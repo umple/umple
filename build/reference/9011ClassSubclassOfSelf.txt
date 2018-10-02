@@ -15,7 +15,7 @@ noreferences
 @@source manualexamples/E011ClassisSubclassOfSelf1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E011ClassisSubclassOfSelf2.ump
 @@endexample
 

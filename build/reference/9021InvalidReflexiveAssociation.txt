@@ -16,10 +16,10 @@ noreferences
 @@endexample
 
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E021InvalidReflexiveAssociation2.ump
 @@endexample
 
-@@example
+@@example @@caption Another Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E021InvalidReflexiveAssociation3.ump
 @@endexample

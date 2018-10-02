@@ -3,15 +3,17 @@ Attributes
 noreferences
 
 @@description
-<p>The following examples illustrate the data types available
+<p>The following example illustrates the data types available
 for Umple attributes. Except as specified, they will generate
 primitive datatypes in Java.</p>
+
+<p>Initialization of values can be performed in a manner similar to Java or C++. Initialization of Dates uses yyyy-mm-dd format, and initialization of Times use hh:mm:dd format.</p>
 
 
 @@example
 @@source manualexamples/UmpleBuiltinDataTypes1.ump
 @@endexample
 
-@@example
+@@example @@caption Example Using a Native Java Type Rather than a Builtin Umple Type @@endcaption
 @@source manualexamples/UmpleBuiltinDataTypes2.ump
 @@endexample

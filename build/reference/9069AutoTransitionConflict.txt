@@ -18,6 +18,6 @@ of both auto-transitions is the same.
 @@source manualexamples/W069AutoTransitionConflict1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W069AutoTransitionConflict2.ump
 @@endexample

@@ -17,6 +17,6 @@ In Umple, enumerations cannot be used in compositions.
 @@source manualexamples/E105EnumerationInComposition1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E105EnumerationInComposition2.ump
 @@endexample

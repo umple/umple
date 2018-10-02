@@ -28,7 +28,6 @@ class LightFixture
     }
   }
 }
-
 //$?[End_of_model]$?
 // @@@skipcppcompile - Contains Java Code
 // @@@skipphpcompile - Contains Java Code

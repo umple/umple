@@ -19,5 +19,3 @@ trait M{
 	//special implementation by M
 	}
 }
-
-

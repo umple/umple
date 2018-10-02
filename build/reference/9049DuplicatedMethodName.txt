@@ -16,6 +16,6 @@ You cannot have two methods that have the same names and return types. The warni
 @@source manualexamples/W049DuplicatedMethodName1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W049DuplicatedMethodName2.ump
 @@endexample

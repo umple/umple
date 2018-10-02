@@ -16,6 +16,6 @@ An error is raised when using a reserved name such as H or HStar as a state name
 @@source manualexamples/E063ReservedNameHistoryState1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E063ReservedNameHistoryState2.ump
 @@endexample

@@ -29,6 +29,6 @@ In Umple, class enumerations must not have the same name as the class they are d
 @@source manualexamples/E096EnumerationNamingConflict4.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E096EnumerationNamingConflict5.ump
 @@endexample

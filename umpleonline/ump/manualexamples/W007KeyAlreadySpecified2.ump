@@ -4,4 +4,3 @@ class X {
   id;
   key { name, id }
 }
-

@@ -1,0 +1,12 @@
+Code Injection in Custom Methods
+Aspect Orientation
+noreferences
+
+@@description
+<p>Much of the usefulness of code injection is for generated methods, but it is also possible to inject code into custom methods, using the custom keyword.
+</p>
+
+
+@@example
+@@source manualexamples/CodeInjectioninCustomMethods1.ump
+@@endexample

@@ -14,7 +14,7 @@ noreferences
 @@source manualexamples/E052StateMachineNameClash1.ump &diagramtype=state
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E052StateMachineNameClash2.ump &diagramtype=state
 @@endexample
 

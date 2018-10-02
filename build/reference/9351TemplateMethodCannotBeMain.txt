@@ -16,6 +16,6 @@ method.
 @@source manualexamples/E3501TemplateMethodCannotBeMain1.ump
 @@endexample
 
-@@example
+@@example  @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E3501TemplateMethodCannotBeMain2.ump
 @@endexample

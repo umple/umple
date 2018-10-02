@@ -8,5 +8,3 @@ class Sub {
   isA P1;
   isA P2;
 }
-
-

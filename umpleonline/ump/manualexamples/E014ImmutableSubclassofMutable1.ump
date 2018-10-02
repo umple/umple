@@ -8,4 +8,3 @@ class X14immut {
   immutable;
   b;
 }
-

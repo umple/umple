@@ -32,7 +32,6 @@ class X
     X x = new X();
   }
 }
-
 //$?[End_of_model]$?
 // @@@skipcppcompile - Has Java code
 // @@@skipphpcompile - Has Java code

@@ -17,6 +17,6 @@ The cause of the error is possibly a typographical mistake.
 @@source manualexamples/E3607PortNameCannotBeResolved1.ump
 @@endexample
 
-@@example
+@@example  @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E3607PortNameCannotBeResolved2.ump
 @@endexample

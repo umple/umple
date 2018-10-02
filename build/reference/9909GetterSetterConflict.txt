@@ -17,6 +17,6 @@ these methods are redefined. The attempt to redefine the method will be ignored.
 @@source manualexamples/W1009GetterSetterConflict1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W1009GetterSetterConflict2.ump
 @@endexample

@@ -16,6 +16,6 @@ Specifying a hard constraint such as 1 or 2 for the upper or lower bound in such
 @@source manualexamples/W036UnmanagedMultiplicity1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W036UnmanagedMultiplicity2.ump
 @@endexample

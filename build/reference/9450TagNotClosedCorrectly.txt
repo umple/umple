@@ -16,6 +16,6 @@ be correctly nested within each other.<br/>
 @@source manualexamples/E4500TagNotClosedCorrectly1.ump
 @@endexample
 
-@@example
+@@example  @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E4500TagNotClosedCorrectly2.ump
 @@endexample

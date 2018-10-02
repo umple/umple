@@ -16,6 +16,6 @@ has no history to be managed. <br/>
 @@source manualexamples/E065NoSubstatesHistoryState1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E065NoSubstatesHistoryState2.ump
 @@endexample

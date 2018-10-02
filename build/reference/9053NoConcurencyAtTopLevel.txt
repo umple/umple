@@ -16,7 +16,7 @@ noreferences
 @@source manualexamples/E053NoConcurrencyAtTopLevel1.ump &diagramtype=state
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E053NoConcurrencyAtTopLevel2.ump &diagramtype=state
 @@endexample
 

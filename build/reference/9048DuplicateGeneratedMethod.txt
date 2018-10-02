@@ -17,6 +17,6 @@ the attribute causing the duplicate can fix the error.
 @@source manualexamples/E048DuplicateGeneratedMethod1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E048DuplicateGeneratedMethod2.ump
 @@endexample

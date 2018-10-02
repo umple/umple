@@ -15,6 +15,6 @@ A queued state machine must have events to be queued, or this warning will be is
 @@source manualexamples/W056NoEventsQueuedStateMachine1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W056NoEventsQueuedStateMachine2.ump
 @@endexample

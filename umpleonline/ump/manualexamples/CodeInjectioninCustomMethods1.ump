@@ -1,0 +1,47 @@
+// This illustrates separate code injection
+// for custom and generated methods
+// The output will be as follows
+// Sound of beep
+// Warning
+//  ... this is injected after the warning
+// Sound of beep
+// Warning
+//  ... this is injected after the warning
+// Sound of beep
+// Warning
+// ... this is injected after the warning
+//
+class Car {
+  queued radio {
+    on {
+      radioToggle -> off;
+    }
+    off {
+      radioToggle -> on;
+    }
+  }
+  after generated radioToggle* {soundBeep();}
+  
+  void soundBeep() {
+    System.out.println("Sound of beep");
+    radioToggleWarning();
+  }
+
+  void radioToggleWarning() {
+    System.out.println("Warning");
+  }
+  
+  after custom radioToggle* {
+    System.out.println(
+      " ... this is injected after the warning");  
+  }
+  
+  public static void main(String[] args) {
+    Car x = new Car();
+    x.radioToggle();
+    x.radioToggle();
+    x.radioToggle();   
+  }
+}
+//$?[End_of_model]$?
+// @@@skipphpcompile Contains Java Code

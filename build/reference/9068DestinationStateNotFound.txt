@@ -18,6 +18,6 @@ The warning can be resolved by correcting the destination state name or by creat
 @@source manualexamples/W068DestinationStateNotFound1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W068DestinationStateNotFound2.ump
 @@endexample

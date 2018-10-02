@@ -16,6 +16,6 @@ template name might be misspelled. <br/>
 @@source manualexamples/E3504TemplateReferenceCannotBeResolved1.ump
 @@endexample
 
-@@example
+@@example  @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E3504TemplateReferenceCannotBeResolved2.ump
 @@endexample

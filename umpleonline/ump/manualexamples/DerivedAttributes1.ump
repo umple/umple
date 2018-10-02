@@ -12,4 +12,3 @@ class Point
     Float theta =
       {Math.toDegrees(Math.atan2(getY(),getX()))}
 }
-

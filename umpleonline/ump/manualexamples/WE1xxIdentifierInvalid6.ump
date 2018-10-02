@@ -5,6 +5,5 @@ class X {
     s1 {}
   }
 }
-
 //$?[End_of_model]$?
 // @@@skipcompile

@@ -17,6 +17,6 @@ The warning might be caused by a template of the same name being defined in a se
 @@source manualexamples/W3506DuplicateTemplateName1.ump
 @@endexample
 
-@@example
+@@example  @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W3506DuplicateTemplateName2.ump
 @@endexample

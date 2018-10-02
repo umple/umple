@@ -16,6 +16,6 @@ reference to itself. The issue might come from a flaw in the templates&#39; desi
 @@source manualexamples/E3505TemplateReferenceCycle1.ump
 @@endexample
 
-@@example
+@@example  @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E3505TemplateReferenceCycle2.ump
 @@endexample

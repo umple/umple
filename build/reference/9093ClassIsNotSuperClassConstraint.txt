@@ -16,6 +16,6 @@ This error is raised if a class is not the superclass of a given class as expect
 @@source manualexamples/E093ClassIsNotSuperClassConstraint1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E093ClassIsNotSuperClassConstraint2.ump
 @@endexample

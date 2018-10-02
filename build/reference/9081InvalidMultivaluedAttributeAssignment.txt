@@ -16,6 +16,6 @@ The error might be caused by a typographical mistake.
 @@source manualexamples/E081InvalidMultivaluedAttributeAssignment1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E081InvalidMultivaluedAttributeAssignment2.ump
 @@endexample

@@ -15,6 +15,6 @@ In Umple, 'Final' is a reserved keyword. It is used to define the final state fo
 @@source manualexamples/E074UserDefinedStateCannotBeNamedFinal1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E074UserDefinedStateCannotBeNamedFinal2.ump
 @@endexample

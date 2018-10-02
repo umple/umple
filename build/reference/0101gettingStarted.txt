@@ -79,3 +79,5 @@ about Umple</a></p>
 <hr />
 
 <i>If you are an ordinary user and notice an error in this manual, <a href="https://github.com/umple/Umple/issues">please report it using our issue tracking system here</a> Flag it as a defect in the user documentation. If you still have trouble after reading this manual, please contact our <a href="mailto:umple-help@googlegroups.com"> help mailing list and post a request for help</a>. If you are a contributer, you can click on the link &apos;edit in github&apos; found at the bottom left of each manual page; also <a href="https://github.com/umple/Umple/wiki/Deploying">instructions on how to edit this manual are here</a>.</i>
+
+@@videoURL https://www.youtube.com/embed/xD-zTpB_zyQ

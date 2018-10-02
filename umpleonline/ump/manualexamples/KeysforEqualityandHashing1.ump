@@ -32,8 +32,7 @@ class PlayerOnTeam {
   * -- 1 Team;
   key { year, player, team }
 }
-
-   //$?[End_of_model]$?
+//$?[End_of_model]$?
 
 class Sport
 {
@@ -63,4 +62,3 @@ class PlayerOnTeam
   position.association Player__PlayerOnTeam 85,0 0,59;
   position.association PlayerOnTeam__Team 30,0 61,63;
 }
-

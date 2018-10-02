@@ -12,4 +12,3 @@ trait T{
 trait T1{
 	name;
 }
-

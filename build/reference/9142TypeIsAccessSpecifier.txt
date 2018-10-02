@@ -18,11 +18,11 @@ method to read it, or the set method to modify it.
 @@source manualexamples/W142TypeIsAccessSpecifierAmbiguous.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W142TypeIsAccessSpecifierCorrect.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W142TypeIsAccessSpecifierExplicit.ump
 @@endexample
 

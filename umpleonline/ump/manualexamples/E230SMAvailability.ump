@@ -14,7 +14,3 @@ trait T {
 class C3 {
  isA T<sm3 as mach1>;
 }
-
-
-
-

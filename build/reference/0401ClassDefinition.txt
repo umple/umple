@@ -4,12 +4,13 @@ noreferences
 
 @@description
 <p>      
-A class definition defines an object-oriented class available for use as a type in your system.  
+A class definition defines an object-oriented class available for use as a type in the system you are developing. Objects (chunks of data) are created as <i>instances</i> of the class. A class describes the structure of that data in terms of <a href="AttributeDefinition.html">attributes</a> (simple data like strings and numbers), <a href="AssociationDefinition.html">associations</a> (links to and from other objects), as well as other items described in this manual.
 </p>
 
-<p>To define a class, specify the keyword 'class', followed by the name of the class (starting in a capital letter in order to avoid a 
-<a href="WE1xxIdentifierInvalid.html">warning</a>, to respect naming conventions) and then the body of the class within curly brackets. 
-The body can contain <a href="ClassContent.html">various elements that are listed in the Class Content page</a>.</p>
+<p>To define a class in Umple, specify the keyword 'class', followed by the name of the class (starting in a capital letter in order to respect naming conventions as well as to avoid a 
+<a href="WE1xxIdentifierInvalid.html">warning</a>) and then the body of the class within curly brackets.</p>
+
+<p>The body can contain <a href="ClassContent.html">various elements that are listed in the Class Content page</a>.</p>
 
 <p>The following UML diagram shows two classes: a Student class and an Address class, linked by an association. The corresponding Umple is below.</p>
 
@@ -17,10 +18,11 @@ The body can contain <a href="ClassContent.html">various elements that are liste
 
 <br />
 
+@@videoURL https://www.youtube.com/embed/HIBo0ErCVtU
 
 @@syntax
 [[classDefinition]] [[classContent]]
 
-@@example
+@@example  @@caption Example Showing to Classes (Class Diagram is Above) @@endcaption
 @@source manualexamples/ClassDefinition1.ump
 @@endexample

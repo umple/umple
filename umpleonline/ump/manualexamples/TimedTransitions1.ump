@@ -15,7 +15,6 @@ class X {
     X x = new X();
   }
 }
-
 //$?[End_of_model]$?
 // @@@skipcppcompile - Contains Java Code
 // @@@skipphpcompile - Contains Java Code

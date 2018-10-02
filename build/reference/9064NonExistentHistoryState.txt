@@ -17,6 +17,6 @@ The error will be raised if the state is not found in the state machine.
 @@source manualexamples/E064NonExistentHistoryState1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E064NonExistentHistoryState2.ump
 @@endexample

@@ -14,6 +14,5 @@ class Student
   // record attribute name
   trace s1 record name;
 }
-
 //$?[End_of_model]$?
 // @@@skipphpcompile - Skipped due to issue 698

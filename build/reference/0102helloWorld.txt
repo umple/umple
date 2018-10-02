@@ -23,10 +23,10 @@ noreferences
 <img src="examples/MentorStudent.png" alt="UML class diagram showing superclass Person (with attribute name), and with subclasses Student and Mentor. There is a 0..1 -- * association between the subclasses."/>
 
 
-@@example
+@@example @@caption Example Showing a Simple Class with a Main Method @@endcaption
 @@source manualexamples/HelloWorldExamples1.ump
 @@endexample
 
-@@example
+@@example @@caption Example Showing Three Classes with an Association and Attributes (Diagram is Above) @@endcaption
 @@source manualexamples/HelloWorldExamples2.ump
 @@endexample

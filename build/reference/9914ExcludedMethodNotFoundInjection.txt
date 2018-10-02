@@ -16,6 +16,6 @@ Verifying which method was meant to be excluded will generally resolve the issue
 @@source manualexamples/W1014ExcludedMethodNotFoundInjection1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W1014ExcludedMethodNotFoundInjection2.ump
 @@endexample

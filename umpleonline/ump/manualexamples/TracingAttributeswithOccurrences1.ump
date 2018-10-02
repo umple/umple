@@ -7,6 +7,5 @@ class Student
   name;
   trace name for 5;
 }
-
 //$?[End_of_model]$?
 // @@@skipphpcompile - Skipped due to issue 698

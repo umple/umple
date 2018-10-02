@@ -15,6 +15,6 @@ will otherwise be ignored. <br/>
 @@source manualexamples/W1012MethodNotFoundInjection1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W1012MethodNotFoundInjection2.ump
 @@endexample

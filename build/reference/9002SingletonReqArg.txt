@@ -21,7 +21,7 @@ greater than 1 (e.g. 5). However, Umple treats a multiplicity specified with a l
 @@source manualexamples/W002SingletonWithRequiredObject1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W002SingletonWithRequiredObject2.ump
 @@endexample
 

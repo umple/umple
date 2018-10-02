@@ -16,10 +16,3 @@ trait T{
 class C{
   isA T<sm.s1.r1 as r2>;
 }
-
-
-
-
-
-
-

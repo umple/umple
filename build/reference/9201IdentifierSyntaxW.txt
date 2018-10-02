@@ -15,10 +15,10 @@ In Umple, identifiers used for traits, classes and interfaces should start with 
 @@source manualexamples/W201NotWellDefinedIdentifier.ump
 @@endexample
 
-@@example
+@@example  @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E200ValidTraitIdentifier1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E200ValidTraitIdentifier2.ump
 @@endexample

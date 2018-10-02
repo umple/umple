@@ -3,4 +3,3 @@ class X29attrtypeconstr {
   Integer a;
   [a > 5]
 }
-

@@ -3,10 +3,12 @@ Attributes
 noreferences
 
 @@description
-<p>As in UML, you can have attribute with multiple values.</p>
+<p>As in UML, Umple allows one to specify an attribute with multiple values.</p>
 
 <p>We encourage the use of association notation in this context, however
 the attribute notation can be useful sometimes.</p>
+
+<p>Initialization of multivalued attributes is also allowed, as shown in the example.</p>
 
 @@syntax
 

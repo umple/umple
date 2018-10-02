@@ -15,7 +15,7 @@ noreferences
 @@source manualexamples/W1011InvalidAssociationClassKey1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W1011InvalidAssociationClassKey2.ump
 @@endexample
 

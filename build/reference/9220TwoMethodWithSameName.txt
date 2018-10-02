@@ -19,6 +19,6 @@ When changing the name of provided methods in traits, it is necessary to be sure
 @@source manualexamples/E220TwoMethodWithSameName2.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E220TwoMethodWithSameName3.ump
 @@endexample

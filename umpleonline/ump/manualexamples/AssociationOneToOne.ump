@@ -1,0 +1,96 @@
+// Core class of the example
+// A company is a corporation
+class Company {
+  name;
+  
+  // A company must have a BoardOfDirectors
+  // that must be created at the same time
+  // as the Company itself
+  1 -- 1 BoardOfDirectors;
+}
+
+// BoardOfDirectors is in a 1-1 relationship
+// with Company meaning that theoretically it
+// could just be merged into the Company class
+// However to facilitate separation of concerns
+// it is sometimes best to keep such classes
+// separate
+class BoardOfDirectors {
+  // A BoardMember is just a member of one
+  // board (but a person can be on multiple
+  // boards using multiple BoardMembers)
+  1 -- * BoardMember;
+}
+
+// A board must have a set of members
+// Former board members tracked 
+class BoardMember {
+  bio; // Brief description of background
+  lazy Date joinedBoard;
+  lazy Date leftBoard;
+  
+  // One of the roles a person could play would
+  // be as a Board member
+  * boardMembership -- 1 Person;
+}
+
+// Generic Person class
+class Person {
+  name;
+  Date dateOfBirth;
+}
+
+// Mixin with a main program demonstrating
+// manipulation of 1--1 and other associations
+class Company {
+  depend java.sql.Date;
+  
+  public static void main(String [] args) {
+  
+    // First create some instances of Person
+    // They are initially not on any boards
+    Person p1 = new Person("Alice",
+      Date.valueOf("1990-01-01"));
+    Person p2 = new Person("Bob",
+      Date.valueOf("1991-02-02"));
+    
+    // Create a Company using the simpler of its
+    // two constructors that doesn't require a
+    // board to already exist. This will actually
+    // create the BoardOfDirectors at the same time
+    Company c = new Company("UmpleCorp");
+    
+    BoardOfDirectors b = c.getBoardOfDirectors();
+    
+    b.addBoardMember("Largest Shareholder", p1);
+    b.addBoardMember("Founder", p2);
+    
+    // Output the results to prove that this works
+    System.out.println("Key company info: "+c);
+    System.out.println("Board members: "+
+      b.getBoardMembers());
+    
+  }
+}//$?[End_of_model]$?
+class Company
+{
+  position 50 30 109 45;
+}
+
+class BoardOfDirectors
+{
+  position 50 149 123 41;
+  position.association BoardMember__BoardOfDirectors 124,23 0,6;
+}
+
+class BoardMember
+{
+  position 275 150 144 92;
+  position.association BoardMember:boardMembership__Person 30,0 29,75;
+}
+
+class Person
+{
+  position 276 17 140 75;
+}
+// @@@skipphpcompile Contains Java code

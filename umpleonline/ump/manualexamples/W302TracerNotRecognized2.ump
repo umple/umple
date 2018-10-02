@@ -7,5 +7,4 @@ class A {
   
   trace id;
 }
-
 // @@@skipphpcompile See issue 596 (PHP tracing causes issues)

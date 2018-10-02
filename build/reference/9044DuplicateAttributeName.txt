@@ -15,6 +15,6 @@ and their types differ.</h2>
 @@source manualexamples/W044AttributeDuplicatedinSuperclass1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/W044AttributeDuplicatedinSuperclass2.ump
 @@endexample

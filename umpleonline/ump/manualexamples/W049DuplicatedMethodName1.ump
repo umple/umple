@@ -3,5 +3,3 @@ class A{
   String test1(){return("hello world");}
   String test1(){return("dlrow olleh");}
 }
-
-

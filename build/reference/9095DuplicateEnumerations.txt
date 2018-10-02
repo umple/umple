@@ -19,6 +19,6 @@ In Umple, enumerations must have unique names.
 @@source manualexamples/E095DuplicateEnumerations2.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E095DuplicateEnumerations3.ump
 @@endexample

@@ -17,6 +17,6 @@ optionally be specified.
 @@source manualexamples/E094NoAssociationFoundConstraint1.ump
 @@endexample
 
-@@example
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
 @@source manualexamples/E094NoAssociationFoundConstraint2.ump
 @@endexample
