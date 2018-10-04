@@ -1,0 +1,18 @@
+namespace example;
+
+class Portal {
+  description = {"Current status: "+getStatusWord();}
+  
+  sm {
+    closed {
+      String getStatusWord() {return "closed";}
+      String getStatusWord(String arg) {return "closed " + arg; }
+      open -> open;
+    }
+    open {
+      String getStatusWord() {return ("open");}
+      String getStatusWord(String arg) {return "open " + arg; }
+      shut -> closed;
+    }
+  }
+}

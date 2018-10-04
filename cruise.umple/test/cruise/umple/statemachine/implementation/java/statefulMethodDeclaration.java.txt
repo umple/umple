@@ -1,0 +1,145 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.0.4260.b21abf3a3 modeling language!*/
+
+package example;
+
+// line 2 "model.ump"
+// line 19 "model.ump"
+public class Portal
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Portal State Machines
+  private String statusWord;
+
+  //Portal State Machines
+  public enum Sm { closed, open }
+  private Sm sm;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Portal()
+  {
+    statusWord = "";
+    setSm(Sm.closed);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setStatusWord(String aStatusWord)
+  {
+    boolean wasSet = false;
+    statusWord = aStatusWord;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getStatusWord()
+  {
+    // line 5 "model.ump"
+    describe();
+    // END OF UMPLE BEFORE INJECTION
+    return statusWord;
+  }
+
+  public String getDescription()
+  {
+    return "Current status: "+getStatusWord();;
+  }
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public boolean describe()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case closed:
+        // line 9 "model.ump"
+        setStatusWord("closed");
+        setSm(Sm.closed);
+        wasEventProcessed = true;
+        break;
+      case open:
+        // line 13 "model.ump"
+        setStatusWord("open");
+        setSm(Sm.open);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean open()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case closed:
+        setSm(Sm.open);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean shut()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case open:
+        setSm(Sm.closed);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "statusWord" + ":" + getStatusWord()+ "," +
+            "description" + ":" + getDescription()+ "]";
+  }
+}

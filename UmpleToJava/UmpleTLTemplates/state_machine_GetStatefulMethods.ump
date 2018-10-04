@@ -1,0 +1,53 @@
+class UmpleToJava {
+    state_machine_Get <<!<</*state_machine_GetStatefulMethods*/>>
+  for (Map.Entry<Integer, Map<State, Method>> entry : sm.getStateMethodsMap().entrySet()) {
+    	String methodModifier = null;
+    	String methodType = null;
+    	String methodName = null;
+    	for (Map.Entry<State, Method> innerEntry : entry.getValue().entrySet()) {
+        	Method currentMethod = innerEntry.getValue();
+    		if (methodModifier == null) {
+    			methodModifier = currentMethod.getModifier().equals("") ? "public" : currentMethod.getModifier();
+    			methodType = currentMethod.getType();
+    			methodName = currentMethod.getName();
+    			StringBuilder parameters = new StringBuilder();
+    	        String finalParams = "";
+    	        if (currentMethod.hasMethodParameters())
+    	        {
+    	          for (MethodParameter aMethodParam : currentMethod.getMethodParameters()) 
+    	          {
+    	            String paramName = aMethodParam.getName();
+    	            String paramType = aMethodParam.getType();
+    	            String isList = aMethodParam.getIsList() ? " [] " : " ";
+    	            String aSingleParameter = paramType + isList + paramName;
+    	            parameters.append(aSingleParameter + ", ");
+    	          }
+    	          
+    	          finalParams = parameters.toString().substring(0, parameters.toString().length()-2);
+    	        }
+    	        StringBuilder methodExceptionsBuilder = new StringBuilder();
+    	        if(currentMethod.getExceptions()!=null&&currentMethod.numberOfExceptions()>0)
+    	        {
+    	          methodExceptionsBuilder.append(" throws ");
+    	          String exceptioncomma = "";
+    	          for(String methodException:currentMethod.getExceptions())
+    	          {
+    	            if(!"".equals(methodException))
+    	            {
+    	              methodExceptionsBuilder.append(exceptioncomma);
+    	              methodExceptionsBuilder.append(methodException);
+    	              exceptioncomma = ",";
+    	            }
+    	          }
+    	        }
+    	        String methodExceptions = methodExceptionsBuilder.toString();
+    	        append(realSb, "\n  {0} {1} {2}({3}){}", methodModifier, methodType, methodName, finalParams, methodExceptions);
+    	    	  append(realSb, "\n  {    switch({0})\n    {\n      ", gen.translate("stateMachineOne", sm));
+        	}
+        	append(realSb, "      case {0}:", innerEntry.getKey().getName());
+        	append(realSb, "\n          {0}", currentMethod.getMethodBody().getCodeblock().getCode());
+        }
+    	realSb.append("\n    }\n  }\n");
+    }
+!>>
+}

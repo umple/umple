@@ -27,7 +27,7 @@ state : [=final]? [stateName] { [[stateInternal]]* }
 
 //Issue 547 and 148
 stateInternal-# : [[comment]] | [=changeType:+| - |- |*]? [[stateEntity]] | [[standAloneTransition]] |[**extraCode] 
-stateEntity- : [=-||] | [[mixsetDefinition]] | [[entryOrExitAction]] | [[autoTransition]] | [[transition]] | [[activity]] | [[state]] | [[trace]] | ;
+stateEntity- : [=-||] | [[mixsetDefinition]] | [[entryOrExitAction]] | [[autoTransition]] | [[transition]] | [[concreteMethodDeclaration]] | [[activity]] | [[state]] | [[trace]] ;
 
 autoTransition : [[activity]]? [[autoTransitionBlock]]
 

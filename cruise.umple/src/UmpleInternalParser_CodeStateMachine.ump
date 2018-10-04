@@ -1057,13 +1057,17 @@ class UmpleInternalParser
       {
         fromState.setFinalState(true);
       }
-	  else if (subToken.is("transition") && !ignoredTransitions.contains(subToken))
+      else if (subToken.is("transition") && !ignoredTransitions.contains(subToken))
       {
         analyzeTransition(false,subToken, fromState, changeType); 
       }
       else if (subToken.is("autoTransition") && !ignoredTransitions.contains(subToken))
       {
         analyzeTransition(true,subToken, fromState, changeType);
+      }
+      else if (subToken.is("concreteMethodDeclaration"))
+      {
+        analyzeStatefulMethod(subToken, fromState);
       }
       else if (subToken.is("activity"))
       {
@@ -1977,6 +1981,12 @@ class UmpleInternalParser
     
     }
 
-  }  
+  }
+
+  private void analyzeStatefulMethod(Token methodToken, State fromState){
+    StateMachine sm = fromState.getStateMachine();
+    Method method = analyzeMethod(methodToken, null, true);
+    sm.addStateMethod(fromState, method);
+  }
 
 } 
