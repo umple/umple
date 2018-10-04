@@ -1,5 +1,5 @@
 class UmpleToJava {
-    state_machine_Get <<!<</*state_machine_GetStatefulMethods*/>>
+    state_machine_GetStatefulMethods <<!<</*state_machine_GetStatefulMethods*/>>
   for (Map.Entry<Integer, Map<State, Method>> entry : sm.getStateMethodsMap().entrySet()) {
     	String methodModifier = null;
     	String methodType = null;
