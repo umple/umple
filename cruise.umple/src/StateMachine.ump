@@ -22,7 +22,8 @@ class StateMachine
   name;
   Boolean containsHistoryState = false;
   Boolean containsDeepHistoryState = false;
-  
+  Map<Integer, Map<State, Method>> stateMethodsMap;
+
   * -- 0..1 UmpleClass;
   
   * -- 0..1 UmpleTrait;
