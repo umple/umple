@@ -1,6 +1,5 @@
 use state_machine_Get.ump;
 use state_machine_GetFull.ump;
-use state_machine_GetStatefulMethods.ump;
 
 
 class UmpleToJava {
@@ -10,8 +9,7 @@ class UmpleToJava {
   isFirst = true;
   for(StateMachine sm : uClass.getStateMachines())
   {
-    #>><<@ UmpleToJava.state_machine_GetFull >><<#
-    #>><<@ UmpleToJava.state_machine_GetStatefulMethods >><<#
+    #>><<@ UmpleToJava.state_machine_GetFull >><<# 
   }
   
   for(StateMachine sm : uClass.getAllStateMachines())

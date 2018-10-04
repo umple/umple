@@ -477,6 +477,29 @@ class StateMachine
       return superStateMachine;
     }
   }
+
+  depend java.util.stream.Collectors;
+
+  // Issue # 1351
+  public int getStateMethodId(Method stateMethod) {
+	  String name = stateMethod.getName();
+	  String returnType = stateMethod.getType();
+	  String params = String.join("@DELIM1@", stateMethod.getMethodParameters().stream().map(p -> 
+			  p.getName() + "@DELIM2@" + p.getFullType()).collect(Collectors.toList()));
+	  return Arrays.asList(name, returnType, params).hashCode();
+  }
+  
+  // Issue # 1351
+  public boolean addStateMethod(State state, Method stateMethod)
+  {
+    boolean wasAdded = false;
+    Integer key = getStateMethodId(stateMethod);
+    Map<State, Method> stateMethodsMapInner = 
+    		stateMethodsMap.computeIfAbsent(key, (k) -> new HashMap<State, Method>());
+    stateMethodsMapInner.put(state, stateMethod);
+    wasAdded = true;
+    return wasAdded;
+  }
 }
 
 class State
@@ -809,27 +832,6 @@ class Transition
      }
      return !fromStateSm.equals(nextStateSm);
    }
-
-  // Issue # 1351
-  public int getStateMethodId(Method stateMethod) {
-	  String name = stateMethod.getName();
-	  String returnType = stateMethod.getType();
-	  String params = String.join("@DELIM1@", stateMethod.getMethodParameters().stream().map(p -> 
-			  p.getName() + "@DELIM2@" + p.getFullType()).collect(Collectors.toList()));
-	  return Arrays.asList(name, returnType, params).hashCode();
-  }
-  
-  // Issue # 1351
-  public boolean addStateMethod(State state, Method stateMethod)
-  {
-    boolean wasAdded = false;
-    Integer key = getStateMethodId(stateMethod);
-    Map<State, Method> stateMethodsMapInner = 
-    		stateMethodsMap.computeIfAbsent(key, (k) -> new HashMap<State, Method>());
-    stateMethodsMapInner.put(state, stateMethod);
-    wasAdded = true;
-    return wasAdded;
-  }
 }
 
 class Event

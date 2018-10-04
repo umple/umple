@@ -1,7 +1,9 @@
 class UmpleToJava {
-    state_machine_GetStatefulMethods <<!<</*state_machine_GetStatefulMethods*/>>
-  for (Map.Entry<Integer, Map<State, Method>> entry : sm.getStateMethodsMap().entrySet()) {
-    	String methodModifier = null;
+    state_machine_StatefulMethods_All <<!<</*state_machine_StatefulMethods_All*/>><<#
+    for(StateMachine sm : uClass.getStateMachines())
+    {                                               
+      for (Map.Entry<Integer, Map<State, Method>> entry : sm.getStateMethodsMap().entrySet()) {
+        String methodModifier = null;
     	String methodType = null;
     	String methodName = null;
     	for (Map.Entry<State, Method> innerEntry : entry.getValue().entrySet()) {
@@ -49,5 +51,6 @@ class UmpleToJava {
         }
     	realSb.append("\n    }\n  }\n");
     }
+  } #>>
 !>>
 }

@@ -3035,7 +3035,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
    * @param isStatefulMethod True if the method is stateful and should not be added to the class element.
    * @return The updated Method entity.
    */
-  private void analyzeMethod(Token method, UmpleElement uElement, boolean isStatefulMethod) {
+  private Method analyzeMethod(Token method, UmpleElement uElement, boolean isStatefulMethod) {
     String modifier = "";
     Method aMethod = new Method("","","",false);
 	
