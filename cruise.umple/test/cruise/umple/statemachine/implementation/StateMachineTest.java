@@ -310,9 +310,9 @@ public class StateMachineTest extends StateMachineTemplateTest
 
   // Issue #1351
   @Test
-  public void statefulMethodDeclaration()
+  public void stateDependentMethodDeclaration()
   {
-    assertUmpleTemplateFor("statefulMethodDeclaration.ump",languagePath + "/statefulMethodDeclaration."+ languagePath +".txt","Portal");
+    assertUmpleTemplateFor("stateDependentMethodDeclaration.ump",languagePath + "/stateDependentMethodDeclaration."+ languagePath +".txt","Portal");
   }
 
   @Test

@@ -3285,8 +3285,16 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if ((!uClass.hasMethod(aMethod) || uClass.getMethod(aMethod).getIsConstructor()) && shouldAddMethod)
       //if (!uClass.hasMethod(aMethod) && shouldAddMethod)
       {
-        uClass.addMethod(aMethod); 
-      } 
+        // See issue #1351. Convert regular methods to default bodies for state-dependent methods
+        // if they exist.
+        if (uClass.getStateDependentMethods().contains(aMethod) && !aMethod.isIsAbstract()) {
+          uClass.addStateDependentMethod(aMethod, null);
+        }
+        else
+        {
+          uClass.addMethod(aMethod);
+        }
+      }
 
       // Make class abstract if an abstract method was added
       if(uClass.hasMethod(aMethod) && aMethod.getIsAbstract()) 

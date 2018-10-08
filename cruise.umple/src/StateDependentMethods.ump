@@ -1,0 +1,22 @@
+namespace cruise.umple.compiler;
+
+class UmpleClass {
+  depend java.util.*;
+  0..1 -- * Method stateDependentMethods;
+  public Map<Method, Map<State, MethodBody>> stateDependentMethodBodyMap = new HashMap<Method, Map<State, MethodBody>>();
+
+  // See issue #1351. Adds a state-dependent method mapping for the current Umple class.
+  public boolean addStateDependentMethod(Method method, State state)
+  {
+    boolean wasAdded = false;
+    if (!stateDependentMethods.contains(method))
+    {
+      stateDependentMethods.add(method);
+    }
+    Map<State, MethodBody> stateMap = stateDependentMethodBodyMap
+                                     	.computeIfAbsent(method, k -> new HashMap<State, MethodBody>());
+    stateMap.put(state, method.getMethodBody());
+    return wasAdded;
+  }
+}
+

@@ -1,0 +1,118 @@
+class UmpleToJava {
+    state_machine_StateDependentMethods_All <<!<</*state_machine_StateDependentMethods_All*/>><<#
+    // Issue #1351
+    if (!uClass.getStateDependentMethods().isEmpty()) {
+
+      // Effectively a lambda function below, so that we can keep code related
+      // to state-dependent method generation all in one space
+      abstract class StateDependentTreeTraversal {
+        public abstract void traverse(Method method);
+      }
+    
+      StateDependentTreeTraversal t = new StateDependentTreeTraversal() {
+    		
+        // Prints the signature for the state-dependent method
+        private void printBefore(Method method) {
+          String methodModifier = method.getModifier().equals("") ? "public" : method.getModifier();
+          String methodType = method.getType();
+          String methodName = method.getName();
+          StringBuilder parameters = new StringBuilder();
+          String finalParams = "";
+          if (method.hasMethodParameters())
+          {
+            for (MethodParameter aMethodParam : method.getMethodParameters()) 
+            {
+              String paramName = aMethodParam.getName();
+              String paramType = aMethodParam.getType();
+              String isList = aMethodParam.getIsList() ? " [] " : " ";
+              String aSingleParameter = paramType + isList + paramName;
+              parameters.append(aSingleParameter + ", ");
+            }
+        
+            finalParams = parameters.toString().substring(0, parameters.toString().length()-2);
+          }
+      
+          StringBuilder methodExceptionsBuilder = new StringBuilder();
+          if(method.getExceptions()!=null&&method.numberOfExceptions()>0)
+          {
+            methodExceptionsBuilder.append(" throws ");
+            String exceptioncomma = "";
+            for(String methodException:method.getExceptions())
+            {
+              if(!"".equals(methodException))
+              {
+                methodExceptionsBuilder.append(exceptioncomma);
+                methodExceptionsBuilder.append(methodException);
+                exceptioncomma = ",";
+              }
+            }
+          }
+
+          String methodExceptions = methodExceptionsBuilder.toString();
+          append(realSb, "\n  {0} {1} {2}({3}){4}", methodModifier, methodType, methodName, finalParams, methodExceptions);
+        }
+    
+        // Prints the state-dependent method as defined within the UmpleClass
+        public void traverse(Method method)
+        {
+          printBefore(method);
+          Map<State, MethodBody> stateMap = uClass.stateDependentMethodBodyMap.get(method);
+          MethodBody defaultBody = stateMap.getOrDefault(null, null);
+          for (StateMachine sm : uClass.getStateMachines())
+          {
+            StringBuilder smBuilder = new StringBuilder();
+    	    boolean foundMethod = traverse(method, sm, null, defaultBody, stateMap, smBuilder, 1);
+            if (foundMethod) realSb.append(smBuilder.toString());
+          }
+      
+          realSb.append("\n    }\n  }\n");
+        }
+    	
+        // Returns true if methods were found. Do not use results of StringBuilder otherwise.
+        private boolean traverse(Method method, StateMachine sm, State fromState, MethodBody defaultBody, Map<State, MethodBody> stateMap, StringBuilder builder, int depth) {
+          boolean foundMethod = false;
+      
+          // Handle leaf node
+          if (fromState != null && fromState.getNestedStateMachines().isEmpty())
+          {
+            MethodBody body = stateMap.getOrDefault(fromState, null);
+            foundMethod = body != null;
+    	    if (foundMethod) append(realSb, "\n          {0}", method.getMethodBody().getCodeblock().getCode());
+            return foundMethod;
+          }
+      
+          // Repeat spacing based on depth
+          String spacing = new String(new char[depth]).replace("\0", "    ");
+      
+          // Non-trivial states should have a switch case:
+          append(builder, "\n{0}{    switch({1})\n{0}    {\n", spacing, gen.translate("stateMachineOne", sm));
+
+          // Loop over states and recurse
+          for (State state : sm.getStates())
+          {
+            // Hierarchically set the default body based on state
+            MethodBody childDefaultBody = stateMap.getOrDefault(state, defaultBody);
+            for (StateMachine nestedSm : children)
+            {
+              foundMethod = traverse(method, nestedSm, state, childDefaultBody, stateMap, builder, depth + 1)
+                            || foundMethod;
+            }
+          }
+      
+          // Output the default value and close brace
+          String defaultValue = (defaultBody == null) ?
+                                gen.translate(method.getType()) : defaultBody.getCodeblock().getCode();
+          append(builder, "{0}    default:\n{1}", spacing, defaultValue);
+          return foundMethod;
+        }
+    };
+  
+    // Generate state-dependent methods
+    for (Method method : uClass.stateDependentMethods)
+    {
+      t.traverse(method);
+    }
+  }
+#>>
+!>>
+}

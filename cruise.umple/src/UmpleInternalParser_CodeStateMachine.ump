@@ -1067,7 +1067,7 @@ class UmpleInternalParser
       }
       else if (subToken.is("concreteMethodDeclaration"))
       {
-        analyzeStatefulMethod(subToken, fromState);
+        analyzeStateDependentMethod(subToken, fromState);
       }
       else if (subToken.is("activity"))
       {
@@ -1983,10 +1983,21 @@ class UmpleInternalParser
 
   }
 
-  private void analyzeStatefulMethod(Token methodToken, State fromState){
+  private void analyzeStateDependentMethod(Token methodToken, State fromState){
     StateMachine sm = fromState.getStateMachine();
-    Method method = analyzeMethod(methodToken, null, true);
-    sm.addStateMethod(fromState, method);
-  }
+    UmpleClass uClass = sm.getUmpleClass();
 
+    // Retrieve method analyzed using the method token
+    Method analyzedMethod = analyzeMethod(methodToken, null, true);
+
+    // Strip off existing method if it exists, and make it the default implementation
+    Method classMethod = uClass.getMethod(analyzedMethod);
+    if (classMethod != null) {
+      uClass.addStateDependentMethod(classMethod, null);
+      uClass.removeMethod(classMethod);
+    }
+
+    // Add current state-dependent method body to the Umple class
+    uClass.addStateDependentMethod(analyzedMethod, fromState);
+  }
 } 
