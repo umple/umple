@@ -13,6 +13,7 @@ package cruise.umple.statemachine.implementation.java;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 import cruise.umple.statemachine.implementation.StateMachineTest;
 import cruise.umple.util.SampleFileWriter;
@@ -32,5 +33,12 @@ public class JavaStateMachineTemplateTest extends StateMachineTest
   {
     super.tearDown();
     SampleFileWriter.destroy(pathToInput + "statemachine/java/example");
+  }
+
+  //Issue #1351
+  @Test
+  public void stateDependentMethodDeclaration()
+  {
+    assertUmpleTemplateFor("stateDependentMethodDeclaration.ump",languagePath + "/stateDependentMethodDeclaration."+ languagePath +".txt","Portal");
   }
 }

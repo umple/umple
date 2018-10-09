@@ -3020,7 +3020,22 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
    * @param method The token flagged to be the method.
    * @param uElement The Umple element for which the method will be added.
    */
-  private void analyzeMethod(Token method, UmpleElement uElement){
+  private void analyzeMethod(Token method, UmpleElement uElement) {
+    analyzeMethod(method, uElement, false);
+  }
+
+  /*
+   * Analyzes a token flagged to be a method in which case the data that makes up the method will be populated into a
+   * method instance and added to an Umple element (which could be an Umple class).
+   *
+   * Also returns the updated Method entity.
+   *
+   * @param method The token flagged to be the method.
+   * @param uElement The Umple element for which the method will be added.
+   * @param isStatefulMethod True if the method is stateful and should not be added to the class element.
+   * @return The updated Method entity.
+   */
+  private Method analyzeMethod(Token method, UmpleElement uElement, boolean isStatefulMethod) {
     String modifier = "";
     Method aMethod = new Method("","","",false);
 	
@@ -3184,7 +3199,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       UmpleClass uClass = (UmpleClass) uElement;
       
       // Add Getter/Setter/Constructor to Class
-      boolean shouldAddMethod = !isConstructorOrGetSet(uClass, aMethod, false);
+      boolean shouldAddMethod = !isStatefulMethod && !isConstructorOrGetSet(uClass, aMethod, false);
      
       //Issue 559
       //if(uClass.hasMethod(aMethod) && !uClass.getMethod(aMethod).getIsConstructor())
@@ -3270,8 +3285,16 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if ((!uClass.hasMethod(aMethod) || uClass.getMethod(aMethod).getIsConstructor()) && shouldAddMethod)
       //if (!uClass.hasMethod(aMethod) && shouldAddMethod)
       {
-        uClass.addMethod(aMethod); 
-      } 
+        // See issue #1351. Convert regular methods to default bodies for state-dependent methods
+        // if they exist.
+        if (uClass.getStateDependentMethods().contains(aMethod) && !aMethod.isIsAbstract()) {
+          uClass.addStateDependentMethod(aMethod, null);
+        }
+        else
+        {
+          uClass.addMethod(aMethod);
+        }
+      }
 
       // Make class abstract if an abstract method was added
       if(uClass.hasMethod(aMethod) && aMethod.getIsAbstract()) 
@@ -3284,8 +3307,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       // unimplemented methods
       if(!uClass.hasMethod(aMethod)) 
       {
-        //Issue 567
-    	if(shouldAddMethod)
+        //Issue 567 and 1351
+    	if(shouldAddMethod && !uClass.getStateDependentMethods().contains(aMethod))
           uClass.addUnimplementedMethod(aMethod);
       }
     }
@@ -3329,6 +3352,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         uInterface.addMethod(aMethod); 
       }
     }
+
+    return aMethod;
   }
 
 

@@ -963,7 +963,19 @@ class Method
     
     return false;
   }
-  
+
+  depend java.util.stream.Collectors;
+
+  public int hashCode() {
+    // Note: this uses roughly the same rules as used above to generate a hashCode
+    // so the two methods should be roughly kept in sync.
+    String name = getName();
+    String returnType = getType();
+    String params = String.join("@DELIM1@", getMethodParameters().stream().map(p ->
+                      p.getName() + "@DELIM2@" + p.getFullType()).collect(Collectors.toList()));
+    String isConstructor = String.valueOf(isIsConstructor());
+    return Arrays.asList(name, returnType, params, isConstructor).hashCode();
+  }
 }
 
 

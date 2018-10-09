@@ -1,0 +1,173 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+package example;
+
+// line 3 "../stateDependentMethodDeclaration.ump"
+public class Portal
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Portal State Machines
+  public enum Sm { closed, open }
+  public enum SmClosed { Null, closedA }
+  private Sm sm;
+  private SmClosed smClosed;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Portal()
+  {
+    setSmClosed(SmClosed.Null);
+    setSm(Sm.closed);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getDescription()
+  {
+    return "Current status: "+getStatusWord();;
+  }
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    if (smClosed != SmClosed.Null) { answer += "." + smClosed.toString(); }
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public SmClosed getSmClosed()
+  {
+    return smClosed;
+  }
+
+  public String getStatusWord()
+  {
+      switch(sm)
+      {
+        case closed:
+          switch(smClosed)
+          {
+            case closedA:
+              return "closedA";
+            default:
+              return "closed";
+          }
+        case open:
+          return "open";
+        default:
+          return "default";
+      }
+  }
+
+   public String getStatusWord(String arg)
+  {
+      switch(sm)
+      {
+        case closed:
+          return "closed " + arg;
+        case open:
+          return "open " + arg;
+        default:
+          return arg;
+      }
+  }
+
+  public boolean open()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case closed:
+        exitSm();
+        setSm(Sm.open);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean shut()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case open:
+        setSm(Sm.closed);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitSm()
+  {
+    switch(sm)
+    {
+      case closed:
+        exitSmClosed();
+        break;
+    }
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case closed:
+        if (smClosed == SmClosed.Null) { setSmClosed(SmClosed.closedA); }
+        break;
+    }
+  }
+
+  private void exitSmClosed()
+  {
+    switch(smClosed)
+    {
+      case closedA:
+        setSmClosed(SmClosed.Null);
+        break;
+    }
+  }
+
+  private void setSmClosed(SmClosed aSmClosed)
+  {
+    smClosed = aSmClosed;
+    if (sm != Sm.closed && aSmClosed != SmClosed.Null) { setSm(Sm.closed); }
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "description" + ":" + getDescription()+ "]";
+  }
+}
