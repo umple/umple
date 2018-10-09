@@ -61,48 +61,73 @@ class UmpleToJava {
           for (StateMachine sm : uClass.getStateMachines())
           {
             StringBuilder smBuilder = new StringBuilder();
+            append(smBuilder, "\n  {");
     	    boolean foundMethod = traverse(method, sm, null, defaultBody, stateMap, smBuilder, 1);
-            if (foundMethod) realSb.append(smBuilder.toString());
+    	    append(smBuilder, "\n  }\n");
+    	    if (foundMethod) realSb.append(smBuilder.toString());
           }
-      
-          realSb.append("\n    }\n  }\n");
         }
     	
         // Returns true if methods were found. Do not use results of StringBuilder otherwise.
         private boolean traverse(Method method, StateMachine sm, State fromState, MethodBody defaultBody, Map<State, MethodBody> stateMap, StringBuilder builder, int depth) {
           boolean foundMethod = false;
       
-          // Handle leaf node
-          if (fromState != null && fromState.getNestedStateMachines().isEmpty())
-          {
-            MethodBody body = stateMap.getOrDefault(fromState, null);
-            foundMethod = body != null;
-    	    if (foundMethod) append(realSb, "\n          {0}", method.getMethodBody().getCodeblock().getCode());
-            return foundMethod;
-          }
-      
           // Repeat spacing based on depth
           String spacing = new String(new char[depth]).replace("\0", "    ");
       
           // Non-trivial states should have a switch case:
-          append(builder, "\n{0}{    switch({1})\n{0}    {\n", spacing, gen.translate("stateMachineOne", sm));
-
+          append(builder, "\n  {0}switch({1})", spacing, gen.translate("stateMachineOne", sm));
+          append(builder, "\n  {0}{", spacing);
+          
           // Loop over states and recurse
           for (State state : sm.getStates())
           {
             // Hierarchically set the default body based on state
             MethodBody childDefaultBody = stateMap.getOrDefault(state, defaultBody);
-            for (StateMachine nestedSm : state.getNestedStateMachines())
-            {
-              foundMethod = traverse(method, nestedSm, state, childDefaultBody, stateMap, builder, depth + 1)
-                            || foundMethod;
+            if (state.hasNestedStateMachines()) {
+            	boolean shouldPrintCaseStatement = true;
+            	for (StateMachine nestedSm : state.getNestedStateMachines())
+                {
+            	  StringBuilder childBuilder = new StringBuilder();
+            	  boolean foundChildMethod = false;
+                  foundChildMethod = traverse(method, nestedSm, state,
+                		           childDefaultBody, stateMap, childBuilder,
+                		           depth + 1) || foundChildMethod;
+                  
+                  if (foundChildMethod)
+                  {
+                	  if (shouldPrintCaseStatement)
+                	  {
+                		  append(builder, "\n  {0}  case {1}:", spacing, state.getName());
+                	  }
+                	  
+                	  append(builder, childBuilder.toString());
+                  }
+                }
             }
+            else
+            {
+            	// Handle leaf nodes
+            	MethodBody body = stateMap.getOrDefault(state, null);
+        	    if (body != null) {
+        	    	append(builder, "\n  {0}  case {1}:", spacing, state.getName());
+        	    	append(builder, "\n  {0}    {1}", spacing, body.getCodeblock().getCode());
+        	    }
+        	    foundMethod = foundMethod || body != null;
+            }
+            
           }
       
           // Output the default value and close brace
           String defaultValue = (defaultBody == null) ?
-                                gen.translate(method.getType()) : defaultBody.getCodeblock().getCode();
-          append(builder, "{0}    default:\n{1}", spacing, defaultValue);
+                                String.format("return %s;", gen.translate(method.getType()))
+                                : defaultBody.getCodeblock().getCode();
+          append(builder, "\n  {0}  default:", spacing);
+          append(builder, "\n  {0}    {1}", spacing, defaultValue);
+          
+          // Close the switch statement
+          append(builder, "\n  {0}}", spacing);
+          
           return foundMethod;
         }
     };

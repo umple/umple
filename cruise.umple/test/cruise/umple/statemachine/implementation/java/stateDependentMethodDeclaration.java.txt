@@ -1,11 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4260.b21abf3a3 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 package example;
 
-// line 2 "model.ump"
-// line 19 "model.ump"
-public class Portal
+// line 3 "../stateDependentMethodDeclaration.ump"
+public abstract class Portal
 {
 
   //------------------------
@@ -13,11 +12,10 @@ public class Portal
   //------------------------
 
   //Portal State Machines
-  private String statusWord;
-
-  //Portal State Machines
   public enum Sm { closed, open }
+  public enum SmClosed { Null, closedA }
   private Sm sm;
+  private SmClosed smClosed;
 
   //------------------------
   // CONSTRUCTOR
@@ -25,29 +23,13 @@ public class Portal
 
   public Portal()
   {
-    statusWord = "";
+    setSmClosed(SmClosed.Null);
     setSm(Sm.closed);
   }
 
   //------------------------
   // INTERFACE
   //------------------------
-
-  public boolean setStatusWord(String aStatusWord)
-  {
-    boolean wasSet = false;
-    statusWord = aStatusWord;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public String getStatusWord()
-  {
-    // line 5 "model.ump"
-    describe();
-    // END OF UMPLE BEFORE INJECTION
-    return statusWord;
-  }
 
   public String getDescription()
   {
@@ -57,6 +39,7 @@ public class Portal
   public String getSmFullName()
   {
     String answer = sm.toString();
+    if (smClosed != SmClosed.Null) { answer += "." + smClosed.toString(); }
     return answer;
   }
 
@@ -65,31 +48,41 @@ public class Portal
     return sm;
   }
 
-  public boolean describe()
+  public SmClosed getSmClosed()
   {
-    boolean wasEventProcessed = false;
-    
-    Sm aSm = sm;
-    switch (aSm)
-    {
-      case closed:
-        // line 9 "model.ump"
-        setStatusWord("closed");
-        setSm(Sm.closed);
-        wasEventProcessed = true;
-        break;
-      case open:
-        // line 13 "model.ump"
-        setStatusWord("open");
-        setSm(Sm.open);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
+    return smClosed;
   }
+
+  public String getStatusWord()
+  {
+      switch(sm)
+      {
+        case closed:
+          switch(smClosed)
+          {
+            case closedA:
+              return "closedA";
+            default:
+              return "closed";
+          }
+        case open:
+          return "open";
+        default:
+          return "default";
+      }
+  }
+
+   public String getStatusWord(String arg)
+  {
+      switch(sm)
+      {
+        case open:
+          return "open " + arg;
+        default:
+          return arg;
+      }
+  }
+
 
   public boolean open()
   {
@@ -99,6 +92,7 @@ public class Portal
     switch (aSm)
     {
       case closed:
+        exitSm();
         setSm(Sm.open);
         wasEventProcessed = true;
         break;
@@ -127,9 +121,43 @@ public class Portal
     return wasEventProcessed;
   }
 
+  private void exitSm()
+  {
+    switch(sm)
+    {
+      case closed:
+        exitSmClosed();
+        break;
+    }
+  }
+
   private void setSm(Sm aSm)
   {
     sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case closed:
+        if (smClosed == SmClosed.Null) { setSmClosed(SmClosed.closedA); }
+        break;
+    }
+  }
+
+  private void exitSmClosed()
+  {
+    switch(smClosed)
+    {
+      case closedA:
+        setSmClosed(SmClosed.Null);
+        break;
+    }
+  }
+
+  private void setSmClosed(SmClosed aSmClosed)
+  {
+    smClosed = aSmClosed;
+    if (sm != Sm.closed && aSmClosed != SmClosed.Null) { setSm(Sm.closed); }
   }
 
   public void delete()
@@ -139,7 +167,6 @@ public class Portal
   public String toString()
   {
     return super.toString() + "["+
-            "statusWord" + ":" + getStatusWord()+ "," +
             "description" + ":" + getDescription()+ "]";
   }
 }

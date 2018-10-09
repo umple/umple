@@ -1985,7 +1985,16 @@ class UmpleInternalParser
 
   private void analyzeStateDependentMethod(Token methodToken, State fromState){
     StateMachine sm = fromState.getStateMachine();
-    UmpleClass uClass = sm.getUmpleClass();
+    
+    // Make sure we retrieve the same Umple class for nested children as well
+    UmpleClass uClass = null;
+    StateMachine smRunner = sm;
+    while (uClass == null)
+    {
+      uClass = smRunner.getUmpleClass();
+      if (smRunner.getParentState() != null)
+    	  smRunner = smRunner.getParentState().getStateMachine();
+    }
 
     // Retrieve method analyzed using the method token
     Method analyzedMethod = analyzeMethod(methodToken, null, true);
