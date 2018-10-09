@@ -56,7 +56,7 @@ class UmpleToJava {
         public void traverse(Method method)
         {
           printBefore(method);
-          Map<State, MethodBody> stateMap = uClass.stateDependentMethodBodyMap.get(method);
+          Map<State, MethodBody> stateMap = uClass.getStateDependentMethodBodyMap().get(method);
           MethodBody defaultBody = stateMap.getOrDefault(null, null);
           for (StateMachine sm : uClass.getStateMachines())
           {
@@ -92,7 +92,7 @@ class UmpleToJava {
           {
             // Hierarchically set the default body based on state
             MethodBody childDefaultBody = stateMap.getOrDefault(state, defaultBody);
-            for (StateMachine nestedSm : children)
+            for (StateMachine nestedSm : state.getNestedStateMachines())
             {
               foundMethod = traverse(method, nestedSm, state, childDefaultBody, stateMap, builder, depth + 1)
                             || foundMethod;
@@ -108,7 +108,7 @@ class UmpleToJava {
     };
   
     // Generate state-dependent methods
-    for (Method method : uClass.stateDependentMethods)
+    for (Method method : uClass.getStateDependentMethods())
     {
       t.traverse(method);
     }

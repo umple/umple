@@ -964,6 +964,8 @@ class Method
     return false;
   }
 
+  depend java.util.stream.Collectors;
+
   public int hashCode() {
     // Note: this uses roughly the same rules as used above to generate a hashCode
     // so the two methods should be roughly kept in sync.
