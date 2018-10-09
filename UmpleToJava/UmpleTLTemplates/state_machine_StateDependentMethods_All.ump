@@ -84,28 +84,30 @@ class UmpleToJava {
           {
             // Hierarchically set the default body based on state
             MethodBody childDefaultBody = stateMap.getOrDefault(state, defaultBody);
+
+            boolean foundChildMethod = false;
             if (state.hasNestedStateMachines()) {
             	boolean shouldPrintCaseStatement = true;
             	for (StateMachine nestedSm : state.getNestedStateMachines())
                 {
-            	  StringBuilder childBuilder = new StringBuilder();
-            	  boolean foundChildMethod = false;
-                  foundChildMethod = traverse(method, nestedSm, state,
+            	    StringBuilder childBuilder = new StringBuilder();
+                  boolean result = traverse(method, nestedSm, state,
                 		           childDefaultBody, stateMap, childBuilder,
-                		           depth + 1) || foundChildMethod;
+                		           depth + 1);
                   
-                  if (foundChildMethod)
+                  if (result)
                   {
+                    foundChildMethod = true;
                 	  if (shouldPrintCaseStatement)
                 	  {
                 		  append(builder, "\n  {0}  case {1}:", spacing, state.getName());
                 	  }
-                	  
                 	  append(builder, childBuilder.toString());
                   }
                 }
             }
-            else
+            
+            if (!foundChildMethod)
             {
             	// Handle leaf nodes
             	MethodBody body = stateMap.getOrDefault(state, null);
@@ -137,7 +139,5 @@ class UmpleToJava {
     {
       t.traverse(method);
     }
-  }
-#>>
-!>>
+  }#>>!>>
 }

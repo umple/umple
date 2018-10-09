@@ -3307,8 +3307,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       // unimplemented methods
       if(!uClass.hasMethod(aMethod)) 
       {
-        //Issue 567
-    	if(shouldAddMethod)
+        //Issue 567 and 1351
+    	if(shouldAddMethod && !uClass.getStateDependentMethods().contains(aMethod))
           uClass.addUnimplementedMethod(aMethod);
       }
     }

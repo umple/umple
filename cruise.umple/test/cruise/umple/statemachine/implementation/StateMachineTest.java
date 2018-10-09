@@ -308,13 +308,6 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("nestedStates.ump",languagePath + "/nestedStates."+ languagePath +".txt","LightFixture");
   }
 
-  // Issue #1351
-  @Test
-  public void stateDependentMethodDeclaration()
-  {
-    assertUmpleTemplateFor("stateDependentMethodDeclaration.ump",languagePath + "/stateDependentMethodDeclaration."+ languagePath +".txt","Portal");
-  }
-
   @Test
   public void nestedStates_exitInnerBeforeOutter()
   {

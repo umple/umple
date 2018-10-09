@@ -4,7 +4,7 @@
 package example;
 
 // line 3 "../stateDependentMethodDeclaration.ump"
-public abstract class Portal
+public class Portal
 {
 
   //------------------------
@@ -76,13 +76,14 @@ public abstract class Portal
   {
       switch(sm)
       {
+        case closed:
+          return "closed " + arg;
         case open:
           return "open " + arg;
         default:
           return arg;
       }
   }
-
 
   public boolean open()
   {

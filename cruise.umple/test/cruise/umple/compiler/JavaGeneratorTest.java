@@ -1325,6 +1325,7 @@ public class JavaGeneratorTest
     String actual = model.getGeneratedCode().get("X");
     File generatedFile = new File(pathToInput+"X.java");
     generatedFile.delete();
+    UmpleModel test = model;
     File expected = new File(pathToInput + "ConstraintX.java.txt");
     SampleFileWriter.assertFileContent(expected, actual,false);
   }
