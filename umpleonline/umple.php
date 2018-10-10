@@ -221,7 +221,7 @@ $output = $dataHandle->readData('model.ump');
     &nbsp; 
     <span style="font-size: 30%">
     <a class="button2" href="javascript:Page.clickToggleAttributes()"
-      title="Show/hide attributes in class diagrams - ctrl-A">A</a>&nbsp;
+      title="Show/hide attributes in class diagrams - shift-ctrl-A">A</a>&nbsp;
     <a class="button2" href="javascript:Page.clickToggleMethods()"
       title="Show/hide methods in class diagrams - ctrl-M">M</a>&nbsp;
     </span>

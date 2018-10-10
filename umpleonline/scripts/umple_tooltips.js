@@ -61,7 +61,7 @@ ToolTips.tooltipEntries = {
   ttShowHideCanvas: ['li', "Show/Hide the diagram </br><b>Shortcut: [ctrl+d]"],
   ttShowHideTextEditor: ['li', "Show/Hide the text editor </br><b>Shortcut: [" + toggleTextEditor + "]"],
   ttShowHideLayoutEditor: ['li', "Show/Hide the layout editor"],
-  ttToggleAttributes: ['li', "Show/Hide attributes on class diagrams </br><b>Shortcut: [ctrl+a]"],
+  ttToggleAttributes: ['li', "Show/Hide attributes on class diagrams </br><b>Shortcut: [shift+ctrl+a]"],
   ttToggleMethods: ['li', "Show/Hide the methods on class diagrams </br><b>Shortcut: [ctrl+m]"],
   ttToggleActions: ['li', "Show/Hide the actions on the state diagrams"],
   ttToggleTransitionLabel: ['li', "Show/Hide the transition labels on the state diagrams"],

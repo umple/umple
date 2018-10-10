@@ -393,7 +393,7 @@ Page.initCodeMirrorEditor = function() {
           "Ctrl-Alt-N": function(cm) {Page.clickShowHideMenu()},
           "Ctrl-Shift-=": function(cm) {Page.clickButtonlarger()},
           "Ctrl-Shift--": function(cm) {Page.clickButtonSmaller()},
-          "Ctrl-A": function(cm) {Page.clickToggleAttributes()},
+          "Shift-Ctrl-A": function(cm) {Page.clickToggleAttributes()},
           "Ctrl-M": function(cm) {Page.clickToggleMethods()},
           "Ctrl-R": function(cm) {Page.clickToggleTraits()},
           "Ctrl-I": function(cm) {Page.clickToggleTransitionLabels()},
