@@ -2117,7 +2117,7 @@ Mousetrap.bind(['ctrl+n', 'ctrl+alt+n'], function(e){
 });
 
 // Functions for changing what is shown on the diagram
-Mousetrap.bind(['ctrl+a'], function(e){
+Mousetrap.bind(['shift+ctrl+a'], function(e){
   Page.clickToggleAttributes();
   return false; //equivalent to e.preventDefault();
 });
