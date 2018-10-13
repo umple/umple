@@ -3062,6 +3062,12 @@ public class UmpleParserTest
   {
     assertHasNoWarningsParse("701_validAttributeName.ump");
   }
+  
+  //Issue 775
+  @Test
+  public void validCodeInjection() {
+	  assertHasNoWarningsParse("702_validCodeInjection.ump");
+  }
 
   public boolean parse(String filename)
   {
