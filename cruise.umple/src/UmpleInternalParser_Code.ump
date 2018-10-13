@@ -348,7 +348,9 @@ class UmpleInternalParser
     if (getParseResult().getWasSuccess())
     {
       applyTraits();
-    }    
+      //Issue 686
+     checkCodeInjections();
+    } 
     
     if (getParseResult().getWasSuccess())
     {

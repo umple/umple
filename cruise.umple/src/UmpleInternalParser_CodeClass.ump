@@ -458,8 +458,6 @@ class UmpleInternalParser
       //Issue 610
       checkAssociationClassKeys();
 
-      //Issue 686
-      checkCodeInjections();
       //issue 841
       checkSingletonParent();
       // this method sets the isDistributed flag for classes.
