@@ -192,6 +192,49 @@ class JsonMixedGenerator
       String implementedInterfaces = "";
       boolean isAbstract = false;
 
+	//Fix for issue #911 - UmpleOnline in Editable diagram mode was not displaying methods for interfaces
+	  for(Method method : aInterface.getMethods())
+      {
+      	if (method.getSource() == Method.Source.fAutoAPI)
+      	  continue;
+
+        if(jsonForMethods.length() > 0)
+        {
+          jsonForMethods += ", ";
+        }
+        String methodModifier = method.getModifier();
+        String methodReturnType = method.getType();
+
+        String visibility="";
+        if(methodModifier.matches(".*public.*"))
+          visibility = "public";
+        else if(methodModifier.matches(".*private.*"))
+          visibility = "private";
+        else if(methodModifier.matches(".*protected.*"))
+          visibility = "protected";
+
+        String methodParams = "";
+        for(MethodParameter param : method.getMethodParameters())
+        {
+          if(methodParams.length() > 0)
+          {
+            methodParams += ",";
+          }
+          methodParams += param.getFullType().trim();
+		}
+                 
+        jsonForMethods += StringFormatter.format(
+          "{ {0}type{0} : {0}{1}{0}, {0}name{0} : {0}{2}{0}, " +
+          "{0}parameters{0} : {0}{3}{0}, {0}visibility{0} : {0}{4}{0}, {0}isAbstract{0} : {0}{5}{0}}",
+          "\"",
+          methodReturnType,
+          method.getName(),
+          methodParams,
+          visibility,
+          method.getIsAbstract());
+      }
+		//End of fix
+
       if (!isFirst)
       {
         jsonForClasses += ", ";
