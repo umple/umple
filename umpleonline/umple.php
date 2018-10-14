@@ -571,8 +571,8 @@ $output = $dataHandle->readData('model.ump');
       "<?php echo $generateDefault ?>"
       ); //
   </script>
+  <div class="visitors-count" align="right">
+      <?php include "counter.php"; ?>
+  </div>
 </body>
-	<div class="visitors-count" align="right">
-			<?php include "counter.php"; ?>
-	</div>
 </html>
