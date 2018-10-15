@@ -9,10 +9,14 @@ http://justintadlock.com/web-design/counter
 //opens countlog.txt to read the number of hits
 $dir = dirname(__FILE__);
 $logpath = $dir."/countlog.txt";
+if(!file_exists($logpath)){
+	$log = fopen($logpath,"w");
+	fwrite($log, 0);
+	fclose($log);
+}
 if(!is_writable($logpath)||!is_readable($logpath)) {
 	chmod($logpath, 0755);
 }
-
 $log = fopen($logpath, "r");
 $count = fgets($log,1000);
 fclose($log);
