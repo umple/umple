@@ -41,4 +41,16 @@ public class JavaStateMachineTemplateTest extends StateMachineTest
   {
     assertUmpleTemplateFor("stateDependentMethodDeclaration.ump",languagePath + "/stateDependentMethodDeclaration."+ languagePath +".txt","Portal");
   }
+
+  @Test
+  public void stateDependentMethodDeclaration_2()
+  {
+    assertUmpleTemplateFor("stateDependentMethodDeclaration_2.ump",languagePath + "/stateDependentMethodDeclaration_2."+ languagePath +".txt","X");
+  }
+
+  @Test
+  public void stateDependentMethodDeclaration_3()
+  {
+    assertUmpleTemplateFor("stateDependentMethodDeclaration_3.ump",languagePath + "/stateDependentMethodDeclaration_3."+ languagePath +".txt","MultipleTopLevel");
+  }
 }

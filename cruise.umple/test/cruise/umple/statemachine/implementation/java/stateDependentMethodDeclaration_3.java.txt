@@ -1,0 +1,443 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+package example;
+
+// line 3 "../stateDependentMethodDeclaration_3.ump"
+public class MultipleTopLevel
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //MultipleTopLevel State Machines
+  public enum SystemA { stateA1, stateA2, stateA3 }
+  public enum SystemAStateA1 { Null, stateA11, stateA12, stateA13 }
+  public enum SystemAStateA1StateA12 { Null, stateA121, stateA122, stateA123 }
+  private SystemA systemA;
+  private SystemAStateA1 systemAStateA1;
+  private SystemAStateA1StateA12 systemAStateA1StateA12;
+  public enum SystemB { stateB1, stateB2, stateB3 }
+  public enum SystemBStateB2 { Null, stateB21, stateB22 }
+  public enum SystemBStateB2StateB21 { Null, stateB211, stateB212, stateB213 }
+  private SystemB systemB;
+  private SystemBStateB2 systemBStateB2;
+  private SystemBStateB2StateB21 systemBStateB2StateB21;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public MultipleTopLevel()
+  {
+    setSystemAStateA1(SystemAStateA1.Null);
+    setSystemAStateA1StateA12(SystemAStateA1StateA12.Null);
+    setSystemA(SystemA.stateA1);
+    setSystemBStateB2(SystemBStateB2.Null);
+    setSystemBStateB2StateB21(SystemBStateB2StateB21.Null);
+    setSystemB(SystemB.stateB1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSystemAFullName()
+  {
+    String answer = systemA.toString();
+    if (systemAStateA1 != SystemAStateA1.Null) { answer += "." + systemAStateA1.toString(); }
+    if (systemAStateA1StateA12 != SystemAStateA1StateA12.Null) { answer += "." + systemAStateA1StateA12.toString(); }
+    return answer;
+  }
+
+  public String getSystemBFullName()
+  {
+    String answer = systemB.toString();
+    if (systemBStateB2 != SystemBStateB2.Null) { answer += "." + systemBStateB2.toString(); }
+    if (systemBStateB2StateB21 != SystemBStateB2StateB21.Null) { answer += "." + systemBStateB2StateB21.toString(); }
+    return answer;
+  }
+
+  public SystemA getSystemA()
+  {
+    return systemA;
+  }
+
+  public SystemB getSystemB()
+  {
+    return systemB;
+  }
+
+  public SystemAStateA1 getSystemAStateA1()
+  {
+    return systemAStateA1;
+  }
+
+  public SystemAStateA1StateA12 getSystemAStateA1StateA12()
+  {
+    return systemAStateA1StateA12;
+  }
+
+  public SystemBStateB2 getSystemBStateB2()
+  {
+    return systemBStateB2;
+  }
+
+  public SystemBStateB2StateB21 getSystemBStateB2StateB21()
+  {
+    return systemBStateB2StateB21;
+  }
+
+  public String getStatus()
+  {
+    switch(systemB)
+    {
+      case stateB2:
+        switch(systemBStateB2)
+        {
+          case stateB21:
+            switch(systemBStateB2StateB21)
+            {
+              case stateB211:
+                return "B211";
+              case stateB212:
+                return "B212";
+              case stateB213:
+                return "B213";
+              default:
+                return "B2";
+            }
+          case stateB22:
+            return "B22";
+          default:
+            return "B2";
+        }
+      case stateB3:
+        return "B3";
+      default:
+        switch(systemA)
+        {
+          case stateA1:
+            switch(systemAStateA1)
+            {
+              case stateA11:
+                return "A11";
+              case stateA12:
+                switch(systemAStateA1StateA12)
+                {
+                  case stateA121:
+                    return "A121";
+                  case stateA123:
+                    return "A123";
+                  default:
+                    return "A12";
+                }
+              default:
+                return "A1";
+            }
+          case stateA2:
+            return "A2";
+          default:
+            return "";
+        }
+    }
+  }
+
+  public boolean next()
+  {
+    boolean wasEventProcessed = false;
+    
+    SystemA aSystemA = systemA;
+    SystemB aSystemB = systemB;
+    switch (aSystemA)
+    {
+      case stateA1:
+        exitSystemA();
+        setSystemA(SystemA.stateA2);
+        wasEventProcessed = true;
+        break;
+      case stateA2:
+        setSystemA(SystemA.stateA3);
+        wasEventProcessed = true;
+        break;
+      case stateA3:
+        setSystemA(SystemA.stateA1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSystemB)
+    {
+      case stateB1:
+        setSystemB(SystemB.stateB3);
+        wasEventProcessed = true;
+        break;
+      case stateB2:
+        exitSystemB();
+        setSystemB(SystemB.stateB1);
+        wasEventProcessed = true;
+        break;
+      case stateB3:
+        setSystemB(SystemB.stateB2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean nextSub()
+  {
+    boolean wasEventProcessed = false;
+    
+    SystemAStateA1 aSystemAStateA1 = systemAStateA1;
+    SystemBStateB2 aSystemBStateB2 = systemBStateB2;
+    switch (aSystemAStateA1)
+    {
+      case stateA11:
+        exitSystemAStateA1();
+        setSystemAStateA1(SystemAStateA1.stateA12);
+        wasEventProcessed = true;
+        break;
+      case stateA12:
+        exitSystemAStateA1();
+        setSystemAStateA1(SystemAStateA1.stateA13);
+        wasEventProcessed = true;
+        break;
+      case stateA13:
+        exitSystemAStateA1();
+        setSystemAStateA1(SystemAStateA1.stateA11);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSystemBStateB2)
+    {
+      case stateB21:
+        exitSystemBStateB2();
+        setSystemBStateB2(SystemBStateB2.stateB22);
+        wasEventProcessed = true;
+        break;
+      case stateB22:
+        exitSystemBStateB2();
+        setSystemBStateB2(SystemBStateB2.stateB21);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean nextSubSub()
+  {
+    boolean wasEventProcessed = false;
+    
+    SystemAStateA1StateA12 aSystemAStateA1StateA12 = systemAStateA1StateA12;
+    SystemBStateB2StateB21 aSystemBStateB2StateB21 = systemBStateB2StateB21;
+    switch (aSystemAStateA1StateA12)
+    {
+      case stateA121:
+        exitSystemAStateA1StateA12();
+        setSystemAStateA1StateA12(SystemAStateA1StateA12.stateA122);
+        wasEventProcessed = true;
+        break;
+      case stateA122:
+        exitSystemAStateA1StateA12();
+        setSystemAStateA1StateA12(SystemAStateA1StateA12.stateA123);
+        wasEventProcessed = true;
+        break;
+      case stateA123:
+        exitSystemAStateA1StateA12();
+        setSystemAStateA1StateA12(SystemAStateA1StateA12.stateA121);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSystemBStateB2StateB21)
+    {
+      case stateB211:
+        exitSystemBStateB2StateB21();
+        setSystemBStateB2StateB21(SystemBStateB2StateB21.stateB212);
+        wasEventProcessed = true;
+        break;
+      case stateB212:
+        exitSystemBStateB2StateB21();
+        setSystemBStateB2StateB21(SystemBStateB2StateB21.stateB213);
+        wasEventProcessed = true;
+        break;
+      case stateB213:
+        exitSystemBStateB2StateB21();
+        setSystemBStateB2StateB21(SystemBStateB2StateB21.stateB211);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitSystemA()
+  {
+    switch(systemA)
+    {
+      case stateA1:
+        exitSystemAStateA1();
+        break;
+    }
+  }
+
+  private void setSystemA(SystemA aSystemA)
+  {
+    systemA = aSystemA;
+
+    // entry actions and do activities
+    switch(systemA)
+    {
+      case stateA1:
+        if (systemAStateA1 == SystemAStateA1.Null) { setSystemAStateA1(SystemAStateA1.stateA11); }
+        break;
+    }
+  }
+
+  private void exitSystemB()
+  {
+    switch(systemB)
+    {
+      case stateB2:
+        exitSystemBStateB2();
+        break;
+    }
+  }
+
+  private void setSystemB(SystemB aSystemB)
+  {
+    systemB = aSystemB;
+
+    // entry actions and do activities
+    switch(systemB)
+    {
+      case stateB2:
+        if (systemBStateB2 == SystemBStateB2.Null) { setSystemBStateB2(SystemBStateB2.stateB21); }
+        break;
+    }
+  }
+
+  private void exitSystemAStateA1()
+  {
+    switch(systemAStateA1)
+    {
+      case stateA11:
+        setSystemAStateA1(SystemAStateA1.Null);
+        break;
+      case stateA12:
+        exitSystemAStateA1StateA12();
+        setSystemAStateA1(SystemAStateA1.Null);
+        break;
+      case stateA13:
+        setSystemAStateA1(SystemAStateA1.Null);
+        break;
+    }
+  }
+
+  private void setSystemAStateA1(SystemAStateA1 aSystemAStateA1)
+  {
+    systemAStateA1 = aSystemAStateA1;
+    if (systemA != SystemA.stateA1 && aSystemAStateA1 != SystemAStateA1.Null) { setSystemA(SystemA.stateA1); }
+
+    // entry actions and do activities
+    switch(systemAStateA1)
+    {
+      case stateA12:
+        if (systemAStateA1StateA12 == SystemAStateA1StateA12.Null) { setSystemAStateA1StateA12(SystemAStateA1StateA12.stateA121); }
+        break;
+    }
+  }
+
+  private void exitSystemAStateA1StateA12()
+  {
+    switch(systemAStateA1StateA12)
+    {
+      case stateA121:
+        setSystemAStateA1StateA12(SystemAStateA1StateA12.Null);
+        break;
+      case stateA122:
+        setSystemAStateA1StateA12(SystemAStateA1StateA12.Null);
+        break;
+      case stateA123:
+        setSystemAStateA1StateA12(SystemAStateA1StateA12.Null);
+        break;
+    }
+  }
+
+  private void setSystemAStateA1StateA12(SystemAStateA1StateA12 aSystemAStateA1StateA12)
+  {
+    systemAStateA1StateA12 = aSystemAStateA1StateA12;
+    if (systemAStateA1 != SystemAStateA1.stateA12 && aSystemAStateA1StateA12 != SystemAStateA1StateA12.Null) { setSystemAStateA1(SystemAStateA1.stateA12); }
+  }
+
+  private void exitSystemBStateB2()
+  {
+    switch(systemBStateB2)
+    {
+      case stateB21:
+        exitSystemBStateB2StateB21();
+        setSystemBStateB2(SystemBStateB2.Null);
+        break;
+      case stateB22:
+        setSystemBStateB2(SystemBStateB2.Null);
+        break;
+    }
+  }
+
+  private void setSystemBStateB2(SystemBStateB2 aSystemBStateB2)
+  {
+    systemBStateB2 = aSystemBStateB2;
+    if (systemB != SystemB.stateB2 && aSystemBStateB2 != SystemBStateB2.Null) { setSystemB(SystemB.stateB2); }
+
+    // entry actions and do activities
+    switch(systemBStateB2)
+    {
+      case stateB21:
+        if (systemBStateB2StateB21 == SystemBStateB2StateB21.Null) { setSystemBStateB2StateB21(SystemBStateB2StateB21.stateB211); }
+        break;
+    }
+  }
+
+  private void exitSystemBStateB2StateB21()
+  {
+    switch(systemBStateB2StateB21)
+    {
+      case stateB211:
+        setSystemBStateB2StateB21(SystemBStateB2StateB21.Null);
+        break;
+      case stateB212:
+        setSystemBStateB2StateB21(SystemBStateB2StateB21.Null);
+        break;
+      case stateB213:
+        setSystemBStateB2StateB21(SystemBStateB2StateB21.Null);
+        break;
+    }
+  }
+
+  private void setSystemBStateB2StateB21(SystemBStateB2StateB21 aSystemBStateB2StateB21)
+  {
+    systemBStateB2StateB21 = aSystemBStateB2StateB21;
+    if (systemBStateB2 != SystemBStateB2.stateB21 && aSystemBStateB2StateB21 != SystemBStateB2StateB21.Null) { setSystemBStateB2(SystemBStateB2.stateB21); }
+  }
+
+  public void delete()
+  {}
+
+}

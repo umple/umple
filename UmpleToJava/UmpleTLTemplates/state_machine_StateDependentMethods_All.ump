@@ -13,7 +13,7 @@ class UmpleToJava {
     		
         // Prints the signature for the state-dependent method
         private void printBefore(Method method) {
-          String methodModifier = method.getModifier().equals("") ? "public" : method.getModifier();
+          String methodModifier = method.getModifier().equals("") ? "public" : method.getModifier().trim();
           String methodType = method.getType();
           String methodName = method.getName();
           StringBuilder parameters = new StringBuilder();
@@ -57,34 +57,192 @@ class UmpleToJava {
         {
           printBefore(method);
           Map<State, MethodBody> stateMap = uClass.getStateDependentMethodBodyMap().get(method);
-          MethodBody defaultBody = stateMap.getOrDefault(null, null);
+          MethodBody defaultMethodBody = stateMap.getOrDefault(null, null);
+          String defaultBody = defaultMethodBody == null ?
+        		 null : defaultMethodBody.getCodeblock().getCode();
+          append(realSb, "\n  {");
+          Set<StateMachine> uniqueStateMachines = new HashSet<StateMachine>(); 
+          for (Map.Entry<State, MethodBody> entry : stateMap.entrySet()) {
+        	if (entry.getKey() == null) continue;
+            uniqueStateMachines.add(entry.getKey().getRootStateMachine());
+          }
+          int numStateMachinesFound = uniqueStateMachines.size();
+          StringBuilder smBuilder = new StringBuilder();
+          String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("before", method.getName(), method.getMethodParameters()));
+          String customAfterInjectionCode  = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("after", method.getName(), method.getMethodParameters()));
+          String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", method.getName()+"Precondition"));        
+          String customPostconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", method.getName()+"Postcondition"));
+          customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
+          if (customBeforeInjectionCode != null) {
+              addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customBeforeInjectionCode,method.getName());
+              append(realSb, "{0}\n",GeneratorHelper.doIndent(customBeforeInjectionCode, "    "));
+          }
           for (StateMachine sm : uClass.getStateMachines())
           {
-            StringBuilder smBuilder = new StringBuilder();
-            append(smBuilder, "\n  {");
-    	    boolean foundMethod = traverse(method, sm, null, defaultBody, stateMap, smBuilder, 1);
-    	    append(smBuilder, "\n  }\n");
-    	    if (foundMethod) realSb.append(smBuilder.toString());
+        	smBuilder = new StringBuilder();
+    	    boolean foundMethod = traverse(
+    	    		method, sm, null,
+    	    		defaultBody, stateMap, smBuilder,
+    	    		numStateMachinesFound);
+    	    if (foundMethod) {
+    	    	numStateMachinesFound--;
+    	    	defaultBody = smBuilder.toString();
+    	    	// make sure the spacing is correct when we insert the result as a default case
+    	    	if (numStateMachinesFound != 0) {
+    	    		defaultBody = defaultBody.replaceFirst("^\\s+", "");
+    	    	}
+    	    }
           }
+          String result = smBuilder.toString();
+
+          if(customAfterInjectionCode != null) {
+            // Do some pre-processing to handle returns not being on a new line. Doing this allows us to maintain suitable indentation.
+            String[] properMethodLines = result.split("\\n");
+            String fixedProperMethodBody = "";
+            for(int i = 0; i < properMethodLines.length; i++) {
+                if(GeneratorHelper.isValidReturnStatement(properMethodLines[i]) && !properMethodLines[i].trim().substring(0, 6).equals("return")) {
+                  String[] splitLines = properMethodLines[i].split("return", 2); 
+                  // Determine indentation of return by adding indentation amount to previous line
+                  String returnIndent = "";
+                  int j = 0;
+                  while(splitLines[0].charAt(j) == ' ') {
+                    returnIndent += " ";
+                    j++;
+                  }
+
+                  fixedProperMethodBody += returnIndent + splitLines[0].trim() + "\n";
+
+                  String[] returnLines = splitLines[1].split(";");
+                  if(returnLines.length > 1 && returnLines[1].trim().length() > 0) {
+                    fixedProperMethodBody += returnIndent + "  return " + returnLines[0].trim() + ";\n" + returnIndent + returnLines[1].trim() + "\n"; 
+                  } else {
+                    fixedProperMethodBody += returnIndent + "  return " + splitLines[1].trim() + "\n"; 
+                  }
+                } else {
+                  fixedProperMethodBody += properMethodLines[i] + "\n";
+                }
+              }
+
+              result = fixedProperMethodBody;
+
+              String properMethodIndent = "";
+              int indentIndex = 0;
+              while(indentIndex < result.length() && result.charAt(indentIndex) == ' ') {
+                properMethodIndent += " ";
+                indentIndex++;
+              }
+
+              // inject the after injection code after every return, while appropriate indentation
+              List<Integer> injectedLineNumbers = new ArrayList<Integer>();
+              for(int i = -1; (i = result.indexOf("return", i + 1)) != -1; ) {
+              	//Check if return statement is on its own line
+              	int lastChar = i - 1;
+              	while (result.charAt(lastChar) == ' ')
+              	  lastChar--;
+              	if (result.charAt(lastChar) != '\n') // If it has any non-space characters before it, it's invalid
+              	  continue;
+              
+                // determine the indentation of the return
+                String indent = "";
+                while(i >= 1 && result.charAt(--i) == ' ') {
+                  indent += " ";
+                }
+
+                // Need to determine if block has braces surrounding it. To do this, take the previous
+                // lines of code and apply some regex to remove all of the comments.
+                String[] previousLinesOfCode = result.substring(0, i+1).replaceAll("\\/\\*([\\S\\s]+?)\\*\\/", "").replaceAll("(?s)/\\*.*?\\*/", "").replaceAll("//.*$", "").split("\\n");
+                int commentLineCount = result.substring(0, i+1).split("\\n").length - previousLinesOfCode.length;
+
+                // set previousLine to be the first non-empty line
+                int previousLine = -1; 
+                for(int j = previousLinesOfCode.length - 1; j >= 0; j--) {
+                  if(previousLinesOfCode[j].trim().length() > 0) {
+                    previousLine = j;
+                    break;
+                  }
+                }
+
+                String previousLineStr = previousLinesOfCode[previousLine].trim();
+
+                // Need to subtract the number of lines of comments between the return and the previous line of code
+                while(!result.split("\\n")[previousLine + commentLineCount].trim().equals(previousLineStr)) {
+                  commentLineCount--;
+                }
+              
+                // If we need to, insert braces, otherwise continue as normal
+                String indentedCustomAfterInjectionCode = GeneratorHelper.doIndent("\n" + customAfterInjectionCode, indent);
+                String braceIndent = "";
+                String brace = "";
+                String braceNewLine = "";
+                if(previousLine != -1 && (previousLineStr.charAt(previousLineStr.length()-1) == ')' || (previousLineStr.length() >= 4 && previousLineStr.substring(previousLineStr.length()-4).equals("else")))) {
+                  String[] methodLines = result.split("\\n");
+                  previousLine += commentLineCount;
+
+                  // determine how indented the brace is
+                  int j = 0;
+                  while(j < methodLines[previousLine].length() && methodLines[previousLine].charAt(j) == ' ') {
+                    braceIndent += " ";
+                    j++;
+                  }
+
+                  methodLines[previousLine] = braceIndent + methodLines[previousLine].trim() + " {"; 
+
+                  // Set properMethodBody to be String.join(methodLines, "\\n")
+                  String newProperMethodBody = "";
+                  for(int k = 0; k < methodLines.length; k++) {
+                    newProperMethodBody += methodLines[k];
+                    if(k != methodLines.length - 1) {
+                      newProperMethodBody += "\n";
+                    }
+                  }
+                  result = newProperMethodBody;
+
+                  brace = "}";
+                  braceNewLine = "\n";
+                }
+
+                i += indent.length() + 1;
+                String[] returnAndRest = result.substring(i).split(";", 2);
+                injectedLineNumbers.add(result.substring(0, i).trim().split("\\n").length);
+                result = properMethodIndent + result.substring(0, i).trim() + indentedCustomAfterInjectionCode + "\n" + indent + returnAndRest[0].trim() + ";" + braceNewLine + braceIndent + brace + returnAndRest[1]; 
+                i += indentedCustomAfterInjectionCode.length() + braceIndent.length() + 7;
+              }
+
+              // if the last line isn't a return, insert the injection at the very end
+              String[] lines = result.split("\\n");
+              if(!lines[lines.length-1].contains("return")) {
+                injectedLineNumbers.add(lines.length);
+                result += GeneratorHelper.doIndent("\n" + customAfterInjectionCode, "    ");
+              }
+              
+              int javaLength = realSb.toString().split("\\n").length;
+              for (Integer line : injectedLineNumbers) {
+                addUncaughtExceptionVariables(javaLength + line,customAfterInjectionCode, method.getName());
+              }
+            }
+          realSb.append(result);
+          append(realSb, "\n  }\n");
         }
     	
         // Returns true if methods were found. Do not use results of StringBuilder otherwise.
-        private boolean traverse(Method method, StateMachine sm, State fromState, MethodBody defaultBody, Map<State, MethodBody> stateMap, StringBuilder builder, int depth) {
+        private boolean traverse(Method method, StateMachine sm, State fromState, String defaultBody, Map<State, MethodBody> stateMap, StringBuilder builder, int depth) {
           boolean foundMethod = false;
       
           // Repeat spacing based on depth
           String spacing = new String(new char[depth]).replace("\0", "    ");
       
           // Non-trivial states should have a switch case:
-          append(builder, "\n  {0}switch({1})", spacing, gen.translate("stateMachineOne", sm));
-          append(builder, "\n  {0}{", spacing);
+          append(builder, "\n{0}switch({1})", spacing, gen.translate("stateMachineOne", sm));
+          append(builder, "\n{0}{", spacing);
           
           // Loop over states and recurse
           for (State state : sm.getStates())
           {
             // Hierarchically set the default body based on state
-            MethodBody childDefaultBody = stateMap.getOrDefault(state, defaultBody);
-
+            MethodBody childDefaultMethodBody = stateMap.getOrDefault(state, null);
+            String childDefaultBody = (childDefaultMethodBody == null) ?
+            		defaultBody : childDefaultMethodBody.getCodeblock().getCode();
+            
             boolean foundChildMethod = false;
             if (state.hasNestedStateMachines()) {
             	boolean shouldPrintCaseStatement = true;
@@ -100,7 +258,7 @@ class UmpleToJava {
                     foundChildMethod = true;
                 	  if (shouldPrintCaseStatement)
                 	  {
-                		  append(builder, "\n  {0}  case {1}:", spacing, state.getName());
+                		  append(builder, "\n{0}  case {1}:", spacing, state.getName());
                 	  }
                 	  append(builder, childBuilder.toString());
                   }
@@ -112,8 +270,8 @@ class UmpleToJava {
             	// Handle leaf nodes
             	MethodBody body = stateMap.getOrDefault(state, null);
         	    if (body != null) {
-        	    	append(builder, "\n  {0}  case {1}:", spacing, state.getName());
-        	    	append(builder, "\n  {0}    {1}", spacing, body.getCodeblock().getCode());
+        	    	append(builder, "\n{0}  case {1}:", spacing, state.getName());
+        	    	append(builder, "\n{0}    {1}", spacing, body.getCodeblock().getCode());
         	    }
         	    foundMethod = foundMethod || body != null;
             }
@@ -123,12 +281,13 @@ class UmpleToJava {
           // Output the default value and close brace
           String defaultValue = (defaultBody == null) ?
                                 String.format("return %s;", gen.translate(method.getType()))
-                                : defaultBody.getCodeblock().getCode();
-          append(builder, "\n  {0}  default:", spacing);
-          append(builder, "\n  {0}    {1}", spacing, defaultValue);
+                                : defaultBody;
+
+          append(builder, "\n{0}  default:", spacing);
+          append(builder, "\n{0}    {1}", spacing, defaultValue);
           
           // Close the switch statement
-          append(builder, "\n  {0}}", spacing);
+          append(builder, "\n{0}}", spacing);
           
           return foundMethod;
         }

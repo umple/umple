@@ -1,0 +1,16 @@
+W082 Conflicting Method Modifiers
+Errors and Warnings 51-99
+noreferences
+
+@@description
+
+<h2>Umple sematic warning when do activities, exit actions, outgoing transitions, and/or nested state machines are removed by the compiler from final states.</h2>
+
+<p>
+This warning is shown when conflicting method modifiers are provided for state-dependent methods.
+</p>
+
+
+@@example
+@@source manualexamples/W082ModifierWarning.ump
+@@endexample

@@ -1,0 +1,40 @@
+namespace example;
+
+class X {
+  public static void main(String [] args) {
+    X testX = new X();
+    testX.go();
+    testX.pstatus();
+    testX.stop();
+    testX.pstatus();
+    testX.go();
+    testX.pstatus();
+    testX.stop();
+    testX.pstatus();
+    testX.stop();
+  }
+  
+  sm {
+    init {
+      void pstatus() { 
+        System.out.println("init");
+      }
+      go -> going;
+    }
+    going {
+      void pstatus() { 
+        System.out.println("going");
+      }
+      stop -> init;      
+    }
+  }
+  
+  void pstatus() {
+      System.out.println("not in a state");    
+  }
+    
+  after pstatus {
+     System.out.println("...");     
+  }
+}
+

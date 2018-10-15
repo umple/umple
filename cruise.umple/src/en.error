@@ -86,6 +86,8 @@
 80: 2, "http://manual.umple.org/?E080InvalidAbstractClassAssociation.html", The association between a class and an abstract class declared in '{0}' must be a directed association or have one end whose multiplicity lower bound is 0 ;
 81: 2, "http://manual.umple.org/?E081InvalidMultivaluedAttributeAssignment.html", Invalid multivalued attribute assignment of attribute '{1}' in class '{0}' ;
 
+82: 4, "http://manual.umple.org/?E082ConflictingMethodModifersDeclaredForStateDependentMethod.html", Found conflicting modifiers for method '{0}'. Ignoring '{1}' and using '{2}' ;
+
 # Model Constraints' Error messages
 90: 2, "http://manual.umple.org/?E090AttributeNameNotFoundConstraint.html", Attribute named {0} was not found in class {1}, as required in constraint ;
 91: 2, "http://manual.umple.org/?E091AttributeOfTypeNotFoundConstraint.html", Attribute with type {0} was not found in class {1}, as required in constraint ;

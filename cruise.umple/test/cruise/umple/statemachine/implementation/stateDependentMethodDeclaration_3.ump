@@ -1,0 +1,98 @@
+namespace example;
+
+class MultipleTopLevel {
+  systemA{
+    stateA1{
+        String getStatus() {
+            return "A1";
+        }
+        next -> stateA2;
+        stateA11{
+            String getStatus() {
+                return "A11";
+            }
+            nextSub -> stateA12;
+        }
+        stateA12{
+            String getStatus() {
+                return "A12";
+            }
+            nextSub -> stateA13;
+            stateA121{
+                String getStatus() {
+                    return "A121";
+                }
+                nextSubSub -> stateA122;
+            }
+            stateA122{
+                nextSubSub -> stateA123;
+            }
+            stateA123{
+                String getStatus() {
+                    return "A123";
+                }
+                nextSubSub -> stateA121;
+            }
+        }
+        stateA13{
+            nextSub -> stateA11;
+        }
+    }
+    
+    stateA2{
+        String getStatus() {
+            return "A2";
+        }
+        next -> stateA3;
+    }
+
+    stateA3{
+        next -> stateA1;
+    }
+  }
+
+  systemB{
+    stateB1{
+        next -> stateB3;
+    }
+    stateB2{
+        String getStatus() {
+            return "B2";
+        }
+        next -> stateB1;
+        stateB21{
+            stateB211{
+                String getStatus() {
+                    return "B211";
+                }
+                nextSubSub -> stateB212;
+            }
+            stateB212{
+                String getStatus() {
+                    return "B212";
+                }
+                nextSubSub -> stateB213;
+            }
+            stateB213{
+                String getStatus() {
+                    return "B213";
+                }
+                nextSubSub -> stateB211;
+            }
+            nextSub -> stateB22;
+        }
+        stateB22{
+            String getStatus() {
+                return "B22";
+            }
+            nextSub -> stateB21;
+        }
+    }
+    stateB3{
+        String getStatus() {
+            return "B3";
+        }
+        next -> stateB2;
+    }
+  }
+}

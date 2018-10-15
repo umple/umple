@@ -55,34 +55,34 @@ public class Portal
 
   public String getStatusWord()
   {
-      switch(sm)
-      {
-        case closed:
-          switch(smClosed)
-          {
-            case closedA:
-              return "closedA";
-            default:
-              return "closed";
-          }
-        case open:
-          return "open";
-        default:
-          return "default";
-      }
+    switch(sm)
+    {
+      case closed:
+        switch(smClosed)
+        {
+          case closedA:
+            return "closedA";
+          default:
+            return "closed";
+        }
+      case open:
+        return "open";
+      default:
+        return "default";
+    }
   }
 
-   public String getStatusWord(String arg)
+  public String getStatusWord(String arg)
   {
-      switch(sm)
-      {
-        case closed:
-          return "closed " + arg;
-        case open:
-          return "open " + arg;
-        default:
-          return arg;
-      }
+    switch(sm)
+    {
+      case closed:
+        return "closed " + arg;
+      case open:
+        return "open " + arg;
+      default:
+        return arg;
+    }
   }
 
   public boolean open()
