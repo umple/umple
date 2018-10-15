@@ -3069,6 +3069,12 @@ public class UmpleParserTest
     assertHasWarningsParse("106_conflictingMethodModifiers.ump", 82);
   }
 
+  //Issue 775
+  @Test
+  public void validCodeInjection() {
+    assertHasNoWarningsParse("702_validCodeInjection.ump");
+  }
+
   public boolean parse(String filename)
   {
     //String input = SampleFileWriter.readContent(new File(pathToInput, filename));

@@ -151,4 +151,10 @@ public class JsonTemplateTest extends TemplateTest
     assertUmpleTemplateFor("json/AbstractClass.ump", "json/AbstractClass.json.txt");
   }
 
+  @Test
+  public void InterfaceWithMethodTest()
+  {
+    assertUmpleTemplateFor("json/InterfaceWithMethod.ump", "json/InterfaceWithMethod.json.txt");
+  }
+
 }
