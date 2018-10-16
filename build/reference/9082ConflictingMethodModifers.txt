@@ -1,0 +1,16 @@
+W082 Conflicting Method Modifiers
+Errors and Warnings 51-99
+noreferences
+
+@@description
+
+<h2>Umple semantic warning when declaring state-dependent methods with different method modifiers.</h2>
+
+<p>
+This warning is shown when conflicting method modifiers are provided for state-dependent methods. The example below illustrates this scenario by marking the method 'printState' as both public and private.
+</p>
+
+
+@@example
+@@source manualexamples/W082ConflictingModifiers.ump
+@@endexample

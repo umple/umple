@@ -3,7 +3,7 @@ namespace example;
 class Portal {
   description = {"Current status: "+getStatusWord();}
   
-  public String getStatusWord(String arg) {
+  String getStatusWord(String arg) {
     return arg;
   }
 
@@ -23,7 +23,7 @@ class Portal {
     }
   }
 
-  public String getStatusWord() {
+  String getStatusWord() {
     return "default";
   }
 }

@@ -3062,11 +3062,17 @@ public class UmpleParserTest
   {
     assertHasNoWarningsParse("701_validAttributeName.ump");
   }
-  
+ 
+  //Issue 1351
+  @Test
+  public void conflictingModifiersForStateDependentMethods() {
+    assertHasWarningsParse("106_conflictingMethodModifiers.ump", 82);
+  }
+
   //Issue 775
   @Test
   public void validCodeInjection() {
-	  assertHasNoWarningsParse("702_validCodeInjection.ump");
+    assertHasNoWarningsParse("702_validCodeInjection.ump");
   }
 
   public boolean parse(String filename)

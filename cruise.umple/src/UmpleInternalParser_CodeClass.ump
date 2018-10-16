@@ -3826,6 +3826,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             matches = true;
           }
         }
+
+        // issue #1351 - check against state-dependent methods
+        final String operationFinal = operation;
+        if (!matches && uClass.getStateDependentMethods().stream().anyMatch(
+          m -> m.getName().equals(operationFinal)))
+        {
+          matches = true;
+        }
       }
 
       // check against custom methods

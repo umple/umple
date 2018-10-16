@@ -1,0 +1,133 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+package example;
+
+// line 3 "../stateDependentMethodDeclaration_2.ump"
+public class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X State Machines
+  public enum Sm { init, going }
+  private Sm sm;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X()
+  {
+    setSm(Sm.init);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public void pstatus()
+  {
+    switch(sm)
+    {
+      case init:
+        System.out.println("init");
+      case going:
+        System.out.println("going");
+      default:
+        System.out.println("not in a state");
+    }
+    
+    // line 30 "../stateDependentMethodDeclaration_2.ump"
+    System.out.println("...");
+    // END OF UMPLE AFTER INJECTION
+  }
+
+  public String rstatus()
+  {
+    // line 38 "../stateDependentMethodDeclaration_2.ump"
+    System.out.println("Preparing to return...");
+    // END OF UMPLE BEFORE INJECTION
+
+    switch(sm)
+    {
+      case init:        
+        // line 42 "../stateDependentMethodDeclaration_2.ump"
+        pstatus();
+        // END OF UMPLE AFTER INJECTION
+        return "init";
+      case going:        
+        // line 42 "../stateDependentMethodDeclaration_2.ump"
+        pstatus();
+        // END OF UMPLE AFTER INJECTION
+        return "going";
+      default:        
+        // line 42 "../stateDependentMethodDeclaration_2.ump"
+        pstatus();
+        // END OF UMPLE AFTER INJECTION
+        return "none";
+    }
+    
+    // line 42 "../stateDependentMethodDeclaration_2.ump"
+    pstatus();
+    // END OF UMPLE AFTER INJECTION
+  }
+
+  public boolean go()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case init:
+        setSm(Sm.going);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean stop()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case going:
+        setSm(Sm.init);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+  }
+
+  public void delete()
+  {}
+
+}

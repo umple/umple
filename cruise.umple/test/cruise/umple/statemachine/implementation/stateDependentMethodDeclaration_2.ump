@@ -1,0 +1,45 @@
+namespace example;
+
+class X { 
+  sm {
+    init {
+      void pstatus() { 
+        System.out.println("init");
+      }
+      String rstatus() {
+        return "init";
+      }
+      go -> going;
+    }
+    going {
+      void pstatus() { 
+        System.out.println("going");
+      }
+      String rstatus() {
+        return "going";
+      }
+      stop -> init;      
+    }
+  }
+  
+  void pstatus() {
+      System.out.println("not in a state");    
+  }
+    
+  after pstatus {
+     System.out.println("...");     
+  }
+
+  String rstatus() {
+    return "none";
+  }
+
+  before rstatus {
+    System.out.println("Preparing to return...");
+  }
+
+  after rstatus {
+    pstatus();
+  }
+}
+

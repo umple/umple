@@ -1,0 +1,18 @@
+// The following shows how to generate the warning
+
+class ConflictingModifiers {
+  status{
+    on{
+      turnoff -> off;
+      public void printState() {
+          System.out.println("on");
+      }
+    }
+    
+    off{
+      private void printState() {
+          System.out.println("off");
+      }
+    }
+  }
+}

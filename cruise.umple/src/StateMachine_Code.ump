@@ -710,6 +710,16 @@ class State
     return concurrentRegion;
   }
  
+  /* Issue 1351
+    A helper function to obtain the root state machine
+  */
+  public StateMachine getRootStateMachine() {
+	  State runner = this;
+	  while (runner.getStateMachine().getParentState() != null) {
+		  runner = runner.getStateMachine().getParentState();
+	  }
+	  return runner.getStateMachine();
+  }
 }
 
 class Transition
