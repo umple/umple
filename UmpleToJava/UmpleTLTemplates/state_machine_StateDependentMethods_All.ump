@@ -75,9 +75,9 @@ class UmpleToJava {
           customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
           if (customBeforeInjectionCode != null) {
               addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customBeforeInjectionCode,method.getName());
-              append(realSb, "{0}\n",GeneratorHelper.doIndent(customBeforeInjectionCode, "    "));
+              append(realSb, "\n{0}\n\n",GeneratorHelper.doIndent(customBeforeInjectionCode, "    "));
           }
-          for (StateMachine sm : uClass.getStateMachines())
+          for (StateMachine sm : uniqueStateMachines)
           {
             smBuilder = new StringBuilder();
             boolean foundMethod = traverse(
@@ -127,7 +127,9 @@ class UmpleToJava {
 
               String properMethodIndent = "";
               int indentIndex = 0;
-              while(indentIndex < result.length() && result.charAt(indentIndex) == ' ') {
+              int newlineOffset = 0;
+              while(result.charAt(newlineOffset) == '\n') newlineOffset++;
+              while(indentIndex + newlineOffset < result.length() && result.charAt(indentIndex + newlineOffset) == ' ') {
                 properMethodIndent += " ";
                 indentIndex++;
               }
