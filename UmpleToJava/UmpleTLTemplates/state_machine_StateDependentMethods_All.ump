@@ -10,7 +10,7 @@ class UmpleToJava {
       }
     
       StateDependentTreeTraversal t = new StateDependentTreeTraversal() {
-    		
+
         // Prints the signature for the state-dependent method
         private void printBefore(Method method) {
           String methodModifier = method.getModifier().equals("") ? "public" : method.getModifier().trim();
@@ -59,11 +59,11 @@ class UmpleToJava {
           Map<State, MethodBody> stateMap = uClass.getStateDependentMethodBodyMap().get(method);
           MethodBody defaultMethodBody = stateMap.getOrDefault(null, null);
           String defaultBody = defaultMethodBody == null ?
-        		 null : defaultMethodBody.getCodeblock().getCode();
+             null : defaultMethodBody.getCodeblock().getCode();
           append(realSb, "\n  {");
           Set<StateMachine> uniqueStateMachines = new HashSet<StateMachine>(); 
           for (Map.Entry<State, MethodBody> entry : stateMap.entrySet()) {
-        	if (entry.getKey() == null) continue;
+          if (entry.getKey() == null) continue;
             uniqueStateMachines.add(entry.getKey().getRootStateMachine());
           }
           int numStateMachinesFound = uniqueStateMachines.size();
@@ -79,19 +79,19 @@ class UmpleToJava {
           }
           for (StateMachine sm : uClass.getStateMachines())
           {
-        	smBuilder = new StringBuilder();
-    	    boolean foundMethod = traverse(
-    	    		method, sm, null,
-    	    		defaultBody, stateMap, smBuilder,
-    	    		numStateMachinesFound);
-    	    if (foundMethod) {
-    	    	numStateMachinesFound--;
-    	    	defaultBody = smBuilder.toString();
-    	    	// make sure the spacing is correct when we insert the result as a default case
-    	    	if (numStateMachinesFound != 0) {
-    	    		defaultBody = defaultBody.replaceFirst("^\\s+", "");
-    	    	}
-    	    }
+            smBuilder = new StringBuilder();
+            boolean foundMethod = traverse(
+              method, sm, null,
+              defaultBody, stateMap, smBuilder,
+              numStateMachinesFound);
+            if (foundMethod) {
+              numStateMachinesFound--;
+              defaultBody = smBuilder.toString();
+              // make sure the spacing is correct when we insert the result as a default case
+              if (numStateMachinesFound != 0) {
+                defaultBody = defaultBody.replaceFirst("^\\s+", "");
+              }
+            }
           }
           String result = smBuilder.toString();
 
@@ -135,12 +135,12 @@ class UmpleToJava {
               // inject the after injection code after every return, while appropriate indentation
               List<Integer> injectedLineNumbers = new ArrayList<Integer>();
               for(int i = -1; (i = result.indexOf("return", i + 1)) != -1; ) {
-              	//Check if return statement is on its own line
-              	int lastChar = i - 1;
-              	while (result.charAt(lastChar) == ' ')
-              	  lastChar--;
-              	if (result.charAt(lastChar) != '\n') // If it has any non-space characters before it, it's invalid
-              	  continue;
+                //Check if return statement is on its own line
+                int lastChar = i - 1;
+                while (result.charAt(lastChar) == ' ')
+                  lastChar--;
+                if (result.charAt(lastChar) != '\n') // If it has any non-space characters before it, it's invalid
+                  continue;
               
                 // determine the indentation of the return
                 String indent = "";
@@ -223,7 +223,7 @@ class UmpleToJava {
           realSb.append(result);
           append(realSb, "\n  }\n");
         }
-    	
+
         // Returns true if methods were found. Do not use results of StringBuilder otherwise.
         private boolean traverse(Method method, StateMachine sm, State fromState, String defaultBody, Map<State, MethodBody> stateMap, StringBuilder builder, int depth) {
           boolean foundMethod = false;
@@ -241,43 +241,42 @@ class UmpleToJava {
             // Hierarchically set the default body based on state
             MethodBody childDefaultMethodBody = stateMap.getOrDefault(state, null);
             String childDefaultBody = (childDefaultMethodBody == null) ?
-            		defaultBody : childDefaultMethodBody.getCodeblock().getCode();
+                defaultBody : childDefaultMethodBody.getCodeblock().getCode();
             
             boolean foundChildMethod = false;
             if (state.hasNestedStateMachines()) {
-            	boolean shouldPrintCaseStatement = true;
-            	for (StateMachine nestedSm : state.getNestedStateMachines())
-                {
-            	    StringBuilder childBuilder = new StringBuilder();
-                  boolean result = traverse(method, nestedSm, state,
-                		           childDefaultBody, stateMap, childBuilder,
-                		           depth + 1);
+              boolean shouldPrintCaseStatement = true;
+              for (StateMachine nestedSm : state.getNestedStateMachines())
+              {
+                StringBuilder childBuilder = new StringBuilder();
+                boolean result = traverse(method, nestedSm, state,
+                                    childDefaultBody, stateMap, childBuilder,
+                                    depth + 1);
                   
                   if (result)
                   {
                     foundChildMethod = true;
-                	  if (shouldPrintCaseStatement)
-                	  {
-                		  append(builder, "\n{0}  case {1}:", spacing, state.getName());
-                	  }
-                	  append(builder, childBuilder.toString());
+                    if (shouldPrintCaseStatement)
+                    {
+                      append(builder, "\n{0}  case {1}:", spacing, state.getName());
+                    }
+                    append(builder, childBuilder.toString());
                   }
                 }
             }
             
             if (!foundChildMethod)
             {
-            	// Handle leaf nodes
-            	MethodBody body = stateMap.getOrDefault(state, null);
-        	    if (body != null) {
-        	    	append(builder, "\n{0}  case {1}:", spacing, state.getName());
-        	    	append(builder, "\n{0}    {1}", spacing, body.getCodeblock().getCode());
-        	    }
-        	    foundMethod = foundMethod || body != null;
+              // Handle leaf nodes
+              MethodBody body = stateMap.getOrDefault(state, null);
+              if (body != null) {
+                append(builder, "\n{0}  case {1}:", spacing, state.getName());
+                append(builder, "\n{0}    {1}", spacing, body.getCodeblock().getCode());
+              }
+              foundMethod = foundMethod || body != null;
             }
-            
           }
-      
+
           // Output the default value and close brace
           String defaultValue = (defaultBody == null) ?
                                 String.format("return %s;", gen.translate(method.getType()))

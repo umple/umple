@@ -1998,9 +1998,24 @@ class UmpleInternalParser
 
     // Retrieve method analyzed using the method token
     Method analyzedMethod = analyzeMethod(methodToken, null, true);
+    Method classMethod = uClass.getMethod(analyzedMethod);
+
+    // Generate warning if any of the method definitions have conflicting method modifiers
+    int methodPrototypeIndex = uClass.getStateDependentMethods().indexOf(analyzedMethod);
+    if (methodPrototypeIndex >= 0) {
+      String methodPrototypeModifier = uClass.getStateDependentMethods().get(methodPrototypeIndex)
+                                         .getModifier().trim();
+      if (!methodPrototypeModifier.equals(analyzedMethod.getModifier().trim())) {
+        setFailedPosition(methodToken.getPosition(), 82,
+          analyzedMethod.getName(), analyzedMethod.getModifier().trim(), methodPrototypeModifier);
+      }
+      if (classMethod != null && !methodPrototypeModifier.equals(classMethod.getModifier().trim())) {
+        setFailedPosition(classMethod.getPosition(), 82,
+          classMethod.getName(), classMethod.getModifier().trim(), methodPrototypeModifier);
+      }
+    }
 
     // Strip off existing method if it exists, and make it the default implementation
-    Method classMethod = uClass.getMethod(analyzedMethod);
     if (classMethod != null) {
       uClass.addStateDependentMethod(classMethod, null);
       uClass.removeMethod(classMethod);

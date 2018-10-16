@@ -4,13 +4,13 @@ noreferences
 
 @@description
 
-<h2>Umple sematic warning when do activities, exit actions, outgoing transitions, and/or nested state machines are removed by the compiler from final states.</h2>
+<h2>Umple semantic warning when declaring state-dependent methods with different method modifiers.</h2>
 
 <p>
-This warning is shown when conflicting method modifiers are provided for state-dependent methods.
+This warning is shown when conflicting method modifiers are provided for state-dependent methods. The example below illustrates this scenario by marking the method 'printState' as both public and private.
 </p>
 
 
 @@example
-@@source manualexamples/W082ModifierWarning.ump
+@@source manualexamples/W082ConflictingModifiers.ump
 @@endexample

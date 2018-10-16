@@ -3824,26 +3824,24 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         { 
           if (uClass.matchOperationMethod(operation, methodName)) {
             matches = true;
-            break;
           }
         }
-        
+
         // issue #1351 - check against state-dependent methods
         final String operationFinal = operation;
         if (!matches && uClass.getStateDependentMethods().stream().anyMatch(
-        		m -> m.getName().equals(operationFinal))) {
-        	matches = true;
+          m -> m.getName().equals(operationFinal)))
+        {
+          matches = true;
         }
       }
 
       // check against custom methods
-      if(!matches && ("all".equals(operationSource) || "custom".equals(operationSource))){
+      if("all".equals(operationSource) || "custom".equals(operationSource)){
         for(Method method : methods) 
         { 
-          if (uClass.matchOperationMethod(operation, method.getName()) && checkParameterMatch(method.getMethodParameters(), currentParameters)) {
-            matches = true;
-            break;
-          }
+          boolean tmpMatches = uClass.matchOperationMethod(operation, method.getName()) && checkParameterMatch(method.getMethodParameters(), currentParameters);
+          matches = matches || tmpMatches;
         }
       }
 
