@@ -75,7 +75,24 @@ class CodeCompiler {
     StackTraceElement ust;
     String javaFileName;
     int javaLineNumber;
-    String lineParts[] = line.split(":",3);
+    String lineParts[] = null;
+    if(File.separator.equals("\\")) {
+    	// Windows System
+    	String tempLineParts[] = line.split(":", 4);
+    	if(tempLineParts.length == 4) {
+    		lineParts = new String[3];
+    		lineParts[0] = tempLineParts[0] + ":" + tempLineParts[1];
+    		lineParts[1] = tempLineParts[2];
+    		lineParts[2] = tempLineParts[3];
+    	} else {
+    		lineParts = line.split(":",3);
+    	}
+    }
+    
+    else {
+    	// Mac or Linux
+    	lineParts = line.split(":",3);
+    }
     
     // Case 1: No colons so nothing to translate
     if(lineParts.length < 3) {
@@ -107,7 +124,9 @@ class CodeCompiler {
         "",
         javaFile,
         Integer.parseInt(lineParts[1])),  "");
+    
     // System.err.println("*"+lineParts[0]+"*"); // Debug
+    
     if(ust==null) {
       return line;
     }

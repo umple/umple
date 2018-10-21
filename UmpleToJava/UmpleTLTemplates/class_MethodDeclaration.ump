@@ -1,5 +1,6 @@
 class UmpleToJava {
     class_MethodDeclaration <<!<</*class_MethodDeclaration*/>><<#
+
     if (uClass.hasMethods())
     {
       boolean hasQueued = false;

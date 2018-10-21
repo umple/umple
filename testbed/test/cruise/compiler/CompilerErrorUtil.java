@@ -43,7 +43,7 @@ public class CompilerErrorUtil
 		int line = 0;
 		while (error != null && expected != null) {
 			line++;
-			Assert.assertEquals("Failed at: " + line, expected, error);
+			Assert.assertEquals("Failed at: " + line, expected.trim(), error.trim());
 			error = actualReader.readLine();
 			expected = expectedReader.readLine();
 		}
