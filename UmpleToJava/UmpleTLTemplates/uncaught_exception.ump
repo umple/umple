@@ -3,6 +3,7 @@ class UmpleToJava {
 java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0|1|2|3|4|5|6|7|8|9]*) \"(.*)\"");
 private void addUncaughtExceptionVariables(int javaline, String code, String methodname)
 {
+
   String[] lines = code.split("\\n");
   java.util.regex.Matcher matcher = lineNumberPattern.matcher(lines[0]);
   if(matcher.matches())

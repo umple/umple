@@ -83,12 +83,14 @@ class ExceptionDumper {
   depend java.io.*;
   depend java.nio.file.Path;
   depend java.nio.file.Paths;
+  depend java.nio.file.InvalidPathException;
 
   public static String dumpCompilerError(Throwable ex) {
     String generatedMessage = "";
     String exceptionMessage = "";
     String generatedSourcePath = System.getenv("GeneratedSourcePath");
     String sourcePathType="GeneratedSourcePath that has been set to ";
+    
     if (generatedSourcePath == null) {
       String homedir = System.getenv("HOME");
       if(homedir != null &&
@@ -132,22 +134,36 @@ class ExceptionDumper {
     // Translate the java stack trace line information into the corresponding Umple line
     public static StackTraceElement javaToUmpleStackTrace(StackTraceElement javaStack, String generatedSourcePath) {
       int javaLineNumber = javaStack.getLineNumber();
-      Path pathToJavaFile = Paths.get(generatedSourcePath + 
+      Path pathToJavaFile;
+      
+      try {
+      	pathToJavaFile = Paths.get(generatedSourcePath + 
                                      javaStack.getClassName().replace('.',File.separatorChar) + ".java");
-
+      } catch (InvalidPathException ipe) {
+      	pathToJavaFile = null;
+      }
+      
       Scanner sc = null;
       try {
-        sc = new Scanner(new BufferedReader(new FileReader(pathToJavaFile.toFile())));
+      	if(pathToJavaFile != null) {
+        	sc = new Scanner(new BufferedReader(new FileReader(pathToJavaFile.toFile())));
+        }
       }
       catch (FileNotFoundException fne) {
         sc = null;
       }
-      
+     
       if(sc == null) {
         // Try opening using just the natural hierarchy from package names
-        pathToJavaFile = Paths.get(javaStack.getClassName().replace('.',File.separatorChar) + ".java");
         try {
-          sc = new Scanner(new BufferedReader(new FileReader(pathToJavaFile.toFile())));
+        	pathToJavaFile = Paths.get(javaStack.getClassName().replace('.',File.separatorChar) + ".java");
+        } catch (InvalidPathException ipe) {
+      		pathToJavaFile = null;
+      	}
+        try {
+        	if(pathToJavaFile != null) {
+          		sc = new Scanner(new BufferedReader(new FileReader(pathToJavaFile.toFile())));
+          	}
         }
         catch (FileNotFoundException fne) {
           sc = null;
@@ -157,10 +173,17 @@ class ExceptionDumper {
       if(sc == null) {
         // Try opening using just the plain file name
         int classNameStart = javaStack.getClassName().lastIndexOf('.')+1;
-        pathToJavaFile = Paths.get(generatedSourcePath + 
-                                   javaStack.getClassName().substring(classNameStart)+".java");
+        
         try {
-          sc = new Scanner(new BufferedReader(new FileReader(pathToJavaFile.toFile())));
+        	pathToJavaFile = Paths.get(generatedSourcePath + 
+                                   javaStack.getClassName().substring(classNameStart)+".java");
+        } catch (InvalidPathException ipe) {
+      		pathToJavaFile = null;
+      	}
+        try {
+        	if(pathToJavaFile != null) {
+          		sc = new Scanner(new BufferedReader(new FileReader(pathToJavaFile.toFile())));
+          	}
         }
         catch (FileNotFoundException fne) {
             sc = null;
@@ -170,9 +193,15 @@ class ExceptionDumper {
       if(sc == null) {
         // The above doesn't work for relative paths in the className, 
         //  so use the actual fileNmae attribute of javaStack
-        pathToJavaFile = Paths.get(generatedSourcePath + javaStack.getFileName());
         try {
-          sc = new Scanner(new BufferedReader(new FileReader(pathToJavaFile.toFile())));
+        	pathToJavaFile = Paths.get(generatedSourcePath + javaStack.getFileName());
+        } catch (InvalidPathException ipe) {
+      		pathToJavaFile = null;
+      	}
+        try {
+        	if(pathToJavaFile != null) {
+          		sc = new Scanner(new BufferedReader(new FileReader(pathToJavaFile.toFile())));
+          	}
         }
         catch (FileNotFoundException fne) {
           return null;          
