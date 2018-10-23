@@ -131,3 +131,5 @@ class Main {
     }
   }
 }
+
+// @@@skipphpcompile - See #1351. State-dependent methods are exclusive to Java generation.
