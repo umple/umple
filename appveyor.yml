@@ -59,4 +59,5 @@ test_script:
 
 artifacts:
 
-  path: dist
+  path: dist\umple.jar
+  path: dist\qa
