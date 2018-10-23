@@ -1,5 +1,7 @@
 version: 1.26.0-{build}-{branch}
 
+skip_branch_with_pr: true
+
 clone_depth: 5
 
 platform:
@@ -54,3 +56,7 @@ test_script:
 
 - cmd: ant -f build.testbed.xml -Dfirst.build=false -Dmyenv=appveyor
 - cmd: ant -f build.exampletests.xml allUserManualAndExampleTests -Dmyenv=appveyor
+
+artifacts:
+
+  path: dist
