@@ -59,5 +59,8 @@ test_script:
 
 artifacts:
 
-  path: dist\umple.jar
-  path: dist\qa
+# built compiler
+- path: dist\umple.jar
+
+# html test results
+- path: dist\qa
