@@ -15,7 +15,7 @@
   <property name="ivyResolveLogLevel" value="default" />
   <property name="junit" value="*Test"/> 
   <property name="rake_cmd" value="rake.bat"/>  
-  <property name="excludeCompilerErrorOutput" value="true"/>  
+  <property name="excludeCompilerErrorOutput" value="false"/>  
 
   <property name="online" value="true" />
    
