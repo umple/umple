@@ -1,5 +1,7 @@
 version: 1.26.0-{build}-{branch}
 
+skip_branch_with_pr: true
+
 clone_depth: 5
 
 platform:
@@ -48,9 +50,17 @@ build_script:
 - ps: cd build
 
 - cmd: ant first-build
-- cmd: ant -f build.umple.xml -Dfirst.build=false
+- cmd: ant -f build.umple.xml -Dfirst.build=false -Dmyenv=appveyor
 
 test_script:
 
-- cmd: ant -f build.testbed.xml -Dfirst.build=false
-- cmd: ant -f build.exampletests.xml allUserManualAndExampleTests
+- cmd: ant -f build.testbed.xml -Dfirst.build=false -Dmyenv=appveyor
+- cmd: ant -f build.exampletests.xml allUserManualAndExampleTests -Dmyenv=appveyor
+
+artifacts:
+
+# built compiler
+- path: dist\umple.jar
+
+# html test results
+- path: dist\qa

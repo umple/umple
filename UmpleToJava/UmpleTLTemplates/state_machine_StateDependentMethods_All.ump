@@ -75,7 +75,7 @@ class UmpleToJava {
           customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
           if (customBeforeInjectionCode != null) {
               addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customBeforeInjectionCode,method.getName());
-              append(realSb, "\n{0}\n\n",GeneratorHelper.doIndent(customBeforeInjectionCode, "    "));
+              append(realSb, "\n{0}\n",GeneratorHelper.doIndent(customBeforeInjectionCode, "    "));
           }
           for (StateMachine sm : uniqueStateMachines)
           {
@@ -221,6 +221,7 @@ class UmpleToJava {
               for (Integer line : injectedLineNumbers) {
                 addUncaughtExceptionVariables(javaLength + line,customAfterInjectionCode, method.getName());
               }
+              realSb.append("\n");
             }
           realSb.append(result);
           append(realSb, "\n  }\n");
@@ -274,15 +275,23 @@ class UmpleToJava {
               if (body != null) {
                 append(builder, "\n{0}  case {1}:", spacing, state.getName());
                 append(builder, "\n{0}    {1}", spacing, body.getCodeblock().getCode());
+
+                // Implicit return for void
+                if (method.getType().equals("void")) {
+                  append(builder, "\n{0}    return;", spacing);
+                }
               }
               foundMethod = foundMethod || body != null;
             }
           }
 
+          String defaultTypeValue = gen.translate(method.getType());
+
           // Output the default value and close brace
           String defaultValue = (defaultBody == null) ?
-                                String.format("return %s;", gen.translate(method.getType()))
-                                : defaultBody;
+                            defaultTypeValue.isEmpty() ?
+                              "return;" : String.format("return %s;", defaultTypeValue) :
+                            defaultBody;
 
           append(builder, "\n{0}  default:", spacing);
           append(builder, "\n{0}    {1}", spacing, defaultValue);
