@@ -126,7 +126,9 @@ class DataHandle extends ReadOnlyDataHandle{
     Copy all information from another readable data object.
     */
     function cloneFrom($other){
-        copy($other->root.'/model.ump', $this->root.'/model.ump');
+        foreach (glob($other->root.'/*.ump') as $umpFile) {
+            copy($umpFile, $this->root."/".basename($umpFile));
+        }
     }
 }
 

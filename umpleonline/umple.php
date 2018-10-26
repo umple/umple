@@ -196,6 +196,7 @@ $output = $dataHandle->readData('model.ump');
           
   <input id="filename" type="hidden" value="<?php echo '../ump/'.$dataHandle->getName().'/model.ump' ?>" />
   <input id="advancedMode" type="hidden" value="0" />
+  <input id="model" type="hidden" value="<?php echo $dataHandle->getName()?>" />
 
   <div id="topLine" class="bookmarkableUrl">
     <span id="linetext">Line=<input size=2 id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
@@ -236,15 +237,26 @@ $output = $dataHandle->readData('model.ump');
     <?php if (isBookmark($dataHandle)) { ?>
       <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
     <?php } else { ?>
-      <a class="button2" id="topBookmarkable" href="bookmark.php?model=<?php echo $dataHandle->getName() ?>" title="Create a URL fpr this model that will allow you to come back and edit again. The URL will persist for a year after its last edit.">Create Bookmarkable URL</a>
+      <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that will allow you to come back and edit again. The URL will persist for a year after its last edit.">Create Bookmarkable URL</a>
     <?php } ?>
 
+    </span>
+
+    <span style="font-size: 30%; white-space:nowrap;">  
+    <a class="button2" href="javascript:Page.downloadAllTabFiles()" title="Download Ump files">Download files</a>
     </span>
     
     <span id="restorecode" >&nbsp; &nbsp; <a href="#"> Restore Saved State</a></span>
 
     &nbsp; &nbsp;<span id=exampleMessage><?php echo $messageURL ?></span> <span id=feedbackMessage></span>
   </div>
+
+  <div id="tabControl">
+    <ul id="tabs" class="tabrow">
+      <li id="createTabBtn"><a href="javascript:Page.createTab();">+</a></li>
+    </ul>
+  </div>
+
   <div id="mainApplication" class="row"> 
     <div id="textEditorColumn"  tabIndex="2"  class="inRow"> 
       <div id="topTextEditor">
