@@ -128,7 +128,12 @@ Action.clicked = function(event)
         Page.setUmpleCode(textToLoad);
       }
     }
-  }    
+  }
+  else if (action == "DownloadFiles")
+  {
+    TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+    window.location.href = "scripts/tab_control.php?download=1&&model=" + Page.getModel();
+  }
   else if (action == "Undo")
   {
     Action.undo();
@@ -279,9 +284,8 @@ Action.redoOrUndo = function(isUndo)
     Page.enableDiagram(false);
   }
   
-  if (isUndo) afterHistoryChange = History.getPreviousVersion();
-  else afterHistoryChange = History.getNextVersion();
-  
+  if (isUndo) afterHistoryChange = TabControl.getCurrentHistory().getPreviousVersion();
+  else afterHistoryChange = TabControl.getCurrentHistory().getNextVersion();
   if (afterHistoryChange == History.noChange)
   {
     afterHistoryChange = "";
@@ -309,7 +313,7 @@ Action.loadFile = function()
 Action.loadFileCallback = function(response)
 {
   Action.freshLoad = true;
-  History.save(response.responseText,"loadFileCallback");
+  TabControl.getCurrentHistory().save(response.responseText,"loadFileCallback");
   Page.setUmpleCode(response.responseText);
   if (!Action.manualSync) Action.updateUmpleDiagram();
 }
@@ -908,7 +912,7 @@ Action.umpleCanvasClicked = function(event)
 // such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
 {
-  History.save(response.responseText, "TextCallback");
+  TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
   Action.freshLoad = true;
 
   Page.setUmpleCode(response.responseText);
@@ -1004,7 +1008,7 @@ Action.loadExampleCallback = function(response)
   Action.freshLoad = true;
   Page.setUmpleCode(response.responseText);
   Page.hideLoading();
-  History.save(response.responseText, "loadExampleCallback");
+  TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
   Action.updateUmpleDiagram();
   Action.setCaretPosition("0");
   Action.updateLineNumberDisplay();
@@ -1476,7 +1480,7 @@ Action.processTyping = function(target, manuallySynchronized)
   // Save in history after a pause in typing
   if (target != "diagramEdit") 
   {
-    History.save(Page.getUmpleCode(), "processTyping");
+    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
   }
   Page.setExampleMessage("");
   
@@ -1962,7 +1966,7 @@ Action.ajax = function(callback,post,errors)
   var filename = Page.getFilename();
   // var errors = typeof(errors) != 'undefined' ? errors : "false";
   var errors = "true";
-  
+  TabControl.useActiveTabTo(TabControl.saveTab)(umpleCode);
   Ajax.sendRequest("scripts/compiler.php",callback,format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
 }
 

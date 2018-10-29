@@ -24,6 +24,7 @@ Page.hLine = null;
 Page.modelLoadingCount = 0;
 Page.layoutLoadingCount = 0;
 Page.canvasLoadingCount = 0;
+Page.onLoadingCompleteCallbacks = [];
 
 // Global options
 Page.readOnly = false; // initially allow editing
@@ -38,15 +39,6 @@ Page.showTraits = false;
 Page.showTransitionLabels = false;
 Page.showGuardLabels = false;
 Page.modifiedDiagrams = false;
-
-// Tabs
-Page.activeTab = null;
-Page.tabs = {}
-Page.nextTabId = 1;
-Page.queuedTabs = 0;
-Page.tabNameBeforeEdit = "";
-Page.reservedNames = {"model": true};
-Page.maxTabs = 10;
 
 // The following is set called from umple.php
 Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault)
@@ -93,14 +85,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   
   jQuery(generateDefault).prop("selected",true);
 
-  jQuery(".tabitem").click(function(e) {
-    e.preventDefault();
-    jQuery(".tabitem").removeClass("selected");
-    jQuery(this).addClass("selected");
-  });
-
-  jQuery('#tabControl').hide()
-  Page.loadAllTabs();
+  TabControl.init()
 };
 
 Page.initPaletteArea = function()
@@ -126,7 +111,8 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonCopy");
   Page.initHighlighter("buttonCopyEncodedURL");
   Page.initHighlighter("buttonCopyLocalBrowser");
-  Page.initHighlighter("buttonLoadLocalBrowser");  
+  Page.initHighlighter("buttonLoadLocalBrowser");
+  Page.initHighlighter("buttonDownloadFiles");
   Page.initHighlighter("buttonSmaller");
   Page.initHighlighter("buttonLarger");
   Page.initHighlighter("buttonSyncCode");
@@ -170,6 +156,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonCopyEncodedURL");
   Page.initAction("buttonCopyLocalBrowser");
   Page.initAction("buttonLoadLocalBrowser");
+  Page.initAction("buttonDownloadFiles");
   Page.initAction("buttonUndo");
   Page.initAction("buttonRedo");
   Page.initAction("buttonUigu");
@@ -713,226 +700,15 @@ Page.umpleCanvasId = function()
   return "umpleCanvas";
 }
 
-Page.getTabFilename = function(tabName)
-{
-  return format("{0}/{1}.ump", Page.getModel(), tabName);
-}
-
-Page.createTab = function(name, fromExisting)
-{
-  if (Object.keys(Page.tabs).length == Page.maxTabs) {
-    return;
-  }
-  var newTabId = Page.nextTabId++;
-  var tabName = name == null ? "Untitled_" + newTabId : name;
-  while (Page.reservedNames.hasOwnProperty(tabName)) {
-    if (name != null) {
-      return;
-    }
-    tabName = "Untitled_" + Page.nextTabId++;
-  }
-  Page.tabs[newTabId] = {
-    name: tabName,
-    id: newTabId,
-  };
-  if (fromExisting) {
-    var filename = Page.getTabFilename(tabName);
-    Ajax.sendRequest(
-      "scripts/compiler.php",
-      Page.createTabFromExistingCallback(newTabId, filename),
-      format("load=1&&filename={0}", filename));
-  }
-  else {
-    Page.saveTab(newTabId, null, true);
-  }
-  Page.reservedNames[tabName] = true;
-}
-
-Page.createTabFromExistingCallback = function(tabId, filename)
-{
-  return function(response)
-  {
-    localStorage[filename] = response.responseText;
-    Page.saveTab(tabId, response.responseText, true);
-    Page.queuedTabs--;
-    if (Page.queuedTabs === 0) {
-      jQuery("#tabControl").show();
-    }
-  }
-}
-
-Page.saveTab = function(tabId, code, isNewTab)
-{
-  var umpleCode = code == null? "//$?[End_of_model]$?" : code;
-  var filename = format("{0}/{1}.ump", Page.getModel(), Page.tabs[tabId].name);
-  Ajax.sendRequest(
-    "scripts/compiler.php",
-    Page.saveTabCallback(tabId, isNewTab),
-    format("save=1&&umpleCode={0}&&filename={1}", umpleCode, filename));
-  localStorage[filename] = umpleCode;
-}
-
-Page.saveTabCallback = function(tabId, isNewTab)
-{
-  return function(response) {
-    if (isNewTab) {
-      var tabName = Page.tabs[tabId].name;
-      var createBtn = jQuery("#createTabBtn");
-      var tabTemplate = jQuery('<li id="tab' + tabId + '" class="">' + 
-        '<a class="tabname" id="tabName' + tabId + '" href="javascript:Page.selectTab(\'' + tabId + '\');"' +
-          'title="Switch to Tab ' + tabId + '">' + tabName + '</a>' + 
-          '<button class="tabbtn" onclick="javascript:Page.deleteTab(\'' + tabId + '\');">&times;</button></li>');
-      tabTemplate.insertBefore(createBtn);
-      var createdTabName = jQuery("#tabName" + tabId);
-
-      handleNameEdit = function() {
-        createdTabName.attr('contentEditable', false);
-        var updatedValue = createdTabName.text();
-        var newName = updatedValue.replace(/\s/g,'');
-        if (newName.length === 0 || Page.reservedNames.hasOwnProperty(newName)) {
-          createdTabName.text(Page.tabs[tabId].name);
-        }
-        else
-        {
-          createdTabName.text(newName);
-          Page.renameTab(tabId, newName);
-        }
-      }
-      createdTabName.bind('dblclick', function() {
-        createdTabName.attr('contentEditable', true);
-        createdTabName.focus();
-      }).blur(handleNameEdit).keypress(function(e) {
-        if(e.which == 13) {
-          createdTabName.blur();
-        }
-      });
-      
-      Page.selectTab(tabId);
-    }
-    Page.tabs[tabId].filename = response.responseText;
-  }
-}
-
-Page.selectTab = function(tabId)
-{
-  if (Page.activeTab !== null) {
-    if (tabId == Page.activeTab.id) {
-      return;
-    }
-    var oldActiveTabDiv = jQuery("#tab" + Page.activeTab.id);
-    oldActiveTabDiv.removeClass("selected");
-    Page.saveTab(Page.activeTab.id, Page.getUmpleCode());
-  }
-  Page.activeTab = Page.tabs[tabId];
-  var activeTabDiv = jQuery("#tab" + tabId);
-  activeTabDiv.addClass("selected");
-  
-  var filename = format("{0}/{1}.ump", Page.getModel(), Page.activeTab.name);
-  Page.setUmpleCode(localStorage[filename]);
-}
-
-Page.loadAllTabs = function()
-{
-  Ajax.sendRequest(
-    "scripts/tab_control.php",
-    Page.loadAllTabsCallback,
-    format("list=1&&model={0}", Page.getModel()));
-}
-
-Page.loadAllTabsCallback = function(response)
-{
-  Page.tabs = {};
-  Page.activeTab = null;
-  var tabs = response.responseText.split("<br />")
-  .filter(
-    function(name) {
-      return (name && name != "model");
-  })
-
-  Page.queuedTabs = tabs.length;
-
-  tabs.map(
-    function(name) {
-      Page.createTab(name, true);
-    }
-  );
-
-  if (tabs.length === 0) {
-    Page.createTab();
-    jQuery("#tabControl").show();
-  }
-}
-
-Page.deleteTab = function(tabId)
-{
-  if (Object.keys(Page.tabs).length > 1) {
-    var tabName = jQuery("#tabName" + tabId);
-    var result = confirm("Are you sure you want to remove " + tabName.text() + "?");
-    if (!result) {
-      return;
-    }
-    var shouldUpdateSelection = tabId == Page.activeTab.id;
-    var tab = jQuery("#tab" + tabId);
-    tab.remove();
-    var tabName = Page.tabs[tabId].name;
-    delete Page.reservedNames[tabName];
-    var filename = Page.tabs[tabId].filename;
-    delete Page.tabs[tabId];
-
-    Ajax.sendRequest(
-      "scripts/tab_control.php",
-      Page.deleteTabCallback(filename),
-      format("delete=1&&model={0}&&name={1}", Page.getModel(), tabName));
-    
-      if (shouldUpdateSelection) {
-      Page.activeTab = null;
-      Page.selectTab(Object.keys(Page.tabs)[0]);
-    }
-  }
-}
-
-Page.deleteTabCallback = function(filename)
-{
-  return function(response)
-  {
-    delete localStorage[filename];
-  }
-}
-
-Page.renameTab = function(tabId, newName)
-{
-  if (Page.reservedNames.hasOwnProperty(newName)) {
-    return;
-  }
-  var oldname = Page.tabs[tabId].name;
-  if (oldname == newName) {
-    return;
-  }
-  Ajax.sendRequest(
-    "scripts/tab_control.php",
-    Page.renameTabCallback(tabId, newName),
-    format("rename=1&&model={0}&&oldname={1}&&newname={2}", Page.getModel(), oldname, newName));
-}
-
-Page.renameTabCallback = function(tabId, newName)
-{
-  return function(response) {
-    delete Page.reservedNames[Page.tabs[tabId].name];
-    Page.reservedNames[newName] = true;
-    Page.tabs[tabId].name = newName;
-  }
-}
-
 Page.createBookmark = function()
 {
-  Page.saveTab(Page.activeTab.id, Page.getUmpleCode());
+  TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   window.location.href = "bookmark.php?model=" + Page.getModel();
 }
 
-Page.downloadAllTabFiles = function()
+Page.toggleTabs = function()
 {
-  Page.saveTab(Page.activeTab.id, Page.getUmpleCode());
-  window.location.href = "scripts/tab_control.php?download=1&&model=" + Page.getModel();
+  TabControl.isHidden()? TabControl.showTabs() : TabControl.hideTabs();
 }
 
 Page.showDiagramSyncNeeded = function(doShow)
@@ -977,6 +753,12 @@ Page.hideLoading = function()
     && Page.canvasLoadingCount === 0)
   {
     jQuery(".bookmarkableUrl").removeClass("disabled");
+
+    // Run any queued callbacks that were waiting on the load operation
+    while (Page.onLoadingCompleteCallbacks.length > 0) {
+      var callback = Page.onLoadingCompleteCallbacks.shift();
+      callback();
+    }
   }
 }
 

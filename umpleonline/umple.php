@@ -243,7 +243,7 @@ $output = $dataHandle->readData('model.ump');
     </span>
 
     <span style="font-size: 30%; white-space:nowrap;">  
-    <a class="button2" href="javascript:Page.downloadAllTabFiles()" title="Download Ump files">Download files</a>
+    <a class="button2" href="javascript:Page.toggleTabs()" title="Toggle tab visibility">Toggle Tabs</a>
     </span>
     
     <span id="restorecode" >&nbsp; &nbsp; <a href="#"> Restore Saved State</a></span>
@@ -253,7 +253,7 @@ $output = $dataHandle->readData('model.ump');
 
   <div id="tabControl">
     <ul id="tabs" class="tabrow">
-      <li id="createTabBtn"><a href="javascript:Page.createTab();">+</a></li>
+      <li id="createTabBtn"><a href="javascript:TabControl.createTab(null, false, true);">+</a></li>
     </ul>
   </div>
 
@@ -306,7 +306,11 @@ $output = $dataHandle->readData('model.ump');
             <li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
               <img src="scripts/copy.png"/> 
               Load from Browser
-            </li>   
+            </li>
+            <li id="buttonDownloadFiles" class="downloadFiles">
+              <img src="scripts/copy.png"/> 
+               Download Files
+            </li>
             
           </ul>
         

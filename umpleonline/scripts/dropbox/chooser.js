@@ -22,7 +22,7 @@ DropboxChooser.load = function(link) {
     Action.freshLoad = true;
     Page.setUmpleCode(content);
     Page.hideLoading();
-    History.save(content, "dropboxLoad");
+    TabControl.getCurrentHistory().save(content, "dropboxLoad");
     Action.updateUmpleDiagram();
     Action.setCaretPosition("0");
     Action.updateLineNumberDisplay();

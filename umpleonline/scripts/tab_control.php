@@ -47,7 +47,7 @@ else if (isset($_REQUEST["delete"]) &&
 else if (isset($_REQUEST["download"]) && isset($_REQUEST["model"]))
 {
     $model = $_REQUEST["model"];
-    $zip_file = "../ump/".$model."/ump.zip";
+    $zip_file = "../ump/".$model."/umplefiles.zip";
     if (file_exists($zip_file)) {
         unlink($zip_file);
     }
@@ -58,7 +58,7 @@ else if (isset($_REQUEST["download"]) && isset($_REQUEST["model"]))
             $zip->addFile($filename, basename($filename));
         }
         $zip->close();
-        header('Content-disposition: attachment; filename=ump.zip');
+        header('Content-disposition: attachment; filename=umplefiles.zip');
         header('Content-type: application/zip');
         readfile($zip_file);
    } else {
