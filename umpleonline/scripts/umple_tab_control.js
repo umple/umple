@@ -388,17 +388,15 @@ TabControl.addToRequestQueue = function(endpoint, callback, parameters)
     callback: TabControl.getQueuedCallback(callback),
     parameters: parameters};
 
+  TabControl.requestQueue.push(requestPayload);
   // If this is the only item in the queue, trigger execution
-  if (TabControl.requestQueue.length === 0)
+  if (TabControl.requestQueue.length === 1)
   {
     Ajax.sendRequest(
         requestPayload.endpoint,
         requestPayload.callback,
         requestPayload.parameters);
-  }
-  else
-  {
-    TabControl.requestQueue.push(requestPayload);
+    TabControl.requestQueue.pop();
   }
 }
 
@@ -436,13 +434,11 @@ TabControl.getQueuedCallback = function(callback)
 TabControl.addCallbackToRequestQueue = function(callback)
 {
   var callbackWrapper = {callback: TabControl.getQueuedCallback(callback)};
-  if (TabControl.requestQueue.length === 0)
+  TabControl.requestQueue.push(callbackWrapper);
+  if (TabControl.requestQueue.length === 1)
   {
     callbackWrapper.callback();
-  }
-  else
-  {
-    TabControl.requestQueue.push(callbackWrapper);
+    TabControl.requestQueue.pop();
   }
 }
 
