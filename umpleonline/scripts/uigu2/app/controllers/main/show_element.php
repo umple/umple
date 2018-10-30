@@ -54,7 +54,41 @@ function _show_element($controller) {
       if(!empty($objects) && count($objects) > 0){
         $objects_table = '<tr><th>Object ID</th><th>String Representation</th></tr>';
         for($i=0; $i < count($objects); $i++){
-          $objects_table .= '<tr><td>'.$i.'</td><td>'.serialize($objects[$i]).'</td></tr>';
+        	$object_string_representation = serialize($objects[$i]);
+        	
+        	$length = strlen($object_string_representation);
+        	$separator = strpos($object_string_representation, "{");
+        	$end = strpos($object_string_representation, "}");
+        	
+        	$head = substr($object_string_representation, 0, $separator);
+        	$body = substr($object_string_representation, $separator + 1, $end - $separator - 1);
+        	
+        	$num_of_attributes = substr($head, 8, strrpos($head, ":") - 8);
+        	$num_of_attributes = intval($num_of_attributes);
+        	
+        	$attribute_array = explode(";", $body, -1);
+        	
+        	for($j = 0; $j < $num_of_attributes; $j++) {
+        		$name_start = strpos($attribute_array[2 * $j], "\"") + 4;
+        		$name_end = strrpos($attribute_array[2 * $j], "\"");
+        		$attribute_name_array[$j] = substr($attribute_array[2 * $j], $name_start, $name_end - $name_start); 
+        		
+        		$value_start = strpos($attribute_array[2 * $j + 1], "\"") + 1;
+        		$value_end = strrpos($attribute_array[2 * $j + 1], "\"");
+        		$attribute_value_array[$j] = substr($attribute_array[2 * $j + 1], $value_start, $value_end - $value_start);
+        	}
+        	
+        	for($j = 0; $j < $num_of_attributes; $j++) {
+        		if($j == 0) {
+        			$objects_table .= "<tr><td>".$i."</td><td>".$attribute_name_array[$j].": ".$attribute_value_array[$j]."</td></tr>";
+        		} else {
+        			$objects_table .= "<tr><td></td><td>".$attribute_name_array[$j].": ".$attribute_value_array[$j]."</td></tr>";
+        		}
+        	}
+        	
+        	$objects_table .= "<tr width=1 height=20></tr>"; // empty row to separate different objects
+        	
+          	//$objects_table .= '<tr><td>'.$i.'</td><td>'.serialize($objects[$i]).'</td></tr>';
         }
       } else{
         $objects_table = "<span class='subtle'> There are no created instances for this Class </span>";
