@@ -744,12 +744,8 @@ function execRun($command) {
 function serverRun($commandLine,$rawcommand=null) {
 
   $originalCommandLine = $commandLine; // save in case we have to fall back to it
-  
-  // run on port 5556 if in a directory with 'test' as a substring, otherwise use 5555
-  $portnumber = 5555;
-  if(strpos(getcwd(),"test") !== false) {
-    $portnumber = 5556;
-  }
+
+  require_once ("setPortNumber.php");  
   
   // Some output is error output -- save to a file
   $errorFile = null;
@@ -813,7 +809,7 @@ function serverRun($commandLine,$rawcommand=null) {
     if ($output === FALSE) {
       @socket_close($theSocket);;
       // This usually happens at moments of overload; run as exec but give server much higher priority
-      execRun("nice -10 java -jar umplesync.jar ".$originalCommandLine);
+      execRun("nice -n 10 java -jar umplesync.jar ".$originalCommandLine);
       return;
     }
     if(strlen($output) == 0) {
