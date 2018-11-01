@@ -301,7 +301,11 @@ TabControl.saveTab = function(tabId, umpleCode)
 TabControl.saveTabCallback = function(tabId)
 {
   return function(response) {
-    TabControl.tabs[tabId].filename = response.responseText;
+    // Make sure the tab exists before we save the filename for it
+    if (TabControl.tabs[tabId])
+    {
+      TabControl.tabs[tabId].filename = response.responseText;
+    }
   }
 }
 
@@ -361,12 +365,24 @@ TabControl.loadAllTabsCallback = function(response)
       var name = nameContentSplit[0];
       var content = nameContentSplit[1];
       if (!name || name === "model") return;
+      if (!foundRemoteTabs)
+      {
+        // Hide tabs until all of the tabs are populated
+        TabControl.hideTabs();
+        foundRemoteTabs = true;
+      }
       TabControl.createTab(name, content, true);
-      foundRemoteTabs = true;
   });
 
   // If no tabs are found, we should initialize with a single tab
-  if (!foundRemoteTabs) TabControl.createTab(null, Page.getUmpleCode());
+  if (!foundRemoteTabs)
+  {
+    TabControl.createTab(null, Page.getUmpleCode());
+  }
+  else
+  {
+    TabControl.showTabs();
+  }
 }
 
 /**
@@ -498,6 +514,7 @@ TabControl.addToRequestQueue = function(endpoint, callback, parameters)
   // If this is the only item in the queue, trigger execution
   if (TabControl.requestQueue.length === 1)
   {
+    jQuery(".bookmarkableUrl").addClass("disabled");
     Ajax.sendRequest(
         requestPayload.endpoint,
         TabControl.getQueuedHeadCallback(requestPayload.callback),
@@ -543,6 +560,15 @@ TabControl.getQueuedCallback = function(callback)
           nextRequest.callback();
       }
     }
+    else
+    {
+      if(Page.modelLoadingCount === 0 
+        && Page.layoutLoadingCount === 0 
+        && Page.canvasLoadingCount === 0)
+      {
+        jQuery(".bookmarkableUrl").removeClass("disabled");
+      }
+    }
   }
 }
 
@@ -555,6 +581,7 @@ TabControl.addCallbackToRequestQueue = function(callback)
   TabControl.requestQueue.push(callbackWrapper);
   if (TabControl.requestQueue.length === 1)
   {
+    jQuery(".bookmarkableUrl").addClass("disabled");
     TabControl.getQueuedHeadCallback(callbackWrapper.callback());
   }
 }

@@ -17,8 +17,11 @@ if (isset($_REQUEST["list"]) && isset($_REQUEST["model"]))
         $contents = file($index_file, FILE_IGNORE_NEW_LINES);
         foreach($contents as $base) {
             $filename = "../ump/".$model."/".$base.".ump";
-            $contents = file_get_contents($filename);
-            echo $base.$delim.$contents."<br />";
+            if (file_exists($filename))
+            {
+                $contents = file_get_contents($filename);
+                echo $base.$delim.$contents."<br />";
+            }
         }
     }
     else
