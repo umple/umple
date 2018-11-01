@@ -1,0 +1,377 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+import java.util.*;
+
+// line 1 "nestedStates_StateMachine_timedEvents.ump"
+public class Window
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Window State Machines
+  public enum WindowController { Stationary, SafetyMechanism, ExtraState }
+  public enum WindowControllerStationary { Null, NormalStationary }
+  public enum WindowControllerSafetyMechanism { Null, NormalStationary2 }
+  private WindowController windowController;
+  private WindowControllerStationary windowControllerStationary;
+  private WindowControllerSafetyMechanism windowControllerSafetyMechanism;
+
+  //Helper Variables
+  private TimedEventHandler timeoutNormalStationary2ToExtraStateHandler;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Window()
+  {
+    setWindowControllerStationary(WindowControllerStationary.Null);
+    setWindowControllerSafetyMechanism(WindowControllerSafetyMechanism.Null);
+    setWindowController(WindowController.Stationary);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getWindowControllerFullName()
+  {
+    String answer = windowController.toString();
+    if (windowControllerStationary != WindowControllerStationary.Null) { answer += "." + windowControllerStationary.toString(); }
+    if (windowControllerSafetyMechanism != WindowControllerSafetyMechanism.Null) { answer += "." + windowControllerSafetyMechanism.toString(); }
+    return answer;
+  }
+
+  public WindowController getWindowController()
+  {
+    return windowController;
+  }
+
+  public WindowControllerStationary getWindowControllerStationary()
+  {
+    return windowControllerStationary;
+  }
+
+  public WindowControllerSafetyMechanism getWindowControllerSafetyMechanism()
+  {
+    return windowControllerSafetyMechanism;
+  }
+
+  public boolean up()
+  {
+    boolean wasEventProcessed = false;
+    
+    WindowController aWindowController = windowController;
+    WindowControllerStationary aWindowControllerStationary = windowControllerStationary;
+    switch (aWindowController)
+    {
+      case ExtraState:
+        setWindowController(WindowController.Stationary);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aWindowControllerStationary)
+    {
+      case NormalStationary:
+        exitWindowController();
+        setWindowController(WindowController.SafetyMechanism);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean timeoutNormalStationary2ToExtraState()
+  {
+    boolean wasEventProcessed = false;
+    
+    WindowControllerSafetyMechanism aWindowControllerSafetyMechanism = windowControllerSafetyMechanism;
+    switch (aWindowControllerSafetyMechanism)
+    {
+      case NormalStationary2:
+        exitWindowController();
+        setWindowController(WindowController.ExtraState);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitWindowController()
+  {
+    switch(windowController)
+    {
+      case Stationary:
+        exitWindowControllerStationary();
+        break;
+      case SafetyMechanism:
+        exitWindowControllerSafetyMechanism();
+        break;
+    }
+  }
+
+  private void setWindowController(WindowController aWindowController)
+  {
+    windowController = aWindowController;
+
+    // entry actions and do activities
+    switch(windowController)
+    {
+      case Stationary:
+        // line 7 "nestedStates_StateMachine_timedEvents.ump"
+        
+        if (windowControllerStationary == WindowControllerStationary.Null) { setWindowControllerStationary(WindowControllerStationary.NormalStationary); }
+        break;
+      case SafetyMechanism:
+        // line 19 "nestedStates_StateMachine_timedEvents.ump"
+        System.out.println("Safety mech");
+        if (windowControllerSafetyMechanism == WindowControllerSafetyMechanism.Null) { setWindowControllerSafetyMechanism(WindowControllerSafetyMechanism.NormalStationary2); }
+        break;
+      case ExtraState:
+        // line 33 "nestedStates_StateMachine_timedEvents.ump"
+        System.out.println("hehe");
+        break;
+    }
+  }
+
+  private void exitWindowControllerStationary()
+  {
+    switch(windowControllerStationary)
+    {
+      case NormalStationary:
+        setWindowControllerStationary(WindowControllerStationary.Null);
+        break;
+    }
+  }
+
+  private void setWindowControllerStationary(WindowControllerStationary aWindowControllerStationary)
+  {
+    windowControllerStationary = aWindowControllerStationary;
+    if (windowController != WindowController.Stationary && aWindowControllerStationary != WindowControllerStationary.Null) { setWindowController(WindowController.Stationary); }
+
+    // entry actions and do activities
+    switch(windowControllerStationary)
+    {
+      case NormalStationary:
+        // line 11 "nestedStates_StateMachine_timedEvents.ump"
+        System.out.println("Window is stopped");
+        break;
+    }
+  }
+
+  private void exitWindowControllerSafetyMechanism()
+  {
+    switch(windowControllerSafetyMechanism)
+    {
+      case NormalStationary2:
+        setWindowControllerSafetyMechanism(WindowControllerSafetyMechanism.Null);
+        stopTimeoutNormalStationary2ToExtraStateHandler();
+        break;
+    }
+  }
+
+  private void setWindowControllerSafetyMechanism(WindowControllerSafetyMechanism aWindowControllerSafetyMechanism)
+  {
+    windowControllerSafetyMechanism = aWindowControllerSafetyMechanism;
+    if (windowController != WindowController.SafetyMechanism && aWindowControllerSafetyMechanism != WindowControllerSafetyMechanism.Null) { setWindowController(WindowController.SafetyMechanism); }
+
+    // entry actions and do activities
+    switch(windowControllerSafetyMechanism)
+    {
+      case NormalStationary2:
+        // line 23 "nestedStates_StateMachine_timedEvents.ump"
+        System.out.println("Window is stopped");
+        startTimeoutNormalStationary2ToExtraStateHandler();
+        break;
+    }
+  }
+
+  private void startTimeoutNormalStationary2ToExtraStateHandler()
+  {
+    timeoutNormalStationary2ToExtraStateHandler = new TimedEventHandler(this,"timeoutNormalStationary2ToExtraState",20);
+  }
+
+  private void stopTimeoutNormalStationary2ToExtraStateHandler()
+  {
+    timeoutNormalStationary2ToExtraStateHandler.stop();
+  }
+
+  public static class TimedEventHandler extends TimerTask  
+  {
+    private Window controller;
+    private String timeoutMethodName;
+    private double howLongInSeconds;
+    private Timer timer;
+    
+    public TimedEventHandler(Window aController, String aTimeoutMethodName, double aHowLongInSeconds)
+    {
+      controller = aController;
+      timeoutMethodName = aTimeoutMethodName;
+      howLongInSeconds = aHowLongInSeconds;
+      timer = new Timer();
+      timer.schedule(this, (long)howLongInSeconds*1000);
+    }
+    
+    public void stop()
+    {
+      timer.cancel();
+    }
+    
+    public void run ()
+    {
+      if ("timeoutNormalStationary2ToExtraState".equals(timeoutMethodName))
+      {
+        boolean shouldRestart = !controller.timeoutNormalStationary2ToExtraState();
+        if (shouldRestart)
+        {
+          controller.startTimeoutNormalStationary2ToExtraStateHandler();
+        }
+        return;
+      }
+    }
+  }
+
+  public void delete()
+  {}
+
+  // line 40 "nestedStates_StateMachine_timedEvents.ump"
+   public static  void main(String [] argc){
+    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
+    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
+    new Window();
+  }
+
+  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
+  {
+    public void uncaughtException(Thread t, Throwable e)
+    {
+      translate(e);
+      if(e.getCause()!=null)
+      {
+        translate(e.getCause());
+      }
+      e.printStackTrace();
+    }
+    public void translate(Throwable e)
+    {
+      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();
+      StackTraceElement[] elements = e.getStackTrace();
+      try
+      {
+        for(StackTraceElement element:elements)
+        {
+          String className = element.getClassName();
+          String methodName = element.getMethodName();
+          boolean methodFound = false;
+          int index = className.lastIndexOf('.')+1;
+          try {
+            java.lang.reflect.Method query = this.getClass().getMethod(className.substring(index)+"_"+methodName,new Class[]{});
+            UmpleSourceData sourceInformation = (UmpleSourceData)query.invoke(this,new Object[]{});
+            for(int i=0;i<sourceInformation.size();++i)
+            {
+              // To compensate for any offsets caused by injected code we need to loop through the other references to this function
+              //  and adjust the start / length of the function.
+              int functionStart = sourceInformation.getJavaLine(i) + (("main".equals(methodName))?3:1);
+              int functionEnd = functionStart + sourceInformation.getLength(i);
+              int afterInjectionLines = 0;
+              //  We can leverage the fact that all inject statements are added to the uncaught exception list 
+              //   before the functions that they are within
+              for (int j = 0; j < i; j++) {
+                if (sourceInformation.getJavaLine(j) - 1 >= functionStart &&
+                    sourceInformation.getJavaLine(j) - 1 <= functionEnd &&
+                    sourceInformation.getJavaLine(j) - 1 <= element.getLineNumber()) {
+                    // A before injection, +2 for the comments surrounding the injected code
+                    if (sourceInformation.getJavaLine(j) - 1 == functionStart) {
+                        functionStart += sourceInformation.getLength(j) + 2;
+                        functionEnd += sourceInformation.getLength(j) + 2;
+                    } else {
+                        // An after injection
+                        afterInjectionLines += sourceInformation.getLength(j) + 2;
+                        functionEnd += sourceInformation.getLength(j) + 2;
+                    }
+                }
+              }
+              int distanceFromStart = element.getLineNumber() - functionStart - afterInjectionLines;
+              if(distanceFromStart>=0&&distanceFromStart<=sourceInformation.getLength(i))
+              {
+                result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),sourceInformation.getFileName(i),sourceInformation.getUmpleLine(i)+distanceFromStart));
+                methodFound = true;
+                break;
+              }
+            }
+          }
+          catch (Exception e2){}
+          if(!methodFound)
+          {
+            result.add(element);
+          }
+        }
+      }
+      catch (Exception e1)
+      {
+        e1.printStackTrace();
+      }
+      e.setStackTrace(result.toArray(new StackTraceElement[0]));
+    }
+  //The following methods Map Java lines back to their original Umple file / line    
+    public UmpleSourceData Window_setWindowControllerStationary(){ return new UmpleSourceData().setFileNames("nestedStates_StateMachine_timedEvents.ump").setUmpleLines(10).setJavaLines(171).setLengths(1);}
+    public UmpleSourceData Window_main(){ return new UmpleSourceData().setFileNames("nestedStates_StateMachine_timedEvents.ump").setUmpleLines(39).setJavaLines(250).setLengths(1);}
+    public UmpleSourceData Window_setWindowController(){ return new UmpleSourceData().setFileNames("nestedStates_StateMachine_timedEvents.ump","nestedStates_StateMachine_timedEvents.ump","nestedStates_StateMachine_timedEvents.ump").setUmpleLines(6, 18, 32).setJavaLines(135, 140, 145).setLengths(1, 1, 1);}
+    public UmpleSourceData Window_setWindowControllerSafetyMechanism(){ return new UmpleSourceData().setFileNames("nestedStates_StateMachine_timedEvents.ump").setUmpleLines(22).setJavaLines(197).setLengths(1);}
+
+  }
+  public static class UmpleSourceData
+  {
+    String[] umpleFileNames;
+    Integer[] umpleLines;
+    Integer[] umpleJavaLines;
+    Integer[] umpleLengths;
+    
+    public UmpleSourceData(){
+    }
+    public String getFileName(int i){
+      return umpleFileNames[i];
+    }
+    public Integer getUmpleLine(int i){
+      return umpleLines[i];
+    }
+    public Integer getJavaLine(int i){
+      return umpleJavaLines[i];
+    }
+    public Integer getLength(int i){
+      return umpleLengths[i];
+    }
+    public UmpleSourceData setFileNames(String... filenames){
+      umpleFileNames = filenames;
+      return this;
+    }
+    public UmpleSourceData setUmpleLines(Integer... umplelines){
+      umpleLines = umplelines;
+      return this;
+    }
+    public UmpleSourceData setJavaLines(Integer... javalines){
+      umpleJavaLines = javalines;
+      return this;
+    }
+    public UmpleSourceData setLengths(Integer... lengths){
+      umpleLengths = lengths;
+      return this;
+    }
+    public int size(){
+      return umpleFileNames.length;
+    }
+  }
+}
