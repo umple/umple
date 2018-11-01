@@ -129,6 +129,10 @@ class DataHandle extends ReadOnlyDataHandle{
         foreach (glob($other->root.'/*.ump') as $umpFile) {
             copy($umpFile, $this->root."/".basename($umpFile));
         }
+        $index_file = $other->root.'/tab_index';
+        if (file_exists($index_file)) {
+            copy($index_file, $this->root."/".basename($index_file));
+        }
     }
 }
 

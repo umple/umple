@@ -315,6 +315,11 @@ Action.loadFileCallback = function(response)
   Action.freshLoad = true;
   TabControl.getCurrentHistory().save(response.responseText,"loadFileCallback");
   Page.setUmpleCode(response.responseText);
+  var extractedName = TabControl.extractNameFromCode(response.responseText);
+  if (extractedName)
+  {
+    TabControl.useActiveTabTo(TabControl.renameTab)(extractedName, true);
+  }
   if (!Action.manualSync) Action.updateUmpleDiagram();
 }
 
@@ -1958,7 +1963,7 @@ Action.generateStructureDiagramFileCallback = function(response)
   Page.toggleStructureDiagramLink(true, response.responseText);
 }
 
-Action.ajax = function(callback,post,errors)
+Action.ajax = function(callback,post,errors,tabIndependent)
 {
   var modelAndPositioning = Page.getUmpleCode();
 
@@ -1967,7 +1972,18 @@ Action.ajax = function(callback,post,errors)
   // var errors = typeof(errors) != 'undefined' ? errors : "false";
   var errors = "true";
   TabControl.useActiveTabTo(TabControl.saveTab)(umpleCode);
-  Ajax.sendRequest("scripts/compiler.php",callback,format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
+
+  var tabContextOld = TabControl.getActiveTabId();
+  var wrappedCallback = !tabIndependent? function(response){
+    var tabContextNew = TabControl.getActiveTabId();
+    if (tabContextNew !== tabContextOld){
+      Page.hideLoading();
+      return;
+    }
+    callback(response);
+  } : callback;
+
+  Ajax.sendRequest("scripts/compiler.php",wrappedCallback,format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
 }
 
 //Mac Keyboard Shortcut

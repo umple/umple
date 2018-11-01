@@ -7,12 +7,44 @@ TabControl.defaultTabName = "Untitled";
 TabControl.showHideKey = "showUmpleTabs";
 
 TabControl.requestQueue = [];
+TabControl.remoteDelim = "%NAME:CONTENT:DELIM%";
+
+// Regular expressions used to validate names as valid filenames
+TabControl.illegalNameRegxp = /[\/\?<>\\:\*\|":]/g;
+TabControl.controlNameRegxp = /[\x00-\x1f\x80-\x9f]/g;
+TabControl.reservedNameRegxp = /^\.+$/;
+TabControl.windowsReservedNameRegxp = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i;
+TabControl.windowsTrailingRegxp = /[\. ]+$/;
+TabControl.nameReplacement = "_";
 
 /**
  * Initializes the tab control.
  */
 TabControl.init = function()
 {
+  jQuery("#tabs").sortable({
+    axis: "x",
+    helper: 'clone',
+    items: "li:not(.unsortable)",
+    update: TabControl.saveActiveTabs,
+  });
+
+  jQuery.fn.selectText = function(){
+    var doc = document;
+    var element = this[0];
+    if (doc.body.createTextRange) {
+        var range = document.body.createTextRange();
+        range.moveToElementText(element);
+        range.select();
+    } else if (window.getSelection) {
+        var selection = window.getSelection();
+        var range = document.createRange();
+        range.selectNodeContents(element);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+  };
+
   TabControl.reset();
   if (!localStorage[TabControl.showHideKey])
   {
@@ -40,6 +72,30 @@ TabControl.hideTabs = function()
 }
 
 /**
+ * Save the order of the active tabs.
+ */
+TabControl.saveActiveTabs = function()
+{
+  var tabNames = [];
+  jQuery(".tabname").each(function()
+  {
+    tabNames.push(jQuery(this).text())
+  });
+  TabControl.addToRequestQueue(
+    "scripts/tab_control.php",
+    function(response){},
+    format("index=1&&model={0}&&orderedTabNames={1}", Page.getModel(), encodeURIComponent(JSON.stringify(tabNames))));
+}
+
+/**
+ * Returns the currently active tab ID.
+ */
+TabControl.getActiveTabId = function()
+{
+  return (TabControl.activeTab)? TabControl.activeTab.id : null;
+}
+
+/**
  * Return true if the tab control is hidden.
  */
 TabControl.isHidden = function()
@@ -64,75 +120,159 @@ TabControl.reset = function(){
 }
 
 /**
- * Creates a new tab.
- * name: name of the tab to create
- * fromRemote: true if code should be taken from remote (requires file with given name to exist)
- * resetCode: true if current editor code should not be used to create the new tab
+ * Returns a sanitized name suitable for filenames on all OS.
  */
-TabControl.createTab = function(name, fromRemote, resetCode)
+TabControl.sanitizeName = function(name)
 {
-  // If the page is still loading, call this when it's done
-  if (Page.modelLoadingCount > 0 || Page.layoutLoadingCount > 0 || Page.canvasLoadingCount > 0) {
-    Page.onLoadingCompleteCallbacks.push(function(){TabControl.createTab(name, fromRemote, resetCode)});
-    return;
-  };
-  // Enforce maximum number of tabs
-  if (Object.keys(TabControl.tabs).length == TabControl.maxTabs) return;
-  // Tab IDs auto-increment similar to PKs of a database
-  var newTabId = TabControl.nextTabId++;
-  var baseTabName = !name? TabControl.defaultTabName : name;
-  var baseCode;
-  if (!fromRemote)
-  {
-    if (!resetCode)
-    {
-      baseCode = Page.getUmpleCode();
-      // Try to find a name from the code if we don't have a desired name
-      // and we're not creating new code from scratch
-      if (!name) {
-        var classNameRegexp = /class[\s]*([a-zA-Z_$][a-zA-Z_$0-9]*)[\s]*{/g;
-        var match = classNameRegexp.exec(baseCode);
-        if (match) baseTabName = match[1];
-      }
-    }
-    else
-    {
-      baseCode = Page.modelDelimiter;
-    }
-  }
+  var sanitized = name
+    .replace(TabControl.illegalNameRegxp, TabControl.nameReplacement)
+    .replace(TabControl.controlNameRegxp, TabControl.nameReplacement)
+    .replace(TabControl.reservedNameRegxp, TabControl.nameReplacement)
+    .replace(TabControl.windowsReservedNameRegxp, TabControl.nameReplacement)
+    .replace(TabControl.windowsTrailingNameRegxp, TabControl.nameReplacement);
+  return sanitized;
+}
+
+/**
+ * Returns an auto-incremented name based on name availability.
+ */
+TabControl.findNextAvailableTabName = function(baseTabName)
+{
   // Count upwards until we find a name that is available
   var tabName = baseTabName;
   var counter = 2;
   while (TabControl.reservedNames.hasOwnProperty(tabName)) {
     tabName = baseTabName + counter++;
   }
+  return tabName;
+}
+
+/**
+ * Returns first class name found in code.
+ */
+TabControl.extractNameFromCode = function(code)
+{
+  var classNameRegexp = /class[\s]*([a-zA-Z_$][a-zA-Z_$0-9]*)[\s]*{/g;
+  var match = classNameRegexp.exec(code);
+  if (match) return match[1];
+}
+
+/**
+ * Creates a new tab.
+ * name: name of the tab to create
+ * fromRemote: true if code should be taken from remote (requires file with given name to exist)
+ * resetCode: true if current editor code should not be used to create the new tab
+ */
+TabControl.createTab = function(name, code)
+{
+  // Enforce maximum number of tabs
+  if (Object.keys(TabControl.tabs).length == TabControl.maxTabs) return;
+
+  // Tab IDs auto-increment similar to PKs of a database
+  var newTabId = TabControl.nextTabId++;
+  var baseTabName = !name? TabControl.defaultTabName : name;
+  if (code != null)
+  {
+    // Try to find a name from the code if we don't have a desired name
+    // and we're not creating new code from scratch
+    if (!name) {
+      var extractedName = TabControl.extractNameFromCode(code);
+      if (extractedName) baseTabName = extractedName;
+    }
+  }
+  else
+  {
+    code = Page.modelDelimiter;
+  }
+  var tabName = TabControl.findNextAvailableTabName(baseTabName);
+  
   // Create the tab entity - still need to wait for filename to be populated by server
   TabControl.tabs[newTabId] = {
     name: tabName,
     id: newTabId,
     history: History.getInstance(newTabId),
   };
-  // If we're creating the file using remote contents, we need to fetch it
-  if (fromRemote) {
-    var filename = TabControl.getTabFilename(tabName);
-    TabControl.addToRequestQueue(
-      "scripts/compiler.php",
-      TabControl.createTabFromExistingCallback(newTabId),
-      format("load=1&&filename={0}", filename));
-  }
-  // Otherwise create a new tab using the baseCode
-  else {
-    TabControl.saveTab(newTabId, baseCode, true);
-  }
-  TabControl.reservedNames[tabName] = true;
-}
 
-TabControl.createTabFromExistingCallback = function(tabId)
-{
-  return function(response)
-  {
-    TabControl.saveTab(tabId, response.responseText, true);
+  // Bind the code to the tab
+  TabControl.reservedNames[tabName] = true;
+  TabControl.saveTab(newTabId, code);
+
+  // Create the physical tab element
+  var createBtn = jQuery("#createTabBtn");
+  var tabTemplate = jQuery('<li id="tab' + newTabId + '" class="">' + 
+    '<a class="tabname" id="tabName' + newTabId + '" href="javascript:TabControl.selectTab(\'' + newTabId + '\');">' + tabName + '</a>' + 
+      '<button class="tabbtn" onclick="javascript:TabControl.deleteTab(\'' + newTabId + '\');">&times;</button></li>');
+  tabTemplate.insertBefore(createBtn);
+
+  // Disable the create button if we've hit the maximum
+  if (Object.keys(TabControl.tabs).length == TabControl.maxTabs) createBtn.hide();
+
+  // Add event handlers to handle renaming
+  var tabNameDiv = TabControl.getTabNameDiv(newTabId);
+  handleNameEdit = function() {
+    // Exit edit mode and deselect the text
+    tabNameDiv.attr('contentEditable', false);
+    if (window.getSelection) window.getSelection().removeAllRanges();
+    else if (document.selection) document.selection.empty();
+
+    // Sanitize the input to ensure that we can use it as a filename
+    var newName = tabNameDiv.text();
+    var oldName = TabControl.tabs[newTabId].name;
+
+    // Do nothing on revert or no op
+    if (newName === oldName)
+    {
+      return;
+    }
+    // Validation
+    var nameIsValid = false;
+    if (TabControl.sanitizeName(newName) !== newName)
+    {
+      alert("The name contains invalid characters. Please try again.");
+    }
+    else if (newName.length === 0 || newName.length > TabControl.maxNameLength)
+    {
+      alert("Name must be between 1 and " + TabControl.maxNameLength + " characters long. Please try again.");
+    }
+    else if (TabControl.reservedNames.hasOwnProperty(newName))
+    {
+      alert("This name is already in use. Please try again.")
+    }
+    else
+    {
+      nameIsValid = true;
+    }
+
+    if (nameIsValid)
+    {
+      // Apply renames
+      tabNameDiv.text(newName);
+      TabControl.renameTab(newTabId, newName);
+    }
+    else
+    {
+      // Revert the name if the name is invalid and reselect it
+      tabNameDiv.text(oldName);
+      tabNameDiv.selectText();
+      tabNameDiv.attr('contentEditable', true);
+    }
   }
+
+  // Double-click to begin edit mode
+  tabNameDiv.bind('dblclick', function() {
+    tabNameDiv.attr('contentEditable', true);
+    tabNameDiv.focus();
+    tabNameDiv.selectText();
+  // Both blur and enter keypress exits edit mode
+  }).blur(handleNameEdit).keypress(function(e) {
+    var enterKeyCode = 13;
+    var deleteKeyCode = 8;
+    if(e.which == enterKeyCode) tabNameDiv.blur();
+    if(e.which != deleteKeyCode && tabNameDiv.text().length >= TabControl.maxNameLength) e.preventDefault();
+  });
+  
+  // If we're just creating a new tab, select it after we save it
+  TabControl.selectTab(newTabId);
 }
 
 /**
@@ -141,70 +281,19 @@ TabControl.createTabFromExistingCallback = function(tabId)
  * umpleCode: the code to save to the tab
  * isNewTab: true if the save corresponds to a newly created tab
  */
-TabControl.saveTab = function(tabId, umpleCode, isNewTab)
+TabControl.saveTab = function(tabId, umpleCode)
 {
   var filename = TabControl.getTabFilename(TabControl.tabs[tabId].name);
   localStorage[filename] = umpleCode;
   TabControl.addToRequestQueue(
     "scripts/compiler.php",
-    TabControl.saveTabCallback(tabId, isNewTab),
+    TabControl.saveTabCallback(tabId),
     format("save=1&&umpleCode={0}&&filename={1}", umpleCode, filename));
 }
 
-TabControl.saveTabCallback = function(tabId, isNewTab)
+TabControl.saveTabCallback = function(tabId)
 {
   return function(response) {
-    if (isNewTab)
-    {
-      // Create the physical tab element
-      var tabName = TabControl.tabs[tabId].name;
-      var createBtn = jQuery("#createTabBtn");
-      var tabTemplate = jQuery('<li id="tab' + tabId + '" class="">' + 
-        '<a class="tabname" id="tabName' + tabId + '" href="javascript:TabControl.selectTab(\'' + tabId + '\');">' + tabName + '</a>' + 
-          '<button class="tabbtn" onclick="javascript:TabControl.deleteTab(\'' + tabId + '\');">&times;</button></li>');
-      tabTemplate.insertBefore(createBtn);
-
-      // Disable the create button if we've hit the maximum
-      if (Object.keys(TabControl.tabs).length == TabControl.maxTabs)
-      {
-        createBtn.hide();
-      }
-
-      var createdTabName = TabControl.getTabNameDiv(tabId);
-      handleNameEdit = function() {
-        // Exit edit mode
-        createdTabName.attr('contentEditable', false);
-
-        // Remove all whitespace
-        var newName = createdTabName.text().replace(/\s/g,'');
-
-        // Revert the name if the name is invalid
-        if (newName.length === 0 || newName.length > TabControl.maxNameLength || TabControl.reservedNames.hasOwnProperty(newName)) {
-          createdTabName.text(TabControl.tabs[tabId].name);
-        }
-        // Otherwise perform the rename operation
-        else
-        {
-          createdTabName.text(newName);
-          TabControl.renameTab(tabId, newName);
-        }
-      }
-
-      // Double-click to begin edit mode
-      createdTabName.bind('dblclick', function() {
-        createdTabName.attr('contentEditable', true);
-        createdTabName.focus();
-      // Both blur and enter keypress exits edit mode
-      }).blur(handleNameEdit).keypress(function(e) {
-        var enterKeyCode = 13;
-        var deleteKeyCode = 8;
-        if(e.which == enterKeyCode) createdTabName.blur();
-        if(e.which != deleteKeyCode && createdTabName.text().length >= TabControl.maxNameLength) e.preventDefault();
-      });
-      
-      // If we're just creating a new tab, select it after we save it
-      TabControl.selectTab(tabId);
-    }
     TabControl.tabs[tabId].filename = response.responseText;
   }
 }
@@ -215,12 +304,6 @@ TabControl.saveTabCallback = function(tabId, isNewTab)
  */
 TabControl.selectTab = function(tabId)
 { 
-   // If the page is still loading, call this when it's done
-  if (Page.modelLoadingCount > 0 || Page.layoutLoadingCount > 0 || Page.canvasLoadingCount > 0) {
-      Page.onLoadingCompleteCallbacks.push(function(){TabControl.selectTab(tabId)});
-      return;
-  };
-
   if (TabControl.activeTab) {
     // Do nothing if already selected
     if (tabId == TabControl.activeTab.id) return;
@@ -240,6 +323,10 @@ TabControl.selectTab = function(tabId)
   // Load code from cache
   var filename = TabControl.getTabFilename(TabControl.activeTab.name);
   Page.setUmpleCode(localStorage[filename]);
+
+  // Reset caret position
+  Action.setCaretPosition(0);
+  Action.updateLineNumberDisplay();
 }
 
 /**
@@ -256,22 +343,22 @@ TabControl.loadAllTabs = function()
 
 TabControl.loadAllTabsCallback = function(response)
 {
-  // The response is a break-separated list of X.ump files
+  // The response is a break-separated list of tab name and content pairings
   var tabs = response.responseText.split("<br />")
-  .filter(
-    function(name) {
-      // Remove empty lines and model.ump
-      return (name && name != "model");
-  })
+  var foundRemoteTabs = false;
 
-  tabs.map(
-    function(name) {
-      TabControl.createTab(name, true);
-    }
-  );
+  tabs.map(function(nameContent)
+  {
+      if (!nameContent) return;
+      var nameContentSplit = nameContent.split(TabControl.remoteDelim);
+      var name = nameContentSplit[0];
+      if (!name || name === "model") return;
+      TabControl.createTab(name, content);
+      foundRemoteTabs = true;
+  });
 
-  // If no tabs are found, we should still create a single tab
-  if (tabs.length === 0) TabControl.createTab();
+  // If no tabs are found, we should initialize with a single tab
+  if (!foundRemoteTabs) TabControl.createTab(null, Page.getUmpleCode());
 }
 
 /**
@@ -306,7 +393,7 @@ TabControl.deleteTab = function(tabId)
     // Delete the tab on remote
     TabControl.addToRequestQueue(
       "scripts/tab_control.php",
-      TabControl.deleteTabCallback,
+      function(response){},
       format("delete=1&&model={0}&&name={1}", Page.getModel(), tabName));
     
     // Navigate to the first tab as necessary
@@ -317,14 +404,12 @@ TabControl.deleteTab = function(tabId)
   }
 }
 
-TabControl.deleteTabCallback = function(response){}
-
 /**
  * Renames a tab.
  * tabId: the ID of the tab to rename
  * newName: the new name of the tab
  */
-TabControl.renameTab = function(tabId, newName)
+TabControl.renameTab = function(tabId, newName, updateUI)
 {
   // If the new name already exists, return
   if (TabControl.reservedNames.hasOwnProperty(newName)) return;
@@ -338,6 +423,12 @@ TabControl.renameTab = function(tabId, newName)
   var newfilename = TabControl.getTabFilename(newName);
   localStorage[newfilename] = localStorage[oldfilename]
   delete localStorage[oldfilename];
+
+  // Only programmatic calls need to update the GUI text again
+  if (updateUI)
+  {
+    TabControl.getTabNameDiv(tabId).text(newName);
+  }
 
   TabControl.addToRequestQueue(
     "scripts/tab_control.php",
@@ -419,11 +510,11 @@ TabControl.getQueuedCallback = function(callback)
 {
   return function(response)
   {
-    callback(response);
     // TODO: consider retrying the request on failure
     // The runtime of this is O(n), which is presumably okay since it's
     // running on the client and n is the number of concurrent requests
     var nextRequest = TabControl.requestQueue.shift();
+    callback(response);
     if (nextRequest) {
       if (nextRequest.hasOwnProperty("endpoint"))
       {

@@ -49,6 +49,8 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Layout.isLayoutVisible = doShowLayout;
   Page.readOnly = doReadOnly;
 
+  TabControl.init()
+
   // Set diagram type - anything else means use the default editable class diagram
   if(diagramType == "GvState")   
   { 
@@ -84,8 +86,6 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Action.loadFile();
   
   jQuery(generateDefault).prop("selected",true);
-
-  TabControl.init()
 };
 
 Page.initPaletteArea = function()
@@ -703,6 +703,7 @@ Page.umpleCanvasId = function()
 Page.createBookmark = function()
 {
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+  TabControl.saveActiveTabs();
   window.location.href = "bookmark.php?model=" + Page.getModel();
 }
 
@@ -753,12 +754,6 @@ Page.hideLoading = function()
     && Page.canvasLoadingCount === 0)
   {
     jQuery(".bookmarkableUrl").removeClass("disabled");
-
-    // Run any queued callbacks that were waiting on the load operation
-    while (Page.onLoadingCompleteCallbacks.length > 0) {
-      var callback = Page.onLoadingCompleteCallbacks.shift();
-      callback();
-    }
   }
 }
 

@@ -253,7 +253,7 @@ $output = $dataHandle->readData('model.ump');
 
   <div id="tabControl">
     <ul id="tabs" class="tabrow">
-      <li id="createTabBtn"><a href="javascript:TabControl.createTab(null, false, true);">+</a></li>
+      <li id="createTabBtn" class="unsortable"><a href="javascript:TabControl.createTab();">+</a></li>
     </ul>
   </div>
 
@@ -300,16 +300,16 @@ $output = $dataHandle->readData('model.ump');
             <li id="buttonCopyLocalBrowser" class="copyLocalBrowser">
               <img src="scripts/copy.png"/> 
               Store in Browser
-            </li>            
+            </li>
+            <li id="buttonDownloadFiles" class="downloadFiles">
+              <img src="scripts/copy.png"/> 
+               Download Files
+            </li>
             <li class="dropbox-add-saver"></li>
             
             <li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
               <img src="scripts/copy.png"/> 
               Load from Browser
-            </li>
-            <li id="buttonDownloadFiles" class="downloadFiles">
-              <img src="scripts/copy.png"/> 
-               Download Files
             </li>
             
           </ul>
