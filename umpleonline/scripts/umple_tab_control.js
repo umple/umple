@@ -163,7 +163,7 @@ TabControl.extractNameFromCode = function(code)
  * fromRemote: true if code should be taken from remote (requires file with given name to exist)
  * resetCode: true if current editor code should not be used to create the new tab
  */
-TabControl.createTab = function(name, code)
+TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
 {
   // Enforce maximum number of tabs
   if (Object.keys(TabControl.tabs).length == TabControl.maxTabs) return;
@@ -191,6 +191,7 @@ TabControl.createTab = function(name, code)
     name: tabName,
     id: newTabId,
     history: History.getInstance(newTabId),
+    nameIsEphemeral: name == null,
   };
 
   // Bind the code to the tab
@@ -271,6 +272,12 @@ TabControl.createTab = function(name, code)
     if(e.which != deleteKeyCode && tabNameDiv.text().length >= TabControl.maxNameLength) e.preventDefault();
   });
   
+  // Don't save active tabs as we populate them from remote
+  if (!shouldNotSaveActiveTabs)
+  {
+    TabControl.saveActiveTabs();
+  }
+
   // If we're just creating a new tab, select it after we save it
   TabControl.selectTab(newTabId);
 }
@@ -352,8 +359,9 @@ TabControl.loadAllTabsCallback = function(response)
       if (!nameContent) return;
       var nameContentSplit = nameContent.split(TabControl.remoteDelim);
       var name = nameContentSplit[0];
+      var content = nameContentSplit[1];
       if (!name || name === "model") return;
-      TabControl.createTab(name, content);
+      TabControl.createTab(name, content, true);
       foundRemoteTabs = true;
   });
 
@@ -401,6 +409,8 @@ TabControl.deleteTab = function(tabId)
         TabControl.activeTab = null;
         TabControl.selectTab(Object.keys(TabControl.tabs)[0]);
     }
+
+    TabControl.saveActiveTabs();
   }
 }
 
@@ -430,10 +440,15 @@ TabControl.renameTab = function(tabId, newName, updateUI)
     TabControl.getTabNameDiv(tabId).text(newName);
   }
 
+  // If a name was renamed, then it is no longer ephemeral
+  TabControl.tabs[tabId].nameIsEphemeral = false;
+
   TabControl.addToRequestQueue(
     "scripts/tab_control.php",
     TabControl.renameTabCallback(tabId, newName),
     format("rename=1&&model={0}&&oldname={1}&&newname={2}", Page.getModel(), oldname, newName));
+
+  TabControl.saveActiveTabs();
 }
 
 TabControl.renameTabCallback = function(tabId, newName)

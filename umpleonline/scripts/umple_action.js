@@ -315,10 +315,13 @@ Action.loadFileCallback = function(response)
   Action.freshLoad = true;
   TabControl.getCurrentHistory().save(response.responseText,"loadFileCallback");
   Page.setUmpleCode(response.responseText);
-  var extractedName = TabControl.extractNameFromCode(response.responseText);
-  if (extractedName)
+  if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {
-    TabControl.useActiveTabTo(TabControl.renameTab)(extractedName, true);
+    var extractedName = TabControl.extractNameFromCode(response.responseText);
+    if (extractedName)
+    {
+      TabControl.useActiveTabTo(TabControl.renameTab)(extractedName, true);
+    }
   }
   if (!Action.manualSync) Action.updateUmpleDiagram();
 }
