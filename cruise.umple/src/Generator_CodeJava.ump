@@ -2051,6 +2051,33 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     } 
     else if(!sm.getNestedStateMachines().isEmpty())
     {
+		/**
+		fix for issue 552 
+		**/
+		
+		for (State s : sm.getStates())
+      {
+		
+        for (Transition t : s.getTransitions())
+        {
+          Event e = t.getEvent();
+	
+          if (!e.getIsTimer())
+          {
+            continue;
+          }
+          hasTimedEvents = true;
+			
+          Action entryAction = new Action(StringFormatter.format("{0}();",translate("eventStartMethod",e)));
+          entryAction.setActionType("entry");
+        
+          Action exitAction = new Action(StringFormatter.format("{0}();",translate("eventStopMethod",e)));
+          exitAction.setActionType("exit");
+
+          t.getFromState().addAction(entryAction);
+          t.getFromState().addAction(exitAction);
+        }
+      }
       for (StateMachine nsm : sm.getNestedStateMachines())
       {
         for (State s : nsm.getStates())
