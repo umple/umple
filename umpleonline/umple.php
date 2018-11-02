@@ -9,7 +9,7 @@ cleanupOldFiles();
 
 if (isset($_REQUEST["model"])) {
   $dataHandle = dataStore()->openData($_REQUEST['model']);
-  if (!dataHandle) {
+  if (!$dataHandle) {
     header('HTTP/1.0 404 Not Found');
     readfile('../404.shtml');
     exit();
