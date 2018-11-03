@@ -115,11 +115,7 @@ function _show_element($controller) {
           $class_name = substr($head_info[2], 1, $class_name_length);
         	$num_of_attributes = intval($head_info[3]);
         	
-        	
-        	// need to modify
-        	
-        	
-        	//O:13:"RegularFlight":4:{s:19:"RegularFlighttime";s:5:"15:00";s:27:"RegularFlightflightNumber";s:2:"76";s:30:"RegularFlightspecificFlights";a:0:{}s:22:"RegularFlightairline";O:7:"Airline":2:{s:23:"AirlineregularFlights";a:1:{i:0;r:1;}s:16:"Airlinepersons";a:0:{}}}
+          
           $temp_body = $body;
           $stack = new Stack();
           for($j = 0; $j < $num_of_attributes; $j++) {
@@ -207,32 +203,6 @@ function _show_element($controller) {
           }
 
           $objects_table .= "<tr width=1 height=20></tr>"; // empty row to separate different objects
-        	
-        	//$attribute_array = explode(";", $body, -1);
-        	
-        	//
-
-        	/*
-        	for($j = 0; $j < $num_of_attributes; $j++) {
-        		$name_start = strpos($attribute_array[2 * $j], "\"") + 4;
-        		$name_end = strrpos($attribute_array[2 * $j], "\"");
-        		$attribute_name_array[$j] = substr($attribute_array[2 * $j], $name_start, $name_end - $name_start); 
-        		
-        		$value_start = strpos($attribute_array[2 * $j + 1], "\"") + 1;
-        		$value_end = strrpos($attribute_array[2 * $j + 1], "\"");
-        		$attribute_value_array[$j] = substr($attribute_array[2 * $j + 1], $value_start, $value_end - $value_start);
-        	}
-        	
-        	for($j = 0; $j < $num_of_attributes; $j++) {
-        		if($j == 0) {
-        			$objects_table .= "<tr><td>".$i."</td><td>".$attribute_name_array[$j].": ".$attribute_value_array[$j]."</td></tr>";
-        		} else {
-        			$objects_table .= "<tr><td></td><td>".$attribute_name_array[$j].": ".$attribute_value_array[$j]."</td></tr>";
-        		}
-        	}
-        	
-        	$objects_table .= "<tr width=1 height=20></tr>"; // empty row to separate different objects
-          */
         	
           	//$objects_table .= '<tr><td>'.$i.'</td><td>'.serialize($objects[$i]).'</td></tr>';
         }
