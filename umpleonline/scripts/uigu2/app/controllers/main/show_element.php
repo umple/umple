@@ -1,4 +1,50 @@
 <?php
+class Stack {
+	private $size;
+  private $stack = array();
+  private $was_set;
+
+  public function __construct() {
+    $this->size = 0;
+    $this->was_set = false;
+  }
+
+  public function was_set() {
+    return $this->was_set;
+  }
+
+  public function is_empty() {
+    if($this->size == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public function push($data) {
+    $this->stack[++$this->size] = $data;
+    $this->was_set = true;
+  }
+
+  public function pop() {
+    if(!$this->is_empty()) {
+      $this->size--;
+    }
+  }
+
+  public function top() {
+    if(!$this->is_empty()) {
+      return $this->stack[$this->size - 1];
+    } else {
+      return -1;
+    }
+  }
+
+  public function recover() {
+    $this->was_set = false;
+  }
+}
+
 function _show_element($controller) {
 
   //TODO make this a parameter-by-url always
@@ -58,16 +104,115 @@ function _show_element($controller) {
         	
         	$length = strlen($object_string_representation);
         	$separator = strpos($object_string_representation, "{");
-        	$end = strpos($object_string_representation, "}");
+        	$end = strrpos($object_string_representation, "}");
         	
         	$head = substr($object_string_representation, 0, $separator);
         	$body = substr($object_string_representation, $separator + 1, $end - $separator - 1);
+
+          $head_info = explode(":", $head, -1);
         	
-        	$num_of_attributes = substr($head, 8, strrpos($head, ":") - 8);
-        	$num_of_attributes = intval($num_of_attributes);
+          $class_name_length = intval($head_info[1]);
+          $class_name = substr($head_info[2], 1, $class_name_length);
+        	$num_of_attributes = intval($head_info[3]);
         	
-        	$attribute_array = explode(";", $body, -1);
         	
+        	// need to modify
+        	
+        	
+        	//O:13:"RegularFlight":4:{s:19:"RegularFlighttime";s:5:"15:00";s:27:"RegularFlightflightNumber";s:2:"76";s:30:"RegularFlightspecificFlights";a:0:{}s:22:"RegularFlightairline";O:7:"Airline":2:{s:23:"AirlineregularFlights";a:1:{i:0;r:1;}s:16:"Airlinepersons";a:0:{}}}
+          $temp_body = $body;
+          $stack = new Stack();
+          for($j = 0; $j < $num_of_attributes; $j++) {
+            $attribute_separator = strpos($temp_body, ";");
+
+            $attribute_string = substr($temp_body, 0, $attribute_separator);
+            $attribute_info = explode(":", $attribute_string);
+            $attribute_length = intval($attribute_info[1]);
+            $attribute_name = substr($attribute_info[2], $class_name_length + 3, $attribute_length - $class_name_length - 2);
+
+            $temp_body = substr($temp_body, $attribute_separator + 1);
+
+            $value_type = $temp_body[0];
+
+            if($value_type == "s") {
+              $value_start = strpos($temp_body, "\"");
+
+              $value_head = substr($temp_body, 0, $value_start - 1);
+              $value_info = explode(":", $value_head);
+              $value_length = intval($value_info[1]);
+              $value_name = substr($temp_body, $value_start + 1, $value_length);
+
+              if($j == 0) {
+                $objects_table .= "<tr><td>".$i."</td><td>".$attribute_name.": ".$value_name."</td></tr>";
+              } else {
+                $objects_table .= "<tr><td></td><td>".$attribute_name.": ".$value_name."</td></tr>";
+              }
+
+              $temp_body = substr($temp_body, $value_start + $value_length + 3);
+
+            } else if($value_type == "a") {
+              $value_start = strpos($temp_body, "{");
+              $stack->push($temp_body[$value_start]); //push "{"
+              $index = $value_start + 1;
+
+              while(!$stack->is_empty()) {
+                if($temp_body[$index] == "{") {
+                  $stack->push("{");
+                } else if($temp_body[$index] == "}") {
+                  $stack->pop();
+                }
+
+                $index++;
+              }
+
+              $value_end = $index - 1;
+
+              if($j == 0) {
+                $objects_table .= "<tr><td>".$i."</td><td></td></tr>";
+              } else {
+                $objects_table .= "<tr><td></td><td></td></tr>";
+              }
+
+              $temp_body = substr($temp_body, $value_end + 1);
+
+            } else if($value_type == "N") {
+              $temp_body = substr($temp_body, 2);
+            } else {
+              //$value_type == "O"
+              $value_start = strpos($temp_body, "{");
+              $stack->push($temp_body[$value_start]); //push "{"
+              $index = $value_start + 1;
+
+              while(!$stack->is_empty()) {
+                if($temp_body[$index] == "{") {
+                  $stack->push("{");
+                } else if($temp_body[$index] == "}") {
+                  $stack->pop();
+                }
+
+                $index++;
+              }
+
+              $value_end = $index - 1;
+
+              if($j == 0) {
+                $objects_table .= "<tr><td>".$i."</td><td></td></tr>";
+              } else {
+                $objects_table .= "<tr><td></td><td></td></tr>";
+              }
+              
+              $temp_body = substr($temp_body, $value_end + 1);
+
+            }
+          }
+
+          $objects_table .= "<tr width=1 height=20></tr>"; // empty row to separate different objects
+        	
+        	//$attribute_array = explode(";", $body, -1);
+        	
+        	//
+
+        	/*
         	for($j = 0; $j < $num_of_attributes; $j++) {
         		$name_start = strpos($attribute_array[2 * $j], "\"") + 4;
         		$name_end = strrpos($attribute_array[2 * $j], "\"");
@@ -87,6 +232,7 @@ function _show_element($controller) {
         	}
         	
         	$objects_table .= "<tr width=1 height=20></tr>"; // empty row to separate different objects
+          */
         	
           	//$objects_table .= '<tr><td>'.$i.'</td><td>'.serialize($objects[$i]).'</td></tr>';
         }
