@@ -462,6 +462,12 @@ public class StateMachineTest extends StateMachineTemplateTest
   }
   
   @Test
+  public void nestedState_StateMachine_timedEvents()
+  {
+  	assertUmpleTemplateFor("nestedStates_StateMachine_timedEvent.ump",languagePath + "/nestedStates_StateMachine_timedEvent."+ languagePath +".txt","Window");
+  }
+  
+  @Test
   public void pooledStateMachine()
   {
 	assertUmpleTemplateFor("pooledStateMachine.ump",languagePath + "/pooledStateMachine."+ languagePath +".txt","Course");
