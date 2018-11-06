@@ -83,28 +83,30 @@ else if (isset($_REQUEST["download"]) && isset($_REQUEST["model"]))
     if (file_exists($zip_file)) {
         unlink($zip_file);
     }
-    // TODO: use code below after validation
-    exec("cd ../ump/".$model." && zip ".$zip_file_name." *.ump -x model.ump");
-    header('Content-disposition: attachment; filename='.$zip_file_name);
-    header('Content-type: application/zip');
-    readfile($zip_file);
 
-    /*
-    $zip = new ZipArchive;
-    if ($zip->open($zip_file,  ZipArchive::CREATE)) {
-        foreach (glob("../ump/".$model."/*.ump") as $filename) {
-            if (basename($filename, ".ump") == "model") continue;
-            $zip->addFile($filename, basename($filename));
+    // Try to obtain the lock
+    $lock_file = "../ump/".$model."/.lockfile";
+    $fp = fopen($lock_file, "w");
+    if (flock($fp, LOCK_EX)) {
+        try {
+            $zip = new ZipArchive;
+            if ($zip->open($zip_file,  ZipArchive::CREATE)) {
+                foreach (glob("../ump/".$model."/*.ump") as $filename) {
+                    if (basename($filename, ".ump") == "model") continue;
+                    $zip->addFile($filename, basename($filename));
+                }
+                $zip->close();
+                header('Content-disposition: attachment; filename='.$zip_file_name);
+                header('Content-type: application/zip');
+                readfile($zip_file);
+            }
+        } catch (Exception $e) {
+            // Nothing to do here for now
+        } finally {
+            // Make sure we release the lock
+            flock($fp, LOCK_UN);
         }
-        $zip->close();
-        header('Content-disposition: attachment; filename='.$zip_file_name);
-        header('Content-type: application/zip');
-        readfile($zip_file);
-   } else {
-        header('HTTP/1.0 404 Not Found');
-        readfile('../404.shtml');
-        exit();
-   }*/
+    }
 }
 else if (isset($_REQUEST["index"]) && isset($_REQUEST["model"]))
 {
