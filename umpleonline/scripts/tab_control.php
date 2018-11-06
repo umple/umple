@@ -8,6 +8,14 @@ header("Access-Control-Allow-Origin: *");
 if (isset($_REQUEST["list"]) && isset($_REQUEST["model"]))
 {
     $model = $_REQUEST["model"];
+
+    // Try to obtain the lock, but we don't actually need to block on the load operation
+    $lock_file = "../ump/".$model."/.lockfile";
+    $fp = fopen($lock_file, "w");
+    if (flock($fp, LOCK_EX)) {
+        flock($fp, LOCK_UN);
+    }
+
     $index_file_name = "tab_index";
     $index_file = "../ump/".$model."/".$index_file_name;
     $delim = "%NAME:CONTENT:DELIM%";
@@ -101,20 +109,32 @@ else if (isset($_REQUEST["download"]) && isset($_REQUEST["model"]))
 else if (isset($_REQUEST["index"]) && isset($_REQUEST["model"]))
 {
     $model = $_REQUEST["model"];
-    $index_file_name = "tab_index";
-    $index_file = "../ump/".$model."/".$index_file_name;
-    $index_contents = array();
-    if (isset($_REQUEST["orderedTabNames"]))
-    {
-        $index_contents = json_decode($_REQUEST["orderedTabNames"]);
-    }
-    else
-    {
-        foreach (glob("../ump/".$model."/*.ump") as $filename) {
-            $index_contents[] = $filename;
+ 
+    // Try to obtain the lock
+    $lock_file = "../ump/".$model."/.lockfile";
+    $fp = fopen($lock_file, "w");
+    if (flock($fp, LOCK_EX)) {
+        try {
+            $index_file_name = "tab_index";
+            $index_file = "../ump/".$model."/".$index_file_name;
+            $index_contents = array();
+            if (isset($_REQUEST["orderedTabNames"]))
+            {
+                $index_contents = json_decode($_REQUEST["orderedTabNames"]);
+            }
+            else
+            {
+                foreach (glob("../ump/".$model."/*.ump") as $filename) {
+                    $index_contents[] = $filename;
+                }
+            }
+        } catch (Exception $e) {
+            // Nothing to do here for now
+        } finally {
+            // Make sure we release the lock
+            flock($fp, LOCK_UN);
         }
     }
-    file_put_contents($index_file, implode("\n", $index_contents));
 }
 else {
     header('HTTP/1.0 404 Not Found');

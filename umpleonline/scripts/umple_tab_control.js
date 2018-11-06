@@ -295,7 +295,7 @@ TabControl.saveTab = function(tabId, umpleCode)
   TabControl.addToRequestQueue(
     "scripts/compiler.php",
     TabControl.saveTabCallback(tabId),
-    format("save=1&&umpleCode={0}&&filename={1}", umpleCode, filename));
+    format("save=1&&lock=1&&model={2}&&umpleCode={0}&&filename={1}", umpleCode, filename, Page.getModel()));
 }
 
 TabControl.saveTabCallback = function(tabId)
