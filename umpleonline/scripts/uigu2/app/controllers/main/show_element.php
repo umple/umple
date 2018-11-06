@@ -146,7 +146,7 @@ function _show_element($controller) {
 
               $temp_body = substr($temp_body, $value_start + $value_length + 3);
 
-            } else if($value_type == "a") {
+            } else if($value_type == "a") { //array
               $value_start = strpos($temp_body, "{");
               $stack->push($temp_body[$value_start]); //push "{"
               $index = $value_start + 1;
@@ -167,6 +167,18 @@ function _show_element($controller) {
                 $objects_table .= "<tr><td>".$i."</td><td></td></tr>";
               } else {
                 $objects_table .= "<tr><td></td><td></td></tr>";
+              }
+
+              $temp_body = substr($temp_body, $value_end + 1);
+
+            } else if($value_type == "i" || $value_type == "d" || $value_type == "b") {
+              $value_end = strpos($temp_body, ";");
+              $value_name = substr($temp_body, 2, $value_end - 2);
+
+              if($j == 0) {
+                $objects_table .= "<tr><td>".$i."</td><td>".$attribute_name.": ".$value_name."</td></tr>";
+              } else {
+                $objects_table .= "<tr><td></td><td>".$attribute_name.": ".$value_name."</td></tr>";
               }
 
               $temp_body = substr($temp_body, $value_end + 1);
