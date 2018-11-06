@@ -57,7 +57,6 @@ if (isset($_REQUEST["save"]))
     list($dataname, $dataHandle) = getOrCreateDataHandle();
     if (isset($_REQUEST["lock"]) && isset($_REQUEST["model"])){
       $model = $_REQUEST["model"];
-      // Try to obtain the lock, but we don't actually need to block on the load operation
       $lock_file = "../ump/".$model."/.lockfile";
       $fp = fopen($lock_file, "w");
       if (flock($fp, LOCK_EX)) {
