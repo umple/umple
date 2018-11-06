@@ -1,0 +1,112 @@
+/*
+Preliminary version of "quick build" (i.e. ant -Dmyenv=local -f build.umple.xml codegen umpleParser rtcpp umpleSelf compile packageJars). Produces an umple compiler jar
+called GradleUmpleJar 
+
+Execute the build using the following Gradle command: 
+gradle cleanUp generateAndCompileParser generateCoupledSource compileCoupledSourceJava packageSource packageUmpleCompilerJar -rerun-tasks
+
+These tasks can be combined to make the command shorter. The 'rerun-tasks' is required because incremental builds aren't working correctly yet.
+
+The sub projects that need to be built and generated to create the Umple compiler jar are all UmpleTo__ projects, UmpleParser, and cruise.umple
+Each gets its own build file. Ideally, we would generate and compile each project individually. However, currently cruise.umple and the UmpleToTL projects
+are too tightly coupled to be built independently, so we build them as a unit in the generateCoupledSource task
+*/
+
+buildscript {
+    repositories {
+        maven {
+            url uri('dist')
+        }
+        //maven {
+          //  url "https://plugins.gradle.org/m2/"
+        //}
+        flatDir dirs: "../umple.gradle/build/libs" //TODO use the plugin portal version once it's finalized
+        mavenCentral()
+    }
+    dependencies {
+        classpath files('libs/umple.jar')
+        classpath "umple.gradle.plugin:UmpleGradlePlugin-0.2.0"
+        classpath group: 'com.google.guava', name: 'guava', version: '19.0'
+    }
+}
+
+// The root project uses source sets, but it's only in the 
+// subprojects that compileUmple is actually called
+apply plugin: 'java'
+subprojects{ 
+    apply plugin: "umple.gradle.plugin"    
+}
+
+task cleanUp << {
+    delete "cruise.umple/GradleTest/bin"
+    delete "cruise.umple/GradleTest/src-gen-umpletl"
+    delete "cruise.umple/GradleTest/src-gen-umple"
+    delete "cruise.umple/GradleTest/parserSource"
+}
+
+task generateAndCompileParser << {
+    println("Finished generating and compiling UmpleParser")
+}
+
+// Meta-task that generates Java files for coupled sub projects
+// TODO decouple as many of these projects as possible
+// TODO further parallelize this task, perhaps using the -parallel flag?
+task generateCoupledSource << {
+    println("Finished generating coupled source (all UmpleToTL projects and cruise.umple)")
+}
+
+generateCoupledSource.dependsOn(':UmpleToJava:compileUmple', ':UmpleToPhp:compileUmple', ':UmpleToRTCpp:compileUmple', 
+                                ':UmpleToRuby:compileUmple', ':UmpleToSql:compileUmple', ':cruise.umple:compileUmple')
+
+generateAndCompileParser.dependsOn(':UmpleParser:compileJava')
+
+// See ivy.xml for which third-party libraries are required by the various flavours of Umple build
+configurations {
+    ivy
+}
+
+dependencies {
+    ivy group: 'net.sf.jopt-simple', name: 'jopt-simple', version: '4.4' // "core"
+    ivy group: 'org.apache.ant', name: 'ant', version: '1.9.6' // "core"
+    ivy group: 'junit', name: 'junit', version: '4.12' // "test"
+} 
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    coupledSource { 
+        compileClasspath += configurations.ivy // add the ivy dependencies to the classpath before compilation (required by cruise.umple)
+        sourceSets.coupledSource.compileClasspath += project.files('/cruise.umple/GradleTest/bin')
+        //The folders that need to be compiled and then included in the Umple compiler jar (all but the jopt folder have been populated by earlier build steps)
+        java.srcDirs = ['cruise.umple/GradleTest/src-gen-umple', 'cruise.umple/GradleTest/src-gen-umpletl' , 'dist/libs/vendors/jopt-simple/src/main/java/joptsimple']
+        output.classesDir = '/cruise.umple/GradleTest/bin'
+    }
+}
+
+task packageUmpleCompilerJar(type: Jar) << {
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
+    println("Packaging Umple compiler jar")
+    from '/cruise.umple/GradleTest/bin'
+    baseName = 'GradleUmpleJar'
+    into('lib') {
+		from configurations.ivy
+	}
+    manifest {
+        attributes 'Main-Class': 'cruise.umple.UmpleConsoleMain',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa'        
+    }
+}
+
+// grammar and error files also need to be included in the Umple jar
+task copyDocs(type: Copy) << {
+    println("Copying .grammar and .error files required by Umple compiler jar")
+    from "C:/Users/i_am_/workspace/umple/cruise.umple/src"
+    into 'C:/Users/i_am_/workspace/umple/cruise.umple/GradleTest/bin'
+    include '**/*.grammar'
+    include '**/*.error'
+}
+
+packageUmpleCompilerJar.dependsOn('copyDocs')
