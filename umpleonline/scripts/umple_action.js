@@ -313,6 +313,9 @@ Action.loadFile = function()
 Action.loadFileCallback = function(response)
 {
   Action.freshLoad = true;
+  // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
+  if (Object.keys(TabControl.tabs).length > 1) return;
+
   TabControl.getCurrentHistory().save(response.responseText,"loadFileCallback");
   Page.setUmpleCode(response.responseText);
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
