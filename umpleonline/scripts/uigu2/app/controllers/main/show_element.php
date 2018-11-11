@@ -59,7 +59,7 @@ function _show_element($controller) {
       //Create table with parameters needed for constructor
       //TODO do not create html here, leave it to the view
       if(count($element['constructor_params']) > 0){
-        $constructor_table_body = '<tr><th>Attribute Name</th><th>Type</th><th>Value</th><th>Hidden type</th></tr>';
+        $constructor_table_body = '<tr><th>Attribute Name</th><th>Type</th><th>Value</th><th></th></tr>';
         $form_enabled = true;
         foreach($element['constructor_params'] as $p){
           $field = array();
