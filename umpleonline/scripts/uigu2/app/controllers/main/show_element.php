@@ -59,7 +59,7 @@ function _show_element($controller) {
       //Create table with parameters needed for constructor
       //TODO do not create html here, leave it to the view
       if(count($element['constructor_params']) > 0){
-        $constructor_table_body = '<tr><th>Attribute Name</th><th>Type</th><th>Value</th></tr>';
+        $constructor_table_body = '<tr><th>Attribute Name</th><th>Type</th><th>Value</th><th>Hidden type</th></tr>';
         $form_enabled = true;
         foreach($element['constructor_params'] as $p){
           $field = array();
@@ -83,9 +83,14 @@ function _show_element($controller) {
               $form_enabled = false;
             }
           }
+
+          $attribute_type = $field['type'];
+          $hidden_type = "<input type='hidden' name='attribute_types[]' value='$attribute_type'/>";
+
           $constructor_table_body .= "<tr><td>{$field['name']}</td>".
                  "<td>{$field['type']}</td>".
-                 "<td>{$input_field}</td></tr>";
+                 "<td>{$input_field}</td>".
+                 "<td>{$hidden_type}</td></tr>";
         }
         $view->set('constructor_table_enabled', $form_enabled);
       }else {
@@ -100,6 +105,7 @@ function _show_element($controller) {
       if(!empty($objects) && count($objects) > 0){
         $objects_table = '<tr><th>Object ID</th><th>String Representation</th></tr>';
         for($i=0; $i < count($objects); $i++){
+          // modification start
         	$object_string_representation = serialize($objects[$i]);
         	
         	$length = strlen($object_string_representation);
