@@ -31,13 +31,13 @@ function _new_instance($controller) {
       }
     } else if($attribute_types[$i] == "Float" || $attribute_types[$i] == "float") {
       if(!preg_match("/^(-?\d+)(\.\d+)?$/", $constructor_values[$i])) {
-        $controller->set_message('Error: Cannot convert "'.$constructor_values[$i].'" into a single floating point number', true);
+        $controller->set_message('Error: Cannot convert "'.$constructor_values[$i].'" into a single-precision floating point number', true);
         Uigu2_Controller::redirect('index');
         return;
       }
     } else if($attribute_types[$i] == "Double" || $attribute_types[$i] == "double") {
       if(!preg_match("/^(-?\d+)(\.\d+)?$/", $constructor_values[$i])) {
-        $controller->set_message('Error: Cannot convert "'.$constructor_values[$i].'" into a double floating point number', true);
+        $controller->set_message('Error: Cannot convert "'.$constructor_values[$i].'" into a double-precision floating point number', true);
         Uigu2_Controller::redirect('index');
         return;
       }
