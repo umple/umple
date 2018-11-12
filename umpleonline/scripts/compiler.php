@@ -55,7 +55,24 @@ if (isset($_REQUEST["save"]))
   {
     $input = $_REQUEST["umpleCode"];
     list($dataname, $dataHandle) = getOrCreateDataHandle();
-    $dataHandle->writeData($dataname, $input);
+    if (isset($_REQUEST["lock"]) && isset($_REQUEST["model"])){
+      $model = $_REQUEST["model"];
+      $lock_file = "../ump/".$model."/.lockfile";
+      $fp = fopen($lock_file, "w");
+      if (flock($fp, LOCK_EX)) {
+        try {
+          $dataHandle->writeData($dataname, $input);
+        } catch (Exception $e) {
+          // Do nothing for now here
+        } finally {
+          flock($fp, LOCK_UN);
+        }
+      }
+    }
+    else
+    {
+      $dataHandle->writeData($dataname, $input);
+    }
     // pretend this is still the old system and mimic the kind of path
     // the JavaScript expects
     echo '../ump/'.$dataHandle->getName().'/'.$dataname;

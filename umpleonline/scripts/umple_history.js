@@ -5,31 +5,72 @@
 // Models history (undo stack) in UmpleOnline
 
 History = new Object();
-// History item currently on display; -1 means nothing saved.
-History.currentIndex = -1;
-// Initially there is nothing saved.
-History.oldestAvailableIndex = 0;
-History.newestAvailableIndex = 0;
+
 // capacity of the circular structure; we will reuse after cycling through
 History.versionCount = 9999;
 History.noChange = "//$?[No_Change]$?";
-// Initially nothing is saved.
-History.firstSave = true;
+
+History.getInstance = function(id)
+{
+  var instance = new Object();
+
+  instance.id = id;
+
+  // History item currently on display; -1 means nothing saved.
+  instance.currentIndex = -1;
+  
+  // Initially there is nothing saved.
+  instance.oldestAvailableIndex = 0;
+  instance.newestAvailableIndex = 0;
+
+  // Initially nothing is saved.
+  instance.firstSave = true;
+  instance.undoButton = false;
+  instance.redoButton = false;
+
+  instance.getNextVersion = function() {return History.getNextVersion(instance)};
+  instance.getPreviousVersion = function() {return History.getPreviousVersion(instance)};
+  instance.save = function(umpleCode, reason) {return History.save(instance, umpleCode, reason)};
+  instance.distanceBetween = function(index1, index2) {return History.distanceBetween(instance, index1, index2)};
+  instance.setButtons = function() {return History.setButtons(instance)};
+  instance.getVersion = function(versionNumber) {return History.getVersion(instance, versionNumber)};
+  instance.setVersion = function(versionNumber, umpleCode) {return History.setVersion(instance, versionNumber, umpleCode)};
+  
+  return instance;
+}
+
+History.setButtons = function(instance)
+{
+  History.enableButtonUndo(instance, instance.undoButton);
+  History.enableButtonRedo(instance, instance.redoButton);
+}
+
+History.enableButtonUndo = function(instance, value)
+{
+  instance.undoButton = value;
+  Page.enablePaletteItem("buttonUndo", value);
+}
+
+History.enableButtonRedo = function(instance, value)
+{
+  instance.redoButton = value;
+  Page.enablePaletteItem("buttonRedo", value);
+}
 
 // Returns the version that had been saved; called when moving forward
 // using a 'redo' operation; called from Action.redo
-History.getNextVersion = function()
+History.getNextVersion = function(instance)
 {
-  Page.enablePaletteItem("buttonUndo", true);
+  History.enableButtonUndo(instance, true);
   
   var result;
   
-  if (!History.FirstSave && History.newestAvailableIndex != History.currentIndex)
+  if (!instance.FirstSave && instance.newestAvailableIndex != instance.currentIndex)
   {
-  	History.currentIndex = History.incrementIndex(History.currentIndex);
+  	instance.currentIndex = History.incrementIndex(instance.currentIndex);
   	// Page.catFeedbackMessage("Set history for next to " + History.currentIndex); // DEBUG
 
-  	result = History.getVersion(History.currentIndex);
+  	result = instance.getVersion(instance.currentIndex);
   	if (result == undefined) result = History.noChange;
   } 
   else
@@ -37,30 +78,29 @@ History.getNextVersion = function()
   	result = History.noChange;
   }
   
-  if (History.newestAvailableIndex == History.currentIndex)
+  if (instance.newestAvailableIndex == instance.currentIndex)
   {
-  	Page.enablePaletteItem("buttonRedo", false);
+  	History.enableButtonRedo(instance, false);
   }
-  
   return result;
 }
 
 // Returns the previously saved version in the undo stack
 // Moves the pointer back in the undo stack
 // Called from Action.undo and also from save in the case of an apparent undo
-History.getPreviousVersion = function()
+History.getPreviousVersion = function(instance)
 {
   var result;
   
-  if (!History.FirstSave && History.oldestAvailableIndex != History.currentIndex)
+  if (!instance.FirstSave && instance.oldestAvailableIndex != instance.currentIndex)
   {
-  	History.currentIndex = History.decrementIndex(History.currentIndex);
+  	instance.currentIndex = History.decrementIndex(instance.currentIndex);
   	// Page.catFeedbackMessage("Set history back to " + History.currentIndex); // DEBUG
 
-  	result = History.getVersion(History.currentIndex);
-  	
+  	result = instance.getVersion(instance.currentIndex);
+
   	if (result == undefined) result = History.noChange;
-  	else Page.enablePaletteItem("buttonRedo", true);
+  	else History.enableButtonRedo(instance, true);
   }
   else
   {
@@ -68,39 +108,40 @@ History.getPreviousVersion = function()
   	result = History.noChange;
   }
   
-  if (History.oldestAvailableIndex == History.currentIndex)
+  if (instance.oldestAvailableIndex == instance.currentIndex)
   {
-  	Page.enablePaletteItem("buttonUndo", false);
+    History.enableButtonUndo(instance, false);
   }
-  
   return result;
 }
 
 // Save a new version of the code
-History.save = function(umpleCode, reason)
+History.save = function(instance, umpleCode, reason)
 {
-  if (!History.firstSave) 
+  if (instance.getVersion(instance.currentIndex) == umpleCode) return;
+
+  if (!instance.firstSave) 
   {
     // Whenever we save we set the highest saved index
     // So we can't redo
-  	Page.enablePaletteItem("buttonRedo", false);
-  	  Page.enablePaletteItem("buttonUndo", true);
+    History.enableButtonRedo(instance, false);
+    History.enableButtonUndo(instance, true);
   } 
   
-  var gap = History.distanceBetween(History.oldestAvailableIndex, History.currentIndex);
-  if (gap == History.versionCount - 1)
+  var gap = instance.distanceBetween(instance.oldestAvailableIndex, instance.currentIndex);
+  if (gap == instance.versionCount - 1)
   {
-  	History.oldestAvailableIndex = History.incrementIndex(History.oldestAvailableIndex);
+  	instance.oldestAvailableIndex = History.incrementIndex(instance.oldestAvailableIndex);
   }
 
-  History.currentIndex = History.incrementIndex(History.currentIndex);
+  instance.currentIndex = History.incrementIndex(instance.currentIndex);
   // Page.catFeedbackMessage("Set history for new to " + History.currentIndex + " " + reason);// DEBUG
 
-  History.newestAvailableIndex = History.currentIndex;
-  History.setVersion(History.currentIndex, umpleCode);
+  instance.newestAvailableIndex = instance.currentIndex;
+  instance.setVersion(instance.currentIndex, umpleCode);
   
-  if(History.firstSave) {
-    History.firstSave = false;
+  if(instance.firstSave) {
+    instance.firstSave = false;
   }
 }
 
@@ -132,27 +173,27 @@ History.incrementIndex = function(index)
 }
 
 // Retrieve the index with version versionNumber
-History.getVersion = function(versionNumber)
+History.getVersion = function(instance, versionNumber)
 {
   var selector = "#" + "textEditorColumn";
-  var requested = "version" + versionNumber;
+  var requested = instance.id + "version" + versionNumber;
   
   return jQuery(selector).data(requested);
 }
 
 // Store a new version with index versionNumber
-History.setVersion = function(versionNumber, umpleCode)
+History.setVersion = function(instance, versionNumber, umpleCode)
 {
   var selector = "#" + "textEditorColumn";
-  var requested = "version" + versionNumber;
-  
+  var requested = instance.id + "version" + versionNumber;
+
   return jQuery(selector).data(requested, umpleCode);
 }
 
 
-History.distanceBetween = function(index1, index2)
+History.distanceBetween = function(instance, index1, index2)
 {
-  if (History.currentIndex == -1) return 0;
+  if (instance.currentIndex == -1) return 0;
   
   var distance = 0;
   var i = index1;
