@@ -35,7 +35,8 @@ ToolTips.tooltipEntries = {
   buttonCopy: ["li", "Click to open the source for this model"],
   buttonCopyEncodedURL: ["li", "Click to view a url encoded with this model"],  
   buttonCopyLocalBrowser: ["li", "Click to save the model in in your browser local storage for later reloading"],  
-  buttonLoadLocalBrowser: ["li", "Click to load the model from what you had previously saved in this browser (above)"],  
+  buttonLoadLocalBrowser: ["li", "Click to load the model from what you had previously saved in this browser (above)"],
+  buttonDownloadFiles: ["li", "Click to download the currently open .ump files."],
   ttDropboxSaver: ["li", "Click to save your model to dropbox"],
 
   // start over tooltips

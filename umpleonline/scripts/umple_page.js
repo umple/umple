@@ -24,6 +24,7 @@ Page.hLine = null;
 Page.modelLoadingCount = 0;
 Page.layoutLoadingCount = 0;
 Page.canvasLoadingCount = 0;
+Page.onLoadingCompleteCallbacks = [];
 
 // Global options
 Page.readOnly = false; // initially allow editing
@@ -46,7 +47,9 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Layout.isTextVisible = doShowText;  
   Layout.isPaletteVisible = doShowMenu;  
   Layout.isLayoutVisible = doShowLayout;
-  Page.readOnly = doReadOnly; 
+  Page.readOnly = doReadOnly;
+
+  TabControl.init()
 
   // Set diagram type - anything else means use the default editable class diagram
   if(diagramType == "GvState")   
@@ -108,7 +111,8 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonCopy");
   Page.initHighlighter("buttonCopyEncodedURL");
   Page.initHighlighter("buttonCopyLocalBrowser");
-  Page.initHighlighter("buttonLoadLocalBrowser");  
+  Page.initHighlighter("buttonLoadLocalBrowser");
+  Page.initHighlighter("buttonDownloadFiles");
   Page.initHighlighter("buttonSmaller");
   Page.initHighlighter("buttonLarger");
   Page.initHighlighter("buttonSyncCode");
@@ -152,6 +156,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonCopyEncodedURL");
   Page.initAction("buttonCopyLocalBrowser");
   Page.initAction("buttonLoadLocalBrowser");
+  Page.initAction("buttonDownloadFiles");
   Page.initAction("buttonUndo");
   Page.initAction("buttonRedo");
   Page.initAction("buttonUigu");
@@ -695,6 +700,18 @@ Page.umpleCanvasId = function()
   return "umpleCanvas";
 }
 
+Page.createBookmark = function()
+{
+  TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+  TabControl.saveActiveTabs();
+  window.location.href = "bookmark.php?model=" + Page.getModel();
+}
+
+Page.toggleTabs = function()
+{
+  TabControl.isHidden()? TabControl.showTabs() : TabControl.hideTabs();
+}
+
 Page.showDiagramSyncNeeded = function(doShow)
 {
   var canvas = jQuery("#umpleCanvas");
@@ -1069,6 +1086,11 @@ Page.getFilename = function()
 Page.getAdvancedMode = function()
 {
   return document.getElementById("advancedMode").value;
+}
+
+Page.getModel = function()
+{
+  return jQuery("#model").val();
 }
 
 jQuery.fn.selectRange = function(start, end) {
