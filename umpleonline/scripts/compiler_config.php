@@ -166,9 +166,13 @@ class WorkDir{
     Could be used to upload to a dedicated fileserver.
     */
     function makePermalink($path){
-        // assumes the server root is umpleonline/
-        $localpath = $this->root.'/'.$path;
-        $serverpath = substr($localpath, strlen(rootDir()));
+        // assumes the server root is not just umpleonline/
+        $umpsubdirStart = strpos($this->root,"/ump/");
+        $umpsubdir=substr($this->root,$umpsubdirStart);
+        $theURI = $_SERVER['REQUEST_URI'];
+        $choppoint= strlen($theURI)-strlen("/scripts/compiler.php");
+        $serverroot = substr($theURI, 1, $choppoint-1);
+        $serverpath ="/".$serverroot.$umpsubdir."/".$path;
         return $serverpath;
     }
 }
