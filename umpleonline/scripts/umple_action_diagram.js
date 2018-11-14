@@ -9,6 +9,7 @@ DiagramEdit.textChangeQueue = [];
 DiagramEdit.pendingChanges = false;
 DiagramEdit.newClass = null;
 DiagramEdit.newAssociation = null;
+DiagramEdit.newTransition = null;
 DiagramEdit.newGeneralization = null;
 
 //Queues and initiates updates to the text editor after the diagram is edited
@@ -84,6 +85,28 @@ DiagramEdit.addAssociation = function(line)
   });
 }
 
+DiagramEdit.addTransition = function(line)
+{
+    Page.setFeedbackMessage("add transition in umple_action_diagram");
+    // the line shown when selecting participating states
+  // is a dummy - erase it and create transition
+  DiagramEdit.removeNewTransition();
+  var umpleTransition = UmpleSystem.createTransition(line.fromStateId, line.toStateId);
+
+  // obtain the json representation of the Transition
+  var umpleJson = Json.toString(umpleTransition);
+  
+  // unselect all drawing tools in the palette and show loading images
+  if (!Page.repeatToolItem) Page.unselectAllToggleTools();
+  Page.showModelLoading();
+  Page.showLayoutLoading();
+  
+  DiagramEdit.updateUmpleText({
+    actionCode: format("action=addTransition&actionCode={0}",umpleJson),
+    codeChange: true
+  });
+}
+
 DiagramEdit.addGeneralization = function(umpleGeneralization)
 {
   DiagramEdit.removeNewGeneralization();
@@ -108,7 +131,9 @@ DiagramEdit.addGeneralization = function(umpleGeneralization)
  */
 DiagramEdit.createAssociationPartOne = function(event)
 {
-  // get the position of the click and compute the first end's position
+    Page.setFeedbackMessage("Part 1 association");
+
+    // get the position of the click and compute the first end's position
   var mousePosition = new UmplePosition(event.pageX,event.pageY,0,0);
   var umpleSystem = UmpleSystem.position();
   var classOneX = mousePosition.x - umpleSystem.x;
@@ -144,6 +169,41 @@ DiagramEdit.createAssociationPartTwo = function(event)
   DiagramEdit.addAssociation(DiagramEdit.newAssociation);
 }
 
+
+/* Creating a transition (via diagram) is divided into two parts:
+ * The first is selecting the first state, and
+ * then anchoring the first end of the transition line.
+ * The second is doing the same for the second chosen state, and then launching
+ * necessary actions to add the transition to the Umple System
+ */
+DiagramEdit.createTransitionPartOne = function(event)
+{
+    Page.setFeedbackMessage("Part 1 transition");
+
+    // get the position of the click and compute the first end's position
+    var mousePosition = new UmplePosition(event.pageX,event.pageY,0,0);
+    var umpleSystem = UmpleSystem.position();
+    var stateOneX = mousePosition.x - umpleSystem.x;
+    var stateOneY = mousePosition.y - umpleSystem.y;
+
+    // draw a dummy transition line and anchor it to the location of the click
+    Action.classSelected(event.currentTarget);
+    DiagramEdit.newTransition = new UmpleTransition();
+    DiagramEdit.newTransition.fromStatePosition = event.currentTarget.id;
+    DiagramEdit.newTransition.toStatePosition = new UmplePosition(stateOneX,stateOneY,0,0);
+    DiagramEdit.newTransition.eventName = "event1";
+}
+
+DiagramEdit.createTransitionPartTwo = function(event)
+{
+    Page.setFeedbackMessage("calling Part two");
+    var mousePosition = new UmplePosition(event.pageX,event.pageY,0,0);
+    Action.classSelected(event.currentTarget);
+    //The inline transition definition belongs in the first state clicked
+    DiagramEdit.newTransition.toStateId = event.currentTarget.id;
+    DiagramEdit.newTransition.toStatePosition = mousePosition.subtract(UmpleSystem.position());
+    DiagramEdit.addTransition(DiagramEdit.newTransition);
+}
 DiagramEdit.createGeneralizationPartOne = function(event)
 {
   var childClass = UmpleSystem.find(event.currentTarget.id);
@@ -580,6 +640,25 @@ DiagramEdit.associationDeleted = function(diagramId, addToQueue)
   });
 }
 
+DiagramEdit.transitionDeleted = function(diagramId, addToQueue)
+{
+    Page.setFeedbackMessage("transition Deleted action diagram");
+
+    if (addToQueue == undefined) addToQueue = false;
+    console.log("add transition in umple_action_diagram\n")
+    var removed = UmpleSystem.removeTransition(diagramId);
+    var json = Json.toString(removed);
+
+    if (!Page.repeatToolItem) Page.unselectAllToggleTools();
+
+    Page.showModelLoading();
+    Page.showLayoutLoading();
+    DiagramEdit.updateUmpleText({
+        actionCode: format("action=removeTransition&actionCode={0}",json),
+        codeChange: true
+    });
+}
+
 DiagramEdit.generalizationDeleted = function(diagramId, addToQueue)
 {
   if (addToQueue == undefined) addToQueue = false;
@@ -620,6 +699,19 @@ DiagramEdit.removeNewAssociation = function()
     var lineSelector = "#"+DiagramEdit.newAssociation.getElementId();
     jQuery(lineSelector).remove();
     DiagramEdit.newAssociation = null;
+    return true;
+  }
+  return false;
+}
+
+DiagramEdit.removeNewTransition = function()
+{
+    Page.setFeedbackMessage("removeNewTransition");
+    if (DiagramEdit.newTransition != null)
+  {
+    var lineSelector = "#"+DiagramEdit.newTransition.getElementId();
+    jQuery(lineSelector).remove();
+    DiagramEdit.newTransition = null;
     return true;
   }
   return false;

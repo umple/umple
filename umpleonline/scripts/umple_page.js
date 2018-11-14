@@ -9,6 +9,7 @@ Page = new Object();
 Page.selectedItem = null;
 Page.selectedClass = null;
 Page.selectedAssociation = null;
+Page.selectedTransition = null;
 Page.selectedGeneralization = null;
 Page.codeEffect = null;
 Page.clickCount = 0;
@@ -38,6 +39,8 @@ Page.showTraits = false;
 Page.showTransitionLabels = false;
 Page.showGuardLabels = false;
 Page.modifiedDiagrams = false;
+
+
 
 // The following is set called from umple.php
 Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault)
@@ -99,6 +102,7 @@ Page.initPaletteArea = function()
   
   Page.initHighlighter("buttonAddClass");
   Page.initHighlighter("buttonAddAssociation");
+  Page.initHighlighter("buttonAddTransition");
   Page.initHighlighter("buttonAddGeneralization");
   Page.initHighlighter("buttonDeleteEntity");
   Page.initHighlighter("buttonPngImage");
@@ -122,6 +126,7 @@ Page.initPaletteArea = function()
   
   Page.initToggleTool("buttonAddClass");
   Page.initToggleTool("buttonAddAssociation");
+  Page.initToggleTool("buttonAddTransition");
   Page.initToggleTool("buttonAddGeneralization");
   Page.initToggleTool("buttonDeleteEntity");
    
@@ -174,6 +179,7 @@ Page.initPaletteArea = function()
   Page.enablePaletteItem("buttonUndo", false);
   Page.enablePaletteItem("buttonRedo", false);
   Page.enablePaletteItem("buttonSyncDiagram", false);
+  Page.enablePaletteItem("buttonAddTransition", false);
 
   jQuery("#genstatus").hide();
   jQuery("#buttonViewComplete").hide();
@@ -547,6 +553,11 @@ Page.enableDiagram = function(doEnable)
   Page.enablePaletteItem("buttonDeleteEntity", doEnable);
   Page.showDiagramSyncNeeded(!doEnable);
 }
+Page.enableTransition = function(doEnable)
+{
+    Page.enablePaletteItem("buttonAddTransition", doEnable);
+    Page.enablePaletteItem("buttonAddAssociation", !doEnable);
+}
 
 Page.enableEditDragAndResize = function(doEnable)
 {
@@ -593,6 +604,8 @@ Page.unselectAllToggleTools = function()
   if(temp) unselected = true;
   temp = DiagramEdit.removeNewAssociation();
   if(temp) unselected = true;
+  temp = DiagramEdit.removeNewTransition();
+  if(temp) unselected = true;
   temp = DiagramEdit.removeNewGeneralization();
   if(temp) unselected = true;
   
@@ -612,6 +625,7 @@ Page.selectToggleTool = function(toolSelected)
   {
     DiagramEdit.removeNewClass();
     DiagramEdit.removeNewAssociation();
+    DiagramEdit.removeNewTransition();
     DiagramEdit.removeNewGeneralization();
   }
   

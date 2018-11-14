@@ -27,7 +27,7 @@ class DeleteTransitionAction
       
       if (!result.getWasSuccess())
       {
-        textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
+        textParser.insert("Unable to update umple code due to error at " + result.getPosition() + "\n");
         setUmpleCode(textParser.getText());
         return;
       }
@@ -39,7 +39,7 @@ class DeleteTransitionAction
       
       if (!jsonResult.getWasSuccess())
       {
-        setUmpleCode("//Failed at: " + jsonResult.getPosition() + "\n\n//" + getDeltaCode() + "\n\n" + getUmpleCode());
+        setUmpleCode("Failed at: " + jsonResult.getPosition() + "\n\n//" + getDeltaCode() + "\n\n" + getUmpleCode());
         return;
       }
       Json json = jsonParser.analyze();

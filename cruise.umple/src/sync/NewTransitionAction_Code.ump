@@ -47,8 +47,8 @@ class NewTransitionAction
               if (!result.getWasSuccess())
               {
                 //Uncomment for debug
-                //textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
-                //setUmpleCode(textParser.getText());
+                textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
+                setUmpleCode(textParser.getText());
                 return false;
               }
               
@@ -62,7 +62,7 @@ class NewTransitionAction
               String toStateId = json.getValue("toStateId");
               Token addAfterLastTransition = null;
               boolean didFindPostion = false;
-              
+
               for(Token t : umpleParser.getRootToken().getSubTokens())
               {
                 if (!t.is("classDefinition"))
@@ -123,9 +123,12 @@ class NewTransitionAction
         }
         
         if(fromStateId.equals(stateToken.getValue("stateName"))) {
-        		String newTransition = StringFormatter.format(" {0} -> {1};\n", event, toStateId);
+            String newTransition = StringFormatter.format(" {0} -> {1};\n", event, toStateId);
             parser.insertAfter(addAfterLastTransition, newTransition);
             return true;
+        } else {
+            textParser.insert("NewTransitionAction error: fromStateId!=Statename" + stateToken.getValue("stateName")+ "\n");
+
         }
         return didFindPosition;
   }

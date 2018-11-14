@@ -431,6 +431,10 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/assoc.png"/> 
               Association
             </li>
+	    <li id="buttonAddTransition" class="toggleToolItem" name="paletteItem" title="Select and click on a state to draw an transition.">
+              <img src="scripts/assoc.png"/>
+              Transition
+            </li>
             <!-- <li id="buttonBendAssociation" class="toggleToolItem" name="paletteItem">
               <img src="scripts/assocbend.jpg"/> 
               Bend Assoc.
