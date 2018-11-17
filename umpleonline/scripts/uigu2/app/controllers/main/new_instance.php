@@ -18,8 +18,8 @@ function _new_instance($controller) {
   $num = count($constructor_values);
   for ($i = 0; $i < $num; $i++) { 
     if($attribute_types[$i] == "Boolean" || $attribute_types[$i] == "boolean" || $attribute_types[$i] == "bool") {
-      if($constructor_values[$i] != "true" && $constructor_values[$i] != "false") {
-        $controller->set_message('Error: Cannot convert "'.$constructor_values[$i].'" into a boolean value', true);
+      if($constructor_values[$i] == "unassigned") {
+        $controller->set_message('Error: Unassigned boolean variable', true);
         Uigu2_Controller::redirect('index');
         return;
       }

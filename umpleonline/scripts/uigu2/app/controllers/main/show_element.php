@@ -45,9 +45,50 @@ class Stack {
   }
 }
 
+
+
+function getBrowser() { 
+  $u_agent = $_SERVER['HTTP_USER_AGENT'];
+  $bname = 'Unknown';
+
+  // Get the name of the useragent yes seperately and for good reason
+  if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent)){
+    $bname = 'Internet Explorer';
+    $ub = "MSIE";
+  }elseif(preg_match('/Firefox/i',$u_agent)){
+    $bname = 'Mozilla Firefox';
+    $ub = "Firefox";
+  }elseif(preg_match('/OPR/i',$u_agent)){
+    $bname = 'Opera';
+    $ub = "Opera";
+  }elseif(preg_match('/Chrome/i',$u_agent) && !preg_match('/Edge/i',$u_agent)){
+    $bname = 'Google Chrome';
+    $ub = "Chrome";
+  }elseif(preg_match('/Safari/i',$u_agent) && !preg_match('/Edge/i',$u_agent)){
+    $bname = 'Apple Safari';
+    $ub = "Safari";
+  }elseif(preg_match('/Netscape/i',$u_agent)){
+    $bname = 'Netscape';
+    $ub = "Netscape";
+  }elseif(preg_match('/Edge/i',$u_agent)){
+    $bname = 'Edge';
+    $ub = "Edge";
+  }elseif(preg_match('/Trident/i',$u_agent)){
+    $bname = 'Internet Explorer';
+    $ub = "MSIE";
+  }
+
+  return array(
+    'userAgent' => $u_agent,
+    'name'      => $bname,
+  );
+} 
+
 function _show_element($controller) {
 
   //TODO make this a parameter-by-url always
+  $ua = getBrowser();
+  $brower_name = $ua['name'];
   if(($element_name = $controller->get_param('element_name')) ||
       ($element_name = $controller->get_param())){
 
@@ -61,18 +102,34 @@ function _show_element($controller) {
       if(count($element['constructor_params']) > 0){
         $constructor_table_body = '<tr><th>Attribute Name</th><th>Type</th><th>Value</th><th></th></tr>';
         $form_enabled = true;
+        $input_field_index = 0;
         foreach($element['constructor_params'] as $p){
           $field = array();
           if(isset($element['attributes'][$p])){
             $field = $element['attributes'][$p];
             $value = isset($field['value']) ? $att['value'] : ''; 
-            $input_field = "<input type='text' name='constructor_values[]' value='$value'/>";
+            if($field['type'] == 'Boolean' || $field['type'] == 'boolean' || $field['type'] == 'bool') {
+              $input_field = "<input type='radio' name='constructor_values[$input_field_index]' value='true'/> true ".
+              "<input type='radio' name='constructor_values[$input_field_index]' value='false'/> false ".
+              "<input type='radio' name='constructor_values[$input_field_index]' style='display:none;' value='unassigned' checked='checked'/>";
+              $input_field_index++;
+            } else if($field['type'] == 'Date' && $brower_name != 'Internet Explorer' && $brower_name != 'Apple Safari') {
+              $input_field = "<input type='date' name='constructor_values[$input_field_index]' required pattern='[0-9]{4}-[0-9]{2}-[0-9]{2}'/>";
+              $input_field_index++;
+            } else if($field['type'] == 'Time' && $brower_name != 'Internet Explorer' && $brower_name != 'Apple Safari') {
+              $input_field = "<input type='time' name='constructor_values[$input_field_index]' required step='1'/>";
+              $input_field_index++;
+            } else {
+              $input_field = "<input type='text' name='constructor_values[$input_field_index]' value='$value'/>";
+              $input_field_index++;
+            }
           }else{
             $field = $element['associations'][$p];
             //Parameter for an association must be an index ("ID") for an existing instance
             $instances = $controller->get_objects($field['type']); 
             if(!empty($instances) && count($instances) > 0){
-              $input_field = "<select name='constructor_values[]'>";
+              $input_field = "<select name='constructor_values[$input_field_index]'>";
+              $input_field_index++;
               for($i=0; $i < count($instances); $i++){
                 $input_field .=  "<option value='{$i}'>Object ID {$i}</option>";
               }
