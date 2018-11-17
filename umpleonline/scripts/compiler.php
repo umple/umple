@@ -222,10 +222,12 @@ else if (isset($_REQUEST["umpleCode"]))
        }
        // exec("cd $uigu2dir; ln -s ../../scripts/uigu2/app .");    
        $uigu2file = $workDir->makePermalink('index.php');
-       $html = "{$errhtml}
+       // DEBUG - to display as a link Uncomment the following line, and comment out the subsequent 4
+       //  $html = "{$errhtml} <b> <a target=\"otherone\" href=\"" . $uigu2file . "\">$uigu2file</a> </b>";  
+       $html = "{$errhtml} 
       <iframe width=100% height=1000 src=\"" . $uigu2file . "\">This browser does not
       support iframes, so the uigu cannot be displayed</iframe> 
-     ";
+      ";
        echo $html;
     }
     else {

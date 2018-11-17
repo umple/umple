@@ -11,8 +11,10 @@ define('WEB_DOMAIN_ROOT','http://'.$actualpath);
  *relative to the <DocumentRoot> element of the apache config file 
  *eg.  if <DocumentRoot> is '/var/www/' and the full path is '/var/www/a/b/index.php'
  *use '/a/' (with trailing slash) */
-define('WEB_FOLDER_ROOT','/ump/');
-
+$pathStart=strpos($actualpath,"/umpleonline/");
+$wfr=substr($actualpath,$pathStart);
+define('WEB_FOLDER_ROOT',$wfr);
 define('APP_PATH','app/');
 define('VIEW_PATH',APP_PATH.'views/');
 define('CONTROLLER_PATH',APP_PATH.'controllers/');
+
