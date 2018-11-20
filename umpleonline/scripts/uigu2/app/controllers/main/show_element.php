@@ -285,9 +285,42 @@ function _show_element($controller) {
         $objects_table = "<span class='subtle'> There are no created instances for this Class </span>";
       }
       $view->set('objects_table', $objects_table);
+
       $element_names = $controller->get_element_names();
+
+      $numbers_of_elements = NULL;
+      if(isset($element_names) && is_array($element_names)) {
+        $numbers_of_elements = array();
+        foreach($element_names as $e){
+          $instances = $controller->get_objects($e);
+          if(empty($instances)) {
+            $numbers_of_elements[$e] = 0;
+          } else {
+            $numbers_of_elements[$e] = count($instances);
+          }
+        }
+      }
+
       $messages = $controller->get_messages_clear();
-      $view->show($element_names, $messages);
+
+      $instantiatable_info = NULL;
+      if(isset($element_names) && is_array($element_names)) {
+        $instantiatable_info = array();
+        foreach($element_names as $e){
+          if(can_instantiate($controller, $e)) {
+            $instantiatable_info[$e] = true;
+          } else {
+            $instantiatable_info[$e] = false;
+          }
+        }
+      }
+      
+      $layout_parameter_map = array('element_names' => $element_names,
+                                    'numbers_of_elements' => $numbers_of_elements,
+                                    'messages' => $messages,
+                                    'instantiatable_info' => $instantiatable_info);
+
+      $view->show_layout($layout_parameter_map);
 
     } else{
       $controller->set_message('Error showing Element: '.$element_name.' does not exist', true);
@@ -296,5 +329,30 @@ function _show_element($controller) {
   } else{
     $controller->set_message('Error showing Element: the Element name was not provided', true);
     Uigu2_Controller::redirect('index'); 
+  }
+}
+
+function can_instantiate($controller, $element_name) {
+  if($element = $controller->get_element($element_name)) {
+    if(count($element['constructor_params']) > 0) {
+      
+      foreach($element['constructor_params'] as $p) {
+        if(!isset($element['attributes'][$p])) {
+          $field = $element['associations'][$p];
+          //Parameter for an association must be an index ("ID") for an existing instance
+          $instances = $controller->get_objects($field['type']);
+          if(empty($instances) || count($instances) == 0) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+
+    } else {
+      return true;
+    }
+  } else {
+    return false;
   }
 }

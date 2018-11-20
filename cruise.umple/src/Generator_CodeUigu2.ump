@@ -247,8 +247,13 @@ class Uigu2ElementGenerator
       String[] constructorParams = constructorSignature.split(", ");
       for(int i = 0; i < constructorParams.length; i++){
         //"$aAttributeName" => "attributeName"
+        //"$allAttributeName" => "attributeName"
         String param = constructorParams[i];
-        param = Character.toLowerCase(param.charAt(2)) + param.substring(3); 
+        if(param.startsWith("$all")) {
+          param = Character.toLowerCase(param.charAt(4)) + param.substring(5);
+        } else {
+          param = Character.toLowerCase(param.charAt(2)) + param.substring(3); 
+        }
         code.append("$constructor_params[] = '" + param + "';").append(NL);
       }
     }

@@ -22,18 +22,36 @@
           <td>
             <a href="<?php echo WEB_FOLDER ?>">Main Page</a> 
           </td>
-          <td> | Show element:
+          <td> | Pick a class:
             <form action="<?php echo WEB_FOLDER.'main/show_element'?>" method="POST">
+              <?php 
+                if (isset($element_names) && is_array($element_names)){
+                  foreach($element_names as $e){
+                    if($instantiatable_info[$e]) {
+                      // classes that can be instantiated
+                      echo "<input type='radio' id='$e' name='element_name' value='$e'>
+                            <label for='$e'><strong>$e &#91;$numbers_of_elements[$e]&#93;</strong></label>";
+                    } else {
+                      // classes that cannot be instantiated
+                      echo "<input type='radio' id='$e' name='element_name' value='$e'>
+                            <label for='$e'>$e &#91;$numbers_of_elements[$e]&#93;</label>";
+                    }
+                  }
+                }
+              ?>
+
+              <!-- 
               <select name="element_name">
                 <option selected>---</option>
                 <?php 
-                if (isset($element_names) && is_array($element_names)){
-                  foreach($element_names as $e){
-                    echo "<option value='$e'>$e</option>";
-                  }
-                }
+                //if (isset($element_names) && is_array($element_names)){
+                //  foreach($element_names as $e){
+                //    echo "<option value='$e'>$e ".$numbers_of_elements[$e]."</option>";
+                //  }
+                //}
                 ?>
-              </select>
+              </select> 
+              -->
               <input type="submit" value="Go"/>
             </form>
           </td>
