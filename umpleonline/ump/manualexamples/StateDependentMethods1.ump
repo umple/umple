@@ -1,0 +1,54 @@
+class Mario {
+  Modifiers {
+    Small {
+      Normal {
+        void onHit() {
+          Die();
+        }
+      }
+      
+      Invulnerable {
+        void onHit() {
+          // took no damage
+        }
+      }
+      
+      void render() {
+        // draw small mario
+      }
+
+      EatMushroom -> Large;
+      Star -> Small.Invulnerable;
+      Die -> Dead;
+    }
+
+    Large {    
+      Normal {
+        void onHit() {
+          Shrink();
+        }
+      }
+    
+      Invulnerable {
+        void onHit() {
+          // took no damage
+        }
+      }
+    
+      void render() {
+        // draw large mario
+      }
+    
+      Shrink -> Small;
+      Star -> Large.Invulnerable;  
+    }
+
+    Dead {
+      void render() {
+        // draw dying animation
+      }
+    }
+  }
+}
+
+// @@@skipphpcompile - See #1351. State-dependent methods are exclusive to Java generation.

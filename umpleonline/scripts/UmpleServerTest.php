@@ -6,11 +6,7 @@
     exit(0);
   }
 
-  // run on port 5556 if in a directory with 'test' as a substring, otherwise use 5555
-  $portnumber = 5555;
-  if(strpos(getcwd(),"test") !== false) {
-    $portnumber = 5556;
-  }  
+  require_once ("setPortNumber.php");
   
   $argCount = 1;
   $commandLine = "";

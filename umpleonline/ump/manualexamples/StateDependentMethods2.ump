@@ -1,0 +1,135 @@
+external Thread {};
+  
+class Philosopher {
+  
+  isA Thread;
+  
+  Fork leftFork;
+  Fork rightFork;
+  String fname;
+  boolean isLeftHanded;
+  
+  ForksInHand {
+    NoForks {
+      LookingForForks {
+        void eat(){
+          if (isLeftHanded) {
+            if (leftFork.take()) {
+              System.out.println(fname + " picked up first fork (left)");
+              LeftForkAcquired();
+            }
+          }
+          else if (rightFork.take()) {
+            System.out.println(fname + " picked up first fork (right)");
+            RightForkAcquired();
+          }
+        }
+        AteFood -> Idling;
+      }
+      Idling {
+        BellyGrumble -> LookingForForks;
+      }
+      LeftForkAcquired -> ForkInLeft;
+      RightForkAcquired -> ForkInRight;
+    }
+    ForkInLeft {
+      void eat() {
+        if (rightFork.take()) {
+          System.out.println(fname + " picked up second fork (right)");
+          RightForkAcquired();
+        }
+      }
+      RightForkAcquired -> ForkInBoth;
+    }
+    
+    ForkInRight {
+      void eat() {
+        if (leftFork.take()) {
+          System.out.println(fname + " picked up second fork (left)");
+          LeftForkAcquired();
+        }
+      }
+      LeftForkAcquired -> ForkInBoth;
+    }
+    
+    ForkInBoth {
+      void eat() {
+        System.out.println(fname + " is eating.");
+        try {
+          sleep(1000);
+        } catch (InterruptedException ex) { }
+        AteFood();
+        leftFork.putDown();
+        rightFork.putDown();
+      }
+      AteFood -> NoForks;
+    }
+  }
+  
+  Belly {
+    IsHungry {
+      boolean isHungry() {
+        return true;
+      }
+      AteFood -> IsFull;
+    }
+    IsFull {
+      void think() {
+        System.out.println(fname + " is full. Now thinking...");
+        try {
+          sleep(1000);
+        } catch (InterruptedException ex) { }
+        BellyGrumble();
+      }
+      BellyGrumble -> IsHungry;
+    }
+  }
+
+  public void run() {
+    while (true) {
+      if (isHungry()) {
+        eat();
+      } else {
+        think();
+      }
+    }
+  }
+}
+
+class Fork {
+  depend java.util.concurrent.*;
+  Semaphore fork = new Semaphore(1);
+
+  boolean take() {
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException ex) { }
+    return fork.tryAcquire();
+  }
+
+  void putDown() {
+    fork.release();
+  }
+}
+
+class Main {
+  public static void main(String[] args){
+    String[] names = {"Plato", "Aristotle", "Cicero", "Confucius", "Eratosthenes"};
+    int k = names.length;
+    Philosopher[] philosophers = new Philosopher[k];
+    Fork[] forks = new Fork[k];
+    
+    for (int i = 0; i < k; ++i) {
+      forks[i] = new Fork();
+    }
+    
+    for (int i = 0; i< k; ++ i) {
+      Fork leftFork = forks[i];
+      Fork rightFork = forks[(i + 1) % forks.length];
+      philosophers[i] = new Philosopher(leftFork, rightFork, names[i], i == k - 1);
+      philosophers[i].start();
+    }
+  }
+}
+
+// @@@skipphpcompile - See #1351. State-dependent methods are exclusive to Java generation.

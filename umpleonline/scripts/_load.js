@@ -108,6 +108,7 @@ document.write('<script type="text/javascript" src="scripts/umple_history.js"></
 document.write('<script type="text/javascript" src="scripts/umple_restore.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_action_diagram.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_tooltips.js"></script>');
+document.write('<script type="text/javascript" src="scripts/umple_tab_control.js"></script>');
 
 //For styling and colouring statetables
 document.write('<script type="text/javascript" src="scripts/statetable/state_table_colourer.js"></script>');

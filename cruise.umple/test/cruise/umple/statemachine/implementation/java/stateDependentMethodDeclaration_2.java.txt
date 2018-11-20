@@ -44,9 +44,17 @@ public class X
     switch(sm)
     {
       case init:
-        System.out.println("init");
+        System.out.println("init");        
+        // line 30 "../stateDependentMethodDeclaration_2.ump"
+        System.out.println("...");
+        // END OF UMPLE AFTER INJECTION
+        return;
       case going:
-        System.out.println("going");
+        System.out.println("going");        
+        // line 30 "../stateDependentMethodDeclaration_2.ump"
+        System.out.println("...");
+        // END OF UMPLE AFTER INJECTION
+        return;
       default:
         System.out.println("not in a state");
     }
