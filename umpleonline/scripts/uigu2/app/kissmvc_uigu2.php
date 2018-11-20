@@ -186,6 +186,16 @@ class Uigu2_View extends KISS_View {
     Uigu2_View::do_dump(VIEW_PATH.'layout.php',$layout_data);
   }
 
+  function show_layout($layout_parameter_map) {
+    // This function is to replace show().
+    $layout_data = array();
+    foreach ($layout_parameter_map as $key => $value) {
+      $layout_data[$key] = $value;
+    }
+    $layout_data['body'][]=$this->fetch();
+    Uigu2_View::do_dump(VIEW_PATH.'layout.php',$layout_data);
+  }
+
   function create_table($array='', $attributes=''){
     if(!is_array($array)||!count($array)){
       return false;
