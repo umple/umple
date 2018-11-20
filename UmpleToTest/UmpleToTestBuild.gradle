@@ -1,0 +1,18 @@
+ext {
+    umpleOutputDir = "src-gen-UmpleTL"
+}
+
+sourceSets {
+    main { 
+        umple{
+           master = file('UmpleTLTemplates/Master.ump')
+           customMasterPath = true
+        }
+    }
+}
+
+// Incremental build logic
+compileUmple {
+    inputs.dir("UmpleTLTemplates") // If any of the source .ump files here have changed, recompile them. Otherwise the task is considered up-to-date
+    outputs.dir(umpleOutputDir)
+}
