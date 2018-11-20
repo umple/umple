@@ -1,0 +1,140 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4307.b26bfcc0a modeling language!*/
+
+class Window
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Window State Machines
+  private static $WindowControllerStationary = 1;
+  private static $WindowControllerSafetyMechanism = 2;
+  private static $WindowControllerStationaryNull = 3;
+  private static $WindowControllerStationaryNormalStationary = 4;
+  private $WindowController;
+  private $WindowControllerStationary;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setWindowControllerStationary(self::$WindowControllerStationaryNull);
+    $this->setWindowController(self::$WindowControllerStationary);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getWindowControllerFullName()
+  {
+    $answer = $this->getWindowController();
+    if ($this->WindowControllerStationary != self::$WindowControllerStationaryNull) { $answer .= "." . $this->getWindowControllerStationary(); }
+    return $answer;
+  }
+
+  public function getWindowController()
+  {
+    if ($this->WindowController == self::$WindowControllerStationary) { return "WindowControllerStationary"; }
+    elseif ($this->WindowController == self::$WindowControllerSafetyMechanism) { return "WindowControllerSafetyMechanism"; }
+    return null;
+  }
+
+  public function getWindowControllerStationary()
+  {
+    if ($this->WindowControllerStationary == self::$WindowControllerStationaryNull) { return "WindowControllerStationaryNull"; }
+    elseif ($this->WindowControllerStationary == self::$WindowControllerStationaryNormalStationary) { return "WindowControllerStationaryNormalStationary"; }
+    return null;
+  }
+
+  public function timeoutSafetyMechanismToStationary()
+  {
+    $wasEventProcessed = false;
+    
+    $aWindowController = $this->WindowController;
+    if ($aWindowController == self::$WindowControllerSafetyMechanism)
+    {
+      $this->setWindowController(self::$WindowControllerStationary);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function down()
+  {
+    $wasEventProcessed = false;
+    
+    $aWindowControllerStationary = $this->WindowControllerStationary;
+    if ($aWindowControllerStationary == self::$WindowControllerStationaryNormalStationary)
+    {
+      $this->exitWindowControllerStationary();
+      $this->setWindowController(self::$WindowControllerSafetyMechanism);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitWindowController()
+  {
+    if ($this->WindowController == self::$WindowControllerStationary)
+    {
+      $this->exitStationary();
+    }
+  }
+
+  private function setWindowController($aWindowController)
+  {
+    $this->WindowController = $aWindowController;
+
+    // entry actions and do activities
+    if ($this->WindowController == self::$WindowControllerStationary)
+    {
+      
+      if ($this->WindowControllerStationary == self::$WindowControllerStationaryNull) { $this->setWindowControllerStationary(self::$WindowControllerStationaryNormalStationary); }
+    }
+    elseif ($this->WindowController == self::$WindowControllerSafetyMechanism)
+    {
+      System.out.println("Safety mechanism");
+    }
+  }
+
+  private function exitWindowControllerStationary()
+  {
+    if ($this->WindowControllerStationary == self::$WindowControllerStationaryNormalStationary)
+    {
+      $this->setWindowControllerStationary(self::WindowControllerStationaryNull);
+    }
+  }
+
+  private function setWindowControllerStationary($aWindowControllerStationary)
+  {
+    $this->WindowControllerStationary = $aWindowControllerStationary;
+    if ($this->WindowController != self::$WindowControllerStationary && $aWindowControllerStationary != self::$WindowControllerStationaryNull) { $this->setWindowController(self::$WindowControllerStationary); }
+
+    // entry actions and do activities
+    if ($this->WindowControllerStationary == self::$WindowControllerStationaryNormalStationary)
+    {
+      System.out.println("Window is stopped");
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+   public static  function main($argc)
+  {
+    new Window1();
+  }
+
+}
+?>

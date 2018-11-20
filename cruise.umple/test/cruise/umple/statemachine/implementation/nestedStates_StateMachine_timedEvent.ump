@@ -1,0 +1,27 @@
+class Window
+{
+	WindowController
+	{
+		Stationary
+		{
+			entry/{}
+			
+			NormalStationary
+			{
+				entry/{System.out.println("Window is stopped");}
+				down -> SafetyMechanism;
+			}
+		}
+		
+		SafetyMechanism
+		{
+			entry/ {System.out.println("Safety mechanism");}
+			after(100) -> Stationary;
+		}
+	}
+	
+	public static void main (String[] argc)
+	{ 
+		new Window1();
+	}
+}

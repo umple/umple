@@ -745,7 +745,19 @@ class PlaygroundMain
       // Start server on port 5556 if in a test environment, otherwise use port 5555
       // Test environment means that the directory has 'test' in it
       int port = 5555;
-      if(System.getProperty("user.dir").contains("test")) {
+      File specialPort = new File(System.getProperty("user.dir")+File.separator+"specialPort.txt");
+      if(specialPort.exists()) {
+        try {
+          FileReader reader = new FileReader(specialPort);
+          BufferedReader in = new BufferedReader(reader);
+          port = Integer.parseInt(in.readLine());
+          in.close();
+        }
+        catch (IOException e) {
+          System.err.println("Could not read the contents of specialPort.txt. Should be a port number. Using 5555.");
+        } 
+      }
+      else if(System.getProperty("user.dir").contains("test")) {
         port = 5556;
       }
       
@@ -823,6 +835,10 @@ class PlaygroundMain
     else
     {
       // All other commands have filename at second argument
+      if(args.length == 1) {
+        System.err.println("Filename argument required after command. Quitting");
+        System.exit(1);
+      }
       String filename = args[1];
       umpleFile = new UmpleFile(filename);
       model = new UmpleModel(umpleFile);

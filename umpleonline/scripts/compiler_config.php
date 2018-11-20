@@ -126,7 +126,13 @@ class DataHandle extends ReadOnlyDataHandle{
     Copy all information from another readable data object.
     */
     function cloneFrom($other){
-        copy($other->root.'/model.ump', $this->root.'/model.ump');
+        foreach (glob($other->root.'/*.ump') as $umpFile) {
+            copy($umpFile, $this->root."/".basename($umpFile));
+        }
+        $index_file = $other->root.'/tab_index';
+        if (file_exists($index_file)) {
+            copy($index_file, $this->root."/".basename($index_file));
+        }
     }
 }
 
@@ -160,9 +166,13 @@ class WorkDir{
     Could be used to upload to a dedicated fileserver.
     */
     function makePermalink($path){
-        // assumes the server root is umpleonline/
-        $localpath = $this->root.'/'.$path;
-        $serverpath = substr($localpath, strlen(rootDir()));
+        // assumes the server root is not just umpleonline/
+        $umpsubdirStart = strpos($this->root,"/ump/");
+        $umpsubdir=substr($this->root,$umpsubdirStart);
+        $theURI = $_SERVER['REQUEST_URI'];
+        $choppoint= strlen($theURI)-strlen("/scripts/compiler.php");
+        $serverroot = substr($theURI, 1, $choppoint-1);
+        $serverpath ="/".$serverroot.$umpsubdir."/".$path;
         return $serverpath;
     }
 }
@@ -738,12 +748,8 @@ function execRun($command) {
 function serverRun($commandLine,$rawcommand=null) {
 
   $originalCommandLine = $commandLine; // save in case we have to fall back to it
-  
-  // run on port 5556 if in a directory with 'test' as a substring, otherwise use 5555
-  $portnumber = 5555;
-  if(strpos(getcwd(),"test") !== false) {
-    $portnumber = 5556;
-  }
+
+  require_once ("setPortNumber.php");  
   
   // Some output is error output -- save to a file
   $errorFile = null;
@@ -807,7 +813,7 @@ function serverRun($commandLine,$rawcommand=null) {
     if ($output === FALSE) {
       @socket_close($theSocket);;
       // This usually happens at moments of overload; run as exec but give server much higher priority
-      execRun("nice -10 java -jar umplesync.jar ".$originalCommandLine);
+      execRun("nice -n 10 java -jar umplesync.jar ".$originalCommandLine);
       return;
     }
     if(strlen($output) == 0) {

@@ -55,7 +55,24 @@ if (isset($_REQUEST["save"]))
   {
     $input = $_REQUEST["umpleCode"];
     list($dataname, $dataHandle) = getOrCreateDataHandle();
-    $dataHandle->writeData($dataname, $input);
+    if (isset($_REQUEST["lock"]) && isset($_REQUEST["model"])){
+      $model = $_REQUEST["model"];
+      $lock_file = "../ump/".$model."/.lockfile";
+      $fp = fopen($lock_file, "w");
+      if (flock($fp, LOCK_EX)) {
+        try {
+          $dataHandle->writeData($dataname, $input);
+        } catch (Exception $e) {
+          // Do nothing for now here
+        } finally {
+          flock($fp, LOCK_UN);
+        }
+      }
+    }
+    else
+    {
+      $dataHandle->writeData($dataname, $input);
+    }
     // pretend this is still the old system and mimic the kind of path
     // the JavaScript expects
     echo '../ump/'.$dataHandle->getName().'/'.$dataname;
@@ -205,10 +222,12 @@ else if (isset($_REQUEST["umpleCode"]))
        }
        // exec("cd $uigu2dir; ln -s ../../scripts/uigu2/app .");    
        $uigu2file = $workDir->makePermalink('index.php');
-       $html = "{$errhtml}
+       // DEBUG - to display as a link Uncomment the following line, and comment out the subsequent 4
+       //  $html = "{$errhtml} <b> <a target=\"otherone\" href=\"" . $uigu2file . "\">$uigu2file</a> </b>";  
+       $html = "
       <iframe width=100% height=1000 src=\"" . $uigu2file . "\">This browser does not
       support iframes, so the uigu cannot be displayed</iframe> 
-     ";
+      ";
        echo $html;
     }
     else {
