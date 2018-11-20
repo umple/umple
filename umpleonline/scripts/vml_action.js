@@ -12,7 +12,6 @@ Action.newAssociation = null;
 
 var obj = Dom.getObject(event);
 var action = obj.id.substring(6);
-console.log(action);
 
 Action.clicked = function(event)
 {

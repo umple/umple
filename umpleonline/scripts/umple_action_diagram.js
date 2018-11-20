@@ -87,7 +87,6 @@ DiagramEdit.addAssociation = function(line)
 
 DiagramEdit.addTransition = function(line)
 {
-    Page.setFeedbackMessage("add transition in umple_action_diagram");
     // the line shown when selecting participating states
   // is a dummy - erase it and create transition
   DiagramEdit.removeNewTransition();
@@ -178,7 +177,6 @@ DiagramEdit.createAssociationPartTwo = function(event)
  */
 DiagramEdit.createTransitionPartOne = function(event)
 {
-    Page.setFeedbackMessage("Part 1 transition");
 
     // get the position of the click and compute the first end's position
     var mousePosition = new UmplePosition(event.pageX,event.pageY,0,0);
@@ -196,7 +194,6 @@ DiagramEdit.createTransitionPartOne = function(event)
 
 DiagramEdit.createTransitionPartTwo = function(event)
 {
-    Page.setFeedbackMessage("calling Part two");
     var mousePosition = new UmplePosition(event.pageX,event.pageY,0,0);
     Action.classSelected(event.currentTarget);
     //The inline transition definition belongs in the first state clicked

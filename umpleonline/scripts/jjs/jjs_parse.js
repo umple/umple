@@ -114,8 +114,6 @@ var JJSdiagram = {
 		//If it is disconnected from a state diagram, then it will remove or modify transition 
 		this.paper.off('link:disconnect').on('link:disconnect',
 			function(linkView, evt, elmentViewDisconnected, magnet, arrowhead){
-                console.log(linkView.model.get('type'));
-                console.log(JJSdiagram.diagram_type);
 				if (JJSdiagram.diagram_type === "UMLclass"){
 					if (linkView.model.get('type') === 'uml.Association') {
 						if (arrowhead === 'source') {
@@ -1179,7 +1177,6 @@ var JJSdiagram = {
 				break;
 			default:
                 console.log('JJSdiagram.makeUmpleCodeFromTransition: action type error.');
-                console.log(actionType);
 				break;
 		}
 		
