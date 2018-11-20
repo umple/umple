@@ -133,25 +133,12 @@ var JJSdiagram = {
 							JJSdiagram.makeUmpleCodeFromGeneralization('removeGeneralization',JJSdiagram.paper.model.getCell(elmentViewDisconnected.model.toJSON().id).toJSON(), JJSdiagram.paper.model.getCell(linkView.model.toJSON().source.id).toJSON());
 						}
 					}
-				} 
-				if (JJSdiagram.diagram_type === "UMLstate") {
-                    if (linkView.model.get('type') === 'uml_state_machine.Transition') {
-                        if (arrowhead === 'source') {
-                            JJSdiagram.makeUmpleCodeFromTransition('removeTransition', JJSdiagram.paper.model.getCell(elmentViewDisconnected.model.toJSON().id).toJSON(), JJSdiagram.paper.model.getCell(linkView.model.toJSON().target.id).toJSON(), '');
-                        }
-                        else if (arrowhead === 'target') {
-                            JJSdiagram.makeUmpleCodeFromTransition('removeTransition', JJSdiagram.paper.model.getCell(linkView.model.toJSON().source.id).toJSON(), JJSdiagram.paper.model.getCell(elmentViewDisconnected.model.toJSON().id).toJSON(), '');
-                        }
-                    }
-
-                }
+				}
 			}
 		);
 
 		this.paper.off('link:connect').on('link:connect',
 			function (linkView, evt, elementViewConnected, magnet, arrowhead) {
-                console.log(linkView.model.get('type'));
-                console.log(JJSdiagram.diagram_type);
 				if (JJSdiagram.diagram_type === "UMLclass"){
 					if (linkView.model.get('type') === 'uml.Association') {
 						if(arrowhead === 'source'){
@@ -172,9 +159,9 @@ var JJSdiagram = {
 				} else if (JJSdiagram.diagram_type === "UMLstate"){
 					if (linkView.model.get('type') === 'uml_state_machine.Transition') {
                         if (arrowhead === 'source') {
-                            JJSdiagram.makeUmpleCodeFromTransition('addJjsTransition', JJSdiagram.paper.model.getCell(elementViewConnected.model.toJSON().id).toJSON(), JJSdiagram.paper.model.getCell(linkView.model.toJSON().target.id).toJSON());
+                            JJSdiagram.makeUmpleCodeFromTransition('addJjsTransition', JJSdiagram.paper.model.getCell(elementViewConnected.model.toJSON().id).toJSON(), JJSdiagram.paper.model.getCell(linkView.model.toJSON().target.id).toJSON(), "event1");
                         } else if (arrowhead === 'target') {
-                            JJSdiagram.makeUmpleCodeFromAssociation('addJjsTransition', JJSdiagram.paper.model.getCell(linkView.model.toJSON().source.id).toJSON(), JJSdiagram.paper.model.getCell(elementViewConnected.model.toJSON().id).toJSON());
+                            JJSdiagram.makeUmpleCodeFromTransition('addJjsTransition', JJSdiagram.paper.model.getCell(linkView.model.toJSON().source.id).toJSON(), JJSdiagram.paper.model.getCell(elementViewConnected.model.toJSON().id).toJSON(), "event1");
                         }
                     }
 				}
@@ -193,7 +180,7 @@ var JJSdiagram = {
 						break;
 					case 'uml_state_machine.Transition':
 						if (cell.toJSON().source.id !== undefined && cell.toJSON().target.id !== undefined){
-							JJSdiagram.makeUmpleCodeFromTransition('removeTransition', this.paper.model.getCell(cell.toJSON().source.id).toJSON(), this.paper.model.getCell(cell.toJSON().target.id).toJSON(), cell.toJSON());
+							JJSdiagram.makeUmpleCodeFromTransition('removeTransition', this.paper.model.getCell(cell.toJSON().source.id).toJSON(), this.paper.model.getCell(cell.toJSON().target.id).toJSON(), cell.toJSON().labels[0].attrs.text.text);
 					 }
 					 break;
 					case 'uml.Generalization':
@@ -384,13 +371,13 @@ var JJSdiagram = {
 								source: { id: transitionId },
 								target: { id: cellView.model.id },
 								attrs: { '.connection-wrap': { fill: 'none' }, '.connection': { fill: 'none' }},
-                            	labels: { position: .5, attrs: { text: { text: 'event1', 'font-size': '8pt' } } },
+                            	labels: [{ position: .5, attrs: { text: { text: 'event1', 'font-size': '8pt' } } }],
                             	umplename: "umpleTransition_" + JJSdiagram.transitionIndex
 							});
 							
 							link.set('connector', { name: 'jumpover', args: { type: 'gap' } });
 							JJSdiagram.paper.model.addCell(link);
-							JJSdiagram.makeUmpleCodeFromTransition('addJjsTransition', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), transitionId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id));
+							JJSdiagram.makeUmpleCodeFromTransition('addJjsTransition', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), transitionId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id), "event1");
 							JJSdiagram.paper.off('cell:pointerclick');
 							JJSdiagram.setPaperListener();
 							$(EvenTarget).removeClass("selected");
@@ -1169,16 +1156,15 @@ var JJSdiagram = {
 	},
 
 	//convert the diagram JSON to umple code
-	makeUmpleCodeFromTransition: function (actionType, jjsJsonOne, jjsJsonTwo) {
+	makeUmpleCodeFromTransition: function (actionType, jjsJsonOne, jjsJsonTwo, event) {
         var nameOne = "";
         var nameTwo = "";
-
 		var actionCodeObj = {
-			"fromStateId": jjsJsonOne.name[0],
-			"toStateId": jjsJsonTwo.name[0],
-			"event": "event1",
+			"fromStateId": jjsJsonOne.name,
+			"toStateId": jjsJsonTwo.name,
+			"event": event,
             "id": "umpleTransition_" + this.transitionIndex,
-			"name": jjsJsonOne.name[0] + "_" + "event1" + "_" + jjsJsonTwo.name[0]
+			"name": jjsJsonOne.name + "_" + event + "_" + jjsJsonTwo.name
    		 };
 
 		switch (actionType) {

@@ -560,20 +560,6 @@ Action.classClicked = function(event)
       setTimeout(function(){ Action.canCreateByDrag = true; }, 500);
     }
   }
-  else if (Page.selectedItem == "AddTransition")
-  {
-      console.log("AddTransition Triggered");
-      if (DiagramEdit.newTransition == null)
-      {
-          Action.canCreateByDrag = false;
-          DiagramEdit.createTransitionPartOne(event);
-      }
-      else
-      {
-          DiagramEdit.createTransitionPartTwo(event);
-          setTimeout(function(){ Action.canCreateByDrag = true; }, 500);
-      }
-  }
   else if (Page.selectedItem == "AddGeneralization")
   {
     if (DiagramEdit.newGeneralization == null)

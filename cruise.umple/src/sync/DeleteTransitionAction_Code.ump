@@ -44,7 +44,8 @@ class DeleteTransitionAction
       }
       Json json = jsonParser.analyze();
       
-      String transitionName = json.getValue("name");
+      String transitionName = json.getValue("fromStateId") + "_" + json.getValue("event") + "_" + json.getValue("toStateId");
+      String transitionEvent = json.getValue("event");
       String stateOfTransitionDefinition = json.getValue("fromStateId");
       /*String classOfTransitionDefinttion;*/
       
@@ -82,7 +83,7 @@ class DeleteTransitionAction
 	      			      continue;
 	      			  }
 	      			  
-	      			  nestedState(stateSubT,textParser, transitionName, stateOfTransitionDefinition, didDeleteDefinition);
+	      			  nestedState(stateSubT,textParser, transitionName, stateOfTransitionDefinition, didDeleteDefinition, transitionEvent);
 	      			  
 	      		   }
 	      		}  		
@@ -109,7 +110,7 @@ class DeleteTransitionAction
     }
   }
   
-  private void nestedState(Token stateToken, TextParser parser, String transitionName, String stateOfTransitionDefinition, boolean didDeleteDefinition)
+  private void nestedState(Token stateToken, TextParser parser, String transitionName, String stateOfTransitionDefinition, boolean didDeleteDefinition, String transitionEvent)
   {
   
     String currentName = "";
@@ -124,7 +125,7 @@ class DeleteTransitionAction
     {
       if (stateSubT.is("state") && !fromState.equals(stateOfTransitionDefinition))
       {
-        nestedState(stateSubT, parser, transitionName, stateOfTransitionDefinition, didDeleteDefinition);
+        nestedState(stateSubT, parser, transitionName, stateOfTransitionDefinition, didDeleteDefinition, transitionEvent);
         return;
       }
       
@@ -145,9 +146,23 @@ class DeleteTransitionAction
     
       if(currentName.equals(transitionName))
        {
-       parser.replace(stateSubT, "");
-       didDeleteDefinition = true;
-       break;
+           parser.replace(stateSubT, "");
+           //parser.insert("DeleteTransitionAction: removed " + currentName);
+           break;
+       }
+       else if (event==null){
+            parser.replace(stateSubT, "");
+            //parser.insert("DeleteTransitionAction: removed " + currentName + ", null event \n");
+            break;
+        }
+        else if(event.equals(transitionEvent.substring(0, event.length()))){
+            parser.replace(stateSubT, "");
+            //parser.insert("DeleteTransitionAction: removed " + currentName + ", shorter event\n");
+            break;
+       }
+       else
+       {
+           //parser.insert("Error: DeleteTransitionAction: " + currentName +" != " + transitionName + "\n");
        }
      }
    }
