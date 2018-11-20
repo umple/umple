@@ -1,1 +1,1 @@
-{"classId": "CarTransmission", "fromStateId": "drive", "toStateId": "neutral","eventName": "selectDrive", "name": "neutral_selectDrive_drive" }
+{"classId": "CarTransmission", "fromStateId": "drive", "toStateId": "neutral","event": "selectDrive", "name": "neutral_selectDrive_drive" }

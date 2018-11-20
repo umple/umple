@@ -30,7 +30,7 @@ public class DeleteTransitionActionTest
   public void Go_NothingToDelete()
   {
     String umple = "class CarTransmission { state { reverse { selectDrive -> drive; } drive {  } } }";
-    String json = "{\"fromStateId\": \"drive\", \"toStateId\" : \"reverse\", \"eventName\" : \"selectReverse\", \"name\" : \"drive_selectReverse_reverse\"}";
+    String json = "{\"fromStateId\": \"drive\", \"toStateId\" : \"reverse\", \"event\" : \"selectReverse\", \"name\" : \"drive_selectReverse_reverse\"}";
     String filename = pathToInput + "/myfile.ump";
     SampleFileWriter.createFile(filename, umple);
     
