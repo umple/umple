@@ -147,22 +147,25 @@ class DeleteTransitionAction
       if(currentName.equals(transitionName))
        {
            parser.replace(stateSubT, "");
-           //parser.insert("DeleteTransitionAction: removed " + currentName);
+           //parser.insert("//DeleteTransitionAction: removed " + currentName);
            break;
        }
        else if (event==null){
             parser.replace(stateSubT, "");
-            //parser.insert("DeleteTransitionAction: removed " + currentName + ", null event \n");
+            //parser.insert("//DeleteTransitionAction: removed " + currentName + ", null event \n");
             break;
         }
-        else if(event.equals(transitionEvent.substring(0, event.length()))){
-            parser.replace(stateSubT, "");
-            //parser.insert("DeleteTransitionAction: removed " + currentName + ", shorter event\n");
-            break;
+        else if(event.length()<transitionEvent.length()) {
+            if(event.equals(transitionEvent.substring(0, event.length()))){
+                parser.replace(stateSubT, "");
+                //parser.insert("//DeleteTransitionAction: removed " + currentName + ", shorter event\n");
+                break;
+            }
+
        }
        else
        {
-           //parser.insert("Error: DeleteTransitionAction: " + currentName +" != " + transitionName + "\n");
+           //parser.insert("//Error: DeleteTransitionAction: " + currentName +" != " + transitionName + "\n");
        }
      }
    }
