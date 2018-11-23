@@ -115,9 +115,10 @@ class RulePart
   {
     if (!hasInnerNames())
     {
+		System.out.println("line 118");
       return new String[0];
     }
-
+	System.out.println("line 121");
     TextParser parser = new TextParser(name);
     parser.load(parser.nextUntil(">"));
     ArrayList<String> allNames = new ArrayList<String>();
@@ -154,6 +155,7 @@ class RulePart
     }
 
     String[] allNames = getInnerNames();
+	  System.out.println("allNames");
     RulePartValue[] allRulePartValues = new RulePartValue[allNames.length];
 
     for (int i=0; i<allNames.length; i++)
@@ -728,9 +730,11 @@ class Parser
    */
   private boolean parse(String ruleName, TextParser inputParser, Token parentToken, int level, String... stopAts)
   {
+	  System.out.println("Went parsing");
     // Go through each rule.
     for (Rule r : rules)
     {
+	
       if (!r.getName().equals(ruleName))
       {
         continue;
@@ -751,6 +755,7 @@ class Parser
       // Go through each definition, from the current rule.
       for (String definition : r.getDefinitions())
       {
+		  System.out.println("definition is " + definition); 
         int currentTokenSize = currentToken.numberOfSubTokens();
 
         // Assume the parsing will succeed and prove otherwise (if theres an error).
@@ -763,6 +768,7 @@ class Parser
         instance.configureDefinition(definition, stopAts);
 
         // As long as there are more sub parts to the rule, parse based on them.
+		  System.out.println("got a rule");
         while (instance.hasMoreRuleParts())
         {
           Position startTokenPosition = inputParser.currentPosition().copy();
@@ -771,7 +777,7 @@ class Parser
           RulePart part = instance.nextRulePart();
 
           String currentRule = part.getName();
-
+		System.out.println("currentRule:   " + currentRule);
           if (part.isStatic())
           {
             String inputValue = inputParser.nextAt(currentRule);
@@ -1155,6 +1161,7 @@ class RuleInstance
     while (ruleParser.next() != null)
     {
       String currentRule = ruleParser.name();
+		System.out.println("currentRule line 1162:  " + currentRule );
       RulePart currentPart = analyzeRule(currentRule);
       addRulePart(currentPart);
     }
