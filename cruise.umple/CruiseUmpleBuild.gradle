@@ -1,18 +1,4 @@
-project.ext {
-    umpleOutputDir = "src-gen-umple"
-}
-
-sourceSets {
-    main { 
-        umple{
-           master = file('src/Master.ump')
-           customMasterPath = true
-        }
-    }
-}
-
-// Incremental build logic
-compileUmple {
-    inputs.dir("src") // If any of the source .ump files here have changed, recompile them. Otherwise the task is considered up-to-date
-    outputs.dir(umpleOutputDir)
+ext {
+  umpleOutputDir = "src-gen-umple"
+  masterFile = "src/Master.ump"
 }
