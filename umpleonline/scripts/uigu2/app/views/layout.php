@@ -29,12 +29,10 @@
                   foreach($element_names as $e){
                     if($instantiatable_info[$e]) {
                       // classes that can be instantiated
-                      echo "<input type='radio' id='$e' name='element_name' value='$e'>
-                            <label for='$e'><strong>$e &#91;$numbers_of_elements[$e]&#93;</strong></label>";
+                      echo "<button name='element_name' value='$e' onclick='this.form.submit();'><strong>$e &#91;$numbers_of_elements[$e]&#93;</strong></button>";
                     } else {
                       // classes that cannot be instantiated
-                      echo "<input type='radio' id='$e' name='element_name' value='$e'>
-                            <label for='$e'>$e &#91;$numbers_of_elements[$e]&#93;</label>";
+                      echo "<button name='element_name' value='$e' onclick='this.form.submit();'>$e &#91;$numbers_of_elements[$e]&#93;</button>";
                     }
                   }
                 }
@@ -52,7 +50,7 @@
                 ?>
               </select> 
               -->
-              <input type="submit" value="Go"/>
+              <!--<input type="submit" value="Go"/> -->
             </form>
           </td>
           <td> | <a href="<?php echo WEB_FOLDER.'main/clear' ?>">Clear Session Data</a> </td>
