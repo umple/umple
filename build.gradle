@@ -38,115 +38,6 @@ buildDir  = 'dist/gradle/'
 // By default, run the full build
 defaultTasks 'fullbuild'
 
-// ===================
-//  Umple compilation
-// ===================
-
-// Download task for updating Umple jar
-apply plugin: 'de.undercouch.download'
-
-// TODO: this logic should eventually be outsourced to the plugin, but for completeness
-// we keep track of it here
-task downloadUmpleJar(type: de.undercouch.gradle.tasks.download.Download) {
-    onlyIfNewer true
-    overwrite true
-    src rootProject.ext.umpleJarRemoteSource
-    dest rootProject.ext.umpleJarRemoteFile
-}
-
-task downloadManualDependencies(type: de.undercouch.gradle.tasks.download.Download) {
-    onlyIfNewer true
-    overwrite true
-    src rootProject.ext.manualDependencyRemotePath
-    dest rootProject.ext.manualDependencyLocalPath
-}
-
-// TODO (?): access the jar file directly in a fashion similar to the plugin
-// ideally the plugin should support local jar files too
-// Execute Umple jar
-static void runUmpleJar(final String umpleJar, final String masterFile) {
-    println("java -jar " + umpleJar + " " + masterFile)
-    def proc = ("java -jar " + umpleJar + " " + masterFile).execute();
-    proc.waitForProcessOutput(System.out, System.err);
-}
-
-subprojects{
-    // Make sure we load all the subproject properties first
-    evaluationDependsOn(":${project.name}")
-
-    // Clean up task
-    task "cleanUp" << {
-        delete project.ext.umpleOutputDir
-    }
-
-    def masterFile = "${projectDir.toString()}/${project.ext.masterFile}"
-
-    // Compile task using remote jar
-    task "compileUmple" << {
-        runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
-    }
-    compileUmple.dependsOn(":downloadUmpleJar")
-
-    // Compile task using local jar, or fallback to remote
-    task "compileUmpleSelf" << {
-        if (new File(rootProject.ext.umpleLatestJar).exists()) {
-            runUmpleJar(rootProject.ext.umpleLatestJar, masterFile)
-        } else {
-            // Still default to using the stable downloaded jar
-            runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
-        }
-    }
-    compileUmpleSelf.dependsOn(":downloadUmpleJar")
-
-    // Copy task for parent project
-    def fromPath = "${projectDir.toString()}/${project.ext.umpleOutputDir}"
-    def intoPath = project.hasProperty("generationDir") ?
-                        "${rootProject.projectDir.toString()}/${project.ext.generationDir}"
-                        :
-                        "${rootProject.projectDir.toString()}/dist/gradle/src-gen/${project.name}/"
-    task "copyUmpleOutput" (type: Copy) {
-        from fromPath
-        into intoPath
-        duplicatesStrategy = 'warn'
-        exclude "**/.git*"
-        doFirst {
-            println("Copying from ${fromPath} to ${intoPath}")
-            inputs.sourceFiles.stopExecutionIfEmpty()
-        }
-    }
-    tasks.getByPath("compileUmple").finalizedBy tasks.getByPath("copyUmpleOutput")
-    tasks.getByPath("compileUmpleSelf").finalizedBy tasks.getByPath("copyUmpleOutput")
-}
-
-// Updates the latest version file
-task updateLatestVersion << {
-    if (new File(rootProject.ext.umpleLatestJar).exists()) {
-    new File(rootProject.ext.umpleVersionFullFile).text =
-"""
-version: ${rootProject.ext.umpleLatestVersion}
-"""
-    } else {
-        throw new Exception("Could not find jar file ${rootProject.ext.umpleLatestJar} when setting version")
-    }
-}
-updateLatestVersion.mustRunAfter 'packageUmple'
-
-// Clean up task
-task cleanUp << {
-    delete "dist/gradle"
-}
-
-// Delete only cruise umple components
-task cleanUpUmple << {
-    delete "dist/gradle/src-gen/cruise.umple"
-    delete "dist/gradle/src-gen/cruise.umple.validator"
-    delete "dist/gradle/src-gen/cruise.umplificator"
-}
-
-// ==================
-//  Java compilation
-// ==================
-
 apply plugin: 'java'
 
 // See ivy.xml for which third-party libraries are required by the various flavours of Umple build
@@ -201,6 +92,139 @@ dependencies {
     ivy group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.core', version: '3.10.0'
 }
 
+// ===================
+//  Umple compilation
+// ===================
+
+// Download task for updating Umple jar
+apply plugin: 'de.undercouch.download'
+
+// TODO: this logic should eventually be outsourced to the plugin, but for completeness
+// we keep track of it here
+task downloadUmpleJar(type: de.undercouch.gradle.tasks.download.Download) {
+    onlyIfNewer true
+    overwrite true
+    src rootProject.ext.umpleJarRemoteSource
+    dest rootProject.ext.umpleJarRemoteFile
+}
+
+task downloadManualDependencies(type: de.undercouch.gradle.tasks.download.Download) {
+    onlyIfNewer true
+    overwrite true
+    src rootProject.ext.manualDependencyRemotePath
+    dest rootProject.ext.manualDependencyLocalPath
+}
+
+// TODO (?): access the jar file directly in a fashion similar to the plugin
+// ideally the plugin should support local jar files too
+// Execute Umple jar
+static void runUmpleJar(final String umpleJar, final String masterFile) {
+    // For the time being it may be good to print the exact command being executed
+    // so that we can check to see if issues are reproducible via the jar itself
+    def command = "java -jar " + umpleJar + " " + masterFile
+    println(command)
+    def proc = command.execute();
+    proc.waitForProcessOutput(System.out, System.err);
+}
+
+subprojects{
+    // Make sure we load all the subproject properties first
+    evaluationDependsOn(":${project.name}")
+
+    // Clean up task
+    task "cleanUp" << {
+        delete project.ext.umpleOutputDir
+    }
+
+    def masterFile = "${projectDir.toString()}/${project.ext.masterFile}"
+
+    // Compile task using remote jar
+    task "compileUmple" << {
+        runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
+    }
+    compileUmple.dependsOn(":downloadUmpleJar")
+
+    // Compile task using local jar, or fallback to remote
+    task "compileUmpleSelf" << {
+        if (new File(rootProject.ext.umpleLatestJar).exists()) {
+            runUmpleJar(rootProject.ext.umpleLatestJar, masterFile)
+        } else {
+            // Still default to using the stable downloaded jar
+            runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
+        }
+    }
+    compileUmpleSelf.dependsOn(":downloadUmpleJar")
+
+    // Copy task for parent project
+    def fromPath = "${projectDir.toString()}/${project.ext.umpleOutputDir}"
+    def intoPath = project.hasProperty("generationDir") ?
+                        "${rootProject.projectDir.toString()}/${project.ext.generationDir}"
+                        :
+                        "${rootProject.projectDir.toString()}/dist/gradle/src-gen/${project.name}/"
+    task "copyUmpleOutput" (type: Copy) {
+        from fromPath
+        into intoPath
+        duplicatesStrategy = 'warn'
+        exclude "**/.git*"
+        doFirst {
+            println("Copying from ${fromPath} to ${intoPath}")
+            inputs.sourceFiles.stopExecutionIfEmpty()
+        }
+    }
+    tasks.getByPath("compileUmple").finalizedBy tasks.getByPath("copyUmpleOutput")
+    tasks.getByPath("compileUmpleSelf").finalizedBy tasks.getByPath("copyUmpleOutput")
+
+    // Each project should also have the option of compiling the Java files directly
+    // while we manage the grouped compilations in this file
+
+    def classfileOutputDir = project.hasProperty("outputDir") ?
+                                project.ext.outputDir
+                                :
+                                rootProject.ext.classfileOutputDir
+
+    task compileJava(type: JavaCompile) {
+        options.fork = true
+        classpath = files(
+            rootProject.ext.classfileOutputDir,
+            rootProject.configurations.ivy,
+            manualDependencyLocalPath)
+        destinationDir = file(classfileOutputDir)
+        source rootProject.ext.generatedBaseDir
+        source 'dist/libs/vendors/jopt-simple/src/main/java/joptsimple'
+        exclude '**/*.ump', '**/.git*'
+        dependsOn 'compileUmpleSelf'
+    }
+}
+
+// Updates the latest version file
+task updateLatestVersion << {
+    if (new File(rootProject.ext.umpleLatestJar).exists()) {
+    new File(rootProject.ext.umpleVersionFullFile).text =
+"""
+version: ${rootProject.ext.umpleLatestVersion}
+"""
+    } else {
+        throw new Exception("Could not find jar file ${rootProject.ext.umpleLatestJar} when setting version")
+    }
+}
+updateLatestVersion.mustRunAfter 'packageUmple'
+
+// Clean up task
+task cleanUp << {
+    delete "dist/gradle"
+}
+
+// Delete only cruise umple components
+task cleanUpUmple << {
+    delete "dist/gradle/src-gen/cruise.umple"
+    delete "dist/gradle/src-gen/cruise.umple.validator"
+    delete "dist/gradle/src-gen/cruise.umplificator"
+}
+
+// ==================
+//  Java compilation
+// ==================
+
 // Compiles the generated Java files
 task compile(type: JavaCompile) {
     options.fork = true
@@ -252,9 +276,71 @@ task packageUmple(type: Jar) {
 //  TODO Items
 // ============
 
-task qaBuildingPage << { println("TODO") }
-task buildSandbox << { println("TODO") }
-task buildUmple << { println("TODO") }
+// Create in-progress QA landing page
+task qaBuildingPage(type: Copy) {
+    from "build/"
+    into "dist/qa/"
+    include 'qa_updating.php'
+    rename 'qa_updating.php', 'index.php'
+    doFirst {
+        println("Creating the QA landing page")
+        inputs.sourceFiles.stopExecutionIfEmpty()
+    }
+}
+
+// Builds the sandbox project
+task buildSandbox << {
+    delete 'cruise.umple.validator/bin'
+    delete 'cruise.umplificator/bin'
+    delete 'sandbox/bin'
+    delete 'dist/sandbox'
+}
+task('sandbox:compileJava').mustRunAfter 'buildSandbox'
+
+// Update files to show generated version
+task setVersion << {
+    ant.replaceregexp(match:'@UMPLE_VERSION@', replace: rootProject.ext.umpleLatestVersion, flags:'g', byline:true) {
+        fileset(dir: 'dist/gradle', includes: '**/*.java')
+    }
+}
+
+// Revert generated version
+task resetVersion << {
+    ant.replaceregexp(match:rootProject.ext.umpleLatestVersion, replace: '@UMPLE_VERSION@', flags:'g', byline:true) {
+        fileset(dir: 'dist/gradle', includes: '**/*.java')
+    }
+}
+
+task deploy << {
+    println("Deploying Version: ${rootProject.ext.umpleLatestVersion}")
+}
+
+task deployUmpleOnlineJars(type: Copy) {
+    from "dist/cruise.umple"
+    into "/h/ralph/sites/www/html/umpleonline/scripts/"
+    doFirst {
+        println("Deploying umple online to /h/ralph/sites/www/html/umpleonline/scripts/")
+        inputs.sourceFiles.stopExecutionIfEmpty()
+    }
+    include "umplesync-${rootProject.ext.umpleVersionFull}"
+    include "umple-${rootProject.ext.umpleVersionFull}"
+    include "umplevml-${rootProject.ext.umpleVersionFull}"
+    mustRunAfter 'deploy'
+}
+
+task deployUpdatedLib(type: Copy) {
+    from "dist/cruise.umple"
+    into "lib"
+    doFirst {
+        println("Deploying umple online to lib")
+        inputs.sourceFiles.stopExecutionIfEmpty()
+    }
+    include "umplesync-${rootProject.ext.umpleVersionFull}"
+    include "umple-${rootProject.ext.umpleVersionFull}"
+    include "umplevml-${rootProject.ext.umpleVersionFull}"
+    mustRunAfter 'deploy'
+}
+
 task buildEclipsePlugin << { println("TODO") }
 task buildUmplificatorEclipsePlugin << { println("TODO") }
 task buildTestUnitGeneratorAndParser << { println("TODO") }
@@ -320,8 +406,7 @@ task firstbuild {
     dependsOn 'compile'
     dependsOn 'packageUmple'
     tasks.findByName('codeGen').mustRunAfter 'cleanUp'
-    tasks.findByName('buildSandbox').mustRunAfter 'codeGen'
-    tasks.findByName('umpleParser').mustRunAfter 'buildSandbox'
+    tasks.findByName('umpleParser').mustRunAfter 'codeGen'
     tasks.findByName('rtcpp').mustRunAfter 'umpleParser'
     tasks.findByName('resetUmpleSelf').mustRunAfter 'rtcpp'
     tasks.findByName('compile').mustRunAfter 'resetUmpleSelf'
@@ -329,12 +414,20 @@ task firstbuild {
 }
 
 // Executes a full build
-// TODO
 task fullbuild {
     dependsOn 'cleanUp'
     dependsOn 'qaBuildingPage'
     dependsOn 'buildSandbox'
-    dependsOn 'buildUmple'
+    dependsOn 'codeGen'
+    dependsOn 'umpleParser'
+    dependsOn 'rtcpp'
+    dependsOn 'setVersion'
+    dependsOn 'resetUmpleSelf'
+    dependsOn 'compile'
+    dependsOn 'packageUmple'
+    dependsOn 'test'
+    dependsOn 'deploy'
+    dependsOn 'resetVersion'
     dependsOn 'buildEclipsePlugin'
     dependsOn 'buildUmplificatorEclipsePlugin'
     dependsOn 'buildTestUnitGeneratorAndParser'
@@ -342,8 +435,17 @@ task fullbuild {
     dependsOn 'testingUmpleOnlineExamplesAndManualExamples'
     tasks.findByName('qaBuildingPage').mustRunAfter 'cleanUp'
     tasks.findByName('buildSandbox').mustRunAfter 'qaBuildingPage'
-    tasks.findByName('buildUmple').mustRunAfter 'buildSandbox'
-    tasks.findByName('buildEclipsePlugin').mustRunAfter 'buildUmple'
+    tasks.findByName('codeGen').mustRunAfter 'buildSandbox'
+    tasks.findByName('umpleParser').mustRunAfter 'codeGen'
+    tasks.findByName('rtcpp').mustRunAfter 'umpleParser'
+    tasks.findByName('setVersion').mustRunAfter 'rtcpp'
+    tasks.findByName('resetUmpleSelf').mustRunAfter 'setVersion'
+    tasks.findByName('compile').mustRunAfter 'resetUmpleSelf'
+    tasks.findByName('packageUmple').mustRunAfter 'compile'
+    tasks.findByName('test').mustRunAfter 'packageUmple'
+    tasks.findByName('deploy').mustRunAfter 'test'
+    tasks.findByName('resetVersion').mustRunAfter 'deploy'
+    tasks.findByName('buildEclipsePlugin').mustRunAfter 'resetVersion'
     tasks.findByName('buildUmplificatorEclipsePlugin').mustRunAfter 'buildEclipsePlugin'
     tasks.findByName('buildTestUnitGeneratorAndParser').mustRunAfter 'buildUmplificatorEclipsePlugin'
     tasks.findByName('buildJavaTestbed').mustRunAfter 'buildTestUnitGeneratorAndParser'
