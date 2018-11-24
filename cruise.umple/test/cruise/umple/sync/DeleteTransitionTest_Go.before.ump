@@ -6,7 +6,7 @@ class CarTransmission{
             }
         drive {
             selectNeutral -> neutral;
-            }       
+            }
         reverse {
             selectNeutral -> neutral;
             }
