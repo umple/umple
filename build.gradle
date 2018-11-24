@@ -20,8 +20,8 @@ ext {
     umpleVersionFull = new org.yaml.snakeyaml.Yaml().load(rootProject.ext.umpleVersionFullFile.newInputStream()).version
     umpleVersion = new org.yaml.snakeyaml.Yaml().load(rootProject.ext.umpleVersionFile.newInputStream()).version
     umpleLatestVersion = "${rootProject.ext.umpleVersion}.${grgit.log().size()}.${grgit.head().getAbbreviatedId(9)}"
-    umpleLatestJarBase = "dist/gradle/libs/umple-${rootProject.ext.umpleLatestVersion}"
-    umpleLatestJar = "${rootProject.ext.umpleLatestJarBase}.jar"
+    umpleLatestJarBase = "umple-${rootProject.ext.umpleLatestVersion}"
+    umpleLatestJar = "dist/gradle/libs/${rootProject.ext.umpleLatestJarBase}.jar"
     umpleJarRemoteSource = "http://cruise.eecs.uottawa.ca/umpleonline/scripts/umple.jar"
     umpleJarRemoteFile = "libs/umple-latest.jar"
     generatedBaseDir = "dist/gradle/src-gen"
@@ -108,7 +108,7 @@ subprojects{
         from fromPath
         into intoPath
         duplicatesStrategy = 'warn'
-        exclude "**/.git*", "**/UmpleTo*.java"
+        exclude "**/.git*"
         doFirst {
             println("Copying from ${fromPath} to ${intoPath}")
             inputs.sourceFiles.stopExecutionIfEmpty()
@@ -243,7 +243,7 @@ task packageUmple(type: Jar) {
                    'Built-By': 'Cruise - University of Ottawa'        
     }
     doFirst {
-        println("Compiling umplegradle.jar using " + rootProject.ext.classfileOutputDir)
+        println("Compiling to ${rootProject.ext.umpleLatestJar} using " + rootProject.ext.classfileOutputDir)
     }
     dependsOn 'copyDocs'
 }
@@ -293,15 +293,6 @@ task rtcpp(type: Copy) {
     from 'cruise.umple.nebula/src', 'UmpleToRTCpp/src'
     into 'dist/gradle/rtcpp'
     exclude '.git*'
-}
-
-// Copies libraries for cruise.umplificator
-task umplificator(type: Copy) {
-    from "cruise.umplificator/src"
-    into 'dist/gradle/src-gen/umplificator-libs'
-    exclude '.git*'
-    exclude '*.ump'
-    mustRunAfter 'cruise.umplificator:compileUmple'
 }
 
 // =========
