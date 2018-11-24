@@ -1,4 +1,4 @@
-CarTransmission{
+class CarTransmission{
     state {
         neutral {
             selectDrive -> drive;
