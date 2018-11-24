@@ -38,6 +38,52 @@ buildDir  = 'dist/gradle/'
 // By default, run the full build
 defaultTasks 'fullbuild'
 
+// Define aliases for build variants
+def buildAliases = [
+    'firstbuild' : [
+       'cleanUp',
+       'codeGen',
+       'umpleParser',
+       'rtcpp',
+       'resetUmpleSelf',
+       'compile',
+       'packageUmple',
+   ],
+   'quickbuild' : [
+        'cleanUpUmple',
+        'resetUmpleSelf',
+        'compile',
+        'packageUmple',
+    ],
+   'fullbuild' : [
+        'cleanUp',
+        'qaBuildingPage',
+        'buildSandbox',
+        'codeGen',
+        'umpleParser',
+        'rtcpp',
+        'setVersion',
+        'resetUmpleSelf',
+        'compile',
+        'packageUmple',
+        'test',
+        'deploy',
+        'resetVersion',
+        'buildEclipsePlugin',
+        'buildUmplificatorEclipsePlugin',
+        'buildTestUnitGeneratorAndParser',
+        'buildJavaTestbed',
+        'testingUmpleOnlineExamplesAndManualExamples',
+   ],
+]
+def expandedTaskList = []
+
+gradle.startParameter.taskNames.each {
+    expandedTaskList << (buildAliases[it] ? buildAliases[it] : it)
+}
+
+gradle.startParameter.taskNames = expandedTaskList.flatten()
+
 apply plugin: 'java'
 
 // See ivy.xml for which third-party libraries are required by the various flavours of Umple build
@@ -379,75 +425,4 @@ task rtcpp(type: Copy) {
     from 'cruise.umple.nebula/src', 'UmpleToRTCpp/src'
     into 'dist/gradle/rtcpp'
     exclude '.git*'
-}
-
-// =========
-//  Presets
-// =========
-
-// Executes a quick build
-task quickbuild {
-    dependsOn 'cleanUpUmple'
-    dependsOn 'resetUmpleSelf'
-    dependsOn 'compile'
-    dependsOn 'packageUmple'
-    tasks.findByName('resetUmpleSelf').mustRunAfter 'cleanUpUmple'
-    tasks.findByName('compile').mustRunAfter 'resetUmpleSelf'
-    tasks.findByName('packageUmple').mustRunAfter 'compile'
-}
-
-// Executes a first build
-task firstbuild {
-    dependsOn 'cleanUp'
-    dependsOn 'codeGen'
-    dependsOn 'umpleParser'
-    dependsOn 'rtcpp'
-    dependsOn 'resetUmpleSelf'
-    dependsOn 'compile'
-    dependsOn 'packageUmple'
-    tasks.findByName('codeGen').mustRunAfter 'cleanUp'
-    tasks.findByName('umpleParser').mustRunAfter 'codeGen'
-    tasks.findByName('rtcpp').mustRunAfter 'umpleParser'
-    tasks.findByName('resetUmpleSelf').mustRunAfter 'rtcpp'
-    tasks.findByName('compile').mustRunAfter 'resetUmpleSelf'
-    tasks.findByName('packageUmple').mustRunAfter 'compile'
-}
-
-// Executes a full build
-task fullbuild {
-    dependsOn 'cleanUp'
-    dependsOn 'qaBuildingPage'
-    dependsOn 'buildSandbox'
-    dependsOn 'codeGen'
-    dependsOn 'umpleParser'
-    dependsOn 'rtcpp'
-    dependsOn 'setVersion'
-    dependsOn 'resetUmpleSelf'
-    dependsOn 'compile'
-    dependsOn 'packageUmple'
-    dependsOn 'test'
-    dependsOn 'deploy'
-    dependsOn 'resetVersion'
-    dependsOn 'buildEclipsePlugin'
-    dependsOn 'buildUmplificatorEclipsePlugin'
-    dependsOn 'buildTestUnitGeneratorAndParser'
-    dependsOn 'buildJavaTestbed'
-    dependsOn 'testingUmpleOnlineExamplesAndManualExamples'
-    tasks.findByName('qaBuildingPage').mustRunAfter 'cleanUp'
-    tasks.findByName('buildSandbox').mustRunAfter 'qaBuildingPage'
-    tasks.findByName('codeGen').mustRunAfter 'buildSandbox'
-    tasks.findByName('umpleParser').mustRunAfter 'codeGen'
-    tasks.findByName('rtcpp').mustRunAfter 'umpleParser'
-    tasks.findByName('setVersion').mustRunAfter 'rtcpp'
-    tasks.findByName('resetUmpleSelf').mustRunAfter 'setVersion'
-    tasks.findByName('compile').mustRunAfter 'resetUmpleSelf'
-    tasks.findByName('packageUmple').mustRunAfter 'compile'
-    tasks.findByName('test').mustRunAfter 'packageUmple'
-    tasks.findByName('deploy').mustRunAfter 'test'
-    tasks.findByName('resetVersion').mustRunAfter 'deploy'
-    tasks.findByName('buildEclipsePlugin').mustRunAfter 'resetVersion'
-    tasks.findByName('buildUmplificatorEclipsePlugin').mustRunAfter 'buildEclipsePlugin'
-    tasks.findByName('buildTestUnitGeneratorAndParser').mustRunAfter 'buildUmplificatorEclipsePlugin'
-    tasks.findByName('buildJavaTestbed').mustRunAfter 'buildTestUnitGeneratorAndParser'
-    tasks.findByName('testingUmpleOnlineExamplesAndManualExamples').mustRunAfter 'buildJavaTestbed'
 }

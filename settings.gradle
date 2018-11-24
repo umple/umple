@@ -8,6 +8,7 @@ include 'UmpleToTest'
 include 'cruise.umple'
 include 'cruise.umple.validator'
 include 'cruise.umplificator'
+include 'sandbox'
 
 rootProject.name = 'umple'
 
@@ -55,6 +56,9 @@ rootProject.children.each {project ->
             break
         case "cruise.umplificator":
             project.buildFileName = "CruiseUmplificatorBuild.gradle"
+            break
+        case "sandbox":
+            project.buildFileName = "SandboxBuild.gradle"
             break
         default:
             throw new IllegalArgumentException("Invalid subproject name : " + project.name);
