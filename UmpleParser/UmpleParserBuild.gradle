@@ -1,5 +1,4 @@
 ext {
   umpleOutputDir = "src-gen-umple"
   masterFile = "src/Master.ump"
-  generationDir = "dist/gradle/src-gen-parser/"
 }
