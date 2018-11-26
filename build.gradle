@@ -49,13 +49,13 @@ def buildAliases = [
        'rtcpp',
        'resetUmpleSelf',
        'compileJava',
-       'packageUmple',
+       'jar',
    ],
    'quickbuild' : [
         'cleanUpUmple',
         'resetUmpleSelf',
         'compileJava',
-        'packageUmple',
+        'jar',
     ],
    'fullbuild' : [
         'cleanUp',
@@ -67,7 +67,7 @@ def buildAliases = [
         'setVersion',
         'resetUmpleSelf',
         'compileJava',
-        'packageUmple',
+        'jar',
         'test',
         'deploy',
         'resetVersion',
@@ -213,7 +213,7 @@ subprojects{
         from fromPath
         into intoPath
         duplicatesStrategy = 'warn'
-        exclude "**/.git*"
+        exclude '**/.git*', '**/*.ump'
         doFirst {
             println("Copying from ${fromPath} to ${intoPath}")
             inputs.sourceFiles.stopExecutionIfEmpty()
@@ -226,12 +226,16 @@ subprojects{
         from "${projectDir.toString()}/test"
         into "${rootProject.ext.testBaseDir}/${project.name}"
         duplicatesStrategy = 'warn'
-        exclude "**/.git*"
+        exclude '**/.git*', '**/*.ump'
         doFirst {
             println("Copying tests from ${projectDir.toString()}/test to ${rootProject.ext.testBaseDir}")
         }
     }
-    copyUmpleOutput.finalizedBy copyUmpleTest
+
+    // TODO: there seems to be some broken Java in some of the compiled files here
+    if (project.name != "cruise.umplificator") {
+        rootProject.tasks.getByName("test").dependsOn copyUmpleTest
+    }
 }
 
 // Updates the latest version file
@@ -274,7 +278,7 @@ sourceSets {
                 rootProject.ext.generatedBaseDir,
                 "${rootProject.projectDir.toString()}/dist/libs/vendors/jopt-simple/src/main/java/joptsimple"
             ]
-            exclude '**/*.ump', '**/.git*'
+            exclude '**/.git*', '**/*.ump'
         }
         output.classesDir = rootProject.ext.classfileOutputDir
     }
@@ -284,11 +288,16 @@ sourceSets {
             rootProject.ext.testClassfileOutputDir,
             configurations.ivy,
             manualDependencyLocalPath)
+        runtimeClasspath = files(
+            rootProject.ext.classfileOutputDir,
+            rootProject.ext.testClassfileOutputDir,
+            configurations.ivy,
+            manualDependencyLocalPath)
         java {
             srcDirs = [
                 rootProject.ext.testBaseDir,
             ]
-            exclude '**/*.ump', '**/.git*'
+            exclude '**/.git*', '**/*.ump'
         }
         output.classesDir = rootProject.ext.testClassfileOutputDir
     }
@@ -312,8 +321,7 @@ task copyDocs(type: Copy) {
     }
 }
 
-// Task for generating the jar file
-task packageUmple(type: Jar) {
+jar {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
     from rootProject.ext.classfileOutputDir
     // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
@@ -321,7 +329,7 @@ task packageUmple(type: Jar) {
     manifest {
         attributes 'Main-Class': 'cruise.umple.UmpleConsoleMain',
                    'Class-Path': configurations.ivy,
-                   'Built-By': 'Cruise - University of Ottawa'        
+                   'Built-By': 'Cruise - University of Ottawa'
     }
     doFirst {
         println("Compiling to ${rootProject.ext.umpleLatestJar} using " + rootProject.ext.classfileOutputDir)
@@ -379,9 +387,9 @@ task deployUmpleOnlineJars(type: Copy) {
         println("Deploying umple online to /h/ralph/sites/www/html/umpleonline/scripts/")
         inputs.sourceFiles.stopExecutionIfEmpty()
     }
-    include "umplesync-${rootProject.ext.umpleVersionFull}"
-    include "umple-${rootProject.ext.umpleVersionFull}"
-    include "umplevml-${rootProject.ext.umpleVersionFull}"
+    include "umplesync-${rootProject.ext.umpleVersionFull}.jar"
+    include "umple-${rootProject.ext.umpleVersionFull}.jar"
+    include "umplevml-${rootProject.ext.umpleVersionFull}.jar"
     mustRunAfter 'deploy'
 }
 
@@ -392,9 +400,9 @@ task deployUpdatedLib(type: Copy) {
         println("Deploying umple online to lib")
         inputs.sourceFiles.stopExecutionIfEmpty()
     }
-    include "umplesync-${rootProject.ext.umpleVersionFull}"
-    include "umple-${rootProject.ext.umpleVersionFull}"
-    include "umplevml-${rootProject.ext.umpleVersionFull}"
+    include "umplesync-${rootProject.ext.umpleVersionFull}.jar"
+    include "umple-${rootProject.ext.umpleVersionFull}.jar"
+    include "umplevml-${rootProject.ext.umpleVersionFull}.jar"
     mustRunAfter 'deploy'
 }
 
@@ -428,7 +436,7 @@ task codeGen {
 
 // Compiles the parser to Java
 task umpleParser {
-    dependsOn ":UmpleParser:compileUmple"
+    dependsOn ":UmpleParser:compileUmpleSelf"
 }
 
 // Copies libraries for RTCpp
