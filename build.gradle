@@ -37,9 +37,6 @@ ext {
 // the ant build system
 buildDir  = "${rootProject.projectDir.toString()}/dist/gradle/"
 
-// By default, run the full build
-defaultTasks 'fullbuild'
-
 // Define aliases for build variants
 def buildAliases = [
     'firstbuild' : [
@@ -213,7 +210,6 @@ subprojects{
         from fromPath
         into intoPath
         duplicatesStrategy = 'warn'
-        exclude '**/.git*', '**/*.ump'
         doFirst {
             println("Copying from ${fromPath} to ${intoPath}")
             inputs.sourceFiles.stopExecutionIfEmpty()
@@ -224,18 +220,21 @@ subprojects{
 
     task copyUmpleTest (type: Copy) {
         from "${projectDir.toString()}/test"
-        into "${rootProject.ext.testBaseDir}/${project.name}"
+        into "${rootProject.ext.testBaseDir}/${project.name}/test"
         duplicatesStrategy = 'warn'
-        exclude '**/.git*', '**/*.ump'
         doFirst {
-            println("Copying tests from ${projectDir.toString()}/test to ${rootProject.ext.testBaseDir}")
+            println("Copying tests from ${projectDir.toString()}/test to ${rootProject.ext.testBaseDir}/test")
         }
     }
 
     // TODO: there seems to be some broken Java in some of the compiled files here
-    if (project.name != "cruise.umplificator") {
-        rootProject.tasks.getByName("test").dependsOn copyUmpleTest
+    if (project.name != "cruise.umplificator" &&
+        project.name != "sandbox") {
+        rootProject.tasks.getByName("compileTestJava").dependsOn copyUmpleTest
     }
+
+    // Make sure any invocations of compile Java from the root also trigger umple compiles
+    rootProject.tasks.getByName("compileJava").dependsOn compileUmple
 }
 
 // Updates the latest version file
@@ -254,6 +253,11 @@ updateLatestVersion.mustRunAfter 'packageUmple'
 // Clean up task
 task cleanUp << {
     delete "${rootProject.projectDir.toString()}/dist/gradle"
+}
+
+// Delete the tests dir
+task cleanUpTests << {
+    delete rootProject.ext.testBaseDir
 }
 
 // Delete only cruise umple components
@@ -297,7 +301,6 @@ sourceSets {
             srcDirs = [
                 rootProject.ext.testBaseDir,
             ]
-            exclude '**/.git*', '**/*.ump'
         }
         output.classesDir = rootProject.ext.testClassfileOutputDir
     }
@@ -341,56 +344,17 @@ jar {
 //  TODO Items
 // ============
 
-// Create in-progress QA landing page
-task qaBuildingPage(type: Copy) {
-    from "${rootProject.projectDir.toString()}/build/"
-    into "${rootProject.projectDir.toString()}/dist/qa/"
-    include 'qa_updating.php'
-    rename 'qa_updating.php', 'index.php'
-    doFirst {
-        println("Creating the QA landing page")
-        inputs.sourceFiles.stopExecutionIfEmpty()
-    }
-}
-
-// Builds the sandbox project
-task buildSandbox << {
-    delete "${rootProject.projectDir.toString()}/cruise.umple.validator/bin"
-    delete "${rootProject.projectDir.toString()}/cruise.umplificator/bin"
-    delete "${rootProject.projectDir.toString()}/sandbox/bin"
-    delete "${rootProject.projectDir.toString()}/dist/sandbox"
-}
-task('sandbox:compileJava').mustRunAfter 'buildSandbox'
-
-// Update files to show generated version
-task setVersion << {
-    ant.replaceregexp(match:'@UMPLE_VERSION@', replace: rootProject.ext.umpleLatestVersion, flags:'g', byline:true) {
-        fileset(dir: "${rootProject.projectDir.toString()}/dist/gradle", includes: '**/*.java')
-    }
-}
-
-// Revert generated version
-task resetVersion << {
-    ant.replaceregexp(match:rootProject.ext.umpleLatestVersion, replace: '@UMPLE_VERSION@', flags:'g', byline:true) {
-        fileset(dir: "${rootProject.projectDir.toString()}/dist/gradle", includes: '**/*.java')
-    }
-}
-
-task deploy << {
-    println("Deploying Version: ${rootProject.ext.umpleLatestVersion}")
-}
-
 task deployUmpleOnlineJars(type: Copy) {
     from "${rootProject.projectDir.toString()}/dist/cruise.umple"
     into "/h/ralph/sites/www/html/umpleonline/scripts/"
     doFirst {
         println("Deploying umple online to /h/ralph/sites/www/html/umpleonline/scripts/")
-        inputs.sourceFiles.stopExecutionIfEmpty()
+        inputs.sourceFiles.stopExecutionIfEmpty() // silent fail, continues execution
     }
+    // TODO: the sync and vml jars still need to be built
     include "umplesync-${rootProject.ext.umpleVersionFull}.jar"
     include "umple-${rootProject.ext.umpleVersionFull}.jar"
     include "umplevml-${rootProject.ext.umpleVersionFull}.jar"
-    mustRunAfter 'deploy'
 }
 
 task deployUpdatedLib(type: Copy) {
@@ -398,12 +362,21 @@ task deployUpdatedLib(type: Copy) {
     into "${rootProject.projectDir.toString()}/lib"
     doFirst {
         println("Deploying umple online to lib")
-        inputs.sourceFiles.stopExecutionIfEmpty()
+        inputs.sourceFiles.stopExecutionIfEmpty() // silent fail, continues execution
     }
+    // TODO: the sync and vml jars still need to be built
     include "umplesync-${rootProject.ext.umpleVersionFull}.jar"
     include "umple-${rootProject.ext.umpleVersionFull}.jar"
     include "umplevml-${rootProject.ext.umpleVersionFull}.jar"
-    mustRunAfter 'deploy'
+}
+
+// We can't really perform a full deployment until we start building the other two jars as well
+task deploy {
+    doLast {
+        println("Deployed Version: ${rootProject.ext.umpleLatestVersion}")
+    }
+    dependsOn 'deployUmpleOnlineJars'
+    dependsOn 'deployUpdatedLib'
 }
 
 task buildEclipsePlugin << { println("TODO") }
@@ -445,4 +418,41 @@ task rtcpp(type: Copy) {
             "${rootProject.projectDir.toString()}/UmpleToRTCpp/src"
     into "${rootProject.projectDir.toString()}/dist/gradle/src-gen/rtcpp"
     exclude '.git*'
+}
+
+// Create in-progress QA landing page
+task qaBuildingPage(type: Copy) {
+    from "${rootProject.projectDir.toString()}/build/"
+    into "${rootProject.projectDir.toString()}/dist/qa/"
+    include 'qa_updating.php'
+    rename 'qa_updating.php', 'index.php'
+    doFirst {
+        println("Creating the QA landing page")
+        inputs.sourceFiles.stopExecutionIfEmpty()
+    }
+}
+
+// Builds the sandbox project
+task buildSandbox << {
+    delete "${rootProject.projectDir.toString()}/cruise.umple.validator/bin"
+    delete "${rootProject.projectDir.toString()}/cruise.umplificator/bin"
+    delete "${rootProject.projectDir.toString()}/sandbox/bin"
+    delete "${rootProject.projectDir.toString()}/dist/sandbox"
+}
+task('sandbox:compileJava').mustRunAfter 'buildSandbox'
+
+// Update files to show generated version
+task setVersion << {
+    println("Setting version to ${rootProject.ext.umpleLatestVersion}")
+    ant.replaceregexp(match:'@UMPLE_VERSION@', replace: rootProject.ext.umpleLatestVersion, flags:'g', byline:true) {
+        fileset(dir: "${rootProject.projectDir.toString()}/dist/gradle", includes: '**/*.java')
+    }
+}
+
+// Revert generated version
+task resetVersion << {
+    println("Reverting version from ${rootProject.ext.umpleLatestVersion} to @UMPLE_VERSION@")
+    ant.replaceregexp(match:rootProject.ext.umpleLatestVersion, replace: '@UMPLE_VERSION@', flags:'g', byline:true) {
+        fileset(dir: "${rootProject.projectDir.toString()}/dist/gradle", includes: '**/*.java')
+    }
 }

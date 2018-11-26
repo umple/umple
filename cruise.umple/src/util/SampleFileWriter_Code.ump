@@ -291,6 +291,14 @@ class SampleFileWriter
     }
     
     path = "/h/ralph/umple/trunk/cruise.umple/" + rawPath;
+    f = new File(path);
+    if (f.exists())
+    {
+      return path;
+    }
+
+    // TODO: this shouldn't be hardcoded - see issue 751
+    path = "dist/gradle/test/bin/" + rawPath;
     return path;
   }
   
