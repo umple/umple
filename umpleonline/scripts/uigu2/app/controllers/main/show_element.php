@@ -181,13 +181,19 @@ function _show_element($controller) {
           
           $temp_body = $body;
           $stack = new Stack();
+
           for($j = 0; $j < $num_of_attributes; $j++) {
+            //O:15:"EllipticalShape":2:{s:30:"EllipticalShapesemiMajorAxis";s:3:"sss";s:15:"Shape2Dcenter";s:2:"cd";}
             $attribute_separator = strpos($temp_body, ";");
 
             $attribute_string = substr($temp_body, 0, $attribute_separator);
             $attribute_info = explode(":", $attribute_string);
             $attribute_length = intval($attribute_info[1]);
-            $attribute_name = substr($attribute_info[2], $class_name_length + 3, $attribute_length - $class_name_length - 2);
+            //$attribute_name = substr($attribute_info[2], $class_name_length + 3, $attribute_length - $class_name_length - 2);
+
+            $attribute_name = explode(chr(0), $attribute_info[2]);
+            $attribute_name = $attribute_name[2];
+            $attribute_name = substr($attribute_name, 0, strlen($attribute_name) - 1);
 
             $temp_body = substr($temp_body, $attribute_separator + 1);
 
