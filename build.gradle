@@ -39,6 +39,14 @@ buildDir  = "${rootProject.projectDir.toString()}/dist/gradle/"
 
 // Define aliases for build variants
 def buildAliases = [
+    'firstbuild' : [
+       'cleanUp',
+       'codeGen',
+       'umpleParser',
+       'resetUmpleSelf',
+       'compileJava',
+       'jar',
+   ],
    'quickbuild' : [
         'cleanUpUmple',
         'resetUmpleSelf',
@@ -287,6 +295,11 @@ sourceSets {
         output.classesDir = rootProject.ext.classfileOutputDir
     }
     test {
+        compileClasspath = files(
+            rootProject.ext.classfileOutputDir,
+            rootProject.ext.testClassfileOutputDir,
+            configurations.ivy,
+            manualDependencyLocalPath)
         runtimeClasspath = files(
             rootProject.ext.classfileOutputDir,
             rootProject.ext.testClassfileOutputDir,
