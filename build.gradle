@@ -39,14 +39,6 @@ buildDir  = "${rootProject.projectDir.toString()}/dist/gradle/"
 
 // Define aliases for build variants
 def buildAliases = [
-    'firstbuild' : [
-       'cleanUp',
-       'codeGen',
-       'umpleParser',
-       'resetUmpleSelf',
-       'compileJava',
-       'jar',
-   ],
    'quickbuild' : [
         'cleanUpUmple',
         'resetUmpleSelf',
@@ -68,7 +60,7 @@ def buildAliases = [
         'resetVersion',
         'buildTestUnitGeneratorAndParser',
         'buildJavaTestbed',
-        'testingUmpleOnlineExamplesAndManualExamples',
+        'allUserManualAndExampleTests',
    ],
 ]
 def expandedTaskList = []
@@ -237,10 +229,10 @@ subprojects{
 // Files in this directory are used during testing
 task copyUmpleOnlineTestFiles(type: Copy) {
     from "${rootProject.projectDir.toString()}/umpleonline/ump"
-    into "${rootProject.ext.testBaseDir}/umpleonline/ump"
+    into "${rootProject.ext.testClassfileOutputDir}/umpleonline/ump"
     include '*.ump'
     doFirst {
-        println("Copying .ump files from ${rootProject.projectDir.toString()}/umpleonline/ump to ${rootProject.ext.testBaseDir}/umpleonline/ump")
+        println("Copying .ump files from ${rootProject.projectDir.toString()}/umpleonline/ump to ${rootProject.ext.testClassfileOutputDir}/umpleonline/ump")
         inputs.sourceFiles.stopExecutionIfEmpty()
     }
 }
@@ -388,10 +380,6 @@ task deploy {
     dependsOn 'deployUpdatedLib'
 }
 
-task buildTestUnitGeneratorAndParser << { println("TODO") }
-task buildJavaTestbed << { println("TODO") }
-task testingUmpleOnlineExamplesAndManualExamples << { println("TODO") }
-
 // =======
 //  Build
 // =======
@@ -436,6 +424,37 @@ task qaBuildingPage(type: Copy) {
     doFirst {
         println("Creating the QA landing page")
         inputs.sourceFiles.stopExecutionIfEmpty()
+    }
+}
+
+// Copy the completed QA landing page
+task qaLandingPage(type: Copy) {
+    from "${rootProject.projectDir.toString()}/build/"
+    into "${rootProject.projectDir.toString()}/dist/qa/"
+    include 'qa_index.php'
+    doFirst {
+        println("Finalizing the QA landing page")
+        inputs.sourceFiles.stopExecutionIfEmpty()
+    }
+}
+
+// Builds test unit generator and parser
+// TODO
+task buildTestUnitGeneratorAndParser << { println("TODO") }
+
+// Builds and executes Java testbed tests
+// TODO
+task buildJavaTestbed {
+    // dependsOn ":testbed:compileUmpleSelf"
+    // dependsOn ":testbed:test"
+}
+
+// Testing UmpleOnline Examples and Manual Examples
+// TODO
+task allUserManualAndExampleTests {
+    doFirst {
+        println("Building User Manual and UmpleOnline Examples")
+        delete "${rootProject.projectDir.toString()}/temp"
     }
 }
 
