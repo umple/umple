@@ -43,7 +43,6 @@ def buildAliases = [
        'cleanUp',
        'codeGen',
        'umpleParser',
-       'rtcpp',
        'resetUmpleSelf',
        'compileJava',
        'jar',
@@ -60,7 +59,6 @@ def buildAliases = [
         'buildSandbox',
         'codeGen',
         'umpleParser',
-        'rtcpp',
         'setVersion',
         'resetUmpleSelf',
         'compileJava',
@@ -68,8 +66,6 @@ def buildAliases = [
         'test',
         'deploy',
         'resetVersion',
-        'buildEclipsePlugin',
-        'buildUmplificatorEclipsePlugin',
         'buildTestUnitGeneratorAndParser',
         'buildJavaTestbed',
         'testingUmpleOnlineExamplesAndManualExamples',
@@ -132,9 +128,6 @@ dependencies {
     // XText/Xtend Plugin
     ivy group: 'org.eclipse.xtext', name: 'org.eclipse.xtext.ui', version: '2.9.0.beta3'
     ivy group: 'org.eclipse.xtend', name: 'org.eclipse.xtend.core', version: '2.9.0.beta3'
-
-    // Eclipse Plugin dependencies
-    ivy group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.core', version: '3.10.0'
 }
 
 // ===================
@@ -200,6 +193,11 @@ subprojects{
     }
     compileUmpleSelf.dependsOn(":downloadUmpleJar")
 
+    // For RTCpp we need to copy additional dependencies
+    if (project.name == "UmpleToRTCpp") {
+        compileUmpleSelf.dependsOn(":copyRTCppLibs") 
+    }
+
     // Copy task for parent project
     def fromPath = "${projectDir.toString()}/${project.ext.umpleOutputDir}"
     def intoPath = project.hasProperty("generationDir") ?
@@ -223,19 +221,30 @@ subprojects{
         into "${rootProject.ext.testBaseDir}/${project.name}/test"
         duplicatesStrategy = 'warn'
         doFirst {
-            println("Copying tests from ${projectDir.toString()}/test to ${rootProject.ext.testBaseDir}/test")
+            println("Copying tests from ${projectDir.toString()}/test to ${rootProject.ext.testBaseDir}/${project.name}/test")
         }
     }
 
     // TODO: there seems to be some broken Java in some of the compiled files here
-    if (project.name != "cruise.umplificator" &&
-        project.name != "sandbox") {
+    if (project.name != "cruise.umplificator" && project.name != "sandbox") {
         rootProject.tasks.getByName("compileTestJava").dependsOn copyUmpleTest
     }
 
     // Make sure any invocations of compile Java from the root also trigger umple compiles
     rootProject.tasks.getByName("compileJava").dependsOn compileUmple
 }
+
+// Files in this directory are used during testing
+task copyUmpleOnlineTestFiles(type: Copy) {
+    from "${rootProject.projectDir.toString()}/umpleonline/ump"
+    into "${rootProject.ext.testBaseDir}/umpleonline/ump"
+    include '*.ump'
+    doFirst {
+        println("Copying .ump files from ${rootProject.projectDir.toString()}/umpleonline/ump to ${rootProject.ext.testBaseDir}/umpleonline/ump")
+        inputs.sourceFiles.stopExecutionIfEmpty()
+    }
+}
+tasks.getByName("test").dependsOn copyUmpleOnlineTestFiles
 
 // Updates the latest version file
 task updateLatestVersion << {
@@ -379,8 +388,6 @@ task deploy {
     dependsOn 'deployUpdatedLib'
 }
 
-task buildEclipsePlugin << { println("TODO") }
-task buildUmplificatorEclipsePlugin << { println("TODO") }
 task buildTestUnitGeneratorAndParser << { println("TODO") }
 task buildJavaTestbed << { println("TODO") }
 task testingUmpleOnlineExamplesAndManualExamples << { println("TODO") }
@@ -388,6 +395,14 @@ task testingUmpleOnlineExamplesAndManualExamples << { println("TODO") }
 // =======
 //  Build
 // =======
+
+// Copies libraries for RTCpp
+task copyRTCppLibs(type: Copy) {
+    from "${rootProject.projectDir.toString()}/cruise.umple.nebula/src",
+            "${rootProject.projectDir.toString()}/UmpleToRTCpp/src"
+    into "${rootProject.projectDir.toString()}/dist/gradle/src-gen/rtcpp"
+    exclude '.git*'
+}
 
 // Builds self
 task resetUmpleSelf {
@@ -410,14 +425,6 @@ task codeGen {
 // Compiles the parser to Java
 task umpleParser {
     dependsOn ":UmpleParser:compileUmpleSelf"
-}
-
-// Copies libraries for RTCpp
-task rtcpp(type: Copy) {
-    from "${rootProject.projectDir.toString()}/cruise.umple.nebula/src",
-            "${rootProject.projectDir.toString()}/UmpleToRTCpp/src"
-    into "${rootProject.projectDir.toString()}/dist/gradle/src-gen/rtcpp"
-    exclude '.git*'
 }
 
 // Create in-progress QA landing page
