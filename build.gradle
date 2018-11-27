@@ -324,7 +324,7 @@ jar {
         attributes 'Main-Class': 'cruise.umple.UmpleConsoleMain',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion,
+                   'Version': rootProject.ext.umpleVersion
     }
     doFirst {
         println("Compiling to ${rootProject.ext.umpleLatestJar} using " + rootProject.ext.classfileOutputDir)
@@ -342,7 +342,7 @@ task packageStatistics(type: Jar) {
         attributes 'Main-Class': 'cruise.umple.stats.StatsMain',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion,
+                   'Version': rootProject.ext.umpleVersion
     }
     doFirst {
         println("Compiling umplestats-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
@@ -360,7 +360,7 @@ task packageDocumenter(type: Jar) {
         attributes 'Main-Class': 'cruise.umple.docs.DocumenterMain',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion,
+                   'Version': rootProject.ext.umpleVersion
     }
     doFirst {
         println("Compiling umpledocs-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
@@ -378,7 +378,7 @@ task packageSync(type: Jar) {
         attributes 'Main-Class': 'cruise.umple.PlaygroundMain',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion,
+                   'Version': rootProject.ext.umpleVersion
     }
     doFirst {
         println("Compiling umplesync-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
@@ -387,7 +387,7 @@ task packageSync(type: Jar) {
 }
 
 // Task for generating the run jar file
-task packageRun(type: Jar) {
+task packageRunner(type: Jar) {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
     from rootProject.ext.classfileOutputDir
     // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
@@ -396,7 +396,7 @@ task packageRun(type: Jar) {
         attributes 'Main-Class': 'cruise.umple.UmpleRunMain',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion,
+                   'Version': rootProject.ext.umpleVersion
     }
     doFirst {
         println("Compiling umplerun-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
@@ -414,7 +414,7 @@ task packageRun(type: Jar) {
         attributes 'Main-Class': 'cruise.vml.VmlConsole',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion,
+                   'Version': rootProject.ext.umpleVersion
     }
     doFirst {
         println("Compiling umplevml-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
