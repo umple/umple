@@ -72,7 +72,7 @@ script:
  
   # Set up UmpleOnline to be packaged into its Docker image, then build the image.
   - if [ "$HAVE_DOCKER" ]; then
-        $ANT_BUILD -DshouldPackageUmpleOnline=true packageUmpleonline && # TODO: gradle version
+        $ANT_BUILD -DshouldPackageUmpleOnline=true packageUmpleonline &&
         docker build -t "umple/umpleonline-base:local"
                      -f ../umpleonline/Dockerfile-base ../umpleonline &&
         docker build -t "umple/umpleonline:recentbuild" ../umpleonline;
