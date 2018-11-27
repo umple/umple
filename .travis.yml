@@ -32,7 +32,7 @@ env:
 
 script:
   # Gradle build
-  - if [ "$USE_GRADLE" ]; then gradlew fullbuild; fi
+  - if [ "$USE_GRADLE" ]; then ./gradlew fullbuild; fi
 
   - if [ -z "$USE_GRADLE" ]; then php --version ; ruby -v; fi
   - if [ -z "$USE_GRADLE" ]; then cd build/; fi
