@@ -203,6 +203,10 @@ subprojects{
     compileUmple.finalizedBy copyUmpleOutput
     compileUmpleSelf.finalizedBy copyUmpleOutput
 
+    if (project.name == "UmpleToRTCpp") {
+        copyUmpleOutput.dependsOn(":copyRTCppLibs")
+    }
+
     task copyUmpleTest (type: Copy) {
         from "${projectDir.toString()}/test"
         into "${rootProject.ext.testBaseDir}/${project.name}/test"
@@ -422,9 +426,9 @@ task packageRun(type: Jar) {
     mustRunAfter 'jar'
 }
 
-// ============
-//  TODO Items
-// ============
+// =======
+//  Build
+// =======
 
 task deployUmpleOnlineJars(type: Copy) {
     from "${rootProject.projectDir.toString()}/dist/cruise.umple"
@@ -459,18 +463,12 @@ task deploy {
     dependsOn 'deployUpdatedLib'
 }
 
-// =======
-//  Build
-// =======
-
 // Copies libraries for RTCpp
 task copyRTCppLibs(type: Copy) {
     from "${rootProject.projectDir.toString()}/cruise.umple.nebula/src",
             "${rootProject.projectDir.toString()}/UmpleToRTCpp/src"
     into "${rootProject.projectDir.toString()}/dist/gradle/src-gen/rtcpp"
     exclude '.git*'
-    mustRunAfter ':UmpleToRTCpp:compileUmpleSelf'
-    mustRunAfter ':UmpleToRTCpp:compileUmple'
 }
 
 // Builds self
