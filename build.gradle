@@ -185,11 +185,6 @@ subprojects{
     }
     compileUmpleSelf.dependsOn(":downloadUmpleJar")
 
-    // For RTCpp we need to copy additional dependencies
-    if (project.name == "UmpleToRTCpp") {
-        compileUmpleSelf.dependsOn(":copyRTCppLibs") 
-    }
-
     // Copy task for parent project
     def fromPath = "${projectDir.toString()}/${project.ext.umpleOutputDir}"
     def intoPath = project.hasProperty("generationDir") ?
@@ -288,11 +283,6 @@ sourceSets {
         output.classesDir = rootProject.ext.classfileOutputDir
     }
     test {
-        compileClasspath = files(
-            rootProject.ext.classfileOutputDir,
-            rootProject.ext.testClassfileOutputDir,
-            configurations.ivy,
-            manualDependencyLocalPath)
         runtimeClasspath = files(
             rootProject.ext.classfileOutputDir,
             rootProject.ext.testClassfileOutputDir,
@@ -333,12 +323,103 @@ jar {
     manifest {
         attributes 'Main-Class': 'cruise.umple.UmpleConsoleMain',
                    'Class-Path': configurations.ivy,
-                   'Built-By': 'Cruise - University of Ottawa'
+                   'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleVersion,
     }
     doFirst {
         println("Compiling to ${rootProject.ext.umpleLatestJar} using " + rootProject.ext.classfileOutputDir)
     }
     dependsOn 'copyDocs'
+}
+
+// Task for generating the statistics jar file
+task packageStatistics(type: Jar) {
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
+    from rootProject.ext.classfileOutputDir
+    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
+    archivesBaseName = "umplestats-${rootProject.ext.umpleLatestVersion}.jar"
+    manifest {
+        attributes 'Main-Class': 'cruise.umple.stats.StatsMain',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleVersion,
+    }
+    doFirst {
+        println("Compiling umplestats-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+    }
+    mustRunAfter 'jar'
+}
+
+// Task for generating the documenter jar file
+task packageDocumenter(type: Jar) {
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
+    from rootProject.ext.classfileOutputDir
+    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
+    archivesBaseName = "umpledocs-${rootProject.ext.umpleLatestVersion}.jar"
+    manifest {
+        attributes 'Main-Class': 'cruise.umple.docs.DocumenterMain',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleVersion,
+    }
+    doFirst {
+        println("Compiling umpledocs-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+    }
+    mustRunAfter 'jar'
+}
+
+// Task for generating the sync jar file
+task packageSync(type: Jar) {
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
+    from rootProject.ext.classfileOutputDir
+    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
+    archivesBaseName = "umplesync-${rootProject.ext.umpleLatestVersion}.jar"
+    manifest {
+        attributes 'Main-Class': 'cruise.umple.PlaygroundMain',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleVersion,
+    }
+    doFirst {
+        println("Compiling umplesync-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+    }
+    mustRunAfter 'jar'
+}
+
+// Task for generating the run jar file
+task packageRun(type: Jar) {
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
+    from rootProject.ext.classfileOutputDir
+    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
+    archivesBaseName = "umplerun-${rootProject.ext.umpleLatestVersion}.jar"
+    manifest {
+        attributes 'Main-Class': 'cruise.umple.UmpleRunMain',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleVersion,
+    }
+    doFirst {
+        println("Compiling umplerun-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+    }
+    mustRunAfter 'jar'
+}
+
+// Task for generating the VML jar file
+task packageRun(type: Jar) {
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
+    from rootProject.ext.classfileOutputDir
+    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
+    archivesBaseName = "umplerun-${rootProject.ext.umpleLatestVersion}.jar"
+    manifest {
+        attributes 'Main-Class': 'cruise.vml.VmlConsole',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleVersion,
+    }
+    doFirst {
+        println("Compiling umplevml-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+    }
+    mustRunAfter 'jar'
 }
 
 // ============
@@ -350,9 +431,8 @@ task deployUmpleOnlineJars(type: Copy) {
     into "/h/ralph/sites/www/html/umpleonline/scripts/"
     doFirst {
         println("Deploying umple online to /h/ralph/sites/www/html/umpleonline/scripts/")
-        inputs.sourceFiles.stopExecutionIfEmpty() // silent fail, continues execution
+        inputs.sourceFiles.stopExecutionIfEmpty()
     }
-    // TODO: the sync and vml jars still need to be built
     include "umplesync-${rootProject.ext.umpleVersionFull}.jar"
     include "umple-${rootProject.ext.umpleVersionFull}.jar"
     include "umplevml-${rootProject.ext.umpleVersionFull}.jar"
@@ -363,9 +443,8 @@ task deployUpdatedLib(type: Copy) {
     into "${rootProject.projectDir.toString()}/lib"
     doFirst {
         println("Deploying umple online to lib")
-        inputs.sourceFiles.stopExecutionIfEmpty() // silent fail, continues execution
+        inputs.sourceFiles.stopExecutionIfEmpty()
     }
-    // TODO: the sync and vml jars still need to be built
     include "umplesync-${rootProject.ext.umpleVersionFull}.jar"
     include "umple-${rootProject.ext.umpleVersionFull}.jar"
     include "umplevml-${rootProject.ext.umpleVersionFull}.jar"
@@ -390,6 +469,8 @@ task copyRTCppLibs(type: Copy) {
             "${rootProject.projectDir.toString()}/UmpleToRTCpp/src"
     into "${rootProject.projectDir.toString()}/dist/gradle/src-gen/rtcpp"
     exclude '.git*'
+    mustRunAfter ':UmpleToRTCpp:compileUmpleSelf'
+    mustRunAfter ':UmpleToRTCpp:compileUmple'
 }
 
 // Builds self
