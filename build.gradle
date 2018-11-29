@@ -644,11 +644,9 @@ task javaTestbedCompile(type: JavaCompile) {
 }
 
 task javaTestbedTest(type: Test) {
-    options.fork = true
     testClassesDirs = fileTree(
         dir: "${rootProject.projectDir.toString()}/testbed/test",
-        include: "**/*Test*.java", "**/AllTests.java", "**/*ErrorOutputTests.java")
-    )
+        includes: ["**/*Test*.java", "**/AllTests.java", "**/*ErrorOutputTests.java"])
     classpath = sourceSets.test.runtimeClasspath
     dependsOn javaTestbedCompile
 }
@@ -689,9 +687,9 @@ task phpTestbedTest {
         def proc = command.execute();
         proc.waitForProcessOutput(System.out, System.err);
 
-        def command = "pushd testbed_php/test; php AllTests.php; popd"
+        command = "pushd testbed_php/test; php AllTests.php; popd"
         println(command)          
-        def proc = command.execute();
+        proc = command.execute();
         proc.waitForProcessOutput(System.out, System.err);
     }
 }
