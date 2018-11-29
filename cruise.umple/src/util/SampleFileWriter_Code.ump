@@ -298,7 +298,7 @@ class SampleFileWriter
     }
 
     // TODO: this shouldn't be hardcoded - see issue 751
-    path = "dist/gradle/test/bin/" + rawPath;
+    path = "dist/gradle/test/workingDir/" + rawPath;
     return path;
   }
   
