@@ -14,14 +14,14 @@ plugins {
 }
 
 ext {
-    umpleVersionFullFile = new File("${rootProject.projectDir.toString()}/build/umpleversion.last.txt")
-    umpleVersionFile = new File("${rootProject.projectDir.toString()}/build/umpleversion.txt")
+    umpleLastVersionFile = new File("${rootProject.projectDir.toString()}/build/umpleversion.last.txt")
+    umpleMajorVersionFile = new File("${rootProject.projectDir.toString()}/build/umpleversion.txt")
     // Try to load the latest version from the build directory
-    umpleVersionFull = new org.yaml.snakeyaml.Yaml().load(rootProject.ext.umpleVersionFullFile.newInputStream()).version
-    umpleVersion = new org.yaml.snakeyaml.Yaml().load(rootProject.ext.umpleVersionFile.newInputStream()).version
-    umpleLatestVersion = "${rootProject.ext.umpleVersion}.${grgit.log().size()}.${grgit.head().getAbbreviatedId(9)}"
-    umpleLatestJarBase = "umple-${rootProject.ext.umpleLatestVersion}"
-    umpleLatestJar = "${rootProject.projectDir.toString()}/dist/gradle/libs/${rootProject.ext.umpleLatestJarBase}.jar"
+    umpleLastVersion = new org.yaml.snakeyaml.Yaml().load(rootProject.ext.umpleLastVersionFile.newInputStream()).version
+    umpleMajorVersion = new org.yaml.snakeyaml.Yaml().load(rootProject.ext.umpleMajorVersionFile.newInputStream()).version
+    umpleCurrentVersion = "${rootProject.ext.umpleMajorVersion}.${grgit.log().size()}.${grgit.head().getAbbreviatedId(9)}"
+    umpleCurrentJarBase = "umple-${rootProject.ext.umpleCurrentVersion}"
+    umpleCurrentJar = "${rootProject.projectDir.toString()}/dist/gradle/libs/${rootProject.ext.umpleCurrentJarBase}.jar"
     umpleJarRemoteSource = "http://cruise.eecs.uottawa.ca/umpleonline/scripts/umple.jar"
     umpleJarRemoteFile = "${rootProject.projectDir.toString()}/libs/umple-latest.jar"
     generatedBaseDir = "${rootProject.projectDir.toString()}/dist/gradle/src-gen"
@@ -63,11 +63,12 @@ def buildAliases = [
         'resetUmpleSelf',
         'compileJava',
         'packageAllJars',
-        'deploy',
         'resetVersion',
         'buildTestUnitGeneratorAndParser',
         'buildJavaTestbed',
         'allUserManualAndExampleTests',
+        'updateLatestVersion',
+        'deploy',
    ],
 ]
 def expandedTaskList = []
@@ -186,8 +187,8 @@ subprojects{
 
     // Compile task using local jar, or fallback to remote
     task compileUmpleSelf << {
-        if (new File(rootProject.ext.umpleLatestJar).exists()) {
-            runUmpleJar(rootProject.ext.umpleLatestJar, masterFile)
+        if (new File(rootProject.ext.umpleCurrentJar).exists()) {
+            runUmpleJar(rootProject.ext.umpleCurrentJar, masterFile)
         } else {
             // Still default to using the stable downloaded jar
             runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
@@ -225,7 +226,7 @@ subprojects{
     }
 
     if (project.name != "cruise.umplificator" && project.name != "sandbox") {
-        copyUmpleOutput.finalizedBy copyUmpleTest
+        rootProject.tasks.getByName("compileTestJava").dependsOn copyUmpleTest
     }
 }
 
@@ -242,7 +243,7 @@ tasks.getByName("compileJava").dependsOn copyRTCppLibs
 task copyUmpleOnlineTestFiles(type: Copy) {
     from "${rootProject.projectDir.toString()}/umpleonline/ump"
     into "${rootProject.ext.testBaseDir}/umpleonline/ump"
-    include '*.ump'
+    include '*.ump' // should avoid hitting the tmp model files
     doFirst {
         println("Copying .ump files from ${rootProject.projectDir.toString()}/umpleonline/ump to ${rootProject.ext.testBaseDir}/umpleonline/ump")
         inputs.sourceFiles.stopExecutionIfEmpty()
@@ -251,29 +252,37 @@ task copyUmpleOnlineTestFiles(type: Copy) {
 tasks.getByName("test").dependsOn copyUmpleOnlineTestFiles
 
 // Files in this directory are used during testing
-task copyValidatorFiles(type: Copy) {
+task copyValidatorUmpFiles(type: Copy) {
     from "${rootProject.projectDir.toString()}/cruise.umple.validator/test"
-    into "${rootProject.ext.testClassfileOutputDir}"
-    include '*.ump'
+    into "${rootProject.ext.testBaseDir}/bin"
+    include '**/*.ump'
     doFirst {
-        println("Copying .ump files from ${rootProject.projectDir.toString()}/umpleonline/ump to ${rootProject.ext.testBaseDir}/umpleonline/ump")
+        println("Copying .ump files from ${rootProject.projectDir.toString()}/cruise.umple.validator/test to ${rootProject.ext.testBaseDir}/bin")
         inputs.sourceFiles.stopExecutionIfEmpty()
     }
 }
-tasks.getByName("test").dependsOn copyUmpleOnlineTestFiles
+tasks.getByName("test").dependsOn copyValidatorUmpFiles
+
+// Files in this directory are used during testing
+task copyValidatorEcoreFiles(type: Copy) {
+    from "${rootProject.projectDir.toString()}/cruise.umple.validator/test"
+    into "${rootProject.ext.testBaseDir}/cruise.umple.validator/test"
+    include '**/*.ecore'
+    doFirst {
+        println("Copying .ecore files from ${rootProject.projectDir.toString()}/cruise.umple.validator/test to ${rootProject.ext.testBaseDir}/cruise.umple.validator/test")
+        inputs.sourceFiles.stopExecutionIfEmpty()
+    }
+}
+tasks.getByName("test").dependsOn copyValidatorEcoreFiles
 
 // Updates the latest version file
 task updateLatestVersion << {
-    if (new File(rootProject.ext.umpleLatestJar).exists()) {
-    new File(rootProject.ext.umpleVersionFullFile).text =
-"""
-version: ${rootProject.ext.umpleLatestVersion}
-"""
+    if (new File(rootProject.ext.umpleCurrentJar).exists()) {
+        rootProject.ext.umpleLastVersionFile.text = "version :   ${rootProject.ext.umpleCurrentVersion}"
     } else {
-        throw new Exception("Could not find jar file ${rootProject.ext.umpleLatestJar} when setting version")
+        throw new Exception("Could not find jar file ${rootProject.ext.umpleCurrentJar} when setting version")
     }
 }
-updateLatestVersion.mustRunAfter 'packageUmple'
 
 // Clean up task
 task cleanUp << {
@@ -292,9 +301,17 @@ task cleanUpUmple << {
     delete "${rootProject.projectDir.toString()}/dist/gradle/src-gen/cruise.umplificator"
 }
 
+task cleanUpArtifacts << {
+    delete "${rootProject.projectDir.toString()}/dist/gradle/libs"
+}
+
 // ============================
 //  Java tests and compilation
 // ============================
+
+test {
+    workingDir = "${rootProject.projectDir.toString()}/dist/gradle/test/bin"
+}
 
 sourceSets {
     main {
@@ -354,16 +371,15 @@ jar {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
     from rootProject.ext.classfileOutputDir
     // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    // Note that this one uses a different property name... how consistent.
-    archivesBaseName = rootProject.ext.umpleLatestJarBase
+    archivesBaseName = rootProject.ext.umpleCurrentJarBase
     manifest {
         attributes 'Main-Class': 'cruise.umple.UmpleConsoleMain',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion
+                   'Version': rootProject.ext.umpleMajorVersion
     }
     doFirst {
-        println("Compiling to ${rootProject.ext.umpleLatestJar} using " + rootProject.ext.classfileOutputDir)
+        println("Compiling to ${rootProject.ext.umpleCurrentJar} using " + rootProject.ext.classfileOutputDir)
     }
     dependsOn 'copyDocs'
 }
@@ -373,15 +389,15 @@ task packageStatistics(type: Jar) {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
     from rootProject.ext.classfileOutputDir
     // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archiveName = "umplestats-${rootProject.ext.umpleLatestVersion}.jar"
+    archiveName = "umplestats-${rootProject.ext.umpleCurrentVersion}.jar"
     manifest {
         attributes 'Main-Class': 'cruise.umple.stats.StatsMain',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion
+                   'Version': rootProject.ext.umpleMajorVersion
     }
     doFirst {
-        println("Compiling umplestats-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+        println("Compiling umplestats-${rootProject.ext.umpleCurrentVersion}.jar using " + rootProject.ext.classfileOutputDir)
     }
 }
 
@@ -390,15 +406,15 @@ task packageDocumenter(type: Jar) {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
     from rootProject.ext.classfileOutputDir
     // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archiveName = "umpledocs-${rootProject.ext.umpleLatestVersion}.jar"
+    archiveName = "umpledocs-${rootProject.ext.umpleCurrentVersion}.jar"
     manifest {
         attributes 'Main-Class': 'cruise.umple.docs.DocumenterMain',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion
+                   'Version': rootProject.ext.umpleMajorVersion
     }
     doFirst {
-        println("Compiling umpledocs-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+        println("Compiling umpledocs-${rootProject.ext.umpleCurrentVersion}.jar using " + rootProject.ext.classfileOutputDir)
     }
 }
 
@@ -407,15 +423,15 @@ task packageSync(type: Jar) {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
     from rootProject.ext.classfileOutputDir
     // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archiveName = "umplesync-${rootProject.ext.umpleLatestVersion}.jar"
+    archiveName = "umplesync-${rootProject.ext.umpleCurrentVersion}.jar"
     manifest {
         attributes 'Main-Class': 'cruise.umple.PlaygroundMain',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion
+                   'Version': rootProject.ext.umpleMajorVersion
     }
     doFirst {
-        println("Compiling umplesync-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+        println("Compiling umplesync-${rootProject.ext.umpleCurrentVersion}.jar using " + rootProject.ext.classfileOutputDir)
     }
 }
 
@@ -424,15 +440,15 @@ task packageRunner(type: Jar) {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
     from rootProject.ext.classfileOutputDir
     // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archiveName = "umplerunner-${rootProject.ext.umpleLatestVersion}.jar"
+    archiveName = "umplerunner-${rootProject.ext.umpleCurrentVersion}.jar"
     manifest {
         attributes 'Main-Class': 'cruise.umple.UmpleRunMain',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion
+                   'Version': rootProject.ext.umpleMajorVersion
     }
     doFirst {
-        println("Compiling umplerun-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+        println("Compiling umplerun-${rootProject.ext.umpleCurrentVersion}.jar using " + rootProject.ext.classfileOutputDir)
     }
 }
 
@@ -441,15 +457,15 @@ task packageVml(type: Jar) {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
     from rootProject.ext.classfileOutputDir
     // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archiveName = "umplevml-${rootProject.ext.umpleLatestVersion}.jar"
+    archiveName = "umplevml-${rootProject.ext.umpleCurrentVersion}.jar"
     manifest {
         attributes 'Main-Class': 'cruise.vml.VmlConsole',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion
+                   'Version': rootProject.ext.umpleMajorVersion
     }
     doFirst {
-        println("Compiling umplevml-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+        println("Compiling umplevml-${rootProject.ext.umpleCurrentVersion}.jar using " + rootProject.ext.classfileOutputDir)
     }
 }
 
@@ -499,46 +515,48 @@ task('sandbox:compileJava').mustRunAfter 'buildSandbox'
 
 // Update files to show generated version
 task setVersion << {
-    ant.replaceregexp(match:'@UMPLE_VERSION@', replace: rootProject.ext.umpleLatestVersion, flags:'g', byline:true) {
+    ant.replaceregexp(match:'@UMPLE_VERSION@', replace: rootProject.ext.umpleCurrentVersion, flags:'g', byline:true) {
         fileset(dir: "${rootProject.projectDir.toString()}/dist/gradle", includes: '**/*.java')
     }
 }
 
 // Revert generated version
 task resetVersion << {
-    ant.replaceregexp(match:rootProject.ext.umpleLatestVersion, replace: '@UMPLE_VERSION@', flags:'g', byline:true) {
+    ant.replaceregexp(match:rootProject.ext.umpleCurrentVersion, replace: '@UMPLE_VERSION@', flags:'g', byline:true) {
         fileset(dir: "${rootProject.projectDir.toString()}/dist/gradle", includes: '**/*.java')
     }
 }
 
-task deploy << {
-    println("Deploying Version: ${rootProject.ext.umpleLatestVersion}")
-}
-
 task deployUmpleOnlineJars(type: Copy) {
-    from "${rootProject.projectDir.toString()}/dist/cruise.umple"
+    from "${rootProject.projectDir.toString()}/dist/gradle/libs"
     into "/h/ralph/sites/www/html/umpleonline/scripts/"
     doFirst {
         println("Deploying umple online to /h/ralph/sites/www/html/umpleonline/scripts/")
         inputs.sourceFiles.stopExecutionIfEmpty()
     }
-    include "umplesync-${rootProject.ext.umpleVersionFull}"
-    include "umple-${rootProject.ext.umpleVersionFull}"
-    include "umplevml-${rootProject.ext.umpleVersionFull}"
-    mustRunAfter 'deploy'
+    include "umplesync-${rootProject.ext.umpleLastVersion}.jar"
+    include "umple-${rootProject.ext.umpleLastVersion}.jar"
+    include "umplevml-${rootProject.ext.umpleLastVersion}.jar"
 }
 
 task deployUpdatedLib(type: Copy) {
-    from "${rootProject.projectDir.toString()}/dist/cruise.umple"
+    from "${rootProject.projectDir.toString()}/dist/gradle/libs"
     into "${rootProject.projectDir.toString()}/lib"
     doFirst {
         println("Deploying umple online to lib")
         inputs.sourceFiles.stopExecutionIfEmpty()
     }
-    include "umplesync-${rootProject.ext.umpleVersionFull}"
-    include "umple-${rootProject.ext.umpleVersionFull}"
-    include "umplevml-${rootProject.ext.umpleVersionFull}"
-    mustRunAfter 'deploy'
+    include "umplesync-${rootProject.ext.umpleLastVersion}.jar"
+    include "umple-${rootProject.ext.umpleLastVersion}.jar"
+    include "umplevml-${rootProject.ext.umpleLastVersion}.jar"
+}
+
+task deploy {
+    doLast {
+        println("Deployed Version: ${rootProject.ext.umpleLastVersion}")
+    }
+    dependsOn deployUmpleOnlineJars
+    dependsOn deployUpdatedLib
 }
 
 task buildEclipsePlugin << { println("TODO") }
