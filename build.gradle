@@ -16,7 +16,6 @@ plugins {
 ext {
     umpleLastVersionFile = new File("${rootProject.projectDir.toString()}/build/umpleversion.last.txt")
     umpleMajorVersionFile = new File("${rootProject.projectDir.toString()}/build/umpleversion.txt")
-    // Try to load the latest version from the build directory
     umpleLastVersion = new org.yaml.snakeyaml.Yaml().load(rootProject.ext.umpleLastVersionFile.newInputStream()).version
     umpleMajorVersion = new org.yaml.snakeyaml.Yaml().load(rootProject.ext.umpleMajorVersionFile.newInputStream()).version
     umpleCurrentVersion = "${rootProject.ext.umpleMajorVersion}.${grgit.log().size()}.${grgit.head().getAbbreviatedId(9)}"
@@ -616,7 +615,108 @@ task umpleParser {
     dependsOn ":UmpleParser:compileUmple"
 }
 
-task buildTestUnitGeneratorAndParser << { println("TODO") }
+task compileXUnitTemplates << {
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/UmpleTToJunit/UmpleTLTemplates/Master.ump")
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/UmpleTToPhpUnit/UmpleTLTemplates/Master.ump")
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/UmpleTToRubyUnit/UmpleTLTemplates/Master.ump")
+}
+
+task copyXUnitJavaGenerator (type: Copy) {
+    from "${rootProject.projectDir.toString()}/UmpleTToJunit/src-gen-UmpleTL/cruise/umple/unitGen/jUnit/"
+    into "${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/jUnit/"
+    duplicatesStrategy = 'warn'
+    exclude "**/.git*", 'UmpleTToJunit.java'
+    doFirst {
+        println("Copying from ${rootProject.projectDir.toString()}/UmpleTToJunit/src-gen-UmpleTL/cruise/umple/unitGen/jUnit/ to ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/jUnit/")
+        inputs.sourceFiles.stopExecutionIfEmpty()
+    }
+    dependsOn compileXUnitTemplates
+}
+
+task copyXUnitPhpGenerator (type: Copy) {
+    from "${rootProject.projectDir.toString()}/UmpleTToPhpUnit/src-gen-UmpleTL/cruise/umple/unitGen/phpUnit/"
+    into "${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/phpUnit/"
+    duplicatesStrategy = 'warn'
+    exclude "**/.git*", 'UmpleTToPhpUnit.java'
+    doFirst {
+        println("Copying from ${rootProject.projectDir.toString()}/UmpleTToPhpUnit/src-gen-UmpleTL/cruise/umple/unitGen/phpUnit/ to ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/phpUnit/")
+        inputs.sourceFiles.stopExecutionIfEmpty()
+    }
+    dependsOn compileXUnitTemplates
+}
+
+task copyXUnitRubyGenerator (type: Copy) {
+    from "${rootProject.projectDir.toString()}/UmpleTToRubyUnit/src-gen-UmpleTL/cruise/umple/unitGen/rubyUnit/"
+    into "${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/rubyUnit/"
+    duplicatesStrategy = 'warn'
+    exclude "**/.git*", 'UmpleTToRubyUnit.java'
+    doFirst {
+        println("Copying from ${rootProject.projectDir.toString()}/UmpleTToRubyUnit/src-gen-UmpleTL/cruise/umple/unitGen/rubyUnit/ to ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/rubyUnit/")
+        inputs.sourceFiles.stopExecutionIfEmpty()
+    }
+    dependsOn compileXUnitTemplates
+}
+
+task copyXUnitGenerators {
+    dependsOn copyXUnitJavaGenerator
+    dependsOn copyXUnitPhpGenerator
+    dependsOn copyXUnitRubyGenerator
+}
+
+task generateTestParser {
+    dependsOn copyXUnitGenerators
+    doLast {
+        println("Generating Umple Test Parser!")
+        runUmpleJar(rootProject.ext.umpleCurrentJar, "cruise.umple.test-parser/src/ump/Master.ump")
+    }
+}
+
+// These tasks seem to be doing nothing in build.testgenerator.xml
+// BEGIN SECTION
+task compileTestParser {
+    dependsOn generateTestParser
+    doLast {
+        println("Compiling Umple Test Parser!")
+    }
+}
+
+task copyTestGenerator (type: Copy) {
+    from "${rootProject.projectDir.toString()}/cruise.umple.test-parser/src/src-gen/cruise/umple/testgenerator/"
+    into "${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen/cruise/umple/testgenerator/"
+    duplicatesStrategy = 'warn'
+    exclude "**/.git*", 'UmpleTToRubyUnit.java'
+    doFirst {
+        println("Copying from ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src/src-gen/cruise/umple/testgenerator/ to ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen/cruise/umple/testgenerator/")
+        inputs.sourceFiles.stopExecutionIfEmpty()
+    }
+    dependsOn compileXUnitTemplates
+}
+
+task copyTestParser (type: Copy) {
+    from "${rootProject.projectDir.toString()}/cruise.umple.test-parser/src/src-gen/cruise/umple/testparser/"
+    into "${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen/cruise/umple/testparser/"
+    duplicatesStrategy = 'warn'
+    exclude "**/.git*", 'UmpleTToRubyUnit.java'
+    doFirst {
+        println("Copying from ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src/src-gen/cruise/umple/testparser/ to ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen/cruise/umple/testparser/")
+        inputs.sourceFiles.stopExecutionIfEmpty()
+    }
+    dependsOn compileXUnitTemplates
+}
+
+task copyTestParserFiles {
+    dependsOn copyTestGenerator
+    dependsOn copyTestParser
+}
+
+task testXUnitTemplateTest {
+    dependsOn copyTestParserFiles
+}
+// END SECTION
+
+task buildTestUnitGeneratorAndParser {
+    dependsOn testXUnitTemplateTest
+}
 
 task javaTestbedCompileUmple << {
     runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed/src/TestHarness.ump")
@@ -682,14 +782,14 @@ task phpTestbedCompile {
 task phpTestbedTest {
     dependsOn phpTestbedCompile
     doLast {
-        def command = "pushd testbed_php/test; php AllXmlTests.php; popd"
-        println(command)          
-        def proc = command.execute();
+        def command = "php AllXmlTests.php"
+        println(command)
+        def proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_php/test"))
         proc.waitForProcessOutput(System.out, System.err);
 
-        command = "pushd testbed_php/test; php AllTests.php; popd"
+        command = "php AllTests.php"
         println(command)          
-        proc = command.execute();
+        proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_php/test"))
         proc.waitForProcessOutput(System.out, System.err);
     }
 }
@@ -706,9 +806,9 @@ task rubyTestbedTest {
     dependsOn rubyTestbedCompile
     doLast {
         println("Running RUBY tests via rake task")
-        def command = "pushd testbed_ruby; rake; popd" // this shouldn't work since the rake tasks expects a different jar location
-        println(command)                               // so we'll allow the exit code of this shell command to be 0 for now
-        def proc = command.execute();
+        def command = "rake || true" // this shouldn't work since the rake tasks expects a different jar location
+        println(command)             // so we'll allow catch it for now
+        def proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_ruby"))
         proc.waitForProcessOutput(System.out, System.err);
         println("RUBY tests completed!")
     }
