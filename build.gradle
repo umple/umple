@@ -41,10 +41,11 @@ buildDir  = "${rootProject.projectDir.toString()}/dist/gradle/"
 def buildAliases = [
     'firstbuild' : [
        'cleanUp',
+       'codeGen',
        'umpleParser',
        'resetUmpleSelf',
        'compileJava',
-       'packageAllJars',
+       'jar',
    ],
    'quickbuild' : [
         'cleanUpUmple',
@@ -56,17 +57,17 @@ def buildAliases = [
         'cleanUp',
         'qaBuildingPage',
         'buildSandbox',
+        'codeGen',
         'umpleParser',
         'setVersion',
         'resetUmpleSelf',
         'compileJava',
-        'test',
-        'buildJavaTestbed',
-        'allUserManualAndExampleTests',
-        'packageAllJars',
+        'jar',
         'deploy',
         'resetVersion',
         'buildTestUnitGeneratorAndParser',
+        'buildJavaTestbed',
+        'allUserManualAndExampleTests',
    ],
 ]
 def expandedTaskList = []
@@ -235,6 +236,7 @@ task copyRTCppLibs(type: Copy) {
     into "${rootProject.projectDir.toString()}/dist/gradle/src-gen/rtcpp"
     exclude '.git*'
 }
+tasks.getByName("compileJava").dependsOn copyRTCppLibs
 
 // Files in this directory are used during testing
 task copyUmpleOnlineTestFiles(type: Copy) {
@@ -365,100 +367,39 @@ jar {
     dependsOn 'copyDocs'
 }
 
-// Task for generating the statistics jar file
-task packageStatistics(type: Jar) {
-    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
-    from rootProject.ext.classfileOutputDir
-    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archivesBaseName = "umplestats-${rootProject.ext.umpleLatestVersion}.jar"
-    manifest {
-        attributes 'Main-Class': 'cruise.umple.stats.StatsMain',
-                   'Class-Path': configurations.ivy,
-                   'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion
-    }
+// ============
+//  TODO Items
+// ============
+
+// Testing UmpleOnline Examples and Manual Examples
+// TODO
+task allUserManualAndExampleTests {
     doFirst {
-        println("Compiling umplestats-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+        println("Building User Manual and UmpleOnline Examples")
+        delete "${rootProject.projectDir.toString()}/temp"
     }
 }
 
-// Task for generating the documenter jar file
-task packageDocumenter(type: Jar) {
-    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
-    from rootProject.ext.classfileOutputDir
-    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archivesBaseName = "umpledocs-${rootProject.ext.umpleLatestVersion}.jar"
-    manifest {
-        attributes 'Main-Class': 'cruise.umple.docs.DocumenterMain',
-                   'Class-Path': configurations.ivy,
-                   'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion
-    }
+// Create in-progress QA landing page
+task qaBuildingPage(type: Copy) {
+    from "${rootProject.projectDir.toString()}/build/"
+    into "${rootProject.projectDir.toString()}/dist/qa/"
+    include 'qa_updating.php'
+    rename 'qa_updating.php', 'index.php'
     doFirst {
-        println("Compiling umpledocs-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+        println("Creating the QA landing page")
+        inputs.sourceFiles.stopExecutionIfEmpty()
     }
 }
 
-// Task for generating the sync jar file
-task packageSync(type: Jar) {
-    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
-    from rootProject.ext.classfileOutputDir
-    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archivesBaseName = "umplesync-${rootProject.ext.umpleLatestVersion}.jar"
-    manifest {
-        attributes 'Main-Class': 'cruise.umple.PlaygroundMain',
-                   'Class-Path': configurations.ivy,
-                   'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion
-    }
-    doFirst {
-        println("Compiling umplesync-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
-    }
+// Builds the sandbox project
+task buildSandbox << {
+    delete "${rootProject.projectDir.toString()}/cruise.umple.validator/bin"
+    delete "${rootProject.projectDir.toString()}/cruise.umplificator/bin"
+    delete "${rootProject.projectDir.toString()}/sandbox/bin"
+    delete "${rootProject.projectDir.toString()}/dist/sandbox"
 }
-
-// Task for generating the run jar file
-task packageRunner(type: Jar) {
-    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
-    from rootProject.ext.classfileOutputDir
-    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archivesBaseName = "umplerun-${rootProject.ext.umpleLatestVersion}.jar"
-    manifest {
-        attributes 'Main-Class': 'cruise.umple.UmpleRunMain',
-                   'Class-Path': configurations.ivy,
-                   'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion
-    }
-    doFirst {
-        println("Compiling umplerun-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
-    }
-}
-
-// Task for generating the VML jar file
-task packageVml(type: Jar) {
-    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
-    from rootProject.ext.classfileOutputDir
-    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archivesBaseName = "umplerun-${rootProject.ext.umpleLatestVersion}.jar"
-    manifest {
-        attributes 'Main-Class': 'cruise.vml.VmlConsole',
-                   'Class-Path': configurations.ivy,
-                   'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleVersion
-    }
-    doFirst {
-        println("Compiling umplevml-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
-    }
-}
-
-// Generate all jar files
-task packageAllJars << {
-    dependsOn jar
-    dependsOn packageStatistics
-    dependsOn packageDocumenter
-    dependsOn packageSync
-    dependsOn packageRunner
-    dependsOn packageVml
-}
+task('sandbox:compileJava').mustRunAfter 'buildSandbox'
 
 // Update files to show generated version
 task setVersion << {
@@ -474,6 +415,10 @@ task resetVersion << {
     }
 }
 
+task deploy << {
+    println("Deploying Version: ${rootProject.ext.umpleLatestVersion}")
+}
+
 task deployUmpleOnlineJars(type: Copy) {
     from "${rootProject.projectDir.toString()}/dist/cruise.umple"
     into "/h/ralph/sites/www/html/umpleonline/scripts/"
@@ -481,9 +426,10 @@ task deployUmpleOnlineJars(type: Copy) {
         println("Deploying umple online to /h/ralph/sites/www/html/umpleonline/scripts/")
         inputs.sourceFiles.stopExecutionIfEmpty()
     }
-    include "umplesync-${rootProject.ext.umpleVersionFull}.jar"
-    include "umple-${rootProject.ext.umpleVersionFull}.jar"
-    include "umplevml-${rootProject.ext.umpleVersionFull}.jar"
+    include "umplesync-${rootProject.ext.umpleVersionFull}"
+    include "umple-${rootProject.ext.umpleVersionFull}"
+    include "umplevml-${rootProject.ext.umpleVersionFull}"
+    mustRunAfter 'deploy'
 }
 
 task deployUpdatedLib(type: Copy) {
@@ -493,17 +439,10 @@ task deployUpdatedLib(type: Copy) {
         println("Deploying umple online to lib")
         inputs.sourceFiles.stopExecutionIfEmpty()
     }
-    include "umplesync-${rootProject.ext.umpleVersionFull}.jar"
-    include "umple-${rootProject.ext.umpleVersionFull}.jar"
-    include "umplevml-${rootProject.ext.umpleVersionFull}.jar"
-}
-
-task deploy {
-    doLast {
-        println("Deployed Version: ${rootProject.ext.umpleLatestVersion}")
-    }
-    dependsOn 'deployUmpleOnlineJars'
-    dependsOn 'deployUpdatedLib'
+    include "umplesync-${rootProject.ext.umpleVersionFull}"
+    include "umple-${rootProject.ext.umpleVersionFull}"
+    include "umplevml-${rootProject.ext.umpleVersionFull}"
+    mustRunAfter 'deploy'
 }
 
 task buildEclipsePlugin << { println("TODO") }
@@ -515,47 +454,6 @@ task testingUmpleOnlineExamplesAndManualExamples << { println("TODO") }
 // =======
 //  Build
 // =======
-
-// Create in-progress QA landing page
-task qaBuildingPage(type: Copy) {
-    from "${rootProject.projectDir.toString()}/build/"
-    into "${rootProject.projectDir.toString()}/dist/qa/"
-    include 'qa_updating.php'
-    rename 'qa_updating.php', 'index.php'
-    doFirst {
-        println("Creating the QA landing page")
-        inputs.sourceFiles.stopExecutionIfEmpty()
-    }
-}
-
-// Copy the completed QA landing page
-task qaLandingPage(type: Copy) {
-    from "${rootProject.projectDir.toString()}/build/"
-    into "${rootProject.projectDir.toString()}/dist/qa/"
-    include 'qa_index.php'
-    doFirst {
-        println("Finalizing the QA landing page")
-        inputs.sourceFiles.stopExecutionIfEmpty()
-    }
-}
-
-// Testing UmpleOnline Examples and Manual Examples
-// TODO
-task allUserManualAndExampleTests {
-    doFirst {
-        println("Building User Manual and UmpleOnline Examples")
-        delete "${rootProject.projectDir.toString()}/temp"
-    }
-}
-
-// Builds the sandbox project
-task buildSandbox << {
-    delete "${rootProject.projectDir.toString()}/cruise.umple.validator/bin"
-    delete "${rootProject.projectDir.toString()}/cruise.umplificator/bin"
-    delete "${rootProject.projectDir.toString()}/sandbox/bin"
-    delete "${rootProject.projectDir.toString()}/dist/sandbox"
-}
-task('sandbox:compileJava').mustRunAfter 'buildSandbox'
 
 // Builds self
 task resetUmpleSelf {
@@ -573,9 +471,7 @@ task codeGen {
     dependsOn ":UmpleToRuby:compileUmpleSelf"
     dependsOn ":UmpleToSql:compileUmpleSelf"
     dependsOn ":UmpleToTest:compileUmpleSelf"
-    dependsOn copyRTCppLibs
 }
-tasks.getByName("compileJava").dependsOn codeGen
 
 // Compiles the parser to Java
 task umpleParser {
