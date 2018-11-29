@@ -68,7 +68,7 @@ def buildAliases = [
    ],
    'testall' : [
         'buildTestUnitGeneratorAndParser',
-        'buildJavaTestbed',
+        'testbedTests',
         'allUserManualAndExampleTests'
    ],
 ]
@@ -515,100 +515,6 @@ task packageAllJars {
 //  Build
 // =======
 
-def setupUserManualAndExampleTests(language) {
-    new File("${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}").mkdirs()
-    def command = "ruby ${rootProject.projectDir.toString()}/build/get_testable_examples.rb " +
-    "-i ${rootProject.projectDir.toString()}/umpleonline/ump/manualexamples -i ${rootProject.projectDir.toString()}/umpleonline/ump " +
-    "-o ${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language} -l ${language} -s *"
-    println(command)
-    def proc = command.execute();
-    proc.waitForProcessOutput(System.out, System.err);
-}
-
-def runUserManualAndExampleTests(language, languageOpt, excludes) {
-    println("Running user manual and example tests for ${languageOpt}")
-    def testTree = fileTree(
-            dir: "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}",
-            excludes : excludes)
-        testTree.each { f ->
-            println("Will test ${f}")
-            if (f.text.contains("@@@skipcompile")) {
-                println("Skipping ${languageOpt} lint due to presence of @@@skipcompile")
-                return
-            }
-            if (f.text.contains("@@@skip${language}compile")) {
-                println("Skipping ${languageOpt} lint due to presence of @@@skip${language}compile")
-                return
-            }
-            runUmpleJar(
-                rootProject.ext.umpleCurrentJar,
-                f,
-                "-g ${languageOpt} --path ${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}/src-gen-umple/${f.getName()}")
-        }
-}
-
-task setupJavaUserManualAndExampleTests << {
-    setupUserManualAndExampleTests("java");
-}
-
-task javaUserManualAndExampleTests {
-    dependsOn setupJavaUserManualAndExampleTests
-    doLast {
-        def excludes = [
-                "E0*.ump",
-                "E1*.ump",
-                "E2*.ump",
-                "E3*.ump",
-                "E4*.ump",
-                "WE1xxIdentifierInvalid1.ump",
-                "WE1xxIdentifierInvalid3.ump",
-                "WE1xxIdentifierInvalid5.ump",
-                "WE1xxIdentifierInvalid6.ump",
-                "WE1xxIdentifierInvalid7.ump",
-                "W142TypeIsAccessSpecifierAmbiguous.ump",
-                "UseStatements1.ump"]
-        runUserManualAndExampleTests("java", "Java", excludes)
-    }
-}
-
-task setupPhpUserManualAndExampleTests << {
-    setupUserManualAndExampleTests("php");
-}
-
-task phpUserManualAndExampleTests {
-    dependsOn setupPhpUserManualAndExampleTests
-    doLast {
-        def excludes = [
-                "E0*.ump",
-                "E1*.ump",
-                "E2*.ump",
-                "E3*.ump",
-                "E4*.ump",
-                "WE1xxIdentifierInvalid1.ump",
-                "WE1xxIdentifierInvalid3.ump",
-                "WE1xxIdentifierInvalid5.ump",
-                "WE1xxIdentifierInvalid6.ump",
-                "WE1xxIdentifierInvalid7.ump",
-                "UseStatements1.ump",
-                "Tracers2.ump",
-                "Tracers3.ump",
-                "Tracers4.ump",
-                "Tracers5.ump"]
-        runUserManualAndExampleTests("php", "Php", excludes)
-    }
-}
-
-// Testing UmpleOnline Examples and Manual Examples
-task allUserManualAndExampleTests {
-    doFirst {
-        println("Building User Manual and UmpleOnline Examples")
-        delete "${rootProject.projectDir.toString()}/temp"
-    }
-    dependsOn javaUserManualAndExampleTests
-    dependsOn phpUserManualAndExampleTests
-    // Consider doing this for the other languages too
-}
-
 // Create in-progress QA landing page
 task qaBuildingPage(type: Copy) {
     from "${rootProject.projectDir.toString()}/build/"
@@ -711,4 +617,201 @@ task umpleParser {
 }
 
 task buildTestUnitGeneratorAndParser << { println("TODO") }
-task buildJavaTestbed << { println("TODO") }
+
+task javaTestbedCompileUmple << {
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed/src/TestHarness.ump")
+    def testTree = fileTree(
+        dir: "${rootProject.projectDir.toString()}/testbed/src/runtime",
+        include: "*.ump")
+    testTree.each { f ->
+        runUmpleJar(rootProject.ext.umpleCurrentJar, f)
+    }
+}
+
+task javaTestbedCompile(type: JavaCompile) {
+    options.fork = true
+    classpath = files(
+        rootProject.ext.classfileOutputDir,
+        rootProject.ext.testClassfileOutputDir,
+        rootProject.configurations.ivy,
+        manualDependencyLocalPath)
+    destinationDir = file(classfileOutputDir)
+    source "${rootProject.projectDir.toString()}/testbed/src"
+    source "${rootProject.projectDir.toString()}/testbed/src-gen-umple"
+    source "${rootProject.projectDir.toString()}/testbed/test"
+    exclude '**/*.ump', '**/.git*', '**/data'
+    dependsOn javaTestbedCompileUmple
+}
+
+task javaTestbedTest(type: Test) {
+    options.fork = true
+    testClassesDirs = fileTree(
+        dir: "${rootProject.projectDir.toString()}/testbed/test",
+        include: "**/*Test*.java", "**/AllTests.java", "**/*ErrorOutputTests.java")
+    )
+    classpath = sourceSets.test.runtimeClasspath
+    dependsOn javaTestbedCompile
+}
+
+task phpTestbedCompileUmple << {
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed/src/TestHarnessPhp.ump")
+}
+
+task phpDownloadSimpleTestZip(type: Download) {
+    onlyIfNewer true
+    overwrite true
+    src "https://github.com/git-mirror/simpletest/archive/1.1.0.tar.gz"
+    dest "${rootProject.projectDir.toString()}/dist/gradle/libs/php/1.1.0.tar.gz"
+}
+
+task phpDownloadAndUnzipSimpleTest(dependsOn: phpDownloadSimpleTestZip, type: Copy) {
+    from tarTree(phpDownloadSimpleTestZip.dest)
+    into "${rootProject.projectDir.toString()}/dist/gradle/libs/php/"
+}
+
+task phpPrepareSimpleTest {
+    dependsOn phpDownloadAndUnzipSimpleTest
+    doLast {
+        delete "${rootProject.projectDir.toString()}/dist/gradle/libs/php/1.1.0.tar.gz"
+    }
+}
+
+task phpTestbedCompile {
+    dependsOn phpTestbedCompileUmple
+    dependsOn phpPrepareSimpleTest
+}
+
+task phpTestbedTest {
+    dependsOn phpTestbedCompile
+    doLast {
+        def command = "pushd testbed_php/test; php AllXmlTests.php; popd"
+        println(command)          
+        def proc = command.execute();
+        proc.waitForProcessOutput(System.out, System.err);
+
+        def command = "pushd testbed_php/test; php AllTests.php; popd"
+        println(command)          
+        def proc = command.execute();
+        proc.waitForProcessOutput(System.out, System.err);
+    }
+}
+
+task rubyTestbedCompileUmple << {
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed/src/TestHarnessRuby.ump")
+}
+
+task rubyTestbedCompile {
+    dependsOn rubyTestbedCompileUmple
+}
+
+task rubyTestbedTest {
+    dependsOn rubyTestbedCompile
+    doLast {
+        println("Running RUBY tests via rake task")
+        def command = "pushd testbed_ruby; rake; popd" // this shouldn't work since the rake tasks expects a different jar location
+        println(command)                               // so we'll allow the exit code of this shell command to be 0 for now
+        def proc = command.execute();
+        proc.waitForProcessOutput(System.out, System.err);
+        println("RUBY tests completed!")
+    }
+}
+
+task testbedTests {
+    dependsOn javaTestbedTest
+    dependsOn phpTestbedTest
+    dependsOn rubyTestbedTest
+}
+
+def setupUserManualAndExampleTests(language) {
+    new File("${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}").mkdirs()
+    def command = "ruby ${rootProject.projectDir.toString()}/build/get_testable_examples.rb " +
+    "-i ${rootProject.projectDir.toString()}/umpleonline/ump/manualexamples -i ${rootProject.projectDir.toString()}/umpleonline/ump " +
+    "-o ${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language} -l ${language} -s *"
+    println(command)
+    def proc = command.execute();
+    proc.waitForProcessOutput(System.out, System.err);
+}
+
+def runUserManualAndExampleTests(language, languageOpt, excludes) {
+    println("Running user manual and example tests for ${languageOpt}")
+    def testTree = fileTree(
+            dir: "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}",
+            excludes : excludes)
+    testTree.each { f ->
+        println("Will test ${f}")
+        if (f.text.contains("@@@skipcompile")) {
+            println("Skipping ${languageOpt} lint due to presence of @@@skipcompile")
+            return
+        }
+        if (f.text.contains("@@@skip${language}compile")) {
+            println("Skipping ${languageOpt} lint due to presence of @@@skip${language}compile")
+            return
+        }
+        runUmpleJar(
+            rootProject.ext.umpleCurrentJar,
+            f,
+            "-g ${languageOpt} --path ${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}/src-gen-umple/${f.getName()}")
+    }
+}
+
+task setupJavaUserManualAndExampleTests << {
+    setupUserManualAndExampleTests("java");
+}
+
+task javaUserManualAndExampleTests {
+    dependsOn setupJavaUserManualAndExampleTests
+    doLast {
+        def excludes = [
+                "E0*.ump",
+                "E1*.ump",
+                "E2*.ump",
+                "E3*.ump",
+                "E4*.ump",
+                "WE1xxIdentifierInvalid1.ump",
+                "WE1xxIdentifierInvalid3.ump",
+                "WE1xxIdentifierInvalid5.ump",
+                "WE1xxIdentifierInvalid6.ump",
+                "WE1xxIdentifierInvalid7.ump",
+                "W142TypeIsAccessSpecifierAmbiguous.ump",
+                "UseStatements1.ump"]
+        runUserManualAndExampleTests("java", "Java", excludes)
+    }
+}
+
+task setupPhpUserManualAndExampleTests << {
+    setupUserManualAndExampleTests("php");
+}
+
+task phpUserManualAndExampleTests {
+    dependsOn setupPhpUserManualAndExampleTests
+    doLast {
+        def excludes = [
+                "E0*.ump",
+                "E1*.ump",
+                "E2*.ump",
+                "E3*.ump",
+                "E4*.ump",
+                "WE1xxIdentifierInvalid1.ump",
+                "WE1xxIdentifierInvalid3.ump",
+                "WE1xxIdentifierInvalid5.ump",
+                "WE1xxIdentifierInvalid6.ump",
+                "WE1xxIdentifierInvalid7.ump",
+                "UseStatements1.ump",
+                "Tracers2.ump",
+                "Tracers3.ump",
+                "Tracers4.ump",
+                "Tracers5.ump"]
+        runUserManualAndExampleTests("php", "Php", excludes)
+    }
+}
+
+// Testing UmpleOnline Examples and Manual Examples
+task allUserManualAndExampleTests {
+    doFirst {
+        println("Building User Manual and UmpleOnline Examples")
+        delete "${rootProject.projectDir.toString()}/temp"
+    }
+    dependsOn javaUserManualAndExampleTests
+    dependsOn phpUserManualAndExampleTests
+    // Consider doing this for the other languages too
+}
