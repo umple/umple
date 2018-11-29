@@ -4,7 +4,7 @@
 
 buildscript {
     dependencies {
-        classpath 'de.undercouch:gradle-download-task:3.2.0'
+        classpath 'de.undercouch:gradle-download-task:3.4.3'
         classpath group: 'org.yaml', name: 'snakeyaml', version: '1.19'
     }
 }
@@ -64,11 +64,12 @@ def buildAliases = [
         'compileJava',
         'packageAllJars',
         'resetVersion',
+        'updateLatestVersion',
+   ],
+   'testall' : [
         'buildTestUnitGeneratorAndParser',
         'buildJavaTestbed',
-        'allUserManualAndExampleTests',
-        'updateLatestVersion',
-        'deploy',
+        'allUserManualAndExampleTests'
    ],
 ]
 def expandedTaskList = []
@@ -140,30 +141,53 @@ dependencies {
 // Download task for updating Umple jar
 apply plugin: 'de.undercouch.download'
 
-// TODO: this logic should eventually be outsourced to the plugin, but for completeness
-// we keep track of it here
-task downloadUmpleJar(type: de.undercouch.gradle.tasks.download.Download) {
+task downloadUmpleJar(type: Download) {
     onlyIfNewer true
     overwrite true
     src rootProject.ext.umpleJarRemoteSource
     dest rootProject.ext.umpleJarRemoteFile
 }
 
-task downloadManualDependencies(type: de.undercouch.gradle.tasks.download.Download) {
+task downloadManualDependencies(type: Download) {
     onlyIfNewer true
     overwrite true
     src rootProject.ext.manualDependencyRemotePath
     dest rootProject.ext.manualDependencyLocalPath
 }
 
+task downloadJOptSimpleVendorZip(type: Download) {
+    onlyIfNewer true
+    overwrite true
+    src "https://codeload.github.com/pholser/jopt-simple/zip/jopt-simple-4.4"
+    dest "${rootProject.projectDir.toString()}/dist/gradle/libs/vendors/jopt-simple-4.4.zip"
+}
+
+task downloadAndUnzipJOptSimpleVendor(dependsOn: downloadJOptSimpleVendorZip, type: Copy) {
+    from zipTree(downloadJOptSimpleVendorZip.dest)
+    into "${rootProject.projectDir.toString()}/dist/gradle/libs/vendors/"
+}
+
+task prepareJOptSimpleVendor {
+    dependsOn downloadAndUnzipJOptSimpleVendor
+    doLast {
+        delete "${rootProject.projectDir.toString()}/dist/gradle/libs/vendors/jopt-simple-4.4.zip"
+        delete "${rootProject.projectDir.toString()}/dist/gradle/libs/vendors/jopt-simple-jopt-simple-4.4/src/test"
+    }
+}
+
+task getVendorLibs {
+    dependsOn prepareJOptSimpleVendor
+}
+tasks.getByName("compileJava").dependsOn getVendorLibs
+
 // Execute Umple jar
-def runUmpleJar(umpleJar, masterFile) {
+def runUmpleJar(umpleJar, masterFile, args="") {
     if (!new File(umpleJar).exists()) {
         throw new Exception("${umpleJar} does not exist.")
     }
     // For the time being it may be good to print the exact command being executed
     // so that we can check to see if issues are reproducible via the jar itself
-    def command = "java -jar " + umpleJar + " " + masterFile
+    def command = "java -jar " + umpleJar + " " + masterFile + " " + args
     println(command)
     def proc = command.execute();
     proc.waitForProcessOutput(System.out, System.err);
@@ -307,6 +331,11 @@ task cleanUpArtifacts << {
     delete "${rootProject.projectDir.toString()}/dist/gradle/libs"
 }
 
+task cleanUpDeployment << {
+    delete "${rootProject.projectDir.toString()}/umple*.jar"
+    delete "/h/ralph/sites/www/html/umpleonline/scripts/umple*.jar"
+}
+
 // ============================
 //  Java tests and compilation
 // ============================
@@ -325,7 +354,7 @@ sourceSets {
         java {
             srcDirs = [
                 rootProject.ext.generatedBaseDir,
-                "${rootProject.projectDir.toString()}/dist/libs/vendors/jopt-simple/src/main/java/joptsimple"
+                "${rootProject.projectDir.toString()}/dist/gradle/libs/vendors/jopt-simple-jopt-simple-4.4/src/main/java/joptsimple"
             ]
             exclude '**/*.ump', '**/.git*'
         }
@@ -482,28 +511,74 @@ task packageAllJars {
     dependsOn packageVml
 }
 
-// ============
-//  TODO Items
-// ============
+// =======
+//  Build
+// =======
 
-def setupUserManualAndExampleTests(projectDir, language) {
-    new File("${projectDir}/dist/gradle/test/workingDir/temp/${language}").mkdirs()
-    def command = "ruby ${projectDir}/build/get_testable_examples.rb -i umpleonline/ump/manualexamples -i umpleonline/ump -o ${projectDir}/dist/gradle/test/workingDir/temp/${language} -l ${language} -s *"
+def setupUserManualAndExampleTests(language) {
+    new File("${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}").mkdirs()
+    def command = "ruby ${rootProject.projectDir.toString()}/build/get_testable_examples.rb " +
+    "-i ${rootProject.projectDir.toString()}/umpleonline/ump/manualexamples -i ${rootProject.projectDir.toString()}/umpleonline/ump " +
+    "-o ${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language} -l ${language} -s *"
     println(command)
     def proc = command.execute();
     proc.waitForProcessOutput(System.out, System.err);
 }
 
+def runUserManualAndExampleTests(language, languageOpt, excludes) {
+    println("Running user manual and example tests for ${languageOpt}")
+    def testTree = fileTree(
+            dir: "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}",
+            excludes : excludes)
+        testTree.each { f ->
+            println("Will test ${f}")
+            if (f.text.contains("@@@skipcompile")) {
+                println("Skipping ${languageOpt} lint due to presence of @@@skipcompile")
+                return
+            }
+            if (f.text.contains("@@@skip${language}compile")) {
+                println("Skipping ${languageOpt} lint due to presence of @@@skip${language}compile")
+                return
+            }
+            runUmpleJar(
+                rootProject.ext.umpleCurrentJar,
+                f,
+                "-g ${languageOpt} --path ${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}/src-gen-umple/${f.getName()}")
+        }
+}
+
+task setupJavaUserManualAndExampleTests << {
+    setupUserManualAndExampleTests("java");
+}
+
+task javaUserManualAndExampleTests {
+    dependsOn setupJavaUserManualAndExampleTests
+    doLast {
+        def excludes = [
+                "E0*.ump",
+                "E1*.ump",
+                "E2*.ump",
+                "E3*.ump",
+                "E4*.ump",
+                "WE1xxIdentifierInvalid1.ump",
+                "WE1xxIdentifierInvalid3.ump",
+                "WE1xxIdentifierInvalid5.ump",
+                "WE1xxIdentifierInvalid6.ump",
+                "WE1xxIdentifierInvalid7.ump",
+                "W142TypeIsAccessSpecifierAmbiguous.ump",
+                "UseStatements1.ump"]
+        runUserManualAndExampleTests("java", "Java", excludes)
+    }
+}
+
 task setupPhpUserManualAndExampleTests << {
-    setupUserManualAndExampleTests(rootProject.projectDir.toString(), "php");
+    setupUserManualAndExampleTests("php");
 }
 
 task phpUserManualAndExampleTests {
     dependsOn setupPhpUserManualAndExampleTests
     doLast {
-        def testTree = fileTree(
-            dir: "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/php",
-            excludes : [
+        def excludes = [
                 "E0*.ump",
                 "E1*.ump",
                 "E2*.ump",
@@ -518,40 +593,8 @@ task phpUserManualAndExampleTests {
                 "Tracers2.ump",
                 "Tracers3.ump",
                 "Tracers4.ump",
-                "Tracers5.ump"])
-        testTree.each { f ->
-            println("Testing ${f}")
-            runUmpleJar(rootProject.ext.umpleCurrentJar, f)
-        }
-    }
-}
-
-task setupJavaUserManualAndExampleTests << {
-    setupUserManualAndExampleTests(rootProject.projectDir.toString(), "java");
-}
-
-task javaUserManualAndExampleTests {
-    dependsOn setupJavaUserManualAndExampleTests
-    doLast {
-        def testTree = fileTree(
-            dir: "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/java",
-            excludes : [
-                "E0*.ump",
-                "E1*.ump",
-                "E2*.ump",
-                "E3*.ump",
-                "E4*.ump",
-                "WE1xxIdentifierInvalid1.ump",
-                "WE1xxIdentifierInvalid3.ump",
-                "WE1xxIdentifierInvalid5.ump",
-                "WE1xxIdentifierInvalid6.ump",
-                "WE1xxIdentifierInvalid7.ump",
-                "W142TypeIsAccessSpecifierAmbiguous.ump",
-                "UseStatements1.ump"])
-        testTree.each { f ->
-            println("Testing ${f}")
-            runUmpleJar(rootProject.ext.umpleCurrentJar, f)
-        }
+                "Tracers5.ump"]
+        runUserManualAndExampleTests("php", "Php", excludes)
     }
 }
 
@@ -574,6 +617,17 @@ task qaBuildingPage(type: Copy) {
     rename 'qa_updating.php', 'index.php'
     doFirst {
         println("Creating the QA landing page")
+        inputs.sourceFiles.stopExecutionIfEmpty()
+    }
+}
+
+// Copy the completed QA landing page
+task qaLandingPage(type: Copy) {
+    from "${rootProject.projectDir.toString()}/build/"
+    into "${rootProject.projectDir.toString()}/dist/qa/"
+    include 'qa_index.php'
+    doFirst {
+        println("Finalizing the QA landing page")
         inputs.sourceFiles.stopExecutionIfEmpty()
     }
 }
@@ -633,16 +687,6 @@ task deploy {
     dependsOn deployUpdatedLib
 }
 
-task buildEclipsePlugin << { println("TODO") }
-task buildUmplificatorEclipsePlugin << { println("TODO") }
-task buildTestUnitGeneratorAndParser << { println("TODO") }
-task buildJavaTestbed << { println("TODO") }
-task testingUmpleOnlineExamplesAndManualExamples << { println("TODO") }
-
-// =======
-//  Build
-// =======
-
 // Builds self
 task resetUmpleSelf {
     dependsOn ':cruise.umple:compileUmpleSelf'
@@ -665,3 +709,6 @@ task codeGen {
 task umpleParser {
     dependsOn ":UmpleParser:compileUmple"
 }
+
+task buildTestUnitGeneratorAndParser << { println("TODO") }
+task buildJavaTestbed << { println("TODO") }

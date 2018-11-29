@@ -35,7 +35,7 @@ env:
 
 script:
   # Gradle build (TODO: figure out why test needs to be run twice)
-  - if [ "$USE_GRADLE" ]; then ./gradlew fullbuild && ./gradlew test; fi
+  - if [ "$USE_GRADLE" ]; then ./gradlew fullbuild && ./gradlew testall; fi
 
   - if [ -z "$USE_GRADLE" ]; then php --version ; ruby -v; fi
   - if [ -z "$USE_GRADLE" ]; then cd build/; fi
