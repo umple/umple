@@ -217,7 +217,7 @@ subprojects{
 
     task copyUmpleTest (type: Copy) {
         from "${projectDir.toString()}/test"
-        into "${rootProject.ext.testBaseDir}/bin/test"
+        into "${rootProject.ext.testBaseDir}/workingDir/test"
         duplicatesStrategy = 'warn'
         exclude "**/.git*"
         doFirst {
@@ -254,10 +254,10 @@ tasks.getByName("test").dependsOn copyUmpleOnlineTestFiles
 // Files in this directory are used during testing
 task copyValidatorUmpFiles(type: Copy) {
     from "${rootProject.projectDir.toString()}/cruise.umple.validator/test"
-    into "${rootProject.ext.testBaseDir}/bin"
+    into "${rootProject.ext.testBaseDir}/workingDir"
     include '**/*.ump'
     doFirst {
-        println("Copying .ump files from ${rootProject.projectDir.toString()}/cruise.umple.validator/test to ${rootProject.ext.testBaseDir}/bin")
+        println("Copying .ump files from ${rootProject.projectDir.toString()}/cruise.umple.validator/test to ${rootProject.ext.testBaseDir}/workingDir")
         inputs.sourceFiles.stopExecutionIfEmpty()
     }
 }
@@ -279,6 +279,7 @@ tasks.getByName("test").dependsOn copyValidatorEcoreFiles
 task updateLatestVersion << {
     if (new File(rootProject.ext.umpleCurrentJar).exists()) {
         rootProject.ext.umpleLastVersionFile.text = "version :   ${rootProject.ext.umpleCurrentVersion}"
+        rootProject.ext.umpleLastVersion = rootProject.ext.umpleCurrentVersion
     } else {
         throw new Exception("Could not find jar file ${rootProject.ext.umpleCurrentJar} when setting version")
     }
@@ -310,7 +311,8 @@ task cleanUpArtifacts << {
 // ============================
 
 test {
-    workingDir = "${rootProject.projectDir.toString()}/dist/gradle/test/bin"
+    workingDir = "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir"
+    exclude "**/CPPCodeGenValidatorTest.class" // TODO - Fix eclipse CDT message: Unresolved inclusion: <HEADER_FILE>
 }
 
 sourceSets {
