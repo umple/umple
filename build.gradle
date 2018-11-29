@@ -45,7 +45,7 @@ def buildAliases = [
        'umpleParser',
        'resetUmpleSelf',
        'compileJava',
-       'jar',
+       'packageAllJars',
    ],
    'quickbuild' : [
         'cleanUpUmple',
@@ -62,7 +62,7 @@ def buildAliases = [
         'setVersion',
         'resetUmpleSelf',
         'compileJava',
-        'jar',
+        'packageAllJars',
         'deploy',
         'resetVersion',
         'buildTestUnitGeneratorAndParser',
@@ -354,6 +354,7 @@ jar {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
     from rootProject.ext.classfileOutputDir
     // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
+    // Note that this one uses a different property name... how consistent.
     archivesBaseName = rootProject.ext.umpleLatestJarBase
     manifest {
         attributes 'Main-Class': 'cruise.umple.UmpleConsoleMain',
@@ -365,6 +366,101 @@ jar {
         println("Compiling to ${rootProject.ext.umpleLatestJar} using " + rootProject.ext.classfileOutputDir)
     }
     dependsOn 'copyDocs'
+}
+
+// Task for generating the statistics jar file
+task packageStatistics(type: Jar) {
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
+    from rootProject.ext.classfileOutputDir
+    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
+    archiveName = "umplestats-${rootProject.ext.umpleLatestVersion}.jar"
+    manifest {
+        attributes 'Main-Class': 'cruise.umple.stats.StatsMain',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleVersion
+    }
+    doFirst {
+        println("Compiling umplestats-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+    }
+}
+
+// Task for generating the documenter jar file
+task packageDocumenter(type: Jar) {
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
+    from rootProject.ext.classfileOutputDir
+    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
+    archiveName = "umpledocs-${rootProject.ext.umpleLatestVersion}.jar"
+    manifest {
+        attributes 'Main-Class': 'cruise.umple.docs.DocumenterMain',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleVersion
+    }
+    doFirst {
+        println("Compiling umpledocs-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+    }
+}
+
+// Task for generating the sync jar file
+task packageSync(type: Jar) {
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
+    from rootProject.ext.classfileOutputDir
+    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
+    archiveName = "umplesync-${rootProject.ext.umpleLatestVersion}.jar"
+    manifest {
+        attributes 'Main-Class': 'cruise.umple.PlaygroundMain',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleVersion
+    }
+    doFirst {
+        println("Compiling umplesync-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+    }
+}
+
+// Task for generating the run jar file
+task packageRunner(type: Jar) {
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
+    from rootProject.ext.classfileOutputDir
+    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
+    archiveName = "umplerunner-${rootProject.ext.umpleLatestVersion}.jar"
+    manifest {
+        attributes 'Main-Class': 'cruise.umple.UmpleRunMain',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleVersion
+    }
+    doFirst {
+        println("Compiling umplerun-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+    }
+}
+
+// Task for generating the VML jar file
+task packageVml(type: Jar) {
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
+    from rootProject.ext.classfileOutputDir
+    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
+    archiveName = "umplevml-${rootProject.ext.umpleLatestVersion}.jar"
+    manifest {
+        attributes 'Main-Class': 'cruise.vml.VmlConsole',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleVersion
+    }
+    doFirst {
+        println("Compiling umplevml-${rootProject.ext.umpleLatestVersion}.jar using " + rootProject.ext.classfileOutputDir)
+    }
+}
+
+// Generate all jar files
+task packageAllJars {
+    dependsOn jar
+    dependsOn packageStatistics
+    dependsOn packageDocumenter
+    dependsOn packageSync
+    dependsOn packageRunner
+    dependsOn packageVml
 }
 
 // ============
