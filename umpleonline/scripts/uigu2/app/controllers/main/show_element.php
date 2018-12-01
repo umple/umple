@@ -229,12 +229,6 @@ function _show_element($controller) {
 
               $value_end = $index - 1;
 
-              // if($j == 0) {
-              //   $objects_table .= "<tr><td>".$i."</td><td></td></tr>";
-              // } else {
-              //   $objects_table .= "<tr><td></td><td></td></tr>";
-              // }
-
               $temp_body = substr($temp_body, $value_end + 1);
 
             } else if($value_type == "i" || $value_type == "d" || $value_type == "b") {
@@ -264,12 +258,6 @@ function _show_element($controller) {
               }
 
               $value_end = $index - 1;
-
-              // if($j == 0) {
-              //   $objects_table .= "<tr><td>".$i."</td><td></td></tr>";
-              // } else {
-              //   $objects_table .= "<tr><td></td><td></td></tr>";
-              // }
               
               $temp_body = substr($temp_body, $value_end + 1);
 
