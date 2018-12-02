@@ -190,7 +190,6 @@ function _show_element($controller) {
             $attribute_string = substr($temp_body, 0, $attribute_separator);
             $attribute_info = explode(":", $attribute_string);
             $attribute_length = intval($attribute_info[1]);
-            //$attribute_name = substr($attribute_info[2], $class_name_length + 3, $attribute_length - $class_name_length - 2);
 
             $attribute_name = explode(chr(0), $attribute_info[2]);
             $attribute_name = $attribute_name[2];
