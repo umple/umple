@@ -160,9 +160,10 @@ function _show_element($controller) {
       //Create table with instantiated objects of this class
       $objects = $controller->get_objects($element_name);
       if(!empty($objects) && count($objects) > 0){
-        $objects_table = '<tr><th>Object ID</th><th>String Representation</th></tr>';
+        // modification start
+        $objects_array = array();
         for($i=0; $i < count($objects); $i++){
-          // modification start
+          $attributes_array = array();
         	$object_string_representation = serialize($objects[$i]);
         	
         	$length = strlen($object_string_representation);
@@ -189,7 +190,6 @@ function _show_element($controller) {
             $attribute_string = substr($temp_body, 0, $attribute_separator);
             $attribute_info = explode(":", $attribute_string);
             $attribute_length = intval($attribute_info[1]);
-            //$attribute_name = substr($attribute_info[2], $class_name_length + 3, $attribute_length - $class_name_length - 2);
 
             $attribute_name = explode(chr(0), $attribute_info[2]);
             $attribute_name = $attribute_name[2];
@@ -207,11 +207,7 @@ function _show_element($controller) {
               $value_length = intval($value_info[1]);
               $value_name = substr($temp_body, $value_start + 1, $value_length);
 
-              if($j == 0) {
-                $objects_table .= "<tr><td>".$i."</td><td>".$attribute_name.": ".$value_name."</td></tr>";
-              } else {
-                $objects_table .= "<tr><td></td><td>".$attribute_name.": ".$value_name."</td></tr>";
-              }
+              $attributes_array[$attribute_name] = $value_name;
 
               $temp_body = substr($temp_body, $value_start + $value_length + 3);
 
@@ -232,23 +228,13 @@ function _show_element($controller) {
 
               $value_end = $index - 1;
 
-              if($j == 0) {
-                $objects_table .= "<tr><td>".$i."</td><td></td></tr>";
-              } else {
-                $objects_table .= "<tr><td></td><td></td></tr>";
-              }
-
               $temp_body = substr($temp_body, $value_end + 1);
 
             } else if($value_type == "i" || $value_type == "d" || $value_type == "b") {
               $value_end = strpos($temp_body, ";");
               $value_name = substr($temp_body, 2, $value_end - 2);
 
-              if($j == 0) {
-                $objects_table .= "<tr><td>".$i."</td><td>".$attribute_name.": ".$value_name."</td></tr>";
-              } else {
-                $objects_table .= "<tr><td></td><td>".$attribute_name.": ".$value_name."</td></tr>";
-              }
+              $attributes_array[$attribute_name] = $value_name;
 
               $temp_body = substr($temp_body, $value_end + 1);
 
@@ -271,22 +257,22 @@ function _show_element($controller) {
               }
 
               $value_end = $index - 1;
-
-              if($j == 0) {
-                $objects_table .= "<tr><td>".$i."</td><td></td></tr>";
-              } else {
-                $objects_table .= "<tr><td></td><td></td></tr>";
-              }
               
               $temp_body = substr($temp_body, $value_end + 1);
 
             }
           }
-
-          $objects_table .= "<tr width=1 height=20></tr>"; // empty row to separate different objects
-        	
-          	//$objects_table .= '<tr><td>'.$i.'</td><td>'.serialize($objects[$i]).'</td></tr>';
+          $objects_array[$i] = $attributes_array;
+          
+          //$objects_table .= '<tr><td>'.$i.'</td><td>'.serialize($objects[$i]).'</td></tr>';
         }
+        $table = create_output_table($objects_array);
+        if($table != 'empty table') {
+          $objects_table = $table;
+        } else {
+          $objects_table = "<span class='subtle'> There are no created instances for this class </span>";
+        }
+
       } else{
         $objects_table = "<span class='subtle'> There are no created instances for this Class </span>";
       }
@@ -336,6 +322,32 @@ function _show_element($controller) {
     $controller->set_message('Error showing Element: the Element name was not provided', true);
     Uigu2_Controller::redirect('index'); 
   }
+}
+
+function create_output_table($objects_array) {
+  if (empty($objects_array)) {
+    return 'empty table';
+  }
+
+  $number_of_objects = count($objects_array);
+  $res = '<thead><tr><th>Object ID</th>';
+  foreach ($objects_array[0] as $key => $value) {
+    $res .= '<th>'.$key.'</th>';
+  }
+  $res .= '</tr></thead>';
+
+  $res .= '<tbody>';
+  for ($i = 0; $i < $number_of_objects; $i++) { 
+    $res .= '<tr><td style="text-align:center">'.$i.'</td>';
+    foreach ($objects_array[$i] as $key => $value) {
+      $res .= '<td style="text-align:center">'.$value.'</td>';
+    }
+    $res .= '</tr>';
+    $res .= '<tr width=1 height=20></tr>'; // empty row to separate different objects
+  }
+  $res .= '</tbody>';
+
+  return $res;
 }
 
 function can_instantiate($controller, $element_name) {
