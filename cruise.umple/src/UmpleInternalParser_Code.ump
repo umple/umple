@@ -271,6 +271,7 @@ class UmpleInternalParser
     analyzeFilterToken(t,analysisStep);
     analyzeFIXML(t, analysisStep);
     analyzeMixsetToken(t, analysisStep);
+    analyzeRequireStatement(t, analysisStep);
     
   }
 
@@ -525,3 +526,4 @@ use UmpleInternalParser_CodeFilter.ump;
 use UmpleInternalParser_CodeParserHandlers.ump;
 use UmpleInternalParser_CodeEnumeration.ump;
 use UmpleInternalParser_CodeMixset.ump;
+use UmpleInternalParser_CodeRequireStatement.ump;

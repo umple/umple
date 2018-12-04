@@ -1,4 +1,3 @@
-
 class UmpleModel {
   // This mixin adds the complete set of Mixsets and files to the
   // model.
@@ -28,6 +27,29 @@ class UmpleFile {
   }
 }
 
+// 
+// multiplicity linking operator includes XOR operator in which lower & upper bounds of the set are limited to 1 (i.e. 1..1). 
+enum MixsetLinkingOperatorType { Required, Optional, Conjunctive, Disjunctive, Multiplicity, Include, Exclude };
+
+class ReferencedMixset{
+  
+  MixsetLinkingOperatorType mixsetLinkingOperatorType;
+  //0..1 -- * Mixset mixset;
+  0..1 linkingOperator -- * Mixset mixsetNode;
+
+}
+
+class ReferencedMultiplicityMixset 
+{
+  isA ReferencedMixset;
+  after constructor(){
+    this.setMixsetLinkingOperatorType(MixsetLinkingOperatorType.Multiplicity);
+  }
+  // min and max attributes required only for mutiplicity. 
+  int min; 
+  int max;
+}
+
 
 // A mixset is a block of code that may or may not be included by a use statement
 // It consists of one or more fragments that are encountered anywhere in the Umple source
@@ -36,6 +58,10 @@ class Mixset {
   mixsetName; // THe name of the mixset
   isA MixsetOrFile;
   
+  0..1 parentMixset -- * ReferencedMixset childReferencedMixset; // a mixset may have requried, optional, or multiplicity of child mixsets(features) or some included/excluded mixsets
+  
+
+
   after constructor {  
     setIsMixset(true);
   }
