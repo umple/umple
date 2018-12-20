@@ -2,6 +2,12 @@ class UmpleModel {
   // This mixin adds the complete set of Mixsets and files to the
   // model.
      0..1 -- * MixsetOrFile;
+     0..1 -- 1 FeatureDiagram;
+}
+
+class FeatureDiagram
+{
+  1--* FeatureNode node;
 }
 
 // A MixsetOrFile is an umple entity that is subject to require logic
@@ -27,29 +33,55 @@ class UmpleFile {
   }
 }
 
-// 
-// multiplicity linking operator includes XOR operator in which lower & upper bounds of the set are limited to 1 (i.e. 1..1). 
-enum MixsetLinkingOperatorType { Required, Optional, Conjunctive, Disjunctive, Multiplicity, Include, Exclude };
+ 
 
-class ReferencedMixset{
-  
-  MixsetLinkingOperatorType mixsetLinkingOperatorType;
-  //0..1 -- * Mixset mixset;
-  0..1 linkingOperator -- * Mixset mixsetNode;
+/*
+A mixset may nest other mixsets, or it may require 
+*/
+class FeatureNode{
+  abstract;
+  boolean isLeaf;
+
 
 }
-
-class ReferencedMultiplicityMixset 
+class FeatureLeaf
 {
-  isA ReferencedMixset;
+  isA FeatureNode;
+  0..1 -- 1 Mixset mixsetNode;
+  0..1 -- * MixsetFragment mixsetFragment;
+}
+class FeatureGroup
+{
+  0..1 -- * FeatureNode innerFeatureNode;
+  isA FeatureNode;
+  boolean isParent =false;// isParent == require sub ... .if not sub, its <<include>>
+  enum FeatureGroupingType{ Required, Optional, Conjunctive, Disjunctive, Multiplicity, Include, Exclude, XOR};  
+  FeatureGroupingType featureGroupingType;
+
+}
+class MultiplicityFeatureGroup 
+{
+  isA FeatureGroup;
   after constructor(){
-    this.setMixsetLinkingOperatorType(MixsetLinkingOperatorType.Multiplicity);
+    this.setFeatureGroupingType(FeatureGroupingType.Multiplicity);
   }
   // min and max attributes required only for mutiplicity. 
   int min; 
   int max;
 }
 
+class XORFeatureGroup 
+{
+  // multiplicity linking operator includes XOR operator in which lower & upper bounds of the set are limited to 1 (i.e. 1..1). 
+  isA MultiplicityFeatureGroup;
+  after constructor(){
+    this.setFeatureGroupingType(FeatureGroupingType.XOR);
+    this.setMin(1);
+    this.setMax(1);
+
+  }
+
+}
 
 // A mixset is a block of code that may or may not be included by a use statement
 // It consists of one or more fragments that are encountered anywhere in the Umple source
@@ -58,9 +90,6 @@ class Mixset {
   mixsetName; // THe name of the mixset
   isA MixsetOrFile;
   
-  0..1 parentMixset -- * ReferencedMixset childReferencedMixset; // a mixset may have requried, optional, or multiplicity of child mixsets(features) or some included/excluded mixsets
-  
-
 
   after constructor {  
     setIsMixset(true);

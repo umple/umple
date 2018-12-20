@@ -241,6 +241,12 @@ public class UmpleMixsetTest {
     umpleParserTest.assertNoWarningsParse("mixsetRequireStatementNoWarnings.ump");
   }
 
+  @Test
+  public void mixsetRequireSubStatementNoWarnings()
+  {
+    umpleParserTest.assertNoWarningsParse("mixsetRequireSubStatementNoWarnings.ump");
+  }
+
  @Test
   public void stateMachine_State_HasMixset()
   {

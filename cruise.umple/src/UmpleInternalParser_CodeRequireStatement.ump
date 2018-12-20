@@ -21,6 +21,48 @@ class UmpleInternalParser
       return;
     }    
     if (t.is("requireStatement"))
-    {}
+    {
+      boolean notFlag = false;
+      boolean optFlag = false;
+       
+      String tokenString = t.toString();
+      for (Token token: t.getSubTokens())
+      {
+      
+        String tokenName= token.getName();
+        if(tokenName.equals("not"))
+        {
+          notFlag=true;
+        }
+        else if(tokenName.equals("opt"))
+        {
+          optFlag= true;
+        }
+         else if(tokenName.equals("requireTerminal"))
+        {
+         String mixsetName = token.getValue("targetMixsetName");
+        /*
+         if (notFlag)
+         {}
+         if (optFlag)
+         {}
+         */
+         optFlag=false; notFlag=false;
+        }
+        else if(tokenName.equals("requireLinkingOp"))
+        {
+        
+        }
+      }
+      //List<Token> subTokens = t.getSubTokens();
+      
+      
+      String mixsetName = t.getValue("targetMixsetName");
+      Mixset mixset = model.getMixset(mixsetName);
+       if(mixset != null)
+       {
+       }
+      
+    }
   }
 }
