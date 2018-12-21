@@ -2,9 +2,10 @@ class UmpleModel {
   // This mixin adds the complete set of Mixsets and files to the
   // model.
      0..1 -- * MixsetOrFile;
-     0..1 -- 1 FeatureDiagram;
+     0..1 -- 0..1 FeatureDiagram;
 }
 
+// A FeatureDiagram stores information required to build a feature diagram 
 class FeatureDiagram
 {
   1--* FeatureNode node;
@@ -35,21 +36,34 @@ class UmpleFile {
 
  
 
-/*
-A mixset may nest other mixsets, or it may require 
-*/
+
+//A Feature model consists of some FeatureNodels, which can be  leaf nodes and a parent (groupinng) nodes.
+
 class FeatureNode{
   abstract;
-  boolean isLeaf;
+  boolean isLeaf =false;
 
 
 }
+
+// A FeatureLeaf contains a full mixset or a full file. 
 class FeatureLeaf
 {
   isA FeatureNode;
-  0..1 -- 1 Mixset mixsetNode;
-  0..1 -- * MixsetFragment mixsetFragment;
+  0..1 -- 0..1 MixsetOrFile mixsetOrFileNode;
+  
+  after constructor() { setIsLeaf(true);}
+
 }
+
+// A FragmentFeatureLeaf consists of one or more mixset fragments.
+class FragmentFeatureLeaf
+{
+  isA FeatureNode;
+  0..1 -- * MixsetFragment mixsetFragment;
+  after constructor() { setIsLeaf(true);}
+}
+// A FeatureGroup is a grouping node in the feature diagram.
 class FeatureGroup
 {
   0..1 -- * FeatureNode innerFeatureNode;
@@ -59,20 +73,21 @@ class FeatureGroup
   FeatureGroupingType featureGroupingType;
 
 }
+// MultiplicityFeatureGroup is a special type of FeatureGroup in which there are min and max multiplicity. 
+
 class MultiplicityFeatureGroup 
 {
   isA FeatureGroup;
   after constructor(){
     this.setFeatureGroupingType(FeatureGroupingType.Multiplicity);
   }
-  // min and max attributes required only for mutiplicity. 
+
   int min; 
   int max;
 }
-
+  // XORFeatureGroup is a special type of MultiplicityFeatureGroup in which lower & upper bounds of the set are limited to 1 (i.e. 1..1). 
 class XORFeatureGroup 
 {
-  // multiplicity linking operator includes XOR operator in which lower & upper bounds of the set are limited to 1 (i.e. 1..1). 
   isA MultiplicityFeatureGroup;
   after constructor(){
     this.setFeatureGroupingType(FeatureGroupingType.XOR);
