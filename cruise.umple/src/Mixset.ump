@@ -1,16 +1,19 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Mixset meta-model
+
+*/
+
 class UmpleModel {
   // This mixin adds the complete set of Mixsets and files to the
   // model.
      0..1 -- * MixsetOrFile;
-     0..1 -- 0..1 FeatureDiagram;
 }
-
-// A FeatureDiagram stores information required to build a feature diagram 
-class FeatureDiagram
-{
-  1--* FeatureNode node;
-}
-
 // A MixsetOrFile is an umple entity that is subject to require logic
 class MixsetOrFile {
   UmpleFile useUmpleFile = null; // File where the use statement was encountered
@@ -19,8 +22,6 @@ class MixsetOrFile {
   abstract String getName();
 
 }
-
- 
 // This class already exists in the util subdirectory
 // It is used for the main file, and there is code
 // to add linkedfiles. It would seem logical to consider 
@@ -33,71 +34,6 @@ class UmpleFile {
     return getSimpleFileName();
   }
 }
-
- 
-
-
-//A Feature model consists of some FeatureNodels, which can be  leaf nodes and a parent (groupinng) nodes.
-
-class FeatureNode{
-  abstract;
-  boolean isLeaf =false;
-
-
-}
-
-// A FeatureLeaf contains a full mixset or a full file. 
-class FeatureLeaf
-{
-  isA FeatureNode;
-  0..1 -- 0..1 MixsetOrFile mixsetOrFileNode;
-  
-  after constructor() { setIsLeaf(true);}
-
-}
-
-// A FragmentFeatureLeaf consists of one or more mixset fragments.
-class FragmentFeatureLeaf
-{
-  isA FeatureNode;
-  0..1 -- * MixsetFragment mixsetFragment;
-  after constructor() { setIsLeaf(true);}
-}
-// A FeatureGroup is a grouping node in the feature diagram.
-class FeatureGroup
-{
-  0..1 -- * FeatureNode innerFeatureNode;
-  isA FeatureNode;
-  boolean isParent =false;// isParent == require sub ... .if not sub, its <<include>>
-  enum FeatureGroupingType{ Required, Optional, Conjunctive, Disjunctive, Multiplicity, Include, Exclude, XOR};  
-  FeatureGroupingType featureGroupingType;
-
-}
-// MultiplicityFeatureGroup is a special type of FeatureGroup in which there are min and max multiplicity. 
-
-class MultiplicityFeatureGroup 
-{
-  isA FeatureGroup;
-  after constructor(){
-    this.setFeatureGroupingType(FeatureGroupingType.Multiplicity);
-  }
-
-  int min; 
-  int max;
-}
-  // XORFeatureGroup is a special type of MultiplicityFeatureGroup in which lower & upper bounds of the set are limited to 1 (i.e. 1..1). 
-class XORFeatureGroup 
-{
-  isA MultiplicityFeatureGroup;
-  after constructor(){
-    this.setFeatureGroupingType(FeatureGroupingType.XOR);
-    this.setMin(1);
-    this.setMax(1);
-
-  }
-
-}
-
 // A mixset is a block of code that may or may not be included by a use statement
 // It consists of one or more fragments that are encountered anywhere in the Umple source
 // including in other mixsets

@@ -126,42 +126,39 @@ class UmpleInternalParser
       return;
     } 
     //else
-    
     if (t.is("useStatement"))
     {
-       String value = t.getValue("use");
+      String value = t.getValue("use");
        
        // ignore .ump files since they are proccessed in UseStatementParserAction class (UmpleInternalParser_CodeParserHandlers.ump).
-       if (value.endsWith(".ump"))
-       {
-         return;   
-       } 
+      if (value.endsWith(".ump"))
+      {
+        return;   
+      } 
        //Otherwise
        
-       String mixsetName = value;
-       int useLineNumber = t.getPosition().getLineNumber();
-       //UmpleFile mixsetUseFile = model.getUmpleFile(); 
-       String fileName = t.getPosition().getFilename();
-       UmpleFile mixsetUseFile = new UmpleFile(fileName);
-       // check if the mixset was added before 
-       Mixset mixset = model.getMixset(mixsetName);
-       if(mixset == null)
-       {
-         mixset = new Mixset(mixsetName);
-	     mixset.setUseUmpleFile(mixsetUseFile);
-	     mixset.setUseUmpleLine(useLineNumber);
-	     model.addMixsetOrFile(mixset);
-	   }
-	   else if (mixset.getUseUmpleFile() == null)
-	   {
-	     mixset.setUseUmpleFile(mixsetUseFile);
-	     mixset.setUseUmpleLine(useLineNumber);
-	   }
+      String mixsetName = value;
+      int useLineNumber = t.getPosition().getLineNumber();
+      //UmpleFile mixsetUseFile = model.getUmpleFile(); 
+      String fileName = t.getPosition().getFilename();
+      UmpleFile mixsetUseFile = new UmpleFile(fileName);
+      // check if the mixset was added before 
+      Mixset mixset = model.getMixset(mixsetName);
+      if(mixset == null)
+      {
+        mixset = new Mixset(mixsetName);
+        mixset.setUseUmpleFile(mixsetUseFile);
+        mixset.setUseUmpleLine(useLineNumber);
+        model.addMixsetOrFile(mixset);
+      }
+      else if (mixset.getUseUmpleFile() == null)
+      {
+        mixset.setUseUmpleFile(mixsetUseFile);
+        mixset.setUseUmpleLine(useLineNumber);
+      }
 	   
-	   // this handles the case when a mixset definition is in a file and the mixset use exists in a subsequent file.
-	   parseMixset(mixset);
-       
-      
+	    // this handles the case when a mixset definition is in a file and the mixset use exists in a subsequent file.
+	    parseMixset(mixset); 
     }
   }
   
@@ -201,8 +198,7 @@ class UmpleInternalParser
     if(mixsetFragment.getIsParsed())
     continue;
     //Otherwise
-    parseMixsetWaitingFragment(mixsetFragment);
-    
+    parseMixsetWaitingFragment(mixsetFragment);  
    }
  }
 
@@ -231,6 +227,8 @@ class UmpleInternalParser
     Token answer = parser.getRootToken(); // result of parsing the body of a mixset waitingFragments
     setRootToken(answer);
     model.setLastResult(result);
+    answer.setName("mixsetDefinition"); //attach the mixset name for the fragment instead of ROOT
+    answer.setValue(mixsetFragment.getMixset().getMixsetName());
     analyzeAllTokens(answer);
     mixsetFragment.setIsParsed(true);
    }
@@ -307,7 +305,7 @@ class UmpleInternalParser
 	  
 	  // Here the mixset fragmet is considered as waitingFragment (mixsetFragment.isParsed==flase). 
 	  mixset.addMixsetFragment(mixsetFragment);
-	  
+	  mixsetFragment.setMixset(mixset);
 	  // parse mixset fragments right away if there is a use statment.
 	  // 
 	  if(mixset.getUseUmpleFile() != null)

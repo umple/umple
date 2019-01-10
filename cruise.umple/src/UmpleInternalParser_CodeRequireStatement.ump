@@ -12,7 +12,6 @@ Please refer to UmpleInternalParser.ump for more details.
 class UmpleInternalParser
 {
   depend cruise.umple.compiler.*;
-   
   public void analyzeRequireStatement(Token t, int analysisStep)
   {
     if (analysisStep != 2)
@@ -22,7 +21,78 @@ class UmpleInternalParser
     }    
     if (t.is("requireStatement"))
     {
+      FeatureModel featureModel = model.getFeatureModel();
+      if(featureModel == null)
+        featureModel = new FeatureModel("featureModel");
+      featureModel.setUmpleModel(model);
+
+      Mixset sourceMixset = getMixsetFromToken(t);
+      FeatureLeaf sourceFeatureLeaf = new FeatureLeaf(featureModel);
+      if (sourceMixset == null) // require-statement comes from umple file 
+      {
+        sourceFeatureLeaf.setMixsetOrFileNode(new UmpleFile(t.getPosition().getFilename()));
+      }
+       //tokens needed for parsing require-statement
+      List<String> acceptedTokensList = Arrays.asList("targetMixsetName","lowerBound","upperBound","and","not","xor","or","sub","opt");
+      ArrayList<Token> requireTokenList = getRequireStatementTokensAsList(t, acceptedTokensList);      
+      if(requireTokenList.size() == 0 )
+      return;
       
+      for(Token token : requireTokenList)
+      {
+        if ( requireTokenList.size() == 1 )
+        {
+          if(token.is("targetMixsetName"))
+          {        	
+            Mixset targetMixset = model.getMixset(token.getValue());
+            if(targetMixset == null)
+              return;
+  
+            sourceFeatureLeaf.setMixsetOrFileNode(sourceMixset);
+            FeatureLeaf targetFeature = new FeatureLeaf(featureModel);
+            targetFeature.setMixsetOrFileNode(targetMixset);
+            FeatureLink edge = new FeatureLink(FeatureLink.FeatureConnectingOpType.Include, sourceFeatureLeaf);        	
+            edge.getTargetFeature().add(targetFeature);
+
+          }
+       
+        }
+      }  
+       
+      
+
     }
+    
   }
+  
+
+  /*
+  This methods clean unwanted tokens & changes the form of require-statement argument from 
+  nested tokens, as the parser does, to list of tokens.  
+  */
+  public ArrayList<Token> getRequireStatementTokensAsList(Token requireStatementToken, List<String> acceptedTokensList)
+  {
+    ArrayList<Token> TokenList =  new ArrayList<Token>();
+    for(Token innerToken : requireStatementToken.getSubTokens())
+    {
+      if (! innerToken.getName().equals("") && acceptedTokensList.contains(innerToken.getName()))
+      	TokenList.add(innerToken);
+      else if (innerToken.getSubTokens() != null)
+      	TokenList.addAll(getRequireStatementTokensAsList(innerToken,acceptedTokensList)); 
+    }
+    return TokenList;
+  }
+  
+  /*
+  This methods returns the mixset in which require-statement was found.
+  It returns null if the require-statement is in a file (not inside a mixset). 
+	*/
+  private Mixset getMixsetFromToken(Token token) {
+  	Token parentToken = token.getParentToken();
+  	if (parentToken.is("mixsetDefinition"))
+  	  return model.getMixset(parentToken.getValue());
+  	
+  	return null;
+	}
+
 }
