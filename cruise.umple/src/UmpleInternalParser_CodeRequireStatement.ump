@@ -28,35 +28,41 @@ class UmpleInternalParser
 
       Mixset sourceMixset = getMixsetFromToken(t);
       FeatureLeaf sourceFeatureLeaf = new FeatureLeaf(featureModel);
-      if (sourceMixset == null) // require-statement comes from umple file 
+      // require-statement comes from umple file or mixset ?
+      if (sourceMixset == null) 
       sourceFeatureLeaf.setMixsetOrFileNode(new UmpleFile(t.getPosition().getFilename()));
+      else 
+      sourceFeatureLeaf.setMixsetOrFileNode(sourceMixset);
+      
       boolean isSubFeature = t.getSubToken("subfeature") != null; 
 
        //tokens needed for parsing require-statement
       List<String> acceptedTokensList = Arrays.asList("targetMixsetName","lowerBound","upperBound","and","not","xor","or","subfeature","opt");
       ArrayList<Token> requireTokenList = getRequireStatementTokensAsList(t, acceptedTokensList);      
       if(requireTokenList.size() == 0 )
-      return;-
+      return;
+
       for(Token token : requireTokenList)
       {
-        if ( requireTokenList.size() == 2 )
-        {
+        if ( requireTokenList.size() == 2 ) // need more checking
+         {
           if(token.is("targetMixsetName"))
           {        	
             Mixset targetMixset = model.getMixset(token.getValue());
             if(targetMixset == null)
               return;
-  
-            sourceFeatureLeaf.setMixsetOrFileNode(sourceMixset);
             FeatureLeaf targetFeature = new FeatureLeaf(featureModel);
             targetFeature.setMixsetOrFileNode(targetMixset);
             FeatureLink edge = new FeatureLink(FeatureLink.FeatureConnectingOpType.Include, sourceFeatureLeaf);        	
-            edge.getTargetFeature().add(targetFeature);
+            edge.addTargetFeature(targetFeature);
             edge.setIsSub(isSubFeature);
 
           }
-       
+          break; // then stop the loop
         }
+
+
+
       }  
        
       
@@ -76,7 +82,9 @@ class UmpleInternalParser
     for(Token innerToken : requireStatementToken.getSubTokens())
     {
       if (! innerToken.getName().equals("") && acceptedTokensList.contains(innerToken.getName()))
-      	TokenList.add(innerToken);
+      {
+        TokenList.add(innerToken);
+      }
       else if (innerToken.getSubTokens() != null)
       	TokenList.addAll(getRequireStatementTokensAsList(innerToken,acceptedTokensList)); 
     }
