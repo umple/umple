@@ -29,18 +29,17 @@ class UmpleInternalParser
       Mixset sourceMixset = getMixsetFromToken(t);
       FeatureLeaf sourceFeatureLeaf = new FeatureLeaf(featureModel);
       if (sourceMixset == null) // require-statement comes from umple file 
-      {
-        sourceFeatureLeaf.setMixsetOrFileNode(new UmpleFile(t.getPosition().getFilename()));
-      }
+      sourceFeatureLeaf.setMixsetOrFileNode(new UmpleFile(t.getPosition().getFilename()));
+      boolean isSubFeature = t.getSubToken("subfeature") != null; 
+
        //tokens needed for parsing require-statement
-      List<String> acceptedTokensList = Arrays.asList("targetMixsetName","lowerBound","upperBound","and","not","xor","or","sub","opt");
+      List<String> acceptedTokensList = Arrays.asList("targetMixsetName","lowerBound","upperBound","and","not","xor","or","subfeature","opt");
       ArrayList<Token> requireTokenList = getRequireStatementTokensAsList(t, acceptedTokensList);      
       if(requireTokenList.size() == 0 )
-      return;
-      
+      return;-
       for(Token token : requireTokenList)
       {
-        if ( requireTokenList.size() == 1 )
+        if ( requireTokenList.size() == 2 )
         {
           if(token.is("targetMixsetName"))
           {        	
@@ -53,6 +52,7 @@ class UmpleInternalParser
             targetFeature.setMixsetOrFileNode(targetMixset);
             FeatureLink edge = new FeatureLink(FeatureLink.FeatureConnectingOpType.Include, sourceFeatureLeaf);        	
             edge.getTargetFeature().add(targetFeature);
+            edge.setIsSub(isSubFeature);
 
           }
        
