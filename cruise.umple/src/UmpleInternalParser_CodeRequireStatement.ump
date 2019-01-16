@@ -38,8 +38,6 @@ class UmpleInternalParser
 
        //tokens needed for parsing require-statement
       List<String> acceptedTokensList = Arrays.asList("targetMixsetName","lowerBound","upperBound","and","not","xor","or","opt");
-          
-      //List<String> acceptedTokensList = Arrays.asList("targetMixsetName","and","not","xor","or","opt");
       ArrayList<Token> requireTokenList = getRequireStatementTokensAsList(t, acceptedTokensList);      
       Token firstTokenOfRequireTokenList;
 
@@ -62,23 +60,18 @@ class UmpleInternalParser
             featureModel.addFeaturelink(edge);
           }
       }
-      /*
-      else if(firstTokenOfRequireTokenList.is("lowerBound") ) // has a form of: require 1..3 { A, B, C }
-      {
-        //To Do
-      }
-      */
       else // has the form of : require [A and B or C]
       {
         TokenTree tree = generateFeatureTreeTokenFromRequireStList(requireTokenList);
-        // TO Do       
+        // TO Do: add tree for the feature model 
+        // To Do: not and opt implementaion 
+        // TO Do:  1..3 of {A, B, C}      
       }
     
     }
   }
 
   
-
   /*
   This method filters unwanted tokens & changes the form of require-statement argument from 
   nested tokens, as the parser does, to list of tokens.  
@@ -160,14 +153,13 @@ private TokenTree generateFeatureTreeTokenFromRequireStList(ArrayList<Token> tok
 			{
         /*
           this for the case : A and B or C --> (or (and A B))
-           and.getPriority == 0. or.getPriority == 1
         */
-				if(previousLinkingSubTokenTree.getPriority() <= rightLinkingTokenTree.getPriority())
+				if(previousLinkingSubTokenTree.getPriority() >= rightLinkingTokenTree.getPriority())
 				{ 
             TokenTree linkNodeToReplace = previousLinkingSubTokenTree;
             while(linkNodeToReplace != null && ! linkNodeToReplace.getNodeToken().getName().equals("ROOT") )
             {
-              if (linkNodeToReplace.getPriority() <= rightLinkingTokenTree.getPriority() )
+              if (linkNodeToReplace.getPriority() >= rightLinkingTokenTree.getPriority() )
                {
                 previousLinkingSubTokenTree = linkNodeToReplace;
                }
@@ -181,7 +173,6 @@ private TokenTree generateFeatureTreeTokenFromRequireStList(ArrayList<Token> tok
 				else
 				{   /*
              this for the case : A or B and C --> or (and A B)
-             and.getPriority == 0. or.getPriority ==1
             */
           rightLinkingTokenTree.setLeftTokenTree(currentTree);
           rightLinkingTokenTree.setParentTokenTree(previousLinkingSubTokenTree);
@@ -195,7 +186,7 @@ private TokenTree generateFeatureTreeTokenFromRequireStList(ArrayList<Token> tok
 		currentTree = rightLinkingTokenTree; // move to next node of the tree 
 	}
   
-	return rootTokenTree.getRightTokenTree;	
+	return rootTokenTree.getRightTokenTree();	
 }
 
 }
@@ -221,9 +212,9 @@ class TokenTree
   boolean isLinkingOperator = false;
 
 /*
-This methods returens the priority of a linking operator to move up in the binary tree.
-high priority node moves up & low prioriy moves down 
-Root > xor > or > and > othter termianl (non linking) nodes.  
+This methods returens the priority of a node to move down in the binary tree.
+high priority node moves down & low prioriy moves up 
+not > and > xor > or > ROOT (Top of the tree)
 */
   public int getPriority()
   {
@@ -231,14 +222,14 @@ Root > xor > or > and > othter termianl (non linking) nodes.
     switch (tokenName)
     {
       case "and":
-      return 0;
-      case "or":
-      return 1;
+      return 3;
       case "xor":
       return 2;
+      case "or":
+      return 1;
       case "ROOT":
-      return 3;
+      return 0;
     }
-    return -1;
+    return -1; // lower priority, leaf nodes should not move 
   }
 }
