@@ -110,7 +110,8 @@ private TokenTree getFeatureTreeTokenFromRequireStList(ArrayList<Token> tokenLis
   rootTokenTree.setNodeToken(new Token("ROOT",""));
 	TokenTree currentTree = rootTokenTree;		
   List<String> acceptedTokensList = Arrays.asList("and","or","xor");
-	for(Token token : tokenList)
+	
+  for(Token token : tokenList)
 	{
 		TokenTree rightTokenTree = new TokenTree();
 		rightTokenTree.setNodeToken(token);
@@ -124,7 +125,6 @@ private TokenTree getFeatureTreeTokenFromRequireStList(ArrayList<Token> tokenLis
 	currentTree = rootTokenTree.getRightTokenTree(); //currentTree points to the first node of the tree
 	
   TokenTree previousLinkingSubTokenTree = null;
-  TokenTree rootNode = null;
 	
   while(currentTree.getRightTokenTree() != null)
 	{
@@ -140,69 +140,53 @@ private TokenTree getFeatureTreeTokenFromRequireStList(ArrayList<Token> tokenLis
       // A and B --> and A B
 			if (previousLinkingSubTokenTree == null)
 			{
-        currentTree.setRightTokenTree(null);
         currentTree.setParentTokenTree(rightLinkingTokenTree);
         rightLinkingTokenTree.setLeftTokenTree(currentTree);
         rightLinkingTokenTree.setParentTokenTree(rootTokenTree);
+        rootTokenTree.setRightTokenTree(rightLinkingTokenTree);
         previousLinkingSubTokenTree = rightLinkingTokenTree;
-        rootNode = rightLinkingTokenTree;// this is the root node 
 			}
-			else if(previousLinkingSubTokenTree != null )
+			else
 			{
         /*
              this for the case : A and B or C --> or (and A B)
-             and.getPriority == 0. or.getPriority ==1
+             and.getPriority == 0. or.getPriority == 1
         */
 				if(previousLinkingSubTokenTree.getPriority() <= rightLinkingTokenTree.getPriority())
 				{ 
          // if(previousLinkingSubTokenTree.getLeftTokenTree() != null)
           //{            
             
-            TokenTree tt = previousLinkingSubTokenTree;
-            while(tt != null && ! tt.getNodeToken().getName().equals("ROOT") )
+            TokenTree linkNodeToReplace = previousLinkingSubTokenTree;
+            while(linkNodeToReplace != null && ! linkNodeToReplace.getNodeToken().getName().equals("ROOT") )
             {
-              if (tt.getPriority() <= rightLinkingTokenTree.getPriority() )
+              if (linkNodeToReplace.getPriority() <= rightLinkingTokenTree.getPriority() )
                {
-                previousLinkingSubTokenTree = tt;
+                previousLinkingSubTokenTree = linkNodeToReplace;
                }
-               tt = tt.getParentTokenTree();
+               linkNodeToReplace = linkNodeToReplace.getParentTokenTree();
             }
 
           rightLinkingTokenTree.setLeftTokenTree(previousLinkingSubTokenTree);
           previousLinkingSubTokenTree.getParentTokenTree().setRightTokenTree(rightLinkingTokenTree); 
           previousLinkingSubTokenTree.setParentTokenTree(rightLinkingTokenTree);
-          currentTree.setRightTokenTree(null);
-          previousLinkingSubTokenTree=rightLinkingTokenTree;
-          
-         /* }
-          else 
-          {
-            rightLinkingTokenTree.setLeftTokenTree(currentTree);
-            previousLinkingSubTokenTree.setRightTokenTree(rightLinkingTokenTree);
-            rightLinkingTokenTree.setParentTokenTree(previousLinkingSubTokenTree);
-            rootNode = rightLinkingTokenTree;
-          }*/	
+          previousLinkingSubTokenTree=rightLinkingTokenTree;	
 				}
 				else
 				{   /*
              this for the case : A or B and C --> or (and A B)
              and.getPriority == 0. or.getPriority ==1
             */
-          // last node has low priori
-          rootNode = previousLinkingSubTokenTree;
-          currentTree.setRightTokenTree(null);
           rightLinkingTokenTree.setLeftTokenTree(currentTree);
           rightLinkingTokenTree.setParentTokenTree(previousLinkingSubTokenTree);
         	previousLinkingSubTokenTree.setRightTokenTree(rightLinkingTokenTree);
+          previousLinkingSubTokenTree = rightLinkingTokenTree;
 				}
 			}
-			
+      // to set right node of terminal to null 
+      currentTree.setRightTokenTree(null);
+
 		}
-    
-  //  if (currentTree.getIsLinkingOperator())
-   // {
-   //   previousLinkingSubTokenTree = currentTree;
-   // }
 		currentTree = rightLinkingTokenTree; // move to next node 
 	}
   
@@ -227,6 +211,7 @@ class TokenTree
   boolean isNegated =false;
   boolean isOpt = false;
   boolean isLinkingOperator = false;
+
   public int getPriority()
   {
     String tokenName = nodeToken.getName();
