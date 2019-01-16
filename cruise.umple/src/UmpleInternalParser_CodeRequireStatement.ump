@@ -110,84 +110,84 @@ This method parses req-statement argument & generates a binary tree representati
 */
 private TokenTree generateFeatureTreeTokenFromRequireStList(ArrayList<Token> tokenList)
 {
-	TokenTree rootTokenTree = new TokenTree();
+  TokenTree rootTokenTree = new TokenTree();
   rootTokenTree.setNodeToken(new Token("ROOT",""));
-	TokenTree currentTree = rootTokenTree;		
+  TokenTree currentTree = rootTokenTree;		
   List<String> linkingOpList = Arrays.asList("and","or","xor");
 	
   for(Token token : tokenList)
-	{
-		TokenTree rightTokenTree = new TokenTree();
-		rightTokenTree.setNodeToken(token);
+  {
+    TokenTree rightTokenTree = new TokenTree();
+    rightTokenTree.setNodeToken(token);
     if(linkingOpList.contains(token.getName()))
     rightTokenTree.setIsLinkingOperator(true);
-		currentTree.setRightTokenTree(rightTokenTree);
-		currentTree = rightTokenTree;
-	}
-	
-	currentTree = rootTokenTree.getRightTokenTree(); //currentTree points to the first node of the tree
-	
+    currentTree.setRightTokenTree(rightTokenTree);
+    currentTree = rightTokenTree;
+  }
+  
+  currentTree = rootTokenTree.getRightTokenTree(); //currentTree points to the first node of the tree
+  
   TokenTree previousLinkingSubTokenTree = null; 
 	
   while(currentTree.getRightTokenTree() != null)
-	{
-		TokenTree rightLinkingTokenTree = currentTree.getRightTokenTree(); //linking operator on the right of current node 
-		
-		if(rightLinkingTokenTree == null)
-			break;
+  {
+    TokenTree rightLinkingTokenTree = currentTree.getRightTokenTree(); //linking operator on the right of current node 	
+    if(rightLinkingTokenTree == null)
+    break;
     if(currentTree.getNodeToken() == null || currentTree.getNodeToken().getName() == null ) 
      continue;
      // currentTree.getNodeToken().getName().equals("targetMixsetName") or opt / not
-		if(currentTree.getNodeToken().getName().equals("targetMixsetName") && rightLinkingTokenTree.getIsLinkingOperator())
-		{
-      // A and B --> (and A B)
-			if (previousLinkingSubTokenTree == null)
-			{
-        currentTree.setParentTokenTree(rightLinkingTokenTree);
-        rightLinkingTokenTree.setLeftTokenTree(currentTree);
-        rightLinkingTokenTree.setParentTokenTree(rootTokenTree);
-        rootTokenTree.setRightTokenTree(rightLinkingTokenTree);
-        previousLinkingSubTokenTree = rightLinkingTokenTree;
-			}
-			else
-			{
+     if(currentTree.getNodeToken().getName().equals("targetMixsetName") && rightLinkingTokenTree.getIsLinkingOperator())
+	{
+	// A and B --> (and A B)
+	if (previousLinkingSubTokenTree == null)
+	{
+          currentTree.setParentTokenTree(rightLinkingTokenTree);
+	  rightLinkingTokenTree.setLeftTokenTree(currentTree);
+	  rightLinkingTokenTree.setParentTokenTree(rootTokenTree);
+	  rootTokenTree.setRightTokenTree(rightLinkingTokenTree);
+	  previousLinkingSubTokenTree = rightLinkingTokenTree;
+	}
+	else
+	{
         /*
           this for the case : A and B or C --> (or (and A B))
         */
-				if(previousLinkingSubTokenTree.getPriority() >= rightLinkingTokenTree.getPriority())
-				{ 
-            TokenTree linkNodeToReplace = previousLinkingSubTokenTree;
-            while(linkNodeToReplace != null && ! linkNodeToReplace.getNodeToken().getName().equals("ROOT") )
-            {
-              if (linkNodeToReplace.getPriority() >= rightLinkingTokenTree.getPriority() )
-               {
-                previousLinkingSubTokenTree = linkNodeToReplace;
-               }
-               linkNodeToReplace = linkNodeToReplace.getParentTokenTree();
+	if(previousLinkingSubTokenTree.getPriority() >= rightLinkingTokenTree.getPriority())
+	{ 
+	  TokenTree linkNodeToReplace = previousLinkingSubTokenTree;
+          while(linkNodeToReplace != null && ! linkNodeToReplace.getNodeToken().getName().equals("ROOT") )
+          {
+            if (linkNodeToReplace.getPriority() >= rightLinkingTokenTree.getPriority() )
+	    {
+	      previousLinkingSubTokenTree = linkNodeToReplace;
             }
+            linkNodeToReplace = linkNodeToReplace.getParentTokenTree();
+          }
           rightLinkingTokenTree.setLeftTokenTree(previousLinkingSubTokenTree);
           previousLinkingSubTokenTree.getParentTokenTree().setRightTokenTree(rightLinkingTokenTree); 
           previousLinkingSubTokenTree.setParentTokenTree(rightLinkingTokenTree);
           previousLinkingSubTokenTree=rightLinkingTokenTree;	
-				}
-				else
-				{   /*
-             this for the case : A or B and C --> or (and A B)
-            */
+	}
+	else
+	{
+	  /*
+           this for the case : A or B and C --> or (and A B)
+          */
           rightLinkingTokenTree.setLeftTokenTree(currentTree);
           rightLinkingTokenTree.setParentTokenTree(previousLinkingSubTokenTree);
-        	previousLinkingSubTokenTree.setRightTokenTree(rightLinkingTokenTree);
+	  previousLinkingSubTokenTree.setRightTokenTree(rightLinkingTokenTree);
           previousLinkingSubTokenTree = rightLinkingTokenTree;
-				}
-			}
+	}
+       }
       // last step: set right node of terminal to null 
       currentTree.setRightTokenTree(null);
-		}
-		currentTree = rightLinkingTokenTree; // move to next node of the tree 
-	}
+     }
+      currentTree = rightLinkingTokenTree; // move to next node of the tree 
+    }
   
 	return rootTokenTree.getRightTokenTree();	
-}
+  }
 
 }
 
@@ -202,10 +202,10 @@ Ex: require [A and B or C] will be formed as:
 class TokenTree
 {
   depend cruise.umple.parser.Token;
-	lazy Token nodeToken;
+  lazy Token nodeToken;
   lazy TokenTree parentTokenTree;
-	lazy TokenTree leftTokenTree;
-	lazy TokenTree rightTokenTree;
+  lazy TokenTree leftTokenTree;
+  lazy TokenTree rightTokenTree;
   
   boolean isNegated =false;
   boolean isOpt = false;
