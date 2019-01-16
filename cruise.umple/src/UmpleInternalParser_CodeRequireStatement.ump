@@ -62,10 +62,12 @@ class UmpleInternalParser
             featureModel.addFeaturelink(edge);
           }
       }
+      /*
       else if(firstTokenOfRequireTokenList.is("lowerBound") ) // has a form of: require 1..3 { A, B, C }
       {
         //To Do
       }
+      */
       else // has the form of : require [A and B or C]
       {
         TokenTree tree = generateFeatureTreeTokenFromRequireStList(requireTokenList);
@@ -84,6 +86,7 @@ class UmpleInternalParser
   public ArrayList<Token> getRequireStatementTokensAsList(Token requireStatementToken, List<String> acceptedTokensList)
   {
     ArrayList<Token> TokenList =  new ArrayList<Token>();
+    Token terminal;
     for(Token innerToken : requireStatementToken.getSubTokens())
     {
       if (! innerToken.getName().equals("") && acceptedTokensList.contains(innerToken.getName()))
@@ -110,7 +113,7 @@ class UmpleInternalParser
 
 /*
 This method parses req-statement argument & generates a binary tree representation form the req-statment argument.
-It returns one node (root node) if there is no argument to parse.
+//It returns one node (root node) if there is no argument to parse.
 */
 private TokenTree generateFeatureTreeTokenFromRequireStList(ArrayList<Token> tokenList)
 {
@@ -192,7 +195,7 @@ private TokenTree generateFeatureTreeTokenFromRequireStList(ArrayList<Token> tok
 		currentTree = rightLinkingTokenTree; // move to next node of the tree 
 	}
   
-	return rootTokenTree;	
+	return rootTokenTree.getRightTokenTree;	
 }
 
 }
