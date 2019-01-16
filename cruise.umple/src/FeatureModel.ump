@@ -19,6 +19,7 @@ class FeatureModel
 {
   name;
   1--* FeatureNode node;
+  0..1 -- * FeatureLink featurelink;
 }
 
 //A Feature model consists of some FeatureNodels, which can be leaf nodes or fragmentFeature nodes.
