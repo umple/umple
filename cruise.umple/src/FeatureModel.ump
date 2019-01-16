@@ -48,7 +48,7 @@ class FragmentFeatureLeaf
 class FeatureLink
 {
   0..1 -- 1 FeatureLeaf sourceFeature;
-  0..1 -- * FeatureNode targetFeature;
+  0..* -- * FeatureNode targetFeature;
   boolean isSub =false; // isSub to differentiate between sub-features and include/exclude relationship
   enum FeatureConnectingOpType{ Required, Optional, Conjunctive, Disjunctive, Multiplicity, Include, Exclude, XOR};  
   FeatureConnectingOpType featureConnectingOpType;
