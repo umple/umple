@@ -1,0 +1,85 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Feature diagram meta-model
+
+*/
+
+// A FeatureDiagram stores information required to build a feature diagram in Umple  
+
+class UmpleModel {
+     0..1 -- 0..1 FeatureModel;
+}
+
+class FeatureModel
+{
+  name;
+  1--* FeatureNode node;
+  0..1 -- * FeatureLink featurelink;
+}
+
+//A Feature model consists of some FeatureNodels, which can be leaf nodes or fragmentFeature nodes.
+class FeatureNode{
+  abstract;
+  boolean isLeaf =false;
+}
+
+// A FeatureLeaf contains a full mixset or a full file. 
+class FeatureLeaf
+{
+  isA FeatureNode;
+  0..1 -- 0..1 MixsetOrFile mixsetOrFileNode;
+  after constructor() { setIsLeaf(true);}
+}
+
+// A FragmentFeatureLeaf consists of one or more mixset fragments.
+class FragmentFeatureLeaf
+{
+  isA FeatureNode;
+  0..1 -- * MixsetFragment mixsetFragment;
+  after constructor() { setIsLeaf(true);}
+}
+
+// A FeatureLink connects a source feature to target feature(s) in the feature diagram.
+class FeatureLink
+{
+  0..1 -- 1 FeatureLeaf sourceFeature;
+  0..* -- * FeatureNode targetFeature;
+  boolean isSub =false; // isSub to differentiate between sub-features and include/exclude relationship
+  enum FeatureConnectingOpType{ Required, Optional, Conjunctive, Disjunctive, Multiplicity, Include, Exclude, XOR};  
+  FeatureConnectingOpType featureConnectingOpType;
+
+}
+// MultiplicityFeatureConnectingOpType is a special type of FeatureLink in which there are min and max multiplicity. 
+
+class MultiplicityFeatureConnectingOpType
+{
+  isA FeatureLink;
+  MultiplicityFeatureConnectingOpType( FeatureLeaf aSourceFeature)
+  {
+    super(FeatureConnectingOpType.Multiplicity, aSourceFeature);
+  }
+  after constructor(){
+    this.setFeatureConnectingOpType(FeatureConnectingOpType.Multiplicity);
+  }
+  lazy Multiplicity multiplicity;
+}
+// XORFeatureConnectingOpType is a special type of FeatureLink in which lower & upper bounds of the set are limited to 1 (i.e. 1..1). 
+class XORFeatureConnectingOpType 
+{
+  isA MultiplicityFeatureConnectingOpType;
+  after constructor(){
+    this.setFeatureConnectingOpType(FeatureConnectingOpType.XOR);
+    setMultiplicity(new Multiplicity());
+   // getMultiplicity.setRange("1","1");
+  }
+}
+
+/*
+class MixsetOrFile{}
+class MixsetFragment{}
+*/

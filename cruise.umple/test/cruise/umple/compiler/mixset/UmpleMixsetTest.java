@@ -9,6 +9,10 @@ import cruise.umple.compiler.UmpleFile;
 import cruise.umple.compiler.UmpleModel;
 import cruise.umple.compiler.UmpleClass;
 import java.util.List;
+import cruise.umple.compiler.FeatureModel;
+import cruise.umple.compiler.FeatureLink;
+import cruise.umple.compiler.FeatureNode;
+import cruise.umple.compiler.FeatureLeaf;
 
 public class UmpleMixsetTest {
   
@@ -241,6 +245,12 @@ public class UmpleMixsetTest {
     umpleParserTest.assertNoWarningsParse("mixsetRequireStatementNoWarnings.ump");
   }
 
+  @Test
+  public void mixsetRequireSubStatementNoWarnings()
+  {
+    umpleParserTest.assertNoWarningsParse("mixsetRequireSubStatementNoWarnings.ump");
+  }
+
  @Test
   public void stateMachine_State_HasMixset()
   {
@@ -289,8 +299,23 @@ public class UmpleMixsetTest {
 		List<UmpleClass> umpleClasses = model.getUmpleClasses();
     Assert.assertEquals(umpleClasses.get(0).getAssociations().length, 2);
   }              
-
- 
+  @Test
+  public void parseOneReqStArgument()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_oneArgument.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+    FeatureModel featureModel= model.getFeatureModel();
+    FeatureLink featureLink = featureModel.getFeaturelink().get(0);
+    FeatureLeaf source = featureLink.getSourceFeature();
+    FeatureNode target = featureLink.getTargetFeature().get(0);
+    Assert.assertEquals(featureModel.getFeaturelink().size(),1); // test 
+    Assert.assertEquals(false,source.getMixsetOrFileNode().getIsMixset());  // false
+    Assert.assertEquals("reqStArgumentParse_oneArgument",source.getMixsetOrFileNode().getName());// == filename 
+    Assert.assertTrue (((FeatureLeaf) target).getMixsetOrFileNode().getIsMixset()); // true 
+    Assert.assertEquals("M1",((FeatureLeaf) target).getMixsetOrFileNode().getName()); // mixstName 
+	
+  }          
   		
 }
-

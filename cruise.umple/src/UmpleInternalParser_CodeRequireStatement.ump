@@ -1,0 +1,235 @@
+/*
+Copyright: All contributers to the Umple Project.
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file analyzses require statement tokens to populate Requiregraph for Umple model.
+
+Please refer to UmpleInternalParser.ump for more details.
+*/
+
+class UmpleInternalParser
+{
+  depend cruise.umple.compiler.*;
+  public void analyzeRequireStatement(Token t, int analysisStep)
+  {
+    if (analysisStep != 2)
+    {
+      shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
+      return;
+    }    
+    if (t.is("requireStatement"))
+    {
+      FeatureModel featureModel = model.getFeatureModel();
+      if(featureModel == null)
+        featureModel = new FeatureModel("featureModel");
+      featureModel.setUmpleModel(model);
+
+      Mixset sourceMixset = getMixsetFromToken(t);
+      FeatureLeaf sourceFeatureLeaf = new FeatureLeaf(featureModel);
+      // require-statement comes from umple file or mixset ?
+      if (sourceMixset == null) 
+      sourceFeatureLeaf.setMixsetOrFileNode(new UmpleFile(t.getPosition().getFilename()));
+      else 
+      sourceFeatureLeaf.setMixsetOrFileNode(sourceMixset);
+      
+      boolean isSubFeature = t.getSubToken("subfeature") != null; 
+
+       //tokens needed for parsing require-statement
+      List<String> acceptedTokensList = Arrays.asList("targetMixsetName","lowerBound","upperBound","and","not","xor","or","opt");
+      ArrayList<Token> requireTokenList = getRequireStatementTokensAsList(t, acceptedTokensList);      
+      Token firstTokenOfRequireTokenList;
+
+      if(requireTokenList.size() == 0 ) // require [ ]
+      return;
+
+      firstTokenOfRequireTokenList = requireTokenList.get(0);
+      if (requireTokenList.size() == 1) // require [A]
+      {
+        if(firstTokenOfRequireTokenList.is("targetMixsetName"))
+          {        	
+            Mixset targetMixset = model.getMixset(firstTokenOfRequireTokenList.getValue());
+            if(targetMixset == null)
+              return;
+            FeatureLeaf targetFeature = new FeatureLeaf(featureModel);
+            targetFeature.setMixsetOrFileNode(targetMixset);
+            FeatureLink edge = new FeatureLink(FeatureLink.FeatureConnectingOpType.Include, sourceFeatureLeaf);        	
+            edge.addTargetFeature(targetFeature);
+            edge.setIsSub(isSubFeature);
+            featureModel.addFeaturelink(edge);
+          }
+      }
+      else // has the form of : require [A and B or C]
+      {
+        TokenTree tree = generateFeatureTreeTokenFromRequireStList(requireTokenList);
+        // TO Do: add tree for the feature model 
+        // To Do: not and opt implementaion 
+        // TO Do:  1..3 of {A, B, C}      
+      }
+    
+    }
+  }
+
+  
+  /*
+  This method filters unwanted tokens & changes the form of require-statement argument from 
+  nested tokens, as the parser does, to list of tokens.  
+  */
+  public ArrayList<Token> getRequireStatementTokensAsList(Token requireStatementToken, List<String> acceptedTokensList)
+  {
+    ArrayList<Token> TokenList =  new ArrayList<Token>();
+    Token terminal;
+    for(Token innerToken : requireStatementToken.getSubTokens())
+    {
+      if (! innerToken.getName().equals("") && acceptedTokensList.contains(innerToken.getName()))
+      {
+        TokenList.add(innerToken);
+      }
+      else if (innerToken.getSubTokens() != null)
+      	TokenList.addAll(getRequireStatementTokensAsList(innerToken,acceptedTokensList)); 
+    }
+    return TokenList;
+  }
+  
+  /*
+  This methods returns the mixset in which require-statement was found.
+  It returns null if the require-statement is in a file (not inside a mixset). 
+	*/
+  private Mixset getMixsetFromToken(Token token) {
+  	Token parentToken = token.getParentToken();
+  	if (parentToken.is("mixsetDefinition"))
+  	  return model.getMixset(parentToken.getValue());
+  	
+  	return null;
+	}
+
+/*
+This method parses req-statement argument & generates a binary tree representation form the req-statment argument.
+//It returns one node (root node) if there is no argument to parse.
+*/
+private TokenTree generateFeatureTreeTokenFromRequireStList(ArrayList<Token> tokenList)
+{
+  TokenTree rootTokenTree = new TokenTree();
+  rootTokenTree.setNodeToken(new Token("ROOT",""));
+  TokenTree currentTree = rootTokenTree;		
+  List<String> linkingOpList = Arrays.asList("and","or","xor");
+	
+  for(Token token : tokenList)
+  {
+    TokenTree rightTokenTree = new TokenTree();
+    rightTokenTree.setNodeToken(token);
+    if(linkingOpList.contains(token.getName()))
+    rightTokenTree.setIsLinkingOperator(true);
+    currentTree.setRightTokenTree(rightTokenTree);
+    currentTree = rightTokenTree;
+  }
+  
+  currentTree = rootTokenTree.getRightTokenTree(); //currentTree points to the first node of the tree
+  
+  TokenTree previousLinkingSubTokenTree = null; 
+	
+  while(currentTree.getRightTokenTree() != null)
+  {
+    TokenTree rightLinkingTokenTree = currentTree.getRightTokenTree(); //linking operator on the right of current node 	
+    if(rightLinkingTokenTree == null)
+    break;
+    if(currentTree.getNodeToken() == null || currentTree.getNodeToken().getName() == null ) 
+     continue;
+     // currentTree.getNodeToken().getName().equals("targetMixsetName") or opt / not
+     if(currentTree.getNodeToken().getName().equals("targetMixsetName") && rightLinkingTokenTree.getIsLinkingOperator())
+	{
+	// A and B --> (and A B)
+	if (previousLinkingSubTokenTree == null)
+	{
+          currentTree.setParentTokenTree(rightLinkingTokenTree);
+	  rightLinkingTokenTree.setLeftTokenTree(currentTree);
+	  rightLinkingTokenTree.setParentTokenTree(rootTokenTree);
+	  rootTokenTree.setRightTokenTree(rightLinkingTokenTree);
+	  previousLinkingSubTokenTree = rightLinkingTokenTree;
+	}
+	else
+	{
+        /*
+          this for the case : A and B or C --> (or (and A B))
+        */
+	if(previousLinkingSubTokenTree.getPriority() >= rightLinkingTokenTree.getPriority())
+	{ 
+	  TokenTree linkNodeToReplace = previousLinkingSubTokenTree;
+          while(linkNodeToReplace != null && ! linkNodeToReplace.getNodeToken().getName().equals("ROOT") )
+          {
+            if (linkNodeToReplace.getPriority() >= rightLinkingTokenTree.getPriority() )
+	    {
+	      previousLinkingSubTokenTree = linkNodeToReplace;
+            }
+            linkNodeToReplace = linkNodeToReplace.getParentTokenTree();
+          }
+          rightLinkingTokenTree.setLeftTokenTree(previousLinkingSubTokenTree);
+          previousLinkingSubTokenTree.getParentTokenTree().setRightTokenTree(rightLinkingTokenTree); 
+          previousLinkingSubTokenTree.setParentTokenTree(rightLinkingTokenTree);
+          previousLinkingSubTokenTree=rightLinkingTokenTree;	
+	}
+	else
+	{
+	  /*
+           this for the case : A or B and C --> or (and A B)
+          */
+          rightLinkingTokenTree.setLeftTokenTree(currentTree);
+          rightLinkingTokenTree.setParentTokenTree(previousLinkingSubTokenTree);
+	  previousLinkingSubTokenTree.setRightTokenTree(rightLinkingTokenTree);
+          previousLinkingSubTokenTree = rightLinkingTokenTree;
+	}
+       }
+      // last step: set right node of terminal to null 
+      currentTree.setRightTokenTree(null);
+     }
+      currentTree = rightLinkingTokenTree; // move to next node of the tree 
+    }
+  
+	return rootTokenTree.getRightTokenTree();	
+  }
+
+}
+
+
+/*
+This class used to represent the binary tree of require-statement argument 
+Ex: require [A and B or C] will be formed as: 
+          ... or...  
+   ... and...      C
+  A           B    
+*/
+class TokenTree
+{
+  depend cruise.umple.parser.Token;
+  lazy Token nodeToken;
+  lazy TokenTree parentTokenTree;
+  lazy TokenTree leftTokenTree;
+  lazy TokenTree rightTokenTree;
+  
+  boolean isNegated =false;
+  boolean isOpt = false;
+  boolean isLinkingOperator = false;
+
+/*
+This methods returens the priority of a node to move down in the binary tree.
+high priority node moves down & low prioriy moves up 
+not > and > xor > or > ROOT (Top of the tree)
+*/
+  public int getPriority()
+  {
+    String tokenName = nodeToken.getName();
+    switch (tokenName)
+    {
+      case "and":
+      return 3;
+      case "xor":
+      return 2;
+      case "or":
+      return 1;
+      case "ROOT":
+      return 0;
+    }
+    return -1; // lower priority, leaf nodes should not move 
+  }
+}
