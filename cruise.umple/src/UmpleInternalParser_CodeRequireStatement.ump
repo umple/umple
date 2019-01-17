@@ -37,7 +37,7 @@ class UmpleInternalParser
       boolean isSubFeature = t.getSubToken("subfeature") != null; 
 
        //tokens needed for parsing require-statement
-      List<String> acceptedTokensList = Arrays.asList("targetMixsetName","lowerBound","upperBound","and","not","xor","or","opt");
+      List<String> acceptedTokensList = Arrays.asList("requireTerminal","and","not","xor","or","opt");
       ArrayList<Token> requireTokenList = getRequireStatementTokensAsList(t, acceptedTokensList);      
       Token firstTokenOfRequireTokenList;
 
@@ -47,9 +47,9 @@ class UmpleInternalParser
       firstTokenOfRequireTokenList = requireTokenList.get(0);
       if (requireTokenList.size() == 1) // require [A]
       {
-        if(firstTokenOfRequireTokenList.is("targetMixsetName"))
+        if(firstTokenOfRequireTokenList.is("requireTerminal"))
           {        	
-            Mixset targetMixset = model.getMixset(firstTokenOfRequireTokenList.getValue());
+            Mixset targetMixset = model.getMixset(firstTokenOfRequireTokenList.getSubToken("targetMixsetName").getValue());
             if(targetMixset == null)
               return;
             FeatureLeaf targetFeature = new FeatureLeaf(featureModel);
@@ -137,7 +137,7 @@ private TokenTree generateFeatureTreeTokenFromRequireStList(ArrayList<Token> tok
     if(currentTree.getNodeToken() == null || currentTree.getNodeToken().getName() == null ) 
      continue;
      // currentTree.getNodeToken().getName().equals("targetMixsetName") or opt / not
-     if(currentTree.getNodeToken().getName().equals("targetMixsetName") && rightLinkingTokenTree.getIsLinkingOperator())
+     if(currentTree.getNodeToken().is("requireTerminal") && rightLinkingTokenTree.getIsLinkingOperator())
 	{
 	// A and B --> (and A B)
 	if (previousLinkingSubTokenTree == null)

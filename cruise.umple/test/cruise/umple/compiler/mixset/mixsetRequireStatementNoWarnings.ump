@@ -1,9 +1,9 @@
 
-require [Mixset];
+require [Mixset]; use Mixset; mixset Mixset {}
 
 require [GSMProtocol opt Mp3Recording and Playback and AudioFormat opt Camera ];
 
-require 1..3 of {M1,M2,M3};
+require [ 1..3 of {M1,M2,M3} ];
 
 require [not M2 and m4 ] ;
 
@@ -11,7 +11,7 @@ require [M1 opt M3];
 
 require [M3 or M2];
 
-require 0..1 of {M1}; 
+require [0..1 of {M1}]; 
 
 
 /*
