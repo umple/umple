@@ -336,6 +336,30 @@ public class UmpleMixsetTest {
     Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(4)).getMixsetOrFileNode().getName(),"C");
     Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(5)).getMixsetOrFileNode().getName(), "B");
     Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(6)).getMixsetOrFileNode().getName() ,"A"); 
-  }                    
+  }
+@Test
+  public void parseMultipleOpReqStArgument()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_MultipleOp.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+		FeatureModel featureModel= model.getFeatureModel();
+		int numOfLinks = featureModel.getFeaturelink().size();
+    int numOfFeatures = featureModel.getNode().size();  
+    Assert.assertEquals(numOfLinks,7); 
+    Assert.assertEquals(numOfFeatures,10); 
+
+    Assert.assertEquals(false,  ((FeatureLeaf)featureModel.getNode().get(0)).getMixsetOrFileNode().isIsMixset() );  // false: its a file
+    Assert.assertEquals(featureModel.getNode().get(1).getName(), "or");
+    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(2)).getMixsetOrFileNode().getName(),"M6");
+		Assert.assertEquals(featureModel.getNode().get(3).getName(), "xor");
+    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(4)).getMixsetOrFileNode().getName() ,"M5"); 
+		Assert.assertEquals(featureModel.getNode().get(5).getName(), "and");
+    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(6)).getMixsetOrFileNode().getName() ,"M4"); 
+    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(7)).getMixsetOrFileNode().getName() ,"M1");     		    	
+    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(8)).getMixsetOrFileNode().getName() ,"M2");  
+    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(9)).getMixsetOrFileNode().getName() ,"M3");  
+  }                               
   		
 }

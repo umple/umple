@@ -44,89 +44,94 @@ class UmpleInternalParser
       if(requireTokenList.size() == 0 ) // require [ ]
       return;
 
-      firstTokenOfRequireTokenList = requireTokenList.get(0);
-      if (requireTokenList.size() == 1) // require [A]
-      {
-        if(firstTokenOfRequireTokenList.is("requireTerminal"))
-          {        	
-            Mixset targetMixset = model.getMixset(firstTokenOfRequireTokenList.getSubToken("targetMixsetName").getValue());
-            if(targetMixset == null)
-              return;
-            FeatureLeaf targetFeature = new FeatureLeaf(featureModel);
-            targetFeature.setMixsetOrFileNode(targetMixset);
-            FeatureLink edge = new FeatureLink(FeatureLink.FeatureConnectingOpType.Include);
-            edge.setSourceFeature(sourceFeatureLeaf);        	
-            edge.addTargetFeature(targetFeature);
-            edge.setIsSub(isSubFeature);
-            featureModel.addFeaturelink(edge);
-          }
-      }
-      else // has the form of : require [A and B or C]
+      if (requireTokenList.size() >= 1)  // has the form of : require [A and B or C .... ]
       {
         TokenTree tree = generateFeatureTreeTokenFromRequireStList(requireTokenList);
      
         createFeatureModelSegment(sourceFeatureLeaf,tree,isSubFeature);
-        // TO Do: add tree for the feature model 
+        // TO Do: add tree for the feature model : Done
         // To Do: not and opt implementaion 
-        // TO Do:  1..3 of {A, B, C}      
+        // TO Do:  1..3 of {A, B, C} : Done 
       }
     
     }
   }
-
+  /*
+  this method generates a new feature and links it with a source feature based on its token in the TokenTree.
+  It return null if either treeNode or source feature is null.
+  */
   public FeatureNode createTargetFeature(TokenTree treeNode, FeatureNode sourceFeature, boolean isSubFeature)
   {
-    FeatureNode intermediateFeatureNode = new FeatureNode(model.getFeatureModel());
-    intermediateFeatureNode.setName(treeNode.getNodeToken().getName());
-    FeatureLink edge = new FeatureLink(treeNode.getFeatureConnectionOpType());
+    if (treeNode == null || sourceFeature == null)
+    return null; // To Do : should raise error here 
+    FeatureNode newFeatureNode = new FeatureNode(model.getFeatureModel());
+    newFeatureNode.setName(treeNode.getNodeToken().getName());
+    FeatureLink edge = new FeatureLink();
+    edge.setFeatureConnectingOpType(treeNode.getFeatureConnectionOpType());
     edge.setSourceFeature(sourceFeature);
     edge.setIsSub(isSubFeature);
-    edge.addTargetFeature(intermediateFeatureNode); 
+    edge.addTargetFeature(newFeatureNode); 
     edge.setFeatureModel(model.getFeatureModel());
     model.getFeatureModel().addFeaturelink(edge);
-    return intermediateFeatureNode;
+    return newFeatureNode;
   }
   /*
-  This method takes a require-st as a token tree and then it adds the tree to the feature model 
+  This method takes a require-st as a token tree and then it generates its segment in the feature model 
   */
   public void createFeatureModelSegment(FeatureNode sourceFeature, TokenTree tokenTree, boolean isSubFeature)
   {
     Token node = tokenTree.getNodeToken();
-    String nodeName = node.getName();
     TokenTree linkingParent = tokenTree.getParentTokenTree();
     FeatureLink edge = null;
     if(! tokenTree.getIsLinkingOperator())
     {
-      if(node.is("requireTerminal"))
+      if(node.is("requireTerminal") && node.getSubToken("lowerBound") == null)
       {        	
-        Mixset targetMixset = model.getMixset(node.getSubToken("targetMixsetName").getValue());
-        if(targetMixset == null)
-        return; // To Do: should raise warning 
-        
+        //Mixset targetMixset = model.getMixset(node.getSubToken("targetMixsetName").getValue());
+        //if(targetMixset == null)
+        //return; // To Do: should raise warning 
+        Mixset targetMixset = new Mixset(node.getSubToken("targetMixsetName").getValue());
         FeatureLeaf targetFeature = new FeatureLeaf(model.getFeatureModel());
         targetFeature.setMixsetOrFileNode(targetMixset);
-        if(linkingParent == null)
-        {
-          // To Do: even if the parent is null, it may be opt or not or multiplicity
-          edge = new FeatureLink(FeatureLink.FeatureConnectingOpType.Include);
-          edge.setSourceFeature(sourceFeature); 
-        }
+        edge = new FeatureLink();
+        
+        if(linkingParent.getNodeToken().is("ROOT"))
+        edge.setFeatureConnectingOpType(FeatureLink.FeatureConnectingOpType.Include);
         else // this is for leaf node as the parent is not null 
-        {
-          edge = new FeatureLink(linkingParent.getFeatureConnectionOpType());
-          edge.setSourceFeature(sourceFeature);       
-        }
+        edge.setFeatureConnectingOpType(linkingParent.getFeatureConnectionOpType());
+        
+        edge.setSourceFeature(sourceFeature);       
         edge.addTargetFeature(targetFeature);
         edge.setIsSub(isSubFeature);
         model.getFeatureModel().addFeaturelink(edge);
       }
+      else if(node.is("requireTerminal") && node.getSubToken("lowerBound") != null) //  [lowerBound]..[upperBound] of [A, B, ... ]
+      {
+        edge = new MultiplicityFeatureConnectingOpType();
+		    Multiplicity featureLinkMultiplicity = ((MultiplicityFeatureConnectingOpType) edge).getMultiplicity();
+        featureLinkMultiplicity.setRange(node.getSubToken("lowerBound").getValue(), node.getSubToken("upperBound").getValue());
+        for(Token subToken : node.getSubTokens())
+        {
+          if(subToken.is("targetMixsetName"))
+          {
+            FeatureLeaf targetFeature = new FeatureLeaf(model.getFeatureModel());
+            Mixset targetMixset = new Mixset(subToken.getValue()); //To Do: check if its a mixset.
+            targetFeature.setMixsetOrFileNode(targetMixset);
+            edge.addTargetFeature(targetFeature);
+          }
+        }
+        edge.setSourceFeature(sourceFeature);       
+        edge.setIsSub(isSubFeature);
+        model.getFeatureModel().addFeaturelink(edge);
+      } 
+ 
     }
     else 
     {
         TokenTree rightTokenTree = tokenTree.getRightTokenTree();
         TokenTree leftTokenTree = tokenTree.getLeftTokenTree();
         if (rightTokenTree == null || leftTokenTree == null)
-        return; //raise error since a connection node does not have left or right node 
+        return; //To Do: raise error since a connection node does not have left or right node 
         //else 
         FeatureNode intermediateFeatureNode = null;
         boolean parentTokenEqualsCurrentNodeToken = node.is(linkingParent.getNodeToken().getName());
@@ -144,8 +149,6 @@ class UmpleInternalParser
 
     }
   }
-
-  
   /*
   This method filters unwanted tokens & changes the form of require-statement argument from 
   nested tokens, as the parser does, to list of tokens.  
