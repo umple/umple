@@ -24,7 +24,7 @@ class FeatureModel
 
 //A Feature model consists of some FeatureNodels, which can be leaf nodes or fragmentFeature nodes.
 class FeatureNode{
-  abstract;
+  lazy name;
   boolean isLeaf =false;
 }
 
@@ -47,7 +47,7 @@ class FragmentFeatureLeaf
 // A FeatureLink connects a source feature to target feature(s) in the feature diagram.
 class FeatureLink
 {
-  0..1 -- 1 FeatureLeaf sourceFeature;
+  * sourceFeatureLink -- 0..1 FeatureNode sourceFeature; // the sourceFeature can be FeatureLeaf or FeatureNode
   0..* -- * FeatureNode targetFeature;
   boolean isSub =false; // isSub to differentiate between sub-features and include/exclude relationship
   enum FeatureConnectingOpType{ Required, Optional, Conjunctive, Disjunctive, Multiplicity, Include, Exclude, XOR};  
@@ -59,6 +59,8 @@ class FeatureLink
 class MultiplicityFeatureConnectingOpType
 {
   isA FeatureLink;
+  
+  /*
   MultiplicityFeatureConnectingOpType( FeatureLeaf aSourceFeature)
   {
     super(FeatureConnectingOpType.Multiplicity, aSourceFeature);
@@ -66,6 +68,7 @@ class MultiplicityFeatureConnectingOpType
   after constructor(){
     this.setFeatureConnectingOpType(FeatureConnectingOpType.Multiplicity);
   }
+  */
   lazy Multiplicity multiplicity;
 }
 // XORFeatureConnectingOpType is a special type of FeatureLink in which lower & upper bounds of the set are limited to 1 (i.e. 1..1). 
@@ -73,7 +76,7 @@ class XORFeatureConnectingOpType
 {
   isA MultiplicityFeatureConnectingOpType;
   after constructor(){
-    this.setFeatureConnectingOpType(FeatureConnectingOpType.XOR);
+    //this.setFeatureConnectingOpType(FeatureConnectingOpType.XOR);
     setMultiplicity(new Multiplicity());
    // getMultiplicity.setRange("1","1");
   }

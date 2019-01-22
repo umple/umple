@@ -308,14 +308,34 @@ public class UmpleMixsetTest {
     model.run();
     FeatureModel featureModel= model.getFeatureModel();
     FeatureLink featureLink = featureModel.getFeaturelink().get(0);
-    FeatureLeaf source = featureLink.getSourceFeature();
+    FeatureLeaf source = ((FeatureLeaf) featureLink.getSourceFeature());
     FeatureNode target = featureLink.getTargetFeature().get(0);
     Assert.assertEquals(featureModel.getFeaturelink().size(),1); // test 
     Assert.assertEquals(false,source.getMixsetOrFileNode().getIsMixset());  // false
     Assert.assertEquals("reqStArgumentParse_oneArgument",source.getMixsetOrFileNode().getName());// == filename 
     Assert.assertTrue (((FeatureLeaf) target).getMixsetOrFileNode().getIsMixset()); // true 
     Assert.assertEquals("M1",((FeatureLeaf) target).getMixsetOrFileNode().getName()); // mixstName 
-	
-  }          
+  }
+
+@Test
+  public void parseMultipleAndsOpReqStArgument()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_MultipleAndsOp.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+		FeatureModel featureModel= model.getFeatureModel();
+		int numOfLinks = featureModel.getFeaturelink().size();// == 6;
+    int numOfFeatures = featureModel.getNode().size();// == 7   
+    Assert.assertEquals(numOfLinks,6); 
+    Assert.assertEquals(numOfFeatures,7); 
+    Assert.assertEquals(false,  ((FeatureLeaf)featureModel.getNode().get(0)).getMixsetOrFileNode().isIsMixset() );  // false: its a file
+    Assert.assertEquals(featureModel.getNode().get(1).getName(), "and");
+    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(2)).getMixsetOrFileNode().getName(),"E");
+    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(3)).getMixsetOrFileNode().getName(), "D");
+    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(4)).getMixsetOrFileNode().getName(),"C");
+    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(5)).getMixsetOrFileNode().getName(), "B");
+    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(6)).getMixsetOrFileNode().getName() ,"A"); 
+  }                    
   		
 }
