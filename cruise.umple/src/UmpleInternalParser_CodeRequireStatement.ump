@@ -298,19 +298,19 @@ public FeatureLink.FeatureConnectingOpType getFeatureConnectionOpType()
   {
     String operator = nodeToken.getName();
     switch (operator) {
-		case "and":
-			return FeatureLink.FeatureConnectingOpType.Conjunctive;
-		case "or":
-			return FeatureLink.FeatureConnectingOpType.Disjunctive;
-		case "xor":
-			return FeatureLink.FeatureConnectingOpType.XOR;
-		case "multiplicityTerminal":
-			return FeatureLink.FeatureConnectingOpType.Multiplicity;
-		case "opt":
-			return FeatureLink.FeatureConnectingOpType.Optional;
-    default:
-			return FeatureLink.FeatureConnectingOpType.Required;
-		}
+      case "and":
+        return FeatureLink.FeatureConnectingOpType.Conjunctive;
+      case "or":
+        return FeatureLink.FeatureConnectingOpType.Disjunctive;
+      case "xor":
+        return FeatureLink.FeatureConnectingOpType.XOR;
+      case "multiplicityTerminal":
+        return FeatureLink.FeatureConnectingOpType.Multiplicity;
+      case "opt":
+        return FeatureLink.FeatureConnectingOpType.Optional;
+      default:
+        return FeatureLink.FeatureConnectingOpType.Required;
+     }
   }
 
   return null;

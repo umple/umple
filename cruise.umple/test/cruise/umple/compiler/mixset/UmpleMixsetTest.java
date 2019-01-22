@@ -324,8 +324,8 @@ public class UmpleMixsetTest {
     UmpleModel model = new UmpleModel(umpleFile);
     model.setShouldGenerate(false);
     model.run();
-		FeatureModel featureModel= model.getFeatureModel();
-		int numOfLinks = featureModel.getFeaturelink().size();// == 6;
+    FeatureModel featureModel= model.getFeatureModel();
+    int numOfLinks = featureModel.getFeaturelink().size();// == 6;
     int numOfFeatures = featureModel.getNode().size();// == 7   
     Assert.assertEquals(numOfLinks,6); 
     Assert.assertEquals(numOfFeatures,7); 
@@ -344,8 +344,8 @@ public class UmpleMixsetTest {
     UmpleModel model = new UmpleModel(umpleFile);
     model.setShouldGenerate(false);
     model.run();
-		FeatureModel featureModel= model.getFeatureModel();
-		int numOfLinks = featureModel.getFeaturelink().size();
+    FeatureModel featureModel= model.getFeatureModel();
+    int numOfLinks = featureModel.getFeaturelink().size();
     int numOfFeatures = featureModel.getNode().size();  
     Assert.assertEquals(numOfLinks,7); 
     Assert.assertEquals(numOfFeatures,10); 
