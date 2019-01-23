@@ -403,6 +403,7 @@ Page.initCodeMirrorEditor = function() {
           "Ctrl-R": function(cm) {Page.clickToggleTraits()},
           "Ctrl-I": function(cm) {Page.clickToggleTransitionLabels()},
           "Ctrl-K": function(cm) {Page.clickToggleGuardLabels()},
+          "Ctrl-B": function(cm) {Action.promptAndExecuteTest()},
           "Esc": function(cm) {cm.getInputField().blur()}
           }
         }

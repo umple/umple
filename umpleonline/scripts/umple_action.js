@@ -919,6 +919,14 @@ Action.umpleCanvasClicked = function(event)
   }
 }
 
+// Called when a change is made by a command that modifies the text, to refresh it
+// and then refresh the diagram.
+Action.directUpdateCommandCallback = function(response)
+{
+  Action.updateUmpleTextCallback(response);
+  Action.redrawDiagram();
+}
+
 // Called whenever any change is made on the graphic pane
 // such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
@@ -1199,6 +1207,10 @@ Action.setCaretPosition = function(line)
       }
       return;
     }
+    if(line.substr(0,2)=="bp") {  // Begin prompt - Also invoked by ctrl-b
+      Action.promptAndExecuteTest();
+      return;
+    }
     else
     {
       if(!Action.selectMatchingText(line)) 
@@ -1257,6 +1269,70 @@ Action.setCaretPosition = function(line)
     range.select();
   }
 }
+
+// This pops up a panel that can be used to execute certain specialized test commands
+// This should be expanded to allow other commands
+Action.promptAndExecuteTest = function() {
+
+  // Get the arguments if any (separated by spaces)
+  var testCommand=prompt("Umpleonline test prompt. Enter command e.g. 'ac Classname' to add a class","");
+
+  var edargs=testCommand.substr(2,99).strip().split(" "); 
+  if(testCommand.substr(0,1)=="a") {
+    // add something
+    if(testCommand.substr(1,1)=="c") {
+      // add class - one argument
+      if(edargs.length >=1) {
+        Action.directAddClass(edargs[0]);
+        return;
+      }
+    }
+    else if (testCommand.substr(1,1)=="a") {
+      // add attribute to class - two arguments
+      if(edargs.length >=2) {
+        Action.directAddAttribute(edargs[0],edargs[1]);
+        return;
+      }
+    }
+    else {
+      Page.setFeedbackMessage("Syntax error in test add command");
+    }
+    Page.setFeedbackMessage("Syntax error in test command");
+  }
+  else {
+
+  }
+  return;
+}
+
+// Adds a class with the given name. The class may already be there. Just edits the text.
+// This could be modified to 
+Action.directAddClass = function(className) {
+
+  var umpleJson = Json.toString({"position" : {"x" : "10","y" : "10","width" : "109","height" : "41"},"name" : className});
+
+  Page.setFeedbackMessage("Adding class "+className);  
+  Action.ajax(Action.directUpdateCommandCallback,format("action=addClass&actionCode={0}",umpleJson));
+
+  // After a pause to let the ajax return, then redraw the diagram.
+  // This could be put in a new callback
+  // setTimeout(function() {Action.redrawDiagram();},1000);
+  return;
+}
+
+// Adds an attribute to a class
+Action.directAddAttribute = function(classname, attribute) {
+  // This has to be written.
+  // It should look for a matching class, and then look for the attributes in it, then
+  // inject the new attribute after it. This assumes no type. That could be added by changing
+  // this to have three arguments (if the third one was missing there would be no type, hence
+  // string as default.
+  // If there is no matching class, this should output a message 
+  
+  Page.setFeedbackMessage("((when written) Adding to class "+classname+" attribute "+attribute);  
+  return;
+}
+
 
 // Searches for the matching text in the code mirror editor
 // Does not span lines
@@ -2166,6 +2242,11 @@ Mousetrap.bind(['ctrl+i'], function(e){
 Mousetrap.bind(['ctrl+k'], function(e){
   Page.clickToggleGuardLabels();
   return false; //equivalent to e.preventDefault();
+});
+
+Mousetrap.bind(['ctrl+b'], function(e){
+  Action.promptAndExecuteTest();
+  return false;
 });
 
 // Functions for editing the diagram - using shift
