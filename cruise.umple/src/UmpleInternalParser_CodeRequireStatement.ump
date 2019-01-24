@@ -85,6 +85,21 @@ class UmpleInternalParser
     FeatureLink edge = null;
     if(! tokenTree.getIsLinkingOperator())
     {
+      if(node.is("opt") || node.is("not"))
+      {
+        if(tokenTree.getRightTokenTree().getNodeToken().is("requireTerminal"))
+        {
+          Mixset targetMixset = new Mixset(tokenTree.getRightTokenTree().getNodeToken().getSubToken("targetMixsetName").getValue());
+          FeatureLeaf targetFeature = new FeatureLeaf(model.getFeatureModel());
+          targetFeature.setMixsetOrFileNode(targetMixset);
+          edge = new FeatureLink();
+          edge.setFeatureConnectingOpType(tokenTree.getFeatureConnectionOpType());
+          edge.setSourceFeature(sourceFeature);
+          edge.addTargetFeature(targetFeature);
+          edge.setIsSub(isSubFeature);
+          model.getFeatureModel().addFeaturelink(edge);          
+        }
+      }
       if(node.is("requireTerminal") && node.getSubToken("lowerBound") == null)
       {        	
         //Mixset targetMixset = model.getMixset(node.getSubToken("targetMixsetName").getValue());
@@ -308,6 +323,8 @@ public FeatureLink.FeatureConnectingOpType getFeatureConnectionOpType()
         return FeatureLink.FeatureConnectingOpType.Multiplicity;
       case "opt":
         return FeatureLink.FeatureConnectingOpType.Optional;
+      case "not":
+        return FeatureLink.FeatureConnectingOpType.Exclude;
       default:
         return FeatureLink.FeatureConnectingOpType.Required;
      }
