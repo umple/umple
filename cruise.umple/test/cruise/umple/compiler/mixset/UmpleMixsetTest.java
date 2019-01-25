@@ -376,7 +376,24 @@ public class UmpleMixsetTest {
     Assert.assertEquals(featureModel.getFeaturelink(0).getFeatureConnectingOpType().name(), "Optional");
     Assert.assertEquals(featureModel.getFeaturelink(1).getFeatureConnectingOpType().name(), "Exclude");
     
-	 
-  }                               
+  }
+	@Test
+  public void parseTerminalNotOptTerminalReqStArgumet()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_TerminalOpTerminal.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+    FeatureModel featureModel= model.getFeatureModel();    
+		//source --> opt B
+    Assert.assertEquals(featureModel.getFeaturelink(0).getFeatureConnectingOpType().name(), "Optional");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(0).getSourceFeature()).getMixsetOrFileNode().isIsMixset(), false); // false: its the source file
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(0).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"B");
+		//source --> and A C
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(1).getSourceFeature()).getMixsetOrFileNode().isIsMixset(), false);
+    Assert.assertEquals(((FeatureNode) featureModel.getFeaturelink(1).getTargetFeature(0)).getName() ,"and");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(2).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"C");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(3).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"A");
+  }                                                              
   		
 }

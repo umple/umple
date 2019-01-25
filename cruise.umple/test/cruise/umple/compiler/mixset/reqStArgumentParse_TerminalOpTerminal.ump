@@ -1,0 +1,5 @@
+require [A opt B and C];
+
+mixset A {} mixset B {} mixset C{}
+
+use A; use B; use C;
