@@ -46,8 +46,8 @@ class UmpleInternalParser
 
       if (requireTokenList.size() >= 1)  // has the form of : require [A and B or C .... ]
       {
-        TokenTree tree = generateFeatureTreeTokenFromRequireStList(requireTokenList);
-     
+        List<TokenTree> tokenTreeList = generateFeatureTreeTokenFromRequireStList(requireTokenList);
+        for(TokenTree tree: tokenTreeList)
         createFeatureModelSegment(sourceFeatureLeaf,tree,isSubFeature);
         // TO Do: add tree for the feature model : Done
         // To Do: not and opt implementaion 
@@ -85,6 +85,21 @@ class UmpleInternalParser
     FeatureLink edge = null;
     if(! tokenTree.getIsLinkingOperator())
     {
+      if(node.is("opt") || node.is("not"))
+      {
+        if(tokenTree.getRightTokenTree().getNodeToken().is("requireTerminal"))
+        {
+          Mixset targetMixset = new Mixset(tokenTree.getRightTokenTree().getNodeToken().getSubToken("targetMixsetName").getValue());
+          FeatureLeaf targetFeature = new FeatureLeaf(model.getFeatureModel());
+          targetFeature.setMixsetOrFileNode(targetMixset);
+          edge = new FeatureLink();
+          edge.setFeatureConnectingOpType(tokenTree.getFeatureConnectionOpType());
+          edge.setSourceFeature(sourceFeature);
+          edge.addTargetFeature(targetFeature);
+          edge.setIsSub(isSubFeature);
+          model.getFeatureModel().addFeaturelink(edge);          
+        }
+      }
       if(node.is("requireTerminal") && node.getSubToken("lowerBound") == null)
       {        	
         //Mixset targetMixset = model.getMixset(node.getSubToken("targetMixsetName").getValue());
@@ -185,22 +200,36 @@ class UmpleInternalParser
 This method parses req-statement argument & generates a binary tree representation form the req-statment argument.
 //It returns one node (root node) if there is no argument to parse.
 */
-private TokenTree generateFeatureTreeTokenFromRequireStList(ArrayList<Token> tokenList)
+private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(ArrayList<Token> tokenList)
 {
   TokenTree rootTokenTree = new TokenTree(new Token("ROOT",""));
   TokenTree currentTree = rootTokenTree;		
   List<String> linkingOpList = Arrays.asList("and","or","xor");
-	
-  for(Token token : tokenList)
+	ArrayList<TokenTree> tokenTreeList = new ArrayList<TokenTree>();
+  
+  for (int i=0;i<tokenList.size();i++)
   {
+    Token token = tokenList.get(i);
     TokenTree rightTokenTree = new TokenTree(token);
+    //Start(1): put each [opt/not][terminal] in a separate TokenTree if it was preceded with [terminal]
+    if(token.is("opt") || token.is("not"))
+    {
+      if(currentTree.getNodeToken().is("requireTerminal") && tokenList.get(i+1).is("requireTerminal")) // A opt B
+      {
+        rightTokenTree.setRightTokenTree(new TokenTree(tokenList.get(i+1)));
+        // setParent to rightTokenTree
+        tokenTreeList.add(rightTokenTree);
+        i++; //skip opt terminal 
+        continue;
+      }
+    }
+    //End(1)
     if(linkingOpList.contains(token.getName()))
     rightTokenTree.setIsLinkingOperator(true);
     currentTree.setRightTokenTree(rightTokenTree);
     rightTokenTree.setParentTokenTree(currentTree);
     currentTree = rightTokenTree;
   }
-  
   currentTree = rootTokenTree.getRightTokenTree(); //currentTree points to the first node of the tree
   
   TokenTree previousLinkingSubTokenTree = null; 
@@ -262,8 +291,8 @@ private TokenTree generateFeatureTreeTokenFromRequireStList(ArrayList<Token> tok
   		}
   	currentTree = rightLinkingTokenTree; // move to next node of the tree 
 		}
- 
-	return rootTokenTree.getRightTokenTree();	
+  tokenTreeList.add(rootTokenTree.getRightTokenTree());
+	return tokenTreeList;	
 	}
 
 }
@@ -308,6 +337,8 @@ public FeatureLink.FeatureConnectingOpType getFeatureConnectionOpType()
         return FeatureLink.FeatureConnectingOpType.Multiplicity;
       case "opt":
         return FeatureLink.FeatureConnectingOpType.Optional;
+      case "not":
+        return FeatureLink.FeatureConnectingOpType.Exclude;
       default:
         return FeatureLink.FeatureConnectingOpType.Required;
      }
