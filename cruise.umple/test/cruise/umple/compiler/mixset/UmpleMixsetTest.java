@@ -48,14 +48,14 @@ public class UmpleMixsetTest {
   @Test
   public void mixsetUseInSubsequentFile()
   {
-	  String[] args = new String[] {"first.ump"};
-	  SampleFileWriter.createFile("first.ump", " mixset MyMixset { class MyClass {} } use activateMixset.ump; ");
-	  SampleFileWriter.createFile	("activateMixset.ump"," use MyMixset; ");
-	  try 
-	  {
+    String[] args = new String[] {"first.ump"};
+    SampleFileWriter.createFile("first.ump", " mixset MyMixset { class MyClass {} } use activateMixset.ump; ");
+    SampleFileWriter.createFile	("activateMixset.ump"," use MyMixset; ");
+    try 
+    {
       UmpleConsoleMain.main(args);
       SampleFileWriter.assertFileExists("MyClass.java");
-    }	
+    }
     finally 
     {
       SampleFileWriter.destroy("first.ump");
@@ -63,8 +63,8 @@ public class UmpleMixsetTest {
       SampleFileWriter.destroy("activateMixset.ump");
     }
   }
-	
-	@Test
+
+  @Test
   public void mixsetUseInCodeTest() {
     String[] args = new String[] {"mixsetUseInCodeTest.ump"};
     SampleFileWriter.createFile("mixsetUseInCodeTest.ump", " class Outer_Mix_1{ } mixset Mix { class Inner_Mix {name;} } class Outer_Mix_2{ }"
@@ -80,27 +80,26 @@ public class UmpleMixsetTest {
       SampleFileWriter.assertFileExists("Outer_Mix_2.java");
     }	
     finally 
-		{
+    {
       SampleFileWriter.destroy("mixsetUseInCodeTest.ump");
       SampleFileWriter.destroy("Inner_Mix.java");
       SampleFileWriter.destroy("Outer_Mix_1.java");
       SampleFileWriter.destroy("Outer_Mix_2.java");
     }
   }
-	
+
   @Test
   public void mixsetUseInConsoleTest() {
     String[] args = new String[] {"mixsetUseInConsoleTest.ump", "Mx"};
 
     SampleFileWriter.createFile("mixsetUseInConsoleTest.ump", " class Outer_1{ } mixset Mx { class Inner_M1 {name;} } class Outer_2{ }");
-
    try 
    {
       UmpleConsoleMain.main(args);
       SampleFileWriter.assertFileExists("Inner_M1.java");
       SampleFileWriter.assertFileExists("Outer_1.java");
       SampleFileWriter.assertFileExists("Outer_2.java");
-    }	
+    }
     finally 
     {
       SampleFileWriter.destroy("mixsetUseInConsoleTest.ump");
@@ -109,7 +108,7 @@ public class UmpleMixsetTest {
       SampleFileWriter.destroy("Outer_2.java");
     }
   }
-			
+
   @Test
   public void multipleMixsetUseInConsoleTest() {
     String[] args = new String[] {"mixset_1.ump", "M2", "mixset_2.ump", "M1"};
@@ -118,18 +117,17 @@ public class UmpleMixsetTest {
 
     try 
     {
-			UmpleConsoleMain.main(args);
-			SampleFileWriter.assertFileExists("Inner_1.java");
+      UmpleConsoleMain.main(args);
+      SampleFileWriter.assertFileExists("Inner_1.java");
       SampleFileWriter.assertFileExists("Inner_2.java");
-
-		}	
-		finally 
-		{
-			SampleFileWriter.destroy("mixset_1.ump");
-			SampleFileWriter.destroy("mixset_2.ump");
-			SampleFileWriter.destroy("Inner_1.java");
-			SampleFileWriter.destroy("Inner_2.java");
-		}
+    }	
+    finally 
+    {
+      SampleFileWriter.destroy("mixset_1.ump");
+      SampleFileWriter.destroy("mixset_2.ump");
+      SampleFileWriter.destroy("Inner_1.java");
+      SampleFileWriter.destroy("Inner_2.java");
+    }
   }
   @Test
   public void middleOfMixsetBodyError() {
@@ -388,19 +386,20 @@ public class UmpleMixsetTest {
     model.setShouldGenerate(false);
     model.run();
     FeatureModel featureModel= model.getFeatureModel();
-    // 5 outging links from the source
-
+    //source --> (and A B)
     Assert.assertEquals(((FeatureNode) featureModel.getFeaturelink(0).getTargetFeature(0)).getName() ,"and");
-    /*
-    //source --> opt B
-    Assert.assertEquals(featureModel.getFeaturelink(0).getFeatureConnectingOpType().name(), "Optional");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(0).getSourceFeature()).getMixsetOrFileNode().isIsMixset(), false); // false: its the source file
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(0).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"B");
-    //source --> and A C
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(1).getSourceFeature()).getMixsetOrFileNode().isIsMixset(), false);
-
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(2).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"C");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(3).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"A");
-    */ 
-}
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(1).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"B");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(2).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"A");
+    //source --> opt C
+    Assert.assertEquals(featureModel.getFeaturelink(3).getFeatureConnectingOpType().name(), "Optional");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(3).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"C");
+    //source --> not D
+    Assert.assertEquals(featureModel.getFeaturelink(4).getFeatureConnectingOpType().name(), "Exclude");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(4).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"D");
+    //source --> (xor F E)
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(5).getSourceFeature()).getMixsetOrFileNode().isIsMixset(), false);
+    Assert.assertEquals(featureModel.getFeaturelink(5).getFeatureConnectingOpType().name(), "XOR");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(6).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"F");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(7).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"E"); 
+  }
 }
