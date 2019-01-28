@@ -26,14 +26,20 @@ class UmpleInternalParser
         featureModel = new FeatureModel("featureModel");
       featureModel.setUmpleModel(model);
 
+      FeatureLeaf sourceFeatureLeaf;
       Mixset sourceMixset = getMixsetFromToken(t);
-      FeatureLeaf sourceFeatureLeaf = new FeatureLeaf(featureModel);
-      // require-statement comes from umple file or mixset ?
-      if (sourceMixset == null) 
-      sourceFeatureLeaf.setMixsetOrFileNode(new UmpleFile(t.getPosition().getFilename()));
-      else 
-      sourceFeatureLeaf.setMixsetOrFileNode(sourceMixset);
-      
+      if(sourceMixset != null)
+      {
+        sourceFeatureLeaf = featureModel.getOrCreateFeatureLeafNode(sourceMixset.getName());
+        sourceFeatureLeaf.setMixsetOrFileNode(sourceMixset); 
+      }
+      else
+      {
+        UmpleFile ufile = new UmpleFile(t.getPosition().getFilename());
+        sourceFeatureLeaf = featureModel.getOrCreateFeatureLeafNode(ufile.getName()); 
+        sourceFeatureLeaf.setMixsetOrFileNode(ufile);
+      }
+    
       boolean isSubFeature = t.getSubToken("subfeature") != null; 
 
        //tokens needed for parsing require-statement
@@ -55,7 +61,7 @@ class UmpleInternalParser
       }
     
     }
-  }
+  }  
   /*
   this method generates a new feature and links it with a source feature based on its token in the TokenTree.
   It return null if either treeNode or source feature is null.
@@ -83,6 +89,7 @@ class UmpleInternalParser
     Token node = tokenTree.getNodeToken();
     TokenTree linkingParent = tokenTree.getParentTokenTree();
     FeatureLink edge = null;
+    FeatureModel featureModel = model.getFeatureModel();
     if(! tokenTree.getIsLinkingOperator())
     {
       if(node.is("opt") || node.is("not"))
@@ -90,8 +97,10 @@ class UmpleInternalParser
         if(tokenTree.getRightTokenTree().getNodeToken().is("requireTerminal"))
         {
           Mixset targetMixset = new Mixset(tokenTree.getRightTokenTree().getNodeToken().getSubToken("targetMixsetName").getValue());
-          FeatureLeaf targetFeature = new FeatureLeaf(model.getFeatureModel());
+          FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
+          //new FeatureLeaf(model.getFeatureModel());//model.getFeatureModel().
           targetFeature.setMixsetOrFileNode(targetMixset);
+          //targetFeature.setName(targetMixset.getName());
           edge = new FeatureLink();
           edge.setFeatureConnectingOpType(tokenTree.getFeatureConnectionOpType());
           edge.setSourceFeature(sourceFeature);
@@ -106,8 +115,9 @@ class UmpleInternalParser
         //if(targetMixset == null)
         //return; // To Do: should raise warning 
         Mixset targetMixset = new Mixset(node.getSubToken("targetMixsetName").getValue());
-        FeatureLeaf targetFeature = new FeatureLeaf(model.getFeatureModel());
+        FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
         targetFeature.setMixsetOrFileNode(targetMixset);
+        //targetFeature.setName(targetMixset.getName());
         edge = new FeatureLink();
         
         if(linkingParent.getNodeToken().is("ROOT"))
@@ -129,8 +139,8 @@ class UmpleInternalParser
         {
           if(subToken.is("targetMixsetName"))
           {
-            FeatureLeaf targetFeature = new FeatureLeaf(model.getFeatureModel());
             Mixset targetMixset = new Mixset(subToken.getValue()); //To Do: check if its a mixset.
+            FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
             targetFeature.setMixsetOrFileNode(targetMixset);
             edge.addTargetFeature(targetFeature);
           }
@@ -297,6 +307,37 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(ArrayList
 
 }
 
+
+class FeatureModel{
+/*
+ * This method returns a leaf node from FeatureModel based on its name.
+ * return null if the leaf node is not found.   
+ */
+  public FeatureLeaf getFeatureLeafNode(String name)
+  {
+    for(FeatureNode aNode: node)
+    {
+      if(aNode.getName().equals(name) && aNode.getIsLeaf()) // isLeaf
+      return ((FeatureLeaf) aNode);
+    }
+    return null;
+  }
+  /*
+  This method does conditional addition for a FeatureLeaf based on the provided name. 
+  It returns a new FeatureLeaf if its not found, or existing FeatureLeaf if the name was found.
+  */
+  public FeatureLeaf getOrCreateFeatureLeafNode(String name)
+  {
+    FeatureLeaf aNode = getFeatureLeafNode(name);
+    if(aNode == null)
+    {
+      aNode = new FeatureLeaf(this);
+      aNode.setName(name);
+    }
+    return aNode; 
+  }
+
+}
 
 /*
 This class used to represent the binary tree of require-statement argument 
