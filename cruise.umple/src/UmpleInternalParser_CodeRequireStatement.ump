@@ -55,6 +55,8 @@ class UmpleInternalParser
         List<TokenTree> tokenTreeList = generateFeatureTreeTokenFromRequireStList(requireTokenList);
         for(TokenTree tree: tokenTreeList)
         createFeatureModelSegment(sourceFeatureLeaf,tree,isSubFeature);
+        
+        //
         // TO Do: add tree for the feature model : Done
         // To Do: not and opt implementaion 
         // TO Do:  1..3 of {A, B, C} : Done 
@@ -98,9 +100,7 @@ class UmpleInternalParser
         {
           Mixset targetMixset = new Mixset(tokenTree.getRightTokenTree().getNodeToken().getSubToken("targetMixsetName").getValue());
           FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
-          //new FeatureLeaf(model.getFeatureModel());//model.getFeatureModel().
           targetFeature.setMixsetOrFileNode(targetMixset);
-          //targetFeature.setName(targetMixset.getName());
           edge = new FeatureLink();
           edge.setFeatureConnectingOpType(tokenTree.getFeatureConnectionOpType());
           edge.setSourceFeature(sourceFeature);
@@ -251,7 +251,6 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(ArrayList
     break;
     if(currentTree.getNodeToken() == null || currentTree.getNodeToken().getName() == null ) 
      continue;
-    // currentTree.getNodeToken().getName().equals("targetMixsetName") or opt / not
     if(currentTree.getNodeToken().is("requireTerminal") && rightLinkingTokenTree.getIsLinkingOperator())
     {
 		// A and B --> (and A B)
@@ -305,6 +304,11 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(ArrayList
 	return tokenTreeList;	
 	}
 
+  public void analyzeFeatureModel()
+  {
+    if(model.getFeatureModel() != null)
+    model.getFeatureModel().satisfyFeatureModel();
+  }
 }
 
 
@@ -335,6 +339,132 @@ class FeatureModel{
       aNode.setName(name);
     }
     return aNode; 
+  }
+  
+  public boolean evaluateFeatureLink(FeatureLink featureLink)
+  {
+    FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeature(0));
+
+    if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Include))
+    {
+      FeatureLeaf fNode = ((FeatureLeaf) featureLink.getTargetFeature(0));
+      boolean isMixset = fNode.getMixsetOrFileNode().getIsMixset();
+      if(isMixset)
+      {
+        Mixset mixset = getUmpleModel().getMixset(fNode.getMixsetOrFileNode().getName());
+        if(mixset != null)
+        {
+          if(mixset.getUseUmpleFile() != null)
+          return true;  // this means there is a use-statement here
+          //else there is no use-statement    
+        }
+        else 
+        {
+          return false;//there is no mixset with the specified name. 
+        }
+      }
+    } 
+    else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Exclude))
+    {
+      FeatureLeaf fNode = ((FeatureLeaf) featureLink.getTargetFeature(0));
+      boolean isMixset = fNode.getMixsetOrFileNode().getIsMixset();
+      if(isMixset)
+      {
+        Mixset mixset = getUmpleModel().getMixset(fNode.getMixsetOrFileNode().getName());
+        if(mixset != null)
+        {
+           if(mixset.getUseUmpleFile() == null)
+          return true;  // this means there is no use-statement here
+          //else there is use-statement   
+        }
+        else 
+        {
+          return false;//raise error here ... 
+        }
+      }
+    }
+    else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Optional))
+    {
+      // opt is allawys has a true value 
+      return true;
+    } 
+    else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Conjunctive))
+    { 
+      FeatureNode fNode = ((FeatureNode) featureLink.getTargetFeature(0));
+      if(!fNode.getIsLeaf())
+      {
+        List<FeatureLink> outgoingLinks = fNode.getSourceFeatureLink();
+        for(int i=0 ; i<outgoingLinks.size()-1; i++){
+          return evaluateFeatureLink(outgoingLinks.get(i)) && evaluateFeatureLink(outgoingLinks.get(i+1));
+        }
+      }
+    }
+    else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Disjunctive))
+    {   
+      FeatureNode fNode = ((FeatureNode) featureLink.getTargetFeature(0));
+      if(!fNode.getIsLeaf())
+      {
+        List<FeatureLink> outgoingLinks = fNode.getSourceFeatureLink();
+        for(int i=0 ; i<outgoingLinks.size()-1; i++){
+          return evaluateFeatureLink(outgoingLinks.get(i)) || evaluateFeatureLink(outgoingLinks.get(i+1));
+        }
+      }
+    }
+    else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.XOR))
+    { 
+      FeatureNode fNode = ((FeatureNode) featureLink.getTargetFeature(0));
+      if(!fNode.getIsLeaf())
+          {
+            List<FeatureLink> outgoingLinks = fNode.getSourceFeatureLink();
+            for(int i=0 ; i<outgoingLinks.size()-1; i++){
+              return evaluateFeatureLink(outgoingLinks.get(i)) ^ evaluateFeatureLink(outgoingLinks.get(i+1));
+            }
+          }
+    }
+    else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Multiplicity))
+    { //To DO
+      return true;
+    }
+    else if(featureNode.getIsLeaf())
+    {
+      FeatureLeaf featureleaf = (FeatureLeaf) featureNode;
+      boolean isMixset = featureleaf.getMixsetOrFileNode().getIsMixset();
+      if(isMixset)
+      {
+        Mixset mixset = getUmpleModel().getMixset(featureleaf.getMixsetOrFileNode().getName());
+        if(mixset != null)
+        {
+          if(mixset.getUseUmpleFile() != null)
+          return true;  // this means there is a use-statement here
+          //else there is no use-statement    
+        }
+        else 
+        {
+          return false;//there is no mixset with the specified name. 
+        }
+      }
+    }
+    return false;
+  }
+
+  depend java.util.stream.*;
+  public void satisfyFeatureModel()
+  {
+    UmpleModel model = getUmpleModel();
+    //if(featureModel == null)
+    //return ; // there is no any feature model the current umple file.
+    //else
+    //get leaf features that has outgoing links, they are the root of the feature model in this case
+    // check each link based on the type of the link
+    List <FeatureNode> rootFeatures = getNode().stream().filter(n -> (n.hasSourceFeatureLink() && n.getIsLeaf())).collect(Collectors.toList());
+    for(FeatureNode featureNode: rootFeatures)
+    {
+      List <FeatureLink> featureNodeOutLinks = featureNode.getSourceFeatureLink();
+      for(FeatureLink flink : featureNodeOutLinks)
+      {
+        evaluateFeatureLink(flink);
+      }
+    }
   }
 
 }

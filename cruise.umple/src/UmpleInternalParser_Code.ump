@@ -118,6 +118,7 @@ class UmpleInternalParser
       secondPostTokenAnalysis();
       //add analysis here!!! xx.validateStateMachineGuardConstraints(model);
       checkDefaultedNameConflict();
+      analyzeFeatureModel(); // lastly to analyze the feature model after all mixsets are added to umple model. 
     
     }
     catch (Exception ex)
