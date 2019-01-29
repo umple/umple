@@ -313,6 +313,7 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(ArrayList
 
 
 class FeatureModel{
+  depend java.util.stream.*;
 /*
  * This method returns a leaf node from FeatureModel based on its name.
  * return null if the leaf node is not found.   
@@ -378,7 +379,7 @@ class FeatureModel{
     } 
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Exclude))
     {
-      return !isUsedFeatureLeaf((FeatureLeaf)featureNode); // return true when there is no use-statement 
+      return !isUsedFeatureLeaf((FeatureLeaf)featureNode); // return true when there is no use-statement, or no def for mixset 
     }
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Optional))
     {
@@ -428,7 +429,6 @@ class FeatureModel{
     }
     return false;
   }
-  depend java.util.stream.*;
   /*
   This method checks whether the use-statements plus the feature model results in valid configuration.
   It return true If there is no feature model.
