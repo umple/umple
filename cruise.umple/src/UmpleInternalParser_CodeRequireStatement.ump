@@ -340,48 +340,45 @@ class FeatureModel{
     }
     return aNode; 
   }
-  
+  /*
+  This method returns true if the feature leaf has a use-statement.
+  It returns false if there is no use-statement for the mixset.
+  It returns false if there is no mixset or file in the feature leaf.
+  */
+  public boolean isUsedFeatureLeaf(FeatureLeaf featureLeaf){
+    boolean isMixset = featureLeaf.getMixsetOrFileNode().getIsMixset();
+    if(isMixset)
+    {
+      Mixset mixset = getUmpleModel().getMixset(featureLeaf.getMixsetOrFileNode().getName());
+      if(mixset != null)
+      {
+        if(mixset.getUseUmpleFile() != null)
+        return true;  // this means there is a use-statement here
+        //else there is no use-statement    
+      }
+      else 
+      {
+        return false;//there is no mixset with the specified name. 
+      }
+    }
+    return false; 
+  }
+  /*
+  This method takes a feature link (from the feature model) and decides whether the link is satisfied.
+  If the link is not satisfied, it return false.
+  Ex: the link "source--> and" for M1 and M2 is true if there are use-statements for both M1 and M2.   
+  */
   public boolean evaluateFeatureLink(FeatureLink featureLink)
   {
     FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeature(0));
 
     if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Include))
     {
-      FeatureLeaf fNode = ((FeatureLeaf) featureLink.getTargetFeature(0));
-      boolean isMixset = fNode.getMixsetOrFileNode().getIsMixset();
-      if(isMixset)
-      {
-        Mixset mixset = getUmpleModel().getMixset(fNode.getMixsetOrFileNode().getName());
-        if(mixset != null)
-        {
-          if(mixset.getUseUmpleFile() != null)
-          return true;  // this means there is a use-statement here
-          //else there is no use-statement    
-        }
-        else 
-        {
-          return false;//there is no mixset with the specified name. 
-        }
-      }
+      return isUsedFeatureLeaf((FeatureLeaf)featureNode);
     } 
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Exclude))
     {
-      FeatureLeaf fNode = ((FeatureLeaf) featureLink.getTargetFeature(0));
-      boolean isMixset = fNode.getMixsetOrFileNode().getIsMixset();
-      if(isMixset)
-      {
-        Mixset mixset = getUmpleModel().getMixset(fNode.getMixsetOrFileNode().getName());
-        if(mixset != null)
-        {
-           if(mixset.getUseUmpleFile() == null)
-          return true;  // this means there is no use-statement here
-          //else there is use-statement   
-        }
-        else 
-        {
-          return false;//raise error here ... 
-        }
-      }
+      return !isUsedFeatureLeaf((FeatureLeaf)featureNode); // return true when there is no use-statement 
     }
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Optional))
     {
@@ -390,10 +387,9 @@ class FeatureModel{
     } 
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Conjunctive))
     { 
-      FeatureNode fNode = ((FeatureNode) featureLink.getTargetFeature(0));
-      if(!fNode.getIsLeaf())
+      if(!featureNode.getIsLeaf())
       {
-        List<FeatureLink> outgoingLinks = fNode.getSourceFeatureLink();
+        List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
         for(int i=0 ; i<outgoingLinks.size()-1; i++){
           return evaluateFeatureLink(outgoingLinks.get(i)) && evaluateFeatureLink(outgoingLinks.get(i+1));
         }
@@ -401,10 +397,9 @@ class FeatureModel{
     }
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Disjunctive))
     {   
-      FeatureNode fNode = ((FeatureNode) featureLink.getTargetFeature(0));
-      if(!fNode.getIsLeaf())
+      if(!featureNode.getIsLeaf())
       {
-        List<FeatureLink> outgoingLinks = fNode.getSourceFeatureLink();
+        List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
         for(int i=0 ; i<outgoingLinks.size()-1; i++){
           return evaluateFeatureLink(outgoingLinks.get(i)) || evaluateFeatureLink(outgoingLinks.get(i+1));
         }
@@ -412,63 +407,48 @@ class FeatureModel{
     }
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.XOR))
     { 
-      FeatureNode fNode = ((FeatureNode) featureLink.getTargetFeature(0));
-      if(!fNode.getIsLeaf())
+      if(!featureNode.getIsLeaf())
           {
-            List<FeatureLink> outgoingLinks = fNode.getSourceFeatureLink();
+            List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
             for(int i=0 ; i<outgoingLinks.size()-1; i++){
-              return evaluateFeatureLink(outgoingLinks.get(i)) ^ evaluateFeatureLink(outgoingLinks.get(i+1));
+              return evaluateFeatureLink(outgoingLinks.get(i)) ^ evaluateFeatureLink(outgoingLinks.get(i+1)); // ^: bitwise xor 
             }
           }
     }
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Multiplicity))
-    { //To DO
+    { 
+      //To Do
+      // To Do next PR
       return true;
     }
     else if(featureNode.getIsLeaf())
     {
-      FeatureLeaf featureleaf = (FeatureLeaf) featureNode;
-      boolean isMixset = featureleaf.getMixsetOrFileNode().getIsMixset();
-      if(isMixset)
-      {
-        Mixset mixset = getUmpleModel().getMixset(featureleaf.getMixsetOrFileNode().getName());
-        if(mixset != null)
-        {
-          if(mixset.getUseUmpleFile() != null)
-          return true;  // this means there is a use-statement here
-          //else there is no use-statement    
-        }
-        else 
-        {
-          return false;//there is no mixset with the specified name. 
-        }
-      }
+      return isUsedFeatureLeaf((FeatureLeaf)featureNode);
     }
     return false;
   }
-
   depend java.util.stream.*;
-  public void satisfyFeatureModel()
+  /*
+  This method checks whether the use-statements plus the feature model results in valid configuration.
+  It return true If there is no feature model.
+  */
+  public boolean satisfyFeatureModel()
   {
     UmpleModel model = getUmpleModel();
-    //if(featureModel == null)
-    //return ; // there is no any feature model the current umple file.
-    //else
-    //get leaf features that has outgoing links, they are the root of the feature model in this case
-    // check each link based on the type of the link
+    boolean isSatisfied = true;
+    // get root features : has outgoing links but no incoming links
     List <FeatureNode> rootFeatures = getNode().stream().filter(n -> (n.hasSourceFeatureLink() && n.getIsLeaf())).collect(Collectors.toList());
     for(FeatureNode featureNode: rootFeatures)
     {
       List <FeatureLink> featureNodeOutLinks = featureNode.getSourceFeatureLink();
       for(FeatureLink flink : featureNodeOutLinks)
       {
-        evaluateFeatureLink(flink);
+        isSatisfied = isSatisfied && evaluateFeatureLink(flink);
       }
     }
+    return isSatisfied;
   }
-
 }
-
 /*
 This class used to represent the binary tree of require-statement argument 
 Ex: require [A and B or C] will be formed as: 

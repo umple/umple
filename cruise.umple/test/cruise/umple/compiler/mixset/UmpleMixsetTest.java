@@ -402,4 +402,25 @@ public class UmpleMixsetTest {
     Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(6).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"F");
     Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(7).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"E"); 
   }
+  @Test
+  public void parseReqStArgumetToSatisfyFeatureModel_1()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_featureModel.ump");//reuse ump file from parseReqStArgumetToFeaureModel()
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+    FeatureModel featureModel= model.getFeatureModel();
+    Assert.assertEquals(featureModel.satisfyFeatureModel(), false);
+  }
+  @Test
+  public void parseReqStArgumetToSatisfyFeatureModel_2()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_validFeatureModel.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+    FeatureModel featureModel= model.getFeatureModel();
+    Assert.assertEquals(featureModel.satisfyFeatureModel(), true);
+  }
+
 }
