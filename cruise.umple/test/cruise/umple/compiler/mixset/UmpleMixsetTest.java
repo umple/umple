@@ -420,7 +420,7 @@ public class UmpleMixsetTest {
     model.setShouldGenerate(false);
     model.run();
     FeatureModel featureModel= model.getFeatureModel();
-    Assert.assertEquals(featureModel.satisfyFeatureModel(), true);
+    Assert.assertEquals(true,featureModel.satisfyFeatureModel());
   }
 
 }

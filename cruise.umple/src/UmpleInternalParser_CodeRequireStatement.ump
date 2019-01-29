@@ -421,7 +421,8 @@ class FeatureModel{
       // To Do next PR
       return true;
     }
-    else if(featureNode.getIsLeaf())
+    
+    if(featureNode.getIsLeaf())
     {
       return isUsedFeatureLeaf((FeatureLeaf)featureNode);
     }
