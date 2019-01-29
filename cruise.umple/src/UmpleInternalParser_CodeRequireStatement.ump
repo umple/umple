@@ -391,19 +391,23 @@ class FeatureModel{
       if(!featureNode.getIsLeaf())
       {
         List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
-        for(int i=0 ; i<outgoingLinks.size()-1; i++){
-          return evaluateFeatureLink(outgoingLinks.get(i)) && evaluateFeatureLink(outgoingLinks.get(i+1));
+        boolean result = true;
+        for(int i=0 ; i<outgoingLinks.size(); i++){
+          result = result && evaluateFeatureLink(outgoingLinks.get(i));
         }
+        return result;
       }
     }
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Disjunctive))
     {   
       if(!featureNode.getIsLeaf())
       {
+        boolean result = false;
         List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
         for(int i=0 ; i<outgoingLinks.size()-1; i++){
-          return evaluateFeatureLink(outgoingLinks.get(i)) || evaluateFeatureLink(outgoingLinks.get(i+1));
+          result = result || evaluateFeatureLink(outgoingLinks.get(i));
         }
+        return result;
       }
     }
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.XOR))
@@ -411,16 +415,26 @@ class FeatureModel{
       if(!featureNode.getIsLeaf())
           {
             List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
-            for(int i=0 ; i<outgoingLinks.size()-1; i++){
-              return evaluateFeatureLink(outgoingLinks.get(i)) ^ evaluateFeatureLink(outgoingLinks.get(i+1)); // ^: bitwise xor 
+            int countOfUsedTarget = 0;
+            for(int i=0 ; i < outgoingLinks.size(); i++){
+              if(evaluateFeatureLink(outgoingLinks.get(i)))
+              countOfUsedTarget++;
             }
+            return (countOfUsedTarget == 1) ? true: false;
           }
     }
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Multiplicity))
-    { 
-      //To Do
-      // To Do next PR
-      return true;
+    {
+      MultiplicityFeatureConnectingOpType multiplicityFeatureLink = (MultiplicityFeatureConnectingOpType) featureLink;
+      int upperBound = multiplicityFeatureLink.getMultiplicity().getUpperBound();
+      int lowerBound = multiplicityFeatureLink.getMultiplicity().getLowerBound();
+      List<FeatureNode> featureNodes = featureLink.getTargetFeature();
+      int countOfUsedTarget = 0;
+      for(int i=0 ; i < featureNodes.size(); i++){
+        if(isUsedFeatureLeaf((FeatureLeaf)featureNodes.get(i)))
+        countOfUsedTarget++;
+      }
+      return (countOfUsedTarget <= upperBound && countOfUsedTarget >= lowerBound) ? true: false;    
     }
     
     if(featureNode.getIsLeaf())
