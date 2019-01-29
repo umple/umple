@@ -372,20 +372,36 @@ class FeatureModel{
   public boolean evaluateFeatureLink(FeatureLink featureLink)
   {
     FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeature(0));
-
-    if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Include))
+    if(featureNode.getIsLeaf())
     {
+      if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Include))
+      {
+        return isUsedFeatureLeaf((FeatureLeaf)featureNode);
+      } 
+      else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Exclude))
+      {
+        return !isUsedFeatureLeaf((FeatureLeaf)featureNode); // return true when there is no use-statement, or no def for mixset 
+      }
+      else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Optional))
+      {
+        return true;        // opt is allawys has a true value 
+      }
+      else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Multiplicity))
+      {
+        MultiplicityFeatureConnectingOpType multiplicityFeatureLink = (MultiplicityFeatureConnectingOpType) featureLink;
+        int upperBound = multiplicityFeatureLink.getMultiplicity().getUpperBound();
+        int lowerBound = multiplicityFeatureLink.getMultiplicity().getLowerBound();
+        List<FeatureNode> featureNodes = featureLink.getTargetFeature();
+        int countOfUsedTarget = 0;
+        for(int i=0 ; i < featureNodes.size(); i++){
+          if(isUsedFeatureLeaf((FeatureLeaf)featureNodes.get(i)))
+          countOfUsedTarget++;
+        }
+        return (countOfUsedTarget <= upperBound && countOfUsedTarget >= lowerBound) ? true: false;    
+      }
+      else 
       return isUsedFeatureLeaf((FeatureLeaf)featureNode);
-    } 
-    else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Exclude))
-    {
-      return !isUsedFeatureLeaf((FeatureLeaf)featureNode); // return true when there is no use-statement, or no def for mixset 
-    }
-    else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Optional))
-    {
-      // opt is allawys has a true value 
-      return true;
-    } 
+    } // if not leaf node
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Conjunctive))
     { 
       if(!featureNode.getIsLeaf())
@@ -404,7 +420,7 @@ class FeatureModel{
       {
         boolean result = false;
         List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
-        for(int i=0 ; i<outgoingLinks.size()-1; i++){
+        for(int i=0 ; i<outgoingLinks.size(); i++){
           result = result || evaluateFeatureLink(outgoingLinks.get(i));
         }
         return result;
@@ -423,24 +439,7 @@ class FeatureModel{
             return (countOfUsedTarget == 1) ? true: false;
           }
     }
-    else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Multiplicity))
-    {
-      MultiplicityFeatureConnectingOpType multiplicityFeatureLink = (MultiplicityFeatureConnectingOpType) featureLink;
-      int upperBound = multiplicityFeatureLink.getMultiplicity().getUpperBound();
-      int lowerBound = multiplicityFeatureLink.getMultiplicity().getLowerBound();
-      List<FeatureNode> featureNodes = featureLink.getTargetFeature();
-      int countOfUsedTarget = 0;
-      for(int i=0 ; i < featureNodes.size(); i++){
-        if(isUsedFeatureLeaf((FeatureLeaf)featureNodes.get(i)))
-        countOfUsedTarget++;
-      }
-      return (countOfUsedTarget <= upperBound && countOfUsedTarget >= lowerBound) ? true: false;    
-    }
-    
-    if(featureNode.getIsLeaf())
-    {
-      return isUsedFeatureLeaf((FeatureLeaf)featureNode);
-    }
+    //otherwise
     return false;
   }
   /*
