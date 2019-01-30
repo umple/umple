@@ -1,0 +1,15 @@
+require [ A xor B xor C];
+
+
+
+mixset A {} mixset B {} mixset C{}
+
+use A; 
+use B; 
+use C;
+
+
+/*
+ This is not valid configuration of feature model. However, using bitwise xor "^" makes the configuration valid.  
+*/
+
