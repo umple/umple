@@ -452,4 +452,14 @@ public class UmpleMixsetTest {
     FeatureModel featureModel= model.getFeatureModel();
     Assert.assertEquals(false,featureModel.satisfyFeatureModel());
   }
+  @Test
+  public void parseReqStArgumetToSatisfyFeatureModel_6()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_NotvalidBitWiseFeatuerModel.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+    FeatureModel featureModel= model.getFeatureModel();
+    Assert.assertEquals(false,featureModel.satisfyFeatureModel());
+  }
 }

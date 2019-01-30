@@ -421,6 +421,7 @@ class FeatureModel{
         boolean result = false;
         List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
         for(int i=0 ; i<outgoingLinks.size(); i++){
+          // bitwise xor (^) can not be used here because it does not mean allways only one. Example: (true ^ true ^ true == true) 
           result = result || evaluateFeatureLink(outgoingLinks.get(i));
         }
         return result;
