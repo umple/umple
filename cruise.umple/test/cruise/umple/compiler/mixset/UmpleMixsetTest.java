@@ -495,7 +495,7 @@ public class UmpleMixsetTest {
  @Test
   public void parseReqStArgumetToSatisfyFeatureModel_10()
   {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_validCombinedOpWithRoundBracketExtra.ump");
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_validCombinedOpWithComplexRoundBracket.ump");
     UmpleModel model = new UmpleModel(umpleFile);
     model.setShouldGenerate(false);
     model.run();
