@@ -274,7 +274,7 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(List<Toke
   currentTree = rootTokenTree.getRightTokenTree(); //currentTree points to the first node of the tree
   
   TokenTree previousLinkingSubTokenTree = null; 
-	// Start(3): build binary tree 
+	//Start(3): building the binary tree of re-st argument 
   while(currentTree.getRightTokenTree() != null)
  	{
 		TokenTree rightLinkingTokenTree = currentTree.getRightTokenTree(); //linking operator on the right of current node 	
@@ -332,8 +332,8 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(List<Toke
   	currentTree = rightLinkingTokenTree; // move to next node of the tree 
 		}
   tokenTreeList.add(rootTokenTree.getRightTokenTree());
-//End(3)
-//Start(4): replace temp with actual values 
+  //End(3)
+  //Start(4): replace temp with actual values 
   if(tempTokenTreeList.size() > 0) //there is a open & close round bracket 
   {
     for(TokenTree aTokenTree : tokenTreeList)
@@ -341,7 +341,7 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(List<Toke
       replaceTempTerminalWithActualValues(aTokenTree,tempTokenTreeList);
     }
   }
-//End(4)
+  //End(4)
 	return tokenTreeList;	
 	}
 
@@ -358,10 +358,8 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(List<Toke
       {
         int indexPositionInTokenValue = token.getValue().indexOf('_')  + 1; 
         int indexOfTempTokenTreeList = Integer.parseInt(token.getValue().substring(indexPositionInTokenValue));
-        TokenTree block = tempTokenTreeList.get(indexOfTempTokenTreeList);
-        tokenTree.replaceWith(block);
-       // tokenTree.setLeftTokenTree(block.getLeftTokenTree());
-        //tokenTree.setRightTokenTree(block.getRightTokenTree());
+        TokenTree actualValueOfBlock = tempTokenTreeList.get(indexOfTempTokenTreeList);
+        tokenTree.replaceWith(actualValueOfBlock);
         return;// then stop
       }		
     }
