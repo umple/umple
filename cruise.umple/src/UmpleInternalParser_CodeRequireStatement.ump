@@ -43,7 +43,7 @@ class UmpleInternalParser
       boolean isSubFeature = t.getSubToken("subfeature") != null; 
 
        //tokens needed for parsing require-statement
-      List<String> acceptedTokensList = Arrays.asList("requireTerminal","and","not","xor","or","opt");
+      List<String> acceptedTokensList = Arrays.asList("requireTerminal","and","not","xor","or","opt","(",")");
       ArrayList<Token> requireTokenList = getRequireStatementTokensAsList(t, acceptedTokensList);      
       Token firstTokenOfRequireTokenList;
 
@@ -210,18 +210,51 @@ class UmpleInternalParser
 This method parses req-statement argument & generates a binary tree representation form the req-statment argument.
 //It returns one node (root node) if there is no argument to parse.
 */
-private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(ArrayList<Token> tokenList)
+private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(List<Token> tokenList)
 {
   TokenTree rootTokenTree = new TokenTree(new Token("ROOT",""));
   TokenTree currentTree = rootTokenTree;		
   List<String> linkingOpList = Arrays.asList("and","or","xor");
 	ArrayList<TokenTree> tokenTreeList = new ArrayList<TokenTree>();
-  
+  int openRoundBracketCount=0;
+  int openBracketIndex = 0;
+  ArrayList<TokenTree> tempTokenTreeList = new ArrayList<TokenTree>();
+
   for (int i=0;i<tokenList.size();i++)
   {
     Token token = tokenList.get(i);
     TokenTree rightTokenTree = new TokenTree(token);
-    //Start(1): put each [opt/not][terminal] in a separate TokenTree if it was preceded with [terminal]
+    if(linkingOpList.contains(token.getName()))
+    rightTokenTree.setIsLinkingOperator(true);
+    //Start(1): handel open_round_bracket by assigning a temp variable to avoid processing it when building the binary tree. 
+    //each temp variable will be replaced before method return. 
+    if(token.getName().equals("("))
+    {
+      openRoundBracketCount++;
+      if(openRoundBracketCount == 1)
+      openBracketIndex = i;
+      continue;
+    }
+    else if (token.getName().equals(")"))
+    {
+      openRoundBracketCount--;
+      if(openRoundBracketCount == 0) //last close
+      {
+        ArrayList<TokenTree> temp = generateFeatureTreeTokenFromRequireStList(tokenList.subList(openBracketIndex+1,i));
+        if(temp.size() == 1)
+        {
+          Token tempToken = new Token("requireTerminal","temp_"+tempTokenTreeList.size());
+          tempTokenTreeList.add(temp.get(0));
+          rightTokenTree.setNodeToken(tempToken);
+        }
+      }
+      else 
+      continue; 
+    } 
+    else if(openRoundBracketCount >0) //there was a bracket 
+    continue;
+    //End(1)
+    //Start(2): put each [opt/not][terminal] in a separate TokenTree if it was preceded with [terminal]
     if(token.is("opt") || token.is("not"))
     {
       if(currentTree.getNodeToken().is("requireTerminal") && tokenList.get(i+1).is("requireTerminal")) // A opt B
@@ -233,9 +266,7 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(ArrayList
         continue;
       }
     }
-    //End(1)
-    if(linkingOpList.contains(token.getName()))
-    rightTokenTree.setIsLinkingOperator(true);
+    //End(2)
     currentTree.setRightTokenTree(rightTokenTree);
     rightTokenTree.setParentTokenTree(currentTree);
     currentTree = rightTokenTree;
@@ -243,7 +274,7 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(ArrayList
   currentTree = rootTokenTree.getRightTokenTree(); //currentTree points to the first node of the tree
   
   TokenTree previousLinkingSubTokenTree = null; 
-		
+	// Start(3): build binary tree 
   while(currentTree.getRightTokenTree() != null)
  	{
 		TokenTree rightLinkingTokenTree = currentTree.getRightTokenTree(); //linking operator on the right of current node 	
@@ -301,9 +332,48 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(ArrayList
   	currentTree = rightLinkingTokenTree; // move to next node of the tree 
 		}
   tokenTreeList.add(rootTokenTree.getRightTokenTree());
+//End(3)
+//Start(4): replace temp with actual values 
+  if(tempTokenTreeList.size() > 0) //there is a open & close round bracket 
+  {
+    for(TokenTree aTokenTree : tokenTreeList)
+    {
+      replaceTempTerminalWithActualValues(aTokenTree,tempTokenTreeList);
+    }
+  }
+//End(4)
 	return tokenTreeList;	
 	}
 
+  /*
+  This method replaces each node in TokenTree that is [requireTerminal] and has a temporary value.
+  The actual value of the node, which may be a tree, is stored in tempTokenTreeList. 
+  */
+  private void replaceTempTerminalWithActualValues(TokenTree tokenTree, ArrayList<TokenTree> tempTokenTreeList)
+  {
+    Token token = tokenTree.getNodeToken();
+    if(token != null)
+    {
+      if(token.is("requireTerminal") && token.getValue().startsWith("temp_"))
+      {
+        int indexPositionInTokenValue = token.getValue().indexOf('_')  + 1; 
+        int indexOfTempTokenTreeList = Integer.parseInt(token.getValue().substring(indexPositionInTokenValue));
+        TokenTree block = tempTokenTreeList.get(indexOfTempTokenTreeList);
+        tokenTree.replaceWith(block);
+       // tokenTree.setLeftTokenTree(block.getLeftTokenTree());
+        //tokenTree.setRightTokenTree(block.getRightTokenTree());
+        return;// then stop
+      }		
+    }
+    if(tokenTree.getRightTokenTree() != null)
+    {
+      replaceTempTerminalWithActualValues(tokenTree.getRightTokenTree(),tempTokenTreeList);
+    }
+    if(tokenTree.getLeftTokenTree() != null)
+    {
+      replaceTempTerminalWithActualValues(tokenTree.getLeftTokenTree(),tempTokenTreeList);
+    }	
+  }
   public void analyzeFeatureModel()
   {
     if(model.getFeatureModel() != null)
@@ -481,6 +551,17 @@ class TokenTree
   boolean isNegated =false;
   boolean isOpt = false;
   boolean isLinkingOperator = false;
+
+// This method replaces the current TokenTree with a new TokenTree.
+public void replaceWith(TokenTree newTokenTree)
+{
+  this.setNodeToken(newTokenTree.getNodeToken());
+  this.setLeftTokenTree(newTokenTree.getLeftTokenTree());
+  this.setRightTokenTree(newTokenTree.getRightTokenTree());
+  this.isLinkingOperator = newTokenTree.getIsLinkingOperator();
+  this.isOpt = newTokenTree.getIsOpt();
+  this.isNegated = newTokenTree.getIsNegated();
+}
 /*
 This method selects the the connection operator type based on the type of the (linking) token.
 If the type is not specified for the linking node, The default is Required.
