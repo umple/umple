@@ -18,9 +18,9 @@ mixsetInlineDefinition- : ( [entityType] [entityName] ( [[mixsetInnerContent]] |
 
 requireStatement : require ( [=subfeature:sub] )? [[requireBody]] 
 
-requireBody- : [(([[requireLinkingOptNot]])? [[requireTerminal]] [[requireList]])] 
+requireBody- : [(([[requireLinkingOptNot]])? (OPEN_ROUND_BRACKET)* [[requireTerminal]] [[requireList]])] 
 
-requireList- : ([[requireLinkingOp]] [[requireTerminal]])*
+requireList- : ([[requireLinkingOp]] (OPEN_ROUND_BRACKET)* [[requireTerminal]] (CLOSE_ROUND_BRACKET)* )*
 
 requireLinkingOp : ([[requireLinkingOptNot]] | [=and:&|&&|and|,] | [!or:([|][|]?|or|;)] | [=xor:xor|XOR])
 
