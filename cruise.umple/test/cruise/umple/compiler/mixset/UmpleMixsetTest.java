@@ -502,5 +502,15 @@ public class UmpleMixsetTest {
     FeatureModel featureModel= model.getFeatureModel();
     Assert.assertEquals(true,featureModel.satisfyFeatureModel());
   }
+ @Test
+  public void parseReqStArgumetToSatisfyFeatureModel_11()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_validNotOptWithRoundBracket.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+    FeatureModel featureModel= model.getFeatureModel();
+    Assert.assertEquals(true,featureModel.satisfyFeatureModel());
+  }
 
 }

@@ -108,16 +108,22 @@ class UmpleInternalParser
           edge.setIsSub(isSubFeature);
           model.getFeatureModel().addFeaturelink(edge);          
         }
+        else 
+        {
+          TokenTree rightTokenTree = tokenTree.getRightTokenTree();
+          TokenTree leftTokenTree = tokenTree.getLeftTokenTree();
+          if (rightTokenTree == null || leftTokenTree != null)
+          return; //To Do: raise error, 'opt' and 'not' are unanary; left is always is null
+          //else 
+          FeatureNode intermediateFeatureNode = createTargetFeature(tokenTree, sourceFeature, isSubFeature);
+          createFeatureModelSegment(intermediateFeatureNode,rightTokenTree,isSubFeature);
+        }
       }
       if(node.is("requireTerminal") && node.getSubToken("lowerBound") == null)
       {        	
-        //Mixset targetMixset = model.getMixset(node.getSubToken("targetMixsetName").getValue());
-        //if(targetMixset == null)
-        //return; // To Do: should raise warning 
         Mixset targetMixset = new Mixset(node.getSubToken("targetMixsetName").getValue());
         FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
         targetFeature.setMixsetOrFileNode(targetMixset);
-        //targetFeature.setName(targetMixset.getName());
         edge = new FeatureLink();
         
         if(linkingParent.getNodeToken().is("ROOT"))
@@ -227,7 +233,7 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(List<Toke
     if(linkingOpList.contains(token.getName()))
     rightTokenTree.setIsLinkingOperator(true);
     //Start(1): handel open_round_bracket by assigning a temp variable to avoid processing it when building the binary tree. 
-    //each temp variable will be replaced before method return. 
+    //each temp variable will be replaced at the end (before method return). 
     if(token.getName().equals("("))
     {
       openRoundBracketCount++;
@@ -501,7 +507,7 @@ class FeatureModel{
             List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
             int countOfUsedTarget = 0;
             for(int i=0 ; i < outgoingLinks.size(); i++){
-              if(evaluateFeatureLink(outgoingLinks.get(i)))  // bitwise xor (^) can not be used here because it does not mean always only one. Example: (true ^ true ^ true == true) 
+              if(evaluateFeatureLink(outgoingLinks.get(i)))
               countOfUsedTarget++;
             }
             return (countOfUsedTarget == 1) ? true: false;
