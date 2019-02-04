@@ -18,13 +18,13 @@ mixsetInlineDefinition- : ( [entityType] [entityName] ( [[mixsetInnerContent]] |
 
 requireStatement : require ( [=subfeature:sub] )? [[requireBody]] 
 
-requireBody- : [ ( (OPEN_ROUND_BRACKET)? [[requireLinkingOptNot]] )? (OPEN_ROUND_BRACKET)* [[requireTerminal]] [[requireList]] ] 
+requireBody- : [(([[requireLinkingOptNot]])? (OPEN_ROUND_BRACKET)* [[requireTerminal]] (CLOSE_ROUND_BRACKET)?  [[requireList]])] 
 
 requireList- : ([[requireLinkingOp]] (OPEN_ROUND_BRACKET)* [[requireTerminal]] (CLOSE_ROUND_BRACKET)* )*
 
 requireLinkingOp : ([[requireLinkingOptNot]] | [=and:&|&&|and|,] | [!or:([|][|]?|or|;)] | [=xor:xor|XOR])
 
-requireLinkingOptNot- : ([=opt:opt] | [=not:not] ) 
+requireLinkingOptNot- : (OPEN_ROUND_BRACKET)? ([=opt:opt] | [=not:not]) 
 
 requireTerminal :  [~targetMixsetName] | [[multiplicityTerminal]]
 
