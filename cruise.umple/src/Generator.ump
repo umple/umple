@@ -290,6 +290,14 @@ class GvClassTraitDiagramGenerator
   depend cruise.umple.compiler.exceptions.*;
 }
 
+class GvFeatureDiagramGenerator
+{
+  isA SuperGvGenerator;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+}
 class GvEntityRelationshipDiagramGenerator
 {
   isA SuperGvGenerator;
