@@ -12,12 +12,12 @@ in your umple file, or the command line option
 
 See also GvStateDiagram
  */
-//class cruise.umple.compiler.GvFeatureDiagramGenerator
+
 namespace cruise.umple.compiler;
 
 class GvFeatureDiagramGenerator {
 
-//This overrides the superclass's method.
+  //This overrides the superclass's method.
   public void generate(){
 	    StringBuilder code = new StringBuilder();
 	    StringBuilder associations = new StringBuilder();
@@ -31,16 +31,9 @@ class GvFeatureDiagramGenerator {
 	    HashSet visitedClasses = new HashSet();
 
 	    // Iterate through each class. 
-	    for (UmpleClass uClass : getModel().getUmpleClasses())
+	    for (FeatureLink link : getModel().getFeatureModel().getFeaturelink())
 	    {
-	      visitClass(uClass, visitedClasses, code, associations);
-	    } // End iteration through classes
-	    
-	    for (UmpleInterface uInterface : getModel().getUmpleInterfaces()){
-	    	createInterfacesAndTheirHirerarchy(uInterface,code); 
-	    }
-	    for (UmpleTrait uTrait : getModel().getUmpleTraits()){
-	    	createTraits(uTrait,code);
+        code.append(""+link);
 	    }
 	    terminateCode(code, associations);
 	  }
