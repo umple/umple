@@ -292,7 +292,7 @@ class GvClassTraitDiagramGenerator
 
 class GvFeatureDiagramGenerator
 {
-  isA SuperGvGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
