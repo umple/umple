@@ -12,6 +12,8 @@ Please refer to UmpleInternalParser.ump for more details.
 class UmpleInternalParser
 {
   depend cruise.umple.compiler.*;
+  depend cruise.umple.compiler.FeatureLink.FeatureConnectingOpType;
+
   public void analyzeRequireStatement(Token t, int analysisStep)
   {
     if (analysisStep != 2)
@@ -121,7 +123,7 @@ class UmpleInternalParser
         edge = new FeatureLink();
         
         if(linkingParent.getNodeToken().is("ROOT"))
-        edge.setFeatureConnectingOpType(FeatureLink.FeatureConnectingOpType.Include);
+        edge.setFeatureConnectingOpType(FeatureConnectingOpType.Include);
         else // this is for leaf node as the parent is not null 
         edge.setFeatureConnectingOpType(linkingParent.getFeatureConnectionOpType());
         
@@ -382,6 +384,7 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(List<Toke
 
 class FeatureModel{
   depend java.util.stream.*;
+  depend cruise.umple.compiler.FeatureLink.FeatureConnectingOpType;
 /*
  * This method returns a leaf node from FeatureModel based on its name.
  * return null if the leaf node is not found.   
@@ -442,19 +445,19 @@ class FeatureModel{
     FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeature(0));
     if(featureNode.getIsLeaf())
     {
-      if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Include))
+      if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Include))
       {
         return isUsedFeatureLeaf((FeatureLeaf)featureNode);
       } 
-      else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Exclude))
+      else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Exclude))
       {
         return !isUsedFeatureLeaf((FeatureLeaf)featureNode); // return true when there is no use-statement, or no def for mixset 
       }
-      else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Optional))
+      else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Optional))
       {
         return true;        // opt is allawys has a true value 
       }
-      else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Multiplicity))
+      else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Multiplicity))
       {
         MultiplicityFeatureConnectingOpType multiplicityFeatureLink = (MultiplicityFeatureConnectingOpType) featureLink;
         int upperBound = multiplicityFeatureLink.getMultiplicity().getUpperBound();
@@ -470,7 +473,7 @@ class FeatureModel{
       else 
       return isUsedFeatureLeaf((FeatureLeaf)featureNode);
     } // if not leaf node
-    else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Conjunctive))
+    else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Conjunctive))
     { 
       if(!featureNode.getIsLeaf())
       {
@@ -482,7 +485,7 @@ class FeatureModel{
         return result;
       }
     }
-    else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.Disjunctive))
+    else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Disjunctive))
     {   
       if(!featureNode.getIsLeaf())
       {
@@ -494,7 +497,7 @@ class FeatureModel{
         return result;
       }
     }
-    else if(featureLink.getFeatureConnectingOpType().equals(FeatureLink.FeatureConnectingOpType.XOR))
+    else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.XOR))
     { 
       if(!featureNode.getIsLeaf())
           {
@@ -549,6 +552,8 @@ Ex: require [A and B or C] will be formed as:
 class TokenTree
 {
   depend cruise.umple.parser.Token;
+  depend cruise.umple.compiler.FeatureLink.FeatureConnectingOpType;
+
   Token nodeToken;
   lazy TokenTree parentTokenTree;
   lazy TokenTree leftTokenTree;
@@ -573,26 +578,26 @@ This method selects the the connection operator type based on the type of the (l
 If the type is not specified for the linking node, The default is Required.
 It returns null if the node is termainl node.
 */
-public FeatureLink.FeatureConnectingOpType getFeatureConnectionOpType()
+public FeatureConnectingOpType getFeatureConnectionOpType()
 {
   if(nodeToken != null )
   {
     String operator = nodeToken.getName();
     switch (operator) {
       case "and":
-        return FeatureLink.FeatureConnectingOpType.Conjunctive;
+        return FeatureConnectingOpType.Conjunctive;
       case "or":
-        return FeatureLink.FeatureConnectingOpType.Disjunctive;
+        return FeatureConnectingOpType.Disjunctive;
       case "xor":
-        return FeatureLink.FeatureConnectingOpType.XOR;
+        return FeatureConnectingOpType.XOR;
       case "multiplicityTerminal":
-        return FeatureLink.FeatureConnectingOpType.Multiplicity;
+        return FeatureConnectingOpType.Multiplicity;
       case "opt":
-        return FeatureLink.FeatureConnectingOpType.Optional;
+        return FeatureConnectingOpType.Optional;
       case "not":
-        return FeatureLink.FeatureConnectingOpType.Exclude;
+        return FeatureConnectingOpType.Exclude;
       default:
-        return FeatureLink.FeatureConnectingOpType.Required;
+        return FeatureConnectingOpType.Required;
      }
   }
 
