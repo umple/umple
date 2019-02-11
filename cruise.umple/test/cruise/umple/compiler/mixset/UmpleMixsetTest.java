@@ -226,15 +226,18 @@ public class UmpleMixsetTest {
   @Test
   public void GvfeatureDiagramConsoleNoWarnings()
   {
-    String[] args = {"-generate","GvFeatureDiagram","reqStArgumentParse_featureModel.ump"} ;
+
+    String[] args = {"-generate","GvFeatureDiagram","GvFeatureConsoleTest.ump"} ;
+    SampleFileWriter.createFile("GvFeatureConsoleTest.ump", "require [A and B or C];");
    try 
     {
       UmpleConsoleMain.main(args);
-      SampleFileWriter.assertFileExists("reqStArgumentParse_featureModelGvFeatureDiagram.gv");
+      SampleFileWriter.assertFileExists("GvFeatureConsoleTestGvFeatureDiagram.gv");
     }	
     finally 
     {
-      SampleFileWriter.destroy("reqStArgumentParse_featureModelGvFeatureDiagram.gv");
+     SampleFileWriter.destroy("GvFeatureConsoleTestGvFeatureDiagram.gv");
+     SampleFileWriter.destroy("GvFeatureConsoleTest.ump");
     }
   }   
   
