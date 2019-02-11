@@ -18,62 +18,71 @@ class GvFeatureDiagramGenerator {
 
 UmpleModel model = null;
 
-public void generate_1(FeatureLink featureLink , StringBuilder code)
-{
-   FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeature(0));
-	 FeatureNode sourceFeatureNode = featureLink.getSourceFeature();
+
+ // Template for what will appear at the start of each graph file
+  graphStart(umpleVersion) <<!digraph FeatureModel{ 
+  node [shape=rectangle]  
+  edge [arrowhead=none]  
+  !>>
+
+  emit graphStart()(graphStart(UmpleModel.VERSION_NUMBER));
+  
+  public void generateFeatureNodeShape(FeatureLink featureLink , StringBuilder code)
+  {
+    FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeature(0));
+    FeatureNode sourceFeatureNode = featureLink.getSourceFeature();
     if(featureNode.getIsLeaf())
     {
-				code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ;"+"\n");
-		}
-		else 
-		{
-			code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ;"+"\n");
-			List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
+      code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ;"+"\n");
+    }
+    else 
+    {
+      code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ;"+"\n");
+      List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
       for(int i=0 ; i<outgoingLinks.size(); i++){
-				generate_1(outgoingLinks.get(i),code);
+        generateFeatureNodeShape(outgoingLinks.get(i),code);
       }
-		}
-}
+    }
+  }
 
   //This overrides the superclass's method.
   public void generate(){
-	    StringBuilder code = new StringBuilder();
-	    StringBuilder associations = new StringBuilder();
+    StringBuilder code = new StringBuilder();
+    // Output basic gv file header
+    if(getModel().getFeatureModel() == null)
+    {
+      code.append("/* Umple code does not have feature diagram. */");
+      return;
+    }
+    _graphStart(0,code);
+     // Iterate through each root feature. 
+    for (FeatureNode featureNode : getModel().getFeatureModel().getRootFeatures())
+    {
+      List <FeatureLink> featureNodeOutLinks = featureNode.getSourceFeatureLink();
+      for(FeatureLink flink : featureNodeOutLinks)
+      {
+        generateFeatureNodeShape(flink,code);
+      }		    
+    }
 
-	    // Output basic gv file header
-//	    _graphStart(0,code,getModel().getUmpleFile().getSimpleFileName());
-	    
+    terminateCode(code);
+    // code.append(" \n } \n");
+  }
 
-      code.append("digraph FeatureModel{ \n node [shape=rectangle] \n edge [arrowhead=none] \n");
-
-	    // Iterate through each root feature. 
-	    for (FeatureNode featureNode : getModel().getFeatureModel().getRootFeatures())
-	    {
-				List <FeatureLink> featureNodeOutLinks = featureNode.getSourceFeatureLink();
-		    for(FeatureLink flink : featureNodeOutLinks)
-		    {
-					generate_1(flink,code);
-		    }
-		    
-	    }
-      terminateCode(code);
-     // code.append(" \n } \n");
-	  }
-
-  protected void terminateCode(StringBuilder code){
- 
+  protected void terminateCode(StringBuilder code){ 
     code.append("\n }\n");
     model.setCode(code.toString());
     writeModel();
   }
 
-  protected String generatorType() { return "GvFeatureDiagram";}
+  protected String generatorType() { 
+    return "GvFeatureDiagram";
+  }
 
   /**
    * Output the graphviz file to a file with the .gv suffix
    */
-  // line 103 "../../../../src/Generator_SuperGvGenerator.ump"
+  // copied from "Generator_SuperGvGenerator.ump"
    protected void writeModel(){
     try
     {
@@ -94,57 +103,3 @@ public void generate_1(FeatureLink featureLink , StringBuilder code)
   }
 
 }
-	
-
-/*
-
-digraph FeatureModel{
- 
-
-
-node [shape=rectangle  ]
-edge [arrowhead=none]
-
-
-
-gsm[label=" GSM protocols "]
-mp3Rec [label="  MP3 recording  "]
-audio [label="  audio formats  "]
-
-Phone -> gsm [arrowhead=dot];
-Phone -> mp3Rec [arrowhead=odot];
-Phone -> playback [arrowhead=dot];
-Phone -> audio [arrowhead=dot];
-Phone -> camera [arrowhead=odot];
-
-
-gsm -> GSM1800 [arrowhead=dot];
-gsm -> GSM1900 [arrowhead=odot];
-camOR [ label="" shape=triangle fixedsize=true  color=black width=.3 height=0.3 margin=0 ];
-camera -> resolution [arrowhead=dot];
-resolution -> camOR;
-camOR->MP2;
-camOR->MP3;
-camOR-> MP5;
-
-resolution [label ="   resolution  "];
-MP2 [label="2.1MP"];
-MP3 [label="3.1MP"];
-MP5 [label="5MP"];
-
-
-//point[ shape=circle,label="",height=0.01,width=0.01]
-//audio -> point [] ;
-
-audio -> audioXor;
-audioXor [ label="" shape=triangle fixedsize=true style=filled color=black width=.3 height=0.3 margin=0 ];
-audioXor-> mp3;
-audioXor-> wav;
-
-
-mp3Rec -> mp3 [arrowhead=normal color=blue constraint=false label="require"];
-}
-
-
-*/
-
