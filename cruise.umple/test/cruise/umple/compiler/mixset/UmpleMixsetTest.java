@@ -222,6 +222,23 @@ public class UmpleMixsetTest {
     Assert.assertEquals(umpleClasses.size(), 1);
     Assert.assertEquals(umpleClasses.get(0).getName(),"Target");
 
+  }
+  @Test
+  public void GvfeatureDiagramConsoleNoWarnings()
+  {
+
+    String[] args = {"-generate","GvFeatureDiagram","GvFeatureConsoleTest.ump"} ;
+    SampleFileWriter.createFile("GvFeatureConsoleTest.ump", "require [A and B or C];");
+   try 
+    {
+      UmpleConsoleMain.main(args);
+      SampleFileWriter.assertFileExists("GvFeatureConsoleTestGvFeatureDiagram.gv");
+    }	
+    finally 
+    {
+     SampleFileWriter.destroy("GvFeatureConsoleTestGvFeatureDiagram.gv");
+     SampleFileWriter.destroy("GvFeatureConsoleTest.ump");
+    }
   }   
   
   @Test

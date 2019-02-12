@@ -519,7 +519,8 @@ class FeatureModel{
     UmpleModel model = getUmpleModel();
     boolean isSatisfied = true;
     // get root features : has outgoing links but no incoming links
-    List <FeatureNode> rootFeatures = getNode().stream().filter(n -> (n.hasSourceFeatureLink() && n.getIsLeaf())).collect(Collectors.toList());
+    List <FeatureNode> rootFeatures = getRootFeatures();
+    //getNode().stream().filter(n -> (n.hasSourceFeatureLink() && n.getIsLeaf())).collect(Collectors.toList());
     for(FeatureNode featureNode: rootFeatures)
     {
       List <FeatureLink> featureNodeOutLinks = featureNode.getSourceFeatureLink();
@@ -529,6 +530,13 @@ class FeatureModel{
       }
     }
     return isSatisfied;
+  }
+
+  public List <FeatureNode> getRootFeatures()
+  {
+        // get root features : has outgoing links but no incoming links
+    List <FeatureNode> rootFeatures = getNode().stream().filter(n -> (n.hasSourceFeatureLink() && n.getIsLeaf())).collect(Collectors.toList());
+    return rootFeatures;
   }
 }
 /*

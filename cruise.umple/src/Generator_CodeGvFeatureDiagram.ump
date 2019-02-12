@@ -1,0 +1,105 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file generates .gv files for use by Graphviz, representing the feature diagram along in the Umple model. To generate for this format, use 
+  generate GvFeatureDiagram;
+in your umple file, or the command line option
+  -g GvFeatureDiagram
+
+*/
+
+namespace cruise.umple.compiler;
+
+class GvFeatureDiagramGenerator {
+
+UmpleModel model = null;
+
+
+ // Template for what will appear at the start of each graph file
+  graphStart(umpleVersion) <<!digraph FeatureModel{ 
+  node [shape=rectangle]  
+  edge [arrowhead=none]  
+  !>>
+
+  emit graphStart()(graphStart(UmpleModel.VERSION_NUMBER));
+  
+  public void generateFeatureNodeShape(FeatureLink featureLink , StringBuilder code)
+  {
+    FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeature(0));
+    FeatureNode sourceFeatureNode = featureLink.getSourceFeature();
+    if(featureNode.getIsLeaf())
+    {
+      code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ;"+"\n");
+    }
+    else 
+    {
+      code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ;"+"\n");
+      List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
+      for(int i=0 ; i<outgoingLinks.size(); i++){
+        generateFeatureNodeShape(outgoingLinks.get(i),code);
+      }
+    }
+  }
+
+  //This overrides the superclass's method.
+  public void generate(){
+    StringBuilder code = new StringBuilder();
+    // Output basic gv file header
+    if(getModel().getFeatureModel() == null)
+    {
+      code.append("/* Umple code does not have feature diagram. */");
+      return;
+    }
+    _graphStart(0,code);
+     // Iterate through each root feature. 
+    for (FeatureNode featureNode : getModel().getFeatureModel().getRootFeatures())
+    {
+      List <FeatureLink> featureNodeOutLinks = featureNode.getSourceFeatureLink();
+      for(FeatureLink flink : featureNodeOutLinks)
+      {
+        generateFeatureNodeShape(flink,code);
+      }		    
+    }
+
+    terminateCode(code);
+    // code.append(" \n } \n");
+  }
+
+  protected void terminateCode(StringBuilder code){ 
+    code.append("\n }\n");
+    model.setCode(code.toString());
+    writeModel();
+  }
+
+  protected String generatorType() { 
+    return "GvFeatureDiagram";
+  }
+
+  /**
+   * Output the graphviz file to a file with the .gv suffix
+   */
+  // copied from "Generator_SuperGvGenerator.ump"
+   protected void writeModel(){
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName()
+          + generatorType() + ".gv";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating GraphViz feature model code." + e, e);
+    }
+  }
+
+}
