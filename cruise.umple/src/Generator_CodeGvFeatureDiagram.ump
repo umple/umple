@@ -33,7 +33,6 @@ class GvFeatureDiagramGenerator {
     appendSpaces(code,indentLevel);
     if(featureNode.getIsLeaf())
     {
-
      if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Exclude))
       {
         code.append(""+sourceFeatureNode.getName()+sourceFeatureNode.getId()+" -> "+featureNode.getName()+" ");
@@ -106,6 +105,7 @@ class GvFeatureDiagramGenerator {
       List <FeatureLink> featureNodeOutLinks = featureNode.getSourceFeatureLink();
       for(FeatureLink flink : featureNodeOutLinks)
       {
+        code.append("  "+featureNode.getName()+featureNode.getId()+" [label=\""+featureNode.getName()+" \" ]; \n");
         generateFeatureNodeShape(flink,code);
       }		    
     }
@@ -119,7 +119,7 @@ class GvFeatureDiagramGenerator {
     switch(featureConnectingOpType)
     {
       case Conjunctive:
-      return "";
+      return "[label=\" and \" ] ";
       case Disjunctive:
       return "[label=\"\" shape=triangle fixedsize=true  color=black width=.3 height=0.3 margin=0 ] ";
       case XOR:
@@ -128,81 +128,7 @@ class GvFeatureDiagramGenerator {
       return "";
     }
   }
-  /*
-   public boolean evaluateFeatureLink(FeatureLink featureLink)
-  {
-    FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeature(0));
-    if(featureNode.getIsLeaf())
-    {
-      if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Include))
-      {
-        return isUsedFeatureLeaf((FeatureLeaf)featureNode);
-      } 
-      else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Exclude))
-      {
-        return !isUsedFeatureLeaf((FeatureLeaf)featureNode); // return true when there is no use-statement, or no def for mixset 
-      }
-      else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Optional))
-      {
-        return true;        // opt is allawys has a true value 
-      }
-      else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Multiplicity))
-      {
-        MultiplicityFeatureConnectingOpType multiplicityFeatureLink = (MultiplicityFeatureConnectingOpType) featureLink;
-        int upperBound = multiplicityFeatureLink.getMultiplicity().getUpperBound();
-        int lowerBound = multiplicityFeatureLink.getMultiplicity().getLowerBound();
-        List<FeatureNode> featureNodes = featureLink.getTargetFeature();
-        int countOfUsedTarget = 0;
-        for(int i=0 ; i < featureNodes.size(); i++){
-          if(isUsedFeatureLeaf((FeatureLeaf)featureNodes.get(i)))
-          countOfUsedTarget++;
-        }
-        return (countOfUsedTarget <= upperBound && countOfUsedTarget >= lowerBound) ? true: false;    
-      }
-      else 
-      return isUsedFeatureLeaf((FeatureLeaf)featureNode);
-    } // if not leaf node
-    else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Conjunctive))
-    { 
-      if(!featureNode.getIsLeaf())
-      {
-        List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
-        boolean result = true;
-        for(int i=0 ; i<outgoingLinks.size(); i++){
-          result = result && evaluateFeatureLink(outgoingLinks.get(i));
-        }
-        return result;
-      }
-    }
-    else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Disjunctive))
-    {   
-      if(!featureNode.getIsLeaf())
-      {
-        boolean result = false;
-        List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
-        for(int i=0 ; i<outgoingLinks.size(); i++){
-          result = result || evaluateFeatureLink(outgoingLinks.get(i));
-        }
-        return result;
-      }
-    }
-    else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.XOR))
-    { 
-      if(!featureNode.getIsLeaf())
-          {
-            List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
-            int countOfUsedTarget = 0;
-            for(int i=0 ; i < outgoingLinks.size(); i++){
-              if(evaluateFeatureLink(outgoingLinks.get(i)))  // bitwise xor (^) can not be used here because it does not mean always only one. Example: (true ^ true ^ true == true) 
-              countOfUsedTarget++;
-            }
-            return (countOfUsedTarget == 1) ? true: false;
-          }
-    }
-    //otherwise
-    return false;
-  }
-*/
+
   protected void terminateCode(StringBuilder code){ 
     code.append("\n }\n");
     model.setCode(code.toString());
