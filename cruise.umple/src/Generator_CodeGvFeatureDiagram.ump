@@ -36,25 +36,25 @@ class GvFeatureDiagramGenerator {
 
      if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Exclude))
       {
-        code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ");
+        code.append(""+sourceFeatureNode.getName()+sourceFeatureNode.getId()+" -> "+featureNode.getName()+" ");
         code.append("["+ "arrowhead=normal color=red constraint=false label=exclude " + "]");
         code.append(" ;"+"\n");
       }
       else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Include))
       {
-        code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ");
+        code.append(""+sourceFeatureNode.getName()+sourceFeatureNode.getId()+" -> "+featureNode.getName()+" ");
         code.append("["+ "arrowhead=normal color=blue constraint=false label=include " + "]");
         code.append(" ;"+"\n");
       }
       else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Optional))
       {
-        code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ");
+        code.append(""+sourceFeatureNode.getName()+sourceFeatureNode.getId()+" -> "+featureNode.getName()+" ");
         code.append("[arrowhead=odot]");
         code.append(" ;"+"\n");      
       }
       else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Conjunctive))
       {
-        code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ");
+        code.append(""+sourceFeatureNode.getName()+sourceFeatureNode.getId()+" -> "+featureNode.getName()+" ");
         code.append("[arrowhead=dot]");
         code.append(" ;"+"\n");      
       }
@@ -65,7 +65,7 @@ class GvFeatureDiagramGenerator {
         int lowerBound = multiplicityFeatureLink.getMultiplicity().getLowerBound();
         String multip = "_"+lowerBound+"_"+upperBound;
         
-        code.append(""+sourceFeatureNode.getName()+" -> "+multip + " ;"+"\n");
+        code.append(""+sourceFeatureNode.getName()+sourceFeatureNode.getId()+" -> "+multip + " ;"+"\n");
         
         List<FeatureNode> featureNodes = featureLink.getTargetFeature();
         indentLevel+=2;
@@ -76,13 +76,13 @@ class GvFeatureDiagramGenerator {
         }
       }
       else 
-        code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ;"+"\n");
+        code.append(""+sourceFeatureNode.getName()+sourceFeatureNode.getId()+" -> "+featureNode.getName()+" ;"+"\n");
     }
     else //if the node is not leaf node 
     {
-      code.append(""+featureNode.getName()+getGvNodeShape(featureLink.getFeatureConnectingOpType())+" ;"+"\n");
+      code.append(""+featureNode.getName()+featureNode.getId()+" "+getGvNodeShape(featureLink.getFeatureConnectingOpType())+" ;"+"\n");
       appendSpaces(code,indentLevel);
-      code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ;"+"\n");
+      code.append(""+sourceFeatureNode.getName()+sourceFeatureNode.getId()+" -> "+featureNode.getName()+featureNode.getId()+" ;"+"\n");
       List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
       for(int i=0 ; i<outgoingLinks.size(); i++){
         generateFeatureNodeShape(outgoingLinks.get(i),code);
@@ -121,9 +121,9 @@ class GvFeatureDiagramGenerator {
       case Conjunctive:
       return "";
       case Disjunctive:
-      return "[ label=\"\" shape=triangle fixedsize=true  color=black width=.3 height=0.3 margin=0 ] ";
+      return "[label=\"\" shape=triangle fixedsize=true  color=black width=.3 height=0.3 margin=0 ] ";
       case XOR:
-      return "[ label=\"\" shape=triangle fixedsize=true style=filled color=black width=.3 height=0.3 margin=0 ]";
+      return "[label=\"\" shape=triangle fixedsize=true style=filled color=black width=.3 height=0.3 margin=0 ]";
       default:
       return "";
     }
