@@ -20,8 +20,8 @@ class GvFeatureDiagramGenerator {
   // Template for what will appear at the start of each graph file
   graphStart(umpleVersion) <<!digraph FeatureModel{ 
   node [shape=rectangle]  
-  edge [arrowhead=none]  
-  !>>
+  edge [arrowhead=none] 
+!>>
 
   emit graphStart()(graphStart(UmpleModel.VERSION_NUMBER));
   
@@ -29,7 +29,8 @@ class GvFeatureDiagramGenerator {
   {
     FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeature(0));
     FeatureNode sourceFeatureNode = featureLink.getSourceFeature();
-    
+    int indentLevel = 2;
+    appendSpaces(code,indentLevel);
     if(featureNode.getIsLeaf())
     {
 
@@ -67,10 +68,11 @@ class GvFeatureDiagramGenerator {
         code.append(""+sourceFeatureNode.getName()+" -> "+multip + " ;"+"\n");
         
         List<FeatureNode> featureNodes = featureLink.getTargetFeature();
-        int countOfUsedTarget = 0;
+        indentLevel+=2;
         for(int i=0 ; i < featureNodes.size(); i++){
-           FeatureLeaf fLeaf = ((FeatureLeaf)featureNodes.get(i));
-           code.append(multip +" -> "+ fLeaf.getName()+" ;"+"\n");
+          FeatureLeaf fLeaf = ((FeatureLeaf)featureNodes.get(i));
+          appendSpaces(code,indentLevel);
+          code.append(multip +" -> "+ fLeaf.getName()+" ;"+"\n");
         }
       }
       else 
@@ -79,6 +81,7 @@ class GvFeatureDiagramGenerator {
     else //if the node is not leaf node 
     {
       code.append(""+featureNode.getName()+getGvNodeShape(featureLink.getFeatureConnectingOpType())+" ;"+"\n");
+      appendSpaces(code,indentLevel);
       code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ;"+"\n");
       List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
       for(int i=0 ; i<outgoingLinks.size(); i++){
@@ -208,6 +211,14 @@ class GvFeatureDiagramGenerator {
 
   protected String generatorType() { 
     return "GvFeatureDiagram";
+  }
+  // copied from "Generator_SuperGvGenerator.ump"
+  private void appendSpaces(StringBuilder code, int numSpaces) 
+  {
+    for(int i=0; i<numSpaces; i++) 
+    {
+      code.append(" ");
+    }
   }
 
   /**
