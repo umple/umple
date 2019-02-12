@@ -26,9 +26,16 @@ class FeatureModel
 class FeatureNode{
   depend java.util.concurrent.atomic.AtomicInteger ;
   static AtomicInteger nextId = new AtomicInteger();
-  int id =nextId.incrementAndGet();
+  // each FeatureNode has a unique id
+  int id = nextId.incrementAndGet();
   lazy name;
   boolean isLeaf =false; 
+
+  //This method assign a unique name for each feature node. 
+  public String getUniqueFeatureNodeName()
+  {
+    return name+"_"+id;
+  }
 }
 
 // A FeatureLeaf contains a full mixset or a full file. 
@@ -37,6 +44,11 @@ class FeatureLeaf
   isA FeatureNode;
   0..1 -- 0..1 MixsetOrFile mixsetOrFileNode;
   after constructor() { setIsLeaf(true);}
+
+  public String getUniqueFeatureNodeName()
+  {
+    return this.getName();
+  }
 }
 
 // A FragmentFeatureLeaf consists of one or more mixset fragments.

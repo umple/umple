@@ -33,55 +33,28 @@ class GvFeatureDiagramGenerator {
     appendSpaces(code,indentLevel);
     if(featureNode.getIsLeaf())
     {
-     if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Exclude))
+      if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Multiplicity))
       {
-        code.append(""+sourceFeatureNode.getName()+sourceFeatureNode.getId()+" -> "+featureNode.getName()+" ");
-        code.append("["+ "arrowhead=normal color=red constraint=false label=exclude " + "]");
-        code.append(" ;"+"\n");
-      }
-      else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Include))
-      {
-        code.append(""+sourceFeatureNode.getName()+sourceFeatureNode.getId()+" -> "+featureNode.getName()+" ");
-        code.append("["+ "arrowhead=normal color=blue constraint=false label=include " + "]");
-        code.append(" ;"+"\n");
-      }
-      else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Optional))
-      {
-        code.append(""+sourceFeatureNode.getName()+sourceFeatureNode.getId()+" -> "+featureNode.getName()+" ");
-        code.append("[arrowhead=odot]");
-        code.append(" ;"+"\n");      
-      }
-      else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Conjunctive))
-      {
-        code.append(""+sourceFeatureNode.getName()+sourceFeatureNode.getId()+" -> "+featureNode.getName()+" ");
-        code.append("[arrowhead=dot]");
-        code.append(" ;"+"\n");      
-      }
-      else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Multiplicity))
-      {
-        MultiplicityFeatureConnectingOpType multiplicityFeatureLink = (MultiplicityFeatureConnectingOpType) featureLink;
-        int upperBound = multiplicityFeatureLink.getMultiplicity().getUpperBound();
-        int lowerBound = multiplicityFeatureLink.getMultiplicity().getLowerBound();
-        String multip = "_"+lowerBound+"_"+upperBound;
-        
-        code.append(""+sourceFeatureNode.getName()+sourceFeatureNode.getId()+" -> "+multip + " ;"+"\n");
-        
         List<FeatureNode> featureNodes = featureLink.getTargetFeature();
         indentLevel+=2;
         for(int i=0 ; i < featureNodes.size(); i++){
           FeatureLeaf fLeaf = ((FeatureLeaf)featureNodes.get(i));
           appendSpaces(code,indentLevel);
-          code.append(multip +" -> "+ fLeaf.getName()+" ;"+"\n");
+          code.append(sourceFeatureNode.getUniqueFeatureNodeName() +" -> "+ fLeaf.getName()+" ;"+"\n");
         }
       }
       else 
-        code.append(""+sourceFeatureNode.getName()+sourceFeatureNode.getId()+" -> "+featureNode.getName()+" ;"+"\n");
+      {// link source to leaf node 
+        code.append(""+sourceFeatureNode.getUniqueFeatureNodeName()+" -> "+featureNode.getName()+" ");
+        code.append(getGvTargetShape(featureLink.getFeatureConnectingOpType()));
+        code.append(" ;"+"\n");    
+      }
     }
     else //if the node is not leaf node 
     {
-      code.append(""+featureNode.getName()+featureNode.getId()+" "+getGvNodeShape(featureLink.getFeatureConnectingOpType())+" ;"+"\n");
+      code.append(""+featureNode.getUniqueFeatureNodeName()+" "+getGvNodeShape(featureLink.getFeatureConnectingOpType())+" ;"+"\n");
       appendSpaces(code,indentLevel);
-      code.append(""+sourceFeatureNode.getName()+sourceFeatureNode.getId()+" -> "+featureNode.getName()+featureNode.getId()+" ;"+"\n");
+      code.append(""+sourceFeatureNode.getUniqueFeatureNodeName()+" -> "+featureNode.getUniqueFeatureNodeName()+" ;"+"\n");
       List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
       for(int i=0 ; i<outgoingLinks.size(); i++){
         generateFeatureNodeShape(outgoingLinks.get(i),code);
@@ -105,7 +78,7 @@ class GvFeatureDiagramGenerator {
       List <FeatureLink> featureNodeOutLinks = featureNode.getSourceFeatureLink();
       for(FeatureLink flink : featureNodeOutLinks)
       {
-        code.append("  "+featureNode.getName()+featureNode.getId()+" [label=\""+featureNode.getName()+" \" ]; \n");
+        code.append("  "+featureNode.getUniqueFeatureNodeName()+" [label=\""+featureNode.getName()+" \" ]; \n");
         generateFeatureNodeShape(flink,code);
       }		    
     }
@@ -114,8 +87,25 @@ class GvFeatureDiagramGenerator {
     // code.append(" \n } \n");
   }
 
+  public static String getGvTargetShape(FeatureConnectingOpType featureConnectingOpType)
+  { 
+    switch(featureConnectingOpType)
+    {
+      case Exclude:
+      return "["+"arrowhead=normal color=red constraint=false label=exclude "+"]";
+      case Include:
+      return "["+ "arrowhead=normal color=blue constraint=false label=include "+"]";
+      case Optional:
+      return "[arrowhead=odot]";
+      case Conjunctive:
+      return "[arrowhead=dot]";
+      default:
+      return "";
+    }
+  }
+
   public static String getGvNodeShape(FeatureConnectingOpType featureConnectingOpType)
-  { //audioXor [ label=\"\" shape=triangle fixedsize=true style=filled color=black width=.3 height=0.3 margin=0 ];
+  { 
     switch(featureConnectingOpType)
     {
       case Conjunctive:
@@ -124,6 +114,8 @@ class GvFeatureDiagramGenerator {
       return "[label=\"\" shape=triangle fixedsize=true  color=black width=.3 height=0.3 margin=0 ] ";
       case XOR:
       return "[label=\"\" shape=triangle fixedsize=true style=filled color=black width=.3 height=0.3 margin=0 ]";
+      case Multiplicity:
+      return "[label=\"multiplicity\"]";
       default:
       return "";
     }
