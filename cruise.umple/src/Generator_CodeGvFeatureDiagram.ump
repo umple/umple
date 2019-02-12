@@ -57,11 +57,28 @@ class GvFeatureDiagramGenerator {
         code.append("[arrowhead=dot]");
         code.append(" ;"+"\n");      
       }
+      else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Multiplicity))
+      {
+        MultiplicityFeatureConnectingOpType multiplicityFeatureLink = (MultiplicityFeatureConnectingOpType) featureLink;
+        int upperBound = multiplicityFeatureLink.getMultiplicity().getUpperBound();
+        int lowerBound = multiplicityFeatureLink.getMultiplicity().getLowerBound();
+        String multip = "_"+lowerBound+"_"+upperBound;
+        
+        code.append(""+sourceFeatureNode.getName()+" -> "+multip + " ;"+"\n");
+        
+        List<FeatureNode> featureNodes = featureLink.getTargetFeature();
+        int countOfUsedTarget = 0;
+        for(int i=0 ; i < featureNodes.size(); i++){
+           FeatureLeaf fLeaf = ((FeatureLeaf)featureNodes.get(i));
+           code.append(multip +" -> "+ fLeaf.getName()+" ;"+"\n");
+        }
+      }
       else 
         code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ;"+"\n");
     }
-    else 
+    else //if the node is not leaf node 
     {
+      code.append(""+featureNode.getName()+getGvNodeShape(featureLink.getFeatureConnectingOpType())+" ;"+"\n");
       code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ;"+"\n");
       List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
       for(int i=0 ; i<outgoingLinks.size(); i++){
@@ -92,6 +109,21 @@ class GvFeatureDiagramGenerator {
 
     terminateCode(code);
     // code.append(" \n } \n");
+  }
+
+  public static String getGvNodeShape(FeatureConnectingOpType featureConnectingOpType)
+  { //audioXor [ label=\"\" shape=triangle fixedsize=true style=filled color=black width=.3 height=0.3 margin=0 ];
+    switch(featureConnectingOpType)
+    {
+      case Conjunctive:
+      return "";
+      case Disjunctive:
+      return "[ label=\"\" shape=triangle fixedsize=true  color=black width=.3 height=0.3 margin=0 ] ";
+      case XOR:
+      return "[ label=\"\" shape=triangle fixedsize=true style=filled color=black width=.3 height=0.3 margin=0 ]";
+      default:
+      return "";
+    }
   }
   /*
    public boolean evaluateFeatureLink(FeatureLink featureLink)
