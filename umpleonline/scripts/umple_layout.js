@@ -102,7 +102,16 @@ Layout.setUmpleCanvasSize = function(width, height)
 
 //Sets the height of the model and layout text editors, depending on what is enabled
 Layout.adjustTextEditorHeight = function(height) 
-{  
+{ 
+  if(true) // Should be if chatbot is enabled
+  {
+    // testing chatbot integration
+    jQuery(modelEditorHandle).outerHeight(height*0.9);
+    if(Page.codeMirrorOn) this.resizeCodeMirrorEditor(height*0.5);
+    jQuery(layoutEditorHandle).outerHeight(height*0.3);
+
+  }
+  
   if(this.isLayoutVisible)
   {
     jQuery(modelEditorHandle).outerHeight(height*0.7);

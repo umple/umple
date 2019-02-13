@@ -266,6 +266,9 @@ $output = $dataHandle->readData('model.ump');
         <textarea id="umpleLayoutEditorText" class="umpleLayoutEditor" wrap="off"></textarea>
       </div>
     </div>
+    <div id="umpleBotUI" class="umpleBotUI">
+      <iframe src="chatbot.php"></iframe>
+    </div>
     
     <div id="paletteColumn" class="inRow">
       <div id="palette" class="palette">
