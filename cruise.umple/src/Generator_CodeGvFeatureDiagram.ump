@@ -18,7 +18,9 @@ class GvFeatureDiagramGenerator {
   depend cruise.umple.compiler.FeatureLink.FeatureConnectingOpType;
   UmpleModel model = null;
   // Template for what will appear at the start of each graph file
-  graphStart(umpleVersion) <<!digraph FeatureModel{ 
+  graphStart(umpleVersion) <<! /*This code was generated using the UMPLE <<=umpleVersion>> modeling language! */
+  
+digraph FeatureModel { 
   node [shape=rectangle]  
   edge [arrowhead=none] 
 !>>
@@ -126,7 +128,7 @@ class GvFeatureDiagramGenerator {
       return nodeName+" [label=\"\" shape=triangle fixedsize=true style=filled color=black width=.3 height=0.3 margin=0 ]"+end;
       case Multiplicity://
       //return nodeName+" [label=\"multiplicity\"]";
-      return "";
+      return "\n";
       default:
       return nodeName +end;
     }
