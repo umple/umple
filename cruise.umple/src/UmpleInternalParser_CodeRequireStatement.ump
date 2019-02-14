@@ -143,8 +143,9 @@ class UmpleInternalParser
         edge.addTargetFeature(newFeatureNode); 
         edge.setFeatureModel(model.getFeatureModel());
         
-        FeatureLink intermediateFeatureNodeToTargetEdge = new MultiplicityFeatureConnectingOpType();
+        MultiplicityFeatureConnectingOpType intermediateFeatureNodeToTargetEdge = new MultiplicityFeatureConnectingOpType();
         intermediateFeatureNodeToTargetEdge.setSourceFeature(newFeatureNode);
+        intermediateFeatureNodeToTargetEdge.setMultiplicity(featureLinkMultiplicity);
   
         for(Token subToken : node.getSubTokens())
         {

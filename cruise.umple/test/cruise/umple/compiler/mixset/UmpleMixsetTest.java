@@ -357,8 +357,8 @@ public class UmpleMixsetTest {
     Assert.assertEquals(featureModel.getNode().get(3).getName(), "xor");
     Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(4)).getMixsetOrFileNode().getName() ,"M5");
     Assert.assertEquals(featureModel.getNode().get(5).getName(), "and");
-    Assert.assertEquals(featureModel.getNode().get(6).getName(), "multiplicityTerminal");
-    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(7)).getMixsetOrFileNode().getName() ,"M4");
+    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(6)).getMixsetOrFileNode().getName() ,"M4");
+    Assert.assertEquals(featureModel.getNode().get(7).getName(), "multiplicityTerminal");
     Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(8)).getMixsetOrFileNode().getName() ,"M1");
     Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(9)).getMixsetOrFileNode().getName() ,"M2");
     Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(10)).getMixsetOrFileNode().getName() ,"M3");

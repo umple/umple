@@ -35,8 +35,13 @@ class GvFeatureDiagramGenerator {
     {
       if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Multiplicity))
       {
-        List<FeatureNode> featureNodes = featureLink.getTargetFeature();
+        MultiplicityFeatureConnectingOpType multiplicityFeatureLink = (MultiplicityFeatureConnectingOpType) featureLink;
+        int upperBound = multiplicityFeatureLink.getMultiplicity().getUpperBound();
+        int lowerBound = multiplicityFeatureLink.getMultiplicity().getLowerBound();        
+        String minMax =""+lowerBound+".."+upperBound;
+        code.append(sourceFeatureNode.getUniqueFeatureNodeName() + getGvMultiplicityShape(minMax));
         indentLevel+=2;
+        List<FeatureNode> featureNodes = featureLink.getTargetFeature();
         for(int i=0 ; i < featureNodes.size(); i++){
           FeatureLeaf fLeaf = ((FeatureLeaf)featureNodes.get(i));
           appendSpaces(code,indentLevel);
@@ -52,7 +57,7 @@ class GvFeatureDiagramGenerator {
     }
     else //if the node is not leaf node 
     {
-      code.append(""+featureNode.getUniqueFeatureNodeName()+" "+getGvNodeShape(featureLink.getFeatureConnectingOpType())+" ;"+"\n");
+      code.append(getGvNodeShape(featureLink.getFeatureConnectingOpType(),featureNode.getUniqueFeatureNodeName()));
       appendSpaces(code,indentLevel);
       code.append(""+sourceFeatureNode.getUniqueFeatureNodeName()+" -> "+featureNode.getUniqueFeatureNodeName()+" ;"+"\n");
       List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
@@ -104,20 +109,26 @@ class GvFeatureDiagramGenerator {
     }
   }
 
-  public static String getGvNodeShape(FeatureConnectingOpType featureConnectingOpType)
+  public static String getGvMultiplicityShape(String minMax)
+  {
+    return "[label=\""+minMax + "\"]"+ ";"+"\n";
+  }
+  public static String getGvNodeShape(FeatureConnectingOpType featureConnectingOpType , String nodeName)
   { 
+    String end = ";"+"\n";
     switch(featureConnectingOpType)
     {
       case Conjunctive:
-      return "[label=\" and \" ] ";
+      return nodeName+" [label=\" and \" ] "+end;
       case Disjunctive:
-      return "[label=\"\" shape=triangle fixedsize=true  color=black width=.3 height=0.3 margin=0 ] ";
+      return nodeName+" [label=\"\" shape=triangle fixedsize=true  color=black width=.3 height=0.3 margin=0 ] "+end;
       case XOR:
-      return "[label=\"\" shape=triangle fixedsize=true style=filled color=black width=.3 height=0.3 margin=0 ]";
-      case Multiplicity:
-      return "[label=\"multiplicity\"]";
-      default:
+      return nodeName+" [label=\"\" shape=triangle fixedsize=true style=filled color=black width=.3 height=0.3 margin=0 ]"+end;
+      case Multiplicity://
+      //return nodeName+" [label=\"multiplicity\"]";
       return "";
+      default:
+      return nodeName +end;
     }
   }
 
