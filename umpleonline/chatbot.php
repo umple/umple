@@ -25,19 +25,9 @@
                 background-color: #ccf5ff;
             }
         </style>
-        
-        <script type="text/javascript" src="./scripts/umple_action.js">
-          
-        </script>
-        
-        <script src="./scripts/jquery/jquery-2.2.4.min.js"></script>
-        
-        <script type="text/javascript">
-                    
-            function hello(x) {
-              alert(x);
-            }
 
+        <script type="text/javascript">
+            
             function addMessage() {
               var userInput = document.getElementById('userinput').value;
               if (userInput == '') return;
@@ -72,11 +62,6 @@
               xhttp.send();
             }
 
-            function callJava() {
-                // Something like this
-                executeCommand("java -jar umplesync.jar -addClass ...");
-            }
-
             function wait(ms){
                var start = new Date().getTime();
                var end = start;
@@ -85,118 +70,8 @@
               }
             }
 
-            function debug2() {
-              // This is what happens when a new class is called
-              Action.ajax(
-                  function(a) {
-                    var c="";
-                    var b="";
-                    c = Action.getDiagramCode(a.responseText);
-                    b = Action.getErrorCode(a.responseText);
-                    if ((c==null||c==""||c=="null")&&Action.diagramInSync) {
-                      Page.enableDiagram(false);
-                      Action.diagramInSync=false;
-                      Page.setFeedbackMessage('<a href="#errorClick">See message.</a> To fix: edit model or click undo')
-                    } else {
-                      Page.enableDiagram(true);
-                      Action.diagramInSync=true
-                    }
-                    if(b!="") {
-                      Page.showGeneratedCode(b,"diagramUpdate")
-                    }
-                  }
-                  , 
-                  language=Json
-              );
-            }
-
-            function debug3() {
-              /*jQuery.getScript("./scripts/umple_action.js", function() {
-			    console.log("typeof Action: " + typeof Action);
-      			Action.ajax(DiagramEdit.addClass(0););
-			  });*/
-              jQuery.getScript("./scripts/umple_system.js", function() {
-                console.log(UmpleSystem);
-			    jQuery.getScript("./scripts/umple_class.js", function() {
-				  console.log(UmpleClass);
-  				  jQuery.getScript("./scripts/umple_action_diagram.js", function() {
-  				    jQuery.getScript("./scripts/umple_action.js", function() {
-  				      console.log(typeof Action);
-  				      //console.log(textstatus);
-    			      //Action.ajax(DiagramEdit.addClass(0));
-
-  				      Action.ajax(Action.updateFromDiagramCallback,Action.getLanguage());
-                    });
-  				  });
-			 	});
-	          });
-        		  
-            }
-
-            function debug3_old() {
-              var umpleSystem;
-              var umpleClass;
-              var diagramEdit;
-				
-              
-				// addClass using DiagramEdit.addClass
-				
-				jQuery.getScript("./scripts/umple_system.js", function(UmpleSystem, textstatus, jqxhr) {
-				  console.log("typeof UmpleSystem: " + typeof UmpleSystem);
-				  umpleSystem = UmpleSystem;
-				  console.log("umpleSystem: " + umpleSystem);
-				  console.log("\n\ntextstatus: " + textstatus);
-				  console.log("\n\njqxhr: " + jqxhr);
-				});
-
-				jQuery.getScript("./scripts/umple_class.js", function(UmpleClass, textstatus, jqxhr) {
-				  umpleClass = UmpleClass;
-				  console.log("umpleClass: " + umpleClass);
-				  console.log("\n\ntextstatus: " + textstatus);
-				  console.log("\n\njqxhr: " + jqxhr);
-				});
-
-				//wait(500);
-				
-
-			  jQuery.getScript("./scripts/umple_action_diagram.js", function(/*DiagramEdit, textstatus, jqxhr*/) {
-			    console.log("typeof DiagramEdit: " + typeof DiagramEdit);
-
-			    //console.log("uc ctor: \n" + umpleClass.constructor);
-			    //console.log(textstatus);
-			    UmpleSystem = umpleSystem;
-			    UmpleClass = umpleClass;
-			    
-		        DiagramEdit.addClass(0);
-              });
-
-				
-				/*jQuery.getScript("./scripts/umple_system.js", function() {
-				    jQuery.getScript("./scripts/umple_class.js", function() {
-    				  jQuery.getScript("./scripts/umple_action_diagram.js", function(DiagramEdit, textstatus, jqxhr) {
-    				    console.log(typeof DiagramEdit);
-    				    console.log(textstatus);
-    				    
-      			        DiagramEdit.addClass(0);
-                      });
-					});
-		       });*/
-
-              /*jQuery.when(
-                  jQuery.getScript( "./scripts/umple_system.js" ),
-                  jQuery.getScript( "./scripts/umple_class.js" ),
-                  jQuery.getScript("./scripts/umple_action_diagram.js" ),
-                  jQuery.getScript("./scripts/umple_action.js" ),
-                  jQuery.Deferred(function( deferred ){
-                    jQuery( deferred.resolve );
-                  })
-              ).done(function(data, textstatus, jqxhr){
-				console.log(data);
-                //Action.ajax(DiagramEdit.addClass(0));
-                console.log("After");
-              }).fail(function(){
-                console.error("Error !!!!!!!! :(")
-              });*/
+            function debug4() {
+              window.parent.Action.directAddClass("Pizza");
             }
         </script>
         
@@ -204,12 +79,9 @@
     <body>
         <h1 style="font-family: sans-serif;">Chatbot</h1>
         
-        <input type="button" onclick="debug3()" value="debug" id="debug"></input>
+        <input type="button" onclick="debug4()" value="debug" id="debug"></input>
         
-       
-        <div id="chathistory">
-        
-        </div>
+        <div id="chathistory"></div>
 
         <div>
             <input type="text" id="userinput"></input>
@@ -221,13 +93,13 @@
             />
             <!-- Hit Enter to Send -->
             <script type="text/javascript">
-                var input = document.getElementById("userinput");
-                input.addEventListener("keyup", function(event) {
-                  event.preventDefault();
-                  if (event.keyCode === 13) { // ENTER
-                    document.getElementById("sendbutton").click();
-                  }
-                });
+              var input = document.getElementById("userinput");
+              input.addEventListener("keyup", function(event) {
+                event.preventDefault();
+                if (event.keyCode === 13) { // ENTER
+                  document.getElementById("sendbutton").click();
+                }
+              });
             </script>
         </div>
         
