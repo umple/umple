@@ -24,8 +24,18 @@ class FeatureModel
 
 //A Feature model consists of some FeatureNodels, which can be leaf nodes or fragmentFeature nodes.
 class FeatureNode{
+  //This to assign a unique name for each feature node. 
+  depend java.util.concurrent.atomic.AtomicInteger ;
+  static AtomicInteger nextId = new AtomicInteger();
+  // each new FeatureNode has a unique id
+  int id = nextId.incrementAndGet();
   lazy name;
-  boolean isLeaf =false;
+  boolean isLeaf =false; 
+
+  public String getUniqueFeatureNodeName()
+  {
+    return name+"_"+id;
+  }
 }
 
 // A FeatureLeaf contains a full mixset or a full file. 
@@ -34,6 +44,11 @@ class FeatureLeaf
   isA FeatureNode;
   0..1 -- 0..1 MixsetOrFile mixsetOrFileNode;
   after constructor() { setIsLeaf(true);}
+  //a leaf node returns its actual name as a unique name.
+  public String getUniqueFeatureNodeName()
+  {
+    return this.getName();
+  }
 }
 
 // A FragmentFeatureLeaf consists of one or more mixset fragments.

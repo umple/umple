@@ -15,15 +15,13 @@ in your umple file, or the command line option
 namespace cruise.umple.compiler;
 
 class GvFeatureDiagramGenerator {
-
-UmpleModel model = null;
-
-
- // Template for what will appear at the start of each graph file
+  depend cruise.umple.compiler.FeatureLink.FeatureConnectingOpType;
+  UmpleModel model = null;
+  // Template for what will appear at the start of each graph file
   graphStart(umpleVersion) <<!digraph FeatureModel{ 
   node [shape=rectangle]  
-  edge [arrowhead=none]  
-  !>>
+  edge [arrowhead=none] 
+!>>
 
   emit graphStart()(graphStart(UmpleModel.VERSION_NUMBER));
   
@@ -31,13 +29,37 @@ UmpleModel model = null;
   {
     FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeature(0));
     FeatureNode sourceFeatureNode = featureLink.getSourceFeature();
+    int indentLevel = 2;
+    appendSpaces(code,indentLevel);
     if(featureNode.getIsLeaf())
     {
-      code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ;"+"\n");
+      if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Multiplicity))
+      {
+        MultiplicityFeatureConnectingOpType multiplicityFeatureLink = (MultiplicityFeatureConnectingOpType) featureLink;
+        int upperBound = multiplicityFeatureLink.getMultiplicity().getUpperBound();
+        int lowerBound = multiplicityFeatureLink.getMultiplicity().getLowerBound();        
+        String minMax =""+lowerBound+".."+upperBound;
+        code.append(sourceFeatureNode.getUniqueFeatureNodeName() + getGvMultiplicityShape(minMax));
+        indentLevel+=2;
+        List<FeatureNode> featureNodes = featureLink.getTargetFeature();
+        for(int i=0 ; i < featureNodes.size(); i++){
+          FeatureLeaf fLeaf = ((FeatureLeaf)featureNodes.get(i));
+          appendSpaces(code,indentLevel);
+          code.append(sourceFeatureNode.getUniqueFeatureNodeName() +" -> "+ fLeaf.getName()+" ;"+"\n");
+        }
+      }
+      else 
+      {// link source to leaf node 
+        code.append(""+sourceFeatureNode.getUniqueFeatureNodeName()+" -> "+featureNode.getName()+" ");
+        code.append(getGvTargetShape(featureLink.getFeatureConnectingOpType()));
+        code.append(" ;"+"\n");    
+      }
     }
-    else 
+    else //if the node is not leaf node 
     {
-      code.append(""+sourceFeatureNode.getName()+" -> "+featureNode.getName()+" ;"+"\n");
+      code.append(getGvNodeShape(featureLink.getFeatureConnectingOpType(),featureNode.getUniqueFeatureNodeName()));
+      appendSpaces(code,indentLevel);
+      code.append(""+sourceFeatureNode.getUniqueFeatureNodeName()+" -> "+featureNode.getUniqueFeatureNodeName()+" ;"+"\n");
       List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
       for(int i=0 ; i<outgoingLinks.size(); i++){
         generateFeatureNodeShape(outgoingLinks.get(i),code);
@@ -61,12 +83,53 @@ UmpleModel model = null;
       List <FeatureLink> featureNodeOutLinks = featureNode.getSourceFeatureLink();
       for(FeatureLink flink : featureNodeOutLinks)
       {
+        code.append("  "+featureNode.getUniqueFeatureNodeName()+" [label=\""+featureNode.getName()+" \" ]; \n");
         generateFeatureNodeShape(flink,code);
       }		    
     }
 
     terminateCode(code);
     // code.append(" \n } \n");
+  }
+
+  public static String getGvTargetShape(FeatureConnectingOpType featureConnectingOpType)
+  { 
+    switch(featureConnectingOpType)
+    {
+      case Exclude:
+      return "["+"arrowhead=normal color=red constraint=false label=exclude "+"]";
+      case Include:
+      return "["+ "arrowhead=normal color=blue constraint=false label=include "+"]";
+      case Optional:
+      return "[arrowhead=odot]";
+      case Conjunctive:
+      return "[arrowhead=dot]";
+      default:
+      return "";
+    }
+  }
+
+  public static String getGvMultiplicityShape(String minMax)
+  {
+    return "[label=\""+minMax + "\"]"+ ";"+"\n";
+  }
+  public static String getGvNodeShape(FeatureConnectingOpType featureConnectingOpType , String nodeName)
+  { 
+    String end = ";"+"\n";
+    switch(featureConnectingOpType)
+    {
+      case Conjunctive:
+      return nodeName+" [label=\" and \" ] "+end;
+      case Disjunctive:
+      return nodeName+" [label=\"\" shape=triangle fixedsize=true  color=black width=.3 height=0.3 margin=0 ] "+end;
+      case XOR:
+      return nodeName+" [label=\"\" shape=triangle fixedsize=true style=filled color=black width=.3 height=0.3 margin=0 ]"+end;
+      case Multiplicity://
+      //return nodeName+" [label=\"multiplicity\"]";
+      return "";
+      default:
+      return nodeName +end;
+    }
   }
 
   protected void terminateCode(StringBuilder code){ 
@@ -77,6 +140,14 @@ UmpleModel model = null;
 
   protected String generatorType() { 
     return "GvFeatureDiagram";
+  }
+  // copied from "Generator_SuperGvGenerator.ump"
+  private void appendSpaces(StringBuilder code, int numSpaces) 
+  {
+    for(int i=0; i<numSpaces; i++) 
+    {
+      code.append(" ");
+    }
   }
 
   /**

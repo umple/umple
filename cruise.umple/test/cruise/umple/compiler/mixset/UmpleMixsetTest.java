@@ -349,7 +349,7 @@ public class UmpleMixsetTest {
     int numOfLinks = featureModel.getFeaturelink().size();
     int numOfFeatures = featureModel.getNode().size();
     Assert.assertEquals(numOfLinks,7);
-    Assert.assertEquals(numOfFeatures,10);
+    Assert.assertEquals(numOfFeatures,11);
 
     Assert.assertEquals(false,  ((FeatureLeaf)featureModel.getNode().get(0)).getMixsetOrFileNode().isIsMixset() );  // false: its a file
     Assert.assertEquals(featureModel.getNode().get(1).getName(), "or");
@@ -358,9 +358,10 @@ public class UmpleMixsetTest {
     Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(4)).getMixsetOrFileNode().getName() ,"M5");
     Assert.assertEquals(featureModel.getNode().get(5).getName(), "and");
     Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(6)).getMixsetOrFileNode().getName() ,"M4");
-    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(7)).getMixsetOrFileNode().getName() ,"M1");
-    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(8)).getMixsetOrFileNode().getName() ,"M2");
-    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(9)).getMixsetOrFileNode().getName() ,"M3");
+    Assert.assertEquals(featureModel.getNode().get(7).getName(), "multiplicityTerminal");
+    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(8)).getMixsetOrFileNode().getName() ,"M1");
+    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(9)).getMixsetOrFileNode().getName() ,"M2");
+    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(10)).getMixsetOrFileNode().getName() ,"M3");
   }
 
   @Test
