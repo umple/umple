@@ -17,6 +17,7 @@ namespace cruise.umple.compiler;
 class GvFeatureDiagramGenerator {
   depend cruise.umple.compiler.FeatureLink.FeatureConnectingOpType;
   UmpleModel model = null;
+  FeatureModel featureModel = null;
   // Template for what will appear at the start of each graphviz file
   graphStart(umpleVersion) <<! /*This code was generated using the UMPLE <<=umpleVersion>> modeling language! */
   
@@ -75,7 +76,8 @@ digraph FeatureModel {
   //This overrides the superclass's method.
   public void generate(){
     StringBuilder code = new StringBuilder();
-    if(getModel().getFeatureModel() == null)
+    featureModel = getModel().getFeatureModel(); 
+    if(featureModel == null)
     {
       code.append("/* Umple code does not have feature diagram. */");
       return;
@@ -83,7 +85,7 @@ digraph FeatureModel {
     // Output basic gv file header
     _graphStart(0,code);
     // Iterate through each root feature. 
-    for (FeatureNode featureNode : getModel().getFeatureModel().getRootFeatures())
+    for (FeatureNode featureNode : featureModel.getRootFeatures())
     {
       List <FeatureLink> featureNodeOutLinks = featureNode.getSourceFeatureLink();
       for(FeatureLink flink : featureNodeOutLinks)
@@ -139,7 +141,7 @@ digraph FeatureModel {
   {
     if(featureNode.getIsLeaf())
     {
-      boolean shouldColor = getModel().getFeatureModel().isUsedFeatureLeaf((FeatureLeaf)featureNode);
+      boolean shouldColor = featureModel.isUsedFeatureLeaf((FeatureLeaf)featureNode);
       if(shouldColor)
       { 
         appendSpaces(code,indentLevel);
