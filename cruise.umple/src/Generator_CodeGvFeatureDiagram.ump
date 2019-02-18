@@ -84,6 +84,8 @@ digraph FeatureModel {
     }
     // Output basic gv file header
     _graphStart(0,code);
+    //display the status of the invariant of FM
+    code.append(configurationStatus());
     // Iterate through each root feature. 
     for (FeatureNode featureNode : featureModel.getRootFeatures())
     {
@@ -148,6 +150,19 @@ digraph FeatureModel {
         code.append(featureNode.getName()+" [style=filled fillcolor=\"chartreuse\"]" + "; \n"); 
       }
     }
+  }
+
+  public String configurationStatus()
+  {
+    String result = "  InvariantstatusNode[label=\"  Configuration Status:\" shape=plaintext] \n";
+    if(featureModel.satisfyFeatureModel())
+    {
+      result = result + "  validStatus[label=\"Valid\" shape=plaintext fontcolor=blue];\n";
+    }
+    else 
+    result = result + "  validStatus[label=\"Not Valid  \" shape=plaintext fontcolor=red];\n";
+
+    return result;
   }
 
   protected void terminateCode(StringBuilder code){ 
