@@ -17,8 +17,11 @@ namespace cruise.umple.compiler;
 class GvFeatureDiagramGenerator {
   depend cruise.umple.compiler.FeatureLink.FeatureConnectingOpType;
   UmpleModel model = null;
-  // Template for what will appear at the start of each graph file
-  graphStart(umpleVersion) <<!digraph FeatureModel{ 
+  FeatureModel featureModel = null;
+  // Template for what will appear at the start of each graphviz file
+  graphStart(umpleVersion) <<! /*This code was generated using the UMPLE <<=umpleVersion>> modeling language! */
+  
+digraph FeatureModel { 
   node [shape=rectangle]  
   edge [arrowhead=none] 
 !>>
@@ -46,6 +49,8 @@ class GvFeatureDiagramGenerator {
           FeatureLeaf fLeaf = ((FeatureLeaf)featureNodes.get(i));
           appendSpaces(code,indentLevel);
           code.append(sourceFeatureNode.getUniqueFeatureNodeName() +" -> "+ fLeaf.getName()+" ;"+"\n");
+          fillColorOfFeatureNode(code,fLeaf,indentLevel);
+          
         }
       }
       else 
@@ -53,6 +58,7 @@ class GvFeatureDiagramGenerator {
         code.append(""+sourceFeatureNode.getUniqueFeatureNodeName()+" -> "+featureNode.getName()+" ");
         code.append(getGvTargetShape(featureLink.getFeatureConnectingOpType()));
         code.append(" ;"+"\n");    
+        fillColorOfFeatureNode(code,featureNode,indentLevel);
       }
     }
     else //if the node is not leaf node 
@@ -70,15 +76,18 @@ class GvFeatureDiagramGenerator {
   //This overrides the superclass's method.
   public void generate(){
     StringBuilder code = new StringBuilder();
-    // Output basic gv file header
-    if(getModel().getFeatureModel() == null)
+    featureModel = getModel().getFeatureModel(); 
+    if(featureModel == null)
     {
       code.append("/* Umple code does not have feature diagram. */");
       return;
     }
+    // Output basic gv file header
     _graphStart(0,code);
-     // Iterate through each root feature. 
-    for (FeatureNode featureNode : getModel().getFeatureModel().getRootFeatures())
+    //display the status of the invariant of FM
+    code.append(configurationStatus());
+    // Iterate through each root feature. 
+    for (FeatureNode featureNode : featureModel.getRootFeatures())
     {
       List <FeatureLink> featureNodeOutLinks = featureNode.getSourceFeatureLink();
       for(FeatureLink flink : featureNodeOutLinks)
@@ -87,9 +96,7 @@ class GvFeatureDiagramGenerator {
         generateFeatureNodeShape(flink,code);
       }		    
     }
-
     terminateCode(code);
-    // code.append(" \n } \n");
   }
 
   public static String getGvTargetShape(FeatureConnectingOpType featureConnectingOpType)
@@ -124,16 +131,42 @@ class GvFeatureDiagramGenerator {
       return nodeName+" [label=\"\" shape=triangle fixedsize=true  color=black width=.3 height=0.3 margin=0 ] "+end;
       case XOR:
       return nodeName+" [label=\"\" shape=triangle fixedsize=true style=filled color=black width=.3 height=0.3 margin=0 ]"+end;
-      case Multiplicity://
-      //return nodeName+" [label=\"multiplicity\"]";
-      return "";
+      case Multiplicity: // nothing to add here. It will be handled in getGvMultiplicityShape(...)
+      return "\n";
       default:
       return nodeName +end;
     }
   }
 
+  //This method fills the background color of a featureLeaf if it is used.
+  public void fillColorOfFeatureNode(StringBuilder code, FeatureNode featureNode, int indentLevel)
+  {
+    if(featureNode.getIsLeaf())
+    {
+      boolean shouldColor = featureModel.isUsedFeatureLeaf((FeatureLeaf)featureNode);
+      if(shouldColor)
+      { 
+        appendSpaces(code,indentLevel);
+        code.append(featureNode.getName()+" [style=filled fillcolor=\"chartreuse\"]" + "; \n"); 
+      }
+    }
+  }
+
+  public String configurationStatus()
+  {
+    String result = "  InvariantstatusNode[label=\"  Configuration Status:\" shape=plaintext] \n";
+    if(featureModel.satisfyFeatureModel())
+    {
+      result = result + "  validStatus[label=\"Valid\" shape=plaintext fontcolor=blue];\n";
+    }
+    else 
+    result = result + "  validStatus[label=\"Not Valid  \" shape=plaintext fontcolor=red];\n";
+
+    return result;
+  }
+
   protected void terminateCode(StringBuilder code){ 
-    code.append("\n }\n");
+    code.append("\n"+"}"+"\n");
     model.setCode(code.toString());
     writeModel();
   }
