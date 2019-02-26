@@ -2216,7 +2216,7 @@ Mousetrap.bind(['ctrl+g'], function(e){
 });
 
 Mousetrap.bind(['ctrl+s'], function(e){
-  Page.clickShowGvFeatureDiagram();
+  Page.clickShowGvStateDiagram();
   return false; //equivalent to e.preventDefault();
 });
 
