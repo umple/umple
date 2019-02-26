@@ -537,7 +537,7 @@ $output = $dataHandle->readData('model.ump');
               <input id="buttonShowGvStateDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/> 
               <a id="labelShowGvStateDiagram" class="buttonExtend">GraphViz State</a> 
             </li>
-			<li id="ttShowGvFeatureDiagram"> 
+	    <li id="ttShowGvFeatureDiagram"> 
               <input id="buttonShowGvFeatureDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVFeatureDiagram"/> 
               <a id="labelShowGvFeatureDiagram" class="buttonExtend">GraphViz Feature</a> 
             </li>
