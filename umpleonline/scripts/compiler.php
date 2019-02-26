@@ -133,6 +133,7 @@ else if (isset($_REQUEST["umpleCode"]))
   {
      $language = "GvStateDiagram";
      $generatorType = "";
+     $stateDiagram = True;
   }
   else if ($language == "featureDiagram")
   {
