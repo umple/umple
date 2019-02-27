@@ -28,6 +28,15 @@ digraph FeatureModel {
 
   emit graphStart()(graphStart(UmpleModel.VERSION_NUMBER));
   
+  // Template for what is output if there is no feature diagram 
+  nofeatureDiagram <<! 
+  node [shape=plaintext];
+  message [fixedsize=true label ="No feature found in the umple file." width=4];
+!>>
+  emit nofeatureDiagram()(nofeatureDiagram);
+
+
+
   public void generateFeatureNodeShape(FeatureLink featureLink , StringBuilder code)
   {
     FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeature(0));
@@ -77,13 +86,15 @@ digraph FeatureModel {
   public void generate(){
     StringBuilder code = new StringBuilder();
     featureModel = getModel().getFeatureModel(); 
+     // Output basic gv file header
+    _graphStart(0,code);
     if(featureModel == null)
     {
-      code.append("/* Umple code does not have feature diagram. */");
-      return;
+      code.append("// Umple code does not have feature diagram. // \n");
+      _nofeatureDiagram(0,code);
     }
-    // Output basic gv file header
-    _graphStart(0,code);
+    else
+    {
     //display the status of the invariant of FM
     code.append(configurationStatus());
     // Iterate through each root feature. 
@@ -95,6 +106,7 @@ digraph FeatureModel {
         code.append("  "+featureNode.getUniqueFeatureNodeName()+" [label=\""+featureNode.getName()+" \" ]; \n");
         generateFeatureNodeShape(flink,code);
       }		    
+    }
     }
     terminateCode(code);
   }
