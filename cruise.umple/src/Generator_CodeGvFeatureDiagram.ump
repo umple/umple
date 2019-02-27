@@ -31,7 +31,7 @@ digraph FeatureModel {
   // Template for what is output if there is no feature diagram 
   nofeatureDiagram <<! 
   node [shape=plaintext];
-  message [fixedsize=true label ="No feature found in the umple file." width=4];
+  message [fixedsize=true label ="No require-statement found in the umple file." width=4];
 !>>
   emit nofeatureDiagram()(nofeatureDiagram);
 

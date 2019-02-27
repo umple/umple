@@ -1848,7 +1848,7 @@ Action.getErrorCode = function(responseText)
     
     if(output == "<p>") output = "";
   }
-  else if(Page.useGvClassDiagram || Page.useGvStateDiagram)
+  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram)
   {
     var miscStuffAndErrorMessages = responseText.split('<svg width=')[0];
     var prelimparts = miscStuffAndErrorMessages.split('errorRow');
