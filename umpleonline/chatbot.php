@@ -26,7 +26,10 @@
             }
         </style>
 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script type="text/javascript">
+
+            var response;
             
             function addMessage() {
               var userInput = document.getElementById('userinput').value;
@@ -36,8 +39,6 @@
                   ('<div class="bubble usermsg">' + userInput + '</div>');
               document.getElementById('userinput').value = ""
               
-              // TODO Actually call chatbot
-              wait(400);
               chatbotReply();
 
               window.scrollTo(0, document.body.scrollHeight);
@@ -50,16 +51,19 @@
             }
 
             function callChatbot(userInput) {
-              var xhttp = new XMLHttpRequest();
-              var reply = "No reply received."
-              xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById('chathistory').innerHTML += ('<div> <h2>' + 
-                            reply + '</h2> </div>');
-                }
-              };
-              xhttp.open("GET", "ajax_info.txt", true);
-              xhttp.send();
+              $(document).ready(function() {
+                var jqueryXHR = $.ajax({
+                  type: 'POST',
+                  url: 'local_watson.php',
+                  dataType: 'json',
+                  data: { 'param': '0', 'input': userInput },
+                });
+                console.log(userInput);
+                jqueryXHR.always(function(resp) {  
+                  response = resp;
+                  console.log(response);
+                });
+              });
             }
 
             function wait(ms){
@@ -80,6 +84,8 @@
         <h1 style="font-family: sans-serif;">Chatbot</h1>
         
         <input type="button" onclick="debug4()" value="debug" id="debug"></input>
+        <input type="button" onclick="callChatbot('Sup?')" value="callChatbot" id="callChatbot"></input>
+
         
         <div id="chathistory"></div>
 
