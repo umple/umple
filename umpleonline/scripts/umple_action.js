@@ -24,7 +24,6 @@ Action.clicked = function(event)
   
   var obj = event.currentTarget;
   var action = obj.id.substring(6);
-  
   if (action == "PhpCode")
   {
     Action.generateCode("php","Php");
@@ -68,6 +67,10 @@ Action.clicked = function(event)
   else if (action == "StructureDiagram")
   {
     Action.generateCode("structureDiagram","structureDiagram");
+  }
+  else if (action == "FeatureDiagram")
+  {
+    Action.generateCode("featureDiagram","featureDiagram");
   }
   else if (action == "classDiagram")
   {
@@ -161,6 +164,10 @@ Action.clicked = function(event)
   else if (action == "ShowGvClassDiagram")
   {
     Action.changeDiagramType({type:"GVClass"});
+  }
+  else if (action == "ShowGvFeatureDiagram")
+  {
+    Action.changeDiagramType({type:"GVFeature"});//buttonShowGvFeatureDiagram
   }
   else if (action == "ShowGvStateDiagram")
   {
@@ -354,6 +361,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useJointJSClassDiagram = false;
     Page.useGvClassDiagram = false;
     Page.useGvStateDiagram = false;
+    Page.useGvFeatureDiagram = false;
     Page.useStructureDiagram = false;
     changedType = true;
     jQuery("#buttonShowEditableClassDiagram").prop('checked', 'checked');
@@ -364,6 +372,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useJointJSClassDiagram = true;
     Page.useGvClassDiagram = false;
     Page.useGvStateDiagram = false;
+    Page.useGvFeatureDiagram = false;
     Page.useStructureDiagram = false;
     changedType = true;
     jQuery("#buttonShowJointJSClassDiagram").prop('checked', 'checked');
@@ -374,6 +383,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useJointJSClassDiagram = false;
     Page.useGvClassDiagram = true;
     Page.useGvStateDiagram = false;
+    Page.useGvFeatureDiagram = false;
     Page.useStructureDiagram = false;
     changedType = true;
     jQuery("#buttonShowGvClassDiagram").prop('checked', 'checked');
@@ -385,8 +395,20 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvClassDiagram = false;
     Page.useGvStateDiagram = true;
     Page.useStructureDiagram = false;
+    Page.useGvFeatureDiagram = false;
     changedType = true;
     jQuery("#buttonShowGvStateDiagram").prop('checked', 'checked');
+  }
+  else if(newDiagramType.type == "GVFeature") {
+   if(Page.useGvFeatureDiagram) return;
+    Page.useEditableClassDiagram = false;
+    Page.useJointJSClassDiagram = false;
+    Page.useGvClassDiagram = false;
+    Page.useGvStateDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useGvFeatureDiagram = true;
+    changedType = true;
+    jQuery("#buttonShowGvFeatureDiagram").prop('checked', 'checked');
   }
   else if(newDiagramType.type == "structure") { // Structure Diagram
     if(Page.useGvStructureDiagram) return;
@@ -395,6 +417,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvClassDiagram = false;
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = true;
+    Page.useGvFeatureDiagram = false;
     changedType = true;
     jQuery("#buttonShowStructureDiagram").prop('checked', 'checked');
   }
@@ -1728,7 +1751,7 @@ Action.updateUmpleDiagramCallback = function(response)
 
     }
     // Display static svg diagram
-    else if(Page.useGvClassDiagram || Page.useGvStateDiagram)
+    else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram )
     {
       jQuery("#umpleCanvas").html(format('{0}', diagramCode));
     }
@@ -1791,7 +1814,7 @@ Action.getDiagramCode = function(responseText)
     if(output == "null") output = "";
     
   }
-  else if(Page.useGvClassDiagram || Page.useGvStateDiagram)
+  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram)
   {
     // The graphviz diagrams are taken from the inner svg tag only. 
     // This allows the website to have a dynamic canvas size around the diagram
@@ -1825,7 +1848,7 @@ Action.getErrorCode = function(responseText)
     
     if(output == "<p>") output = "";
   }
-  else if(Page.useGvClassDiagram || Page.useGvStateDiagram)
+  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram)
   {
     var miscStuffAndErrorMessages = responseText.split('<svg width=')[0];
     var prelimparts = miscStuffAndErrorMessages.split('errorRow');
@@ -2405,6 +2428,9 @@ Action.getLanguage = function()
     if(Page.showMethods) language=language+".showmethods";
     if(!Page.showAttributes) language=language+".hideattributes";
   }
+  if(Page.useGvFeatureDiagram) {language="language=featureDiagram"}
+
+
   return language;
 }
 

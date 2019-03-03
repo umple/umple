@@ -31,6 +31,7 @@ Page.readOnly = false; // initially allow editing
 Page.useEditableClassDiagram = true;
 Page.useGvClassDiagram = false;
 Page.useGvStateDiagram = false;
+Page.useGvFeatureDiagram = false;
 Page.useStructureDiagram = false;
 Page.showAttributes = true;
 Page.showMethods = false;
@@ -61,6 +62,12 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   {
     Page.useGvClassDiagram = true;
     Page.useEditableClassDiagram = false;
+  }
+  else if(diagramType == "GVFeature")   
+  {
+    Page.useGvFeatureDiagram = true;
+    Page.useEditableClassDiagram = false;
+    Page.useGvStateDiagram = false;
   }
   else if(diagramType == "structureDiagram")
   {
@@ -149,6 +156,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowJointJSClassDiagram");
   Page.initAction("buttonShowGvClassDiagram");
   Page.initAction("buttonShowGvStateDiagram");
+  Page.initAction("buttonShowGvFeatureDiagram");//buttonShowGvFeatureDiagram
   Page.initAction("buttonShowStructureDiagram");
   Page.initAction("buttonShowHideLayoutEditor");
   Page.initAction("buttonManualSync");
@@ -230,6 +238,9 @@ Page.initOptions = function()
    jQuery("#buttonShowJointJSClassDiagram").prop('checked', true);
   if(Page.useGvClassDiagram)
     jQuery("#buttonShowGvClassDiagram").prop('checked', true);
+if(Page.useGvFeatureDiagram)
+    jQuery("#buttonShowGvFeatureDiagram").prop('checked', true);
+
   if(Page.useGvStateDiagram)
     jQuery("#buttonShowGvStateDiagram").prop('checked', true);
   if(Page.useStructureDiagram)
@@ -424,6 +435,9 @@ Page.clickShowGvClassDiagram = function() {
 }
 Page.clickShowGvStateDiagram = function() {
   jQuery('#buttonShowGvStateDiagram').trigger('click');
+}
+Page.clickShowGvFeatureDiagram = function() {
+  jQuery('#buttonShowGvFeatureDiagram').trigger('click');
 }
 Page.clickShowStructureDiagram = function() {
   jQuery('#buttonShowStructureDiagram').trigger('click');
