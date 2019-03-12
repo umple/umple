@@ -29,7 +29,7 @@ techniques.</a></p>
 <p>The example below shows the basic properties of attributes.<p>
 
 @@syntax
-[[attribute]] [[simpleAttribute]]  [[autouniqueAttribute]]  [[derivedAttribute]]  [[complexAttribute]]
+[[attribute]] [[simpleAttribute]]  [[autouniqueAttribute]]  [[multivaluedAttribute]]  [[derivedAttribute]]  [[complexAttribute]]
 
 
 @@example
