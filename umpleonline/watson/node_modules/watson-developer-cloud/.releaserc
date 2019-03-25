@@ -1,0 +1,15 @@
+{
+  "branch": "master",
+  "verifyConditions": ["@semantic-release/changelog", "@semantic-release/npm", "@semantic-release/git"],
+  "prepare": ["@semantic-release/changelog", "@semantic-release/npm", "@semantic-release/git"],
+  "publish": [
+    "@semantic-release/npm",
+    {
+      "path": "@semantic-release/github",
+      "assets": [
+        {"path": "dist/watson.js"},
+        {"path": "dist/watson.min.js"}
+      ]
+    }
+  ]
+}

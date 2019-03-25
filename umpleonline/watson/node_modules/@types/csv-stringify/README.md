@@ -1,0 +1,16 @@
+# Installation
+> `npm install --save @types/csv-stringify`
+
+# Summary
+This package contains type definitions for csv-stringify (https://github.com/wdavidw/node-csv-stringify).
+
+# Details
+Files were exported from https://www.github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/csv-stringify
+
+Additional Details
+ * Last updated: Fri, 19 Jan 2018 22:53:49 GMT
+ * Dependencies: node
+ * Global values: none
+
+# Credits
+These definitions were written by Rogier Schouten <https://github.com/rogierschouten>, Arjen van der Ende <https://github.com/arjenvanderende>.

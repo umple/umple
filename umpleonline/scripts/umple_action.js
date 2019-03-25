@@ -1330,9 +1330,10 @@ Action.promptAndExecuteTest = function() {
 
 // Adds a class with the given name. The class may already be there. Just edits the text.
 // This could be modified to 
-Action.directAddClass = function(className) {
-
-  var umpleJson = Json.toString({"position" : {"x" : "10","y" : "10","width" : "109","height" : "41"},"name" : className});
+Action.directAddClass = function(className, position) {
+  //console.log('position: ' + position + ', ' + !position);
+  if (!position) position = ["10", "10"];
+  var umpleJson = Json.toString({"position" : {"x" : position[0],"y" : position[1],"width" : "109","height" : "41"},"name" : className});
 
   Page.setFeedbackMessage("Adding class "+className);  
   Action.ajax(Action.directUpdateCommandCallback,format("action=addClass&actionCode={0}",umpleJson));

@@ -1,0 +1,16 @@
+# Installation
+> `npm install --save @types/extend`
+
+# Summary
+This package contains type definitions for extend (https://www.npmjs.com/package/extend).
+
+# Details
+Files were exported from https://www.github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/extend
+
+Additional Details
+ * Last updated: Mon, 09 Oct 2017 23:22:01 GMT
+ * Dependencies: none
+ * Global values: none
+
+# Credits
+These definitions were written by Stefan Steinhart <https://github.com/reppners>.

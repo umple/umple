@@ -1,0 +1,164 @@
+/**
+ * Copyright 2015 IBM Corp. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/// <reference types="node" />
+import { RequestResponse } from 'request';
+import { BaseService } from '../lib/base_service';
+import { FileObject } from '../lib/helper';
+declare class DialogV1 extends BaseService {
+    static URL: string;
+    /**
+     * Construct a DialogV1 object.
+     *
+     * @param {Object} options - Options for the service.
+     * @param {string} options.version_date - The API version date to use with the service, in "YYYY-MM-DD" format. Whenever the API is changed in a backwards incompatible way, a new minor version of the API is released. The service uses the API version for the date you specify, or the most recent version before that date. Note that you should not programmatically specify the current date at runtime, in case the API has been updated since your application's release. Instead, specify a version date that is compatible with your application, and don't change it until your application is ready for a later version.
+     * @param {string} [options.url] - The base url to use when contacting the service (e.g. 'https://gateway.watsonplatform.net/conversation/api'). The base url may differ between Bluemix regions.
+     * @param {string} [options.username] - The username used to authenticate with the service. Username and password credentials are only required to run your application locally or outside of Bluemix. When running on Bluemix, the credentials will be automatically loaded from the `VCAP_SERVICES` environment variable.
+     * @param {string} [options.password] - The password used to authenticate with the service. Username and password credentials are only required to run your application locally or outside of Bluemix. When running on Bluemix, the credentials will be automatically loaded from the `VCAP_SERVICES` environment variable.
+     * @param {boolean} [options.use_unauthenticated] - Set to `true` to avoid including an authorization header. This option may be useful for requests that are proxied.
+     * @param {Object} [options.headers] - Default headers that shall be included with every request to the service.
+     * @param {boolean} [options.headers.X-Watson-Learning-Opt-Out] - Set to `true` to opt-out of data collection. By default, all IBM Watson services log requests and their results. Logging is done only to improve the services for future users. The logged data is not shared or made public. If you are concerned with protecting the privacy of users' personal information or otherwise do not want your requests to be logged, you can opt out of logging.
+     * @constructor
+     * @returns {DialogV1}
+     * @throws {Error}
+     */
+    constructor(options: DialogV1.Options);
+    /**
+     * Retrieves the values for profile constiables for specific client ID
+     * @param  {Object}   params   { client_id: '', dialog_id: '', name:''}
+     */
+    getProfile(params: DialogV1.GetProfileParams, callback: DialogV1.Callback): NodeJS.ReadableStream | void;
+    /**
+     * Sets the values for profile variables
+     * @param  {Object}   params   { client_id: '', dialog_id: '', name_values:''}
+     */
+    updateProfile(params: DialogV1.UpdateProfileParams, callback: DialogV1.Callback): NodeJS.ReadableStream | void;
+    /**
+     * Returns a chat session data dump for a given date.
+     * @param  {Object}   params   { client_id: '', dialog_id: '', name_values:''}
+     */
+    getConversation(params: DialogV1.GetConversationParams, callback: DialogV1.Callback): NodeJS.ReadableStream | void;
+    /**
+     * Returns a response for a submitted input message.
+     * Also used to start new conversations.
+     * @param  {Object}   params   { client_id: '', dialog_id: '' }
+     */
+    conversation(params: DialogV1.ConversationParams, callback: DialogV1.Callback): NodeJS.ReadableStream | void;
+    /**
+     * Updates content for specified nodes.
+     * @param  {Object}   params   { dialog_id: '' }
+     */
+    updateContent(params: DialogV1.UpdateContentParams, callback: DialogV1.Callback): NodeJS.ReadableStream | void;
+    /**
+     * Gets content for nodes.
+     * @param  {Object}   params   { dialog_id: '' }
+     */
+    getContent(params: DialogV1.GetContentParams, callback: DialogV1.Callback): NodeJS.ReadableStream | void;
+    /**
+     * Create a dialog based on a file and name
+     * @param  {Object}   params   { name: '', file:'' }
+     */
+    createDialog(params: DialogV1.CreateDialogParams, callback: DialogV1.Callback): NodeJS.ReadableStream | void;
+    /**
+     * Returns the dialogs associated with a service instance
+     */
+    getDialogs(params: DialogV1.GetDialogsParams, callback: DialogV1.Callback): NodeJS.ReadableStream | void;
+    /**
+     * Delete a dialog and removes all associated data
+     */
+    deleteDialog(params: DialogV1.DeleteDialogParams, callback: DialogV1.Callback): NodeJS.ReadableStream | void;
+    /**
+     * Update a dialog with a new dialog file
+     * @param  {Object}   params   { dialog_id: '' }
+     */
+    updateDialog(params: DialogV1.UpdateDialogParams, callback: DialogV1.Callback): NodeJS.ReadableStream | void;
+}
+declare namespace DialogV1 {
+    /** Options for the `DialogV1` constructor. */
+    type Options = {
+        url?: string;
+        username?: string;
+        password?: string;
+        use_unauthenticated?: boolean;
+        headers?: object;
+    };
+    /** The callback for a service request. */
+    type Callback = (error: any, body?: any, response?: RequestResponse) => void;
+    interface UpdateDialogParams {
+        /** The dialog template identifier.  */
+        dialog_id: string;
+        /** The dialog template file. Valid file extensions are .mct for encrypeed dialog files, .json and .xml.  */
+        file: FileObject;
+    }
+    interface UpdateContentParams {
+        /** The dialog template identifier.  */
+        dialog_id: string;
+        [key: string]: any;
+    }
+    interface GetContentParams {
+        /** The dialog template identifier.  */
+        dialog_id: string;
+        [key: string]: any;
+    }
+    interface GetDialogsParams {
+    }
+    interface CreateDialogParams {
+        /** The dialog template name.  */
+        name: string;
+        /** The dialog template file. Valid file extensions are .mct for encrypeed dialog files, .json and .xml.  */
+        file: FileObject;
+    }
+    interface DeleteDialogParams {
+        /** The dialog identifier.  */
+        id: string;
+    }
+    interface ConversationParams {
+        /** The dialog template indentifier.  */
+        dialog_id: string;
+        /** A generated conversation identifier number. If it is not specified, a new conversation is started.  */
+        conversation_id: string;
+        /** A generated client identifier number. If it is not specified, a new client identifier is issued.  */
+        client_id: string;
+        /** The user input to be processed. If the conversation_id parameter is blank, this parameter is optional.  */
+        input: string;
+    }
+    interface GetConversationParams {
+        /** The dialog template identifier.  */
+        dialog_id: string;
+        /** The start of the range in YYYY-MM-DD HH:MM:SS format.  */
+        date_from: string;
+        /** The end of the range in YYYY-MM-DD HH:MM:SS format.  */
+        date_to: string;
+        /** The offset starting point in the conversation result list. The default value is 0.  */
+        offset: number;
+        /** The maximum number of conversations to retrieve. The default value is 10000.  */
+        limit: number;
+    }
+    interface GetProfileParams {
+        /** The dialog template identifier.  */
+        dialog_id: string;
+        /** A client ID obtained from /dialog.  */
+        client_id: string;
+        name: string | string[];
+    }
+    interface UpdateProfileParams {
+        /** The dialog template identifier.  */
+        dialog_id: string;
+        /** A client ID obtained from /dialog.  */
+        client_id: string;
+        name_values: string;
+    }
+}
+export = DialogV1;

@@ -114,9 +114,9 @@ Layout.adjustTextEditorHeight = function(height)
   
   if(this.isLayoutVisible)
   {
-    jQuery(modelEditorHandle).outerHeight(height*0.7);
-    if(Page.codeMirrorOn) this.resizeCodeMirrorEditor(height*0.7);
-    jQuery(layoutEditorHandle).outerHeight(height*0.3);
+    //jQuery(modelEditorHandle).outerHeight(height*0.7);
+    //if(Page.codeMirrorOn) this.resizeCodeMirrorEditor(height*0.7);
+    //jQuery(layoutEditorHandle).outerHeight(height*0.3);
   }
   else
   {
