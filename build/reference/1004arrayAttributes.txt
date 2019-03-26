@@ -12,7 +12,7 @@ the attribute notation can be useful sometimes.</p>
 
 @@syntax
 
-[[complexAttribute]]
+[[multivaluedAttribute]]
 
 @@example
 @@source manualexamples/MultiValuedAttributes1.ump
