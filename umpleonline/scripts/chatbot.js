@@ -1,7 +1,10 @@
 var jsonResponse;
 var intent;
 
-const defaultClassPositions = {};
+const defaultClassPositions = [[ 50,  50], [250,  50], [450,  50],
+                               [ 50, 200], [250, 200], [450, 200],
+                               [ 50, 350], [250, 350], [450, 350],
+                               [ 50, 500], [250, 500], [450, 500]];
 var numClasses = 0;
 
 function addMessage() {

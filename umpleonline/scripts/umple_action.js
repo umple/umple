@@ -1331,7 +1331,6 @@ Action.promptAndExecuteTest = function() {
 // Adds a class with the given name. The class may already be there. Just edits the text.
 // This could be modified to 
 Action.directAddClass = function(className, position) {
-  //console.log('position: ' + position + ', ' + !position);
   if (!position) position = ["10", "10"];
   var umpleJson = Json.toString({"position" : {"x" : position[0],"y" : position[1],"width" : "109","height" : "41"},"name" : className});
 
@@ -1352,8 +1351,11 @@ Action.directAddAttribute = function(classname, attribute) {
   // this to have three arguments (if the third one was missing there would be no type, hence
   // string as default.
   // If there is no matching class, this should output a message 
+  var umpleJson = "";
   
-  Page.setFeedbackMessage("((when written) Adding to class "+classname+" attribute "+attribute);  
+  Page.setFeedbackMessage("Adding to class "+classname+" attribute "+attribute);  
+  Action.ajax(Action.directUpdateCommandCallback, format("", umpleJson));
+
   return;
 }
 
@@ -2088,7 +2090,7 @@ Action.ajax = function(callback,post,errors,tabIndependent)
     }
     callback(response);
   } : callback;
-
+  console.log(format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors))
   Ajax.sendRequest("scripts/compiler.php",wrappedCallback,format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
 }
 
