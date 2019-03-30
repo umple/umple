@@ -6,6 +6,14 @@ const http = require('http');
 const querystring = require('querystring');
 const fs = require('fs');
 
+var debug = false;
+
+if (process.argv.length > 2 && process.argv[2] === '-debug') {
+  console.log('Running in debug mode...');
+  debug = true;
+}
+
+
 const secrets = JSON.parse(fs.readFileSync('secrets.json')); 
 
 var userInput = '';
@@ -21,16 +29,18 @@ var assistantId = secrets.assistantId;
 var sessionId;
 
 // Create session.
-service.createSession({
-  assistant_id: assistantId
-}, function(err, result) {
-  if (err) {
-    console.error(err); // something went wrong
-    return;
-  }
-  sessionId = result.session_id;
-  sendMessage(''); // start conversation with empty message
-});
+if(!debug) {
+  service.createSession({
+    assistant_id: assistantId
+  }, function(err, result) {
+    if (err) {
+      console.error(err); // something went wrong
+      return;
+    }
+    sessionId = result.session_id;
+    sendMessage(''); // start conversation with empty message
+  });
+}
 
 var server = http.createServer((request, response) => {
   const { headers, method, url } = request;
@@ -65,6 +75,10 @@ var server = http.createServer((request, response) => {
 // Send message to assistant.
 function sendMessage(messageText) {
   if (messageText === '.exit') return;
+  if (debug) {
+    processResponseDebug(messageText);
+    return;
+  }
   service.message({
     assistant_id: assistantId,
     session_id: sessionId,
@@ -117,5 +131,30 @@ function processResponse(err, response) {
     });
     return;
   }
+}
+
+// debug function used to reply with canned responses in order to avoid unneeded API calls to Watson
+// this function assumes valid input
+function processResponseDebug(messageText) {
+  messageText = messageText.toLowerCase();
+  var words = messageText.split(' ');
+  
+  if (messageText.includes('create a')) { // supports a/an
+    for (var i = 0; i < words.length - 2; i++) {
+      if (words[i] === 'create') {
+        className = words[i + 2].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "); // strip punctuation
+        className = className[0].toUpperCase() + className.substring(1);
+        watsonJson = { output: {
+          intents: [{intent: 'Create_Class'}],
+          entities: [{value: className}],
+          generic: [{text: 'I created a class called ' + className + '.'}]
+        }};
+      }
+    }
+    return;
+  }
+
+  // TODO Add other functionality
+
 }
 
