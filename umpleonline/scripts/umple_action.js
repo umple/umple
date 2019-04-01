@@ -8,6 +8,7 @@
 // located in the umple_action_diagram.js file.
 //
 var Action = new Object();
+var toPrint = "";
 Action.waiting_time = 1500;
 Action.oldTimeout = null;
 Action.elementClicked = false;
@@ -2090,8 +2091,16 @@ Action.ajax = function(callback,post,errors,tabIndependent)
     }
     callback(response);
   } : callback;
-  console.log(format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors))
+  //console.log(format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
   Ajax.sendRequest("scripts/compiler.php",wrappedCallback,format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
+  
+  var h = document.createElement("h");
+  var n = document.createTextNode(post);
+  h.appendChild(n);
+  h.style.display = "none";
+  var ub = document.getElementById('umpleBotUI');
+  ub.appendChild(h);
+  
 }
 
 //Mac Keyboard Shortcut

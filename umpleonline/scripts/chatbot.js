@@ -35,6 +35,13 @@ function chatbotAction() {
   intent = jsonResponse.output.intents[0].intent;
   console.log(jsonResponse);
 
+  var modelLog = "";
+  var list = window.parent.document.getElementsByTagName('h');
+  for (var i = 0; i<list.length; i++){
+	  modelLog+= list[i].firstChild.nodeValue + "\n";
+  }
+  console.log(modelLog);
+  
   const action = {
     'Create_Class': addClass,
     // TODO Add all the other intents here
