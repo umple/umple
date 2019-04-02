@@ -140,8 +140,8 @@ function processResponseDebug(messageText) {
   if (messageText.includes('create a')) { // supports a/an
     for (var i = 0; i < words.length - 2; i++) {
       if (words[i] === 'create') {
-        var className = words[i + 2].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "); // strip punctuation
-        className = className[0].toUpperCase() + className.substring(1);
+        // strip punctuation
+        var className = firstLetterUppercase(words[i + 2].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "));
         watsonJson = { output: {
           intents: [{intent: 'Create_Class'}],
           entities: [{value: className}],
@@ -152,11 +152,10 @@ function processResponseDebug(messageText) {
     return;
   }
 
-  if (messageText.includes('has a')) { // supports a/an
+  if (messageText.includes('has a')) {
     for (var i = 0; i < words.length - 2; i++) {
       if (words[i] === 'has') {
-        var className = words[i - 1]
-        className = className[0].toUpperCase() + className.substring(1);
+        var className = firstLetterUppercase(words[i - 1]);
         var attributeName = words[i + 2].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ");
         watsonJson = { output: {
           intents: [{intent: 'Add_Attribute'}],
@@ -168,7 +167,43 @@ function processResponseDebug(messageText) {
     return;
   }
 
-  // TODO Add other functionality
+  if (messageText.includes('is a')) {
+    for (var i = 0; i < words.length - 2; i++) {
+      if (words[i] === 'is') {
+        var childClassName = firstLetterUppercase(words[i - 1]);
+        var parentClassName = firstLetterUppercase(words[i + 2].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "));
+        watsonJson = { output: {
+          intents: [{intent: 'Add_Inheritance'}],
+          entities: [{value: childClassName}, {value: parentClassName}],
+          generic: [{text: childClassName + ' is a subclass of ' + parentClassName + '.'}]
+        }};
+      }
+    }
+    return;
+  }
+
+  if (messageText.includes('is composed of')) {
+    for (var i = 0; i < words.length - 2; i++) {
+      if (words[i] === 'is') {
+        var wholeClassName = firstLetterUppercase(words[i - 1]);
+        var partClassName = firstLetterUppercase(words[i + 3].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "));
+        // assume the plural when partClassName ends with s
+        if (parentClassName.substr(-1) === 's') {
+          parentClassName = parentClassName.slice(0, -1);
+        }
+        watsonJson = { output: {
+          intents: [{intent: 'Add_Composition'}],
+          entities: [{value: wholeClassName}, {value: partClassName}],
+          generic: [{text: wholeClassName + ' is now composed of ' + partClassName + '.'}]
+        }};
+      }
+    }
+    return;
+  }
+
+  function firstLetterUppercase(input) {
+    return input = input[0].toUpperCase() + input.substring(1);
+  }
 
 }
 

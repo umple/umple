@@ -55,7 +55,8 @@ function chatbotAction() {
   const action = {
     'Create_Class': addClass,
     'Add_Attribute': addAttribute,
-    // TODO Add all the other intents here
+    'Add_Inheritance': addInheritance,
+    'Add_Composition': addComposition
   };
 
   action[intent]();
@@ -100,17 +101,29 @@ function addAttribute() {
   const className = jsonResponse.output.entities[0].value || 'NewClass';
   const attributeName = jsonResponse.output.entities[1].value || 'attributeName';
   var json = modelClassJsons[className];
-  console.log(json);
+  var attributes = {
+    type: "String", name: attributeName, textColor: "black", aColor: "black", newType: "String", newName: attributeName
+  };
   if (typeof json["attributes"] === "undefined") { 
-    json["attributes"] = [{
-      type: "String", name: attributeName, textColor: "black", aColor: "black", newType: "String", newName: attributeName
-    }];
+    json["attributes"] = [attributes];
   } else {
-    json["attributes"].push({
-      type: "String", name: attributeName, textColor: "black", aColor: "black", newType: "String", newName: attributeName
-    });
+    json["attributes"].push(attributes);
   }
   var request = "action=editClass&actionCode=" + JSON.stringify(json);
+  Action.ajax(Action.directUpdateCommandCallback, request);
+}
+
+function addInheritance() {
+  const childClassName = jsonResponse.output.entities[0].value || 'SubClass';
+  const parentClassName = jsonResponse.output.entities[1].value || 'SuperClass';
+  var request = `action=addGeneralization&actionCode={"parentId": ${parentClassName}, "childId": ${childClassName}}`;
+  Action.ajax(Action.directUpdateCommandCallback, request);
+}
+
+function addComposition() {
+  const wholeClassName = jsonResponse.output.entities[0].value || 'Whole';
+  const partClassName = jsonResponse.output.entities[1].value || 'Part';
+  var request = `TODO`;
   Action.ajax(Action.directUpdateCommandCallback, request);
 }
 
