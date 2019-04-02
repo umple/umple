@@ -56,6 +56,7 @@ function chatbotAction() {
     'Create_Class': addClass,
     'Add_Attribute': addAttribute,
     'Add_Inheritance': addInheritance,
+    'Add_Association': addAssociation,
     'Add_Composition': addComposition
   };
 
@@ -117,6 +118,42 @@ function addInheritance() {
   const childClassName = jsonResponse.output.entities[0].value || 'SubClass';
   const parentClassName = jsonResponse.output.entities[1].value || 'SuperClass';
   var request = `action=addGeneralization&actionCode={"parentId": ${parentClassName}, "childId": ${childClassName}}`;
+  Action.ajax(Action.directUpdateCommandCallback, request);
+}
+
+function addAssociation() {
+  const className1 = jsonResponse.output.entities[0].value || 'NewClass1';
+  const className2 = jsonResponse.output.entities[1].value || 'NewClass2';
+  var request = `action=addAssociation&actionCode={  
+    "classOnePosition": ${JSON.stringify(modelClassJsons[className1].position)},
+    "classTwoPosition": ${JSON.stringify(modelClassJsons[className2].position)},
+    "offsetOnePosition":{  
+       "x":"50",
+       "y":"50",
+       "width":"0",
+       "height":"0"
+    },
+    "offsetTwoPosition":{  
+       "x":"50",
+       "y":"50",
+       "width":"0",
+       "height":"0"
+    },
+    "multiplicityOne":"*",
+    "multiplicityTwo":"*",
+    "name":"${className1}__${className2}",
+    "roleOne":"",
+    "roleTwo":"",
+    "isSymmetricReflexive":"false",
+    "isLeftNavigable":"true",
+    "isRightNavigable":"true",
+    "isLeftComposition":"false",
+    "isRightComposition":"false",
+    "color":"black",
+    "id":"${"umpleAssociation_" + 2*numClasses}",
+    "classOneId":"${className1}",
+    "classTwoId":"${className2}"
+  }`;
   Action.ajax(Action.directUpdateCommandCallback, request);
 }
 

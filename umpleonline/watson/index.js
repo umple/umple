@@ -183,7 +183,7 @@ function processResponseDebug(messageText) {
   }
 
   if (messageText.includes('is composed of')) {
-    for (var i = 0; i < words.length - 2; i++) {
+    for (var i = 0; i < words.length - 3; i++) {
       if (words[i] === 'is') {
         var wholeClassName = firstLetterUppercase(words[i - 1]);
         var partClassName = firstLetterUppercase(words[i + 3].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "));
@@ -195,6 +195,28 @@ function processResponseDebug(messageText) {
           intents: [{intent: 'Add_Composition'}],
           entities: [{value: wholeClassName}, {value: partClassName}],
           generic: [{text: wholeClassName + ' is now composed of ' + partClassName + '.'}]
+        }};
+      }
+    }
+    return;
+  }
+
+  // not very useful, but good for testing
+  if (messageText.includes('is associated with')) {
+    for (var i = 0; i < words.length - 3; i++) {
+      if (words[i] === 'is') {
+        var className1 = firstLetterUppercase(words[i - 1]);
+        var className2 = '';
+        if (words[i + 3] === 'a') { 
+          className2 = words[i + 4]; 
+        } else {
+          className2 = words[i + 3];
+        }
+        className2 = firstLetterUppercase(className2.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "));
+        watsonJson = { output: {
+          intents: [{intent: 'Add_Association'}],
+          entities: [{value: className1}, {value: className2}],
+          generic: [{text: 'A ' + className1 + ' has many ' + className2 + 's.'}]
         }};
       }
     }
