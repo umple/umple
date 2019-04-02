@@ -167,21 +167,6 @@ function processResponseDebug(messageText) {
     return;
   }
 
-  if (messageText.includes('is a')) {
-    for (var i = 0; i < words.length - 2; i++) {
-      if (words[i] === 'is') {
-        var childClassName = firstLetterUppercase(words[i - 1]);
-        var parentClassName = firstLetterUppercase(words[i + 2].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "));
-        watsonJson = { output: {
-          intents: [{intent: 'Add_Inheritance'}],
-          entities: [{value: childClassName}, {value: parentClassName}],
-          generic: [{text: childClassName + ' is a subclass of ' + parentClassName + '.'}]
-        }};
-      }
-    }
-    return;
-  }
-
   if (messageText.includes('is composed of')) {
     for (var i = 0; i < words.length - 3; i++) {
       if (words[i] === 'is') {
@@ -217,6 +202,21 @@ function processResponseDebug(messageText) {
           intents: [{intent: 'Add_Association'}],
           entities: [{value: className1}, {value: className2}],
           generic: [{text: 'A ' + className1 + ' has many ' + className2 + 's.'}]
+        }};
+      }
+    }
+    return;
+  }
+
+  if (messageText.includes('is a')) {
+    for (var i = 0; i < words.length - 2; i++) {
+      if (words[i] === 'is') {
+        var childClassName = firstLetterUppercase(words[i - 1]);
+        var parentClassName = firstLetterUppercase(words[i + 2].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "));
+        watsonJson = { output: {
+          intents: [{intent: 'Add_Inheritance'}],
+          entities: [{value: childClassName}, {value: parentClassName}],
+          generic: [{text: childClassName + ' is a subclass of ' + parentClassName + '.'}]
         }};
       }
     }
