@@ -64,8 +64,6 @@ var server = http.createServer((request, response) => {
 
     const responseBody = { headers, method, url, body };
 
-    //response.write(JSON.stringify(responseBody));
-
     console.log(JSON.stringify(watsonJson) + "\n");
     response.write(JSON.stringify(watsonJson));
     response.end();
@@ -138,16 +136,32 @@ function processResponse(err, response) {
 function processResponseDebug(messageText) {
   messageText = messageText.toLowerCase();
   var words = messageText.split(' ');
-  
+
   if (messageText.includes('create a')) { // supports a/an
     for (var i = 0; i < words.length - 2; i++) {
       if (words[i] === 'create') {
-        className = words[i + 2].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "); // strip punctuation
+        var className = words[i + 2].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "); // strip punctuation
         className = className[0].toUpperCase() + className.substring(1);
         watsonJson = { output: {
           intents: [{intent: 'Create_Class'}],
           entities: [{value: className}],
           generic: [{text: 'I created a class called ' + className + '.'}]
+        }};
+      }
+    }
+    return;
+  }
+
+  if (messageText.includes('has a')) { // supports a/an
+    for (var i = 0; i < words.length - 2; i++) {
+      if (words[i] === 'has') {
+        var className = words[i - 1]
+        className = className[0].toUpperCase() + className.substring(1);
+        var attributeName = words[i + 2].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ");
+        watsonJson = { output: {
+          intents: [{intent: 'Add_Attribute'}],
+          entities: [{value: className}, {value: attributeName}],
+          generic: [{text: className + ' now has the attribute ' + attributeName + '.'}]
         }};
       }
     }

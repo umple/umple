@@ -1,5 +1,8 @@
 var jsonResponse;
 var intent;
+var modelLog = "";
+var modelClassJsons = {};
+var Action = window.parent.Action;
 
 const defaultClassPositions = [[ 50,  50], [250,  50], [450,  50],
                                [ 50, 200], [250, 200], [450, 200],
@@ -31,23 +34,32 @@ function chatbotReply(response) {
   window.scrollTo(0, document.body.scrollHeight);
 }
 
-function chatbotAction() {
-  intent = jsonResponse.output.intents[0].intent;
-  console.log(jsonResponse);
-
-  var modelLog = "";
+function updateModelLog() {
   var list = window.parent.document.getElementsByTagName('h');
-  for (var i = 0; i<list.length; i++){
-	  modelLog+= list[i].firstChild.nodeValue + "\n";
+  for (var i = 0; i < list.length; i++){
+    var postCmd = list[i].firstChild.nodeValue;
+    modelLog += postCmd + "\n\n";
+    
+    if (postCmd.includes("action=addClass")) {
+      postCmd = postCmd.replace("action=addClass&actionCode=", "");
+      var classInfo = JSON.parse(postCmd);
+      modelClassJsons[classInfo.name] = classInfo;
+    }
   }
   console.log(modelLog);
+}
+
+function chatbotAction() {
+  intent = jsonResponse.output.intents[0].intent;
   
   const action = {
     'Create_Class': addClass,
+    'Add_Attribute': addAttribute,
     // TODO Add all the other intents here
   };
 
   action[intent]();
+  updateModelLog();
 }
 
 function callChatbot(userInput) {
@@ -84,6 +96,24 @@ function addClass() {
   numClasses++;
 }
 
+function addAttribute() {
+  const className = jsonResponse.output.entities[0].value || 'NewClass';
+  const attributeName = jsonResponse.output.entities[1].value || 'attributeName';
+  var json = modelClassJsons[className];
+  console.log(json);
+  if (typeof json["attributes"] === "undefined") { 
+    json["attributes"] = [{
+      type: "String", name: attributeName, textColor: "black", aColor: "black", newType: "String", newName: attributeName
+    }];
+  } else {
+    json["attributes"].push({
+      type: "String", name: attributeName, textColor: "black", aColor: "black", newType: "String", newName: attributeName
+    });
+  }
+  var request = "action=editClass&actionCode=" + JSON.stringify(json);
+  Action.ajax(Action.directUpdateCommandCallback, request);
+}
+
 function debug4() {
-  window.parent.Action.directAddClass("Pizza", ['500', '750']);
+  Action.directAddClass("Pizza", ['500', '750']);
 }
