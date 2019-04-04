@@ -2,7 +2,9 @@ var jsonResponse;
 var intent;
 var modelLog = "";
 var modelClassJsons = {};
+var umpleCode;
 var Action = window.parent.Action;
+var Page = window.parent.Page;
 
 const defaultClassPositions = [[ 50,  50], [250,  50], [450,  50],
                                [ 50, 200], [250, 200], [450, 200],
@@ -49,6 +51,11 @@ function updateModelLog() {
   console.log(modelLog);
 }
 
+function updateUmpleCode() {
+  umpleCode = Page.getUmpleCode()
+  console.log(umpleCode);
+}
+
 function chatbotAction() {
   intent = jsonResponse.output.intents[0].intent;
   
@@ -82,6 +89,7 @@ function callChatbot(userInput) {
       chatbotReply(jsonResponse.output.generic[0].text);
     });
   });
+  setTimeout(updateUmpleCode, 3000);
 }
 
 function wait(ms) {
@@ -94,7 +102,7 @@ function wait(ms) {
 
 function addClass() {
   const className = jsonResponse.output.entities[0].value || 'NewClass';
-  window.parent.Action.directAddClass(className, defaultClassPositions[numClasses]);
+  Action.directAddClass(className, defaultClassPositions[numClasses]);
   numClasses++;
 }
 
@@ -160,8 +168,16 @@ function addAssociation() {
 function addComposition() {
   const wholeClassName = jsonResponse.output.entities[0].value || 'Whole';
   const partClassName = jsonResponse.output.entities[1].value || 'Part';
+
+  for (var i = 0; i < umpleCode.childElements().length; i++) {
+    if ((umpleCode.childElements()[i].outerHTML).includes(wholeClassName)) {
+      umpleCode.childElements()[i + 1].insertAdjacentHTML('afterEnd', `<pre>  1 <@>- * ${partClassName};</pre>`);
+      break;
+    }
+  }
+
   var request = `TODO`;
-  Action.ajax(Action.directUpdateCommandCallback, request);
+  //Action.ajax(Action.directUpdateCommandCallback, request);
 }
 
 function debug4() {
