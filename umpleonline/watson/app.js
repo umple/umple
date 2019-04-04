@@ -257,7 +257,7 @@ var server = http.createServer((request, response) => {
     response.setHeader('Content-Type', 'application/json');
 
     const responseBody = { headers, method, url, body };
-
+    wait(3000);
     console.log(JSON.stringify(watsonJson) + "\n");
     response.write(JSON.stringify(watsonJson));
     response.end();
