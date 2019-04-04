@@ -32,13 +32,10 @@ if (process.argv.length > 2 && process.argv[2] === '-debug') {
   debug = true;
 }
 
-var userInput = '';
-var watsonJson = {};
-
-// The following requires are needed for logging purposes
-var uuid = require('uuid');
-var vcapServices = require('vcap_services');
-var basicAuth = require('basic-auth-connect');
+// Ensure NLU is not confused by sending it this exact string
+var firstMessage = 'hello, how can you?';
+var userInput = firstMessage;
+var watsonJson = null;
 
 var app = express();
 
@@ -89,18 +86,19 @@ var features = {
 };
 
 // Endpoint to be call from the client side
-if (!debug) {
-  app.post('/api/message', function (req, res) {
+function callWatson() {
+  //app.post('/api/message', function (req, res) {
+    console.log("Here!!!");
     var workspace = process.env.WORKSPACE_ID || '<workspace-id>';
     if (!workspace || workspace === '<workspace-id>') {
-      return res.json({
+      return null; /*res.json({
         'output': {
           'text': `The app has not been configured with a <b>WORKSPACE_ID</b> environment variable. Please refer to the ' +
           '<a href="https://github.com/watson-developer-cloud/conversation-simple">README</a> documentation on how to set this variable. <br>' +
           'Once a workspace has been defined the intents may be imported from ' +
           '<a href="https://github.com/watson-developer-cloud/conversation-simple/blob/master/training/car_workspace.json">here</a> in order to get a working application.`
         }
-      });
+      });*/
     }
     var payload = {
       workspace_id: workspace,
@@ -108,26 +106,25 @@ if (!debug) {
       input: {}
     };
     var params = null;
-    if (req.body) {
-      if (req.body.input) {
-        payload.input = req.body.input;
-        //userInput = payload.input.text;
+    //if (req.body) {
+      //if (req.body.input) {
+        payload.input.text = userInput;
+        payload.input.type = 'text';
         params = { text: userInput, features: features };
-      }
-      if (req.body.context) {
-        // The client must maintain context/state
-        payload.context = req.body.context;
-      }
-    }
+      //}
+      //if (req.body.context) {
+        // TODO The client must maintain context/state
+        //payload.context = req.body.context;
+      //}
+    //}
 
     if (params == null) {
-      // Ensure NLU is not confused by sending it this exact string
-      params = { text: "hello, how can you?", features: features }
+      params = { text: firstMessage, features: features }
     }
 
     nlu.analyze(params, function (error, response) {
       if (error) {
-        return res.status(error.code || 500).json(error);
+        return null; //res.status(error.code || 500).json(error);
       }
       if (response != null) {
         //if response is not null, print response from NLU
@@ -221,24 +218,29 @@ if (!debug) {
       // Send the input to the conversation service
       conversation.message(payload, function (err, data) {
         if (err) {
-          return res.status(err.code || 500).json(err);
+          return null; //res.status(err.code || 500).json(err);
         }
         watsonJson = data;
         console.log(watsonJson);
-        updateResponse(res, data);
+        var res = null;
+        //updateResponse(res, data);
       });
 
     });
     
-  });
-} else {
+  //});
 
+  //wait(3000);
+  return "callWatson returned";
 }
+
+// call Watson once to initialize it
+callWatson();
 
 var server = http.createServer((request, response) => {
   const { headers, method, url } = request;
   let body = [];
-  console.log('Called index.js \n');
+  console.log('Called app.js \n');
   response.setHeader("Access-Control-Allow-Origin", "*");
 
   request.on('data', (info) => {
@@ -248,7 +250,7 @@ var server = http.createServer((request, response) => {
     const qs = querystring.parse(body);
     userInput = qs.input;
     console.log(userInput);
-    sendMessage(userInput);
+    console.log(callWatson());
 
     response.on('error', (err) => { console.error(err); });
     response.statusCode = 200;
@@ -304,6 +306,14 @@ function checkWeather(data) {
   return data.intents && data.intents.length > 0 && data.intents[0].intent === 'weather'
     && (data.context != null) && (data.context.appCity != null) && (data.context.appST != null);
 };
+
+function wait(ms) {
+  var start = new Date().getTime();
+  var end = start;
+  while (end < start + ms) {
+    end = new Date().getTime();
+  }
+}
 
 module.exports = app;
 

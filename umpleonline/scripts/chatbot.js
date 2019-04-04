@@ -57,14 +57,14 @@ function updateUmpleCode() {
 }
 
 function chatbotAction() {
-  intent = jsonResponse.output.intents[0].intent;
+  intent = jsonResponse.intents[0].intent;
   
   const action = {
-    'Create_Class': addClass,
-    'Add_Attribute': addAttribute,
-    'Add_Inheritance': addInheritance,
-    'Add_Association': addAssociation,
-    'Add_Composition': addComposition
+    'create_class': addClass,
+    'add_attribute': addAttribute,
+    'create_inheritance': addInheritance,
+    'create_association': addAssociation,
+    'create_composition': addComposition
   };
 
   action[intent]();
@@ -75,7 +75,7 @@ function callChatbot(userInput) {
   $(document).ready(function() {
     var jqueryXHR = $.ajax({
       type: 'POST',
-      url: 'http://localhost:8002/watson/index.js',
+      url: 'http://localhost:8002/watson/app.js',
       dataType: 'json',
       data: {
         'param': '0',
@@ -83,10 +83,12 @@ function callChatbot(userInput) {
       },
     });
     console.log(userInput);
+    console.log(jsonResponse);
     jqueryXHR.always(function(resp) {
       jsonResponse = resp;
+      console.log(resp);
       chatbotAction();
-      chatbotReply(jsonResponse.output.generic[0].text);
+      chatbotReply(jsonResponse.output.text[0]);
     });
   });
   setTimeout(updateUmpleCode, 3000);
@@ -101,7 +103,7 @@ function wait(ms) {
 }
 
 function addClass() {
-  const className = jsonResponse.output.entities[0].value || 'NewClass';
+  const className = jsonResponse.entities[0].value || 'NewClass';
   Action.directAddClass(className, defaultClassPositions[numClasses]);
   numClasses++;
 }
@@ -123,8 +125,8 @@ function addAttribute() {
 }
 
 function addInheritance() {
-  const childClassName = jsonResponse.output.entities[0].value || 'SubClass';
-  const parentClassName = jsonResponse.output.entities[1].value || 'SuperClass';
+  const childClassName = jsonResponse.context.varChild || 'SubClass';
+  const parentClassName = jsonResponse.context.varParent || 'SuperClass';
   var request = `action=addGeneralization&actionCode={"parentId": ${parentClassName}, "childId": ${childClassName}}`;
   Action.ajax(Action.directUpdateCommandCallback, request);
 }
@@ -166,8 +168,8 @@ function addAssociation() {
 }
 
 function addComposition() {
-  const wholeClassName = jsonResponse.output.entities[0].value || 'Whole';
-  const partClassName = jsonResponse.output.entities[1].value || 'Part';
+  const wholeClassName = jsonResponse.context.varContainer || 'Whole';
+  const partClassName = jsonResponse.context.varPart || 'Part';
 
   for (var i = 0; i < umpleCode.childElements().length; i++) {
     if ((umpleCode.childElements()[i].outerHTML).includes(wholeClassName)) {
