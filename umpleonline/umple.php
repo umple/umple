@@ -266,8 +266,8 @@ $output = $dataHandle->readData('model.ump');
         <textarea id="umpleLayoutEditorText" class="umpleLayoutEditor" wrap="off"></textarea>
       </div>
     </div>
-    <div id="umpleBotUI" class="umpleBotUI">
-      <iframe src="chatbot.php"></iframe>
+    <div id="umpleBotUI" class="umpleBotUI inRow">
+      <iframe src="chatbot.php" height=900></iframe>
     </div>
     
     <div id="paletteColumn" class="inRow">
@@ -567,6 +567,8 @@ $output = $dataHandle->readData('model.ump');
     <div id="umpleCanvasColumn" class="umpleCanvasColumn inRow">
       <div id="umpleCanvas"  tabIndex="1" class="surface"></div>
     </div>
+    
+
   </div>
  <a name="genArea"/>  
   <div id="generatedCodeRow" class="row">
