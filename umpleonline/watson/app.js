@@ -36,6 +36,7 @@ if (process.argv.length > 2 && process.argv[2] === '-debug') {
 var firstMessage = 'hello, how can you?';
 var userInput = firstMessage;
 var watsonJson = null;
+var globalResponse = null;
 
 var app = express();
 
@@ -86,7 +87,7 @@ var features = {
 };
 
 // Endpoint to be call from the client side
-function callWatson() {
+async function callWatson(callback) {
   //app.post('/api/message', function (req, res) {
     console.log("Here!!!");
     var workspace = process.env.WORKSPACE_ID || '<workspace-id>';
@@ -122,7 +123,7 @@ function callWatson() {
       params = { text: firstMessage, features: features }
     }
 
-    nlu.analyze(params, function (error, response) {
+    let promise = nlu.analyze(params, async function (error, response) {
       if (error) {
         return null; //res.status(error.code || 500).json(error);
       }
@@ -216,7 +217,7 @@ function callWatson() {
         console.log('response from NLU entity extraction is null');
       }
       // Send the input to the conversation service
-      conversation.message(payload, function (err, data) {
+      var innerFunction = async function (err, data) {
         if (err) {
           return null; //res.status(err.code || 500).json(err);
         }
@@ -224,21 +225,30 @@ function callWatson() {
         console.log(watsonJson);
         var res = null;
         //updateResponse(res, data);
-      });
+        callback();
 
+        return watsonJson;
+      }
+      let innerPromise = conversation.message(payload, innerFunction);
+      await innerPromise;
+      return watsonJson;
     });
+    await promise;
     
   //});
 
   //wait(3000);
-  return "callWatson returned";
+  console.log("callWatson() returned");
+  return watsonJson;
 }
 
 // call Watson once to initialize it
-callWatson();
-//callWatson();
+// (async () => {
+//   callWatson();
+// })();
 
 var server = http.createServer((request, response) => {
+  globalResponse = response;
   const { headers, method, url } = request;
   let body = [];
   console.log('Called app.js \n');
@@ -251,17 +261,24 @@ var server = http.createServer((request, response) => {
     const qs = querystring.parse(body);
     userInput = qs.input;
     console.log(userInput);
-    console.log(callWatson());
+    var wj = null;
+    (async () => {
+      wj = await callWatson(function() {
+        console.log(JSON.stringify(watsonJson) + "\n");
+        globalResponse.write(JSON.stringify(watsonJson));
+        globalResponse.end();
+      });
+    })();
 
     response.on('error', (err) => { console.error(err); });
     response.statusCode = 200;
     response.setHeader('Content-Type', 'application/json');
 
     const responseBody = { headers, method, url, body };
-    //wait(3000);
-    console.log(JSON.stringify(watsonJson) + "\n");
-    response.write(JSON.stringify(watsonJson));
-    response.end();
+    
+    // console.log(JSON.stringify(wj) + "\n");
+    // response.write(JSON.stringify(wj));
+    // response.end();
   });
 }).listen(8002);
 

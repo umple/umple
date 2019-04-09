@@ -301,10 +301,22 @@ function readPkcs8ECDSAPrivate(der) {
 	assert.equal(version[0], 1, 'unknown version of ECDSA key');
 
 	var d = der.readString(asn1.Ber.OctetString, true);
-	der.readSequence(0xa1);
+	var Q;
 
-	var Q = der.readString(asn1.Ber.BitString, true);
-	Q = utils.ecNormalize(Q);
+	if (der.peek() == 0xa0) {
+		der.readSequence(0xa0);
+		der._offset += der.length;
+	}
+	if (der.peek() == 0xa1) {
+		der.readSequence(0xa1);
+		Q = der.readString(asn1.Ber.BitString, true);
+		Q = utils.ecNormalize(Q);
+	}
+
+	if (Q === undefined) {
+		var pub = utils.publicFromPrivateECDSA(curveName, d);
+		Q = pub.part.Q.data;
+	}
 
 	var key = {
 		type: 'ecdsa',

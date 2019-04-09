@@ -58,6 +58,7 @@ function updateUmpleCode() {
 
 function chatbotAction() {
   intent = jsonResponse.intents[0].intent;
+  console.log("intent: " + intent);
   
   const action = {
     'create_class': addClass,
