@@ -13,7 +13,6 @@ if (process.argv.length > 2 && process.argv[2] === '-debug') {
   debug = true;
 }
 
-
 const secrets = JSON.parse(fs.readFileSync('secrets.json')); 
 
 var userInput = '';
@@ -52,7 +51,6 @@ var server = http.createServer((request, response) => {
     body.push(info);
   }).on('end', () => {
     body = Buffer.concat(body).toString(); 
-    //console.log("\nBody: " + typeof(body) + "\n" + decodeURIComponent(body.replace(/\+/g, " ")));
     const qs = querystring.parse(body);
     userInput = qs.input;
     console.log(userInput);
@@ -143,7 +141,7 @@ function processResponseDebug(messageText) {
         // strip punctuation
         var className = firstLetterUppercase(words[i + 2].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "));
         watsonJson = { output: {
-          intents: [{intent: 'Create_Class'}],
+          intents: [{intent: 'create_class'}],
           entities: [{value: className}],
           generic: [{text: 'I created a class called ' + className + '.'}]
         }};
@@ -158,7 +156,7 @@ function processResponseDebug(messageText) {
         var className = firstLetterUppercase(words[i - 1]);
         var attributeName = words[i + 2].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ");
         watsonJson = { output: {
-          intents: [{intent: 'Add_Attribute'}],
+          intents: [{intent: 'add_attribute'}],
           entities: [{value: className}, {value: attributeName}],
           generic: [{text: className + ' now has the attribute ' + attributeName + '.'}]
         }};
@@ -173,14 +171,14 @@ function processResponseDebug(messageText) {
         var wholeClassName = firstLetterUppercase(words[i - 1]);
         var partClassName = firstLetterUppercase(words[i + 3].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "));
         // assume the plural when partClassName ends with s
-        if (parentClassName.substr(-1) === 's') {
-          parentClassName = parentClassName.slice(0, -1);
+        if (partClassName.substr(-1) === 's') {
+          partClassName = partClassName.slice(0, -1);
         }
-        watsonJson = { output: {
-          intents: [{intent: 'Add_Composition'}],
+        watsonJson = {
+          intents: [{intent: 'create_composition'}],
           entities: [{value: wholeClassName}, {value: partClassName}],
           generic: [{text: wholeClassName + ' is now composed of ' + partClassName + '.'}]
-        }};
+        };
       }
     }
     return;
@@ -199,7 +197,7 @@ function processResponseDebug(messageText) {
         }
         className2 = firstLetterUppercase(className2.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "));
         watsonJson = { output: {
-          intents: [{intent: 'Add_Association'}],
+          intents: [{intent: 'create_association'}],
           entities: [{value: className1}, {value: className2}],
           generic: [{text: 'A ' + className1 + ' has many ' + className2 + 's.'}]
         }};
@@ -214,7 +212,7 @@ function processResponseDebug(messageText) {
         var childClassName = firstLetterUppercase(words[i - 1]);
         var parentClassName = firstLetterUppercase(words[i + 2].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "));
         watsonJson = { output: {
-          intents: [{intent: 'Add_Inheritance'}],
+          intents: [{intent: 'create_inheritance'}],
           entities: [{value: childClassName}, {value: parentClassName}],
           generic: [{text: childClassName + ' is a subclass of ' + parentClassName + '.'}]
         }};
