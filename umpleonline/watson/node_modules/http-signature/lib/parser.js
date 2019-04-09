@@ -2,17 +2,20 @@
 
 var assert = require('assert-plus');
 var util = require('util');
-var utils = require('./utils');
 
 
 
 ///--- Globals
 
-var HASH_ALGOS = utils.HASH_ALGOS;
-var PK_ALGOS = utils.PK_ALGOS;
-var HttpSignatureError = utils.HttpSignatureError;
-var InvalidAlgorithmError = utils.InvalidAlgorithmError;
-var validateAlgorithm = utils.validateAlgorithm;
+var Algorithms = {
+  'rsa-sha1': true,
+  'rsa-sha256': true,
+  'rsa-sha512': true,
+  'dsa-sha1': true,
+  'hmac-sha1': true,
+  'hmac-sha256': true,
+  'hmac-sha512': true
+};
 
 var State = {
   New: 0,
@@ -27,8 +30,17 @@ var ParamsState = {
 };
 
 
+
 ///--- Specific Errors
 
+function HttpSignatureError(message, caller) {
+  if (Error.captureStackTrace)
+    Error.captureStackTrace(this, caller || HttpSignatureError);
+
+  this.message = message;
+  this.name = caller.name;
+}
+util.inherits(HttpSignatureError, Error);
 
 function ExpiredRequestError(message) {
   HttpSignatureError.call(this, message, ExpiredRequestError);
@@ -53,10 +65,7 @@ function MissingHeaderError(message) {
 }
 util.inherits(MissingHeaderError, HttpSignatureError);
 
-function StrictParsingError(message) {
-  HttpSignatureError.call(this, message, StrictParsingError);
-}
-util.inherits(StrictParsingError, HttpSignatureError);
+
 
 ///--- Exported API
 
@@ -79,7 +88,7 @@ module.exports = {
    *         "algorithm": "rsa-sha256",
    *         "headers": [
    *           "date" or "x-date",
-   *           "digest"
+   *           "content-md5"
    *         ],
    *         "signature": "base64"
    *       },
@@ -91,8 +100,6 @@ module.exports = {
    *                   - clockSkew: allowed clock skew in seconds (default 300).
    *                   - headers: required header names (def: date or x-date)
    *                   - algorithms: algorithms to support (default: all).
-   *                   - strict: should enforce latest spec parsing
-   *                             (default: false).
    * @return {Object} parsed out object (see above).
    * @throws {TypeError} on invalid input.
    * @throws {InvalidHeaderError} on an invalid Authorization header error.
@@ -101,8 +108,6 @@ module.exports = {
    *                              either in the request headers from the params,
    *                              or not in the params from a required header
    *                              in options.
-   * @throws {StrictParsingError} if old attributes are used in strict parsing
-   *                              mode.
    * @throws {ExpiredRequestError} if the value of date or x-date exceeds skew.
    */
   parseRequest: function parseRequest(request, options) {
@@ -116,14 +121,11 @@ module.exports = {
     }
     assert.object(options, 'options');
     assert.arrayOfString(options.headers, 'options.headers');
-    assert.optionalFinite(options.clockSkew, 'options.clockSkew');
+    assert.optionalNumber(options.clockSkew, 'options.clockSkew');
 
-    var authzHeaderName = options.authorizationHeaderName || 'authorization';
-
-    if (!request.headers[authzHeaderName]) {
-      throw new MissingHeaderError('no ' + authzHeaderName + ' header ' +
-                                   'present in the request');
-    }
+    if (!request.headers.authorization)
+      throw new MissingHeaderError('no authorization header present in ' +
+                                   'the request');
 
     options.clockSkew = options.clockSkew || 300;
 
@@ -137,10 +139,19 @@ module.exports = {
     var parsed = {
       scheme: '',
       params: {},
-      signingString: ''
+      signingString: '',
+
+      get algorithm() {
+        return this.params.algorithm.toUpperCase();
+      },
+
+      get keyId() {
+        return this.params.keyId;
+      }
+
     };
 
-    var authz = request.headers[authzHeaderName];
+    var authz = request.headers.authorization;
     for (i = 0; i < authz.length; i++) {
       var c = authz.charAt(i);
 
@@ -232,43 +243,23 @@ module.exports = {
 
     // Check the algorithm against the official list
     parsed.params.algorithm = parsed.params.algorithm.toLowerCase();
-    try {
-      validateAlgorithm(parsed.params.algorithm);
-    } catch (e) {
-      if (e instanceof InvalidAlgorithmError)
-        throw (new InvalidParamsError(parsed.params.algorithm + ' is not ' +
-          'supported'));
-      else
-        throw (e);
-    }
+    if (!Algorithms[parsed.params.algorithm])
+      throw new InvalidParamsError(parsed.params.algorithm +
+                                   ' is not supported');
 
     // Build the signingString
     for (i = 0; i < parsed.params.headers.length; i++) {
       var h = parsed.params.headers[i].toLowerCase();
       parsed.params.headers[i] = h;
 
-      if (h === 'request-line') {
-        if (!options.strict) {
-          /*
-           * We allow headers from the older spec drafts if strict parsing isn't
-           * specified in options.
-           */
-          parsed.signingString +=
-            request.method + ' ' + request.url + ' HTTP/' + request.httpVersion;
-        } else {
-          /* Strict parsing doesn't allow older draft headers. */
-          throw (new StrictParsingError('request-line is not a valid header ' +
-            'with strict parsing enabled.'));
-        }
-      } else if (h === '(request-target)') {
-        parsed.signingString +=
-          '(request-target): ' + request.method.toLowerCase() + ' ' +
-          request.url;
-      } else {
+      if (h !== 'request-line') {
         var value = request.headers[h];
-        if (value === undefined)
+        if (!value)
           throw new MissingHeaderError(h + ' was not in the request');
         parsed.signingString += h + ': ' + value;
+      } else {
+        parsed.signingString +=
+          request.method + ' ' + request.url + ' HTTP/' + request.httpVersion;
       }
 
       if ((i + 1) < parsed.params.headers.length)
@@ -297,7 +288,7 @@ module.exports = {
     options.headers.forEach(function (hdr) {
       // Remember that we already checked any headers in the params
       // were in the request, so if this passes we're good.
-      if (parsed.params.headers.indexOf(hdr.toLowerCase()) < 0)
+      if (parsed.params.headers.indexOf(hdr) < 0)
         throw new MissingHeaderError(hdr + ' was not a signed header');
     });
 
@@ -307,8 +298,6 @@ module.exports = {
                                      ' is not a supported algorithm');
     }
 
-    parsed.algorithm = parsed.params.algorithm.toUpperCase();
-    parsed.keyId = parsed.params.keyId;
     return parsed;
   }
 
