@@ -52,3 +52,5 @@ hs_err_pid*
 
 
 umpleonline/watson/secrets\.json
+
+umpleonline/watson/\.env
