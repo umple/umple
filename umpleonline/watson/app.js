@@ -22,56 +22,63 @@ var AssistantV1 = require('watson-developer-cloud/assistant/v1');  // watson ass
 var http = require('http');
 const querystring = require('querystring');
 
-var debug = false;
-
-if (process.argv.length > 2 && process.argv[2] === '-debug') {
-  console.log('Running in debug mode...');
-  debug = true;
-}
-
 // Ensure NLU is not confused by sending it this exact string
 var firstMessage = 'hello, how can you?';
 var userInput = firstMessage;
 var watsonJson = null;
 var globalResponse = null;
 
+var conversation;
+var NaturalLanguageUnderstandingV1;
+var nlu;
+var features;
+
+var debug = false;
+
 // Ctrl-C to close
 process.on('SIGINT', function() {
   process.exit();
 });
 
-// Create the service wrapper
-// Set up Assistant service wrapper.
-var conversation = new AssistantV1({
-  version: '2018-09-20',
-  iam_apikey: process.env.CONVERSATION_USERNAME || '<username>',
-  url: process.env.CONVERSATION_PASSWORD || '<password>'
-});
+if (process.argv.length > 2 && process.argv[2] === '-debug') {
+  console.log('Running in debug mode...');
+  debug = true;
+}
 
-// Create service wrapper for Natural Language Understanding
-const NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js');
+if (!debug) {
+  // Create the service wrapper
+  // Set up Assistant service wrapper.
+  conversation = new AssistantV1({
+    version: '2018-09-20',
+    iam_apikey: process.env.CONVERSATION_USERNAME || '<username>',
+    url: process.env.CONVERSATION_PASSWORD || '<password>'
+  });
 
-var nlu = new NaturalLanguageUnderstandingV1({
-  version: '2018-11-16',
-  iam_apikey: process.env.NATURAL_LANGUAGE_UNDERSTANDING_USERNAME || '<username>',
-  url: process.env.NATURAL_LANGUAGE_UNDERSTANDING_PASSWORD || '<password>'
-});
+  // Create service wrapper for Natural Language Understanding
+  NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js');
+
+  nlu = new NaturalLanguageUnderstandingV1({
+    version: '2018-11-16',
+    iam_apikey: process.env.NATURAL_LANGUAGE_UNDERSTANDING_USERNAME || '<username>',
+    url: process.env.NATURAL_LANGUAGE_UNDERSTANDING_PASSWORD || '<password>'
+  });
 
 
-// Define what features you want to extract with NLU
-// In this case, we're interested in entities and relations
-var features = {
-  categories: {
-    limit: 3
-  },
-  entities: {
-    mentions: true,
-    model: '0af23d03-3b2d-4407-b61e-3d1c63f5e99a'
-  },
-  relations: {
-    model: '0af23d03-3b2d-4407-b61e-3d1c63f5e99a'   
-  }
-};
+  // Define what features you want to extract with NLU
+  // In this case, we're interested in entities and relations
+  features = {
+    categories: {
+      limit: 3
+    },
+    entities: {
+      mentions: true,
+      model: '0af23d03-3b2d-4407-b61e-3d1c63f5e99a'
+    },
+    relations: {
+      model: '0af23d03-3b2d-4407-b61e-3d1c63f5e99a'   
+    }
+  };
+}
 
 // Endpoint to be called from the client side
 function callWatson(callback) {
@@ -191,11 +198,10 @@ function callWatson(callback) {
         return err;
       }
       watsonJson = data;
-      console.log(watsonJson);
-      var res = null;
-      //updateResponse(res, data);
+      //console.log(watsonJson);
+      
       callback();
-
+      
       return watsonJson;
     });
     return watsonJson;
@@ -206,7 +212,7 @@ function callWatson(callback) {
 }
 
 // call Watson once to initialize it
-callWatson(() => {});
+if (!debug) callWatson(() => {});
 
 var server = http.createServer((request, response) => {
   globalResponse = response;
@@ -222,14 +228,132 @@ var server = http.createServer((request, response) => {
     const qs = querystring.parse(body);
     userInput = qs.input;
     console.log(userInput);
-    callWatson(function() {
-      console.log(JSON.stringify(watsonJson) + "\n");
-      globalResponse.write(JSON.stringify(watsonJson));
-      globalResponse.end();
-    });
 
     response.on('error', (err) => { console.error(err); });
     response.statusCode = 200;
     response.setHeader('Content-Type', 'application/json');
+
+    if (!debug) {
+      callWatson(function() {
+        if ((((watsonJson||{}).intents||[])[0]||{}).intent) {
+          writeResponse();
+        } else {
+          processResponseDebug();
+          writeResponse();
+        }
+      });
+    } else {
+      processResponseDebug();
+      writeResponse();
+    }
+
   });
 }).listen(8002);
+
+function writeResponse() {
+  console.log('writeResponse():');
+  console.log(watsonJson);
+  globalResponse.write(JSON.stringify(watsonJson));
+  globalResponse.end();
+}
+
+/**
+ * Debug function used to reply with canned responses in order to avoid unneeded API calls to Watson.
+ * It is also used as a backup when Watson does not understand user input, eg for functionality not yet implemented.
+ * This function assumes valid input.
+ */
+function processResponseDebug() {
+  var messageText = userInput.toLowerCase();
+  var words = messageText.split(' ');
+
+  if (messageText.includes('create a')) { // supports a/an
+    for (var i = 0; i < words.length - 2; i++) {
+      if (words[i] === 'create') {
+        // strip punctuation
+        var className = firstLetterUppercase(words[i + 2].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "));
+        watsonJson = { 
+          intents: [{intent: 'create_class'}],
+          entities: [{value: className}],
+          output: {text: ['I created a class called ' + className + '.']}
+        };
+      }
+    }
+    return;
+  }
+
+  if (messageText.includes('has a')) {
+    for (var i = 0; i < words.length - 2; i++) {
+      if (words[i] === 'has') {
+        var className = firstLetterUppercase(words[i - 1]);
+        var attributeName = words[i + 2].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ");
+        watsonJson = {
+          intents: [{intent: 'add_attribute'}],
+          entities: [{value: className}, {value: attributeName}],
+          output: [{text: className + ' now has the attribute ' + attributeName + '.'}]
+        };
+      }
+    }
+    return;
+  }
+
+  if (messageText.includes('is composed of')) {
+    for (var i = 0; i < words.length - 3; i++) {
+      if (words[i] === 'is') {
+        var wholeClassName = firstLetterUppercase(words[i - 1]);
+        var partClassName = firstLetterUppercase(words[i + 3].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "));
+        // assume the plural when partClassName ends with s
+        if (partClassName.substr(-1) === 's') {
+          partClassName = partClassName.slice(0, -1);
+        }
+        watsonJson = {
+          intents: [{intent: 'create_composition'}],
+          entities: [{value: wholeClassName}, {value: partClassName}],
+          output: [{text: wholeClassName + ' is now composed of ' + partClassName + '.'}]
+        };
+      }
+    }
+    return;
+  }
+
+  // not very useful, but good for testing
+  if (messageText.includes('is associated with')) {
+    for (var i = 0; i < words.length - 3; i++) {
+      if (words[i] === 'is') {
+        var className1 = firstLetterUppercase(words[i - 1]);
+        var className2 = '';
+        if (words[i + 3] === 'a') { 
+          className2 = words[i + 4]; 
+        } else {
+          className2 = words[i + 3];
+        }
+        className2 = firstLetterUppercase(className2.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "));
+        watsonJson = {
+          intents: [{intent: 'create_association'}],
+          entities: [{value: className1}, {value: className2}],
+          output: [{text: 'A ' + className1 + ' has many ' + className2 + 's.'}]
+        };
+      }
+    }
+    return;
+  }
+
+  if (messageText.includes('is a')) {
+    for (var i = 0; i < words.length - 2; i++) {
+      if (words[i] === 'is') {
+        var childClassName = firstLetterUppercase(words[i - 1]);
+        var parentClassName = firstLetterUppercase(words[i + 2].replace(/[^\w\s]|_/g, "").replace(/\s+/g, " "));
+        watsonJson = {
+          intents: [{intent: 'create_inheritance'}],
+          entities: [{value: childClassName}, {value: parentClassName}],
+          output: {text: [childClassName + ' is a subclass of ' + parentClassName + '.']}
+        };
+      }
+    }
+    return;
+  }
+
+  function firstLetterUppercase(input) {
+    return input = input[0].toUpperCase() + input.substring(1);
+  }
+
+}

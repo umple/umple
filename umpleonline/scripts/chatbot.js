@@ -1,6 +1,7 @@
 var jsonResponse;
+var userResponse = '';
 var intent;
-var modelLog = "";
+var modelLog = '';
 var modelClassJsons = {};
 var umpleCode;
 var Action = window.parent.Action;
@@ -10,6 +11,9 @@ const defaultClassPositions = [[ 50,  50], [250,  50], [450,  50],
                                [ 50, 200], [250, 200], [450, 200],
                                [ 50, 350], [250, 350], [450, 350],
                                [ 50, 500], [250, 500], [450, 500]];
+
+
+const defaultUserResponse = "Sorry, I didn't get that, can you rephrase? :)";
 var numClasses = 0;
 
 function addMessage() {
@@ -31,7 +35,7 @@ function chatbotReply(response) {
       ('<div class="bubble chatbot"><b>Chatbot:</b> ' + response + '</div>');
   } else {
     document.getElementById('chathistory').innerHTML +=
-      ('<div class="bubble chatbot"><b>Chatbot:</b>Sorry, I didn\'t get that, can you rephrase? :)</div>');
+      ('<div class="bubble chatbot"><b>Chatbot:</b>' + defaultUserResponse + '</div>');
   }
   window.scrollTo(0, document.body.scrollHeight);
 }
@@ -57,7 +61,7 @@ function updateUmpleCode() {
 }
 
 function chatbotAction() {
-  intent = jsonResponse.intents[0].intent;
+  intent = (((jsonResponse||{}).intents||[])[0]||{}).intent || 'unknown';
   console.log("intent: " + intent);
   
   const action = {
@@ -65,7 +69,8 @@ function chatbotAction() {
     'add_attribute': addAttribute,
     'create_inheritance': addInheritance,
     'create_association': addAssociation,
-    'create_composition': addComposition
+    'create_composition': addComposition,
+    'unknown': () => { chatbotReply(defaultUserResponse); }
   };
 
   action[intent]();
@@ -89,7 +94,7 @@ function callChatbot(userInput) {
       jsonResponse = resp;
       console.log(resp);
       chatbotAction();
-      chatbotReply(jsonResponse.output.text[0]);
+      chatbotReply(userResponse);
     });
   });
   setTimeout(updateUmpleCode, 3000);
@@ -104,14 +109,16 @@ function wait(ms) {
 }
 
 function addClass() {
+  userResponse = jsonResponse.output.text[0];
   const className = jsonResponse.entities[0].value || 'NewClass';
   Action.directAddClass(className, defaultClassPositions[numClasses]);
   numClasses++;
 }
 
 function addAttribute() {
-  const className = jsonResponse.output.entities[0].value || 'NewClass';
-  const attributeName = jsonResponse.output.entities[1].value || 'attributeName';
+  userResponse = jsonResponse.output[0].text;
+  const className = jsonResponse.entities[0].value || 'NewClass';
+  const attributeName = jsonResponse.entities[1].value || 'attributeName';
   var json = modelClassJsons[className];
   var attributes = {
     type: "String", name: attributeName, textColor: "black", aColor: "black", newType: "String", newName: attributeName
@@ -126,15 +133,17 @@ function addAttribute() {
 }
 
 function addInheritance() {
-  const childClassName = jsonResponse.context.varChild || 'SubClass';
-  const parentClassName = jsonResponse.context.varParent || 'SuperClass';
+  userResponse = jsonResponse.output.text[0];
+  const childClassName = jsonResponse.entities[0].value || 'SubClass';
+  const parentClassName = jsonResponse.entities[1].value || 'SuperClass';
   var request = `action=addGeneralization&actionCode={"parentId": ${parentClassName}, "childId": ${childClassName}}`;
   Action.ajax(Action.directUpdateCommandCallback, request);
 }
 
 function addAssociation() {
-  const className1 = jsonResponse.output.entities[0].value || 'NewClass1';
-  const className2 = jsonResponse.output.entities[1].value || 'NewClass2';
+  userResponse = jsonResponse.output[0].text;
+  const className1 = jsonResponse.entities[0].value || 'NewClass1';
+  const className2 = jsonResponse.entities[1].value || 'NewClass2';
   var request = `action=addAssociation&actionCode={  
     "classOnePosition": ${JSON.stringify(modelClassJsons[className1].position)},
     "classTwoPosition": ${JSON.stringify(modelClassJsons[className2].position)},
@@ -169,15 +178,16 @@ function addAssociation() {
 }
 
 function addComposition() {
-  const wholeClassName = jsonResponse.context.varContainer || 'Whole';
-  const partClassName = jsonResponse.context.varPart || 'Part';
+  userResponse = jsonResponse.output[0].text;
+  const wholeClassName = jsonResponse.entities[0].value || 'Whole';
+  const partClassName = jsonResponse.entities[1].value || 'Part';
 
-  for (var i = 0; i < umpleCode.childElements().length; i++) {
-    if ((umpleCode.childElements()[i].outerHTML).includes(wholeClassName)) {
-      umpleCode.childElements()[i + 1].insertAdjacentHTML('afterEnd', `<pre>  1 <@>- * ${partClassName};</pre>`);
-      break;
-    }
-  }
+  // for (var i = 0; i < umpleCode.childElements().length; i++) {
+  //   if ((umpleCode.childElements()[i].outerHTML).includes(wholeClassName)) {
+  //     umpleCode.childElements()[i + 1].insertAdjacentHTML('afterEnd', `<pre>  1 <@>- * ${partClassName};</pre>`);
+  //     break;
+  //   }
+  // }
 
   var request = `TODO`;
   //Action.ajax(Action.directUpdateCommandCallback, request);
