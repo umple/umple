@@ -97,7 +97,7 @@ function callChatbot(userInput) {
       chatbotReply(userResponse);
     });
   });
-  setTimeout(updateUmpleCode, 3000);
+  setTimeout(updateUmpleCode, 2000);
 }
 
 function wait(ms) {
@@ -134,6 +134,7 @@ function addAttribute() {
 
 function addInheritance() {
   userResponse = jsonResponse.output.text[0];
+  fixInheritanceUserResponse();
   const childClassName = jsonResponse.entities[0].value || 'SubClass';
   const parentClassName = jsonResponse.entities[1].value || 'SuperClass';
   var request = `action=addGeneralization&actionCode={"parentId": ${parentClassName}, "childId": ${childClassName}}`;
@@ -178,21 +179,36 @@ function addAssociation() {
 }
 
 function addComposition() {
-  userResponse = jsonResponse.output[0].text;
-  const wholeClassName = jsonResponse.entities[0].value || 'Whole';
-  const partClassName = jsonResponse.entities[1].value || 'Part';
+  userResponse = jsonResponse.output.text[0];
+  const wholeClassName = jsonResponse.context.varContainer || 'Whole';
+  const partClassName = jsonResponse.context.varPart || 'Part';
 
-  // for (var i = 0; i < umpleCode.childElements().length; i++) {
-  //   if ((umpleCode.childElements()[i].outerHTML).includes(wholeClassName)) {
-  //     umpleCode.childElements()[i + 1].insertAdjacentHTML('afterEnd', `<pre>  1 <@>- * ${partClassName};</pre>`);
-  //     break;
-  //   }
-  // }
-
-  var request = `TODO`;
-  //Action.ajax(Action.directUpdateCommandCallback, request);
+  var lines = umpleCode.split('\n');
+  umpleCode = '';
+  var done = false;
+  for (var i = 0; i < lines.length; i++) {
+    if (!done && lines[i].includes(wholeClassName)) {
+      lines.splice(i+2, 0, `  1 <@>- * ${partClassName};`);
+      done = true;
+    }
+    umpleCode += lines[i] + '\n'
+  }
+  
+  Page.setUmpleCode(umpleCode);
 }
 
 function debug4() {
-  Action.directAddClass("Pizza", ['500', '750']);
+  Action.directAddClass("School", defaultClassPositions[numClasses++]);
+}
+
+/**
+ * Temporary workaround a bug in Watson Assistant.
+ * When a sentence is cut off like this "Okay! I've created an inheritance between Fruit and,"
+ * it will attempt to add the missing word.
+ */
+function fixInheritanceUserResponse() {
+  var words = userResponse.split(' ');
+  if (words[words.length - 1] === '') {
+    userResponse += jsonResponse.entities[0].value + '.';
+  }
 }

@@ -234,7 +234,7 @@ var server = http.createServer((request, response) => {
     response.setHeader('Content-Type', 'application/json');
 
     if (!debug) {
-      callWatson(function() {
+      callWatson(() => {
         if ((((watsonJson||{}).intents||[])[0]||{}).intent) {
           writeResponse();
         } else {
@@ -263,9 +263,9 @@ function writeResponse() {
  * This function assumes valid input.
  */
 function processResponseDebug() {
+  console.log('Processing request in debug mode');
   var messageText = userInput.toLowerCase();
   var words = messageText.split(' ');
-
   if (messageText.includes('create a')) { // supports a/an
     for (var i = 0; i < words.length - 2; i++) {
       if (words[i] === 'create') {
@@ -308,7 +308,8 @@ function processResponseDebug() {
         watsonJson = {
           intents: [{intent: 'create_composition'}],
           entities: [{value: wholeClassName}, {value: partClassName}],
-          output: [{text: wholeClassName + ' is now composed of ' + partClassName + '.'}]
+          output: {text: [wholeClassName + ' is now composed of ' + partClassName + '.']},
+          context: {varContainer: wholeClassName, varPart: partClassName}
         };
       }
     }
