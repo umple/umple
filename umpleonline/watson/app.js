@@ -354,7 +354,7 @@ function processResponseDebug() {
   }
 
   function firstLetterUppercase(input) {
-    return input = input[0].toUpperCase() + input.substring(1);
+    return input[0].toUpperCase() + input.substring(1);
   }
 
 }

@@ -111,13 +111,13 @@ function wait(ms) {
 function addClass() {
   userResponse = jsonResponse.output.text[0];
   const className = jsonResponse.entities[0].value || 'NewClass';
-  Action.directAddClass(className, defaultClassPositions[numClasses]);
+  Action.directAddClass(firstLetterUppercase(className), defaultClassPositions[numClasses]);
   numClasses++;
 }
 
 function addAttribute() {
   userResponse = jsonResponse.output[0].text;
-  const className = jsonResponse.entities[0].value || 'NewClass';
+  const className = firstLetterUppercase(jsonResponse.entities[0].value) || 'NewClass';
   const attributeName = jsonResponse.entities[1].value || 'attributeName';
   var json = modelClassJsons[className];
   var attributes = {
@@ -135,16 +135,17 @@ function addAttribute() {
 function addInheritance() {
   userResponse = jsonResponse.output.text[0];
   fixInheritanceUserResponse();
-  const childClassName = jsonResponse.entities[0].value || 'SubClass';
-  const parentClassName = jsonResponse.entities[1].value || 'SuperClass';
+  const childClassName = firstLetterUppercase(jsonResponse.entities[0].value) || 'SubClass';
+  const parentClassName = firstLetterUppercase(jsonResponse.entities[1].value) || 'SuperClass';
+  console.log('par:'+parentClassName)
   var request = `action=addGeneralization&actionCode={"parentId": ${parentClassName}, "childId": ${childClassName}}`;
   Action.ajax(Action.directUpdateCommandCallback, request);
 }
 
 function addAssociation() {
   userResponse = jsonResponse.output[0].text;
-  const className1 = jsonResponse.entities[0].value || 'NewClass1';
-  const className2 = jsonResponse.entities[1].value || 'NewClass2';
+  const className1 = firstLetterUppercase(jsonResponse.entities[0].value) || 'NewClass1';
+  const className2 = firstLetterUppercase(jsonResponse.entities[1].value) || 'NewClass2';
   var request = `action=addAssociation&actionCode={  
     "classOnePosition": ${JSON.stringify(modelClassJsons[className1].position)},
     "classTwoPosition": ${JSON.stringify(modelClassJsons[className2].position)},
@@ -180,14 +181,19 @@ function addAssociation() {
 
 function addComposition() {
   userResponse = jsonResponse.output.text[0];
-  const wholeClassName = jsonResponse.context.varContainer || 'Whole';
-  const partClassName = jsonResponse.context.varPart || 'Part';
+  const wholeClassName = firstLetterUppercase(jsonResponse.context.varContainer) || 'Whole';
+  var partClassName = (jsonResponse.context.varPart).trim()  || 'Part';
+
+  if (partClassName.substr(-1) === 's' && modelClassJsons[partClassName] === undefined) {
+    partClassName = partClassName.slice(0, -1);
+  }
+  partClassName = firstLetterUppercase(partClassName);
 
   var lines = umpleCode.split('\n');
   umpleCode = '';
   var done = false;
   for (var i = 0; i < lines.length; i++) {
-    if (!done && lines[i].includes(wholeClassName)) {
+    if (!done && lines[i].includes('class ' + wholeClassName)) {
       lines.splice(i+2, 0, `  1 <@>- * ${partClassName};`);
       done = true;
     }
@@ -199,6 +205,11 @@ function addComposition() {
 
 function debug4() {
   Action.directAddClass("School", defaultClassPositions[numClasses++]);
+}
+
+function firstLetterUppercase(input) {
+  input = input.trim();
+  return input[0].toUpperCase() + input.substring(1);
 }
 
 /**
