@@ -31,10 +31,10 @@
     </head>
 
     <body>
-        <h1 style="font-family: sans-serif;">Chatbot</h1>
+        <h1 style="font-family: 'Century Gothic', 'CenturyGothic', 'AppleGothic', sans-serif;">UmpleBot</h1>
         
-        <input type="button" onclick="debug4()" value="debug" id="debug"/>
-        <input type="button" onclick="callChatbot('Hey, how are you?')" value="callChatbot" id="callChatbot"/>
+        <!-- <input type="button" onclick="debug4()" value="debug" id="debug"/>
+        <input type="button" onclick="callChatbot('Hey, how are you?')" value="callChatbot" id="callChatbot"/> -->
  
         <div id="chathistory"></div>
 

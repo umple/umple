@@ -6,6 +6,7 @@ var modelClassJsons = {};
 var umpleCode;
 var Action = window.parent.Action;
 var Page = window.parent.Page;
+var Layout = window.parent.Layout;
 
 const defaultClassPositions = [[ 50,  50], [250,  50], [450,  50],
                                [ 50, 200], [250, 200], [450, 200],
@@ -15,6 +16,8 @@ const defaultClassPositions = [[ 50,  50], [250,  50], [450,  50],
 
 const defaultUserResponse = "Sorry, I didn't get that, can you rephrase? :)";
 var numClasses = 0;
+
+Layout.setUmpleCanvasSize(1200, 900);
 
 function addMessage() {
   var userInput = document.getElementById('userinput').value;

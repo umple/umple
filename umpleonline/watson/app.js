@@ -233,14 +233,12 @@ var server = http.createServer((request, response) => {
     response.statusCode = 200;
     response.setHeader('Content-Type', 'application/json');
 
-    if (!debug) {
+    if (!debug && !userInput.includes('has a')) {
       callWatson(() => {
-        if ((((watsonJson||{}).intents||[])[0]||{}).intent) {
-          writeResponse();
-        } else {
+        if (!(((watsonJson||{}).intents||[])[0]||{}).intent) {
           processResponseDebug();
-          writeResponse();
         }
+        writeResponse();
       });
     } else {
       processResponseDebug();

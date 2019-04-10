@@ -269,10 +269,6 @@ $output = $dataHandle->readData('model.ump');
     <div id="umpleBotUI" class="umpleBotUI inRow">
       <iframe src="chatbot.php" height=900></iframe>
     </div>
-
-    <div id="umpleCanvasColumn" class="umpleCanvasColumn inRow">
-      <div id="umpleCanvas"  tabIndex="1" class="surface"></div>
-    </div>
     
     <div id="paletteColumn" class="inRow">
       <div id="palette" class="palette">
