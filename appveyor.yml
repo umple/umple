@@ -11,7 +11,7 @@ cache:
 
 - C:\Users\appveyor\.ant -> appveyor.yml
 - C:\Users\appveyor\.ivy2 -> appveyor.yml
-- C:\tools\php -> appveyor.yml
+- C:\tools\php73 -> appveyor.yml
 - C:\ProgramData\chocolatey\bin -> appveyor.yml
 - C:\ProgramData\chocolatey\lib -> appveyor.yml
 
@@ -28,7 +28,7 @@ init:
 - ps: choco install php --ignore-dependencies
 
 install:
-
+# NOTE if changing php version, make sure you change the cache above
 - ps: $env:Path="C:\Ruby21\bin;C:/tools/ruby22/bin;C:\Program Files (x86)\Java\jdk1.8.0\bin;$($env:Path);C:\tools\php73;C:\tools\php;C:\ProgramData\chocolatey\lib\ant"
 
 - ps: ant -version

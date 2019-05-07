@@ -725,6 +725,7 @@ Page.createBookmark = function()
 Page.toggleTabs = function()
 {
   TabControl.isHidden()? TabControl.showTabs() : TabControl.hideTabs();
+  Layout.layoutHandler.adjustAfterWindowResize();
 }
 
 Page.showDiagramSyncNeeded = function(doShow)
