@@ -743,7 +743,14 @@ function executeCommand($command, $rawcommand = null)
 
 function execRun($command) {
   set_time_limit(0);
-  passthru("( ulimit -t 10; " . $command . ")");
+  // the following prevents runaway server execution
+  // on Linux servers, but since Windows does not have
+  // a ulimit command, we bypass that for Windows  
+  if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+    passthru($command);
+  } else {
+    passthru("(ulimit -t 10; " . $command . ")");
+  }
 }
 
 function serverRun($commandLine,$rawcommand=null) {
