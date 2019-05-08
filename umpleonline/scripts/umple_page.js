@@ -36,6 +36,9 @@ Page.useStructureDiagram = false;
 Page.showAttributes = true;
 Page.showMethods = false;
 Page.showActions = true;
+Page.showText = true;
+Page.showCanvas = true;
+Page.showActions = true;
 Page.showTraits = false;
 Page.showTransitionLabels = false;
 Page.showGuardLabels = false;
@@ -423,28 +426,70 @@ Page.initCodeMirrorEditor = function() {
   Page.codeMirrorOn = true;  
 }
 
-// Function to make the E G S T D A M icons in UmpleOnline context senstive (#1400)
-Page.setDiagramTypeIconState = function(selectx,deselect1,deselect2,deselect3,
-deselect4,deselect5,deselect6 ){
-  document.getElementById(select).style.background = '#529932';
-  document.getElementById(select).innerHTML = 'okbb';
+// Function to make the E G S icons in UmpleOnline context senstive (#1400)
+Page.setDiagramTypeIconState = function(selectedButton){
+  buttonList = ['ECD_button','GCD_button','SD_button'];
+  for (i = 0, l = buttonList.length; i<l;++i){
+    buttonID = buttonList[i];
+    document.getElementById(buttonID).style.background = '#d8a695';
+    if(buttonID == selectedButton){
+      document.getElementById(buttonID).style.background = '#777777';
+    }
+  }
+
+}
+
+// Function to make the T D A M icons in UmpleOnline context senstive (#1400)
+Page.setShowHideIconState = function(selectedButton){//  buttonList = ['ECD_button','GCD_button','SD_button','SHT_button','SHD_button','SHA_button','SHM_button'];
+  defaultColor = '#d8a695';
+  lighterColor = '#d1d1d1';
+  switch(selectedButton){
+    case 'SHT_button':
+      if(Page.showText){
+        document.getElementById(selectedButton).style.background = defaultColor;
+      } else {
+        document.getElementById(selectedButton).style.background = lighterColor;
+      }
+      break;
+    case 'SHD_button':
+      if(Page.showCanvas){
+        document.getElementById(selectedButton).style.background = defaultColor;
+      } else {
+        document.getElementById(selectedButton).style.background = lighterColor;
+      }
+      break;
+    case 'SHA_button':
+      if(Page.showAttributes){
+        document.getElementById(selectedButton).style.background = defaultColor;
+      } else {
+        document.getElementById(selectedButton).style.background = lighterColor;
+      }
+      break;
+    case 'SHM_button':
+      if(Page.showMethods){
+        document.getElementById(selectedButton).style.background = defaultColor;
+      } else {
+        document.getElementById(selectedButton).style.background = lighterColor;
+      }
+      break;
+  }
 }
 
 // Functions to click various menu items - invoked by code mirror and MouseTrap
 Page.clickShowEditableClassDiagram = function() {
-  
-  Page.setDiagramTypeIconState('ECD','ECD','ECD','ECD',
-'ECD','ECD','ECD' );
   jQuery('#buttonShowEditableClassDiagram').trigger('click');
+  Page.setDiagramTypeIconState('ECD_button');
 }
 Page.clickShowJointJSClassDiagram = function() {
   jQuery('#buttonShowJointJSClassDiagram').trigger('click');
 }
 Page.clickShowGvClassDiagram = function() {
   jQuery('#buttonShowGvClassDiagram').trigger('click');
+  Page.setDiagramTypeIconState('GCD_button');
 }
 Page.clickShowGvStateDiagram = function() {
   jQuery('#buttonShowGvStateDiagram').trigger('click');
+  Page.setDiagramTypeIconState('SD_button');
 }
 Page.clickShowGvFeatureDiagram = function() {
   jQuery('#buttonShowGvFeatureDiagram').trigger('click');
@@ -454,9 +499,11 @@ Page.clickShowStructureDiagram = function() {
 }
 Page.clickShowHideText = function() {
   jQuery('#buttonShowHideTextEditor').trigger('click');
+  Page.setShowHideIconState('SHT_button');
 }
 Page.clickShowHideCanvas = function() {
   jQuery('#buttonShowHideCanvas').trigger('click');
+  Page.setShowHideIconState('SHD_button');
 }
 Page.clickShowHideMenu = function() {
   Layout.showHideMenu(); // No clickable button
@@ -470,9 +517,11 @@ Page.clickButtonSmaller = function() {
 }
 Page.clickToggleAttributes = function() {
   jQuery('#buttonToggleAttributes').trigger('click');
+  Page.setShowHideIconState('SHA_button');
 }
 Page.clickToggleMethods = function() {
   jQuery('#buttonToggleMethods').trigger('click');
+  Page.setShowHideIconState('SHM_button');
 }
 Page.clickToggleTraits = function() {
   jQuery('#buttonToggleTraits').trigger('click');

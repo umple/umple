@@ -148,10 +148,12 @@ Action.clicked = function(event)
   else if (action == "ShowHideTextEditor")
   {
     Layout.showHideTextEditor();
+    Page.showText = !Page.showText;
   }
   else if (action == "ShowHideCanvas")
   {
     Layout.showHideCanvas();
+    Page.showCanvas = !Page.showCanvas;
   }
   else if (action == "ShowEditableClassDiagram")
   {
