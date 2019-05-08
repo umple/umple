@@ -440,7 +440,7 @@ Page.setDiagramTypeIconState = function(selectedButton){
 }
 
 // Function to make the T D A M icons in UmpleOnline context senstive (#1400)
-Page.setShowHideIconState = function(selectedButton){//  buttonList = ['ECD_button','GCD_button','SD_button','SHT_button','SHD_button','SHA_button','SHM_button'];
+Page.setShowHideIconState = function(selectedButton){
   defaultColor = '#d8a695';
   lighterColor = '#d1d1d1';
   switch(selectedButton){
