@@ -478,18 +478,15 @@ Page.setShowHideIconState = function(selectedButton){//  buttonList = ['ECD_butt
 // Functions to click various menu items - invoked by code mirror and MouseTrap
 Page.clickShowEditableClassDiagram = function() {
   jQuery('#buttonShowEditableClassDiagram').trigger('click');
-  Page.setDiagramTypeIconState('ECD_button');
 }
 Page.clickShowJointJSClassDiagram = function() {
   jQuery('#buttonShowJointJSClassDiagram').trigger('click');
 }
 Page.clickShowGvClassDiagram = function() {
   jQuery('#buttonShowGvClassDiagram').trigger('click');
-  Page.setDiagramTypeIconState('GCD_button');
 }
 Page.clickShowGvStateDiagram = function() {
   jQuery('#buttonShowGvStateDiagram').trigger('click');
-  Page.setDiagramTypeIconState('SD_button');
 }
 Page.clickShowGvFeatureDiagram = function() {
   jQuery('#buttonShowGvFeatureDiagram').trigger('click');
@@ -499,11 +496,9 @@ Page.clickShowStructureDiagram = function() {
 }
 Page.clickShowHideText = function() {
   jQuery('#buttonShowHideTextEditor').trigger('click');
-  Page.setShowHideIconState('SHT_button');
 }
 Page.clickShowHideCanvas = function() {
   jQuery('#buttonShowHideCanvas').trigger('click');
-  Page.setShowHideIconState('SHD_button');
 }
 Page.clickShowHideMenu = function() {
   Layout.showHideMenu(); // No clickable button
@@ -517,11 +512,9 @@ Page.clickButtonSmaller = function() {
 }
 Page.clickToggleAttributes = function() {
   jQuery('#buttonToggleAttributes').trigger('click');
-  Page.setShowHideIconState('SHA_button');
 }
 Page.clickToggleMethods = function() {
   jQuery('#buttonToggleMethods').trigger('click');
-  Page.setShowHideIconState('SHM_button');
 }
 Page.clickToggleTraits = function() {
   jQuery('#buttonToggleTraits').trigger('click');

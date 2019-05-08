@@ -149,35 +149,43 @@ Action.clicked = function(event)
   {
     Layout.showHideTextEditor();
     Page.showText = !Page.showText;
+    Page.setShowHideIconState('SHT_button');
   }
   else if (action == "ShowHideCanvas")
   {
     Layout.showHideCanvas();
     Page.showCanvas = !Page.showCanvas;
+    Page.setShowHideIconState('SHD_button');
   }
   else if (action == "ShowEditableClassDiagram")
   {
     Action.changeDiagramType({type:"editableClass"});
+    Page.setDiagramTypeIconState('ECD_button');
   }
   else if (action == "ShowJointJSClassDiagram")
   {
     Action.changeDiagramType({type:"JointJSClass"});
+    Page.setDiagramTypeIconState(null);
   }
   else if (action == "ShowGvClassDiagram")
   {
     Action.changeDiagramType({type:"GVClass"});
+    Page.setDiagramTypeIconState('GCD_button');
   }
   else if (action == "ShowGvFeatureDiagram")
   {
     Action.changeDiagramType({type:"GVFeature"});//buttonShowGvFeatureDiagram
+    Page.setDiagramTypeIconState(null);
   }
   else if (action == "ShowGvStateDiagram")
   {
     Action.changeDiagramType({type:"GVState"});
+    Page.setDiagramTypeIconState('SD_button');
   }
   else if (action == "ShowStructureDiagram")
   {
     Action.changeDiagramType({type:"structure"});
+    Page.setDiagramTypeIconState(null);
   }
   else if (action == "ShowHideLayoutEditor")
   {
@@ -198,10 +206,12 @@ Action.clicked = function(event)
   else if (action == "ToggleAttributes")
   {
     Action.toggleAttributes();
+    Page.setShowHideIconState('SHA_button');
   }
   else if (action == "ToggleMethods")
   {
     Action.toggleMethods();
+    Page.setShowHideIconState('SHM_button');
   }
   else if (action == "ToggleActions")
   {
