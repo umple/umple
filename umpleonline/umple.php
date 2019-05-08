@@ -202,27 +202,27 @@ $output = $dataHandle->readData('model.ump');
     <span id="linetext">Line=<input size=2 id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
   
     <span style="font-size: 30%">
-    <a class="button2" href="javascript:Page.clickShowEditableClassDiagram()"
+    <a id="ECD_button" class="button2" href="javascript:Page.clickShowEditableClassDiagram()"
       title="Editable class diagram - ctrl-E">E</a>&nbsp;
-    <a class="button2" href="javascript:Page.clickShowGvClassDiagram()"
+    <a id="GCD_button" class="button2" href="javascript:Page.clickShowGvClassDiagram()"
       title="Graphviz class diagram - ctrl-G">G</a>&nbsp;
-    <a class="button2" href="javascript:Page.clickShowGvStateDiagram()"
+    <a id="SD_button" class="button2" href="javascript:Page.clickShowGvStateDiagram()"
       title="State diagram - ctrl-S">S</a>&nbsp;
     </span>
  
     &nbsp; 
     <span style="font-size: 30%">
-    <a class="button2" href="javascript:Page.clickShowHideText()"
+    <a id="SHT_button" class="button2" href="javascript:Page.clickShowHideText()"
       title="Show/hide text pane on left - ctrl-T">T</a>&nbsp;
-    <a class="button2" href="javascript:Page.clickShowHideCanvas()"
+    <a id="SHD_button" class="button2" href="javascript:Page.clickShowHideCanvas()"
       title="Show/hide diagram pane on right - ctrl-D">D</a>&nbsp;
     </span>
     
     &nbsp; 
     <span style="font-size: 30%">
-    <a class="button2" href="javascript:Page.clickToggleAttributes()"
+    <a id="SHA_button" class="button2" href="javascript:Page.clickToggleAttributes()"
       title="Show/hide attributes in class diagrams - shift-ctrl-A">A</a>&nbsp;
-    <a class="button2" href="javascript:Page.clickToggleMethods()"
+    <a id="SHM_button" class="button2" href="javascript:Page.clickToggleMethods()"
       title="Show/hide methods in class diagrams - ctrl-M">M</a>&nbsp;
     </span>
 
