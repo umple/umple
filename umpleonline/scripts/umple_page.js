@@ -38,7 +38,6 @@ Page.showMethods = false;
 Page.showActions = true;
 Page.showText = true;
 Page.showCanvas = true;
-Page.showActions = true;
 Page.showTraits = false;
 Page.showTransitionLabels = false;
 Page.showGuardLabels = false;
