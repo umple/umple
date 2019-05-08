@@ -423,8 +423,18 @@ Page.initCodeMirrorEditor = function() {
   Page.codeMirrorOn = true;  
 }
 
+// Function to make the E G S T D A M icons in UmpleOnline context senstive (#1400)
+Page.setDiagramTypeIconState = function(selectx,deselect1,deselect2,deselect3,
+deselect4,deselect5,deselect6 ){
+  document.getElementById(select).style.background = '#529932';
+  document.getElementById(select).innerHTML = 'okbb';
+}
+
 // Functions to click various menu items - invoked by code mirror and MouseTrap
 Page.clickShowEditableClassDiagram = function() {
+  
+  Page.setDiagramTypeIconState('ECD','ECD','ECD','ECD',
+'ECD','ECD','ECD' );
   jQuery('#buttonShowEditableClassDiagram').trigger('click');
 }
 Page.clickShowJointJSClassDiagram = function() {
