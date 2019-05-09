@@ -59,22 +59,26 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   { 
     Page.useGvStateDiagram = true;
     Page.useEditableClassDiagram = false; 
+    Page.setDiagramTypeIconState('GvState');
   }
   else if(diagramType == "GvClass")   
   {
     Page.useGvClassDiagram = true;
     Page.useEditableClassDiagram = false;
+    Page.setDiagramTypeIconState('GvClass');
   }
   else if(diagramType == "GVFeature")   
   {
     Page.useGvFeatureDiagram = true;
     Page.useEditableClassDiagram = false;
     Page.useGvStateDiagram = false;
+    Page.setDiagramTypeIconState('GVFeature');
   }
   else if(diagramType == "structureDiagram")
   {
     Page.useStructureDiagram = true;
     Page.useEditableClassDiagram = false;  
+    Page.setDiagramTypeIconState('structureDiagram');
   }
 
   jQuery.noConflict();
@@ -183,9 +187,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleTraits");
   Page.initAction("buttonToggleTransitionLabels");
   Page.initAction("buttonToggleGuardLabels");
-  
-  Page.initButtonShading();//#1400
-  
+    
   Page.initLabels();
 
   Page.enablePaletteItem("buttonUndo", false);
@@ -242,7 +244,7 @@ Page.initOptions = function()
    jQuery("#buttonShowJointJSClassDiagram").prop('checked', true);
   if(Page.useGvClassDiagram)
     jQuery("#buttonShowGvClassDiagram").prop('checked', true);
-if(Page.useGvFeatureDiagram)
+  if(Page.useGvFeatureDiagram)
     jQuery("#buttonShowGvFeatureDiagram").prop('checked', true);
 
   if(Page.useGvStateDiagram)
@@ -428,14 +430,21 @@ Page.initCodeMirrorEditor = function() {
 }
 
 // Function to make the E G S icons in UmpleOnline context senstive (#1400)
-Page.setDiagramTypeIconState = function(selectedButton){
+Page.setDiagramTypeIconState = function(diagramType){
   buttonList = ['ECD_button','GCD_button','SD_button'];
   for (i = 0, l = buttonList.length; i<l;++i){
-    buttonID = buttonList[i];
-    document.getElementById(buttonID).className = "button2";
-    if(buttonID == selectedButton){
-      document.getElementById(selectedButton).className = "button2 active";
-    }
+    document.getElementById(buttonList[i]).className = "button2";
+  }
+  switch(diagramType){
+    case 'editableClass':
+    document.getElementById('ECD_button').className = "button2 active";
+    break;
+    case 'GvClass':
+    document.getElementById('GCD_button').className = "button2 active";
+    break;
+    case 'GvState':
+    document.getElementById('SD_button').className = "button2 active";
+    break;
   }
 }
 
@@ -1176,9 +1185,4 @@ jQuery.fn.selectRange = function(start, end) {
        range.select();
     }
   });
-}
-
-Page.initButtonShading = function(){//#1400
-  Page.setDiagramTypeIconState('ECD_button');
-  Page.setShowHideIconState('SHM_button');
 }

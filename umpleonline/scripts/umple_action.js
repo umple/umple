@@ -160,32 +160,26 @@ Action.clicked = function(event)
   else if (action == "ShowEditableClassDiagram")
   {
     Action.changeDiagramType({type:"editableClass"});
-    Page.setDiagramTypeIconState('ECD_button');
   }
   else if (action == "ShowJointJSClassDiagram")
   {
     Action.changeDiagramType({type:"JointJSClass"});
-    Page.setDiagramTypeIconState(null);
   }
   else if (action == "ShowGvClassDiagram")
   {
     Action.changeDiagramType({type:"GVClass"});
-    Page.setDiagramTypeIconState('GCD_button');
   }
   else if (action == "ShowGvFeatureDiagram")
   {
     Action.changeDiagramType({type:"GVFeature"});//buttonShowGvFeatureDiagram
-    Page.setDiagramTypeIconState(null);
   }
   else if (action == "ShowGvStateDiagram")
   {
     Action.changeDiagramType({type:"GVState"});
-    Page.setDiagramTypeIconState('SD_button');
   }
   else if (action == "ShowStructureDiagram")
   {
     Action.changeDiagramType({type:"structure"});
-    Page.setDiagramTypeIconState(null);
   }
   else if (action == "ShowHideLayoutEditor")
   {
@@ -377,6 +371,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = false;
     changedType = true;
     jQuery("#buttonShowEditableClassDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('editableClass');
   }
   else if(newDiagramType.type == "JointJSClass") { 
     if(Page.useJointJSClassDiagram) return;
@@ -388,6 +383,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = false;
     changedType = true;
     jQuery("#buttonShowJointJSClassDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('JointJSClass');
   }  
   else if(newDiagramType.type == "GVClass") { 
     if(Page.useGvClassDiagram) return;
@@ -399,6 +395,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = false;
     changedType = true;
     jQuery("#buttonShowGvClassDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('GVClass');
   }
   else if(newDiagramType.type == "GVState") {
     if(Page.useGvStateDiagram) return;
@@ -410,6 +407,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvFeatureDiagram = false;
     changedType = true;
     jQuery("#buttonShowGvStateDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('GvState');
   }
   else if(newDiagramType.type == "GVFeature") {
    if(Page.useGvFeatureDiagram) return;
@@ -421,6 +419,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvFeatureDiagram = true;
     changedType = true;
     jQuery("#buttonShowGvFeatureDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('GVFeature');
   }
   else if(newDiagramType.type == "structure") { // Structure Diagram
     if(Page.useGvStructureDiagram) return;
@@ -432,6 +431,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvFeatureDiagram = false;
     changedType = true;
     jQuery("#buttonShowStructureDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('structure');
   }
   if (changedType) {
     Action.redrawDiagram();
