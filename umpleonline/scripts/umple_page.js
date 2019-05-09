@@ -42,12 +42,13 @@ Page.showGuardLabels = false;
 Page.modifiedDiagrams = false;
 
 // The following is set called from umple.php
-Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault)
+Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, doShowUmpleBot, diagramType, generateDefault)
 { 
   Layout.isDiagramVisible = doShowDiagram;  
   Layout.isTextVisible = doShowText;  
   Layout.isPaletteVisible = doShowMenu;  
   Layout.isLayoutVisible = doShowLayout;
+  Layout.isUmpleBotVisible = doShowUmpleBot;
   Page.readOnly = doReadOnly;
 
   TabControl.init()
@@ -159,6 +160,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowGvFeatureDiagram");//buttonShowGvFeatureDiagram
   Page.initAction("buttonShowStructureDiagram");
   Page.initAction("buttonShowHideLayoutEditor");
+  Page.initAction("buttonShowHideUmpleBot");
   Page.initAction("buttonManualSync");
   Page.initAction("buttonCopy");
   Page.initAction("buttonCopyEncodedURL");
@@ -223,6 +225,7 @@ Page.initOptions = function()
   jQuery("#buttonShowHideLayoutEditor").prop('checked', Layout.isLayoutVisible);
   jQuery("#buttonShowHideTextEditor").prop('checked', Layout.isTextVisible);
   jQuery("#buttonShowHideCanvas").prop('checked', Layout.isDiagramVisible);
+  jQuery("#buttonShowUmpleBot").prop('checked', Layout.isUmpleBotVisible);
 	jQuery("#buttonTabsCheckbox").prop('checked', false);
 	jQuery("#tabRow").hide();
 	jQuery("#ttTabsCheckbox").hide();

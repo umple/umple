@@ -86,6 +86,8 @@ if ($showDiagram && isset($_REQUEST["notext"])) {$showText=false;} else {$showTe
 // ignored if notext is also set
 if ($showText && isset($_REQUEST["showlayout"])) {$showLayout=true;} else {$showLayout=false;}
 
+if ($showUmpleBot && isset($_REQUEST["showumplebot"])) {$showUmpleBot=true;} else {$showUmpleBot=false;}
+
 // nomenu means suppress display of menu. Can only happen if diagram OR text hidden
 if (isset($_REQUEST["nomenu"])) {$showMenu=false;} else {$showMenu=true;}
 
@@ -493,6 +495,10 @@ $output = $dataHandle->readData('model.ump');
               <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> 
               <a id="labelShowHideTextEditor" class="buttonExtend">Text Editor</a>
             </li>
+            <li id="ttShowHideUmpleBot" class="layoutListItem"> 
+              <input id="buttonShowHideUmpleBot" class="checkbox" type="checkbox" name="buttonShowHideUmpleBot" value="buttonShowHideUmpleBot"/> 
+              <a id="labelShowHideUmpleBot" class="buttonExtend">UmpleBot (beta)</a> 
+            </li> 
             <li id="ttShowHideLayoutEditor" class="layoutListItem"> 
               <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> 
               <a id="labelShowHideLayoutEditor" class="buttonExtend">Layout Editor</a> 
@@ -592,6 +598,7 @@ $output = $dataHandle->readData('model.ump');
       <?php if($showMenu) { ?> true  <?php } else { ?> false <?php } ?>,
       <?php if($readOnly) { ?> true  <?php } else { ?> false <?php } ?>,
       <?php if($showLayout) { ?> true <?php } else { ?> false <?php } ?>,
+      <?php if($showUmpleBot) { ?> true <?php } else { ?> false <?php } ?>,
       "<?php echo $diagramType ?>",
       "<?php echo $generateDefault ?>"
       ); //

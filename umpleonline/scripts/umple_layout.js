@@ -10,6 +10,7 @@ Layout.isTextVisible = true;
 Layout.isDiagramVisible = true;
 Layout.isPaletteVisible = true;
 Layout.isLayoutVisible = false;
+Layout.isShowUmpleBot = false;
 Layout.layoutHandler = null;
 Layout.isInSmallScreenMode = false;
 Layout.screenThresholdWidth = 945;
