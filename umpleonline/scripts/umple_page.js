@@ -432,45 +432,42 @@ Page.setDiagramTypeIconState = function(selectedButton){
   buttonList = ['ECD_button','GCD_button','SD_button'];
   for (i = 0, l = buttonList.length; i<l;++i){
     buttonID = buttonList[i];
-    document.getElementById(buttonID).style.background = '#d1d1d1';
+    document.getElementById(buttonID).className = "button2";
     if(buttonID == selectedButton){
-      document.getElementById(buttonID).style.background = '#d8a695';
+      document.getElementById(selectedButton).className = "button2 active";
     }
   }
-
 }
 
 // Function to make the T D A M icons in UmpleOnline context senstive (#1400)
 Page.setShowHideIconState = function(selectedButton){
-  defaultColor = '#d8a695';
-  lighterColor = '#d1d1d1';
   switch(selectedButton){
     case 'SHT_button':
       if(Page.showText){
-        document.getElementById(selectedButton).style.background = defaultColor;
+        document.getElementById(selectedButton).className = "button2 active";
       } else {
-        document.getElementById(selectedButton).style.background = lighterColor;
+        document.getElementById(selectedButton).className = "button2";
       }
       break;
     case 'SHD_button':
       if(Page.showCanvas){
-        document.getElementById(selectedButton).style.background = defaultColor;
+        document.getElementById(selectedButton).className = "button2 active";
       } else {
-        document.getElementById(selectedButton).style.background = lighterColor;
+        document.getElementById(selectedButton).className = "button2";
       }
       break;
     case 'SHA_button':
       if(Page.showAttributes){
-        document.getElementById(selectedButton).style.background = defaultColor;
+        document.getElementById(selectedButton).className = "button2 active";
       } else {
-        document.getElementById(selectedButton).style.background = lighterColor;
+        document.getElementById(selectedButton).className = "button2";
       }
       break;
     case 'SHM_button':
       if(Page.showMethods){
-        document.getElementById(selectedButton).style.background = defaultColor;
+        document.getElementById(selectedButton).className = "button2 active";
       } else {
-        document.getElementById(selectedButton).style.background = lighterColor;
+        document.getElementById(selectedButton).className = "button2";
       }
       break;
   }
