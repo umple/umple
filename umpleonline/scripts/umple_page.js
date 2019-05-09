@@ -184,6 +184,8 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleTransitionLabels");
   Page.initAction("buttonToggleGuardLabels");
   
+  Page.initButtonShading();//#1400
+  
   Page.initLabels();
 
   Page.enablePaletteItem("buttonUndo", false);
@@ -430,9 +432,9 @@ Page.setDiagramTypeIconState = function(selectedButton){
   buttonList = ['ECD_button','GCD_button','SD_button'];
   for (i = 0, l = buttonList.length; i<l;++i){
     buttonID = buttonList[i];
-    document.getElementById(buttonID).style.background = '#d8a695';
+    document.getElementById(buttonID).style.background = '#d1d1d1';
     if(buttonID == selectedButton){
-      document.getElementById(buttonID).style.background = '#777777';
+      document.getElementById(buttonID).style.background = '#d8a695';
     }
   }
 
@@ -1177,4 +1179,9 @@ jQuery.fn.selectRange = function(start, end) {
        range.select();
     }
   });
+}
+
+Page.initButtonShading = function(){//#1400
+  Page.setDiagramTypeIconState('ECD_button');
+  Page.setShowHideIconState('SHM_button');
 }
