@@ -713,8 +713,9 @@ function LargeScreenManager()
   
   this.calculateHeight = function()
   {
+    var tabHeight = TabControl.isHidden() ? 0 : jQuery("#tabControl").outerHeight();
     var newHeight = (jQuery(window).innerHeight() - jQuery("#header").outerHeight() 
-      - jQuery("#topLine").outerHeight() - parseInt(jQuery("body").css('marginBottom'))
+      - jQuery("#topLine").outerHeight() - tabHeight - parseInt(jQuery("body").css('marginBottom'))
       - parseInt(jQuery("body").css('marginTop')) - Layout.errorMessageSpace) * this.heightFactor;
     
     if(newHeight < this.minCanvasSize.height)
@@ -970,8 +971,9 @@ function SmallScreenManager()
   
   this.calculateHeight = function()
   {
+    var tabHeight = TabControl.isHidden() ? 0 : jQuery("#tabControl").outerHeight();  
     var height = (jQuery(window).innerHeight() - jQuery("#header").outerHeight(true)
-      - 2*jQuery("#topLine").outerHeight(true) - Layout.errorMessageSpace)/2;
+      - 2*jQuery("#topLine").outerHeight(true) - tabHeight - Layout.errorMessageSpace)/2;
 
     return height;
   }
