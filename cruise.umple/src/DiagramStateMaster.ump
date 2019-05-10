@@ -19,4 +19,4 @@ along with the user manual files
 use DiagramMaster.ump;
 
 // Activate this specific mixset
-use CoreClassesOnly;
+use StateClassesOnly;
