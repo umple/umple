@@ -167,15 +167,15 @@ Action.clicked = function(event)
   }
   else if (action == "ShowGvClassDiagram")
   {
-    Action.changeDiagramType({type:"GVClass"});
+    Action.changeDiagramType({type:"GvClass"});
   }
   else if (action == "ShowGvFeatureDiagram")
   {
-    Action.changeDiagramType({type:"GVFeature"});//buttonShowGvFeatureDiagram
+    Action.changeDiagramType({type:"GvFeature"});//buttonShowGvFeatureDiagram
   }
   else if (action == "ShowGvStateDiagram")
   {
-    Action.changeDiagramType({type:"GVState"});
+    Action.changeDiagramType({type:"GvState"});
   }
   else if (action == "ShowStructureDiagram")
   {
@@ -385,7 +385,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery("#buttonShowJointJSClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('JointJSClass');
   }  
-  else if(newDiagramType.type == "GVClass") { 
+  else if(newDiagramType.type == "GvClass") { 
     if(Page.useGvClassDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -395,9 +395,9 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = false;
     changedType = true;
     jQuery("#buttonShowGvClassDiagram").prop('checked', 'checked');
-    Page.setDiagramTypeIconState('GVClass');
+    Page.setDiagramTypeIconState('GvClass');
   }
-  else if(newDiagramType.type == "GVState") {
+  else if(newDiagramType.type == "GvState") {
     if(Page.useGvStateDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -409,7 +409,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery("#buttonShowGvStateDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('GvState');
   }
-  else if(newDiagramType.type == "GVFeature") {
+  else if(newDiagramType.type == "GvFeature") {
    if(Page.useGvFeatureDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -419,7 +419,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvFeatureDiagram = true;
     changedType = true;
     jQuery("#buttonShowGvFeatureDiagram").prop('checked', 'checked');
-    Page.setDiagramTypeIconState('GVFeature');
+    Page.setDiagramTypeIconState('GvFeature');
   }
   else if(newDiagramType.type == "structure") { // Structure Diagram
     if(Page.useGvStructureDiagram) return;
