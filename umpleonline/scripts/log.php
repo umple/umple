@@ -46,7 +46,7 @@
     passthru("php -version");
         
     echo "<p>Java version:";
-    passthru("java --version");
+    passthru("java -version");
     
     $numBytesSent= socket_write($theSocket, $commandLine);
     if($numBytesSent === FALSE) {
