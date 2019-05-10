@@ -36,6 +36,8 @@ Page.useStructureDiagram = false;
 Page.showAttributes = true;
 Page.showMethods = false;
 Page.showActions = true;
+Page.showText = true;
+Page.showCanvas = true;
 Page.showTraits = false;
 Page.showTransitionLabels = false;
 Page.showGuardLabels = false;
@@ -57,22 +59,26 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   { 
     Page.useGvStateDiagram = true;
     Page.useEditableClassDiagram = false; 
+    Page.setDiagramTypeIconState('GvState');
   }
   else if(diagramType == "GvClass")   
   {
     Page.useGvClassDiagram = true;
     Page.useEditableClassDiagram = false;
+    Page.setDiagramTypeIconState('GvClass');
   }
   else if(diagramType == "GVFeature")   
   {
     Page.useGvFeatureDiagram = true;
     Page.useEditableClassDiagram = false;
     Page.useGvStateDiagram = false;
+    Page.setDiagramTypeIconState('GVFeature');
   }
   else if(diagramType == "structureDiagram")
   {
     Page.useStructureDiagram = true;
     Page.useEditableClassDiagram = false;  
+    Page.setDiagramTypeIconState('structureDiagram');
   }
 
   jQuery.noConflict();
@@ -181,7 +187,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleTraits");
   Page.initAction("buttonToggleTransitionLabels");
   Page.initAction("buttonToggleGuardLabels");
-  
+    
   Page.initLabels();
 
   Page.enablePaletteItem("buttonUndo", false);
@@ -238,7 +244,7 @@ Page.initOptions = function()
    jQuery("#buttonShowJointJSClassDiagram").prop('checked', true);
   if(Page.useGvClassDiagram)
     jQuery("#buttonShowGvClassDiagram").prop('checked', true);
-if(Page.useGvFeatureDiagram)
+  if(Page.useGvFeatureDiagram)
     jQuery("#buttonShowGvFeatureDiagram").prop('checked', true);
 
   if(Page.useGvStateDiagram)
@@ -421,6 +427,59 @@ Page.initCodeMirrorEditor = function() {
       );
   Page.hLine = Page.codeMirrorEditor.setLineClass(0, "activeline");
   Page.codeMirrorOn = true;  
+}
+
+// Function to make the E G S icons in UmpleOnline context senstive (#1400)
+Page.setDiagramTypeIconState = function(diagramType){
+  buttonList = ['ECD_button','GCD_button','SD_button'];
+  for (i = 0, l = buttonList.length; i<l;++i){
+    document.getElementById(buttonList[i]).className = "button2";
+  }
+  switch(diagramType){
+    case 'editableClass':
+    document.getElementById('ECD_button').className = "button2 active";
+    break;
+    case 'GvClass':
+    document.getElementById('GCD_button').className = "button2 active";
+    break;
+    case 'GvState':
+    document.getElementById('SD_button').className = "button2 active";
+    break;
+  }
+}
+
+// Function to make the T D A M icons in UmpleOnline context senstive (#1400)
+Page.setShowHideIconState = function(selectedButton){
+  switch(selectedButton){
+    case 'SHT_button':
+      if(Page.showText){
+        document.getElementById(selectedButton).className = "button2 active";
+      } else {
+        document.getElementById(selectedButton).className = "button2";
+      }
+      break;
+    case 'SHD_button':
+      if(Page.showCanvas){
+        document.getElementById(selectedButton).className = "button2 active";
+      } else {
+        document.getElementById(selectedButton).className = "button2";
+      }
+      break;
+    case 'SHA_button':
+      if(Page.showAttributes){
+        document.getElementById(selectedButton).className = "button2 active";
+      } else {
+        document.getElementById(selectedButton).className = "button2";
+      }
+      break;
+    case 'SHM_button':
+      if(Page.showMethods){
+        document.getElementById(selectedButton).className = "button2 active";
+      } else {
+        document.getElementById(selectedButton).className = "button2";
+      }
+      break;
+  }
 }
 
 // Functions to click various menu items - invoked by code mirror and MouseTrap
@@ -840,7 +899,7 @@ Page.getSelectedExample = function()
       // if diagram type not a editable class diagram, set it 
       if(!Page.useGvClassDiagram) {
         jQuery("#buttonShowGvClassDiagram").attr('checked', true); 
-        Action.changeDiagramType({type: "GVClass"});
+        Action.changeDiagramType({type: "GvClass"});
       }
     }
     else {
@@ -857,7 +916,7 @@ Page.getSelectedExample = function()
       // if diagram type is not a state machine, set to state machine
       if( !Page.useGvStateDiagram && !Page.useJointJSClassDiagram) {
          jQuery("#buttonShowGvStateDiagram").attr('checked', true); 
-         Action.changeDiagramType({type: "GVState"});
+         Action.changeDiagramType({type: "GvState"});
       }
     }
     else {

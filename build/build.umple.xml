@@ -340,7 +340,7 @@
           fork="true"
           failonerror="true">
       <arg value="${tmpScript}"/>
-      <arg line="-o ${scriptPath}/allumple-min.js"/>
+      <redirector output ="${scriptPath}/allumple-min.js"/>
     </java>
     <delete>
       <fileset file="${tmpScript}"/>
