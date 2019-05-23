@@ -75,7 +75,7 @@ public class Mentor
     x = nextX++;
     if (!setId(aId))
     {
-      throw new RuntimeException("Cannot create due to duplicate id");
+      throw new RuntimeException("Cannot create due to duplicate id. See http://manual.umple.org?RE003ViolationofUniqueness.html");
     }
   }
 

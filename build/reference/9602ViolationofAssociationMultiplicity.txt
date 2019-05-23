@@ -1,4 +1,4 @@
-RE004 ConstructorAssociationAssignMandatoryMany.
+RE002 Violation of Association Multiplicity
 Runtime Exceptions
 noreferences
 

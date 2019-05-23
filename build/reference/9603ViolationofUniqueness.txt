@@ -1,4 +1,4 @@
-RE008 ConstructorAttributeAssignUnique.
+RE003 Violation of Uniqueness
 Runtime Exceptions
 noreferences
 

@@ -1,4 +1,4 @@
-RE002 ConstructorAssociationAssignImmutableOptionalMany
+RE001 Violation of Immutability
 Runtime Exceptions
 noreferences
 
