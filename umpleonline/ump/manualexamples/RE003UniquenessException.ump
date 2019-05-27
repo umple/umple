@@ -54,3 +54,7 @@ class Student {
       "This line should not be reached");
   }
 }
+//$?[End_of_model]$?
+// @@@skipcppcompile - Has Java code
+// @@@skipphpcompile - Has Java code
+// @@@skiprubycompile - Has Java code
