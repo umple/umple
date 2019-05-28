@@ -1,6 +1,6 @@
 // This first example uses attribute notation
 // The address is required on the constructor, but
-// can be null An instance of Address can be
+// can be null. An instance of Address can be
 // considered to be contained within the
 // Person class.
 //

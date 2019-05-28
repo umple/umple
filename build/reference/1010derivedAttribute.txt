@@ -23,6 +23,6 @@ API (rather than directly accessing variables) and avoid having any side-effects
 @@source manualexamples/DerivedAttributes1.ump
 @@endexample
 
-@@example
+@@example @@caption Example with the Language of the Expression Being Specified @@endcaption
 @@source manualexamples/DerivedAttributes2.ump
 @@endexample
