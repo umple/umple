@@ -89,7 +89,7 @@ noreferences
 <li><b>Compatibility:</b> We use a lot of re-used, proprietary or legacy code that might be incompatible with the new technology:<br/>
 <u>Not true for Umple, because:</u>
 <ul>
-  <li>Umple can work with any existing libraries in Java, PHP, Ruby etc. You can subclass existing classes even if you can't see the source; you can write arbitrary code to call APIs of existing libraries, or you can convert existing code to Umple if you wish.</li>
+  <li>Umple can work with any existing libraries in Java, PHP, Ruby etc. You can subclass existing classes even if you can&quot;t see the source; you can write arbitrary code to call APIs of existing libraries, or you can convert existing code to Umple if you wish.</li>
   <li>Umple is particularly good at helping incrementally re-engineer (i.e. umplifiy) legacy code: You can convert your legacy code little-by-little. But you also have the option to leave it unchanged and just use Umple for extensions or new code.</li>
 </ul></li><br/>
 
