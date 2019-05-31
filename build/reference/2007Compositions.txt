@@ -52,19 +52,19 @@ In the class diagrams generated for compositions, the symbol is a filled-in diam
 
 [[association]] [[inlineAssociation]]
 
-@@example
+@@example @@caption Example 1 @@endcaption
 @@source manualexamples/Compositions_regAssoc.ump
 @@endexample
 
-@@example
+@@example @@caption Example 2 @@endcaption
 @@source manualexamples/Compositions1.ump
 @@endexample
 
-@@example
+@@example @@caption Example 3 @@endcaption
 @@source manualexamples/Compositions1_eq1.ump
 @@endexample
 
-@@example
+@@example @@caption Example 4 @@endcaption
 @@source manualexamples/Compositions1_eq2.ump
 @@endexample
 

@@ -77,15 +77,15 @@ Umple&#39;s mixin capability allows templates to be kept in separate files. This
 @@syntax
 [[templateAttributeDefinition]] [[templateName]] [[templateAttribute]] [[templateAttributeContent]] [[templateExpression]] [[templateComment]]  [[templateCodeBlock]] [[templateText]] [[emitMethod]] [[templateList]] [[templatePrameter]]
 
-@@example
+@@example @@caption Example 1 @@endcaption
 @@source manualexamples/BasicTemplates1.ump
 @@endexample
 
-@@example
+@@example @@caption Example 2 @@endcaption
 @@source manualexamples/BasicTemplates2.ump
 @@endexample
 
 
-@@example
+@@example @@caption Example 3 @@endcaption
 @@source manualexamples/BasicTemplates3.ump
 @@endexample

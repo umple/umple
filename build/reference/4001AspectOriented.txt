@@ -22,14 +22,14 @@ after the constructor.</p>
 
 [[codeInjection]] [[beforeCode]] [[afterCode]]
 
-@@example
+@@example @@caption Example with &quot;after&quot; statement @@endcaption
 @@source manualexamples/BeforeandAfterStatements1.ump
 @@endexample
 
-@@example
+@@example @@caption Example with &quot;before&quot; statement @@endcaption
 @@source manualexamples/BeforeandAfterStatements2.ump
 @@endexample
 
-@@example
+@@example @@caption Example with both &quot;before&quot; and &quot;after&quot; statements @@endcaption
 @@source manualexamples/BeforeandAfterStatements3.ump
 @@endexample
