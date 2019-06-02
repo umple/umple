@@ -22,9 +22,9 @@ noreferences
 
 <p>Load the example below into UmpleOnline and uncomment any of the 8 filter statements, one at at a time, to see the effect of filtering. The comment just before each filter statement describes the effect. Note that the named filters described as Filter 7 have been left uncommented as they are ignored until the un-named filter following them is activated.</p>
 
-@@syntax
-[[filter]] [[filterStatement]] [[filterCombinedValue]] [[filterNamespace]] [[filterValue]] [[hops]] [[super]] [[sub]] [[association]]
-
 @@example
 @@source manualexamples/Filters-Shape3D-1.ump
 @@endexample
+
+@@syntax
+[[filter]] [[filterStatement]] [[filterCombinedValue]] [[filterNamespace]] [[filterValue]] [[hops]] [[super]] [[sub]] [[association]]

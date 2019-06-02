@@ -4,7 +4,7 @@ noreferences
 
 @@description
 
-<p>A composite structure diagram is used to show how various instances of classes, called <em>parts</em>, are connected at run time in order communicate with each other.</p>
+<p>A composite structure diagram is used to show how various instances of classes, called <em>parts</em>, are connected at run time in order to communicate with each other.</p>
 
 <p>To specify composite structure, the following are the elements that need to be present in an Umple system:</p>
 
@@ -28,9 +28,9 @@ noreferences
 
 <p>See also the <a href="http://en.wikipedia.org/wiki/Composite_structure_diagram">Wikipedia page on Composite Structure Diagrams</a>.</p>
 
-@@syntax
-[[portDefinition]] [[typedPortName]] [[portMultiplicity]] [[portBindingDefinition]]  [[bindinHandler]] [[activeMethodDefinition]] [[portWatch]] [[activeMethodDeclarator]] [[activeMethodBody]] [[activeDirectionHandler]] [[activeTrigger]] [[activeDirectionHandler]] [[activeTriggerBody]] [[deferredList]] [[activeTriggerDefinition]] [[thenDefinition]] [[resolveDefinition]] [[hitchConstraint]] [[constraintList]] [[basicConstraint]] [[timeConstraint]] [[messageConstraint]] [[invoke]] [[anonymousTriggerBody]]  [[primitiveDefinition]] 
-
 @@example
 @@source PingPong.ump &diagramtype=structure&generateDefault=cpp
 @@endexample
+
+@@syntax
+[[portDefinition]] [[typedPortName]] [[portMultiplicity]] [[portBindingDefinition]]  [[bindinHandler]] [[activeMethodDefinition]] [[portWatch]] [[activeMethodDeclarator]] [[activeMethodBody]] [[activeDirectionHandler]] [[activeTrigger]] [[activeDirectionHandler]] [[activeTriggerBody]] [[deferredList]] [[activeTriggerDefinition]] [[thenDefinition]] [[resolveDefinition]] [[hitchConstraint]] [[constraintList]] [[basicConstraint]] [[timeConstraint]] [[messageConstraint]] [[invoke]] [[anonymousTriggerBody]]  [[primitiveDefinition]] 

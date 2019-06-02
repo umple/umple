@@ -27,20 +27,19 @@ There are two cases. (1) trace the UML construct from its creation and stop when
 </ul>
 </p>
 
-@@syntax
-
-[[PreOrPostCondition]] [[traceWhere]] [[traceGiving]] [[traceCondition]] [[traceFor]] [[traceUntil]] [[traceAfter]] [[constraint]]
-
-
-@@example
+@@example @@caption Conditions and Number of Occurences @@endcaption
 @@source manualexamples/TracingConstraints1.ump
 @@endexample
 
-@@example
+@@example @@caption Record Clause @@endcaption
 @@source manualexamples/TracingConstraints2.ump
 @@endexample
 
 
-@@example
+@@example @@caption Life Timeline @@endcaption
 @@source manualexamples/TracingConstraints3.ump
 @@endexample
+
+@@syntax
+
+[[PreOrPostCondition]] [[traceWhere]] [[traceGiving]] [[traceCondition]] [[traceFor]] [[traceUntil]] [[traceAfter]] [[constraint]]
