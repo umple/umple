@@ -2,6 +2,6 @@ class UmpleToPhp {
     constructor_AttributeAssignUnique <<!<</*constructor_AttributeAssignUnique*/>>
     if (!$this-><<=gen.translate("setMethod", av)>>($<<=gen.translate("parameterOne", av)>>))
     {
-      throw new RuntimeException("Cannot create due to duplicate <<=av.getName()>>");
+      throw new RuntimeException("Cannot create due to duplicate <<=av.getName()>>. See http://manual.umple.org?RE003ViolationofUniqueness.html");
     }!>>
 }
