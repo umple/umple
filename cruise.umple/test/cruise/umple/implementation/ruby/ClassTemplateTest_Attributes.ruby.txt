@@ -62,7 +62,7 @@ class Mentor
     @@next_x += 1
     @id = nil
     if (!set_id(a_id))
-      raise ArgumentError, 'Cannot create due to duplicate id'
+      raise ArgumentError, 'Cannot create due to duplicate id. See http://manual.umple.org?RE003ViolationofUniqueness.html'
     end
     @initialized = true
   end
