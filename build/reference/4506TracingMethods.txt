@@ -13,6 +13,9 @@ Tracing non api methods is possible using MOTL. Entry and/or exit of methods can
 </ul>
 </p>
 
+@@syntax
+[[traceDirective]] [[traceItem]] [[traceOption]]
+
 @@example @@caption Method Entry @@endcaption
 @@source manualexamples/TracingMethods1.ump
 @@endexample
@@ -20,6 +23,3 @@ Tracing non api methods is possible using MOTL. Entry and/or exit of methods can
 @@example @@caption Method Exit @@endcaption
 @@source manualexamples/TracingMethods2.ump
 @@endexample
-
-@@syntax
-[[traceDirective]] [[traceItem]] [[traceOption]]

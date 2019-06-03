@@ -28,6 +28,9 @@ MOTL tracers can be classified into two main categories: Built in tracers and th
 </ol>
 </p>
 
+@@syntax
+[[traceType]] [[log4jConfig]]
+
 @@example @@caption File tracer @@endcaption
 @@source manualexamples/Tracers1.ump
 @@endexample
@@ -47,7 +50,3 @@ MOTL tracers can be classified into two main categories: Built in tracers and th
 @@example @@caption log4j tracer with customized log4j xml configuration file @@endcaption
 @@source manualexamples/Tracers4.ump
 @@endexample
-
-@@syntax
-
-[[traceType]] [[log4jConfig]]

@@ -41,6 +41,9 @@ Umple introduces a special syntax to allow having template parameters that can b
 The <b>example 3</b> shows how a template parameter is used in the body of a method. As seen, trait T1 has a template parameter named TP (line 4). The provided method method2() needs to return a string which is a combination of calling the required method method1() and a method named process() from the template parameter TP. In the body of the provided method method2(), an instance of the template parameter needs to be created so as to call the method process(). This is achieved by having the name of template parameter encompassed by '#' in places that require types (line 7). The rest needs to follow the syntax of the language used to implement the code blocks, in this case, Java. Class C2 uses trait T1 and binds class C1 to the template parameter TP (line 15). It also implements the required method method1() in order to able to use the trait.
 </p>
 
+@@syntax
+[[traitParameters]] [[traitFullParameters]] [[traitParametersInterface]]
+
 @@example @@caption Example 1 @@endcaption
 @@source manualexamples/traits_example_006.ump
 @@endexample
@@ -52,6 +55,3 @@ The <b>example 3</b> shows how a template parameter is used in the body of a met
 @@example @@caption Example 3 @@endcaption
 @@source manualexamples/traits_example_008.ump
 @@endexample
-
-@@syntax
-[[traitParameters]] [[traitFullParameters]] [[traitParametersInterface]]
