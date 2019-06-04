@@ -73,6 +73,9 @@ The first two examples below show how simple templates can be used to output str
 Umple&#39;s mixin capability allows templates to be kept in separate files. This can faciliatate reuse. 
 </p>
 
+@@syntax
+[[templateAttributeDefinition]] [[templateName]] [[templateAttribute]] [[templateAttributeContent]] [[templateExpression]] [[templateComment]]  [[templateCodeBlock]] [[templateText]] [[emitMethod]] [[templateList]] [[templatePrameter]]
+
 @@example @@caption Example 1 @@endcaption
 @@source manualexamples/BasicTemplates1.ump
 @@endexample
@@ -81,10 +84,6 @@ Umple&#39;s mixin capability allows templates to be kept in separate files. This
 @@source manualexamples/BasicTemplates2.ump
 @@endexample
 
-
 @@example @@caption Example 3 @@endcaption
 @@source manualexamples/BasicTemplates3.ump
 @@endexample
-
-@@syntax
-[[templateAttributeDefinition]] [[templateName]] [[templateAttribute]] [[templateAttributeContent]] [[templateExpression]] [[templateComment]]  [[templateCodeBlock]] [[templateText]] [[emitMethod]] [[templateList]] [[templatePrameter]]

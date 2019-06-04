@@ -11,6 +11,9 @@ with arbitrary methods written in the natively compiled language (e.g. Java, Php
 
 <p>A standard Umple method will specify the return type, then the name, then the argument list and finally the method body in curly brackets. The generated output for the method will use correct format for the generated language and will be public.
 
+@@syntax
+[[concreteMethodDeclaration]] [[methodDeclarator]] [[parameterList]] [[parameter]]
+
 @@example @@caption Example of a method with no arguments @@endcaption
 @@source manualexamples/MethodDefinition1.ump
 @@endexample
@@ -19,10 +22,6 @@ with arbitrary methods written in the natively compiled language (e.g. Java, Php
 @@source manualexamples/MethodDefinition2.ump
 @@endexample
 
-
 @@example @@caption Example of a public method @@endcaption
 @@source manualexamples/MethodDefinition3.ump
 @@endexample
-
-@@syntax
-[[concreteMethodDeclaration]] [[methodDeclarator]] [[parameterList]] [[parameter]]

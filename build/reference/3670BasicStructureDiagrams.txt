@@ -28,9 +28,9 @@ noreferences
 
 <p>See also the <a href="http://en.wikipedia.org/wiki/Composite_structure_diagram">Wikipedia page on Composite Structure Diagrams</a>.</p>
 
+@@syntax
+[[portDefinition]] [[typedPortName]] [[portMultiplicity]] [[portBindingDefinition]]  [[bindinHandler]] [[activeMethodDefinition]] [[portWatch]] [[activeMethodDeclarator]] [[activeMethodBody]] [[activeDirectionHandler]] [[activeTrigger]] [[activeDirectionHandler]] [[activeTriggerBody]] [[deferredList]] [[activeTriggerDefinition]] [[thenDefinition]] [[resolveDefinition]] [[hitchConstraint]] [[constraintList]] [[basicConstraint]] [[timeConstraint]] [[messageConstraint]] [[invoke]] [[anonymousTriggerBody]]  [[primitiveDefinition]] 
+
 @@example
 @@source PingPong.ump &diagramtype=structure&generateDefault=cpp
 @@endexample
-
-@@syntax
-[[portDefinition]] [[typedPortName]] [[portMultiplicity]] [[portBindingDefinition]]  [[bindinHandler]] [[activeMethodDefinition]] [[portWatch]] [[activeMethodDeclarator]] [[activeMethodBody]] [[activeDirectionHandler]] [[activeTrigger]] [[activeDirectionHandler]] [[activeTriggerBody]] [[deferredList]] [[activeTriggerDefinition]] [[thenDefinition]] [[resolveDefinition]] [[hitchConstraint]] [[constraintList]] [[basicConstraint]] [[timeConstraint]] [[messageConstraint]] [[invoke]] [[anonymousTriggerBody]]  [[primitiveDefinition]] 
