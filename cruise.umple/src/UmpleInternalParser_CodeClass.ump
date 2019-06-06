@@ -2905,14 +2905,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
                     "               $y->get"+ sortedName +"();\n"+
                     "      }";  
             String java_codeblock = 
-                "\n      new Comparator<" + attributeType +">(){\n"+
-                    "        @Override\n"+
-                    "        public int compare("+attributeType+" arg0, "+attributeType+" arg1)\n"+ 
-                    "        {\n"+
-                    "          return (("+priorityType+")arg0.get"+sortedName+"()).compareTo(\n"+
-                    "                 (("+priorityType+")arg1.get"+sortedName+"()));\n"+ 
-                    "        }\n"+
-                    "      }";    
+                "\n      Comparator.comparing(" + attributeType + "::get" + sortedName + ")";//java 8+ 
+
 
             Attribute priority = new Attribute(yourEnd.getRoleName()+"Priority","Comparator<" + attributeType +">", "", "", false, yourClass);
             CodeBlock cb = new CodeBlock();
@@ -2946,14 +2940,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
                     "               $y->get"+ sortedName +"();\n"+
                     "      }";  
             String java_codeblock = 
-                "\n      new Comparator<" + attributeType +">(){\n"+
-                    "        @Override\n"+
-                    "        public int compare("+attributeType+" arg0, "+attributeType +" arg1)\n"+ 
-                    "        {\n"+
-                    "          return (("+priorityType+")arg0.get"+sortedName+"()).compareTo(\n"+
-                    "                 (("+priorityType+")arg1.get"+sortedName+"()));\n"+ 
-                    "        }\n"+
-                    "      }";    
+                "\n      Comparator.comparing(" + attributeType + "::get" + sortedName + ")";//java 8+  
 
             Attribute priority = new Attribute(myEnd.getRoleName()+"Priority","Comparator<" + attributeType +">", "", "", false, myClass);
             CodeBlock cb = new CodeBlock();

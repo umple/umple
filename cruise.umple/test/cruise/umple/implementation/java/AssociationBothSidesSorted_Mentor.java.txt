@@ -26,14 +26,7 @@ public class Mentor
   {
     name = aName;
     studentsPriority = 
-      new Comparator<Student>(){
-        @Override
-        public int compare(Student arg0, Student arg1)
-        {
-          return ((Integer)arg0.getId()).compareTo(
-                 ((Integer)arg1.getId()));
-        }
-      };
+      Comparator.comparing(Student::getId);
     students = new ArrayList<Student>();
   }
 
