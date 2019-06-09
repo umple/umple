@@ -12,14 +12,14 @@ class ManyToMNTest extends UnitTestCase
   
   public function test_ConstructorWithTooFew()
   {
-  	$this->expectException(new Exception("Unable to create MentorO, must have 2 to 4 students"));
+  	$this->expectException(new Exception("Unable to create MentorO, must have 2 to 4 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentO(99);
     new MentorO("blah",array($s));
   }
 
   public function test_ConstructorWithTooMany()
   {
-  	$this->expectException(new Exception("Unable to create MentorO, must have 2 to 4 students"));
+  	$this->expectException(new Exception("Unable to create MentorO, must have 2 to 4 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentO(99);
     $s2 = new StudentO(98);    
     $s3 = new StudentO(97);
@@ -62,7 +62,7 @@ class ManyToMNTest extends UnitTestCase
 
   public function test_constructorWatchOutForDuplicateEntries()
   {
-  	$this->expectException(new Exception("Unable to create MentorO, must have 2 to 4 students"));
+  	$this->expectException(new Exception("Unable to create MentorO, must have 2 to 4 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentO(99);
     new MentorO("blah",array($s, $s));
   }
