@@ -16,7 +16,7 @@ When <a href="ClientsofTraits.html">clients</a> use traits, they must bind types
 </p>
 
 <p align = "justify">
-The example 1 below shows how template parameters can be defined and used. It depicts a trait called T1 (line 4) with one template parameter named TP. The template parameter is restricted to implement the interface I1, defined in line 8. The restriction is applied to make sure a correct type will be bound to the template parameter. Trait T1 has a required method named method2() with a return and a parameter of type TP (which is a template parameter). Furthermore, it has a provided method named method3() with a parameter of type TP.
+The <b>example 1</b> below shows how template parameters can be defined and used. It depicts a trait called T1 (line 4) with one template parameter named TP. The template parameter is restricted to implement the interface I1, defined in line 8. The restriction is applied to make sure a correct type will be bound to the template parameter. Trait T1 has a required method named method2() with a return and a parameter of type TP (which is a template parameter). Furthermore, it has a provided method named method3() with a parameter of type TP.
 </p>
 
 <p align = "justify">
@@ -29,7 +29,7 @@ Since a trait can use other traits, a trait with template parameters can use oth
 </p>
 
 <p align = "justify">
-The example 2 below shows how one template parameter is bound to another one. Trait T1 has the template parameter TP used to define the type of parameter for the provided method method2(). Trait T2 has the template parameter TP used to define the type of parameter for the provided method method3(). It also uses trait T1 and binds its own template parameter to traits T1’s template parameter (line 9). Note that trait T2 can also bind any other types to the template parameter TP, if it is required. Finally, class C1 uses trait T2 and binds String to the template parameter TP (line 13)
+The <b>example 2</b> below shows how one template parameter is bound to another one. Trait T1 has the template parameter TP used to define the type of parameter for the provided method method2(). Trait T2 has the template parameter TP used to define the type of parameter for the provided method method3(). It also uses trait T1 and binds its own template parameter to traits T1’s template parameter (line 9). Note that trait T2 can also bind any other types to the template parameter TP, if it is required. Finally, class C1 uses trait T2 and binds String to the template parameter TP (line 13)
 </p>
 
 
@@ -38,21 +38,20 @@ Umple introduces a special syntax to allow having template parameters that can b
 </p>
 
 <p align = "justify">
-The example 3 shows how a template parameter is used in the body of a method. As seen, trait T1 has a template parameter named TP (line 4). The provided method method2() needs to return a string which is a combination of calling the required method method1() and a method named process() from the template parameter TP. In the body of the provided method method2(), an instance of the template parameter needs to be created so as to call the method process(). This is achieved by having the name of template parameter encompassed by '#' in places that require types (line 7). The rest needs to follow the syntax of the language used to implement the code blocks, in this case, Java. Class C2 uses trait T1 and binds class C1 to the template parameter TP (line 15). It also implements the required method method1() in order to able to use the trait.
+The <b>example 3</b> shows how a template parameter is used in the body of a method. As seen, trait T1 has a template parameter named TP (line 4). The provided method method2() needs to return a string which is a combination of calling the required method method1() and a method named process() from the template parameter TP. In the body of the provided method method2(), an instance of the template parameter needs to be created so as to call the method process(). This is achieved by having the name of template parameter encompassed by '#' in places that require types (line 7). The rest needs to follow the syntax of the language used to implement the code blocks, in this case, Java. Class C2 uses trait T1 and binds class C1 to the template parameter TP (line 15). It also implements the required method method1() in order to able to use the trait.
 </p>
-
 
 @@syntax
 [[traitParameters]] [[traitFullParameters]] [[traitParametersInterface]]
 
-@@example
+@@example @@caption Example 1 @@endcaption
 @@source manualexamples/traits_example_006.ump
 @@endexample
 
-@@example
+@@example @@caption Example 2 @@endcaption
 @@source manualexamples/traits_example_007.ump
 @@endexample
 
-@@example
+@@example @@caption Example 3 @@endcaption
 @@source manualexamples/traits_example_008.ump
 @@endexample

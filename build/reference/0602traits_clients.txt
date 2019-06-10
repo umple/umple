@@ -8,7 +8,7 @@ noreferences
 </P>
 
 <p align = "justify">
-In the example 1 below, trait T2 is a client that uses trait T1 (at line 11) and class C2 is a client that uses trait T2 (at line 21). Clients can use other traits if they satisfy their required methods. Satisfaction of required methods is performed by having implemented in clients. For example, trait T2 uses trait T1 and so it is required to have the required methods of trait T1 implemented in trait T2 (or in clients of trait T2). Trait T2 achieves this through implementing two methods named method1() and method2() defined in lines 13 and 14.
+In the example 1 below, trait T2 is a client that uses trait T1 (at line 11) and class C2 is a client that uses trait T2 (at line 21). Clients can use other traits if they satisfy their required methods. Satisfaction of required methods is performed by having them implemented in clients. For example, trait T2 uses trait T1 and so it is required to have the required methods of trait T1 implemented in trait T2 (or in clients of trait T2). Trait T2 achieves this through implementing two methods named method1() and method2() defined in lines 13 and 14.
 </p>
 
 <p align = "justify">

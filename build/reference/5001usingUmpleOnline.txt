@@ -173,7 +173,7 @@ showing this pane and saving the layout information</li>
 <li><b>To add an <a href="AttributeDefinition.html">attribute</a></b>, click in the 'Add More' box and type the 
 attribute name. To give an attribute a type, follow the name by a colon, 
 and then one of the Umple types (Integer, String, Date, Time, Boolean or 
-the name of an Umple class (note that this is UML diagram syntax for typed attributes which is not the same as the Umple textual syntax). You can click on an attribute at any time to 
+the name of an Umple class). Note that this is UML diagram syntax for typed attributes which is not the same as the Umple textual syntax. You can click on an attribute at any time to 
 change its name or type, or you can edit the attribute in the textual 
 (left) pane. You can add a whole series of attributes by just hitting 
 return after each one and typing the next one.</li>

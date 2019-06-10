@@ -15,10 +15,10 @@ noreferences
 @@syntax
 [[constraint]] [[constraintBody]] [[constraintExpr]] [[linkingOp]] [[negativeConstraint]] [[stringExpr]] [[stringLit]] [[genExpr]] [[numExpr]] [[equalityOp]] [[equalsOp]] [[notequalsOp]] [[ordinalOp]] [[greaterOp]] [[lessOp]] [[moreOp]] [[smallerOp]]
 
-@@example
+@@example @@caption Example with simple constraints @@endcaption
 @@source manualexamples/SimpleConstraints1.ump
 @@endexample
 
-@@example
+@@example @@caption Example with more operators @@endcaption
 @@source manualexamples/SimpleConstraints2.ump
 @@endexample
