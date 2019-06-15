@@ -2914,6 +2914,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             cb.setCode("Java", java_codeblock);
             cb.setCode("Ruby", "\"\"");
             priority.setCodeblock(cb); 
+            priority.setIsInternalTransient(true); 
             myClass.addAttribute(priority);
 
           } 
@@ -2948,6 +2949,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             cb.setCode("Java", java_codeblock);
             cb.setCode("Ruby", "\"\"");
             priority.setCodeblock(cb); 
+            priority.setIsInternalTransient(true); 
             yourClass.addAttribute(priority);
           }  
           else

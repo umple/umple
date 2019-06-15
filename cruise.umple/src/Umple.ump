@@ -903,6 +903,9 @@ class Attribute
   // Specifies whether or not the method parameter is derived.
   Boolean isDerived = false;
 
+  // Specifies whether or not the method parameter is internalTransient.
+  Boolean isInternalTransient = false;
+
   CodeBlock codeblock = new CodeBlock();
 
   after constructor { codeblock.setCode(normalizeValue(aType,aValue)); }
