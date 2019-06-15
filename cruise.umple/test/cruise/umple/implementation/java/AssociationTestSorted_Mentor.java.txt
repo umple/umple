@@ -12,7 +12,7 @@ public class Mentor
   //------------------------
 
   //Mentor Attributes
-  private Comparator<Student> studentsPriority;
+  private transient Comparator<Student> studentsPriority;
 
   //Mentor Associations
   private List<Student> students;
