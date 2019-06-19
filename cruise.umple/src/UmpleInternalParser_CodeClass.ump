@@ -2907,7 +2907,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             String java_codeblock = 
                 "\n      Comparator.comparing(" + attributeType + "::get" + sortedName + ")";//java 8+ 
 
-
             Attribute priority = new Attribute(yourEnd.getRoleName()+"Priority","Comparator<" + attributeType +">", "", "", false, yourClass);
             CodeBlock cb = new CodeBlock();
             cb.setCode("Php", php_codeblock);
@@ -2917,7 +2916,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             priority.setIsInternalTransient(true); 
             myClass.addAttribute(priority);
             myClass.setIsInternalSerializable(true);
-
           } 
           else
             setFailedPosition(association.getTokenPosition(), 24, yourEnd.getPriority(), myClass.getName());

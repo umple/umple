@@ -150,6 +150,18 @@ else if(model.getDistributed())
             append(realSb," ,java.io.Serializable");
       } 
 }
+else if(uClass.getIsInternalSerializable())//issue#1444
+{
+  if (hasParentInterface == false)
+  {
+    append(realSb," implements java.io.Serializable");
+    hasParentInterface=true;
+  }
+  else
+  {
+    append(realSb," ,java.io.Serializable");
+  } 
+}
 
 boolean implementsRunnable = false;
 
