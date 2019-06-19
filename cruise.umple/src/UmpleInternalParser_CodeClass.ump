@@ -2916,6 +2916,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             priority.setCodeblock(cb); 
             priority.setIsInternalTransient(true); 
             myClass.addAttribute(priority);
+            myClass.setIsInternalSerializable(true);
 
           } 
           else
@@ -2951,6 +2952,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             priority.setCodeblock(cb); 
             priority.setIsInternalTransient(true); 
             yourClass.addAttribute(priority);
+            yourClass.setIsInternalSerializable(true);
           }  
           else
             setFailedPosition(association.getTokenPosition(), 24, myEnd.getPriority(), yourClass.getName());

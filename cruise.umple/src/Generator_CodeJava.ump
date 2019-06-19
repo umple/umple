@@ -2596,6 +2596,11 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
           }
       }
     }
+
+    if(aClass.getIsInternalSerializable()&&!getModel().getDistributed()&&!aClass.getIsDistributed())
+    {
+      genClass.addMultiLookup("import", "java.io.Serializable");
+    }
   }
   private String nameOf(Attribute av)
   {
