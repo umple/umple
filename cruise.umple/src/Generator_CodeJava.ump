@@ -1924,30 +1924,9 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
   
   private void prepareCodeInjectionForAttributes(UmpleClass aClass)
   { 
-    boolean addReadObject = false;
-    String readObjectString = 
-      "\n    private void readObject(java.io.ObjectInputStream in) throws Exception {"+
-      "\n      in.defaultReadObject();";
-
-    String methods = "";
     for(Attribute av : aClass.getAttributes())
     {
       prepareCodeInjectionForAttribute(aClass, av);
-      if(av.getIsInternalTransient())
-      { 
-        readObjectString += av.getCodeblock().getCode("Java")+";";
-        addReadObject = true;
-      }
-      methods = translate("addMethod",av);
-    }
-    readObjectString += "\n     }\n" ;
-    if(addReadObject && !aClass.getIsDistributed())
-    {
-      CodeBlock cb = new CodeBlock("Java",readObjectString);
-      CodeInjection set = new CodeInjection("after", "constructor",cb, aClass);
-      
-      //cb.setCode("Java",readObjectString);
-      aClass.addCodeInjection(set);
     }
   }
   

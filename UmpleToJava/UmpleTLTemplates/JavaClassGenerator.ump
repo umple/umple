@@ -339,8 +339,12 @@ for (StateMachine smq : uClass.getStateMachines())
       self="self";
       
     String umpleSourceFile = "";
-    Integer baseJavaLine = realSb.toString().split("\\n").length+3;#>><<@ UmpleToJava.association_Get_All >><<@ UmpleToJava.association_Set_All >>
-  <<#return realSb.toString();
+    Integer baseJavaLine = realSb.toString().split("\\n").length+3;#>><<@ UmpleToJava.association_Get_All >><<@ UmpleToJava.association_Set_All >><<#
+    if(uclass.getIsInternalSerializable() && !uClass.getIsDistributed())
+    {
+      #>><<@ UmpleToJava.association_sorted_serializable_readObject >><<#
+    }
+    return realSb.toString();
     } 
     
     private String getEqualsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
