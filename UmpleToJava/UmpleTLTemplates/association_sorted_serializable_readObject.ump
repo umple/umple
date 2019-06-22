@@ -2,13 +2,11 @@ class UmpleToJava {
   association_sorted_serializable_readObject <<!  /* Code from template association_sorted_serializable_readObject */
 <</*association_sorted_serializable_readObject*/>>  
 private void readObject(java.io.ObjectInputStream in)
-  throws IOException, ClassNotFoundException 
+  throws Exception
   {
-    <<# if (customGetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetPrefixCode,gen.translate("getMethod",av)); 
-    append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
-    
     in.defaultReadObject();
 
-    <<# for( Attribute av : uClass.getAttributes() ) #>><<= (av.isInternalTransient?av.getCodeblock().getCode():"")>>
+    <<# for( Attribute av : uClass.getAttributes() ) #>><<= (av.getIsInternalTransient()?av.getCodeblock().getCode()+";":"")>>
   }!>>
 }
+//throws IOException, ClassNotFoundException

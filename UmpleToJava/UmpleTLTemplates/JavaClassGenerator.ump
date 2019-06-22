@@ -29,6 +29,7 @@ use toString_declare.ump;
 use trace.ump;
 use uncaught_exception.ump;
 use queued_method.ump;
+use association_sorted_serializable_readObject.ump;
 
 
 namespace cruise.umple.compiler.java;
@@ -340,9 +341,9 @@ for (StateMachine smq : uClass.getStateMachines())
       
     String umpleSourceFile = "";
     Integer baseJavaLine = realSb.toString().split("\\n").length+3;#>><<@ UmpleToJava.association_Get_All >><<@ UmpleToJava.association_Set_All >><<#
-    if(uclass.getIsInternalSerializable() && !uClass.getIsDistributed())
+    if(uClass.getIsInternalSerializable() && !uClass.getIsDistributed())
     {
-      #>><<@ UmpleToJava.association_sorted_serializable_readObject >><<#
+      #>><<@ UmpleToJava.association_sorted_serializable_readObject>><<#
     }
     return realSb.toString();
     } 
