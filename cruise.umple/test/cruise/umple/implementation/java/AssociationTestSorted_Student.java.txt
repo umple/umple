@@ -3,8 +3,10 @@
 
 
 import java.util.*;
+import java.io.Serializable;
 
-public class Student
+// line 2 "model.ump"
+public class Student implements java.io.Serializable
 {
 
   //------------------------
@@ -43,7 +45,7 @@ public class Student
   {
     return id;
   }
-
+  /* Code from template association_GetMany */
   public Mentor getMentor(int index)
   {
     Mentor aMentor = mentors.get(index);
@@ -73,12 +75,12 @@ public class Student
     int index = mentors.indexOf(aMentor);
     return index;
   }
-
+  /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfMentors()
   {
     return 0;
   }
-
+  /* Code from template association_AddManyToManyMethod */
   public boolean addMentor(Mentor aMentor)
   {
     boolean wasAdded = false;
@@ -98,7 +100,7 @@ public class Student
     }
     return wasAdded;
   }
-
+  /* Code from template association_RemoveMany */
   public boolean removeMentor(Mentor aMentor)
   {
     boolean wasRemoved = false;
@@ -123,7 +125,7 @@ public class Student
     }
     return wasRemoved;
   }
-
+  /* Code from template association_AddIndexControlFunctions */
   public boolean addMentorAt(Mentor aMentor, int index)
   {  
     boolean wasAdded = false;
@@ -156,6 +158,13 @@ public class Student
     return wasAdded;
   }
 
+  /* Code from template association_sorted_serializable_readObject */ 
+  private void readObject(java.io.ObjectInputStream in)
+  throws Exception
+  {
+    in.defaultReadObject();
+
+  }
   public void delete()
   {
     ArrayList<Mentor> copyOfMentors = new ArrayList<Mentor>(mentors);
