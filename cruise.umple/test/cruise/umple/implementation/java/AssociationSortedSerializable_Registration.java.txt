@@ -1,0 +1,359 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+import java.io.Serializable;
+
+// line 16 "model.ump"
+public class Registration implements java.io.Serializable
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Registration Associations
+  private Student student;
+  private Course course;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Registration(Student aStudent, Course aCourse)
+  {
+    boolean didAddStudent = setStudent(aStudent);
+    if (!didAddStudent)
+    {
+      throw new RuntimeException("Unable to create registration due to student");
+    }
+    boolean didAddCourse = setCourse(aCourse);
+    if (!didAddCourse)
+    {
+      throw new RuntimeException("Unable to create registration due to course");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getName()
+  {
+    return getStudent().getName();
+  }
+
+  public String getCode()
+  {
+    return getCourse().getCode();
+  }
+  /* Code from template association_GetOne */
+  public Student getStudent()
+  {
+    return student;
+  }
+  /* Code from template association_GetOne */
+  public Course getCourse()
+  {
+    return course;
+  }
+  /* Code from template association_SetOneToMany */
+  public boolean setStudent(Student aStudent)
+  {
+    boolean wasSet = false;
+    if (aStudent == null)
+    {
+      return wasSet;
+    }
+
+    Student existingStudent = student;
+    student = aStudent;
+    if (existingStudent != null && !existingStudent.equals(aStudent))
+    {
+      existingStudent.removeRegistration(this);
+    }
+    student.addRegistration(this);
+    wasSet = true;
+    return wasSet;
+  }
+  /* Code from template association_SetOneToMany */
+  public boolean setCourse(Course aCourse)
+  {
+    boolean wasSet = false;
+    if (aCourse == null)
+    {
+      return wasSet;
+    }
+
+    Course existingCourse = course;
+    course = aCourse;
+    if (existingCourse != null && !existingCourse.equals(aCourse))
+    {
+      existingCourse.removeRegistration(this);
+    }
+    course.addRegistration(this);
+    wasSet = true;
+    return wasSet;
+  }
+
+  /* Code from template association_sorted_serializable_readObject */ 
+  private void readObject(java.io.ObjectInputStream in)
+  throws Exception
+  {
+    in.defaultReadObject();
+
+  }
+  public void delete()
+  {
+    Student placeholderStudent = student;
+    this.student = null;
+    if(placeholderStudent != null)
+    {
+      placeholderStudent.removeRegistration(this);
+    }
+    Course placeholderCourse = course;
+    this.course = null;
+    if(placeholderCourse != null)
+    {
+      placeholderCourse.removeRegistration(this);
+    }
+  }
+
+  // line 24 "model.ump"
+   public String toString(){
+    return "Registration: " + getName()  
+      + ":" + getCode();
+  }
+
+}
+
+
+
+//%% NEW FILE Student BEGINS HERE %%
+
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+import java.util.*;
+import java.io.Serializable;
+
+// line 7 "model.ump"
+public class Student implements java.io.Serializable
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private int id;
+  private String name;
+
+  //Student Associations
+  private Academy academy;
+  private List<Registration> registrations;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(int aId, String aName, Academy aAcademy)
+  {
+    id = aId;
+    name = aName;
+    boolean didAddAcademy = setAcademy(aAcademy);
+    if (!didAddAcademy)
+    {
+      throw new RuntimeException("Unable to create registrant due to academy");
+    }
+    registrations = new ArrayList<Registration>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getId()
+  {
+    return id;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+  /* Code from template association_GetOne */
+  public Academy getAcademy()
+  {
+    return academy;
+  }
+  /* Code from template association_GetMany */
+  public Registration getRegistration(int index)
+  {
+    Registration aRegistration = registrations.get(index);
+    return aRegistration;
+  }
+
+  public List<Registration> getRegistrations()
+  {
+    List<Registration> newRegistrations = Collections.unmodifiableList(registrations);
+    return newRegistrations;
+  }
+
+  public int numberOfRegistrations()
+  {
+    int number = registrations.size();
+    return number;
+  }
+
+  public boolean hasRegistrations()
+  {
+    boolean has = registrations.size() > 0;
+    return has;
+  }
+
+  public int indexOfRegistration(Registration aRegistration)
+  {
+    int index = registrations.indexOf(aRegistration);
+    return index;
+  }
+  /* Code from template association_SetOneToMany */
+  public boolean setAcademy(Academy aAcademy)
+  {
+    boolean wasSet = false;
+    if (aAcademy == null)
+    {
+      return wasSet;
+    }
+
+    Academy existingAcademy = academy;
+    academy = aAcademy;
+    if (existingAcademy != null && !existingAcademy.equals(aAcademy))
+    {
+      existingAcademy.removeRegistrant(this);
+    }
+    academy.addRegistrant(this);
+    wasSet = true;
+    return wasSet;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  public static int minimumNumberOfRegistrations()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToOne */
+  public Registration addRegistration(Course aCourse)
+  {
+    return new Registration(this, aCourse);
+  }
+
+  public boolean addRegistration(Registration aRegistration)
+  {
+    boolean wasAdded = false;
+    if (registrations.contains(aRegistration)) { return false; }
+    Student existingStudent = aRegistration.getStudent();
+    boolean isNewStudent = existingStudent != null && !this.equals(existingStudent);
+    if (isNewStudent)
+    {
+      aRegistration.setStudent(this);
+    }
+    else
+    {
+      registrations.add(aRegistration);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeRegistration(Registration aRegistration)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aRegistration, as it must always have a student
+    if (!this.equals(aRegistration.getStudent()))
+    {
+      registrations.remove(aRegistration);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  public boolean addRegistrationAt(Registration aRegistration, int index)
+  {  
+    boolean wasAdded = false;
+    if(addRegistration(aRegistration))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfRegistrations()) { index = numberOfRegistrations() - 1; }
+      registrations.remove(aRegistration);
+      registrations.add(index, aRegistration);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveRegistrationAt(Registration aRegistration, int index)
+  {
+    boolean wasAdded = false;
+    if(registrations.contains(aRegistration))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfRegistrations()) { index = numberOfRegistrations() - 1; }
+      registrations.remove(aRegistration);
+      registrations.add(index, aRegistration);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addRegistrationAt(aRegistration, index);
+    }
+    return wasAdded;
+  }
+
+  /* Code from template association_sorted_serializable_readObject */ 
+  private void readObject(java.io.ObjectInputStream in)
+  throws Exception
+  {
+    in.defaultReadObject();
+
+  }
+  public void delete()
+  {
+    Academy placeholderAcademy = academy;
+    this.academy = null;
+    if(placeholderAcademy != null)
+    {
+      placeholderAcademy.removeRegistrant(this);
+    }
+    for(int i=registrations.size(); i > 0; i--)
+    {
+      Registration aRegistration = registrations.get(i - 1);
+      aRegistration.delete();
+    }
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "id" + ":" + getId()+ "," +
+            "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "academy = "+(getAcademy()!=null?Integer.toHexString(System.identityHashCode(getAcademy())):"null");
+  }
+}
