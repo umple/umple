@@ -193,13 +193,6 @@ public class Student implements java.io.Serializable
     return wasAdded;
   }
 
-  /* Code from template association_sorted_serializable_readObject */ 
-  private void readObject(java.io.ObjectInputStream in)
-  throws Exception
-  {
-    in.defaultReadObject();
-
-  }
   public void delete()
   {
     Academy placeholderAcademy = academy;
