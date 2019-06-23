@@ -343,7 +343,13 @@ for (StateMachine smq : uClass.getStateMachines())
     Integer baseJavaLine = realSb.toString().split("\\n").length+3;#>><<@ UmpleToJava.association_Get_All >><<@ UmpleToJava.association_Set_All >><<#
     if(uClass.getIsInternalSerializable() && !uClass.getIsDistributed())
     {
-      #>><<@ UmpleToJava.association_sorted_serializable_readObject>><<#
+      boolean hasInternalTransientAttributes = false;
+      for(Attribute av:uClass.getAttributes())
+        hasInternalTransientAttributes=av.getIsInternalTransient()?true:hasInternalTransientAttributes;
+      if(hasInternalTransientAttributes)
+      {
+        #>><<@ UmpleToJava.association_sorted_serializable_readObject>><<#
+      }
     }
     return realSb.toString();
     } 
