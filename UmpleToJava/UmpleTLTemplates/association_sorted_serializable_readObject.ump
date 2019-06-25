@@ -7,6 +7,7 @@ class UmpleToJava {
     in.defaultReadObject();
 
     <<# for( Attribute av : uClass.getAttributes() ) #>><<= (av.getIsInternalTransient()?"\n    "+av.getName()+" = "+av.getCodeblock().getCode()+";":"")>>
-  }!>>
+  }
+  !>>
 }
 //throws IOException, ClassNotFoundException

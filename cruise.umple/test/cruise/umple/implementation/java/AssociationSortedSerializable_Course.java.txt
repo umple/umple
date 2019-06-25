@@ -175,6 +175,7 @@ public class Course implements java.io.Serializable
     registrationsPriority = 
       Comparator.comparing(Registration::getName);
   }
+
   public void delete()
   {
     Academy placeholderAcademy = academy;
