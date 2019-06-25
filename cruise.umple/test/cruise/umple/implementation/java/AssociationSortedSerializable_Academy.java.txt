@@ -224,7 +224,7 @@ public class Academy implements java.io.Serializable
     registrantsPriority = 
       Comparator.comparing(Student::getId);
   }
-
+  
   public void delete()
   {
     for(int i=courses.size(); i > 0; i--)
