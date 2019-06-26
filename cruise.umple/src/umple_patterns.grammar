@@ -32,5 +32,5 @@ parameterListing : OPEN_ROUND_BRACKET ([[parameterTypes]])? CLOSE_ROUND_BRACKET
 
 injectionOperation : [operationName] ([[parameterListing]])?
 
-beforeCode : before ([=operationSource:custom|generated|all])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
-afterCode : after ([=operationSource:custom|generated|all])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+beforeCode : before ([=operationSource:custom|generated|all])? ([!label:\S+:])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+afterCode : after ([=operationSource:custom|generated|all])? ([!label:\S+:])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
