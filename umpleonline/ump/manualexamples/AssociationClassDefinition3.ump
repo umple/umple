@@ -20,7 +20,7 @@ class Team {
 
 // This gathers the number of points a player
 // gained on a particular team in a particular
-// position while playing in a particular position
+// season while playing in a particular position
 // To get the total points in any one category,
 // you would have to add the points several
 // instances

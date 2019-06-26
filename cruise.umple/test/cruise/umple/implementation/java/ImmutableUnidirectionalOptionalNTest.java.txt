@@ -32,7 +32,7 @@ public class Student
     boolean didAddMentors = setMentors(allMentors);
     if (!didAddMentors)
     {
-      throw new RuntimeException("Unable to create Student, must have 3 or fewer mentors, no duplicates.");
+      throw new RuntimeException("Unable to create Student, must have 3 or fewer mentors, no duplicates. See http://manual.umple.org?RE001ViolationofImmutability.html");
     }
   }
 

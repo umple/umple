@@ -27,4 +27,5 @@ Errors and Warnings 1-50;
 Errors and Warnings 51-99;
 Errors and Warnings 100-999;
 Errors and Warnings 1000+;
+Runtime Exceptions;
 

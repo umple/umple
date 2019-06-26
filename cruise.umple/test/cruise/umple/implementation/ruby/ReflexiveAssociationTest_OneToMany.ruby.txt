@@ -23,7 +23,7 @@ class OneToMany
     @initialized = false
     @deleted = false
     unless set_oneToMany(a_oneToMany)
-      raise "Unable to create OneToMany due to a_oneToMany" 
+      raise "Unable to create OneToMany due to a_oneToMany. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" 
     end
     @initialized = true
   end

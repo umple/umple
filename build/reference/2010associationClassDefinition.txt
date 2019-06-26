@@ -35,23 +35,23 @@ always has two or more 1..many associations to other classes. Each of these is w
 @@syntax
 [[associationClassDefinition]] [[associationClassContent]] [[singleAssociationEnd]]
 
-@@example
+@@example @@caption Example 1 @@endcaption
 @@source manualexamples/AssociationClassDefinition1.ump
 @@endexample
 
-@@example
+@@example @@caption Example 2 @@endcaption
 @@source manualexamples/AssociationClassDefinition2.ump
 @@endexample
 
-@@example
+@@example @@caption Example 3 @@endcaption
 @@source manualexamples/AssociationClassDefinition3.ump
 @@endexample
 
-@@example
+@@example @@caption Example 4 @@endcaption
 @@source manualexamples/AssociationClassDefinition4.ump
 @@endexample
 
-@@example
+@@example @@caption Example 5 @@endcaption
 @@source manualexamples/AssociationClassDefinition5.ump
 @@endexample
 
