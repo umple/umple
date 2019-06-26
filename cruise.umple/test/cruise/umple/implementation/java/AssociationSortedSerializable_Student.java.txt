@@ -32,7 +32,7 @@ public class Student implements java.io.Serializable
     boolean didAddAcademy = setAcademy(aAcademy);
     if (!didAddAcademy)
     {
-      throw new RuntimeException("Unable to create registrant due to academy");
+      throw new RuntimeException("Unable to create registrant due to academy. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     registrations = new ArrayList<Registration>();
   }
