@@ -90,9 +90,8 @@ class CodeBlock{
   depend java.util.regex.Matcher;
   depend java.util.regex.Pattern;
 
-  ArrayList<String> codeLabels = new ArrayList<String>();
-
   public ArrayList<String> getCodeWithLabels() {
+    ArrayList <String> codeLabels = new ArrayList<String>();
 	  String codeToLockAt = codes.get("");
     ArrayList<String> codeWithLabels = new ArrayList<String>();
     Pattern labelPatternToMatch = Pattern.compile("(\\S+):");
@@ -111,7 +110,7 @@ class CodeBlock{
     codeWithLabels.add(codeAfterLastLabel);
     return codeWithLabels;
   }
-
+/*
   boolean hasCodeLabels()
   {
     return codeLabels.size() > 0 ;
@@ -120,5 +119,6 @@ class CodeBlock{
   {
     return hasCodeLabels() && codeLabels.contains(label); 
   }
+  */
 
 }
