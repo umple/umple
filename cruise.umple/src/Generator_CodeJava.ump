@@ -1923,7 +1923,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
   }
   
   private void prepareCodeInjectionForAttributes(UmpleClass aClass)
-  {
+  { 
     for(Attribute av : aClass.getAttributes())
     {
       prepareCodeInjectionForAttribute(aClass, av);
@@ -1931,7 +1931,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
   }
   
   private void prepareCodeInjectionForAssociations(UmpleClass aClass)
-  {
+  { 
     for(AssociationVariable av : aClass.getAssociationVariables())
     {
       prepareCodeInjectionForAssociation(aClass, av);
@@ -2595,6 +2595,11 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
             genClass.addMultiLookup("import", "java.rmi.server.UnicastRemoteObject");
           }
       }
+    }
+
+    if(aClass.getIsInternalSerializable()&&!getModel().getDistributed()&&!aClass.getIsDistributed())
+    {
+      genClass.addMultiLookup("import", "java.io.Serializable");
     }
   }
   private String nameOf(Attribute av)

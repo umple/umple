@@ -13,7 +13,7 @@ public class Mentor
 
   //Mentor Attributes
   private String name;
-  private Comparator<Student> myStudentsPriority;
+  private transient Comparator<Student> myStudentsPriority;
 
   //Mentor Associations
   private List<Student> myStudents;
