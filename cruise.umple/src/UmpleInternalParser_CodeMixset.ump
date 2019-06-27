@@ -71,57 +71,56 @@ class UmpleInternalParser
 	}
 
   private void analyzeMixsetBodyToken(Token token)
-	{
-	  Token mixsetBodyToken = token.getSubToken("extraCode");      
+  {
+    Token mixsetBodyToken = token.getSubToken("extraCode");      
     mixsetBodyToken.setValue(getMixsetFragmentWithEnclosingElement(token,mixsetBodyToken.getValue()));
     analyzeMixset(token);
-	}
+  }
 	
-	// This method takes a mixset fragment and adds its context. 
-	private String getMixsetFragmentWithEnclosingElement(Token token, String mixsetBody)
-	{
+  // This method takes a mixset fragment and adds its context. 
+  private String getMixsetFragmentWithEnclosingElement(Token token, String mixsetBody)
+  {
     if (token.is("ROOT") || token == null)
-	  return mixsetBody ;
+      return mixsetBody ;
 
-	  String tokenKey ="";
-	  String prefix ="";
+    String tokenKey ="";
+    String prefix ="";
     boolean returnMixsetBody= false;
 	
-	  if (token.is("state"))
+    if (token.is("state"))
     {
-	    tokenKey = "stateName";
+      tokenKey = "stateName";
     }
-	  else if (token.is("inlineStateMachine"))
-	  tokenKey =  "name";
-	  else if (token.is("classDefinition"))
-	  {
-	    tokenKey = "name"; 
-	    prefix ="class";
+    else if (token.is("inlineStateMachine"))
+      tokenKey =  "name";
+    else if (token.is("classDefinition"))
+    {
+      tokenKey = "name"; 
+      prefix ="class";
       returnMixsetBody= true;
-	  }
-	  else if (token.is("traitDefinition"))
-	  {
-	    tokenKey = "name"; 
-	    prefix ="trait";
+    }
+    else if (token.is("traitDefinition"))
+    {
+      tokenKey = "name"; 
+      prefix ="trait";
       returnMixsetBody= true;
-
-	  }
-	   else if (token.is("associationDefinition"))
-	  {
-	    tokenKey = "name"; 
-	    prefix ="association";
-	  }
-	  	  
-	 if(! tokenKey.equals("")) 
-	 {
-     mixsetBody = " "+prefix +" "+ token.getValue(tokenKey) + " { " + mixsetBody + " } ";
-     if(returnMixsetBody) 
-     return mixsetBody;
-   }
-	 return getMixsetFragmentWithEnclosingElement(token.getParentToken(), mixsetBody) ;
+    }
+    else if (token.is("associationDefinition"))
+    {
+      tokenKey = "name"; 
+      prefix ="association";
+    }
 	  
+    if(! tokenKey.equals("")) 
+    {
+      mixsetBody = " "+prefix +" "+ token.getValue(tokenKey) + " { " + mixsetBody + " } ";
+      if(returnMixsetBody) 
+      return mixsetBody;
+    }
+    
+    return getMixsetFragmentWithEnclosingElement(token.getParentToken(), mixsetBody) ;	  
 	
-	}
+  }
 	 
 /*
  * This method handles mixset use statements appearing in both code and in the console. The method adds mixset use statements to umple model in the first round on analysis, before
@@ -242,7 +241,7 @@ class UmpleInternalParser
    
  }
 
- private void analyzeMixsetToken(Token t, int analysisStep)
+  private void analyzeMixsetToken(Token t, int analysisStep)
   {
    if (analysisStep != 2)
     {
@@ -256,48 +255,45 @@ class UmpleInternalParser
     
   }
   
-  
   private Mixset analyzeMixset(Token token)
   {
     String mixsetName = token.getValue("mixsetName");
-  	
     // check if the mixset is was not added before
     Mixset mixset = model.getMixset(mixsetName);
     if(mixset  == null)
-	{
-	  mixset  = new Mixset(mixsetName);
-	  model.addMixsetOrFile(mixset);
-	}
+    {
+       mixset  = new Mixset(mixsetName);
+       model.addMixsetOrFile(mixset);
+    }
 	
 	
-	Position mixsetFragmentPosition = null;
-	int mixsetFragmentLineNumber = 0;
+    Position mixsetFragmentPosition = null;
+    int mixsetFragmentLineNumber = 0;
 	
-	String mixsetBody = token.getValue("extraCode");
-	if(mixsetBody != null)
-	{
-	  mixsetFragmentPosition = token.getSubToken("extraCode").getPosition();
-	}		
+    String mixsetBody = token.getValue("extraCode");
+    if(mixsetBody != null)
+    {
+      mixsetFragmentPosition = token.getSubToken("extraCode").getPosition();
+    }		
 	
-	//inline mixset def.
-	String entityType = token.getValue("entityType");
-	String entityName = token.getValue("entityName");
+    //inline mixset def.
+    String entityType = token.getValue("entityType");
+    String entityName = token.getValue("entityName");
 	
-	// mixset with one element
-	String oneElementMixset = token.getValue("oneElement");
+    // mixset with one element
+    String oneElementMixset = token.getValue("oneElement");
 	
-	if(entityType != null) {
-	  if (oneElementMixset != null)
+    if(entityType != null) {
+        if (oneElementMixset != null)
 	  {
 	    mixsetBody = entityType + " "+entityName + " { "+ oneElementMixset + " }";
-	    mixsetFragmentPosition = token.getSubToken("oneElementMixset").getPosition();
-	    
+	    mixsetFragmentPosition = token.getSubToken("oneElementMixset").getPosition();	    
 	  }
 	  else
 	    mixsetBody = entityType + " "+entityName + " { "+ mixsetBody + " }";
 	    mixsetFragmentPosition = token.getSubToken("extraCode").getPosition();	
 	  }
-	else if (oneElementMixset != null) 
+	  else if (oneElementMixset != null) 
 	  {
 	    mixsetBody = oneElementMixset;
 	    mixsetFragmentPosition = token.getSubToken("oneElementMixset").getPosition();	  
