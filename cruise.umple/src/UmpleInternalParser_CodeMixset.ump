@@ -85,12 +85,11 @@ class UmpleInternalParser
 
 	  String tokenKey ="";
 	  String prefix ="";
-    boolean returnMixsetBody= true;
+    boolean returnMixsetBody= false;
 	
 	  if (token.is("state"))
     {
 	    tokenKey = "stateName";
-      returnMixsetBody = false;
     }
 	  else if (token.is("inlineStateMachine"))
 	  tokenKey =  "name";
@@ -98,11 +97,14 @@ class UmpleInternalParser
 	  {
 	    tokenKey = "name"; 
 	    prefix ="class";
+      returnMixsetBody= true;
 	  }
 	  else if (token.is("traitDefinition"))
 	  {
 	    tokenKey = "name"; 
 	    prefix ="trait";
+      returnMixsetBody= true;
+
 	  }
 	   else if (token.is("associationDefinition"))
 	  {
