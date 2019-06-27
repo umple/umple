@@ -84,7 +84,7 @@ class GeneratorHelper
           {
             asCode = positionString + inject.getConstraintCode(generator) + injectFooter;
           }
-          else asCode = positionString + inject.getCode() + injectFooter;
+          else asCode = (inject.getCode()!=null)?positionString + inject.getCode() + injectFooter:positionString + injectFooter;
         }
         else
         {
