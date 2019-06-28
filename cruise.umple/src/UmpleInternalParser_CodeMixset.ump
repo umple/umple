@@ -72,7 +72,16 @@ class UmpleInternalParser
 
   private void analyzeMixsetBodyToken(Token token)
   {
-    Token mixsetBodyToken = token.getSubToken("extraCode");      
+    Token mixsetBodyToken = token.getSubToken("extraCode");
+
+    if(mixsetBodyToken == null || token.getSubToken("entityType") != null) 
+    // the above two conditions filter out inline mixsets; 
+    //they should be formated early in analyzeMixset(..) then become regular mixsets here.
+    { 
+      String mixsetName = token.getSubToken("mixsetName").getValue();
+      getParseResult().addErrorMessage(new ErrorMessage(1511,token.getPosition(), mixsetName)); 
+    }
+    else  
     mixsetBodyToken.setValue(getMixsetFragmentWithEnclosingElement(token,mixsetBodyToken.getValue()));
     analyzeMixset(token);
   }

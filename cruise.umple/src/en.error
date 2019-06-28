@@ -209,6 +209,8 @@
 1503 : 1, "http://manual.umple.org/?E15xxParsingError.html", Parsing error: {0}, did you mean {1} ;  
 1510 : 1, "http://manual.umple.org/?E1510UseFileMissing.html", File '{0}' referred to in use statement was not found ; 
 
+1511 : 2, "http://manual.umple.org/?E1511InlineMixsetNotSupported.html", Inline syntax is not supported for the mixset : '{0}' . Please enclose its body with curly brackets. ; 
+
 
 
 # Messages to be emitted when embedded code from another language is compiled and you are passing on the error. These have not yet been activated.
