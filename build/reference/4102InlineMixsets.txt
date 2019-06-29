@@ -6,7 +6,7 @@ noreferences
 
 <h2> Inline mixset is not supported error reported when the Umple parser can't interpret an inline mixset.</h2>
 
-<p> Umple allows inline mixsets for certain entities in Umple. Inline mixsets accepts classes, traits, and interfaces. If you encounter an error regarding the support of inline mixsets, you can easily add a pair of curly brackets around the code that a mixset introduces. The code bellow shows how to use inline mixsets.  <br/>
+<p> Umple allows inline mixsets for certain entities in Umple. Inline mixsets accepts classes, traits, and interfaces. However, empty code classes, interfaces, and traits are allowed for inline mixsets. If you encounter an error regarding the support of inline mixsets, you can easily add a pair of curly brackets around the code that a mixset introduces. The code bellow shows how to use inline mixsets.  <br/>
 </p>
 
 
