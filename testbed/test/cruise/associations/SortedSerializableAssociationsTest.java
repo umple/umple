@@ -40,6 +40,8 @@ public class SortedSerializableAssociationsTest
     { 
       result = ex.getMessage();
     } 
+
+    //verifying serialization
   	Assert.assertEquals(result,"serialized");
 
     SortedSerializableAcademy ac2 = null; 
@@ -61,7 +63,13 @@ public class SortedSerializableAssociationsTest
     { 
       result = ex.getMessage();
     } 
+
+    //verifying deserialization
     Assert.assertEquals(result,"deserialized");
+
+    //verifying object after deserialization
+    Assert.assertEquals(ac.getRegistrant(0).getName(),ac2.getRegistrant(0).getName());
+    Assert.assertEquals("Ali",ac2.getRegistrant(0).getName());
 
     // Adding new elements and comparing 
     try
@@ -79,16 +87,28 @@ public class SortedSerializableAssociationsTest
     f2.addSortedSerializableRegistration(c22);
 
     result = "added";
-
-    Assert.assertEquals(c2.getSortedSerializableRegistration(0).getSortedSerializableStudent().getName(),c22.getSortedSerializableRegistration(0).getSortedSerializableStudent().getName());
-    Assert.assertEquals(c2.getSortedSerializableRegistration(1).getSortedSerializableStudent().getName(),c22.getSortedSerializableRegistration(1).getSortedSerializableStudent().getName());
     } 
     
     catch(Exception ex) 
     { 
       result = ex.getMessage();
-    } 
+    }
+
+    //verifying ability to add new elements after deserialization 
     Assert.assertEquals(result,"added");
+
+    //verifying students sort in academy after deserialization (sorted by id)
+    Assert.assertEquals(ac.getRegistrant(0).getName(),ac2.getRegistrant(0).getName());
+    Assert.assertEquals("Francois",ac2.getRegistrant(0).getName());
+
+    //verifying courses sort in academy after deserialization (sorted by code)
+    Assert.assertEquals(ac.getSortedSerializableCourse(0).getCode(),ac2.getSortedSerializableCourse(0).getCode());
+    Assert.assertEquals("AN234",ac2.getSortedSerializableCourse(0).getCode());
+
+    //verifying students sort in course after deserialization (sorted by name)
+    Assert.assertEquals(ac.getSortedSerializableCourse(1).getSortedSerializableRegistration(1).getName(),ac2.getSortedSerializableCourse(1).getSortedSerializableRegistration(1).getName());
+    Assert.assertEquals("Mary",ac2.getSortedSerializableCourse(0).getSortedSerializableRegistration(1).getName());
+
   }
   
 }
