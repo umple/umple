@@ -1,0 +1,17 @@
+class X {
+  mixset InlineMixset attr1;
+  mixset InlineMixset abstract;
+}
+
+trait Y 
+{
+ mixset InlineMixset attr2;
+}
+
+
+class Z
+{
+  isA Y;
+}
+
+use InlineMixset;

@@ -525,5 +525,15 @@ public class UmpleMixsetTest {
   {
     umpleParserTest.assertNoWarningsParse("InlineMixsetInsideMixset.ump");
   }
+  @Test
+  public void parseInlineMixsetInsideUmpleEntity()
+  {
+    umpleParserTest.assertNoWarningsParse("inlineMixsetInsideUmpleEntity.ump");
+    UmpleFile umpleFile = new  UmpleFile(umpleParserTest.pathToInput,"inlineMixsetInsideUmpleEntity.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+    Assert.assertEquals(umpleClasses.get(0).getAttribute(0).getName(),"attr1");
+  }
 
 }

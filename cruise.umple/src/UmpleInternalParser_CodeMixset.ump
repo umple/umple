@@ -70,16 +70,26 @@ class UmpleInternalParser
     }  
 	}
 
-  private void analyzeMixsetBodyToken(Token token)
+  private void analyzeMixsetBodyToken(Token token) 
   {
     Token mixsetBodyToken = token.getSubToken("extraCode");
-
+    // Code bellow accepts a one element and changes it to be an extraCode
+    // To allow one element mixset that is placed inside a class, trait, etc.
+    if (token.getSubToken("oneElement") != null)
+    {
+      Token oneElementToken = token.getSubToken("oneElement");
+      oneElementToken.setValue(oneElementToken.getValue()+" ;");
+      //String mixsetExtaCode = getMixsetFragmentWithEnclosingElement(token,oneElementToken.getValue());
+      oneElementToken.setName("extraCode");
+      mixsetBodyToken = oneElementToken;
+    }
+    // end
     if(mixsetBodyToken == null) 
     { 
       String mixsetName = token.getSubToken("mixsetName").getValue();
       getParseResult().addErrorMessage(new ErrorMessage(1511,token.getPosition(), mixsetName)); 
     }
-    else  
+    else 
     mixsetBodyToken.setValue(getMixsetFragmentWithEnclosingElement(token,mixsetBodyToken.getValue()));
     analyzeMixset(token);
   }
