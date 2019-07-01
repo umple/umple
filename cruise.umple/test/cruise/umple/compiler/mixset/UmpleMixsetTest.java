@@ -533,6 +533,7 @@ public class UmpleMixsetTest {
     UmpleModel model = new UmpleModel(umpleFile);
     model.setShouldGenerate(false);
     model.run();
+    List<UmpleClass> umpleClasses = model.getUmpleClasses();
     Assert.assertEquals(umpleClasses.get(0).getAttribute(0).getName(),"attr1");
   }
 
