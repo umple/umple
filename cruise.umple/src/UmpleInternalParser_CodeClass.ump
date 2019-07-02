@@ -3680,6 +3680,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   private void analyzeInjectionCode(Token injectToken, UmpleClassifier uClassifier)
   {
     String type = injectToken.is("beforeCode") ? "before" : "after";
+    Token codeLabelToken = injectToken.getSubToken("codeLabel");
     CodeBlock cb = new CodeBlock();
     String operationName = getOperationName(injectToken);
     String operationSource = getOperationSource(injectToken).toLowerCase();
@@ -3690,6 +3691,9 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
     CodeInjection injection = new CodeInjection(type,operationName,"",uClassifier);
     injection.setOperationSource(operationSource);
+     // check if the aspect needs to be injected before/after a label.
+    if(codeLabelToken != null)
+    injection.setInjectionlabel(codeLabelToken.getValue());
 
     List<String> operationsParameters = getOperationsParameters(injectToken);
     for(String operationParameters : operationsParameters) {

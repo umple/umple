@@ -101,6 +101,11 @@ class GeneratorHelper
     {
       return null;
     }
+    if (inject.hasCodeLabel())
+    {
+      // handle the case when labels are used 
+      return " ";
+    }
     return asCode;
   }  
 
