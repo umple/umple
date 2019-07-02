@@ -79,7 +79,6 @@ class UmpleInternalParser
     {
       Token oneElementToken = token.getSubToken("oneElement");
       oneElementToken.setValue(oneElementToken.getValue()+" ;");
-      //String mixsetExtaCode = getMixsetFragmentWithEnclosingElement(token,oneElementToken.getValue());
       oneElementToken.setName("extraCode");
       mixsetBodyToken = oneElementToken;
     }
