@@ -85,7 +85,16 @@ class GeneratorHelper
           {
             asCode = positionString + inject.getConstraintCode(generator) + injectFooter;
           }
+<<<<<<< HEAD
           else asCode = (inject.getCode()!=null)?positionString + inject.getCode() + injectFooter:positionString + injectFooter;
+=======
+          if (inject.hasCodeLabel())
+          {
+            // handle the case when labels are used
+            asCode =  "$$$$$$$$$$$44 Should be added "+injectType +inject.getInjectionlabel() + positionString + inject.getCode() + injectFooter;
+          }
+          else asCode = positionString + inject.getCode() + injectFooter;
+>>>>>>> ideas to filter out code labels in JavaClassGenerator
         }
         else
         {
@@ -100,11 +109,6 @@ class GeneratorHelper
     if (asCode == null)
     {
       return null;
-    }
-    if (inject.hasCodeLabel())
-    {
-      // handle the case when labels are used 
-      return " ";
     }
     return asCode;
   }  
