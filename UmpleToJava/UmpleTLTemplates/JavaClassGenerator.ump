@@ -216,7 +216,62 @@ for (StateMachine smq : uClass.getStateMachines())
   {
     #>><<@ UmpleToJava.enumerations_All >><<#
   }
-  
+
+  // This method allows the injection of some code before/after a code label inside a method of an umple class. 
+  private void applyCodeInjectionToLabeledMethod(UmpleClass uClass, Method aMethod, String aspectType) {
+	  List<CodeInjection> uClassCodeInectionList = uClass.getApplicableCodeInjectionsCustomMethod(aspectType, aMethod.getName(), aMethod.getMethodParameters());
+		if(uClassCodeInectionList.size() == 0 )
+		{
+			// no code to inject 
+			// return;
+		}
+		CodeBlock methodCodeBlock = aMethod.getMethodBody().getCodeblock();
+		String codesKey_lang = ""; // the type of a language that the method belongs to
+		ArrayList<String> methodCodeWithLabels = methodCodeBlock.getCodeWithLabels(codesKey_lang);
+		ArrayList<Integer> indexToRemoveList = new ArrayList<Integer>();
+		for (CodeInjection codeInjectionItem: uClassCodeInectionList)
+		{
+			
+			if(! codeInjectionItem.hasCodeLabel()) // we are concerning with only codeInjection item which has code labels.
+				continue;
+			//else 
+				String methodLabelToLookat = codeInjectionItem.getInjectionlabel();
+				String codeToAdd = codeInjectionItem.getCode(codesKey_lang);
+
+				int indexOfLabel = methodCodeWithLabels.indexOf(methodLabelToLookat);
+				if (indexOfLabel == -1) // the method does not contain the required label
+				{
+					// raise error 
+					// raise warning 
+			   }
+				else if (codeInjectionItem.getType().equals("before"))
+				{
+					methodCodeWithLabels.add(indexOfLabel, "\n"+codeToAdd + "\n");
+				}
+				else if (codeInjectionItem.getType().equals("after"))
+				{
+					if(indexOfLabel < methodCodeWithLabels.size())
+					methodCodeWithLabels.add(indexOfLabel+1, "\n"+codeToAdd + "\n");
+					else
+						methodCodeWithLabels.add("\n"+codeToAdd + "\n");
+				}
+				// at the end, remove the codeInjection belongs to labeled aspect
+				// otherwise it will be added to the code when handling aspects 
+				//uClassCodeInectionList.remove(codeInjectionItem); // causes error:ConcurrentModificationException
+				indexToRemoveList.add(uClassCodeInectionList.indexOf(codeInjectionItem));
+				// update the method code with addition 
+				String resultCode="";
+				for (String stringItem : methodCodeWithLabels)
+				{
+					resultCode += stringItem ;
+				}
+				aMethod.getMethodBody().getCodeblock().setCode(codesKey_lang, resultCode);
+		}
+		for(int codeInjectionItemIndex:indexToRemoveList)
+		{
+			uClassCodeInectionList.remove(codeInjectionItemIndex);
+		}
+	}
   /*
    * Issue 1008 - A helper function to determine if a class uses an enum defined in the model
    */
