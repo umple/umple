@@ -1,0 +1,44 @@
+/*
+Example to show how to define inline mixsets. 
+*/
+
+// The mixset M1 has been defined as inline mixset. this because the definition of the mixset is followed by a class definition. 
+mixset M1 class A { 
+  isA B;
+  isA C;
+  x;
+}
+
+// M1 also is inline mixset because it has been followed by a trait definition without curly brackets. 
+// The usuall definition of M1 is: 
+/* 
+mixset M1 
+{ 
+  trait B 
+  { 
+    y;
+  }
+} 
+*/  
+mixset M1 trait B 
+{ 
+  y;
+}
+
+
+// M2 is an inline mixset that defines an interface.
+mixset M1 interface C { void method(); }
+
+
+class D {
+  // M3 adds an attribute for class D. It's an inline mixset since there is no mention to which a class attr1 belongs to.
+  // However, Umple parser understands this implicit definition. Therefore, the attr1 will be added to the class D.   
+  mixset M3 {attr1;}
+  
+  }
+
+
+//The line below will cause error since the interface E is empty.
+//Mixset M4 interface E {}
+
+use M1; use M2; use M3;
