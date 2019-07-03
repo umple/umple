@@ -62,7 +62,7 @@ class C3 {
 
 mixset f4 class C4 {
   isA T4;
-  // Code bellow will cause an error when mixset f4 is used even when mixset f5 is not used.
+  // Commented code bellow will cause an error when mixset f4 is used even when mixset f5 is not used.
   // This because inline mixsets does not support apsect.
   //mixset f5 after custom m2() {System.out.println("m2 occurred");}
   mixset f5 { after custom m2() {System.out.println("m2 occurred");} } 
