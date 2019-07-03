@@ -1,0 +1,103 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class JavaPhpRubyNoNullMethodInjection
+
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize()
+    @initialized = false
+    @deleted = false
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def delete
+    @deleted = true
+  end
+
+
+  # injection 1
+  def method1 ()
+    // line 8 "model.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
+    // line 10 "model.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
+    // line 13 "model.ump"
+    #Ruby
+    // END OF UMPLE BEFORE INJECTION
+    
+    // line 17 "model.ump"
+    
+    // END OF UMPLE AFTER INJECTION
+    // line 19 "model.ump"
+    
+    // END OF UMPLE AFTER INJECTION
+    // line 22 "model.ump"
+    #Ruby
+    // END OF UMPLE AFTER INJECTION
+  end
+
+
+  # injection 2
+  def method2 ()
+    // line 29 "model.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
+    // line 32 "model.ump"
+    #Ruby
+    // END OF UMPLE BEFORE INJECTION
+    // line 36 "model.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
+    
+    // line 38 "model.ump"
+    
+    // END OF UMPLE AFTER INJECTION
+    // line 41 "model.ump"
+    #Ruby
+    // END OF UMPLE AFTER INJECTION
+    // line 45 "model.ump"
+    
+    // END OF UMPLE AFTER INJECTION
+  end
+
+
+  # injection 3
+  def method3 ()
+    // line 51 "model.ump"
+    #Ruby
+    // END OF UMPLE BEFORE INJECTION
+    // line 55 "model.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
+    // line 57 "model.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
+    
+    // line 60 "model.ump"
+    #Ruby
+    // END OF UMPLE AFTER INJECTION
+    // line 64 "model.ump"
+    
+    // END OF UMPLE AFTER INJECTION
+    // line 66 "model.ump"
+    
+    // END OF UMPLE AFTER INJECTION
+  end
+
+
+
+end

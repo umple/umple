@@ -1,0 +1,68 @@
+class JavaPhpRubyNoNullMethodInjection {
+  
+  // injection 1
+  public void method1 () {
+  } 
+  before method1 Java {
+  //Java
+  }
+  before method1 Php {
+  //Php
+  }
+  before method1 Ruby {
+  #Ruby
+  }
+  after method1 Java {
+  //Java
+  }
+  after method1 Php {
+  //Php
+  }
+  after method1 Ruby {
+  #Ruby
+  }
+   
+  // injection 2
+  public void method2 () {
+  } 
+  before method2 Php {
+  //Php
+  }
+  before method2 Ruby {
+  #Ruby
+  }    
+  before method2 Java {
+  //Java
+  }
+  after method2 Php {
+  //Php
+  }
+  after method2 Ruby {
+  #Ruby
+  }    
+  after method2 Java {
+  //Java
+  }
+      
+  // injection 3
+  public void method3 () {
+  } 
+  before method3 Ruby {
+  #Ruby
+  }    
+  before method3 Java {
+  //Java
+  }
+  before method3 Php {
+  //Php
+  }
+  after method3 Ruby {
+  #Ruby
+  }    
+  after method3 Java {
+  //Java
+  }
+  after method3 Php {
+  //Php
+  }
+}

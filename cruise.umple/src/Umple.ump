@@ -605,6 +605,7 @@ class UmpleClass
   Boolean hasProxyPattern = false;
   Boolean needsDefaultInterface=false;
   Boolean isDistributed = false;
+  Boolean isInternalSerializable = false;
   Boolean isDefaultInterfaceRemoteRMI=false;
   // Specifies whether or not in the filter
   Boolean filteredin = false;
@@ -902,6 +903,9 @@ class Attribute
 
   // Specifies whether or not the method parameter is derived.
   Boolean isDerived = false;
+
+  // Specifies whether or not the method parameter is internalTransient.
+  Boolean isInternalTransient = false;
 
   CodeBlock codeblock = new CodeBlock();
 
