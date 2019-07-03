@@ -294,6 +294,10 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/MultipleConstraints.php");
     SampleFileWriter.destroy(pathToInput + "/multiple_constraints.rb");
     
+    // Tear down issue 1444 tests
+    SampleFileWriter.destroy(pathToInput + "/Academy.java");
+    SampleFileWriter.destroy(pathToInput + "/Registration.java");
+
    // destroying the object factory
   }
 

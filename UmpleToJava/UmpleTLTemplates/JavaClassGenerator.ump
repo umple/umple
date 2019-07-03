@@ -29,6 +29,7 @@ use toString_declare.ump;
 use trace.ump;
 use uncaught_exception.ump;
 use queued_method.ump;
+use association_sorted_serializable_readObject.ump;
 
 
 namespace cruise.umple.compiler.java;
@@ -149,6 +150,18 @@ else if(model.getDistributed())
           if(!uClass.getIsDistributed())
             append(realSb," ,java.io.Serializable");
       } 
+}
+else if(uClass.getIsInternalSerializable())//issue#1444
+{
+  if (hasParentInterface == false)
+  {
+    append(realSb," implements java.io.Serializable");
+    hasParentInterface=true;
+  }
+  else
+  {
+    append(realSb," ,java.io.Serializable");
+  } 
 }
 
 boolean implementsRunnable = false;
@@ -327,8 +340,18 @@ for (StateMachine smq : uClass.getStateMachines())
       self="self";
       
     String umpleSourceFile = "";
-    Integer baseJavaLine = realSb.toString().split("\\n").length+3;#>><<@ UmpleToJava.association_Get_All >><<@ UmpleToJava.association_Set_All >>
-  <<#return realSb.toString();
+    Integer baseJavaLine = realSb.toString().split("\\n").length+3;#>><<@ UmpleToJava.association_Get_All >><<@ UmpleToJava.association_Set_All >><<#
+    if(uClass.getIsInternalSerializable() && !uClass.getIsDistributed())
+    {
+      boolean hasInternalTransientAttributes = false;
+      for(Attribute av:uClass.getAttributes())
+        hasInternalTransientAttributes=av.getIsInternalTransient()?true:hasInternalTransientAttributes;
+      if(hasInternalTransientAttributes)
+      {
+        #>><<@ UmpleToJava.association_sorted_serializable_readObject>><<#
+      }
+    }
+    return realSb.toString();
     } 
     
     private String getEqualsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)

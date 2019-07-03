@@ -13,7 +13,7 @@ public class Student
 
   //Student Attributes
   private int id;
-  private Comparator<Mentor> ProfsPriority;
+  private transient Comparator<Mentor> ProfsPriority;
 
   //Student Associations
   private List<Mentor> Profs;
