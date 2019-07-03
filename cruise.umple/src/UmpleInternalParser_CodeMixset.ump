@@ -86,7 +86,8 @@ class UmpleInternalParser
     if(mixsetBodyToken == null) 
     { 
       String mixsetName = token.getSubToken("mixsetName").getValue();
-      getParseResult().addErrorMessage(new ErrorMessage(1511,token.getPosition(), mixsetName)); 
+      getParseResult().addErrorMessage(new ErrorMessage(1511,token.getPosition(), mixsetName));
+      return; 
     }
     else 
     mixsetBodyToken.setValue(getMixsetFragmentWithEnclosingElement(token,mixsetBodyToken.getValue()));
