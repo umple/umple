@@ -527,7 +527,6 @@ public class UmpleMixsetTest {
     umpleParserTest.assertNoWarningsParse("InlineMixsetInsideMixset.ump");
   }
   @Test
-<<<<<<< HEAD
   public void parseInlineMixsetInsideUmpleEntity()
   {
     umpleParserTest.assertNoWarningsParse("inlineMixsetInsideUmpleEntity.ump");
@@ -537,7 +536,6 @@ public class UmpleMixsetTest {
     model.run();
     List<UmpleClass> umpleClasses = model.getUmpleClasses();
     Assert.assertEquals(umpleClasses.get(0).getAttribute(0).getName(),"attr1");
-=======
   public void parseLabelsInsideMethod()
   {    
     UmpleFile umpleFile =new  UmpleFile(umpleParserTest.pathToInput,"parseLabelsInsideMethod_basic.ump");
@@ -554,7 +552,7 @@ public class UmpleMixsetTest {
     Assert.assertEquals(true, methodBodyCode.contains("SecondLabel:"));
     Assert.assertEquals(true, afterLabelCode.contains("code added after the SecondLabel in staticMethod()."));
 
->>>>>>> add a test case
+
   }
 
 }
