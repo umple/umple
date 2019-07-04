@@ -297,6 +297,11 @@ public class TemplateTest
     // Tear down issue 1444 tests
     SampleFileWriter.destroy(pathToInput + "/Academy.java");
     SampleFileWriter.destroy(pathToInput + "/Registration.java");
+    
+    // Tear down issue 1464 tests
+    SampleFileWriter.destroy(pathToInput + "/JavaPhpRubyNoNullMethodInjection.java");
+    SampleFileWriter.destroy(pathToInput + "/JavaPhpRubyNoNullMethodInjection.php");
+    SampleFileWriter.destroy(pathToInput + "/java_php_ruby_no_null_method_injection.rb");
 
    // destroying the object factory
   }

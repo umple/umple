@@ -61,21 +61,22 @@ class GeneratorHelper
     {
       for (CodeInjection inject : allCodeInjections)
       {
+        String comment = "//";//(inject.getSnippet().getCode("Ruby") != null)?"#":"//";
         String positionString = "";
         Position p = inject.getPosition();
         Position codeP = inject.getCodePosition();
         String injectFooter = "";
         String injectType = inject.getType();
         if (codeP != null) {
-            positionString =  "// line " + codeP.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
+            positionString =  comment + " line " + codeP.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
             if (injectType != null) {
-                injectFooter = "\n// END OF UMPLE " + injectType.toUpperCase() + " INJECTION";
+                injectFooter = "\n"+ comment +" END OF UMPLE " + injectType.toUpperCase() + " INJECTION";
             }
         }
         else if (p != null) {
-            positionString =  "// line " + p.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
+            positionString =  comment +" line " + p.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
             if (injectType != null) {
-                injectFooter = "\n// END OF UMPLE " + injectType.toUpperCase() + " INJECTION";
+                injectFooter = "\n"+ comment +" END OF UMPLE " + injectType.toUpperCase() + " INJECTION";
             }
         }
         if (asCode == null)
@@ -84,7 +85,7 @@ class GeneratorHelper
           {
             asCode = positionString + inject.getConstraintCode(generator) + injectFooter;
           }
-          else asCode = positionString + inject.getCode() + injectFooter;
+          else asCode = (inject.getCode()!=null)?positionString + inject.getCode() + injectFooter:positionString + injectFooter;
         }
         else
         {
