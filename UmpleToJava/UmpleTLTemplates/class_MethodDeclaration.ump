@@ -85,7 +85,7 @@ class UmpleToJava {
     if(!aMethod.getLabelsProcessed())
     {
       applyCodeInjectionToLabeledMethod(uClass, aMethod, "before");
-	    applyCodeInjectionToLabeledMethod(uClass, aMethod, "after");
+      applyCodeInjectionToLabeledMethod(uClass, aMethod, "after");
       aMethod.setLabelsProcessed(true);
     }
         String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("before", aMethod.getName(), aMethod.getMethodParameters()));

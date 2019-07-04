@@ -540,7 +540,7 @@ public class UmpleMixsetTest {
 =======
   public void parseLabelsInsideMethod()
   {    
-    UmpleFile umpleFile =new  UmpleFile(umpleParserTest.pathToInput,"parseLabelsInsideMethod_basic");
+    UmpleFile umpleFile =new  UmpleFile(umpleParserTest.pathToInput,"parseLabelsInsideMethod_basic.ump");
     UmpleModel umodel = new UmpleModel(umpleFile);
     umodel.run();
     umodel.generate();

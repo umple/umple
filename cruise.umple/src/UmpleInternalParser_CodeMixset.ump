@@ -353,7 +353,7 @@ class CodeBlock{
 
   public ArrayList<String> getCodeWithLabels(String codesKey) {
     ArrayList <String> codeLabels = new ArrayList<String>();
-	  String codeToLockAt = getCode(codesKey);
+    String codeToLockAt = getCode(codesKey);
     ArrayList<String> codeWithLabels = new ArrayList<String>();
     Pattern labelPatternToMatch = Pattern.compile("(\\S+):");
     Matcher matcher = labelPatternToMatch.matcher(codeToLockAt);
@@ -366,7 +366,7 @@ class CodeBlock{
       codeLabels.add(matcher.group().replaceFirst(":","")); // remove colon and add it the list of labels 
       lastMatchedIndex = matcher.end();
     }
-		// This for last label, to add the code after last matched label 
+    // This for last label, to add the code after last matched label 
     String codeAfterLastLabel =codeToLockAt.substring(lastMatchedIndex); 
     codeWithLabels.add(codeAfterLastLabel);
     return codeWithLabels;
