@@ -13,6 +13,7 @@ import cruise.umple.compiler.FeatureModel;
 import cruise.umple.compiler.FeatureLink;
 import cruise.umple.compiler.FeatureNode;
 import cruise.umple.compiler.FeatureLeaf;
+import cruise.umple.compiler.Method;
 
 public class UmpleMixsetTest {
   
@@ -526,6 +527,7 @@ public class UmpleMixsetTest {
     umpleParserTest.assertNoWarningsParse("InlineMixsetInsideMixset.ump");
   }
   @Test
+<<<<<<< HEAD
   public void parseInlineMixsetInsideUmpleEntity()
   {
     umpleParserTest.assertNoWarningsParse("inlineMixsetInsideUmpleEntity.ump");
@@ -535,6 +537,24 @@ public class UmpleMixsetTest {
     model.run();
     List<UmpleClass> umpleClasses = model.getUmpleClasses();
     Assert.assertEquals(umpleClasses.get(0).getAttribute(0).getName(),"attr1");
+=======
+  public void parseLabelsInsideMethod()
+  {    
+    UmpleFile umpleFile =new  UmpleFile(umpleParserTest.pathToInput,"parseLabelsInsideMethod_basic");
+    UmpleModel umodel = new UmpleModel(umpleFile);
+    umodel.run();
+    umodel.generate();
+    UmpleClass uClass = umodel.getUmpleClass(0);
+    Method aMethod = uClass.getMethod(5);
+    String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
+    String beforeLabelCode = methodBodyCode.substring(0,methodBodyCode.indexOf("SecondLabel:"));
+    String afterLabelCode = methodBodyCode.substring(methodBodyCode.indexOf("SecondLabel:"));
+    
+    Assert.assertEquals(true, beforeLabelCode.contains("code added before the SecondLabel in staticMethod()."));
+    Assert.assertEquals(true, methodBodyCode.contains("SecondLabel:"));
+    Assert.assertEquals(true, afterLabelCode.contains("code added after the SecondLabel in staticMethod()."));
+
+>>>>>>> add a test case
   }
 
 }
