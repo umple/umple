@@ -371,16 +371,10 @@ class CodeBlock{
     codeWithLabels.add(codeAfterLastLabel);
     return codeWithLabels;
   }
-/*
-  boolean hasCodeLabels()
-  {
-    return codeLabels.size() > 0 ;
+
+  class Method {
+    boolean labelsProcessed = false;
   }
-  boolean hasCodeLabel(String label) 
-  {
-    return hasCodeLabels() && codeLabels.contains(label); 
-  }
-  */
 
 }
 
