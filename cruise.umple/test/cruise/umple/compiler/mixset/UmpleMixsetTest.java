@@ -536,6 +536,8 @@ public class UmpleMixsetTest {
     model.run();
     List<UmpleClass> umpleClasses = model.getUmpleClasses();
     Assert.assertEquals(umpleClasses.get(0).getAttribute(0).getName(),"attr1");
+  }
+  @Test
   public void parseLabelsInsideMethod()
   {    
     UmpleFile umpleFile =new  UmpleFile(umpleParserTest.pathToInput,"parseLabelsInsideMethod_basic.ump");
@@ -551,6 +553,7 @@ public class UmpleMixsetTest {
     Assert.assertEquals(true, beforeLabelCode.contains("code added before the SecondLabel in staticMethod()."));
     Assert.assertEquals(true, methodBodyCode.contains("SecondLabel:"));
     Assert.assertEquals(true, afterLabelCode.contains("code added after the SecondLabel in staticMethod()."));
+    SampleFileWriter.destroy("InjectToLabel.java");
 
 
   }

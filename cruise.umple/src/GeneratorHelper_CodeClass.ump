@@ -91,7 +91,7 @@ class GeneratorHelper
             // handle the case when labels are used 
             // Do nothing  
           }
-          else asCode = positionString + inject.getCode() + injectFooter;
+          else asCode = (inject.getCode()!=null)?positionString + inject.getCode() + injectFooter:positionString + injectFooter;
 
         }
         else
