@@ -61,6 +61,8 @@ class GeneratorHelper
     {
       for (CodeInjection inject : allCodeInjections)
       {
+				if(inject.hasCodeLabel())
+          continue;// handle the case when labels are used. // Do nothing  
         String comment = "//";//(inject.getSnippet().getCode("Ruby") != null)?"#":"//";
         String positionString = "";
         Position p = inject.getPosition();
@@ -86,11 +88,6 @@ class GeneratorHelper
             asCode = positionString + inject.getConstraintCode(generator) + injectFooter;
           }
           
-          //if (inject.hasCodeLabel())
-          //{
-            // handle the case when labels are used 
-            // Do nothing  
-          //}
           else asCode = (inject.getCode()!=null)?positionString + inject.getCode() + injectFooter:positionString + injectFooter;
 
         }
