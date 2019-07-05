@@ -335,7 +335,46 @@ class UmpleInternalParser
 	return  mixset ;
   }
     
-
   
+}
+
+class CodeInjection{
+  String injectionlabel = "";
+
+  boolean hasCodeLabel()
+  {
+    return ! injectionlabel.equals("");
+  }
+}
+
+class CodeBlock{
+  depend java.util.regex.Matcher;
+  depend java.util.regex.Pattern;
+
+  public ArrayList<String> getCodeWithLabels(String codesKey) {
+    ArrayList <String> codeLabels = new ArrayList<String>();
+    String codeToLockAt = getCode(codesKey);
+    ArrayList<String> codeWithLabels = new ArrayList<String>();
+    Pattern labelPatternToMatch = Pattern.compile("(\\S+):");
+    Matcher matcher = labelPatternToMatch.matcher(codeToLockAt);
+    int lastMatchedIndex=0;
+    while (matcher.find()) {
+      String codeBeforeLabel = codeToLockAt.substring(lastMatchedIndex, matcher.start());
+      if(!codeBeforeLabel.equals(""))
+        codeWithLabels.add(codeBeforeLabel);
+      codeWithLabels.add(matcher.group()); //add the label itself to the source code.
+      codeLabels.add(matcher.group().replaceFirst(":","")); // remove colon and add it the list of labels 
+      lastMatchedIndex = matcher.end();
+    }
+    // This for last label, to add the code after last matched label 
+    String codeAfterLastLabel =codeToLockAt.substring(lastMatchedIndex); 
+    codeWithLabels.add(codeAfterLastLabel);
+    return codeWithLabels;
+  }
+
+  class Method {
+    boolean labelsProcessed = false;
+  }
+
 }
 
