@@ -86,11 +86,12 @@ class GeneratorHelper
             asCode = positionString + inject.getConstraintCode(generator) + injectFooter;
           }
           else asCode = (inject.getCode()!=null)?positionString + inject.getCode() + injectFooter:positionString + injectFooter;
-          if (inject.hasCodeLabel())
-          {
+          
+          //if (inject.hasCodeLabel())
+          //{
             // handle the case when labels are used 
             // Do nothing  
-          }
+          //}
           else asCode = (inject.getCode()!=null)?positionString + inject.getCode() + injectFooter:positionString + injectFooter;
 
         }
