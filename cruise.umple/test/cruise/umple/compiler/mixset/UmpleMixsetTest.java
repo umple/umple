@@ -553,7 +553,14 @@ public class UmpleMixsetTest {
     Assert.assertEquals(true, beforeLabelCode.contains("code added before the SecondLabel in staticMethod()."));
     Assert.assertEquals(true, methodBodyCode.contains("SecondLabel:"));
     Assert.assertEquals(true, afterLabelCode.contains("code added after the SecondLabel in staticMethod()."));
-    SampleFileWriter.destroy("InjectToLabel.java");
+   try 
+    {
+      SampleFileWriter.assertFileExists(umpleParserTest.pathToInput+"/"+"InjectToLabel.java");
+    }
+    finally 
+    {
+      SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"InjectToLabel.java");
+    }
 
 
   }
