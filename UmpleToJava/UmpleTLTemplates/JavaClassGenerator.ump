@@ -231,8 +231,9 @@ for (StateMachine smq : uClass.getStateMachines())
     ArrayList<Integer> indexToRemoveList = new ArrayList<Integer>();
     for (CodeInjection codeInjectionItem: uClassCodeInectionList)
     {
-    	
-      if(! codeInjectionItem.hasCodeLabel()) // we are concerning with only codeInjection item which has code labels.
+    	// the condition below keeps only codeInjection item(s) which has code labels.
+      // also, codeInjection(s) that has been processed should not be processed again.
+      if(!codeInjectionItem.hasCodeLabel() || codeInjectionItem.getCodeBlockProcessed() ) 
         continue;
       //else 
       String methodLabelToLookat = codeInjectionItem.getInjectionlabel();
@@ -266,6 +267,7 @@ for (StateMachine smq : uClass.getStateMachines())
         resultCode += stringItem ;
       }
       aMethod.getMethodBody().getCodeblock().setCode(codesKey_lang, resultCode);
+      codeInjectionItem.setCodeBlockProcessed(true);
     }
   }
   /*
