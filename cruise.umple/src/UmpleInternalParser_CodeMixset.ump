@@ -400,7 +400,8 @@ class MethodBody
 	}
 	return closeIndex;
 }
-  public static ArrayList<MixsetInMethod> getMixsetsWithinMethod(String codeToLockAt ) { 
+  public ArrayList<MixsetInMethod> getMixsetsWithinMethod() { 
+  String codeToLockAt= this.getCodeblock().getCode(); // the code to look at. 
   ArrayList<MixsetInMethod> mixsetInsideMethodList = new ArrayList<MixsetInMethod>();
   Pattern labelPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+\\{"); // to detect mixset def.
   Matcher matcher = labelPatternToMatch.matcher(codeToLockAt);
@@ -410,7 +411,7 @@ class MethodBody
     int indexOfMixsetClosingBracket = matcher.start() + indexOfMixsetClosingBracket(mixsetDefPlusAfterCode);
     String mixsetBodyWithDef = codeToLockAt.substring(matcher.start(),indexOfMixsetClosingBracket);
     // get the name of the mixset
-    String mixsetName = matcher.group().replace("mixset", "").replace("{", ""); 
+    String mixsetName = matcher.group().replace("mixset", "").replace("{", "").trim(); 
     MixsetInMethod mixsetInsideMethod = new MixsetInMethod(mixsetName,matcher.start(),indexOfMixsetClosingBracket,mixsetBodyWithDef);
     
     // place inner method in their right position.
