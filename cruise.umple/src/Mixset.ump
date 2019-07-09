@@ -86,7 +86,7 @@ class MixsetFragment {
   body;
 }
 
-class Method
+class MethodBody
 {
   0..1 -- * MixsetInMethod;
 }
@@ -95,8 +95,9 @@ class Method
 class MixsetInMethod
 {
   String mixsetName; 
-	int startPositionIndex; //relative to the original body of the method 
-	int endPositionIndex;
-	MixsetInMethod parentInnerMixset = null; // to determine if its inner mixset
-	MixsetInMethod[] childMixsets ;
+  int startPositionIndex; //relative to the original body of the method 
+  int endPositionIndex;
+  MixsetInMethod parentInnerMixset = null; // to determine if its inner mixset
+  MixsetInMethod[] childMixsets;
+  String mixsetFragment;
 }
