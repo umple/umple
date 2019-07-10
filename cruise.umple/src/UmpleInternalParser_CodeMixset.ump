@@ -380,7 +380,7 @@ class MethodBody
   depend java.util.regex.Matcher;
   depend java.util.regex.Pattern;
 
-  private static int indexOfMixsetClosingBracket(String strInput) {
+  public static int indexOfMixsetClosingBracket(String strInput) {
 	int closeIndex = 0;
 	int numOfclosingBracket=0;
 	for(int i = 0; i< strInput.length();i++)

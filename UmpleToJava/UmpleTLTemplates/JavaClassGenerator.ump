@@ -218,17 +218,31 @@ for (StateMachine smq : uClass.getStateMachines())
   }
   public void handelMixsetInsideMethod(UmpleModel umodel, MixsetInMethod mixsetInMethod, MethodBody mBody)
   {
-    if(umodel.getMixset(mixsetInMethod.getMixsetName()) != null) // the mixset has been used.
+    Mixset mixset = umodel.getMixset(mixsetInMethod.getMixsetName());
+    boolean mixsetIsUsed = false;
+    if(mixset != null) // the mixset has been used. 
     {
-      //first process children
-		  for(MixsetInMethod childMixsetInMethod : mixsetInMethod.getChildMixsets())
-        handelMixsetInsideMethod(umodel, childMixsetInMethod, mBody);
-		 //Then ... 
-      String code = mBody.getCodeblock().getCode().replaceFirst("mixset\\s+"+mixsetInMethod.getMixsetName()+"\\s+\\{", ""); // remove def. of mixset + open curly bracket 
-      code = code.substring(0,code.lastIndexOf("}")); // remove last curly bracket.
-      mBody.getCodeblock().setCode(code);
+      if(mixset.getUseUmpleFile() != null)
+      {
+        mixsetIsUsed = true;
+        //first process children
+		    for(MixsetInMethod childMixsetInMethod : mixsetInMethod.getChildMixsets())
+          handelMixsetInsideMethod(umodel, childMixsetInMethod, mBody);
+		    //Then ... 
+        String searchFor = "mixset\\s+"+mixsetInMethod.getMixsetName()+"\\s+\\{"; 
+        String code = mBody.getCodeblock().getCode();
+        code = code.replaceFirst(searchFor, ""); // remove def. of mixset + open curly bracket 
+
+        int indexOfMixsetClosingBracket= MethodBody.indexOfMixsetClosingBracket(" { "+code) - 3; // 3 is the added Chars at beginning 
+        String resCode = code.substring(0,indexOfMixsetClosingBracket-1) + " ";
+        if(indexOfMixsetClosingBracket < code.length()) 
+          resCode = resCode + code.substring(indexOfMixsetClosingBracket+1); 
+        mBody.getCodeblock().setCode(resCode);
+
+
+      }
     }
-    else
+    else if(!mixsetIsUsed)
 	  {
 		 // delete body of unused mixsets  
 		 String mixsetInMethodCode = mixsetInMethod.getMixsetFragment();
