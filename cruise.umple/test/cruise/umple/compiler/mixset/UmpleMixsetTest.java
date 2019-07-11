@@ -582,4 +582,74 @@ public class UmpleMixsetTest {
 
     SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"InjectToLabel.java");
   }
+  @Test
+  public void mixsetInsideMethods_noUseStatement() {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseMixsetsInsideMethod.ump");
+    UmpleModel umodel = new UmpleModel(umpleFile);
+    umodel.run();
+    umodel.generate();
+    UmpleClass uClass = umodel.getUmpleClass(0);
+    Method aMethod = uClass.getMethod(0);
+    String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
+    String keyWord = "Code after (outside) mixset M1";
+    String beforeLabelCode = methodBodyCode.substring(0,methodBodyCode.indexOf(keyWord));
+    String afterLabelCode = methodBodyCode.substring(methodBodyCode.indexOf(keyWord));
+    Assert.assertEquals(true, methodBodyCode.contains(keyWord));
+    //before checks: 
+    Assert.assertEquals(true, beforeLabelCode.contains("this is aMethod."));
+    Assert.assertEquals(false, beforeLabelCode.contains("code for InnerMixset"));
+    Assert.assertEquals(false, beforeLabelCode.contains("mixset M1 { "));
+    Assert.assertEquals(false, beforeLabelCode.contains("x++;"));
+    Assert.assertEquals(false, beforeLabelCode.contains("extra code for the mixset M1"));
+    //after checks:
+    Assert.assertEquals(false, afterLabelCode.contains("code for mixset M2."));
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"MixsetWithinMethodClass.java");
+  }
+  @Test
+  public void mixsetInsideMethods_useM1Statement() {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseMixsetsInsideMethod_M1.ump");
+    UmpleModel umodel = new UmpleModel(umpleFile);
+    umodel.run();
+    umodel.generate();
+    UmpleClass uClass = umodel.getUmpleClass(0);
+    Method aMethod = uClass.getMethod(0);
+    String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
+    String keyWord = "Code after (outside) mixset M1";
+    String beforeLabelCode = methodBodyCode.substring(0,methodBodyCode.indexOf(keyWord));
+    String afterLabelCode = methodBodyCode.substring(methodBodyCode.indexOf(keyWord));
+    Assert.assertEquals(true, methodBodyCode.contains(keyWord));
+    //before checks: 
+    Assert.assertEquals(true, beforeLabelCode.contains("this is aMethod."));
+    Assert.assertEquals(false, beforeLabelCode.contains("code for InnerMixset"));
+    Assert.assertEquals(false, beforeLabelCode.contains("mixset M1 { "));
+    Assert.assertEquals(true, beforeLabelCode.contains("x++;"));
+    Assert.assertEquals(true, beforeLabelCode.contains("extra code for the mixset M1"));
+    //after checks:
+    Assert.assertEquals(false, afterLabelCode.contains("code for mixset M2."));
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"MixsetWithinMethodClass.java");
+  }
+  @Test
+  public void mixsetInsideMethods_useM2Statement() {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseMixsetsInsideMethod_M2.ump");
+    UmpleModel umodel = new UmpleModel(umpleFile);
+    umodel.run();
+    umodel.generate();
+    UmpleClass uClass = umodel.getUmpleClass(0);
+    Method aMethod = uClass.getMethod(0);
+    String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
+    String keyWord = "Code after (outside) mixset M1";
+    String beforeLabelCode = methodBodyCode.substring(0,methodBodyCode.indexOf(keyWord));
+    String afterLabelCode = methodBodyCode.substring(methodBodyCode.indexOf(keyWord));
+    Assert.assertEquals(true, methodBodyCode.contains(keyWord));
+    //before checks: 
+    Assert.assertEquals(true, beforeLabelCode.contains("this is aMethod."));
+    Assert.assertEquals(false, beforeLabelCode.contains("code for InnerMixset"));
+    Assert.assertEquals(false, beforeLabelCode.contains("mixset M1 { "));
+    Assert.assertEquals(false, beforeLabelCode.contains("x++;"));
+    Assert.assertEquals(false, beforeLabelCode.contains("extra code for the mixset M1"));
+    //after checks:
+    Assert.assertEquals(true, afterLabelCode.contains("code for mixset M2."));
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"MixsetWithinMethodClass.java");
+  }
+
 }
