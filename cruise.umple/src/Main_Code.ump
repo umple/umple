@@ -703,6 +703,9 @@ class PlaygroundMain
               +"  JsonMixed: " +generateJsonMixedCommandsRun
               +"\n\n", client);          
 
+          returnCommandResult("Number of commands run since July 2019: "
+            +commandsEverRun+"\n\n", client);
+
           returnCommandResult("Number of clients queued: "
             +getClientConnections().length+"\n\n", client);
 
@@ -910,13 +913,12 @@ class PlaygroundMain
     returnCommandResult(answer, client);
   }
   
-
-  protected boolean saveCommandsCount(){
+  private boolean saveCommandsCount(){
     boolean saved = false;
 
     try {
-        FileWriter writer = new FileWriter("commandcount.txt", true);
-        writer.write(commandsEverRun);
+        FileWriter writer = new FileWriter("commandcount.txt", false);
+        writer.write(Integer.toString(commandsEverRun));
         writer.close();
         saved = true;
     } catch (IOException e) {
@@ -926,7 +928,7 @@ class PlaygroundMain
     return saved;
   }
 
-  protected boolean loadCommandsCount(){
+  private boolean loadCommandsCount(){
     boolean loaded = false;
     try {
       BufferedReader myReader = new BufferedReader(new FileReader("commandcount.txt"));
@@ -963,7 +965,6 @@ class PlaygroundMain
   protected void serverStopped() {
     // Uncomment the following to debug
     // System.err.println("Umple server stopped accepting connections "+getPort());
-    saveCommandsCount();
   }
   
   protected void serverClosed() {
