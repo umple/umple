@@ -320,24 +320,30 @@ else if (isset($_REQUEST["umpleCode"]))
   $sourceCode = htmlspecialchars($sourceCode);
   
   $errhtml = getErrorHtml($errorFilename);
-  
+
   if ($sourceCode == "")
   {
     if($input == "//$?[End_of_model]$?") {
-      $html = "
+      $msg = "
         Please create an Umple model textually (on the left side of the screen)
         or visually (on the right side of the screen),
         and then choose Generate Code again.";
     }
     else
     {
-      $html = "
+      $msg = "
         An error occurred interpreting your Umple code, please review it and try again.
         If the problem persists, please email the Umple code to
         the umple-help google group: umple-help@googlegroups.com";
     }
-    echo $errhtml ."<p>URL_SPLIT" . $html;
-    
+    if ($errhtml == ""){
+      $errhtml = "<a href='#' id='errorClick'>Show/Hide errors and warnings</a>";
+      $errhtml .= "<div id='errorRow' colspan='3' >"; 
+      $errhtml .= "<font color=\"red\"> Error : {$msg}.</font></br>";
+      $errhtml .= "<script type=\"text/javascript\">jQuery(\"#errorClick\").click(function(a){a.preventDefault();jQuery(\"#errorRow\").toggle();});</script>";
+      $errhtml .= "</div>";
+    }   
+    echo $errhtml;
   }
   else
   {
