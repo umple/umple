@@ -794,6 +794,7 @@ class PlaygroundMain
     if ("-quit".equals(args[0])) {
       if(isServer) {
         try {
+          saveCommandsCount();
           this.close();
         }
         catch (IOException e) {

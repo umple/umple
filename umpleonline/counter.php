@@ -28,7 +28,7 @@ if(file_exists($logpath)){
 }
 
 if(file_exists($commandlogpath)){
-	if(!is_writable($commandlogpath)||!is_readable($commandlogpath)) {
+	if(!is_readable($commandlogpath)) {
 		chmod($commandlogpath, 0755);
 	}
 	$log = fopen($commandlogpath, "r");
