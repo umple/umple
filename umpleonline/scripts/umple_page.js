@@ -1055,7 +1055,7 @@ Page.getErrorMarkup = function(code, language)
   }
   else if(language == "diagramUpdate")
   { // Covers simple right-hand side canvas updates
-    output = code.replace(/<p>$/, "");
+    output = code.replace(/<p>[\s\S]*/, "");
   }
   else
   {
