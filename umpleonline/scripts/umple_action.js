@@ -2385,12 +2385,11 @@ Action.generateTabsCode = function(theCode)
     // If New File Beginning
     if(theLine.indexOf("//%%") >= 0){
       intFileCounter++;
-      if(intFileCounter > 1){ arrCodeFiles[intFileCounter] += "</p>"; }
       strFileName = theLine.slice(14);
       strFileName = strFileName.substr(0, strFileName.indexOf(' '));
       arrFileNames[intFileCounter] = strFileName;
       jQuery('#generatedCodeRow').append("<div id='innerGeneratedCodeRow" + intFileCounter + "'></div>");
-      arrCodeFiles[intFileCounter] = "<p>URL_SPLIT";
+      arrCodeFiles[intFileCounter] = "";
       skipSpace = true;
     }
     else{
@@ -2402,7 +2401,6 @@ Action.generateTabsCode = function(theCode)
       }
     }
   });
-  arrCodeFiles[intFileCounter] += "</p>";
 
   // Output buttons for number of files found
   for (i=1; i <= intFileCounter; i++){
@@ -2456,8 +2454,6 @@ function showTab(event)
 
   // Highlight code for specific file only
   Page.showGeneratedCode(event.data.code, $("inputGenerateCode").value.split(":")[0], event.data.tabnumber);
-  jQuery('.line').last().hide();
-  jQuery('.line').last().hide();
 
   // Hide main code window with glommed files
   jQuery('#innerGeneratedCodeRow').hide();
