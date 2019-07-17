@@ -1,0 +1,98 @@
+// This example demonstrates serialisation of
+// sorted associations in Java. The main program
+// adds items to an object out of order, serialize the
+// object, deserialize it and then add more items
+// to it. When they are printed after deserialisation,
+// all items will appear in the right order.
+
+class Academy {
+  1 -- * Student registrants sorted {id};
+}
+
+class Student {
+  Integer id;
+  name;
+}
+
+// Mixin with main program, toString method
+// and serialization test
+
+class Academy {
+  depend java.nio.file.*;
+  depend java.io.*;
+  
+  public static void main(String [ ] args) {
+    String filename = "SortedSerializableAssociation.ser";
+    Academy ac = new Academy();
+    Student j = ac.addRegistrant(12,"Jim");
+    Student a = ac.addRegistrant(4,"Ali");
+
+    System.out.println("Before Serialization");
+    System.out.println(ac);
+   
+    //serialization
+    try
+    { 
+      FileOutputStream file = new FileOutputStream(filename); 
+      ObjectOutputStream out = new ObjectOutputStream(file); 
+      out.writeObject(ac);       
+      out.close(); 
+      file.close();       
+    } 
+    catch(Exception ex) 
+    { 
+      System.out.println(ex.getMessage());
+    } 
+
+    Academy ac2 = null; 
+
+    // Deserialization 
+    try
+    { 
+      FileInputStream file = new FileInputStream(filename); 
+      ObjectInputStream in = new ObjectInputStream(file);       
+      ac2 = (Academy)in.readObject();       
+      in.close(); 
+      file.close();
+    } 
+    catch(Exception ex) 
+    { 
+      System.out.println(ex.getMessage());
+    } 
+
+    // Adding new elements and comparing 
+    try
+    { 
+	Student m = ac2.addRegistrant(8,"Mary");
+	Student f = ac2.addRegistrant(3,"Francois");
+    }    
+    catch(Exception ex) 
+    { 
+      System.out.println(ex.getMessage());
+    } 
+    
+    System.out.println("After Serialization");
+    System.out.println(ac2);
+    
+  }
+  
+  public String toString() {
+    String result="Students:\n";
+    for (Student s: getRegistrants()) {
+      result +=s + "\n";
+    }
+    return result;
+  }
+}
+
+class Student {
+  public String toString() {
+    String result="Student=" + id + "["
+      + name +"]"+ "\n";
+    return result;
+  }
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Has Java code
+// @@@skipphpcompile - Has Java code
+// @@@skiprubycompile - Has Java code
