@@ -4313,6 +4313,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     boolean isUnique = attributeToken.getValue("unique") != null;
     boolean isLazy = attributeToken.getValue("lazy") != null;
     boolean isIvar = attributeToken.getValue("ivar") != null;
+    boolean isList = attributeToken.getValue("list") != null;
     boolean isConstant = "const".equals(attributeToken.getValue("modifier"));
     boolean validName = Token.isValidIdentifier(attributeToken.getValue("name"));
     boolean properName = !Token.isValidIdentifier(attributeToken.getValue("name"), "[A-Z]");
@@ -4384,6 +4385,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         setFailedPosition(attributeToken.getPosition(), 22, aClass.getName(), name);
       }
     }
+
     CodeBlock languageSpecificCode = new CodeBlock();
     if (derivedValue != null)
     {
@@ -4409,12 +4411,18 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
     }
 
+    if (derivedValue != null && isList) // added block for issue 1376
+    {
+      setFailedPosition(attributeToken.getPosition(), 83, aClass.getName(), name);
+      return;
+    }
+
     if ("defaulted".equals(modifier) && value == null)
     {
       setFailedPosition(attributeToken.getPosition(), 6, attributeToken.getValue("name"));
       return;
     }
-
+      
     if (isUnique)
     {
       UniqueIdentifier uniqueIdentifier = new UniqueIdentifier(name,type,modifier,value);
@@ -4444,8 +4452,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
     }
 
-    boolean isList = attributeToken.getValue("list") != null;
-        
     if(type != null && value != null)
     {
       if (!isList) { // will check list initializer later
@@ -5188,7 +5194,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
       aClass.appendExtraCode(true,cb);
       aClass.appendExtraCode("  "+extraCode+"\n");
-
+      
       setFailedPosition(sub.getPosition(), 1007, sub.getValue("name"));
     }
     else if(sub.is("malformedStatemachine1")||sub.is("malformedStatemachine2"))
@@ -5356,6 +5362,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       aClass.appendExtraCode(true,cb);
       aClass.appendExtraCode("  " + token.getValue());
       // Issue 516 Fix : UCOSP : Michael Kmicik
+
       setFailedPosition(token.getPosition(), 1007, token.getValue("name"));
     }
     else

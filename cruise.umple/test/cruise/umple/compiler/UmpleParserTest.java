@@ -3039,6 +3039,15 @@ public class UmpleParserTest
     assertFailedParse("008_multivaluedAttributeAssignment1.ump", 81);
     assertFailedParse("008_multivaluedAttributeAssignment2.ump", 81);
   }
+  
+  
+  
+  // Issue 1376
+  @Test
+  public void multivaluedAttributeInitialization()
+  {	 
+	assertFailedParse("008_multivaluedAttributeInitialization.ump", 83);//Derived variable should not contain list indicator   
+  }
 
   //Issue 1277
   @Test
