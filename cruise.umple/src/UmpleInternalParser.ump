@@ -36,7 +36,8 @@ class UmpleInternalParser
   
   currentPackageName = "";
   Boolean packageNameUsed = true;
-  Boolean outputUmpleSource = false; 
+  Boolean outputUmpleSource = false;
+  redefinePackageName = "";
 
   // The Umple meta model which will be populated based on what was parsed.
   UmpleModel model;
