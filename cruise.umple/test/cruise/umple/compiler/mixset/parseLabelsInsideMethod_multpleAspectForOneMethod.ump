@@ -1,0 +1,28 @@
+
+class InjectToLabel
+{
+a;b;
+  public static void theStaticMethod( )
+  {
+    FirstLabel: System.out.println("this is line 1.");
+    System.out.println("this is line 2.");
+    SecondLabel: System.out.println("this is line 3");
+    System.out.println("the end of theStaticMethod().");
+    }
+	
+
+  before custom SecondLabel:theStaticMethod
+  {	
+    //Start first Injection.
+    System.out.println("code added before the SecondLabel by first Injection.");
+    NewLabel:
+    //End first Injection.
+  }
+
+  before custom SecondLabel:theStaticMethod
+  {	
+    //Start second Injection.
+    System.out.println("code added before the SecondLabel by second Injection.");
+    //End second Injection. 
+  }		
+}

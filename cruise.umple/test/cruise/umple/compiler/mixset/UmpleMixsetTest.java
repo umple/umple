@@ -561,8 +561,25 @@ public class UmpleMixsetTest {
     {
       SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"InjectToLabel.java");
     }
-
-
   }
+  @Test
+  public void multipleAspectsForOneLabelMethod() {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseLabelsInsideMethod_multpleAspectForOneMethod.ump");
+    UmpleModel umodel = new UmpleModel(umpleFile);
+    umodel.run();
+    umodel.generate();
+    UmpleClass uClass = umodel.getUmpleClass(0);
+    Method aMethod = uClass.getMethod(5);
+    String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
 
+    String keyWord = "NewLabel:";
+    String beforeLabelCode = methodBodyCode.substring(0,methodBodyCode.indexOf(keyWord));
+    String afterLabelCode = methodBodyCode.substring(methodBodyCode.indexOf(keyWord));
+
+    Assert.assertEquals(true, beforeLabelCode.contains("code added before the SecondLabel by first Injection"));
+    Assert.assertEquals(true, methodBodyCode.contains(keyWord));
+    Assert.assertEquals(true, afterLabelCode.contains("code added before the SecondLabel by second Injection"));
+
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"InjectToLabel.java");
+  }
 }

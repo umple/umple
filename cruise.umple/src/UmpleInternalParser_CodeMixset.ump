@@ -372,8 +372,8 @@ class CodeBlock{
     return codeWithLabels;
   }
 
-  class Method {
-    boolean labelsProcessed = false;
+  class CodeInjection {
+    boolean codeBlockProcessed = false;
   }
 
 }
