@@ -216,7 +216,40 @@ for (StateMachine smq : uClass.getStateMachines())
   {
     #>><<@ UmpleToJava.enumerations_All >><<#
   }
+  public void handelMixsetInsideMethod(UmpleModel umodel, MixsetInMethod mixsetInMethod, MethodBody mBody)
+  {
+    Mixset mixset = umodel.getMixset(mixsetInMethod.getMixsetName());
+    boolean mixsetIsUsed = false;
+    if(mixset != null) // the mixset has been used. 
+    {
+      if(mixset.getUseUmpleFile() != null)
+      {
+        mixsetIsUsed = true;
+        //first process children
+		    for(MixsetInMethod childMixsetInMethod : mixsetInMethod.getChildMixsets())
+          handelMixsetInsideMethod(umodel, childMixsetInMethod, mBody);
+		    //Then ... 
+        String searchFor = "mixset\\s+"+mixsetInMethod.getMixsetName()+"\\s+\\{"; 
+        String code = mBody.getCodeblock().getCode();
+        code = code.replaceFirst(searchFor, ""); // remove def. of mixset + open curly bracket 
 
+        int indexOfMixsetClosingBracket= MethodBody.indexOfMixsetClosingBracket(" { "+code) - 3; // 3 is the added Chars at beginning 
+        String resCode = code.substring(0,indexOfMixsetClosingBracket-1) + " ";
+        if(indexOfMixsetClosingBracket < code.length()) 
+          resCode = resCode + code.substring(indexOfMixsetClosingBracket+1); 
+        mBody.getCodeblock().setCode(resCode);
+
+
+      }
+    }
+    else if(!mixsetIsUsed)
+	  {
+		 // delete body of unused mixsets  
+		 String mixsetInMethodCode = mixsetInMethod.getMixsetFragment();
+		 String code = mBody.getCodeblock().getCode().replace(mixsetInMethodCode, "");
+		 mBody.getCodeblock().setCode(code);
+	  } 
+  }
   // This method allows the injection of some code before/after a code label inside a method of an umple class. 
   private void applyCodeInjectionToLabeledMethod(UmpleClass uClass, Method aMethod, String aspectType) {
     List<CodeInjection> uClassCodeInectionList = uClass.getApplicableCodeInjectionsCustomMethod(aspectType, aMethod.getName(), aMethod.getMethodParameters());

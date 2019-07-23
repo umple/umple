@@ -84,7 +84,14 @@ class UmpleToJava {
     
     applyCodeInjectionToLabeledMethod(uClass, aMethod, "before");
     applyCodeInjectionToLabeledMethod(uClass, aMethod, "after");
-
+   
+   // handle mixsets inside methods(uClass, aMethod);
+    ArrayList<MixsetInMethod> mixsetsWithinMethodList = aMethod.getMethodBody().getMixsetsWithinMethod();
+    for(MixsetInMethod mixsetsWithinMethodItem : mixsetsWithinMethodList)
+    {
+      handelMixsetInsideMethod(model, mixsetsWithinMethodItem, aMethod.getMethodBody());
+    }
+    // End 
         String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("before", aMethod.getName(), aMethod.getMethodParameters()));
         String customAfterInjectionCode  = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("after", aMethod.getName(), aMethod.getMethodParameters()));
         String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));        
