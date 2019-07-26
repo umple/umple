@@ -1216,7 +1216,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }    
     if("".equals(aClass.getPackageName())){
       String pkgName = getCurrentNameSpace(classToken);
-      aClass.setPackageName( pkgName!="" && !pkgName.equals("-") ? pkgName : currentPackageName);
+      aClass.setPackageName( pkgName!="" && !pkgName.equals("-") ? pkgName : pkgName.equals("-") ? "" : currentPackageName);
     }
     if (aClass.getIsSingleton()) 
     {
