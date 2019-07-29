@@ -96,8 +96,8 @@ class UmpleInternalParser
     {
       if(!t.getValue().equals("-"))
       {
-      currentPackageName = t.getValue();
       redefinePackageName = "";
+      currentPackageName = t.getValue();
       }
       else
       {
@@ -1205,7 +1205,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if(redefinePackageName.equals(currentPackageName))
       {
         aClass.setPackageName(currentPackageName);
-        redefinePackageName = "";
       }
       else
       {
@@ -5486,8 +5485,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           resetClass = false;
 
         } else {
-            if (!resetClass && !currentNameSpace.equals("-") && !redefinePackageName.equals("-")){
-              setFailedPosition(t1.getPosition(),31,currentPackageName,t1.getValue());
+            if (!resetClass && !currentNameSpace.equals("-") && !currentNameSpace.equals(currentPackageName) && !redefinePackageName.equals("-")){
+              setFailedPosition(t1.getPosition(),31,currentNameSpace,currentPackageName);
               continue;
             }
         }
