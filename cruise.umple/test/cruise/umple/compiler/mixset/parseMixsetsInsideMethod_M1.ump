@@ -1,0 +1,32 @@
+
+//use M2;
+use M1;
+//use InnerMixset;
+
+class MixsetWithinMethodClass
+{
+  public void aMethod( )
+  {
+    System.out.println("this is aMethod.");
+    mixset M1 { 
+      x++;    
+      int i = 0;
+      System.out.println("mixset M1 ... ");
+      mixset InnerMixset 
+      {
+        //code for InnerMixset
+      }
+    //extra code for the mixset M1 
+    }
+
+    //Code after (outside) mixset M1 
+		
+    mixset M2 {
+      // code for mixset M2.
+    }
+		
+  }
+		
+}
+
+

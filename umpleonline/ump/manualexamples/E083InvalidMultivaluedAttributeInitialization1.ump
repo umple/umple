@@ -1,0 +1,8 @@
+// For derived attributes remove list indicator []
+// For list initializer, there should be a semicolon on the end
+class Office {
+  Integer number;
+  String[] emails = {"abc@umple.org", "def@umple.org"}
+  Integer [] incomingNumber = {765432, 987654}
+}
+
