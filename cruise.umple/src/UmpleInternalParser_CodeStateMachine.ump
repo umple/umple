@@ -884,6 +884,13 @@ class UmpleInternalParser
 
   private void populateStateMachine(Token stateMachineToken, StateMachine sm, UmpleClassifier uClassifier)
   {
+    //issue1483
+    if(sm.getUmpleClass() == null && sm.getUmpleTrait() == null)
+    {
+      setFailedPosition(stateMachineToken.getPosition(), 1015);
+      return;
+    }
+
     boolean isFirst;
     boolean isFinalState = false;
     String changeType = null;
