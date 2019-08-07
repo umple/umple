@@ -203,6 +203,9 @@
 1012: 3, "http://manual.umple.org/?W1012MethodNotFoundInjection.html", Method '{0}' cannot be found. Injection was ignored. ;
 1013: 3, "http://manual.umple.org/?W1013ParameterSpecificationDoesNotApply.html", Parameter specification does not apply to code injections with the '{0}' keyword. The injection was applied to all generated methods. ;
 1014: 3, "http://manual.umple.org/?W1014ExcludedMethodNotFoundInjection.html", Excluded method '{0}' cannot be found. The exclusion was ignored. ;
+# Issue 1483
+1015: 3, "http://manual.umple.org/?BasicStateMachines.html", Methods in standalone state machines might not be correctly generated. State machines can be used in traits or put directly in a class to achieve the same effect. ;
+
 
 1500 : 1, "http://manual.umple.org/?E15xxParsingError.html", Parsing error: '{0}' not understood ; 
 1501 : 1, "http://manual.umple.org/?E15xxParsingError.html", Parsing error: Arguments to '{0}' not understood ; 
