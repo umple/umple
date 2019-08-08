@@ -1989,11 +1989,20 @@ class UmpleInternalParser
     // Make sure we retrieve the same Umple class for nested children as well
     UmpleClass uClass = null;
     StateMachine smRunner = sm;
-    while (uClass == null)
+    int depth = 0;//issue1483
+
+    while (uClass == null && depth<100)
     {
       uClass = smRunner.getUmpleClass();
       if (smRunner.getParentState() != null)
     	  smRunner = smRunner.getParentState().getStateMachine();
+      depth++;
+    }
+    
+    if(uClass == null)//issue1483
+    {
+      setFailedPosition(methodToken.getPosition(), 1015);
+      return;
     }
 
     // Retrieve method analyzed using the method token
