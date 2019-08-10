@@ -1956,26 +1956,21 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       inject.setIsInternal(true);
       aClass.addCodeInjection(inject);
     }
-
+      
     if (av.getIsUnique())
     {
-      String equals = "| boolean | byte | char | short | int | long | float | double | Integer | Float | Double | Boolean |".contains(av.getFullType())? "{1} == {2}" : "{1} != null && {1}.equals({2})";
       injectIntoUniqueSet(
         av.getType() + " {2} = {3}();" + "\n" +
-        "if (" + equals + ") {" + "\n" + 
+        "if ({2} != null && {2}.equals({1})) {" + "\n" + 
         "return true;" + "\n" +
         "}" + "\n" + 
         "if ({4}({1})) {" + "\n" + 
         "  return wasSet;" + "\n" +
         "}", "before", av, aClass);
-
-      String remove = "| boolean | byte | char | short | int | long | float | double | Integer | Float | Double | Boolean |".contains(av.getFullType())?
-      "{5}.remove({2});" + "\n" :
-      "if ({2} != null) {" + "\n" +
-        "  {5}.remove({2});" + "\n" +
-        "}" + "\n";
       injectIntoUniqueSet(
-        remove +
+        "if ({2} != null) {" + "\n" +
+        "  {5}.remove({2});" + "\n" +
+        "}" + "\n" +
         "{5}.put({1}, this);", "after", av, aClass);
       injectIntoUniqueDelete(
         "{5}.remove({3}());", "before", av, aClass);
