@@ -1962,7 +1962,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       injectIntoUniqueSet(
         av.getType() + " {2} = {3}();" + "\n" +
         "if ({2} != null && {2}.equals({1})) {" + "\n" + 
-        "return true;" + "\n" +
+        "  return true;" + "\n" +
         "}" + "\n" + 
         "if ({4}({1})) {" + "\n" + 
         "  return wasSet;" + "\n" +

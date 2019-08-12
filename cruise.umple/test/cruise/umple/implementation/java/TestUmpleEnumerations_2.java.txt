@@ -57,7 +57,7 @@ public class X
     boolean wasSet = false;
     String anOldMyName = getMyName();
     if (anOldMyName != null && anOldMyName.equals(aMyName)) {
-    return true;
+      return true;
     }
     if (hasWithMyName(aMyName)) {
       return wasSet;

@@ -147,7 +147,7 @@ public class Mentor
     boolean wasSet = false;
     String anOldId = getId();
     if (anOldId != null && anOldId.equals(aId)) {
-    return true;
+      return true;
     }
     if (hasWithId(aId)) {
       return wasSet;

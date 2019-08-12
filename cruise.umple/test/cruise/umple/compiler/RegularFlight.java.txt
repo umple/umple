@@ -72,7 +72,7 @@ public class RegularFlight
     boolean wasSet = false;
     Integer anOldFlightNumber = getFlightNumber();
     if (anOldFlightNumber != null && anOldFlightNumber.equals(aFlightNumber)) {
-    return true;
+      return true;
     }
     if (hasWithFlightNumber(aFlightNumber)) {
       return wasSet;
@@ -91,7 +91,7 @@ public class RegularFlight
     boolean wasSet = false;
     Float anOldFlightNumber3 = getFlightNumber3();
     if (anOldFlightNumber3 != null && anOldFlightNumber3.equals(aFlightNumber3)) {
-    return true;
+      return true;
     }
     if (hasWithFlightNumber3(aFlightNumber3)) {
       return wasSet;
@@ -110,7 +110,7 @@ public class RegularFlight
     boolean wasSet = false;
     Double anOldFlightNumber4 = getFlightNumber4();
     if (anOldFlightNumber4 != null && anOldFlightNumber4.equals(aFlightNumber4)) {
-    return true;
+      return true;
     }
     if (hasWithFlightNumber4(aFlightNumber4)) {
       return wasSet;
@@ -129,7 +129,7 @@ public class RegularFlight
     boolean wasSet = false;
     String anOldLala = getLala();
     if (anOldLala != null && anOldLala.equals(aLala)) {
-    return true;
+      return true;
     }
     if (hasWithLala(aLala)) {
       return wasSet;
