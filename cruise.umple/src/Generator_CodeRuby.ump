@@ -687,6 +687,9 @@ class RubyGenerator
       {
         injectIntoUniqueSet(
           "{2} = {3}();" + "\n" +
+          "if ({2} != nil && {2} == {1})" + "\n" + 
+          "  return true" + "\n" +
+          "end" + "\n" +
           "if ({6}.{4}?({1}))" + "\n" + 
           "  return was_set" + "\n" +
           "end", "before", av, aClass);

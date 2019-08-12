@@ -143,6 +143,9 @@ class Mentor
     if (isset($this->id)) {
       $anOldId = $this->getId();
     }
+    if (isset($anOldId) && $anOldId === $aId) {
+      return true;
+    }
     if (Mentor::hasWithId($aId)) {
       return $wasSet;
     }

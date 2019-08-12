@@ -678,6 +678,9 @@ class PhpGenerator
           "if (isset($this->{0})) {" + "\n" +
           "  ${2} = $this->{3}();" + "\n" + 
           "}" + "\n" + 
+          "if (isset(${2}) && ${2} === ${1}) {" + "\n" + 
+          "  return true;" + "\n" +
+          "}" + "\n" + 
           "if ({6}::{4}(${1})) {" + "\n" + 
           "  return $wasSet;" + "\n" +
           "}", "before", av, aClass);

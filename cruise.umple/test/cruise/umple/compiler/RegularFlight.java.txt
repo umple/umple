@@ -5,6 +5,8 @@
 import java.sql.Time;
 import java.util.*;
 
+// line 2 "model.ump"
+// line 10 "model.ump"
 public class RegularFlight
 {
 
@@ -69,6 +71,9 @@ public class RegularFlight
   {
     boolean wasSet = false;
     Integer anOldFlightNumber = getFlightNumber();
+    if (anOldFlightNumber != null && anOldFlightNumber.equals(aFlightNumber)) {
+      return true;
+    }
     if (hasWithFlightNumber(aFlightNumber)) {
       return wasSet;
     }
@@ -85,6 +90,9 @@ public class RegularFlight
   {
     boolean wasSet = false;
     Float anOldFlightNumber3 = getFlightNumber3();
+    if (anOldFlightNumber3 != null && anOldFlightNumber3.equals(aFlightNumber3)) {
+      return true;
+    }
     if (hasWithFlightNumber3(aFlightNumber3)) {
       return wasSet;
     }
@@ -101,6 +109,9 @@ public class RegularFlight
   {
     boolean wasSet = false;
     Double anOldFlightNumber4 = getFlightNumber4();
+    if (anOldFlightNumber4 != null && anOldFlightNumber4.equals(aFlightNumber4)) {
+      return true;
+    }
     if (hasWithFlightNumber4(aFlightNumber4)) {
       return wasSet;
     }
@@ -117,6 +128,9 @@ public class RegularFlight
   {
     boolean wasSet = false;
     String anOldLala = getLala();
+    if (anOldLala != null && anOldLala.equals(aLala)) {
+      return true;
+    }
     if (hasWithLala(aLala)) {
       return wasSet;
     }
@@ -138,12 +152,12 @@ public class RegularFlight
   {
     return flightNumber;
   }
-
+  /* Code from template attribute_GetUnique */
   public static RegularFlight getWithFlightNumber(int aFlightNumber)
   {
     return regularflightsByFlightNumber.get(aFlightNumber);
   }
-
+  /* Code from template attribute_HasUnique */
   public static boolean hasWithFlightNumber(int aFlightNumber)
   {
     return getWithFlightNumber(aFlightNumber) != null;
@@ -153,12 +167,12 @@ public class RegularFlight
   {
     return flightNumber3;
   }
-
+  /* Code from template attribute_GetUnique */
   public static RegularFlight getWithFlightNumber3(float aFlightNumber3)
   {
     return regularflightsByFlightNumber3.get(aFlightNumber3);
   }
-
+  /* Code from template attribute_HasUnique */
   public static boolean hasWithFlightNumber3(float aFlightNumber3)
   {
     return getWithFlightNumber3(aFlightNumber3) != null;
@@ -168,12 +182,12 @@ public class RegularFlight
   {
     return flightNumber4;
   }
-
+  /* Code from template attribute_GetUnique */
   public static RegularFlight getWithFlightNumber4(double aFlightNumber4)
   {
     return regularflightsByFlightNumber4.get(aFlightNumber4);
   }
-
+  /* Code from template attribute_HasUnique */
   public static boolean hasWithFlightNumber4(double aFlightNumber4)
   {
     return getWithFlightNumber4(aFlightNumber4) != null;
@@ -183,12 +197,12 @@ public class RegularFlight
   {
     return lala;
   }
-
+  /* Code from template attribute_GetUnique */
   public static RegularFlight getWithLala(String aLala)
   {
     return regularflightsByLala.get(aLala);
   }
-
+  /* Code from template attribute_HasUnique */
   public static boolean hasWithLala(String aLala)
   {
     return getWithLala(aLala) != null;
