@@ -96,12 +96,16 @@ class UmpleInternalParser
     {
       if(!t.getValue().equals("-"))
       {
-      redefinePackageName = "";
-      currentPackageName = t.getValue();
+        redefinePackageName = "";
+        currentPackageName = t.getValue();
+        if (!"".equals(nameSpaceNotUsedYet)){
+          setFailedPosition(t.getPosition(),31,nameSpaceNotUsedYet,currentPackageName);
+        }
+        nameSpaceNotUsedYet = currentPackageName;
       }
       else
       {
-      redefinePackageName = "-";
+        redefinePackageName = "-";
       }
       if (model.getDefaultNamespace() == null)
       {
@@ -1205,6 +1209,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if(redefinePackageName.equals(currentPackageName))
       {
         aClass.setPackageName(currentPackageName);
+        nameSpaceNotUsedYet = "";
       }
       else
       {
@@ -1216,6 +1221,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     if("".equals(aClass.getPackageName())){
       String pkgName = getCurrentNameSpace(classToken);
       aClass.setPackageName( pkgName!="" && !pkgName.equals("-") ? pkgName : pkgName.equals("-") ? "" : currentPackageName);
+      nameSpaceNotUsedYet = "";
     }
     if (aClass.getIsSingleton()) 
     {
@@ -5485,10 +5491,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           resetClass = false;
 
         } else {
-            if (!resetClass && !currentNameSpace.equals("-") && !currentNameSpace.equals(currentPackageName) && !redefinePackageName.equals("-")){
-              setFailedPosition(t1.getPosition(),31,currentNameSpace,currentPackageName);
-              continue;
-            }
+          continue;
         }
       }
     }

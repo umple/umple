@@ -36,6 +36,7 @@ class UmpleInternalParser
   
   currentPackageName = "";
   redefinePackageName = "";
+  nameSpaceNotUsedYet = "";
   Boolean packageNameUsed = true;
   Boolean outputUmpleSource = false;
 
