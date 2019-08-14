@@ -44,8 +44,7 @@ class UmpleInternalParser
   RuleBasedParser parser;
   
   NameSpace lastParsedNameSpace = new NameSpace("",new Position("", 0, 0, 0));
-  NameSpace[] usedNameSpaces;
-  NameSpace[] unusedNameSpaces;
+  NameSpace[] parsedNameSpaces;
   Integer[] allowedMessages;
   Integer[] ignoredMessages;
   Integer[] disallowedMessages;

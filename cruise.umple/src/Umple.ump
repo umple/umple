@@ -1182,6 +1182,7 @@ class NameSpace
 
   immutable value;
   immutable Position position;
+  Integer timesUsed = 0;
 }
 
 use UmpleVersion.ump;
