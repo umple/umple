@@ -98,10 +98,8 @@ class UmpleInternalParser
       {
         redefinePackageName = "";
         currentPackageName = t.getValue();
-        if (!"".equals(nameSpaceNotUsedYet)){
-          setFailedPosition(t.getPosition(),31,nameSpaceNotUsedYet,currentPackageName);
-        }
-        nameSpaceNotUsedYet = currentPackageName;
+        lastParsedNameSpace = new NameSpace(t.getValue(),t.getPosition());
+        unusedNameSpaces.add(lastParsedNameSpace);
       }
       else
       {
@@ -1208,8 +1206,15 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     if(!"".equals(aClass.getPackageName()) && !currentPackageName.equals(aClass.getPackageName())){
       if(redefinePackageName.equals(currentPackageName))
       {
+        usedNameSpaces.remove(aClass.getNameSpace());
+        if(!usedNameSpaces.contains(aClass.getNameSpace()))
+        {
+          unusedNameSpaces.add(aClass.getNameSpace());
+        }
         aClass.setPackageName(currentPackageName);
-        nameSpaceNotUsedYet = "";
+        aClass.setNameSpace(lastParsedNameSpace);
+        usedNameSpaces.add(lastParsedNameSpace);
+        unusedNameSpaces.remove(lastParsedNameSpace);
       }
       else
       {
@@ -1219,9 +1224,22 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       
     }    
     if("".equals(aClass.getPackageName())){
-      String pkgName = getCurrentNameSpace(classToken);
-      aClass.setPackageName( pkgName!="" && !pkgName.equals("-") ? pkgName : pkgName.equals("-") ? "" : currentPackageName);
-      nameSpaceNotUsedYet = "";
+      String pkgName = lastParsedNameSpace.getValue();
+      if(pkgName!="" && !pkgName.equals("-"))
+      {
+        aClass.setPackageName(pkgName);
+        aClass.setNameSpace(lastParsedNameSpace);
+        usedNameSpaces.add(lastParsedNameSpace);
+        unusedNameSpaces.remove(lastParsedNameSpace);
+      }
+      else if(pkgName.equals("-"))
+      {
+        aClass.setPackageName("");
+      }
+      else
+      {
+        aClass.setPackageName(currentPackageName);
+      }
     }
     if (aClass.getIsSingleton()) 
     {
@@ -1402,7 +1420,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       setFailedPosition(interfaceToken.getPosition(), 30, anInterface.getName(), currentPackageName);
     }    
     if("".equals(anInterface.getPackageName())){
-      String pkgName = getCurrentNameSpace(interfaceToken);
+      String pkgName = lastParsedNameSpace.getValue();
       anInterface.setPackageName( pkgName!="" ? pkgName : currentPackageName);
     }
     analyzeInterface(interfaceToken,anInterface);
@@ -5467,35 +5485,42 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       setFailedPosition(position,1502,identifier);
     }
   }
-  
-  private String getCurrentNameSpace(Token inToken) {
-    String currentNameSpace="";
-    boolean twice = false;
-    boolean resetClass = false;
-    //int index=-1;
-    for(int i = 0; i<inToken.getParentToken().getSubTokens().size();i++){
-      Token t1 = inToken.getParentToken().getSubTokens().get(i);
-      if (t1.equals(inToken)) {
-        //index=i;
-        break;
-      }
-      if (t1.getName().equals("classDefinition")) {
-        resetClass=true;
-        twice =false;
-       // currentNameSpace="";
-      }
-      if (t1.getName().equals("namespace")&& !t1.getValue().equals("STATIC"))  {
-        currentNameSpace = t1.getValue();
-        if (!twice){
-          twice = true;
-          resetClass = false;
 
-        } else {
-          continue;
-        }
-      }
+  private void checkUnusedNamespaces()
+  {
+    for(NameSpace ns : unusedNameSpaces)
+    {
+      setFailedPosition(ns.getPosition(),31,ns.getValue(),ns.getValue());
     }
-    return currentNameSpace;
+  }
+  
+//  private String getCurrentNameSpace(Token inToken) {
+//    String currentNameSpace="";
+//    boolean twice = false;
+//    boolean resetClass = false;
+//    //int index=-1;
+//    for(int i = 0; i<inToken.getParentToken().getSubTokens().size();i++){
+//      Token t1 = inToken.getParentToken().getSubTokens().get(i);
+//      if (t1.equals(inToken)) {
+//        //index=i;
+//        break;
+//      }
+//      if (t1.getName().equals("classDefinition")) {
+//        resetClass=true;
+//        twice =false;
+//       // currentNameSpace="";
+//      }
+//      if (t1.getName().equals("namespace")&& !t1.getValue().equals("STATIC"))  {
+//        currentNameSpace = t1.getValue();
+//        if (!twice){
+//          twice = true;
+//          resetClass = false;
+//        }
+//      }
+//    }
+//    return currentNameSpace;
+
+
 //    boolean finalCheck = false;
 //    String extraNamespace = "";
 //    int counter = -1;
@@ -5523,6 +5548,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 //      setFailedPosition(forReport.getPosition(),31,currentPackageName,forReport.getValue());
 //      return extraNamespace;
 //    }
-  }
+//  }
   
 } 

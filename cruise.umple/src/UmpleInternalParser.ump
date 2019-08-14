@@ -36,7 +36,6 @@ class UmpleInternalParser
   
   currentPackageName = "";
   redefinePackageName = "";
-  nameSpaceNotUsedYet = "";
   Boolean packageNameUsed = true;
   Boolean outputUmpleSource = false;
 
@@ -44,6 +43,9 @@ class UmpleInternalParser
   UmpleModel model;
   RuleBasedParser parser;
   
+  NameSpace lastParsedNameSpace = new NameSpace("",new Position("", 0, 0, 0));
+  NameSpace[] usedNameSpaces;
+  NameSpace[] unusedNameSpaces;
   Integer[] allowedMessages;
   Integer[] ignoredMessages;
   Integer[] disallowedMessages;
