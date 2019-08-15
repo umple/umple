@@ -1428,7 +1428,8 @@ public class UmpleParserTest
   @Test
   public void externalAssociationWithUnknownClass()
   {
-    assertFailedParse("009_externalAssociationWithUnknownClass.ump", new Position("009_externalAssociationWithUnknownClass.ump",6,7,42));
+    assertFailedParse("009_externalAssociationWithUnknownClass.ump", 31, 0);
+    assertFailedParse("009_externalAssociationWithUnknownClass.ump", 5, 1);
   }
 
   @Test

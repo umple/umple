@@ -1254,8 +1254,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       analyzeAllAssociations(classToken);
     }
     
-
-    
     analyzeAllTokens(classToken,aClass);
     return aClass;
   }
@@ -1375,8 +1373,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       setFailedPosition(interfaceToken.getPosition(), 111, interfaceName);
     }
     
-    UmpleInterface anInterface = new UmpleInterface(interfaceToken.getValue("name"),model);
-    model.addUmpleInterface(anInterface);
+    UmpleInterface anInterface = model.addUmpleInterface(interfaceToken.getValue("name"));
     Position thePosition = interfaceToken.getPosition();
     Position endPosition = interfaceToken.getEndPosition();
 
@@ -1411,11 +1408,36 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
   
     if(!"".equals(anInterface.getPackageName()) && !currentPackageName.equals(anInterface.getPackageName())){
-      setFailedPosition(interfaceToken.getPosition(), 30, anInterface.getName(), currentPackageName);
+      if(redefinePackageName.equals(currentPackageName))
+      {
+        anInterface.getNameSpace().setTimesUsed(anInterface.getNameSpace().getTimesUsed()-1);
+        anInterface.setPackageName(currentPackageName);
+        anInterface.setNameSpace(lastParsedNameSpace);
+        lastParsedNameSpace.setTimesUsed(lastParsedNameSpace.getTimesUsed()+1);
+      }
+      else
+      {
+        if(!redefinePackageName.equals("-"))
+          setFailedPosition(interfaceToken.getPosition(), 30, anInterface.getName(), currentPackageName);
+      }
+      
     }    
     if("".equals(anInterface.getPackageName())){
       String pkgName = lastParsedNameSpace.getValue();
-      anInterface.setPackageName( pkgName!="" ? pkgName : currentPackageName);
+      if(pkgName!="" && !pkgName.equals("-"))
+      {
+        anInterface.setPackageName(pkgName);
+        anInterface.setNameSpace(lastParsedNameSpace);
+        lastParsedNameSpace.setTimesUsed(lastParsedNameSpace.getTimesUsed()+1);
+      }
+      else if(pkgName.equals("-"))
+      {
+        anInterface.setPackageName("");
+      }
+      else
+      {
+        anInterface.setPackageName(currentPackageName);
+      }
     }
     analyzeInterface(interfaceToken,anInterface);
     return anInterface;
@@ -5488,7 +5510,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         setFailedPosition(ns.getPosition(),31,ns.getValue());
     }
   }
-  
+
+//  Replaced on fixing issue 1315  
 //  private String getCurrentNameSpace(Token inToken) {
 //    String currentNameSpace="";
 //    boolean twice = false;
