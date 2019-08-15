@@ -94,11 +94,11 @@ class UmpleInternalParser
     }      
     else if (t.is("namespace"))
     {
+      lastParsedNameSpace = new NameSpace(t.getValue(),t.getPosition());
       if(!t.getValue().equals("-"))
       {
         redefinePackageName = "";
         currentPackageName = t.getValue();
-        lastParsedNameSpace = new NameSpace(t.getValue(),t.getPosition());
         parsedNameSpaces.add(lastParsedNameSpace);
       }
       else
