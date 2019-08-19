@@ -43,8 +43,12 @@ class UmpleInternalParser
   UmpleModel model;
   RuleBasedParser parser;
   
+  // List of parsed namespaces.
+  // This is used to check the use of parsed namespaces.
+  1 -> * NameSpace parsedNameSpaces;
+
   NameSpace lastParsedNameSpace = new NameSpace("",new Position("", 0, 0, 0));
-  NameSpace[] parsedNameSpaces;
+
   Integer[] allowedMessages;
   Integer[] ignoredMessages;
   Integer[] disallowedMessages;
