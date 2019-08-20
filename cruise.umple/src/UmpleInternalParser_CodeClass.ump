@@ -1978,7 +1978,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     String match = "public " + aMethod.getType() + " " + aMethod.getName();    
     if (uClass.getExtraCode().contains(match))
       return true;
-    //4. Check if method is an association method
+    //4. Check if method is an association method #834
     if (uClass.hasMethod(aMethod) && isAssociationMethod(uClass, uClass.getMethod(aMethod)))
       return true;
     return false;
@@ -1992,12 +1992,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   }
   
   private boolean isAssociationMethod(UmpleClass uClass, Method method){
-    if (method.getName().length() <= 2)
+    if (method.getName().length() <= 2 || !uClass.hasAssociations())
       return false;
     String methodName = method.getName();
     boolean isAssociationMethod = methodName.startsWith("get") || methodName.startsWith("set") || methodName.startsWith("add") || methodName.startsWith("remove") || methodName.startsWith("addOrMove") || methodName.startsWith("has") || methodName.startsWith("indexOf") || methodName.startsWith("minimumNumberOf") || methodName.startsWith("maximumNumberOf") || methodName.startsWith("requiredNumberOf");
 
-    return isAssociationMethod && uClass.hasAssociations() && method.getSource() == Method.Source.fAutoAPI && !method.getIsConstructor();
+    return isAssociationMethod && method.getSource() == Method.Source.fAutoAPI && !method.getIsConstructor();
   }
 
   // Same association in subclass with a different role name should emit
