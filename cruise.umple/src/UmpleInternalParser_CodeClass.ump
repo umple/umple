@@ -94,18 +94,19 @@ class UmpleInternalParser
     }      
     else if (t.is("namespace"))
     {
-      lastParsedNameSpace = new NameSpace(t.getValue(),t.getPosition());
-      if(!t.getValue().equals("-"))
+      String nameSpaceValue = t.getValue();
+      lastParsedNameSpace = new NameSpace(nameSpaceValue,t.getPosition());
+      if(!nameSpaceValue.equals("-"))
       {
         redefinePackageName = "";
-        currentPackageName = t.getValue();
+        currentPackageName = nameSpaceValue;
         parsedNameSpaces.add(lastParsedNameSpace);
       }
       else
       {
         redefinePackageName = "-";
       }
-      if (model.getDefaultNamespace() == null)
+      if (model.getDefaultNamespace() == null && !nameSpaceValue.equals("default"))
       {
         model.setDefaultNamespace(currentPackageName);  
       }
@@ -1207,7 +1208,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if(redefinePackageName.equals(currentPackageName))
       {
         aClass.getNameSpace().setTimesUsed(aClass.getNameSpace().getTimesUsed()-1);
-        aClass.setPackageName(currentPackageName);
+        aClass.setPackageName(currentPackageName.equals("default")?"":currentPackageName);
         aClass.setNameSpace(lastParsedNameSpace);
         lastParsedNameSpace.setTimesUsed(lastParsedNameSpace.getTimesUsed()+1);
       }
@@ -1222,7 +1223,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       String pkgName = lastParsedNameSpace.getValue();
       if(pkgName!="" && !pkgName.equals("-"))
       {
-        aClass.setPackageName(pkgName);
+        aClass.setPackageName(pkgName.equals("default")?"":pkgName);
         aClass.setNameSpace(lastParsedNameSpace);
         lastParsedNameSpace.setTimesUsed(lastParsedNameSpace.getTimesUsed()+1);
       }
@@ -1232,7 +1233,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
       else
       {
-        aClass.setPackageName(currentPackageName);
+        aClass.setPackageName(currentPackageName.equals("default")?"":currentPackageName);
       }
     }
     if (aClass.getIsSingleton()) 
@@ -1411,7 +1412,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if(redefinePackageName.equals(currentPackageName))
       {
         anInterface.getNameSpace().setTimesUsed(anInterface.getNameSpace().getTimesUsed()-1);
-        anInterface.setPackageName(currentPackageName);
+        anInterface.setPackageName(currentPackageName.equals("default")?"":currentPackageName);
         anInterface.setNameSpace(lastParsedNameSpace);
         lastParsedNameSpace.setTimesUsed(lastParsedNameSpace.getTimesUsed()+1);
       }
@@ -1426,7 +1427,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       String pkgName = lastParsedNameSpace.getValue();
       if(pkgName!="" && !pkgName.equals("-"))
       {
-        anInterface.setPackageName(pkgName);
+        anInterface.setPackageName(pkgName.equals("default")?"":pkgName);
         anInterface.setNameSpace(lastParsedNameSpace);
         lastParsedNameSpace.setTimesUsed(lastParsedNameSpace.getTimesUsed()+1);
       }
@@ -1436,7 +1437,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
       else
       {
-        anInterface.setPackageName(currentPackageName);
+        anInterface.setPackageName(currentPackageName.equals("default")?"":currentPackageName);
       }
     }
     analyzeInterface(interfaceToken,anInterface);
