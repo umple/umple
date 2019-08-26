@@ -5512,6 +5512,99 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
   }
 
+  //Method to fix the case where a class/interface implements/extends 
+  //another one that is located in default namespace (so prevent import .*;)
+  //issue #1315
+
+  private void fixImportFromDefaultPackage()
+  {
+    boolean notDone = true;
+
+    while(notDone)
+    {
+      notDone = false;
+
+      //check if a class implements an interface in default namespace
+      //if so, put it in the same namespace as the class
+
+      if(!unlinkedInterfaceExtends.isEmpty())
+        for (UmpleClassifier c : unlinkedInterfaceExtends.keySet())
+        {
+          UmpleClassifier myClass = c;
+          for(String className : unlinkedInterfaceExtends.get(c))
+          {
+            UmpleClassifier yourClass = model.getUmpleClass(className);
+            if(yourClass == null)
+              yourClass = model.getUmpleInterface(className);
+            if(raiseImportFromDefaultNameSpaceWarning(myClass,yourClass))
+              notDone = true;
+          }
+        }
+
+      //check if a class extends a class in default namespace
+      //if so, put it in the same namespace as the class
+
+      if(!unlinkedExtends.isEmpty())
+        for (UmpleClassifier c : unlinkedExtends.keySet())
+        {
+          UmpleClassifier myClass = c;
+          for(String className : unlinkedExtends.get(c))
+          {
+            UmpleClassifier yourClass = model.getUmpleClass(className);
+            if(yourClass == null)
+              yourClass = model.getUmpleInterface(className);
+            if(raiseImportFromDefaultNameSpaceWarning(myClass,yourClass))
+              notDone = true;
+          }
+                  
+        }  
+
+      //check if a class has association with a class in default namespace
+      //if so, put it in the same namespace as the class
+
+      if(model.hasAssociations())
+        for (Association association : model.getAssociations()) 
+        {  
+          if (associationIsBetweenClassAndTrait(association)){continue;} 
+          
+          AssociationEnd myEnd = association.getEnd(0);
+          AssociationEnd yourEnd = association.getEnd(1);
+        
+          if(getModel().getUmpleTraitTypeParameter(myEnd.getClassName()) || getModel().getUmpleTrait(myEnd.getClassName())!=null) return ;
+          if(getModel().getUmpleTraitTypeParameter(yourEnd.getClassName()) || getModel().getUmpleTrait(yourEnd.getClassName())!=null) return ;
+        
+          UmpleClassifier myClass = model.getUmpleClass(myEnd.getClassName());
+          if(myClass == null)
+            myClass = model.getUmpleInterface(myEnd.getClassName());
+          UmpleClassifier yourClass = model.getUmpleClass(yourEnd.getClassName());
+          if(yourClass == null)
+            yourClass = model.getUmpleInterface(yourEnd.getClassName());  
+
+          if(raiseImportFromDefaultNameSpaceWarning(myClass,yourClass))
+            notDone = true;
+          if(raiseImportFromDefaultNameSpaceWarning(yourClass,myClass))
+            notDone = true;
+        }
+
+      //TODO: do the same thing for interfaces that extend interfaces 
+      //in default namespace, but currently, there is no way/I couldn't find a way
+      //to generate "import packageNameHere.*;" for interfaces (for UmpleClass we
+      //can use the method addMultiLookup of it's GeneratedClass)
+
+    }
+  }
+
+  private boolean raiseImportFromDefaultNameSpaceWarning(UmpleClassifier myClass, UmpleClassifier yourClass)
+  { boolean wasDone = false;
+    if(myClass!=null && yourClass!=null && !myClass.getPackageName().equals("") && yourClass.getPackageName().equals(""))
+    {
+      yourClass.setPackageName(myClass.getPackageName());
+      setFailedPosition(yourClass.getPosition(0),42,yourClass.getName(),myClass.getPackageName());
+      wasDone = true;
+    }
+    return wasDone;
+  }
+
 //  Replaced on fixing issue 1315  
 //  private String getCurrentNameSpace(Token inToken) {
 //    String currentNameSpace="";

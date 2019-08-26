@@ -227,6 +227,7 @@ class UmpleInternalParser
     }
     while (shouldProcessAgain);
 
+    fixImportFromDefaultPackage();
     checkUnusedNamespaces();
   }
 

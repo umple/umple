@@ -928,6 +928,18 @@ class RubyGenerator
     for (UmpleClass aClass : getModel().getUmpleClasses())
     {
       GeneratedClass genClass = aClass.getGeneratedClass();
+
+      //add interface imports
+      if (aClass.hasParentInterface())
+      {
+        for(UmpleInterface interfaceParent: aClass.getParentInterface())
+        { 
+          if (!aClass.getPackageName().equals(interfaceParent.getPackageName()))
+          {
+            genClass.addMultiLookup("import", interfaceParent.getPackageName() + ".*");  
+          }
+        }
+      }
       
       if (aClass.getExtendsClass() != null)
       {
