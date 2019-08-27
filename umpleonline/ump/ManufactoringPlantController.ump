@@ -83,7 +83,9 @@ class OrderLineItem {
  * Robot;
 }*/
 //$?[End_of_model]$?
-namespace MFP.core.black;
+
+namespace -;
+
 class ProductRun
 {
   displayColour lightgrey;
@@ -108,7 +110,6 @@ class ProductType
   position.association Product__ProductType 70,0 80,79;
 }
 
-namespace MFP.core.red;
 class RobotAllocation
 {
   displayColour pink;
@@ -117,7 +118,6 @@ class RobotAllocation
   position.association Robot__RobotAllocation 145,15 0,13;
 }
 
-namespace MFP.core.blue;
 class OrderLineItem
 {
   displayColour lightblue;
@@ -125,7 +125,6 @@ class OrderLineItem
   position.association OrderLineItem__Product 0,12 160,22;
 }
 
-namespace MFP.core.green;
 class BillOfMaterialsLineItem
 {
   displayColour lightgreen;
@@ -141,7 +140,6 @@ class Product
   position.association Product__Product:packagedWith 0,64 11,79;
 }
 
-namespace MFP.core.red;
 class AssemblyStep
 {
   displayColour pink;
@@ -154,7 +152,6 @@ class Robot
   displayColour pink;
   position 291 442 125 58;
 }
-namespace MFP.core.green;
 class Supplier
 {
   displayColour lightgreen;

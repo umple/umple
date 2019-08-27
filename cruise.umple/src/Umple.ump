@@ -140,6 +140,8 @@ class UmpleElement
 
   String[] namespaces;
 
+  NameSpace nameSpace = new NameSpace("",new Position("", 0, 0, 0));
+
   packageName = "";
 
   // The code associated with the Umple element.
@@ -1171,6 +1173,17 @@ class GenerateTarget
 
   before getPath{if(path == null) path = ""; }
   key{language}
+}
+
+//added for issue 1315 warning 31
+class NameSpace
+{
+  depend cruise.umple.parser.Position;
+
+  immutable value;
+  immutable Position position;
+  Integer timesUsed = 0;
+  before setTimesUsed{if(aTimesUsed <0) return false; }
 }
 
 use UmpleVersion.ump;

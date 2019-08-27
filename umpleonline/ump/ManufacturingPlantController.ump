@@ -83,6 +83,9 @@ class OrderLineItem {
  * Robot;
 }*/
 //$?[End_of_model]$?
+//Positioning
+
+namespace -;
 
 class ProductRun
 {

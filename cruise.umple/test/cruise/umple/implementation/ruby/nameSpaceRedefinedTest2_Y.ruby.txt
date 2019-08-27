@@ -1,0 +1,139 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module M
+
+class Y
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Y Associations - for documentation purposes
+  #attr_reader :xs
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize()
+    @initialized = false
+    @deleted = false
+    @xs = []
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def get_x(index)
+    a_x = @xs[index]
+    a_x
+  end
+
+  def get_xs
+    new_xs = @xs.dup
+    new_xs
+  end
+
+  def number_of_xs
+    number = @xs.size
+    number
+  end
+
+  def has_xs
+    has = @xs.size > 0
+    has
+  end
+
+  def index_of_x(a_x)
+    index = @xs.index(a_x)
+    index = -1 if index.nil?
+    index
+  end
+
+  def self.minimum_number_of_xs
+    0
+  end
+
+  def add_x(a_x)
+    was_added = false
+    return false if index_of_x(a_x) != -1
+    @xs << a_x
+    if a_x.index_of_y(self) != -1
+      was_added = true
+    else
+      was_added = a_x.add_y(self)
+      unless was_added
+        @xs.delete(a_x)
+      end
+    end
+    was_added
+  end
+
+  def remove_x(a_x)
+    was_removed = false
+    unless @xs.include?(a_x)
+      return was_removed
+    end
+
+    oldIndex = @xs.index(a_x)
+    @xs.delete_at(oldIndex)
+    if a_x.index_of_y(self) == -1
+      was_removed = true
+    else
+      was_removed = a_x.remove_y(self)
+      @xs.insert(oldIndex,a_x) unless was_removed
+    end
+    was_removed
+  end
+
+  def add_x_at(a_x, index)
+    was_added = false
+    if add_x(a_x)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_xs())
+        index = number_of_xs() - 1
+      end
+      @xs.delete(a_x)
+      @xs.insert(index, a_x)
+      was_added = true
+    end
+    was_added
+  end
+
+  def add_or_move_x_at(a_x, index)
+    was_added = false
+    if @xs.include?(a_x)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_xs())
+        index = number_of_xs() - 1
+      end
+      @xs.delete(a_x)
+      @xs.insert(index, a_x)
+      was_added = true
+    else
+      was_added = add_x_at(a_x, index)
+    end
+    was_added
+  end
+
+  def delete
+    @deleted = true
+    copy_of_xs = @xs.dup
+    @xs.clear
+    copy_of_xs.each do |a_x|
+      a_x.remove_y(self)
+    end
+  end
+
+end
+end

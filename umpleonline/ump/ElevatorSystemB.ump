@@ -56,7 +56,9 @@ class ConsoleCallButton
 }
 //$?[End_of_model]$?
 //Positioning
-namespace Elevator.core;
+
+namespace -;
+
 class Elevator
 {
   position 276 380 217 96;
@@ -69,7 +71,6 @@ class FloorNumberDisplay
   position 37 491 140 45;
   position.association Floor__FloorNumberDisplay 70,0 56,45;
 }
-namespace Elevator.core.Buttons;
 class Button
 {
   position 303 35 135 62;
@@ -100,7 +101,6 @@ class CloseDoorButton
   position 298 202 121 45;
   position.association CloseDoorButton__Elevator 54,45 84,0;
 }
-namespace Elevator.core;
 class FullSystem
 {
   position 576 399 109 41;

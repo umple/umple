@@ -1,0 +1,10 @@
+interface I{}
+namespace m;
+interface I{}
+class A{}
+class B{}
+namespace n --redefine;
+interface I{}
+class A{}
+namespace -;
+class B{x;}

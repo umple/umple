@@ -35,8 +35,8 @@
 28: 2, "http://manual.umple.org/?E028ConstraintIdentifierIncorrect.html", Attribute '{0}' in constraint is not defined in class '{1}' ;
 29: 2, "http://manual.umple.org/?E029ConstraintTypeMismatch.html", Constraint contains comparison between incompatible types ;
 
-30: 4, "http://manual.umple.org/?W030RedefinedNamespace.html", Redefining the namespace of class {0} to {1} ;
-31: 4, "http://manual.umple.org/?W031NamespaceNotUsed.html", Declared namespace {0} was not used before declaring {1} ;
+30: 4, "http://manual.umple.org/?W030RedefinedNamespace.html", Ignored attempt to redefine the namespace of {0} {1} to {2}. Use --redefine to force this ;
+31: 4, "http://manual.umple.org/?W031NamespaceNotUsed.html", Declared namespace {0} was not used ;
 32: 1, "http://manual.umple.org/?E032ReservedRoleName.html", The role name '{0}' has a conflict. Please don't use plural form of class name as a role name ;
 33: 3, "http://manual.umple.org/?W033MissingSuperclass.html", The indicated superclass {0} of class {1} does not exist and has been ignored. Declare {0} to be external if it is defined outside this Umple system ;
 34: 2, "http://manual.umple.org/?E034MultipleInheritance.html", Multiple inheritance not allowed in Umple so  code can be generated for languages that do not permit it. So class {0} cannot be a subclass of class {1} as well as other classes. Consider using multiple implementations of an interface or using traits ;
@@ -48,6 +48,7 @@
 
 40: 2, "http://manual.umple.org/?E040SingletonHasSubclasses.html", Singleton classes have a private constructor and cannot be extended. So class {0} cannot be a subclass of singleton class {1} ;
 41: 2, "http://manual.umple.org/?E041NonVoidMethodDeclaredasQueued.html", A non-void method cannot be declared as queued;
+42: 4, "http://manual.umple.org/?W031NamespaceNotUsed.html",Class or interface {0} must not be in default namespace. It's namespace has been changed to {1};
 44: 3, "http://manual.umple.org/?W044AttributeDuplicatedinSuperclass.html", Class '{0}' has attribute name {1} that duplicates an attribute inherited from a superclass '{2}'. New definition is being disregarded ;
 45: 4, "http://manual.umple.org/?W045InitializedValueinKey.html", Attribute '{0}' in class '{1}' is in the key. Initializing it will result in all instances having this same value and being treated as equal ;
 46: 4, "http://manual.umple.org/?W046AttributeHasTemplateType.html", Attribute {0} in class {1} is declared using a collection template type {2}. Use a directed association (->) or multi-valued attribute([]) to follow proper modelling conventions ;

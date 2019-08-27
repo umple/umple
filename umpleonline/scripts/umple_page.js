@@ -718,7 +718,10 @@ Page.getUmpleCode = function()
 {
   var modelCleaned = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
   var positioning = jQuery("#umpleLayoutEditorText").val().replace(Page.modelDelimiter, "");
-  
+  if(positioning !== "" && !positioning.includes("namespace -;")){
+   // prepend namespace cancellation to prevent namespace redefinition errors
+    positioning = "\n\nnamespace -;\n"+positioning;
+  }
   var umpleCode = modelCleaned + Page.modelDelimiter + positioning;
   return umpleCode;
 }

@@ -1,0 +1,10 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+package n;
+// line 2 "../../../../ump/tmp762034/model.ump"
+// line 4 "../../../../ump/tmp762034/model.ump"
+// line 8 "../../../../ump/tmp762034/model.ump"
+public interface I
+{
+  
+}
