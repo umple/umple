@@ -1,0 +1,139 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module M
+
+class X < J
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #X Associations - for documentation purposes
+  #attr_reader :ies
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize()
+    @initialized = false
+    @deleted = false
+    @ies = []
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def get_y(index)
+    a_y = @ies[index]
+    a_y
+  end
+
+  def get_ies
+    new_ies = @ies.dup
+    new_ies
+  end
+
+  def number_of_ies
+    number = @ies.size
+    number
+  end
+
+  def has_ies
+    has = @ies.size > 0
+    has
+  end
+
+  def index_of_y(a_y)
+    index = @ies.index(a_y)
+    index = -1 if index.nil?
+    index
+  end
+
+  def self.minimum_number_of_ies
+    0
+  end
+
+  def add_y(a_y)
+    was_added = false
+    return false if index_of_y(a_y) != -1
+    @ies << a_y
+    if a_y.index_of_x(self) != -1
+      was_added = true
+    else
+      was_added = a_y.add_x(self)
+      unless was_added
+        @ies.delete(a_y)
+      end
+    end
+    was_added
+  end
+
+  def remove_y(a_y)
+    was_removed = false
+    unless @ies.include?(a_y)
+      return was_removed
+    end
+
+    oldIndex = @ies.index(a_y)
+    @ies.delete_at(oldIndex)
+    if a_y.index_of_x(self) == -1
+      was_removed = true
+    else
+      was_removed = a_y.remove_x(self)
+      @ies.insert(oldIndex,a_y) unless was_removed
+    end
+    was_removed
+  end
+
+  def add_y_at(a_y, index)
+    was_added = false
+    if add_y(a_y)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_ies())
+        index = number_of_ies() - 1
+      end
+      @ies.delete(a_y)
+      @ies.insert(index, a_y)
+      was_added = true
+    end
+    was_added
+  end
+
+  def add_or_move_y_at(a_y, index)
+    was_added = false
+    if @ies.include?(a_y)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_ies())
+        index = number_of_ies() - 1
+      end
+      @ies.delete(a_y)
+      @ies.insert(index, a_y)
+      was_added = true
+    else
+      was_added = add_y_at(a_y, index)
+    end
+    was_added
+  end
+
+  def delete
+    @deleted = true
+    copy_of_ies = @ies.dup
+    @ies.clear
+    copy_of_ies.each do |a_y|
+      a_y.remove_x(self)
+    end
+  end
+
+end
+end
