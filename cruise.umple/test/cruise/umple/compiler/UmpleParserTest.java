@@ -721,6 +721,31 @@ public class UmpleParserTest
   }
 
   @Test
+  public void redefineNamespace()
+  {
+    assertHasWarningsParse("002_redefineNamespace.ump",30,0);
+    assertHasWarningsParse("002_redefineNamespace.ump",30,1);
+    assertNoWarningsParse("002_defaultRedefineNamespace.ump");
+  }
+
+  @Test
+  public void notUsedNamespace()
+  {
+    assertHasWarningsParse("002_notUsedNamespace.ump", new Position("002_notUsedNamespace.ump",1,33,33),31);
+    assertHasWarningsParse("002_notUsedNamespace2.ump", new Position("002_notUsedNamespace2.ump",1,10,10),31);
+    assertHasWarningsParse("002_notUsedNamespace3.ump", new Position("002_notUsedNamespace3.ump",1,10,10),31);
+    assertHasWarningsParse("002_notUsedNamespace4.ump", new Position("002_notUsedNamespace4.ump",1,34,34),31);
+  }
+
+  @Test
+  public void noDefaultNamespace()
+  {
+    assertHasWarningsParse("002_noDefaultNamespace.ump",42,0);
+    assertHasWarningsParse("002_noDefaultNamespace.ump",42,1);
+    assertHasWarningsParse("002_noDefaultNamespace.ump",42,2);
+  }
+
+  @Test
   public void emptyClass()
   {
     assertParse("003_emptyClass.ump");
@@ -1428,7 +1453,8 @@ public class UmpleParserTest
   @Test
   public void externalAssociationWithUnknownClass()
   {
-    assertFailedParse("009_externalAssociationWithUnknownClass.ump", new Position("009_externalAssociationWithUnknownClass.ump",6,7,42));
+    assertFailedParse("009_externalAssociationWithUnknownClass.ump", 31, 0);
+    assertFailedParse("009_externalAssociationWithUnknownClass.ump", 5, 1);
   }
 
   @Test

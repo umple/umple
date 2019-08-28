@@ -41,7 +41,8 @@ useStatement : use [use] ;
 toplevelExtracode : top [top] [[moreCode]]
 
 // Namespaces divide the code into logical groups. See [*NamespaceDirectives*]
-namespace- : namespace [namespace] ;
+namespace- : namespace [namespace] [[namespaceoption]]? ;
+namespaceoption : [=option:--redefine]
 
 // The main top level elements to be found in an Umple file
 entity- : [[requireStatement]] | [[mixsetDefinition]] | [[classDefinition]] | [[traitDefinition]] | [[fixml]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]] | [[templateDefinition]] | [[enumerationDefinition]]

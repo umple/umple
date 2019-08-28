@@ -1,0 +1,30 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package n;
+
+// line 5 "../../../../ump/tmp762034/model.ump"
+// line 9 "../../../../ump/tmp762034/model.ump"
+// line 15 "../../../../ump/tmp762034/model.ump"
+public class A
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public A()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+}

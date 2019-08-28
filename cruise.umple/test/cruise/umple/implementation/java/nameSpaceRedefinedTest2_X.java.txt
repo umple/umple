@@ -1,0 +1,153 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package m;
+import java.util.*;
+
+// line 4 "../../../../ump/tmp762034/model.ump"
+public class X implements J
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X Associations
+  private List<Y> ies;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X()
+  {
+    ies = new ArrayList<Y>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetMany */
+  public Y getY(int index)
+  {
+    Y aY = ies.get(index);
+    return aY;
+  }
+
+  public List<Y> getIes()
+  {
+    List<Y> newIes = Collections.unmodifiableList(ies);
+    return newIes;
+  }
+
+  public int numberOfIes()
+  {
+    int number = ies.size();
+    return number;
+  }
+
+  public boolean hasIes()
+  {
+    boolean has = ies.size() > 0;
+    return has;
+  }
+
+  public int indexOfY(Y aY)
+  {
+    int index = ies.indexOf(aY);
+    return index;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  public static int minimumNumberOfIes()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToManyMethod */
+  public boolean addY(Y aY)
+  {
+    boolean wasAdded = false;
+    if (ies.contains(aY)) { return false; }
+    ies.add(aY);
+    if (aY.indexOfX(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aY.addX(this);
+      if (!wasAdded)
+      {
+        ies.remove(aY);
+      }
+    }
+    return wasAdded;
+  }
+  /* Code from template association_RemoveMany */
+  public boolean removeY(Y aY)
+  {
+    boolean wasRemoved = false;
+    if (!ies.contains(aY))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = ies.indexOf(aY);
+    ies.remove(oldIndex);
+    if (aY.indexOfX(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aY.removeX(this);
+      if (!wasRemoved)
+      {
+        ies.add(oldIndex,aY);
+      }
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  public boolean addYAt(Y aY, int index)
+  {  
+    boolean wasAdded = false;
+    if(addY(aY))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfIes()) { index = numberOfIes() - 1; }
+      ies.remove(aY);
+      ies.add(index, aY);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveYAt(Y aY, int index)
+  {
+    boolean wasAdded = false;
+    if(ies.contains(aY))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfIes()) { index = numberOfIes() - 1; }
+      ies.remove(aY);
+      ies.add(index, aY);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addYAt(aY, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    ArrayList<Y> copyOfIes = new ArrayList<Y>(ies);
+    ies.clear();
+    for(Y aY : copyOfIes)
+    {
+      aY.removeX(this);
+    }
+  }
+
+}
