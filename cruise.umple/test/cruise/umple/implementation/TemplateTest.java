@@ -318,7 +318,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/m/");
     SampleFileWriter.destroy(pathToInput + "/n/");
     
-    // Tear down issue 1315 tests
+    // Tear down issue 834 tests
     SampleFileWriter.destroy(pathToInput + "/First.java");
     SampleFileWriter.destroy(pathToInput + "/Second.java");
     SampleFileWriter.destroy(pathToInput + "/I.java");

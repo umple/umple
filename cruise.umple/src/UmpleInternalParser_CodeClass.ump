@@ -2501,6 +2501,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         if ( b2UB == -1 ) 
         { 
           secondUpperBoundOK = true;
+
         }
         
         if ( b1UB == -1 || (b1LB == 0 && b1UB != 1))
@@ -2518,7 +2519,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         {
           boundsOK = true;
         }
-
+        
         if ( subclassOK && namesOK && boundsOK )
         {
           // then it's a redefinition
