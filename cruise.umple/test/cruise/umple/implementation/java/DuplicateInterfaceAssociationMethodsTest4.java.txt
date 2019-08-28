@@ -5,7 +5,7 @@
 import java.util.*;
 
 // line 2 "model.ump"
-// line 36 "model.ump"
+// line 40 "model.ump"
 public class First implements I
 {
 
@@ -20,9 +20,14 @@ public class First implements I
   // CONSTRUCTOR
   //------------------------
 
-  public First()
+  public First(Second... allSeconds)
   {
     seconds = new ArrayList<Second>();
+    boolean didAddSeconds = setSeconds(allSeconds);
+    if (!didAddSeconds)
+    {
+      throw new RuntimeException("Unable to create First, must have at least 1 seconds. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
   }
 
   //------------------------
@@ -58,10 +63,16 @@ public class First implements I
     int index = seconds.indexOf(aSecond);
     return index;
   }
+  /* Code from template association_IsNumberOfValidMethod */
+  public boolean isNumberOfSecondsValid()
+  {
+    boolean isValid = numberOfSeconds() >= minimumNumberOfSeconds();
+    return isValid;
+  }
   /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfSeconds()
   {
-    return 0;
+    return 1;
   }
   /* Code from template association_AddManyToManyMethod */
   public boolean addSecond(Second aSecond)
@@ -83,11 +94,16 @@ public class First implements I
     }
     return wasAdded;
   }
-  /* Code from template association_RemoveMany */
+  /* Code from template association_AddMStarToMany */
   public boolean removeSecond(Second aSecond)
   {
     boolean wasRemoved = false;
     if (!seconds.contains(aSecond))
+    {
+      return wasRemoved;
+    }
+
+    if (numberOfSeconds() <= minimumNumberOfSeconds())
     {
       return wasRemoved;
     }
@@ -107,6 +123,47 @@ public class First implements I
       }
     }
     return wasRemoved;
+  }
+  /* Code from template association_SetMStarToMany */
+  public boolean setSeconds(Second... newSeconds)
+  {
+    boolean wasSet = false;
+    ArrayList<Second> verifiedSeconds = new ArrayList<Second>();
+    for (Second aSecond : newSeconds)
+    {
+      if (verifiedSeconds.contains(aSecond))
+      {
+        continue;
+      }
+      verifiedSeconds.add(aSecond);
+    }
+
+    if (verifiedSeconds.size() != newSeconds.length || verifiedSeconds.size() < minimumNumberOfSeconds())
+    {
+      return wasSet;
+    }
+
+    ArrayList<Second> oldSeconds = new ArrayList<Second>(seconds);
+    seconds.clear();
+    for (Second aNewSecond : verifiedSeconds)
+    {
+      seconds.add(aNewSecond);
+      if (oldSeconds.contains(aNewSecond))
+      {
+        oldSeconds.remove(aNewSecond);
+      }
+      else
+      {
+        aNewSecond.addFirst(this);
+      }
+    }
+
+    for (Second anOldSecond : oldSeconds)
+    {
+      anOldSecond.removeFirst(this);
+    }
+    wasSet = true;
+    return wasSet;
   }
   /* Code from template association_AddIndexControlFunctions */
   public boolean addSecondAt(Second aSecond, int index)
@@ -153,16 +210,6 @@ public class First implements I
 
   @Override
   public boolean setSecond(Second aSecond){
-          return false;
-  }
-
-  @Override
-  public boolean setSeconds(Second... newSeconds){
-          return false;
-  }
-
-  @Override
-  public boolean isNumberOfSecondsValid(){
           return false;
   }
 

@@ -1,6 +1,6 @@
 class First{
   isA I;
-        *--* Second; 
+        *--0..* Second; 
 }
 class Second{
 }

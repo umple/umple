@@ -1,0 +1,109 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class First implements I
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //First Associations
+  private $second;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aSecond)
+  {
+    $didAddSecond = $this->setSecond($aSecond);
+    if (!$didAddSecond)
+    {
+      throw new Exception("Unable to create first due to second. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getSecond()
+  {
+    return $this->second;
+  }
+
+  public function setSecond($aSecond)
+  {
+    $wasSet = false;
+    if ($aSecond == null)
+    {
+      return $wasSet;
+    }
+    
+    $existingSecond = $this->second;
+    $this->second = $aSecond;
+    if ($existingSecond != null && $existingSecond != $aSecond)
+    {
+      $existingSecond->removeFirst($this);
+    }
+    $this->second->addFirst($this);
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $placeholderSecond = $this->second;
+    $this->second = null;
+    $placeholderSecond->removeFirst($this);
+  }
+
+  public function addSecond(Second $aSecond)
+  {
+          return "";
+  }
+
+  public function getSeconds()
+  {
+          return "";
+  }
+
+  public function setSeconds(Second... $newSeconds)
+  {
+          return "";
+  }
+
+  public function numberOfSeconds()
+  {
+          return "";
+  }
+
+  public function hasSeconds()
+  {
+          return "";
+  }
+
+  public function indexOfSecond(Second $second)
+  {
+          return "";
+  }
+
+  public function isNumberOfSecondsValid()
+  {
+          return "";
+  }
+
+  public function removeSecond(Second $second)
+  {
+          return "";
+  }
+
+}
+?>

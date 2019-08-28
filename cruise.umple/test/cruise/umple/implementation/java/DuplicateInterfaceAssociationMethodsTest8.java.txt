@@ -1,0 +1,100 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+// line 2 "model.ump"
+// line 40 "model.ump"
+public class First implements I
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //First Associations
+  private Second second;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public First(Second aSecond)
+  {
+    if (aSecond == null || aSecond.getFirst() != null)
+    {
+      throw new RuntimeException("Unable to create First due to aSecond. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    second = aSecond;
+  }
+
+  public First()
+  {
+    second = new Second(this);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetOne */
+  public Second getSecond()
+  {
+    return second;
+  }
+
+  public void delete()
+  {
+    Second existingSecond = second;
+    second = null;
+    if (existingSecond != null)
+    {
+      existingSecond.delete();
+    }
+  }
+
+  @Override
+  public boolean addSecond(Second aSecond){
+          return false;
+  }
+
+  @Override
+  public List<Second> getSeconds(){
+          return null;
+  }
+
+  @Override
+  public boolean setSecond(Second aSecond){
+          return false;
+  }
+
+  @Override
+  public boolean setSeconds(Second... newSeconds){
+          return false;
+  }
+
+  @Override
+  public int numberOfSeconds(){
+          return 0;
+  }
+
+  @Override
+  public boolean hasSeconds(){
+          return false;
+  }
+
+  @Override
+  public int indexOfSecond(Second second){
+          return 0;
+  }
+
+  @Override
+  public boolean isNumberOfSecondsValid(){
+          return false;
+  }
+
+  @Override
+  public boolean removeSecond(Second second){
+          return false;
+  }
+
+}

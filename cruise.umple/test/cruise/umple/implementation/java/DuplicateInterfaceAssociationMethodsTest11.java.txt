@@ -5,7 +5,7 @@
 import java.util.*;
 
 // line 2 "model.ump"
-// line 36 "model.ump"
+// line 40 "model.ump"
 public class First implements I
 {
 
@@ -58,54 +58,80 @@ public class First implements I
     int index = seconds.indexOf(aSecond);
     return index;
   }
+  /* Code from template association_IsNumberOfValidMethod */
+  public boolean isNumberOfSecondsValid()
+  {
+    boolean isValid = numberOfSeconds() >= minimumNumberOfSeconds() && numberOfSeconds() <= maximumNumberOfSeconds();
+    return isValid;
+  }
   /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfSeconds()
   {
-    return 0;
+    return 1;
   }
-  /* Code from template association_AddManyToManyMethod */
+  /* Code from template association_MaximumNumberOfMethod */
+  public static int maximumNumberOfSeconds()
+  {
+    return 4;
+  }
+  /* Code from template association_AddMNToOnlyOne */
+  public Second addSecond()
+  {
+    if (numberOfSeconds() >= maximumNumberOfSeconds())
+    {
+      return null;
+    }
+    else
+    {
+      return new Second(this);
+    }
+  }
+
   public boolean addSecond(Second aSecond)
   {
     boolean wasAdded = false;
     if (seconds.contains(aSecond)) { return false; }
-    seconds.add(aSecond);
-    if (aSecond.indexOfFirst(this) != -1)
+    if (numberOfSeconds() >= maximumNumberOfSeconds())
     {
-      wasAdded = true;
+      return wasAdded;
+    }
+
+    First existingFirst = aSecond.getFirst();
+    boolean isNewFirst = existingFirst != null && !this.equals(existingFirst);
+
+    if (isNewFirst && existingFirst.numberOfSeconds() <= minimumNumberOfSeconds())
+    {
+      return wasAdded;
+    }
+
+    if (isNewFirst)
+    {
+      aSecond.setFirst(this);
     }
     else
     {
-      wasAdded = aSecond.addFirst(this);
-      if (!wasAdded)
-      {
-        seconds.remove(aSecond);
-      }
+      seconds.add(aSecond);
     }
+    wasAdded = true;
     return wasAdded;
   }
-  /* Code from template association_RemoveMany */
+
   public boolean removeSecond(Second aSecond)
   {
     boolean wasRemoved = false;
-    if (!seconds.contains(aSecond))
+    //Unable to remove aSecond, as it must always have a first
+    if (this.equals(aSecond.getFirst()))
     {
       return wasRemoved;
     }
 
-    int oldIndex = seconds.indexOf(aSecond);
-    seconds.remove(oldIndex);
-    if (aSecond.indexOfFirst(this) == -1)
+    //first already at minimum (1)
+    if (numberOfSeconds() <= minimumNumberOfSeconds())
     {
-      wasRemoved = true;
+      return wasRemoved;
     }
-    else
-    {
-      wasRemoved = aSecond.removeFirst(this);
-      if (!wasRemoved)
-      {
-        seconds.add(oldIndex,aSecond);
-      }
-    }
+    seconds.remove(aSecond);
+    wasRemoved = true;
     return wasRemoved;
   }
   /* Code from template association_AddIndexControlFunctions */
@@ -143,11 +169,10 @@ public class First implements I
 
   public void delete()
   {
-    ArrayList<Second> copyOfSeconds = new ArrayList<Second>(seconds);
-    seconds.clear();
-    for(Second aSecond : copyOfSeconds)
+    for(int i=seconds.size(); i > 0; i--)
     {
-      aSecond.removeFirst(this);
+      Second aSecond = seconds.get(i - 1);
+      aSecond.delete();
     }
   }
 
@@ -158,11 +183,6 @@ public class First implements I
 
   @Override
   public boolean setSeconds(Second... newSeconds){
-          return false;
-  }
-
-  @Override
-  public boolean isNumberOfSecondsValid(){
           return false;
   }
 

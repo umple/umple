@@ -5,7 +5,7 @@
 import java.util.*;
 
 // line 2 "model.ump"
-// line 36 "model.ump"
+// line 40 "model.ump"
 public class First implements I
 {
 
@@ -63,11 +63,21 @@ public class First implements I
   {
     return 0;
   }
+  /* Code from template association_MaximumNumberOfMethod */
+  public static int maximumNumberOfSeconds()
+  {
+    return 5;
+  }
   /* Code from template association_AddManyToManyMethod */
   public boolean addSecond(Second aSecond)
   {
     boolean wasAdded = false;
     if (seconds.contains(aSecond)) { return false; }
+    if (numberOfSeconds() >= maximumNumberOfSeconds())
+    {
+      return wasAdded;
+    }
+
     seconds.add(aSecond);
     if (aSecond.indexOfFirst(this) != -1)
     {
@@ -107,6 +117,47 @@ public class First implements I
       }
     }
     return wasRemoved;
+  }
+  /* Code from template association_SetOptionalNToMany */
+  public boolean setSeconds(Second... newSeconds)
+  {
+    boolean wasSet = false;
+    ArrayList<Second> verifiedSeconds = new ArrayList<Second>();
+    for (Second aSecond : newSeconds)
+    {
+      if (verifiedSeconds.contains(aSecond))
+      {
+        continue;
+      }
+      verifiedSeconds.add(aSecond);
+    }
+
+    if (verifiedSeconds.size() != newSeconds.length || verifiedSeconds.size() > maximumNumberOfSeconds())
+    {
+      return wasSet;
+    }
+
+    ArrayList<Second> oldSeconds = new ArrayList<Second>(seconds);
+    seconds.clear();
+    for (Second aNewSecond : verifiedSeconds)
+    {
+      seconds.add(aNewSecond);
+      if (oldSeconds.contains(aNewSecond))
+      {
+        oldSeconds.remove(aNewSecond);
+      }
+      else
+      {
+        aNewSecond.addFirst(this);
+      }
+    }
+
+    for (Second anOldSecond : oldSeconds)
+    {
+      anOldSecond.removeFirst(this);
+    }
+    wasSet = true;
+    return wasSet;
   }
   /* Code from template association_AddIndexControlFunctions */
   public boolean addSecondAt(Second aSecond, int index)
@@ -153,11 +204,6 @@ public class First implements I
 
   @Override
   public boolean setSecond(Second aSecond){
-          return false;
-  }
-
-  @Override
-  public boolean setSeconds(Second... newSeconds){
           return false;
   }
 
