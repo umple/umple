@@ -1992,12 +1992,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   }
   
   private boolean isAssociationMethod(UmpleClass uClass, Method method){
-    if (method.getName().length() <= 2 || !uClass.hasAssociations())
+    if (method.getName().length() <= 2 || !uClass.hasAssociations() || method.getIsConstructor() || method.getSource() != Method.Source.fAutoAPI)
       return false;
     String methodName = method.getName();
-    boolean isAssociationMethod = methodName.startsWith("get") || methodName.startsWith("set") || methodName.startsWith("add") || methodName.startsWith("remove") || methodName.startsWith("addOrMove") || methodName.startsWith("has") || methodName.startsWith("indexOf") || methodName.startsWith("minimumNumberOf") || methodName.startsWith("maximumNumberOf") || methodName.startsWith("requiredNumberOf");
+    boolean isAssociationMethod = methodName.startsWith("get") || methodName.startsWith("set") || methodName.startsWith("add") || methodName.startsWith("remove") || methodName.startsWith("addOrMove") || methodName.startsWith("has") || methodName.startsWith("indexOf") || methodName.startsWith("minimumNumberOf") || methodName.startsWith("maximumNumberOf") || methodName.startsWith("requiredNumberOf") || methodName.startsWith("isNumberOf");
 
-    return isAssociationMethod && method.getSource() == Method.Source.fAutoAPI && !method.getIsConstructor();
+    return isAssociationMethod;
   }
 
   // Same association in subclass with a different role name should emit
@@ -4707,6 +4707,17 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     else
     {
       Multiplicity m = end.getMultiplicity();
+      System.out.println("class: "+aClass.getName());
+      System.out.println("multiplicity: "+m);
+      System.out.println("upper: "+m.getUpperBound() );
+      System.out.println("lower: "+m.getLowerBound() );
+      System.out.println("isLowerBoundMany: "+m.isLowerBoundMany() );
+      System.out.println("isLowerBoundNumeric: "+m.isLowerBoundNumeric() );
+      System.out.println("isUpperBoundMany: "+m.isUpperBoundMany() );
+      System.out.println("isUpperBoundNumeric: "+m.isUpperBoundNumeric() );
+      System.out.println("isMany: "+m.isMany() );
+      System.out.println("isOne: "+m.isOne() );
+
       String roleName = end.getRoleName();
       String singularName = model.getGlossary().getSingular(end.getRoleName());
       AssociationEnd otherEnd = (end.getAssociation().indexOfEnd(end)) == 0 ? end.getAssociation().getEnd(1) : end.getAssociation().getEnd(0);
@@ -4738,11 +4749,21 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         addMinimumNumberOfMethod(roleName, aClass);
         if(m.isUpperBoundNumeric())
         {
-          addMaximumNumberOfMethod(roleName, aClass);
-          if(m.getLowerBound() == m.getUpperBound())
-            addRequiredNumberOfMethod(roleName, aClass);
-          addSetManyMethod(roleName, singularName, aClass);
+          if(m.getUpperBound()>1)
+          {
+            addMaximumNumberOfMethod(roleName, aClass);
+
+            if(m.getLowerBound() == m.getUpperBound())
+              addRequiredNumberOfMethod(roleName, aClass);            
+
+            if(m.getLowerBound() > 0)
+              addIsNumberOfValidMethod(roleName, aClass);
+          }
+
+          if(!"1".equals(m.getBound()) && !"1".equals(otherEnd.getMultiplicity().getBound()) && !"*".equals(m.getBound()) && m.getLowerBound()>0)
+              addSetManyMethod(roleName, singularName, aClass);
         }
+
         addNumberOfMethod(roleName, aClass);
         addHasMethod(roleName, aClass);
         
@@ -4838,6 +4859,16 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     String numberOfName = StringFormatter.format("requiredNumberOf{0}", StringFormatter.toPascalCase(name));
     
     Method aMethod = new Method("public", numberOfName, "Integer", false);
+    setUpAutoGenMethod(aMethod);
+    
+    aClass.addMethod(aMethod);
+  }
+     
+  private void addIsNumberOfValidMethod(String name, UmpleClass aClass)
+  {
+    String numberOfName = StringFormatter.format("isNumberOf{0}Valid", StringFormatter.toPascalCase(name));
+    
+    Method aMethod = new Method("public", numberOfName, "Boolean", false);
     setUpAutoGenMethod(aMethod);
     
     aClass.addMethod(aMethod);
