@@ -317,6 +317,17 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/z.rb");
     SampleFileWriter.destroy(pathToInput + "/m/");
     SampleFileWriter.destroy(pathToInput + "/n/");
+    
+    // Tear down issue 834 tests
+    SampleFileWriter.destroy(pathToInput + "/First.java");
+    SampleFileWriter.destroy(pathToInput + "/Second.java");
+    SampleFileWriter.destroy(pathToInput + "/I.java");
+    SampleFileWriter.destroy(pathToInput + "/first.rb");
+    SampleFileWriter.destroy(pathToInput + "/second.rb");
+    SampleFileWriter.destroy(pathToInput + "/i.rb");
+    SampleFileWriter.destroy(pathToInput + "/First.php");
+    SampleFileWriter.destroy(pathToInput + "/Second.php");
+    SampleFileWriter.destroy(pathToInput + "/I.php");
 
    // destroying the object factory
   }
