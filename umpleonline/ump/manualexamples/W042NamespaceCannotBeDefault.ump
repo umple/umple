@@ -38,4 +38,4 @@ interface K{isA J;}
 //and the import text will not be generated for K in Y
 namespace p;
 class X{isA D;}
-interface Y{isA K;}
+//interface Y{isA K;}

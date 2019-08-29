@@ -24,7 +24,7 @@ interface E{}
 interface F{}
 namespace n;
 interface J{isA E;}
-class K{isA K;}
+class K{isA F;}
 
 
 //Here an import text will be generated for A in X
@@ -34,4 +34,4 @@ class K{isA K;}
 //and the import text will not be generated for K in Y
 namespace p;
 class X{isA A;}
-interface Y{isA E;}
+//interface Y{isA E;}
