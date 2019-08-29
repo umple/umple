@@ -1215,7 +1215,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       else
       {
         if(!redefinePackageName.equals("-"))
-          setFailedPosition(classToken.getPosition(), 30, aClass.getName(), currentPackageName);
+          setFailedPosition(classToken.getPosition(), 30, "class", aClass.getName(), currentPackageName);
       }
       
     }    
@@ -1419,7 +1419,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       else
       {
         if(!redefinePackageName.equals("-"))
-          setFailedPosition(interfaceToken.getPosition(), 30, anInterface.getName(), currentPackageName);
+          setFailedPosition(interfaceToken.getPosition(), 30, "interface", anInterface.getName(), currentPackageName);
       }
       
     }    

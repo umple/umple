@@ -6,11 +6,29 @@ noreferences
 <p>Namespaces allow you to group similar entities to promote cohesion, 
 as well as reduce the possibility of name collision. Sub-namespaces are separated using a period (.).</p>
 
-<p> In the following example, the classes Faculty and Student will be in namespace school.admin. In Java they will be generated into the admin package (directory) within the school package. Similarly, class Building will be in the elevator.structure namespace.</p>
+<p> In the first example, the classes Faculty and Student will be in namespace school.admin. In Java they will be generated into the admin package (directory) within the school package. Similarly, class Building will be in the elevator.structure namespace.</p>
+
+<p> A previously defined namespace for an entity can be redefined using the "--redefine" option. If the "--redefine" option is not used, the namespace will not change and a warning will be issued (example 2).</p>
+
+<p> Entities declared before any namespace or after "namespace default;" will be in the default package. Entities declared after "namespace -;" will not be in the last declared namespace. Instead, they will be in the default package. If declared after a non-default namespace, the namespace of an entity in the default namespace will be redefined (example 3).</p>
+
+<p> There are some cases where an entity should be imported thus cannot be in the default package and will automatically be placed in another package (example 4). However, automatic import code generation in interfaces that extend interfaces in other packages is not supported yet.</p>
 
 @@syntax
-[[namespace]]
+[[namespace]] [[namespaceoption]]
 
-@@example
+@@example @@caption Example 1: Sub-namespaces  @@endcaption
 @@source manualexamples/NamespaceDirectives1.ump
+@@endexample
+
+@@example @@caption Example 2: Redefining a namespace  @@endcaption
+@@source manualexamples/NamespaceDirectives2.ump
+@@endexample
+
+@@example @@caption Example 3: Default namespace  @@endcaption
+@@source manualexamples/NamespaceDirectives3.ump
+@@endexample
+
+@@example @@caption Example 4: Automatically redefined namespace  @@endcaption
+@@source manualexamples/NamespaceDirectives4.ump
 @@endexample
