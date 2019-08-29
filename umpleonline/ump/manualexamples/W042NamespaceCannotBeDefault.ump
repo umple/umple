@@ -1,16 +1,16 @@
-//Classes A, B and C are in the 
-//default namespace. Class D is in
-//namespace m. All these classes are
-//linked to each other via associations,
-//therefore, and because they are not all
-//in the same namespace, an import text
-//will be generated. However, many programming
-//languages do not support import from
-//the default namespace so the namespace of
-//C will become m because it is linked to
-//D, and the same goes for B because C is 
-//now in namespace m, and then A is placed 
-//in m because B is now in m.
+// Classes A, B and C are in the 
+// default namespace. Class D is in
+// namespace m. All these classes are
+// linked to each other via associations,
+// therefore, and because they are not all
+// in the same namespace, an import text
+// will be generated. However, many programming
+// languages do not support import from
+// the default namespace so the namespace of
+// C will become m because it is linked to
+// D, and the same goes for B because C is 
+// now in namespace m, and then A is placed 
+// in m because B is now in m.
 
 class A{}
 class B{*--*A;}
@@ -20,10 +20,10 @@ class D{*--* C;}
 namespace -;
 
 
-//The same issue occurs when an
-//entity in a non-default namespace
-//extends or implements an entity
-//in the default namespace
+// The same issue occurs when an
+// entity in a non-default namespace
+// extends or implements an entity
+// in the default namespace
 
 interface E{}
 interface F{isA E;}
@@ -32,10 +32,11 @@ namespace n;
 interface K{isA J;}
 
 
-//Here an import text will be generated for D in X
-//because D is in a different namespace
-//This feature is not yet supported for interfaces
-//and the import text will not be generated for K in Y
+// Here an import text will be generated for D in X
+// because D is in a different namespace
+// This feature is not yet supported for interfaces
+// and the import text will not be generated for K in Y
+
 namespace p;
 class X{isA D;}
-//interface Y{isA K;}
+// interface Y{isA K;}
