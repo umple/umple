@@ -61,9 +61,9 @@ class GeneratorHelper
     {
       for (CodeInjection inject : allCodeInjections)
       {
-	if(inject.hasCodeLabel())
+	      if(inject.hasCodeLabel())
           continue;// handle the case when labels are used. // Do nothing  
-        String comment = "//";//(inject.getSnippet().getCode("Ruby") != null)?"#":"//";
+        String comment = RubyGenerator.class.isInstance(generator)?"#":"//";
         String positionString = "";
         Position p = inject.getPosition();
         Position codeP = inject.getCodePosition();
