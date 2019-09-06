@@ -166,7 +166,12 @@ $output = $dataHandle->readData('model.ump');
       </div>
       <div class="inRow">
         <p class="pagedescription">
-          Draw on the right, write (Umple) model code on the left, analyse and generate code from models.<br/>
+        <span class="pretext">
+          Draw on the right, write (Umple) model code on the left, analyse and generate code from models.
+        <br/></span>
+        <span id="gdprtext" class="pretext">        
+          This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="http://privacy.umple.org" target="privacy">Click here to learn about privacy.</a>
+        <br/></span>
 
     <span style="font-size: 30%; white-space:nowrap;">
     <a class="button2" href="http://dl.umple.org" target="dlpage" title="Go to the page that gives instructions on how to download Umple for use in Docker, or Eclipse or on the command line">Run in Docker for speed, or download</a>&nbsp;

@@ -17,6 +17,7 @@ Action.diagramInSync = true;
 Action.freshLoad = false;
 Action.gentime = new Date().getTime();
 Action.savedCanonical = "";
+Action.gdprHidden = false;
 
 Action.clicked = function(event)
 {
@@ -1213,6 +1214,11 @@ Action.setCaretPosition = function(line)
   if(isNaN(line-0)) 
   {
     // It is not a number so must be a special hidden command
+    if(line=="gd") 
+    {
+      jQuery('#gdprtext').show();
+      Action.gdprHidden = false;      
+    }
     if(line=="av") 
     {
       // Special backdoor to turn on experimental features
@@ -2459,3 +2465,8 @@ function showTab(event)
   jQuery('#innerGeneratedCodeRow').hide();
 }
 
+Action.hidegdpr = function() 
+{
+  jQuery('#gdprtext').hide();
+  Action.gdprHidden = true;
+}

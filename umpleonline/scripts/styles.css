@@ -5,14 +5,15 @@ body {
 p, ol, ul, div, h1, h2, h3, h4, b { 
   font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; color: #000000; 
 }
-p.pagedescription { margin-left:5px; }
+p.pagedescription { margin-left:5px; margin-top: 0px;}
 
 /* UNIVERSAL LAYOUT STYLES */ 
 .inRow { float: left; }
 .row { clear: both; overflow: auto; }
 
 /* HEADER */
-.logo { margin-top: 10px; }
+.logo { margin-top: 0px; }
+.pretext { line-height: 1.5em; }
 
 /* MAIN APPLICATION CONTAINER */
 #mainApplication { overflow: hidden; }
