@@ -253,9 +253,17 @@ class UmpleInternalParser
     }
     // TODO Under development
     
-    else if (token.is("classDefinition"))
+    else if (token.is("classDefinition") || token.is("staticClass"))
     {
+      boolean isStatic = false;
+      if(token.is("staticClass"))
+      {
+        token = token.getSubToken("classDefinition");
+        isStatic = true;
+      }
       UmpleClass childClass = analyzeClass(token);
+      childClass.setIsStatic(isStatic);
+
       Token p = token.getParentToken();
       for (Token t: p.getSubTokens()) {
         if (t.getValue() == aClass.getName()) {
@@ -280,6 +288,8 @@ class UmpleInternalParser
           }
         }
       }
+      // add Inner class to the aClass. 
+      aClass.addSubclass(childClass); //what is it, Is it a static or not 
     }
     else if (token.is("constantDeclaration"))
     {

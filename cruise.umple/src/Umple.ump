@@ -695,6 +695,9 @@ class UmpleClass
 
   // The Umple Class's super class (if there is one).
   * subclasses -- 0..1 UmpleClass extendsClass;
+  
+  //isStatic if the inner class is static
+  boolean isStatic = false;
 
   * subClasses -- * UmpleTrait extendsTraits;
 
