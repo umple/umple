@@ -113,6 +113,14 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals("if (((getFlag()!=getFlag())||(getFlag()||getFlag())))\n{\n  {0}\n}", gen.translate("on", t3.getGuard()));
     Assert.assertEquals("if ((!(!getFlag()&&getX())&&(getX()||getX())))\n{\n  {0}\n}", gen.translate("on", t4.getGuard()));
   }
+
+  // Issue 1492
+  @Test
+  public void verifyDuplicateGuards()
+  {
+    assertHasWarning("DuplicateGuards.ump",0,70);
+    assertHasWarning("DuplicateGuards.ump",1,70);
+  }
   
   // Issue 796
   @Test
@@ -2723,6 +2731,10 @@ public class UmpleParserStateMachineTest
     assertHasWarning(filename, -1, -1, null);
   }
 
+  private void assertHasWarning(String filename, int expectedWarningIndex, int expectedError) {
+    assertHasWarning(filename, expectedWarningIndex, expectedError, null);
+  }
+
   private void assertHasWarning(String filename, int expectedWarningIndex, int expectedError, Position expectedPosition)
   {
     File file = new File(pathToInput, filename);
@@ -2755,7 +2767,9 @@ public class UmpleParserStateMachineTest
       Assert.assertNotNull(parser.getParseResult().getErrorMessage(expectedWarningIndex));
       Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(expectedWarningIndex).getErrorType().getErrorCode());
       System.out.println(">>" + parser.getParseResult().getErrorMessage(expectedWarningIndex).getPosition().getOffset());
-      Assert.assertEquals(expectedPosition, parser.getParseResult().getErrorMessage(expectedWarningIndex).getPosition());
+      if (expectedPosition != null) {
+        Assert.assertEquals(expectedPosition, parser.getParseResult().getErrorMessage(expectedWarningIndex).getPosition());
+      }
     }
   }
 

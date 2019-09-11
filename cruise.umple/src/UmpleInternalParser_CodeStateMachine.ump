@@ -1582,7 +1582,7 @@ class UmpleInternalParser
    private Token getExpressionOperator(Token expression, Integer startIndex)
    {
      Integer operatorPosition = startIndex + OPERATOR_POSITION;
-     if (operatorPosition < expression.getSubTokens().size())
+     if (operatorPosition < expression.getSubTokens().size()-1)
      {
        Token operator = expression.getSubToken(operatorPosition);
        String operatorName = operator.getName();
