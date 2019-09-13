@@ -251,19 +251,31 @@ class UmpleInternalParser
       analyzeMultilineComment(token);
       shouldConsumeComment = false;
     }
-    // TODO Under development
-    
-    else if (token.is("classDefinition") || token.is("staticClass"))
+    else if (token.is("innerClass"))
     {
+      
       boolean isStatic = false;
-      if(token.is("staticClass"))
+      if(token.getSubToken("innerStaticClass") != null)
       {
-        token = token.getSubToken("classDefinition");
+        token = token.getSubToken("innerStaticClass");
         isStatic = true;
       }
+      else
+      {
+        token = token.getSubToken("innerNonStaticClass");
+      }
+      token = token.getSubToken("classDefinition");
       UmpleClass childClass = analyzeClass(token);
       childClass.setIsStatic(isStatic);
-
+      //childClass.setIsInner(true);
+      // add Inner class to the aClass. 
+      aClass.addInnerClass(childClass); //what is it, Is it a static or not 
+    }
+    // TODO Under development
+    
+    else if (token.is("classDefinition"))
+    {
+      UmpleClass childClass = analyzeClass(token);
       Token p = token.getParentToken();
       for (Token t: p.getSubTokens()) {
         if (t.getValue() == aClass.getName()) {
@@ -288,8 +300,6 @@ class UmpleInternalParser
           }
         }
       }
-      // add Inner class to the aClass. 
-      aClass.addSubclass(childClass); //what is it, Is it a static or not 
     }
     else if (token.is("constantDeclaration"))
     {

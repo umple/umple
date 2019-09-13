@@ -3207,9 +3207,14 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       {
         aClass.setName(className+"Impl");
           }
+      if(uClass.hasOuterClass())
+      {
+        return ; // inner classes should not be writen in single files.
+      }
     }
     ILang language = getLanguageFor(aClass);
     String contents = language.getCode(getModel(), aClass);
+
     aClass.setName(className);
     String path = StringFormatter.addPathOrAbsolute( 
                   getModel().getUmpleFile().getPath(), 

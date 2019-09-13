@@ -697,7 +697,10 @@ class UmpleClass
   * subclasses -- 0..1 UmpleClass extendsClass;
   
   //isStatic if the inner class is static
+  // The inner classes contained within the Umple class.
+  0..1 outerClass --  0..* UmpleClass innerClasses;
   boolean isStatic = false;
+//  boolean isInner = false;
 
   * subClasses -- * UmpleTrait extendsTraits;
 
