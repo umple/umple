@@ -30,7 +30,7 @@ public class TestTemplateTest extends ClassTemplateTest{
 	  {
 	    super.tearDown();
 	    
-	    //SampleFileWriter.destroy(pathToInput + "/test/Test.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/test/Test.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/test");
 	    SampleFileWriter.destroy(pathToInput + "/test/FooTest.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/Bar1Test.umpt");
@@ -172,7 +172,7 @@ public class TestTemplateTest extends ClassTemplateTest{
 	   
 	    
 	  }
-	  
+	  /*
 	  @Test @Ignore 
 	  public void traitAssertion_extendedTraits()
 	  {
@@ -183,7 +183,7 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/TraitAssertion_extendedTrait_ModelTest.umpt")).exists());
 	   
 	    
-	  }
+	  }*/
 	  
 	  @Test
 	  public void traitAssertion_SameTestMultiplTraits()
