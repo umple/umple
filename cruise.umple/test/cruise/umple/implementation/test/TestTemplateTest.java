@@ -30,8 +30,8 @@ public class TestTemplateTest extends ClassTemplateTest{
 	  {
 	    super.tearDown();
 	    
-	    SampleFileWriter.destroy(pathToInput + "/test/Test.umpt");
-	    SampleFileWriter.destroy(pathToInput + "/test/test");
+	    //SampleFileWriter.destroy(pathToInput + "/test/Test.umpt");
+	    //SampleFileWriter.destroy(pathToInput + "/test/test");
 	    SampleFileWriter.destroy(pathToInput + "/test/FooTest.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/Bar1Test.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/Bar2Test.umpt");
@@ -189,7 +189,7 @@ public class TestTemplateTest extends ClassTemplateTest{
 	  public void traitAssertion_SameTestMultiplTraits()
 	  {
 	    language = "Test";
-	    assertUmpleTemplateFor("test/traitAssertion_SameTestMultipleTraits.ump","test/testTraitAssertion_SameTestMultipleTraits.test.txt");
+	    assertUmpleTemplateFor("test/TraitAssertion_SameTestMultipleTraits.ump","test/testTraitAssertion_SameTestMultipleTraits.test.txt");
 	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
 	    createUmpleSystem(pathToInput, "test/TraitAssertion_SameTestMultipleTraits.ump");
 	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/TraitAssertion_SameTestMultipleTraits_ModelTest.umpt")).exists());

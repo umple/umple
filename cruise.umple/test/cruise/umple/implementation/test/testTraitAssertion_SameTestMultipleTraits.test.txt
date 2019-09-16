@@ -3,7 +3,7 @@
 
 
 
-////---- Tests for  traitAssertion_SameTestMultipleTraits ----/////
+////---- Tests for  TraitAssertion_SameTestMultipleTraits ----/////
 Test Person {
   //tests for :firstName
 
