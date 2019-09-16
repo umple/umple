@@ -22,6 +22,7 @@ This file generates Tests for attributes for a given class. Once all the attribu
   String typeName = at.getType() == null ? "String" : at.getType();
   String upperBound = at.getIsList() ? " upperBound=\"-1\"" : "";
   String attrName = StringFormatter.toPascalCase(at.getName());
+  //appendln(realSb, " ");
   	#>> //tests for :<<=at.getName()>>
 
   		test attribute_<<=at.getName()>> {

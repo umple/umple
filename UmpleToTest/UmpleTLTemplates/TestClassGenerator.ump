@@ -4,6 +4,8 @@ use members_AllAttributes.ump;
 use members_AllStateMachines.ump;
 use members_AllMethods.ump;
 use members_AllTestCases.ump;
+use members_Before.ump;
+use members_After.ump;  
 use depends.ump;
 
 
@@ -40,6 +42,10 @@ class TestClassGenerator {
   GeneratedClass gClass = uClass.getGeneratedClass();
   TestGenerator gen = new TestGenerator();
   gen.setModel(model);
+  String isAbstract ="";
+  
+   if (uClass.getIsAbstract()) { isAbstract = "abstract "; }
+   
   
   //appendln(realSb, gen.translate("beforeCode", uClass));
 
@@ -67,6 +73,7 @@ class TestClassGenerator {
 <<# if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).getIsInline()) {append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else { append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} } #>>
 
 ////---- Tests for  <<=model.getUmpleFile().getFileName().subSequence(0, model.getUmpleFile().getFileName().length()-4)>> ----/////
+
 <<#
 	String coverageCriteria = "";
 	for (GenerateTarget tr : model.getGenerates() )
@@ -77,10 +84,11 @@ class TestClassGenerator {
     		}
     	}
  #>>
-Test <<=uClass.getName() >> {
- <<@ UmpleToTest.members_AllAttributes >>
+<<=isAbstract>>Test <<=uClass.getName() >> {
+<<@ UmpleToTest.members_Before >> <<@ UmpleToTest.members_AllAttributes >>
  <<@ UmpleToTest.members_AllTestCases >> 
- <<@ UmpleToTest.members_AllMethods >> 
+ <<@ UmpleToTest.members_AllMethods >>
+ <<@ UmpleToTest.members_After >> 
 <<# //appendln(realSb, gen.translate("afterCode", uClass));#>> 
 
 }

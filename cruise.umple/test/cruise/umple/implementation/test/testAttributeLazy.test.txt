@@ -1,6 +1,5 @@
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
 
 
 
@@ -10,11 +9,11 @@ Test LazyA {
 
       test attribute_id {
     
-    AssertTrue( lazya.setId("RandomString1"));
-    AssertTrue( lazya.getId() =="RandomString1");
-    AssertTrue( lazya.setId("RandomString1"));
-    AssertTrue( lazya.getId("RandomString1"));
-    AssertTrue( lazya.getId() =="RandomString1");
+    assertTrue( lazya.setId("RandomString1"));
+    assertTrue( lazya.getId() =="RandomString1");
+    assertTrue( lazya.setId("RandomString2"));
+    assertTrue( lazya.getId()=="RandomString2");
+    assertFalse( lazya.getId() =="RandomString1");
              
 
           
@@ -27,6 +26,7 @@ AssertNotNull (id);
 
 
   
+ 
    
 
 }

@@ -1,0 +1,50 @@
+
+class Person {  
+  
+   testSequence ts { checkName -> checkStatus ; }
+  
+  test checkStatus {
+        //something
+        Person p1 ("id");
+        id = "id" ;
+        String id2 = p1.getGate(id, "name") ;
+        String id2 = p1.getGate() ;
+        String id2 = getGate() ;
+        String id2 = getGate(id) ;
+        p1.openGarage(p1);
+        openGarage(p1);        
+        before assertFalse(firstName == "Orlean");
+        this.setId("id",id);
+        //assertion comment
+        after assertFalse(firstName == "something");
+        /*multiline comment 
+      line comment*/
+        }
+        
+         before test checkPower {
+          //test code or test class setups, this testcase will be tagged @Before      
+        }
+        
+        
+        test checkName {
+        //test code 
+        
+        }
+        
+        
+     garageDoor{
+     
+     open{
+     }
+     
+     close{
+     }
+     
+     
+     }
+     
+       
+  
+}  
+ 
+  

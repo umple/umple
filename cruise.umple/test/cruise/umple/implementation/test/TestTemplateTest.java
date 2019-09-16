@@ -137,6 +137,165 @@ public class TestTemplateTest extends ClassTemplateTest{
 	  }
 	  
 	  
+	  @Test
+	  public void classAssertion()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/ClassAssertion.ump","test/testClassAssertion.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/ClassAssertion.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/ClassAssertionTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void traitAssertion()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/TraitAssertion.ump","test/testTraitAssertion.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/TraitAssertion.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/TraitAssertion_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void traitAssertion_multiplTraits()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/TraitAssertion_multipleTraits.ump","test/testTraitAssertion_multipleTraits.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/TraitAssertion_multipleTraits.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/TraitAssertion_multipleTraits_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test @Ignore 
+	  public void traitAssertion_extendedTraits()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/TraitAssertion_extendedTrait.ump","test/testTraitAssertion_multipleTraits.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/TraitAssertion_extendedTrait.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/TraitAssertion_extendedTrait_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void traitAssertion_SameTestMultiplTraits()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/traitAssertion_SameTestMultipleTraits.ump","test/testTraitAssertion_SameTestMultipleTraits.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/TraitAssertion_SameTestMultipleTraits.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/TraitAssertion_SameTestMultipleTraits_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void mixsetTest()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/MixsetTest.ump","test/testMixsetTest.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/MixsetTest.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/MixsetTest_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void mixsetTest_action()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/MixsetTest_action.ump","test/testMixsetTest_action.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/MixsetTest_action.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/MixsetTest_action_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  
+	  @Test
+	  public void mixsetTest_multiple()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/MixsetTest_multiple.ump","test/testMixsetTest_multiple.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/MixsetTest_multiple.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/MixsetTest_multiple_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void mixsetTest_SameTestMultipleMixsets()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/MixsetTest_SameTestMultipleMixsets.ump","test/testMixsetTest_SameTestMultipleMixsets.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/MixsetTest_SameTestMultipleMixsets.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/MixsetTest_SameTestMultipleMixsets_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  
+	  @Test
+	  public void testcaseAction()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/TestCaseAction.ump","test/testTestcaseAction.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/TestCaseAction.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/TestCaseAction_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void testcaseAction_trait()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/TestCaseAction_trait.ump","test/testTestcaseAction_trait.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/TestCaseAction_trait.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/TestCaseAction_trait_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void interfaceTest()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/interfaceTest.ump","test/testInterfaceTest.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/interfaceTest.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/interfaceTest_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  
+	  @Test
+	  public void abstractTest()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/TestCase_AbstractTest.ump","test/testAbstractTest.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/TestCase_AbstractTest.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/TestCase_AbstractTest_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
 	  
 	 
 	  

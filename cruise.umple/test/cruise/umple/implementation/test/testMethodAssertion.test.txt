@@ -1,6 +1,5 @@
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 
@@ -10,8 +9,8 @@ Test MethodAssertion {
 
       test attribute_number {
     
-      AssertTrue( methodassertion.setNumber(123)));
-      AssertTrue( methodassertion.getNumber() == 123));
+      assertTrue( methodassertion.setNumber(123)));
+      assertTrue( methodassertion.getNumber() == 123));
           
 	}
 
@@ -19,39 +18,45 @@ Test MethodAssertion {
 
       test attribute_number2 {
     
-      AssertTrue( methodassertion.setNumber2(123)));
-      AssertTrue( methodassertion.getNumber2() == 123));
+      assertTrue( methodassertion.setNumber2(123)));
+      assertTrue( methodassertion.getNumber2() == 123));
           
 	}
 
 
- 
+      //------------------
+      //User-defined Tests
+      //------------------
+
       
       test calculateSomething {
-      AssertTrue ( id == "seomthing" ) ;
-        }
-        
-    
-      
-      test calculateSomething {
-      AssertTrue ( number == 123 ) ;
-        }
-        
-    
-      
-      test calculateSomething {
-      AssertTrue ( number, number2 ) ;
-        }
-        
-     
-  
-      test calculateSomething ()
-      {
+        assertFalse(number == 2222);
+        assertEqual(number, number2);
         assertTrue(id == "seomthing");
         assertFalse(number == 123);
         assertEqual(number, number2);
-          
-       }
-         
+        assertFalse(number == 9999);
+        assertEqual(number, number2);
+        }
+      
+      
+      
+      
+        
+    
+      
+      test calculateSomethingTest {
+        assertTrue(id == "something");
+        assertFalse(number == 444);
+        assertEqual(number, number2);
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
 
 }

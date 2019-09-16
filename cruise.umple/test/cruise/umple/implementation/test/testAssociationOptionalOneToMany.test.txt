@@ -1,6 +1,5 @@
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 
@@ -10,22 +9,22 @@ Test A {
 
       test attribute_att1 {
     
-    AssertTrue( a.setAtt1("RandomString1"));
-    AssertTrue( a.getAtt1() =="RandomString1");
-    AssertTrue( a.setAtt1("RandomString1"));
-    AssertTrue( a.getAtt1("RandomString1"));
-    AssertTrue( a.getAtt1() =="RandomString1");
+    assertTrue( a.setAtt1("RandomString1"));
+    assertTrue( a.getAtt1() =="RandomString1");
+    assertTrue( a.setAtt1("RandomString2"));
+    assertTrue( a.getAtt1()=="RandomString2");
+    assertFalse( a.getAtt1() =="RandomString1");
              
 	}
 
 
   
+ 
    
 
 }
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 
@@ -35,16 +34,17 @@ Test B {
 
       test attribute_att2 {
     
-    AssertTrue( b.setAtt2("RandomString1"));
-    AssertTrue( b.getAtt2() =="RandomString1");
-    AssertTrue( b.setAtt2("RandomString1"));
-    AssertTrue( b.getAtt2("RandomString1"));
-    AssertTrue( b.getAtt2() =="RandomString1");
+    assertTrue( b.setAtt2("RandomString1"));
+    assertTrue( b.getAtt2() =="RandomString1");
+    assertTrue( b.setAtt2("RandomString2"));
+    assertTrue( b.getAtt2()=="RandomString2");
+    assertFalse( b.getAtt2() =="RandomString1");
              
 	}
 
 
   
+ 
    
 
 }
