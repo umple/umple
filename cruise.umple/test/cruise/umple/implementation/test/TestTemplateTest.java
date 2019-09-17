@@ -31,7 +31,7 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    super.tearDown();
 	    
 	    //SampleFileWriter.destroy(pathToInput + "/test/Test.umpt");
-	    //SampleFileWriter.destroy(pathToInput + "/test/test");
+	    SampleFileWriter.destroy(pathToInput + "/test/test");
 	    SampleFileWriter.destroy(pathToInput + "/test/FooTest.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/Bar1Test.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/Bar2Test.umpt");
