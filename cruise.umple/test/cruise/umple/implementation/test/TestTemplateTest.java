@@ -184,8 +184,8 @@ public class TestTemplateTest extends ClassTemplateTest{
 	   
 	    
 	  }*/
-	  
-	  @Test
+	  /*
+	  @Test 
 	  public void traitAssertion_SameTestMultiplTraits()
 	  {
 	    language = "Test";
@@ -297,6 +297,6 @@ public class TestTemplateTest extends ClassTemplateTest{
 	  }
 	  
 	  
-	 
+	 */
 	  
 }
