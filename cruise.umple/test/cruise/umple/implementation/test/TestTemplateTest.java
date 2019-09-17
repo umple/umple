@@ -128,16 +128,16 @@ public class TestTemplateTest extends ClassTemplateTest{
 	  public void methodAssertion()
 	  {
 	    language = "Test";
-	    assertUmpleTemplateFor("test/methodAssertion.ump","test/testMethodAssertion.test.txt");
+	    assertUmpleTemplateFor("test/MethodAssertion.ump","test/testMethodAssertion.test.txt");
 	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
-	    createUmpleSystem(pathToInput, "test/methodAssertion.ump");
+	    createUmpleSystem(pathToInput, "test/MethodAssertion.ump");
 	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/MethodAssertionTest.umpt")).exists());
 	   
 	    
 	  }
 	  
 	  
-	  @Test
+	  /*@Test
 	  public void classAssertion()
 	  {
 	    language = "Test";
@@ -147,7 +147,7 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/ClassAssertionTest.umpt")).exists());
 	   
 	    
-	  }
+	  }*/
 	  
 	  @Test
 	  public void traitAssertion()

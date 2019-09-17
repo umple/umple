@@ -3,7 +3,7 @@
 
 
 
-////---- Tests for  methodAssertion ----/////
+////---- Tests for  MethodAssertion ----/////
 Test MethodAssertion {
   //tests for :number
 
