@@ -1,4 +1,4 @@
-class OuterClass
+class OuterClass_3
 {
   inner class InnerClassAAAA
   {

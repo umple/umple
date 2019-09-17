@@ -1,4 +1,4 @@
-class OuterClass
+class OuterClass_1
 {
   static int y=0;
 
