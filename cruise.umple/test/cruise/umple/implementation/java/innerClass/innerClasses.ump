@@ -1,0 +1,15 @@
+class OuterClass
+{
+  inner class InnerClassAAAA
+  {
+  
+  }
+  static class InnerStaticClass 
+  {
+  
+    
+  }
+}
+
+
+

@@ -1,0 +1,12 @@
+class OuterClass
+{
+  inner class InnerClass
+  {
+    int x;
+  
+  }
+
+}
+
+
+
