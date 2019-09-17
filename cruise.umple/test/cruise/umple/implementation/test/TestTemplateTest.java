@@ -139,7 +139,7 @@ public class TestTemplateTest extends ClassTemplateTest{
 	  }*/
 	  
 	  
-	  /*@Test
+	  @Test
 	  public void classAssertion()
 	  {
 	    language = "Test";
@@ -149,7 +149,7 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/ClassAssertionTest.umpt")).exists());
 	   
 	    
-	  }*/
+	  }
 	  
 	  @Test
 	  public void traitAssertion()
@@ -186,7 +186,7 @@ public class TestTemplateTest extends ClassTemplateTest{
 	   
 	    
 	  }*/
-	  /*
+	  
 	  @Test 
 	  public void traitAssertion_SameTestMultiplTraits()
 	  {
@@ -299,6 +299,6 @@ public class TestTemplateTest extends ClassTemplateTest{
 	  }
 	  
 	  
-	 */
+	 
 	  
 }
