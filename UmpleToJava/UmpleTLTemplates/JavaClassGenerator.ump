@@ -112,11 +112,14 @@ String classPackageName=(uClass.getPackageName().length() == 0 ? "" : uClass.get
     appendln(realSb,NL+"@XmlAccessorType(XmlAccessType.FIELD)");
 }
 #>>
-<<# append(realSb, "{0}", "\n"); 
+<<#
+append(realSb, "{0}", "\n");
 if(! uClass.hasOuterClass())
   append(realSb, "{0} ", "public");
 else if (uClass.getIsStatic())
-  append(realSb, "{0} ", "static");
+  {
+    append(realSb, "{0} ", "static"); 
+  }
 
 if (uClass.getIsAbstract()) { append(realSb, "{0} ", "abstract"); } #>>class <<=uClass.getName()>><<= gen.translate("isA",uClass) >><<#
 boolean hasParentInterface=uClass.hasParentInterface();
@@ -223,11 +226,10 @@ for (StateMachine smq : uClass.getStateMachines())
 
   private void getInnerClasses(StringBuilder realSb, UmpleModel model, UmpleClass uClass, boolean isFirst)
   {
-    //StringBuilder,UmpleModel,UmpleClass,boolean
     for(UmpleClass innerClass: uClass.getInnerClasses())
     {
       String innerClassContent = getCode(model, innerClass);
-      append(realSb,innerClassContent);
+      append(realSb, GeneratorHelper.doIndent(innerClassContent, "  "));
     }
   }
   private void getEnumerationCode(StringBuilder realSb, UmpleModel model, UmpleClass uClass, boolean isFirst)
