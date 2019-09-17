@@ -112,7 +112,13 @@ String classPackageName=(uClass.getPackageName().length() == 0 ? "" : uClass.get
     appendln(realSb,NL+"@XmlAccessorType(XmlAccessType.FIELD)");
 }
 #>>
-public <<# if (uClass.getIsAbstract()) { append(realSb, "{0} ", "abstract"); } #>>class <<=uClass.getName()>><<= gen.translate("isA",uClass) >><<#
+<<# append(realSb, "{0}", "\n"); 
+if(! uClass.hasOuterClass())
+  append(realSb, "{0} ", "public");
+else if (uClass.getIsStatic())
+  append(realSb, "{0} ", "static");
+
+if (uClass.getIsAbstract()) { append(realSb, "{0} ", "abstract"); } #>>class <<=uClass.getName()>><<= gen.translate("isA",uClass) >><<#
 boolean hasParentInterface=uClass.hasParentInterface();
 
 if(uClass.getNeedsDefaultInterface())
@@ -210,7 +216,7 @@ for (StateMachine smq : uClass.getStateMachines())
   getDeleteCode(realSb, model,uClass,gClass,gen,isFirst,false);
   getExtraMethodsCode(realSb, model,uClass,gClass,gen,isFirst);
   getQueuedMethodClass(realSb, model, uClass, gen);
-  //getInnerClasses(realSb, model,uClass,isFirst);
+  getInnerClasses(realSb, model,uClass,isFirst);
   getAllExtraCode(realSb, model,uClass,gClass,gen,isFirst);
   return realSb;
     }
