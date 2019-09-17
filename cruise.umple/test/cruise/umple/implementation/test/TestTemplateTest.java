@@ -124,6 +124,8 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/BTest.umpt")).exists());
 	    
 	  }
+	  
+	  /*
 	  @Test
 	  public void methodAssertion()
 	  {
@@ -134,7 +136,7 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/MethodAssertionTest.umpt")).exists());
 	   
 	    
-	  }
+	  }*/
 	  
 	  
 	  /*@Test
