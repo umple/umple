@@ -19,8 +19,8 @@ public class InnerClassTest extends TemplateTest {
     tracerPath = null;
   }
 	
-	@Test
-	public void TestInnerStaticClass()
+  @Test
+  public void TestInnerStaticClass()
   {
     assertUmpleTemplateFor("/innerStatic.ump", "/innerStatic.java.txt", "OuterClass_1");
   }
