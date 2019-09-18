@@ -1,6 +1,8 @@
 generate Test;
 
 
+use MethodAssertion2.ump;
+
 class MethodAssertion {
 
 	Integer number = 321;
@@ -9,10 +11,22 @@ class MethodAssertion {
 
 	void calculateSomething ()
 	{
+		test calculateSomething{ 
 		assertTrue (id == "seomthing");
 		assertFalse (number == 123);
+		assertEqual (number, number2);		
+	    }
+
+	    test calculateSomethingTest{ 
+		assertTrue (id == "something");
+		assertFalse (number == 444);
+		assertEqual (number, number2);		
+	    }
+
+	    assertFalse (number == 9999);
 		assertEqual (number, number2);
-		assertMethod (getNumer());
+
+
 
 		// some extra code for the method 
 		statement;

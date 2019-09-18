@@ -1,4 +1,3 @@
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE ${last.version} modeling language!*/
 
@@ -10,11 +9,11 @@ Test Foo {
 
       test attribute_testAttribute1 {
     
-    AssertTrue( foo.setTestAttribute1("RandomString1"));
-    AssertTrue( foo.getTestAttribute1() =="RandomString1");
-    AssertTrue( foo.setTestAttribute1("RandomString1"));
-    AssertTrue( foo.getTestAttribute1("RandomString1"));
-    AssertTrue( foo.getTestAttribute1() =="RandomString1");
+    assertTrue( foo.setTestAttribute1("RandomString1"));
+    assertTrue( foo.getTestAttribute1() =="RandomString1");
+    assertTrue( foo.setTestAttribute1("RandomString2"));
+    assertTrue( foo.getTestAttribute1()=="RandomString2");
+    assertFalse( foo.getTestAttribute1() =="RandomString1");
              
 	}
 
@@ -22,11 +21,11 @@ Test Foo {
 
       test attribute_testAttribute2 {
     
-    AssertTrue( foo.setTestAttribute2("RandomString1"));
-    AssertTrue( foo.getTestAttribute2() =="RandomString1");
-    AssertTrue( foo.setTestAttribute2("RandomString1"));
-    AssertTrue( foo.getTestAttribute2("RandomString1"));
-    AssertTrue( foo.getTestAttribute2() =="RandomString1");
+    assertTrue( foo.setTestAttribute2("RandomString1"));
+    assertTrue( foo.getTestAttribute2() =="RandomString1");
+    assertTrue( foo.setTestAttribute2("RandomString2"));
+    assertTrue( foo.getTestAttribute2()=="RandomString2");
+    assertFalse( foo.getTestAttribute2() =="RandomString1");
              
 	}
 
@@ -34,11 +33,11 @@ Test Foo {
 
       test attribute_testAttribute3 {
     
-    AssertTrue( foo.setTestAttribute3("RandomString1"));
-    AssertTrue( foo.getTestAttribute3() =="RandomString1");
-    AssertTrue( foo.setTestAttribute3("RandomString1"));
-    AssertTrue( foo.getTestAttribute3("RandomString1"));
-    AssertTrue( foo.getTestAttribute3() =="RandomString1");
+    assertTrue( foo.setTestAttribute3("RandomString1"));
+    assertTrue( foo.getTestAttribute3() =="RandomString1");
+    assertTrue( foo.setTestAttribute3("RandomString2"));
+    assertTrue( foo.getTestAttribute3()=="RandomString2");
+    assertFalse( foo.getTestAttribute3() =="RandomString1");
              
 	}
 
@@ -46,16 +45,17 @@ Test Foo {
 
       test attribute_testAttribute4 {
     
-    AssertTrue( foo.setTestAttribute4("RandomString1"));
-    AssertTrue( foo.getTestAttribute4() =="RandomString1");
-    AssertTrue( foo.setTestAttribute4("RandomString1"));
-    AssertTrue( foo.getTestAttribute4("RandomString1"));
-    AssertTrue( foo.getTestAttribute4() =="RandomString1");
+    assertTrue( foo.setTestAttribute4("RandomString1"));
+    assertTrue( foo.getTestAttribute4() =="RandomString1");
+    assertTrue( foo.setTestAttribute4("RandomString2"));
+    assertTrue( foo.getTestAttribute4()=="RandomString2");
+    assertFalse( foo.getTestAttribute4() =="RandomString1");
              
 	}
 
 
   
+ 
    
 
 }

@@ -1,0 +1,46 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  ClassAssertion ----/////
+Test ClassAssertion {
+  //tests for :number
+
+      test attribute_number {
+    
+      assertTrue( classassertion.setNumber(123)));
+      assertTrue( classassertion.getNumber() == 123));
+          
+	}
+
+ //tests for :number2
+
+      test attribute_number2 {
+    
+      assertTrue( classassertion.setNumber2(123)));
+      assertTrue( classassertion.getNumber2() == 123));
+          
+	}
+
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test calculateSomething {
+        assertTrue(id == "seomthing");
+        assertFalse(number == 123);
+        assertEqual(number, number2);
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}

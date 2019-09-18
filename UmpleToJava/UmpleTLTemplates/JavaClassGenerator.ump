@@ -164,6 +164,8 @@ else if(uClass.getIsInternalSerializable())//issue#1444
   } 
 }
 
+
+
 boolean implementsRunnable = false;
 
 for (StateMachine smq : uClass.getStateMachines())
@@ -194,7 +196,7 @@ for (StateMachine smq : uClass.getStateMachines())
   
 #>>
 {
-  <<#
+  <<#   
   getEnumerationCode(realSb, model, uClass, isFirst);
   getMemberCode(realSb, model,uClass,gClass,gen,isFirst);
   getConstructorCode(realSb, model,uClass,gClass,gen,isFirst, false);
@@ -383,12 +385,25 @@ for (StateMachine smq : uClass.getStateMachines())
     String isTransient="";
     if (uClass.getIsDistributed() && model.getDistributePattern()==0)
       isTransient=" transient ";
-
+   
+  // comment with the name of the test cases the class has 
+  if(uClass.hasUmpleTestCases()){
+  append(realSb,"\n\n  //------------------------\n");
+  append(realSb,"  // {0} Testcases: \n", uClass.getName());
+  append(realSb,"  //.........................\n");
+  for(UmpleTestCase tc : uClass.getUmpleTestCases()){
+  append(realSb,"  // test  {0} \n", tc.getName());      
+  }
+  append(realSb,"  //------------------------\n");
+   }  
+   
   #>><<@ UmpleToJava.members_AllStatics >><<@ UmpleToJava.members_AllAttributes >><<@ UmpleToJava.members_AllStateMachines >><<@ UmpleToJava.members_AllDoActivities >><<@ UmpleToJava.members_AllAssociations >><<@ UmpleToJava.members_AllHelpers >>
   <<#return realSb.toString();
     }
   private UmpleClass globalUmpleClass = null;
   public Map<String,UncaughtException> uncaughtExceptions = new HashMap<String,UncaughtException>();
+   
+  
   
     private String getConstructorCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
   {

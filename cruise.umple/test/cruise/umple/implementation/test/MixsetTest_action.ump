@@ -1,0 +1,19 @@
+mixset CustomTest1 {  
+    
+  class Person {
+  test checkName { 
+     assertFalse (firstName == "Orlean");
+     this.setId ( "kingEdward");
+     assertTrue (firstName == "KingEdward");        
+    } 
+   }
+}
+
+class Person {  
+  x;  
+  
+}
+
+use CustomTest1;  
+ 
+        

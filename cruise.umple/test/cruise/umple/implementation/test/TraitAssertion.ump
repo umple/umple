@@ -1,0 +1,15 @@
+trait CustomTest1 {  
+  firstName;  
+  
+  test checkName { 
+     assertFalse (firstName == "Orlean");
+     assertTrue (firstName == "KingEdward");        
+    } 
+    }
+
+class Person {  
+  isA CustomTest1;  
+  
+}  
+ 
+        

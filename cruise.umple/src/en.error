@@ -264,4 +264,10 @@
 # Message to emit when you are parsing a construct but are not yet processing it in a sensible way/
 9999: 5, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Feature under development. '{0}' found and ignored. processed as: '{1}' ;
 
+# Messages related to test in Umple model
+6001: 4, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Missing implementation for tests found in interface. Class {0} must implement : {1};
+6002: 2, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Error parsing test case . {0} ;
+6003: 2, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Error parsing assertion . {0} ;
+6004: 2, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Error parsing test inside method . {0} ;
+6005: 2, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Error parsing test case in interface . {0} ;
 

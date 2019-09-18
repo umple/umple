@@ -1,4 +1,3 @@
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE ${last.version} modeling language!*/
 
@@ -10,16 +9,17 @@ Test SubMentor2 {
 
       test attribute_subName {
     
-    AssertTrue( submentor2.setSubName("RandomString1"));
-    AssertTrue( submentor2.getSubName() =="RandomString1");
-    AssertTrue( submentor2.setSubName("RandomString1"));
-    AssertTrue( submentor2.getSubName("RandomString1"));
-    AssertTrue( submentor2.getSubName() =="RandomString1");
+    assertTrue( submentor2.setSubName("RandomString1"));
+    assertTrue( submentor2.getSubName() =="RandomString1");
+    assertTrue( submentor2.setSubName("RandomString2"));
+    assertTrue( submentor2.getSubName()=="RandomString2");
+    assertFalse( submentor2.getSubName() =="RandomString1");
              
 	}
 
 
   
+ 
    
 
 }

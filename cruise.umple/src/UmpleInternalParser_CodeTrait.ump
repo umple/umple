@@ -211,6 +211,13 @@ class UmpleInternalParser
       analyzeMixsetBodyToken(token);
    
     }
+    
+    else if (token.is("testCase"))
+    {
+      analyzeTraitTestCaseToken(token, aTrait);
+   
+    }
+    
     else if (token.is("inlineComment"))
     {
       analyzeComment(token, false);
@@ -756,6 +763,7 @@ class UmpleInternalParser
           if (getParseResult().getWasSuccess()) copyMethodsFromTraitToClass(uClass);
           if (getParseResult().getWasSuccess()) copyAssociationsFromTraitToClass(uClass);
           if (getParseResult().getWasSuccess()) copyStateMachinesFromTraiToClass(uClass);
+          if (getParseResult().getWasSuccess()) copyTestCasesFromTraitsToClass(uClass);
           if (getParseResult().getWasSuccess()) {
             for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
               recursiveApplyTraits(uClass,uTrait);
@@ -1088,7 +1096,14 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 		// copy Postcondition
 		for(Postcondition aPostcondition : inTrait.getPostConds()) {
 			inClass.addPostCond(aPostcondition);
-		}						
+		}	
+		
+		for (UmpleTestCase tc: inTrait.getUmpleTestCases())
+		{
+			//copyTestCasesFromTraitsToClass(inClass);
+			//inClass.addUmpleTestCase(tc);
+			//copyTestCasefromExtendedTrait(inClass, inTrait);
+		}					
 
 		//copy attributes
 		/*

@@ -300,6 +300,11 @@ class UmpleInternalParser
       analyzeClassTestCase(token,aClass);
     }
     
+    else if (token.is("testSequence"))
+    {
+      analyzeClassTestSequence(token,aClass);
+    }
+    
     else if (token.getValue("mixsetDefinition") != null)  {
       analyzeMixsetBodyToken(token);
     }
@@ -353,23 +358,6 @@ class UmpleInternalParser
     }
   }
   
-  private void analyzeClassTestCase(Token token, UmpleClass aClass) {
-  UmpleTestCase uTestCase = new UmpleTestCase ("", aClass);
-  UmpleAssertion assertion = new UmpleAssertion("","","","","",uTestCase);
-  
-  uTestCase.setName(token.getValue("testCaseName"));
-  
-  for (Token subToken : token.getSubTokens())
-  {
-    if (subToken.getName().equals("assertion"))
-    {
-      assertion.setAssertCode(token.getValue("code"));
-        //assertion.setType("true");
-        assertion.setLevel("method");
-      uTestCase.addUmpleAssertion(assertion);
-    }
-  }
-  }
   
   
   
@@ -1545,6 +1533,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         setFailedPosition(childToken.getPosition(), 901);
         analyzeConstant(childToken, aInterface);    
       }
+      
+      else if (childToken.is("interfaceTest"))
+      {
+        //setFailedPosition(childToken.getPosition(), 901);
+        analyzeInterfaceTest(childToken, aInterface);    
+      }
+      
       else if (childToken.is("displayColor"))
       {  // Note: See near clone in UmpleInternalParser_CodeLayout.ump
         String theColor = childToken.getValue("colorValue");
@@ -3247,10 +3242,62 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
     
       else if (token.is("assertion")){ 
-        if (uElement instanceof UmpleClass){
-          analyzeMethodAssertion(token, (UmpleClass) uElement,meth, aMethod);
+        boolean testcaseExist= false;
+    	  int index=0;
+    	  
+    	  if (uElement instanceof UmpleClass){
+
+    		  for(UmpleTestCase tc: ((UmpleClass) uElement).getUmpleTestCases())
+    		  {
+    			  if (tc.getName().equals(aMethod.getName()))
+    			  {
+    				  testcaseExist= true;
+    				  index = ((UmpleClass) uElement).indexOfUmpleTestCase(tc);
+    			  }
+    		  }
+
+    		  if(!testcaseExist)
+    		  {
+    			  UmpleTestCase uTestCase = new UmpleTestCase(aMethod.getName(),0);
+    			  analyzeMethodAssertion(token, (UmpleClass) uElement,meth, aMethod,uTestCase);
+    			 ((UmpleClass) uElement).addUmpleTestCase(uTestCase);
+    		  }
+    		  else {
+    			  analyzeMethodAssertion(token, (UmpleClass) uElement,meth, aMethod,((UmpleClass) uElement).getUmpleTestCase(index));
+
+    		  }
+           
+          
         }  
       }
+
+      else if (token.is("testCase")){ 
+          if (uElement instanceof UmpleClass){
+        	  boolean testcaseExist= false;
+        	  int index=0;
+        	  
+        	  for(UmpleTestCase tc: ((UmpleClass) uElement).getUmpleTestCases())
+    		  {
+    			  if (tc.getName().equals(token.getValue("testCaseName")))
+    			  {
+    				  testcaseExist= true;
+    				  index = ((UmpleClass) uElement).indexOfUmpleTestCase(tc);
+    			  }
+    		  }
+
+    		  if(!testcaseExist)
+    		  {
+    			  UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName"),0);
+    			  analyzeMethodTestCase(token, (UmpleClass) uElement,meth, aMethod,uTestCase);
+    			   ((UmpleClass) uElement).addUmpleTestCase(uTestCase);
+    		  }
+    		  else {
+    			  analyzeMethodTestCase(token, (UmpleClass) uElement,meth, aMethod,((UmpleClass) uElement).getUmpleTestCase(index));
+
+    		  }
+            
+          }  
+        }
     }
     meth.setCodeblock(cb);
     meth.setImplementationPositions(implementationPositions);
@@ -3422,37 +3469,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
 
 
-  private void analyzeMethodAssertion (Token token, UmpleElement uElement,MethodBody meth, Method aMethod)
-  {
-      UmpleTestCase uTestCase = new UmpleTestCase(aMethod.getName(),(UmpleClass)uElement);  
-    UmpleAssertion assertion = new UmpleAssertion("","","","","",uTestCase); 
-
-    if (token.getValue("assertType").equals("assertTrue"))
-    {
-      assertion.setAssertCode(token.getValue("code"));
-      assertion.setType("true");
-      assertion.setLevel("method");
-      meth.addUmpleAssertion(assertion);
-    }
-    
-    if (token.getValue("assertType").equals("assertFalse"))
-    {
-      assertion.setAssertCode(token.getValue("code"));
-      assertion.setType("false");
-      assertion.setLevel("method");
-      meth.addUmpleAssertion(assertion);
-    }
-    
-    if (token.getValue("assertType").equals("assertEqual"))
-    {
-      assertion.setAssertCode(token.getValue("code"));
-      assertion.setType("equal");
-      assertion.setLevel("method");
-      meth.addUmpleAssertion(assertion);
-    }
-    
   
-  }
 
   /*
    * Analyzes a method header, from a token flagged to be one, to populate a method instance for things such as the

@@ -1,6 +1,5 @@
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 
@@ -10,11 +9,11 @@ Test A {
 
       test attribute_id {
     
-    AssertTrue( a.setId("RandomString1"));
-    AssertTrue( a.getId() =="RandomString1");
-    AssertTrue( a.setId("RandomString1"));
-    AssertTrue( a.getId("RandomString1"));
-    AssertTrue( a.getId() =="RandomString1");
+    assertTrue( a.setId("RandomString1"));
+    assertTrue( a.getId() =="RandomString1");
+    assertTrue( a.setId("RandomString2"));
+    assertTrue( a.getId()=="RandomString2");
+    assertFalse( a.getId() =="RandomString1");
              
 	}
 
@@ -22,8 +21,8 @@ Test A {
 
       test attribute_number {
     
-      AssertTrue( a.setNumber(123)));
-      AssertTrue( a.getNumber() == 123));
+      assertTrue( a.setNumber(123)));
+      assertTrue( a.getNumber() == 123));
           
 	}
 
@@ -31,8 +30,8 @@ Test A {
 
       test attribute_number2 {
     
-      AssertTrue( a.setNumber2(null)));
-      AssertTrue( a.getNumber2() == null));
+      assertTrue( a.setNumber2(null)));
+      assertTrue( a.getNumber2() == null));
           
 	}
 
@@ -40,19 +39,19 @@ Test A {
 
       test attribute_number3 {
     
-      AssertTrue( a.setNumber3(123)));
-      AssertTrue( a.getNumber3() == 123));
+      assertTrue( a.setNumber3(123)));
+      assertTrue( a.getNumber3() == 123));
           
 	}
 
 
   
+ 
    
 
 }
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 
@@ -62,11 +61,11 @@ Test B {
 
       test attribute_name {
     
-    AssertTrue( b.setName("RandomString1"));
-    AssertTrue( b.getName() =="RandomString1");
-    AssertTrue( b.setName("RandomString1"));
-    AssertTrue( b.getName("RandomString1"));
-    AssertTrue( b.getName() =="RandomString1");
+    assertTrue( b.setName("RandomString1"));
+    assertTrue( b.getName() =="RandomString1");
+    assertTrue( b.setName("RandomString2"));
+    assertTrue( b.getName()=="RandomString2");
+    assertFalse( b.getName() =="RandomString1");
              
 	}
 
@@ -74,16 +73,17 @@ Test B {
 
       test attribute_address {
     
-    AssertTrue( b.setAddress("RandomString1"));
-    AssertTrue( b.getAddress() =="RandomString1");
-    AssertTrue( b.setAddress("RandomString1"));
-    AssertTrue( b.getAddress("RandomString1"));
-    AssertTrue( b.getAddress() =="RandomString1");
+    assertTrue( b.setAddress("RandomString1"));
+    assertTrue( b.getAddress() =="RandomString1");
+    assertTrue( b.setAddress("RandomString2"));
+    assertTrue( b.getAddress()=="RandomString2");
+    assertFalse( b.getAddress() =="RandomString1");
              
 	}
 
 
   
+ 
    
 
 }

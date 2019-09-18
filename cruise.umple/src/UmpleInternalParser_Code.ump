@@ -379,6 +379,18 @@ class UmpleInternalParser
     {
       postTokenEnumerationAnalysis();
     }
+    
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenInterfaceTestAnalysis();
+    }
+    
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenAbstractTestAnalysis();
+    }
+    
+    
   }
   
   //This is used for the cases that will be resolved by traits and we don't need to see those warnings.
@@ -531,3 +543,4 @@ use UmpleInternalParser_CodeParserHandlers.ump;
 use UmpleInternalParser_CodeEnumeration.ump;
 use UmpleInternalParser_CodeMixset.ump;
 use UmpleInternalParser_CodeRequireStatement.ump;
+use UmpleInternalParser_CodeTest.ump;
