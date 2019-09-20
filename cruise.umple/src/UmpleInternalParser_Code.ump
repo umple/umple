@@ -390,6 +390,11 @@ class UmpleInternalParser
       postTokenAbstractTestAnalysis();
     }
     
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenTestSequeceAnalysis();
+    }
+    
     
   }
   

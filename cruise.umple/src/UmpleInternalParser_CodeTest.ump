@@ -20,6 +20,45 @@ private void analyzeTraitTestCaseToken(Token token, UmpleTrait aTrait){
 	  copyTestCasefromExtendedTrait(token, aTrait);
 	  
   }
+  
+  /////////////////
+  //post check for test sequence and test cases
+  // 
+  private void postTokenTestSequeceAnalysis() {
+	// TODO check for test cases not found in test sequence and raise a warning 
+	  
+	  for(UmpleClass uClass : model.getUmpleClasses())
+	  {
+		  if (uClass.hasTestSequences())
+		  {
+			  for (TestSequence ts : uClass.getTestSequences())
+			  {
+			  if(uClass.hasUmpleTestCases())
+			  {
+				  
+				  for (UmpleTestCase tc : uClass.getUmpleTestCases())
+				  {
+					  for (String tsTestCase : ts.getTests())
+					  {
+					if(!tsTestCase.equals(tc.getName()))
+					{
+						getParseResult().addErrorMessage(new ErrorMessage(6007,uClass.getPosition(0),uClass.getName(),ts.getName(),tc.getName()));
+					}
+						  
+				  }
+				  }
+			  }
+			  else {
+				  // test sequence found but class has no test cases
+				  getParseResult().addErrorMessage(new ErrorMessage(6006,uClass.getPosition(0),uClass.getName(),ts.getName()));
+				  
+			  }
+			  
+			  }
+		  }
+	  }
+	
+}
 
 /////////////////////////
 // This method copies testcases found in trait into the class 

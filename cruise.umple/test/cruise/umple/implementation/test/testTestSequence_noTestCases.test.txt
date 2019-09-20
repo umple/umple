@@ -1,0 +1,14 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This test code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  TestSequence_noTestCases ----/////
+Test Person {
+ 
+
+  
+ 
+   
+
+}
