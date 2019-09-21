@@ -77,6 +77,9 @@ interfaceTest : test [~testName] ;
 testSequence : testSequence [~sequenceName] { [[testSequenceEntry]] }
 testSequenceEntry : [~name] ( -> [~name] )* ;
 
+
+
+
 // Details of associations: See manual page [*AssociationDefinition*]
 
 association : [=modifier:immutable]?  [[associationEnd]] [=arrow:--|->|<-|><|<@>-|-<@>] [[associationEnd]] ;
