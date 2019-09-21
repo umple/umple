@@ -4,6 +4,8 @@ class Util{
 
 depend java.util.Random;
 depend java.lang.reflect.Method;
+depend cruise.umple.testparser.TestParser;
+depend  java.io.File;
 
 		
 
@@ -49,6 +51,73 @@ public Boolean assertMethod (Class cls, String methodName)
     	}
     	return hasMethod;    	
     }
+
+ public TestModel createUmpleTestSystem(String path, String filename,String lang)
+   {
+	  
+	   
+	   
+
+	 String language =lang;
+     //File file = new File(pathToInput+"/" + path, filename);
+     File file = new File(path+filename);
+     String grName = "";
+     TestModel aTestModel = new TestModel(null, null, null, null, null,null, null, language);
+     TestParser parser = new TestParser(null, "", file, 0);
+     //ParseResult result = new ParseResult(false);
+     //InputStream is = this.getClass().getResourceAsStream("mbt_parsing.grammar");
+     //ClassLoader classLoader = getClass().getClassLoader();
+     //File grammarFile = new File(classLoader.getResource("mbt_parsing.grammar").getFile());
+     ////system.out.println(grammarFile.tos);
+     //parser.setGrammarFile(path+"src/ump/mbt_parsing.grammar");
+     //InputStream in = getClass().getResourceAsStream("/mbt_parsing.grammar"); 
+     //BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+     //File grFile = new File (getClass().getResource("mbt_parsing.grammar").getPath().replace("file:", ""));
+     //File grFile = new File ();
+     //grName = file.getName();
+     
+     //grName = getClass().getResource("mbt_parsing.grammar").getFile();
+     ////system.out.println(Util.class.getResource("mbt_parsing.grammar").getFile());
+     //parser.setGrammarFile(Util.class.getResource("mbt_parsing.grammar").getFile().toString());
+     ////system.out.println(parser.getGrammarFile());
+     parser.setTestModelFile(file);
+     //parser.setTestModelFile(file);
+     
+     
+     ////system.out.println(path);
+     parser.prepare();
+     aTestModel = parser.getATestModel();
+     //system.out.println(file.getAbsoluteFile());
+     aTestModel.setCodeLang(language);
+     //system.out.println(aTestModel.getCodeLang());
+     if(aTestModel.getCodeLang().equals("JUnit"))
+     {
+     
+     //language = lang;
+     TestCaseJUnitGenerator junitGenerator = new TestCaseJUnitGenerator(null, null, null, null, null);
+	     junitGenerator.setTestModel(aTestModel);
+	     junitGenerator.setPath(path);
+	     junitGenerator.writeFile();
+     }
+     if(aTestModel.getCodeLang().equals("PhpUnit"))
+     {
+     	TestCasePhpUnitGenerator phpGenerator = new TestCasePhpUnitGenerator(null, null, null, null, null); 
+         phpGenerator.setTestModel(aTestModel);
+         phpGenerator.setPath(path);
+         phpGenerator.writeFile();
+   }
+     if(aTestModel.getCodeLang().equals("RubyUnit"))
+     {
+     	TestCaseRubyUnitGenerator rubyGenerator = new TestCaseRubyUnitGenerator(null, null, null, null, null); 
+         rubyGenerator.setTestModel(aTestModel);
+         rubyGenerator.setPath(path);
+         rubyGenerator.writeFile();
+     }
+     
+     
+     
+     return aTestModel;
+   }
 
 
 
