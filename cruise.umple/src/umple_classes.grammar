@@ -62,7 +62,7 @@ methodThrowsExceptions : throws [~exception] ( , [~exception] )*
 parameterList : OPEN_ROUND_BRACKET ([[parameter]] ( , [[parameter]] )* )? CLOSE_ROUND_BRACKET
 parameter : [[typedName]]
 
-testCase : [=isTimed:before|after]? [=isOverride:override]? test [~testCaseName] { ( [[assertion]] | [[testAction]] | [[testInit]] | [[testInitAtt]] | [[testInitAttWithMethodCall]] | [[comment]] )* }
+testCase : [=isTimed:before|after]? [=isConcrete:JUnit|PhpUnit|RubyUnit]? [=isOverride:override]? test [~testCaseName] { ( [[assertion]] | [[testAction]] | [[testInit]] | [[testInitAtt]] | [[testInitAttWithMethodCall]] | [[comment]] )* }
 assertion : [=isTimed:before|after]? [=assertType:assertTrue|assertFalse|assertEqual|assertNull|assertMethod] OPEN_ROUND_BRACKET [**code] CLOSE_ROUND_BRACKET ;
 testAction : [~objectName] ( (.)[~methodName] )? OPEN_ROUND_BRACKET  [[testActionParameterList]] CLOSE_ROUND_BRACKET ;
 testMethodCall : [~objectName] ( (.)[~methodName] )? OPEN_ROUND_BRACKET  [[testActionParameterList]] CLOSE_ROUND_BRACKET

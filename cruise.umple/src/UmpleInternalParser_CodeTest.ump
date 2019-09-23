@@ -209,6 +209,16 @@ private void analyzeTestCase(Token token, UmpleElement uElement, UmpleTestCase u
     for (Token subToken : token.getSubTokens())
 	    {
 	     
+	      if(subToken.getName().equals("isConcrete"))
+	      {	    	
+	         if( subToken.getValue("isConcrete")!= null)
+	         {
+	        	 uTestCase.setIsConcrete(true);
+	        	 uTestCase.setConcreteLang(subToken.getValue("isConcrete"));
+	         }
+	         
+	      }
+	      
 	      if(subToken.getName().equals("testAction"))
 	      {	    	
 	        analyzeTestAction(subToken,uElement,uTestCase);	      	    	

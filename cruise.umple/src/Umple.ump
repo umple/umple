@@ -264,6 +264,8 @@ class UmpleTestCase {
 	int locOrder;
 	boolean isTimed = false;
 	boolean isOverride = false;
+	boolean isConcrete = false;
+	String concreteLang = "";
 	0..1 -- * UmpleAssertion;	
 	0..1 -- * TestAction;
 	0..1 -- * TestInit;	

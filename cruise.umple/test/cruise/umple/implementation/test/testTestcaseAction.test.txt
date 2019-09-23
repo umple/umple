@@ -64,7 +64,7 @@ Test Person {
         
     
       
-      test checkName {
+      JUnit test checkName {
         //test code
         }
       

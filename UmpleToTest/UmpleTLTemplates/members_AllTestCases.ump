@@ -6,6 +6,9 @@ members_AllTestCases <<!<</*members_AllTestCases*/>><<#
 		{
 		boolean hasBeforeAssertions=false;
 		boolean hasAfterAssertions=false;
+		String concreteLang="";
+		
+		
 		
 		
 		
@@ -13,10 +16,13 @@ members_AllTestCases <<!<</*members_AllTestCases*/>><<#
 		appendln(realSb, "     //------------------");
 	    appendln(realSb, "      //User-defined Tests");
 	    appendln(realSb, "      //------------------");
-		for (UmpleTestCase uTestCase :uClass.getUmpleTestCases())
-		{#>>
+		for (UmpleTestCase uTestCase :uClass.getUmpleTestCases())			
+		{
+		if(uTestCase.getIsConcrete())
+		{ concreteLang = uTestCase.getConcreteLang()+" ";   }
+		#>>
 			
-			test <<=uTestCase.getName()>> {
+			<<=concreteLang>>test <<=uTestCase.getName()>> {
 			  <<#
 			  
 			for (UmpleAssertion uAssert : uTestCase.getUmpleAssertions())
