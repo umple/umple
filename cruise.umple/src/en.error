@@ -270,4 +270,6 @@
 6003: 2, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Error parsing assertion . {0} ;
 6004: 2, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Error parsing test inside method . {0} ;
 6005: 2, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Error parsing test case in interface . {0} ;
+6006: 4, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Class {0} has test sequence {1} but no tests were detected. ;
+6006: 4, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Class {0}:  test case {2} is not included in test sequence {1}. ;
 

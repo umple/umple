@@ -25,7 +25,7 @@
 		  		</java>
 		  		<java jar="${umple.stable.jar}" fork="true" failonerror="true">
 		  		  <arg value="UmpleTToRubyUnit/UmpleTLTemplates/Master.ump"/>
-		  		</java>
+		  		</java>				
       
 		      </parallel>
 		  </target>
@@ -55,11 +55,26 @@
 	  		
 	      </parallel>
 	  </target>
+	  	  
 		  
 	  <target name="CompilingUmpleTestParser">
 		  <echo message="Compiling Umple Test Parser !"/>
 	 
 	 </target>
+	 
+     <!-- 
+       Build
+       Compile Umple files for Mutation test generator
+      -->
+	 
+    <target name="GeneratingMutationTestGenerator">  
+	  <echo message="Generating Umple Mutation Test Generator !"/>
+      <parallel>
+        <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+          <arg value="cruise.umple.mutation/src/Master.ump"/>
+        </java>  		
+      </parallel>
+  </target>
 		
 		
 	 
@@ -70,8 +85,7 @@
 	 </copy>
      <copy todir="cruise.umple.test-parser/src-gen/cruise/umple/testparser/" overwrite="true">
 	  <fileset dir="cruise.umple.test-parser/src/src-gen/cruise/umple/testparser/" excludes=".git* UmpleTToRubyUnit.java" />
-	 </copy>
-	 				  
+	 </copy>	 				  
     </target>
 	
 	
@@ -93,6 +107,7 @@
 				   <antcall target="CopyingXUnitGenerators" />
 			       <antcall target="GeneratingTestParser" />
 				   <antcall target="CompilingUmpleTestParser" />
+				   <antcall target="GeneratingMutationTestGenerator" />
    				   <antcall target="CopyingTestParserFiles" />
 				   <antcall target="testXUnitTemplateTest" />
 				   

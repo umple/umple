@@ -1,11 +1,13 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.25.0-963d2bd modeling language!*/
+/*This code was generated using the UMPLE 1.29.1.4657.40ea68fec modeling language!*/
 
 package cruise.umple.testgenerator;
 import java.util.Random;
-import cruise.umple.*;
+import java.lang.reflect.Method;
+import cruise.umple.testparser.TestParser;
+import java.io.File;
 
-// line 3 "../../../Utility.ump"
+// line 3 "../../../../ump/Utility.ump"
 public class Util
 {
 
@@ -51,7 +53,7 @@ public class Util
    * Random String Generator
    * ------------------------
    */
-  // line 17 "../../../Utility.ump"
+  // line 20 "../../../../ump/Utility.ump"
    public String randomGenerator(Random random, String characters, int length){
     char[] text = new char[length];
     for (int i = 0; i < length; i++)
@@ -60,9 +62,6 @@ public class Util
     }
     return new String(text);
   }
-   
- 
-   
 
 
   /**
@@ -70,11 +69,92 @@ public class Util
    * Random Int Generator
    * ------------------------
    */
-  // line 30 "../../../Utility.ump"
+  // line 33 "../../../../ump/Utility.ump"
    public int randomGenerator(int range){
     int text = random.nextInt(range);
 	  	
 	return text;
+  }
+
+
+  /**
+   * ------------------------
+   * AssertMethod // check if a method is present in a class using reflection, example: assertMethod(foo.class, "methodName")
+   * ------------------------
+   */
+  // line 45 "../../../../ump/Utility.ump"
+   public Boolean assertMethod(Class cls, String methodName){
+    Boolean hasMethod = false;
+    	Method[] methods = cls.getMethods();
+    	for (Method m : methods )
+    	{
+    		if ( m.getName() == methodName)
+    		{ hasMethod = true; }
+    	}
+    	return hasMethod;
+  }
+
+  // line 61 "../../../../ump/Utility.ump"
+   public TestModel createUmpleTestSystem(String path, String filename, String lang){
+    String language =lang;
+     //File file = new File(pathToInput+"/" + path, filename);
+     File file = new File(path+filename);
+     String grName = "";
+     TestModel aTestModel = new TestModel(null, null, null, null, null,null, null, language);
+     TestParser parser = new TestParser(null, "", file, 0);
+     //ParseResult result = new ParseResult(false);
+     //InputStream is = this.getClass().getResourceAsStream("mbt_parsing.grammar");
+     //ClassLoader classLoader = getClass().getClassLoader();
+     //File grammarFile = new File(classLoader.getResource("mbt_parsing.grammar").getFile());
+     ////system.out.println(grammarFile.tos);
+     //parser.setGrammarFile(path+"src/ump/mbt_parsing.grammar");
+     //InputStream in = getClass().getResourceAsStream("/mbt_parsing.grammar"); 
+     //BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+     //File grFile = new File (getClass().getResource("mbt_parsing.grammar").getPath().replace("file:", ""));
+     //File grFile = new File ();
+     //grName = file.getName();
+     
+     //grName = getClass().getResource("mbt_parsing.grammar").getFile();
+     ////system.out.println(Util.class.getResource("mbt_parsing.grammar").getFile());
+     //parser.setGrammarFile(Util.class.getResource("mbt_parsing.grammar").getFile().toString());
+     ////system.out.println(parser.getGrammarFile());
+     parser.setTestModelFile(file);
+     //parser.setTestModelFile(file);
+     
+     
+     ////system.out.println(path);
+     parser.prepare();
+     aTestModel = parser.getATestModel();
+     //system.out.println(file.getAbsoluteFile());
+     aTestModel.setCodeLang(language);
+     //system.out.println(aTestModel.getCodeLang());
+     if(aTestModel.getCodeLang().equals("JUnit"))
+     {
+     
+     //language = lang;
+     TestCaseJUnitGenerator junitGenerator = new TestCaseJUnitGenerator(null, null, null, null, null);
+	     junitGenerator.setTestModel(aTestModel);
+	     junitGenerator.setPath(path);
+	     junitGenerator.writeFile();
+     }
+     if(aTestModel.getCodeLang().equals("PhpUnit"))
+     {
+     	TestCasePhpUnitGenerator phpGenerator = new TestCasePhpUnitGenerator(null, null, null, null, null); 
+         phpGenerator.setTestModel(aTestModel);
+         phpGenerator.setPath(path);
+         phpGenerator.writeFile();
+   }
+     if(aTestModel.getCodeLang().equals("RubyUnit"))
+     {
+     	TestCaseRubyUnitGenerator rubyGenerator = new TestCaseRubyUnitGenerator(null, null, null, null, null); 
+         rubyGenerator.setTestModel(aTestModel);
+         rubyGenerator.setPath(path);
+         rubyGenerator.writeFile();
+     }
+     
+     
+     
+     return aTestModel;
   }
 
 

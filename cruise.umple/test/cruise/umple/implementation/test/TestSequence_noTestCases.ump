@@ -1,0 +1,10 @@
+
+class Person {  
+  
+   testSequence ts { checkName -> checkStatus ; }
+      
+       
+  
+}  
+ 
+  

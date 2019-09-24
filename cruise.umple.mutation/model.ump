@@ -1,0 +1,28 @@
+use model2.ump;
+
+class A {
+
+String id;
+Integer number;
+Float number3;
+Double numer2;
+
+}
+
+class B {
+
+0..1 -- * A;
+
+1 -- * C;
+
+}
+
+
+class C {
+	
+1 -- 2..4 D;
+	
+	
+}
+
+class D {}
