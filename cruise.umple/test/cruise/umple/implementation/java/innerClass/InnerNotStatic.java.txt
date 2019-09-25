@@ -1,0 +1,79 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+// line 1 "InnerStatic.ump"
+public class OuterClass_2
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public OuterClass_2()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+  /*PLEASE DO NOT EDIT THIS CODE*/
+  /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+  
+  
+  
+  // line 3 "InnerStatic.ump"
+  public class InnerClass
+  {
+  
+    //------------------------
+    // MEMBER VARIABLES
+    //------------------------
+  
+    //InnerClass Attributes
+    private int x;
+  
+    //------------------------
+    // CONSTRUCTOR
+    //------------------------
+  
+    public InnerClass(int aX)
+    {
+      x = aX;
+    }
+  
+    //------------------------
+    // INTERFACE
+    //------------------------
+  
+    public boolean setX(int aX)
+    {
+      boolean wasSet = false;
+      x = aX;
+      wasSet = true;
+      return wasSet;
+    }
+  
+    public int getX()
+    {
+      return x;
+    }
+  
+    public void delete()
+    {}
+  
+  
+    public String toString()
+    {
+      return super.toString() + "["+
+              "x" + ":" + getX()+ "]";
+    }
+  }
+}
