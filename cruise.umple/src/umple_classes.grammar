@@ -33,7 +33,7 @@ classContent- : [[comment]] | [[innerClass]] | [[mixsetDefinition]] | [[distribu
 associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[displayColor]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[association]] | [[inlineAssociation]] | [[singleAssociationEnd]] | [[attribute]] | [[stateMachine]] | ; | [[extraCode]]
 innerClass : [[innerStaticClass]] | [[innerNonStaticClass]]
 innerStaticClass : static [[classDefinition]]
-innerNonStaticClass: inner [[classDefinition]]
+innerNonStaticClass : inner [[classDefinition]]
 
 
 // Interfaces: Note that if the format of an abstractMethodDeclaration is not
