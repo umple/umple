@@ -45,14 +45,14 @@ public class InnerClassTest extends TemplateTest {
   public void TestNoPackageNameForInnerElement()
   {
     UmpleFile uFile = new UmpleFile(pathToInput+"/OuterClassWithNameSpace.ump");
-		UmpleModel umpleModel = new UmpleModel(uFile);
-		umpleModel.run();
-		umpleModel.generate();
-		Map<String, String> map= umpleModel.getGeneratedCode();
-		String generatedCodeforClass = map.get("OuterClassWithNameSpace");
-		//if there is only one import-statement, its split should generate 2 strings:
-		Assert.assertEquals(generatedCodeforClass.split("package com.umple.innerClasses").length , 2);
-   // assertUmpleTemplateFor("/innerClasses.ump",  "/innerClasses.java.txt", "OuterClass_3");
+    UmpleModel umpleModel = new UmpleModel(uFile);
+    umpleModel.run();
+    umpleModel.generate();
+    Map<String, String> map= umpleModel.getGeneratedCode();
+    String generatedCodeforClass = map.get("OuterClassWithNameSpace");
+    //if there is only one import-statement, its split should generate 2 strings:
+    Assert.assertEquals(generatedCodeforClass.split("package com.umple.innerClasses").length , 2);
+    // assertUmpleTemplateFor("/innerClasses.ump",  "/innerClasses.java.txt", "OuterClass_3");
   }
 
   @After
