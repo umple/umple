@@ -590,6 +590,9 @@ class JavaGenerator
     }
     else if ("packageDefinition".equals(keyName))
     {
+      if(aClass.hasOuterClass())
+      return "";
+      else
       return aClass.getPackageName().length() == 0 ? "" : "package " + aClass.getPackageName() + ";"; 
     }
     else if ("type".equals(keyName))
