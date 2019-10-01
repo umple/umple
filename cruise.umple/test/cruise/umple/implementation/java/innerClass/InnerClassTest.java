@@ -4,6 +4,11 @@ import org.junit.*;
 import cruise.umple.implementation.TemplateTest;
 import cruise.umple.util.SampleFileWriter;
 
+import java.util.Map;
+import cruise.umple.compiler.UmpleClass;
+import cruise.umple.compiler.UmpleFile;
+import cruise.umple.compiler.UmpleModel;
+
 public class InnerClassTest extends TemplateTest {
 
   @Before
@@ -36,12 +41,27 @@ public class InnerClassTest extends TemplateTest {
     assertUmpleTemplateFor("/innerClasses.ump",  "/innerClasses.java.txt", "OuterClass_3");
   }
 
+  @Test
+  public void TestNoPackageNameForInnerElement()
+  {
+    UmpleFile uFile = new UmpleFile(pathToInput+"/OuterClassWithNameSpace.ump");
+		UmpleModel umpleModel = new UmpleModel(uFile);
+		umpleModel.run();
+		umpleModel.generate();
+		Map<String, String> map= umpleModel.getGeneratedCode();
+		String generatedCodeforClass = map.get("OuterClassWithNameSpace");
+		//if there is only one import-statement, its split should generate 2 strings:
+		Assert.assertEquals(generatedCodeforClass.split("package com.umple.innerClasses").length , 2);
+   // assertUmpleTemplateFor("/innerClasses.ump",  "/innerClasses.java.txt", "OuterClass_3");
+  }
+
   @After
   public void tearDown()
   {
     SampleFileWriter.destroy(pathToInput + "/OuterClass_1.java");
     SampleFileWriter.destroy(pathToInput + "/OuterClass_2.java");
     SampleFileWriter.destroy(pathToInput + "/OuterClass_3.java");
+    SampleFileWriter.destroy(pathToInput + "/com");
   }
 
 }
