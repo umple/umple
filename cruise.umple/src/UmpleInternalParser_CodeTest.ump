@@ -975,6 +975,103 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 	
 }
 
+///// generic methods 
+
+ private void analyzeClassGenericTestCase(Token token, UmpleClass aClass){
+    String element = "";
+	   
+	   if (token.getValue("genericElement").equals("attribute"))
+	   {
+		   element = "attribute";
+	   }
+	   
+	   else if (token.getValue("genericElement").equals("method"))
+	   {
+		   element = "method";
+	   }
+	   
+	   else {
+		  getParseResult().addErrorMessage(new ErrorMessage(new ErrorType(6020,4, "Generic Test element is not recognized. ", ""), aClass.getPosition(0)));
+	   }
+	   
+	   
+	   
+	   
+	   if (element.equals("attribute"))
+	   {
+	    for (Attribute att : aClass.getAttributes())
+	    { 
+	    	String code = token.getValue("code");
+	    	//boolean isPascaled = false;
+	    	char preChar = '-';	    	
+	    	int indexOfNonPascaledElement = 0; 	    	
+	    	int preCharIndex = 0;
+	    	//StringBuilder code = new StringBuilder(token.getValue("code"));
+	    	String pascalRegex = "[a-zA-Z0-9]<<attribute>>";
+	    	String nonPascalRegex = "[=|(|!|\\s]<<attribute>>";
+	    	//String lookAheadAssertion = "\\w(?= {attribute})"; 	
+	    	Pattern pattern = Pattern.compile(pascalRegex);
+	    	Matcher matcher = pattern.matcher(code);
+	    	Pattern nonPattern = Pattern.compile(nonPascalRegex);
+	    	Matcher nonMatcher =nonPattern.matcher(code);
+	    	//preChar = code.substring(matcher.start()-2, matcher.start()-1).;
+	       while(matcher.find())
+	       {	    	   
+	    	int startIndex = matcher.start();
+	    	int endIndex = matcher.end();
+	    	preCharIndex = matcher.start();
+	    	preChar = code.charAt(preCharIndex);	    		    		    	    	    	
+	    	if(Character.isLetter(preChar)){ // to check that the attribute is within a method call such as getId and has no white spaces or Java characters: ex get<<attribute>>	    	  
+	    		String tempGroup = matcher.group();	    		
+	    		String tempReplacement = tempGroup.replace("<<attribute>>", StringFormatter.toPascalCase(att.getName()));
+	    		code = code.replace(tempGroup,tempReplacement);	    		
+	        }	    	
+	    	while (nonMatcher.find()) // this loop fins matches of attribute that are not part of a methodCall example : getValue(<<attribute>>) it is rather a parameter in this case or String tempAtt = <<attribute>>
+	    	{	    	
+	    		String tempGroup = nonMatcher.group();	    		
+	    		String tempReplacement = tempGroup.replace("<<attribute>>", att.getName());
+	    		code = code.replace(tempGroup,tempReplacement);
+	    	}
+	    	
+	    	//isPascaled = false;
+	    	
+	       }
+	    	
+	        //System.out.println(code);
+	       
+	    	UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+att.getName(),0);
+	    	TestAction aTestAction = new TestAction("genericAttribute", code.toString(), "generic", 0);
+	    	
+	    	uTestCase.addTestAction(aTestAction);
+	    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	    	aClass.addUmpleTestCase(uTestCase);	 
+	    	matcher.reset();
+	    	
+	    	//System.out.println(uTestCase.getTestAction(0).getActionCode());
+	    }
+	    
+	    
+	    
+	    
+	   }
+	   
+	   
+	   
+	   if (element.equals("method"))
+	   {
+	    for (Method meth : aClass.getMethods())
+	    { 
+	    	UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+meth.getName(),0);
+	    	TestAction aTestAction = new TestAction("genericAttribute", token.getValue("code"), "generic", 0);
+	    	aTestAction.setActionCode(aTestAction.getActionCode().replace("{method}", meth.getName()));	    	
+	    	uTestCase.addTestAction(aTestAction);
+	    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	    	aClass.addUmpleTestCase(uTestCase);	    	
+	    }
+	   }
+  }
+
+
 
 
   
