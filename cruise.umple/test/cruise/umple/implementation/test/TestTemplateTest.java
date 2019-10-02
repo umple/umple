@@ -322,6 +322,30 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    
 	  }
 	  
+	  @Test
+	  public void genericTestCaseTest_String()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_String.ump","test/testGenericTestcase_String.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_String.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_String_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void genericTestCaseTest_Integer()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_Integer.ump","test/testGenericTestcase_Integer.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_Integer.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_Integer_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
 	  
 	 
 	  

@@ -1,12 +1,12 @@
 
 class Person {  
     
-    id;
+    Integer id;
     name;
     address;
     
     
-  generic test checkifLogged(String attribute){
+  generic test checkifLogged(Integer attribute){
         Person p1 ( "S1425", "John", "Ottawa") ;        
         String valueToCheck = p1.get<<attribute>>();  
         ps1.getValue(<<attribute>>);    

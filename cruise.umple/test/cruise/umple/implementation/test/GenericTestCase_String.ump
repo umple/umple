@@ -1,7 +1,7 @@
 
 class Person {  
     
-    id;
+    Integer id;
     name;
     address;
     
