@@ -84,7 +84,7 @@ testSequenceEntry : [~name] ( -> [~name] )* ;
 // Generic test case rules
 genericTestCase : generic test [~testCaseName] OPEN_ROUND_BRACKET [[genericElement]] CLOSE_ROUND_BRACKET { ( [**code] )* }
 genericElement- : [~elementType] [~genericElement]  [[genericMethodParameters]]? 
-genericMethodParameters- : [~elementType] (,[~elementType] )*
+genericMethodParameters- : [~elementType] ( , [~elementType] )*
 
 
 // Details of associations: See manual page [*AssociationDefinition*]
