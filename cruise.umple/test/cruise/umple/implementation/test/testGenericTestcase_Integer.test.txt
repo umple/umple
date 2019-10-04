@@ -11,6 +11,9 @@ Test Person {
     
       assertTrue( person.setId(123)));
       assertTrue( person.getId() == 123));
+      assertTrue( person.setId(321)));
+      assertTrue( person.getId() == 321));
+      assertFlase( person.getId() == 123));
           
 	}
 

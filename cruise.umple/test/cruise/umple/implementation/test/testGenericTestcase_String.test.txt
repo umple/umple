@@ -11,6 +11,9 @@ Test Person {
     
       assertTrue( person.setId(123)));
       assertTrue( person.getId() == 123));
+      assertTrue( person.setId(321)));
+      assertTrue( person.getId() == 321));
+      assertFlase( person.getId() == 123));
           
 	}
 
@@ -71,6 +74,20 @@ Test Person {
       
         
      
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_String ----/////
+Test Identification {
+ 
+
+  
  
    
 

@@ -5,6 +5,8 @@ class Person {
     name;
     address;
     
+    * -- 1 Identification;
+    
     
   generic test checkifLogged(String attribute){
         Person p1 ( "S1425", "John", "Ottawa") ;        
@@ -17,4 +19,10 @@ class Person {
         String  returnSumOfValues (int x, int y) { return x+y;}                 
 }  
  
+ 
+ 
+ class Identification {
+ 
+    
+ }
   

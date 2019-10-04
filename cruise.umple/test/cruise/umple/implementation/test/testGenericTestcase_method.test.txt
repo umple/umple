@@ -11,6 +11,9 @@ Test Calculator {
     
       assertTrue( calculator.setX(123)));
       assertTrue( calculator.getX() == 123));
+      assertTrue( calculator.setX(321)));
+      assertTrue( calculator.getX() == 321));
+      assertFlase( calculator.getX() == 123));
           
 	}
 
@@ -20,6 +23,9 @@ Test Calculator {
     
       assertTrue( calculator.setY(123)));
       assertTrue( calculator.getY() == 123));
+      assertTrue( calculator.setY(321)));
+      assertTrue( calculator.getY() == 321));
+      assertFlase( calculator.getY() == 123));
           
 	}
 

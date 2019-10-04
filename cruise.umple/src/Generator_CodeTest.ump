@@ -21,11 +21,13 @@ depend cruise.umple.compiler.test.*;
   
   	HashMap<String, String> TestingCredentialsLookUpMap = new HashMap<String, String>();
 	    TestingCredentialsLookUpMap.put("AttStringManu", "RandomString1");
+	    TestingCredentialsLookUpMap.put("AttStringManu2", "RandomString2");
 	    TestingCredentialsLookUpMap.put("AttIntManu", "123");
-	    TestingCredentialsLookUpMap.put("AttIntManu", "123");
-	    TestingCredentialsLookUpMap.put("AttDoubleManu", "12345");
+	    TestingCredentialsLookUpMap.put("AttIntManu2", "321");
+	    TestingCredentialsLookUpMap.put("AttDoubleManu", "123456789");
+	    TestingCredentialsLookUpMap.put("AttDoubleManu2", "987654321");
 	    TestingCredentialsLookUpMap.put("AttfloatManu", "1.2");
-
+	    TestingCredentialsLookUpMap.put("AttfloatManu2", "213.8765");
 		return TestingCredentialsLookUpMap.get(aString);
   	
   }

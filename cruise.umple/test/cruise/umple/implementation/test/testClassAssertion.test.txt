@@ -11,6 +11,9 @@ Test ClassAssertion {
     
       assertTrue( classassertion.setNumber(123)));
       assertTrue( classassertion.getNumber() == 123));
+      assertTrue( classassertion.setNumber(321)));
+      assertTrue( classassertion.getNumber() == 321));
+      assertFlase( classassertion.getNumber() == 123));
           
 	}
 
@@ -20,6 +23,9 @@ Test ClassAssertion {
     
       assertTrue( classassertion.setNumber2(123)));
       assertTrue( classassertion.getNumber2() == 123));
+      assertTrue( classassertion.setNumber2(321)));
+      assertTrue( classassertion.getNumber2() == 321));
+      assertFlase( classassertion.getNumber2() == 123));
           
 	}
 

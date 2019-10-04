@@ -23,6 +23,9 @@ Test A {
     
       assertTrue( a.setNumber(123)));
       assertTrue( a.getNumber() == 123));
+      assertTrue( a.setNumber(321)));
+      assertTrue( a.getNumber() == 321));
+      assertFlase( a.getNumber() == 123));
           
 	}
 
@@ -32,6 +35,9 @@ Test A {
     
       assertTrue( a.setNumber2(null)));
       assertTrue( a.getNumber2() == null));
+      assertTrue( a.setNumber2(null)));
+      assertTrue( a.getNumber2() == null));
+      assertFlase( a.getNumber2() == null));
           
 	}
 
@@ -39,8 +45,11 @@ Test A {
 
       test attribute_number3 {
     
-      assertTrue( a.setNumber3(123)));
-      assertTrue( a.getNumber3() == 123));
+      assertTrue( a.setNumber3(123456789)));
+      assertTrue( a.getNumber3() == 123456789));
+      assertTrue( a.setNumber3(987654321)));
+      assertTrue( a.getNumber3() == 987654321));
+      assertFlase( a.getNumber3() == 123456789));
           
 	}
 

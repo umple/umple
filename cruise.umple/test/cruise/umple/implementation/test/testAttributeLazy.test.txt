@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 
@@ -18,8 +18,8 @@ Test LazyA {
 
           
 
-AssertNotNull (id);
-    AssertNotNull (LazyA.getId != null)
+    assertTrue (!id.equals(null));
+    assertTrue (LazyA.getId() != null)
           
 
         	}

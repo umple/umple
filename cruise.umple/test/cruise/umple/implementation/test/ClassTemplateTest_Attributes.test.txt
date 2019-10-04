@@ -11,6 +11,9 @@ Test Mentor {
     
       assertTrue( mentor.setMAX(123)));
       assertTrue( mentor.getMAX() == 123));
+      assertTrue( mentor.setMAX(321)));
+      assertTrue( mentor.getMAX() == 321));
+      assertFlase( mentor.getMAX() == 123));
           
 	}
 
@@ -20,6 +23,9 @@ Test Mentor {
     
       assertTrue( mentor.setMIN(123)));
       assertTrue( mentor.getMIN() == 123));
+      assertTrue( mentor.setMIN(321)));
+      assertTrue( mentor.getMIN() == 321));
+      assertFlase( mentor.getMIN() == 123));
           
 	}
 
@@ -53,7 +59,7 @@ Test Mentor {
     
           
 
-AssertNotNull (str2);
+    assertTrue (!str2.equals(null));
 
         
           
@@ -77,8 +83,8 @@ AssertNotNull (str2);
 
           
 
-AssertNotNull (someName);
-    AssertNotNull (Mentor.getSomeName != null)
+    assertTrue (!someName.equals(null));
+    assertTrue (Mentor.getSomeName() != null)
           
 
         	}
@@ -87,13 +93,16 @@ AssertNotNull (someName);
 
       test attribute_lDoub {
     
-      assertTrue( mentor.setLDoub(123)));
-      assertTrue( mentor.getLDoub() == 123));
+      assertTrue( mentor.setLDoub(123456789)));
+      assertTrue( mentor.getLDoub() == 123456789));
+      assertTrue( mentor.setLDoub(987654321)));
+      assertTrue( mentor.getLDoub() == 987654321));
+      assertFlase( mentor.getLDoub() == 123456789));
           
 
           
 
-AssertNotNull (lDoub);
+    assertTrue (!lDoub.equals(null));
 
         	}
 
@@ -104,7 +113,7 @@ AssertNotNull (lDoub);
 
           
 
-AssertNotNull (lBool);
+    assertTrue (!lBool.equals(null));
 
         	}
 
@@ -121,7 +130,7 @@ AssertNotNull (lBool);
 
           
 
-AssertNotNull (name);
+    assertTrue (!name.equals(null));
 
         	}
 
@@ -143,6 +152,9 @@ AssertNotNull (name);
     
       assertTrue( mentor.setI(123)));
       assertTrue( mentor.getI() == 123));
+      assertTrue( mentor.setI(321)));
+      assertTrue( mentor.getI() == 321));
+      assertFlase( mentor.getI() == 123));
           
 	}
 
@@ -152,6 +164,9 @@ AssertNotNull (name);
     
       assertTrue( mentor.setDerivedTwiceI(123)));
       assertTrue( mentor.getDerivedTwiceI() == 123));
+      assertTrue( mentor.setDerivedTwiceI(321)));
+      assertTrue( mentor.getDerivedTwiceI() == 321));
+      assertFlase( mentor.getDerivedTwiceI() == 123));
           
 	}
 
@@ -161,6 +176,9 @@ AssertNotNull (name);
     
       assertTrue( mentor.setX(123)));
       assertTrue( mentor.getX() == 123));
+      assertTrue( mentor.setX(321)));
+      assertTrue( mentor.getX() == 321));
+      assertFlase( mentor.getX() == 123));
           
 	}
 
