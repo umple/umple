@@ -16,8 +16,8 @@ cache:
 addons:
   apt:
     packages:
-    - php5-common
-    - php5-cli
+    - php-common
+    - php-cli
 
 before_install:
   - ./travis/deps.sh # run linux or osx depending on environment
@@ -105,7 +105,12 @@ after_success:
 matrix:
   include:
     - os: linux
-      jdk: oraclejdk8
+      jdk: oraclejdk12
+      addons:
+        apt:
+          packages:
+            - ant
+            - ant-optional
       # only Linux supports Docker right now
       env:
         - HAVE_DOCKER=1
