@@ -109,7 +109,8 @@ matrix:
       addons:
         apt:
           packages:
-            - ant      
+            - ant
+            - ant-optional
       # only Linux supports Docker right now
       env:
         - HAVE_DOCKER=1
