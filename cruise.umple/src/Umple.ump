@@ -303,8 +303,10 @@ class TestSequence {
 class TestInit{
   identifier;
   objectName;
+  code;
+  
   0..1 -- * TestParameter;
-
+  
 }
 
 
@@ -687,10 +689,12 @@ class UmpleClass
   //The possible Preconditions related to the Umple Class
   1 -> 0..* Postcondition postConds;
   
-  //Umple Test Case at the cass level
+  //Umple Test Case at the class level
   0..1 -- 0..* UmpleTestCase;
   // class test sequence for testcases
   0..1 -- 0..* TestSequence;
+  // class test initialization: inits at the top level
+  0..1 -- 0..* TestInit;
 
   // The possible Constraints related to the Umple Class
   1 uClass -> 0..* ConstraintTree;

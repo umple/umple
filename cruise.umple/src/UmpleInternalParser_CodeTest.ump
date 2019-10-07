@@ -1082,6 +1082,16 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 	   }
   }
    
+   // test initializations at the class level, these are inits that were mesnt to be done at the global-level in the test class
+   
+   private void analyzeTestClassInit(Token token, UmpleClass aClass) {
+	// TODO fix init code 
+	  TestInit ti = new TestInit("", "", "");
+	  ti.setCode(token.getValue("code"));	  
+	  aClass.addTestInit(ti);
+	
+}
+   
    
    // This method modifies the generic template to replace with the actual attribute name if it matches the type indicated in template 
    private String modifyGenericTestAttribute (Token token,UmpleClass aClass, Attribute att)
