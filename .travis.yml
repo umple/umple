@@ -105,7 +105,7 @@ after_success:
 matrix:
   include:
     - os: linux
-      jdk: oraclejdk8
+      jdk: oraclejdk12
       # only Linux supports Docker right now
       env:
         - HAVE_DOCKER=1
