@@ -106,6 +106,10 @@ matrix:
   include:
     - os: linux
       jdk: oraclejdk12
+      addons:
+        apt:
+          packages:
+            - ant      
       # only Linux supports Docker right now
       env:
         - HAVE_DOCKER=1
