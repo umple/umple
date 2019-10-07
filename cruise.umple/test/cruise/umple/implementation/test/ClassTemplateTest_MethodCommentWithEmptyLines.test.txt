@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  MethodCommentWithEmptyLines ----/////
+
 Test Foo {
+
+ generate JUnit ;
+ 
+ depend  Foo ; 
+
+
+
+ 
+ GIVEN:
+ MethodCommentWithEmptyLines.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

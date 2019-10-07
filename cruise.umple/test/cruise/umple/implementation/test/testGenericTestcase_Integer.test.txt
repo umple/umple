@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  GenericTestCase_Integer ----/////
+
 Test Person {
+
+ generate JUnit ;
+ 
+ depend  Person ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_Integer.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :id
 
       test attribute_id {

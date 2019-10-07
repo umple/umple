@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  TestSequence_noTestCases ----/////
+
 Test Person {
+
+ generate JUnit ;
+ 
+ depend  Person ; 
+
+
+
+ 
+ GIVEN:
+ TestSequence_noTestCases.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

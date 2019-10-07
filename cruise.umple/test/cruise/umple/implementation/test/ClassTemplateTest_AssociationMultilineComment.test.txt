@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  AssociationMultilineComment ----/////
+
 Test Foo {
+
+ generate JUnit ;
+ 
+ depend  Foo,Bar ; 
+
+
+
+ 
+ GIVEN:
+ AssociationMultilineComment.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

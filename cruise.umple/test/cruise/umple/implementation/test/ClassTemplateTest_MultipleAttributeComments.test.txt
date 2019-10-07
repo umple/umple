@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  MultipleAttributeComments ----/////
+
 Test Foo {
+
+ generate JUnit ;
+ 
+ depend  Foo ; 
+
+
+
+ 
+ GIVEN:
+ MultipleAttributeComments.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :testAttribute1
 
       test attribute_testAttribute1 {

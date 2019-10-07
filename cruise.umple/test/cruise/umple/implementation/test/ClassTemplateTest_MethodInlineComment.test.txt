@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  MethodInlineComment ----/////
+
 Test Foo {
+
+ generate JUnit ;
+ 
+ depend  Foo ; 
+
+
+
+ 
+ GIVEN:
+ MethodInlineComment.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

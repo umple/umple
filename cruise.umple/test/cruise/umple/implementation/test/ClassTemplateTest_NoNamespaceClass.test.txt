@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  ClassTemplateTest_NoNamespace ----/////
+
 Test Token {
+
+ generate JUnit ;
+ 
+ depend  Token ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_NoNamespace.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

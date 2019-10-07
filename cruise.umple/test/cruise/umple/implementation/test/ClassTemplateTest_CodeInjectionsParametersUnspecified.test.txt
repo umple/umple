@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  ClassTemplateTest_CodeInjectionsParametersUnspecified ----/////
+
 Test Student {
+
+ generate JUnit ;
+ 
+ depend  Student ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_CodeInjectionsParametersUnspecified.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

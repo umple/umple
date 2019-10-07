@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  LazyAttribute ----/////
+
 Test LazyA {
+
+ generate JUnit ;
+ 
+ depend  LazyA ; 
+
+
+
+ 
+ GIVEN:
+ LazyAttribute.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :id
 
       test attribute_id {

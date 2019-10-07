@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  ClassTemplateTest_EmptyClass ----/////
+
 Test Mentor {
+
+ generate JUnit ;
+ 
+ depend  Mentor ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_EmptyClass.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

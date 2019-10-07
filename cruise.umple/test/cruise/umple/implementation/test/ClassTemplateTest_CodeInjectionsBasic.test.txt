@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  ClassTemplateTest_CodeInjectionsBasic ----/////
+
 Test Student {
+
+ generate JUnit ;
+ 
+ depend  Student ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_CodeInjectionsBasic.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

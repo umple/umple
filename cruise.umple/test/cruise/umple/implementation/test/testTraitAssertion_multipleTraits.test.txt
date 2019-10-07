@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  TraitAssertion_multipleTraits ----/////
+
 Test Person {
+
+ generate JUnit ;
+ 
+ depend  Person ; 
+
+
+
+ 
+ GIVEN:
+ TraitAssertion_multipleTraits.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :firstName
 
       test attribute_firstName {

@@ -7,7 +7,22 @@ This is a student
 */
 
 ////---- Tests for  ClassTemplateTest_GarbageComment ----/////
+
 Test Student {
+
+ generate JUnit ;
+ 
+ depend  Student ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_GarbageComment.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

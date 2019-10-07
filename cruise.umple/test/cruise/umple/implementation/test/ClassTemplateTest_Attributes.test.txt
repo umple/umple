@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  ClassTemplateTest_Attributes ----/////
+
 Test Mentor {
+
+ generate JUnit ;
+ 
+ depend  Mentor ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_Attributes.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :MAX
 
       test attribute_MAX {

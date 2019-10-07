@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  ClassAssertion ----/////
+
 Test ClassAssertion {
+
+ generate JUnit ;
+ 
+ depend  ClassAssertion ; 
+
+
+
+ 
+ GIVEN:
+ ClassAssertion.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :number
 
       test attribute_number {

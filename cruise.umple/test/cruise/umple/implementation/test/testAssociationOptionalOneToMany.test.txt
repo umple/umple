@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  OptionalOneToManyAssociation ----/////
+
 Test A {
+
+ generate JUnit ;
+ 
+ depend  A,B ; 
+
+
+
+ 
+ GIVEN:
+ OptionalOneToManyAssociation.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :att1
 
       test attribute_att1 {
@@ -29,7 +44,22 @@ Test A {
 
 
 ////---- Tests for  OptionalOneToManyAssociation ----/////
+
 Test B {
+
+ generate JUnit ;
+ 
+ depend  A,B ; 
+
+
+
+ 
+ GIVEN:
+ OptionalOneToManyAssociation.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :att2
 
       test attribute_att2 {

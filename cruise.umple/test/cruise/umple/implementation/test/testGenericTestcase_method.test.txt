@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  GenericTestCase_method ----/////
+
 Test Calculator {
+
+ generate JUnit ;
+ 
+ depend  Calculator ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_method.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :x
 
       test attribute_x {

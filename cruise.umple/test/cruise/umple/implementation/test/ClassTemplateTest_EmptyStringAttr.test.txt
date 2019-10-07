@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  ClassTemplateTest_EmptyStringAttr ----/////
+
 Test Student {
+
+ generate JUnit ;
+ 
+ depend  Student ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_EmptyStringAttr.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :grade
 
       test attribute_grade {
