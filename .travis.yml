@@ -16,8 +16,8 @@ cache:
 addons:
   apt:
     packages:
-    - php5-common
-    - php5-cli
+    - php-common
+    - php-cli
 
 before_install:
   - ./travis/deps.sh # run linux or osx depending on environment
