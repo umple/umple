@@ -2,14 +2,11 @@ package cruise.umple.implementation.test;
 
 import java.io.File;
 
-import org.junit.Assert;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
 import cruise.umple.implementation.ClassTemplateTest;
-import cruise.umple.implementation.TemplateTest;
 import cruise.umple.util.SampleFileWriter;
 
 
