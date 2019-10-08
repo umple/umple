@@ -7,6 +7,7 @@ depend java.lang.reflect.Method;
 depend cruise.umple.testparser.TestParser;
 depend  java.io.File;
 depend java.util.List;
+depend java.util.ArrayList;
 
 		
 
@@ -46,12 +47,16 @@ public void writeTestRunnerFiles (String path , List<String> classes ) {
 	  StringBuilder br = new StringBuilder();
 	  StringBuilder sb = new StringBuilder();
 	  sb .append("");
-	  sb.append(getTestRunnerTemplateCode (classes));
+	  sb.append(getTestRunnerTemplateJUnitCode (classes));
 	  
   }
   
-   emit getTestRunnerTemplateCode (List<String> classes) (TestRunnerGenerator);
-   TestRunnerGenerator <<!<<# 
+   emit getTestRunnerTemplateJUnitCode (List<String> classes) (TestRunnerJUnitGenerator);
+   emit getTestRunnerTemplatePhpUnitCode (List<String> classes) (TestRunnerPhpUnitGenerator);
+   emit getTestRunnerTemplateRubyUnitCode (List<String> classes) (TestRunnerRubyUnitGenerator);
+   
+   // Template for JUnit Test Runner 
+   TestRunnerJUnitGenerator <<!<<# 
    String classesCode = "";
    
    for (int x = 0; x < classes.size(); x++)
@@ -92,10 +97,19 @@ public void writeTestRunnerFiles (String path , List<String> classes ) {
     
     }
   !>>
+  
+  // Template for PhpUnit test runner
+  TestRunnerPhpUnitGenerator <<! //to be implemented  !>>
+  
+  
+  // Template for Ruby Unit test runner
+  TestRunnerRubyUnitGenerator <<! //to be implemented  !>>
+  
+  
 
-//------------------------
+//---------------------------------------------------
 // AssertMethod // check if a method is present in a class using reflection, example: assertMethod(foo.class, "methodName") 
-//------------------------
+//---------------------------------------------------
 
 public Boolean assertMethod (Class cls, String methodName)
     {
@@ -112,45 +126,18 @@ public Boolean assertMethod (Class cls, String methodName)
  public TestModel createUmpleTestSystem(String path, String filename,String lang)
    {
 	  
-	   
-	   
-
-	 String language =lang;
-     //File file = new File(pathToInput+"/" + path, filename);
+	 String language =lang;     
      File file = new File(path+filename);
      String grName = "";
      TestModel aTestModel = new TestModel(null, null, null, null, null,null, null, language);
-     TestParser parser = new TestParser(null, "", file, 0);
-     //ParseResult result = new ParseResult(false);
-     //InputStream is = this.getClass().getResourceAsStream("mbt_parsing.grammar");
-     //ClassLoader classLoader = getClass().getClassLoader();
-     //File grammarFile = new File(classLoader.getResource("mbt_parsing.grammar").getFile());
-     ////system.out.println(grammarFile.tos);
-     //parser.setGrammarFile(path+"src/ump/mbt_parsing.grammar");
-     //InputStream in = getClass().getResourceAsStream("/mbt_parsing.grammar"); 
-     //BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-     //File grFile = new File (getClass().getResource("mbt_parsing.grammar").getPath().replace("file:", ""));
-     //File grFile = new File ();
-     //grName = file.getName();
-     
-     //grName = getClass().getResource("mbt_parsing.grammar").getFile();
-     ////system.out.println(Util.class.getResource("mbt_parsing.grammar").getFile());
-     //parser.setGrammarFile(Util.class.getResource("mbt_parsing.grammar").getFile().toString());
-     ////system.out.println(parser.getGrammarFile());
+     TestParser parser = new TestParser(null, "", file, 0);     
      parser.setTestModelFile(file);
-     //parser.setTestModelFile(file);
-     
-     
-     ////system.out.println(path);
      parser.prepare();
      aTestModel = parser.getATestModel();
-     //system.out.println(file.getAbsoluteFile());
      aTestModel.setCodeLang(language);
-     //system.out.println(aTestModel.getCodeLang());
      if(aTestModel.getCodeLang().equals("JUnit"))
      {
      
-     //language = lang;
      TestCaseJUnitGenerator junitGenerator = new TestCaseJUnitGenerator(null, null, null, null, null);
 	     junitGenerator.setTestModel(aTestModel);
 	     junitGenerator.setPath(path);
@@ -170,8 +157,6 @@ public Boolean assertMethod (Class cls, String methodName)
          rubyGenerator.setPath(path);
          rubyGenerator.writeFile();
      }
-     
-     
      
      return aTestModel;
    }
