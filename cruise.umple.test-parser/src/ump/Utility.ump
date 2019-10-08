@@ -6,6 +6,7 @@ depend java.util.Random;
 depend java.lang.reflect.Method;
 depend cruise.umple.testparser.TestParser;
 depend  java.io.File;
+depend java.util.List;
 
 		
 
@@ -35,6 +36,62 @@ public int randomGenerator (int range)
 	return text;
 }
 
+//-----------------------------
+// Test Runner Template/Methods
+//-----------------------------
+
+public void writeTestRunnerFiles (String path , List<String> classes ) {
+	  String testrunnerFileName = "TestRunner";
+	  File file  = new File(path+testrunnerFileName);
+	  StringBuilder br = new StringBuilder();
+	  StringBuilder sb = new StringBuilder();
+	  sb .append("");
+	  sb.append(getTestRunnerTemplateCode (classes));
+	  
+  }
+  
+   emit getTestRunnerTemplateCode (List<String> classes) (TestRunnerGenerator);
+   TestRunnerGenerator <<!<<# 
+   String classesCode = "";
+   
+   for (int x = 0; x < classes.size(); x++)
+   {
+      if (x == 0)
+       {classesCode+= classes.get(x)+".class";}
+       else 
+       {classesCode+=", " +classes.get(x)+".class";}   
+   }
+   
+   #>> 
+	import java.io.File;
+	import org.junit.After;
+	import org.junit.Assert;
+	import org.junit.Before;
+	import org.junit.Test;
+	import org.junit.internal.TextListener;
+	import org.junit.runner.JUnitCore;
+	import org.junit.runner.Result;  
+    
+    public class TestRunner {
+    
+     public static void main (String[] args)
+     JUnitCore  junit = new JUnitCore();
+     junit.addListener(new TextListener(System.out));
+     Result result = junit.run(<<=classesCode>>);
+     
+     resultReport(result);
+    }
+    
+    public static void resultReport(Result result) {
+		    System.out.println("Finished. Result: Failures: " +
+		      result.getFailureCount() + ". Ignored: " +
+		      result.getIgnoreCount() + ". Tests run: " +
+		      result.getRunCount() + ". Time: " +
+		      result.getRunTime() + "ms.");
+		}
+    
+    }
+  !>>
 
 //------------------------
 // AssertMethod // check if a method is present in a class using reflection, example: assertMethod(foo.class, "methodName") 
