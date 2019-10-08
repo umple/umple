@@ -1,5 +1,9 @@
 namespace cruise.umple.testgenerator;
 
+use Utility_TestRunnerTemplate_JUnit.ump;
+use Utility_TestRunnerTemplate_RubyUnit.ump;
+use Utility_TestRunnerTemplate_PhpUnit.ump;
+
 class Util{
 
 depend java.util.Random;

@@ -1,0 +1,12 @@
+namespace cruise.umple.testgenerator;
+
+class Util{
+
+   emit getTestRunnerTemplatePhpUnitCode (List<String> classes) (TestRunnerPhpUnitGenerator);
+  
+  // Template for PhpUnit test runner
+  TestRunnerPhpUnitGenerator <<!
+   //to be implemented
+    !>>
+  
+}
