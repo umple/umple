@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  MixsetTest ----/////
+
 Test Person {
+
+ generate JUnit ;
+ 
+ depend  Person ; 
+
+
+
+ 
+ GIVEN:
+ MixsetTest.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :x
 
       test attribute_x {

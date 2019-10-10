@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  ClassTemplateTest_IsA ----/////
+
 Test SubMentor {
+
+ generate JUnit ;
+ 
+ depend  Mentor,SubMentor,SubMentor2 ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_IsA.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

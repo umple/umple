@@ -1,3 +1,5 @@
+generate Test;
+
 
 class Person {  
   
@@ -29,6 +31,11 @@ class Person {
         JUnit test checkName {
         //test code 
         
+        }
+        
+        
+        test Init {
+        Person p1 ("john" , 123);          
         }
         
         

@@ -9,7 +9,22 @@ on several lines
 */
 
 ////---- Tests for  ClassTemplateTest_MultiLineComment ----/////
+
 Test Student {
+
+ generate JUnit ;
+ 
+ depend  Student ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_MultiLineComment.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

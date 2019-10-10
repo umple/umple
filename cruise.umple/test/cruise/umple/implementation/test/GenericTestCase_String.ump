@@ -1,0 +1,28 @@
+
+class Person {  
+    
+    Integer id;
+    name;
+    address;
+    
+    * -- 1 Identification;
+    
+    
+  generic test checkifLogged(String attribute){
+        Person p1 ( "S1425", "John", "Ottawa") ;        
+        String valueToCheck = p1.get<<attribute>>();  
+        ps1.getValue(<<attribute>>);    
+        boolean isLogged =  p1.checkIsLogged(valueToCheck);        
+        assertTrue(logged == "true");                      
+        }
+        
+        String  returnSumOfValues (int x, int y) { return x+y;}                 
+}  
+ 
+ 
+ 
+ class Identification {
+ 
+    
+ }
+  

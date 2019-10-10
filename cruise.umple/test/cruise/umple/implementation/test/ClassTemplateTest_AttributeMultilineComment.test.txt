@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  AttributeMultilineComment ----/////
+
 Test Foo {
+
+ generate JUnit ;
+ 
+ depend  Foo ; 
+
+
+
+ 
+ GIVEN:
+ AttributeMultilineComment.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :name
 
       test attribute_name {

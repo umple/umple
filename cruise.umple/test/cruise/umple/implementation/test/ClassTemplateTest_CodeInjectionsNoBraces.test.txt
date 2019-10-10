@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  ClassTemplateTest_CodeInjectionsNoBraces ----/////
+
 Test Student {
+
+ generate JUnit ;
+ 
+ depend  Student ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_CodeInjectionsNoBraces.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

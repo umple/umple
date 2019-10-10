@@ -1,0 +1,81 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_Integer ----/////
+
+Test Person {
+
+ generate JUnit ;
+ 
+ depend  Person ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_Integer.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :id
+
+      test attribute_id {
+    
+      assertTrue( person.setId(123)));
+      assertTrue( person.getId() == 123));
+      assertTrue( person.setId(321)));
+      assertTrue( person.getId() == 321));
+      assertFlase( person.getId() == 123));
+          
+	}
+
+ //tests for :name
+
+      test attribute_name {
+    
+    assertTrue( person.setName("RandomString1"));
+    assertTrue( person.getName() =="RandomString1");
+    assertTrue( person.setName("RandomString2"));
+    assertTrue( person.getName()=="RandomString2");
+    assertFalse( person.getName() =="RandomString1");
+             
+	}
+
+ //tests for :address
+
+      test attribute_address {
+    
+    assertTrue( person.setAddress("RandomString1"));
+    assertTrue( person.getAddress() =="RandomString1");
+    assertTrue( person.setAddress("RandomString2"));
+    assertTrue( person.getAddress()=="RandomString2");
+    assertFalse( person.getAddress() =="RandomString1");
+             
+	}
+
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkifLogged_id {
+        Person p1 ( "S1425", "John", "Ottawa") ;        
+        String valueToCheck = p1.getId();  
+        ps1.getValue(id);    
+        boolean isLogged =  p1.checkIsLogged(valueToCheck);        
+        assertTrue(logged == "true");
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}

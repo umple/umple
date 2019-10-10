@@ -2,14 +2,11 @@ package cruise.umple.implementation.test;
 
 import java.io.File;
 
-import org.junit.Assert;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
 import cruise.umple.implementation.ClassTemplateTest;
-import cruise.umple.implementation.TemplateTest;
 import cruise.umple.util.SampleFileWriter;
 
 
@@ -310,6 +307,53 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    
 	  }
 	  
+	  @Test
+	  public void genericTestCaseTest()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase.ump","test/testGenericTestcase.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void genericTestCaseTest_String()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_String.ump","test/testGenericTestcase_String.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_String.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_String_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void genericTestCaseTest_Integer()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_Integer.ump","test/testGenericTestcase_Integer.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_Integer.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_Integer_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void genericTestCaseTest_method()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_method.ump","test/testGenericTestcase_method.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_method.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_method_ModelTest.umpt")).exists());
+	   
+	    
+	  }
 	  
 	 
 	  

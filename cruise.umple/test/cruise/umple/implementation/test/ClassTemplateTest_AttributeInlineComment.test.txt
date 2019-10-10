@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  AttributeInlineComment ----/////
+
 Test Foo {
+
+ generate JUnit ;
+ 
+ depend  Foo ; 
+
+
+
+ 
+ GIVEN:
+ AttributeInlineComment.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :bar
 
       test attribute_bar {

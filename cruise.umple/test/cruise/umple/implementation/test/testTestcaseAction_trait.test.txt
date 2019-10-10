@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  TestCaseAction_trait ----/////
+
 Test Person {
+
+ generate JUnit ;
+ 
+ depend  Person ; 
+
+
+
+ 
+ GIVEN:
+ TestCaseAction_trait.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :firstName
 
       test attribute_firstName {

@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  ClassTemplateTest_ListAttributes ----/////
+
 Test Token {
+
+ generate JUnit ;
+ 
+ depend  Token,Position ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_ListAttributes.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :positions
 
       test attribute_positions {

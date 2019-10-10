@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  ClassTemplateTest_Depend ----/////
+
 Test Mentor {
+
+ generate JUnit ;
+ 
+ depend  Mentor ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_Depend.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

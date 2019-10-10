@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  OneToManyAssociation ----/////
+
 Test A {
+
+ generate JUnit ;
+ 
+ depend  A,B ; 
+
+
+
+ 
+ GIVEN:
+ OneToManyAssociation.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :id
 
       test attribute_id {
@@ -29,7 +44,22 @@ Test A {
 
 
 ////---- Tests for  OneToManyAssociation ----/////
+
 Test B {
+
+ generate JUnit ;
+ 
+ depend  A,B ; 
+
+
+
+ 
+ GIVEN:
+ OneToManyAssociation.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

@@ -1,10 +1,25 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 
 ////---- Tests for  LazyAttribute ----/////
+
 Test LazyA {
+
+ generate JUnit ;
+ 
+ depend  LazyA ; 
+
+
+
+ 
+ GIVEN:
+ LazyAttribute.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :id
 
       test attribute_id {
@@ -18,8 +33,8 @@ Test LazyA {
 
           
 
-AssertNotNull (id);
-    AssertNotNull (LazyA.getId != null)
+    assertTrue (!id.equals(null));
+    assertTrue (LazyA.getId() != null)
           
 
         	}

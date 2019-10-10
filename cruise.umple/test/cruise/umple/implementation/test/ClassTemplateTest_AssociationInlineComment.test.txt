@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  AssociationInlineComment ----/////
+
 Test Foo {
+
+ generate JUnit ;
+ 
+ depend  Foo,Bar ; 
+
+
+
+ 
+ GIVEN:
+ AssociationInlineComment.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

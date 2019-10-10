@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  TestCase_AbstractTest ----/////
+
 abstract Test Person {
+
+ generate JUnit ;
+ 
+ depend  Person ; 
+
+
+
+ 
+ GIVEN:
+ TestCase_AbstractTest.ump;
+ 
+ 
+ 
+ THEN:
  
 
       //------------------

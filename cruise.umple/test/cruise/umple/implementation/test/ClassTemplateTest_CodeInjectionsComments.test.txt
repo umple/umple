@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  ClassTemplateTest_CodeInjectionsComments ----/////
+
 Test Student {
+
+ generate JUnit ;
+ 
+ depend  Student ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_CodeInjectionsComments.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

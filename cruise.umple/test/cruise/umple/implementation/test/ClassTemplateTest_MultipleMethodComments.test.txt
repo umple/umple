@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  MultipleMethodComments ----/////
+
 Test Foo {
+
+ generate JUnit ;
+ 
+ depend  Foo ; 
+
+
+
+ 
+ GIVEN:
+ MultipleMethodComments.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

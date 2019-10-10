@@ -18,7 +18,22 @@
 */
 
 ////---- Tests for  ClassCommentWithEmptyLines ----/////
+
 Test Foo {
+
+ generate JUnit ;
+ 
+ depend  Foo ; 
+
+
+
+ 
+ GIVEN:
+ ClassCommentWithEmptyLines.ump;
+ 
+ 
+ 
+ THEN:
  
 
   

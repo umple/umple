@@ -975,8 +975,164 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 	
 }
 
+///// generic test methods 
 
+ private void analyzeClassGenericTestCase(Token token, UmpleClass aClass){
+    String element = "";
+    String elementType = token.getValue("elementType");
+    List<String> elementTypes = new ArrayList<String>();
+    String code = "";
+    boolean toBeAdded = false;
+	   
+	   if (token.getValue("genericElement").equals("attribute"))
+	   {
+		   element = "attribute";
+	   }
+	   
+	   else if (token.getValue("genericElement").equals("method"))
+	   {
+		   element = "method";
+	   }
+	   
+	   else {
+		  getParseResult().addErrorMessage(new ErrorMessage(new ErrorType(6020,4, "Generic Test element is not recognized. ", ""), aClass.getPosition(0)));
+	   }
+	   
+	   
+	   
+	   
+	   if (element.equals("attribute"))
+	   {
+		   
+		   
+	    for (Attribute att : aClass.getAttributes())
+	    { 
+	    	if (att.getType().equals(elementType))
+	    	{
+	    	   code = modifyGenericTestAttribute(token, aClass, att);
+	    	//System.out.println(uTestCase.getTestAction(0).getActionCode());
+		    	
+		    	UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+att.getName(),0);
+		       	TestAction aTestAction = new TestAction("genericAttribute", code.toString(), "generic", 0);
+		       	
+		       	uTestCase.addTestAction(aTestAction);
+		       	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+		       	aClass.addUmpleTestCase(uTestCase);	 
+	    	}
+	    		    		    	
+	    	
+	    }
+	    
+	    
+	    
+	    
+	    
+	   }
+	   
+	   
+	   
+	   if (element.equals("method"))
+	   {
+		   
+		   String returnValue = "";
+		   String methodPar = ""; // store the method input paramters		   
+		   String methodReturnV = ""; // store the method return value 
+		   for (Token subToken : token.getSubTokens())
+		   {
+			   if(subToken.getName().equals("elementType"))			   
+				   elementTypes.add(subToken.getValue("elementType"));			   			   			   
+		   }
+		   
+		   for (int x = 0 ; x<elementTypes.size();x++)
+		   {
+			  // System.out.println(elementTypes.get(x) + meth);
+		   }
+		   
+		   
+		   //set return value then clear input from list 
+		   returnValue = elementTypes.get(0);
+		   //System.out.println(returnValue);
+		   //elementTypes.remove(0);
+		   
+		 
+	    for (Method meth : aClass.getMethods())
+	    { 
+	    	List<String> methodParametersType = new ArrayList<String>();
+	    	methodParametersType.add(meth.getType());
+	    	//System.out.println("::" + meth.getMethodParameters().toString());
+	    	for (MethodParameter pr : meth.getMethodParameters())
+	    	{
+	    		methodParametersType.add(pr.getType());
+	    		//System.out.println("::" +pr.getType());
+	    	}
+	    	
+	    	if(elementTypes.equals(methodParametersType))
+	    	{
+	    		//System.out.println(":::EQUAL");
+	    	
+	    	
+	    	UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+meth.getName(),0);
+	    	TestAction aTestAction = new TestAction("genericAttribute", token.getValue("code"), "generic", 0);
+	    	aTestAction.setActionCode(aTestAction.getActionCode().replace("<<method>>", meth.getName()));	    	
+	    	uTestCase.addTestAction(aTestAction);
+	    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	    	aClass.addUmpleTestCase(uTestCase);	
+	    	}
+	    }
+	   }
+  }
+   
+   // test initializations at the class level, these are inits that were mesnt to be done at the global-level in the test class
+   
+   private void analyzeTestClassInit(Token token, UmpleClass aClass) {
+	// TODO fix init code 
+	  TestInit ti = new TestInit("", "", "");
+	  ti.setCode(token.getValue("code"));	  
+	  aClass.addTestInit(ti);
+	
+}
+   
+   
+   // This method modifies the generic template to replace with the actual attribute name if it matches the type indicated in template 
+   private String modifyGenericTestAttribute (Token token,UmpleClass aClass, Attribute att)
+   {
+	   String code = token.getValue("code");
+   	//boolean isPascaled = false;
+   	char preChar = '-';	    	
+   	int indexOfNonPascaledElement = 0; 	    	
+   	int preCharIndex = 0;
+   	//StringBuilder code = new StringBuilder(token.getValue("code"));
+   	String pascalRegex = "[a-zA-Z0-9]<<attribute>>";
+   	String nonPascalRegex = "[=|(|!|\\s]<<attribute>>";
+   	//String lookAheadAssertion = "\\w(?= {attribute})"; 	
+   	Pattern pattern = Pattern.compile(pascalRegex);
+   	Matcher matcher = pattern.matcher(code);
+   	Pattern nonPattern = Pattern.compile(nonPascalRegex);
+   	Matcher nonMatcher =nonPattern.matcher(code);
+   	//preChar = code.substring(matcher.start()-2, matcher.start()-1).;
+      while(matcher.find())
+      {	    	   
+   	int startIndex = matcher.start();
+   	int endIndex = matcher.end();
+   	preCharIndex = matcher.start();
+   	preChar = code.charAt(preCharIndex);	    		    		    	    	    	
+   	if(Character.isLetter(preChar)){ // to check that the attribute is within a method call such as getId and has no white spaces or Java characters: ex get<<attribute>>	    	  
+   		String tempGroup = matcher.group();	    		
+   		String tempReplacement = tempGroup.replace("<<attribute>>", StringFormatter.toPascalCase(att.getName()));
+   		code = code.replace(tempGroup,tempReplacement);	    		
+       }	    	
+   	while (nonMatcher.find()) // this loop fins matches of attribute that are not part of a methodCall example : getValue(<<attribute>>) it is rather a parameter in this case or String tempAtt = <<attribute>>
+   	{	    	
+   		String tempGroup = nonMatcher.group();	    		
+   		String tempReplacement = tempGroup.replace("<<attribute>>", att.getName());
+   		code = code.replace(tempGroup,tempReplacement);
+   	}
+   	
+      }
+   	             
+   	return code;
+   	
+   }
 
-  
    	
 }

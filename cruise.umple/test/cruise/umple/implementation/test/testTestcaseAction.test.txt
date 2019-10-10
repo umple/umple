@@ -4,7 +4,23 @@
 
 
 ////---- Tests for  TestCaseAction ----/////
+
 Test Person {
+
+ generate JUnit ;
+ 
+ depend  Person ; 
+
+
+
+ 
+ GIVEN:
+ TestCaseAction.ump;
+ 
+ WHERE:
+  Person p1 ("john" , 123);
+ 
+ THEN:
 
 
  before { checkPower }

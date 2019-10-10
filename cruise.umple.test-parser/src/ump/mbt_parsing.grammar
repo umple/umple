@@ -25,7 +25,7 @@ thenCont: (THEN:)? [[testCase]]*
 
 
 //testCase : test [~testCaseName] {( [[initialization]] | [[methodCall]] | [[assertions]] | [[testInitAtt]] | [[comment]] )* }
-testCase : test [~testCaseName] {( [[initialization]] | [[assertion]] | [[testInitAtt]] | [[comment]] )* }
+testCase : [=abstract:abstract]? [=isConcrete:concrete]? [=isTargeted:JUnit|PhpUnit|RubyUnit]? test [~testCaseName] {( [[initialization]] | [[assertion]] | [[testInitAtt]] | [[comment]] )* }
 initialization : [~identifier] [~name] OPEN_ROUND_BRACKET  [[parameter]]* CLOSE_ROUND_BRACKET  ;
 //testinitAtt 
 testInitAtt : [~identifier] [~attributeName] =  [[pValue]] ;

@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  ClassTemplateTest_AssociationAttributes ----/////
+
 Test Token {
+
+ generate JUnit ;
+ 
+ depend  Token,Position ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_AssociationAttributes.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :p
 
       test attribute_p {

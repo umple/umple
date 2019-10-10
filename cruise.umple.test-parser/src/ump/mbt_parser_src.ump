@@ -467,6 +467,31 @@ for ( Token st : t.getSubTokens())
 		
 	{
 	
+	if(st.getName().equals("isTargeted"))
+	{
+		if(st.getValue("isTargeted") != null)
+		{
+			
+			aTestCase.setIsTargeted(true);
+			aTestCase.setConcreteLanguage(st.getValue("isTargeted"));
+			System.out.println( aTestCase.getConcreteLanguage());
+			
+		}
+		
+		
+	}
+	
+	if(st.getName().equals("isConcrete"))
+	{
+		if(st.getValue("isConcrete") != null)
+		{			
+			aTestCase.setIsConcrete(true);
+			aTestCase.setIsTargeted(true);
+			aTestCase.setConcreteLanguage(st.getValue("isTargeted"));
+		}
+		
+	}
+	
 	if(st.getName().equals("initialization"))
 	 {
 		//system.out.println("\tInitlocOrder");

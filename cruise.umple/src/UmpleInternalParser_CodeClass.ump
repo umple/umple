@@ -320,6 +320,16 @@ class UmpleInternalParser
       analyzeClassTestCase(token,aClass);
     }
     
+    else if (token.is("testClassInit"))
+    {
+      analyzeTestClassInit(token,aClass);
+    }
+    
+    else if (token.is("genericTestCase"))
+    {
+      analyzeClassGenericTestCase(token,aClass);
+    }
+    
     else if (token.is("testSequence"))
     {
       analyzeClassTestSequence(token,aClass);

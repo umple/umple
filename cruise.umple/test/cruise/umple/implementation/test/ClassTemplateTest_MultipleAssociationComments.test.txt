@@ -4,7 +4,22 @@
 
 
 ////---- Tests for  MultipleAssociationComments ----/////
+
 Test Foo {
+
+ generate JUnit ;
+ 
+ depend  Foo,Bar1,Bar2,Bar3,Bar4 ; 
+
+
+
+ 
+ GIVEN:
+ MultipleAssociationComments.ump;
+ 
+ 
+ 
+ THEN:
  
 
   
