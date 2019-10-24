@@ -807,6 +807,16 @@ public class UmpleClassTest
     }
   }
 
+  @Test
+  public void getCodeInjectionSynchroziedMethod()
+  {
+    String code = " class Person{   static synchronized void doSomeThing(){  }  }  class Person { after doSomeThing()  {   //added code    } } ";
+    UmpleModel model = getModel(code);
+    model.run();
+    Assert.assertTrue(model.getUmpleClass(0).getMethod(0).getModifier().contains("synchronized"););
+    
+  }
+
 
   @Test
   public void testCheckIgnoredAssociations_DefaultRoleName()

@@ -3173,7 +3173,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
       else if (token.is("synchronized"))
       {
-        modifier += " synchronized ";
+        modifier += "synchronized ";
         aMethod.setModifier(modifier);
       }
       else if (token.is("type"))
