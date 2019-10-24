@@ -808,12 +808,13 @@ public class UmpleClassTest
   }
 
   @Test
-  public void getCodeInjectionSynchroziedMethod()
+  public void testSynchroziedMethod()
   {
-    String code = " class Person{   static synchronized void doSomeThing(){  }  }  class Person { after doSomeThing()  {   //added code    } } ";
+    String code = " class Person{   static synchronized void doSomeThing(){  }  } ";
     UmpleModel model = getModel(code);
     model.run();
-    Assert.assertTrue(model.getUmpleClass(0).getMethod(0).getModifier().contains("synchronized"););
+    Assert.assertTrue(model.getUmpleClass(0).getMethod(0).getModifier().contains("synchronized"));
+    SampleFileWriter.destroy("Person.java");
     
   }
 
