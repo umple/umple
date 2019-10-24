@@ -105,7 +105,7 @@ after_success:
 matrix:
   include:
     - os: linux
-      jdk: oraclejdk12
+      jdk: openjdk12
       addons:
         apt:
           packages:
