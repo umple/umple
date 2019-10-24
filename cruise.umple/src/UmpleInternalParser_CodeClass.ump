@@ -3171,6 +3171,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         modifier += " static ";
         aMethod.setModifier(modifier);
       }
+      else if (token.is("synchronized"))
+      {
+        modifier += " synchronized ";
+        aMethod.setModifier(modifier);
+      }
       else if (token.is("type"))
       {
         if (aMethod.getIsQueued() && !token.getValue().equals("void"))
