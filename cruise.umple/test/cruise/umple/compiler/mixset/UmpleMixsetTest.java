@@ -727,7 +727,7 @@ public class UmpleMixsetTest {
   public void testAround_twoLabels() {
     UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"aroundInjectionTwoLabels.ump");
     UmpleModel umodel = new UmpleModel(umpleFile);
-    Method aMethod = null;
+    Method aMethod ;
     try{
       umodel.run();
       umodel.generate();
@@ -747,7 +747,6 @@ public class UmpleMixsetTest {
       Assert.assertEquals(true, methodBodyCode.contains(keyWord));
       //before checks: 
       Assert.assertEquals(true, beforeLabelCode.contains("if (true) {"));
-      Assert.assertEquals(true, beforeLabelCode.contains("int x=0;"));
       //after checks:
       Assert.assertEquals(true, afterLabelCode.contains("}"));
       Assert.assertEquals(true, afterLabelCode.contains("code after around."));
