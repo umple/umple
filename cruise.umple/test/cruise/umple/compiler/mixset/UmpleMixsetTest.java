@@ -14,6 +14,8 @@ import cruise.umple.compiler.FeatureLink;
 import cruise.umple.compiler.FeatureNode;
 import cruise.umple.compiler.FeatureLeaf;
 import cruise.umple.compiler.Method;
+import cruise.umple.compiler.exceptions.*;
+
 
 public class UmpleMixsetTest {
   
@@ -729,15 +731,15 @@ public class UmpleMixsetTest {
     try{
       umodel.run();
       umodel.generate();
-      UmpleClass uClass = umodel.getUmpleClass(0);
-      aMethod = uClass.getMethod(0);
     }
     catch (UmpleCompilerException e)
     {
-    // this is warning 
+    // this is aspect injection warning.
     }
     finally 
-    {
+    {  
+      UmpleClass uClass = umodel.getUmpleClass(0);
+      aMethod = uClass.getMethod(0);
       String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
       String keyWord = "int x=0;";
       String beforeLabelCode = methodBodyCode.substring(0,methodBodyCode.indexOf(keyWord));
