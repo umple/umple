@@ -306,6 +306,13 @@ for (StateMachine smq : uClass.getStateMachines())
         else
           methodCodeWithLabels.add("\n"+codeToAdd + "\n");
       }
+    	else if (codeInjectionItem.getType().equals("around"))
+      {
+        if(indexOfLabel < methodCodeWithLabels.size())
+          methodCodeWithLabels.add(indexOfLabel+1, "\n"+codeToAdd + "\n");
+        else
+          methodCodeWithLabels.add("\n"+codeToAdd + "\n");
+      }
       // at the end, remove the codeInjection belongs to labeled aspect
       // otherwise it will be added to the code when handling aspects 
       //uClassCodeInectionList.remove(codeInjectionItem); // causes error:ConcurrentModificationException

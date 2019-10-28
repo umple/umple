@@ -3808,7 +3808,9 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     String type = injectToken.is("beforeCode") ? "before" : "after";
     // arround 
     //
-    //
+    if(injectToken.getSubToken("around") != null) {
+      type="around";
+    }
     Token codeLabelToken = injectToken.getSubToken("codeLabel");
     CodeBlock cb = new CodeBlock();
     String operationName = getOperationName(injectToken);
