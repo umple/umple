@@ -306,10 +306,13 @@ for (StateMachine smq : uClass.getStateMachines())
         else
           methodCodeWithLabels.add("\n"+codeToAdd + "\n");
       }
-    	else if (codeInjectionItem.getType().equals("around"))
+
+    	 if (codeInjectionItem.getType().equals("around"))
       {
-        String[] BoundLabels = codeInjectionItem.getInjectionlabel().split("-");
-        String firstLabel = BoundLabels[0];
+				
+//			if(methodLabelToLookat.contains("-"))
+        String[] BoundLabels = methodLabelToLookat.split("-");
+        String firstLabel = BoundLabels[0]+":";
         String SecondLabel = BoundLabels[1]; 
         String[] codeToInjectArray = codeToAdd.split("around_proceed:");
         String afterCodeSegment = codeToInjectArray[0];
@@ -318,7 +321,7 @@ for (StateMachine smq : uClass.getStateMachines())
         int afterIndex = methodCodeWithLabels.indexOf(firstLabel);
         int beforeIndex = methodCodeWithLabels.indexOf(SecondLabel);
         methodCodeWithLabels.add(afterIndex+1, "\n"+afterCodeSegment + "\n");
-        methodCodeWithLabels.add(beforeIndex, "\n"+beforeCodeSegment + "\n");
+        methodCodeWithLabels.add(beforeIndex+1, "\n"+beforeCodeSegment + "\n");
 
       }
       // at the end, remove the codeInjection belongs to labeled aspect
