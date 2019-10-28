@@ -1,10 +1,10 @@
 class AroundClass{
     static void doSomeThing()
     {
-      boolean flag= false;
-      Label1: int x=0;
-      Label2: int a= 0;
-      flag =true;
+      boolean flag = false;
+      Label1: int x = 0;
+      Label2: int a = 0;
+      flag = true;
     }
 }
 
@@ -15,7 +15,7 @@ class AroundClass
      // code before around.
      if (true) {
        around_proceed:
-     } else 
+     }  
      // code after around.
  }
    

@@ -725,26 +725,34 @@ public class UmpleMixsetTest {
   public void testAround_twoLabels() {
     UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"aroundInjectionTwoLabels.ump");
     UmpleModel umodel = new UmpleModel(umpleFile);
-    umodel.run();
-    umodel.generate();
-    UmpleClass uClass = umodel.getUmpleClass(0);
-    Method aMethod = uClass.getMethod(0);
-    String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
-    String keyWord = "int x=0;";
-    String beforeLabelCode = methodBodyCode.substring(0,methodBodyCode.indexOf(keyWord));
-    String afterLabelCode = methodBodyCode.substring(methodBodyCode.indexOf(keyWord));
-    Assert.assertEquals(true, methodBodyCode.contains(keyWord));
-    //before checks: 
-    Assert.assertEquals(true, beforeLabelCode.contains("if (true) {"));
-    Assert.assertEquals(true, beforeLabelCode.contains("int x=0;"));
-
-    //after checks:
-    Assert.assertEquals(true, afterLabelCode.contains("}"));
-    Assert.assertEquals(true, afterLabelCode.contains("code after around."));
-    Assert.assertEquals(true, afterLabelCode.contains("Label2:"));
-    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"AroundClass.java");
-
-
-  }
+    Method aMethod = null;
+    try{
+      umodel.run();
+      umodel.generate();
+      UmpleClass uClass = umodel.getUmpleClass(0);
+      aMethod = uClass.getMethod(0);
+    }
+    catch (UmpleCompilerException e)
+    {
+    // this is warning 
+    }
+    finally 
+    {
+      String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
+      String keyWord = "int x=0;";
+      String beforeLabelCode = methodBodyCode.substring(0,methodBodyCode.indexOf(keyWord));
+      String afterLabelCode = methodBodyCode.substring(methodBodyCode.indexOf(keyWord));
+      Assert.assertEquals(true, methodBodyCode.contains(keyWord));
+      //before checks: 
+      Assert.assertEquals(true, beforeLabelCode.contains("if (true) {"));
+      Assert.assertEquals(true, beforeLabelCode.contains("int x=0;"));
+      //after checks:
+      Assert.assertEquals(true, afterLabelCode.contains("}"));
+      Assert.assertEquals(true, afterLabelCode.contains("code after around."));
+      Assert.assertEquals(true, afterLabelCode.contains("Label2:"));
+      SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"AroundClass.java");
+   }
+  
+}
 
 }
