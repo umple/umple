@@ -697,7 +697,7 @@ public class UmpleMixsetTest {
     Assert.assertEquals(true, afterLabelCode.contains("code for mixset M2."));
     SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"MixsetWithinMethodClass.java");
   }
-@Test
+  @Test
   public void mixsetInsideMethods_useM1andInnerMixsetandM2Statement() {
     UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseMixsetsInsideMethod_M1_InnerMixset_M2.ump");
     UmpleModel umodel = new UmpleModel(umpleFile);
@@ -719,6 +719,32 @@ public class UmpleMixsetTest {
     //after checks:
     Assert.assertEquals(true, afterLabelCode.contains("code for mixset M2."));
     SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"MixsetWithinMethodClass.java");
+  }
+
+  @Test
+  public void testAround_twoLabels() {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"aroundInjectionTwoLabels.ump");
+    UmpleModel umodel = new UmpleModel(umpleFile);
+    umodel.run();
+    umodel.generate();
+    UmpleClass uClass = umodel.getUmpleClass(0);
+    Method aMethod = uClass.getMethod(0);
+    String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
+    String keyWord = "int x=0;";
+    String beforeLabelCode = methodBodyCode.substring(0,methodBodyCode.indexOf(keyWord));
+    String afterLabelCode = methodBodyCode.substring(methodBodyCode.indexOf(keyWord));
+    Assert.assertEquals(true, methodBodyCode.contains(keyWord));
+    //before checks: 
+    Assert.assertEquals(true, beforeLabelCode.contains("if (true) {"));
+    Assert.assertEquals(true, beforeLabelCode.contains("int x=0;"));
+
+    //after checks:
+    Assert.assertEquals(true, afterLabelCode.contains("}"));
+    Assert.assertEquals(true, afterLabelCode.contains("code after around."));
+    Assert.assertEquals(true, afterLabelCode.contains("Label2:"));
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"AroundClass.java");
+
+
   }
 
 }
