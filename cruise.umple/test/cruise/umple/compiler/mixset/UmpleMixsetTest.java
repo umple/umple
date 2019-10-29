@@ -741,7 +741,7 @@ public class UmpleMixsetTest {
       UmpleClass uClass = umodel.getUmpleClass(0);
       aMethod = uClass.getMethod(0);
       String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
-      String keyWord = "int x=0;";
+      String keyWord = "int x";
       String beforeLabelCode = methodBodyCode.substring(0,methodBodyCode.indexOf(keyWord));
       String afterLabelCode = methodBodyCode.substring(methodBodyCode.indexOf(keyWord));
       Assert.assertEquals(true, methodBodyCode.contains(keyWord));
