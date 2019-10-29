@@ -309,8 +309,6 @@ for (StateMachine smq : uClass.getStateMachines())
 
     	 if (codeInjectionItem.getType().equals("around"))
       {
-				
-//			if(methodLabelToLookat.contains("-"))
         String[] BoundLabels = methodLabelToLookat.split("-");
         String firstLabel = BoundLabels[0]+":";
         String SecondLabel = BoundLabels[1]; 
