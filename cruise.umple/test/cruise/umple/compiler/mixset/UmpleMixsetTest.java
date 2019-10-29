@@ -734,7 +734,10 @@ public class UmpleMixsetTest {
     }
     catch (UmpleCompilerException e)
     {
-    // this is aspect injection warning.
+      if(!e.getMessage().contains("1013")) // ignore warning caused by aspect injection.
+    	{
+    	  throw e;
+    	}
     }
     finally 
     {  
