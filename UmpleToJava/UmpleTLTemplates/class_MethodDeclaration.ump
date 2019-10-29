@@ -84,6 +84,7 @@ class UmpleToJava {
     
     applyCodeInjectionToLabeledMethod(uClass, aMethod, "before");
     applyCodeInjectionToLabeledMethod(uClass, aMethod, "after");
+    applyCodeInjectionToLabeledMethod(uClass, aMethod, "around");
    
    // handle mixsets inside methods(uClass, aMethod);
     ArrayList<MixsetInMethod> mixsetsWithinMethodList = aMethod.getMethodBody().getMixsetsWithinMethod();

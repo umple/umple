@@ -14,6 +14,8 @@ import cruise.umple.compiler.FeatureLink;
 import cruise.umple.compiler.FeatureNode;
 import cruise.umple.compiler.FeatureLeaf;
 import cruise.umple.compiler.Method;
+import cruise.umple.compiler.exceptions.*;
+
 
 public class UmpleMixsetTest {
   
@@ -697,7 +699,7 @@ public class UmpleMixsetTest {
     Assert.assertEquals(true, afterLabelCode.contains("code for mixset M2."));
     SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"MixsetWithinMethodClass.java");
   }
-@Test
+  @Test
   public void mixsetInsideMethods_useM1andInnerMixsetandM2Statement() {
     UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseMixsetsInsideMethod_M1_InnerMixset_M2.ump");
     UmpleModel umodel = new UmpleModel(umpleFile);
@@ -720,5 +722,41 @@ public class UmpleMixsetTest {
     Assert.assertEquals(true, afterLabelCode.contains("code for mixset M2."));
     SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"MixsetWithinMethodClass.java");
   }
+
+  @Test
+  public void testAround_twoLabels() {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"aroundInjectionTwoLabels.ump");
+    UmpleModel umodel = new UmpleModel(umpleFile);
+    Method aMethod ;
+    try{
+      umodel.run();
+      umodel.generate();
+    }
+    catch (UmpleCompilerException e)
+    {
+      if(!e.getMessage().contains("1013")) // ignore warning caused by aspect injection.
+    	{
+    	  throw e;
+    	}
+    }
+    finally 
+    {  
+      UmpleClass uClass = umodel.getUmpleClass(0);
+      aMethod = uClass.getMethod(0);
+      String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
+      String keyWord = "int x";
+      String beforeLabelCode = methodBodyCode.substring(0,methodBodyCode.indexOf(keyWord));
+      String afterLabelCode = methodBodyCode.substring(methodBodyCode.indexOf(keyWord));
+      Assert.assertEquals(true, methodBodyCode.contains(keyWord));
+      //before checks: 
+      Assert.assertEquals(true, beforeLabelCode.contains("if (true) {"));
+      //after checks:
+      Assert.assertEquals(true, afterLabelCode.contains("}"));
+      Assert.assertEquals(true, afterLabelCode.contains("code after around."));
+      Assert.assertEquals(true, afterLabelCode.contains("Label2:"));
+      SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"AroundClass.java");
+   }
+  
+}
 
 }

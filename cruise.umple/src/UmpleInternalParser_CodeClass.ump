@@ -3806,6 +3806,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   private void analyzeInjectionCode(Token injectToken, UmpleClassifier uClassifier)
   {
     String type = injectToken.is("beforeCode") ? "before" : "after";
+    // around as aspect type
+    if(injectToken.getSubToken("around") != null) {
+      type="around";
+    }
     Token codeLabelToken = injectToken.getSubToken("codeLabel");
     CodeBlock cb = new CodeBlock();
     String operationName = getOperationName(injectToken);
