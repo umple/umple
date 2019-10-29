@@ -95,13 +95,14 @@ class UmpleToJava {
     // End 
         String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("before", aMethod.getName(), aMethod.getMethodParameters()));
         String customAfterInjectionCode  = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("after", aMethod.getName(), aMethod.getMethodParameters()));
-        if(customBeforeInjectionCode.contains("around_proceed:") && (customAfterInjectionCode == null) )
+        if( customBeforeInjectionCode.contains("around_proceed:") && (customAfterInjectionCode == null) )
         {
           String[] codeToInjectArray = customBeforeInjectionCode.split("around_proceed:");
           customBeforeInjectionCode = codeToInjectArray[0];
-          customAfterInjectionCode = codeToInjectArray[1];
+          customAfterInjectionCode = ""+codeToInjectArray[1];
           customAfterInjectionCode = customAfterInjectionCode.replace("END OF UMPLE BEFORE INJECTION","END OF UMPLE AROUND INJECTION");
         }
+        
         String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));        
         String customPostconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Postcondition"));
         customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
