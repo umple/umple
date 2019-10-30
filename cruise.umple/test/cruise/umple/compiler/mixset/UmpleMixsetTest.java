@@ -15,7 +15,7 @@ import cruise.umple.compiler.FeatureNode;
 import cruise.umple.compiler.FeatureLeaf;
 import cruise.umple.compiler.Method;
 import cruise.umple.compiler.exceptions.*;
-
+import java.io.File;
 
 public class UmpleMixsetTest {
   
@@ -26,7 +26,6 @@ public class UmpleMixsetTest {
   {
     umpleParserTest = new UmpleParserTest();
     umpleParserTest.pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler/mixset");
-
   }
 
   @Test
@@ -765,6 +764,7 @@ public class UmpleMixsetTest {
     try{
       umodel.run();
       umodel.generate();
+
     }
     catch (UmpleCompilerException e)
     {
@@ -775,6 +775,11 @@ public class UmpleMixsetTest {
     }
     finally 
     {  
+      SampleFileWriter.assertFileExists("/"+"AroundClass.java");
+      String actual = umodel.getGeneratedCode().get("AroundClass");
+      File expected = new File(umpleParserTest.pathToInput + "/AroundClass.java.txt");
+      SampleFileWriter.assertFileContent(expected, actual,true);
+      /*
       UmpleClass uClass = umodel.getUmpleClass(0);
       aMethod = uClass.getMethod(0);
       String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
@@ -783,13 +788,14 @@ public class UmpleMixsetTest {
       String afterLabelCode = methodBodyCode.substring(methodBodyCode.indexOf(keyWord));
       Assert.assertEquals(true, methodBodyCode.contains(keyWord));
       //before checks: 
-      Assert.assertEquals(true, beforeLabelCode.contains("if (true) {"));
+      Assert.assertEquals(true, beforeLabelCode.contains("if (true)"));
       Assert.assertEquals(true, beforeLabelCode.contains("boolean flag"));
       Assert.assertEquals(true, beforeLabelCode.indexOf("boolean flag") > beforeLabelCode.indexOf("code before around"));
       //after checks:
       Assert.assertEquals(true, afterLabelCode.contains("}"));
       Assert.assertEquals(true, afterLabelCode.contains("code after around."));
       Assert.assertEquals(true, afterLabelCode.contains("Label2:"));
+      */
       SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"AroundClass.java");
    }
   }
