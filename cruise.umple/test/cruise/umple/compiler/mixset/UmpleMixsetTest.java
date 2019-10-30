@@ -775,9 +775,10 @@ public class UmpleMixsetTest {
     }
     finally 
     {  
-      SampleFileWriter.assertFileExists("/"+"AroundClass.java");
+      String pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler/mixset/");
+      SampleFileWriter.assertFileExists(pathToInput+"AroundClass.java");
       String actual = umodel.getGeneratedCode().get("AroundClass");
-      File expected = new File(umpleParserTest.pathToInput + "/AroundClass.java.txt");
+      File expected = new File(pathToInput + "AroundClass.java.txt");
       SampleFileWriter.assertFileContent(expected, actual,true);
       /*
       UmpleClass uClass = umodel.getUmpleClass(0);
