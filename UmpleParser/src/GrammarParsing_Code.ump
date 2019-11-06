@@ -141,7 +141,6 @@ class RuleBasedParser
     int parseResult = root.parse(token, 0,data.getInput().length(),data.getInput(),data);
     if(parseResult==data.getInput().length())
     {
-      if(!filename.endsWith("GrammarParsing_Code.ump"))
       cleanEscapeChars(token);cleanEscapeChars(token);
       setRootToken(token);
     }
@@ -172,7 +171,6 @@ class RuleBasedParser
     int parseResult = root.parse(token, 0,data.getLine(line).length(),data.getLine(line),data);
     if(parseResult==data.getInput().length())
     {
-      if(!filename.endsWith("GrammarParsing_Code.ump"))
       cleanEscapeChars(token);
       setRootToken(token);
     }
@@ -349,7 +347,6 @@ class RuleBasedParser
     }
     analyzer.execute();
     setRootToken(analyzer.getRootToken());
-    if(!file.getName().endsWith("GrammarParsing_Code.ump"))
     cleanEscapeChars(analyzer.getRootToken());
     setParseResult(analyzer.getParseResult());
     return getParseResult();
@@ -381,7 +378,6 @@ class RuleBasedParser
     
     analyzer.execute();
     setRootToken(analyzer.getRootToken());
-    if(!fileName.endsWith("GrammarParsing_Code.ump"))
     cleanEscapeChars(analyzer.getRootToken());
     setParseResult(analyzer.getParseResult());
     return getParseResult();
