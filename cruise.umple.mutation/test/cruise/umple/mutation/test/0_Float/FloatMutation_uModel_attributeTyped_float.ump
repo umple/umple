@@ -3,10 +3,10 @@
   Last updated: June 8, 2010
 */
 //Namespace for core of the system.
-namespace telecome.telephone.Integer;
+namespace telecome.telephone.Float;
 
 class A{
 
-Float x;
+Integer x;
 
 }

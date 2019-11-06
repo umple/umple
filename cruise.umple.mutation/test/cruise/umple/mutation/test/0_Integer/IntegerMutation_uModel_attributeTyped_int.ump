@@ -7,6 +7,6 @@ namespace telecome.telephone.Integer;
 
 class A{
 
-Float x;
+String x;
 
 }

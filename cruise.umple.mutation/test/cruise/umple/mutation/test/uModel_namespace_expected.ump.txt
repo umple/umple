@@ -3,7 +3,7 @@
   Last updated: June 8, 2010
 */
 //Namespace for core of the system.
-namespace telecome.telephone.AssociationDirectionality;
+namespace telecome.telephone.direction;
 
 class A{
 }
