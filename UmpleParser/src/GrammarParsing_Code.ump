@@ -109,19 +109,21 @@ class RuleBasedParser
     return grootToken;
   }
 
+  /*
+    This method helps to clean the string value of a token by tranforming an unicode character into its value. Such as semicolon "\u003B" into ";".
+    It supports \u003B ---> semicolon. This method can extended to support other unicode characters.
+  */
+  private void cleanEscapeChars(Token token){
 
-
-private void cleanSemicolon(Token token){
-
-  if(token.getValue() != null)
-  {
-    if(token.getValue().contains("\\u003B"))
-      token.setValue(token.getValue().replace("\\u003B",";")); 
-  } 
-  for(Token subToken : token.getSubTokens())
-  {
-    cleanSemicolon(subToken);
-  }
+    if(token.getValue() != null)
+    {
+      if(token.getValue().contains("\\u003B"))
+        token.setValue(token.getValue().replace("\\u003B",";")); 
+    } 
+    for(Token subToken : token.getSubTokens())
+    {
+      cleanEscapeChars(subToken);
+    }
 
 }
 
@@ -139,7 +141,7 @@ private void cleanSemicolon(Token token){
     int parseResult = root.parse(token, 0,data.getInput().length(),data.getInput(),data);
     if(parseResult==data.getInput().length())
     {
-cleanSemicolon(token);
+      cleanEscapeChars(token);
       setRootToken(token);
     }
     else
@@ -169,7 +171,7 @@ cleanSemicolon(token);
     int parseResult = root.parse(token, 0,data.getLine(line).length(),data.getLine(line),data);
     if(parseResult==data.getInput().length())
     {
-cleanSemicolon(token);
+      cleanEscapeChars(token);
       setRootToken(token);
     }
     else
@@ -345,7 +347,7 @@ cleanSemicolon(token);
     }
     analyzer.execute();
     setRootToken(analyzer.getRootToken());
-cleanSemicolon(analyzer.getRootToken());
+    cleanEscapeChars(analyzer.getRootToken());
     setParseResult(analyzer.getParseResult());
     return getParseResult();
   }
@@ -376,7 +378,7 @@ cleanSemicolon(analyzer.getRootToken());
     
     analyzer.execute();
     setRootToken(analyzer.getRootToken());
-cleanSemicolon(analyzer.getRootToken());
+    cleanEscapeChars(analyzer.getRootToken());
     setParseResult(analyzer.getParseResult());
     return getParseResult();
   }
