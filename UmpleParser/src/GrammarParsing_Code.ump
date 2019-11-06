@@ -117,7 +117,7 @@ class RuleBasedParser
 
     if(token.getValue() != null)
     {
-      if(token.getValue().contains("\\u003B"))
+      if(token.is("value") && token.getValue().contains("\\u003B"))
         token.setValue(token.getValue().replace("\\u003B",";")); 
     } 
     for(Token subToken : token.getSubTokens())
