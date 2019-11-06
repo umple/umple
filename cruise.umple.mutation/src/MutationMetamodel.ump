@@ -13,6 +13,8 @@ class MutationSuite{
    boolean hasMultipleFiles= false;
    ArrayList<String> randomReplacements_association = new ArrayList<String>(Arrays.asList("OneToMany","OptionalOneToMany","OneToNN","ManyToMany")) ;
    ArrayList<String> randomReplacements_typedAttribute = new ArrayList<String>(Arrays.asList("String","Integer","Float","Double")) ;
+   ArrayList<String> randomReplacements_Elements = new ArrayList<String>(Arrays.asList("attribute","association")) ; ;
+   HashMap<String,String> filesToWrite = new HashMap<String, String>() ;
   //private ArrayList<String> replacementsCode = new ArrayList<String>(Arrays.asList("1..*","0..1--*","1--2..4")) ;
     
   0..1 -- * Replacement;
