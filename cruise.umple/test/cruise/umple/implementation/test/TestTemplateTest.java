@@ -1,11 +1,18 @@
 package cruise.umple.implementation.test;
 
 import java.io.File;
+import java.lang.reflect.Field;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.JUnitCore;
+import org.junit.internal.TextListener;
+import org.junit.runner.Result;
+//import com.ibm.icu.util.BytesTrie.Result;
+import org.junit.runner.notification.Failure;
+
 import cruise.umple.implementation.ClassTemplateTest;
 import cruise.umple.util.SampleFileWriter;
 
@@ -60,6 +67,55 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    
 	  }
 	  
+	  public static void main (String[] args)
+	  {
+	    JUnitCore  junit = new JUnitCore();
+	     junit.addListener(new TextListener(System.out));
+	     org.junit.runner.Result result = junit.run(TestTemplateTest.class);
+	     
+	     TestTemplateTest testClass = new TestTemplateTest();
+	     
+	     
+	     
+	     
+	     
+	     
+	     if(result.wasSuccessful())
+	     {
+	    	 System.out.println("test has successfully passed");
+	     }
+	     
+	     
+	     
+	     else {
+	    	 double y = result.getFailureCount();
+		     double z = result.getRunCount();	 
+	     int x = (int) ((y/z)  * 100)  ;
+	     for (Failure f : result.getFailures())
+	     {	    	 
+	     System.out.println(f.getDescription() + "failed");
+	     }
+	     
+	     System.out.println("Mutation Score: "+ x);
+	     }
+	     
+	     
+	     
+	     for(Field field : TestTemplateTest.class.getDeclaredFields() )
+	     {
+	    	 System.out.println(field.getName());
+	     }
+	     
+	     
+	  }
+	  
+	  public static void resultReport(Result result) {
+		    System.out.println("Finished. Result: Failures: " +
+		      result.getFailureCount() + ". Ignored: " +
+		      result.getIgnoreCount() + ". Tests run: " +
+		      result.getRunCount() + ". Time: " +
+		      result.getRunTime() + "ms.");
+		}
 	  
 	  @Test 
 	  public void Attribute()

@@ -1,6 +1,7 @@
 interface RegisterCapable
 {
   depend school.util.*;
+  id;
   
   boolean registerForCourse(Course aCourse);
   test checkCourseRegistration;
