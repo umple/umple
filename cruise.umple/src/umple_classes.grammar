@@ -66,7 +66,7 @@ methodThrowsExceptions : throws [~exception] ( , [~exception] )*
 parameterList : OPEN_ROUND_BRACKET ([[parameter]] ( , [[parameter]] )* )? CLOSE_ROUND_BRACKET
 parameter : [[typedName]]
 
-testCase : [=isTimed:before|after]? [=isConcrete:JUnit|PhpUnit|RubyUnit]? [=isOverride:override]? test [~testCaseName] { ( [[assertion]] | [[testAction]] | [[testInit]] | [[testInitAtt]] | [[testInitAttWithMethodCall]] | [[comment]] )* }
+testCase : [=isTimed:before|after]? [=isConcrete:JUnit|PhpUnit|RubyUnit]? [=isOverride:override]? test [~testCaseName] { ( [[assertion]] | [[testAction]] | [[testInit]] | [[testInitAtt]] | [[testInitAttWithMethodCall]] | [[comment]] | [[ifStatement]] )* }
 assertion : [=isTimed:before|after]? [=assertType:assertTrue|assertFalse|assertEqual|assertNull|assertMethod] OPEN_ROUND_BRACKET [**code] CLOSE_ROUND_BRACKET ;
 testAction : [~objectName] ( (.)[~methodName] )? OPEN_ROUND_BRACKET  [[testActionParameterList]] CLOSE_ROUND_BRACKET ;
 testMethodCall : [~objectName] ( (.)[~methodName] )? OPEN_ROUND_BRACKET  [[testActionParameterList]] CLOSE_ROUND_BRACKET
@@ -76,7 +76,7 @@ testInit : [~identifier] [~objectName] OPEN_ROUND_BRACKET [[testParameter]]?  CL
 testInitAtt : [~identifier]? [~attributeName] =  [[pValue]] ;
 testInitAttWithMethodCall : [~identifier]? [~attributeName] =  [[testMethodCall]] ;
 //paraTestAction : [~methodName] OPEN_ROUND_BRACKET ( [[pValue]] ( , [[pValue]] ) )* CLOSE_ROUND_BRACKET
-pValue- : ( [~name] | "[~name]" ) 
+pValue- : ( [name] | "[name]" ) 
 interfaceTest : test [~testName] ;
 testSequence : testSequence [~sequenceName] { [[testSequenceEntry]] }
 testSequenceEntry : [~name] ( -> [~name] )* ;
@@ -90,6 +90,13 @@ testClassInit : test Init  { [**code] }
 genericTestCase : generic test [~testCaseName] OPEN_ROUND_BRACKET [[genericElement]] CLOSE_ROUND_BRACKET { ( [**code] )* }
 genericElement- : [~elementType] [~genericElement]  [[genericMethodParameters]]? 
 genericMethodParameters- : [~elementType] ( , [~elementType] )*
+
+//testcase if statement
+ifStatement : if OPEN_ROUND_BRACKET [**condition] CLOSE_ROUND_BRACKET { [**code] } [[ifElseStatement]]* [[elseStatement]]?
+ifElseStatement : if else OPEN_ROUND_BRACKET [**condition] CLOSE_ROUND_BRACKET { [**code] }
+elseStatement : else { [**code] }
+
+
 
 
 // Details of associations: See manual page [*AssociationDefinition*]

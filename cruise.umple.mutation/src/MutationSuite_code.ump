@@ -194,12 +194,12 @@ public Boolean mutate(Mutant mu, String modelCode, String muType, String muOpera
  return false;
 }
 
-// line 170 "../../../../src/MutationSuite_code.ump"
+
 public Boolean generateMuCode(Mutant mu){
  return null;
 }
 
-// line 175 "../../../../src/MutationSuite_code.ump"
+
 public Boolean mutateAssociationOneToMany(Mutant mu, String modelCode, String replacementType, String lang){
  String muModelCode = "";
 	   String modelFileName="";
@@ -262,7 +262,7 @@ public Boolean mutateAssociationOneToMany(Mutant mu, String modelCode, String re
 	   return null;
 }
 
-// line 238 "../../../../src/MutationSuite_code.ump"
+
 public Boolean mutateAssociationOneToOptionalOne(Mutant mu, String modelCode, String replacementType, String lang){
  String muModelCode = "";
 	   String modelFileName="";
@@ -331,7 +331,7 @@ public Boolean mutateAssociationOneToOptionalOne(Mutant mu, String modelCode, St
 	   return null;
 }
 
-// line 308 "../../../../src/MutationSuite_code.ump"
+
 public Boolean mutateAssociationOptionalOneToMany(Mutant mu, String modelCode, String replacementType, String lang){
  String muModelCode = "";
 	   String modelFileName="";
@@ -404,7 +404,7 @@ public Boolean mutateAssociationOptionalOneToMany(Mutant mu, String modelCode, S
 	   return null;
 }
 
-// line 382 "../../../../src/MutationSuite_code.ump"
+
 public Boolean mutateAssociationDirectionality(Mutant mu, String modelCode, String replacementType, String lang){
  String muModelCode = "";
 	   StringBuffer muCode = new StringBuffer(modelCode);
@@ -498,7 +498,8 @@ public Boolean mutateAssociationDirectionality(Mutant mu, String modelCode, Stri
 	   return null;
 }
 
-// line 475 "../../../../src/MutationSuite_code.ump"
+
+
 public Boolean mutateAssociationOneToN(Mutant mu, String modelCode, String replacementType, String lang){
  String muModelCode="";
 	  String regex = "1\\s*\\w*\\s*--\\s*\\d\\s+\\w\\s+\\w*";
@@ -510,7 +511,7 @@ public Boolean mutateAssociationOneToN(Mutant mu, String modelCode, String repla
 return null;
 }
 
-// line 487 "../../../../src/MutationSuite_code.ump"
+
 public Boolean mutateAssociationOneToNN(Mutant mu, String modelCode, String replacementType, String lang){
  String regex = "[2-9]..[2-9]";
 	   Pattern pattern = Pattern.compile(regex);
@@ -573,7 +574,7 @@ public Boolean mutateAssociationOneToNN(Mutant mu, String modelCode, String repl
 	  return null;
 }
 
-// line 551 "../../../../src/MutationSuite_code.ump"
+
 public Boolean mutateAttributeTypedString(Mutant mu, String modelCode, String replacementType, String lang){
  String muModelCode = "";
 	   String modelFileName="";
@@ -638,7 +639,7 @@ public Boolean mutateAttributeTypedString(Mutant mu, String modelCode, String re
 		  return null;
 }
 
-// line 614 "../../../../src/MutationSuite_code.ump"
+
 public Boolean mutateAttributeTypedInteger(Mutant mu, String modelCode, String replacementType, String lang){
  String muModelCode = "";
 	   String modelFileName="";
@@ -705,7 +706,7 @@ public Boolean mutateAttributeTypedInteger(Mutant mu, String modelCode, String r
 		  return null;
 }
 
-// line 678 "../../../../src/MutationSuite_code.ump"
+
 public Boolean mutateAttributeTypedFloat(Mutant mu, String modelCode, String replacementType, String lang){
  String muModelCode = "";
 	   String modelFileName="";
@@ -785,7 +786,7 @@ public Boolean mutateAttributeTypedFloat(Mutant mu, String modelCode, String rep
 		  return null;
 }
 
-// line 755 "../../../../src/MutationSuite_code.ump"
+
 public Boolean mutateAttributeTypedDouble(Mutant mu, String modelCode, String replacementType, String lang){
  String muModelCode = "";
 	   String modelFileName="";
@@ -864,7 +865,7 @@ public Boolean mutateAttributeTypedDouble(Mutant mu, String modelCode, String re
 		  return null;
 }
 
-// line 832 "../../../../src/MutationSuite_code.ump"
+
 public Boolean mutateConstraintsBiggerEq(Mutant mu, String modelCode, String replacementType, String lang){
  String muModelCode = "";
 	   String modelFileName="";
@@ -939,7 +940,7 @@ public Boolean mutateConstraintsBiggerEq(Mutant mu, String modelCode, String rep
 		  return null;
 }
 
-// line 906 "../../../../src/MutationSuite_code.ump"
+
 public Boolean mutateConstraintsBigger(Mutant mu, String modelCode, String replacementType, String lang){
  String muModelCode = "";
 	   String modelFileName="";
@@ -1014,7 +1015,7 @@ public Boolean mutateConstraintsBigger(Mutant mu, String modelCode, String repla
 		  return null;
 }
 
-// line 980 "../../../../src/MutationSuite_code.ump"
+
 public Boolean mutateAttributeLazy(Mutant mu, String modelCode, String replacementType, String lang){
  String muModelCode = "";
 			  String regex = "0..1\\s*\\w*\\s*--\\s*\\*\\s+\\w\\s+\\w*";
@@ -1035,7 +1036,7 @@ public Boolean mutateAttributeLazy(Mutant mu, String modelCode, String replaceme
 	  return null;
 }
 
-// line 1000 "../../../../src/MutationSuite_code.ump"
+
 public Boolean mutateAttributeImmutable(Mutant mu, String modelCode, String replacementType, String lang){
  String muModelCode = "";
 			  String regex = "0..1\\s*\\w*\\s*--\\s*\\*\\s+\\w\\s+\\w*";
@@ -1056,7 +1057,7 @@ public Boolean mutateAttributeImmutable(Mutant mu, String modelCode, String repl
 	  return null;
 }
 
-// line 1021 "../../../../src/MutationSuite_code.ump"
+
 public Boolean mutateExtraCodeOperatorBiggerThan(Mutant mu, String modelCode, String replacementType, String lang){
  String muModelCode = "";
 			  String regex = "0..1\\s*\\w*\\s*--\\s*\\*\\s+\\w\\s+\\w*";
@@ -1077,7 +1078,7 @@ public Boolean mutateExtraCodeOperatorBiggerThan(Mutant mu, String modelCode, St
 	  return null;
 }
 
-// line 1041 "../../../../src/MutationSuite_code.ump"
+
 public Boolean mutateExtraCodeOperatorSmallerThan(Mutant mu, String modelCode, String replacementType, String lang){
  String muModelCode = "";
 			  String regex = "0..1\\s*\\w*\\s*--\\s*\\*\\s+\\w\\s+\\w*";
@@ -1132,8 +1133,8 @@ public String addMutatedFile(String path, String modelName, String muType, Strin
 		code = modifyModelUseStatements(code, muType);
 		
 		
-		System.out.println("File to add: " + filename);
-		System.out.println("File to add code : " + code);
+		//System.out.println("File to add: " + filename);
+		//System.out.println("File to add code : " + code);
 		//System.out.println("code to add: " + code);
 		filesToWrite.put(filename, code);
 		
@@ -1196,7 +1197,7 @@ public void preprocessFiles ()
 	   
 }
 
-// line 1230 "../../../../src/MutationSuite_code.ump"
+
 public String readUseFilesCode(String filename){
  String code= "";
 	   
@@ -1223,19 +1224,19 @@ public String readUseFilesCode(String filename){
 	   return code;
 }
 
-// line 1257 "../../../../src/MutationSuite_code.ump"
+
 public void writeMutatedUseFiles(String path, String muType, String code){
  // TODO Auto-generated method stub
 	   
-	   for(String filename : muFiles)
+	   /*for(String filename : muFiles)
 	   {
 		   //writeMutatedFile(path, filename, muType, code);
 		   //System.out.println("muFileXXXXX:"+ filename);
 		   
-	   }
+	   }*/
 }
 
-// line 1270 "../../../../src/MutationSuite_code.ump"
+
 public boolean analyzeModelFiles(String path, String modelName, String modelCode){
  String regex = "use\\s\\w*.ump;";
 	   modelCode = originalModel.getCode(); 
@@ -1287,7 +1288,7 @@ public boolean analyzeModelFiles(String path, String modelName, String modelCode
 	 else return false;
 }
 
-// line 1321 "../../../../src/MutationSuite_code.ump"
+
 public String modifyModelCode(String modelCode, String regex, String replacement, String muOperator){
  String muModelCode = "";
 	   StringBuffer muCode = new StringBuffer(modelCode);	   
@@ -1344,7 +1345,7 @@ public String modifyModelCode(String modelCode, String regex, String replacement
 	   return  muModelCode;
 }
 
-// line 1379 "../../../../src/MutationSuite_code.ump"
+
 public String modifyModelNameSpace(String model, String muType){
  String regex = "namespace\\s\\w+[.\\w]*";
 	   Pattern pattern = Pattern.compile(regex);
@@ -1362,7 +1363,7 @@ public String modifyModelNameSpace(String model, String muType){
 	   return model;
 }
 
-// line 1398 "../../../../src/MutationSuite_code.ump"
+
 public String modifyModelUseStatements(String model, String muType){
  String regex = "use";
 	   Pattern pattern = Pattern.compile(regex);
@@ -1373,7 +1374,7 @@ public String modifyModelUseStatements(String model, String muType){
 	   return model;
 }
 
-// line 1410 "../../../../src/MutationSuite_code.ump"
+
 @SuppressWarnings("null")
 public void prepare(String aPath, String aUFileName, String aLang, String replacementType, String muOperator){
  //MutationSuite muSuite = new MutationSuite(null, 0, null);
@@ -1511,7 +1512,7 @@ public void prepare(String aPath, String aUFileName, String aLang, String replac
 }
 
 
-// line 1083 "../../../../src/MutationSuite_code.ump"
+
 @SuppressWarnings("null")
 public UmpleModel createUmpleMutationSystem(String pathToInput, String filename, String lang, String muType) throws IOException{
  //pathToInput= SampleFileWriter.rationalize("");
@@ -1736,13 +1737,13 @@ private void generateRelatedFiles(String lang, String mutationOperator,String aU
 			  //uFileName = muFiles.get(x);
 			  //System.out.println(readModelFile(modelCode, muFiles.get(x)));
 			  modelCode = readModelFile(modelCode, muFiles.get(x));
-			  System.out.println("model COODEODODOEDOE::: "+modelCode);
+			  //System.out.println("model COODEODODOEDOE::: "+modelCode);
 			  if ( x+1 != fileToMutate)
 			  {
 				  try {
 
-					  System.out.println("11XXXXXXFILENAME : "+ muFiles.get(x));
-					  System.out.println("11XXXXXXFILECODE : "+ modelCode);
+					  //System.out.println("11XXXXXXFILENAME : "+ muFiles.get(x));
+					  //System.out.println("11XXXXXXFILECODE : "+ modelCode);
 					  addMutatedFile(path,uFileName,mutationOperator, modelCode);	
 					  //createUmpleMutationSystem(path, mutationOperator+"Mutation_"+muFiles.get(x), lang, mutationOperator);
 					  System.out.println("related file generated : "+ muFiles.get(x));
@@ -1769,11 +1770,11 @@ private void generateRelatedFiles(String lang, String mutationOperator,String aU
 			  System.out.println("related file generated : "+ aUFileName);
 			  modelCode = "";
 			  
-			  for (Map.Entry<String, String> entry : filesToWrite.entrySet())
+			 /* for (Map.Entry<String, String> entry : filesToWrite.entrySet())
 			  {
 				  System.out.println("FFFFFF files to write: " +entry.getKey());
 				  System.out.println("FFFFFF files to write: " +entry.getValue());
-			  }
+			  }*/
 			  
 		  }
 		  catch (Exception e) {

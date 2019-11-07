@@ -254,6 +254,11 @@ private void analyzeTestCase(Token token, UmpleElement uElement, UmpleTestCase u
 	        analyzeTestMultiComment(subToken,uElement,uTestCase);	      	    	
 	      }
 	      
+	      if(subToken.getName().equals("ifStatement"))
+	      {	    	  
+	        analyzeTestIfStatement(subToken,uElement,uTestCase);	      	    	
+	      }
+	      
 	    }
   }
 
@@ -1133,6 +1138,95 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
    	return code;
    	
    }
+   
+   private void analyzeTestIfStatement(Token token, UmpleElement uElement, UmpleTestCase uTestCase) {
+	// TODO analyze if statement tokens
+	  
+	 TestAction ta = new TestAction("ifStatement","", "ifStatement",uTestCase.getLocOrder());
+	  String code = "";
+	  for (Token subToken : token.getSubTokens()) {
+		  if (subToken.getName().equals("("))
+		  {
+			  code += "(";
+		  }
+		  
+		  if (subToken.getName().equals(")"))
+		  {
+			  code += ")";
+		  }
+		  
+		  if (subToken.getName().equals("}"))
+		  {
+			  code += "\n\t  }";
+		  }
+		  
+		  if (subToken.getName().equals("{"))
+		  {
+			  code += "{\n\t";
+		  }
+		  
+		  if (subToken.getName().equals("if"))
+		  {
+			  code += "\n\t"+"if";
+		  }
+		  
+		  if (subToken.getName().equals("condition"))
+		  {
+			  code += subToken.getValue("condition");
+		  }
+		  
+		  if (subToken.getName().equals("code")) {
+			  code += "" +subToken.getValue("code");
+		  }
+		  
+		  if (subToken.getName().equals("ifElseStatement"))
+		  {
+			  for (Token ifElseToken :subToken.getSubTokens()) {
+				  
+			  if (ifElseToken.getName().equals("if"))			  
+			  code += "\n\t"+"if";			  
+			  if (ifElseToken.getName().equals("else"))
+				  code += " else";
+			  if (ifElseToken.getName().equals("code"))
+				  code += ifElseToken.getValue("code");
+			  if (ifElseToken.getName().equals("("))
+				  code += "(";
+			  if (ifElseToken.getName().equals(")"))
+				  code += ")";
+			  if (ifElseToken.getName().equals("}"))
+				  code +="\n\t}\n";
+			  if (ifElseToken.getName().equals("{"))
+				  code += "{\n\t";
+			  if (ifElseToken.getName().equals("condition"))
+				  code += ifElseToken.getValue("condition");			  
+			  }
+		  }
+		  
+		  if (subToken.getName().equals("elseStatement"))
+		  {
+			  code += "\n\t";
+			  for (Token elseToken :subToken.getSubTokens()) {
+				  		  
+			  if (elseToken.getName().equals("else"))
+				  code += "else";
+			  if (elseToken.getName().equals("code"))
+				  code += "\t" + elseToken.getValue("code")+"";
+			  if (elseToken.getName().equals("}"))
+				  code += "\n\t}\n";
+			  if (elseToken.getName().equals("{"))
+				  code += " {\n";			  		  
+			  }
+		  }
+		  
+		  
+	  }
+	  
+	  ta.setActionCode(code);
+	  
+	  uTestCase.addTestAction(ta);
+	  uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	
+}
 
    	
 }

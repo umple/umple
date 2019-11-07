@@ -1,9 +1,12 @@
 generate Test;
 
 
-class Person {  
+class Person {    
+   
   
    testSequence ts { checkName -> checkStatus ; }
+  
+ 
   
   test checkStatus {
         //something

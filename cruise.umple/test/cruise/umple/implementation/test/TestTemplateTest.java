@@ -338,6 +338,42 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    
 	  }
 	  
+	  @Test
+	  public void ifStatement_Test()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/ifStatementTest.ump","test/testIfStatementTest.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/ifStatementTest.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/ifStatementTest_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void ifElseStatement_Test()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/ifElseStatementTest.ump","test/testIfElseStatementTest.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/ifElseStatementTest.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/ifElseStatementTest_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void elseStatement_Test()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/elseStatementTest.ump","test/testElseStatementTest.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/elseStatementTest.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/elseStatementTest_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
 	  
 	  @Test
 	  public void abstractTest()

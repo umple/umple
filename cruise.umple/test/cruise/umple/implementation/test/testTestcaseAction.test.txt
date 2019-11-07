@@ -17,8 +17,7 @@ Test Person {
  GIVEN:
  TestCaseAction.ump;
  
- WHERE:
-  Person p1 ("john" , 123);
+ 
  
  THEN:
 
@@ -82,6 +81,16 @@ Test Person {
       
       JUnit test checkName {
         //test code
+        }
+      
+      
+      
+      
+        
+    
+      
+      JUnit test Init {
+        Person p1 ("john", 123);
         }
       
       

@@ -15,7 +15,7 @@ depend joptsimple.*;
 	public static void main(String[] args) {
 		
 		
-		MutationSuite ms = new MutationSuite(null,0, "", "");
+		
 		OptionParser parser = new OptionParser();
 		OptionSpec<Void> help = parser.acceptsAll(Arrays.asList("h","help"),"show help").forHelp();
         OptionSpec<String> generate = parser.accepts("generate").withRequiredArg();        
@@ -23,6 +23,7 @@ depend joptsimple.*;
         OptionSpec<String> mutationType = parser.accepts("t").withRequiredArg();
         OptionSpec<String> mutationOperator = parser.accepts("p").withRequiredArg();
         OptionSpec<String> lang = parser.accepts("l").withRequiredArg();
+        OptionSpec<String> numberOfMutants = parser.accepts("n").withRequiredArg();
         
         //OptionSet options = parser.parse("generate", "-t", "random", "-p", "full");
         OptionSet options = null;
@@ -124,6 +125,7 @@ depend joptsimple.*;
         					   "			  direction, Integer, String, Double, Float");
         	System.out.println("-p		 	indicate the targeted element to be mutated: ‘full’ or specific element.");
         	System.out.println("-l			the output language of the system to be generated: Java, ruby, Php (any system Umple accepts)  ");
+        	System.out.println("-n			the number of mutants to be generated randomly  ");
         	
 
         }
@@ -138,6 +140,7 @@ depend joptsimple.*;
         String aLang=options.valueOf(lang);
         String replacementType = "";
         String muOperator = "";
+        int mutantNumber = Integer.parseInt(options.valueOf(numberOfMutants));
         
         replacementType = (options.valueOf(mutationType)).toString();
         muOperator = (options.valueOf(mutationOperator)).toString();
@@ -146,8 +149,13 @@ depend joptsimple.*;
         System.out.println("Replacement type used: "+replacementType);
         System.out.println("Targeted mutation operator : "+muOperator);
         try {
+        for (int x = 1 ; x<= mutantNumber ; x++)
+        {
+        MutationSuite ms = new MutationSuite(null,0, "", "",x);	        	
         ms.prepare(path, modelName, aLang,replacementType,muOperator);
         System.out.println("Model mutated successfully !");
+        
+        }
         
         }
         catch(Exception e) {
