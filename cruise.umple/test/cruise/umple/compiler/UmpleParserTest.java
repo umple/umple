@@ -3109,7 +3109,15 @@ public class UmpleParserTest
   public void validCodeInjection() {
     assertHasNoWarningsParse("702_validCodeInjection.ump");
   }
-
+  @Test
+  void testSemicolonUnicode()
+  {
+    UmpleFile uFile = new UmpleFile("classAttributeContainsSemicolons.ump");
+    UmpleModel umodel = new UmpleModel(uFile);
+    umodel.run();
+    String attributeValue = umodel.getUmpleClass(0).getAttribute(0).getValue().trim();
+    Assert.assertTrue(attributeValue.equals("\"int x =10 ; x++ ;\""));	
+  }
   public boolean parse(String filename)
   {
     //String input = SampleFileWriter.readContent(new File(pathToInput, filename));

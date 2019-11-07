@@ -1,0 +1,6 @@
+class AttriWithSemicolons
+{
+
+ String aJavaStatement = "int x =10 \u003B x++ \u003B" ;
+ 
+}
