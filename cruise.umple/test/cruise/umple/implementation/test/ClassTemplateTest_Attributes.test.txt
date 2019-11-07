@@ -1,17 +1,34 @@
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 
 ////---- Tests for  ClassTemplateTest_Attributes ----/////
+
 Test Mentor {
+
+ generate JUnit ;
+ 
+ depend  Mentor ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_Attributes.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :MAX
 
       test attribute_MAX {
     
-      AssertTrue( mentor.setMAX(123)));
-      AssertTrue( mentor.getMAX() == 123));
+      assertTrue( mentor.setMAX(123)));
+      assertTrue( mentor.getMAX() == 123));
+      assertTrue( mentor.setMAX(321)));
+      assertTrue( mentor.getMAX() == 321));
+      assertFlase( mentor.getMAX() == 123));
           
 	}
 
@@ -19,8 +36,11 @@ Test Mentor {
 
       test attribute_MIN {
     
-      AssertTrue( mentor.setMIN(123)));
-      AssertTrue( mentor.getMIN() == 123));
+      assertTrue( mentor.setMIN(123)));
+      assertTrue( mentor.getMIN() == 123));
+      assertTrue( mentor.setMIN(321)));
+      assertTrue( mentor.getMIN() == 321));
+      assertFlase( mentor.getMIN() == 123));
           
 	}
 
@@ -28,11 +48,11 @@ Test Mentor {
 
       test attribute_HELLO {
     
-    AssertTrue( mentor.setHELLO("RandomString1"));
-    AssertTrue( mentor.getHELLO() =="RandomString1");
-    AssertTrue( mentor.setHELLO("RandomString1"));
-    AssertTrue( mentor.getHELLO("RandomString1"));
-    AssertTrue( mentor.getHELLO() =="RandomString1");
+    assertTrue( mentor.setHELLO("RandomString1"));
+    assertTrue( mentor.getHELLO() =="RandomString1");
+    assertTrue( mentor.setHELLO("RandomString2"));
+    assertTrue( mentor.getHELLO()=="RandomString2");
+    assertFalse( mentor.getHELLO() =="RandomString1");
              
 	}
 
@@ -54,7 +74,7 @@ Test Mentor {
     
           
 
-AssertNotNull (str2);
+    assertTrue (!str2.equals(null));
 
         
           
@@ -69,17 +89,17 @@ AssertNotNull (str2);
 
       test attribute_someName {
     
-    AssertTrue( mentor.setSomeName("RandomString1"));
-    AssertTrue( mentor.getSomeName() =="RandomString1");
-    AssertTrue( mentor.setSomeName("RandomString1"));
-    AssertTrue( mentor.getSomeName("RandomString1"));
-    AssertTrue( mentor.getSomeName() =="RandomString1");
+    assertTrue( mentor.setSomeName("RandomString1"));
+    assertTrue( mentor.getSomeName() =="RandomString1");
+    assertTrue( mentor.setSomeName("RandomString2"));
+    assertTrue( mentor.getSomeName()=="RandomString2");
+    assertFalse( mentor.getSomeName() =="RandomString1");
              
 
           
 
-AssertNotNull (someName);
-    AssertNotNull (Mentor.getSomeName != null)
+    assertTrue (!someName.equals(null));
+    assertTrue (Mentor.getSomeName() != null)
           
 
         	}
@@ -88,13 +108,16 @@ AssertNotNull (someName);
 
       test attribute_lDoub {
     
-      AssertTrue( mentor.setLDoub(123)));
-      AssertTrue( mentor.getLDoub() == 123));
+      assertTrue( mentor.setLDoub(123456789)));
+      assertTrue( mentor.getLDoub() == 123456789));
+      assertTrue( mentor.setLDoub(987654321)));
+      assertTrue( mentor.getLDoub() == 987654321));
+      assertFlase( mentor.getLDoub() == 123456789));
           
 
           
 
-AssertNotNull (lDoub);
+    assertTrue (!lDoub.equals(null));
 
         	}
 
@@ -105,7 +128,7 @@ AssertNotNull (lDoub);
 
           
 
-AssertNotNull (lBool);
+    assertTrue (!lBool.equals(null));
 
         	}
 
@@ -113,16 +136,16 @@ AssertNotNull (lBool);
 
       test attribute_name {
     
-    AssertTrue( mentor.setName("RandomString1"));
-    AssertTrue( mentor.getName() =="RandomString1");
-    AssertTrue( mentor.setName("RandomString1"));
-    AssertTrue( mentor.getName("RandomString1"));
-    AssertTrue( mentor.getName() =="RandomString1");
+    assertTrue( mentor.setName("RandomString1"));
+    assertTrue( mentor.getName() =="RandomString1");
+    assertTrue( mentor.setName("RandomString2"));
+    assertTrue( mentor.getName()=="RandomString2");
+    assertFalse( mentor.getName() =="RandomString1");
              
 
           
 
-AssertNotNull (name);
+    assertTrue (!name.equals(null));
 
         	}
 
@@ -142,8 +165,11 @@ AssertNotNull (name);
 
       test attribute_i {
     
-      AssertTrue( mentor.setI(123)));
-      AssertTrue( mentor.getI() == 123));
+      assertTrue( mentor.setI(123)));
+      assertTrue( mentor.getI() == 123));
+      assertTrue( mentor.setI(321)));
+      assertTrue( mentor.getI() == 321));
+      assertFlase( mentor.getI() == 123));
           
 	}
 
@@ -151,8 +177,11 @@ AssertNotNull (name);
 
       test attribute_derivedTwiceI {
     
-      AssertTrue( mentor.setDerivedTwiceI(123)));
-      AssertTrue( mentor.getDerivedTwiceI() == 123));
+      assertTrue( mentor.setDerivedTwiceI(123)));
+      assertTrue( mentor.getDerivedTwiceI() == 123));
+      assertTrue( mentor.setDerivedTwiceI(321)));
+      assertTrue( mentor.getDerivedTwiceI() == 321));
+      assertFlase( mentor.getDerivedTwiceI() == 123));
           
 	}
 
@@ -160,8 +189,11 @@ AssertNotNull (name);
 
       test attribute_x {
     
-      AssertTrue( mentor.setX(123)));
-      AssertTrue( mentor.getX() == 123));
+      assertTrue( mentor.setX(123)));
+      assertTrue( mentor.getX() == 123));
+      assertTrue( mentor.setX(321)));
+      assertTrue( mentor.getX() == 321));
+      assertFlase( mentor.getX() == 123));
           
 	}
 
@@ -169,11 +201,11 @@ AssertNotNull (name);
 
       test attribute_id {
     
-    AssertTrue( mentor.setId("RandomString1"));
-    AssertTrue( mentor.getId() =="RandomString1");
-    AssertTrue( mentor.setId("RandomString1"));
-    AssertTrue( mentor.getId("RandomString1"));
-    AssertTrue( mentor.getId() =="RandomString1");
+    assertTrue( mentor.setId("RandomString1"));
+    assertTrue( mentor.getId() =="RandomString1");
+    assertTrue( mentor.setId("RandomString2"));
+    assertTrue( mentor.getId()=="RandomString2");
+    assertFalse( mentor.getId() =="RandomString1");
              
 	}
 
@@ -181,11 +213,11 @@ AssertNotNull (name);
 
       test attribute_p {
     
-    AssertTrue( mentor.setP("RandomString1"));
-    AssertTrue( mentor.getP() =="RandomString1");
-    AssertTrue( mentor.setP("RandomString1"));
-    AssertTrue( mentor.getP("RandomString1"));
-    AssertTrue( mentor.getP() =="RandomString1");
+    assertTrue( mentor.setP("RandomString1"));
+    assertTrue( mentor.getP() =="RandomString1");
+    assertTrue( mentor.setP("RandomString2"));
+    assertTrue( mentor.getP()=="RandomString2");
+    assertFalse( mentor.getP() =="RandomString1");
              
 	}
 
@@ -193,11 +225,11 @@ AssertNotNull (name);
 
       test attribute_q {
     
-    AssertTrue( mentor.setQ("RandomString1"));
-    AssertTrue( mentor.getQ() =="RandomString1");
-    AssertTrue( mentor.setQ("RandomString1"));
-    AssertTrue( mentor.getQ("RandomString1"));
-    AssertTrue( mentor.getQ() =="RandomString1");
+    assertTrue( mentor.setQ("RandomString1"));
+    assertTrue( mentor.getQ() =="RandomString1");
+    assertTrue( mentor.setQ("RandomString2"));
+    assertTrue( mentor.getQ()=="RandomString2");
+    assertFalse( mentor.getQ() =="RandomString1");
              
 	}
 
@@ -205,11 +237,11 @@ AssertNotNull (name);
 
       test attribute_r {
     
-    AssertTrue( mentor.setR("RandomString1"));
-    AssertTrue( mentor.getR() =="RandomString1");
-    AssertTrue( mentor.setR("RandomString1"));
-    AssertTrue( mentor.getR("RandomString1"));
-    AssertTrue( mentor.getR() =="RandomString1");
+    assertTrue( mentor.setR("RandomString1"));
+    assertTrue( mentor.getR() =="RandomString1");
+    assertTrue( mentor.setR("RandomString2"));
+    assertTrue( mentor.getR()=="RandomString2");
+    assertFalse( mentor.getR() =="RandomString1");
              
 	}
 
@@ -251,6 +283,7 @@ AssertNotNull (name);
 
 
   
+ 
    
 
 }

@@ -5,30 +5,48 @@ attribute_typed <<!<</*attribute_typed*/>><<#
 if(at.getType().equals("String") || at.getType().equals("null"))
 	    	  {
 	    	  	   String randomString1 = UUID.randomUUID().toString().replaceAll("-","").substring(0, 8);#>>
-		AssertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>("<<=gen.translate("AttStringManu")>>"));
-		AssertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() =="<<=gen.translate("AttStringManu")>>");
-		AssertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>("RandomString1"));
-		AssertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>("RandomString1"));
-		AssertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() =="<<=gen.translate("AttStringManu")>>");
+		assertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>("<<=gen.translate("AttStringManu")>>"));
+		assertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() =="<<=gen.translate("AttStringManu")>>");
+		assertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>("<<=gen.translate("AttStringManu2")>>"));
+		assertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>()=="<<=gen.translate("AttStringManu2")>>");
+		assertFalse( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() =="<<=gen.translate("AttStringManu")>>");
 	    		   <<#
 	    	  }
 
-	    	  if(at.getType().equals("Double") || at.getType().equals("Integer"))
+	    	  if(at.getType().equals("Integer"))
 	    	  {#>>
-	    AssertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>(<<=gen.translate("AttIntManu")>>)));
-	    AssertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == <<=gen.translate("AttIntManu")>>));
+	    assertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>(<<=gen.translate("AttIntManu")>>)));
+	    assertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == <<=gen.translate("AttIntManu")>>));
+	    assertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>(<<=gen.translate("AttIntManu2")>>)));
+	    assertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == <<=gen.translate("AttIntManu2")>>));
+	    assertFlase( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == <<=gen.translate("AttIntManu")>>));
+	    	  <<#}
+	    	  
+	    	  if(at.getType().equals("Double"))
+	    	  {#>>
+	    assertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>(<<=gen.translate("AttDoubleManu")>>)));
+	    assertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == <<=gen.translate("AttDoubleManu")>>));
+	    assertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>(<<=gen.translate("AttDoubleManu2")>>)));
+	    assertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == <<=gen.translate("AttDoubleManu2")>>));
+	    assertFlase( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == <<=gen.translate("AttDoubleManu")>>));
 	    	  <<#}
 
 	    	  if(at.getType().equals("Float"))
 	    	  {#>>
-	    AssertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>(<<=gen.translate("AttFloatManu")>>)));
-	    AssertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == <<=gen.translate("AttFloatManu")>>));
+	    assertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>(<<=gen.translate("AttFloatManu")>>)));
+	    assertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == <<=gen.translate("AttFloatManu")>>));
+	    assertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>(<<=gen.translate("AttFloatManu2")>>)));
+	    assertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == <<=gen.translate("AttFloatManu2")>>));
+	    assertFlase( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == <<=gen.translate("AttFloatManu")>>));
 	    	  <<#}
-	    	  /*if(at.getType().equals("Boolean"))
-	    	  {
-	    		   appendln(realSb("\tAssertTrue( {0}.(set{1}(true));\n",uClass.getName().toLowerCase() , attrName));
-	    		   appendln(realSb("\tAssertTrue( {0}.get{1}());\n",uClass.getName().toLowerCase() , attrName, gen.translate("AttBooleanManu")));
-	    	  }*/
+	    	  if(at.getType().equals("boolean"))
+	    	  {#>>
+	    assertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>(false)));
+	    assertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == false);
+	    assertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>(true)));
+	    assertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == true);
+	    assertFlase( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == false));
+	    	  <<#}
 #>>
 !>>
 

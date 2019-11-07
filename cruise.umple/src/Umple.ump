@@ -140,6 +140,8 @@ class UmpleElement
 
   String[] namespaces;
 
+  NameSpace nameSpace = new NameSpace("",new Position("", 0, 0, 0));
+
   packageName = "";
 
   // The code associated with the Umple element.
@@ -236,6 +238,7 @@ class MethodBody
   
   //the method assertions
   1 -> * UmpleAssertion;
+  0..1 -- * UmpleTestCase;
 }
 
 /*
@@ -248,6 +251,8 @@ class UmpleAssertion {
 	level;
 	action;
 	assertCode;
+	int locOrder;
+	boolean isTimed = false;
 }
 
 /*
@@ -256,9 +261,54 @@ class UmpleAssertion {
 
 class UmpleTestCase {
 	name;
-	
-	1 -- * UmpleAssertion;		
+	int locOrder;
+	boolean isTimed = false;
+	boolean isOverride = false;
+	boolean isConcrete = false;
+	String concreteLang = "";
+	0..1 -- * UmpleAssertion;	
+	0..1 -- * TestAction;
+	0..1 -- * TestInit;	
+	Map<Integer,String> bodyCode = new HashMap<Integer,String>();	
 }
+
+
+
+// test action statements
+class TestAction{
+  name;
+  actionCode;
+  type;
+  int locOrder;
+
+}
+
+
+class TestParameter {
+	String value;
+	String type;
+	String name;
+}
+
+
+class TestSequence {
+ name;
+ String[] tests = null;
+ //0..1 -- 1 UmpleClass;
+}
+
+
+//initialization statements in test that holds
+// identifier objectname (parameters);
+class TestInit{
+  identifier;
+  objectName;
+  code;
+  
+  0..1 -- * TestParameter;
+  
+}
+
 
 
 /*
@@ -583,6 +633,7 @@ class UmpleInterface
 
   // The comments associated with the Umple Interface (such as the Javadoc above it).
   1 -> * Comment;
+  0..1 -- * UmpleTestCase;
 
   before setPackageName { if (aPackageName == null) { return false; } }
   before addDepend { if (depends.contains(aDepend)) { return false; } }
@@ -605,6 +656,7 @@ class UmpleClass
   Boolean hasProxyPattern = false;
   Boolean needsDefaultInterface=false;
   Boolean isDistributed = false;
+  Boolean isInternalSerializable = false;
   Boolean isDefaultInterfaceRemoteRMI=false;
   // Specifies whether or not in the filter
   Boolean filteredin = false;
@@ -637,14 +689,24 @@ class UmpleClass
   //The possible Preconditions related to the Umple Class
   1 -> 0..* Postcondition postConds;
   
-  //Umple Test Case at the cass level
-  1 -- 0..* UmpleTestCase;
+  //Umple Test Case at the class level
+  0..1 -- 0..* UmpleTestCase;
+  // class test sequence for testcases
+  0..1 -- 0..* TestSequence;
+  // class test initialization: inits at the top level
+  0..1 -- 0..* TestInit;
 
   // The possible Constraints related to the Umple Class
   1 uClass -> 0..* ConstraintTree;
 
   // The Umple Class's super class (if there is one).
   * subclasses -- 0..1 UmpleClass extendsClass;
+  
+  //isStatic if the inner class is static
+  // The inner classes contained within the Umple class.
+  0..1 outerClass --  0..* UmpleClass innerClasses;
+  boolean isStatic = false;
+//  boolean isInner = false;
 
   * subClasses -- * UmpleTrait extendsTraits;
 
@@ -743,6 +805,10 @@ class UmpleTrait {
 
   //This is used to assign required interfaces
   1 -> * UmpleInterface requiredInterfaces;
+
+  //trait test cases
+
+  0..1 -- * UmpleTestCase;
 
   //--- before addDepend { if (depends.contains(aDepend)) { return false; } }
 
@@ -902,6 +968,9 @@ class Attribute
 
   // Specifies whether or not the method parameter is derived.
   Boolean isDerived = false;
+
+  // Specifies whether or not the method parameter is internalTransient.
+  Boolean isInternalTransient = false;
 
   CodeBlock codeblock = new CodeBlock();
 
@@ -1167,6 +1236,17 @@ class GenerateTarget
 
   before getPath{if(path == null) path = ""; }
   key{language}
+}
+
+//added for issue 1315 warning 31
+class NameSpace
+{
+  depend cruise.umple.parser.Position;
+
+  immutable value;
+  immutable Position position;
+  Integer timesUsed = 0;
+  before setTimesUsed{if(aTimesUsed <0) return false; }
 }
 
 use UmpleVersion.ump;

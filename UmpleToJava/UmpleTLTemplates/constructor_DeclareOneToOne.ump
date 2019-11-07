@@ -3,6 +3,7 @@ use constructor_AssociationAssignOptionalMany.ump;
 use constructor_AssociationCreateOneToOne.ump;
 use constructor_AttributeAssign.ump;
 use constructor_AttributeAssignAutounique.ump;
+use constructor_AttributeAssignUnique.ump;
 use constructor_AttributeAssignDefaulted.ump;
 use constructor_AttributeAssignLazy.ump;
 use constructor_AttributeAssignList.ump;
@@ -74,6 +75,11 @@ class UmpleToJava {
     {
       hasBody = true;
       #>><<@ UmpleToJava.constructor_AttributeAssignLazy >><<#
+    }
+    else if(av.getIsUnique())
+    {
+      hasBody = true;
+      #>><<@ UmpleToJava.constructor_AttributeAssignUnique >><<#
     }
     else
     {

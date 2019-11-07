@@ -1,0 +1,35 @@
+class InjectToLabel
+{
+  firstName;
+  lastName;
+  public static void staticMethod( )
+  {
+    FirstLabel: System.out.println("this is line 1.");
+    System.out.println("this is line 2.");
+    SecondLabel: System.out.println("this is line 3");
+  }
+
+  before custom SecondLabel:staticMethod
+  {	
+    //Start before SecondLabel.
+    System.out.println("code added before the SecondLabel in staticMethod().");
+    //End before SecondLabel.
+  }
+  
+  void main(String[] arg)
+  {
+	
+  }
+
+  public void objectMethod()
+  {
+  }
+  after custom SecondLabel:staticMethod
+  {
+    //Start after SecondLabel.
+    System.out.println("code added after the SecondLabel in staticMethod().");
+    //End after SecondLabel.
+  }	
+}
+
+

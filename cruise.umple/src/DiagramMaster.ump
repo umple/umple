@@ -18,6 +18,40 @@ along with the user manual files
 */
 generate GvClassDiagram "DiagramMaster.gv" --override-all;
 
+// Activated in DiagramCoreMaster.ump
+mixset CoreClassesOnly {
+  filter {
+    include UmpleModel, UmpleClass, UmpleAssociation, UmpleInterface;
+    hops {
+      association 1;
+      sub 5;
+    }
+  }
+}
+
+// Activated in DiagramStateMaster.gv
+mixset StateClassesOnly {
+  filter {
+    include StateMachine, State, Transition;
+    hops {
+      association 1;
+      sub 2;}
+  }
+}
+
+// Default filter, will show almost everything (attempts to show everything result in a
+// graph that won't properly display by graphViz.
+filter {
+  include UmpleInternalParser, UmpleClass, CodeGeneratorWithSubptions, BasicExpression;
+  hops {
+    association 999;
+  }
+  hops {
+    sub 10;
+  }
+}
+
+
 use Master.ump;
 
 // Pink for core Umple classes for parsing and the model

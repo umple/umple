@@ -14,11 +14,18 @@ noreferences
 
 <p><b>Risk of deprecation, missing features and defects:</b> It is possible that code which works today may cease working in the future. Development is performed by students and in the context of research. You will therefore find incomplete features and bugs. We encourage you to report new ones (and fix them) and to realize that you may need to work around the existing ones. That said, we do use test-driven development to maintain what we believe is a high level of quality.</p>
 
-<p><b>Limitations of UmpleOnline:</b> The purpose of UmpleOnline is purely to allow people to explore Umple and model-oriented programming, particularly in an educational context. UmpleOnline is not intended to be a commercial or open source development tool; this is one of the reasons why it is only capable of storing a single Umple file per user session. If you want to do serious development in Umple, with multiple files, you should <a href="http://cruise.eecs.uottawa.ca/umpleonline/download_eclipse_umple_plugin.html">download it</a>.</p>
+<p><b>Limitations of UmpleOnline:</b> The purpose of UmpleOnline is purely to allow people to explore Umple and model-oriented programming, particularly in an educational context. UmpleOnline is not intended to be a commercial or open source development tool; this is one of the reasons why it is only capable of working with a small number of Umple files per user session. If you want to do serious development in Umple, with many files, you should <a href="http://cruise.eecs.uottawa.ca/umpleonline/download_eclipse_umple_plugin.html">download it</a> and run it on the command line, or some other supported IDE.</p>
 
-<p><b>Not certified for safety critical or mission critical use:</b> At the current time Umple-generated code <b>should not be used for mission-critical or safety critical uses</b>, including software for any device that may pose a safety risk if it performs incorrectly, or software that would cause economic damage if it failed. We intend that, in time, Umple and tools like it will in fact help improve safety and reliability. But at the current time we have not subjected Umple to the rigorous validation it needs for such uses, and there are many known issues that would preclude such current use.</p>
+<p><b>Not certified for safety critical or mission critical use:</b> At the current time Umple-generated code <b>should not be used for mission-critical or safety critical uses</b>, including software for any device that may pose a safety risk if it performs incorrectly, or software that would cause economic damage if it failed. We intend that, in time, Umple and tools like it will in fact help improve safety and reliability. But at the current time we have not subjected Umple to the rigorous validation it needs for such uses, and there are  known issues that would preclude such current use.</p>
 
 <p><b>Need to apply best practices:</b> Should you choose to use Umple for production use, it is <b>critical that you follow rigorous software engineering practices</b> including (but not limited to): Requirements analysis, careful design and thorough testing. <a href="https://github.com/umple/Umple/wiki/BestUmpleUsePractices">See here for a list of Umple best practies.</a></p>
+
+&nbsp; <br />
+
+<h2>Privacy: Use of Cookies</h2>
+
+<p>UmpleOnline stores a copy of your most recent edited Umple code and various settings in cookies. This protects against losing data by accidental closure of the browser. Upon starting UmpleOnline again, the user will be presented with an option to &apos;Restore saved state&apos; by loading the model and settings from such cookies. This does mean that someone else might be able to find out what you were editing if they had access to your computer. You should not, therefore, use UmpleOnline if you are concerned about such access.</p>
+
 
 &nbsp; <br />
 
@@ -28,11 +35,11 @@ noreferences
 
 <p>Data saved automatically in this way remains stored at the University of Ottawa for up to two days. This is so you can continue an editing session, even if you walk away from your computer for an extended period. We have an automated process that will normally delete such data after two days. However we reserve the right to record general statistics about the size of models and other uses of Umple tools before we delete such data.</p>
 
-<p>If you choose &apos;Create a Bookmarkable URL&apos; then your model is stored, indefinitely, subject to deletion rules described below. Such a file can be edited and deleted by anyone to whom you give the URL, or by anyone who guesses the URL.</p>
+<p>If you choose &apos;Create a Bookmarkable URL&apos; then your model is stored for an extended period, subject to deletion rules described below. Such a file can be edited and deleted by anyone to whom you give the URL, or by anyone who guesses the URL.</p>
 
 <p>If we detect abuse of UmpleOnline, we reserve the right to attempt to track the user using such tools as the originating IP address, and to block access from such an address or address range.<p>
 
-<p>We do intend to install tools to survey users about their experiences with Umple. We will likely use external tools such as SurveyMoney for such surveys; people who complete such surveys would then be subject to the privacy rules of such external tools. Users would be requested to give informed consent prior to taking such a survey, and such informed consent would first be approved by the University of Ottawa&apos;s Research Ethics Board.</p>
+<p>We do intend to install tools to survey users about their experiences with Umple. We will likely use external tools such as SurveyMonkey for such surveys; people who complete such surveys would then be subject to the privacy rules of such external tools. Users would be requested to give informed consent prior to taking such a survey, and such informed consent would first be approved by the University of Ottawa&apos;s Research Ethics Board.</p>
 
 
 &nbsp; <br />
@@ -49,6 +56,8 @@ noreferences
 &nbsp; <br />
 
 <h2>Data deletion</h2>
+
+<p>Models and associated generated outputs are always deleted after two days. If the user generates a permanent URL, our normal policy is to keep the data for two years after the last time it has been edited. But this is not guaranteed, for the reasons mentioned below.</p> 
 
 <p>You may delete your own model in UmpleOnline: Simply select all the text and delete it. To delete all records of generated code, it is suggested that you replace your model by a single line of code (such as class X {} and then generate code from it (generate code in all formats you have previously generated).</p>
 

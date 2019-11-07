@@ -11,7 +11,7 @@ noreferences
 
 <p> Filters can be used to describe a particular diagram (or system version). There can be any number of named filters.<p>
 
-<p>Within a filter directive, one can specify:/p>
+<p>Within a filter directive, one can specify</p>
 
 <ul>
   <li><i>include</i> statements. These list the main classes to be included. There can be any number of include statements, and multiple comma-separated classes can follow each include keyword. Several include statements can be seen in the example below. Any associations between included classes are shown (see Filter 8)<br/>&nbsp;

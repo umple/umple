@@ -27,7 +27,7 @@ public class Student
     number = aNumber;
     if (aMentor == null || aMentor.getStudent() != null)
     {
-      throw new RuntimeException("Unable to create Student due to aMentor");
+      throw new RuntimeException("Unable to create Student due to aMentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     mentor = aMentor;
   }

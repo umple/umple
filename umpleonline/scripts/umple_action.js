@@ -17,6 +17,7 @@ Action.diagramInSync = true;
 Action.freshLoad = false;
 Action.gentime = new Date().getTime();
 Action.savedCanonical = "";
+Action.gdprHidden = false;
 
 Action.clicked = function(event)
 {
@@ -148,10 +149,14 @@ Action.clicked = function(event)
   else if (action == "ShowHideTextEditor")
   {
     Layout.showHideTextEditor();
+    Page.showText = !Page.showText;
+    Page.setShowHideIconState('SHT_button');
   }
   else if (action == "ShowHideCanvas")
   {
     Layout.showHideCanvas();
+    Page.showCanvas = !Page.showCanvas;
+    Page.setShowHideIconState('SHD_button');
   }
   else if (action == "ShowEditableClassDiagram")
   {
@@ -163,15 +168,15 @@ Action.clicked = function(event)
   }
   else if (action == "ShowGvClassDiagram")
   {
-    Action.changeDiagramType({type:"GVClass"});
+    Action.changeDiagramType({type:"GvClass"});
   }
   else if (action == "ShowGvFeatureDiagram")
   {
-    Action.changeDiagramType({type:"GVFeature"});//buttonShowGvFeatureDiagram
+    Action.changeDiagramType({type:"GvFeature"});//buttonShowGvFeatureDiagram
   }
   else if (action == "ShowGvStateDiagram")
   {
-    Action.changeDiagramType({type:"GVState"});
+    Action.changeDiagramType({type:"GvState"});
   }
   else if (action == "ShowStructureDiagram")
   {
@@ -196,10 +201,12 @@ Action.clicked = function(event)
   else if (action == "ToggleAttributes")
   {
     Action.toggleAttributes();
+    Page.setShowHideIconState('SHA_button');
   }
   else if (action == "ToggleMethods")
   {
     Action.toggleMethods();
+    Page.setShowHideIconState('SHM_button');
   }
   else if (action == "ToggleActions")
   {
@@ -365,6 +372,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = false;
     changedType = true;
     jQuery("#buttonShowEditableClassDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('editableClass');
   }
   else if(newDiagramType.type == "JointJSClass") { 
     if(Page.useJointJSClassDiagram) return;
@@ -376,8 +384,9 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = false;
     changedType = true;
     jQuery("#buttonShowJointJSClassDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('JointJSClass');
   }  
-  else if(newDiagramType.type == "GVClass") { 
+  else if(newDiagramType.type == "GvClass") { 
     if(Page.useGvClassDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -387,8 +396,9 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = false;
     changedType = true;
     jQuery("#buttonShowGvClassDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('GvClass');
   }
-  else if(newDiagramType.type == "GVState") {
+  else if(newDiagramType.type == "GvState") {
     if(Page.useGvStateDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -398,8 +408,9 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvFeatureDiagram = false;
     changedType = true;
     jQuery("#buttonShowGvStateDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('GvState');
   }
-  else if(newDiagramType.type == "GVFeature") {
+  else if(newDiagramType.type == "GvFeature") {
    if(Page.useGvFeatureDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -409,6 +420,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvFeatureDiagram = true;
     changedType = true;
     jQuery("#buttonShowGvFeatureDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('GvFeature');
   }
   else if(newDiagramType.type == "structure") { // Structure Diagram
     if(Page.useGvStructureDiagram) return;
@@ -420,6 +432,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvFeatureDiagram = false;
     changedType = true;
     jQuery("#buttonShowStructureDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('structure');
   }
   if (changedType) {
     Action.redrawDiagram();
@@ -1201,6 +1214,11 @@ Action.setCaretPosition = function(line)
   if(isNaN(line-0)) 
   {
     // It is not a number so must be a special hidden command
+    if(line=="gd") 
+    {
+      jQuery('#gdprtext').show();
+      Action.gdprHidden = false;      
+    }
     if(line=="av") 
     {
       // Special backdoor to turn on experimental features
@@ -2384,12 +2402,11 @@ Action.generateTabsCode = function(theCode)
     // If New File Beginning
     if(theLine.indexOf("//%%") >= 0){
       intFileCounter++;
-      if(intFileCounter > 1){ arrCodeFiles[intFileCounter] += "</p>"; }
       strFileName = theLine.slice(14);
       strFileName = strFileName.substr(0, strFileName.indexOf(' '));
       arrFileNames[intFileCounter] = strFileName;
       jQuery('#generatedCodeRow').append("<div id='innerGeneratedCodeRow" + intFileCounter + "'></div>");
-      arrCodeFiles[intFileCounter] = "<p>URL_SPLIT";
+      arrCodeFiles[intFileCounter] = "";
       skipSpace = true;
     }
     else{
@@ -2401,7 +2418,6 @@ Action.generateTabsCode = function(theCode)
       }
     }
   });
-  arrCodeFiles[intFileCounter] += "</p>";
 
   // Output buttons for number of files found
   for (i=1; i <= intFileCounter; i++){
@@ -2455,10 +2471,13 @@ function showTab(event)
 
   // Highlight code for specific file only
   Page.showGeneratedCode(event.data.code, $("inputGenerateCode").value.split(":")[0], event.data.tabnumber);
-  jQuery('.line').last().hide();
-  jQuery('.line').last().hide();
 
   // Hide main code window with glommed files
   jQuery('#innerGeneratedCodeRow').hide();
 }
 
+Action.hidegdpr = function() 
+{
+  jQuery('#gdprtext').hide();
+  Action.gdprHidden = true;
+}

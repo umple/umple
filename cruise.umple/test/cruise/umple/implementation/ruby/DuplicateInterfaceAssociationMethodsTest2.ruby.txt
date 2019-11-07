@@ -1,0 +1,96 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class First < I
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #First Associations - for documentation purposes
+  #attr_reader :second
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_second)
+    @initialized = false
+    @deleted = false
+    @second = nil
+    did_add_second = set_second(a_second)
+    raise "Unable to create first due to @second. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" unless did_add_second
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def get_second
+    @second
+  end
+
+  def set_second(a_second)
+    was_set = false
+    if a_second.nil?
+      return was_set
+    end
+
+    existing_second = @second
+    @second = a_second
+    if !existing_second.nil? and !existing_second.eql?(a_second)
+      existing_second.remove_first(self)
+    end
+    @second.add_first(self)
+    was_set = true
+    was_set
+  end
+
+  def delete
+    @deleted = true
+    @placeholder_second = @second
+    @second = nil
+    @placeholder_second.remove_first(self)
+  end
+
+  def addSecond (aSecond)
+    
+  end
+
+  def getSeconds ()
+    
+  end
+
+  def setSeconds (newSeconds)
+    
+  end
+
+  def numberOfSeconds ()
+    
+  end
+
+  def hasSeconds ()
+    
+  end
+
+  def indexOfSecond (second)
+    
+  end
+
+  def isNumberOfSecondsValid ()
+    
+  end
+
+  def removeSecond (second)
+    
+  end
+
+
+
+end

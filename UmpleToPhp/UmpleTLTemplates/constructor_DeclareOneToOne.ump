@@ -2,6 +2,7 @@ use constructor_AssociationAssignDefault.ump;
 use constructor_AssociationCreateOneToOne.ump;
 use constructor_AttributeAssign.ump;
 use constructor_AttributeAssignAutounique.ump;
+use constructor_AttributeAssignUnique.ump;
 use constructor_AttributeAssignDefaulted.ump;
 use constructor_AttributeAssignLazy.ump;
 use constructor_AttributeAssignList.ump;
@@ -41,6 +42,11 @@ class UmpleToPhp {
     {
       hasBody = true;
       #>><<@ UmpleToPhp.constructor_AttributeAssignLazy >><<#
+    }
+    else if(av.getIsUnique())
+    {
+      hasBody = true;
+      #>><<@ UmpleToPhp.constructor_AttributeAssignUnique >><<#
     }
     else
     {

@@ -44,18 +44,18 @@ itself does not appear in UmpleOnline; this will be fixed.</p>
 
 [[symmetricReflexiveAssociation]] 
 
-@@example
+@@example @@caption Asymmetric association with role names on both ends @@endcaption
 @@source manualexamples/ReflexiveAssociations1.ump
 @@endexample
 
-@@example
+@@example @@caption Asymmetric association with role names on one end @@endcaption
 @@source manualexamples/ReflexiveAssociations2.ump
 @@endexample
 
-@@example
+@@example @@caption Asymmetric association with role names on the other end @@endcaption
 @@source manualexamples/ReflexiveAssociations3.ump
 @@endexample
 
-@@example
+@@example @@caption Symmetric association @@endcaption
 @@source manualexamples/ReflexiveAssociations4.ump
 @@endexample

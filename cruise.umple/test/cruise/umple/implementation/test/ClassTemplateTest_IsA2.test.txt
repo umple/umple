@@ -1,25 +1,40 @@
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 
 ////---- Tests for  ClassTemplateTest_IsA ----/////
+
 Test SubMentor2 {
+
+ generate JUnit ;
+ 
+ depend  Mentor,SubMentor,SubMentor2 ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_IsA.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :subName
 
       test attribute_subName {
     
-    AssertTrue( submentor2.setSubName("RandomString1"));
-    AssertTrue( submentor2.getSubName() =="RandomString1");
-    AssertTrue( submentor2.setSubName("RandomString1"));
-    AssertTrue( submentor2.getSubName("RandomString1"));
-    AssertTrue( submentor2.getSubName() =="RandomString1");
+    assertTrue( submentor2.setSubName("RandomString1"));
+    assertTrue( submentor2.getSubName() =="RandomString1");
+    assertTrue( submentor2.setSubName("RandomString2"));
+    assertTrue( submentor2.getSubName()=="RandomString2");
+    assertFalse( submentor2.getSubName() =="RandomString1");
              
 	}
 
 
   
+ 
    
 
 }

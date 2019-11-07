@@ -40,6 +40,12 @@ class Group
   internal Time t2 = new Time(
     System.currentTimeMillis());
 
+  // unique: Every new object created must have a
+  // unique new value assigned.
+  // You can get the value. You can set it as well,
+  // but it has to be unique.  
+  unique u;
+
   // autounique: Every new object created will have a
   // new integer assigned.
   // You can get the value (an integer) but not set it.  

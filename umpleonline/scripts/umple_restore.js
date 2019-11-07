@@ -37,6 +37,12 @@ jQuery(document).ready(function(){
         preferences = c.substring(preferences.length,c.length);
       }
   }
+  
+  if(preferences.indexOf("g") != -1) // Found g so hide gdpr
+  {
+    Action.hidegdpr();
+  }
+  
   //If the filepath is found in the cookie
   if(filepath != null && filepath.length != 0)
   {
@@ -235,6 +241,8 @@ window.onbeforeunload = function(event) {
               
     //Preferences
     cookie_pref = "PREF=";
+    if(Action.gdprHidden)
+      cookie_pref += "g";
     if(jQuery("#buttonPhotoReady").prop("checked"))
       cookie_pref += "p";
     if(jQuery("#buttonManualSync").prop("checked"))

@@ -1,0 +1,109 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase ----/////
+
+Test Person {
+
+ generate JUnit ;
+ 
+ depend  Person ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :id
+
+      test attribute_id {
+    
+    assertTrue( person.setId("RandomString1"));
+    assertTrue( person.getId() =="RandomString1");
+    assertTrue( person.setId("RandomString2"));
+    assertTrue( person.getId()=="RandomString2");
+    assertFalse( person.getId() =="RandomString1");
+             
+	}
+
+ //tests for :name
+
+      test attribute_name {
+    
+    assertTrue( person.setName("RandomString1"));
+    assertTrue( person.getName() =="RandomString1");
+    assertTrue( person.setName("RandomString2"));
+    assertTrue( person.getName()=="RandomString2");
+    assertFalse( person.getName() =="RandomString1");
+             
+	}
+
+ //tests for :address
+
+      test attribute_address {
+    
+    assertTrue( person.setAddress("RandomString1"));
+    assertTrue( person.getAddress() =="RandomString1");
+    assertTrue( person.setAddress("RandomString2"));
+    assertTrue( person.getAddress()=="RandomString2");
+    assertFalse( person.getAddress() =="RandomString1");
+             
+	}
+
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkifLogged_id {
+        Person p1 ( "S1425", "John", "Ottawa") ;        
+        String valueToCheck = p1.getId();  
+        ps1.getValue(id);    
+        boolean isLogged =  p1.checkIsLogged(valueToCheck);        
+        assertTrue(logged == "true");
+        }
+      
+      
+      
+      
+        
+    
+      
+      test checkifLogged_name {
+        Person p1 ( "S1425", "John", "Ottawa") ;        
+        String valueToCheck = p1.getName();  
+        ps1.getValue(name);    
+        boolean isLogged =  p1.checkIsLogged(valueToCheck);        
+        assertTrue(logged == "true");
+        }
+      
+      
+      
+      
+        
+    
+      
+      test checkifLogged_address {
+        Person p1 ( "S1425", "John", "Ottawa") ;        
+        String valueToCheck = p1.getAddress();  
+        ps1.getValue(address);    
+        boolean isLogged =  p1.checkIsLogged(valueToCheck);        
+        assertTrue(logged == "true");
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}

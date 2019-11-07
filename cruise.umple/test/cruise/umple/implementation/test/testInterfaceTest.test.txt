@@ -1,0 +1,150 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  interfaceTest ----/////
+
+Test Person {
+
+ generate JUnit ;
+ 
+ depend  Person,CorporateClient,IndividualStudent,Course ; 
+
+
+
+ 
+ GIVEN:
+ interfaceTest.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :name
+
+      test attribute_name {
+    
+    assertTrue( person.setName("RandomString1"));
+    assertTrue( person.getName() =="RandomString1");
+    assertTrue( person.setName("RandomString2"));
+    assertTrue( person.getName()=="RandomString2");
+    assertFalse( person.getName() =="RandomString1");
+             
+	}
+
+
+  
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  interfaceTest ----/////
+
+Test CorporateClient {
+
+ generate JUnit ;
+ 
+ depend  Person,CorporateClient,IndividualStudent,Course ; 
+
+
+
+ 
+ GIVEN:
+ interfaceTest.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+  
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  interfaceTest ----/////
+
+Test IndividualStudent {
+
+ generate JUnit ;
+ 
+ depend  Person,CorporateClient,IndividualStudent,Course ; 
+
+
+
+ 
+ GIVEN:
+ interfaceTest.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+  
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  interfaceTest ----/////
+
+Test Course {
+
+ generate JUnit ;
+ 
+ depend  Person,CorporateClient,IndividualStudent,Course ; 
+
+
+
+ 
+ GIVEN:
+ interfaceTest.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :name
+
+      test attribute_name {
+    
+    assertTrue( course.setName("RandomString1"));
+    assertTrue( course.getName() =="RandomString1");
+    assertTrue( course.setName("RandomString2"));
+    assertTrue( course.getName()=="RandomString2");
+    assertFalse( course.getName() =="RandomString1");
+             
+	}
+
+ //tests for :description
+
+      test attribute_description {
+    
+    assertTrue( course.setDescription("RandomString1"));
+    assertTrue( course.getDescription() =="RandomString1");
+    assertTrue( course.setDescription("RandomString2"));
+    assertTrue( course.getDescription()=="RandomString2");
+    assertFalse( course.getDescription() =="RandomString1");
+             
+	}
+
+
+  
+ 
+   
+
+}

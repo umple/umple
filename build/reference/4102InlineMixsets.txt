@@ -1,0 +1,19 @@
+E1511 Inline Mixset Is Not Supported 
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2> Error reporting that most inline mixsets must have curly brackets around their content.</h2>
+
+<p> An inline mixset is one in a class, interface or trait and where the mixset name is not followed by block denoted by curly brackets. Most of the time to specify a mixset in a class you just specify the keyword mixset, followed by the name of the mixset, followed by the block of items to be included (e.g. attributes, methods, state machines, associations).</p>
+
+<p>However Umple allows inline mixsets for certain entities in Umple. Inline mixsets allow for nested declarations of classes (to create subclasses), traits, and interfaces. However, empty code classes, interfaces, and traits are not allowed for inline mixsets.</p>
+
+<p>If you encounter this error, you can easily add a pair of curly brackets around the code that a mixset introduces. The code bellow shows how to use inline mixsets.  <br/>
+</p>
+
+
+@@example
+@@source manualexamples/E1511InlineMixsetIsNotSupported.ump
+@@endexample

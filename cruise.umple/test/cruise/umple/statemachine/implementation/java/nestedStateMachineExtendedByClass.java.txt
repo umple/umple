@@ -38,7 +38,7 @@ public class Animal extends ThingInWorld
     boolean didAddWorld = setWorld(aWorld);
     if (!didAddWorld)
     {
-      throw new RuntimeException("Unable to create animal due to world");
+      throw new RuntimeException("Unable to create animal due to world. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     setStateAlive(StateAlive.Null);
     setStateAliveNormal(StateAliveNormal.Null);

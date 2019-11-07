@@ -1,0 +1,17 @@
+class OuterClass_1
+{
+  static int y=0;
+
+  static class InnerStaticClass 
+  {
+  
+    void increaseY()
+    {
+      y++;
+    }
+    
+  }
+}
+
+
+

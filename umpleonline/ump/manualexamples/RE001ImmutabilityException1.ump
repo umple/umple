@@ -1,0 +1,32 @@
+// This demonstrates code that will throw the
+// immutability exception  
+class Point2D  
+{  
+  immutable;  
+  Float x;  
+  Float y;  
+} 
+
+class Path  
+{  
+  immutable;  
+  1 -> * Point2D pathElements;  
+    public static void main(String[] argv) {
+    
+      Point2D p2d = new Point2D(0,0);
+
+  
+      // This will throw an exception since the
+      // pathElements cannot be duplicate
+      try {
+        Path p = new Path(p2d,p2d);
+      }
+      catch (RuntimeException re) {
+        System.out.println("Exception Caught: "+re+"\n");    
+      }    
+    }
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Has Java code
+// @@@skipphpcompile - Has Java code
+// @@@skiprubycompile - Has Java code

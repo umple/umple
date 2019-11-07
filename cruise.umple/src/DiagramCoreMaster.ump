@@ -17,4 +17,6 @@ along with the user manual files
 @outputumplesource
 */
 use DiagramMaster.ump;
-filter { include UmpleModel, UmpleClass, UmpleAssociation, UmpleInterface; hops {association 1;}}
+
+// Activate this specific mixset
+use CoreClassesOnly;

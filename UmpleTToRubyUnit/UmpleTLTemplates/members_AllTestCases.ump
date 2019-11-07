@@ -6,8 +6,27 @@ class UmpleTToRubyUnit {
 
 members_AllTestCases <<!<</*members_AllTestCases*/>><<#
 
+
+boolean skipTest = false;
+boolean isConcrete = false;
+
 for (TestCase tc : model.getTestSuite(0).getTestcases())
-{#>>
+{
+if (tc.getIsTargeted())
+  {
+    if(tc.getConcreteLanguage().equals( "PhpUnit") || tc.getConcreteLanguage().equals("JUnit") )
+    {
+     skipTest = true;
+    }
+  }
+
+
+	if (skipTest) {
+		//skipThisTest 
+	}
+else{
+
+#>>
 	def <<=tc.getName() >> < Test::Unitt::TestCase
   <<#
 	  for (int i = 0; i<tc.getLocOrder();i++)
@@ -71,6 +90,9 @@ for (TestCase tc : model.getTestSuite(0).getTestcases())
 	<<#
 }
 
+
+skipTest = false;
+}
 
 #>>!>>
 }

@@ -192,7 +192,7 @@ class DataStore{
     function createData($prefix = 'tmp'){
         while(true)
         {
-            $id = rand(0,999999);
+            $id = base_convert(rand(0,999999999).rand(0,9999),10,36);
             $dirname = "{$this->root}/{$prefix}{$id}";
             if (!file_exists($dirname))
             {

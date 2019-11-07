@@ -109,12 +109,12 @@
 
     <deps-load-path conf="core"           pathid="core.ivy.classpath" />
     <deps-load-path conf="test"           pathid="test.ivy.classpath" />
-
+    <!-- No longer doing these for now at least
     <deps-load-path conf="umplificator"   pathid="umplificator.ivy.classpath" />
     <deps-load-path conf="validator"      pathid="validator.ivy.classpath" />
     <deps-load-path conf="eclipseplugin"  pathid="eclipseplugin.ivy.classpath" />
     <deps-load-path conf="xtext"          pathid="xtext.ivy.classpath" />
-
+    -->
     <antcall target="deps-umple" />
     <antcall target="deps-manual" />
     <antcall target="deps-vendor" />

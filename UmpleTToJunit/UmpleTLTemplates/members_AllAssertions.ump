@@ -3,25 +3,25 @@ class UmpleTToJUnit {
 members_AllAssertions <<!<</*members_AllAssertions*/>><<#
 
 
-		if(as.getType().equals("AssertTrue"))
+		if(as.getType().equals("assertTrue"))
 		{		
 		#>>		 
 		 			 Assert.assertTrue (<<=as.getAssertCode()>>);
 		<<#}
 		
-		if(as.getType().equals("AssertFalse"))
+		if(as.getType().equals("assertFalse"))
 		{#>>
 		 			 Assert.assertFalse (<<=as.getAssertCode()>>);<<#}
 		
-		if(as.getType().equals("AssertEqual"))
+		if(as.getType().equals("assertEqual"))
 		{#>>
 		 			 Assert.assertEqual (<<=as.getAssertCode()>>);<<#}
 		
-		if(as.getType().equals("AssertNull"))
+		if(as.getType().equals("assertNull"))
 		{#>>
 		 			 Assert.assertNull (<<=as.getAssertCode()>>);<<#}
 		
-		if(as.getType().equals("AssertMethod"))
+		if(as.getType().equals("assertMethod"))
 		{#>>
 		 			 UmpleAssert.assertMethod (<<=as.getAssertCode()>>);<<#}
 #>>

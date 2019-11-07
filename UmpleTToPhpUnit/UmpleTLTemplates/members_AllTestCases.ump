@@ -6,8 +6,25 @@ class UmpleTToPhpUnit {
 
 members_AllTestCases <<!<</*members_AllTestCases*/>><<#
 
+boolean skipTest = false;
+boolean isConcrete = false;
 for (TestCase tc : model.getTestSuite(0).getTestcases())
-{#>>
+{
+if (tc.getIsTargeted())
+  {
+    if(tc.getConcreteLanguage().equals( "JUnit") || tc.getConcreteLanguage().equals("RubyUnit") )
+    {
+     skipTest = true;
+    }
+  }
+
+
+	if (skipTest) {
+		//skipThisTest 
+	}
+else{
+
+#>>
 	public function <<=tc.getName() >>()
   {
   <<#
@@ -32,7 +49,7 @@ for (TestCase tc : model.getTestSuite(0).getTestcases())
 	  		{
 				if (act.getLocOrder() == i)
 				{
-					#>> //include Action Code if there is actions in a TestCAse 
+					#>>		  
 					  <<=act.getCode()>><<#
 				}
 				
@@ -42,7 +59,7 @@ for (TestCase tc : model.getTestSuite(0).getTestcases())
 		  
 		  
 		  if (tc.hasAssertions())
-		  {
+		  {		  
 			  for (Assertion as: tc.getAssertions())
 			  {
 				  if (as.getLocOrder() ==i)
@@ -65,6 +82,9 @@ for (TestCase tc : model.getTestSuite(0).getTestcases())
 	<<#
 }
 
+
+skipTest = false;
+}
 
 #>>!>>
 }

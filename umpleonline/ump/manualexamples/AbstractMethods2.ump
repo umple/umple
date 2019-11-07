@@ -16,7 +16,7 @@ class Shape {
   }
 }
 
-//Both Square and Shape are concrete
+//Both Square and Circle are concrete
 //classes as they implement all inherited
 //abstract methods
 class Square {

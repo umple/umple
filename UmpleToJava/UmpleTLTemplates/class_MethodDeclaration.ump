@@ -81,8 +81,31 @@ class UmpleToJava {
       // If this is not a constructor, this method should return "void"
       methodType = methodType.equals("") ? "void" : methodType;
     }
+    
+    applyCodeInjectionToLabeledMethod(uClass, aMethod, "before");
+    applyCodeInjectionToLabeledMethod(uClass, aMethod, "after");
+    applyCodeInjectionToLabeledMethod(uClass, aMethod, "around");
+   
+   // handle mixsets inside methods(uClass, aMethod);
+    ArrayList<MixsetInMethod> mixsetsWithinMethodList = aMethod.getMethodBody().getMixsetsWithinMethod();
+    for(MixsetInMethod mixsetsWithinMethodItem : mixsetsWithinMethodList)
+    {
+      handelMixsetInsideMethod(model, mixsetsWithinMethodItem, aMethod.getMethodBody());
+    }
+    // End 
         String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("before", aMethod.getName(), aMethod.getMethodParameters()));
         String customAfterInjectionCode  = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("after", aMethod.getName(), aMethod.getMethodParameters()));
+        if( (customBeforeInjectionCode != null) && (customAfterInjectionCode == null) )
+        {
+          if(customBeforeInjectionCode.contains("around_proceed:"))
+          {
+            String[] codeToInjectArray = customBeforeInjectionCode.split("around_proceed:");
+            customBeforeInjectionCode = codeToInjectArray[0];
+            customAfterInjectionCode = ""+codeToInjectArray[1];
+            customAfterInjectionCode = customAfterInjectionCode.replace("END OF UMPLE BEFORE INJECTION","END OF UMPLE AROUND INJECTION");
+          }
+        }
+        
         String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));        
         String customPostconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Postcondition"));
         customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;

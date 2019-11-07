@@ -69,7 +69,7 @@ explicitly include. This is because one of the key points about Umple is
 that it <i>generates</i> a high percentage of the methods you would 
 normally need to write by hand if you were programming directly in the 
 target language. In other words, when you compile Umple constructs such as 
-assocations, attributes and state machines, you are generating many 
+associations, attributes and state machines, you are generating many 
 methods that you can call; the set of methods you can call is the 
 generated API. You can find out the API by using Javadoc, or a similar 
 tool, on the generated code, or you can look at the <a href="APISummary.html"> quick reference manual page.</a> One of the options in <a href="UsingUmpleOnline.html">UmpleOnline</a> is to generate Javadoc output.</p>
@@ -93,7 +93,7 @@ create a complete definition, also means that you can create
 added to add extra features to a system. You can therefore organize your 
 system, in whole or in part, by <i>feature</i>. The various pieces of code 
 needed to implement a feature (including entire new classes, or bits such 
-as associations and methods to add to existing classes), can be therefore 
+as associations and methods to add to existing classes), can therefore 
 be grouped together. There are limits to this, however: At the current 
 time, this mechanism does not allow you to override existing elements, 
 which you might need to do to add a feature. Taken together, these 

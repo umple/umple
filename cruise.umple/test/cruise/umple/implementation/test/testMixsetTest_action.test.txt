@@ -1,0 +1,55 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  MixsetTest_action ----/////
+
+Test Person {
+
+ generate JUnit ;
+ 
+ depend  Person ; 
+
+
+
+ 
+ GIVEN:
+ MixsetTest_action.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :x
+
+      test attribute_x {
+    
+    assertTrue( person.setX("RandomString1"));
+    assertTrue( person.getX() =="RandomString1");
+    assertTrue( person.setX("RandomString2"));
+    assertTrue( person.getX()=="RandomString2");
+    assertFalse( person.getX() =="RandomString1");
+             
+	}
+
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkName {
+        assertFalse(firstName == "Orlean");
+        this.setId("kingEdward");
+        assertTrue(firstName == "KingEdward");
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}

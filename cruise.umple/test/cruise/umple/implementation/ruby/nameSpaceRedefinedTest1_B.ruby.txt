@@ -1,0 +1,49 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module M
+
+class B
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #B Attributes - for documentation purposes
+  #attr_reader :x
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_x)
+    @initialized = false
+    @deleted = false
+    @x = a_x
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_x(a_x)
+    was_set = false
+    @x = a_x
+    was_set = true
+    was_set
+  end
+
+  def get_x
+    @x
+  end
+
+  def delete
+    @deleted = true
+  end
+
+end
+end

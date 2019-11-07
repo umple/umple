@@ -29,14 +29,18 @@ associationClassDefinition : associationClass [name] { [[associationClassContent
 enumerationDefinition : enum [name] { [enumValue](, [enumValue])* }
 
 // The following items can be found inside the body of classes or association classes
-classContent- : [[comment]] | [[mixsetDefinition]] | [[distributable]] | [[proxyPattern]] | [[classDefinition]] | [[trace]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[primitiveDefinition]] | [[portDefinition]] | [[portBindingDefinition]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[testCase]] | [[stateMachine]] | [[activeMethodDefinition]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[modelConstraint]] | [[invariant]] | ; | [[enumerationDefinition]] | [[exception]] | [[extraCode]]
+classContent- : [[comment]] | [[innerClass]] | [[mixsetDefinition]] | [[distributable]] | [[proxyPattern]] | [[classDefinition]] | [[trace]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[primitiveDefinition]] | [[portDefinition]] | [[portBindingDefinition]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[testCase]] | [[genericTestCase]] | [[testSequence]] | [[testClassInit]] | [[stateMachine]] | [[activeMethodDefinition]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[modelConstraint]] | [[invariant]] | ; | [[enumerationDefinition]] | [[exception]] | [[extraCode]] 
 associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[displayColor]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[association]] | [[inlineAssociation]] | [[singleAssociationEnd]] | [[attribute]] | [[stateMachine]] | ; | [[extraCode]]
+innerClass : [[innerStaticClass]] | [[innerNonStaticClass]]
+innerStaticClass : static [[classDefinition]]
+innerNonStaticClass : inner [[classDefinition]]
+
 
 // Interfaces: Note that if the format of an abstractMethodDeclaration is not
 // followed, then the body will extraCode and passed to the base language
 // See user manual page [*interfaceDefinition*]
 interfaceBody- : [[interfaceMemberDeclaration]]*
-interfaceMemberDeclaration : [[comment]] | [[constantDeclaration]] | [[constantDeclarationDeprecated]] | [[abstractMethodDeclaration]] | [[position]] | [[displayColor]] | [[isA]] | [[distributableInterface]] | [[exception]] | [[extraCode]]
+interfaceMemberDeclaration : [[comment]] | [[constantDeclaration]] | [[constantDeclarationDeprecated]] | [[abstractMethodDeclaration]] | [[position]] | [[displayColor]] | [[isA]] | [[interfaceTest]] | [[distributableInterface]] | [[exception]] | [[extraCode]]
 distributableInterface : [[distributable]]
 // Constants in interfaces (e.g. const String ACONSTANT="aValue";)
 // Note: in Classes const is a modifier
@@ -53,19 +57,40 @@ codeLangs- : ([=codeLang:Java|RTCpp|SimpleCpp|Cpp|Php|Ruby|Alloy|UmpleSelf] ( , 
 
 // Methods: The code in concrete methods is passed to the base language
 // See user manual page [*MethodDefinition*]
-concreteMethodDeclaration : [=modifier:public|protected|private]? [=static]? [=queued]? [type]? [[methodDeclarator]] [[methodThrowsExceptions]]? [[methodBody]] | [=modifier:public|protected]? [=abstract] [type]? [[methodDeclarator]] [[methodThrowsExceptions]]? ;
+concreteMethodDeclaration : [=modifier:public|protected|private]? [=static]? [=synchronized]? [=queued]? [type]? [[methodDeclarator]] [[methodThrowsExceptions]]? [[methodBody]] | [=modifier:public|protected]? [=abstract] [type]? [[methodDeclarator]] [[methodThrowsExceptions]]? ;
 abstractMethodDeclaration :  [type] [[methodDeclarator]] ; 
 //queuedMethodDeclaration- : queued [[methodDeclarator]] [[methodThrowsExceptions]]? [[methodBody]]
-methodBody- : ( [[codeLangs]] { ( [[precondition]] | [[postcondition]] | [[assertion]] )* [**code] } )+ 
+methodBody- : ( [[codeLangs]] { ( [[precondition]] | [[postcondition]] | [[assertion]]|[[testCase]] )* [**code] } )+ 
 methodDeclarator : [methodName] [[parameterList]]
 methodThrowsExceptions : throws [~exception] ( , [~exception] )*
 parameterList : OPEN_ROUND_BRACKET ([[parameter]] ( , [[parameter]] )* )? CLOSE_ROUND_BRACKET
 parameter : [[typedName]]
 
-//
+testCase : [=isTimed:before|after]? [=isConcrete:JUnit|PhpUnit|RubyUnit]? [=isOverride:override]? test [~testCaseName] { ( [[assertion]] | [[testAction]] | [[testInit]] | [[testInitAtt]] | [[testInitAttWithMethodCall]] | [[comment]] )* }
+assertion : [=isTimed:before|after]? [=assertType:assertTrue|assertFalse|assertEqual|assertNull|assertMethod] OPEN_ROUND_BRACKET [**code] CLOSE_ROUND_BRACKET ;
+testAction : [~objectName] ( (.)[~methodName] )? OPEN_ROUND_BRACKET  [[testActionParameterList]] CLOSE_ROUND_BRACKET ;
+testMethodCall : [~objectName] ( (.)[~methodName] )? OPEN_ROUND_BRACKET  [[testActionParameterList]] CLOSE_ROUND_BRACKET
+testActionParameterList :  [[testParameter]]? 
+testParameter :  [[pValue]] ( , [[pValue]] )* 
+testInit : [~identifier] [~objectName] OPEN_ROUND_BRACKET [[testParameter]]?  CLOSE_ROUND_BRACKET ;
+testInitAtt : [~identifier]? [~attributeName] =  [[pValue]] ;
+testInitAttWithMethodCall : [~identifier]? [~attributeName] =  [[testMethodCall]] ;
+//paraTestAction : [~methodName] OPEN_ROUND_BRACKET ( [[pValue]] ( , [[pValue]] ) )* CLOSE_ROUND_BRACKET
+pValue- : ( [~name] | "[~name]" ) 
+interfaceTest : test [~testName] ;
+testSequence : testSequence [~sequenceName] { [[testSequenceEntry]] }
+testSequenceEntry : [~name] ( -> [~name] )* ;
 
-testCase : test [~testCaseName] { [[assertion]]* }
-assertion : [=assertType:assertTrue|assertFalse|assertEqual|assertNull|assertMethod] OPEN_ROUND_BRACKET [**code] CLOSE_ROUND_BRACKET ;
+//top-level initialization 
+
+testClassInit : test Init  { [**code] } 
+
+
+// Generic test case rules
+genericTestCase : generic test [~testCaseName] OPEN_ROUND_BRACKET [[genericElement]] CLOSE_ROUND_BRACKET { ( [**code] )* }
+genericElement- : [~elementType] [~genericElement]  [[genericMethodParameters]]? 
+genericMethodParameters- : [~elementType] ( , [~elementType] )*
+
 
 // Details of associations: See manual page [*AssociationDefinition*]
 

@@ -14,15 +14,14 @@ with arbitrary methods written in the natively compiled language (e.g. Java, Php
 @@syntax
 [[concreteMethodDeclaration]] [[methodDeclarator]] [[parameterList]] [[parameter]]
 
-@@example
+@@example @@caption Example of a method with no arguments @@endcaption
 @@source manualexamples/MethodDefinition1.ump
 @@endexample
 
-@@example
+@@example @@caption Example of a method with arguments @@endcaption
 @@source manualexamples/MethodDefinition2.ump
 @@endexample
 
-
-@@example
+@@example @@caption Example of a public method @@endcaption
 @@source manualexamples/MethodDefinition3.ump
 @@endexample

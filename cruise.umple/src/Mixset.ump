@@ -85,3 +85,19 @@ class MixsetFragment {
   // if class X { mixset Y a; then just there are no curly brackets, and a is wrapped in class X {}
   body;
 }
+
+class MethodBody
+{
+  0..1 -- * MixsetInMethod;
+}
+
+// This class keeps references to mixsets which are iside methods
+class MixsetInMethod
+{
+  String mixsetName; 
+  int startPositionIndex; //relative to the original body of the method 
+  int endPositionIndex;
+  MixsetInMethod parentInnerMixset = null; // to determine if its inner mixset
+  MixsetInMethod[] childMixsets;
+  String mixsetFragment;
+}

@@ -39,7 +39,7 @@ edited and never should be edited, since You can always embed native methods  (i
 Java, Php, etc.) in the Umple, or else use Umple's <a href="BeforeandAfterStatements.html">aspect oriented</a> 
 capabilities to alter the effects of generated code. As a result the concept of 'round 
 tripping' is obsolete in Umple. You should treat Umple-generated code just 
-lke you would treat bytecode-or machine code, i.e. as a development 
+like you would treat bytecode-or machine code, i.e. as a development 
 artifact that can be thrown away and recreated. Nevertheless, we have 
 endeavoured to make the generated code as clean and readable as possible 
 so you can verify its correctness and learn how it works.</li>

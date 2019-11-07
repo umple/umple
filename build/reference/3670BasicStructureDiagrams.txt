@@ -4,7 +4,7 @@ noreferences
 
 @@description
 
-<p>A composite structure diagram is used to show how various instances of classes, called <em>parts</em>, are connected at run time in order communicate with each other.</p>
+<p>A composite structure diagram is used to show how various instances of classes, called <em>parts</em>, are connected at run time in order to communicate with each other.</p>
 
 <p>To specify composite structure, the following are the elements that need to be present in an Umple system:</p>
 

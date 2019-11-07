@@ -1,25 +1,40 @@
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 
 ////---- Tests for  AttributeInlineComment ----/////
+
 Test Foo {
+
+ generate JUnit ;
+ 
+ depend  Foo ; 
+
+
+
+ 
+ GIVEN:
+ AttributeInlineComment.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :bar
 
       test attribute_bar {
     
-    AssertTrue( foo.setBar("RandomString1"));
-    AssertTrue( foo.getBar() =="RandomString1");
-    AssertTrue( foo.setBar("RandomString1"));
-    AssertTrue( foo.getBar("RandomString1"));
-    AssertTrue( foo.getBar() =="RandomString1");
+    assertTrue( foo.setBar("RandomString1"));
+    assertTrue( foo.getBar() =="RandomString1");
+    assertTrue( foo.setBar("RandomString2"));
+    assertTrue( foo.getBar()=="RandomString2");
+    assertFalse( foo.getBar() =="RandomString1");
              
 	}
 
 
   
+ 
    
 
 }

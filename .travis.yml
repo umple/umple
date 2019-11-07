@@ -16,8 +16,8 @@ cache:
 addons:
   apt:
     packages:
-    - php5-common
-    - php5-cli
+    - php-common
+    - php-cli
 
 before_install:
   - ./travis/deps.sh # run linux or osx depending on environment
@@ -34,16 +34,18 @@ script:
   - cd build/
   - ant bootstrap
   # We resolve all of the dependencies before, this way the command will be unlikely to time out
+  # Temporarily commenting out the following line
   - ant deps-resolve-all
 
   # Do a modified version of `first-build` (build using last successful build)
   - $ANT_FIRST clean init codegen umpleParser rtcpp template.setVersion resetUmpleSelf
-  - $ANT_FIRST compile compileValidator compileUmplificator
+  # taking compileValidator compileUmplificator out of the following
+  - $ANT_FIRST compile 
   - $ANT_FIRST package template.resetVersion
 
   # Do a modified version of `build`to create new jars
   - $ANT_BUILD clean init codegen umpleParser rtcpp template.setVersion resetUmpleSelf
-  - $ANT_BUILD compile compileValidator compileUmplificator
+  - $ANT_BUILD compile 
   - $ANT_BUILD package 
   
   # Repeat creation of the compiler in case last build made a bad compiler
@@ -105,7 +107,12 @@ after_success:
 matrix:
   include:
     - os: linux
-      jdk: oraclejdk8
+      jdk: openjdk12
+      addons:
+        apt:
+          packages:
+            - ant
+            - ant-optional
       # only Linux supports Docker right now
       env:
         - HAVE_DOCKER=1

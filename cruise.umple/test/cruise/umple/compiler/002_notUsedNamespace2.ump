@@ -1,0 +1,4 @@
+namespace m;
+namespace -;
+class X{}
+interface Y{}

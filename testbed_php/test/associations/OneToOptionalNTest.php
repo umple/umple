@@ -5,7 +5,7 @@ class OneToOptionalNTest extends UnitTestCase
 
   public function test_cannotCreateNullStudent()
   {
-  	$this->expectException(new Exception("Unable to create student due to mentor"));
+  	$this->expectException(new Exception("Unable to create student due to mentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     new StudentZ(99,null);
   }
   
@@ -41,7 +41,7 @@ class OneToOptionalNTest extends UnitTestCase
   
   public function test_CreateStudentFromMentorTooMany()
   {
-  	$this->expectException(new Exception("Unable to create student due to mentor"));
+  	$this->expectException(new Exception("Unable to create student due to mentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $m = new MentorZ("blah");
     new StudentZ(99,$m);
     new StudentZ(98,$m);

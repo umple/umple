@@ -1,0 +1,32 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  MixsetTest ----/////
+Test Person {
+  //tests for :x
+
+      test attribute_x {
+    
+    AssertTrue( person.setX("RandomString1"));
+    AssertTrue( person.getX() =="RandomString1");
+    AssertTrue( person.setX("RandomString1"));
+    AssertTrue( person.getX("RandomString1"));
+    AssertTrue( person.getX() =="RandomString1");
+             
+	}
+
+
+ 
+      
+      test checkName {
+        assertFalse(firstName == "Orlean");
+        assertTrue(firstName == "KingEdward");
+        }
+        
+     
+   
+
+}

@@ -22,7 +22,7 @@ class OneSymmetricNoParam
 
     if ($aFriend == null || $aFriend->getFriend() != null)
     {
-      throw new Exception("Unable to create OneSymmetricNoParam due to aFriend");
+      throw new Exception("Unable to create OneSymmetricNoParam due to aFriend. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     $this->friend = $aFriend;
   }

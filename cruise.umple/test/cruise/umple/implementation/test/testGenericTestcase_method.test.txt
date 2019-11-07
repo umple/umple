@@ -1,0 +1,80 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_method ----/////
+
+Test Calculator {
+
+ generate JUnit ;
+ 
+ depend  Calculator ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_method.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :x
+
+      test attribute_x {
+    
+      assertTrue( calculator.setX(123)));
+      assertTrue( calculator.getX() == 123));
+      assertTrue( calculator.setX(321)));
+      assertTrue( calculator.getX() == 321));
+      assertFlase( calculator.getX() == 123));
+          
+	}
+
+ //tests for :y
+
+      test attribute_y {
+    
+      assertTrue( calculator.setY(123)));
+      assertTrue( calculator.getY() == 123));
+      assertTrue( calculator.setY(321)));
+      assertTrue( calculator.getY() == 321));
+      assertFlase( calculator.getY() == 123));
+          
+	}
+
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkifLogged_returnInteger {
+        Calculator c1 ( 4, 5) ;        
+        
+        String valueToCheck = p1.getreturnInteger();  
+        ps1.getValue(returnInteger);    
+        boolean isLogged =  p1.checkIsLogged(valueToCheck);        
+        assertTrue(logged == "true");
+        }
+      
+      
+      
+      
+        
+    
+      
+      test checkifLogged_returnStirng {
+        // should generate empty template for 'returnString' with return value String and Integer as input
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}

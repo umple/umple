@@ -4,7 +4,7 @@ noreferences
 
 @@description
 <p><b>Transition actions:</b>      
-When n transition is taken, an action can occur. This is indicated
+When a transition is taken, an action can occur. This is indicated
 using a slash &quot;/&quot; followed by arbitrary code in braces. The arbitrary code
 may be placed after the event name or before the destination state name. In other words the arrow -&gt; can be placed either directly after the event (before the action), or directly before the destination state (after the action)
 
@@ -36,6 +36,6 @@ in Java, the code it needs to catch InterruptedException as shown in the first e
 @@source manualexamples/StateMachineActionsandDoActivities1.ump &diagramtype=state
 @@endexample
 
-@@example
+@@example @@caption Example with different target languages @@endcaption
 @@source manualexamples/StateMachineActionsandDoActivities2.ump &diagramtype=state
 @@endexample

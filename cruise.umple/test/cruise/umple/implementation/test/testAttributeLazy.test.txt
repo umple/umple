@@ -1,32 +1,47 @@
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 
 ////---- Tests for  LazyAttribute ----/////
+
 Test LazyA {
+
+ generate JUnit ;
+ 
+ depend  LazyA ; 
+
+
+
+ 
+ GIVEN:
+ LazyAttribute.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :id
 
       test attribute_id {
     
-    AssertTrue( lazya.setId("RandomString1"));
-    AssertTrue( lazya.getId() =="RandomString1");
-    AssertTrue( lazya.setId("RandomString1"));
-    AssertTrue( lazya.getId("RandomString1"));
-    AssertTrue( lazya.getId() =="RandomString1");
+    assertTrue( lazya.setId("RandomString1"));
+    assertTrue( lazya.getId() =="RandomString1");
+    assertTrue( lazya.setId("RandomString2"));
+    assertTrue( lazya.getId()=="RandomString2");
+    assertFalse( lazya.getId() =="RandomString1");
              
 
           
 
-AssertNotNull (id);
-    AssertNotNull (LazyA.getId != null)
+    assertTrue (!id.equals(null));
+    assertTrue (LazyA.getId() != null)
           
 
         	}
 
 
   
+ 
    
 
 }

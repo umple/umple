@@ -1,0 +1,16 @@
+RE001 Violation of Immutability
+Runtime Exceptions
+noreferences
+
+@@description
+
+<h2>Umple runtime exception thrown when <a href="ImmutablePattern.html">Immutability</a> is violated in a constructor</h2>
+
+<p>The immutable keyword in Umple can be applied to a class, an attribute or an association to ensure that they can only be set in the constructor, and cannot be modified again subsequently. The immutability of associations means that all associated objects must be specified as unique constructor arguments. Violation of this is detected by the constructor, in which case a RuntimeException is thrown. This can be caught by a try-catch block.</p>
+
+<p>
+In the example below, an immutable Path has immutable pathElements (instances of Point2D). The Path instances are of an immutable class too (here Point2D), and the only way to construct this association is in arguments to the constructor. But it is necessary to avoid duplicate objects in the constructor and a runtime exception is thrown when this constraint is violated. So, a runtime exception is thrown here when an attempt is made to create a Path with duplicate instances of Point2D.</p>
+
+@@example
+@@source manualexamples/RE001ImmutabilityException1.ump
+@@endexample

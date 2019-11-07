@@ -28,25 +28,25 @@ public class Student
     boolean didAddM2 = setM2(aM2);
     if (!didAddM2)
     {
-      throw new RuntimeException("Unable to create two due to m2");
+      throw new RuntimeException("Unable to create two due to m2. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     m3s = new ArrayList<Mentor>();
     boolean didAddM3s = setM3s(allM3s);
     if (!didAddM3s)
     {
-      throw new RuntimeException("Unable to create Student, must have 1 to 3 m3s");
+      throw new RuntimeException("Unable to create Student, must have 1 to 3 m3s. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     m4s = new ArrayList<Mentor>();
     boolean didAddM4s = setM4s(allM4s);
     if (!didAddM4s)
     {
-      throw new RuntimeException("Unable to create Student, must have 4 to 7 m4s");
+      throw new RuntimeException("Unable to create Student, must have 4 to 7 m4s. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     m5s = new ArrayList<Mentor>();
     boolean didAddM5s = setM5s(allM5s);
     if (!didAddM5s)
     {
-      throw new RuntimeException("Unable to create Student, must have at least 2 m5s");
+      throw new RuntimeException("Unable to create Student, must have at least 2 m5s. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     m6s = new ArrayList<Mentor>();
   }
