@@ -3110,7 +3110,7 @@ public class UmpleParserTest
     assertHasNoWarningsParse("702_validCodeInjection.ump");
   }
   @Test
-  void testSemicolonUnicode()
+  public void testSemicolonUnicode()
   {
     UmpleFile uFile = new UmpleFile("classAttributeContainsSemicolons.ump");
     UmpleModel umodel = new UmpleModel(uFile);
