@@ -110,6 +110,24 @@ class RuleBasedParser
   }
 
   /*
+    This method helps to clean the string value of a token by tranforming an unicode character into its value. Such as semicolon "\u003B" into ";".
+    It supports \u003B ---> semicolon. This method can extended to support other unicode characters.
+  */
+  private void cleanEscapeChars(Token token){
+
+    if(token.getValue() != null)
+    {
+      if(token.is("value") && token.getValue().contains("\\u003B"))
+        token.setValue(token.getValue().replace("\\u003B",";")); 
+    } 
+    for(Token subToken : token.getSubTokens())
+    {
+      cleanEscapeChars(subToken);
+    }
+
+}
+
+  /*
     Takes a root rule and uses it to start parsing. The result will be put into the root token passed. The parsing will be performed
     on the file. data is a DataPackage which needs to be initialized(using the init(Position)) before passing to this function.
     The data package will contain miscellaneous data that will be computed throughout the parsing, such as FailPosition(if parsing fails)
@@ -123,6 +141,7 @@ class RuleBasedParser
     int parseResult = root.parse(token, 0,data.getInput().length(),data.getInput(),data);
     if(parseResult==data.getInput().length())
     {
+      cleanEscapeChars(token);cleanEscapeChars(token);
       setRootToken(token);
     }
     else
@@ -152,6 +171,7 @@ class RuleBasedParser
     int parseResult = root.parse(token, 0,data.getLine(line).length(),data.getLine(line),data);
     if(parseResult==data.getInput().length())
     {
+      cleanEscapeChars(token);
       setRootToken(token);
     }
     else
@@ -327,6 +347,7 @@ class RuleBasedParser
     }
     analyzer.execute();
     setRootToken(analyzer.getRootToken());
+    cleanEscapeChars(analyzer.getRootToken());
     setParseResult(analyzer.getParseResult());
     return getParseResult();
   }
@@ -357,6 +378,7 @@ class RuleBasedParser
     
     analyzer.execute();
     setRootToken(analyzer.getRootToken());
+    cleanEscapeChars(analyzer.getRootToken());
     setParseResult(analyzer.getParseResult());
     return getParseResult();
   }
