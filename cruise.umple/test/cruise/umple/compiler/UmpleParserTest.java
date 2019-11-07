@@ -3112,7 +3112,7 @@ public class UmpleParserTest
   @Test
   public void testSemicolonUnicode()
   {
-    UmpleFile uFile = new UmpleFile("classAttributeContainsSemicolons.ump");
+    UmpleFile uFile = new UmpleFile(pathToInput,"classAttributeContainsSemicolons.ump");
     UmpleModel umodel = new UmpleModel(uFile);
     umodel.run();
     String attributeValue = umodel.getUmpleClass(0).getAttribute(0).getValue().trim();
