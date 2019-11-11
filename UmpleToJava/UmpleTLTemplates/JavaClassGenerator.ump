@@ -289,25 +289,7 @@ for (StateMachine smq : uClass.getStateMachines())
       String methodLabelToLookat = codeInjectionItem.getInjectionlabel();
       String codeToAdd = codeInjectionItem.getCode(codesKey_lang);
 
-      int indexOfLabel = methodCodeWithLabels.indexOf(methodLabelToLookat);
-      if (indexOfLabel == -1) // the method does not contain the required label
-      {
-        // raise error 
-        // raise warning 
-      }
-      else if (codeInjectionItem.getType().equals("before"))
-      {
-        methodCodeWithLabels.add(indexOfLabel, "\n"+codeToAdd + "\n");
-      }
-      else if (codeInjectionItem.getType().equals("after"))
-      {
-        if(indexOfLabel < methodCodeWithLabels.size())
-          methodCodeWithLabels.add(indexOfLabel+1, "\n"+codeToAdd + "\n");
-        else
-          methodCodeWithLabels.add("\n"+codeToAdd + "\n");
-      }
-
-    	 if (codeInjectionItem.getType().equals("around"))
+    	if (codeInjectionItem.getType().equals("around"))
       {
         String[] BoundLabels = methodLabelToLookat.split("-");
         String firstLabel = BoundLabels[0]+":";
@@ -320,8 +302,27 @@ for (StateMachine smq : uClass.getStateMachines())
         int beforeIndex = methodCodeWithLabels.indexOf(SecondLabel);
         methodCodeWithLabels.add(afterIndex+1, "\n"+afterCodeSegment + "\n");
         methodCodeWithLabels.add(beforeIndex+1, "\n"+beforeCodeSegment + "\n");
-
       }
+      else {
+        int indexOfLabel = methodCodeWithLabels.indexOf(methodLabelToLookat);
+        if (indexOfLabel == -1) // the method does not contain the required label
+        {
+          return;// raise error 
+          // raise warning 
+        }
+        else if (codeInjectionItem.getType().equals("before"))
+        {
+          methodCodeWithLabels.add(indexOfLabel, "\n"+codeToAdd + "\n");
+        }
+        else if (codeInjectionItem.getType().equals("after"))
+        {
+          if(indexOfLabel < methodCodeWithLabels.size())
+            methodCodeWithLabels.add(indexOfLabel+1, "\n"+codeToAdd + "\n");
+          else
+            methodCodeWithLabels.add("\n"+codeToAdd + "\n");
+        }
+      }
+
       // at the end, remove the codeInjection belongs to labeled aspect
       // otherwise it will be added to the code when handling aspects 
       //uClassCodeInectionList.remove(codeInjectionItem); // causes error:ConcurrentModificationException

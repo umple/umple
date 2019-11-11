@@ -14,6 +14,7 @@ import cruise.umple.compiler.FeatureLink;
 import cruise.umple.compiler.FeatureNode;
 import cruise.umple.compiler.FeatureLeaf;
 import cruise.umple.compiler.Method;
+import cruise.umple.compiler.MethodBody;
 import cruise.umple.compiler.exceptions.*;
 import java.io.File;
 
@@ -756,7 +757,7 @@ public class UmpleMixsetTest {
       SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"AroundClass.java");
    }
   }
-@Test
+  @Test
   public void testAround_noLabels() {
     UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"aroundInjectionNoLabels.ump");
     UmpleModel umodel = new UmpleModel(umpleFile);
@@ -780,24 +781,40 @@ public class UmpleMixsetTest {
       String actual = umodel.getGeneratedCode().get("AroundClass");
       File expected = new File(pathToInput + "AroundClass.java.txt");
       SampleFileWriter.assertFileContent(expected, actual,true);
-      /*
-      UmpleClass uClass = umodel.getUmpleClass(0);
-      aMethod = uClass.getMethod(0);
-      String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
-      String keyWord = "int x";
-      String beforeLabelCode = methodBodyCode.substring(0,methodBodyCode.indexOf(keyWord));
-      String afterLabelCode = methodBodyCode.substring(methodBodyCode.indexOf(keyWord));
-      Assert.assertEquals(true, methodBodyCode.contains(keyWord));
-      //before checks: 
-      Assert.assertEquals(true, beforeLabelCode.contains("if (true)"));
-      Assert.assertEquals(true, beforeLabelCode.contains("boolean flag"));
-      Assert.assertEquals(true, beforeLabelCode.indexOf("boolean flag") > beforeLabelCode.indexOf("code before around"));
-      //after checks:
-      Assert.assertEquals(true, afterLabelCode.contains("}"));
-      Assert.assertEquals(true, afterLabelCode.contains("code after around."));
-      Assert.assertEquals(true, afterLabelCode.contains("Label2:"));
-      */
       SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"AroundClass.java");
+   }
+  }
+
+  @Test
+  public void testCasecadeExtentionOfLabeledAspect() {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"casecadExtentionForLabeledAspect.ump");
+    UmpleModel umodel = new UmpleModel(umpleFile);
+    Method aMethod ;
+    try{
+      umodel.run();
+      umodel.generate();
+    }
+    catch (UmpleCompilerException e)
+    {
+      if(!e.getMessage().contains("1013")) // ignore warning caused by aspect injection.
+    	{
+    	  throw e;
+    	}
+    }
+    finally 
+    { 
+      MethodBody mBody = umodel.getUmpleClass(0).getMethod(0).getMethodBody();
+      String code = mBody.getCodeblock().getCode();
+      int label0Index =  code.indexOf("Label_0");
+      int label3Index =  code.indexOf("Label3");
+      int label2Index =  code.indexOf("Label2");
+      int label1Index =  code.indexOf("Label1:");
+      Assert.assertTrue(label0Index < label3Index);
+      Assert.assertTrue(label3Index < label2Index);
+      Assert.assertTrue(label2Index < label1Index);
+      String pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler/mixset/");
+      SampleFileWriter.assertFileExists(pathToInput+"Aclass.java");
+      SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"Aclass.java");
    }
   }
 
