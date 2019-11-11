@@ -14,6 +14,7 @@ import cruise.umple.compiler.FeatureLink;
 import cruise.umple.compiler.FeatureNode;
 import cruise.umple.compiler.FeatureLeaf;
 import cruise.umple.compiler.Method;
+import cruise.umple.compiler.MethodBody;
 import cruise.umple.compiler.exceptions.*;
 import java.io.File;
 
