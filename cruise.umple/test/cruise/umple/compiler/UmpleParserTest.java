@@ -25,6 +25,7 @@ import java.io.*;
 
 import cruise.umple.parser.Token;
 import cruise.umple.parser.Position;
+import cruise.umple.util.SampleFileWriter;
 
 public class UmpleParserTest
 {
@@ -3117,6 +3118,7 @@ public class UmpleParserTest
     umodel.run();
     String attributeValue = umodel.getUmpleClass(0).getAttribute(0).getValue().trim();
     Assert.assertTrue(attributeValue.equals("\"int x =10 ; x++ ;\""));	
+    SampleFileWriter.destroy(pathToInput+"/"+"AttriWithSemicolons.java");
   }
   public boolean parse(String filename)
   {
