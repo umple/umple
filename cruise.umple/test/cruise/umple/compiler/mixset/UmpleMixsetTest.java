@@ -804,11 +804,11 @@ public class UmpleMixsetTest {
     finally 
     { 
       MethodBody mBody = umodel.getUmpleClass(0).getMethod(0).getMethodBody();
-		  String code = mBody.getCodeblock().getCode();
+      String code = mBody.getCodeblock().getCode();
       int label0Index =  code.indexOf("Label_0");
-		  int label3Index =  code.indexOf("Label3");
-		  int label2Index =  code.indexOf("Label2");
-		  int label1Index =  code.indexOf("Label1");
+      int label3Index =  code.indexOf("Label3");
+      int label2Index =  code.indexOf("Label2");
+      int label1Index =  code.indexOf("Label1:");
       Assert.assertTrue(label0Index < label3Index);
       Assert.assertTrue(label3Index < label2Index);
       Assert.assertTrue(label2Index < label1Index);
@@ -817,6 +817,5 @@ public class UmpleMixsetTest {
       SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"Aclass.java");
    }
   }
-
 
 }
