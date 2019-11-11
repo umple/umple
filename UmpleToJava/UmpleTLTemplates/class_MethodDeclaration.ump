@@ -87,8 +87,7 @@ class UmpleToJava {
     {
       handelMixsetInsideMethod(model, mixsetsWithinMethodItem, aMethod.getMethodBody());
     }
-    // End
-    //This code adds aspect with labels; the loop aims to make sure that casecaded additon are properly added in each method.
+    // End 
     for(int i =uClass.getCodeInjections().size() ; i > 0 ; i--)
     {
       applyCodeInjectionToLabeledMethod(uClass, aMethod, "before");
@@ -410,6 +409,8 @@ class UmpleToJava {
           appendln(realSb, "  }");
           addUncaughtExceptionVariables(methodName,p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline,methodBody.split("\\n").length);
         }
+
+      }
     }
 #>>!>>
 }
