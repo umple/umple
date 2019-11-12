@@ -63,14 +63,14 @@
         <arg value="cruise.umple/src/Master.ump"/>
         <jvmarg value="-Xmx500m"/>
       </java>
-      <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+      <!--java jar="${umple.stable.jar}" fork="true" failonerror="true">
         <arg value="cruise.umple.validator/src/Master.ump"/>
         <jvmarg value="-Xmx500m"/>
-      </java>
-       <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+      </java-->
+       <!--java jar="${umple.stable.jar}" fork="true" failonerror="true">
         <arg value="cruise.umplificator/src/Master.ump"/>
         <jvmarg value="-Xmx500m"/>
-      </java>
+      </java-->
     </parallel>
   </target>
 
@@ -92,12 +92,12 @@
       <java jar="${umplejar.built.here}" fork="true" failonerror="true">
         <arg value="cruise.umple/src/Master.ump"/>
       </java>
-      <java jar="${umplejar.built.here}" fork="true" failonerror="true">
+      <!--java jar="${umplejar.built.here}" fork="true" failonerror="true">
         <arg value="cruise.umple.validator/src/Master.ump"/>
-      </java>
-      <java jar="${umplejar.built.here}" fork="true" failonerror="true">
+      </java-->
+      <!--java jar="${umplejar.built.here}" fork="true" failonerror="true">
         <arg value="cruise.umplificator/src/Master.ump"/>
-      </java>
+      </java-->
     </parallel>
   </target>
 
@@ -621,8 +621,8 @@
     <antcall target="template.setVersion" />
     <antcall target="resetUmpleSelf" />
     <antcall target="compile" />
-    <antcall target="compileValidator" />
-    <antcall target="compileUmplificator" />
+    <!--antcall target="compileValidator" -->
+    <!--antcall target="compileUmplificator" -->
     <antcall target="package" />
     <antcall target="template.resetVersion" />
   </target>
@@ -670,8 +670,8 @@
     <antcall target="template.setVersion" />
     <antcall target="umpleSelf" />
     <antcall target="compile" />
-    <antcall target="compileValidator" />
-    <antcall target="compileUmplificator" />
+    <!--antcall target="compileValidator" -->
+    <!--antcall target="compileUmplificator" -->
     <antcall target="package" />
     <antcall target="template.test" />
     <antcall target="deploy" />
