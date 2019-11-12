@@ -63,14 +63,14 @@
         <arg value="cruise.umple/src/Master.ump"/>
         <jvmarg value="-Xmx500m"/>
       </java>
-      <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+      <!--java jar="${umple.stable.jar}" fork="true" failonerror="true">
         <arg value="cruise.umple.validator/src/Master.ump"/>
         <jvmarg value="-Xmx500m"/>
-      </java>
-       <java jar="${umple.stable.jar}" fork="true" failonerror="true">
+      </java-->
+       <!--java jar="${umple.stable.jar}" fork="true" failonerror="true">
         <arg value="cruise.umplificator/src/Master.ump"/>
         <jvmarg value="-Xmx500m"/>
-      </java>
+      </java-->
     </parallel>
   </target>
 
@@ -92,12 +92,12 @@
       <java jar="${umplejar.built.here}" fork="true" failonerror="true">
         <arg value="cruise.umple/src/Master.ump"/>
       </java>
-      <java jar="${umplejar.built.here}" fork="true" failonerror="true">
+      <!--java jar="${umplejar.built.here}" fork="true" failonerror="true">
         <arg value="cruise.umple.validator/src/Master.ump"/>
-      </java>
-      <java jar="${umplejar.built.here}" fork="true" failonerror="true">
+      </java-->
+      <!--java jar="${umplejar.built.here}" fork="true" failonerror="true">
         <arg value="cruise.umplificator/src/Master.ump"/>
-      </java>
+      </java-->
     </parallel>
   </target>
 
@@ -221,8 +221,8 @@
     <deps-load-path conf="test"   pathid="test.ivy.classpath" />
 
     <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.8" target="1.8">
-	    <src path="${xtext.project.path}/src"/>
-      <src path="${xtext.project.path}/src-gen"/>
+	    <!--src path="${xtext.project.path}/src"/ -->
+      <!-- src path="${xtext.project.path}/src-gen"/ -->
       <src path="${project.path}/src"/>
       <src path="${project.path}/src-gen-umpletl"/>
       <src path="${project.path}/src-gen-umple"/>
@@ -621,8 +621,8 @@
     <antcall target="template.setVersion" />
     <antcall target="resetUmpleSelf" />
     <antcall target="compile" />
-    <antcall target="compileValidator" />
-    <antcall target="compileUmplificator" />
+    <!--antcall target="compileValidator" -->
+    <!--antcall target="compileUmplificator" -->
     <antcall target="package" />
     <antcall target="template.resetVersion" />
   </target>
@@ -670,8 +670,8 @@
     <antcall target="template.setVersion" />
     <antcall target="umpleSelf" />
     <antcall target="compile" />
-    <antcall target="compileValidator" />
-    <antcall target="compileUmplificator" />
+    <!--antcall target="compileValidator" -->
+    <!--antcall target="compileUmplificator" -->
     <antcall target="package" />
     <antcall target="template.test" />
     <antcall target="deploy" />

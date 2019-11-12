@@ -35,8 +35,8 @@
         <!-- Validator -->
         <dependency org="org.eclipse.core" name="runtime" rev="3.9.0-v20130326-1255" conf="validator->default"/>
 
-
-        <!-- Umplificator -->
+<!-- Cmmmenting out as we are not building the Umplificator or Xtext any more due to lack of use
+        < Recomment this when activating Umplificator >
         <dependency org="commons-io"                name="commons-io"               rev="2.4"       conf="umplificator->default"/>
         <dependency org="org.apache.commons"        name="commons-collections4"     rev="4.0"       conf="umplificator->default"/>
         <dependency org="commons-configuration"     name="commons-configuration"    rev="1.10"      conf="umplificator->default"/>
@@ -52,10 +52,10 @@
         <dependency org="org.eclipse.core"          name="runtime"                  rev="3.10.0-v20140318-2214" conf="umplificator->default" />
         <dependency org="org.osgi"                  name="org.osgi.core"            rev="4.3.0"       conf="umplificator->default" />
 
-        <!-- XText/Xtend Plugin -->
+        < Recomment this when activating XText/Xtend Plugin >
         <dependency org="org.eclipse.xtext" name="org.eclipse.xtext.ui"     rev="2.9.0.beta3"   conf="xtext->default"/>
         <dependency org="org.eclipse.xtend" name="org.eclipse.xtend.core"   rev="2.9.0.beta3"   conf="xtext->default"/>
-
+-->
         <!-- Eclipse Plugin dependencies -->
         <dependency org="org.eclipse.jdt"   name="org.eclipse.jdt.core" rev="3.10.0" conf="eclipseplugin->default"/>
         
