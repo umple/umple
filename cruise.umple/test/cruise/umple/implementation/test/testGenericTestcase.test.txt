@@ -62,6 +62,16 @@ Test Person {
       //------------------
 
       
+      test init {
+        Student st (9999, 9999);
+        }
+      
+      
+      
+      
+        
+    
+      
       test checkifLogged_id {
         Person p1 ( "S1425", "John", "Ottawa") ;        
         String valueToCheck = p1.getId();  

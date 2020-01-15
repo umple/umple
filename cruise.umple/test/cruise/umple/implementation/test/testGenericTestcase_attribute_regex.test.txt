@@ -3,7 +3,7 @@
 
 
 
-////---- Tests for  GenericTestCase_Integer ----/////
+////---- Tests for  GenericTestCase_attribute_regex ----/////
 
 Test Student {
 
@@ -15,7 +15,7 @@ Test Student {
 
  
  GIVEN:
- GenericTestCase_Integer.ump;
+ GenericTestCase_attribute_regex.ump;
  
  
  
@@ -32,15 +32,27 @@ Test Student {
              
 	}
 
- //tests for :name
+ //tests for :nameMemebershipId
 
-      test attribute_name {
+      test attribute_nameMemebershipId {
     
-    assertTrue( student.setName("RandomString1"));
-    assertTrue( student.getName() =="RandomString1");
-    assertTrue( student.setName("RandomString2"));
-    assertTrue( student.getName()=="RandomString2");
-    assertFalse( student.getName() =="RandomString1");
+    assertTrue( student.setNameMemebershipId("RandomString1"));
+    assertTrue( student.getNameMemebershipId() =="RandomString1");
+    assertTrue( student.setNameMemebershipId("RandomString2"));
+    assertTrue( student.getNameMemebershipId()=="RandomString2");
+    assertFalse( student.getNameMemebershipId() =="RandomString1");
+             
+	}
+
+ //tests for :nameMemebershipHouse
+
+      test attribute_nameMemebershipHouse {
+    
+    assertTrue( student.setNameMemebershipHouse("RandomString1"));
+    assertTrue( student.getNameMemebershipHouse() =="RandomString1");
+    assertTrue( student.setNameMemebershipHouse("RandomString2"));
+    assertTrue( student.getNameMemebershipHouse()=="RandomString2");
+    assertFalse( student.getNameMemebershipHouse() =="RandomString1");
              
 	}
 
@@ -62,10 +74,10 @@ Test Student {
       //------------------
 
       
-      test checkifLogged_studentId {
+      test checkifLogged_nameMemebershipId {
         Student st1 ( "S1425", "John", "Ottawa") ;        
-        String valueToCheck = st1.getStudentId();  
-        st1.getValue(studentId);    
+        String valueToCheck = st1.getNameMemebershipId();  
+        st1.getValue(nameMemebershipId);    
         boolean isLogged =  st1.checkIsLogged(valueToCheck);        
         
         //list assertions
@@ -77,25 +89,10 @@ Test Student {
         
     
       
-      test checkifLogged_name {
+      test checkifLogged_nameMemebershipHouse {
         Student st1 ( "S1425", "John", "Ottawa") ;        
-        String valueToCheck = st1.getName();  
-        st1.getValue(name);    
-        boolean isLogged =  st1.checkIsLogged(valueToCheck);        
-        
-        //list assertions
-        }
-      
-      
-      
-      
-        
-    
-      
-      test checkifLogged_address {
-        Student st1 ( "S1425", "John", "Ottawa") ;        
-        String valueToCheck = st1.getAddress();  
-        st1.getValue(address);    
+        String valueToCheck = st1.getNameMemebershipHouse();  
+        st1.getValue(nameMemebershipHouse);    
         boolean isLogged =  st1.checkIsLogged(valueToCheck);        
         
         //list assertions

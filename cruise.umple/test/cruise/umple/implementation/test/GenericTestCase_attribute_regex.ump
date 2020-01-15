@@ -2,11 +2,12 @@
 class Student {  
     
     String studentId;
-    name;
+    nameMemebershipId;
+    nameMemebershipHouse;
     address;    
     
     
-  generic test checkifLogged(String attribute){
+  generic test checkifLogged(String attribute.regex(name\w*)){
         Student st1 ( "S1425", "John", "Ottawa") ;        
         String valueToCheck = st1.get<<attribute>>();  
         st1.getValue(<<attribute>>);    

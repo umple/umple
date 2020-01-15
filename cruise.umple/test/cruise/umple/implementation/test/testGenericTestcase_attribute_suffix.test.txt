@@ -3,7 +3,7 @@
 
 
 
-////---- Tests for  GenericTestCase_Integer ----/////
+////---- Tests for  GenericTestCase_attribute_suffix ----/////
 
 Test Student {
 
@@ -15,7 +15,7 @@ Test Student {
 
  
  GIVEN:
- GenericTestCase_Integer.ump;
+ GenericTestCase_attribute_suffix.ump;
  
  
  
@@ -66,36 +66,6 @@ Test Student {
         Student st1 ( "S1425", "John", "Ottawa") ;        
         String valueToCheck = st1.getStudentId();  
         st1.getValue(studentId);    
-        boolean isLogged =  st1.checkIsLogged(valueToCheck);        
-        
-        //list assertions
-        }
-      
-      
-      
-      
-        
-    
-      
-      test checkifLogged_name {
-        Student st1 ( "S1425", "John", "Ottawa") ;        
-        String valueToCheck = st1.getName();  
-        st1.getValue(name);    
-        boolean isLogged =  st1.checkIsLogged(valueToCheck);        
-        
-        //list assertions
-        }
-      
-      
-      
-      
-        
-    
-      
-      test checkifLogged_address {
-        Student st1 ( "S1425", "John", "Ottawa") ;        
-        String valueToCheck = st1.getAddress();  
-        st1.getValue(address);    
         boolean isLogged =  st1.checkIsLogged(valueToCheck);        
         
         //list assertions

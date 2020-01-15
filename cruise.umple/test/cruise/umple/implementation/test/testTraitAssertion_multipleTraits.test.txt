@@ -60,7 +60,7 @@ Test Person {
         
     
       
-      test thirstCheckName {
+      test thirsdCheckName {
         assertFalse(firstName == "ThirdOrlean");
         assertTrue(firstName == "ThirdEdwardEdward");
         }

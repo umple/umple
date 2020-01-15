@@ -170,7 +170,7 @@ Test Person {
         
     
       
-      JUinit test checkStatus {
+      test checkStatus {
         
 
         //----------------
@@ -198,6 +198,32 @@ Test Person {
         //after assertions
         //----------------
         AssertFalse(firstName == "something");
+        //End of after assertions
+
+        }
+      
+      
+      
+      
+        
+    
+      
+      test checkCashierPromotion {
+        
+
+        //----------------
+        //before assertions
+        //----------------
+        AssertTrue(jobName == "Cashier");
+        //End of before assertions
+
+        job1.promote();
+        
+
+        //----------------
+        //after assertions
+        //----------------
+        AssertTrue(jobName == "Manager");
         //End of after assertions
 
         }

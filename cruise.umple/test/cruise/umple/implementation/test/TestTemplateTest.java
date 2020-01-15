@@ -459,6 +459,39 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    
 	  }
 	  
-	 
+	  @Test
+	  public void genericTestCaseTest_attribute_prefix()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_attribute_prefix.ump","test/testGenericTestcase_attribute_prefix.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_attribute_prefix.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_attribute_prefix_ModelTest.umpt")).exists());
+	   
+	    
+	  }
 	  
+	  @Test
+	  public void genericTestCaseTest_attribute_suffix()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_attribute_suffix.ump","test/testGenericTestcase_attribute_suffix.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_attribute_suffix.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_attribute_suffix_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	 
+	  @Test
+	  public void genericTestCaseTest_attribute_regex()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_attribute_regex.ump","test/testGenericTestcase_attribute_regex.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_attribute_regex.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_attribute_regex_ModelTest.umpt")).exists());
+	   
+	    
+	  }
 }
