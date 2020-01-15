@@ -77,7 +77,7 @@ public class TestTemplateTest extends ClassTemplateTest{
 	     
 	     
 	     
-	     
+	     resultReport(result);
 	     
 	     
 	     if(result.wasSuccessful())
@@ -383,6 +383,18 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
 	    createUmpleSystem(pathToInput, "test/TestCase_AbstractTest.ump");
 	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/TestCase_AbstractTest_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void fatherTest()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/TestCase_AnscestralTest.ump","test/testAnscestralAbstractTest.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/TestCase_AnscestralTest.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/TestCase_AnscestralTest_ModelTest.umpt")).exists());
 	   
 	    
 	  }

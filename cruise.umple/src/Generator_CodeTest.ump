@@ -38,18 +38,61 @@ depend cruise.umple.compiler.test.*;
   	return null;
   	
   } 	
-  public void prepareDependency()
-  {  ClassDependencyTree cTree = new ClassDependencyTree(false, false, null);
+   public void prepareDependency(){
+    
+	    
+	   
+	   ClassDependencyTree cTree = new ClassDependencyTree(false, false);
+	   
+	   List<String> visited = new ArrayList<String>();
      
 	  
 	  for ( UmpleClass uClass : model.getUmpleClasses())
 	  {
+		  if(!visited.contains(uClass.getName()))
+		  {
+		  System.out.println(uClass.getName());
 		  for (Association as : uClass.getAssociations())
 		  {
 			  int i=0;
 			  AssociationEnd myEnd = as.getIsRightNavigable()?as.getEnd(0):as.getEnd(1);
 		      AssociationEnd theirEnd = as.getIsRightNavigable()?as.getEnd(1):as.getEnd(0);
-			  
+		      
+		      //System.out.println("MY End :: "+ myEnd.getMultiplicity().isMany());
+		      //System.out.println("their End :: "+ theirEnd);
+		      
+		      /*if (theirEnd.getMultiplicity().isOne()&& theirEnd.getMultiplicity().isOne())
+		      {
+		    	  //ignore 		    	  
+		    	  /*String name = theirEnd.getClassName();
+		    	  ClassDependencyNode cdn = new ClassDependencyNode(1, true, false, name);
+		    	  cdn.setUmpleClass(uClass);
+		    	  
+		    	  System.out.println("need to Add :: "+ theirEnd.getClassName());		    	  
+		    	  cTree.addClassDependencyNode(cdn);	    	      	  
+		      }
+		      
+		      else */
+		      if (myEnd.getMultiplicity().isOne() && theirEnd.getMultiplicity().isMany())
+		      {   
+		    	  
+		    	  String name = theirEnd.getClassName();
+		    	  ClassDependencyNode cdn = new ClassDependencyNode(1, true, false, myEnd.getClassName());
+		    	  for(UmpleClass dependeeClass : model.getUmpleClasses())
+		    	  {
+		    		  if (dependeeClass.getName().equals(name)){
+		    			  cdn.setUmpleClass(dependeeClass);		    			  
+		    		  }
+		    	  }
+		    	  
+		    	  
+		    	  System.out.println("need to add "+ myEnd.getClassName() +"  to :: "+ theirEnd.getClassName());		    	  		    	  
+		    	  cTree.addClassDependencyNode(cdn);		    	  		    	  		    	  
+		      }
+		      
+		      
+		      
+		      
 			  if ( theirEnd.getMultiplicity().isMany() && myEnd.getMultiplicity().isMany())
 			  {
 				  
@@ -59,10 +102,62 @@ depend cruise.umple.compiler.test.*;
 			  }
 			  
 		  }
+		  visited.add(uClass.getName());
+		  }
+		  
 	  }
 	  
+	  for (ClassDependencyNode node : cTree.getClassDependencyNodes())
+	  {
+	  System.out.println("dependee : "+node.getUClassName() +"  object Level : "+ node.getLevel()+" dependent class is:  "+node.getUmpleClass().getName());
 	  
-  }  
+	  }
+	  
+	  System.out.println("node size ::: " + cTree.getClassDependencyNodes().size());	  	  
+	  
+	  for (UmpleClass uClass : model.getUmpleClasses())
+	  {
+		  if ( uClass.hasClassDependencyNodes())
+		  {
+			  
+			  System.out.println("Class Name: " + uClass.getName());
+			  System.out.println("dependee size ::: " + uClass.getClassDependencyNodes().size());
+			  for (ClassDependencyNode dn : uClass.getClassDependencyNodes())
+			  {
+				  
+				  System.out.println("\t dependee : " + dn.getUClassName());
+			  }
+			  
+			  
+		  }
+		  
+	  }
+  }
+   
+   
+  void checkDependency (UmpleClass uClass)
+  {
+	  String name = ""; 
+	  if (uClass.hasAssociations())
+	  {
+		  for (Association as : uClass.getAssociations())
+		  {
+			  name = as.getEnd(1).getClassName();
+			  for (UmpleClass cs : model.getUmpleClasses())
+			   {
+				  if (cs.getName().equals(name)) {  checkDependency(cs);}
+			   }
+			  
+			  
+		  }
+	  }
+	  else {
+		  //end recursion 
+	  }
+		  
+		  
+		  
+  }
 
   public String writeFile(UmpleClass aClass){
     String className=aClass.getName();

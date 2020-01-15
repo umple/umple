@@ -5,6 +5,11 @@ class Person {
     name;
     address;
     
+   test init {
+   Student st (9999, 9999); 
+        
+  } 
+    
     
   generic test checkifLogged(String attribute){
         Person p1 ( "S1425", "John", "Ottawa") ;        

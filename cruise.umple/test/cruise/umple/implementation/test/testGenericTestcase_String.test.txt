@@ -9,7 +9,7 @@ Test Person {
 
  generate JUnit ;
  
- depend  Person,Identification ; 
+ depend  Person ; 
 
 
 
@@ -44,16 +44,16 @@ Test Person {
              
 	}
 
- //tests for :address
+ //tests for :postal
 
-      test attribute_address {
+      test attribute_postal {
     
-    assertTrue( person.setAddress("RandomString1"));
-    assertTrue( person.getAddress() =="RandomString1");
-    assertTrue( person.setAddress("RandomString2"));
-    assertTrue( person.getAddress()=="RandomString2");
-    assertFalse( person.getAddress() =="RandomString1");
-             
+      assertTrue( person.setPostal(123456789)));
+      assertTrue( person.getPostal() == 123456789));
+      assertTrue( person.setPostal(987654321)));
+      assertTrue( person.getPostal() == 987654321));
+      assertFlase( person.getPostal() == 123456789));
+          
 	}
 
 
@@ -74,50 +74,7 @@ Test Person {
       
       
         
-    
-      
-      test checkifLogged_address {
-        Person p1 ( "S1425", "John", "Ottawa") ;        
-        String valueToCheck = p1.getAddress();  
-        ps1.getValue(address);    
-        boolean isLogged =  p1.checkIsLogged(valueToCheck);        
-        assertTrue(logged == "true");
-        }
-      
-      
-      
-      
-        
      
- 
-   
-
-}
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
-
-
-
-////---- Tests for  GenericTestCase_String ----/////
-
-Test Identification {
-
- generate JUnit ;
- 
- depend  Person,Identification ; 
-
-
-
- 
- GIVEN:
- GenericTestCase_String.ump;
- 
- 
- 
- THEN:
- 
-
-  
  
    
 

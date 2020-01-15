@@ -9,7 +9,7 @@ WHEN:
  RegularFlight flight1 ("TK",5467) ;
 THEN:
 
-test someTest {
+JUnit test someTest {
 
  Person p1 ("John", 123);
  assertTrue ( p1.id = 123 ) ;

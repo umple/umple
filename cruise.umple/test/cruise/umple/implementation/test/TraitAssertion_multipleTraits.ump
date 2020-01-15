@@ -19,7 +19,7 @@ trait CustomTest1 {
 
 trait CustomTest2 {  
     
-  test thirstCheckName { 
+  test thirsdCheckName { 
      assertFalse (firstName == "ThirdOrlean");
      assertTrue (firstName == "ThirdEdwardEdward");        
     }

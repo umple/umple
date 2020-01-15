@@ -66,7 +66,7 @@ methodThrowsExceptions : throws [~exception] ( , [~exception] )*
 parameterList : OPEN_ROUND_BRACKET ([[parameter]] ( , [[parameter]] )* )? CLOSE_ROUND_BRACKET
 parameter : [[typedName]]
 
-testCase : [=isTimed:before|after]? [=isConcrete:JUnit|PhpUnit|RubyUnit]? [=isOverride:override]? test [~testCaseName] { ( [[assertion]] | [[testAction]] | [[testInit]] | [[testInitAtt]] | [[testInitAttWithMethodCall]] | [[comment]] | [[ifStatement]] )* }
+testCase : [=isTimed:before|after]? [=isConcrete:JUnit|PhpUnit|RubyUnit]? [=isOverride:override]? test [~testCaseName] { ( [[assertion]] | [[testAction]] | [[testInit]] | [[testInitAtt]] | [[testInitAttWithMethodCall]] | [[comment]] | [[ifStatement]] | [[forStatement]] )* }
 assertion : [=isTimed:before|after]? [=assertType:assertTrue|assertFalse|assertEqual|assertNull|assertMethod] OPEN_ROUND_BRACKET [**code] CLOSE_ROUND_BRACKET ;
 testAction : [~objectName] ( (.)[~methodName] )? OPEN_ROUND_BRACKET  [[testActionParameterList]] CLOSE_ROUND_BRACKET ;
 testMethodCall : [~objectName] ( (.)[~methodName] )? OPEN_ROUND_BRACKET  [[testActionParameterList]] CLOSE_ROUND_BRACKET
@@ -88,13 +88,17 @@ testClassInit : test Init  { [**code] }
 
 // Generic test case rules
 genericTestCase : generic test [~testCaseName] OPEN_ROUND_BRACKET [[genericElement]] CLOSE_ROUND_BRACKET { ( [**code] )* }
-genericElement- : [~elementType] [~genericElement]  [[genericMethodParameters]]? 
+genericElement- : [~elementType] [~genericElement] [[elementFix]]?  [[genericMethodParameters]]? 
 genericMethodParameters- : [~elementType] ( , [~elementType] )*
+elementFix :  (.) [=fixType:prefix|suffix|regex] OPEN_ROUND_BRACKET [fixValue] CLOSE_ROUND_BRACKET
 
 //testcase if statement
 ifStatement : if OPEN_ROUND_BRACKET [**condition] CLOSE_ROUND_BRACKET { [**code] } [[ifElseStatement]]* [[elseStatement]]?
 ifElseStatement : if else OPEN_ROUND_BRACKET [**condition] CLOSE_ROUND_BRACKET { [**code] }
 elseStatement : else { [**code] }
+
+// for statement 
+forStatement : for OPEN_ROUND_BRACKET [**forCode] CLOSE_ROUND_BRACKET { [**code] }
 
 
 

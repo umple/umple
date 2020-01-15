@@ -740,6 +740,7 @@ private void postTokenInterfaceTestAnalysis(){
 				  if(uClass.getExtendsClass().hasUmpleTestCases())
 				  {
 					  System.out.println("father has tests");
+					  copyFatherClassTests(uClass, uClass.getExtendsClass());
 				  }
 				  
 			  }
@@ -921,16 +922,17 @@ private void postTokenInterfaceTestAnalysis(){
 	
 }
    
-  private void copyFatherClassTests(UmpleClass inClass, UmpleClass uClass) {
-	// TODO copy tests from father class to child class and check override 
-	  //boolean isExist = false;
-	  
+  private void copyFatherClassTests(UmpleClass inClass, UmpleClass uClass){
+    // TODO copy tests from father class to child class and check override 
+	  boolean isExist = false;
+	   	  
 	  for(UmpleTestCase uTc: inClass.getUmpleTestCases())
 	  {
 	  for (UmpleTestCase exTc: uClass.getUmpleTestCases())
 	  {
 		  if (exTc.getName().equals(uTc.getName()))
 		  {
+			  System.out.println("test are equal ");
 			  if(uTc.getIsOverride())
 			  {
 				  // then don't append child test into father test
@@ -939,17 +941,25 @@ private void postTokenInterfaceTestAnalysis(){
 				  // if there is definition in father test, merge two tests into one father code then child code
 				  mergeTests(uTc, exTc);
 			  }
-		  }
-		  
+		  }		  
 		  else {
+			  System.out.println("addddd ");
 			  // add father test to child class
-			  inClass.addUmpleTestCase(exTc);
-		  }
-		  
+			  UmpleTestCase uTestCase = new UmpleTestCase(exTc.getName(),0);
+			  //uTestCase.ad
+			  mergeTests(uTestCase, exTc);
+			  
+			  //We are HEREREERE inClass.add
+			  
+			  //inClass.addUmpleTestCase(uTestCase);
+		  }		  
 	  }
+	  
 	  }
-	
-}
+	  
+	  
+  }
+
 
 private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 	// TODO Analyze test sequence token, order test cases with delimiter -> according to order
@@ -984,9 +994,52 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 
  private void analyzeClassGenericTestCase(Token token, UmpleClass aClass){
     String element = "";
+    String fix = "";
+    String fixType = "";
+    String fixValue = "";
+    boolean hasFix = false;
     String elementType = token.getValue("elementType");
     List<String> elementTypes = new ArrayList<String>();
     String code = "";
+    
+    for(Token subToken :token.getSubTokens() ){
+    	
+    	if(subToken.getName().equals("elementFix"))
+    	{
+    		fixType = subToken.getValue("fixType");
+    		hasFix = true;
+    		for (Token fixToken : subToken.getSubTokens()) {
+    			if(fixToken.getName().equals("fixValue"))
+    			{
+    				fix += fixToken.getValue("fixValue");
+    				fixValue = fixToken.getValue("fixValue");
+    			}
+    			else
+    			fix += fixToken.getName();
+    		}    		
+    		
+    	}
+    }
+    /*// set fix type pre/suf
+    if (fix.contains("prefix"))
+    {
+    	fixType = "prefix";
+    }
+    else if  (fix.contains("suffix"))
+    {
+    	fixType = "suffix";
+    }*/
+    
+    //set flag
+    
+    
+    
+    
+    
+    //System.out.println(fix);
+    //System.out.println(fixType);
+    //System.out.println(fixValue);
+    
     boolean toBeAdded = false;
 	   
 	   if (token.getValue("genericElement").equals("attribute"))
@@ -1012,8 +1065,68 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 		   
 	    for (Attribute att : aClass.getAttributes())
 	    { 
-	    	if (att.getType().equals(elementType))
+	    	if (hasFix)
 	    	{
+	    		if (fixType.equals("prefix"))
+	    		{
+	    			if (att.getType().equals(elementType) && att.getName().startsWith(fixValue))
+	    			{
+
+	    		    	   code = modifyGenericTestAttribute(token, aClass, att);
+	    		    	//System.out.println(uTestCase.getTestAction(0).getActionCode());
+	    			    	
+	    			    	UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+att.getName(),0);
+	    			       	TestAction aTestAction = new TestAction("genericAttribute", code.toString(), "generic", 0);
+	    			       	
+	    			       	uTestCase.addTestAction(aTestAction);
+	    			       	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	    			       	aClass.addUmpleTestCase(uTestCase);	 
+	    		    	
+	    			}
+	    		}
+	    		
+	    		else if (fixType.equals("suffix"))
+	    		{
+	    			if (att.getType().equals(elementType) && att.getName().endsWith(fixValue))
+	    			{
+
+	    		    	   code = modifyGenericTestAttribute(token, aClass, att);
+	    		    	//System.out.println(uTestCase.getTestAction(0).getActionCode());
+	    			    	
+	    			    	UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+att.getName(),0);
+	    			       	TestAction aTestAction = new TestAction("genericAttribute", code.toString(), "generic", 0);
+	    			       	
+	    			       	uTestCase.addTestAction(aTestAction);
+	    			       	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	    			       	aClass.addUmpleTestCase(uTestCase);	 
+	    		    	
+	    			}
+	    		}
+	    		
+	    		else if (fixType.equals("regex"))
+	    		{
+	    			if (att.getType().equals(elementType) && att.getName().matches(fixValue))
+	    			{
+
+	    		    	   code = modifyGenericTestAttribute(token, aClass, att);
+	    		    	   //System.out.println(uTestCase.getTestAction(0).getActionCode());
+	    			    	
+	    			    	UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+att.getName(),0);
+	    			       	TestAction aTestAction = new TestAction("genericAttribute", code.toString(), "generic", 0);
+	    			       	
+	    			       	uTestCase.addTestAction(aTestAction);
+	    			       	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	    			       	aClass.addUmpleTestCase(uTestCase);	 
+	    		    	
+	    			}
+	    		}
+	    		
+	    	}
+	    	
+	    	else if (att.getType().equals(elementType))
+	    	{
+	    		
+	    		
 	    	   code = modifyGenericTestAttribute(token, aClass, att);
 	    	//System.out.println(uTestCase.getTestAction(0).getActionCode());
 		    	
@@ -1225,6 +1338,55 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 	  
 	  uTestCase.addTestAction(ta);
 	  uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	
+}
+
+
+private void analyzeTestForStatement(Token token, UmpleElement uElement, UmpleTestCase uTestCase) {
+	// TODO For loop analysis
+	TestAction ta = new TestAction("forLoop","","forLoop", uTestCase.getLocOrder());
+	String code = "";
+	for (Token subToken : token.getSubTokens())
+	{
+		if (subToken.getName().equals("for"))
+		{
+			code += "for ";
+		}
+		if (subToken.getName().equals("("))
+		{
+			code += "( ";
+		}
+		if (subToken.getName().equals(")"))
+		{
+			code += " )\n\t";
+		}
+		
+		if (subToken.getName().equals("forCode"))
+		{
+			code += subToken.getValue("forCode");
+		}
+		
+		if (subToken.getName().equals("{"))
+		{
+			code += " {\n\t";
+		}
+
+		if (subToken.getName().equals("}"))
+		{
+			code += " \n\t}";
+		}
+		if (subToken.getName().equals("code"))
+		{
+			code += subToken.getValue("code");
+		}
+		
+		ta.setActionCode(code);
+		
+		uTestCase.addTestAction(ta);
+		uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+		
+	}
+	  
 	
 }
 
