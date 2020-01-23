@@ -993,7 +993,7 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 ///// generic test methods 
 
  private void analyzeClassGenericTestCase(Token token, UmpleClass aClass){
-    String element = "";
+    String element = token.getValue("genericElement");
     String fix = "";
     String fixType = "";
     String fixValue = "";
@@ -1001,6 +1001,9 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
     String elementType = token.getValue("elementType");
     List<String> elementTypes = new ArrayList<String>();
     String code = "";
+    
+    //System.out.println(token.getValue("elementType"));
+    //System.out.println(token.getValue("genericElement"));
     
     for(Token subToken :token.getSubTokens() ){
     	
@@ -1050,6 +1053,11 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 	   else if (token.getValue("genericElement").equals("method"))
 	   {
 		   element = "method";
+	   }
+	   
+	   else if (token.getValue("genericElement").equals("association"))
+	   {
+		   element = "association";
 	   }
 	   
 	   else {
@@ -1190,7 +1198,7 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 	    	
 	    	
 	    	UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+meth.getName(),0);
-	    	TestAction aTestAction = new TestAction("genericAttribute", token.getValue("code"), "generic", 0);
+	    	TestAction aTestAction = new TestAction("genericMethod", token.getValue("code"), "generic", 0);
 	    	aTestAction.setActionCode(aTestAction.getActionCode().replace("<<method>>", meth.getName()));	    	
 	    	uTestCase.addTestAction(aTestAction);
 	    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
@@ -1198,7 +1206,125 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 	    	}
 	    }
 	   }
+	   
+	   if(element.equals("association"))
+	   {
+		   //System.out.println("association ....");
+		   
+		   for (AssociationVariable av: aClass.getAssociationVariables())
+		   {	
+			   
+			   
+			   code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+			   //System.out.println(token.getValue("elementType"));				   
+			   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
+		    	TestAction aTestAction = new TestAction("genericAssociation", code, "generic", 0);
+		    	
+		    	
+		    	
+		    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association>>", av.getName()));
+		    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1)));
+		    	uTestCase.addTestAction(aTestAction);
+		    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+		    	aClass.addUmpleTestCase(uTestCase);	
+			   
+		   }
+		   
+		   
+	   }
   }
+
+
+  private String modfiyGenericAssociationReplacements(Token token, UmpleClass uClass, AssociationVariable av, String testCode) {
+	// TODO modify necessary association-related tokens in test template for generic templates
+	  String code = testCode;
+	  String fix = "";
+	  
+	  //code = testCode.replace("<<association>>", av.getName());
+	  //code = testCode.replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1));
+	  
+	  
+	  char preChar = '-';	    	
+	   	int indexOfNonPascaledElement = 0; 	    	
+	   	int preCharIndex = 0;
+	   	//StringBuilder code = new StringBuilder(token.getValue("code"));
+	   	String pascalRegex = "[a-zA-Z0-9]<<association>>";
+	   	String nonPascalRegex = "[=|(|!|\\s]<<association>>";
+	   	String PascalSingularRegex = "[a-zA-Z0-9]<<association\\.toSingular\\(\\)>>";
+	   	String nonPascalSingularRegex = "[=|(|!|\\s]<<association\\.toSingular\\(\\)>>";
+	   	
+	   	
+	   	Pattern pascalSingularPattern = Pattern.compile(PascalSingularRegex);
+	   	Pattern nonPascalSingularPattern = Pattern.compile(nonPascalSingularRegex);
+	   	
+	   	
+	   	Matcher pascSingularMatcher = pascalSingularPattern.matcher(code);
+	   	Matcher nonPascSingularMatcher = nonPascalSingularPattern.matcher(code);
+	   	
+	   	//String lookAheadAssertion = "\\w(?= {attribute})"; 	
+	   	Pattern pattern = Pattern.compile(pascalRegex);
+	   	Matcher matcher = pattern.matcher(code);
+	   	Pattern nonPattern = Pattern.compile(nonPascalRegex);
+	   	Matcher nonMatcher =nonPattern.matcher(code);
+	   	//preChar = code.substring(matcher.start()-2, matcher.start()-1).;
+	      while(matcher.find())
+	      {	    	   
+		   	//int startIndex = matcher.start();
+		   	//int endIndex = matcher.end();
+		   	preCharIndex = matcher.start();
+		   	preChar = code.charAt(preCharIndex);	    		    		    	    	    	
+		   	if(Character.isLetter(preChar)){ // to check that the attribute is within a method call such as getId and has no white spaces or Java characters: ex get<<attribute>>	    	  
+		   		String tempGroup = matcher.group();	    	
+		   		//System.out.println(tempGroup);
+		   		String tempReplacement ="";
+		   		tempReplacement = tempGroup.replace("<<association>>", StringFormatter.toPascalCase(av.getName()));
+		   		//System.out.println(tempReplacement);
+		   		
+		   		code = code.replace(tempGroup,tempReplacement);	    		
+		       }
+	      }
+		   	while (nonMatcher.find()) // this loop finds matches of attribute that are not part of a methodCall example : getValue(<<attribute>>) it is rather a parameter in this case or String tempAtt = <<attribute>>
+		   	{	    	
+		   		String tempGroup = nonMatcher.group();	    		
+		   		String tempReplacement = "";
+		   			tempReplacement= tempGroup.replace("<<association>>", av.getName());
+		   			//tempReplacement= tempGroup.replace("<<association.toSingular()>>", av.getName());
+		   		code = code.replace(tempGroup,tempReplacement);
+		   	}
+		   	
+		   	
+		   	//singular 
+		   	
+		   	while(pascSingularMatcher.find())
+		      {	    	   
+			   	//int startIndex = matcher.start();
+			   	//int endIndex = matcher.end();
+			   	preCharIndex = pascSingularMatcher.start();
+			   	preChar = code.charAt(preCharIndex);	    		    		    	    	    	
+			   	if(Character.isLetter(preChar)){ // to check that the asscoaition is within a method call and a singular 	    	  
+			   		String tempGroup = pascSingularMatcher.group();	    	
+			   		//System.out.println(tempGroup);
+			   		String tempReplacement ="";
+			   		tempReplacement = tempGroup.replace("<<association.toSingular()>>", StringFormatter.toPascalCase(av.getName().substring(0, av.getName().length()-1)));
+			   		//System.out.println(tempReplacement);
+			   		
+			   		code = code.replace(tempGroup,tempReplacement);	    		
+			       }
+		      }
+			   	while (nonPascSingularMatcher.find()) // this loop finds matches of attribute that are not part of a methodCall example : getValue(<<attribute>>) it is rather a parameter in this case or String tempAtt = <<attribute>>
+			   	{			   		
+			   		String tempGroup = nonPascSingularMatcher.group();	    		
+			   		String tempReplacement = "";			   		
+			   			tempReplacement= tempGroup.replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1));
+			   			//tempReplacement= tempGroup.replace("<<association.toSingular()>>", av.getName());
+			   		code = code.replace(tempGroup,tempReplacement);
+			   	}
+	   	
+	      
+	   	             
+	   	return code;
+	
+}
    
    // test initializations at the class level, these are inits that were mesnt to be done at the global-level in the test class
    

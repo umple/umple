@@ -1,0 +1,73 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association ----/////
+
+Test Calculator {
+
+ generate JUnit ;
+ 
+ depend  Calculator,Number ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_association.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkifLogged_numbers {
+        Calculator c1 ( 4, 5) ;                
+        String valueToCheck = p1.getNumbers();
+         Number tempNumber =  numbers;
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association ----/////
+
+Test Number {
+
+ generate JUnit ;
+ 
+ depend  Calculator,Number ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_association.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+  
+ 
+   
+
+}

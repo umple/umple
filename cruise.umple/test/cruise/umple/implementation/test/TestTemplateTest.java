@@ -460,6 +460,30 @@ public class TestTemplateTest extends ClassTemplateTest{
 	  }
 	  
 	  @Test
+	  public void genericTestCaseTest_association()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_association.ump","test/testGenericTestcase_association.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_association.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void genericTestCaseTest_association_toSingular()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_association_toSingular.ump","test/testGenericTestcase_association_toSingular.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyassociation_toSingular_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_association_toSingular.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_toSingular_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
 	  public void genericTestCaseTest_attribute_prefix()
 	  {
 	    language = "Test";

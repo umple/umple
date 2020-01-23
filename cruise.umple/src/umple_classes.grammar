@@ -88,7 +88,7 @@ testClassInit : test Init  { [**code] }
 
 // Generic test case rules
 genericTestCase : generic test [~testCaseName] OPEN_ROUND_BRACKET [[genericElement]] CLOSE_ROUND_BRACKET { ( [**code] )* }
-genericElement- : [~elementType] [~genericElement] [[elementFix]]?  [[genericMethodParameters]]? 
+genericElement- : [elementType] [=genericElement:attribute|method|association] [[elementFix]]?  [[genericMethodParameters]]? 
 genericMethodParameters- : [~elementType] ( , [~elementType] )*
 elementFix :  (.) [=fixType:prefix|suffix|regex] OPEN_ROUND_BRACKET [fixValue] CLOSE_ROUND_BRACKET
 
