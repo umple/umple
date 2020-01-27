@@ -483,6 +483,31 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    
 	  }
 	  
+	  
+	  @Test
+	  public void genericTestCaseTest_association_oneToMany()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_association_oneToMany.ump","test/testGenericTestcase_association_oneToMany.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyassociation_oneToMany_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_association_oneToMany.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_oneToMany_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void genericTestCaseTest_association_OptionalOneToMany()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_association_optionalOneToMany.ump","test/testGenericTestcase_association_OptionalOneToMany.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyassociation_OptionalOneToMany_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_association_optionalOneToMany.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_optionalOneToMany_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
 	  @Test
 	  public void genericTestCaseTest_attribute_prefix()
 	  {
