@@ -1233,20 +1233,42 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 		   
 	   }
   }
+  
+  private String modifyGenericTestCode (Matcher matcher, Matcher nonMatcher, String element, String replacement, String nonReplacement, String code) {
+	   while(matcher.find())
+	   	{	//System.out.println("found attribute");    	   
+	   		//int startIndex = matcher.start();
+	   		//int endIndex = matcher.end();
+	   		int preCharIndex = matcher.start();
+	   		char preChar = code.charAt(preCharIndex);	    		    		    	    	    	
+	   		if(Character.isLetter(preChar)){ // to check that the attribute is within a method call such as getId and has no white spaces or Java characters: ex get<<attribute>>	    	  
+	   			String tempGroup = matcher.group();	    	
+	   			//System.out.println(tempGroup);
+	   			String tempReplacement ="";
+	   			tempReplacement = tempGroup.replace(element, replacement);
+	   			//System.out.println(tempReplacement);
+
+	   			code = code.replace(tempGroup,tempReplacement);	    		
+	   		}
+	   	}
+	   	while (nonMatcher.find()) // this loop finds matches of attribute that are not part of a methodCall example : getValue(<<attribute>>) it is rather a parameter in this case or String tempAtt = <<attribute>>
+	   	{	    	
+	   		String tempGroup = nonMatcher.group();	    		
+	   		String tempReplacement = "";
+	   		tempReplacement= tempGroup.replace(element, nonReplacement);
+	   		//tempReplacement= tempGroup.replace("<<association.toSingular()>>", av.getName());
+	   		code = code.replace(tempGroup,tempReplacement);
+	   	}
+	   	
+	   	return code;
+   }
 
 
-  private String modfiyGenericAssociationReplacements(Token token, UmpleClass uClass, AssociationVariable av, String testCode) {
-	// TODO modify necessary association-related tokens in test template for generic templates
+  private String modfiyGenericAssociationReplacements(Token token, UmpleClass uClass, AssociationVariable av, String testCode){
+    // TODO modify necessary association-related tokens in test template for generic templates
 	  String code = testCode;
 	  String fix = "";
-	  
-	  //code = testCode.replace("<<association>>", av.getName());
-	  //code = testCode.replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1));
-	  
-	  
-	  char preChar = '-';	    	
-	   	int indexOfNonPascaledElement = 0; 	    	
-	   	int preCharIndex = 0;
+
 	   	//StringBuilder code = new StringBuilder(token.getValue("code"));
 	   	String pascalRegex = "[a-zA-Z0-9]<<association>>";
 	   	String nonPascalRegex = "[=|(|!|\\s]<<association>>";
@@ -1261,70 +1283,21 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 	   	Matcher pascSingularMatcher = pascalSingularPattern.matcher(code);
 	   	Matcher nonPascSingularMatcher = nonPascalSingularPattern.matcher(code);
 	   	
-	   	//String lookAheadAssertion = "\\w(?= {attribute})"; 	
+	   	//	
 	   	Pattern pattern = Pattern.compile(pascalRegex);
 	   	Matcher matcher = pattern.matcher(code);
 	   	Pattern nonPattern = Pattern.compile(nonPascalRegex);
-	   	Matcher nonMatcher =nonPattern.matcher(code);
-	   	//preChar = code.substring(matcher.start()-2, matcher.start()-1).;
-	      while(matcher.find())
-	      {	    	   
-		   	//int startIndex = matcher.start();
-		   	//int endIndex = matcher.end();
-		   	preCharIndex = matcher.start();
-		   	preChar = code.charAt(preCharIndex);	    		    		    	    	    	
-		   	if(Character.isLetter(preChar)){ // to check that the attribute is within a method call such as getId and has no white spaces or Java characters: ex get<<attribute>>	    	  
-		   		String tempGroup = matcher.group();	    	
-		   		//System.out.println(tempGroup);
-		   		String tempReplacement ="";
-		   		tempReplacement = tempGroup.replace("<<association>>", StringFormatter.toPascalCase(av.getName()));
-		   		//System.out.println(tempReplacement);
-		   		
-		   		code = code.replace(tempGroup,tempReplacement);	    		
-		       }
-	      }
-		   	while (nonMatcher.find()) // this loop finds matches of attribute that are not part of a methodCall example : getValue(<<attribute>>) it is rather a parameter in this case or String tempAtt = <<attribute>>
-		   	{	    	
-		   		String tempGroup = nonMatcher.group();	    		
-		   		String tempReplacement = "";
-		   			tempReplacement= tempGroup.replace("<<association>>", av.getName());
-		   			//tempReplacement= tempGroup.replace("<<association.toSingular()>>", av.getName());
-		   		code = code.replace(tempGroup,tempReplacement);
-		   	}
-		   	
-		   	
-		   	//singular 
-		   	
-		   	while(pascSingularMatcher.find())
-		      {	    	   
-			   	//int startIndex = matcher.start();
-			   	//int endIndex = matcher.end();
-			   	preCharIndex = pascSingularMatcher.start();
-			   	preChar = code.charAt(preCharIndex);	    		    		    	    	    	
-			   	if(Character.isLetter(preChar)){ // to check that the asscoaition is within a method call and a singular 	    	  
-			   		String tempGroup = pascSingularMatcher.group();	    	
-			   		//System.out.println(tempGroup);
-			   		String tempReplacement ="";
-			   		tempReplacement = tempGroup.replace("<<association.toSingular()>>", StringFormatter.toPascalCase(av.getName().substring(0, av.getName().length()-1)));
-			   		//System.out.println(tempReplacement);
-			   		
-			   		code = code.replace(tempGroup,tempReplacement);	    		
-			       }
-		      }
-			   	while (nonPascSingularMatcher.find()) // this loop finds matches of attribute that are not part of a methodCall example : getValue(<<attribute>>) it is rather a parameter in this case or String tempAtt = <<attribute>>
-			   	{			   		
-			   		String tempGroup = nonPascSingularMatcher.group();	    		
-			   		String tempReplacement = "";			   		
-			   			tempReplacement= tempGroup.replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1));
-			   			//tempReplacement= tempGroup.replace("<<association.toSingular()>>", av.getName());
-			   		code = code.replace(tempGroup,tempReplacement);
-			   	}
+	   	Matcher nonMatcher =nonPattern.matcher(code);	   	
+	   	
+	   	code = modifyGenericTestCode(matcher, nonMatcher, "<<association>>", StringFormatter.toPascalCase(av.getName()), av.getName(), code);
+	   	code = modifyGenericTestCode(pascSingularMatcher, nonPascSingularMatcher, "<<association.toSingular()>>", StringFormatter.toPascalCase(av.getName().substring(0, av.getName().length()-1)), av.getName().substring(0, av.getName().length()-1), code); 
+	   	
+	   	
 	   	
 	      
 	   	             
 	   	return code;
-	
-}
+  }
    
    // test initializations at the class level, these are inits that were mesnt to be done at the global-level in the test class
    
@@ -1338,45 +1311,23 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
    
    
    // This method modifies the generic template to replace with the actual attribute name if it matches the type indicated in template 
-   private String modifyGenericTestAttribute (Token token,UmpleClass aClass, Attribute att)
-   {
-	   String code = token.getValue("code");
-   	//boolean isPascaled = false;
-   	char preChar = '-';	    	
-   	int indexOfNonPascaledElement = 0; 	    	
-   	int preCharIndex = 0;
-   	//StringBuilder code = new StringBuilder(token.getValue("code"));
+   private String modifyGenericTestAttribute(Token token, UmpleClass aClass, Attribute att){
+    String code = token.getValue("code");
+
    	String pascalRegex = "[a-zA-Z0-9]<<attribute>>";
    	String nonPascalRegex = "[=|(|!|\\s]<<attribute>>";
-   	//String lookAheadAssertion = "\\w(?= {attribute})"; 	
+ 	
    	Pattern pattern = Pattern.compile(pascalRegex);
    	Matcher matcher = pattern.matcher(code);
    	Pattern nonPattern = Pattern.compile(nonPascalRegex);
    	Matcher nonMatcher =nonPattern.matcher(code);
-   	//preChar = code.substring(matcher.start()-2, matcher.start()-1).;
-      while(matcher.find())
-      {	    	   
-   	int startIndex = matcher.start();
-   	int endIndex = matcher.end();
-   	preCharIndex = matcher.start();
-   	preChar = code.charAt(preCharIndex);	    		    		    	    	    	
-   	if(Character.isLetter(preChar)){ // to check that the attribute is within a method call such as getId and has no white spaces or Java characters: ex get<<attribute>>	    	  
-   		String tempGroup = matcher.group();	    		
-   		String tempReplacement = tempGroup.replace("<<attribute>>", StringFormatter.toPascalCase(att.getName()));
-   		code = code.replace(tempGroup,tempReplacement);	    		
-       }	    	
-   	while (nonMatcher.find()) // this loop fins matches of attribute that are not part of a methodCall example : getValue(<<attribute>>) it is rather a parameter in this case or String tempAtt = <<attribute>>
-   	{	    	
-   		String tempGroup = nonMatcher.group();	    		
-   		String tempReplacement = tempGroup.replace("<<attribute>>", att.getName());
-   		code = code.replace(tempGroup,tempReplacement);
-   	}
    	
-      }
+   	code = modifyGenericTestCode(matcher, nonMatcher, "<<attribute>>", StringFormatter.toPascalCase(att.getName()) , att.getName(), code);
+   	
+      
    	             
    	return code;
-   	
-   }
+  }
    
    private void analyzeTestIfStatement(Token token, UmpleElement uElement, UmpleTestCase uTestCase) {
 	// TODO analyze if statement tokens
