@@ -1,8 +1,10 @@
 
 class Calculator{  
     
-    1--* Number;    
+       
+        1--* Number; 
         
+        0..1--* Controller;
     
     
   generic test checkifLogged(1--* association){
@@ -20,4 +22,12 @@ class Number {
 
 
 } 
+
+
+class Controller {
+
+
+}
+
+
   

@@ -1209,26 +1209,41 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 	   
 	   if(element.equals("association"))
 	   {
-		   //System.out.println("association ....");
 		   
-		   for (AssociationVariable av: aClass.getAssociationVariables())
+		   		   		  		   
+		   if (elementType.equals( "1--*"))
+		   {
+			   
+			   addGenericOneToMany (code,aClass,token);
+		   }
+		   
+		   if (elementType.equals( "0..1--*"))
+		   {
+			   
+			   addGenericOptionalOneToMany (code,aClass,token);
+		   }
+		   
+		   
+		   /*for (AssociationVariable av: aClass.getAssociationVariables())
 		   {	
-			   
-			   
+			   			   				   			   
 			   code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+			   
+			   
+			 
 			   //System.out.println(token.getValue("elementType"));				   
 			   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
 		    	TestAction aTestAction = new TestAction("genericAssociation", code, "generic", 0);
 		    	
-		    	
-		    	
+		    			    	
 		    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association>>", av.getName()));
 		    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1)));
 		    	uTestCase.addTestAction(aTestAction);
 		    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
 		    	aClass.addUmpleTestCase(uTestCase);	
 			   
-		   }
+		    		    	
+		   }*/
 		   
 		   
 	   }
@@ -1298,6 +1313,58 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 	   	             
 	   	return code;
   }
+  
+  private void addGenericOptionalOneToMany(String code, UmpleClass aClass, Token token) {
+	// TODO Auto-generated method stub
+	  
+	  for (AssociationVariable av : aClass.getAssociationVariables())
+	  {
+		  if (av.isOptionalMany() && av.getRelatedAssociation().isOptionalOne())
+		  {
+			  code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+			   
+			   
+				 
+			   //System.out.println(token.getValue("elementType"));				   
+			   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
+		    	TestAction aTestAction = new TestAction("genericAssociation", code, "generic", 0);
+		    	
+		    			    	
+		    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association>>", av.getName()));
+		    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1)));
+		    	uTestCase.addTestAction(aTestAction);
+		    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+		    	aClass.addUmpleTestCase(uTestCase);	
+		  }
+	  }
+	
+}
+
+private void addGenericOneToMany(String code, UmpleClass aClass,Token token) {
+	// TODO Auto-generated method stub
+	  for (AssociationVariable av : aClass.getAssociationVariables())
+	  {
+		  if (av.isOptionalMany() && av.getRelatedAssociation().isMandatoryOne())
+		  {
+			  
+			  code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+			   
+			   
+				 
+			   //System.out.println(token.getValue("elementType"));				   
+			   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
+		    	TestAction aTestAction = new TestAction("genericAssociationOneToMany", code, "generic", 0);
+		    	
+		    			    	
+		    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association>>", av.getName()));
+		    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1)));
+		    	uTestCase.addTestAction(aTestAction);
+		    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+		    	aClass.addUmpleTestCase(uTestCase);	
+		  }
+	  }
+	
+}
    
    // test initializations at the class level, these are inits that were mesnt to be done at the global-level in the test class
    
