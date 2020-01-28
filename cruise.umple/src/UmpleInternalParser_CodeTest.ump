@@ -1237,60 +1237,144 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 		   
 		   //Navigatable association
 		   if (elementType.equals( "1->*"))
-		   {
-			   
-			   addGenericManyToMany (code,aClass,token);
+		   {			   			   
+			   addGenericRightNavOneToMany (code,aClass,token);
 		   }
-		   
-		   if (elementType.equals( "1<-*"))
-		   {
-			   
-			   addGenericManyToMany (code,aClass,token);
-		   }
-		   
+		   		   
 		   
 		   if (elementType.equals( "0..1->*"))
 		   {
 			   
-			   addGenericManyToMany (code,aClass,token);
-		   }
-		   if (elementType.equals( "0..1<-*"))
-		   {
-			   
-			   addGenericManyToMany (code,aClass,token);
-		   }
+			   addGenericRightNavOptionalOneToMany (code,aClass,token);
+		   }		   
 		   
 		   if (elementType.equals( "*->*"))
 		   {
 			   
-			   addGenericManyToMany (code,aClass,token);
+			   addGenericRightNavManyToMany (code,aClass,token);
 		   
-		   }
-		   
-		   if (elementType.equals( "*<-*"))
-		   {
-			   
-			   addGenericManyToMany (code,aClass,token);
-		   
-		   }
+		   }		   		   
 		   
 		   if (elementType.equals( "0..1-->1"))
 		   {
 			   
-			   addGenericManyToMany (code,aClass,token);
+			   addGenericRightNavOptionalOneToOne (code,aClass,token);
 		   }
-		   
-		   if (elementType.equals( "0..1<-1"))
-		   {
-			   
-			   addGenericManyToMany (code,aClass,token);
-		   }
+
 		   
 		   
 		   
 		   
 	   }
   }
+  
+  private void addGenericRightNavManyToMany(String code, UmpleClass aClass, Token token) {
+		// TODO Add gen-test for right navigable ManyToMany
+		  for (AssociationVariable av : aClass.getAssociationVariables())
+		  {
+			  if (( av.isOptionalMany() && av.getRelatedAssociation().isOptionalMany() ) &&  ! av.getRelatedAssociation().getIsNavigable())
+			  {
+				  
+				  code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+				   
+				   
+					 
+				   //System.out.println(token.getValue("elementType"));				   
+				   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
+			    	TestAction aTestAction = new TestAction("genericAssociationRightNavigableManyToMany", code, "generic", 0);
+			    	
+			    			    	
+			    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association>>", av.getName()));
+			    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1)));
+			    	uTestCase.addTestAction(aTestAction);
+			    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+			    	aClass.addUmpleTestCase(uTestCase);	
+			  }
+		  }
+		  
+	}
+  
+  private void addGenericRightNavOptionalOneToOne(String code, UmpleClass aClass, Token token) {
+		// TODO Add gen-test for right navigable Optional one-to-one
+		  for (AssociationVariable av : aClass.getAssociationVariables())
+		  {
+			  if (( av.isMandatoryOne() && av.getRelatedAssociation().isOptionalOne() ) &&  ! av.getRelatedAssociation().getIsNavigable())
+			  {
+				  
+				  code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+				   
+				   
+					 
+				   //System.out.println(token.getValue("elementType"));				   
+				   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
+			    	TestAction aTestAction = new TestAction("genericAssociationRightNavigableOptionalOneToOne", code, "generic", 0);
+			    	
+			    			    	
+			    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association>>", av.getName()));
+			    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1)));
+			    	uTestCase.addTestAction(aTestAction);
+			    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+			    	aClass.addUmpleTestCase(uTestCase);	
+			  }
+		  }
+		  
+	}
+  
+  
+  private void addGenericRightNavOneToMany(String code, UmpleClass aClass, Token token) {
+	// TODO Add gen-test for right navigable one-to-many
+	  for (AssociationVariable av : aClass.getAssociationVariables())
+	  {
+		  if (( av.isOptionalMany() && av.getRelatedAssociation().isMandatoryOne() ) &&  ! av.getRelatedAssociation().getIsNavigable())
+		  {
+			  
+			  code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+			   
+			   
+				 
+			   //System.out.println(token.getValue("elementType"));				   
+			   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
+		    	TestAction aTestAction = new TestAction("genericAssociationRightNavigableOneToMany", code, "generic", 0);
+		    	
+		    			    	
+		    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association>>", av.getName()));
+		    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1)));
+		    	uTestCase.addTestAction(aTestAction);
+		    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+		    	aClass.addUmpleTestCase(uTestCase);	
+		  }
+	  }
+	  
+}
+  
+  private void addGenericRightNavOptionalOneToMany(String code, UmpleClass aClass, Token token) {
+		// TODO Add gen-test for right navigable Optional one-to-many
+		  	  
+	  for (AssociationVariable av : aClass.getAssociationVariables())
+		  {
+		  System.out.println(av.getIsNavigable());
+			  if (( av.isOptionalMany() && av.getRelatedAssociation().isOptionalOne() ) &&   ! av.getRelatedAssociation().getIsNavigable())
+			  {
+				  
+				  code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+				   
+				   
+					 
+				   //System.out.println(token.getValue("elementType"));				   
+				   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
+			    	TestAction aTestAction = new TestAction("genericAssociationRightNavigableOneToMany", code, "generic", 0);
+			    	
+			    			    	
+			    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association>>", av.getName()));
+			    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1)));
+			    	uTestCase.addTestAction(aTestAction);
+			    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+			    	aClass.addUmpleTestCase(uTestCase);	
+			  }
+		  }
+		  
+	}
+  
   
   private String modifyGenericTestCode (Matcher matcher, Matcher nonMatcher, String element, String replacement, String nonReplacement, String code) {
 	   while(matcher.find())

@@ -2,12 +2,12 @@
 class Calculator{  
     
        
-        1--* Number; 
+        1->* Number; 
         
-        0..1->* Controller;
+        0..1--* Controller;
     
     
-  generic test checkifLogged(0..1->* association){
+  generic test checkifLogged( 1->* association){
         Calculator c1 ( 4, 5) ;                
         String valueToCheck = p1.get<<association>>();
          Number temp<<association.toSingular()>> =  <<association>>;   
