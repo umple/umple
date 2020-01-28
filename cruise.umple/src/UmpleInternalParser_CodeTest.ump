@@ -1229,6 +1229,63 @@ private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
 			   addGenericManyToMany (code,aClass,token);
 		   }
 		   
+		   if (elementType.equals( "0..1--1"))
+		   {
+			   
+			   addGenericOptionalOneToOne (code,aClass,token);
+		   }
+		   
+		   //Navigatable association
+		   if (elementType.equals( "1->*"))
+		   {
+			   
+			   addGenericManyToMany (code,aClass,token);
+		   }
+		   
+		   if (elementType.equals( "1<-*"))
+		   {
+			   
+			   addGenericManyToMany (code,aClass,token);
+		   }
+		   
+		   
+		   if (elementType.equals( "0..1->*"))
+		   {
+			   
+			   addGenericManyToMany (code,aClass,token);
+		   }
+		   if (elementType.equals( "0..1<-*"))
+		   {
+			   
+			   addGenericManyToMany (code,aClass,token);
+		   }
+		   
+		   if (elementType.equals( "*->*"))
+		   {
+			   
+			   addGenericManyToMany (code,aClass,token);
+		   
+		   }
+		   
+		   if (elementType.equals( "*<-*"))
+		   {
+			   
+			   addGenericManyToMany (code,aClass,token);
+		   
+		   }
+		   
+		   if (elementType.equals( "0..1-->1"))
+		   {
+			   
+			   addGenericManyToMany (code,aClass,token);
+		   }
+		   
+		   if (elementType.equals( "0..1<-1"))
+		   {
+			   
+			   addGenericManyToMany (code,aClass,token);
+		   }
+		   
 		   
 		   
 		   
@@ -1370,6 +1427,26 @@ private void addGenericManyToMany(String code, UmpleClass aClass, Token token){
 		   }
 	   }
    }
+   
+   
+   private void addGenericOptionalOneToOne(String code, UmpleClass aClass, Token token){
+	    // TODO addd test for generic association *--*
+		   for (AssociationVariable av : aClass.getAssociationVariables())
+		   {
+			   if (av.isMandatoryOne() && av.getRelatedAssociation().isOptionalOne())
+			   {
+
+				   code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+
+				   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
+				   TestAction aTestAction = new TestAction("genericAssociationOptionalOneToOne", code, "generic", 0);
+
+				   uTestCase.addTestAction(aTestAction);
+				   uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+				   aClass.addUmpleTestCase(uTestCase);	
+			   }
+		   }
+	  } 
 
    
    // test initializations at the class level, these are inits that were mesnt to be done at the global-level in the test class
