@@ -500,10 +500,34 @@ public class TestTemplateTest extends ClassTemplateTest{
 	  public void genericTestCaseTest_association_OptionalOneToMany()
 	  {
 	    language = "Test";
-	    assertUmpleTemplateFor("test/GenericTestCase_association_optionalOneToMany.ump","test/testGenericTestcase_association_OptionalOneToMany.test.txt");
+	    assertUmpleTemplateFor("test/GenericTestCase_association_optionalOneToMany.ump","test/testGenericTestcase_association_optionalOneToMany.test.txt");
 	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyassociation_OptionalOneToMany_ModelTest.umpt")).exists());
 	    createUmpleSystem(pathToInput, "test/GenericTestCase_association_optionalOneToMany.ump");
 	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_optionalOneToMany_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void genericTestCaseTest_association_OptionalOneToOne()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_association_optionalOneToOne.ump","test/testGenericTestcase_association_optionalOneToOne.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToOneassociation_OptionalOneToOne_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_association_optionalOneToOne.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_optionalOneToOne_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  
+	  @Test
+	  public void genericTestCaseTest_association_ManyToMany()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_association_manyToMany.ump","test/testGenericTestcase_association_manyToMany.test.txt");	    
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_association_manyToMany.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_manyToMany_ModelTest.umpt")).exists());
 	   
 	    
 	  }
