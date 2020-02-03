@@ -216,9 +216,9 @@
 
         <echo>Fetching org.eclipse.cdt.core_5.5.0.jar</echo>
 
-        <echo level="warning">WARNING: This is merely wget-itng http://ftp.acc.umu.se/mirror/eclipse.org/tools/cdt/releases/kepler/sr1/plugins/org.eclipse.cdt.core_5.5.0.201309180223.jar</echo>
+        <echo level="warning">WARNING: This is merely wget-itng https://cruise.site.uottawa.ca/preserved-deps/org.eclipse.cdt.core_5.5.0.201309180223.jar</echo>
         <mkdir dir="${umple.deps.manual.dir}" />
-        <get src="http://ftp.acc.umu.se/mirror/eclipse.org/tools/cdt/releases/kepler/sr1/plugins/org.eclipse.cdt.core_5.5.0.201309180223.jar"
+        <get src="https://cruise.site.uottawa.ca/preserved-deps/org.eclipse.cdt.core_5.5.0.201309180223.jar"
              dest="${umple.deps.manual.dir}/"
              usetimestamp="true" />
       </else>
