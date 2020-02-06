@@ -14,8 +14,8 @@ class UmpleToJava {
 
   for (String anImport : gClass.getMultiLookup("import"))
   {
-    // Test whether the import is already written
-    if (importSet.contains(anImport)) {
+    // Test whether the import is already written OR the class is inner class (should not have import statement)
+    if (importSet.contains(anImport) | uClass.hasOuterClass()) {
       continue;
     }
     appendln(realSb, "");

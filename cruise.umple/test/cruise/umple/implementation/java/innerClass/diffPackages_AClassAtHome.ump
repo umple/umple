@@ -1,0 +1,13 @@
+
+namespace com.me.at.home;
+
+class AClassAtHome {
+     
+  
+  static class RootDoWork{
+      isA RootDoWork;
+      
+       public void doWork() { }
+    }
+    
+  }
