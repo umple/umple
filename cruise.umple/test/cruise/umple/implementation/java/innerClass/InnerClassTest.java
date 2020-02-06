@@ -58,7 +58,7 @@ public class InnerClassTest extends TemplateTest {
   }
  
   @Test
-  void TestNoPackageNameForInnerElementInDifferentPackages() {
+  public void TestNoPackageNameForInnerElementInDifferentPackages() {
    
     UmpleFile umpleFile = new UmpleFile(pathToInput+"diffPackages_master.ump");
     UmpleModel umodel = new UmpleModel(umpleFile);
