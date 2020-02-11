@@ -8,6 +8,8 @@ import java.util.Map;
 import cruise.umple.compiler.UmpleClass;
 import cruise.umple.compiler.UmpleFile;
 import cruise.umple.compiler.UmpleModel;
+import java.util.Map;
+
 
 public class InnerClassTest extends TemplateTest {
 
@@ -53,6 +55,20 @@ public class InnerClassTest extends TemplateTest {
     //if there is only one import-statement, its split should generate 2 strings:
     Assert.assertEquals(generatedCodeforClass.split("package com.umple.innerClasses").length , 2);
     // assertUmpleTemplateFor("/innerClasses.ump",  "/innerClasses.java.txt", "OuterClass_3");
+  }
+ 
+  @Test
+  public void TestNoPackageNameForInnerElementInDifferentPackages() {
+   
+    UmpleFile umpleFile = new UmpleFile(pathToInput+"/diffPackages_master.ump");
+    UmpleModel umodel = new UmpleModel(umpleFile);
+    umodel.run();
+
+    Map<String, String> map = umodel.getGeneratedCode();
+    String generatedCodeforClass = map.get("AClassAtHome");
+    Assert.assertFalse(generatedCodeforClass.contains("import"));  // import statment should not be added before the inner static class.
+    System.out.println(generatedCodeforClass);
+
   }
 
   @After
