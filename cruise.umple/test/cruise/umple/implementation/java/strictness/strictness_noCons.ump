@@ -1,0 +1,18 @@
+namespace generatedCode;
+
+// superclass 
+class SupertSrictnessClass {
+   int x;     
+}
+
+
+class StrictnessClassNoConstructor {
+
+  isA SupertSrictnessClass;  
+  stringField1; 
+
+  strictness disable constructor;  
+}
+
+
+

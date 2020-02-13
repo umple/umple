@@ -1,0 +1,16 @@
+namespace generatedCode;
+
+// superclass 
+class SupertSrictnessClass {
+   int x;     
+}
+
+class StrictnessClassNoDelete {
+ 
+ isA SupertSrictnessClass;
+    
+ stringField2;
+
+ strictness disable delete();  
+  
+}
