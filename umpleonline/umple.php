@@ -160,17 +160,22 @@ $output = $dataHandle->readData('model.ump');
 </head>
 <body>
   <?php if($showChrome) { ?> 
+  
     <div id="header" class="row">
+        <span style="float: right">
+          <a href="http://www.uottawa.ca" target="uottawatab"><img height="33px" src="scripts/uottawa_ver_black.png" alt="University of Ottawa logo / Université d'Ottawa" /></a>        
+        </span>       
       <div class="inRow logo">
-        <a href="http://www.umple.org"><img src="scripts/umpleonline_title.jpg" alt="UmpleOnline logo" /></a>
+        <a href="http://www.umple.org"><img src="scripts/umpleonline_title.jpg" alt="UmpleOnline logo" /></a>     
       </div>
       <div class="inRow">
         <p class="pagedescription">
+        
         <span class="pretext">
-          Draw on the right, write (Umple) model code on the left, analyse and generate code from models.
+          Draw on the right, write (Umple) model code on the left. Analyse models and generate code.
         <br/></span>
         <span id="gdprtext" class="pretext">        
-          This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="http://privacy.umple.org" target="privacy">Click here to learn about privacy.</a>
+          This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="http://privacy.umple.org" target="privacy">Click to learn about privacy.</a>
         <br/></span>
 
     <span style="font-size: 30%; white-space:nowrap;">
