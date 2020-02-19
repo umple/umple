@@ -41,7 +41,7 @@ if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
       {
         $isCachedExample=true;
         $diagramtype="&diagramtype=structureDiagram&generateDefault=cpp";
-      }    
+      }
     }
   }
   if($isCachedExample) {
@@ -73,7 +73,7 @@ $diagramType = "class";
 if (isset($_REQUEST["diagramtype"])) {
   $diagramType=$_REQUEST["diagramtype"];
   if ($diagramType=="state") $diagramType = "GvState";
-  else if ($diagramType=="structure") $diagramType = "structureDiagram";  
+  else if ($diagramType=="structure") $diagramType = "structureDiagram";
   else if ($diagramType !="GvState" && $diagramType !="GvClass" && $diagramType !="structureDiagram") $diagramType = "class";
 }
 if ($diagramtype=="") $diagramtype = "&diagramtype=".$diagramType;
@@ -106,7 +106,7 @@ $output = $dataHandle->readData('model.ump');
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script src="scripts/_load.js" type="text/javascript"></script>
   <title>UmpleOnline: Generate Java, C++, PHP, Alloy, NuSMV or Ruby code from Umple</title>
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
   <style>
   .button2 {
    border-top: 1px solid #d3bc8f;
@@ -139,7 +139,7 @@ $output = $dataHandle->readData('model.ump');
 .active {
   background: #C98C7D;
 }
-</style>  
+</style>
 <link rel="apple-touch-icon" sizes="57x57" href="https://cruise.eecs.uottawa.ca/apple-icon-57x57.png">
 <link rel="apple-touch-icon" sizes="60x60" href="https://cruise.eecs.uottawa.ca/apple-icon-60x60.png">
 <link rel="apple-touch-icon" sizes="72x72" href="https://cruise.eecs.uottawa.ca/apple-icon-72x72.png">
@@ -159,32 +159,32 @@ $output = $dataHandle->readData('model.ump');
 <meta name="theme-color" content="#ffffff">
 </head>
 <body>
-  <?php if($showChrome) { ?> 
-  
+  <?php if($showChrome) { ?>
+
     <div id="header" class="row">
         <span style="float: right">
-          <a href="http://www.uottawa.ca" target="uottawatab"><img height="33px" src="scripts/uottawa_ver_black.png" alt="University of Ottawa logo / Université d'Ottawa" /></a>        
-        </span>       
+          <a href="http://www.uottawa.ca" target="uottawatab"><img height="33px" src="scripts/uottawa_ver_black.png" alt="University of Ottawa logo / Université d'Ottawa" /></a>
+        </span>
       <div class="inRow logo">
-        <a href="http://www.umple.org"><img src="scripts/umpleonline_title.jpg" alt="UmpleOnline logo" /></a>     
+        <a href="http://www.umple.org"><img src="scripts/umpleonline_title.jpg" alt="UmpleOnline logo" /></a>
       </div>
       <div class="inRow">
         <p class="pagedescription">
-        
+
         <span class="pretext">
           Draw on the right, write (Umple) model code on the left. Analyse models and generate code.
         <br/></span>
-        <span id="gdprtext" class="pretext">        
+        <span id="gdprtext" class="pretext">
           This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="http://privacy.umple.org" target="privacy">Click to learn about privacy.</a>
         <br/></span>
 
     <span style="font-size: 30%; white-space:nowrap;">
     <a class="button2" href="http://dl.umple.org" target="dlpage" title="Go to the page that gives instructions on how to download Umple for use in Docker, or Eclipse or on the command line">Download</a>&nbsp;
     <a class="button2" href="https://alumni.uottawa.ca/donation-form?fid=bp71rD2pbt0%3d&fdesc=vj8yiR3kw2%2bPwQCmy1Z8CfKc0F1zufF0wBCY%2fxboCy4%2bHJZne7BoLhQuKHwuRN4R5bhBEciI1Gn5RbPGt1TgEQ%3d%3d" target="donatepage" title="Go to a University of Ottawa page that will enable you to donate to support Umple; even a few dollars will be much appreciated">Donate</a>&nbsp;
-    
+
     </span>&nbsp; &nbsp;
           For help:
-    <?php if(strpos($_SERVER['REQUEST_URI'], 'umple.php') !== false && strpos($_SERVER['REQUEST_URI'], 'umpleonline/umple.php') === false ) {$manpage="/manual/GettingStarted.html";} else {$manpage="http://manual.umple.org";} ?>                
+    <?php if(strpos($_SERVER['REQUEST_URI'], 'umple.php') !== false && strpos($_SERVER['REQUEST_URI'], 'umpleonline/umple.php') === false ) {$manpage="/manual/GettingStarted.html";} else {$manpage="http://manual.umple.org";} ?>
     <span style="font-size: 30%; white-space:nowrap;">
     <a class="button2" style="line-height: 1" href="<?php echo $manpage ?>" target="helppage" title="Open the Umple user manual in a seprate tab" >User manual</a>&nbsp;
     <a class="button2" style="line-height: 1" href="http://questions.umple.org"
@@ -203,15 +203,15 @@ $output = $dataHandle->readData('model.ump');
     <pre>
       <?php echo $output ?>
     </pre>
-  </noscript> 
-          
+  </noscript>
+
   <input id="filename" type="hidden" value="<?php echo '../ump/'.$dataHandle->getName().'/model.ump' ?>" />
   <input id="advancedMode" type="hidden" value="0" />
   <input id="model" type="hidden" value="<?php echo $dataHandle->getName()?>" />
 
   <div id="topLine" class="bookmarkableUrl">
-    <span id="linetext">Line=<input size=2 id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
-  
+    <span id="linetext">Line=<input size=2 id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>
+
     <span style="font-size: 30%">
     <a id="ECD_button" class="button2 active" href="javascript:Page.clickShowEditableClassDiagram()"
       title="Editable class diagram - ctrl-E">E</a>&nbsp;
@@ -220,16 +220,16 @@ $output = $dataHandle->readData('model.ump');
     <a id="SD_button" class="button2" href="javascript:Page.clickShowGvStateDiagram()"
       title="State diagram - ctrl-S">S</a>&nbsp;
     </span>
- 
-    &nbsp; 
+
+    &nbsp;
     <span style="font-size: 30%">
     <a id="SHT_button" class="button2 active" href="javascript:Page.clickShowHideText()"
       title="Show/hide text pane on left - ctrl-T">T</a>&nbsp;
     <a id="SHD_button" class="button2 active" href="javascript:Page.clickShowHideCanvas()"
       title="Show/hide diagram pane on right - ctrl-D">D</a>&nbsp;
     </span>
-    
-    &nbsp; 
+
+    &nbsp;
     <span style="font-size: 30%">
     <a id="SHA_button" class="button2 active" href="javascript:Page.clickToggleAttributes()"
       title="Show/hide attributes in class diagrams - shift-ctrl-A">A</a>&nbsp;
@@ -238,25 +238,26 @@ $output = $dataHandle->readData('model.ump');
     </span>
 
 
-    &nbsp; 
+    &nbsp;
+
+    <span style="font-size: 30%; white-space:nowrap;">
+    <a class="button2" href="javascript:Page.toggleTabs()" title="Toggle tab visibility">Tabs</a>
+    </span>
+
     <span style="font-size: 30%; white-space:nowrap;">
     <a class="button2" href="javascript:Action.generateCode('java','Java');"
       title="Generate Java from this Umple model ... To generate other outputs such as C++, PhP, ER Diagrams and Formal Methods, use the Generate menu in Tools">Generate Java</a>&nbsp;
-    </span>    
-  
-    <span style="font-size: 30%; white-space:nowrap;">  
+    </span>
+
+    <span style="font-size: 30%; white-space:nowrap;">
     <?php if (isBookmark($dataHandle)) { ?>
       <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
     <?php } else { ?>
-      <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that will allow you to come back and edit again. The URL will persist for a year after its last edit.">Create Bookmarkable URL</a>
+      <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
     <?php } ?>
 
     </span>
 
-    <span style="font-size: 30%; white-space:nowrap;">  
-    <a class="button2" href="javascript:Page.toggleTabs()" title="Toggle tab visibility">Toggle Tabs</a>
-    </span>
-    
     <span id="restorecode" >&nbsp; &nbsp; <a href="#"> Restore Saved State</a></span>
 
     &nbsp; &nbsp;<span id=exampleMessage><?php echo $messageURL ?></span> <span id=feedbackMessage></span>
@@ -268,8 +269,8 @@ $output = $dataHandle->readData('model.ump');
     </ul>
   </div>
 
-  <div id="mainApplication" class="row"> 
-    <div id="textEditorColumn"  tabIndex="2"  class="inRow"> 
+  <div id="mainApplication" class="row">
+    <div id="textEditorColumn"  tabIndex="2"  class="inRow">
       <div id="topTextEditor">
         <textarea id="umpleModelEditorText" class="umpleModelEditor" wrap="off"></textarea>
       </div>
@@ -277,13 +278,13 @@ $output = $dataHandle->readData('model.ump');
         <textarea id="umpleLayoutEditorText" class="umpleLayoutEditor" wrap="off"></textarea>
       </div>
     </div>
-    
+
     <div id="paletteColumn" class="inRow">
       <div id="palette" class="palette">
 
         <!-- GROUP 1 OF OPTIONS -->
         <h3><a href="#">SAVE & LOAD</a></h3>
-        
+
         <div class="section">
           <ul class="first">
             <li class="subtitle">SAVE</li>
@@ -294,48 +295,48 @@ $output = $dataHandle->readData('model.ump');
               </div>
             </li>
             <?php } else { ?>
-            <li id="ttSaveModel"> 
+            <li id="ttSaveModel">
               <div id="menuBookmarkable" class="bookmarkableUrl">
                 <a href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Save as URL</a>
               </div>
             </li>
             <?php } ?>
             <li id="buttonCopy" class="copy">
-              <img src="scripts/copy.png"/> 
+              <img src="scripts/copy.png"/>
                Source to Copy
             </li>
             <li id="buttonCopyEncodedURL" class="copyEncoded">
-              <img src="scripts/copy.png"/> 
+              <img src="scripts/copy.png"/>
               Encoded URL
             </li>
             <li id="buttonCopyLocalBrowser" class="copyLocalBrowser">
-              <img src="scripts/copy.png"/> 
+              <img src="scripts/copy.png"/>
               Store in Browser
             </li>
             <li id="buttonDownloadFiles" class="downloadFiles">
-              <img src="scripts/copy.png"/> 
+              <img src="scripts/copy.png"/>
                Download Files
             </li>
             <li class="dropbox-add-saver"></li>
-            
+
             <li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
-              <img src="scripts/copy.png"/> 
+              <img src="scripts/copy.png"/>
               Load from Browser
             </li>
-            
+
           </ul>
-        
+
           <ul class="second center-children">
             <li class="subtitle">RESET</li>
-            <li id="ttStartOver"> 
-              <div id="buttonStartOver" class="jQuery-palette-button" value="Start Over"></div> 
+            <li id="ttStartOver">
+              <div id="buttonStartOver" class="jQuery-palette-button" value="Start Over"></div>
             </li>
           </ul>
         </div>
-        
+
         <!-- GROUP 2 OF OPTIONS -->
         <h3><a href="#tools">TOOLS</a></h3>
-        
+
         <div class="section">
           <ul id="mainLoadMenu" class="first center-children">
             <li class="subtitle"> Examples </li>
@@ -384,8 +385,8 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="InventoryManagement.ump">Inventory Management</option>
                 <option name = "optionExample" value="Library.ump">Library</option>
                 <option name = "optionExample" value="MailOrderSystemClientOrder.ump">Mail Order System- Client Order</option>
-                <option name = "optionExample" value="ManufacturingPlantController.ump">Manufacturing Plant Controller</option>   
-                <option name = "optionExample" value="Pizza.ump">Pizza System</option>  
+                <option name = "optionExample" value="ManufacturingPlantController.ump">Manufacturing Plant Controller</option>
+                <option name = "optionExample" value="Pizza.ump">Pizza System</option>
                 <option name = "optionExample" value="PoliceSystem.ump">Police System</option>
                 <option name = "optionExample" value="PoliticalEntities.ump">Political Entities</option>
                 <option name = "optionExample" value="realestate.ump">Real Estate</option>
@@ -445,25 +446,25 @@ $output = $dataHandle->readData('model.ump');
                 <option name="optionExample" class="openUmprOption" value="">Select from Umpr Repository...</option>
               </select>
             </li>
-            <!-- <li class="dropbox-add-chooser"></li> --> 
+            <!-- <li class="dropbox-add-chooser"></li> -->
           </ul>
-      
+
           <ul id="mainDrawMenu" class="second toggle">
             <li class="subtitle"> Draw </li>
             <li id="buttonAddClass" class="toggleToolItem" name="paletteItem" title="Select and click on the canvas to add a new class.">
-              <img src="scripts/class.png"/> 
+              <img src="scripts/class.png"/>
               Class
             </li>
             <li id="buttonAddAssociation" class="toggleToolItem" name="paletteItem" title="Select and click on a class to draw an association.">
-              <img src="scripts/assoc.png"/> 
+              <img src="scripts/assoc.png"/>
               Association
             </li>
             <!-- <li id="buttonBendAssociation" class="toggleToolItem" name="paletteItem">
-              <img src="scripts/assocbend.jpg"/> 
+              <img src="scripts/assocbend.jpg"/>
               Bend Assoc.
             </li> -->
             <li id="buttonAddGeneralization" class="toggleToolItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class.">
-              <img src="scripts/generalization.png"/> 
+              <img src="scripts/generalization.png"/>
               Generalization
             </li>
             <li id="buttonDeleteEntity" class="toggleToolItem" name="paletteItem" title="Select and click on an element to remove it from your model.">
@@ -471,112 +472,112 @@ $output = $dataHandle->readData('model.ump');
                Delete
              </li>
             <li id="buttonUndo" name="paletteItem">
-              <img src="scripts/undo.png"> 
+              <img src="scripts/undo.png">
               Undo
             </li>
             <li id="buttonRedo" name="paletteItem">
-              <img src="scripts/redo.png"> 
+              <img src="scripts/redo.png">
               Redo
             </li>
             <li id="buttonSyncDiagram" name="paletteItem">
-              <img src="scripts/sync_diagram.png" /> 
-              Sync Diagram 
+              <img src="scripts/sync_diagram.png" />
+              Sync Diagram
             </li>
         </ul>
         <?php generateMenu("") ?>
       </div>
-      
+
       <!-- GROUP 3 OF OPTIONS -->
       <h3><a href="#options">OPTIONS</a></h3>
-      
+
       <div class="section">
         <div id="buttonViewComplete" title="View Complete">Selected view has opened in a new window.</div>
           <ul class="first toggle">
             <li class="subtitle"> Show View </li>
-            <li id="ttShowHideCanvas"> 
-              <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> 
+            <li id="ttShowHideCanvas">
+              <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/>
               <a id="labelShowHideCanvas" class="buttonExtend">Diagram (Canvas)</a>
             </li>
-            <li id="ttShowHideTextEditor"> 
-              <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> 
+            <li id="ttShowHideTextEditor">
+              <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/>
               <a id="labelShowHideTextEditor" class="buttonExtend">Text Editor</a>
             </li>
-            <li id="ttShowHideLayoutEditor" class="layoutListItem"> 
-              <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> 
-              <a id="labelShowHideLayoutEditor" class="buttonExtend">Layout Editor</a> 
-            </li>          
-            <li id="ttToggleAttributes" class="layoutListItem"> 
-              <input id="buttonToggleAttributes" class="checkbox" type="checkbox"/> 
+            <li id="ttShowHideLayoutEditor" class="layoutListItem">
+              <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/>
+              <a id="labelShowHideLayoutEditor" class="buttonExtend">Layout Editor</a>
+            </li>
+            <li id="ttToggleAttributes" class="layoutListItem">
+              <input id="buttonToggleAttributes" class="checkbox" type="checkbox"/>
               <a id="labelToggleAttributes" class="buttonExtend">Attributes</a>
             </li>
-            <li id="ttToggleMethods" class="layoutListItem"> 
-              <input id="buttonToggleMethods" class="checkbox" type="checkbox"/> 
+            <li id="ttToggleMethods" class="layoutListItem">
+              <input id="buttonToggleMethods" class="checkbox" type="checkbox"/>
               <a id="labelToggleMethods" class="buttonExtend">Methods</a>
             </li>
-            <li id="ttToggleActions" class="layoutListItem"> 
-              <input id="buttonToggleActions" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleActions" class="buttonExtend">Actions</a> 
+            <li id="ttToggleActions" class="layoutListItem">
+              <input id="buttonToggleActions" class="checkbox" type="checkbox"/>
+              <a id="labelToggleActions" class="buttonExtend">Actions</a>
             </li>
-            <li id="ttToggleTraits" class="layoutListItem"> 
-              <input id="buttonToggleTraits" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleTraits" class="buttonExtend">Traits</a> 
+            <li id="ttToggleTraits" class="layoutListItem">
+              <input id="buttonToggleTraits" class="checkbox" type="checkbox"/>
+              <a id="labelToggleTraits" class="buttonExtend">Traits</a>
             </li>
-            <li id="ttToggleTransitionLabels" class="layoutListItem"> 
-              <input id="buttonToggleTransitionLabels" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleTransitionLabels" class="buttonExtend">Transition Labels</a> 
+            <li id="ttToggleTransitionLabels" class="layoutListItem">
+              <input id="buttonToggleTransitionLabels" class="checkbox" type="checkbox"/>
+              <a id="labelToggleTransitionLabels" class="buttonExtend">Transition Labels</a>
             </li>
-            <li id="ttToggleGuardLabels" class="layoutListItem"> 
-              <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
+            <li id="ttToggleGuardLabels" class="layoutListItem">
+              <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/>
+              <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a>
             </li>
           </ul>
           <ul class="second">
             <li id="diagramTypeTitle" class="subtitle"> Diagram Type </li>
-            <li id="ttShowEditableClassDiagram"> 
-              <input id="buttonShowEditableClassDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> 
-              <a id="labelShowEditableClassDiagram" class="buttonExtend">Editable Class</a> 
+            <li id="ttShowEditableClassDiagram">
+              <input id="buttonShowEditableClassDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/>
+              <a id="labelShowEditableClassDiagram" class="buttonExtend">Editable Class</a>
             </li>
-            <li id="ttShowJointJSClassDiagram"> 
-              <input id="buttonShowJointJSClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeJointJSClassDiagram"/> 
-              <a id="labelShowJointJSClassDiagram" class="buttonExtend">JointJS Class</a> 
+            <li id="ttShowJointJSClassDiagram">
+              <input id="buttonShowJointJSClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeJointJSClassDiagram"/>
+              <a id="labelShowJointJSClassDiagram" class="buttonExtend">JointJS Class</a>
             </li>
-            <li id="ttShowGvClassDiagram"> 
-              <input id="buttonShowGvClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGvClassDiagram"/> 
-              <a id="labelShowGvClassDiagram" class="buttonExtend">GraphViz Class</a> 
+            <li id="ttShowGvClassDiagram">
+              <input id="buttonShowGvClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGvClassDiagram"/>
+              <a id="labelShowGvClassDiagram" class="buttonExtend">GraphViz Class</a>
             </li>
-            <li id="ttShowGvStateDiagram"> 
-              <input id="buttonShowGvStateDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/> 
-              <a id="labelShowGvStateDiagram" class="buttonExtend">GraphViz State</a> 
+            <li id="ttShowGvStateDiagram">
+              <input id="buttonShowGvStateDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/>
+              <a id="labelShowGvStateDiagram" class="buttonExtend">GraphViz State</a>
             </li>
-	    <li id="ttShowGvFeatureDiagram"> 
-              <input id="buttonShowGvFeatureDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVFeatureDiagram"/> 
-              <a id="labelShowGvFeatureDiagram" class="buttonExtend">GraphViz Feature</a> 
+	    <li id="ttShowGvFeatureDiagram">
+              <input id="buttonShowGvFeatureDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVFeatureDiagram"/>
+              <a id="labelShowGvFeatureDiagram" class="buttonExtend">GraphViz Feature</a>
             </li>
-            <li id="ttShowStructureDiagram"> 
-              <input id="buttonShowStructureDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeStructureDiagram"/> 
-              <a id="labelShowStructureDiagram" class="buttonExtend">Composite Structure</a> 
+            <li id="ttShowStructureDiagram">
+              <input id="buttonShowStructureDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeStructureDiagram"/>
+              <a id="labelShowStructureDiagram" class="buttonExtend">Composite Structure</a>
             </li>
           </ul>
           <ul class="second">
             <li id="preferencesTitle" class="subtitle"> Preferences </li>
-            <li id="ttPhotoReady"> 
-              <input id="buttonPhotoReady" class="checkbox" type="checkbox" name="photoReady" value="photoReady"/> 
-              <a id="labelPhotoReady" class="buttonExtend">Photo Ready</a> 
+            <li id="ttPhotoReady">
+              <input id="buttonPhotoReady" class="checkbox" type="checkbox" name="photoReady" value="photoReady"/>
+              <a id="labelPhotoReady" class="buttonExtend">Photo Ready</a>
             </li>
             <li id="ttManualSync">
-              <input id="buttonManualSync" class="checkbox" type="checkbox" name="manualSync" value="manualSync"/> 
-              <a id="labelManualSync" class="buttonExtend">Manual Sync</a> 
-            </li>          
+              <input id="buttonManualSync" class="checkbox" type="checkbox" name="manualSync" value="manualSync"/>
+              <a id="labelManualSync" class="buttonExtend">Manual Sync</a>
+            </li>
           </ul>
          </div>
-      </div> 
+      </div>
     </div>
-   
+
     <div id="umpleCanvasColumn" class="umpleCanvasColumn inRow">
       <div id="umpleCanvas"  tabIndex="1" class="surface"></div>
     </div>
   </div>
- <a name="genArea"/>  
+ <a name="genArea"/>
   <div id="generatedCodeRow" class="row">
 		<li id="ttTabsCheckbox">
 			<input id="buttonTabsCheckbox" type="checkbox" class="checkbox" name="buttonTabsCheckbox" value="buttonTabsCheckbox"/>
