@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
 Counter code derived from Justin Tadlock
 http://justintadlock.com/web-design/counter
 */
@@ -18,8 +18,9 @@ if(file_exists($logpath)){
 	$count = fgets($log,1000);
 	fclose($log);
 	$count=$count + 1 ;
-	echo "$count" ;
-	echo " visits since October 2018" ;
+	$count_new=$count/1000;
+	echo "$count_new" ;
+	echo " K visits since October 2018" ;
 
 	// opens countlog.txt to change new hit number
 	$log = fopen($logpath,"w");
@@ -34,7 +35,8 @@ if(file_exists($commandlogpath)){
 	$log = fopen($commandlogpath, "r");
 	$count = fgets($log,1000);
 	fclose($log);
-	echo " | $count commands run since July 2019" ;
+	$count_new=$count/1000;
+	echo " | $count_new K commands run since July 2019" ;
 }
 
 
