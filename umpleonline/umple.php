@@ -241,7 +241,7 @@ $output = $dataHandle->readData('model.ump');
     &nbsp;
 
     <span style="font-size: 30%; white-space:nowrap;">
-    <a class="button2" href="javascript:Page.toggleTabs()" title="Toggle tab visibility">Tabs</a>
+    <a class="button2 active" href="javascript:Page.toggleTabs()" title="Toggle tab visibility">Tabs</a>
     </span>
 
     <span style="font-size: 30%; white-space:nowrap;">

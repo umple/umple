@@ -18,9 +18,21 @@ if(file_exists($logpath)){
 	$count = fgets($log,1000);
 	fclose($log);
 	$count=$count + 1 ;
-	$count_new=$count/1000;
-	echo "$count_new" ;
-	echo " K visits since October 2018" ;
+	if ($count>=1000 && $count<1000000) {
+		$count_new=$count/1000;
+		echo "$count_new" ;
+		echo " K visits since October 2018" ;
+	}
+	elseif ($count>=1000000) {
+		$count_new=$count/1000000;
+		echo "$count_new" ;
+		echo " million visits since October 2018" ;
+	}
+	else {
+		$count_new=$count;
+		echo "$count_new" ;
+		echo " visits since October 2018" ;
+	}
 
 	// opens countlog.txt to change new hit number
 	$log = fopen($logpath,"w");
@@ -35,8 +47,18 @@ if(file_exists($commandlogpath)){
 	$log = fopen($commandlogpath, "r");
 	$count = fgets($log,1000);
 	fclose($log);
-	$count_new=$count/1000;
-	echo " | $count_new K commands run since July 2019" ;
+	if ($count>=1000 && $count<1000000) {
+		$count_new=$count/1000;
+		echo " | $count_new K commands run since July 2019" ;
+	}
+	elseif ($count>=1000000) {
+		$count_new=$count/1000000;
+		echo " | $count_new million commands run since July 2019" ;
+	}
+	else {
+		$count_new=$count;
+		echo " | $count_new commands run since July 2019" ;
+	}
 }
 
 
