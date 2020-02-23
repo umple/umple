@@ -237,11 +237,10 @@ $output = $dataHandle->readData('model.ump');
       title="Show/hide methods in class diagrams - ctrl-M">M</a>&nbsp;
     </span>
 
-
     &nbsp;
 
     <span style="font-size: 30%; white-space:nowrap;">
-    <a class="button2 active" href="javascript:Page.toggleTabs()" title="Toggle tab visibility">Tabs</a>
+    <a class="button2" href="javascript:Page.toggleTabs()" title="Toggle tab visibility">Tabs</a>&nbsp;
     </span>
 
     <span style="font-size: 30%; white-space:nowrap;">
