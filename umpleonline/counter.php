@@ -19,12 +19,12 @@ if(file_exists($logpath)){
 	fclose($log);
 	$count=$count + 1 ;
 	if ($count>=1000 && $count<1000000) {
-		$count_new=((float)$count/1000, 2, '.', '');
+		$count_new=number_format((float)$count/1000, 2, '.', '');
 		echo "$count_new" ;
 		echo " K visits since October 2018" ;
 	}
 	elseif ($count>=1000000) {
-		$count_new=((float)$count/1000000, 2, '.', '');
+		$count_new=number_format((float)$count/1000000, 2, '.', '');
 		echo "$count_new" ;
 		echo " million visits since October 2018" ;
 	}
@@ -48,11 +48,11 @@ if(file_exists($commandlogpath)){
 	$count = fgets($log,1000);
 	fclose($log);
 	if ($count>=1000 && $count<1000000) {
-		$count_new=((float)$count/1000, 2, '.', '');
+		$count_new=number_format((float)$count/1000, 2, '.', '');
 		echo " | $count_new K commands run since July 2019" ;
 	}
 	elseif ($count>=1000000) {
-		$count_new=((float)$count/1000000, 2, '.', '');
+		$count_new=number_format((float)$count/1000000, 2, '.', '');
 		echo " | $count_new million commands run since July 2019" ;
 	}
 	else {
