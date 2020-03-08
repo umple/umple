@@ -1,0 +1,23 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_String ----/////
+
+Test GenericTestCase_String.ump {
+depend  Person ; 
+
+
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Person       */
+  /*-------------------------*/
+
+ 
+ 
+
+ }

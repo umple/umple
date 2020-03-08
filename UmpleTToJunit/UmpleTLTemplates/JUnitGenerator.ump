@@ -5,6 +5,7 @@ use where_init.ump;
 use members_AllTestCases.ump;
 use members_AllAssertions.ump;
 use assertion_true.ump;
+use depends.ump;
 
 
 
@@ -19,6 +20,7 @@ class JUnitGenerator {
     depend java.util.*;
 	depend cruise.umple.testgenerator.*;
 	depend cruise.umple.testgenerator.Action;
+	depend cruise.umple.testgenerator.Depend;
 
     isA ILang;
 
@@ -59,15 +61,18 @@ class JUnitGenerator {
 
 
 
-<<#// if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).getIsInline()) {append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else { append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} } #>>
+
 
 import org.junit.*;
 
 ////---- Tests for  <<=model.getFile()>>----/////
 
 
+<<@UmpleTToJUnit.depends>>
+
 
 public class <<=model.getFile().subSequence(0, model.getFile().length()-4)>>Test {
+ 
  
  <<@UmpleTToJUnit.where_init >>
  <<@UmpleTToJUnit.members_Setup >>

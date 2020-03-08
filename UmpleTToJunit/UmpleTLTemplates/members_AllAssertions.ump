@@ -15,7 +15,7 @@ members_AllAssertions <<!<</*members_AllAssertions*/>><<#
 		
 		if(as.getType().equals("assertEqual"))
 		{#>>
-		 			 Assert.assertEqual (<<=as.getAssertCode()>>);<<#}
+		 			 Assert.assertEquals (<<=as.getAssertCode()>>);<<#}
 		
 		if(as.getType().equals("assertNull"))
 		{#>>

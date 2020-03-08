@@ -130,6 +130,7 @@ private void analyzeTestInitAttribute(Token token, int analysisStep, TestCase aT
 	  }
 	  ta.setCode(code);
 	  aTestCase.addAction(ta);
+	  locOrder++;
 	
 }
   private String analyzeAssertEqualCode(Token t, int analysisStep)
@@ -646,7 +647,7 @@ private void analyzeMethodCall(Token t, int analysisStep, TestCase aTestCase, in
 }
 
 private  void analyzeInit(Token t, int analysisStep, TestCase aTestCase, int locOrder) {
-	TestInitialization aInit  = new TestInitialization (null, "construction", t.getValue("identifier"), t.getValue("name"), locOrder);
+	TestInitialization aInit  = new TestInitialization (null, "construction", t.getValue("identifier"), t.getValue("objectName"), locOrder);
 	Token st = t.getSubToken("parameter");
 	//Parameter aParameter = new Parameter(t.getValue("Parameter"), t.getValue("identifier"), null);
 	
@@ -666,8 +667,8 @@ for ( Token sst : st.getSubTokens())
 }
 
 
-private void analyzeTestInitAttributeMethodCall(Token token, int analysisStep, TestCase aTestCase, int locOrder) {
-	// TODO Auto-generated method stub
+private void analyzeTestInitAttributeMethodCall(Token token, int analysisStep, TestCase aTestCase, int locOrder){
+    // TODO Auto-generated method stub
 	  Action ta = new Action("initAttMethodCall", "", locOrder);
 	  String code = "";
 	  
@@ -675,7 +676,7 @@ private void analyzeTestInitAttributeMethodCall(Token token, int analysisStep, T
 	  {
 		  if(subToken.getName().equals("identifier"))
 		  {
-			  code+=subToken.getValue("identifer");			  
+			  code+=subToken.getValue("identifier");			  
 		  }
 		  
 		  if(subToken.getName().equals("attributeName"))
@@ -683,9 +684,81 @@ private void analyzeTestInitAttributeMethodCall(Token token, int analysisStep, T
 			  code+= " " +subToken.getValue("attributeName");			  
 		  }
 		  
+		  if(subToken.getName().equals("object"))
+		  {			  
+				  code+= " " +subToken.getValue("object");			  
+		  }
+		  
+		  if(subToken.getName().equals("name"))
+		  {			  
+				  code+= "" +subToken.getValue("name");			  
+		  }
+		  
+		  if(subToken.getName().equals("."))
+		  {
+			  code+= "" +".";			  
+		  }
+		  
+		  if(subToken.getName().equals("("))
+		  {
+			  code+= "" +"(";			  
+		  }
+		  
+		  if(subToken.getName().equals(")"))
+		  {
+			  code+= "" +")";			  
+		  }
+		  
+		  if(subToken.getName().equals("call"))
+		  {
+			  //System.out.println(subToken.getValue());
+			  String methodName = subToken.getValue();
+			  if (aTestModel.getCodeLang().equals("RubyUnit") && (methodName.contains("get") || methodName.subSequence(0, 3).equals("set")))
+			  {
+				String dashedMethod = methodName.substring(0, 3) + "_" + methodName.substring(3, 4).toLowerCase() +methodName.substring(4, methodName.length());  
+				code+=dashedMethod;
+			  }
+			  else if (aTestModel.getCodeLang().equals("RubyUnit") && methodName.contains("reset") )
+			  {
+				String dashedMethod = methodName.substring(0, 5) + "_" + methodName.substring(5, 6).toLowerCase() +methodName.substring(6, methodName.length());  
+				code+=dashedMethod;
+			  }
+			  else{
+				  code += methodName;
+			  }
+			  
+			  
+			  //code+= " " +methodName;			  
+		  }
+		  
+		  
+		  
 		  if(subToken.getName().equals("="))
 		  {
 			  code+= " " +"= ";			  
+		  }
+		  
+		  if(subToken.getName().equals("\""))
+		  {
+			  code+= "" +"\" ";			  
+		  }
+		  
+		  
+		  if(subToken.getName().equals("parameter"))
+		  {
+			  for (Token ssToken : subToken.getSubTokens()){
+				  if(ssToken.getName().equals(","))
+				  {
+					  code+= ",";
+				  }
+				  else if(ssToken.getName().equals("\""))
+				  {
+					  code+= "\"";
+				  }
+				  else  {
+					  code += ssToken.getValue();
+				  }
+			  }
 		  }
 		  
 		  if(subToken.getName().equals("testMethodCall"))
@@ -696,9 +769,7 @@ private void analyzeTestInitAttributeMethodCall(Token token, int analysisStep, T
 		  aTestCase.addAction(ta);		  
 		  
 	  }
-	  
-	
-}
+  }
 
 private String analyzeInitMethodCall(Token token, TestCase aTestCase, int locOrder) {
 	// TODO Auto-generated method stub
@@ -841,16 +912,46 @@ private  void analyzeModel(Token t, int analysisStep) {
 	aTestModel.addTestSuite(aTestSuite);
 }
 
-private  void analyzeInit(Token t, int analysisStep) {
-for ( Token st : t.getSubTokens())
+
+
+
+//analyze main when initialzation statements
+private void analyzeInit(Token t, int analysisStep){
+    String code = "";
+    
+    TestInitialization aInit  = new TestInitialization (null, "construction", t.getValue("identifier"), t.getValue("objectName"), locOrder);
+	Token st = t.getSubToken("parameter");
+	
 		
-	{
-	if(st.getName().equals("parameter"))
-	 {
-		 analyzeParameter(st,analysisStep);
-	 }
-		
-	}
+		for ( Token sst : st.getSubTokens())
+			
+		{
+		if (sst.getName().equals("pValue"))
+		 {	
+			aInit.addParameter(new Parameter(sst.getValue(), "", sst.getValue()));
+		 }
+		}
+			    
+    //TestInitialization ti = new TestInitialization("model", "modelInit" , t.getValue("identifier"), t.getValue("name"), locOrder);
+    //aTestModel.getTestSuite(0).add
+    aTestModel.addTestInitialization(aInit);
+    
+  }
+  
+  
+  
+  private void analyzeObjectInitialization(Token token, int analysisStep) {
+	// TODO Object init
+	
+}
+
+private void analyzeAttWithMethodInitialization(Token token, int analysisStep) {
+	// TODO att init and assignment
+	
+}
+
+private void analyzeAttInitialization(Token token, int analysisStep) {
+	// TODO att init assignment that has method calls
 	
 }
 
@@ -867,7 +968,7 @@ private  void analyzeDepend(Token t, int analysisStep) {
 		{
 		if(st.getName().equals("pValue"))
 		 {
-			depends.add(new Depend(st.getValue(),"",aTestModel));
+			aTestModel.addDepend(new Depend(st.getValue(), ""));
 		 }
 			
 		}	  

@@ -1,0 +1,132 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+/*
+All person cannot have a Coash as a job.
+*/
+
+////---- Tests for  TestCaseAction ----/////
+
+Test Person {
+
+ generate JUnit ;
+ 
+ depend  Job,Organization,Score,Person ; 
+
+
+
+ 
+ GIVEN:
+ TestCaseAction.ump;
+ 
+ 
+ 
+ THEN:
+
+
+ before { setUp }
+
+
+
+ before { teardown }
+
+ 
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test Init {
+        Person p1 ("john", 123);
+        Job j1 ("Cashier");
+        }
+      
+      
+      
+      
+        
+    
+      
+      test checkForLoop {
+        Person p1 (123);
+        ArrayList<Job> jobs = p1.getJobs();
+        Integer size = jobs.size();
+        }
+      
+      
+      
+      
+        
+    
+      
+      test checkStatus {
+        
+
+        //----------------
+        //before assertions
+        //----------------
+        AssertFalse(firstName == "Orlean");
+        //End of before assertions
+
+        //something
+        Person p1 ("id");
+         id = "id";
+        String id2 = p1.getGate(id,"name");
+        String id2 = p1.getGate();
+        String id2 = getGate();
+        String id2 = getGate(id);
+        p1.openGarage(p1);
+        openGarage(p1);
+        this.setId("id",id);
+        //assertion comment
+        /*multiline comment 
+      line comment*/
+        
+
+        //----------------
+        //after assertions
+        //----------------
+        AssertFalse(firstName == "something");
+        //End of after assertions
+
+        }
+      
+      
+      
+      
+        
+    
+      
+      test setUp {
+        //initalize enviroment
+        }
+      
+      
+      
+      
+        
+    
+      
+      test teardown {
+        //delete files
+        }
+      
+      
+      
+      
+        
+     
+ 
+ 
+
+ after { setUp }
+
+
+
+ after { teardown }
+
+  
+
+}

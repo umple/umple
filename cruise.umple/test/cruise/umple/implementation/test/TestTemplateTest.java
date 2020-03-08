@@ -35,7 +35,7 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    super.tearDown();
 	    
 	    //SampleFileWriter.destroy(pathToInput + "/test/Test.umpt");
-	    SampleFileWriter.destroy(pathToInput + "/test/test");
+	    //SampleFileWriter.destroy(pathToInput + "/test/test");
 	    SampleFileWriter.destroy(pathToInput + "/test/FooTest.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/Bar1Test.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/Bar2Test.umpt");
@@ -69,7 +69,7 @@ public class TestTemplateTest extends ClassTemplateTest{
 	  
 	  public static void main (String[] args)
 	  {
-	    JUnitCore  junit = new JUnitCore();
+	     JUnitCore  junit = new JUnitCore();
 	     junit.addListener(new TextListener(System.out));
 	     org.junit.runner.Result result = junit.run(TestTemplateTest.class);
 	     

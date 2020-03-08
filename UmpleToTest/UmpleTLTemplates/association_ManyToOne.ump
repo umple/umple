@@ -1,0 +1,38 @@
+class UmpleToTest {
+    association_ManyToOne <<!<</*association_ManyToOne*/>><<#
+
+  
+  String relatedAv = av.getRelatedAssociation().getUmpleClass().getName();
+  String buffName = "a" +uClass.getName();#>>
+        		  
+        		  /////// Association: -- <<=av.getRelatedAssociation().getMultiplicity().getRange()>> <<=av.getRelatedAssociation().getUmpleClass().getName()>> /////// 
+        		  
+        		  test create<<=uClass.getName()>>With<<=av.getRelatedAssociation().getUmpleClass().getName()>> {        		  
+        		  <<=gen.dependencyInjection(uClass)>>
+        		  <<=uClass.getName()>> <<=gen.initiateClass(uClass)>>;
+        		  
+        		  assertTrue (a<<=uClass.getName()>>.get<<=av.getName()>>() == a<<=relatedAv>>);
+        		  }
+        		  
+        		  
+        		  
+        		  test replace<<=relatedAv>>{ 
+        		  
+        		  <<=gen.dependencyInjection(uClass)>>        		          		  
+        		  <<=uClass.getName()>> b<<=gen.initiateClass(uClass)>>;
+        		  
+        		  <<=gen.dependencyInjection(av.getRelatedAssociation().getUmpleClass())>>        		  
+        		  <<=relatedAv>> b<<=gen.initiateClass(av.getRelatedAssociation().getUmpleClass())>>;
+        		  
+        		  a<<=uClass.getName()>>.set<<=relatedAv>>(ba<<=relatedAv>>);
+        		  
+        		  assertTrue (ba<<=relatedAv>> == a<<=uClass.getName()>>.get<<=relatedAv>>());        		  
+        		  
+        		          		  
+        		  }
+        		  
+        		  
+        		  <<#
+        		  
+#>>!>>
+}

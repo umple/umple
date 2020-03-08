@@ -660,6 +660,12 @@ class UmpleClass
   Boolean isDistributed = false;
   Boolean isInternalSerializable = false;
   Boolean isDefaultInterfaceRemoteRMI=false;
+  
+  // dependency handling attributes
+  
+  Integer level = 0;
+  Boolean isInitialized = false;
+  
   // Specifies whether or not in the filter
   Boolean filteredin = false;
 
@@ -1252,6 +1258,22 @@ class NameSpace
   Integer timesUsed = 0;
   before setTimesUsed{if(aTimesUsed <0) return false; }
 }
+
+// UmpleObject is used to initialize classes 
+class UmpleObject {
+  type;
+  name;
+  0..1 -- * ObjectElement;
+  //* -- 0..1 UmpleClass;  
+}
+
+// object element is any element with type value and name, such as attribute or Umple element.
+class ObjectElement {
+  type;
+  name;
+  value;  
+}
+
 
 use UmpleVersion.ump;
 use UmpleDiagram.ump;

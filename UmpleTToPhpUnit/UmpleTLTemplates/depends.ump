@@ -1,4 +1,4 @@
-class UmpleToTest {
+class UmpleTToPhpUnit {
     depends <<!<</*depends*/>><<#
 /*
 This file generates depends classes for test model
@@ -7,9 +7,9 @@ This file generates depends classes for test model
   String depend;
   isFirst = true;
   
-  for (String dep : aTestModel.getDepends())
+  for (Depend dep : model.getDepends())
     {
-    	appendln(realSb, "import {0};",dep)) ;
+    	appendln(realSb, "use {0};",dep.getName()) ;
     }
   appendln(realSb,"");
 

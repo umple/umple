@@ -4,7 +4,17 @@ class UmpleTToPhpUnit {
 This file generates initializations for classes in PhpUnit class
 */
   isFirst = true;
+  if(model.hasTestInitializations())
+  {
+     for (TestInitialization init : model.getTestInitializations())
+     {
+     
+     #>><<@UmpleTToPhpUnit.testcase_init>><<#
+     
+     }
   
+  
+  }
  
   
 #>>!>>

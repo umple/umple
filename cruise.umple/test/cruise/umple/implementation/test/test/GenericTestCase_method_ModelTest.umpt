@@ -1,0 +1,23 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_method ----/////
+
+Test GenericTestCase_method.ump {
+depend  Calculator ; 
+
+
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Calculator       */
+  /*-------------------------*/
+
+ 
+ 
+
+ }

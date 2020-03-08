@@ -6,48 +6,48 @@ This file creates the necessary for Optional One To Many Association
 */
 
   				  String buffName = "some" +uClass.getName();#>>
-        		  /////// Association: -- <<=theirEnd.getMultiplicity().getRange()>> <<=theirEnd.getClassName()>> /////// 
+        		  /////// Association: -- <<=av.getRelatedAssociation().getMultiplicity().getRange()>> <<=av.getRelatedAssociation().getUmpleClass().getName()>> /////// 
         		  //create ... without ...
-        		  test Create<<=uClass.getName()>>Without<<=theirEnd.getClassName()>> {
+        		  test Create<<=uClass.getName()>>Without<<=av.getRelatedAssociation().getUmpleClass().getName()>> {
         		  <<=uClass.getName()>> <<=buffName>> ();
-        		  assertFalse (some<<=theirEnd.getClassName()>>.get<<=theirEnd.getRoleName().toUpperCase()>>()!= null);
+        		  assertFalse (some<<=av.getRelatedAssociation().getUmpleClass().getName()>>.get<<=av.getRelatedAssociation().getName().toUpperCase()>>()!= null);
         		  }
         		  //replace
-        		  <<#buffName = "some"+theirEnd.getClassName();#>>
-        		  test Replace<<=theirEnd.getClassName()>>In<<=uClass.getName()>> { 
+        		  <<#buffName = "some"+av.getRelatedAssociation().getUmpleClass().getName();#>>
+        		  test Replace<<=av.getRelatedAssociation().getUmpleClass().getName()>>In<<=uClass.getName()>> { 
         		  
-        		  <<=theirEnd.getClassName()>> <<=buffName>> (); 
-        		  <<=theirEnd.getClassName()>> <<=buffName>>2 ();
-        		  <<=buffName>>.add<<=theirEnd.getClassName()>>(some<<=myEnd.getClassName()>>);
-        		  assertEqual (1, <<=buffName>>.getNumberOf<<=myEnd.getClassName()>>s());        		  
-        		  some<<=myEnd.getClassName()>>.set<<=theirEnd.getClassName()>>(<<=buffName>>2);
-        		  assertEqual (some<<=myEnd.getClassName()>>, <<=buffName>>2.get<<=myEnd.getClassName()>>(0));
+        		  <<=av.getRelatedAssociation().getUmpleClass().getName()>> <<=buffName>> (); 
+        		  <<=av.getRelatedAssociation().getUmpleClass().getName()>> <<=buffName>>2 ();
+        		  <<=buffName>>.add<<=av.getRelatedAssociation().getUmpleClass().getName()>>(some<<=av.getUmpleClass().getName()>>);
+        		  assertEqual (1, <<=buffName>>.getNumberOf<<=av.getUmpleClass().getName()>>s());        		  
+        		  some<<=av.getUmpleClass().getName()>>.set<<=av.getRelatedAssociation().getUmpleClass().getName()>>(<<=buffName>>2);
+        		  assertEqual (some<<=av.getUmpleClass().getName()>>, <<=buffName>>2.get<<=av.getUmpleClass().getName()>>(0));
         		  }
         		  //delete
-        		  test Delete<<=theirEnd.getClassName()>> {
+        		  test Delete<<=av.getRelatedAssociation().getUmpleClass().getName()>> {
         		   
-        		   <<=theirEnd.getClassName()>> <<=buffName>> (); 
-        		  <<=theirEnd.getClassName()>> <<=buffName>>2 ();
-        		  <<=buffName>>.add<<=theirEnd.getClassName()>>(some<<=myEnd.getClassName()>>);
+        		   <<=av.getRelatedAssociation().getUmpleClass().getName()>> <<=buffName>> (); 
+        		  <<=av.getRelatedAssociation().getUmpleClass().getName()>> <<=buffName>>2 ();
+        		  <<=buffName>>.add<<=av.getRelatedAssociation().getUmpleClass().getName()>>(some<<=av.getUmpleClass().getName()>>);
         		  
-        		  // delete <<=theirEnd.getClassName()>> in <<=uClass.getName()>>
+        		  // delete <<=av.getRelatedAssociation().getUmpleClass().getName()>> in <<=uClass.getName()>>
         		  <<=buffName>>2.delete(); 
-        		  assertEqual (null, <<=buffName>>2.get<<=myEnd.getClassName()>>(0));
+        		  assertEqual (null, <<=buffName>>2.get<<=av.getUmpleClass().getName()>>(0));
         		  }
         		  //boundary test
         		  
         		  test BoundaryTest {
-        		  Integer size = <<=theirEnd.getClassName()>>.getNumberOf<<=uClass.getName()>>s(); 
-        		  assertTrue ( size > <<=myEnd.getMultiplicity().getLowerBound()>>);
-        		  assertTrue (  size < <<=myEnd.getMultiplicity().getUpperBound()>>); 
+        		  Integer size = <<=av.getRelatedAssociation().getUmpleClass().getName()>>.getNumberOf<<=uClass.getName()>>s(); 
+        		  assertTrue ( size > <<=av.getMultiplicity().getLowerBound()>>);
+        		  assertTrue (  size < <<=av.getMultiplicity().getUpperBound()>>); 
         		  
         		  }
         		  
         		  test BoundaryAtMax {
         		  
-        		  <<#int size = theirEnd.getMultiplicity().getUpperBound();
+        		  <<#int size = av.getRelatedAssociation().getMultiplicity().getUpperBound();
         		  	int i =0;
-        		  	int lowerBound = theirEnd.getMultiplicity().getLowerBound();
+        		  	int lowerBound = av.getRelatedAssociation().getMultiplicity().getLowerBound();
         		  	StringBuilder initObjects = new StringBuilder();#>>
         		  	
         		  	
@@ -58,12 +58,12 @@ This file creates the necessary for Optional One To Many Association
         		  	#>>
         		  
         		  //Maximum <<=uClass.getName()>> allowed : <<=size>>
-        		  Integer size = <<=theirEnd.getClassName()>>.getNumberOf<<=uClass.getName()>>s();
+        		  Integer size = <<=av.getRelatedAssociation().getUmpleClass().getName()>>.getNumberOf<<=uClass.getName()>>s();
         		  
         		  <<#for ( i = 1; i <= lowerBound; i++){#>>
         		  <<=uClass.getName()>> obj<<=i>> ();<<#}#>>
         		  
-        		  <<=theirEnd.getClassName()>> <<=buffName>> = new <<=theirEnd.getClassName()>>(<<=initObjects.toString()>>);
+        		  <<=av.getRelatedAssociation().getUmpleClass().getName()>> <<=buffName>> = new <<=av.getRelatedAssociation().getUmpleClass().getName()>>(<<=initObjects.toString()>>);
 
         		  <<#for ( i = <<=lowerBound>>; i <= size; i++){#>>
         		  <<=uClass.getName()>> obj<<=i>> (<<=buffName>>);<<#}#>>

@@ -1,0 +1,64 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  attribute ----/////
+
+Test B {
+
+ generate JUnit ;
+ 
+ depend  A,B ; 
+
+
+
+ 
+ GIVEN:
+ attribute.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :name
+
+      test attribute_name {
+    
+    assertTrue( b.setName("RandomString1"));
+    assertTrue( b.getName() =="RandomString1");
+    assertTrue( b.setName("RandomString2"));
+    assertTrue( b.getName()=="RandomString2");
+    assertFalse( b.getName() =="RandomString1");
+             
+	}
+
+ //tests for :address
+
+      test attribute_address {
+    
+    assertTrue( b.setAddress("RandomString1"));
+    assertTrue( b.getAddress() =="RandomString1");
+    assertTrue( b.setAddress("RandomString2"));
+    assertTrue( b.getAddress()=="RandomString2");
+    assertFalse( b.getAddress() =="RandomString1");
+             
+	}
+
+ //tests for :id
+
+      test attribute_id {
+    
+    assertTrue( b.setId("RandomString1"));
+    assertTrue( b.getId() =="RandomString1");
+    assertTrue( b.setId("RandomString2"));
+    assertTrue( b.getId()=="RandomString2");
+    assertFalse( b.getId() =="RandomString1");
+             
+	}
+
+
+  
+ 
+   
+
+}

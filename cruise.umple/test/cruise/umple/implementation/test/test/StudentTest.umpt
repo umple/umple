@@ -1,0 +1,82 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_attribute_suffix ----/////
+
+Test Student {
+
+ generate JUnit ;
+ 
+ depend  Student ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_attribute_suffix.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :studentId
+
+      test attribute_studentId {
+    
+    assertTrue( student.setStudentId("RandomString1"));
+    assertTrue( student.getStudentId() =="RandomString1");
+    assertTrue( student.setStudentId("RandomString2"));
+    assertTrue( student.getStudentId()=="RandomString2");
+    assertFalse( student.getStudentId() =="RandomString1");
+             
+	}
+
+ //tests for :name
+
+      test attribute_name {
+    
+    assertTrue( student.setName("RandomString1"));
+    assertTrue( student.getName() =="RandomString1");
+    assertTrue( student.setName("RandomString2"));
+    assertTrue( student.getName()=="RandomString2");
+    assertFalse( student.getName() =="RandomString1");
+             
+	}
+
+ //tests for :address
+
+      test attribute_address {
+    
+    assertTrue( student.setAddress("RandomString1"));
+    assertTrue( student.getAddress() =="RandomString1");
+    assertTrue( student.setAddress("RandomString2"));
+    assertTrue( student.getAddress()=="RandomString2");
+    assertFalse( student.getAddress() =="RandomString1");
+             
+	}
+
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkifLogged_studentId {
+        Student st1 ( "S1425", "John", "Ottawa") ;        
+        String valueToCheck = st1.getStudentId();  
+        st1.getValue(studentId);    
+        boolean isLogged =  st1.checkIsLogged(valueToCheck);        
+        
+        //list assertions
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}

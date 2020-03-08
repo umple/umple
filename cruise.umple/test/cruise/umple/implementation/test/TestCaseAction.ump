@@ -73,7 +73,7 @@ class Person {
                   
         job1.promote();                 
         
-        before assertTrue (jobName == "Cashier");
+        before assertTrue (job.getName == "Cashier");
         after assertTrue (jobName == "Manager");
                 
         }

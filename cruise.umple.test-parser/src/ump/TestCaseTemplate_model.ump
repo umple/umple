@@ -23,7 +23,8 @@ ParseResult parseingResult;
 codeLang;
 
 1 -- * TestSuite;
-1 -- * Depend depends;
+0..1 -- * Depend depends;
+0..1 -- * TestInitialization;
 
 }
 

@@ -1,0 +1,40 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  TestCaseAction ----/////
+
+Test Score {
+
+ generate JUnit ;
+ 
+ depend  Job,Organization,Score,Person ; 
+
+
+
+ 
+ GIVEN:
+ TestCaseAction.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :score
+
+      test attribute_score {
+    
+      assertTrue( score.setScore(123)));
+      assertTrue( score.getScore() == 123));
+      assertTrue( score.setScore(321)));
+      assertTrue( score.getScore() == 321));
+      assertFlase( score.getScore() == 123));
+          
+	}
+
+
+  
+ 
+   
+
+}

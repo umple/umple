@@ -9,7 +9,7 @@ class Util{
 depend java.util.Random;
 depend java.lang.reflect.Method;
 depend cruise.umple.testparser.TestParser;
-depend  java.io.File;
+depend java.io.*;
 depend java.util.List;
 depend java.util.ArrayList;
 
@@ -130,13 +130,83 @@ public Boolean assertMethod (Class cls, String methodName)
  public TestModel createUmpleTestSystem(String path, String filename,String lang)
    {
 	  
-	 String language =lang;     
+	 String language =lang;   
+    //path = "/cruise.umple.test-parser/src-gen/cruise/umple/testgenerator/";
+    //filename = "ATest.umpt";
      File file = new File(path+filename);
      String grName = "";
+     //grName = "src/ump/mbt_parsing.grammar";
+     //grName = Util.class.getClassLoader().getResource("src/mbt_parsing.grammar").getFile();
+     //System.out.println(grName);
      TestModel aTestModel = new TestModel(null, null, null, null, null,null, null, language);
-     TestParser parser = new TestParser(null, "", file, 0);     
+     TestParser parser = new TestParser(null, grName, file, 0);     
+     //System.out.println(file.getAbsolutePath());
+     //System.out.println(Util.class.getClassLoader().getResource("mbt_parsing.grammar"));
+     parser.setGrammarFile("src/ump/mbt_parsing.grammar");
+     
+     
+     ///
+     
+     InputStream is = getClass().getResourceAsStream("mbt_parsing.grammar");
+     InputStreamReader isr = new InputStreamReader(is);
+     
+     File grFile = new File("grammar");
+     String grFileName = "grammar.grammar";
+     grFile.mkdir();
+     
+     BufferedReader br = new BufferedReader(isr);
+     
+     
+     StringBuffer sb = new StringBuffer();
+     String line;
+     try {
+		while ((line = br.readLine()) != null) 
+		 {
+		   sb.append(line+"\n");
+		 }
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+     try {
+    	 BufferedWriter bw = new BufferedWriter(new FileWriter(new File(grFile.getAbsoluteFile(),grFileName)));   	
+    	 bw.write(sb.toString());
+    	 bw.flush();
+    	 bw.close();
+		br.close();
+		 isr.close();
+	     is.close();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+     
+     
+     //System.out.println(sb.toString());
+    
+     //return sb.toString();
+     
+     /////////
+     
+     
+     
+     parser.setGrammarFile("grammar/grammar.grammar");
      parser.setTestModelFile(file);
      parser.prepare();
+     
+     //deleting temp written files
+     String[]entries = grFile.list();
+     for(String s: entries){
+         File currentFile = new File(grFile.getPath(),s);
+         currentFile.delete();
+     }
+     
+     grFile.delete();
+     
+     /// end of deleting temp files
+     
+     
+     
      aTestModel = parser.getATestModel();
      aTestModel.setCodeLang(language);
      if(aTestModel.getCodeLang().equals("JUnit"))
