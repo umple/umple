@@ -15,6 +15,7 @@ namespace cruise.umple.compiler;
 class TestGenerator
 {
 depend cruise.umple.compiler.test.*;
+depend java.util.stream.Collectors;
 
 
 
@@ -24,21 +25,32 @@ depend cruise.umple.compiler.test.*;
   private boolean branchReset = false;
   private String depCode ="";
   Random random = new Random();
-  HashMap<String, String> TestingCredentialsLookUpMap = new HashMap<String, String>();
+  HashMap<String, String> testingCredentialsLookUpMap = new HashMap<String, String>();
 	
   public String translate(String aString)
   {
   
-  	//HashMap<String, String> TestingCredentialsLookUpMap = new HashMap<String, String>();
-	    TestingCredentialsLookUpMap.put("AttStringManu", "RandomString1");
-	    TestingCredentialsLookUpMap.put("AttStringManu2", "RandomString2");
-	    TestingCredentialsLookUpMap.put("AttIntManu", "123");
-	    TestingCredentialsLookUpMap.put("AttIntManu2", "321");
-	    TestingCredentialsLookUpMap.put("AttDoubleManu", "123456789");
-	    TestingCredentialsLookUpMap.put("AttDoubleManu2", "987654321");
-	    TestingCredentialsLookUpMap.put("AttfloatManu", "1.2");
-	    TestingCredentialsLookUpMap.put("AttfloatManu2", "213.8765");
-		return TestingCredentialsLookUpMap.get(aString);
+  	//HashMap<String, String> testingCredentialsLookUpMap = new HashMap<String, String>();
+	    testingCredentialsLookUpMap.put("AttStringManu", "RandomString1");
+	    testingCredentialsLookUpMap.put("AttStringManu2", "RandomString2");
+	    testingCredentialsLookUpMap.put("AttIntManu", "123");
+	    testingCredentialsLookUpMap.put("AttIntManu2", "321");
+	    testingCredentialsLookUpMap.put("AttDoubleManu", "123456789");
+	    testingCredentialsLookUpMap.put("AttDoubleManu2", "987654321");
+	    testingCredentialsLookUpMap.put("AttfloatManu", "1.2");
+	    testingCredentialsLookUpMap.put("AttfloatManu2", "213.8765");
+	    testingCredentialsLookUpMap.put("AttDateManu", "Date.valueOf(\"1999-12-12\")");
+	    testingCredentialsLookUpMap.put("AttTimeManu", "Time.valueOf(\"12:59:59\")");
+		return testingCredentialsLookUpMap.get(aString);
+  	
+  }
+  
+  public String addTranslate(String key, String value)
+  {
+    	
+	    testingCredentialsLookUpMap.put(key, value);
+	    
+		return testingCredentialsLookUpMap.get(key);
   	
   }
   
@@ -175,7 +187,7 @@ depend cruise.umple.compiler.test.*;
 	    String path = StringFormatter.addPathOrAbsolute( 
 	                  getModel().getUmpleFile().getPath(), 
 	                            getOutput()) + 
-	                            aClass.getPackageName().replace(".", File.separator)+"/test";  
+	                            aClass.getPackageName().replace(".", File.separator)+"";  
 	    
 	    File file = new File(path);
 	    file.mkdirs();   
@@ -353,7 +365,7 @@ depend cruise.umple.compiler.test.*;
     
     //if(uClass.getIsInitialized() != true){
          
-	 if (uClass.hasClassDependencyNodes()) { 
+	 
      for (Method method: uClass.getMethods())
 	  {
     	 
@@ -409,7 +421,7 @@ depend cruise.umple.compiler.test.*;
 					   
 				   }
 				   else {
-					   System.out.println(methPara.getIsList());
+					   //System.out.println(methPara.getIsList());
 					   code += translate("AttIntManu");
 				   }
 			   }
@@ -454,13 +466,7 @@ depend cruise.umple.compiler.test.*;
 	   
 	   
 	  }
-	 }
 	 
-	 else {
-		 
-		 
-		 
-	 }
 		 
 	  
 	  
@@ -503,7 +509,7 @@ depend cruise.umple.compiler.test.*;
   // initiate the whole model with minimum requirements
    
    
-   public String initializeModel (UmpleModel model) {
+   
 	   public String initializeModel(UmpleModel model){
     String code = "";
     List<UmpleClass> sortedByLevel = sortClassesByLevel();  
@@ -518,7 +524,7 @@ depend cruise.umple.compiler.test.*;
     
 	return code;
   }
-   }
+   
    
    
    
@@ -585,24 +591,24 @@ depend cruise.umple.compiler.test.*;
     List<String> allTypes = new ArrayList<String>();
     List<String> interfacesProcessed = new ArrayList<String>();
     
-    //Map<String, String> TestingCredentialsLookUpMap = new HashMap<String, String>();
-    /*TestingCredentialsLookUpMap.put("AttStringManu", "id123test");
-    TestingCredentialsLookUpMap.put("AttStringRand", "RANDOMSTRING");
-    TestingCredentialsLookUpMap.put("AttIntManu", "123");
-    TestingCredentialsLookUpMap.put("AttIntRand", "RANDOMINT");
-    TestingCredentialsLookUpMap.put("AttFloatManu", "1.2");
-    TestingCredentialsLookUpMap.put("AttFloatRand", "RANDOMFloat");
-    TestingCredentialsLookUpMap.put("AttBooleanManu", "true");
-    TestingCredentialsLookUpMap.put("AttBooleanRand", "RANDOMBool");*/
+    //Map<String, String> testingCredentialsLookUpMap = new HashMap<String, String>();
+    /*testingCredentialsLookUpMap.put("AttStringManu", "id123test");
+    testingCredentialsLookUpMap.put("AttStringRand", "RANDOMSTRING");
+    testingCredentialsLookUpMap.put("AttIntManu", "123");
+    testingCredentialsLookUpMap.put("AttIntRand", "RANDOMINT");
+    testingCredentialsLookUpMap.put("AttFloatManu", "1.2");
+    testingCredentialsLookUpMap.put("AttFloatRand", "RANDOMFloat");
+    testingCredentialsLookUpMap.put("AttBooleanManu", "true");
+    testingCredentialsLookUpMap.put("AttBooleanRand", "RANDOMBool");*/
     
-    TestingCredentialsLookUpMap.put("AttStringManu", "RandomString1");
-	    TestingCredentialsLookUpMap.put("AttStringManu2", "RandomString2");
-	    TestingCredentialsLookUpMap.put("AttIntManu", "123");
-	    TestingCredentialsLookUpMap.put("AttIntManu2", "321");
-	    TestingCredentialsLookUpMap.put("AttDoubleManu", "123456789");
-	    TestingCredentialsLookUpMap.put("AttDoubleManu2", "987654321");
-	    TestingCredentialsLookUpMap.put("AttfloatManu", "1.2");
-	    TestingCredentialsLookUpMap.put("AttfloatManu2", "213.8765");
+    testingCredentialsLookUpMap.put("AttStringManu", "RandomString1");
+	    testingCredentialsLookUpMap.put("AttStringManu2", "RandomString2");
+	    testingCredentialsLookUpMap.put("AttIntManu", "123");
+	    testingCredentialsLookUpMap.put("AttIntManu2", "321");
+	    testingCredentialsLookUpMap.put("AttDoubleManu", "123456789");
+	    testingCredentialsLookUpMap.put("AttDoubleManu2", "987654321");
+	    testingCredentialsLookUpMap.put("AttfloatManu", "1.2");
+	    testingCredentialsLookUpMap.put("AttfloatManu2", "213.8765");
     
     
     
@@ -829,24 +835,24 @@ code.append(StringFormatter.format(" ////---- Tests for  {0} ----/////\n\n",mode
 	    	  	if(av.getType() == "String" || av.getType() == null)
 	    	  {
 	    	  	   String randomString1 = UUID.randomUUID().toString().replaceAll("-","").substring(0, 8);
-	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.set{1}(\"{2}\"));\n",uClass.getName().toLowerCase() , attrName, TestingCredentialsLookUpMap.get("AttStringManu")));
-	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}() ==\"{2}\");\n",uClass.getName().toLowerCase() , attrName, TestingCredentialsLookUpMap.get("AttStringManu")));
+	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.set{1}(\"{2}\"));\n",uClass.getName().toLowerCase() , attrName, testingCredentialsLookUpMap.get("AttStringManu")));
+	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}() ==\"{2}\");\n",uClass.getName().toLowerCase() , attrName, testingCredentialsLookUpMap.get("AttStringManu")));
 	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.set{1}(\"{2}\"));\n",uClass.getName().toLowerCase() , attrName, "RandomString1"));
 	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}(\"{2}\"));\n",uClass.getName().toLowerCase() , attrName, "RandomString1"));
-	    		   code.append(StringFormatter.format("\tAssertFalse( {0}.get{1}() ==\"{2}\");\n",uClass.getName().toLowerCase() , attrName, TestingCredentialsLookUpMap.get("AttStringManu")));
+	    		   code.append(StringFormatter.format("\tAssertFalse( {0}.get{1}() ==\"{2}\");\n",uClass.getName().toLowerCase() , attrName, testingCredentialsLookUpMap.get("AttStringManu")));
 	    	  }
 	    	  
 	    	  if(av.getType().equals("Double") || av.getType().equals("Integer"))
 	    	  {
-	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.set{1}({2}));\n",uClass.getName().toLowerCase() , attrName,TestingCredentialsLookUpMap.get("AttIntManu")));
-	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}() == {2});\n",uClass.getName().toLowerCase() , attrName, TestingCredentialsLookUpMap.get("AttIntManu")));
+	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.set{1}({2}));\n",uClass.getName().toLowerCase() , attrName,testingCredentialsLookUpMap.get("AttIntManu")));
+	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}() == {2});\n",uClass.getName().toLowerCase() , attrName, testingCredentialsLookUpMap.get("AttIntManu")));
 	    		   
 	    	  }
 	    	  
 	    	  if(av.getType().equals("Float"))
 	    	  {
-	    		  code.append(StringFormatter.format("\tAssertTrue( {0}.set{1}({2}));\n",uClass.getName().toLowerCase() , attrName,TestingCredentialsLookUpMap.get("AttFloatManu")));
-	    		  code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}() =={2});\n",uClass.getName().toLowerCase() , attrName, TestingCredentialsLookUpMap.get("AttFloatManu")));
+	    		  code.append(StringFormatter.format("\tAssertTrue( {0}.set{1}({2}));\n",uClass.getName().toLowerCase() , attrName,testingCredentialsLookUpMap.get("AttFloatManu")));
+	    		  code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}() =={2});\n",uClass.getName().toLowerCase() , attrName, testingCredentialsLookUpMap.get("AttFloatManu")));
 	
 	    	  }
 	    	  
@@ -854,7 +860,7 @@ code.append(StringFormatter.format(" ////---- Tests for  {0} ----/////\n\n",mode
 	    	  if(av.getType().equals("Boolean"))
 	    	  {
 	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.(set{1}(true));\n",uClass.getName().toLowerCase() , attrName));
-	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}());\n",uClass.getName().toLowerCase() , attrName, TestingCredentialsLookUpMap.get("AttBooleanManu")));
+	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}());\n",uClass.getName().toLowerCase() , attrName, testingCredentialsLookUpMap.get("AttBooleanManu")));
 	    		  
 	    	  }
 	    		 
@@ -1198,14 +1204,14 @@ static
     OneOrManyLookup.add("attribute");
     OneOrManyLookup.add("parameter");
     
-    HashMap<String, String> TestingCredentialsLookUpMap = new HashMap<String, String>();
-    TestingCredentialsLookUpMap.put("setAttString", "id123");
-    TestingCredentialsLookUpMap.put("getAttString", "id123");
-    TestingCredentialsLookUpMap.put("setAttInt", "123");
-    TestingCredentialsLookUpMap.put("getAttInt", "123");
-    TestingCredentialsLookUpMap.put("setAttInt", "");
-    TestingCredentialsLookUpMap.put("setAttFloat", "");
-    TestingCredentialsLookUpMap.put("setAttBoolean", "");
+    HashMap<String, String> testingCredentialsLookUpMap = new HashMap<String, String>();
+    testingCredentialsLookUpMap.put("setAttString", "id123");
+    testingCredentialsLookUpMap.put("getAttString", "id123");
+    testingCredentialsLookUpMap.put("setAttInt", "123");
+    testingCredentialsLookUpMap.put("getAttInt", "123");
+    testingCredentialsLookUpMap.put("setAttInt", "");
+    testingCredentialsLookUpMap.put("setAttFloat", "");
+    testingCredentialsLookUpMap.put("setAttBoolean", "");
   }	
 
  private String writeModel(){
@@ -1216,7 +1222,7 @@ static
       String path = StringFormatter.addPathOrAbsolute( 
 	                  getModel().getUmpleFile().getPath(), 
 	                            getOutput()) + 
-	                            model.getUmpleClass(0).getPackageName().replace(".", File.separator)+"/test";
+	                            model.getUmpleClass(0).getPackageName().replace(".", File.separator)+"";
       File file = new File(path);
       file.mkdirs();
       String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + "_ModelTest.umpt";

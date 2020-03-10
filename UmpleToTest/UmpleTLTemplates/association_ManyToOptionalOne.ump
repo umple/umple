@@ -16,10 +16,10 @@ This file creates the necessary for Optional One To Many Association
         		  
         		  <<=gen.dependencyInjection(av.getRelatedAssociation().getUmpleClass())>>
         		  <<=av.getRelatedAssociation().getUmpleClass().getName()>> <<=gen.initiateClass(av.getRelatedAssociation().getUmpleClass())>>;
-        		  <<=buffName>>.add<<=av.getRelatedAssociation().getUmpleClass().getName()>>(<<=buffName2>>);
-        		  <<=buffName>>.remove<<=av.getRelatedAssociation().getUmpleClass().getName()>>(<<=buffName2>>);
+        		  assertTrue(<<=buffName>>.set<<=av.getRelatedAssociation().getUmpleClass().getName()>>(<<=buffName2>>));        		  
+        		  a<<=av.getRelatedAssociation().getUmpleClass().getName()>>.delete();
         		  
-        		  assertTrue (a<<=av.getUmpleClass().getName()>>.get<<=av.getName()>>At(0) == null);
+        		  assertTrue (a<<=av.getUmpleClass().getName()>>.get<<=av.getRelatedAssociation().getUmpleClass().getName()>>() == null);
         		  }
         		  
         		  

@@ -22,26 +22,38 @@ This file generates Tests for attributes for a given class. Once all the attribu
   String typeName = at.getType() == null ? "String" : at.getType();
   String upperBound = at.getIsList() ? " upperBound=\"-1\"" : "";
   String attrName = StringFormatter.toPascalCase(at.getName());
+  String isLazy = "";
+  String isImmutable = "";
+  if(at.isIsLazy())
+  {
+  	isLazy = "lazy_";
+  }
+  
+  if(at.isImmutable())
+  {
+  	isImmutable = "immutable_";
+  }
   //appendln(realSb, " ");
   	#>> //tests for :<<=at.getName()>>
 
-  		test attribute_<<=at.getName()>> {
+  		test attribute_<<=isLazy>><<=isImmutable>><<=at.getName()>> {
   	<<#
 
 
-  	if (!at.isImmutable())
-	      {
+  	if (!at.isImmutable() && !at.isConstant())
+	        {
+	        if (at.isIsLazy())
+	      {#>>	    	  
+	      <<#}
 	    	  	#>><<@UmpleToTest.attribute_typed>><<#
 		    }
 	    	  //appendln(realSb("\t}\n", attrName));
-	      if (at.isIsLazy())
-	      {#>>
-	    	  <<@UmpleToTest.attribute_Lazy>>
-	      <<#}
+	      
 	      if ( at.isImmutable() == true)
 	      {#>>
 	    	  <<@UmpleToTest.attribute_Immutable>>
 	      <<#}
+	      
         
 
 

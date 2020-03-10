@@ -2,8 +2,8 @@ class UmpleTToJUnit{
 
 members_Setup <<!<</*members_Setup*/>>
 
-  @Before
-  public void setup(){
+  @BeforeAll
+  public static void setup(){
 
   }
 

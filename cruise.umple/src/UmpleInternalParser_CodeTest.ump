@@ -259,6 +259,11 @@ private void analyzeTestCase(Token token, UmpleElement uElement, UmpleTestCase u
 	        analyzeTestIfStatement(subToken,uElement,uTestCase);	      	    	
 	      }
 	      
+	      if(subToken.getName().equals("forStatement"))
+	      {	    	  
+	    	  analyzeTestForStatement(subToken,uElement,uTestCase);	      	    	
+	      }
+	      
 	    }
   }
 
@@ -359,8 +364,26 @@ private void analyzeTestComment(Token token, UmpleElement uElement, UmpleTestCas
  private void analyzeClassTestCase(Token token, UmpleClass aClass){
     
 	   
-	        	  boolean testcaseExist= false;
+	        	 boolean testcaseExist= false;
 	        	  int index=0;
+	        	  
+	        	  if(token.getValue("testCaseName").equals("init"))
+	        	  {
+	        		  // only ignore the test named : init (used for initialization for WHEN statement
+	        		  
+	        		  for (Token initToken : token.getSubTokens())
+	        		  {
+	        			  if(initToken.getName().equals("testInit"))
+	        			  {	        			
+	        				  //System.out.println(initToken.toString());	  
+	        				  
+	        		  analyzeTestClassInit(initToken, aClass);
+	        			  }
+	        		  }
+	        		  
+	        	  }
+	        	  
+	        	  else {
 	        	  
 	        	  for(UmpleTestCase tc: aClass.getUmpleTestCases())
 	    		  {
@@ -382,8 +405,8 @@ private void analyzeTestComment(Token token, UmpleElement uElement, UmpleTestCas
 	    		  }
 	    		  else {
 	    			  analyzeTestCase(token, aClass, aClass.getUmpleTestCase(index));
-	    		  }	            	           	           
-	   
+	    		  }
+	        	  }
 	   
   }
   
@@ -1538,7 +1561,60 @@ private void addGenericManyToMany(String code, UmpleClass aClass, Token token){
    private void analyzeTestClassInit(Token token, UmpleClass aClass) {
 	// TODO fix init code 
 	  TestInit ti = new TestInit("", "", "");
-	  ti.setCode(token.getValue("code"));	  
+	  //System.out.println(token.getValue("code"));
+	  
+	  String code = "";
+	  for (Token subToken: token.getSubTokens())
+	  {
+		  if ( subToken.getName().equals("identifier"))
+		  {
+			 code+=subToken.getValue();
+		  }
+		  
+		  if ( subToken.getName().equals("objectName"))
+		  {
+			  code+= " " + subToken.getValue() + " " ;
+		  }
+		  
+		  if ( subToken.getName().equals("("))
+		  {
+			  code+="(";
+		  }
+		  
+		  if ( subToken.getName().equals(")"))
+		  {
+			  code+=")";
+		  }
+		  
+		  if ( subToken.getName().equals(";"))
+		  {
+			  code+=";";
+		  }
+		  if ( subToken.getName().equals("testParameter"))
+		  {
+			  //String tiParameters = "";
+			  for (Token tiToken : subToken.getSubTokens() )
+			  {
+				  //System.out.println();
+				  if ( tiToken.getName().equals("name"))
+				  {
+					  code += tiToken.getValue("name");
+				  }
+				  
+				  if ( tiToken.getName().equals(","))
+				  {
+					  code += ", ";
+				  }
+				  if ( tiToken.getName().equals("\""))
+				  {
+					  code += "\"";
+				  }
+			  }
+			  
+		  }
+	  }
+	  
+	  ti.setCode(code);	  
 	  aClass.addTestInit(ti);
 	
 }

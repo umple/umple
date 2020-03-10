@@ -7,45 +7,57 @@ This file creates the necessary for Optional One To Many Association
 
   
   				  String buffName = "some" +uClass.getName();
-  				  String buffName2 = "some"+av.getRelatedAssociation().getUmpleClass().getName();#>>
+  				  String buffName2 = "some"+av.getRelatedAssociation().getUmpleClass().getName();
+  				  String myClass = uClass.getName();
+  				  String otherClass = av.getRelatedAssociation().getUmpleClass().getName();
+  				  #>>
         		  /////// Association: -- <<=av.getRelatedAssociation().getMultiplicity().getRange()>> <<=av.getRelatedAssociation().getUmpleClass().getName()>> /////// 
         		  //create ... without ...
-        		  Test Create<<=uClass.getName()>>Without<<=av.getRelatedAssociation().getUmpleClass().getName()>> {
-        		  <<=uClass.getName()>> <<=buffName>> = new <<=uClass.getName()>>();
-        		  AssertTrue (some<<=av.getRelatedAssociation().getUmpleClass().getName()>>.get<<=av.getRelatedAssociation().getName().toUpperCase()>>()!= null);
+        		  test Create<<=uClass.getName()>>Without<<=av.getRelatedAssociation().getUmpleClass().getName()>> {
+        		  
+        		  <<=gen.dependencyInjection(uClass)>>
+        		  <<=uClass.getName()>> <<=gen.initiateClass(uClass)>>;
+        		  int size = a<<=myClass>>.get<<=otherClass>>s().size(); 
+        		  assertTrue ( size == 0);
+        		  
         		  }
         		  //replace
         		  <<#buffName = "some"+av.getRelatedAssociation().getUmpleClass().getName();#>>
-        		  Test Replace<<=av.getRelatedAssociation().getUmpleClass().getName()>>In<<=uClass.getName()>> { 
+        		  test Replace<<=uClass.getName()>>In<<=av.getRelatedAssociation().getUmpleClass().getName()>> { 
         		  
-        		  <<=av.getRelatedAssociation().getUmpleClass().getName()>> <<=buffName2>> = new <<=av.getRelatedAssociation().getUmpleClass().getName()>>(); 
-        		  <<=av.getRelatedAssociation().getUmpleClass().getName()>> <<=buffName2>>2 = new <<=av.getRelatedAssociation().getUmpleClass().getName()>>();
-        		  <<=buffName>>.add<<=av.getRelatedAssociation().getUmpleClass().getName()>>(some<<=av.getUmpleClass().getName()>>);
-        		  AssertEqual (1, <<=buffName>>.getNumberOf<<=av.getUmpleClass().getName()>>s());
-        		  AssertEqual (1, <<=buffName>>.getNumberOf<<=av.getUmpleClass().getName()>>s());
-        		  some<<=av.getUmpleClass().getName()>>.set<<=av.getRelatedAssociation().getUmpleClass().getName()>>(<<=buffName>>2);
-        		  AssertEqual (some<<=av.getUmpleClass().getName()>>, <<=buffName>>2.get<<=av.getUmpleClass().getName()>>(0));
+        		  <<=av.getRelatedAssociation().getUmpleClass().getName()>> <<=gen.initiateClass(av.getRelatedAssociation().getUmpleClass())>>;
+        		  <<=av.getRelatedAssociation().getUmpleClass().getName()>> b<<=gen.initiateClass(av.getRelatedAssociation().getUmpleClass())>>;
+        		  <<=uClass.getName()>> <<=gen.initiateClass(uClass)>>;
+        		  <<=uClass.getName()>> b<<=gen.initiateClass(uClass)>>;
+        		  
+        		
+        		  assertTrue(a<<=uClass.getName()>>.add<<=av.getRelatedAssociation().getUmpleClass().getName()>>(a<<=av.getRelatedAssociation().getUmpleClass().getName()>>));
+        		  assertEqual ( a<<=myClass>>.get<<=otherClass>>(0),a<<=otherClass>>);
+        		  
+        		  assertTrue(a<<=av.getRelatedAssociation().getUmpleClass().getName()>>.set<<=uClass.getName()>>(ba<<=uClass.getName()>>));
+        		  assertTrue ( a<<=av.getRelatedAssociation().getUmpleClass().getName()>>.get<<=uClass.getName()>>() == ba<<=uClass.getName()>>);
         		  }
-        		  //delete
-        		  Test Delete<<=av.getRelatedAssociation().getUmpleClass().getName()>> {
+        		  
+        		  test delete<<=av.getRelatedAssociation().getUmpleClass().getName()>> {
         		  // delete <<=av.getRelatedAssociation().getUmpleClass().getName()>> in <<=uClass.getName()>>
-        		  <<=buffName>>2.delete(); 
-        		  AssertEqual (null, <<=buffName>>2.get<<=av.getUmpleClass().getName()>>(0));
-        		  }
-        		  //add to new B
         		  
-        		  Test Add<<=av.getRelatedAssociation().getUmpleClass().getName()>>ToNew<<=uClass.getName()>> { 
-        		  <<=av.getRelatedAssociation().getUmpleClass().getName()>> <<=buffName2>> = new <<=av.getRelatedAssociation().getUmpleClass().getName()>>();
-        		  <<=av.getRelatedAssociation().getUmpleClass().getName()>> <<=buffName2>>2 = new <<=av.getRelatedAssociation().getUmpleClass().getName()>>();
-      
-        		  <<=av.getUmpleClass().getName()>> some<<=av.getUmpleClass().getName()>> = new <<=av.getUmpleClass().getName()>>();
-        		  <<=buffName>>.add<<=av.getRelatedAssociation().getUmpleClass().getName()>>(some<<=av.getRelatedAssociation().getUmpleClass().getName()>>);
-        		  <<=buffName>>.add<<=av.getRelatedAssociation().getUmpleClass().getName()>>(some<<=av.getRelatedAssociation().getUmpleClass().getName()>>2);  
-        
-        		  AssertEqual(some<<=av.getRelatedAssociation().getUmpleClass().getName()>>2, <<=buffName>>.get<<=av.getRelatedAssociation().getUmpleClass().getName()>>(); 
-        		  AssertEqual (<<=buffName>>, some<<=av.getRelatedAssociation().getUmpleClass().getName()>>2.get<<=av.getUmpleClass().getName()>>(0));
-        		  AssertEqual (<<=buffName>>, some<<=av.getRelatedAssociation().getUmpleClass().getName()>>.getNumberOf<<=av.getUmpleClass().getName()>>s());
-        		  }<<#
+        		  
+        		  <<=gen.dependencyInjection(av.getRelatedAssociation().getUmpleClass())>>
+        		  <<=otherClass>> b<<=gen.initiateClass(av.getRelatedAssociation().getUmpleClass())>>;
+        		  
+        		  <<=gen.dependencyInjection(uClass)>>
+        		  <<=uClass.getName()>> <<=gen.initiateClass(uClass)>>;
+        		  
+        		  assertTrue(a<<=myClass>>.add<<=otherClass>>(ba<<=otherClass>>));
+        		  
+        		  ba<<=otherClass>>.delete();
+        		  
+        		  int size = a<<=myClass>>.get<<=otherClass>>s().size(); 
+        		  assertTrue ( size == 0);
+        		  }
+        		  
+        		  
+        		  <<#
   
   
 #>>!>>

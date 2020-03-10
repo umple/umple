@@ -131,7 +131,7 @@ class TestClassGenerator {
     	
  #>>
 
-<<=isAbstract>>Test <<=uClass.getName() >> {
+<<=isAbstract>>test <<=uClass.getName() >> {
 
  generate <<=unitLanguage>> ;
  

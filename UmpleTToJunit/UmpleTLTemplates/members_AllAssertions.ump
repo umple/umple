@@ -6,24 +6,24 @@ members_AllAssertions <<!<</*members_AllAssertions*/>><<#
 		if(as.getType().equals("assertTrue"))
 		{		
 		#>>		 
-		 			 Assert.assertTrue (<<=as.getAssertCode()>>);
+		 			 assertTrue (<<=as.getAssertCode()>>);
 		<<#}
 		
 		if(as.getType().equals("assertFalse"))
 		{#>>
-		 			 Assert.assertFalse (<<=as.getAssertCode()>>);<<#}
+		 			 assertFalse (<<=as.getAssertCode()>>);<<#}
 		
 		if(as.getType().equals("assertEqual"))
 		{#>>
-		 			 Assert.assertEquals (<<=as.getAssertCode()>>);<<#}
+		 			 assertEquals (<<=as.getAssertCode()>>);<<#}
 		
 		if(as.getType().equals("assertNull"))
 		{#>>
-		 			 Assert.assertNull (<<=as.getAssertCode()>>);<<#}
+		 			 assertNull (<<=as.getAssertCode()>>);<<#}
 		
 		if(as.getType().equals("assertMethod"))
 		{#>>
-		 			 UmpleAssert.assertMethod (<<=as.getAssertCode()>>);<<#}
+		 			 assertMethod (<<=as.getAssertCode()>>);<<#}
 #>>
 !>>
 

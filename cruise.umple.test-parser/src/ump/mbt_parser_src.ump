@@ -105,6 +105,34 @@ public void analyzeAllTokens(Token rootToken){
 }
 
 
+private void analyzeAction(Token token, int analysisStep, TestCase aTestCase, int locOrder2) {
+	// TODO Analyze test actions statement
+	  
+	  String code = ""; 
+	
+	  for (Token subToken : token.getSubTokens())
+	  {
+		  if(subToken.getName().equals("objectName"))
+		  {
+			  code += subToken.getValue();
+		  }
+		  
+		  if(subToken.getName().equals("code"))
+		  {
+			  code += subToken.getValue();
+		  }
+		  
+		  if(subToken.getName().equals("."))
+		  {
+			  code += ".";
+		  }
+		  
+	  }
+	  
+	  Action ac = new Action("", code, locOrder);
+	  aTestCase.addAction(ac);
+}
+
 private void analyzeTestInitAttribute(Token token, int analysisStep, TestCase aTestCase, int locOrder2) {
 	// TODO analyze attribute initialization 
 	Action ta = new Action ("initAtt", "", locOrder);
@@ -118,6 +146,9 @@ private void analyzeTestInitAttribute(Token token, int analysisStep, TestCase aT
 		  
 		  if (subToken.getName().equals("name"))
 		  { code += " "+subToken.getValue("name") + ""; }
+		  
+		  if (subToken.getName().equals("code"))
+		  { code += " "+subToken.getValue("code") + ""; }
 		  
 		  if (subToken.getName().equals("\""))
 		  { code += "\"" ; }
@@ -500,6 +531,14 @@ for ( Token st : t.getSubTokens())
 		analyzeInit(st,analysisStep, aTestCase, locOrder);
 		locOrder++;
 	 }
+	 
+	 if(st.getName().equals("testAction"))
+	 {
+		//system.out.println("\tInitlocOrder");
+		//system.out.println(locOrder);
+		analyzeAction(st,analysisStep, aTestCase, locOrder);
+		locOrder++;
+	 }
 	
 	 if(st.getName().equals("methodCall"))
   	 {
@@ -648,20 +687,37 @@ private void analyzeMethodCall(Token t, int analysisStep, TestCase aTestCase, in
 
 private  void analyzeInit(Token t, int analysisStep, TestCase aTestCase, int locOrder) {
 	TestInitialization aInit  = new TestInitialization (null, "construction", t.getValue("identifier"), t.getValue("objectName"), locOrder);
-	Token st = t.getSubToken("parameter");
+	System.out.println(t.getSubTokens().toString());
+       	
+	Token st = null;// t.getSubToken("parameter");
 	//Parameter aParameter = new Parameter(t.getValue("Parameter"), t.getValue("identifier"), null);
 	
-for ( Token sst : st.getSubTokens())
-		
+	for (Token parToken : t.getSubTokens())
 	{
-	if (sst.getName().equals("pValue"))
-	 {	
-		aInit.addParameter(new Parameter(sst.getValue(), "", sst.getValue()));
-	 }
+		if (parToken.getName().equals("parameter"))
+		{
+			st = parToken;
+		}
+	}
+
+	if(st != null)
+	{
+		for ( Token sst : st.getSubTokens())
+
+		{						
+			if(!sst.getValue().equals("STATIC"))
+			{
+			aInit.addParameter(new Parameter(sst.getValue(), "", sst.getValue()));
+			}
+
+		}
+	}
+	else {
+		aInit.addParameter(new Parameter("","",""));
 	}
 
 
-	
+
 	aTestCase.addInit(aInit);
 		
 }

@@ -2,25 +2,36 @@ class UmpleToTest{
 
 attribute_Lazy <<!<</*attribute_Lazy*/>>
 
-		assertTrue (!<<=at.getName()>>.equals(null));<<#
+		<<#
 	    	  //TODO: testGenerator,  add assertion for lazy, we want to see if the object has the lazy-specific LOC in the constructor, Note this is still abstrac ( not language oriented) 
 	    	  //  AssertLOC : student={ method=Student(), LOC="name = null;"}
+	    	  #>>assertTrue (a<<=uClass.getName()>>.get<<=attrName>>() == null );<<#
 	    	  
-	    	  if(at.getType() == "String" || at.getType() == null)
-	    	  {#>>
-		assertTrue (<<=uClass.getName()>>.get<<=attrName>>() != null)
+	    	  if(at.getValue() != "null")
+	    	  {
+	    	    
+	    	  }
+	    	  
+	    	  else {
+	    	  
+	    	  #>>assertTrue (a<<=uClass.getName()>>.get<<=at.getName()>>() == null );<<#
+	    	  
+	    	  if(at.getType().equals( "String") || at.getType().equals(null))
+	    	  {
+	    	  #>>
+		assertTrue (a<<=uClass.getName()>>.get<<=attrName>>() == null);
 	    	  <<#}
-	    	  if(at.getType() == "Double" || at.getType() == "Integer")
+	    	  if(at.getType().equals("Double") || at.getType().equals( "Integer"))
 	    	  {#>>
-		assertTrue (<<=uClass.getName()>>.get<<=attrName>>() != null)
+		assertTrue (a<<=uClass.getName()>>.get<<=attrName>>() == null);
 	    	  <<#}	    	  
 	    	  if(at.getType() == "Float")
 	    	  {#>>
-		assertTrue (<<=uClass.getName()>>.get<<=attrName>>() != null)	
+		assertTrue (a<<=uClass.getName()>>.get<<=attrName>>() == null);	
 	    	  <<#}
 	    	  if(at.getType() == "Boolean") 
 	    	  {#>>
-		assertTrue (<<=uClass.getName()>>.get<<=attrName>>() != null)
+		assertTrue (a<<=uClass.getName()>>.get<<=attrName>>() == null);
 	    	  <<#}
 	    	  
 	    	  if (at.getType() == "")
@@ -30,6 +41,7 @@ attribute_Lazy <<!<</*attribute_Lazy*/>>
 	    	  
 	    	  else{
 	    		  
+	    	   }
 	    	  }
 #>>
 !>>

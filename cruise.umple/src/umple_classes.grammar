@@ -67,7 +67,7 @@ parameterList : OPEN_ROUND_BRACKET ([[parameter]] ( , [[parameter]] )* )? CLOSE_
 parameter : [[typedName]]
 
 testCase : [=isTimed:before|after]? [=isConcrete:JUnit|PhpUnit|RubyUnit]? [=isOverride:override]? test [~testCaseName] { ( [[assertion]] | [[testAction]] | [[testInit]] | [[testInitAtt]] | [[testInitAttWithMethodCall]] | [[comment]] | [[ifStatement]] | [[forStatement]] )* }
-assertion : [=isTimed:before|after]? [=assertType:assertTrue|assertFalse|assertEqual|assertNull|assertMethod] OPEN_ROUND_BRACKET [**code] CLOSE_ROUND_BRACKET ;
+assertion : [=isTimed:before|after]? [=assertType:assertTrue|assertFalse|assertEqual|assertNull|assertMethod] [**code] ;
 testAction : [~objectName] ( (.)[~methodName] )? OPEN_ROUND_BRACKET  [[testActionParameterList]] CLOSE_ROUND_BRACKET ;
 testMethodCall : [~objectName] ( (.)[~methodName] )? OPEN_ROUND_BRACKET  [[testActionParameterList]] CLOSE_ROUND_BRACKET
 testActionParameterList :  [[testParameter]]? 
@@ -83,7 +83,7 @@ testSequenceEntry : [~name] ( -> [~name] )* ;
 
 //top-level initialization 
 
-testClassInit : test Init  { [**code] } 
+testClassInit : test init  { [**code] } 
 
 
 // Generic test case rules

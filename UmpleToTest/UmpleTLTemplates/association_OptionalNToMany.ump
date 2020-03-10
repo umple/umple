@@ -9,7 +9,7 @@ This file creates the necessary for Optional One To Many Association
         		  /////// Association: -- <<=theirEnd.getMultiplicity().getRange()>> <<=av.getRelatedAssociation().getUmpleClass().getName()>> /////// 
         		  //create ... without ...
         		  Test Create<<=uClass.getName()>>Without<<=av.getRelatedAssociation().getUmpleClass().getName()>> {
-        		  <<=uClass.getName()>> <<=buffName>> = new <<=uClass.getName()>>(); \n",,));
+        		  
         		  AssertF (some<<=av.getRelatedAssociation().getUmpleClass().getName()>>.get<<=theirEnd.getRoleName().toUpperCase()>>()!= null);
         		  }
         		  //replace
