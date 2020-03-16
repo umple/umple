@@ -79,7 +79,7 @@ Organization aOrganization();
               
               
               
-              test replaceOrganizationInPerson { 
+              test replaceMandatoryOneOrganizationInPerson { 
               
                                           
               Organization baOrganization();
@@ -197,7 +197,7 @@ Organization aOrganization();
               
               
               
-              test replacePersonInScore { 
+              test replaceMandatoryOnePersonInScore { 
               
               Organization aOrganization();
 Organization aOrganization();
@@ -273,7 +273,7 @@ Organization aOrganization();
               
               
               
-              test replacePersonInJob { 
+              test replaceMandatoryOnePersonInJob { 
               
               Organization aOrganization();
 Organization aOrganization();

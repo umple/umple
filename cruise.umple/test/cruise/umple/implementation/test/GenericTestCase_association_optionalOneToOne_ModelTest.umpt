@@ -43,7 +43,7 @@ THEN:
               
               
               
-              test replaceLevel3InController { 
+              test replaceMandatoryOneLevel3InController { 
               
                                           
               Level3 baLevel3();
