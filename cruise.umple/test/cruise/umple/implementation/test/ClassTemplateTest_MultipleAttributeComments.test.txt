@@ -5,7 +5,7 @@
 
 ////---- Tests for  MultipleAttributeComments ----/////
 
-Test Foo {
+test Foo {
 
  generate JUnit ;
  
@@ -24,49 +24,69 @@ Test Foo {
 
       test attribute_testAttribute1 {
     
-    assertTrue( foo.setTestAttribute1("RandomString1"));
-    assertTrue( foo.getTestAttribute1() =="RandomString1");
-    assertTrue( foo.setTestAttribute1("RandomString2"));
-    assertTrue( foo.getTestAttribute1()=="RandomString2");
-    assertFalse( foo.getTestAttribute1() =="RandomString1");
+      
+        Foo aFoo("RandomString1","RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aFoo.setTestAttribute1("RandomString1"));
+    assertTrue( aFoo.getTestAttribute1() =="RandomString1");
+    assertTrue( aFoo.setTestAttribute1("RandomString2"));
+    assertTrue( aFoo.getTestAttribute1()=="RandomString2");
+    assertFalse( aFoo.getTestAttribute1() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :testAttribute2
 
       test attribute_testAttribute2 {
     
-    assertTrue( foo.setTestAttribute2("RandomString1"));
-    assertTrue( foo.getTestAttribute2() =="RandomString1");
-    assertTrue( foo.setTestAttribute2("RandomString2"));
-    assertTrue( foo.getTestAttribute2()=="RandomString2");
-    assertFalse( foo.getTestAttribute2() =="RandomString1");
+      
+        Foo aFoo("RandomString1","RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aFoo.setTestAttribute2("RandomString1"));
+    assertTrue( aFoo.getTestAttribute2() =="RandomString1");
+    assertTrue( aFoo.setTestAttribute2("RandomString2"));
+    assertTrue( aFoo.getTestAttribute2()=="RandomString2");
+    assertFalse( aFoo.getTestAttribute2() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :testAttribute3
 
       test attribute_testAttribute3 {
     
-    assertTrue( foo.setTestAttribute3("RandomString1"));
-    assertTrue( foo.getTestAttribute3() =="RandomString1");
-    assertTrue( foo.setTestAttribute3("RandomString2"));
-    assertTrue( foo.getTestAttribute3()=="RandomString2");
-    assertFalse( foo.getTestAttribute3() =="RandomString1");
+      
+        Foo aFoo("RandomString1","RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aFoo.setTestAttribute3("RandomString1"));
+    assertTrue( aFoo.getTestAttribute3() =="RandomString1");
+    assertTrue( aFoo.setTestAttribute3("RandomString2"));
+    assertTrue( aFoo.getTestAttribute3()=="RandomString2");
+    assertFalse( aFoo.getTestAttribute3() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :testAttribute4
 
       test attribute_testAttribute4 {
     
-    assertTrue( foo.setTestAttribute4("RandomString1"));
-    assertTrue( foo.getTestAttribute4() =="RandomString1");
-    assertTrue( foo.setTestAttribute4("RandomString2"));
-    assertTrue( foo.getTestAttribute4()=="RandomString2");
-    assertFalse( foo.getTestAttribute4() =="RandomString1");
+      
+        Foo aFoo("RandomString1","RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aFoo.setTestAttribute4("RandomString1"));
+    assertTrue( aFoo.getTestAttribute4() =="RandomString1");
+    assertTrue( aFoo.setTestAttribute4("RandomString2"));
+    assertTrue( aFoo.getTestAttribute4()=="RandomString2");
+    assertFalse( aFoo.getTestAttribute4() =="RandomString1");
              
-	}
+          
+        	}
 
 
   

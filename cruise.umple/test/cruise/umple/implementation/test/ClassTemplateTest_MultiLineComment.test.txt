@@ -10,7 +10,7 @@ on several lines
 
 ////---- Tests for  ClassTemplateTest_MultiLineComment ----/////
 
-Test Student {
+test Student {
 
  generate JUnit ;
  

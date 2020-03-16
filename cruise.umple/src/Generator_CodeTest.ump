@@ -15,20 +15,42 @@ namespace cruise.umple.compiler;
 class TestGenerator
 {
 depend cruise.umple.compiler.test.*;
+depend java.util.stream.Collectors;
+
+
+
+  private int tempLevel = 0 ;
+  private int nodeTraversalDepth;
+  private int currentHighest = 0;
+  private boolean branchReset = false;
+  private String depCode ="";
+  Random random = new Random();
+  HashMap<String, String> testingCredentialsLookUpMap = new HashMap<String, String>();
 	
   public String translate(String aString)
   {
   
-  	HashMap<String, String> TestingCredentialsLookUpMap = new HashMap<String, String>();
-	    TestingCredentialsLookUpMap.put("AttStringManu", "RandomString1");
-	    TestingCredentialsLookUpMap.put("AttStringManu2", "RandomString2");
-	    TestingCredentialsLookUpMap.put("AttIntManu", "123");
-	    TestingCredentialsLookUpMap.put("AttIntManu2", "321");
-	    TestingCredentialsLookUpMap.put("AttDoubleManu", "123456789");
-	    TestingCredentialsLookUpMap.put("AttDoubleManu2", "987654321");
-	    TestingCredentialsLookUpMap.put("AttfloatManu", "1.2");
-	    TestingCredentialsLookUpMap.put("AttfloatManu2", "213.8765");
-		return TestingCredentialsLookUpMap.get(aString);
+  	//HashMap<String, String> testingCredentialsLookUpMap = new HashMap<String, String>();
+	    testingCredentialsLookUpMap.put("AttStringManu", "RandomString1");
+	    testingCredentialsLookUpMap.put("AttStringManu2", "RandomString2");
+	    testingCredentialsLookUpMap.put("AttIntManu", "123");
+	    testingCredentialsLookUpMap.put("AttIntManu2", "321");
+	    testingCredentialsLookUpMap.put("AttDoubleManu", "123456789");
+	    testingCredentialsLookUpMap.put("AttDoubleManu2", "987654321");
+	    testingCredentialsLookUpMap.put("AttfloatManu", "1.2");
+	    testingCredentialsLookUpMap.put("AttfloatManu2", "213.8765");
+	    testingCredentialsLookUpMap.put("AttDateManu", "Date.valueOf(\"1999-12-12\")");
+	    testingCredentialsLookUpMap.put("AttTimeManu", "Time.valueOf(\"12:59:59\")");
+		return testingCredentialsLookUpMap.get(aString);
+  	
+  }
+  
+  public String addTranslate(String key, String value)
+  {
+    	
+	    testingCredentialsLookUpMap.put(key, value);
+	    
+		return testingCredentialsLookUpMap.get(key);
   	
   }
   
@@ -38,18 +60,61 @@ depend cruise.umple.compiler.test.*;
   	return null;
   	
   } 	
-  public void prepareDependency()
-  {  ClassDependencyTree cTree = new ClassDependencyTree(false, false, null);
+   public void prepareDependency(){
+    
+	    
+	   
+	   ClassDependencyTree cTree = new ClassDependencyTree(false, false);
+	   
+	   List<String> visited = new ArrayList<String>();
      
 	  
 	  for ( UmpleClass uClass : model.getUmpleClasses())
 	  {
+		  if(!visited.contains(uClass.getName()))
+		  {
+		  System.out.println(uClass.getName());
 		  for (Association as : uClass.getAssociations())
 		  {
 			  int i=0;
 			  AssociationEnd myEnd = as.getIsRightNavigable()?as.getEnd(0):as.getEnd(1);
 		      AssociationEnd theirEnd = as.getIsRightNavigable()?as.getEnd(1):as.getEnd(0);
-			  
+		      
+		      //System.out.println("MY End :: "+ myEnd.getMultiplicity().isMany());
+		      //System.out.println("their End :: "+ theirEnd);
+		      
+		      /*if (theirEnd.getMultiplicity().isOne()&& theirEnd.getMultiplicity().isOne())
+		      {
+		    	  //ignore 		    	  
+		    	  /*String name = theirEnd.getClassName();
+		    	  ClassDependencyNode cdn = new ClassDependencyNode(1, true, false, name);
+		    	  cdn.setUmpleClass(uClass);
+		    	  
+		    	  System.out.println("need to Add :: "+ theirEnd.getClassName());		    	  
+		    	  cTree.addClassDependencyNode(cdn);	    	      	  
+		      }
+		      
+		      else */
+		      if (myEnd.getMultiplicity().isOne() && theirEnd.getMultiplicity().isMany())
+		      {   
+		    	  
+		    	  String name = theirEnd.getClassName();
+		    	  ClassDependencyNode cdn = new ClassDependencyNode(1, true, false, myEnd.getClassName());
+		    	  for(UmpleClass dependeeClass : model.getUmpleClasses())
+		    	  {
+		    		  if (dependeeClass.getName().equals(name)){
+		    			  cdn.setUmpleClass(dependeeClass);		    			  
+		    		  }
+		    	  }
+		    	  
+		    	  
+		    	  //System.out.println("need to add "+ myEnd.getClassName() +"  to :: "+ theirEnd.getClassName());		    	  		    	  
+		    	  cTree.addClassDependencyNode(cdn);		    	  		    	  		    	  
+		      }
+		      
+		      
+		      
+		      
 			  if ( theirEnd.getMultiplicity().isMany() && myEnd.getMultiplicity().isMany())
 			  {
 				  
@@ -59,10 +124,59 @@ depend cruise.umple.compiler.test.*;
 			  }
 			  
 		  }
+		  visited.add(uClass.getName());
+		  }
+		  
 	  }
 	  
+	  for (ClassDependencyNode node : cTree.getClassDependencyNodes())
+	  {
+	 // System.out.println("dependee : "+node.getUClassName() +"  object Level : "+ node.getLevel()+" dependent class is:  "+node.getUmpleClass().getName());
 	  
-  }  
+	  }
+	  
+	 // System.out.println("node size ::: " + cTree.getClassDependencyNodes().size());	  	  
+	  
+	  for (UmpleClass uClass : model.getUmpleClasses())
+	  {
+		  if ( uClass.hasClassDependencyNodes())
+		  {
+			  
+			  //System.out.println("Class Name: " + uClass.getName());
+			  //System.out.println("dependee size ::: " + uClass.getClassDependencyNodes().size());
+			  for (ClassDependencyNode dn : uClass.getClassDependencyNodes())
+			  {
+				  
+				//  System.out.println("\t dependee : " + dn.getUClassName());
+			  }
+			  
+			  
+		  }
+		  
+	  }
+  }
+   
+   // process Dependencies for each class and create dependency nodes for each dependency
+  public boolean processDependencyNodes ()
+   {
+	   for ( UmpleClass uClass : model.getUmpleClasses())
+	    {    		    	
+	      if (uClass.hasAssociationVariables())
+	      {
+	    	  for (AssociationVariable av : uClass.getAssociationVariables())
+	    	  {	    		 
+	    		  if (av.isMandatory())
+	    		  {	    			 
+	    			  ClassDependencyNode CDN  = new  ClassDependencyNode(0,false,false, av.getRelatedAssociation().getUmpleClass().getName());
+	    			  uClass.addClassDependencyNode(CDN);
+	    		  }
+	    	  }
+	      }      
+	    	
+	    }
+	   
+	   return true;
+   }
 
   public String writeFile(UmpleClass aClass){
     String className=aClass.getName();
@@ -73,7 +187,7 @@ depend cruise.umple.compiler.test.*;
 	    String path = StringFormatter.addPathOrAbsolute( 
 	                  getModel().getUmpleFile().getPath(), 
 	                            getOutput()) + 
-	                            aClass.getPackageName().replace(".", File.separator)+"/test";  
+	                            aClass.getPackageName().replace(".", File.separator)+"";  
 	    
 	    File file = new File(path);
 	    file.mkdirs();   
@@ -170,6 +284,365 @@ depend cruise.umple.compiler.test.*;
 	   
    }
 
+  //dependency handling 
+  
+  // class leveling
+  public boolean levelClasses(){
+    for (UmpleClass uClass : model.getUmpleClasses())
+    {	   
+    	if(uClass.hasClassDependencyNodes()) {
+    		//System.out.println("NODE ###############:");
+    		//uClass.setLevel(uClass.getLevel()+1);
+    		traverseDependency(uClass);
+    		uClass.setLevel(tempLevel);    		   
+    		tempLevel=0;
+    	/*for (ClassDependencyNode cNode: uClass.getClassDependencyNodes())
+		{
+			if (model.getUmpleClass(cNode.getUClassName()).hasClassDependencyNodes())
+			{			
+				//System.out.println("nested initiation:");
+				//uClass.setLevel(uClass.getLevel()+1);
+				//System.out.println(model.getUmpleClass(cNode.getUClassName()).getName());
+				uClass.setLevel(model.getUmpleClass(cNode.getUClassName()).getLevel());
+			}
+			
+			else {
+			//System.out.println("non-nested initiation:");
+			//System.out.println(model.getUmpleClass(cNode.getUClassName()).getName());
+			}
+			
+		}*/
+    	}
+    	else {
+    		uClass.setLevel(0);
+    	}
+      
+    	//System.out.println("class NAme**: " +uClass.getName());; System.out.println("class level: " +uClass.getLevel());
+    }
+
+	   return false;
+  }
+  
+  
+  public int traverseDependency (UmpleClass inClass) {
+	   
+	   if (inClass.hasClassDependencyNodes())
+	   {
+		   //System.out.println(inClass.getName()+"has nodes");
+		   //inClass.setLevel(inClass.getLevel()+1);
+		   //tempLevel += tempLevel+1;
+		   //tempLevel += tempLevel+1;
+		   nodeTraversalDepth += 1;
+		   for(ClassDependencyNode cNode: inClass.getClassDependencyNodes())
+		   {
+			   //inClass.setLevel(inClass.getLevel()+1);
+			   traverseDependency(model.getUmpleClass(cNode.getUClassName()));
+			   if (nodeTraversalDepth > tempLevel)
+			   {
+				   tempLevel = nodeTraversalDepth;
+			   }
+			   nodeTraversalDepth = 0;
+		   }
+	   }
+	   
+	   else {
+		   //do not increase level, just nothing
+	   }
+	   	   
+	   //ArrayList nodes = (ArrayList) inClass.getClassDependencyNodes();	   	 	   
+	   return 0;
+	   
+   }
+  
+  
+  //class object initiation
+  
+  public String initiateClass(UmpleClass uClass){
+    String code = "";
+    boolean isFirst = true;
+	 
+    
+    
+    //if(uClass.getIsInitialized() != true){
+         
+	 
+     for (Method method: uClass.getMethods())
+	  {
+    	 
+	   if (method.getName().equals(uClass.getName()))
+	   {
+		   
+		   code += "a"+uClass.getName() + "(" ;   
+		   for (MethodParameter methPara : method.getMethodParameters()) {
+	        //System.out.println(method.getName() + "::"+ method.getSignature() );
+			   
+			   
+			   //check and set isList in method Parameters if an attribute is a list 
+			   // an issue where method parameter is not set to isList when multivalue attribute is not initialized
+			   for (Attribute att : uClass.getAttributes())
+			   {
+				   String fixedName = "";				   
+				   
+				   if(att.getIsList() && (methPara.getIsList() == false))
+				   {
+				    fixedName = "a"+StringFormatter.toPascalCase(att.getName());				   				   
+				    //System.out.println(fixedName);
+				   
+				   if(fixedName.equals(methPara.getName()))
+				   {
+						   methPara.setIsList(true);
+						   //System.out.println(methPara.getIsList());
+				   }
+					   
+				   }
+			   }
+			   
+			   
+			   if(!methPara.getIsList())
+			   {
+			   
+			   if(isFirst!= true)
+			   {
+				   code += ",";
+			   }
+			   
+			   if (methPara.getType().equals("String") || methPara.getType().equals(null) )
+			   {
+				   
+				   //translate("AttStringManu")
+				   code +=  "\""+translate("AttStringManu")+"\"" ;
+			   }
+			   
+			   else if (methPara.getType().equals("Integer") || methPara.getType().equals("int"))
+			   {
+				   //code +=  "12345" ;
+				   if (methPara.getIsList())
+				   {
+					   
+				   }
+				   else {
+					   //System.out.println(methPara.getIsList());
+					   code += translate("AttIntManu");
+				   }
+			   }
+			   
+			   else if (methPara.getType().equals("Time") || methPara.getType().equals("time"))
+			   {
+				   //code +=  "12345" ;
+				   code += "\""+ translate("AttTimeManu")+ "\"";
+			   }
+			   
+			   else if (methPara.getType().equals("Date") || methPara.getType().equals("date"))
+			   {
+				   //code +=  "12345" ;
+				   code += "\""+ translate("AttDateManu") + "\"";
+			   }
+			   
+			   else  {
+				   
+				   code += "\""+ "unidentified" + "\"";
+			   }
+			   
+			   }
+			   
+			   
+			   
+			   
+			   
+			   if (isFirst == true)
+			   {
+				   isFirst = false;
+			   }
+			   
+		   }
+		   
+		   
+		   
+		   
+	   }
+	   
+	   
+	   
+	   
+	   
+	  }
+	 
+		 
+	  
+	  
+	  if (isFirst == true)
+	   {
+		   code += "a"+uClass.getName() + "(" ;
+	   }
+	  
+	  for (AssociationVariable av : uClass.getAssociationVariables())
+	  {
+
+		  if ( av.isMandatory() )
+		  {
+			  if (isFirst==false)
+			  {
+				  if(av.isN())
+				  {
+					  for (int x = 1 ; x< av.getMultiplicity().getLowerBound();x++)
+					  {
+					  //code +=  ","+ "a"+av.getRelatedAssociation().getUmpleClass().getName()+x ;
+					  }
+				  }
+				  else {
+				  code +=  ","+ "a"+av.getRelatedAssociation().getUmpleClass().getName() ;
+				  }
+			  }
+			  else 
+			  {
+				  if(av.isN())
+				  {
+					  for (int x = 1 ; x< av.getMultiplicity().getLowerBound();x++)
+					  {
+					  //code += "a"+av.getRelatedAssociation().getUmpleClass().getName()+x ;
+					  }
+				  }
+				  else {
+				  code +=  "a"+av.getRelatedAssociation().getUmpleClass().getName() ;
+				  }
+			  }
+				  
+		  }		  		  
+		  
+	  }
+	  
+	  for (AssociationVariable av : uClass.getAssociationVariables())
+	  {
+		  if (av.isN())
+		  {
+			  if(av.getMultiplicity().isLowerBoundNumeric())
+			  {
+				  int lowerBound = av.getMultiplicity().getLowerBound();
+				  
+				  for (int x = 1 ; x <lowerBound+1 ; x++)
+				  {
+					  if (isFirst == false )
+					  {
+						  code +=  ","+"a"+x+ "a"+av.getRelatedAssociation().getUmpleClass().getName() ;
+					  }
+					  
+					  else {
+						  code += "a"+x + "a"+av.getRelatedAssociation().getUmpleClass().getName() ;
+						  isFirst = false;
+					  }
+				  }
+				  
+			  }
+		  }
+	  }
+	    
+	  
+	  code += ")";
+	  uClass.setIsInitialized(true);
+	  
+   //}
+	  
+	  //System.out.println(code );
+	  
+	  return code;
+	   
+	   	  
+  }
+  
+  
+  
+  // resets initialized objects: use to control scope of objects
+  public void resetInitializedObject ()
+   
+   {
+	   for(UmpleClass uClass : model.getUmpleClasses())
+	   {
+		   uClass.setIsInitialized(false);
+	   }
+	   
+	   
+   }
+  
+  
+  // initiate the whole model with minimum requirements
+   
+   
+   
+	   public String initializeModel(UmpleModel model){
+    String code = "";
+    List<UmpleClass> sortedByLevel = sortClassesByLevel();  
+	
+    for (int x = 0 ; x<sortedByLevel.size(); x ++)
+    {
+    	//code += dependencyInjection(sortedByLevel.get(x));
+    	code += sortedByLevel.get(x).getName()+ " "+ initiateClass(sortedByLevel.get(x)) + "\n";
+    }
+    
+    //System.out.println(code);
+    
+	return code;
+  }
+   
+   
+   
+   
+   // sort Umple classes by dependency level and return a sorted set
+   // Return: sortByLevel::UmpleClasses
+    
+   private List<UmpleClass> sortClassesByLevel() {
+	// TODO sort Umple classes by dependency level and return a sorted set
+		   	  					
+	return model.getUmpleClasses().stream().sorted(Comparator.comparingInt(UmpleClass::getLevel)).collect(Collectors.toList());
+	  	
+}
+   
+   
+   //dependency injection for a class 
+   
+   public String dependencyInjection(UmpleClass uClass) {
+	   String code  = "";
+	   int depth = uClass.getLevel();
+	   
+	   if (uClass.hasClassDependencyNodes()) {
+		   for (ClassDependencyNode cdp : uClass.getClassDependencyNodes())
+		   { 
+			   //UmpleClass depClass = model.getUmpleClass(cdp.getUClassName());			   			   
+			   if (model.getUmpleClass(cdp.getUClassName()).hasClassDependencyNodes())
+			   {
+				   dependencyInjection(model.getUmpleClass(cdp.getUClassName()));
+			   }
+			 depCode += cdp.getUClassName() + " "  + initiateClass(model.getUmpleClass(cdp.getUClassName())) + ";\n";
+			 
+			 for (AssociationVariable av : uClass.getAssociationVariables())
+			 {
+				 
+				 if ( av.getRelatedAssociation().getUmpleClass().getName().equals(cdp.getUClassName()))
+				 { 
+					 
+					 if (av.isN()) {
+						 for (int x = 1 ; x< av.getMultiplicity().getLowerBound()+1;x++)
+						 {
+							 depCode += cdp.getUClassName() + " a"+ x  + initiateClass(model.getUmpleClass(cdp.getUClassName())) + ";\n";
+						 }
+					 }
+				 }
+			 }
+		   }
+	   }
+	   
+	   else 
+	   {
+		   //no dependencies to be resoved code is depCode should be empty
+		   //depCode += uClass.getName() + " "  + initiateClass(uClass) + "\n";
+	   }
+	   	   
+	   code = depCode;
+	   depCode = "";
+	   
+	   return code;
+   }
+
+   
   public void generate()
   {
     StringBuilder code = new StringBuilder();
@@ -183,19 +656,52 @@ depend cruise.umple.compiler.test.*;
     StringBuilder dependClasses = new StringBuilder();
     StringBuilder parameters = new StringBuilder();
 	   Random random;
+	   
+	   
+	   
 
     String packageName;
     List<String> allTypes = new ArrayList<String>();
     List<String> interfacesProcessed = new ArrayList<String>();
-    Map<String, String> TestingCredentialsLookUpMap = new HashMap<String, String>();
-    TestingCredentialsLookUpMap.put("AttStringManu", "id123test");
-    TestingCredentialsLookUpMap.put("AttStringRand", "RANDOMSTRING");
-    TestingCredentialsLookUpMap.put("AttIntManu", "123");
-    TestingCredentialsLookUpMap.put("AttIntRand", "RANDOMINT");
-    TestingCredentialsLookUpMap.put("AttFloatManu", "1.2");
-    TestingCredentialsLookUpMap.put("AttFloatRand", "RANDOMFloat");
-    TestingCredentialsLookUpMap.put("AttBooleanManu", "true");
-    TestingCredentialsLookUpMap.put("AttBooleanRand", "RANDOMBool");
+    
+    //Map<String, String> testingCredentialsLookUpMap = new HashMap<String, String>();
+    /*testingCredentialsLookUpMap.put("AttStringManu", "id123test");
+    testingCredentialsLookUpMap.put("AttStringRand", "RANDOMSTRING");
+    testingCredentialsLookUpMap.put("AttIntManu", "123");
+    testingCredentialsLookUpMap.put("AttIntRand", "RANDOMINT");
+    testingCredentialsLookUpMap.put("AttFloatManu", "1.2");
+    testingCredentialsLookUpMap.put("AttFloatRand", "RANDOMFloat");
+    testingCredentialsLookUpMap.put("AttBooleanManu", "true");
+    testingCredentialsLookUpMap.put("AttBooleanRand", "RANDOMBool");*/
+    
+    testingCredentialsLookUpMap.put("AttStringManu", "RandomString1");
+	    testingCredentialsLookUpMap.put("AttStringManu2", "RandomString2");
+	    testingCredentialsLookUpMap.put("AttIntManu", "123");
+	    testingCredentialsLookUpMap.put("AttIntManu2", "321");
+	    testingCredentialsLookUpMap.put("AttDoubleManu", "123456789");
+	    testingCredentialsLookUpMap.put("AttDoubleManu2", "987654321");
+	    testingCredentialsLookUpMap.put("AttfloatManu", "1.2");
+	    testingCredentialsLookUpMap.put("AttfloatManu2", "213.8765");
+    
+    
+    
+    // Dependency Analysis 
+    
+    
+    
+    // Dependency Analysis 
+
+    //System.out.println(dependencyInjection(model.getUmpleClass(0)));
+    
+    // process and create dependency nodes
+    processDependencyNodes();
+    // calculate the dependency depth level and set classes' level
+    levelClasses();
+    
+    
+    
+    
+    
     code.append("/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */\n");
     code.append("/*PLEASE DO NOT EDIT THIS CODE*/\n");
     code.append("/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/\n\n");
@@ -402,24 +908,24 @@ code.append(StringFormatter.format(" ////---- Tests for  {0} ----/////\n\n",mode
 	    	  	if(av.getType() == "String" || av.getType() == null)
 	    	  {
 	    	  	   String randomString1 = UUID.randomUUID().toString().replaceAll("-","").substring(0, 8);
-	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.set{1}(\"{2}\"));\n",uClass.getName().toLowerCase() , attrName, TestingCredentialsLookUpMap.get("AttStringManu")));
-	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}() ==\"{2}\");\n",uClass.getName().toLowerCase() , attrName, TestingCredentialsLookUpMap.get("AttStringManu")));
+	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.set{1}(\"{2}\"));\n",uClass.getName().toLowerCase() , attrName, testingCredentialsLookUpMap.get("AttStringManu")));
+	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}() ==\"{2}\");\n",uClass.getName().toLowerCase() , attrName, testingCredentialsLookUpMap.get("AttStringManu")));
 	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.set{1}(\"{2}\"));\n",uClass.getName().toLowerCase() , attrName, "RandomString1"));
 	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}(\"{2}\"));\n",uClass.getName().toLowerCase() , attrName, "RandomString1"));
-	    		   code.append(StringFormatter.format("\tAssertFalse( {0}.get{1}() ==\"{2}\");\n",uClass.getName().toLowerCase() , attrName, TestingCredentialsLookUpMap.get("AttStringManu")));
+	    		   code.append(StringFormatter.format("\tAssertFalse( {0}.get{1}() ==\"{2}\");\n",uClass.getName().toLowerCase() , attrName, testingCredentialsLookUpMap.get("AttStringManu")));
 	    	  }
 	    	  
 	    	  if(av.getType().equals("Double") || av.getType().equals("Integer"))
 	    	  {
-	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.set{1}({2}));\n",uClass.getName().toLowerCase() , attrName,TestingCredentialsLookUpMap.get("AttIntManu")));
-	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}() == {2});\n",uClass.getName().toLowerCase() , attrName, TestingCredentialsLookUpMap.get("AttIntManu")));
+	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.set{1}({2}));\n",uClass.getName().toLowerCase() , attrName,testingCredentialsLookUpMap.get("AttIntManu")));
+	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}() == {2});\n",uClass.getName().toLowerCase() , attrName, testingCredentialsLookUpMap.get("AttIntManu")));
 	    		   
 	    	  }
 	    	  
 	    	  if(av.getType().equals("Float"))
 	    	  {
-	    		  code.append(StringFormatter.format("\tAssertTrue( {0}.set{1}({2}));\n",uClass.getName().toLowerCase() , attrName,TestingCredentialsLookUpMap.get("AttFloatManu")));
-	    		  code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}() =={2});\n",uClass.getName().toLowerCase() , attrName, TestingCredentialsLookUpMap.get("AttFloatManu")));
+	    		  code.append(StringFormatter.format("\tAssertTrue( {0}.set{1}({2}));\n",uClass.getName().toLowerCase() , attrName,testingCredentialsLookUpMap.get("AttFloatManu")));
+	    		  code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}() =={2});\n",uClass.getName().toLowerCase() , attrName, testingCredentialsLookUpMap.get("AttFloatManu")));
 	
 	    	  }
 	    	  
@@ -427,7 +933,7 @@ code.append(StringFormatter.format(" ////---- Tests for  {0} ----/////\n\n",mode
 	    	  if(av.getType().equals("Boolean"))
 	    	  {
 	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.(set{1}(true));\n",uClass.getName().toLowerCase() , attrName));
-	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}());\n",uClass.getName().toLowerCase() , attrName, TestingCredentialsLookUpMap.get("AttBooleanManu")));
+	    		   code.append(StringFormatter.format("\tAssertTrue( {0}.get{1}());\n",uClass.getName().toLowerCase() , attrName, testingCredentialsLookUpMap.get("AttBooleanManu")));
 	    		  
 	    	  }
 	    		 
@@ -771,14 +1277,14 @@ static
     OneOrManyLookup.add("attribute");
     OneOrManyLookup.add("parameter");
     
-    HashMap<String, String> TestingCredentialsLookUpMap = new HashMap<String, String>();
-    TestingCredentialsLookUpMap.put("setAttString", "id123");
-    TestingCredentialsLookUpMap.put("getAttString", "id123");
-    TestingCredentialsLookUpMap.put("setAttInt", "123");
-    TestingCredentialsLookUpMap.put("getAttInt", "123");
-    TestingCredentialsLookUpMap.put("setAttInt", "");
-    TestingCredentialsLookUpMap.put("setAttFloat", "");
-    TestingCredentialsLookUpMap.put("setAttBoolean", "");
+    HashMap<String, String> testingCredentialsLookUpMap = new HashMap<String, String>();
+    testingCredentialsLookUpMap.put("setAttString", "id123");
+    testingCredentialsLookUpMap.put("getAttString", "id123");
+    testingCredentialsLookUpMap.put("setAttInt", "123");
+    testingCredentialsLookUpMap.put("getAttInt", "123");
+    testingCredentialsLookUpMap.put("setAttInt", "");
+    testingCredentialsLookUpMap.put("setAttFloat", "");
+    testingCredentialsLookUpMap.put("setAttBoolean", "");
   }	
 
  private String writeModel(){
@@ -789,7 +1295,7 @@ static
       String path = StringFormatter.addPathOrAbsolute( 
 	                  getModel().getUmpleFile().getPath(), 
 	                            getOutput()) + 
-	                            model.getUmpleClass(0).getPackageName().replace(".", File.separator)+"/test";
+	                            model.getUmpleClass(0).getPackageName().replace(".", File.separator)+"";
       File file = new File(path);
       file.mkdirs();
       String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + "_ModelTest.umpt";
@@ -813,5 +1319,8 @@ static
   
   
 }
+
+
+
 
 }

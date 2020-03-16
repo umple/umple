@@ -48,7 +48,7 @@ else{ #>>
 				if (act.getLocOrder() == i)
 				{//include Action Code if there is actions in a TestCAse 
 					#>> 
-					  <<=act.getCode()>>
+					  <<=act.getCode()>>;
 					  <<#
 				}
 				

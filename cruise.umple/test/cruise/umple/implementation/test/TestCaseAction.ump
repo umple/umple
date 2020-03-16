@@ -1,9 +1,55 @@
 generate Test;
 
+class Job {
+ name;
+}
 
-class Person {  
+class Organization {
+
+  
+ //1 -- * Person;
+ 
+ //1 -- * Job;
+
+}
+
+
+class Score {
+Integer score;
+}
+
+
+  // All person cannot have a Coash as a job.
+class Person {    
+   1 -- * Score;
+   1 -- * Job;
+   * -- 1 Organization;
+   
+   
+   
+   test init {   
+      Person p1 ("john" , 123);
+      Job j1 ("Cashier");          
+   }
   
    testSequence ts { checkName -> checkStatus ; }
+  
+ 
+  test checkForLoop {
+  
+  Person p1 (123);
+   
+  ArrayList<Job> jobs = p1.getJobs();
+  Integer size = jobs.size();
+  
+  for (Job job : jobs)
+  {  
+   assertTrue(job.getName() != "Coach");       
+  }
+  
+  
+  
+  }
   
   test checkStatus {
         //something
@@ -15,28 +61,39 @@ class Person {
         String id2 = getGate(id) ;
         p1.openGarage(p1);
         openGarage(p1);        
-        before assertFalse(firstName == "Orlean");
+        before assertFalse(d1.firstName() == "Orlean");
         this.setId("id",id);
         //assertion comment
-        after assertFalse(firstName == "something");
+        after assertFalse(p1.getId() == "something");
         /*multiline comment 
       line comment*/
         }
         
-         before test checkPower {
-          //test code or test class setups, this testcase will be tagged @Before      
+        test checkCashierPromotion {
+                  
+        job1.promote();                 
+        
+        before assertTrue (job.getName == "Cashier");
+        after assertTrue (jobName == "Manager");
+                
+        }
+        
+         before test setUp {
+          //initalize enviroment      
+        }
+        
+        after test teardown {
+          //delete files      
         }
         
         
-        JUnit test checkName {
+        JUnit concrete test checkName {
         //test code 
         
         }
         
         
-        test Init {
-        Person p1 ("john" , 123);          
-        }
+        
         
         
      garageDoor{

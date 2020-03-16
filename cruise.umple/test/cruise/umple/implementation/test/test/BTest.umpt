@@ -1,0 +1,70 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  attribute ----/////
+
+test B {
+
+ generate JUnit ;
+ 
+ depend  A,B ; 
+
+
+
+ 
+ GIVEN:
+ attribute.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :name
+
+      test attribute_name {
+    
+      
+        B aB("RandomString1","RandomString1","RandomString1");
+    assertTrue( aB.setName("RandomString1"));
+    assertTrue( aB.getName() =="RandomString1");
+    assertTrue( aB.setName("RandomString2"));
+    assertTrue( aB.getName()=="RandomString2");
+    assertFalse( aB.getName() =="RandomString1");
+             
+	}
+
+ //tests for :address
+
+      test attribute_address {
+    
+      
+        B aB("RandomString1","RandomString1","RandomString1");
+    assertTrue( aB.setAddress("RandomString1"));
+    assertTrue( aB.getAddress() =="RandomString1");
+    assertTrue( aB.setAddress("RandomString2"));
+    assertTrue( aB.getAddress()=="RandomString2");
+    assertFalse( aB.getAddress() =="RandomString1");
+             
+	}
+
+ //tests for :id
+
+      test attribute_id {
+    
+      
+        B aB("RandomString1","RandomString1","RandomString1");
+    assertTrue( aB.setId("RandomString1"));
+    assertTrue( aB.getId() =="RandomString1");
+    assertTrue( aB.setId("RandomString2"));
+    assertTrue( aB.getId()=="RandomString2");
+    assertFalse( aB.getId() =="RandomString1");
+             
+	}
+
+
+  
+ 
+   
+
+}

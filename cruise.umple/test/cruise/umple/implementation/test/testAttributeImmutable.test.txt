@@ -5,7 +5,7 @@
 
 ////---- Tests for  immutableAttribute ----/////
 
-Test ImmutableA {
+test ImmutableA {
 
  generate JUnit ;
  
@@ -22,12 +22,14 @@ Test ImmutableA {
  THEN:
   //tests for :id
 
-      test attribute_id {
+      test attribute_immutable_id {
     
           
 
-    AssertMethodFalse( immutablea.setId());
-    AssertTrue( immutablea.getId() == "someId");
+    
+        ImmutableA aImmutableA();
+    //assertMethod(setId());
+    assertTrue( aImmutableA.getId() == "someId");
 
 
         	}

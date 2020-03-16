@@ -1,11 +1,18 @@
 package cruise.umple.implementation.test;
 
 import java.io.File;
+import java.lang.reflect.Field;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.JUnitCore;
+import org.junit.internal.TextListener;
+import org.junit.runner.Result;
+//import com.ibm.icu.util.BytesTrie.Result;
+import org.junit.runner.notification.Failure;
+
 import cruise.umple.implementation.ClassTemplateTest;
 import cruise.umple.util.SampleFileWriter;
 
@@ -28,7 +35,7 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    super.tearDown();
 	    
 	    //SampleFileWriter.destroy(pathToInput + "/test/Test.umpt");
-	    SampleFileWriter.destroy(pathToInput + "/test/test");
+	    //SampleFileWriter.destroy(pathToInput + "/test/test");
 	    SampleFileWriter.destroy(pathToInput + "/test/FooTest.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/Bar1Test.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/Bar2Test.umpt");
@@ -60,6 +67,55 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    
 	  }
 	  
+	  public static void main (String[] args)
+	  {
+	     JUnitCore  junit = new JUnitCore();
+	     junit.addListener(new TextListener(System.out));
+	     org.junit.runner.Result result = junit.run(TestTemplateTest.class);
+	     
+	     TestTemplateTest testClass = new TestTemplateTest();
+	     
+	     
+	     
+	     resultReport(result);
+	     
+	     
+	     if(result.wasSuccessful())
+	     {
+	    	 System.out.println("test has successfully passed");
+	     }
+	     
+	     
+	     
+	     else {
+	    	 double y = result.getFailureCount();
+		     double z = result.getRunCount();	 
+	     int x = (int) ((y/z)  * 100)  ;
+	     for (Failure f : result.getFailures())
+	     {	    	 
+	     System.out.println(f.getDescription() + "failed");
+	     }
+	     
+	     System.out.println("Mutation Score: "+ x);
+	     }
+	     
+	     
+	     
+	     for(Field field : TestTemplateTest.class.getDeclaredFields() )
+	     {
+	    	 System.out.println(field.getName());
+	     }
+	     
+	     
+	  }
+	  
+	  public static void resultReport(Result result) {
+		    System.out.println("Finished. Result: Failures: " +
+		      result.getFailureCount() + ". Ignored: " +
+		      result.getIgnoreCount() + ". Tests run: " +
+		      result.getRunCount() + ". Time: " +
+		      result.getRunTime() + "ms.");
+		}
 	  
 	  @Test 
 	  public void Attribute()
@@ -282,6 +338,42 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    
 	  }
 	  
+	  @Test
+	  public void ifStatement_Test()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/ifStatementTest.ump","test/testIfStatementTest.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/ifStatementTest.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/ifStatementTest_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void ifElseStatement_Test()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/ifElseStatementTest.ump","test/testIfElseStatementTest.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/ifElseStatementTest.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/ifElseStatementTest_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void elseStatement_Test()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/elseStatementTest.ump","test/testElseStatementTest.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/elseStatementTest.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/elseStatementTest_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
 	  
 	  @Test
 	  public void abstractTest()
@@ -291,6 +383,18 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
 	    createUmpleSystem(pathToInput, "test/TestCase_AbstractTest.ump");
 	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/TestCase_AbstractTest_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void fatherTest()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/TestCase_AnscestralTest.ump","test/testAnscestralAbstractTest.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/TestCase_AnscestralTest.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/TestCase_AnscestralTest_ModelTest.umpt")).exists());
 	   
 	    
 	  }
@@ -355,6 +459,160 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    
 	  }
 	  
-	 
+	  @Test
+	  public void genericTestCaseTest_association()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_association.ump","test/testGenericTestcase_association.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_association.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_ModelTest.umpt")).exists());
+	   
+	    
+	  }
 	  
+	  @Test
+	  public void genericTestCaseTest_association_toSingular()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_association_toSingular.ump","test/testGenericTestcase_association_toSingular.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyassociation_toSingular_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_association_toSingular.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_toSingular_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  
+	  @Test
+	  public void genericTestCaseTest_association_oneToMany()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_association_oneToMany.ump","test/testGenericTestcase_association_oneToMany.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyassociation_oneToMany_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_association_oneToMany.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_oneToMany_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void genericTestCaseTest_association_OptionalOneToMany()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_association_optionalOneToMany.ump","test/testGenericTestcase_association_optionalOneToMany.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyassociation_OptionalOneToMany_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_association_optionalOneToMany.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_optionalOneToMany_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void genericTestCaseTest_association_OptionalOneToOne()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_association_optionalOneToOne.ump","test/testGenericTestcase_association_optionalOneToOne.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToOneassociation_OptionalOneToOne_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_association_optionalOneToOne.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_optionalOneToOne_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void genericTestCaseTest_association_OptionalOneToOne_RNav()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_association_optionalOneToOne_RNav.ump","test/testGenericTestcase_association_optionalOneToOne_RNav.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToOne_RNavassociation_OptionalOneToOne_RNav_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_association_optionalOneToOne_RNav.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_optionalOneToOne_RNav_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  
+	  @Test
+	  public void genericTestCaseTest_association_ManyToMany()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_association_manyToMany.ump","test/testGenericTestcase_association_manyToMany.test.txt");	    
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_association_manyToMany.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_manyToMany_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void genericTestCaseTest_association_ManyToMany_RNav()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_association_manyToMany_RNav.ump","test/testGenericTestcase_association_manyToMany_RNav.test.txt");	    
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_association_manyToMany_RNav.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_manyToMany_RNav_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  
+	  @Test
+	  public void genericTestCaseTest_association_oneToMany_RNav()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_association_oneToMany_RNav.ump","test/testGenericTestcase_association_oneToMany_RNav.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToMany_RNavassociation_oneToMany_RNav_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_association_oneToMany_RNav.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_oneToMany_RNav_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void genericTestCaseTest_association_optionalOneToMany_RNav()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_association_optionalOneToMany_RNav.ump","test/testGenericTestcase_association_optionalOneToMany_RNav.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToMany_RNavassociation_optionalOneToMany_RNav_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_association_optionalOneToMany_RNav.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_association_optionalOneToMany_RNav_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void genericTestCaseTest_attribute_prefix()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_attribute_prefix.ump","test/testGenericTestcase_attribute_prefix.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_attribute_prefix.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_attribute_prefix_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	  
+	  @Test
+	  public void genericTestCaseTest_attribute_suffix()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_attribute_suffix.ump","test/testGenericTestcase_attribute_suffix.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_attribute_suffix.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_attribute_suffix_ModelTest.umpt")).exists());
+	   
+	    
+	  }
+	 
+	  @Test
+	  public void genericTestCaseTest_attribute_regex()
+	  {
+	    language = "Test";
+	    assertUmpleTemplateFor("test/GenericTestCase_attribute_regex.ump","test/testGenericTestcase_attribute_regex.test.txt");
+	    //Assert.assertEquals(true, (new File(pathToInput  + "/test/test/NNToManyAssociation_ModelTest.umpt")).exists());
+	    createUmpleSystem(pathToInput, "test/GenericTestCase_attribute_regex.ump");
+	    Assert.assertEquals(true, (new File(pathToInput  + "/test/test/GenericTestCase_attribute_regex_ModelTest.umpt")).exists());
+	   
+	    
+	  }
 }

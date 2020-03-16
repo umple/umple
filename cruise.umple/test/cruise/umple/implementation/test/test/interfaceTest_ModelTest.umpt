@@ -1,0 +1,87 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  interfaceTest ----/////
+
+test interfaceTest.ump {
+depend  Person,CorporateClient,IndividualStudent,Course ; 
+
+
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Person       */
+  /*-------------------------*/
+
+              /////// Association: -- [0,*] CorporateClient /////// 
+              //create ... without ...
+              test removeCorporateClient {
+              
+              Person aPerson("RandomString1");
+              
+              
+              CorporateClient aCorporateClient();
+              aPerson.addCorporateClient(aCorporateClient);
+              aPerson.removeCorporateClient(aCorporateClient);
+              
+              assertTrue (aPerson.getcorporateClientAt(0) == null);
+              }
+              
+              
+              
+  /*-------------------------*/
+  /*  Class CorporateClient       */
+  /*-------------------------*/
+
+              /////// Association: -- [0,1] Person /////// 
+              //create ... without ...
+              Test CreateCorporateClientWithoutPerson {
+              CorporateClient someCorporateClient = new CorporateClient();
+              AssertTrue (somePerson.getCORPORATECLIENT()!= null);
+              }
+              //replace
+              
+              Test ReplacePersonInCorporateClient { 
+              
+              Person somePerson = new Person(); 
+              Person somePerson2 = new Person();
+              somePerson.addPerson(someCorporateClient);
+              AssertEqual (1, somePerson.getNumberOfCorporateClients());
+              AssertEqual (1, somePerson.getNumberOfCorporateClients());
+              someCorporateClient.setPerson(somePerson2);
+              AssertEqual (someCorporateClient, somePerson2.getCorporateClient(0));
+              }
+              //delete
+              Test DeletePerson {
+              // delete Person in CorporateClient
+              somePerson2.delete(); 
+              AssertEqual (null, somePerson2.getCorporateClient(0));
+              }
+              //add to new B
+              
+              Test AddPersonToNewCorporateClient { 
+              Person somePerson = new Person();
+              Person somePerson2 = new Person();
+      
+              CorporateClient someCorporateClient = new CorporateClient();
+              somePerson.addPerson(somePerson);
+              somePerson.addPerson(somePerson2);  
+        
+              AssertEqual(somePerson2, somePerson.getPerson(); 
+              AssertEqual (somePerson, somePerson2.getCorporateClient(0));
+              AssertEqual (somePerson, somePerson.getNumberOfCorporateClients());
+              }  /*-------------------------*/
+  /*  Class IndividualStudent       */
+  /*-------------------------*/
+
+  /*-------------------------*/
+  /*  Class Course       */
+  /*-------------------------*/
+ 
+ 
+
+ }

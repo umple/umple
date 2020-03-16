@@ -5,7 +5,7 @@
 
 ////---- Tests for  ClassTemplateTest_Depend ----/////
 
-Test Mentor {
+test Mentor {
 
  generate JUnit ;
  

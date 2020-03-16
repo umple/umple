@@ -1,0 +1,40 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association_optionalOneToOne ----/////
+
+Test EmployeeRole {
+
+ generate JUnit ;
+ 
+ depend  Airline,RegularFlight,SpecificFlight,PassengerRole,EmployeeRole,Person,PersonRole,Booking ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_association_optionalOneToOne.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :jobFunction
+
+      test attribute_jobFunction {
+    
+    assertTrue( employeerole.setJobFunction("RandomString1"));
+    assertTrue( employeerole.getJobFunction() =="RandomString1");
+    assertTrue( employeerole.setJobFunction("RandomString2"));
+    assertTrue( employeerole.getJobFunction()=="RandomString2");
+    assertFalse( employeerole.getJobFunction() =="RandomString1");
+             
+	}
+
+
+  
+ 
+   
+
+}

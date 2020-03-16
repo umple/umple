@@ -1,0 +1,23 @@
+
+
+class Person {
+  name;
+  Integer id;
+  Job;
+  
+  
+  test checkIfStatement {
+  
+  String tempId = p1.getId();
+  String job = p1.getJob();
+  
+  if (tempId == 1324 )
+  {
+  	   assertTrue (job.getName() == "Saleman");
+  
+  }
+    
+  
+  } 
+  
+}

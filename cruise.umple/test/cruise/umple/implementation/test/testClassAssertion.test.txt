@@ -5,7 +5,7 @@
 
 ////---- Tests for  ClassAssertion ----/////
 
-Test ClassAssertion {
+test ClassAssertion {
 
  generate JUnit ;
  
@@ -24,25 +24,35 @@ Test ClassAssertion {
 
       test attribute_number {
     
-      assertTrue( classassertion.setNumber(123)));
-      assertTrue( classassertion.getNumber() == 123));
-      assertTrue( classassertion.setNumber(321)));
-      assertTrue( classassertion.getNumber() == 321));
-      assertFlase( classassertion.getNumber() == 123));
+      
+        ClassAssertion aClassAssertion();
+       assertEqual(aClassAssertion.getNumber(), 321 );        
+            
+      assertTrue( aClassAssertion.setNumber(123));
+      assertTrue( aClassAssertion.getNumber() == 123);
+      assertTrue( aClassAssertion.setNumber(321));
+      assertTrue( aClassAssertion.getNumber() == 321);
+      assertFalse( aClassAssertion.getNumber() == 123);
           
-	}
+          
+        	}
 
  //tests for :number2
 
       test attribute_number2 {
     
-      assertTrue( classassertion.setNumber2(123)));
-      assertTrue( classassertion.getNumber2() == 123));
-      assertTrue( classassertion.setNumber2(321)));
-      assertTrue( classassertion.getNumber2() == 321));
-      assertFlase( classassertion.getNumber2() == 123));
+      
+        ClassAssertion aClassAssertion();
+       assertEqual(aClassAssertion.getNumber2(), 10 );        
+            
+      assertTrue( aClassAssertion.setNumber2(123));
+      assertTrue( aClassAssertion.getNumber2() == 123);
+      assertTrue( aClassAssertion.setNumber2(321));
+      assertTrue( aClassAssertion.getNumber2() == 321);
+      assertFalse( aClassAssertion.getNumber2() == 123);
           
-	}
+          
+        	}
 
 
       //------------------

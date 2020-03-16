@@ -5,7 +5,7 @@
 
 ////---- Tests for  ClassTemplateTest_CodeInjectionsSingleLine ----/////
 
-Test Student {
+test Student {
 
  generate JUnit ;
  

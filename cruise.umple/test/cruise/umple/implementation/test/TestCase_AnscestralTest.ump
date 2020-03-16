@@ -15,6 +15,7 @@ class Student {
   
    isA Person;  
    
+   test checkId{
    
-  
+   }  
 }  

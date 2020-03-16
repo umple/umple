@@ -5,11 +5,11 @@
 
 ////---- Tests for  GenericTestCase_Integer ----/////
 
-Test Person {
+test Student {
 
  generate JUnit ;
  
- depend  Person ; 
+ depend  Student ; 
 
 
 
@@ -20,41 +20,56 @@ Test Person {
  
  
  THEN:
-  //tests for :id
+  //tests for :studentId
 
-      test attribute_id {
+      test attribute_studentId {
     
-      assertTrue( person.setId(123)));
-      assertTrue( person.getId() == 123));
-      assertTrue( person.setId(321)));
-      assertTrue( person.getId() == 321));
-      assertFlase( person.getId() == 123));
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aStudent.setStudentId("RandomString1"));
+    assertTrue( aStudent.getStudentId() =="RandomString1");
+    assertTrue( aStudent.setStudentId("RandomString2"));
+    assertTrue( aStudent.getStudentId()=="RandomString2");
+    assertFalse( aStudent.getStudentId() =="RandomString1");
+             
           
-	}
+        	}
 
  //tests for :name
 
       test attribute_name {
     
-    assertTrue( person.setName("RandomString1"));
-    assertTrue( person.getName() =="RandomString1");
-    assertTrue( person.setName("RandomString2"));
-    assertTrue( person.getName()=="RandomString2");
-    assertFalse( person.getName() =="RandomString1");
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aStudent.setName("RandomString1"));
+    assertTrue( aStudent.getName() =="RandomString1");
+    assertTrue( aStudent.setName("RandomString2"));
+    assertTrue( aStudent.getName()=="RandomString2");
+    assertFalse( aStudent.getName() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :address
 
       test attribute_address {
     
-    assertTrue( person.setAddress("RandomString1"));
-    assertTrue( person.getAddress() =="RandomString1");
-    assertTrue( person.setAddress("RandomString2"));
-    assertTrue( person.getAddress()=="RandomString2");
-    assertFalse( person.getAddress() =="RandomString1");
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aStudent.setAddress("RandomString1"));
+    assertTrue( aStudent.getAddress() =="RandomString1");
+    assertTrue( aStudent.setAddress("RandomString2"));
+    assertTrue( aStudent.getAddress()=="RandomString2");
+    assertFalse( aStudent.getAddress() =="RandomString1");
              
-	}
+          
+        	}
 
 
       //------------------
@@ -62,12 +77,43 @@ Test Person {
       //------------------
 
       
-      test checkifLogged_id {
-        Person p1 ( "S1425", "John", "Ottawa") ;        
-        String valueToCheck = p1.getId();  
-        ps1.getValue(id);    
-        boolean isLogged =  p1.checkIsLogged(valueToCheck);        
-        assertTrue(logged == "true");
+      test checkifLogged_studentId {
+        Student st1 ( "S1425", "John", "Ottawa") ;        
+        String valueToCheck = st1.getStudentId();  
+        st1.getValue(studentId);    
+        boolean isLogged =  st1.checkIsLogged(valueToCheck);        
+        
+        //list assertions
+        }
+      
+      
+      
+      
+        
+    
+      
+      test checkifLogged_name {
+        Student st1 ( "S1425", "John", "Ottawa") ;        
+        String valueToCheck = st1.getName();  
+        st1.getValue(name);    
+        boolean isLogged =  st1.checkIsLogged(valueToCheck);        
+        
+        //list assertions
+        }
+      
+      
+      
+      
+        
+    
+      
+      test checkifLogged_address {
+        Student st1 ( "S1425", "John", "Ottawa") ;        
+        String valueToCheck = st1.getAddress();  
+        st1.getValue(address);    
+        boolean isLogged =  st1.checkIsLogged(valueToCheck);        
+        
+        //list assertions
         }
       
       

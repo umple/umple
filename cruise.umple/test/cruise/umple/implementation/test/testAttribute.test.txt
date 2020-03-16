@@ -5,7 +5,7 @@
 
 ////---- Tests for  attribute ----/////
 
-Test A {
+test A {
 
  generate JUnit ;
  
@@ -24,49 +24,64 @@ Test A {
 
       test attribute_id {
     
-    assertTrue( a.setId("RandomString1"));
-    assertTrue( a.getId() =="RandomString1");
-    assertTrue( a.setId("RandomString2"));
-    assertTrue( a.getId()=="RandomString2");
-    assertFalse( a.getId() =="RandomString1");
+      
+        A aA("RandomString1",123,"unidentified","unidentified");
+        
+        
+    assertTrue( aA.setId("RandomString1"));
+    assertTrue( aA.getId() =="RandomString1");
+    assertTrue( aA.setId("RandomString2"));
+    assertTrue( aA.getId()=="RandomString2");
+    assertFalse( aA.getId() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :number
 
       test attribute_number {
     
-      assertTrue( a.setNumber(123)));
-      assertTrue( a.getNumber() == 123));
-      assertTrue( a.setNumber(321)));
-      assertTrue( a.getNumber() == 321));
-      assertFlase( a.getNumber() == 123));
+      
+        A aA("RandomString1",123,"unidentified","unidentified");        
+            
+      assertTrue( aA.setNumber(123));
+      assertTrue( aA.getNumber() == 123);
+      assertTrue( aA.setNumber(321));
+      assertTrue( aA.getNumber() == 321);
+      assertFalse( aA.getNumber() == 123);
           
-	}
+          
+        	}
 
  //tests for :number2
 
       test attribute_number2 {
     
-      assertTrue( a.setNumber2(null)));
-      assertTrue( a.getNumber2() == null));
-      assertTrue( a.setNumber2(null)));
-      assertTrue( a.getNumber2() == null));
-      assertFlase( a.getNumber2() == null));
+      
+        A aA("RandomString1",123,"unidentified","unidentified");    
+      assertTrue( aA.setNumber2(null));
+      assertTrue( aA.getNumber2() == null);
+      assertTrue( aA.setNumber2(null));
+      assertTrue( aA.getNumber2() == null);
+      assertFalse( aA.getNumber2() == null);
           
-	}
+          
+        	}
 
  //tests for :number3
 
       test attribute_number3 {
     
-      assertTrue( a.setNumber3(123456789)));
-      assertTrue( a.getNumber3() == 123456789));
-      assertTrue( a.setNumber3(987654321)));
-      assertTrue( a.getNumber3() == 987654321));
-      assertFlase( a.getNumber3() == 123456789));
+      
+        A aA("RandomString1",123,"unidentified","unidentified");    
+      assertTrue( aA.setNumber3(123456789));
+      assertTrue( aA.getNumber3() == 123456789);
+      assertTrue( aA.setNumber3(987654321));
+      assertTrue( aA.getNumber3() == 987654321);
+      assertFalse( aA.getNumber3() == 123456789);
           
-	}
+          
+        	}
 
 
   
@@ -81,7 +96,7 @@ Test A {
 
 ////---- Tests for  attribute ----/////
 
-Test B {
+test B {
 
  generate JUnit ;
  
@@ -100,25 +115,52 @@ Test B {
 
       test attribute_name {
     
-    assertTrue( b.setName("RandomString1"));
-    assertTrue( b.getName() =="RandomString1");
-    assertTrue( b.setName("RandomString2"));
-    assertTrue( b.getName()=="RandomString2");
-    assertFalse( b.getName() =="RandomString1");
+      
+        B aB("RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aB.setName("RandomString1"));
+    assertTrue( aB.getName() =="RandomString1");
+    assertTrue( aB.setName("RandomString2"));
+    assertTrue( aB.getName()=="RandomString2");
+    assertFalse( aB.getName() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :address
 
       test attribute_address {
     
-    assertTrue( b.setAddress("RandomString1"));
-    assertTrue( b.getAddress() =="RandomString1");
-    assertTrue( b.setAddress("RandomString2"));
-    assertTrue( b.getAddress()=="RandomString2");
-    assertFalse( b.getAddress() =="RandomString1");
+      
+        B aB("RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aB.setAddress("RandomString1"));
+    assertTrue( aB.getAddress() =="RandomString1");
+    assertTrue( aB.setAddress("RandomString2"));
+    assertTrue( aB.getAddress()=="RandomString2");
+    assertFalse( aB.getAddress() =="RandomString1");
              
-	}
+          
+        	}
+
+ //tests for :id
+
+      test attribute_id {
+    
+      
+        B aB("RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aB.setId("RandomString1"));
+    assertTrue( aB.getId() =="RandomString1");
+    assertTrue( aB.setId("RandomString2"));
+    assertTrue( aB.getId()=="RandomString2");
+    assertFalse( aB.getId() =="RandomString1");
+             
+          
+        	}
 
 
   

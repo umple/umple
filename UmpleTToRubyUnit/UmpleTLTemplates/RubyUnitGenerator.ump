@@ -5,6 +5,7 @@ use where_init.ump;
 use members_AllTestCases.ump;
 use members_AllAssertions.ump;
 use testcase_init.ump;
+use depends.ump;
 
 
 
@@ -19,6 +20,7 @@ class RubyUnitGenerator {
     depend java.util.*;
 	depend cruise.umple.testgenerator.*;
 	depend cruise.umple.testgenerator.Action;
+	depend cruise.umple.testgenerator.Depend;
 
     isA ILang;
 
@@ -62,13 +64,14 @@ class RubyUnitGenerator {
 <<#// if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).getIsInline()) {append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else { append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} } #>>
 
 require 'test/unit'
+<<@UmpleTToRubyUnit.depends>>
 
 ######---- Tests for  <<=model.getFile()>> ----#####
 
 module <<=model.getFile().subSequence(0, model.getFile().length()-4)+"Module">>
 
 	class <<=model.getFile().subSequence(0, model.getFile().length()-4)>>Test  
-		 <<@UmpleTToRubyUnit.where_init >>
+		 <<@UmpleTToRubyUnit.where_init>>
 		 <<@UmpleTToRubyUnit.members_Setup>>
 		 <<@UmpleTToRubyUnit.members_TearDown>>
 		 <<@UmpleTToRubyUnit.members_AllTestCases>>

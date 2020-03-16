@@ -5,7 +5,7 @@
 
 ////---- Tests for  AttributeInlineComment ----/////
 
-Test Foo {
+test Foo {
 
  generate JUnit ;
  
@@ -24,13 +24,18 @@ Test Foo {
 
       test attribute_bar {
     
-    assertTrue( foo.setBar("RandomString1"));
-    assertTrue( foo.getBar() =="RandomString1");
-    assertTrue( foo.setBar("RandomString2"));
-    assertTrue( foo.getBar()=="RandomString2");
-    assertFalse( foo.getBar() =="RandomString1");
+      
+        Foo aFoo("RandomString1");
+        
+        
+    assertTrue( aFoo.setBar("RandomString1"));
+    assertTrue( aFoo.getBar() =="RandomString1");
+    assertTrue( aFoo.setBar("RandomString2"));
+    assertTrue( aFoo.getBar()=="RandomString2");
+    assertFalse( aFoo.getBar() =="RandomString1");
              
-	}
+          
+        	}
 
 
   

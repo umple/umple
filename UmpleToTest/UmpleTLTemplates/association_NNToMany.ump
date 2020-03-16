@@ -4,76 +4,41 @@ class UmpleToTest {
 /*
 This file creates the necessary for Optional One To Many Association 
 */
-
+				  String myClass = uClass.getName();
+  				  String otherClass = av.getRelatedAssociation().getUmpleClass().getName();
   				  String buffName = "some" +uClass.getName();#>>
-        		  /////// Association: -- <<=theirEnd.getMultiplicity().getRange()>> <<=theirEnd.getClassName()>> /////// 
+        		  /////// Association: -- <<=av.getRelatedAssociation().getMultiplicity().getRange()>> <<=av.getRelatedAssociation().getUmpleClass().getName()>> /////// 
         		  //create ... without ...
-        		  test Create<<=uClass.getName()>>Without<<=theirEnd.getClassName()>> {
-        		  <<=uClass.getName()>> <<=buffName>> ();
-        		  assertFalse (some<<=theirEnd.getClassName()>>.get<<=theirEnd.getRoleName().toUpperCase()>>()!= null);
-        		  }
-        		  //replace
-        		  <<#buffName = "some"+theirEnd.getClassName();#>>
-        		  test Replace<<=theirEnd.getClassName()>>In<<=uClass.getName()>> { 
+        		  test create<<=uClass.getName()>>Without<<=av.getRelatedAssociation().getUmpleClass().getName()>> {
         		  
-        		  <<=theirEnd.getClassName()>> <<=buffName>> (); 
-        		  <<=theirEnd.getClassName()>> <<=buffName>>2 ();
-        		  <<=buffName>>.add<<=theirEnd.getClassName()>>(some<<=myEnd.getClassName()>>);
-        		  assertEqual (1, <<=buffName>>.getNumberOf<<=myEnd.getClassName()>>s());        		  
-        		  some<<=myEnd.getClassName()>>.set<<=theirEnd.getClassName()>>(<<=buffName>>2);
-        		  assertEqual (some<<=myEnd.getClassName()>>, <<=buffName>>2.get<<=myEnd.getClassName()>>(0));
-        		  }
-        		  //delete
-        		  test Delete<<=theirEnd.getClassName()>> {
-        		   
-        		   <<=theirEnd.getClassName()>> <<=buffName>> (); 
-        		  <<=theirEnd.getClassName()>> <<=buffName>>2 ();
-        		  <<=buffName>>.add<<=theirEnd.getClassName()>>(some<<=myEnd.getClassName()>>);
+        		  <<=gen.dependencyInjection(uClass)>>
+        		  <<=myClass>> <<=gen.initiateClass(uClass)>>;        		  
         		  
-        		  // delete <<=theirEnd.getClassName()>> in <<=uClass.getName()>>
-        		  <<=buffName>>2.delete(); 
-        		  assertEqual (null, <<=buffName>>2.get<<=myEnd.getClassName()>>(0));
-        		  }
-        		  //boundary test
-        		  
-        		  test BoundaryTest {
-        		  Integer size = <<=theirEnd.getClassName()>>.getNumberOf<<=uClass.getName()>>s(); 
-        		  assertTrue ( size > <<=myEnd.getMultiplicity().getLowerBound()>>);
-        		  assertTrue (  size < <<=myEnd.getMultiplicity().getUpperBound()>>); 
-        		  
+        		  assertEqual (a<<=uClass.getName()>>.numberOf<<=otherClass>>s() , <<=av.getMultiplicity().getLowerBound()>> );
         		  }
         		  
-        		  test BoundaryAtMax {
+        		  test overFlowIn<<=uClass.getName()>>For<<=av.getRelatedAssociation().getUmpleClass().getName()>> {
         		  
-        		  <<#int size = theirEnd.getMultiplicity().getUpperBound();
-        		  	int i =0;
-        		  	int lowerBound = theirEnd.getMultiplicity().getLowerBound();
-        		  	StringBuilder initObjects = new StringBuilder();#>>
-        		  	
-        		  	
-        		  	<<#for ( i = 1; i <= lowerBound; i++){
-        		  	initObjects.append(StringFormatter.format("obj{0},",i));}
-        		  	
-        		  	
-        		  	#>>
+        		  <<=gen.dependencyInjection(uClass)>>
+        		  <<=myClass>> <<=gen.initiateClass(uClass)>>;  
         		  
-        		  //Maximum <<=uClass.getName()>> allowed : <<=size>>
-        		  Integer size = <<=theirEnd.getClassName()>>.getNumberOf<<=uClass.getName()>>s();
+        		  assertFalse(a<<=myClass>>.add<<=otherClass>>(a<<=otherClass>>));      		  
         		  
-        		  <<#for ( i = 1; i <= lowerBound; i++){#>>
-        		  <<=uClass.getName()>> obj<<=i>> ();<<#}#>>
+        		  assertEqual (a<<=uClass.getName()>>.numberOf<<=otherClass>>s() , <<=av.getMultiplicity().getLowerBound()>> );
+        		  }
         		  
-        		  <<=theirEnd.getClassName()>> <<=buffName>> = new <<=theirEnd.getClassName()>>(<<=initObjects.toString()>>);
-
-        		  <<#for ( i = <<=lowerBound>>; i <= size; i++){#>>
-        		  <<=uClass.getName()>> obj<<=i>> (<<=buffName>>);<<#}#>>
+        		  test belowBoundaryIn<<=uClass.getName()>>For<<=av.getRelatedAssociation().getUmpleClass().getName()>> {
         		  
-        		  assertEqual(size, <<=buffName>>.getNumberOf<<=uClass.getName()>>s());<<#
-        		  for (i = 1; i <= size; i++) {#>>
-        		  assertEqual(<<=buffName>>, obj<<=i>>.getSome<<=uClass.getName()>>(0));<<#}#>>
+        		  <<=gen.dependencyInjection(uClass)>>
+        		  <<=myClass>> <<=gen.initiateClass(uClass)>>;  
+        		  
+        		  assertFalse(a<<=myClass>>.remove<<=otherClass>>(a2a<<=otherClass>>));      		  
+        		  
+        		  assertEqual (a<<=uClass.getName()>>.numberOf<<=otherClass>>s() , <<=av.getMultiplicity().getLowerBound()>> );
+        		  }
         		  
         		  
-        		  }<<#
+        		  <<#
   
   
 #>>!>>

@@ -14,7 +14,7 @@ import java.io.IOException;
 import org.junit.*;
 
 public class MutationTest {
-	MutationSuite ms = new MutationSuite(null,0,"","");
+	MutationSuite ms = new MutationSuite(null,0,"","",0);
 	String path = "";
 	String uFileName = "";
 	File aFile = null;
@@ -45,7 +45,7 @@ public class MutationTest {
 		
 		
 		
-		assertMutatedModelEqualFalse(path+uFileName, path+"OneToMany/"+"OneToManyMutation_" +uFileName);
+		assertMutatedModelEqualFalse(path+uFileName, path+"0_OneToMany/"+"OneToManyMutation_" +uFileName);
 		/*if (assertMutatedModelEqualTrue(path+uFileName, path+"OneToMany/"+"OneToManyMutation_" +uFileName))
 		{	
 			Assert.fail("generated mutation model is identical to original");
@@ -69,7 +69,7 @@ public class MutationTest {
 	    ms.prepare(path, uFileName,"Java","OptionalOneToMany","OneToMany");
 	    
 		//SampleFileWriter.assertFileContent(new File(path+uFileName),new File (path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName), true);		
-		 SampleFileWriter.assertFileExists(path + "OneToMany");
+		 SampleFileWriter.assertFileExists(path + "0_OneToMany");
 						
 	}
 	
@@ -81,7 +81,7 @@ public class MutationTest {
 		ms.prepare(path, uFileName,"Java","OneToMany","OptionalOneToMany");
 	    
 		//SampleFileWriter.assertFileContent(new File(path+uFileName),new File (path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName), true);
-		assertMutatedModelEqualFalse(path+uFileName, path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName);
+		assertMutatedModelEqualFalse(path+uFileName, path+"0_OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName);
 		/*if (assertMutatedModelEqualFalse(path+uFileName, path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName))
 		{	
 			Assert.fail("New mutation is identical");
@@ -100,7 +100,7 @@ public class MutationTest {
 		ms.prepare(path, uFileName,"Java","OneToMany","OptionalOneToMany");
 	    
 		//SampleFileWriter.assertFileContent(new File(path+uFileName),new File (path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName), true);
-		SampleFileWriter.assertFileExists(path + "OptionalOneToMany");	
+		SampleFileWriter.assertFileExists(path + "0_OptionalOneToMany");	
 	}
 	
 	@Test
@@ -112,7 +112,7 @@ public class MutationTest {
 	    
 		//SampleFileWriter.assertFileContent(new File(path+uFileName),new File (path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName), true);
 		
-		assertMutatedModelEqualFalse(path+uFileName, path+"AssociationDirectionality/"+"AssociationDirectionalityMutation_" +uFileName);
+		assertMutatedModelEqualFalse(path+uFileName, path+"0_direction/"+"directionMutation_" +uFileName);
 		/*if (AssertMutatedModel(path+uFileName, path+"AssociationDirectionality/"+"AssociationDirectionalityMutation_" +uFileName))
 		{	
 			Assert.fail("New mutation is identical");
@@ -124,7 +124,7 @@ public class MutationTest {
 						
 	}
 	
-	@Test
+	@Test @Ignore
 	public void mutateAssociation_DirectionalityGeneratedFiles(){
 	    path = "test/cruise/umple/mutation/test/";
 	    uFileName = "uModel.ump";
@@ -132,7 +132,7 @@ public class MutationTest {
 		ms.prepare(path, uFileName,"Java","","direction");
 	    
 		//SampleFileWriter.assertFileContent(new File(path+uFileName),new File (path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName), true);		
-		 SampleFileWriter.assertFileExists(path + "AssociationDirectionality");
+		 SampleFileWriter.assertFileExists(path + "0_direction");
 						
 	}
 	
@@ -146,7 +146,7 @@ public class MutationTest {
 		ms.prepare(path, uFileName,"Java","","direction");
 	    
 		//SampleFileWriter.assertFileContent(new File(path+uFileName),new File (path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName), true);
-		SampleFileWriter.assertFileContent(new File(path+"uModel_namespace_expected.ump.txt"), new File(path + "AssociationDirectionality/AssociationDirectionalityMutation_uModel_namespace.ump"), false);
+		SampleFileWriter.assertFileContent(new File(path+"uModel_namespace_expected.ump.txt"), new File(path + "0_direction/directionMutation_uModel_namespace.ump"), false);
 		
 		
 		 
@@ -159,10 +159,10 @@ public class MutationTest {
 	    path = "test/cruise/umple/mutation/test/";
 	    uFileName = "uModel_attributeTyped_int.ump";
 	     
-		ms.prepare(path, uFileName,"Java","Float","AttributeInt");
+		ms.prepare(path, uFileName,"Java","Float","Integer");
 	    
 		//SampleFileWriter.assertFileContent(new File(path+uFileName),new File (path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName), true);
-		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_int_expectedFloat.ump.txt"), new File(path + "TypedAttributeInteger/TypedAttributeIntegerMutation_uModel_attributeTyped_int.ump"), false);	 
+		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_int_expectedFloat.ump.txt"), new File(path + "0_Integer/IntegerMutation_uModel_attributeTyped_int.ump"), false);	 
 						
 	}
 	
@@ -171,10 +171,10 @@ public class MutationTest {
 	    path = "test/cruise/umple/mutation/test/";
 	    uFileName = "uModel_attributeTyped_int.ump";
 	     
-		ms.prepare(path, uFileName,"Java","String","AttributeInt");
+		ms.prepare(path, uFileName,"Java","String","Integer");
 	    
 		//SampleFileWriter.assertFileContent(new File(path+uFileName),new File (path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName), true);
-		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_int_expectedString.ump.txt"), new File(path + "TypedAttributeInteger/TypedAttributeIntegerMutation_uModel_attributeTyped_int.ump"), false);	 
+		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_int_expectedString.ump.txt"), new File(path + "0_Integer/IntegerMutation_uModel_attributeTyped_int.ump"), false);	 
 						
 	}
 	@Test
@@ -182,10 +182,10 @@ public class MutationTest {
 	    path = "test/cruise/umple/mutation/test/";
 	    uFileName = "uModel_attributeTyped_int.ump";
 	     
-		ms.prepare(path, uFileName,"Java","Double","AttributeInt");
+		ms.prepare(path, uFileName,"Java","Double","Integer");
 	    
 		//SampleFileWriter.assertFileContent(new File(path+uFileName),new File (path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName), true);
-		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_int_expectedDouble.ump.txt"), new File(path + "TypedAttributeInteger/TypedAttributeIntegerMutation_uModel_attributeTyped_int.ump"), false);	 
+		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_int_expectedDouble.ump.txt"), new File(path + "0_Integer/IntegerMutation_uModel_attributeTyped_int.ump"), false);	 
 						
 	}
 	
@@ -194,10 +194,10 @@ public class MutationTest {
 	    path = "test/cruise/umple/mutation/test/";
 	    uFileName = "uModel_attributeTyped_float.ump";
 	     
-		ms.prepare(path, uFileName,"Java","Double","AttributeFloat");
+		ms.prepare(path, uFileName,"Java","Double","Float");
 	    
 		//SampleFileWriter.assertFileContent(new File(path+uFileName),new File (path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName), true);
-		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_float_expectedDouble.ump.txt"), new File(path + "TypedAttributeFloat/TypedAttributeFloatMutation_uModel_attributeTyped_float.ump"), false);	 
+		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_float_expectedDouble.ump.txt"), new File(path + "0_Float/FloatMutation_uModel_attributeTyped_float.ump"), false);	 
 						
 	}
 	
@@ -207,10 +207,10 @@ public class MutationTest {
 	    path = "test/cruise/umple/mutation/test/";
 	    uFileName = "uModel_attributeTyped_float.ump";
 	     
-		ms.prepare(path, uFileName,"Java","Integer","AttributeFloat");
+		ms.prepare(path, uFileName,"Java","Integer","Float");
 	    
 		//SampleFileWriter.assertFileContent(new File(path+uFileName),new File (path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName), true);
-		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_float_expectedInt.ump.txt"), new File(path + "TypedAttributeFloat/TypedAttributeFloatMutation_uModel_attributeTyped_float.ump"), false);	 
+		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_float_expectedInt.ump.txt"), new File(path + "0_Float/FloatMutation_uModel_attributeTyped_float.ump"), false);	 
 						
 	}
 	
@@ -219,10 +219,10 @@ public class MutationTest {
 	    path = "test/cruise/umple/mutation/test/";
 	    uFileName = "uModel_attributeTyped_float.ump";
 	     
-		ms.prepare(path, uFileName,"Java","String","AttributeFloat");
+		ms.prepare(path, uFileName,"Java","String","Float");
 	    
 		//SampleFileWriter.assertFileContent(new File(path+uFileName),new File (path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName), true);
-		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_float_expectedString.ump.txt"), new File(path + "TypedAttributeFloat/TypedAttributeFloatMutation_uModel_attributeTyped_float.ump"), false);	 
+		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_float_expectedString.ump.txt"), new File(path + "0_Float/FloatMutation_uModel_attributeTyped_float.ump"), false);	 
 						
 	}
 	
@@ -232,10 +232,10 @@ public class MutationTest {
 	    path = "test/cruise/umple/mutation/test/";
 	    uFileName = "uModel_attributeTyped_string.ump";
 	     
-		ms.prepare(path, uFileName,"Java","Double","AttributeString");
+		ms.prepare(path, uFileName,"Java","Double","String");
 	    
 		//SampleFileWriter.assertFileContent(new File(path+uFileName),new File (path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName), true);
-		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_string_expectedDouble.ump.txt"), new File(path + "TypedAttributeString/TypedAttributeStringMutation_uModel_attributeTyped_string.ump"), false);	 
+		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_string_expectedDouble.ump.txt"), new File(path + "0_String/StringMutation_uModel_attributeTyped_string.ump"), false);	 
 						
 	}
 	
@@ -245,10 +245,10 @@ public class MutationTest {
 	    path = "test/cruise/umple/mutation/test/";
 	    uFileName = "uModel_attributeTyped_string.ump";
 	     
-		ms.prepare(path, uFileName,"Java","Integer","AttributeString");
+		ms.prepare(path, uFileName,"Java","Integer","String");
 	    
 		//SampleFileWriter.assertFileContent(new File(path+uFileName),new File (path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName), true);
-		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_string_expectedInt.ump.txt"), new File(path + "TypedAttributeString/TypedAttributeStringMutation_uModel_attributeTyped_string.ump"), false);	 
+		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_string_expectedInt.ump.txt"), new File(path + "0_String/StringMutation_uModel_attributeTyped_string.ump"), false);	 
 						
 	}
 	
@@ -257,10 +257,10 @@ public class MutationTest {
 	    path = "test/cruise/umple/mutation/test/";
 	    uFileName = "uModel_attributeTyped_string.ump";
 	     
-		ms.prepare(path, uFileName,"Java","Float","AttributeString");
+		ms.prepare(path, uFileName,"Java","Float","String");
 	    
 		//SampleFileWriter.assertFileContent(new File(path+uFileName),new File (path+"OptionalOneToMany/"+"OptionalOneToManyMutation_" +uFileName), true);
-		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_string_expectedFloat.ump.txt"), new File(path + "TypedAttributeString/TypedAttributeStringMutation_uModel_attributeTyped_string.ump"), false);	 
+		SampleFileWriter.assertFileContent(new File(path+"uModel_attributeTyped_string_expectedFloat.ump.txt"), new File(path + "0_String/StringMutation_uModel_attributeTyped_string.ump"), false);	 
 						
 	}
 	
@@ -287,7 +287,7 @@ public class MutationTest {
 	}
 	
 	
-	@Test
+	@Test @Ignore
 	public void mutate_constraint(){
 	    path = "test/cruise/umple/mutation/test/";
 	    uFileName = "uModel_mutateConstraint.ump";
@@ -331,7 +331,7 @@ public class MutationTest {
 		//Assert.assertFalse(assertMutatedModel(path+model1,path+model3));
 		//Assert.assertTrue("AssertMethod: AssertMutateModell failed! @ identical",assertMutatedModelEqualTrue(path+model1,path+ model2));
 		//Assert.assertTrue("AssertMethod: AssertMutateModell failed @ mutated!",assertMutatedModelEqualFalse(path+model1,path+model3));
-		ms.prepare(path, model1, "Java", "random", "full");
+		ms.prepare(path, model1, "Java", "random", "random");
 	}
 	
 	

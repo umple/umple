@@ -5,7 +5,7 @@
 
 ////---- Tests for  ClassTemplateTest_CodeInjectionsParametersUnspecified ----/////
 
-Test Student {
+test Student {
 
  generate JUnit ;
  

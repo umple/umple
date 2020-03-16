@@ -1,15 +1,34 @@
 
-class A {
 
-id;
-
-
-
-}
 
 class B {
 
 1 -- * A;
 
+
 }
 
+class C {
+ 
+ 1 -- * B;
+
+ }
+ 
+ 
+ class Z {
+ 
+ 0..1 -- * B;
+ 
+ }
+ 
+ class X {
+ }
+
+
+class A {
+
+id;
+
+1 -- * X;
+
+}

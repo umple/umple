@@ -1,0 +1,118 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association_optionalOneToOne ----/////
+
+test GenericTestCase_association_optionalOneToOne.ump {
+depend  Calculator,Number,Level3,Controller ; 
+
+
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Calculator       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Number       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Level3       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [1,1] Controller /////// 
+              
+              test createLevel3WithoutController {              
+              
+              Level3 aLevel3();
+              
+              assertTrue (aLevel3.numberOfcontrollers()== 0);
+              }
+              
+              
+              
+              test replaceLevel3InController { 
+              
+                                          
+              Level3 baLevel3();
+              
+              Level3 aLevel3();
+
+              Controller aController("RandomString1",aLevel3); 
+              Controller baController("RandomString1",aLevel3);
+              
+              aController.setLevel3(baaLevel3);
+              assertEqual (baaLevel3, aController.getLevel3());              
+              assertTrue(baaLevel3.getController(0) == aController );
+                            
+              }
+              
+              
+              test removeControllerInLevel3 {
+              
+              
+              Level3 aLevel3();
+              aLevel3.addController(aController);
+              
+              aController.delete(); 
+              assertEqual (aLevel3.getcontroller(0) == null);
+              }
+              
+              
+              //add to new B
+              
+              test AddControllerToNewLevel3 { 
+              Controller aLevel3 = new Controller();
+              Controller aLevel32 = new Controller();
+      
+              Level3 aLevel3 = new Level3();
+              aLevel3.addController(aController);
+              aLevel3.addController(aController2);  
+        
+              assertEqual(aController2, aLevel3.getController(); 
+              assertEqual (aLevel3, aController2.getLevel3(0));
+              assertEqual (aLevel3, aController.getNumberOfLevel3s());
+              }
+  /*-------------------------*/
+  /*  Class Controller       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [0,*] Level3 /////// 
+              
+              test createControllerWithLevel3 {              
+              Level3 aLevel3();
+
+              Controller aController("RandomString1",aLevel3);
+              
+              assertTrue (aController.getlevel3() == aLevel3);
+              }
+              
+              
+              
+              test replaceLevel3{ 
+              
+              Level3 aLevel3();
+                            
+              Controller baController("RandomString1",aLevel3);
+              
+                            
+              Level3 baLevel3();
+              
+              aController.setLevel3(baLevel3);
+              
+              assertTrue (baLevel3 == aController.getLevel3());              
+              
+                            
+              }
+              
+              
+              
+ 
+ 
+
+ }

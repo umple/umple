@@ -49,8 +49,12 @@ else{
 	  		{
 				if (act.getLocOrder() == i)
 				{
+				   if(act.getName().equals("initAttMethodCall"))
+				    {
+				    act.setCode(act.getCode().replace(".","->"));
+				    }
 					#>>		  
-					  <<=act.getCode()>><<#
+					  <<=act.getCode()>>;<<#
 				}
 				
 			}

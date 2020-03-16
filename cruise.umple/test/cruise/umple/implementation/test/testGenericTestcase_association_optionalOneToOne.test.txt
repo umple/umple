@@ -1,0 +1,224 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association_optionalOneToOne ----/////
+
+test Calculator {
+
+ generate JUnit ;
+ 
+ depend  Calculator,Number,Level3,Controller ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_association_optionalOneToOne.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :name
+
+      test attribute_name {
+    
+      Number aNumber("RandomString1",aController);
+
+        Calculator aCalculator("RandomString1","RandomString1",123,aNumber);
+        
+        
+    assertTrue( aCalculator.setName("RandomString1"));
+    assertTrue( aCalculator.getName() =="RandomString1");
+    assertTrue( aCalculator.setName("RandomString2"));
+    assertTrue( aCalculator.getName()=="RandomString2");
+    assertFalse( aCalculator.getName() =="RandomString1");
+             
+          
+        	}
+
+ //tests for :address
+
+      test attribute_address {
+    
+      Number aNumber("RandomString1",aController);
+
+        Calculator aCalculator("RandomString1","RandomString1",123,aNumber);
+        
+        
+    assertTrue( aCalculator.setAddress("RandomString1"));
+    assertTrue( aCalculator.getAddress() =="RandomString1");
+    assertTrue( aCalculator.setAddress("RandomString2"));
+    assertTrue( aCalculator.getAddress()=="RandomString2");
+    assertFalse( aCalculator.getAddress() =="RandomString1");
+             
+          
+        	}
+
+ //tests for :someNO
+
+      test attribute_someNO {
+    
+          
+        	}
+
+ //tests for :numbers
+
+      test attribute_numbers {
+    
+      Number aNumber("RandomString1",aController);
+
+        Calculator aCalculator("RandomString1","RandomString1",123,aNumber);        
+            
+      assertTrue( aCalculator.setNumbers(123));
+      assertTrue( aCalculator.getNumbers() == 123);
+      assertTrue( aCalculator.setNumbers(321));
+      assertTrue( aCalculator.getNumbers() == 321);
+      assertFalse( aCalculator.getNumbers() == 123);
+          
+          
+        	}
+
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkifLogged_number {
+        Calculator c1 ( 4, 5) ;                
+        String valueToCheck = p1.getNumber();
+         Number tempNumbe =  number;
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association_optionalOneToOne ----/////
+
+test Number {
+
+ generate JUnit ;
+ 
+ depend  Calculator,Number,Level3,Controller ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_association_optionalOneToOne.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :id
+
+      test attribute_id {
+    
+      Controller aController("RandomString1",aLevel3);
+
+        Number aNumber("RandomString1",aController);
+        
+        
+    assertTrue( aNumber.setId("RandomString1"));
+    assertTrue( aNumber.getId() =="RandomString1");
+    assertTrue( aNumber.setId("RandomString2"));
+    assertTrue( aNumber.getId()=="RandomString2");
+    assertFalse( aNumber.getId() =="RandomString1");
+             
+          
+        	}
+
+
+  
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association_optionalOneToOne ----/////
+
+test Level3 {
+
+ generate JUnit ;
+ 
+ depend  Calculator,Number,Level3,Controller ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_association_optionalOneToOne.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+  
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association_optionalOneToOne ----/////
+
+test Controller {
+
+ generate JUnit ;
+ 
+ depend  Calculator,Number,Level3,Controller ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_association_optionalOneToOne.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :serialNo
+
+      test attribute_serialNo {
+    
+      Level3 aLevel3();
+
+        Controller aController("RandomString1",aLevel3);
+        
+        
+    assertTrue( aController.setSerialNo("RandomString1"));
+    assertTrue( aController.getSerialNo() =="RandomString1");
+    assertTrue( aController.setSerialNo("RandomString2"));
+    assertTrue( aController.getSerialNo()=="RandomString2");
+    assertFalse( aController.getSerialNo() =="RandomString1");
+             
+          
+        	}
+
+
+  
+ 
+   
+
+}

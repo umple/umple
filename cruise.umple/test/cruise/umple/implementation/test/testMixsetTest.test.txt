@@ -5,7 +5,7 @@
 
 ////---- Tests for  MixsetTest ----/////
 
-Test Person {
+test Person {
 
  generate JUnit ;
  
@@ -24,13 +24,18 @@ Test Person {
 
       test attribute_x {
     
-    assertTrue( person.setX("RandomString1"));
-    assertTrue( person.getX() =="RandomString1");
-    assertTrue( person.setX("RandomString2"));
-    assertTrue( person.getX()=="RandomString2");
-    assertFalse( person.getX() =="RandomString1");
+      
+        Person aPerson("RandomString1");
+        
+        
+    assertTrue( aPerson.setX("RandomString1"));
+    assertTrue( aPerson.getX() =="RandomString1");
+    assertTrue( aPerson.setX("RandomString2"));
+    assertTrue( aPerson.getX()=="RandomString2");
+    assertFalse( aPerson.getX() =="RandomString1");
              
-	}
+          
+        	}
 
 
       //------------------

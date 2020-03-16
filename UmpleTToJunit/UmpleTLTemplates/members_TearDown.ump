@@ -2,8 +2,8 @@ class UmpleTToJUnit{
 
 members_TearDown <<!<</*members_tearDown*/>>
 
-  @After
-  public void teardown(){
+  @AfterAll
+  public static void teardown(){
 
 
   }

@@ -18,6 +18,15 @@ members_AllTestCases <<!<</*members_AllTestCases*/>><<#
 	    appendln(realSb, "      //------------------");
 		for (UmpleTestCase uTestCase :uClass.getUmpleTestCases())			
 		{
+		
+		if (uTestCase.getName().equals("init"))
+		{
+		 // ignore the
+		
+		}
+		
+		else {
+		
 		if(uTestCase.getIsConcrete())
 		{ concreteLang = uTestCase.getConcreteLang()+" ";   }
 		#>>
@@ -41,7 +50,7 @@ members_AllTestCases <<!<</*members_AllTestCases*/>><<#
 			{
 			 if (uAssert.getType().contains("before"))
 			 {
-			 #>>        <<=uAssert.getType().replace("before","").replace("after","")>>(<<=uAssert.getAssertCode()>>);<<#
+			 #>>        <<=uAssert.getType().replace("before","").replace("after","")>><<=uAssert.getAssertCode()>>;<<#
 			 			 
 			 	
 			 }
@@ -65,17 +74,17 @@ members_AllTestCases <<!<</*members_AllTestCases*/>><<#
 			{
 					if (uAssert.getType().equals("assertTrue"))
 				{
-				#>>assertTrue(<<=uAssert.getAssertCode()>>);
+				#>>assertTrue<<=uAssert.getAssertCode()>>;
 				<<#				
 				}
 				if (uAssert.getType().equals("assertFalse"))
 				{
-				#>>assertFalse(<<=uAssert.getAssertCode()>>);
+				#>>assertFalse<<=uAssert.getAssertCode()>>;
 				<<#				
 				}
 				if (uAssert.getType().equals("assertEqual"))
 				{
-				#>>assertEqual(<<=uAssert.getAssertCode()>>);
+				#>>assertEqual<<=uAssert.getAssertCode()>>;
 				<<#				
 				}
 			 }
@@ -102,7 +111,7 @@ members_AllTestCases <<!<</*members_AllTestCases*/>><<#
 			{
 			 if (uAssert.getType().contains("after"))
 			 {
-			 #>>        <<=uAssert.getType().replace("before","").replace("after","")>>(<<=uAssert.getAssertCode()>>);<<#
+			 #>>        <<=uAssert.getType().replace("before","").replace("after","")>><<=uAssert.getAssertCode()>>;<<#
 			 			 
 			 	
 			 }
@@ -117,7 +126,7 @@ members_AllTestCases <<!<</*members_AllTestCases*/>><<#
 			
 			}
 			
-						
+			}			
 			#>>}
 			
 			

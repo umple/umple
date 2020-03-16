@@ -1,17 +1,18 @@
 
-class Person {  
+class Student {  
     
-    Integer id;
+    String studentId;
     name;
-    address;
+    address;    
     
     
-  generic test checkifLogged(Integer attribute){
-        Person p1 ( "S1425", "John", "Ottawa") ;        
-        String valueToCheck = p1.get<<attribute>>();  
-        ps1.getValue(<<attribute>>);    
-        boolean isLogged =  p1.checkIsLogged(valueToCheck);        
-        assertTrue(logged == "true");                      
+  generic test checkifLogged(String attribute){
+        Student st1 ( "S1425", "John", "Ottawa") ;        
+        String valueToCheck = st1.get<<attribute>>();  
+        st1.getValue(<<attribute>>);    
+        boolean isLogged =  st1.checkIsLogged(valueToCheck);        
+        
+        //list assertions                      
         }
         
         String  returnSumOfValues (int x, int y) { return x+y;}                 

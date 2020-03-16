@@ -3,6 +3,8 @@ use members_Setup.ump;
 use members_TearDown.ump;
 use where_init.ump;
 use members_AllTestCases.ump;
+use depends.ump;
+
 
 
 
@@ -17,6 +19,7 @@ class PhpUnitGenerator {
     depend java.util.*;
 	depend cruise.umple.testgenerator.*;
 	depend cruise.umple.testgenerator.Action;
+	depend cruise.umple.testgenerator.Depend;
 
     isA ILang;
 
@@ -60,9 +63,8 @@ class PhpUnitGenerator {
 <<#// if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).getIsInline()) {append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else { append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} } #>>
 
 <?php
-
 ////---- Tests for  <<=model.getFile()>>----/////
-
+<<@UmpleTToPhpUnit.depends >>
 
 
 class <<=model.getFile().subSequence(0, model.getFile().length()-4)>>Test extends UnitTestCase{

@@ -1,0 +1,112 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  OneToManyAssociation ----/////
+
+test OneToManyAssociation.ump {
+depend  A,B ; 
+
+
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class A       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [0,*] B /////// 
+              
+              test createAWithB {              
+              B aB();
+
+              A aA("RandomString1",aB);
+              
+              assertTrue (aA.getb() == aB);
+              }
+              
+              
+              
+              test replaceB{ 
+              
+              B aB();
+                            
+              A baA("RandomString1",aB);
+              
+                            
+              B baB();
+              
+              aA.setB(baB);
+              
+              assertTrue (baB == aA.getB());              
+              
+                            
+              }
+              
+              
+              
+  /*-------------------------*/
+  /*  Class B       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [1,1] A /////// 
+              
+              test createBWithoutA {              
+              
+              B aB();
+              
+              assertTrue (aB.numberOfas()== 0);
+              }
+              
+              
+              
+              test replaceBInA { 
+              
+                                          
+              B baB();
+              
+              B aB();
+
+              A aA("RandomString1",aB); 
+              A baA("RandomString1",aB);
+              
+              aA.setB(baaB);
+              assertEqual (baaB, aA.getB());              
+              assertTrue(baaB.getA(0) == aA );
+                            
+              }
+              
+              
+              test removeAInB {
+              
+              
+              B aB();
+              aB.addA(aA);
+              
+              aA.delete(); 
+              assertEqual (aB.geta(0) == null);
+              }
+              
+              
+              //add to new B
+              
+              test AddAToNewB { 
+              A aB = new A();
+              A aB2 = new A();
+      
+              B aB = new B();
+              aB.addA(aA);
+              aB.addA(aA2);  
+        
+              assertEqual(aA2, aB.getA(); 
+              assertEqual (aB, aA2.getB(0));
+              assertEqual (aB, aA.getNumberOfBs());
+              }
+ 
+ 
+
+ }

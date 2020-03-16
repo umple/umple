@@ -5,7 +5,7 @@
 
 ////---- Tests for  AssociationInlineComment ----/////
 
-Test Foo {
+test Foo {
 
  generate JUnit ;
  

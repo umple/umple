@@ -1,12 +1,8 @@
 
-class Person {  
-    
+class Person {     
     Integer id;
     name;
-    address;
-    
-    * -- 1 Identification;
-    
+    Double postal;    
     
   generic test checkifLogged(String attribute){
         Person p1 ( "S1425", "John", "Ottawa") ;        
@@ -16,13 +12,11 @@ class Person {
         assertTrue(logged == "true");                      
         }
         
-        String  returnSumOfValues (int x, int y) { return x+y;}                 
+        String  returnSumOfValues (int x, int y) {
+         return x+y;
+         }
+         
+         boolean checkIsLogged (String value) {
+         // ommitted code          
+         }                 
 }  
- 
- 
- 
- class Identification {
- 
-    
- }
-  

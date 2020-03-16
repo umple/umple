@@ -1,0 +1,112 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association_toSingular ----/////
+
+test GenericTestCase_association_toSingular.ump {
+depend  Calculator,Number ; 
+
+
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Calculator       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [1,1] Number /////// 
+              
+              test createCalculatorWithoutNumber {              
+              
+              Calculator aCalculator();
+              
+              assertTrue (aCalculator.numberOfnumbers()== 0);
+              }
+              
+              
+              
+              test replaceCalculatorInNumber { 
+              
+                                          
+              Calculator baCalculator();
+              
+              Calculator aCalculator();
+
+              Number aNumber(aCalculator); 
+              Number baNumber(aCalculator);
+              
+              aNumber.setCalculator(baaCalculator);
+              assertEqual (baaCalculator, aNumber.getCalculator());              
+              assertTrue(baaCalculator.getNumber(0) == aNumber );
+                            
+              }
+              
+              
+              test removeNumberInCalculator {
+              
+              
+              Calculator aCalculator();
+              aCalculator.addNumber(aNumber);
+              
+              aNumber.delete(); 
+              assertEqual (aCalculator.getnumber(0) == null);
+              }
+              
+              
+              //add to new B
+              
+              test AddNumberToNewCalculator { 
+              Number aCalculator = new Number();
+              Number aCalculator2 = new Number();
+      
+              Calculator aCalculator = new Calculator();
+              aCalculator.addNumber(aNumber);
+              aCalculator.addNumber(aNumber2);  
+        
+              assertEqual(aNumber2, aCalculator.getNumber(); 
+              assertEqual (aCalculator, aNumber2.getCalculator(0));
+              assertEqual (aCalculator, aNumber.getNumberOfCalculators());
+              }
+  /*-------------------------*/
+  /*  Class Number       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [0,*] Calculator /////// 
+              
+              test createNumberWithCalculator {              
+              Calculator aCalculator();
+
+              Number aNumber(aCalculator);
+              
+              assertTrue (aNumber.getcalculator() == aCalculator);
+              }
+              
+              
+              
+              test replaceCalculator{ 
+              
+              Calculator aCalculator();
+                            
+              Number baNumber(aCalculator);
+              
+                            
+              Calculator baCalculator();
+              
+              aNumber.setCalculator(baCalculator);
+              
+              assertTrue (baCalculator == aNumber.getCalculator());              
+              
+                            
+              }
+              
+              
+              
+ 
+ 
+
+ }

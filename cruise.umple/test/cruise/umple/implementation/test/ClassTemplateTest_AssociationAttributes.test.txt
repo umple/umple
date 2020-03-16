@@ -5,7 +5,7 @@
 
 ////---- Tests for  ClassTemplateTest_AssociationAttributes ----/////
 
-Test Token {
+test Token {
 
  generate JUnit ;
  
@@ -24,7 +24,8 @@ Test Token {
 
       test attribute_p {
     
-	}
+          
+        	}
 
 
   

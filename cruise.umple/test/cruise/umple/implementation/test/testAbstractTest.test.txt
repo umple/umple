@@ -5,7 +5,7 @@
 
 ////---- Tests for  TestCase_AbstractTest ----/////
 
-abstract Test Person {
+abstract test Person {
 
  generate JUnit ;
  

@@ -1,0 +1,83 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  NNToManyAssociation ----/////
+
+test NNToManyAssociation.ump {
+depend  A,B ; 
+
+
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class A       */
+  /*-------------------------*/
+
+              /////// Association: -- [0,*] B /////// 
+              //create ... without ...
+              test CreateAWithoutB {
+              A someA ();
+              assertFalse (someB.getAS()!= null);
+              }
+              //replace
+              
+              test ReplaceBInA { 
+              
+              B someB (); 
+              B someB2 ();
+              someB.addB(someA);
+              assertEqual (1, someB.getNumberOfAs());              
+              someA.setB(someB2);
+              assertEqual (someA, someB2.getA(0));
+              }
+              //delete
+              test DeleteB {
+               
+               B someB (); 
+              B someB2 ();
+              someB.addB(someA);
+              
+              // delete B in A
+              someB2.delete(); 
+              assertEqual (null, someB2.getA(0));
+              }
+              //boundary test
+              
+              test BoundaryTest {
+              Integer size = B.getNumberOfAs(); 
+              assertTrue ( size > 4);
+              assertTrue (  size < 4); 
+              
+              }
+              
+              test BoundaryAtMax {
+              
+              
+                
+                
+                
+              
+              //Maximum A allowed : -1
+              Integer size = B.getNumberOfAs();
+              
+              
+              
+              B someB = new B();
+
+              
+              
+              assertEqual(size, someB.getNumberOfAs());
+              
+              
+              }
+  /*-------------------------*/
+  /*  Class B       */
+  /*-------------------------*/
+ 
+ 
+
+ }

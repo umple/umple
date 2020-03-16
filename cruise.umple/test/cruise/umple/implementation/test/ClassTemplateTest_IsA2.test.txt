@@ -5,7 +5,7 @@
 
 ////---- Tests for  ClassTemplateTest_IsA ----/////
 
-Test SubMentor2 {
+test SubMentor2 {
 
  generate JUnit ;
  
@@ -24,13 +24,18 @@ Test SubMentor2 {
 
       test attribute_subName {
     
-    assertTrue( submentor2.setSubName("RandomString1"));
-    assertTrue( submentor2.getSubName() =="RandomString1");
-    assertTrue( submentor2.setSubName("RandomString2"));
-    assertTrue( submentor2.getSubName()=="RandomString2");
-    assertFalse( submentor2.getSubName() =="RandomString1");
+      
+        SubMentor2 aSubMentor2("RandomString1");
+        
+        
+    assertTrue( aSubMentor2.setSubName("RandomString1"));
+    assertTrue( aSubMentor2.getSubName() =="RandomString1");
+    assertTrue( aSubMentor2.setSubName("RandomString2"));
+    assertTrue( aSubMentor2.getSubName()=="RandomString2");
+    assertFalse( aSubMentor2.getSubName() =="RandomString1");
              
-	}
+          
+        	}
 
 
   
