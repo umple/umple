@@ -221,7 +221,7 @@
   </target>
 
   <target name="testRuby">
-    <echo message="Running RUBY tests via rake task"/>
+    <echo message="Running RUBY tests via rake task ${rake_cmd} output ${test.output.path.ruby}/index.html to ${test.output.ruby}"/>
     <exec executable="${rake_cmd}" dir="testbed_ruby/" output="${test.output.path.ruby}/index.html" outputproperty="test.output.ruby" />
 
     <!-- check for error string 'rake aborted', and fail build if itis found -->
