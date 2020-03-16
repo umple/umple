@@ -29,11 +29,11 @@ mixset JobTest {
     test checkPromotion {
       Student s1 ("ID123", "John", "Director");
       
-      assertTrue(s1.getJobRank == 1);
+      assertTrue(s1.getJobRank() == 1);
       
       s1.promote();
       
-      assertTrue(s1.getJobRank == 2);
+      assertTrue(s1.getJobRank() == 2);
       
     }
     
