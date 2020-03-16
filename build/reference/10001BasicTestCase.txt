@@ -33,5 +33,7 @@ noreferences
 @@source manualexamples/basicTestcase1.ump
 @@endexample
 
-
+@@example
+@@source manualexamples/basicTestcase2.ump
+@@endexample
 

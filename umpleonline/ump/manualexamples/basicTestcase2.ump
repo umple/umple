@@ -1,0 +1,14 @@
+class Student {
+	id;
+	name;
+
+	test checkSetId {
+	Student s ("98CS","Jane");
+
+	assertEqual(s.getId(),"98CS");
+
+    s.setName("Roger");
+	assertFalse(s.getName() == "Jane");
+
+	}
+}
