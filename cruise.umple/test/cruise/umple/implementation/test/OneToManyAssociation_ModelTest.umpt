@@ -38,7 +38,7 @@ THEN:
               
               
               
-              test replaceBInA { 
+              test replaceMandatoryOneBInA { 
               
               C aC();
                             
@@ -169,7 +169,7 @@ THEN:
               
               
               
-              test replaceCInB { 
+              test replaceMandatoryOneCInB { 
               
                                           
               C baC();
@@ -368,7 +368,7 @@ THEN:
               
               
               
-              test replaceAInX { 
+              test replaceMandatoryOneAInX { 
               
               B aB(aC);
                             

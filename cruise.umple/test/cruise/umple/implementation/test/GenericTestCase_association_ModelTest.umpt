@@ -37,7 +37,7 @@ THEN:
               
               
               
-              test replaceCalculatorInNumber { 
+              test replaceMandatoryOneCalculatorInNumber { 
               
                                           
               Calculator baCalculator();

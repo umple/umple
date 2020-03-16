@@ -196,6 +196,9 @@
     <replace dir="cruise.umple/src-gen-umpletl/cruise" token="${umple.version}" value="$${last.version}">
       <include name="**/*.java"/>
     </replace>
+    <replace dir="cruise.umple/test/cruise/umple/implementation/test" token="${umple.version}" value="$${last.version}">
+      <include name="*.umpt"/>
+    </replace>    
 
     <!-- TODO: UNCOMMENT ONCE RSM IN THE MIX -->
     <!--
