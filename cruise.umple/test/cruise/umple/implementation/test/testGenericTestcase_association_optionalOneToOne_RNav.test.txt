@@ -5,7 +5,7 @@
 
 ////---- Tests for  GenericTestCase_association_optionalOneToOne_RNav ----/////
 
-Test Calculator {
+test Calculator {
 
  generate JUnit ;
  
@@ -34,7 +34,7 @@ Test Calculator {
 
 ////---- Tests for  GenericTestCase_association_optionalOneToOne_RNav ----/////
 
-Test Number {
+test Number {
 
  generate JUnit ;
  
@@ -63,7 +63,7 @@ Test Number {
 
 ////---- Tests for  GenericTestCase_association_optionalOneToOne_RNav ----/////
 
-Test Controller {
+test Controller {
 
  generate JUnit ;
  

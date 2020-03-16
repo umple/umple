@@ -5,7 +5,7 @@
 
 ////---- Tests for  ifStatementTest ----/////
 
-Test Person {
+test Person {
 
  generate JUnit ;
  
@@ -24,37 +24,51 @@ Test Person {
 
       test attribute_name {
     
-    assertTrue( person.setName("RandomString1"));
-    assertTrue( person.getName() =="RandomString1");
-    assertTrue( person.setName("RandomString2"));
-    assertTrue( person.getName()=="RandomString2");
-    assertFalse( person.getName() =="RandomString1");
+      
+        Person aPerson("RandomString1",123,"RandomString1");
+        
+        
+    assertTrue( aPerson.setName("RandomString1"));
+    assertTrue( aPerson.getName() =="RandomString1");
+    assertTrue( aPerson.setName("RandomString2"));
+    assertTrue( aPerson.getName()=="RandomString2");
+    assertFalse( aPerson.getName() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :id
 
       test attribute_id {
     
-      assertTrue( person.setId(123)));
-      assertTrue( person.getId() == 123));
-      assertTrue( person.setId(321)));
-      assertTrue( person.getId() == 321));
-      assertFlase( person.getId() == 123));
+      
+        Person aPerson("RandomString1",123,"RandomString1");        
+            
+      assertTrue( aPerson.setId(123));
+      assertTrue( aPerson.getId() == 123);
+      assertTrue( aPerson.setId(321));
+      assertTrue( aPerson.getId() == 321);
+      assertFalse( aPerson.getId() == 123);
           
-	}
+          
+        	}
 
  //tests for :Job
 
       test attribute_Job {
     
-    assertTrue( person.setJob("RandomString1"));
-    assertTrue( person.getJob() =="RandomString1");
-    assertTrue( person.setJob("RandomString2"));
-    assertTrue( person.getJob()=="RandomString2");
-    assertFalse( person.getJob() =="RandomString1");
+      
+        Person aPerson("RandomString1",123,"RandomString1");
+        
+        
+    assertTrue( aPerson.setJob("RandomString1"));
+    assertTrue( aPerson.getJob() =="RandomString1");
+    assertTrue( aPerson.setJob("RandomString2"));
+    assertTrue( aPerson.getJob()=="RandomString2");
+    assertFalse( aPerson.getJob() =="RandomString1");
              
-	}
+          
+        	}
 
 
       //------------------
@@ -67,7 +81,7 @@ Test Person {
         String job = p1.getJob();
         
 	if(tempId == 1324){
-	assertTrue (job == "Saleman");
+	assertTrue (job.getName() == "Saleman");
 	  }
         }
       

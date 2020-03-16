@@ -5,7 +5,7 @@
 
 ////---- Tests for  AttributeMultilineComment ----/////
 
-Test Foo {
+test Foo {
 
  generate JUnit ;
  
@@ -24,13 +24,18 @@ Test Foo {
 
       test attribute_name {
     
-    assertTrue( foo.setName("RandomString1"));
-    assertTrue( foo.getName() =="RandomString1");
-    assertTrue( foo.setName("RandomString2"));
-    assertTrue( foo.getName()=="RandomString2");
-    assertFalse( foo.getName() =="RandomString1");
+      
+        Foo aFoo("RandomString1");
+        
+        
+    assertTrue( aFoo.setName("RandomString1"));
+    assertTrue( aFoo.getName() =="RandomString1");
+    assertTrue( aFoo.setName("RandomString2"));
+    assertTrue( aFoo.getName()=="RandomString2");
+    assertFalse( aFoo.getName() =="RandomString1");
              
-	}
+          
+        	}
 
 
   

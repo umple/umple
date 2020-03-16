@@ -5,7 +5,7 @@
 
 ////---- Tests for  GenericTestCase_attribute_regex ----/////
 
-Test Student {
+test Student {
 
  generate JUnit ;
  
@@ -24,49 +24,69 @@ Test Student {
 
       test attribute_studentId {
     
-    assertTrue( student.setStudentId("RandomString1"));
-    assertTrue( student.getStudentId() =="RandomString1");
-    assertTrue( student.setStudentId("RandomString2"));
-    assertTrue( student.getStudentId()=="RandomString2");
-    assertFalse( student.getStudentId() =="RandomString1");
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aStudent.setStudentId("RandomString1"));
+    assertTrue( aStudent.getStudentId() =="RandomString1");
+    assertTrue( aStudent.setStudentId("RandomString2"));
+    assertTrue( aStudent.getStudentId()=="RandomString2");
+    assertFalse( aStudent.getStudentId() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :nameMemebershipId
 
       test attribute_nameMemebershipId {
     
-    assertTrue( student.setNameMemebershipId("RandomString1"));
-    assertTrue( student.getNameMemebershipId() =="RandomString1");
-    assertTrue( student.setNameMemebershipId("RandomString2"));
-    assertTrue( student.getNameMemebershipId()=="RandomString2");
-    assertFalse( student.getNameMemebershipId() =="RandomString1");
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aStudent.setNameMemebershipId("RandomString1"));
+    assertTrue( aStudent.getNameMemebershipId() =="RandomString1");
+    assertTrue( aStudent.setNameMemebershipId("RandomString2"));
+    assertTrue( aStudent.getNameMemebershipId()=="RandomString2");
+    assertFalse( aStudent.getNameMemebershipId() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :nameMemebershipHouse
 
       test attribute_nameMemebershipHouse {
     
-    assertTrue( student.setNameMemebershipHouse("RandomString1"));
-    assertTrue( student.getNameMemebershipHouse() =="RandomString1");
-    assertTrue( student.setNameMemebershipHouse("RandomString2"));
-    assertTrue( student.getNameMemebershipHouse()=="RandomString2");
-    assertFalse( student.getNameMemebershipHouse() =="RandomString1");
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aStudent.setNameMemebershipHouse("RandomString1"));
+    assertTrue( aStudent.getNameMemebershipHouse() =="RandomString1");
+    assertTrue( aStudent.setNameMemebershipHouse("RandomString2"));
+    assertTrue( aStudent.getNameMemebershipHouse()=="RandomString2");
+    assertFalse( aStudent.getNameMemebershipHouse() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :address
 
       test attribute_address {
     
-    assertTrue( student.setAddress("RandomString1"));
-    assertTrue( student.getAddress() =="RandomString1");
-    assertTrue( student.setAddress("RandomString2"));
-    assertTrue( student.getAddress()=="RandomString2");
-    assertFalse( student.getAddress() =="RandomString1");
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aStudent.setAddress("RandomString1"));
+    assertTrue( aStudent.getAddress() =="RandomString1");
+    assertTrue( aStudent.setAddress("RandomString2"));
+    assertTrue( aStudent.getAddress()=="RandomString2");
+    assertFalse( aStudent.getAddress() =="RandomString1");
              
-	}
+          
+        	}
 
 
       //------------------

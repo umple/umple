@@ -5,7 +5,7 @@
 
 ////---- Tests for  ClassTemplateTest_EmptyStringAttr ----/////
 
-Test Student {
+test Student {
 
  generate JUnit ;
  
@@ -24,13 +24,19 @@ Test Student {
 
       test attribute_grade {
     
-    assertTrue( student.setGrade("RandomString1"));
-    assertTrue( student.getGrade() =="RandomString1");
-    assertTrue( student.setGrade("RandomString2"));
-    assertTrue( student.getGrade()=="RandomString2");
-    assertFalse( student.getGrade() =="RandomString1");
+      
+        Student aStudent();
+        
+        
+       assertEqual(aStudent.getGrade(), "" );
+    assertTrue( aStudent.setGrade("RandomString1"));
+    assertTrue( aStudent.getGrade() =="RandomString1");
+    assertTrue( aStudent.setGrade("RandomString2"));
+    assertTrue( aStudent.getGrade()=="RandomString2");
+    assertFalse( aStudent.getGrade() =="RandomString1");
              
-	}
+          
+        	}
 
 
   

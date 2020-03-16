@@ -1,0 +1,31 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  MixsetTest_SameTestMultipleMixsets ----/////
+
+test MixsetTest_SameTestMultipleMixsets {
+
+generate JUnit;
+
+depend  Person ; 
+
+
+
+
+GIVEN:
+MixsetTest_SameTestMultipleMixsets.ump;
+THEN:
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Person       */
+  /*-------------------------*/
+
+ 
+ 
+
+ }

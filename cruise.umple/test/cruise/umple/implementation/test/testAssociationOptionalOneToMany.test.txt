@@ -5,7 +5,7 @@
 
 ////---- Tests for  OptionalOneToManyAssociation ----/////
 
-Test A {
+test A {
 
  generate JUnit ;
  
@@ -24,13 +24,18 @@ Test A {
 
       test attribute_att1 {
     
-    assertTrue( a.setAtt1("RandomString1"));
-    assertTrue( a.getAtt1() =="RandomString1");
-    assertTrue( a.setAtt1("RandomString2"));
-    assertTrue( a.getAtt1()=="RandomString2");
-    assertFalse( a.getAtt1() =="RandomString1");
+      
+        A aA("RandomString1");
+        
+        
+    assertTrue( aA.setAtt1("RandomString1"));
+    assertTrue( aA.getAtt1() =="RandomString1");
+    assertTrue( aA.setAtt1("RandomString2"));
+    assertTrue( aA.getAtt1()=="RandomString2");
+    assertFalse( aA.getAtt1() =="RandomString1");
              
-	}
+          
+        	}
 
 
   
@@ -45,7 +50,7 @@ Test A {
 
 ////---- Tests for  OptionalOneToManyAssociation ----/////
 
-Test B {
+test B {
 
  generate JUnit ;
  
@@ -64,13 +69,18 @@ Test B {
 
       test attribute_att2 {
     
-    assertTrue( b.setAtt2("RandomString1"));
-    assertTrue( b.getAtt2() =="RandomString1");
-    assertTrue( b.setAtt2("RandomString2"));
-    assertTrue( b.getAtt2()=="RandomString2");
-    assertFalse( b.getAtt2() =="RandomString1");
+      
+        B aB("RandomString1");
+        
+        
+    assertTrue( aB.setAtt2("RandomString1"));
+    assertTrue( aB.getAtt2() =="RandomString1");
+    assertTrue( aB.setAtt2("RandomString2"));
+    assertTrue( aB.getAtt2()=="RandomString2");
+    assertFalse( aB.getAtt2() =="RandomString1");
              
-	}
+          
+        	}
 
 
   

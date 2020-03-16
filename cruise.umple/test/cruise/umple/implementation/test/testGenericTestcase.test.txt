@@ -5,7 +5,7 @@
 
 ////---- Tests for  GenericTestCase ----/////
 
-Test Person {
+test Person {
 
  generate JUnit ;
  
@@ -17,60 +17,67 @@ Test Person {
  GIVEN:
  GenericTestCase.ump;
  
- 
+ WHERE:
+  Student st (9999, 9999);
+  
  
  THEN:
   //tests for :id
 
       test attribute_id {
     
-    assertTrue( person.setId("RandomString1"));
-    assertTrue( person.getId() =="RandomString1");
-    assertTrue( person.setId("RandomString2"));
-    assertTrue( person.getId()=="RandomString2");
-    assertFalse( person.getId() =="RandomString1");
+      
+        Person aPerson("RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aPerson.setId("RandomString1"));
+    assertTrue( aPerson.getId() =="RandomString1");
+    assertTrue( aPerson.setId("RandomString2"));
+    assertTrue( aPerson.getId()=="RandomString2");
+    assertFalse( aPerson.getId() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :name
 
       test attribute_name {
     
-    assertTrue( person.setName("RandomString1"));
-    assertTrue( person.getName() =="RandomString1");
-    assertTrue( person.setName("RandomString2"));
-    assertTrue( person.getName()=="RandomString2");
-    assertFalse( person.getName() =="RandomString1");
+      
+        Person aPerson("RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aPerson.setName("RandomString1"));
+    assertTrue( aPerson.getName() =="RandomString1");
+    assertTrue( aPerson.setName("RandomString2"));
+    assertTrue( aPerson.getName()=="RandomString2");
+    assertFalse( aPerson.getName() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :address
 
       test attribute_address {
     
-    assertTrue( person.setAddress("RandomString1"));
-    assertTrue( person.getAddress() =="RandomString1");
-    assertTrue( person.setAddress("RandomString2"));
-    assertTrue( person.getAddress()=="RandomString2");
-    assertFalse( person.getAddress() =="RandomString1");
+      
+        Person aPerson("RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aPerson.setAddress("RandomString1"));
+    assertTrue( aPerson.getAddress() =="RandomString1");
+    assertTrue( aPerson.setAddress("RandomString2"));
+    assertTrue( aPerson.getAddress()=="RandomString2");
+    assertFalse( aPerson.getAddress() =="RandomString1");
              
-	}
+          
+        	}
 
 
       //------------------
       //User-defined Tests
       //------------------
 
-      
-      test init {
-        Student st (9999, 9999);
-        }
-      
-      
-      
-      
-        
-    
       
       test checkifLogged_id {
         Person p1 ( "S1425", "John", "Ottawa") ;        

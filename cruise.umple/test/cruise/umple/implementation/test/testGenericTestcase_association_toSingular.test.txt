@@ -5,7 +5,7 @@
 
 ////---- Tests for  GenericTestCase_association_toSingular ----/////
 
-Test Calculator {
+test Calculator {
 
  generate JUnit ;
  
@@ -49,7 +49,7 @@ Test Calculator {
 
 ////---- Tests for  GenericTestCase_association_toSingular ----/////
 
-Test Number {
+test Number {
 
  generate JUnit ;
  

@@ -1,11 +1,11 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
 
 
 
 ////---- Tests for  GenericTestCase_association_optionalOneToOne ----/////
 
-Test GenericTestCase_association_optionalOneToOne.ump {
+test GenericTestCase_association_optionalOneToOne.ump {
 depend  Calculator,Number,Level3,Controller ; 
 
 
@@ -100,8 +100,7 @@ depend  Calculator,Number,Level3,Controller ;
                             
               Controller baController("RandomString1",aLevel3);
               
-              
-              Level3 aLevel3(); 
+                            
               Level3 baLevel3();
               
               aController.setLevel3(baLevel3);

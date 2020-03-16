@@ -1,11 +1,11 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
 
 
 
 ////---- Tests for  GenericTestCase_association ----/////
 
-Test GenericTestCase_association.ump {
+test GenericTestCase_association.ump {
 depend  Calculator,Number,Controller ; 
 
 
@@ -132,8 +132,7 @@ depend  Calculator,Number,Controller ;
                             
               Number baNumber(aCalculator);
               
-              
-              Calculator aCalculator(); 
+                            
               Calculator baCalculator();
               
               aNumber.setCalculator(baCalculator);

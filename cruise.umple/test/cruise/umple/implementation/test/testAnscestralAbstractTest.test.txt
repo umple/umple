@@ -5,7 +5,7 @@
 
 ////---- Tests for  TestCase_AnscestralTest ----/////
 
-Test Person {
+test Person {
 
  generate JUnit ;
  
@@ -48,7 +48,7 @@ Test Person {
 
 ////---- Tests for  TestCase_AnscestralTest ----/////
 
-Test Student {
+test Student {
 
  generate JUnit ;
  

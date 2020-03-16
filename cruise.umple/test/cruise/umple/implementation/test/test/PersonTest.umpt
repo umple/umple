@@ -1,116 +1,50 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
 
 
-/*
-All person cannot have a Coash as a job.
-*/
 
-////---- Tests for  TestCaseAction ----/////
+////---- Tests for  MixsetTest_SameTestMultipleMixsets ----/////
 
-Test Person {
+test Person {
 
  generate JUnit ;
  
- depend  Job,Organization,Score,Person ; 
+ depend  Person ; 
 
 
 
  
  GIVEN:
- TestCaseAction.ump;
+ MixsetTest_SameTestMultipleMixsets.ump;
  
  
  
  THEN:
+  //tests for :x
 
+      test attribute_x {
+    
+      
+        Person aPerson("RandomString1");
+    assertTrue( aPerson.setX("RandomString1"));
+    assertTrue( aPerson.getX() =="RandomString1");
+    assertTrue( aPerson.setX("RandomString2"));
+    assertTrue( aPerson.getX()=="RandomString2");
+    assertFalse( aPerson.getX() =="RandomString1");
+             
+	}
 
- before { setUp }
-
-
-
- before { teardown }
-
- 
 
       //------------------
       //User-defined Tests
       //------------------
 
       
-      test Init {
-        Person p1 ("john", 123);
-        Job j1 ("Cashier");
-        }
-      
-      
-      
-      
-        
-    
-      
-      test checkForLoop {
-        Person p1 (123);
-        ArrayList<Job> jobs = p1.getJobs();
-        Integer size = jobs.size();
-        }
-      
-      
-      
-      
-        
-    
-      
-      test checkStatus {
-        
-
-        //----------------
-        //before assertions
-        //----------------
-        AssertFalse(firstName == "Orlean");
-        //End of before assertions
-
-        //something
-        Person p1 ("id");
-         id = "id";
-        String id2 = p1.getGate(id,"name");
-        String id2 = p1.getGate();
-        String id2 = getGate();
-        String id2 = getGate(id);
-        p1.openGarage(p1);
-        openGarage(p1);
-        this.setId("id",id);
-        //assertion comment
-        /*multiline comment 
-      line comment*/
-        
-
-        //----------------
-        //after assertions
-        //----------------
-        AssertFalse(firstName == "something");
-        //End of after assertions
-
-        }
-      
-      
-      
-      
-        
-    
-      
-      test setUp {
-        //initalize enviroment
-        }
-      
-      
-      
-      
-        
-    
-      
-      test teardown {
-        //delete files
+      test checkName {
+        assertFalse(firstName == "Orlean");
+        assertTrue(firstName == "KingEdward");
+        assertFalse(firstName == "Orlean");
+        assertTrue(firstName == "KingEdward");
         }
       
       
@@ -119,14 +53,6 @@ Test Person {
         
      
  
- 
-
- after { setUp }
-
-
-
- after { teardown }
-
-  
+   
 
 }

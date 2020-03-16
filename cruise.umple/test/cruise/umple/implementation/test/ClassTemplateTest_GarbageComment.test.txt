@@ -8,7 +8,7 @@ This is a student
 
 ////---- Tests for  ClassTemplateTest_GarbageComment ----/////
 
-Test Student {
+test Student {
 
  generate JUnit ;
  

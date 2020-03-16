@@ -27,7 +27,7 @@ class Person {
    
    
    
-   test Init {   
+   test init {   
       Person p1 ("john" , 123);
       Job j1 ("Cashier");          
    }
@@ -61,10 +61,10 @@ class Person {
         String id2 = getGate(id) ;
         p1.openGarage(p1);
         openGarage(p1);        
-        before assertFalse(firstName == "Orlean");
+        before assertFalse(d1.firstName() == "Orlean");
         this.setId("id",id);
         //assertion comment
-        after assertFalse(firstName == "something");
+        after assertFalse(p1.getId() == "something");
         /*multiline comment 
       line comment*/
         }

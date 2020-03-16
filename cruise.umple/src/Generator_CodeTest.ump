@@ -482,13 +482,57 @@ depend java.util.stream.Collectors;
 		  {
 			  if (isFirst==false)
 			  {
-				  code +=  ","+ "a"+av.getRelatedAssociation().getUmpleClass().getName() ; 
+				  if(av.isN())
+				  {
+					  for (int x = 1 ; x< av.getMultiplicity().getLowerBound();x++)
+					  {
+					  //code +=  ","+ "a"+av.getRelatedAssociation().getUmpleClass().getName()+x ;
+					  }
+				  }
+				  else {
+				  code +=  ","+ "a"+av.getRelatedAssociation().getUmpleClass().getName() ;
+				  }
 			  }
 			  else 
 			  {
+				  if(av.isN())
+				  {
+					  for (int x = 1 ; x< av.getMultiplicity().getLowerBound();x++)
+					  {
+					  //code += "a"+av.getRelatedAssociation().getUmpleClass().getName()+x ;
+					  }
+				  }
+				  else {
 				  code +=  "a"+av.getRelatedAssociation().getUmpleClass().getName() ;
+				  }
 			  }
 				  
+		  }		  		  
+		  
+	  }
+	  
+	  for (AssociationVariable av : uClass.getAssociationVariables())
+	  {
+		  if (av.isN())
+		  {
+			  if(av.getMultiplicity().isLowerBoundNumeric())
+			  {
+				  int lowerBound = av.getMultiplicity().getLowerBound();
+				  
+				  for (int x = 1 ; x <lowerBound+1 ; x++)
+				  {
+					  if (isFirst == false )
+					  {
+						  code +=  ","+"a"+x+ "a"+av.getRelatedAssociation().getUmpleClass().getName() ;
+					  }
+					  
+					  else {
+						  code += "a"+x + "a"+av.getRelatedAssociation().getUmpleClass().getName() ;
+						  isFirst = false;
+					  }
+				  }
+				  
+			  }
 		  }
 	  }
 	    
@@ -504,6 +548,20 @@ depend java.util.stream.Collectors;
 	   
 	   	  
   }
+  
+  
+  
+  // resets initialized objects: use to control scope of objects
+  public void resetInitializedObject ()
+   
+   {
+	   for(UmpleClass uClass : model.getUmpleClasses())
+	   {
+		   uClass.setIsInitialized(false);
+	   }
+	   
+	   
+   }
   
   
   // initiate the whole model with minimum requirements
@@ -553,7 +611,22 @@ depend java.util.stream.Collectors;
 			   {
 				   dependencyInjection(model.getUmpleClass(cdp.getUClassName()));
 			   }
-			 depCode += cdp.getUClassName() + " "  + initiateClass(model.getUmpleClass(cdp.getUClassName())) + ";\n";  
+			 depCode += cdp.getUClassName() + " "  + initiateClass(model.getUmpleClass(cdp.getUClassName())) + ";\n";
+			 
+			 for (AssociationVariable av : uClass.getAssociationVariables())
+			 {
+				 
+				 if ( av.getRelatedAssociation().getUmpleClass().getName().equals(cdp.getUClassName()))
+				 { 
+					 
+					 if (av.isN()) {
+						 for (int x = 1 ; x< av.getMultiplicity().getLowerBound()+1;x++)
+						 {
+							 depCode += cdp.getUClassName() + " a"+ x  + initiateClass(model.getUmpleClass(cdp.getUClassName())) + ";\n";
+						 }
+					 }
+				 }
+			 }
 		   }
 	   }
 	   

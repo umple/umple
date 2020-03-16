@@ -22,6 +22,8 @@ This file creates the necessary for Optional One To Many Association
         		  assertTrue (a<<=av.getUmpleClass().getName()>>.get<<=av.getRelatedAssociation().getUmpleClass().getName()>>() == null);
         		  }
         		  
+        		  <<#gen.resetInitializedObject();#>>
+        		  
         		  
         		  
 !>>

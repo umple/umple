@@ -5,11 +5,127 @@
 
 ////---- Tests for  OneToManyAssociation ----/////
 
-Test A {
+test B {
 
  generate JUnit ;
  
- depend  A,B ; 
+ depend  B,C,Z,X,A ; 
+
+
+
+ 
+ GIVEN:
+ OneToManyAssociation.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+  
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  OneToManyAssociation ----/////
+
+test C {
+
+ generate JUnit ;
+ 
+ depend  B,C,Z,X,A ; 
+
+
+
+ 
+ GIVEN:
+ OneToManyAssociation.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+  
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  OneToManyAssociation ----/////
+
+test Z {
+
+ generate JUnit ;
+ 
+ depend  B,C,Z,X,A ; 
+
+
+
+ 
+ GIVEN:
+ OneToManyAssociation.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+  
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  OneToManyAssociation ----/////
+
+test X {
+
+ generate JUnit ;
+ 
+ depend  B,C,Z,X,A ; 
+
+
+
+ 
+ GIVEN:
+ OneToManyAssociation.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+  
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  OneToManyAssociation ----/////
+
+test A {
+
+ generate JUnit ;
+ 
+ depend  B,C,Z,X,A ; 
 
 
 
@@ -24,43 +140,20 @@ Test A {
 
       test attribute_id {
     
-    assertTrue( a.setId("RandomString1"));
-    assertTrue( a.getId() =="RandomString1");
-    assertTrue( a.setId("RandomString2"));
-    assertTrue( a.getId()=="RandomString2");
-    assertFalse( a.getId() =="RandomString1");
+      B aB(aC);
+
+        A aA("RandomString1",aB);
+        
+        
+    assertTrue( aA.setId("RandomString1"));
+    assertTrue( aA.getId() =="RandomString1");
+    assertTrue( aA.setId("RandomString2"));
+    assertTrue( aA.getId()=="RandomString2");
+    assertFalse( aA.getId() =="RandomString1");
              
-	}
+          
+        	}
 
-
-  
- 
-   
-
-}
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
-
-
-
-////---- Tests for  OneToManyAssociation ----/////
-
-Test B {
-
- generate JUnit ;
- 
- depend  A,B ; 
-
-
-
- 
- GIVEN:
- OneToManyAssociation.ump;
- 
- 
- 
- THEN:
- 
 
   
  

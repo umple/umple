@@ -1,7 +1,7 @@
 use attribute_typed.ump;
 use attribute_Lazy.ump;
 use attribute_Immutable.ump;
-//use attribute_Defaulted.ump;
+use attribute_Defaulted.ump;
 //use attribute_Autonique.ump;
 
 
@@ -24,6 +24,7 @@ This file generates Tests for attributes for a given class. Once all the attribu
   String attrName = StringFormatter.toPascalCase(at.getName());
   String isLazy = "";
   String isImmutable = "";
+  String isDefaulted = "";
   if(at.isIsLazy())
   {
   	isLazy = "lazy_";
@@ -33,10 +34,15 @@ This file generates Tests for attributes for a given class. Once all the attribu
   {
   	isImmutable = "immutable_";
   }
+  
+  if(at.isDefaulted())
+  {
+  	isDefaulted = "defaulted_";
+  }
   //appendln(realSb, " ");
   	#>> //tests for :<<=at.getName()>>
 
-  		test attribute_<<=isLazy>><<=isImmutable>><<=at.getName()>> {
+  		test attribute_<<=isLazy>><<=isImmutable>><<=isDefaulted>><<=at.getName()>> {
   	<<#
 
 
@@ -46,6 +52,13 @@ This file generates Tests for attributes for a given class. Once all the attribu
 	      {#>>	    	  
 	      <<#}
 	    	  	#>><<@UmpleToTest.attribute_typed>><<#
+	    	 if (at.isDefaulted())
+	    	 {#>>
+	    	 <<@UmpleToTest.attribute_Defaulted>>
+	    	 <<#}
+	      {#>>	    	  
+	      <<#} 	
+	    	  	
 		    }
 	    	  //appendln(realSb("\t}\n", attrName));
 	      

@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
 
 
 
@@ -36,8 +36,8 @@ depend  Airline,RegularFlight,SpecificFlight,PassengerRole,EmployeeRole,Person,P
               
               Airline aAirline();
 
-              RegularFlight aRegularFlight("17:03:00",123,aAirline); 
-              RegularFlight baRegularFlight("17:03:00",123,aAirline);
+              RegularFlight aRegularFlight("null",123,aAirline); 
+              RegularFlight baRegularFlight("null",123,aAirline);
               
               aRegularFlight.setAirline(baaAirline);
               assertEqual (baaAirline, aRegularFlight.getAirline());              
@@ -136,7 +136,7 @@ depend  Airline,RegularFlight,SpecificFlight,PassengerRole,EmployeeRole,Person,P
               test createRegularFlightWithoutSpecificFlight {              
               Airline aAirline();
 
-              RegularFlight aRegularFlight("17:03:00",123,aAirline);
+              RegularFlight aRegularFlight("null",123,aAirline);
               
               assertTrue (aRegularFlight.numberOfspecificFlights()== 0);
               }
@@ -147,12 +147,12 @@ depend  Airline,RegularFlight,SpecificFlight,PassengerRole,EmployeeRole,Person,P
               
               Airline aAirline();
                             
-              RegularFlight baRegularFlight("17:03:00",123,aAirline);
+              RegularFlight baRegularFlight("null",123,aAirline);
               
-              RegularFlight aRegularFlight("17:03:00",123,aAirline);
+              RegularFlight aRegularFlight("null",123,aAirline);
 
-              SpecificFlight aSpecificFlight("2020-12-06",aRegularFlight); 
-              SpecificFlight baSpecificFlight("2020-12-06",aRegularFlight);
+              SpecificFlight aSpecificFlight("null",aRegularFlight); 
+              SpecificFlight baSpecificFlight("null",aRegularFlight);
               
               aSpecificFlight.setRegularFlight(baaRegularFlight);
               assertEqual (baaRegularFlight, aSpecificFlight.getRegularFlight());              
@@ -165,7 +165,7 @@ depend  Airline,RegularFlight,SpecificFlight,PassengerRole,EmployeeRole,Person,P
               
               Airline aAirline();
 
-              RegularFlight aRegularFlight("17:03:00",123,aAirline);
+              RegularFlight aRegularFlight("null",123,aAirline);
               aRegularFlight.addSpecificFlight(aSpecificFlight);
               
               aSpecificFlight.delete(); 
@@ -194,7 +194,7 @@ depend  Airline,RegularFlight,SpecificFlight,PassengerRole,EmployeeRole,Person,P
               test createRegularFlightWithAirline {              
               Airline aAirline();
 
-              RegularFlight aRegularFlight("17:03:00",123,aAirline);
+              RegularFlight aRegularFlight("null",123,aAirline);
               
               assertTrue (aRegularFlight.getairline() == aAirline);
               }
@@ -205,10 +205,9 @@ depend  Airline,RegularFlight,SpecificFlight,PassengerRole,EmployeeRole,Person,P
               
               Airline aAirline();
                             
-              RegularFlight baRegularFlight("17:03:00",123,aAirline);
+              RegularFlight baRegularFlight("null",123,aAirline);
               
-              
-              Airline aAirline(); 
+                            
               Airline baAirline();
               
               aRegularFlight.setAirline(baAirline);
@@ -228,9 +227,9 @@ depend  Airline,RegularFlight,SpecificFlight,PassengerRole,EmployeeRole,Person,P
               /////// Association: -- [0,*] RegularFlight /////// 
               
               test createSpecificFlightWithRegularFlight {              
-              RegularFlight aRegularFlight("17:03:00",123,aAirline);
+              RegularFlight aRegularFlight("null",123,aAirline);
 
-              SpecificFlight aSpecificFlight("2020-12-06",aRegularFlight);
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
               
               assertTrue (aSpecificFlight.getregularFlight() == aRegularFlight);
               }
@@ -239,14 +238,13 @@ depend  Airline,RegularFlight,SpecificFlight,PassengerRole,EmployeeRole,Person,P
               
               test replaceRegularFlight{ 
               
-              RegularFlight aRegularFlight("17:03:00",123,aAirline);
+              RegularFlight aRegularFlight("null",123,aAirline);
                             
-              SpecificFlight baSpecificFlight("2020-12-06",aRegularFlight);
+              SpecificFlight baSpecificFlight("null",aRegularFlight);
               
               Airline aAirline();
-
-              RegularFlight aRegularFlight("17:03:00",123,aAirline); 
-              RegularFlight baRegularFlight("17:03:00",123,aAirline);
+              
+              RegularFlight baRegularFlight("null",123,aAirline);
               
               aSpecificFlight.setRegularFlight(baRegularFlight);
               
@@ -262,9 +260,9 @@ depend  Airline,RegularFlight,SpecificFlight,PassengerRole,EmployeeRole,Person,P
               /////// Association: -- [1,1] Booking /////// 
               
               test createSpecificFlightWithoutBooking {              
-              RegularFlight aRegularFlight("17:03:00",123,aAirline);
+              RegularFlight aRegularFlight("null",123,aAirline);
 
-              SpecificFlight aSpecificFlight("2020-12-06",aRegularFlight);
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
               
               assertTrue (aSpecificFlight.numberOfbookings()== 0);
               }
@@ -273,11 +271,11 @@ depend  Airline,RegularFlight,SpecificFlight,PassengerRole,EmployeeRole,Person,P
               
               test replaceSpecificFlightInBooking { 
               
-              RegularFlight aRegularFlight("17:03:00",123,aAirline);
+              RegularFlight aRegularFlight("null",123,aAirline);
                             
-              SpecificFlight baSpecificFlight("2020-12-06",aRegularFlight);
+              SpecificFlight baSpecificFlight("null",aRegularFlight);
               
-              SpecificFlight aSpecificFlight("2020-12-06",aRegularFlight);
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
 PassengerRole aPassengerRole();
 
               Booking aBooking("RandomString1",aSpecificFlight,aPassengerRole); 
@@ -292,9 +290,9 @@ PassengerRole aPassengerRole();
               
               test removeBookingInSpecificFlight {
               
-              RegularFlight aRegularFlight("17:03:00",123,aAirline);
+              RegularFlight aRegularFlight("null",123,aAirline);
 
-              SpecificFlight aSpecificFlight("2020-12-06",aRegularFlight);
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
               aSpecificFlight.addBooking(aBooking);
               
               aBooking.delete(); 
@@ -337,7 +335,7 @@ PassengerRole aPassengerRole();
                                           
               PassengerRole baPassengerRole();
               
-              SpecificFlight aSpecificFlight("2020-12-06",aRegularFlight);
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
 PassengerRole aPassengerRole();
 
               Booking aBooking("RandomString1",aSpecificFlight,aPassengerRole); 
@@ -514,8 +512,7 @@ PassengerRole aPassengerRole();
                             
               Person baPerson("RandomString1",123,aAirline);
               
-              
-              Airline aAirline(); 
+                            
               Airline baAirline();
               
               aPerson.setAirline(baAirline);
@@ -551,8 +548,7 @@ PassengerRole aPassengerRole();
               PersonRole baPersonRole(aPerson);
               
               Airline aAirline();
-
-              Person aPerson("RandomString1",123,aAirline); 
+              
               Person baPerson("RandomString1",123,aAirline);
               
               aPersonRole.setPerson(baPerson);
@@ -572,7 +568,7 @@ PassengerRole aPassengerRole();
               /////// Association: -- [0,*] SpecificFlight /////// 
               
               test createBookingWithSpecificFlight {              
-              SpecificFlight aSpecificFlight("2020-12-06",aRegularFlight);
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
 PassengerRole aPassengerRole();
 
               Booking aBooking("RandomString1",aSpecificFlight,aPassengerRole);
@@ -584,15 +580,14 @@ PassengerRole aPassengerRole();
               
               test replaceSpecificFlight{ 
               
-              SpecificFlight aSpecificFlight("2020-12-06",aRegularFlight);
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
 PassengerRole aPassengerRole();
                             
               Booking baBooking("RandomString1",aSpecificFlight,aPassengerRole);
               
-              RegularFlight aRegularFlight("17:03:00",123,aAirline);
-
-              SpecificFlight aSpecificFlight("2020-12-06",aRegularFlight); 
-              SpecificFlight baSpecificFlight("2020-12-06",aRegularFlight);
+              RegularFlight aRegularFlight("null",123,aAirline);
+              
+              SpecificFlight baSpecificFlight("null",aRegularFlight);
               
               aBooking.setSpecificFlight(baSpecificFlight);
               
@@ -608,7 +603,7 @@ PassengerRole aPassengerRole();
               /////// Association: -- [0,*] PassengerRole /////// 
               
               test createBookingWithPassengerRole {              
-              SpecificFlight aSpecificFlight("2020-12-06",aRegularFlight);
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
 PassengerRole aPassengerRole();
 
               Booking aBooking("RandomString1",aSpecificFlight,aPassengerRole);
@@ -620,13 +615,12 @@ PassengerRole aPassengerRole();
               
               test replacePassengerRole{ 
               
-              SpecificFlight aSpecificFlight("2020-12-06",aRegularFlight);
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
 PassengerRole aPassengerRole();
                             
               Booking baBooking("RandomString1",aSpecificFlight,aPassengerRole);
               
-              
-              PassengerRole aPassengerRole(); 
+                            
               PassengerRole baPassengerRole();
               
               aBooking.setPassengerRole(baPassengerRole);

@@ -5,7 +5,7 @@
 
 ////---- Tests for  GenericTestCase_String ----/////
 
-Test Person {
+test Person {
 
  generate JUnit ;
  
@@ -24,37 +24,49 @@ Test Person {
 
       test attribute_id {
     
-      assertTrue( person.setId(123)));
-      assertTrue( person.getId() == 123));
-      assertTrue( person.setId(321)));
-      assertTrue( person.getId() == 321));
-      assertFlase( person.getId() == 123));
+      
+        Person aPerson(123,"RandomString1","unidentified");        
+            
+      assertTrue( aPerson.setId(123));
+      assertTrue( aPerson.getId() == 123);
+      assertTrue( aPerson.setId(321));
+      assertTrue( aPerson.getId() == 321);
+      assertFalse( aPerson.getId() == 123);
           
-	}
+          
+        	}
 
  //tests for :name
 
       test attribute_name {
     
-    assertTrue( person.setName("RandomString1"));
-    assertTrue( person.getName() =="RandomString1");
-    assertTrue( person.setName("RandomString2"));
-    assertTrue( person.getName()=="RandomString2");
-    assertFalse( person.getName() =="RandomString1");
+      
+        Person aPerson(123,"RandomString1","unidentified");
+        
+        
+    assertTrue( aPerson.setName("RandomString1"));
+    assertTrue( aPerson.getName() =="RandomString1");
+    assertTrue( aPerson.setName("RandomString2"));
+    assertTrue( aPerson.getName()=="RandomString2");
+    assertFalse( aPerson.getName() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :postal
 
       test attribute_postal {
     
-      assertTrue( person.setPostal(123456789)));
-      assertTrue( person.getPostal() == 123456789));
-      assertTrue( person.setPostal(987654321)));
-      assertTrue( person.getPostal() == 987654321));
-      assertFlase( person.getPostal() == 123456789));
+      
+        Person aPerson(123,"RandomString1","unidentified");    
+      assertTrue( aPerson.setPostal(123456789));
+      assertTrue( aPerson.getPostal() == 123456789);
+      assertTrue( aPerson.setPostal(987654321));
+      assertTrue( aPerson.getPostal() == 987654321);
+      assertFalse( aPerson.getPostal() == 123456789);
           
-	}
+          
+        	}
 
 
       //------------------

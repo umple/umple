@@ -5,7 +5,7 @@
 
 ////---- Tests for  GenericTestCase_Integer ----/////
 
-Test Student {
+test Student {
 
  generate JUnit ;
  
@@ -24,37 +24,52 @@ Test Student {
 
       test attribute_studentId {
     
-    assertTrue( student.setStudentId("RandomString1"));
-    assertTrue( student.getStudentId() =="RandomString1");
-    assertTrue( student.setStudentId("RandomString2"));
-    assertTrue( student.getStudentId()=="RandomString2");
-    assertFalse( student.getStudentId() =="RandomString1");
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aStudent.setStudentId("RandomString1"));
+    assertTrue( aStudent.getStudentId() =="RandomString1");
+    assertTrue( aStudent.setStudentId("RandomString2"));
+    assertTrue( aStudent.getStudentId()=="RandomString2");
+    assertFalse( aStudent.getStudentId() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :name
 
       test attribute_name {
     
-    assertTrue( student.setName("RandomString1"));
-    assertTrue( student.getName() =="RandomString1");
-    assertTrue( student.setName("RandomString2"));
-    assertTrue( student.getName()=="RandomString2");
-    assertFalse( student.getName() =="RandomString1");
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aStudent.setName("RandomString1"));
+    assertTrue( aStudent.getName() =="RandomString1");
+    assertTrue( aStudent.setName("RandomString2"));
+    assertTrue( aStudent.getName()=="RandomString2");
+    assertFalse( aStudent.getName() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :address
 
       test attribute_address {
     
-    assertTrue( student.setAddress("RandomString1"));
-    assertTrue( student.getAddress() =="RandomString1");
-    assertTrue( student.setAddress("RandomString2"));
-    assertTrue( student.getAddress()=="RandomString2");
-    assertFalse( student.getAddress() =="RandomString1");
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aStudent.setAddress("RandomString1"));
+    assertTrue( aStudent.getAddress() =="RandomString1");
+    assertTrue( aStudent.setAddress("RandomString2"));
+    assertTrue( aStudent.getAddress()=="RandomString2");
+    assertFalse( aStudent.getAddress() =="RandomString1");
              
-	}
+          
+        	}
 
 
       //------------------

@@ -5,7 +5,7 @@
 
 ////---- Tests for  GenericTestCase_association_optionalOneToOne ----/////
 
-Test Calculator {
+test Calculator {
 
  generate JUnit ;
  
@@ -24,31 +24,61 @@ Test Calculator {
 
       test attribute_name {
     
-    assertTrue( calculator.setName("RandomString1"));
-    assertTrue( calculator.getName() =="RandomString1");
-    assertTrue( calculator.setName("RandomString2"));
-    assertTrue( calculator.getName()=="RandomString2");
-    assertFalse( calculator.getName() =="RandomString1");
+      Number aNumber("RandomString1",aController);
+
+        Calculator aCalculator("RandomString1","RandomString1",123,aNumber);
+        
+        
+    assertTrue( aCalculator.setName("RandomString1"));
+    assertTrue( aCalculator.getName() =="RandomString1");
+    assertTrue( aCalculator.setName("RandomString2"));
+    assertTrue( aCalculator.getName()=="RandomString2");
+    assertFalse( aCalculator.getName() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :address
 
       test attribute_address {
     
-    assertTrue( calculator.setAddress("RandomString1"));
-    assertTrue( calculator.getAddress() =="RandomString1");
-    assertTrue( calculator.setAddress("RandomString2"));
-    assertTrue( calculator.getAddress()=="RandomString2");
-    assertFalse( calculator.getAddress() =="RandomString1");
+      Number aNumber("RandomString1",aController);
+
+        Calculator aCalculator("RandomString1","RandomString1",123,aNumber);
+        
+        
+    assertTrue( aCalculator.setAddress("RandomString1"));
+    assertTrue( aCalculator.getAddress() =="RandomString1");
+    assertTrue( aCalculator.setAddress("RandomString2"));
+    assertTrue( aCalculator.getAddress()=="RandomString2");
+    assertFalse( aCalculator.getAddress() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :someNO
 
       test attribute_someNO {
     
-	}
+          
+        	}
+
+ //tests for :numbers
+
+      test attribute_numbers {
+    
+      Number aNumber("RandomString1",aController);
+
+        Calculator aCalculator("RandomString1","RandomString1",123,aNumber);        
+            
+      assertTrue( aCalculator.setNumbers(123));
+      assertTrue( aCalculator.getNumbers() == 123);
+      assertTrue( aCalculator.setNumbers(321));
+      assertTrue( aCalculator.getNumbers() == 321);
+      assertFalse( aCalculator.getNumbers() == 123);
+          
+          
+        	}
 
 
       //------------------
@@ -78,7 +108,7 @@ Test Calculator {
 
 ////---- Tests for  GenericTestCase_association_optionalOneToOne ----/////
 
-Test Number {
+test Number {
 
  generate JUnit ;
  
@@ -97,13 +127,19 @@ Test Number {
 
       test attribute_id {
     
-    assertTrue( number.setId("RandomString1"));
-    assertTrue( number.getId() =="RandomString1");
-    assertTrue( number.setId("RandomString2"));
-    assertTrue( number.getId()=="RandomString2");
-    assertFalse( number.getId() =="RandomString1");
+      Controller aController("RandomString1",aLevel3);
+
+        Number aNumber("RandomString1",aController);
+        
+        
+    assertTrue( aNumber.setId("RandomString1"));
+    assertTrue( aNumber.getId() =="RandomString1");
+    assertTrue( aNumber.setId("RandomString2"));
+    assertTrue( aNumber.getId()=="RandomString2");
+    assertFalse( aNumber.getId() =="RandomString1");
              
-	}
+          
+        	}
 
 
   
@@ -118,7 +154,7 @@ Test Number {
 
 ////---- Tests for  GenericTestCase_association_optionalOneToOne ----/////
 
-Test Level3 {
+test Level3 {
 
  generate JUnit ;
  
@@ -147,7 +183,7 @@ Test Level3 {
 
 ////---- Tests for  GenericTestCase_association_optionalOneToOne ----/////
 
-Test Controller {
+test Controller {
 
  generate JUnit ;
  
@@ -166,13 +202,19 @@ Test Controller {
 
       test attribute_serialNo {
     
-    assertTrue( controller.setSerialNo("RandomString1"));
-    assertTrue( controller.getSerialNo() =="RandomString1");
-    assertTrue( controller.setSerialNo("RandomString2"));
-    assertTrue( controller.getSerialNo()=="RandomString2");
-    assertFalse( controller.getSerialNo() =="RandomString1");
+      Level3 aLevel3();
+
+        Controller aController("RandomString1",aLevel3);
+        
+        
+    assertTrue( aController.setSerialNo("RandomString1"));
+    assertTrue( aController.getSerialNo() =="RandomString1");
+    assertTrue( aController.setSerialNo("RandomString2"));
+    assertTrue( aController.getSerialNo()=="RandomString2");
+    assertFalse( aController.getSerialNo() =="RandomString1");
              
-	}
+          
+        	}
 
 
   

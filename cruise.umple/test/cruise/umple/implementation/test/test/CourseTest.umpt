@@ -1,11 +1,11 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
 
 
 
 ////---- Tests for  interfaceTest ----/////
 
-Test Course {
+test Course {
 
  generate JUnit ;
  
@@ -24,11 +24,13 @@ Test Course {
 
       test attribute_name {
     
-    assertTrue( course.setName("RandomString1"));
-    assertTrue( course.getName() =="RandomString1");
-    assertTrue( course.setName("RandomString2"));
-    assertTrue( course.getName()=="RandomString2");
-    assertFalse( course.getName() =="RandomString1");
+      
+        Course aCourse("RandomString1","RandomString1");
+    assertTrue( aCourse.setName("RandomString1"));
+    assertTrue( aCourse.getName() =="RandomString1");
+    assertTrue( aCourse.setName("RandomString2"));
+    assertTrue( aCourse.getName()=="RandomString2");
+    assertFalse( aCourse.getName() =="RandomString1");
              
 	}
 
@@ -36,11 +38,13 @@ Test Course {
 
       test attribute_description {
     
-    assertTrue( course.setDescription("RandomString1"));
-    assertTrue( course.getDescription() =="RandomString1");
-    assertTrue( course.setDescription("RandomString2"));
-    assertTrue( course.getDescription()=="RandomString2");
-    assertFalse( course.getDescription() =="RandomString1");
+      
+        Course aCourse("RandomString1","RandomString1");
+    assertTrue( aCourse.setDescription("RandomString1"));
+    assertTrue( aCourse.getDescription() =="RandomString1");
+    assertTrue( aCourse.setDescription("RandomString2"));
+    assertTrue( aCourse.getDescription()=="RandomString2");
+    assertFalse( aCourse.getDescription() =="RandomString1");
              
 	}
 

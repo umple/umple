@@ -5,7 +5,7 @@
 
 ////---- Tests for  MethodCommentWithEmptyLines ----/////
 
-Test Foo {
+test Foo {
 
  generate JUnit ;
  

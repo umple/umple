@@ -5,7 +5,7 @@
 
 ////---- Tests for  TestCaseAction ----/////
 
-Test Job {
+test Job {
 
  generate JUnit ;
  
@@ -24,13 +24,19 @@ Test Job {
 
       test attribute_name {
     
-    assertTrue( job.setName("RandomString1"));
-    assertTrue( job.getName() =="RandomString1");
-    assertTrue( job.setName("RandomString2"));
-    assertTrue( job.getName()=="RandomString2");
-    assertFalse( job.getName() =="RandomString1");
+      Person aPerson(aOrganization);
+
+        Job aJob("RandomString1",aPerson);
+        
+        
+    assertTrue( aJob.setName("RandomString1"));
+    assertTrue( aJob.getName() =="RandomString1");
+    assertTrue( aJob.setName("RandomString2"));
+    assertTrue( aJob.getName()=="RandomString2");
+    assertFalse( aJob.getName() =="RandomString1");
              
-	}
+          
+        	}
 
 
   
@@ -45,7 +51,7 @@ Test Job {
 
 ////---- Tests for  TestCaseAction ----/////
 
-Test Organization {
+test Organization {
 
  generate JUnit ;
  
@@ -74,7 +80,7 @@ Test Organization {
 
 ////---- Tests for  TestCaseAction ----/////
 
-Test Score {
+test Score {
 
  generate JUnit ;
  
@@ -93,13 +99,18 @@ Test Score {
 
       test attribute_score {
     
-      assertTrue( score.setScore(123)));
-      assertTrue( score.getScore() == 123));
-      assertTrue( score.setScore(321)));
-      assertTrue( score.getScore() == 321));
-      assertFlase( score.getScore() == 123));
+      Person aPerson(aOrganization);
+
+        Score aScore(123,aPerson);        
+            
+      assertTrue( aScore.setScore(123));
+      assertTrue( aScore.getScore() == 123);
+      assertTrue( aScore.setScore(321));
+      assertTrue( aScore.getScore() == 321);
+      assertFalse( aScore.getScore() == 123);
           
-	}
+          
+        	}
 
 
   
@@ -117,7 +128,7 @@ All person cannot have a Coash as a job.
 
 ////---- Tests for  TestCaseAction ----/////
 
-Test Person {
+test Person {
 
  generate JUnit ;
  
@@ -129,7 +140,10 @@ Test Person {
  GIVEN:
  TestCaseAction.ump;
  
- 
+ WHERE:
+  Person p1 ("john", 123);
+  Job j1 ("Cashier");
+  
  
  THEN:
 
@@ -147,21 +161,14 @@ Test Person {
       //------------------
 
       
-      test Init {
-        Person p1 ("john", 123);
-        Job j1 ("Cashier");
-        }
-      
-      
-      
-      
-        
-    
-      
       test checkForLoop {
         Person p1 (123);
         ArrayList<Job> jobs = p1.getJobs();
         Integer size = jobs.size();
+        for ( Job job : jobs )
+	 {
+	assertTrue(job.getName() != "Coach"); 
+	}
         }
       
       
@@ -176,7 +183,7 @@ Test Person {
         //----------------
         //before assertions
         //----------------
-        AssertFalse(firstName == "Orlean");
+        AssertFalse(d1.firstName() == "Orlean");
         //End of before assertions
 
         //something
@@ -197,7 +204,7 @@ Test Person {
         //----------------
         //after assertions
         //----------------
-        AssertFalse(firstName == "something");
+        AssertFalse(p1.getId() == "something");
         //End of after assertions
 
         }
@@ -214,7 +221,7 @@ Test Person {
         //----------------
         //before assertions
         //----------------
-        AssertTrue(jobName == "Cashier");
+        AssertTrue(job.getName == "Cashier");
         //End of before assertions
 
         job1.promote();

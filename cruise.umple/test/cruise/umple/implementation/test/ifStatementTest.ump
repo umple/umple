@@ -13,7 +13,7 @@ class Person {
   
   if (tempId == 1324 )
   {
-  	   assertTrue (job == "Saleman");
+  	   assertTrue (job.getName() == "Saleman");
   
   }
     

@@ -1,0 +1,35 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  attribute ----/////
+
+test attribute {
+
+generate JUnit;
+
+depend  A,B ; 
+
+
+
+
+GIVEN:
+attribute.ump;
+THEN:
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class A       */
+  /*-------------------------*/
+
+  /*-------------------------*/
+  /*  Class B       */
+  /*-------------------------*/
+
+ 
+ 
+
+ }
