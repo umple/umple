@@ -3,7 +3,7 @@ class Calculator{
     
     Integer x;
     Integer y;
-    String someString
+    String someString;
         
   Integer  returnInteger (Integer x) { return x+y;}
   
