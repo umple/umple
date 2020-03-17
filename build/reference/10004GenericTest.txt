@@ -1,0 +1,23 @@
+Generic Testing
+Tests
+noreferences
+
+@@description
+<p>Generic testcase is an Umple testcase that is defined as <i>generic</i>. This allows you write a test template that has access to the metamodel in order to propagate the template against a number of elements those match a certain pattern. For instance, you can write a generic test that can be generated for each attribute that is string and has a certain prefix 'studentXXX' or a suffix such as 'XXXId'. You can also use regular expression to match attribute name. We can this a <i>fix</i> in the template. Currently, generic tests can be generated for: attributes, methods and associations. Attibutes can be matched using name and type, methods can be matched using name and exact order of parameters and association are matched based on the type of associations and given specfic fixes to handle association variable propagation. 
+</p>
+
+
+
+@@example
+@@source manualexamples/autotest_generic1.ump
+@@endexample
+
+@@example
+@@source manualexamples/autotest_generic2.ump
+@@endexample
+
+@@example
+@@source manualexamples/autotest_generic3.ump
+@@endexample
+
+
