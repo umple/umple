@@ -3,10 +3,11 @@ class Calculator{
     
     Integer x;
     Integer y;
+    String someString
         
   Integer  returnInteger (Integer x) { return x+y;}
   
-  String  returnStirng (Integer x) { return (x+y).toString();}
+  String  returnStirng (Integer x) { return someString;}
     
     
   generic test checkifLogged(Integer method Integer){
