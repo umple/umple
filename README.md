@@ -98,6 +98,8 @@ The umple project is split into many smaller subprojects; the folder hierarchy i
   * umplesync.VERSION.jar *UmpleOnline tool to to synchronize graphical form*
   * umplerun.VERSION.jar *tool to drive input to an umple program*
   * vml.VERSION.jar * Extension for variability modeling*
+  * umple.unit-test.jar *Test Language Compiler*
+  * umple.mutation.jar *Umple Mutant Generator*
 
 * examples/ *Developer curated examples*
 * externalexamples/ *External projects that are used for testing*
@@ -113,8 +115,11 @@ The umple project is split into many smaller subprojects; the folder hierarchy i
 * UmpleToRTCpp/ *Code generation for C++ *
 * UmpleToSDL/ *Code generation to convert Umple to SDL* (in early development)
 * UmpleToSql/ *Code generation SQL from Umple models*
+* UmpleToTest/ *Code generation for abstract tests*
 * UmpleToTemplate/ *Location for templates that could be common to subprojects*
-
+* UmpleTToJunit/ *Code Generation for JUnit5 - used by MTL compiler*
+* UmpleTToPhpunit/ *Code Generation for PhpUnit - used by MTL compiler*
+* UmpleTToRubyunit/ *Code Generation for RubyUnit - used by MTL compiler*
 * umpleonline/ *The UmpleOnline web application*
   * UmpleOnline allows generation of code from Umple directly in a web browser, and also editing of Umple both graphically and textually. Available at http://try.umple.org
 
