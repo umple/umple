@@ -19,7 +19,7 @@ constraintToken : [[constraint]]
 
 // A constraint is an expression optionally be surrounded in round brackets or negated
 constraint- :  [[constraintBody]] [[linkingOp]]? |  [[constraintExpr]] [[linkingOp]]?
-//negativeConstraint : ( ! | not ) ( [[constraintName]] | [[constraint]] )
+//negativeConstraint : ( ! | not ) ( [[constraintName]] | [[constraint]] )   fixed issue1536 'Umple does not parse properly the guards'
 negativeConstraint : ( ! | [!constraintNegSymbol:not\s+] ) ( [[constraintName]] | [[constraint]] )
 
 // A constraint body is a constraint expression (possibly with a linking operator such as && or ||). 
