@@ -122,7 +122,13 @@ public class StateMachineTest extends StateMachineTemplateTest
 
 
   // SPACING
-  
+
+  // Spacing after the guard negation symbol
+  @Test //Test the spacing problems in issue 1536
+  public void guardNegSymbolSpacing() {
+	  assertUmpleTemplateFor("guardNegSymbolSpacing.ump",languagePath + "/guardNegSymbolSpacing."+ languagePath +".txt","Agent");
+  }
+
   // Spacing of state transaction actions
   
   @Test // Test the spacing problems in issue 155
