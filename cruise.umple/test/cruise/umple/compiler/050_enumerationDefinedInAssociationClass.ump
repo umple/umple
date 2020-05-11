@@ -1,0 +1,10 @@
+class A {}  
+  
+class B {}  
+  
+associationClass C {  
+  * A;  
+  * B; 
+  enum AttributeName {something};
+  AttributeName attribute;
+}  
