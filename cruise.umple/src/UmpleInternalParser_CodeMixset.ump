@@ -334,6 +334,48 @@ class UmpleInternalParser
 	  
 	return  mixset ;
   }
+  
+  private void parseMixsetFragmentNotUsed(MixsetFragment mixsetFragment){
+    if(! mixsetFragment.getIsParsed()) // a fragment that is not parsed before. 
+    {
+      String mixsetFragmentFile = mixsetFragment.getOriginalUmpFile().getPath()+"/"+mixsetFragment.getOriginalUmpFile().getFileName();
+      int mixsetFragmentLine = mixsetFragment.getOriginalUmpLine() - 1;
+      String mixsetFragmentBodyExtraLine = mixsetFragment.getBody()+"\n;";
+      ParseResult result= parse("MixsetFragmentParsing",  mixsetFragmentBodyExtraLine, mixsetFragmentFile, null, mixsetFragmentLine,0); 
+      setParseResult(result);
+      Token answer = getParser().getRootToken(); // result of parsing the body of a mixset waitingFragments
+      //    setRootToken(answer);
+      //    model.setLastResult(result);
+      answer.setName("mixsetDefinition"); //attach the mixset name for the fragment instead of ROOT
+      answer.setValue(mixsetFragment.getMixset().getMixsetName());
+      //isFeature + umpFiles + require-st
+
+      //    analyzeAllTokens(answer);
+      //  mixsetFragment.setIsParsed(true);
+    }
+  }
+  /*
+   * This method does partial parsing for mixsets that have no use-statements.
+   */
+    private void parseMixsetsNotUsed() {
+      
+    List<Mixset> mixsetList = model.getMixsetOrFiles().stream().filter(mixset -> mixset.getIsMixset()).map(obj -> (Mixset)obj).collect(Collectors.toList());
+    for (Mixset aMixset: mixsetList)
+    {
+      List<MixsetFragment>mixsetFragmentList= aMixset.getMixsetFragments();
+      for(MixsetFragment aMixsetFragment :  mixsetFragmentList)
+      {
+        if(aMixsetFragment.getIsParsed()) // the fragment is already parsed 
+          continue;
+        else
+        {
+          parseMixsetFragmentNotUsed(aMixsetFragment);
+          
+        }
+      }
+      
+    }
+  }
     
   
 }
