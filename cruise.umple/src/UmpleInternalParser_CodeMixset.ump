@@ -289,12 +289,12 @@ class UmpleInternalParser
   private MixsetFragment createMixsetFragment(Token token) {  
     String mixsetName = token.getValue("mixsetName");
     // check if the mixset is was not added before
-    Mixset mixset = getModel().getMixset(mixsetName);
+    Mixset mixset = model.getMixset(mixsetName);
     
     if(mixset  == null)
     {
        mixset  = new Mixset(mixsetName);
-       getModel().addMixsetOrFile(mixset);
+       model.addMixsetOrFile(mixset);
     }
     
     Position mixsetFragmentPosition = null;
@@ -330,7 +330,7 @@ class UmpleInternalParser
       mixsetBody = ""; // because there is no fragment to add. 
       
       mixsetFragmentLineNumber = mixsetFragmentPosition.getLineNumber();
-      UmpleFile mixsetFragmentUmpleFile = getModel().getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
+      UmpleFile mixsetFragmentUmpleFile = model.getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
       MixsetFragment mixsetFragment = new MixsetFragment(mixsetFragmentUmpleFile, mixsetFragmentLineNumber, mixsetBody);
       mixsetFragment.setMixset(mixset);
     return mixsetFragment;
