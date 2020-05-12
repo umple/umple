@@ -38,9 +38,9 @@ class UmpleFile {
 // It consists of one or more fragments that are encountered anywhere in the Umple source
 // including in other mixsets
 class Mixset {
-  mixsetName; // THe name of the mixset
+  mixsetName; // name of the mixset
   isA MixsetOrFile;
-  
+  boolean isFeature = false;  // Specify a mixset to be a feature. Default value is false.. 
 
   after constructor {  
     setIsMixset(true);
