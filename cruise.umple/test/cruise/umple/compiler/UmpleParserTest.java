@@ -2986,6 +2986,17 @@ public class UmpleParserTest
   assertFailedParse("050_duplicateEnumsInClass.ump", 95);
  }
 
+ //Issue 1522
+ @Test
+ public void parseUmpleEnumerationDefinedInAssociationClass () {
+    assertSimpleParse("050_enumerationDefinedInAssociationClass.ump");
+    UmpleClass uClass = model.getUmpleClass("C");
+    Assert.assertEquals(1, uClass.getEnums().size());
+
+    Assert.assertEquals("AttributeName", uClass.getEnum(0).getName());
+    Assert.assertEquals("something", uClass.getEnum(0).getEnumValue(0));
+ }
+
  // Issue 1008
  @Test
  public void namingConflictBetweenEnumerationAndClass() {
