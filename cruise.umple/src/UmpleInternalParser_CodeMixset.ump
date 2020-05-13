@@ -298,11 +298,8 @@ class UmpleInternalParser
   }
   
   private MixsetFragment createMixsetFragment(Token token,  Mixset mixset) {  
-  
-    
     Position mixsetFragmentPosition = null;
     int mixsetFragmentLineNumber = 0;
-
     String mixsetBody = token.getValue("extraCode");
     if(mixsetBody != null)
     {
@@ -339,8 +336,6 @@ class UmpleInternalParser
       mixsetFragment.setMixset(mixset);
     return mixsetFragment;
   }
-
-
   
   private void parseMixsetFragmentNotUsed(MixsetFragment mixsetFragment){
     if(! mixsetFragment.getIsParsed()) // a fragment that is not parsed before. 
@@ -357,6 +352,23 @@ class UmpleInternalParser
       answer.setValue(mixsetFragment.getMixset().getMixsetName());
       //  getIsFeature()
       //isFeature + umpFiles(use-st) + require-st
+      for(Token token : answer.getSubTokens())
+      {
+        analyzeRequireStatement(token, 2);
+        if(token.is("mixsetDefinition"))
+        {
+          String mixsetName = token.getValue("mixsetName");
+          // check if the mixset is was not added before
+          Mixset mixset = model.getMixset(mixsetName);
+          if(mixset  == null)
+          {
+            mixset  = new Mixset(mixsetName);
+            model.addMixsetOrFile(mixset);
+          }
+          
+           createMixsetFragment(token,  mixset) ;
+        }
+      }
 
       //    analyzeAllTokens(answer);
       //  mixsetFragment.setIsParsed(true);

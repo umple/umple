@@ -403,7 +403,7 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(List<Toke
   }
   public void analyzeFeatureModel()
   {
-   // parseMixsetsNotUsed();
+    parseMixsetsNotUsed();
     
     if(model.getFeatureModel() != null)
     model.getFeatureModel().satisfyFeatureModel();
