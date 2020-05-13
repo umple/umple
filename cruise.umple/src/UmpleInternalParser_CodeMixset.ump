@@ -273,9 +273,20 @@ class UmpleInternalParser
   }
 
   private Mixset analyzeMixset(Token token){
+    String mixsetName = token.getValue("mixsetName");
+    // check if the mixset is was not added before
+    Mixset mixset = model.getMixset(mixsetName);
+    
+    if(mixset  == null)
+    {
+       mixset  = new Mixset(mixsetName);
+       model.addMixsetOrFile(mixset);
+    }
     //inline mixset def.
-    MixsetFragment mixsetFragment = createMixsetFragment(token);      
-    Mixset mixset = mixsetFragment.getMixset();
+    MixsetFragment mixsetFragment = createMixsetFragment(token, mixset);
+    if(mixsetFragment == null)
+    return mixset;
+    //else      
     // Here the mixset fragment is considered as waitingFragment (mixsetFragment.isParsed==false). 
     mixset.addMixsetFragment(mixsetFragment);
     mixsetFragment.setMixset(mixset);
@@ -286,24 +297,17 @@ class UmpleInternalParser
       return mixset;
   }
   
-  private MixsetFragment createMixsetFragment(Token token) {  
-    String mixsetName = token.getValue("mixsetName");
-    // check if the mixset is was not added before
-    Mixset mixset = model.getMixset(mixsetName);
-    
-    if(mixset  == null)
-    {
-       mixset  = new Mixset(mixsetName);
-       model.addMixsetOrFile(mixset);
-    }
+  private MixsetFragment createMixsetFragment(Token token,  Mixset mixset) {  
+  
     
     Position mixsetFragmentPosition = null;
+    int mixsetFragmentLineNumber = 0;
+
     String mixsetBody = token.getValue("extraCode");
     if(mixsetBody != null)
     {
       mixsetFragmentPosition = token.getSubToken("extraCode").getPosition();
     }       
-    int mixsetFragmentLineNumber;
     String entityType = token.getValue("entityType");
     String entityName = token.getValue("entityName");
     
@@ -327,7 +331,7 @@ class UmpleInternalParser
       }
       
       if(mixsetBody == null)
-      mixsetBody = ""; // because there is no fragment to add. 
+      return null; // because there is no fragment to add. 
       
       mixsetFragmentLineNumber = mixsetFragmentPosition.getLineNumber();
       UmpleFile mixsetFragmentUmpleFile = model.getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
