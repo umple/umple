@@ -338,6 +338,9 @@ class UmpleInternalParser
   }
   
   private void parseMixsetFragmentNotUsed(MixsetFragment mixsetFragment){
+    if(mixsetFragment == null)
+    return;
+    //else
     if(! mixsetFragment.getIsParsed()) // a fragment that is not parsed before. 
     {
       String mixsetFragmentFile = mixsetFragment.getOriginalUmpFile().getPath()+"/"+mixsetFragment.getOriginalUmpFile().getFileName();
@@ -366,7 +369,7 @@ class UmpleInternalParser
             model.addMixsetOrFile(mixset);
           }
           
-           createMixsetFragment(token,  mixset) ;
+           parseMixsetFragmentNotUsed(createMixsetFragment(token,  mixset) );
         }
       }
 
