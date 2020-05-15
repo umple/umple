@@ -74,7 +74,7 @@ class UmpleModel
   
   internal List<File> linkedFiles = new ArrayList<File>();
 
-  
+  1 -> * CodeInjection;
   
   // The Umple Enumerations contained within the model
   1 -> * UmpleEnumeration enums;

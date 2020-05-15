@@ -2168,6 +2168,7 @@ public class UmpleParserTest
   @Test
   public void beforeKeyword()
   {
+    System.out.println("Testing in class beforeKeyword HERE"); //DEBUG
     assertParse("019_before.ump");
 
     UmpleClass student = model.getUmpleClass("Student");
@@ -2191,6 +2192,20 @@ public class UmpleParserTest
     Assert.assertEquals("after",inject.getType());
     Assert.assertEquals("getName",inject.getOperation());
     Assert.assertEquals("notReallyPossible();",inject.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelBeforeKeyword()
+  {
+       System.out.println(); // Debug
+       System.out.println("toplevelBeforeKeyword Tested"); // Debug
+       System.out.println(); // Debug
+    assertSimpleParse("1521_toplevelBefore.ump");
+    CodeInjection inject = model.getCodeInjection(0);
+    Assert.assertEquals("before",inject.getType());
+    Assert.assertEquals("setName",inject.getOperation());
+    Assert.assertEquals("doSomething();",inject.getCode());
   }
 
   @Test

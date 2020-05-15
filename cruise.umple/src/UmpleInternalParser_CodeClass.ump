@@ -3808,6 +3808,79 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     return operationName.toString();
   }
 
+  // Issue#1521
+  private void analyzeToplevelInjectionCode(Token injectToken, int analysisStep)
+  {
+    Token classNameToken = injectToken.getSubTokens("className");
+    String className = classNameToken.getValue();
+    injectToken.removeSubToken(classNameToken);
+    analyzeInjectionCode(injectToken, model.getUmpleClass(className));
+  }
+  private void analyzeInjectionCode(Token injectToken, int analysisStep)
+  {
+       System.out.println(); // Debug
+       System.out.println("analyzeInjectionCode0"); // Debug
+       System.out.println(); // Debug
+    //if (analysisStep != 2)
+    //{
+    //  shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
+    //  return;
+    //}
+    String type = injectToken.is("beforeCode") ? "before" : "after";
+    Token codeLabelToken = injectToken.getSubToken("codeLabel");
+
+       System.out.println(); // Debug
+       System.out.println("analyzeInjectionCode01"); // Debug
+       System.out.println(); // Debug
+    // around as aspect type
+    if( (injectToken.getSubToken("around") != null) && (codeLabelToken != null) ) {
+      type="around";
+    }
+    CodeBlock cb = new CodeBlock();
+    String operationName = getOperationName(injectToken);
+    String operationSource = getOperationSource(injectToken).toLowerCase();
+
+       System.out.println(); // Debug
+       System.out.println("analyzeInjectionCode02"); // Debug
+       System.out.println(); // Debug
+    if(operationSource.equals("")) {
+      operationSource = "all";
+    }
+
+       System.out.println(); // Debug
+       System.out.println("analyzeInjectionCode03"); // Debug
+       System.out.println(); // Debug
+    CodeInjection injection = new CodeInjection(type,operationName,"");
+    injection.setOperationSource(operationSource);
+     // check if the aspect needs to be injected before/after a label.
+    if(codeLabelToken != null)
+    injection.setInjectionlabel(codeLabelToken.getValue());
+
+       System.out.println(); // Debug
+       System.out.println("analyzeInjectionCode04"); // Debug
+       System.out.println(); // Debug
+    List<String> operationsParameters = getOperationsParameters(injectToken);
+       System.out.println(); // Debug
+       System.out.println("analyzeInjectionCode040"); // Debug
+       System.out.println("length:" + operationsParameters.size()); // Debug
+    for(String operationParameter : operationsParameters) {  
+       System.out.println(); // Debug
+       System.out.println("analyzeInjectionCode041"); // Debug
+       System.out.println("size:" + operationParameter); // Debug 
+      //injection.addParameter(operationParameter);  
+       System.out.println(); // Debug
+       System.out.println("analyzeInjectionCode042"); // Debug
+       System.out.println(); // Debug    
+    }
+
+       System.out.println(); // Debug
+       System.out.println("analyzeInjectionCode05"); // Debug
+       System.out.println(); // Debug
+    makeCodeInject(injectToken,injection,cb);
+    injection.setSnippet(cb);
+    model.addCodeInjection(injection);
+  }
+
   //TODO I changed the parameter's type. please remove this comment;
   private void analyzeInjectionCode(Token injectToken, UmpleClassifier uClassifier)
   {
@@ -3992,6 +4065,41 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
   }
   
+  // Issue#1521
+  private void makeCodeInject(Token injectToken,CodeInjection injection, CodeBlock cb)
+  {
+    List<String> langs = new ArrayList<String>();
+    for(Token sub: injectToken.getSubTokens())
+    {
+      if(sub.is("codeLang"))
+      {
+        langs.add(sub.getValue());
+      }
+      if(sub.is("code"))
+      {          
+        if(langs.size()==0)
+        {
+          cb.setCode(sub.getValue());
+          injection.setCodePosition(sub.getPosition());
+        }
+        else
+        {
+          for(String lang:langs)
+            {
+                cb.setCode(lang,sub.getValue());
+                if("Java".equals(lang))
+                {
+                  injection.setCodePosition(sub.getPosition());
+                }
+            }
+        }
+        langs.clear();      
+      }
+    }    
+    injection.setPosition(injectToken.getPosition());
+    
+  }
+
   //TODO I changed the parameter's type. please remove this comment;
   private void makeCodeInject(Token injectToken,CodeInjection injection, CodeBlock cb, UmpleClassifier uClassifier)
   {

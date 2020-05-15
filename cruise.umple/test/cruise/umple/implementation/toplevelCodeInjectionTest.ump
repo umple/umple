@@ -1,0 +1,5 @@
+before setName { doSomething(); }  
+class Student
+{
+  name;
+}
