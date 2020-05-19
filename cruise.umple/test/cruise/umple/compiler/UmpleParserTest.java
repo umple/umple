@@ -2202,7 +2202,9 @@ public class UmpleParserTest
        System.out.println("toplevelBeforeKeyword Tested"); // Debug
        System.out.println(); // Debug
     assertSimpleParse("1521_toplevelBefore.ump");
-    CodeInjection inject = model.getCodeInjection(0);
+    UmpleClass student = model.getUmpleClass("Student");
+    Assert.assertEquals(1,student.numberOfCodeInjections());
+    CodeInjection inject = student.getCodeInjection(0);
     Assert.assertEquals("before",inject.getType());
     Assert.assertEquals("setName",inject.getOperation());
     Assert.assertEquals("doSomething();",inject.getCode());

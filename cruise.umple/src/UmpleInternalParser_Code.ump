@@ -220,7 +220,7 @@ class UmpleInternalParser
       {
         analyzeToken(t,analysisStep);
         if (!getParseResult().getWasSuccess())
-        {
+        {System.out.println("PARSE FAILED");//DEBUG
           return;
         }
       }
@@ -287,10 +287,19 @@ class UmpleInternalParser
      }
    
      if (t.is("toplevelBeforeCode") || t.is("toplevelAfterCode"))//"beforeCode") || t.is("afterCode"))
-     {
+     {//System.out.println("class content ToString():");
+       //System.out.println(model.getUmpleClass("Student").getMethodNames().get(0));
        System.out.println(); // Debug
        System.out.println("analyzeInjectionToken Invoked"); // Debug
        System.out.println(); // Debug
+
+       if (model.getUmpleClass("Student") == null) {
+        model.getUmpleClasses();
+        System.out.println("STudent Class is null");
+       } else {
+        System.out.println("if class content ToString():");
+       System.out.println(model.getUmpleClass("Student")); // Debug
+       }
        analyzeToplevelInjectionCode(t, analysisStep);
      }
    }
@@ -326,7 +335,7 @@ class UmpleInternalParser
       analyzeModelConstraint(t,aClass);
     }
     else if (t.is("beforeCode") || t.is("afterCode"))
-    {
+    {//System.out.println(t.toString());//DEBUG
       analyzeInjectionCode(t,aClass);
     }
     else if (t.is("key") || t.is("defaultKey"))

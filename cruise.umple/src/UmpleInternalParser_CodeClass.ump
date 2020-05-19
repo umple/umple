@@ -3811,9 +3811,33 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   // Issue#1521
   private void analyzeToplevelInjectionCode(Token injectToken, int analysisStep)
   {
-    Token classNameToken = injectToken.getSubTokens("className");
+    System.out.println(injectToken.toString());
+       System.out.println(); // Debug
+       System.out.println("analyzeInjectionCode01"); // Debug
+       System.out.println(); // Debug
+    Token classNameToken = injectToken.getSubToken("className");
+       System.out.println(); // Debug
+       System.out.println("analyzeInjectionCode02"); // Debug
+       System.out.println(); // Debug
     String className = classNameToken.getValue();
-    injectToken.removeSubToken(classNameToken);
+       System.out.println(className); // Debug
+       System.out.println("analyzeInjectionCode03"); // Debug
+       System.out.println(); // Debug
+    injectToken.removeSubToken(classNameToken);   
+        System.out.println(injectToken.getSubToken("toplevelBeforeCode").getName()); // Debug
+
+    injectToken.getSubToken("toplevelBeforeCode").setName("beforeCode");
+       System.out.println(injectToken.toString()); // Debug
+       System.out.println(injectToken.getSubToken("beforeCode").getName()); // Debug
+       //System.out.println("class model ToString():");
+       //System.out.println(model.toString());
+       if (model.getUmpleClass("Student") == null) {
+        System.out.println("null umpleClass");
+       } else {
+        System.out.println("if class content ToString():");
+       System.out.println(model.getUmpleClass(className)); // Debug
+       }
+       
     analyzeInjectionCode(injectToken, model.getUmpleClass(className));
   }
   private void analyzeInjectionCode(Token injectToken, int analysisStep)
@@ -3883,7 +3907,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
   //TODO I changed the parameter's type. please remove this comment;
   private void analyzeInjectionCode(Token injectToken, UmpleClassifier uClassifier)
-  {
+  {//System.out.println(uClassifier.toString());
     String type = injectToken.is("beforeCode") ? "before" : "after";
     Token codeLabelToken = injectToken.getSubToken("codeLabel");
 
