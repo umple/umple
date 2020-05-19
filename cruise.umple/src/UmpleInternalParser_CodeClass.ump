@@ -3809,100 +3809,68 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   }
 
   // Issue#1521
-  private void analyzeToplevelInjectionCode(Token injectToken, int analysisStep)
+  private void analyzeToplevelInjectionCode(Token injectToken, int analysisStep, String toplevelBeforeOrAfter)
   {
+    if (analysisStep == 1) // Do not process when analysis step == 1
+    //if (analysisStep == 1)
+    {
+      shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
+      return;
+    }
+    if (analysisStep == 2) 
+    {
+      System.out.println("analysisStep is 2 HERE"); // DEBUG
+      shouldProcessAgain = true;
+      return;
+    }
     System.out.println(injectToken.toString());
        System.out.println(); // Debug
        System.out.println("analyzeInjectionCode01"); // Debug
        System.out.println(); // Debug
-    Token classNameToken = injectToken.getSubToken("className");
-       System.out.println(); // Debug
-       System.out.println("analyzeInjectionCode02"); // Debug
-       System.out.println(); // Debug
-    String className = classNameToken.getValue();
-       System.out.println(className); // Debug
-       System.out.println("analyzeInjectionCode03"); // Debug
-       System.out.println(); // Debug
-    injectToken.removeSubToken(classNameToken);   
-        System.out.println(injectToken.getSubToken("toplevelBeforeCode").getName()); // Debug
+    Token classNameToken;
+    ArrayList<String> classNames = new ArrayList<String>();
+    while (injectToken.getSubToken("className") != null)
+    {
+      classNameToken = injectToken.getSubToken("className");
+      String className = classNameToken.getValue();
+      classNames.add(className);
+      System.out.println(); // Debug
+      System.out.println("analyzeInjectionCode02: Get ClassNameToken Value: " + className); // Debug
+      injectToken.removeSubToken(classNameToken); 
+    }
+        
+    System.out.println(injectToken.getSubToken(toplevelBeforeOrAfter).getName()); // Debug
 
-    injectToken.getSubToken("toplevelBeforeCode").setName("beforeCode");
+    String beforeOrAfter = toplevelBeforeOrAfter.substring(8);
+    String beforeOrAfter2 = beforeOrAfter.substring(0, 1).toLowerCase() + beforeOrAfter.substring(1); //toLowerCase first letter
+    injectToken.getSubToken(toplevelBeforeOrAfter).setName(beforeOrAfter2);
        System.out.println(injectToken.toString()); // Debug
-       System.out.println(injectToken.getSubToken("beforeCode").getName()); // Debug
+       System.out.println(injectToken.getSubToken(beforeOrAfter2).getName()); // Debug
        //System.out.println("class model ToString():");
        //System.out.println(model.toString());
        if (model.getUmpleClass("Student") == null) {
-        System.out.println("null umpleClass");
+        System.out.println("null umpleClass Student");
        } else {
-        System.out.println("if class content ToString():");
-       System.out.println(model.getUmpleClass(className)); // Debug
+        System.out.println("Student class detected");
+       //System.out.println(model.getUmpleClass(className)); // Debug
        }
-       
-    analyzeInjectionCode(injectToken, model.getUmpleClass(className));
-  }
-  private void analyzeInjectionCode(Token injectToken, int analysisStep)
-  {
-       System.out.println(); // Debug
-       System.out.println("analyzeInjectionCode0"); // Debug
-       System.out.println(); // Debug
-    //if (analysisStep != 2)
-    //{
-    //  shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
-    //  return;
-    //}
-    String type = injectToken.is("beforeCode") ? "before" : "after";
-    Token codeLabelToken = injectToken.getSubToken("codeLabel");
-
-       System.out.println(); // Debug
-       System.out.println("analyzeInjectionCode01"); // Debug
-       System.out.println(); // Debug
-    // around as aspect type
-    if( (injectToken.getSubToken("around") != null) && (codeLabelToken != null) ) {
-      type="around";
-    }
-    CodeBlock cb = new CodeBlock();
-    String operationName = getOperationName(injectToken);
-    String operationSource = getOperationSource(injectToken).toLowerCase();
-
-       System.out.println(); // Debug
-       System.out.println("analyzeInjectionCode02"); // Debug
-       System.out.println(); // Debug
-    if(operationSource.equals("")) {
-      operationSource = "all";
-    }
-
-       System.out.println(); // Debug
-       System.out.println("analyzeInjectionCode03"); // Debug
-       System.out.println(); // Debug
-    CodeInjection injection = new CodeInjection(type,operationName,"");
-    injection.setOperationSource(operationSource);
-     // check if the aspect needs to be injected before/after a label.
-    if(codeLabelToken != null)
-    injection.setInjectionlabel(codeLabelToken.getValue());
-
-       System.out.println(); // Debug
-       System.out.println("analyzeInjectionCode04"); // Debug
-       System.out.println(); // Debug
-    List<String> operationsParameters = getOperationsParameters(injectToken);
-       System.out.println(); // Debug
-       System.out.println("analyzeInjectionCode040"); // Debug
-       System.out.println("length:" + operationsParameters.size()); // Debug
-    for(String operationParameter : operationsParameters) {  
-       System.out.println(); // Debug
-       System.out.println("analyzeInjectionCode041"); // Debug
-       System.out.println("size:" + operationParameter); // Debug 
-      //injection.addParameter(operationParameter);  
-       System.out.println(); // Debug
-       System.out.println("analyzeInjectionCode042"); // Debug
-       System.out.println(); // Debug    
-    }
-
-       System.out.println(); // Debug
-       System.out.println("analyzeInjectionCode05"); // Debug
-       System.out.println(); // Debug
-    makeCodeInject(injectToken,injection,cb);
-    injection.setSnippet(cb);
-    model.addCodeInjection(injection);
+    
+    if (classNames.get(0).equals("*"))
+    {
+      String operationName = getOperationName(injectToken);
+      for (UmpleClass uc:model.getUmpleClasses())
+      {
+        if (uc.getMethodNames().contains(operationName))
+        {
+          analyzeInjectionCode(injectToken, uc);
+        }
+      }
+    } else {
+      for (String className : classNames)
+      {
+        analyzeInjectionCode(injectToken, model.getUmpleClass(className));
+      }
+    }  
   }
 
   //TODO I changed the parameter's type. please remove this comment;

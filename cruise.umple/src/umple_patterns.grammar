@@ -37,5 +37,5 @@ injectionOperation : [operationName] ([[parameterListing]])?
 beforeCode : ( before | [=around] ) ([=operationSource:custom|generated|all])? ([!codeLabel:\S+:])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
 afterCode : after ([=operationSource:custom|generated|all])? ([!codeLabel:\S+:])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
 
-toplevelBeforeCode : ( before | [=around] ) {[className]} ([=operationSource:custom|generated|all])? ([!codeLabel:\S+:])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
-toplevelAfterCode : after  {[className]} ([=operationSource:custom|generated|all])? ([!codeLabel:\S+:])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+toplevelBeforeCode : ( before | [=around] ) {([className])(, [className])*} ([=operationSource:custom|generated|all])? ([!codeLabel:\S+:])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+toplevelAfterCode : after  {([className])(, [className])*} ([=operationSource:custom|generated|all])? ([!codeLabel:\S+:])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*

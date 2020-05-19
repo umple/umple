@@ -1,0 +1,13 @@
+after {*} setName { doSomething(); }  
+class Student
+{
+  name;
+}
+class Teacher
+{
+  name;
+}
+class Employer
+{
+  age;
+}

@@ -213,14 +213,14 @@ class UmpleInternalParser
     int analysisStep = 0;
     shouldProcessAgain = true;
     do
-    {
+    {//System.out.println("analysisStep: " + analysisStep);//DEBUG
       analysisStep += 1;
       shouldProcessAgain = false;
       for(Token t : rootToken.getSubTokens())
       {
         analyzeToken(t,analysisStep);
         if (!getParseResult().getWasSuccess())
-        {System.out.println("PARSE FAILED");//DEBUG
+        {//System.out.println("PARSE FAILED");//DEBUG
           return;
         }
       }
@@ -277,32 +277,45 @@ class UmpleInternalParser
     analyzeMixsetToken(t, analysisStep);
     analyzeRequireStatement(t, analysisStep);
     analyzeInjectionToken(t, analysisStep);
+    //System.out.println("PRint TOKEN:" + t);
+    //System.out.println(model.getUmpleClasses().size());//DEBUG
+    //if(model.getUmpleClass("Student") != null) {
+    //  System.out.println("Student class HERE");
+    //}
   }
 
   // Issue#1521
   private void analyzeInjectionToken(Token t, int analysisStep) {
-     if (analysisStep != 1)
-     {
-       return;
-     }
-   
-     if (t.is("toplevelBeforeCode") || t.is("toplevelAfterCode"))//"beforeCode") || t.is("afterCode"))
-     {//System.out.println("class content ToString():");
-       //System.out.println(model.getUmpleClass("Student").getMethodNames().get(0));
-       System.out.println(); // Debug
-       System.out.println("analyzeInjectionToken Invoked"); // Debug
-       System.out.println(); // Debug
+    //if (analysisStep != 1)
+     //{
+     //  return;
+     //}
+    //if(analysisStep <= 2 || shouldProcessClassAgain)
+    //{
+    //  shouldProcessClassAgain = true;
+    //  return;
+    //}
 
-       if (model.getUmpleClass("Student") == null) {
-        model.getUmpleClasses();
-        System.out.println("STudent Class is null");
-       } else {
-        System.out.println("if class content ToString():");
-       System.out.println(model.getUmpleClass("Student")); // Debug
-       }
-       analyzeToplevelInjectionCode(t, analysisStep);
-     }
-   }
+    if (t.is("toplevelBeforeCode"))//"beforeCode") || t.is("afterCode"))
+    {//System.out.println("class content ToString():");
+       //System.out.println(model.getUmpleClass("Student").getMethodNames().get(0));
+       //System.out.println(); // Debug
+       //System.out.println("analyzeInjectionToken Invoked"); // Debug
+       //System.out.println(); // Debug
+
+      if (model.getUmpleClass("Student") == null) {
+        //System.out.println(model.getUmpleClasses().size());
+        //System.out.println("STudent Class is null");
+      } else {
+        //System.out.println("if class content ToString():");
+       //System.out.println(model.getUmpleClass("Student")); // Debug
+      }
+      analyzeToplevelInjectionCode(t, analysisStep, "toplevelBeforeCode");
+    } else if (t.is("toplevelAfterCode"))
+    {
+      analyzeToplevelInjectionCode(t, analysisStep, "toplevelAfterCode");
+    }
+  }
 
   // Analyze an individual token, delegates to the various components in Umple
   private void analyzeToken(Token t, UmpleClass aClass, int analysisStep)
@@ -322,7 +335,7 @@ class UmpleInternalParser
   {
     // Methods after this point will occur on analysisStep > 1
     if (analysisStep <=2 && t.is("invariant"))
-    {
+    {//System.out.println("analyzeDependentTokens method invoked, toke t is invariant: " + t); //DEBUG
       shouldProcessAgain = true;
     }
     if(analysisStep <= 2 || shouldProcessClassAgain)

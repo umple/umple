@@ -1205,12 +1205,6 @@ class CodeInjection
   {
     this(a,b,new CodeBlock(c), d);
   }
-  public CodeInjection(String type, String operation, String c)
-  {
-    this.type = type;
-    this.operation = operation;
-    snippet = new CodeBlock(c);
-  }
   public void setCode(String str)
   {
     snippet.setCode(str);

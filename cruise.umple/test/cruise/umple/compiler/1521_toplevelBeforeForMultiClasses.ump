@@ -1,0 +1,9 @@
+before {Student,Teacher} setName { doSomething(); }  
+class Student
+{
+  name;
+}
+class Teacher
+{
+  name;
+}
