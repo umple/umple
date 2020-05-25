@@ -224,6 +224,7 @@ class UmpleInternalParser
           return;
         }
       }
+      //System.out.println("shouldProcessAgain value: " + shouldProcessAgain);
     }
     while (shouldProcessAgain);
 
@@ -302,14 +303,6 @@ class UmpleInternalParser
        //System.out.println(); // Debug
        //System.out.println("analyzeInjectionToken Invoked"); // Debug
        //System.out.println(); // Debug
-
-      if (model.getUmpleClass("Student") == null) {
-        //System.out.println(model.getUmpleClasses().size());
-        //System.out.println("STudent Class is null");
-      } else {
-        //System.out.println("if class content ToString():");
-       //System.out.println(model.getUmpleClass("Student")); // Debug
-      }
       analyzeToplevelInjectionCode(t, analysisStep, "toplevelBeforeCode");
     } else if (t.is("toplevelAfterCode"))
     {

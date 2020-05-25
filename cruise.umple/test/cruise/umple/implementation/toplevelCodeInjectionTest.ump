@@ -1,5 +1,42 @@
-before setName { doSomething(); }  
 class Student
 {
   name;
+}
+before {Student} setName { doSomething(); }  
+
+
+after {*} testFunction{
+    //this code will be injected
+}
+class toplevelAfterOnTraitClass
+{
+    isA T;
+}
+trait T{
+    void testFunction(){
+        //code  
+    }
+}
+
+after {*} set* { doSomething(); }
+class Student1
+{
+	name;
+}
+class Student2
+{
+	name;
+	isA T2;
+}
+trait T2{
+    void setSomething(){
+        //code  
+    }
+}
+class Employer
+{
+	age;
+	String testFunction2() {
+		return "This is a test function";
+	}
 }

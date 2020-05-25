@@ -1,9 +1,9 @@
-after {*} setName,testFunction { doSomething(); }
-class Student
+after {Student*} setName,testFunction { doSomething(); }
+class Student1
 {
 	name;
 }
-class Teacher
+class Student2
 {
 	name;
 }

@@ -2197,23 +2197,54 @@ public class UmpleParserTest
 
   // Issue#1521
   @Test
-  public void toplevelBeforeKeyword()
+  public void toplevelBefore()
   {
        System.out.println(); // Debug
-       System.out.println("toplevelBeforeKeyword Tested"); // Debug
+       System.out.println("toplevelBefore Tested"); // Debug
        System.out.println(); // Debug
     assertSimpleParse("1521_toplevelBefore.ump");
     UmpleClass student = model.getUmpleClass("Student");
-    System.out.println("Student class methods toString: ");
-    for (String m:student.getMethodNames()) {
-      System.out.println(m);
-    }
-    
     Assert.assertEquals(1,student.numberOfCodeInjections());
     CodeInjection inject = student.getCodeInjection(0);
     Assert.assertEquals("before",inject.getType());
     Assert.assertEquals("setName",inject.getOperation());
     Assert.assertEquals("doSomething();",inject.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelAndInclassAspects()
+  {
+       System.out.println(); // Debug
+       System.out.println("toplevelAndInclassAspects Tested"); // Debug
+       System.out.println(); // Debug
+    assertSimpleParse("1521_toplevelAndInclassAspects.ump");
+    UmpleClass student = model.getUmpleClass("Student");
+    Assert.assertEquals(2,student.numberOfCodeInjections());
+    CodeInjection inject = student.getCodeInjection(1);
+    CodeInjection inject2 = student.getCodeInjection(0);
+    Assert.assertEquals("before",inject.getType());
+    Assert.assertEquals("setName",inject.getOperation());
+    Assert.assertEquals("doSomething();",inject.getCode());
+    Assert.assertEquals("after",inject2.getType());
+    Assert.assertEquals("setName",inject2.getOperation());
+    Assert.assertEquals("//afterCodeInjection();",inject2.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelAspectsForMixset()
+  {
+       System.out.println(); // Debug
+       System.out.println("toplevelAspectsForMixset Tested"); // Debug
+       System.out.println(); // Debug
+    assertSimpleParse("1521_toplevelAspectsForMixset.ump");
+    UmpleClass x = model.getUmpleClass("X");
+    Assert.assertEquals(1,x.numberOfCodeInjections());
+    CodeInjection inject = x.getCodeInjection(0);
+    Assert.assertEquals("after",inject.getType());
+    Assert.assertEquals("setC",inject.getOperation());
+    Assert.assertEquals("//this code will be injected",inject.getCode());
   }
 
   // Issue#1521
@@ -2234,10 +2265,10 @@ public class UmpleParserTest
 
   // Issue#1521
   @Test
-  public void toplevelBeforeKeywordForMultiClasses()
+  public void toplevelBeforeForMultiClasses()
   {
        System.out.println(); // Debug
-       System.out.println("toplevelBeforeKeywordForMultiClasses Tested"); // Debug
+       System.out.println("toplevelBeforeForMultiClasses Tested"); // Debug
        System.out.println(); // Debug
     assertSimpleParse("1521_toplevelBeforeForMultiClasses.ump");
     UmpleClass student = model.getUmpleClass("Student");
@@ -2267,15 +2298,158 @@ public class UmpleParserTest
     UmpleClass employer = model.getUmpleClass("Employer");
     Assert.assertEquals(1,student.numberOfCodeInjections());
     Assert.assertEquals(1,teacher.numberOfCodeInjections());
-    Assert.assertEquals(0,employer.numberOfCodeInjections());
+    Assert.assertEquals(1,employer.numberOfCodeInjections());
     CodeInjection inject = student.getCodeInjection(0);
     CodeInjection inject2 = teacher.getCodeInjection(0);
+    CodeInjection inject3 = employer.getCodeInjection(0);
     Assert.assertEquals("after",inject.getType());
     Assert.assertEquals("setName",inject.getOperation());
     Assert.assertEquals("doSomething();",inject.getCode());
     Assert.assertEquals("after",inject2.getType());
     Assert.assertEquals("setName",inject2.getOperation());
     Assert.assertEquals("doSomething();",inject2.getCode());
+    Assert.assertEquals("after",inject3.getType());
+    Assert.assertEquals("testFunction",inject3.getOperation());
+    Assert.assertEquals("doSomething();",inject3.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelInjectMultipleMethods()
+  {
+       System.out.println(); // Debug
+       System.out.println("toplevelInjectMultipleMethods Tested"); // Debug
+       System.out.println(); // Debug
+    assertSimpleParse("1521_toplevelInjectMultipleMethods.ump");
+
+    UmpleClass a = model.getUmpleClass("A");
+    Assert.assertEquals(4,a.numberOfCodeInjections());
+
+    CodeInjection aInject1 = a.getCodeInjection(0);
+    Assert.assertEquals("after",aInject1.getType());
+    Assert.assertEquals("setX", aInject1.getOperation());
+    Assert.assertEquals("//this code will be injected",aInject1.getCode());
+
+    CodeInjection aInject2 = a.getCodeInjection(1);
+    Assert.assertEquals("after",aInject2.getType());
+    Assert.assertEquals("setY", aInject2.getOperation());
+    Assert.assertEquals("//this code will be injected",aInject2.getCode());
+
+    CodeInjection aInject3 = a.getCodeInjection(2);
+    Assert.assertEquals("before",aInject3.getType());
+    Assert.assertEquals("setX", aInject3.getOperation());
+    Assert.assertEquals("//this code will be injected",aInject3.getCode());
+
+    UmpleClass b = model.getUmpleClass("B");
+    Assert.assertEquals(4,b.numberOfCodeInjections());
+
+    CodeInjection bInject = b.getCodeInjection(0);
+    Assert.assertEquals("after",bInject.getType());
+    Assert.assertEquals("setX",bInject.getOperation());
+    Assert.assertEquals("//this code will be injected",bInject.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelAfterOnTrait()
+  {
+       System.out.println(); // Debug
+       System.out.println("toplevelAfterOnTrait Tested"); // Debug
+       System.out.println(); // Debug
+    assertSimpleParse("1521_toplevelAfterOnTrait.ump");
+
+    UmpleClass a = model.getUmpleClass("toplevelAfterOnTraitClass");
+    //System.out.println("numberOfExtendsTraits: " + a.numberOfExtendsTraits());
+    Assert.assertEquals(1,a.numberOfCodeInjections());
+
+    CodeInjection aInject = a.getCodeInjection(0);
+    Assert.assertEquals("after",aInject.getType());
+    Assert.assertEquals("testFunction", aInject.getOperation());
+    Assert.assertEquals("//this code will be injected",aInject.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelAfterGlobClassName()
+  {
+       System.out.println(); // Debug
+       System.out.println("toplevelAfterGlobClassName Tested"); // Debug
+       System.out.println(); // Debug
+    assertSimpleParse("1521_toplevelAfterGlobClassName.ump");
+    UmpleClass student1 = model.getUmpleClass("Student1");
+    UmpleClass student2 = model.getUmpleClass("Student2");
+    UmpleClass employer = model.getUmpleClass("Employer");
+    Assert.assertEquals(1,student1.numberOfCodeInjections());
+    Assert.assertEquals(1,student2.numberOfCodeInjections());
+    Assert.assertEquals(0,employer.numberOfCodeInjections());
+    CodeInjection inject = student1.getCodeInjection(0);
+    CodeInjection inject2 = student2.getCodeInjection(0);
+    Assert.assertEquals("after",inject.getType());
+    Assert.assertEquals("setName",inject.getOperation());
+    Assert.assertEquals("doSomething();",inject.getCode());
+    Assert.assertEquals("after",inject2.getType());
+    Assert.assertEquals("setName",inject2.getOperation());
+    Assert.assertEquals("doSomething();",inject2.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelAfterGlobOperationName()
+  {
+       System.out.println(); // Debug
+       System.out.println("toplevelAfterGlobOperationName Tested"); // Debug
+       System.out.println(); // Debug
+    assertSimpleParse("1521_toplevelAfterGlobOperationName.ump");
+    UmpleClass student1 = model.getUmpleClass("Student1");
+    UmpleClass student2 = model.getUmpleClass("Student2");
+    UmpleClass employer = model.getUmpleClass("Employer");
+    Assert.assertEquals(1,student1.numberOfCodeInjections());
+    Assert.assertEquals(1,student2.numberOfCodeInjections());
+    Assert.assertEquals(1,employer.numberOfCodeInjections());
+    CodeInjection inject = student1.getCodeInjection(0);
+    CodeInjection inject2 = student2.getCodeInjection(0);
+    CodeInjection inject3 = employer.getCodeInjection(0);
+    Assert.assertEquals("after",inject.getType());
+    Assert.assertEquals("setName",inject.getOperation());
+    Assert.assertEquals("doSomething();",inject.getCode());
+    Assert.assertEquals("after",inject2.getType());
+    Assert.assertEquals("setName",inject2.getOperation());
+    Assert.assertEquals("doSomething();",inject2.getCode());
+    Assert.assertEquals("after",inject3.getType());
+    Assert.assertEquals("setAge",inject3.getOperation());
+    Assert.assertEquals("doSomething();",inject3.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelAfterGlobOperationNameOnTrait()
+  {
+       System.out.println(); // Debug
+       System.out.println("toplevelAfterGlobOperationNameOnTrait Tested"); // Debug
+       System.out.println(); // Debug
+    assertSimpleParse("1521_toplevelAfterGlobOperationNameOnTrait.ump");
+    UmpleClass student1 = model.getUmpleClass("Student1");
+    UmpleClass student2 = model.getUmpleClass("Student2");
+    UmpleClass employer = model.getUmpleClass("Employer");
+    Assert.assertEquals(1,student1.numberOfCodeInjections());
+    Assert.assertEquals(2,student2.numberOfCodeInjections());
+    Assert.assertEquals(1,employer.numberOfCodeInjections());
+    CodeInjection inject = student1.getCodeInjection(0);
+    CodeInjection inject2 = student2.getCodeInjection(0);
+    CodeInjection inject3 = employer.getCodeInjection(0);
+    CodeInjection inject4 = student2.getCodeInjection(1);
+    Assert.assertEquals("after",inject.getType());
+    Assert.assertEquals("setName",inject.getOperation());
+    Assert.assertEquals("doSomething();",inject.getCode());
+    Assert.assertEquals("after",inject2.getType());
+    Assert.assertEquals("setName",inject2.getOperation());
+    Assert.assertEquals("doSomething();",inject2.getCode());
+    Assert.assertEquals("after",inject3.getType());
+    Assert.assertEquals("setAge",inject3.getOperation());
+    Assert.assertEquals("doSomething();",inject3.getCode());
+    Assert.assertEquals("after",inject4.getType());
+    Assert.assertEquals("setSomething",inject4.getOperation());
+    Assert.assertEquals("doSomething();",inject4.getCode());
   }
 
   @Test
