@@ -2,7 +2,7 @@
 class X {}
 class Z {}
 
-after {X} setA {
+after {X} setC {
   //this code will be injected
 }
 
@@ -60,3 +60,4 @@ use specialVersion2;
 mixset specialVersion3 {
  class W {}
 }
+

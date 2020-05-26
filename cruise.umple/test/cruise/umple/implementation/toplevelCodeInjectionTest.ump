@@ -2,7 +2,9 @@ class Student
 {
   name;
 }
-before {Student} setName { doSomething(); }  
+before {Student} setName { 
+  //doSomething0(); 
+}  
 
 
 after {*} testFunction{
@@ -18,7 +20,9 @@ trait T{
     }
 }
 
-after {*} set* { doSomething(); }
+after {*} set* { 
+  //doSomething1(); 
+}
 class Student1
 {
 	name;
@@ -40,3 +44,17 @@ class Employer
 		return "This is a test function";
 	}
 }
+
+after {Student1} setB {
+  //doSomething2();
+}
+
+mixset specialVersion {
+  class Student1 {
+    b;
+  }
+}
+
+// To activate the specialVersion mixset we need
+// to encounter the following
+use specialVersion;

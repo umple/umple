@@ -1,10 +1,9 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.1.4832.193aa514a modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
 
 // line 2 "model.ump"
-// line 13 "model.ump"
 public class Student
 {
 
@@ -31,11 +30,14 @@ public class Student
   public boolean setName(String aName)
   {
     boolean wasSet = false;
-    // line 3 "model.ump"
-    doSomething();
+    // line 7 "model.ump"
+    //doSomething0();
     // END OF UMPLE BEFORE INJECTION
     name = aName;
     wasSet = true;
+    // line 25 "model.ump"
+    //doSomething1();
+    // END OF UMPLE AFTER INJECTION
     return wasSet;
   }
 
@@ -54,3 +56,277 @@ public class Student
             "name" + ":" + getName()+ "]";
   }
 }
+
+
+
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+// line 14 "model.ump"
+public class toplevelAfterOnTraitClass
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public toplevelAfterOnTraitClass()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+
+  /**
+   * Please do not modify the following method.
+   * The following method comes from trait T.
+   * Trait T has been used in classes: 'toplevelAfterOnTraitClass' 
+   */
+  // line 20 "model.ump"
+  public void testFunction(){
+    //code
+    // line 12 "model.ump"
+    //this code will be injected
+    // END OF UMPLE AFTER INJECTION
+  }
+
+}
+
+
+
+//%% NEW FILE Employer BEGINS HERE %%
+
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+// line 41 "model.ump"
+public class Employer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Employer Attributes
+  private String age;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Employer(String aAge)
+  {
+    age = aAge;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setAge(String aAge)
+  {
+    boolean wasSet = false;
+    age = aAge;
+    wasSet = true;
+    // line 25 "model.ump"
+    //doSomething1();
+    // END OF UMPLE AFTER INJECTION
+    return wasSet;
+  }
+
+  public String getAge()
+  {
+    return age;
+  }
+
+  public void delete()
+  {}
+
+  // line 45 "model.ump"
+  public String testFunction2(){
+    return "This is a test function";
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "age" + ":" + getAge()+ "]";
+  }
+}
+
+
+
+//%% NEW FILE Student1 BEGINS HERE %%
+
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+// line 27 "model.ump"
+// line 54 "model.ump"
+// line 67 "model.ump"
+// line 72 "model.ump"
+public class Student1
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student1 Attributes
+  private String name;
+  private String b;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student1(String aName, String aB)
+  {
+    name = aName;
+    b = aB;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    // line 25 "model.ump"
+    //doSomething1();
+    // END OF UMPLE AFTER INJECTION
+    return wasSet;
+  }
+
+  public boolean setB(String aB)
+  {
+    boolean wasSet = false;
+    b = aB;
+    wasSet = true;
+    // line 25 "model.ump"
+    //doSomething1();
+    // END OF UMPLE AFTER INJECTION
+    // line 50 "model.ump"
+    //doSomething2();
+    // END OF UMPLE AFTER INJECTION
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public String getB()
+  {
+    return b;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "b" + ":" + getB()+ "]";
+  }
+}
+
+
+
+//%% NEW FILE Student2 BEGINS HERE %%
+
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+// line 31 "model.ump"
+public class Student2
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student2 Attributes
+  private String name;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student2(String aName)
+  {
+    name = aName;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    // line 25 "model.ump"
+    //doSomething1();
+    // END OF UMPLE AFTER INJECTION
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public void delete()
+  {}
+
+
+  /**
+   * Please do not modify the following method.
+   * The following method comes from trait T2.
+   * Trait T2 has been used in classes: 'Student2' 
+   */
+  // line 38 "model.ump"
+  public void setSomething(){
+    //code
+    // line 25 "model.ump"
+    //doSomething1();
+    // END OF UMPLE AFTER INJECTION
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "]";
+  }
+}
+
+
+
+//%% NEW FILE Student BEGINS HERE %%
+

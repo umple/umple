@@ -209,7 +209,7 @@ class UmpleInternalParser
   // Each token is analyzed as long as "shouldProcessAgain" is set to true during the analysis
   // analyzeToken and quits early if a problem arises
   private void analyzeAllTokens(Token rootToken)
-  {
+  {//System.out.println("analyzeAllTokens being called");
     int analysisStep = 0;
     shouldProcessAgain = true;
     do
@@ -227,6 +227,7 @@ class UmpleInternalParser
       //System.out.println("shouldProcessAgain value: " + shouldProcessAgain);
     }
     while (shouldProcessAgain);
+    shouldProcessAgain = true;
 
     fixImportFromDefaultPackage();
     checkUnusedNamespaces();

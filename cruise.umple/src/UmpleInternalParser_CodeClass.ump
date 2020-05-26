@@ -53,7 +53,7 @@ class UmpleInternalParser
     if (analysisStep != 2)
     {
       shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
-      System.out.println("analyzeClassToken method changed shouldProcessAgain to: " + shouldProcessAgain);
+      //System.out.println("analyzeClassToken method changed shouldProcessAgain to: " + shouldProcessAgain); //DEBUG
       return;
     }
 
@@ -3900,12 +3900,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     //if (analysisStep == 1)
     {
       shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
+      System.out.println("analyzeToplevelInjectionCode 1 set shouldProcessAgain value: " + shouldProcessAgain);
       return;
     }
     if (analysisStep == 2) // Do not process when analysis step == 2
     {
       System.out.println("analysisStep is 2 HERE"); // DEBUG
       shouldProcessAgain = true;
+      System.out.println("analyzeToplevelInjectionCode 2 set shouldProcessAgain value: " + shouldProcessAgain);
       return;
     }
     System.out.println(injectToken.getSubToken("injectionOperation").getSubToken("operationName"));
@@ -4063,6 +4065,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           }
         } else { //Umple traits in this class is null
           ArrayList<String> methodNames = model.getUmpleClass(className).getMethodNames();
+          try {
           for (String umpleTraitName:traitNames)
           {
             System.out.println("umpleTraitName: " + umpleTraitName);
@@ -4074,14 +4077,19 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             }
           }
           System.out.println("Umple traits in this class is null. Analyzeing " + className + " class");//DEBUG
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
           try {
           for (String operationName : operationNames)
           {
+            boolean foundMethod = false;
             for (String methodName : methodNames) // target method names
             {
               System.out.println("methodName: " + methodName);
               if (methodName.matches(globToRegex(operationName)))
               {
+                foundMethod = true;
                 System.out.println("Analyzeing " + className + "." + operationName);
                 String globMatched = "";
                 if (operationName.contains("*"))
@@ -4091,7 +4099,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
                 Token singleOperationNameInjectToken = toSingleOperationNameInInjectToken(injectToken, operationName, globMatched);
                 System.out.println("singleOperationNameInjectToken" + singleOperationNameInjectToken);
                 analyzeInjectionCode(singleOperationNameInjectToken, model.getUmpleClass(className));
-              }//getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operationName));
+              }
+            }
+            if (!foundMethod) 
+            {
+              getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operationName));
             }
           }
           } catch (Exception e) {
