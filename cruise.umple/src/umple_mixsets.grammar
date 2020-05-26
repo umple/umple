@@ -18,7 +18,7 @@ mixsetIsFeature : isFeature
 
 // require statement allows adding dependencies between mixsets.
 
-requireStatement : require ( subfeature )? [[requireBody]] 
+requireStatement : require ( [=subfeature] )? [[requireBody]] 
 
 requireBody- : [(([[requireLinkingOptNot]])? (OPEN_ROUND_BRACKET)* [[requireTerminal]] [[requireList]])] 
 

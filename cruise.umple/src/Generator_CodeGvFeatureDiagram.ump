@@ -65,7 +65,7 @@ digraph FeatureModel {
       else 
       {// link source to leaf node 
         code.append(""+sourceFeatureNode.getUniqueFeatureNodeName()+" -> "+featureNode.getName()+" ");
-        code.append(getGvTargetShape(featureLink.getFeatureConnectingOpType()));
+        code.append(getGvTargetShape(featureLink.getFeatureConnectingOpType(), featureLink.getIsSub() ));
         code.append(" ;"+"\n");    
         fillColorOfFeatureNode(code,featureNode,indentLevel);
       }
@@ -111,20 +111,28 @@ digraph FeatureModel {
     terminateCode(code);
   }
 
-  public static String getGvTargetShape(FeatureConnectingOpType featureConnectingOpType)
+  public static String getGvTargetShape(FeatureConnectingOpType featureConnectingOpType , boolean isSub)
   { 
+		String shapeProp = " ";
+	  if(! isSub)
+    shapeProp = " constraint=false ";
+
     switch(featureConnectingOpType)
     {
       case Exclude:
-      return "["+"arrowhead=normal color=red constraint=false label=exclude "+"]";
+      return "["+ shapeProp +" arrowhead=normal color=red label=exclude " +" ]";
       case Include:
-      return "["+ "arrowhead=normal color=blue constraint=false label=include "+"]";
+			if(isSub)
+      shapeProp += " arrowhead=dot ";
+      else 
+      shapeProp += " arrowhead=normal label=include color=blue ";
+      return "["+ shapeProp +" ]";
       case Optional:
-      return "[arrowhead=odot]";
+      return "[arrowhead=odot "+shapeProp+" ]";
       case Conjunctive:
-      return "[arrowhead=dot]";
+      return "[arrowhead=dot "+shapeProp+" ]";
       default:
-      return "";
+      return "[ "+shapeProp+" ]";
     }
   }
 
