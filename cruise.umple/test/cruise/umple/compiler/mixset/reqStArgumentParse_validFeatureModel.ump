@@ -1,8 +1,8 @@
 
-require sub [A and B];
-require sub [opt C];
+require subfeature [A and B];
+require subfeature [opt C];
 require [not D];
-require sub [E xor F];
+require subfeature [E xor F];
 
 
 mixset A {} mixset B {} mixset C{}
