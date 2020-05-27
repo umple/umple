@@ -329,6 +329,14 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Second.php");
     SampleFileWriter.destroy(pathToInput + "/I.php");
 
+
+    // Tear down issue 1521 tests
+    SampleFileWriter.destroy(pathToInput + "/Student10.java");
+    SampleFileWriter.destroy(pathToInput + "/Student11.java");
+    SampleFileWriter.destroy(pathToInput + "/Student12.java");
+    SampleFileWriter.destroy(pathToInput + "/toplevelAfterOnTraitClass.java");
+    SampleFileWriter.destroy(pathToInput + "/Employer.java");
+
    // destroying the object factory
   }
 
