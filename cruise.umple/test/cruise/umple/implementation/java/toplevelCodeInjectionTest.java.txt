@@ -4,7 +4,7 @@
 
 
 // line 2 "model.ump"
-public class Student
+public class Student10
 {
 
   //------------------------
@@ -56,14 +56,6 @@ public class Student
             "name" + ":" + getName()+ "]";
   }
 }
-
-
-
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
-
-
-
 // line 14 "model.ump"
 public class toplevelAfterOnTraitClass
 {
@@ -103,8 +95,6 @@ public class toplevelAfterOnTraitClass
 }
 
 
-
-//%% NEW FILE Employer BEGINS HERE %%
 
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
@@ -168,8 +158,6 @@ public class Employer
 }
 
 
-
-//%% NEW FILE Student1 BEGINS HERE %%
 
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
@@ -254,8 +242,6 @@ public class Student1
 
 
 
-//%% NEW FILE Student2 BEGINS HERE %%
-
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
@@ -325,8 +311,3 @@ public class Student2
             "name" + ":" + getName()+ "]";
   }
 }
-
-
-
-//%% NEW FILE Student BEGINS HERE %%
-

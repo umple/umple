@@ -1,8 +1,8 @@
-class Student
+class Student10
 {
   name;
 }
-before {Student} setName { 
+before {Student10} setName { 
   //doSomething0(); 
 }  
 
@@ -23,11 +23,11 @@ trait T{
 after {*} set* { 
   //doSomething1(); 
 }
-class Student1
+class Student11
 {
 	name;
 }
-class Student2
+class Student12
 {
 	name;
 	isA T2;
@@ -45,12 +45,12 @@ class Employer
 	}
 }
 
-after {Student1} setB {
+after {Student11} setB {
   //doSomething2();
 }
 
 mixset specialVersion {
-  class Student1 {
+  class Student11 {
     b;
   }
 }

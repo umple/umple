@@ -3812,52 +3812,26 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   // Issue#1521
   private Token toSingleOperationNameInInjectToken(Token injectToken, String operationName, String globMatched)
   {
-    Token newInjectToken = injectToken.copy(); //new Token("", "");//injectToken.copy();
-    System.out.println("if Same object: " + (newInjectToken.getSubToken(0) == injectToken.getSubToken(0)));
-    try {
-      //Position position = newInjectToken.getPosition("injectionOperation");
-      //System.out.println("Position: " + position.getOffset());
-      System.out.println("newInjectToken: " + newInjectToken);
-      //newInjectToken.remove(position.getOffset());
-      System.out.println("newInjectToken: " + newInjectToken);
-      //position = newInjectToken.getPosition("injectionOperation");
-      //newInjectToken.remove(position.getOffset());
-      System.out.println("newInjectToken: " + newInjectToken);
+    Token newInjectToken = injectToken.copy();
+    
     List<Token> subTokens = newInjectToken.getSubTokens();
     ArrayList<Token> subTokens2 = new ArrayList<Token>();
     subTokens2.addAll(subTokens);
-    //ArrayList<Token> removedTokens = new ArrayList<Token>();// addedToken = 
     for (Token subToken : subTokens2)
     {
-      //System.out.println("subToken: " + subToken);
       if (subToken.is("injectionOperation"))
       {
         List<Token> subSubTokens = subToken.getSubTokens();
         for (Token subSubToken : subSubTokens)
         {
-          //System.out.println("subSubToken: " + subSubToken);
           if (subSubToken.is("operationName") && !subSubToken.getValue().equals(operationName))
           {
-            System.out.println(subSubToken.getValue());
-            //System.out.println(subToken);
-            //removedTokens.add(subToken);
-            System.out.println("if remove succeed: " + newInjectToken.removeSubTokenNotSetParentToken(subToken));
-            //System.out.println(newInjectToken.removeSubToken(subToken)); 
-            //System.out.println(newInjectToken);         
+            newInjectToken.removeSubTokenNotSetParentToken(subToken);
           } else if (!globMatched.equals("")) {
-            System.out.println("Is glob! if set operationName succeed: " + subSubToken.setValue(globMatched));
+            subSubToken.setValue(globMatched);
           }
         }
       }
-    }
-    //for (Token t : removedTokens)
-    //{ 
-    //  System.out.println("Removed: " + t);
-    //  System.out.println("if remove succeed: " + newInjectToken.removeSubToken(t));
-    //}
-    System.out.println("finished");
-    }catch (Exception e) {
-      e.printStackTrace();
     }
     return newInjectToken;
   }
@@ -3897,24 +3871,15 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   private void analyzeToplevelInjectionCode(Token injectToken, int analysisStep, String toplevelBeforeOrAfter)
   {
     if (analysisStep == 1) // Do not process when analysis step == 1
-    //if (analysisStep == 1)
     {
       shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
-      System.out.println("analyzeToplevelInjectionCode 1 set shouldProcessAgain value: " + shouldProcessAgain);
       return;
     }
     if (analysisStep == 2) // Do not process when analysis step == 2
     {
-      System.out.println("analysisStep is 2 HERE"); // DEBUG
       shouldProcessAgain = true;
-      System.out.println("analyzeToplevelInjectionCode 2 set shouldProcessAgain value: " + shouldProcessAgain);
       return;
     }
-    System.out.println(injectToken.getSubToken("injectionOperation").getSubToken("operationName"));
-    System.out.println(injectToken.toString());
-       System.out.println(); // Debug
-       System.out.println("analyzeInjectionCode01"); // Debug
-       System.out.println(); // Debug
     Token classNameToken;
     ArrayList<String> matchedClassNames = new ArrayList<String>();
     ArrayList<String> matchingClassNamePatterns = new ArrayList<String>();
@@ -3923,45 +3888,22 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       classNameToken = injectToken.getSubToken("className");
       String matchingClassNamePattern = classNameToken.getValue();
       matchingClassNamePatterns.add(matchingClassNamePattern);
-      System.out.println(); // Debug
-      System.out.println("analyzeInjectionCode02: Get ClassNameToken Value: " + matchingClassNamePattern); // Debug
       injectToken.removeSubToken(classNameToken); 
     }
-        
-    System.out.println(injectToken.getSubToken(toplevelBeforeOrAfter).getName()); // Debug
 
     String beforeOrAfter = toplevelBeforeOrAfter.substring(8);
     String beforeOrAfter2 = beforeOrAfter.substring(0, 1).toLowerCase() + beforeOrAfter.substring(1); //toLowerCase first letter
     injectToken.getSubToken(toplevelBeforeOrAfter).setName(beforeOrAfter2);
 
-    System.out.println(injectToken.toString()); // Debug
-    System.out.println(injectToken.getSubToken(beforeOrAfter2).getName()); // Debug
-     //System.out.println("class model ToString():");
-     //System.out.println(model.toString());
-    if (model.getUmpleClass("Student") == null) {
-      System.out.println("null umpleClass Student");
-    } else {
-      System.out.println("Student class detected");
-     //System.out.println(model.getUmpleClass(className)); // Debug
-    }
-      
-    if (model.getUmpleClass("toplevelAfterOnTraitClass") != null)
-    {
-      System.out.println("If contains testFunction: " + model.getUmpleClass("toplevelAfterOnTraitClass").getMethodNames().contains("testFunction"));
-    }
-
-    //String operationName = getOperationName(injectToken);
     ArrayList<String> operationNames = new ArrayList<String>();
-    System.out.println(injectToken.getSubToken("injectionOperation"));
     for (Token subToken : injectToken.getSubTokens())
     {
       if (subToken.is("injectionOperation"))
-      {System.out.println(subToken);
+      {
         for (Token subSubToken : subToken.getSubTokens())
         {
           if (subSubToken.is("operationName"))
           {
-            System.out.println(subSubToken.getValue());
             operationNames.add(subSubToken.getValue());
           }
         }
@@ -3972,24 +3914,15 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     ArrayList<String> allClassNames = new ArrayList<String>();
     for (UmpleClass umpleClass:model.getUmpleClasses())
     {
-      //if (umpleClass.getMethodNames().contains(getOperationName(injectToken)))
-      {
-        //System.out.println(umpleClass.getName());
-        allClassNames.add(umpleClass.getName());
-      }
+      allClassNames.add(umpleClass.getName());
     }
 
     // get matched class for code injection
     if (matchingClassNamePatterns.get(0).equals("*"))
     {
-      //classNames.remove(0);
       for (UmpleClass umpleClass:model.getUmpleClasses())
       {
-        //if (umpleClass.getMethodNames().contains(getOperationName(injectToken)))
-        {
-          //System.out.println(umpleClass.getName());
-          matchedClassNames = allClassNames;
-        }
+        matchedClassNames = allClassNames;
       }
     } else {
       for (String matchingClassNamePattern : matchingClassNamePatterns)
@@ -3998,7 +3931,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         for (String s : matched)
         {
           if (!matchedClassNames.contains(s))
-          {System.out.println(s); //DEBUG
+          {
             matchedClassNames.add(s);
           }
         }
@@ -4006,110 +3939,62 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
 
     for (String className : matchedClassNames) //loop over every matched class
-    {System.out.println("Have Class NAme:" + className);
-
-  }
-    //ArrayList<String> methodWithinClass = new ArrayList<String>();
-    for (String className : matchedClassNames) //loop over every matched class
-    {System.out.println("Analyzeing " + className);
+    {
       if (model.getUmpleClass(className) != null)
       {
         List<UmpleTrait> umpleTraits = model.getUmpleClass(className).getExtendsTraits();
-        //System.out.println("numberOfExtendsTraits: " + umpleTraits.size());
         ArrayList<String> traitNames = new ArrayList<String>();
-        try {
-          //ArrayList<String> names = (ArrayList<String>) unlinkedExtends.get(model.getUmpleClass(className));
-          //for (HashMap.entrySet<UmpleClassifier>)
-          Iterator hmIterator = unlinkedExtends.entrySet().iterator(); 
-  
-          // Iterate through the hashmap 
-          // and add some bonus marks for every student 
-          System.out.println("HashMap:"); 
-          
-          while (hmIterator.hasNext()) { 
-              Map.Entry mapElement = (Map.Entry)hmIterator.next(); 
-              if (((UmpleClass)mapElement.getKey()).equals(model.getUmpleClass(className)))
+        Iterator hmIterator = unlinkedExtends.entrySet().iterator(); 
+        
+        while (hmIterator.hasNext()) { 
+          Map.Entry mapElement = (Map.Entry)hmIterator.next(); 
+          if (((UmpleClass)mapElement.getKey()).equals(model.getUmpleClass(className)))
+          {
+            traitNames = (ArrayList<String>) mapElement.getValue();
+            ArrayList<String> newTraitNames = (ArrayList<String>) traitNames.clone();
+            for (String traitName : traitNames)
+            {
+              if (model.getUmpleTrait(traitName) == null)
               {
-                traitNames = (ArrayList<String>) mapElement.getValue(); 
-                System.out.println("traits found:" + traitNames);
+                newTraitNames.remove(traitName);
               }
-              //System.out.println(((UmpleClass)mapElement.getKey()). + " : " + marks); 
-          } 
+            } 
+            traitNames = newTraitNames;
+          }
+        } 
 
-          //for (String s : names)
-          //{
-          //  System.out.println("unlinkedExtends Name: " + s);
-          //}
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-        //analyzeInjectionCode(injectToken, model.getUmpleClass(className));
-        //continue;
-        if (false)//!traitNames.isEmpty())
+        ArrayList<String> methodNames = model.getUmpleClass(className).getMethodNames();
+        
+        for (String umpleTraitName:traitNames)
         {
-          for (String operationName : operationNames) //loop over all operationNames
+          for (Method m : model.getUmpleTrait(umpleTraitName).getMethods())
           {
-            boolean methodNotInTrait = true;
-            
-            //method is in class, not in trait
-            if (methodNotInTrait)
+            methodNames.add(m.getName());
+          }
+        }
+          
+        for (String operationName : operationNames)
+        {
+          boolean foundMethod = false;
+          for (String methodName : methodNames) // target method names
+          {
+            if (methodName.matches(globToRegex(operationName)))
             {
-              System.out.println("methodNotInTrait!");
-              for (String m : model.getUmpleClass(className).getMethodNames())
+              foundMethod = true;
+              String globMatched = "";
+              if (operationName.contains("*"))
               {
-                System.out.println("method name: " + m);
+                globMatched = methodName;
               }
-              Token injectTokenForClass = toSingleOperationNameInInjectToken(injectToken, operationName, "");
-              analyzeInjectionCode(injectTokenForClass, model.getUmpleClass(className));
-            }              
+              Token singleOperationNameInjectToken = toSingleOperationNameInInjectToken(injectToken, operationName, globMatched);
+              analyzeInjectionCode(singleOperationNameInjectToken, model.getUmpleClass(className));
+            }
           }
-        } else { //Umple traits in this class is null
-          ArrayList<String> methodNames = model.getUmpleClass(className).getMethodNames();
-          try {
-          for (String umpleTraitName:traitNames)
+          if (!foundMethod) 
           {
-            System.out.println("umpleTraitName: " + umpleTraitName);
-            System.out.println("numberOfUnimplementedMethods(): " + model.getUmpleTrait(umpleTraitName).numberOfUnimplementedMethods());
-            for (Method m : model.getUmpleTrait(umpleTraitName).getMethods())
-            {
-              System.out.println("m.getMethodName: " + m.getName());
-              methodNames.add(m.getName());
-            }
+            getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operationName));
           }
-          System.out.println("Umple traits in this class is null. Analyzeing " + className + " class");//DEBUG
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-          try {
-          for (String operationName : operationNames)
-          {
-            boolean foundMethod = false;
-            for (String methodName : methodNames) // target method names
-            {
-              System.out.println("methodName: " + methodName);
-              if (methodName.matches(globToRegex(operationName)))
-              {
-                foundMethod = true;
-                System.out.println("Analyzeing " + className + "." + operationName);
-                String globMatched = "";
-                if (operationName.contains("*"))
-                {
-                  globMatched = methodName;
-                }
-                Token singleOperationNameInjectToken = toSingleOperationNameInInjectToken(injectToken, operationName, globMatched);
-                System.out.println("singleOperationNameInjectToken" + singleOperationNameInjectToken);
-                analyzeInjectionCode(singleOperationNameInjectToken, model.getUmpleClass(className));
-              }
-            }
-            if (!foundMethod) 
-            {
-              getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operationName));
-            }
-          }
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        }  
+        }    
       }
     }
   }
