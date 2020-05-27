@@ -1,0 +1,46 @@
+mixset Phone {
+  require subfeature [ GSM_Protocols];
+  require subfeature [ opt  MP3_Recording ];
+  require subfeature [ Audio_Formats  ];
+  require subfeature [ Playback ];
+  require subfeature [ opt Camera ];
+}
+    
+mixset GSM_Protocols 
+{
+  require subfeature [GSM1800];
+  require subfeature [opt GSM1900];
+}
+
+mixset MP3_Recording 
+{
+  require [  MP3  ];
+}
+
+mixset Audio_Formats 
+{
+  require subfeature [  MP3 xor WAV  ];
+}
+
+
+mixset GSM1800
+{
+  
+}
+mixset Playback 
+{
+  
+}
+mixset Audio 
+{
+
+}
+mixset  Camera 
+{    
+  require subfeature [  Resolution ];
+}
+
+mixset Resolution 
+{
+  require subfeature [  _2MP or _3MP or _5MP  ];
+}
