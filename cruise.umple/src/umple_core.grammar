@@ -46,7 +46,7 @@ namespace- : namespace [namespace] [[namespaceoption]]? ;
 namespaceoption : [=option:--redefine]
 
 // The main top level elements to be found in an Umple file
-entity- : [[requireStatement]] | [[mixsetDefinition]] | [[classDefinition]] | [[traitDefinition]] | [[fixml]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]] | [[templateDefinition]] | [[enumerationDefinition]] | [[toplevelCodeInjection]]
+entity- : [[mixsetIsFeature]] | [[requireStatement]] | [[mixsetDefinition]] | [[classDefinition]] | [[traitDefinition]] | [[fixml]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]] | [[templateDefinition]] | [[enumerationDefinition]] | [[toplevelCodeInjection]]
 
 // Comments follow the same conventions as C-family languages. [*UmpleComments*]
 comment- : [[inlineComment]] | [[multilineComment]] | [[annotationComment]]

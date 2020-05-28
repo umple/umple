@@ -20,7 +20,24 @@ class UmpleInternalParser
     {
       shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
       return;
-    }    
+    }
+    
+    if (t.is("mixsetIsFeature"))
+    {
+      FeatureModel featureModel = model.getFeatureModel();
+      if(featureModel == null)
+        featureModel = new FeatureModel("featureModel");
+      featureModel.setUmpleModel(model);
+
+      FeatureLeaf sourceFeatureLeaf;
+      Mixset sourceMixset = getMixsetFromToken(t); // the mixset containing the isFeature;
+      if(sourceMixset != null)
+      {
+        sourceFeatureLeaf = featureModel.getOrCreateFeatureLeafNode(sourceMixset.getName());
+        sourceFeatureLeaf.setMixsetOrFileNode(sourceMixset); 
+      }
+
+    }   
     if (t.is("requireStatement"))
     {
       FeatureModel featureModel = model.getFeatureModel();
@@ -386,6 +403,8 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(List<Toke
   }
   public void analyzeFeatureModel()
   {
+    parseMixsetsNotUsed();
+    
     if(model.getFeatureModel() != null)
     model.getFeatureModel().satisfyFeatureModel();
   }

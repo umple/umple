@@ -271,68 +271,129 @@ class UmpleInternalParser
     }
     
   }
-  
-  private Mixset analyzeMixset(Token token)
-  {
+
+  private Mixset analyzeMixset(Token token){
     String mixsetName = token.getValue("mixsetName");
     // check if the mixset is was not added before
     Mixset mixset = model.getMixset(mixsetName);
+    
     if(mixset  == null)
     {
        mixset  = new Mixset(mixsetName);
        model.addMixsetOrFile(mixset);
     }
-	
-	
+    //inline mixset def.
+    MixsetFragment mixsetFragment = createMixsetFragment(token, mixset);
+    if(mixsetFragment == null)
+    return mixset;
+    //else      
+    // Here the mixset fragment is considered as waitingFragment (mixsetFragment.isParsed==false). 
+    mixset.addMixsetFragment(mixsetFragment);
+    mixsetFragment.setMixset(mixset);
+    // parse mixset fragments right away if there is a use-statement. 
+    if(mixset.getUseUmpleFile() != null)
+      parseMixsetWaitingFragment(mixsetFragment);
+      
+      return mixset;
+  }
+  
+  private MixsetFragment createMixsetFragment(Token token,  Mixset mixset) {  
     Position mixsetFragmentPosition = null;
     int mixsetFragmentLineNumber = 0;
-	
     String mixsetBody = token.getValue("extraCode");
     if(mixsetBody != null)
     {
       mixsetFragmentPosition = token.getSubToken("extraCode").getPosition();
-    }		
-	
-    //inline mixset def.
+    }       
     String entityType = token.getValue("entityType");
     String entityName = token.getValue("entityName");
-	
+    
     // mixset with one element
     String oneElementMixset = token.getValue("oneElement");
-	
+    
     if(entityType != null) {
         if (oneElementMixset != null)
-	  {
-	    mixsetBody = entityType + " "+entityName + " { "+ oneElementMixset + " }";
-	    mixsetFragmentPosition = token.getSubToken("oneElementMixset").getPosition();	    
-	  }
-	  else
-	    mixsetBody = entityType + " "+entityName + " { "+ mixsetBody + " }";
-	    mixsetFragmentPosition = token.getSubToken("extraCode").getPosition();	
-	  }
-	  else if (oneElementMixset != null) 
-	  {
-	    mixsetBody = oneElementMixset;
-	    mixsetFragmentPosition = token.getSubToken("oneElementMixset").getPosition();	  
-	  }
-	  
-	  if(mixsetBody == null)
-	  return mixset; // becuase there is no fragment to add. 
-	  
-	  mixsetFragmentLineNumber = mixsetFragmentPosition.getLineNumber();
-	  UmpleFile mixsetFragmentUmpleFile = model.getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
-	  MixsetFragment mixsetFragment = new MixsetFragment(mixsetFragmentUmpleFile, mixsetFragmentLineNumber, mixsetBody);
-	  
-	  // Here the mixset fragmet is considered as waitingFragment (mixsetFragment.isParsed==flase). 
-	  mixset.addMixsetFragment(mixsetFragment);
-	  mixsetFragment.setMixset(mixset);
-	  // parse mixset fragments right away if there is a use statment.
-	  // 
-	  if(mixset.getUseUmpleFile() != null)
-	  parseMixsetWaitingFragment(mixsetFragment);
-	  
-	  
-	return  mixset ;
+      {
+        mixsetBody = entityType + " "+entityName + " { "+ oneElementMixset + " }";
+        mixsetFragmentPosition = token.getSubToken("oneElementMixset").getPosition();       
+      }
+      else
+        mixsetBody = entityType + " "+entityName + " { "+ mixsetBody + " }";
+        mixsetFragmentPosition = token.getSubToken("extraCode").getPosition();  
+      }
+      else if (oneElementMixset != null) 
+      {
+        mixsetBody = oneElementMixset;
+        mixsetFragmentPosition = token.getSubToken("oneElementMixset").getPosition();     
+      }
+      
+      if(mixsetBody == null)
+      return null; // because there is no fragment to add. 
+      
+      mixsetFragmentLineNumber = mixsetFragmentPosition.getLineNumber();
+      UmpleFile mixsetFragmentUmpleFile = model.getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
+      MixsetFragment mixsetFragment = new MixsetFragment(mixsetFragmentUmpleFile, mixsetFragmentLineNumber, mixsetBody);
+      mixsetFragment.setMixset(mixset);
+    return mixsetFragment;
+  }
+  
+  private void parseMixsetFragmentNotUsed(MixsetFragment mixsetFragment){
+    if(mixsetFragment == null)
+    return;
+    //else
+    if(! mixsetFragment.getIsParsed()) // process a fragment that has not been parsed. 
+    {
+      String mixsetFragmentFile = mixsetFragment.getOriginalUmpFile().getPath()+"/"+mixsetFragment.getOriginalUmpFile().getFileName();
+      int mixsetFragmentLine = mixsetFragment.getOriginalUmpLine() - 1;
+      String mixsetFragmentBodyExtraLine = mixsetFragment.getBody()+"\n;";
+      ParseResult result= parse("MixsetFragmentParsing",  mixsetFragmentBodyExtraLine, mixsetFragmentFile, null, mixsetFragmentLine,0); 
+      setParseResult(result);
+      Token answer = getParser().getRootToken(); // result of parsing the body of a MixsetFragment
+      //    setRootToken(answer);
+      //    model.setLastResult(result);
+      answer.setName("mixsetDefinition"); //attach the mixset name for the fragment instead of ROOT
+      answer.setValue(mixsetFragment.getMixset().getMixsetName());
+      //  getIsFeature()
+      //isFeature + umpFiles(use-st) + require-st
+      for(Token token : answer.getSubTokens())
+      {
+        analyzeRequireStatement(token, 2);
+        if(token.is("mixsetDefinition"))
+        {
+          String mixsetName = token.getValue("mixsetName");
+          // check if the mixset is was not added before
+          Mixset mixset = model.getMixset(mixsetName);
+          if(mixset  == null)
+          {
+            mixset  = new Mixset(mixsetName);
+            model.addMixsetOrFile(mixset);
+          }   
+           parseMixsetFragmentNotUsed(createMixsetFragment(token,  mixset) );
+        }
+      }
+    }
+  }
+  /*
+   * This method does partial parsing for mixsets that have no use-statements.
+   */
+    private void parseMixsetsNotUsed() {
+      
+    List<Mixset> mixsetList = model.getMixsetOrFiles().stream().filter(mixset -> mixset.getIsMixset()).map(obj -> (Mixset)obj).collect(Collectors.toList());
+    for (Mixset aMixset: mixsetList)
+    {
+      List<MixsetFragment>mixsetFragmentList= aMixset.getMixsetFragments();
+      for(MixsetFragment aMixsetFragment :  mixsetFragmentList)
+      {
+        if(aMixsetFragment.getIsParsed()) // the fragment is already parsed 
+          continue;
+        else
+        {
+          parseMixsetFragmentNotUsed(aMixsetFragment);
+          
+        }
+      }
+      
+    }
   }
     
   
