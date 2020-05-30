@@ -34,8 +34,10 @@ parameterListing : OPEN_ROUND_BRACKET ([[parameterTypes]])? CLOSE_ROUND_BRACKET
 
 injectionOperation : [operationName] ([[parameterListing]])?
 
-beforeCode : ( before | [=around] ) ([=operationSource:custom|generated|all])? ([!codeLabel:\S+:])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
-afterCode : after ([=operationSource:custom|generated|all])? ([!codeLabel:\S+:])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+beforeCode : ( before | [=around] ) [[aspectBody]]
+afterCode : after [[aspectBody]]
 
-toplevelBeforeCode : ( before | [=around] ) {([className])(, [className])*} ([=operationSource:custom|generated|all])? ([!codeLabel:\S+:])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
-toplevelAfterCode : after  {([className])(, [className])*} ([=operationSource:custom|generated|all])? ([!codeLabel:\S+:])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+toplevelBeforeCode : ( before | [=around] ) {([className])(, [className])*} [[aspectBody]]
+toplevelAfterCode : after  {([className])(, [className])*} [[aspectBody]]
+
+aspectBody- : ([=operationSource:custom|generated|all])? ([!codeLabel:\S+:])? [[injectionOperation]] ( , [[injectionOperation]] )* ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*

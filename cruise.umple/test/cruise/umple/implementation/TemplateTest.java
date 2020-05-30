@@ -336,6 +336,16 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Student12.java");
     SampleFileWriter.destroy(pathToInput + "/toplevelAfterOnTraitClass.java");
     SampleFileWriter.destroy(pathToInput + "/Employer.java");
+    SampleFileWriter.destroy(pathToInput + "/Student10.php");
+    SampleFileWriter.destroy(pathToInput + "/Student11.php");
+    SampleFileWriter.destroy(pathToInput + "/Student12.php");
+    SampleFileWriter.destroy(pathToInput + "/toplevelAfterOnTraitClass.php");
+    SampleFileWriter.destroy(pathToInput + "/Employer.php");
+    SampleFileWriter.destroy(pathToInput + "/student_10.rb");
+    SampleFileWriter.destroy(pathToInput + "/student_11.rb");
+    SampleFileWriter.destroy(pathToInput + "/student_12.rb");
+    SampleFileWriter.destroy(pathToInput + "/toplevel_after_on_trait_class.rb");
+    SampleFileWriter.destroy(pathToInput + "/employer.rb");
 
    // destroying the object factory
   }

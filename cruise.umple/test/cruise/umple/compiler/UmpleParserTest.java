@@ -26,6 +26,7 @@ import java.io.*;
 import cruise.umple.parser.Token;
 import cruise.umple.parser.Position;
 import cruise.umple.util.SampleFileWriter;
+import cruise.umple.compiler.exceptions.*;
 
 public class UmpleParserTest
 {
@@ -2450,6 +2451,62 @@ public class UmpleParserTest
     Assert.assertEquals("after",inject4.getType());
     Assert.assertEquals("setSomething",inject4.getOperation());
     Assert.assertEquals("doSomething();",inject4.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelAround() {
+       System.out.println(); // Debug
+       System.out.println("toplevelAround Tested"); // Debug
+       System.out.println(); // Debug
+    UmpleFile umpleFile = new UmpleFile(pathToInput,"1521_toplevelAround.ump");
+    UmpleModel umodel = new UmpleModel(umpleFile);
+    Method aMethod ;
+    try{
+      umodel.run();
+      umodel.generate();
+    }
+    catch (UmpleCompilerException e)
+    {
+      if(!e.getMessage().contains("1013")) // ignore warning caused by aspect injection.
+      {
+        throw e;
+      }
+    }
+    finally 
+    {  
+      UmpleClass uClass = umodel.getUmpleClass(0);
+      aMethod = uClass.getMethod(0);
+      String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
+      String keyWord = "int x";
+      String beforeLabelCode = methodBodyCode.substring(0,methodBodyCode.indexOf(keyWord));
+      String afterLabelCode = methodBodyCode.substring(methodBodyCode.indexOf(keyWord));
+      Assert.assertEquals(true, methodBodyCode.contains(keyWord));
+      //before checks: 
+      Assert.assertEquals(true, beforeLabelCode.contains("if (true) {"));
+      //after checks:
+      Assert.assertEquals(true, afterLabelCode.contains("}"));
+      Assert.assertEquals(true, afterLabelCode.contains("code after around."));
+      Assert.assertEquals(true, afterLabelCode.contains("Label2:"));
+      SampleFileWriter.destroy(pathToInput+"/"+"AroundClass.java");
+    }
+    // Method aMethod ;
+    // assertSimpleParse("1521_toplevelAround.ump");
+    //   UmpleClass uClass = model.getUmpleClass(0);
+    //   aMethod = uClass.getMethod(0);
+    //   String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
+    //   String keyWord = "int x";
+    //   String beforeLabelCode = methodBodyCode.substring(0,methodBodyCode.indexOf(keyWord));
+    //   String afterLabelCode = methodBodyCode.substring(methodBodyCode.indexOf(keyWord));
+    //   Assert.assertEquals(true, methodBodyCode.contains(keyWord));
+    //   //before checks: 
+    //   Assert.assertEquals(true, beforeLabelCode.contains("if (true) {"));
+    //   //after checks:
+    //   Assert.assertEquals(true, afterLabelCode.contains("}"));
+    //   Assert.assertEquals(true, afterLabelCode.contains("code after around."));
+    //   Assert.assertEquals(true, afterLabelCode.contains("Label2:"));
+    //   //SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"AroundClass.java");
+   
   }
 
   @Test

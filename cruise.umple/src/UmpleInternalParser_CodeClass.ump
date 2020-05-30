@@ -53,7 +53,6 @@ class UmpleInternalParser
     if (analysisStep != 2)
     {
       shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
-      //System.out.println("analyzeClassToken method changed shouldProcessAgain to: " + shouldProcessAgain); //DEBUG
       return;
     }
 
@@ -3809,7 +3808,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     return operationName.toString();
   }
 
-  // Issue#1521
+  // Issue#1521. make toplevel injection token only contain one methodName.
   private Token toSingleOperationNameInInjectToken(Token injectToken, String operationName, String globMatched)
   {
     Token newInjectToken = injectToken.copy();
@@ -3836,6 +3835,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     return newInjectToken;
   }
 
+  // Issue#1521
   private String globToRegex(String glob)
   {
     String regex = "";
@@ -3917,7 +3917,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       allClassNames.add(umpleClass.getName());
     }
 
-    // get matched class for code injection
+    // get all matched class names for code injection
     if (matchingClassNamePatterns.get(0).equals("*"))
     {
       for (UmpleClass umpleClass:model.getUmpleClasses())
@@ -3942,6 +3942,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       if (model.getUmpleClass(className) != null)
       {
+        if (injectToken.getSubToken("around") != null)
+        {
+          analyzeInjectionCode(injectToken, model.getUmpleClass(className));
+          System.out.println("around analyze!!!!!!!");
+          continue;
+        }
+        //System.out.println(injectToken.getSubToken("around").getValue());
         List<UmpleTrait> umpleTraits = model.getUmpleClass(className).getExtendsTraits();
         ArrayList<String> traitNames = new ArrayList<String>();
         Iterator hmIterator = unlinkedExtends.entrySet().iterator(); 
@@ -3978,7 +3985,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           boolean foundMethod = false;
           for (String methodName : methodNames) // target method names
           {
-            if (methodName.matches(globToRegex(operationName)))
+            if (methodName.matches(globToRegex(operationName))) // if the method matches
             {
               foundMethod = true;
               String globMatched = "";
@@ -3990,7 +3997,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
               analyzeInjectionCode(singleOperationNameInjectToken, model.getUmpleClass(className));
             }
           }
-          if (!foundMethod) 
+          if (!foundMethod && !matchingClassNamePatterns.get(0).equals("*")) 
           {
             getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operationName));
           }
@@ -4001,7 +4008,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
   //TODO I changed the parameter's type. please remove this comment;
   private void analyzeInjectionCode(Token injectToken, UmpleClassifier uClassifier)
-  {//System.out.println(uClassifier.toString());
+  {
     String type = injectToken.is("beforeCode") ? "before" : "after";
     Token codeLabelToken = injectToken.getSubToken("codeLabel");
 
@@ -4181,41 +4188,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         getParseResult().addErrorMessage(new ErrorMessage(1013, injectToken.getPosition(), operationSource));
       }
     }
-  }
-  
-  // Issue#1521
-  private void makeCodeInject(Token injectToken,CodeInjection injection, CodeBlock cb)
-  {
-    List<String> langs = new ArrayList<String>();
-    for(Token sub: injectToken.getSubTokens())
-    {
-      if(sub.is("codeLang"))
-      {
-        langs.add(sub.getValue());
-      }
-      if(sub.is("code"))
-      {          
-        if(langs.size()==0)
-        {
-          cb.setCode(sub.getValue());
-          injection.setCodePosition(sub.getPosition());
-        }
-        else
-        {
-          for(String lang:langs)
-            {
-                cb.setCode(lang,sub.getValue());
-                if("Java".equals(lang))
-                {
-                  injection.setCodePosition(sub.getPosition());
-                }
-            }
-        }
-        langs.clear();      
-      }
-    }    
-    injection.setPosition(injectToken.getPosition());
-    
   }
 
   //TODO I changed the parameter's type. please remove this comment;
