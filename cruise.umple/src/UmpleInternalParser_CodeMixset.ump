@@ -300,7 +300,12 @@ class UmpleInternalParser
   }
   
   private MixsetFragment createMixsetFragment(Token token,  Mixset mixset) {  
-    return createMixsetFragment(token).setMixset(mixset);
+    MixsetFragment mixsetFragment = createMixsetFragment(token);
+    if(mixsetFragment == null || mixset == null)
+    return null;
+    else
+    mixsetFragment.setMixset(mixset);
+    return mixsetFragment;
   }
 
   private MixsetFragment createMixsetFragment(Token token) {  
@@ -342,6 +347,24 @@ class UmpleInternalParser
     return mixsetFragment;
   }
   
+  private void parseMixsetNotUsedToken(Token token){
+    //parse require statments 
+    analyzeRequireStatement(token, 2);
+    // parse nested mixset def.
+    if(token.is("mixsetDefinition"))
+    {
+      String mixsetName = token.getValue("mixsetName");
+      // check if the mixset is was not added before
+      Mixset mixset = model.getMixset(mixsetName);
+      if(mixset  == null)
+      {
+        mixset  = new Mixset(mixsetName);
+        model.addMixsetOrFile(mixset);
+      }   
+      parseMixsetFragmentNotUsed(createMixsetFragment(token) );
+    }
+  }
+
   private void parseMixsetFragmentNotUsed(MixsetFragment mixsetFragment){
     if(mixsetFragment == null)
     return;
@@ -362,46 +385,19 @@ class UmpleInternalParser
       //isFeature + umpFiles(use-st) + require-st
       for(Token token : answer.getSubTokens())
       {
-        analyzeRequireStatement(token, 2);
-        if(token.is("mixsetDefinition"))
-        {
-          String mixsetName = token.getValue("mixsetName");
-          // check if the mixset is was not added before
-          Mixset mixset = model.getMixset(mixsetName);
-          if(mixset  == null)
-          {
-            mixset  = new Mixset(mixsetName);
-            model.addMixsetOrFile(mixset);
-          }   
-          parseMixsetFragmentNotUsed(createMixsetFragment(token) );
-        }
-        else if (token.is("useStatement"))
-        {
+        parseMixsetNotUsedToken(token);
+        if (token.is("useStatement")) // an ump file 
+        {          
           String umpFileName = token.getSubToken("use").getValue();
-          if(! parsedUmpfiles.keySet().contains(umpFileName)) // accept a file that has not been parsed before.
+          if(parsedUmpfiles.keySet().contains(umpFileName)) // accept a file that has not been parsed before.
+          return;
+          //else
+          for (Token subToken : token.getSubTokens())
           {
-            /* here the goal is to create a fragment that contains the content of a refereced file.
-             * Then it will be parsed in similar way to a mixset fragment. 
-             */
-            // read ump files via ParserDataPackage (in which Umple parser read umple files ).
-            ParserDataPackage fileData = new ParserDataPackage(umpFileName, null);
-            fileData.init(null);
-            String fileContent = fileData.getInput(); // get the content of umpleFile as a String. 
-            UmpleFile aOriginalUmpFile = new UmpleFile(umpFileName); 
-            int aOriginalUmpLine = 1;
-            MixsetFragment mixsetFragmentOutOffUmpFile = new MixsetFragment(aOriginalUmpFile, aOriginalUmpLine, fileContent);
-            //mixsetFragmentOutOffUmpFile.setMixset(mixsetFragment.getMixset());
-
-            parseMixsetFragmentNotUsed(mixsetFragmentOutOffUmpFile);
-            parsedUmpfiles.put(umpFileName, false); // add current file to partially parsed files. 
-
+            parseMixsetNotUsedToken(subToken);
           }
-          else 
-          {
-            // The file is already parsed. 
-          }
+          parsedUmpfiles.put(umpFileName, false); // add current file to partially parsed files. 
         }
-
       }
     }
   }
@@ -420,8 +416,7 @@ class UmpleInternalParser
           continue;
         else
         {
-          parseMixsetFragmentNotUsed(aMixsetFragment);
-          
+          parseMixsetFragmentNotUsed(aMixsetFragment);   
         }
       }
       
