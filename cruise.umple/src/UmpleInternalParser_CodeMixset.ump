@@ -346,9 +346,9 @@ class UmpleInternalParser
       MixsetFragment mixsetFragment = new MixsetFragment(mixsetFragmentUmpleFile, mixsetFragmentLineNumber, mixsetBody);
     return mixsetFragment;
   }
-  
+  // this method specifies kinds of tokens to be parsed for unused mixset. 
   private void parseMixsetNotUsedToken(Token token){
-    //parse require statments 
+    //parse require statments. 
     analyzeRequireStatement(token, 2);
     // parse nested mixset def.
     if(token.is("mixsetDefinition"))
@@ -361,11 +361,11 @@ class UmpleInternalParser
         mixset  = new Mixset(mixsetName);
         model.addMixsetOrFile(mixset);
       }   
-      parseMixsetFragmentNotUsed(createMixsetFragment(token) );
+      parseMixsetFragmentNotUsed(createMixsetFragment(token), mixset.getName());
     }
   }
 
-  private void parseMixsetFragmentNotUsed(MixsetFragment mixsetFragment){
+  private void parseMixsetFragmentNotUsed(MixsetFragment mixsetFragment, String parentMixset){
     if(mixsetFragment == null)
     return;
     //else
@@ -380,13 +380,15 @@ class UmpleInternalParser
       //    setRootToken(answer);
       //    model.setLastResult(result);
       answer.setName("mixsetDefinition"); //attach the mixset name for the fragment instead of ROOT
-      answer.setValue("TEMP_MIXSET");
+      answer.setValue(parentMixset);
       //  getIsFeature()
       //isFeature + umpFiles(use-st) + require-st
       for(Token token : answer.getSubTokens())
       {
         parseMixsetNotUsedToken(token);
-        if (token.is("useStatement")) // an ump file 
+        // an ump file included in an unused mixset: it should be partially parsed to know mixsets' dependencies.
+        // 
+        if (token.is("useStatement")) 
         {          
           String umpFileName = token.getSubToken("use").getValue();
           if(parsedUmpfiles.keySet().contains(umpFileName)) // accept a file that has not been parsed before.
@@ -416,7 +418,7 @@ class UmpleInternalParser
           continue;
         else
         {
-          parseMixsetFragmentNotUsed(aMixsetFragment);   
+          parseMixsetFragmentNotUsed(aMixsetFragment, aMixsetFragment.getMixset().getName());   
         }
       }
       
