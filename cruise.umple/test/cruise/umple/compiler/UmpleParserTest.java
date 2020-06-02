@@ -2200,9 +2200,6 @@ public class UmpleParserTest
   @Test
   public void toplevelBefore()
   {
-       System.out.println(); // Debug
-       System.out.println("toplevelBefore Tested"); // Debug
-       System.out.println(); // Debug
     assertSimpleParse("1521_toplevelBefore.ump");
     UmpleClass student = model.getUmpleClass("Student");
     Assert.assertEquals(1,student.numberOfCodeInjections());
@@ -2216,9 +2213,6 @@ public class UmpleParserTest
   @Test
   public void toplevelAndInclassAspects()
   {
-       System.out.println(); // Debug
-       System.out.println("toplevelAndInclassAspects Tested"); // Debug
-       System.out.println(); // Debug
     assertSimpleParse("1521_toplevelAndInclassAspects.ump");
     UmpleClass student = model.getUmpleClass("Student");
     Assert.assertEquals(2,student.numberOfCodeInjections());
@@ -2236,9 +2230,6 @@ public class UmpleParserTest
   @Test
   public void toplevelAspectsForMixset()
   {
-       System.out.println(); // Debug
-       System.out.println("toplevelAspectsForMixset Tested"); // Debug
-       System.out.println(); // Debug
     assertSimpleParse("1521_toplevelAspectsForMixset.ump");
     UmpleClass x = model.getUmpleClass("X");
     Assert.assertEquals(1,x.numberOfCodeInjections());
@@ -2252,9 +2243,6 @@ public class UmpleParserTest
   @Test
   public void toplevelBeforeKeywordAtBegining()
   {
-       System.out.println(); // Debug
-       System.out.println("toplevelBeforeKeywordAtBegining Tested"); // Debug
-       System.out.println(); // Debug
     assertSimpleParse("1521_toplevelBeforeKeywordAtBegining.ump");
     UmpleClass student = model.getUmpleClass("Student");  
     Assert.assertEquals(1,student.numberOfCodeInjections());
@@ -2268,9 +2256,6 @@ public class UmpleParserTest
   @Test
   public void toplevelBeforeForMultiClasses()
   {
-       System.out.println(); // Debug
-       System.out.println("toplevelBeforeForMultiClasses Tested"); // Debug
-       System.out.println(); // Debug
     assertSimpleParse("1521_toplevelBeforeForMultiClasses.ump");
     UmpleClass student = model.getUmpleClass("Student");
     UmpleClass teacher = model.getUmpleClass("Teacher");
@@ -2290,9 +2275,6 @@ public class UmpleParserTest
   @Test
   public void toplevelAfterAsteriskKeyword()
   {
-       System.out.println(); // Debug
-       System.out.println("toplevelAfterAsteriskKeyword Tested"); // Debug
-       System.out.println(); // Debug
     assertSimpleParse("1521_toplevelAfterAsteriskKeyword.ump");
     UmpleClass student = model.getUmpleClass("Student");
     UmpleClass teacher = model.getUmpleClass("Teacher");
@@ -2318,9 +2300,6 @@ public class UmpleParserTest
   @Test
   public void toplevelInjectMultipleMethods()
   {
-       System.out.println(); // Debug
-       System.out.println("toplevelInjectMultipleMethods Tested"); // Debug
-       System.out.println(); // Debug
     assertSimpleParse("1521_toplevelInjectMultipleMethods.ump");
 
     UmpleClass a = model.getUmpleClass("A");
@@ -2354,9 +2333,6 @@ public class UmpleParserTest
   @Test
   public void toplevelAfterOnTrait()
   {
-       System.out.println(); // Debug
-       System.out.println("toplevelAfterOnTrait Tested"); // Debug
-       System.out.println(); // Debug
     assertSimpleParse("1521_toplevelAfterOnTrait.ump");
 
     UmpleClass a = model.getUmpleClass("toplevelAfterOnTraitClass");
@@ -2373,9 +2349,6 @@ public class UmpleParserTest
   @Test
   public void toplevelAfterGlobClassName()
   {
-       System.out.println(); // Debug
-       System.out.println("toplevelAfterGlobClassName Tested"); // Debug
-       System.out.println(); // Debug
     assertSimpleParse("1521_toplevelAfterGlobClassName.ump");
     UmpleClass student1 = model.getUmpleClass("Student1");
     UmpleClass student2 = model.getUmpleClass("Student2");
@@ -2397,9 +2370,6 @@ public class UmpleParserTest
   @Test
   public void toplevelAfterGlobOperationName()
   {
-       System.out.println(); // Debug
-       System.out.println("toplevelAfterGlobOperationName Tested"); // Debug
-       System.out.println(); // Debug
     assertSimpleParse("1521_toplevelAfterGlobOperationName.ump");
     UmpleClass student1 = model.getUmpleClass("Student1");
     UmpleClass student2 = model.getUmpleClass("Student2");
@@ -2425,9 +2395,6 @@ public class UmpleParserTest
   @Test
   public void toplevelAfterGlobOperationNameOnTrait()
   {
-       System.out.println(); // Debug
-       System.out.println("toplevelAfterGlobOperationNameOnTrait Tested"); // Debug
-       System.out.println(); // Debug
     assertSimpleParse("1521_toplevelAfterGlobOperationNameOnTrait.ump");
     UmpleClass student1 = model.getUmpleClass("Student1");
     UmpleClass student2 = model.getUmpleClass("Student2");
@@ -2456,9 +2423,6 @@ public class UmpleParserTest
   // Issue#1521
   @Test
   public void toplevelAround() {
-       System.out.println(); // Debug
-       System.out.println("toplevelAround Tested"); // Debug
-       System.out.println(); // Debug
     UmpleFile umpleFile = new UmpleFile(pathToInput,"1521_toplevelAround.ump");
     UmpleModel umodel = new UmpleModel(umpleFile);
     Method aMethod ;
@@ -2490,23 +2454,6 @@ public class UmpleParserTest
       Assert.assertEquals(true, afterLabelCode.contains("Label2:"));
       SampleFileWriter.destroy(pathToInput+"/"+"AroundClass.java");
     }
-    // Method aMethod ;
-    // assertSimpleParse("1521_toplevelAround.ump");
-    //   UmpleClass uClass = model.getUmpleClass(0);
-    //   aMethod = uClass.getMethod(0);
-    //   String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
-    //   String keyWord = "int x";
-    //   String beforeLabelCode = methodBodyCode.substring(0,methodBodyCode.indexOf(keyWord));
-    //   String afterLabelCode = methodBodyCode.substring(methodBodyCode.indexOf(keyWord));
-    //   Assert.assertEquals(true, methodBodyCode.contains(keyWord));
-    //   //before checks: 
-    //   Assert.assertEquals(true, beforeLabelCode.contains("if (true) {"));
-    //   //after checks:
-    //   Assert.assertEquals(true, afterLabelCode.contains("}"));
-    //   Assert.assertEquals(true, afterLabelCode.contains("code after around."));
-    //   Assert.assertEquals(true, afterLabelCode.contains("Label2:"));
-    //   //SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"AroundClass.java");
-   
   }
 
   @Test
