@@ -1,0 +1,17 @@
+Top-level Aspects
+Aspect Orientation
+noreferences
+
+@@description
+<p>Aspects in Umple can also be top-level<p>
+
+@@syntax
+[[toplevelCodeInjection]] [[toplevelBeforeCode]] [[toplevelAfterCode]]
+
+@@example @@caption Example with &quot;after&quot; statement @@endcaption
+@@source manualexamples/ToplevelAspect1.ump
+@@endexample
+
+@@example @@caption Example @@endcaption
+@@source manualexamples/ToplevelAspect2.ump
+@@endexample

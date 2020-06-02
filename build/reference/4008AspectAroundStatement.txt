@@ -1,0 +1,17 @@
+Around Statement
+Aspect Orientation
+noreferences
+
+@@description
+<p>Around statement is used to inject codes around a code block(i.e. inject codes before and after a code block). See examples below.<p>
+
+@@syntax
+[[toplevelBeforeCode]]
+
+@@example @@caption Example with &quot;in class around injection with no labels&quot; statement @@endcaption
+@@source manualexamples/AroundStatement1.ump
+@@endexample
+
+@@example @@caption Example with &quot;top-level around injection with two labels&quot; statement @@endcaption
+@@source manualexamples/AroundStatement2.ump
+@@endexample
