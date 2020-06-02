@@ -1,0 +1,19 @@
+class AroundClass{
+  static void doSomeThing()
+  {
+    boolean flag = false;
+    Label1: int x = 0;
+    Label2: int a = 0;
+    flag = true;
+  }
+}
+
+around {AroundClass} Label1-Label2:doSomeThing()
+{
+  // code before around.
+  if (true) {
+    around_proceed:
+  }  
+  // code after around.
+}
+

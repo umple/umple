@@ -1,0 +1,60 @@
+class Student10
+{
+  name;
+}
+before {Student10} setName { 
+  //doSomething0(); 
+}  
+
+
+after {*} testFunction{
+    //this code will be injected
+}
+class toplevelAfterOnTraitClass
+{
+    isA T;
+}
+trait T{
+    void testFunction(){
+        //code  
+    }
+}
+
+after {*} set* { 
+  //doSomething1(); 
+}
+class Student11
+{
+	name;
+}
+class Student12
+{
+	name;
+	isA T2;
+}
+trait T2{
+    void setSomething(){
+        //code  
+    }
+}
+class Employer
+{
+	age;
+	String testFunction2() {
+		return "This is a test function";
+	}
+}
+
+after {Student11} setB {
+  //doSomething2();
+}
+
+mixset specialVersion {
+  class Student11 {
+    b;
+  }
+}
+
+// To activate the specialVersion mixset we need
+// to encounter the following
+use specialVersion;

@@ -1,0 +1,16 @@
+after {*} setX,setY {
+    //this code will be injected
+}
+before {*} setX,setY {
+  //this code will be injected
+}
+class A{
+  Integer x;
+  Integer y;
+  
+}
+
+class B{
+  Integer x;
+  Integer y;
+}

@@ -51,4 +51,15 @@ public class CodeInjectionTest extends TemplateTest
     }
   }
   
+  @Test
+  public void ToplevelCodeInjection()
+  {
+    assertUmpleTemplateFor("toplevelCodeInjectionTest.ump",languagePath + "/toplevelCodeInjectionTest."+ languagePath +".txt", "Student11");
+  }
+
+  // @Test
+  // public void ToplevelCodeInjectionAtBegining()
+  // {
+  //   assertUmpleTemplateFor("toplevelCodeInjectionAtBeginingTest.ump",languagePath + "/toplevelCodeInjectionTest."+ languagePath +".txt","Student");
+  // }
 }
