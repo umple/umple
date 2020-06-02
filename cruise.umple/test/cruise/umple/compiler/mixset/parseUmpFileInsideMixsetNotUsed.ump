@@ -1,0 +1,9 @@
+
+mixset NotUsedMixset {
+  use parseReqStInsideMixsetNotUsed.ump; // this umple file is inside mixset not used.    
+}
+
+mixset GSM1800
+{
+  require subfeature [opt DummyFeature]; 
+}

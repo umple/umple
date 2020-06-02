@@ -67,6 +67,11 @@ class UmpleInternalParser
     else if (t.is("useStatement") )
     {
       analyzeAllTokens(t);
+      // add parsed files to parsedUmpfiles hashMap.
+      String umpFileName = t.getSubToken("use").getValue();
+      if(! parsedUmpfiles.keySet().contains(umpFileName))
+      parsedUmpfiles.put(umpFileName, true);
+      
     }
     else if (t.is("strictness") )
     {
