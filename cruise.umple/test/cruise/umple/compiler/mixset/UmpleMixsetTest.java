@@ -827,9 +827,17 @@ public class UmpleMixsetTest {
     model.setShouldGenerate(false);
     model.run();
     Assert.assertEquals(model.getMixsetOrFiles().size() , 9);
-
-
-
   }
+
+ @Test
+  public void umpFileInsideMixsetNotusedIsParsed()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseUmpFileInsideMixsetNotUsed.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+    Assert.assertEquals(model.getMixsetOrFiles().size() , 10);
+  }
+
 
 }
