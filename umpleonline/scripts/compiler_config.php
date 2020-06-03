@@ -171,8 +171,13 @@ class WorkDir{
         $umpsubdir=substr($this->root,$umpsubdirStart);
         $theURI = $_SERVER['REQUEST_URI'];
         $choppoint= strlen($theURI)-strlen("/scripts/compiler.php");
-        $serverroot = substr($theURI, 1, $choppoint-1);
-        $serverpath ="/".$serverroot.$umpsubdir."/".$path;
+        if ($choppoint == 0)
+        {
+            $serverroot = "";
+        } else {
+            $serverroot = substr($theURI, 1, $choppoint-1);
+        }
+        $serverpath =$serverroot.$umpsubdir."/".$path;
         return $serverpath;
     }
 }
