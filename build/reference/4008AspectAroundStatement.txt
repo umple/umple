@@ -3,7 +3,7 @@ Aspect Orientation
 noreferences
 
 @@description
-<p>Around statement is used to inject codes around a code block(i.e. inject codes before and after a code block). See examples below.<p>
+<p>An around statement can be used used to inject code around a code block. The original code appears in the middle, wherever the special around_proceed keyword is placed. The first example below surrounds the body of an entire method. The second example injects code between two labels<p>
 
 @@syntax
 [[toplevelBeforeCode]]
