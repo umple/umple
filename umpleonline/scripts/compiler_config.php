@@ -174,10 +174,12 @@ class WorkDir{
         if ($choppoint == 0)
         {
             $serverroot = "";
+            $serverpath = $serverroot.$umpsubdir."/".$path;
+            return $serverpath;
         } else {
             $serverroot = substr($theURI, 1, $choppoint-1);
         }
-        $serverpath =$serverroot.$umpsubdir."/".$path;
+        $serverpath ="/".$serverroot.$umpsubdir."/".$path;
         return $serverpath;
     }
 }
