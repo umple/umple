@@ -3,7 +3,7 @@ Aspect Orientation
 noreferences
 
 @@description
-<p>Aspects in Umple can also be specified at top level (i.e. outside any classes). In this case pattern matching a set of classes in which to inject the code must bs specified. Glob patterns can be used to match a set of classes, where an asterisk is the wildcard character.<p>
+<p>Aspects in Umple can also be specified at top level (i.e. outside any classes). In this case, a set of classes in which to inject the code must be specified, within curly brackets. Glob patterns can be used to match a set of classes, where an asterisk is the wildcard character.<p>
 
 @@syntax
 [[toplevelCodeInjection]] [[toplevelBeforeCode]] [[toplevelAfterCode]]
