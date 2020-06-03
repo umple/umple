@@ -21,3 +21,5 @@ class AroundClass
     // code after around.
   }  
 }
+
+// @@@skipphpcompile - contains java code
