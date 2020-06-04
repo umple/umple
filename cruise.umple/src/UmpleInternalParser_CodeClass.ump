@@ -3393,24 +3393,39 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             }
             else
             {
-            
-            if (isGetterSetter(actualMethod)) {
-              String methodName = aMethod.getName();
-              String attributeName = methodName.substring(3,methodName.length()).toLowerCase();
-              getParseResult().addErrorMessage(new ErrorMessage(1009, aMethod.getPosition(), methodName, attributeName, uClass.getName()));
-            }
-            //Issue 771
-            else if(uClass.hasSameType(aMethod)) 
-            {
-              getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
-                      aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getMethodBody().getImplementationPositions().get(l).getFilename(),
-                      aMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", aMethod.getPosition().getFilename(), l));
+              if (isGetterSetter(actualMethod)) {
+                String methodName = aMethod.getName();
+                String attributeName = methodName.substring(3,methodName.length()).toLowerCase();
+                getParseResult().addErrorMessage(new ErrorMessage(1009, aMethod.getPosition(), methodName, attributeName, uClass.getName()));
+              }
+              //Issue 771
+              else if(uClass.hasSameType(aMethod)) 
+              {
+                //Issue 1488
+                boolean raiseWarning49 = !method.getSubToken("code").getValue().equals("");
+                System.out.println("issue1488!!"); //DEBUG
+                System.out.println("code token Value: " + method.getSubToken("code").getValue().equals(""));
+                for (Token token : method.getSubTokens())
+                {
+                  if (token.is("codeLang"))
+                  {
+                    System.out.println("TOKEN: codeLang " + token);
+                    raiseWarning49 = true;
+                  }
+                }
+                if (raiseWarning49) // if no executable code, don't raise warning 49.
+                {
+                  getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
+                        aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getMethodBody().getImplementationPositions().get(l).getFilename(),
+                        aMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", aMethod.getPosition().getFilename(), l));
+                }
+                
               }
               else
               {
-              getParseResult().addErrorMessage(new ErrorMessage(71,aMethod.getPosition(),
-                      aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getMethodBody().getImplementationPositions().get(l).getFilename(),
-                      aMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", aMethod.getPosition().getFilename(), l));
+                getParseResult().addErrorMessage(new ErrorMessage(71,aMethod.getPosition(),
+                        aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getMethodBody().getImplementationPositions().get(l).getFilename(),
+                        aMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", aMethod.getPosition().getFilename(), l));
               }
             }
             

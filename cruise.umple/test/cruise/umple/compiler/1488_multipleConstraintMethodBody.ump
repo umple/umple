@@ -1,0 +1,14 @@
+class X {
+  Integer age;
+  m1 () {
+    // test1
+  }
+
+  m1 () {
+    [pre: age >= 18]  
+  }
+  m1 () {
+    [pre: age <= 99]  
+  }
+
+}

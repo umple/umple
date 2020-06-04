@@ -1,0 +1,15 @@
+class X {
+  Integer age;
+  m1 () {
+    // test1
+  }
+
+  m1 () {
+    [pre: age >= 18] 
+    System.out.println("Should have warning 49"); 
+  }
+  m1 () {
+    [pre: age <= 99]  
+  }
+
+}

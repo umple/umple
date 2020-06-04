@@ -128,6 +128,7 @@ public class UmpleParserTest
   @Test
   public void multLanguageImplementation()
   {
+    System.out.println("multLanguageImplementation Tested!!!");
 	  assertNoWarningsParse("015_multLanguageImplementation.ump");
 	  assertNoWarningsParse("015_multLanguageImplementation2.ump");
 	  assertHasWarningsParse("015_multLanguageImplementation3.ump", 49);
@@ -2336,7 +2337,6 @@ public class UmpleParserTest
     assertSimpleParse("1521_toplevelAfterOnTrait.ump");
 
     UmpleClass a = model.getUmpleClass("toplevelAfterOnTraitClass");
-    //System.out.println("numberOfExtendsTraits: " + a.numberOfExtendsTraits());
     Assert.assertEquals(1,a.numberOfCodeInjections());
 
     CodeInjection aInject = a.getCodeInjection(0);
@@ -2349,6 +2349,8 @@ public class UmpleParserTest
   @Test
   public void toplevelAfterGlobClassName()
   {
+    System.out.println("toplevelAfterGlobClassName Tested!!!"); //DEBUG
+    assertHasWarningsParse("1521_toplevelAfterGlobClassName.ump", 1012);
     assertSimpleParse("1521_toplevelAfterGlobClassName.ump");
     UmpleClass student1 = model.getUmpleClass("Student1");
     UmpleClass student2 = model.getUmpleClass("Student2");
@@ -2454,6 +2456,26 @@ public class UmpleParserTest
       Assert.assertEquals(true, afterLabelCode.contains("Label2:"));
       SampleFileWriter.destroy(pathToInput+"/"+"AroundClass.java");
     }
+  }
+
+  // Issue 1488
+  @Test
+  public void multipleConstraintMethodBody() 
+  {
+    System.out.println("1488_multipleConstraintMethodBody Tested!!!"); //DEBUG
+    //assertHasWarningsParse("1488_multipleConstraintMethodBody.ump", 49);
+    assertNoWarningsParse("1488_multipleConstraintMethodBody.ump");
+    assertSimpleParse("1488_multipleConstraintMethodBody.ump");
+  }
+
+  // Issue 1488
+  @Test
+  public void multipleMethodBodyWarning() 
+  {
+    System.out.println("1488_multipleMethodBodyWarning Tested!!!"); //DEBUG
+    assertHasWarningsParse("1488_multipleMethodBodyWarning.ump", 49);
+    //assertNoWarningsParse("1488_multipleMethodBodyWarning.ump");
+    assertSimpleParse("1488_multipleMethodBodyWarning.ump");
   }
 
   @Test
