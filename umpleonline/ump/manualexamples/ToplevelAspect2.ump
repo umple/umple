@@ -14,3 +14,13 @@ class Employer
 		return "This is a test function";
 	}
 }
+
+class Student1 {isA X;}
+class Student2 {isA X;}
+trait X {
+  doSomething() {
+    System.out.println("Doing something\n");
+  }
+}
+
+// @@@skipphpcompile - contains java code

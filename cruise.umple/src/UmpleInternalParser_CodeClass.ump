@@ -3950,10 +3950,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         if (injectToken.getSubToken("around") != null)
         {
           analyzeInjectionCode(injectToken, model.getUmpleClass(className));
-          System.out.println("around analyze!!!!!!!");
           continue;
         }
-        //System.out.println(injectToken.getSubToken("around").getValue());
         List<UmpleTrait> umpleTraits = model.getUmpleClass(className).getExtendsTraits();
         ArrayList<String> traitNames = new ArrayList<String>();
         Iterator hmIterator = unlinkedExtends.entrySet().iterator(); 

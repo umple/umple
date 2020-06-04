@@ -3,7 +3,7 @@ class AroundClass{
   {
     boolean flag = false;
     Label1: int x = 0;
-    Label2: int a = 0;
+    Label2: 
     flag = true;
   }
 }
@@ -17,3 +17,5 @@ around {AroundClass} Label1-Label2:doSomeThing()
   }  
   // code after around.
 }
+
+// @@@skipphpcompile - contains java code
