@@ -379,7 +379,7 @@ else if (isset($_REQUEST["umpleCode"]))
     else if ($stateDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/stateDiagram.svg");
-      $command = "dot -Tsvg -Gdpi=63 " . $thedir . "/model.gv -o " . $thedir .  "/stateDiagram.svg"; 
+      $command = "dot -Tsvg " . $thedir . "/model.gv -o " . $thedir .  "/stateDiagram.svg"; 
       exec($command);
             if (!file_exists($thedir . "/stateDiagram.svg") && file_exists("doterr.svg"))
             {
@@ -391,14 +391,16 @@ else if (isset($_REQUEST["umpleCode"]))
       $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
-      echo $svgcode;
+      $changesToMake = 1;
+      $shrunksvgcode = str_replace("scale(1 1)","scale(0.875 0.875)",$svgcode,$changesToMake);
+      echo $shrunksvgcode;
       echo "</svg>"; 
     } // end state diagram
 
     else if ($featureDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/featureDiagram.svg");
-      $command = "dot -Tsvg -Gdpi=63 " . $thedir . "/modelGvFeatureDiagram.gv -o " . $thedir .  "/featureDiagram.svg";
+      $command = "dot -Tsvg " . $thedir . "/modelGvFeatureDiagram.gv -o " . $thedir .  "/featureDiagram.svg";
       exec($command);
       if (!file_exists($thedir . "/featureDiagram.svg") && file_exists("doterr.svg"))
       {
@@ -410,14 +412,16 @@ else if (isset($_REQUEST["umpleCode"]))
       $html = "<a href=\featureDiagram.svg\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
-      echo $svgcode;
+      $changesToMake = 1;
+      $shrunksvgcode = str_replace("scale(1 1)","scale(0.875 0.875)",$svgcode,$changesToMake);
+      echo $shrunksvgcode;
       echo "</svg>";   
     }
     
     else if ($classDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/classDiagram.svg");
-      $command = "dot -Tsvg -Gdpi=63 " . $thedir . "/model" . $generatorType . ".gv -o " . $thedir .  "/classDiagram.svg";
+      $command = "dot -Tsvg " . $thedir . "/model" . $generatorType . ".gv -o " . $thedir .  "/classDiagram.svg";
       exec($command);
             if (!file_exists($thedir . "/classDiagram.svg") && file_exists("doterr.svg"))
             {
@@ -429,14 +433,16 @@ else if (isset($_REQUEST["umpleCode"]))
       $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
-      echo $svgcode;
+      $changesToMake = 1;
+      $shrunksvgcode = str_replace("scale(1 1)","scale(0.875 0.875)",$svgcode,$changesToMake);
+      echo $shrunksvgcode;
       echo "</svg>";      
     } // end graphViz class diagram
 
     else if ($entityRelationshipDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/entityRelationshipDiagram.svg");
-      $command = "dot -Tsvg -Gdpi=63 " . $thedir . "/modelerd.gv -o " . $thedir .  "/entityRelationshipDiagram.svg";
+      $command = "dot -Tsvg " . $thedir . "/modelerd.gv -o " . $thedir .  "/entityRelationshipDiagram.svg";
       exec($command);
       if (!file_exists($thedir . "/entityRelationshipDiagram.svg") && file_exists("doterr.svg"))
       {
@@ -448,7 +454,9 @@ else if (isset($_REQUEST["umpleCode"]))
       $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$erdiagramlink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
-      echo $svgcode;
+      $changesToMake = 1;
+      $shrunksvgcode = str_replace("scale(1 1)","scale(0.875 0.875)",$svgcode,$changesToMake);
+      echo $shrunksvgcode;
       echo "</svg>";      
     } // end graphViz entity relationship diagram
     

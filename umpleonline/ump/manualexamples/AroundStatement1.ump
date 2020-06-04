@@ -11,7 +11,7 @@ class AroundClass{
 
 class AroundClass
 {
-  around doSomeThing()
+  around custom doSomeThing()
   {
     // code before around.
     if (true) 
@@ -20,6 +20,6 @@ class AroundClass
     }  
     // code after around.
   }  
-}
+}//$?[End_of_model]$?
 
 // @@@skipphpcompile - contains java code

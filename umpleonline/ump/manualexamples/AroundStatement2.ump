@@ -8,7 +8,7 @@ class AroundClass{
   }
 }
 
-around {AroundClass} Label1-Label2:doSomeThing()
+around {AroundClass} custom Label1-Label2:doSomeThing()
 {
   // code before around.
   if (true) 
@@ -16,6 +16,6 @@ around {AroundClass} Label1-Label2:doSomeThing()
     around_proceed:
   }  
   // code after around.
-}
+}//$?[End_of_model]$?
 
 // @@@skipphpcompile - contains java code
