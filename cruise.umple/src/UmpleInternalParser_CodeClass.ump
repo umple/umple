@@ -3403,13 +3403,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
               {
                 //Issue 1488
                 boolean raiseWarning49 = !method.getSubToken("code").getValue().equals("");
-                System.out.println("issue1488!!"); //DEBUG
-                System.out.println("code token Value: " + method.getSubToken("code").getValue().equals(""));
                 for (Token token : method.getSubTokens())
                 {
                   if (token.is("codeLang"))
                   {
-                    System.out.println("TOKEN: codeLang " + token);
                     raiseWarning49 = true;
                   }
                 }
@@ -3419,7 +3416,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
                         aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getMethodBody().getImplementationPositions().get(l).getFilename(),
                         aMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", aMethod.getPosition().getFilename(), l));
                 }
-                
               }
               else
               {

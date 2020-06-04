@@ -2462,20 +2462,14 @@ public class UmpleParserTest
   @Test
   public void multipleConstraintMethodBody() 
   {
-    System.out.println("1488_multipleConstraintMethodBody Tested!!!"); //DEBUG
-    //assertHasWarningsParse("1488_multipleConstraintMethodBody.ump", 49);
     assertNoWarningsParse("1488_multipleConstraintMethodBody.ump");
-    assertSimpleParse("1488_multipleConstraintMethodBody.ump");
   }
 
   // Issue 1488
   @Test
   public void multipleMethodBodyWarning() 
   {
-    System.out.println("1488_multipleMethodBodyWarning Tested!!!"); //DEBUG
     assertHasWarningsParse("1488_multipleMethodBodyWarning.ump", 49);
-    //assertNoWarningsParse("1488_multipleMethodBodyWarning.ump");
-    assertSimpleParse("1488_multipleMethodBodyWarning.ump");
   }
 
   @Test
