@@ -208,7 +208,6 @@ Action.clicked = function(event)
   else if (action == "PhotoReady")
   {
     Action.photoReady();
-    //alert("bbbbbbbbbbbbbbbbbbbbbbbbbbb");//DEBUG
   }
   else if (action == "ToggleAttributes")
   {
@@ -811,7 +810,6 @@ Action.photoReady = function()
   if (Page.isPhotoReady())
   {
     jQuery(canvasSel).addClass("photoReady");
-    alert("photoReady being called");  //DEBUG
   }
   else
   {
@@ -1725,7 +1723,7 @@ Action.updateUmpleDiagramCallback = function(response)
       Action.diagramInSync = true;
     }
 
-    Page.catFeedbackMessage("");
+    Page.setFeedbackMessage("");
     Page.hideGeneratedCode();
     
     // Display editable class diagram
