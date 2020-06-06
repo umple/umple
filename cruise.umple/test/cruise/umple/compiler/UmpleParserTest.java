@@ -128,7 +128,6 @@ public class UmpleParserTest
   @Test
   public void multLanguageImplementation()
   {
-    System.out.println("multLanguageImplementation Tested!!!");
 	  assertNoWarningsParse("015_multLanguageImplementation.ump");
 	  assertNoWarningsParse("015_multLanguageImplementation2.ump");
 	  assertHasWarningsParse("015_multLanguageImplementation3.ump", 49);
@@ -2170,9 +2169,7 @@ public class UmpleParserTest
   @Test
   public void beforeKeyword()
   {
-    System.out.println("Testing in class beforeKeyword HERE"); //DEBUG
     assertParse("019_before.ump");
-        System.out.println(model.getUmpleClasses().size());
 
     UmpleClass student = model.getUmpleClass("Student");
     Assert.assertEquals(1,student.numberOfCodeInjections());
@@ -2349,7 +2346,6 @@ public class UmpleParserTest
   @Test
   public void toplevelAfterGlobClassName()
   {
-    System.out.println("toplevelAfterGlobClassName Tested!!!"); //DEBUG
     assertHasWarningsParse("1521_toplevelAfterGlobClassName.ump", 1012);
     assertSimpleParse("1521_toplevelAfterGlobClassName.ump");
     UmpleClass student1 = model.getUmpleClass("Student1");

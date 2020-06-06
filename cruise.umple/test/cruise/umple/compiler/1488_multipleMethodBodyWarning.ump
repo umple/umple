@@ -6,9 +6,10 @@ class X {
 
   m1 () {
     [pre: age >= 18] 
-    System.out.println("Should have warning 49"); 
+    return "Should have warning 49"; 
   }
   m1 () {
+    // testing comment
     [pre: age <= 99]  
   }
 
