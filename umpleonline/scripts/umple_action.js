@@ -136,7 +136,18 @@ Action.clicked = function(event)
   else if (action == "DownloadFiles")
   {
     TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
-    window.location.href = "scripts/tab_control.php?download=1&&model=" + Page.getModel();
+    
+    // issue#1554
+    //window.location.href = "scripts/tab_control.php?download=1&&model=" + Page.getModel();
+    var link = document.createElement("a");
+    link.setAttribute("href", "scripts/tab_control.php?download=1&&model=" + Page.getModel());
+    link.setAttribute('id', "downloadLink");
+    var linkText = document.createTextNode("Download ZIP File From Here");
+    link.appendChild(linkText);
+
+    var node = document.createElement("LI");   
+    node.appendChild(link);
+    document.getElementById("saveLoad").appendChild(node);
   }
   else if (action == "Undo")
   {
@@ -197,6 +208,7 @@ Action.clicked = function(event)
   else if (action == "PhotoReady")
   {
     Action.photoReady();
+    //alert("bbbbbbbbbbbbbbbbbbbbbbbbbbb");//DEBUG
   }
   else if (action == "ToggleAttributes")
   {
@@ -798,7 +810,8 @@ Action.photoReady = function()
   var canvasSel = "#" + Page.umpleCanvasId();
   if (Page.isPhotoReady())
   {
-    jQuery(canvasSel).addClass("photoReady");  
+    jQuery(canvasSel).addClass("photoReady");
+    alert("photoReady being called");  //DEBUG
   }
   else
   {
@@ -1619,6 +1632,9 @@ Action.processTyping = function(target, manuallySynchronized)
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor") {
       Action.updateLayoutEditorAndDiagram();
       
+      // issue#1554
+      var downloadLink = document.getElementById("downloadLink");
+      downloadLink.parentNode.removeChild(downloadLink);
       Page.enablePaletteItem("buttonSyncDiagram", false);
     }
     else if(target == "diagramEdit")
@@ -1709,7 +1725,7 @@ Action.updateUmpleDiagramCallback = function(response)
       Action.diagramInSync = true;
     }
 
-    Page.setFeedbackMessage("");
+    Page.catFeedbackMessage("");
     Page.hideGeneratedCode();
     
     // Display editable class diagram

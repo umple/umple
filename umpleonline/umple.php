@@ -285,7 +285,7 @@ $output = $dataHandle->readData('model.ump');
         <h3><a href="#">SAVE & LOAD</a></h3>
         
         <div class="section">
-          <ul class="first">
+          <ul class="first" id="saveLoad">
             <li class="subtitle">SAVE</li>
             <?php if (isBookmark($dataHandle)) { ?>
             <li id="ttSaveBookmark">
@@ -312,16 +312,17 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/copy.png"/> 
               Store in Browser
             </li>
-            <li id="buttonDownloadFiles" class="downloadFiles">
-              <img src="scripts/copy.png"/> 
-               Download Files
-            </li>
-            <li class="dropbox-add-saver"></li>
             
             <li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
               <img src="scripts/copy.png"/> 
               Load from Browser
             </li>
+            
+            <li id="buttonDownloadFiles" class="downloadFiles">
+              <img src="scripts/copy.png"/> 
+               Download Files
+            </li>
+            <li class="dropbox-add-saver"></li>
             
           </ul>
         
