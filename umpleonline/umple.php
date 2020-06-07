@@ -321,8 +321,7 @@ $output = $dataHandle->readData('model.ump');
             <li id="buttonDownloadFiles" class="downloadFiles">
               <img src="scripts/copy.png"/> 
                Download Files
-            </li>
-            <li class="dropbox-add-saver"></li>
+            </li>            
             
           </ul>
         
