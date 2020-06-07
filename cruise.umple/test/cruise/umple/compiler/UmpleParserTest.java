@@ -2169,9 +2169,7 @@ public class UmpleParserTest
   @Test
   public void beforeKeyword()
   {
-    System.out.println("Testing in class beforeKeyword HERE"); //DEBUG
     assertParse("019_before.ump");
-        System.out.println(model.getUmpleClasses().size());
 
     UmpleClass student = model.getUmpleClass("Student");
     Assert.assertEquals(1,student.numberOfCodeInjections());
@@ -2336,7 +2334,6 @@ public class UmpleParserTest
     assertSimpleParse("1521_toplevelAfterOnTrait.ump");
 
     UmpleClass a = model.getUmpleClass("toplevelAfterOnTraitClass");
-    //System.out.println("numberOfExtendsTraits: " + a.numberOfExtendsTraits());
     Assert.assertEquals(1,a.numberOfCodeInjections());
 
     CodeInjection aInject = a.getCodeInjection(0);
@@ -2349,6 +2346,7 @@ public class UmpleParserTest
   @Test
   public void toplevelAfterGlobClassName()
   {
+    assertHasWarningsParse("1521_toplevelAfterGlobClassName.ump", 1012);
     assertSimpleParse("1521_toplevelAfterGlobClassName.ump");
     UmpleClass student1 = model.getUmpleClass("Student1");
     UmpleClass student2 = model.getUmpleClass("Student2");
@@ -2454,6 +2452,20 @@ public class UmpleParserTest
       Assert.assertEquals(true, afterLabelCode.contains("Label2:"));
       SampleFileWriter.destroy(pathToInput+"/"+"AroundClass.java");
     }
+  }
+
+  // Issue 1488
+  @Test
+  public void multipleConstraintMethodBody() 
+  {
+    assertNoWarningsParse("1488_multipleConstraintMethodBody.ump");
+  }
+
+  // Issue 1488
+  @Test
+  public void multipleMethodBodyWarning() 
+  {
+    assertHasWarningsParse("1488_multipleMethodBodyWarning.ump", 49);
   }
 
   @Test

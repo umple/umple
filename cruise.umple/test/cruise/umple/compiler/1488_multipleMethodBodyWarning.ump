@@ -1,0 +1,16 @@
+class X {
+  Integer age;
+  m1 () {
+    // test1
+  }
+
+  m1 () {
+    [pre: age >= 18] 
+    return "Should have warning 49"; 
+  }
+  m1 () {
+    // testing comment
+    [pre: age <= 99]  
+  }
+
+}
