@@ -136,7 +136,27 @@ Action.clicked = function(event)
   else if (action == "DownloadFiles")
   {
     TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
-    window.location.href = "scripts/tab_control.php?download=1&&model=" + Page.getModel();
+    
+    // issue#1554
+    //window.location.href = "scripts/tab_control.php?download=1&&model=" + Page.getModel();
+    if (document.getElementById("downloadLink") === null)
+    {
+      var link = document.createElement("a");
+      link.setAttribute("href", "scripts/tab_control.php?download=1&&model=" + Page.getModel());
+      link.setAttribute('id', "downloadLink");
+      var linkText = document.createTextNode("Download ZIP File From Here");
+      link.appendChild(linkText);
+      
+      var node = document.createElement("LI");   
+      node.appendChild(link);
+      document.getElementById("saveLoad").appendChild(node);
+    } else {
+      document.getElementById("downloadLink").setAttribute("href", "scripts/tab_control.php?download=1&&model=" + Page.getModel());
+    }
+
+    setTimeout(function () {
+      document.getElementById("downloadLink").remove();
+    }, 30000);
   }
   else if (action == "Undo")
   {
@@ -798,7 +818,7 @@ Action.photoReady = function()
   var canvasSel = "#" + Page.umpleCanvasId();
   if (Page.isPhotoReady())
   {
-    jQuery(canvasSel).addClass("photoReady");  
+    jQuery(canvasSel).addClass("photoReady");
   }
   else
   {
@@ -1618,6 +1638,10 @@ Action.processTyping = function(target, manuallySynchronized)
     
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor") {
       Action.updateLayoutEditorAndDiagram();
+      
+      // issue#1554
+      var downloadLink = document.getElementById("downloadLink");
+      downloadLink.remove();
       
       Page.enablePaletteItem("buttonSyncDiagram", false);
     }
