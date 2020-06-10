@@ -141,16 +141,16 @@ mixset Logging {
   require subfeature [LoggingBase];
   require subfeature [ opt  LoggingFiner     
      opt  LoggingConfig    
-		 opt  LoggingSevere    
-	   opt  LoggingEvictor    
-	   opt  LoggingCleaner    
-		 opt  LoggingRecovery    
-		 opt  LoggingDbLogHandler    
-	   opt  LoggingConsoleHandler    
-		 opt  LoggingInfo    
-	   opt  LoggingFileHandler    
-	   opt  LoggingFine    
-		 opt  LoggingFinest ];
+     opt  LoggingSevere    
+     opt  LoggingEvictor    
+     opt  LoggingCleaner    
+     opt  LoggingRecovery    
+     opt  LoggingDbLogHandler    
+     opt  LoggingConsoleHandler    
+     opt  LoggingInfo    
+     opt  LoggingFileHandler    
+     opt  LoggingFine    
+     opt  LoggingFinest ];
     
   mixset  LoggingFiner { }   
   mixset  LoggingConfig  { } 
