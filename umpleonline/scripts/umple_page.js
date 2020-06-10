@@ -70,13 +70,13 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.setDiagramTypeIconState('GvClass');
     Page.useGvFeatureDiagram = false;
   }
-  else if(diagramType == "GVFeature")   
+  else if(diagramType == "GvFeature")   
   {
     Page.useGvFeatureDiagram = true;
     Page.useEditableClassDiagram = false;
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = false;
-    Page.setDiagramTypeIconState('GVFeature');
+    Page.setDiagramTypeIconState('GvFeature');
   }
   else if(diagramType == "structureDiagram")
   {
@@ -933,7 +933,7 @@ Page.getSelectedExample = function()
        inputExample = jQuery("#inputExample4 option:selected").val();
            if( !Page.useGvFeatureDiagram) {
          jQuery("#buttonShowGvFeatureDiagram").attr('checked', true); 
-         Action.changeDiagramType({type: "GVFeature"});
+         Action.changeDiagramType({type: "GvFeature"});
       }
     }
   else {
