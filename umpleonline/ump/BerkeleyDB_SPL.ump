@@ -1,6 +1,11 @@
 /*
   This is the feature model for BerkeleyDB SPL in Umple.
+  The feature model is taken from:
+  C. Kastner, S. Apel, and D. Batory, “A case study implementing features
+  using AspectJ,” in 11th International Software Product Line Conference
+  (SPLC 2007), 2007, pp. 223–232.
 */
+
 
 require subfeature [Base];
 require subfeature [Ops];
