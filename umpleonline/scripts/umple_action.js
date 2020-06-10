@@ -1060,7 +1060,7 @@ Action.loadExample = function loadExample()
   }
  else if(Page.useGvFeatureDiagram) {
     diagramType="&diagramtype=GvFeature";
-    jQuery("#gencpp").prop("selected",true);
+    jQuery("#genjava").prop("selected",true);
   }
   else if(Page.useStructureDiagram) {
     diagramType="&diagramtype=structure&generateDefault=cpp";
