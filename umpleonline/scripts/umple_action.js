@@ -1038,6 +1038,10 @@ Action.loadExample = function loadExample()
     diagramType="&diagramtype=state";
     jQuery("#genjava").prop("selected",true);
   }
+ else if(Page.useGvFeatureDiagram) {
+    diagramType="&diagramtype=GvFeature";
+    jQuery("#gencpp").prop("selected",true);
+  }
   else if(Page.useStructureDiagram) {
     diagramType="&diagramtype=structure&generateDefault=cpp";
     jQuery("#gencpp").prop("selected",true);
