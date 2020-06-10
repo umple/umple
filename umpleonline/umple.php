@@ -344,6 +344,7 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExampleType" id = "cdModels" value="cdModels">Class Diagrams</option>
                 <option name = "optionExampleType" id = "smModels" value="smModels">State Machines</option>
                 <option name = "optionExampleType" id = "structureModels" value="structureModels">Composite Structure</option>
+                <option name = "optionExampleType" id = "featureModels" value="featureModels">Feature Diagram</option>
               </select>
             </li>
             <li id="itemLoadExamples">
@@ -437,6 +438,7 @@ $output = $dataHandle->readData('model.ump');
                 <option name="optionExample" class="openUmprOption" value="">Select from Umpr Repository...</option>
               </select>
             </li>
+
             <li id="itemLoadExamples3">
               <select id="inputExample3" name="inputExample3" class="button" size="1" data-diagram-type="composite">
                 <option name = "optionExample3" id = "defaultExampleOption3" value="">Select Example</option>
@@ -445,6 +447,15 @@ $output = $dataHandle->readData('model.ump');
                 <option name="optionExample" class="openUmprOption" value="">Select from Umpr Repository...</option>
               </select>
             </li>
+
+  					<li id="itemLoadExamples4">
+              <select id="inputExample4" name="inputExample4" class="button" size="1" data-diagram-type="feature">
+                <option name = "optionExample4" id = "defaultExampleOption4" value="">Select Example</option>
+                <option name = "optionExample" value="BerkeleyDB_SPL.ump"> BerkeleyDB SPL </option>
+               
+              </select>
+            </li>
+          
             <!-- <li class="dropbox-add-chooser"></li> --> 
           </ul>
       
