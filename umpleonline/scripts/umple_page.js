@@ -61,12 +61,14 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useGvStateDiagram = true;
     Page.useEditableClassDiagram = false; 
     Page.setDiagramTypeIconState('GvState');
+    Page.useGvFeatureDiagram = false;
   }
   else if(diagramType == "GvClass")   
   {
     Page.useGvClassDiagram = true;
     Page.useEditableClassDiagram = false;
     Page.setDiagramTypeIconState('GvClass');
+    Page.useGvFeatureDiagram = false;
   }
   else if(diagramType == "GVFeature")   
   {
@@ -80,6 +82,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useStructureDiagram = true;
     Page.useEditableClassDiagram = false;  
     Page.setDiagramTypeIconState('structureDiagram');
+    Page.useGvFeatureDiagram = false;
   }
 
   jQuery.noConflict();
