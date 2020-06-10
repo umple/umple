@@ -5,8 +5,6 @@
   using AspectJ,” in 11th International Software Product Line Conference
   (SPLC 2007), 2007, pp. 223–232.
 */
-
-
 require subfeature [Base];
 require subfeature [Ops];
 require subfeature [opt MemoryBudget];
