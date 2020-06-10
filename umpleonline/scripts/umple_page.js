@@ -75,6 +75,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useGvFeatureDiagram = true;
     Page.useEditableClassDiagram = false;
     Page.useGvStateDiagram = false;
+    Page.useStructureDiagram = false;
     Page.setDiagramTypeIconState('GVFeature');
   }
   else if(diagramType == "structureDiagram")
