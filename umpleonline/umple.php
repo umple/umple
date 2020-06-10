@@ -447,8 +447,8 @@ $output = $dataHandle->readData('model.ump');
                 <option name="optionExample" class="openUmprOption" value="">Select from Umpr Repository...</option>
               </select>
             </li>
-
-  					<li id="itemLoadExamples4">
+		  
+  	    <li id="itemLoadExamples4">
               <select id="inputExample4" name="inputExample4" class="button" size="1" data-diagram-type="feature">
                 <option name = "optionExample4" id = "defaultExampleOption4" value="">Select Example</option>
                 <option name = "optionExample" value="BerkeleyDB_SPL.ump"> BerkeleyDB SPL </option>
