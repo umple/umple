@@ -600,11 +600,13 @@ Page.initExamples = function()
     jQuery("#structureModels").prop("selected",true);
     jQuery("#itemLoadExamples").hide();
     jQuery("#itemLoadExamples2").hide();
+    jQuery("#itemLoadExamples4").hide();      
   }
   else if (Page.useGvStateDiagram) {
     jQuery("#smModels").prop("selected",true);
     jQuery("#itemLoadExamples").hide();
-    jQuery("#itemLoadExamples3").hide();    
+    jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples4").hide();  
   }
  else if (Page.useGvFeatureDiagram) {
     jQuery("#featureModels").prop("selected",true);
