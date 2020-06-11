@@ -167,6 +167,10 @@ mixset Logging {
   mixset  LoggingFinest  { } 
 				
 }
+//$?[End_of_model]$?
+// @@@skipjavacompile - Generates no language code
+// @@@skipphpcompile - Contains no language code
+// @@@skiprubycompile - Contains no language code
 
 
 
