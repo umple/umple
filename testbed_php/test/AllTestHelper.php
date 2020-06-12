@@ -1,13 +1,17 @@
 <?php
-
-function __autoload($class_name) 
+set_error_handler(function($severity, $message, $file, $line) {
+    if (error_reporting() & $severity) {
+        throw new ErrorException($message, 0, $severity, $file, $line);
+    }
+});
+spl_autoload_register(function ($class_name) 
 {
   if ($class_name == "Date")
   {
     return;
   }
   require_once "../src-gen-umple/" . $class_name . '.php';
-}
+});
 
 function endsWith($str, $sub ) 
 {
