@@ -1,9 +1,4 @@
 <?php
-set_error_handler(function($severity, $message, $file, $line) {
-    if (error_reporting() & $severity) {
-        throw new ErrorException($message, 0, $severity, $file, $line);
-    }
-});
 spl_autoload_register(function ($class_name) 
 {
   if ($class_name == "Date")

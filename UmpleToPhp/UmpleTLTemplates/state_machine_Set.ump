@@ -89,8 +89,6 @@ class UmpleToPhp {
           {
             exitActions.append("\n    ");
             exitActions.append(StringFormatter.format("elseif ($this->{0} == self::${1})\n    {",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
-            //System.out.println("DDDDDD");
-              //System.out.println("stateOne: " + gen.translate("stateOne",state) + "  stateMachineOne: " + gen.translate("stateMachineOne",sm));
           }
           isFirstExit = false;
         }
@@ -100,14 +98,10 @@ class UmpleToPhp {
         if(action.getActionCode() == null) //verify why it returns null
         {
           exitActions.append("\n      " + StringFormatter.format("$this->{0}(self::${1});", gen.translate("setMethod",sm), gen.translate("stateNull",sm)));
-          //System.out.println("BBBBBBBBBBBBB");
-          //System.out.println("null: " + gen.translate("setMethod",sm) + ", " + gen.translate("stateNull",sm));
         }
         else
         {
           exitActions.append("\n      " + action.getActionCode());
-          //System.out.println("action.getActionCode(): " + action.getActionCode());
-          //System.out.println("StringBuilder: " + exitActions);
         }
       }
     }
