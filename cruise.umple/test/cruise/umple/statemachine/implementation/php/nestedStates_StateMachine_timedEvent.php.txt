@@ -83,7 +83,7 @@ class Window
   {
     if ($this->WindowController == self::$WindowControllerStationary)
     {
-      $this->exitStationary();
+      $this->exitWindowControllerStationary();
     }
   }
 
