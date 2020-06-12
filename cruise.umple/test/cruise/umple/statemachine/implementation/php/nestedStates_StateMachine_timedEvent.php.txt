@@ -107,7 +107,7 @@ class Window
   {
     if ($this->WindowControllerStationary == self::$WindowControllerStationaryNormalStationary)
     {
-      $this->setWindowControllerStationary(self::WindowControllerStationaryNull);
+      $this->setWindowControllerStationary(self::$WindowControllerStationaryNull);
     }
   }
 
