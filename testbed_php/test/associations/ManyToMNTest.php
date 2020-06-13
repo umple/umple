@@ -113,7 +113,7 @@ class ManyToMNTest extends UnitTestCase
     $this->assertEqual(0,$s4->numberOfMentors());
     $this->assertEqual(0,$s5->numberOfMentors());
 
-    $this->assertEqual(false,$m->setStudents($s5));
+    $this->assertEqual(false,$m->setStudents(array($s5)));
     $this->assertEqual(2,$m->numberOfStudents());
     $this->assertEqual($m,$s->getMentor_index(0));
     $this->assertEqual($m,$s2->getMentor_index(0));
