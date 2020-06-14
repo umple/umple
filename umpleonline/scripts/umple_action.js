@@ -1650,7 +1650,9 @@ Action.processTyping = function(target, manuallySynchronized)
       
       // issue#1554
       var downloadLink = document.getElementById("downloadLink");
-      downloadLink.remove();
+      if (downloadLink !== null){
+        downloadLink.remove();
+      }
       
       Page.enablePaletteItem("buttonSyncDiagram", false);
     }
