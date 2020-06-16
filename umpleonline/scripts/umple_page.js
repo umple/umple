@@ -992,8 +992,13 @@ Page.showGeneratedCode = function(code,language,tabnumber)
   var errorMarkup = Page.getErrorMarkup(code, language);
   var generatedMarkup = Page.getGeneratedMarkup(code, language);
 
-  //Set any error or warning messages
-	jQuery("#messageArea").html(errorMarkup);
+  //Set download link, any error or warning messages 
+	if (tabnumber == "")
+  {
+    jQuery("#downloadArea").html(errorMarkup);
+  } else {
+    jQuery("#messageArea").html(errorMarkup);
+  }
 
   //Set the generated content
   if(language == "java" || language == "php" || language == "cpp" 
