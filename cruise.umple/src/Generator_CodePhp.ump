@@ -794,7 +794,7 @@ class PhpGenerator
           ,translate("setMethod",sm)
           ,translate("stateOne",sm.getStartState()))
       );
-      lookups.put("parentExitActionCode",StringFormatter.format("$this->{0}();",translate("exitMethod",parentState)));
+      lookups.put("parentExitActionCode",StringFormatter.format("$this->{0}();",translate("exitMethod",sm)));
       GeneratorHelper.prepareNestedStateMachine(sm,concurrentIndex,lookups);  
     }
 

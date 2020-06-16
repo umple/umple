@@ -132,7 +132,7 @@ class ManyToMStarTest extends UnitTestCase
     $s3 = new StudentR(97);
     
     $m = new MentorR("blah",array($s,$s2,$s3));
-    $this->assertEqual(false, $m->setStudents($s2,$s2,$s3));
+    $this->assertEqual(false, $m->setStudents(array($s2,$s2,$s3)));
   }
 
 
