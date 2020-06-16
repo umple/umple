@@ -594,6 +594,7 @@ $output = $dataHandle->readData('model.ump');
 			<a id="labelTabsCheckbox" class="buttonExtend">Show Files in Separate Tabs</a>
 		</li>
     <div id="messageArea"></div>
+    <div id ="downloadArea"></div>
     <div id="tabRow"></div>
     <div id="innerGeneratedCodeRow"></div>
   </div>
