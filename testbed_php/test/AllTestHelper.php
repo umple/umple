@@ -5,6 +5,12 @@ spl_autoload_register(function ($class_name)
   {
     return;
   }
+  if ($class_name == "DOMDocument")
+  {
+    echo "DOMDocument not installed, because php-xml not installed, so cannot do Php Testing, so <strong>0</strong> fails since 0 tried.";
+    exit(0);
+  }  
+  
   require_once "../src-gen-umple/" . $class_name . '.php';
 });
 
