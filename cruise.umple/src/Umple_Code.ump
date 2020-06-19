@@ -2310,7 +2310,7 @@ class Attribute
 	codeblock = another.getCodeblock();
 	isLazy = another.getIsLazy();
 	//Attribute Associations
-	comments = new ArrayList<Comment>(); // Create a shallow copy of comments.
+	comments = new ArrayList<Comment>(); // Create a deep copy of comments.
   for (Comment comment : another.getComments())
   {
     comments.add(new Comment(comment));
