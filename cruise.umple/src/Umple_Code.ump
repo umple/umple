@@ -2310,7 +2310,11 @@ class Attribute
 	codeblock = another.getCodeblock();
 	isLazy = another.getIsLazy();
 	//Attribute Associations
-	comments = another.getComments();
+	comments = new ArrayList<Comment>(); // Create a deep copy of comments.
+  for (Comment comment : another.getComments())
+  {
+    comments.add(new Comment(comment));
+  }
 	position = another.getPosition();
 	endPosition = another.getEndPosition();
 	umpleClass = another.getUmpleClass();
@@ -4060,6 +4064,13 @@ class Comment
 {
   Boolean isInline = true;
 
+  // deep copy constructor
+  public Comment(Comment aComment)
+  {
+    text = aComment.getText();
+    annotation = aComment.getAnnotation();
+    isInline = aComment.getIsInline();
+  }
   /**
    * Used to take a comment and process it into a format appropriate for displaying in generated code.
    *

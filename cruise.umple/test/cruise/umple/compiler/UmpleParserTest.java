@@ -2467,6 +2467,14 @@ public class UmpleParserTest
   {
     assertHasWarningsParse("1488_multipleMethodBodyWarning.ump", 49);
   }
+  
+  // Issue 1519
+  @Test
+  public void filterWithAttributeInTrait() 
+  {
+    assertHasNoWarningsParse("1519_filterWithAttributeInTrait.ump");
+    Assert.assertEquals(1, model.numberOfUmpleClasses());
+  }
 
   @Test
   public void multiInject()
