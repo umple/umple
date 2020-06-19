@@ -779,7 +779,10 @@ Page.setUmpleCode = function(umpleCode, reason)
 
 
   if(Page.codeMirrorOn) {
+    // issue#1409  Set the cursor position after update code mirror text.
+    var cursorPos = Page.codeMirrorEditor.getCursor(true);
     Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
+    Page.codeMirrorEditor.setCursor(cursorPos.line, cursorPos.ch, false);
   }
   jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
 }
