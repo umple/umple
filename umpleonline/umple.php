@@ -533,7 +533,7 @@ $output = $dataHandle->readData('model.ump');
           </ul>
           <ul class="second">
        
-          <li id="diagramTypeTitle" class="subtitle"> Show View </li>
+          <li id="ShowViewTitle" class="subtitle"> Show View </li>
           <li id="ttShowHideCanvas"> 
               <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> 
               <a id="labelShowHideCanvas" class="buttonExtend">Diagram (Canvas)</a>
