@@ -378,7 +378,7 @@ Page.initUmpleTextArea = function()
   
   modelEditor.keyup(function(eventObject){Action.umpleTyped(eventObject);});
   modelEditor.mousedown(function(){setTimeout("jQuery(\"#linenum\").val(Action.getCaretPosition())",25)});
-  layoutEditor.keyup(function(eventObject){Action.umpleTyped(eventObject);});
+  layoutEditor.keyup(function(eventObject){Action.umpleCodeMirrorTypingActivity();}); // Fixes Issue#1571 Editing on the layout editor will not update the Umple diagram
   modelEditor.focus(function(){Action.focusOn("umpleModelEditorText", true);});
   layoutEditor.focus(function(){Action.focusOn("umpleLayoutEditorText", true);});
   modelEditor.blur(function(){Action.focusOn("umpleModelEditorText", false);});
