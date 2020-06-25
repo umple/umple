@@ -147,9 +147,9 @@ digraph FeatureModel {
     {
       case Conjunctive:
       return nodeName+" [label=\" and \" ] "+end;
-      case Disjunctive:
-      return nodeName+" [label=\"\" shape=triangle fixedsize=true  color=black width=.3 height=0.3 margin=0 ] "+end;
       case XOR:
+      return nodeName+" [label=\"\" shape=triangle fixedsize=true  color=black width=.3 height=0.3 margin=0 ] "+end;
+      case Disjunctive:
       return nodeName+" [label=\"\" shape=triangle fixedsize=true style=filled color=black width=.3 height=0.3 margin=0 ]"+end;
       case Multiplicity: // nothing to add here. It will be handled in getGvMultiplicityShape(...)
       return "\n";
