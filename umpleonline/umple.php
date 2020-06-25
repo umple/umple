@@ -502,9 +502,39 @@ $output = $dataHandle->readData('model.ump');
       
       <div class="section">
         <div id="buttonViewComplete" title="View Complete">Selected view has opened in a new window.</div>
+      
           <ul class="first toggle">
-            <li class="subtitle"> Show View </li>
-            <li id="ttShowHideCanvas"> 
+            <li class="subtitle">  Diagram Type </li>
+              
+            <li id="ttShowEditableClassDiagram"> 
+              <input id="buttonShowEditableClassDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> 
+              <a id="labelShowEditableClassDiagram" class="buttonExtend">Editable Class</a> 
+            </li>
+            <li id="ttShowJointJSClassDiagram"> 
+              <input id="buttonShowJointJSClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeJointJSClassDiagram"/> 
+              <a id="labelShowJointJSClassDiagram" class="buttonExtend">JointJS Class</a> 
+            </li>
+            <li id="ttShowGvClassDiagram"> 
+              <input id="buttonShowGvClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGvClassDiagram"/> 
+              <a id="labelShowGvClassDiagram" class="buttonExtend">GraphViz Class</a> 
+            </li>
+            <li id="ttShowGvStateDiagram"> 
+              <input id="buttonShowGvStateDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/> 
+              <a id="labelShowGvStateDiagram" class="buttonExtend">GraphViz State</a> 
+            </li>
+	    <li id="ttShowGvFeatureDiagram"> 
+              <input id="buttonShowGvFeatureDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVFeatureDiagram"/> 
+              <a id="labelShowGvFeatureDiagram" class="buttonExtend">GraphViz Feature</a> 
+            </li>
+            <li id="ttShowStructureDiagram"> 
+              <input id="buttonShowStructureDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeStructureDiagram"/> 
+              <a id="labelShowStructureDiagram" class="buttonExtend">Composite Structure</a> 
+            </li>
+          </ul>
+          <ul class="second">
+       
+          <li id="diagramTypeTitle" class="subtitle"> Show View </li>
+          <li id="ttShowHideCanvas"> 
               <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> 
               <a id="labelShowHideCanvas" class="buttonExtend">Diagram (Canvas)</a>
             </li>
@@ -539,33 +569,6 @@ $output = $dataHandle->readData('model.ump');
             <li id="ttToggleGuardLabels" class="layoutListItem"> 
               <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/> 
               <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
-            </li>
-          </ul>
-          <ul class="second">
-            <li id="diagramTypeTitle" class="subtitle"> Diagram Type </li>
-            <li id="ttShowEditableClassDiagram"> 
-              <input id="buttonShowEditableClassDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> 
-              <a id="labelShowEditableClassDiagram" class="buttonExtend">Editable Class</a> 
-            </li>
-            <li id="ttShowJointJSClassDiagram"> 
-              <input id="buttonShowJointJSClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeJointJSClassDiagram"/> 
-              <a id="labelShowJointJSClassDiagram" class="buttonExtend">JointJS Class</a> 
-            </li>
-            <li id="ttShowGvClassDiagram"> 
-              <input id="buttonShowGvClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGvClassDiagram"/> 
-              <a id="labelShowGvClassDiagram" class="buttonExtend">GraphViz Class</a> 
-            </li>
-            <li id="ttShowGvStateDiagram"> 
-              <input id="buttonShowGvStateDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/> 
-              <a id="labelShowGvStateDiagram" class="buttonExtend">GraphViz State</a> 
-            </li>
-	    <li id="ttShowGvFeatureDiagram"> 
-              <input id="buttonShowGvFeatureDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVFeatureDiagram"/> 
-              <a id="labelShowGvFeatureDiagram" class="buttonExtend">GraphViz Feature</a> 
-            </li>
-            <li id="ttShowStructureDiagram"> 
-              <input id="buttonShowStructureDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeStructureDiagram"/> 
-              <a id="labelShowStructureDiagram" class="buttonExtend">Composite Structure</a> 
             </li>
           </ul>
           <ul class="second">
