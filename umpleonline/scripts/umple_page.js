@@ -779,7 +779,6 @@ Page.setUmpleCode = function(umpleCode, reason)
   var modelAndPositioning = Page.splitUmpleCode(umpleCode);
 
   jQuery("#umpleLayoutEditorText").val(modelAndPositioning[1]);
-  console.log(modelAndPositioning[1]);//DEBUG
 
   if(Page.codeMirrorOn) {
     // issue#1409  Set the cursor position after update code mirror text.
@@ -789,24 +788,13 @@ Page.setUmpleCode = function(umpleCode, reason)
       Page.cursorPos = Page.codeMirrorEditor.getCursor(true);
     }
     
-    //var cursorPos = Page.codeMirrorEditor.getCursor(true);
     Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
-    console.log("setUmpleCode():  Set Cursor Position!!");
-    console.log("Page.codeMirrorEditor.getCursor(true): ");
-    console.log(Page.codeMirrorEditor.getCursor(true));
-    //console.trace();//DEBUG
-    // if (_.isEqual(cursorPos, Page.codeMirrorEditor.getCursor(true)))
-    // {
-    //   Page.codeMirrorEditor.setCursor(cursorPos.line, cursorPos.ch, false);
-    // }
-    console.log("length: ");
-    console.log(DiagramEdit.textChangeQueue.length);
+
     if (DiagramEdit.textChangeQueue.length == 0) 
     {
       Page.codeMirrorEditor.setCursor(Page.cursorPos.line, Page.cursorPos.ch, false);
       Page.setUmpleCodeInvokedFirstTime = true;
     }
-    //Page.codeMirrorEditor.setCursor(cursorPos.line, cursorPos.ch, false);
   }
   jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
 }
