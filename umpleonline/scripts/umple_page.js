@@ -788,10 +788,10 @@ Page.setUmpleCode = function(umpleCode, reason)
       Page.cursorPos = Page.codeMirrorEditor.getCursor(true);
     }
     
-    Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
 
     if (DiagramEdit.textChangeQueue.length == 0) 
     {
+      Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
       Page.codeMirrorEditor.setCursor(Page.cursorPos.line, Page.cursorPos.ch, false);
       Page.setUmpleCodeInvokedFirstTime = true;
     }
