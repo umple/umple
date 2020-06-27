@@ -26,6 +26,9 @@ Page.layoutLoadingCount = 0;
 Page.canvasLoadingCount = 0;
 Page.onLoadingCompleteCallbacks = [];
 
+Page.cursorPos = { line: 0, ch: 0 };
+Page.setUmpleCodeInvokedFirstTime = true;
+
 // Global options
 Page.readOnly = false; // initially allow editing
 Page.useEditableClassDiagram = true;
@@ -777,9 +780,21 @@ Page.setUmpleCode = function(umpleCode, reason)
 
   jQuery("#umpleLayoutEditorText").val(modelAndPositioning[1]);
 
-
   if(Page.codeMirrorOn) {
-    Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
+    // issue#1409  Set the cursor position after update code mirror text.
+    if (Page.setUmpleCodeInvokedFirstTime == true)
+    {
+      Page.setUmpleCodeInvokedFirstTime = false;
+      Page.cursorPos = Page.codeMirrorEditor.getCursor(true);
+    }
+    
+
+    if (DiagramEdit.textChangeQueue.length == 0) 
+    {
+      Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
+      Page.codeMirrorEditor.setCursor(Page.cursorPos.line, Page.cursorPos.ch, false);
+      Page.setUmpleCodeInvokedFirstTime = true;
+    }
   }
   jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
 }

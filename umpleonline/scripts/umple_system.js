@@ -393,12 +393,11 @@ UmpleSystem.update = function()
     this.umpleAssociations[i].setOffsetTwoPosition(screenPosition2);
     UmpleSystem.redrawAssociation(this.umpleAssociations[i]);
   }
-  // issue#1409  this block of code will trim blank part of the diagram, 
-  // which makes the diagram look worse and will eventually call the updateUmpleTextCallback() that set the cursor to positon (0,0). 
-  // for(var i = 0; i<this.umpleClasses.length;++i)
-  // {
-  //   UmpleSystem.trimOverlappingAssociations(this.umpleClasses[i]);
-  // }
+  
+  for(var i = 0; i<this.umpleClasses.length;++i)
+  {
+    UmpleSystem.trimOverlappingAssociations(this.umpleClasses[i]);
+  }
 
 }
 
