@@ -542,34 +542,40 @@ $output = $dataHandle->readData('model.ump');
               <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> 
               <a id="labelShowHideTextEditor" class="buttonExtend">Text Editor</a>
             </li>
-            <li id="ttShowHideLayoutEditor" class="layoutListItem"> 
+            <li id="ttShowHideLayoutEditor" class="layoutListItem view_opt_class"> 
               <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> 
               <a id="labelShowHideLayoutEditor" class="buttonExtend">Layout Editor</a> 
             </li>          
-            <li id="ttToggleAttributes" class="layoutListItem"> 
+            <li id="ttToggleAttributes" class="layoutListItem view_opt_class"> 
               <input id="buttonToggleAttributes" class="checkbox" type="checkbox"/> 
               <a id="labelToggleAttributes" class="buttonExtend">Attributes</a>
             </li>
-            <li id="ttToggleMethods" class="layoutListItem"> 
+            <li id="ttToggleMethods" class="layoutListItem view_opt_class"> 
               <input id="buttonToggleMethods" class="checkbox" type="checkbox"/> 
               <a id="labelToggleMethods" class="buttonExtend">Methods</a>
             </li>
-            <li id="ttToggleActions" class="layoutListItem"> 
+            <li id="ttToggleActions" class="layoutListItem view_opt_state"> 
               <input id="buttonToggleActions" class="checkbox" type="checkbox"/> 
               <a id="labelToggleActions" class="buttonExtend">Actions</a> 
             </li>
-            <li id="ttToggleTraits" class="layoutListItem"> 
+            <li id="ttToggleTraits" class="layoutListItem view_opt_class"> 
               <input id="buttonToggleTraits" class="checkbox" type="checkbox"/> 
               <a id="labelToggleTraits" class="buttonExtend">Traits</a> 
             </li>
-            <li id="ttToggleTransitionLabels" class="layoutListItem"> 
+            <li id="ttToggleTransitionLabels" class="layoutListItem view_opt_state"> 
               <input id="buttonToggleTransitionLabels" class="checkbox" type="checkbox"/> 
               <a id="labelToggleTransitionLabels" class="buttonExtend">Transition Labels</a> 
             </li>
-            <li id="ttToggleGuardLabels" class="layoutListItem"> 
+            <li id="ttToggleGuardLabels" class="layoutListItem view_opt_state"> 
               <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/> 
               <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
             </li>
+            <li id="ttToggleFeatureDependencyLabels" class="layoutListItem view_opt_feature"> 
+              <input id="buttonToggleFeatureDependencyLabels" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleFeatureDependencyLabels" class="buttonExtend">Dependency</a> 
+            </li>
+
+            
           </ul>
           <!-- PREFERENCES OPTIONS -->
           <ul class="second">
