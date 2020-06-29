@@ -502,7 +502,7 @@ $output = $dataHandle->readData('model.ump');
       
       <div class="section">
         <div id="buttonViewComplete" title="View Complete">Selected view has opened in a new window.</div>
-      
+         <!-- DIAGRAM TYPE OPTIONS -->
           <ul class="first toggle">
             <li class="subtitle">  Diagram Type </li>
               
@@ -531,8 +531,8 @@ $output = $dataHandle->readData('model.ump');
               <a id="labelShowStructureDiagram" class="buttonExtend">Composite Structure</a> 
             </li>
           </ul>
+          <!-- SHOW VIEW OPTIONS -->
           <ul class="second">
-       
           <li id="ShowViewTitle" class="subtitle"> Show View </li>
           <li id="ttShowHideCanvas"> 
               <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> 
@@ -571,6 +571,7 @@ $output = $dataHandle->readData('model.ump');
               <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
             </li>
           </ul>
+          <!-- PREFERENCES OPTIONS -->
           <ul class="second">
             <li id="preferencesTitle" class="subtitle"> Preferences </li>
             <li id="ttPhotoReady"> 
