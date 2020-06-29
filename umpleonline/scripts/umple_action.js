@@ -18,6 +18,7 @@ Action.freshLoad = false;
 Action.gentime = new Date().getTime();
 Action.savedCanonical = "";
 Action.gdprHidden = false;
+Action.update = "";
 
 Action.clicked = function(event)
 {
@@ -989,8 +990,8 @@ Action.updateUmpleTextCallback = function(response)
 {
   TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
   Action.freshLoad = true;
-
-  Page.setUmpleCode(response.responseText);
+  
+  Page.setUmpleCode(response.responseText, Action.update.codeChange);
   // DEBUG
   // Page.setFeedbackMessage("update text callback -");
   // Page.catFeedbackMessage(response.responseText);

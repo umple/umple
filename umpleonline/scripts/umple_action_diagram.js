@@ -31,6 +31,7 @@ DiagramEdit.updateUmpleText = function(update)
 DiagramEdit.doTextUpdate = function()
 {
   update = DiagramEdit.textChangeQueue.shift();
+  Action.update = update;
 
   if(update.codeChange) {
     Page.hideGeneratedCode();

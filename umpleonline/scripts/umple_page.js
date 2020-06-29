@@ -781,19 +781,10 @@ Page.setUmpleCode = function(umpleCode, reason)
   jQuery("#umpleLayoutEditorText").val(modelAndPositioning[1]);
 
   if(Page.codeMirrorOn) {
-    // issue#1409  Set the cursor position after update code mirror text.
-    if (Page.setUmpleCodeInvokedFirstTime == true)
-    {
-      Page.setUmpleCodeInvokedFirstTime = false;
-      Page.cursorPos = Page.codeMirrorEditor.getCursor(true);
-    }
-    
-
-    if (DiagramEdit.textChangeQueue.length == 0) 
+    // issue#1409  Do not Set the umple code if codeChange is false(i.e. reason is false)
+    if (!((typeof reason === 'boolean') && reason == false))
     {
       Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
-      Page.codeMirrorEditor.setCursor(Page.cursorPos.line, Page.cursorPos.ch, false);
-      Page.setUmpleCodeInvokedFirstTime = true;
     }
   }
   jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
