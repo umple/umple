@@ -57,6 +57,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Page.readOnly = doReadOnly;
 
   TabControl.init()
+  jQuery(".layoutListItem").hide();
 
   // Set diagram type - anything else means use the default editable class diagram
   if(diagramType == "GvState")   
@@ -65,6 +66,8 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useEditableClassDiagram = false; 
     Page.setDiagramTypeIconState('GvState');
     Page.useGvFeatureDiagram = false;
+    jQuery(".view_opt_state").show();
+
   }
   else if(diagramType == "GvClass")   
   {
@@ -72,6 +75,8 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useEditableClassDiagram = false;
     Page.setDiagramTypeIconState('GvClass');
     Page.useGvFeatureDiagram = false;
+    jQuery(".view_opt_class").show();
+
   }
   else if(diagramType == "GvFeature")   
   {
@@ -80,6 +85,8 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = false;
     Page.setDiagramTypeIconState('GvFeature');
+    jQuery(".view_opt_feature").show();
+
   }
   else if(diagramType == "structureDiagram")
   {
@@ -87,6 +94,10 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useEditableClassDiagram = false;  
     Page.setDiagramTypeIconState('structureDiagram');
     Page.useGvFeatureDiagram = false;
+  }
+  else
+  {
+    jQuery(".view_opt_class").show();
   }
 
   jQuery.noConflict();
