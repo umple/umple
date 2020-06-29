@@ -26,9 +26,6 @@ Page.layoutLoadingCount = 0;
 Page.canvasLoadingCount = 0;
 Page.onLoadingCompleteCallbacks = [];
 
-Page.cursorPos = { line: 0, ch: 0 };
-Page.setUmpleCodeInvokedFirstTime = true;
-
 // Global options
 Page.readOnly = false; // initially allow editing
 Page.useEditableClassDiagram = true;
