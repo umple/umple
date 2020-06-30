@@ -453,6 +453,8 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample4" id = "defaultExampleOption4" value="">Select Example</option>
                 <option name = "optionExample" value="BerkeleyDB_SPL.ump"> BerkeleyDB SPL </option>
                 <option name = "optionExample" value="HelloWorld_SPL.ump"> HelloWorld SPL </option>
+                <option name = "optionExample" value="BerkeleyDB_SP_featureDepend.ump"> Feature Dependencies of BerkeleyDB SPL </option>
+
               </select>
             </li>
           

@@ -1,0 +1,33 @@
+
+
+
+
+mixset Evictor { require[MemoryBudget]; }  
+
+mixset EvictorDaemon { require[MemoryBudget]; }
+
+mixset LookAHEADCache { require[MemoryBudget]; }
+   
+mixset CriticalEviction { require[INCompressor]; } 
+
+mixset CPBytes{ require[CPTime]; }
+
+mixset DeleteOp { require [Evictor]; } 
+
+mixset DeleteOp { require [INCompressor]; } 
+
+mixset DeleteOp { require [ MemoryBudget]; } 
+
+mixset MemoryBudget { require [Evictor]; } 
+
+mixset MemoryBudget { require [Latches]; } 
+ 
+mixset TruncateOp { require[DeleteOp]; } 
+
+mixset Verifier{  require[INCompressor];  } 
+
+//$?[End_of_model]$?
+// @@@skipjavacompile - Generates no language code
+// @@@skipphpcompile - Contains no language code
+// @@@skiprubycompile - Contains no language code
+
