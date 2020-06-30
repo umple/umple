@@ -1,7 +1,9 @@
+// This file contains feature dependencies of BerkeleyDB SPL.
+// The feature model can be found in: 
+//                       TOOLS > EXAMPLES > Feature Diagram.
 
-
-
-
+// View can be adjusted from the option: 
+//                        TOOLS > SHOW VIEW > Feature Dependency.  
 mixset Evictor { require[MemoryBudget]; }  
 
 mixset EvictorDaemon { require[MemoryBudget]; }

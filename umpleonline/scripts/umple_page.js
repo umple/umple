@@ -260,6 +260,8 @@ Page.initOptions = function()
   jQuery("#buttonToggleTransitionLabels").prop('checked',false);
   jQuery("#buttonToggleGuardLabels").prop('checked',false);
   jQuery("#buttonToggleTraits").prop('checked',false);
+  jQuery("#buttonToggleFeatureDependency").prop('checked',false);
+
   
   if(Page.useEditableClassDiagram)
    jQuery("#buttonShowEditableClassDiagram").prop('checked', true);
@@ -964,11 +966,14 @@ Page.getSelectedExample = function()
   }
   else if (theExampleType == "featureModels")
     {
-       inputExample = jQuery("#inputExample4 option:selected").val();
-           if( !Page.useGvFeatureDiagram) {
+       inputExample = jQuery("#inputExample4 option:selected").val(); 
+     //  if (inputExample == "BerkeleyDB_SP_featureDepend.ump")
+     //  this.showFeatureDependency = true;
+       if( !Page.useGvFeatureDiagram) {
          jQuery("#buttonShowGvFeatureDiagram").attr('checked', true); 
          Action.changeDiagramType({type: "GvFeature"});
       }
+    
     }
   else {
 
