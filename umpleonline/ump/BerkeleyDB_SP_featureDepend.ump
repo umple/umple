@@ -2,6 +2,10 @@
 // The feature model can be found in: 
 //                       TOOLS > EXAMPLES > Feature Diagram.
 
+// To combine the feature model with the feature dependecies in one file, uncomment the line below:
+//  use ../BerkeleyDB_SPL.ump;
+
+
 // View can be adjusted from the option: 
 //                        TOOLS > SHOW VIEW > Feature Dependency.  
 mixset Evictor { require[MemoryBudget]; }  
