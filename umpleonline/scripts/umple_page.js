@@ -156,6 +156,8 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonToggleTransitionLabels");
   Page.initHighlighter("buttonToggleGuardLabels");
   Page.initHighlighter("buttonToggleTraits");
+  Page.initHighlighter("buttonToggleFeatureDependency");
+
   
   Page.initToggleTool("buttonAddClass");
   Page.initToggleTool("buttonAddAssociation");
@@ -205,6 +207,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleAttributes");
   Page.initAction("buttonToggleActions");
   Page.initAction("buttonToggleTraits");
+  Page.initAction("buttonToggleFeatureDependency");
   Page.initAction("buttonToggleTransitionLabels");
   Page.initAction("buttonToggleGuardLabels");
     

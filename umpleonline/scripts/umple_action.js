@@ -2487,12 +2487,7 @@ Action.getLanguage = function()
   }
   else if(Page.useGvStateDiagram) {language="language=stateDiagram"}
   else if(Page.useStructureDiagram) {language="language=StructureDiagram"}
-    // append any suboptions needed for GvFeatureDiagram
-    if(Page.useFeatureDiagram) { 
-      language="language=featureDiagram";
-    //  if(Page.showFeatureDependency) language=language+".showFeatureDependency";
-
-    }
+ 
 
   // append any suboptions needed for GvStateDiagram
   if(Page.useGvStateDiagram) { 
@@ -2506,6 +2501,13 @@ Action.getLanguage = function()
     if(Page.showMethods) language=language+".showmethods";
     if(!Page.showAttributes) language=language+".hideattributes";
   }
+
+     // append any suboptions needed for GvFeatureDiagram
+     if(Page.useFeatureDiagram) 
+      language="language=featureDiagram";
+    //  if(Page.showFeatureDependency) language=language+".showFeatureDependency";
+
+    
 
 
 
