@@ -244,6 +244,10 @@ Action.clicked = function(event)
   {
     Action.toggleGuardLabels();
   }
+  else if (action == "ToggleFeatureDependency")
+  {
+    Action.toggleFeatureDependency();
+  }
   else if(action == "StructureLink")
   {
     Action.generateStructureDiagramFile();
@@ -2025,7 +2029,11 @@ Action.toggleGuardLabels = function()
   Page.showGuardLabels = !Page.showGuardLabels;
   Action.redrawDiagram();
 }
-
+Action.toggleFeatureDependency = function()
+{
+  Page.showFeatureDependency = !Page.showFeatureDependency;
+  Action.redrawDiagram();
+}
 Action.toggleTraits = function()
 {
   Page.showTraits = !Page.showTraits;
@@ -2479,7 +2487,13 @@ Action.getLanguage = function()
   }
   else if(Page.useGvStateDiagram) {language="language=stateDiagram"}
   else if(Page.useStructureDiagram) {language="language=StructureDiagram"}
-  
+    // append any suboptions needed for GvFeatureDiagram
+    if(Page.useFeatureDiagram) { 
+      language="language=featureDiagram";
+    //  if(Page.showFeatureDependency) language=language+".showFeatureDependency";
+
+    }
+
   // append any suboptions needed for GvStateDiagram
   if(Page.useGvStateDiagram) { 
     if(!Page.showActions) language=language+".hideactions";
@@ -2492,7 +2506,7 @@ Action.getLanguage = function()
     if(Page.showMethods) language=language+".showmethods";
     if(!Page.showAttributes) language=language+".hideattributes";
   }
-  if(Page.useGvFeatureDiagram) {language="language=featureDiagram"}
+
 
 
   return language;

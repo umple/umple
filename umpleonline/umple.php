@@ -571,7 +571,7 @@ $output = $dataHandle->readData('model.ump');
               <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
             </li>
             <li id="ttToggleFeatureDependencyLabels" class="layoutListItem view_opt_feature"> 
-              <input id="buttonToggleFeatureDependencyLabels" class="checkbox" type="checkbox"/> 
+              <input id="buttonToggleFeatureDependency" class="checkbox" type="checkbox"/> 
               <a id="labelToggleFeatureDependencyLabels" class="buttonExtend">Feature Dependency</a> 
             </li>
 

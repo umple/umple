@@ -35,6 +35,7 @@ Page.useEditableClassDiagram = true;
 Page.useGvClassDiagram = false;
 Page.useGvStateDiagram = false;
 Page.useGvFeatureDiagram = false;
+Page.showFeatureDependency = false;
 Page.useStructureDiagram = false;
 Page.useFeatureDiagram = false;
 Page.showAttributes = true;
@@ -545,7 +546,9 @@ Page.clickToggleMethods = function() {
 Page.clickToggleTraits = function() {
   jQuery('#buttonToggleTraits').trigger('click');
 }
-
+Page.clickToggleFeatureDependency= function() {
+  jQuery('#buttonToggleFeatureDependency').trigger('click');
+}
 Page.clickToggleTransitionLabels = function() {
   jQuery('#buttonToggleTransitionLabels').trigger('click');
 }
