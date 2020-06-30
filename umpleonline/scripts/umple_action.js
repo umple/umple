@@ -2501,16 +2501,11 @@ Action.getLanguage = function()
     if(Page.showMethods) language=language+".showmethods";
     if(!Page.showAttributes) language=language+".hideattributes";
   }
-
-     // append any suboptions needed for GvFeatureDiagram
-     if(Page.useFeatureDiagram) 
-      language="language=featureDiagram";
-    //  if(Page.showFeatureDependency) language=language+".showFeatureDependency";
-
-    
-
-
-
+  // append any suboptions needed for GvFeatureDiagram
+  if(Page.useGvFeatureDiagram) {
+    language="language=featureDiagram";
+    if(Page.showFeatureDependency) language=language+".showFeatureDependency";
+  }
   return language;
 }
 
