@@ -19,9 +19,7 @@ public class DoActivityTest
     Assert.assertEquals("Do Activity On Closed",course.getLog(2));
   }
   
-  @Test
-  @Ignore
-  // Ignored because was nondeterministic and breaking build when build was running under heavily loaded machine FIX FIX TO DO    
+  @Test   
   public void stopProcessingIfYouLeaveTheState() throws InterruptedException
   {
     CourseC course = new CourseC();
