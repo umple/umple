@@ -453,6 +453,8 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample4" id = "defaultExampleOption4" value="">Select Example</option>
                 <option name = "optionExample" value="BerkeleyDB_SPL.ump"> BerkeleyDB SPL </option>
                 <option name = "optionExample" value="HelloWorld_SPL.ump"> HelloWorld SPL </option>
+                <option name = "optionExample" value="BerkeleyDB_SP_featureDepend.ump"> Feature Dependencies of BerkeleyDB SPL </option>
+
               </select>
             </li>
           
@@ -502,47 +504,10 @@ $output = $dataHandle->readData('model.ump');
       
       <div class="section">
         <div id="buttonViewComplete" title="View Complete">Selected view has opened in a new window.</div>
+         <!-- DIAGRAM TYPE OPTIONS -->
           <ul class="first toggle">
-            <li class="subtitle"> Show View </li>
-            <li id="ttShowHideCanvas"> 
-              <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> 
-              <a id="labelShowHideCanvas" class="buttonExtend">Diagram (Canvas)</a>
-            </li>
-            <li id="ttShowHideTextEditor"> 
-              <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> 
-              <a id="labelShowHideTextEditor" class="buttonExtend">Text Editor</a>
-            </li>
-            <li id="ttShowHideLayoutEditor" class="layoutListItem"> 
-              <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> 
-              <a id="labelShowHideLayoutEditor" class="buttonExtend">Layout Editor</a> 
-            </li>          
-            <li id="ttToggleAttributes" class="layoutListItem"> 
-              <input id="buttonToggleAttributes" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleAttributes" class="buttonExtend">Attributes</a>
-            </li>
-            <li id="ttToggleMethods" class="layoutListItem"> 
-              <input id="buttonToggleMethods" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleMethods" class="buttonExtend">Methods</a>
-            </li>
-            <li id="ttToggleActions" class="layoutListItem"> 
-              <input id="buttonToggleActions" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleActions" class="buttonExtend">Actions</a> 
-            </li>
-            <li id="ttToggleTraits" class="layoutListItem"> 
-              <input id="buttonToggleTraits" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleTraits" class="buttonExtend">Traits</a> 
-            </li>
-            <li id="ttToggleTransitionLabels" class="layoutListItem"> 
-              <input id="buttonToggleTransitionLabels" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleTransitionLabels" class="buttonExtend">Transition Labels</a> 
-            </li>
-            <li id="ttToggleGuardLabels" class="layoutListItem"> 
-              <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
-            </li>
-          </ul>
-          <ul class="second">
-            <li id="diagramTypeTitle" class="subtitle"> Diagram Type </li>
+            <li class="subtitle">  Diagram Type </li>
+              
             <li id="ttShowEditableClassDiagram"> 
               <input id="buttonShowEditableClassDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> 
               <a id="labelShowEditableClassDiagram" class="buttonExtend">Editable Class</a> 
@@ -568,6 +533,53 @@ $output = $dataHandle->readData('model.ump');
               <a id="labelShowStructureDiagram" class="buttonExtend">Composite Structure</a> 
             </li>
           </ul>
+          <!-- SHOW VIEW OPTIONS -->
+          <ul class="second">
+          <li id="ShowViewTitle" class="subtitle"> Show View </li>
+          <li id="ttShowHideCanvas"> 
+              <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> 
+              <a id="labelShowHideCanvas" class="buttonExtend">Diagram (Canvas)</a>
+            </li>
+            <li id="ttShowHideTextEditor"> 
+              <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> 
+              <a id="labelShowHideTextEditor" class="buttonExtend">Text Editor</a>
+            </li>
+            <li id="ttShowHideLayoutEditor" class="layoutListItem view_opt_class"> 
+              <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> 
+              <a id="labelShowHideLayoutEditor" class="buttonExtend">Layout Editor</a> 
+            </li>          
+            <li id="ttToggleAttributes" class="layoutListItem view_opt_class"> 
+              <input id="buttonToggleAttributes" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleAttributes" class="buttonExtend">Attributes</a>
+            </li>
+            <li id="ttToggleMethods" class="layoutListItem view_opt_class"> 
+              <input id="buttonToggleMethods" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleMethods" class="buttonExtend">Methods</a>
+            </li>
+            <li id="ttToggleActions" class="layoutListItem view_opt_state"> 
+              <input id="buttonToggleActions" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleActions" class="buttonExtend">Actions</a> 
+            </li>
+            <li id="ttToggleTraits" class="layoutListItem view_opt_class"> 
+              <input id="buttonToggleTraits" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleTraits" class="buttonExtend">Traits</a> 
+            </li>
+            <li id="ttToggleTransitionLabels" class="layoutListItem view_opt_state"> 
+              <input id="buttonToggleTransitionLabels" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleTransitionLabels" class="buttonExtend">Transition Labels</a> 
+            </li>
+            <li id="ttToggleGuardLabels" class="layoutListItem view_opt_state"> 
+              <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
+            </li>
+            <li id="ttToggleFeatureDependencyLabels" class="layoutListItem view_opt_feature"> 
+              <input id="buttonToggleFeatureDependency" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleFeatureDependencyLabels" class="buttonExtend">Feature Dependency</a> 
+            </li>
+
+            
+          </ul>
+          <!-- PREFERENCES OPTIONS -->
           <ul class="second">
             <li id="preferencesTitle" class="subtitle"> Preferences </li>
             <li id="ttPhotoReady"> 

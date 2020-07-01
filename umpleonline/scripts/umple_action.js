@@ -244,6 +244,10 @@ Action.clicked = function(event)
   {
     Action.toggleGuardLabels();
   }
+  else if (action == "ToggleFeatureDependency")
+  {
+    Action.toggleFeatureDependency();
+  }
   else if(action == "StructureLink")
   {
     Action.generateStructureDiagramFile();
@@ -382,6 +386,8 @@ Action.saveNewFileCallback = function(response)
 Action.changeDiagramType = function(newDiagramType)
 {
   var changedType = false;
+  jQuery(".layoutListItem").hide();
+
   if(newDiagramType.type == "editableClass") { 
     if(Page.useEditableClassDiagram) return;
     Page.useEditableClassDiagram = true;
@@ -393,6 +399,8 @@ Action.changeDiagramType = function(newDiagramType)
     changedType = true;
     jQuery("#buttonShowEditableClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('editableClass');
+    jQuery(".view_opt_class").show();
+
   }
   else if(newDiagramType.type == "JointJSClass") { 
     if(Page.useJointJSClassDiagram) return;
@@ -405,6 +413,8 @@ Action.changeDiagramType = function(newDiagramType)
     changedType = true;
     jQuery("#buttonShowJointJSClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('JointJSClass');
+    jQuery(".view_opt_class").show();
+
   }  
   else if(newDiagramType.type == "GvClass") { 
     if(Page.useGvClassDiagram) return;
@@ -417,6 +427,8 @@ Action.changeDiagramType = function(newDiagramType)
     changedType = true;
     jQuery("#buttonShowGvClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('GvClass');
+    jQuery(".view_opt_class").show();
+
   }
   else if(newDiagramType.type == "GvState") {
     if(Page.useGvStateDiagram) return;
@@ -429,6 +441,8 @@ Action.changeDiagramType = function(newDiagramType)
     changedType = true;
     jQuery("#buttonShowGvStateDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('GvState');
+    jQuery(".view_opt_state").show();
+
   }
   else if(newDiagramType.type == "GvFeature") {
    if(Page.useGvFeatureDiagram) return;
@@ -441,6 +455,9 @@ Action.changeDiagramType = function(newDiagramType)
     changedType = true;
     jQuery("#buttonShowGvFeatureDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('GvFeature');
+    jQuery(".view_opt_feature").show();
+
+
   }
   else if(newDiagramType.type == "structure") { // Structure Diagram
     if(Page.useGvStructureDiagram) return;
@@ -2012,7 +2029,11 @@ Action.toggleGuardLabels = function()
   Page.showGuardLabels = !Page.showGuardLabels;
   Action.redrawDiagram();
 }
-
+Action.toggleFeatureDependency = function()
+{
+  Page.showFeatureDependency = !Page.showFeatureDependency;
+  Action.redrawDiagram();
+}
 Action.toggleTraits = function()
 {
   Page.showTraits = !Page.showTraits;
@@ -2466,7 +2487,8 @@ Action.getLanguage = function()
   }
   else if(Page.useGvStateDiagram) {language="language=stateDiagram"}
   else if(Page.useStructureDiagram) {language="language=StructureDiagram"}
-  
+ 
+
   // append any suboptions needed for GvStateDiagram
   if(Page.useGvStateDiagram) { 
     if(!Page.showActions) language=language+".hideactions";
@@ -2479,9 +2501,11 @@ Action.getLanguage = function()
     if(Page.showMethods) language=language+".showmethods";
     if(!Page.showAttributes) language=language+".hideattributes";
   }
-  if(Page.useGvFeatureDiagram) {language="language=featureDiagram"}
-
-
+  // append any suboptions needed for GvFeatureDiagram
+  if(Page.useGvFeatureDiagram) {
+    language="language=featureDiagram";
+    if(Page.showFeatureDependency) language=language+".showFeatureDependency";
+  }
   return language;
 }
 

@@ -35,6 +35,7 @@ Page.useEditableClassDiagram = true;
 Page.useGvClassDiagram = false;
 Page.useGvStateDiagram = false;
 Page.useGvFeatureDiagram = false;
+Page.showFeatureDependency = false;
 Page.useStructureDiagram = false;
 Page.useFeatureDiagram = false;
 Page.showAttributes = true;
@@ -57,6 +58,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Page.readOnly = doReadOnly;
 
   TabControl.init()
+  jQuery(".layoutListItem").hide();
 
   // Set diagram type - anything else means use the default editable class diagram
   if(diagramType == "GvState")   
@@ -65,6 +67,8 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useEditableClassDiagram = false; 
     Page.setDiagramTypeIconState('GvState');
     Page.useGvFeatureDiagram = false;
+    jQuery(".view_opt_state").show();
+
   }
   else if(diagramType == "GvClass")   
   {
@@ -72,6 +76,8 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useEditableClassDiagram = false;
     Page.setDiagramTypeIconState('GvClass');
     Page.useGvFeatureDiagram = false;
+    jQuery(".view_opt_class").show();
+
   }
   else if(diagramType == "GvFeature")   
   {
@@ -80,6 +86,8 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = false;
     Page.setDiagramTypeIconState('GvFeature');
+    jQuery(".view_opt_feature").show();
+
   }
   else if(diagramType == "structureDiagram")
   {
@@ -87,6 +95,10 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useEditableClassDiagram = false;  
     Page.setDiagramTypeIconState('structureDiagram');
     Page.useGvFeatureDiagram = false;
+  }
+  else
+  {
+    jQuery(".view_opt_class").show();
   }
 
   jQuery.noConflict();
@@ -144,6 +156,8 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonToggleTransitionLabels");
   Page.initHighlighter("buttonToggleGuardLabels");
   Page.initHighlighter("buttonToggleTraits");
+  Page.initHighlighter("buttonToggleFeatureDependency");
+
   
   Page.initToggleTool("buttonAddClass");
   Page.initToggleTool("buttonAddAssociation");
@@ -193,6 +207,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleAttributes");
   Page.initAction("buttonToggleActions");
   Page.initAction("buttonToggleTraits");
+  Page.initAction("buttonToggleFeatureDependency");
   Page.initAction("buttonToggleTransitionLabels");
   Page.initAction("buttonToggleGuardLabels");
     
@@ -245,6 +260,8 @@ Page.initOptions = function()
   jQuery("#buttonToggleTransitionLabels").prop('checked',false);
   jQuery("#buttonToggleGuardLabels").prop('checked',false);
   jQuery("#buttonToggleTraits").prop('checked',false);
+  jQuery("#buttonToggleFeatureDependency").prop('checked',false);
+
   
   if(Page.useEditableClassDiagram)
    jQuery("#buttonShowEditableClassDiagram").prop('checked', true);
@@ -534,7 +551,9 @@ Page.clickToggleMethods = function() {
 Page.clickToggleTraits = function() {
   jQuery('#buttonToggleTraits').trigger('click');
 }
-
+Page.clickToggleFeatureDependency= function() {
+  jQuery('#buttonToggleFeatureDependency').trigger('click');
+}
 Page.clickToggleTransitionLabels = function() {
   jQuery('#buttonToggleTransitionLabels').trigger('click');
 }
@@ -947,11 +966,14 @@ Page.getSelectedExample = function()
   }
   else if (theExampleType == "featureModels")
     {
-       inputExample = jQuery("#inputExample4 option:selected").val();
-           if( !Page.useGvFeatureDiagram) {
+       inputExample = jQuery("#inputExample4 option:selected").val(); 
+     //  if (inputExample == "BerkeleyDB_SP_featureDepend.ump")
+     //  this.showFeatureDependency = true;
+       if( !Page.useGvFeatureDiagram) {
          jQuery("#buttonShowGvFeatureDiagram").attr('checked', true); 
          Action.changeDiagramType({type: "GvFeature"});
       }
+    
     }
   else {
 

@@ -140,6 +140,8 @@ else if (isset($_REQUEST["umpleCode"]))
       $language = "GvFeatureDiagram";
       $generatorType = "";
       $featureDiagram = True;
+      $featureDependency = (strpos($suboptions, 'showFeatureDependency') !== false); 
+      
   }
   else if ($language == "classDiagram")
   {
@@ -400,7 +402,10 @@ else if (isset($_REQUEST["umpleCode"]))
     else if ($featureDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/featureDiagram.svg");
-      $command = "dot -Tsvg " . $thedir . "/modelGvFeatureDiagram.gv -o " . $thedir .  "/featureDiagram.svg";
+      $graphviz_layout = "dot"; //default layout for feature diagram.
+      if($featureDependency)
+      $graphviz_layout = "circo";
+      $command = $graphviz_layout ." -Tsvg " . $thedir . "/modelGvFeatureDiagram.gv -o " . $thedir .  "/featureDiagram.svg";
       exec($command);
       if (!file_exists($thedir . "/featureDiagram.svg") && file_exists("doterr.svg"))
       {
