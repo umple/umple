@@ -325,9 +325,58 @@ Action.redoOrUndo = function(isUndo)
   {
     afterHistoryChange = "";
   }
+  
+  var delimiterLoc = afterHistoryChange.indexOf(Page.modelDelimiter);
+  var rawReplacement = "";
+  if(delimiterLoc == -1) {
+    rawReplacement = afterHistoryChange;
+  }
+  else {
+    rawReplacement = afterHistoryChange.substring(0,delimiterLoc);
+  }
+  var rawOriginal = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
+  var theDiff=Action.findDiff(rawOriginal, rawReplacement);
+  var prevLine=Action.getCaretPosition();
+
   Action.freshLoad = true;
   Page.setUmpleCode(afterHistoryChange);
   if (!Action.manualSync) Action.updateUmpleDiagram();
+  
+  setTimeout(function () { // Delay so it doesn't get erased
+    // Page.setFeedbackMessage("Changed line "+theDiff[3]+" "+theDiff[1]);
+    if(theDiff[1] == theDiff[2])
+    {
+      // change was in diagram so leave caret where it is
+      Action.setCaretPosition(prevLine);
+    }
+    else
+    {
+      // set line number to where change occurred
+      Action.setCaretPosition(theDiff[3]);
+    }   
+  }, 300);
+}
+
+Action.findDiff = function(oldString, newString)
+{
+
+  var lineNumber = 0; // line number in newString
+  
+  var lOld = oldString.length, lNew = newString.length;
+  var l=lOld; // Assume old is shorter
+  if (lNew < l) l=lNew; // Actually new is shorter
+  var i=0;
+
+  while(i < l && oldString.charAt(i) === newString.charAt(i)) {
+    i++;
+    if(oldString.charAt(i) === '\n' && newString.charAt(i) === '\n') lineNumber++;
+  }
+  
+  // i is now the character index where the difference begins
+  var startChange=newString.substring(i,1);
+  
+  // Tuple is length of old, length of new, position of change, line number chg
+  return [lOld, lNew, i, lineNumber+1];
 }
 
 // Initial load of a file (e.g. example or blank) at initialization
