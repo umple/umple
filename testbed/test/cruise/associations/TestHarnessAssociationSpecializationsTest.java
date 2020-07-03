@@ -34,6 +34,30 @@ public class TestHarnessAssociationSpecializationsTest
 
   	Whale whale = new Whale();
   	Assert.assertTrue(whale instanceof BigCreature);
+
+  	Repenter repenter = new Repenter();
+  	Assert.assertTrue(repenter instanceof Repent);
+
+  	Repenter1 repenter1 = new Repenter1();
+  	Assert.assertTrue(repenter1 instanceof Repent1);
+
+  	Serendipity2 serendipity2 = new Serendipity2();
+  	Assert.assertTrue(serendipity2 instanceof Serendipity1);
+
+  	Birch birch = new Birch();
+  	Assert.assertTrue(birch instanceof Tree);
+
+  	Subba subba = new Subba();
+  	Assert.assertTrue(subba instanceof Suppa);
+
+  	Subab subab = new Subab();
+  	Assert.assertTrue(subab instanceof Supap);
+
+  	Spammer spammer = new Spammer();
+  	Assert.assertTrue(spammer instanceof Spam);
+
+  	Drummer drummer = new Drummer();
+  	Assert.assertTrue(drummer instanceof Drama);
   }
 
 }
