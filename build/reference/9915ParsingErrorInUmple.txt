@@ -6,7 +6,7 @@ noreferences
 
 <h2>Umple error messages reported when the Umple parser can't interpret the code.</h2>
 
-<p>These messages occurs in several contexts:<br>
+<p>These messages occur in several contexts:<br>
 <ul>
 <li>There is a typographical error in one of the <a href="TypesofDirectives.html">directives</a> specified outside a class declaration. Umple does not recognize the keyword.
 <li>The syntax (i.e. arguments) to one of the <a href="TypesofDirectives.html">directives</a> such as 'generate' or 'use' is not properly typed.
