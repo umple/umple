@@ -292,7 +292,7 @@ TabControl.saveTab = function(tabId, umpleCode)
 {
   var filename = TabControl.getTabFilename(TabControl.tabs[tabId].name);
   localStorage[filename] = umpleCode;
-  var umpleCodeWithoutAmpersand = umpleCode.replace("&&", "%26%26");
+  var umpleCodeWithoutAmpersand = umpleCode.replaceAll("&", "%26");
   TabControl.addToRequestQueue(
     "scripts/compiler.php",
     TabControl.saveTabCallback(tabId),
