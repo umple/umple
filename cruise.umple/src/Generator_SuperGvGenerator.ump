@@ -129,6 +129,8 @@ digraph "<<=filename>>" {
       } else {
         text = uComment.getText().replace("\"","'");
       }
+      text = text.replace("<", "&lt;"); // Issue1584 "Certain kinds of comments (with less than or greater than) result in failure to generate graphviz"
+      text = text.replace(">", "&gt;"); // Issue1584 "Certain kinds of comments (with less than or greater than) result in failure to generate graphviz"
       if(text.startsWith(" *")) {
         tooltip.append(text.substring(2)+"&#13;");
       }
