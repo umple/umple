@@ -1432,8 +1432,11 @@ class UmpleInternalParser
           for(Token guardedTransition : guardedTransitions){
             Boolean subTokenIsAutoTransition = subToken.is("autoTransition");
             Boolean guardTransitionIsAutoTransition = guardedTransition.is("autoTransition");
-            if ((guardTransitionIsAutoTransition && subTokenIsAutoTransition) || (!guardTransitionIsAutoTransition && guardedTransition.getValue("event") == subToken.getValue("event"))
-             || (!guardTransitionIsAutoTransition && guardedTransition.getValue("event").equals(subToken.getValue("event"))))
+            if ((guardTransitionIsAutoTransition && subTokenIsAutoTransition) 
+              || (!guardTransitionIsAutoTransition && guardedTransition.getValue("event") != null && guardedTransition.getValue("event") == subToken.getValue("event"))
+              || (!guardTransitionIsAutoTransition && guardedTransition.getValue("event") != null && guardedTransition.getValue("event").equals(subToken.getValue("event"))) 
+              || (!guardTransitionIsAutoTransition && guardedTransition.getValue("timer") != null && guardedTransition.getValue("timer") == subToken.getValue("timer"))
+              || (!guardTransitionIsAutoTransition && guardedTransition.getValue("timer") != null && guardedTransition.getValue("timer").equals(subToken.getValue("timer"))))
             {
               Position subTokenPosition = subToken.getPosition();
               String subTokenValue = subToken.getValue("event");

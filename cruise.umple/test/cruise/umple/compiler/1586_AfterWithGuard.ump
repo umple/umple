@@ -1,0 +1,31 @@
+class MicrowaveOven { 
+  queued timeProcesser { 
+    time0 { 
+      startTime [isTimerMode0]->time1; 
+    } 
+
+    time1 { 
+      entry / {display("Timer: " + time);} 
+      after(1)  [time>=1]/ {time--;} -> time1; 
+      //after(1)  [time>=1]/ {time--;} -> timeOn; 
+      openedDoor [isTimerMode] -> time2; 
+      after(2)  [time>=1]/ {time--;} -> time3;
+      after(1)  [time>=2]/ {time--;} -> time4;
+      after(3)  [time>=3]/ {time--;} -> time5;
+      openedDoor [isTimerMode2] -> time6;
+    } 
+
+    time2 { 
+    } 
+    time3 { 
+    } 
+    time4 { 
+    } 
+    time5 { 
+    } 
+    time6 { 
+    } 
+    
+    
+  } 
+} 
