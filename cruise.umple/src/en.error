@@ -133,7 +133,7 @@
 161: 4, "http://manual.umple.org/?WE1xxIdentifierInvalid.html", Constant name '{0}' should start with a upper-case letter ;
 
 
-170: 3, "http://manual.umple.org/build/reference/09170CustomConstructor.txt", Custom constructors should normally not be provided in Umple. Consider using before or after keywords to adjust what the constructor does, or adjusting constructor parameters using keywords like lazy.;
+170: 3, "http://manual.umple.org/?CustomConstructor.html", Custom constructors should normally not be provided in Umple. Consider using before or after keywords to adjust what the constructor does, or adjusting constructor parameters using keywords like lazy.;
 180: 2, "http://manual.umple.org/?E180DuplicateAssociationNameClassHierarchy", Class '{0}' is a subclass of class '{1}' and may not have multiple associations with the same name '{2}' ;
 
 # Messages related to traits starting with 200
