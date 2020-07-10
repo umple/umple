@@ -827,18 +827,14 @@ function serverRun($commandLine,$rawcommand=null) {
   socket_set_option($theSocket, SOL_SOCKET, SO_RCVTIMEO,array("sec"=>1,"usec"=>500000) ); // Wait 5 secs  
   while ($readMoreLines === TRUE) {
     $output = @socket_read($theSocket, 65534, PHP_BINARY_READ);
-    //echo " </br></br> output length: " . strlen($output);
-    //echo " Output: " . $output;
     if ($output === FALSE) {
       @socket_close($theSocket);;
       // This usually happens at moments of overload; run as exec but give server much higher priority
       execRun("nice -n 10 java -jar umplesync.jar ".$originalCommandLine);
-      //echo "  output is false!!!!!!!!!!!!!!!!!";
       return;
     }
     if(strlen($output) == 0) {
       $readMoreLines = FALSE;
-      //echo " output is 0";
     }
     else {
       if(substr($output,0,7) == "ERROR!!") {
@@ -848,20 +844,17 @@ function serverRun($commandLine,$rawcommand=null) {
           $hasMoreError = TRUE;
         } else {
             $hasMoreError = FALSE;
-            //echo "output: " . $output;
-            //echo "errorEnd: " . $errorEnd . "!";
             $errorLength=$errorEnd-7;
             $errorString = substr($output,7,$errorLength);
             $output = substr($output,$errorLength+14); // cut out the error message.
             // The following one line is for DEBUG, uncomment as appropriate
             // saveFile("\n ERRORLOG* [[".$errorString."]] - other output [[".$output."]] ErrorEnd=".$errorEnd."\n","/tmp/UmpleOnlineLog.txt",'a');
 
-            //echo "errorfile :" . $errorfile;
             savefile($errorString,$errorfile);
         }
         
       } 
-      else if ($hasMoreError === TRUE) {
+      else if ($hasMoreError === TRUE) { //There is more error in upcoming output
         $errorEnd = strpos($output, "!!ERROR");
         if ($errorEnd === FALSE) {
           savefile($output,$errorfile, 'a');
@@ -874,8 +867,8 @@ function serverRun($commandLine,$rawcommand=null) {
             savefile($errorString,$errorfile, 'a');
         }
       }
-      if(strlen($output)>0 &&  $hasMoreError === FALSE) {
-        echo $output;//"</br></br> Final Output: ".$output;
+      if(strlen($output)>0 && $hasMoreError === FALSE) {
+        echo $output;
       }
     }
     usleep(50000); // wait a little bit in case the server is sending more
