@@ -345,6 +345,7 @@ function readTemporaryFile($filename)
   }
 
   $handle = fopen($filename, "r");
+  //$contents = fread($handle, filesize($filename));
   $contents = fread($handle, filesize($filename));
   fclose($handle);
   return $contents;
@@ -822,6 +823,7 @@ function serverRun($commandLine,$rawcommand=null) {
   }
  
   $readMoreLines = TRUE;
+  $hasMoreError = FALSE;
   socket_set_option($theSocket, SOL_SOCKET, SO_RCVTIMEO,array("sec"=>1,"usec"=>500000) ); // Wait 5 secs  
   while ($readMoreLines === TRUE) {
     $output = @socket_read($theSocket, 65534, PHP_BINARY_READ);
@@ -837,16 +839,35 @@ function serverRun($commandLine,$rawcommand=null) {
     else {
       if(substr($output,0,7) == "ERROR!!") {
         $errorEnd = strpos($output, "!!ERROR");
-        $errorLength=$errorEnd-7;
-        $errorString = substr($output,7,$errorLength);
-        $output = substr($output,$errorLength+14); // cut out the error message.
+        if ($errorEnd === FALSE) {
+          savefile(substr($output, 7),$errorfile);
+          $hasMoreError = TRUE;
+        } else {
+            $hasMoreError = FALSE;
+            $errorLength=$errorEnd-7;
+            $errorString = substr($output,7,$errorLength);
+            $output = substr($output,$errorLength+14); // cut out the error message.
+            // The following one line is for DEBUG, uncomment as appropriate
+            // saveFile("\n ERRORLOG* [[".$errorString."]] - other output [[".$output."]] ErrorEnd=".$errorEnd."\n","/tmp/UmpleOnlineLog.txt",'a');
 
-        // The following one line is for DEBUG, uncomment as appropriate
-        // saveFile("\n ERRORLOG* [[".$errorString."]] - other output [[".$output."]] ErrorEnd=".$errorEnd."\n","/tmp/UmpleOnlineLog.txt",'a');
-
-        savefile($errorString,$errorfile);
+            savefile($errorString,$errorfile);
+        }
+        
+      } 
+      else if ($hasMoreError === TRUE) { //There is more error in upcoming output
+        $errorEnd = strpos($output, "!!ERROR");
+        if ($errorEnd === FALSE) {
+          savefile($output,$errorfile, 'a');
+          $hasMoreError = TRUE;
+        } else {
+            $hasMoreError = FALSE;
+            $errorLength=$errorEnd-7;
+            $errorString = substr($output,7,$errorLength);
+            $output = substr($output,$errorLength+14); // cut out the error message.
+            savefile($errorString,$errorfile, 'a');
+        }
       }
-      if(strlen($output)>0) {
+      if(strlen($output)>0 && $hasMoreError === FALSE) {
         echo $output;
       }
     }
