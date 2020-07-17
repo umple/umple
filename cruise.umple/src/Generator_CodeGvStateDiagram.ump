@@ -111,8 +111,6 @@ digraph "<<=filename>>" {
       	root = sm;
         if(sm.getParentState() == null) 
         { // This check shouldn't be needed
-        System.out.println("topLevel state machine: " + sm.getName());
-        System.out.println();//DEBUG
           appendStateMachineRecursively(code, transitions, sm, uClass, className, true, smCount, 4);
         }
       } // End iteration through state machines of a class
@@ -308,14 +306,10 @@ node [shape = circle, fixedsize = true, width=.3];
     tooltip = "Class "+className+", SM "+stateInfo[0]+", State "+stateInfo[1];
     _startState(indentLevel,code,clSmName, tooltip);
     _normalStateFormat(indentLevel, code);
- System.out.println("sm getName: " + sm.getName());
- for (State s : sm.getStates())
- {
-  System.out.println("s getName: " + s.getName());
- }
+ 
     // Iterate through the states of this state machine
     for (State s : sm.getStates())
-    {//System.out.println("In state: " + s.getName());//DEBUG
+    {
       sLabel=s.getName();  // This is what is displayed
       if(sLabel.equals("HStar")) sLabel="\"H*\"";
       isPseudo = sLabel.equals("H") || sLabel.equals("\"H*\"");
@@ -401,9 +395,6 @@ node [shape = circle, fixedsize = true, width=.3];
         stateInfo = getStatePath(sm, s.getName());
         tooltip = "start to "+stateInfo[1]; 
         
-        System.out.println();
-        System.out.println(" Current State name: " + s.getName());
-        System.out.println("clSmName: " + clSmName);
         _transition(2,transitions,"start_"+clSmName,"->", dest,
           transitionAttributes(head,"","start",s.getName(), tooltip)); 
       }
@@ -508,17 +499,8 @@ node [shape = circle, fixedsize = true, width=.3];
 
       // Process nested state machines of this state
       allNestedStateMachines = s.getNestedStateMachines();
-
-        System.out.println("state name: " + s.getName());
-
-        for(StateMachine nestedSm: allNestedStateMachines) 
-        {
-          System.out.println("nested state machine: " + nestedSm.getName());
-        }
       for(StateMachine nestedSm: allNestedStateMachines) 
       {
-        //System.out.println("state name: " + s.getName());
-        //System.out.println("nested state machine: " + nestedSm.getName());
         appendStateMachineRecursively(code, transitions, nestedSm, uClass, className, false, smCount, indentLevel+2);
       } // End iteration through nested state machines
 
