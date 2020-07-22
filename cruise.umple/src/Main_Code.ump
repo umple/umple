@@ -1022,6 +1022,14 @@ class PlaygroundMain
     {
       return new DeleteAssociationAction(deltaCode,umpleCode,filename);
     }
+    else if ("-addTransition".equals(type))
+    {
+    	return new NewTransitionAction(deltaCode, umpleCode, filename);
+    }
+    else if ("-removeTransition".equals(type))
+    {
+    	return new DeleteTransitionAction(deltaCode, umpleCode, filename);
+    }
     else if ("-addGeneralization".equals(type))
     {
       return new NewGeneralizationAction(deltaCode,umpleCode,filename);

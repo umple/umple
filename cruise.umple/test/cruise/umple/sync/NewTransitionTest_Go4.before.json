@@ -1,1 +1,1 @@
-{"classId": "CarTransmission", "fromStateId": "neural", "toStateId": "reverse","eventName": "selectReverse", "name": "neutral_selectReverse_reverse" }
+{"classId": "CarTransmission", "fromStateId": "neural", "toStateId": "reverse","event": "selectReverse", "name": "neutral_selectReverse_reverse" }

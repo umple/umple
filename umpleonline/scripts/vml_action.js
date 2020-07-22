@@ -10,6 +10,9 @@ Action.waiting_time = 1200;
 Action.oldTimeout = null;
 Action.newAssociation = null;
 
+var obj = Dom.getObject(event);
+var action = obj.id.substring(6);
+
 Action.clicked = function(event)
 {
   Page.clickCount += 1;
