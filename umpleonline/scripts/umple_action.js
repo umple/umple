@@ -671,6 +671,7 @@ Action.unselectAll = function()
   Action.classSelected(null);
   Action.associationSelected(null);
   Action.generalizationSelected(null);
+  Action.transitionSelected(null);
 }
 
 Action.classClicked = function(event)
@@ -718,8 +719,42 @@ Action.classClicked = function(event)
   
   else
   {
+    console.log("This was not selected" + Page.selectedItem);
     Action.classSelected(obj);
   }
+}
+
+Action.stateClicked = function(event)
+{
+    Page.setFeedbackMessage("state clicked");
+    if (!Action.diagramInSync) return;
+    Action.focusOn("umpleCanvas", true);
+    Action.focusOn("umpleModelEditorText", false);
+
+    Action.unselectAll();
+    Action.elementClicked = true;
+    var obj = event.currentTarget;
+
+    Action.selectState(obj.id);
+
+
+   if (Page.selectedItem == "AddTransition")
+    {
+        if (DiagramEdit.newTransition == null)
+        {
+            Action.canCreateByDrag = false;
+            DiagramEdit.createTransitionPartOne(event);
+        }
+        else
+        {
+            DiagramEdit.createTransitionPartTwo(event);
+            setTimeout(function(){ Action.canCreateByDrag = true; }, 500);
+        }
+    }
+    else
+    {
+        Action.stateSelected(obj);
+    }
 }
 
 Action.associationClicked = function(event)
@@ -732,6 +767,16 @@ Action.associationClicked = function(event)
   Action.associationSelected(obj);
 }
 
+Action.transitionClicked = function(event)
+{
+    Page.setFeedbackMessage("transition clicked");
+  if(!Action.diagramInSync) return;
+  Action.elementClicked = true;
+  Action.unselectAll();
+
+  var obj = event.currentTarget;
+  Action.transitionSelected(obj);
+}
 Action.generalizationClicked = function(event)
 {
   if (!Action.diagramInSync) return;
@@ -760,6 +805,26 @@ Action.associationHover = function(event,isHovering)
     }
   }
 }
+
+Action.transitionHover = function(event,isHovering)
+{
+    if (!Action.diagramInSync) return;
+    var updateTransition = event.currentTarget;
+    var umpleTransition = UmpleSystem.findTransition(updateTransition.id);
+
+    if (updateAssociation != null && Page.canShowHovers())
+    {
+        var hoverCount = 2;
+        var selector = "#" + updateAssociation.id + "_hover";
+
+        for (var i=0; i<hoverCount; i++)
+        {
+            if (isHovering) jQuery(selector+i).show();
+            else jQuery(selector+i).hide();
+        }
+    }
+}
+
 
 Action.generalizationHover = function(event,isHovering)
 {
@@ -811,6 +876,43 @@ Action.associationSelected = function(obj)
     if (isSelected) jQuery(anchorSelector + i).show();
     else jQuery(anchorSelector + i).hide();
   }
+}
+
+Action.transitionSelected = function(obj)
+{
+    Page.setFeedbackMessage("transition selected");
+    var isSelected = (obj == null) ? false : true;
+    var updateObj = null;
+
+    if (Page.selectedItem == "DeleteEntity" && obj != null)
+    {
+        var addToQueue = false;
+        DiagramEdit.transitionDeleted(obj.id, addToQueue);
+        return;
+    }
+
+    if (obj != null)
+    {
+        Page.selectedTransition = obj;
+        updateObj = obj;
+    }
+    else if (Page.selectedTransition != null)
+    {
+        updateObj = Page.selectedTransition;
+        Page.selectedTransition = null;
+    }
+    else
+    {
+        return;
+    }
+
+    var anchorCount = 2;
+    var anchorSelector = "#" + updateObj.id + "_anchor";
+    for (var i=0; i<anchorCount; i++)
+    {
+        if (isSelected) jQuery(anchorSelector + i).show();
+        else jQuery(anchorSelector + i).hide();
+    }
 }
 
 Action.generalizationSelected = function(obj)
@@ -928,6 +1030,10 @@ Action.classMouseDown = function(event)
   {
     DiagramEdit.createGeneralizationPartOne(event);
   }
+  else if (Page.selectedItem == "AddTransition" && DiagramEdit.newTransition == null)
+  {
+      DiagramEdit.createTransitionPartOne(event);
+  }
 }
 
 Action.classMouseUp = function(event)
@@ -941,6 +1047,9 @@ Action.classMouseUp = function(event)
   else if (Page.selectedItem == "AddGeneralization" && DiagramEdit.newGeneralization != null)
   {
     DiagramEdit.createGeneralizationPartTwo(event);
+  }
+  else if (Page.selectedItem == "AddTransition" && DiagramEdit.newTransition != null){
+    DiagramEdit.createTransitionPartTwo(event);
   }
 }
 
@@ -962,6 +1071,10 @@ Action.mouseMove = function(event)
   if (DiagramEdit.newAssociation != null && Page.selectedItem == "AddAssociation")
   {
     Action.drawAssociationLine(event, DiagramEdit.newAssociation);
+  }
+  if (DiagramEdit.newTransition != null && Page.selectedItem == "AddTransition")
+  {
+    Action.drawTransitionLine(event, Diagramedit.newTransition);
   }
   if (DiagramEdit.newGeneralization != null && Page.selectedItem == "AddGeneralization")
   {
@@ -1000,6 +1113,15 @@ Action.drawAssociationLine = function(event, newAssociation)
   jQuery(canvasSelector).append(newAssociation.drawable());
 }
 
+Action.drawTransitionLine = function(event, newTransition)
+{
+    var canvasSelector = "#" + Page.umpleCanvasId();
+    var mousePosition = new UmplePosition(event.pageX, event.pageY,0,0);
+    newTransition.toStatePosition = mousePosition.subtract(UmpleSystem.position());
+    jQuery(canvasSelector).append(newTransition.drawable());
+}
+
+
 Action.drawGeneralizationLine = function(event, newGeneralization)
 {
   var canvasSelector = "#" + Page.umpleCanvasId();
@@ -1034,6 +1156,14 @@ Action.umpleCanvasClicked = function(event)
       DiagramEdit.removeNewAssociation();
     }
   }
+  else if (Page.selectedItem == "AddTransition" && DiagramEdit.newTransition != null)
+  {
+    if (Page.clickCount >1)
+    {
+      DiagramEdit.removeNewTransition();
+    }
+  }
+
   else if (Page.selectedItem == "AddGeneralization" && DiagramEdit.newGeneralization != null)
   {
     if (Page.clickCount > 1)
@@ -1581,6 +1711,15 @@ Action.selectClass = function(className)
 	Action.selectItem(scursor, ncursor);
 }
 
+// Highlights the text of the class that is currently selected.
+Action.selectState = function(stateName)
+{
+    var scursor = new RegExp("(class|interface|trait) "+stateName+"($|\\\s|[{])");
+    var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
+
+    Action.selectItem(scursor, ncursor);
+}
+
 Action.selectStateInClass = function(stateName, classname) 
 {
   if(Page.codeMirrorOn) {}
@@ -2120,11 +2259,13 @@ Action.redrawDiagram = function()
 
       Page.enablePaletteItem('buttonAddClass', true);
       Page.enablePaletteItem('buttonAddAssociation', true);
+      Page.enablePaletteItem('buttonAddTransition', true);
       Page.enablePaletteItem('buttonAddGeneralization', true);
       Page.enablePaletteItem('buttonDeleteEntity', true);
     
       Page.initToggleTool('buttonAddClass');
       Page.initToggleTool('buttonAddAssociation');
+      Page.initToggleTool('buttonAddTransition');
       Page.initToggleTool('buttonAddGeneralization');
       Page.initToggleTool('buttonDeleteEntity');
     }

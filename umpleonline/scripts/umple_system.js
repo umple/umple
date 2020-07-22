@@ -8,6 +8,7 @@
 UmpleSystem = new Object();
 UmpleSystem.umpleClasses = [];
 UmpleSystem.umpleAssociations = [];
+UmpleSystem.umpleTransitions = [];
   
 UmpleSystem.position = function()
 {
@@ -45,13 +46,13 @@ UmpleSystem.findAssociation = function(diagramId)
 }
 
 /* New association is being added via the diagram - this
- * method creates the association object and adds it 
+ * method creates the association object and adds it
  * to the Umple System */
 UmpleSystem.createAssociation = function(classOneId, classTwoId, screenOnePosition, screenTwoPosition)
 {
   // create association object
   var umpleAssociation = new UmpleAssociation();
-  
+
   // set its attributes according to parameters
   umpleAssociation.id = this.nextAssociationId();
   umpleAssociation.setClasses(classOneId, classTwoId);
@@ -74,6 +75,24 @@ UmpleSystem.createAssociation = function(classOneId, classTwoId, screenOnePositi
   return this.addAssociation(umpleAssociation);
 }
 
+/* New transition is being added via the diagram - this
+* method creates the transition object and adds it
+* to the Umple System */
+UmpleSystem.createTransition = function(fromTransitionId, toTransitionId)
+{
+    // create transition object
+    var umpleTransition = new UmpleTransition();
+
+    // set its attributes according to parameters
+    umpleTransition.id = this.nextTransitionId();
+    umpleTransition.setStates(fromStateId, toStateId);
+    umpleTransition.setDefaultEvent();
+    umpleTransition.setName(umpleTransition.getName());
+
+    // add it to the Umple System
+    return this.addTransition(umpleTransition);
+}
+
 UmpleSystem.createGeneralization = function(childId, parentId)
 {
   var child = UmpleSystem.find(childId);
@@ -88,6 +107,15 @@ UmpleSystem.addAssociation = function(umpleAssociation)
   var associationDiv = this.redrawAssociation(umpleAssociation);
   
   return umpleAssociation;
+}
+
+/* Add transition to the umple system */
+UmpleSystem.addTransition = function(umpleTransition)
+{
+    this.umpleTransitions.push(umpleTransition);
+    var transitionDiv = this.redrawTransition(umpleTransition);
+
+    return umpleTransition;
 }
 
 /* Create a new class to be added to the Umple System
@@ -337,6 +365,24 @@ UmpleSystem.redrawAssociation = function(umpleAssociation)
   
   return associationDiv;
 }
+
+UmpleSystem.redrawTransition = function(umpleTransition)
+{
+    var transitionSel = "#" + umpleTransition.id;
+    var canvasSel = "#" + Page.umpleCanvasId();
+    var transitionDiv = null;
+
+    transitionDiv = umpleTransition.drawable();
+    jQuery(canvasSel).append(transitionDiv);
+
+    if (!Page.isPhotoReady())
+    {
+        jQuery(transitionSel).click(Action.transitionClicked);
+    }
+
+    return transitionDiv;
+}
+
 
 UmpleSystem.redrawGeneralizationsTo = function(parent)
 {
@@ -595,6 +641,24 @@ UmpleSystem.removeAssociation = function(diagramId)
   return null;
 }
 
+UmpleSystem.removeTransition = function(diagramId)
+{
+    for (var i=0; i<this.umpleAssociations.length; i++)
+    {
+        var umpleTransition = this.umpleAssociations[i];
+        if (umpleTransition == diagramId)
+        {
+            this.umpleTransitions.splice(i,1);
+
+            var transitionSel = "#" + diagramId;
+            jQuery(transitionSel).remove();
+
+            return umpleTransition;
+        }
+    }
+    return null;
+}
+
 UmpleSystem.removeGeneralization = function(diagramId)
 {
   var generalizationSel = "#" + diagramId;
@@ -780,3 +844,40 @@ UmpleSystem.nextAssociationId = function(desiredName)
   }
   return "";
 }
+
+UmpleSystem.nextTransitionId = function(desiredName)
+{
+    var template = "umpleTransition_";
+    var nextElementId = template + "0";
+    if (typeof(desiredName) != "undefined")
+    {
+        template = desiredName;
+        nextElementId = desiredName;
+    }
+
+    var found = false;
+    var nextIndex = 0;
+    while (nextIndex < 100 && !found)
+    {
+        if (nextIndex > 0)
+        {
+            nextElementId = template + nextIndex;
+        }
+        found = true;
+        for (var i=0; i<this.umpleTransitions.length; i++)
+        {
+            if (this.umpleTransitions[i].id == nextElementId)
+            {
+                found = false;
+                nextIndex += 1;
+                break;
+            }
+        }
+        if (found)
+        {
+            return nextElementId;
+        }
+    }
+    return "";
+}
+

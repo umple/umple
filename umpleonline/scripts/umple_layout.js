@@ -218,11 +218,13 @@ Layout.showHideCanvas = function(doShow)
 
       Page.enablePaletteItem('buttonAddClass', true);
       Page.enablePaletteItem('buttonAddAssociation', true);
+      Page.enablePaletteItem('buttonAddTransition', true);
       Page.enablePaletteItem('buttonAddGeneralization', true);
       Page.enablePaletteItem('buttonDeleteEntity', true);
     
       Page.initToggleTool('buttonAddClass');
       Page.initToggleTool('buttonAddAssociation');
+	  Page.initToggleTool('buttonAddTransition');
       Page.initToggleTool('buttonAddGeneralization');
       Page.initToggleTool('buttonDeleteEntity');
     }
@@ -239,12 +241,14 @@ Layout.showHideCanvas = function(doShow)
     
     Page.enablePaletteItem('buttonAddClass', false);
     Page.enablePaletteItem('buttonAddAssociation', false);
-    Page.enablePaletteItem('buttonAddGeneralization', false);
+	Page.enablePaletteItem('buttonAddTransition', false);    
+	Page.enablePaletteItem('buttonAddGeneralization', false);
     Page.enablePaletteItem('buttonDeleteEntity', false);
     Page.enablePaletteItem('buttonSyncDiagram', false);
 
     Page.removeToggleTool('buttonAddClass');
     Page.removeToggleTool('buttonAddAssociation');
+	Page.removeToggleTool('buttonAddTransition');
     Page.removeToggleTool('buttonAddGeneralization');
     Page.removeToggleTool('buttonDeleteEntity');
   }

@@ -30,7 +30,7 @@ public class DeleteTransitionActionTest
   public void Go_NothingToDelete()
   {
     String umple = "class CarTransmission { state { reverse { selectDrive -> drive; } drive {  } } }";
-    String json = "{\"fromStateId\": \"drive\", \"toStateId\" : \"reverse\", \"eventName\" : \"selectReverse\", \"name\" : \"drive_selectReverse_reverse\"}";
+    String json = "{\"fromStateId\": \"drive\", \"toStateId\" : \"reverse\", \"event\" : \"selectReverse\", \"name\" : \"drive_selectReverse_reverse\"}";
     String filename = pathToInput + "/myfile.ump";
     SampleFileWriter.createFile(filename, umple);
     
@@ -64,7 +64,8 @@ public class DeleteTransitionActionTest
     DeleteTransitionAction action = new DeleteTransitionAction(json,umple,filename);
     action.go();
     
-    SampleFileWriter.assertFileContent(new File(pathToInput,"DeleteTransitionTest_Go2.after.ump"), action.getUmpleCode());
+    SampleFileWriter.assertFileContent(new File(pathToInput,"DeleteTransitionTest_Go2.after.ump"),
+    action.getUmpleCode());
   } 
   
   @Test
