@@ -43,6 +43,7 @@ Page.showCanvas = true;
 Page.showTraits = false;
 Page.showTransitionLabels = false;
 Page.showGuardLabels = false;
+Page.showGuards = true;
 Page.modifiedDiagrams = false;
 
 // The following is set called from umple.php
@@ -96,6 +97,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   else
   {
     jQuery(".view_opt_class").show();
+    jQuery(".view_opt_class_palette").show();
   }
 
   jQuery.noConflict();
@@ -151,6 +153,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonToggleAttributes");
   Page.initHighlighter("buttonToggleActions");
   Page.initHighlighter("buttonToggleTransitionLabels");
+  Page.initHighlighter("buttonToggleGuards");
   Page.initHighlighter("buttonToggleGuardLabels");
   Page.initHighlighter("buttonToggleTraits");
   Page.initHighlighter("buttonToggleFeatureDependency");
@@ -206,6 +209,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleTraits");
   Page.initAction("buttonToggleFeatureDependency");
   Page.initAction("buttonToggleTransitionLabels");
+  Page.initAction("buttonToggleGuards");
   Page.initAction("buttonToggleGuardLabels");
     
   Page.initLabels();
@@ -255,6 +259,7 @@ Page.initOptions = function()
   jQuery("#buttonToggleAttributes").prop('checked',true);
   jQuery("#buttonToggleActions").prop('checked',true);
   jQuery("#buttonToggleTransitionLabels").prop('checked',false);
+  jQuery("#buttonToggleGuards").prop('checked',true);  
   jQuery("#buttonToggleGuardLabels").prop('checked',false);
   jQuery("#buttonToggleTraits").prop('checked',false);
   jQuery("#buttonToggleFeatureDependency").prop('checked',false);
@@ -554,7 +559,9 @@ Page.clickToggleFeatureDependency= function() {
 Page.clickToggleTransitionLabels = function() {
   jQuery('#buttonToggleTransitionLabels').trigger('click');
 }
-
+Page.clickToggleGuardLabels = function() {
+  jQuery('#buttonToggleGuards').trigger('click');
+}
 Page.clickToggleGuardLabels = function() {
   jQuery('#buttonToggleGuardLabels').trigger('click');
 }

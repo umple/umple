@@ -463,11 +463,11 @@ $output = $dataHandle->readData('model.ump');
       
           <ul id="mainDrawMenu" class="second toggle">
             <li class="subtitle"> Draw </li>
-            <li id="buttonAddClass" class="toggleToolItem" name="paletteItem" title="Select and click on the canvas to add a new class.">
+            <li id="buttonAddClass" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the canvas to add a new class.">
               <img src="scripts/class.png"/> 
               Class
             </li>
-            <li id="buttonAddAssociation" class="toggleToolItem" name="paletteItem" title="Select and click on a class to draw an association.">
+            <li id="buttonAddAssociation" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on a class to draw an association.">
               <img src="scripts/assoc.png"/> 
               Association
             </li>
@@ -475,11 +475,11 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/assocbend.jpg"/> 
               Bend Assoc.
             </li> -->
-            <li id="buttonAddGeneralization" class="toggleToolItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class.">
+            <li id="buttonAddGeneralization" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class.">
               <img src="scripts/generalization.png"/> 
               Generalization
             </li>
-            <li id="buttonDeleteEntity" class="toggleToolItem" name="paletteItem" title="Select and click on an element to remove it from your model.">
+            <li id="buttonDeleteEntity" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on an element to remove it from your model.">
               <img src="scripts/delete.png"/>
                Delete
              </li>
@@ -568,6 +568,10 @@ $output = $dataHandle->readData('model.ump');
               <input id="buttonToggleTransitionLabels" class="checkbox" type="checkbox"/> 
               <a id="labelToggleTransitionLabels" class="buttonExtend">Transition Labels</a> 
             </li>
+            <li id="ttToggleGuards" class="layoutListItem view_opt_state"> 
+              <input id="buttonToggleGuards" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleGuards" class="buttonExtend">Guards</a> 
+            </li>            
             <li id="ttToggleGuardLabels" class="layoutListItem view_opt_state"> 
               <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/> 
               <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
@@ -582,7 +586,7 @@ $output = $dataHandle->readData('model.ump');
           <!-- PREFERENCES OPTIONS -->
           <ul class="second">
             <li id="preferencesTitle" class="subtitle"> Preferences </li>
-            <li id="ttPhotoReady"> 
+            <li id="ttPhotoReady" class="layoutListItem view_opt_class"> 
               <input id="buttonPhotoReady" class="checkbox" type="checkbox" name="photoReady" value="photoReady"/> 
               <a id="labelPhotoReady" class="buttonExtend">Photo Ready</a> 
             </li>
