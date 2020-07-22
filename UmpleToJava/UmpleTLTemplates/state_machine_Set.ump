@@ -42,12 +42,9 @@ class UmpleToJava {
       }
       if (prefix.length() >= 4)
       {
-        singularName = singularName.substring(0, singularName.length()-10);
-      
+        singularName = singularName.substring(0, singularName.length()-10);      
         singularName = singularName.substring(0, 1).toLowerCase() + singularName.substring(1);
-    
       
-        //System.out.println("singularName: " + singularName);
         int numOfOccurance = 0;
           for (StateMachine sm2 : uClass.getAllStateMachines())
           {
@@ -55,22 +52,17 @@ class UmpleToJava {
             {
               if (e.getName().equals(singularName))
               {
-                //System.out.println("smsmsmsmsm: " + sm2.getName());
-                //singularName = sm.getName() + "_" + event.getName();
                 numOfOccurance++;
                 break;
               }
             }
           }
-        
-        //System.out.println("-1: " + action.getActionCode());//DEBUG
 
         if (numOfOccurance > 1)
         {
           action.setActionCode(prefix + StringFormatter.toPascalCase(sm.getFullName() + "_" + singularName) + "Handler();");
         }
       }
-      //System.out.println("0: " + action.getActionCode());//DEBUG
       if ("entry".equals(action.getActionType()))
       {
         TraceItem traceItem = state.getTraced("entry",uClass);
@@ -135,13 +127,11 @@ class UmpleToJava {
           for (Activity activity : state.getActivities())
           {
             entryActions.append("\n        " + action.getActionCode().substring(0, action.getActionCode().length() - 1).concat(traceItemActivity.trace(gen, activity,"sm_di", uClass))+" }");
-            //System.out.println("1: " + action.getActionCode().substring(0, action.getActionCode().length() - 1).concat(traceItemActivity.trace(gen, activity,"sm_di", uClass)));
             entryJavaLine+=action.getActionCode().split("\\n").length;
           }
         }
         else{
           entryActions.append("\n        " + action.getActionCode());
-          //System.out.println("2: " + action.getActionCode());
           entryJavaLine+=action.getActionCode().split("\\n").length;
         }
 
