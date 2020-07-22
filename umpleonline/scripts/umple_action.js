@@ -240,7 +240,11 @@ Action.clicked = function(event)
   else if (action == "ToggleTransitionLabels")
   {
     Action.toggleTransitionLabels();
-  }  
+  }
+  else if (action == "ToggleGuards")
+  {
+    Action.toggleGuards();
+  }
   else if (action == "ToggleGuardLabels")
   {
     Action.toggleGuardLabels();
@@ -450,6 +454,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery("#buttonShowEditableClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('editableClass');
     jQuery(".view_opt_class").show();
+    jQuery(".view_opt_class_palette").show();
 
   }
   else if(newDiagramType.type == "JointJSClass") { 
@@ -464,7 +469,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery("#buttonShowJointJSClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('JointJSClass');
     jQuery(".view_opt_class").show();
-
+    jQuery(".view_opt_class_palette").show();
   }  
   else if(newDiagramType.type == "GvClass") { 
     if(Page.useGvClassDiagram) return;
@@ -2074,6 +2079,11 @@ Action.toggleTransitionLabels = function()
   Action.redrawDiagram();
 }
 
+Action.toggleGuards = function()
+{
+  Page.showGuards = !Page.showGuards;
+  Action.redrawDiagram();
+}
 Action.toggleGuardLabels = function()
 {
   Page.showGuardLabels = !Page.showGuardLabels;
@@ -2543,6 +2553,7 @@ Action.getLanguage = function()
   if(Page.useGvStateDiagram) { 
     if(!Page.showActions) language=language+".hideactions";
     if(Page.showTransitionLabels) language=language+".showtransitionlabels";
+    if(!Page.showGuards) language=language+".hideguards";    
     if(Page.showGuardLabels) language=language+".showguardlabels";
     language=language+"."+$("inputGenerateCode").value.split(":")[1];
   }

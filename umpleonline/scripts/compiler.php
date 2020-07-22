@@ -121,6 +121,8 @@ else if (isset($_REQUEST["umpleCode"]))
   $Uigu2 = false;
   $htmlContents = false;
   $generatorType = "";
+  $svg_regex= "/scale\([0-9]*(\.([0-9])*)? [0-9]*(\.([0-9])*)?\) rotate\(0\)/";
+  $svg_scale="scale(0.75 0.75) rotate(0)";
   
   //featureDiagram
 
@@ -394,7 +396,7 @@ else if (isset($_REQUEST["umpleCode"]))
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       $changesToMake = 1;
-      $shrunksvgcode = str_replace("scale(1 1)","scale(0.875 0.875)",$svgcode,$changesToMake);
+      $shrunksvgcode = preg_replace($svg_regex,$svg_scale,$svgcode,$changesToMake);
       echo $shrunksvgcode;
       echo "</svg>"; 
     } // end state diagram
@@ -419,7 +421,7 @@ else if (isset($_REQUEST["umpleCode"]))
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       $changesToMake = 1;
-      $shrunksvgcode = str_replace("scale(1 1)","scale(0.875 0.875)",$svgcode,$changesToMake);
+      $shrunksvgcode = preg_replace($svg_regex,$svg_scale,$svgcode,$changesToMake);
       echo $shrunksvgcode;
       echo "</svg>";   
     }
@@ -440,7 +442,7 @@ else if (isset($_REQUEST["umpleCode"]))
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       $changesToMake = 1;
-      $shrunksvgcode = str_replace("scale(1 1)","scale(0.875 0.875)",$svgcode,$changesToMake);
+      $shrunksvgcode = preg_replace($svg_regex,$svg_scale,$svgcode,$changesToMake);
       echo $shrunksvgcode;
       echo "</svg>";      
     } // end graphViz class diagram
@@ -461,7 +463,7 @@ else if (isset($_REQUEST["umpleCode"]))
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       $changesToMake = 1;
-      $shrunksvgcode = str_replace("scale(1 1)","scale(0.875 0.875)",$svgcode,$changesToMake);
+      $shrunksvgcode = preg_replace($svg_regex,$svg_scale,$svgcode,$changesToMake);
       echo $shrunksvgcode;
       echo "</svg>";      
     } // end graphViz entity relationship diagram
