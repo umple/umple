@@ -16,8 +16,8 @@ cache:
 addons:
   apt:
     packages:
-    - php5-common
-    - php5-cli
+    - php-common
+    - php-cli
 
 before_install:
   - ./travis/deps.sh # run linux or osx depending on environment
@@ -45,12 +45,12 @@ script:
 
   # Do a modified version of `first-build` (build using last successful build)
   - if [ -z "$USE_GRADLE" ]; then $ANT_FIRST clean init codegen umpleParser rtcpp template.setVersion resetUmpleSelf; fi
-  - if [ -z "$USE_GRADLE" ]; then $ANT_FIRST compile compileValidator compileUmplificator; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_FIRST compile; fi
   - if [ -z "$USE_GRADLE" ]; then $ANT_FIRST package template.resetVersion; fi
 
   # Do a modified version of `build`to create new jars
   - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD clean init codegen umpleParser rtcpp template.setVersion resetUmpleSelf; fi
-  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD compile compileValidator compileUmplificator; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD compile; fi
   - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD package; fi
   
   # Repeat creation of the compiler in case last build made a bad compiler
@@ -112,7 +112,12 @@ after_success:
 matrix:
   include:
     - os: linux
-      jdk: oraclejdk8
+      jdk: openjdk12
+      addons:
+        apt:
+          packages:
+            - ant
+            - ant-optional
       # only Linux supports Docker right now
       env:
         - HAVE_DOCKER=1
@@ -122,7 +127,7 @@ matrix:
 
     # test gradle builds
     - os: linux
-      jdk: oraclejdk8
+      jdk: openjdk12
       env:
         - USE_GRADLE=1
         # TODO: test Docker
