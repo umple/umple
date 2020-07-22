@@ -175,14 +175,15 @@ class JavaGenerator
   public String translate(String keyName, State state)
   {
     String singularName = state.getName();
+    //System.out.println(singularName);
     String pluralName = getModel().getGlossary().getPlural(singularName);
   
     if (UpperCasePluralLookupMap.containsKey(keyName))
-    {
+    {//System.out.println("1" + StringFormatter.format(UpperCasePluralLookupMap.get(keyName),getUpperCaseName(pluralName)));
       return StringFormatter.format(UpperCasePluralLookupMap.get(keyName),getUpperCaseName(pluralName));
     }
     else if (UpperCaseSingularLookupMap.containsKey(keyName))
-    {
+    {//System.out.println("2" + StringFormatter.format(UpperCaseSingularLookupMap.get(keyName),getUpperCaseName(singularName)));
       return StringFormatter.format(UpperCaseSingularLookupMap.get(keyName),getUpperCaseName(singularName));
     }
     else if (AsIsPluralLookupMap.containsKey(keyName))
@@ -541,7 +542,57 @@ class JavaGenerator
       return StringFormatter.format(AsIsPluralLookupMap.get(keyName),pluralName);
     }
     else if (AsIsSingularLookupMap.containsKey(keyName))
+    {//System.out.println("444444444444444" + StringFormatter.format(AsIsSingularLookupMap.get(keyName),singularName));
+      return StringFormatter.format(AsIsSingularLookupMap.get(keyName),singularName);
+    }
+    
+    return "UNKNOWN ID: " + keyName;
+  }  
+
+  public String translate(String keyName, Event event, StateMachine sm)
+  {
+    // Issue1602
+    String singularName = event.getName();
+    int numOfOccurance = 0;
+    // Check if there is same event in different stateMahcine.
+    for (UmpleClass c : getModel().getUmpleClasses())
     {
+      for (StateMachine sm2 : c.getAllStateMachines())
+      {
+        for (Event e : sm2.getEvents())
+        {
+          if (e.equals(event))
+          {
+            //System.out.println("smsmsmsmsm: " + sm2.getName());
+            //singularName = sm.getName() + "_" + event.getName();
+            numOfOccurance++;
+            break;
+          }
+        }
+      }
+    }
+
+    if (numOfOccurance > 1)
+    {
+      singularName = sm.getFullName() + "_" + event.getName();
+    }
+    //System.out.println("Event singularName" + singularName);
+    String pluralName = getModel().getGlossary().getPlural(singularName);
+
+    if (UpperCasePluralLookupMap.containsKey(keyName))
+    {
+      return StringFormatter.format(UpperCasePluralLookupMap.get(keyName),getUpperCaseName(pluralName));
+    }
+    else if (UpperCaseSingularLookupMap.containsKey(keyName))
+    {
+      return StringFormatter.format(UpperCaseSingularLookupMap.get(keyName),getUpperCaseName(singularName));
+    }
+    else if (AsIsPluralLookupMap.containsKey(keyName))
+    {
+      return StringFormatter.format(AsIsPluralLookupMap.get(keyName),pluralName);
+    }
+    else if (AsIsSingularLookupMap.containsKey(keyName))
+    {//System.out.println("444444444444444" + StringFormatter.format(AsIsSingularLookupMap.get(keyName),singularName));
       return StringFormatter.format(AsIsSingularLookupMap.get(keyName),singularName);
     }
     
