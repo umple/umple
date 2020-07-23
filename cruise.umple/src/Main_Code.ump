@@ -791,6 +791,20 @@ class PlaygroundMain
       {
         System.out.println("ERROR - Could not listen for clients!");
       }
+      finally {
+        // write out the umple version
+      File versionRunning = new File(System.getProperty("user.dir")+File.separator+"versionRunning.txt");
+        try {
+          FileWriter writer = new FileWriter(versionRunning);
+          BufferedWriter out = new BufferedWriter(writer);
+          out.write(UmpleModel.VERSION_NUMBER+"\n");
+          out.close();
+        }
+        catch (IOException e) {
+          // Do nothing if we can't write out the version
+        } 
+      }
+      
       return;
     }
     

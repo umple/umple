@@ -880,7 +880,7 @@ Action.associationSelected = function(obj)
 
 Action.transitionSelected = function(obj)
 {
-    Page.setFeedbackMessage("transition selected");
+    // Page.setFeedbackMessage("transition selected");
     var isSelected = (obj == null) ? false : true;
     var updateObj = null;
 
