@@ -21,7 +21,7 @@ ext {
     umpleCurrentVersion = "${rootProject.ext.umpleMajorVersion}.${grgit.log().size()}.${grgit.head().getAbbreviatedId(9)}"
     umpleCurrentJarBase = "umple-${rootProject.ext.umpleCurrentVersion}"
     umpleCurrentJar = "${rootProject.projectDir.toString()}/dist/gradle/libs/${rootProject.ext.umpleCurrentJarBase}.jar"
-    umpleJarRemoteSource = "http://cruise.eecs.uottawa.ca/umpleonline/scripts/umple.jar"
+    umpleJarRemoteSource = "https://cruise.eecs.uottawa.ca/umpleonline/scripts/umple.jar"
     umpleJarRemoteFile = "${rootProject.projectDir.toString()}/libs/umple-latest.jar"
     generatedBaseDir = "${rootProject.projectDir.toString()}/dist/gradle/src-gen"
     testBaseDir = "${rootProject.projectDir.toString()}/dist/gradle/test"
@@ -87,11 +87,11 @@ configurations {
 repositories {
     maven {
         name 'central'
-        url 'http://repo1.maven.org/maven2'
+        url 'https://repo1.maven.org/maven2'
     }
     maven {
         name 'jboss'
-        url 'http://repository.jboss.org/nexus/content/groups/public-jboss'
+        url 'https://repository.jboss.org/nexus/content/groups/public-jboss'
     }
 }
 

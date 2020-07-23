@@ -126,12 +126,12 @@ matrix:
         - docker
     - os: osx
 
-    # test gradle builds
-    - os: linux
-      jdk: openjdk12
-      env:
-        - USE_GRADLE=1
-        # TODO: test Docker
-    - os: osx
-      env:
-        - USE_GRADLE=1
+    # test gradle builds - commented out for now
+#    - os: linux
+#      jdk: openjdk12
+#      env:
+#        - USE_GRADLE=1
+#        # TODO: test Docker
+#    - os: osx
+#      env:
+#        - USE_GRADLE=1
