@@ -173,6 +173,12 @@ $output = $dataHandle->readData('model.ump');
         
         <span class="pretext">
           Draw on the right, write (Umple) model code on the left. Analyse models and generate code.
+          <?php
+          $alertMessage = @file_get_contents("ump/aalertMessage.txt");
+          if($alertMessage != FALSE && !empty($alertMessage)) {
+          echo "<span style=\"color: red\"><br/>$alertMessage</span>";
+          }
+          ?>
         <br/></span>
         <span id="gdprtext" class="pretext">        
           This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="http://privacy.umple.org" target="privacy">Click to learn about privacy.</a>
@@ -191,7 +197,6 @@ $output = $dataHandle->readData('model.ump');
        target="questionpage" title="Open a separate tab on the StackOverflow page where you can ask Umple community members questions">Ask questions</a>&nbsp;
     <a class="button2" style="line-height: 1" href="https://github.com/umple/umple/issues/new" target="issuepage" title="Open a separate tab on the page where you can report an Umple bug or request an improvement">Report issue</a>&nbsp;
     </span>
-
         </p>
       </div>
     </div>
@@ -204,7 +209,7 @@ $output = $dataHandle->readData('model.ump');
       <?php echo $output ?>
     </pre>
   </noscript> 
-          
+      
   <input id="filename" type="hidden" value="<?php echo '../ump/'.$dataHandle->getName().'/model.ump' ?>" />
   <input id="advancedMode" type="hidden" value="0" />
   <input id="model" type="hidden" value="<?php echo $dataHandle->getName()?>" />
@@ -248,13 +253,13 @@ $output = $dataHandle->readData('model.ump');
     <?php if (isBookmark($dataHandle)) { ?>
       <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
     <?php } else { ?>
-      <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that will allow you to come back and edit again. The URL will persist for a year after its last edit.">Create Bookmarkable URL</a>
+      <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
     <?php } ?>
 
     </span>
 
     <span style="font-size: 30%; white-space:nowrap;">  
-    <a class="button2" href="javascript:Page.toggleTabs()" title="Toggle tab visibility">Toggle Tabs</a>
+    <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>
     </span>
     
     <span id="restorecode" >&nbsp; &nbsp; <a href="#"> Restore Saved State</a></span>

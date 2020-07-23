@@ -58,8 +58,10 @@ TabControl.init = function()
  */
 TabControl.showTabs = function()
 {
+  jQuery('#toggleTabsButton').html('Hide Tabs');
   jQuery("#tabControl").show();
   localStorage[TabControl.showHideKey] = true;
+ // document.getElementById("toggleTabsButton").innerHTML = "Hide Tabs"; 
 }
 
 /**
@@ -67,8 +69,10 @@ TabControl.showTabs = function()
  */
 TabControl.hideTabs = function()
 {
+  jQuery('#toggleTabsButton').html('Show Tabs');  
   jQuery("#tabControl").hide();
   delete localStorage[TabControl.showHideKey];
+ // document.getElementById("toggleTabsButton").innerHTML = "Show Tabs";  
 }
 
 /**

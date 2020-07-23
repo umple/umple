@@ -12,6 +12,7 @@ umpleonline/manual
 umpleonline/countlog.txt
 umpleonline/scripts/commandcount.txt
 umpleonline/scripts/specialPort.txt
+umpleonline/scripts/versionRunning.txt
 
 # generated Umple code that is not saved
 src-gen-umple/
