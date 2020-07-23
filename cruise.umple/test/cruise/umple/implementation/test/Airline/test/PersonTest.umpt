@@ -1,0 +1,52 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association_optionalOneToOne ----/////
+
+Test Person {
+
+ generate JUnit ;
+ 
+ depend  Airline,RegularFlight,SpecificFlight,PassengerRole,EmployeeRole,Person,PersonRole,Booking ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_association_optionalOneToOne.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :name
+
+      test attribute_name {
+    
+    assertTrue( person.setName("RandomString1"));
+    assertTrue( person.getName() =="RandomString1");
+    assertTrue( person.setName("RandomString2"));
+    assertTrue( person.getName()=="RandomString2");
+    assertFalse( person.getName() =="RandomString1");
+             
+	}
+
+ //tests for :idNumber
+
+      test attribute_idNumber {
+    
+      assertTrue( person.setIdNumber(123)));
+      assertTrue( person.getIdNumber() == 123));
+      assertTrue( person.setIdNumber(321)));
+      assertTrue( person.getIdNumber() == 321));
+      assertFlase( person.getIdNumber() == 123));
+          
+	}
+
+
+  
+ 
+   
+
+}

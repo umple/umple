@@ -1,0 +1,41 @@
+
+class Aclass{  
+  void doA()
+  {
+   Label_0: int mainDoA = 0;// method original implementation. 
+  } 
+  
+}
+
+class Aclass{
+  after Label_0: doA()
+  {
+    ; // comment  
+    Label1_X: int x=0;//added by first code injection 
+    Label1: x++; //added by first code injection 
+  
+  }
+}
+
+class Aclass{  
+  before Label1:doA()
+  {
+     Label2: int y=0; // added by second code injection
+  }
+ }
+
+class Aclass{
+  before Label2:doA()
+  {
+     Label3: int y=0; // added by third code injection
+  }  
+  
+}
+
+class Aclass{  
+  after Label3:doA()
+  {
+     int finalAfterAddition=0;// added by fourth code injection
+  }
+    
+}

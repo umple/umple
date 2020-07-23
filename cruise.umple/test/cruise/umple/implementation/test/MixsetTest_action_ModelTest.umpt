@@ -1,0 +1,31 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  MixsetTest_action ----/////
+
+test MixsetTest_action {
+
+generate JUnit;
+
+depend  Person ; 
+
+
+
+
+GIVEN:
+MixsetTest_action.ump;
+THEN:
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Person       */
+  /*-------------------------*/
+
+ 
+ 
+
+ }

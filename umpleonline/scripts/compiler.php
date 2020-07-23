@@ -113,6 +113,7 @@ else if (isset($_REQUEST["umpleCode"]))
 
   $javadoc = false;
   $stateDiagram = false;
+  $featureDiagram = false;
   $classDiagram = false;
   $entityRelationshipDiagram = false;
   $yumlDiagram = false;
@@ -120,7 +121,10 @@ else if (isset($_REQUEST["umpleCode"]))
   $Uigu2 = false;
   $htmlContents = false;
   $generatorType = "";
+  $svg_regex= "/scale\([0-9]*(\.([0-9])*)? [0-9]*(\.([0-9])*)?\) rotate\(0\)/";
+  $svg_scale="scale(0.75 0.75) rotate(0)";
   
+  //featureDiagram
 
   if ($language == "javadoc")
   {
@@ -132,6 +136,14 @@ else if (isset($_REQUEST["umpleCode"]))
      $language = "GvStateDiagram";
      $generatorType = "";
      $stateDiagram = True;
+  }
+  else if ($language == "featureDiagram")
+  {
+      $language = "GvFeatureDiagram";
+      $generatorType = "";
+      $featureDiagram = True;
+      $featureDependency = (strpos($suboptions, 'showFeatureDependency') !== false); 
+      
   }
   else if ($language == "classDiagram")
   {
@@ -236,7 +248,7 @@ else if (isset($_REQUEST["umpleCode"]))
     return;      
   } // end html content      
 
-  elseif (!in_array($language,array("Php","Java","Ruby","RTCpp","Cpp","Sql","GvStateDiagram","GvClassDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
+  elseif (!in_array($language,array("Php","Java","Ruby","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
   {  // If NOT one of the basic languages, then use umplesync.jar
     list($dataname, $dataHandle) = getOrCreateDataHandle();
     $dataHandle->writeData($dataname, $input);
@@ -287,7 +299,7 @@ else if (isset($_REQUEST["umpleCode"]))
   if($toRemove) { exec($rmcommand); }
   
   // The following is a hack. The arguments to umplesync need fixing
-  if (!$stateDiagram && !$classDiagram && !$entityRelationshipDiagram && !$yumlDiagram) {  
+  if (!$stateDiagram && !$classDiagram && !$entityRelationshipDiagram && !$yumlDiagram && !$featureDiagram) {  
     $command = "java -jar umplesync.jar -source {$filename} 2> {$errorFilename}";
   }
   else {
@@ -371,25 +383,53 @@ else if (isset($_REQUEST["umpleCode"]))
     else if ($stateDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/stateDiagram.svg");
-      $command = "dot -Tsvg -Gdpi=63 " . $thedir . "/model.gv -o " . $thedir .  "/stateDiagram.svg"; 
+      $command = "dot -Tsvg " . $thedir . "/model.gv -o " . $thedir .  "/stateDiagram.svg"; 
       exec($command);
             if (!file_exists($thedir . "/stateDiagram.svg") && file_exists("doterr.svg"))
             {
                 exec("cp " . "./doterr.svg " . $thedir . "/stateDiagram.svg");
             }
       $svgcode = readTemporaryFile("{$thedir}/stateDiagram.svg");
+      $gvlink = $workDir->makePermalink('model'.$generatorType.'.gv');      
       $svglink = $workDir->makePermalink('stateDiagram.svg');
-      $html = "<a href=\"umpleonline/$thedir/model.gv\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
-      echo $svgcode;
+      $changesToMake = 1;
+      $shrunksvgcode = preg_replace($svg_regex,$svg_scale,$svgcode,$changesToMake);
+      echo $shrunksvgcode;
       echo "</svg>"; 
     } // end state diagram
 
+    else if ($featureDiagram) {
+      $thedir = dirname($outputFilename);
+      exec("rm -rf " . $thedir . "/featureDiagram.svg");
+      $graphviz_layout = "dot"; //default layout for feature diagram.
+      if($featureDependency)
+      $graphviz_layout = "circo";
+      $command = $graphviz_layout ." -Tsvg " . $thedir . "/modelGvFeatureDiagram.gv -o " . $thedir .  "/featureDiagram.svg";
+      exec($command);
+      if (!file_exists($thedir . "/featureDiagram.svg") && file_exists("doterr.svg"))
+      {
+        exec("cp " . "./doterr.svg " . $thedir . "/featureDiagram.svg");
+      }
+      $svgcode = readTemporaryFile("{$thedir}/featureDiagram.svg");
+      $gvlink = $workDir->makePermalink('modelGvFeatureDiagram.gv');
+      $svglink = $workDir->makePermalink('featureDiagram.svg');
+      
+      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+      <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
+      echo $html;
+      $changesToMake = 1;
+      $shrunksvgcode = preg_replace($svg_regex,$svg_scale,$svgcode,$changesToMake);
+      echo $shrunksvgcode;
+      echo "</svg>";   
+    }
+    
     else if ($classDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/classDiagram.svg");
-      $command = "dot -Tsvg -Gdpi=63 " . $thedir . "/model" . $generatorType . ".gv -o " . $thedir .  "/classDiagram.svg";
+      $command = "dot -Tsvg " . $thedir . "/model" . $generatorType . ".gv -o " . $thedir .  "/classDiagram.svg";
       exec($command);
             if (!file_exists($thedir . "/classDiagram.svg") && file_exists("doterr.svg"))
             {
@@ -401,14 +441,16 @@ else if (isset($_REQUEST["umpleCode"]))
       $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
-      echo $svgcode;
+      $changesToMake = 1;
+      $shrunksvgcode = preg_replace($svg_regex,$svg_scale,$svgcode,$changesToMake);
+      echo $shrunksvgcode;
       echo "</svg>";      
     } // end graphViz class diagram
 
     else if ($entityRelationshipDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/entityRelationshipDiagram.svg");
-      $command = "dot -Tsvg -Gdpi=63 " . $thedir . "/modelerd.gv -o " . $thedir .  "/entityRelationshipDiagram.svg";
+      $command = "dot -Tsvg " . $thedir . "/modelerd.gv -o " . $thedir .  "/entityRelationshipDiagram.svg";
       exec($command);
       if (!file_exists($thedir . "/entityRelationshipDiagram.svg") && file_exists("doterr.svg"))
       {
@@ -420,7 +462,9 @@ else if (isset($_REQUEST["umpleCode"]))
       $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$erdiagramlink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
-      echo $svgcode;
+      $changesToMake = 1;
+      $shrunksvgcode = preg_replace($svg_regex,$svg_scale,$svgcode,$changesToMake);
+      echo $shrunksvgcode;
       echo "</svg>";      
     } // end graphViz entity relationship diagram
     

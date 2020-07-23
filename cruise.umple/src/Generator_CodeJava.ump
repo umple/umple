@@ -590,6 +590,9 @@ class JavaGenerator
     }
     else if ("packageDefinition".equals(keyName))
     {
+      if(aClass.hasOuterClass())
+      return "";
+      else
       return aClass.getPackageName().length() == 0 ? "" : "package " + aClass.getPackageName() + ";"; 
     }
     else if ("type".equals(keyName))
@@ -1923,7 +1926,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
   }
   
   private void prepareCodeInjectionForAttributes(UmpleClass aClass)
-  {
+  { 
     for(Attribute av : aClass.getAttributes())
     {
       prepareCodeInjectionForAttribute(aClass, av);
@@ -1931,7 +1934,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
   }
   
   private void prepareCodeInjectionForAssociations(UmpleClass aClass)
-  {
+  { 
     for(AssociationVariable av : aClass.getAssociationVariables())
     {
       prepareCodeInjectionForAssociation(aClass, av);
@@ -1960,7 +1963,10 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     if (av.getIsUnique())
     {
       injectIntoUniqueSet(
-        av.getType() + " {2} = {3}();" + "\n" + 
+        av.getType() + " {2} = {3}();" + "\n" +
+        "if ({2} != null && {2}.equals({1})) {" + "\n" + 
+        "  return true;" + "\n" +
+        "}" + "\n" + 
         "if ({4}({1})) {" + "\n" + 
         "  return wasSet;" + "\n" +
         "}", "before", av, aClass);
@@ -2450,6 +2456,18 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     for (UmpleClass aClass : getModel().getUmpleClasses())
     {
       GeneratedClass genClass = aClass.getGeneratedClass();
+
+      //add interface imports
+      if (aClass.hasParentInterface())
+      {
+        for(UmpleInterface interfaceParent: aClass.getParentInterface())
+        { 
+          if (!aClass.getPackageName().equals(interfaceParent.getPackageName()))
+          {
+            genClass.addMultiLookup("import", interfaceParent.getPackageName() + ".*");  
+          }
+        }
+      }
       
       if (aClass.getExtendsClass() != null)
       {
@@ -2595,6 +2613,11 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
             genClass.addMultiLookup("import", "java.rmi.server.UnicastRemoteObject");
           }
       }
+    }
+
+    if(aClass.getIsInternalSerializable()&&!getModel().getDistributed()&&!aClass.getIsDistributed())
+    {
+      genClass.addMultiLookup("import", "java.io.Serializable");
     }
   }
   private String nameOf(Attribute av)
@@ -3187,9 +3210,14 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       {
         aClass.setName(className+"Impl");
           }
+      if(uClass.hasOuterClass())
+      {
+        return ; // inner classes should not be writen in single files.
+      }
     }
     ILang language = getLanguageFor(aClass);
     String contents = language.getCode(getModel(), aClass);
+
     aClass.setName(className);
     String path = StringFormatter.addPathOrAbsolute( 
                   getModel().getUmpleFile().getPath(), 

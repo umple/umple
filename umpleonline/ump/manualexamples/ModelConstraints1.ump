@@ -1,5 +1,5 @@
 class X {
-  // Checks that this class has an assciation
+  // Checks that this class has an association
   // with class Z.
   [model: -- Z]
 }

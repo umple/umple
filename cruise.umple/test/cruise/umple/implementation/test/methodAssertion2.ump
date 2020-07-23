@@ -1,0 +1,18 @@
+generate Test;
+
+
+class MethodAssertion {
+
+
+
+	void calculateSomething ()
+	{
+		
+
+	    assertFalse (number == 2222);
+		assertEqual (number, number2);
+		
+	
+	}
+
+}

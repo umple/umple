@@ -1,0 +1,81 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  NNToManyAssociation ----/////
+
+test NNToManyAssociation {
+
+generate JUnit;
+
+depend  A,B ; 
+
+
+
+
+GIVEN:
+NNToManyAssociation.ump;
+THEN:
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class A       */
+  /*-------------------------*/
+
+              /////// Association: -- [0,*] B /////// 
+              //create ... without ...
+              test createAWithoutB {
+              
+              B aB();
+B a1aB();
+B a2aB();
+B a3aB();
+B a4aB();
+
+              A aA("RandomString1",a1aB,a2aB,a3aB,a4aB);              
+              
+              assertEqual (aA.numberOfBs() , 4 );
+              }
+              
+              test overFlowInAForB {
+              
+              B aB();
+B a1aB();
+B a2aB();
+B a3aB();
+B a4aB();
+
+              A aA("RandomString1",a1aB,a2aB,a3aB,a4aB);  
+              
+              assertFalse(aA.addB(aB));            
+              
+              assertEqual (aA.numberOfBs() , 4 );
+              }
+              
+              test belowBoundaryInAForB {
+              
+              B aB();
+B a1aB();
+B a2aB();
+B a3aB();
+B a4aB();
+
+              A aA("RandomString1",a1aB,a2aB,a3aB,a4aB);  
+              
+              assertFalse(aA.removeB(a2aB));            
+              
+              assertEqual (aA.numberOfBs() , 4 );
+              }
+              
+              
+              
+  /*-------------------------*/
+  /*  Class B       */
+  /*-------------------------*/
+ 
+ 
+
+ }

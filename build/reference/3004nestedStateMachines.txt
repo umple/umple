@@ -15,17 +15,17 @@ illustrate the difference.
 </p>
 
 
-@@example
+@@example @@caption Abstract example of nested state machines @@endcaption
 @@source manualexamples/NestedStateMachines1.ump &diagramtype=state
 @@endexample
 
 
-@@example
+@@example @@caption Concrete example of nested state machines @@endcaption
 @@source manualexamples/NestedStateMachines2.ump &diagramtype=state
 @@endexample
 
 
 
-@@example
+@@example @@caption Concrete example of state machines without nesting @@endcaption
 @@source manualexamples/NestedStateMachines3.ump &diagramtype=state
 @@endexample

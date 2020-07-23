@@ -25,6 +25,8 @@ import java.io.*;
 
 import cruise.umple.parser.Token;
 import cruise.umple.parser.Position;
+import cruise.umple.util.SampleFileWriter;
+import cruise.umple.compiler.exceptions.*;
 
 public class UmpleParserTest
 {
@@ -718,6 +720,31 @@ public class UmpleParserTest
   public void invalidNamespace_noName()
   {
     assertFailedParse("002_invalidNamespace_noName.ump", new Position("002_invalidNamespace_noName.ump",1,0,0));
+  }
+
+  @Test
+  public void redefineNamespace()
+  {
+    assertHasWarningsParse("002_redefineNamespace.ump",30,0);
+    assertHasWarningsParse("002_redefineNamespace.ump",30,1);
+    assertNoWarningsParse("002_defaultRedefineNamespace.ump");
+  }
+
+  @Test
+  public void notUsedNamespace()
+  {
+    assertHasWarningsParse("002_notUsedNamespace.ump", new Position("002_notUsedNamespace.ump",1,33,33),31);
+    assertHasWarningsParse("002_notUsedNamespace2.ump", new Position("002_notUsedNamespace2.ump",1,10,10),31);
+    assertHasWarningsParse("002_notUsedNamespace3.ump", new Position("002_notUsedNamespace3.ump",1,10,10),31);
+    assertHasWarningsParse("002_notUsedNamespace4.ump", new Position("002_notUsedNamespace4.ump",1,34,34),31);
+  }
+
+  @Test
+  public void noDefaultNamespace()
+  {
+    assertHasWarningsParse("002_noDefaultNamespace.ump",42,0);
+    assertHasWarningsParse("002_noDefaultNamespace.ump",42,1);
+    assertHasWarningsParse("002_noDefaultNamespace.ump",42,2);
   }
 
   @Test
@@ -1428,7 +1455,8 @@ public class UmpleParserTest
   @Test
   public void externalAssociationWithUnknownClass()
   {
-    assertFailedParse("009_externalAssociationWithUnknownClass.ump", new Position("009_externalAssociationWithUnknownClass.ump",6,7,42));
+    assertFailedParse("009_externalAssociationWithUnknownClass.ump", 31, 0);
+    assertFailedParse("009_externalAssociationWithUnknownClass.ump", 5, 1);
   }
 
   @Test
@@ -2164,6 +2192,288 @@ public class UmpleParserTest
     Assert.assertEquals("after",inject.getType());
     Assert.assertEquals("getName",inject.getOperation());
     Assert.assertEquals("notReallyPossible();",inject.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelBefore()
+  {
+    assertSimpleParse("1521_toplevelBefore.ump");
+    UmpleClass student = model.getUmpleClass("Student");
+    Assert.assertEquals(1,student.numberOfCodeInjections());
+    CodeInjection inject = student.getCodeInjection(0);
+    Assert.assertEquals("before",inject.getType());
+    Assert.assertEquals("setName",inject.getOperation());
+    Assert.assertEquals("doSomething();",inject.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelAndInclassAspects()
+  {
+    assertSimpleParse("1521_toplevelAndInclassAspects.ump");
+    UmpleClass student = model.getUmpleClass("Student");
+    Assert.assertEquals(2,student.numberOfCodeInjections());
+    CodeInjection inject = student.getCodeInjection(1);
+    CodeInjection inject2 = student.getCodeInjection(0);
+    Assert.assertEquals("before",inject.getType());
+    Assert.assertEquals("setName",inject.getOperation());
+    Assert.assertEquals("doSomething();",inject.getCode());
+    Assert.assertEquals("after",inject2.getType());
+    Assert.assertEquals("setName",inject2.getOperation());
+    Assert.assertEquals("//afterCodeInjection();",inject2.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelAspectsForMixset()
+  {
+    assertSimpleParse("1521_toplevelAspectsForMixset.ump");
+    UmpleClass x = model.getUmpleClass("X");
+    Assert.assertEquals(1,x.numberOfCodeInjections());
+    CodeInjection inject = x.getCodeInjection(0);
+    Assert.assertEquals("after",inject.getType());
+    Assert.assertEquals("setC",inject.getOperation());
+    Assert.assertEquals("//this code will be injected",inject.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelBeforeKeywordAtBegining()
+  {
+    assertSimpleParse("1521_toplevelBeforeKeywordAtBegining.ump");
+    UmpleClass student = model.getUmpleClass("Student");  
+    Assert.assertEquals(1,student.numberOfCodeInjections());
+    CodeInjection inject = student.getCodeInjection(0);
+    Assert.assertEquals("before",inject.getType());
+    Assert.assertEquals("setName",inject.getOperation());
+    Assert.assertEquals("doSomething();",inject.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelBeforeForMultiClasses()
+  {
+    assertSimpleParse("1521_toplevelBeforeForMultiClasses.ump");
+    UmpleClass student = model.getUmpleClass("Student");
+    UmpleClass teacher = model.getUmpleClass("Teacher");
+    Assert.assertEquals(1,student.numberOfCodeInjections());
+    Assert.assertEquals(1,teacher.numberOfCodeInjections());
+    CodeInjection inject = student.getCodeInjection(0);
+    CodeInjection inject2 = teacher.getCodeInjection(0);
+    Assert.assertEquals("before",inject.getType());
+    Assert.assertEquals("setName",inject.getOperation());
+    Assert.assertEquals("doSomething();",inject.getCode());
+    Assert.assertEquals("before",inject2.getType());
+    Assert.assertEquals("setName",inject2.getOperation());
+    Assert.assertEquals("doSomething();",inject2.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelAfterAsteriskKeyword()
+  {
+    assertSimpleParse("1521_toplevelAfterAsteriskKeyword.ump");
+    UmpleClass student = model.getUmpleClass("Student");
+    UmpleClass teacher = model.getUmpleClass("Teacher");
+    UmpleClass employer = model.getUmpleClass("Employer");
+    Assert.assertEquals(1,student.numberOfCodeInjections());
+    Assert.assertEquals(1,teacher.numberOfCodeInjections());
+    Assert.assertEquals(1,employer.numberOfCodeInjections());
+    CodeInjection inject = student.getCodeInjection(0);
+    CodeInjection inject2 = teacher.getCodeInjection(0);
+    CodeInjection inject3 = employer.getCodeInjection(0);
+    Assert.assertEquals("after",inject.getType());
+    Assert.assertEquals("setName",inject.getOperation());
+    Assert.assertEquals("doSomething();",inject.getCode());
+    Assert.assertEquals("after",inject2.getType());
+    Assert.assertEquals("setName",inject2.getOperation());
+    Assert.assertEquals("doSomething();",inject2.getCode());
+    Assert.assertEquals("after",inject3.getType());
+    Assert.assertEquals("testFunction",inject3.getOperation());
+    Assert.assertEquals("doSomething();",inject3.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelInjectMultipleMethods()
+  {
+    assertSimpleParse("1521_toplevelInjectMultipleMethods.ump");
+
+    UmpleClass a = model.getUmpleClass("A");
+    Assert.assertEquals(4,a.numberOfCodeInjections());
+
+    CodeInjection aInject1 = a.getCodeInjection(0);
+    Assert.assertEquals("after",aInject1.getType());
+    Assert.assertEquals("setX", aInject1.getOperation());
+    Assert.assertEquals("//this code will be injected",aInject1.getCode());
+
+    CodeInjection aInject2 = a.getCodeInjection(1);
+    Assert.assertEquals("after",aInject2.getType());
+    Assert.assertEquals("setY", aInject2.getOperation());
+    Assert.assertEquals("//this code will be injected",aInject2.getCode());
+
+    CodeInjection aInject3 = a.getCodeInjection(2);
+    Assert.assertEquals("before",aInject3.getType());
+    Assert.assertEquals("setX", aInject3.getOperation());
+    Assert.assertEquals("//this code will be injected",aInject3.getCode());
+
+    UmpleClass b = model.getUmpleClass("B");
+    Assert.assertEquals(4,b.numberOfCodeInjections());
+
+    CodeInjection bInject = b.getCodeInjection(0);
+    Assert.assertEquals("after",bInject.getType());
+    Assert.assertEquals("setX",bInject.getOperation());
+    Assert.assertEquals("//this code will be injected",bInject.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelAfterOnTrait()
+  {
+    assertSimpleParse("1521_toplevelAfterOnTrait.ump");
+
+    UmpleClass a = model.getUmpleClass("toplevelAfterOnTraitClass");
+    Assert.assertEquals(1,a.numberOfCodeInjections());
+
+    CodeInjection aInject = a.getCodeInjection(0);
+    Assert.assertEquals("after",aInject.getType());
+    Assert.assertEquals("testFunction", aInject.getOperation());
+    Assert.assertEquals("//this code will be injected",aInject.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelAfterGlobClassName()
+  {
+    assertHasWarningsParse("1521_toplevelAfterGlobClassName.ump", 1012);
+    assertSimpleParse("1521_toplevelAfterGlobClassName.ump");
+    UmpleClass student1 = model.getUmpleClass("Student1");
+    UmpleClass student2 = model.getUmpleClass("Student2");
+    UmpleClass employer = model.getUmpleClass("Employer");
+    Assert.assertEquals(1,student1.numberOfCodeInjections());
+    Assert.assertEquals(1,student2.numberOfCodeInjections());
+    Assert.assertEquals(0,employer.numberOfCodeInjections());
+    CodeInjection inject = student1.getCodeInjection(0);
+    CodeInjection inject2 = student2.getCodeInjection(0);
+    Assert.assertEquals("after",inject.getType());
+    Assert.assertEquals("setName",inject.getOperation());
+    Assert.assertEquals("doSomething();",inject.getCode());
+    Assert.assertEquals("after",inject2.getType());
+    Assert.assertEquals("setName",inject2.getOperation());
+    Assert.assertEquals("doSomething();",inject2.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelAfterGlobOperationName()
+  {
+    assertSimpleParse("1521_toplevelAfterGlobOperationName.ump");
+    UmpleClass student1 = model.getUmpleClass("Student1");
+    UmpleClass student2 = model.getUmpleClass("Student2");
+    UmpleClass employer = model.getUmpleClass("Employer");
+    Assert.assertEquals(1,student1.numberOfCodeInjections());
+    Assert.assertEquals(1,student2.numberOfCodeInjections());
+    Assert.assertEquals(1,employer.numberOfCodeInjections());
+    CodeInjection inject = student1.getCodeInjection(0);
+    CodeInjection inject2 = student2.getCodeInjection(0);
+    CodeInjection inject3 = employer.getCodeInjection(0);
+    Assert.assertEquals("after",inject.getType());
+    Assert.assertEquals("setName",inject.getOperation());
+    Assert.assertEquals("doSomething();",inject.getCode());
+    Assert.assertEquals("after",inject2.getType());
+    Assert.assertEquals("setName",inject2.getOperation());
+    Assert.assertEquals("doSomething();",inject2.getCode());
+    Assert.assertEquals("after",inject3.getType());
+    Assert.assertEquals("setAge",inject3.getOperation());
+    Assert.assertEquals("doSomething();",inject3.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelAfterGlobOperationNameOnTrait()
+  {
+    assertSimpleParse("1521_toplevelAfterGlobOperationNameOnTrait.ump");
+    UmpleClass student1 = model.getUmpleClass("Student1");
+    UmpleClass student2 = model.getUmpleClass("Student2");
+    UmpleClass employer = model.getUmpleClass("Employer");
+    Assert.assertEquals(1,student1.numberOfCodeInjections());
+    Assert.assertEquals(2,student2.numberOfCodeInjections());
+    Assert.assertEquals(1,employer.numberOfCodeInjections());
+    CodeInjection inject = student1.getCodeInjection(0);
+    CodeInjection inject2 = student2.getCodeInjection(0);
+    CodeInjection inject3 = employer.getCodeInjection(0);
+    CodeInjection inject4 = student2.getCodeInjection(1);
+    Assert.assertEquals("after",inject.getType());
+    Assert.assertEquals("setName",inject.getOperation());
+    Assert.assertEquals("doSomething();",inject.getCode());
+    Assert.assertEquals("after",inject2.getType());
+    Assert.assertEquals("setName",inject2.getOperation());
+    Assert.assertEquals("doSomething();",inject2.getCode());
+    Assert.assertEquals("after",inject3.getType());
+    Assert.assertEquals("setAge",inject3.getOperation());
+    Assert.assertEquals("doSomething();",inject3.getCode());
+    Assert.assertEquals("after",inject4.getType());
+    Assert.assertEquals("setSomething",inject4.getOperation());
+    Assert.assertEquals("doSomething();",inject4.getCode());
+  }
+
+  // Issue#1521
+  @Test
+  public void toplevelAround() {
+    UmpleFile umpleFile = new UmpleFile(pathToInput,"1521_toplevelAround.ump");
+    UmpleModel umodel = new UmpleModel(umpleFile);
+    Method aMethod ;
+    try{
+      umodel.run();
+      umodel.generate();
+    }
+    catch (UmpleCompilerException e)
+    {
+      if(!e.getMessage().contains("1013")) // ignore warning caused by aspect injection.
+      {
+        throw e;
+      }
+    }
+    finally 
+    {  
+      UmpleClass uClass = umodel.getUmpleClass(0);
+      aMethod = uClass.getMethod(0);
+      String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
+      String keyWord = "int x";
+      String beforeLabelCode = methodBodyCode.substring(0,methodBodyCode.indexOf(keyWord));
+      String afterLabelCode = methodBodyCode.substring(methodBodyCode.indexOf(keyWord));
+      Assert.assertEquals(true, methodBodyCode.contains(keyWord));
+      //before checks: 
+      Assert.assertEquals(true, beforeLabelCode.contains("if (true) {"));
+      //after checks:
+      Assert.assertEquals(true, afterLabelCode.contains("}"));
+      Assert.assertEquals(true, afterLabelCode.contains("code after around."));
+      Assert.assertEquals(true, afterLabelCode.contains("Label2:"));
+      SampleFileWriter.destroy(pathToInput+"/"+"AroundClass.java");
+    }
+  }
+
+  // Issue 1488
+  @Test
+  public void multipleConstraintMethodBody() 
+  {
+    assertNoWarningsParse("1488_multipleConstraintMethodBody.ump");
+  }
+
+  // Issue 1488
+  @Test
+  public void multipleMethodBodyWarning() 
+  {
+    assertHasWarningsParse("1488_multipleMethodBodyWarning.ump", 49);
+  }
+  
+  // Issue 1519
+  @Test
+  public void filterWithAttributeInTrait() 
+  {
+    assertHasNoWarningsParse("1519_filterWithAttributeInTrait.ump");
+    Assert.assertEquals(1, model.numberOfUmpleClasses());
   }
 
   @Test
@@ -2959,6 +3269,17 @@ public class UmpleParserTest
   assertFailedParse("050_duplicateEnumsInClass.ump", 95);
  }
 
+ //Issue 1522
+ @Test
+ public void parseUmpleEnumerationDefinedInAssociationClass () {
+    assertSimpleParse("050_enumerationDefinedInAssociationClass.ump");
+    UmpleClass uClass = model.getUmpleClass("C");
+    Assert.assertEquals(1, uClass.getEnums().size());
+
+    Assert.assertEquals("AttributeName", uClass.getEnum(0).getName());
+    Assert.assertEquals("something", uClass.getEnum(0).getEnumValue(0));
+ }
+
  // Issue 1008
  @Test
  public void namingConflictBetweenEnumerationAndClass() {
@@ -3039,6 +3360,15 @@ public class UmpleParserTest
     assertFailedParse("008_multivaluedAttributeAssignment1.ump", 81);
     assertFailedParse("008_multivaluedAttributeAssignment2.ump", 81);
   }
+  
+  
+  
+  // Issue 1376
+  @Test
+  public void multivaluedAttributeInitialization()
+  {	 
+	assertFailedParse("008_multivaluedAttributeInitialization.ump", 83);//Derived variable should not contain list indicator   
+  }
 
   //Issue 1277
   @Test
@@ -3074,7 +3404,16 @@ public class UmpleParserTest
   public void validCodeInjection() {
     assertHasNoWarningsParse("702_validCodeInjection.ump");
   }
-
+  @Test
+  public void testSemicolonUnicode()
+  {
+    UmpleFile uFile = new UmpleFile(pathToInput,"classAttributeContainsSemicolons.ump");
+    UmpleModel umodel = new UmpleModel(uFile);
+    umodel.run();
+    String attributeValue = umodel.getUmpleClass(0).getAttribute(0).getValue().trim();
+    Assert.assertTrue(attributeValue.equals("\"int x =10 ; x++ ;\""));	
+    SampleFileWriter.destroy(pathToInput+"/"+"AttriWithSemicolons.java");
+  }
   public boolean parse(String filename)
   {
     //String input = SampleFileWriter.readContent(new File(pathToInput, filename));

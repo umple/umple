@@ -27,15 +27,15 @@ Model-level enumerations will be added to classes when they do not already have 
 @@source manualexamples/EnumerationDefinition1.ump
 @@endexample
 
-@@example
+@@example @@caption Example of Enumeration Shared by Two Different Classes @@endcaption
 @@source manualexamples/EnumerationDefinition2.ump
 @@endexample
 
 
-@@example
+@@example @@caption Example of Enumerations Defined for a Single Class or Shared between Different Classes @@endcaption
 @@source manualexamples/EnumerationDefinition3.ump
 @@endexample
 
-@@example
+@@example @@caption Example with Enumerations Defined Within and Outside of Class Bodies @@endcaption
 @@source manualexamples/EnumerationDefinition4.ump
 @@endexample

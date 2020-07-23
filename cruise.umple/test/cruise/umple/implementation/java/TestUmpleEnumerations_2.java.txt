@@ -4,6 +4,8 @@
 package example;
 import java.util.*;
 
+// line 4 "../../../../ump/tmp12056/model.ump"
+// line 19 "../../../../ump/tmp12056/model.ump"
 public class X
 {
 
@@ -41,7 +43,7 @@ public class X
     defaultAttr = aDefaultAttr;
     if (!setMyName(aMyName))
     {
-      throw new RuntimeException("Cannot create due to duplicate myName");
+      throw new RuntimeException("Cannot create due to duplicate myName. See http://manual.umple.org?RE003ViolationofUniqueness.html");
     }
     setSm(Sm.s1);
   }
@@ -54,6 +56,9 @@ public class X
   {
     boolean wasSet = false;
     String anOldMyName = getMyName();
+    if (anOldMyName != null && anOldMyName.equals(aMyName)) {
+      return true;
+    }
     if (hasWithMyName(aMyName)) {
       return wasSet;
     }
@@ -78,12 +83,12 @@ public class X
   {
     return myName;
   }
-
+  /* Code from template attribute_GetUnique */
   public static X getWithMyName(String aMyName)
   {
     return xsByMyName.get(aMyName);
   }
-
+  /* Code from template attribute_HasUnique */
   public static boolean hasWithMyName(String aMyName)
   {
     return getWithMyName(aMyName) != null;

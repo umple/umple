@@ -113,6 +113,14 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals("if (((getFlag()!=getFlag())||(getFlag()||getFlag())))\n{\n  {0}\n}", gen.translate("on", t3.getGuard()));
     Assert.assertEquals("if ((!(!getFlag()&&getX())&&(getX()||getX())))\n{\n  {0}\n}", gen.translate("on", t4.getGuard()));
   }
+
+  // Issue 1492
+  @Test
+  public void verifyDuplicateGuards()
+  {
+    assertHasWarning("DuplicateGuards.ump",0,70);
+    assertHasWarning("DuplicateGuards.ump",1,70);
+  }
   
   // Issue 796
   @Test
@@ -2654,6 +2662,60 @@ public class UmpleParserStateMachineTest
     assertFailedParse("488_stateNameIsFinal_2.ump", new Position("488_stateNameIsFinal_2.ump", 4, 6, 32), 74);
   }
 
+  // Issue 1586
+  @Test
+  public void smAfterWithGuard()
+  {
+    assertNoWarnings("1586_AfterWithGuard.ump");
+    UmpleClass c = model.getUmpleClass("MicrowaveOven");
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("timeProcesser", sm.getName());
+
+    State time0 = sm.getState(0);
+    Assert.assertEquals("time0", time0.getName());
+    Transition t01 = time0.getTransition(0);
+    Assert.assertEquals("startTime", t01.getEvent().getName());
+
+    
+    State time1 = sm.getState(1);
+    Assert.assertEquals("time1", time1.getName());
+
+    Transition t10 = time1.getTransition(0);
+    Assert.assertTrue(t10.hasGuard());
+    Action a10 = t10.getAction();
+    Assert.assertNotNull(a10);
+    Assert.assertEquals("time--;", a10.getActionCode()); 
+
+    Transition t11 = time1.getTransition(1);
+    Assert.assertTrue(t11.hasGuard());
+    Assert.assertEquals("openedDoor", t11.getEvent().getName());
+    Action a11 = t11.getAction();
+    Assert.assertNull(a11);
+
+    Transition t12 = time1.getTransition(2);
+    Assert.assertTrue(t12.hasGuard());
+    Action a12 = t12.getAction();
+    Assert.assertNotNull(a12);
+    Assert.assertEquals("time--;", a12.getActionCode()); 
+
+    Transition t13 = time1.getTransition(3);
+    Assert.assertTrue(t13.hasGuard());
+    Action a13 = t13.getAction();
+    Assert.assertNotNull(a13);
+    Assert.assertEquals("time--;", a13.getActionCode()); 
+    
+    Transition t14 = time1.getTransition(4);
+    Assert.assertTrue(t14.hasGuard());
+    Action a14 = t14.getAction();
+    Assert.assertNotNull(a14);
+    Assert.assertEquals("time--;", a14.getActionCode()); 
+    
+    Transition t15 = time1.getTransition(5);
+    Assert.assertTrue(t15.hasGuard());
+    Action a15 = t15.getAction();
+    Assert.assertNull(a15);
+  }
+
   public void walkGraphTwiceNested_StateMachineGraph_ClearNodes()
   {
     assertParse("101_Nested_realExample2.ump","[classDefinition][name:StrobeLight][stateMachine][inlineStateMachine][name:dvdPlayer][state][stateName:Off][transition][event:turnOn][stateName:On][state][stateName:Sleep][transition][event:wake][stateName:Pause][state][stateName:On][transition][event:turnOff][stateName:Off][state][stateName:Play][transition][event:push][stateName:Pause][state][stateName:Pause][transition][event:push][stateName:Play][transition][event:standby][stateName:Sleep]");
@@ -2723,6 +2785,10 @@ public class UmpleParserStateMachineTest
     assertHasWarning(filename, -1, -1, null);
   }
 
+  private void assertHasWarning(String filename, int expectedWarningIndex, int expectedError) {
+    assertHasWarning(filename, expectedWarningIndex, expectedError, null);
+  }
+
   private void assertHasWarning(String filename, int expectedWarningIndex, int expectedError, Position expectedPosition)
   {
     File file = new File(pathToInput, filename);
@@ -2755,7 +2821,9 @@ public class UmpleParserStateMachineTest
       Assert.assertNotNull(parser.getParseResult().getErrorMessage(expectedWarningIndex));
       Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(expectedWarningIndex).getErrorType().getErrorCode());
       System.out.println(">>" + parser.getParseResult().getErrorMessage(expectedWarningIndex).getPosition().getOffset());
-      Assert.assertEquals(expectedPosition, parser.getParseResult().getErrorMessage(expectedWarningIndex).getPosition());
+      if (expectedPosition != null) {
+        Assert.assertEquals(expectedPosition, parser.getParseResult().getErrorMessage(expectedWarningIndex).getPosition());
+      }
     }
   }
 

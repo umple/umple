@@ -1,0 +1,18 @@
+generate Test;
+
+
+
+
+class ClassAssertion {
+
+	Integer number = 321;
+	Integer number2 = 10;
+
+
+	test calculateSomething{ 
+		assertTrue (id == "seomthing");
+		assertFalse (number == 123);
+		assertEqual (number, number2);		
+	    }
+
+}

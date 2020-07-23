@@ -9,7 +9,7 @@ class X {
   stateMachine1 {
     s1a {
       do {
-        // This do activity sends events to stateMachine1
+        // This do activity sends events to stateMachine2
         e(5);
         Thread.sleep(1000);
         e(6);

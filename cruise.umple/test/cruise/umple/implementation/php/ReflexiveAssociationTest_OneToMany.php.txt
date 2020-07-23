@@ -20,7 +20,7 @@ class OneToMany
   {
     if (!$this->setOneToMany($aOneToMany))
     {
-      throw new Exception("Unable to create OneToMany due to aOneToMany");
+      throw new Exception("Unable to create OneToMany due to aOneToMany. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

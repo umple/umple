@@ -12,7 +12,7 @@ class ManyToMStarTest extends UnitTestCase
   
   public function test_ConstructorWithTooFew()
   {
-  	$this->expectException(new Exception("Unable to create MentorR, must have at least 3 students"));
+  	$this->expectException(new Exception("Unable to create MentorR, must have at least 3 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentR(99);
     new MentorR("blah",array($s));
   }
@@ -67,7 +67,7 @@ class ManyToMStarTest extends UnitTestCase
 
   public function test_constructorWatchOutForDuplicateEntries()
   {
-  	$this->expectException(new Exception("Unable to create MentorR, must have at least 3 students"));
+  	$this->expectException(new Exception("Unable to create MentorR, must have at least 3 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentR(99);
     new MentorR("blah",array($s,$s));
   }
@@ -132,7 +132,7 @@ class ManyToMStarTest extends UnitTestCase
     $s3 = new StudentR(97);
     
     $m = new MentorR("blah",array($s,$s2,$s3));
-    $this->assertEqual(false, $m->setStudents($s2,$s2,$s3));
+    $this->assertEqual(false, $m->setStudents(array($s2,$s2,$s3)));
   }
 
 

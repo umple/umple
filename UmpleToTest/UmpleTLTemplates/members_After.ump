@@ -1,0 +1,23 @@
+class UmpleToTest {
+
+members_After <<!<</*members_After*/>><<#
+
+	hasTimedTestCases = false;
+	if ( uClass.hasUmpleTestCases())
+		{
+				
+		
+		for (UmpleTestCase tc : uClass.getUmpleTestCases())
+		{		
+			if (tc.getIsTimed() == true)
+			{
+				hasTimedTestCases = true;
+				append(realSb, "\n\n after { {0} }\n\n", tc.getName());				
+			}				
+		}
+		
+		
+		}
+	
+#>>!>>
+}

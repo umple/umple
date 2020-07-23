@@ -62,11 +62,12 @@ ToolTips.tooltipEntries = {
   ttShowHideCanvas: ['li', "Show/Hide the diagram </br><b>Shortcut: [ctrl+d]"],
   ttShowHideTextEditor: ['li', "Show/Hide the text editor </br><b>Shortcut: [" + toggleTextEditor + "]"],
   ttShowHideLayoutEditor: ['li', "Show/Hide the layout editor"],
-  ttToggleAttributes: ['li', "Show/Hide attributes on class diagrams </br><b>Shortcut: [shift+ctrl+a]"],
-  ttToggleMethods: ['li', "Show/Hide the methods on class diagrams </br><b>Shortcut: [ctrl+m]"],
-  ttToggleActions: ['li', "Show/Hide the actions on the state diagrams"],
-  ttToggleTransitionLabel: ['li', "Show/Hide the transition labels on the state diagrams"],
-  ttToggleGuardLabel: ['li', "Show/Hide the guard labels on the state diagrams"],
+  ttToggleAttributes: ['li', "Show/Hide attributes in class diagrams </br><b>Shortcut: [shift+ctrl+a]"],
+  ttToggleMethods: ['li', "Show/Hide methods in class diagrams </br><b>Shortcut: [ctrl+m]"],
+  ttToggleActions: ['li', "Show/Hide actions in state diagrams (hide to simplify)"],
+  ttToggleGuards: ['li', "Show/Hide guards in state diagrams (hide to simplify)"],
+  ttToggleTransitionLabels: ['li', "Show/Hide transition labels in state diagrams (t1, t2 etc.) to allow reference"],
+  ttToggleGuardLabels: ['li', "Show/Hide guard labels on the state diagrams (g1, g2 etc.) to allow reference"],
 
   // diagram type tooltips
   ttShowEditableClassDiagram: ["li", "Display a graphically editable class diagram </br><b>Shortcut: [ctrl+e]</b>"],

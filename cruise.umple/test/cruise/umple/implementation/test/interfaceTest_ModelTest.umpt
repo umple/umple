@@ -1,0 +1,139 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  interfaceTest ----/////
+
+test interfaceTest {
+
+generate JUnit;
+
+depend  Person,CorporateClient,IndividualStudent,Course ; 
+
+
+
+
+GIVEN:
+interfaceTest.ump;
+THEN:
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Person       */
+  /*-------------------------*/
+
+              /////// Association: -- [0,*] CorporateClient /////// 
+              //create ... without ...
+              test removeCorporateClient {
+              
+              Person aPerson("RandomString1");
+              
+              
+              CorporateClient aCorporateClient();
+              assertTrue(aPerson.setCorporateClient(aCorporateClient));              
+              aCorporateClient.delete();
+              
+              assertTrue (aPerson.getCorporateClient() == null);
+              }
+              
+              
+              
+              
+              
+  /*-------------------------*/
+  /*  Class CorporateClient       */
+  /*-------------------------*/
+
+              /////// Association: -- [0,1] Person /////// 
+              //create ... without ...
+              test CreateCorporateClientWithoutPerson {
+              
+              
+              CorporateClient aCorporateClient();
+              int size = aCorporateClient.getPersons().size(); 
+              assertTrue ( size == 0);
+              
+              }
+              
+              //replace
+              
+              test ReplaceOptionalCorporateClientInPerson { 
+              
+              Person aPerson("RandomString1");
+              Person baPerson("RandomString1");
+              CorporateClient aCorporateClient();
+              CorporateClient baCorporateClient();
+              
+            
+              assertTrue(aCorporateClient.addPerson(aPerson));
+              assertEqual ( aCorporateClient.getPerson(0),aPerson);
+              
+              assertTrue(aPerson.setCorporateClient(baCorporateClient));
+              assertTrue ( aPerson.getCorporateClient() == baCorporateClient);
+              }
+              
+              
+              
+              test deletePersonFromCorporateClient {
+              // delete Person in CorporateClient
+              
+              
+              
+              Person baPerson("RandomString1");
+              
+              
+              CorporateClient aCorporateClient();
+              
+              assertTrue(aCorporateClient.addPerson(baPerson));
+              
+              baPerson.delete();
+              
+              int size = aCorporateClient.getPersons().size(); 
+              assertTrue ( size == 0);
+              }
+              
+              
+              
+              test AddPersonToNewCorporateClient { 
+              
+              
+              Person aPerson("RandomString1");
+              
+              
+              Person baPerson("RandomString1");
+              
+              
+              CorporateClient aCorporateClient();
+              
+              
+              CorporateClient baCorporateClient();
+              
+                                  
+              
+              aCorporateClient.addPerson(aPerson);
+              baCorporateClient.addPerson(aPerson);
+               
+        
+              assertEqual(baCorporateClient.getPerson(0), aPerson) ;
+                            
+               
+              assertEqual (aCorporateClient.numberOfPersons(), 0);
+              
+              assertEqual (baCorporateClient.numberOfPersons(), 1);
+              }
+              
+              
+                /*-------------------------*/
+  /*  Class IndividualStudent       */
+  /*-------------------------*/
+
+  /*-------------------------*/
+  /*  Class Course       */
+  /*-------------------------*/
+ 
+ 
+
+ }

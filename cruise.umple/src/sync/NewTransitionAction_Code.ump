@@ -33,11 +33,11 @@ class NewTransitionAction
               cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
               UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
               ParseResult result = parser.parse(umpleFile);
-              
+
               if (!result.getWasSuccess())
               {
                 //Uncomment for debug
-                textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
+                textParser.insert("//1. Unable to update umple code due to error at " + result.getPosition() + "\n");
                 setUmpleCode(textParser.getText());
                 return false;
               }
@@ -47,8 +47,8 @@ class NewTransitionAction
               if (!result.getWasSuccess())
               {
                 //Uncomment for debug
-                //textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
-                //setUmpleCode(textParser.getText());
+                textParser.insert("//2. Unable to update umple code due to error at " + result.getPosition() + "\n");
+                setUmpleCode(textParser.getText());
                 return false;
               }
               
@@ -58,11 +58,11 @@ class NewTransitionAction
               Json json = jsonParser.analyze();
               
               String fromStateId = json.getValue("fromStateId");
-              String event = json.getValue("eventName");
+              String event = json.getValue("event");
               String toStateId = json.getValue("toStateId");
               Token addAfterLastTransition = null;
-              boolean didFindPostion = false;
-              
+              boolean didFindPosition = false;
+
               for(Token t : umpleParser.getRootToken().getSubTokens())
               {
                 if (!t.is("classDefinition"))
@@ -80,9 +80,12 @@ class NewTransitionAction
                     			{
                     				
                     				for (Token stateSubT: stateMSubT.getSubTokens()) {
-                    					if(stateSubT.is("state")&&!didFindPostion) {
-                    						didFindPostion = nestedState(stateSubT, fromStateId, textParser, event, toStateId);
-                    					}	
+                                        if(didFindPosition) {
+                                            break;
+                                        }
+                    					else if(!didFindPosition&&stateSubT.is("state")) {
+                    						didFindPosition = nestedState(stateSubT, fromStateId, textParser, event, toStateId);
+                    					}
                     				}
                     			}	
                     		} 
@@ -123,9 +126,13 @@ class NewTransitionAction
         }
         
         if(fromStateId.equals(stateToken.getValue("stateName"))) {
-        		String newTransition = StringFormatter.format(" {0} -> {1};\n", event, toStateId);
+            String newTransition = StringFormatter.format(" {0} -> {1};\n", event, toStateId);
             parser.insertAfter(addAfterLastTransition, newTransition);
+            //parser.insert("//NewTransitionAction: Inserted " + newTransition);
             return true;
+        } else {
+            //parser.insert("//NewTransitionAction error: fromStateId!=stateName " + stateToken.getValue("stateName")+ "\n");
+
         }
         return didFindPosition;
   }

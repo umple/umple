@@ -1,0 +1,16 @@
+W042 Namespace Cannot Be Default
+Errors and Warnings 1-50
+noreferences
+
+@@description
+
+<h2>Umple warning reported when an entity cannot be in the default namespace</h2>
+
+<p>If you declare an entity in the default namespace and then declare another entity that extends, implements, or has an association with the first entity, this warning is issued. The reason for the warning is that if two related entities are in different namespaces, import will be generated for those entities, and many programming laguages do not support import from the default namespace. Therefore, the namespace for entities in the default namespace will be changed.</p>
+
+
+@@example
+@@source manualexamples/W042NamespaceCannotBeDefault.ump
+@@endexample
+
+

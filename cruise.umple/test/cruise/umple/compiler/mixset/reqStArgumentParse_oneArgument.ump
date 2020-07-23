@@ -1,0 +1,13 @@
+
+
+require [M1];
+
+mixset M1 {
+
+class A {}
+
+}
+
+use M1;
+
+

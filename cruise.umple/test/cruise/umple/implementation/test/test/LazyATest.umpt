@@ -1,0 +1,49 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  LazyAttribute ----/////
+
+test LazyA {
+
+ generate JUnit ;
+ 
+ depend  LazyA ; 
+
+
+
+ 
+ GIVEN:
+ LazyAttribute.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :id
+
+      test attribute_id {
+    
+      
+        LazyA aLazyA();
+    assertTrue( aLazyA.setId("RandomString1"));
+    assertTrue( aLazyA.getId() =="RandomString1");
+    assertTrue( aLazyA.setId("RandomString2"));
+    assertTrue( aLazyA.getId()=="RandomString2");
+    assertFalse( aLazyA.getId() =="RandomString1");
+             
+
+          
+
+    assertTrue (!id.equals(null));
+    assertTrue (LazyA.getId() != null)
+          
+
+        	}
+
+
+  
+ 
+   
+
+}

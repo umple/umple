@@ -1,0 +1,51 @@
+//////class UmpleClass{}
+//// Mutation model
+
+class MutationSuite{
+  depend cruise.umple.compiler.*;
+//  attriute
+   UmpleModel originalModel;
+   int score;
+   String uFileName;
+   int unprocessedFiles = 0 ;
+   String path;
+   int fileToMutate = 0;
+   Integer numberofMutants;
+   String mutationPath = "";
+   List<String> muFiles = new ArrayList<String>();
+   boolean hasMultipleFiles= false;
+   ArrayList<String> randomReplacements_association = new ArrayList<String>(Arrays.asList("OneToMany","OptionalOneToMany","ManyToMany")) ;
+   ArrayList<String> randomReplacements_typedAttribute = new ArrayList<String>(Arrays.asList("String","Integer","Float","Double")) ;
+   ArrayList<String> randomReplacements_Elements = new ArrayList<String>(Arrays.asList("attribute","association")) ; ;
+   HashMap<String,String> filesToWrite = new HashMap<String, String>() ;
+  //private ArrayList<String> replacementsCode = new ArrayList<String>(Arrays.asList("1..*","0..1--*","1--2..4")) ;
+    
+  0..1 -- * Replacement;
+  1 -- * Mutant;  
+}
+
+class Mutant{
+  depend cruise.umple.compiler.*;
+  UmpleModel muModel;
+  type;
+    
+  1--* MutationFragment mf;  
+  
+}
+
+
+
+class Replacement{
+replacementCode;
+replacementType;
+
+}
+
+class MutationFragment {
+ code;
+ location;
+ type;
+}
+
+
+

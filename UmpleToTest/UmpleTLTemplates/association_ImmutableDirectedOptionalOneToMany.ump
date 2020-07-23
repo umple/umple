@@ -1,0 +1,45 @@
+
+class UmpleToTest {
+    association_ImmutableDirectedOptionalOneToMany <<!<</*association_ImmutableDirectedOptionalOneToMany*/>><<#
+/*
+This file creates the necessary for Optional One To Many Association 
+*/
+
+  
+  				  String buffName = "some" +uClass.getName();
+  				  String buffName2 = "some"+av.getRelatedAssociation().getUmpleClass().getName().getClassName();#>>
+        		  /////// Association: -- <<=av.getRelatedAssociation().getUmpleClass().getName().getMultiplicity().getRange()>> <<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>> /////// 
+        		  //create ... without ...
+        		  test create<<=uClass.getName()>>Without<<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>> {
+        		  <<=uClass.getName()>> <<=buffName>> = new <<=uClass.getName()>>();
+        		  assertTrue (some<<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>>.get<<=av.getRelatedAssociation().getUmpleClass().getName().getRoleName().toUpperCase()>>()!= null);
+        		  }
+        		  //replace
+        		  <<#buffName = "some"+av.getRelatedAssociation().getUmpleClass().getName().getClassName();#>>
+        		  
+        		  
+        		  
+        		  //delete
+        		  test Delete<<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>> {
+        		  // delete <<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>> in <<=uClass.getName()>>
+        		  <<=buffName>>2.delete(); 
+        		  assertEqual (null, <<=buffName>>2.get<<=av.getUmpleClass().getName().getClassName()>>(0));
+        		  }
+        		  //add to new B
+        		  
+        		  test settable<<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>>ToNew<<=uClass.getName()>> { 
+        		  <<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>> <<=buffName2>> = new <<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>>();
+        		  <<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>> <<=buffName2>>2 = new <<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>>();
+      
+        		  <<=av.getUmpleClass().getName().getClassName()>> some<<=av.getUmpleClass().getName().getClassName()>> = new <<=av.getUmpleClass().getName().getClassName()>>();
+        		  <<=buffName>>.add<<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>>(some<<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>>);
+        		  <<=buffName>>.add<<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>>(some<<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>>2);  
+        
+        		  assertEqual(some<<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>>2, <<=buffName>>.get<<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>>(); 
+        		  assertEqual (<<=buffName>>, some<<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>>2.get<<=av.getUmpleClass().getName().getClassName()>>(0));
+        		  assertEqual (<<=buffName>>, some<<=av.getRelatedAssociation().getUmpleClass().getName().getClassName()>>.getNumberOf<<=av.getUmpleClass().getName().getClassName()>>s());
+        		  }<<#
+  
+  
+#>>!>>
+}

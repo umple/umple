@@ -1,0 +1,75 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  ClassAssertion ----/////
+
+test ClassAssertion {
+
+ generate JUnit ;
+ 
+ depend  ClassAssertion ; 
+
+
+
+ 
+ GIVEN:
+ ClassAssertion.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :number
+
+      test attribute_number {
+    
+      
+        ClassAssertion aClassAssertion();
+       assertEqual(aClassAssertion.getNumber(), "321" );        
+            
+      assertTrue( aClassAssertion.setNumber(123)));
+      assertTrue( aClassAssertion.getNumber() == 123));
+      assertTrue( aClassAssertion.setNumber(321)));
+      assertTrue( aClassAssertion.getNumber() == 321));
+      assertFlase( aClassAssertion.getNumber() == 123));
+          
+	}
+
+ //tests for :number2
+
+      test attribute_number2 {
+    
+      
+        ClassAssertion aClassAssertion();
+       assertEqual(aClassAssertion.getNumber2(), "10" );        
+            
+      assertTrue( aClassAssertion.setNumber2(123)));
+      assertTrue( aClassAssertion.getNumber2() == 123));
+      assertTrue( aClassAssertion.setNumber2(321)));
+      assertTrue( aClassAssertion.getNumber2() == 321));
+      assertFlase( aClassAssertion.getNumber2() == 123));
+          
+	}
+
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test calculateSomething {
+        assertTrue(id == "seomthing");
+        assertFalse(number == 123);
+        assertEqual(number, number2);
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}

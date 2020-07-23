@@ -17,6 +17,8 @@ Action.diagramInSync = true;
 Action.freshLoad = false;
 Action.gentime = new Date().getTime();
 Action.savedCanonical = "";
+Action.gdprHidden = false;
+Action.update = "";
 
 Action.clicked = function(event)
 {
@@ -24,7 +26,6 @@ Action.clicked = function(event)
   
   var obj = event.currentTarget;
   var action = obj.id.substring(6);
-  
   if (action == "PhpCode")
   {
     Action.generateCode("php","Php");
@@ -68,6 +69,10 @@ Action.clicked = function(event)
   else if (action == "StructureDiagram")
   {
     Action.generateCode("structureDiagram","structureDiagram");
+  }
+  else if (action == "FeatureDiagram")
+  {
+    Action.generateCode("featureDiagram","featureDiagram");
   }
   else if (action == "classDiagram")
   {
@@ -132,7 +137,27 @@ Action.clicked = function(event)
   else if (action == "DownloadFiles")
   {
     TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
-    window.location.href = "scripts/tab_control.php?download=1&&model=" + Page.getModel();
+    
+    // issue#1554
+    //window.location.href = "scripts/tab_control.php?download=1&&model=" + Page.getModel();
+    if (document.getElementById("downloadLink") === null)
+    {
+      var link = document.createElement("a");
+      link.setAttribute("href", "scripts/tab_control.php?download=1&&model=" + Page.getModel());
+      link.setAttribute('id', "downloadLink");
+      var linkText = document.createTextNode("Download ZIP File From Here");
+      link.appendChild(linkText);
+      
+      var node = document.createElement("LI");   
+      node.appendChild(link);
+      document.getElementById("saveLoad").appendChild(node);
+    } else {
+      document.getElementById("downloadLink").setAttribute("href", "scripts/tab_control.php?download=1&&model=" + Page.getModel());
+    }
+
+    setTimeout(function () {
+      document.getElementById("downloadLink").remove();
+    }, 30000);
   }
   else if (action == "Undo")
   {
@@ -145,10 +170,14 @@ Action.clicked = function(event)
   else if (action == "ShowHideTextEditor")
   {
     Layout.showHideTextEditor();
+    Page.showText = !Page.showText;
+    Page.setShowHideIconState('SHT_button');
   }
   else if (action == "ShowHideCanvas")
   {
     Layout.showHideCanvas();
+    Page.showCanvas = !Page.showCanvas;
+    Page.setShowHideIconState('SHD_button');
   }
   else if (action == "ShowEditableClassDiagram")
   {
@@ -160,11 +189,15 @@ Action.clicked = function(event)
   }
   else if (action == "ShowGvClassDiagram")
   {
-    Action.changeDiagramType({type:"GVClass"});
+    Action.changeDiagramType({type:"GvClass"});
+  }
+  else if (action == "ShowGvFeatureDiagram")
+  {
+    Action.changeDiagramType({type:"GvFeature"});//buttonShowGvFeatureDiagram
   }
   else if (action == "ShowGvStateDiagram")
   {
-    Action.changeDiagramType({type:"GVState"});
+    Action.changeDiagramType({type:"GvState"});
   }
   else if (action == "ShowStructureDiagram")
   {
@@ -189,10 +222,12 @@ Action.clicked = function(event)
   else if (action == "ToggleAttributes")
   {
     Action.toggleAttributes();
+    Page.setShowHideIconState('SHA_button');
   }
   else if (action == "ToggleMethods")
   {
     Action.toggleMethods();
+    Page.setShowHideIconState('SHM_button');
   }
   else if (action == "ToggleActions")
   {
@@ -205,10 +240,18 @@ Action.clicked = function(event)
   else if (action == "ToggleTransitionLabels")
   {
     Action.toggleTransitionLabels();
-  }  
+  }
+  else if (action == "ToggleGuards")
+  {
+    Action.toggleGuards();
+  }
   else if (action == "ToggleGuardLabels")
   {
     Action.toggleGuardLabels();
+  }
+  else if (action == "ToggleFeatureDependency")
+  {
+    Action.toggleFeatureDependency();
   }
   else if(action == "StructureLink")
   {
@@ -290,9 +333,58 @@ Action.redoOrUndo = function(isUndo)
   {
     afterHistoryChange = "";
   }
+  
+  var delimiterLoc = afterHistoryChange.indexOf(Page.modelDelimiter);
+  var rawReplacement = "";
+  if(delimiterLoc == -1) {
+    rawReplacement = afterHistoryChange;
+  }
+  else {
+    rawReplacement = afterHistoryChange.substring(0,delimiterLoc);
+  }
+  var rawOriginal = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
+  var theDiff=Action.findDiff(rawOriginal, rawReplacement);
+  var prevLine=Action.getCaretPosition();
+
   Action.freshLoad = true;
   Page.setUmpleCode(afterHistoryChange);
   if (!Action.manualSync) Action.updateUmpleDiagram();
+  
+  setTimeout(function () { // Delay so it doesn't get erased
+    // Page.setFeedbackMessage("Changed line "+theDiff[3]+" "+theDiff[1]);
+    if(theDiff[1] == theDiff[2])
+    {
+      // change was in diagram so leave caret where it is
+      Action.setCaretPosition(prevLine);
+    }
+    else
+    {
+      // set line number to where change occurred
+      Action.setCaretPosition(theDiff[3]);
+    }   
+  }, 300);
+}
+
+Action.findDiff = function(oldString, newString)
+{
+
+  var lineNumber = 0; // line number in newString
+  
+  var lOld = oldString.length, lNew = newString.length;
+  var l=lOld; // Assume old is shorter
+  if (lNew < l) l=lNew; // Actually new is shorter
+  var i=0;
+
+  while(i < l && oldString.charAt(i) === newString.charAt(i)) {
+    i++;
+    if(oldString.charAt(i) === '\n' && newString.charAt(i) === '\n') lineNumber++;
+  }
+  
+  // i is now the character index where the difference begins
+  var startChange=newString.substring(i,1);
+  
+  // Tuple is length of old, length of new, position of change, line number chg
+  return [lOld, lNew, i, lineNumber+1];
 }
 
 // Initial load of a file (e.g. example or blank) at initialization
@@ -348,15 +440,22 @@ Action.saveNewFileCallback = function(response)
 Action.changeDiagramType = function(newDiagramType)
 {
   var changedType = false;
+  jQuery(".layoutListItem").hide();
+
   if(newDiagramType.type == "editableClass") { 
     if(Page.useEditableClassDiagram) return;
     Page.useEditableClassDiagram = true;
     Page.useJointJSClassDiagram = false;
     Page.useGvClassDiagram = false;
     Page.useGvStateDiagram = false;
+    Page.useGvFeatureDiagram = false;
     Page.useStructureDiagram = false;
     changedType = true;
     jQuery("#buttonShowEditableClassDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('editableClass');
+    jQuery(".view_opt_class").show();
+    jQuery(".view_opt_class_palette").show();
+
   }
   else if(newDiagramType.type == "JointJSClass") { 
     if(Page.useJointJSClassDiagram) return;
@@ -364,29 +463,56 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useJointJSClassDiagram = true;
     Page.useGvClassDiagram = false;
     Page.useGvStateDiagram = false;
+    Page.useGvFeatureDiagram = false;
     Page.useStructureDiagram = false;
     changedType = true;
     jQuery("#buttonShowJointJSClassDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('JointJSClass');
+    jQuery(".view_opt_class").show();
+    jQuery(".view_opt_class_palette").show();
   }  
-  else if(newDiagramType.type == "GVClass") { 
+  else if(newDiagramType.type == "GvClass") { 
     if(Page.useGvClassDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
     Page.useGvClassDiagram = true;
     Page.useGvStateDiagram = false;
+    Page.useGvFeatureDiagram = false;
     Page.useStructureDiagram = false;
     changedType = true;
     jQuery("#buttonShowGvClassDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('GvClass');
+    jQuery(".view_opt_class").show();
+
   }
-  else if(newDiagramType.type == "GVState") {
+  else if(newDiagramType.type == "GvState") {
     if(Page.useGvStateDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
     Page.useGvClassDiagram = false;
     Page.useGvStateDiagram = true;
     Page.useStructureDiagram = false;
+    Page.useGvFeatureDiagram = false;
     changedType = true;
     jQuery("#buttonShowGvStateDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('GvState');
+    jQuery(".view_opt_state").show();
+
+  }
+  else if(newDiagramType.type == "GvFeature") {
+   if(Page.useGvFeatureDiagram) return;
+    Page.useEditableClassDiagram = false;
+    Page.useJointJSClassDiagram = false;
+    Page.useGvClassDiagram = false;
+    Page.useGvStateDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useGvFeatureDiagram = true;
+    changedType = true;
+    jQuery("#buttonShowGvFeatureDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('GvFeature');
+    jQuery(".view_opt_feature").show();
+
+
   }
   else if(newDiagramType.type == "structure") { // Structure Diagram
     if(Page.useGvStructureDiagram) return;
@@ -395,8 +521,10 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvClassDiagram = false;
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = true;
+    Page.useGvFeatureDiagram = false;
     changedType = true;
     jQuery("#buttonShowStructureDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('structure');
   }
   if (changedType) {
     Action.redrawDiagram();
@@ -543,6 +671,7 @@ Action.unselectAll = function()
   Action.classSelected(null);
   Action.associationSelected(null);
   Action.generalizationSelected(null);
+  Action.transitionSelected(null);
 }
 
 Action.classClicked = function(event)
@@ -590,8 +719,42 @@ Action.classClicked = function(event)
   
   else
   {
+    console.log("This was not selected" + Page.selectedItem);
     Action.classSelected(obj);
   }
+}
+
+Action.stateClicked = function(event)
+{
+    Page.setFeedbackMessage("state clicked");
+    if (!Action.diagramInSync) return;
+    Action.focusOn("umpleCanvas", true);
+    Action.focusOn("umpleModelEditorText", false);
+
+    Action.unselectAll();
+    Action.elementClicked = true;
+    var obj = event.currentTarget;
+
+    Action.selectState(obj.id);
+
+
+   if (Page.selectedItem == "AddTransition")
+    {
+        if (DiagramEdit.newTransition == null)
+        {
+            Action.canCreateByDrag = false;
+            DiagramEdit.createTransitionPartOne(event);
+        }
+        else
+        {
+            DiagramEdit.createTransitionPartTwo(event);
+            setTimeout(function(){ Action.canCreateByDrag = true; }, 500);
+        }
+    }
+    else
+    {
+        Action.stateSelected(obj);
+    }
 }
 
 Action.associationClicked = function(event)
@@ -604,6 +767,16 @@ Action.associationClicked = function(event)
   Action.associationSelected(obj);
 }
 
+Action.transitionClicked = function(event)
+{
+    Page.setFeedbackMessage("transition clicked");
+  if(!Action.diagramInSync) return;
+  Action.elementClicked = true;
+  Action.unselectAll();
+
+  var obj = event.currentTarget;
+  Action.transitionSelected(obj);
+}
 Action.generalizationClicked = function(event)
 {
   if (!Action.diagramInSync) return;
@@ -632,6 +805,26 @@ Action.associationHover = function(event,isHovering)
     }
   }
 }
+
+Action.transitionHover = function(event,isHovering)
+{
+    if (!Action.diagramInSync) return;
+    var updateTransition = event.currentTarget;
+    var umpleTransition = UmpleSystem.findTransition(updateTransition.id);
+
+    if (updateAssociation != null && Page.canShowHovers())
+    {
+        var hoverCount = 2;
+        var selector = "#" + updateAssociation.id + "_hover";
+
+        for (var i=0; i<hoverCount; i++)
+        {
+            if (isHovering) jQuery(selector+i).show();
+            else jQuery(selector+i).hide();
+        }
+    }
+}
+
 
 Action.generalizationHover = function(event,isHovering)
 {
@@ -683,6 +876,43 @@ Action.associationSelected = function(obj)
     if (isSelected) jQuery(anchorSelector + i).show();
     else jQuery(anchorSelector + i).hide();
   }
+}
+
+Action.transitionSelected = function(obj)
+{
+    Page.setFeedbackMessage("transition selected");
+    var isSelected = (obj == null) ? false : true;
+    var updateObj = null;
+
+    if (Page.selectedItem == "DeleteEntity" && obj != null)
+    {
+        var addToQueue = false;
+        DiagramEdit.transitionDeleted(obj.id, addToQueue);
+        return;
+    }
+
+    if (obj != null)
+    {
+        Page.selectedTransition = obj;
+        updateObj = obj;
+    }
+    else if (Page.selectedTransition != null)
+    {
+        updateObj = Page.selectedTransition;
+        Page.selectedTransition = null;
+    }
+    else
+    {
+        return;
+    }
+
+    var anchorCount = 2;
+    var anchorSelector = "#" + updateObj.id + "_anchor";
+    for (var i=0; i<anchorCount; i++)
+    {
+        if (isSelected) jQuery(anchorSelector + i).show();
+        else jQuery(anchorSelector + i).hide();
+    }
 }
 
 Action.generalizationSelected = function(obj)
@@ -762,7 +992,7 @@ Action.photoReady = function()
   var canvasSel = "#" + Page.umpleCanvasId();
   if (Page.isPhotoReady())
   {
-    jQuery(canvasSel).addClass("photoReady");  
+    jQuery(canvasSel).addClass("photoReady");
   }
   else
   {
@@ -800,6 +1030,10 @@ Action.classMouseDown = function(event)
   {
     DiagramEdit.createGeneralizationPartOne(event);
   }
+  else if (Page.selectedItem == "AddTransition" && DiagramEdit.newTransition == null)
+  {
+      DiagramEdit.createTransitionPartOne(event);
+  }
 }
 
 Action.classMouseUp = function(event)
@@ -813,6 +1047,9 @@ Action.classMouseUp = function(event)
   else if (Page.selectedItem == "AddGeneralization" && DiagramEdit.newGeneralization != null)
   {
     DiagramEdit.createGeneralizationPartTwo(event);
+  }
+  else if (Page.selectedItem == "AddTransition" && DiagramEdit.newTransition != null){
+    DiagramEdit.createTransitionPartTwo(event);
   }
 }
 
@@ -834,6 +1071,10 @@ Action.mouseMove = function(event)
   if (DiagramEdit.newAssociation != null && Page.selectedItem == "AddAssociation")
   {
     Action.drawAssociationLine(event, DiagramEdit.newAssociation);
+  }
+  if (DiagramEdit.newTransition != null && Page.selectedItem == "AddTransition")
+  {
+    Action.drawTransitionLine(event, Diagramedit.newTransition);
   }
   if (DiagramEdit.newGeneralization != null && Page.selectedItem == "AddGeneralization")
   {
@@ -872,6 +1113,15 @@ Action.drawAssociationLine = function(event, newAssociation)
   jQuery(canvasSelector).append(newAssociation.drawable());
 }
 
+Action.drawTransitionLine = function(event, newTransition)
+{
+    var canvasSelector = "#" + Page.umpleCanvasId();
+    var mousePosition = new UmplePosition(event.pageX, event.pageY,0,0);
+    newTransition.toStatePosition = mousePosition.subtract(UmpleSystem.position());
+    jQuery(canvasSelector).append(newTransition.drawable());
+}
+
+
 Action.drawGeneralizationLine = function(event, newGeneralization)
 {
   var canvasSelector = "#" + Page.umpleCanvasId();
@@ -906,6 +1156,14 @@ Action.umpleCanvasClicked = function(event)
       DiagramEdit.removeNewAssociation();
     }
   }
+  else if (Page.selectedItem == "AddTransition" && DiagramEdit.newTransition != null)
+  {
+    if (Page.clickCount >1)
+    {
+      DiagramEdit.removeNewTransition();
+    }
+  }
+
   else if (Page.selectedItem == "AddGeneralization" && DiagramEdit.newGeneralization != null)
   {
     if (Page.clickCount > 1)
@@ -919,14 +1177,22 @@ Action.umpleCanvasClicked = function(event)
   }
 }
 
+// Called when a change is made by a command that modifies the text, to refresh it
+// and then refresh the diagram.
+Action.directUpdateCommandCallback = function(response)
+{
+  Action.updateUmpleTextCallback(response);
+  Action.redrawDiagram();
+}
+
 // Called whenever any change is made on the graphic pane
 // such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
 {
   TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
   Action.freshLoad = true;
-
-  Page.setUmpleCode(response.responseText);
+  
+  Page.setUmpleCode(response.responseText, Action.update.codeChange);
   // DEBUG
   // Page.setFeedbackMessage("update text callback -");
   // Page.catFeedbackMessage(response.responseText);
@@ -953,6 +1219,7 @@ Action.setExampleType = function setExampleType()
   jQuery("#itemLoadExamples").hide();
   jQuery("#itemLoadExamples2").hide();
   jQuery("#itemLoadExamples3").hide();
+  jQuery("#itemLoadExamples4").hide();
      
   if(Page.getExampleType() == "cdModels") {
      jQuery("#itemLoadExamples").show();
@@ -961,6 +1228,10 @@ Action.setExampleType = function setExampleType()
    else if(Page.getExampleType() == "smModels") {
      jQuery("#itemLoadExamples2").show();
      jQuery("#defaultExampleOption2").prop("selected",true);
+   }
+   else if(Page.getExampleType() == "featureModels") {
+     jQuery("#itemLoadExamples4").show();
+     jQuery("#defaultExampleOption4").prop("selected",true);
    }
    else {
      jQuery("#itemLoadExamples3").show();
@@ -987,6 +1258,10 @@ Action.loadExample = function loadExample()
   var diagramType="";
   if(Page.useGvStateDiagram) {
     diagramType="&diagramtype=state";
+    jQuery("#genjava").prop("selected",true);
+  }
+ else if(Page.useGvFeatureDiagram) {
+    diagramType="&diagramtype=GvFeature";
     jQuery("#genjava").prop("selected",true);
   }
   else if(Page.useStructureDiagram) {
@@ -1170,6 +1445,11 @@ Action.setCaretPosition = function(line)
   if(isNaN(line-0)) 
   {
     // It is not a number so must be a special hidden command
+    if(line=="gd") 
+    {
+      jQuery('#gdprtext').show();
+      Action.gdprHidden = false;      
+    }
     if(line=="av") 
     {
       // Special backdoor to turn on experimental features
@@ -1197,6 +1477,10 @@ Action.setCaretPosition = function(line)
         Page.initCodeMirrorEditor();
         jQuery("#linenum").val("0");
       }
+      return;
+    }
+    if(line.substr(0,2)=="bp") {  // Begin prompt - Also invoked by ctrl-b
+      Action.promptAndExecuteTest();
       return;
     }
     else
@@ -1257,6 +1541,70 @@ Action.setCaretPosition = function(line)
     range.select();
   }
 }
+
+// This pops up a panel that can be used to execute certain specialized test commands
+// This should be expanded to allow other commands
+Action.promptAndExecuteTest = function() {
+
+  // Get the arguments if any (separated by spaces)
+  var testCommand=prompt("Umpleonline test prompt. Enter command e.g. 'ac Classname' to add a class","");
+
+  var edargs=testCommand.substr(2,99).strip().split(" "); 
+  if(testCommand.substr(0,1)=="a") {
+    // add something
+    if(testCommand.substr(1,1)=="c") {
+      // add class - one argument
+      if(edargs.length >=1) {
+        Action.directAddClass(edargs[0]);
+        return;
+      }
+    }
+    else if (testCommand.substr(1,1)=="a") {
+      // add attribute to class - two arguments
+      if(edargs.length >=2) {
+        Action.directAddAttribute(edargs[0],edargs[1]);
+        return;
+      }
+    }
+    else {
+      Page.setFeedbackMessage("Syntax error in test add command");
+    }
+    Page.setFeedbackMessage("Syntax error in test command");
+  }
+  else {
+
+  }
+  return;
+}
+
+// Adds a class with the given name. The class may already be there. Just edits the text.
+// This could be modified to 
+Action.directAddClass = function(className) {
+
+  var umpleJson = Json.toString({"position" : {"x" : "10","y" : "10","width" : "109","height" : "41"},"name" : className});
+
+  Page.setFeedbackMessage("Adding class "+className);  
+  Action.ajax(Action.directUpdateCommandCallback,format("action=addClass&actionCode={0}",umpleJson));
+
+  // After a pause to let the ajax return, then redraw the diagram.
+  // This could be put in a new callback
+  // setTimeout(function() {Action.redrawDiagram();},1000);
+  return;
+}
+
+// Adds an attribute to a class
+Action.directAddAttribute = function(classname, attribute) {
+  // This has to be written.
+  // It should look for a matching class, and then look for the attributes in it, then
+  // inject the new attribute after it. This assumes no type. That could be added by changing
+  // this to have three arguments (if the third one was missing there would be no type, hence
+  // string as default.
+  // If there is no matching class, this should output a message 
+  
+  Page.setFeedbackMessage("((when written) Adding to class "+classname+" attribute "+attribute);  
+  return;
+}
+
 
 // Searches for the matching text in the code mirror editor
 // Does not span lines
@@ -1361,6 +1709,15 @@ Action.selectClass = function(className)
 	var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
 
 	Action.selectItem(scursor, ncursor);
+}
+
+// Highlights the text of the class that is currently selected.
+Action.selectState = function(stateName)
+{
+    var scursor = new RegExp("(class|interface|trait) "+stateName+"($|\\\s|[{])");
+    var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
+
+    Action.selectItem(scursor, ncursor);
 }
 
 Action.selectStateInClass = function(stateName, classname) 
@@ -1501,6 +1858,12 @@ Action.processTyping = function(target, manuallySynchronized)
     
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor") {
       Action.updateLayoutEditorAndDiagram();
+      
+      // issue#1554
+      var downloadLink = document.getElementById("downloadLink");
+      if (downloadLink !== null){
+        downloadLink.remove();
+      }
       
       Page.enablePaletteItem("buttonSyncDiagram", false);
     }
@@ -1652,7 +2015,7 @@ Action.updateUmpleDiagramCallback = function(response)
 
     }
     // Display static svg diagram
-    else if(Page.useGvClassDiagram || Page.useGvStateDiagram)
+    else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram )
     {
       jQuery("#umpleCanvas").html(format('{0}', diagramCode));
     }
@@ -1715,7 +2078,7 @@ Action.getDiagramCode = function(responseText)
     if(output == "null") output = "";
     
   }
-  else if(Page.useGvClassDiagram || Page.useGvStateDiagram)
+  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram)
   {
     // The graphviz diagrams are taken from the inner svg tag only. 
     // This allows the website to have a dynamic canvas size around the diagram
@@ -1749,7 +2112,7 @@ Action.getErrorCode = function(responseText)
     
     if(output == "<p>") output = "";
   }
-  else if(Page.useGvClassDiagram || Page.useGvStateDiagram)
+  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram)
   {
     var miscStuffAndErrorMessages = responseText.split('<svg width=')[0];
     var prelimparts = miscStuffAndErrorMessages.split('errorRow');
@@ -1855,12 +2218,21 @@ Action.toggleTransitionLabels = function()
   Action.redrawDiagram();
 }
 
+Action.toggleGuards = function()
+{
+  Page.showGuards = !Page.showGuards;
+  Action.redrawDiagram();
+}
 Action.toggleGuardLabels = function()
 {
   Page.showGuardLabels = !Page.showGuardLabels;
   Action.redrawDiagram();
 }
-
+Action.toggleFeatureDependency = function()
+{
+  Page.showFeatureDependency = !Page.showFeatureDependency;
+  Action.redrawDiagram();
+}
 Action.toggleTraits = function()
 {
   Page.showTraits = !Page.showTraits;
@@ -1887,11 +2259,13 @@ Action.redrawDiagram = function()
 
       Page.enablePaletteItem('buttonAddClass', true);
       Page.enablePaletteItem('buttonAddAssociation', true);
+      Page.enablePaletteItem('buttonAddTransition', true);
       Page.enablePaletteItem('buttonAddGeneralization', true);
       Page.enablePaletteItem('buttonDeleteEntity', true);
     
       Page.initToggleTool('buttonAddClass');
       Page.initToggleTool('buttonAddAssociation');
+      Page.initToggleTool('buttonAddTransition');
       Page.initToggleTool('buttonAddGeneralization');
       Page.initToggleTool('buttonDeleteEntity');
     }
@@ -2168,6 +2542,11 @@ Mousetrap.bind(['ctrl+k'], function(e){
   return false; //equivalent to e.preventDefault();
 });
 
+Mousetrap.bind(['ctrl+b'], function(e){
+  Action.promptAndExecuteTest();
+  return false;
+});
+
 // Functions for editing the diagram - using shift
 Mousetrap.bind(['g'], function(e){
   if(jQuery('#umpleCanvasColumn').hasClass('focus') 
@@ -2269,12 +2648,11 @@ Action.generateTabsCode = function(theCode)
     // If New File Beginning
     if(theLine.indexOf("//%%") >= 0){
       intFileCounter++;
-      if(intFileCounter > 1){ arrCodeFiles[intFileCounter] += "</p>"; }
       strFileName = theLine.slice(14);
       strFileName = strFileName.substr(0, strFileName.indexOf(' '));
       arrFileNames[intFileCounter] = strFileName;
       jQuery('#generatedCodeRow').append("<div id='innerGeneratedCodeRow" + intFileCounter + "'></div>");
-      arrCodeFiles[intFileCounter] = "<p>URL_SPLIT";
+      arrCodeFiles[intFileCounter] = "";
       skipSpace = true;
     }
     else{
@@ -2286,7 +2664,6 @@ Action.generateTabsCode = function(theCode)
       }
     }
   });
-  arrCodeFiles[intFileCounter] += "</p>";
 
   // Output buttons for number of files found
   for (i=1; i <= intFileCounter; i++){
@@ -2311,11 +2688,13 @@ Action.getLanguage = function()
   }
   else if(Page.useGvStateDiagram) {language="language=stateDiagram"}
   else if(Page.useStructureDiagram) {language="language=StructureDiagram"}
-  
+ 
+
   // append any suboptions needed for GvStateDiagram
   if(Page.useGvStateDiagram) { 
     if(!Page.showActions) language=language+".hideactions";
     if(Page.showTransitionLabels) language=language+".showtransitionlabels";
+    if(!Page.showGuards) language=language+".hideguards";    
     if(Page.showGuardLabels) language=language+".showguardlabels";
     language=language+"."+$("inputGenerateCode").value.split(":")[1];
   }
@@ -2323,6 +2702,11 @@ Action.getLanguage = function()
   if(Page.useGvClassDiagram) { 
     if(Page.showMethods) language=language+".showmethods";
     if(!Page.showAttributes) language=language+".hideattributes";
+  }
+  // append any suboptions needed for GvFeatureDiagram
+  if(Page.useGvFeatureDiagram) {
+    language="language=featureDiagram";
+    if(Page.showFeatureDependency) language=language+".showFeatureDependency";
   }
   return language;
 }
@@ -2337,10 +2721,13 @@ function showTab(event)
 
   // Highlight code for specific file only
   Page.showGeneratedCode(event.data.code, $("inputGenerateCode").value.split(":")[0], event.data.tabnumber);
-  jQuery('.line').last().hide();
-  jQuery('.line').last().hide();
 
   // Hide main code window with glommed files
   jQuery('#innerGeneratedCodeRow').hide();
 }
 
+Action.hidegdpr = function() 
+{
+  jQuery('#gdprtext').hide();
+  Action.gdprHidden = true;
+}

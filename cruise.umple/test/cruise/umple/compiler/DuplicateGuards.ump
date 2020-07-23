@@ -1,0 +1,24 @@
+class OtherClass {
+  * -> 1 Another ;
+  Integer row;  
+  Integer row2; 
+}
+
+class Another {
+   Integer junk;
+}
+
+class Statemachine {
+  * -> 1 OtherClass other;
+  Boolean cond; 
+  sm {
+    s1 {
+      event1[other.another.junk == 3] -> s3;
+      event1[other.another.junk == 3] -> s1;
+      event1[cond && other.row > 4] -> s2;
+      event1[cond && other.row == 3] -> s3;
+      event1[cond && other.row == 3] -> s1;
+    }
+    s3 {}
+ }
+}

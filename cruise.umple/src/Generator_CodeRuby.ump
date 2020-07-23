@@ -687,6 +687,9 @@ class RubyGenerator
       {
         injectIntoUniqueSet(
           "{2} = {3}();" + "\n" +
+          "if ({2} != nil && {2} == {1})" + "\n" + 
+          "  return true" + "\n" +
+          "end" + "\n" +
           "if ({6}.{4}?({1}))" + "\n" + 
           "  return was_set" + "\n" +
           "end", "before", av, aClass);
@@ -928,6 +931,18 @@ class RubyGenerator
     for (UmpleClass aClass : getModel().getUmpleClasses())
     {
       GeneratedClass genClass = aClass.getGeneratedClass();
+
+      //add interface imports
+      if (aClass.hasParentInterface())
+      {
+        for(UmpleInterface interfaceParent: aClass.getParentInterface())
+        { 
+          if (!aClass.getPackageName().equals(interfaceParent.getPackageName()))
+          {
+            genClass.addMultiLookup("import", interfaceParent.getPackageName() + ".*");  
+          }
+        }
+      }
       
       if (aClass.getExtendsClass() != null)
       {

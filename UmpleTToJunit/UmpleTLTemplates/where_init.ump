@@ -5,6 +5,18 @@ This file generates initializations for classes in JUnit class
 */
   isFirst = true;
   
+  if(model.hasTestInitializations())
+  {
+     for (TestInitialization init : model.getTestInitializations())
+     {
+     
+     #>><<@UmpleTToJUnit.testcase_init>><<#
+     
+     }
+  
+  
+  }
+  
  
   
 #>>!>>

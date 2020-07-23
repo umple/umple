@@ -1432,8 +1432,11 @@ class UmpleInternalParser
           for(Token guardedTransition : guardedTransitions){
             Boolean subTokenIsAutoTransition = subToken.is("autoTransition");
             Boolean guardTransitionIsAutoTransition = guardedTransition.is("autoTransition");
-            if ((guardTransitionIsAutoTransition && subTokenIsAutoTransition) || (!guardTransitionIsAutoTransition && guardedTransition.getValue("event") == subToken.getValue("event"))
-             || (!guardTransitionIsAutoTransition && guardedTransition.getValue("event").equals(subToken.getValue("event"))))
+            if ((guardTransitionIsAutoTransition && subTokenIsAutoTransition) 
+              || (!guardTransitionIsAutoTransition && guardedTransition.getValue("event") != null && guardedTransition.getValue("event") == subToken.getValue("event"))
+              || (!guardTransitionIsAutoTransition && guardedTransition.getValue("event") != null && guardedTransition.getValue("event").equals(subToken.getValue("event"))) 
+              || (!guardTransitionIsAutoTransition && guardedTransition.getValue("timer") != null && guardedTransition.getValue("timer") == subToken.getValue("timer"))
+              || (!guardTransitionIsAutoTransition && guardedTransition.getValue("timer") != null && guardedTransition.getValue("timer").equals(subToken.getValue("timer"))))
             {
               Position subTokenPosition = subToken.getPosition();
               String subTokenValue = subToken.getValue("event");
@@ -1582,7 +1585,7 @@ class UmpleInternalParser
    private Token getExpressionOperator(Token expression, Integer startIndex)
    {
      Integer operatorPosition = startIndex + OPERATOR_POSITION;
-     if (operatorPosition < expression.getSubTokens().size())
+     if (operatorPosition < expression.getSubTokens().size()-1)
      {
        Token operator = expression.getSubToken(operatorPosition);
        String operatorName = operator.getName();
@@ -1989,11 +1992,20 @@ class UmpleInternalParser
     // Make sure we retrieve the same Umple class for nested children as well
     UmpleClass uClass = null;
     StateMachine smRunner = sm;
-    while (uClass == null)
+    int depth = 0;//issue1483
+
+    while (uClass == null && depth<100)
     {
       uClass = smRunner.getUmpleClass();
       if (smRunner.getParentState() != null)
     	  smRunner = smRunner.getParentState().getStateMachine();
+      depth++;
+    }
+    
+    if(uClass == null)//issue1483
+    {
+      setFailedPosition(methodToken.getPosition(), 1015);
+      return;
     }
 
     // Retrieve method analyzed using the method token

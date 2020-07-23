@@ -1,0 +1,17 @@
+Around Statement
+Aspect Orientation
+noreferences
+
+@@description
+<p>An around statement can be used used to inject code around a code block. The original code appears in the middle, wherever the special around_proceed keyword is placed. The first example below surrounds the body of an entire method. The second example injects code between two labels<p>
+
+@@syntax
+[[toplevelBeforeCode]]
+
+@@example @@caption Example with &quot;in class around injection with no labels&quot; statement @@endcaption
+@@source manualexamples/AroundStatement1.ump
+@@endexample
+
+@@example @@caption Example with &quot;top-level around injection with two labels&quot; statement @@endcaption
+@@source manualexamples/AroundStatement2.ump
+@@endexample

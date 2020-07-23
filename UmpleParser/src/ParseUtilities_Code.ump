@@ -329,6 +329,18 @@ class Token
     return nToken;
   }
 
+  // for issue#1521
+  public boolean removeSubTokenNotSetParentToken(Token aSubToken)
+  {
+    boolean wasRemoved = false;
+    if (subTokens.contains(aSubToken))
+    {
+      subTokens.remove(aSubToken);
+      //aSubToken.setParentToken(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
 }
 
 class Position

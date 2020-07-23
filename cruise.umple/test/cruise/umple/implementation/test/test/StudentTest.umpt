@@ -1,0 +1,88 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_attribute_suffix ----/////
+
+test Student {
+
+ generate JUnit ;
+ 
+ depend  Student ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_attribute_suffix.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :studentId
+
+      test attribute_studentId {
+    
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1");
+    assertTrue( aStudent.setStudentId("RandomString1"));
+    assertTrue( aStudent.getStudentId() =="RandomString1");
+    assertTrue( aStudent.setStudentId("RandomString2"));
+    assertTrue( aStudent.getStudentId()=="RandomString2");
+    assertFalse( aStudent.getStudentId() =="RandomString1");
+             
+	}
+
+ //tests for :name
+
+      test attribute_name {
+    
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1");
+    assertTrue( aStudent.setName("RandomString1"));
+    assertTrue( aStudent.getName() =="RandomString1");
+    assertTrue( aStudent.setName("RandomString2"));
+    assertTrue( aStudent.getName()=="RandomString2");
+    assertFalse( aStudent.getName() =="RandomString1");
+             
+	}
+
+ //tests for :address
+
+      test attribute_address {
+    
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1");
+    assertTrue( aStudent.setAddress("RandomString1"));
+    assertTrue( aStudent.getAddress() =="RandomString1");
+    assertTrue( aStudent.setAddress("RandomString2"));
+    assertTrue( aStudent.getAddress()=="RandomString2");
+    assertFalse( aStudent.getAddress() =="RandomString1");
+             
+	}
+
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkifLogged_studentId {
+        Student st1 ( "S1425", "John", "Ottawa") ;        
+        String valueToCheck = st1.getStudentId();  
+        st1.getValue(studentId);    
+        boolean isLogged =  st1.checkIsLogged(valueToCheck);        
+        
+        //list assertions
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}

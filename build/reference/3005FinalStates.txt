@@ -16,15 +16,15 @@ The first way is to use the "Final" keyword (with a capital F) as the destinatio
 The second way is to use the "final" keyword (lower case) before a state name to tag a state as final. Using this keyword allows users to define multiple final states as shown in the second example below. In the case of <a href="StateMachineRegions.html">concurrent regions (indicated using the || in the example)</a>, all state machines within the same concurrent region must be in their final states before the enclosing region is considered to be complete. In the case of non-concurrent state machines, as soon as a final state is entered, the state machine is considered to be complete.
 <p>
 
-@@example
+@@example @@caption Example with the &quot;Final&quot; keyword @@endcaption
 @@source manualexamples/FinalStateKeywordExample.ump &diagramtype=state
 @@endexample
 
-@@example
+@@example @@caption Example of concurrent state machines with &quot;final&quot; states @@endcaption
 @@source manualexamples/RegionFinal_ConcurrentExample.ump &diagramtype=state
 @@endexample
 
 
-@@example
+@@example @@caption Example of non-concurrent state machines with &quot;final&quot; states @@endcaption
 @@source manualexamples/RegionFinal_NonConcurrentExample.ump &diagramtype=state
 @@endexample

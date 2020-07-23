@@ -1,0 +1,6 @@
+//emails and incomingNumber can now be initialized
+class Office {
+  Integer number;
+  String[] emails = {"abc@umple.org", "def@umple.org"};
+  Integer [] incomingNumber = {765432, 987654};
+} 

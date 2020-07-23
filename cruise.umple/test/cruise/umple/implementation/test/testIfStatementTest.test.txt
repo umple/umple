@@ -1,0 +1,96 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  ifStatementTest ----/////
+
+test Person {
+
+ generate JUnit ;
+ 
+ depend  Person ; 
+
+
+
+ 
+ GIVEN:
+ ifStatementTest.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :name
+
+      test attribute_name {
+    
+      
+        Person aPerson("RandomString1",123,"RandomString1");
+        
+        
+    assertTrue( aPerson.setName("RandomString1"));
+    assertTrue( aPerson.getName() =="RandomString1");
+    assertTrue( aPerson.setName("RandomString2"));
+    assertTrue( aPerson.getName()=="RandomString2");
+    assertFalse( aPerson.getName() =="RandomString1");
+             
+          
+        	}
+
+ //tests for :id
+
+      test attribute_id {
+    
+      
+        Person aPerson("RandomString1",123,"RandomString1");        
+            
+      assertTrue( aPerson.setId(123));
+      assertTrue( aPerson.getId() == 123);
+      assertTrue( aPerson.setId(321));
+      assertTrue( aPerson.getId() == 321);
+      assertFalse( aPerson.getId() == 123);
+          
+          
+        	}
+
+ //tests for :Job
+
+      test attribute_Job {
+    
+      
+        Person aPerson("RandomString1",123,"RandomString1");
+        
+        
+    assertTrue( aPerson.setJob("RandomString1"));
+    assertTrue( aPerson.getJob() =="RandomString1");
+    assertTrue( aPerson.setJob("RandomString2"));
+    assertTrue( aPerson.getJob()=="RandomString2");
+    assertFalse( aPerson.getJob() =="RandomString1");
+             
+          
+        	}
+
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkIfStatement {
+        String tempId = p1.getId();
+        String job = p1.getJob();
+        
+	if(tempId == 1324){
+	assertTrue (job.getName() == "Saleman");
+	  }
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}

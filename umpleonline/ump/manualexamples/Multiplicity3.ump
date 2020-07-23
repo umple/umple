@@ -2,7 +2,7 @@
 // must be exactly that number of objects linked
 // at all times (including when the object at the
 // other end is first created). Except for '1', 
-// such multiplicities are rate.
+// such multiplicities are rare.
 //
 // Here, there must be exactly two objects (lower
 // and upper bound are both 2)

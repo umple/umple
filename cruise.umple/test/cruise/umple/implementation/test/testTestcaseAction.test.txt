@@ -1,0 +1,274 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  TestCaseAction ----/////
+
+test Job {
+
+ generate JUnit ;
+ 
+ depend  Job,Organization,Score,Person ; 
+
+
+
+ 
+ GIVEN:
+ TestCaseAction.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :name
+
+      test attribute_name {
+    
+      Person aPerson(aOrganization);
+
+        Job aJob("RandomString1",aPerson);
+        
+        
+    assertTrue( aJob.setName("RandomString1"));
+    assertTrue( aJob.getName() =="RandomString1");
+    assertTrue( aJob.setName("RandomString2"));
+    assertTrue( aJob.getName()=="RandomString2");
+    assertFalse( aJob.getName() =="RandomString1");
+             
+          
+        	}
+
+
+  
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  TestCaseAction ----/////
+
+test Organization {
+
+ generate JUnit ;
+ 
+ depend  Job,Organization,Score,Person ; 
+
+
+
+ 
+ GIVEN:
+ TestCaseAction.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+  
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  TestCaseAction ----/////
+
+test Score {
+
+ generate JUnit ;
+ 
+ depend  Job,Organization,Score,Person ; 
+
+
+
+ 
+ GIVEN:
+ TestCaseAction.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :score
+
+      test attribute_score {
+    
+      Person aPerson(aOrganization);
+
+        Score aScore(123,aPerson);        
+            
+      assertTrue( aScore.setScore(123));
+      assertTrue( aScore.getScore() == 123);
+      assertTrue( aScore.setScore(321));
+      assertTrue( aScore.getScore() == 321);
+      assertFalse( aScore.getScore() == 123);
+          
+          
+        	}
+
+
+  
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+/*
+All person cannot have a Coash as a job.
+*/
+
+////---- Tests for  TestCaseAction ----/////
+
+test Person {
+
+ generate JUnit ;
+ 
+ depend  Job,Organization,Score,Person ; 
+
+
+
+ 
+ GIVEN:
+ TestCaseAction.ump;
+ 
+ WHERE:
+  Person p1 ("john", 123);
+  Job j1 ("Cashier");
+  
+ 
+ THEN:
+
+
+ before { setUp }
+
+
+
+ before { teardown }
+
+ 
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkForLoop {
+        Person p1 (123);
+        ArrayList<Job> jobs = p1.getJobs();
+        Integer size = jobs.size();
+        for ( Job job : jobs )
+	 {
+	assertTrue(job.getName() != "Coach"); 
+	}
+        }
+      
+      
+      
+      
+        
+    
+      
+      test checkStatus {
+        
+
+        //----------------
+        //before assertions
+        //----------------
+        AssertFalse(d1.firstName() == "Orlean");
+        //End of before assertions
+
+        //something
+        Person p1 ("id");
+         id = "id";
+        String id2 = p1.getGate(id,"name");
+        String id2 = p1.getGate();
+        String id2 = getGate();
+        String id2 = getGate(id);
+        p1.openGarage(p1);
+        openGarage(p1);
+        this.setId("id",id);
+        //assertion comment
+        /*multiline comment 
+      line comment*/
+        
+
+        //----------------
+        //after assertions
+        //----------------
+        AssertFalse(p1.getId() == "something");
+        //End of after assertions
+
+        }
+      
+      
+      
+      
+        
+    
+      
+      test checkCashierPromotion {
+        
+
+        //----------------
+        //before assertions
+        //----------------
+        AssertTrue(job.getName == "Cashier");
+        //End of before assertions
+
+        job1.promote();
+        
+
+        //----------------
+        //after assertions
+        //----------------
+        AssertTrue(jobName == "Manager");
+        //End of after assertions
+
+        }
+      
+      
+      
+      
+        
+    
+      
+      test setUp {
+        //initalize enviroment
+        }
+      
+      
+      
+      
+        
+    
+      
+      test teardown {
+        //delete files
+        }
+      
+      
+      
+      
+        
+     
+ 
+ 
+
+ after { setUp }
+
+
+
+ after { teardown }
+
+  
+
+}

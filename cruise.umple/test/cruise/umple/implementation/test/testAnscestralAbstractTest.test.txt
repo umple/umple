@@ -1,0 +1,84 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  TestCase_AnscestralTest ----/////
+
+test Person {
+
+ generate JUnit ;
+ 
+ depend  Person,Student ; 
+
+
+
+ 
+ GIVEN:
+ TestCase_AnscestralTest.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkName {
+        //Father test
+        assertTrue(id == 1);
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  TestCase_AnscestralTest ----/////
+
+test Student {
+
+ generate JUnit ;
+ 
+ depend  Person,Student ; 
+
+
+
+ 
+ GIVEN:
+ TestCase_AnscestralTest.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkId {
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}

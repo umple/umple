@@ -103,7 +103,7 @@ public class UnitTemplateTest
    
 
     File expected = new File(pathToInput, codeFile);
-    System.out.println(actual);
+    //system.out.println(actual);
 
 
     if (isFullMatch)
@@ -132,13 +132,29 @@ public class UnitTemplateTest
     parser.setGrammarFile("src/ump/mbt_parsing.grammar");
     parser.setTestModelFile(file);
     parser.setTestModelFile(file);
-    //System.out.println(file.getAbsolutePath());
-    //System.out.println(path);
+    ////system.out.println(file.getAbsolutePath());
+    ////system.out.println(path);
     parser.prepare();
     aTestModel = parser.getATestModel();
-    //System.out.println(file.getPath());
+    ////system.out.println(aTestModel.toString());
+    String codeLang = "";
+    codeLang = aTestModel.getCodeLang();
+    /*try {
+    	
+    }
     
-    switch(aTestModel.getCodeLang())
+    catch (Exception e) {
+    	//system.out.println("Error parsing model: " + e.getMessage());    	
+    }*/
+    
+    if(codeLang == null)
+    {
+    	//system.out.println("Error parsing model: ");
+    }
+    
+    
+    
+    switch(codeLang)
     {
     case "JUnit" :
     TestCaseJUnitGenerator junitGenerator = new TestCaseJUnitGenerator(null, null, null, null, null);

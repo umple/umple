@@ -1,0 +1,44 @@
+
+
+
+class Advisor 
+{
+  name;
+  id;
+  int tel;
+
+  0..1 -- * Student;
+
+  1 -- * Office;
+
+  2 -- * Course;
+
+}
+
+
+class Student {
+  name;
+
+}
+
+
+class Office {
+  name;
+  lazy address;
+
+
+
+}
+
+
+class Course {
+  code;
+  int numberOfStudents;
+  description;
+
+  Date startDate = "2020-12-26";
+
+  Time classTime = "12:59:59";
+
+
+}

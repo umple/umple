@@ -1,0 +1,93 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_String ----/////
+
+test Person {
+
+ generate JUnit ;
+ 
+ depend  Person ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_String.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :id
+
+      test attribute_id {
+    
+      
+        Person aPerson(123,"RandomString1","unidentified");        
+            
+      assertTrue( aPerson.setId(123));
+      assertTrue( aPerson.getId() == 123);
+      assertTrue( aPerson.setId(321));
+      assertTrue( aPerson.getId() == 321);
+      assertFalse( aPerson.getId() == 123);
+          
+          
+        	}
+
+ //tests for :name
+
+      test attribute_name {
+    
+      
+        Person aPerson(123,"RandomString1","unidentified");
+        
+        
+    assertTrue( aPerson.setName("RandomString1"));
+    assertTrue( aPerson.getName() =="RandomString1");
+    assertTrue( aPerson.setName("RandomString2"));
+    assertTrue( aPerson.getName()=="RandomString2");
+    assertFalse( aPerson.getName() =="RandomString1");
+             
+          
+        	}
+
+ //tests for :postal
+
+      test attribute_postal {
+    
+      
+        Person aPerson(123,"RandomString1","unidentified");    
+      assertTrue( aPerson.setPostal(123456789));
+      assertTrue( aPerson.getPostal() == 123456789);
+      assertTrue( aPerson.setPostal(987654321));
+      assertTrue( aPerson.getPostal() == 987654321);
+      assertFalse( aPerson.getPostal() == 123456789);
+          
+          
+        	}
+
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkifLogged_name {
+        Person p1 ( "S1425", "John", "Ottawa") ;        
+        String valueToCheck = p1.getName();  
+        ps1.getValue(name);    
+        boolean isLogged =  p1.checkIsLogged(valueToCheck);        
+        assertTrue(logged == "true");
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}

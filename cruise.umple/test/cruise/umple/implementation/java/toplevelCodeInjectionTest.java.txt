@@ -1,0 +1,79 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+// line 27 "model.ump"
+// line 54 "model.ump"
+// line 67 "model.ump"
+public class Student11
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student11 Attributes
+  private String name;
+  private String b;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student11(String aName, String aB)
+  {
+    name = aName;
+    b = aB;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    // line 25 "model.ump"
+    //doSomething1();
+    // END OF UMPLE AFTER INJECTION
+    return wasSet;
+  }
+
+  public boolean setB(String aB)
+  {
+    boolean wasSet = false;
+    b = aB;
+    wasSet = true;
+    // line 25 "model.ump"
+    //doSomething1();
+    // END OF UMPLE AFTER INJECTION
+    // line 50 "model.ump"
+    //doSomething2();
+    // END OF UMPLE AFTER INJECTION
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public String getB()
+  {
+    return b;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "b" + ":" + getB()+ "]";
+  }
+}

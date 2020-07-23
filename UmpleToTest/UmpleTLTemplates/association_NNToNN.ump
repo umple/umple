@@ -9,20 +9,20 @@ This file creates the necessary for Optional One To Many Association
         		  /////// Association: -- <<=theirEnd.getMultiplicity().getRange()>> <<=theirEnd.getClassName()>> /////// 
         		  //create ... without ...
         		  Test Create<<=uClass.getName()>>Without<<=theirEnd.getClassName()>> {
-        		  <<=uClass.getName()>> <<=buffName>> = new <<=uClass.getName()>>(); \n",,));
-        		  AssertF (some<<=theirEnd.getClassName()>>.get<<=theirEnd.getRoleName().toUpperCase()>>()!= null);
+        		  <<=uClass.getName()>> <<=buffName>> = new <<=uClass.getName()>>());
+        		  AssertF (some<<=myEnd.getClassName()>>.get<<=theirEnd.getRoleName()>>()!= null);
         		  }
         		  //replace
         		  <<#buffName = "some"+theirEnd.getClassName();#>>
         		  Test Replace<<=theirEnd.getClassName()>>In<<=uClass.getName()>> { 
-        		  
-        		  <<=theirEnd.getClassName()>> <<=buffName>> = new <<=theirEnd.getClassName()>>(); 
-        		  <<=theirEnd.getClassName()>> <<=buffName>>2 = new <<=theirEnd.getClassName()>>();
-        		  <<=buffName>>.add<<=theirEnd.getClassName()>>(some<<=myEnd.getClassName()>>);
-        		  AssertEqual (1, <<=buffName>>.getNumberOf<<=myEnd.getClassName()>>s());
-        		  AssertEqual (1, <<=buffName>>.getNumberOf<<=myEnd.getClassName()>>s());
+        		  <<=myEnd.getClassName()>> <<="some"+myEnd.getClassName()>>();
+        		  <<=theirEnd.getClassName()>> <<=buffName>> (); 
+        		  <<=theirEnd.getClassName()>> <<=buffName>>2 ();
+        		  <<="some"+myEnd.getClassName()>>().add<<=theirEnd.getClassName()>>(some<<=theirEnd.getClassName()>>);
+        		  AssertEqual (1, <<="some"+myEnd.getClassName()>>().getNumberOf<<=theirEnd.getClassName()>>s());
+        		  AssertEqual (1, <<="some"+myEnd.getClassName()>>().getNumberOf<<=their.getClassName()>>s());
         		  some<<=myEnd.getClassName()>>.set<<=theirEnd.getClassName()>>(<<=buffName>>2);
-        		  AssertEqual (some<<=myEnd.getClassName()>>, <<=buffName>>2.get<<=myEnd.getClassName()>>(0));
+        		  AssertEqual (some<<=myEnd.getClassName()>>.get<<=myEnd.getClassName()>>(0), <<=buffName>>2);
         		  }
         		  //delete
         		  Test Delete<<=theirEnd.getClassName()>> {
@@ -40,7 +40,7 @@ This file creates the necessary for Optional One To Many Association
         		  
         		  Test BoundaryAtMax {
         		  
-        		  int size = <<=theirEnd.getClassName()>>.getNumberOf<<=uClass.getName()>>s();
+        		  int size = <<=myEnd.getClassName()>>.getNumberOf<<=theirEnd.getClassName()>>s();
         		  <<=theirEnd.getClassName()>> <<=buffName>> = new <<=theirEnd.getClassName()>>();
         		  <<#for (int i = 0; i <= size; i++) {#>>
         		  <<=uClass.getName()>> obj<<=i>> (<<=BuffName>>);
@@ -49,7 +49,7 @@ This file creates the necessary for Optional One To Many Association
         		  AssertEqual(size, <<=buffName>>.getNumberOf<<=uClass.getName>>s());
         		  
         		  <<#for (int i = 0; i <= size; i++) {#>>
-        		  AssertEqual(<<=buffName>>, obj<<=i>>.getSome<<=uClass.getName()>>(0));
+        		  AssertEqual(<<=buffName>>, obj<<=i>>.get<<=theirEnd.getClassName()>>(0));
         		  }#>>
         	
         		  

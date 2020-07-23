@@ -25,7 +25,7 @@ class Lock
       boatInLockRequestingToGoDown
         -> / {setBoatGoingDown(true);}
         ClosingUpperGate;
-      after3minutes [!boatBlockingGate]
+      after(180000) [!boatBlockingGate]
         -> ClosingUpperGate;
     }
 
@@ -59,7 +59,7 @@ class Lock
       boatInLockRequestingToGoUp
         -> / {setBoatGoingUp(true);}
           ClosingLowerGate;
-      after3minutes [!boatBlockingGate]
+      after(180000) [!boatBlockingGate]
         -> ClosingLowerGate;
     }
 

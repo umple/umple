@@ -4,7 +4,7 @@ class Student
   Integer id;
   // trace attribute id and record provided string
   // message as part of  the trace output
-  trace id record "i am tracing attribute name";
+  trace id record "i am tracing attribute id";
   
   status {
     s1 { e1 -> s2; }

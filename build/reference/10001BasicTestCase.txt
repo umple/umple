@@ -1,0 +1,39 @@
+Basic Testcase
+Tests
+noreferences
+
+@@description
+<p>Testcase can be embed within the Umple model and will be generated when using the  <em>Test</em> generator. A testcase can be embedded at the class-level or the model-level. 
+</p>
+
+<p><ul>
+<p>A testcase canonsists of the following elements: </p>
+	 <p><b>Initialization:</b> ~identidier ~name = ~value; </p>
+	 	<p style="padding-right: 5px;">
+		<li>ex: ~identifier ~objectname ( ~Parameters );</li>
+		    <li>Person p ("name", 345);</li></p>
+	 <b>Action:</b> ~identifier ~name = ~value;
+			<p style="padding-right: 5px;"><li>| ~name = ~value ;</li> 
+		 	<li>Integer number = 12345;</li>
+		    <li>number = student.numberOfMentors();</li></p>
+	 <b>Assertions:</b> ~assertion ( ~assertionCode )
+		 <p style="padding-right: 5px;"><li>assertTrue( p.setName("Jane"));</li>
+		 		<li>- assertTrue (bool) </li>
+		 		<li>- assertFalse (bool)</li>
+		 		<li>- assertEqual (value1 , value2)</li>
+		 		<li>- assertNull (value)</li>
+		 		<li>- assertAttribute (attributeName) , to be presence in generated code </li>
+		 		<li>- assertMethod (methodName)   , to be presence in generated code</li></p>
+
+</p></ul>
+
+
+
+@@example
+@@source manualexamples/basicTestcase1.ump
+@@endexample
+
+@@example
+@@source manualexamples/basicTestcase2.ump
+@@endexample
+

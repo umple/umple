@@ -1,0 +1,185 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class First < I
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #First Associations - for documentation purposes
+  #attr_reader :seconds
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(all_seconds)
+    @initialized = false
+    @deleted = false
+    @seconds = []
+    did_add_seconds = set_seconds(all_seconds)
+    raise "Unable to create First, must have at least 1 @seconds. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" unless did_add_seconds
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def get_second(index)
+    a_second = @seconds[index]
+    a_second
+  end
+
+  def get_seconds
+    new_seconds = @seconds.dup
+    new_seconds
+  end
+
+  def number_of_seconds
+    number = @seconds.size
+    number
+  end
+
+  def has_seconds
+    has = @seconds.size > 0
+    has
+  end
+
+  def index_of_second(a_second)
+    index = @seconds.index(a_second)
+    index = -1 if index.nil?
+    index
+  end
+
+  def is_number_of_seconds_valid
+    is_valid = number_of_seconds >= First.minimum_number_of_seconds
+    is_valid
+  end
+
+  def self.minimum_number_of_seconds
+    1
+  end
+
+  def add_second(a_second)
+    was_added = false
+    return false if index_of_second(a_second) != -1
+    @seconds << a_second
+    if a_second.index_of_first(self) != -1
+      was_added = true
+    else
+      was_added = a_second.add_first(self)
+      unless was_added
+        @seconds.delete(a_second)
+      end
+    end
+    was_added
+  end
+
+  def remove_second(a_second)
+    was_removed = false
+    unless @seconds.include?(a_second)
+      return was_removed
+    end
+
+    if number_of_seconds <= First.minimum_number_of_seconds
+      return was_removed
+    end
+
+    oldIndex = @seconds.index(a_second)
+    @seconds.delete_at(oldIndex)
+    if a_second.index_of_first(self) == -1
+      was_removed = true
+    else
+      was_removed = a_second.remove_first(self)
+      @seconds.insert(oldIndex,a_second) unless was_removed
+    end
+    was_removed
+  end
+
+  def set_seconds(new_seconds)
+    was_set = false
+    verified_seconds = []
+    new_seconds.each do |a_second|
+      next if (verified_seconds.include?(a_second))
+      verified_seconds << a_second
+    end
+
+    if verified_seconds.size != new_seconds.size or verified_seconds.size < First.minimum_number_of_seconds
+      return was_set
+    end
+
+    old_seconds = @seconds.dup
+    @seconds.clear
+    verified_seconds.each do |a_new_second|
+      @seconds << a_new_second
+      if old_seconds.include?(a_new_second)
+        old_seconds.delete(a_new_second)
+      else
+        a_new_second.add_first(self)
+      end
+    end
+
+    old_seconds.each do |an_old_second|
+      an_old_second.remove_first(self)
+    end
+    was_set = true
+    was_set
+  end
+
+  def add_second_at(a_second, index)
+    was_added = false
+    if add_second(a_second)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_seconds())
+        index = number_of_seconds() - 1
+      end
+      @seconds.delete(a_second)
+      @seconds.insert(index, a_second)
+      was_added = true
+    end
+    was_added
+  end
+
+  def add_or_move_second_at(a_second, index)
+    was_added = false
+    if @seconds.include?(a_second)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_seconds())
+        index = number_of_seconds() - 1
+      end
+      @seconds.delete(a_second)
+      @seconds.insert(index, a_second)
+      was_added = true
+    else
+      was_added = add_second_at(a_second, index)
+    end
+    was_added
+  end
+
+  def delete
+    @deleted = true
+    copy_of_seconds = @seconds.dup
+    @seconds.clear
+    copy_of_seconds.each do |a_second|
+      a_second.remove_first(self)
+    end
+  end
+
+  def setSecond (aSecond)
+    
+  end
+
+
+
+end

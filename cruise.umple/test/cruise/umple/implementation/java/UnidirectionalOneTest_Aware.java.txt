@@ -25,7 +25,7 @@ public class Mentor
     name = aName;
     if (!setStudent(aStudent))
     {
-      throw new RuntimeException("Unable to create Mentor due to aStudent");
+      throw new RuntimeException("Unable to create Mentor due to aStudent. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

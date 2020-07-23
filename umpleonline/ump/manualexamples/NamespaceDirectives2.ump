@@ -1,0 +1,32 @@
+// Entities A, B and C are currently in
+// namespace m.
+
+namespace m;
+class A{}
+interface B{}
+class C{}
+
+
+// To redefine the namespace of an
+// entity, use the --redefine option.
+// B is now in namespace n.
+
+namespace n --redefine;
+interface B{}
+
+
+// If --redefine is not used, a warning will
+// be issued when trying to redefine the 
+// namespace of an entity
+
+namespace p;
+class C{}
+
+
+// Using namepace -; will deactivate the last
+// declared namespace. There will not be an
+// attempt to redefine the namespace of interface
+// B and a warning will not be issued
+
+namespace -;
+interface B{}

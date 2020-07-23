@@ -1,0 +1,115 @@
+
+
+
+
+class TestGeneratorConsoleMain {
+ depend java.io.File;
+depend java.nio.file.Paths;
+depend joptsimple.OptionParser;
+depend joptsimple.OptionSet;
+depend joptsimple.OptionSpec;
+depend java.util.Arrays;	
+	
+	public static void main(String[] args) {
+		
+		Util util = new Util();
+		OptionParser parser = new OptionParser();
+		//OptionSpec<String> help = parser.accepts("help").withOptionalArg();
+		OptionSpec<Void> help = parser.acceptsAll(Arrays.asList("h","help"),"show help").forHelp();
+		OptionSpec<String> generate = parser.accepts("generate").withOptionalArg();        
+        OptionSpec<String> mutant = parser.accepts("unit-test").withOptionalArg();
+        //OptionSpec<String> mutationType = parser.accepts("t").withRequiredArg();
+        //OptionSpec<String> mutationOperator = parser.accepts("p").withRequiredArg();
+        OptionSpec<String> lang = parser.accepts("l").withRequiredArg();
+        
+        //OptionSet options = parser.parse("generate", "-t", "random", "-p", "full");
+        OptionSet options = parser.parse(args);
+               
+        //OptionSet options = parser.parse("-a", "apple", "-a", "berries", "-a", "mango");
+        /*System.out.println("model name: ");
+        System.out.println(options.valuesOf(generate));
+        System.out.println(options.has(generate));
+        System.out.println("Opetions: ");
+        System.out.println(options.valueOf(mutationType));
+        System.out.println(options.has(mutationType));
+        System.out.println("Operator: ");
+        System.out.println(options.valueOf(mutationOperator));
+        System.out.println(options.has(mutationOperator));
+        
+        System.out.println("Language: ");
+        System.out.println(options.valueOf(lang));
+        System.out.println(options.has(lang));*/
+        String path = "";
+        String languagePath="";
+        
+        
+        if(options.has(help)) {
+        	System.out.println("Please specify <umple_file.umpt> to process for unit-test generation");
+        	System.out.println("For more detailed information visit http://manual.umple.org");
+        	System.out.println("#############################################################################################");
+        	System.out.println("Example: java -jar umple.unit-test.jar -generate model.umpt -l JUnit   ");
+        	System.out.println("#############################################################################################");
+        	System.out.println("Option	    Description");
+        	System.out.println("------	    -----------");
+        	System.out.println("-help		Print help message");
+        	/*System.out.println("-t			indicate the type of replacement for the  \n" + 
+        					   "		          mutation : random, specific element: OptionalOneToMany, OneToMany, OptionalOneToOne, ManyToMany,\n"+
+        					   "			  direction, Integer, String, Double, Float");
+        	System.out.println("-p		 	indicate the targeted element to be mutated: ‘full’ or specific element.");*/
+        	System.out.println("-l			the output language of the unit system to be generated: JUnit, RubyUnit, PhpUnit");
+        	
+
+        }
+        
+        else {
+        
+        languagePath= options.valueOf(lang);
+        
+        path = Paths.get(".").toAbsolutePath().normalize().toString()+File.separator;
+			//path = System.getProperty("user.dir")+File.separator+"cruise/umple/mutation/";
+        	//path=(MutationConsoleMain.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
+		
+            
+        
+        String modelName =options.valueOf(generate);
+        String aLang=options.valueOf(lang);
+        String replacementType = "";
+        String muOperator = "";
+        
+        //replacementType = (options.valueOf(mutationType)).toString();
+        //muOperator = (options.valueOf(mutationOperator)).toString();
+        
+        //System.out.println("Replacement type used: "+replacementType);
+        
+        
+        /*if(languagePath.equals("JUnit")) {
+        	//
+        }*/
+        
+        //util.createUmpleTestSystem(path, modelName,languagePath);
+        try {
+        
+        	util.createUmpleTestSystem(path, modelName,languagePath);
+        	System.out.println("Unit system: "+languagePath);
+        	System.out.println("Unit tests generated successfully !");        
+        
+                       
+        }
+        catch(Exception e) {
+        	System.out.println("Failed to generate unit tests: ");
+        	
+        }
+        /*****
+        // Run Diff on original model against the mutated one to find changes.
+        try {
+         
+			//Runtime.getRuntime().exec("diff " + modelName +" "+ mutationType+File.separator+mutationType+"Mutation_"+modelName);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
+        }
+	}
+
+}

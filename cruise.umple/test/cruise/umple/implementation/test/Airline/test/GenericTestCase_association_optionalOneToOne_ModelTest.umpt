@@ -1,0 +1,638 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association_optionalOneToOne ----/////
+
+Test GenericTestCase_association_optionalOneToOne.ump {
+depend  Airline,RegularFlight,SpecificFlight,PassengerRole,EmployeeRole,Person,PersonRole,Booking ; 
+
+
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Airline       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [1,1] RegularFlight /////// 
+              
+              test createAirlineWithoutRegularFlight {              
+              
+              Airline aAirline();
+              
+              assertTrue (aAirline.numberOfregularFlights()== 0);
+              }
+              
+              
+              
+              test replaceAirlineInRegularFlight { 
+              
+                                          
+              Airline baAirline();
+              
+              Airline aAirline();
+
+              RegularFlight aRegularFlight("null",123,aAirline); 
+              RegularFlight baRegularFlight("null",123,aAirline);
+              
+              aRegularFlight.setAirline(baaAirline);
+              assertEqual (baaAirline, aRegularFlight.getAirline());              
+              assertTrue(baaAirline.getRegularFlight(0) == aRegularFlight );
+                            
+              }
+              
+              
+              test removeRegularFlightInAirline {
+              
+              
+              Airline aAirline();
+              aAirline.addRegularFlight(aRegularFlight);
+              
+              aRegularFlight.delete(); 
+              assertEqual (aAirline.getregularFlight(0) == null);
+              }
+              
+              
+              //add to new B
+              
+              test AddRegularFlightToNewAirline { 
+              RegularFlight aAirline = new RegularFlight();
+              RegularFlight aAirline2 = new RegularFlight();
+      
+              Airline aAirline = new Airline();
+              aAirline.addRegularFlight(aRegularFlight);
+              aAirline.addRegularFlight(aRegularFlight2);  
+        
+              assertEqual(aRegularFlight2, aAirline.getRegularFlight(); 
+              assertEqual (aAirline, aRegularFlight2.getAirline(0));
+              assertEqual (aAirline, aRegularFlight.getNumberOfAirlines());
+              }
+
+              
+              /////// Association: -- [1,1] Person /////// 
+              
+              test createAirlineWithoutPerson {              
+              
+              Airline aAirline();
+              
+              assertTrue (aAirline.numberOfpersons()== 0);
+              }
+              
+              
+              
+              test replaceAirlineInPerson { 
+              
+                                          
+              Airline baAirline();
+              
+              Airline aAirline();
+
+              Person aPerson("RandomString1",123,aAirline); 
+              Person baPerson("RandomString1",123,aAirline);
+              
+              aPerson.setAirline(baaAirline);
+              assertEqual (baaAirline, aPerson.getAirline());              
+              assertTrue(baaAirline.getPerson(0) == aPerson );
+                            
+              }
+              
+              
+              test removePersonInAirline {
+              
+              
+              Airline aAirline();
+              aAirline.addPerson(aPerson);
+              
+              aPerson.delete(); 
+              assertEqual (aAirline.getperson(0) == null);
+              }
+              
+              
+              //add to new B
+              
+              test AddPersonToNewAirline { 
+              Person aAirline = new Person();
+              Person aAirline2 = new Person();
+      
+              Airline aAirline = new Airline();
+              aAirline.addPerson(aPerson);
+              aAirline.addPerson(aPerson2);  
+        
+              assertEqual(aPerson2, aAirline.getPerson(); 
+              assertEqual (aAirline, aPerson2.getAirline(0));
+              assertEqual (aAirline, aPerson.getNumberOfAirlines());
+              }
+  /*-------------------------*/
+  /*  Class RegularFlight       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [1,1] SpecificFlight /////// 
+              
+              test createRegularFlightWithoutSpecificFlight {              
+              Airline aAirline();
+
+              RegularFlight aRegularFlight("null",123,aAirline);
+              
+              assertTrue (aRegularFlight.numberOfspecificFlights()== 0);
+              }
+              
+              
+              
+              test replaceRegularFlightInSpecificFlight { 
+              
+              Airline aAirline();
+                            
+              RegularFlight baRegularFlight("null",123,aAirline);
+              
+              RegularFlight aRegularFlight("null",123,aAirline);
+
+              SpecificFlight aSpecificFlight("null",aRegularFlight); 
+              SpecificFlight baSpecificFlight("null",aRegularFlight);
+              
+              aSpecificFlight.setRegularFlight(baaRegularFlight);
+              assertEqual (baaRegularFlight, aSpecificFlight.getRegularFlight());              
+              assertTrue(baaRegularFlight.getSpecificFlight(0) == aSpecificFlight );
+                            
+              }
+              
+              
+              test removeSpecificFlightInRegularFlight {
+              
+              Airline aAirline();
+
+              RegularFlight aRegularFlight("null",123,aAirline);
+              aRegularFlight.addSpecificFlight(aSpecificFlight);
+              
+              aSpecificFlight.delete(); 
+              assertEqual (aRegularFlight.getspecificFlight(0) == null);
+              }
+              
+              
+              //add to new B
+              
+              test AddSpecificFlightToNewRegularFlight { 
+              SpecificFlight aRegularFlight = new SpecificFlight();
+              SpecificFlight aRegularFlight2 = new SpecificFlight();
+      
+              RegularFlight aRegularFlight = new RegularFlight();
+              aRegularFlight.addSpecificFlight(aSpecificFlight);
+              aRegularFlight.addSpecificFlight(aSpecificFlight2);  
+        
+              assertEqual(aSpecificFlight2, aRegularFlight.getSpecificFlight(); 
+              assertEqual (aRegularFlight, aSpecificFlight2.getRegularFlight(0));
+              assertEqual (aRegularFlight, aSpecificFlight.getNumberOfRegularFlights());
+              }
+
+              
+              /////// Association: -- [0,*] Airline /////// 
+              
+              test createRegularFlightWithAirline {              
+              Airline aAirline();
+
+              RegularFlight aRegularFlight("null",123,aAirline);
+              
+              assertTrue (aRegularFlight.getairline() == aAirline);
+              }
+              
+              
+              
+              test replaceAirline{ 
+              
+              Airline aAirline();
+                            
+              RegularFlight baRegularFlight("null",123,aAirline);
+              
+                            
+              Airline baAirline();
+              
+              aRegularFlight.setAirline(baAirline);
+              
+              assertTrue (baAirline == aRegularFlight.getAirline());              
+              
+                            
+              }
+              
+              
+              
+  /*-------------------------*/
+  /*  Class SpecificFlight       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [0,*] RegularFlight /////// 
+              
+              test createSpecificFlightWithRegularFlight {              
+              RegularFlight aRegularFlight("null",123,aAirline);
+
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
+              
+              assertTrue (aSpecificFlight.getregularFlight() == aRegularFlight);
+              }
+              
+              
+              
+              test replaceRegularFlight{ 
+              
+              RegularFlight aRegularFlight("null",123,aAirline);
+                            
+              SpecificFlight baSpecificFlight("null",aRegularFlight);
+              
+              Airline aAirline();
+              
+              RegularFlight baRegularFlight("null",123,aAirline);
+              
+              aSpecificFlight.setRegularFlight(baRegularFlight);
+              
+              assertTrue (baRegularFlight == aSpecificFlight.getRegularFlight());              
+              
+                            
+              }
+              
+              
+              
+
+              
+              /////// Association: -- [1,1] Booking /////// 
+              
+              test createSpecificFlightWithoutBooking {              
+              RegularFlight aRegularFlight("null",123,aAirline);
+
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
+              
+              assertTrue (aSpecificFlight.numberOfbookings()== 0);
+              }
+              
+              
+              
+              test replaceSpecificFlightInBooking { 
+              
+              RegularFlight aRegularFlight("null",123,aAirline);
+                            
+              SpecificFlight baSpecificFlight("null",aRegularFlight);
+              
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
+PassengerRole aPassengerRole();
+
+              Booking aBooking("RandomString1",aSpecificFlight,aPassengerRole); 
+              Booking baBooking("RandomString1",aSpecificFlight,aPassengerRole);
+              
+              aBooking.setSpecificFlight(baaSpecificFlight);
+              assertEqual (baaSpecificFlight, aBooking.getSpecificFlight());              
+              assertTrue(baaSpecificFlight.getBooking(0) == aBooking );
+                            
+              }
+              
+              
+              test removeBookingInSpecificFlight {
+              
+              RegularFlight aRegularFlight("null",123,aAirline);
+
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
+              aSpecificFlight.addBooking(aBooking);
+              
+              aBooking.delete(); 
+              assertEqual (aSpecificFlight.getbooking(0) == null);
+              }
+              
+              
+              //add to new B
+              
+              test AddBookingToNewSpecificFlight { 
+              Booking aSpecificFlight = new Booking();
+              Booking aSpecificFlight2 = new Booking();
+      
+              SpecificFlight aSpecificFlight = new SpecificFlight();
+              aSpecificFlight.addBooking(aBooking);
+              aSpecificFlight.addBooking(aBooking2);  
+        
+              assertEqual(aBooking2, aSpecificFlight.getBooking(); 
+              assertEqual (aSpecificFlight, aBooking2.getSpecificFlight(0));
+              assertEqual (aSpecificFlight, aBooking.getNumberOfSpecificFlights());
+              }
+  /*-------------------------*/
+  /*  Class PassengerRole       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [1,1] Booking /////// 
+              
+              test createPassengerRoleWithoutBooking {              
+              
+              PassengerRole aPassengerRole();
+              
+              assertTrue (aPassengerRole.numberOfbookings()== 0);
+              }
+              
+              
+              
+              test replacePassengerRoleInBooking { 
+              
+                                          
+              PassengerRole baPassengerRole();
+              
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
+PassengerRole aPassengerRole();
+
+              Booking aBooking("RandomString1",aSpecificFlight,aPassengerRole); 
+              Booking baBooking("RandomString1",aSpecificFlight,aPassengerRole);
+              
+              aBooking.setPassengerRole(baaPassengerRole);
+              assertEqual (baaPassengerRole, aBooking.getPassengerRole());              
+              assertTrue(baaPassengerRole.getBooking(0) == aBooking );
+                            
+              }
+              
+              
+              test removeBookingInPassengerRole {
+              
+              
+              PassengerRole aPassengerRole();
+              aPassengerRole.addBooking(aBooking);
+              
+              aBooking.delete(); 
+              assertEqual (aPassengerRole.getbooking(0) == null);
+              }
+              
+              
+              //add to new B
+              
+              test AddBookingToNewPassengerRole { 
+              Booking aPassengerRole = new Booking();
+              Booking aPassengerRole2 = new Booking();
+      
+              PassengerRole aPassengerRole = new PassengerRole();
+              aPassengerRole.addBooking(aBooking);
+              aPassengerRole.addBooking(aBooking2);  
+        
+              assertEqual(aBooking2, aPassengerRole.getBooking(); 
+              assertEqual (aPassengerRole, aBooking2.getPassengerRole(0));
+              assertEqual (aPassengerRole, aBooking.getNumberOfPassengerRoles());
+              }
+  /*-------------------------*/
+  /*  Class EmployeeRole       */
+  /*-------------------------*/
+
+              /////// Association: -- [0,*] EmployeeRole /////// 
+              //create ... without ...
+              test removeEmployeeRole {
+              
+              EmployeeRole aEmployeeRole();
+              
+              
+              EmployeeRole aEmployeeRole();
+              aEmployeeRole.addEmployeeRole(aEmployeeRole);
+              aEmployeeRole.removeEmployeeRole(aEmployeeRole);
+              
+              assertTrue (aEmployeeRole.getsupervisorAt(0) == null);
+              }
+              
+              
+              
+
+              /////// Association: -- [0,1] EmployeeRole /////// 
+              //create ... without ...
+              Test CreateEmployeeRoleWithoutEmployeeRole {
+              EmployeeRole someEmployeeRole = new EmployeeRole();
+              AssertTrue (someEmployeeRole.getSUPERVISOR()!= null);
+              }
+              //replace
+              
+              Test ReplaceEmployeeRoleInEmployeeRole { 
+              
+              EmployeeRole someEmployeeRole = new EmployeeRole(); 
+              EmployeeRole someEmployeeRole2 = new EmployeeRole();
+              someEmployeeRole.addEmployeeRole(someEmployeeRole);
+              AssertEqual (1, someEmployeeRole.getNumberOfEmployeeRoles());
+              AssertEqual (1, someEmployeeRole.getNumberOfEmployeeRoles());
+              someEmployeeRole.setEmployeeRole(someEmployeeRole2);
+              AssertEqual (someEmployeeRole, someEmployeeRole2.getEmployeeRole(0));
+              }
+              //delete
+              Test DeleteEmployeeRole {
+              // delete EmployeeRole in EmployeeRole
+              someEmployeeRole2.delete(); 
+              AssertEqual (null, someEmployeeRole2.getEmployeeRole(0));
+              }
+              //add to new B
+              
+              Test AddEmployeeRoleToNewEmployeeRole { 
+              EmployeeRole someEmployeeRole = new EmployeeRole();
+              EmployeeRole someEmployeeRole2 = new EmployeeRole();
+      
+              EmployeeRole someEmployeeRole = new EmployeeRole();
+              someEmployeeRole.addEmployeeRole(someEmployeeRole);
+              someEmployeeRole.addEmployeeRole(someEmployeeRole2);  
+        
+              AssertEqual(someEmployeeRole2, someEmployeeRole.getEmployeeRole(); 
+              AssertEqual (someEmployeeRole, someEmployeeRole2.getEmployeeRole(0));
+              AssertEqual (someEmployeeRole, someEmployeeRole.getNumberOfEmployeeRoles());
+              }  /*-------------------------*/
+  /*  Class Person       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [1,1] PersonRole /////// 
+              
+              test createPersonWithoutPersonRole {              
+              Airline aAirline();
+
+              Person aPerson("RandomString1",123,aAirline);
+              
+              assertTrue (aPerson.numberOfpersonRoles()== 0);
+              }
+              
+              
+              
+              test replacePersonInPersonRole { 
+              
+              Airline aAirline();
+                            
+              Person baPerson("RandomString1",123,aAirline);
+              
+              Person aPerson("RandomString1",123,aAirline);
+
+              PersonRole aPersonRole(aPerson); 
+              PersonRole baPersonRole(aPerson);
+              
+              aPersonRole.setPerson(baaPerson);
+              assertEqual (baaPerson, aPersonRole.getPerson());              
+              assertTrue(baaPerson.getPersonRole(0) == aPersonRole );
+                            
+              }
+              
+              
+              test removePersonRoleInPerson {
+              
+              Airline aAirline();
+
+              Person aPerson("RandomString1",123,aAirline);
+              aPerson.addPersonRole(aPersonRole);
+              
+              aPersonRole.delete(); 
+              assertEqual (aPerson.getpersonRole(0) == null);
+              }
+              
+              
+              //add to new B
+              
+              test AddPersonRoleToNewPerson { 
+              PersonRole aPerson = new PersonRole();
+              PersonRole aPerson2 = new PersonRole();
+      
+              Person aPerson = new Person();
+              aPerson.addPersonRole(aPersonRole);
+              aPerson.addPersonRole(aPersonRole2);  
+        
+              assertEqual(aPersonRole2, aPerson.getPersonRole(); 
+              assertEqual (aPerson, aPersonRole2.getPerson(0));
+              assertEqual (aPerson, aPersonRole.getNumberOfPersons());
+              }
+
+              
+              /////// Association: -- [0,*] Airline /////// 
+              
+              test createPersonWithAirline {              
+              Airline aAirline();
+
+              Person aPerson("RandomString1",123,aAirline);
+              
+              assertTrue (aPerson.getairline() == aAirline);
+              }
+              
+              
+              
+              test replaceAirline{ 
+              
+              Airline aAirline();
+                            
+              Person baPerson("RandomString1",123,aAirline);
+              
+                            
+              Airline baAirline();
+              
+              aPerson.setAirline(baAirline);
+              
+              assertTrue (baAirline == aPerson.getAirline());              
+              
+                            
+              }
+              
+              
+              
+  /*-------------------------*/
+  /*  Class PersonRole       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [0,2] Person /////// 
+              
+              test createPersonRoleWithPerson {              
+              Person aPerson("RandomString1",123,aAirline);
+
+              PersonRole aPersonRole(aPerson);
+              
+              assertTrue (aPersonRole.getperson() == aPerson);
+              }
+              
+              
+              
+              test replacePerson{ 
+              
+              Person aPerson("RandomString1",123,aAirline);
+                            
+              PersonRole baPersonRole(aPerson);
+              
+              Airline aAirline();
+              
+              Person baPerson("RandomString1",123,aAirline);
+              
+              aPersonRole.setPerson(baPerson);
+              
+              assertTrue (baPerson == aPersonRole.getPerson());              
+              
+                            
+              }
+              
+              
+              
+  /*-------------------------*/
+  /*  Class Booking       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [0,*] SpecificFlight /////// 
+              
+              test createBookingWithSpecificFlight {              
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
+PassengerRole aPassengerRole();
+
+              Booking aBooking("RandomString1",aSpecificFlight,aPassengerRole);
+              
+              assertTrue (aBooking.getspecificFlight() == aSpecificFlight);
+              }
+              
+              
+              
+              test replaceSpecificFlight{ 
+              
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
+PassengerRole aPassengerRole();
+                            
+              Booking baBooking("RandomString1",aSpecificFlight,aPassengerRole);
+              
+              RegularFlight aRegularFlight("null",123,aAirline);
+              
+              SpecificFlight baSpecificFlight("null",aRegularFlight);
+              
+              aBooking.setSpecificFlight(baSpecificFlight);
+              
+              assertTrue (baSpecificFlight == aBooking.getSpecificFlight());              
+              
+                            
+              }
+              
+              
+              
+
+              
+              /////// Association: -- [0,*] PassengerRole /////// 
+              
+              test createBookingWithPassengerRole {              
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
+PassengerRole aPassengerRole();
+
+              Booking aBooking("RandomString1",aSpecificFlight,aPassengerRole);
+              
+              assertTrue (aBooking.getpassengerRole() == aPassengerRole);
+              }
+              
+              
+              
+              test replacePassengerRole{ 
+              
+              SpecificFlight aSpecificFlight("null",aRegularFlight);
+PassengerRole aPassengerRole();
+                            
+              Booking baBooking("RandomString1",aSpecificFlight,aPassengerRole);
+              
+                            
+              PassengerRole baPassengerRole();
+              
+              aBooking.setPassengerRole(baPassengerRole);
+              
+              assertTrue (baPassengerRole == aBooking.getPassengerRole());              
+              
+                            
+              }
+              
+              
+              
+ 
+ 
+
+ }

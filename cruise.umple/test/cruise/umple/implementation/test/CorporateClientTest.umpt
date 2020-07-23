@@ -1,0 +1,29 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  interfaceTest ----/////
+
+test CorporateClient {
+
+ generate JUnit ;
+ 
+ depend  Person,CorporateClient,IndividualStudent,Course ; 
+
+
+
+ 
+ GIVEN:
+ interfaceTest.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+  
+ 
+   
+
+}

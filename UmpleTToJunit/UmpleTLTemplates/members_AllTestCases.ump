@@ -6,8 +6,22 @@ class UmpleTToJUnit {
 
 members_AllTestCases <<!<</*members_AllTestCases*/>><<#
 
+boolean skipTest = false;
+boolean isConcrete = false;
 for (TestCase tc : model.getTestSuite(0).getTestcases())
-{#>>
+{if (tc.getIsTargeted())
+  {
+    if(tc.getConcreteLanguage().equals( "PhpUnit") || tc.getConcreteLanguage().equals("RubyUnit") )
+    {
+     skipTest = true;
+    }
+  }
+
+
+	if (skipTest) {
+		//skipThisTest 
+	}
+else{ #>>
 	@Test
 	public void <<=tc.getName() >>()
   {
@@ -32,9 +46,10 @@ for (TestCase tc : model.getTestSuite(0).getTestcases())
 	  		for ( Action act : tc.getActions())
 	  		{
 				if (act.getLocOrder() == i)
-				{
-					#>> //include Action Code if there is actions in a TestCAse 
-					  <<=act.getCode()>><<#
+				{//include Action Code if there is actions in a TestCAse 
+					#>> 
+					  <<=act.getCode()>>;
+					  <<#
 				}
 				
 			}
@@ -64,6 +79,8 @@ for (TestCase tc : model.getTestSuite(0).getTestcases())
 	<<#
 }
 
+skipTest = false;
+}
 
 #>>!>>
 }

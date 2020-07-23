@@ -259,8 +259,8 @@ class MNToMNTest extends UnitTestCase
     $s4 = new StudentS(96);
     $s5 = new StudentS(95);
     
-    $m->setStudents($s,$s2,$s3,$s4,$s5);
-    $m2->setStudents($s,$s2,$s3);
+    $m->setStudents(array($s,$s2,$s3,$s4,$s5));
+    $m2->setStudents(array($s,$s2,$s3));
     
     $p = new ProgramS();
     $s->setProgram($p);

@@ -1,0 +1,17 @@
+trait CustomTest1 {  
+  firstName;  
+  
+  test checkName { 
+     assertFalse (firstName == "Orlean");
+     this.setId ( "kingEdward");
+     assertTrue (firstName == "KingEdward");        
+    } 
+    }
+
+class Person {  
+  
+  isA CustomTest1;  
+  
+}  
+ 
+        

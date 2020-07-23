@@ -1,0 +1,37 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Code for Test classses : UmpleTestCase, TestSequence, UmpleAssertion, etc.
+
+ */
+
+
+namespace cruise.umple.compiler;
+
+
+
+
+class UmpleClass {
+
+//return TestCase using name
+
+public UmpleTestCase getUmpleTestCase (String name)
+{
+	for( UmpleTestCase tc : this.getUmpleTestCases())
+	{
+		if (tc.getName().equals(name))
+		{
+			return tc;
+		}
+	}
+	
+	return null;
+
+}
+
+
+}

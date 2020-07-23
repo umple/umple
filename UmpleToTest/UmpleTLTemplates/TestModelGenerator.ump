@@ -71,8 +71,16 @@ class TestModelGenerator {
 
 ////---- Tests for  <<=model.getUmpleFile().getFileName().subSequence(0, model.getUmpleFile().getFileName().length()-4)>> ----/////
 
-Test <<=model.getUmpleFile().getFileName() >> {
-<<@ UmpleToTest.depends >> <<@ UmpleToTest.members_AllAssociations >> 
+test <<=model.getUmpleFile().getFileName().subSequence(0, model.getUmpleFile().getFileName().length()-4)>> {
+
+generate JUnit;
+
+<<@ UmpleToTest.depends >>
+
+GIVEN:
+<<=model.getUmpleFile().getFileName()>>;
+THEN:
+ <<@ UmpleToTest.members_AllAssociations >> 
 
 
 <<#// appendln(realSb, gen.translate("afterCode", uClass));

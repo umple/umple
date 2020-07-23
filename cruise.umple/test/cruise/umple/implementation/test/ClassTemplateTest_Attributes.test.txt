@@ -1,226 +1,307 @@
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 
 ////---- Tests for  ClassTemplateTest_Attributes ----/////
-Test Mentor {
+
+test Mentor {
+
+ generate JUnit ;
+ 
+ depend  Mentor ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_Attributes.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :MAX
 
       test attribute_MAX {
-    
-      AssertTrue( mentor.setMAX(123)));
-      AssertTrue( mentor.getMAX() == 123));
-          
-	}
+    	}
 
  //tests for :MIN
 
       test attribute_MIN {
-    
-      AssertTrue( mentor.setMIN(123)));
-      AssertTrue( mentor.getMIN() == 123));
-          
-	}
+    	}
 
  //tests for :HELLO
 
       test attribute_HELLO {
-    
-    AssertTrue( mentor.setHELLO("RandomString1"));
-    AssertTrue( mentor.getHELLO() =="RandomString1");
-    AssertTrue( mentor.setHELLO("RandomString1"));
-    AssertTrue( mentor.getHELLO("RandomString1"));
-    AssertTrue( mentor.getHELLO() =="RandomString1");
-             
-	}
+    	}
 
  //tests for :str
 
-      test attribute_str {
+      test attribute_immutable_str {
     
           
 
-    AssertMethodFalse( mentor.setStr());
-    AssertTrue( mentor.getStr() == null);
+    
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");
+    //assertMethod(setStr());
+    assertTrue( aMentor.getStr() == null);
 
 
         	}
 
  //tests for :str2
 
-      test attribute_str2 {
+      test attribute_lazy_immutable_str2 {
     
           
 
-AssertNotNull (str2);
-
-        
-          
-
-    AssertMethodFalse( mentor.setStr2());
-    AssertTrue( mentor.getStr2() == null);
+    
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");
+    //assertMethod(setStr2());
+    assertTrue( aMentor.getStr2() == null);
 
 
         	}
 
  //tests for :someName
 
-      test attribute_someName {
-    
-    AssertTrue( mentor.setSomeName("RandomString1"));
-    AssertTrue( mentor.getSomeName() =="RandomString1");
-    AssertTrue( mentor.setSomeName("RandomString1"));
-    AssertTrue( mentor.getSomeName("RandomString1"));
-    AssertTrue( mentor.getSomeName() =="RandomString1");
+      test attribute_lazy_someName {
+              
+        
+      
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");
+        
+          
+
+    assertTrue (aMentor.getSomeName() == null );
+
+        
+        
+    assertTrue( aMentor.setSomeName("RandomString1"));
+    assertTrue( aMentor.getSomeName() =="RandomString1");
+    assertTrue( aMentor.setSomeName("RandomString2"));
+    assertTrue( aMentor.getSomeName()=="RandomString2");
+    assertFalse( aMentor.getSomeName() =="RandomString1");
              
-
           
-
-AssertNotNull (someName);
-    AssertNotNull (Mentor.getSomeName != null)
-          
-
         	}
 
  //tests for :lDoub
 
-      test attribute_lDoub {
-    
-      AssertTrue( mentor.setLDoub(123)));
-      AssertTrue( mentor.getLDoub() == 123));
+      test attribute_lazy_lDoub {
+              
+        
+      
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");    
+      assertTrue( aMentor.setLDoub(123456789));
+      assertTrue( aMentor.getLDoub() == 123456789);
+      assertTrue( aMentor.setLDoub(987654321));
+      assertTrue( aMentor.getLDoub() == 987654321);
+      assertFalse( aMentor.getLDoub() == 123456789);
           
-
           
-
-AssertNotNull (lDoub);
-
         	}
 
  //tests for :lBool
 
-      test attribute_lBool {
-    
-
+      test attribute_lazy_lBool {
+              
+        
           
-
-AssertNotNull (lBool);
-
         	}
 
  //tests for :name
 
-      test attribute_name {
-    
-    AssertTrue( mentor.setName("RandomString1"));
-    AssertTrue( mentor.getName() =="RandomString1");
-    AssertTrue( mentor.setName("RandomString1"));
-    AssertTrue( mentor.getName("RandomString1"));
-    AssertTrue( mentor.getName() =="RandomString1");
-             
-
+      test attribute_lazy_name {
+              
+        
+      
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");
+        
           
 
-AssertNotNull (name);
+    assertTrue (aMentor.getName() == null );
 
+        
+        
+       assertEqual(aMentor.getName(), "Johannes" );
+    assertTrue( aMentor.setName("RandomString1"));
+    assertTrue( aMentor.getName() =="RandomString1");
+    assertTrue( aMentor.setName("RandomString2"));
+    assertTrue( aMentor.getName()=="RandomString2");
+    assertFalse( aMentor.getName() =="RandomString1");
+             
+          
         	}
 
  //tests for :d
 
       test attribute_d {
     
-	}
+      
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");    
+      Date aDate = Date.valueOf("1999-12-12");
+      assertTrue( aMentor.setD(aDate));
+      
+      assertEqual( aMentor.getD() , aDate);
+      
+          
+          
+        	}
 
  //tests for :t
 
       test attribute_t {
     
-	}
+      
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");   
+        Time sTime = Time.valueOf(new Time());
+       assertEqual(aMentor.getT(), sTime );
+       
+        Time aTime = Time.valueOf("12:59:59");
+      assertTrue( aMentor.setT(aTime));
+      assertEqual( aMentor.getT() , aTime);
+      
+          
+          
+        	}
 
  //tests for :i
 
       test attribute_i {
     
-      AssertTrue( mentor.setI(123)));
-      AssertTrue( mentor.getI() == 123));
+      
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");        
+            
+      assertTrue( aMentor.setI(123));
+      assertTrue( aMentor.getI() == 123);
+      assertTrue( aMentor.setI(321));
+      assertTrue( aMentor.getI() == 321);
+      assertFalse( aMentor.getI() == 123);
           
-	}
+          
+        	}
 
  //tests for :derivedTwiceI
 
       test attribute_derivedTwiceI {
     
-      AssertTrue( mentor.setDerivedTwiceI(123)));
-      AssertTrue( mentor.getDerivedTwiceI() == 123));
+      
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");
+       assertEqual(aMentor.getDerivedTwiceI(), i*2 );        
+            
+      assertTrue( aMentor.setDerivedTwiceI(123));
+      assertTrue( aMentor.getDerivedTwiceI() == 123);
+      assertTrue( aMentor.setDerivedTwiceI(321));
+      assertTrue( aMentor.getDerivedTwiceI() == 321);
+      assertFalse( aMentor.getDerivedTwiceI() == 123);
           
-	}
+          
+        	}
 
  //tests for :x
 
       test attribute_x {
     
-      AssertTrue( mentor.setX(123)));
-      AssertTrue( mentor.getX() == 123));
+      
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");        
+            
+      assertTrue( aMentor.setX(123));
+      assertTrue( aMentor.getX() == 123);
+      assertTrue( aMentor.setX(321));
+      assertTrue( aMentor.getX() == 321);
+      assertFalse( aMentor.getX() == 123);
           
-	}
+          
+        	}
 
  //tests for :id
 
       test attribute_id {
     
-    AssertTrue( mentor.setId("RandomString1"));
-    AssertTrue( mentor.getId() =="RandomString1");
-    AssertTrue( mentor.setId("RandomString1"));
-    AssertTrue( mentor.getId("RandomString1"));
-    AssertTrue( mentor.getId() =="RandomString1");
+      
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");
+        
+        
+    assertTrue( aMentor.setId("RandomString1"));
+    assertTrue( aMentor.getId() =="RandomString1");
+    assertTrue( aMentor.setId("RandomString2"));
+    assertTrue( aMentor.getId()=="RandomString2");
+    assertFalse( aMentor.getId() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :p
 
-      test attribute_p {
+      test attribute_defaulted_p {
     
-    AssertTrue( mentor.setP("RandomString1"));
-    AssertTrue( mentor.getP() =="RandomString1");
-    AssertTrue( mentor.setP("RandomString1"));
-    AssertTrue( mentor.getP("RandomString1"));
-    AssertTrue( mentor.getP() =="RandomString1");
+      
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");
+        
+        
+       assertEqual(aMentor.getP(), "robot" );
+    assertTrue( aMentor.setP("RandomString1"));
+    assertTrue( aMentor.getP() =="RandomString1");
+    assertTrue( aMentor.setP("RandomString2"));
+    assertTrue( aMentor.getP()=="RandomString2");
+    assertFalse( aMentor.getP() =="RandomString1");
              
-	}
+
+         assertTrue(aMentor.resetP());
+  assertEqual( aMentor.getDefaultP(), "robot" );
+                   
+        	}
 
  //tests for :q
 
       test attribute_q {
     
-    AssertTrue( mentor.setQ("RandomString1"));
-    AssertTrue( mentor.getQ() =="RandomString1");
-    AssertTrue( mentor.setQ("RandomString1"));
-    AssertTrue( mentor.getQ("RandomString1"));
-    AssertTrue( mentor.getQ() =="RandomString1");
+      
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");
+        
+        
+       assertEqual(aMentor.getQ(), "chicken" );
+    assertTrue( aMentor.setQ("RandomString1"));
+    assertTrue( aMentor.getQ() =="RandomString1");
+    assertTrue( aMentor.setQ("RandomString2"));
+    assertTrue( aMentor.getQ()=="RandomString2");
+    assertFalse( aMentor.getQ() =="RandomString1");
              
-	}
+          
+        	}
 
  //tests for :r
 
-      test attribute_r {
+      test attribute_defaulted_r {
     
-    AssertTrue( mentor.setR("RandomString1"));
-    AssertTrue( mentor.getR() =="RandomString1");
-    AssertTrue( mentor.setR("RandomString1"));
-    AssertTrue( mentor.getR("RandomString1"));
-    AssertTrue( mentor.getR() =="RandomString1");
+      
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");
+        
+        
+       assertEqual(aMentor.getR(), "" );
+    assertTrue( aMentor.setR("RandomString1"));
+    assertTrue( aMentor.getR() =="RandomString1");
+    assertTrue( aMentor.setR("RandomString2"));
+    assertTrue( aMentor.getR()=="RandomString2");
+    assertFalse( aMentor.getR() =="RandomString1");
              
-	}
+
+         assertTrue(aMentor.resetR());
+  assertEqual( aMentor.getDefaultR(), "" );
+                   
+        	}
 
  //tests for :s
 
-      test attribute_s {
+      test attribute_immutable_s {
     
           
 
-    AssertMethodFalse( mentor.setS());
-    AssertTrue( mentor.getS() == "123");
+    
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");
+    //assertMethod(setS());
+    assertTrue( aMentor.getS() == "123");
 
 
         	}
@@ -229,28 +310,85 @@ AssertNotNull (name);
 
       test attribute_tt {
     
-	}
+      
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");   
+       Date sDate = Date.valueOf("1978-12-25");
+       assertEqual(aMentor.getTt(), sDate ); 
+      Date aDate = Date.valueOf("1999-12-12");
+      assertTrue( aMentor.setTt(aDate));
+      
+      assertEqual( aMentor.getTt() , aDate);
+      
+          
+          
+        	}
 
  //tests for :u
 
       test attribute_u {
     
-	}
+      
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");   
+        Time sTime = Time.valueOf("12:13:14");
+       assertEqual(aMentor.getU(), sTime );
+       
+        Time aTime = Time.valueOf("12:59:59");
+      assertTrue( aMentor.setU(aTime));
+      assertEqual( aMentor.getU() , aTime);
+      
+          
+          
+        	}
 
  //tests for :v
 
-      test attribute_v {
+      test attribute_defaulted_v {
     
-	}
+      
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");   
+       Date sDate = Date.valueOf("1978-12-26");
+       assertEqual(aMentor.getV(), sDate ); 
+      Date aDate = Date.valueOf("1999-12-12");
+      assertTrue( aMentor.setV(aDate));
+      
+      assertEqual( aMentor.getV() , aDate);
+      
+          
+
+         
+  assertTrue(aMentor.resetV());
+  Date  resetDate =  Date.valueOf("1978-12-26");
+  assertEqual( aMentor.getDefaultV(), resetDate);
+  
+                   
+        	}
 
  //tests for :w
 
-      test attribute_w {
+      test attribute_defaulted_w {
     
-	}
+      
+        Mentor aMentor("RandomString1","Date.valueOf("1999-12-12")",123,"RandomString1");   
+        Time sTime = Time.valueOf("12:59:59");
+       assertEqual(aMentor.getW(), sTime );
+       
+        Time aTime = Time.valueOf("12:59:59");
+      assertTrue( aMentor.setW(aTime));
+      assertEqual( aMentor.getW() , aTime);
+      
+          
+
+         
+  assertTrue(aMentor.resetW());
+  Time  resetTime =  Time.valueOf("12:59:59");
+  assertEqual( aMentor.getDefaultW(), resetTime);
+  
+                   
+        	}
 
 
   
+ 
    
 
 }

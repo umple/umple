@@ -52,9 +52,9 @@ public class JUnitTemplateTest extends UnitTemplateTest{
 		//createUmpleSystem(languagePath, "/testGenerator_jUnit_testGenerate.ump");
 		
 		language = "JUnit";
-	    System.out.println(pathToInput);    	    
+	    //system.out.println(pathToInput);    	    
 	    createUmpleTestSystem(languagePath, "/testGenerator_jUnit_testGenerate.umpt");
-	    System.out.println(pathToInput);
+	    //system.out.println(pathToInput);
 	    assertGeneratedCodeEquals(pathToInput, "/junit/GenerateTest.java");
 	    Assert.assertEquals(true, (new File(pathToInput + "/junit/GenerateTest.java")).exists());
 	    
@@ -65,7 +65,7 @@ public class JUnitTemplateTest extends UnitTemplateTest{
 	  public void depends()
 	  {
 	    language = "JUnit";
-	    //System.out.println(languagePath);
+	    ////system.out.println(languagePath);
 	    createUmpleTestSystem(languagePath, "/testGenerator_jUnit_depend.umpt");
 	    //assertUmpleTemplateFor("junit/testGenerate_model.umpt","junit/Testgenerate_model.java");
 	    assertGeneratedCodeEquals(pathToInput, "/junit/DependTest.java");
@@ -76,7 +76,7 @@ public class JUnitTemplateTest extends UnitTemplateTest{
 	  public void subOption()
 	  {
 	    language = "JUnit";
-	    //System.out.println(languagePath);
+	    ////system.out.println(languagePath);
 	    createUmpleTestSystem(languagePath, "/testGenerator_jUnit_subOption.umpt");
 	    //assertUmpleTemplateFor("junit/testGenerate_model.umpt","junit/Testgenerate_model.java");
 	    assertGeneratedCodeEquals(pathToInput, "/junit/SubOptionTest.java");
@@ -87,7 +87,7 @@ public class JUnitTemplateTest extends UnitTemplateTest{
 	  public void testCase()
 	  {
 	    language = "JUnit";
-	    //System.out.println(languagePath);
+	    ////system.out.println(languagePath);
 	    createUmpleTestSystem(languagePath, "/testGenerator_jUnit_testcase.umpt");
 	    //assertUmpleTemplateFor("junit/testGenerate_model.umpt","junit/Testgenerate_model.java");
 	    assertGeneratedCodeEquals(pathToInput, "/junit/TestcaseTest.java");
@@ -98,7 +98,7 @@ public class JUnitTemplateTest extends UnitTemplateTest{
 	  public void testCase_assertion()
 	  {
 	    language = "JUnit";
-	    //System.out.println(languagePath);
+	    ////system.out.println(languagePath);
 	    createUmpleTestSystem(languagePath, "/testGenerator_jUnit_testcase_assertion.umpt");
 	    //assertUmpleTemplateFor("junit/testGenerate_model.umpt","junit/Testgenerate_model.java");
 	    assertGeneratedCodeEquals(pathToInput, "/junit/AssertionTest.java");
@@ -109,7 +109,7 @@ public class JUnitTemplateTest extends UnitTemplateTest{
 	  public void testCase_assertionTrue()
 	  {
 	    language = "JUnit";
-	    //System.out.println(languagePath);
+	    ////system.out.println(languagePath);
 	    createUmpleTestSystem(languagePath, "/testGenerator_jUnit_depend.umpt");
 	    //assertUmpleTemplateFor("junit/testGenerate_model.umpt","junit/Testgenerate_model.java");
 	    Assert.assertEquals(true, (new File(pathToInput + "/junit/DependTest.java")).exists());
@@ -119,7 +119,7 @@ public class JUnitTemplateTest extends UnitTemplateTest{
 	  public void testCase_assertionFalse()
 	  {
 	    language = "JUnit";
-	    //System.out.println(languagePath);
+	    ////system.out.println(languagePath);
 	    createUmpleTestSystem(languagePath, "/testGenerator_jUnit_depend.umpt");
 	    //assertUmpleTemplateFor("junit/testGenerate_model.umpt","junit/Testgenerate_model.java");
 	    Assert.assertEquals(true, (new File(pathToInput + "/junit/DependTest.java")).exists());
@@ -129,9 +129,19 @@ public class JUnitTemplateTest extends UnitTemplateTest{
 	  public void testCase_assertioneEqual()
 	  {
 	    language = "JUnit";
-	    //System.out.println(languagePath);
+	    ////system.out.println(languagePath);
 	    createUmpleTestSystem(languagePath, "/testGenerator_jUnit_depend.umpt");
 	    //assertUmpleTemplateFor("junit/testGenerate_model.umpt","junit/Testgenerate_model.java");
 	    Assert.assertEquals(true, (new File(pathToInput + "/junit/DependTest.java")).exists());
+	  }
+	  
+	  @Test 
+	  public void testCase_NoGiven()
+	  {
+	    language = "JUnit";
+	    ////system.out.println(languagePath);
+	    createUmpleTestSystem(languagePath, "/testGenerator_jUnit_testGenerate.umpt");
+	    //assertUmpleTemplateFor("junit/testGenerate_model.umpt","junit/Testgenerate_model.java");
+	    Assert.assertEquals(true, (new File(pathToInput + "/junit/GenerateTest.java")).exists());
 	  }
 }

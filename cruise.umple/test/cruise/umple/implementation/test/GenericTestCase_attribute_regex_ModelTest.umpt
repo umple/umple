@@ -1,0 +1,31 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_attribute_regex ----/////
+
+test GenericTestCase_attribute_regex {
+
+generate JUnit;
+
+depend  Student ; 
+
+
+
+
+GIVEN:
+GenericTestCase_attribute_regex.ump;
+THEN:
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Student       */
+  /*-------------------------*/
+
+ 
+ 
+
+ }

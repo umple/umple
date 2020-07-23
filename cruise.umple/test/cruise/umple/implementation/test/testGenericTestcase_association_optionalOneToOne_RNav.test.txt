@@ -1,0 +1,87 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association_optionalOneToOne_RNav ----/////
+
+test Calculator {
+
+ generate JUnit ;
+ 
+ depend  Calculator,Number,Controller ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_association_optionalOneToOne_RNav.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+  
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association_optionalOneToOne_RNav ----/////
+
+test Number {
+
+ generate JUnit ;
+ 
+ depend  Calculator,Number,Controller ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_association_optionalOneToOne_RNav.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+  
+ 
+   
+
+}
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association_optionalOneToOne_RNav ----/////
+
+test Controller {
+
+ generate JUnit ;
+ 
+ depend  Calculator,Number,Controller ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_association_optionalOneToOne_RNav.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+  
+ 
+   
+
+}

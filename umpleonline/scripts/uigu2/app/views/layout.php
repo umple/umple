@@ -23,16 +23,17 @@
             <a href="<?php echo WEB_FOLDER ?>">Main Page</a> 
           </td>
           <td> | Pick a class:
-            <form action="<?php echo WEB_FOLDER.'main/show_element'?>" method="POST">
+            <form id="classForm" action="<?php echo WEB_FOLDER.'main/show_element'?>" method="POST">
               <?php 
                 if (isset($element_names) && is_array($element_names)){
+                  $form_id = "classForm";
                   foreach($element_names as $e){
                     if($instantiatable_info[$e]) {
                       // classes that can be instantiated
-                      echo "<button name='element_name' value='$e' onclick='this.form.submit();'><strong>$e &#91;$numbers_of_elements[$e]&#93;</strong></button>";
+                      echo "<a href='javascript:document.getElementById($form_id).submit();'><button name='element_name' value='$e' onclick='javascript:document.getElementById($form_id).submit();'><strong>$e &#91;$numbers_of_elements[$e]&#93;</strong></button></a>";
                     } else {
                       // classes that cannot be instantiated
-                      echo "<button name='element_name' value='$e' onclick='this.form.submit();'>$e &#91;$numbers_of_elements[$e]&#93;</button>";
+                      echo "<a href='javascript:document.getElementById($form_id).submit();'><button name='element_name' value='$e' onclick='javascript:document.getElementById($form_id).submit();'>$e &#91;$numbers_of_elements[$e]&#93;</button></a>";
                     }
                   }
                 }

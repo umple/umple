@@ -1,0 +1,22 @@
+after {*} set* { doSomething(); }
+class Student1
+{
+	name;
+}
+class Student2
+{
+	name;
+	isA T;
+}
+trait T{
+    void setSomething(){
+        //code  
+    }
+}
+class Employer
+{
+	age;
+	String testFunction() {
+		return "This is a test function";
+	}
+}

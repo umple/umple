@@ -12,14 +12,14 @@ class OptionalOneToMNTest extends UnitTestCase
   
   public function test_ConstructorWithTooFew()
   {
-  	$this->expectException(new Exception("Unable to create MentorE, must have 2 to 5 students"));
+  	$this->expectException(new Exception("Unable to create MentorE, must have 2 to 5 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentE();
     new MentorE(array($s));
   }
 
   public function test_ConstructorWithTooMany()
   {
-  	$this->expectException(new Exception("Unable to create MentorE, must have 2 to 5 students"));
+  	$this->expectException(new Exception("Unable to create MentorE, must have 2 to 5 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentE();
     $s2 = new StudentE();    
     $s3 = new StudentE();
@@ -65,14 +65,14 @@ class OptionalOneToMNTest extends UnitTestCase
 
   public function test_constructorWatchOutForDuplicateEntries()
   {
-  	$this->expectException(new Exception("Unable to create MentorE, must have 2 to 5 students"));
+  	$this->expectException(new Exception("Unable to create MentorE, must have 2 to 5 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentE();
     new MentorE(array($s, $s));
   }
   
   public function test_constructorCheckForExistingMentorNotEnoughToSurvive()
   {
-  	$this->expectException(new Exception("Unable to create MentorE, must have 2 to 5 students"));
+  	$this->expectException(new Exception("Unable to create MentorE, must have 2 to 5 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s1 = new StudentE();
     $s2 = new StudentE();
     $s3 = new StudentE();

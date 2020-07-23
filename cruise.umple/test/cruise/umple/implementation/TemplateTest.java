@@ -294,6 +294,59 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/MultipleConstraints.php");
     SampleFileWriter.destroy(pathToInput + "/multiple_constraints.rb");
     
+    // Tear down issue 1444 tests
+    SampleFileWriter.destroy(pathToInput + "/Academy.java");
+    SampleFileWriter.destroy(pathToInput + "/Registration.java");
+    
+    // Tear down issue 1464 tests
+    SampleFileWriter.destroy(pathToInput + "/JavaPhpRubyNoNullMethodInjection.java");
+    SampleFileWriter.destroy(pathToInput + "/JavaPhpRubyNoNullMethodInjection.php");
+    SampleFileWriter.destroy(pathToInput + "/java_php_ruby_no_null_method_injection.rb");
+    
+    // Tear down issue 1315 tests
+    SampleFileWriter.destroy(pathToInput + "/B.java");
+    SampleFileWriter.destroy(pathToInput + "/C.java");
+    SampleFileWriter.destroy(pathToInput + "/I.java");
+    SampleFileWriter.destroy(pathToInput + "/J.java");
+    SampleFileWriter.destroy(pathToInput + "/Y.java");
+    SampleFileWriter.destroy(pathToInput + "/b.rb");
+    SampleFileWriter.destroy(pathToInput + "/c.rb");
+    SampleFileWriter.destroy(pathToInput + "/i.rb");
+    SampleFileWriter.destroy(pathToInput + "/j.rb");
+    SampleFileWriter.destroy(pathToInput + "/y.rb");
+    SampleFileWriter.destroy(pathToInput + "/z.rb");
+    SampleFileWriter.destroy(pathToInput + "/m/");
+    SampleFileWriter.destroy(pathToInput + "/n/");
+    
+    // Tear down issue 834 tests
+    SampleFileWriter.destroy(pathToInput + "/First.java");
+    SampleFileWriter.destroy(pathToInput + "/Second.java");
+    SampleFileWriter.destroy(pathToInput + "/I.java");
+    SampleFileWriter.destroy(pathToInput + "/first.rb");
+    SampleFileWriter.destroy(pathToInput + "/second.rb");
+    SampleFileWriter.destroy(pathToInput + "/i.rb");
+    SampleFileWriter.destroy(pathToInput + "/First.php");
+    SampleFileWriter.destroy(pathToInput + "/Second.php");
+    SampleFileWriter.destroy(pathToInput + "/I.php");
+
+
+    // Tear down issue 1521 tests
+    SampleFileWriter.destroy(pathToInput + "/Student10.java");
+    SampleFileWriter.destroy(pathToInput + "/Student11.java");
+    SampleFileWriter.destroy(pathToInput + "/Student12.java");
+    SampleFileWriter.destroy(pathToInput + "/toplevelAfterOnTraitClass.java");
+    SampleFileWriter.destroy(pathToInput + "/Employer.java");
+    SampleFileWriter.destroy(pathToInput + "/Student10.php");
+    SampleFileWriter.destroy(pathToInput + "/Student11.php");
+    SampleFileWriter.destroy(pathToInput + "/Student12.php");
+    SampleFileWriter.destroy(pathToInput + "/toplevelAfterOnTraitClass.php");
+    SampleFileWriter.destroy(pathToInput + "/Employer.php");
+    SampleFileWriter.destroy(pathToInput + "/student_10.rb");
+    SampleFileWriter.destroy(pathToInput + "/student_11.rb");
+    SampleFileWriter.destroy(pathToInput + "/student_12.rb");
+    SampleFileWriter.destroy(pathToInput + "/toplevel_after_on_trait_class.rb");
+    SampleFileWriter.destroy(pathToInput + "/employer.rb");
+
    // destroying the object factory
   }
 
