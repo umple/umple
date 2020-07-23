@@ -554,17 +554,21 @@ class JavaGenerator
     String singularName = event.getName();
     int numOfOccurance = 0;
     // Check if there is same event in different stateMahcine.
-    for (UmpleClass c : getModel().getUmpleClasses())
+    UmpleClass c = sm.getUmpleClass();
+    StateMachine parentStateMachine = sm;
+    while (c == null)
     {
-      for (StateMachine sm2 : c.getAllStateMachines())
+      parentStateMachine = parentStateMachine.getSuperStateMachine();
+      c = parentStateMachine.getUmpleClass();
+    }
+    for (StateMachine sm2 : c.getAllStateMachines())
+    {
+      for (Event e : sm2.getEvents())
       {
-        for (Event e : sm2.getEvents())
+        if (e.equals(event))
         {
-          if (e.equals(event))
-          {
-            numOfOccurance++;
-            break;
-          }
+          numOfOccurance++;
+          break;
         }
       }
     }

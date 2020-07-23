@@ -31,11 +31,11 @@ class UmpleToJava {
       // Issue1602
       String singularName = action.getActionCode();
       String prefix = "";
-      if (singularName.startsWith("start"))
+      if (singularName.startsWith("start") && singularName.endsWith("Handler();"))
       {
         prefix = "start";
         singularName = singularName.substring(5);
-      } else if (singularName.startsWith("stop")) 
+      } else if (singularName.startsWith("stop") && singularName.endsWith("Handler();"))
       {
         prefix = "stop";
         singularName = singularName.substring(4);
