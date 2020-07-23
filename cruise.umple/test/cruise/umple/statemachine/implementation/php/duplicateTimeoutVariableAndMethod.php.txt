@@ -1,0 +1,101 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X State Machines
+  private static $Sm1S1 = 1;
+  private static $Sm1S2 = 2;
+  private $sm1;
+
+  private static $Sm2S1 = 1;
+  private static $Sm2S2 = 2;
+  private $sm2;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setSm1(self::$Sm1S1);
+    $this->setSm2(self::$Sm2S1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getSm1FullName()
+  {
+    $answer = $this->getSm1();
+    return $answer;
+  }
+
+  public function getSm2FullName()
+  {
+    $answer = $this->getSm2();
+    return $answer;
+  }
+
+  public function getSm1()
+  {
+    if ($this->sm1 == self::$Sm1S1) { return "Sm1S1"; }
+    elseif ($this->sm1 == self::$Sm1S2) { return "Sm1S2"; }
+    return null;
+  }
+
+  public function getSm2()
+  {
+    if ($this->sm2 == self::$Sm2S1) { return "Sm2S1"; }
+    elseif ($this->sm2 == self::$Sm2S2) { return "Sm2S2"; }
+    return null;
+  }
+
+  public function timeouts1Tos2()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm1 = $this->sm1;
+    $aSm2 = $this->sm2;
+    if ($aSm1 == self::$Sm1S1)
+    {
+      $this->setSm1(self::$Sm1S2);
+      $wasEventProcessed = true;
+    }
+
+    
+    if ($aSm2 == self::$Sm2S1)
+    {
+      $this->setSm2(self::$Sm2S2);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setSm1($aSm1)
+  {
+    $this->sm1 = $aSm1;
+  }
+
+  private function setSm2($aSm2)
+  {
+    $this->sm2 = $aSm2;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

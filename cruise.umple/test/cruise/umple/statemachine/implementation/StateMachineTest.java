@@ -900,7 +900,7 @@ public class StateMachineTest extends StateMachineTemplateTest
   @Test
   public void duplicateTimeoutVariableAndMethod()
   {
-    assertUmpleTemplateFor("duplicateTimeoutVariableAndMethod.ump","java/duplicateTimeoutVariableAndMethod.java.txt","X");
+    assertUmpleTemplateFor("duplicateTimeoutVariableAndMethod.ump",languagePath + "/duplicateTimeoutVariableAndMethod." + languagePath +".txt","X");
   }
   
 }
