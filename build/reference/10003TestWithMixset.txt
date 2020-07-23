@@ -1,0 +1,16 @@
+Test with Mixset
+Tests
+noreferences
+
+@@description
+<p>Tests can be integrated with mixsets to enhance feature-based testing. This allows the user to toggle feature-specific tests using a mixset dedicated for testcases that can be switched on using the <i>use mixsetTest;</i> statement. The following example shows how to create a mixset for testing another mixset. Note the tests can also be embedded in the same mixset or can be defined in a separate one. The only issue that need to be handled is that dependency between mixsets. If your test case contains an instantiated object that uses attribute in a particular mixset then either embed the tests within the mixset to avoid errors or make sure you always switch-on the targeted feature to avoid instantiation errors. Currently, this is not caught by the compiler but will be added.
+
+</p>
+
+
+
+@@example
+@@source manualexamples/autotest_mixset.ump
+@@endexample
+
+

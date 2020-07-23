@@ -4,6 +4,9 @@ use members_AllAttributes.ump;
 use members_AllStateMachines.ump;
 use members_AllMethods.ump;
 use members_AllTestCases.ump;
+use members_Before.ump;
+use members_After.ump;  
+use members_TestInit.ump;
 use depends.ump;
 
 
@@ -40,6 +43,10 @@ class TestClassGenerator {
   GeneratedClass gClass = uClass.getGeneratedClass();
   TestGenerator gen = new TestGenerator();
   gen.setModel(model);
+  String isAbstract ="";
+  
+   if (uClass.getIsAbstract()) { isAbstract = "abstract "; }
+   
   
   //appendln(realSb, gen.translate("beforeCode", uClass));
 
@@ -67,20 +74,79 @@ class TestClassGenerator {
 <<# if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).getIsInline()) {append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else { append(realSb, "\n{0}", Comment.format("Multiline",uClass.getComments()));} } #>>
 
 ////---- Tests for  <<=model.getUmpleFile().getFileName().subSequence(0, model.getUmpleFile().getFileName().length()-4)>> ----/////
+
 <<#
 	String coverageCriteria = "";
+	String unitLanguage = "";
 	for (GenerateTarget tr : model.getGenerates() )
     	{
     		if (tr.hasSuboptions())
     		{
+    			
     			//coverageCriteria = tr.getSubOption(0);
     		}
     	}
+    	
+    	
+    	if (model.hasGenerates())
+    	for (GenerateTarget gt : model.getGenerates())
+    {
+       if (gt.hasSuboptions())
+       {
+    	for (String so : gt.getSuboptions()){
+    		
+    		if( so.equals("JUnit"))
+    		{
+    			unitLanguage = "JUnit";
+    		}
+    		
+    		else if( so.equals("PhpUnit"))
+    		{
+    			unitLanguage = "PhpUnit";
+    		}
+    		
+    		else if( so.equals("RubyUnit"))
+    		{
+    			unitLanguage = "RubyUnit";
+    		}
+    		
+    		else 
+    		{
+    			unitLanguage = "JUnit";
+    		}     			
+    	}
+    	    
+    	}
+    	
+    	else {
+    	if (gt.getLanguage().equals("Test"))
+    	{
+    	  unitLanguage = "JUnit";
+    	}
+      }
+    		
+    }
+    
+    else { unitLanguage = "JUnit";}
+    	
  #>>
-Test <<=uClass.getName() >> {
- <<@ UmpleToTest.members_AllAttributes >>
+
+<<=isAbstract>>test <<=uClass.getName() >> {
+
+ generate <<=unitLanguage>> ;
+ 
+ <<@ UmpleToTest.depends >>
+ 
+ GIVEN:
+ <<=model.getUmpleFile().getFileName()>>;
+ 
+ <<@ UmpleToTest.members_TestInit >>
+ 
+ THEN:
+<<@ UmpleToTest.members_Before >> <<@ UmpleToTest.members_AllAttributes >>
  <<@ UmpleToTest.members_AllTestCases >> 
- <<@ UmpleToTest.members_AllMethods >> 
+ <<@ UmpleToTest.members_AllMethods >>
+ <<@ UmpleToTest.members_After >> 
 <<# //appendln(realSb, gen.translate("afterCode", uClass));#>> 
 
 }

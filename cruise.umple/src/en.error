@@ -35,8 +35,8 @@
 28: 2, "http://manual.umple.org/?E028ConstraintIdentifierIncorrect.html", Attribute '{0}' in constraint is not defined in class '{1}' ;
 29: 2, "http://manual.umple.org/?E029ConstraintTypeMismatch.html", Constraint contains comparison between incompatible types ;
 
-30: 4, "http://manual.umple.org/?W030RedefinedNamespace.html", Redefining the namespace of class {0} to {1} ;
-31: 4, "http://manual.umple.org/?W031NamespaceNotUsed.html", Declared namespace {0} was not used before declaring {1} ;
+30: 4, "http://manual.umple.org/?W030RedefinedNamespace.html", Ignored attempt to redefine the namespace of {0} {1} to {2}. Use --redefine to force this ;
+31: 4, "http://manual.umple.org/?W031NamespaceNotUsed.html", Declared namespace {0} was not used ;
 32: 1, "http://manual.umple.org/?E032ReservedRoleName.html", The role name '{0}' has a conflict. Please don't use plural form of class name as a role name ;
 33: 3, "http://manual.umple.org/?W033MissingSuperclass.html", The indicated superclass {0} of class {1} does not exist and has been ignored. Declare {0} to be external if it is defined outside this Umple system ;
 34: 2, "http://manual.umple.org/?E034MultipleInheritance.html", Multiple inheritance not allowed in Umple so  code can be generated for languages that do not permit it. So class {0} cannot be a subclass of class {1} as well as other classes. Consider using multiple implementations of an interface or using traits ;
@@ -48,6 +48,7 @@
 
 40: 2, "http://manual.umple.org/?E040SingletonHasSubclasses.html", Singleton classes have a private constructor and cannot be extended. So class {0} cannot be a subclass of singleton class {1} ;
 41: 2, "http://manual.umple.org/?E041NonVoidMethodDeclaredasQueued.html", A non-void method cannot be declared as queued;
+42: 4, "http://manual.umple.org/?W042NamespaceCannotBeDefault.html",Class or interface {0} must not be in default namespace. Its namespace has been changed to {1};
 44: 3, "http://manual.umple.org/?W044AttributeDuplicatedinSuperclass.html", Class '{0}' has attribute name {1} that duplicates an attribute inherited from a superclass '{2}'. New definition is being disregarded ;
 45: 4, "http://manual.umple.org/?W045InitializedValueinKey.html", Attribute '{0}' in class '{1}' is in the key. Initializing it will result in all instances having this same value and being treated as equal ;
 46: 4, "http://manual.umple.org/?W046AttributeHasTemplateType.html", Attribute {0} in class {1} is declared using a collection template type {2}. Use a directed association (->) or multi-valued attribute([]) to follow proper modelling conventions ;
@@ -87,6 +88,7 @@
 81: 2, "http://manual.umple.org/?E081InvalidMultivaluedAttributeAssignment.html", Invalid multivalued attribute assignment of attribute '{1}' in class '{0}' ;
 
 82: 4, "http://manual.umple.org/?E082ConflictingMethodModifersDeclaredForStateDependentMethod.html", Found conflicting modifiers for method '{0}'. Ignoring '{1}' and using '{2}' ;
+83: 2, "http://manual.umple.org/?E083InvalidMultivaluedAttributeInitialization.html", A derived attribute should not contain a list indicator. If you want to create a list initializer, it should terminate with a semicolon ;
 
 # Model Constraints' Error messages
 90: 2, "http://manual.umple.org/?E090AttributeNameNotFoundConstraint.html", Attribute named {0} was not found in class {1}, as required in constraint ;
@@ -131,7 +133,7 @@
 161: 4, "http://manual.umple.org/?WE1xxIdentifierInvalid.html", Constant name '{0}' should start with a upper-case letter ;
 
 
-170: 3, "http://manual.umple.org/build/reference/09170CustomConstructor.txt", Custom constructors should normally not be provided in Umple. Consider using before or after keywords to adjust what the constructor does, or adjusting constructor parameters using keywords like lazy.;
+170: 3, "http://manual.umple.org/?CustomConstructor.html", Custom constructors should normally not be provided in Umple. Consider using before or after keywords to adjust what the constructor does, or adjusting constructor parameters using keywords like lazy.;
 180: 2, "http://manual.umple.org/?E180DuplicateAssociationNameClassHierarchy", Class '{0}' is a subclass of class '{1}' and may not have multiple associations with the same name '{2}' ;
 
 # Messages related to traits starting with 200
@@ -202,12 +204,17 @@
 1012: 3, "http://manual.umple.org/?W1012MethodNotFoundInjection.html", Method '{0}' cannot be found. Injection was ignored. ;
 1013: 3, "http://manual.umple.org/?W1013ParameterSpecificationDoesNotApply.html", Parameter specification does not apply to code injections with the '{0}' keyword. The injection was applied to all generated methods. ;
 1014: 3, "http://manual.umple.org/?W1014ExcludedMethodNotFoundInjection.html", Excluded method '{0}' cannot be found. The exclusion was ignored. ;
+# Issue 1483
+1015: 3, "http://manual.umple.org/?BasicStateMachines.html", Methods in standalone state machines might not be correctly generated. State machines can be used in traits or put directly in a class to achieve the same effect. ;
+
 
 1500 : 1, "http://manual.umple.org/?E15xxParsingError.html", Parsing error: '{0}' not understood ; 
 1501 : 1, "http://manual.umple.org/?E15xxParsingError.html", Parsing error: Arguments to '{0}' not understood ; 
 1502 : 1, "http://manual.umple.org/?E15xxParsingError.html", Parsing error: Structure of '{0}' invalid ;
 1503 : 1, "http://manual.umple.org/?E15xxParsingError.html", Parsing error: {0}, did you mean {1} ;  
 1510 : 1, "http://manual.umple.org/?E1510UseFileMissing.html", File '{0}' referred to in use statement was not found ; 
+
+1511 : 2, "http://manual.umple.org/?E1511InlineMixsetIsNotSupported.html", Inline syntax for the mixset '{0}' is not supported. Please enclose the body of '{0}' with curly brackets. ; 
 
 
 
@@ -257,4 +264,12 @@
 # Message to emit when you are parsing a construct but are not yet processing it in a sensible way/
 9999: 5, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Feature under development. '{0}' found and ignored. processed as: '{1}' ;
 
+# Messages related to test in Umple model
+6001: 4, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Missing implementation for tests found in interface. Class {0} must implement : {1};
+6002: 2, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Error parsing test case . {0} ;
+6003: 2, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Error parsing assertion . {0} ;
+6004: 2, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Error parsing test inside method . {0} ;
+6005: 2, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Error parsing test case in interface . {0} ;
+6006: 4, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Class {0} has test sequence {1} but no tests were detected. ;
+6006: 4, "http://manual.umple.org/?W9999FeatureUnderDevelopment.html", Class {0}:  test case {2} is not included in test sequence {1}. ;
 

@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
+// line 5 "../../../../ump/tmp12056/model.ump"
 public class Mentor
 {
 
@@ -75,14 +76,14 @@ public class Mentor
     x = nextX++;
     if (!setId(aId))
     {
-      throw new RuntimeException("Cannot create due to duplicate id");
+      throw new RuntimeException("Cannot create due to duplicate id. See http://manual.umple.org?RE003ViolationofUniqueness.html");
     }
   }
 
   //------------------------
   // INTERFACE
   //------------------------
-
+  /* Code from template attribute_SetImmutable */
   public boolean setStr2(String aStr2)
   {
     boolean wasSet = false;
@@ -145,6 +146,9 @@ public class Mentor
   {
     boolean wasSet = false;
     String anOldId = getId();
+    if (anOldId != null && anOldId.equals(aId)) {
+      return true;
+    }
     if (hasWithId(aId)) {
       return wasSet;
     }
@@ -156,7 +160,7 @@ public class Mentor
     mentorsById.put(aId, this);
     return wasSet;
   }
-
+  /* Code from template attribute_SetDefaulted */
   public boolean setP(String aP)
   {
     boolean wasSet = false;
@@ -180,7 +184,7 @@ public class Mentor
     wasSet = true;
     return wasSet;
   }
-
+  /* Code from template attribute_SetDefaulted */
   public boolean setR(String aR)
   {
     boolean wasSet = false;
@@ -212,7 +216,7 @@ public class Mentor
     wasSet = true;
     return wasSet;
   }
-
+  /* Code from template attribute_SetDefaulted */
   public boolean setV(Date aV)
   {
     boolean wasSet = false;
@@ -228,7 +232,7 @@ public class Mentor
     wasReset = true;
     return wasReset;
   }
-
+  /* Code from template attribute_SetDefaulted */
   public boolean setW(Time aW)
   {
     boolean wasSet = false;
@@ -294,12 +298,12 @@ public class Mentor
   {
     return id;
   }
-
+  /* Code from template attribute_GetUnique */
   public static Mentor getWithId(String aId)
   {
     return mentorsById.get(aId);
   }
-
+  /* Code from template attribute_HasUnique */
   public static boolean hasWithId(String aId)
   {
     return getWithId(aId) != null;
@@ -309,7 +313,7 @@ public class Mentor
   {
     return p;
   }
-
+  /* Code from template attribute_GetDefaulted */
   public String getDefaultP()
   {
     return "robot";
@@ -324,7 +328,7 @@ public class Mentor
   {
     return r;
   }
-
+  /* Code from template attribute_GetDefaulted */
   public String getDefaultR()
   {
     return "";
@@ -349,7 +353,7 @@ public class Mentor
   {
     return v;
   }
-
+  /* Code from template attribute_GetDefaulted */
   public Date getDefaultV()
   {
     return Date.valueOf("1978-12-26");
@@ -359,7 +363,7 @@ public class Mentor
   {
     return w;
   }
-
+  /* Code from template attribute_GetDefaulted */
   public Time getDefaultW()
   {
     return Time.valueOf("12:59:59");
@@ -369,7 +373,7 @@ public class Mentor
   {
     return x;
   }
-
+  /* Code from template attribute_IsBoolean */
   public boolean isLBool()
   {
     return lBool;

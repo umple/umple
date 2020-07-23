@@ -26,14 +26,15 @@ distribute :distributable [=distributeTech:RMI|WS]? [=distributePattern:0|1|2|3]
 // is found, where it might not have been intended. Strictness can also be used
 // To either suppress certain messages, or to declare that they should be present.
 // NOTE: This is currently under development
-strictness- : strictness ( [=strictness:modelOnly|noExtraCode|none] | [[strictnessMessage]] ) ;
+strictness- : strictness ( [=strictness:modelOnly|noExtraCode|none] | [[strictnessMessage]] | [[strictnessDisableAuto]] ) ;
 strictnessMessage : [=message:allow|ignore|expect|disallow] [messageNumber]
+strictnessDisableAuto : disable [**expression]
 
 // The generate clause can be used to generate multiple outputs
 // The --override is used to say that subsequent generate statements will be ignored
-generate : generate [=language:Java|Php|RTCpp|SimpleCpp|Ruby|Cpp|Json|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|Umple|UmpleSelf|USE|Test|SimpleMetrics|Uigu2] ( [=suboptionIndicator:-s|--suboption] " [**suboption] " )* ;
-
-generate_path : generate [=language:Java|Php|RTCpp|SimpleCpp|Ruby|Cpp|Json|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|UmpleSelf|USE|test] " [**output] " [=override:--override|--override-all]? ( [=suboptionIndicator:-s|--suboption]  " [**suboption] " )* ;
+generate : generate [=language:Java|Php|RTCpp|SimpleCpp|Ruby|Cpp|Json|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvFeatureDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|Umple|UmpleSelf|USE|Test|SimpleMetrics|Uigu2] ( [=suboptionIndicator:-s|--suboption] " [**suboption] " )* ;
+ 
+generate_path : generate [=language:Java|Php|RTCpp|SimpleCpp|Ruby|Cpp|Json|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvClassTraitDiagram|GvFeatureDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|UmpleSelf|USE|test] " [**output] " [=override:--override|--override-all]? ( [=suboptionIndicator:-s|--suboption]  " [**suboption] " )* ;
 
 // Use statements allow incorporation of other Umple files. See [*UseStatements*]
 useStatement : use [use] ;
@@ -41,10 +42,11 @@ useStatement : use [use] ;
 toplevelExtracode : top [top] [[moreCode]]
 
 // Namespaces divide the code into logical groups. See [*NamespaceDirectives*]
-namespace- : namespace [namespace] ;
+namespace- : namespace [namespace] [[namespaceoption]]? ;
+namespaceoption : [=option:--redefine]
 
 // The main top level elements to be found in an Umple file
-entity- : [[requireStatement]] | [[mixsetDefinition]] | [[classDefinition]] | [[traitDefinition]] | [[fixml]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]] | [[templateDefinition]] | [[enumerationDefinition]]
+entity- : [[mixsetIsFeature]] | [[requireStatement]] | [[mixsetDefinition]] | [[classDefinition]] | [[traitDefinition]] | [[fixml]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]] | [[templateDefinition]] | [[enumerationDefinition]] | [[toplevelCodeInjection]]
 
 // Comments follow the same conventions as C-family languages. [*UmpleComments*]
 comment- : [[inlineComment]] | [[multilineComment]] | [[annotationComment]]

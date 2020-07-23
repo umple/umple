@@ -14,7 +14,7 @@ noreferences
 
 <li><b>Rapid application development:</b> Models containing the essential structure of a system can be developed extremely fast, and modified extremely rapidly. This is because most people can edit Umple text faster than they can use a drawing tool. But the ability to use a drawing tool is not sacrificed  you can still draw an Umple model as a diagram with <a href="UsingUmpleOnline.html">UmpleOnline</a>!</li><br/>
 
-<li><b>Less code to write:</b> Code for UML constructs like <a href="AssociationDefinition.html">associations</a>, <a href="BasicStateMachines.html">state machines</a> and certain <a href="SingletonPattern.html">patterns</a> is generated. Less code means fewer bugs.  Developers can concentrate on the more interesting or critical parts of your code.</li><br/>
+<li><b>Less code to write:</b> Code for UML constructs like <a href="AssociationDefinition.html">associations</a>, <a href="BasicStateMachines.html">state machines</a> and certain <a href="SingletonPattern.html">patterns</a> is generated. Less code means fewer bugs.  Developers can concentrate on the more interesting or critical parts of their code.</li><br/>
 
 <li><b>Fewer bugs:</b> It is extremely difficult to consistently write bug-free code for complex constructs like <a href="BasicStateMachines.html">state machines</a>, or <a href="AssociationDefinition.html">associations</a> that maintain referential integrity and respect <a href="Multiplicity.html">multiplicity</a> constraints. Umple does this for you.</li><br/>
 
@@ -22,7 +22,7 @@ noreferences
 
 <li><b>Text-diagram duality:</b> Umple allows visualization of key aspects of your code with UmpleOnline. Furthermore the diagram can be edited to change the code, or the code can be edited to change the diagram. Both of these occur in real time.</li><br/>
 
-<li><b>Product-line and feature-oriented development:</b> Umple brings mixin technology to Java and PhP, allowing you to easily build different versions of your software for different customers or hardware platforms. Umple code can also be organized on a feature-by feature basis.</li><br/>
+<li><b>Product-line and feature-oriented development:</b> Umple brings mixin technology to Java and PhP, allowing you to easily build different versions of your software for different customers or hardware platforms. Umple code can also be organized on a feature-by-feature basis.</li><br/>
 
 <li><b>Aspect orientation to adapt generated code:</b> You can inject your own code <a href="BeforeandAfterStatements.html">before and after</a> any generated methods to enforce constraints or change semantics.</li><br/>
 
@@ -89,7 +89,7 @@ noreferences
 <li><b>Compatibility:</b> We use a lot of re-used, proprietary or legacy code that might be incompatible with the new technology:<br/>
 <u>Not true for Umple, because:</u>
 <ul>
-  <li>Umple can work with any existing libraries in Java, PHP, Ruby etc. You can subclass existing classes even if you cant see the source; you can write arbitrary code to call APIs of existing libraries, or you can convert existing code to Umple if you wish.</li>
+  <li>Umple can work with any existing libraries in Java, PHP, Ruby etc. You can subclass existing classes even if you can&quot;t see the source; you can write arbitrary code to call APIs of existing libraries, or you can convert existing code to Umple if you wish.</li>
   <li>Umple is particularly good at helping incrementally re-engineer (i.e. umplifiy) legacy code: You can convert your legacy code little-by-little. But you also have the option to leave it unchanged and just use Umple for extensions or new code.</li>
 </ul></li><br/>
 

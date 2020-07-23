@@ -1,0 +1,16 @@
+require [ 2..3 of { A, B, C, D}];
+
+
+
+mixset A {} mixset B {} mixset C{}
+mixset D {}
+
+/*
+ use-statements result in not valid configuration of feature model. 
+*/
+
+use A; 
+//use B; 
+//use C;
+//use D; 
+

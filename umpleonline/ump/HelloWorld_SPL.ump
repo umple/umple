@@ -1,0 +1,45 @@
+/*
+  HelloWorld SPL is an easy example to show how mixsets can be defined
+  in Umple. Then at the end, mixsets contribute to form the feature model. 
+*/
+
+class Main { 
+  public static void main(String[] args) { 
+    Hello_label: 
+    Beautiful_label:                                            
+    Wonderful_label: 
+    mixset World {
+      System.out.print (" world !"); 
+    }
+  }  
+}
+
+class Main {   
+  mixset Hello {
+    after Hello_label: main(String ) {
+      System.out.print(" Hello "); 
+    }
+  }
+  mixset Beautiful {
+    after Beautiful_label: main(String) {
+      System.out.print(" beautiful "); 
+   }
+  }
+  mixset Wonderful {
+    after Wonderful_label: main(String) {
+      System.out.print (" wonderful "); 
+    }
+  }        
+}
+
+use Hello;
+use Wonderful;
+use World;
+
+require subfeature [ opt Hello];
+require subfeature [ opt Beautiful];
+require subfeature [ opt Wonderful];
+require subfeature [ opt World];
+//$?[End_of_model]$?
+// @@@skipphpcompile - Contains java code
+// @@@skiprubycompile - Contains Java code

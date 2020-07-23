@@ -711,3 +711,24 @@ class AssociationClassManyKeys {
   * -- * AssociatedClassWithKey associatedClasses;
   key {associatedClasses};
 }
+
+class SortedSerializableAcademy {
+  1 -- * SortedSerializableCourse sorted {code};
+  1 -- * SortedSerializableStudent registrants sorted {id};
+}
+
+class SortedSerializableStudent {
+  Integer id;
+  name;
+}
+
+class SortedSerializableCourse {
+  code;
+}
+
+class SortedSerializableRegistration {
+  * -- 1 SortedSerializableStudent;
+  * sorted {name} -- 1 SortedSerializableCourse;
+  name = {getSortedSerializableStudent().getName()}
+  code = {getSortedSerializableCourse().getCode()}
+}

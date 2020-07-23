@@ -1,0 +1,153 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package m;
+import java.util.*;
+
+// line 6 "../../../../ump/tmp762034/model.ump"
+public class Y
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Y Associations
+  private List<X> xs;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Y()
+  {
+    xs = new ArrayList<X>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetMany */
+  public X getX(int index)
+  {
+    X aX = xs.get(index);
+    return aX;
+  }
+
+  public List<X> getXs()
+  {
+    List<X> newXs = Collections.unmodifiableList(xs);
+    return newXs;
+  }
+
+  public int numberOfXs()
+  {
+    int number = xs.size();
+    return number;
+  }
+
+  public boolean hasXs()
+  {
+    boolean has = xs.size() > 0;
+    return has;
+  }
+
+  public int indexOfX(X aX)
+  {
+    int index = xs.indexOf(aX);
+    return index;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  public static int minimumNumberOfXs()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToManyMethod */
+  public boolean addX(X aX)
+  {
+    boolean wasAdded = false;
+    if (xs.contains(aX)) { return false; }
+    xs.add(aX);
+    if (aX.indexOfY(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aX.addY(this);
+      if (!wasAdded)
+      {
+        xs.remove(aX);
+      }
+    }
+    return wasAdded;
+  }
+  /* Code from template association_RemoveMany */
+  public boolean removeX(X aX)
+  {
+    boolean wasRemoved = false;
+    if (!xs.contains(aX))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = xs.indexOf(aX);
+    xs.remove(oldIndex);
+    if (aX.indexOfY(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aX.removeY(this);
+      if (!wasRemoved)
+      {
+        xs.add(oldIndex,aX);
+      }
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  public boolean addXAt(X aX, int index)
+  {  
+    boolean wasAdded = false;
+    if(addX(aX))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfXs()) { index = numberOfXs() - 1; }
+      xs.remove(aX);
+      xs.add(index, aX);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveXAt(X aX, int index)
+  {
+    boolean wasAdded = false;
+    if(xs.contains(aX))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfXs()) { index = numberOfXs() - 1; }
+      xs.remove(aX);
+      xs.add(index, aX);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addXAt(aX, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    ArrayList<X> copyOfXs = new ArrayList<X>(xs);
+    xs.clear();
+    for(X aX : copyOfXs)
+    {
+      aX.removeY(this);
+    }
+  }
+
+}

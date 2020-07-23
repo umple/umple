@@ -1,0 +1,13 @@
+
+
+class Person {  
+  abstract;
+  
+   test checkName { 
+     // Father test
+     assertTrue(id == 1);
+                
+    }  
+  
+}  
+  

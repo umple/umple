@@ -1,0 +1,19 @@
+
+require subfeature [Mixset1]; use Mixset1; mixset Mixset1{}
+
+require subfeature [GSMProtocol opt Mp3Recording and Playback and AudioFormat opt Camera ];
+
+require subfeature [ 1..3 of {M1,M2,M3 } ];
+
+require subfeature [M1 opt M3];
+
+require subfeature [M3 or M2];
+
+require subfeature [0..1 of {M1}]; 
+
+
+/*
+
+All these forms of require statements should not raise errors .  
+
+*/

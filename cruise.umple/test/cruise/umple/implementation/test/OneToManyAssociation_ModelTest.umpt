@@ -1,0 +1,470 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  OneToManyAssociation ----/////
+
+test OneToManyAssociation {
+
+generate JUnit;
+
+depend  B,C,Z,X,A ; 
+
+
+
+
+GIVEN:
+OneToManyAssociation.ump;
+THEN:
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class B       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [1,1] A /////// 
+              
+              test createBWithoutA {              
+              C aC();
+
+              B aB(aC);
+              
+              assertTrue (aB.numberOfAs()== 0);
+              }
+              
+              
+              
+              test replaceMandatoryOneBInA { 
+              
+              C aC();
+                            
+              B baB(aC);
+              
+              B aB(aC);
+
+              A aA("RandomString1",aB); 
+              A baA("RandomString1",aB);
+              
+              aA.setB(baB);
+              assertEqual (aA.getB() , baB);              
+              assertEqual(baA.getB() , aB );
+                            
+              }
+              
+              
+              
+              test removeAInB {
+              
+              C aC();
+
+              B baB(aC);
+              B aB(aC);
+
+              A aA("RandomString1",aB);
+              aB.addA(aA);
+              
+              aA.delete(); 
+              assertTrue (aB.numberOfAs() == 0);
+              }
+              
+              
+              
+              
+              test AddAToNewB { 
+              
+              C aC();
+
+              B baB(aC);
+              
+              B aB(aC);
+
+              A aA("RandomString1",aB);
+              A baA("RandomString1",aB);
+              
+
+              aB.addA(aA);
+              aB.addA(baA);  
+        
+              assertEqual( aB.getA(1),baA); 
+              assertEqual ( baA.getB(), aB);
+              assertEqual ( aB.numberOfAs(),  2);
+              }
+              
+              
+              
+
+              
+              /////// Association: -- [0,*] C /////// 
+              
+              test createBWithC {              
+              C aC();
+
+              B aB(aC);
+              
+              assertTrue (aB.getC() == aC);
+              }
+              
+              
+              
+              test replaceManyCInOneB{ 
+              
+              
+              C baC();
+              
+              
+              
+              C aC();
+                            
+              B aB(aC);
+              
+                            
+              //C baC();
+              
+              aB.setC(baC);
+              
+              assertEqual ( aB.getC(),baC);              
+              
+                            
+              }
+              
+              
+              
+
+              /////// Association: -- [0,*] Z /////// 
+              //create ... without ...
+              test removeZ {
+              C aC();
+
+              B aB(aC);
+              
+              
+              Z aZ();
+              assertTrue(aB.setZ(aZ));              
+              aZ.delete();
+              
+              assertTrue (aB.getZ() == null);
+              }
+              
+              
+              
+              
+              
+  /*-------------------------*/
+  /*  Class C       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [1,1] B /////// 
+              
+              test createCWithoutB {              
+              
+              C aC();
+              
+              assertTrue (aC.numberOfBs()== 0);
+              }
+              
+              
+              
+              test replaceMandatoryOneCInB { 
+              
+                                          
+              C baC();
+              
+              C aC();
+
+              B aB(aC); 
+              B baB(aC);
+              
+              aB.setC(baC);
+              assertEqual (aB.getC() , baC);              
+              assertEqual(baB.getC() , aC );
+                            
+              }
+              
+              
+              
+              test removeBInC {
+              
+              
+              C baC();
+              C aC();
+
+              B aB(aC);
+              aC.addB(aB);
+              
+              aB.delete(); 
+              assertTrue (aC.numberOfBs() == 0);
+              }
+              
+              
+              
+              
+              test AddBToNewC { 
+              
+              
+              C baC();
+              
+              C aC();
+
+              B aB(aC);
+              B baB(aC);
+              
+
+              aC.addB(aB);
+              aC.addB(baB);  
+        
+              assertEqual( aC.getB(1),baB); 
+              assertEqual ( baB.getC(), aC);
+              assertEqual ( aC.numberOfBs(),  2);
+              }
+              
+              
+              
+  /*-------------------------*/
+  /*  Class Z       */
+  /*-------------------------*/
+
+              /////// Association: -- [0,1] B /////// 
+              //create ... without ...
+              test CreateZWithoutB {
+              
+              
+              Z aZ();
+              int size = aZ.getBs().size(); 
+              assertTrue ( size == 0);
+              
+              }
+              
+              //replace
+              
+              test ReplaceOptionalZInB { 
+              
+              B aB(aC);
+              B baB(aC);
+              Z aZ();
+              Z baZ();
+              
+            
+              assertTrue(aZ.addB(aB));
+              assertEqual ( aZ.getB(0),aB);
+              
+              assertTrue(aB.setZ(baZ));
+              assertTrue ( aB.getZ() == baZ);
+              }
+              
+              
+              
+              test deleteBFromZ {
+              // delete B in Z
+              
+              
+              C aC();
+
+              B baB(aC);
+              
+              
+              Z aZ();
+              
+              assertTrue(aZ.addB(baB));
+              
+              baB.delete();
+              
+              int size = aZ.getBs().size(); 
+              assertTrue ( size == 0);
+              }
+              
+              
+              
+              test AddBToNewZ { 
+              
+              C aC();
+
+              B aB(aC);
+              
+              C aC();
+
+              B baB(aC);
+              
+              
+              Z aZ();
+              
+              
+              Z baZ();
+              
+                                  
+              
+              aZ.addB(aB);
+              baZ.addB(aB);
+               
+        
+              assertEqual(baZ.getB(0), aB) ;
+                            
+               
+              assertEqual (aZ.numberOfBs(), 0);
+              
+              assertEqual (baZ.numberOfBs(), 1);
+              }
+              
+              
+                /*-------------------------*/
+  /*  Class X       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [0,*] A /////// 
+              
+              test createXWithA {              
+              A aA("RandomString1",aB);
+
+              X aX(aA);
+              
+              assertTrue (aX.getA() == aA);
+              }
+              
+              
+              
+              test replaceManyAInOneX{ 
+              
+              B aB(aC);
+
+              A baA("RandomString1",aB);
+              
+              
+              
+              A aA("RandomString1",aB);
+                            
+              X aX(aA);
+              
+                            
+              //A baA("RandomString1",aB);
+              
+              aX.setA(baA);
+              
+              assertEqual ( aX.getA(),baA);              
+              
+                            
+              }
+              
+              
+              
+  /*-------------------------*/
+  /*  Class A       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [1,1] X /////// 
+              
+              test createAWithoutX {              
+              B aB(aC);
+
+              A aA("RandomString1",aB);
+              
+              assertTrue (aA.numberOfXs()== 0);
+              }
+              
+              
+              
+              test replaceMandatoryOneAInX { 
+              
+              B aB(aC);
+                            
+              A baA("RandomString1",aB);
+              
+              A aA("RandomString1",aB);
+
+              X aX(aA); 
+              X baX(aA);
+              
+              aX.setA(baA);
+              assertEqual (aX.getA() , baA);              
+              assertEqual(baX.getA() , aA );
+                            
+              }
+              
+              
+              
+              test removeXInA {
+              
+              B aB(aC);
+
+              A baA("RandomString1",aB);
+              A aA("RandomString1",aB);
+
+              X aX(aA);
+              aA.addX(aX);
+              
+              aX.delete(); 
+              assertTrue (aA.numberOfXs() == 0);
+              }
+              
+              
+              
+              
+              test AddXToNewA { 
+              
+              B aB(aC);
+
+              A baA("RandomString1",aB);
+              
+              A aA("RandomString1",aB);
+
+              X aX(aA);
+              X baX(aA);
+              
+
+              aA.addX(aX);
+              aA.addX(baX);  
+        
+              assertEqual( aA.getX(1),baX); 
+              assertEqual ( baX.getA(), aA);
+              assertEqual ( aA.numberOfXs(),  2);
+              }
+              
+              
+              
+
+              
+              /////// Association: -- [0,*] B /////// 
+              
+              test createAWithB {              
+              B aB(aC);
+
+              A aA("RandomString1",aB);
+              
+              assertTrue (aA.getB() == aB);
+              }
+              
+              
+              
+              test replaceManyBInOneA{ 
+              
+              C aC();
+
+              B baB(aC);
+              
+              
+              
+              B aB(aC);
+                            
+              A aA("RandomString1",aB);
+              
+                            
+              //B baB(aC);
+              
+              aA.setB(baB);
+              
+              assertEqual ( aA.getB(),baB);              
+              
+                            
+              }
+              
+              
+              
+ 
+ 
+
+ }

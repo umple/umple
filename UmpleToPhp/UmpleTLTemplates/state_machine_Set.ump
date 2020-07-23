@@ -66,24 +66,24 @@ class UmpleToPhp {
           {
             exitActions.append(StringFormatter.format("if ($this->{0} == self::${1})\n    {",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
             for( TraceDirective tc : uClass.getTraceDirectives() )
-        	{
+          	{
               for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
               {
             	  StateMachineTraceItem tracedState = tc.getStateMachineTraceItem(i);
-        		  StateMachine stm = tracedState.getStateMachine();
-        		  for( int j = 0 ; j < stm.numberOfStates() ; ++j )
-        		  {
-        		  	State stat = stm.getState(j);
-        		  	String statName =  stm.getName() + stat.getName();
-        		  	if( tracedState.getExit() )
-        			  if( statName.equalsIgnoreCase(gen.translate("stateOne",state)))
-            			if( model.getTraceType().equals("Console"))
-            				exitActions.append(StringFormatter.format( "\n      " + "print(\"Tracing state {0} exit action(s)\");",gen.translate("stateOne",state)));
-         				else if( model.getTraceType().equals("File"))
-         					exitActions.append(StringFormatter.format( "\n      " + "fileTracer(\"Tracing state {0} exit action(s)\");",gen.translate("stateOne",state))); 
-         		  }
-        	  }
-        	}
+          		  StateMachine stm = tracedState.getStateMachine();
+          		  for( int j = 0 ; j < stm.numberOfStates() ; ++j )
+          		  {
+          		  	State stat = stm.getState(j);
+          		  	String statName =  stm.getName() + stat.getName();
+          		  	if( tracedState.getExit() )
+          			  if( statName.equalsIgnoreCase(gen.translate("stateOne",state)))
+              			if( model.getTraceType().equals("Console"))
+              				exitActions.append(StringFormatter.format( "\n      " + "print(\"Tracing state {0} exit action(s)\");",gen.translate("stateOne",state)));
+           				  else if( model.getTraceType().equals("File"))
+           					exitActions.append(StringFormatter.format( "\n      " + "fileTracer(\"Tracing state {0} exit action(s)\");",gen.translate("stateOne",state))); 
+           		  }
+          	  }
+          	}
           }
           else
           {
@@ -97,7 +97,7 @@ class UmpleToPhp {
         isFirstExit = false;
         if(action.getActionCode() == null) //verify why it returns null
         {
-          exitActions.append("\n      " + StringFormatter.format("$this->{0}(self::{1});", gen.translate("setMethod",sm), gen.translate("stateNull",sm)));
+          exitActions.append("\n      " + StringFormatter.format("$this->{0}(self::${1});", gen.translate("setMethod",sm), gen.translate("stateNull",sm)));
         }
         else
         {

@@ -120,9 +120,9 @@
       -->
       <parallel>
         <isreachable property="access.maven" 
-                     host="http://repo1.maven.org" />
+                     host="https://repo1.maven.org" />
         <isreachable property="access.umple" 
-                     host="http://cruise.eecs.uottawa.ca/index.shtml" />
+                     host="https://cruise.eecs.uottawa.ca/index.shtml" />
         <isreachable property="access.github" 
                      host="https://github.com" />
       </parallel>
@@ -196,6 +196,9 @@
     <replace dir="cruise.umple/src-gen-umpletl/cruise" token="${umple.version}" value="$${last.version}">
       <include name="**/*.java"/>
     </replace>
+    <replace dir="cruise.umple/test/cruise/umple/implementation/test" token="${umple.version}" value="$${last.version}">
+      <include name="*.umpt"/>
+    </replace>    
 
     <!-- TODO: UNCOMMENT ONCE RSM IN THE MIX -->
     <!--

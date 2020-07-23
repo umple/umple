@@ -1,0 +1,20 @@
+E083 Invalid Multivalued Attribute Initialization
+Errors and Warnings 51-99
+noreferences
+
+@@description
+
+<h2>Umple syntactic error raised when initializing multivalued attributes with invalid values</h2>
+
+<p>When indicating initial values for a multivalued attribute, an error is raised if the values to
+assign cannot be parsed properly. <br/>
+The error might be caused by a typographical mistake.
+</p>
+
+@@example
+@@source manualexamples/E083InvalidMultivaluedAttributeInitialization1.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/E083InvalidMultivaluedAttributeInitialization2.ump
+@@endexample

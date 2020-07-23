@@ -1,0 +1,60 @@
+// This demonstrates code that will throw the
+// uniqueness exception
+class Student {
+  unique Integer number;
+  name;
+ 
+  public static void main(String[] argv) {
+    
+    Student s1 = null;
+    Student s2 = null;
+    Student s3 = null;
+    Student s4 = null;
+
+    System.out.println("Initial\ns1= "+s1+
+      "\ns2= "+s2+"\ns3= "+s3+"\n\n");
+
+    // We set up the first student s1 with no problem
+    s1 = new Student(1,"Abel");
+    
+    // For the second student we use a try catch
+    // block to catch the exception
+    // Ideally code would avoid creating violations
+    // to start with, but the following
+    // approach can be used as a safety mechanism.
+    try {
+      s2 = new Student(1, "Baker");
+    }
+    catch (RuntimeException re) {
+      System.out.println("Exception Caught: "+re+"\n");
+    }
+    
+    // We now create a student that doesn't
+    // violate uniqueness
+    s3 = new Student(2,"Charlie");
+    
+    // Uniqueness can also be detected by trying
+    // to change a value
+    // This does not throw the exception, since
+    // the setNumber() method returns false
+    boolean result = s3.setNumber(1);
+    if(!result) System.out.println(
+      "Could not change number as it would have"+
+      " violated uniqueness\n");
+
+    System.out.println("Final\ns1= "+s1+
+      "\ns2= "+s2+"\ns3= "+s3+"\n\n");
+    
+    // The following will throw the exception
+    // without being caught
+    s4 = new Student(1, "Delta");
+    
+    // This statement will not be reached
+    System.out.println(
+      "This line should not be reached");
+  }
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Has Java code
+// @@@skipphpcompile - Has Java code
+// @@@skiprubycompile - Has Java code

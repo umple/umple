@@ -20,11 +20,11 @@ Another way to avoid conflicts is to use stateless traits. In that case, traits 
 
 </p>
 
-@@example
+@@example @@caption Example showing how to use a trait in Umple @@endcaption
 @@source manualexamples/traits_example_003.ump
 @@endexample
 
-@@example
+@@example @@caption Example showing how methods can obtain states in traits @@endcaption
 @@source manualexamples/traits_example_004.ump
 @@endexample
 

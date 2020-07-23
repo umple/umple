@@ -1,0 +1,379 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  TestCaseAction ----/////
+
+test TestCaseAction {
+
+generate JUnit;
+
+depend  Job,Organization,Score,Person ; 
+
+
+
+
+GIVEN:
+TestCaseAction.ump;
+THEN:
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Job       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [0,*] Person /////// 
+              
+              test createJobWithPerson {              
+              Person aPerson(aOrganization);
+
+              Job aJob("RandomString1",aPerson);
+              
+              assertTrue (aJob.getPerson() == aPerson);
+              }
+              
+              
+              
+              test replaceManyPersonInOneJob{ 
+              
+              Organization aOrganization();
+Organization aOrganization();
+
+              Person baPerson(aOrganization);
+              
+              
+              
+              Person aPerson(aOrganization);
+                            
+              Job aJob("RandomString1",aPerson);
+              
+                            
+              //Person baPerson(aOrganization);
+              
+              aJob.setPerson(baPerson);
+              
+              assertEqual ( aJob.getPerson(),baPerson);              
+              
+                            
+              }
+              
+              
+              
+  /*-------------------------*/
+  /*  Class Organization       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [1,1] Person /////// 
+              
+              test createOrganizationWithoutPerson {              
+              
+              Organization aOrganization();
+              
+              assertTrue (aOrganization.numberOfPersons()== 0);
+              }
+              
+              
+              
+              test replaceMandatoryOneOrganizationInPerson { 
+              
+                                          
+              Organization baOrganization();
+              
+              Organization aOrganization();
+Organization aOrganization();
+
+              Person aPerson(aOrganization); 
+              Person baPerson(aOrganization);
+              
+              aPerson.setOrganization(baOrganization);
+              assertEqual (aPerson.getOrganization() , baOrganization);              
+              assertEqual(baPerson.getOrganization() , aOrganization );
+                            
+              }
+              
+              
+              
+              test removePersonInOrganization {
+              
+              
+              Organization baOrganization();
+              Organization aOrganization();
+Organization aOrganization();
+
+              Person aPerson(aOrganization);
+              aOrganization.addPerson(aPerson);
+              
+              aPerson.delete(); 
+              assertTrue (aOrganization.numberOfPersons() == 0);
+              }
+              
+              
+              
+              
+              test AddPersonToNewOrganization { 
+              
+              
+              Organization baOrganization();
+              
+              Organization aOrganization();
+Organization aOrganization();
+
+              Person aPerson(aOrganization);
+              Person baPerson(aOrganization);
+              
+
+              aOrganization.addPerson(aPerson);
+              aOrganization.addPerson(baPerson);  
+        
+              assertEqual( aOrganization.getPerson(1),baPerson); 
+              assertEqual ( baPerson.getOrganization(), aOrganization);
+              assertEqual ( aOrganization.numberOfPersons(),  2);
+              }
+              
+              
+              
+  /*-------------------------*/
+  /*  Class Score       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [0,*] Person /////// 
+              
+              test createScoreWithPerson {              
+              Person aPerson(aOrganization);
+
+              Score aScore(123,aPerson);
+              
+              assertTrue (aScore.getPerson() == aPerson);
+              }
+              
+              
+              
+              test replaceManyPersonInOneScore{ 
+              
+              Organization aOrganization();
+Organization aOrganization();
+
+              Person baPerson(aOrganization);
+              
+              
+              
+              Person aPerson(aOrganization);
+                            
+              Score aScore(123,aPerson);
+              
+                            
+              //Person baPerson(aOrganization);
+              
+              aScore.setPerson(baPerson);
+              
+              assertEqual ( aScore.getPerson(),baPerson);              
+              
+                            
+              }
+              
+              
+              
+  /*-------------------------*/
+  /*  Class Person       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [1,1] Score /////// 
+              
+              test createPersonWithoutScore {              
+              Organization aOrganization();
+Organization aOrganization();
+
+              Person aPerson(aOrganization);
+              
+              assertTrue (aPerson.numberOfScores()== 0);
+              }
+              
+              
+              
+              test replaceMandatoryOnePersonInScore { 
+              
+              Organization aOrganization();
+Organization aOrganization();
+                            
+              Person baPerson(aOrganization);
+              
+              Person aPerson(aOrganization);
+
+              Score aScore(123,aPerson); 
+              Score baScore(123,aPerson);
+              
+              aScore.setPerson(baPerson);
+              assertEqual (aScore.getPerson() , baPerson);              
+              assertEqual(baScore.getPerson() , aPerson );
+                            
+              }
+              
+              
+              
+              test removeScoreInPerson {
+              
+              Organization aOrganization();
+Organization aOrganization();
+
+              Person baPerson(aOrganization);
+              Person aPerson(aOrganization);
+
+              Score aScore(123,aPerson);
+              aPerson.addScore(aScore);
+              
+              aScore.delete(); 
+              assertTrue (aPerson.numberOfScores() == 0);
+              }
+              
+              
+              
+              
+              test AddScoreToNewPerson { 
+              
+              Organization aOrganization();
+Organization aOrganization();
+
+              Person baPerson(aOrganization);
+              
+              Person aPerson(aOrganization);
+
+              Score aScore(123,aPerson);
+              Score baScore(123,aPerson);
+              
+
+              aPerson.addScore(aScore);
+              aPerson.addScore(baScore);  
+        
+              assertEqual( aPerson.getScore(1),baScore); 
+              assertEqual ( baScore.getPerson(), aPerson);
+              assertEqual ( aPerson.numberOfScores(),  2);
+              }
+              
+              
+              
+
+              
+              /////// Association: -- [1,1] Job /////// 
+              
+              test createPersonWithoutJob {              
+              Organization aOrganization();
+Organization aOrganization();
+
+              Person aPerson(aOrganization);
+              
+              assertTrue (aPerson.numberOfJobs()== 0);
+              }
+              
+              
+              
+              test replaceMandatoryOnePersonInJob { 
+              
+              Organization aOrganization();
+Organization aOrganization();
+                            
+              Person baPerson(aOrganization);
+              
+              Person aPerson(aOrganization);
+
+              Job aJob("RandomString1",aPerson); 
+              Job baJob("RandomString1",aPerson);
+              
+              aJob.setPerson(baPerson);
+              assertEqual (aJob.getPerson() , baPerson);              
+              assertEqual(baJob.getPerson() , aPerson );
+                            
+              }
+              
+              
+              
+              test removeJobInPerson {
+              
+              Organization aOrganization();
+Organization aOrganization();
+
+              Person baPerson(aOrganization);
+              Person aPerson(aOrganization);
+
+              Job aJob("RandomString1",aPerson);
+              aPerson.addJob(aJob);
+              
+              aJob.delete(); 
+              assertTrue (aPerson.numberOfJobs() == 0);
+              }
+              
+              
+              
+              
+              test AddJobToNewPerson { 
+              
+              Organization aOrganization();
+Organization aOrganization();
+
+              Person baPerson(aOrganization);
+              
+              Person aPerson(aOrganization);
+
+              Job aJob("RandomString1",aPerson);
+              Job baJob("RandomString1",aPerson);
+              
+
+              aPerson.addJob(aJob);
+              aPerson.addJob(baJob);  
+        
+              assertEqual( aPerson.getJob(1),baJob); 
+              assertEqual ( baJob.getPerson(), aPerson);
+              assertEqual ( aPerson.numberOfJobs(),  2);
+              }
+              
+              
+              
+
+              
+              /////// Association: -- [0,*] Organization /////// 
+              
+              test createPersonWithOrganization {              
+              Organization aOrganization();
+Organization aOrganization();
+
+              Person aPerson(aOrganization);
+              
+              assertTrue (aPerson.getOrganization() == aOrganization);
+              }
+              
+              
+              
+              test replaceManyOrganizationInOnePerson{ 
+              
+              
+              Organization baOrganization();
+              
+              
+              
+              Organization aOrganization();
+Organization aOrganization();
+                            
+              Person aPerson(aOrganization);
+              
+                            
+              //Organization baOrganization();
+              
+              aPerson.setOrganization(baOrganization);
+              
+              assertEqual ( aPerson.getOrganization(),baOrganization);              
+              
+                            
+              }
+              
+              
+              
+ 
+ 
+
+ }

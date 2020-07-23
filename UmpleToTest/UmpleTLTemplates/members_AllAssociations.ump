@@ -1,5 +1,7 @@
 use association_optionlOneToMany.ump;
+use association_ManyToOptionalOne.ump;
 use association_OneToMany.ump;
+use association_ManyToOne.ump;
 use association_NNToMany.ump;
 
 class UmpleToTest {
@@ -31,32 +33,46 @@ Note: The foreign key constraint is not defined here, as the associated class ma
   
   isFirst = true;
   
-  for (Association as : uClass.getAssociations())
+  for (AssociationVariable av : uClass.getAssociationVariables())
   {
-   		AssociationEnd myEnd = as.getIsRightNavigable()?as.getEnd(0):as.getEnd(1);
-        AssociationEnd theirEnd = as.getIsRightNavigable()?as.getEnd(1):as.getEnd(0);
-        boolean isBidirectional = as.getIsLeftNavigable()&&as.getIsRightNavigable();
-        boolean isTheirEndClass = theirEnd.getClassName().equals(uClass.getName());
+   		//AssociationEnd myEnd = as.getIsRightNavigable()?as.getEnd(0):as.getEnd(1);
+        //AssociationEnd theirEnd = as.getIsRightNavigable()?as.getEnd(1):as.getEnd(0);
+        //AssociationEnd myEnd = as.getIsRightNavigable()?as.getEnd(0):as.getEnd(1);
+        //AssociationEnd theirEnd = as.getIsRightNavigable()?as.getEnd(1):as.getEnd(0);
+        //boolean isBidirectional = as.getIsLeftNavigable()&&as.getIsRightNavigable();
+        //boolean isTheirEndClass = theirEnd.getClassName().equals(uClass.getName());
         
-        if (isTheirEndClass && isBidirectional)
+        /*if (isTheirEndClass && isBidirectional)
           {
             myEnd = as.getEnd(1);
             theirEnd = as.getEnd(0);
-          }
+          }*/
         
-        if(isBidirectional)
-        {
-        	if (theirEnd.getMultiplicity().getLowerBound() == 0 && theirEnd.getMultiplicity().getUpperBound() ==1 &&   myEnd.getMultiplicity().isMany())
+        //if(isBidirectional)
+        //{
+        	if (av.isOptionalMany() && av.getRelatedAssociation().isOptionalOne())
         	{
         		#>><<@UmpleToTest.association_optionalOneToMany>><<#
         	}
         	
-        	if (theirEnd.getMultiplicity().getLowerBound() == 1 && myEnd.getMultiplicity().isMany())
+        	if (av.isOptionalOne() && av.getRelatedAssociation().isOptionalMany())
+        	{
+        		#>><<@UmpleToTest.association_ManyToOptionalOne>><<#
+        	}
+        	
+        	if (av.isOptionalMany() && av.getRelatedAssociation().isMandatoryOne())
         {
         #>><<@UmpleToTest.association_OneToMany>><<#
         appendln(realSb,"");
         }
-        if ((theirEnd.getMultiplicity().isLowerBoundNumeric() && theirEnd.getMultiplicity().isUpperBoundNumeric() )&& myEnd.getMultiplicity().isMany())
+        
+        if (av.isMandatoryOne() && av.getRelatedAssociation().isMany())
+        {
+        #>><<@UmpleToTest.association_ManyToOne>><<#
+        appendln(realSb,"");
+        }
+        
+        if (av.isN())
         {
         #>><<@UmpleToTest.association_NNToMany>><<#
         appendln(realSb,"");
@@ -67,7 +83,7 @@ Note: The foreign key constraint is not defined here, as the associated class ma
         
         
         
-   } 
+   //} 
   }
   }
 #>>!>>

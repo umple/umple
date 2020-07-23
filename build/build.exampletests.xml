@@ -194,7 +194,7 @@
           <mkdir dir="${java.path}/bin/${manualfileshort}" />
           <trycatch>
             <try>
-              <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${java.path}/bin/${manualfileshort}" source="1.7" target="1.7">
+              <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${java.path}/bin/${manualfileshort}" source="1.8" target="1.8">
                 <src path="${java.path}/src-gen-umple/${manualfileshort}"/>
               </javac>
               <echo>Successfully compiled java code generated from ${manualfileshort}.ump</echo>

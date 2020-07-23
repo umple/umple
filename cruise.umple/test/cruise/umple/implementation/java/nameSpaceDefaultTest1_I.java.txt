@@ -1,0 +1,10 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+// line 3 "model.ump"
+// line 6 "model.ump"
+// line 11 "model.ump"
+public interface I
+{
+  
+}

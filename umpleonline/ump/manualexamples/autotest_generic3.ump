@@ -1,0 +1,25 @@
+
+class Calculator{  
+    
+    Integer x;
+    Integer y;
+    String someString;
+        
+  Integer  returnInteger (Integer x) { return x+y;}
+  
+  String  returnStirng (Integer x) { return someString;}
+    
+    
+  generic test checkifLogged(Integer method Integer){
+        Calculator c1 ( 4, 5) ;                
+        String valueToCheck = p1.get<<method>>();  
+        ps1.getValue(<<method>>);    
+        boolean isLogged =  p1.checkIsLogged(valueToCheck);        
+        assertTrue(logged == "true");                      
+        }        
+   generic test checkifLogged(String method Integer){
+        // code omitted                       
+     }                      
+}  
+ 
+  

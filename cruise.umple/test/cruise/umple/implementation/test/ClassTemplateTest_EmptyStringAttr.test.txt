@@ -1,25 +1,46 @@
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 
 ////---- Tests for  ClassTemplateTest_EmptyStringAttr ----/////
-Test Student {
+
+test Student {
+
+ generate JUnit ;
+ 
+ depend  Student ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_EmptyStringAttr.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :grade
 
       test attribute_grade {
     
-    AssertTrue( student.setGrade("RandomString1"));
-    AssertTrue( student.getGrade() =="RandomString1");
-    AssertTrue( student.setGrade("RandomString1"));
-    AssertTrue( student.getGrade("RandomString1"));
-    AssertTrue( student.getGrade() =="RandomString1");
+      
+        Student aStudent();
+        
+        
+       assertEqual(aStudent.getGrade(), "" );
+    assertTrue( aStudent.setGrade("RandomString1"));
+    assertTrue( aStudent.getGrade() =="RandomString1");
+    assertTrue( aStudent.setGrade("RandomString2"));
+    assertTrue( aStudent.getGrade()=="RandomString2");
+    assertFalse( aStudent.getGrade() =="RandomString1");
              
-	}
+          
+        	}
 
 
   
+ 
    
 
 }

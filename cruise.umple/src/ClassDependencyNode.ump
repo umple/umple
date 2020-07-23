@@ -16,13 +16,18 @@ namespace cruise.umple.compiler;
 
 
 class ClassDependencyNode {
-
+    
+    
+    
 	depend java.util.*;	
 	int level;
 	Boolean isFirstLevel; 
 	Boolean isInitialized;
 	String uClassName;
 	private List<String> dependents;
+	
+	
+	* -- 0..1 UmpleClass; 
 	
 	
 	public ClassDependencyNode getNodeByName ( String name)
@@ -44,7 +49,7 @@ class ClassDependencyTree {
 	boolean isLevelled;
 	boolean isProcessed;
 	0..1 -- * ClassDependencyNode;
-	List<String> cdN;
+	//List<String> cdN;
 	
 	 public boolean containsNode (ClassDependencyNode node)
   {

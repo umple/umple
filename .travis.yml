@@ -41,6 +41,7 @@ script:
   - if [ -z "$USE_GRADLE" ]; then cd build/; fi
   - if [ -z "$USE_GRADLE" ]; then ant bootstrap; fi
   # We resolve all of the dependencies before, this way the command will be unlikely to time out
+
   - if [ -z "$USE_GRADLE" ]; then ant deps-resolve-all; fi
 
   # Do a modified version of `first-build` (build using last successful build)

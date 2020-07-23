@@ -1,0 +1,6 @@
+namespace m;
+class X{}
+interface Y{}
+namespace n --redefine;
+class X{}
+interface Y{}

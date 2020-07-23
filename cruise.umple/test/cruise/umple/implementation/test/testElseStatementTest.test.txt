@@ -1,0 +1,102 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  elseStatementTest ----/////
+
+test Person {
+
+ generate JUnit ;
+ 
+ depend  Person ; 
+
+
+
+ 
+ GIVEN:
+ elseStatementTest.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :name
+
+      test attribute_name {
+    
+      
+        Person aPerson("RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aPerson.setName("RandomString1"));
+    assertTrue( aPerson.getName() =="RandomString1");
+    assertTrue( aPerson.setName("RandomString2"));
+    assertTrue( aPerson.getName()=="RandomString2");
+    assertFalse( aPerson.getName() =="RandomString1");
+             
+          
+        	}
+
+ //tests for :job
+
+      test attribute_job {
+    
+      
+        Person aPerson("RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aPerson.setJob("RandomString1"));
+    assertTrue( aPerson.getJob() =="RandomString1");
+    assertTrue( aPerson.setJob("RandomString2"));
+    assertTrue( aPerson.getJob()=="RandomString2");
+    assertFalse( aPerson.getJob() =="RandomString1");
+             
+          
+        	}
+
+ //tests for :id
+
+      test attribute_id {
+    
+      
+        Person aPerson("RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aPerson.setId("RandomString1"));
+    assertTrue( aPerson.getId() =="RandomString1");
+    assertTrue( aPerson.setId("RandomString2"));
+    assertTrue( aPerson.getId()=="RandomString2");
+    assertFalse( aPerson.getId() =="RandomString1");
+             
+          
+        	}
+
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkJobBasedOnId {
+        Person p1 ("John", "Cashier", 9780);
+        String tempId = p1.getId();
+        String job = p1.getJob();
+        
+	if(tempId == 1234){
+	assertTrue (job == "Saleman");
+	  }
+	else {
+	assertFalse (job == "Saleman");
+	}
+
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}

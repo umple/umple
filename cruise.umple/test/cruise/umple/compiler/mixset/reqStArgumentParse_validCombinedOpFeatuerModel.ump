@@ -1,0 +1,12 @@
+//This configuration is valid. 
+require [ A and B or C and D]; // (A and B) or (C and D)
+require [B xor C and D]; // B xor (C and D)
+require [1..2 of {C,D} not E]; 
+
+mixset A {} mixset B {} mixset C{} mixset D {} mixset E{}
+ 
+use C;
+use D;
+
+
+

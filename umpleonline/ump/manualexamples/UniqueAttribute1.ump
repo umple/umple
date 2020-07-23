@@ -1,0 +1,9 @@
+// Every player has a ranking.
+// Rankings can be modified,
+// but two different players 
+// can not have the same ranking.
+
+class Player
+{
+  unique Integer ranking;
+}

@@ -30,21 +30,20 @@ saved), click 'Start Over' under the 'SAVE &amp; LOAD' menu.</li>
 
 <br />
 
-<li><b>To save your work</b>, there are three approaches:
+<li><b>To save your work</b>, there are several approaches:
 
 <ol>
 <li><b>Create a bookmarkable URL</b>. To do this, click 'Create Bookmarkable URL'
-above 
-the left pane or 'Save Model For Future Editing' in the centre pane under 'SAVE &amp; LOAD'. Then copy or bookmark the URL that 
+at the top near the centre 'Save as URLg' in the centre pane under 'SAVE LOAD'. Then copy or bookmark the URL that 
 appears in your browser's URL bar. <br/>&nbsp;<br/>
 
 Note that from this point on you can 
 keep editing the Umple code or diagram, and your work will continue to be 
 saved at this URL. You are thus saving your work in the 'cloud'. You can 
 embed the URL in other pages to document your product. Note that at the 
-current time, anyone who knows your URL can also edit your work, and if 
+current time, anyone who knows your URL can also edit your work (which enables collaboration), and if 
 you forget your URL, or someone messes up the saved contents at that URL,
-there is no way to retrieve it. Therefore it is also 
+there is no way to retrieve it. Saved URLs are also only saved for one year since their last edit. Therefore it is also 
 suggested that if this is a concern, you use saving mehods 2 or 3.<br/>&nbsp;<br/></li>
 
 
@@ -52,9 +51,13 @@ suggested that if this is a concern, you use saving mehods 2 or 3.<br/>&nbsp;<br
 work for small diagrams, since some browsers such as older versions
 of Internet Explorer limit the number of characters in a URL. <br/>&nbsp;<br/>
 
-To do this, click on "Encoded URL" in the 'SAVE &amp; LOAD' menu, and copy the URL that appears in a separate window. You might want to
+To do this, click on "Encoded URL" in the 'SAVE' menu, and copy the URL that appears in a separate window. You might want to
 use a URL shortening service such as bit.ly to shorten the URL before 
 posting it or embedding it in another document. You also need to be aware that you are limited by certain browsers and URL shortening services to files with about 2000 characters or less, so test your URL once you have created it.<br/>&nbsp;<br/></li>
+
+<li><b>Temporarily stash your current work in your browser.</b> You can click 'Store in Browser' in the 'SAVE' menu at any time. Later on, in the same browser, you can retrieve this model using 'Load from Browser' (and if you load by mistake, you can click undo from the Tools menu). This method is not for permanent saving, but can be useful for temporary backups to protect against power failure, browser crashes and so on.</li>
+
+<li><b>Download Files.</b> This is probably the safest approach. It will generate a zip file with the code.</li>
 
 
 <li><b>Copy and paste the text of important models somewhere 
@@ -63,7 +66,7 @@ left hand pane, you will <u>not</u> be saving the <i>layout of the
 diagram</i>. If you want to save the layout too, you have to do one of the 
 following:
   <ul>
-     <li>Click on 'Source' in the 'SAVE &amp; LOAD' menu. This will generate a popup 
+     <li>Click on 'Source to Copy' in the 'SAVE' menu. This will generate a popup 
 that contains Umple code with the layout information. Copy and paste the contents
 of this window, and then close the window.
      <li>Check the box 'Layout Editor' in the 'OPTIONS' menu to view a 
@@ -108,7 +111,7 @@ the simplest Umple program you could type here would be class X {}</li>
 <br />
 
 <li><b>If you make a mistake</b>, you can click 'Undo' in the 'TOOLS' menu, 
-repeatedly to 'back out' each change you made. You can also redo changes 
+repeatedly to 'back out' each change you made (or use your browser's undo keystroke). You can also redo changes 
 in a similar manner.</li>
 
 <br />
@@ -137,6 +140,8 @@ in the 'OPTIONS' menu or uncheck 'Canvas' to hide the diagram entirely.</li>
 
 
 <p><b>Right Pane: UML diagram</b></p>
+
+<p>This can be an editable class diagram, which is the default. The 'E' button at the top-left returns the display to this state as will ctrl-E. The instructions below refer to this format. This can also be a class diagram laid out using Graphviz (G button or ctrl-G), or a state diagram (S button or ctrl-S). To change the Graphviz diagrams, you have to edit Umple textually.</p>
 
 <ul>
 
@@ -173,7 +178,7 @@ showing this pane and saving the layout information</li>
 <li><b>To add an <a href="AttributeDefinition.html">attribute</a></b>, click in the 'Add More' box and type the 
 attribute name. To give an attribute a type, follow the name by a colon, 
 and then one of the Umple types (Integer, String, Date, Time, Boolean or 
-the name of an Umple class (note that this is UML diagram syntax for typed attributes which is not the same as the Umple textual syntax). You can click on an attribute at any time to 
+the name of an Umple class). Note that this is UML diagram syntax for typed attributes which is not the same as the Umple textual syntax. You can click on an attribute at any time to 
 change its name or type, or you can edit the attribute in the textual 
 (left) pane. You can add a whole series of attributes by just hitting 
 return after each one and typing the next one.</li>
@@ -226,14 +231,21 @@ size a little. UmpleOnline is an excellent tool for preparing nice-looking
 diagrams ready for publication. Note that this works best in Firefox at the current time.</li>
 
 <br />
+</ul>
 
-<li><b>To hide the graphical canvas</b>, uncheck 'Layout Editor' in the 'OPTIONS' menu. 
-Then you can just work with the textual Umple in the left pane.</li>
+<p><b>Adjusting the panes</b></p>
+
+<ul>
+
+<li><b>To hide (or re-show) the graphical canvas</b>, click the 'D' button or use ctrl-D.</li>
 
 <br />
 
-<li><b>To adjust the size of the canvas</b> select 'Smaller' or 'Larger' 
-from the 'OPTIONS' menu.</li>
+<li><b>To hide (or re-show) the text editor</b>, click the 'T' button or use ctrl-T.</li>
+
+<br />
+
+<li><b>To adjust the size of the canvas</b> hover the cursor over either edge of the menu; an arrow will appear, allowing you to drag left or right to change the portion of the screen allocated to text or graphics .</li>
 
 </ul>
 

@@ -1,0 +1,181 @@
+/*
+  This is the feature model for BerkeleyDB SPL in Umple.
+  The feature model is taken from:
+  C. Kastner, S. Apel, and D. Batory, “A case study implementing features
+  using AspectJ,” in 11th International Software Product Line Conference
+  (SPLC 2007), 2007, pp. 223–232.
+*/
+require subfeature [Base];
+require subfeature [Ops];
+require subfeature [opt MemoryBudget];
+require subfeature [BTree];
+require subfeature [opt Statistics];
+require subfeature [Persistance];
+require subfeature [ConcurrTrans];
+require subfeature [opt Logging];
+
+mixset Base{  }
+
+mixset MemoryBudget { }
+
+mixset Ops {
+
+ require subfeature [opt TruncateOp opt RenameOp opt DeleteOP];
+
+ mixset TruncateOp { } 
+ 
+ mixset RenameOp { }
+ 
+ mixset DeleteOP { } 
+}
+
+mixset BTree {
+  
+  require subfeature [opt INCompressor opt IEvictor opt  Verifier]; 
+
+  mixset INCompressor { }
+  
+  mixset IEvictor {
+  
+    require subfeature [Evictor];
+
+    require subfeature [opt CriticalEviction opt EvictorDaemon];
+
+    mixset Evictor { }
+
+    mixset CriticalEviction { }
+
+    mixset EvictorDaemon { }
+  }
+
+  mixset Verifier { }
+ 
+}
+
+mixset Statistics { }
+
+mixset Persistance{
+
+  require subfeature [IICLeaner];
+  require subfeature [opt FileHandleCache];
+  require subfeature [opt DiskFullErro];
+  require subfeature [Checkpointer];
+  require subfeature [opt EnvironmentLocking];
+  require subfeature [IIO];
+
+  mixset IIO {
+  require subfeature [NewIO xor OldIO];
+
+  mixset NewIO {
+    require subfeature [opt DirectNIO];
+    require subfeature [NIOAccess];
+    mixset DirectNIO { }
+    mixset NIOAccess {  
+      require subfeature [NIO xor ChunckedNIO];
+      mixset NIO { }
+      mixset ChunckedNIO { }
+    } 
+   
+  }
+  mixset OldIO { 
+    require subfeature [opt SynchronizedIO];
+    require subfeature [IO];
+
+    mixset SynchronizedIO { } 
+    mixset IO {
+    }
+  
+}
+
+
+}
+  require subfeature [opt Checksum];
+
+
+  mixset IICLeaner {
+  require subfeature  [opt LookAHEADCache];
+  require subfeature  [Cleaner];
+  require subfeature [opt CleanerDaemon];
+
+  mixset LookAHEADCache{ }
+  mixset Cleaner{ }
+  mixset CleanerDaemon{ }
+   
+  }
+  
+  mixset FileHandleCache { }
+
+  mixset DiskfullErro{ }
+
+  mixset Checkpointer {
+
+  require subfeature [opt CPBytes];
+
+  require subfeature [opt CPTime];
+
+  require subfeature  [opt CheckpointerDaemon]; 
+
+  mixset CPBytes { }
+
+  mixset CPTime  { }
+
+  mixset CheckpointerDaemon { }
+  
+  }
+ 
+
+}
+
+mixset ConcurrTrans
+{
+  require subfeature [opt Latches opt Transactions opt CheckLeaks opt FSync ];
+  mixset Latches {  }
+  mixset Transactions  {   }
+  mixset CheckLeaks {  }
+  mixset FSync {  }
+}
+
+
+mixset Logging {
+
+  require subfeature [LoggingBase];
+  require subfeature [ opt  LoggingFiner     
+     opt  LoggingConfig    
+     opt  LoggingSevere    
+     opt  LoggingEvictor    
+     opt  LoggingCleaner    
+     opt  LoggingRecovery    
+     opt  LoggingDbLogHandler    
+     opt  LoggingConsoleHandler    
+     opt  LoggingInfo    
+     opt  LoggingFileHandler    
+     opt  LoggingFine    
+     opt  LoggingFinest ];
+    
+  mixset  LoggingFiner { }   
+  mixset  LoggingConfig  { } 
+  mixset  LoggingSevere  { } 
+  mixset  LoggingEvictor  { } 
+  mixset  LoggingCleaner  { } 
+  mixset  LoggingRecovery  { } 
+  mixset  LoggingDbLogHandler  { } 
+  mixset  LoggingConsoleHandler  { } 
+  mixset  LoggingInfo  { } 
+  mixset  LoggingBase  { } 
+  mixset  LoggingFileHandler  { } 
+  mixset  LoggingFine  { } 
+  mixset  LoggingFinest  { } 
+				
+}
+//$?[End_of_model]$?
+// @@@skipjavacompile - Generates no language code
+// @@@skipphpcompile - Contains no language code
+// @@@skiprubycompile - Contains no language code
+
+
+
+
+
+
+
+

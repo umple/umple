@@ -29,9 +29,9 @@
   <property name="threadcount" value="4"/>
   <property name="cleanonfinish" value="true" />
 
-  <property name="php.simpletest.version" value="1.1" />
+  <property name="php.simpletest.version" value="1.2" />
   <property name="php.simpletest.url" 
-            value="https://github.com/git-mirror/simpletest/archive/${php.simpletest.version}.0.tar.gz" />
+            value="https://github.com/simpletest/simpletest/archive/v${php.simpletest.version}.0.tar.gz" />
   <property name="php.libs.dir" value="${dist.dir}/libs/php" />
 
   <path id="project.classpath">
@@ -221,7 +221,7 @@
   </target>
 
   <target name="testRuby">
-    <echo message="Running RUBY tests via rake task"/>
+    <echo message="Running RUBY tests via rake task ${rake_cmd} output ${test.output.path.ruby}/index.html to ${test.output.ruby}"/>
     <exec executable="${rake_cmd}" dir="testbed_ruby/" output="${test.output.path.ruby}/index.html" outputproperty="test.output.ruby" />
 
     <!-- check for error string 'rake aborted', and fail build if itis found -->

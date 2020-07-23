@@ -1,0 +1,13 @@
+namespace example;
+
+class Agent{
+  status{
+    follow{change_lane -> changing_lane;}
+    changing_lane{
+      change_lane [not_achieved==False] ->changing_lane;
+      change_lane [not_achieved==True] -> final;
+    }
+    final{}
+  }
+}
+

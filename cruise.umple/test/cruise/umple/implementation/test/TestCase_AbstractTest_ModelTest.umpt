@@ -1,0 +1,31 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  TestCase_AbstractTest ----/////
+
+test TestCase_AbstractTest {
+
+generate JUnit;
+
+depend  Person ; 
+
+
+
+
+GIVEN:
+TestCase_AbstractTest.ump;
+THEN:
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Person       */
+  /*-------------------------*/
+
+ 
+ 
+
+ }

@@ -25,14 +25,14 @@ lower bound.</p>
 @@syntax
 [[multiplicity]]
 
-@@example
+@@example @@caption 'Mandatory many' example @@endcaption
 @@source manualexamples/Multiplicity1.ump
 @@endexample
 
-@@example
+@@example @@caption Example with lower and upper bounds @@endcaption
 @@source manualexamples/Multiplicity2.ump
 @@endexample
 
-@@example
+@@example @@caption Example with single integer multiplicity @@endcaption
 @@source manualexamples/Multiplicity3.ump
 @@endexample

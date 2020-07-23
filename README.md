@@ -7,7 +7,7 @@ OS         | Linux  | OSX    | Windows
 **Status** | [![Travis-CI Build Status](https://travis-ci.org/umple/umple.svg?branch=master)](https://travis-ci.org/umple/umple) | [![Travis-CI Build Status](https://travis-ci.org/umple/umple.svg?branch=master)](https://travis-ci.org/umple/umple) | [![Windows Build status](https://ci.appveyor.com/api/projects/status/1yetvadynui7r8y6?svg=true)](https://ci.appveyor.com/project/vahdat-ab/umple/branch/master) 
 
 
-## Introduction
+## Description
 
 This is the main project for various Umple subprojects and components.
 
@@ -15,25 +15,60 @@ Umple is a model-oriented programming technology, allowing developers to embed m
 
 The project homepage is located at http://umple.org/
 
-## Development
-Umple is developed in itself, guaranteeing robustness; the most recent version of the compiler must be used to compile itself. See the wiki for development setup.
+There are a large number of scientific papers about Umple listed at: http://publications.umple.org
 
-Development follows a model-driven, test-driven, agile, continuous-integration process. Umple is hosted currently on Github at http://code.umple.org. It was first released in 2007, and the master was on Google Code from 2011 to mid 2015.
+## Development Process
+Umple is developed in itself, guaranteeing robustness; the most recent version of the compiler must be used to compile itself. See the wiki for development setup: http://devsetup.umple.org
 
-Umple has been largely developed as a research project at the University of Ottawa, Canada, by numerous PhD and masters students: many undergraduates from across Canada and the USA have also contributed through the UCOSP program. See the license file for the list of contributors.
+Development follows a model-driven, test-driven, agile, continuous-integration process. Umple is hosted currently on Github at http://code.umple.org. It was first released in 2007. The master was on Google Code from 2011 to mid 2015 and moved to Github in 2015.
 
-More details can be found as follows
+Umple has been largely developed as a research project at the University of Ottawa, Canada, by numerous PhD and masters students. Many undergraduates from across Canada and the USA have also contributed through the UCOSP program. See the license file for the list of contributors. http://license.umple.org
+
+## Installation and Downloading
+
+Umple does not need necessarily to be downloaded, the following allow you to run it directly in any web browser:
+
+  * UmpleOnline: http://try.umple.org - Website for the GUI version of Umple 
+  * Docker: http://docker.umple.org - Install a docker image to run the GUI directly
+
+You can download the java jar for command-line use, or the Eclipse plugin:
+
+  * Download page: http://dl.umple.org    - Links to the latest official release and continuous builds (command-line, Eclipse, Docker)
+  
+To run locally on your machine, Umple needs Java (versions 8-13) installed. It runs on Mac, Linux and Windows.
+  
+## Usage
+
+Umple is a programming and modeling language with a rich syntax. Full documentation with many examples can be found at 
+
+  * Umple user manual: http://manual.umple.org 
+
+## Other Key links
 
   * Umple home page: http://www.umple.org  - The master Umple page with a more comprehensive set of links
-  * Umple user manual: http://manual.umple.org  - Full documentation of all Umple features
-  * UmpleOnline: http://try.umple.org - Website for the GUI version of Umple (can also be run on your local machine using Docker)
-  * Download page: http://dl.umple.org    - Links to the latest official release and continuous builds (command-line, Eclipse, Docker)
+  *  - Full documentation of all Umple features
   * Live diagram of the metamodel: http://metamodel.umple.org
   * Architecture: http://architecture.umple.org
 
 Umple is continuously tested and built at the University of Ottawa using CruiseControl; see http://cc.umple.org . It is also built on Travis CI (http://travis.umple.org/) and Appveyor (https://appveyor.com/).
- 
-### Project setup
+
+## Contributing
+
+  * Please report any bugs or improvement requests at: http://bugs.umple.org
+  * To set up your development environment please see: http://devsetup.umple.org
+  * For more details on contributing, please see: https://github.com/umple/umple/blob/master/CONTRIBUTING.md
+
+## License
+
+Umple is licensed under the MIT license. See http://license.umple.org
+
+## Credits
+
+All developers of Umple are listed in the license file at http://license.umple.org
+
+Financial support has been received from NSERC and the Ontario Research Fund. IBM supported early development of Umple. Google and Facebook supported student travel during Umple's development. 
+
+## Contents of the directories
 
 The umple project is split into many smaller subprojects; the folder hierarchy is explained below to better describe the structure.
 
@@ -63,6 +98,8 @@ The umple project is split into many smaller subprojects; the folder hierarchy i
   * umplesync.VERSION.jar *UmpleOnline tool to to synchronize graphical form*
   * umplerun.VERSION.jar *tool to drive input to an umple program*
   * vml.VERSION.jar * Extension for variability modeling*
+  * umple.unit-test.jar *Test Language Compiler*
+  * umple.mutation.jar *Umple Mutant Generator*
 
 * examples/ *Developer curated examples*
 * externalexamples/ *External projects that are used for testing*
@@ -78,8 +115,11 @@ The umple project is split into many smaller subprojects; the folder hierarchy i
 * UmpleToRTCpp/ *Code generation for C++ *
 * UmpleToSDL/ *Code generation to convert Umple to SDL* (in early development)
 * UmpleToSql/ *Code generation SQL from Umple models*
+* UmpleToTest/ *Code generation for abstract tests*
 * UmpleToTemplate/ *Location for templates that could be common to subprojects*
-
+* UmpleTToJunit/ *Code Generation for JUnit5 - used by MTL compiler*
+* UmpleTToPhpunit/ *Code Generation for PhpUnit - used by MTL compiler*
+* UmpleTToRubyunit/ *Code Generation for RubyUnit - used by MTL compiler*
 * umpleonline/ *The UmpleOnline web application*
   * UmpleOnline allows generation of code from Umple directly in a web browser, and also editing of Umple both graphically and textually. Available at http://try.umple.org
 

@@ -1,0 +1,44 @@
+class UmpleToTest {
+    association_ManyToOne <<!<</*association_ManyToOne*/>><<#
+
+  String myClass = uClass.getName();
+  String otherClass = av.getRelatedAssociation().getUmpleClass().getName();
+  String relatedAv = av.getRelatedAssociation().getUmpleClass().getName();
+  String buffName = "a" +uClass.getName();#>>
+        		  
+        		  /////// Association: -- <<=av.getRelatedAssociation().getMultiplicity().getRange()>> <<=av.getRelatedAssociation().getUmpleClass().getName()>> /////// 
+        		  
+        		  test create<<=uClass.getName()>>With<<=av.getRelatedAssociation().getUmpleClass().getName()>> {        		  
+        		  <<=gen.dependencyInjection(uClass)>>
+        		  <<=uClass.getName()>> <<=gen.initiateClass(uClass)>>;
+        		  
+        		  assertTrue (a<<=uClass.getName()>>.get<<=otherClass>>() == a<<=relatedAv>>);
+        		  }
+        		  
+        		  <<#gen.resetInitializedObject();#>>
+        		  
+        		  test replaceMany<<=relatedAv>>InOne<<=myClass>>{ 
+        		  
+        		  <<=gen.dependencyInjection(av.getRelatedAssociation().getUmpleClass())>>
+        		  <<=otherClass>> b<<=gen.initiateClass(av.getRelatedAssociation().getUmpleClass())>>;
+        		  
+        		  
+        		  
+        		  <<=gen.dependencyInjection(uClass)>>        		          		  
+        		  <<=myClass>> <<=gen.initiateClass(uClass)>>;
+        		  
+        		          		  
+        		  //<<=otherClass>> b<<=gen.initiateClass(av.getRelatedAssociation().getUmpleClass())>>;
+        		  
+        		  a<<=uClass.getName()>>.set<<=relatedAv>>(ba<<=otherClass>>);
+        		  
+        		  assertEqual ( a<<=uClass.getName()>>.get<<=relatedAv>>(),ba<<=relatedAv>>);        		  
+        		  
+        		          		  
+        		  }
+        		  <<#gen.resetInitializedObject();#>>
+        		  
+        		  <<#
+        		  
+#>>!>>
+}

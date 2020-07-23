@@ -1,0 +1,63 @@
+// Initially there are two classes with no attributes
+class X {}
+class Z {}
+
+after {X} setC {
+  //this code will be injected
+}
+
+// In another place, potentially a separate file.
+// class X is given attribute a
+// This is a simple mixin
+class X {
+ a;
+}
+ 
+// In a third place we conditionally want to
+// include attribute b, perhaps only in certain
+// versions of the software.
+mixset specialVersion {
+  class X {
+    b;
+  }
+}
+
+// To activate the specialVersion mixset we need
+// to encounter the following
+use specialVersion;
+
+// We can also have another 'fragment' of
+// the specialVersion mixset elsewhere
+mixset specialVersion {
+  class X {
+    c;
+  }
+}
+
+// The following notations can also be used
+class X {
+  mixset specialVersion {d;}
+}
+
+// Any features of a class can be incorporated
+// using a mixset including the following
+// Here we introduce a second mixset
+mixset specialVersion2 {
+ class Z {p;}
+}
+
+class X {
+  mixset specialVersion2 {
+    isA Z;
+    0..1 -- * Z;
+  }
+}
+
+use specialVersion2;
+
+// The following mixset will be ignored since
+// there is no use statement for it
+mixset specialVersion3 {
+ class W {}
+}
+

@@ -23,6 +23,6 @@ A class definition defines an object-oriented class available for use as a type 
 @@syntax
 [[classDefinition]] [[classContent]]
 
-@@example  @@caption Example Showing to Classes (Class Diagram is Above) @@endcaption
+@@example  @@caption Example Showing two Classes (Class Diagram is Above) @@endcaption
 @@source manualexamples/ClassDefinition1.ump
 @@endexample

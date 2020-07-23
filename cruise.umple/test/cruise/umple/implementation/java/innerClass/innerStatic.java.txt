@@ -1,0 +1,68 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+// line 1 "InnerStatic.ump"
+public class OuterClass_1
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public OuterClass_1()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+  /*PLEASE DO NOT EDIT THIS CODE*/
+  /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+  
+  
+  
+  // line 5 "InnerStatic.ump"
+  public static class InnerStaticClass
+  {
+  
+    //------------------------
+    // MEMBER VARIABLES
+    //------------------------
+  
+    //------------------------
+    // CONSTRUCTOR
+    //------------------------
+  
+    public InnerStaticClass()
+    {}
+  
+    //------------------------
+    // INTERFACE
+    //------------------------
+  
+    public void delete()
+    {}
+  
+    // line 10 "InnerStatic.ump"
+    public void increaseY(){
+      y++;
+    }
+  
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 3 "InnerStatic.ump"
+  static int y=0 ;
+
+  
+}

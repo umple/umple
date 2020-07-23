@@ -1,0 +1,42 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  immutableAttribute ----/////
+
+test ImmutableA {
+
+ generate JUnit ;
+ 
+ depend  ImmutableA ; 
+
+
+
+ 
+ GIVEN:
+ immutableAttribute.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :id
+
+      test attribute_immutable_id {
+    
+          
+
+    
+        ImmutableA aImmutableA();
+    //assertMethod(setId());
+    assertTrue( aImmutableA.getId() == "someId");
+
+
+        	}
+
+
+  
+ 
+   
+
+}

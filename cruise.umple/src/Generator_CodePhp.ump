@@ -678,6 +678,9 @@ class PhpGenerator
           "if (isset($this->{0})) {" + "\n" +
           "  ${2} = $this->{3}();" + "\n" + 
           "}" + "\n" + 
+          "if (isset(${2}) && ${2} === ${1}) {" + "\n" + 
+          "  return true;" + "\n" +
+          "}" + "\n" + 
           "if ({6}::{4}(${1})) {" + "\n" + 
           "  return $wasSet;" + "\n" +
           "}", "before", av, aClass);
@@ -791,7 +794,7 @@ class PhpGenerator
           ,translate("setMethod",sm)
           ,translate("stateOne",sm.getStartState()))
       );
-      lookups.put("parentExitActionCode",StringFormatter.format("$this->{0}();",translate("exitMethod",parentState)));
+      lookups.put("parentExitActionCode",StringFormatter.format("$this->{0}();",translate("exitMethod",sm)));
       GeneratorHelper.prepareNestedStateMachine(sm,concurrentIndex,lookups);  
     }
 
@@ -965,6 +968,18 @@ class PhpGenerator
     for (UmpleClass aClass : getModel().getUmpleClasses())
     {
       GeneratedClass genClass = aClass.getGeneratedClass();
+
+      //add interface imports
+      if (aClass.hasParentInterface())
+      {
+        for(UmpleInterface interfaceParent: aClass.getParentInterface())
+        { 
+          if (!aClass.getPackageName().equals(interfaceParent.getPackageName()))
+          {
+            genClass.addMultiLookup("import", interfaceParent.getPackageName() + ".*");  
+          }
+        }
+      }
       
       if (aClass.getExtendsClass() != null)
       {

@@ -1,0 +1,114 @@
+generate Test;
+
+class Job {
+ name;
+}
+
+class Organization {
+
+  
+ //1 -- * Person;
+ 
+ //1 -- * Job;
+
+}
+
+
+class Score {
+Integer score;
+}
+
+
+  // All person cannot have a Coash as a job.
+class Person {    
+   1 -- * Score;
+   1 -- * Job;
+   * -- 1 Organization;
+   
+   
+   
+   test init {   
+      Person p1 ("john" , 123);
+      Job j1 ("Cashier");          
+   }
+  
+   testSequence ts { checkName -> checkStatus ; }
+  
+ 
+  test checkForLoop {
+  
+  Person p1 (123);
+   
+  ArrayList<Job> jobs = p1.getJobs();
+  Integer size = jobs.size();
+  
+  for (Job job : jobs)
+  {  
+   assertTrue(job.getName() != "Coach");       
+  }
+  
+  
+  
+  }
+  
+  test checkStatus {
+        //something
+        Person p1 ("id");
+        id = "id" ;
+        String id2 = p1.getGate(id, "name") ;
+        String id2 = p1.getGate() ;
+        String id2 = getGate() ;
+        String id2 = getGate(id) ;
+        p1.openGarage(p1);
+        openGarage(p1);        
+        before assertFalse(d1.firstName() == "Orlean");
+        this.setId("id",id);
+        //assertion comment
+        after assertFalse(p1.getId() == "something");
+        /*multiline comment 
+      line comment*/
+        }
+        
+        test checkCashierPromotion {
+                  
+        job1.promote();                 
+        
+        before assertTrue (job.getName == "Cashier");
+        after assertTrue (jobName == "Manager");
+                
+        }
+        
+         before test setUp {
+          //initalize enviroment      
+        }
+        
+        after test teardown {
+          //delete files      
+        }
+        
+        
+        JUnit concrete test checkName {
+        //test code 
+        
+        }
+        
+        
+        
+        
+        
+     garageDoor{
+     
+     open{
+     }
+     
+     close{
+     }
+     
+     
+     }
+     
+       
+  
+}  
+ 
+  

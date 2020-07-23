@@ -1,0 +1,1781 @@
+/*
+ * This Umple file modify the following classes:
+ * UmpleInternalParser,
+ *  */
+
+
+namespace cruise.umple.compiler;
+  
+class UmpleInternalParser
+{
+
+/////////////////////////
+// This method analyze testcase token found in traits 
+/////////////////////////
+private void analyzeTraitTestCaseToken(Token token, UmpleTrait aTrait){
+    UmpleTestCase tc = new UmpleTestCase(token.getValue("testCaseName"),0);
+	analyzeTestCase(token, aTrait, tc);	
+	  aTrait.addUmpleTestCase(tc);
+	  //System.out.println(aTrait.getUmpleTestCase(0).getUmpleAssertions().toString());
+	  copyTestCasefromExtendedTrait(token, aTrait);
+	  
+  }
+  
+  /////////////////
+  //post check for test sequence and test cases
+  // 
+  private void postTokenTestSequeceAnalysis() {
+	// TODO check for test cases not found in test sequence and raise a warning 
+	  
+	  for(UmpleClass uClass : model.getUmpleClasses())
+	  {
+		  if (uClass.hasTestSequences())
+		  {
+			  for (TestSequence ts : uClass.getTestSequences())
+			  {
+			  if(uClass.hasUmpleTestCases())
+			  {
+				  
+				  for (UmpleTestCase tc : uClass.getUmpleTestCases())
+				  {
+					  for (String tsTestCase : ts.getTests())
+					  {
+					if(!tsTestCase.equals(tc.getName()))
+					{
+						getParseResult().addErrorMessage(new ErrorMessage(6007,uClass.getPosition(0),uClass.getName(),ts.getName(),tc.getName()));
+					}
+						  
+				  }
+				  }
+			  }
+			  else {
+				  // test sequence found but class has no test cases
+				  getParseResult().addErrorMessage(new ErrorMessage(6006,uClass.getPosition(0),uClass.getName(),ts.getName()));
+				  
+			  }
+			  
+			  }
+		  }
+	  }
+	
+}
+
+/////////////////////////
+// This method copies testcases found in trait into the class 
+/////////////////////////
+
+private void copyTestCasesFromTraitsToClass(UmpleClass inClass) {
+	    Map<UmpleTrait, List<UmpleTestCase>> traitTestCases = new HashMap<UmpleTrait, List<UmpleTestCase>>();
+		Map<UmpleTrait, List<UmpleTestCase>> tempTraitTestCases = new HashMap<UmpleTrait, List<UmpleTestCase>>();
+		Map <UmpleTestCase, List<UmpleAssertion>> tcTempAssertions = new HashMap<UmpleTestCase, List<UmpleAssertion>>(); 
+		boolean tcExist = false;
+		int index = 0;
+		/*for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
+			tempTraitTestCases = gatherTestCases(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()));
+			if ( ! getParseResult().getWasSuccess() ) return;
+			if (checkTcComeFromTraitsIsAvaiableInClass(tempTraitTestCases,inClass) ) return;
+			if (CheckTcComeFromTraitsIsAvaialbleInOtherTraits(traitTestCases,tempTraitTestCases)) return;
+			AddTcMapToAnother(traitTestCases,tempTraitTestCases);
+		}*/
+		for (UmpleTrait t1 : inClass.getExtendsTraits()) {
+			for (UmpleTestCase tc : t1.getUmpleTestCases()) {
+				if(inClass.hasUmpleTestCases())
+				{
+					for (UmpleTestCase tempTc : inClass.getUmpleTestCases())
+					{
+						if(tc.getName().equals(tempTc.getName()))
+						{
+							//TODO: append trait tests
+							tcExist=true;
+							index = inClass.indexOfUmpleTestCase(tempTc);
+						}
+						else {
+							tcExist = false;
+						}
+					}
+				}
+				
+				if( tcExist != true)
+				{
+					inClass.addUmpleTestCase(tc);
+					
+				}
+				else 
+				{
+					mergeTests(inClass.getUmpleTestCase(index),tc);										
+					//tcTempAssertions.put(tc, tc.getUmpleAssertions());
+					//inClass.addUmpleTestCase(tc);
+					/*System.out.println(tc.getUmpleAssertions().toString());
+					//System.out.println("second:::");
+					//System.out.println(inClass.getUmpleTestCase(index).getUmpleAssertions().toString());
+					//mergeTests(inClass.getUmpleTestCase(index), tc);
+					
+					for ( UmpleAssertion uAssert : tc.getUmpleAssertions())
+					{
+						//UmpleAssertion uAssertTemp= new UmpleAssertion(null, uAssert.getType(), uAssert.getLevel(), null, uAssert.getAssertCode());												
+						//inClass.getUmpleTestCase(index).addUmpleAssertion(uAssertTemp);
+						mergeTests(inClass.getUmpleTestCase(index),tc);						
+					}*/
+					
+					
+					
+				}
+				  
+			}
+			
+			//System.out.println(inClass.getUmpleTestCase(index).toString());
+		}
+	
+}
+// the following method not currently used but may be needed later.
+/*private Map<UmpleTrait, List<UmpleTestCase>> gatherTestCases(UmpleTrait inTrait,
+		GeneralTPApplied inGTPApplied) {
+	Map<UmpleTrait, List<UmpleTestCase>> traitTestCases = new HashMap<UmpleTrait, List<UmpleTestCase>>(); 
+	 Map<UmpleTrait, List<UmpleTestCase>> tempTestCases = new HashMap<UmpleTrait, List<UmpleTestCase>>();
+	 //----------------------------------------------------------------------------------------
+	 List<UmpleTestCase> attributes = new ArrayList<UmpleTestCase>();	  
+	 for (UmpleTestCase tc : inTrait.getUmpleTestCases()) {
+		 UmpleTestCase newTc = new UmpleTestCase(tc.getName(),0);
+	 	 ApplyTypeParametersToAttribute(newTc,inGTPApplied,inTrait);
+		 attributes.add(newTc);
+	 }
+   traitTestCases.put(inTrait,attributes);
+   //----------------------------------------------------------------------------------------
+   for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+     GeneralTPApplied newGTParameter = inTrait.getGeneralTPAppliedByName(uTrait.getName())!=null ? new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName())) : null;
+     if (newGTParameter!=null){
+        ApplyTypeParametersToTypeParameters(newGTParameter, inGTPApplied,inTrait);       
+        checkClassSupportTraitsInterfaces(newGTParameter,inTrait);
+     }
+     if ( ! getParseResult().getWasSuccess() ) return traitTestCases;
+   	tempTestCases = gatherTestCases(uTrait,getNewGeneralTPAppliedWithP2P(inTrait,uTrait,inGTPApplied));   	 
+  	 	if ( ! getParseResult().getWasSuccess() ) return traitTestCases;
+  	 	if (CheckAttComeFromTraitsIsAvaialbleInOtherTraits(traitTestCases, tempTestCases)) return traitTestCases;
+  	 	AddAttMapToAnother(traitTestCases,tempTestCases);
+	}
+   return traitTestCases;
+}*/
+
+
+/////////////////////////
+// This method merges the content of two test cases 
+// TODO: fix LocOrder and actions, init 
+/////////////////////////
+
+private boolean mergeTests(UmpleTestCase tc1, UmpleTestCase tc2){
+    //TODO: FIX LocCode for test merge 
+	   //for (int)
+	   if(tc2.hasUmpleAssertions()) {
+	   for (UmpleAssertion uAssert : tc2.getUmpleAssertions())
+			{
+    	int index=tc2.getLocOrder();
+		//
+				//TODO:add LocOrder for actions and inits
+		
+				UmpleAssertion uAssertTemp= new UmpleAssertion(null, uAssert.getType(), uAssert.getLevel(), null, uAssert.getAssertCode(),index);
+				tc1.setLocOrder(tc1.getLocOrder()+1);
+				tc1.addUmpleAssertion(uAssertTemp);
+						
+			}
+       }
+    
+    //if (tc2)
+	
+	return true;
+  }
+  
+  private void  copyTestCasefromExtendedTrait (Token token, UmpleTrait aTrait)
+   {
+	   //System.out.println(aTrait.hasExtendsTraits());
+		  if(aTrait.hasExtendsTraits())
+		  {
+			  //System.out.println("found Extended trait");
+			  for(UmpleTrait exTrait: aTrait.getExtendsTraits())
+			  {
+				  if (exTrait.hasUmpleTestCases())
+				  {
+					  for(UmpleTestCase uTc : exTrait.getUmpleTestCases())
+					  {
+						  analyzeTestCase(token, exTrait, uTc);
+						  UmpleTestCase tempTc = new UmpleTestCase(uTc.getName(), uTc.getLocOrder());
+						  aTrait.addUmpleTestCase(tempTc);
+					  }
+				  }
+			  }
+		  }
+   }
+
+private void analyzeTestCase(Token token, UmpleElement uElement, UmpleTestCase uTestCase){
+    for (Token subToken : token.getSubTokens())
+	    {
+	     
+	      if(subToken.getName().equals("isConcrete"))
+	      {	    	
+	         if( subToken.getValue("isConcrete")!= null)
+	         {
+	        	 uTestCase.setIsConcrete(true);
+	        	 uTestCase.setConcreteLang(subToken.getValue("isConcrete"));
+	         }
+	         
+	      }
+	      
+	      if(subToken.getName().equals("testAction"))
+	      {	    	
+	        analyzeTestAction(subToken,uElement,uTestCase);	      	    	
+	      }
+	      if(subToken.getName().equals("assertion"))
+	      {	    	
+	        analyzeAssertion(subToken,uElement,uTestCase);	      	    	
+	      }
+	      
+	      if(subToken.getName().equals("testInit"))
+	      {	    	  
+	        analyzeTestInit(subToken,uElement,uTestCase);	      	    	
+	      }
+	      
+	      if(subToken.getName().equals("testInitAtt"))
+	      {	    	  
+	        analyzeTestInitAtt(subToken,uElement,uTestCase);	      	    	
+	      }
+	      
+	      if(subToken.getName().equals("testInitAttWithMethodCall"))
+	      {	    	  
+	        analyzeTestInitAttWithMethodCall(subToken,uElement,uTestCase);	      	    	
+	      }
+	      
+	      
+	      if(subToken.getName().equals("inlineComment"))
+	      {	    	  
+	        analyzeTestComment(subToken,uElement,uTestCase);	      	    	
+	      }
+	      
+	      if(subToken.getName().equals("multilineComment"))
+	      {	    	  
+	        analyzeTestMultiComment(subToken,uElement,uTestCase);	      	    	
+	      }
+	      
+	      if(subToken.getName().equals("ifStatement"))
+	      {	    	  
+	        analyzeTestIfStatement(subToken,uElement,uTestCase);	      	    	
+	      }
+	      
+	      if(subToken.getName().equals("forStatement"))
+	      {	    	  
+	    	  analyzeTestForStatement(subToken,uElement,uTestCase);	      	    	
+	      }
+	      
+	    }
+  }
+
+   
+   private void analyzeTestMultiComment(Token token, UmpleElement uElement, UmpleTestCase uTestCase) {
+	// TODO Auto-generated method stub
+	  TestAction ta = new TestAction("multicomment"+uTestCase.getLocOrder(),"/*"+token.getValue("multilineComment")+"*/","comment", uTestCase.getLocOrder());
+	  uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+		uTestCase.addTestAction(ta);
+	  
+}
+
+private void analyzeTestComment(Token token, UmpleElement uElement, UmpleTestCase uTestCase) {
+	// TODO fix test comments with line of code order
+	  
+	  TestAction ta = new TestAction("comment"+uTestCase.getLocOrder(),"//"+token.getValue("inlineComment"),"comment", uTestCase.getLocOrder());
+	  uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+		uTestCase.addTestAction(ta);
+	  
+	
+}
+
+
+ 
+
+  private String analyzeTestMethodCall (Token token, UmpleTestCase uTestCase, String tCode ){
+  
+ String code = "";
+	  
+	  
+	  
+	  
+	  for (Token subToken: token.getSubTokens())
+	  {
+		  if ( subToken.getName().equals("objectName"))
+		  {
+			  code += subToken.getValue("objectName");
+		  }
+		  
+		  if ( subToken.getName().equals("methodName"))
+		  {
+			  code += subToken.getValue("methodName");
+		  }
+		  
+		  
+		  
+		  
+		  if (subToken.getName().equals("testActionParameterList"))
+		  {
+			  //System.out.println("before test Action: "+code);
+			  String paramCode = "";
+			  for(Token parToken : subToken.getSubTokens())
+			  {
+				  
+				  if(parToken.getName().equals("testParameter"))
+				  {
+				  paramCode = analyzeTestParameter(parToken,uTestCase,"");					  
+				  }
+				  
+				  
+			  }
+			  
+			  code += paramCode;
+			  paramCode="";
+			  
+		  }
+		  
+		  if ( subToken.getName().equals(","))
+		  {
+			  code += ", ";
+		  }
+		  if ( subToken.getName().equals("\""))
+		  {
+			  code += "\"";
+		  }
+		  
+		  if ( subToken.getName().equals("("))
+		  {
+			  code+="(";
+		  }
+		  
+		  if ( subToken.getName().equals(")"))
+		  {
+			  code+=")";
+		  }
+		  
+		  if ( subToken.getName().equals("."))
+		  {
+			  code+=".";
+		  }
+	  }
+	  
+	return code;
+	
+	}
+   
+   
+ private void analyzeClassTestCase(Token token, UmpleClass aClass){
+    
+	   
+	        	 boolean testcaseExist= false;
+	        	  int index=0;
+	        	  
+	        	  if(token.getValue("testCaseName").equals("init"))
+	        	  {
+	        		  // only ignore the test named : init (used for initialization for WHEN statement
+	        		  
+	        		  for (Token initToken : token.getSubTokens())
+	        		  {
+	        			  if(initToken.getName().equals("testInit"))
+	        			  {	        			
+	        				  //System.out.println(initToken.toString());	  
+	        				  
+	        		  analyzeTestClassInit(initToken, aClass);
+	        			  }
+	        		  }
+	        		  
+	        	  }
+	        	  
+	        	  else {
+	        	  
+	        	  for(UmpleTestCase tc: aClass.getUmpleTestCases())
+	    		  {
+	    			  if (tc.getName().equals(token.getValue("testCaseName")))
+	    			  {
+	    				  testcaseExist= true;
+	    				  index = aClass.indexOfUmpleTestCase(tc);
+	    			  }
+	    		  }
+
+	    		  if(!testcaseExist)
+	    		  {
+	    			  UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName"),0);
+	    			  if (token.getValue("isTimed")!= null) {
+	    				  uTestCase.setIsTimed(true);
+	    			  }
+	    			  analyzeTestCase(token, aClass, uTestCase);
+	    			  aClass.addUmpleTestCase(uTestCase);
+	    		  }
+	    		  else {
+	    			  analyzeTestCase(token, aClass, aClass.getUmpleTestCase(index));
+	    		  }
+	        	  }
+	   
+  }
+  
+  
+  private void analyzeAssertion(Token token, UmpleElement uElement, MethodBody meth, UmpleTestCase uTestCase, String level){
+    boolean isTimed = token.getValue("isTimed")!= null;
+	   String type = "";
+	   if (isTimed)
+	   {
+		   type = token.getValue("isTimed")+StringFormatter.toPascalCase(token.getValue("assertType"));
+		   //System.out.println(type);
+	   }
+	   else 
+	   {
+		   type = token.getValue("assertType");
+	   }
+	   
+	   
+	   
+	   if(token.getName().equals("assertion"))
+	      {
+	    	
+	        if (token.getValue("assertType").equals("assertTrue"))
+	        {  
+	         UmpleAssertion assertion = new UmpleAssertion("",type,level,"",token.getValue("code"),uTestCase.getLocOrder());
+	        		 uTestCase.addUmpleAssertion(assertion);
+	        		 meth.addUmpleAssertion(assertion);
+	        		 uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	        }
+
+	        if (token.getValue("assertType").equals("assertFalse"))
+	        {
+	        	UmpleAssertion assertion = new UmpleAssertion("",type,level,"",token.getValue("code"),uTestCase.getLocOrder());
+	        			uTestCase.addUmpleAssertion(assertion);
+	        			meth.addUmpleAssertion(assertion);
+	        			uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	        }
+
+	        if (token.getValue("assertType").equals("assertEqual"))
+	        {
+	        	UmpleAssertion assertion = new UmpleAssertion("",type,level,"",token.getValue("code"),uTestCase.getLocOrder());
+	            uTestCase.addUmpleAssertion(assertion);
+	            meth.addUmpleAssertion(assertion);
+	            uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	        }
+	    	
+	       }
+  }
+
+private void analyzeMethodAssertion(Token token, UmpleElement uElement, MethodBody meth, Method aMethod, UmpleTestCase uTestCase){
+    //UmpleAssertion assertion = new UmpleAssertion("","","","","",uTestCase); 
+
+	 //analyzeAssertion(token,(UmpleClass) uElement, uTestCase,"method"); 
+	 
+	 analyzeAssertion(token,(UmpleClass) uElement,meth, uTestCase,"method");
+	 
+	 
+	
+  }
+  
+  UmpleTestCase getMethodTestCase(UmpleClass aClass, String meth) {
+	
+	   for (UmpleTestCase tc : aClass.getUmpleTestCases() )
+	   {
+		   if(tc.getName().equals(meth))
+		   {
+			   return tc;
+		   }
+	   }	   	   
+	   return null;	   	   
+   }
+
+
+  private void analyzeMethodTestCase(Token token, UmpleElement uElement, MethodBody meth, Method aMethod, UmpleTestCase uTestCase){
+    String testCaseName = token.getValue("testCaseName");
+    
+    /*int index = -1;
+    
+    
+    for(UmpleTestCase tc : uElement.getUmpleTestCases()) {
+    	if (tc.getName().equals(testCaseName))
+    	{
+    		index = uElement.indexOfUmpleTestCase(tc);
+    	}
+    }*/
+    
+    
+	   
+    //UmpleAssertion assertion = new UmpleAssertion("","","","","",uTestCase);
+    //UmpleTestCase uTestCase = new UmpleTestCase(testCaseName,(UmpleClass)uElement);
+    for (Token subToken : token.getSubTokens())
+    {
+     
+      if(subToken.getName().equals("assertion"))
+      {
+    	  
+    	  analyzeAssertion(subToken,uElement, meth,uTestCase, "method");
+    	
+        /*if (subToken.getValue("assertType").equals("assertTrue"))
+        {         
+          uTestCase.addUmpleAssertion(new UmpleAssertion("","true","method","",subToken.getValue("code"),uTestCase.getLocOrder()));
+          uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+        }
+
+        if (subToken.getValue("assertType").equals("assertFalse"))
+        {
+        	uTestCase.addUmpleAssertion(new UmpleAssertion("","false","method","",subToken.getValue("code"),uTestCase.getLocOrder()));
+        	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+        }
+
+        if (subToken.getValue("assertType").equals("assertEqual"))
+        {
+          uTestCase.addUmpleAssertion(new UmpleAssertion("","true","equal","",subToken.getValue("code"),uTestCase.getLocOrder()));
+          uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+        }*/
+    	
+       }
+      
+    	
+    }
+    
+    meth.addUmpleTestCase(uTestCase);
+  }
+  
+  
+  private void analyzeTestAction(Token token, UmpleElement aClass, UmpleTestCase uTestCase) {
+	// TODO Auto-generated method stub	  
+	  String code ="";
+	  
+	  for(Token subToken: token.getSubTokens())
+	  {
+		  if(subToken.getName().equals("objectName"))
+		  {
+			  code += token.getValue("objectName") + "";
+		  }
+		  
+		  if(subToken.getName().equals("."))
+		  {
+			  code += ".";
+		  }
+		  
+		  if(subToken.getName().equals("methodName"))
+		  {
+			  code += token.getValue("methodName") + "";
+		  }
+		  
+		  if(subToken.getName().equals("("))
+		  {
+			  code += "(";
+		  }
+		  
+		  if(subToken.getName().equals(")"))
+		  {
+			  code += ")" + "";
+		  }
+		  
+		  if(subToken.getName().equals(";"))
+		  {
+			  code += ";" + "";
+		  }
+		  
+		  if(subToken.getName().equals("testActionParameterList"))
+		  {
+			  String parCode = "";
+			  //System.out.println(subToken.getSubTokens());
+			  //TODO
+			  
+			  for (Token parToken : subToken.getSubTokens())
+			  {
+				  //System.out.println(parToken.getSubTokens());
+				  if(parToken.getName().equals("("))
+				  {
+					  parCode += "(";
+				  }
+				  
+				  if(parToken.getName().equals(")"))
+				  {
+					  parCode += ")";
+				  }
+				  
+				  if(parToken.getName().equals(","))
+				  {
+					  parCode += ",";
+				  }
+				  
+				  if(parToken.getName().equals("testParameter"))
+				  {
+					  parCode += analyzeTestParameter(parToken, uTestCase, parCode);					  					  					  
+				  }
+				  				  
+				  //parCode += "" + parToken.getSubTokens().toString(); 
+			  }
+			  code += "" + parCode +"";
+		  }
+		  
+		  
+		  
+	  }
+	  
+	//code += token.getValue("objectName");
+	//code += token.getValue("objectName");
+	TestAction ta = new TestAction("",code,"", uTestCase.getLocOrder());
+	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	uTestCase.addTestAction(ta);
+	
+}
+
+private void analyzeTestInit(Token token, UmpleElement aClass, UmpleTestCase uTestCase) {
+	// TODO fix test initialization
+	  //TestInit ti = new TestInit("", "");
+	  TestAction ta = new TestAction("","","init",uTestCase.getLocOrder());
+	  String code = "";
+	  for (Token subToken: token.getSubTokens())
+	  {
+		  if ( subToken.getName().equals("identifier"))
+		  {
+			 code+=subToken.getValue();
+		  }
+		  
+		  if ( subToken.getName().equals("objectName"))
+		  {
+			  code+= " " + subToken.getValue() + " " ;
+		  }
+		  
+		  if ( subToken.getName().equals("("))
+		  {
+			  code+="(";
+		  }
+		  
+		  if ( subToken.getName().equals(")"))
+		  {
+			  code+=")";
+		  }
+		  
+		  if ( subToken.getName().equals(";"))
+		  {
+			  code+=";";
+		  }
+		  if ( subToken.getName().equals("testParameter"))
+		  {
+			  //String tiParameters = "";
+			  for (Token tiToken : subToken.getSubTokens() )
+			  {
+				  //System.out.println();
+				  if ( tiToken.getName().equals("name"))
+				  {
+					  code += tiToken.getValue("name");
+				  }
+				  
+				  if ( tiToken.getName().equals(","))
+				  {
+					  code += ", ";
+				  }
+				  if ( tiToken.getName().equals("\""))
+				  {
+					  code += "\"";
+				  }
+			  }
+			  
+		  }
+		  
+		  ta.setActionCode(code);
+		  uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+		  uTestCase.addTestAction(ta);
+		  
+		  
+		  
+			  
+	  }
+	  
+	  //uTestCase.
+	  
+	
+}
+
+private String analyzeTestParameter(Token token, UmpleTestCase uTestCase, String parCode) {
+	// TODO Auto-generated method stub
+	  for(Token spToken : token.getSubTokens())
+	  {
+		  if (spToken.getName().equals("testActionParameterList"))
+		  {
+			  System.out.println("nested");
+		  }
+		  if (spToken.getName().equals("\"")) { parCode+="\""; }
+		  if (spToken.getName().equals(",")) { parCode+=","; }
+		  if (spToken.getName().equals("name")) { parCode += spToken.getValue("name"); }
+	  }
+	  
+	  return parCode;
+	
+}
+
+  private void analyzeInterfaceTest(Token token, UmpleInterface aInterface) {
+	// TODO add Test to interface
+	  UmpleTestCase tc = new UmpleTestCase (token.getValue("testName"), 0);
+	  aInterface.addUmpleTestCase(tc);
+	
+}
+
+private void postTokenInterfaceTestAnalysis(){
+    // TODO Check if class has implementation for interface test 
+	  
+	  for (UmpleClass uClass : model.getUmpleClasses())
+	  {
+		  if(uClass.hasParentInterface())
+		  {
+			  for(UmpleInterface aInterface : uClass.getParentInterface())
+			  {
+			  if(aInterface.hasUmpleTestCases())
+			  {
+				  
+				  if(!uClass.hasUmpleTestCases())
+				  {
+					  // the class has no tests at all (although interface has test defnitions)					  					 					  
+					  getParseResult().addErrorMessage(new ErrorMessage(6001,uClass.getPosition(0),uClass.getName(), aInterface.getName()+" tests"));
+				  }
+				  else {
+				  //System.out.print("has TestCase");
+				  for(UmpleTestCase iTc: aInterface.getUmpleTestCases())
+				  {
+					  for(UmpleTestCase uTc : uClass.getUmpleTestCases())
+					  {						 
+						  if(!uTc.getName().equals(iTc.getName()))
+						  {
+							  //Class has tests but not the one found in interface
+							  // TODO: raise warning 
+							  getParseResult().addErrorMessage(new ErrorMessage(6001,uClass.getPosition(0),uClass.getName(),aInterface.getName()+"."+iTc.getName()));
+						  }
+						  
+						  else {
+							  //The class has an implementation for the test found in interface
+						  }
+					  }
+					  
+					  
+
+					  
+				  }
+				  }
+			  }
+			  }
+		  }
+	  }
+  }
+
+   
+   private void postTokenAbstractTestAnalysis() {
+	   
+	   for (UmpleClass uClass : model.getUmpleClasses())
+		  {
+			  if(uClass.hasExtendsClass())
+			  {				  
+				  				  
+				  if(uClass.getExtendsClass().hasUmpleTestCases())
+				  {
+					  System.out.println("father has tests");
+					  copyFatherClassTests(uClass, uClass.getExtendsClass());
+				  }
+				  
+			  }
+		  }
+	   
+	   
+   }
+  
+  private void analyzeAssertion(Token token, UmpleElement aClass, UmpleTestCase uTestCase){
+    boolean isTimed = token.getValue("isTimed")!= null;
+	   String type = "";
+	   if (isTimed)
+	   {
+		   type = token.getValue("isTimed")+StringFormatter.toPascalCase(token.getValue("assertType"));
+		   //System.out.println(type);
+	   }
+	   else 
+	   {
+		   type = token.getValue("assertType");
+	   }
+	   
+	   
+	   //System.out.println(isTimed);
+	   
+	   if(token.getName().equals("assertion"))
+	      {
+	    	
+	        if (token.getValue("assertType").equals("assertTrue"))
+	        {         
+	          uTestCase.addUmpleAssertion(new UmpleAssertion("",type,"method","",token.getValue("code"),uTestCase.getLocOrder()));
+	          uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	        }
+
+	        if (token.getValue("assertType").equals("assertFalse"))
+	        {
+	        	uTestCase.addUmpleAssertion(new UmpleAssertion("",type,"method","",token.getValue("code"),uTestCase.getLocOrder()));
+	        	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	        }
+
+	        if (token.getValue("assertType").equals("assertEqual"))
+	        {
+	          uTestCase.addUmpleAssertion(new UmpleAssertion("",type,"method","",token.getValue("code"),uTestCase.getLocOrder()));
+	          uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	        }
+	    	
+	       }
+  } 
+  
+  private void checkFatherTestRecusive(UmpleClass inClass, UmpleClass exClass) {
+	   //List<UmpleTestCase> uTcList;  
+	   
+	   if(exClass.hasExtendsClass()){
+		   System.out.println("father is nested");
+		   
+		   
+		   if(exClass.hasUmpleTestCases())
+		   {
+			   copyFatherClassTests(inClass,exClass);
+		   }
+		   //checkFatherTestRecusive(uClass);
+		   
+		   
+		   checkFatherTestRecusive(exClass, exClass.getExtendsClass());
+		   		   
+		   
+	   }
+	   
+	   else {
+		   if(exClass.hasUmpleTestCases())
+		   {
+			   copyFatherClassTests(inClass,exClass);
+		   } 
+	   }
+   }
+   
+   private void analyzeTestInitAtt(Token token, UmpleElement uElement, UmpleTestCase uTestCase) {
+	// TODO analyse test attribute initialization 
+	  TestAction ta = new TestAction("","","initAttribute",uTestCase.getLocOrder());
+	  String code = "";
+	  for (Token subToken: token.getSubTokens())
+	  {
+		  if ( subToken.getName().equals("identifier"))
+		  {
+			 code+=subToken.getValue();
+		  }
+		  
+		  if ( subToken.getName().equals("attributeName"))
+		  {
+			  code+= " " + subToken.getValue() + " " ;
+		  }
+		  
+		  if ( subToken.getName().equals("name"))
+		  {
+			  code += subToken.getValue("name");
+		  }
+		  
+		  if ( subToken.getName().equals(","))
+		  {
+			  code += ", ";
+		  }
+		  if ( subToken.getName().equals("\""))
+		  {
+			  code += "\"";
+		  }
+		  
+		  if ( subToken.getName().equals("("))
+		  {
+			  code+="(";
+		  }
+		  
+		  if ( subToken.getName().equals(")"))
+		  {
+			  code+=")";
+		  }
+		  
+		  if ( subToken.getName().equals(";"))
+		  {
+			  code+=";";
+		  }
+		  
+		  if ( subToken.getName().equals("="))
+		  {
+			  code+="= ";
+		  }
+		  
+		  ta.setActionCode(code);
+		  uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+		  uTestCase.addTestAction(ta);
+		  
+		  
+		  
+			  
+	  }
+	  }
+	  
+	  private void analyzeTestInitAttWithMethodCall(Token token, UmpleElement uElement, UmpleTestCase uTestCase) {
+	// TODO assignments using method calls such as: String id = p1.getId();
+	  TestAction ta = new TestAction("","","initAttribute",uTestCase.getLocOrder());
+	  String code = "";
+	  for (Token subToken: token.getSubTokens())
+	  {
+		  if ( subToken.getName().equals("identifier"))
+		  {
+			 code+=subToken.getValue();
+		  }
+		  
+		  if ( subToken.getName().equals("attributeName"))
+		  {
+			  code+= " " + subToken.getValue() + " " ;
+		  }
+		  
+		  if ( subToken.getName().equals("="))
+		  {
+			  code+="= ";
+		  }
+		  
+		  if (subToken.getName().equals("testMethodCall"))
+		  {
+			  code += analyzeTestMethodCall(subToken, uTestCase, code);
+		  }
+		  
+		  
+		  
+		  if ( subToken.getName().equals(";"))
+		  {
+			  code+=";";
+		  }
+		  
+		  
+		  
+		  ta.setActionCode(code);
+		  uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+		  uTestCase.addTestAction(ta);
+		  
+		  
+		  
+			  
+	  }
+	
+}
+   
+  private void copyFatherClassTests(UmpleClass inClass, UmpleClass uClass){
+    // TODO copy tests from father class to child class and check override 
+	  boolean isExist = false;
+	   	  
+	  for(UmpleTestCase uTc: inClass.getUmpleTestCases())
+	  {
+	  for (UmpleTestCase exTc: uClass.getUmpleTestCases())
+	  {
+		  if (exTc.getName().equals(uTc.getName()))
+		  {
+			  System.out.println("test are equal ");
+			  if(uTc.getIsOverride())
+			  {
+				  // then don't append child test into father test
+			  }
+			  else {
+				  // if there is definition in father test, merge two tests into one father code then child code
+				  mergeTests(uTc, exTc);
+			  }
+		  }		  
+		  else {
+			  System.out.println("addddd ");
+			  // add father test to child class
+			  UmpleTestCase uTestCase = new UmpleTestCase(exTc.getName(),0);
+			  //uTestCase.ad
+			  mergeTests(uTestCase, exTc);
+			  
+			  //We are HEREREERE inClass.add
+			  
+			  //inClass.addUmpleTestCase(uTestCase);
+		  }		  
+	  }
+	  
+	  }
+	  
+	  
+  }
+
+
+private void analyzeClassTestSequence(Token token, UmpleClass aClass) {
+	// TODO Analyze test sequence token, order test cases with delimiter -> according to order
+	  TestSequence ts = new TestSequence(token.getValue("sequenceName"));
+	   //String [] tests;
+	  String sequenceCode = "";
+	  for (Token subToken : token.getSubTokens())
+	  {
+		   
+		  if(subToken.getName().equals("testSequenceEntry"))
+		  {
+			  for (Token ssubToken : subToken.getSubTokens())
+			  {
+				
+				  if(ssubToken.getName().equals("->"))
+				  {
+					  sequenceCode += "->";
+				  }
+				  else if (ssubToken.getName().equals("name")){					  
+			      sequenceCode += ssubToken.getValue(); 
+			      ts.addTest(ssubToken.getValue());
+			  //System.out.println("entry");
+				  }
+			  }
+		  }
+	  }	  	  	
+	  //tests = sequenceCode.split("->");	
+	
+}
+
+///// generic test methods 
+
+ private void analyzeClassGenericTestCase(Token token, UmpleClass aClass){
+    String element = token.getValue("genericElement");
+    String fix = "";
+    String fixType = "";
+    String fixValue = "";
+    boolean hasFix = false;
+    String elementType = token.getValue("elementType");
+    List<String> elementTypes = new ArrayList<String>();
+    String code = "";
+    
+    //System.out.println(token.getValue("elementType"));
+    //System.out.println(token.getValue("genericElement"));
+    
+    for(Token subToken :token.getSubTokens() ){
+    	
+    	if(subToken.getName().equals("elementFix"))
+    	{
+    		fixType = subToken.getValue("fixType");
+    		hasFix = true;
+    		for (Token fixToken : subToken.getSubTokens()) {
+    			if(fixToken.getName().equals("fixValue"))
+    			{
+    				fix += fixToken.getValue("fixValue");
+    				fixValue = fixToken.getValue("fixValue");
+    			}
+    			else
+    			fix += fixToken.getName();
+    		}    		
+    		
+    	}
+    }
+    /*// set fix type pre/suf
+    if (fix.contains("prefix"))
+    {
+    	fixType = "prefix";
+    }
+    else if  (fix.contains("suffix"))
+    {
+    	fixType = "suffix";
+    }*/
+    
+    //set flag
+    
+    
+    
+    
+    
+    //System.out.println(fix);
+    //System.out.println(fixType);
+    //System.out.println(fixValue);
+    
+    boolean toBeAdded = false;
+	   
+	   if (token.getValue("genericElement").equals("attribute"))
+	   {
+		   element = "attribute";
+	   }
+	   
+	   else if (token.getValue("genericElement").equals("method"))
+	   {
+		   element = "method";
+	   }
+	   
+	   else if (token.getValue("genericElement").equals("association"))
+	   {
+		   element = "association";
+	   }
+	   
+	   else {
+		  getParseResult().addErrorMessage(new ErrorMessage(new ErrorType(6020,4, "Generic Test element is not recognized. ", ""), aClass.getPosition(0)));
+	   }
+	   
+	   
+	   
+	   
+	   if (element.equals("attribute"))
+	   {
+		   
+		   
+	    for (Attribute att : aClass.getAttributes())
+	    { 
+	    	if (hasFix)
+	    	{
+	    		if (fixType.equals("prefix"))
+	    		{
+	    			if (att.getType().equals(elementType) && att.getName().startsWith(fixValue))
+	    			{
+
+	    		    	   code = modifyGenericTestAttribute(token, aClass, att);
+	    		    	//System.out.println(uTestCase.getTestAction(0).getActionCode());
+	    			    	
+	    			    	UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+att.getName(),0);
+	    			       	TestAction aTestAction = new TestAction("genericAttribute", code.toString(), "generic", 0);
+	    			       	
+	    			       	uTestCase.addTestAction(aTestAction);
+	    			       	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	    			       	aClass.addUmpleTestCase(uTestCase);	 
+	    		    	
+	    			}
+	    		}
+	    		
+	    		else if (fixType.equals("suffix"))
+	    		{
+	    			if (att.getType().equals(elementType) && att.getName().endsWith(fixValue))
+	    			{
+
+	    		    	   code = modifyGenericTestAttribute(token, aClass, att);
+	    		    	//System.out.println(uTestCase.getTestAction(0).getActionCode());
+	    			    	
+	    			    	UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+att.getName(),0);
+	    			       	TestAction aTestAction = new TestAction("genericAttribute", code.toString(), "generic", 0);
+	    			       	
+	    			       	uTestCase.addTestAction(aTestAction);
+	    			       	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	    			       	aClass.addUmpleTestCase(uTestCase);	 
+	    		    	
+	    			}
+	    		}
+	    		
+	    		else if (fixType.equals("regex"))
+	    		{
+	    			if (att.getType().equals(elementType) && att.getName().matches(fixValue))
+	    			{
+
+	    		    	   code = modifyGenericTestAttribute(token, aClass, att);
+	    		    	   //System.out.println(uTestCase.getTestAction(0).getActionCode());
+	    			    	
+	    			    	UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+att.getName(),0);
+	    			       	TestAction aTestAction = new TestAction("genericAttribute", code.toString(), "generic", 0);
+	    			       	
+	    			       	uTestCase.addTestAction(aTestAction);
+	    			       	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	    			       	aClass.addUmpleTestCase(uTestCase);	 
+	    		    	
+	    			}
+	    		}
+	    		
+	    	}
+	    	
+	    	else if (att.getType().equals(elementType))
+	    	{
+	    		
+	    		
+	    	   code = modifyGenericTestAttribute(token, aClass, att);
+	    	//System.out.println(uTestCase.getTestAction(0).getActionCode());
+		    	
+		    	UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+att.getName(),0);
+		       	TestAction aTestAction = new TestAction("genericAttribute", code.toString(), "generic", 0);
+		       	
+		       	uTestCase.addTestAction(aTestAction);
+		       	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+		       	aClass.addUmpleTestCase(uTestCase);	 
+	    	}
+	    		    		    	
+	    	
+	    }
+	    
+	    
+	    
+	    
+	    
+	   }
+	   
+	   
+	   
+	   if (element.equals("method"))
+	   {
+		   
+		   String returnValue = "";
+		   String methodPar = ""; // store the method input paramters		   
+		   String methodReturnV = ""; // store the method return value 
+		   for (Token subToken : token.getSubTokens())
+		   {
+			   if(subToken.getName().equals("elementType"))			   
+				   elementTypes.add(subToken.getValue("elementType"));			   			   			   
+		   }
+		   
+		   for (int x = 0 ; x<elementTypes.size();x++)
+		   {
+			  // System.out.println(elementTypes.get(x) + meth);
+		   }
+		   
+		   
+		   //set return value then clear input from list 
+		   returnValue = elementTypes.get(0);
+		   //System.out.println(returnValue);
+		   //elementTypes.remove(0);
+		   
+		 
+	    for (Method meth : aClass.getMethods())
+	    { 
+	    	List<String> methodParametersType = new ArrayList<String>();
+	    	methodParametersType.add(meth.getType());
+	    	//System.out.println("::" + meth.getMethodParameters().toString());
+	    	for (MethodParameter pr : meth.getMethodParameters())
+	    	{
+	    		methodParametersType.add(pr.getType());
+	    		//System.out.println("::" +pr.getType());
+	    	}
+	    	
+	    	if(elementTypes.equals(methodParametersType))
+	    	{
+	    		//System.out.println(":::EQUAL");
+	    	
+	    	
+	    	UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+meth.getName(),0);
+	    	TestAction aTestAction = new TestAction("genericMethod", token.getValue("code"), "generic", 0);
+	    	aTestAction.setActionCode(aTestAction.getActionCode().replace("<<method>>", meth.getName()));	    	
+	    	uTestCase.addTestAction(aTestAction);
+	    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	    	aClass.addUmpleTestCase(uTestCase);	
+	    	}
+	    }
+	   }
+	   
+	   if(element.equals("association"))
+	   {
+		   
+		   		   		  		   
+		   if (elementType.equals( "1--*"))
+		   {
+			   
+			   addGenericOneToMany (code,aClass,token);
+		   }
+		   
+		   if (elementType.equals( "0..1--*"))
+		   {
+			   
+			   addGenericOptionalOneToMany (code,aClass,token);
+		   }
+		   
+		   if (elementType.equals( "*--*"))
+		   {
+			   
+			   addGenericManyToMany (code,aClass,token);
+		   }
+		   
+		   if (elementType.equals( "0..1--1"))
+		   {
+			   
+			   addGenericOptionalOneToOne (code,aClass,token);
+		   }
+		   
+		   //Navigatable association
+		   if (elementType.equals( "1->*"))
+		   {			   			   
+			   addGenericRightNavOneToMany (code,aClass,token);
+		   }
+		   		   
+		   
+		   if (elementType.equals( "0..1->*"))
+		   {
+			   
+			   addGenericRightNavOptionalOneToMany (code,aClass,token);
+		   }		   
+		   
+		   if (elementType.equals( "*->*"))
+		   {
+			   
+			   addGenericRightNavManyToMany (code,aClass,token);
+		   
+		   }		   		   
+		   
+		   if (elementType.equals( "0..1-->1"))
+		   {
+			   
+			   addGenericRightNavOptionalOneToOne (code,aClass,token);
+		   }
+
+		   
+		   
+		   
+		   
+	   }
+  }
+  
+  private void addGenericRightNavManyToMany(String code, UmpleClass aClass, Token token) {
+		// TODO Add gen-test for right navigable ManyToMany
+		  for (AssociationVariable av : aClass.getAssociationVariables())
+		  {
+			  if (( av.isOptionalMany() && av.getRelatedAssociation().isOptionalMany() ) &&  ! av.getRelatedAssociation().getIsNavigable())
+			  {
+				  
+				  code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+				   
+				   
+					 
+				   //System.out.println(token.getValue("elementType"));				   
+				   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
+			    	TestAction aTestAction = new TestAction("genericAssociationRightNavigableManyToMany", code, "generic", 0);
+			    	
+			    			    	
+			    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association>>", av.getName()));
+			    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1)));
+			    	uTestCase.addTestAction(aTestAction);
+			    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+			    	aClass.addUmpleTestCase(uTestCase);	
+			  }
+		  }
+		  
+	}
+  
+  private void addGenericRightNavOptionalOneToOne(String code, UmpleClass aClass, Token token) {
+		// TODO Add gen-test for right navigable Optional one-to-one
+		  for (AssociationVariable av : aClass.getAssociationVariables())
+		  {
+			  if (( av.isMandatoryOne() && av.getRelatedAssociation().isOptionalOne() ) &&  ! av.getRelatedAssociation().getIsNavigable())
+			  {
+				  
+				  code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+				   
+				   
+					 
+				   //System.out.println(token.getValue("elementType"));				   
+				   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
+			    	TestAction aTestAction = new TestAction("genericAssociationRightNavigableOptionalOneToOne", code, "generic", 0);
+			    	
+			    			    	
+			    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association>>", av.getName()));
+			    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1)));
+			    	uTestCase.addTestAction(aTestAction);
+			    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+			    	aClass.addUmpleTestCase(uTestCase);	
+			  }
+		  }
+		  
+	}
+  
+  
+  private void addGenericRightNavOneToMany(String code, UmpleClass aClass, Token token) {
+	// TODO Add gen-test for right navigable one-to-many
+	  for (AssociationVariable av : aClass.getAssociationVariables())
+	  {
+		  if (( av.isOptionalMany() && av.getRelatedAssociation().isMandatoryOne() ) &&  ! av.getRelatedAssociation().getIsNavigable())
+		  {
+			  
+			  code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+			   
+			   
+				 
+			   //System.out.println(token.getValue("elementType"));				   
+			   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
+		    	TestAction aTestAction = new TestAction("genericAssociationRightNavigableOneToMany", code, "generic", 0);
+		    	
+		    			    	
+		    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association>>", av.getName()));
+		    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1)));
+		    	uTestCase.addTestAction(aTestAction);
+		    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+		    	aClass.addUmpleTestCase(uTestCase);	
+		  }
+	  }
+	  
+}
+  
+  private void addGenericRightNavOptionalOneToMany(String code, UmpleClass aClass, Token token) {
+		// TODO Add gen-test for right navigable Optional one-to-many
+		  	  
+	  for (AssociationVariable av : aClass.getAssociationVariables())
+		  {
+		  System.out.println(av.getIsNavigable());
+			  if (( av.isOptionalMany() && av.getRelatedAssociation().isOptionalOne() ) &&   ! av.getRelatedAssociation().getIsNavigable())
+			  {
+				  
+				  code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+				   
+				   
+					 
+				   //System.out.println(token.getValue("elementType"));				   
+				   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
+			    	TestAction aTestAction = new TestAction("genericAssociationRightNavigableOneToMany", code, "generic", 0);
+			    	
+			    			    	
+			    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association>>", av.getName()));
+			    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1)));
+			    	uTestCase.addTestAction(aTestAction);
+			    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+			    	aClass.addUmpleTestCase(uTestCase);	
+			  }
+		  }
+		  
+	}
+  
+  
+  private String modifyGenericTestCode (Matcher matcher, Matcher nonMatcher, String element, String replacement, String nonReplacement, String code) {
+	   while(matcher.find())
+	   	{	//System.out.println("found attribute");    	   
+	   		//int startIndex = matcher.start();
+	   		//int endIndex = matcher.end();
+	   		int preCharIndex = matcher.start();
+	   		char preChar = code.charAt(preCharIndex);	    		    		    	    	    	
+	   		if(Character.isLetter(preChar)){ // to check that the attribute is within a method call such as getId and has no white spaces or Java characters: ex get<<attribute>>	    	  
+	   			String tempGroup = matcher.group();	    	
+	   			//System.out.println(tempGroup);
+	   			String tempReplacement ="";
+	   			tempReplacement = tempGroup.replace(element, replacement);
+	   			//System.out.println(tempReplacement);
+
+	   			code = code.replace(tempGroup,tempReplacement);	    		
+	   		}
+	   	}
+	   	while (nonMatcher.find()) // this loop finds matches of attribute that are not part of a methodCall example : getValue(<<attribute>>) it is rather a parameter in this case or String tempAtt = <<attribute>>
+	   	{	    	
+	   		String tempGroup = nonMatcher.group();	    		
+	   		String tempReplacement = "";
+	   		tempReplacement= tempGroup.replace(element, nonReplacement);
+	   		//tempReplacement= tempGroup.replace("<<association.toSingular()>>", av.getName());
+	   		code = code.replace(tempGroup,tempReplacement);
+	   	}
+	   	
+	   	return code;
+   }
+
+
+  private String modfiyGenericAssociationReplacements(Token token, UmpleClass uClass, AssociationVariable av, String testCode){
+    // TODO modify necessary association-related tokens in test template for generic templates
+	  String code = testCode;
+	  String fix = "";
+
+	   	//StringBuilder code = new StringBuilder(token.getValue("code"));
+	   	String pascalRegex = "[a-zA-Z0-9]<<association>>";
+	   	String nonPascalRegex = "[=|(|!|\\s]<<association>>";
+	   	String PascalSingularRegex = "[a-zA-Z0-9]<<association\\.toSingular\\(\\)>>";
+	   	String nonPascalSingularRegex = "[=|(|!|\\s]<<association\\.toSingular\\(\\)>>";
+	   	
+	   	
+	   	Pattern pascalSingularPattern = Pattern.compile(PascalSingularRegex);
+	   	Pattern nonPascalSingularPattern = Pattern.compile(nonPascalSingularRegex);
+	   	
+	   	
+	   	Matcher pascSingularMatcher = pascalSingularPattern.matcher(code);
+	   	Matcher nonPascSingularMatcher = nonPascalSingularPattern.matcher(code);
+	   	
+	   	//	
+	   	Pattern pattern = Pattern.compile(pascalRegex);
+	   	Matcher matcher = pattern.matcher(code);
+	   	Pattern nonPattern = Pattern.compile(nonPascalRegex);
+	   	Matcher nonMatcher =nonPattern.matcher(code);	   	
+	   	
+	   	code = modifyGenericTestCode(matcher, nonMatcher, "<<association>>", StringFormatter.toPascalCase(av.getName()), av.getName(), code);
+	   	code = modifyGenericTestCode(pascSingularMatcher, nonPascSingularMatcher, "<<association.toSingular()>>", StringFormatter.toPascalCase(av.getName().substring(0, av.getName().length()-1)), av.getName().substring(0, av.getName().length()-1), code); 
+	   	
+	   	
+	   	
+	      
+	   	             
+	   	return code;
+  }
+  
+  private void addGenericOptionalOneToMany(String code, UmpleClass aClass, Token token) {
+	// TODO Auto-generated method stub
+	  
+	  for (AssociationVariable av : aClass.getAssociationVariables())
+	  {
+		  if (av.isOptionalMany() && av.getRelatedAssociation().isOptionalOne())
+		  {
+			  code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+			   
+			   
+				 
+			   //System.out.println(token.getValue("elementType"));				   
+			   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
+		    	TestAction aTestAction = new TestAction("genericAssociation", code, "generic", 0);
+		    	
+		    			    	
+		    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association>>", av.getName()));
+		    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1)));
+		    	uTestCase.addTestAction(aTestAction);
+		    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+		    	aClass.addUmpleTestCase(uTestCase);	
+		  }
+	  }
+	
+}
+
+private void addGenericOneToMany(String code, UmpleClass aClass,Token token) {
+	// TODO Auto-generated method stub
+	  for (AssociationVariable av : aClass.getAssociationVariables())
+	  {
+		  if (av.isOptionalMany() && av.getRelatedAssociation().isMandatoryOne())
+		  {
+			  
+			  code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+			   
+			   
+				 
+			   //System.out.println(token.getValue("elementType"));				   
+			   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
+		    	TestAction aTestAction = new TestAction("genericAssociationOneToMany", code, "generic", 0);
+		    	
+		    			    	
+		    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association>>", av.getName()));
+		    	//aTestAction.setActionCode(aTestAction.getActionCode().replace("<<association.toSingular()>>", av.getName().substring(0, av.getName().length()-1)));
+		    	uTestCase.addTestAction(aTestAction);
+		    	uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+		    	aClass.addUmpleTestCase(uTestCase);	
+		  }
+	  }
+	
+}
+
+private void addGenericManyToMany(String code, UmpleClass aClass, Token token){
+	   // TODO addd test for generic association *--*
+	   for (AssociationVariable av : aClass.getAssociationVariables())
+	   {
+		   if (av.isOptionalMany() && av.getRelatedAssociation().isOptionalMany())
+		   {
+
+			   code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+
+			   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
+			   TestAction aTestAction = new TestAction("genericAssociationOneToMany", code, "generic", 0);
+
+			   uTestCase.addTestAction(aTestAction);
+			   uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+			   aClass.addUmpleTestCase(uTestCase);	
+		   }
+	   }
+   }
+   
+   
+   private void addGenericOptionalOneToOne(String code, UmpleClass aClass, Token token){
+	    // TODO addd test for generic association *--*
+		   for (AssociationVariable av : aClass.getAssociationVariables())
+		   {
+			   if (av.isMandatoryOne() && av.getRelatedAssociation().isOptionalOne())
+			   {
+
+				   code = modfiyGenericAssociationReplacements(token,aClass, av, token.getValue("code"));
+
+				   UmpleTestCase uTestCase = new UmpleTestCase(token.getValue("testCaseName")+"_"+av.getName(),0);
+				   TestAction aTestAction = new TestAction("genericAssociationOptionalOneToOne", code, "generic", 0);
+
+				   uTestCase.addTestAction(aTestAction);
+				   uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+				   aClass.addUmpleTestCase(uTestCase);	
+			   }
+		   }
+	  } 
+
+   
+   // test initializations at the class level, these are inits that were mesnt to be done at the global-level in the test class
+   
+   private void analyzeTestClassInit(Token token, UmpleClass aClass) {
+	// TODO fix init code 
+	  TestInit ti = new TestInit("", "", "");
+	  //System.out.println(token.getValue("code"));
+	  
+	  String code = "";
+	  for (Token subToken: token.getSubTokens())
+	  {
+		  if ( subToken.getName().equals("identifier"))
+		  {
+			 code+=subToken.getValue();
+		  }
+		  
+		  if ( subToken.getName().equals("objectName"))
+		  {
+			  code+= " " + subToken.getValue() + " " ;
+		  }
+		  
+		  if ( subToken.getName().equals("("))
+		  {
+			  code+="(";
+		  }
+		  
+		  if ( subToken.getName().equals(")"))
+		  {
+			  code+=")";
+		  }
+		  
+		  if ( subToken.getName().equals(";"))
+		  {
+			  code+=";";
+		  }
+		  if ( subToken.getName().equals("testParameter"))
+		  {
+			  //String tiParameters = "";
+			  for (Token tiToken : subToken.getSubTokens() )
+			  {
+				  //System.out.println();
+				  if ( tiToken.getName().equals("name"))
+				  {
+					  code += tiToken.getValue("name");
+				  }
+				  
+				  if ( tiToken.getName().equals(","))
+				  {
+					  code += ", ";
+				  }
+				  if ( tiToken.getName().equals("\""))
+				  {
+					  code += "\"";
+				  }
+			  }
+			  
+		  }
+	  }
+	  
+	  ti.setCode(code);	  
+	  aClass.addTestInit(ti);
+	
+}
+   
+   
+   // This method modifies the generic template to replace with the actual attribute name if it matches the type indicated in template 
+   private String modifyGenericTestAttribute(Token token, UmpleClass aClass, Attribute att){
+    String code = token.getValue("code");
+
+   	String pascalRegex = "[a-zA-Z0-9]<<attribute>>";
+   	String nonPascalRegex = "[=|(|!|\\s]<<attribute>>";
+ 	
+   	Pattern pattern = Pattern.compile(pascalRegex);
+   	Matcher matcher = pattern.matcher(code);
+   	Pattern nonPattern = Pattern.compile(nonPascalRegex);
+   	Matcher nonMatcher =nonPattern.matcher(code);
+   	
+   	code = modifyGenericTestCode(matcher, nonMatcher, "<<attribute>>", StringFormatter.toPascalCase(att.getName()) , att.getName(), code);
+   	
+      
+   	             
+   	return code;
+  }
+   
+   private void analyzeTestIfStatement(Token token, UmpleElement uElement, UmpleTestCase uTestCase) {
+	// TODO analyze if statement tokens
+	  
+	 TestAction ta = new TestAction("ifStatement","", "ifStatement",uTestCase.getLocOrder());
+	  String code = "";
+	  for (Token subToken : token.getSubTokens()) {
+		  if (subToken.getName().equals("("))
+		  {
+			  code += "(";
+		  }
+		  
+		  if (subToken.getName().equals(")"))
+		  {
+			  code += ")";
+		  }
+		  
+		  if (subToken.getName().equals("}"))
+		  {
+			  code += "\n\t  }";
+		  }
+		  
+		  if (subToken.getName().equals("{"))
+		  {
+			  code += "{\n\t";
+		  }
+		  
+		  if (subToken.getName().equals("if"))
+		  {
+			  code += "\n\t"+"if";
+		  }
+		  
+		  if (subToken.getName().equals("condition"))
+		  {
+			  code += subToken.getValue("condition");
+		  }
+		  
+		  if (subToken.getName().equals("code")) {
+			  code += "" +subToken.getValue("code");
+		  }
+		  
+		  if (subToken.getName().equals("ifElseStatement"))
+		  {
+			  for (Token ifElseToken :subToken.getSubTokens()) {
+				  
+			  if (ifElseToken.getName().equals("if"))			  
+			  code += "\n\t"+"if";			  
+			  if (ifElseToken.getName().equals("else"))
+				  code += " else";
+			  if (ifElseToken.getName().equals("code"))
+				  code += ifElseToken.getValue("code");
+			  if (ifElseToken.getName().equals("("))
+				  code += "(";
+			  if (ifElseToken.getName().equals(")"))
+				  code += ")";
+			  if (ifElseToken.getName().equals("}"))
+				  code +="\n\t}\n";
+			  if (ifElseToken.getName().equals("{"))
+				  code += "{\n\t";
+			  if (ifElseToken.getName().equals("condition"))
+				  code += ifElseToken.getValue("condition");			  
+			  }
+		  }
+		  
+		  if (subToken.getName().equals("elseStatement"))
+		  {
+			  code += "\n\t";
+			  for (Token elseToken :subToken.getSubTokens()) {
+				  		  
+			  if (elseToken.getName().equals("else"))
+				  code += "else";
+			  if (elseToken.getName().equals("code"))
+				  code += "\t" + elseToken.getValue("code")+"";
+			  if (elseToken.getName().equals("}"))
+				  code += "\n\t}\n";
+			  if (elseToken.getName().equals("{"))
+				  code += " {\n";			  		  
+			  }
+		  }
+		  
+		  
+	  }
+	  
+	  ta.setActionCode(code);
+	  
+	  uTestCase.addTestAction(ta);
+	  uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+	
+}
+
+
+private void analyzeTestForStatement(Token token, UmpleElement uElement, UmpleTestCase uTestCase) {
+	// TODO For loop analysis
+	TestAction ta = new TestAction("forLoop","","forLoop", uTestCase.getLocOrder());
+	String code = "";
+	for (Token subToken : token.getSubTokens())
+	{
+		if (subToken.getName().equals("for"))
+		{
+			code += "for ";
+		}
+		if (subToken.getName().equals("("))
+		{
+			code += "( ";
+		}
+		if (subToken.getName().equals(")"))
+		{
+			code += " )\n\t";
+		}
+		
+		if (subToken.getName().equals("forCode"))
+		{
+			code += subToken.getValue("forCode");
+		}
+		
+		if (subToken.getName().equals("{"))
+		{
+			code += " {\n\t";
+		}
+
+		if (subToken.getName().equals("}"))
+		{
+			code += " \n\t}";
+		}
+		if (subToken.getName().equals("code"))
+		{
+			code += subToken.getValue("code");
+		}
+		
+		ta.setActionCode(code);
+		
+		uTestCase.addTestAction(ta);
+		uTestCase.setLocOrder(uTestCase.getLocOrder()+1);
+		
+	}
+	  
+	
+}
+
+   	
+}

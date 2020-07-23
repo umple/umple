@@ -1,0 +1,24 @@
+Unique Attributes
+Attributes
+noreferences
+
+@@description
+<p>Attributes in Umple can be <b>unique</b>. Applying the unique keyword to an attribute ensures that each instance of the class in the currently running program has a unique value for that attribute.</p>
+
+<p>In the first example, each player has a unique ranking. The ranking of a player can change but two players cannot have the same ranking.</p>
+
+<p>The <b>autounique</b> keyword can be used to automatically assign a unique Integer to every new instance created (example 2).</p>
+
+<p>Certain <a href="RE003ViolationofUniqueness.html">runtime errors</a> can occur if attempts are made to violate uniqueness.</p>
+
+@@syntax
+
+[[complexAttribute]] [[autouniqueAttribute]]
+
+@@example @@caption Example 1 @@endcaption
+@@source manualexamples/UniqueAttribute1.ump
+@@endexample
+
+@@example @@caption Example 2 @@endcaption
+@@source manualexamples/UniqueAttribute2.ump
+@@endexample

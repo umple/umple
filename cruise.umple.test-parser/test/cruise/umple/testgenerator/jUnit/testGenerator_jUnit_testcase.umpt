@@ -1,4 +1,4 @@
-test Testcase {
+ test Testcase {
 
 	generate JUnit;
 	
@@ -10,8 +10,12 @@ test Testcase {
 	 Person p1 ("John", 123) ;
 	THEN:
 	
-	test someTest {	
+	test someTest {		 	 
 	 Person p1 ("John", "123","someAddrss" );
-	 assertTrue(p1.getId() != null);	 
+	 assertTrue (p1.getId()!=null);	 
+	 String id = id;
+	 //comment
+	 
 	 }
+	 	 
 }

@@ -1,0 +1,129 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_attribute_regex ----/////
+
+test Student {
+
+ generate JUnit ;
+ 
+ depend  Student ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_attribute_regex.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :studentId
+
+      test attribute_studentId {
+    
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aStudent.setStudentId("RandomString1"));
+    assertTrue( aStudent.getStudentId() =="RandomString1");
+    assertTrue( aStudent.setStudentId("RandomString2"));
+    assertTrue( aStudent.getStudentId()=="RandomString2");
+    assertFalse( aStudent.getStudentId() =="RandomString1");
+             
+          
+        	}
+
+ //tests for :nameMemebershipId
+
+      test attribute_nameMemebershipId {
+    
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aStudent.setNameMemebershipId("RandomString1"));
+    assertTrue( aStudent.getNameMemebershipId() =="RandomString1");
+    assertTrue( aStudent.setNameMemebershipId("RandomString2"));
+    assertTrue( aStudent.getNameMemebershipId()=="RandomString2");
+    assertFalse( aStudent.getNameMemebershipId() =="RandomString1");
+             
+          
+        	}
+
+ //tests for :nameMemebershipHouse
+
+      test attribute_nameMemebershipHouse {
+    
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aStudent.setNameMemebershipHouse("RandomString1"));
+    assertTrue( aStudent.getNameMemebershipHouse() =="RandomString1");
+    assertTrue( aStudent.setNameMemebershipHouse("RandomString2"));
+    assertTrue( aStudent.getNameMemebershipHouse()=="RandomString2");
+    assertFalse( aStudent.getNameMemebershipHouse() =="RandomString1");
+             
+          
+        	}
+
+ //tests for :address
+
+      test attribute_address {
+    
+      
+        Student aStudent("RandomString1","RandomString1","RandomString1","RandomString1");
+        
+        
+    assertTrue( aStudent.setAddress("RandomString1"));
+    assertTrue( aStudent.getAddress() =="RandomString1");
+    assertTrue( aStudent.setAddress("RandomString2"));
+    assertTrue( aStudent.getAddress()=="RandomString2");
+    assertFalse( aStudent.getAddress() =="RandomString1");
+             
+          
+        	}
+
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkifLogged_nameMemebershipId {
+        Student st1 ( "S1425", "John", "Ottawa") ;        
+        String valueToCheck = st1.getNameMemebershipId();  
+        st1.getValue(nameMemebershipId);    
+        boolean isLogged =  st1.checkIsLogged(valueToCheck);        
+        
+        //list assertions
+        }
+      
+      
+      
+      
+        
+    
+      
+      test checkifLogged_nameMemebershipHouse {
+        Student st1 ( "S1425", "John", "Ottawa") ;        
+        String valueToCheck = st1.getNameMemebershipHouse();  
+        st1.getValue(nameMemebershipHouse);    
+        boolean isLogged =  st1.checkIsLogged(valueToCheck);        
+        
+        //list assertions
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}

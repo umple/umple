@@ -1,0 +1,16 @@
+after {*} setName,testFunction { doSomething(); }
+class Student
+{
+	name;
+}
+class Teacher
+{
+	name;
+}
+class Employer
+{
+	age;
+	String testFunction() {
+		return "This is a test function";
+	}
+}

@@ -41,6 +41,13 @@
   
   if($isSuccess) {
     echo "<p>Successfully established connection to server\n";
+   
+    echo "\n<p>php version: ";
+    passthru("php -version");
+        
+    echo "<p>Java version: ";
+    passthru("java -version 2>&1");
+    
     $numBytesSent= socket_write($theSocket, $commandLine);
     if($numBytesSent === FALSE) {
       echo "<p>Cound not send log command to server\n";

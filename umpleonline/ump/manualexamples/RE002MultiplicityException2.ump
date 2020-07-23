@@ -1,0 +1,39 @@
+// This demonstrates code that will throw a
+// multiplicity exception in  1--1 associations
+class StockSymbol {
+  code;
+  1 -- 1 Company;
+}
+
+class Company {
+  name;
+   
+  public static void main(String[] argv) {
+    
+    Company c1 = null;
+    StockSymbol s1 = null;
+
+    // This will throw an exception since the stock
+    // symbol cannot be null
+    try {
+      c1 = new Company("Umpleco", s1);
+    }
+    catch (RuntimeException re) {
+      System.out.println("Exception Caught: "+re+"\n");    
+    }    
+    
+    // This will succeed: Umple 1--1 constructors
+    // create both objects at once
+    c1 = new Company("Umpleco","UMPC");
+    
+    s1 = c1.getStockSymbol();
+    System.out.println("The company: "+
+      c1+"\n"+
+      "The stock symbol: "+
+      s1+"\n");     
+  }
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Has Java code
+// @@@skipphpcompile - Has Java code
+// @@@skiprubycompile - Has Java code

@@ -1,0 +1,12 @@
+after {*} testFunction{
+    //this code will be injected
+}
+class toplevelAfterOnTraitClass
+{
+    isA T;
+}
+trait T{
+    void testFunction(){
+        //code  
+    }
+}

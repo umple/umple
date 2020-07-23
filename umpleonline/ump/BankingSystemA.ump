@@ -89,7 +89,9 @@ class Division{
 // Positioning
 
 // Positioning
-namespace BankingSystem.core.intangableResources;
+
+namespace -;
+
 class Account
 {
   position 438 270 189 96;
@@ -114,7 +116,6 @@ class CreditCardAccount
   position 391 416 139 58;
   position.association Card__CreditCardAccount 0,14 153,15;
 }
-namespace BankingSystem.core.humanResources;
 class Client
 {
   position 444 125 166 96;
@@ -141,7 +142,6 @@ class PersonRole
 {
   position 350 31 110 45;
 }
-namespace BankingSystem.core.tangableResources;
 class Branch
 {
   position 200 283 171 79;

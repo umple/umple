@@ -1,0 +1,74 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Student11
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student11 Attributes
+  private $name;
+  private $b;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aName, $aB)
+  {
+    $this->name = $aName;
+    $this->b = $aB;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setName($aName)
+  {
+    $wasSet = false;
+    $this->name = $aName;
+    $wasSet = true;
+    // line 25 "model.ump"
+    //doSomething1();
+    // END OF UMPLE AFTER INJECTION
+    return $wasSet;
+  }
+
+  public function setB($aB)
+  {
+    $wasSet = false;
+    $this->b = $aB;
+    $wasSet = true;
+    // line 25 "model.ump"
+    //doSomething1();
+    // END OF UMPLE AFTER INJECTION
+    // line 50 "model.ump"
+    //doSomething2();
+    // END OF UMPLE AFTER INJECTION
+    return $wasSet;
+  }
+
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  public function getB()
+  {
+    return $this->b;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

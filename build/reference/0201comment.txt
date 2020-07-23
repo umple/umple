@@ -21,10 +21,10 @@ Comments can be either <a href="InlineComments.html">inlineComments</a>, or <a h
 
 <br />
 
-@@example
+@@example @@caption Example Showing Inline Comments @@endcaption
 @@source manualexamples/UmpleComments1.ump
 @@endexample
 
-@@example
+@@example @@caption Example Showing Both Inline And Multiline Comments @@endcaption
 @@source manualexamples/UmpleComments2.ump
 @@endexample

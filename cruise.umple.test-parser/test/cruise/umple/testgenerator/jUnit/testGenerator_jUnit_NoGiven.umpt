@@ -1,0 +1,18 @@
+test Generate {
+
+	generate JUnit;
+	
+	depend Person;
+	
+	WHEN:
+	 Person p1 ("John", 123) ;
+	THEN:
+	
+	test someTest {	
+	 /* comment */
+
+	 Person p1 ("John", "123","someAddrss" );
+	 assertTrue(p1.getId() != null);	 
+	 
+	 }
+}

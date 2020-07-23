@@ -94,7 +94,7 @@ class ManyToOptionalNTest extends UnitTestCase
     $m = new MentorAA("blah");
     
     $this->assertEqual(true,$m->setStudents(array($s,$s2)));
-    $this->assertEqual(false, $m->setStudents($s2,$s3,$s4,$s5,$s));
+    $this->assertEqual(false, $m->setStudents(array($s2,$s3,$s4,$s5,$s)));
     $this->assertEqual(2,$m->numberOfStudents());
     $this->assertEqual($m,$s->getMentor_index(0));
     $this->assertEqual($m,$s2->getMentor_index(0));

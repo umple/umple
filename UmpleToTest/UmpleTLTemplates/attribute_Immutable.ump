@@ -2,8 +2,10 @@ class UmpleToTest{
 
 attribute_Immutable <<!<</*attribute_Immutable*/>>
 
-		AssertMethodFalse( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>());
-		AssertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == <<=at.getValue()>>);
+		<<=gen.dependencyInjection(uClass)>>
+        <<=uClass.getName()>> <<=gen.initiateClass(uClass)>>;
+		//assertMethod(set<<=attrName>>());
+		assertTrue( a<<=uClass.getName()>>.get<<=attrName>>() == <<=at.getValue()>>);
 
 !>>
 

@@ -1,0 +1,81 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  TraitAssertion_multipleTraits ----/////
+
+test Person {
+
+ generate JUnit ;
+ 
+ depend  Person ; 
+
+
+
+ 
+ GIVEN:
+ TraitAssertion_multipleTraits.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :firstName
+
+      test attribute_firstName {
+    
+      
+        Person aPerson();
+        
+        
+    assertTrue( aPerson.setFirstName("RandomString1"));
+    assertTrue( aPerson.getFirstName() =="RandomString1");
+    assertTrue( aPerson.setFirstName("RandomString2"));
+    assertTrue( aPerson.getFirstName()=="RandomString2");
+    assertFalse( aPerson.getFirstName() =="RandomString1");
+             
+          
+        	}
+
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test firstCheckName {
+        assertFalse(firstName == "Orlean");
+        assertTrue(firstName == "KingEdward");
+        }
+      
+      
+      
+      
+        
+    
+      
+      test secondCheckName {
+        assertFalse(firstName == "SecOrlean");
+        assertTrue(firstName == "SecondEdward");
+        }
+      
+      
+      
+      
+        
+    
+      
+      test thirsdCheckName {
+        assertFalse(firstName == "ThirdOrlean");
+        assertTrue(firstName == "ThirdEdwardEdward");
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}

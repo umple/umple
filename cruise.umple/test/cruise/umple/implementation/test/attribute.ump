@@ -17,5 +17,6 @@ class B{
 name;
 
 address;
+id;
 
 }

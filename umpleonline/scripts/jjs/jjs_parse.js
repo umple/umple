@@ -1,5 +1,6 @@
 var JJSdiagram = {
 	associationIndex: 0,
+	transitionIndex: 0,
 	newClassIndex: 0,
 	paper: null,
 	container: null,
@@ -110,6 +111,7 @@ var JJSdiagram = {
 
 		//The following disconnect and connect event is intended to implement modifying association end, at the moment
 		//the workflow is remove then add, please refer to issue #1127 for detail
+		//If it is disconnected from a state diagram, then it will remove or modify transition 
 		this.paper.off('link:disconnect').on('link:disconnect',
 			function(linkView, evt, elmentViewDisconnected, magnet, arrowhead){
 				if (JJSdiagram.diagram_type === "UMLclass"){
@@ -143,6 +145,7 @@ var JJSdiagram = {
 							JJSdiagram.makeUmpleCodeFromAssociation('addJjsAssociation', JJSdiagram.paper.model.getCell(linkView.model.toJSON().source.id).toJSON(), JJSdiagram.paper.model.getCell(elementViewConnected.model.toJSON().id).toJSON());
 						}
 					}
+					
 					else if (linkView.model.get('type') === 'uml.Generalization') {
 						if (arrowhead === 'source') {
 							JJSdiagram.makeUmpleCodeFromGeneralization('addJjsGeneralization',JJSdiagram.paper.model.getCell(linkView.model.toJSON().target.id).toJSON(), JJSdiagram.paper.model.getCell(elementViewConnected.model.toJSON().id).toJSON());
@@ -150,13 +153,21 @@ var JJSdiagram = {
 						else if (arrowhead === 'target'){
 							JJSdiagram.makeUmpleCodeFromGeneralization('addJjsGeneralization',JJSdiagram.paper.model.getCell(elementViewConnected.model.toJSON().id).toJSON(), JJSdiagram.paper.model.getCell(linkView.model.toJSON().source.id).toJSON());
 						}
-					}
+					} 
+				} else if (JJSdiagram.diagram_type === "UMLstate"){
+					if (linkView.model.get('type') === 'uml_state_machine.Transition') {
+                        if (arrowhead === 'source') {
+                            JJSdiagram.makeUmpleCodeFromTransition('addJjsTransition', JJSdiagram.paper.model.getCell(elementViewConnected.model.toJSON().id).toJSON(), JJSdiagram.paper.model.getCell(linkView.model.toJSON().target.id).toJSON(), "event1");
+                        } else if (arrowhead === 'target') {
+                            JJSdiagram.makeUmpleCodeFromTransition('addJjsTransition', JJSdiagram.paper.model.getCell(linkView.model.toJSON().source.id).toJSON(), JJSdiagram.paper.model.getCell(elementViewConnected.model.toJSON().id).toJSON(), "event1");
+                        }
+                    }
 				}
 			}
 		);
 
-		//remove listeners for association and generalization
-		//Because of the removing on disconnect, the removing button is now only used for full connected association
+		//remove listeners for association, transition and generalization
+		//Because of the removing on disconnect, the removing button is now only used for full connected association & full connected transition
 		this.paper.model.on('remove', _.bind(function (cell) {
 			if (cell.isLink()) {
 				switch (cell.toJSON().type) {
@@ -165,6 +176,11 @@ var JJSdiagram = {
 							JJSdiagram.makeUmpleCodeFromAssociation('removeAssociation', this.paper.model.getCell(cell.toJSON().source.id).toJSON(), this.paper.model.getCell(cell.toJSON().target.id).toJSON(), cell.toJSON());
 						}
 						break;
+					case 'uml_state_machine.Transition':
+						if (cell.toJSON().source.id !== undefined && cell.toJSON().target.id !== undefined){
+							JJSdiagram.makeUmpleCodeFromTransition('removeTransition', this.paper.model.getCell(cell.toJSON().source.id).toJSON(), this.paper.model.getCell(cell.toJSON().target.id).toJSON(), cell.toJSON().labels[0].attrs.text.text);
+					 }
+					 break;
 					case 'uml.Generalization':
 						if (cell.toJSON().source.id !== undefined && cell.toJSON().target.id !== undefined) {
 							JJSdiagram.makeUmpleCodeFromGeneralization('removeGeneralization', this.paper.model.getCell(cell.toJSON().target.id).toJSON(), this.paper.model.getCell(cell.toJSON().source.id).toJSON());
@@ -172,6 +188,7 @@ var JJSdiagram = {
 						break;
 					default:
 						console.log('JJSdiagram -->initJJSDiagram -->graph remove listener--> unknown type');
+						//console.log(cell.toJSON().type);
 						break;
 				}
 			}
@@ -313,6 +330,61 @@ var JJSdiagram = {
 			}
 		});
 
+		jQuery('#buttonAddTransition').off('click').on('click.fly', function (e) {
+			if (Page.useJointJSClassDiagram) {
+				var EvenTarget = jQuery(e.target);
+				var clickcount = 0;
+				var canvas = jQuery("#jjsPaper");
+
+				if (EvenTarget.hasClass("selected")){
+					$(EvenTarget).removeClass("selected");
+					clickcount = 0;
+					canvas.find("div.html-element").fadeTo("fast",1);
+				}else {
+					var transitionId;
+					//remove all other selected editing option as well as hidden delete button
+					var selectedItem = format("div.palette li.selected");
+					jQuery(selectedItem).removeClass("selected");
+
+					jQuery('.html-element button.delete').css('visibility', 'hidden')
+
+					canvas.find("div.html-element").fadeTo(1,1);
+
+					$(EvenTarget).addClass("selected");
+					canvas.find("div.html-element").fadeTo("fast",0.4);
+					//paper listener
+					JJSdiagram.paper.on('cell:pointerclick', function (cellView, evt, x, y) {
+						if(EvenTarget.hasClass("selected")){
+							clickcount++;
+						}
+						if (clickcount === 1) {
+							transitionId = cellView.model.id;
+							cellView.$box.fadeTo("fast",1);
+						}
+						if (clickcount === 2) {
+							cellView.$box.fadeTo("fast",1);
+							// Create the transistion from pseudo-start to starting state.
+							//add labels
+							var link = new joint.shapes.uml_state_machine.Transition({
+								source: { id: transitionId },
+								target: { id: cellView.model.id },
+								attrs: { '.connection-wrap': { fill: 'none' }, '.connection': { fill: 'none' }},
+                            	labels: [{ position: .5, attrs: { text: { text: 'event1', 'font-size': '8pt' } } }],
+                            	umplename: "umpleTransition_" + JJSdiagram.transitionIndex
+							});
+							
+							link.set('connector', { name: 'jumpover', args: { type: 'gap' } });
+							JJSdiagram.paper.model.addCell(link);
+							JJSdiagram.makeUmpleCodeFromTransition('addJjsTransition', JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), transitionId), JJSdiagram.getCurrentObject(JJSdiagram.paper.model.toJSON(), cellView.model.id), "event1");
+							JJSdiagram.paper.off('cell:pointerclick');
+							JJSdiagram.setPaperListener();
+							$(EvenTarget).removeClass("selected");
+							canvas.find("div.html-element").fadeTo("fast",1);
+						}
+					});
+				}
+			}
+		});
 		jQuery('#buttonAddGeneralization').off('click').on('click.fly', function (e) {
 			if (Page.useJointJSClassDiagram) {
 				var EvenTarget = jQuery(e.target);
@@ -1082,6 +1154,38 @@ var JJSdiagram = {
 	},
 
 	//convert the diagram JSON to umple code
+	makeUmpleCodeFromTransition: function (actionType, jjsJsonOne, jjsJsonTwo, event) {
+        var nameOne = "";
+        var nameTwo = "";
+		var actionCodeObj = {
+			"fromStateId": jjsJsonOne.name,
+			"toStateId": jjsJsonTwo.name,
+			"event": event,
+            "id": "umpleTransition_" + this.transitionIndex,
+			"name": jjsJsonOne.name + "_" + event + "_" + jjsJsonTwo.name
+   		 };
+
+		switch (actionType) {
+			case 'addJjsTransition':
+				actionCode = "action=addTransition&actionCode=";
+				actionCode += JSON.stringify(actionCodeObj);
+				this.transitionIndex++;
+				break;
+			case 'removeTransition':
+				actionCode = "action=removeTransition&actionCode=";
+				actionCode += JSON.stringify(actionCodeObj);
+				break;
+			default:
+                console.log('JJSdiagram.makeUmpleCodeFromTransition: action type error.');
+				break;
+		}
+		
+		DiagramEdit.updateUmpleText({
+			actionCode: actionCode,
+			codeChange: true
+		});
+	},
+	//convert the diagram JSON to umple code
 	makeUmpleCodeFromGeneralization: function (actionType, parent, child) {
 		parent.position.height = parent.size.height;
 		parent.position.width = parent.size.width;
@@ -1694,7 +1798,7 @@ var JJSdiagram = {
 				// Can get rid of this once the CSS bugs are fixed
 				link.attr({ '.connection-wrap': { fill: 'none' }, '.connection': { fill: 'none' } });
 
-				// Because the default font-size is 14
+				//Because the default font-size is 14
 				var labels = link.get('labels');
 				labels.forEach(function (label) {
 					_.extend(label.attrs.text, { 'font-size': 9 });

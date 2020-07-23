@@ -12,7 +12,7 @@ class DoActivityTest extends UnitTestCase
     $course->flip();
     
     sleep(3);
-    $this->assertEqual("Excepted 5 or more, but only produced " + $course->numberOfLogs(), true,$course->numberOfLogs() >= 5);
+    $this->assertEqual(true, $course->numberOfLogs() >= 5);
     $this->assertEqual("Open Entry", $course->getLog(0));
     $this->assertEqual("Do Activity On Open",$course->getLog(1));
     $this->assertEqual("Closed Entry",$course->getLog(2));

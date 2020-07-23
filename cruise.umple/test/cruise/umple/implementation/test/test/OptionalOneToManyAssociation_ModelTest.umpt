@@ -1,0 +1,80 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  OptionalOneToManyAssociation ----/////
+
+test OptionalOneToManyAssociation.ump {
+depend  A,B ; 
+
+
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class A       */
+  /*-------------------------*/
+
+              /////// Association: -- [0,*] B /////// 
+              //create ... without ...
+              test removeB {
+              
+              A aA("RandomString1");
+              
+              
+              B aB("RandomString1");
+              aA.addB(aB);
+              aA.removeB(aB);
+              
+              assertTrue (aA.getbAt(0) == null);
+              }
+              
+              
+              
+  /*-------------------------*/
+  /*  Class B       */
+  /*-------------------------*/
+
+              /////// Association: -- [0,1] A /////// 
+              //create ... without ...
+              Test CreateBWithoutA {
+              B someB = new B();
+              AssertTrue (someA.getB()!= null);
+              }
+              //replace
+              
+              Test ReplaceAInB { 
+              
+              A someA = new A(); 
+              A someA2 = new A();
+              someA.addA(someB);
+              AssertEqual (1, someA.getNumberOfBs());
+              AssertEqual (1, someA.getNumberOfBs());
+              someB.setA(someA2);
+              AssertEqual (someB, someA2.getB(0));
+              }
+              //delete
+              Test DeleteA {
+              // delete A in B
+              someA2.delete(); 
+              AssertEqual (null, someA2.getB(0));
+              }
+              //add to new B
+              
+              Test AddAToNewB { 
+              A someA = new A();
+              A someA2 = new A();
+      
+              B someB = new B();
+              someA.addA(someA);
+              someA.addA(someA2);  
+        
+              AssertEqual(someA2, someA.getA(); 
+              AssertEqual (someA, someA2.getB(0));
+              AssertEqual (someA, someA.getNumberOfBs());
+              } 
+ 
+
+ }

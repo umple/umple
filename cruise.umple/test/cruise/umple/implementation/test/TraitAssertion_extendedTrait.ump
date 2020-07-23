@@ -1,0 +1,21 @@
+trait T1{
+   id;
+   
+   test firstCheckName { 
+     assertFalse (firstName == "Orlean");
+     assertTrue (firstName == "KingEdward");        
+    } 
+     
+}
+trait T2{
+  isA T1;
+  
+ 
+}
+class C1{
+  
+}
+class C2{
+  isA T2;
+  
+}

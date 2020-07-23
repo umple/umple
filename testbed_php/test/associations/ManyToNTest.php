@@ -12,14 +12,14 @@ class ManyToNTest extends UnitTestCase
   
   public function test_ConstructorWithTooFew()
   {
-  	$this->expectException(new Exception("Unable to create MentorQ, must have 2 students"));
+  	$this->expectException(new Exception("Unable to create MentorQ, must have 2 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentQ(99);
     new MentorQ("blah",array($s));
   }
 
   public function test_ConstructorWithTooMany()
   {
-  	$this->expectException(new Exception("Unable to create MentorQ, must have 2 students"));
+  	$this->expectException(new Exception("Unable to create MentorQ, must have 2 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentQ(99);
     $s2 = new StudentQ(98);    
     $s3 = new StudentQ(97);
@@ -42,7 +42,7 @@ class ManyToNTest extends UnitTestCase
   
   public function test_constructorWatchOutForDuplicateEntries()
   {
-  	$this->expectException(new Exception("Unable to create MentorQ, must have 2 students"));
+  	$this->expectException(new Exception("Unable to create MentorQ, must have 2 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentQ(99);
     new MentorQ("blah",array($s, $s));
   }
@@ -84,7 +84,7 @@ class ManyToNTest extends UnitTestCase
 
     $m = new MentorQ("blah",array($s,$s2));
     
-    $this->assertEqual(false,$m->setStudents($s2,$s3,$s4));
+    $this->assertEqual(false,$m->setStudents(array($s2,$s3,$s4)));
     $this->assertEqual(2,$m->numberOfStudents());
     $this->assertEqual($m,$s->getMentor_index(0));
     $this->assertEqual($m,$s2->getMentor_index(0));
@@ -92,7 +92,7 @@ class ManyToNTest extends UnitTestCase
     $this->assertEqual(0,$s4->numberOfMentors());
     $this->assertEqual(0,$s5->numberOfMentors());
 
-    $this->assertEqual(false,$m->setStudents($s5));
+    $this->assertEqual(false,$m->setStudents(array($s5)));
     $this->assertEqual(2,$m->numberOfStudents());
     $this->assertEqual($m,$s->getMentor_index(0));
     $this->assertEqual($m,$s2->getMentor_index(0));
@@ -111,7 +111,7 @@ class ManyToNTest extends UnitTestCase
     $s3 = new StudentQ(97);
 
     $m = new MentorQ("blah",array($s,$s2));
-    $this->assertEqual(false,$m->setStudents($s2,$s2,$s3));
+    $this->assertEqual(false,$m->setStudents(array($s2,$s2,$s3)));
   }
 
 

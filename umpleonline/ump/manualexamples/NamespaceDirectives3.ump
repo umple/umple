@@ -1,0 +1,27 @@
+// Class A will be in the default namespace
+
+class A{}
+class B{}
+
+
+// Class B was in the default namespace
+// But now will be in namespace m
+
+namespace m;
+class B{}
+class C{}
+namespace -;
+
+
+// Because namespace -; was used, namespace m
+// is no longer active, and class D will be 
+// in the default namespace
+
+class D{}
+
+
+// Class C is in namespace m, but can
+// be placed in the default namespace
+
+namespace default --redefine;
+class C{}

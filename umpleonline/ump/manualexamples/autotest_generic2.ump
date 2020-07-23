@@ -1,0 +1,52 @@
+
+class Calculator{  
+    
+       
+        1--* Number; 
+        
+        0..1->* Controller;
+    
+    
+  generic test checkifLogged(0..1->* association){
+        Calculator c1 () ;
+        Number n1(c1);
+        Number n2(c1);                                
+        Controller cn1();
+        Controller cn2();
+        
+        c1.addNumber(n1);
+        c1.addNumber(n2);
+
+        c1.addController(cn1);
+        c1.addController(cn2);
+
+        String numberInList = c1.numberOf<<association.toSingular()>>s();
+        
+        if(c1.numberOfNumbers() > 2)
+        {
+        	assertTrue (numberInList > 2);
+        }
+
+        else {
+        	assertTrue (numberInList < 2)
+        }
+                                          
+        }        
+                     
+}  
+ 
+ 
+ 
+class Number {
+
+
+} 
+
+
+class Controller {
+
+
+}
+
+
+  

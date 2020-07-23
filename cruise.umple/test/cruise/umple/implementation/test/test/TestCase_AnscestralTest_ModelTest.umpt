@@ -1,0 +1,27 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  TestCase_AnscestralTest ----/////
+
+test TestCase_AnscestralTest.ump {
+depend  Person,Student ; 
+
+
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Person       */
+  /*-------------------------*/
+
+  /*-------------------------*/
+  /*  Class Student       */
+  /*-------------------------*/
+
+ 
+ 
+
+ }

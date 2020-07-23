@@ -118,6 +118,7 @@ class UmpleInternalParser
       secondPostTokenAnalysis();
       //add analysis here!!! xx.validateStateMachineGuardConstraints(model);
       checkDefaultedNameConflict();
+      analyzeFeatureModel(); // lastly to analyze the feature model after all mixsets are added to umple model. 
     
     }
     catch (Exception ex)
@@ -225,6 +226,10 @@ class UmpleInternalParser
       }
     }
     while (shouldProcessAgain);
+    shouldProcessAgain = true;
+
+    fixImportFromDefaultPackage();
+    checkUnusedNamespaces();
   }
 
   // Delegate function to analyze a token within the context of a class
@@ -271,7 +276,19 @@ class UmpleInternalParser
     analyzeFilterToken(t,analysisStep);
     analyzeFIXML(t, analysisStep);
     analyzeMixsetToken(t, analysisStep);
-    
+    analyzeRequireStatement(t, analysisStep);
+    analyzeInjectionToken(t, analysisStep);
+  }
+
+  // Issue#1521
+  private void analyzeInjectionToken(Token t, int analysisStep) {
+    if (t.is("toplevelBeforeCode"))
+    {
+      analyzeToplevelInjectionCode(t, analysisStep, "toplevelBeforeCode");
+    } else if (t.is("toplevelAfterCode"))
+    {
+      analyzeToplevelInjectionCode(t, analysisStep, "toplevelAfterCode");
+    }
   }
 
   // Analyze an individual token, delegates to the various components in Umple
@@ -374,6 +391,23 @@ class UmpleInternalParser
     {
       postTokenEnumerationAnalysis();
     }
+    
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenInterfaceTestAnalysis();
+    }
+    
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenAbstractTestAnalysis();
+    }
+    
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenTestSequeceAnalysis();
+    }
+    
+    
   }
   
   //This is used for the cases that will be resolved by traits and we don't need to see those warnings.
@@ -525,3 +559,5 @@ use UmpleInternalParser_CodeFilter.ump;
 use UmpleInternalParser_CodeParserHandlers.ump;
 use UmpleInternalParser_CodeEnumeration.ump;
 use UmpleInternalParser_CodeMixset.ump;
+use UmpleInternalParser_CodeRequireStatement.ump;
+use UmpleInternalParser_CodeTest.ump;

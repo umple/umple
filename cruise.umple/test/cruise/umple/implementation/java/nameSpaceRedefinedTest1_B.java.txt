@@ -1,0 +1,54 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package m;
+
+// line 6 "../../../../ump/tmp762034/model.ump"
+// line 11 "../../../../ump/tmp762034/model.ump"
+// line 20 "../../../../ump/tmp762034/model.ump"
+public class B
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //B Attributes
+  private String x;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public B(String aX)
+  {
+    x = aX;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setX(String aX)
+  {
+    boolean wasSet = false;
+    x = aX;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getX()
+  {
+    return x;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "x" + ":" + getX()+ "]";
+  }
+}

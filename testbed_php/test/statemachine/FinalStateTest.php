@@ -23,8 +23,8 @@ class FinalStateTest extends UnitTestCase
     $this->assertEqual(1,$c->numberOfLogs());
     $this->assertEqual("deleted",$c->getLog(0));
 
-    $this->assertEqual("StatusOn",$c->getStatus());
-    $this->assertEqual("StatusOnMotorIdleFinal",$c->getStatusOnMotorIdle());
+    $this->assertEqual("StatusFinal",$c->getStatus());
+    $this->assertEqual("StatusOnMotorIdleNull",$c->getStatusOnMotorIdle());
     $this->assertEqual("StatusOnFanIdleFanIdle",$c->getStatusOnFanIdle());
   }
   

@@ -1,0 +1,39 @@
+interface RegisterCapable
+{
+  depend school.util.*;
+  id;
+  
+  boolean registerForCourse(Course aCourse);
+  test checkCourseRegistration;
+}
+
+class Person {
+  name;
+}
+
+
+class CorporateClient {
+  isA RegisterCapable;
+  boolean registerForCourse(Course aCourse) {
+     // write code here
+  }
+  0..1 <- * Person employees;
+}
+
+class IndividualStudent {
+  isA Person, RegisterCapable;
+  
+  
+  
+  boolean registerForCourse(Course aCourse) {
+     // write code here
+  }
+}
+
+
+class Course
+{
+  name;
+  description;
+  * -- * Person registrants;
+}
