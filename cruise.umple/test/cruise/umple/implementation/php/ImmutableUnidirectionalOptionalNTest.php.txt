@@ -30,7 +30,7 @@ class Student
     $didAddMentors = $this->setMentors($allMentors);
     if (!$didAddMentors)
     {
-      throw new Exception("Unable to create Student, must have 3 or fewer mentors, no duplicates.");
+      throw new Exception("Unable to create Student, must have 3 or fewer mentors, no duplicates. See http://manual.umple.org?RE001ViolationofImmutability.html");
     }
   }
 

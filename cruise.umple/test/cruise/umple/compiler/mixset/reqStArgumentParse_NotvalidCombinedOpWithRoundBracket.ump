@@ -1,0 +1,15 @@
+
+require [ ((A or B) and C ) and (D xor F) ];
+
+
+
+mixset A {} mixset B {} mixset C{}
+mixset D {}
+
+/*
+ Not valid configuration of feature model. 
+*/
+//use A; 
+use C;
+use D; 
+

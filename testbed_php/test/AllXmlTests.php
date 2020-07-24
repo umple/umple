@@ -9,7 +9,8 @@ $test = new TestSuite('All Tests');
 loadTestsIn($test,'associations');
 loadTestsIn($test,'statemachine');
 loadTestsIn($test,'attributes');
-loadTestsIn($test,'tracer');
+// issue#1525  I commented out this beacuse no tracer folder found in the /umple/testbed_php/test/.
+// loadTestsIn($test,'tracer');
 
 $reporter = new XmlReporter();
 $test->run($reporter);

@@ -1,0 +1,20 @@
+
+require subfeature [A and B];
+require subfeature [opt C];
+require [not D];
+require subfeature [E xor F];
+
+
+mixset A {} mixset B {} mixset C{}
+mixset D {} mixset E {} mixset F{}
+
+/*
+ use-statements result in valid configuration of feature model. 
+*/
+
+use A; use B; 
+use C;
+//use D; 
+use E; 
+//use F;
+

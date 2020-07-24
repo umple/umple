@@ -1,0 +1,97 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Feature diagram meta-model
+
+*/
+
+// A FeatureDiagram stores information required to build a feature diagram in Umple  
+
+class UmpleModel {
+     0..1 -- 0..1 FeatureModel;
+}
+
+class FeatureModel
+{
+  name;
+  1--* FeatureNode node;
+  0..1 -- * FeatureLink featurelink;
+}
+
+//A Feature model consists of some FeatureNodels, which can be leaf nodes or fragmentFeature nodes.
+class FeatureNode{
+  //This to assign a unique name for each feature node. 
+  depend java.util.concurrent.atomic.AtomicInteger ;
+  static AtomicInteger nextId = new AtomicInteger();
+  // each new FeatureNode has a unique id
+  int id = nextId.incrementAndGet();
+  lazy name;
+  boolean isLeaf =false; 
+
+  public String getUniqueFeatureNodeName()
+  {
+    return name+"_"+id;
+  }
+}
+
+// A FeatureLeaf contains a full mixset or a full file. 
+class FeatureLeaf
+{
+  isA FeatureNode;
+  0..1 -- 0..1 MixsetOrFile mixsetOrFileNode;
+  after constructor() { setIsLeaf(true);}
+  //a leaf node returns its actual name as a unique name.
+  public String getUniqueFeatureNodeName()
+  {
+    return this.getName();
+  }
+}
+
+// A FragmentFeatureLeaf consists of one or more mixset fragments.
+class FragmentFeatureLeaf
+{
+  isA FeatureNode;
+  0..1 -- * MixsetFragment mixsetFragment;
+  after constructor() { setIsLeaf(true);}
+}
+
+// A FeatureLink connects a source feature to target feature(s) in the feature diagram.
+class FeatureLink
+{
+  * sourceFeatureLink -- 0..1 FeatureNode sourceFeature; // the sourceFeature can be FeatureLeaf or FeatureNode
+  0..* -- * FeatureNode targetFeature;
+  boolean isSub =false; // isSub to differentiate between sub-features and include/exclude relationship
+  enum FeatureConnectingOpType{ Required, Optional, Conjunctive, Disjunctive, Multiplicity, Include, Exclude, XOR};  
+  FeatureConnectingOpType featureConnectingOpType = null;
+
+}
+// MultiplicityFeatureConnectingOpType is a special type of FeatureLink in which there are min and max multiplicity. 
+
+class MultiplicityFeatureConnectingOpType
+{
+  isA FeatureLink;
+  Multiplicity multiplicity = new Multiplicity();
+  after constructor(){
+    this.setFeatureConnectingOpType(FeatureConnectingOpType.Multiplicity);
+  }
+}
+// XORFeatureConnectingOpType is a special type of FeatureLink in which lower & upper bounds of the set are limited to 1 (i.e. 1..1). 
+class XORFeatureConnectingOpType 
+{
+  isA MultiplicityFeatureConnectingOpType;
+  after constructor(){
+    this.setFeatureConnectingOpType(FeatureConnectingOpType.XOR);
+    Multiplicity xorMultiplicity = new Multiplicity();
+    xorMultiplicity.setRange("1","1");
+    setMultiplicity(xorMultiplicity);
+  }
+}
+
+/*
+class MixsetOrFile{}
+class MixsetFragment{}
+*/

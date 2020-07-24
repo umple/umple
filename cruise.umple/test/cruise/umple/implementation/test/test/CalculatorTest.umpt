@@ -1,0 +1,44 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association_toSingular ----/////
+
+test Calculator {
+
+ generate JUnit ;
+ 
+ depend  Calculator,Number ; 
+
+
+
+ 
+ GIVEN:
+ GenericTestCase_association_toSingular.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkifLogged_numbers {
+        Calculator c1 ( 4, 5) ;                
+        String valueToCheck = p1.getNumber();
+         Number tempNumber =  number;
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}

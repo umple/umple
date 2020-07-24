@@ -1,0 +1,162 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class First < I
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #First Associations - for documentation purposes
+  #attr_reader :second
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_second)
+    @initialized = false
+    @deleted = false
+    @second = nil
+    unless a_second.nil?
+      @second = a_second
+      a_second.instance_variable_set("@first",self)
+    end
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def get_second
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    @second
+  end
+
+  def delete
+    @deleted = true
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    existing_second = @second
+    @second = nil
+    unless existing_second.nil?
+      existing_second.delete
+    end
+  end
+
+  def addSecond (aSecond)
+    result = addSecond_original(aSecond)
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    return result
+  end
+
+  def addSecond_original(aSecond)
+
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    
+  end
+
+  def getSeconds ()
+    result = getSeconds_original()
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    return result
+  end
+
+  def getSeconds_original()
+
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    
+  end
+
+  def setSecond (aSecond)
+    result = setSecond_original(aSecond)
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    return result
+  end
+
+  def setSecond_original(aSecond)
+
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    
+  end
+
+  def setSeconds (newSeconds)
+    result = setSeconds_original(newSeconds)
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    return result
+  end
+
+  def setSeconds_original(newSeconds)
+
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    
+  end
+
+  def numberOfSeconds ()
+    result = numberOfSeconds_original()
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    return result
+  end
+
+  def numberOfSeconds_original()
+
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    
+  end
+
+  def hasSeconds ()
+    result = hasSeconds_original()
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    return result
+  end
+
+  def hasSeconds_original()
+
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    
+  end
+
+  def indexOfSecond (second)
+    result = indexOfSecond_original(second)
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    return result
+  end
+
+  def indexOfSecond_original(second)
+
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    
+  end
+
+  def isNumberOfSecondsValid ()
+    result = isNumberOfSecondsValid_original()
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    return result
+  end
+
+  def isNumberOfSecondsValid_original()
+
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    
+  end
+
+  def removeSecond (second)
+    result = removeSecond_original(second)
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    return result
+  end
+
+  def removeSecond_original(second)
+
+    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
+    
+  end
+
+
+
+end

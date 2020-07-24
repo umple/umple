@@ -1,0 +1,25 @@
+RE002 Violation of Association Multiplicity
+Runtime Exceptions
+noreferences
+
+@@description
+
+<h2>Umple runtime exception thrown when <a href="Multiplicity.html">multiplicity</a> is violated in a constructor</h2>
+
+<p>Umple manages multiplicity by blocking operations that would allow too many or too few instances of a class to be linked. There are two ways in which links can be set, hence violating multiplicity: a) in a constructor, or b) after construction using an ordinary method. In a case of a constructor that would violate multiplicity, a RuntimeException is thrown. This can be caught by a try-catch block. After construction, any method that attempts to violate the multiplicity will return false.</p>
+
+<p>
+In the first example below a student is always required to have a program. A runtime exception is thrown when an attempt is made to create a Student without specifying a required program. A method that attempt to violate multiplicity, and hence returns false, is shown at the end of the first example.
+</p>
+
+<p>The second example shows a runtime exception that is thrown in the case of a <a href="One-to-OneAssociations.html">one-to-one association</a>. Since for such associations there must always be equal numbers of both associated classes, and objects of the two classes must be created in pairs, the constructor of either class also creates instances of the other class. An attempt to call such a constructor with a null argument will throw a runtime exception.
+</p>
+
+
+@@example @@caption One to many example  @@endcaption
+@@source manualexamples/RE002MultiplicityException1.ump
+@@endexample
+
+@@example @@caption One to one example  @@endcaption
+@@source manualexamples/RE002MultiplicityException2.ump
+@@endexample

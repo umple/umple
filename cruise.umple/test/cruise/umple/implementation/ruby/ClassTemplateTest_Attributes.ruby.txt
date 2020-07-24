@@ -62,7 +62,7 @@ class Mentor
     @@next_x += 1
     @id = nil
     if (!set_id(a_id))
-      raise ArgumentError, 'Cannot create due to duplicate id'
+      raise ArgumentError, 'Cannot create due to duplicate id. See http://manual.umple.org?RE003ViolationofUniqueness.html'
     end
     @initialized = true
   end
@@ -125,6 +125,9 @@ class Mentor
   def set_id(a_id)
     was_set = false
     an_old_id = get_id();
+    if (an_old_id != nil && an_old_id == a_id)
+      return true
+    end
     if (Mentor.has_with_id?(a_id))
       return was_set
     end

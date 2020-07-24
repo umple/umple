@@ -1,0 +1,30 @@
+
+class UmpleToTest {
+    association_ManyToOptionalOne <<!<</*association_ManyToOptionalOne*/>><<#
+/*
+This file creates the necessary for Optional One To Many Association 
+*/
+
+  
+  				  String buffName = "a" +uClass.getName();
+  				  String buffName2 = "a"+av.getRelatedAssociation().getUmpleClass().getName();#>>
+        		  /////// Association: -- <<=av.getRelatedAssociation().getMultiplicity().getRange()>> <<=av.getRelatedAssociation().getUmpleClass().getName()>> /////// 
+        		  //create ... without ...
+        		  test remove<<=av.getRelatedAssociation().getUmpleClass().getName()>> {
+        		  <<=gen.dependencyInjection(uClass)>>
+        		  <<=uClass.getName()>> <<=gen.initiateClass(uClass)>>;
+        		  
+        		  <<=gen.dependencyInjection(av.getRelatedAssociation().getUmpleClass())>>
+        		  <<=av.getRelatedAssociation().getUmpleClass().getName()>> <<=gen.initiateClass(av.getRelatedAssociation().getUmpleClass())>>;
+        		  assertTrue(<<=buffName>>.set<<=av.getRelatedAssociation().getUmpleClass().getName()>>(<<=buffName2>>));        		  
+        		  a<<=av.getRelatedAssociation().getUmpleClass().getName()>>.delete();
+        		  
+        		  assertTrue (a<<=av.getUmpleClass().getName()>>.get<<=av.getRelatedAssociation().getUmpleClass().getName()>>() == null);
+        		  }
+        		  
+        		  <<#gen.resetInitializedObject();#>>
+        		  
+        		  
+        		  
+!>>
+}

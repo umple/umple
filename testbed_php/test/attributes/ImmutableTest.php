@@ -6,7 +6,7 @@ class ImmutableTest extends UnitTestCase
   // TODO: Look at writing a helper test to use reflection to make sure the "setX" method is not available   
   public function test_Immutable()
   {
-    $door = new DoorC("1",2,3.4,date(1234),time(1235),false,new DoorB(5));
+    $door = new DoorC("1",2,3.4,date(1234),time(),false,new DoorB(5));
 
     $this->assertEqual("1",$door->getId());
     // $this->assertEqual(false,$door->setId("2"));
@@ -24,7 +24,7 @@ class ImmutableTest extends UnitTestCase
     // $this->assertEqual(false,$door->setDateId(date(4321)));
     // $this->assertEqual(date(1234),$door->getDateId());
 
-    $this->assertEqual(time(1235),$door->getTimeId());
+    $this->assertEqual(time(),$door->getTimeId());
     // $this->assertEqual(false,$door->setTimeId(date(5321)));
     // $this->assertEqual(time(1235),$door->getTimeId());
 
@@ -57,7 +57,7 @@ class ImmutableTest extends UnitTestCase
     // $this->assertEqual(false,$door->setDateId(date(4321)));
     // $this->assertEqual(date(1234),$door->getDateId());
 
-    $this->assertEqual(time(1235),$door->getTimeId());
+    $this->assertEqual(time(),$door->getTimeId());
     // $this->assertEqual(false,$door->setTimeId(date(5321)));
     // $this->assertEqual(time(1235),$door->getTimeId());
 

@@ -5,8 +5,7 @@ class CarTransmission{
             selectDrive -> drive;
             }
         drive {
-            selectNeutral -> neutral;
-            }       
+            }
         reverse {
             selectNeutral -> neutral;
             }

@@ -58,8 +58,10 @@ TabControl.init = function()
  */
 TabControl.showTabs = function()
 {
+  jQuery('#toggleTabsButton').html('Hide Tabs');
   jQuery("#tabControl").show();
   localStorage[TabControl.showHideKey] = true;
+ // document.getElementById("toggleTabsButton").innerHTML = "Hide Tabs"; 
 }
 
 /**
@@ -67,8 +69,10 @@ TabControl.showTabs = function()
  */
 TabControl.hideTabs = function()
 {
+  jQuery('#toggleTabsButton').html('Show Tabs');  
   jQuery("#tabControl").hide();
   delete localStorage[TabControl.showHideKey];
+ // document.getElementById("toggleTabsButton").innerHTML = "Show Tabs";  
 }
 
 /**
@@ -292,10 +296,11 @@ TabControl.saveTab = function(tabId, umpleCode)
 {
   var filename = TabControl.getTabFilename(TabControl.tabs[tabId].name);
   localStorage[filename] = umpleCode;
+  var umpleCodeWithoutAmpersand = umpleCode.replace(/&/g, "%26").replace(/\+/g, "%2B");
   TabControl.addToRequestQueue(
     "scripts/compiler.php",
     TabControl.saveTabCallback(tabId),
-    format("save=1&&lock=1&&model={2}&&umpleCode={0}&&filename={1}", umpleCode, filename, Page.getModel()));
+    format("save=1&&lock=1&&model={2}&&umpleCode={0}&&filename={1}", umpleCodeWithoutAmpersand, filename, Page.getModel()));
 }
 
 TabControl.saveTabCallback = function(tabId)

@@ -21,7 +21,7 @@ public class OneToMany
   {
     if (!setOneToMany(aOneToMany))
     {
-      throw new RuntimeException("Unable to create OneToMany due to aOneToMany");
+      throw new RuntimeException("Unable to create OneToMany due to aOneToMany. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

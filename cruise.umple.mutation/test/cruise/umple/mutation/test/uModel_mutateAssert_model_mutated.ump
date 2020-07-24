@@ -1,0 +1,39 @@
+/*
+ Telephone System- sample UML class diagram in Umple 
+  Last updated: June 8, 2010
+*/
+//Namespace for core of the system.
+namespace telecome.telephone.SomeNamespace;
+
+class PhoneCall{ 
+ String isOnHold;
+ Double startTime;
+ duration;
+ 1 call -- * TelephoneNumber originator;
+ 0..1 -- * TelephoneNumber parties;
+}
+class TelephoneNumber{
+ digits;
+ 0..1 number -- * TelephoneNumber voicemail;
+}
+class VoiceMailBox{
+ 0..1 -- * VoiceMailMessage; 
+ 1 -- * TelephoneNumber;
+}
+class VoiceMailMessage {
+ Integer digitizedSound;
+}
+class Feature {
+ Integer description;
+ * -- * TelephoneNumber;
+}
+class Telephone {
+ model;
+}
+class PhoneLine {
+ double location;
+ double poCode;
+ Integer digOrAnalog;
+ * -- * TelephoneNumber;
+ 1 -- 0..1 Telephone;
+}

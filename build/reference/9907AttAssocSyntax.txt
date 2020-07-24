@@ -4,9 +4,9 @@ noreferences
 
 @@description
 
-<h2>Umple semantic warning reported when a when Umple finds an un-parsable element in a class, which is likely a malformed attribute or association declaration.</h2>
+<h2>Umple semantic warning reported when Umple finds an un-parsable element in a class, which is likely a malformed attribute, association, method or state machine declaration.</h2>
 
-<p>Umple emits such elements 'as is' as 'extra code' in its generated code, in case they are some part of the base language that Umple cannot understand.
+<p>Umple emits such elements 'as is' (or what we call 'extra code') in its generated code, in case they are some part of the base language that Umple cannot understand. 
 </p>
 
 @@example

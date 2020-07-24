@@ -1,0 +1,26 @@
+class Academy {  
+  1 -- * Course courses sorted {code};  
+  1 -- * Student registrants sorted {id};  
+}  
+  
+class Student {  
+  Integer id;  
+  name;  
+}  
+  
+class Course {  
+  code;  
+}  
+  
+class Registration {  
+  * -- 1 Student;  
+  * sorted {name} -- 1 Course;  
+  
+  name = {getStudent().getName()}  
+  code = {getCourse().getCode()}  
+  
+  public String toString() {  
+    return "Registration: " + getName()  
+      + ":" + getCode();  
+  }  
+}

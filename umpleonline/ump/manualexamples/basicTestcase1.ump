@@ -1,0 +1,12 @@
+class Student {
+	id = "ID123";
+	name = "John";
+
+
+	test checkSetId {
+	Student s ();
+
+	assertTrue(s1.setId("ID432"));
+
+	}
+}

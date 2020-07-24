@@ -324,6 +324,9 @@ class UmpleConsoleMain
     OptionParser optparser = new OptionParser();
     
     String languages = String.join(",", UmpleModel.validLanguages );
+    String suboptionsAvail = "(With GvStateDiagram: hideactions, hideguards, showtransitionlabels, showguardlabels, Java, Cpp) ";
+    suboptionsAvail += "(With GvClassDiagram or GvClassTraitDiagram or GvEntityRelationshipDiagram: hideattributes, showmethods)";
+
     optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
     optparser.acceptsAll(Arrays.asList("performance", "p"), "Indicate time taken to parse and generate code");
     optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
@@ -332,7 +335,7 @@ class UmpleConsoleMain
     optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to the entry class to compile, or with argument - to compile all outputfiles").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("import","i"), "Indicate to read in XMI model and generate ump files").withRequiredArg().ofType(String. class);
-    optparser.acceptsAll(Arrays.asList("suboption","s"), "Indicate to generate files with suboptions").withRequiredArg().ofType(String.class);
+    optparser.acceptsAll(Arrays.asList("suboption","s"), "Indicate to generate files with suboptions "+suboptionsAvail).withRequiredArg().ofType(String.class);
     
     return optparser;
   }
@@ -340,7 +343,7 @@ class UmpleConsoleMain
   private static void printUsage()
   {
     System.out.println("For more detailed information go to http://manual.umple.org"+System.lineSeparator()
-      +"Usage: java -jar umple.jar [options] <umple_file>"+System.lineSeparator()
+      +"Usage: java -jar umple.jar [options] <umple_files>"+System.lineSeparator()
       +"Example: java -jar umple.jar airline.ump");
     try
     {
@@ -484,6 +487,7 @@ class PlaygroundMain
 
   Boolean isServer=false;
   int commandsRun = 0;
+  int commandsEverRun = 0;
   int checkpointCommandsRun = 0;
   int checkpoint2CommandsRun = 0;
   int cpDiffCmds = 0;
@@ -590,6 +594,7 @@ class PlaygroundMain
   {
     String answer = "";
     commandsRun++;
+    commandsEverRun++;
     
     if(commandsRun%100==0) { // We have hit a checkpoint
       checkpoint2CommandsRun = checkpointCommandsRun;
@@ -598,6 +603,11 @@ class PlaygroundMain
       checkpointTime = System.currentTimeMillis();
       checkpoint2MaxElapsed = checkpointMaxElapsed;
       checkpointMaxElapsed = 0; // start counting max again
+    }
+
+    if(commandsEverRun%1000==0) {
+      //write commandcount.txt with commandsEverRun (to allow for crashes)
+      saveCommandsCount();
     }
     
     previousCommand = lastCommand;
@@ -637,7 +647,7 @@ class PlaygroundMain
       
       returnCommandResult("-generate "+
         "<Java|Cpp|Ruby|Ecore|Papyrus|TextUml|GvStateDiagram|"+
-        "GvClassDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|"+
+        "GvClassDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|GvFeatureDiagram|"+
         "Alloy|NuSMV|NuSMVOptimizer|Violet|Umlet> <filename>\n", client); // Compile filename and generate output
       returnCommandResult("<action> <deltaCode> <filename>\n", client);  
       return;
@@ -695,6 +705,9 @@ class PlaygroundMain
               +"  GvState: " +generateGvStateDiagramCommandsRun
               +"  JsonMixed: " +generateJsonMixedCommandsRun
               +"\n\n", client);          
+
+          returnCommandResult("Number of commands run since July 2019: "
+            +commandsEverRun+"\n\n", client);
 
           returnCommandResult("Number of clients queued: "
             +getClientConnections().length+"\n\n", client);
@@ -778,12 +791,27 @@ class PlaygroundMain
       {
         System.out.println("ERROR - Could not listen for clients!");
       }
+      finally {
+        // write out the umple version
+      File versionRunning = new File(System.getProperty("user.dir")+File.separator+"versionRunning.txt");
+        try {
+          FileWriter writer = new FileWriter(versionRunning);
+          BufferedWriter out = new BufferedWriter(writer);
+          out.write(UmpleModel.VERSION_NUMBER+"\n");
+          out.close();
+        }
+        catch (IOException e) {
+          // Do nothing if we can't write out the version
+        } 
+      }
+      
       return;
     }
     
     if ("-quit".equals(args[0])) {
       if(isServer) {
         try {
+          saveCommandsCount();
           this.close();
         }
         catch (IOException e) {
@@ -813,7 +841,7 @@ class PlaygroundMain
     UmpleModel model = null;
 
     // Valid values include Java, Cpp, PhP, Ruby, Json, Yuml, Xmi, Ecore, Papyrus, TextUml,
-    // GvStateDiagram, GvStructureDiagram, GvClassDiagram,GvClassTraitDiagram, GvEntityRelationshipDiagram, Alloy, NuSMV, NuSMVOptimizer
+    // GvStateDiagram, GvStructureDiagram, GvClassDiagram,GvClassTraitDiagram, GvEntityRelationshipDiagram, Alloy, NuSMV, NuSMVOptimizer, GvFeatureDiagram
     if ("-generate".equals(args[0]) && args.length >= 2)
     {
       String filename = args[2];
@@ -903,10 +931,53 @@ class PlaygroundMain
     returnCommandResult(answer, client);
   }
   
+  private boolean saveCommandsCount(){
+    boolean saved = false;
+
+    try {
+        FileWriter writer = new FileWriter("commandcount.txt", false);
+        writer.write(Integer.toString(commandsEverRun));
+        writer.close();
+        saved = true;
+    } catch (IOException e) {
+        System.err.println(e.getMessage());
+    }
+
+    return saved;
+  }
+
+  private boolean loadCommandsCount(){
+    boolean loaded = false;
+    try {
+      BufferedReader myReader = new BufferedReader(new FileReader("commandcount.txt"));
+
+      int number = 0;
+      String token;
+      if ((token = myReader.readLine()) != null) {
+        try {
+            number = Integer.parseInt(token);
+        } catch (NumberFormatException ex) {
+            System.err.println(token + " is not a number");
+        } 
+      } 
+      myReader.close();
+      commandsEverRun = number;
+      loaded = true;
+
+    } catch(FileNotFoundException e){
+      System.err.println(e.getMessage());
+
+    } catch(IOException e){
+      System.err.println(e.getMessage());
+    }
+    return loaded;
+  }
+
   protected void serverStarted() {
     // Uncomment the following to debug
     // System.err.println("Umple server started on port "+getPort());
     // System.err.println("Working directory "+System.getProperty("user.dir"));
+    loadCommandsCount();
   }
   
   protected void serverStopped() {
@@ -964,6 +1035,14 @@ class PlaygroundMain
     else if ("-removeAssociation".equals(type))
     {
       return new DeleteAssociationAction(deltaCode,umpleCode,filename);
+    }
+    else if ("-addTransition".equals(type))
+    {
+    	return new NewTransitionAction(deltaCode, umpleCode, filename);
+    }
+    else if ("-removeTransition".equals(type))
+    {
+    	return new DeleteTransitionAction(deltaCode, umpleCode, filename);
     }
     else if ("-addGeneralization".equals(type))
     {

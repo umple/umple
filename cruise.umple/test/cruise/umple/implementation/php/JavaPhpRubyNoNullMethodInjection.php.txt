@@ -1,0 +1,116 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class JavaPhpRubyNoNullMethodInjection
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+
+  /**
+   * injection 1
+   */
+   public function method1()
+  {
+
+    // line 8 "model.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
+    // line 10 "model.ump"
+    //Php
+    // END OF UMPLE BEFORE INJECTION
+    // line 13 "model.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
+    
+    // line 17 "model.ump"
+    
+    // END OF UMPLE AFTER INJECTION
+    // line 19 "model.ump"
+    //Php
+    // END OF UMPLE AFTER INJECTION
+    // line 22 "model.ump"
+    
+    // END OF UMPLE AFTER INJECTION
+  }
+
+
+  /**
+   * injection 2
+   */
+   public function method2()
+  {
+
+    // line 29 "model.ump"
+    //Php
+    // END OF UMPLE BEFORE INJECTION
+    // line 32 "model.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
+    // line 36 "model.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
+    
+    // line 38 "model.ump"
+    //Php
+    // END OF UMPLE AFTER INJECTION
+    // line 41 "model.ump"
+    
+    // END OF UMPLE AFTER INJECTION
+    // line 45 "model.ump"
+    
+    // END OF UMPLE AFTER INJECTION
+  }
+
+
+  /**
+   * injection 3
+   */
+   public function method3()
+  {
+
+    // line 51 "model.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
+    // line 55 "model.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
+    // line 57 "model.ump"
+    //Php
+    // END OF UMPLE BEFORE INJECTION
+    
+    // line 60 "model.ump"
+    
+    // END OF UMPLE AFTER INJECTION
+    // line 64 "model.ump"
+    
+    // END OF UMPLE AFTER INJECTION
+    // line 66 "model.ump"
+    //Php
+    // END OF UMPLE AFTER INJECTION
+  }
+
+}
+?>

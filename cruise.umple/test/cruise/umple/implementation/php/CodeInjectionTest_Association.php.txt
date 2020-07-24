@@ -26,25 +26,25 @@ class Student
     $didAddM2 = $this->setM2($aM2);
     if (!$didAddM2)
     {
-      throw new Exception("Unable to create two due to m2");
+      throw new Exception("Unable to create two due to m2. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     $this->m3s = array();
     $didAddM3s = $this->setM3s($allM3s);
     if (!$didAddM3s)
     {
-      throw new Exception("Unable to create Student, must have 1 to 3 m3s");
+      throw new Exception("Unable to create Student, must have 1 to 3 m3s. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     $this->m4s = array();
     $didAddM4s = $this->setM4s($allM4s);
     if (!$didAddM4s)
     {
-      throw new Exception("Unable to create Student, must have 4 to 7 m4s");
+      throw new Exception("Unable to create Student, must have 4 to 7 m4s. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     $this->m5s = array();
     $didAddM5s = $this->setM5s($allM5s);
     if (!$didAddM5s)
     {
-      throw new Exception("Unable to create Student, must have at least 2 m5s");
+      throw new Exception("Unable to create Student, must have at least 2 m5s. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     $this->m6s = array();
   }

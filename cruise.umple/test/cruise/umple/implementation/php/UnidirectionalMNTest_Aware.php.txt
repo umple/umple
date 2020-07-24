@@ -26,7 +26,7 @@ class Mentor
     $didAddStudents = $this->setStudents($allStudents);
     if (!$didAddStudents)
     {
-      throw new Exception("Unable to create Mentor, must have 3 to 7 students");
+      throw new Exception("Unable to create Mentor, must have 3 to 7 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

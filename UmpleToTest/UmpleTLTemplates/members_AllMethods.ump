@@ -3,12 +3,39 @@ class UmpleToTest {
 members_AllMethods <<!<</*members_AllMethods*/>><<#
 
 	if ( uClass.hasMethods())
-		{
+		{/*
 		
 		for (Method meth :uClass.getMethods())
 		{
+					
 			MethodBody methBody = meth.getMethodBody();
-			if(methBody.hasUmpleAssertions())
+			if(methBody.hasUmpleTestCases())
+			{#>>
+				test <<=meth.getName()>> ()
+				{<<#for(UmpleAssertion uAssert: methBody.getUmpleTestCase(0).getUmpleAssertions())
+					{
+					if (uAssert.getType().equals("assertTrue"))
+				{
+				#>>assertTrue(<<=uAssert.getAssertCode()>>);
+				<<#				
+				}
+				if (uAssert.getType().equals("assertFalse"))
+				{
+				#>>assertFalse(<<=uAssert.getAssertCode()>>);
+				<<#				
+				}
+				if (uAssert.getType().equals("assertEqual"))
+				{
+				#>>assertEqual(<<=uAssert.getAssertCode()>>);
+				<<#				
+				}
+					
+			
+			}	
+			#>>}<<#
+		}
+
+			else if (methBody.hasUmpleAssertions())
 			{#>> 
 			test <<=meth.getName()>> ()
 			{
@@ -36,7 +63,10 @@ members_AllMethods <<!<</*members_AllMethods*/>><<#
 			 }
 			 <<#
 			}
-		}
+
+
+
+		}*/
 				
 		}
 #>>!>>

@@ -24,7 +24,7 @@ class Mentor
     $this->name = $aName;
     if (!$this->setStudent($aStudent))
     {
-      throw new Exception("Unable to create Mentor due to aStudent");
+      throw new Exception("Unable to create Mentor due to aStudent. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

@@ -10,7 +10,7 @@ test Assertion {
 	 Person p1 ("John", 123) ;
 	THEN:
 	
-	test someTest {	
+	JUnit test someTest {	
 	 Person p1 ("John", "123","someAddrss" );
 	 assertTrue(p1.getId() != null);	 
 	 }

@@ -1,0 +1,21 @@
+
+
+class Person {  
+  
+   test checkName { 
+     // Father test
+     assertTrue(id == 1);
+                
+    }  
+  
+}  
+ 
+        
+class Student {  
+  
+   isA Person;  
+   
+   test checkId{
+   
+   }  
+}  

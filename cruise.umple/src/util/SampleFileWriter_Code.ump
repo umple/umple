@@ -111,7 +111,7 @@ class SampleFileWriter
         }
         actualLine = readLine(actualReader);
         // HACK: To deal with // line # comments
-        while (actualLine != null && actualLine.indexOf("// line") != -1)
+        while (actualLine != null && (actualLine.indexOf("// line") != -1 ||  actualLine.indexOf("# line") != -1))
         { //Ignore the line, go to next
           actualLine = readLine(actualReader);
         }
@@ -196,17 +196,21 @@ class SampleFileWriter
         {
           // Skip past elements that may change in updated code but are not important differences
           while (actualLine != null && (actualLine.indexOf("// line") != -1 ||
+                    actualLine.indexOf("# line") != -1 ||
                     actualLine.indexOf("/* Code from template") != -1 ||
-                    actualLine.matches("\\s*\\/\\/ END OF UMPLE (BEFORE|AFTER) INJECTION")))
+                    actualLine.matches("\\s*\\/\\/ END OF UMPLE (BEFORE|AFTER) INJECTION") ||
+                    actualLine.matches("\\s*\\# END OF UMPLE (BEFORE|AFTER) INJECTION")))
           { //Ignore the line, go to next - line found has unimportant difference
             actualLine = actualReader.readLine();
             skippedActualLineDifference = true;
           }
           
           while (expectedLine != null && (expectedLine.indexOf("// line") != -1 ||
+                    actualLine.indexOf("# line") != -1 ||
                     expectedLine.indexOf("/* Code from template") != -1 ||  
                     (skippedActualLineDifference == true && expectedLine.trim().isEmpty()) ||      
-                    expectedLine.matches("\\s*\\/\\/ END OF UMPLE (BEFORE|AFTER) INJECTION")))
+                    expectedLine.matches("\\s*\\/\\/ END OF UMPLE (BEFORE|AFTER) INJECTION")||
+                    expectedLine.matches("\\s*\\# END OF UMPLE (BEFORE|AFTER) INJECTION")))
           { 
         	  expectedLine = expectedReader.readLine();
         	  skippedActualLineDifference = false; // Only skip one blank
@@ -291,6 +295,14 @@ class SampleFileWriter
     }
     
     path = "/h/ralph/umple/trunk/cruise.umple/" + rawPath;
+    f = new File(path);
+    if (f.exists())
+    {
+      return path;
+    }
+
+    // TODO: this shouldn't be hardcoded - see issue 751
+    path = "dist/gradle/test/workingDir/" + rawPath;
     return path;
   }
   

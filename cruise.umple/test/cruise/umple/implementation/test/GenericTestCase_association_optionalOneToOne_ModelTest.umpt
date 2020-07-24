@@ -1,0 +1,144 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association_optionalOneToOne ----/////
+
+test GenericTestCase_association_optionalOneToOne {
+
+generate JUnit;
+
+depend  Calculator,Number,Level3,Controller ; 
+
+
+
+
+GIVEN:
+GenericTestCase_association_optionalOneToOne.ump;
+THEN:
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Calculator       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Number       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Level3       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [1,1] Controller /////// 
+              
+              test createLevel3WithoutController {              
+              
+              Level3 aLevel3();
+              
+              assertTrue (aLevel3.numberOfControllers()== 0);
+              }
+              
+              
+              
+              test replaceMandatoryOneLevel3InController { 
+              
+                                          
+              Level3 baLevel3();
+              
+              Level3 aLevel3();
+
+              Controller aController("RandomString1",aLevel3); 
+              Controller baController("RandomString1",aLevel3);
+              
+              aController.setLevel3(baLevel3);
+              assertEqual (aController.getLevel3() , baLevel3);              
+              assertEqual(baController.getLevel3() , aLevel3 );
+                            
+              }
+              
+              
+              
+              test removeControllerInLevel3 {
+              
+              
+              Level3 baLevel3();
+              Level3 aLevel3();
+
+              Controller aController("RandomString1",aLevel3);
+              aLevel3.addController(aController);
+              
+              aController.delete(); 
+              assertTrue (aLevel3.numberOfControllers() == 0);
+              }
+              
+              
+              
+              
+              test AddControllerToNewLevel3 { 
+              
+              
+              Level3 baLevel3();
+              
+              Level3 aLevel3();
+
+              Controller aController("RandomString1",aLevel3);
+              Controller baController("RandomString1",aLevel3);
+              
+
+              aLevel3.addController(aController);
+              aLevel3.addController(baController);  
+        
+              assertEqual( aLevel3.getController(1),baController); 
+              assertEqual ( baController.getLevel3(), aLevel3);
+              assertEqual ( aLevel3.numberOfControllers(),  2);
+              }
+              
+              
+              
+  /*-------------------------*/
+  /*  Class Controller       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [0,*] Level3 /////// 
+              
+              test createControllerWithLevel3 {              
+              Level3 aLevel3();
+
+              Controller aController("RandomString1",aLevel3);
+              
+              assertTrue (aController.getLevel3() == aLevel3);
+              }
+              
+              
+              
+              test replaceManyLevel3InOneController{ 
+              
+              
+              Level3 baLevel3();
+              
+              
+              
+              Level3 aLevel3();
+                            
+              Controller aController("RandomString1",aLevel3);
+              
+                            
+              //Level3 baLevel3();
+              
+              aController.setLevel3(baLevel3);
+              
+              assertEqual ( aController.getLevel3(),baLevel3);              
+              
+                            
+              }
+              
+              
+              
+ 
+ 
+
+ }

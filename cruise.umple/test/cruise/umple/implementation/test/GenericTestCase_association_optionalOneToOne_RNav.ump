@@ -1,0 +1,33 @@
+
+class Calculator{  
+    
+       
+        0..1->1 Number; 
+        
+        0..1--* Controller;
+    
+    
+  generic test checkifLogged(0..1->1 association){
+        Calculator c1 ( 4, 5) ;                
+        String valueToCheck = p1.get<<association>>();
+         Number temp<<association.toSingular()>> =  <<association>>;   
+                                          
+        }        
+                     
+}  
+ 
+ 
+ 
+class Number {
+
+
+} 
+
+
+class Controller {
+
+
+}
+
+
+  

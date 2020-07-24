@@ -10,18 +10,16 @@ and compile .ump files.</p>
 
 <ul>
 
-<li><b>Eclipse.</b> To use Umple with Eclipse, you need to load an Umple 
-Eclipse plugin. This can be obtained from our <a 
-href="http://dl.umple.org">downloads site</a>.</li>
-
-<br />
-
 <li><b>UmpleOnline.</b> <a href="http://try.umple.org">UmpleOnline</a> 
 allows you to instantly experiment with Umple on the web. You can explore 
 examples or create your own and save them in the "cloud". You can generate 
 code as well as several other outputs. <a href="UsingUmpleOnline.html">The UmpleOnline
 section of this User manual describes how to use UmpleOnline</a>. Note that UmpleOnline
 can be run locally on your machine by using a Docker image. <a href="https://hub.docker.com/r/umple/umpleonline/">See the DockerHub page for information.</a></li>
+
+<li><b>Eclipse.</b> To use Umple with Eclipse, you need to load an Umple 
+Eclipse plugin. This can be obtained from our <a 
+href="http://dl.umple.org">downloads site</a>.</li>
 
 <br />
 
@@ -33,6 +31,14 @@ officially released version of the umple jar</a>, and run it as "java -jar umple
 <br />
 
 <li><a href="http://try.umple.org/scripts/umple.jar">For the adventurous, the bleeding-edge continuous build version of the Umple command-line compiler can be obtained here</a>.</li>
+
+<br />
+
+<li><b>Plugin for Microsoft Visual Studio Code</b>. This plugin allows basic <a href="https://marketplace.visualstudio.com/items?itemName=digized.umple">editing and compilation of Umple in Visual Studio Code</a>.</li>
+
+<br />
+
+<li><b>Plugin for Sublime Text</b>. Try this <a href="https://github.com/umple/umple.sublime">Umple Plugin if you use Sublime Text</a>.</li>
 
 </ul>
 

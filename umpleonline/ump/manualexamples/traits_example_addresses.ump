@@ -1,0 +1,51 @@
+class Address { street; city; postalCode; country; }
+
+trait EntityWithValidityPeriod {
+  Date startDate; Date endDate;
+}
+
+trait PurposedEntity {
+  purpose; // e.g. home, work, mobile
+}
+
+class DatedAddress {
+   isA EntityWithValidityPeriod, PurposedEntity, Address;
+}
+
+class DatedPhoneNumber {
+  isA EntityWithValidityPeriod, PurposedEntity;
+  number;
+}
+
+trait LocatableEntity {
+  0..1 -> 1..* DatedAddress;
+  0..1 -> 1..* DatedPhoneNumber;
+}
+
+class Person {  isA LocatableEntity;}
+class Business {  isA LocatableEntity;}//$?[End_of_model]$?
+
+class Address
+{
+  position 243 18 146 106;
+}
+
+class DatedAddress
+{
+  position 342 163 127 90;
+}
+
+class DatedPhoneNumber
+{
+  position 53 131 141 106;
+}
+
+class Person
+{
+  position 417 337 109 40;
+}
+
+class Business
+{
+  position 158 315 109 40;
+}

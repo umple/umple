@@ -136,10 +136,9 @@ $output = $dataHandle->readData('model.ump');
    background: #810b09;
    color: #ccc;
    }
-.button2:active {
-   border-top-color: #810b09;
-   background: #810b09;
-   }
+.active {
+  background: #C98C7D;
+}
 </style>  
 <link rel="apple-touch-icon" sizes="57x57" href="https://cruise.eecs.uottawa.ca/apple-icon-57x57.png">
 <link rel="apple-touch-icon" sizes="60x60" href="https://cruise.eecs.uottawa.ca/apple-icon-60x60.png">
@@ -161,16 +160,34 @@ $output = $dataHandle->readData('model.ump');
 </head>
 <body>
   <?php if($showChrome) { ?> 
+  
     <div id="header" class="row">
+        <span style="float: right">
+          <a href="http://www.uottawa.ca" target="uottawatab"><img height="33px" src="scripts/uottawa_ver_black.png" alt="University of Ottawa logo / Université d'Ottawa" /></a>        
+        </span>       
       <div class="inRow logo">
-        <a href="http://www.umple.org"><img src="scripts/umpleonline_title.jpg" alt="UmpleOnline logo" /></a>
+        <a href="http://www.umple.org"><img src="scripts/umpleonline_title.jpg" alt="UmpleOnline logo" /></a>     
       </div>
       <div class="inRow">
         <p class="pagedescription">
-          Draw on the right, write (Umple) model code on the left, analyse and generate code from models.<br/>
+        
+        <span class="pretext">
+          Draw on the right, write (Umple) model code on the left. Analyse models and generate code.
+          <?php
+          $alertMessage = @file_get_contents("ump/aalertMessage.txt");
+          if($alertMessage != FALSE && !empty($alertMessage)) {
+          echo "<span style=\"color: red\"><br/>$alertMessage</span>";
+          }
+          ?>
+        <br/></span>
+        <span id="gdprtext" class="pretext">        
+          This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="http://privacy.umple.org" target="privacy">Click to learn about privacy.</a>
+        <br/></span>
 
     <span style="font-size: 30%; white-space:nowrap;">
-    <a class="button2" href="http://dl.umple.org" target="dlpage" title="Go to the page that gives instructions on how to download Umple for use in Docker, or Eclipse or on the command line">Run in Docker for speed, or download</a>&nbsp;
+    <a class="button2" href="http://dl.umple.org" target="dlpage" title="Go to the page that gives instructions on how to download Umple for use in Docker, or Eclipse or on the command line">Download</a>&nbsp;
+    <a class="button2" href="https://alumni.uottawa.ca/donation-form?fid=bp71rD2pbt0%3d&fdesc=vj8yiR3kw2%2bPwQCmy1Z8CfKc0F1zufF0wBCY%2fxboCy4%2bHJZne7BoLhQuKHwuRN4R5bhBEciI1Gn5RbPGt1TgEQ%3d%3d" target="donatepage" title="Go to a University of Ottawa page that will enable you to donate to support Umple; even a few dollars will be much appreciated">Donate</a>&nbsp;
+    
     </span>&nbsp; &nbsp;
           For help:
     <?php if(strpos($_SERVER['REQUEST_URI'], 'umple.php') !== false && strpos($_SERVER['REQUEST_URI'], 'umpleonline/umple.php') === false ) {$manpage="/manual/GettingStarted.html";} else {$manpage="http://manual.umple.org";} ?>                
@@ -180,7 +197,6 @@ $output = $dataHandle->readData('model.ump');
        target="questionpage" title="Open a separate tab on the StackOverflow page where you can ask Umple community members questions">Ask questions</a>&nbsp;
     <a class="button2" style="line-height: 1" href="https://github.com/umple/umple/issues/new" target="issuepage" title="Open a separate tab on the page where you can report an Umple bug or request an improvement">Report issue</a>&nbsp;
     </span>
-
         </p>
       </div>
     </div>
@@ -193,7 +209,7 @@ $output = $dataHandle->readData('model.ump');
       <?php echo $output ?>
     </pre>
   </noscript> 
-          
+      
   <input id="filename" type="hidden" value="<?php echo '../ump/'.$dataHandle->getName().'/model.ump' ?>" />
   <input id="advancedMode" type="hidden" value="0" />
   <input id="model" type="hidden" value="<?php echo $dataHandle->getName()?>" />
@@ -202,27 +218,27 @@ $output = $dataHandle->readData('model.ump');
     <span id="linetext">Line=<input size=2 id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
   
     <span style="font-size: 30%">
-    <a class="button2" href="javascript:Page.clickShowEditableClassDiagram()"
+    <a id="ECD_button" class="button2 active" href="javascript:Page.clickShowEditableClassDiagram()"
       title="Editable class diagram - ctrl-E">E</a>&nbsp;
-    <a class="button2" href="javascript:Page.clickShowGvClassDiagram()"
+    <a id="GCD_button" class="button2" href="javascript:Page.clickShowGvClassDiagram()"
       title="Graphviz class diagram - ctrl-G">G</a>&nbsp;
-    <a class="button2" href="javascript:Page.clickShowGvStateDiagram()"
+    <a id="SD_button" class="button2" href="javascript:Page.clickShowGvStateDiagram()"
       title="State diagram - ctrl-S">S</a>&nbsp;
     </span>
  
     &nbsp; 
     <span style="font-size: 30%">
-    <a class="button2" href="javascript:Page.clickShowHideText()"
+    <a id="SHT_button" class="button2 active" href="javascript:Page.clickShowHideText()"
       title="Show/hide text pane on left - ctrl-T">T</a>&nbsp;
-    <a class="button2" href="javascript:Page.clickShowHideCanvas()"
+    <a id="SHD_button" class="button2 active" href="javascript:Page.clickShowHideCanvas()"
       title="Show/hide diagram pane on right - ctrl-D">D</a>&nbsp;
     </span>
     
     &nbsp; 
     <span style="font-size: 30%">
-    <a class="button2" href="javascript:Page.clickToggleAttributes()"
+    <a id="SHA_button" class="button2 active" href="javascript:Page.clickToggleAttributes()"
       title="Show/hide attributes in class diagrams - shift-ctrl-A">A</a>&nbsp;
-    <a class="button2" href="javascript:Page.clickToggleMethods()"
+    <a id="SHM_button" class="button2" href="javascript:Page.clickToggleMethods()"
       title="Show/hide methods in class diagrams - ctrl-M">M</a>&nbsp;
     </span>
 
@@ -237,13 +253,13 @@ $output = $dataHandle->readData('model.ump');
     <?php if (isBookmark($dataHandle)) { ?>
       <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
     <?php } else { ?>
-      <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that will allow you to come back and edit again. The URL will persist for a year after its last edit.">Create Bookmarkable URL</a>
+      <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
     <?php } ?>
 
     </span>
 
     <span style="font-size: 30%; white-space:nowrap;">  
-    <a class="button2" href="javascript:Page.toggleTabs()" title="Toggle tab visibility">Toggle Tabs</a>
+    <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>
     </span>
     
     <span id="restorecode" >&nbsp; &nbsp; <a href="#"> Restore Saved State</a></span>
@@ -274,7 +290,7 @@ $output = $dataHandle->readData('model.ump');
         <h3><a href="#">SAVE & LOAD</a></h3>
         
         <div class="section">
-          <ul class="first">
+          <ul class="first" id="saveLoad">
             <li class="subtitle">SAVE</li>
             <?php if (isBookmark($dataHandle)) { ?>
             <li id="ttSaveBookmark">
@@ -301,16 +317,16 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/copy.png"/> 
               Store in Browser
             </li>
-            <li id="buttonDownloadFiles" class="downloadFiles">
-              <img src="scripts/copy.png"/> 
-               Download Files
-            </li>
-            <li class="dropbox-add-saver"></li>
             
             <li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
               <img src="scripts/copy.png"/> 
               Load from Browser
             </li>
+            
+            <li id="buttonDownloadFiles" class="downloadFiles">
+              <img src="scripts/copy.png"/> 
+               Download Files
+            </li>            
             
           </ul>
         
@@ -333,6 +349,7 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExampleType" id = "cdModels" value="cdModels">Class Diagrams</option>
                 <option name = "optionExampleType" id = "smModels" value="smModels">State Machines</option>
                 <option name = "optionExampleType" id = "structureModels" value="structureModels">Composite Structure</option>
+                <option name = "optionExampleType" id = "featureModels" value="featureModels">Feature Diagram</option>
               </select>
             </li>
             <li id="itemLoadExamples">
@@ -426,6 +443,7 @@ $output = $dataHandle->readData('model.ump');
                 <option name="optionExample" class="openUmprOption" value="">Select from Umpr Repository...</option>
               </select>
             </li>
+
             <li id="itemLoadExamples3">
               <select id="inputExample3" name="inputExample3" class="button" size="1" data-diagram-type="composite">
                 <option name = "optionExample3" id = "defaultExampleOption3" value="">Select Example</option>
@@ -434,28 +452,43 @@ $output = $dataHandle->readData('model.ump');
                 <option name="optionExample" class="openUmprOption" value="">Select from Umpr Repository...</option>
               </select>
             </li>
+		  
+  	    <li id="itemLoadExamples4">
+              <select id="inputExample4" name="inputExample4" class="button" size="1" data-diagram-type="feature">
+                <option name = "optionExample4" id = "defaultExampleOption4" value="">Select Example</option>
+                <option name = "optionExample" value="BerkeleyDB_SPL.ump"> BerkeleyDB SPL </option>
+                <option name = "optionExample" value="HelloWorld_SPL.ump"> HelloWorld SPL </option>
+                <option name = "optionExample" value="BerkeleyDB_SP_featureDepend.ump"> Feature Dependencies of BerkeleyDB SPL </option>
+
+              </select>
+            </li>
+          
             <!-- <li class="dropbox-add-chooser"></li> --> 
           </ul>
       
           <ul id="mainDrawMenu" class="second toggle">
             <li class="subtitle"> Draw </li>
-            <li id="buttonAddClass" class="toggleToolItem" name="paletteItem" title="Select and click on the canvas to add a new class.">
+            <li id="buttonAddClass" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the canvas to add a new class.">
               <img src="scripts/class.png"/> 
               Class
             </li>
-            <li id="buttonAddAssociation" class="toggleToolItem" name="paletteItem" title="Select and click on a class to draw an association.">
+            <li id="buttonAddAssociation" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on a class to draw an association.">
               <img src="scripts/assoc.png"/> 
               Association
             </li>
+            <li id="buttonAddTransition" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select and click on a state to draw a transition.">
+               <img src="scripts/assoc.png"/>
+               Transition
+             </li>            
             <!-- <li id="buttonBendAssociation" class="toggleToolItem" name="paletteItem">
               <img src="scripts/assocbend.jpg"/> 
               Bend Assoc.
             </li> -->
-            <li id="buttonAddGeneralization" class="toggleToolItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class.">
+            <li id="buttonAddGeneralization" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class.">
               <img src="scripts/generalization.png"/> 
               Generalization
             </li>
-            <li id="buttonDeleteEntity" class="toggleToolItem" name="paletteItem" title="Select and click on an element to remove it from your model.">
+            <li id="buttonDeleteEntity" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on an element to remove it from your model.">
               <img src="scripts/delete.png"/>
                Delete
              </li>
@@ -480,47 +513,10 @@ $output = $dataHandle->readData('model.ump');
       
       <div class="section">
         <div id="buttonViewComplete" title="View Complete">Selected view has opened in a new window.</div>
+         <!-- DIAGRAM TYPE OPTIONS -->
           <ul class="first toggle">
-            <li class="subtitle"> Show View </li>
-            <li id="ttShowHideCanvas"> 
-              <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> 
-              <a id="labelShowHideCanvas" class="buttonExtend">Diagram (Canvas)</a>
-            </li>
-            <li id="ttShowHideTextEditor"> 
-              <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> 
-              <a id="labelShowHideTextEditor" class="buttonExtend">Text Editor</a>
-            </li>
-            <li id="ttShowHideLayoutEditor" class="layoutListItem"> 
-              <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> 
-              <a id="labelShowHideLayoutEditor" class="buttonExtend">Layout Editor</a> 
-            </li>          
-            <li id="ttToggleAttributes" class="layoutListItem"> 
-              <input id="buttonToggleAttributes" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleAttributes" class="buttonExtend">Attributes</a>
-            </li>
-            <li id="ttToggleMethods" class="layoutListItem"> 
-              <input id="buttonToggleMethods" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleMethods" class="buttonExtend">Methods</a>
-            </li>
-            <li id="ttToggleActions" class="layoutListItem"> 
-              <input id="buttonToggleActions" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleActions" class="buttonExtend">Actions</a> 
-            </li>
-            <li id="ttToggleTraits" class="layoutListItem"> 
-              <input id="buttonToggleTraits" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleTraits" class="buttonExtend">Traits</a> 
-            </li>
-            <li id="ttToggleTransitionLabels" class="layoutListItem"> 
-              <input id="buttonToggleTransitionLabels" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleTransitionLabels" class="buttonExtend">Transition Labels</a> 
-            </li>
-            <li id="ttToggleGuardLabels" class="layoutListItem"> 
-              <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
-            </li>
-          </ul>
-          <ul class="second">
-            <li id="diagramTypeTitle" class="subtitle"> Diagram Type </li>
+            <li class="subtitle">  Diagram Type </li>
+              
             <li id="ttShowEditableClassDiagram"> 
               <input id="buttonShowEditableClassDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> 
               <a id="labelShowEditableClassDiagram" class="buttonExtend">Editable Class</a> 
@@ -537,14 +533,69 @@ $output = $dataHandle->readData('model.ump');
               <input id="buttonShowGvStateDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/> 
               <a id="labelShowGvStateDiagram" class="buttonExtend">GraphViz State</a> 
             </li>
+	    <li id="ttShowGvFeatureDiagram"> 
+              <input id="buttonShowGvFeatureDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVFeatureDiagram"/> 
+              <a id="labelShowGvFeatureDiagram" class="buttonExtend">GraphViz Feature</a> 
+            </li>
             <li id="ttShowStructureDiagram"> 
               <input id="buttonShowStructureDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeStructureDiagram"/> 
               <a id="labelShowStructureDiagram" class="buttonExtend">Composite Structure</a> 
             </li>
           </ul>
+          <!-- SHOW VIEW OPTIONS -->
+          <ul class="second">
+          <li id="ShowViewTitle" class="subtitle"> Show View </li>
+          <li id="ttShowHideCanvas"> 
+              <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> 
+              <a id="labelShowHideCanvas" class="buttonExtend">Diagram (Canvas)</a>
+            </li>
+            <li id="ttShowHideTextEditor"> 
+              <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> 
+              <a id="labelShowHideTextEditor" class="buttonExtend">Text Editor</a>
+            </li>
+            <li id="ttShowHideLayoutEditor" class="layoutListItem view_opt_class"> 
+              <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> 
+              <a id="labelShowHideLayoutEditor" class="buttonExtend">Layout Editor</a> 
+            </li>          
+            <li id="ttToggleAttributes" class="layoutListItem view_opt_class"> 
+              <input id="buttonToggleAttributes" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleAttributes" class="buttonExtend">Attributes</a>
+            </li>
+            <li id="ttToggleMethods" class="layoutListItem view_opt_class"> 
+              <input id="buttonToggleMethods" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleMethods" class="buttonExtend">Methods</a>
+            </li>
+            <li id="ttToggleActions" class="layoutListItem view_opt_state"> 
+              <input id="buttonToggleActions" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleActions" class="buttonExtend">Actions</a> 
+            </li>
+            <li id="ttToggleTraits" class="layoutListItem view_opt_class"> 
+              <input id="buttonToggleTraits" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleTraits" class="buttonExtend">Traits</a> 
+            </li>
+            <li id="ttToggleTransitionLabels" class="layoutListItem view_opt_state"> 
+              <input id="buttonToggleTransitionLabels" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleTransitionLabels" class="buttonExtend">Transition Labels</a> 
+            </li>
+            <li id="ttToggleGuards" class="layoutListItem view_opt_state"> 
+              <input id="buttonToggleGuards" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleGuards" class="buttonExtend">Guards</a> 
+            </li>            
+            <li id="ttToggleGuardLabels" class="layoutListItem view_opt_state"> 
+              <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
+            </li>
+            <li id="ttToggleFeatureDependencyLabels" class="layoutListItem view_opt_feature"> 
+              <input id="buttonToggleFeatureDependency" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleFeatureDependencyLabels" class="buttonExtend">Feature Dependency</a> 
+            </li>
+
+            
+          </ul>
+          <!-- PREFERENCES OPTIONS -->
           <ul class="second">
             <li id="preferencesTitle" class="subtitle"> Preferences </li>
-            <li id="ttPhotoReady"> 
+            <li id="ttPhotoReady" class="layoutListItem view_opt_class"> 
               <input id="buttonPhotoReady" class="checkbox" type="checkbox" name="photoReady" value="photoReady"/> 
               <a id="labelPhotoReady" class="buttonExtend">Photo Ready</a> 
             </li>
@@ -568,6 +619,7 @@ $output = $dataHandle->readData('model.ump');
 			<a id="labelTabsCheckbox" class="buttonExtend">Show Files in Separate Tabs</a>
 		</li>
     <div id="messageArea"></div>
+    <div id ="downloadArea"></div>
     <div id="tabRow"></div>
     <div id="innerGeneratedCodeRow"></div>
   </div>

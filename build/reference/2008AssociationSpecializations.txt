@@ -8,7 +8,7 @@ noreferences
 <ul>
 <li> the role names are identical;
 <li> the associated types form a hierarchical structure (i.e. the specialized types are subclasses);
-<li> and the multiplicites are more specific than that of the previously defined association.
+<li> and the multiplicities are more specific than that of the previously defined association.
 </ul>
 </p> 
 

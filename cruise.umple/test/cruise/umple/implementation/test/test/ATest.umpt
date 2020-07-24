@@ -1,0 +1,85 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  attribute ----/////
+
+test A {
+
+ generate JUnit ;
+ 
+ depend  A,B ; 
+
+
+
+ 
+ GIVEN:
+ attribute.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :id
+
+      test attribute_id {
+    
+      
+        A aA("RandomString1",123,"unidentified","unidentified");
+    assertTrue( aA.setId("RandomString1"));
+    assertTrue( aA.getId() =="RandomString1");
+    assertTrue( aA.setId("RandomString2"));
+    assertTrue( aA.getId()=="RandomString2");
+    assertFalse( aA.getId() =="RandomString1");
+             
+	}
+
+ //tests for :number
+
+      test attribute_number {
+    
+      
+        A aA("RandomString1",123,"unidentified","unidentified");        
+            
+      assertTrue( aA.setNumber(123)));
+      assertTrue( aA.getNumber() == 123));
+      assertTrue( aA.setNumber(321)));
+      assertTrue( aA.getNumber() == 321));
+      assertFlase( aA.getNumber() == 123));
+          
+	}
+
+ //tests for :number2
+
+      test attribute_number2 {
+    
+      
+        A aA("RandomString1",123,"unidentified","unidentified");    
+      assertTrue( aA.setNumber2(null)));
+      assertTrue( aA.getNumber2() == null));
+      assertTrue( aA.setNumber2(null)));
+      assertTrue( aA.getNumber2() == null));
+      assertFlase( aA.getNumber2() == null));
+          
+	}
+
+ //tests for :number3
+
+      test attribute_number3 {
+    
+      
+        A aA("RandomString1",123,"unidentified","unidentified");    
+      assertTrue( aA.setNumber3(123456789)));
+      assertTrue( aA.getNumber3() == 123456789));
+      assertTrue( aA.setNumber3(987654321)));
+      assertTrue( aA.getNumber3() == 987654321));
+      assertFlase( aA.getNumber3() == 123456789));
+          
+	}
+
+
+  
+ 
+   
+
+}

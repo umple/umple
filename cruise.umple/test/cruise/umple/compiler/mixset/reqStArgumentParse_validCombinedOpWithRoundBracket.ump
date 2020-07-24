@@ -1,0 +1,16 @@
+
+require [ ((A or B) and C ) and (D xor F) ];
+
+
+
+mixset A {} mixset B {} mixset C{}
+mixset D {}
+
+/*
+ use-statements result in a valid configuration of feature model. 
+*/
+
+use A; 
+use C;
+use D; 
+

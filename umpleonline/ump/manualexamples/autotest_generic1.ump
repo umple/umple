@@ -1,0 +1,21 @@
+
+class Student {  
+    
+    String studentId;
+    nameMemebershipId;
+    address;
+    studentAge;    
+    
+    
+  generic test checkifLogged(String attribute.regex(\w*Age)){
+        Student st1 ( "S1425", "John", "Ottawa",20) ;        
+        String valueToCheck = st1.get<<attribute>>();  
+        
+        assertTrue(valueToCheck > 18);
+        
+        
+        }        
+        
+}  
+ 
+  

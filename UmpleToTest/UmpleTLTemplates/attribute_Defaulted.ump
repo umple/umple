@@ -1,34 +1,25 @@
 class UmpleToTest{
 
 attribute_Defaulted <<!<</*attribute_Defaulted*/>><<#
-
-if(at.getType() == "String" || at.getType() == null)
-	    	  {
-		AssertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>(), initialValue##Fix );
-		AssertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>("someString123"));
-		AssertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() =="someString123")>>");
-		AssertTrue( <<=uClass.getName().toLowerCase()>>.reset<<=attrName>>());
-		AssertFalse( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>(),"randomString123"));
-		AssertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>(),initialValue##Fix);
-	    		   <<#
-	    	  }
-
-	    	  if(at.getType().equals("Double") || at.getType().equals("Integer"))
-	    	  {#>>
-	    AssertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>(<<=gen.translate("AttIntManu")>>)));
-	    AssertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == <<=gen.translate("AttIntManu")>>));
-	    	  <<#}
-
-	    	  if(at.getType().equals("Float"))
-	    	  {#>>
-	    AssertTrue( <<=uClass.getName().toLowerCase()>>.set<<=attrName>>(<<=gen.translate("AttFloatManu")>>)));
-	    AssertTrue( <<=uClass.getName().toLowerCase()>>.get<<=attrName>>() == <<=gen.translate("AttFloatManu")>>));
-	    	  <<#}
-	    	  /*if(at.getType().equals("Boolean"))
-	    	  {
-	    		   appendln(realSb("\tAssertTrue( {0}.(set{1}(true));\n",uClass.getName().toLowerCase() , attrName));
-	    		   appendln(realSb("\tAssertTrue( {0}.get{1}());\n",uClass.getName().toLowerCase() , attrName, gen.translate("AttBooleanManu")));
-	    	  }*/
+	
+	if(at.getType().equals( "Date"))
+	{#>>
+	assertTrue(a<<=uClass.getName()>>.reset<<=attrName>>());
+	Date  resetDate =  Date.valueOf(<<=at.getValue()>>);
+	assertEqual( a<<=uClass.getName()>>.getDefault<<=attrName>>(), resetDate);
+	<<#}
+	
+	else if (at.getType().equals("Time"))
+	{#>>
+	assertTrue(a<<=uClass.getName()>>.reset<<=attrName>>());
+	Time  resetTime =  Time.valueOf(<<=at.getValue()>>);
+	assertEqual( a<<=uClass.getName()>>.getDefault<<=attrName>>(), resetTime);
+	<<#}
+	
+	else {
+	#>>assertTrue(a<<=uClass.getName()>>.reset<<=attrName>>());
+	assertEqual( a<<=uClass.getName()>>.getDefault<<=attrName>>(), <<=at.getValue()>> );<<#
+	}		
 
 #>>!>>
 

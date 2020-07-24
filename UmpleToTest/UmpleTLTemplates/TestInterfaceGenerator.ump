@@ -1,11 +1,11 @@
 use UmpleNotice.ump;
 
 
-namespace cruise.umple.compiler.sql;
+namespace cruise.umple.compiler.test;
 
 external interface ILang{}
 
-class SqlInterfaceGenerator {
+class TestInterfaceGenerator {
     depend cruise.umple.compiler.*;
     depend cruise.umple.util.*;
     depend java.util.*;
@@ -28,15 +28,10 @@ class SqlInterfaceGenerator {
     emit getCode(UmpleModel model, UmpleElement uElement)(sqlInterfaceGenerator);
 
 
-    sqlInterfaceGenerator <<!<</*sqlInterfaceGenerator*/>><<@ UmpleToSql.UmpleNotice >>
+    TestInterfaceGenerator <<!<</*TestInterfaceGenerator*/>><<@ UmpleToSql.UmpleNotice >>
 <<#
-// Interfaces don't really make sense with Sql.
-// A possible solution around this, is to make 
-// every class that uses said interface X, also 
-// generate the attributes/associations for interface X.
-// This file should probably ignored.
-// We should also prevent SqlGenerator from
-// trying to create an interface.
+// Interface tests
+// here
 
 #>>!>>
 }

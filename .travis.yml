@@ -16,11 +16,15 @@ cache:
 addons:
   apt:
     packages:
-    - php5-common
-    - php5-cli
+    - php-common
+    - php-cli
 
 before_install:
   - ./travis/deps.sh # run linux or osx depending on environment
+  - chmod +x gradlew
+
+install:
+  - true # See https://github.com/travis-ci/travis-ci/issues/8667
 
 env:
   global:
@@ -30,41 +34,45 @@ env:
     - ANT_EXAMPLES='ant -f build.exampletests.xml'
 
 script:
-  - php --version ; ruby -v
-  - cd build/
-  - ant bootstrap
+  # Gradle build (TODO: figure out why test needs to be run twice)
+  - if [ "$USE_GRADLE" ]; then ./gradlew fullbuild && ./gradlew testall; fi
+
+  - if [ -z "$USE_GRADLE" ]; then php --version ; ruby -v; fi
+  - if [ -z "$USE_GRADLE" ]; then cd build/; fi
+  - if [ -z "$USE_GRADLE" ]; then ant bootstrap; fi
   # We resolve all of the dependencies before, this way the command will be unlikely to time out
-  - ant deps-resolve-all
+
+  - if [ -z "$USE_GRADLE" ]; then ant deps-resolve-all; fi
 
   # Do a modified version of `first-build` (build using last successful build)
-  - $ANT_FIRST clean init codegen umpleParser rtcpp template.setVersion resetUmpleSelf
-  - $ANT_FIRST compile compileValidator compileUmplificator
-  - $ANT_FIRST package template.resetVersion
+  - if [ -z "$USE_GRADLE" ]; then $ANT_FIRST clean init codegen umpleParser rtcpp template.setVersion resetUmpleSelf; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_FIRST compile; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_FIRST package template.resetVersion; fi
 
   # Do a modified version of `build`to create new jars
-  - $ANT_BUILD clean init codegen umpleParser rtcpp template.setVersion resetUmpleSelf
-  - $ANT_BUILD compile compileValidator compileUmplificator
-  - $ANT_BUILD package 
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD clean init codegen umpleParser rtcpp template.setVersion resetUmpleSelf; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD compile; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD package; fi
   
   # Repeat creation of the compiler in case last build made a bad compiler
-  - $ANT_BUILD codegen umpleParser rtcpp template.setVersion resetUmpleSelf
-  - $ANT_BUILD compile
-  - $ANT_BUILD package
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD codegen umpleParser rtcpp template.setVersion resetUmpleSelf; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD compile; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD package; fi
   
   # Run the unit tests
-  - $ANT_BUILD template.test template.resetVersion
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD template.test template.resetVersion; fi
 
   # Build and run the testbed (tests that test generated code)
-  - $ANT_TESTBED clean template.clean init
-  - $ANT_TESTBED compile 
-  - $ANT_TESTBED test 
+  - if [ -z "$USE_GRADLE" ]; then $ANT_TESTBED clean template.clean init; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_TESTBED compile; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_TESTBED test; fi
   
   # Compile all known Umple examples and verify they compile in Java
-  - $ANT_EXAMPLES allUserManualAndExampleTests   
-  - $ANT_TESTBED template.resetVersion 
+  - if [ -z "$USE_GRADLE" ]; then $ANT_EXAMPLES allUserManualAndExampleTests; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_TESTBED template.resetVersion; fi
   
   # Build the user manual and copy it to a subfolder of UmpleOnline
-  - $ANT_BUILD packageDocs travisCopyManual
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD packageDocs travisCopyManual; fi
  
   # Set up UmpleOnline to be packaged into its Docker image, then build the image.
   - if [ "$HAVE_DOCKER" ]; then
@@ -105,10 +113,25 @@ after_success:
 matrix:
   include:
     - os: linux
-      jdk: oraclejdk8
+      jdk: openjdk12
+      addons:
+        apt:
+          packages:
+            - ant
+            - ant-optional
       # only Linux supports Docker right now
       env:
         - HAVE_DOCKER=1
       services:
         - docker
     - os: osx
+
+    # test gradle builds - commented out for now
+#    - os: linux
+#      jdk: openjdk12
+#      env:
+#        - USE_GRADLE=1
+#        # TODO: test Docker
+#    - os: osx
+#      env:
+#        - USE_GRADLE=1

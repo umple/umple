@@ -13,7 +13,7 @@ class UnidirectionalOneTest extends UnitTestCase
   
   public function test_ConstructorCannotSetNull()
   {
-  	$this->expectException(new Exception("Unable to create MentorAH due to aStudent"));
+  	$this->expectException(new Exception("Unable to create MentorAH due to aStudent. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     new MentorAH("a",null);
   }   
   

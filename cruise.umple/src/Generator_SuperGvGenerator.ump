@@ -129,6 +129,7 @@ digraph "<<=filename>>" {
       } else {
         text = uComment.getText().replace("\"","'");
       }
+      text = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"); // Issue1584 and 1587 "Certain kinds of comments (<,>,&) result in failure to generate graphviz"
       if(text.startsWith(" *")) {
         tooltip.append(text.substring(2)+"&#13;");
       }

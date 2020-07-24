@@ -1,0 +1,109 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+// line 2 "model.ump"
+// line 36 "model.ump"
+public class First implements I
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //First Associations
+  private Second second;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public First(Second aSecond)
+  {
+    boolean didAddSecond = setSecond(aSecond);
+    if (!didAddSecond)
+    {
+      throw new RuntimeException("Unable to create first due to second. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetOne */
+  public Second getSecond()
+  {
+    return second;
+  }
+  /* Code from template association_SetOneToMany */
+  public boolean setSecond(Second aSecond)
+  {
+    boolean wasSet = false;
+    if (aSecond == null)
+    {
+      return wasSet;
+    }
+
+    Second existingSecond = second;
+    second = aSecond;
+    if (existingSecond != null && !existingSecond.equals(aSecond))
+    {
+      existingSecond.removeFirst(this);
+    }
+    second.addFirst(this);
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    Second placeholderSecond = second;
+    this.second = null;
+    if(placeholderSecond != null)
+    {
+      placeholderSecond.removeFirst(this);
+    }
+  }
+
+  @Override
+  public boolean addSecond(Second aSecond){
+          return false;
+  }
+
+  @Override
+  public List<Second> getSeconds(){
+          return null;
+  }
+
+  @Override
+  public boolean setSeconds(Second... newSeconds){
+          return false;
+  }
+
+  @Override
+  public int numberOfSeconds(){
+          return 0;
+  }
+
+  @Override
+  public boolean hasSeconds(){
+          return false;
+  }
+
+  @Override
+  public int indexOfSecond(Second second){
+          return 0;
+  }
+
+  @Override
+  public boolean isNumberOfSecondsValid(){
+          return false;
+  }
+
+  @Override
+  public boolean removeSecond(Second second){
+          return false;
+  }
+
+}

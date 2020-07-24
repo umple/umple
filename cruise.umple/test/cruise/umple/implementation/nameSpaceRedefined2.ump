@@ -1,0 +1,5 @@
+interface I{}
+interface J{isA I;}
+class X{isA J;}
+namespace m;
+class Y{*--*X;}

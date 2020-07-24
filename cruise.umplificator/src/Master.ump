@@ -11,6 +11,7 @@ The following instructs the system to inject comments on every class point to th
 @outputumplesource
 */
 strictness allow 30;
+strictness allow 31;
 strictness allow 1006;
 strictness allow 1007;
 strictness allow 1008;

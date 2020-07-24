@@ -109,12 +109,12 @@
 
     <deps-load-path conf="core"           pathid="core.ivy.classpath" />
     <deps-load-path conf="test"           pathid="test.ivy.classpath" />
-
+    <!-- No longer doing these for now at least
     <deps-load-path conf="umplificator"   pathid="umplificator.ivy.classpath" />
     <deps-load-path conf="validator"      pathid="validator.ivy.classpath" />
     <deps-load-path conf="eclipseplugin"  pathid="eclipseplugin.ivy.classpath" />
     <deps-load-path conf="xtext"          pathid="xtext.ivy.classpath" />
-
+    -->
     <antcall target="deps-umple" />
     <antcall target="deps-manual" />
     <antcall target="deps-vendor" />
@@ -147,8 +147,10 @@
     <mkdir dir="${user.home.ant}"/>
 
     <echo>Installing Ivy v${ivy.install.version}</echo>
-    <get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+    <get src="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
          dest="${ivy.jar.file}" usetimestamp="true" />
+    <!-- COMMENTED OUT AS WAS GETTING 503 ERROR get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+         dest="${ivy.jar.file}" usetimestamp="true" / -->
 
     <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.jar.file}" />
 
@@ -214,9 +216,8 @@
 
         <echo>Fetching org.eclipse.cdt.core_5.5.0.jar</echo>
 
-        <echo level="warning">WARNING: This is merely wget-itng http://ftp.acc.umu.se/mirror/eclipse.org/tools/cdt/releases/kepler/sr1/plugins/org.eclipse.cdt.core_5.5.0.201309180223.jar</echo>
-        <mkdir dir="${umple.deps.manual.dir}" />
-        <get src="http://ftp.acc.umu.se/mirror/eclipse.org/tools/cdt/releases/kepler/sr1/plugins/org.eclipse.cdt.core_5.5.0.201309180223.jar"
+        <echo level="warning">WARNING: This is merely wget-itng https://cruise.site.uottawa.ca/preserved-deps/org.eclipse.cdt.core_5.5.0.201309180223.jar</echo>
+        <get src="https://cruise.site.uottawa.ca/preserved-deps/org.eclipse.cdt.core_5.5.0.201309180223.jar"
              dest="${umple.deps.manual.dir}/"
              usetimestamp="true" />
       </else>

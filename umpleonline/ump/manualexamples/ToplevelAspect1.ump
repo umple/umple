@@ -1,0 +1,30 @@
+after {*} set* { doSomething(); }
+
+class Student1
+{
+  name;
+}
+
+class Student2
+{
+  name;
+}
+
+class Employer
+{
+  age;
+  String testFunction() {
+    return "This is a test function";
+  }
+}
+
+class Student1 {isA X;}
+class Student2 {isA X;}
+class Employer {isA X;}
+trait X {
+  doSomething() {
+    System.out.println("Doing something\n");
+  }
+}//$?[End_of_model]$?
+
+// @@@skipphpcompile - contains java code

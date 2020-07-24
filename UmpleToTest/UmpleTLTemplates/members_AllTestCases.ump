@@ -4,23 +4,137 @@ members_AllTestCases <<!<</*members_AllTestCases*/>><<#
 
 	if ( uClass.hasUmpleTestCases())
 		{
+		boolean hasBeforeAssertions=false;
+		boolean hasAfterAssertions=false;
+		String concreteLang="";
 		
-		for (UmpleTestCase uTestCase :uClass.getUmpleTestCases())
-		{#>>
+		
+		
+		
+		
+		
+		appendln(realSb, "     //------------------");
+	    appendln(realSb, "      //User-defined Tests");
+	    appendln(realSb, "      //------------------");
+		for (UmpleTestCase uTestCase :uClass.getUmpleTestCases())			
+		{
+		
+		if (uTestCase.getName().equals("init"))
+		{
+		 // ignore the
+		
+		}
+		
+		else {
+		
+		if(uTestCase.getIsConcrete())
+		{ concreteLang = uTestCase.getConcreteLang()+" ";   }
+		#>>
 			
-			test <<=uTestCase.getName()>> {
-			<<#
-			
-			for (UmpleAssertion uAssertion : uTestCase.getUmpleAssertions())
+			<<=concreteLang>>test <<=uTestCase.getName()>> {
+			  <<#
+			  
+			for (UmpleAssertion uAssert : uTestCase.getUmpleAssertions())
 			{
-				#>>AssertTrue ( <<=uAssertion.getAssertCode()>> ) ;
-				<<#
+			 if (uAssert.getType().contains("before")){ hasBeforeAssertions = true; }
+			 if (uAssert.getType().contains("after")){ hasAfterAssertions = true; }
+			}  
+			
+			if(hasBeforeAssertions == true ) {  
+			appendln(realSb, "");
+			appendln(realSb, "");
+			appendln(realSb, "        //----------------");
+			appendln(realSb, "        //before assertions");
+			appendln(realSb, "        //----------------");
+			for (UmpleAssertion uAssert : uTestCase.getUmpleAssertions())
+			{
+			 if (uAssert.getType().contains("before"))
+			 {
+			 #>>        <<=uAssert.getType().replace("before","").replace("after","")>><<=uAssert.getAssertCode()>>;<<#
+			 			 
+			 	
+			 }
+			 hasBeforeAssertions = false; 						
+			}
+			
+
+			appendln(realSb, "\n        //End of before assertions");
+			
+			appendln(realSb, "");
+			append(realSb, "        ");			 
 			
 			}
-						
+			  
+			  
+			for (int x=0; x<uTestCase.getLocOrder();x++)
+			{
+			for (UmpleAssertion uAssert : uTestCase.getUmpleAssertions())
+			{
+			if(uAssert.getLocOrder()==x)
+			{
+					if (uAssert.getType().equals("assertTrue"))
+				{
+				#>>assertTrue<<=uAssert.getAssertCode()>>;
+				<<#				
+				}
+				if (uAssert.getType().equals("assertFalse"))
+				{
+				#>>assertFalse<<=uAssert.getAssertCode()>>;
+				<<#				
+				}
+				if (uAssert.getType().equals("assertEqual"))
+				{
+				#>>assertEqual<<=uAssert.getAssertCode()>>;
+				<<#				
+				}
+			 }
+			}
+			
+			for (TestAction ta : uTestCase.getTestActions())
+			{
+			 if (ta.getLocOrder()==x)
+			 {
+				#>><<=ta.getActionCode()>>
+				<<#
+				}	
+			}
+			}
+			
+			
+			if(hasAfterAssertions == true ) {  
+			appendln(realSb, "");
+			appendln(realSb, "");
+			appendln(realSb, "        //----------------");
+			appendln(realSb, "        //after assertions");
+			appendln(realSb, "        //----------------");
+			for (UmpleAssertion uAssert : uTestCase.getUmpleAssertions())
+			{
+			 if (uAssert.getType().contains("after"))
+			 {
+			 #>>        <<=uAssert.getType().replace("before","").replace("after","")>><<=uAssert.getAssertCode()>>;<<#
+			 			 
+			 	
+			 }
+			 hasAfterAssertions = false; 						
+			}
+			
+
+			appendln(realSb, "\n        //End of after assertions");
+			
+			appendln(realSb, "");
+			append(realSb, "        ");			 
+			
+			}
+			
+			}			
 			#>>}
+			
+			
+			
+			
 				
 		<<#}
 	}
+	
 #>>!>>
 }

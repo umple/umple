@@ -1,0 +1,42 @@
+// This demonstrates code that will throw the
+// multiplicity exception
+class Program {
+  title;
+  1 -- * Student;
+}
+
+class Student {
+  name;
+   
+  public static void main(String[] argv) {
+    
+    Student s1 = null;
+    Program p1 = null;
+
+    // This will throw an exception since there must
+    // be at least one program
+    try {
+      s1 = new Student("Abel", null);
+    }
+    catch (RuntimeException re) {
+      System.out.println("Exception Caught: "+re+"\n");    
+    }
+    
+    // After we create a program we can repeat the
+    // attempt.
+    p1 = new Program("Computer Science");
+    s1 = new Student("Abel", p1);
+    
+    // Attempting to change the program back to null
+    // will not throw an exception but will result
+    // in null being thrown
+    if(!s1.setProgram(null)) {
+      System.out.println("Could not set program "+
+       "to null as would violate multiplicity \n");
+    }
+  }
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Has Java code
+// @@@skipphpcompile - Has Java code
+// @@@skiprubycompile - Has Java code

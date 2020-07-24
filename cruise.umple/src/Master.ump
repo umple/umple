@@ -20,6 +20,7 @@ strictness allow 1008;
 strictness allow 46; // For now don't worry about special attribute types
 strictness allow 36; // don't worry about multiplicity of directed associations
 strictness allow 170; // allow custom constructors
+strictness allow 31; // dont worry about namespaces
 
 use Documenter.ump;
 use Generator.ump;

@@ -25,7 +25,7 @@ class MySubordinate
     $didAddMyDriver = $this->setMyDriver($aMyDriver);
     if (!$didAddMyDriver)
     {
-      throw new Exception("Unable to create mySubordinate due to myDriver");
+      throw new Exception("Unable to create mySubordinate due to myDriver. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

@@ -1,0 +1,61 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  MixsetTest_SameTestMultipleMixsets ----/////
+
+test Person {
+
+ generate JUnit ;
+ 
+ depend  Person ; 
+
+
+
+ 
+ GIVEN:
+ MixsetTest_SameTestMultipleMixsets.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :x
+
+      test attribute_x {
+    
+      
+        Person aPerson("RandomString1");
+        
+        
+    assertTrue( aPerson.setX("RandomString1"));
+    assertTrue( aPerson.getX() =="RandomString1");
+    assertTrue( aPerson.setX("RandomString2"));
+    assertTrue( aPerson.getX()=="RandomString2");
+    assertFalse( aPerson.getX() =="RandomString1");
+             
+          
+        	}
+
+
+      //------------------
+      //User-defined Tests
+      //------------------
+
+      
+      test checkName {
+        assertFalse(firstName == "Orlean");
+        assertTrue(firstName == "KingEdward");
+        assertFalse(firstName == "Orlean");
+        assertTrue(firstName == "KingEdward");
+        }
+      
+      
+      
+      
+        
+     
+ 
+   
+
+}

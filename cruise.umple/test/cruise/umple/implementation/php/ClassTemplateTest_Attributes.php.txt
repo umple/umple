@@ -71,7 +71,7 @@ class Mentor
     $this->x = self::$nextX++;
     if (!$this->setId($aId))
     {
-      throw new RuntimeException("Cannot create due to duplicate id");
+      throw new RuntimeException("Cannot create due to duplicate id. See http://manual.umple.org?RE003ViolationofUniqueness.html");
     }
   }
 
@@ -142,6 +142,9 @@ class Mentor
     $wasSet = false;
     if (isset($this->id)) {
       $anOldId = $this->getId();
+    }
+    if (isset($anOldId) && $anOldId === $aId) {
+      return true;
     }
     if (Mentor::hasWithId($aId)) {
       return $wasSet;

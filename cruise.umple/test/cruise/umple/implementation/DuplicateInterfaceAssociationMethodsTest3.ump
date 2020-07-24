@@ -1,0 +1,34 @@
+class First{
+  isA I;
+        *--1..5 Second; 
+}
+class Second{
+}
+
+interface I{
+  depend java.util.*;
+
+  boolean addSecond(Second aSecond);
+  List<Second> getSeconds();
+  boolean setSecond(Second aSecond);
+  boolean setSeconds(Second... newSeconds);
+  int numberOfSeconds();
+  boolean hasSeconds();
+  int indexOfSecond(Second second);
+  boolean isNumberOfSecondsValid();
+  boolean removeSecond(Second second);
+  
+  //the followings methods are static
+  //int minimumNumberOfSeconds();
+  //int maximumNumberOfSeconds();
+  //int requiredNumberOfSeconds();
+  
+  //method does not override or implement a method from a supertype
+  //Second addSecond();
+  //Second getSecond();
+
+  //there is an issue with arguments types recognition for interface methods
+  //Second getSecond(Integer index);
+  //boolean addSecondAt(Second second, Integer index);
+  //boolean addOrMoveSecondAt(Second second, Integer index);
+}

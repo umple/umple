@@ -5,42 +5,55 @@ entity- : [[modelDefinition]]
 
 // Classes are the most common elements in Umple.
 // See user manual page [*ClassDefinition*]
-modelDefinition- : test [modelName] { [[modelContent]] }
+modelDefinition- : [=isAbstract:abstract]? test [modelName] { [[modelContent]] }
 
 // The following items can be found inside the body of classes or association classes
-modelContent- : [[generate]]? [[depend]]* [[givenCont]] [[whenCont]] [[thenCont]] 
+modelContent- : [[generate]]? [[depend]]* [[givenCont]]? [[whenCont]]? [[thenCont]]? 
 
 generate: generate [=codeLang:JUnit|PhpUnit|RubyUnit] ( [=subOptionIndicator:-s|-suboption] " [**subOption] " )* ;
 
 depend: depend [pValue] (, [pValue])* ;
 
  
-givenCont: GIVEN: [[givenUmpleModel]]* 
-whenCont: WHEN: [[initialization]]*
-thenCont: THEN: [[testCase]]*
+givenCont: (GIVEN:)? [[givenUmpleModel]]*
+givenUmpleModel : [~modelName].ump;
+
+ 
+whenCont: (WHEN:)? [[initialization]]*
+thenCont: (THEN:)? [[testCase]]*
 
 
 
-testCase: test [~testCaseName] {( [[initialization]] | [[methodCall]] | [[assertions]] | [[comment]])* }
-givenUmpleModel: [~modelName].ump;
-initialization: [~identifier] [~name] [[parameter]]*;
-construct: OPEN_ROUND_BRACKET ([**value] | "[**value]") (,([**value] | "[**value]"))* CLOSE_ROUND_BRACKET
-parameter: OPEN_ROUND_BRACKET ([pValue] | "[pValue]") (,([pValue] | "[pValue]"))* CLOSE_ROUND_BRACKET
-pValue: [**name]
+//testCase : test [~testCaseName] {( [[initialization]] | [[methodCall]] | [[assertions]] | [[testInitAtt]] | [[comment]] )* }
+testCase : [=abstract:abstract]? [=isConcrete:concrete]? [=isTargeted:JUnit|PhpUnit|RubyUnit]? test [~testCaseName] {( [[initialization]] | [[assertion]] | [[testInitAtt]] | [[comment]] )* }
+initialization : [~identifier] [~name] OPEN_ROUND_BRACKET  [[parameter]]* CLOSE_ROUND_BRACKET  ;
+//testinitAtt 
+testInitAtt : [~identifier] [~attributeName] =  [[pValue]] ;
+//testInitAttWithMethodCall : [~identifier]? [~attributeName] =  [[testMethodCall]] ;
+//testMethodCall : [~objectName] ( (.)[~methodName] )? OPEN_ROUND_BRACKET  [[testActionParameterList]] CLOSE_ROUND_BRACKET
+parameter : ([pValue] | "[pValue]") (,([pValue] | "[pValue]"))*
+pValue- : ( [~name] | "[~name]" ) 
 
-
-assertions: ([[assertionTrue]]|[[assertionFalse]]|[[assertionEqual]])*
-
+//testActionParameterList :  [[testParameter]]?
+//testParameter :  [[pValue]] ( , [[pValue]] )*
 //Assertions Rules:
 
-assertionTrue: assertTrue OPEN_ROUND_BRACKET [[assertCode]] CLOSE_ROUND_BRACKET ;
-assertionFalse: assertFalse OPEN_ROUND_BRACKET [[assertCode]] CLOSE_ROUND_BRACKET ;
-assertionEqual: assertEqual OPEN_ROUND_BRACKET [[assertEqualCode]] CLOSE_ROUND_BRACKET ;
-assertEqualCode:[~objectName1](.)?[[assertEqualMethodCall]]? (,) [~objectName2](.)?[[assertEqualMethodCall]]?
-assertEqualMethodCall: [~methodName]  OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET 
+assertion : [=assertType:assertTrue|assertFalse|assertEqual|assertNull|assertMethod] OPEN_ROUND_BRACKET [[assertCode]] CLOSE_ROUND_BRACKET ;
+//assertCode : [[methodCall]]?
+chainedAction : [[methodCall]]
+assertEqualCode :  [~value1] , [~value2]
+
+
+//assertionTrue : assertTrue OPEN_ROUND_BRACKET [[assertCode]] CLOSE_ROUND_BRACKET ;
+//assertionFalse : assertFalse OPEN_ROUND_BRACKET [[assertCode]] CLOSE_ROUND_BRACKET ;
+//assertionEqual : assertEqual OPEN_ROUND_BRACKET [[assertEqualCode]] CLOSE_ROUND_BRACKET ;
+//assertEqualCode :[~objectName1](.)?[[assertEqualMethodCall]]? (,) [~objectName2](.)?[[assertEqualMethodCall]]?
+//assertEqualMethodCall : [~methodName]  OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET 
 assertCode : [[methodCall]] (== | != )? ( [**compValue] | ( "[**compValue]" )? | [[methodCall]] )?
-methodCall: [~objectName](.)[~methodName]  OPEN_ROUND_BRACKET [[assertParameter]]* CLOSE_ROUND_BRACKET(;)?
-assertParameter:  ([pValue] | "[pValue]") (,([pValue] | "[pValue]"))*
+methodCall : ([~objectName](.))?[~methodName]  OPEN_ROUND_BRACKET [[assertParameter]]* CLOSE_ROUND_BRACKET (;)?
+assertParameter :  ([pValue] | "[pValue]") (,([pValue] | "[pValue]"))*
+
+
 
 // Comments follow the same conventions as C-family languages. [*UmpleComments*]
 comment- : [[inlineComment]] | [[multilineComment]] | [[annotationComment]]

@@ -1,0 +1,199 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+import java.util.*;
+
+// line 2 "model.ump"
+// line 40 "model.ump"
+public class First implements I
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //First Associations
+  private List<Second> seconds;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public First(Second... allSeconds)
+  {
+    seconds = new ArrayList<Second>();
+    boolean didAddSeconds = setSeconds(allSeconds);
+    if (!didAddSeconds)
+    {
+      throw new RuntimeException("Unable to create First, must have 5 seconds. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetMany */
+  public Second getSecond(int index)
+  {
+    Second aSecond = seconds.get(index);
+    return aSecond;
+  }
+
+  public List<Second> getSeconds()
+  {
+    List<Second> newSeconds = Collections.unmodifiableList(seconds);
+    return newSeconds;
+  }
+
+  public int numberOfSeconds()
+  {
+    int number = seconds.size();
+    return number;
+  }
+
+  public boolean hasSeconds()
+  {
+    boolean has = seconds.size() > 0;
+    return has;
+  }
+
+  public int indexOfSecond(Second aSecond)
+  {
+    int index = seconds.indexOf(aSecond);
+    return index;
+  }
+  /* Code from template association_IsNumberOfValidMethod */
+  public boolean isNumberOfSecondsValid()
+  {
+    boolean isValid = numberOfSeconds() >= minimumNumberOfSeconds() && numberOfSeconds() <= maximumNumberOfSeconds();
+    return isValid;
+  }
+  /* Code from template association_RequiredNumberOfMethod */
+  public static int requiredNumberOfSeconds()
+  {
+    return 5;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  public static int minimumNumberOfSeconds()
+  {
+    return 5;
+  }
+  /* Code from template association_MaximumNumberOfMethod */
+  public static int maximumNumberOfSeconds()
+  {
+    return 5;
+  }
+  /* Code from template association_AddManyToManyMethod */
+  public boolean addSecond(Second aSecond)
+  {
+    boolean wasAdded = false;
+    if (seconds.contains(aSecond)) { return false; }
+    if (numberOfSeconds() >= maximumNumberOfSeconds())
+    {
+      return wasAdded;
+    }
+
+    seconds.add(aSecond);
+    if (aSecond.indexOfFirst(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aSecond.addFirst(this);
+      if (!wasAdded)
+      {
+        seconds.remove(aSecond);
+      }
+    }
+    return wasAdded;
+  }
+  /* Code from template association_AddMNToMany */
+  public boolean removeSecond(Second aSecond)
+  {
+    boolean wasRemoved = false;
+    if (!seconds.contains(aSecond))
+    {
+      return wasRemoved;
+    }
+
+    if (numberOfSeconds() <= minimumNumberOfSeconds())
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = seconds.indexOf(aSecond);
+    seconds.remove(oldIndex);
+    if (aSecond.indexOfFirst(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aSecond.removeFirst(this);
+      if (!wasRemoved)
+      {
+        seconds.add(oldIndex,aSecond);
+      }
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_SetMNToMany */
+  public boolean setSeconds(Second... newSeconds)
+  {
+    boolean wasSet = false;
+    ArrayList<Second> verifiedSeconds = new ArrayList<Second>();
+    for (Second aSecond : newSeconds)
+    {
+      if (verifiedSeconds.contains(aSecond))
+      {
+        continue;
+      }
+      verifiedSeconds.add(aSecond);
+    }
+
+    if (verifiedSeconds.size() != newSeconds.length || verifiedSeconds.size() < minimumNumberOfSeconds() || verifiedSeconds.size() > maximumNumberOfSeconds())
+    {
+      return wasSet;
+    }
+
+    ArrayList<Second> oldSeconds = new ArrayList<Second>(seconds);
+    seconds.clear();
+    for (Second aNewSecond : verifiedSeconds)
+    {
+      seconds.add(aNewSecond);
+      if (oldSeconds.contains(aNewSecond))
+      {
+        oldSeconds.remove(aNewSecond);
+      }
+      else
+      {
+        aNewSecond.addFirst(this);
+      }
+    }
+
+    for (Second anOldSecond : oldSeconds)
+    {
+      anOldSecond.removeFirst(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    ArrayList<Second> copyOfSeconds = new ArrayList<Second>(seconds);
+    seconds.clear();
+    for(Second aSecond : copyOfSeconds)
+    {
+      aSecond.removeFirst(this);
+    }
+  }
+
+  @Override
+  public boolean setSecond(Second aSecond){
+          return false;
+  }
+
+}

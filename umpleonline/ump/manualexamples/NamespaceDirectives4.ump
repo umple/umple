@@ -1,0 +1,38 @@
+// Classes A is in the 
+// default namespace. Class B is in
+// namespace m. Both are
+// linked to each other via an association,
+// therefore, and because they are not all
+// in the same namespace, an import text
+// should be generated. However, many programming
+// languages do not support import from
+// the default namespace so the namespace of
+// A will become m because B is in m.
+
+class A{}
+namespace m;
+class B{*--* A;}
+namespace -;
+
+
+// The same issue occurs when an
+// entity in a non-default namespace
+// extends or implements an entity
+// in the default namespace
+
+interface E{}
+interface F{}
+namespace n;
+interface J{isA E;}
+class K{isA F;}
+
+
+// Here an import text will be generated for A in X
+// because A is in a different namespace
+// This feature is not yet supported for interfaces
+// that extend interfaces in other namespaces
+// and the import text will not be generated for K in Y
+
+namespace p;
+class X{isA A;}
+// interface Y{isA E;}

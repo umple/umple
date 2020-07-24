@@ -1,0 +1,132 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  OptionalOneToManyAssociation ----/////
+
+test OptionalOneToManyAssociation {
+
+generate JUnit;
+
+depend  A,B ; 
+
+
+
+
+GIVEN:
+OptionalOneToManyAssociation.ump;
+THEN:
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class A       */
+  /*-------------------------*/
+
+              /////// Association: -- [0,*] B /////// 
+              //create ... without ...
+              test removeB {
+              
+              A aA("RandomString1");
+              
+              
+              B aB("RandomString1");
+              assertTrue(aA.setB(aB));              
+              aB.delete();
+              
+              assertTrue (aA.getB() == null);
+              }
+              
+              
+              
+              
+              
+  /*-------------------------*/
+  /*  Class B       */
+  /*-------------------------*/
+
+              /////// Association: -- [0,1] A /////// 
+              //create ... without ...
+              test CreateBWithoutA {
+              
+              
+              B aB("RandomString1");
+              int size = aB.getAs().size(); 
+              assertTrue ( size == 0);
+              
+              }
+              
+              //replace
+              
+              test ReplaceOptionalBInA { 
+              
+              A aA("RandomString1");
+              A baA("RandomString1");
+              B aB("RandomString1");
+              B baB("RandomString1");
+              
+            
+              assertTrue(aB.addA(aA));
+              assertEqual ( aB.getA(0),aA);
+              
+              assertTrue(aA.setB(baB));
+              assertTrue ( aA.getB() == baB);
+              }
+              
+              
+              
+              test deleteAFromB {
+              // delete A in B
+              
+              
+              
+              A baA("RandomString1");
+              
+              
+              B aB("RandomString1");
+              
+              assertTrue(aB.addA(baA));
+              
+              baA.delete();
+              
+              int size = aB.getAs().size(); 
+              assertTrue ( size == 0);
+              }
+              
+              
+              
+              test AddAToNewB { 
+              
+              
+              A aA("RandomString1");
+              
+              
+              A baA("RandomString1");
+              
+              
+              B aB("RandomString1");
+              
+              
+              B baB("RandomString1");
+              
+                                  
+              
+              aB.addA(aA);
+              baB.addA(aA);
+               
+        
+              assertEqual(baB.getA(0), aA) ;
+                            
+               
+              assertEqual (aB.numberOfAs(), 0);
+              
+              assertEqual (baB.numberOfAs(), 1);
+              }
+              
+              
+               
+ 
+
+ }

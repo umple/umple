@@ -1,0 +1,163 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class First < I
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #First Associations - for documentation purposes
+  #attr_reader :seconds
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize()
+    @initialized = false
+    @deleted = false
+    @seconds = []
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def get_second(index)
+    a_second = @seconds[index]
+    a_second
+  end
+
+  def get_seconds
+    new_seconds = @seconds.dup
+    new_seconds
+  end
+
+  def number_of_seconds
+    number = @seconds.size
+    number
+  end
+
+  def has_seconds
+    has = @seconds.size > 0
+    has
+  end
+
+  def index_of_second(a_second)
+    index = @seconds.index(a_second)
+    index = -1 if index.nil?
+    index
+  end
+
+  def is_number_of_seconds_valid
+    is_valid = number_of_seconds >= First.minimum_number_of_seconds and number_of_seconds <= First.maximum_number_of_seconds
+    is_valid
+  end
+
+  def self.minimum_number_of_seconds
+    1
+  end
+
+  def self.maximum_number_of_seconds
+    4
+  end
+
+  def add_second(a_second)
+    was_added = false
+    return false if index_of_second(a_second) != -1
+    if number_of_seconds >= First.maximum_number_of_seconds
+      return was_added
+    end
+
+    existing_first = a_second.get_first
+    is_new_first = (!existing_first.nil? and !existing_first.eql?(self))
+
+    if is_new_first and existing_first.number_of_seconds <= First.minimum_number_of_seconds
+      return was_added
+    end
+
+    if is_new_first
+      a_second.set_first(self)
+    else
+      @seconds << a_second
+    end
+    was_added = true
+    was_added
+  end
+
+  def remove_second(a_second)
+    was_removed = false
+    # Unable to remove a_second, as it must always have a first
+    if a_second.get_first.eql?(self)
+      return was_removed
+    end
+
+    # first already at minimum (1)
+    if number_of_seconds <= First.minimum_number_of_seconds
+      return was_removed
+    end
+
+    @seconds.delete(a_second)
+    was_removed = true
+    was_removed
+  end
+
+  def add_second_at(a_second, index)
+    was_added = false
+    if add_second(a_second)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_seconds())
+        index = number_of_seconds() - 1
+      end
+      @seconds.delete(a_second)
+      @seconds.insert(index, a_second)
+      was_added = true
+    end
+    was_added
+  end
+
+  def add_or_move_second_at(a_second, index)
+    was_added = false
+    if @seconds.include?(a_second)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_seconds())
+        index = number_of_seconds() - 1
+      end
+      @seconds.delete(a_second)
+      @seconds.insert(index, a_second)
+      was_added = true
+    else
+      was_added = add_second_at(a_second, index)
+    end
+    was_added
+  end
+
+  def delete
+    @deleted = true
+    @seconds.each do |a_second|
+      a_second.delete
+    end
+  end
+
+  def setSecond (aSecond)
+    
+  end
+
+  def setSeconds (newSeconds)
+    
+  end
+
+
+
+end

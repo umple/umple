@@ -1,0 +1,44 @@
+class Student {
+  id;
+  name;
+
+  
+}
+
+
+mixset Job {
+  class Student {
+  job;
+Integer  jobRank = 1;  
+  
+    void promote () {
+     this.setJobRank(this.jobRank + 1);
+    }
+    
+  }
+  
+}
+
+
+mixset JobTest {
+  
+  class Student {
+    test checkPromotion {
+      Student s1 ("ID123", "John", "Director");
+      
+      assertTrue(s1.getJobRank() == 1);
+      
+      s1.promote();
+      
+      assertTrue(s1.getJobRank() == 2);
+      
+    }
+    
+  }
+  
+  
+}
+
+use Job;
+use JobTest;
+

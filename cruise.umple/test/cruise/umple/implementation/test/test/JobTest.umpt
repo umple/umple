@@ -1,0 +1,43 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  TestCaseAction ----/////
+
+test Job {
+
+ generate JUnit ;
+ 
+ depend  Job,Organization,Score,Person ; 
+
+
+
+ 
+ GIVEN:
+ TestCaseAction.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :name
+
+      test attribute_name {
+    
+      Person aPerson(aOrganization);
+
+        Job aJob("RandomString1",aPerson);
+    assertTrue( aJob.setName("RandomString1"));
+    assertTrue( aJob.getName() =="RandomString1");
+    assertTrue( aJob.setName("RandomString2"));
+    assertTrue( aJob.getName()=="RandomString2");
+    assertFalse( aJob.getName() =="RandomString1");
+             
+	}
+
+
+  
+ 
+   
+
+}

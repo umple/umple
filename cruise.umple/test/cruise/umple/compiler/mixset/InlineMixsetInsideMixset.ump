@@ -1,0 +1,66 @@
+//This code is reported as an issue#1467 in Umple github. 
+// It fails when mixset f4 or mixset f5 are used.
+//https://github.com/umple/umple/issues/1467
+
+interface I1 { void m1(); }
+  
+trait SuperT {
+  isA I1;
+  mixset f5 {e;}
+  void m1() {
+    System.out.println("impl of m1");
+ } }
+
+trait T1 {
+  isA SuperT;
+  Integer c;
+  Integer d;
+  mixset f6 {[c > d]}
+  after setC {
+     System.out.println("SetC has happened from T1");
+  }
+  mixset f1 {1 -- 1..* C4;}
+}
+
+trait T2 {
+  after setC {
+    System.out.println("setC has happened from T2");
+} }
+
+trait T3 {
+  void m2() {
+    System.out.println("M2 is executing");
+  }
+  stateMachine1 {
+    state1 { event -> state2; }
+    state2 { }
+} }
+
+trait T4 {
+  isA T3<stateMachine1 as stateMachine2,
+      *.event() as event1>;
+}
+
+class C1 {
+  isA T1, I1;
+  mixset f1 {1 -- * C3;}
+}
+
+mixset f5 class C2 {
+  mixset f4 {1 -- 1..* C3;}
+  isA C1, T2;
+  void m1() {
+    System.out.println("Overriding impl of m1");
+} }  
+
+class C3 {}
+
+mixset f4 class C4 {
+  isA T4;
+  mixset f5 {after custom m2() 
+     {System.out.println("m2 occurred");}   }
+  after event1 {
+    System.out.printlin("event event1 occurred");}
+}
+use f3; use f2; use f1; use f5; use f4;
+

@@ -218,11 +218,13 @@ Layout.showHideCanvas = function(doShow)
 
       Page.enablePaletteItem('buttonAddClass', true);
       Page.enablePaletteItem('buttonAddAssociation', true);
+      Page.enablePaletteItem('buttonAddTransition', true);
       Page.enablePaletteItem('buttonAddGeneralization', true);
       Page.enablePaletteItem('buttonDeleteEntity', true);
     
       Page.initToggleTool('buttonAddClass');
       Page.initToggleTool('buttonAddAssociation');
+	  Page.initToggleTool('buttonAddTransition');
       Page.initToggleTool('buttonAddGeneralization');
       Page.initToggleTool('buttonDeleteEntity');
     }
@@ -239,12 +241,14 @@ Layout.showHideCanvas = function(doShow)
     
     Page.enablePaletteItem('buttonAddClass', false);
     Page.enablePaletteItem('buttonAddAssociation', false);
-    Page.enablePaletteItem('buttonAddGeneralization', false);
+	Page.enablePaletteItem('buttonAddTransition', false);    
+	Page.enablePaletteItem('buttonAddGeneralization', false);
     Page.enablePaletteItem('buttonDeleteEntity', false);
     Page.enablePaletteItem('buttonSyncDiagram', false);
 
     Page.removeToggleTool('buttonAddClass');
     Page.removeToggleTool('buttonAddAssociation');
+	Page.removeToggleTool('buttonAddTransition');
     Page.removeToggleTool('buttonAddGeneralization');
     Page.removeToggleTool('buttonDeleteEntity');
   }
@@ -703,8 +707,9 @@ function LargeScreenManager()
   
   this.calculateHeight = function()
   {
+    var tabHeight = TabControl.isHidden() ? 0 : jQuery("#tabControl").outerHeight();
     var newHeight = (jQuery(window).innerHeight() - jQuery("#header").outerHeight() 
-      - jQuery("#topLine").outerHeight() - parseInt(jQuery("body").css('marginBottom'))
+      - jQuery("#topLine").outerHeight() - tabHeight - parseInt(jQuery("body").css('marginBottom'))
       - parseInt(jQuery("body").css('marginTop')) - Layout.errorMessageSpace) * this.heightFactor;
     
     if(newHeight < this.minCanvasSize.height)
@@ -960,8 +965,9 @@ function SmallScreenManager()
   
   this.calculateHeight = function()
   {
+    var tabHeight = TabControl.isHidden() ? 0 : jQuery("#tabControl").outerHeight();  
     var height = (jQuery(window).innerHeight() - jQuery("#header").outerHeight(true)
-      - 2*jQuery("#topLine").outerHeight(true) - Layout.errorMessageSpace)/2;
+      - 2*jQuery("#topLine").outerHeight(true) - tabHeight - Layout.errorMessageSpace)/2;
 
     return height;
   }

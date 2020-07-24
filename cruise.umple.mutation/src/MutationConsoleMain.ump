@@ -1,0 +1,179 @@
+namespace cruise.umple.mutation;
+
+
+
+
+class MutationConsoleMain{
+depend java.io.File;
+depend java.net.URISyntaxException;
+depend java.nio.file.Paths;
+depend java.util.Arrays;
+
+depend cruise.umple.UmpleConsoleMain;
+depend joptsimple.*;
+			
+	public static void main(String[] args) {
+		
+		
+		
+		OptionParser parser = new OptionParser();
+		OptionSpec<Void> help = parser.acceptsAll(Arrays.asList("h","help"),"show help").forHelp();
+        OptionSpec<String> generate = parser.accepts("generate").withRequiredArg();        
+        OptionSpec<String> mutant = parser.accepts("mutant").withOptionalArg();
+        OptionSpec<String> mutationType = parser.accepts("t").withRequiredArg();
+        OptionSpec<String> mutationOperator = parser.accepts("p").withRequiredArg();
+        OptionSpec<String> lang = parser.accepts("l").withRequiredArg();
+        OptionSpec<String> numberOfMutants = parser.accepts("n").withRequiredArg();
+        
+        //OptionSet options = parser.parse("generate", "-t", "random", "-p", "full");
+        OptionSet options = null;
+        try {
+         options = parser.parse(args);
+        }
+        catch(Exception e) {
+        	if (e.toString().contains("generate"))
+        	{
+        		System.out.println(" Missing Umple model file! example: <umple_file>.ump");
+        		return;
+        	}
+        	
+        	if (e.toString().contains("l"))
+        	{
+        		System.out.println(" Missing language ! example: Java, Php, Ruby ..etc");
+        		return;
+        	}
+        	
+        	if (e.toString().contains("t"))
+        	{
+        		System.out.println(" Missing replacement type ! example: random, OneOptionalToMany, Integer ..etc , runy -h for more help !");
+        		return;
+        	}
+        	
+        	if (e.toString().contains("p"))
+        	{
+        		System.out.println(" Missing mutation operator ! example: full, OneOptionalToMany, Integer ..etc , runy -h for more help !");
+        		return;
+        	}
+        		
+        }
+        
+        try {
+        options.valueOf(generate).equals(null);
+    	
+    		//System.out.println(" Missing Umple model file! example: <umple_file>.ump");    		    	
+        }
+        catch(Exception e) {
+        	System.out.println(" Missing Umple model file! example: <umple_file>.ump");
+        }
+    	
+        try {
+            options.valueOf(lang).equals(null);
+        	
+        		//System.out.println(" Missing Umple model file! example: <umple_file>.ump");    		    	
+            }
+            catch(Exception e) {
+            	System.out.println(" Missing language ! example: Java, Php, Ruby ..etc");
+            	return;
+            }
+    	
+        try {
+            options.valueOf(mutationType).equals(null);
+        	
+        		//System.out.println(" Missing Umple model file! example: <umple_file>.ump");    		    	
+            }
+            catch(Exception e) {
+            	System.out.println(" Missing replacement type ! example: random, OneOptionalToMany, Integer ..etc , runy -h for more help !");
+        		return;
+            }
+    	
+    	
+        try {
+            options.valueOf(mutationOperator).equals(null);
+        	
+        		//System.out.println(" Missing Umple model file! example: <umple_file>.ump");    		    	
+            }
+            catch(Exception e) {
+            	System.out.println(" Missing mutation operator ! example: full, OneOptionalToMany, Integer ..etc , runy -h for more help !");
+        		return;
+            }
+               
+        //OptionSet options = parser.parse("-a", "apple", "-a", "berries", "-a", "mango");
+        /*System.out.println("model name: ");
+        System.out.println(options.valuesOf(generate));
+        System.out.println(options.has(generate));
+        System.out.println("Opetions: ");
+        System.out.println(options.valueOf(mutationType));
+        System.out.println(options.has(mutationType));
+        System.out.println("Operator: ");
+        System.out.println(options.valueOf(mutationOperator));
+        System.out.println(options.has(mutationOperator));
+        //# FIXME: improve commandline messages;
+        System.out.println("Language: ");
+        System.out.println(options.valueOf(lang));
+        System.out.println(options.has(lang));*/
+        if(options.has(help)) {
+        	System.out.println("Please specify <umple_file> to process for mutation");
+        	System.out.println("For more detailed information visit http://manual.umple.org");
+        	System.out.println("#############################################################################################");
+        	System.out.println("Example: java -jar umple.mutation.jar -generate model.ump -t random -p OneToMany -l Java   ");
+        	System.out.println("#############################################################################################");
+        	System.out.println("Option	    Description");
+        	System.out.println("------	    -----------");
+        	System.out.println("-help		Print help message");
+        	System.out.println("-t			indicate the type of replacement for the  \n" + 
+        					   "		          mutation : random, specific element: OptionalOneToMany, OneToMany, OptionalOneToOne, ManyToMany,\n"+
+        					   "			  direction, Integer, String, Double, Float");
+        	System.out.println("-p		 	indicate the targeted element to be mutated: ‘full’ or specific element.");
+        	System.out.println("-l			the output language of the system to be generated: Java, ruby, Php (any system Umple accepts)  ");
+        	System.out.println("-n			the number of mutants to be generated randomly  ");
+        	
+
+        }
+        
+        else {
+        	      
+        String path = "";
+        path = Paths.get(".").toAbsolutePath().normalize().toString()+File.separator;
+			//path = System.getProperty("user.dir")+File.separator+"cruise/umple/mutation/";
+        	//path=(MutationConsoleMain.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();		
+        String modelName =options.valueOf(generate);
+        String aLang=options.valueOf(lang);
+        String replacementType = "";
+        String muOperator = "";
+        int mutantNumber = Integer.parseInt(options.valueOf(numberOfMutants));
+        
+        replacementType = (options.valueOf(mutationType)).toString();
+        muOperator = (options.valueOf(mutationOperator)).toString();
+        
+                
+        System.out.println("Replacement type used: "+replacementType);
+        System.out.println("Targeted mutation operator : "+muOperator);
+        try {
+        for (int x = 1 ; x<= mutantNumber ; x++)
+        {
+        MutationSuite ms = new MutationSuite(null,0, "", "",x);	        	
+        ms.prepare(path, modelName, aLang,replacementType,muOperator);
+        System.out.println("Model mutated successfully !");
+        
+        }
+        
+        }
+        catch(Exception e) {
+        	System.out.println("Failed to mutate: "+ e.getMessage());
+        	
+        }
+        /*****
+        // Run Diff on original model against the mutated one to find changes.
+        try {
+         
+			Runtime.getRuntime().exec("diff " + modelName +" "+ mutationType+File.separator+mutationType+"Mutation_"+modelName);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
+        }
+		
+	}
+
+}

@@ -7,10 +7,15 @@ nohup.out
 
 # umple specific
 umpleonline/ump/tmp*
+umpleonline/ump/20*
+umpleonline/ump/ATempCrash*
 build/UserManualAndExampleTests_output.txt
 umpleonline/manual
 umpleonline/countlog.txt
+umpleonline/scripts/commandcount.txt
 umpleonline/scripts/specialPort.txt
+umpleonline/scripts/versionRunning.txt
+umpleonline/ump/aalertMessage.txt
 
 # generated Umple code that is not saved
 src-gen-umple/
@@ -49,4 +54,7 @@ src-gen-[Uu]mple[Tt][Ll]/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# Gradle
+.gradle
 

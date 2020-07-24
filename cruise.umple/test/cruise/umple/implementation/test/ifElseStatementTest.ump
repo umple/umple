@@ -1,0 +1,24 @@
+
+class Person {
+  name;
+  job;
+  Integer id;
+
+
+test checkIfElse {
+
+if (tempId == 1324 )
+  {
+  	   assertTrue (job == "Saleman");
+  
+  }
+
+if else (tempId == 980)
+  {
+    asserTrue (job == "Cashier");   
+  }  
+  
+    
+  }
+  
+}

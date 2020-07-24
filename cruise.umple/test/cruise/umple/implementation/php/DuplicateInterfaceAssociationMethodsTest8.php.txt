@@ -1,0 +1,106 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class First implements I
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //First Associations
+  private $second;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aSecond = null)
+  {
+    if (func_num_args() == 0) { return; }
+
+    if ($aSecond == null || $aSecond->getFirst() != null)
+    {
+      throw new Exception("Unable to create First due to aSecond. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    $this->second = $aSecond;
+  }
+  public static function newInstance()
+  {
+    $thisInstance = new First();
+    $thisInstance->second = new Second($thisInstance);
+    return $thisInstance;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getSecond()
+  {
+    return $this->second;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $existingSecond = $this->second;
+    $this->second = null;
+    if ($existingSecond != null)
+    {
+      $existingSecond->delete();
+    }
+  }
+
+  public function addSecond(Second $aSecond)
+  {
+          return "";
+  }
+
+  public function getSeconds()
+  {
+          return "";
+  }
+
+  public function setSecond(Second $aSecond)
+  {
+          return "";
+  }
+
+  public function setSeconds(Second... $newSeconds)
+  {
+          return "";
+  }
+
+  public function numberOfSeconds()
+  {
+          return "";
+  }
+
+  public function hasSeconds()
+  {
+          return "";
+  }
+
+  public function indexOfSecond(Second $second)
+  {
+          return "";
+  }
+
+  public function isNumberOfSecondsValid()
+  {
+          return "";
+  }
+
+  public function removeSecond(Second $second)
+  {
+          return "";
+  }
+
+}
+?>

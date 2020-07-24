@@ -1,0 +1,20 @@
+
+class UmpleToTest {
+
+members_TestInit <<!<</*members_TestInit*/>><<#
+
+if (uClass.hasTestInits())
+{
+  #>>WHERE:
+  
+  <<#
+  for (TestInit ti : uClass.getTestInits()){
+  #>><<=ti.getCode()>>
+  
+  <<#  
+  }
+
+}
+
+
+#>>!>>}

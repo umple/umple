@@ -1,0 +1,14 @@
+namespace cruise.umple.testgenerator;
+
+class Util{
+
+   emit getTestRunnerTemplateRubyUnitCode (List<String> classes) (TestRunnerRubyUnitGenerator);
+   
+   
+  // Template for Ruby Unit test runner
+  TestRunnerRubyUnitGenerator <<!
+   //to be implemented
+     !>>
+  
+  
+}

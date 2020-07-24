@@ -1,0 +1,170 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_association_optionalOneToMany ----/////
+
+test GenericTestCase_association_optionalOneToMany.ump {
+depend  Calculator,Number,Controller ; 
+
+
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Calculator       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [1,1] Number /////// 
+              
+              test createCalculatorWithoutNumber {              
+              
+              Calculator aCalculator();
+              
+              assertTrue (aCalculator.numberOfnumbers()== 0);
+              }
+              
+              
+              
+              test replaceCalculatorInNumber { 
+              
+                                          
+              Calculator baCalculator();
+              
+              Calculator aCalculator();
+
+              Number aNumber(aCalculator); 
+              Number baNumber(aCalculator);
+              
+              aNumber.setCalculator(baaCalculator);
+              assertEqual (baaCalculator, aNumber.getCalculator());              
+              assertTrue(baaCalculator.getNumber(0) == aNumber );
+                            
+              }
+              
+              
+              test removeNumberInCalculator {
+              
+              
+              Calculator aCalculator();
+              aCalculator.addNumber(aNumber);
+              
+              aNumber.delete(); 
+              assertEqual (aCalculator.getnumber(0) == null);
+              }
+              
+              
+              //add to new B
+              
+              test AddNumberToNewCalculator { 
+              Number aCalculator = new Number();
+              Number aCalculator2 = new Number();
+      
+              Calculator aCalculator = new Calculator();
+              aCalculator.addNumber(aNumber);
+              aCalculator.addNumber(aNumber2);  
+        
+              assertEqual(aNumber2, aCalculator.getNumber(); 
+              assertEqual (aCalculator, aNumber2.getCalculator(0));
+              assertEqual (aCalculator, aNumber.getNumberOfCalculators());
+              }
+
+              /////// Association: -- [0,1] Controller /////// 
+              //create ... without ...
+              Test CreateCalculatorWithoutController {
+              Calculator someCalculator = new Calculator();
+              AssertTrue (someController.getCALCULATOR()!= null);
+              }
+              //replace
+              
+              Test ReplaceControllerInCalculator { 
+              
+              Controller someController = new Controller(); 
+              Controller someController2 = new Controller();
+              someController.addController(someCalculator);
+              AssertEqual (1, someController.getNumberOfCalculators());
+              AssertEqual (1, someController.getNumberOfCalculators());
+              someCalculator.setController(someController2);
+              AssertEqual (someCalculator, someController2.getCalculator(0));
+              }
+              //delete
+              Test DeleteController {
+              // delete Controller in Calculator
+              someController2.delete(); 
+              AssertEqual (null, someController2.getCalculator(0));
+              }
+              //add to new B
+              
+              Test AddControllerToNewCalculator { 
+              Controller someController = new Controller();
+              Controller someController2 = new Controller();
+      
+              Calculator someCalculator = new Calculator();
+              someController.addController(someController);
+              someController.addController(someController2);  
+        
+              AssertEqual(someController2, someController.getController(); 
+              AssertEqual (someController, someController2.getCalculator(0));
+              AssertEqual (someController, someController.getNumberOfCalculators());
+              }  /*-------------------------*/
+  /*  Class Number       */
+  /*-------------------------*/
+
+              
+              /////// Association: -- [0,*] Calculator /////// 
+              
+              test createNumberWithCalculator {              
+              Calculator aCalculator();
+
+              Number aNumber(aCalculator);
+              
+              assertTrue (aNumber.getcalculator() == aCalculator);
+              }
+              
+              
+              
+              test replaceCalculator{ 
+              
+              Calculator aCalculator();
+                            
+              Number baNumber(aCalculator);
+              
+                            
+              Calculator baCalculator();
+              
+              aNumber.setCalculator(baCalculator);
+              
+              assertTrue (baCalculator == aNumber.getCalculator());              
+              
+                            
+              }
+              
+              
+              
+  /*-------------------------*/
+  /*  Class Controller       */
+  /*-------------------------*/
+
+              /////// Association: -- [0,*] Calculator /////// 
+              //create ... without ...
+              test removeCalculator {
+              
+              Controller aController();
+              
+              
+              Calculator aCalculator();
+              aController.addCalculator(aCalculator);
+              aController.removeCalculator(aCalculator);
+              
+              assertTrue (aController.getcalculatorAt(0) == null);
+              }
+              
+              
+              
+ 
+ 
+
+ }

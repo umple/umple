@@ -1,0 +1,50 @@
+namespace cruise.umple.testgenerator;
+
+class Util{
+
+  
+   emit getTestRunnerTemplateJUnitCode (List<String> classes) (TestRunnerJUnitGenerator);
+      
+   // Template for JUnit Test Runner 
+   TestRunnerJUnitGenerator <<!<<# 
+   String classesCode = "";
+   
+   for (int x = 0; x < classes.size(); x++)
+   {
+      if (x == 0)
+       {classesCode+= classes.get(x)+".class";}
+       else 
+       {classesCode+=", " +classes.get(x)+".class";}   
+   }
+   
+   #>> 
+	import java.io.File;
+	import org.junit.After;
+	import org.junit.Assert;
+	import org.junit.Before;
+	import org.junit.Test;
+	import org.junit.internal.TextListener;
+	import org.junit.runner.JUnitCore;
+	import org.junit.runner.Result;  
+    
+    public class TestRunner {
+    
+     public static void main (String[] args)
+     JUnitCore  junit = new JUnitCore();
+     junit.addListener(new TextListener(System.out));
+     Result result = junit.run(<<=classesCode>>);
+     
+     resultReport(result);
+    }
+    
+    public static void resultReport(Result result) {
+		    System.out.println("Finished. Result: Failures: " +
+		      result.getFailureCount() + ". Ignored: " +
+		      result.getIgnoreCount() + ". Tests run: " +
+		      result.getRunCount() + ". Time: " +
+		      result.getRunTime() + "ms.");
+		}
+    
+    }
+  !>>  
+}

@@ -1,1 +1,1 @@
-{"classId": "CourseSection", "fromStateId": "EnoughStudents", "toStateId": "Closed","eventName": "classSizeExceedsMaximum", "name": "EnoughStudents_classSizeExceedsMaximum_Closed" }
+{"classId": "CourseSection", "fromStateId": "EnoughStudents", "toStateId": "Closed","event": "classSizeExceedsMaximum", "name": "EnoughStudents_classSizeExceedsMaximum_Closed" }

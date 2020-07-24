@@ -1,25 +1,45 @@
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 
 ////---- Tests for  AttributeMultilineComment ----/////
-Test Foo {
+
+test Foo {
+
+ generate JUnit ;
+ 
+ depend  Foo ; 
+
+
+
+ 
+ GIVEN:
+ AttributeMultilineComment.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :name
 
       test attribute_name {
     
-    AssertTrue( foo.setName("RandomString1"));
-    AssertTrue( foo.getName() =="RandomString1");
-    AssertTrue( foo.setName("RandomString1"));
-    AssertTrue( foo.getName("RandomString1"));
-    AssertTrue( foo.getName() =="RandomString1");
+      
+        Foo aFoo("RandomString1");
+        
+        
+    assertTrue( aFoo.setName("RandomString1"));
+    assertTrue( aFoo.getName() =="RandomString1");
+    assertTrue( aFoo.setName("RandomString2"));
+    assertTrue( aFoo.getName()=="RandomString2");
+    assertFalse( aFoo.getName() =="RandomString1");
              
-	}
+          
+        	}
 
 
   
+ 
    
 
 }

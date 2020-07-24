@@ -49,16 +49,16 @@ class NestedStateMachineTest extends UnitTestCase
   
     // TODO: Missing Exit Event
     // Assert.assertEquals(9,course.numberOfLogs());
-    $this->assertEqual(8,$course->numberOfLogs());
+    $this->assertEqual(9,$course->numberOfLogs());
     $this->assertEqual("Enter Off", $course->getLog(0));
     $this->assertEqual("Exit Off", $course->getLog(1));
     $this->assertEqual("Enter On", $course->getLog(2));
     $this->assertEqual("Enter Play", $course->getLog(3));
     $this->assertEqual("Exit Play", $course->getLog(4));
     $this->assertEqual("Enter Pause", $course->getLog(5));
-    // $this->assertEqual("Exit Pause", $course->getLog(6));
-    $this->assertEqual("Exit On", $course->getLog(6));
-    $this->assertEqual("Enter Off", $course->getLog(7));
+    $this->assertEqual("Exit Pause", $course->getLog(6));
+    $this->assertEqual("Exit On", $course->getLog(7));
+    $this->assertEqual("Enter Off", $course->getLog(8));
     
     $this->assertEqual("StatusOff", $course->getStatus());
     $this->assertEqual("StatusOnNull", $course->getStatusOn());    

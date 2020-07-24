@@ -1,0 +1,21 @@
+
+class Student {  
+    
+    String studentId;
+    name;
+    address;    
+    
+    
+  generic test checkifLogged(String attribute.prefix(student)){
+        Student st1 ( "S1425", "John", "Ottawa") ;        
+        String valueToCheck = st1.get<<attribute>>();  
+        st1.getValue(<<attribute>>);    
+        boolean isLogged =  st1.checkIsLogged(valueToCheck);        
+        
+        //list assertions                      
+        }
+        
+        String  returnSumOfValues (int x, int y) { return x+y;}                 
+}  
+ 
+  

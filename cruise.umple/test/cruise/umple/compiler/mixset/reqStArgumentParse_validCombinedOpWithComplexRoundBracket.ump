@@ -1,0 +1,15 @@
+require [ ((A xor B) and C ) and (D xor (2..3 of {A,B,C,D} and E) ) ];
+
+
+
+mixset A {} mixset B {} mixset C{}
+mixset D {} mixset E{}
+
+/*
+ valid configuration of feature model. 
+*/
+
+use A; 
+use C;
+use E;
+

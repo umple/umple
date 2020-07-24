@@ -1,0 +1,31 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+////---- Tests for  GenericTestCase_attribute_prefix ----/////
+
+test GenericTestCase_attribute_prefix {
+
+generate JUnit;
+
+depend  Student ; 
+
+
+
+
+GIVEN:
+GenericTestCase_attribute_prefix.ump;
+THEN:
+ 
+  /*-------------------------*/
+  /*  Association Test       */
+  /*-------------------------*/
+  /*-------------------------*/
+  /*  Class Student       */
+  /*-------------------------*/
+
+ 
+ 
+
+ }

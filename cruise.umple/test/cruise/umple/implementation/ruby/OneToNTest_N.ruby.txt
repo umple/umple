@@ -28,7 +28,7 @@ class Student
     @number = a_number
     @mentor = nil
     did_add_mentor = set_mentor(a_mentor)
-    raise "Unable to create student due to @mentor" unless did_add_mentor
+    raise "Unable to create student due to @mentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" unless did_add_mentor
     @initialized = true
   end
 

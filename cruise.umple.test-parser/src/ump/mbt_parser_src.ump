@@ -94,14 +94,75 @@ public void analyzeAllTokens(Token rootToken){
    
 
   private void analyzeAssertEqual(Token t, int analysisStep, TestCase aTestCase, int aLocOrder) {
-	  //System.out.println("EqualAnalysis");
+	  ////system.out.println("EqualAnalysis");
 	  Token ts = t.getSubToken("assertEqualCode");
 	  String assertCode = analyzeAssertEqualCode(ts, analysisStep);
 	  //assertCode = ts.getValue("objectName1") +","+ts.getValue("objectName2");
 	  aTestCase.addAssertion(new Assertion("AssertEqual", null, null, "equal", assertCode,null, null, locOrder));
-	  System.out.println("\t\tEquLOC");
-		System.out.println(locOrder);
+	  //system.out.println("\t\tEquLOC");
+		//system.out.println(locOrder);
 	  locOrder++;
+}
+
+
+private void analyzeAction(Token token, int analysisStep, TestCase aTestCase, int locOrder2) {
+	// TODO Analyze test actions statement
+	  
+	  String code = ""; 
+	
+	  for (Token subToken : token.getSubTokens())
+	  {
+		  if(subToken.getName().equals("objectName"))
+		  {
+			  code += subToken.getValue();
+		  }
+		  
+		  if(subToken.getName().equals("code"))
+		  {
+			  code += subToken.getValue();
+		  }
+		  
+		  if(subToken.getName().equals("."))
+		  {
+			  code += ".";
+		  }
+		  
+	  }
+	  
+	  Action ac = new Action("", code, locOrder);
+	  aTestCase.addAction(ac);
+}
+
+private void analyzeTestInitAttribute(Token token, int analysisStep, TestCase aTestCase, int locOrder2) {
+	// TODO analyze attribute initialization 
+	Action ta = new Action ("initAtt", "", locOrder);
+	String code = "";
+	  for (Token subToken : token.getSubTokens())
+	  {
+		  if (subToken.getName().equals("identifier"))
+		  { code += subToken.getValue("identifier"); }
+		  if (subToken.getName().equals("attributeName"))
+		  { code += " "+subToken.getValue("attributeName") + ""; }
+		  
+		  if (subToken.getName().equals("name"))
+		  { code += " "+subToken.getValue("name") + ""; }
+		  
+		  if (subToken.getName().equals("code"))
+		  { code += " "+subToken.getValue("code") + ""; }
+		  
+		  if (subToken.getName().equals("\""))
+		  { code += "\"" ; }
+		  
+		  if (subToken.getName().equals("="))
+		  { code += "=" ; }
+		  
+		  if (subToken.getName().equals(";"))
+		  { code += ";"; }
+	  }
+	  ta.setCode(code);
+	  aTestCase.addAction(ta);
+	  locOrder++;
+	
 }
   private String analyzeAssertEqualCode(Token t, int analysisStep)
   {
@@ -111,8 +172,8 @@ public void analyzeAllTokens(Token rootToken){
 	  boolean isFirstMethod = true;
 	  for (Token tss : t.getSubTokens())
 	  {
-		  //System.out.println("EqToken");
-		  //System.out.println(t.getName());		  
+		  ////system.out.println("EqToken");
+		  ////system.out.println(t.getName());		  
 			if (tss.getName().equals("objectName1")) {
 				if (aTestModel.getCodeLang().equals("PhpUnit")) {
 					assertCode += "$" + tss.getValue();
@@ -233,16 +294,16 @@ public void analyzeAllTokens(Token rootToken){
 private void analyzeAssertFalse(Token t, int analysisStep, TestCase aTestCase, int aLocOrder) {
 	String assertCode = analyzeAssertCode(t, analysisStep, null);
 	aTestCase.addAssertion(new Assertion("AssertFalse", null, null, "equal", assertCode,null, null, locOrder));
-	System.out.println("\t\tFalseLOC");
-	System.out.println(locOrder);
+	//system.out.println("\t\tFalseLOC");
+	//system.out.println(locOrder);
 	locOrder++;
 }
 
 private  void analyzeAssertTrue(Token t, int analysisStep, TestCase aTestCase, int aLocOrder) {
 	String assertCode = analyzeAssertCode(t, analysisStep, null);
 	aTestCase.addAssertion(new Assertion("AssertTrue", null, null, "equal", assertCode,null, null, locOrder));
-	System.out.println("\t\tTrueLOC");
-	System.out.println(locOrder);
+	//system.out.println("\t\tTrueLOC");
+	//system.out.println(locOrder);
 	locOrder++;
 }
 
@@ -250,22 +311,17 @@ private  void analyzeAssertTrue(Token t, int analysisStep, TestCase aTestCase, i
 private void analyzeGenerate ( Token t, int analysisStep)
 {
 	//setting the target platform
-	System.out.println(t.getValue("codeLang"));
+	//system.out.println(t.getValue("codeLang"));
 	aTestModel.setCodeLang(t.getValue("codeLang"));
 	
 }
 
-private String analyzeAssertCode (Token t, int analysisStep, Assertion as)
+private String analyzeAssertCode (Token st, int analysisStep, Assertion as)
 {
 	String assertCode="";
 	String methodCallCode="";
 	boolean isFirst = true;
-for ( Token st : t.getSubTokens())
-		
-	{
-	
-	if(st.getName().equals("assertCode"))
-	 {
+
 		for (Token sst: st.getSubTokens())
 		{
 			if (sst.getName().equals("methodCall"))
@@ -276,8 +332,8 @@ for ( Token st : t.getSubTokens())
 			
 			else if (sst.getName().equals("compValue"))
 			{
-				//System.out.println("compV");
-				//System.out.println(sst.getValue());
+				////system.out.println("compV");
+				////system.out.println(sst.getValue());
 				if (aTestModel.getCodeLang().equals("RubyUnit") )
 				 {
 					if (sst.getValue().contains("null"))
@@ -300,10 +356,10 @@ for ( Token st : t.getSubTokens())
 			assertCode += sst.getName();
 			}
 		}
-	 }
+	 
 	
 		
-	}
+	
 	
 return assertCode;
 }
@@ -314,15 +370,15 @@ private String analyzeMethodCall(Token t, int analysisStep, Assertion as) {
 	
 	for (Token st: t.getSubTokens())
 	{
-		//System.out.println(st.getName());
+		////system.out.println(st.getName());
 		
 		if (st.getName().equals("objectName"))
 		{
 
 			if (aTestModel.getCodeLang().equals("PhpUnit"))
 			{
-				//System.out.println("codeLangforPhp");
-				//System.out.println(aTestModel.getCodeLang());
+				////system.out.println("codeLangforPhp");
+				////system.out.println(aTestModel.getCodeLang());
 				// Injecting '$' sign for Php objectName tokens.
 				code += ("$" + st.getValue());
 			}
@@ -382,8 +438,8 @@ private String analyzeMethodCall(Token t, int analysisStep, Assertion as) {
 			for (Token sbt : sst.getSubTokens())
 			{
 			 parameterCode += sbt.getValue();
-			 //System.out.println("parCode");
-			 //System.out.println(parameterCode);
+			 ////system.out.println("parCode");
+			 ////system.out.println(parameterCode);
 			}
 			code+= parameterCode;
 			
@@ -409,39 +465,27 @@ private String analyzeMethodCall(Token t, int analysisStep, Assertion as) {
 		
 		
 	}
-	//System.out.println("MethodCode");
-	//System.out.println(code+";");
+	////system.out.println("MethodCode");
+	////system.out.println(code+";");
 	return code;
 }
 
 private  void analyzeAssertions(Token t, int analysisStep, TestCase aTestCase, int aLocOrder) {
 	
-for ( Token st : t.getSubTokens())
+Assertion as = new Assertion(t.getValue("assertType"),"", "", "", "", "", "", locOrder);
+	   String code="";
+	   String assertCode="";
+	  for ( Token st : t.getSubTokens())
 		
-	{
-	
-	if(st.getName().equals("assertionTrue"))
-	 {
-		 analyzeAssertTrue(st,analysisStep, aTestCase, locOrder);
-		 
-		 
-	 }
-	 
-	 if(st.getName().equals("assertionFalse"))
-	 {
-		 analyzeAssertFalse(st,analysisStep, aTestCase, locOrder);
-		 
-	 }
-	 
-	 if(st.getName().equals("assertionEqual"))
-	 {
-		 analyzeAssertEqual(st,analysisStep, aTestCase, locOrder);
-		 
-	 }
-		
+	{		  		  
+		  if (st.getName().equals("assertCode"))
+		  {
+			  assertCode = analyzeAssertCode(st, analysisStep, as);
+		  }		  		  	
 	}
-	
-	
+	  as.setAssertCode(assertCode);	  
+	  aTestCase.addAssertion(as);
+	  locOrder++;
 	
 	
 }
@@ -455,32 +499,90 @@ for ( Token st : t.getSubTokens())
 		
 	{
 	
+	if(st.getName().equals("isTargeted"))
+	{
+		if(st.getValue("isTargeted") != null)
+		{
+			
+			aTestCase.setIsTargeted(true);
+			aTestCase.setConcreteLanguage(st.getValue("isTargeted"));
+			System.out.println( aTestCase.getConcreteLanguage());
+			
+		}
+		
+		
+	}
+	
+	if(st.getName().equals("isConcrete"))
+	{
+		if(st.getValue("isConcrete") != null)
+		{			
+			aTestCase.setIsConcrete(true);
+			aTestCase.setIsTargeted(true);
+			aTestCase.setConcreteLanguage(st.getValue("isTargeted"));
+		}
+		
+	}
+	
 	if(st.getName().equals("initialization"))
 	 {
-		System.out.println("\tInitlocOrder");
-		System.out.println(locOrder);
+		//system.out.println("\tInitlocOrder");
+		//system.out.println(locOrder);
 		analyzeInit(st,analysisStep, aTestCase, locOrder);
+		locOrder++;
+	 }
+	 
+	 if(st.getName().equals("testAction"))
+	 {
+		//system.out.println("\tInitlocOrder");
+		//system.out.println(locOrder);
+		analyzeAction(st,analysisStep, aTestCase, locOrder);
 		locOrder++;
 	 }
 	
 	 if(st.getName().equals("methodCall"))
   	 {
-		 System.out.println("\tMethlocOrder");
-		 System.out.println(locOrder);
+		 //system.out.println("\tMethlocOrder");
+		 //system.out.println(locOrder);
   		 analyzeMethodCall(st,analysisStep, aTestCase,locOrder);
   		 locOrder++;
   	 }
 	
-   	 if(st.getName().equals("assertions"))
+   	 if(st.getName().equals("assertion"))
    	 {
    		
    		analyzeAssertions(st,analysisStep, aTestCase, locOrder);
    	 }
+
+   	 if(st.getName().equals("testInitAttWithMethodCall"))
+  	 {
+  		
+  		analyzeTestInitAttributeMethodCall(st,analysisStep, aTestCase, locOrder);
+  	 }
+  	 
+  	 if(st.getName().equals("testInitAtt"))
+ 	 { 		
+ 		analyzeTestInitAttribute(st,analysisStep, aTestCase, locOrder);
+ 	 }
+  	 
+  	 if(st.getName().equals("inlineComment"))
+ 	 {
+   		Action ta = new Action ("inlinecomment", "//"+st.getValue("inlineComment"), locOrder);
+   		////system.out.println("comment");
+   		aTestCase.addAction(ta);
+   		locOrder++;
+ 	 }
+   	
+   	if(st.getName().equals("multilineComment"))
+	 {
+  		Action ta = new Action ("multilinecomment","/*" +st.getValue("multilineComment")+"*/", locOrder);
+  		////system.out.println("comment");
+  		aTestCase.addAction(ta);
+  		locOrder++;
+	 }
 		
 	}
-	System.out.println("TClocOrder");
-	System.out.println("testName "+aTestCase.getName());
-	System.out.println(locOrder);
+	
 	aTestCase.setLocOrder(locOrder);
 	aTestModel.getTestSuite(0).addTestcase(aTestCase);
 	
@@ -494,15 +596,15 @@ private void analyzeMethodCall(Token t, int analysisStep, TestCase aTestCase, in
 	
 	for (Token st: t.getSubTokens())
 	{
-		//System.out.println(st.getName());
+		////system.out.println(st.getName());
 		
 		if (st.getName().equals("objectName"))
 		{
 
 			if (aTestModel.getCodeLang().equals("PhpUnit"))
 			{
-				//System.out.println("codeLangforPhp");
-				//System.out.println(aTestModel.getCodeLang());
+				////system.out.println("codeLangforPhp");
+				////system.out.println(aTestModel.getCodeLang());
 				// Injecting '$' sign for Php objectName tokens.
 				code += ("$" + st.getValue());
 			}
@@ -555,8 +657,8 @@ private void analyzeMethodCall(Token t, int analysisStep, TestCase aTestCase, in
 			for (Token sbt : sst.getSubTokens())
 			{
 			 parameterCode += sbt.getValue();
-			 //System.out.println("parCode");
-			 //System.out.println(parameterCode);
+			 ////system.out.println("parCode");
+			 ////system.out.println(parameterCode);
 			}
 			code+= parameterCode;
 			
@@ -575,32 +677,244 @@ private void analyzeMethodCall(Token t, int analysisStep, TestCase aTestCase, in
 		
 		
 	}
-	//System.out.println("MethodCode");
-	//System.out.println(code+";");
-	//System.out.println("ActionCode");
-	//System.out.println(code);
+	////system.out.println("MethodCode");
+	////system.out.println(code+";");
+	////system.out.println("ActionCode");
+	////system.out.println(code);
 	aTestCase.addAction( new Action("",code,locOrder));
 	
 }
 
 private  void analyzeInit(Token t, int analysisStep, TestCase aTestCase, int locOrder) {
-	TestInitialization aInit  = new TestInitialization (null, "construction", t.getValue("identifier"), t.getValue("name"), locOrder);
-	Token st = t.getSubToken("parameter");
+	TestInitialization aInit  = new TestInitialization (null, "construction", t.getValue("identifier"), t.getValue("objectName"), locOrder);
+	System.out.println(t.getSubTokens().toString());
+       	
+	Token st = null;// t.getSubToken("parameter");
 	//Parameter aParameter = new Parameter(t.getValue("Parameter"), t.getValue("identifier"), null);
 	
-for ( Token sst : st.getSubTokens())
-		
+	for (Token parToken : t.getSubTokens())
 	{
-	if (sst.getName().equals("pValue"))
-	 {	
-		aInit.addParameter(new Parameter(sst.getValue(), "", sst.getValue()));
-	 }
+		if (parToken.getName().equals("parameter"))
+		{
+			st = parToken;
+		}
+	}
+
+	if(st != null)
+	{
+		for ( Token sst : st.getSubTokens())
+
+		{						
+			if(!sst.getValue().equals("STATIC"))
+			{
+			aInit.addParameter(new Parameter(sst.getValue(), "", sst.getValue()));
+			}
+
+		}
+	}
+	else {
+		aInit.addParameter(new Parameter("","",""));
 	}
 
 
-	
+
 	aTestCase.addInit(aInit);
 		
+}
+
+
+private void analyzeTestInitAttributeMethodCall(Token token, int analysisStep, TestCase aTestCase, int locOrder){
+    // TODO Auto-generated method stub
+	  Action ta = new Action("initAttMethodCall", "", locOrder);
+	  String code = "";
+	  
+	  for(Token subToken : token.getSubTokens())
+	  {
+		  if(subToken.getName().equals("identifier"))
+		  {
+			  code+=subToken.getValue("identifier");			  
+		  }
+		  
+		  if(subToken.getName().equals("attributeName"))
+		  {
+			  code+= " " +subToken.getValue("attributeName");			  
+		  }
+		  
+		  if(subToken.getName().equals("object"))
+		  {			  
+				  code+= " " +subToken.getValue("object");			  
+		  }
+		  
+		  if(subToken.getName().equals("name"))
+		  {			  
+				  code+= "" +subToken.getValue("name");			  
+		  }
+		  
+		  if(subToken.getName().equals("."))
+		  {
+			  code+= "" +".";			  
+		  }
+		  
+		  if(subToken.getName().equals("("))
+		  {
+			  code+= "" +"(";			  
+		  }
+		  
+		  if(subToken.getName().equals(")"))
+		  {
+			  code+= "" +")";			  
+		  }
+		  
+		  if(subToken.getName().equals("call"))
+		  {
+			  //System.out.println(subToken.getValue());
+			  String methodName = subToken.getValue();
+			  if (aTestModel.getCodeLang().equals("RubyUnit") && (methodName.contains("get") || methodName.subSequence(0, 3).equals("set")))
+			  {
+				String dashedMethod = methodName.substring(0, 3) + "_" + methodName.substring(3, 4).toLowerCase() +methodName.substring(4, methodName.length());  
+				code+=dashedMethod;
+			  }
+			  else if (aTestModel.getCodeLang().equals("RubyUnit") && methodName.contains("reset") )
+			  {
+				String dashedMethod = methodName.substring(0, 5) + "_" + methodName.substring(5, 6).toLowerCase() +methodName.substring(6, methodName.length());  
+				code+=dashedMethod;
+			  }
+			  else{
+				  code += methodName;
+			  }
+			  
+			  
+			  //code+= " " +methodName;			  
+		  }
+		  
+		  
+		  
+		  if(subToken.getName().equals("="))
+		  {
+			  code+= " " +"= ";			  
+		  }
+		  
+		  if(subToken.getName().equals("\""))
+		  {
+			  code+= "" +"\" ";			  
+		  }
+		  
+		  
+		  if(subToken.getName().equals("parameter"))
+		  {
+			  for (Token ssToken : subToken.getSubTokens()){
+				  if(ssToken.getName().equals(","))
+				  {
+					  code+= ",";
+				  }
+				  else if(ssToken.getName().equals("\""))
+				  {
+					  code+= "\"";
+				  }
+				  else  {
+					  code += ssToken.getValue();
+				  }
+			  }
+		  }
+		  
+		  if(subToken.getName().equals("testMethodCall"))
+		  {
+			  code += analyzeInitMethodCall(subToken, aTestCase, locOrder);			  
+		  }
+		  ta.setCode(code);		  		  
+		  aTestCase.addAction(ta);		  
+		  
+	  }
+  }
+
+private String analyzeInitMethodCall(Token token, TestCase aTestCase, int locOrder) {
+	// TODO Auto-generated method stub
+	String code = "";
+	  	  	  
+	  for (Token subToken: token.getSubTokens())
+	  {
+		  if ( subToken.getName().equals("objectName"))
+		  {
+			  code += subToken.getValue("objectName");
+		  }
+		  
+		  if ( subToken.getName().equals("methodName"))
+		  {
+			  code += subToken.getValue("methodName");
+		  }
+		  
+		  
+		  
+		  
+		  if (subToken.getName().equals("testActionParameterList"))
+		  {
+			  ////system.out.println("before test Action: "+code);
+			  String paramCode = "";
+			  for(Token parToken : subToken.getSubTokens())
+			  {
+				  
+				  if(parToken.getName().equals("testParameter"))
+				  {
+				  paramCode = analyzeTestParameter(parToken,aTestCase,"");					  
+				  }
+				  
+				  
+			  }
+			  
+			  code += paramCode;
+			  paramCode="";
+			  
+		  }
+		  
+		  if ( subToken.getName().equals(","))
+		  {
+			  code += ", ";
+		  }
+		  if ( subToken.getName().equals("\""))
+		  {
+			  code += "\"";
+		  }
+		  
+		  if ( subToken.getName().equals("("))
+		  {
+			  code+="(";
+		  }
+		  
+		  if ( subToken.getName().equals(")"))
+		  {
+			  code+=")";
+		  }
+		  
+		  if ( subToken.getName().equals("."))
+		  {
+			  code+=".";
+		  }
+	  }
+	  
+	return code;
+	
+	
+	//return "";
+	
+	
+	
+}
+
+private String analyzeTestParameter(Token parToken, TestCase aTestCase, String string) {
+	// TODO Auto-generated method stub
+	String parCode = "";
+	for(Token spToken : parToken.getSubTokens())
+	  {
+		  if (spToken.getName().equals("testActionParameterList"))
+		  {
+			  //system.out.println("nested");
+		  }
+		  if (spToken.getName().equals("\"")) { parCode+="\""; }
+		  if (spToken.getName().equals(",")) { parCode+=","; }
+		  if (spToken.getName().equals("name")) { parCode += spToken.getValue("name"); }
+	  }
+	  
+	  return parCode;
 }
 
 private  void analyzeThen(Token t, int analysisStep) {
@@ -620,7 +934,7 @@ for ( Token st : t.getSubTokens())
 }
 
 private  void analyzeParameter(Token t, int analysisStep) {
-	//System.out.println("analyzeParam"); analysis done within parent token
+	////system.out.println("analyzeParam"); analysis done within parent token
 }
 
 private  void analyzeWhen(Token t, int analysisStep) {
@@ -654,16 +968,46 @@ private  void analyzeModel(Token t, int analysisStep) {
 	aTestModel.addTestSuite(aTestSuite);
 }
 
-private  void analyzeInit(Token t, int analysisStep) {
-for ( Token st : t.getSubTokens())
+
+
+
+//analyze main when initialzation statements
+private void analyzeInit(Token t, int analysisStep){
+    String code = "";
+    
+    TestInitialization aInit  = new TestInitialization (null, "construction", t.getValue("identifier"), t.getValue("objectName"), locOrder);
+	Token st = t.getSubToken("parameter");
+	
 		
-	{
-	if(st.getName().equals("parameter"))
-	 {
-		 analyzeParameter(st,analysisStep);
-	 }
-		
-	}
+		for ( Token sst : st.getSubTokens())
+			
+		{
+		if (sst.getName().equals("pValue"))
+		 {	
+			aInit.addParameter(new Parameter(sst.getValue(), "", sst.getValue()));
+		 }
+		}
+			    
+    //TestInitialization ti = new TestInitialization("model", "modelInit" , t.getValue("identifier"), t.getValue("name"), locOrder);
+    //aTestModel.getTestSuite(0).add
+    aTestModel.addTestInitialization(aInit);
+    
+  }
+  
+  
+  
+  private void analyzeObjectInitialization(Token token, int analysisStep) {
+	// TODO Object init
+	
+}
+
+private void analyzeAttWithMethodInitialization(Token token, int analysisStep) {
+	// TODO att init and assignment
+	
+}
+
+private void analyzeAttInitialization(Token token, int analysisStep) {
+	// TODO att init assignment that has method calls
 	
 }
 
@@ -680,7 +1024,7 @@ private  void analyzeDepend(Token t, int analysisStep) {
 		{
 		if(st.getName().equals("pValue"))
 		 {
-			depends.add(new Depend(st.getValue(),"",aTestModel));
+			aTestModel.addDepend(new Depend(st.getValue(), ""));
 		 }
 			
 		}	  

@@ -26,7 +26,7 @@ public class Student
     boolean didAddMentor = setMentor(aMentor);
     if (!didAddMentor)
     {
-      throw new RuntimeException("Unable to create student due to mentor");
+      throw new RuntimeException("Unable to create student due to mentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

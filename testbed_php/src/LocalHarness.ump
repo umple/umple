@@ -5,14 +5,14 @@ class DoorA
 {
   immutable DoorB doorId = new DoorB(5);
   immutable Date dateId = date(1234);
-  immutable Time timeId = time(1235);
+  immutable Time timeId = time();
 }
 
 class DoorD
 {
   defaulted DoorB doorId = new DoorB(5);
   defaulted Date dateId = date(1234);
-  defaulted Time timeId = time(1235);
+  defaulted Time timeId = time();
 }
 
 

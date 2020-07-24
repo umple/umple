@@ -1,50 +1,90 @@
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 
 ////---- Tests for  OptionalOneToManyAssociation ----/////
-Test A {
+
+test A {
+
+ generate JUnit ;
+ 
+ depend  A,B ; 
+
+
+
+ 
+ GIVEN:
+ OptionalOneToManyAssociation.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :att1
 
       test attribute_att1 {
     
-    AssertTrue( a.setAtt1("RandomString1"));
-    AssertTrue( a.getAtt1() =="RandomString1");
-    AssertTrue( a.setAtt1("RandomString1"));
-    AssertTrue( a.getAtt1("RandomString1"));
-    AssertTrue( a.getAtt1() =="RandomString1");
+      
+        A aA("RandomString1");
+        
+        
+    assertTrue( aA.setAtt1("RandomString1"));
+    assertTrue( aA.getAtt1() =="RandomString1");
+    assertTrue( aA.setAtt1("RandomString2"));
+    assertTrue( aA.getAtt1()=="RandomString2");
+    assertFalse( aA.getAtt1() =="RandomString1");
              
-	}
+          
+        	}
 
 
   
+ 
    
 
 }
-/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 
 ////---- Tests for  OptionalOneToManyAssociation ----/////
-Test B {
+
+test B {
+
+ generate JUnit ;
+ 
+ depend  A,B ; 
+
+
+
+ 
+ GIVEN:
+ OptionalOneToManyAssociation.ump;
+ 
+ 
+ 
+ THEN:
   //tests for :att2
 
       test attribute_att2 {
     
-    AssertTrue( b.setAtt2("RandomString1"));
-    AssertTrue( b.getAtt2() =="RandomString1");
-    AssertTrue( b.setAtt2("RandomString1"));
-    AssertTrue( b.getAtt2("RandomString1"));
-    AssertTrue( b.getAtt2() =="RandomString1");
+      
+        B aB("RandomString1");
+        
+        
+    assertTrue( aB.setAtt2("RandomString1"));
+    assertTrue( aB.getAtt2() =="RandomString1");
+    assertTrue( aB.setAtt2("RandomString2"));
+    assertTrue( aB.getAtt2()=="RandomString2");
+    assertFalse( aB.getAtt2() =="RandomString1");
              
-	}
+          
+        	}
 
 
   
+ 
    
 
 }

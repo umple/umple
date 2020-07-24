@@ -23,7 +23,8 @@ ParseResult parseingResult;
 codeLang;
 
 1 -- * TestSuite;
-1 -- * Depend depends;
+0..1 -- * Depend depends;
+0..1 -- * TestInitialization;
 
 }
 
@@ -51,7 +52,9 @@ class TestCase {
 	
 	name;
 	int locOrder;
-	
+	String concreteLanguage = "";
+	boolean isTargeted = false;
+	boolean isConcrete = false;
 	
 	0..1 testcase -- * TestInitialization inits;
 	0..1 testcase -- * Assertion assertions;
