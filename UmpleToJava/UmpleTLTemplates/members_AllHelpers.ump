@@ -95,7 +95,7 @@ class UmpleToJava {
       {
         appendln(realSb, "");
       }
-      append(realSb, "  private{1} TimedEventHandler {0};", gen.translate("eventHandler",e),isTransient);
+      append(realSb, "  private{1} TimedEventHandler {0};", gen.translate("eventHandler",e,sm),isTransient);
     }
   }
 
