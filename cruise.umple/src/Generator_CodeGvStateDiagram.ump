@@ -288,7 +288,7 @@ node [shape = circle, fixedsize = true, width=.3];
     else if(isBottomLevel) levelPhrase = "Bottom Level ";
       
     smName = sm.getName();
-    clSmName = className+"_"+smName;
+    clSmName = className+"_"+sm.getFullName();
     code.append("\n");
     appendSpaces(code,  indentLevel);
     code.append("// "+levelPhrase+"StateMachine: "+smName+"\n");        
