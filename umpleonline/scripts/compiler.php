@@ -90,7 +90,6 @@ else if (isset($_REQUEST["load"]))
 }
 else if (isset($_REQUEST["loadTask"])) 
 {
-  $filename = explode("-", $_REQUEST["filename"])[1];
   foreach (new DirectoryIterator("../ump") as $file) 
   {
     if ($file->isDot()) continue;
