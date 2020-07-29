@@ -21,6 +21,21 @@
   ``````````````````````````` -->
 
   <target name="umpleSandbox">
+    <if>
+      <not>
+        <resourceexists>
+          <file file="${umple.stable.jar}" />
+        </resourceexists>
+      </not>
+      <then>
+        <echo message="New release detected. Copying old release to dist and lib boostrap compile" />
+        <copy tofile="${umple.stable.jar}"
+          file="${dist.dir}/umple.jar" />
+        <copy todir="dist"
+          file="${umple.stable.jar}" />
+      </then>
+    </if>
+
     <java jar="${umple.stable.jar}" fork="true" failonerror="true">
       <arg value="sandbox/src/sandbox.ump"/>
     </java>
