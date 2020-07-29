@@ -88,6 +88,30 @@ else if (isset($_REQUEST["load"]))
   $outputUmple = $dataHandle->readData($filename);
   echo $outputUmple;
 }
+else if (isset($_REQUEST["loadTask"])) 
+{
+  $filename = explode("-", $_REQUEST["filename"])[1];
+  foreach (new DirectoryIterator("../ump") as $file) 
+  {
+    if ($file->isDot()) continue;
+
+    if ($file->isDir() && substr($file->getFilename(), 0, 4) == "task") 
+    {
+      $taskName = explode("-", $file->getFilename())[1];
+        //print $file->getFilename() . '<br />';
+        if ($taskName == $_REQUEST["filename"])//"task-666-200729bkx78zwi")
+        {//echo $_REQUEST["filename"];
+          $dataHandle = dataStore()->openData($file->getFilename());
+          $umpleCode = $dataHandle->readData("model.ump");
+          //echo $outputUmple;
+          //echo "instructions:";
+          $instructions = $dataHandle->readData("instructions.md");
+          echo $umpleCode . "instructions:" . $instructions;
+          break;
+        }
+    }
+  }
+}
 else if (isset($_REQUEST["action"]))
 {
   handleUmpleTextChange();

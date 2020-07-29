@@ -148,6 +148,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonCopyEncodedURL");
   Page.initHighlighter("buttonCopyLocalBrowser");
   Page.initHighlighter("buttonLoadLocalBrowser");
+  Page.initHighlighter("buttonLoadTask");
   Page.initHighlighter("buttonDownloadFiles");
   Page.initHighlighter("buttonSmaller");
   Page.initHighlighter("buttonLarger");
@@ -216,6 +217,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleTransitionLabels");
   Page.initAction("buttonToggleGuards");
   Page.initAction("buttonToggleGuardLabels");
+  Page.initAction("buttonLoadTask");
     
   Page.initLabels();
 
@@ -842,6 +844,34 @@ Page.createBookmark = function()
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
   window.location.href = "bookmark.php?model=" + Page.getModel();
+}
+
+Page.showTaskArea = function()
+{
+  jQuery("#taskArea").css("display","block");
+}
+
+Page.showLoadTaskArea = function()
+{
+  jQuery("#taskArea").css("display","block");
+}
+
+Page.createTask = function()
+{
+  var taskName = jQuery("#taskName");
+  console.log(taskName.val());
+  var instructions = jQuery("#instructions");
+  console.log(instructions.val());
+  taskName.hide();
+  instructions.hide();
+  jQuery("#labelTaskName").hide();
+  jQuery("#labelInstructions").hide();
+  jQuery("#buttonSubmitTask").hide();
+  TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+  TabControl.saveActiveTabs();
+  console.log(Page.getModel());
+  window.location.href = "task.php?taskName=" + taskName.val() + "&instructions=" + instructions.val() + "&model=" + Page.getModel();
+  window.alert("Successfully created a Task!");
 }
 
 Page.toggleTabs = function()

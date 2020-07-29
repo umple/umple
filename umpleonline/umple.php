@@ -214,6 +214,11 @@ $output = $dataHandle->readData('model.ump');
   <input id="advancedMode" type="hidden" value="0" />
   <input id="model" type="hidden" value="<?php echo $dataHandle->getName()?>" />
 
+  <div id="showInstrcutionsArea" style="display: none;" readonly>
+    <label id="labelShowInstructions" for="textareaShowInstrcutions">Task Instructions:</label><br>
+    <textarea id="textareaShowInstrcutions"></textarea>
+  </div>
+
   <div id="topLine" class="bookmarkableUrl">
     <span id="linetext">Line=<input size=2 id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
   
@@ -261,6 +266,33 @@ $output = $dataHandle->readData('model.ump');
     <span style="font-size: 30%; white-space:nowrap;">  
     <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>
     </span>
+
+    <!-- <form action="/task.php" method="post">
+      <label for="taskName">Task name:</label><br>
+      <input type="text" id="taskName" name="fname"><br>
+      <label for="instruction">Instruction:</label><br>
+      <input type="text" id="instruction" name="lname"><br><br>
+      <label for="Model">Instruction:</label><br>
+      <input type="text" id="instruction" name="lname"><br><br>
+      <input type="submit" value="Submit">
+    </form>  -->
+
+    <span style="font-size: 30%; white-space:nowrap;">
+      <!-- <?//php if (isTask($dataHandle)) { ?>
+      <a id="buttonCreateTask" class="button2" href="javascript:Page.showTaskArea()">Modify this Task</a> -->
+      <a id="buttonCreateTask" class="button2" href="javascript:Page.showTaskArea()">Create a Task</a> 
+    </span>
+
+    <div id="taskArea" style="display: none;">
+      <br>
+      <label id="labelTaskName" for="taskName">Task name:</label><br>
+      <input type="text" id="taskName" name="fname"><br>
+      <label id="labelInstructions" for="instructions">Instruction:</label><br>
+      <textarea id="instructions"></textarea>
+      
+      <span id="buttonSubmitTask">
+      <a href="javascript:Page.createTask()">Submit Task</a> </span>
+    </div>
     
     <span id="restorecode" >&nbsp; &nbsp; <a href="#"> Restore Saved State</a></span>
 
@@ -323,6 +355,19 @@ $output = $dataHandle->readData('model.ump');
               Load from Browser
             </li>
             
+            <li id="buttonLoadTask">
+              <img src="scripts/copy.png"/> 
+              Load a Task
+            </li>
+
+            <div id="loadTaskNameArea" style="display: none;">
+              <label id="labelLoadTaskName" for="inputLoadTaskName">Task name:</label><br>
+              <input type="text" id="inputLoadTaskName" name="ffname"><br>
+              
+              <span id="buttonSubmitLoadTask">
+              <a href="javascript:Action.submitLoadTask()">Load Task</a> </span>
+            </div>
+
             <li id="buttonDownloadFiles" class="downloadFiles">
               <img src="scripts/copy.png"/> 
                Download Files

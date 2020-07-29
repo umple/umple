@@ -357,6 +357,12 @@ function isBookmark($dataHandle)
     return substr($modelId,0,3) != "tmp";
 }
 
+function isTask($dataHandle)
+{
+    $modelId = $dataHandle->getName();
+    return substr($modelId,0,4) == "task";
+}
+
 // delete everything stored in a directory
 function recursiveDelete($str){
         if(is_file($str)){
