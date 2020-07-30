@@ -25,6 +25,7 @@ COPY . /var/www
 RUN chown -R :nginx /var/www && \
     chmod -R g+r /var/www && \
     chmod -R g+w /var/www/ump && \
+    touch /supervisord.log && \
     chmod a+rw /supervisord.log
 
 # this is what runs on container startup
