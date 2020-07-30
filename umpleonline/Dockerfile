@@ -24,9 +24,7 @@ COPY . /var/www
 # session data should be written
 RUN chown -R :nginx /var/www && \
     chmod -R g+r /var/www && \
-    chmod -R g+w /var/www/ump && \
-    touch /supervisord.log && \
-    chmod a+rw /supervisord.log
+    chmod -R g+w /var/www/ump
 
 # this is what runs on container startup
 CMD supervisord --nodaemon --configuration=/etc/supervisord.conf
