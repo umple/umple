@@ -12,11 +12,9 @@ COPY docker_config/php-fpm.conf /etc/php7/php-fpm.d/php-fpm.conf
 # javadoc by linking it into /usr/bin so UmpleOnline can use it.
 RUN ln -s /usr/lib/jvm/default-jvm/bin/javadoc /usr/bin/javadoc
 
+# Save the branch so it can be accessed internally
 ARG gitbranch
 RUN echo $gitbranch > /etc/umplegitbranch.txt
-
-# Save the branch of git so this can be displayed if needed
-RUN git symbolic-ref --short HEAD > /etc/umplegitbranch.txt
 
 # copy over the website data
 COPY . /var/www
