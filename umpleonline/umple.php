@@ -1,4 +1,6 @@
 <?php
+ini_set("display_errors", 1);
+ini_set('display_startup_errors', '1');
 // Copyright: All contributors to the Umple Project
 // This file is made available subject to the open source license found at:
 // http://umple.org/license
@@ -14,6 +16,10 @@ if (isset($_REQUEST["model"])) {
     readfile('../404.shtml');
     exit();
   }
+}
+
+if (isset($_REQUEST["instructions"])) {
+  
 }
 
 $diagramtype = "";
@@ -51,7 +57,12 @@ if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
 }
 
 $dataHandle = extractFilename();
-
+if (substr($dataHandle->getName(), 0, 4) == "task")
+{
+  $doLoadTask = true;
+} else {
+  $doLoadTask = false;
+}
 // Core options after ? and between &. One of the first four is allowed
 
 // example=xxx means load the .ump file named xxx
@@ -276,23 +287,6 @@ $output = $dataHandle->readData('model.ump');
       <input type="text" id="instruction" name="lname"><br><br>
       <input type="submit" value="Submit">
     </form>  -->
-
-    <span style="font-size: 30%; white-space:nowrap;">
-      <!-- <?//php if (isTask($dataHandle)) { ?>
-      <a id="buttonCreateTask" class="button2" href="javascript:Page.showTaskArea()">Modify this Task</a> -->
-      <a id="buttonCreateTask" class="button2" href="javascript:Page.showTaskArea()">Create a Task</a> 
-    </span>
-
-    <div id="taskArea" style="display: none;">
-      <br>
-      <label id="labelTaskName" for="taskName">Task name:</label><br>
-      <input type="text" id="taskName" name="fname"><br>
-      <label id="labelInstructions" for="instructions">Instruction:</label><br>
-      <textarea id="instructions"></textarea>
-      
-      <span id="buttonSubmitTask">
-      <a href="javascript:Page.createTask()">Submit Task</a> </span>
-    </div>
     
     <span id="restorecode" >&nbsp; &nbsp; <a href="#"> Restore Saved State</a></span>
 
@@ -354,6 +348,33 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/copy.png"/> 
               Load from Browser
             </li>
+
+            <li id="buttonDownloadFiles" class="downloadFiles">
+              <img src="scripts/copy.png"/> 
+               Download Files
+            </li>                        
+          </ul>
+        
+          <ul>
+            <li class="subtitle">TASK</li>
+
+            <div id="createTaskArea" style="display: none;">
+              <br>
+              <label id="labelTaskName" for="taskName">Task name:</label><br>
+              <input type="text" id="taskName" name="fname"><br>
+              <label id="labelInstructions" for="instructions">Instruction:</label><br>
+              <textarea id="instructions"></textarea>
+              
+              <span id="buttonSubmitTask">
+              <a href="javascript:Page.createTask()">Submit Task</a> </span>
+            </div>
+
+            <li id="buttonCreateTask">
+              <img src="scripts/copy.png"/> 
+              <!-- <?//php if (isTask($dataHandle)) { ?>
+              <a id="buttonCreateTask" class="button2" href="javascript:Page.showTaskArea()">Modify this Task</a> -->
+              Create a Task
+            </li>
             
             <li id="buttonLoadTask">
               <img src="scripts/copy.png"/> 
@@ -367,14 +388,8 @@ $output = $dataHandle->readData('model.ump');
               <span id="buttonSubmitLoadTask">
               <a href="javascript:Action.submitLoadTask()">Load Task</a> </span>
             </div>
-
-            <li id="buttonDownloadFiles" class="downloadFiles">
-              <img src="scripts/copy.png"/> 
-               Download Files
-            </li>            
-            
           </ul>
-        
+
           <ul class="second center-children">
             <li class="subtitle">RESET</li>
             <li id="ttStartOver"> 
@@ -681,7 +696,8 @@ $output = $dataHandle->readData('model.ump');
       <?php if($readOnly) { ?> true  <?php } else { ?> false <?php } ?>,
       <?php if($showLayout) { ?> true <?php } else { ?> false <?php } ?>,
       "<?php echo $diagramType ?>",
-      "<?php echo $generateDefault ?>"
+      "<?php echo $generateDefault ?>",
+      <?php if($doLoadTask) { ?> true  <?php } else { ?> false <?php } ?>
       ); //
   </script>
   <div class="visitors-count" align="right">

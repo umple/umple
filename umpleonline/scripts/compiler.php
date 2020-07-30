@@ -1,4 +1,5 @@
 <?php
+ini_set("display_errors", 1);
 // Copyright: All contributers to the Umple Project
 // This file is made available subject to the open source license found at:
 // http://umple.org/license
@@ -90,7 +91,7 @@ else if (isset($_REQUEST["load"]))
 }
 else if (isset($_REQUEST["loadTask"])) 
 {
-  foreach (new DirectoryIterator("../ump") as $file) 
+  foreach (new DirectoryIterator("../ump/tasks") as $file) 
   {
     if ($file->isDot()) continue;
 
@@ -100,12 +101,12 @@ else if (isset($_REQUEST["loadTask"]))
         //print $file->getFilename() . '<br />';
         if ($taskName == $_REQUEST["filename"])//"task-666-200729bkx78zwi")
         {//echo $_REQUEST["filename"];
-          $dataHandle = dataStore()->openData($file->getFilename());
+          $dataHandle = dataStore()->openData("tasks/" . $file->getFilename());
           $umpleCode = $dataHandle->readData("model.ump");
           //echo $outputUmple;
           //echo "instructions:";
           $instructions = $dataHandle->readData("instructions.md");
-          echo $umpleCode . "instructions:" . $instructions;
+          echo $umpleCode . "task delimiter" . $instructions . "task delimiter" . $taskName . "task delimiter" . $file->getFilename();
           break;
         }
     }

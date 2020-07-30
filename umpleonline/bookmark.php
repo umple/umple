@@ -13,8 +13,14 @@ $tempModelId = $_REQUEST["model"];
 // The following creates a random numbered directory in ump
 // the result is ump/{dir}/model.ump
 date_default_timezone_set('UTC');
-$savedModelData = dataStore()->createData(date("ymd"));
-$tempModelData = dataStore()->openData($tempModelId);
+
+if (isset($_REQUEST["taskname"])) {
+  $savedModelData = dataStore()->createData("task-" . $_REQUEST["taskname"] . "-" . date("ymd"));
+  $tempModelData = dataStore()->openData("tasks/" . $tempModelId);
+} else {
+  $savedModelData = dataStore()->createData(date("ymd"));
+  $tempModelData = dataStore()->openData($tempModelId);
+}
 
 $saveModelId = $savedModelData->getName();
 
@@ -47,7 +53,13 @@ if (!$tempModelData->hasData('model.ump.erroroutput'))
 $savedModelData->cloneFrom($tempModelData);
 
 // Empty anything else in directory and remove it
-$tempModelData->delete();
+if (!isset($_REQUEST["taskname"])) 
+{
+  $tempModelData->delete();
+}
 
-header("Location: umple.php?model={$saveModelId}");
-
+if (isset($_REQUEST["taskname"])) {  
+  header("Location: umple.php?model={$saveModelId}");
+} else {
+  header("Location: umple.php?model={$saveModelId}");
+}

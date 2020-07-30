@@ -1,4 +1,7 @@
 <?php
+echo (integer)ini_get('display_errors');
+ini_set("display_errors", 1);
+echo (integer)ini_get('display_errors');
 require_once ("scripts/compiler_config.php");
 
 if (!isset($_REQUEST["model"]) || !isset($_REQUEST["taskName"]) || !isset($_REQUEST["instructions"]))
@@ -13,7 +16,7 @@ $tempModelId = $_REQUEST["model"];
 // The following creates a random numbered directory in ump
 // the result is ump/{dir}/model.ump
 date_default_timezone_set('UTC');
-$savedModelData = dataStore()->createData("task-" . $_REQUEST["taskName"] . "-" . date("ymd"));
+$savedModelData = dataStore()->createData("tasks/task-" . $_REQUEST["taskName"] . "-" . date("ymd"));
 $tempModelData = dataStore()->openData($tempModelId);
 
 $saveModelId = $savedModelData->getName();
@@ -51,5 +54,5 @@ $savedModelData->writeData("taskdetails.json", "{\"profName\" : \"Timothy Lethbr
 // Empty anything else in directory and remove it
 $tempModelData->delete();
 
-header("Location: umple.php?model={$saveModelId}");
-
+//header("Location: umple.php?model={$saveModelId}");
+header("Location: umple.php");

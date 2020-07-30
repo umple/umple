@@ -134,6 +134,10 @@ Action.clicked = function(event)
       }
     }
   }
+  else if (action == "CreateTask") 
+  {
+    jQuery("#createTaskArea").css("display","block");
+  }
   else if (action == "LoadTask")
   {
     jQuery("#loadTaskNameArea").css("display","block");
@@ -425,23 +429,23 @@ Action.loadFileCallback = function(response)
   if (!Action.manualSync) Action.updateUmpleDiagram();
 }
 
-Action.loadTask = function(taskName)
-{
-  console.log(taskName);
-  Ajax.sendRequest("scripts/compiler.php",Action.loadTaskCallback,format("loadTask=1&filename={0}",taskName));
-}
+// Action.loadTaskExceptCode = function(taskName)
+// {
+//   Ajax.sendRequest("scripts/compiler.php",Action.loadTaskExceptCodeCallback,format("loadTaskExceptCode=1&filename={0}",taskName));
+// }
 
-Action.loadTaskCallback = function(response)
+Action.loadTaskExceptCodeCallback = function(response)
 {
-  console.log(response);
+  console.log("111111111111111111111111111");
+  //console.log(response);
   Action.freshLoad = true;
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   if (Object.keys(TabControl.tabs).length > 1) return;
 
-  TabControl.getCurrentHistory().save(response.responseText,"loadTaskCallback");
-  var responseArray = response.responseText.split("instructions:")
-  Page.setUmpleCode(responseArray[0]);
+  TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
+  var responseArray = response.responseText.split("task delimiter");
   jQuery("#textareaShowInstrcutions").val(responseArray[1]);
+  jQuery("#labelShowInstructions").text("Task Instructions: " + responseArray[2]);
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {
     var extractedName = TabControl.extractNameFromCode(responseArray[0]);
@@ -453,12 +457,48 @@ Action.loadTaskCallback = function(response)
   if (!Action.manualSync) Action.updateUmpleDiagram();
 }
 
+Action.loadTask = function(taskName, isBookmark)
+{
+  jQuery("#showInstrcutionsArea").css("display","block");
+  if (!isBookmark)
+  {
+    Ajax.sendRequest("scripts/compiler.php",Action.loadTaskCallback,format("loadTask=1&filename={0}",taskName));
+  } else {
+    Ajax.sendRequest("scripts/compiler.php",Action.loadTaskExceptCodeCallback,format("loadTask=1&filename={0}",taskName));
+  }
+}
+
+Action.loadTaskCallback = function(response)
+{
+  //console.log(response);
+  Action.freshLoad = true;
+  // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
+  if (Object.keys(TabControl.tabs).length > 1) return;
+
+  TabControl.getCurrentHistory().save(response.responseText,"loadTaskCallback");
+  var responseArray = response.responseText.split("task delimiter");
+  Page.setUmpleCode(responseArray[0]);
+  jQuery("#textareaShowInstrcutions").val(responseArray[1]);
+  jQuery("#labelShowInstructions").text("Task Instructions: " + responseArray[2]);
+  if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
+  {
+    var extractedName = TabControl.extractNameFromCode(responseArray[0]);
+    if (extractedName)
+    {
+      TabControl.useActiveTabTo(TabControl.renameTab)(extractedName, true);
+    }
+  }
+  if (!Action.manualSync) Action.updateUmpleDiagram();
+    TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+    TabControl.saveActiveTabs();
+    //console.log(Page.getModel());
+    window.location.href = "bookmark.php?taskname=" + responseArray[2] + "&model=" + responseArray[3];
+}
+
 Action.submitLoadTask = function()
 {
   var taskName = jQuery("#inputLoadTaskName");
-  Action.loadTask(taskName.val());
-  jQuery("#loadTaskNameArea").css("display","block");
-  jQuery("#showInstrcutionsArea").css("display","block");
+  Action.loadTask(taskName.val(), false);
 }
 Action.saveNewFile = function()
 {

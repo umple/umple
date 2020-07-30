@@ -50,7 +50,7 @@ Page.modifiedDiagrams = false;
 
 
 // The following is set called from umple.php
-Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault)
+Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask)
 { 
   Layout.isDiagramVisible = doShowDiagram;  
   Layout.isTextVisible = doShowText;  
@@ -119,6 +119,11 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   if(Page.readOnly) {jQuery("#" + Page.umpleCanvasId()).addClass("photoReady");}
 
   Action.loadFile();
+  if (doLoadTask)
+  {
+    Action.loadTask(jQuery("#model").val().split("-")[1], true);
+  } else {
+  }
   
   jQuery(generateDefault).prop("selected",true);
 };
@@ -148,6 +153,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonCopyEncodedURL");
   Page.initHighlighter("buttonCopyLocalBrowser");
   Page.initHighlighter("buttonLoadLocalBrowser");
+  Page.initHighlighter("buttonCreateTask");
   Page.initHighlighter("buttonLoadTask");
   Page.initHighlighter("buttonDownloadFiles");
   Page.initHighlighter("buttonSmaller");
@@ -198,6 +204,8 @@ Page.initPaletteArea = function()
   Page.initAction("buttonCopyEncodedURL");
   Page.initAction("buttonCopyLocalBrowser");
   Page.initAction("buttonLoadLocalBrowser");
+  Page.initAction("buttonCreateTask");
+  Page.initAction("buttonLoadTask");
   Page.initAction("buttonDownloadFiles");
   Page.initAction("buttonUndo");
   Page.initAction("buttonRedo");
@@ -217,7 +225,6 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleTransitionLabels");
   Page.initAction("buttonToggleGuards");
   Page.initAction("buttonToggleGuardLabels");
-  Page.initAction("buttonLoadTask");
     
   Page.initLabels();
 
@@ -844,16 +851,6 @@ Page.createBookmark = function()
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
   window.location.href = "bookmark.php?model=" + Page.getModel();
-}
-
-Page.showTaskArea = function()
-{
-  jQuery("#taskArea").css("display","block");
-}
-
-Page.showLoadTaskArea = function()
-{
-  jQuery("#taskArea").css("display","block");
 }
 
 Page.createTask = function()
