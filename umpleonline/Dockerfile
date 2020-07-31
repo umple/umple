@@ -24,7 +24,7 @@ COPY . /var/www
 # session data should be written
 RUN chown -R :nginx /var/www && \
     chmod -R g+r /var/www && \
-    chmod -R g+w /var/www/ump \
+    chmod -R g+w /var/www/ump && \
     mkdir /var/run && \
     chown -R :nginx /var/run && \
     chmod -R g+rw /var/run  && \
