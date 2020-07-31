@@ -14,7 +14,7 @@ RUN ln -s /usr/lib/jvm/default-jvm/bin/javadoc /usr/bin/javadoc
 
 # Save the branch so it can be accessed internally
 ARG gitbranch
-RUN echo $gitbranch > /etc/umplegitbranch.txt
+RUN echo $gitbranch > /tmp/umplegitbranch.txt
 
 # copy over the website data
 COPY . /var/www
