@@ -27,5 +27,5 @@ RUN chown -R :nginx /var/www && \
     chmod -R g+w /var/www/ump
 
 # this is what runs on container startup
-CMD supervisord --nodaemon --configuration=/etc/supervisord.conf
+CMD supervisord --nodaemon --configuration=/etc/supervisord.conf --logfile=/tmp/supervisord.log
 
