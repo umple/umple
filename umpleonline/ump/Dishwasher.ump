@@ -1,0 +1,182 @@
+// This example illustrates a simple simulation of a Dishwasher 
+// Author: Timothy Lethbridge
+// The simulation accepts input of a cycle to run,
+//    and also c to cancel and q to quit (see the main program)
+// The commands do and dc can also be used to simulate
+//    door opening and closing
+// These inputs are converted into methods that trigger events
+//    on state machines
+//
+// There are three state machines:
+//  core operates the cycles
+//    states: active (has substates), draining, idle and suspended
+//  timingSm runs a timer that updates the display
+//  doorSm tracks the door state and helps ensure pausing when open
+// Note that the main program and the two state machines operate
+// in separate threads.
+
+class Dishwasher {
+  // This will be used to display the time remaining and
+  // track that time
+  // In a real system, this would be in minutes,
+  // but it will be seconds in this simulation
+  Integer minutesRemaining = 0;
+  
+  // Time in cycle segments we are not timing yet
+  Integer subsequentTime = 0;
+  
+  // Fixed times for various tasks
+  const Integer PrewashTime=5;
+  const Integer WashTime=10;
+  const Integer RinseTime=5;
+  
+  // This will be set if a timed operation needs to not count down,
+  // e.g. when the door is open
+  Boolean paused = false;
+  
+  queued doorSm {
+    closed {
+      openDoor / {paused = true;} -> open;
+    }
+    open {
+      closeDoor / {paused = false;}-> closed;
+    }
+  }
+
+  // Central state machine for system state
+  queued core {
+    idle {
+      // in this state the dishwasher can accept a cycle command
+      entry / {display("Enter cycle to run (n,f,r,c,q)");}
+      normal [!paused] / {minutesRemaining = PrewashTime;} -> active;
+      fast [!paused]
+        / {minutesRemaining = WashTime;} -> mainWash;  // skips prewash
+      rinse [!paused]
+        / {minutesRemaining = RinseTime;}-> rinsing;  // skips wash
+    }
+    active {
+      cancel
+        / {display("CANCELLING");startTimer(1,0);} -> draining;
+      openDoor -> suspended;      
+      preWash {
+        // The normal cycle starts with the use of pure water
+        // to get most of the dirt off
+        entry / {display("PREWASH");}
+        entry
+          / {startTimer(minutesRemaining,WashTime+RinseTime);}
+        timerEnded [minutesRemaining == 0]
+          / {minutesRemaining=WashTime;} -> mainWash;
+      }
+      mainWash {
+        entry / {display("MAIN WASH");}
+        entry / {startTimer(minutesRemaining,RinseTime);}              
+        timerEnded [minutesRemaining == 0]
+          / {minutesRemaining=RinseTime;} -> rinsing;
+      }
+      rinsing {
+        entry / {display("RINSING");}
+        entry / {startTimer(minutesRemaining,0);}          
+        timerEnded [minutesRemaining == 0] -> draining;
+      }
+    }
+    
+    draining {
+       entry / {display("DRAINING");}
+       after(1) -> idle;
+    }
+    suspended {
+      entry / {display("SUSPENDED - door open "
+        +(minutesRemaining+subsequentTime)+" left");}    
+      closeDoor -> active.H;
+      exit / {display("RESUMING");}       
+    }
+  }
+  
+ 
+  
+  queued timingSm {
+    idle {
+      startTimer(int numMins, int subsequentMins) -> countingDown;
+    }
+    countingDown {
+      startTimer(int numMins, int subsequentMins) -> countingDown;
+      
+      after(1.0) [minutesRemaining >= 1 && ! paused]  / {
+        displayTime();
+        minutesRemaining--;
+      } -> countingDown;
+      
+      after(1.0) [minutesRemaining <= 0] -> idle;
+      
+      openDoor -> idle;
+      
+      exit / {timerEnded();}
+    }
+  }
+  
+  before startTimer {
+    minutesRemaining = numMins;
+    subsequentTime = subsequentMins;
+  }
+  
+  void display(String s) {
+    System.out.println(s);
+  }
+  
+  void displayTime() {
+    System.out.println("DISPLAY: "+(minutesRemaining+subsequentTime));
+  } 
+  
+  // This main program allows the user to enter commands to change state
+  // The user can therefore operate the dishwasher in simulation
+  // with real timing
+  public static void main(String[] argv) {
+    Dishwasher dw = new Dishwasher();
+    System.out.println("c/q/do can interrupt to cancel/quit/door open");
+    System.out.println("dc to close door");
+    Scanner s = new Scanner(System.in);
+    String command ="";
+    while(true) {
+      while(!s.hasNextLine()) {
+        try { Thread.sleep(1000); }
+        catch (InterruptedException e) {
+          dw.display("Quitting due to end of input");
+          System.exit(0);          
+        }
+      }
+      command = s.nextLine();
+
+      switch(command) {
+        case "q":
+          dw.display("Quitting due to q command");
+          System.exit(0);
+        case "n":
+          dw.normal();
+          break;
+        case "f":
+          dw.fast();
+          break;          
+        case "r":
+          dw.rinse();
+          break;          
+        case "c":
+          dw.cancel();
+          break;          
+        case "dc":
+          dw.closeDoor();
+          break;    
+        case "do":
+          dw.openDoor();
+          break;            
+        
+        default:
+          break;
+      }
+    }
+  }
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code
+    

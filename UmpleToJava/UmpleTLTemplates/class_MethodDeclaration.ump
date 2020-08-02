@@ -52,7 +52,7 @@ class UmpleToJava {
 		
 			append(realSb,"\n  {");
 		
-			append(realSb,"\n    Vector v = new Vector({0});", aMethod.numberOfMethodParameters());
+			append(realSb,"\n    Vector<Object> v = new Vector<Object>({0});", aMethod.numberOfMethodParameters());
 			for ( int i=0; i < aMethod.numberOfMethodParameters(); i++)
 			{
 			  append(realSb,"\n    v.add({0}, {1});",i, aMethod.getMethodParameter(i).getName());

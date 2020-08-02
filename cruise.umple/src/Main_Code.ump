@@ -222,6 +222,13 @@ class UmpleConsoleMain
          }
 
       String successWord = compileSuccess ? "Success! " : "";
+      
+      if(compileSuccess) {
+        for (UmpleClass mainClass: CodeCompiler.getMainClasses(model)) {
+          System.out.println("  Main method found. Run java "+mainClass.getName());
+        }
+      }  
+      
       System.out.println(successWord + "Processed "+ cfg.getUmpleFile() + ".");
       cfg.getLinkedFilesAsFile().stream()
         .filter(File::exists)
