@@ -136,10 +136,10 @@
   docker pull umple/umpleonline
 </pre>
 
-<li>In a terminal (console), invoke the image (you can change the 8000 to be another port both here and in the next instruction if you prefer):
+<li>In a terminal (console), invoke the image (you can change the first 8000 to be another port both here and in the next instruction if you prefer):
 
 <pre>
-  docker run --rm -ti -p 8000:80 umple/umpleonline >/dev/null
+  docker run --rm -ti -p 8000:8000 umple/umpleonline >/dev/null
 </pre>
 
 <li>In a web browser, go to the following link: <a href="http://localhost:8000/umple.php">http://localhost:8000/umple.php</a><br/>&nbsp;<br/>
@@ -155,9 +155,9 @@
 <ul>
 
   <li> Run docker as:
-  docker run --rm -ti -p 8000:80 umple/umpleonline >/dev/null
+  docker run --rm -ti -p 8000:8000 umple/umpleonline >/dev/null
   <pre>
-    docker run --rm -ti -p 8000:80 -v {dir}:{dir:t} umple/umpleonline >/dev/null
+    docker run --rm -ti -p 8000:8000 -v {dir}:{dir:t} umple/umpleonline >/dev/null
   </pre>
   
   <li> and open your browser to href="http://localhost:8000/umple.php">http://localhost:8000/umple.php?model={dir:t}
@@ -187,7 +187,7 @@
 
 </ul>
 
-<p>The Docker UmpleOnline option is not designed for large-scale projects; for those use the command-line (A) or Eclipse (B) downloads above. However, the Docker option can 
+<p>More information about Umple in Docker can be found at <a href="http://docker.umple.org">http://docker.umple.org</a></p>
 
 
 
