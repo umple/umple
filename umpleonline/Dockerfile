@@ -1,4 +1,5 @@
 FROM umple/umpleonline-base:latest
+# To test local base, change the above to :local
 # To save 200MB on image size, all our dependencies are in a separate
 # slow-changing base image
 
@@ -25,10 +26,14 @@ COPY . /var/www
 RUN chown -R :nginx /var/www && \
     chmod -R g+r /var/www && \
     chmod -R g+w /var/www/ump && \
+    chown -R :nginx /run && \
+    chmod -R g+rw /run  && \
     chown -R :nginx /var/run && \
     chmod -R g+rw /var/run  && \
     chown -R :nginx /var/log && \
-    chmod -R g+rw /var/log
+    chmod -R g+rw /var/log && \
+    chown -R :nginx /var/cache && \
+    chmod -R g+rw /var/cache
 
 # this is what runs on container startup
 CMD supervisord --nodaemon --configuration=/etc/supervisord.conf --logfile=/var/log/supervisord.log --pidfile=/var/log/supervisord.pid
