@@ -421,7 +421,14 @@ function extractFilename()
     // If the argument is model=X, then load that saved tmp or bookmarked model
     if (isset($_REQUEST["model"]))
     {
-        $dataHandle = dataStore()->openData($_REQUEST['model']);
+        if (isset($_REQUEST["task"]))
+        {
+            $dataHandle = dataStore()->openData("tasks/" . $_REQUEST['model']);
+        }
+        else
+        {
+            $dataHandle = dataStore()->openData($_REQUEST['model']);
+        }
         // if the model does not exist, create one containing an error message
         if(!$dataHandle){
             $dataHandle = dataStore()->createData();
@@ -719,11 +726,14 @@ function handleUmpleTextChange()
   }
 
   list($dataname, $dataHandle) = getOrCreateDataHandle();
+  //$input = $input . $dataname;
   $dataHandle->writeData($dataname, $input);
   $workDir = $dataHandle->getWorkDir();
   $filename = $workDir->getPath().'/'.$dataname;
 
   $umpleOutput = executeCommand("java -jar umplesync.jar -{$action} \"{$actionCode}\" {$filename}", "-{$action} \"{$rawActionCode}\" {$filename}");
+  //echo $dataHandle->getName();
+  //$umpleOutput = $umpleOutput . $dataHandle->getWorkDir()->getPath();
   $dataHandle->writeData($dataname, $umpleOutput);
   echo $umpleOutput;
   return;

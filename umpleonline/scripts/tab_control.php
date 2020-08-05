@@ -4,10 +4,18 @@ Tab control handlers.
 */
 
 header("Access-Control-Allow-Origin: *");
+if(isset($_REQUEST["model"]))
+{
+    $modelId = $_REQUEST["model"];
+    if (substr($modelId, 0, 4) == "task")
+    {
+        $modelId = "tasks/" . $modelId;
+    }
+}
 
 if (isset($_REQUEST["list"]) && isset($_REQUEST["model"]))
 {
-    $model = $_REQUEST["model"];
+    $model = $modelId;
 
     // Try to obtain the lock, but we don't actually need to block on the load operation
     $lock_file = "../ump/".$model."/.lockfile";
@@ -46,7 +54,7 @@ else if (isset($_REQUEST["rename"]) &&
     isset($_REQUEST["oldname"]) &&
     isset($_REQUEST["newname"]))
 {
-    $model = $_REQUEST["model"];
+    $model = $modelId;
     $oldfilename = "../ump/".$model."/".$_REQUEST["oldname"].".ump";
     $newfilename = "../ump/".$model."/".$_REQUEST["newname"].".ump";
 
@@ -63,7 +71,7 @@ else if (isset($_REQUEST["delete"]) &&
     isset($_REQUEST["model"]) &&
     isset($_REQUEST["name"]))
 {
-    $filename = "../ump/".$_REQUEST["model"]."/".$_REQUEST["name"].".ump";
+    $filename = "../ump/".$modelId."/".$_REQUEST["name"].".ump";
 
     // Do not allow deletion of model.ump
     if (!file_exists($filename) || $_REQUEST["name"] == "model") {
@@ -77,7 +85,7 @@ else if (isset($_REQUEST["delete"]) &&
 }
 else if (isset($_REQUEST["download"]) && isset($_REQUEST["model"]))
 {
-    $model = $_REQUEST["model"];
+    $model = $modelId;
     $zip_file_name = "umplefiles.zip";
     $zip_file = "../ump/".$model."/".$zip_file_name;
     if (file_exists($zip_file)) {
@@ -110,7 +118,7 @@ else if (isset($_REQUEST["download"]) && isset($_REQUEST["model"]))
 }
 else if (isset($_REQUEST["index"]) && isset($_REQUEST["model"]))
 {
-    $model = $_REQUEST["model"];
+    $model = $modelId;
  
     // Try to obtain the lock
     $lock_file = "../ump/".$model."/.lockfile";

@@ -46,12 +46,14 @@ Page.showTransitionLabels = false;
 Page.showGuardLabels = false;
 Page.showGuards = true;
 Page.modifiedDiagrams = false;
+Page.canEditTask = false;
 
 
 
 // The following is set called from umple.php
-Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask)
+Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask, doEditTask)
 { 
+  Page.canEditTask = doEditTask;
   Layout.isDiagramVisible = doShowDiagram;  
   Layout.isTextVisible = doShowText;  
   Layout.isPaletteVisible = doShowMenu;  
@@ -121,8 +123,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Action.loadFile();
   if (doLoadTask)
   {
-    Action.loadTask(jQuery("#model").val().split("-")[1], true);
-  } else {
+    Action.loadTask(jQuery("#model").val().split("-")[1], true); // load task instruction
   }
   
   jQuery(generateDefault).prop("selected",true);
@@ -153,7 +154,14 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonCopyEncodedURL");
   Page.initHighlighter("buttonCopyLocalBrowser");
   Page.initHighlighter("buttonLoadLocalBrowser");
-  Page.initHighlighter("buttonCreateTask");
+  if (Page.canEditTask)
+  {
+    Page.initHighlighter("buttonEditTask");
+  }
+  else
+  {
+    Page.initHighlighter("buttonCreateTask");
+  }
   Page.initHighlighter("buttonLoadTask");
   Page.initHighlighter("buttonDownloadFiles");
   Page.initHighlighter("buttonSmaller");
@@ -204,7 +212,14 @@ Page.initPaletteArea = function()
   Page.initAction("buttonCopyEncodedURL");
   Page.initAction("buttonCopyLocalBrowser");
   Page.initAction("buttonLoadLocalBrowser");
-  Page.initAction("buttonCreateTask");
+  if (Page.canEditTask)
+  {
+    Page.initAction("buttonEditTask");
+  }
+  else
+  {
+    Page.initAction("buttonCreateTask");
+  }
   Page.initAction("buttonLoadTask");
   Page.initAction("buttonDownloadFiles");
   Page.initAction("buttonUndo");
@@ -856,19 +871,30 @@ Page.createBookmark = function()
 Page.createTask = function()
 {
   var taskName = jQuery("#taskName");
-  console.log(taskName.val());
+  //console.log(taskName.val());
   var instructions = jQuery("#instructions");
-  console.log(instructions.val());
-  taskName.hide();
-  instructions.hide();
-  jQuery("#labelTaskName").hide();
-  jQuery("#labelInstructions").hide();
-  jQuery("#buttonSubmitTask").hide();
+  //console.log(instructions.val());
+  //taskName.hide();
+  //instructions.hide();
+  // jQuery("#labelTaskName").hide();
+  // jQuery("#labelInstructions").hide();
+  // jQuery("#buttonSubmitTask").hide();
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
-  console.log(Page.getModel());
+  //console.log(Page.getModel());
+  console.log("task.php?taskName=" + taskName.val() + "&instructions=" + instructions.val() + "&model=" + Page.getModel());
   window.location.href = "task.php?taskName=" + taskName.val() + "&instructions=" + instructions.val() + "&model=" + Page.getModel();
   window.alert("Successfully created a Task!");
+}
+
+Page.editTask = function()
+{
+  var instructions = jQuery("#instructions");
+  var taskName = jQuery("#model").val().split("-")[1]
+  TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+  TabControl.saveActiveTabs();
+  window.location.href = "task.php?edit=1&taskName=" + taskName + "&instructions=" + instructions.val() + "&model=" + Page.getModel();
+  window.alert("Successfully edit Task " + taskName + "!");
 }
 
 Page.toggleTabs = function()

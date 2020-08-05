@@ -295,12 +295,21 @@ TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
 TabControl.saveTab = function(tabId, umpleCode)
 {
   var filename = TabControl.getTabFilename(TabControl.tabs[tabId].name);
+  var modelname = Page.getModel();
   localStorage[filename] = umpleCode;
+  if (String(Page.getFilename()).indexOf("tasks") !== -1)
+  {
+    filename = "tasks/" + filename;
+    modelname = "tasks/" + modelname;
+  }
+  // console.log("AAAAAAAAAatab filename: ");
+  // console.log(filename);
+  // console.log(umpleCode);
   var umpleCodeWithoutAmpersand = umpleCode.replace(/&/g, "%26").replace(/\+/g, "%2B");
   TabControl.addToRequestQueue(
     "scripts/compiler.php",
     TabControl.saveTabCallback(tabId),
-    format("save=1&&lock=1&&model={2}&&umpleCode={0}&&filename={1}", umpleCodeWithoutAmpersand, filename, Page.getModel()));
+    format("save=1&&lock=1&&model={2}&&umpleCode={0}&&filename={1}", umpleCodeWithoutAmpersand, filename, modelname));
 }
 
 TabControl.saveTabCallback = function(tabId)

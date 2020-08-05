@@ -10,7 +10,14 @@ require_once ("scripts/compiler_config.php");
 cleanupOldFiles();
 
 if (isset($_REQUEST["model"])) {
-  $dataHandle = dataStore()->openData($_REQUEST['model']);
+  if (isset($_REQUEST["task"]))
+  {
+    $dataHandle = dataStore()->openData("tasks/" . $_REQUEST['model']);
+  }
+  else
+  {
+    $dataHandle = dataStore()->openData($_REQUEST['model']);
+  }
   if (!$dataHandle) {
     header('HTTP/1.0 404 Not Found');
     readfile('../404.shtml');
@@ -18,9 +25,6 @@ if (isset($_REQUEST["model"])) {
   }
 }
 
-if (isset($_REQUEST["instructions"])) {
-  
-}
 
 $diagramtype = "";
 $isCachedExample = false;
@@ -59,9 +63,9 @@ if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
 $dataHandle = extractFilename();
 if (substr($dataHandle->getName(), 0, 4) == "task")
 {
-  $doLoadTask = true;
+  $doLoadTaskInstruction = true;
 } else {
-  $doLoadTask = false;
+  $doLoadTaskInstruction = false;
 }
 // Core options after ? and between &. One of the first four is allowed
 
@@ -221,13 +225,21 @@ $output = $dataHandle->readData('model.ump');
     </pre>
   </noscript> 
       
-  <input id="filename" type="hidden" value="<?php echo '../ump/'.$dataHandle->getName().'/model.ump' ?>" />
+  <input id="filename" type="hidden" value="<?php if (isset($_REQUEST["task"])) { echo '../ump/tasks/'.$dataHandle->getName().'/model.ump'; } else {echo '../ump/'.$dataHandle->getName().'/model.ump'; }?>" />
   <input id="advancedMode" type="hidden" value="0" />
   <input id="model" type="hidden" value="<?php echo $dataHandle->getName()?>" />
 
-  <div id="showInstrcutionsArea" style="display: none;" readonly>
+  <div id="reminder" <?php if (!isset($_REQUEST["task"])) {
+    echo "style=\"display: none;\"";
+  } ?>>
+    <label>  Edit task starting model in this page. To edit task instruction, please navigate the task submenu under SAVE&LOAD.</label>
+    <br/>
+    <br/>
+  </div>
+
+  <div id="showInstrcutionsArea" style="display: none;">
     <label id="labelShowInstructions" for="textareaShowInstrcutions">Task Instructions:</label><br>
-    <textarea id="textareaShowInstrcutions"></textarea>
+    <textarea id="textareaShowInstrcutions" readonly></textarea>
   </div>
 
   <div id="topLine" class="bookmarkableUrl">
@@ -267,7 +279,7 @@ $output = $dataHandle->readData('model.ump');
   
     <span style="font-size: 30%; white-space:nowrap;">  
     <?php if (isBookmark($dataHandle)) { ?>
-      <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
+      <a class="button2" id="topBookmarkable" href="umple.php?<?php echo "task=1&" ?>model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
     <?php } else { ?>
       <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
     <?php } ?>
@@ -360,21 +372,34 @@ $output = $dataHandle->readData('model.ump');
 
             <div id="createTaskArea" style="display: none;">
               <br>
-              <label id="labelTaskName" for="taskName">Task name:</label><br>
-              <input type="text" id="taskName" name="fname"><br>
-              <label id="labelInstructions" for="instructions">Instruction:</label><br>
-              <textarea id="instructions"></textarea>
-              
+              <div id="taskNameArea" style="display: none;">
+                <label id="labelTaskName" for="taskName">Task name:</label><br>
+                <input type="text" id="taskName" name="fname"><br>
+              </div>
+                <label id="labelInstructions" for="instructions">Instruction:</label><br>
+                <textarea id="instructions"></textarea>
+
               <span id="buttonSubmitTask">
-              <a href="javascript:Page.createTask()">Submit Task</a> </span>
+              <?php if (!isset($_REQUEST["task"])) { ?>
+                <a href="javascript:Page.createTask()">Submit Task</a> 
+              <?php } else { ?>
+                <a href="javascript:Page.editTask()">Submit changes to this Task</a> 
+              <?php } ?>
+              </span>
+
             </div>
 
-            <li id="buttonCreateTask">
-              <img src="scripts/copy.png"/> 
-              <!-- <?//php if (isTask($dataHandle)) { ?>
-              <a id="buttonCreateTask" class="button2" href="javascript:Page.showTaskArea()">Modify this Task</a> -->
-              Create a Task
-            </li>
+            <?php if (!isset($_REQUEST["task"])) { ?>
+              <li id="buttonCreateTask">
+                <img src="scripts/copy.png"/>
+                Create a Task
+              </li>
+            <?php } else { ?>
+              <li id="buttonEditTask">
+                <img src="scripts/copy.png"/>
+                Edit Task Instrcution
+              </li>
+            <?php } ?>
             
             <li id="buttonLoadTask">
               <img src="scripts/copy.png"/> 
@@ -697,7 +722,8 @@ $output = $dataHandle->readData('model.ump');
       <?php if($showLayout) { ?> true <?php } else { ?> false <?php } ?>,
       "<?php echo $diagramType ?>",
       "<?php echo $generateDefault ?>",
-      <?php if($doLoadTask) { ?> true  <?php } else { ?> false <?php } ?>
+      <?php if($doLoadTaskInstruction) { ?> true  <?php } else { ?> false <?php } ?>,
+      <?php if(isset($_REQUEST["task"])) { ?> true <?php } else { ?> false <?php } ?>
       ); //
   </script>
   <div class="visitors-count" align="right">
