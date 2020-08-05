@@ -43,7 +43,7 @@ class FeatureLeaf
 {
   isA FeatureNode;
   0..1 -- 0..1 MixsetOrFile mixsetOrFileNode;
-  after constructor() { setIsLeaf(true);}
+  after constructor { setIsLeaf(true);}
   //a leaf node returns its actual name as a unique name.
   public String getUniqueFeatureNodeName()
   {
@@ -56,7 +56,7 @@ class FragmentFeatureLeaf
 {
   isA FeatureNode;
   0..1 -- * MixsetFragment mixsetFragment;
-  after constructor() { setIsLeaf(true);}
+  after constructor { setIsLeaf(true);}
 }
 
 // A FeatureLink connects a source feature to target feature(s) in the feature diagram.
@@ -75,7 +75,7 @@ class MultiplicityFeatureConnectingOpType
 {
   isA FeatureLink;
   Multiplicity multiplicity = new Multiplicity();
-  after constructor(){
+  after constructor {
     this.setFeatureConnectingOpType(FeatureConnectingOpType.Multiplicity);
   }
 }
@@ -83,7 +83,7 @@ class MultiplicityFeatureConnectingOpType
 class XORFeatureConnectingOpType 
 {
   isA MultiplicityFeatureConnectingOpType;
-  after constructor(){
+  after constructor {
     this.setFeatureConnectingOpType(FeatureConnectingOpType.XOR);
     Multiplicity xorMultiplicity = new Multiplicity();
     xorMultiplicity.setRange("1","1");
