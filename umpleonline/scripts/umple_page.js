@@ -46,6 +46,7 @@ Page.showTransitionLabels = false;
 Page.showGuardLabels = false;
 Page.showGuards = true;
 Page.modifiedDiagrams = false;
+Page.allowPinch = false;
 
 
 
@@ -161,7 +162,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonToggleGuardLabels");
   Page.initHighlighter("buttonToggleTraits");
   Page.initHighlighter("buttonToggleFeatureDependency");
-
+  Page.initHighlighter("buttonallowPinch");
   
   Page.initToggleTool("buttonAddClass");
   Page.initToggleTool("buttonAddAssociation");
@@ -216,6 +217,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleTransitionLabels");
   Page.initAction("buttonToggleGuards");
   Page.initAction("buttonToggleGuardLabels");
+  Page.initAction("buttonAllowPinch");
     
   Page.initLabels();
 
@@ -269,7 +271,7 @@ Page.initOptions = function()
   jQuery("#buttonToggleGuardLabels").prop('checked',false);
   jQuery("#buttonToggleTraits").prop('checked',false);
   jQuery("#buttonToggleFeatureDependency").prop('checked',false);
-
+  jQuery("#buttonAllowPinch").prop('checked',false);
   
   if(Page.useEditableClassDiagram)
    jQuery("#buttonShowEditableClassDiagram").prop('checked', true);
@@ -571,6 +573,11 @@ Page.clickToggleGuardLabels = function() {
 Page.clickToggleGuardLabels = function() {
   jQuery('#buttonToggleGuardLabels').trigger('click');
 }
+
+Page.clickAllowPinch = function() {
+  jQuery('#buttonAllowPinch').trigger('click');
+}
+
 
 Page.isPhotoReady = function()
 {

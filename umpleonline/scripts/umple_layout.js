@@ -511,6 +511,8 @@ function LargeScreenManager()
       jQuery(editorHandle).resizable('option', 'maxWidth', this.maxEditorSize.width);
       jQuery(canvasHandle).resizable('option', 'maxWidth', this.maxCanvasSize.width);
     }
+    
+    Action.setupPinch(); // does nothing unless there is an svg    
   }
   
   this.adjustAfterWindowResize = function()
@@ -635,6 +637,7 @@ function LargeScreenManager()
     jQuery(modelEditorHandle).width(Layout.savedStartingWidth - deltaWidth);
     jQuery(layoutEditorHandle).width(Layout.savedStartingWidth - deltaWidth);
     jQuery(canvasHandle).css('left', '0px'); //Corrects the resize dragging moving the canvas right
+    Action.setupPinch(); // does nothing unless there is an svg        
   }
   
   this.canvasResized = function(event, ui)

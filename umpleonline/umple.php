@@ -603,8 +603,12 @@ $output = $dataHandle->readData('model.ump');
             </li>
             <li id="ttManualSync">
               <input id="buttonManualSync" class="checkbox" type="checkbox" name="manualSync" value="manualSync"/> 
-              <a id="labelManualSync" class="buttonExtend">Manual Sync</a> 
-            </li>          
+              <a id="labelManualSync" class="buttonExtend">Manual Sync</a>              
+            </li>
+            <li id="ttAllowPinch">
+              <input id="buttonAllowPinch" class="checkbox" type="checkbox" name="allowPinch" value="allowPinch"/> 
+              <a id="labelAllowPinch" class="buttonExtend">Pinch to Zoom</a>               
+            </li> 
           </ul>
          </div>
       </div> 
@@ -629,6 +633,8 @@ $output = $dataHandle->readData('model.ump');
   <?php if($showChrome) { ?>
     <div class="spacer row"></div>
   <?php } ?>
+
+  <script src="scripts/pinch.js" type="text/javascript"></script>
 
   <script>
     Page.init(
