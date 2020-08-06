@@ -249,6 +249,10 @@ Action.clicked = function(event)
   {
     Action.toggleGuardLabels();
   }
+  else if (action == "AllowPinch")
+  {
+    Action.allowPinch();
+  }
   else if (action == "ToggleFeatureDependency")
   {
     Action.toggleFeatureDependency();
@@ -2018,6 +2022,8 @@ Action.updateUmpleDiagramCallback = function(response)
     else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram )
     {
       jQuery("#umpleCanvas").html(format('{0}', diagramCode));
+      jQuery("#umpleCanvas").children().first().attr("id", "svgCanvas");
+      Action.setupPinch();
     }
     //Display structure diagram
     else if(Page.useStructureDiagram)
@@ -2226,6 +2232,11 @@ Action.toggleGuards = function()
 Action.toggleGuardLabels = function()
 {
   Page.showGuardLabels = !Page.showGuardLabels;
+  Action.redrawDiagram();
+}
+Action.allowPinch = function()
+{
+  Page.allowPinch = !Page.allowPinch;
   Action.redrawDiagram();
 }
 Action.toggleFeatureDependency = function()

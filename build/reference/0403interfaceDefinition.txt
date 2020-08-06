@@ -9,7 +9,8 @@ An interface defines a list of abstract <a href="MethodDefinition.html">methods<
 
 <ul>
 <li><a href="Dependclause.html">Dependencies</a></li>
-<li><a href="MethodDefinition.html">Method declarations</a></li>
+<li><a href="MethodDefinition.html">Method declarations</a> (methods with no body)</li>
+<li><a href="isAclause.html">isA clauses</a> (placing interfaces in an inheritance hierarchy)</li>
 </ul>
 
 <p>To implement an interface in a class, or to create subinterfaces, use an <a href="isAclause.html">isA clause</a>.</p>

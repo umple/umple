@@ -11,7 +11,7 @@ and can be defaulted to a certain value.</p>
 <p>It is important to distinguish an attribute from the concept of a 'field' or
 'instance variable' in Java or another programming language. An attribute is a
 UML/Umple entity that represents simple data. In Java it will become a field, but 
-there will also be methods associated with the Umple attribute to get it, set it, and constrain
+there will also be methods associated with the Umple attribute to get it, set it, and <a href="SimpleConstraints.html">constrain</a>
 its value. An attribute may also automatically be added to the argument list
 of the constructor and constructed in the constructor. In
 addition to representing attributes, Java fields also represent the ends of 

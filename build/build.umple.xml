@@ -389,11 +389,23 @@
 
   <target name="buildDockerImage">
     <exec executable="docker" dir="umpleonline" searchpath="true" failonerror="true">
-	<arg value="build" />
-	<arg value="--tag" />
-	<arg value="umpleonline" />
-	<arg value="." />
+      <arg value="build" />
+      <arg value="-t" />
+      <arg value="umple/umpleonline-base:local" />
+      <arg value="-f" />
+      <arg value="Dockerfile-base" />
+      <arg value="." />
     </exec>
+
+    <exec executable="docker" dir="umpleonline" searchpath="true" failonerror="true">
+      <arg value="build" />
+      <arg value="-t" />
+      <arg value="umple/umpleonline:local" />
+      <arg value="--build-arg" />
+      <arg value="gitbranch=localtest" />
+      <arg value="." />
+    </exec>
+
   </target>
 
 <!-- The Umplificator jar-->

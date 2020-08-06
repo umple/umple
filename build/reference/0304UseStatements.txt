@@ -4,9 +4,10 @@ noreferences
 
 @@description
 <p>Use statements allow you to decompose your system by embedding or referencing
-other model or program entities (i.e. classes) within your current model.</p>
+files containing other model or program entities (i.e. classes) within your current model or to include optional
+blocks of code that are specified within <a href="BasicMixsets.html">mixsets</a>.</p>
 
-<p>A model file will only be included once, subsequent "use" commands 
+<p>A model file or mixset will only be included once, subsequent "use" commands 
 for the same file will be ignored.</p>
 
 <p>A common technique is to create a 'master' Umple file that does nothing but have a list
