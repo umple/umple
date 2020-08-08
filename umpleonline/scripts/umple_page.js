@@ -157,6 +157,7 @@ Page.initPaletteArea = function()
   if (Page.canEditTask)
   {
     Page.initHighlighter("buttonEditTask");
+    Page.initHighlighter("buttonRequestAllZip");
   }
   else
   {
@@ -215,6 +216,7 @@ Page.initPaletteArea = function()
   if (Page.canEditTask)
   {
     Page.initAction("buttonEditTask");
+    Page.initAction("buttonRequestAllZip");
   }
   else
   {
@@ -882,7 +884,7 @@ Page.createTask = function()
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
   //console.log(Page.getModel());
-  console.log("task.php?taskName=" + taskName.val() + "&instructions=" + instructions.val() + "&model=" + Page.getModel());
+  //console.log("task.php?taskName=" + taskName.val() + "&instructions=" + instructions.val() + "&model=" + Page.getModel());
   window.location.href = "task.php?taskName=" + taskName.val() + "&instructions=" + instructions.val() + "&model=" + Page.getModel();
   window.alert("Successfully created a Task!");
 }

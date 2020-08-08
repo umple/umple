@@ -145,8 +145,20 @@ Action.clicked = function(event)
   }
   else if (action == "EditTask")
   {
-    console.log("2345678765");
     jQuery("#createTaskArea").css("display","block");
+  }
+  else if (action == "RequestAllZip") 
+  {
+    var link = document.createElement("a");
+    link.setAttribute("href", "scripts/tab_control.php?downloadTaskUserDir=1&taskid=" + Page.getModel());
+    link.setAttribute('id', "downloadLink");
+    var linkText = document.createTextNode("Download ZIP File From Here");
+    link.appendChild(linkText);
+    
+    var node = document.createElement("LI");   
+    node.appendChild(link);
+    document.getElementById("taskSubmenu").appendChild(node);
+    
   }
   else if (action == "DownloadFiles")
   {
@@ -408,7 +420,7 @@ Action.loadFile = function()
   if (filename != "")
   {
     console.log(filename);
-    if (Page.getModel().substring(0, 4) == "task")
+    if (Page.getModel().substring(0, 8) == "taskroot")
     {
       Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&isTask=1&filename={0}",filename));
     } 

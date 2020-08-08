@@ -58,9 +58,9 @@ if (isset($_REQUEST["save"]))
     list($dataname, $dataHandle) = getOrCreateDataHandle();
     if (isset($_REQUEST["lock"]) && isset($_REQUEST["model"])){
       $model = $_REQUEST["model"];
-  file_put_contents("/home/jpan/test.html", ' ' . $model, FILE_APPEND);
+  //file_put_contents("/home/jpan/test.html", ' ' . $model, FILE_APPEND);
 
-  file_put_contents("/home/jpan/test.html", "111 " . $dataHandle->getWorkDir()->getPath(), FILE_APPEND);
+  //file_put_contents("/home/jpan/test.html", "111 " . $dataHandle->getWorkDir()->getPath(), FILE_APPEND);
       $lock_file = "../ump/".$model."/.lockfile";
       $fp = fopen($lock_file, "w");
       if (flock($fp, LOCK_EX)) {
@@ -94,18 +94,18 @@ else if (isset($_REQUEST["load"]))
   {
     $modelId = "tasks/" . $modelId;
   }
+  //file_put_contents("/home/jpan/test.html", $modelId . "///", FILE_APPEND);
   $dataHandle = dataStore()->openData($modelId);
   $outputUmple = $dataHandle->readData($filename);
   echo $outputUmple;
 }
-else if (isset($_REQUEST["loadTask"])) 
+else if (isset($_REQUEST["loadTask"])) //load the task in the tasks dir
 {
-  file_put_contents("/home/jpan/test.html", "0000000000000", FILE_APPEND);
   foreach (new DirectoryIterator("../ump/tasks") as $file) 
   {
     if ($file->isDot()) continue;
 
-    if ($file->isDir() && substr($file->getFilename(), 0, 4) == "task") 
+    if ($file->isDir() && substr($file->getFilename(), 0, 8) == "taskroot") 
     {
       $taskName = explode("-", $file->getFilename())[1];
         //print $file->getFilename() . '<br />';
@@ -124,12 +124,11 @@ else if (isset($_REQUEST["loadTask"]))
 }
 else if (isset($_REQUEST["action"]))
 {
-  file_put_contents("/home/jpan/test.html", "AAAAAAAAAAAAAAAAAAAAAAAAA", FILE_APPEND);
   handleUmpleTextChange();
 }
 else if (isset($_REQUEST["umpleCode"]))
 {
-  file_put_contents("/home/jpan/test.html", "BBBBBBBBBBBBBBBBBBBB", FILE_APPEND);
+  //file_put_contents("/home/jpan/test.html", "BBBBBBBBBBBBBBBBBBBB", FILE_APPEND);
   $input = $_REQUEST["umpleCode"];
   $fulllanguage = $_REQUEST["language"];
   

@@ -1,30 +1,32 @@
 <?php
-echo (integer)ini_get('display_errors');
+//echo (integer)ini_get('display_errors');
 ini_set("display_errors", 1);
-echo (integer)ini_get('display_errors');
+//echo (integer)ini_get('display_errors');
 require_once ("scripts/compiler_config.php");
 
-if (!isset($_REQUEST["model"]) || !isset($_REQUEST["taskName"]) || !isset($_REQUEST["instructions"]))
-{
-  header('HTTP/1.0 404 Not Found');
-  readfile('../404.shtml');
-  exit();
-}
+// if (!isset($_REQUEST["model"]) || !isset($_REQUEST["taskName"]) || !isset($_REQUEST["instructions"]))
+// {
+//   header('HTTP/1.0 404 Not Found');
+//   readfile('../404.shtml');
+//   exit();
+// }
 
-$tempModelId = $_REQUEST["model"];
 
 // The following creates a random numbered directory in ump
 // the result is ump/{dir}/model.ump
 date_default_timezone_set('UTC');
 if (isset($_REQUEST["edit"]))
 {
+  $tempModelId = $_REQUEST["model"];
   $editModelData = dataStore()->openData("tasks/" . $tempModelId);
   $editModelData->writeData("instructions.md", $_REQUEST["instructions"]);
   header("Location: umple.php?task=1&model={$tempModelId}");
 }
 else
 {
-  $savedModelData = dataStore()->createData("tasks/task-" . $_REQUEST["taskName"] . "-" . date("ymd"));
+  file_put_contents("/home/jpan/test.html", "7777777777", FILE_APPEND);
+  $tempModelId = $_REQUEST["model"];
+  $savedModelData = dataStore()->createData("tasks/taskroot-" . $_REQUEST["taskName"] . "-" . date("ymd"));
   $tempModelData = dataStore()->openData($tempModelId);
 
   $saveModelId = $savedModelData->getName();

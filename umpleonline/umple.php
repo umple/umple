@@ -368,7 +368,7 @@ $output = $dataHandle->readData('model.ump');
           </ul>
         
           <ul>
-            <li class="subtitle">TASK</li>
+            <li class="subtitle" id="taskSubmenu">TASK</li>
 
             <div id="createTaskArea" style="display: none;">
               <br>
@@ -405,6 +405,13 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/copy.png"/> 
               Load a Task
             </li>
+
+            <?php if (isset($_REQUEST["task"])) { ?>
+            <li id="buttonRequestAllZip">
+              <img src="scripts/copy.png"/> 
+              Request all Directories under this task
+            </li>
+            <?php } ?>
 
             <div id="loadTaskNameArea" style="display: none;">
               <label id="labelLoadTaskName" for="inputLoadTaskName">Task name:</label><br>
