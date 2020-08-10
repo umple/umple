@@ -8,11 +8,11 @@ class PhoneSystemSimulation {
   // lazy PhoneLine[] lines;
   1 -- * PhoneLine lines;
   after constructor {
-    addLine(new PhoneLine("line1","Bruce",this));
-    addLine(new PhoneLine("line2","Ralph",this));
+    addLine(new PhoneLine("line1","Alex",this));
+    addLine(new PhoneLine("line2","Thomas",this));
     addLine(new PhoneLine("line3","Victoria",this));
-    addLine(new PhoneLine("line4","Vicki",this));
-    addLine(new PhoneLine("line5","Agnes",this));
+    addLine(new PhoneLine("line4","Samantha ",this));
+    addLine(new PhoneLine("line5","Karen",this));
   }
 
   static PhoneSystemSimulation s;

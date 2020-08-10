@@ -64,6 +64,6 @@ echo "For log: open http://localhost:$port/scripts/log.php"
 if (`uname` == "Darwin") then
   ( sleep 2 ; open "http://localhost:$port/umple.php$modelarg" ) &
 endif
-echo running docker run --rm -ti -p "$port":80 $volcommand umple/umpleonline$image
-docker run --rm -ti -p "$port":80 $volcommand umple/umpleonline$image >/dev/null
+echo running docker run --rm -ti -p "$port":8000 $volcommand umple/umpleonline$image
+docker run --rm -ti -p "$port":8000 $volcommand umple/umpleonline$image >/dev/null
 echo Docker image quit

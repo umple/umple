@@ -1,0 +1,103 @@
+// This program will accept a series of command line
+// arguments and will issue them on standard output.
+// You can specify the amount of time to elapse before
+// each command by preceding it with a number of seconds
+// followed by a colon
+//
+// Example arguments:
+//   m 6:c 5:r 8:q would would output
+//      m
+//      and 6 seconds later s
+//      5 seconds later r and so on.
+// This is intended to be used to test time-sensitive
+// systems. Pipe standard output of this program to
+// standard input of the system under test.
+//
+// to compile this:
+//  java -jar umple.jar timedcommands.ump
+//  jar cfe CommandIssuer.jar CommandIssuer *.class
+//
+// to run it
+//  java -jar CommandIssuer.jar arg1 arg2 4:arg3
+//
+// Example of running with Dishwasher example
+//  java -jar CommandIssuer.jar n 25:r 2:do 2:dc 15:n 20:q | java Dishwasher
+
+
+
+class CommandIssuer {
+  Command nextCommand = null;
+  int nextDelay = 0;
+  
+  queued sm {
+    initializing {
+      processCommands -> processing;
+    }
+ 
+    processing {
+      [!hasCommands()] -> done;
+
+      [hasCommands()] -> doingACommand;
+    }
+    
+    doingACommand {
+      entry / {
+        nextCommand = getCommand(0);
+        nextDelay = nextCommand.getDelay();
+      }
+      
+      after(nextDelay) -> processing;
+
+      exit / {
+        System.out.println(nextCommand.getName());      
+        removeCommand(nextCommand);
+      }
+    }
+    
+    done {
+      entry / {System.exit(0);}
+    }
+  }
+
+  public static void main(String[] argv) {
+    CommandIssuer tt = new CommandIssuer();
+
+    for (String anArg: argv) {
+      String[] parts = anArg.split(":");
+
+      if(parts.length == 0) {
+        // Just a colon. Ignore.
+      }
+      else if(parts.length == 1 && !anArg.endsWith(":")) {
+        // no colon
+        tt.addCommand(new Command(0,parts[0]));
+      }
+      else if(parts.length >= 1) {
+        // colon present
+        int theDelay = 0;
+        String theCommand = "";
+        if(parts.length > 1) theCommand = parts[1];
+        
+        try  {
+          theDelay = Integer.parseInt(parts[0]);
+        }
+        catch (Exception e) {
+          // ignore badly formed numbers and assume zero
+        }
+        tt.addCommand(new Command(theDelay, theCommand));
+      }
+    }
+    tt.processCommands();
+  }
+  
+  0..1 -- * Command;
+}
+
+class Command {
+  int delay;
+  name;
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code

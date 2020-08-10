@@ -79,7 +79,8 @@ script:
         $ANT_BUILD -DshouldPackageUmpleOnline=true packageUmpleonline &&
         docker build -t "umple/umpleonline-base:local"
                      -f ../umpleonline/Dockerfile-base ../umpleonline &&
-        docker build -t "umple/umpleonline:recentbuild" ../umpleonline;
+        docker build -t "umple/umpleonline:recentbuild" 
+                     --build-arg gitbranch=$TRAVIS_BRANCH ../umpleonline;
     fi
 
 after_success:

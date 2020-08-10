@@ -24,7 +24,7 @@ digraph "NestedState" {
       
       // Start states are shown as a black circle
       node [shape = point, fillcolor="black", width=0.2 ];
-      start_A_s2 [ tooltip = "Class A, SM sm, State s2.start" ];
+      start_A_smS2 [ tooltip = "Class A, SM sm, State s2.start" ];
       
             
       // Format for normal states
@@ -41,6 +41,6 @@ digraph "NestedState" {
 
   // All transitions
     start_A_sm -> A_smS2_s2a [  lhead=clusterA_sm_s2,  tooltip = "start to s2" ] ;
-    start_A_s2 -> A_smS2_s2a [  tooltip = "start to s2.s2a" ] ;
+    start_A_smS2 -> A_smS2_s2a [  tooltip = "start to s2.s2a" ] ;
   
 }

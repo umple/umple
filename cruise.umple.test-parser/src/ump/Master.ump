@@ -1,6 +1,7 @@
 generate Java "../src-gen";
 
 
+strictness allow 31; // don't worry about namespaces not being used
 //namespace cruise.umple.testgenerator;
 
 use TestCaseTemplate_model.ump;

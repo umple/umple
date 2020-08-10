@@ -13,6 +13,7 @@ $versionpath = $dir."/scripts/versionRunning.txt";
 $commandlogpath = $dir."/scripts/commandcount.txt";
 $visitsString = "visits since October 2018";
 $commandsRunString = "commands run since July 2019";
+$branchpath = "/tmp/umplegitbranch.txt";
 if(file_exists($logpath)){
 	if(!is_writable($logpath)||!is_readable($logpath)) {
 		chmod($logpath, 0755);
@@ -71,5 +72,17 @@ if(file_exists($versionpath)){
 	fclose($vfile);
 	echo " | v$currentversion" ;
 }
+
+
+if(file_exists($branchpath)){
+	if(!is_readable($branchpath)) {
+		chmod($branchpath, 0755);
+	}
+	$bfile = fopen($branchpath, "r");
+	$currentbranch = fgets($bfile,1000);
+	fclose($bfile);
+	echo " | $currentbranch" ;
+}
+
 
 ?>

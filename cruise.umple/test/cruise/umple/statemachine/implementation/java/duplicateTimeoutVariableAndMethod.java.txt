@@ -1,0 +1,205 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4260.b21abf3a3 modeling language!*/
+
+
+import java.util.*;
+
+// line 1 "test.ump"
+public class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X State Machines
+  public enum Sm1 { s1, s2 }
+  private Sm1 sm1;
+  public enum Sm2 { s1, s2 }
+  private Sm2 sm2;
+
+  //Helper Variables
+  private TimedEventHandler sm1_timeouts1Tos2Handler;
+  private TimedEventHandler sm2_timeouts1Tos2Handler;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X()
+  {
+    setSm1(Sm1.s1);
+    setSm2(Sm2.s1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSm1FullName()
+  {
+    String answer = sm1.toString();
+    return answer;
+  }
+
+  public String getSm2FullName()
+  {
+    String answer = sm2.toString();
+    return answer;
+  }
+
+  public Sm1 getSm1()
+  {
+    return sm1;
+  }
+
+  public Sm2 getSm2()
+  {
+    return sm2;
+  }
+
+  public boolean timeouts1Tos2()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm1 aSm1 = sm1;
+    Sm2 aSm2 = sm2;
+    switch (aSm1)
+    {
+      case s1:
+        exitSm1();
+        setSm1(Sm1.s2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSm2)
+    {
+      case s1:
+        exitSm2();
+        setSm2(Sm2.s2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitSm1()
+  {
+    switch(sm1)
+    {
+      case s1:
+        stopSm1_timeouts1Tos2Handler();
+        break;
+    }
+  }
+
+  private void setSm1(Sm1 aSm1)
+  {
+    sm1 = aSm1;
+
+    // entry actions and do activities
+    switch(sm1)
+    {
+      case s1:
+        startSm1_timeouts1Tos2Handler();
+        break;
+    }
+  }
+
+  private void exitSm2()
+  {
+    switch(sm2)
+    {
+      case s1:
+        stopSm2_timeouts1Tos2Handler();
+        break;
+    }
+  }
+
+  private void setSm2(Sm2 aSm2)
+  {
+    sm2 = aSm2;
+
+    // entry actions and do activities
+    switch(sm2)
+    {
+      case s1:
+        startSm2_timeouts1Tos2Handler();
+        break;
+    }
+  }
+
+  private void startSm1_timeouts1Tos2Handler()
+  {
+    sm1_timeouts1Tos2Handler = new TimedEventHandler(this,"sm1_timeouts1Tos2",1);
+  }
+
+  private void stopSm1_timeouts1Tos2Handler()
+  {
+    sm1_timeouts1Tos2Handler.stop();
+  }
+
+  private void startSm2_timeouts1Tos2Handler()
+  {
+    sm2_timeouts1Tos2Handler = new TimedEventHandler(this,"sm2_timeouts1Tos2",1);
+  }
+
+  private void stopSm2_timeouts1Tos2Handler()
+  {
+    sm2_timeouts1Tos2Handler.stop();
+  }
+
+  public static class TimedEventHandler extends TimerTask  
+  {
+    private X controller;
+    private String timeoutMethodName;
+    private double howLongInSeconds;
+    private Timer timer;
+    
+    public TimedEventHandler(X aController, String aTimeoutMethodName, double aHowLongInSeconds)
+    {
+      controller = aController;
+      timeoutMethodName = aTimeoutMethodName;
+      howLongInSeconds = aHowLongInSeconds;
+      timer = new Timer();
+      timer.schedule(this, (long)howLongInSeconds*1000);
+    }
+    
+    public void stop()
+    {
+      timer.cancel();
+    }
+    
+    public void run ()
+    {
+      if ("sm1_timeouts1Tos2".equals(timeoutMethodName))
+      {
+        boolean shouldRestart = !controller.timeouts1Tos2();
+        if (shouldRestart)
+        {
+          controller.startSm1_timeouts1Tos2Handler();
+        }
+        return;
+      }
+      if ("sm2_timeouts1Tos2".equals(timeoutMethodName))
+      {
+        boolean shouldRestart = !controller.timeouts1Tos2();
+        if (shouldRestart)
+        {
+          controller.startSm2_timeouts1Tos2Handler();
+        }
+        return;
+      }
+    }
+  }
+
+  public void delete()
+  {}
+
+}

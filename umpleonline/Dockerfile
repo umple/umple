@@ -1,4 +1,5 @@
 FROM umple/umpleonline-base:latest
+# To test local base, change the above to :local
 # To save 200MB on image size, all our dependencies are in a separate
 # slow-changing base image
 
@@ -12,16 +13,28 @@ COPY docker_config/php-fpm.conf /etc/php7/php-fpm.d/php-fpm.conf
 # javadoc by linking it into /usr/bin so UmpleOnline can use it.
 RUN ln -s /usr/lib/jvm/default-jvm/bin/javadoc /usr/bin/javadoc
 
+# Save the branch so it can be accessed internally
+ARG gitbranch
+RUN echo $gitbranch > /tmp/umplegitbranch.txt
+
 # copy over the website data
 COPY . /var/www
 
-# make sure the php files are readable
+# make sure the php files are readable and log files are writable
 # for extra security, only /ump is writable since it is the only place
 # session data should be written
 RUN chown -R :nginx /var/www && \
     chmod -R g+r /var/www && \
-    chmod -R g+w /var/www/ump
+    chmod -R g+w /var/www/ump && \
+    chown -R :nginx /run && \
+    chmod -R g+rw /run  && \
+    chown -R :nginx /var/run && \
+    chmod -R g+rw /var/run  && \
+    chown -R :nginx /var/log && \
+    chmod -R g+rw /var/log && \
+    chown -R :nginx /var/cache && \
+    chmod -R g+rw /var/cache
 
 # this is what runs on container startup
-CMD supervisord --nodaemon --configuration=/etc/supervisord.conf
+CMD supervisord --nodaemon --configuration=/etc/supervisord.conf --logfile=/var/log/supervisord.log --pidfile=/var/log/supervisord.pid
 
