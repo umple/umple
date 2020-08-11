@@ -2758,11 +2758,8 @@ Action.reindent = function(lines)
 
     var indexOfFirstQuote  = trimmedLine.indexOf("\"");
     var indexOfSecondQuote = trimmedLine.indexOf("\"", indexOfFirstQuote + 1);
-    console.log(i + ":::: ");
     if (indexOfFirstQuote != -1 && indexOfSecondQuote != -1)
     {
-      //var openCurlyBraceExits = trimmedLine.indexOf("{") != -1 && trimmedLine.indexOf("{") < indexOfFirstQuote && trimmedLine.indexOf("{") > indexOfSecondQuote;
-      //var closeCurlyBraceExits = trimmedLine.indexOf("}") != -1 && trimmedLine.indexOf("}") < indexOfFirstQuote && trimmedLine.indexOf("}") > indexOfSecondQuote;
       var indexOfOpenCurlyBrace = trimmedLine.indexOf("{");
       if (indexOfOpenCurlyBrace != -1 && indexOfOpenCurlyBrace > indexOfFirstQuote && indexOfOpenCurlyBrace < indexOfSecondQuote)
       {
@@ -2777,14 +2774,11 @@ Action.reindent = function(lines)
       var indexOfOpenCurlyBrace = trimmedLine.indexOf("{");
       var indexOfCloseCurlyBrace = trimmedLine.indexOf("}");
     }
-    
-    //continue;
 
     if (indexOfOpenCurlyBrace != -1 && indexOfOpenCurlyBrace != trimmedLine.length - 1)
     {
       lines.splice(i + 1, 0, trimmedLine.substr(indexOfOpenCurlyBrace + 1));
       lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfOpenCurlyBrace + 1);
-      console.log(lines);
       Action.reindent(lines);
       return;
     }
@@ -2803,8 +2797,6 @@ Action.reindent = function(lines)
         }
         lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfCloseCurlyBrace);
       }
-      console.log("second:");
-      console.log(lines);
       Action.reindent(lines);
       return;
     }
