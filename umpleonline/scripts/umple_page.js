@@ -201,6 +201,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonDownloadFiles");
   Page.initAction("buttonUndo");
   Page.initAction("buttonRedo");
+  Page.initAction("buttonReindent");
   Page.initAction("buttonUigu");
   Page.initAction("buttonStartOver");
   Page.initAction("buttonGenerateCode");
@@ -223,6 +224,7 @@ Page.initPaletteArea = function()
 
   Page.enablePaletteItem("buttonUndo", false);
   Page.enablePaletteItem("buttonRedo", false);
+  Page.enablePaletteItem("buttonReindent", true);
   Page.enablePaletteItem("buttonSyncDiagram", false);
   Page.enablePaletteItem("buttonAddTransition", false);
 
