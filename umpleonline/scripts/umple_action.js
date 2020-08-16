@@ -172,15 +172,8 @@ Action.clicked = function(event)
     var lines = Page.getRawUmpleCode().split("\n");
     var cursorPos = Page.codeMirrorEditor.getCursor(true);
     var whiteSpace = lines[cursorPos.line].match(/^\s*/)[0].length;
-    console.log(cursorPos.ch);
-      var lengthToFirstCh = cursorPos.ch - whiteSpace;
-      cursorPos.ch = lengthToFirstCh;
-    // console.log(cursorPos);
-    // lines[cursorPos.line] = lines[cursorPos.line].slice(0, cursorPos.ch) + "CursorPositonCursorPositonCursorPositon" + lines[cursorPos.line].slice(cursorPos.ch);
-    // console.log(lines[cursorPos.line]);
-// var o = {line:1, ch:1};
-//   Page.codeMirrorEditor.clipPos(o);
-  //console.log(Page.codeMirrorEditor.getCursor());
+    var lengthToFirstCh = cursorPos.ch - whiteSpace;
+    cursorPos.ch = lengthToFirstCh;
     Action.reindent(lines, cursorPos);
   }
   else if (action == "ShowHideTextEditor")
@@ -2915,18 +2908,6 @@ Action.reindent = function(lines, cursorPos)
       }
     }
 
-    // if (indexOfCursor == -1) {
-    //   var indexOfCursor = lines[i].indexOf("CursorPositonCursorPositonCursorPositon");
-    //   if (indexOfCursor != -1)
-    //   {
-    //     var cursorLine = i;
-    //      console.log(i);
-    //      console.log(indexOfCursor);
-    //     //var cursorCh = indexOfCursor;
-    //     lines[i] = lines[i].slice(0, indexOfCursor) + lines[i].substr(indexOfCursor + 39);
-    //   }
-    // }
-
     if (i != lines.length -1)
     {
       codeAfterIndent += lines[i] + "\n";
@@ -2935,25 +2916,10 @@ Action.reindent = function(lines, cursorPos)
     }
   }
   
-  // for (var i = 0; i < len; i++) 
-  // {
-  //   var indexOfCursor = lines[i].indexOf("CursorPositonCursorPositonCursorPositon");
-  //   if (indexOfCursor != -1)
-  //   {
-  //     console.log("hhh");
-  //     console.log(i);
-  //     console.log(indexOfCursor);
-  //     var cursorLine = i;
-  //     var cursorCh = indexOfCursor;
-  //     Page.codeMirrorEditor.setCursor(i, indexOfCursor);
-  //     lines[i] = lines[i].slice(0, indexOfCursor) + lines[i].substr(indexOfCursor + 39);
-  //   }
-  // }
   if(Page.codeMirrorOn) {
     Page.codeMirrorEditor.setValue(codeAfterIndent);
   }
   jQuery("#umpleModelEditorText").val(codeAfterIndent);
-  //console.log(indexOfCursor);
 
   var whiteSpace = Page.getRawUmpleCode().split("\n")[cursorPos.line].match(/^\s*/)[0].length;
   if (cursorPos.ch >= 0)
@@ -2965,6 +2931,4 @@ Action.reindent = function(lines, cursorPos)
     Page.codeMirrorEditor.setCursor(cursorPos.line, 0);
   }
   Page.codeMirrorEditor.focus();
-  //Action.processTyping("umpleModelEditorText", true);
-  //Page.codeMirrorEditor.setCursor(1, 1, true);
 }
