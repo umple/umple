@@ -168,8 +168,20 @@ Action.clicked = function(event)
     Action.redo();
   }
   else if (action == "Reindent") 
-  {
-    Action.reindent(Page.getRawUmpleCode().split("\n"));
+  { 
+    var lines = Page.getRawUmpleCode().split("\n");
+    var cursorPos = Page.codeMirrorEditor.getCursor(true);
+    var whiteSpace = lines[cursorPos.line].match(/^\s*/)[0].length;
+    console.log(cursorPos.ch);
+      var lengthToFirstCh = cursorPos.ch - whiteSpace;
+      cursorPos.ch = lengthToFirstCh;
+    // console.log(cursorPos);
+    // lines[cursorPos.line] = lines[cursorPos.line].slice(0, cursorPos.ch) + "CursorPositonCursorPositonCursorPositon" + lines[cursorPos.line].slice(cursorPos.ch);
+    // console.log(lines[cursorPos.line]);
+// var o = {line:1, ch:1};
+//   Page.codeMirrorEditor.clipPos(o);
+  //console.log(Page.codeMirrorEditor.getCursor());
+    Action.reindent(lines, cursorPos);
   }
   else if (action == "ShowHideTextEditor")
   {
@@ -217,7 +229,8 @@ Action.clicked = function(event)
   }
   else if (action == "SyncDiagram")
   {
-    Action.processTyping("umpleModelEditorText", true);
+    Action.processTyping("codeMirrorEditor", true);
+    Page.codeMirrorEditor.focus();
   }
   else if (action == "PhotoReady")
   {
@@ -1841,7 +1854,8 @@ Action.umpleTypingActivity = function(target) {
     Action.diagramInSync = false;
     Page.enableDiagram(false);
   }
-  
+  //Action.processTyping("codeMirrorEditor", true);
+  //return;
   if (Action.oldTimeout != null)
   {
     clearTimeout(Action.oldTimeout);
@@ -1866,7 +1880,7 @@ Action.processTyping = function(target, manuallySynchronized)
     
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor") {
       Action.updateLayoutEditorAndDiagram();
-      
+
       // issue#1554
       var downloadLink = document.getElementById("downloadLink");
       if (downloadLink !== null){
@@ -2747,14 +2761,49 @@ Action.hidegdpr = function()
   Action.gdprHidden = true;
 }
 
-Action.reindent = function(lines)
+Action.reindent = function(lines, cursorPos)
 {
   var offset = "";
   var codeAfterIndent = "";
   var len = lines.length;
+  var inBlockComment = false;
+  var statementEnd = true; // i.e. have semicolon at the end of the statement.
+  var statementEndIndentSpace = 0;
+  var indexOfCursor = -1;
   for (var i = 0; i < len; i++) 
   {
     var trimmedLine = lines[i].trim();
+
+    if (trimmedLine.indexOf("//") != -1)
+    {
+      trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("//"));
+    }
+
+    if (inBlockComment)
+    {
+      if (trimmedLine.indexOf("*/") != -1)
+      {
+        trimmedLine = trimmedLine.substr(trimmedLine.indexOf("*/") + 2);
+        inBlockComment = false;
+      }
+      else {
+        if (i != lines.length -1)
+        {
+          codeAfterIndent += lines[i] + "\n";
+        } else {
+          codeAfterIndent += lines[i];
+        }
+        continue;
+      }
+    }
+    else if (trimmedLine.indexOf("/*") != -1)
+    {
+      if (trimmedLine.indexOf("*/") == -1)
+      {
+        inBlockComment = true;
+      }
+      trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("/*"));
+    }
 
     var indexOfFirstQuote  = trimmedLine.indexOf("\"");
     var indexOfSecondQuote = trimmedLine.indexOf("\"", indexOfFirstQuote + 1);
@@ -2775,41 +2824,109 @@ Action.reindent = function(lines)
       var indexOfCloseCurlyBrace = trimmedLine.indexOf("}");
     }
 
-    if (indexOfOpenCurlyBrace != -1 && indexOfOpenCurlyBrace != trimmedLine.length - 1)
+    var doNotIndent = indexOfOpenCurlyBrace != -1 && indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace - indexOfOpenCurlyBrace < 40;
+    if (doNotIndent)
     {
-      lines.splice(i + 1, 0, trimmedLine.substr(indexOfOpenCurlyBrace + 1));
-      lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfOpenCurlyBrace + 1);
-      Action.reindent(lines);
-      return;
-    }
-
-    if (indexOfCloseCurlyBrace != -1 && trimmedLine.length > 1)
-    {
-      if (indexOfCloseCurlyBrace == 0)
+      if (!statementEnd)
       {
-        lines.splice(i + 1, 0, trimmedLine.substr(1));
-        lines[i] = "}";
-      } else {
-        lines.splice(i + 1, 0, "}");
-        if (indexOfCloseCurlyBrace != trimmedLine.length - 1)
+        if (trimmedLine.slice(-1) == "{")
         {
-          lines.splice(i + 2, 0, trimmedLine.substr(indexOfCloseCurlyBrace + 1));
+          statementEnd = true;
+        } 
+        else 
+        {
+          lines[i] = offset + lines[i].match(/^\s*/)[0].substr(statementEndIndentSpace) + lines[i].trim();
+          if (trimmedLine.indexOf(";") == trimmedLine.length - 1)
+          {
+            statementEnd = true;
+          }
         }
-        lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfCloseCurlyBrace);
       }
-      Action.reindent(lines);
-      return;
+      else
+      {
+        lines[i] = offset + lines[i].trim();
+      }
     }
-    if (indexOfCloseCurlyBrace != -1)
+    else 
     {
-      offset = offset.substr(2);
-    }
-    lines[i] = offset + lines[i].trim();
+      if (indexOfOpenCurlyBrace != -1 && indexOfOpenCurlyBrace != trimmedLine.length - 1)
+      {
+        lines.splice(i + 1, 0, trimmedLine.substr(indexOfOpenCurlyBrace + 1));
+        lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfOpenCurlyBrace + 1);
+        Action.reindent(lines, {line:cursorPos.line+1, ch:cursorPos.ch});
+        return;
+      }
 
-    if (indexOfOpenCurlyBrace != -1)
-    {
-      offset += "  ";
+      if (indexOfCloseCurlyBrace != -1 && trimmedLine.length > 1)
+      {
+        if (indexOfCloseCurlyBrace == 0)
+        {
+          lines.splice(i + 1, 0, trimmedLine.substr(1));
+          lines[i] = "}";
+          cursorPos.line = cursorPos.line+1;
+        } else {
+          lines.splice(i + 1, 0, "}");
+          cursorPos.line = cursorPos.line+1;
+          if (indexOfCloseCurlyBrace != trimmedLine.length - 1)
+          {
+            lines.splice(i + 2, 0, trimmedLine.substr(indexOfCloseCurlyBrace + 1));
+            cursorPos.line = cursorPos.line+1;
+          }
+          lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfCloseCurlyBrace);
+        }
+        Action.reindent(lines, cursorPos);
+        return;
+      }
+
+      if (statementEnd && trimmedLine.indexOf(";") != trimmedLine.length - 1 && trimmedLine.slice(-1) != "{" && trimmedLine.slice(-1) != "}" && trimmedLine.slice(-2) != "||")
+      {
+        statementEnd = false;
+        statementEndIndentSpace = lines[i].match(/^\s*/)[0].length;
+      }
+
+      if (indexOfCloseCurlyBrace != -1)
+      {
+        offset = offset.substr(2);
+      }
+
+      if (!statementEnd)
+      {
+        if (trimmedLine.slice(-1) == "{" || trimmedLine.slice(-2) == "||" && trimmedLine.slice(-1) == "}")
+        {
+          statementEnd = true;
+        } 
+        else 
+        {
+          lines[i] = offset + lines[i].match(/^\s*/)[0].substr(statementEndIndentSpace) + lines[i].trim();
+          if (trimmedLine.indexOf(";") == trimmedLine.length - 1)
+          {
+            statementEnd = true;
+          }
+        }
+      }
+      else
+      {
+        lines[i] = offset + lines[i].trim();
+      }
+
+      if (indexOfOpenCurlyBrace != -1)
+      {
+        offset += "  ";
+      }
     }
+
+    // if (indexOfCursor == -1) {
+    //   var indexOfCursor = lines[i].indexOf("CursorPositonCursorPositonCursorPositon");
+    //   if (indexOfCursor != -1)
+    //   {
+    //     var cursorLine = i;
+    //      console.log(i);
+    //      console.log(indexOfCursor);
+    //     //var cursorCh = indexOfCursor;
+    //     lines[i] = lines[i].slice(0, indexOfCursor) + lines[i].substr(indexOfCursor + 39);
+    //   }
+    // }
+
     if (i != lines.length -1)
     {
       codeAfterIndent += lines[i] + "\n";
@@ -2817,5 +2934,37 @@ Action.reindent = function(lines)
       codeAfterIndent += lines[i];
     }
   }
-  Page.setUmpleCode(codeAfterIndent, true);
+  
+  // for (var i = 0; i < len; i++) 
+  // {
+  //   var indexOfCursor = lines[i].indexOf("CursorPositonCursorPositonCursorPositon");
+  //   if (indexOfCursor != -1)
+  //   {
+  //     console.log("hhh");
+  //     console.log(i);
+  //     console.log(indexOfCursor);
+  //     var cursorLine = i;
+  //     var cursorCh = indexOfCursor;
+  //     Page.codeMirrorEditor.setCursor(i, indexOfCursor);
+  //     lines[i] = lines[i].slice(0, indexOfCursor) + lines[i].substr(indexOfCursor + 39);
+  //   }
+  // }
+  if(Page.codeMirrorOn) {
+    Page.codeMirrorEditor.setValue(codeAfterIndent);
+  }
+  jQuery("#umpleModelEditorText").val(codeAfterIndent);
+  //console.log(indexOfCursor);
+
+  var whiteSpace = Page.getRawUmpleCode().split("\n")[cursorPos.line].match(/^\s*/)[0].length;
+  if (cursorPos.ch >= 0)
+  {
+    Page.codeMirrorEditor.setCursor(cursorPos.line, cursorPos.ch+whiteSpace);//cursorLine, indexOfCursor);
+  }
+  else
+  {
+    Page.codeMirrorEditor.setCursor(cursorPos.line, 0);
+  }
+  Page.codeMirrorEditor.focus();
+  //Action.processTyping("umpleModelEditorText", true);
+  //Page.codeMirrorEditor.setCursor(1, 1, true);
 }

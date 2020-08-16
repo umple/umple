@@ -163,6 +163,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonToggleTraits");
   Page.initHighlighter("buttonToggleFeatureDependency");
   Page.initHighlighter("buttonallowPinch");
+  Page.initHighlighter("buttonReindent");
   
   Page.initToggleTool("buttonAddClass");
   Page.initToggleTool("buttonAddAssociation");
@@ -224,7 +225,6 @@ Page.initPaletteArea = function()
 
   Page.enablePaletteItem("buttonUndo", false);
   Page.enablePaletteItem("buttonRedo", false);
-  Page.enablePaletteItem("buttonReindent", true);
   Page.enablePaletteItem("buttonSyncDiagram", false);
   Page.enablePaletteItem("buttonAddTransition", false);
 
