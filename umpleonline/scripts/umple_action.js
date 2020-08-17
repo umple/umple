@@ -2794,32 +2794,66 @@ Action.reindent = function(lines, cursorPos)
       if (trimmedLine.indexOf("*/") == -1)
       {
         inBlockComment = true;
+        trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("/*"));
       }
-      trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("/*"));
+      else
+      {
+        trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("/*")) + trimmedLine.substr(trimmedLine.indexOf("*/") + 2);
+      }
+      
     }
 
     var indexOfFirstQuote  = trimmedLine.indexOf("\"");
-    var indexOfSecondQuote = trimmedLine.indexOf("\"", indexOfFirstQuote + 1);
-    if (indexOfFirstQuote != -1 && indexOfSecondQuote != -1)
+    var indexOfLastQuote = trimmedLine.indexOf("\"", indexOfFirstQuote + 1);
+    if (indexOfFirstQuote != -1 && indexOfLastQuote != -1)
     {
       var indexOfOpenCurlyBrace = trimmedLine.indexOf("{");
-      if (indexOfOpenCurlyBrace != -1 && indexOfOpenCurlyBrace > indexOfFirstQuote && indexOfOpenCurlyBrace < indexOfSecondQuote)
+      if (indexOfOpenCurlyBrace != -1 && indexOfOpenCurlyBrace > indexOfFirstQuote && indexOfOpenCurlyBrace < indexOfLastQuote)
       {
         indexOfOpenCurlyBrace = trimmedLine.indexOf("{", indexOfOpenCurlyBrace + 1);
       }
       var indexOfCloseCurlyBrace = trimmedLine.indexOf("}");
-      if (indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace > indexOfFirstQuote && indexOfCloseCurlyBrace < indexOfSecondQuote)
+      if (indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace > indexOfFirstQuote && indexOfCloseCurlyBrace < indexOfLastQuote)
       {
         indexOfCloseCurlyBrace = trimmedLine.indexOf("}", indexOfCloseCurlyBrace + 1);
       }
+      // var indexOfCloseCurlyBrace = trimmedLine.lastIndexOf("}");
+      // if (indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace > indexOfFirstQuote && indexOfCloseCurlyBrace < indexOfLastQuote)
+      // {
+      //   indexOfCloseCurlyBrace = trimmedLine.lastIndexOf("}", indexOfCloseCurlyBrace - 1);
+      // }
+      // var indexOfFirstCloseCurlyBrace = trimmedLine.indexOf("}");
+      // if (indexOfFirstCloseCurlyBrace != -1 && indexOfFirstCloseCurlyBrace > indexOfFirstQuote && indexOfFirstCloseCurlyBrace < indexOfLastQuote)
+      // {
+      //   indexOfFirstCloseCurlyBrace = trimmedLine.indexOf("}", indexOfFirstCloseCurlyBrace + 1);
+      // }
     } else {
       var indexOfOpenCurlyBrace = trimmedLine.indexOf("{");
       var indexOfCloseCurlyBrace = trimmedLine.indexOf("}");
     }
 
-    var doNotIndent = indexOfOpenCurlyBrace != -1 && indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace - indexOfOpenCurlyBrace < 40;
+
+    //var indexOfSemiColon = trimmedLine.indexOf(";");
+    //console.log("line: " + i);
+    //console.log(indexOfCloseCurlyBrace);
+    if (indexOfOpenCurlyBrace != -1 && indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace - indexOfOpenCurlyBrace < 40)
+    {
+      console.log(trimmedLine);
+      console.log(trimmedLine.substr(0, indexOfCloseCurlyBrace).indexOf("{", indexOfOpenCurlyBrace + 1));
+    }
+    var doNotIndent = indexOfOpenCurlyBrace != -1 && indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace - indexOfOpenCurlyBrace < 40 && trimmedLine.substr(0, indexOfCloseCurlyBrace).indexOf("{", indexOfOpenCurlyBrace + 1) == -1;
     if (doNotIndent)
     {
+      if (indexOfCloseCurlyBrace != trimmedLine.length - 1)
+      {
+        lines.splice(i + 1, 0, trimmedLine.substr(indexOfCloseCurlyBrace + 1));
+        cursorPos.line = cursorPos.line+1;
+        lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfCloseCurlyBrace + 1);
+        console.log(lines);
+        Action.reindent(lines, cursorPos);
+        return;
+      }
+      
       if (!statementEnd)
       {
         if (trimmedLine.slice(-1) == "{")
@@ -2846,6 +2880,7 @@ Action.reindent = function(lines, cursorPos)
       {
         lines.splice(i + 1, 0, trimmedLine.substr(indexOfOpenCurlyBrace + 1));
         lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfOpenCurlyBrace + 1);
+        console.log(lines);
         Action.reindent(lines, {line:cursorPos.line+1, ch:cursorPos.ch});
         return;
       }
@@ -2870,6 +2905,7 @@ Action.reindent = function(lines, cursorPos)
         Action.reindent(lines, cursorPos);
         return;
       }
+
 
       if (statementEnd && trimmedLine.indexOf(";") != trimmedLine.length - 1 && trimmedLine.slice(-1) != "{" && trimmedLine.slice(-1) != "}" && trimmedLine.slice(-2) != "||")
       {
@@ -2921,10 +2957,15 @@ Action.reindent = function(lines, cursorPos)
   }
   jQuery("#umpleModelEditorText").val(codeAfterIndent);
 
-  var whiteSpace = Page.getRawUmpleCode().split("\n")[cursorPos.line].match(/^\s*/)[0].length;
-  if (cursorPos.ch >= 0)
+  var cursorLine = Page.getRawUmpleCode().split("\n")[cursorPos.line];
+  var whiteSpace = cursorLine.match(/^\s*/)[0].length;
+  if (cursorPos.ch >= cursorLine.trim().length) 
   {
-    Page.codeMirrorEditor.setCursor(cursorPos.line, cursorPos.ch+whiteSpace);//cursorLine, indexOfCursor);
+    Page.codeMirrorEditor.setCursor(cursorPos.line, cursorLine.trim().length + whiteSpace);
+  }
+  else if (cursorPos.ch >= 0)
+  {
+    Page.codeMirrorEditor.setCursor(cursorPos.line, cursorPos.ch+whiteSpace);
   }
   else
   {
