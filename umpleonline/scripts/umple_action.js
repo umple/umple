@@ -167,6 +167,15 @@ Action.clicked = function(event)
   {
     Action.redo();
   }
+  else if (action == "Reindent") 
+  { 
+    var lines = Page.getRawUmpleCode().split("\n");
+    var cursorPos = Page.codeMirrorEditor.getCursor(true);
+    var whiteSpace = lines[cursorPos.line].match(/^\s*/)[0].length;
+    var lengthToFirstCh = cursorPos.ch - whiteSpace;
+    cursorPos.ch = lengthToFirstCh;
+    Action.reindent(lines, cursorPos);
+  }
   else if (action == "ShowHideTextEditor")
   {
     Layout.showHideTextEditor();
@@ -213,7 +222,8 @@ Action.clicked = function(event)
   }
   else if (action == "SyncDiagram")
   {
-    Action.processTyping("umpleModelEditorText", true);
+    Action.processTyping("codeMirrorEditor", true);
+    Page.codeMirrorEditor.focus();
   }
   else if (action == "PhotoReady")
   {
@@ -1837,7 +1847,8 @@ Action.umpleTypingActivity = function(target) {
     Action.diagramInSync = false;
     Page.enableDiagram(false);
   }
-  
+  //Action.processTyping("codeMirrorEditor", true);
+  //return;
   if (Action.oldTimeout != null)
   {
     clearTimeout(Action.oldTimeout);
@@ -1862,7 +1873,7 @@ Action.processTyping = function(target, manuallySynchronized)
     
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor") {
       Action.updateLayoutEditorAndDiagram();
-      
+
       // issue#1554
       var downloadLink = document.getElementById("downloadLink");
       if (downloadLink !== null){
@@ -2741,4 +2752,224 @@ Action.hidegdpr = function()
 {
   jQuery('#gdprtext').hide();
   Action.gdprHidden = true;
+}
+
+Action.reindent = function(lines, cursorPos)
+{
+  var offset = "";
+  var codeAfterIndent = "";
+  var len = lines.length;
+  var inBlockComment = false;
+  var statementEnd = true; // i.e. have semicolon at the end of the statement.
+  var statementEndIndentSpace = 0;
+  var indexOfCursor = -1;
+  for (var i = 0; i < len; i++) 
+  {
+    var trimmedLine = lines[i].trim();
+
+    if (trimmedLine.indexOf("//") != -1)
+    {
+      trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("//"));
+    }
+
+    if (inBlockComment)
+    {
+      if (trimmedLine.indexOf("*/") != -1)
+      {
+        trimmedLine = trimmedLine.substr(trimmedLine.indexOf("*/") + 2);
+        inBlockComment = false;
+      }
+      else {
+        if (i != lines.length -1)
+        {
+          codeAfterIndent += lines[i] + "\n";
+        } else {
+          codeAfterIndent += lines[i];
+        }
+        continue;
+      }
+    }
+    else if (trimmedLine.indexOf("/*") != -1)
+    {
+      if (trimmedLine.indexOf("*/") == -1)
+      {
+        inBlockComment = true;
+        trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("/*"));
+      }
+      else
+      {
+        trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("/*")) + trimmedLine.substr(trimmedLine.indexOf("*/") + 2);
+      }
+      
+    }
+
+    var indexOfFirstQuote  = trimmedLine.indexOf("\"");
+    var indexOfLastQuote = trimmedLine.indexOf("\"", indexOfFirstQuote + 1);
+    if (indexOfFirstQuote != -1 && indexOfLastQuote != -1)
+    {
+      var indexOfOpenCurlyBrace = trimmedLine.indexOf("{");
+      if (indexOfOpenCurlyBrace != -1 && indexOfOpenCurlyBrace > indexOfFirstQuote && indexOfOpenCurlyBrace < indexOfLastQuote)
+      {
+        indexOfOpenCurlyBrace = trimmedLine.indexOf("{", indexOfOpenCurlyBrace + 1);
+      }
+      var indexOfCloseCurlyBrace = trimmedLine.indexOf("}");
+      if (indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace > indexOfFirstQuote && indexOfCloseCurlyBrace < indexOfLastQuote)
+      {
+        indexOfCloseCurlyBrace = trimmedLine.indexOf("}", indexOfCloseCurlyBrace + 1);
+      }
+      // var indexOfCloseCurlyBrace = trimmedLine.lastIndexOf("}");
+      // if (indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace > indexOfFirstQuote && indexOfCloseCurlyBrace < indexOfLastQuote)
+      // {
+      //   indexOfCloseCurlyBrace = trimmedLine.lastIndexOf("}", indexOfCloseCurlyBrace - 1);
+      // }
+      // var indexOfFirstCloseCurlyBrace = trimmedLine.indexOf("}");
+      // if (indexOfFirstCloseCurlyBrace != -1 && indexOfFirstCloseCurlyBrace > indexOfFirstQuote && indexOfFirstCloseCurlyBrace < indexOfLastQuote)
+      // {
+      //   indexOfFirstCloseCurlyBrace = trimmedLine.indexOf("}", indexOfFirstCloseCurlyBrace + 1);
+      // }
+    } else {
+      var indexOfOpenCurlyBrace = trimmedLine.indexOf("{");
+      var indexOfCloseCurlyBrace = trimmedLine.indexOf("}");
+    }
+
+
+    //var indexOfSemiColon = trimmedLine.indexOf(";");
+    //console.log("line: " + i);
+    //console.log(indexOfCloseCurlyBrace);
+    if (indexOfOpenCurlyBrace != -1 && indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace - indexOfOpenCurlyBrace < 40)
+    {
+      console.log(trimmedLine);
+      console.log(trimmedLine.substr(0, indexOfCloseCurlyBrace).indexOf("{", indexOfOpenCurlyBrace + 1));
+    }
+    var doNotIndent = indexOfOpenCurlyBrace != -1 && indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace - indexOfOpenCurlyBrace < 40 && trimmedLine.substr(0, indexOfCloseCurlyBrace).indexOf("{", indexOfOpenCurlyBrace + 1) == -1;
+    if (doNotIndent)
+    {
+      if (indexOfCloseCurlyBrace != trimmedLine.length - 1)
+      {
+        lines.splice(i + 1, 0, trimmedLine.substr(indexOfCloseCurlyBrace + 1));
+        cursorPos.line = cursorPos.line+1;
+        lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfCloseCurlyBrace + 1);
+        console.log(lines);
+        Action.reindent(lines, cursorPos);
+        return;
+      }
+      
+      if (!statementEnd)
+      {
+        if (trimmedLine.slice(-1) == "{")
+        {
+          statementEnd = true;
+        } 
+        else 
+        {
+          lines[i] = offset + lines[i].match(/^\s*/)[0].substr(statementEndIndentSpace) + lines[i].trim();
+          if (trimmedLine.indexOf(";") == trimmedLine.length - 1)
+          {
+            statementEnd = true;
+          }
+        }
+      }
+      else
+      {
+        lines[i] = offset + lines[i].trim();
+      }
+    }
+    else 
+    {
+      if (indexOfOpenCurlyBrace != -1 && indexOfOpenCurlyBrace != trimmedLine.length - 1)
+      {
+        lines.splice(i + 1, 0, trimmedLine.substr(indexOfOpenCurlyBrace + 1));
+        lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfOpenCurlyBrace + 1);
+        console.log(lines);
+        Action.reindent(lines, {line:cursorPos.line+1, ch:cursorPos.ch});
+        return;
+      }
+
+      if (indexOfCloseCurlyBrace != -1 && trimmedLine.length > 1)
+      {
+        if (indexOfCloseCurlyBrace == 0)
+        {
+          lines.splice(i + 1, 0, trimmedLine.substr(1));
+          lines[i] = "}";
+          cursorPos.line = cursorPos.line+1;
+        } else {
+          lines.splice(i + 1, 0, "}");
+          cursorPos.line = cursorPos.line+1;
+          if (indexOfCloseCurlyBrace != trimmedLine.length - 1)
+          {
+            lines.splice(i + 2, 0, trimmedLine.substr(indexOfCloseCurlyBrace + 1));
+            cursorPos.line = cursorPos.line+1;
+          }
+          lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfCloseCurlyBrace);
+        }
+        Action.reindent(lines, cursorPos);
+        return;
+      }
+
+
+      if (statementEnd && trimmedLine.indexOf(";") != trimmedLine.length - 1 && trimmedLine.slice(-1) != "{" && trimmedLine.slice(-1) != "}" && trimmedLine.slice(-2) != "||")
+      {
+        statementEnd = false;
+        statementEndIndentSpace = lines[i].match(/^\s*/)[0].length;
+      }
+
+      if (indexOfCloseCurlyBrace != -1)
+      {
+        offset = offset.substr(2);
+      }
+
+      if (!statementEnd)
+      {
+        if (trimmedLine.slice(-1) == "{" || trimmedLine.slice(-2) == "||" && trimmedLine.slice(-1) == "}")
+        {
+          statementEnd = true;
+        } 
+        else 
+        {
+          lines[i] = offset + lines[i].match(/^\s*/)[0].substr(statementEndIndentSpace) + lines[i].trim();
+          if (trimmedLine.indexOf(";") == trimmedLine.length - 1)
+          {
+            statementEnd = true;
+          }
+        }
+      }
+      else
+      {
+        lines[i] = offset + lines[i].trim();
+      }
+
+      if (indexOfOpenCurlyBrace != -1)
+      {
+        offset += "  ";
+      }
+    }
+
+    if (i != lines.length -1)
+    {
+      codeAfterIndent += lines[i] + "\n";
+    } else {
+      codeAfterIndent += lines[i];
+    }
+  }
+  
+  if(Page.codeMirrorOn) {
+    Page.codeMirrorEditor.setValue(codeAfterIndent);
+  }
+  jQuery("#umpleModelEditorText").val(codeAfterIndent);
+
+  var cursorLine = Page.getRawUmpleCode().split("\n")[cursorPos.line];
+  var whiteSpace = cursorLine.match(/^\s*/)[0].length;
+  if (cursorPos.ch >= cursorLine.trim().length) 
+  {
+    Page.codeMirrorEditor.setCursor(cursorPos.line, cursorLine.trim().length + whiteSpace);
+  }
+  else if (cursorPos.ch >= 0)
+  {
+    Page.codeMirrorEditor.setCursor(cursorPos.line, cursorPos.ch+whiteSpace);
+  }
+  else
+  {
+    Page.codeMirrorEditor.setCursor(cursorPos.line, 0);
+  }
+  Page.codeMirrorEditor.focus();
 }

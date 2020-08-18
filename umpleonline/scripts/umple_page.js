@@ -163,6 +163,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonToggleTraits");
   Page.initHighlighter("buttonToggleFeatureDependency");
   Page.initHighlighter("buttonallowPinch");
+  Page.initHighlighter("buttonReindent");
   
   Page.initToggleTool("buttonAddClass");
   Page.initToggleTool("buttonAddAssociation");
@@ -201,6 +202,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonDownloadFiles");
   Page.initAction("buttonUndo");
   Page.initAction("buttonRedo");
+  Page.initAction("buttonReindent");
   Page.initAction("buttonUigu");
   Page.initAction("buttonStartOver");
   Page.initAction("buttonGenerateCode");
