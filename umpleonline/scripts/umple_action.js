@@ -2767,16 +2767,27 @@ Action.reindent = function(lines, cursorPos)
   {
     var trimmedLine = lines[i].trim();
 
+    // remove quotation
+    var indexOfFirstQuote  = trimmedLine.indexOf("\"");
+    var indexOfLastQuote = trimmedLine.indexOf("\"", indexOfFirstQuote + 1);
+    while (indexOfFirstQuote != -1 && indexOfLastQuote != -1)
+    {
+      trimmedLine = trimmedLine.slice(0, indexOfFirstQuote) + trimmedLine.slice(indexOfLastQuote+1, trimmedLine.length);
+      indexOfFirstQuote  = trimmedLine.indexOf("\"");
+      indexOfLastQuote = trimmedLine.indexOf("\"", indexOfFirstQuote + 1);
+    }
+
+    // remove comment
     if (trimmedLine.indexOf("//") != -1)
     {
-      trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("//"));
+      trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("//")).trim();
     }
 
     if (inBlockComment)
     {
       if (trimmedLine.indexOf("*/") != -1)
       {
-        trimmedLine = trimmedLine.substr(trimmedLine.indexOf("*/") + 2);
+        trimmedLine = trimmedLine.substr(trimmedLine.indexOf("*/") + 2).trim();
         inBlockComment = false;
       }
       else {
@@ -2794,62 +2805,42 @@ Action.reindent = function(lines, cursorPos)
       if (trimmedLine.indexOf("*/") == -1)
       {
         inBlockComment = true;
-        trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("/*"));
+        trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("/*")).trim();
       }
       else
       {
-        trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("/*")) + trimmedLine.substr(trimmedLine.indexOf("*/") + 2);
+        trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("/*")) + trimmedLine.substr(trimmedLine.indexOf("*/") + 2).trim(); // remove block comment for trimmed line
       }
       
     }
-
-    var indexOfFirstQuote  = trimmedLine.indexOf("\"");
-    var indexOfLastQuote = trimmedLine.indexOf("\"", indexOfFirstQuote + 1);
-    if (indexOfFirstQuote != -1 && indexOfLastQuote != -1)
+    
+    var indexOfOpenCurlyBrace = trimmedLine.indexOf("{");
+    var indexOfCloseCurlyBrace = trimmedLine.indexOf("}");
+    var indexOfSemiColon = trimmedLine.indexOf(";");
+    
+    if (indexOfSemiColon != -1 && indexOfSemiColon != trimmedLine.length - 1 && trimmedLine.substr(indexOfSemiColon+1).trim().charAt(0) != "}")
     {
-      var indexOfOpenCurlyBrace = trimmedLine.indexOf("{");
-      if (indexOfOpenCurlyBrace != -1 && indexOfOpenCurlyBrace > indexOfFirstQuote && indexOfOpenCurlyBrace < indexOfLastQuote)
+      lines.splice(i + 1, 0, trimmedLine.substr(indexOfSemiColon + 1));
+      if (i <= cursorPos.line)
       {
-        indexOfOpenCurlyBrace = trimmedLine.indexOf("{", indexOfOpenCurlyBrace + 1);
+        cursorPos.line++;
       }
-      var indexOfCloseCurlyBrace = trimmedLine.indexOf("}");
-      if (indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace > indexOfFirstQuote && indexOfCloseCurlyBrace < indexOfLastQuote)
-      {
-        indexOfCloseCurlyBrace = trimmedLine.indexOf("}", indexOfCloseCurlyBrace + 1);
-      }
-      // var indexOfCloseCurlyBrace = trimmedLine.lastIndexOf("}");
-      // if (indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace > indexOfFirstQuote && indexOfCloseCurlyBrace < indexOfLastQuote)
-      // {
-      //   indexOfCloseCurlyBrace = trimmedLine.lastIndexOf("}", indexOfCloseCurlyBrace - 1);
-      // }
-      // var indexOfFirstCloseCurlyBrace = trimmedLine.indexOf("}");
-      // if (indexOfFirstCloseCurlyBrace != -1 && indexOfFirstCloseCurlyBrace > indexOfFirstQuote && indexOfFirstCloseCurlyBrace < indexOfLastQuote)
-      // {
-      //   indexOfFirstCloseCurlyBrace = trimmedLine.indexOf("}", indexOfFirstCloseCurlyBrace + 1);
-      // }
-    } else {
-      var indexOfOpenCurlyBrace = trimmedLine.indexOf("{");
-      var indexOfCloseCurlyBrace = trimmedLine.indexOf("}");
+      lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfSemiColon + 1);
+      Action.reindent(lines, cursorPos);
+      return;
     }
 
-
-    //var indexOfSemiColon = trimmedLine.indexOf(";");
-    //console.log("line: " + i);
-    //console.log(indexOfCloseCurlyBrace);
-    if (indexOfOpenCurlyBrace != -1 && indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace - indexOfOpenCurlyBrace < 40)
-    {
-      console.log(trimmedLine);
-      console.log(trimmedLine.substr(0, indexOfCloseCurlyBrace).indexOf("{", indexOfOpenCurlyBrace + 1));
-    }
     var doNotIndent = indexOfOpenCurlyBrace != -1 && indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace - indexOfOpenCurlyBrace < 40 && trimmedLine.substr(0, indexOfCloseCurlyBrace).indexOf("{", indexOfOpenCurlyBrace + 1) == -1;
     if (doNotIndent)
     {
       if (indexOfCloseCurlyBrace != trimmedLine.length - 1)
       {
         lines.splice(i + 1, 0, trimmedLine.substr(indexOfCloseCurlyBrace + 1));
-        cursorPos.line = cursorPos.line+1;
+        if (i <= cursorPos.line)
+        {
+          cursorPos.line++;
+        }
         lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfCloseCurlyBrace + 1);
-        console.log(lines);
         Action.reindent(lines, cursorPos);
         return;
       }
@@ -2876,12 +2867,15 @@ Action.reindent = function(lines, cursorPos)
     }
     else 
     {
-      if (indexOfOpenCurlyBrace != -1 && indexOfOpenCurlyBrace != trimmedLine.length - 1)
+      if (indexOfOpenCurlyBrace != -1 && indexOfOpenCurlyBrace != trimmedLine.length - 1) // put code after an open curly bracket to next line
       {
         lines.splice(i + 1, 0, trimmedLine.substr(indexOfOpenCurlyBrace + 1));
         lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfOpenCurlyBrace + 1);
-        console.log(lines);
-        Action.reindent(lines, {line:cursorPos.line+1, ch:cursorPos.ch});
+        if (i <= cursorPos.line)
+        {
+          cursorPos.line++;
+        }
+        Action.reindent(lines, cursorPos);
         return;
       }
 
@@ -2891,14 +2885,23 @@ Action.reindent = function(lines, cursorPos)
         {
           lines.splice(i + 1, 0, trimmedLine.substr(1));
           lines[i] = "}";
-          cursorPos.line = cursorPos.line+1;
+          if (i <= cursorPos.line)
+          {
+            cursorPos.line++;
+          }
         } else {
           lines.splice(i + 1, 0, "}");
-          cursorPos.line = cursorPos.line+1;
-          if (indexOfCloseCurlyBrace != trimmedLine.length - 1)
+          if (i <= cursorPos.line)
+          {
+            cursorPos.line++;
+          }
+          if (indexOfCloseCurlyBrace != trimmedLine.length - 1) // there is code after close curly bracket
           {
             lines.splice(i + 2, 0, trimmedLine.substr(indexOfCloseCurlyBrace + 1));
-            cursorPos.line = cursorPos.line+1;
+            if (i <= cursorPos.line)
+            {
+              cursorPos.line++;
+            }
           }
           lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfCloseCurlyBrace);
         }
@@ -2923,6 +2926,7 @@ Action.reindent = function(lines, cursorPos)
         if (trimmedLine.slice(-1) == "{" || trimmedLine.slice(-2) == "||" && trimmedLine.slice(-1) == "}")
         {
           statementEnd = true;
+          lines[i] = offset + lines[i].trim();
         } 
         else 
         {
@@ -2952,7 +2956,8 @@ Action.reindent = function(lines, cursorPos)
     }
   }
   
-  if(Page.codeMirrorOn) {
+  if(Page.codeMirrorOn) 
+  {
     Page.codeMirrorEditor.setValue(codeAfterIndent);
   }
   jQuery("#umpleModelEditorText").val(codeAfterIndent);
