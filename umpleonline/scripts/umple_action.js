@@ -143,22 +143,36 @@ Action.clicked = function(event)
   {
     jQuery("#loadTaskNameArea").css("display","block");
   }
+  else if (action == "LoadThisTask")
+  {
+    Action.loadTask(Page.getModel().split("-")[1], false);
+  }
   else if (action == "EditTask")
   {
     jQuery("#createTaskArea").css("display","block");
   }
   else if (action == "RequestAllZip") 
   {
-    var link = document.createElement("a");
-    link.setAttribute("href", "scripts/tab_control.php?downloadTaskUserDir=1&taskid=" + Page.getModel());
-    link.setAttribute('id', "downloadLink");
-    var linkText = document.createTextNode("Download ZIP File From Here");
-    link.appendChild(linkText);
-    
-    var node = document.createElement("LI");   
-    node.appendChild(link);
-    document.getElementById("taskSubmenu").appendChild(node);
-    
+    if (document.getElementById("downloadTaskDirLink") === null)
+    {
+      var link = document.createElement("a");
+      link.setAttribute("href", "scripts/tab_control.php?downloadTaskUserDir=1&taskid=" + Page.getModel());
+      link.setAttribute('id', "downloadTaskDirLink");
+      var linkText = document.createTextNode("Download ZIP File From Here");
+      link.appendChild(linkText);
+      
+      var node = document.createElement("LI");   
+      node.appendChild(link);
+      document.getElementById("taskSubmenu").appendChild(node);
+    }
+    else
+    {
+      document.getElementById("downloadTaskDirLink").setAttribute("href", "scripts/tab_control.php?downloadTaskUserDir=1&taskid=" + Page.getModel());
+    }
+
+    setTimeout(function () {
+      document.getElementById("downloadTaskDirLink").remove();
+    }, 30000);
   }
   else if (action == "DownloadFiles")
   {
@@ -177,7 +191,9 @@ Action.clicked = function(event)
       var node = document.createElement("LI");   
       node.appendChild(link);
       document.getElementById("saveLoad").appendChild(node);
-    } else {
+    }
+    else 
+    {
       document.getElementById("downloadLink").setAttribute("href", "scripts/tab_control.php?download=1&&model=" + Page.getModel());
     }
 

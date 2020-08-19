@@ -9,6 +9,12 @@ ini_set('display_startup_errors', '1');
 require_once ("scripts/compiler_config.php");
 cleanupOldFiles();
 
+// if (isset($_REQUEST["loadTaskWithURL"]))
+// {
+//   echo "<script type='text/javascript'> Action.loadTask(" . $_REQUEST["taskName"] . ", false); </script>";
+//   exit();
+// }
+
 if (isset($_REQUEST["model"])) {
   if (isset($_REQUEST["task"]))
   {
@@ -120,6 +126,7 @@ $output = $dataHandle->readData('model.ump');
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script src="scripts/_load.js" type="text/javascript"></script>
+  <?php ?>
   <title>UmpleOnline: Generate Java, C++, PHP, Alloy, NuSMV or Ruby code from Umple</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
   <style>
@@ -229,6 +236,25 @@ $output = $dataHandle->readData('model.ump');
   <input id="advancedMode" type="hidden" value="0" />
   <input id="model" type="hidden" value="<?php echo $dataHandle->getName()?>" />
 
+  <div id="createTaskArea" style="display: none;">
+    <div id="taskNameArea" style="display: none;">
+      <label id="labelTaskName" for="taskName">Task name:</label><br>
+      <input type="text" id="taskName" name="fname"><br>
+    </div>
+      <label id="labelInstructions" for="instructions">Instruction:</label><br>
+      <textarea id="instructions"></textarea>
+
+    <span id="buttonSubmitTask">
+    <?php if (!isset($_REQUEST["task"])) { ?>
+      <a href="javascript:Page.createTask()">Submit Task</a> 
+    <?php } else { ?>
+      <a href="javascript:Page.editTask()">Submit changes to this Task</a> 
+    <?php } ?>
+    </span>
+    <br>
+    <br>
+  </div>
+
   <div id="reminder" <?php if (!isset($_REQUEST["task"])) {
     echo "style=\"display: none;\"";
   } ?>>
@@ -289,16 +315,6 @@ $output = $dataHandle->readData('model.ump');
     <span style="font-size: 30%; white-space:nowrap;">  
     <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>
     </span>
-
-    <!-- <form action="/task.php" method="post">
-      <label for="taskName">Task name:</label><br>
-      <input type="text" id="taskName" name="fname"><br>
-      <label for="instruction">Instruction:</label><br>
-      <input type="text" id="instruction" name="lname"><br><br>
-      <label for="Model">Instruction:</label><br>
-      <input type="text" id="instruction" name="lname"><br><br>
-      <input type="submit" value="Submit">
-    </form>  -->
     
     <span id="restorecode" >&nbsp; &nbsp; <a href="#"> Restore Saved State</a></span>
 
@@ -367,27 +383,8 @@ $output = $dataHandle->readData('model.ump');
             </li>                        
           </ul>
         
-          <ul>
-            <li class="subtitle" id="taskSubmenu">TASK</li>
-
-            <div id="createTaskArea" style="display: none;">
-              <br>
-              <div id="taskNameArea" style="display: none;">
-                <label id="labelTaskName" for="taskName">Task name:</label><br>
-                <input type="text" id="taskName" name="fname"><br>
-              </div>
-                <label id="labelInstructions" for="instructions">Instruction:</label><br>
-                <textarea id="instructions"></textarea>
-
-              <span id="buttonSubmitTask">
-              <?php if (!isset($_REQUEST["task"])) { ?>
-                <a href="javascript:Page.createTask()">Submit Task</a> 
-              <?php } else { ?>
-                <a href="javascript:Page.editTask()">Submit changes to this Task</a> 
-              <?php } ?>
-              </span>
-
-            </div>
+          <ul id="taskSubmenu">
+            <li class="subtitle">TASK</li>
 
             <?php if (!isset($_REQUEST["task"])) { ?>
               <li id="buttonCreateTask">
@@ -400,11 +397,23 @@ $output = $dataHandle->readData('model.ump');
                 Edit Task Instrcution
               </li>
             <?php } ?>
+
+            <?php if (!isset($_REQUEST["task"])) { ?>
+              <li id="buttonLoadTask">
+                <img src="scripts/copy.png"/>
+                Load a Task
+              </li>
+            <?php } else { ?>
+              <li id="buttonLoadThisTask">
+                <img src="scripts/copy.png"/>
+                Load this Task as an Experiment
+              </li>
+            <?php } ?>
             
-            <li id="buttonLoadTask">
+           <!--  <li id="buttonLoadTask">
               <img src="scripts/copy.png"/> 
               Load a Task
-            </li>
+            </li> -->
 
             <?php if (isset($_REQUEST["task"])) { ?>
             <li id="buttonRequestAllZip">

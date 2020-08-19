@@ -24,7 +24,6 @@ if (isset($_REQUEST["edit"]))
 }
 else
 {
-  file_put_contents("/home/jpan/test.html", "7777777777", FILE_APPEND);
   $tempModelId = $_REQUEST["model"];
   $savedModelData = dataStore()->createData("tasks/taskroot-" . $_REQUEST["taskName"] . "-" . date("ymd"));
   $tempModelData = dataStore()->openData($tempModelId);

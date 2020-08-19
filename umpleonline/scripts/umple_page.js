@@ -158,13 +158,14 @@ Page.initPaletteArea = function()
   if (Page.canEditTask)
   {
     Page.initHighlighter("buttonEditTask");
+    Page.initHighlighter("buttonLoadThisTask");
     Page.initHighlighter("buttonRequestAllZip");
   }
   else
   {
     Page.initHighlighter("buttonCreateTask");
+    Page.initHighlighter("buttonLoadTask")
   }
-  Page.initHighlighter("buttonLoadTask");
   Page.initHighlighter("buttonDownloadFiles");
   Page.initHighlighter("buttonSmaller");
   Page.initHighlighter("buttonLarger");
@@ -217,13 +218,14 @@ Page.initPaletteArea = function()
   if (Page.canEditTask)
   {
     Page.initAction("buttonEditTask");
+    Page.initAction("buttonLoadThisTask");
     Page.initAction("buttonRequestAllZip");
   }
   else
   {
     Page.initAction("buttonCreateTask");
+    Page.initAction("buttonLoadTask");
   }
-  Page.initAction("buttonLoadTask");
   Page.initAction("buttonDownloadFiles");
   Page.initAction("buttonUndo");
   Page.initAction("buttonRedo");
