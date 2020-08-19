@@ -24,6 +24,22 @@ if (isset($_REQUEST["edit"]))
 }
 else
 {
+  //file_put_contents("/home/jpan/test.html", "7777777777", FILE_APPEND);
+  foreach (new DirectoryIterator("ump/tasks") as $file) 
+  {
+    if ($file->isDot()) continue;
+
+    if ($file->isDir() && substr($file->getFilename(), 0, 8) == "taskroot") 
+    {
+      $taskName = explode("-", $file->getFilename())[1];
+        if ($taskName == $_REQUEST["taskName"]) // task name already existed
+        {
+          echo "Task name '" . $_REQUEST["taskName"] . "' already exists";
+          //file_put_contents("/home/jpan/test.html", "7777777777", FILE_APPEND);
+          exit();
+        }
+    }
+  }
   $tempModelId = $_REQUEST["model"];
   $savedModelData = dataStore()->createData("tasks/taskroot-" . $_REQUEST["taskName"] . "-" . date("ymd"));
   $tempModelData = dataStore()->openData($tempModelId);
@@ -63,6 +79,7 @@ else
   // Empty anything else in directory and remove it
   $tempModelData->delete();
 
-  header("Location: umple.php?task=1&model={$saveModelId}");
+  echo $saveModelId;
+  //header("Location: umple.php?task=1&model={$saveModelId}");
 }
 //header("Location: umple.php");

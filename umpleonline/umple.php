@@ -258,7 +258,7 @@ $output = $dataHandle->readData('model.ump');
   <div id="reminder" <?php if (!isset($_REQUEST["task"])) {
     echo "style=\"display: none;\"";
   } ?>>
-    <label>  Edit task starting model in this page. To edit task instruction, please navigate the task submenu under SAVE&LOAD.</label>
+    <label>  Edit task starting model in this page. To edit task instruction or load this task as an experiment, please navigate the task submenu under SAVE&LOAD.</label>
     <br/>
     <br/>
   </div>

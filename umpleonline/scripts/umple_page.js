@@ -894,8 +894,22 @@ Page.createTask = function()
   TabControl.saveActiveTabs();
   //console.log(Page.getModel());
   //console.log("task.php?taskName=" + taskName.val() + "&instructions=" + instructions.val() + "&model=" + Page.getModel());
-  window.location.href = "task.php?taskName=" + taskName.val() + "&instructions=" + instructions.val() + "&model=" + Page.getModel();
-  window.alert("Successfully created a Task!");
+  Ajax.sendRequest("task.php",Page.createTaskCallback,format("taskName={0}&instructions={1}&model={2}",taskName.val(),instructions.val(), Page.getModel()));
+  //window.location.href = "task.php?taskName=" + taskName.val() + "&instructions=" + instructions.val() + "&model=" + Page.getModel();
+}
+
+Page.createTaskCallback = function(response)
+{
+  console.log(response);
+  if (response.responseText.split(" ")[0] == "Task")
+  {
+    window.alert("Create Task Failed! " + response.responseText);
+  }
+  else 
+  {
+    //window.alert("Successfully created a Task! Now you will be navaigate to task modfication page");
+    window.location.href = "umple.php?task=1&model=" + response.responseText;
+  }
 }
 
 Page.editTask = function()

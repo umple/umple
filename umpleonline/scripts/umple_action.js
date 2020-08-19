@@ -512,15 +512,14 @@ Action.loadTaskCallback = function(response)
     }
   }
   if (!Action.manualSync) Action.updateUmpleDiagram();
-    TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
-    TabControl.saveActiveTabs();
-    //console.log(Page.getModel());
-    window.location.href = "bookmark.php?taskname=" + responseArray[2] + "&model=" + responseArray[3];
+  TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+  TabControl.saveActiveTabs();
+  //console.log(Page.getModel());
+  window.location.href = "bookmark.php?taskname=" + responseArray[2] + "&model=" + responseArray[3];
 }
 
 Action.loadTaskExceptCodeCallback = function(response)
 {
-  console.log("111111111111111111111111111");
   //console.log(response);
   Action.freshLoad = true;
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.

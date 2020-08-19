@@ -108,13 +108,10 @@ else if (isset($_REQUEST["loadTask"])) //load the task in the tasks dir
     if ($file->isDir() && substr($file->getFilename(), 0, 8) == "taskroot") 
     {
       $taskName = explode("-", $file->getFilename())[1];
-        //print $file->getFilename() . '<br />';
-        if ($taskName == $_REQUEST["filename"])//"task-666-200729bkx78zwi")
-        {//echo $_REQUEST["filename"];
+        if ($taskName == $_REQUEST["filename"])
+        {
           $dataHandle = dataStore()->openData("tasks/" . $file->getFilename());
           $umpleCode = $dataHandle->readData("model.ump");
-          //echo $outputUmple;
-          //echo "instructions:";
           $instructions = $dataHandle->readData("instructions.md");
           echo $umpleCode . "task delimiter" . $instructions . "task delimiter" . $taskName . "task delimiter" . $file->getFilename();
           break;
