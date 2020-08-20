@@ -507,6 +507,11 @@ class UmpleInternalParser
     placeholderStateMachine = new StateMachine("PLACE_HOLDER");
     String name = stateMachineToken.getValue("name");
 
+    if (name.equals("timer"))
+    {
+      getParseResult().addErrorMessage(new ErrorMessage(75, stateMachineToken.getSubToken("name").getPosition(), "" + stateMachineToken.getSubToken("name").getPosition().getLineNumber()));
+    }
+
     if(!Token.isValidIdentifier(stateMachineToken.getValue("name"))){
     	setFailedPosition(stateMachineToken.getPosition(), 150, stateMachineToken.getValue("name"));
     }
@@ -1078,11 +1083,16 @@ class UmpleInternalParser
       	fromState.addAction(analyzeAction(subToken, fromState));
       }
       else if (subToken.is("||"))
-      {
+      {//System.out.println("stateToken: " + stateToken);
         if (fromState.numberOfNestedStateMachines() == 0) { continue; }
         int previousSmIndex = fromState.numberOfNestedStateMachines() - 1;
               StateMachine nestedSm = fromState.getNestedStateMachine(previousSmIndex);
               if (nestedSm.numberOfStates() == 0) { continue; }
+              //System.out.println("fromState.getName(): " + fromState.getName());
+              //System.out.println(fromState.getNestedStateMachines());
+              //System.out.println(nestedSm.getStates());
+              //System.out.println(nestedSm.getState(0).getNestedStateMachines());
+              //System.out.println("nestedSm.getName(): " + nestedSm.getName());
               nestedSm.setName(nestedSm.getState(0).getName());
               addNewSm = true;
               isConcurrentState = true;

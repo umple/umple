@@ -1,0 +1,9 @@
+class X {
+  sm_timer {
+    s1 {
+      after(1) -> s2;
+    }
+    s2 {
+    }
+  }
+}
