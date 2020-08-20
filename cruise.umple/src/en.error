@@ -83,7 +83,7 @@
 72: 4, "http://manual.umple.org/?W072RefactoredFinalState.html", Removed do activities, exit actions, transitions, and/or nested state machines from final State '{0}' of StateMachine '{1}' ;
 73: 2, "http://manual.umple.org/?E073DuplicateParallelStateMachineName.html", Composite state '{0}' contains parallel state machines with the same name '{1}' on lines '{2}' and '{3}' ; 
 74: 2, "http://manual.umple.org/?E074UserDefinedStateCannotBeNamedFinal.html", Cannot name user-defined state on line '{0}' as Final because it is a reserved keyword ;
-75: 2, "http://manual.umple.org/?E075UserDefinedStateMachineCannotBeNamedTimer.html", Cannot name user-defined state machine on line '{0}' as timer because it is a reserved keyword ;
+75: 2, "http://manual.umple.org/?E075UserDefinedStateMachineCannotBeNamedTimer.html", Cannot name state machine on line '{0}' as timer because this name is reserved for internal use. Please choose another name ;
 
 80: 2, "http://manual.umple.org/?E080InvalidAbstractClassAssociation.html", The association between a class and an abstract class declared in '{0}' must be a directed association or have one end whose multiplicity lower bound is 0 ;
 81: 2, "http://manual.umple.org/?E081InvalidMultivaluedAttributeAssignment.html", Invalid multivalued attribute assignment of attribute '{1}' in class '{0}' ;
