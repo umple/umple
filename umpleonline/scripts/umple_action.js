@@ -151,6 +151,31 @@ Action.clicked = function(event)
   {
     jQuery("#createTaskArea").css("display","block");
   }
+  else if (action == "RequestLoadTaskURL")
+  {
+    if (document.getElementById("loadTaskURLLink") === null)
+    {
+      var taskname = Page.getModel().split("-")[1];
+
+      //var url = document.createElement("li");
+      //url.setAttribute('id', "downloadTaskDirLink");
+      var url = document.createTextNode("bookmark.php?taskname=" + taskname + "&model=" + taskname);
+      //url.appendChild(linkText);
+      
+      var node = document.createElement("LI"); 
+      node.setAttribute('id', "loadTaskURLLink"); 
+      node.appendChild(url);
+      document.getElementById("taskSubmenu").appendChild(node);
+    }
+    else
+    {
+      document.getElementById("loadTaskURLLink").setAttribute("bookmark.php?taskname=" + taskname + "&model=" + taskname);
+    }
+
+    setTimeout(function () {
+      document.getElementById("loadTaskURLLink").remove();
+    }, 30000);
+  }
   else if (action == "RequestAllZip") 
   {
     if (document.getElementById("downloadTaskDirLink") === null)
@@ -485,9 +510,22 @@ Action.loadTask = function(taskName, isBookmark)
   jQuery("#showInstrcutionsArea").css("display","block");
   if (!isBookmark)
   {
-    Ajax.sendRequest("scripts/compiler.php",Action.loadTaskCallback,format("loadTask=1&filename={0}",taskName));
+    Ajax.sendRequest("bookmark.php", Action.loadTaskBookmark,format("taskname={0}&model={0}",taskName));
+    //Ajax.sendRequest("scripts/compiler.php",Action.loadTaskCallback,format("loadTask=1&filename={0}",taskName));
   } else {
     Ajax.sendRequest("scripts/compiler.php",Action.loadTaskExceptCodeCallback,format("loadTask=1&filename={0}",taskName));
+  }
+}
+
+Action.loadTaskBookmark = function(response)
+{
+  if (response.responseText.split(" ")[0] == "Task")
+  {
+    window.alert("Load Task Failed! " + response.responseText);
+  }
+  else
+  {
+    window.location.href = "umple.php?model=" + response.responseText;
   }
 }
 
@@ -514,7 +552,7 @@ Action.loadTaskCallback = function(response)
   if (!Action.manualSync) Action.updateUmpleDiagram();
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
-  //console.log(Page.getModel());
+  console.log(responseArray[3]);
   window.location.href = "bookmark.php?taskname=" + responseArray[2] + "&model=" + responseArray[3];
 }
 

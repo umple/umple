@@ -160,6 +160,7 @@ Page.initPaletteArea = function()
     Page.initHighlighter("buttonEditTask");
     Page.initHighlighter("buttonLoadThisTask");
     Page.initHighlighter("buttonRequestAllZip");
+    Page.initHighlighter("buttonRequestLoadTaskURL");
   }
   else
   {
@@ -220,6 +221,7 @@ Page.initPaletteArea = function()
     Page.initAction("buttonEditTask");
     Page.initAction("buttonLoadThisTask");
     Page.initAction("buttonRequestAllZip");
+    Page.initAction("buttonRequestLoadTaskURL");
   }
   else
   {

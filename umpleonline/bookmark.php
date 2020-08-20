@@ -15,8 +15,31 @@ $tempModelId = $_REQUEST["model"];
 date_default_timezone_set('UTC');
 
 if (isset($_REQUEST["taskname"])) {
+  $taskExist = false;
   $savedModelData = dataStore()->createData("task-" . $_REQUEST["taskname"] . "-" . date("ymd"));
-  $tempModelData = dataStore()->openData("tasks/" . $tempModelId);
+  foreach (new DirectoryIterator("ump/tasks") as $file) 
+  {
+    if ($file->isDot()) continue;
+
+    if ($file->isDir() && substr($file->getFilename(), 0, 8) == "taskroot") 
+    {
+      $taskName = explode("-", $file->getFilename())[1];
+      if ($taskName == $_REQUEST["taskname"])
+      {
+        $tempModelId = $file->getFilename();
+        $taskExist = true;
+      }
+    }
+  }
+  if ($taskExist)
+  {
+    $tempModelData = dataStore()->openData("tasks/" . $tempModelId);
+  }
+  else 
+  {
+    echo "Task with name '" . $_REQUEST["taskname"] . "' does not exist"; 
+    exit();
+  }
 } else {
   $savedModelData = dataStore()->createData(date("ymd"));
   $tempModelData = dataStore()->openData($tempModelId);
@@ -59,7 +82,8 @@ if (!isset($_REQUEST["taskname"]))
 }
 
 if (isset($_REQUEST["taskname"])) {  
-  header("Location: umple.php?model={$saveModelId}");
+  //header("Location: umple.php?model={$saveModelId}");
+  echo "$saveModelId";
 } else {
   header("Location: umple.php?model={$saveModelId}");
 }
