@@ -143,7 +143,7 @@ else if (isset($_REQUEST["downloadTaskUserDir"]) && isset($_REQUEST["taskid"]))
         {
           if ($file->isDot()) continue;
 
-          if ($file->isDir() && explode("-", $file->getFilename())[1] == explode("-", $taskId)[1]) 
+          if ($file->isDir() && sizeof(explode("-", $file->getFilename())) > 1 && explode("-", $file->getFilename())[1] == explode("-", $taskId)[1])
           {
             //file_put_contents("/home/jpan/test.html", $pathdir . "/////////", FILE_APPEND);
             $pathdir = $file->getFilename();
