@@ -153,28 +153,30 @@ Action.clicked = function(event)
   }
   else if (action == "RequestLoadTaskURL")
   {
-    if (document.getElementById("loadTaskURLLink") === null)
-    {
-      var taskname = Page.getModel().split("-")[1];
+    var taskname = Page.getModel().split("-")[1];
+    //var url = window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname;
+    Action.copyToClp(window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+    // if (document.getElementById("loadTaskURLLink") === null)
+    // {
 
-      //var url = document.createElement("li");
-      //url.setAttribute('id', "downloadTaskDirLink");
-      var url = document.createTextNode("bookmark.php?taskname=" + taskname + "&model=" + taskname);
-      //url.appendChild(linkText);
+    //   //var url = document.createElement("li");
+    //   //url.setAttribute('id', "downloadTaskDirLink");
+    //   var url = document.createTextNode(window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+    //   //url.appendChild(linkText);
       
-      var node = document.createElement("LI"); 
-      node.setAttribute('id', "loadTaskURLLink"); 
-      node.appendChild(url);
-      document.getElementById("taskSubmenu").appendChild(node);
-    }
-    else
-    {
-      document.getElementById("loadTaskURLLink").setAttribute("bookmark.php?taskname=" + taskname + "&model=" + taskname);
-    }
+    //   var node = document.createElement("LI"); 
+    //   node.setAttribute('id', "loadTaskURLLink"); 
+    //   node.appendChild(url);
+    //   document.getElementById("taskSubmenu").appendChild(node);
+    // }
+    // else
+    // {
+    //   document.getElementById("loadTaskURLLink").setAttribute(window.location.href + "bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+    // }
 
-    setTimeout(function () {
-      document.getElementById("loadTaskURLLink").remove();
-    }, 30000);
+    // setTimeout(function () {
+    //   document.getElementById("loadTaskURLLink").remove();
+    // }, 30000);
   }
   else if (action == "RequestAllZip") 
   {
@@ -500,11 +502,6 @@ Action.loadFileCallback = function(response)
   if (!Action.manualSync) Action.updateUmpleDiagram();
 }
 
-// Action.loadTaskExceptCode = function(taskName)
-// {
-//   Ajax.sendRequest("scripts/compiler.php",Action.loadTaskExceptCodeCallback,format("loadTaskExceptCode=1&filename={0}",taskName));
-// }
-
 Action.loadTask = function(taskName, isBookmark)
 {
   jQuery("#showInstrcutionsArea").css("display","block");
@@ -539,8 +536,8 @@ Action.loadTaskCallback = function(response)
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskCallback");
   var responseArray = response.responseText.split("task delimiter");
   Page.setUmpleCode(responseArray[0]);
-  jQuery("#textareaShowInstrcutions").val(responseArray[1]);
-  jQuery("#labelShowInstructions").text("Task Instructions: " + responseArray[2]);
+  //jQuery("#textareaShowInstrcutions").val(responseArray[1]);
+  //jQuery("#labelShowInstructions").text("Task Instructions: " + responseArray[2]);
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {
     var extractedName = TabControl.extractNameFromCode(responseArray[0]);
@@ -558,7 +555,7 @@ Action.loadTaskCallback = function(response)
 
 Action.loadTaskExceptCodeCallback = function(response)
 {
-  //console.log(response);
+  console.log(response);
   Action.freshLoad = true;
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   //if (Object.keys(TabControl.tabs).length > 1) return;
@@ -567,8 +564,11 @@ Action.loadTaskExceptCodeCallback = function(response)
   var responseArray = response.responseText.split("task delimiter");
   console.log("responseArray[1]: ");
   console.log(responseArray[1]);
-  jQuery("#textareaShowInstrcutions").val(responseArray[1]);
-  jQuery("#labelShowInstructions").text("Task Instructions: " + responseArray[2]);
+  jQuery("#instructions").val(responseArray[1]);
+  jQuery("#labelInstructions").text("Task Instructions: " + responseArray[2]);
+  jQuery("#instructions").css("display","block");
+  jQuery("#labelInstructions").css("display","block");
+  jQuery("#createTaskArea").css("display","block");
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {
     var extractedName = TabControl.extractNameFromCode(responseArray[0]);
@@ -585,6 +585,75 @@ Action.submitLoadTask = function()
   var taskName = jQuery("#inputLoadTaskName");
   Action.loadTask(taskName.val(), false);
 }
+
+Action.submitTaskWork =function()
+{
+  Ajax.sendRequest("task.php", Action.submitTaskWorkCallback(), format("submitTaskWork=1&model={0}", Page.getModel()));
+}
+
+Action.submitTaskWorkCallback = function(response)
+{
+  window.alert("Successfully submitted Task!");
+  window.location.href = "umple.php";
+}
+Action.launchParticipantURL = function()
+{
+  var taskname = Page.getModel().split("-")[1];
+  window.open("bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+}
+
+Action.copyParticipantURL = function()
+{
+  var taskname = Page.getModel().split("-")[1];
+    //var url = window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname;
+    Action.copyToClp(window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+    // if (document.getElementById("loadTaskURLLink") === null)
+    // {
+
+    //   //var url = document.createElement("li");
+    //   //url.setAttribute('id', "downloadTaskDirLink");
+    //   var url = document.createTextNode(window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+    //   //url.appendChild(linkText);
+      
+    //   var node = document.createElement("LI"); 
+    //   node.setAttribute('id', "loadTaskURLLink"); 
+    //   node.appendChild(url);
+    //   document.getElementById("taskSubmenu").appendChild(node);
+    // }
+    // else
+    // {
+    //   document.getElementById("loadTaskURLLink").setAttribute(window.location.href + "bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+    // }
+
+    // setTimeout(function () {
+    //   document.getElementById("loadTaskURLLink").remove();
+    // }, 30000);
+}
+
+Action.copyToClp = function(txt){
+    txt = document.createTextNode(txt);
+    var m = document;
+    var w = window;
+    var b = m.body;
+    b.appendChild(txt);
+    if (b.createTextRange) {
+        var d = b.createTextRange();
+        d.moveToElementText(txt);
+        d.select();
+        m.execCommand('copy');
+    } 
+    else {
+        var d = m.createRange();
+        var g = w.getSelection;
+        d.selectNodeContents(txt);
+        g().removeAllRanges();
+        g().addRange(d);
+        m.execCommand('copy');
+        g().removeAllRanges();
+    }
+    txt.remove();
+}
+
 Action.saveNewFile = function()
 {
   var umpleCode = Page.getUmpleCode();

@@ -157,16 +157,14 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonLoadLocalBrowser");
   if (Page.canEditTask)
   {
-    Page.initHighlighter("buttonEditTask");
-    Page.initHighlighter("buttonLoadThisTask");
-    Page.initHighlighter("buttonRequestAllZip");
+    //Page.initHighlighter("buttonEditTask");
+    //Page.initHighlighter("buttonLoadThisTask");
+    //Page.initHighlighter("buttonRequestAllZip");
     Page.initHighlighter("buttonRequestLoadTaskURL");
   }
-  else
-  {
     Page.initHighlighter("buttonCreateTask");
     Page.initHighlighter("buttonLoadTask")
-  }
+  
   Page.initHighlighter("buttonDownloadFiles");
   Page.initHighlighter("buttonSmaller");
   Page.initHighlighter("buttonLarger");
@@ -218,16 +216,14 @@ Page.initPaletteArea = function()
   Page.initAction("buttonLoadLocalBrowser");
   if (Page.canEditTask)
   {
-    Page.initAction("buttonEditTask");
-    Page.initAction("buttonLoadThisTask");
-    Page.initAction("buttonRequestAllZip");
+    //Page.initAction("buttonEditTask");
+    //Page.initAction("buttonLoadThisTask");
+    //Page.initAction("buttonRequestAllZip");
     Page.initAction("buttonRequestLoadTaskURL");
   }
-  else
-  {
     Page.initAction("buttonCreateTask");
     Page.initAction("buttonLoadTask");
-  }
+
   Page.initAction("buttonDownloadFiles");
   Page.initAction("buttonUndo");
   Page.initAction("buttonRedo");
@@ -883,7 +879,14 @@ Page.createBookmark = function()
 
 Page.createTask = function()
 {
-  var taskName = jQuery("#taskName");
+  var taskName = jQuery("#taskName").val();
+  let patt = /^(\w|\.|-)+$/;
+  if (!patt.test(taskName))//taskName.indexOf(" ") != -1 || taskName.indexOf("/") != -1 || taskName.indexOf("-") != -1 || taskName.indexOf("\\") != -1) 
+  {
+    window.alert("Task Name can only contain letters(case insensitive), underscores, dots, and digits!");
+    return;
+  }
+  var requestorName = jQuery("#requestorName");
   //console.log(taskName.val());
   var instructions = jQuery("#instructions");
   //console.log(instructions.val());
@@ -896,7 +899,7 @@ Page.createTask = function()
   TabControl.saveActiveTabs();
   //console.log(Page.getModel());
   //console.log("task.php?taskName=" + taskName.val() + "&instructions=" + instructions.val() + "&model=" + Page.getModel());
-  Ajax.sendRequest("task.php",Page.createTaskCallback,format("taskName={0}&instructions={1}&model={2}",taskName.val(),instructions.val(), Page.getModel()));
+  Ajax.sendRequest("task.php",Page.createTaskCallback,format("taskName={0}&instructions={1}&model={2}&requestorName={3}",taskName,instructions.val(), Page.getModel(), requestorName.val()));
   //window.location.href = "task.php?taskName=" + taskName.val() + "&instructions=" + instructions.val() + "&model=" + Page.getModel();
 }
 
@@ -921,7 +924,7 @@ Page.editTask = function()
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
   window.location.href = "task.php?edit=1&taskName=" + taskName + "&instructions=" + instructions.val() + "&model=" + Page.getModel();
-  window.alert("Successfully edit Task " + taskName + "!");
+  //window.alert("Successfully edit Task " + taskName + "!");
 }
 
 Page.toggleTabs = function()

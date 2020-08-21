@@ -1,6 +1,4 @@
 <?php
-ini_set("display_errors", 1);
-ini_set('display_startup_errors', '1');
 // Copyright: All contributors to the Umple Project
 // This file is made available subject to the open source license found at:
 // http://umple.org/license
@@ -22,6 +20,19 @@ if (isset($_REQUEST["model"])) {
   }
   else
   {
+    if (explode("-", $_REQUEST["model"])[0] == "task")
+    {
+      foreach (new DirectoryIterator("ump/" . $_REQUEST['model']) as $file) 
+      {
+        //file_put_contents("/home/jpan/test.html", $file->getFilename() . "/////////", FILE_APPEND);
+        if ($file->getFilename() == "submitted.md") 
+        {
+          header('HTTP/1.0 404 Not Found');
+          readfile('404.shtml');
+          exit();
+        }
+      }
+    }
     $dataHandle = dataStore()->openData($_REQUEST['model']);
   }
   if (!$dataHandle) {
@@ -238,35 +249,46 @@ $output = $dataHandle->readData('model.ump');
 
   <div id="createTaskArea" style="display: none;">
     <div id="taskNameArea" style="display: none;">
-      <label id="labelTaskName" for="taskName">Task name:</label><br>
+      <label id="labelTaskName" for="taskName">Task Name:</label><br>
       <input type="text" id="taskName" name="fname"><br>
+      <label id="labelRequestorName" for="requestorName">Requestor Name:</label><br>
+      <input type="text" id="requestorName"><br>
     </div>
-      <label id="labelInstructions" for="instructions">Instruction:</label><br>
-      <textarea id="instructions"></textarea>
+      <label id="labelInstructions" for="instructions">Task Instructions:</label><br>
+      <textarea id="instructions" <?php if ($doLoadTaskInstruction && !isset($_REQUEST["task"])) {echo "readonly";}?>></textarea>
 
     <span id="buttonSubmitTask">
-    <?php if (!isset($_REQUEST["task"])) { ?>
+    <?php if (!isset($_REQUEST["task"]) && !$doLoadTaskInstruction) { ?>
       <a href="javascript:Page.createTask()">Submit Task</a> 
-    <?php } else { ?>
-      <a href="javascript:Page.editTask()">Submit changes to this Task</a> 
+    <?php } else if (isset($_REQUEST["task"])) { ?>
+      <a href="javascript:Page.editTask()">Save changes to this Task</a> &nbsp;&nbsp;&nbsp;
+      <a href="javascript:Action.copyParticipantURL()">Copy Participant URL</a> &nbsp;&nbsp;&nbsp;
+      <a href="javascript:Action.launchParticipantURL()">Launch Participant URL in a new tab</a>
+    <?php } else if ($doLoadTaskInstruction && substr($dataHandle->getName(), 0, 8) != "taskroot") {?>
+      <a href="javascript:Action.submitTaskWork()">Submit Your Work(Once submitted you won't be able to open this page)</a>
+     <!--  all your subsequent work will not be saved -->
     <?php } ?>
+    </span>
+
+    <span id="buttonCopyParticipantURL">
+      
     </span>
     <br>
     <br>
   </div>
 
-  <div id="reminder" <?php if (!isset($_REQUEST["task"])) {
+<!--   <div id="reminder" <?php if (!isset($_REQUEST["task"])) {
     echo "style=\"display: none;\"";
   } ?>>
     <label>  Edit task starting model in this page. To edit task instruction or load this task as an experiment, please navigate the task submenu under SAVE&LOAD.</label>
     <br/>
     <br/>
-  </div>
+  </div> -->
 
-  <div id="showInstrcutionsArea" style="display: none;">
+  <!-- <div id="showInstrcutionsArea" style="display: none;">
     <label id="labelShowInstructions" for="textareaShowInstrcutions">Task Instructions:</label><br>
     <textarea id="textareaShowInstrcutions" readonly></textarea>
-  </div>
+  </div> -->
 
   <div id="topLine" class="bookmarkableUrl">
     <span id="linetext">Line=<input size=2 id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
@@ -305,7 +327,7 @@ $output = $dataHandle->readData('model.ump');
   
     <span style="font-size: 30%; white-space:nowrap;">  
     <?php if (isBookmark($dataHandle)) { ?>
-      <a class="button2" id="topBookmarkable" href="umple.php?<?php echo "task=1&" ?>model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
+      <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
     <?php } else { ?>
       <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
     <?php } ?>
@@ -385,8 +407,12 @@ $output = $dataHandle->readData('model.ump');
         
           <ul id="taskSubmenu">
             <li class="subtitle">TASK</li>
-
-            <?php if (!isset($_REQUEST["task"])) { ?>
+            
+            <li id="buttonCreateTask">
+              <img src="scripts/copy.png"/>
+              Create a Task
+            </li>
+            <!-- <?php if (!isset($_REQUEST["task"])) { ?>
               <li id="buttonCreateTask">
                 <img src="scripts/copy.png"/>
                 Create a Task
@@ -396,9 +422,13 @@ $output = $dataHandle->readData('model.ump');
                 <img src="scripts/copy.png"/>
                 Edit Task Instrcution
               </li>
-            <?php } ?>
+            <?php } ?> -->
 
-            <?php if (!isset($_REQUEST["task"])) { ?>
+            <li id="buttonLoadTask">
+              <img src="scripts/copy.png"/>
+              Load a Task
+            </li>
+           <!--  <?php if (!isset($_REQUEST["task"])) { ?>
               <li id="buttonLoadTask">
                 <img src="scripts/copy.png"/>
                 Load a Task
@@ -408,14 +438,14 @@ $output = $dataHandle->readData('model.ump');
                 <img src="scripts/copy.png"/>
                 Load this Task as an Experiment
               </li>
-            <?php } ?>
+            <?php } ?> -->
             
-            <?php if (isset($_REQUEST["task"])) { ?>
+           <!--  <?php if (isset($_REQUEST["task"])) { ?>
             <li id="buttonRequestLoadTaskURL">
               <img src="scripts/copy.png"/> 
               Get a link to load this task
             </li>
-            <?php } ?>
+            <?php } ?> -->
 
             <?php if (isset($_REQUEST["task"])) { ?>
             <li id="buttonRequestAllZip">

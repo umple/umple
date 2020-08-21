@@ -11,6 +11,14 @@ require_once ("scripts/compiler_config.php");
 //   exit();
 // }
 
+if (isset($_REQUEST["submitTaskWork"]))
+{
+
+  $tempModelId = $_REQUEST["model"];
+  $tempModelData = dataStore()->openData($tempModelId);
+  $tempModelData->writeData("submitted.md", " ");
+  exit();
+}
 
 // The following creates a random numbered directory in ump
 // the result is ump/{dir}/model.ump
@@ -32,16 +40,16 @@ else
     if ($file->isDir() && substr($file->getFilename(), 0, 8) == "taskroot") 
     {
       $taskName = explode("-", $file->getFilename())[1];
-        if ($taskName == $_REQUEST["taskName"]) // task name already existed
-        {
-          echo "Task name '" . $_REQUEST["taskName"] . "' already exists";
-          //file_put_contents("/home/jpan/test.html", "7777777777", FILE_APPEND);
-          exit();
-        }
+      if ($taskName == strtolower($_REQUEST["taskName"])) // task name already existed
+      {
+        echo "Task name '" . $_REQUEST["taskName"] . "' already exists";
+        //file_put_contents("/home/jpan/test.html", "7777777777", FILE_APPEND);
+        exit();
+      }
     }
   }
   $tempModelId = $_REQUEST["model"];
-  $savedModelData = dataStore()->createData("tasks/taskroot-" . $_REQUEST["taskName"] . "-" . date("ymd"));
+  $savedModelData = dataStore()->createData("tasks/taskroot-" . strtolower($_REQUEST["taskName"]) . "-" . date("ymd"));
   $tempModelData = dataStore()->openData($tempModelId);
 
   $saveModelId = $savedModelData->getName();
@@ -74,7 +82,7 @@ else
 
   $savedModelData->cloneFrom($tempModelData);
   $savedModelData->writeData("instructions.md", $_REQUEST["instructions"]);
-  $savedModelData->writeData("taskdetails.json", "{\"profName\" : \"Timothy Lethbridge\", \"taskName\" : \"" . $_REQUEST["taskName"] . "\"}");
+  $savedModelData->writeData("taskdetails.json", "{\"profName\" : \"" . $_REQUEST["requestorName"] . "\", \"taskName\" : \"" . $_REQUEST["taskName"] . "\"}");
 
   // Empty anything else in directory and remove it
   $tempModelData->delete();

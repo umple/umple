@@ -81,9 +81,14 @@ if (!isset($_REQUEST["taskname"]))
   $tempModelData->delete();
 }
 
-if (isset($_REQUEST["taskname"])) {  
+if ($_REQUEST["loadTaskWithURL"])
+{
+  header("Location: umple.php?model={$saveModelId}");
+}
+else if (isset($_REQUEST["taskname"])) {  
   //header("Location: umple.php?model={$saveModelId}");
   echo "$saveModelId";
-} else {
+} 
+else {
   header("Location: umple.php?model={$saveModelId}");
 }
