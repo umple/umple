@@ -28,9 +28,11 @@ if (isset($_REQUEST["taskname"])) {
       {
         $tempModelId = $file->getFilename();
         $taskExist = true;
+        break;
       }
     }
   }
+
   if ($taskExist)
   {
     $tempModelData = dataStore()->openData("tasks/" . $tempModelId);
@@ -81,7 +83,7 @@ if (!isset($_REQUEST["taskname"]))
   $tempModelData->delete();
 }
 
-if ($_REQUEST["loadTaskWithURL"])
+if (isset($_REQUEST["loadTaskWithURL"]))
 {
   header("Location: umple.php?model={$saveModelId}");
 }

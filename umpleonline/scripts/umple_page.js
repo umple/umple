@@ -48,13 +48,14 @@ Page.showGuards = true;
 Page.modifiedDiagrams = false;
 Page.allowPinch = false;
 Page.canEditTask = false;
-
+Page.canCreateTask = true;
 
 
 // The following is set called from umple.php
-Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask, doEditTask)
+Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask, doEditTask, doCreateTask)
 { 
   Page.canEditTask = doEditTask;
+  Page.canCreateTask = doCreateTask;
   Layout.isDiagramVisible = doShowDiagram;  
   Layout.isTextVisible = doShowText;  
   Layout.isPaletteVisible = doShowMenu;  
@@ -159,11 +160,14 @@ Page.initPaletteArea = function()
   {
     //Page.initHighlighter("buttonEditTask");
     //Page.initHighlighter("buttonLoadThisTask");
-    //Page.initHighlighter("buttonRequestAllZip");
+    Page.initHighlighter("buttonRequestAllZip");
     Page.initHighlighter("buttonRequestLoadTaskURL");
   }
+  if (Page.canCreateTask)
+  {
     Page.initHighlighter("buttonCreateTask");
-    Page.initHighlighter("buttonLoadTask")
+  }
+  Page.initHighlighter("buttonLoadTask")
   
   Page.initHighlighter("buttonDownloadFiles");
   Page.initHighlighter("buttonSmaller");
@@ -218,11 +222,14 @@ Page.initPaletteArea = function()
   {
     //Page.initAction("buttonEditTask");
     //Page.initAction("buttonLoadThisTask");
-    //Page.initAction("buttonRequestAllZip");
+    Page.initAction("buttonRequestAllZip");
     Page.initAction("buttonRequestLoadTaskURL");
   }
+  if (Page.canCreateTask)
+  {
     Page.initAction("buttonCreateTask");
-    Page.initAction("buttonLoadTask");
+  }
+  Page.initAction("buttonLoadTask");
 
   Page.initAction("buttonDownloadFiles");
   Page.initAction("buttonUndo");
@@ -886,20 +893,16 @@ Page.createTask = function()
     window.alert("Task Name can only contain letters(case insensitive), underscores, dots, and digits!");
     return;
   }
-  var requestorName = jQuery("#requestorName");
-  //console.log(taskName.val());
+  var requestorName = jQuery("#requestorName").val();
   var instructions = jQuery("#instructions");
-  //console.log(instructions.val());
-  //taskName.hide();
-  //instructions.hide();
-  // jQuery("#labelTaskName").hide();
+  var completionURL = jQuery("#completionURL").val();
   // jQuery("#labelInstructions").hide();
   // jQuery("#buttonSubmitTask").hide();
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
   //console.log(Page.getModel());
   //console.log("task.php?taskName=" + taskName.val() + "&instructions=" + instructions.val() + "&model=" + Page.getModel());
-  Ajax.sendRequest("task.php",Page.createTaskCallback,format("taskName={0}&instructions={1}&model={2}&requestorName={3}",taskName,instructions.val(), Page.getModel(), requestorName.val()));
+  Ajax.sendRequest("task.php",Page.createTaskCallback,format("taskName={0}&instructions={1}&model={2}&requestorName={3}&completionURL={4}", taskName, instructions.val(), Page.getModel(), requestorName, completionURL));
   //window.location.href = "task.php?taskName=" + taskName.val() + "&instructions=" + instructions.val() + "&model=" + Page.getModel();
 }
 
@@ -908,7 +911,7 @@ Page.createTaskCallback = function(response)
   console.log(response);
   if (response.responseText.split(" ")[0] == "Task")
   {
-    window.alert("Create Task Failed! " + response.responseText);
+    window.alert("Not able to create a task with that name. " + response.responseText);
   }
   else 
   {
@@ -920,11 +923,28 @@ Page.createTaskCallback = function(response)
 Page.editTask = function()
 {
   var instructions = jQuery("#instructions");
-  var taskName = jQuery("#model").val().split("-")[1]
+  var taskName = jQuery("#model").val().split("-")[1];
+  var requestorName = jQuery("#requestorName2").val();
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
-  window.location.href = "task.php?edit=1&taskName=" + taskName + "&instructions=" + instructions.val() + "&model=" + Page.getModel();
+  Ajax.sendRequest("task.php", Page.editTaskCallback, "edit=1&taskName=" + taskName + "&instructions=" + instructions.val() + "&model=" + Page.getModel() + "&requestorName=" + requestorName);
+  //window.location.href = "task.php?edit=1&taskName=" + taskName + "&instructions=" + instructions.val() + "&model=" + Page.getModel() + "&requestorName=" + requestorName;
   //window.alert("Successfully edit Task " + taskName + "!");
+}
+
+Page.editTaskCallback = function(response)
+{
+  Page.setFeedbackMessage('Changes saved');
+}
+
+Page.cancelTaskResponse = function()
+{
+  console.log(Page.getModel());
+  var answer = confirm("Are you sure to cancel this task response?");
+  if (answer)
+  {
+    window.location.href = "task.php?cancelTaskResponse=1&model=" + Page.getModel();
+  }
 }
 
 Page.toggleTabs = function()

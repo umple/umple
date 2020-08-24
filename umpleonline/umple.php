@@ -20,20 +20,8 @@ if (isset($_REQUEST["model"])) {
   }
   else
   {
-    if (explode("-", $_REQUEST["model"])[0] == "task")
-    {
-      foreach (new DirectoryIterator("ump/" . $_REQUEST['model']) as $file) 
-      {
-        //file_put_contents("/home/jpan/test.html", $file->getFilename() . "/////////", FILE_APPEND);
-        if ($file->getFilename() == "submitted.md") 
-        {
-          header('HTTP/1.0 404 Not Found');
-          readfile('404.shtml');
-          exit();
-        }
-      }
-    }
     $dataHandle = dataStore()->openData($_REQUEST['model']);
+  file_put_contents("/home/jpan/test.html", $dataHandle, FILE_APPEND);
   }
   if (!$dataHandle) {
     header('HTTP/1.0 404 Not Found');
@@ -84,6 +72,12 @@ if (substr($dataHandle->getName(), 0, 4) == "task")
 } else {
   $doLoadTaskInstruction = false;
 }
+
+$canCreateTask = true;
+if (isset($_REQUEST["model"]) && substr(explode("-", $_REQUEST["model"])[0], 0, 4) == "task")
+{
+  $canCreateTask = false;
+}
 // Core options after ? and between &. One of the first four is allowed
 
 // example=xxx means load the .ump file named xxx
@@ -123,6 +117,17 @@ if (isset($_REQUEST["nomenu"])) {$showMenu=false;} else {$showMenu=true;}
 
 // readOnly means suppress ability to edit - passed to JavaScript
 $readOnly = isset($_REQUEST["readOnly"]);
+if (isset($_REQUEST["model"]) && explode("-", $_REQUEST["model"])[0] == "task")
+{
+  foreach (new DirectoryIterator("ump/" . $_REQUEST['model']) as $file) 
+  {
+    //file_put_contents("/home/jpan/test.html", $file->getFilename() . "/////////", FILE_APPEND);
+    if ($file->getFilename() == "submitted.md") 
+    {
+      $readOnly = true;
+    }
+  }
+}
 
 //
 $generateDefault="#genclass";
@@ -249,23 +254,53 @@ $output = $dataHandle->readData('model.ump');
 
   <div id="createTaskArea" style="display: none;">
     <div id="taskNameArea" style="display: none;">
-      <label id="labelTaskName" for="taskName">Task Name:</label><br>
-      <input type="text" id="taskName" name="fname"><br>
+      <table>
+        <tr style="text-align:left;">
+          <th><label id="labelTaskName" for="taskName">Task Name:</label></th>
+          <th><label id="labelRequestorName" for="requestorName">Requestor Name:</label></th>
+          <th><label id="labelCompletionURL">Completion Survey URL:</label></th>
+        </tr>
+        <tr>
+          <th><input type="text" id="taskName" name="fname"></th>
+          <th><input type="text" id="requestorName"></th>
+          <th><input type="text" id="completionURL"></th>
+        </tr>
+      </table>
+     <!--  <label id="labelTaskName" for="taskName">Task Name:</label>
       <label id="labelRequestorName" for="requestorName">Requestor Name:</label><br>
-      <input type="text" id="requestorName"><br>
+      <input type="text" id="taskName" name="fname">
+      <input type="text" id="requestorName"><br> -->
     </div>
+      <?php if (isset($_REQUEST["task"])) { ?>
+        <div>
+          <label id="labelRequestorName" for="requestorName">Requestor Name:</label>
+          <input type="text" id="requestorName2">
+        </div>
+      <?php } ?>
+
       <label id="labelInstructions" for="instructions">Task Instructions:</label><br>
-      <textarea id="instructions" <?php if ($doLoadTaskInstruction && !isset($_REQUEST["task"])) {echo "readonly";}?>></textarea>
+      <textarea id="instructions" rows="6" <?php if ($doLoadTaskInstruction && !isset($_REQUEST["task"])) {echo "readonly";}?>></textarea>
 
     <span id="buttonSubmitTask">
     <?php if (!isset($_REQUEST["task"]) && !$doLoadTaskInstruction) { ?>
-      <a href="javascript:Page.createTask()">Submit Task</a> 
+      <a href="javascript:Page.createTask()" title="Click this to submit the task.
+        After you click you will be taken to a page to edit the task
+        You must bookmark that page so you can edit the task repeatedly.
+        ">Submit Task</a> 
     <?php } else if (isset($_REQUEST["task"])) { ?>
-      <a href="javascript:Page.editTask()">Save changes to this Task</a> &nbsp;&nbsp;&nbsp;
-      <a href="javascript:Action.copyParticipantURL()">Copy Participant URL</a> &nbsp;&nbsp;&nbsp;
-      <a href="javascript:Action.launchParticipantURL()">Launch Participant URL in a new tab</a>
+      <a href="javascript:Page.editTask()" title="Each time you click this, the instructions and model given to participants will be
+        updated, although existing participants will see the original
+        instructions and model. Use this link to polish your task.
+        Don't forget to bookmark this page so you can return to modify the task.">Save changes to this Task</a> &nbsp;&nbsp;&nbsp;
+      <a href="javascript:Action.copyParticipantURL()" title="Click to put the participant URL in your clipboard. You can then send
+        the link to participants so they can do the task">Copy Participant URL</a> &nbsp;&nbsp;&nbsp;
+      <a href="javascript:Action.launchParticipantURL()" title="Click to generate an answer to this task in the same way
+        a participant would.Do this to test the task. Note that your response will appear if you later     
+        download all the responses unless you cancel the submission.">Launch Participant URL in a new tab</a>
     <?php } else if ($doLoadTaskInstruction && substr($dataHandle->getName(), 0, 8) != "taskroot") {?>
-      <a href="javascript:Action.submitTaskWork()">Submit Your Work(Once submitted you won't be able to open this page)</a>
+      <a href="javascript:Action.submitTaskWork()" title="Click to indicate that you have finished the task.
+        If the requestor has asked you to, also send the URL to the requestor">Submit Your Work</a>
+      <a href="javascript:Page.cancelTaskResponse()" title="Cancel this submission. Your data will be deleted.">Cancel this task response</a>
      <!--  all your subsequent work will not be saved -->
     <?php } ?>
     </span>
@@ -408,10 +443,12 @@ $output = $dataHandle->readData('model.ump');
           <ul id="taskSubmenu">
             <li class="subtitle">TASK</li>
             
-            <li id="buttonCreateTask">
-              <img src="scripts/copy.png"/>
-              Create a Task
-            </li>
+            <?php if ($canCreateTask) { ?>
+              <li id="buttonCreateTask">
+                <img src="scripts/copy.png"/>
+                Create a Task
+              </li>
+            <?php } ?>
             <!-- <?php if (!isset($_REQUEST["task"])) { ?>
               <li id="buttonCreateTask">
                 <img src="scripts/copy.png"/>
@@ -453,11 +490,11 @@ $output = $dataHandle->readData('model.ump');
               Request all Directories as a zip under this task
             </li>
             <?php } ?>
-            <br>
+            
 
             <div id="loadTaskNameArea" style="display: none;">
               <label id="labelLoadTaskName" for="inputLoadTaskName">Task name:</label><br>
-              <input type="text" id="inputLoadTaskName" name="ffname"><br>
+              <input type="text" id="inputLoadTaskName"><br>
               
               <span id="buttonSubmitLoadTask">
               <a href="javascript:Action.submitLoadTask()">Load Task</a> </span>
@@ -780,7 +817,8 @@ $output = $dataHandle->readData('model.ump');
       "<?php echo $diagramType ?>",
       "<?php echo $generateDefault ?>",
       <?php if($doLoadTaskInstruction) { ?> true  <?php } else { ?> false <?php } ?>,
-      <?php if(isset($_REQUEST["task"])) { ?> true <?php } else { ?> false <?php } ?>
+      <?php if(isset($_REQUEST["task"])) { ?> true <?php } else { ?> false <?php } ?>,
+      <?php if($canCreateTask) { ?> true <?php } else { ?> false <?php } ?>
       ); //
   </script>
   <div class="visitors-count" align="right">

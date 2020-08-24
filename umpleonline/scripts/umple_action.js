@@ -565,7 +565,7 @@ Action.loadTaskExceptCodeCallback = function(response)
   console.log("responseArray[1]: ");
   console.log(responseArray[1]);
   jQuery("#instructions").val(responseArray[1]);
-  jQuery("#labelInstructions").text("Task Instructions: " + responseArray[2]);
+  jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":");
   jQuery("#instructions").css("display","block");
   jQuery("#labelInstructions").css("display","block");
   jQuery("#createTaskArea").css("display","block");
@@ -582,20 +582,27 @@ Action.loadTaskExceptCodeCallback = function(response)
 
 Action.submitLoadTask = function()
 {
-  var taskName = jQuery("#inputLoadTaskName");
-  Action.loadTask(taskName.val(), false);
+  var taskName = jQuery("#inputLoadTaskName").val();
+  let patt = /^(\w|\.|-)+$/;
+  if (!patt.test(taskName))//taskName.indexOf(" ") != -1 || taskName.indexOf("/") != -1 || taskName.indexOf("-") != -1 || taskName.indexOf("\\") != -1) 
+  {
+    window.alert("Task Name can only contain letters(case insensitive), underscores, dots, and digits!");
+    return;
+  }
+  Action.loadTask(taskName, false);
 }
 
 Action.submitTaskWork =function()
 {
-  Ajax.sendRequest("task.php", Action.submitTaskWorkCallback(), format("submitTaskWork=1&model={0}", Page.getModel()));
+  Ajax.sendRequest("task.php", Action.submitTaskWorkCallback, format("submitTaskWork=1&model={0}", Page.getModel()));
 }
 
 Action.submitTaskWorkCallback = function(response)
 {
   window.alert("Successfully submitted Task!");
-  window.location.href = "umple.php";
+  window.location.href = response.responseText;
 }
+
 Action.launchParticipantURL = function()
 {
   var taskname = Page.getModel().split("-")[1];
@@ -605,29 +612,8 @@ Action.launchParticipantURL = function()
 Action.copyParticipantURL = function()
 {
   var taskname = Page.getModel().split("-")[1];
-    //var url = window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname;
-    Action.copyToClp(window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
-    // if (document.getElementById("loadTaskURLLink") === null)
-    // {
-
-    //   //var url = document.createElement("li");
-    //   //url.setAttribute('id', "downloadTaskDirLink");
-    //   var url = document.createTextNode(window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
-    //   //url.appendChild(linkText);
-      
-    //   var node = document.createElement("LI"); 
-    //   node.setAttribute('id', "loadTaskURLLink"); 
-    //   node.appendChild(url);
-    //   document.getElementById("taskSubmenu").appendChild(node);
-    // }
-    // else
-    // {
-    //   document.getElementById("loadTaskURLLink").setAttribute(window.location.href + "bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
-    // }
-
-    // setTimeout(function () {
-    //   document.getElementById("loadTaskURLLink").remove();
-    // }, 30000);
+  Action.copyToClp(window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+  Page.setFeedbackMessage("Participant URL is in copy buffer: " + window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
 }
 
 Action.copyToClp = function(txt){

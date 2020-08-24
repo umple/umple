@@ -1,7 +1,4 @@
 <?php
-//echo (integer)ini_get('display_errors');
-ini_set("display_errors", 1);
-//echo (integer)ini_get('display_errors');
 require_once ("scripts/compiler_config.php");
 
 // if (!isset($_REQUEST["model"]) || !isset($_REQUEST["taskName"]) || !isset($_REQUEST["instructions"]))
@@ -13,13 +10,38 @@ require_once ("scripts/compiler_config.php");
 
 if (isset($_REQUEST["submitTaskWork"]))
 {
-
   $tempModelId = $_REQUEST["model"];
   $tempModelData = dataStore()->openData($tempModelId);
   $tempModelData->writeData("submitted.md", " ");
+  foreach (new DirectoryIterator("ump/tasks") as $file) 
+  {
+    if ($file->isDot()) continue;
+
+    if ($file->isDir() && substr($file->getFilename(), 0, 8) == "taskroot") 
+    {
+      $taskName = explode("-", $file->getFilename())[1];
+        if ($taskName == explode("-", $_REQUEST["model"])[1])
+        {
+          $dataHandle = dataStore()->openData("tasks/" . $file->getFilename());
+          $taskdetails = $dataHandle->readData("taskdetails.json");
+          $json = json_decode($taskdetails, true);
+          file_put_contents("/home/jpan/test.html", $json["completionURL"], FILE_APPEND);
+          echo $json["completionURL"];
+          break;
+        }
+    }
+  }
   exit();
 }
 
+if (isset($_REQUEST["cancelTaskResponse"]))
+{
+  $tempModelId = $_REQUEST["model"];
+  $tempModelData = dataStore()->openData($tempModelId);
+  $tempModelData->delete();
+  header("Location: umple.php");
+  exit();
+}
 // The following creates a random numbered directory in ump
 // the result is ump/{dir}/model.ump
 date_default_timezone_set('UTC');
@@ -28,7 +50,13 @@ if (isset($_REQUEST["edit"]))
   $tempModelId = $_REQUEST["model"];
   $editModelData = dataStore()->openData("tasks/" . $tempModelId);
   $editModelData->writeData("instructions.md", $_REQUEST["instructions"]);
-  header("Location: umple.php?task=1&model={$tempModelId}");
+  $json = json_decode($editModelData->readData("taskdetails.json"), true);
+  // file_put_contents("/home/jpan/test.html", strval($json), FILE_APPEND);
+  // exit();
+  $json["requestorName"] = $_REQUEST["requestorName"];
+  $editModelData->writeData("taskdetails.json", json_encode($json));
+  //$editModelData->writeData("taskdetails.json", "{\"requestorName\" : \"" . $_REQUEST["requestorName"] . "\", \"taskName\" : \"" . $_REQUEST["taskName"] . "\"}");
+  //header("Location: umple.php?task=1&model={$tempModelId}");
 }
 else
 {
@@ -82,7 +110,7 @@ else
 
   $savedModelData->cloneFrom($tempModelData);
   $savedModelData->writeData("instructions.md", $_REQUEST["instructions"]);
-  $savedModelData->writeData("taskdetails.json", "{\"profName\" : \"" . $_REQUEST["requestorName"] . "\", \"taskName\" : \"" . $_REQUEST["taskName"] . "\"}");
+  $savedModelData->writeData("taskdetails.json", "{\"requestorName\" : \"" . $_REQUEST["requestorName"] . "\", \"taskName\" : \"" . $_REQUEST["taskName"] . "\", \"completionURL\": \"" . $_REQUEST["completionURL"] . "\"}");
 
   // Empty anything else in directory and remove it
   $tempModelData->delete();
