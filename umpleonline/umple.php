@@ -21,7 +21,6 @@ if (isset($_REQUEST["model"])) {
   else
   {
     $dataHandle = dataStore()->openData($_REQUEST['model']);
-  file_put_contents("/home/jpan/test.html", $dataHandle, FILE_APPEND);
   }
   if (!$dataHandle) {
     header('HTTP/1.0 404 Not Found');
@@ -253,33 +252,34 @@ $output = $dataHandle->readData('model.ump');
   <input id="model" type="hidden" value="<?php echo $dataHandle->getName()?>" />
 
   <div id="createTaskArea" style="display: none;">
-    <div id="taskNameArea" style="display: none;">
+    
       <table>
         <tr style="text-align:left;">
-          <th><label id="labelTaskName" for="taskName">Task Name:</label></th>
+          <th id="labelTaskName" style="display: none;"><label for="taskName">Task Name:</label></th>
           <th><label id="labelRequestorName" for="requestorName">Requestor Name:</label></th>
-          <th><label id="labelCompletionURL">Completion Survey URL:</label></th>
+          <th id="labelCompletionURL"><label>Completion Survey URL:</label></th>
         </tr>
         <tr>
-          <th><input type="text" id="taskName" name="fname"></th>
+          <th id="taskNameCell" style="display: none;"><input type="text" id="taskName" name="fname"></th>
           <th><input type="text" id="requestorName"></th>
-          <th><input type="text" id="completionURL"></th>
+          <th id="completionURLCell" ><input type="text" id="completionURL"></th>
         </tr>
       </table>
-     <!--  <label id="labelTaskName" for="taskName">Task Name:</label>
-      <label id="labelRequestorName" for="requestorName">Requestor Name:</label><br>
-      <input type="text" id="taskName" name="fname">
-      <input type="text" id="requestorName"><br> -->
-    </div>
-      <?php if (isset($_REQUEST["task"])) { ?>
+     
+      <!-- <?php if (isset($_REQUEST["task"])) { ?>
         <div>
           <label id="labelRequestorName" for="requestorName">Requestor Name:</label>
           <input type="text" id="requestorName2">
         </div>
-      <?php } ?>
-
-      <label id="labelInstructions" for="instructions">Task Instructions:</label><br>
-      <textarea id="instructions" rows="6" <?php if ($doLoadTaskInstruction && !isset($_REQUEST["task"])) {echo "readonly";}?>></textarea>
+      <?php } ?> -->
+      <!-- <div  id="requestorNameEditArea" style="display: none;">
+          <label id="labelRequestorName" for="requestorName">Requestor Name:</label>
+          <input type="text" id="requestorNameEdit">
+      </div>
+ -->
+      <br>
+      <label id="labelInstructions" for="instructions">Task Instructions:</label>
+      <textarea id="instructions" <?php if ($doLoadTaskInstruction && !isset($_REQUEST["task"])) {echo "readonly";}?>></textarea>
 
     <span id="buttonSubmitTask">
     <?php if (!isset($_REQUEST["task"]) && !$doLoadTaskInstruction) { ?>

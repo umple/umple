@@ -127,6 +127,12 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   {
     Action.loadTask(jQuery("#model").val().split("-")[1], true); // load task instruction
   }
+  jQuery('#instructions').each(function () {
+    this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+  }).on('input', function () {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+  });
   
   jQuery(generateDefault).prop("selected",true);
 };
@@ -897,13 +903,9 @@ Page.createTask = function()
   var instructions = jQuery("#instructions");
   var completionURL = jQuery("#completionURL").val();
   // jQuery("#labelInstructions").hide();
-  // jQuery("#buttonSubmitTask").hide();
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
-  //console.log(Page.getModel());
-  //console.log("task.php?taskName=" + taskName.val() + "&instructions=" + instructions.val() + "&model=" + Page.getModel());
   Ajax.sendRequest("task.php",Page.createTaskCallback,format("taskName={0}&instructions={1}&model={2}&requestorName={3}&completionURL={4}", taskName, instructions.val(), Page.getModel(), requestorName, completionURL));
-  //window.location.href = "task.php?taskName=" + taskName.val() + "&instructions=" + instructions.val() + "&model=" + Page.getModel();
 }
 
 Page.createTaskCallback = function(response)
@@ -924,10 +926,11 @@ Page.editTask = function()
 {
   var instructions = jQuery("#instructions");
   var taskName = jQuery("#model").val().split("-")[1];
-  var requestorName = jQuery("#requestorName2").val();
+  var requestorName = jQuery("#requestorName").val();
+  var completionURL = jQuery("#completionURL").val();
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
-  Ajax.sendRequest("task.php", Page.editTaskCallback, "edit=1&taskName=" + taskName + "&instructions=" + instructions.val() + "&model=" + Page.getModel() + "&requestorName=" + requestorName);
+  Ajax.sendRequest("task.php", Page.editTaskCallback, "edit=1&taskName=" + taskName + "&instructions=" + instructions.val() + "&model=" + Page.getModel() + "&requestorName=" + requestorName + "&completionURL=" + completionURL);
   //window.location.href = "task.php?edit=1&taskName=" + taskName + "&instructions=" + instructions.val() + "&model=" + Page.getModel() + "&requestorName=" + requestorName;
   //window.alert("Successfully edit Task " + taskName + "!");
 }

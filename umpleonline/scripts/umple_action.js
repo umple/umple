@@ -137,7 +137,9 @@ Action.clicked = function(event)
   else if (action == "CreateTask") 
   {
     jQuery("#createTaskArea").css("display","block");
-    jQuery("#taskNameArea").css("display","block");
+    //jQuery("#taskNameArea").css("display","block");
+    jQuery("#labelTaskName").css("display","block");
+    jQuery("#taskNameCell").css("display","block");
   }
   else if (action == "LoadTask")
   {
@@ -146,10 +148,6 @@ Action.clicked = function(event)
   else if (action == "LoadThisTask")
   {
     Action.loadTask(Page.getModel().split("-")[1], false);
-  }
-  else if (action == "EditTask")
-  {
-    jQuery("#createTaskArea").css("display","block");
   }
   else if (action == "RequestLoadTaskURL")
   {
@@ -566,9 +564,29 @@ Action.loadTaskExceptCodeCallback = function(response)
   console.log(responseArray[1]);
   jQuery("#instructions").val(responseArray[1]);
   jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":");
+  jQuery("#requestorName").val(responseArray[4]);
+  console.log(responseArray[4]);
   jQuery("#instructions").css("display","block");
   jQuery("#labelInstructions").css("display","block");
   jQuery("#createTaskArea").css("display","block");
+  if (Page.getModel().split("-")[0] == "task")
+  {
+    jQuery("#labelCompletionURL").css("display", "none");
+    jQuery("#completionURLCell").css("display", "none");
+    jQuery("#requestorName").attr('readonly', true);
+  }
+  else {
+    jQuery("#completionURL").val(responseArray[5]);
+    jQuery("#completionURL").css("width", responseArray[5].length + "ch");
+    // var input = document.querySelector('input'); // get the input element
+    // input.addEventListener('input', resizeInput); // bind the "resizeInput" callback on "input" event
+    // resizeInput.call(input); // immediately call the function
+
+    // function resizeInput() {
+    //   this.style.width = this.value.length + "ch";
+    // }
+  }
+
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {
     var extractedName = TabControl.extractNameFromCode(responseArray[0]);

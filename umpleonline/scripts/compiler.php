@@ -112,7 +112,10 @@ else if (isset($_REQUEST["loadTask"])) //load the task in the tasks dir
           $dataHandle = dataStore()->openData("tasks/" . $file->getFilename());
           $umpleCode = $dataHandle->readData("model.ump");
           $instructions = $dataHandle->readData("instructions.md");
-          echo $umpleCode . "task delimiter" . $instructions . "task delimiter" . $taskName . "task delimiter" . $file->getFilename();
+          $json = json_decode($dataHandle->readData("taskdetails.json"), true);
+          $requestorName = $json["requestorName"];
+          $completionURL = $json["completionURL"];
+          echo $umpleCode . "task delimiter" . $instructions . "task delimiter" . $json["taskName"] . "task delimiter" . $file->getFilename() . "task delimiter" . $requestorName . "task delimiter" . $completionURL;
           break;
         }
     }

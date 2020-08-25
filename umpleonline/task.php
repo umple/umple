@@ -25,7 +25,6 @@ if (isset($_REQUEST["submitTaskWork"]))
           $dataHandle = dataStore()->openData("tasks/" . $file->getFilename());
           $taskdetails = $dataHandle->readData("taskdetails.json");
           $json = json_decode($taskdetails, true);
-          file_put_contents("/home/jpan/test.html", $json["completionURL"], FILE_APPEND);
           echo $json["completionURL"];
           break;
         }
@@ -51,7 +50,7 @@ if (isset($_REQUEST["edit"]))
   $editModelData = dataStore()->openData("tasks/" . $tempModelId);
   $editModelData->writeData("instructions.md", $_REQUEST["instructions"]);
   $json = json_decode($editModelData->readData("taskdetails.json"), true);
-  // file_put_contents("/home/jpan/test.html", strval($json), FILE_APPEND);
+  //file_put_contents("/home/jpan/test.html", $_REQUEST["requestorName"], FILE_APPEND);
   // exit();
   $json["requestorName"] = $_REQUEST["requestorName"];
   $editModelData->writeData("taskdetails.json", json_encode($json));
@@ -110,7 +109,7 @@ else
 
   $savedModelData->cloneFrom($tempModelData);
   $savedModelData->writeData("instructions.md", $_REQUEST["instructions"]);
-  $savedModelData->writeData("taskdetails.json", "{\"requestorName\" : \"" . $_REQUEST["requestorName"] . "\", \"taskName\" : \"" . $_REQUEST["taskName"] . "\", \"completionURL\": \"" . $_REQUEST["completionURL"] . "\"}");
+  $savedModelData->writeData("taskdetails.json", "{\"requestorName\" : \"" . $_REQUEST["requestorName"] . "\", \n\"taskName\" : \"" . $_REQUEST["taskName"] . "\", \n\"completionURL\": \"" . $_REQUEST["completionURL"] . "\"}");
 
   // Empty anything else in directory and remove it
   $tempModelData->delete();
