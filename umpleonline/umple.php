@@ -24,7 +24,7 @@ if (isset($_REQUEST["model"])) {
   }
   if (!$dataHandle) {
     header('HTTP/1.0 404 Not Found');
-    readfile('../404.shtml');
+    readfile('404.shtml');
     exit();
   }
 }
@@ -262,23 +262,12 @@ $output = $dataHandle->readData('model.ump');
         <tr>
           <th id="taskNameCell" style="display: none;"><input type="text" id="taskName" name="fname"></th>
           <th><input type="text" id="requestorName"></th>
-          <th id="completionURLCell" ><input type="text" id="completionURL"></th>
+          <th id="completionURLCell" ><input type="text" id="completionURL" width="60ch"></th>
           <!-- <th><input type="checkbox" id="isExperiment" value="isExperiment"></th> -->
         </tr>
       </table>
      
-      <!-- <?php if (isset($_REQUEST["task"])) { ?>
-        <div>
-          <label id="labelRequestorName" for="requestorName">Requestor Name:</label>
-          <input type="text" id="requestorName2">
-        </div>
-      <?php } ?> -->
-      <!-- <div  id="requestorNameEditArea" style="display: none;">
-          <label id="labelRequestorName" for="requestorName">Requestor Name:</label>
-          <input type="text" id="requestorNameEdit">
-      </div>
- -->
-      <br>
+    
       <label id="labelInstructions" for="instructions">Task Instructions:</label>
       <textarea id="instructions" <?php if ($doLoadTaskInstruction && !isset($_REQUEST["task"])) {echo "readonly";}?>></textarea>
 
@@ -298,11 +287,13 @@ $output = $dataHandle->readData('model.ump');
       <a href="javascript:Action.launchParticipantURL()" title="Click to generate an answer to this task in the same way
         a participant would.Do this to test the task. Note that your response will appear if you later     
         download all the responses unless you cancel the submission.">Launch Participant URL in a new tab</a>
-    <?php } else if ($doLoadTaskInstruction && substr($dataHandle->getName(), 0, 8) != "taskroot") {?>
+    <?php } else if ($doLoadTaskInstruction && substr($dataHandle->getName(), 0, 8) != "taskroot" && !$readOnly) {?>
       <a href="javascript:Action.submitTaskWork()" title="Click to indicate that you have finished the task.
         If the requestor has asked you to, also send the URL to the requestor">Submit Your Work</a>
       <a href="javascript:Page.cancelTaskResponse()" title="Cancel this submission. Your data will be deleted.">Cancel this task response</a>
      <!--  all your subsequent work will not be saved -->
+    <?php } else if ($readOnly) {?>
+      This task response has already been submitted and is now read-only.
     <?php } ?>
     </span>
 
