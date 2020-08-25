@@ -263,6 +263,7 @@ $output = $dataHandle->readData('model.ump');
           <th id="taskNameCell" style="display: none;"><input type="text" id="taskName" name="fname"></th>
           <th><input type="text" id="requestorName"></th>
           <th id="completionURLCell" ><input type="text" id="completionURL"></th>
+          <!-- <th><input type="checkbox" id="isExperiment" value="isExperiment"></th> -->
         </tr>
       </table>
      
@@ -446,7 +447,7 @@ $output = $dataHandle->readData('model.ump');
             <?php if ($canCreateTask) { ?>
               <li id="buttonCreateTask">
                 <img src="scripts/copy.png"/>
-                Create a Task
+                Create a Task(beta)
               </li>
             <?php } ?>
             <!-- <?php if (!isset($_REQUEST["task"])) { ?>

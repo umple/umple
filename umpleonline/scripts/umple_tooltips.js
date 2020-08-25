@@ -37,7 +37,7 @@ ToolTips.tooltipEntries = {
   buttonCopyLocalBrowser: ["li", "Click to save the model in in your browser local storage for later reloading"],  
   buttonLoadLocalBrowser: ["li", "Click to load the model from what you had previously saved in this browser (above)"],
   buttonDownloadFiles: ["li", "Click to download the currently open .ump files."],
-  buttonCreateTask: ["li", "Create a modeling task for participants to try.</br>You will be able to given them some instructionsand a model as a starting point. The instructions could be requirements to model, or changes to make. This can be for an experiment or a course assignment."],
+  buttonCreateTask: ["li", "This is a beta feature. Do not rely on it yet. Create a modeling task for participants to try.</br>You will be able to given them some instructionsand a model as a starting point. The instructions could be requirements to model, or changes to make. This can be for an experiment or a course assignment."],
   buttonLoadTask: ["li", "Load a model and a set of instructions that have been created by someone running an experiment or a teacher of a course. You need to enter the task name that the person gave you."],
   buttonRequestAllZip: ["li", "Create a zip file to download, containing all submissions for this task."],
   ttDropboxSaver: ["li", "Click to save your model to dropbox"],
