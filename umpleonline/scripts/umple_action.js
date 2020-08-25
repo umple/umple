@@ -464,7 +464,6 @@ Action.loadFile = function()
   var filename = Page.getFilename();
   if (filename != "")
   {
-    console.log(filename);
     if (Page.getModel().substring(0, 8) == "taskroot")
     {
       Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&isTask=1&filename={0}",filename));
@@ -526,7 +525,6 @@ Action.loadTaskBookmark = function(response)
 
 Action.loadTaskCallback = function(response)
 {
-  //console.log(response);
   Action.freshLoad = true;
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   if (Object.keys(TabControl.tabs).length > 1) return;
@@ -547,21 +545,17 @@ Action.loadTaskCallback = function(response)
   if (!Action.manualSync) Action.updateUmpleDiagram();
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
-  console.log(responseArray[3]);
   window.location.href = "bookmark.php?taskname=" + responseArray[2] + "&model=" + responseArray[3];
 }
 
 Action.loadTaskExceptCodeCallback = function(response)
 {
-  console.log(response);
   Action.freshLoad = true;
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   //if (Object.keys(TabControl.tabs).length > 1) return;
 
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
   var responseArray = response.responseText.split("task delimiter");
-  console.log("responseArray[1]: ");
-  console.log(responseArray[1]);
   jQuery("#instructions").val(responseArray[1]);
   jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":");
   jQuery("#requestorName").val(responseArray[4]);
@@ -2607,8 +2601,6 @@ Action.ajax = function(callback,post,errors,tabIndependent)
     }
     callback(response);
   } : callback;
-  console.log("filename: ");
-console.log(filename);
   Ajax.sendRequest("scripts/compiler.php",wrappedCallback,format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
 }
 

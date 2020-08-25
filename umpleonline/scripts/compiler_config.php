@@ -103,9 +103,7 @@ class DataHandle extends ReadOnlyDataHandle{
     Invalidates the handle.
     */
     function delete(){
-        //recursiveDelete($this->root)
-
-            file_put_contents("/home/jpan/test.html", $this->root . "\n", FILE_APPEND);
+        //recursiveDelete($this->root);
         delete_directory($this->root);
         $this->root = NULL;
     }
@@ -373,9 +371,7 @@ function recursiveDelete($str){
         }
         elseif(is_dir($str)){
             $scan = glob(rtrim($str,'/').'/*');
-            file_put_contents("/home/jpan/test.html", rtrim($str,'/') . "\n", FILE_APPEND);
-            file_put_contents("/home/jpan/test.html", implode(",", $scan) . "\n", FILE_APPEND);
-            foreach($scan as $index=>$path){file_put_contents("/home/jpan/test.html", "|||||" . $path, FILE_APPEND);
+            foreach($scan as $index=>$path){
                 recursiveDelete($path);
             }
             return @rmdir($str);
