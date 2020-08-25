@@ -565,15 +565,16 @@ Action.loadTaskExceptCodeCallback = function(response)
   jQuery("#instructions").val(responseArray[1]);
   jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":");
   jQuery("#requestorName").val(responseArray[4]);
-  console.log(responseArray[4]);
   jQuery("#instructions").css("display","block");
   jQuery("#labelInstructions").css("display","block");
   jQuery("#createTaskArea").css("display","block");
-  if (Page.getModel().split("-")[0] == "task")
+  if (Page.getModel().split("-")[0] == "task") // it is in task bookmark page
   {
+    jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":               Requestor Name:" + responseArray[4]);
     jQuery("#labelCompletionURL").css("display", "none");
     jQuery("#completionURLCell").css("display", "none");
-    jQuery("#requestorName").attr('readonly', true);
+    jQuery("#labelRequestorName").css("display", "none");
+    jQuery("#requestorName").css("display", "none");
   }
   else {
     jQuery("#completionURL").val(responseArray[5]);
@@ -611,13 +612,14 @@ Action.submitLoadTask = function()
 
 Action.submitTaskWork =function()
 {
-  Ajax.sendRequest("task.php", Action.submitTaskWorkCallback, format("submitTaskWork=1&model={0}", Page.getModel()));
+  Ajax.sendRequest("task.php", Action.submitTaskWorkCallback, format("submitTaskWork=1&model={0}&responseURL={1}", Page.getModel(), window.location.href));
 }
 
 Action.submitTaskWorkCallback = function(response)
 {
   window.alert("Successfully submitted Task!");
-  window.location.href = response.responseText;
+  var responseArray = response.responseText.split("task submit delimiter");
+  window.location.href = responseArray[0] + "?task=" + responseArray[1] + "&url=" + responseArray[2];
 }
 
 Action.launchParticipantURL = function()

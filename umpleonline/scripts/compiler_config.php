@@ -103,7 +103,10 @@ class DataHandle extends ReadOnlyDataHandle{
     Invalidates the handle.
     */
     function delete(){
-        recursiveDelete($this->root);
+        //recursiveDelete($this->root)
+
+            file_put_contents("/home/jpan/test.html", $this->root . "\n", FILE_APPEND);
+        delete_directory($this->root);
         $this->root = NULL;
     }
     /**
@@ -370,12 +373,35 @@ function recursiveDelete($str){
         }
         elseif(is_dir($str)){
             $scan = glob(rtrim($str,'/').'/*');
-            foreach($scan as $index=>$path){
+            file_put_contents("/home/jpan/test.html", rtrim($str,'/') . "\n", FILE_APPEND);
+            file_put_contents("/home/jpan/test.html", implode(",", $scan) . "\n", FILE_APPEND);
+            foreach($scan as $index=>$path){file_put_contents("/home/jpan/test.html", "|||||" . $path, FILE_APPEND);
                 recursiveDelete($path);
             }
             return @rmdir($str);
         }
     }
+
+function delete_directory($dirname) 
+{
+    if (is_dir($dirname))
+       $dir_handle = opendir($dirname);
+    if (!$dir_handle)
+      return false;
+    while($file = readdir($dir_handle)) 
+    {
+        if ($file != "." && $file != "..") 
+        {
+            if (!is_dir($dirname."/".$file))
+                 unlink($dirname."/".$file);
+            else
+                 delete_directory($dirname.'/'.$file);
+       }
+ }
+ closedir($dir_handle);
+ rmdir($dirname);
+ return true;
+}
 
 function ensureFullPath($relativeFilename)
 {

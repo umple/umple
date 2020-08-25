@@ -54,6 +54,10 @@ Page.canCreateTask = true;
 // The following is set called from umple.php
 Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask, doEditTask, doCreateTask)
 { 
+  if(performance.navigation.type == 2)
+  {
+    location.reload(true);
+  }
   Page.canEditTask = doEditTask;
   Page.canCreateTask = doCreateTask;
   Layout.isDiagramVisible = doShowDiagram;  

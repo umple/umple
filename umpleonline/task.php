@@ -25,7 +25,8 @@ if (isset($_REQUEST["submitTaskWork"]))
           $dataHandle = dataStore()->openData("tasks/" . $file->getFilename());
           $taskdetails = $dataHandle->readData("taskdetails.json");
           $json = json_decode($taskdetails, true);
-          echo $json["completionURL"];
+
+          echo $json["completionURL"] . "task submit delimiter" . $json["taskName"] . "task submit delimiter" . $_REQUEST["responseURL"];
           break;
         }
     }
@@ -53,6 +54,7 @@ if (isset($_REQUEST["edit"]))
   //file_put_contents("/home/jpan/test.html", $_REQUEST["requestorName"], FILE_APPEND);
   // exit();
   $json["requestorName"] = $_REQUEST["requestorName"];
+  $json["completionURL"] = $_REQUEST["completionURL"];
   $editModelData->writeData("taskdetails.json", json_encode($json));
   //$editModelData->writeData("taskdetails.json", "{\"requestorName\" : \"" . $_REQUEST["requestorName"] . "\", \"taskName\" : \"" . $_REQUEST["taskName"] . "\"}");
   //header("Location: umple.php?task=1&model={$tempModelId}");
