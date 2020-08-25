@@ -578,14 +578,13 @@ Action.loadTaskExceptCodeCallback = function(response)
   else {
     jQuery("#completionURL").val(responseArray[5]);
     jQuery("#completionURL").css("width", responseArray[5].length + "ch");
-    // var input = document.querySelector('input'); // get the input element
-    // input.addEventListener('input', resizeInput); // bind the "resizeInput" callback on "input" event
-    // resizeInput.call(input); // immediately call the function
-
-    // function resizeInput() {
-    //   this.style.width = this.value.length + "ch";
-    // }
   }
+  jQuery('#instructions').each(function () {
+    this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+  }).on('input', function () {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+  });
 
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {

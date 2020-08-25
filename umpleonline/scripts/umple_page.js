@@ -127,12 +127,6 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   {
     Action.loadTask(jQuery("#model").val().split("-")[1], true); // load task instruction
   }
-  jQuery('#instructions').each(function () {
-    this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
-  }).on('input', function () {
-    this.style.height = 'auto';
-    this.style.height = (this.scrollHeight) + 'px';
-  });
   
   jQuery(generateDefault).prop("selected",true);
 };
