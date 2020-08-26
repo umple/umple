@@ -1,43 +1,39 @@
 <?php
 
-$logOfCommands = fopen('ump/LogOfCommands.txt', 'w');
+require_once("scripts/compiler_config.php");
+require_once("scripts/tab_control.php");
 
-$time = time();
-$date = date("Y-m-d H:i:s", $time);
+function intiateLogging() {
+	$logOfCommands = fopen("ump/LogOfCommands.txt", 'w');
+}
 
-// function recordVersion($name, ){
-	if (file_exists('ump/LogOfCommands.txt')) {
-		echo "File exist."; //debug
-		fwrite($logOfCommands, "File exist.");
-	}
-	else {
-		echo "File does not exist."; //debug
-	}
+intiateLogging(); //initiate the logging
 
-	if (isset($_REQUEST["model"]) {
-		mkdir("ump/LogOfModelVersions");
+//$model = $_REQUEST["model"];
 
+//save function
+//function saving() {
+	if (file_exists("ump/LogOfCommands.txt")) {
 		$model = $_REQUEST["model"];
-		foreach($contents as $base) {
-				$filename = "../ump/".$model."/".$base.".ump";
-				if (file_exists($filename))
-				{
-						$contents = file_get_contents($filename);
-						savefile($contents,$filename);
-				}
-		}
+
+		mkdir("ump/".$dirname."/LogOfModelVersions"); // the first time it would need to create this
+
+		$dataHandle = dataStore()->createData();
+		$workDir = $dataHandle->getWorkDir();
+
+		$filename = $workDir->getPath().'LogOfModelVersions/"."1".".txt'); //Each version has to have an new file name with a number
+		$contents = file_get_contents($filename); //get contents
+		savefile($contents, $filename); //save file
 	}
 	else {
 		echo "Do nothing.";
 	}
 //}
 
-fwrite($logOfCommands, $date."\n");
-
+$logOfCommands = fopen('ump/LogOfCommands.txt', 'w');
+fwrite($logOfCommands, "OK");
 fclose($logOfCommands);
 
-echo "</br>";
-echo "LogOfCommands.txt";
 echo "</br>";
 echo "End";
 
