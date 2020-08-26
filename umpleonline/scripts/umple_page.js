@@ -11,6 +11,8 @@ Page.selectedClass = null;
 Page.selectedAssociation = null;
 Page.selectedTransition = null;
 Page.selectedGeneralization = null;
+Page.canEditTask = false;
+Page.canCreateTask = true;
 Page.codeEffect = null;
 Page.clickCount = 0;
 Page.repeatToolItem = false;
@@ -47,8 +49,6 @@ Page.showGuardLabels = false;
 Page.showGuards = true;
 Page.modifiedDiagrams = false;
 Page.allowPinch = false;
-Page.canEditTask = false;
-Page.canCreateTask = true;
 
 
 // The following is set called from umple.php
@@ -908,7 +908,6 @@ Page.createTask = function()
 
 Page.createTaskCallback = function(response)
 {
-  console.log(response);
   if (response.responseText.split(" ")[0] == "Task")
   {
     window.alert("Not able to create a task with that name. " + response.responseText);
@@ -940,7 +939,6 @@ Page.editTaskCallback = function(response)
 
 Page.cancelTaskResponse = function()
 {
-  console.log(Page.getModel());
   var answer = confirm("Are you sure to cancel this task response?");
   if (answer)
   {

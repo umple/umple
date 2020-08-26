@@ -262,8 +262,8 @@ $output = $dataHandle->readData('model.ump');
         <tr>
           <th id="taskNameCell" style="display: none;"><input type="text" id="taskName" name="fname"></th>
           <th><input type="text" id="requestorName"></th>
-          <th id="completionURLCell" ><input type="text" id="completionURL" width="60ch"></th>
-          <!-- <th><input type="checkbox" id="isExperiment" value="isExperiment"></th> -->
+          <th id="completionURLCell" ><input type="text" id="completionURL" width="70ch"></th>
+          <th title=" Check this if this task is an experiment and full details of every interaction the user does needs to be recorded. You should have received ethics approval before sending such a task to users."><input type="checkbox" id="isExperiment" value="isExperiment"><label for="isExperiment">isExperiment</label></th>
         </tr>
       </table>
      
@@ -271,36 +271,35 @@ $output = $dataHandle->readData('model.ump');
       <label id="labelInstructions" for="instructions">Task Instructions:</label>
       <textarea id="instructions" <?php if ($doLoadTaskInstruction && !isset($_REQUEST["task"])) {echo "readonly";}?>></textarea>
 
-    <span id="buttonSubmitTask">
+    <div style="margin-top: 5px;">
     <?php if (!isset($_REQUEST["task"]) && !$doLoadTaskInstruction) { ?>
-      <a href="javascript:Page.createTask()" title="Click this to submit the task.
+      <a class="button2" href="javascript:Page.createTask()" title="Click this to submit the task.
         After you click you will be taken to a page to edit the task
         You must bookmark that page so you can edit the task repeatedly.
         ">Submit Task</a> 
     <?php } else if (isset($_REQUEST["task"])) { ?>
-      <a href="javascript:Page.editTask()" title="Each time you click this, the instructions and model given to participants will be
+      <a class="button2" href="javascript:Page.editTask()" title="Each time you click this, the instructions and model given to participants will be
         updated, although existing participants will see the original
         instructions and model. Use this link to polish your task.
         Don't forget to bookmark this page so you can return to modify the task.">Save changes to this Task</a> &nbsp;&nbsp;&nbsp;
-      <a href="javascript:Action.copyParticipantURL()" title="Click to put the participant URL in your clipboard. You can then send
+      <a class="button2" href="javascript:Action.copyParticipantURL()" title="Click to put the participant URL in your clipboard. You can then send
         the link to participants so they can do the task">Copy Participant URL</a> &nbsp;&nbsp;&nbsp;
-      <a href="javascript:Action.launchParticipantURL()" title="Click to generate an answer to this task in the same way
+      <a class="button2" href="javascript:Action.launchParticipantURL()" title="Click to generate an answer to this task in the same way
         a participant would.Do this to test the task. Note that your response will appear if you later     
         download all the responses unless you cancel the submission.">Launch Participant URL in a new tab</a>
     <?php } else if ($doLoadTaskInstruction && substr($dataHandle->getName(), 0, 8) != "taskroot" && !$readOnly) {?>
-      <a href="javascript:Action.submitTaskWork()" title="Click to indicate that you have finished the task.
-        If the requestor has asked you to, also send the URL to the requestor">Submit Your Work</a>
-      <a href="javascript:Page.cancelTaskResponse()" title="Cancel this submission. Your data will be deleted.">Cancel this task response</a>
+      <a class="button2" href="javascript:Action.submitTaskWork()" title="Click to indicate that you have finished the task.
+        If the requestor has asked you to, also send the URL to the requestor">Submit Your Work</a>&nbsp;&nbsp;&nbsp;
+      <a class="button2" href="javascript:Page.cancelTaskResponse()" title="Cancel this submission. Your data will be deleted.">Cancel this task response</a>
      <!--  all your subsequent work will not be saved -->
     <?php } else if ($readOnly) {?>
       This task response has already been submitted and is now read-only.
     <?php } ?>
-    </span>
+    </div>
 
     <span id="buttonCopyParticipantURL">
       
     </span>
-    <br>
     <br>
   </div>
 

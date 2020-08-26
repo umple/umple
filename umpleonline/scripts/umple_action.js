@@ -152,29 +152,7 @@ Action.clicked = function(event)
   else if (action == "RequestLoadTaskURL")
   {
     var taskname = Page.getModel().split("-")[1];
-    //var url = window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname;
     Action.copyToClp(window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
-    // if (document.getElementById("loadTaskURLLink") === null)
-    // {
-
-    //   //var url = document.createElement("li");
-    //   //url.setAttribute('id', "downloadTaskDirLink");
-    //   var url = document.createTextNode(window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
-    //   //url.appendChild(linkText);
-      
-    //   var node = document.createElement("LI"); 
-    //   node.setAttribute('id', "loadTaskURLLink"); 
-    //   node.appendChild(url);
-    //   document.getElementById("taskSubmenu").appendChild(node);
-    // }
-    // else
-    // {
-    //   document.getElementById("loadTaskURLLink").setAttribute(window.location.href + "bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
-    // }
-
-    // setTimeout(function () {
-    //   document.getElementById("loadTaskURLLink").remove();
-    // }, 30000);
   }
   else if (action == "RequestAllZip") 
   {
@@ -572,7 +550,7 @@ Action.loadTaskExceptCodeCallback = function(response)
   }
   else {
     jQuery("#completionURL").val(responseArray[5]);
-    jQuery("#completionURL").css("width", responseArray[5].length + "ch");
+    //jQuery("#completionURL").css("width", responseArray[5].length + "ch");
   }
   jQuery('#instructions').each(function () {
     this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
@@ -625,8 +603,8 @@ Action.launchParticipantURL = function()
 Action.copyParticipantURL = function()
 {
   var taskname = Page.getModel().split("-")[1];
-  Action.copyToClp(window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
-  Page.setFeedbackMessage("Participant URL is in copy buffer: " + window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+  Action.copyToClp(window.location.hostname + window.location.pathname + "11/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+  Page.setFeedbackMessage("Participant URL is in copy buffer: " + window.location.hostname + window.location.pathname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
 }
 
 Action.copyToClp = function(txt){
