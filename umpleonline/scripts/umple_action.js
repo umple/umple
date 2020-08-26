@@ -134,6 +134,51 @@ Action.clicked = function(event)
       }
     }
   }
+  else if (action == "CreateTask") 
+  {
+    jQuery("#createTaskArea").css("display","block");
+    //jQuery("#taskNameArea").css("display","block");
+    jQuery("#labelTaskName").css("display","block");
+    jQuery("#taskNameCell").css("display","block");
+    jQuery("#instructions").css("display","block");
+    jQuery("#isExperiment").css("display","block");
+  }
+  else if (action == "LoadTask")
+  {
+    jQuery("#loadTaskNameArea").css("display","block");
+  }
+  else if (action == "LoadThisTask")
+  {
+    Action.loadTask(Page.getModel().split("-")[1], false);
+  }
+  else if (action == "RequestLoadTaskURL")
+  {
+    var taskname = Page.getModel().split("-")[1];
+    Action.copyToClp(window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+  }
+  else if (action == "RequestAllZip") 
+  {
+    if (document.getElementById("downloadTaskDirLink") === null)
+    {
+      var link = document.createElement("a");
+      link.setAttribute("href", "scripts/tab_control.php?downloadTaskUserDir=1&taskid=" + Page.getModel());
+      link.setAttribute('id', "downloadTaskDirLink");
+      var linkText = document.createTextNode("Download ZIP File From Here");
+      link.appendChild(linkText);
+      
+      var node = document.createElement("LI");   
+      node.appendChild(link);
+      document.getElementById("taskSubmenu").appendChild(node);
+    }
+    else
+    {
+      document.getElementById("downloadTaskDirLink").setAttribute("href", "scripts/tab_control.php?downloadTaskUserDir=1&taskid=" + Page.getModel());
+    }
+
+    setTimeout(function () {
+      document.getElementById("downloadTaskDirLink").remove();
+    }, 30000);
+  }
   else if (action == "DownloadFiles")
   {
     TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
@@ -151,7 +196,9 @@ Action.clicked = function(event)
       var node = document.createElement("LI");   
       node.appendChild(link);
       document.getElementById("saveLoad").appendChild(node);
-    } else {
+    }
+    else 
+    {
       document.getElementById("downloadLink").setAttribute("href", "scripts/tab_control.php?download=1&&model=" + Page.getModel());
     }
 
@@ -407,7 +454,14 @@ Action.loadFile = function()
   var filename = Page.getFilename();
   if (filename != "")
   {
-    Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&filename={0}",filename));
+    if (Page.getModel().substring(0, 8) == "taskroot")
+    {
+      Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&isTask=1&filename={0}",filename));
+    } 
+    else 
+    {
+      Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&filename={0}",filename));
+    }
   }
   else
   {
@@ -433,6 +487,185 @@ Action.loadFileCallback = function(response)
     }
   }
   if (!Action.manualSync) Action.updateUmpleDiagram();
+}
+
+Action.loadTask = function(taskName, isBookmark)
+{
+  jQuery("#showInstrcutionsArea").css("display","block");
+  if (!isBookmark)
+  {
+    Ajax.sendRequest("bookmark.php", Action.loadTaskBookmark,format("taskname={0}&model={0}",taskName));
+    //Ajax.sendRequest("scripts/compiler.php",Action.loadTaskCallback,format("loadTask=1&filename={0}",taskName));
+  } else {
+    if (Page.getModel().split("-")[0] == "task") // it is in task bookmark page. instruction can not be edited.
+    {
+      Ajax.sendRequest("scripts/compiler.php",Action.loadTaskExceptCodeCallback,format("loadTask=1&loadInstructionAsHTML=1&filename={0}",taskName));
+    }
+    else
+    {
+      Ajax.sendRequest("scripts/compiler.php",Action.loadTaskExceptCodeCallback,format("loadTask=1&filename={0}",taskName));
+    }
+  }
+}
+
+Action.loadTaskBookmark = function(response)
+{
+  if (response.responseText.split(" ")[0] == "Task")
+  {
+    window.alert("Load Task Failed! " + response.responseText);
+  }
+  else
+  {
+    window.location.href = "umple.php?model=" + response.responseText;
+  }
+}
+
+Action.loadTaskCallback = function(response)
+{
+  Action.freshLoad = true;
+  // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
+  if (Object.keys(TabControl.tabs).length > 1) return;
+
+  TabControl.getCurrentHistory().save(response.responseText,"loadTaskCallback");
+  var responseArray = response.responseText.split("task delimiter");
+  Page.setUmpleCode(responseArray[0]);
+  //jQuery("#textareaShowInstrcutions").val(responseArray[1]);
+  //jQuery("#labelShowInstructions").text("Task Instructions: " + responseArray[2]);
+  if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
+  {
+    var extractedName = TabControl.extractNameFromCode(responseArray[0]);
+    if (extractedName)
+    {
+      TabControl.useActiveTabTo(TabControl.renameTab)(extractedName, true);
+    }
+  }
+  if (!Action.manualSync) Action.updateUmpleDiagram();
+  TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+  TabControl.saveActiveTabs();
+  window.location.href = "bookmark.php?taskname=" + responseArray[2] + "&model=" + responseArray[3];
+}
+
+Action.loadTaskExceptCodeCallback = function(response)
+{
+  Action.freshLoad = true;
+  // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
+  //if (Object.keys(TabControl.tabs).length > 1) return;
+
+  TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
+  var responseArray = response.responseText.split("task delimiter");
+  jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":");
+  jQuery("#requestorName").val(responseArray[4]);
+  jQuery("#labelInstructions").css("display","block");
+  jQuery("#createTaskArea").css("display","block");
+  if (Page.getModel().split("-")[0] == "task") // it is in task bookmark page. instruction can not be edited.
+  {
+    jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":               Requestor Name:" + responseArray[4]);
+    jQuery("#labelCompletionURL").css("display", "none");
+    jQuery("#completionURLCell").css("display", "none");
+    jQuery("#labelRequestorName").css("display", "none");
+    jQuery("#requestorName").css("display", "none");
+    console.log(responseArray[1]);
+    jQuery("#instructionsHTML").html(responseArray[1]);
+  }
+  else 
+  {
+    jQuery("#instructions").val(responseArray[1]);
+    jQuery("#instructions").css("display","block");
+    jQuery("#completionURL").val(responseArray[5]);
+    jQuery('#instructions').each(function () {
+      this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+    }).on('input', function () {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+    });
+
+    //jQuery("#completionURL").css("width", responseArray[5].length + "ch");
+  }
+  // jQuery('#instructions').each(function () {
+  //   this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+  // }).on('input', function () {
+  //   this.style.height = 'auto';
+  //   this.style.height = (this.scrollHeight) + 'px';
+  // });
+
+  if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
+  {
+    var extractedName = TabControl.extractNameFromCode(responseArray[0]);
+    if (extractedName)
+    {
+      TabControl.useActiveTabTo(TabControl.renameTab)(extractedName, true);
+    }
+  }
+  //if (!Action.manualSync) Action.updateUmpleDiagram();
+}
+
+Action.submitLoadTask = function()
+{
+  var taskName = jQuery("#inputLoadTaskName").val();
+  let patt = /^(\w|\.|-)+$/;
+  if (!patt.test(taskName))//taskName.indexOf(" ") != -1 || taskName.indexOf("/") != -1 || taskName.indexOf("-") != -1 || taskName.indexOf("\\") != -1) 
+  {
+    window.alert("Task Name can only contain letters(case insensitive), underscores, dots, and digits!");
+    return;
+  }
+  Action.loadTask(taskName, false);
+}
+
+Action.submitTaskWork =function()
+{
+  Ajax.sendRequest("task.php", Action.submitTaskWorkCallback, format("submitTaskWork=1&model={0}&responseURL={1}", Page.getModel(), window.location.href));
+}
+
+Action.submitTaskWorkCallback = function(response)
+{
+  window.alert("Successfully submitted Task!");
+  var responseArray = response.responseText.split("task submit delimiter");
+  window.location.href = responseArray[0] + "?task=" + responseArray[1] + "&url=" + responseArray[2];
+}
+
+Action.launchParticipantURL = function()
+{
+  var taskname = Page.getModel().split("-")[1];
+  window.open("bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+}
+
+Action.copyParticipantURL = function()
+{
+  var taskname = Page.getModel().split("-")[1];
+  Action.copyToClp(window.location.hostname + window.location.pathname + "11/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+  Page.setFeedbackMessage("Participant URL is in copy buffer: " + window.location.hostname + window.location.pathname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+}
+
+Action.copyToClp = function(txt){
+    txt = document.createTextNode(txt);
+    var m = document;
+    var w = window;
+    var b = m.body;
+    b.appendChild(txt);
+    if (b.createTextRange) {
+        var d = b.createTextRange();
+        d.moveToElementText(txt);
+        d.select();
+        m.execCommand('copy');
+    } 
+    else {
+        var d = m.createRange();
+        var g = w.getSelection;
+        d.selectNodeContents(txt);
+        g().removeAllRanges();
+        g().addRange(d);
+        m.execCommand('copy');
+        g().removeAllRanges();
+    }
+    txt.remove();
+}
+
+Action.openInstructionInNewTab = function()
+{
+  var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
+  winPrint.document.write("<!DOCTYPE html><html><head><title>Instructions</title></head><body>" + jQuery("#instructionsHTML").html() + "</body></html>");
+  winPrint.document.close();
+  winPrint.focus();
 }
 
 Action.saveNewFile = function()
@@ -2384,7 +2617,6 @@ Action.ajax = function(callback,post,errors,tabIndependent)
     }
     callback(response);
   } : callback;
-
   Ajax.sendRequest("scripts/compiler.php",wrappedCallback,format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
 }
 

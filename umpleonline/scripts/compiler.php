@@ -22,6 +22,7 @@
 //
 
 require_once("compiler_config.php");
+require_once("Parsedown.php");
 
 // Allow CORS so that any site may use the Umple compiler.
 header("Access-Control-Allow-Origin: *");
@@ -57,6 +58,9 @@ if (isset($_REQUEST["save"]))
     list($dataname, $dataHandle) = getOrCreateDataHandle();
     if (isset($_REQUEST["lock"]) && isset($_REQUEST["model"])){
       $model = $_REQUEST["model"];
+  //file_put_contents("/home/jpan/test.html", ' ' . $model, FILE_APPEND);
+
+  //file_put_contents("/home/jpan/test.html", "111 " . $dataHandle->getWorkDir()->getPath(), FILE_APPEND);
       $lock_file = "../ump/".$model."/.lockfile";
       $fp = fopen($lock_file, "w");
       if (flock($fp, LOCK_EX)) {
@@ -84,9 +88,47 @@ else if (isset($_REQUEST["load"]))
   // extract the model ID and filename from the old-style path
   $filename = basename($_REQUEST["filename"]);
   $modelId = basename(dirname($_REQUEST["filename"]));
+  // echo $filename;
+  // echo $modelId;
+  if (isset($_REQUEST["isTask"]))
+  {
+    $modelId = "tasks/" . $modelId;
+  }
+  //file_put_contents("/home/jpan/test.html", $modelId . "///", FILE_APPEND);
   $dataHandle = dataStore()->openData($modelId);
   $outputUmple = $dataHandle->readData($filename);
   echo $outputUmple;
+}
+else if (isset($_REQUEST["loadTask"])) //load the task in the tasks dir
+{
+  foreach (new DirectoryIterator("../ump/tasks") as $file) 
+  {
+    if ($file->isDot()) continue;
+
+    if ($file->isDir() && substr($file->getFilename(), 0, 8) == "taskroot") 
+    {
+      $taskName = explode("-", $file->getFilename())[1];
+        if ($taskName == $_REQUEST["filename"])
+        {
+          $dataHandle = dataStore()->openData("tasks/" . $file->getFilename());
+          $umpleCode = $dataHandle->readData("model.ump");
+          if (isset($_REQUEST["loadInstructionAsHTML"]))
+          {
+            $Parsedown = new Parsedown();
+            $instructions = $Parsedown->text($dataHandle->readData("instructions.md")); # prints: <p>Hello <em>Parsedown</em>!</p>
+          }
+          else
+          {
+            $instructions = $dataHandle->readData("instructions.md");
+          }
+          $json = json_decode($dataHandle->readData("taskdetails.json"), true);
+          $requestorName = $json["requestorName"];
+          $completionURL = $json["completionURL"];
+          echo $umpleCode . "task delimiter" . $instructions . "task delimiter" . $json["taskName"] . "task delimiter" . $file->getFilename() . "task delimiter" . $requestorName . "task delimiter" . $completionURL;
+          break;
+        }
+    }
+  }
 }
 else if (isset($_REQUEST["action"]))
 {
@@ -94,6 +136,7 @@ else if (isset($_REQUEST["action"]))
 }
 else if (isset($_REQUEST["umpleCode"]))
 {
+  //file_put_contents("/home/jpan/test.html", "BBBBBBBBBBBBBBBBBBBB", FILE_APPEND);
   $input = $_REQUEST["umpleCode"];
   $fulllanguage = $_REQUEST["language"];
   

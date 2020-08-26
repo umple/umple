@@ -11,6 +11,8 @@ Page.selectedClass = null;
 Page.selectedAssociation = null;
 Page.selectedTransition = null;
 Page.selectedGeneralization = null;
+Page.canEditTask = false;
+Page.canCreateTask = true;
 Page.codeEffect = null;
 Page.clickCount = 0;
 Page.repeatToolItem = false;
@@ -49,10 +51,15 @@ Page.modifiedDiagrams = false;
 Page.allowPinch = false;
 
 
-
 // The following is set called from umple.php
-Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault)
+Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask, doEditTask, doCreateTask)
 { 
+  if(performance.navigation.type == 2)
+  {
+    location.reload(true);
+  }
+  Page.canEditTask = doEditTask;
+  Page.canCreateTask = doCreateTask;
   Layout.isDiagramVisible = doShowDiagram;  
   Layout.isTextVisible = doShowText;  
   Layout.isPaletteVisible = doShowMenu;  
@@ -120,6 +127,10 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   if(Page.readOnly) {jQuery("#" + Page.umpleCanvasId()).addClass("photoReady");}
 
   Action.loadFile();
+  if (doLoadTask)
+  {
+    Action.loadTask(jQuery("#model").val().split("-")[1], true); // load task instruction
+  }
   
   jQuery(generateDefault).prop("selected",true);
 };
@@ -149,6 +160,19 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonCopyEncodedURL");
   Page.initHighlighter("buttonCopyLocalBrowser");
   Page.initHighlighter("buttonLoadLocalBrowser");
+  if (Page.canEditTask)
+  {
+    //Page.initHighlighter("buttonEditTask");
+    //Page.initHighlighter("buttonLoadThisTask");
+    Page.initHighlighter("buttonRequestAllZip");
+    Page.initHighlighter("buttonRequestLoadTaskURL");
+  }
+  if (Page.canCreateTask)
+  {
+    Page.initHighlighter("buttonCreateTask");
+  }
+  Page.initHighlighter("buttonLoadTask")
+  
   Page.initHighlighter("buttonDownloadFiles");
   Page.initHighlighter("buttonSmaller");
   Page.initHighlighter("buttonLarger");
@@ -199,6 +223,19 @@ Page.initPaletteArea = function()
   Page.initAction("buttonCopyEncodedURL");
   Page.initAction("buttonCopyLocalBrowser");
   Page.initAction("buttonLoadLocalBrowser");
+  if (Page.canEditTask)
+  {
+    //Page.initAction("buttonEditTask");
+    //Page.initAction("buttonLoadThisTask");
+    Page.initAction("buttonRequestAllZip");
+    Page.initAction("buttonRequestLoadTaskURL");
+  }
+  if (Page.canCreateTask)
+  {
+    Page.initAction("buttonCreateTask");
+  }
+  Page.initAction("buttonLoadTask");
+
   Page.initAction("buttonDownloadFiles");
   Page.initAction("buttonUndo");
   Page.initAction("buttonRedo");
@@ -851,6 +888,64 @@ Page.createBookmark = function()
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
   window.location.href = "bookmark.php?model=" + Page.getModel();
+}
+
+Page.createTask = function()
+{
+  var taskName = jQuery("#taskName").val();
+  let patt = /^(\w|\.|-)+$/;
+  if (!patt.test(taskName))//taskName.indexOf(" ") != -1 || taskName.indexOf("/") != -1 || taskName.indexOf("-") != -1 || taskName.indexOf("\\") != -1) 
+  {
+    window.alert("Task Name can only contain letters(case insensitive), underscores, dots, and digits!");
+    return;
+  }
+  var requestorName = jQuery("#requestorName").val();
+  var instructions = jQuery("#instructions");
+  var completionURL = jQuery("#completionURL").val();
+  // jQuery("#labelInstructions").hide();
+  TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+  TabControl.saveActiveTabs();
+  Ajax.sendRequest("task.php",Page.createTaskCallback,format("taskName={0}&instructions={1}&model={2}&requestorName={3}&completionURL={4}", taskName, instructions.val(), Page.getModel(), requestorName, completionURL));
+}
+
+Page.createTaskCallback = function(response)
+{
+  if (response.responseText.split(" ")[0] == "Task")
+  {
+    window.alert("Not able to create a task with that name. " + response.responseText);
+  }
+  else 
+  {
+    //window.alert("Successfully created a Task! Now you will be navaigate to task modfication page");
+    window.location.href = "umple.php?task=1&model=" + response.responseText;
+  }
+}
+
+Page.editTask = function()
+{
+  var instructions = jQuery("#instructions");
+  var taskName = jQuery("#model").val().split("-")[1];
+  var requestorName = jQuery("#requestorName").val();
+  var completionURL = jQuery("#completionURL").val();
+  TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+  TabControl.saveActiveTabs();
+  Ajax.sendRequest("task.php", Page.editTaskCallback, "edit=1&taskName=" + taskName + "&instructions=" + instructions.val() + "&model=" + Page.getModel() + "&requestorName=" + requestorName + "&completionURL=" + completionURL);
+  //window.location.href = "task.php?edit=1&taskName=" + taskName + "&instructions=" + instructions.val() + "&model=" + Page.getModel() + "&requestorName=" + requestorName;
+  //window.alert("Successfully edit Task " + taskName + "!");
+}
+
+Page.editTaskCallback = function(response)
+{
+  Page.setFeedbackMessage('Changes saved');
+}
+
+Page.cancelTaskResponse = function()
+{
+  var answer = confirm("Are you sure to cancel this task response?");
+  if (answer)
+  {
+    window.location.href = "task.php?cancelTaskResponse=1&model=" + Page.getModel();
+  }
 }
 
 Page.toggleTabs = function()
