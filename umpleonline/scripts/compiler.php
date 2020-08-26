@@ -124,7 +124,7 @@ else if (isset($_REQUEST["loadTask"])) //load the task in the tasks dir
           $json = json_decode($dataHandle->readData("taskdetails.json"), true);
           $requestorName = $json["requestorName"];
           $completionURL = $json["completionURL"];
-          echo $umpleCode . "task delimiter" . $instructions . "task delimiter" . $json["taskName"] . "task delimiter" . $file->getFilename() . "task delimiter" . $requestorName . "task delimiter" . $completionURL;
+          echo $umpleCode . "task delimiter" . $instructions . "task delimiter" . $json["taskName"] . "task delimiter" . $file->getFilename() . "task delimiter" . $requestorName . "task delimiter" . $completionURL . "task delimiter" . $json["isExperiment"];
           break;
         }
     }

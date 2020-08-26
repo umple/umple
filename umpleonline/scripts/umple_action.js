@@ -141,7 +141,7 @@ Action.clicked = function(event)
     jQuery("#labelTaskName").css("display","block");
     jQuery("#taskNameCell").css("display","block");
     jQuery("#instructions").css("display","block");
-    jQuery("#isExperiment").css("display","block");
+    jQuery("#isExperimentCell").css("display","block");
   }
   else if (action == "LoadTask")
   {
@@ -564,14 +564,15 @@ Action.loadTaskExceptCodeCallback = function(response)
     jQuery("#completionURLCell").css("display", "none");
     jQuery("#labelRequestorName").css("display", "none");
     jQuery("#requestorName").css("display", "none");
-    console.log(responseArray[1]);
-    jQuery("#instructionsHTML").html(responseArray[1]);
+    jQuery("#instructionsHTML").html(">" + responseArray[1]);
   }
   else 
   {
     jQuery("#instructions").val(responseArray[1]);
     jQuery("#instructions").css("display","block");
     jQuery("#completionURL").val(responseArray[5]);
+    jQuery("#isExperimentCell").css("display", "inline");
+    jQuery("#isExperiment").prop('checked', responseArray[6] == 'true');
     jQuery('#instructions').each(function () {
       this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
     }).on('input', function () {
@@ -620,7 +621,14 @@ Action.submitTaskWorkCallback = function(response)
 {
   window.alert("Successfully submitted Task!");
   var responseArray = response.responseText.split("task submit delimiter");
-  window.location.href = responseArray[0] + "?task=" + responseArray[1] + "&url=" + responseArray[2];
+  if (responseArray[0] == "")
+  {
+    window.location.href = responseArray[2];
+  }
+  else
+  {
+    window.location.href = responseArray[0] + "?task=" + responseArray[1] + "&url=" + responseArray[2];
+  }
 }
 
 Action.launchParticipantURL = function()
@@ -632,8 +640,9 @@ Action.launchParticipantURL = function()
 Action.copyParticipantURL = function()
 {
   var taskname = Page.getModel().split("-")[1];
-  Action.copyToClp(window.location.hostname + window.location.pathname + "11/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
-  Page.setFeedbackMessage("Participant URL is in copy buffer: " + window.location.hostname + window.location.pathname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+  var copiedURL = window.location.hostname + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname;
+  Action.copyToClp(copiedURL);
+  Page.setFeedbackMessage("Participant URL is in copy buffer: " + copiedURL);
 }
 
 Action.copyToClp = function(txt){
@@ -662,10 +671,23 @@ Action.copyToClp = function(txt){
 
 Action.openInstructionInNewTab = function()
 {
-  var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
-  winPrint.document.write("<!DOCTYPE html><html><head><title>Instructions</title></head><body>" + jQuery("#instructionsHTML").html() + "</body></html>");
-  winPrint.document.close();
-  winPrint.focus();
+  jQuery("#buttonReshowInstructions").css("display", "inline");
+  // var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
+  // winPrint.document.write("<!DOCTYPE html><html><head><title>Instructions</title></head><body>" + jQuery("#instructionsHTML").html() + "</body></html>");
+  // winPrint.document.close();
+  // winPrint.focus();
+  var tab = window.open('about:blank', '_blank');
+  tab.document.write(jQuery("#instructionsHTML").html()); // where 'html' is a variable containing your HTML
+  tab.document.close();
+  jQuery("#instructionsHTML").css("display", "none");
+  jQuery("#labelInstructions").css("display", "none");
+}
+
+Action.reshowInstructions = function()
+{
+  jQuery("#instructionsHTML").css("display", "block");
+  jQuery("#labelInstructions").css("display", "inline");
+  jQuery("#buttonReshowInstructions").css("display", "none");
 }
 
 Action.saveNewFile = function()

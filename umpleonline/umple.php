@@ -260,17 +260,41 @@ $output = $dataHandle->readData('model.ump');
           <th id="labelCompletionURL"><label>Completion Survey URL:</label></th>
         </tr>
         <tr>
-          <th id="taskNameCell" style="display: none;"><input type="text" id="taskName" name="fname"></th>
-          <th><input type="text" id="requestorName"></th>
-          <th id="completionURLCell" ><input type="text" id="completionURL" width="70ch"></th>
-          <th id="isExperiment" style="display: none;" title=" Check this if this task is an experiment and full details of every interaction the user does needs to be recorded. You should have received ethics approval before sending such a task to users."><input type="checkbox" value="isExperiment"><label>isExperiment</label></th>
+          <th id="taskNameCell" style="display: none;" title="This name should describe the experiment or course assignment.
+            It can contain alphanumeric characters as well as _ and .
+            It is case sensitive. Responders will be able to use this
+            to look up the task from the 'Load a task' menu item"><input type="text" id="taskName" name="fname"></th>
+          <th title="This is optional. It will help reassure responders that they
+            are responding to the correct task for the correct person
+            or organization."><input type="text" id="requestorName"></th>
+          <th id="completionURLCell" title="This is optional. Upon submitting a task, UmpleOnline will
+            take responders to this URL with two arguments: task: the task name
+            url: the URL of the completed task (with the model read-only)
+            Requestors can use this to gather responses and/or
+            to ask survey questions about the experiment or assignment"><input type="text" id="completionURL" width="70ch"></th>
+          <th id="isExperimentCell" style="display: none; "title=" Check this to initiate logging of every command the user does.
+            You should have ethics committee approval if you wish to use this
+            and publish the results. Also, you should
+            When you download the task you will be able to analyse the
+            complete evolution of the model as the user works on it."><input id="isExperiment" type="checkbox" value="isExperiment"><label>isExperiment</label></th>
         </tr>
       </table>
      
     
-      <label id="labelInstructions" for="instructions">Task Instructions:</label>
+      <b><label id="labelInstructions" for="instructions">Task Instructions:</label></b>
       <div id="instructionsHTML"></div>
-      <textarea id="instructions" style="display: none;"> <?php if ($doLoadTaskInstruction && !isset($_REQUEST["task"])) {echo "readonly";}?>></textarea>
+      <textarea id="instructions" style="display: none;" title="Write task instructions in Markdown format.
+        Lines starting with # are headings
+        Lines starting with * are bullet points
+        URLs will become links that take a user to another tab
+        (You can use such URLs to tell users where to find more information
+        about the task)
+        The instructions might be requirements you want responders to
+        implement. You can also create a complete model in the main
+        area and then ask for reponders to make changes.
+        If you need to be able to identify the responders you should
+        ask them to include their name and/or ID in a comment
+        in their model."></textarea>
 
     <div style="margin-top: 5px;">
     <?php if (!isset($_REQUEST["task"]) && !$doLoadTaskInstruction) { ?>
@@ -289,11 +313,12 @@ $output = $dataHandle->readData('model.ump');
         a participant would.Do this to test the task. Note that your response will appear if you later     
         download all the responses unless you cancel the submission.">Launch Participant URL in a new tab</a>
     <?php } else if ($doLoadTaskInstruction && substr($dataHandle->getName(), 0, 8) != "taskroot" && !$readOnly) {?>
-      <a class="button2" href="javascript:Action.openInstructionInNewTab()">Open instruction in a new window</a>&nbsp;&nbsp;&nbsp;
-      <a class="button2" href="javascript:Action.submitTaskWork()" title="Click to indicate that you have finished the task.
-        If the requestor has asked you to, also send the URL to the requestor">Submit Your Work</a>&nbsp;&nbsp;&nbsp;
+      <a class="button2" href="javascript:Action.openInstructionInNewTab()">Open instruction in a new window</a>&nbsp;&nbsp;
+      <a id="buttonReshowInstructions" class="button2" href="javascript:Action.reshowInstructions()" style="display: none;">Re-show Instructions</a>&nbsp;&nbsp;&nbsp;
+      <a class="button2" href="javascript:Action.submitTaskWork()" title=" When you submit, the requestor will be able to see your response
+        and it will no longer be editable. Make sure your name is in a
+        comment in the response if that has been requested in the instructions.">Submit Response</a>&nbsp;&nbsp;&nbsp;
       <a class="button2" href="javascript:Page.cancelTaskResponse()" title="Cancel this submission. Your data will be deleted.">Cancel this task response</a>
-     <!--  all your subsequent work will not be saved -->
     <?php } else if ($readOnly) {?>
       This task response has already been submitted and is now read-only.
     <?php } ?>

@@ -55,13 +55,13 @@ if (isset($_REQUEST["edit"]))
   // exit();
   $json["requestorName"] = $_REQUEST["requestorName"];
   $json["completionURL"] = $_REQUEST["completionURL"];
+  $json["isExperiment"] = $_REQUEST["isExperiment"];
   $editModelData->writeData("taskdetails.json", json_encode($json));
   //$editModelData->writeData("taskdetails.json", "{\"requestorName\" : \"" . $_REQUEST["requestorName"] . "\", \"taskName\" : \"" . $_REQUEST["taskName"] . "\"}");
   //header("Location: umple.php?task=1&model={$tempModelId}");
 }
-else
+else // create task
 {
-  //file_put_contents("/home/jpan/test.html", "7777777777", FILE_APPEND);
   foreach (new DirectoryIterator("ump/tasks") as $file) 
   {
     if ($file->isDot()) continue;
@@ -111,7 +111,12 @@ else
 
   $savedModelData->cloneFrom($tempModelData);
   $savedModelData->writeData("instructions.md", $_REQUEST["instructions"]);
-  $savedModelData->writeData("taskdetails.json", "{\"requestorName\" : \"" . $_REQUEST["requestorName"] . "\", \n\"taskName\" : \"" . $_REQUEST["taskName"] . "\", \n\"completionURL\": \"" . $_REQUEST["completionURL"] . "\"}");
+  $savedModelData->writeData("taskdetails.json", "{\"requestorName\" : \"" . $_REQUEST["requestorName"] . "\", \n\"taskName\" : \"" . $_REQUEST["taskName"] . "\", \n\"completionURL\": \"" . $_REQUEST["completionURL"] . "\", \n\"isExperiment\" : \"" . $_REQUEST["isExperiment"] . "\"}");
+
+  if ($_REQUEST["isExperiment"] == true)
+  {
+    $savedModelData->writeData("LogOfCommands.txt", "");
+  }
 
   // Empty anything else in directory and remove it
   $tempModelData->delete();

@@ -902,10 +902,12 @@ Page.createTask = function()
   var requestorName = jQuery("#requestorName").val();
   var instructions = jQuery("#instructions");
   var completionURL = jQuery("#completionURL").val();
+  var isExperiment = jQuery("#isExperiment").is(':checked');
   // jQuery("#labelInstructions").hide();
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
-  Ajax.sendRequest("task.php",Page.createTaskCallback,format("taskName={0}&instructions={1}&model={2}&requestorName={3}&completionURL={4}", taskName, instructions.val(), Page.getModel(), requestorName, completionURL));
+  Ajax.sendRequest("task.php",Page.createTaskCallback,format("taskName={0}&instructions={1}&model={2}&requestorName={3}&completionURL={4}&isExperiment={5}", 
+    taskName, instructions.val(), Page.getModel(), requestorName, completionURL, isExperiment));
 }
 
 Page.createTaskCallback = function(response)
@@ -927,9 +929,11 @@ Page.editTask = function()
   var taskName = jQuery("#model").val().split("-")[1];
   var requestorName = jQuery("#requestorName").val();
   var completionURL = jQuery("#completionURL").val();
+  var isExperiment = jQuery("#isExperiment").is(':checked');
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
-  Ajax.sendRequest("task.php", Page.editTaskCallback, "edit=1&taskName=" + taskName + "&instructions=" + instructions.val() + "&model=" + Page.getModel() + "&requestorName=" + requestorName + "&completionURL=" + completionURL);
+  Ajax.sendRequest("task.php", Page.editTaskCallback, "edit=1&taskName=" + taskName + "&instructions=" + instructions.val() + "&model=" 
+    + Page.getModel() + "&requestorName=" + requestorName + "&completionURL=" + completionURL + "&isExperiment=" + isExperiment);
   //window.location.href = "task.php?edit=1&taskName=" + taskName + "&instructions=" + instructions.val() + "&model=" + Page.getModel() + "&requestorName=" + requestorName;
   //window.alert("Successfully edit Task " + taskName + "!");
 }
