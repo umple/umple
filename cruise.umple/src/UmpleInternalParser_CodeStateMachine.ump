@@ -507,6 +507,11 @@ class UmpleInternalParser
     placeholderStateMachine = new StateMachine("PLACE_HOLDER");
     String name = stateMachineToken.getValue("name");
 
+    if (name.equals("timer"))
+    {
+      getParseResult().addErrorMessage(new ErrorMessage(75, stateMachineToken.getSubToken("name").getPosition(), "" + stateMachineToken.getSubToken("name").getPosition().getLineNumber()));
+    }
+
     if(!Token.isValidIdentifier(stateMachineToken.getValue("name"))){
     	setFailedPosition(stateMachineToken.getPosition(), 150, stateMachineToken.getValue("name"));
     }

@@ -664,6 +664,10 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/redo.png"> 
               Redo
             </li>
+            <li id="buttonReindent" name="paletteItem">
+              <img src="scripts/sync_diagram.png" /> 
+              Reindent Code
+            </li>
             <li id="buttonSyncDiagram" name="paletteItem">
               <img src="scripts/sync_diagram.png" /> 
               Sync Diagram 

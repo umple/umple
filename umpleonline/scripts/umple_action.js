@@ -212,6 +212,15 @@ Action.clicked = function(event)
   {
     Action.redo();
   }
+  else if (action == "Reindent") 
+  { 
+    var lines = Page.getRawUmpleCode().split("\n");
+    var cursorPos = Page.codeMirrorEditor.getCursor(true);
+    var whiteSpace = lines[cursorPos.line].match(/^\s*/)[0].length;
+    var lengthToFirstCh = cursorPos.ch - whiteSpace;
+    cursorPos.ch = lengthToFirstCh;
+    Action.reindent(lines, cursorPos);
+  }
   else if (action == "ShowHideTextEditor")
   {
     Layout.showHideTextEditor();
@@ -258,7 +267,8 @@ Action.clicked = function(event)
   }
   else if (action == "SyncDiagram")
   {
-    Action.processTyping("umpleModelEditorText", true);
+    Action.processTyping("codeMirrorEditor", true);
+    Page.codeMirrorEditor.focus();
   }
   else if (action == "PhotoReady")
   {
@@ -2043,7 +2053,8 @@ Action.umpleTypingActivity = function(target) {
     Action.diagramInSync = false;
     Page.enableDiagram(false);
   }
-  
+  //Action.processTyping("codeMirrorEditor", true);
+  //return;
   if (Action.oldTimeout != null)
   {
     clearTimeout(Action.oldTimeout);
@@ -2068,7 +2079,7 @@ Action.processTyping = function(target, manuallySynchronized)
     
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor") {
       Action.updateLayoutEditorAndDiagram();
-      
+
       // issue#1554
       var downloadLink = document.getElementById("downloadLink");
       if (downloadLink !== null){
@@ -2946,4 +2957,229 @@ Action.hidegdpr = function()
 {
   jQuery('#gdprtext').hide();
   Action.gdprHidden = true;
+}
+
+Action.reindent = function(lines, cursorPos)
+{
+  var offset = "";
+  var codeAfterIndent = "";
+  var len = lines.length;
+  var inBlockComment = false;
+  var statementEnd = true; // i.e. have semicolon at the end of the statement.
+  var statementEndIndentSpace = 0;
+  var indexOfCursor = -1;
+  for (var i = 0; i < len; i++) 
+  {
+    var trimmedLine = lines[i].trim();
+
+    // remove quotation
+    var indexOfFirstQuote  = trimmedLine.indexOf("\"");
+    var indexOfLastQuote = trimmedLine.indexOf("\"", indexOfFirstQuote + 1);
+    while (indexOfFirstQuote != -1 && indexOfLastQuote != -1)
+    {
+      trimmedLine = trimmedLine.slice(0, indexOfFirstQuote) + trimmedLine.slice(indexOfLastQuote+1, trimmedLine.length);
+      indexOfFirstQuote  = trimmedLine.indexOf("\"");
+      indexOfLastQuote = trimmedLine.indexOf("\"", indexOfFirstQuote + 1);
+    }
+
+    // remove comment
+    if (trimmedLine.indexOf("//") != -1)
+    {
+      trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("//")).trim();
+    }
+
+    if (inBlockComment)
+    {
+      if (trimmedLine.indexOf("*/") != -1)
+      {
+        trimmedLine = trimmedLine.substr(trimmedLine.indexOf("*/") + 2).trim();
+        inBlockComment = false;
+      }
+      else {
+        if (i != lines.length -1)
+        {
+          codeAfterIndent += lines[i] + "\n";
+        } else {
+          codeAfterIndent += lines[i];
+        }
+        continue;
+      }
+    }
+    else if (trimmedLine.indexOf("/*") != -1)
+    {
+      if (trimmedLine.indexOf("*/") == -1)
+      {
+        inBlockComment = true;
+        trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("/*")).trim();
+      }
+      else
+      {
+        trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("/*")) + trimmedLine.substr(trimmedLine.indexOf("*/") + 2).trim(); // remove block comment for trimmed line
+      }
+      
+    }
+    
+    var indexOfOpenCurlyBrace = trimmedLine.indexOf("{");
+    var indexOfCloseCurlyBrace = trimmedLine.indexOf("}");
+    var indexOfSemiColon = trimmedLine.indexOf(";");
+    
+    if (indexOfSemiColon != -1 && indexOfSemiColon != trimmedLine.length - 1 && trimmedLine.substr(indexOfSemiColon+1).trim().charAt(0) != "}")
+    {
+      lines.splice(i + 1, 0, trimmedLine.substr(indexOfSemiColon + 1));
+      if (i <= cursorPos.line)
+      {
+        cursorPos.line++;
+      }
+      lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfSemiColon + 1);
+      Action.reindent(lines, cursorPos);
+      return;
+    }
+
+    var doNotIndent = indexOfOpenCurlyBrace != -1 && indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace - indexOfOpenCurlyBrace < 40 && trimmedLine.substr(0, indexOfCloseCurlyBrace).indexOf("{", indexOfOpenCurlyBrace + 1) == -1;
+    if (doNotIndent)
+    {
+      if (indexOfCloseCurlyBrace != trimmedLine.length - 1)
+      {
+        lines.splice(i + 1, 0, trimmedLine.substr(indexOfCloseCurlyBrace + 1));
+        if (i <= cursorPos.line)
+        {
+          cursorPos.line++;
+        }
+        lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfCloseCurlyBrace + 1);
+        Action.reindent(lines, cursorPos);
+        return;
+      }
+      
+      if (!statementEnd)
+      {
+        if (trimmedLine.slice(-1) == "{")
+        {
+          statementEnd = true;
+        } 
+        else 
+        {
+          lines[i] = offset + lines[i].match(/^\s*/)[0].substr(statementEndIndentSpace) + lines[i].trim();
+          if (trimmedLine.indexOf(";") == trimmedLine.length - 1)
+          {
+            statementEnd = true;
+          }
+        }
+      }
+      else
+      {
+        lines[i] = offset + lines[i].trim();
+      }
+    }
+    else 
+    {
+      if (indexOfOpenCurlyBrace != -1 && indexOfOpenCurlyBrace != trimmedLine.length - 1) // put code after an open curly bracket to next line
+      {
+        lines.splice(i + 1, 0, trimmedLine.substr(indexOfOpenCurlyBrace + 1));
+        lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfOpenCurlyBrace + 1);
+        if (i <= cursorPos.line)
+        {
+          cursorPos.line++;
+        }
+        Action.reindent(lines, cursorPos);
+        return;
+      }
+
+      if (indexOfCloseCurlyBrace != -1 && trimmedLine.length > 1)
+      {
+        if (indexOfCloseCurlyBrace == 0)
+        {
+          lines.splice(i + 1, 0, trimmedLine.substr(1));
+          lines[i] = "}";
+          if (i <= cursorPos.line)
+          {
+            cursorPos.line++;
+          }
+        } else {
+          lines.splice(i + 1, 0, "}");
+          if (i <= cursorPos.line)
+          {
+            cursorPos.line++;
+          }
+          if (indexOfCloseCurlyBrace != trimmedLine.length - 1) // there is code after close curly bracket
+          {
+            lines.splice(i + 2, 0, trimmedLine.substr(indexOfCloseCurlyBrace + 1));
+            if (i <= cursorPos.line)
+            {
+              cursorPos.line++;
+            }
+          }
+          lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfCloseCurlyBrace);
+        }
+        Action.reindent(lines, cursorPos);
+        return;
+      }
+
+
+      if (statementEnd && trimmedLine.indexOf(";") != trimmedLine.length - 1 && trimmedLine.slice(-1) != "{" && trimmedLine.slice(-1) != "}" && trimmedLine.slice(-2) != "||")
+      {
+        statementEnd = false;
+        statementEndIndentSpace = lines[i].match(/^\s*/)[0].length;
+      }
+
+      if (indexOfCloseCurlyBrace != -1)
+      {
+        offset = offset.substr(2);
+      }
+
+      if (!statementEnd)
+      {
+        if (trimmedLine.slice(-1) == "{" || trimmedLine.slice(-2) == "||" && trimmedLine.slice(-1) == "}")
+        {
+          statementEnd = true;
+          lines[i] = offset + lines[i].trim();
+        } 
+        else 
+        {
+          lines[i] = offset + lines[i].match(/^\s*/)[0].substr(statementEndIndentSpace) + lines[i].trim();
+          if (trimmedLine.indexOf(";") == trimmedLine.length - 1)
+          {
+            statementEnd = true;
+          }
+        }
+      }
+      else
+      {
+        lines[i] = offset + lines[i].trim();
+      }
+
+      if (indexOfOpenCurlyBrace != -1)
+      {
+        offset += "  ";
+      }
+    }
+
+    if (i != lines.length -1)
+    {
+      codeAfterIndent += lines[i] + "\n";
+    } else {
+      codeAfterIndent += lines[i];
+    }
+  }
+  
+  if(Page.codeMirrorOn) 
+  {
+    Page.codeMirrorEditor.setValue(codeAfterIndent);
+  }
+  jQuery("#umpleModelEditorText").val(codeAfterIndent);
+
+  var cursorLine = Page.getRawUmpleCode().split("\n")[cursorPos.line];
+  var whiteSpace = cursorLine.match(/^\s*/)[0].length;
+  if (cursorPos.ch >= cursorLine.trim().length) 
+  {
+    Page.codeMirrorEditor.setCursor(cursorPos.line, cursorLine.trim().length + whiteSpace);
+  }
+  else if (cursorPos.ch >= 0)
+  {
+    Page.codeMirrorEditor.setCursor(cursorPos.line, cursorPos.ch+whiteSpace);
+  }
+  else
+  {
+    Page.codeMirrorEditor.setCursor(cursorPos.line, 0);
+  }
+  Page.codeMirrorEditor.focus();
 }
