@@ -670,11 +670,14 @@ Action.copyToClp = function(txt){
 
 Action.openInstructionInNewTab = function()
 {
-  var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
-  winPrint.document.write("<!DOCTYPE html><html><head><title>Instructions</title></head><body>" + jQuery("#instructionsHTML").html() + "</body></html>");
-  winPrint.document.close();
-  winPrint.focus();
-  jQuery("#instructionsHTML").html("");
+  // var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
+  // winPrint.document.write("<!DOCTYPE html><html><head><title>Instructions</title></head><body>" + jQuery("#instructionsHTML").html() + "</body></html>");
+  // winPrint.document.close();
+  // winPrint.focus();
+  var tab = window.open('about:blank', '_blank');
+  tab.document.write(jQuery("#instructionsHTML").html()); // where 'html' is a variable containing your HTML
+  tab.document.close();
+  jQuery("#instructionsHTML").css("display", "none");
   jQuery("#labelInstructions").css("display", "none");
 }
 
