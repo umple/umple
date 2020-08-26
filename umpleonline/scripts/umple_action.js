@@ -686,6 +686,7 @@ Action.openInstructionInNewTab = function()
 Action.reshowInstructions = function()
 {
   jQuery("#instructionsHTML").css("display", "block");
+  jQuery("#labelInstructions").css("display", "inline");
   jQuery("#buttonReshowInstructions").css("display", "none");
 }
 
