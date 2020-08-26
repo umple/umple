@@ -22,6 +22,7 @@
 //
 
 require_once("compiler_config.php");
+require_once("Parsedown.php");
 
 // Allow CORS so that any site may use the Umple compiler.
 header("Access-Control-Allow-Origin: *");
@@ -111,7 +112,15 @@ else if (isset($_REQUEST["loadTask"])) //load the task in the tasks dir
         {
           $dataHandle = dataStore()->openData("tasks/" . $file->getFilename());
           $umpleCode = $dataHandle->readData("model.ump");
-          $instructions = $dataHandle->readData("instructions.md");
+          if (isset($_REQUEST["loadInstructionAsHTML"]))
+          {
+            $Parsedown = new Parsedown();
+            $instructions = $Parsedown->text($dataHandle->readData("instructions.md")); # prints: <p>Hello <em>Parsedown</em>!</p>
+          }
+          else
+          {
+            $instructions = $dataHandle->readData("instructions.md");
+          }
           $json = json_decode($dataHandle->readData("taskdetails.json"), true);
           $requestorName = $json["requestorName"];
           $completionURL = $json["completionURL"];

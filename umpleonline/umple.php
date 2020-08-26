@@ -263,13 +263,14 @@ $output = $dataHandle->readData('model.ump');
           <th id="taskNameCell" style="display: none;"><input type="text" id="taskName" name="fname"></th>
           <th><input type="text" id="requestorName"></th>
           <th id="completionURLCell" ><input type="text" id="completionURL" width="70ch"></th>
-          <th title=" Check this if this task is an experiment and full details of every interaction the user does needs to be recorded. You should have received ethics approval before sending such a task to users."><input type="checkbox" id="isExperiment" value="isExperiment"><label for="isExperiment">isExperiment</label></th>
+          <th id="isExperiment" style="display: none;" title=" Check this if this task is an experiment and full details of every interaction the user does needs to be recorded. You should have received ethics approval before sending such a task to users."><input type="checkbox" value="isExperiment"><label>isExperiment</label></th>
         </tr>
       </table>
      
     
       <label id="labelInstructions" for="instructions">Task Instructions:</label>
-      <textarea id="instructions" <?php if ($doLoadTaskInstruction && !isset($_REQUEST["task"])) {echo "readonly";}?>></textarea>
+      <div id="instructionsHTML"></div>
+      <textarea id="instructions" style="display: none;"> <?php if ($doLoadTaskInstruction && !isset($_REQUEST["task"])) {echo "readonly";}?>></textarea>
 
     <div style="margin-top: 5px;">
     <?php if (!isset($_REQUEST["task"]) && !$doLoadTaskInstruction) { ?>
@@ -288,6 +289,7 @@ $output = $dataHandle->readData('model.ump');
         a participant would.Do this to test the task. Note that your response will appear if you later     
         download all the responses unless you cancel the submission.">Launch Participant URL in a new tab</a>
     <?php } else if ($doLoadTaskInstruction && substr($dataHandle->getName(), 0, 8) != "taskroot" && !$readOnly) {?>
+      <a class="button2" href="javascript:Action.openInstructionInNewTab()">Open instruction in a new window</a>&nbsp;&nbsp;&nbsp;
       <a class="button2" href="javascript:Action.submitTaskWork()" title="Click to indicate that you have finished the task.
         If the requestor has asked you to, also send the URL to the requestor">Submit Your Work</a>&nbsp;&nbsp;&nbsp;
       <a class="button2" href="javascript:Page.cancelTaskResponse()" title="Cancel this submission. Your data will be deleted.">Cancel this task response</a>

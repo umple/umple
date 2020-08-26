@@ -140,6 +140,8 @@ Action.clicked = function(event)
     //jQuery("#taskNameArea").css("display","block");
     jQuery("#labelTaskName").css("display","block");
     jQuery("#taskNameCell").css("display","block");
+    jQuery("#instructions").css("display","block");
+    jQuery("#isExperiment").css("display","block");
   }
   else if (action == "LoadTask")
   {
@@ -495,7 +497,14 @@ Action.loadTask = function(taskName, isBookmark)
     Ajax.sendRequest("bookmark.php", Action.loadTaskBookmark,format("taskname={0}&model={0}",taskName));
     //Ajax.sendRequest("scripts/compiler.php",Action.loadTaskCallback,format("loadTask=1&filename={0}",taskName));
   } else {
-    Ajax.sendRequest("scripts/compiler.php",Action.loadTaskExceptCodeCallback,format("loadTask=1&filename={0}",taskName));
+    if (Page.getModel().split("-")[0] == "task") // it is in task bookmark page. instruction can not be edited.
+    {
+      Ajax.sendRequest("scripts/compiler.php",Action.loadTaskExceptCodeCallback,format("loadTask=1&loadInstructionAsHTML=1&filename={0}",taskName));
+    }
+    else
+    {
+      Ajax.sendRequest("scripts/compiler.php",Action.loadTaskExceptCodeCallback,format("loadTask=1&filename={0}",taskName));
+    }
   }
 }
 
@@ -544,30 +553,40 @@ Action.loadTaskExceptCodeCallback = function(response)
 
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
   var responseArray = response.responseText.split("task delimiter");
-  jQuery("#instructions").val(responseArray[1]);
   jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":");
   jQuery("#requestorName").val(responseArray[4]);
-  jQuery("#instructions").css("display","block");
   jQuery("#labelInstructions").css("display","block");
   jQuery("#createTaskArea").css("display","block");
-  if (Page.getModel().split("-")[0] == "task") // it is in task bookmark page
+  if (Page.getModel().split("-")[0] == "task") // it is in task bookmark page. instruction can not be edited.
   {
     jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":               Requestor Name:" + responseArray[4]);
     jQuery("#labelCompletionURL").css("display", "none");
     jQuery("#completionURLCell").css("display", "none");
     jQuery("#labelRequestorName").css("display", "none");
     jQuery("#requestorName").css("display", "none");
+    console.log(responseArray[1]);
+    jQuery("#instructionsHTML").html(responseArray[1]);
   }
-  else {
+  else 
+  {
+    jQuery("#instructions").val(responseArray[1]);
+    jQuery("#instructions").css("display","block");
     jQuery("#completionURL").val(responseArray[5]);
+    jQuery('#instructions').each(function () {
+      this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+    }).on('input', function () {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+    });
+
     //jQuery("#completionURL").css("width", responseArray[5].length + "ch");
   }
-  jQuery('#instructions').each(function () {
-    this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
-  }).on('input', function () {
-    this.style.height = 'auto';
-    this.style.height = (this.scrollHeight) + 'px';
-  });
+  // jQuery('#instructions').each(function () {
+  //   this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+  // }).on('input', function () {
+  //   this.style.height = 'auto';
+  //   this.style.height = (this.scrollHeight) + 'px';
+  // });
 
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {
@@ -639,6 +658,14 @@ Action.copyToClp = function(txt){
         g().removeAllRanges();
     }
     txt.remove();
+}
+
+Action.openInstructionInNewTab = function()
+{
+  var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
+  winPrint.document.write("<!DOCTYPE html><html><head><title>Instructions</title></head><body>" + jQuery("#instructionsHTML").html() + "</body></html>");
+  winPrint.document.close();
+  winPrint.focus();
 }
 
 Action.saveNewFile = function()
