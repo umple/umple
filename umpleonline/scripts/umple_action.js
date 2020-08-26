@@ -141,7 +141,7 @@ Action.clicked = function(event)
     jQuery("#labelTaskName").css("display","block");
     jQuery("#taskNameCell").css("display","block");
     jQuery("#instructions").css("display","block");
-    jQuery("#isExperiment").css("display","block");
+    jQuery("#isExperimentCell").css("display","block");
   }
   else if (action == "LoadTask")
   {
@@ -564,14 +564,15 @@ Action.loadTaskExceptCodeCallback = function(response)
     jQuery("#completionURLCell").css("display", "none");
     jQuery("#labelRequestorName").css("display", "none");
     jQuery("#requestorName").css("display", "none");
-    console.log(responseArray[1]);
-    jQuery("#instructionsHTML").html(responseArray[1]);
+    jQuery("#instructionsHTML").html(">" + responseArray[1]);
   }
   else 
   {
     jQuery("#instructions").val(responseArray[1]);
     jQuery("#instructions").css("display","block");
     jQuery("#completionURL").val(responseArray[5]);
+    jQuery("#isExperimentCell").css("display", "inline");
+    jQuery("#isExperiment").prop('checked', responseArray[6] == 'true');
     jQuery('#instructions').each(function () {
       this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
     }).on('input', function () {
@@ -670,6 +671,7 @@ Action.copyToClp = function(txt){
 
 Action.openInstructionInNewTab = function()
 {
+  jQuery("#buttonReshowInstructions").css("display", "inline");
   // var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
   // winPrint.document.write("<!DOCTYPE html><html><head><title>Instructions</title></head><body>" + jQuery("#instructionsHTML").html() + "</body></html>");
   // winPrint.document.close();
@@ -679,6 +681,12 @@ Action.openInstructionInNewTab = function()
   tab.document.close();
   jQuery("#instructionsHTML").css("display", "none");
   jQuery("#labelInstructions").css("display", "none");
+}
+
+Action.reshowInstructions = function()
+{
+  jQuery("#instructionsHTML").css("display", "block");
+  jQuery("#buttonReshowInstructions").css("display", "none");
 }
 
 Action.saveNewFile = function()
