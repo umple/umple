@@ -620,7 +620,14 @@ Action.submitTaskWorkCallback = function(response)
 {
   window.alert("Successfully submitted Task!");
   var responseArray = response.responseText.split("task submit delimiter");
-  window.location.href = responseArray[0] + "?task=" + responseArray[1] + "&url=" + responseArray[2];
+  if (responseArray[0] == "")
+  {
+    window.location.href = responseArray[2];
+  }
+  else
+  {
+    window.location.href = responseArray[0] + "?task=" + responseArray[1] + "&url=" + responseArray[2];
+  }
 }
 
 Action.launchParticipantURL = function()
@@ -632,8 +639,9 @@ Action.launchParticipantURL = function()
 Action.copyParticipantURL = function()
 {
   var taskname = Page.getModel().split("-")[1];
-  Action.copyToClp(window.location.hostname + window.location.pathname + "11/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
-  Page.setFeedbackMessage("Participant URL is in copy buffer: " + window.location.hostname + window.location.pathname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+  var copiedURL = window.location.hostname + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname;
+  Action.copyToClp(copiedURL);
+  Page.setFeedbackMessage("Participant URL is in copy buffer: " + copiedURL);
 }
 
 Action.copyToClp = function(txt){
@@ -666,6 +674,8 @@ Action.openInstructionInNewTab = function()
   winPrint.document.write("<!DOCTYPE html><html><head><title>Instructions</title></head><body>" + jQuery("#instructionsHTML").html() + "</body></html>");
   winPrint.document.close();
   winPrint.focus();
+  jQuery("#instructionsHTML").html("");
+  jQuery("#labelInstructions").css("display", "none");
 }
 
 Action.saveNewFile = function()
