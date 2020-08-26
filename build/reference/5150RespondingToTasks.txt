@@ -1,0 +1,27 @@
+Responding to Tasks
+UmpleOnline
+noreferences
+
+@@description
+
+<p>If you are asked to complete a <em>task</em> in Umple as part of an experiment or a course assignment, the following are some tips you might want to consider.</p>
+
+<ul>
+
+<li><p>If you are given a URL to load a task, then just click on it (or copy and paste it). Make sure the URL start with https://cruise.eecs.uottawa.ca/umpleonline, or else is a URL in your own university or company that you trust.</p>
+
+<li><p>If you are instead given a taskname, you can load the task as follows: Go to <a href="http://try.umple.org" target="uol">UmpleOnline</a>; open up the menu in the center that says <b>SAVE & LOAD</b>; and click on <b>Load a Task</b>. This will display a field where you can type the task name, and then hit <b>Load Task</b>.</p>
+
+<li><p>After you have loaded the task you will see a set of instructions at the top. These have been set by a task requestor; simply do what the instructions say. Normally this involves writing Umple models. See the rest of this user manual for information about how to do that, including the page about <a href="UsingUmpleOnline.html">UmpleOnline itself</a>.</p>
+
+<li><p>If the instructions take up too much space use the relevant buttons to open them in a new window, and hide them from the main UmpleOnline window.</p>
+
+<li><p>Responses to a task are <b>anonymous unless you explicitly put your name and/or ID in your Umple model</b>. Add your name as a comment in the model  if this is a course assignment or if the instructions tell you to.</p>
+
+<li><p>If this is a class assignment or other work that you might need to do in several steps over several hours, you should <b>save the URL of your individual response. Either bookmark it using your browser, or copy and paste it into another tool like a text editor</b>. This protects against accidentally closing your browser, or your computer crashing. Each person's response to a task has a separate secret URL, and if you lose track of it, it will not be easy to recover it (the requestor might be able to get your work back by looking at all the responses, but it would be a multi-step process for them and they would have to search for a submission that has your name in it)</p>
+
+<li><p>To submit your work, make sure you are completely finished, and then select <b>Submit Your Work</b>. At this point your work will become read only (you will not be able to make more changes) so don't submit too soon. An alternative way to submit would be to send the URL of your individual response to the requestor; do this if they ask. Note that the requestor is able to see your response even before you submit or if you forget to do so.</p>
+
+<li><p>If you want to throw away your work before submitting, select <b>Cancel this task response</b>.</p> 
+
+</ul>
