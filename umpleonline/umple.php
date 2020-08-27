@@ -7,12 +7,6 @@
 require_once ("scripts/compiler_config.php");
 cleanupOldFiles();
 
-// if (isset($_REQUEST["loadTaskWithURL"]))
-// {
-//   echo "<script type='text/javascript'> Action.loadTask(" . $_REQUEST["taskName"] . ", false); </script>";
-//   exit();
-// }
-
 if (isset($_REQUEST["model"])) {
   if (isset($_REQUEST["task"]))
   {
@@ -120,7 +114,6 @@ if (isset($_REQUEST["model"]) && explode("-", $_REQUEST["model"])[0] == "task")
 {
   foreach (new DirectoryIterator("ump/" . $_REQUEST['model']) as $file) 
   {
-    //file_put_contents("/home/jpan/test.html", $file->getFilename() . "/////////", FILE_APPEND);
     if ($file->getFilename() == "submitted.md") 
     {
       $readOnly = true;
@@ -330,18 +323,6 @@ $output = $dataHandle->readData('model.ump');
     <br>
   </div>
 
-<!--   <div id="reminder" <?php if (!isset($_REQUEST["task"])) {
-    echo "style=\"display: none;\"";
-  } ?>>
-    <label>  Edit task starting model in this page. To edit task instruction or load this task as an experiment, please navigate the task submenu under SAVE&LOAD.</label>
-    <br/>
-    <br/>
-  </div> -->
-
-  <!-- <div id="showInstrcutionsArea" style="display: none;">
-    <label id="labelShowInstructions" for="textareaShowInstrcutions">Task Instructions:</label><br>
-    <textarea id="textareaShowInstrcutions" readonly></textarea>
-  </div> -->
 
   <div id="topLine" class="bookmarkableUrl">
     <span id="linetext">Line=<input size=2 id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
@@ -398,7 +379,9 @@ $output = $dataHandle->readData('model.ump');
 
   <div id="tabControl">
     <ul id="tabs" class="tabrow">
-      <li id="createTabBtn" class="unsortable"><a href="javascript:TabControl.createTab();">+</a></li>
+      
+        <li id="createTabBtn" class="unsortable"><a href="javascript:TabControl.createTab('afterTabControlInit');">+</a></li>
+      
     </ul>
   </div>
 
@@ -467,40 +450,11 @@ $output = $dataHandle->readData('model.ump');
                 Create a Task(beta)
               </li>
             <?php } ?>
-            <!-- <?php if (!isset($_REQUEST["task"])) { ?>
-              <li id="buttonCreateTask">
-                <img src="scripts/copy.png"/>
-                Create a Task
-              </li>
-            <?php } else { ?>
-              <li id="buttonEditTask">
-                <img src="scripts/copy.png"/>
-                Edit Task Instrcution
-              </li>
-            <?php } ?> -->
 
             <li id="buttonLoadTask">
               <img src="scripts/copy.png"/>
               Load a Task
             </li>
-           <!--  <?php if (!isset($_REQUEST["task"])) { ?>
-              <li id="buttonLoadTask">
-                <img src="scripts/copy.png"/>
-                Load a Task
-              </li>
-            <?php } else { ?>
-              <li id="buttonLoadThisTask">
-                <img src="scripts/copy.png"/>
-                Load this Task as an Experiment
-              </li>
-            <?php } ?> -->
-            
-           <!--  <?php if (isset($_REQUEST["task"])) { ?>
-            <li id="buttonRequestLoadTaskURL">
-              <img src="scripts/copy.png"/> 
-              Get a link to load this task
-            </li>
-            <?php } ?> -->
 
             <?php if (isset($_REQUEST["task"])) { ?>
             <li id="buttonRequestAllZip">
@@ -531,6 +485,7 @@ $output = $dataHandle->readData('model.ump');
         <h3><a href="#tools">TOOLS</a></h3>
         
         <div class="section">
+          <?php if (!$readOnly) { ?>
           <ul id="mainLoadMenu" class="first center-children">
             <li class="subtitle"> Examples </li>
             <li id="exampleType">
@@ -656,6 +611,7 @@ $output = $dataHandle->readData('model.ump');
           
             <!-- <li class="dropbox-add-chooser"></li> --> 
           </ul>
+          <?php } ?>
       
           <ul id="mainDrawMenu" class="second toggle">
             <li class="subtitle"> Draw </li>
@@ -843,8 +799,10 @@ $output = $dataHandle->readData('model.ump');
       <?php if($canCreateTask) { ?> true <?php } else { ?> false <?php } ?>
       ); //
   </script>
-  <div class="visitors-count" align="right">
-      <?php include "counter.php"; ?>
-  </div>
+  <?php if ($showChrome) { ?>
+    <div class="visitors-count" align="right">
+        <?php include "counter.php"; ?>
+    </div>
+  <?php } ?>
 </body>
 </html>

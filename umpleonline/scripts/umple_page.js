@@ -66,7 +66,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Layout.isLayoutVisible = doShowLayout;
   Page.readOnly = doReadOnly;
 
-  TabControl.init()
+  TabControl.init();
   jQuery(".layoutListItem").hide();
 
   // Set diagram type - anything else means use the default editable class diagram
