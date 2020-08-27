@@ -169,6 +169,14 @@ TabControl.extractNameFromCode = function(code)
  */
 TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
 {
+  if (Page.readOnly && name == 'afterTabControlInit')
+  {
+    return;
+  } else if (name == 'afterTabControlInit')
+  {
+    name = null;
+  }
+  
   // Enforce maximum number of tabs
   if (Object.keys(TabControl.tabs).length == TabControl.maxTabs) return;
 
@@ -360,6 +368,7 @@ TabControl.selectTab = function(tabId)
  */
 TabControl.loadAllTabs = function()
 {
+  console.log("loadAllTabs00");
   TabControl.addToRequestQueue(
     "scripts/tab_control.php",
     TabControl.loadAllTabsCallback,
@@ -368,6 +377,7 @@ TabControl.loadAllTabs = function()
 
 TabControl.loadAllTabsCallback = function(response)
 {
+  console.log("loadAllTabsCallback");
   // The response is a break-separated list of tab name and content pairings
   var tabs = response.responseText.split("<br />")
   var foundRemoteTabs = false;
@@ -386,6 +396,7 @@ TabControl.loadAllTabsCallback = function(response)
         foundRemoteTabs = true;
       }
       TabControl.createTab(name, content, true);
+      console.log("createTab");
   });
 
   // If no tabs are found, we should initialize with a single tab
