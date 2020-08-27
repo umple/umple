@@ -143,7 +143,6 @@ Action.clicked = function(event)
     jQuery("#instructions").css("display","block");
     jQuery("#isExperimentCell").css("display","block");
     Layout.zoomResize();
-    console.log("resize");
   }
   else if (action == "LoadTask")
   {
@@ -600,7 +599,6 @@ Action.loadTaskExceptCodeCallback = function(response)
     }
   }
   Layout.zoomResize();
-    console.log("resize2");
 }
 
 Action.submitLoadTask = function()
@@ -684,6 +682,7 @@ Action.openInstructionInNewTab = function()
   tab.document.close();
   jQuery("#instructionsHTML").css("display", "none");
   jQuery("#labelInstructions").css("display", "none");
+  Layout.zoomResize();
 }
 
 Action.reshowInstructions = function()
@@ -691,6 +690,7 @@ Action.reshowInstructions = function()
   jQuery("#instructionsHTML").css("display", "block");
   jQuery("#labelInstructions").css("display", "inline");
   jQuery("#buttonReshowInstructions").css("display", "none");
+  Layout.zoomResize();
 }
 
 Action.saveNewFile = function()
