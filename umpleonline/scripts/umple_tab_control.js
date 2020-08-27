@@ -410,6 +410,10 @@ TabControl.loadAllTabsCallback = function(response)
  */
 TabControl.deleteTab = function(tabId)
 {
+  if (Page.readOnly)
+  {
+    return;
+  } 
   // Don't delete if we only have one tab
   if (Object.keys(TabControl.tabs).length > 1) {
     // Confirm deletion
@@ -456,6 +460,10 @@ TabControl.deleteTab = function(tabId)
  */
 TabControl.renameTab = function(tabId, newName, updateUI)
 {
+  if (Page.readOnly)
+  {
+    return;
+  } 
   // If the new name already exists, return
   if (TabControl.reservedNames.hasOwnProperty(newName)) return;
 
