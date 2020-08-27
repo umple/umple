@@ -90,9 +90,9 @@ noreferences
 <br/>&nbsp;
 
 
-<h2>How do responders respond to a task</h2>
+<h2>How do responders respond to a task?</h2>
 
-<p>This information is <a href="RespondingToTasks.html">in a separate manual page intended for responders</a>. The tool is designed, however, such that responders should not need to access any help. They just read the instructions provided by the requestor, do the task, and submit.</p>
+<p>This information is <a href="RespondingtoTasks.html">in a separate manual page intended for responders</a>. The tool is designed, however, such that responders should not need to access any help. They just read the instructions provided by the requestor, do the task, and submit.</p>
 
 <p>There are a few points responders should be aware of in certain circumstances.
 

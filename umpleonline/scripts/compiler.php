@@ -411,15 +411,25 @@ else if (isset($_REQUEST["umpleCode"]))
           $command = $command . " " . $afile;
        }                  
        
-       exec($command);
-       exec("cd $thedir; rm javadocFromUmple.zip; zip -r javadocFromUmple javadoc");
+       exec($command." 2>&1",$outputlines,$retcode);
+       if(!file_exists("$thedir/javadoc")) {
+         // Javadoc failed
+         $html="Javadoc was not able to produced any output, since there are errors in the embedded Java. Look for syntax errors the embedded code in methods, guards, conditions and aspects . ";
+         foreach($outputlines as $outputline){
+           $foundresult=strstr($outputline,"error:");
+           if($foundresult != FALSE) $html = $html . "<br/><b>".$foundresult."</b>\n";
+         }
+       }
+       else {
+         exec("cd $thedir; rm javadocFromUmple.zip; zip -r javadocFromUmple javadoc");
        
-       $javadocdir = $workDir->makePermalink('javadoc/');
-       $javadoczip = $workDir->makePermalink('javadocFromUmple.zip');
-       $html = "<a href=\"{$javadoczip}\">Download the following as a zip file</a>&nbsp;{$errhtml}
-      <iframe width=100% height=1000 src=\"" . $javadocdir . "\">This browser does not
-      support iframes, so the javadoc cannot be displayed</iframe> 
-     ";
+         $javadocdir = $workDir->makePermalink('javadoc/');
+         $javadoczip = $workDir->makePermalink('javadocFromUmple.zip');
+         $html = "<a href=\"{$javadoczip}\">Download the following as a zip file</a>&nbsp;{$errhtml}
+         <iframe width=100% height=1000 src=\"" . $javadocdir . "\">This browser does not
+         support iframes, so the javadoc cannot be displayed</iframe> 
+         ";
+       }
        echo $html;
     }  // end javadoc
     
