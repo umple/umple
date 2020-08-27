@@ -565,7 +565,7 @@ Action.loadTaskExceptCodeCallback = function(response)
     jQuery("#completionURLCell").css("display", "none");
     jQuery("#labelRequestorName").css("display", "none");
     jQuery("#requestorName").css("display", "none");
-    jQuery("#instructionsHTML").html(">" + responseArray[1]);
+    jQuery("#instructionsHTML").html(responseArray[1]);
   }
   else 
   {
