@@ -176,7 +176,7 @@ TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
   {
     name = null;
   }
-  
+
   // Enforce maximum number of tabs
   if (Object.keys(TabControl.tabs).length == TabControl.maxTabs) return;
 
@@ -310,9 +310,6 @@ TabControl.saveTab = function(tabId, umpleCode)
     filename = "tasks/" + filename;
     modelname = "tasks/" + modelname;
   }
-  // console.log("AAAAAAAAAatab filename: ");
-  // console.log(filename);
-  // console.log(umpleCode);
   var umpleCodeWithoutAmpersand = umpleCode.replace(/&/g, "%26").replace(/\+/g, "%2B");
   TabControl.addToRequestQueue(
     "scripts/compiler.php",
@@ -368,7 +365,6 @@ TabControl.selectTab = function(tabId)
  */
 TabControl.loadAllTabs = function()
 {
-  console.log("loadAllTabs00");
   TabControl.addToRequestQueue(
     "scripts/tab_control.php",
     TabControl.loadAllTabsCallback,
@@ -377,7 +373,6 @@ TabControl.loadAllTabs = function()
 
 TabControl.loadAllTabsCallback = function(response)
 {
-  console.log("loadAllTabsCallback");
   // The response is a break-separated list of tab name and content pairings
   var tabs = response.responseText.split("<br />")
   var foundRemoteTabs = false;
@@ -396,7 +391,6 @@ TabControl.loadAllTabsCallback = function(response)
         foundRemoteTabs = true;
       }
       TabControl.createTab(name, content, true);
-      console.log("createTab");
   });
 
   // If no tabs are found, we should initialize with a single tab
