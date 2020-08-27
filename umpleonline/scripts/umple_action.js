@@ -136,12 +136,14 @@ Action.clicked = function(event)
   }
   else if (action == "CreateTask") 
   {
-    jQuery("#createTaskArea").css("display","block");
+    jQuery("#taskArea").css("display","block");
     //jQuery("#taskNameArea").css("display","block");
     jQuery("#labelTaskName").css("display","block");
     jQuery("#taskNameCell").css("display","block");
     jQuery("#instructions").css("display","block");
     jQuery("#isExperimentCell").css("display","block");
+    Layout.zoomResize();
+    console.log("resize");
   }
   else if (action == "LoadTask")
   {
@@ -556,7 +558,7 @@ Action.loadTaskExceptCodeCallback = function(response)
   jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":");
   jQuery("#requestorName").val(responseArray[4]);
   jQuery("#labelInstructions").css("display","block");
-  jQuery("#createTaskArea").css("display","block");
+  jQuery("#taskArea").css("display","block");
   if (Page.getModel().split("-")[0] == "task") // it is in task bookmark page. instruction can not be edited.
   {
     jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":               Requestor Name:" + responseArray[4]);
@@ -597,7 +599,8 @@ Action.loadTaskExceptCodeCallback = function(response)
       TabControl.useActiveTabTo(TabControl.renameTab)(extractedName, true);
     }
   }
-  //if (!Action.manualSync) Action.updateUmpleDiagram();
+  Layout.zoomResize();
+    console.log("resize2");
 }
 
 Action.submitLoadTask = function()

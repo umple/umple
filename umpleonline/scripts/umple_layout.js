@@ -711,9 +711,14 @@ function LargeScreenManager()
   this.calculateHeight = function()
   {
     var tabHeight = TabControl.isHidden() ? 0 : jQuery("#tabControl").outerHeight();
+    var taskAreaHeight = jQuery("#taskArea").css("display") == "none" ? 0 : jQuery("#taskArea").outerHeight();
+    if (taskAreaHeight > jQuery(window).innerHeight()/2)
+    {
+      taskAreaHeight =0;
+    }
     var newHeight = (jQuery(window).innerHeight() - jQuery("#header").outerHeight() 
       - jQuery("#topLine").outerHeight() - tabHeight - parseInt(jQuery("body").css('marginBottom'))
-      - parseInt(jQuery("body").css('marginTop')) - Layout.errorMessageSpace) * this.heightFactor;
+      - parseInt(jQuery("body").css('marginTop')) - Layout.errorMessageSpace) * this.heightFactor - taskAreaHeight;
     
     if(newHeight < this.minCanvasSize.height)
       return this.minCanvasSize.height;
@@ -968,9 +973,14 @@ function SmallScreenManager()
   
   this.calculateHeight = function()
   {
-    var tabHeight = TabControl.isHidden() ? 0 : jQuery("#tabControl").outerHeight();  
+    var tabHeight = TabControl.isHidden() ? 0 : jQuery("#tabControl").outerHeight(); 
+    var taskAreaHeight = jQuery("#taskArea").css("display") == "none" ? 0 : jQuery("#taskArea").outerHeight();
+    if (taskAreaHeight > jQuery(window).innerHeight()/2)
+    {
+      taskAreaHeight =0;
+    }
     var height = (jQuery(window).innerHeight() - jQuery("#header").outerHeight(true)
-      - 2*jQuery("#topLine").outerHeight(true) - tabHeight - Layout.errorMessageSpace)/2;
+      - 2*jQuery("#topLine").outerHeight(true) - tabHeight - Layout.errorMessageSpace)/2 - taskAreaHeight;
 
     return height;
   }

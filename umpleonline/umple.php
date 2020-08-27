@@ -251,7 +251,7 @@ $output = $dataHandle->readData('model.ump');
   <input id="advancedMode" type="hidden" value="0" />
   <input id="model" type="hidden" value="<?php echo $dataHandle->getName()?>" />
 
-  <div id="createTaskArea" style="display: none;">
+  <div id="taskArea" style="display: none;">
     
       <table>
         <tr style="text-align:left;">
