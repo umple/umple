@@ -136,12 +136,13 @@ Action.clicked = function(event)
   }
   else if (action == "CreateTask") 
   {
-    jQuery("#createTaskArea").css("display","block");
+    jQuery("#taskArea").css("display","block");
     //jQuery("#taskNameArea").css("display","block");
     jQuery("#labelTaskName").css("display","block");
     jQuery("#taskNameCell").css("display","block");
     jQuery("#instructions").css("display","block");
     jQuery("#isExperimentCell").css("display","block");
+    Layout.zoomResize();
   }
   else if (action == "LoadTask")
   {
@@ -556,7 +557,7 @@ Action.loadTaskExceptCodeCallback = function(response)
   jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":");
   jQuery("#requestorName").val(responseArray[4]);
   jQuery("#labelInstructions").css("display","block");
-  jQuery("#createTaskArea").css("display","block");
+  jQuery("#taskArea").css("display","block");
   if (Page.getModel().split("-")[0] == "task") // it is in task bookmark page. instruction can not be edited.
   {
     jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":               Requestor Name:" + responseArray[4]);
@@ -564,7 +565,7 @@ Action.loadTaskExceptCodeCallback = function(response)
     jQuery("#completionURLCell").css("display", "none");
     jQuery("#labelRequestorName").css("display", "none");
     jQuery("#requestorName").css("display", "none");
-    jQuery("#instructionsHTML").html(">" + responseArray[1]);
+    jQuery("#instructionsHTML").html(responseArray[1]);
   }
   else 
   {
@@ -597,7 +598,7 @@ Action.loadTaskExceptCodeCallback = function(response)
       TabControl.useActiveTabTo(TabControl.renameTab)(extractedName, true);
     }
   }
-  //if (!Action.manualSync) Action.updateUmpleDiagram();
+  Layout.zoomResize();
 }
 
 Action.submitLoadTask = function()
@@ -681,6 +682,7 @@ Action.openInstructionInNewTab = function()
   tab.document.close();
   jQuery("#instructionsHTML").css("display", "none");
   jQuery("#labelInstructions").css("display", "none");
+  Layout.zoomResize();
 }
 
 Action.reshowInstructions = function()
@@ -688,6 +690,7 @@ Action.reshowInstructions = function()
   jQuery("#instructionsHTML").css("display", "block");
   jQuery("#labelInstructions").css("display", "inline");
   jQuery("#buttonReshowInstructions").css("display", "none");
+  Layout.zoomResize();
 }
 
 Action.saveNewFile = function()
