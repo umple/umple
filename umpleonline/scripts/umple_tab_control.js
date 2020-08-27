@@ -169,6 +169,14 @@ TabControl.extractNameFromCode = function(code)
  */
 TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
 {
+  if (Page.readOnly && name == 'afterTabControlInit')
+  {
+    return;
+  } else if (name == 'afterTabControlInit')
+  {
+    name = null;
+  }
+
   // Enforce maximum number of tabs
   if (Object.keys(TabControl.tabs).length == TabControl.maxTabs) return;
 
@@ -302,9 +310,6 @@ TabControl.saveTab = function(tabId, umpleCode)
     filename = "tasks/" + filename;
     modelname = "tasks/" + modelname;
   }
-  // console.log("AAAAAAAAAatab filename: ");
-  // console.log(filename);
-  // console.log(umpleCode);
   var umpleCodeWithoutAmpersand = umpleCode.replace(/&/g, "%26").replace(/\+/g, "%2B");
   TabControl.addToRequestQueue(
     "scripts/compiler.php",
@@ -405,6 +410,10 @@ TabControl.loadAllTabsCallback = function(response)
  */
 TabControl.deleteTab = function(tabId)
 {
+  if (Page.readOnly)
+  {
+    return;
+  } 
   // Don't delete if we only have one tab
   if (Object.keys(TabControl.tabs).length > 1) {
     // Confirm deletion
@@ -451,6 +460,10 @@ TabControl.deleteTab = function(tabId)
  */
 TabControl.renameTab = function(tabId, newName, updateUI)
 {
+  if (Page.readOnly)
+  {
+    return;
+  } 
   // If the new name already exists, return
   if (TabControl.reservedNames.hasOwnProperty(newName)) return;
 
