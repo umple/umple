@@ -22,7 +22,8 @@ COPY . /var/www
 
 # make sure the php files are readable and log files are writable
 # for extra security, only /ump is writable since it is the only place
-# session data should be written
+# session data should be written. Windows EXE files are being removed
+# as they were triggering certain security warnings
 RUN chown -R :nginx /var/www && \
     chmod -R g+r /var/www && \
     chmod -R g+w /var/www/ump && \
@@ -33,7 +34,9 @@ RUN chown -R :nginx /var/www && \
     chown -R :nginx /var/log && \
     chmod -R g+rw /var/log && \
     chown -R :nginx /var/cache && \
-    chmod -R g+rw /var/cache
+    chmod -R g+rw /var/cache && \
+    rm /usr/lib/python*/site-packages/setuptools/*.exe && \
+    rm /usr/lib/python*/site-packages/pip/_vendor/distlib/*.exe
 
 # this is what runs on container startup
 CMD supervisord --nodaemon --configuration=/etc/supervisord.conf --logfile=/var/log/supervisord.log --pidfile=/var/log/supervisord.pid
