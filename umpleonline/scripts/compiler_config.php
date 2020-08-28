@@ -243,7 +243,14 @@ function dataStore(){
 
 // converts an example filename to a full path
 function getExamplePath($example){
+  $expath=rootDir().'/umplibrary/'.$example;
+  if(file_exists($expath)) {
+    return $expath;
+  }
+  else {
+    // Fall back to old location
     return rootDir().'/ump/'.$example;
+  }
 }
 
 $uiguDir="";

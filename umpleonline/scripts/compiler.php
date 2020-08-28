@@ -575,7 +575,7 @@ else if (isset($_REQUEST["umpleCode"]))
 }  // end request has umpleCode
 else if (isset($_REQUEST["exampleCode"]))
 {
-  $filename = rootDir()."/ump/" . $_REQUEST["exampleCode"];
+  $filename = rootDir()."/umplibrary/" . $_REQUEST["exampleCode"];
   $outputUmple = readTemporaryFile($filename);
   echo $outputUmple;
 }
