@@ -362,9 +362,9 @@ $output = $dataHandle->readData('model.ump');
     </span>    
   
     <span style="font-size: 30%; white-space:nowrap;">  
-    <?php if (isBookmark($dataHandle)) { ?>
+    <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
       <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
-    <?php } else { ?>
+    <?php } else if (!isset($_REQUEST["task"])) { ?>
       <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
     <?php } ?>
 
@@ -406,13 +406,13 @@ $output = $dataHandle->readData('model.ump');
         <div class="section">
           <ul class="first" id="saveLoad">
             <li class="subtitle">SAVE</li>
-            <?php if (isBookmark($dataHandle)) { ?>
+            <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
             <li id="ttSaveBookmark">
               <div id="menuBookmarkable" class="bookmarkableUrl">
                 <a href="umple.php?model=<?php echo $dataHandle->getName() ?>">Resave URL</a>
               </div>
             </li>
-            <?php } else { ?>
+            <?php } else if (!isset($_REQUEST["task"])) { ?>
             <li id="ttSaveModel"> 
               <div id="menuBookmarkable" class="bookmarkableUrl">
                 <a href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Save as URL</a>
