@@ -4,7 +4,7 @@ MAINTAINER Umple umple-help@googlegroups.com
 
 # give php its own user and install UmpleOnline's dependencies
 RUN adduser -D -H -h /var/cache/php -s /sbin/nologin -G nginx php && \
-    apk add --no-cache openjdk11 python supervisor graphviz zip \
+    apk add --no-cache openjdk11 python3 supervisor graphviz zip \
 		       php7 php7-fpm php7-sockets php7-zip php7-json
 
 
