@@ -454,6 +454,7 @@ class Group
 class ContentParser
 {
   depend java.nio.file.Paths;
+  depend java.nio.file.Path;
   depend java.nio.file.Files;
   depend java.io.IOException;
   
@@ -514,8 +515,15 @@ class ContentParser
                 String exampleName = exampleTextWithArguments;
                 if (spaceLocation != -1) exampleName=exampleTextWithArguments.substring(
                   0,spaceLocation);
-                exampleText = new String(Files.readAllBytes(Paths
-                  .get("umpleonline/ump/"+exampleName) ));
+                Path thePath = Paths.get("umpleonline/umplibrary/"+exampleName);
+                if(Files.exists(thePath)) {
+                  exampleText = new String(Files.readAllBytes(thePath));
+                }
+                else {
+                  // Fall back to the old location of the manual examples
+                  thePath = Paths.get("umpleonline/ump/"+exampleName);                
+                  exampleText = new String(Files.readAllBytes(thePath));
+                }
                 exampleText = exampleText.replaceAll("<", "&lt;");
                 exampleText = exampleText.replaceAll(">", "&gt;");
                 exampleURL="?example="+exampleTextWithArguments;

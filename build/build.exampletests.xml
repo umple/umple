@@ -12,8 +12,8 @@
   <property name="php.path" value="${project.output.path}/php" />
   <property name="ruby.path" value="${project.output.path}/ruby" />
 
-  <property name="manualumpfiles.path" value="umpleonline/ump/manualexamples" />
-  <property name="exampleumpfiles.path" value="umpleonline/ump" />
+  <property name="manualumpfiles.path" value="umpleonline/umplibrary/manualexamples" />
+  <property name="exampleumpfiles.path" value="umpleonline/umplibrary" />
 
   <import file="_${myenv}.xml" />
   <import file="_template.xml" />

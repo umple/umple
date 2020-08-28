@@ -17,9 +17,9 @@
   <property name="test.output.path.ruby" value="${dist.dir}/qa/testbed_ruby"/>
 
   <property name="examplepattern" value="*" />
-  <property name="manualumpfiles.path" value="umpleonline/ump/manualexamples"/>
+  <property name="manualumpfiles.path" value="umpleonline/umplibrary/manualexamples"/>
   <property name="manualumpfiles.bin.path" value="${manualumpfiles.path}/bin"/>
-  <property name="exampleumpfiles.path" value="umpleonline/ump"/>
+  <property name="exampleumpfiles.path" value="umpleonline/umplibrary"/>
   <property name="exampleumpfiles.bin.path" value="${exampleumpfiles.path}/bin"/>
 
   <!-- Options for allUserManualExampleTests target-->

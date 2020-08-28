@@ -35,14 +35,14 @@ $isCachedExample = false;
 $imageoutput="";
 $messageURL="";
 if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
-  $cachedimage= "ump/imagecache/".htmlspecialchars($_REQUEST['example']).".svg";
+  $cachedimage= "umplibrary/imagecache/".htmlspecialchars($_REQUEST['example']).".svg";
   if (file_exists($cachedimage))
   {
     $isCachedExample=true;
   }
   else
   {
-    $cachedimage= "ump/imagecachesm/".htmlspecialchars($_REQUEST['example']).".svg";
+    $cachedimage= "umplibrary/imagecachesm/".htmlspecialchars($_REQUEST['example']).".svg";
     if (file_exists($cachedimage))
     {
       $isCachedExample=true;
@@ -50,7 +50,7 @@ if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
     }
     else
     {
-      $cachedimage= "ump/imagecachestructure/".htmlspecialchars($_REQUEST['example']).".svg";
+      $cachedimage= "umplibrary/imagecachestructure/".htmlspecialchars($_REQUEST['example']).".svg";
       if (file_exists($cachedimage))
       {
         $isCachedExample=true;
