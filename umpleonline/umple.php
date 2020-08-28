@@ -305,16 +305,18 @@ $output = $dataHandle->readData('model.ump');
       <a class="button2" href="javascript:Action.launchParticipantURL()" title="Click to generate an answer to this task in the same way
         a participant would.Do this to test the task. Note that your response will appear if you later     
         download all the responses unless you cancel the submission.">Launch Participant URL in a new tab</a>
-    <?php } else if ($doLoadTaskInstruction && substr($dataHandle->getName(), 0, 8) != "taskroot" && !$readOnly) {?>
-      <a class="button2" href="javascript:Action.openInstructionInNewTab()">Open instruction in a new window</a>&nbsp;&nbsp;
+    <?php } else if ($doLoadTaskInstruction && substr($dataHandle->getName(), 0, 8) != "taskroot") {?>
+      <a class="button2" href="javascript:Action.openInstructionInNewTab()">Open instruction in a new tab</a>&nbsp;&nbsp;
       <a id="buttonReshowInstructions" class="button2" href="javascript:Action.reshowInstructions()" style="display: none;">Re-show Instructions</a>&nbsp;&nbsp;&nbsp;
-      <a class="button2" href="javascript:Action.submitTaskWork()" title=" When you submit, the requestor will be able to see your response
-        and it will no longer be editable. Make sure your name is in a
-        comment in the response if that has been requested in the instructions.">Submit Response</a>&nbsp;&nbsp;&nbsp;
-      <a class="button2" href="javascript:Page.cancelTaskResponse()" title="Cancel this submission. Your data will be deleted.">Cancel this task response</a>
-    <?php } else if ($readOnly) {?>
-      This task response has already been submitted and is now read-only.
-    <?php } ?>
+      <a id="buttonHideInstructions" class="button2" href="javascript:Action.hideInstructions()">Hide Instructions</a>&nbsp;&nbsp;&nbsp;
+      <?php if (!$readOnly) { ?>
+        <a class="button2" href="javascript:Action.submitTaskWork()" title=" When you submit, the requestor will be able to see your response
+          and it will no longer be editable. Make sure your name is in a
+          comment in the response if that has been requested in the instructions.">Submit Response</a>&nbsp;&nbsp;&nbsp;
+        <a class="button2" href="javascript:Page.cancelTaskResponse()" title="Cancel this submission. Your data will be deleted.">Cancel this task response</a>&nbsp;
+      <?php } else { ?>
+        This task response has already been submitted and is now read-only.
+    <?php }} ?>
     </div>
 
     <span id="buttonCopyParticipantURL">

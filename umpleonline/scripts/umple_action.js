@@ -682,6 +682,7 @@ Action.openInstructionInNewTab = function()
   tab.document.close();
   jQuery("#instructionsHTML").css("display", "none");
   jQuery("#labelInstructions").css("display", "none");
+  jQuery("#buttonHideInstructions").css("display", "none");
   Layout.zoomResize();
 }
 
@@ -690,6 +691,16 @@ Action.reshowInstructions = function()
   jQuery("#instructionsHTML").css("display", "block");
   jQuery("#labelInstructions").css("display", "inline");
   jQuery("#buttonReshowInstructions").css("display", "none");
+  jQuery("#buttonHideInstructions").css("display", "inline");
+  Layout.zoomResize();
+}
+
+Action.hideInstructions = function()
+{
+  jQuery("#instructionsHTML").css("display", "none");
+  jQuery("#labelInstructions").css("display", "none");
+  jQuery("#buttonHideInstructions").css("display", "none");
+  jQuery("#buttonReshowInstructions").css("display", "inline");
   Layout.zoomResize();
 }
 
