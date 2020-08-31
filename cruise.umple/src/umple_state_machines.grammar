@@ -51,7 +51,9 @@ afterEvent- : after -( [!timer:[+*/a-zA-Z0-9_\.-]+(\([0-9\.]*\))?] -)
 
 // An action can be executed on a transition, or on entry or exit
 action : / [[moreCode]]+
-entryOrExitAction : [=type:entry|exit] / [[moreCode]]+
+entryOrExitAction : [=type:entry|exit] [[guardCode]]? / [[moreCode]]+
+
+guardCode :[ [**code] ]
 
 // A do activity is long-lasting and can be interrupted
 activity : do [[moreCode]]+
