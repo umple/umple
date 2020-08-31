@@ -95,9 +95,9 @@ class UmpleInternalParser
     newFeatureNode.setName(treeNode.getNodeToken().getName());
     FeatureLink edge = new FeatureLink();
     edge.setFeatureConnectingOpType(treeNode.getFeatureConnectionOpType());
-    edge.setSourceFeature(sourceFeature);
+    edge.setSourceFeatureNode(sourceFeature);
     edge.setIsSub(isSubFeature);
-    edge.addTargetFeature(newFeatureNode); 
+    edge.setTargetFeatureNode(newFeatureNode); 
     edge.setFeatureModel(model.getFeatureModel());
     model.getFeatureModel().addFeaturelink(edge);
     return newFeatureNode;
@@ -122,8 +122,8 @@ class UmpleInternalParser
           targetFeature.setMixsetOrFileNode(targetMixset);
           edge = new FeatureLink();
           edge.setFeatureConnectingOpType(tokenTree.getFeatureConnectionOpType());
-          edge.setSourceFeature(sourceFeature);
-          edge.addTargetFeature(targetFeature);
+          edge.setSourceFeatureNode(sourceFeature);
+          edge.setTargetFeatureNode(targetFeature);
           edge.setIsSub(isSubFeature);
           model.getFeatureModel().addFeaturelink(edge);          
         }
@@ -144,8 +144,8 @@ class UmpleInternalParser
         else // this is for leaf node as the parent is not null 
         edge.setFeatureConnectingOpType(linkingParent.getFeatureConnectionOpType());
         
-        edge.setSourceFeature(sourceFeature);       
-        edge.addTargetFeature(targetFeature);
+        edge.setSourceFeatureNode(sourceFeature);       
+        edge.setTargetFeatureNode(targetFeature);
         edge.setIsSub(isSubFeature);
         model.getFeatureModel().addFeaturelink(edge);
       }
@@ -157,11 +157,11 @@ class UmpleInternalParser
         
         FeatureNode newFeatureNode = new FeatureNode(model.getFeatureModel());
         newFeatureNode.setName("multiplicityTerminal");
-        edge.addTargetFeature(newFeatureNode); 
+        edge.setTargetFeatureNode(newFeatureNode); 
         edge.setFeatureModel(model.getFeatureModel());
         
         MultiplicityFeatureConnectingOpType intermediateFeatureNodeToTargetEdge = new MultiplicityFeatureConnectingOpType();
-        intermediateFeatureNodeToTargetEdge.setSourceFeature(newFeatureNode);
+        intermediateFeatureNodeToTargetEdge.setSourceFeatureNode(newFeatureNode);
         intermediateFeatureNodeToTargetEdge.setMultiplicity(featureLinkMultiplicity);
   
         for(Token subToken : node.getSubTokens())
@@ -171,10 +171,10 @@ class UmpleInternalParser
             Mixset targetMixset = new Mixset(subToken.getValue()); //To Do: check if its a mixset.
             FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
             targetFeature.setMixsetOrFileNode(targetMixset);
-            intermediateFeatureNodeToTargetEdge.addTargetFeature(targetFeature);
+            intermediateFeatureNodeToTargetEdge.setTargetFeatureNode(targetFeature);
           }
         }
-        edge.setSourceFeature(sourceFeature);       
+        edge.setSourceFeatureNode(sourceFeature);       
         edge.setIsSub(isSubFeature);
         model.getFeatureModel().addFeaturelink(edge);
       } 

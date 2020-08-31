@@ -31,15 +31,22 @@ class FeatureNode{
   int id = nextId.incrementAndGet();
   lazy name;
   boolean isLeaf =false; 
-  
+  boolean isCompundFeature = false;  
   0..1 targetFeatureNode -- * FeatureLink incomingFeatureLinks;
   0..1 sourceFeatureNode -- * FeatureLink outgoingFeatureLinks;
   
-
   public String getUniqueFeatureNodeName()
   {
     return name+"_"+id;
   }
+}
+
+// Compund features cotains multiple of features (for example, xor , or and other what have multiplicity.)
+class CompoundFeatureNode
+{
+  isA FeatureNode;
+  1--* FeatureNode targetFeatures;
+  after constructor { setIsCompundFeature(true);}
 }
 
 // A FeatureLeaf contains a full mixset or a full file. 
@@ -93,8 +100,3 @@ class XORFeatureConnectingOpType
     setMultiplicity(xorMultiplicity);
   }
 }
-
-/*
-class MixsetOrFile{}
-class MixsetFragment{}
-*/
