@@ -31,7 +31,7 @@ class FeatureNode{
   int id = nextId.incrementAndGet();
   lazy name;
   boolean isLeaf =false; 
-  boolean isCompundFeature = false;  
+  boolean isCompoundFeature = false;  
   0..1 targetFeatureNode -- * FeatureLink incomingFeatureLinks;
   0..1 sourceFeatureNode -- * FeatureLink outgoingFeatureLinks;
   
@@ -46,7 +46,7 @@ class CompoundFeatureNode
 {
   isA FeatureNode;
   1--* FeatureNode targetFeatures;
-  after constructor { setIsCompundFeature(true);}
+  after constructor { setIsCompoundFeature(true);}
 }
 
 // A FeatureLeaf contains a full mixset or a full file. 
