@@ -31,6 +31,10 @@ class FeatureNode{
   int id = nextId.incrementAndGet();
   lazy name;
   boolean isLeaf =false; 
+  
+  0..1 targetFeatureNode -- * FeatureLink incomingFeatureLinks;
+  0..1 sourceFeatureNode -- * FeatureLink outgoingFeatureLinks;
+  
 
   public String getUniqueFeatureNodeName()
   {
@@ -43,6 +47,7 @@ class FeatureLeaf
 {
   isA FeatureNode;
   0..1 -- 0..1 MixsetOrFile mixsetOrFileNode;
+  
   after constructor { setIsLeaf(true);}
   //a leaf node returns its actual name as a unique name.
   public String getUniqueFeatureNodeName()
@@ -62,10 +67,8 @@ class FragmentFeatureLeaf
 // A FeatureLink connects a source feature to target feature(s) in the feature diagram.
 class FeatureLink
 {
-  * sourceFeatureLink -- 0..1 FeatureNode sourceFeature; // the sourceFeature can be FeatureLeaf or FeatureNode
-  0..* -- * FeatureNode targetFeature;
   boolean isSub =false; // isSub to differentiate between sub-features and include/exclude relationship
-  enum FeatureConnectingOpType{ Required, Optional, Conjunctive, Disjunctive, Multiplicity, Include, Exclude, XOR};  
+  enum FeatureConnectingOpType{ Mandatory, Optional, Conjunctive, Disjunctive, Multiplicity, Include, Exclude, XOR};  
   FeatureConnectingOpType featureConnectingOpType = null;
 
 }

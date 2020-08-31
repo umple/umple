@@ -140,7 +140,7 @@ class UmpleInternalParser
         edge = new FeatureLink();
         
         if(linkingParent.getNodeToken().is("ROOT"))
-        edge.setFeatureConnectingOpType(FeatureConnectingOpType.Include);
+        edge.setFeatureConnectingOpType(FeatureConnectingOpType.Mandatory);
         else // this is for leaf node as the parent is not null 
         edge.setFeatureConnectingOpType(linkingParent.getFeatureConnectionOpType());
         
@@ -633,7 +633,7 @@ public FeatureConnectingOpType getFeatureConnectionOpType()
       case "not":
         return FeatureConnectingOpType.Exclude;
       default:
-        return FeatureConnectingOpType.Required;
+        return FeatureConnectingOpType.Mandatory;
      }
   }
 
