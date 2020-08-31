@@ -1805,20 +1805,37 @@ class UmpleInternalParser
   	Action action= new Action("");
   	CodeBlock cb = new CodeBlock();
   	List<String> codelangs = new ArrayList<String>();
+    String guardCode = "";
+    int statementIndex = 0;
   	for(Token tkn: actionToken.getSubTokens()){
+      if (tkn.is("guardCode"))
+      {
+        guardCode = tkn.getSubToken("code").getValue();
+      }
   	  if(tkn.is("codeLang")){
-  		codelangs.add(tkn.getValue());
-  	  } else if(tkn.is("code")){
-  		if(codelangs.isEmpty())
-  		{
-  		  cb.setCode(tkn.getValue());
-  		} 
-  		else {
-  		  for(String lang: codelangs){
-  			cb.setCode(lang, tkn.getValue());
+  		  codelangs.add(tkn.getValue());
+  	  } 
+      else if(tkn.is("code"))
+      {
+    		if(codelangs.isEmpty())
+    		{
+          if (!guardCode.equals("") && statementIndex == 0)
+          {
+            cb.setCode("if (" + guardCode + ")\n        {\n          " + tkn.getValue() + "\n        }");
+          }
+          else 
+          {
+    		    cb.setCode(tkn.getValue());
+          }
+          statementIndex++;
+    		} 
+    		else {
+    		  for(String lang: codelangs)
+          {
+    		    cb.setCode(lang, tkn.getValue());
           }
           codelangs.clear();
-    	}
+      	}
       }
     }
     action.setCodeblock(cb);
