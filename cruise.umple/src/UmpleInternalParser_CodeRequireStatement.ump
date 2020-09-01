@@ -164,8 +164,7 @@ class UmpleInternalParser
         edge.setFeatureModel(model.getFeatureModel());
         edge.setIsSub(isSubFeature);
         model.getFeatureModel().addFeaturelink(edge);
-        
-  
+        // add child elements to newCompoundFeatureNode.
         for(Token subToken : node.getSubTokens())
         {
           if(subToken.is("targetMixsetName"))
@@ -468,8 +467,7 @@ class FeatureModel{
   If the link is not satisfied, it return false.
   Ex: the link "source--> and" for M1 and M2 is true if there are use-statements for both M1 and M2.   
   */
-  public boolean evaluateFeatureLink(FeatureLink featureLink){ return true;}
-  public boolean evaluateFeatureLink2(FeatureLink featureLink)
+  public boolean evaluateFeatureLink(FeatureLink featureLink)
   {
     FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeatureNode());
     if(featureNode.getIsLeaf())
