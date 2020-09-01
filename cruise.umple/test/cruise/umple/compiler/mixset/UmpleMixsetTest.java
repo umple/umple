@@ -313,8 +313,8 @@ public class UmpleMixsetTest {
     model.run();
     FeatureModel featureModel= model.getFeatureModel();
     FeatureLink featureLink = featureModel.getFeaturelink().get(0);
-    FeatureLeaf source = ((FeatureLeaf) featureLink.getSourceFeature());
-    FeatureNode target = featureLink.getTargetFeature().get(0);
+    FeatureLeaf source = ((FeatureLeaf) featureLink.getSourceFeatureNode());
+    FeatureNode target = featureLink.getTargetFeatureNode();
     Assert.assertEquals(featureModel.getFeaturelink().size(),1); // test 
     Assert.assertEquals(false,source.getMixsetOrFileNode().getIsMixset());  // false
     Assert.assertEquals("reqStArgumentParse_oneArgument",source.getMixsetOrFileNode().getName());// == filename 
@@ -391,13 +391,13 @@ public class UmpleMixsetTest {
     FeatureModel featureModel= model.getFeatureModel();
     //source --> opt B
     Assert.assertEquals(featureModel.getFeaturelink(0).getFeatureConnectingOpType().name(), "Optional");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(0).getSourceFeature()).getMixsetOrFileNode().isIsMixset(), false); // false: its the source file
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(0).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"B");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(0).getSourceFeatureNode()).getMixsetOrFileNode().isIsMixset(), false); // false: its the source file
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(0).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"B");
     //source --> and A C
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(1).getSourceFeature()).getMixsetOrFileNode().isIsMixset(), false);
-    Assert.assertEquals(((FeatureNode) featureModel.getFeaturelink(1).getTargetFeature(0)).getName() ,"and");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(2).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"C");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(3).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"A");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(1).getSourceFeatureNode()).getMixsetOrFileNode().isIsMixset(), false);
+    Assert.assertEquals(((FeatureNode) featureModel.getFeaturelink(1).getTargetFeatureNode()).getName() ,"and");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(2).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"C");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(3).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"A");
   }
   @Test
   public void parseReqStArgumetToFeaureModel()
@@ -408,20 +408,20 @@ public class UmpleMixsetTest {
     model.run();
     FeatureModel featureModel= model.getFeatureModel();
     //source --> (and A B)
-    Assert.assertEquals(((FeatureNode) featureModel.getFeaturelink(0).getTargetFeature(0)).getName() ,"and");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(1).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"B");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(2).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"A");
+    Assert.assertEquals(((FeatureNode) featureModel.getFeaturelink(0).getTargetFeatureNode()).getName() ,"and");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(1).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"B");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(2).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"A");
     //source --> opt C
     Assert.assertEquals(featureModel.getFeaturelink(3).getFeatureConnectingOpType().name(), "Optional");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(3).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"C");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(3).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"C");
     //source --> not D
     Assert.assertEquals(featureModel.getFeaturelink(4).getFeatureConnectingOpType().name(), "Exclude");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(4).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"D");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(4).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"D");
     //source --> (xor F E)
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(5).getSourceFeature()).getMixsetOrFileNode().isIsMixset(), false);
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(5).getSourceFeatureNode()).getMixsetOrFileNode().isIsMixset(), false);
     Assert.assertEquals(featureModel.getFeaturelink(5).getFeatureConnectingOpType().name(), "XOR");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(6).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"F");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(7).getTargetFeature(0)).getMixsetOrFileNode().getName() ,"E"); 
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(6).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"F");
+    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(7).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"E"); 
   }
   @Test
   public void parseReqStArgumetToSatisfyFeatureModel_1()

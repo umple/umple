@@ -32,6 +32,7 @@ class FeatureNode{
   lazy name;
   boolean isLeaf =false; 
   boolean isCompoundFeature = false;  
+  // A feature node in the feature diagram may have 0 or more incoming/outgoing links.
   0..1 targetFeatureNode -- * FeatureLink incomingFeatureLinks;
   0..1 sourceFeatureNode -- * FeatureLink outgoingFeatureLinks;
   
@@ -41,11 +42,11 @@ class FeatureNode{
   }
 }
 
-// Compund features cotains multiple of features (for example, xor , or and other what have multiplicity.)
+// A compund feature has multiple of features (like xor , or and other that have multiplicity.)
 class CompoundFeatureNode
 {
   isA FeatureNode;
-  1--* FeatureNode targetFeatures;
+  0..1--* FeatureNode childFeatures;
   after constructor { setIsCompoundFeature(true);}
 }
 

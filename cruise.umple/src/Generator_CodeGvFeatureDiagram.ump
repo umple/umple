@@ -39,13 +39,13 @@ digraph FeatureModel {
 
   public void generateFeatureNodeShape(FeatureLink featureLink , StringBuilder code)
   {
-    FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeature(0));
-    FeatureNode sourceFeatureNode = featureLink.getSourceFeature();
+    FeatureNode featureNode = featureLink.getTargetFeatureNode();
+    FeatureNode sourceFeatureNode = featureLink.getSourceFeatureNode();
     int indentLevel = 2;
     appendSpaces(code,indentLevel);
     if(featureNode.getIsLeaf())
     {
-      if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Multiplicity))
+      if(featureNode.getIsCompoundFeature())
       {
         MultiplicityFeatureConnectingOpType multiplicityFeatureLink = (MultiplicityFeatureConnectingOpType) featureLink;
         int upperBound = multiplicityFeatureLink.getMultiplicity().getUpperBound();
@@ -53,13 +53,12 @@ digraph FeatureModel {
         String minMax =""+lowerBound+".."+upperBound;
         code.append(sourceFeatureNode.getUniqueFeatureNodeName() + getGvMultiplicityShape(minMax));
         indentLevel+=2;
-        List<FeatureNode> featureNodes = featureLink.getTargetFeature();
+        List<FeatureNode> featureNodes = ((CompoundFeatureNode) featureNode).getChildFeatures();
         for(int i=0 ; i < featureNodes.size(); i++){
           FeatureLeaf fLeaf = ((FeatureLeaf)featureNodes.get(i));
           appendSpaces(code,indentLevel);
           code.append(sourceFeatureNode.getUniqueFeatureNodeName() +" -> "+ fLeaf.getName()+" ;"+"\n");
           fillColorOfFeatureNode(code,fLeaf,indentLevel);
-          
         }
       }
       else 
@@ -75,7 +74,7 @@ digraph FeatureModel {
       code.append(getGvNodeShape(featureLink.getFeatureConnectingOpType(),featureNode.getUniqueFeatureNodeName()));
       appendSpaces(code,indentLevel);
       code.append(""+sourceFeatureNode.getUniqueFeatureNodeName()+" -> "+featureNode.getUniqueFeatureNodeName()+" ;"+"\n");
-      List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
+      List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
       for(int i=0 ; i<outgoingLinks.size(); i++){
         generateFeatureNodeShape(outgoingLinks.get(i),code);
       }
@@ -100,7 +99,7 @@ digraph FeatureModel {
     // Iterate through each root feature. 
     for (FeatureNode featureNode : featureModel.getRootFeatures())
     {
-      List <FeatureLink> featureNodeOutLinks = featureNode.getSourceFeatureLink();
+      List <FeatureLink> featureNodeOutLinks = featureNode.getOutgoingFeatureLinks();
       for(FeatureLink flink : featureNodeOutLinks)
       {
         code.append("  "+featureNode.getUniqueFeatureNodeName()+" [label=\""+featureNode.getName()+" \" ]; \n");
