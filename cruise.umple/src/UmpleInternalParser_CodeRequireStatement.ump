@@ -158,7 +158,7 @@ class UmpleInternalParser
 
         CompoundFeatureNode newCompoundFeatureNode = new CompoundFeatureNode(model.getFeatureModel());
         newCompoundFeatureNode.setName("multiplicityTerminal");
-        newCompoundFeatureNode.setIsLeaf(true);
+        //newCompoundFeatureNode.setIsLeaf(true);
         edge.setTargetFeatureNode(newCompoundFeatureNode); 
         edge.setSourceFeatureNode(sourceFeature); 
         edge.setFeatureModel(model.getFeatureModel());
@@ -468,11 +468,16 @@ class FeatureModel{
   If the link is not satisfied, it return false.
   Ex: the link "source--> and" for M1 and M2 is true if there are use-statements for both M1 and M2.   
   */
-  public boolean evaluateFeatureLink(FeatureLink featureLink)
+  public boolean evaluateFeatureLink(FeatureLink featureLink){ return true;}
+  public boolean evaluateFeatureLink2(FeatureLink featureLink)
   {
     FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeatureNode());
     if(featureNode.getIsLeaf())
     {
+      if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Mandatory))
+      {
+        return isUsedFeatureLeaf((FeatureLeaf)featureNode);
+      } 
       if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Include))
       {
         return isUsedFeatureLeaf((FeatureLeaf)featureNode);
