@@ -73,11 +73,12 @@ digraph FeatureModel {
       code.append(getGvNodeShape(featureLink.getFeatureConnectingOpType(),featureNode.getUniqueFeatureNodeName()));
       appendSpaces(code,indentLevel);
       code.append(""+sourceFeatureNode.getUniqueFeatureNodeName()+" -> "+featureNode.getUniqueFeatureNodeName()+" ;"+"\n");
-      List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
-      for(int i=0 ; i<outgoingLinks.size(); i++){
-        generateFeatureNodeShape(outgoingLinks.get(i),code);
       }
-      }
+    }
+    
+    List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
+    for(int i=0 ; i<outgoingLinks.size(); i++){
+      generateFeatureNodeShape(outgoingLinks.get(i),code);
     }
   }
 
@@ -89,7 +90,7 @@ digraph FeatureModel {
     _graphStart(0,code);
     if(featureModel == null)
     {
-      code.append("// Umple code does not have feature diagram. // \n");
+      code.append("// Umple code does not have a feature diagram. // \n");
       _nofeatureDiagram(0,code);
     }
     else
@@ -120,10 +121,10 @@ digraph FeatureModel {
     {
       case Exclude:
       return "["+ shapeProp +" arrowhead=normal color=red label=exclude " +" ]";
-      case Include:
-			if(isSub)
+      case Mandatory:
       shapeProp += " arrowhead=dot ";
-      else 
+      return "["+ shapeProp +" ]";
+      case Include:
       shapeProp += " arrowhead=normal label=include color=blue ";
       return "["+ shapeProp +" ]";
       case Optional:
