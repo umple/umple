@@ -94,7 +94,7 @@ class UmpleInternalParser
     FeatureNode newFeatureNode = new FeatureNode(model.getFeatureModel());
     newFeatureNode.setName(treeNode.getNodeToken().getName());
     FeatureLink edge = new FeatureLink();
-    edge.setFeatureConnectingOpType(treeNode.getFeatureConnectionOpType());
+    edge.setFeatureConnectingOpType(treeNode.getFeatureConnectionOpType(isSubFeature));
     edge.setSourceFeatureNode(sourceFeature);
     edge.setIsSub(isSubFeature);
     edge.setTargetFeatureNode(newFeatureNode); 
@@ -121,7 +121,7 @@ class UmpleInternalParser
           FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
           targetFeature.setMixsetOrFileNode(targetMixset);
           edge = new FeatureLink();
-          edge.setFeatureConnectingOpType(tokenTree.getFeatureConnectionOpType());
+          edge.setFeatureConnectingOpType(tokenTree.getFeatureConnectionOpType(isSubFeature));
           edge.setSourceFeatureNode(sourceFeature);
           edge.setTargetFeatureNode(targetFeature);
           edge.setIsSub(isSubFeature);
@@ -136,13 +136,8 @@ class UmpleInternalParser
         Mixset targetMixset = new Mixset(node.getSubToken("targetMixsetName").getValue());
         FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
         targetFeature.setMixsetOrFileNode(targetMixset);
-        //targetFeature.setName(targetMixset.getName());
         edge = new FeatureLink();
-        
-        if(linkingParent.getNodeToken().is("ROOT"))
-        edge.setFeatureConnectingOpType(FeatureConnectingOpType.Mandatory);
-        else // this is for leaf node as the parent is not null 
-        edge.setFeatureConnectingOpType(linkingParent.getFeatureConnectionOpType());
+        edge.setFeatureConnectingOpType(linkingParent.getFeatureConnectionOpType(isSubFeature));
         edge.setSourceFeatureNode(sourceFeature);       
         edge.setTargetFeatureNode(targetFeature);
         edge.setIsSub(isSubFeature);
@@ -611,7 +606,7 @@ This method selects the the connection operator type based on the type of the (l
 If the type is not specified for the linking node, The default is Required.
 It returns null if the node is termainl node.
 */
-public FeatureConnectingOpType getFeatureConnectionOpType()
+public FeatureConnectingOpType getFeatureConnectionOpType(boolean isSubFeature)
 {
   if(nodeToken != null )
   {
@@ -630,7 +625,12 @@ public FeatureConnectingOpType getFeatureConnectionOpType()
       case "not":
         return FeatureConnectingOpType.Exclude;
       default:
+      {
+        if(isSubFeature)
         return FeatureConnectingOpType.Mandatory;
+        else
+        return FeatureConnectingOpType.Include;
+      }
      }
   }
 

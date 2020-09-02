@@ -76,9 +76,9 @@ class FragmentFeatureLeaf
 class FeatureLink
 {
   boolean isSub =false; // isSub to differentiate between sub-features and include/exclude relationship
-  enum FeatureConnectingOpType{ Mandatory, Optional, Conjunctive, Disjunctive, Multiplicity, Include, Exclude, XOR};  
-  FeatureConnectingOpType featureConnectingOpType = null;
-
+  enum FeatureConnectingOpType{ Mandatory, Optional, Conjunctive, Disjunctive, Multiplicity, Include, Exclude, XOR}; 
+  //Set a default value for featureLinks. 
+  FeatureConnectingOpType featureConnectingOpType = FeatureConnectingOpType.Include;
 }
 // MultiplicityFeatureConnectingOpType is a special type of FeatureLink in which there are min and max multiplicity. 
 
