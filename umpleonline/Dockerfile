@@ -21,12 +21,10 @@ RUN echo $gitbranch > /tmp/umplegitbranch.txt
 COPY . /var/www
 
 # make sure the php files are readable and log files are writable
-# for extra security, only /ump is writable since it is the only place
-# session data should be written. Windows EXE files are being removed
+# Windows EXE files are being removed
 # as they were triggering certain security warnings
 RUN chown -R :nginx /var/www && \
     chmod -R g+r /var/www && \
-    chmod -R g+w /var/www/ump && \
     chown -R :nginx /run && \
     chmod -R g+rw /run  && \
     chown -R :nginx /var/run && \

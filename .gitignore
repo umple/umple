@@ -11,13 +11,14 @@ umpleonline/ump/2*
 umpleonline/ump/1*
 umpleonline/ump/task*
 umpleonline/ump/ATempCrash*
+umpleonline/ump/index.html
+umpleonline/ump/aalertMessage.txt
 build/UserManualAndExampleTests_output.txt
 umpleonline/manual
 umpleonline/countlog.txt
 umpleonline/scripts/commandcount.txt
 umpleonline/scripts/specialPort.txt
 umpleonline/scripts/versionRunning.txt
-umpleonline/ump/aalertMessage.txt
 
 # generated Umple code that is not saved
 src-gen-umple/
