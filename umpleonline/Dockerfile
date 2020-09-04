@@ -36,6 +36,8 @@ RUN chown -R :nginx /var/www && \
     rm /usr/lib/python*/site-packages/setuptools/*.exe && \
     rm /usr/lib/python*/site-packages/pip/_vendor/distlib/*.exe
 
+USER nginx:nginx
+
 # this is what runs on container startup
 CMD supervisord --nodaemon --configuration=/etc/supervisord.conf --logfile=/var/log/supervisord.log --pidfile=/var/log/supervisord.pid
 
