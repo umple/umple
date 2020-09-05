@@ -131,7 +131,6 @@ DiagramEdit.addGeneralization = function(umpleGeneralization)
  */
 DiagramEdit.createAssociationPartOne = function(event)
 {
-    Page.setFeedbackMessage("Part 1 association");
 
     // get the position of the click and compute the first end's position
   var mousePosition = new UmplePosition(event.pageX,event.pageY,0,0);
@@ -640,7 +639,6 @@ DiagramEdit.associationDeleted = function(diagramId, addToQueue)
 
 DiagramEdit.transitionDeleted = function(diagramId, addToQueue)
 {
-    Page.setFeedbackMessage("transition Deleted action diagram");
 
     if (addToQueue == undefined) addToQueue = false;
     console.log("add transition in umple_action_diagram\n")
@@ -704,7 +702,6 @@ DiagramEdit.removeNewAssociation = function()
 
 DiagramEdit.removeNewTransition = function()
 {
-    Page.setFeedbackMessage("removeNewTransition");
     if (DiagramEdit.newTransition != null)
   {
     var lineSelector = "#"+DiagramEdit.newTransition.getElementId();

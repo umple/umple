@@ -188,6 +188,15 @@ class WorkDir{
 class DataStore{
     function __construct($root){
         $this->root = rootDir().'/'.$root;
+        if(!file_exists($this->root)) {
+          mkdir($this->root);
+        }
+        if(!file_exists($this->root."/tasks")) {
+          mkdir($this->root."/tasks");
+        }
+        if(!file_exists($this->root."/index.html")) {
+          copy(rootDir()."/umplibrary/index.html",$this->root."/index.html");
+        }
     }
     /**
     Atomically creates a data storage area with a name of the
@@ -200,7 +209,7 @@ class DataStore{
     function createData($prefix = 'tmp'){
         while(true)
         {
-            $id = base_convert(rand(0,999999999).rand(0,9999),10,36);
+            $id = base_convert(rand(0,999999999).rand(0,9999999999),10,36);
             $dirname = "{$this->root}/{$prefix}{$id}";
             if (!file_exists($dirname))
             {
