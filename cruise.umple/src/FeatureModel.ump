@@ -31,11 +31,23 @@ class FeatureNode{
   int id = nextId.incrementAndGet();
   lazy name;
   boolean isLeaf =false; 
-
+  boolean isCompoundFeature = false;  
+  // A feature node in the feature diagram may have 0 or more incoming/outgoing links.
+  0..1 targetFeatureNode -- * FeatureLink incomingFeatureLinks;
+  0..1 sourceFeatureNode -- * FeatureLink outgoingFeatureLinks;
+  
   public String getUniqueFeatureNodeName()
   {
     return name+"_"+id;
   }
+}
+
+// A compund feature has multiple of features (like xor , or and other that have multiplicity.)
+class CompoundFeatureNode
+{
+  isA FeatureNode;
+  0..1--* FeatureNode childFeatures;
+  after constructor { setIsCompoundFeature(true);}
 }
 
 // A FeatureLeaf contains a full mixset or a full file. 
@@ -43,6 +55,7 @@ class FeatureLeaf
 {
   isA FeatureNode;
   0..1 -- 0..1 MixsetOrFile mixsetOrFileNode;
+  
   after constructor { setIsLeaf(true);}
   //a leaf node returns its actual name as a unique name.
   public String getUniqueFeatureNodeName()
@@ -62,12 +75,10 @@ class FragmentFeatureLeaf
 // A FeatureLink connects a source feature to target feature(s) in the feature diagram.
 class FeatureLink
 {
-  * sourceFeatureLink -- 0..1 FeatureNode sourceFeature; // the sourceFeature can be FeatureLeaf or FeatureNode
-  0..* -- * FeatureNode targetFeature;
   boolean isSub =false; // isSub to differentiate between sub-features and include/exclude relationship
-  enum FeatureConnectingOpType{ Required, Optional, Conjunctive, Disjunctive, Multiplicity, Include, Exclude, XOR};  
-  FeatureConnectingOpType featureConnectingOpType = null;
-
+  enum FeatureConnectingOpType{ Mandatory, Optional, Conjunctive, Disjunctive, Multiplicity, Include, Exclude, XOR}; 
+  //Set a default value for featureLinks. 
+  FeatureConnectingOpType featureConnectingOpType = FeatureConnectingOpType.Include;
 }
 // MultiplicityFeatureConnectingOpType is a special type of FeatureLink in which there are min and max multiplicity. 
 
@@ -90,8 +101,3 @@ class XORFeatureConnectingOpType
     setMultiplicity(xorMultiplicity);
   }
 }
-
-/*
-class MixsetOrFile{}
-class MixsetFragment{}
-*/

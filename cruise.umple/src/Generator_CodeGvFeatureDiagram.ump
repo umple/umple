@@ -39,13 +39,21 @@ digraph FeatureModel {
 
   public void generateFeatureNodeShape(FeatureLink featureLink , StringBuilder code)
   {
-    FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeature(0));
-    FeatureNode sourceFeatureNode = featureLink.getSourceFeature();
+    FeatureNode featureNode = featureLink.getTargetFeatureNode();
+    FeatureNode sourceFeatureNode = featureLink.getSourceFeatureNode();
     int indentLevel = 2;
     appendSpaces(code,indentLevel);
     if(featureNode.getIsLeaf())
+    { 
+      // link source to leaf node 
+        code.append(""+sourceFeatureNode.getUniqueFeatureNodeName()+" -> "+featureNode.getName()+" ");
+        code.append(getGvTargetShape(featureLink.getFeatureConnectingOpType(), featureLink.getIsSub() ));
+        code.append(" ;"+"\n");    
+        fillColorOfFeatureNode(code,featureNode,indentLevel);
+    }
+    else //if the node is not leaf node 
     {
-      if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Multiplicity))
+      if(featureNode.getIsCompoundFeature())
       {
         MultiplicityFeatureConnectingOpType multiplicityFeatureLink = (MultiplicityFeatureConnectingOpType) featureLink;
         int upperBound = multiplicityFeatureLink.getMultiplicity().getUpperBound();
@@ -53,32 +61,24 @@ digraph FeatureModel {
         String minMax =""+lowerBound+".."+upperBound;
         code.append(sourceFeatureNode.getUniqueFeatureNodeName() + getGvMultiplicityShape(minMax));
         indentLevel+=2;
-        List<FeatureNode> featureNodes = featureLink.getTargetFeature();
+        List<FeatureNode> featureNodes = ((CompoundFeatureNode) featureNode).getChildFeatures();
         for(int i=0 ; i < featureNodes.size(); i++){
           FeatureLeaf fLeaf = ((FeatureLeaf)featureNodes.get(i));
           appendSpaces(code,indentLevel);
           code.append(sourceFeatureNode.getUniqueFeatureNodeName() +" -> "+ fLeaf.getName()+" ;"+"\n");
           fillColorOfFeatureNode(code,fLeaf,indentLevel);
-          
         }
       }
-      else 
-      {// link source to leaf node 
-        code.append(""+sourceFeatureNode.getUniqueFeatureNodeName()+" -> "+featureNode.getName()+" ");
-        code.append(getGvTargetShape(featureLink.getFeatureConnectingOpType(), featureLink.getIsSub() ));
-        code.append(" ;"+"\n");    
-        fillColorOfFeatureNode(code,featureNode,indentLevel);
-      }
-    }
-    else //if the node is not leaf node 
-    {
+      else{
       code.append(getGvNodeShape(featureLink.getFeatureConnectingOpType(),featureNode.getUniqueFeatureNodeName()));
       appendSpaces(code,indentLevel);
       code.append(""+sourceFeatureNode.getUniqueFeatureNodeName()+" -> "+featureNode.getUniqueFeatureNodeName()+" ;"+"\n");
-      List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
-      for(int i=0 ; i<outgoingLinks.size(); i++){
-        generateFeatureNodeShape(outgoingLinks.get(i),code);
       }
+    }
+    
+    List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
+    for(int i=0 ; i<outgoingLinks.size(); i++){
+      generateFeatureNodeShape(outgoingLinks.get(i),code);
     }
   }
 
@@ -90,7 +90,7 @@ digraph FeatureModel {
     _graphStart(0,code);
     if(featureModel == null)
     {
-      code.append("// Umple code does not have feature diagram. // \n");
+      code.append("// Umple code does not have a feature diagram. // \n");
       _nofeatureDiagram(0,code);
     }
     else
@@ -100,7 +100,7 @@ digraph FeatureModel {
     // Iterate through each root feature. 
     for (FeatureNode featureNode : featureModel.getRootFeatures())
     {
-      List <FeatureLink> featureNodeOutLinks = featureNode.getSourceFeatureLink();
+      List <FeatureLink> featureNodeOutLinks = featureNode.getOutgoingFeatureLinks();
       for(FeatureLink flink : featureNodeOutLinks)
       {
         code.append("  "+featureNode.getUniqueFeatureNodeName()+" [label=\""+featureNode.getName()+" \" ]; \n");
@@ -121,10 +121,10 @@ digraph FeatureModel {
     {
       case Exclude:
       return "["+ shapeProp +" arrowhead=normal color=red label=exclude " +" ]";
-      case Include:
-			if(isSub)
+      case Mandatory:
       shapeProp += " arrowhead=dot ";
-      else 
+      return "["+ shapeProp +" ]";
+      case Include:
       shapeProp += " arrowhead=normal label=include color=blue ";
       return "["+ shapeProp +" ]";
       case Optional:
