@@ -595,7 +595,7 @@ class Template
       "      </pre>" + "\n" +
       "</span>" +
       "<p class=\"description\">" +
-      "<a target=\"uol\" href=\"http://cruise.eecs.uottawa.ca/umpleonline@@EXAMPLE_CODE_URL@@\">" +
+      "<a target=\"uol\" href=\"https://cruise.umple.org/umpleonline@@EXAMPLE_CODE_URL@@\">" +
         "Load the above code into UmpleOnline</a></p>" + "\n" +
       "&nbsp; <br/>" + "\n";
     return template;
@@ -657,7 +657,7 @@ class Template
         "  <tbody>" + "\n" +
         "  <tr>" + "\n" +
         "    <td class=\"menu\">" + "\n" +
-        "      <div class=\"title\"><a href=\"http://cruise.site.uottawa.ca/umple\">" +
+        "      <div class=\"title\"><a href=\"https://cruise.umple.org/umple\">" +
         "<img height=\"25\" src=\"files/indicator_blocks.gif\" alt=\"Umple Logo\" />&nbsp;" +
         "Umple </a></div>" + "\n" +
         
