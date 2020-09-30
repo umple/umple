@@ -114,8 +114,6 @@ Follow the following links to watch further examples for:  </p>
 
 @@videoURL https://www.youtube.com/embed/bGKAJpFojSE
 
-<br/>
-
 @@syntax
 
 [[program]] [[comment]] [[directive]]  [[useStatement]] 
