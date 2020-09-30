@@ -99,6 +99,21 @@ time, this mechanism does not allow you to override existing elements,
 which you might need to do to add a feature. Taken together, these 
 mechanisms allow for a form of product-line development.</p>
 
+<br/>
+
+<p><b>Examples of Mixins</b></p>
+
+<p>The below video shows some ways to incorporate mixins to Umple classes. 
+Follow the following links to watch further examples for:  </p>
+
+<ul>
+  <li><a href="https://youtu.be/Zo9hzYXn1N0"> Mixins and state machines.</a></li>  
+  <li><a href="https://youtu.be/bK3R1-4svP4"> Mixins and aspect oriented programming.</a></li>
+  <li><a href="https://youtu.be/e-rnKX1tzKg"> Mixins and associations.</a></li> 
+</ul>
+
+@@videoURL https://www.youtube.com/embed/bGKAJpFojSE
+
 @@syntax
 
 [[program]] [[comment]] [[directive]]  [[useStatement]] 
