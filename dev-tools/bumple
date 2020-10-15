@@ -1,12 +1,22 @@
 #!/bin/csh -fb
 if ! $?UMPLEROOT then
-  setenv UMPLEROOT ~/umple
+  if ( $cwd:t == 'build' ) then
+    if ( $1 == 'here' ) then
+      setenv UMPLEROOT `dirname "$cwd"`
+    else
+      echo If in a build directory specify \'bumple here\' to avoid default
+      exit
+    endif
+  else
+    setenv UMPLEROOT ~/umple
+  endif
 endif
 cd $UMPLEROOT/build
-if ($OSTYPE == 'cygwin' || $OSTYPE == 'msys' | $OSTYPE == 'win32') then
-  set buildenv="wlocal"
-else
-  set buildenv="local"
+set buildenv="local"
+if ( $?OSTYPE ) then
+  if ( $OSTYPE == 'cygwin' || $OSTYPE == 'msys' | $OSTYPE == 'win32' ) then
+    set buildenv="wlocal"
+  endif
 endif
 echo Doing FULL build of Umple at $UMPLEROOT using ant -Dmyenv=$buildenv
 echo Building repo at $UMPLEROOT
