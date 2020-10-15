@@ -427,6 +427,10 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/copy.png"/> 
               Encoded URL
             </li>
+            <li id="buttonCopyCommandLine" class="copyCommandLine">
+              <img src="scripts/copy.png"/> 
+              Command Script
+            </li>
             <li id="buttonCopyLocalBrowser" class="copyLocalBrowser">
               <img src="scripts/copy.png"/> 
               Store in Browser
@@ -441,38 +445,6 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/copy.png"/> 
                Download Files
             </li>                        
-          </ul>
-        
-          <ul id="taskSubmenu">
-            <li class="subtitle">TASK</li>
-            
-            <?php if ($canCreateTask) { ?>
-              <li id="buttonCreateTask">
-                <img src="scripts/copy.png"/>
-                Create a Task(beta)
-              </li>
-            <?php } ?>
-
-            <li id="buttonLoadTask">
-              <img src="scripts/copy.png"/>
-              Load a Task
-            </li>
-
-            <?php if (isset($_REQUEST["task"])) { ?>
-            <li id="buttonRequestAllZip">
-              <img src="scripts/copy.png"/> 
-              Request all Directories as a zip under this task
-            </li>
-            <?php } ?>
-            
-
-            <div id="loadTaskNameArea" style="display: none;">
-              <label id="labelLoadTaskName" for="inputLoadTaskName">Task name:</label><br>
-              <input type="text" id="inputLoadTaskName"><br>
-              
-              <span id="buttonSubmitLoadTask">
-              <a href="javascript:Action.submitLoadTask()">Load Task</a> </span>
-            </div>
           </ul>
 
           <ul class="second center-children">
@@ -762,6 +734,46 @@ $output = $dataHandle->readData('model.ump');
             </li> 
           </ul>
          </div>
+
+
+      <!-- GROUP 4 OF OPTIONS -->
+      <h3><a href="#options">TASKS</a></h3>
+
+      <div class="section">
+          <ul id="taskSubmenu">
+            
+            <?php if ($canCreateTask) { ?>
+              <li id="buttonCreateTask">
+                <img src="scripts/copy.png"/>
+                Create a Task
+              </li>
+            <?php } ?>
+
+            <li id="buttonLoadTask">
+              <img src="scripts/copy.png"/>
+              Load a Task
+            </li>
+
+            <?php if (isset($_REQUEST["task"])) { ?>
+            <li id="buttonRequestAllZip">
+              <img src="scripts/copy.png"/> 
+              Request all Directories as a zip under this task
+            </li>
+            <?php } ?>
+            
+
+            <div id="loadTaskNameArea" style="display: none;">
+              <label id="labelLoadTaskName" for="inputLoadTaskName">Task name:</label><br>
+              <input type="text" id="inputLoadTaskName"><br>
+              
+              <span id="buttonSubmitLoadTask">
+              <a href="javascript:Action.submitLoadTask()">Load Task</a> </span>
+            </div>
+          </ul>
+
+
+      </div>
+
       </div> 
     </div>
    

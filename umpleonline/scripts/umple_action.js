@@ -115,6 +115,10 @@ Action.clicked = function(event)
   {
     Action.showCodeInSeparateWindow();
   }
+  else if (action == "CopyCommandLine")
+  {
+    Action.copyCommandLineCode();
+  }  
   else if (action == "CopyEncodedURL")
   {
     Action.showEncodedURLCodeInSeparateWindow();
@@ -647,11 +651,14 @@ Action.copyParticipantURL = function()
 }
 
 Action.copyToClp = function(txt){
+    prenode=document.createElement("PRE");
     txt = document.createTextNode(txt);
+    prenode.appendChild(txt);
     var m = document;
     var w = window;
     var b = m.body;
-    b.appendChild(txt);
+    b.appendChild(prenode);
+
     if (b.createTextRange) {
         var d = b.createTextRange();
         d.moveToElementText(txt);
@@ -667,7 +674,7 @@ Action.copyToClp = function(txt){
         m.execCommand('copy');
         g().removeAllRanges();
     }
-    txt.remove();
+    prenode.remove();
 }
 
 Action.openInstructionInNewTab = function()
@@ -851,6 +858,21 @@ Action.uiguCallback = function(response)
   jQuery(uiguSelector).hideLoading();
   window.open("scripts/compiler.php?asUI=" + filename, "showUserInterface");
   Page.showViewDone();
+}
+
+Action.copyCommandLineCode = function()
+{
+  var pretext="sh\n";
+  pretext+="echo Will compile umple file. Requires umple command to be installed\n";
+  pretext+="cd ~/tmp\n";
+  pretext+="mkdir testump-$$\n";
+  pretext+="cd testump-$$\n";
+  pretext+="cat >> test.ump <<ENDUMP\n";
+  var posttext="\nENDUMP\n";
+  posttext+="umple test.ump -c -\n";
+  posttext+="echo Use ctrl-D to exit back to the original shell\n\n";
+  Action.copyToClp(pretext+Page.getUmpleCode()+posttext);
+  Page.setFeedbackMessage("Shell code to compile on command line was copied to clipboard");  
 }
 
 Action.showCodeInSeparateWindow = function()
@@ -2834,6 +2856,11 @@ Mousetrap.bind(['ctrl+k'], function(e){
 
 Mousetrap.bind(['ctrl+b'], function(e){
   Action.promptAndExecuteTest();
+  return false;
+});
+
+Mousetrap.bind(['ctrl+o'], function(e){
+  Action.copyCommandLineCode();
   return false;
 });
 

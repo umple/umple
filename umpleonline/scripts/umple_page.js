@@ -158,6 +158,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonUigu");
   Page.initHighlighter("buttonCopy");
   Page.initHighlighter("buttonCopyEncodedURL");
+  Page.initHighlighter("buttonCopyCommandLine");
   Page.initHighlighter("buttonCopyLocalBrowser");
   Page.initHighlighter("buttonLoadLocalBrowser");
   if (Page.canEditTask)
@@ -221,6 +222,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonManualSync");
   Page.initAction("buttonCopy");
   Page.initAction("buttonCopyEncodedURL");
+  Page.initAction("buttonCopyCommandLine");
   Page.initAction("buttonCopyLocalBrowser");
   Page.initAction("buttonLoadLocalBrowser");
   if (Page.canEditTask)
@@ -494,6 +496,7 @@ Page.initCodeMirrorEditor = function() {
           "Ctrl-R": function(cm) {Page.clickToggleTraits()},
           "Ctrl-I": function(cm) {Page.clickToggleTransitionLabels()},
           "Ctrl-K": function(cm) {Page.clickToggleGuardLabels()},
+          "Ctrl-O": function(cm) {Action.copyCommandLineCode()},
           "Ctrl-B": function(cm) {Action.promptAndExecuteTest()},
           "Esc": function(cm) {cm.getInputField().blur()}
           }
