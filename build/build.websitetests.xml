@@ -23,9 +23,8 @@
 
   <target name="help">
     <echo>Using this build script:
-  There are four entry targets for this build script:
-  testUmpleOnlineMain - runs the tests against the public umpleonline (http://cruise.eecs.uottawa.ca/umpleonline/)
-  testUmpleOnlineTest - runs the tests against the test umpleonline (http://cruise.eecs.uottawa.ca/umpleonline/test/)
+  There are several entry targets for this build script:
+  testUmpleOnlineMain - runs the tests against the public umpleonline (https://cruise.umple.org/umpleonline/)
   testUmpleOnlineLocal - runs against the local server (http://cruise.local/)
 
   You can specify a custom hostname with -Dhostname="yourserver" 
@@ -59,12 +58,7 @@
   </target>
 
   <target name="testUmpleOnlineMain">
-    <property name="hostName" value="http://cruise.eecs.uottawa.ca/umpleonline/" />
-    <antcall target="doWebsiteTests" />
-  </target>
-
-  <target name="testUmpleOnlineTest">
-    <property name="hostName" value="http://cruise.eecs.uottawa.ca/umpleonline/test/" />
+    <property name="hostName" value="https://cruise.umple.org/umpleonline/" />
     <antcall target="doWebsiteTests" />
   </target>
 
