@@ -162,28 +162,34 @@ class UmpleInternalParser
       } 
        //Otherwise
        
-      String mixsetName = value;
       int useLineNumber = t.getPosition().getLineNumber();
       //UmpleFile mixsetUseFile = model.getUmpleFile(); 
       String fileName = t.getPosition().getFilename();
       UmpleFile mixsetUseFile = new UmpleFile(fileName);
-      // check if the mixset was added before 
-      Mixset mixset = model.getMixset(mixsetName);
-      if(mixset == null)
+
+      //if(value.contains(",")) // like: use M1,M2, ... 
+      String[] mixsetNames = value.split(","); // it includes the case if no comma.
+
+      for (String mixsetName : mixsetNames)
       {
-        mixset = new Mixset(mixsetName);
-        mixset.setUseUmpleFile(mixsetUseFile);
-        mixset.setUseUmpleLine(useLineNumber);
-        model.addMixsetOrFile(mixset);
-      }
-      else if (mixset.getUseUmpleFile() == null)
-      {
-        mixset.setUseUmpleFile(mixsetUseFile);
-        mixset.setUseUmpleLine(useLineNumber);
-      }
+        // check if the mixset was added before 
+        Mixset mixset = model.getMixset(mixsetName.trim());
+        if(mixset == null)
+        {
+          mixset = new Mixset(mixsetName);
+          mixset.setUseUmpleFile(mixsetUseFile);
+          mixset.setUseUmpleLine(useLineNumber);
+          model.addMixsetOrFile(mixset);
+        }
+        else if (mixset.getUseUmpleFile() == null)
+        {
+          mixset.setUseUmpleFile(mixsetUseFile);
+          mixset.setUseUmpleLine(useLineNumber);
+        }
 	   
 	    // this handles the case when a mixset definition is in a file and the mixset use exists in a subsequent file.
 	    parseMixset(mixset); 
+      }
     }
   }
   
