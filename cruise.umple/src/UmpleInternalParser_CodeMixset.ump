@@ -166,9 +166,13 @@ class UmpleInternalParser
       //UmpleFile mixsetUseFile = model.getUmpleFile(); 
       String fileName = t.getPosition().getFilename();
       UmpleFile mixsetUseFile = new UmpleFile(fileName);
-
-      //if(value.contains(",")) // like: use M1,M2, ... 
-      String[] mixsetNames = value.split(","); // it includes the case if no comma.
+      ArrayList<String> mixsetNames = new ArrayList<String>();
+      mixsetNames.put(value); // add first use. 
+      for(Token subToken : t.getSubTokens()) // add the rest of use-statment that are in : use M1,M2, ... 
+      {
+        if(subToken.is("extraUse"))
+        mixsetNames.put(t.getValue("extraUse"));
+      }
 
       for (String mixsetName : mixsetNames)
       {
@@ -192,6 +196,8 @@ class UmpleInternalParser
       }
     }
   }
+
+
   
 /*
  * This method parses all waiting fragments of a mixset, if there is a mixset-use-statment specified in some of the files.  
