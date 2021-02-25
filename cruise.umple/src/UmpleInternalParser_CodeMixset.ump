@@ -167,11 +167,11 @@ class UmpleInternalParser
       String fileName = t.getPosition().getFilename();
       UmpleFile mixsetUseFile = new UmpleFile(fileName);
       ArrayList<String> mixsetNames = new ArrayList<String>();
-      mixsetNames.put(value); // add first use. 
+      mixsetNames.add(value); // add first use. 
       for(Token subToken : t.getSubTokens()) // add the rest of use-statment that are in : use M1,M2, ... 
       {
         if(subToken.is("extraUse"))
-        mixsetNames.put(t.getValue("extraUse"));
+        mixsetNames.add(t.getValue("extraUse"));
       }
 
       for (String mixsetName : mixsetNames)
