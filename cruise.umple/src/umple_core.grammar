@@ -37,7 +37,7 @@ generate : generate [=language:Java|Php|RTCpp|SimpleCpp|Ruby|Cpp|Json|StructureD
 generate_path : generate [=language:Java|Php|RTCpp|SimpleCpp|Ruby|Cpp|Json|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvClassTraitDiagram|GvFeatureDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|UmpleSelf|USE|test] " [**output] " [=override:--override|--override-all]? ( [=suboptionIndicator:-s|--suboption]  " [**suboption] " )* ;
 
 // Use statements allow incorporation of other Umple files. See [*UseStatements*]
-useStatement : use [!use=\S.*.;]
+useStatement : use [use] ( , [extraUse] )*
 
 toplevelExtracode : top [top] [[moreCode]]
 
