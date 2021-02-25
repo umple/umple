@@ -171,7 +171,7 @@ class UmpleInternalParser
       for(Token subToken : t.getSubTokens()) // add the rest of use-statment that are in : use M1,M2, ... 
       {
         if(subToken.is("extraUse"))
-        mixsetNames.add(t.getValue("extraUse"));
+        mixsetNames.add(subToken.getValue("extraUse"));
       }
 
       for (String mixsetName : mixsetNames)
