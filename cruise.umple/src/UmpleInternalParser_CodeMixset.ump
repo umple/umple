@@ -162,30 +162,42 @@ class UmpleInternalParser
       } 
        //Otherwise
        
-      String mixsetName = value;
       int useLineNumber = t.getPosition().getLineNumber();
       //UmpleFile mixsetUseFile = model.getUmpleFile(); 
       String fileName = t.getPosition().getFilename();
       UmpleFile mixsetUseFile = new UmpleFile(fileName);
-      // check if the mixset was added before 
-      Mixset mixset = model.getMixset(mixsetName);
-      if(mixset == null)
+      ArrayList<String> mixsetNames = new ArrayList<String>();
+      mixsetNames.add(value); // add first use. 
+      for(Token subToken : t.getSubTokens()) // add the rest of use-statment that are in : use M1,M2, ... 
       {
-        mixset = new Mixset(mixsetName);
-        mixset.setUseUmpleFile(mixsetUseFile);
-        mixset.setUseUmpleLine(useLineNumber);
-        model.addMixsetOrFile(mixset);
+        if(subToken.is("extraUse"))
+        mixsetNames.add(subToken.getValue("extraUse"));
       }
-      else if (mixset.getUseUmpleFile() == null)
+
+      for (String mixsetName : mixsetNames)
       {
-        mixset.setUseUmpleFile(mixsetUseFile);
-        mixset.setUseUmpleLine(useLineNumber);
-      }
+        // check if the mixset was added before 
+        Mixset mixset = model.getMixset(mixsetName.trim());
+        if(mixset == null)
+        {
+          mixset = new Mixset(mixsetName);
+          mixset.setUseUmpleFile(mixsetUseFile);
+          mixset.setUseUmpleLine(useLineNumber);
+          model.addMixsetOrFile(mixset);
+        }
+        else if (mixset.getUseUmpleFile() == null)
+        {
+          mixset.setUseUmpleFile(mixsetUseFile);
+          mixset.setUseUmpleLine(useLineNumber);
+        }
 	   
 	    // this handles the case when a mixset definition is in a file and the mixset use exists in a subsequent file.
 	    parseMixset(mixset); 
+      }
     }
   }
+
+
   
 /*
  * This method parses all waiting fragments of a mixset, if there is a mixset-use-statment specified in some of the files.  
