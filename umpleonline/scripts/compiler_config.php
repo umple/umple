@@ -787,7 +787,7 @@ function executeCommand($command, $rawcommand = null)
   $useServerIfPossble=true;  // Set to false to deactivate the server feature
   
   ob_start();
-  if(substr($command,0,23) == "java -jar umplesync.jar" && $useServerIfPossble) {
+  if(substr($command,0,23) == "java -jar umplesync.jar" && $useServerIfPossble && !strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
     serverRun(substr($command,24),$rawcommand);
   }
   else {
