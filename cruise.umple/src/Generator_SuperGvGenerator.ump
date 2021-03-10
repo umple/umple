@@ -192,7 +192,7 @@ digraph "<<=filename>>" {
   {
     String association;
 
-    association = "  \""+left+"\" --> \""+right+"\" ["+arrow+
+    association = "  \""+left+"\" -> \""+right+"\" ["+arrow+
         ", taillabel=\""+tLabel+"\""+", headlabel=\""+hLabel+"\""+
         ", tooltip=\""+tooltip+"\"];\n";
 
