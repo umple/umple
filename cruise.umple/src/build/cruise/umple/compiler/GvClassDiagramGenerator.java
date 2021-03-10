@@ -1,39 +1,56 @@
-/*
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.29.1.4607.2d2b84eb8 modeling language!*/
 
-Copyright: All contributers to the Umple Project
+package cruise.umple.compiler;
 
-This file is made available subject to the open source license found at:
-http://umple.org/license
-
-This file generates .gv files for use by Graphviz, representing the class diagram  in the Umple model. To generate for this format, use 
-  generate GvClassDiagram;
-in your umple file, or the command line option
-  -g GvClassDiagram
-
-See also GvStateDiagram
- */
-
-namespace cruise.umple.compiler;
-
-class GvClassDiagramGenerator
+// line 18 "../../../../Generator_CodeGvClassDiagram.ump"
+public class GvClassDiagramGenerator
 {
-  // Returns what is being generated - called SuperGvGenerator
-  protected String generatorType()
-  {
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public GvClassDiagramGenerator()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+
+  /**
+   * Returns what is being generated - called SuperGvGenerator
+   */
+  // line 23 "../../../../Generator_CodeGvClassDiagram.ump"
+   protected String generatorType(){
     return "cd";
   }
 
-  // Create the association between a class and its parent 
-  // - called VisitClass in SuperGvGenerator
-  protected void parentClassAssoc(StringBuilder code, String className, String parentName)
-  {
+
+  /**
+   * Create the association between a class and its parent
+   * - called VisitClass in SuperGvGenerator
+   */
+  // line 30 "../../../../Generator_CodeGvClassDiagram.ump"
+   protected void parentClassAssoc(StringBuilder code, String className, String parentName){
     code.append("  \""+className+"\" -> \""+parentName+"\""
         +" [arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
   }
 
-  // Create each class - called VisitClass in SuperGvGenerator
-  protected void classCreation(UmpleClass uClass, StringBuilder code)
-  {
+
+  /**
+   * Create each class - called VisitClass in SuperGvGenerator
+   */
+  // line 37 "../../../../Generator_CodeGvClassDiagram.ump"
+   protected void classCreation(UmpleClass uClass, StringBuilder code){
     boolean manyClass = getModel().getUmpleClasses().size() >= 200 ? true : false;
 
     String className = uClass.getName();
@@ -83,11 +100,14 @@ class GvClassDiagramGenerator
 
     // Terminate the class as a whole
     code.append("];\n");
-	}
+  }
 
-  // Create each attribute for each class - called by classCreation
-  private void attributeCreation(UmpleClass uClass, StringBuilder code, boolean manyClass)
-  {
+
+  /**
+   * Create each attribute for each class - called by classCreation
+   */
+  // line 91 "../../../../Generator_CodeGvClassDiagram.ump"
+   private void attributeCreation(UmpleClass uClass, StringBuilder code, boolean manyClass){
     // Iterate through attributes of the class]
     boolean isFirst = true;
 
@@ -123,9 +143,12 @@ class GvClassDiagramGenerator
     }
   }
 
-  // Create each method for each class - called by classCreation
-  private void methodCreation(UmpleClassifier inUmpleClassifier, StringBuilder code, boolean manyClass)
-  {
+
+  /**
+   * Create each method for each class - called by classCreation
+   */
+  // line 129 "../../../../Generator_CodeGvClassDiagram.ump"
+   private void methodCreation(UmpleClassifier inUmpleClassifier, StringBuilder code, boolean manyClass){
     if (hasSuboption("showmethods")) {
       boolean isFirstMethod = true;
       for (Method uMethod : inUmpleClassifier.getMethods()) {
@@ -190,9 +213,12 @@ class GvClassDiagramGenerator
     }
   }
 
-  // Create each interface for each class - called by classCreation
-  protected void interfaceCreation(UmpleClass uClass, StringBuilder code)
-  {
+
+  /**
+   * Create each interface for each class - called by classCreation
+   */
+  // line 196 "../../../../Generator_CodeGvClassDiagram.ump"
+   protected void interfaceCreation(UmpleClass uClass, StringBuilder code){
     // Add any interface implementations so they are output at the end
     for(UmpleInterface uInterface : uClass.getParentInterface()) {
       String intColor = uInterface.getDisplayColor();
@@ -207,10 +233,13 @@ class GvClassDiagramGenerator
     }
   }
 
-  // Create the associations in the class diagram
-  // - called VisitClass in SuperGvGenerator
-  protected void associationCreation(UmpleClass uClass, Association uAssoc, StringBuilder associations, String className)
-  {
+
+  /**
+   * Create the associations in the class diagram
+   * - called VisitClass in SuperGvGenerator
+   */
+  // line 214 "../../../../Generator_CodeGvClassDiagram.ump"
+   protected void associationCreation(UmpleClass uClass, Association uAssoc, StringBuilder associations, String className){
     AssociationEnd leftEnd = uAssoc.getEnd(0);
     AssociationEnd rightEnd = uAssoc.getEnd(1);
     String modifierOne = leftEnd.getModifier();
@@ -245,16 +274,24 @@ class GvClassDiagramGenerator
     }
   }
 
-  // Used to indent code
-  private void appendSpaces(StringBuilder code, int numSpaces) {
+
+  /**
+   * Used to indent code
+   */
+  // line 250 "../../../../Generator_CodeGvClassDiagram.ump"
+   private void appendSpaces(StringBuilder code, int numSpaces){
     for(int i=0; i<numSpaces; i++) {
       code.append(" ");
     }
   }
-  
-  //This overrides a method used for generating the necessary tags for interfaces and also their hierarchies.
+
+
+  /**
+   * This overrides a method used for generating the necessary tags for interfaces and also their hierarchies.
+   */
+  // line 257 "../../../../Generator_CodeGvClassDiagram.ump"
    protected void createInterfacesAndTheirHirerarchy(UmpleInterface inInterface, StringBuilder code){
-	   boolean manyInterface = getModel().getUmpleInterfaces().size() >= 200 ? true : false;
+    boolean manyInterface = getModel().getUmpleInterfaces().size() >= 200 ? true : false;
 
 	    String interfaceName = inInterface.getName();
 	    String interfaceColor = inInterface.getDisplayColor();
@@ -289,11 +326,15 @@ class GvClassDiagramGenerator
 	    // Terminate the class as a whole
 	    code.append("];\n");
 	    createInterfaceHierarchyAssociations(inInterface,code);
-   }
-   
-   //This creates tags which are necessary to show hierarchies.
+  }
+
+
+  /**
+   * This creates tags which are necessary to show hierarchies.
+   */
+  // line 296 "../../../../Generator_CodeGvClassDiagram.ump"
    protected void createInterfaceHierarchyAssociations(UmpleInterface inInterface, StringBuilder code){
-	    for(UmpleInterface uInt : inInterface.getExtendsInterface()) {
+    for(UmpleInterface uInt : inInterface.getExtendsInterface()) {
 	        String intColor = uInt.getDisplayColor();
 	        // TO DO needs fixing - interface colour does not appear
 	        if (!intColor.equals("")) {
@@ -303,5 +344,6 @@ class GvClassDiagramGenerator
 	        code.append("  \""+inInterface.getName()+"\" -> \""+uInt.getName());
 	        code.append("\" [  arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
 	      }
-   }  
+  }
+
 }
