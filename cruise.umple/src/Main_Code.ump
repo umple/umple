@@ -225,7 +225,9 @@ class UmpleConsoleMain
       
       if(compileSuccess) {
         for (UmpleClass mainClass: CodeCompiler.getMainClasses(model)) {
-          System.out.println("  Main method found. Run java "+mainClass.getName());
+          if (true){
+              System.out.println("  Main method found. Run java (to modify here) "+mainClass.getName());
+          }
         }
       }  
       
