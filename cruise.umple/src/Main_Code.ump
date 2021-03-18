@@ -228,7 +228,7 @@ class UmpleConsoleMain
           System.out.println("  Compiled to target langauge "+key+"\n");
           if(key.compareTo("Java")==0) {
             for (UmpleClass mainClass: CodeCompiler.getMainClasses(model)) {
-              System.out.println("  Java Main method found. Run "+mainClass.getName());
+              System.out.println("  Main method found. Run Java "+mainClass.getName());
             }
           }
         }
