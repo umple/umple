@@ -838,6 +838,14 @@ public class UmpleMixsetTest {
     model.run();
     Assert.assertEquals(model.getMixsetOrFiles().size() , 10);
   }
-
+  @Test
+  public void multipleMixsetsInOneUseStatment()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseMixsetUseInOneUseStatement.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+    Assert.assertEquals(model.getUmpleClasses().size() , 3);
+  }
 
 }
