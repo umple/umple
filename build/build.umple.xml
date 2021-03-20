@@ -362,6 +362,36 @@
     <copy todir="${dist.path}/reference/files">
       <fileset dir="build/reference/files"/>
     </copy>
+    <copy todir="${dist.path}/reference/">
+      <fileset file="umplewww/index.html"/>
+    </copy>
+    <copy todir="${dist.path}/reference/files">
+      <fileset file="umplewww/files/umple_logo.jpg"/>
+    </copy>
+    <copy todir="${dist.path}/reference/files">
+      <fileset file="umplewww/files/uottawa_ver_black.png"/>
+    </copy>
+    <copy todir="${dist.path}/reference/files">
+      <fileset file="umplewww/files/Octocat.jpg"/>
+    </copy>
+    <copy todir="${dist.path}/reference/files">
+      <fileset file="umplewww/files/umple_example_uml.jpg"/>
+    </copy>
+    <copy todir="${dist.path}/reference/syntaxhighlighter">
+      <fileset dir="umplewww/syntaxhighlighter"/>
+    </copy>
+    <copy todir="${dist.path}/reference/examples">
+      <fileset dir="umplewww/examples"/>
+    </copy>
+    <copy todir="${dist.path}/reference/">
+      <fileset file="umplewww/umple-core-classDiagram.shtml"/>
+    </copy>
+    <copy todir="${dist.path}/reference/">
+      <fileset file="umplewww/umple-compiler-classDiagram.shtml"/>
+    </copy>
+    <copy todir="${dist.path}/reference/">
+      <fileset file="umplewww/umple-state-classDiagram.shtml"/>
+    </copy>
   </target>
 
   <target name="travisCopyManual">
@@ -373,11 +403,10 @@
     </copy>
     <copy todir="umpleonline/manual/examples">
       <fileset dir="umplewww/examples"/>
-    </copy>     
+    </copy>
     <copy todir="umpleonline/manual/syntaxhighlighter">
       <fileset dir="umplewww/syntaxhighlighter"/>
-    </copy>     
-    
+    </copy>
   </target>
 
   <target name="packageUmpleonline" if="${shouldPackageUmpleOnline}">
