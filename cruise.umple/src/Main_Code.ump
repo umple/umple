@@ -217,15 +217,20 @@ class UmpleConsoleMain
            {
              Double generateTime = Double.parseDouble(model. getHashMap().get(key));
              
-             System.out.println("--> Gernerating Target Language " + key + " time: "+df.format(generateTime)+" s");
+             System.out.println("--> Generating Target Language " + key + " time: "+df.format(generateTime)+" s");
            }                           
          }
 
       String successWord = compileSuccess ? "Success! " : "";
       
       if(compileSuccess) {
-        for (UmpleClass mainClass: CodeCompiler.getMainClasses(model)) {
-          System.out.println("  Main method found. Run java "+mainClass.getName());
+        for (String key : model. getHashMap().keySet()) {
+          System.out.println("  Compiled to target language "+key);
+          if(key.compareTo("Java")==0) {
+            for (UmpleClass mainClass: CodeCompiler.getMainClasses(model)) {
+              System.out.println("  Main method found. Run Java "+mainClass.getName());
+            }
+          }
         }
       }  
       
