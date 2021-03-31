@@ -217,30 +217,37 @@ class GvClassDiagramGenerator
     String modifierTwo = rightEnd.getModifier();
     String visualLeftEnd, visualRightEnd, toolTip, label;
 
+    String leftClass= leftEnd.getClassName();
     // Only output them when visiting one class
-    if(leftEnd.getClassName().equals(className)) {
+    if(leftClass.equals(className)) {
       String[] arrows = retArrows(uAssoc);
+      String leftMult= leftEnd.toSimpleString();
+      String rightMult= rightEnd.toSimpleString();
+      String rightClass= rightEnd.getClassName();
         
       if ("symmetricreflexive".equals(modifierOne) && "symmetricreflexive".equals(modifierTwo)) 
       {
         if ("undefined".equals(rightEnd.getDisplayRoleName()))
-          label = leftEnd.toSimpleString()+" "+leftEnd.getDisplayRoleName();
-        else label = rightEnd.toSimpleString()+" "+rightEnd.getDisplayRoleName();
+          label = leftMult+" "+leftEnd.getDisplayRoleName();
+        else label = rightMult+" "+rightEnd.getDisplayRoleName();
           
-        toolTip = leftEnd.getClassName() + " " + label + " " + rightEnd.getClassName() + "TEST NATURAL LANGUAGE B";
+        toolTip = leftClass + " " + label + " " + rightClass + "TEST NATURAL LANGUAGE B";
           
-        associations.append(labelAssociation(leftEnd.getClassName(),
-          rightEnd.getClassName(), arrows[0], label, toolTip));
+        associations.append(labelAssociation(leftClass,
+          rightClass, arrows[0], label, toolTip));
       }
       else 
       {
-        visualLeftEnd = leftEnd.toSimpleString()+" "+leftEnd.getDisplayRoleName();
-        visualRightEnd = rightEnd.toSimpleString()+" "+rightEnd.getDisplayRoleName();
-        toolTip = leftEnd.getClassName() + " " + visualLeftEnd +
-            " " + arrows[1] + " " + visualRightEnd + " " + rightEnd.getClassName() + "TEST NATURAL LANGUAGE A";
+        String nlDesc = "\nTEMPDEBUG\n"; // initialize Natural Language String
+        if (leftMult.equals("*")) nlDesc += "A "+rightClass+" has some "+leftClass+"s. It can have none, and there is no upper bound defined.\n";
+                
+        visualLeftEnd = leftMult+" "+leftEnd.getDisplayRoleName();
+        visualRightEnd = rightMult+" "+rightEnd.getDisplayRoleName();
+        toolTip = leftClass + " " + visualLeftEnd +
+            " " + arrows[1] + " " + visualRightEnd + " " + rightClass + nlDesc;
           
-        associations.append(twoLabelAssociation(leftEnd.getClassName(),
-          rightEnd.getClassName(), arrows[0], visualRightEnd, visualLeftEnd, toolTip));
+        associations.append(twoLabelAssociation(leftClass,
+          rightClass, arrows[0], visualRightEnd, visualLeftEnd, toolTip));
       }
     }
   }
