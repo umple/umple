@@ -1,0 +1,35 @@
+// Class Diagram illustrating use of a trait
+// to incorporate the same state machine in multiple
+// classes. This is an alternative to using 
+// standalone state machines (see an equivalent model
+// in the state machine section of the manual)
+
+class MotorController {
+  isA DeviceWithStatus;
+}
+
+class BrakeController {
+  isA DeviceWithStatus;
+}
+
+trait DeviceWithStatus {
+  deviceStatus {
+    inactive {
+      activate -> booting;
+    }
+    booting {
+      completedStartupChecks -> active;
+      startupCriticalErrorDetected -> outOfOrder;
+    }
+    active {
+      runtimeCriticalErrorDetected -> outOfOrder;
+      deactivate -> shuttingDown;
+    }
+    shuttingDown {
+      shutdownComplete -> inactive;
+    }
+    outOfOrder {
+      repaired -> inactive;
+    }
+  }
+}
