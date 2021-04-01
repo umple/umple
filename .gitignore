@@ -6,7 +6,7 @@ nohup.out
 /ump
 
 # umple specific
-umpleonline/ump*
+umpleonline/ump/
 umpleonline/ump/tmp*
 umpleonline/ump/2*
 umpleonline/ump/1*

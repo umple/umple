@@ -22,8 +22,12 @@ Standalone state machines can be used to make code appear simpler than it does w
 
 @@syntax
 
-[[stateMachineDefinition]]
+[[stateMachineDefinition]] [[referencedStateMachine]] [[extendedStateMachine]]
 
-@@example
+@@example @@caption Standalone state machine used in two classes @@endcaption
 @@source manualexamples/standaloneStatemachine1.ump &diagramtype=state
+@@endexample
+
+@@example @@caption Standalone state machine modified when reused @@endcaption
+@@source manualexamples/standaloneStatemachine2.ump &diagramtype=state
 @@endexample
