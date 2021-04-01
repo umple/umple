@@ -239,7 +239,44 @@ class GvClassDiagramGenerator
       else 
       {
         String nlDesc = "\nTEMPDEBUG\n"; // initialize Natural Language String
-        if (leftMult.equals("*")) nlDesc += "A "+rightClass+" has some "+leftClass+"s. It can have none, and there is no upper bound defined.\n";
+        
+        
+        // Test the left multiplicity of the association
+        if (leftMult.equals("*")) {
+          // Text view when the multiplicity is *
+          nlDesc += "A "+rightClass+" has some "+leftClass+"s. It can have none, and there is no upper bound defined.\n";
+        } 
+        else if (leftMult.equals("1")) {
+          // Text view when the multiplicity is 1
+          nlDesc += "A " + rightClass + " has a " + leftClass + ". It must always have exactly, one, and can never have none.\n";
+        }
+
+        // Test the right multiplicity of the association
+        if (rightMult.equals("*")) {
+          // Text view when the multiplicity is *
+          nlDesc += "A "+leftClass+" has some "+rightClass+"s. It can have none, and there is no upper bound defined.\n";
+        } 
+        else if (rightMult.equals("1")) {
+          // Text view when the multiplicity is 1
+          nlDesc += "A " + leftClass + " has a " + rightClass + ". It must always have exactly, one, and can never have none.\n";
+        }
+
+        // Test the multiplicity of the association
+        if (leftMult.equals("1") && rightMult.equals("1")) {
+          nlDesc += "There must always be an equal number of " + rightClass + " and " + leftClass + ", connected as Pairs.\n" + 
+          "When a " + leftClass + " is created, its " + rightClass + " must be created at the same time.\n" +
+          "When a " + leftClass + " is deleted, its " + rightClass + " is deleted at the same time.\n";
+        } 
+        else if (leftMult.equals("1") && rightMult.equals("*")) {
+          nlDesc += "When a " + rightClass + " is created, its " + leftClass + " must be assigned.\n" +
+          "When a " + rightClass + " is deleted, its " + leftClass + " is not deleted and his list of " + rightClass + "s is decreased.\n" +
+          "When a " + leftClass + " is deleted, its " + rightClass + "s are not deleted. They are assigned to another " + leftClass + ".\n";
+        }
+        else if (leftMult.equals("*") && rightMult.equals("1")) {
+          nlDesc += "When a " + leftClass + " is created, its " + rightClass + " must be assigned.\n" +
+          "When a " + leftClass + " is deleted, its " + rightClass + " is not deleted and his list of " + leftClass + "s is decreased.\n" +
+          "When a " + rightClass + " is deleted, its " + leftClass + "s are not deleted. They are assigned to another " + rightClass + ".\n";
+        }
                 
         visualLeftEnd = leftMult+" "+leftEnd.getDisplayRoleName();
         visualRightEnd = rightMult+" "+rightEnd.getDisplayRoleName();
