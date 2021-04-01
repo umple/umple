@@ -1,0 +1,49 @@
+// Class Diagram illustrating standalone state machine being
+// modified when it is reused, to add additional events
+// states and entry/exit actions
+
+class MotorController {
+  Boolean warmup = false;
+  motorStatus as deviceStatus {
+    // Add a transition to the reused state machine
+    cancel booting-> inactive;
+    completedStartupWhilewarning  booting -> warm ;
+    
+    // Add transition with action
+    warmSoReady inactive -> / {warmup=true;} booting ;
+    
+    // Add an entirely new state
+    warm {
+      go -> active;
+    }
+    
+    // add an entry action to an existing state
+    inactive {
+      entry / {warmup=false;};
+    }
+  };
+}
+
+// Reusable standalone state machine
+statemachine deviceStatus {
+  inactive {
+    activate -> booting;
+  }
+  booting {
+    completedStartupChecks -> active;
+    startupCriticalErrorDetected -> outOfOrder;
+  }
+  active {
+    runtimeCriticalErrorDetected -> outOfOrder;
+    deactivate -> shuttingDown;
+  }
+  shuttingDown {
+    shutdownComplete -> inactive;
+  }
+  outOfOrder {
+    repaired -> inactive;
+  }
+}
+// @@@skipphpcompile - contains java code
+
+      
