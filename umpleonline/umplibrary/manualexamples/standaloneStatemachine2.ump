@@ -44,5 +44,6 @@ statemachine deviceStatus {
     repaired -> inactive;
   }
 }
+// @@@skipphpcompile - contains java code
 
       
