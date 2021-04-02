@@ -6,6 +6,7 @@ nohup.out
 /ump
 
 # umple specific
+umpleonline/ump/
 umpleonline/ump/tmp*
 umpleonline/ump/2*
 umpleonline/ump/1*
@@ -15,6 +16,7 @@ umpleonline/ump/index.html
 umpleonline/ump/aalertMessage.txt
 build/UserManualAndExampleTests_output.txt
 umpleonline/manual
+umpleonline/qr*
 umpleonline/countlog.txt
 umpleonline/scripts/commandcount.txt
 umpleonline/scripts/specialPort.txt
