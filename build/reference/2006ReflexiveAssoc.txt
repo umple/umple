@@ -1,6 +1,8 @@
 Reflexive Associations
 Associations
 noreferences
+@@tooltip A reflexive association is an association from a class to itself
+
 
 @@description
 

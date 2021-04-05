@@ -1,6 +1,7 @@
 State Machine Actions and Do Activities
 State Machines
 noreferences
+@@tooltip Actions are code that can be executed when taking a transition, or on entry or exit from a state, and which take negligible time
 
 @@description
 <p><b>Transition actions:</b>      

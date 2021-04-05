@@ -1,6 +1,7 @@
 Getting Started
 User Manual Basics
 noreferences
+@@tooltip How can Umple be used?
 
 @@description
 <p>Umple is a technology for Model-Oriented Programming.</p>

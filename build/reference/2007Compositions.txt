@@ -1,6 +1,7 @@
 Compositions
 Associations
 noreferences
+@@tooltip A composition is a strong aggregation where the parts are deleted when the whole is deleted
 
 @@description
 

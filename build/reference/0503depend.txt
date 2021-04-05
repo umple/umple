@@ -1,6 +1,7 @@
 Depend clause
 Classes and Interfaces
 noreferences
+@@tooltip The depend clause specifies inclusion of external libraries
 
 @@description
 <p>The depend clause is used to indicate a dependency to another namespace, class or interface.</p>

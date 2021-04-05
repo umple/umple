@@ -42,6 +42,8 @@
     <delete dir="${project.path}/src-gen-umpleTL" failonerror="false" />
     <delete dir="${project.path}/src-gen-umpletl" failonerror="false" />
   	<delete dir="UmpleToRTCpp/src-gen-UmpleTL" failonerror="false" />
+    <delete dir="${project.path}/bin" failonerror="false" />
+    <delete dir="${project.path}/src/cruise" failonerror="false" />
     <delete dir="cruise.umplificator/src-gen-umple" failonerror="false" />
     <delete dir="cruise.umple.validator/src-gen-umple" failonerror="false" />
   </target>
@@ -100,6 +102,26 @@
       </java-->
     </parallel>
   </target>
+
+  <!-- Compiles Just the umple documenter - relies on the rest to be already compiled -->
+  <target name="umpleDocumenter">
+
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
+    
+    <!-- On cruiseControl the jar built here IS the stable one -->
+    <condition property="umplejar.built.here" value="${umple.stable.jar}" else="${dist.dir}/${dist.umple.jar}">
+      <equals arg1="${myenv}" arg2="cc" />
+    </condition>
+
+    <echo message="Compiling Umple using compiler built on this machine: ${umplejar.built.here}"/>
+    <parallel>
+      <java jar="${umplejar.built.here}" fork="true" failonerror="true">
+        <arg value="cruise.umple/src/Documenter.ump"/>
+      </java>
+    </parallel>
+  </target>
+
+
 
  <!-- ```````````````````````````
     Generate Templates
@@ -500,11 +522,54 @@
     </jar>
     <echo message="Making symbolic link so it can be run as umple.jar" />
     <symlink link="${dist.dir}/umple.jar" resource="${dist.dir}/${dist.umple.jar}" overwrite="true" failonerror="false" />
-    
   </target>
+
+
+  <target name="packageSyncJar">
+    <echo message="Package: Umple sync jar used in UmpleOnline to compile and sync diagram - See PlaygroundMain" />
+
+    <deps-get-path conf="core" pathid="core.ivy.classpath" />
+    <manifestclasspath property="umple.jar.classpath" jarfile="${dist.dir}/${dist.umple.jar}" >
+      <classpath refid="core.ivy.classpath"/>
+    </manifestclasspath>
+
+    <jar  destfile="${dist.dir}/${dist.umple.sync.jar}" 
+          basedir="${bin.path}" 
+          includes="cruise/umple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/** joptsimple/**">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umple.PlaygroundMain"/>
+        <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="packageDocJar">
+    <echo message="Package: Documenter jar used to generate user manual" />
+
+    <deps-get-path conf="core" pathid="core.ivy.classpath" />
+    <manifestclasspath property="umple.jar.classpath" jarfile="${dist.dir}/${dist.umple.jar}" >
+      <classpath refid="core.ivy.classpath"/>
+    </manifestclasspath>
+
+    <jar  destfile="${dist.dir}/${dist.umple.docs.jar}" 
+          basedir="${bin.path}" 
+          includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/**">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umple.docs.DocumenterMain"/>
+        <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
+      </manifest>
+    </jar>
+  </target>
+
 
   <target name="packageJars">
     <antcall target="packageMainJar" />
+    <antcall target="packageSyncJar" />
+    <antcall target="packageDocJar" />
 
     <deps-get-path conf="core" pathid="core.ivy.classpath" />
     <manifestclasspath property="umple.jar.classpath" jarfile="${dist.dir}/${dist.umple.jar}" >
@@ -524,30 +589,6 @@
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
         <attribute name="Main-Class" value="cruise.umple.stats.StatsMain"/>
-        <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
-      </manifest>
-    </jar>
-
-    <echo message="Package: Umple documenter jar used to build the user manual" />
-    <jar  destfile="${dist.dir}/${dist.umple.docs.jar}" 
-          basedir="${bin.path}" 
-          includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/**">
-      <manifest>
-        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
-        <attribute name="Version" value="${umple.version}"/>
-        <attribute name="Main-Class" value="cruise.umple.docs.DocumenterMain"/>
-        <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
-      </manifest>
-    </jar>
-
-    <echo message="Package: Umple sync jar used in UmpleOnline to compile and sync diagram - See PlaygroundMain" />
-    <jar  destfile="${dist.dir}/${dist.umple.sync.jar}" 
-          basedir="${bin.path}" 
-          includes="cruise/umple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/** joptsimple/**">
-      <manifest>
-        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
-        <attribute name="Version" value="${umple.version}"/>
-        <attribute name="Main-Class" value="cruise.umple.PlaygroundMain"/>
         <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
       </manifest>
     </jar>
@@ -748,11 +789,16 @@
     <antcall target="template.test" />
   </target>
 
-  <!-- Run This Command if you are working outside Eclipse and want to see if the tests are passing -->
+  <!-- Run This Command if you are working outside Eclipse and want to see if compilation works -->
   <target name="local" >
     <antcall target="umpleSelf" />
     <antcall target="compile" />
-    <!-- <antcall target="template.test" /> -->
+  </target>
+
+ <target name="documenter" >
+    <antcall target="umpleDocumenter" />
+    <antcall target="compile" />
+    <antcall target="packageDocJar" />    
   </target>
 
 

@@ -1,6 +1,7 @@
 Traits
 Traits
 noreferences
+@@tooltip A trait contains class elements that can be added to multiple classes; a class can implement several traits
 
 @@description
 <p> 

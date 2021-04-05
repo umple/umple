@@ -1,6 +1,7 @@
 Umple Comments
 Comments
 noreferences
+@@tooltip Ways to specify comments in Umple code
 
 @@description
 Comments provide a mechanism to document your work to provide some insight into
