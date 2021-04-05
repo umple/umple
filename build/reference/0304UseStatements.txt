@@ -1,6 +1,7 @@
 Use Statements
 Directives
 noreferences
+@@tooltip Use statements to incorporate the contents of another Umple file or activate a mixset
 
 @@description
 <p>Use statements allow you to decompose your system by embedding or referencing

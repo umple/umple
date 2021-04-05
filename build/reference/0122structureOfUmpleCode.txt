@@ -1,6 +1,7 @@
 Structure of Umple Code
 User Manual Basics
 noreferences
+@@tooltip How to organize Umple code into Entities (classes, traits etc.) with methods, associations and state machines in them, as well as the use of multiple files and mixins
 
 @@description
 

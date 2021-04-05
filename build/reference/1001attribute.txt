@@ -1,6 +1,7 @@
 Attribute Definition
 Attributes
 noreferences
+@@tooltip Basic examples of Umple attributes, along with keywords that specify how they behave
 
 @@description
 <p>An attribute represents some information held by a class.</p>

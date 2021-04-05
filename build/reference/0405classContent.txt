@@ -1,6 +1,7 @@
 Class Content
 Classes and Interfaces
 noreferences
+@@tooltip Comprehensive list of all the things that can be specified in an Umple class
 
 @@description
 <p>      

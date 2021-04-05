@@ -1,6 +1,7 @@
 interface Definition
 Classes and Interfaces
 noreferences
+@@tooltip An interface defines a set of method signatures that a class must implement
 
 @@description
 <p>      

@@ -1,6 +1,7 @@
 Independently Defined Associations
 Associations
 noreferences
+@@tooltip An association specified outside of either class, using the association keyword
 
 @@description
 <p>An association can be defined separately from any class. Contrast
