@@ -239,60 +239,125 @@ class GvClassDiagramGenerator
       else 
       {
         String nlDesc = "\n"; // initialize Natural Language String
-        
+
         // Test the left multiplicity of the association
-        try {
-          int leftMultInt = Integer.parseInt(leftMult);  // 
-          if (leftMultInt > 0) {
-            if ( leftMultInt == 1) {
-              nlDesc += startWithVowel(rightClass) + rightClass + " has " + startWithVowel(leftClass) + leftClass + ". It must always have exactly, one, and can never have none. And there is an upper bound of at most one " + leftClass + ".\n";
+        String[] array = leftMult.split("\\.\\."); // Split the multiplicity of the left side 
+        if (array.length == 1) {
+          try {
+            int leftMultInt = Integer.parseInt(leftMult);          
+            if (leftMultInt > 0) {
+              if ( leftMultInt == 1) {
+                nlDesc += startWithVowel(rightClass) + rightClass + " has " + startWithVowel(leftClass) + leftClass + ". It must always have exactly, one, and can never have none. And there is an upper bound of at most one " + leftClass + ".\n";
+              }
+              else {
+                nlDesc += startWithVowel(rightClass) + rightClass + " has " + leftMultInt + " " + leftClass + "s. \n" + 
+                " When " + startWithVowel(rightClass).toLowerCase() + rightClass + " is created, its " + leftMultInt + " " + leftClass + "s must be assigned.\n";
+              }
             }
-            else {
-              nlDesc += "A " + rightClass + " has " + leftMultInt + " " + leftClass + "s. It must always have exactly " + leftMultInt + " and can never have none. And there is an upper bound of at most " + leftMultInt + " " + leftClass + "s.\n";
+          } catch (NumberFormatException ex) {
+            if (leftMult.equals("*")) {
+              // Text view when the multiplicity is *
+              nlDesc += startWithVowel(rightClass) + rightClass + " has some " + leftClass + "s. It can have none, and there is no upper bound defined.\n";
+            } 
+          }
+        } else {
+          String leftMult1 = array[0];
+          String leftMult2 = array[1];
+          try {
+            int leftMultInt1 = Integer.parseInt(leftMult1);
+              if ( leftMultInt1 == 0) {
+                nlDesc += startWithVowel(rightClass) + rightClass + " may have " + startWithVowel(leftClass).toLowerCase() + leftClass + ". ";
+              } else if (leftMultInt1 == 1) {
+                nlDesc += startWithVowel(rightClass) + rightClass + " has at least " + leftMultInt1 + " " + leftClass + " and can never have none. ";
+              }
+              else {
+                nlDesc += startWithVowel(rightClass) + rightClass + " has at least" + leftMultInt1 + " " + leftClass + "s and can never have none. ";
+              }
+
+              int leftMultInt2 = Integer.parseInt(leftMult2);
+              if (leftMultInt2 == 1) {
+                nlDesc += "It can have none or just 1. \n";
+              }
+              else {
+                nlDesc += "And there is an upper bound of at most " + leftMultInt2 + " " + leftClass + "s.\n";
+              }
+          }
+          catch (NumberFormatException ex) {
+            if (leftMult2.equals("*")) {
+              nlDesc += "And there is no upper bound defined.\n";
             }
           }
-        } catch (NumberFormatException ex) {
-          if (leftMult.equals("*")) {
-            // Text view when the multiplicity is *
-            nlDesc += startWithVowel(rightClass) + rightClass + " has some " + leftClass + "s. It can have none, and there is no upper bound defined.\n";
-          } 
         }
         
-
         // Test the right multiplicity of the association
-        try {
-          int rightMultInt = Integer.parseInt(rightMult);
-          if (rightMultInt > 0) {
-            if ( rightMultInt == 1) {
-              nlDesc += startWithVowel(leftClass) + leftClass + " has " + startWithVowel(rightClass) + rightClass + ". It must always have exactly, one, and can never have none. And there is an upper bound of at most one " + rightClass + ".\n";
+        String[] arrayR = rightMult.split("\\.\\."); // Split the multiplicity of the right side
+        // Test the left multiplicity of the association
+        if (arrayR.length == 1) {
+          try {
+            int rightMultInt = Integer.parseInt(rightMult);          
+            if (rightMultInt > 0) {
+              if ( rightMultInt == 1) {
+                nlDesc += startWithVowel(leftClass) + leftClass + " has " + startWithVowel(rightClass) + rightClass + ". It must always have exactly, one, and can never have none. And there is an upper bound of at most one " + rightClass + ".\n";
+              }
+              else {
+                nlDesc += startWithVowel(leftClass) + leftClass + " has " + rightMultInt + " " + rightClass + "s. \n" + 
+                " When " + startWithVowel(leftClass).toLowerCase() + leftClass + " is created, its " + rightMultInt + " " + rightClass + "s must be assigned.\n";
+              }
             }
-            else {
-              nlDesc += startWithVowel(leftClass) + leftClass + " has " + rightMultInt + " " + rightClass + "s. It must always have exactly " + rightMultInt + " and can never have none. And there is an upper bound of at most " + rightMultInt + " " + rightClass + "s.\n";
+          } catch (NumberFormatException ex) {
+            if (rightMult.equals("*")) {
+              // Text view when the multiplicity is *
+              nlDesc += startWithVowel(leftClass) + leftClass + " has some " + rightClass + "s. It can have none, and there is no upper bound defined.\n";
+            } 
+          }
+        } 
+        else {
+          String rightMult1 = arrayR[0];
+          String rightMult2 = arrayR[1];
+          try {
+            int rightMultInt1 = Integer.parseInt(rightMult1);            
+              if ( rightMultInt1 == 0) {
+                nlDesc += startWithVowel(leftClass) + leftClass + " may have " + startWithVowel(rightClass).toLowerCase() + rightClass + ". ";
+              }
+              else if (rightMultInt1 == 1) {
+                nlDesc += startWithVowel(leftClass) + leftClass + " has at least " + rightMultInt1 + " " + rightClass + " and can never have none. ";
+              }
+              else {
+                nlDesc += startWithVowel(leftClass) + leftClass + " has at least" + rightMultInt1 + " " + rightClass + "s and can never have none. ";
+              }
+              
+              int rightMultInt2 = Integer.parseInt(rightMult2);
+              if (rightMultInt2 == 1) {
+                nlDesc += "It can have none or just 1. \n";
+              }
+              else {
+                nlDesc += "And there is an upper bound of at most " + rightMultInt2 + " " + rightClass + "s.\n";
+              }
+            
+          } 
+          catch (NumberFormatException ex) {
+            if (rightMult2.equals("*")) {
+              nlDesc += "And there is no upper bound defined.\n";
             }
           }
-        } catch(NumberFormatException ex) {
-          if (rightMult.equals("*")) {
-            // Text view when the multiplicity is *
-            nlDesc += startWithVowel(leftClass) + leftClass + " has some " + rightClass + "s. It can have none, and there is no upper bound defined.\n";
-          } 
         }
         
 
         // Test the multiplicity of the association
         if (leftMult.equals("1") && rightMult.equals("1")) {
           nlDesc += "There must always be an equal number of " + rightClass + " and " + leftClass + ", connected as Pairs.\n" + 
-          "When " + startWithVowel(leftClass) + leftClass + " is created, its " + rightClass + " must be created at the same time.\n" +
-          "When " + startWithVowel(leftClass) + leftClass + " is deleted, its " + rightClass + " is deleted at the same time.\n";
+          "When " + startWithVowel(leftClass).toLowerCase() + leftClass + " is created, its " + rightClass + " must be created at the same time.\n" +
+          "When " + startWithVowel(leftClass).toLowerCase() + leftClass + " is deleted, its " + rightClass + " is deleted at the same time.\n";
         } 
         else if (leftMult.equals("1") && rightMult.equals("*")) {
-          nlDesc += "When " + startWithVowel(rightClass) + rightClass + " is created, its " + leftClass + " must be assigned.\n" +
-          "When " + startWithVowel(rightClass) + rightClass + " is deleted, its " + leftClass + " is not deleted and its list of " + rightClass + "s is decreased.\n" +
-          "When " + startWithVowel(leftClass) + leftClass + " is deleted, its " + rightClass + "s are not deleted. They are assigned to another " + leftClass + ".\n";
+          nlDesc += "When " + startWithVowel(rightClass).toLowerCase() + rightClass + " is created, its " + leftClass + " must be assigned.\n" +
+          "When " + startWithVowel(rightClass).toLowerCase() + rightClass + " is deleted, its " + leftClass + " is not deleted and its list of " + rightClass + "s is decreased.\n" +
+          "When " + startWithVowel(leftClass).toLowerCase() + leftClass + " is deleted, its " + rightClass + "s are not deleted. They are assigned to another " + leftClass + ".\n";
         }
         else if (leftMult.equals("*") && rightMult.equals("1")) {
-          nlDesc += "When " + startWithVowel(leftClass) + leftClass + " is created, its " + rightClass + " must be assigned.\n" +
-          "When " + startWithVowel(leftClass) + leftClass + " is deleted, its " + rightClass + " is not deleted and its list of " + leftClass + "s is decreased.\n" +
-          "When " + startWithVowel(rightClass) + rightClass + " is deleted, its " + leftClass + "s are not deleted. They are assigned to another " + rightClass + ".\n";
+          nlDesc += "When " + startWithVowel(leftClass).toLowerCase() + leftClass + " is created, its " + rightClass + " must be assigned.\n" +
+          "When " + startWithVowel(leftClass).toLowerCase() + leftClass + " is deleted, its " + rightClass + " is not deleted and its list of " + leftClass + "s is decreased.\n" +
+          "When " + startWithVowel(rightClass).toLowerCase() + rightClass + " is deleted, its " + leftClass + "s are not deleted. They are assigned to another " + rightClass + ".\n";
         }
                 
         visualLeftEnd = leftMult+" "+leftEnd.getDisplayRoleName();
