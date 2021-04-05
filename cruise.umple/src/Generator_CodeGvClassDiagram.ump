@@ -238,14 +238,14 @@ class GvClassDiagramGenerator
       }
       else 
       {
-        String nlDesc = ""; // initialize Natural Language String
+        String nlDesc = "\n"; // initialize Natural Language String
         
         // Test the left multiplicity of the association
         try {
           int leftMultInt = Integer.parseInt(leftMult);  // 
           if (leftMultInt > 0) {
             if ( leftMultInt == 1) {
-              nlDesc += "A " + rightClass + " has a " + leftClass + ". It must always have exactly, one, and can never have none. And there is an upper bound of at most one " + leftClass + ".\n";
+              nlDesc += startWithVowel(rightClass) + rightClass + " has " + startWithVowel(leftClass) + leftClass + ". It must always have exactly, one, and can never have none. And there is an upper bound of at most one " + leftClass + ".\n";
             }
             else {
               nlDesc += "A " + rightClass + " has " + leftMultInt + " " + leftClass + "s. It must always have exactly " + leftMultInt + " and can never have none. And there is an upper bound of at most " + leftMultInt + " " + leftClass + "s.\n";
@@ -254,7 +254,7 @@ class GvClassDiagramGenerator
         } catch (NumberFormatException ex) {
           if (leftMult.equals("*")) {
             // Text view when the multiplicity is *
-            nlDesc += "A "+rightClass+" has some "+leftClass+"s. It can have none, and there is no upper bound defined.\n";
+            nlDesc += startWithVowel(rightClass) + rightClass + " has some " + leftClass + "s. It can have none, and there is no upper bound defined.\n";
           } 
         }
         
@@ -264,16 +264,16 @@ class GvClassDiagramGenerator
           int rightMultInt = Integer.parseInt(rightMult);
           if (rightMultInt > 0) {
             if ( rightMultInt == 1) {
-              nlDesc += "A " + leftClass + " has a " + rightClass + ". It must always have exactly, one, and can never have none. And there is an upper bound of at most one " + rightClass + ".\n";
+              nlDesc += startWithVowel(leftClass) + leftClass + " has " + startWithVowel(rightClass) + rightClass + ". It must always have exactly, one, and can never have none. And there is an upper bound of at most one " + rightClass + ".\n";
             }
             else {
-              nlDesc += "A " + leftClass + " has " + rightMultInt + " " + rightClass + "s. It must always have exactly " + rightMultInt + " and can never have none. And there is an upper bound of at most " + rightMultInt + " " + rightClass + "s.\n";
+              nlDesc += startWithVowel(leftClass) + leftClass + " has " + rightMultInt + " " + rightClass + "s. It must always have exactly " + rightMultInt + " and can never have none. And there is an upper bound of at most " + rightMultInt + " " + rightClass + "s.\n";
             }
           }
         } catch(NumberFormatException ex) {
           if (rightMult.equals("*")) {
             // Text view when the multiplicity is *
-            nlDesc += "A " + leftClass + " has some " + rightClass + "s. It can have none, and there is no upper bound defined.\n";
+            nlDesc += startWithVowel(leftClass) + leftClass + " has some " + rightClass + "s. It can have none, and there is no upper bound defined.\n";
           } 
         }
         
@@ -281,18 +281,18 @@ class GvClassDiagramGenerator
         // Test the multiplicity of the association
         if (leftMult.equals("1") && rightMult.equals("1")) {
           nlDesc += "There must always be an equal number of " + rightClass + " and " + leftClass + ", connected as Pairs.\n" + 
-          "When a " + leftClass + " is created, its " + rightClass + " must be created at the same time.\n" +
-          "When a " + leftClass + " is deleted, its " + rightClass + " is deleted at the same time.\n";
+          "When " + startWithVowel(leftClass) + leftClass + " is created, its " + rightClass + " must be created at the same time.\n" +
+          "When " + startWithVowel(leftClass) + leftClass + " is deleted, its " + rightClass + " is deleted at the same time.\n";
         } 
         else if (leftMult.equals("1") && rightMult.equals("*")) {
-          nlDesc += "When a " + rightClass + " is created, its " + leftClass + " must be assigned.\n" +
-          "When a " + rightClass + " is deleted, its " + leftClass + " is not deleted and its list of " + rightClass + "s is decreased.\n" +
-          "When a " + leftClass + " is deleted, its " + rightClass + "s are not deleted. They are assigned to another " + leftClass + ".\n";
+          nlDesc += "When " + startWithVowel(rightClass) + rightClass + " is created, its " + leftClass + " must be assigned.\n" +
+          "When " + startWithVowel(rightClass) + rightClass + " is deleted, its " + leftClass + " is not deleted and its list of " + rightClass + "s is decreased.\n" +
+          "When " + startWithVowel(leftClass) + leftClass + " is deleted, its " + rightClass + "s are not deleted. They are assigned to another " + leftClass + ".\n";
         }
         else if (leftMult.equals("*") && rightMult.equals("1")) {
-          nlDesc += "When a " + leftClass + " is created, its " + rightClass + " must be assigned.\n" +
-          "When a " + leftClass + " is deleted, its " + rightClass + " is not deleted and its list of " + leftClass + "s is decreased.\n" +
-          "When a " + rightClass + " is deleted, its " + leftClass + "s are not deleted. They are assigned to another " + rightClass + ".\n";
+          nlDesc += "When " + startWithVowel(leftClass) + leftClass + " is created, its " + rightClass + " must be assigned.\n" +
+          "When " + startWithVowel(leftClass) + leftClass + " is deleted, its " + rightClass + " is not deleted and its list of " + leftClass + "s is decreased.\n" +
+          "When " + startWithVowel(rightClass) + rightClass + " is deleted, its " + leftClass + "s are not deleted. They are assigned to another " + rightClass + ".\n";
         }
                 
         visualLeftEnd = leftMult+" "+leftEnd.getDisplayRoleName();
@@ -303,6 +303,17 @@ class GvClassDiagramGenerator
         associations.append(twoLabelAssociation(leftClass,
           rightClass, arrows[0], visualRightEnd, visualLeftEnd, toolTip));
       }
+    }
+  }
+
+  // Check whether the classname starts with a vowel or not to see if we use A or An
+  private String startWithVowel(String str) {
+    char filter = str.charAt(0);
+    if (filter == 'A' || filter == 'E' || filter == 'I' || filter == 'U' || filter == 'O' || filter == 'Y') {
+      return "An ";
+    }
+    else {
+      return "A ";
     }
   }
 
