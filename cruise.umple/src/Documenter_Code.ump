@@ -141,21 +141,27 @@ class Documenter
         }
         
         prevNextOutput="&nbsp; &nbsp;";
+        Content theContent=null;
 
         // Add file link to previous page if there is one
         if(ci>0) {
-          prevNextOutput +="<a href=\"" + group.getContent(ci-1).getTitleFilename() + "\">[Previous]</a>&nbsp &nbsp;";
+          theContent=group.getContent(ci-1);
+          prevNextOutput+=genPrevNext("Previous",theContent);
         }
         else if(gi > 0&&getParser().getGroup(gi-1).numberOfContents()>=1) {
-          prevNextOutput +="<a href=\"" + getParser().getGroup(gi-1).getContent(getParser().getGroup(gi-1).numberOfContents()-1).getTitleFilename() + "\">[Previous]</a>&nbsp &nbsp;";
+          theContent=getParser().getGroup(gi-1)
+            .getContent(getParser().getGroup(gi-1).numberOfContents()-1);
+          prevNextOutput+=genPrevNext("Previous",theContent);
         }
 
         // Add file link to next page if there is one
         if(ci<(numContents -1)) {
-          prevNextOutput +="<a href=\"" + group.getContent(ci+1).getTitleFilename() + "\">[Next]</a>&nbsp; &nbsp;";
+          theContent=group.getContent(ci+1);
+          prevNextOutput+=genPrevNext("Next",theContent);
         }
         else if(gi<(numGroups -1)&&getParser().getGroup(gi+1).numberOfContents()>0) {
-          prevNextOutput +="<a href=\"" + getParser().getGroup(gi+1).getContent(0).getTitleFilename() + "\">[Next]</a>&nbsp &nbsp;";
+          theContent=getParser().getGroup(gi+1).getContent(0);
+          prevNextOutput+=genPrevNext("Next",theContent);
         }
         String htmlOutput = toHtml(content, navigationOutput, sectionsToHide, prevNextOutput, content.getFilename());
 
@@ -186,6 +192,19 @@ class Documenter
     addMessage("Created "+totPages+" manual pages, in "+numGroups+" groups, including "+filename);
     return true;
   }
+  
+  public String genPrevNext(String direction, Content theContent) {
+    String tooltip="title=\""+theContent.getTitle();
+    if(theContent.getTooltip()==null) {
+      tooltip+="\" ";
+    }
+    else {
+      tooltip+="\n\n"+theContent.getTooltip()+"\" "; 
+    }
+  
+    return("<a "+tooltip+"href=\"" + theContent.getTitleFilename() + "\">["+direction+"]</a>&nbsp &nbsp;");
+  }
+
   
   public String toHtml(String title)
   {
@@ -400,6 +419,12 @@ class Documenter
         .replace("@@NAVIGATION_HEADER_NAME@@",group.getName())
         .replace("@@NAVIGATION_HEADER_ID@@",group.getGroupIdName())
         .replace("@@NAVIGATION_HEADER_ID@@",group.getGroupIdName());
+      if(group.getTooltip() == null || group.getTooltip().equals("")) {
+        nextGroupHeader = nextGroupHeader.replace("@@TOOLTIP@@ ","");
+      }
+      else {
+        nextGroupHeader = nextGroupHeader.replace("@@TOOLTIP@@ ","title=\""+group.getTooltip()+"\"");
+      }
       navigationOutput += nextGroupHeader;
 
       for (Content content : group.getContents())
@@ -411,6 +436,13 @@ class Documenter
           nextGroupItem = Template.NavigationItemTemplate;
         }
         nextGroupItem = nextGroupItem.replace("@@NAVIGATION_ITEM_NAME@@",content.getTitle());
+        if(content.getTooltip() != null) {
+          nextGroupItem = nextGroupItem.replace("@@TOOLTIP@@",Template.tooltipTemplate().replace("@@TOOLTIP@@",content.getTooltip()));
+        }
+        else {
+          nextGroupItem = nextGroupItem.replace("@@TOOLTIP@@ ","");
+        }
+        
         if(content != contentToNotHighlight) {
           nextGroupItem = nextGroupItem.replace("@@NAVIGATION_ITEM_FILENAME@@",content.getTitleFilename());
         }
@@ -463,7 +495,7 @@ class ContentParser
   private int init()
   {
     addRule("groupOrder : ( [**group] ; )*");
-    addRule("content : [*title] [*group] [=noreferences]? @@description [**description] (@@videoURL [**videoURL])? (@@syntax [**syntax])? [[example]]* @@Filename [*filename]");
+    addRule("content : [*title] [*group] [=noreferences]? (@@tooltip [**tooltip])?  @@description [**description] (@@videoURL [**videoURL])? (@@syntax [**syntax])? [[example]]* @@Filename [*filename]");
     addRule("example- : @@example ( @@caption [**caption] @@endcaption )? [**example] @@endexample");
     init += 1;
     return init;
@@ -491,6 +523,10 @@ class ContentParser
       {
         Group g = getGroup(t.getValue("group"));
         Content content = new Content(t.getValue("title"), t.getValue("description"), t.getValue("syntax"), t.getValue("filename"));
+
+        if(t.getValue("tooltip") != null) {
+          content.setTooltip(t.getValue("tooltip"));
+        }
         
         if(t.getValue("videoURL") != null) {
           content.setVideoURL(t.getValue("videoURL"));
@@ -557,7 +593,14 @@ class ContentParser
         {
           if (!groupToken.isStatic())
           {
-            addGroup(new Group(groupToken.getValue()));
+            String [] groupInfo=groupToken.getValue().split("%");
+            Group newGroup = new Group(groupInfo[0]);
+            String newTooltip="";
+            if(groupInfo.length==2) {
+              newTooltip=groupInfo[1];
+            }
+            newGroup.setTooltip(newTooltip);
+            addGroup(newGroup);
           }
         }
       }
@@ -571,13 +614,13 @@ class Template
   
   private static String navigationHeaderTemplate()
   {
-    return "        <div class=\"level1\"><a href=\"javascript:showHide('@@NAVIGATION_HEADER_ID@@');\">@@NAVIGATION_HEADER_NAME@@</a></div>" + "\n" +
+    return "        <div class=\"level1\"><a @@TOOLTIP@@ href=\"javascript:showHide('@@NAVIGATION_HEADER_ID@@');\">@@NAVIGATION_HEADER_NAME@@</a></div>" + "\n" +
            "        <div id=\"@@NAVIGATION_HEADER_ID@@\">";
   }
   
   private static String navigationItemTemplate()
   {
-    return "          <div class=\"level2\"><a href=\"@@NAVIGATION_ITEM_FILENAME@@\" >@@NAVIGATION_ITEM_NAME@@</a></div>" + "\n";
+    return "          <div class=\"level2\"><a @@TOOLTIP@@ href=\"@@NAVIGATION_ITEM_FILENAME@@\" >@@NAVIGATION_ITEM_NAME@@</a></div>" + "\n";
   }
  
   private static String navigationItemTemplateNoAnchor()
@@ -611,6 +654,14 @@ class Template
         "" + "\n";
     return template;
   }
+  
+  static String tooltipTemplate()
+  {
+    String template = "" +
+      "title=\"@@TOOLTIP@@\"";
+    return template;
+  }  
+  
   
   private static String videoURLTemplate()
   {
@@ -673,7 +724,7 @@ class Template
 
         "@@NAVIGATION@@" + "\n" +
         "<div class=\"level1\"><a href=\"UmpleUserManualCombined.html\">Combined Version</a></div>\n" +  
-        "<div class=\"level1\"><a href=\"https://github.com/umple/umple/tree/master/build/reference/@@SRCFILENAME@@\">Edit on Github</a></div>\n" +                
+        "<div class=\"level1\"><a title=\"Click here to open an editor in Github on the original source for this manual page.\nYou can submit a pull request after making your changes\" href=\"https://github.com/umple/umple/tree/master/build/reference/@@SRCFILENAME@@\">Edit on Github</a></div>\n" +                
         "<div class=\"level1\">@@PREVNEXT@@</div>\n" +
         "    </td>" + "\n" +
         "" + "\n" +
@@ -681,6 +732,11 @@ class Template
         "" + "\n" +
         "      <td class=\"content\">" + "\n" +
         "" + "\n" +
+        
+        "<span style=\"float: right\">"+
+        "  <a title=\"Umple is led by Timothy Lethbridge, professor at the University of Ottawa. Much of the development has been by graduate students at uOttawa.\" href=\"https://www.uottawa.ca\" target=\"uottawatab\"><img height=\"20px\" src=\"files/uottawa_ver_black.png\" alt=\"University of Ottawa logo / Université d'Ottawa\" /></a>"+
+        "</span>"+
+        
         "      <h2><i>User Manual @@PREVNEXT@@</i></h2>"  + "\n" +
         
 // Code from Google for custom search
