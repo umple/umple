@@ -221,7 +221,7 @@ class GvClassDiagramGenerator
     // Only output them when visiting one class
     if(leftClass.equals(className)) {
       String[] arrows = retArrows(uAssoc);
-      String leftMult= leftEnd.toSimpleString();
+      String leftMult= leftEnd.toSimpleString();      
       String rightMult= rightEnd.toSimpleString();
       String rightClass= rightEnd.getClassName();
         
@@ -238,28 +238,45 @@ class GvClassDiagramGenerator
       }
       else 
       {
-        String nlDesc = "\nTEMPDEBUG\n"; // initialize Natural Language String
-        
+        String nlDesc = ""; // initialize Natural Language String
         
         // Test the left multiplicity of the association
-        if (leftMult.equals("*")) {
-          // Text view when the multiplicity is *
-          nlDesc += "A "+rightClass+" has some "+leftClass+"s. It can have none, and there is no upper bound defined.\n";
-        } 
-        else if (leftMult.equals("1")) {
-          // Text view when the multiplicity is 1
-          nlDesc += "A " + rightClass + " has a " + leftClass + ". It must always have exactly, one, and can never have none.\n";
+        try {
+          int leftMultInt = Integer.parseInt(leftMult);  // 
+          if (leftMultInt > 0) {
+            if ( leftMultInt == 1) {
+              nlDesc += "A " + rightClass + " has a " + leftClass + ". It must always have exactly, one, and can never have none. And there is an upper bound of at most one " + leftClass + ".\n";
+            }
+            else {
+              nlDesc += "A " + rightClass + " has " + leftMultInt + " " + leftClass + "s. It must always have exactly " + leftMultInt + " and can never have none. And there is an upper bound of at most " + leftMultInt + " " + leftClass + "s.\n";
+            }
+          }
+        } catch (NumberFormatException ex) {
+          if (leftMult.equals("*")) {
+            // Text view when the multiplicity is *
+            nlDesc += "A "+rightClass+" has some "+leftClass+"s. It can have none, and there is no upper bound defined.\n";
+          } 
         }
+        
 
         // Test the right multiplicity of the association
-        if (rightMult.equals("*")) {
-          // Text view when the multiplicity is *
-          nlDesc += "A "+leftClass+" has some "+rightClass+"s. It can have none, and there is no upper bound defined.\n";
-        } 
-        else if (rightMult.equals("1")) {
-          // Text view when the multiplicity is 1
-          nlDesc += "A " + leftClass + " has a " + rightClass + ". It must always have exactly, one, and can never have none.\n";
+        try {
+          int rightMultInt = Integer.parseInt(rightMult);
+          if (rightMultInt > 0) {
+            if ( rightMultInt == 1) {
+              nlDesc += "A " + leftClass + " has a " + rightClass + ". It must always have exactly, one, and can never have none. And there is an upper bound of at most one " + rightClass + ".\n";
+            }
+            else {
+              nlDesc += "A " + leftClass + " has " + rightMultInt + " " + rightClass + "s. It must always have exactly " + rightMultInt + " and can never have none. And there is an upper bound of at most " + rightMultInt + " " + rightClass + "s.\n";
+            }
+          }
+        } catch(NumberFormatException ex) {
+          if (rightMult.equals("*")) {
+            // Text view when the multiplicity is *
+            nlDesc += "A " + leftClass + " has some " + rightClass + "s. It can have none, and there is no upper bound defined.\n";
+          } 
         }
+        
 
         // Test the multiplicity of the association
         if (leftMult.equals("1") && rightMult.equals("1")) {
@@ -269,12 +286,12 @@ class GvClassDiagramGenerator
         } 
         else if (leftMult.equals("1") && rightMult.equals("*")) {
           nlDesc += "When a " + rightClass + " is created, its " + leftClass + " must be assigned.\n" +
-          "When a " + rightClass + " is deleted, its " + leftClass + " is not deleted and his list of " + rightClass + "s is decreased.\n" +
+          "When a " + rightClass + " is deleted, its " + leftClass + " is not deleted and its list of " + rightClass + "s is decreased.\n" +
           "When a " + leftClass + " is deleted, its " + rightClass + "s are not deleted. They are assigned to another " + leftClass + ".\n";
         }
         else if (leftMult.equals("*") && rightMult.equals("1")) {
           nlDesc += "When a " + leftClass + " is created, its " + rightClass + " must be assigned.\n" +
-          "When a " + leftClass + " is deleted, its " + rightClass + " is not deleted and his list of " + leftClass + "s is decreased.\n" +
+          "When a " + leftClass + " is deleted, its " + rightClass + " is not deleted and its list of " + leftClass + "s is decreased.\n" +
           "When a " + rightClass + " is deleted, its " + leftClass + "s are not deleted. They are assigned to another " + rightClass + ".\n";
         }
                 
