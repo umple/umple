@@ -10,10 +10,9 @@ Note that some generators such as Umlet and Violet are in their own files
 
  */
 
-
-use FeatureDiagramGenerator; // This feature should be moved into config. file in next step.
-
 namespace cruise.umple.compiler;
+
+//use FeatureDiagramGenerator; // This feature should be moved into config. file in next step.
 
 // Allows independent code generation tools
 // Different generators will do different things regarding where the files are put, etc.

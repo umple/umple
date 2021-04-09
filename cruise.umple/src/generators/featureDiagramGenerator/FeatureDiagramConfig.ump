@@ -1,10 +1,12 @@
 namespace cruise.umple.compiler;
 
 
+use FeatureDiagramGenerator;
+
 mixset FeatureDiagramGenerator
 {
 
-  use Generator_CodeGvFeatureDiagram.ump;
+  use generators/featureDiagramGenerator/Generator_CodeGvFeatureDiagram.ump;
 
   class GvFeatureDiagramGenerator
   {
