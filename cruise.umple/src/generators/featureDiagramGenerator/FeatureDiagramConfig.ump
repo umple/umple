@@ -1,0 +1,18 @@
+namespace cruise.umple.compiler;
+
+
+mixset FeatureDiagramGenerator
+{
+
+  use Generator_CodeGvFeatureDiagram.ump;
+
+  class GvFeatureDiagramGenerator
+  {
+    isA CodeGeneratorWithSubptions;
+    depend java.io.*;
+    depend java.util.*;
+    depend cruise.umple.util.*;
+    depend cruise.umple.compiler.exceptions.*;
+  }
+
+}

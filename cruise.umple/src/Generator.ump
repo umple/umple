@@ -11,7 +11,7 @@ Note that some generators such as Umlet and Violet are in their own files
  */
 
 
-use FeatureGenerator;
+use FeatureDiagramGenerator; // This feature should be moved into config. file in next step.
 
 namespace cruise.umple.compiler;
 
@@ -292,16 +292,7 @@ class GvClassTraitDiagramGenerator
   depend cruise.umple.compiler.exceptions.*;
 }
 
-mixset FeatureGenerator { 
-  class GvFeatureDiagramGenerator
-  {
-    isA CodeGeneratorWithSubptions;
-    depend java.io.*;
-    depend java.util.*;
-    depend cruise.umple.util.*;
-    depend cruise.umple.compiler.exceptions.*;
-  }
-}
+
 class GvEntityRelationshipDiagramGenerator
 {
   isA SuperGvGenerator;
@@ -550,8 +541,7 @@ use Generator_CodeSimpleMetrics.ump;
 use Generator_CodeGvClassDiagram.ump;
 use Generator_CodeGvClassTraitDiagram.ump;
 use Generator_CodeGvEntityRelationshipDiagram.ump;
-mixset FeatureGenerator{
-  use generators/featureModelGenerator/Generator_CodeGvFeatureDiagram.ump;}
+use generators/featureDiagramGenerator/FeatureDiagramConfig.ump;
 use Generator_CodeAlloy.ump;
 use Generator_CodeNuSMV.ump;
 use Generator_CodeNuSMVOptimizer.ump;
