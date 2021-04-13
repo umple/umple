@@ -292,15 +292,6 @@ class GvClassTraitDiagramGenerator
 }
 
 
-class GvEntityRelationshipDiagramGenerator
-{
-  isA SuperGvGenerator;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-}
-
 class AlloyGenerator
 {
   isA CodeGeneratorWithSubptions;
@@ -539,8 +530,13 @@ use Generator_CodeEventSequence.ump;
 use Generator_CodeSimpleMetrics.ump;
 use Generator_CodeGvClassDiagram.ump;
 use Generator_CodeGvClassTraitDiagram.ump;
+<<<<<<< HEAD
 use Generator_CodeGvEntityRelationshipDiagram.ump;
 use generators/featureDiagramGenerator/FeatureDiagramConfig.ump;
+=======
+use generators/entityRelationshipDiagramGenerator/entityRelationshipConfig.ump
+use Generator_CodeGvFeatureDiagram.ump;
+>>>>>>> refactor GvEntityRelationshipDiagram generator
 use Generator_CodeAlloy.ump;
 use Generator_CodeNuSMV.ump;
 use Generator_CodeNuSMVOptimizer.ump;
