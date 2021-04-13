@@ -291,7 +291,6 @@ class GvClassTraitDiagramGenerator
   depend cruise.umple.compiler.exceptions.*;
 }
 
-
 class AlloyGenerator
 {
   isA CodeGeneratorWithSubptions;
@@ -531,9 +530,12 @@ use Generator_CodeSimpleMetrics.ump;
 use Generator_CodeGvClassDiagram.ump;
 use Generator_CodeGvClassTraitDiagram.ump;
 <<<<<<< HEAD
+<<<<<<< HEAD
 use Generator_CodeGvEntityRelationshipDiagram.ump;
 use generators/featureDiagramGenerator/FeatureDiagramConfig.ump;
 =======
+=======
+>>>>>>> 51466c95d4fbec87b23c5574a6258092282ecd91
 use generators/entityRelationshipDiagramGenerator/entityRelationshipConfig.ump
 use Generator_CodeGvFeatureDiagram.ump;
 >>>>>>> refactor GvEntityRelationshipDiagram generator
