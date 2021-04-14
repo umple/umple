@@ -11,6 +11,15 @@ namespace cruise.umple.compiler;
 
 class Uigu2Generator
 {
+  isA PhpGenerator;
+  depend java.io.*;
+  depend java.nio.charset.*;
+  depend java.nio.file.*;
+  depend java.util.*;
+
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.compiler.uigu2.*;
+  
 
   const Charset CHARSET = StandardCharsets.UTF_8;
   const String NL = System.getProperty("line.separator");
