@@ -75,21 +75,6 @@ class GeneratorHelper
   depend cruise.umple.parser.Position;
 }
 
-class EcoreGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  EcoreGenModel genModel = null;
-  String output = "";
-}
-
 class TestGenerator
 {
   isA CodeGeneratorWithSubptions;
@@ -503,7 +488,7 @@ use Generator_CodeUigu2.ump;
 use Generator_CodeSql.ump;
 use Generator_CodeUmpleSelf.ump;
 use Generator_CodeUSE.ump;
-use Generator_CodeEcore.ump;
+use generators/Generator_CodeEcore.ump; 
 use Generator_CodeTest.ump;
 use Generator_CodePapyrus.ump;
 use Generator_CodeXmi.ump;
