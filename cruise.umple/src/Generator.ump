@@ -488,7 +488,7 @@ use Generator_CodeUigu2.ump;
 use Generator_CodeSql.ump;
 use Generator_CodeUmpleSelf.ump;
 use Generator_CodeUSE.ump;
-use generators/Generator_CodeEcore.ump; 
+use generators/ecoreGenerator/ecoreGeneratorConfig.ump;
 use Generator_CodeTest.ump;
 use Generator_CodePapyrus.ump;
 use Generator_CodeXmi.ump;
