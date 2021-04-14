@@ -490,7 +490,10 @@ use Generator_CodeUmpleSelf.ump;
 use Generator_CodeUSE.ump;
 use generators/ecoreGenerator/ecoreGeneratorConfig.ump;
 use Generator_CodeTest.ump;
-use Generator_CodePapyrus.ump;
+use PapyrusGenerator; // This use statement should moved into main conf. file in later stages.
+mixset PapyrusGenerator{
+  use generators/papyrus/Generator_CodePapyrus.ump;
+}
 use Generator_CodeXmi.ump;
 use Generator_CodeTextUml.ump;
 use Generator_CodeScxml.ump;
