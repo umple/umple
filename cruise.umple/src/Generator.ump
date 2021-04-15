@@ -98,10 +98,15 @@ use XmiGenerator;
 mixset XmiGenerator{
   use generators/xmi/Generator_CodeXmi.ump;
 }
-use generators/Generator_CodeTextUml.ump;
-use generators/Generator_CodeScxml.ump;
+use TextUmlGenerator;
+mixset TextUmlGenerator{ use generators/Generator_CodeTextUml.ump; }
+use ScxmlGenerator;
+mixset ScxmlGenerator{ use generators/Generator_CodeScxml.ump; }
+
 use generators/statemachineDiagramGenerator/stateMachineDiagramConfig.ump;
-use generators/Generator_CodeStateTables.ump;
+use StateTableGenerator;
+
+mixset StateTableGenerator{ use generators/Generator_CodeStateTables.ump; }
 use generators/Generator_CodeEventSequence.ump;
 use generators/Generator_CodeSimpleMetrics.ump;
 use generators/Generator_CodeGvClassDiagram.ump;
