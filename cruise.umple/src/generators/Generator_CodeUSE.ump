@@ -9,6 +9,15 @@ namespace cruise.umple.compiler;
 
 class USEGenerator
 {
+  isA CodeGeneratorWithSubptions;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  UmpleModel model = null;
+  String output = "";
+
   
   private String getAssociationName(Association as) {
     String firstEndName = as.getEnd(0).getDisplayRoleName();
