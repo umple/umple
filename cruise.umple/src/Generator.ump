@@ -108,8 +108,9 @@ use StateTableGenerator;
 mixset StateTableGenerator{ use generators/Generator_CodeStateTables.ump; }
 use EventSequenceGenerator;
 mixset EventSequenceGenerator{ use generators/Generator_CodeEventSequence.ump; }
+use SimpleMetricsGenerator;
+mixset SimpleMetricsGenerator{ use generators/Generator_CodeSimpleMetrics.ump; }
 
-use generators/Generator_CodeSimpleMetrics.ump;
 use generators/Generator_CodeGvClassDiagram.ump;
 use generators/Generator_CodeGvClassTraitDiagram.ump;
 use generators/featureDiagramGenerator/FeatureDiagramConfig.ump;
@@ -117,12 +118,18 @@ use generators/entityRelationshipDiagramGenerator/entityRelationshipConfig.ump
 use generators/Generator_CodeAlloy.ump;
 use generators/Generator_CodeNuSMV.ump;
 use generators/Generator_CodeNuSMVOptimizer.ump;
-use generators/Generator_CodeSimulate.ump;
-use generators/Generator_CodeYuml.ump;
-use generators/Generator_CodeXtext.ump;
-use generators/Generator_CodeJson.ump;
-use generators/Generator_CodeJsonMixed.ump;
-use generators/Generator_CodeStructureDiagram.ump;
+use SimulateGenerator;
+mixset SimulateGenerator{ use generators/Generator_CodeSimulate.ump; }
+use YumlGenerator;
+mixset YumlGenerator{ use generators/Generator_CodeYuml.ump; }
+use XtextGenerator;
+mixset XtextGenerator{ use generators/Generator_CodeXtext.ump; }
+use JsonGenerator;
+mixset JsonGenerator{ use generators/Generator_CodeJson.ump; }
+use JsonMixedGenerator;
+mixset JsonMixedGenerator{ use generators/Generator_CodeJsonMixed.ump; }
+use StructureDiagramGenerator;
+mixset StructureDiagramGenerator{ use generators/Generator_CodeStructureDiagram.ump; }
 use Generator_SuperCodeGenerator.ump;
 use Generator_SuperGvGenerator.ump; // ABSTRACT CLASS FOR GV!!
 use Generator_Html.ump;
