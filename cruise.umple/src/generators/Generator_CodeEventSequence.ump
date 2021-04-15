@@ -27,7 +27,9 @@ class EventSequenceGenerator
   // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
+}
 
+class EventSequencer {
   0..1 -> * StateWrapper possibleStates;
   0..1 -> * Transition possibleTransitions;
   0..1 -> * Event possibleEvents; 
