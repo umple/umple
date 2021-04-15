@@ -105,9 +105,10 @@ mixset ScxmlGenerator{ use generators/Generator_CodeScxml.ump; }
 
 use generators/statemachineDiagramGenerator/stateMachineDiagramConfig.ump;
 use StateTableGenerator;
-
 mixset StateTableGenerator{ use generators/Generator_CodeStateTables.ump; }
-use generators/Generator_CodeEventSequence.ump;
+use EventSequenceGenerator;
+mixset EventSequenceGenerator{ use generators/Generator_CodeEventSequence.ump; }
+
 use generators/Generator_CodeSimpleMetrics.ump;
 use generators/Generator_CodeGvClassDiagram.ump;
 use generators/Generator_CodeGvClassTraitDiagram.ump;
