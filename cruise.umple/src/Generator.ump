@@ -130,8 +130,12 @@ use JsonMixedGenerator;
 mixset JsonMixedGenerator{ use generators/Generator_CodeJsonMixed.ump; }
 use StructureDiagramGenerator;
 mixset StructureDiagramGenerator{ use generators/Generator_CodeStructureDiagram.ump; }
+
+use BeforeSuperCodeGenerator;
+mixset BeforeSuperCodeGenerator{
 use Generator_SuperCodeGenerator.ump;
 use Generator_SuperGvGenerator.ump; // ABSTRACT CLASS FOR GV!!
 use Generator_Html.ump;
 use Generator_UmpleModelWalker.ump;
 use generators/Generator_CodeAnalysis.ump;
+}
