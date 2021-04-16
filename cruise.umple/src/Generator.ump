@@ -111,7 +111,7 @@ use StateTableGenerator;
 use SuperGvGeneratorGenerator;
 use HtmlGenerator;
 use UmpleModelWalkerGenerator;
-use CodeAnalysisGenerator
+use CodeAnalysisGenerator;
 
 
 mixset CodeGenerator { use generators/Generator_Code.ump; }
