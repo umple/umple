@@ -75,11 +75,12 @@ class GeneratorHelper
   depend cruise.umple.parser.Position;
 }
 
-use TopGroup;
-mixset TopGroup{
+
 use Umple.ump;
 use StateMachine.ump;
 use GeneratorHelper_Code.ump;
+use TopGroup;
+mixset TopGroup{
 use generators/Generator_Code.ump;
 use generators/Generator_CodeUmple.ump;
 use generators/Generator_CodeRuby.ump;
