@@ -75,6 +75,8 @@ class GeneratorHelper
   depend cruise.umple.parser.Position;
 }
 
+use TopGroup;
+mixset TopGroup{
 use Umple.ump;
 use StateMachine.ump;
 use GeneratorHelper_Code.ump;
@@ -90,6 +92,7 @@ use generators/Generator_CodeUmpleSelf.ump;
 use generators/Generator_CodeUSE.ump;
 use generators/ecoreGenerator/ecoreGeneratorConfig.ump;
 use generators/Generator_CodeTest.ump;
+}
 use PapyrusGenerator; // This use statement should moved into main conf. file in later stages.
 mixset PapyrusGenerator{
   use generators/papyrus/Generator_CodePapyrus.ump;
