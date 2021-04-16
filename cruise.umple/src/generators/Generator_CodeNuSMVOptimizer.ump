@@ -12,8 +12,8 @@ in your umple file, or the command line option
 
  */
 
-use NuSMVMetamodel.ump;
-use NuSMVCoordinationUnit.ump;
+//use NuSMVMetamodel.ump;
+//use NuSMVCoordinationUnit.ump;
 namespace cruise.umple.compiler;
 
 class NuSMVOptimizerGenerator

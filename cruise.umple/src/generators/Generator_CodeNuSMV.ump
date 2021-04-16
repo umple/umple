@@ -12,12 +12,13 @@ in your umple file, or the command line option
 
  */
 
-use NuSMVMetamodel.ump;
-use NuSMVCoordinationUnit.ump;
+//use NuSMVMetamodel.ump;
+//use NuSMVCoordinationUnit.ump;
 namespace cruise.umple.compiler;
 
 class NuSMVGenerator
 {
+  
   isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
