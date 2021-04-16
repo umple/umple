@@ -79,7 +79,8 @@ class GeneratorHelper
 use Umple.ump;
 use StateMachine.ump;
 use GeneratorHelper_Code.ump;
-
+use NuSMVMetamodel.ump;
+use NuSMVCoordinationUnit.ump;
 use CodeGenerator ;   
 use UmpleGenerator ;   
 use RubyGenerator ;   
@@ -118,8 +119,6 @@ use NuSMVOptimizerGenerator;
 use SimpleMetricsGenerator;
 use CodeGvClassDiagramGenerator;
 
-
-
 mixset CodeGenerator { use generators/Generator_Code.ump; }
 mixset UmpleGenerator { use generators/Generator_CodeUmple.ump; }
 mixset RubyGenerator { use generators/Generator_CodeRuby.ump; }
@@ -132,7 +131,6 @@ mixset UmpleSelfGenerator { use generators/Generator_CodeUmpleSelf.ump; }
 mixset USEGenerator { use generators/Generator_CodeUSE.ump; }
 mixset EcoreGenerator { use generators/ecoreGenerator/ecoreGeneratorConfig.ump; }
 mixset TestGenerator { use generators/Generator_CodeTest.ump; }
-
 mixset PapyrusGenerator{ use generators/papyrus/Generator_CodePapyrus.ump; }
 mixset XmiGenerator{ use generators/xmi/Generator_CodeXmi.ump; }
 mixset TextUmlGenerator{ use generators/Generator_CodeTextUml.ump; }
@@ -144,10 +142,7 @@ mixset SimpleMetricsGenerator{ use generators/Generator_CodeSimpleMetrics.ump; }
 mixset CodeGvClassDiagramGenerator{ use generators/Generator_CodeGvClassDiagram.ump;}
 mixset CodeGvClassTraitDiagramGenerator{ use generators/Generator_CodeGvClassTraitDiagram.ump; }
 mixset FeatureDiagramCo{ use generators/featureDiagramGenerator/FeatureDiagramConfig.ump; }
-mixset EntityRelationshipCon{ use generators/entityRelationshipDiagramGenerator/entityRelationshipConfig.ump
-}
-use NuSMVMetamodel.ump;
-use NuSMVCoordinationUnit.ump;
+mixset EntityRelationshipCon{ use generators/entityRelationshipDiagramGenerator/entityRelationshipConfig.ump}
 mixset AlloyGenerator{ use generators/Generator_CodeAlloy.ump; }
 mixset NuSMVGenerator{ use generators/Generator_CodeNuSMV.ump;}
 mixset NuSMVOptimizerGenerator{ use generators/Generator_CodeNuSMVOptimizer.ump;}
