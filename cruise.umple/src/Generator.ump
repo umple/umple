@@ -112,6 +112,7 @@ use SuperGvGeneratorGenerator;
 use HtmlGenerator;
 use UmpleModelWalkerGenerator;
 use CodeAnalysisGenerator;
+use AlloyGenerator;
 
 
 mixset CodeGenerator { use generators/Generator_Code.ump; }
@@ -155,7 +156,9 @@ mixset FeatureDiagramCo{
 mixset EntityRelationshipCon{
   use generators/entityRelationshipDiagramGenerator/entityRelationshipConfig.ump
 }
-use generators/Generator_CodeAlloy.ump;
+mixset AlloyGenerator{
+  use generators/Generator_CodeAlloy.ump;
+}
 use generators/Generator_CodeNuSMV.ump;
 use generators/Generator_CodeNuSMVOptimizer.ump;
 mixset SimulateGenerator{ use generators/Generator_CodeSimulate.ump; }
