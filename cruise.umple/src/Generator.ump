@@ -110,11 +110,13 @@ use EventSequenceGenerator;
 mixset EventSequenceGenerator{ use generators/Generator_CodeEventSequence.ump; }
 use SimpleMetricsGenerator;
 mixset SimpleMetricsGenerator{ use generators/Generator_CodeSimpleMetrics.ump; }
-
+use Group_A_Generator;
+mixset Group_A_Generator{
 use generators/Generator_CodeGvClassDiagram.ump;
 use generators/Generator_CodeGvClassTraitDiagram.ump;
 use generators/featureDiagramGenerator/FeatureDiagramConfig.ump;
 use generators/entityRelationshipDiagramGenerator/entityRelationshipConfig.ump
+}
 use generators/Generator_CodeAlloy.ump;
 use generators/Generator_CodeNuSMV.ump;
 use generators/Generator_CodeNuSMVOptimizer.ump;
