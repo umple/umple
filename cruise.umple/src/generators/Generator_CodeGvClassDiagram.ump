@@ -17,6 +17,12 @@ namespace cruise.umple.compiler;
 
 class GvClassDiagramGenerator
 {
+  isA SuperGvGenerator;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
   // Returns what is being generated - called SuperGvGenerator
   protected String generatorType()
   {

@@ -11,6 +11,15 @@ namespace cruise.umple.compiler;
 
 class YumlGenerator
 {
+  isA CodeGeneratorWithSubptions;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String outputPath = "";
+
 
   public void generate()
   {

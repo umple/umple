@@ -15,7 +15,21 @@ use SimpleMetrics_Class.ump;
 use SimpleMetrics_SM.ump;
 use SimpleMetrics_CodeLines.ump;
 
-class SimpleMetricsGenerator {
+class SimpleMetricsGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String output = "";
+
+
+
   StringBuilder code = new StringBuilder();
 
   // Basic templates

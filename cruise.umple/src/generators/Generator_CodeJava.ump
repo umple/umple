@@ -8,10 +8,20 @@ http://umple.org/license
 */
 
 namespace cruise.umple.compiler;
-
 class JavaGenerator
 {
+  isA CodeTranslator;
+  isA SuperCodeGenerator;
+  depend java.util.*;
+  depend java.io.*;
+  depend cruise.umple.util.*;
   depend cruise.umple.util.StringFormatter;
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.compiler.java.*;
+
+  StringBuilder uncaughtExceptions = new StringBuilder();
+  UmpleClass[] mainClasses;
+
   
   private static Map<String,String> UpperCaseSingularLookupMap;
   private static Map<String,String> UpperCasePluralLookupMap;

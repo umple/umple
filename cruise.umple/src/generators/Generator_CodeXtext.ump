@@ -11,6 +11,21 @@ namespace cruise.umple.compiler;
 
 class XtextGenerator
 {
+  isA CodeGeneratorWithSubptions;
+  depend java.util.regex.*;
+  depend java.util.*;
+  depend java.io.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.Rule;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  PatternHandler[] patterns;
+  UmpleModel model = null;
+  String outputPath = "";
+  String output = "";
+
+  HashSet<String> terminals = new HashSet<String>();
 
   public void generate()
   {

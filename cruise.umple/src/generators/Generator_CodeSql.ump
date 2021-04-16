@@ -9,95 +9,98 @@ http://umple.org/license
 
 namespace cruise.umple.compiler;
 
-class RubyGenerator
+class SqlGenerator
 {
+  isA SuperCodeGenerator;
+  isA CodeTranslator;
+  depend java.util.*;
+  depend java.io.*;
+  depend cruise.umple.util.*;
+
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.compiler.sql.*;
   
   private static Map<String,String> UpperCaseSingularLookupMap;
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;
   private static Map<String,String> AsIsPluralLookupMap;
   private static List<String> OneOrManyLookup;
-
-  public JavaGenerator jgen = new JavaGenerator();
+  private static List<String> SqlPrimitives;
+  private static String beforeCode;
+  private static String afterCode;
 
   static
   {
 
     UpperCaseSingularLookupMap = new HashMap<String, String>();
-    UpperCaseSingularLookupMap.put("attributeConstant", "{0}");
 
     UpperCasePluralLookupMap = new HashMap<String, String>();
 
-
     AsIsSingularLookupMap = new HashMap<String, String>();
-    AsIsSingularLookupMap.put("parameterOne", "a_{0}");
-    AsIsSingularLookupMap.put("removeParameterOne", "placeholder_{0}");
-    AsIsSingularLookupMap.put("parameterNew", "a_new_{0}");
-    AsIsSingularLookupMap.put("parameterNext", "next_{0}");
-    AsIsSingularLookupMap.put("addMethod", "add_{0}");
-    AsIsSingularLookupMap.put("addAtMethod", "add_{0}_at");
-    AsIsSingularLookupMap.put("addOrMoveAtMethod", "add_or_move_{0}_at");
-    AsIsSingularLookupMap.put("addViaMethod", "add_{0}_via");
-    AsIsSingularLookupMap.put("removeMethod", "remove_{0}");
-    AsIsSingularLookupMap.put("indexOfMethod", "index_of_{0}");
-    AsIsSingularLookupMap.put("parameterOld", "an_old_{0}");
-    AsIsSingularLookupMap.put("parameterExisting", "existing_{0}");
-    AsIsSingularLookupMap.put("parameterExistingSerialized", "existing_serialized_{0}");
-    AsIsSingularLookupMap.put("parameterIsNew", "is_new_{0}");
-    AsIsSingularLookupMap.put("parameterGetUnique", "retrieved_by_{0}");
-    AsIsSingularLookupMap.put("parameterHasUnique", "has_unique_{0}");
-    AsIsSingularLookupMap.put("associationNew", "new_{0}");
-    AsIsSingularLookupMap.put("canSetMethod", "can_set_{0}");
-    AsIsSingularLookupMap.put("parameterCurrent", "current_{0}");
-    AsIsSingularLookupMap.put("deleteMethod", "delete_{0}");
-    AsIsSingularLookupMap.put("enterMethod", "enter_{0}");
-    AsIsSingularLookupMap.put("exitMethod", "exit_{0}");
-    AsIsSingularLookupMap.put("resetMethod", "reset_{0}");
-    AsIsSingularLookupMap.put("getDefaultMethod", "get_default_{0}");
-    AsIsSingularLookupMap.put("didAdd", "did_add_{0}");
-    AsIsSingularLookupMap.put("hasMethod", "has_{0}");
-    AsIsSingularLookupMap.put("associationCanSetOne","can_set_{0}");
-    AsIsSingularLookupMap.put("attributeCanSetOne","can_set_{0}");
-    AsIsSingularLookupMap.put("eventStartMethod", "start_{0}_handler");
-    AsIsSingularLookupMap.put("eventStopMethod", "stop_{0}_handler");
-    AsIsSingularLookupMap.put("associationOne","{0}");
-    AsIsSingularLookupMap.put("attributeOne","{0}");
-    AsIsSingularLookupMap.put("stateMachineOne","{0}");
-    AsIsSingularLookupMap.put("eventMethod","{0}");
-    AsIsSingularLookupMap.put("eventHandler","{0}_handler");
-    AsIsSingularLookupMap.put("setMethod", "set_{0}");
-    AsIsSingularLookupMap.put("getMethod", "get_{0}");
-    AsIsSingularLookupMap.put("isMethod", "is_{0}");
-
+    AsIsSingularLookupMap.put("attributeOne", "{0}");
+    AsIsSingularLookupMap.put("attributeOneQuoted", "`{0}`");
+    AsIsSingularLookupMap.put("attributeConstant", "{0}");
+    AsIsSingularLookupMap.put("attributeConstantQuoted", "`{0}`");
 
     AsIsPluralLookupMap = new HashMap<String, String>();
-    AsIsPluralLookupMap.put("parameterMany", "new_{0}");
-    AsIsPluralLookupMap.put("parameterAll", "all_{0}");
-    AsIsPluralLookupMap.put("numberOfMethod", "number_of_{0}");
-    AsIsPluralLookupMap.put("minimumNumberOfMethod", "minimum_number_of_{0}");
-    AsIsPluralLookupMap.put("maximumNumberOfMethod", "maximum_number_of_{0}");
-    AsIsPluralLookupMap.put("isNumberOfValidMethod", "is_number_of_{0}_valid");
-    AsIsPluralLookupMap.put("parameterVerifiedMany", "verified_{0}");
-    AsIsPluralLookupMap.put("parameterOldMany", "old_{0}");
-    AsIsPluralLookupMap.put("parameterCheckNewMany", "check_new_{0}");
-    AsIsPluralLookupMap.put("parameterCopyOfMany", "copy_of_{0}");
-    AsIsPluralLookupMap.put("parameterMany", "new_{0}");
-    AsIsPluralLookupMap.put("didAddMany", "did_add_{0}");
-    AsIsPluralLookupMap.put("hasManyMethod", "has_{0}");
-    AsIsPluralLookupMap.put("associationCanSetMany","can_set_{0}");
-    AsIsPluralLookupMap.put("attributeCanSetMany","can_set_{0}");
-    AsIsPluralLookupMap.put("requiredNumberOfMethod", "required_number_of_{0}");
-    AsIsPluralLookupMap.put("associationMany","{0}");
-    AsIsPluralLookupMap.put("attributeMany","{0}");
-    AsIsPluralLookupMap.put("getManyMethod", "get_{0}");
-    AsIsPluralLookupMap.put("setManyMethod", "set_{0}");
 
     OneOrManyLookup = new ArrayList<String>();
     OneOrManyLookup.add("attribute");
     OneOrManyLookup.add("parameter");
-
-  }
     
+    SqlPrimitives = new ArrayList<String>();
+    //MySQL types
+    SqlPrimitives.add("CHAR");
+    SqlPrimitives.add("VARCHAR");
+    SqlPrimitives.add("TINYTEXT");
+    SqlPrimitives.add("TEXT");
+    SqlPrimitives.add("BLOB");
+    SqlPrimitives.add("MEDIUMTEXT");
+    SqlPrimitives.add("MEDIUMBLOB");
+    SqlPrimitives.add("LONGTEXT");
+    SqlPrimitives.add("LONGBLOB");
+    SqlPrimitives.add("ENUM");
+    SqlPrimitives.add("SET");
+    SqlPrimitives.add("TINYINT");
+    SqlPrimitives.add("SMALLINT");
+    SqlPrimitives.add("MEDIUMINT");
+    SqlPrimitives.add("INT");
+    SqlPrimitives.add("BIGINT");
+    SqlPrimitives.add("FLOAT");
+    SqlPrimitives.add("DOUBLE");
+    SqlPrimitives.add("DECIMAL");
+    SqlPrimitives.add("DATE");
+    SqlPrimitives.add("DATETIME");
+    SqlPrimitives.add("TIMESTAMP");
+    SqlPrimitives.add("TIME");
+    SqlPrimitives.add("YEAR");
+    //Additional Sql Server types
+    SqlPrimitives.add("NCHAR");
+    SqlPrimitives.add("NVARCHAR");
+    SqlPrimitives.add("NTEXT");
+    SqlPrimitives.add("BIT");
+    SqlPrimitives.add("BINARY");
+    SqlPrimitives.add("VARBINARY");
+    SqlPrimitives.add("IMAGE");
+    SqlPrimitives.add("NUMERIC");
+    SqlPrimitives.add("SMALLMONEY");
+    SqlPrimitives.add("MONEY");
+    SqlPrimitives.add("REAL");
+    SqlPrimitives.add("DATETIME2");
+    SqlPrimitives.add("SMALLDATETIME");
+    SqlPrimitives.add("DATETIMEOFFSET");
+    //Other types
+    SqlPrimitives.add("SQL_VARIANT");
+    SqlPrimitives.add("UNIQUEIDENTIFIER");
+    SqlPrimitives.add("XML");
+    SqlPrimitives.add("CURSOR");
+    SqlPrimitives.add("TABLE");
+    
+    //Codes used to break the generated code into groups
+    beforeCode = "@BEFORE_CODE@";
+    afterCode = "@AFTER_CODE@";
+  }
+  
   public void prepare()
   {
     List<UmpleClass> allClasses = new ArrayList<UmpleClass>(getModel().getUmpleClasses());
@@ -115,11 +118,193 @@ class RubyGenerator
     }
 
     addRelatedImports();
+    
+    //Add internal association class to replace M..N or * associations
+    for (int i = 0; i < getModel().numberOfUmpleClasses(); i++)
+    {
+      UmpleClass aClass = getModel().getUmpleClass(i);
+      if (aClass instanceof AssociationClass)
+      {
+        continue;
+      }
+      for (AssociationVariable av : aClass.getAssociationVariables())
+      {
+        if (getModel().indexOfUmpleClass(av.getRelatedAssociation().getUmpleClass()) >= i)
+        {
+          continue;
+        }
+        if ((av.isMN() && !av.isOptionalOne()) || (av.getRelatedAssociation().isMN() && !av.getRelatedAssociation().isOptionalOne()))
+        {
+          //ToDo: Create new internal association class that replaces the association described by av and av.getRelatedAssociaiton()
+          /*
+          AssociationClass ac = new AssociationClass(aClass.getName() + "To" + av.getRelatedAssociation().getUmpleClass().getName());
+          ac.setIsInternal(true);
+          ac.addAssociatedTo(Association aAssociatedTo); //Association to aClass
+          ac.addAssociatedTo(Association aAssociatedTo); //Association to av.getRelatedAssociation().getUmpleClass()
+          Key k = new Key();
+          k.addMember(String name); //Name of first association
+          k.addMember(String name); //Name of second association
+          ac.setKey(k);
+          */
+        }
+      }
+    }
+  }
+  
+  
+  public List<Attribute> resolvePrimaryKey(UmpleClass aClass)
+  {
+    List<Attribute> result = new ArrayList<Attribute>();
+    
+    //Check for Primary Key
+    String[] keyMembers = aClass.getKey().getMembers();
+    if (keyMembers.length > 0)
+    {
+      for (String m : keyMembers)
+      {
+        Attribute attr = aClass.getAttribute(m);
+        AssociationVariable av = aClass.getAssociationVariable(m);
+        StateMachine sm = aClass.getStateMachine(m);
+        
+        if (attr != null)
+        {
+          UmpleClass foreignClass = getModel().getUmpleClass(attr.getType());
+          if (foreignClass != null)
+          {
+            for (Attribute FK : resolvePrimaryKey(foreignClass))
+            {
+              result.add(attributePsudoCopy(FK, m + "_", ""));
+            }
+          }
+          else
+          {
+            result.add(attr);
+          }
+        }
+        else if (av != null && av.getIsNavigable() && (av.isOptionalOne() || av.isOnlyOne() || av.isN()))
+        {
+          UmpleClass foreignClass = av.getRelatedAssociation().getUmpleClass();
+          if (foreignClass != null)
+          {
+            int maxMultiplicity = av.getMultiplicity().getUpperBound();
+            List<Attribute> FK = resolvePrimaryKey(foreignClass);
+            for (int i = 1; i <= maxMultiplicity; i++)
+            {
+              for (Attribute fk : FK)
+              {
+                result.add(attributePsudoCopy(fk, m + "_", ((maxMultiplicity > 1) ? "_"+ i : "")));
+              }
+            }
+          }
+        }
+        else if (sm != null)
+        {
+          result.add(makeFakeAttribute(m, aClass));
+        }
+        else
+        {
+          //Error: Key name does not refer to anything.
+        }
+      }
+    }
+
+    if (result.isEmpty())
+    {
+      if (aClass.numberOfAttributes() > 0)
+      {
+        result.add(aClass.getAttribute(0));
+      }
+      else if (aClass.numberOfAssociations() > 0)
+      {
+        int maxAssoc = aClass.numberOfAssociations();
+        int i = 0;
+        while (result.isEmpty() && i < maxAssoc)
+        {
+          AssociationVariable av = aClass.getAssociationVariable(i);
+          if (av != null && av.getIsNavigable() && (av.isOptionalOne() || av.isOnlyOne() || av.isN()))
+          {
+            UmpleClass foreignClass = av.getRelatedAssociation().getUmpleClass();
+            if (foreignClass != null)
+            {
+              int maxMultiplicity = av.getMultiplicity().getUpperBound();
+              List<Attribute> FK = resolvePrimaryKey(foreignClass);
+              for (int p = 1; p <= maxMultiplicity; p++)
+              {
+                for (Attribute fk : FK)
+                {
+                  result.add(attributePsudoCopy(fk, foreignClass.getName() + "_", ((maxMultiplicity > 1) ? "_"+ p : "")));
+                }
+              }
+            }
+          }
+          i++;
+        }
+      }
+      else if (aClass.numberOfStateMachines() > 0)
+      {
+        result.add(makeFakeAttribute(aClass.getStateMachine(0).getName(), aClass));
+      }
+    }
+    
+    if (result.isEmpty())
+    {
+      //Error: Class is empty
+    }
+    return result;
+  }
+  
+  private Attribute attributePsudoCopy(Attribute a, String prefix, String suffix)
+  {
+    Attribute aCopy = new Attribute(prefix + a.getName() + suffix, a.getType(), a.getModifier(), a.getValue(), a.getIsAutounique(), a.getUmpleClass());
+    aCopy.setIsList(a.getIsList());
+    aCopy.setIsDerived(a.getIsDerived());
+    aCopy.setIsLazy(a.getIsLazy());
+    return aCopy;
+  }
+  
+  private Attribute makeFakeAttribute(String name, UmpleClass parent)
+  {
+    return new Attribute(name, "", "", "", false, parent);
+  }
+  
+  public String getType(UmpleVariable av)
+  {
+    String myType = av.getType();
+    
+    if (myType == null || myType.length() == 0) //No type specified.
+    {
+      return "BLOB";
+    }
+    else if (UmpleToPrimitiveMap.containsKey(myType)) //Type is an Umple Primitive.
+    {
+      return UmpleToPrimitiveMap.get(myType);
+    }
+    //Check if type is an Sql primitive
+    for (String primitiveType : SqlPrimitives)
+    {
+      if (myType.toUpperCase().equals(primitiveType) || (myType.toUpperCase().startsWith(primitiveType + "(") && myType.endsWith(")")))
+      {
+        return primitiveType + myType.substring(primitiveType.length());
+      }
+    }
+    //Check if type is that of another class.
+    if (av instanceof AssociationVariable)
+    {
+      //What to do in this case?
+    }
+    
+    //Unknown type
+    return "BLOB";
   }
   
   public boolean isNullable(UmpleVariable av)
   {
     return true;
+  }
+
+  public String translate(String format, ConstraintTree constraint)
+  {
+  	return "{0}";
   }
   
   public String relatedTranslate(String name, AssociationVariable av)
@@ -131,75 +316,28 @@ class RubyGenerator
   {
     if (aElement instanceof UmpleInterface)
     {
-      return new RubyInterfaceGenerator();
+      return new SqlInterfaceGenerator();
     }
     else if (aElement instanceof UmpleClass)
     {
-      return new RubyClassGenerator();
+      return new SqlClassGenerator();
     } 
     else{
     	return null;    	
     }
   }
   
-  public String umpleCVarToLanguagePrimitive(String name, ConstraintVariable expr) {
-    if ((expr instanceof ConstraintAttribute)&&"Date".equals(((ConstraintAttribute)expr).getAttribute().getType()))
-    {
-      return name + ".to_time.to_i";
-    }
-    else
-    {
-      return name;
-    }
-  }
-
-  // Retrieve the applicable injections with the Ruby naming convention and the typical Java naming convention
-  public List<CodeInjection> getApplicableCodeInjections(UmpleClass uClass, String injectType, String methodDesc, Attribute av) {
-    List<CodeInjection> injections = uClass.getApplicableCodeInjections(injectType, jgen.translate(methodDesc, av));
-
-    for(CodeInjection cd : uClass.getApplicableCodeInjections(injectType, translate(methodDesc, av))) {
-      boolean add = true;
-      for(CodeInjection cd2 : injections) {
-        if(cd.equals(cd2)) {
-          add = false;
-        }
-      }
-
-      if(add) {
-        injections.add(cd);
-      }
-    }
-
-    return injections;
-  }
-
-  public List<CodeInjection> getApplicableCodeInjections(UmpleClass uClass, String injectType, String methodDesc, AssociationVariable av) {
-    List<CodeInjection> injections = uClass.getApplicableCodeInjections(injectType, jgen.translate(methodDesc, av));
-
-    for(CodeInjection cd : uClass.getApplicableCodeInjections(injectType, translate(methodDesc, av))) {
-      boolean add = true;
-      for(CodeInjection cd2 : injections) {
-        if(cd.equals(cd2)) {
-          add = false;
-        }
-      }
-
-      if(add) {
-        injections.add(cd);
-      }
-    }
-
-    return injections;
-  }
-  
   public String translate(String name, UmpleInterface aInterface)
   {
-    if ("packageDefinition".equals(name))
+    String result = "";
+    if ("packageDefinition".equals(name) && aInterface.getPackageName().length() > 0)
     {
-      String moduleName = StringFormatter.toPascalCase(aInterface.getPackageName());
-      return aInterface.getPackageName().length() == 0 ? "" : "module " + moduleName; 
-      }
-    return "";
+      String moduleName = StringFormatter.toUnderscore(aInterface.getPackageName());
+      result += "CREATE DATABASE IF NOT EXISTS `" + moduleName +"`;\n";
+      result += "USE `" + moduleName +"`;";
+      return result;
+    }
+    return result;
   }
   
   public String translate(String name, UmpleClass aClass)
@@ -208,22 +346,51 @@ class RubyGenerator
     {
       return aClass.getGeneratedClass().getLookup("constructorSignature_mandatory");
     }
+    else if ("packageName".equals(name))
+    {
+      String moduleName = StringFormatter.toUnderscore(aClass.getPackageName());
+      return aClass.getPackageName().length() == 0 ? "" : moduleName; 
+    }
+    else if ("packageNameQuoted".equals(name))
+    {
+      String moduleName = StringFormatter.toUnderscore(aClass.getPackageName());
+      return aClass.getPackageName().length() == 0 ? "" : "`" + moduleName + "`"; 
+    }
     else if ("packageDefinition".equals(name))
     {
-      String moduleName = StringFormatter.toPascalCase(aClass.getPackageName());
-      return aClass.getPackageName().length() == 0 ? "" : "module " + moduleName; 
+      String moduleName = translate("packageNameQuoted", aClass);
+      return aClass.getPackageName().length() == 0 ? "" : "CREATE DATABASE IF NOT EXISTS " + moduleName +";\nUSE " + moduleName +";";
     }
     else if ("packageDefinitionEnd".equals(name))
     {
-      return aClass.getPackageName().length() == 0 ? "" : "end";
+      return "\n";
     }
     else if ("type".equals(name))
     {
-      return aClass.getName();
+      return StringFormatter.toUnderscore(aClass.getName());
+    } 
+    else if ("typeQuoted".equals(name))
+    {
+      return "`" + StringFormatter.toUnderscore(aClass.getName()) + "`";
+    } 
+    else if ("typeWithPackage".equals(name))
+    {
+      String result = translate("packageNameQuoted", aClass);
+      result = result.length() == 0 ? "" : result + ".";
+      result += translate("typeQuoted", aClass);
+      return result;
     } 
     else if ("isA".equals(name))
     {
        return getExtendAndImplements(aClass);
+    }
+    else if ("beforeCode".equals(name))
+    {
+       return beforeCode;
+    }
+    else if ("afterCode".equals(name))
+    {
+       return afterCode;
     }
     return "UNKNOWN ID: " + name;
   }
@@ -267,13 +434,19 @@ class RubyGenerator
     return translate(keyName,av,isMany);
   }
   
+  public String translate(String keyName, TraceItem ti)
+  {
+  	return "";
+  }
+   
   public String translate(String keyName, AssociationVariable av)
   {
     boolean isMany = av.isMany();
     return translate(keyName,av,isMany);
   }  
 
-  // Translates Date and Time values, has to be used for interfaces as they do not use attributes. 
+        
+  // Translates Date, Time and String const to SQL value, has to be used for interfaces as they do not use attributes. 
   public String translateInterfaceValue(String value, String type){
     if (value == null)
     {
@@ -283,16 +456,26 @@ class RubyGenerator
     boolean isString = value.startsWith("\"") && value.endsWith("\"");
     if (isString && "Date".equals(type))
     {
-      return StringFormatter.format("Date.parse({0})",value);
+      return StringFormatter.format("Date.parse({0})", value);
     }
     else if (isString && "Time".equals(type))
     {
-      return StringFormatter.format("Time.parse({0})",value);
+      return StringFormatter.format("Time.parse({0})", value);
+    }
+    else if (isString)
+    {
+      return value.substring(1, value.length() - 1);
     }
     else
     {
       return value;
     }
+  }
+
+  // Translates primitive data types to their SQL equivalent. Used for interfaces as they do not use attributes.
+  public String translateInterfaceType(String type)
+  {
+      return typeOf(type);
   }
   
   private String translate(String keyName, UmpleVariable av, boolean isMany)
@@ -316,11 +499,11 @@ class RubyGenerator
     }
     else if (AsIsPluralLookupMap.containsKey(keyName))
     {
-      return StringFormatter.format(AsIsPluralLookupMap.get(keyName),pluralName);
+      return StringFormatter.format(AsIsPluralLookupMap.get(keyName),StringFormatter.toUnderscore(pluralName));
     }
     else if (AsIsSingularLookupMap.containsKey(keyName))
     {
-      return StringFormatter.format(AsIsSingularLookupMap.get(keyName),singularName);
+      return StringFormatter.format(AsIsSingularLookupMap.get(keyName),StringFormatter.toUnderscore(singularName));
     }
     else if ("parameterValue".equals(keyName))
     {
@@ -338,18 +521,34 @@ class RubyGenerator
       {
         return StringFormatter.format("Time.parse({0})",av.getValue());
       }
+      else if (isString)
+      {
+        return av.getValue().substring(1, av.getValue().length() - 1);
+      }
       else
       {
         return av.getValue();
       }
     }
+    else if ("parameterValueQuoted".equals(keyName))
+    {
+      return "'" + translate("parameterValue", av, isMany) + "'";
+    }
     else if ("type".equals(keyName))
     {
-      return getType(av);
+      if (av instanceof Attribute)
+      {
+        return getType(av).toUpperCase();
+      }
+      return StringFormatter.toUnderscore(getType(av));
     }
     else if ("typeMany".equals(keyName))
     {
-      return isNullable(av) ? getType(av) : av.getType();
+      if (av instanceof Attribute)
+      {
+        return isNullable(av) ? getType(av).toUpperCase() : av.getType().toUpperCase();
+      }
+      return StringFormatter.toUnderscore(isNullable(av) ? getType(av) : av.getType());
     }
     
     if (av instanceof AssociationVariable)
@@ -390,27 +589,15 @@ class RubyGenerator
         String actualLookup = attVar.getIsList() ? "attributeCanSetMany" : "attributeCanSetOne";
         return translate(actualLookup,av,isMany);
       }
-      else if ("hasUniqueMethod".equals(keyName)) 
-      {
-        return "has_with_" + attVar.getName();
-      } 
-      else if ("getUniqueMethod".equals(keyName))
-      {
-        return "get_with_" + attVar.getName();
-      }
-      else if ("uniqueMap".equals(keyName))
-      {
-        return attVar.getUmpleClass().getName().toLowerCase() + "s_by_" + attVar.getName();
-      }
     }    
     return "UNKNOWN ID: " + keyName;
   }
   
   public String translate(String keyName, State state)
   {
-    String singularName = state.getName();
+    String singularName = StringFormatter.toUnderscore(state.getName());
     String pluralName = getModel().getGlossary().getPlural(singularName);
-    String stateMachinePlusState = StringFormatter.format("{0}{1}",getUpperCaseName(state.getStateMachine().getName()),getUpperCaseName(singularName));
+    String stateMachinePlusState = StringFormatter.format("{0}_{1}",StringFormatter.toUnderscore(state.getStateMachine().getName()),singularName);
   
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
@@ -430,7 +617,11 @@ class RubyGenerator
     }
     else if ("stateOne".equals(keyName))
     {
-      return stateMachinePlusState;
+      return singularName;
+    }
+    else if ("stateOneQuoted".equals(keyName))
+    {
+      return "'" + singularName + "'";
     }
     else if ("stateString".equals(keyName))
     {
@@ -443,29 +634,10 @@ class RubyGenerator
     
     return "UNKNOWN ID: " + keyName;
   }
-
-  public String translate(String keyName, Activity a)
-  {
-    State s = a.getState();
-    String threadNum = "";
-    if (s.numberOfActivities() > 1)
-    {
-      threadNum = "" + a.getState().getActivities().indexOf(a);
-    }
-    if ("doActivityMethod".equals(keyName))
-    {
-      return StringFormatter.format("doActivity{0}{1}", threadNum,  GeneratorHelper.getFullActivityName(a.getState())); 
-    }
-    else if ("doActivityThread".equals(keyName))
-    {
-      return StringFormatter.format("doActivity{0}{1}Thread", threadNum, GeneratorHelper.getFullActivityName(a.getState())); 
-    }
-    return "UNKNOWN ID: " + keyName;
-  }
   
   public String translate(String keyName, StateMachine sm)
   {
-    String singularName = sm.getFullName();
+    String singularName = StringFormatter.toUnderscore(sm.getFullName());
     String pluralName = getModel().getGlossary().getPlural(singularName);
   
     if (UpperCasePluralLookupMap.containsKey(keyName))
@@ -483,6 +655,23 @@ class RubyGenerator
     else if (AsIsSingularLookupMap.containsKey(keyName))
     {
       return StringFormatter.format(AsIsSingularLookupMap.get(keyName),singularName);
+    }
+    else if ("type".equals(keyName))
+    {
+      return singularName;
+    }
+    else if ("listStates".equals(keyName))
+    {
+      String allEnums = "";
+      for(State state : sm.getStates())
+      {
+        if (allEnums.length() > 0)
+        {
+          allEnums += ", ";
+        }
+        allEnums += translate("stateOneQuoted",state);
+      }
+      return allEnums;
     }
     return "UNKNOWN ID: " + keyName;
   }
@@ -515,14 +704,7 @@ class RubyGenerator
   public void generate()
   {
     prepare();
-    for (UmpleElement currentElement : getModel().getUmpleElements())
-    {
-      if ("external".equals(currentElement.getModifier()))
-      {
-        continue;
-      }
-      writeFile(currentElement);
-    }
+    writeFile();
     postpare();
   }
 
@@ -558,6 +740,10 @@ class RubyGenerator
     {
       return "double";
     }
+    else if(aType.equals("Float"))
+    {
+      return "float";
+    }
     else if (aType.equals("Boolean"))
     {
       return "boolean";
@@ -568,12 +754,10 @@ class RubyGenerator
     }
   }
   
-  private void writeFile(UmpleElement aElement)
+  private void writeFile()
   {
-    try
+    try //Output all elements in a single file
     {
-      ILang language = getLanguageFor(aElement);
-      
       String path = StringFormatter.addPathOrAbsolute( 
     						  getModel().getUmpleFile().getPath(), 
         	                  getOutput());
@@ -581,12 +765,63 @@ class RubyGenerator
       File file = new File(path);
       file.mkdirs();
 
-      String rubyName = StringFormatter.toUnderscore(aElement.getName()) + ".rb";
-      String filename = path + File.separator + rubyName;
+      String sqlName = getModel().getUmpleFile().getFileName();
+      if (sqlName.endsWith(".ump"))
+      {
+        sqlName = sqlName.substring(0, sqlName.length() - 4);
+      }
+      String filename = path + File.separator + sqlName + ".sql";
       BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
-      String contents = language.getCode(getModel(), aElement);
-      getModel().getGeneratedCode().put(aElement.getName(),contents);
-      bw.write(contents);
+      
+      /*
+      The following outputs all classes together in a single file. 
+      Also, since all classes should be declared before the foreign key constraints are added, the following divides the generated code of each class into three groups
+      and then outputs each group in order.
+      */
+      String[] contents = new String[3];
+      boolean isFirst = true;
+      
+      for (UmpleElement currentElement : getModel().getUmpleElements())
+      {
+        ILang language = getLanguageFor(currentElement);
+        
+        if ("external".equals(currentElement.getModifier()))
+        {
+          continue;
+        }
+        String returnedContents = language.getCode(getModel(), currentElement);
+        String elementContents;
+        
+        int index = 0;
+        int prevIndex = 0;
+        
+        index = returnedContents.indexOf(beforeCode);        
+        if (isFirst)
+        {
+          for (int i = 0; i < contents.length; i++)
+          {
+            contents[i] = "";
+          }
+          contents[0] += returnedContents.substring(prevIndex, index);
+          isFirst = false;
+        }
+        elementContents = returnedContents.substring(prevIndex, index);
+        prevIndex = index + beforeCode.length();
+        index = returnedContents.indexOf(afterCode, prevIndex);
+        contents[1] += returnedContents.substring(prevIndex, index);
+        elementContents += returnedContents.substring(prevIndex, index);
+        prevIndex = index + afterCode.length();
+        contents[2] += returnedContents.substring(prevIndex);
+        elementContents += returnedContents.substring(prevIndex);
+        getModel().getGeneratedCode().put(currentElement.getName(), elementContents);
+        
+      }
+      String finalResult = "";
+      for (String s : contents)
+      {
+        finalResult += s;
+      }
+      bw.write(finalResult);
       bw.flush();
       bw.close();
     }
@@ -612,37 +847,11 @@ class RubyGenerator
     }
   }
   
-  private void injectIntoUnique(String method, String injection, String when, Attribute av, UmpleClass aClass)
-  {
-    String code = StringFormatter.format(injection,
-      av.getName(),
-      translate("parameterOne", av),
-      translate("parameterOld", av),
-      translate("getMethod", av),
-      translate("hasUniqueMethod", av),
-      translate("uniqueMap", av),
-      av.getUmpleClass().getName());
-    CodeInjection set = new CodeInjection(when, method, code, aClass);
-    aClass.addCodeInjection(set);
-  }
-  
-  private void injectIntoUniqueSet(String injection, String when, Attribute av, UmpleClass aClass)
-  {
-    injectIntoUnique(translate("setMethod", av), injection, when, av, aClass);
-  }
-  
-  private void injectIntoUniqueDelete(String injection, String when, Attribute av, UmpleClass aClass)
-  {
-    injectIntoUnique("delete", injection, when, av, aClass);
-  }
-  
   private void prepare(UmpleClass aClass)
   {
     if (aClass.getGeneratedClass() != null)
     {
-      GeneratedClass genClass = aClass.createGeneratedClass(getModel());
-      generateConstructorSignature(genClass);
-      //return;
+      return;
     }
     else if (aClass.isRoot())
     {
@@ -682,25 +891,6 @@ class RubyGenerator
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
       }
-      
-      if (av.getIsUnique())
-      {
-        injectIntoUniqueSet(
-          "{2} = {3}();" + "\n" +
-          "if ({2} != nil && {2} == {1})" + "\n" + 
-          "  return true" + "\n" +
-          "end" + "\n" +
-          "if ({6}.{4}?({1}))" + "\n" + 
-          "  return was_set" + "\n" +
-          "end", "before", av, aClass);
-        injectIntoUniqueSet(
-          "if ({2} != nil)" + "\n" +
-          "  {6}.{5}[{2}] = nil" + "\n" +
-          "end" + "\n" +
-          "{6}.{5}[{1}] = self", "after", av, aClass);
-        injectIntoUniqueDelete(
-          "{6}.{5}[{3}()] = nil", "before", av, aClass);
-      }
     }
     
     for(AssociationVariable av : aClass.getAssociationVariables())
@@ -709,15 +899,6 @@ class RubyGenerator
       {
         String code = StringFormatter.format("return false unless @{0}",translate("associationCanSet",av));
         String methods = StringFormatter.format("{0},{1},{2},{3},{4}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("setMethod",av),translate("resetMethod",av));
-        CodeInjection inject = new CodeInjection("before", methods, code, aClass);
-        inject.setIsInternal(true);
-        aClass.addCodeInjection(inject);
-      }
-      
-      if (av.isImmutable())
-      {
-        String code = StringFormatter.format("return false unless @{0}\n@{0} = false",translate("associationCanSet",av));
-        String methods = StringFormatter.format("{0},{1}",translate("setManyMethod",av),translate("setMethod",av));
         CodeInjection inject = new CodeInjection("before", methods, code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
@@ -739,33 +920,11 @@ class RubyGenerator
         aClass.addCodeInjection(set);
       }
       
-      if(av.isSorted())
-      {
-      	String codeblock = 
-		      "{ |x, y| "+
-                "x.get_"+av.getPriority() +"() <=> "+ 
-                "y.get_"+ av.getPriority() +"()"+
-                "}";
-      	String java_code = StringFormatter.format("wasAdded = wasAdded ? Collections.sort({0}, {0}Priority) : false;\n",translate("attributeMany",av));
-      	String php_code  = StringFormatter.format("if(wasAdded)\n    usort($this->{0}, $this->{0}Priority);\n",translate("attributeMany",av));
-        String ruby_code = StringFormatter.format("@{0}.sort! "+codeblock+" if wasAdded\n",translate("attributeMany",av));
-        String methods = translate("addMethod",av);
-        
-        CodeInjection set = new CodeInjection("after", methods,"", aClass);
-        CodeBlock cb = new CodeBlock();
-        cb.setCode("Java",java_code);
-        cb.setCode("Php",php_code);
-        cb.setCode("Ruby",ruby_code);
-        set.setSnippet(cb);
-        aClass.addCodeInjection(set);
-      }
     } 
     
-    prepareConstraints(aClass);   
-    
     Map<String,String> lookups = new HashMap<String,String>();
-    String executeMethods = "def self.execute(message)\nself.getInstance().addTrace(message)\nend\n";
-    executeMethods += "def reset\nself.getInstance().traces = []\nend";
+    String executeMethods = "def self.execute(message)\n  self.getInstance().addTrace(message)\nend\n";
+    executeMethods += "def reset\n  self.getInstance().traces = []\nend";
     lookups.put("consoleTemplate","puts \"{0}=#{{1}}\"");
     lookups.put("stringTemplate","StringTracer::execute(\"{0}=#{{1}}\")");
     lookups.put("executeMethods",executeMethods);
@@ -808,7 +967,7 @@ class RubyGenerator
     {
       AssociationVariable relatedAv = av.getRelatedAssociation();
 
-      if ((av.getMultiplicity().getLowerBound() == 0 && !av.isImmutable())|| !av.getIsNavigable())
+      if (av.getMultiplicity().getLowerBound() == 0 || !av.getIsNavigable())
       {
         continue;
       }
@@ -931,18 +1090,6 @@ class RubyGenerator
     for (UmpleClass aClass : getModel().getUmpleClasses())
     {
       GeneratedClass genClass = aClass.getGeneratedClass();
-
-      //add interface imports
-      if (aClass.hasParentInterface())
-      {
-        for(UmpleInterface interfaceParent: aClass.getParentInterface())
-        { 
-          if (!aClass.getPackageName().equals(interfaceParent.getPackageName()))
-          {
-            genClass.addMultiLookup("import", interfaceParent.getPackageName() + ".*");  
-          }
-        }
-      }
       
       if (aClass.getExtendsClass() != null)
       {
@@ -973,34 +1120,13 @@ class RubyGenerator
     }
   }
 
-  public void initializeLangaugeBasedVariables() {
-	UmpleToPrimitiveMap.put("String","String");
-	//
-	TraceLookupMap.put("indent","    ");
-    TraceLookupMap.put("template","{0}Tracer.handle( {1} );");
-    TraceLookupMap.put("timestamp","new Date()");
-    TraceLookupMap.put("identifier","System.identityHashCode({0})");
-    TraceLookupMap.put("thread","Thread.currentThread().getId()");
-    TraceLookupMap.put("self","this");
-    //
-    ConstraintLookupMap.put("in==","{0}.equals(\"{1}\")");
-    ConstraintLookupMap.put("in!=","!{0}.equals(\"{1}\")");
-    ConstraintLookupMap.put("object==","{0}.equals({1})");
-    ConstraintLookupMap.put("object!=","!{0}.equals({1})");
-    ConstraintLookupMap.put("accessor","");
-    ConstraintLookupMap.put("paramaccessor","");
-    ConstraintLookupMap.put("exception","raise RuntimeError, \'Please provide a valid {0}\'");
-    ConstraintLookupMap.put("ifstatement","if {0} then");
-    ConstraintLookupMap.put("end","end");
-    ConstraintLookupMap.put("concatenate","{0}+{1}");
-    ConstraintLookupMap.put("initialise","{0}.new");
-    ConstraintLookupMap.put("has","{0}.include?({1})");
-    ConstraintLookupMap.put("hasAll","{0}.include?({1})");
-    ConstraintLookupMap.put("cardinality==","{0}=={1}");
-    ConstraintLookupMap.put("cardinality!=","{0}!={1}");
-    ConstraintLookupMap.put("cardinality>=","{0}>={1}");
-    ConstraintLookupMap.put("cardinality<=","{0}<={1}");
-    ConstraintLookupMap.put("cardinality>","{0}>{1}");
-    ConstraintLookupMap.put("cardinality<","{0}<{1}");
-	}  
+	public void initializeLangaugeBasedVariables() {
+	    UmpleToPrimitiveMap.put("Integer","INT");
+	    UmpleToPrimitiveMap.put("Float","FLOAT");
+	    UmpleToPrimitiveMap.put("Double","DOUBLE");
+	    UmpleToPrimitiveMap.put("String","VARCHAR(255)");
+	    UmpleToPrimitiveMap.put("Boolean","BIT");
+	    UmpleToPrimitiveMap.put("Date","DATE");
+	    UmpleToPrimitiveMap.put("Time","TIME");
+	} 
 }

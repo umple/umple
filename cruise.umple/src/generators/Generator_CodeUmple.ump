@@ -29,8 +29,21 @@ Current Implementation:
 
 namespace cruise.umple.compiler;
 
+
 class UmpleGenerator
 {
+  isA SuperCodeGenerator;
+  isA CodeTranslator;
+  depend java.util.*;
+  depend java.io.*;
+  depend cruise.umple.util.*;
+
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.parser.analysis.*;
+  depend cruise.umple.parser.rules.*;
+  depend cruise.umple.parser.Token;
+  // depend cruise.umple.compiler.umple.*;
+  
   /*
    * Shared variables
    */

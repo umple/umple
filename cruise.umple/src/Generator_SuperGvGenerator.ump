@@ -1,5 +1,19 @@
 class SuperGvGenerator
 {
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+  abstract;
+  //The reason for bringing following inheritance here is because of Umple code generation. It generates a false method for iterface coverage.
+  isA CodeGeneratorWithSubptions;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String output = "";
+
+
   // Basic templates for GV elements to output
   
   // Template for what will appear at the start of each graph file

@@ -27,6 +27,12 @@ class BindingDescriptor {
 
 class StructureDiagramGenerator
 {
+    isA CodeGeneratorWithSubptions;
+    depend cruise.umple.util.*;
+
+    UmpleModel model = null;
+	String output = "";
+
 	depend java.util.List;
 	depend java.util.ArrayList;
 	depend cruise.umple.compiler.Port.Type;

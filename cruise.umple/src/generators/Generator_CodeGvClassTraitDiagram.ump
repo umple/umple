@@ -17,6 +17,12 @@ namespace cruise.umple.compiler;
 
 class GvClassTraitDiagramGenerator
 {
+  isA SuperGvGenerator;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
   //This overrides the superclass's method.
   public void generate(){
 	    StringBuilder code = new StringBuilder();

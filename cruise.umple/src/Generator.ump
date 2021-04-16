@@ -75,450 +75,86 @@ class GeneratorHelper
   depend cruise.umple.parser.Position;
 }
 
-class TestGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class UmpleSelfGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class USEGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  UmpleModel model = null;
-  String output = "";
-}
-
-class PapyrusGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class XmiGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class TextUmlGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class ScxmlGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class StateTablesGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class EventSequenceGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class CodeAnalysisGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, 
-  // attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class SimpleMetricsGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class SuperGvGenerator
-{
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-  abstract;
-  //The reason for bringing following inheritance here is because of Umple code generation. It generates a false method for iterface coverage.
-  isA CodeGeneratorWithSubptions;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class GvClassDiagramGenerator
-{
-  isA SuperGvGenerator;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-}
-
-class GvClassTraitDiagramGenerator
-{
-  isA SuperGvGenerator;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-}
-
-class AlloyGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class NuSMVGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class NuSMVOptimizerGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class SimulateGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.io.*;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class YumlGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.util.*;
-  depend cruise.umple.util.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String outputPath = "";
-}
-
-class XtextGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.util.regex.*;
-  depend java.util.*;
-  depend java.io.*;
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.Rule;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  PatternHandler[] patterns;
-  UmpleModel model = null;
-  String outputPath = "";
-  String output = "";
-
-  HashSet<String> terminals = new HashSet<String>();
-}
-
-class JsonGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend cruise.umple.util.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class JsonMixedGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend cruise.umple.util.*;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class StructureDiagramGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend cruise.umple.util.*;
-
-  UmpleModel model = null;
-  String output = "";
-}
-
-class JavaGenerator
-{
-  isA CodeTranslator;
-  isA SuperCodeGenerator;
-  depend java.util.*;
-  depend java.io.*;
-  depend cruise.umple.util.*;
-
-  depend cruise.umple.compiler.exceptions.*;
-  depend cruise.umple.compiler.java.*;
-
-  StringBuilder uncaughtExceptions = new StringBuilder();
-  UmpleClass[] mainClasses;
-}
-
-class RTCppGenerator
-{
-  isA CodeGeneratorWithSubptions;
-  depend java.util.*;
-  depend java.io.*;
-  depend cruise.umple.util.*;
-
-  depend cruise.umple.compiler.exceptions.*;
-  depend cruise.umple.cpp.generator.UmpleCppPoliciesProcessor;
-  depend cruise.umple.cpp.core.ContentsDescriptor;
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
-}
-
-class PhpGenerator
-{
-  isA SuperCodeGenerator;
-  isA CodeTranslator;
-  depend java.util.*;
-  depend java.io.*;
-  depend cruise.umple.util.*;
-
-  depend cruise.umple.compiler.exceptions.*;
-  depend cruise.umple.compiler.php.*;
-}
-
-class UmpleGenerator
-{
-  isA SuperCodeGenerator;
-  isA CodeTranslator;
-  depend java.util.*;
-  depend java.io.*;
-  depend cruise.umple.util.*;
-
-  depend cruise.umple.compiler.exceptions.*;
-  depend cruise.umple.parser.analysis.*;
-  depend cruise.umple.parser.rules.*;
-  depend cruise.umple.parser.Token;
-  // depend cruise.umple.compiler.umple.*;
-}
-
-class Uigu2Generator
-{
-  isA PhpGenerator;
-  depend java.io.*;
-  depend java.nio.charset.*;
-  depend java.nio.file.*;
-  depend java.util.*;
-
-  depend cruise.umple.compiler.exceptions.*;
-  depend cruise.umple.compiler.uigu2.*;
-}
-
-class RubyGenerator
-{
-  isA SuperCodeGenerator;
-  isA CodeTranslator;
-  depend java.util.*;
-  depend java.io.*;
-  depend cruise.umple.util.*;
-
-  depend cruise.umple.compiler.exceptions.*;
-  depend cruise.umple.compiler.ruby.*;
-}
-
-class SqlGenerator
-{
-  isA SuperCodeGenerator;
-  isA CodeTranslator;
-  depend java.util.*;
-  depend java.io.*;
-  depend cruise.umple.util.*;
-
-  depend cruise.umple.compiler.exceptions.*;
-  depend cruise.umple.compiler.sql.*;
-}
 
 use Umple.ump;
 use StateMachine.ump;
 use GeneratorHelper_Code.ump;
-use Generator_Code.ump;
-use Generator_CodeUmple.ump;
-use Generator_CodeRuby.ump;
-use Generator_CodeJava.ump;
-use Generator_CodeRTCpp.ump;
-use Generator_CodePhp.ump;
-use Generator_CodeUigu2.ump;
-use Generator_CodeSql.ump;
-use Generator_CodeUmpleSelf.ump;
-use Generator_CodeUSE.ump;
-use generators/ecoreGenerator/ecoreGeneratorConfig.ump;
-use Generator_CodeTest.ump;
+use NuSMVMetamodel.ump;
+use NuSMVCoordinationUnit.ump;
+use CodeGenerator ;   
+use UmpleGenerator ;   
+use RubyGenerator ;   
+use JavaGenerator ;   
+use RTCppGenerator ;   
+use PhpGenerator ;  
+use Uigu2Generator ;  
+use SqlGenerator ;   
+use UmpleSelfGenerator ;   
+use USEGenerator ;   
+use EcoreGenerator ;  
+use TestGenerator ;   
 use PapyrusGenerator; // This use statement should moved into main conf. file in later stages.
-mixset PapyrusGenerator{
-  use generators/papyrus/Generator_CodePapyrus.ump;
-}
 use XmiGenerator;
-mixset XmiGenerator{
-  use generators/xmi/Generator_CodeXmi.ump;
-}
-use Generator_CodeTextUml.ump;
-use Generator_CodeScxml.ump;
+use TextUmlGenerator;
+use ScxmlGenerator;
+use CodeGvClassTraitDiagramGenerator;
+use EventSequenceGenerator;
+use FeatureDiagramCo;
+use EntityRelationshipCon;
+use SimulateGenerator;
+use YumlGenerator;
+use XtextGenerator;
+use JsonGenerator;
+use JsonMixedGenerator;
+use StructureDiagramGenerator;
+use SuperCodeGeneratorGenerator;
+use StateTableGenerator;
+use SuperGvGeneratorGenerator;
+use HtmlGenerator;
+use UmpleModelWalkerGenerator;
+use CodeAnalysisGenerator;
+use AlloyGenerator;
+use NuSMVGenerator; 
+use NuSMVOptimizerGenerator;
+use SimpleMetricsGenerator;
+use CodeGvClassDiagramGenerator;
+
+mixset CodeGenerator { use generators/Generator_Code.ump; }
+mixset UmpleGenerator { use generators/Generator_CodeUmple.ump; }
+mixset RubyGenerator { use generators/Generator_CodeRuby.ump; }
+mixset JavaGenerator { use generators/Generator_CodeJava.ump; }
+mixset RTCppGenerator { use generators/Generator_CodeRTCpp.ump; }
+mixset PhpGenerator { use generators/Generator_CodePhp.ump; }
+mixset Uigu2Generator { use generators/Generator_CodeUigu2.ump; }
+mixset SqlGenerator { use generators/Generator_CodeSql.ump; }
+mixset UmpleSelfGenerator { use generators/Generator_CodeUmpleSelf.ump; }
+mixset USEGenerator { use generators/Generator_CodeUSE.ump; }
+mixset EcoreGenerator { use generators/ecoreGenerator/ecoreGeneratorConfig.ump; }
+mixset TestGenerator { use generators/Generator_CodeTest.ump; }
+mixset PapyrusGenerator{ use generators/papyrus/Generator_CodePapyrus.ump; }
+mixset XmiGenerator{ use generators/xmi/Generator_CodeXmi.ump; }
+mixset TextUmlGenerator{ use generators/Generator_CodeTextUml.ump; }
+mixset ScxmlGenerator{ use generators/Generator_CodeScxml.ump; }
 use generators/statemachineDiagramGenerator/stateMachineDiagramConfig.ump;
-use Generator_CodeStateTables.ump;
-use Generator_CodeEventSequence.ump;
-use Generator_CodeSimpleMetrics.ump;
-use Generator_CodeGvClassDiagram.ump;
-use Generator_CodeGvClassTraitDiagram.ump;
-use generators/featureDiagramGenerator/FeatureDiagramConfig.ump;
-use generators/entityRelationshipDiagramGenerator/entityRelationshipConfig.ump
-use Generator_CodeAlloy.ump;
-use Generator_CodeNuSMV.ump;
-use Generator_CodeNuSMVOptimizer.ump;
-use Generator_CodeSimulate.ump;
-use Generator_CodeYuml.ump;
-use Generator_CodeXtext.ump;
-use Generator_CodeJson.ump;
-use Generator_CodeJsonMixed.ump;
-use Generator_CodeStructureDiagram.ump;
-use Generator_SuperCodeGenerator.ump;
-use Generator_SuperGvGenerator.ump; // ABSTRACT CLASS FOR GV!!
-use Generator_Html.ump;
-use Generator_UmpleModelWalker.ump;
-use Generator_CodeAnalysis.ump;
+mixset StateTableGenerator{ use generators/Generator_CodeStateTables.ump; }
+mixset EventSequenceGenerator{ use generators/Generator_CodeEventSequence.ump; }
+mixset SimpleMetricsGenerator{ use generators/Generator_CodeSimpleMetrics.ump; }
+mixset CodeGvClassDiagramGenerator{ use generators/Generator_CodeGvClassDiagram.ump;}
+mixset CodeGvClassTraitDiagramGenerator{ use generators/Generator_CodeGvClassTraitDiagram.ump; }
+mixset FeatureDiagramCo{ use generators/featureDiagramGenerator/FeatureDiagramConfig.ump; }
+mixset EntityRelationshipCon{ use generators/entityRelationshipDiagramGenerator/entityRelationshipConfig.ump}
+mixset AlloyGenerator{ use generators/Generator_CodeAlloy.ump; }
+mixset NuSMVGenerator{ use generators/Generator_CodeNuSMV.ump;}
+mixset NuSMVOptimizerGenerator{ use generators/Generator_CodeNuSMVOptimizer.ump;}
+mixset SimulateGenerator{ use generators/Generator_CodeSimulate.ump; }
+mixset YumlGenerator{ use generators/Generator_CodeYuml.ump; }
+mixset XtextGenerator{ use generators/Generator_CodeXtext.ump; }
+mixset JsonGenerator{ use generators/Generator_CodeJson.ump; }
+mixset JsonMixedGenerator{ use generators/Generator_CodeJsonMixed.ump; }
+mixset StructureDiagramGenerator{ use generators/Generator_CodeStructureDiagram.ump; }
+mixset SuperCodeGeneratorGenerator{ use Generator_SuperCodeGenerator.ump;}
+mixset SuperGvGeneratorGenerator{ use Generator_SuperGvGenerator.ump; }
+mixset HtmlGenerator{ use Generator_Html.ump;}
+mixset UmpleModelWalkerGenerator{ use Generator_UmpleModelWalker.ump;}
+mixset CodeAnalysisGenerator{ use generators/Generator_CodeAnalysis.ump;}
+
