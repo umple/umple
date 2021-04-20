@@ -76,6 +76,7 @@ use EventSequenceGenerator,  FeatureDiagramCo,  EntityRelationshipCon,  Simulate
 use XtextGenerator,  JsonGenerator,  JsonMixedGenerator,  StructureDiagramGenerator,  SuperCodeGeneratorGenerator;
 use StateTableGenerator, SuperGvGeneratorGenerator, HtmlGenerator, UmpleModelWalkerGenerator,  CodeAnalysisGenerator;
 use AlloyGenerator,  NuSMVGenerator,   NuSMVOptimizerGenerator,  SimpleMetricsGenerator, CodeGvClassDiagramGenerator;
+
 mixset CodeGenerator { use generators/Generator_Code.ump; }
 mixset UmpleGenerator { use generators/Generator_CodeUmple.ump; }
 mixset RubyGenerator { use generators/Generator_CodeRuby.ump; }
@@ -114,9 +115,9 @@ mixset XtextGenerator{ use generators/Generator_CodeXtext.ump; }
 mixset JsonGenerator{ use generators/Generator_CodeJson.ump; }
 mixset JsonMixedGenerator{ use generators/Generator_CodeJsonMixed.ump; }
 mixset StructureDiagramGenerator{ use generators/Generator_CodeStructureDiagram.ump; }
-mixset SuperCodeGeneratorGenerator{ use Generator_SuperCodeGenerator.ump;}
-mixset SuperGvGeneratorGenerator{ use Generator_SuperGvGenerator.ump; }
-mixset HtmlGenerator{ use Generator_Html.ump;}
-mixset UmpleModelWalkerGenerator{ use Generator_UmpleModelWalker.ump;}
+mixset SuperCodeGeneratorGenerator{ use generators/Generator_SuperCodeGenerator.ump;}
+mixset SuperGvGeneratorGenerator{ use generators/Generator_SuperGvGenerator.ump; }
+mixset HtmlGenerator{ use generators/Generator_Html.ump;}
+mixset UmpleModelWalkerGenerator{ use generators/Generator_UmpleModelWalker.ump;}
 mixset CodeAnalysisGenerator{ use generators/Generator_CodeAnalysis.ump;}
 
