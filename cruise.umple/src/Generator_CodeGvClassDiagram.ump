@@ -247,17 +247,17 @@ class GvClassDiagramGenerator
             int leftMultInt = Integer.parseInt(leftMult);          
             if (leftMultInt > 0) {
               if ( leftMultInt == 1) {
-                nlDesc += startWithVowel(rightClass) + hasRoleName(rightEnd, leftEnd) + " has " + startWithVowel(leftClass) + hasRoleName(leftEnd, rightEnd) + ". It must always have exactly, one, and can never have none. And there is an upper bound of at most one " + hasRoleName(leftEnd, rightEnd) + ".\n";
+                nlDesc += startWithVowel(rightClass) + getClassWithRoleName(rightEnd, "1") + " has " + startWithVowel(leftClass) + getClassWithRoleName(leftEnd, "1") + ". It must always have exactly, one, and can never have none. And there is an upper bound of at most one " + getClassWithRoleName(leftEnd, "1") + ".\n";
               }
               else {
-                nlDesc += startWithVowel(rightClass) + hasRoleName(rightEnd, leftEnd) + " has " + leftMultInt + " " + hasRoleNames(leftEnd, rightEnd) + "\n" + 
-                " When " + startWithVowel(rightClass).toLowerCase() + hasRoleName(rightEnd, leftEnd) + " is created, its " + leftMultInt + " " + hasRoleNames(leftEnd, rightEnd) + " must be assigned.\n";
+                nlDesc += startWithVowel(rightClass) + getClassWithRoleName(rightEnd, "1") + " has " + leftMultInt + " " + getClassWithRoleName(leftEnd, leftMult) + "\n" + 
+                " When " + startWithVowel(rightClass).toLowerCase() + getClassWithRoleName(rightEnd, "1") + " is created, its " + leftMultInt + " " + getClassWithRoleName(leftEnd, leftMult) + " must be assigned.\n";
               }
             }
           } catch (NumberFormatException ex) {
             if (leftMult.equals("*")) {
               // Text view when the multiplicity is *
-              nlDesc += startWithVowel(rightClass) + hasRoleName(rightEnd, leftEnd) + " has some " + hasRoleNames(leftEnd, rightEnd) + ". It can have none, and there is no upper bound defined.\n";
+              nlDesc += startWithVowel(rightClass) + getClassWithRoleName(rightEnd, "1") + " has some " + getClassWithRoleName(leftEnd, "*") + ". It can have none, and there is no upper bound defined.\n";
             } 
           }
         } else {
@@ -266,12 +266,12 @@ class GvClassDiagramGenerator
           try {
             int leftMultInt1 = Integer.parseInt(leftMult1);
               if ( leftMultInt1 == 0) {
-                nlDesc += startWithVowel(rightClass) + hasRoleName(rightEnd, leftEnd) + " may have " + startWithVowel(leftClass).toLowerCase() + hasRoleName(leftEnd, rightEnd) + ". ";
+                nlDesc += startWithVowel(rightClass) + getClassWithRoleName(rightEnd, "1") + " may have " + startWithVowel(leftClass).toLowerCase() + getClassWithRoleName(leftEnd, "0") + ". ";
               } else if (leftMultInt1 == 1) {
-                nlDesc += startWithVowel(rightClass) + hasRoleName(rightEnd, leftEnd) + " has at least " + leftMultInt1 + " " + hasRoleName(leftEnd, rightEnd) + " and can never have none. ";
+                nlDesc += startWithVowel(rightClass) + getClassWithRoleName(rightEnd, "1") + " has at least " + leftMultInt1 + " " + getClassWithRoleName(leftEnd, leftMult1) + " and can never have none. ";
               }
               else {
-                nlDesc += startWithVowel(rightClass) + hasRoleName(rightEnd, leftEnd) + " has at least" + leftMultInt1 + " " + hasRoleNames(leftEnd, rightEnd) + " and can never have none. ";
+                nlDesc += startWithVowel(rightClass) + getClassWithRoleName(rightEnd, "1") + " has at least" + leftMultInt1 + " " + getClassWithRoleName(leftEnd, leftMult1) + " and can never have none. ";
               }
 
               int leftMultInt2 = Integer.parseInt(leftMult2);
@@ -279,7 +279,7 @@ class GvClassDiagramGenerator
                 nlDesc += "It can have none or just 1. \n";
               }
               else {
-                nlDesc += "And there is an upper bound of at most " + leftMultInt2 + " " + hasRoleNames(leftEnd, rightEnd) + ".\n";
+                nlDesc += "And there is an upper bound of at most " + leftMultInt2 + " " + getClassWithRoleName(leftEnd, leftMult2) + ".\n";
               }
           }
           catch (NumberFormatException ex) {
@@ -297,17 +297,17 @@ class GvClassDiagramGenerator
             int rightMultInt = Integer.parseInt(rightMult);          
             if (rightMultInt > 0) {
               if ( rightMultInt == 1) {
-                nlDesc += startWithVowel(leftClass) + hasRoleName(leftEnd, rightEnd) + " has " + startWithVowel(rightClass) + hasRoleName(rightEnd, leftEnd) + ". It must always have exactly, one, and can never have none. And there is an upper bound of at most one " + hasRoleName(rightEnd, leftEnd) + ".\n";
+                nlDesc += startWithVowel(leftClass) + getClassWithRoleName(leftEnd, "1") + " has " + startWithVowel(rightClass) + getClassWithRoleName(rightEnd, "1") + ". It must always have exactly, one, and can never have none. And there is an upper bound of at most one " + getClassWithRoleName(rightEnd, "1") + ".\n";
               }
               else {
-                nlDesc += startWithVowel(leftClass) + hasRoleName(leftEnd, rightEnd) + " has " + rightMultInt + " " + hasRoleNames(rightEnd, leftEnd) + ". \n" + 
-                "When " + startWithVowel(leftClass).toLowerCase() + hasRoleName(leftEnd, rightEnd) + " is created, its " + rightMultInt + " " + hasRoleNames(rightEnd, leftEnd) + " must be assigned.\n";
+                nlDesc += startWithVowel(leftClass) + getClassWithRoleName(leftEnd, "1") + " has " + rightMultInt + " " + getClassWithRoleName(rightEnd, rightMult) + ". \n" + 
+                "When " + startWithVowel(leftClass).toLowerCase() + getClassWithRoleName(leftEnd, "1") + " is created, its " + rightMultInt + " " + getClassWithRoleName(rightEnd, rightMult) + " must be assigned.\n";
               }
             }
           } catch (NumberFormatException ex) {
             if (rightMult.equals("*")) {
               // Text view when the multiplicity is *
-              nlDesc += startWithVowel(leftClass) + hasRoleName(leftEnd, rightEnd) + " has some " + hasRoleNames(rightEnd, leftEnd) + ". It can have none, and there is no upper bound defined.\n";
+              nlDesc += startWithVowel(leftClass) + getClassWithRoleName(leftEnd, "1") + " has some " + getClassWithRoleName(rightEnd, "*") + ". It can have none, and there is no upper bound defined.\n";
             } 
           }
         } 
@@ -317,13 +317,13 @@ class GvClassDiagramGenerator
           try {
             int rightMultInt1 = Integer.parseInt(rightMult1);            
               if ( rightMultInt1 == 0) {
-                nlDesc += startWithVowel(leftClass) + hasRoleName(leftEnd, rightEnd) + " may have " + startWithVowel(rightClass).toLowerCase() + hasRoleName(rightEnd, leftEnd) + ". ";
+                nlDesc += startWithVowel(leftClass) + getClassWithRoleName(leftEnd, "1") + " may have " + startWithVowel(rightClass).toLowerCase() + getClassWithRoleName(rightEnd, "0") + ". ";
               }
               else if (rightMultInt1 == 1) {
-                nlDesc += startWithVowel(leftClass) + hasRoleName(leftEnd, rightEnd) + " has at least " + rightMultInt1 + " " + hasRoleNames(rightEnd, leftEnd) + " and can never have none. ";
+                nlDesc += startWithVowel(leftClass) + getClassWithRoleName(leftEnd, "1") + " has at least " + rightMultInt1 + " " + getClassWithRoleName(rightEnd, rightMult1) + " and can never have none. ";
               }
               else {
-                nlDesc += startWithVowel(leftClass) + hasRoleName(leftEnd, rightEnd) + " has at least" + rightMultInt1 + " " + hasRoleNames(rightEnd, leftEnd) + " and can never have none. ";
+                nlDesc += startWithVowel(leftClass) + getClassWithRoleName(leftEnd, "1") + " has at least" + rightMultInt1 + " " + getClassWithRoleName(rightEnd, rightMult1) + " and can never have none. ";
               }
               
               int rightMultInt2 = Integer.parseInt(rightMult2);
@@ -331,7 +331,7 @@ class GvClassDiagramGenerator
                 nlDesc += "It can have none or just 1. \n";
               }
               else {
-                nlDesc += "And there is an upper bound of at most " + rightMultInt2 + " " + hasRoleNames(rightEnd,leftEnd) + ".\n";
+                nlDesc += "And there is an upper bound of at most " + rightMultInt2 + " " + getClassWithRoleName(rightEnd, rightMult2) + ".\n";
               }
             
           } 
@@ -382,24 +382,38 @@ class GvClassDiagramGenerator
     }
   }
 
-  private String hasRoleName(AssociationEnd sideEnd1, AssociationEnd sideEnd2) {
+  private String getClassWithRoleName(AssociationEnd sideEnd1, String quantity) {
     String str = "";
-    if (!sideEnd1.getRoleName().equals(sideEnd2.getClassName())) {
-      str += sideEnd1.getClassName() + " called " + sideEnd1.getRoleName();
-    } else {
-      str += sideEnd1.getClassName();
+    String roleName = sideEnd1.getRoleName().toLowerCase();
+    String className = sideEnd1.getClassName().toLowerCase();
+    String classNames = className + "s";
+    try {
+      int quantityInt = Integer.parseInt(quantity);
+      if ( !(roleName.equals(classNames) || roleName.equals(className) ||
+            className.equals(roleName.substring(0, roleName.length()-1))) ) {
+        if (quantityInt!=0 && quantityInt!=1) {
+          str += sideEnd1.getClassName() + "s called " + sideEnd1.getRoleName();
+        } else if (quantityInt==0 || quantityInt==1) {
+          str += sideEnd1.getClassName() + " called false " + sideEnd1.getRoleName();
+        }
+      } else {
+        if (quantityInt==0 || quantityInt==1) {
+          str += sideEnd1.getClassName();
+        } else {
+          str += sideEnd1.getClassName() + "s";
+        }
+      }
+    } catch (NumberFormatException ex) {
+      if (quantity.equals("*")) {
+        if ( !(roleName.equals(classNames) || roleName.equals(className) ||
+            className.equals(roleName.substring(0, roleName.length()-1))) ) {
+          str += sideEnd1.getClassName() + "s called " + sideEnd1.getRoleName();
+        } else {
+          str += sideEnd1.getClassName() + "s";
+        }
+      }
     }
-    return str;
-  }
-
-  private String hasRoleNames(AssociationEnd sideEnd1, AssociationEnd sideEnd2) {
-    String str = "";
-    if (!sideEnd1.getRoleName().equals(sideEnd2.getClassName())) {
-      str += sideEnd1.getClassName() + "s called " + sideEnd1.getRoleName() + "s";
-    } else {
-      str += sideEnd1.getClassName();
-    }
-    return str;
+    return str; 
   }
 
   // Used to indent code
