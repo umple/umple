@@ -57,17 +57,8 @@ interface CodeTranslator
   // TODO: LH#171
   //String translate(String id, AssociationVariable associationVariable);
 }
-
-
-class GeneratorHelper
-{
-  depend cruise.umple.parser.Position;
-}
-
-
 use Umple.ump;
 use generators/GeneratorHelper_Code.ump;
-
 
 use CodeGenerator, UmpleGenerator, RubyGenerator , JavaGenerator , RTCppGenerator, PhpGenerator; 
 use Uigu2Generator , SqlGenerator , UmpleSelfGenerator , USEGenerator , EcoreGenerator ,TestGenerator ; 
