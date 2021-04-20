@@ -58,18 +58,7 @@ interface CodeTranslator
   //String translate(String id, AssociationVariable associationVariable);
 }
 
-class SuperCodeGenerator {
-  depend java.util.*;
-  depend cruise.umple.util.*;
-  abstract;
-  //The reason for bringing following inheritance here is because of Umple code generation. It generates a false method for iterface coverage.
-  isA CodeGeneratorWithSubptions;
-  isA CodeTranslator;
-  UmpleModel model = null;
-  String output = "";
 
-  public void postpare() { GeneratorHelper.postpare(getModel()); }
-}
 class GeneratorHelper
 {
   depend cruise.umple.parser.Position;
@@ -77,48 +66,17 @@ class GeneratorHelper
 
 
 use Umple.ump;
-use StateMachine.ump;
+//use StateMachine.ump;
 use GeneratorHelper_Code.ump;
-use NuSMVMetamodel.ump;
-use NuSMVCoordinationUnit.ump;
-use CodeGenerator ;   
-use UmpleGenerator ;   
-use RubyGenerator ;   
-use JavaGenerator ;   
-use RTCppGenerator ;   
-use PhpGenerator ;  
-use Uigu2Generator ;  
-use SqlGenerator ;   
-use UmpleSelfGenerator ;   
-use USEGenerator ;   
-use EcoreGenerator ;  
-use TestGenerator ;   
-use PapyrusGenerator; // This use statement should moved into main conf. file in later stages.
-use XmiGenerator;
-use TextUmlGenerator;
-use ScxmlGenerator;
-use CodeGvClassTraitDiagramGenerator;
-use EventSequenceGenerator;
-use FeatureDiagramCo;
-use EntityRelationshipCon;
-use SimulateGenerator;
-use YumlGenerator;
-use XtextGenerator;
-use JsonGenerator;
-use JsonMixedGenerator;
-use StructureDiagramGenerator;
-use SuperCodeGeneratorGenerator;
-use StateTableGenerator;
-use SuperGvGeneratorGenerator;
-use HtmlGenerator;
-use UmpleModelWalkerGenerator;
-use CodeAnalysisGenerator;
-use AlloyGenerator;
-use NuSMVGenerator; 
-use NuSMVOptimizerGenerator;
-use SimpleMetricsGenerator;
-use CodeGvClassDiagramGenerator;
 
+
+use CodeGenerator, UmpleGenerator, RubyGenerator , JavaGenerator , RTCppGenerator, PhpGenerator; 
+use Uigu2Generator , SqlGenerator , UmpleSelfGenerator , USEGenerator , EcoreGenerator ,TestGenerator ; 
+use PapyrusGenerator, XmiGenerator, TextUmlGenerator, ScxmlGenerator, CodeGvClassTraitDiagramGenerator
+use EventSequenceGenerator,  FeatureDiagramCo,  EntityRelationshipCon,  SimulateGenerator,  YumlGenerator;
+use XtextGenerator,  JsonGenerator,  JsonMixedGenerator,  StructureDiagramGenerator,  SuperCodeGeneratorGenerator;
+use StateTableGenerator, SuperGvGeneratorGenerator, HtmlGenerator, UmpleModelWalkerGenerator,  CodeAnalysisGenerator;
+use AlloyGenerator,  NuSMVGenerator,   NuSMVOptimizerGenerator,  SimpleMetricsGenerator, CodeGvClassDiagramGenerator;
 mixset CodeGenerator { use generators/Generator_Code.ump; }
 mixset UmpleGenerator { use generators/Generator_CodeUmple.ump; }
 mixset RubyGenerator { use generators/Generator_CodeRuby.ump; }
@@ -143,8 +101,13 @@ mixset CodeGvClassDiagramGenerator{ use generators/Generator_CodeGvClassDiagram.
 mixset CodeGvClassTraitDiagramGenerator{ use generators/Generator_CodeGvClassTraitDiagram.ump; }
 mixset FeatureDiagramCo{ use generators/featureDiagramGenerator/FeatureDiagramConfig.ump; }
 mixset EntityRelationshipCon{ use generators/entityRelationshipDiagramGenerator/entityRelationshipConfig.ump}
-mixset AlloyGenerator{ use generators/Generator_CodeAlloy.ump; }
-mixset NuSMVGenerator{ use generators/Generator_CodeNuSMV.ump;}
+mixset AlloyGenerator{ 
+  use generators/Generator_CodeAlloy.ump; 
+}
+mixset NuSMVGenerator{ 
+  use NuSMVMetamodel.ump;
+  use NuSMVCoordinationUnit.ump; 
+  use generators/Generator_CodeNuSMV.ump;}
 mixset NuSMVOptimizerGenerator{ use generators/Generator_CodeNuSMVOptimizer.ump;}
 mixset SimulateGenerator{ use generators/Generator_CodeSimulate.ump; }
 mixset YumlGenerator{ use generators/Generator_CodeYuml.ump; }
