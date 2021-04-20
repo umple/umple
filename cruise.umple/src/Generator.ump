@@ -66,8 +66,7 @@ class GeneratorHelper
 
 
 use Umple.ump;
-//use StateMachine.ump;
-use GeneratorHelper_Code.ump;
+use generators/GeneratorHelper_Code.ump;
 
 
 use CodeGenerator, UmpleGenerator, RubyGenerator , JavaGenerator , RTCppGenerator, PhpGenerator; 
