@@ -1,0 +1,9 @@
+
+namespace cruise.umple.compiler;
+
+
+use NuSMVMetamodel.ump;
+use NuSMVCoordinationUnit.ump;
+
+mixset NuSMVGenerator{ use Generator_CodeNuSMV.ump;}
+mixset NuSMVOptimizerGenerator{ use Generator_CodeNuSMVOptimizer.ump;}
