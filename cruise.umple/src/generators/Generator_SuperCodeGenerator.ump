@@ -1,4 +1,15 @@
 class SuperCodeGenerator {
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  abstract;
+  //The reason for bringing following inheritance here is because of Umple code generation. It generates a false method for iterface coverage.
+  isA CodeGeneratorWithSubptions;
+  isA CodeTranslator;
+  UmpleModel model = null;
+  String output = "";
+
+  public void postpare() { GeneratorHelper.postpare(getModel()); }
+
   after constructor {
     UmpleToPrimitiveMap = new HashMap<String, String>();
     TraceLookupMap = new HashMap<String,String>();	
