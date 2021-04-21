@@ -60,14 +60,17 @@ interface CodeTranslator
 use Umple.ump;
 use generators/GeneratorHelper_Code.ump;
 
+//Below mixsets use statments. All mentioned mixsets are activited.
 use CodeGenerator, UmpleGenerator, RubyGenerator , JavaGenerator , RTCppGenerator, PhpGenerator; 
 use Uigu2Generator , SqlGenerator , UmpleSelfGenerator , USEGenerator , EcoreGenerator ,TestGenerator ; 
 use PapyrusGenerator, XmiGenerator, TextUmlGenerator, ScxmlGenerator, CodeGvClassTraitDiagramGenerator
 use EventSequenceGenerator,  FeatureDiagramCo,  EntityRelationshipCon,  SimulateGenerator,  YumlGenerator;
 use XtextGenerator,  JsonGenerator,  JsonMixedGenerator,  StructureDiagramGenerator,  SuperCodeGeneratorGenerator;
 use StateTableGenerator, SuperGvGeneratorGenerator, HtmlGenerator, UmpleModelWalkerGenerator,  CodeAnalysisGenerator;
-use AlloyGenerator,  NuSMVGenerator,   NuSMVOptimizerGenerator,  SimpleMetricsGenerator, CodeGvClassDiagramGenerator;
+use AlloyGenerator,  NuSMVGenerators, NuSMVGenerator,   NuSMVOptimizerGenerator,  SimpleMetricsGenerator, CodeGvClassDiagramGenerator;
+//End 
 
+// Below mixsets declarations. They contain inclusion of their files. 
 mixset CodeGenerator { use generators/Generator_Code.ump; }
 mixset UmpleGenerator { use generators/Generator_CodeUmple.ump; }
 mixset RubyGenerator { use generators/Generator_CodeRuby.ump; }
@@ -92,15 +95,8 @@ mixset CodeGvClassDiagramGenerator{ use generators/Generator_CodeGvClassDiagram.
 mixset CodeGvClassTraitDiagramGenerator{ use generators/Generator_CodeGvClassTraitDiagram.ump; }
 mixset FeatureDiagramCo{ use generators/featureDiagramGenerator/FeatureDiagramConfig.ump; }
 mixset EntityRelationshipCon{ use generators/entityRelationshipDiagramGenerator/entityRelationshipConfig.ump}
-mixset AlloyGenerator{ 
-  use generators/Generator_CodeAlloy.ump; 
-}
-mixset NuSMVGenerator{ use NuSMV;}
-mixset NuSMVOptimizerGenerator{ use NuSMV;}
-mixset NuSMV { use generators/NuSMV/nusmvGeneratorConfig.ump; }
-mixset NuSMVGenerator{ use generators/NuSMV/Generator_CodeNuSMV.ump; }
-mixset NuSMVOptimizerGenerator{ use generators/NuSMV/Generator_CodeNuSMVOptimizer.ump;}
-
+mixset AlloyGenerator{ use generators/Generator_CodeAlloy.ump; }
+mixset NuSMVGenerators{ use generators/NuSMV/nusmvGeneratorConfig.ump; }
 mixset SimulateGenerator{ use generators/Generator_CodeSimulate.ump; }
 mixset YumlGenerator{ use generators/Generator_CodeYuml.ump; }
 mixset XtextGenerator{ use generators/Generator_CodeXtext.ump; }
@@ -112,4 +108,5 @@ mixset SuperGvGeneratorGenerator{ use generators/Generator_SuperGvGenerator.ump;
 mixset HtmlGenerator{ use generators/Generator_Html.ump;}
 mixset UmpleModelWalkerGenerator{ use generators/Generator_UmpleModelWalker.ump;}
 mixset CodeAnalysisGenerator{ use generators/Generator_CodeAnalysis.ump;}
+//End
 
