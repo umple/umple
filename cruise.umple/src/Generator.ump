@@ -96,7 +96,7 @@ mixset AlloyGenerator{
   use generators/Generator_CodeAlloy.ump; 
 }
 use NuSMVGenerators;
-mixset NuSMVGenerators{ generators/NuSMV/nusmvGeneratorConfig.ump; }
+mixset NuSMVGenerators{ use generators/NuSMV/nusmvGeneratorConfig.ump; }
 mixset SimulateGenerator{ use generators/Generator_CodeSimulate.ump; }
 mixset YumlGenerator{ use generators/Generator_CodeYuml.ump; }
 mixset XtextGenerator{ use generators/Generator_CodeXtext.ump; }
