@@ -237,14 +237,14 @@ class GvClassDiagramGenerator
           label = leftMult+" "+leftEnd.getDisplayRoleName();
         else label = rightMult+" "+rightEnd.getDisplayRoleName();
           
-        toolTip = leftClass + " " + label + " " + rightClass + "TEST NATURAL LANGUAGE B";
+        toolTip = leftClass + " " + label + " " + rightClass + "\n\nThere is a set of "+leftClass+" that have the "+label+" relationship with each other";
           
         associations.append(labelAssociation(leftClass,
           rightClass, arrows[0], label, toolTip));
       }
       else 
       {
-        String nlDesc = "\n"; // initialize Natural Language String
+        String nlDesc = "\n\n"; // initialize Natural Language String
 
         // Test the left multiplicity of the association
         String[] array = leftMult.split("\\.\\."); // Split the multiplicity of the left side 
@@ -294,6 +294,8 @@ class GvClassDiagramGenerator
             }
           }
         }
+        
+        nlDesc +="\n"; // Newline to separate the two ends
         
         // Test the right multiplicity of the association
         String[] arrayR = rightMult.split("\\.\\."); // Split the multiplicity of the right side
@@ -348,13 +350,23 @@ class GvClassDiagramGenerator
           }
         }
         
+        nlDesc +="\n"; // Newline to separate the following information
 
         // Test the multiplicity of the association
         if (leftMult.equals("1") && rightMult.equals("1")) {
           nlDesc += "There must always be an equal number of " + rightClass + " and " + leftClass + ", connected as Pairs.\n" + 
           "When " + startWithVowel(leftClass).toLowerCase() + leftClass + " is created, its " + rightClass + " must be created at the same time.\n" +
           "When " + startWithVowel(leftClass).toLowerCase() + leftClass + " is deleted, its " + rightClass + " is deleted at the same time.\n";
-        } 
+        }
+        else if (arrows[1].equals("<@>-")) {
+          // Part-whole
+          nlDesc += "This is a composition. "+startWithVowel(rightClass)+ rightClass + " is part of "+ startWithVowel(leftClass).toLowerCase() + leftClass + ". When any "+ leftClass +" is destroyed its parts are destroyed too.\n";
+        }
+        else if (arrows[1].equals("-<@>")) {
+          // Whole-Part
+          nlDesc += "This is a composition. "+startWithVowel(leftClass)+ leftClass + " is part of "+ startWithVowel(rightClass).toLowerCase() + rightClass + ". When any "+ rightClass +" is destroyed its parts are destroyed too.\n";
+        }
+         
         else if (leftMult.equals("1") && rightMult.equals("*")) {
           nlDesc += "When " + startWithVowel(rightClass).toLowerCase() + rightClass + " is created, its " + leftClass + " must be assigned.\n" +
           "When " + startWithVowel(rightClass).toLowerCase() + rightClass + " is deleted, its " + leftClass + " is not deleted and its list of " + rightClass + "s is decreased.\n" +

@@ -32,8 +32,8 @@ digraph "Relationship1N" {
 
   // All associations
   "X_Y" [shape=diamond, label="   left   ", tooltip="X->Y"];
-  "X" -> "X_Y" [dir="none", label="1", tooltip="X->Y"];
+  "X" -> "X_Y" [dir="none", label="1", tooltip="X->Y" labeltooltip="X->Y" headtooltip="X->Y" tailtooltip="X->Y" labelurl="javascript:void()" tailurl="javascript:void()" headurl="javascript:void()" ];
 
-  "X_Y" -> "Y" [dir="none", label="*", tooltip="X->Y"];
+  "X_Y" -> "Y" [dir="none", label="*", tooltip="X->Y" labeltooltip="X->Y" headtooltip="X->Y" tailtooltip="X->Y" labelurl="javascript:void()" tailurl="javascript:void()" headurl="javascript:void()" ];
 
 }
