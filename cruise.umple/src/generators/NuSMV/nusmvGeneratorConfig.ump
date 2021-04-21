@@ -1,16 +1,16 @@
 
 namespace cruise.umple.compiler;
 
+
 // Below files are shared by NuSMVGenerator and NuSMVOptimizerGenerator.
 use NuSMVMetamodel.ump;
 use NuSMVCoordinationUnit.ump;
 //End
 
-use AAA;
-mixset NuSMVGenerator{
-  use generators/NuSMV/Generator_CodeNuSMV.ump;
-}
-mixset NuSMVOptimizerGenerator{
-  use generators/NuSMV/Generator_CodeNuSMVOptimizer.ump;
-}
+//mixset NuSMVGenerator{
+  //use generators/NuSMV/Generator_CodeNuSMV.ump;
+//}
+//mixset NuSMVOptimizerGenerator{
+ // use generators/NuSMV/Generator_CodeNuSMVOptimizer.ump;
+//}
 

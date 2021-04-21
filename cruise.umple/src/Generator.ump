@@ -95,8 +95,11 @@ mixset EntityRelationshipCon{ use generators/entityRelationshipDiagramGenerator/
 mixset AlloyGenerator{ 
   use generators/Generator_CodeAlloy.ump; 
 }
-mixset NuSMVGenerator{ use generators/NuSMV/nusmvGeneratorConfig.ump; }
-//mixset NuSMVOptimizerGenerator{ use generators/NuSMV/nusmvGeneratorConfig.ump; }
+mixset NuSMVGenerator{ use NuSMV;}
+mixset NuSMVOptimizerGenerator{ use NuSMV;}
+mixset NuSMV { use generators/NuSMV/nusmvGeneratorConfig.ump; }
+mixset NuSMVGenerator{ use generators/NuSMV/Generator_CodeNuSMV.ump; }
+mixset NuSMVOptimizerGenerator{ use generators/NuSMV/Generator_CodeNuSMVOptimizer.ump;}
 
 mixset SimulateGenerator{ use generators/Generator_CodeSimulate.ump; }
 mixset YumlGenerator{ use generators/Generator_CodeYuml.ump; }
