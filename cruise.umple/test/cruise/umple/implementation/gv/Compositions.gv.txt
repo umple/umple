@@ -29,7 +29,70 @@ Class with inline composition having role name&#13;"];
 Class with both composition ends having role names&#13;"];
 
   // All associations
-  "X" -> "Y" [dir="forward", arrowhead="diamond", taillabel="* x", headlabel="2..3 ", tooltip="X * x -<@> 2..3  Y"];
-  "B" -> "A" [dir="forward", arrowhead="diamond", taillabel="1 ", headlabel="* endTwo", tooltip="B 1  -<@> * endTwo A"];
-  "C" -> "A" [dir="back", arrowtail="diamond", taillabel="0..1 endOne", headlabel="* endTwo", tooltip="C 0..1 endOne <@>- * endTwo A"];
+  "X" -> "Y" [dir="forward", arrowhead="diamond", taillabel="* x", headlabel="2..3 ", tooltip="X * x -<@> 2..3  Y
+
+An Y called ies has some Xs. It can have none, and there is no upper bound defined.
+
+A X has at least2 Ys called ies and can never have none. And there is an upper bound of at most 3 Ys called ies.
+
+This is a composition. A X is part of an Y. When any Y is destroyed its parts are destroyed too.
+" headtooltip="X * x -<@> 2..3  Y
+
+An Y called ies has some Xs. It can have none, and there is no upper bound defined.
+
+A X has at least2 Ys called ies and can never have none. And there is an upper bound of at most 3 Ys called ies.
+
+This is a composition. A X is part of an Y. When any Y is destroyed its parts are destroyed too.
+" tailtooltip="X * x -<@> 2..3  Y
+
+An Y called ies has some Xs. It can have none, and there is no upper bound defined.
+
+A X has at least2 Ys called ies and can never have none. And there is an upper bound of at most 3 Ys called ies.
+
+This is a composition. A X is part of an Y. When any Y is destroyed its parts are destroyed too.
+" tailurl="javascript:void()" headurl="javascript:void()" ];
+  "B" -> "A" [dir="forward", arrowhead="diamond", taillabel="1 ", headlabel="* endTwo", tooltip="B 1  -<@> * endTwo A
+
+An A called endTwo has A B. It must always have exactly, one, and can never have none. And there is an upper bound of at most one B.
+
+A B has some As called endTwo. It can have none, and there is no upper bound defined.
+
+This is a composition. A B is part of an A. When any A is destroyed its parts are destroyed too.
+" headtooltip="B 1  -<@> * endTwo A
+
+An A called endTwo has A B. It must always have exactly, one, and can never have none. And there is an upper bound of at most one B.
+
+A B has some As called endTwo. It can have none, and there is no upper bound defined.
+
+This is a composition. A B is part of an A. When any A is destroyed its parts are destroyed too.
+" tailtooltip="B 1  -<@> * endTwo A
+
+An A called endTwo has A B. It must always have exactly, one, and can never have none. And there is an upper bound of at most one B.
+
+A B has some As called endTwo. It can have none, and there is no upper bound defined.
+
+This is a composition. A B is part of an A. When any A is destroyed its parts are destroyed too.
+" tailurl="javascript:void()" headurl="javascript:void()" ];
+  "C" -> "A" [dir="back", arrowtail="diamond", taillabel="0..1 endOne", headlabel="* endTwo", tooltip="C 0..1 endOne <@>- * endTwo A
+
+An A called endTwo may have a C called endOne. It can have none or just 1. 
+
+A C called endOne has some As called endTwo. It can have none, and there is no upper bound defined.
+
+This is a composition. An A is part of a C. When any C is destroyed its parts are destroyed too.
+" headtooltip="C 0..1 endOne <@>- * endTwo A
+
+An A called endTwo may have a C called endOne. It can have none or just 1. 
+
+A C called endOne has some As called endTwo. It can have none, and there is no upper bound defined.
+
+This is a composition. An A is part of a C. When any C is destroyed its parts are destroyed too.
+" tailtooltip="C 0..1 endOne <@>- * endTwo A
+
+An A called endTwo may have a C called endOne. It can have none or just 1. 
+
+A C called endOne has some As called endTwo. It can have none, and there is no upper bound defined.
+
+This is a composition. An A is part of a C. When any C is destroyed its parts are destroyed too.
+" tailurl="javascript:void()" headurl="javascript:void()" ];
 }
