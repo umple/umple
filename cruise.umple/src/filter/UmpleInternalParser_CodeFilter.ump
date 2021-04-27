@@ -19,6 +19,10 @@ use UmpleFilterModel.ump;
 class UmpleInternalParser
 {
 
+  after init(){
+    parser.addGrammarFile("/filter/umple_filter.grammar"); 
+  }
+  
   //------------------------------------------
   //----------  Diagram analysis Code  -------
   //------------------------------------------
