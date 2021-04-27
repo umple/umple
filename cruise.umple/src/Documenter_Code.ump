@@ -114,7 +114,7 @@ class Documenter
         "  <style> .regCentered {text-align: center; font-size: 110%  }</style>\n" +  
         "  <meta name='viewport' content='width=device-width, initial-scale=1'>\n  " +
         "</head>\n<body>\n" +
-        "<div class='largeCentered'>Umple Combined User Manual<br><a href='http://www.umple.org'>http://www.umple.org</a></div><div class='regCentered'>This version is one large page and is intended to allow searching through the entire manual, or easy printing to pdf for offline reading. For most purposes you will want to work with the individual manual pages at <a href='http://manual.umple.org'>http://manual.umple.org</a> </div>"
+        "<div class='largeCentered'>Umple Combined User Manual<br><a href='http://www.umple.org'>http://www.umple.org</a></div><div class='regCentered'>This version is one large page and is intended to allow searching through the entire manual, or easy printing to pdf for offline reading. For most purposes you will want to work with the individual manual pages at <a href='http://manual.umple.org'>http://manual.umple.org</a>. A published 526-page <a href='https://doi.org/10393/42044'>pdf version of the Umple User Manual</a> is also available for download. </div>&nbsp;<br/>"
         );
 
     Hashtable<String,String> referenceLookup = createReferenceLookup();
