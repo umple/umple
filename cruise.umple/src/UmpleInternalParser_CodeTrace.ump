@@ -571,7 +571,7 @@ class UmpleInternalParser
 } 
 
 use UmpleInternalParser_CodeTraceAttribute.ump;
-use UmpleInternalParser_CodeTraceStateMachine.ump;
+use stateMachine/UmpleInternalParser_CodeTraceStateMachine.ump;
 use UmpleInternalParser_CodeTraceAssociation.ump;
 use UmpleInternalParser_CodeTraceCase.ump;
 
