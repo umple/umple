@@ -86,7 +86,7 @@ class UmpleInternalParser
     parser.addGrammarFile("/umple_traits.grammar");
     parser.addGrammarFile("/umple_fixml.grammar");
     parser.addGrammarFile("/umple_patterns.grammar");
-    parser.addGrammarFile("/umple_state_machines.grammar");
+    parser.addGrammarFile("/stateMachine/umple_state_machines.grammar");
     parser.addGrammarFile("/umple_traces.grammar");
     parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
     parser.addGrammarFile("/umple_structure.grammar");
@@ -553,7 +553,7 @@ use UmpleInternalParser_CodeTrait.ump;
 use UmpleInternalParser_CodeConstraints.ump;
 use UmpleInternalParser_CodeStructure.ump;
 use UmpleInternalParser_CodeTemplate.ump;
-use UmpleInternalParser_CodeStateMachine.ump;
+use stateMachine/UmpleInternalParser_CodeStateMachine.ump;
 use UmpleInternalParser_CodeTrace.ump;
 use UmpleInternalParser_CodeLayout.ump;
 use UmpleInternalParser_CodeUSE.ump;
