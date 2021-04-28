@@ -599,7 +599,9 @@ class UmpleGenerator
     mixset Filter {
       parser.addGrammarFile("/filter/umple_filter.grammar"); // TODO Under development
     }
-    parser.addGrammarFile("/umple_mixsets.grammar"); //  Under development
+    mixset Mixset {
+      parser.addGrammarFile("/mixset/umple_mixsets.grammar");
+    }
 
     parser.setupRules(true);    // Compute the Umple grammar rules
 
