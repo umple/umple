@@ -14,9 +14,15 @@ Please refer to UmpleInternalParser.ump for more details.
 
 namespace cruise.umple.compiler;
 
+use UmpleFilterModel.ump;
+
 class UmpleInternalParser
 {
 
+  after init(){
+    parser.addGrammarFile("/filter/umple_filter.grammar"); 
+  }
+  
   //------------------------------------------
   //----------  Diagram analysis Code  -------
   //------------------------------------------

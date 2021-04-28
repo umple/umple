@@ -32,6 +32,10 @@ Please refer to UmpleInternalParser.ump for more details.
 
 namespace cruise.umple.compiler;
 
+// enable umple filter as a feature
+use Filter;
+
+
 class UmpleInternalParser
 {
 
@@ -89,7 +93,6 @@ class UmpleInternalParser
     parser.addGrammarFile("/umple_layout.grammar");
     parser.addGrammarFile("/umple_exceptions.grammar");
     parser.addGrammarFile("/use.grammar");
-    parser.addGrammarFile("/umple_filter.grammar"); // TODO Under development
     parser.addGrammarFile("/umple_mixsets.grammar"); // Under development
     
     
@@ -544,7 +547,6 @@ class UmpleInternalParser
     }
   }
 }
-
 use UmpleInternalParser_CodeCore.ump;
 use UmpleInternalParser_CodeClass.ump;
 use UmpleInternalParser_CodeTrait.ump;
@@ -555,7 +557,9 @@ use UmpleInternalParser_CodeStateMachine.ump;
 use UmpleInternalParser_CodeTrace.ump;
 use UmpleInternalParser_CodeLayout.ump;
 use UmpleInternalParser_CodeUSE.ump;
-use UmpleInternalParser_CodeFilter.ump;
+mixset Filter {
+  use /filter/UmpleInternalParser_CodeFilter.ump;
+}
 use UmpleInternalParser_CodeParserHandlers.ump;
 use UmpleInternalParser_CodeEnumeration.ump;
 use UmpleInternalParser_CodeMixset.ump;

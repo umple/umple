@@ -489,7 +489,7 @@
     <echo message="Package: Umple validator jar used in Umple " />
     <jar destfile="${dist.dir}/umplevalidator_${umple.version}.jar"
          basedir="cruise.umple.validator/bin"
-         includes="cruise/umple/** cruise/umple/validator** org/eclipse/** en.error org/** *.grammar *.error templates/** org/apache/** joptsimple/**" >
+         includes="cruise/umple/** cruise/umple/validator** org/eclipse/** en.error org/** *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar" >
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -510,7 +510,7 @@
 
     <jar destfile="${dist.dir}/${dist.umple.jar}"
          basedir="${bin.path}"
-         includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/**"
+         includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar"
          excludes="**/*Test.class">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
@@ -535,7 +535,7 @@
 
     <jar  destfile="${dist.dir}/${dist.umple.sync.jar}" 
           basedir="${bin.path}" 
-          includes="cruise/umple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/** joptsimple/**">
+          includes="cruise/umple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -555,7 +555,7 @@
 
     <jar  destfile="${dist.dir}/${dist.umple.docs.jar}" 
           basedir="${bin.path}" 
-          includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/**">
+          includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -584,7 +584,7 @@
     <echo message="Package: Umple statistics jar" />
     <jar  destfile="${dist.dir}/${dist.umple.stats.jar}" 
           basedir="${bin.path}" 
-          includes="cruise/umple/** *.grammar *.error templates/** org/apache/** joptsimple/**">
+          includes="cruise/umple/** *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -600,7 +600,7 @@
 
     <jar  destfile="${dist.dir}/${dist.umple.run.jar}" 
           basedir="${bin.path}" 
-          includes="cruise/umple/** en.error org/** *.grammar *.error templates/** org/apache/** joptsimple/**">
+          includes="cruise/umple/** en.error org/** *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar">
       <manifest>
         <attribute name="Built-By"    value="Cruise - University of Ottawa"/>
         <attribute name="Version"     value="${umple.version}"/>
