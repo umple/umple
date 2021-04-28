@@ -588,7 +588,7 @@ class UmpleGenerator
     parser.addGrammarFile("/umple_traits.grammar");
     parser.addGrammarFile("/umple_fixml.grammar");
     parser.addGrammarFile("/umple_patterns.grammar");
-    parser.addGrammarFile("/umple_state_machines.grammar");
+    parser.addGrammarFile("/stateMachine/umple_state_machines.grammar");
     parser.addGrammarFile("/umple_traces.grammar");
     parser.addGrammarFile("/umple_template.grammar");
     parser.addGrammarFile("/umple_structure.grammar");
