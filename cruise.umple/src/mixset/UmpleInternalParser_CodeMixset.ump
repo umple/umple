@@ -59,7 +59,7 @@ class UmpleInternalParser
 
   after init()
   {
-    parser.addGrammarFile("/umple_mixsets.grammar"); 
+    parser.addGrammarFile("/mixset/umple_mixsets.grammar"); 
   }
 	// prepare mixsets that are inside a state machine. 
   private void analyzeMixsetDefinition(List<Token> tokenList , StateMachine stateMachine)

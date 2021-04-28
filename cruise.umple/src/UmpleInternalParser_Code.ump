@@ -563,7 +563,7 @@ mixset Filter {
 use UmpleInternalParser_CodeParserHandlers.ump;
 use UmpleInternalParser_CodeEnumeration.ump;
 mixset Mixset{
-  use mixst/UmpleInternalParser_CodeMixset.ump;
+  use /mixset/UmpleInternalParser_CodeMixset.ump;
 }
 use UmpleInternalParser_CodeRequireStatement.ump;
 use UmpleInternalParser_CodeTest.ump;
