@@ -84,7 +84,7 @@ class UmpleInternalParser
     
     parser.addGrammarFile("/umple_core.grammar");
     parser.addGrammarFile("/umple_classes.grammar");
-    parser.addGrammarFile("/umple_traits.grammar");
+    parser.addGrammarFile("/trait/umple_traits.grammar");
     parser.addGrammarFile("/umple_fixml.grammar");
     parser.addGrammarFile("/umple_patterns.grammar");
     parser.addGrammarFile("/umple_traces.grammar");
@@ -549,7 +549,7 @@ class UmpleInternalParser
 }
 use UmpleInternalParser_CodeCore.ump;
 use UmpleInternalParser_CodeClass.ump;
-use UmpleInternalParser_CodeTrait.ump;
+use trait/UmpleInternalParser_CodeTrait.ump;
 use UmpleInternalParser_CodeConstraints.ump;
 use UmpleInternalParser_CodeStructure.ump;
 use UmpleInternalParser_CodeTemplate.ump;
