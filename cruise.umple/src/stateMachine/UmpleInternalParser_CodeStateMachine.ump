@@ -66,6 +66,11 @@ class UmpleInternalParser
   //Issue 531. Number of ocurrences of a given state in a state machine. 
   //More than one means that the transition is ambiguous and should generate a warning message 
   private int numberOfOcurrences;
+
+  after init()
+  {
+    parser.addGrammarFile("/stateMachine/umple_state_machines.grammar");
+  }
    
   //Check if "extra code" is likely a malformed state machine
   private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){

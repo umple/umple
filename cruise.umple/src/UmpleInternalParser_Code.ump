@@ -32,7 +32,7 @@ Please refer to UmpleInternalParser.ump for more details.
 
 namespace cruise.umple.compiler;
 
-// enable umple filter as a feature
+// enable umple features
 use Filter;
 use Mixset;
 use StateMachine;
@@ -87,7 +87,6 @@ class UmpleInternalParser
     parser.addGrammarFile("/umple_traits.grammar");
     parser.addGrammarFile("/umple_fixml.grammar");
     parser.addGrammarFile("/umple_patterns.grammar");
-    parser.addGrammarFile("/stateMachine/umple_state_machines.grammar");
     parser.addGrammarFile("/umple_traces.grammar");
     parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
     parser.addGrammarFile("/umple_structure.grammar");
