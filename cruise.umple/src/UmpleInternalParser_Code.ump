@@ -556,7 +556,7 @@ use UmpleInternalParser_CodeTemplate.ump;
 mixset StateMachine {
   use stateMachine/UmpleInternalParser_CodeStateMachine.ump;
 }
-use UmpleInternalParser_CodeTrace.ump;
+use trace/UmpleInternalParser_CodeTrace.ump;
 use UmpleInternalParser_CodeLayout.ump;
 use UmpleInternalParser_CodeUSE.ump;
 mixset Filter {
