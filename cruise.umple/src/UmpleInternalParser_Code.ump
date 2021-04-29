@@ -87,7 +87,7 @@ class UmpleInternalParser
     parser.addGrammarFile("/trait/umple_traits.grammar");
     parser.addGrammarFile("/umple_fixml.grammar");
     parser.addGrammarFile("/umple_patterns.grammar");
-    parser.addGrammarFile("/umple_traces.grammar");
+    parser.addGrammarFile("/trace/umple_traces.grammar");
     parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
     parser.addGrammarFile("/umple_structure.grammar");
     parser.addGrammarFile("/umple_template.grammar");
