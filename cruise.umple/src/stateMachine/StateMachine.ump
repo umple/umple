@@ -381,5 +381,5 @@ class UmpleClass {
   }
 }
 
-use Umple.ump;
+//use Umple.ump;
 use StateMachine_Code.ump;

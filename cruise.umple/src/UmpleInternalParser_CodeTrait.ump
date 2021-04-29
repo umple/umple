@@ -2014,5 +2014,7 @@ private void ApplyExludeIncludeAliasToMethod(Map<UmpleTrait, List<Method>> intra
 }
 
 use UmpleInternalParser_FIXML.ump;
-use UmpleInternalParser_CodeTrait_StateMachine.ump;
+mixset StateMachine {
+use stateMachine/UmpleInternalParser_CodeTrait_StateMachine.ump;
+}
 

@@ -26,7 +26,7 @@ use Documenter.ump;
 use Generator.ump;
 use Json.ump;
 use Parser.ump;
-use StateMachine.ump;
+use stateMachine/StateMachine.ump;
 use Umlet.ump;
 use Umple.ump;
 use Trace.ump;

@@ -57,6 +57,10 @@ class UmpleInternalParser
   
   Map<String, Boolean> parsedUmpfiles = new HashMap<>(); // The key is to store names of parsed umple files. The value is to specify if fully parsed file (true) or partially (false). 
 
+  after init()
+  {
+    parser.addGrammarFile("/mixset/umple_mixsets.grammar"); 
+  }
 	// prepare mixsets that are inside a state machine. 
   private void analyzeMixsetDefinition(List<Token> tokenList , StateMachine stateMachine)
   {  

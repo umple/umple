@@ -588,7 +588,7 @@ class UmpleGenerator
     parser.addGrammarFile("/umple_traits.grammar");
     parser.addGrammarFile("/umple_fixml.grammar");
     parser.addGrammarFile("/umple_patterns.grammar");
-    parser.addGrammarFile("/umple_state_machines.grammar");
+    parser.addGrammarFile("/stateMachine/umple_state_machines.grammar");
     parser.addGrammarFile("/umple_traces.grammar");
     parser.addGrammarFile("/umple_template.grammar");
     parser.addGrammarFile("/umple_structure.grammar");
@@ -599,7 +599,9 @@ class UmpleGenerator
     mixset Filter {
       parser.addGrammarFile("/filter/umple_filter.grammar"); // TODO Under development
     }
-    parser.addGrammarFile("/umple_mixsets.grammar"); //  Under development
+    mixset Mixset {
+      parser.addGrammarFile("/mixset/umple_mixsets.grammar");
+    }
 
     parser.setupRules(true);    // Compute the Umple grammar rules
 
