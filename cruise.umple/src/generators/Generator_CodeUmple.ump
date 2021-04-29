@@ -595,7 +595,7 @@ class UmpleGenerator
     parser.addGrammarFile("/trace/umple_traces.grammar");
     }
     parser.addGrammarFile("/umple_template.grammar");
-    parser.addGrammarFile("/umple_structure.grammar");
+    parser.addGrammarFile("/strcture/umple_structure.grammar");
     parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
     parser.addGrammarFile("/umple_layout.grammar");
     parser.addGrammarFile("/umple_exceptions.grammar");
