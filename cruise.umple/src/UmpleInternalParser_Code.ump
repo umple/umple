@@ -36,6 +36,8 @@ namespace cruise.umple.compiler;
 use Filter;
 use Mixset;
 use StateMachine;
+use Trait;
+use Trace;
 
 
 class UmpleInternalParser
@@ -84,10 +86,8 @@ class UmpleInternalParser
     
     parser.addGrammarFile("/umple_core.grammar");
     parser.addGrammarFile("/umple_classes.grammar");
-    parser.addGrammarFile("/trait/umple_traits.grammar");
     parser.addGrammarFile("/umple_fixml.grammar");
     parser.addGrammarFile("/umple_patterns.grammar");
-    parser.addGrammarFile("/trace/umple_traces.grammar");
     parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
     parser.addGrammarFile("/umple_structure.grammar");
     parser.addGrammarFile("/umple_template.grammar");
@@ -549,23 +549,27 @@ class UmpleInternalParser
 }
 use UmpleInternalParser_CodeCore.ump;
 use UmpleInternalParser_CodeClass.ump;
-use trait/UmpleInternalParser_CodeTrait.ump;
+mixset Trait{
+  use trait/UmpleInternalParser_CodeTrait.ump;
+}
 use UmpleInternalParser_CodeConstraints.ump;
 use UmpleInternalParser_CodeStructure.ump;
 use UmpleInternalParser_CodeTemplate.ump;
 mixset StateMachine {
   use stateMachine/UmpleInternalParser_CodeStateMachine.ump;
 }
-use trace/UmpleInternalParser_CodeTrace.ump;
+mixset Trace {
+  use trace/UmpleInternalParser_CodeTrace.ump;
+}
 use UmpleInternalParser_CodeLayout.ump;
 use UmpleInternalParser_CodeUSE.ump;
 mixset Filter {
-  use /filter/UmpleInternalParser_CodeFilter.ump;
+  use filter/UmpleInternalParser_CodeFilter.ump;
 }
 use UmpleInternalParser_CodeParserHandlers.ump;
 use UmpleInternalParser_CodeEnumeration.ump;
 mixset Mixset{
-  use /mixset/UmpleInternalParser_CodeMixset.ump;
+  use mixset/UmpleInternalParser_CodeMixset.ump;
 }
 use UmpleInternalParser_CodeRequireStatement.ump;
 use UmpleInternalParser_CodeTest.ump;
