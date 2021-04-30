@@ -40,6 +40,7 @@ use Trait;
 use Trace;
 use Structure;
 use Template;
+use FIXML;
 
 class UmpleInternalParser
 {

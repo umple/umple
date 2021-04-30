@@ -588,7 +588,9 @@ class UmpleGenerator
     mixset Trait {
       parser.addGrammarFile("/trait/umple_traits.grammar");
     }
-    parser.addGrammarFile("/fixml/umple_fixml.grammar");
+    mixset FIXML {
+      parser.addGrammarFile("/fixml/umple_fixml.grammar");
+    }
     parser.addGrammarFile("/umple_patterns.grammar");
     mixset StateMachine {
       parser.addGrammarFile("/stateMachine/umple_state_machines.grammar");
