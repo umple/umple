@@ -90,7 +90,7 @@ class UmpleInternalParser
     parser.addGrammarFile("/umple_patterns.grammar");
     parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
     parser.addGrammarFile("/strcture/umple_structure.grammar");
-    parser.addGrammarFile("/umple_template.grammar");
+    parser.addGrammarFile("/template/umple_template.grammar");
     parser.addGrammarFile("/umple_layout.grammar");
     parser.addGrammarFile("/umple_exceptions.grammar");
     parser.addGrammarFile("/use.grammar");
@@ -554,7 +554,7 @@ mixset Trait{
 }
 use UmpleInternalParser_CodeConstraints.ump;
 use strcture/UmpleInternalParser_CodeStructure.ump;
-use UmpleInternalParser_CodeTemplate.ump;
+use template/UmpleInternalParser_CodeTemplate.ump;
 mixset StateMachine {
   use stateMachine/UmpleInternalParser_CodeStateMachine.ump;
 }

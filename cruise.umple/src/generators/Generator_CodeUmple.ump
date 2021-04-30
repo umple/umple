@@ -594,7 +594,7 @@ class UmpleGenerator
     mixset Trace {
     parser.addGrammarFile("/trace/umple_traces.grammar");
     }
-    parser.addGrammarFile("/umple_template.grammar");
+    parser.addGrammarFile("/template/umple_template.grammar");
     parser.addGrammarFile("/strcture/umple_structure.grammar");
     parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
     parser.addGrammarFile("/umple_layout.grammar");
