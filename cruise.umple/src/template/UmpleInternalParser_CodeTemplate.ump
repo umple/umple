@@ -824,6 +824,10 @@ class TemplateDefinitionWalker {
 class UmpleInternalParser
 {
   internal TemplateDefinitionWalker walker = new TemplateDefinitionWalker(this);
+
+  after init() {
+    parser.addGrammarFile("/template/umple_template.grammar");
+  }
   
   private void analyzeTemplateToken(Token token, int analysisStep) {  	
   	walker.analyze(token, analysisStep);

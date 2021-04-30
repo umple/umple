@@ -1595,6 +1595,10 @@ class UmpleInternalParser
 {
   internal CompositeStructureDefinitionWalker compWalker = new CompositeStructureDefinitionWalker(this);
 
+  after init() {
+    parser.addGrammarFile("/strcture/umple_structure.grammar");
+  }
+  
   private void analyzeComponentToken(Token token, int analysisStep) {
   	compWalker.analyze(token, analysisStep);
   }

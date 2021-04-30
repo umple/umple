@@ -7,7 +7,12 @@ class UmpleInternalParser {
    Map<Association,Integer> afixmlAttributeCount = new HashMap<Association, Integer>();
 //----------------------------------------------------------------------------  
 //---------------------------------Start--------------------------------------
-//----------------------------------------------------------------------------   
+//----------------------------------------------------------------------------  
+
+  after init() {
+    parser.addGrammarFile("/fixml/umple_fixml.grammar");
+  } 
+  
    private void analyzeFIXML(Token t, int analysisStep){
     if (analysisStep != 2)
 	    {

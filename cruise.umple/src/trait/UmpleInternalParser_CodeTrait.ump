@@ -23,6 +23,9 @@ boolean getUmpleTraitTypeParameter(String value) {
 //*************************************************************************************  
 class UmpleInternalParser
 {
+  after init() {
+    parser.addGrammarFile("/trait/umple_traits.grammar");
+  }
 
 //----------------------------------------------------------------------------  
 //---------------------------------Start--------------------------------------
@@ -2012,8 +2015,9 @@ private void ApplyExludeIncludeAliasToMethod(Map<UmpleTrait, List<Method>> intra
 //---------------------------------Start--------------------------------------
 
 }
-
-use UmpleInternalParser_FIXML.ump;
+mixset FIXML {
+  use fixml/UmpleInternalParser_FIXML.ump;
+}
 mixset StateMachine {
 use stateMachine/UmpleInternalParser_CodeTrait_StateMachine.ump;
 }

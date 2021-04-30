@@ -585,13 +585,25 @@ class UmpleGenerator
     // Populate the parser with Umple's grammar (see GrammarParsing_Code.ump)
     parser.addGrammarFile("/umple_core.grammar");
     parser.addGrammarFile("/umple_classes.grammar");
-    parser.addGrammarFile("/umple_traits.grammar");
-    parser.addGrammarFile("/umple_fixml.grammar");
+    mixset Trait {
+      parser.addGrammarFile("/trait/umple_traits.grammar");
+    }
+    mixset FIXML {
+      parser.addGrammarFile("/fixml/umple_fixml.grammar");
+    }
     parser.addGrammarFile("/umple_patterns.grammar");
-    parser.addGrammarFile("/stateMachine/umple_state_machines.grammar");
-    parser.addGrammarFile("/umple_traces.grammar");
-    parser.addGrammarFile("/umple_template.grammar");
-    parser.addGrammarFile("/umple_structure.grammar");
+    mixset StateMachine {
+      parser.addGrammarFile("/stateMachine/umple_state_machines.grammar");
+    }
+    mixset Trace {
+      parser.addGrammarFile("/trace/umple_traces.grammar");
+    }
+    mixset Template {
+      parser.addGrammarFile("/template/umple_template.grammar");
+    }
+    mixset Structure {
+      parser.addGrammarFile("/strcture/umple_structure.grammar");
+    }
     parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
     parser.addGrammarFile("/umple_layout.grammar");
     parser.addGrammarFile("/umple_exceptions.grammar");
