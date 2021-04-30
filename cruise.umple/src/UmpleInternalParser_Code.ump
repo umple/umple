@@ -38,7 +38,8 @@ use Mixset;
 use StateMachine;
 use Trait;
 use Trace;
-
+use Structure;
+use Template;
 
 class UmpleInternalParser
 {
@@ -89,13 +90,9 @@ class UmpleInternalParser
     parser.addGrammarFile("/umple_fixml.grammar");
     parser.addGrammarFile("/umple_patterns.grammar");
     parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
-    parser.addGrammarFile("/strcture/umple_structure.grammar");
-    parser.addGrammarFile("/template/umple_template.grammar");
     parser.addGrammarFile("/umple_layout.grammar");
     parser.addGrammarFile("/umple_exceptions.grammar");
     parser.addGrammarFile("/use.grammar");
-    
-    
   }
 
   public ParseResult parse(String ruleName, String input){

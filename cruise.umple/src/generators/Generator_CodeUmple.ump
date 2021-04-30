@@ -590,12 +590,18 @@ class UmpleGenerator
     }
     parser.addGrammarFile("/umple_fixml.grammar");
     parser.addGrammarFile("/umple_patterns.grammar");
-    parser.addGrammarFile("/stateMachine/umple_state_machines.grammar");
-    mixset Trace {
-    parser.addGrammarFile("/trace/umple_traces.grammar");
+    mixset StateMachine {
+      parser.addGrammarFile("/stateMachine/umple_state_machines.grammar");
     }
-    parser.addGrammarFile("/template/umple_template.grammar");
-    parser.addGrammarFile("/strcture/umple_structure.grammar");
+    mixset Trace {
+      parser.addGrammarFile("/trace/umple_traces.grammar");
+    }
+    mixset Template {
+      parser.addGrammarFile("/template/umple_template.grammar");
+    }
+    mixset Structure {
+      parser.addGrammarFile("/strcture/umple_structure.grammar");
+    }
     parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
     parser.addGrammarFile("/umple_layout.grammar");
     parser.addGrammarFile("/umple_exceptions.grammar");
