@@ -88,7 +88,7 @@ class UmpleInternalParser
     parser.setAnalyzerGenerator( new UmpleAnalyzerGeneratorHandler() );
     
     parser.addGrammarFile("/umple_core.grammar");
-    parser.addGrammarFile("/umple_classes.grammar");
+    parser.addGrammarFile("/class/umple_classes.grammar");
     parser.addGrammarFile("/umple_patterns.grammar");
     parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
     parser.addGrammarFile("/layout/umple_layout.grammar");
@@ -546,7 +546,7 @@ class UmpleInternalParser
   }
 }
 use UmpleInternalParser_CodeCore.ump;
-use UmpleInternalParser_CodeClass.ump;
+use class/UmpleInternalParser_CodeClass.ump;
 mixset Trait{
   use trait/UmpleInternalParser_CodeTrait.ump;
 }
