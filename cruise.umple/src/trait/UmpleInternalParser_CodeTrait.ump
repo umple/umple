@@ -23,7 +23,7 @@ boolean getUmpleTraitTypeParameter(String value) {
 //*************************************************************************************  
 class UmpleInternalParser
 {
-  after init() {
+  after init  {
     parser.addGrammarFile("/trait/umple_traits.grammar");
   }
 

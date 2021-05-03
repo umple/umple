@@ -42,6 +42,7 @@ use Structure;
 use Template;
 use FIXML;
 use Layout;
+use Class;
 
 class UmpleInternalParser
 {
@@ -88,10 +89,8 @@ class UmpleInternalParser
     parser.setAnalyzerGenerator( new UmpleAnalyzerGeneratorHandler() );
     
     parser.addGrammarFile("/umple_core.grammar");
-    parser.addGrammarFile("/class/umple_classes.grammar");
     parser.addGrammarFile("/umple_patterns.grammar");
     parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
-    parser.addGrammarFile("/layout/umple_layout.grammar");
     parser.addGrammarFile("/umple_exceptions.grammar");
     parser.addGrammarFile("/use.grammar");
   }

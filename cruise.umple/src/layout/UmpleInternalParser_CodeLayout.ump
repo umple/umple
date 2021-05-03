@@ -16,6 +16,10 @@ namespace cruise.umple.compiler;
 
 class UmpleInternalParser
 {
+   after init {
+     parser.addGrammarFile("/layout/umple_layout.grammar");
+  }
+
 
   // Analyze layout tokens to the Umple language
   private void analyzeLayoutToken(Token token, int analysisStep)

@@ -584,7 +584,9 @@ class UmpleGenerator
 
     // Populate the parser with Umple's grammar (see GrammarParsing_Code.ump)
     parser.addGrammarFile("/umple_core.grammar");
-    parser.addGrammarFile("/class/umple_classes.grammar");
+    mixset Class {
+      parser.addGrammarFile("/class/umple_classes.grammar");
+    }
     mixset Trait {
       parser.addGrammarFile("/trait/umple_traits.grammar");
     }
