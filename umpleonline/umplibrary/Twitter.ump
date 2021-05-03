@@ -1,0 +1,163 @@
+namespace twitter.User;
+
+class User
+{
+  position 377 240 165 157;
+  id;
+  name;
+  age;
+  userName;
+  password;
+  emailAddress;
+  
+}
+
+class ProfilePhoto
+{
+  id;
+  filename;
+  1 -- 1 User;
+  
+  position.association ProfilePhoto__User 0,22 165,24;
+  position 764 200 133 72;
+}
+
+class City
+{
+  id;
+  name;
+  1 -- * User;
+  
+  position 404 17 113 72;
+  position.association City__User 85,72 74,0;
+}
+
+class Country
+{
+  id;
+  name;
+  
+  1 -- * City;
+  
+  position 635 26 113 72;
+  position.association City__Country 0,19 113,19;
+}
+
+class TimeZone
+{
+  id;
+  name;
+  continent;
+  UTF_diff;
+  1 -- * User;
+  position 129 341 139 107;
+  position.association TimeZone__User 140,5 0,88;
+}
+
+namespace twitter.Security;
+
+class SecurityParameter
+{
+  id;
+  name;
+  position 80 231 133 72;
+}
+
+class SecurityValue
+{
+  id;
+  name;
+  position 81 32 113 72;
+}
+
+class SecuritySetting
+{
+  * -- 1 SecurityParameter;
+  * -- 1 SecurityValue;
+  * -- 1 User;
+  position 226 123 112 39;
+  position.association SecuritySetting__User 84,39 0,0;
+  position.association SecurityParameter__SecuritySetting 38,39 109,0;
+  position.association SecuritySetting__SecurityValue 41,0 113,47;
+}
+
+namespace twitter.Util;
+
+
+
+class Following
+{
+  id;
+  User following;
+  User follower;
+  * -- * User;
+  position 604 130 125 89;
+  position.association Following__User 0,0 147,0;
+}
+
+class Message
+{
+  id;
+  text;
+  User sender;
+  
+  * -- 1 User;
+  * -- 1 Tweet;
+  position 661 291 109 89;
+  position.association Message__User 0,10 165,54;
+  position.association Message__Tweet 24,89 86,0;
+}
+
+class Tweet
+{
+  id;
+  text;
+  Tweet retweet;
+  Time created;
+  Like like;
+  * -- 1 User;
+  1 -- * Hashtag;
+  position 376 441 125 124;
+  position.association Tweet__User 74,0 73,157;
+  position.association Hashtag__Tweet 125,25 0,6;
+  
+}
+
+class Reply
+{
+  id;
+  text;
+  User author;
+  * -- 1 Tweet;
+  position 150 543 109 89;
+  position.association Reply__Tweet 85,0 0,16;
+}
+
+
+class Hashtag
+{
+  id;
+  text;
+  position 686 429 109 72;
+}
+
+class Image
+{
+  id;
+  filename;
+  
+  * -- 1 Tweet;
+  position 595 533 133 72;
+  position.association Image__Tweet 0,34 125,75;
+}
+
+class Likes
+{
+  id;
+  User user;
+  date;
+  * -- 1 Tweet;
+  position 386 593 109 89;
+  position.association Likes__Tweet 44,0 53,124;
+}
+
