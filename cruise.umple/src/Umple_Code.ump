@@ -1584,7 +1584,7 @@ class UmpleClass
     return methodNames;
   }
   
-    // line 1869 "../../../../src/UmpleInternalParser_CodeClass.ump"
+    // line 1869 "../../../../src/class/UmpleInternalParser_CodeClass.ump"
    private boolean isGetterSetter(Method method){
     if (method.getName().length() <= 2)
   		return false;

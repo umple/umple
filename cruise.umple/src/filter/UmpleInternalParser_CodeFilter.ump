@@ -19,7 +19,7 @@ use UmpleFilterModel.ump;
 class UmpleInternalParser
 {
 
-  after init(){
+  after init {
     parser.addGrammarFile("/filter/umple_filter.grammar"); 
   }
   

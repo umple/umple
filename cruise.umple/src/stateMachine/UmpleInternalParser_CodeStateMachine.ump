@@ -67,7 +67,7 @@ class UmpleInternalParser
   //More than one means that the transition is ambiguous and should generate a warning message 
   private int numberOfOcurrences;
 
-  after init()
+  after init
   {
     parser.addGrammarFile("/stateMachine/umple_state_machines.grammar");
   }

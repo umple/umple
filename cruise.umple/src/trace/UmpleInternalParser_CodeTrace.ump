@@ -25,7 +25,7 @@ class UmpleInternalParser
   TraceCase tca = null;
   Postfix post = null;
 
-  after init(){     
+  after init {     
     parser.addGrammarFile("/trace/umple_traces.grammar");
   }
 

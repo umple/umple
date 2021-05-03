@@ -9,7 +9,7 @@ class UmpleInternalParser {
 //---------------------------------Start--------------------------------------
 //----------------------------------------------------------------------------  
 
-  after init() {
+  after init {
     parser.addGrammarFile("/fixml/umple_fixml.grammar");
   } 
   

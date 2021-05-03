@@ -41,6 +41,13 @@ class UmpleInternalParser
   internal AssociationVariable lastassoc = null;
   Position lastassocPosition = null;
   internal Map<Token, UmpleClass> attributeAutouniqueImmutable = null;
+
+  after init {
+    parser.addGrammarFile("/class/umple_classes.grammar");
+  }
+
+
+
    
   /*
    * Analyze class definitions and related tokens.

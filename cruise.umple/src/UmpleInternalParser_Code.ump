@@ -41,6 +41,8 @@ use Trace;
 use Structure;
 use Template;
 use FIXML;
+use Layout;
+use Class;
 
 class UmpleInternalParser
 {
@@ -87,11 +89,8 @@ class UmpleInternalParser
     parser.setAnalyzerGenerator( new UmpleAnalyzerGeneratorHandler() );
     
     parser.addGrammarFile("/umple_core.grammar");
-    parser.addGrammarFile("/umple_classes.grammar");
-    parser.addGrammarFile("/fixml/umple_fixml.grammar");
     parser.addGrammarFile("/umple_patterns.grammar");
     parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
-    parser.addGrammarFile("/umple_layout.grammar");
     parser.addGrammarFile("/umple_exceptions.grammar");
     parser.addGrammarFile("/use.grammar");
   }
@@ -546,20 +545,28 @@ class UmpleInternalParser
   }
 }
 use UmpleInternalParser_CodeCore.ump;
-use UmpleInternalParser_CodeClass.ump;
+mixset Class {
+  use class/UmpleInternalParser_CodeClass.ump;
+}
 mixset Trait{
   use trait/UmpleInternalParser_CodeTrait.ump;
 }
 use UmpleInternalParser_CodeConstraints.ump;
-use strcture/UmpleInternalParser_CodeStructure.ump;
-use template/UmpleInternalParser_CodeTemplate.ump;
+mixset Structure {
+  use strcture/UmpleInternalParser_CodeStructure.ump;
+}
+mixset Template {
+  use template/UmpleInternalParser_CodeTemplate.ump;
+}
 mixset StateMachine {
   use stateMachine/UmpleInternalParser_CodeStateMachine.ump;
 }
 mixset Trace {
   use trace/UmpleInternalParser_CodeTrace.ump;
 }
-use UmpleInternalParser_CodeLayout.ump;
+mixset Layout {
+  use layout/UmpleInternalParser_CodeLayout.ump;
+}
 use UmpleInternalParser_CodeUSE.ump;
 mixset Filter {
   use filter/UmpleInternalParser_CodeFilter.ump;
