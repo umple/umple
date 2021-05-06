@@ -2223,48 +2223,54 @@ public class ParserTest
   public void commentEndOfLineTest()
   {
 	  parser.addRule("program : [[comment]] [var]");
-	  parser.addRule("comment : // [*inlineComment]");
+	  parser.addRule("comment : // [*inlineComment] | # [*inlineComment]");
 	  assertParse(true, parser.parse("program", "//\nblah"));
+	  assertParse(true, parser.parse("program", "#\nblah"));
   }
   
   @Test
   public void commentEndOfLineTest2()
   {
 	  parser.addRule("program : [[comment]] [var]");
-	  parser.addRule("comment : // [*inlineComment]");
+	  parser.addRule("comment : // [*inlineComment] | # [*inlineComment]");
 	  assertParse(true, parser.parse("program", "//test\nblah"));
+	  assertParse(true, parser.parse("program", "#test\nblah"));
   }
   
   @Test
   public void commentEndOfLineTest3()
   {
 	  parser.addRule("program : [[comment]] [var] [[comment]] [var]");
-	  parser.addRule("comment : // [*inlineComment]");
+	  parser.addRule("comment : // [*inlineComment] | # [*inlineComment]");
 	  assertParse(true, parser.parse("program", "//\nfoo\n//\nbar"));
+	  assertParse(true, parser.parse("program", "#\nfoo\n#\nbar"));
   }
   
   @Test
   public void longCommentWithSpacesBasic()
   {
 	  parser.addRule("program : [[comment]] [var]");
-	  parser.addRule("comment : // [*inlineComment]");
+	  parser.addRule("comment : // [*inlineComment] | # [*inlineComment]");
 	  assertParse(true, parser.parse("program", "// \nfoobar"));
+	  assertParse(true, parser.parse("program", "# \nfoobar"));
   }
   
   @Test
   public void longCommentWithSpacesModerate()
   {
 	  parser.addRule("program : [[comment]] [var]");
-	  parser.addRule("comment : // [*inlineComment]");
+	  parser.addRule("comment : // [*inlineComment] | # [*inlineComment]");
 	  assertParse(true, parser.parse("program", "//          \nfoobar"));
+	  assertParse(true, parser.parse("program", "#          \nfoobar"));
   }
   
   @Test
   public void longCommentWithSpacesAdvanced()
   {
 	  parser.addRule("program : [[comment]] [var] [[comment]] [var] [[comment]] [var] [[comment]] [var] [[comment]] [var]");
-	  parser.addRule("comment : // [*inlineComment]");
+	  parser.addRule("comment : // [*inlineComment] | # [*inlineComment]");
 	  assertParse(true, parser.parse("program", "// \nfoobar\n//          \nabc\n//  \n123\n//          \nblah\n// \nstudent"));
+	  assertParse(true, parser.parse("program", "# \nfoobar\n#          \nabc\n#  \n123\n#          \nblah\n# \nstudent"));
   }
   
   @Test
