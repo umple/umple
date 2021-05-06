@@ -41,6 +41,8 @@ class JavaClassGenerator {
     depend cruise.umple.util.*;
     depend java.util.*;
     depend cruise.umple.parser.Position;
+    depend java.util.regex.Matcher;
+    depend java.util.regex.Pattern;
 
     isA ILang;
 
@@ -246,17 +248,21 @@ for (StateMachine smq : uClass.getStateMachines())
 		    for(MixsetInMethod childMixsetInMethod : mixsetInMethod.getChildMixsets())
           handelMixsetInsideMethod(umodel, childMixsetInMethod, mBody);
 		    //Then ... 
-        String searchFor = "mixset\\s+"+mixsetInMethod.getMixsetName()+"\\s+\\{"; 
-        String code = mBody.getCodeblock().getCode();
-        code = code.replaceFirst(searchFor, ""); // remove def. of mixset + open curly bracket 
+        String searchFor = ".*"+mixsetInMethod.getMixsetName()+".*\\{"; 
+		    String code = mBody.getCodeblock().getCode();
+		    Pattern pattern = Pattern.compile(searchFor);
+        Matcher matcher = pattern.matcher(code);
+        matcher.find();
+        int matchIndex = 0;
+        if(matcher.find())
+        	matchIndex = matcher.start() ;
 
-        int indexOfMixsetClosingBracket= MethodBody.indexOfMixsetClosingBracket(" { "+code) - 3; // 3 is the added Chars at beginning 
-        String resCode = code.substring(0,indexOfMixsetClosingBracket-1) + " ";
-        if(indexOfMixsetClosingBracket < code.length()) 
-          resCode = resCode + code.substring(indexOfMixsetClosingBracket+1); 
+        int indexOfMixsetClosingBracket= MethodBody.indexOfMixsetClosingBracket(code.substring(matchIndex)); 
+        String resCode = code.substring(0,indexOfMixsetClosingBracket+matchIndex-1) + " ";
+        if(indexOfMixsetClosingBracket+matchIndex < code.length()) 
+          resCode = resCode + code.substring(indexOfMixsetClosingBracket+matchIndex+1); 
+        resCode = resCode.replaceFirst("mixset\\s+"+mixsetName+"[\\s+]?\\{", "");
         mBody.getCodeblock().setCode(resCode);
-
-
       }
     }
     else if(!mixsetIsUsed)
