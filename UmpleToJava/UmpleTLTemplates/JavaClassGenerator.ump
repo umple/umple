@@ -256,13 +256,17 @@ for (StateMachine smq : uClass.getStateMachines())
         int matchIndex = 0;
         if(matcher.find())
         	matchIndex = matcher.start() ;
-
+      
         int indexOfMixsetClosingBracket= MethodBody.indexOfMixsetClosingBracket(code.substring(matchIndex)); 
-        String resCode = code.substring(0,indexOfMixsetClosingBracket+matchIndex-1) + " ";
-        if(indexOfMixsetClosingBracket+matchIndex < code.length()) 
-          resCode = resCode + code.substring(indexOfMixsetClosingBracket+matchIndex+1); 
-        resCode = resCode.replaceFirst("mixset\\s+"+mixsetName+"[\\s+]?\\{", "");
-        mBody.getCodeblock().setCode(resCode);
+        indexOfMixsetClosingBracket= indexOfMixsetClosingBracket + matchIndex -1;
+        if (code.charAt(indexOfMixsetClosingBracket) == '}')
+        {
+        	char[] codeChars = code.toCharArray();
+        	codeChars[indexOfMixsetClosingBracket] = ' ';
+        	String resCode = String.valueOf(codeChars);
+        	resCode = resCode.replaceFirst("mixset\\s+"+mixsetInMethod.getMixsetName()+"[\\s+]?\\{", "");
+          mBody.getCodeblock().setCode(resCode);
+        }            
       }
     }
     else if(!mixsetIsUsed)
