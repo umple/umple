@@ -4,7 +4,6 @@ import org.junit.*;
 import cruise.umple.UmpleConsoleMain;
 import cruise.umple.compiler.UmpleParserTest;
 import cruise.umple.util.SampleFileWriter;
-import jdk.jfr.Timestamp;
 import cruise.umple.parser.Position;
 import cruise.umple.compiler.UmpleFile;
 import cruise.umple.compiler.UmpleModel;

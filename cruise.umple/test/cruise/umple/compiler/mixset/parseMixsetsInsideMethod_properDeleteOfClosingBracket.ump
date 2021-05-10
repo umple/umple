@@ -192,7 +192,8 @@ class MixsetWithinMethodClass_CloseBracket
 						    visitor.visit(smte);
 					      }
                         //TAG_MIXSET_BEFORE_CLOSE
-						}  // The above closing bracket should be removed as StateMachine is used.
+						}  
+                        // The above closing bracket should be removed as StateMachine is used.
                         //TAG_MIXSET_CLOSE 
                       
 					}
