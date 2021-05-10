@@ -4,6 +4,7 @@ import org.junit.*;
 import cruise.umple.UmpleConsoleMain;
 import cruise.umple.compiler.UmpleParserTest;
 import cruise.umple.util.SampleFileWriter;
+import jdk.jfr.Timestamp;
 import cruise.umple.parser.Position;
 import cruise.umple.compiler.UmpleFile;
 import cruise.umple.compiler.UmpleModel;
@@ -721,6 +722,29 @@ public class UmpleMixsetTest {
     //after checks:
     Assert.assertEquals(true, afterLabelCode.contains("code for mixset M2."));
     SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"MixsetWithinMethodClass.java");
+  }
+
+  @Test 
+  public void mixsetInsideMethods_deleteProperCloseBracket()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseMixsetsInsideMethod_properDeleteOfClosingBracket.ump");
+    UmpleModel umodel = new UmpleModel(umpleFile);
+    umodel.run();
+    umodel.generate();
+    UmpleClass uClass = umodel.getUmpleClass(0);
+    Method aMethod = uClass.getMethod(0);
+    String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
+    String keyWord1 = "//TAG_MIXSET_BEFORE_CLOSE";
+    String keyWord2 = "//TAG_MIXSET_CLOSE";
+  
+    int indexOfKeyWord1= methodBodyCode.indexOf(keyWord1);
+    int indexOfKeyWord2= methodBodyCode.indexOf(keyWord2);
+
+    Assert.assertEquals(true, methodBodyCode.contains(keyWord1));
+    Assert.assertEquals(true, methodBodyCode.contains(keyWord2));
+    Assert.assertEquals(false, methodBodyCode.substring(indexOfKeyWord1, indexOfKeyWord2).contains("}"));
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"MixsetWithinMethodClass_CloseBracket.java");
+
   }
 
   @Test
