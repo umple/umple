@@ -243,20 +243,22 @@ for (StateMachine smq : uClass.getStateMachines())
       {
         mixsetIsUsed = true;
         //first process children
-		    for(MixsetInMethod childMixsetInMethod : mixsetInMethod.getChildMixsets())
+        for(MixsetInMethod childMixsetInMethod : mixsetInMethod.getChildMixsets())
           handelMixsetInsideMethod(umodel, childMixsetInMethod, mBody);
-		    //Then ... 
-        String searchFor = "mixset\\s+"+mixsetInMethod.getMixsetName()+"\\s+\\{"; 
-        String code = mBody.getCodeblock().getCode();
-        code = code.replaceFirst(searchFor, ""); // remove def. of mixset + open curly bracket 
-
-        int indexOfMixsetClosingBracket= MethodBody.indexOfMixsetClosingBracket(" { "+code) - 3; // 3 is the added Chars at beginning 
-        String resCode = code.substring(0,indexOfMixsetClosingBracket-1) + " ";
-        if(indexOfMixsetClosingBracket < code.length()) 
-          resCode = resCode + code.substring(indexOfMixsetClosingBracket+1); 
-        mBody.getCodeblock().setCode(resCode);
-
-
+        //Then ...
+        String methodCode = mBody.getCodeblock().getCode();
+        Pattern labelPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+\\{");
+        Matcher matcher = labelPatternToMatch.matcher(methodCode);
+        // below code, to delete mixset def. and its closing bracket.
+        if (matcher.find()) {
+          String mixsetDefPlusAfterCode = methodCode.substring(matcher.start());
+          int indexOfMixsetClosingBracket = matcher.start() + MethodBody.indexOfMixsetClosingBracket(mixsetDefPlusAfterCode) - 1 ;
+          String methodCodeRemovedMixset = methodCode.substring(0,indexOfMixsetClosingBracket) + " " ; // remove closing bracket 
+          if(indexOfMixsetClosingBracket + 1 < methodCode.length())
+          methodCodeRemovedMixset = methodCodeRemovedMixset + methodCode.substring(indexOfMixsetClosingBracket +1); 
+          methodCodeRemovedMixset = methodCodeRemovedMixset.substring(0,matcher.start()) + methodCodeRemovedMixset.substring(matcher.end()+1); // remove mixset def.
+          mBody.getCodeblock().setCode(methodCodeRemovedMixset);
+        }
       }
     }
     else if(!mixsetIsUsed)
