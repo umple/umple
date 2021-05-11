@@ -1,0 +1,5 @@
+<div id="styleTip"></div><!--
+--><div id="extraInfo" class="fade-out" onmouseleave='hideExtra()'>
+  <script src="tips/tipDisplay.js"></script>
+</div>
+<link rel="stylesheet" href="tips/tipStyle.css">
