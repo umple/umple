@@ -1,0 +1,94 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+ */
+
+namespace cruise.umple.compiler;
+
+class UmpleAnnotaiveToCompositionGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+  depend java.util.stream.Collectors;
+
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String output = "";
+
+  fileExtension= ".ump";
+ 
+
+  // CENTRAL GENERATE METHOD
+
+  public void generate()
+  {
+    StringBuilder code = new StringBuilder();
+    List<Mixset> mixsetList = model.getMixsetOrFiles().stream().filter(mixset -> mixset.getIsMixset()).map(obj -> (Mixset)obj).collect(Collectors.toList());
+		for (Mixset aMixset: mixsetList)
+		{
+			code.append("/* \n");
+			code.append("Annotaive fragments are refactored into composition fragments. \n");
+			code.append("Total mixsts definitions: "+mixsetList.size());
+			code.append("\n*/ \n");
+			code.append("\n");
+
+			code.append("mixset "+aMixset.getMixsetName() + " { ") ;
+			for (MixsetFragment  mFragment : aMixset.getMixsetFragments())
+			{
+				code.append("\n// File: "+mFragment.getOriginalUmpFile().getFileName());
+				code.append("\n// Line: "+mFragment.getOriginalUmpLine());
+				code.append("\n"+mFragment.getBody());
+				code.append("\n");
+
+			}
+			code.append("\n}\n") ;
+
+		}
+		
+
+    model.setCode(code.toString());
+    writeModel();
+  } // end generate
+
+  private String spacer(int num)
+  {
+    StringBuilder space = new StringBuilder();
+    for (int i = 0; i < num; i++)
+    {
+      space.append(" ");
+    }
+    return space.toString();
+  }
+
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName()+"_refactoredToComposition" + this.fileExtension ;
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating UmpleSelf code." + e, e);
+    }
+  }
+
+
+
+}
+
