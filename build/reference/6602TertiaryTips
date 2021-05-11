@@ -4,3 +4,15 @@ noreferences
 @@tooltip The third-priority tips that will appear in the 'tip of the day' occasionally in UmpleOnline
 
 @@description
+<h2>You can work on multiple tabs</h2>
+<p>By clicking the Show Tabs button above the text editor, you're able to write code on multiple tabs and make the classes in them interact with one other.</p>
+
+</p>In order to hide the tabs, you use the same button to hide the tabs</p>
+
+<h2>Feel free to work on one screen at a time according to your preferences</h2>
+<p>By toggling the T and D buttons above the text editor, you can choose to work on one screen at a time.</p>
+
+<p>The T button hides the text-editor screen and the D button hides the diagram-editor screen.</p>
+
+<h2>Hovering over an item will allow you to see more info about it</h2>
+<p>By hovering over a button or some text, there will be a message displayed with extra information about that item including extra links and shortcuts.</p>
