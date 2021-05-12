@@ -6,10 +6,10 @@ var firstTime = localStorage.getItem("first_time");
 if(!firstTime) {
     localStorage.setItem('tipCount',0);
     localStorage.setItem('priorityCount',0);
-
+    
     //acquiring tipInformation
     var allInfo;
-    var fileNames = ["../build/reference/6600ImportantTips","../build/reference/6601SecondaryTips", "../build/reference/6602TertiaryTips"];
+    var fileNames = ["../build/reference/6600ImportantTips.txt","../build/reference/6601SecondaryTips.txt", "../build/reference/6602TertiaryTips.txt"];
     
     for (let files=0; files<fileNames.length; files++){
         var request = new XMLHttpRequest();
@@ -38,7 +38,7 @@ if(!firstTime) {
 // Tip Pickers
 // =========================================
 
-window.addEventListener('load', function () {
+window.addEventListener('DOMContentLoaded', function () {
     var priority=this.localStorage.getItem('priorityCount');
     var tip = JSON.parse(localStorage.getItem('tipInfo'+priority));
     var num = parseInt(localStorage.getItem('tipCount'));

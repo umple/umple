@@ -4,8 +4,8 @@ noreferences
 @@tooltip The second-priority tips that will appear in the 'tip of the day' occasionally in UmpleOnline
 
 @@description
-<h2>In the Umple User Manual, you can select Combined version at the bottom</h2>
+<h2>In the Umple User Manual, you can select Combined version at the bottom.</h2>
 <p>At the bottom-left of each user manual page is a link called <a href="https://cruise.umple.org/umple/UmpleUserManualCombined.html">Combined Version</a>. If you select this you can then use the built-in search function in your browser (control-f or command-f) to find information. Beware though that the combined version web page is extremely big. There is also a <a href="https://doi.org/10393/42044">pdf version of the manual</a> available.</p>
 
-<h2>In Umple textual code the type comes before an attribute name, but in UML it comes afterwards</h2>
-<p>Umple follows the Java, C and C++ approach of specifying the type of an attribute: The type is specified followed by the name. For example <pre>Integer count;</pre>But class diagrams created in Umple follow the UML convention whereby the type follows the name of the attribute, with a colon separating them. So the above example in a diagram appears as: <pre>count: Integer</pre> </p>
+<h2>In Umple textual code the type comes before an attribute name, but in UML it comes afterwards.</h2>
+<p>Umple follows the Java, C and C++ approach of specifying the type of an attribute: The type is specified followed by the name. For example</p><pre>Integer count;</pre><p>But class diagrams created in Umple follow the UML convention whereby the type follows the name of the attribute, with a colon separating them. So the above example in a diagram appears as: </p><pre>count: Integer</pre> 
