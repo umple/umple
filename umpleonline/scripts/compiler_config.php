@@ -293,7 +293,7 @@ function generateMenu($buttonSuffix)
             <option id=\"gencpp\" value=\"cpp:RTCpp\">C++ Code</option>
             <option id=\"genruby\" value=\"ruby:Ruby\">Ruby Code</option>
             <option id=\"genalloy\" value=\"alloy:Alloy\">Alloy Model</option>
-        <option id=\"gennusmv\" value=\"nusmv:NuSMV\">NuSMV Model</option>
+            <option id=\"gennusmv\" value=\"nusmv:NuSMV\">NuSMV Model</option>
             <option value=\"xml:Ecore\">Ecore</option>
             <option value=\"java:TextUml\">TextUml</option>
             <option value=\"xml:Scxml\">Scxml (Experimental)</option>
@@ -312,6 +312,7 @@ function generateMenu($buttonSuffix)
             <option id=\"genmetrics\" value=\"html:SimpleMetrics\">Simple Metrics</option>
             <option value=\"html:CodeAnalysis\">Code Analysis</option>
             <option value=\"java:USE\">USE Model</option>
+            <option value=\"java:Test\">Umple Test Language</option>
             <option value=\"java:UmpleSelf\">Internal Umple Representation</option>
           </select>
         </li>

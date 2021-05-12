@@ -86,6 +86,10 @@ Action.clicked = function(event)
   {
     Action.generateCode("xml","Ecore");
   }
+  else if (action == "Umpletest")
+  {
+    Action.generateCode("java","Test");
+  }
   else if (action == "GenerateCode")
   {
     var languageAndGenerate = $("inputGenerateCode").value.split(":");

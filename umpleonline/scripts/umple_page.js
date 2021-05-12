@@ -208,6 +208,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonNuSMVCode");
   Page.initAction("buttonSqlCode");
   Page.initAction("buttonCppCode");
+  Page.initAction("buttonUmpletest");
   Page.initAction("buttonPhotoReady");
   Page.initAction("buttonSimulateCode");
   Page.initAction("buttonShowHideTextEditor");
