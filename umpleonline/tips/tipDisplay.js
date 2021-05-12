@@ -60,19 +60,14 @@ window.addEventListener('load', function () {
 // Hover Functions
 // =========================================
 
-var extraTip = document.getElementById('extraInfo');
-
 function showExtra(){
-    extraTip.classList.remove("fade-outInst");
-    extraTip.classList.add("fade-in");
+    document.getElementById('extraInfo').classList.remove("fade-outInst");
+    document.getElementById('extraInfo').classList.add("fade-in");
     setTimeout(function(){hideExtra();}, 8000);
 }
 
 function hideExtra(){
-    extraTip.classList.remove("fade-in");
-    extraTip.classList.add("fade-outInst");
+    document.getElementById('extraInfo').classList.remove("fade-in");
+    document.getElementById('extraInfo').classList.add("fade-outInst");
 }
 
-//ensuring document returns to original location
-var loc=document.location;
-document.location=loc.prototype.substring(0,loc.length-21);
