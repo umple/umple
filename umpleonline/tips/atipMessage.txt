@@ -3,6 +3,6 @@
   <link rel="stylesheet" href="tips/tipStyle.css">
 </head>
 <body>
-<div id="styleTip"></div>
-<div id="extraInfo" style="visibility: visisble" onmouseleave='hideExtra()'></div>
+<span id="styleTip" style="display:inline;"></span>
+<span id="extraInfo" onmouseleave='hideExtra()'></span>
 </body>

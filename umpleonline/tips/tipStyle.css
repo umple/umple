@@ -1,17 +1,14 @@
 #styleTip{
     max-width:600px;
-    height: fit-content;
-    word-wrap: normal;
+    display: inline;
     overflow: auto;
     position: relative;
     display: inline;
     color: green;
-    left: 5px;
-    font-size: 10pt;
-    top: -7px;
 }
 
 #extraInfo{
+    display: block;
     visibility:hidden;
     background-color: #dadada;
     border: 2px solid #aaaaaa; position: absolute;

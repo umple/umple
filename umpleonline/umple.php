@@ -204,6 +204,7 @@ $output = $dataHandle->readData('model.ump');
         <span class="pretext">
           Draw on the right, write (Umple) model code on the left. Analyse models and generate code.
           <?php
+            $surveyMessage = @file_get_contents("ump/aSurvey.txt"); // survey
             //alert message
             $alertMessage = @file_get_contents("ump/aalertMessage.txt");
             if($alertMessage != FALSE && !empty($alertMessage)) {
@@ -212,7 +213,7 @@ $output = $dataHandle->readData('model.ump');
             else { //tip of the day
               if(!isset($_COOKIE["loadUp"])){
                 $tipMessage = @file_get_contents("tips/atipMessage.txt");
-                echo "<span>$tipMessage</span>";
+                echo "<span><br/>$tipMessage</span>";
                 setcookie("loadUp", "within_day", time()+3600*24, "/","", 0);
               }
             }
