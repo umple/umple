@@ -368,6 +368,17 @@ class UmpleInternalParser
     
       mixsetFragmentLineNumber = mixsetFragmentPosition.getLineNumber();
       UmpleFile mixsetFragmentUmpleFile = model.getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
+      // Start: update the fragment file if the fragment came from a file included by use statement.
+      Token lookForUseStToken = token;
+		  while((lookForUseStToken = lookForUseStToken.getParentToken()) != null)  
+		  {
+		    if(lookForUseStToken.is("useStatement"))
+		    {
+		    	mixsetFragmentUmpleFile = new UmpleFile(lookForUseStToken.getSubToken("use").getValue());
+		    	break;
+		    }  		  
+		  } 
+      //End
       MixsetFragment mixsetFragment = new MixsetFragment(mixsetFragmentUmpleFile, mixsetFragmentLineNumber, mixsetBody);
     return mixsetFragment;
   }
