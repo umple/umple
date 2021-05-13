@@ -30,7 +30,7 @@ ext {
     distpath =  "${rootProject.projectDir.toString()}/dist/cruise.umple/reference"
     distdir = "${rootProject.projectDir.toString()}/dist"
     umpleweb = "${rootProject.projectDir.toString()}/umplewww"
-
+    umpleoscripts = "${rootProject.projectDir.toString()}/umpleonline/scripts"
 }
 
 // For the time being, we may want to keep the build directory separate
@@ -47,6 +47,7 @@ def buildAliases = [
        'resetUmpleSelf',
        'compileJava',
        'packageAllJars',
+       'packageDocs'
    ],
    'quickbuild' : [
         'cleanUpUmple',
@@ -66,6 +67,7 @@ def buildAliases = [
         'packageAllJars',
         'resetVersion',
         'updateLatestVersion',
+        'packageDocs'
    ],
    'testall' : [
         'buildTestUnitGeneratorAndParser',
@@ -900,48 +902,53 @@ task allUserManualAndExampleTests {
 // Build User manual
 // =====================
 
-task copybuilddir(type: Copy) {
- doLast{
-	 copy{
-	  	from ("${rootProject.projectDir.toString()}/build/ref/files")
+task copybuilddir1(type: Copy) {
+	  	from "${rootProject.projectDir.toString()}/build/reference/files"
 	  	into ("${rootProject.ext.distpath}/files")
-	  }
-	  
-	  copy {
+}
+task copybuilddir2(type: Copy){
 	  	from ("${rootProject.ext.umpleweb}/index.html")
 	  	into (distpath)	
+	  	dependsOn copybuilddir1
 	  }
-	  copy {
+task copybuilddir3(type: Copy) {
 	  	from ("${rootProject.ext.umpleweb}/files/umple_logo.jpg")
-	  	into ("${rootProject.ext.distpath}/files")	
+	  	into ("${rootProject.ext.distpath}/files")
+	  	dependsOn copybuilddir2	
 	  }
-	  copy {
+task copybuilddir4(type: Copy) {
 	  	from ("${rootProject.ext.umpleweb}/files/uottawa_ver_black.png")
-	  	into ("${rootProject.ext.distpath}/files")	
+	  	into ("${rootProject.ext.distpath}/files")
+	  	dependsOn copybuilddir3	
 	  }
-	  copy {
+task copybuilddir5(type: Copy) {
 	  	from ("${rootProject.ext.umpleweb}/files/umple_example_uml.jpg")
-	  	into ("${rootProject.ext.distpath}/files")	
-	  }
-	  copy {
-	  	from ("${rootProject.ext.umpleweb}/syntaxhighlighter")
-	  	into ("${rootProject.ext.distpath}/syntaxhighlighter")	
-	  }
-	  copy {
-	  	from ("${rootProject.ext.umpleweb}/examples")
-	  	into ("${rootProject.ext.distpath}/examples")	
-	  }
-	  copy {
-	  	from ("${rootProject.ext.umpleweb}/umple-core-classDiagram.shtml")
-	  	into (distpath)	
-	  }
-	   copy {
-	  	from ("${rootProject.ext.umpleweb}/umple-state-classDiagram.shtml")
-	  	into (distpath)	
-	  }
-	}
-  
+	  	into ("${rootProject.ext.distpath}/files")
+	  	dependsOn copybuilddir4	
 }
+task copybuilddir6(type: Copy) {
+	  	from ("${rootProject.ext.umpleweb}/syntaxhighlighter")
+	  	into ("${rootProject.ext.distpath}/syntaxhighlighter")
+	  	dependsOn copybuilddir5	
+	  }
+task copybuilddir7(type: Copy) {
+	  	from ("${rootProject.ext.umpleweb}/examples")
+	  	into ("${rootProject.ext.distpath}/examples")
+	  	dependsOn copybuilddir6	
+	  }
+task copybuilddir8(type: Copy){
+	  	from ("${rootProject.ext.umpleweb}/umple-core-classDiagram.shtml")
+	  	into (distpath)
+	  	dependsOn copybuilddir7	
+	  }
+task copybuilddir9(type: Copy){
+	  	from ("${rootProject.ext.umpleweb}/umple-state-classDiagram.shtml")
+	  	into (distpath)
+	  	dependsOn copybuilddir8	
+	  }
+  
+
+
  task executeDocJar (type: JavaExec){
  	
  	classpath = files("${rootProject.ext.distdir}/umpledocs**.jar")
@@ -950,10 +957,71 @@ task copybuilddir(type: Copy) {
  	args = ["build/reference", "${rootProject.ext.distdir}/cruise.umple/reference"]
  	jvmArgs = ['-Xmx500m']
  }
+
  
  task packageDocs {
  
  	dependsOn executeDocJar
- 	dependsOn copybuilddir
+ 	dependsOn copybuilddir9
  }
+ 
+ // =====================
+// Package Umpleonline
+// =====================
+ 
+ task packageUmpleonline1 (type: Copy) {
+ 	 	from distdir
+ 	 	include "umplesync**"	
+ 	 	into umpleoscripts
+ 	 	rename ("(.*)umplesync(.*)", 'umplesync.jar')
+ 	 	
+ 	}
+ 	
+ task packageUmpleonline2 (type: Copy) {
+ 		from distdir	
+ 	 	into umpleoscripts
+ 	 	include "umple.jar"
+ 	 	dependsOn packageUmpleonline1
+ 	}
+ 	
+ task packageUmpleonline3 (type: Copy) {
+ 		from distdir	
+ 	 	into umpleoscripts
+ 	 	include "umplevml*.jar"
+ 		rename ("(.*)umplevml(.*)", 'vml.jar')
+ 		dependsOn packageUmpleonline2
+ 		//Compress JS TODO
+ 	}
+ 
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
