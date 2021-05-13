@@ -7,9 +7,6 @@
 require_once ("scripts/compiler_config.php");
 cleanupOldFiles();
 
-ini_set('display_errors', 1); error_reporting(E_ALL);
-
-ddddddd;
 if (isset($_REQUEST["model"])) {
   if (isset($_REQUEST["task"]))
   {
@@ -206,17 +203,13 @@ $output = $dataHandle->readData('model.ump');
         <span class="pretext">
           Draw on the right, write (Umple) model code on the left. Analyse models and generate code.
           <?php
-            $surveyMessage = @file_get_contents("ump/aSurvey.txt"); // survey
             //alert message
             $alertMessage = @file_get_contents("ump/aalertMessage.txt");
             if($alertMessage != FALSE && !empty($alertMessage)) {
             echo "<span style=\"color: red\"><br/>$alertMessage</span>";
             }
             else { //tip of the day
-                //echo "<br/>";
-                //$tipMessage = @file_get_contents("tips/atipMessage.html");
-                //echo "$tipMessage";
-                readfile("tips/atipMessage.html");
+              readfile("scripts/tipProcessor.html");
             }
           ?>
         <br/></span>

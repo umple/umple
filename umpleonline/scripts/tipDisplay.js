@@ -41,23 +41,21 @@ if (existCookie==null){
     // Tip Pickers
     // =========================================
 
-    window.addEventListener('load', function () {
-        var priority=this.localStorage.getItem('priorityCount');
-        var tip = JSON.parse(localStorage.getItem('tipInfo'+priority));
-        var num = parseInt(localStorage.getItem('tipCount'));
-        
-        document.getElementById('styleTip').innerHTML = "<br/>Tip: "+tip[num+1][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more</span>';
-        document.getElementById('extraInfo').innerHTML = tip[num+1][1] + '<script src="tips/tipDisplay.js"> </script>';
-        if (num+2>=tip.length-1){
-            if (parseInt(priority)+1>=3) //loops over infinitely
-                this.localStorage.setItem('priorityCount', '0');
-            else this.localStorage.setItem('priorityCount', parseInt(priority)+1);
-            localStorage.setItem('tipCount','0');
-        }
-        else{
-            localStorage.setItem('tipCount',num+1);
-        }
-    })
+    var priority=this.localStorage.getItem('priorityCount');
+    var tip = JSON.parse(localStorage.getItem('tipInfo'+priority));
+    var num = parseInt(localStorage.getItem('tipCount'));
+    
+    document.getElementById('styleTip').innerHTML = "<br/>Tip: "+tip[num+1][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more</span>';
+    document.getElementById('extraInfo').innerHTML = tip[num+1][1];
+    if (num+2>=tip.length-1){
+        if (parseInt(priority)+1>=3) //loops over infinitely
+            this.localStorage.setItem('priorityCount', '0');
+        else this.localStorage.setItem('priorityCount', parseInt(priority)+1);
+        localStorage.setItem('tipCount','0');
+    }
+    else{
+        localStorage.setItem('tipCount',num+1);
+    }
 
     let currentTime=new Date();
     currentTime.setTime(currentTime.getTime() + (24*60*60*1000));
