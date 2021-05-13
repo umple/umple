@@ -7,6 +7,9 @@
 require_once ("scripts/compiler_config.php");
 cleanupOldFiles();
 
+ini_set('display_errors', 1); error_reporting(E_ALL);
+
+ddddddd;
 if (isset($_REQUEST["model"])) {
   if (isset($_REQUEST["task"]))
   {
@@ -190,7 +193,6 @@ $output = $dataHandle->readData('model.ump');
 </head>
 <body>
   <?php if($showChrome) { ?> 
-  
     <div id="header" class="row">
         <span style="float: right">
           <a href="https://www.uottawa.ca" target="uottawatab"><img height="33px" src="scripts/uottawa_ver_black.png" alt="University of Ottawa logo / Université d'Ottawa" /></a>        
@@ -211,11 +213,10 @@ $output = $dataHandle->readData('model.ump');
             echo "<span style=\"color: red\"><br/>$alertMessage</span>";
             }
             else { //tip of the day
-              if(!isset($_COOKIE["loadUp"])){
-                $tipMessage = @file_get_contents("tips/atipMessage.txt");
-                echo "<span><br/>$tipMessage</span>";
-                setcookie("loadUp", "within_day", time()+3600*24, "/","", 0);
-              }
+                //echo "<br/>";
+                //$tipMessage = @file_get_contents("tips/atipMessage.html");
+                //echo "$tipMessage";
+                readfile("tips/atipMessage.html");
             }
           ?>
         <br/></span>
