@@ -1,0 +1,44 @@
+// The master of this part of the Umple grammar is available at
+// [*https://github.com/umple/umple/blob/master/cruise.umple/src/trait/umple_traits.grammar*]
+
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
+
+traitDefinition : trait [name] [[traitParameters]]? { [[traitContent]]* }
+traitContent- : [[mixsetDefinition]] | [[testCase]] | [[requiredModelElements]] | [[comment]] | [[traitDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[abstractMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; | [[exception]] | [[extraCode]]
+traitParameters : < [[traitFullParameters]] ( , [[traitFullParameters]] )* >
+traitFullParameters : [~parameter] ([[traitParametersInterface]])? ( = [~defaultType] )?
+traitParametersInterface- : isA [~tInterface]( & [~tInterface])*
+requiredModelElements : require ([[requiredState]] | [[requiredEvent]])
+requiredState : [smName] ;
+	//.[~stateName](.[~stateName])* ;
+requiredEvent : [smName] OPEN_ROUND_BRACKET ( [parameter] ( , [parameter] )* )? CLOSE_ROUND_BRACKET ;
+	//.[~stateName](.[~stateName])* 
+
+
+//iE = Include Exclude
+AllInclusionExclusionAlias- : [[InclusionExclusionAlias]] ( , [[InclusionExclusionAlias]]  )*
+InclusionExclusionAlias- : [[functionIncludeExcludeAlias]] | [[StateMachineIncludeExcludeAlias]] 
+functionIncludeExcludeAlias- : [[functionInExAlias]]  ( , [[functionInExAlias]]  )*
+functionInExAlias- : [[functionAliasName]] | [[iEFunction]] | [[traitAppliedParameters]]
+iEFunction : [=modifier:+|-] [~methodName] [[iEParameterList]]
+iEParameterList : OPEN_ROUND_BRACKET ( [parameter] ( , [parameter] )* )? CLOSE_ROUND_BRACKET
+functionAliasName : [=modifier:+]? ( ( [~smName] | [!smPattern:\d+|[*]]) .)? [~methodName] [[iEParameterList]] as [[IEVisibilityAlias]]
+
+IEVisibilityAlias- : ([[IEVisibility]] [~aliasName]?) | ([~aliasName])
+IEVisibility- : [=iEVisibility:public|private|protected]
+traitAppliedParameters : [~pName] = [~rName]
+
+StateMachineIncludeExcludeAlias- : [[ StateMachineInExAlias]] ( , [[StateMachineInExAlias]]  )*
+StateMachineInExAlias- : [[StateMachineAliasName]] | [[iEStateMachine]] 
+//| [[StateMachineTransitionAlias]] 
+StateMachineAliasName : ([=iEStateMachineModifier:+])? [~smName] ([[StateNames]])? as [~smDesName] ([[DesStateNames]])?
+StateNames : . [~sName] ( [[StateNamesPassing]] )*
+DesStateNames :[[StateNames]]
+StateNamesPassing : [[StateNames]]
+//iEStateMachine : [=iEStateMachineModifier:+|-] [~smName] [[StateNames]]?
+iEStateMachine :  [=modifier:+|-] [~smName]  (  [[StateNames]] ( ( [[iEParameterList]] [[guardOption]]? ) | ( . [[guardOption]] ) )?   )?
+guardOption : [[guard]] | []
+//This is for events in state machines
+//StateMachineTransitionAlias : ( [~smName] | [!smPattern:\d+|[*]]) . [~eventName] [[iEParameterList]] as [~AliasName]

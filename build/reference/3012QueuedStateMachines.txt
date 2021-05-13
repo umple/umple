@@ -1,6 +1,7 @@
 Queued State Machines
 State Machines
 noreferences
+@@tooltip A queued state machine has separate threads to manage a queue of incoming events, and to do the resulting transitions, meaning that deadlock is less likely
 
 @@description
 <p>      

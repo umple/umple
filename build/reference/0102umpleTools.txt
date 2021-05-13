@@ -1,6 +1,7 @@
 Umple Tools
 User Manual Basics
 noreferences
+@@tooltip Tools to use Umple: Umpleonline, command-line compiler, and plugins
 
 @@description
 

@@ -1,0 +1,31 @@
+#!/bin/csh -fb
+echo will clean empty dirs gt 1 day and tmp directories gt 30 days from ump 
+# echo will also delete dirs that just have model.ump, created by a webcrawler
+echo requires sudo access. so su to your account then sudo it there
+echo requires first argument to be 'real' otherwise will just test
+echo to list potential deletions in detail, use list as the argument
+echo argument is $1
+set command = "ls -dlt"
+set outcommand =  "wc -l"
+if ($1 == 'real') set command = "rm -rvf"
+if ($1 == 'list') set outcommand = "cat"
+cd ..
+echo removing the old directories - will print number removed
+find ./ump -maxdepth 1 -type d -mtime +30 | grep /tmp | xargs $command | $outcommand
+
+echo removing the empty directories - will print number removed - may take time
+echo these are usually produced by web crawlers arriving at try.umple.org with no javascript
+find ./ump -maxdepth 1 -type d -empty | grep -v lost+found |  xargs $command |  $outcommand
+
+echo removing directories that only contain model.ump older than 2 h ago
+echo these are created by webcrawlers linking from the user manual with no javascript
+set count=0
+foreach x ( `find ./ump -maxdepth 1 -type d -mmin +120` )
+  set thelist = `ls $x | xargs echo`
+  if ( "$thelist" == "model.ump" || "$thelist" == "model.ump uigu" ) then
+    @ count++
+    if ( $1 != '' )  $command $x
+  endif
+end
+echo $count
+echo done

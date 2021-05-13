@@ -1,6 +1,7 @@
 Method Definition
 Methods
 noreferences
+@@tooltip methods in any language supported by Umple can be embedded in Umple code
 
 @@description
 

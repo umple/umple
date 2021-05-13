@@ -1,0 +1,74 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file generates NuSMV code
+  generate NuSMV;
+in your umple file, or the command line option
+  -g NuSMV
+
+ */
+
+//use NuSMVMetamodel.ump;
+//use NuSMVCoordinationUnit.ump;
+namespace cruise.umple.compiler;
+
+class NuSMVGenerator
+{
+  
+  isA CodeGeneratorWithSubptions;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.nusmv.*;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String output = "";
+
+    
+  public void generate() {
+  	
+  	NuSMVCoordinator coord = new NuSMVCoordinator();
+    StringBuilder code = new StringBuilder();
+ 
+ 	//This appends comment to the model
+    code.append(coord.commentModel(model));
+    code.append("-- PLEASE DO NOT EDIT THIS CODE --\n");
+    code.append("-- This code was generated using the UMPLE "+UmpleModel.VERSION_NUMBER+" modeling language! --\n\n");
+    code.append( coord.generateModules( model, 0 ) );
+    terminateCode( code );
+    
+    //coord.analyzeModel( model );
+  }
+  
+  private void terminateCode(StringBuilder code) {
+    model.setCode( code.toString() );
+    writeModel();
+  }
+  
+  // Output the NuSMV file to a file with the .als suffix
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".smv";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating NuSMV code." + e, e);
+    }
+  } 
+}

@@ -122,7 +122,7 @@
         <isreachable property="access.maven" 
                      host="https://repo1.maven.org" />
         <isreachable property="access.umple" 
-                     host="https://cruise.eecs.uottawa.ca/index.shtml" />
+                     host="https://cruise.umple.org/index.shtml" />
         <isreachable property="access.github" 
                      host="https://github.com" />
       </parallel>

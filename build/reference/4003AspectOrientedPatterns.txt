@@ -2,6 +2,8 @@ Code Injection Pattern Matching
 Aspect Orientation
 noreferences
 
+@@tooltip Use wildcard characters to select methods in which to inject code
+
 @@description
 <p>When creating before and after statements, you
 can arrange for the code to be injected into certain

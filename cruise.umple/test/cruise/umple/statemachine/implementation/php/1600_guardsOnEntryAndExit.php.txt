@@ -1,0 +1,119 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X State Machines
+  private static $SmS1 = 1;
+  private static $SmS2 = 2;
+  private $sm;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setSm(self::$SmS1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getSmFullName()
+  {
+    $answer = $this->getSm();
+    return $answer;
+  }
+
+  public function getSm()
+  {
+    if ($this->sm == self::$SmS1) { return "SmS1"; }
+    elseif ($this->sm == self::$SmS2) { return "SmS2"; }
+    return null;
+  }
+
+  public function hh()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS1)
+    {
+      $this->exitSm();
+      $this->setSm(self::$SmS2);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function hhh()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS2)
+    {
+      $this->exitSm();
+      $this->setSm(self::$SmS1);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitSm()
+  {
+    if ($this->sm == self::$SmS1)
+    {
+      if (!condition2)
+        {
+          System.out.println("s1 exit!");
+        }
+    }
+    elseif ($this->sm == self::$SmS2)
+    {
+      if (condition4)
+        {
+          System.out.println("s2 exit!");
+        }
+    }
+  }
+
+  private function setSm($aSm)
+  {
+    $this->sm = $aSm;
+
+    // entry actions and do activities
+    if ($this->sm == self::$SmS1)
+    {
+      if (condition)
+        {
+          System.out.println("s1 entry!");
+        }
+    }
+    elseif ($this->sm == self::$SmS2)
+    {
+      if (condition3)
+        {
+          System.out.println("s2 entry!");
+        }
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

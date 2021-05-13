@@ -128,6 +128,7 @@ public class UmpleConsoleMainTest {
 		    UmpleConsoleMain.main(args);
 
       Assert.assertEquals("Processing -> testclass1.ump"+System.lineSeparator()
+              + "  Compiled to target language Java"+System.lineSeparator()
               + "Success! Processed testclass1.ump."+System.lineSeparator()
               + "Success! Processed testclass2.ump."+System.lineSeparator(),
           outErrIntercept.toString());

@@ -19,12 +19,13 @@ included in the system. A mixset is included using a <i>use</i> statement or a c
   <li>Within a class, trait or other top-level entity. In this case the contents of the block are included in that entity (if a matching use statement is encountered).
 </ul>
 
+@@videoURL https://www.youtube.com/embed/fHec6Z8_udI 
+
+
 @@syntax
 [[mixsetDefinition]] [[mixsetInnerContent]] [[mixsetInlineDefinition]] [[extraCode]]
 
 @@example
 @@source manualexamples/SimpleMixsets1.ump
 @@endexample
-
-
 

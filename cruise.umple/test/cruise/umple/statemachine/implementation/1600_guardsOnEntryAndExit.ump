@@ -1,0 +1,24 @@
+class X {
+  sm {
+    s1 {
+      entry [condition] / {
+        System.out.println("s1 entry!");
+      }
+      hh ->s2;
+      exit [!condition2] / {
+        System.out.println("s1 exit!");
+      }
+    }
+    s2 {
+      entry [condition3] / {
+        System.out.println("s2 entry!");
+      }
+      hhh -> s1;
+      exit [condition4] / {
+        System.out.println("s2 exit!");
+      }
+    }
+  
+  }
+ 
+}

@@ -1,6 +1,7 @@
 Basic State Machines
 State Machines
 noreferences
+@@tooltip Overview of core elements of state machines, with an example
 
 @@description
 

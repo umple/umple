@@ -1,6 +1,7 @@
 Role Names
 Associations
 noreferences
+@@tooltip A role name is a label given to a class in the context of an association
 
 @@description
 <p>A role name is an additional name attached to an association. In the

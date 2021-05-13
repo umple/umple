@@ -1,0 +1,19 @@
+// This file has a use-statement activating multiple mixsets at the same time.
+mixset M1
+{
+  class ClassA{ }
+}
+    
+use M1, M2, M3; 
+
+
+mixset M2
+{
+  class ClassB{ }
+
+}
+
+mixset M3
+{
+  class ClassC { }
+}

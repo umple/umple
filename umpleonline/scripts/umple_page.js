@@ -158,6 +158,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonUigu");
   Page.initHighlighter("buttonCopy");
   Page.initHighlighter("buttonCopyEncodedURL");
+  Page.initHighlighter("buttonCopyCommandLine");
   Page.initHighlighter("buttonCopyLocalBrowser");
   Page.initHighlighter("buttonLoadLocalBrowser");
   if (Page.canEditTask)
@@ -207,6 +208,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonNuSMVCode");
   Page.initAction("buttonSqlCode");
   Page.initAction("buttonCppCode");
+  Page.initAction("buttonUmpletest");
   Page.initAction("buttonPhotoReady");
   Page.initAction("buttonSimulateCode");
   Page.initAction("buttonShowHideTextEditor");
@@ -221,6 +223,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonManualSync");
   Page.initAction("buttonCopy");
   Page.initAction("buttonCopyEncodedURL");
+  Page.initAction("buttonCopyCommandLine");
   Page.initAction("buttonCopyLocalBrowser");
   Page.initAction("buttonLoadLocalBrowser");
   if (Page.canEditTask)
@@ -494,6 +497,7 @@ Page.initCodeMirrorEditor = function() {
           "Ctrl-R": function(cm) {Page.clickToggleTraits()},
           "Ctrl-I": function(cm) {Page.clickToggleTransitionLabels()},
           "Ctrl-K": function(cm) {Page.clickToggleGuardLabels()},
+          "Ctrl-O": function(cm) {Action.copyCommandLineCode()},
           "Ctrl-B": function(cm) {Action.promptAndExecuteTest()},
           "Esc": function(cm) {cm.getInputField().blur()}
           }
@@ -832,7 +836,7 @@ Page.getUmpleCode = function()
 Page.getEncodedURL = function()
 {
   var server=window.location.href.split("?")[0];
-  if(server.substr(0,42)=="http://cruise.site.uottawa.ca/umpleonline/") {
+  if(server.substr(0,37)=="https://cruise.umple.org/umpleonline/") {
     server = "http://try.umple.org/";
   }
   return server+"?text=" + encodeURIComponent(Page.getUmpleCode());

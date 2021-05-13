@@ -1,0 +1,61 @@
+// The master of this part of the Umple grammar is available at
+// [*https://github.com/umple/umple/blob/master/cruise.umple/src/stateMachine/umple_state_machines.grammar*]
+
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
+
+// State machine elements in Umple. See user manual page: [*BasicStateMachines*]
+stateMachineDefinition : statemachine [=queued]? [=pooled]? [name] { [[state]]* }
+stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]] | [[activeDefinition]] 
+
+activeDefinition : [=active] [[codeLangs]] [name]? [[moreCode]]+
+
+//Issue 148
+inlineStateMachine : [=queued]? [=pooled]? [~name] { ( [[comment]] | [[state]] | [[trace]] | [[mixsetDefinition]] | [=-||] | [[standAloneTransition]])* }
+referencedStateMachine : [name] as [definitionName] ( { [[extendedStateMachine]] } | ; )
+
+//Issue 547 and 148
+extendedStateMachine# : ( [[comment]] | [=changeType:+| - |- |*]? [[state]] | [[standAloneTransition]] )*
+
+// An enum is a state machine that has no events
+// 	stateName is prefixed with ~ to match alphanumeric names only.
+// 	This is needed to solve issue 399, which is cause when a terminating } is parsed as part of the statename. 
+enum : [~name:key] { [~stateName]? (, [~stateName])* }
+
+state : [=final]? [stateName] { [[stateInternal]]* } 
+
+//Issue 547 and 148
+stateInternal-# : [[comment]] | [=changeType:+| - |- |*]? [[stateEntity]] | [[standAloneTransition]] | [[concreteMethodDeclaration]] | [**extraCode]
+stateEntity- : [=-||] | [[mixsetDefinition]] | [[entryOrExitAction]] | [[autoTransition]] | [[transition]] | [[activity]] | [[state]] | [[trace]] | ;
+
+autoTransition : [[activity]]? [[autoTransitionBlock]]
+
+// Autotransitions have no event. The transition is immediately taken
+// or taken after the do activity ends[[guard]]? -> [[action]]?
+// The action can come before or after the arrow
+autoTransitionBlock- : [[guard]]? ( [[action]] -> | -> [[action]] | -> ) [stateName] ;
+
+// A transition guard can come before or after the arrow
+// The order of guard and event definition can also be interchanged
+transition : ( [[eventDefinition]] [[guard]] | [[guard]] [[eventDefinition]] | [=unspecified]? [[guard]] | [[eventDefinition]])? ( [[action]] -> | -> [[action]] | -> ) [stateName] ; 
+
+//Issue148
+standAloneTransition : ( [[eventDefinition]] [[guard]] | [[guard]] [[eventDefinition]] | [=unspecified]? [[guard]] | [[eventDefinition]])? [~fromState] ( [[action]] -> | -> [[action]] | -> ) [~toState] ;
+
+eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [~event] ( [[parameterList]] )?
+
+// The timer in a timed event can be an number, variable, function() or function(num)
+afterEveryEvent- : afterEvery -( [!timer:[+*/a-zA-Z0-9_\.-]+(\([0-9\.]*\))?] -)
+afterEvent- : after -( [!timer:[+*/a-zA-Z0-9_\.-]+(\([0-9\.]*\))?] -)
+
+// An action can be executed on a transition, or on entry or exit
+action : / [[moreCode]]+
+entryOrExitAction : [=type:entry|exit] [[guardCode]]? / [[moreCode]]+
+
+guardCode :[ [**code] ]
+
+// A do activity is long-lasting and can be interrupted
+activity : do [[moreCode]]+
+
+guard : [ [[constraint]] ]

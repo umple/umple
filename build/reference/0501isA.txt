@@ -1,6 +1,7 @@
 isA clause
 Classes and Interfaces
 noreferences
+@@tooltip The isA clause is used to specify class generalization, implementation of an interface and inclusion of a trait
 
 @@description
 <p>The isA keyword is used to denote an inheritance relationship (generalization) between two classes, or a class and the <a href="interfaceDefinition.html">interfaces</a> it implements, or a class and the <a href="Traits.html">traits</a> it includes.</p>

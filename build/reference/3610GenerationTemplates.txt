@@ -1,6 +1,7 @@
 Basic Templates
 Generation Templates
 noreferences
+@@tooltip Basic patterns of string output, including generated emit methods, and expression blocks allowing strings to be generated algorithmically
 
 @@description
 

@@ -2,6 +2,8 @@ Before and After Statements
 Aspect Orientation
 noreferences
 
+@@tooltip Inject code before and after generated methods or custom methods written by the programmer, an approach that is part of aspect-oriented development
+
 @@description
 <p>You can request that certain code be run before or after
 various Umple-defined actions on attributes, associations, and the

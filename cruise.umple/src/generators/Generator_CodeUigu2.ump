@@ -1,0 +1,296 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace cruise.umple.compiler;
+
+class Uigu2Generator
+{
+  isA PhpGenerator;
+  depend java.io.*;
+  depend java.nio.charset.*;
+  depend java.nio.file.*;
+  depend java.util.*;
+
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.compiler.uigu2.*;
+  
+
+  const Charset CHARSET = StandardCharsets.UTF_8;
+  const String NL = System.getProperty("line.separator");
+
+  internal Uigu2ElementGenerator generator = new Uigu2ElementGenerator();
+  lazy internal UmpleElement[] elements;
+  
+  /*
+  * Path to where the PhpGenerator will place the domain classes
+  */
+  lazy Path outputPath;
+
+  /*
+  * Pathname to setup.php file, relative to outputPath
+  * We'll only know outputPath at execution time, so leave it as a String pathname
+  */
+  const String SETUP_RELATIVE_PATHNAME  = "../../scripts/uigu2/setup.php";
+
+  @Override
+  public void generate() {
+    //use default PHP generator to create the domain classes
+    super.generate();
+
+    this.setOutputPath(super.getModel().getUmpleFile().getPath());
+    this.elements = super.getModel().getUmpleElements();
+
+    try {
+      this.assertSetupFileExistent();
+      this.generateInitializationFile();
+      this.generateIndexFile();
+      this.generateModRewriteFile();
+      
+    } catch (Exception e) {
+      throw new UmpleCompilerException("There was a problem with Uigu2 code generation: " + e.getMessage(), e);
+    }
+  }
+
+  /*
+   * Generates initialize_model.php file with UmpleModel information accessible to all controllers.
+   */
+  private void generateInitializationFile() throws IOException{
+    StringBuilder initFile = new StringBuilder("<?php" + NL + NL
+            + "function initialize_model(){" + NL
+            + "$UMPLE_MODEL = array();" + NL
+            + "$UMPLE_MODEL['execution_id'] = '_'.basename(dirname(__FILE__));" + NL);
+
+    //$ELEMENTS associative array with info from each UmpleElement
+    if (this.elements.size() > 0) {
+      for (UmpleElement e : this.elements) {
+        initFile.append(this.generator.getCode(super.getModel(), e));
+      }
+      initFile.append("$UMPLE_MODEL['ELEMENTS'] = $ELEMENTS;").append(NL);
+    }
+    initFile.append("return $UMPLE_MODEL;").append(NL).append("}");
+    Path path = this.outputPath.resolve(Paths.get("initialize_model.php"));
+    writeStringToFile(initFile.toString(), path);
+  }
+
+  /*
+  * Generates index.php to outputPath
+  */
+  private void generateIndexFile() throws IOException{
+    String indexFile = "<?php" + NL + NL
+        + "if(!function_exists('session_start')) {" + NL
+        + "  echo('This php server does not support session_start and hence not the CRUD interface.');" + NL
+        + "  exit(0);" + NL
+        + "}" + NL
+        + "ini_set('display_errors','On');" + NL
+        + "error_reporting(E_ALL);" + NL
+        + "require_once('" + SETUP_RELATIVE_PATHNAME + "');" + NL
+        + "define('WEB_DOMAIN', WEB_DOMAIN_ROOT . basename(dirname(__FILE__)));" + NL
+        + "define('WEB_FOLDER', WEB_FOLDER_ROOT . basename(dirname(__FILE__)) . '/');" + NL
+        + "require_once(APP_PATH.'kissmvc_uigu2.php');" + NL
+        + "session_start();" + NL + NL
+        + "function __autoload($classname) {" + NL
+        + "\t$filename = $classname.'.php';" + NL
+        + "\tif(file_exists($filename)){" + NL
+        + "\t\trequire_once($classname.'.php');" + NL
+        + "\t}" + NL
+        + "}" + NL
+        + "new Uigu2_Controller('main','index');";
+    Path writePath = this.outputPath.resolve(Paths.get("index.php"));
+    writeStringToFile(indexFile, writePath);
+  }
+
+  /*
+  * Generates .htaccess to outputPath
+  */
+  private void generateModRewriteFile() throws IOException{
+    String mrFile = "RewriteEngine ON" + NL
+      + "RewriteCond %{REQUEST_FILENAME} !-f" + NL
+      + "RewriteCond %{REQUEST_FILENAME} !-d" + NL
+      + "RewriteCond %{REQUEST_URI} !^/(index\\.php|images|css|js|robots\\.txt|favicon\\.ico)" + NL
+      + "RewriteRule ^(.*)$ index.php/$1 [L]" + NL
+      + "Options -Indexes";
+    Path writePath = this.outputPath.resolve(Paths.get(".htaccess"));
+    writeStringToFile(mrFile, writePath);
+  }
+
+  /**
+   * @param text content of text file to be written
+   * @param filePath Absolute path in the FileSystem to file to be written
+   */
+  private void writeStringToFile(String text, Path filePath) throws IOException {
+    Files.createDirectories(filePath.getParent());
+    BufferedWriter bw = null;
+    try {
+      //Replaces existing files
+      bw = Files.newBufferedWriter(filePath, CHARSET);
+      bw.write(text);
+    }finally{
+      if(bw != null){
+        bw.close();
+      }
+    }
+  }
+
+  private void setOutputPath(String pathname){
+    if(pathname != null){
+      this.outputPath = Paths.get(pathname).toAbsolutePath();
+    }
+  }
+
+  /*
+  * The Uigu2Generator should only be run with UmpleOnline, so we have to make sure
+  * SETUP_RELATIVE_PATHNAME resolves to setup.php at runtime
+  */
+  private void assertSetupFileExistent() throws Exception{
+    try{
+      this.outputPath.resolve(Paths.get(SETUP_RELATIVE_PATHNAME)).toRealPath();
+    }catch(NoSuchFileException e){
+      throw new Exception("setup.php file not found, make sure the .ump input file is inside /umpleonline/ump/folder/",e);
+    }
+  }
+}
+
+namespace cruise.umple.compiler.uigu2;
+
+class Uigu2ElementGenerator
+{
+  depend java.util.*;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  const String NL = System.getProperty("line.separator");
+  //keeps track of elements whose codes have already been generated
+  internal UmpleElement[] generatedElements;
+
+  /**
+   * Returns the generated code specific to an UmpleElement.
+   */
+  public String getCode(UmpleModel model, UmpleElement uElement) {
+
+    if(this.generatedElements.contains(uElement)){
+      return "";
+    }
+    StringBuilder code = new StringBuilder();
+    String name = uElement.getName();
+
+    if(uElement instanceof UmpleClass){
+      UmpleClass aClass = (UmpleClass) uElement;
+      code.append("$ELEMENTS['" + name + "']['name'] = '"+name+"';").append(NL);
+      code.append("$ELEMENTS['" + name + "']['element_kind'] = 'Class';").append(NL);
+
+      if(aClass.getIsAbstract()){
+        code.append("$ELEMENTS['" + name + "']['abstract'] = 1;").append(NL);
+      }
+      this.appendAttributesCode(code, aClass);
+      this.appendAssociationsCode(code, aClass);
+      this.appendConstructorCode(code, aClass);
+      this.generatedElements.add(uElement);
+
+      if(aClass.isRoot()){
+        return code.toString();
+
+      //Use recursion to make sure classes with dependencies are generated last
+      }else {
+        UmpleClass parent = aClass.getExtendsClass();
+        code.append("$ELEMENTS['" + name + "']['parent'] = '" + parent.getName() + "';").append(NL);
+        return this.getCode(model, parent) + code.toString();
+      }
+    //TODO else if(uElement instanceof UmpleInterface){
+    }else {
+      return "";
+    }
+  }
+
+  private void appendAttributesCode(StringBuilder code, UmpleClass uClass) {
+    List<Attribute> attributes = this.getAttributesSuperClasses(uClass);
+    code.append("$attributes = array();").append(NL);
+    if(attributes.size() > 0){
+      String name, value, type;
+      for (Attribute att : attributes){
+        name = att.getName();
+        value = att.getValue();
+        type = att.getType();
+        code.append("$a_attribute = array();").append(NL);
+        code.append("$a_attribute['name'] = '" + name + "';").append(NL);
+        code.append("$a_attribute['type'] = '" + type + "';").append(NL);
+        if(value != null){
+          value = value.replaceAll("\"", "");
+          code.append("$a_attribute['value'] = '" + value + "';").append(NL);
+        }
+        code.append("$attributes['" + name + "'] = $a_attribute;").append(NL);
+      }
+    }
+    code.append("$ELEMENTS['" + uClass.getName() + "']['attributes'] = $attributes;").append(NL);
+  }
+
+  private void appendAssociationsCode(StringBuilder code, UmpleClass uClass) {
+    String className = uClass.getName();
+    List<AssociationVariable> avs = this.getAssociationsSuperClasses(uClass);
+    code.append("$associations = array();").append(NL);
+    if(avs.size() > 0){
+      for(AssociationVariable av : avs){
+        String name = av.getName();
+        String type = av.getType();
+        code.append("$a_association = array();").append(NL);
+        code.append("$a_association['name'] = '" + name + "';").append(NL);
+        code.append("$a_association['type'] = '" + type + "';").append(NL);
+        code.append("$associations['" + name + "'] = $a_association;").append(NL);
+      }
+    }
+    code.append("$ELEMENTS['" + className + "']['associations'] = $associations;").append(NL);
+  }
+
+  private void appendConstructorCode(StringBuilder code, UmpleClass uClass){
+    String className = uClass.getName();
+    GeneratedClass gc = uClass.getGeneratedClass();
+    String constructorSignature = gc.getLookup("constructorSignature");
+    code.append("$constructor_params = array();").append(NL);
+
+    if(!"".equals(constructorSignature)){
+      String[] constructorParams = constructorSignature.split(", ");
+      for(int i = 0; i < constructorParams.length; i++){
+        //"$aAttributeName" => "attributeName"
+        //"$allAttributeName" => "attributeName"
+        String param = constructorParams[i];
+        if(param.startsWith("$all")) {
+          param = Character.toLowerCase(param.charAt(4)) + param.substring(5);
+        } else {
+          param = Character.toLowerCase(param.charAt(2)) + param.substring(3); 
+        }
+        code.append("$constructor_params[] = '" + param + "';").append(NL);
+      }
+    }
+    code.append("$ELEMENTS['" + className + "']['constructor_params'] = $constructor_params;").append(NL);
+  }
+
+  /*
+  * Returns attributes from uClass and from all the classes above it in the inheritance hierarchy.
+  * eg. if A is subclass of B, and B is subclass of C. Calling the method for A will return all
+  * the attributes of A, B and C
+  */
+  private List<Attribute> getAttributesSuperClasses(UmpleClass uClass){
+    List<Attribute> attributes = new ArrayList<Attribute>();
+    attributes.addAll(uClass.getAttributes());
+    if(!uClass.isRoot()){
+      UmpleClass parent = uClass.getExtendsClass();
+      attributes.addAll(this.getAttributesSuperClasses(parent));
+    }
+    return attributes;
+  }
+
+  private List<AssociationVariable> getAssociationsSuperClasses(UmpleClass uClass){
+    List<AssociationVariable> avs = new ArrayList<AssociationVariable>();
+    avs.addAll(uClass.getAssociationVariables());
+    if(!uClass.isRoot()){
+      UmpleClass parent = uClass.getExtendsClass();
+      avs.addAll(this.getAssociationsSuperClasses(parent));
+    }
+    return avs;
+  }
+}

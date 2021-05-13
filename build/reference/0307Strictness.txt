@@ -1,6 +1,7 @@
 Strictness Directive
 Directives
 noreferences
+@@tooltip Control Umple's compiler in various ways, such as suppressing unwanted warnings
 
 @@description
 <p>

@@ -12,7 +12,7 @@
   <property name="showJunitSummary" value="false"/>
   <property name="showJunitOutput" value="false"/>
   <property name="junit" value="*Test"/>
-  <property name="rake_cmd" value="rake.bat"/>
+  <property name="rake_cmd" value="rake.cmd"/>
 
   <import file="_versionLast.xml" />
 

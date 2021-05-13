@@ -188,6 +188,15 @@ class WorkDir{
 class DataStore{
     function __construct($root){
         $this->root = rootDir().'/'.$root;
+        if(!file_exists($this->root)) {
+          mkdir($this->root);
+        }
+        if(!file_exists($this->root."/tasks")) {
+          mkdir($this->root."/tasks");
+        }
+        if(!file_exists($this->root."/index.html")) {
+          copy(rootDir()."/umplibrary/index.html",$this->root."/index.html");
+        }
     }
     /**
     Atomically creates a data storage area with a name of the
@@ -200,7 +209,7 @@ class DataStore{
     function createData($prefix = 'tmp'){
         while(true)
         {
-            $id = base_convert(rand(0,999999999).rand(0,9999),10,36);
+            $id = base_convert(rand(0,999999999).rand(0,9999999999),10,36);
             $dirname = "{$this->root}/{$prefix}{$id}";
             if (!file_exists($dirname))
             {
@@ -284,7 +293,7 @@ function generateMenu($buttonSuffix)
             <option id=\"gencpp\" value=\"cpp:RTCpp\">C++ Code</option>
             <option id=\"genruby\" value=\"ruby:Ruby\">Ruby Code</option>
             <option id=\"genalloy\" value=\"alloy:Alloy\">Alloy Model</option>
-        <option id=\"gennusmv\" value=\"nusmv:NuSMV\">NuSMV Model</option>
+            <option id=\"gennusmv\" value=\"nusmv:NuSMV\">NuSMV Model</option>
             <option value=\"xml:Ecore\">Ecore</option>
             <option value=\"java:TextUml\">TextUml</option>
             <option value=\"xml:Scxml\">Scxml (Experimental)</option>
@@ -303,6 +312,7 @@ function generateMenu($buttonSuffix)
             <option id=\"genmetrics\" value=\"html:SimpleMetrics\">Simple Metrics</option>
             <option value=\"html:CodeAnalysis\">Code Analysis</option>
             <option value=\"java:USE\">USE Model</option>
+            <option value=\"java:Test\">Umple Test Language</option>
             <option value=\"java:UmpleSelf\">Internal Umple Representation</option>
           </select>
         </li>
@@ -778,7 +788,7 @@ function executeCommand($command, $rawcommand = null)
   $useServerIfPossble=true;  // Set to false to deactivate the server feature
   
   ob_start();
-  if(substr($command,0,23) == "java -jar umplesync.jar" && $useServerIfPossble) {
+  if(substr($command,0,23) == "java -jar umplesync.jar" && $useServerIfPossble && !(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')) {
     serverRun(substr($command,24),$rawcommand);
   }
   else {

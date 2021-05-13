@@ -94,10 +94,10 @@ class UmpleInternalParser
     FeatureNode newFeatureNode = new FeatureNode(model.getFeatureModel());
     newFeatureNode.setName(treeNode.getNodeToken().getName());
     FeatureLink edge = new FeatureLink();
-    edge.setFeatureConnectingOpType(treeNode.getFeatureConnectionOpType());
-    edge.setSourceFeature(sourceFeature);
+    edge.setFeatureConnectingOpType(treeNode.getFeatureConnectionOpType(isSubFeature));
+    edge.setSourceFeatureNode(sourceFeature);
     edge.setIsSub(isSubFeature);
-    edge.addTargetFeature(newFeatureNode); 
+    edge.setTargetFeatureNode(newFeatureNode); 
     edge.setFeatureModel(model.getFeatureModel());
     model.getFeatureModel().addFeaturelink(edge);
     return newFeatureNode;
@@ -121,9 +121,9 @@ class UmpleInternalParser
           FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
           targetFeature.setMixsetOrFileNode(targetMixset);
           edge = new FeatureLink();
-          edge.setFeatureConnectingOpType(tokenTree.getFeatureConnectionOpType());
-          edge.setSourceFeature(sourceFeature);
-          edge.addTargetFeature(targetFeature);
+          edge.setFeatureConnectingOpType(tokenTree.getFeatureConnectionOpType(isSubFeature));
+          edge.setSourceFeatureNode(sourceFeature);
+          edge.setTargetFeatureNode(targetFeature);
           edge.setIsSub(isSubFeature);
           model.getFeatureModel().addFeaturelink(edge);          
         }
@@ -136,34 +136,30 @@ class UmpleInternalParser
         Mixset targetMixset = new Mixset(node.getSubToken("targetMixsetName").getValue());
         FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
         targetFeature.setMixsetOrFileNode(targetMixset);
-        //targetFeature.setName(targetMixset.getName());
         edge = new FeatureLink();
-        
-        if(linkingParent.getNodeToken().is("ROOT"))
-        edge.setFeatureConnectingOpType(FeatureConnectingOpType.Include);
-        else // this is for leaf node as the parent is not null 
-        edge.setFeatureConnectingOpType(linkingParent.getFeatureConnectionOpType());
-        
-        edge.setSourceFeature(sourceFeature);       
-        edge.addTargetFeature(targetFeature);
+        edge.setFeatureConnectingOpType(linkingParent.getFeatureConnectionOpType(isSubFeature));
+        edge.setSourceFeatureNode(sourceFeature);       
+        edge.setTargetFeatureNode(targetFeature);
         edge.setIsSub(isSubFeature);
         model.getFeatureModel().addFeaturelink(edge);
       }
       else if(node.is("requireTerminal") && node.getSubToken("lowerBound") != null) //  [lowerBound]..[upperBound] of [A, B, ... ]
-      {
-        edge = new MultiplicityFeatureConnectingOpType();
-		    Multiplicity featureLinkMultiplicity = ((MultiplicityFeatureConnectingOpType) edge).getMultiplicity();
+      {        
+        MultiplicityFeatureConnectingOpType multiplicityFeatureConnectingOpTypeEdge = new MultiplicityFeatureConnectingOpType();
+        Multiplicity featureLinkMultiplicity = multiplicityFeatureConnectingOpTypeEdge.getMultiplicity();
         featureLinkMultiplicity.setRange(node.getSubToken("lowerBound").getValue(), node.getSubToken("upperBound").getValue());
-        
-        FeatureNode newFeatureNode = new FeatureNode(model.getFeatureModel());
-        newFeatureNode.setName("multiplicityTerminal");
-        edge.addTargetFeature(newFeatureNode); 
+        multiplicityFeatureConnectingOpTypeEdge.setMultiplicity(featureLinkMultiplicity);
+        edge = (FeatureLink) multiplicityFeatureConnectingOpTypeEdge;
+
+        CompoundFeatureNode newCompoundFeatureNode = new CompoundFeatureNode(model.getFeatureModel());
+        newCompoundFeatureNode.setName("multiplicityTerminal");
+        //newCompoundFeatureNode.setIsLeaf(true);
+        edge.setTargetFeatureNode(newCompoundFeatureNode); 
+        edge.setSourceFeatureNode(sourceFeature); 
         edge.setFeatureModel(model.getFeatureModel());
-        
-        MultiplicityFeatureConnectingOpType intermediateFeatureNodeToTargetEdge = new MultiplicityFeatureConnectingOpType();
-        intermediateFeatureNodeToTargetEdge.setSourceFeature(newFeatureNode);
-        intermediateFeatureNodeToTargetEdge.setMultiplicity(featureLinkMultiplicity);
-  
+        edge.setIsSub(isSubFeature);
+        model.getFeatureModel().addFeaturelink(edge);
+        // add child elements to newCompoundFeatureNode.
         for(Token subToken : node.getSubTokens())
         {
           if(subToken.is("targetMixsetName"))
@@ -171,12 +167,9 @@ class UmpleInternalParser
             Mixset targetMixset = new Mixset(subToken.getValue()); //To Do: check if its a mixset.
             FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
             targetFeature.setMixsetOrFileNode(targetMixset);
-            intermediateFeatureNodeToTargetEdge.addTargetFeature(targetFeature);
+            newCompoundFeatureNode.addChildFeature(targetFeature);
           }
         }
-        edge.setSourceFeature(sourceFeature);       
-        edge.setIsSub(isSubFeature);
-        model.getFeatureModel().addFeaturelink(edge);
       } 
  
     }
@@ -471,9 +464,13 @@ class FeatureModel{
   */
   public boolean evaluateFeatureLink(FeatureLink featureLink)
   {
-    FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeature(0));
+    FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeatureNode());
     if(featureNode.getIsLeaf())
     {
+      if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Mandatory))
+      {
+        return isUsedFeatureLeaf((FeatureLeaf)featureNode);
+      } 
       if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Include))
       {
         return isUsedFeatureLeaf((FeatureLeaf)featureNode);
@@ -493,7 +490,7 @@ class FeatureModel{
     { 
       if(!featureNode.getIsLeaf())
       {
-        List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
+        List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
         boolean result = true;
         for(int i=0 ; i<outgoingLinks.size(); i++){
           result = result && evaluateFeatureLink(outgoingLinks.get(i));
@@ -506,7 +503,7 @@ class FeatureModel{
       if(!featureNode.getIsLeaf())
       {
         boolean result = false;
-        List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
+        List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
         for(int i=0 ; i<outgoingLinks.size(); i++){
           result = result || evaluateFeatureLink(outgoingLinks.get(i));
         }
@@ -517,7 +514,7 @@ class FeatureModel{
     { 
       if(!featureNode.getIsLeaf())
           {
-            List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
+            List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
             int countOfUsedTarget = 0;
             for(int i=0 ; i < outgoingLinks.size(); i++){
               if(evaluateFeatureLink(outgoingLinks.get(i)))  // bitwise xor (^) can not be used here because it does not mean always only one. Example: (true ^ true ^ true == true) 
@@ -531,19 +528,14 @@ class FeatureModel{
         MultiplicityFeatureConnectingOpType multiplicityFeatureLink = (MultiplicityFeatureConnectingOpType) featureLink;
         int upperBound = multiplicityFeatureLink.getMultiplicity().getUpperBound();
         int lowerBound = multiplicityFeatureLink.getMultiplicity().getLowerBound();
-       // List<FeatureNode> featureNodes = featureLink.getTargetFeature(); //featureNode.
         
-        List<FeatureLink> outgoingLinks = featureNode.getSourceFeatureLink();
         int countOfUsedTarget = 0;
-        for(int i=0 ; i<outgoingLinks.size(); i++){
-          FeatureLink link = outgoingLinks.get(i);
-          List<FeatureNode> featureNodes = link.getTargetFeature();  
+          List<FeatureNode> featureNodes = ((CompoundFeatureNode)featureNode).getChildFeatures();
           for(int k=0 ; k < featureNodes.size(); k++){
             if(isUsedFeatureLeaf((FeatureLeaf)featureNodes.get(k)))
             countOfUsedTarget++;
           }
 
-        }
         return (countOfUsedTarget <= upperBound && countOfUsedTarget >= lowerBound) ? true: false;    
       }
     //otherwise
@@ -562,10 +554,10 @@ class FeatureModel{
     //getNode().stream().filter(n -> (n.hasSourceFeatureLink() && n.getIsLeaf())).collect(Collectors.toList());
     for(FeatureNode featureNode: rootFeatures)
     {
-      List <FeatureLink> featureNodeOutLinks = featureNode.getSourceFeatureLink();
-      for(FeatureLink flink : featureNodeOutLinks)
+      List <FeatureLink> featureNodeOutgoingLinks = featureNode.getOutgoingFeatureLinks();
+      for(FeatureLink featureLink : featureNodeOutgoingLinks)
       {
-        isSatisfied = isSatisfied && evaluateFeatureLink(flink);
+        isSatisfied = isSatisfied && evaluateFeatureLink(featureLink);
       }
     }
     return isSatisfied;
@@ -573,8 +565,8 @@ class FeatureModel{
 
   public List <FeatureNode> getRootFeatures()
   {
-        // get root features : has outgoing links but no incoming links
-    List <FeatureNode> rootFeatures = getNode().stream().filter(n -> (n.hasSourceFeatureLink() && n.getIsLeaf())).collect(Collectors.toList());
+    // A root feature : has outgoing links but no incoming links.
+    List <FeatureNode> rootFeatures = getNode().stream().filter(n -> (n.hasOutgoingFeatureLinks() && (! n.hasIncomingFeatureLinks()))).collect(Collectors.toList());
     return rootFeatures;
   }
 }
@@ -614,7 +606,7 @@ This method selects the the connection operator type based on the type of the (l
 If the type is not specified for the linking node, The default is Required.
 It returns null if the node is termainl node.
 */
-public FeatureConnectingOpType getFeatureConnectionOpType()
+public FeatureConnectingOpType getFeatureConnectionOpType(boolean isSubFeature)
 {
   if(nodeToken != null )
   {
@@ -633,7 +625,12 @@ public FeatureConnectingOpType getFeatureConnectionOpType()
       case "not":
         return FeatureConnectingOpType.Exclude;
       default:
-        return FeatureConnectingOpType.Required;
+      {
+        if(isSubFeature)
+        return FeatureConnectingOpType.Mandatory;
+        else
+        return FeatureConnectingOpType.Include;
+      }
      }
   }
 

@@ -1,0 +1,33 @@
+Standalone State Machines
+State Machines
+noreferences
+
+@@description
+<p>      
+State machines can be defined at the top level of a model. This feature allows the definition of reusable state machines, to simplify code, or to facilitate separation of concerns.
+</p>
+
+<p>
+The example below shows that the <em>statemachine</em> keyword is used to specify a standalone state machine. Such a state machine, by itself, must be syntactically correct, and error messages will be generated, enabling debugging. However, the state machine is not displayed as a diagram and will not result in any code generation unless it is incorporated in one or more classes. The <em>as</em> keyword is used to do incorporate a standalone state machine in a class, as shown in the example.
+</p>
+
+<p>
+An alternative, and equivalent, way to define state machines outside of classes is to use traits. A model equivalent to the example below is shown in <a href="StateMachinesinTraits.html">Example 5 of the page on state machines in traits.</a>
+</p>
+
+<p>
+Standalone state machines can be used to make code appear simpler than it does when the state machine is directly incorporated in a class or trait, as there is less indentation, and the statemachine keyword makes it more explicit that what is being described is a state machine.
+</p>
+
+
+@@syntax
+
+[[stateMachineDefinition]] [[referencedStateMachine]] [[extendedStateMachine]]
+
+@@example @@caption Standalone state machine used in two classes @@endcaption
+@@source manualexamples/standaloneStatemachine1.ump &diagramtype=state
+@@endexample
+
+@@example @@caption Standalone state machine modified when reused @@endcaption
+@@source manualexamples/standaloneStatemachine2.ump &diagramtype=state
+@@endexample

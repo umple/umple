@@ -5,6 +5,7 @@
 // This file holds all the functions that initialize and control the layout of the
 // dynamic elements of umpleonline.
 
+
 var Layout = {};
 Layout.isTextVisible = true;
 Layout.isDiagramVisible = true;
@@ -35,7 +36,7 @@ Layout.init = function()
   }
 
   var layoutQuery = this.checkLayoutNeeded();
-
+  
   if(layoutQuery.layoutType === "large")
   {
     this.layoutHandler = new LargeScreenManager();
@@ -284,6 +285,7 @@ Layout.showHideMenu = function(doShow)
 //Deals with any resize of the window. This includes browser zoom and resize within the OS.
 Layout.zoomResize = function()
 { 
+  
   var layoutQuery = this.checkLayoutNeeded();
 
   if(layoutQuery.layoutType === "large")
@@ -301,6 +303,7 @@ Layout.zoomResize = function()
 // A function to switch between the small and normal screen modes
 Layout.toggleSmallScreenMode = function()
 { 
+  
   if(this.isInSmallScreenMode)
   {
     this.isInSmallScreenMode = false;
@@ -313,6 +316,7 @@ Layout.toggleSmallScreenMode = function()
   }
   
   this.layoutHandler.transition(false);
+  
 }
 
 Layout.verticallyResizing = function(event, ui) {this.layoutHandler.verticallyResizing(event, ui);}
@@ -432,7 +436,7 @@ function LargeScreenManager()
     Layout.adjustTextEditorHeight(height);
 
     if(Layout.isDiagramVisible)
-      this.setUmpleCanvasSize(this.calculateLeftoverWidth() + jQuery(canvasHandle).outerWidth(), undefined);
+      this.setUmpleCanvasSize(this.calculateLeftoverWidth() +jQuery(canvasHandle).outerWidth(), undefined);
   }
   
   this.setUmpleCanvasSize = function(width, height)
@@ -705,6 +709,7 @@ function LargeScreenManager()
     if(Layout.isTextVisible) width -= jQuery(editorHandle).outerWidth();
     if(Layout.isDiagramVisible) width -= jQuery(canvasHandle).outerWidth();
     if(Layout.isPaletteVisible) width -= jQuery(paletteHandle).outerWidth();
+    
     return width;
   }
   

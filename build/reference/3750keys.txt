@@ -1,6 +1,8 @@
 Keys for Equality and Hashing
 Patterns
 noreferences
+@@tooltip Keys specify one or more attributes, such that if objects have the same values of these attributes, then the objects should be considered to describe the same real-world thing
+
 
 @@description
 <p>In any class you can specify a set of attributes and associations as

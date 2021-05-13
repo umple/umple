@@ -1,6 +1,7 @@
 Class Definition
 Classes and Interfaces
 noreferences
+@@tooltip Classes are structured data types that have attributes, methods and other elements; they can be instantiated to create objects
 
 @@description
 <p>      

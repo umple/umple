@@ -27,6 +27,10 @@ ext {
     testBaseDir = "${rootProject.projectDir.toString()}/dist/gradle/test"
     classfileOutputDir = "${rootProject.projectDir.toString()}/dist/gradle/bin"
     testClassfileOutputDir = "${rootProject.ext.testBaseDir}/bin"
+    distpath =  "${rootProject.projectDir.toString()}/dist/cruise.umple/reference"
+    distdir = "${rootProject.projectDir.toString()}/dist"
+    umpleweb = "${rootProject.projectDir.toString()}/umplewww"
+
 }
 
 // For the time being, we may want to keep the build directory separate
@@ -891,3 +895,65 @@ task allUserManualAndExampleTests {
     dependsOn phpUserManualAndExampleTests
     // Consider doing this for the other languages too
 }
+
+// =====================
+// Build User manual
+// =====================
+
+task copybuilddir(type: Copy) {
+ doLast{
+	 copy{
+	  	from ("${rootProject.projectDir.toString()}/build/ref/files")
+	  	into ("${rootProject.ext.distpath}/files")
+	  }
+	  
+	  copy {
+	  	from ("${rootProject.ext.umpleweb}/index.html")
+	  	into (distpath)	
+	  }
+	  copy {
+	  	from ("${rootProject.ext.umpleweb}/files/umple_logo.jpg")
+	  	into ("${rootProject.ext.distpath}/files")	
+	  }
+	  copy {
+	  	from ("${rootProject.ext.umpleweb}/files/uottawa_ver_black.png")
+	  	into ("${rootProject.ext.distpath}/files")	
+	  }
+	  copy {
+	  	from ("${rootProject.ext.umpleweb}/files/umple_example_uml.jpg")
+	  	into ("${rootProject.ext.distpath}/files")	
+	  }
+	  copy {
+	  	from ("${rootProject.ext.umpleweb}/syntaxhighlighter")
+	  	into ("${rootProject.ext.distpath}/syntaxhighlighter")	
+	  }
+	  copy {
+	  	from ("${rootProject.ext.umpleweb}/examples")
+	  	into ("${rootProject.ext.distpath}/examples")	
+	  }
+	  copy {
+	  	from ("${rootProject.ext.umpleweb}/umple-core-classDiagram.shtml")
+	  	into (distpath)	
+	  }
+	   copy {
+	  	from ("${rootProject.ext.umpleweb}/umple-state-classDiagram.shtml")
+	  	into (distpath)	
+	  }
+	}
+  
+}
+ task executeDocJar (type: JavaExec){
+ 	
+ 	classpath = files("${rootProject.ext.distdir}/umpledocs**.jar")
+ 	classpath += sourceSets.main.runtimeClasspath
+ 	main = "cruise.umple.docs.DocumenterMain"
+ 	args = ["build/reference", "${rootProject.ext.distdir}/cruise.umple/reference"]
+ 	jvmArgs = ['-Xmx500m']
+ }
+ 
+ task packageDocs {
+ 
+ 	dependsOn executeDocJar
+ 	dependsOn copybuilddir
+ }
+

@@ -1,6 +1,7 @@
 Multiplicity
 Associations
 noreferences
+@@tooltip Multiplicity: Specifies the number of connected objects allowed at each end of a link (the run time instantiation of an association)
 
 @@description
 <p>Multiplicity describes the allowable number of entities that can participate in one end of an association.

@@ -1,6 +1,7 @@
 Types of Directives
 Directives
 noreferences
+@@tooltip Categories of top-level Umple statements to specify entities such as classes as well as control reuse and generation (use statements, before/after statements, mixsets, namespaces, and so on)
 
 @@description
 <p>      

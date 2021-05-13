@@ -2716,6 +2716,20 @@ public class UmpleParserStateMachineTest
     Assert.assertNull(a15);
   }
 
+  // Issue 1600
+  @Test
+  public void guardsOnEntryAndExit()
+  {
+    assertNoWarnings("1600_guardsOnEntryAndExit.ump");
+    UmpleClass c = model.getUmpleClass("X");
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("sm", sm.getName());
+
+    State s1 = sm.getState(0);
+    Action s1Entry = s1.getAction(0);
+    Assert.assertEquals("if (condition)\n        {\n          System.out.println(\"s1 entry!\");\n        }", s1Entry.getCodeblock().getCode());
+  }
+
   public void walkGraphTwiceNested_StateMachineGraph_ClearNodes()
   {
     assertParse("101_Nested_realExample2.ump","[classDefinition][name:StrobeLight][stateMachine][inlineStateMachine][name:dvdPlayer][state][stateName:Off][transition][event:turnOn][stateName:On][state][stateName:Sleep][transition][event:wake][stateName:Pause][state][stateName:On][transition][event:turnOff][stateName:Off][state][stateName:Play][transition][event:push][stateName:Pause][state][stateName:Pause][transition][event:push][stateName:Play][transition][event:standby][stateName:Sleep]");
@@ -2799,6 +2813,7 @@ public class UmpleParserStateMachineTest
     parser = new UmpleInternalParser(umpleParserName, model, rbp);
     ParseResult result = rbp.parse(file);
     model.extractAnalyzersFromParser(rbp);
+    System.out.println(rbp.getRootToken());
     answer = result.getWasSuccess();
     if (answer)
     {

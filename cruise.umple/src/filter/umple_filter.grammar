@@ -1,0 +1,26 @@
+// The master of this part of the Umple grammar is available at
+// [*https://github.com/umple/umple/blob/master/cruise.umple/src/filter/umple_filter.grammar*]
+//
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
+
+// This feature allows drawing diagrams of part of a model
+
+filter : filter ( [filterName] )? { ([[filterStatement]])* }
+
+filterStatement- : [[filterCombinedValue]] | [[filterNamespace]] | [[filterValue]] | [[hops]]
+
+hops- : hops {([[super]] | [[sub]] | [[association]])*}
+ 
+filterValue : include ([classname]) ( , [classname] )*;
+
+super : super [superNum];
+
+sub : sub [subNum];
+
+association : association [associationNum];
+
+filterNamespace : namespace [Namespace] (, [Namespace])* ;
+
+filterCombinedValue : includeFilter ([filterName]) ( , [filterName] )*;

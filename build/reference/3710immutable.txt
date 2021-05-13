@@ -1,6 +1,7 @@
 Immutable Pattern
 Patterns
 noreferences
+@@tooltip Immutable is a pattern whereby attributes and 1-ended associations, or entire classes are not allowed to change values after creation
 
 @@description
 <p>Mark a class as immutable to force all its contents to be immutable. The code ensures all attributes and associations can only be set in the constructor, and cannot be modified again subsequently.</p>

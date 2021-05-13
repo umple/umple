@@ -42,6 +42,8 @@
     <delete dir="${project.path}/src-gen-umpleTL" failonerror="false" />
     <delete dir="${project.path}/src-gen-umpletl" failonerror="false" />
   	<delete dir="UmpleToRTCpp/src-gen-UmpleTL" failonerror="false" />
+    <delete dir="${project.path}/bin" failonerror="false" />
+    <delete dir="${project.path}/src/cruise" failonerror="false" />
     <delete dir="cruise.umplificator/src-gen-umple" failonerror="false" />
     <delete dir="cruise.umple.validator/src-gen-umple" failonerror="false" />
   </target>
@@ -100,6 +102,26 @@
       </java-->
     </parallel>
   </target>
+
+  <!-- Compiles Just the umple documenter - relies on the rest to be already compiled -->
+  <target name="umpleDocumenter">
+
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
+    
+    <!-- On cruiseControl the jar built here IS the stable one -->
+    <condition property="umplejar.built.here" value="${umple.stable.jar}" else="${dist.dir}/${dist.umple.jar}">
+      <equals arg1="${myenv}" arg2="cc" />
+    </condition>
+
+    <echo message="Compiling Umple using compiler built on this machine: ${umplejar.built.here}"/>
+    <parallel>
+      <java jar="${umplejar.built.here}" fork="true" failonerror="true">
+        <arg value="cruise.umple/src/Documenter.ump"/>
+      </java>
+    </parallel>
+  </target>
+
+
 
  <!-- ```````````````````````````
     Generate Templates
@@ -362,6 +384,36 @@
     <copy todir="${dist.path}/reference/files">
       <fileset dir="build/reference/files"/>
     </copy>
+    <copy todir="${dist.path}/reference/">
+      <fileset file="umplewww/index.html"/>
+    </copy>
+    <copy todir="${dist.path}/reference/files">
+      <fileset file="umplewww/files/umple_logo.jpg"/>
+    </copy>
+    <copy todir="${dist.path}/reference/files">
+      <fileset file="umplewww/files/uottawa_ver_black.png"/>
+    </copy>
+    <copy todir="${dist.path}/reference/files">
+      <fileset file="umplewww/files/Octocat.jpg"/>
+    </copy>
+    <copy todir="${dist.path}/reference/files">
+      <fileset file="umplewww/files/umple_example_uml.jpg"/>
+    </copy>
+    <copy todir="${dist.path}/reference/syntaxhighlighter">
+      <fileset dir="umplewww/syntaxhighlighter"/>
+    </copy>
+    <copy todir="${dist.path}/reference/examples">
+      <fileset dir="umplewww/examples"/>
+    </copy>
+    <copy todir="${dist.path}/reference/">
+      <fileset file="umplewww/umple-core-classDiagram.shtml"/>
+    </copy>
+    <copy todir="${dist.path}/reference/">
+      <fileset file="umplewww/umple-compiler-classDiagram.shtml"/>
+    </copy>
+    <copy todir="${dist.path}/reference/">
+      <fileset file="umplewww/umple-state-classDiagram.shtml"/>
+    </copy>
   </target>
 
   <target name="travisCopyManual">
@@ -373,11 +425,10 @@
     </copy>
     <copy todir="umpleonline/manual/examples">
       <fileset dir="umplewww/examples"/>
-    </copy>     
+    </copy>
     <copy todir="umpleonline/manual/syntaxhighlighter">
       <fileset dir="umplewww/syntaxhighlighter"/>
-    </copy>     
-    
+    </copy>
   </target>
 
   <target name="packageUmpleonline" if="${shouldPackageUmpleOnline}">
@@ -438,7 +489,7 @@
     <echo message="Package: Umple validator jar used in Umple " />
     <jar destfile="${dist.dir}/umplevalidator_${umple.version}.jar"
          basedir="cruise.umple.validator/bin"
-         includes="cruise/umple/** cruise/umple/validator** org/eclipse/** en.error org/** *.grammar *.error templates/** org/apache/** joptsimple/**" >
+         includes="cruise/umple/** cruise/umple/validator** org/eclipse/** en.error org/** *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar" >
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -459,7 +510,7 @@
 
     <jar destfile="${dist.dir}/${dist.umple.jar}"
          basedir="${bin.path}"
-         includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/**"
+         includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar"
          excludes="**/*Test.class">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
@@ -471,11 +522,54 @@
     </jar>
     <echo message="Making symbolic link so it can be run as umple.jar" />
     <symlink link="${dist.dir}/umple.jar" resource="${dist.dir}/${dist.umple.jar}" overwrite="true" failonerror="false" />
-    
   </target>
+
+
+  <target name="packageSyncJar">
+    <echo message="Package: Umple sync jar used in UmpleOnline to compile and sync diagram - See PlaygroundMain" />
+
+    <deps-get-path conf="core" pathid="core.ivy.classpath" />
+    <manifestclasspath property="umple.jar.classpath" jarfile="${dist.dir}/${dist.umple.jar}" >
+      <classpath refid="core.ivy.classpath"/>
+    </manifestclasspath>
+
+    <jar  destfile="${dist.dir}/${dist.umple.sync.jar}" 
+          basedir="${bin.path}" 
+          includes="cruise/umple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umple.PlaygroundMain"/>
+        <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="packageDocJar">
+    <echo message="Package: Documenter jar used to generate user manual" />
+
+    <deps-get-path conf="core" pathid="core.ivy.classpath" />
+    <manifestclasspath property="umple.jar.classpath" jarfile="${dist.dir}/${dist.umple.jar}" >
+      <classpath refid="core.ivy.classpath"/>
+    </manifestclasspath>
+
+    <jar  destfile="${dist.dir}/${dist.umple.docs.jar}" 
+          basedir="${bin.path}" 
+          includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umple.docs.DocumenterMain"/>
+        <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
+      </manifest>
+    </jar>
+  </target>
+
 
   <target name="packageJars">
     <antcall target="packageMainJar" />
+    <antcall target="packageSyncJar" />
+    <antcall target="packageDocJar" />
 
     <deps-get-path conf="core" pathid="core.ivy.classpath" />
     <manifestclasspath property="umple.jar.classpath" jarfile="${dist.dir}/${dist.umple.jar}" >
@@ -490,35 +584,11 @@
     <echo message="Package: Umple statistics jar" />
     <jar  destfile="${dist.dir}/${dist.umple.stats.jar}" 
           basedir="${bin.path}" 
-          includes="cruise/umple/** *.grammar *.error templates/** org/apache/** joptsimple/**">
+          includes="cruise/umple/** *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
         <attribute name="Main-Class" value="cruise.umple.stats.StatsMain"/>
-        <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
-      </manifest>
-    </jar>
-
-    <echo message="Package: Umple documenter jar used to build the user manual" />
-    <jar  destfile="${dist.dir}/${dist.umple.docs.jar}" 
-          basedir="${bin.path}" 
-          includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/**">
-      <manifest>
-        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
-        <attribute name="Version" value="${umple.version}"/>
-        <attribute name="Main-Class" value="cruise.umple.docs.DocumenterMain"/>
-        <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
-      </manifest>
-    </jar>
-
-    <echo message="Package: Umple sync jar used in UmpleOnline to compile and sync diagram - See PlaygroundMain" />
-    <jar  destfile="${dist.dir}/${dist.umple.sync.jar}" 
-          basedir="${bin.path}" 
-          includes="cruise/umple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/** joptsimple/**">
-      <manifest>
-        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
-        <attribute name="Version" value="${umple.version}"/>
-        <attribute name="Main-Class" value="cruise.umple.PlaygroundMain"/>
         <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
       </manifest>
     </jar>
@@ -530,7 +600,7 @@
 
     <jar  destfile="${dist.dir}/${dist.umple.run.jar}" 
           basedir="${bin.path}" 
-          includes="cruise/umple/** en.error org/** *.grammar *.error templates/** org/apache/** joptsimple/**">
+          includes="cruise/umple/** en.error org/** *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar">
       <manifest>
         <attribute name="Built-By"    value="Cruise - University of Ottawa"/>
         <attribute name="Version"     value="${umple.version}"/>
@@ -719,11 +789,16 @@
     <antcall target="template.test" />
   </target>
 
-  <!-- Run This Command if you are working outside Eclipse and want to see if the tests are passing -->
+  <!-- Run This Command if you are working outside Eclipse and want to see if compilation works -->
   <target name="local" >
     <antcall target="umpleSelf" />
     <antcall target="compile" />
-    <!-- <antcall target="template.test" /> -->
+  </target>
+
+ <target name="documenter" >
+    <antcall target="umpleDocumenter" />
+    <antcall target="compile" />
+    <antcall target="packageDocJar" />    
   </target>
 
 

@@ -1,6 +1,7 @@
 Convincing Potential Adopters
 User Manual Basics
 noreferences
+@@tooltip Benefits of Umple (as opposed to traditional programming) such as less code and higher quality
 
 @@description
 

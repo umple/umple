@@ -1,0 +1,144 @@
+// The master of this second part of the Umple grammar is available at
+// [*https://github.com/umple/umple/blob/master/cruise.umple/src/class/umple_classes.grammar*]
+
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
+
+// Classes are the most common elements in Umple.
+// See user manual page [*ClassDefinition*]
+classDefinition : class [name] { [[classContent]]* }
+
+//The external keyword declares a class that is defined in a different
+// compilation unit
+externalDefinition : external [=interface]? [name] { [[classContent]]* }
+
+// An Interface can only contain method. See [*interfaceDefinition*]
+interfaceDefinition : interface [name] { [[depend]]* [[interfaceBody]] }
+
+// Associations can be declared outside the body of classes. 
+// See user manual page [*IndependentlyDefinedAssociations*]
+associationDefinition : association [name]? { ([[comment]] | [[mixsetDefinition]] | [[association]])* }
+
+// Associations that would be many-many can also become full-fledged classes too
+// See user manual page [*AssociationClassDefinition*]
+associationClassDefinition : associationClass [name] { [[associationClassContent]]* }
+
+// Enumerations can be declared outside the body of classes
+// See user manual page [*EnumerationDefinition*]
+enumerationDefinition : enum [name] { [enumValue](, [enumValue])* }
+
+// The following items can be found inside the body of classes or association classes
+classContent- : [[comment]] | [[innerClass]] | [[mixsetDefinition]] | [[distributable]] | [[proxyPattern]] | [[strictness]] | [[classDefinition]] | [[trace]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[primitiveDefinition]] | [[portDefinition]] | [[portBindingDefinition]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[testCase]] | [[genericTestCase]] | [[testSequence]] | [[testClassInit]] | [[stateMachine]] | [[activeMethodDefinition]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[modelConstraint]] | [[invariant]] | ; | [[enumerationDefinition]] | [[exception]] | [[extraCode]] 
+associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[displayColor]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[association]] | [[inlineAssociation]] | [[singleAssociationEnd]] | [[attribute]] | [[stateMachine]] | [[enumerationDefinition]] | ; | [[extraCode]]
+innerClass : [[innerStaticClass]] | [[innerNonStaticClass]]
+innerStaticClass : static [[classDefinition]]
+innerNonStaticClass : inner [[classDefinition]]
+
+
+// Interfaces: Note that if the format of an abstractMethodDeclaration is not
+// followed, then the body will extraCode and passed to the base language
+// See user manual page [*interfaceDefinition*]
+interfaceBody- : [[interfaceMemberDeclaration]]*
+interfaceMemberDeclaration : [[comment]] | [[constantDeclaration]] | [[constantDeclarationDeprecated]] | [[abstractMethodDeclaration]] | [[position]] | [[displayColor]] | [[isA]] | [[interfaceTest]] | [[distributableInterface]] | [[exception]] | [[extraCode]]
+distributableInterface : [[distributable]]
+// Constants in interfaces (e.g. const String ACONSTANT="aValue";)
+// Note: in Classes const is a modifier
+constantDeclarationDeprecated : constant [[typedName]] (= [**value])? ;
+constantDeclaration : [=internal]? const [[typedName]] (= [**value])? ;
+
+//TODO Should we use modifier for concrete methods [=modifier:public|protected|private]?
+//TODO Should we use modifier for abstract methods [=modifier:public|protected|abstract|final]?
+
+distributable- : [=distributable:distributable] [=distributeTech:RMI|WS]? ;
+proxyPattern- : [=proxyPattern:proxyPattern] ;
+moreCode- : [[codeLangs]] { [**code] }
+codeLangs- : ([=codeLang:Java|RTCpp|SimpleCpp|Cpp|Php|Ruby|Alloy|UmpleSelf] ( , [=codeLang:Java|Alloy|RTCpp|SimpleCpp|Cpp|Php|Ruby|UmpleSelf] )* )?
+
+// Methods: The code in concrete methods is passed to the base language
+// See user manual page [*MethodDefinition*]
+concreteMethodDeclaration : [=modifier:public|protected|private]? [=static]? [=synchronized]? [=queued]? [type]? [[methodDeclarator]] [[methodThrowsExceptions]]? [[methodBody]] | [=modifier:public|protected]? [=abstract] [type]? [[methodDeclarator]] [[methodThrowsExceptions]]? ;
+abstractMethodDeclaration :  [type] [[methodDeclarator]] ; 
+//queuedMethodDeclaration- : queued [[methodDeclarator]] [[methodThrowsExceptions]]? [[methodBody]]
+methodBody- : ( [[codeLangs]] { ( [[precondition]] | [[postcondition]] | [[assertion]]|[[testCase]] )* [**code] } )+ 
+methodDeclarator : [methodName] [[parameterList]]
+methodThrowsExceptions : throws [~exception] ( , [~exception] )*
+parameterList : OPEN_ROUND_BRACKET ([[parameter]] ( , [[parameter]] )* )? CLOSE_ROUND_BRACKET
+parameter : [[typedName]]
+
+testCase : [=isTimed:before|after]? [=isConcrete:JUnit|PhpUnit|RubyUnit]? [=isOverride:override]? test [~testCaseName] { ( [[assertion]] | [[testAction]] | [[testInit]] | [[testInitAtt]] | [[testInitAttWithMethodCall]] | [[comment]] | [[ifStatement]] | [[forStatement]] )* }
+assertion : [=isTimed:before|after]? [=assertType:assertTrue|assertFalse|assertEqual|assertNull|assertMethod] [**code] ;
+testAction : [~objectName] ( (.)[~methodName] )? OPEN_ROUND_BRACKET  [[testActionParameterList]] CLOSE_ROUND_BRACKET ;
+testMethodCall : [~objectName] ( (.)[~methodName] )? OPEN_ROUND_BRACKET  [[testActionParameterList]] CLOSE_ROUND_BRACKET
+testActionParameterList :  [[testParameter]]? 
+testParameter :  [[pValue]] ( , [[pValue]] )* 
+testInit : [~identifier] [~objectName] OPEN_ROUND_BRACKET [[testParameter]]?  CLOSE_ROUND_BRACKET ;
+testInitAtt : [~identifier]? [~attributeName] =  [[pValue]] ;
+testInitAttWithMethodCall : [~identifier]? [~attributeName] =  [[testMethodCall]] ;
+//paraTestAction : [~methodName] OPEN_ROUND_BRACKET ( [[pValue]] ( , [[pValue]] ) )* CLOSE_ROUND_BRACKET
+pValue- : ( [name] | "[name]" ) 
+interfaceTest : test [~testName] ;
+testSequence : testSequence [~sequenceName] { [[testSequenceEntry]] }
+testSequenceEntry : [~name] ( -> [~name] )* ;
+
+//top-level initialization 
+
+testClassInit : test init  { [**code] } 
+
+
+// Generic test case rules
+genericTestCase : generic test [~testCaseName] OPEN_ROUND_BRACKET [[genericElement]] CLOSE_ROUND_BRACKET { ( [**code] )* }
+genericElement- : [elementType] [=genericElement:attribute|method|association] [[elementFix]]?  [[genericMethodParameters]]? 
+genericMethodParameters- : [~elementType] ( , [~elementType] )*
+elementFix :  (.) [=fixType:prefix|suffix|regex] OPEN_ROUND_BRACKET [fixValue] CLOSE_ROUND_BRACKET
+
+//testcase if statement
+ifStatement : if OPEN_ROUND_BRACKET [**condition] CLOSE_ROUND_BRACKET { [**code] } [[ifElseStatement]]* [[elseStatement]]?
+ifElseStatement : if else OPEN_ROUND_BRACKET [**condition] CLOSE_ROUND_BRACKET { [**code] }
+elseStatement : else { [**code] }
+
+// for statement 
+forStatement : for OPEN_ROUND_BRACKET [**forCode] CLOSE_ROUND_BRACKET { [**code] }
+
+
+
+
+// Details of associations: See manual page [*AssociationDefinition*]
+
+association : [=modifier:immutable]?  [[associationEnd]] [=arrow:--|->|<-|><|<@>-|-<@>] [[associationEnd]] ;
+symmetricReflexiveAssociation : [[multiplicity]] self [roleName] ;
+inlineAssociation : [=modifier:immutable]? [[inlineAssociationEnd]] [=arrow:--|->|<-|><|<@>-|-<@>] [[associationEnd]] ;
+inlineAssociationEnd : [[multiplicity]] [~roleName]? [[isSorted]]?
+singleAssociationEnd : [[multiplicity]] ( ( [otherEndroleName] [type] [roleName] ) | ( [type] [~roleName]? ) ) ;
+
+associationEnd : [[multiplicity]] [type] [~roleName]? [[isSorted]]?
+multiplicity- : [!lowerBound:\d+|[*]] .. [!upperBound:\d+|[*]] | [!bound:\d+|[*]]
+isSorted- : sorted { [priority] }
+
+// Details of attributes. See user manual page [*AttributeDefinition*]
+attribute : [[simpleAttribute]] | [[autouniqueAttribute]] | [[multivaluedAttribute]] | [[derivedAttribute]] | [[complexAttribute]]
+simpleAttribute- : [~name] ;
+autouniqueAttribute- : [=autounique] [~name] ;
+multivaluedAttribute- : [=unique]? [=lazy]? [=ivar]? [=modifier:immutable|settable|internal|defaulted|const|fixml]? [type]? [[list]] [~name] (= { [**value] })? ;
+derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const|fixml]? [[typedName]] = ( [[moreCode]] )+
+complexAttribute- : [=unique]? [=lazy]? [=ivar]? [=modifier:immutable|settable|internal|defaulted|const|fixml]? [[typedName]] (= [**value])? ;
+
+
+// Keys are used to define quality and hash codes, plus Sql keys.
+// See user manual page [*KeysforEqualityandHashing*]
+defaultKey : key { }
+key : key { [keyId] ( , [keyId] )* }
+
+// Depend clause. See user manual page [*Dependclause*]
+depend- : depend [depend] ;
+
+// Anything inside a class that is not parsable by Umple is passed on to the base language
+// compiler. To raise warnings when this occurs, use the strictness directive.
+extraCode- : [**extraCode]
+
+list- : [!list:\[\s*\]]
+baseType- : [!baseType:[a-zA-Z0-9_$]+]
+nestedType- : [[baseType]] ( < [[argType]] > )?
+argType- : ( ? | [[nestedType]] [[list]]? ) ( , [[argType]] )?
+type : [[nestedType]] ( ... )?
+typedName- : [[type]]? [[list]]? [~name]

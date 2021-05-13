@@ -1,0 +1,35 @@
+// Class Diagram illustrating use of top-level state machine with
+// usage in separate classes.
+// Note that this could also be accomplished by putting the
+// state machine in a trait, and then having each class use the trait
+
+class MotorController {
+   motorStatus as deviceStatus;
+}
+
+class BrakeController {
+   brakeStatus as deviceStatus;
+}
+
+// By itself, the following will not generate any code
+// but it can be debugged by itself outside of any class
+// and can be incorporated in multiple classes, as above
+statemachine deviceStatus {
+  inactive {
+    activate -> booting;
+  }
+  booting {
+    completedStartupChecks -> active;
+    startupCriticalErrorDetected -> outOfOrder;
+  }
+  active {
+    runtimeCriticalErrorDetected -> outOfOrder;
+    deactivate -> shuttingDown;
+  }
+  shuttingDown {
+    shutdownComplete -> inactive;
+  }
+  outOfOrder {
+    repaired -> inactive;
+  }
+}

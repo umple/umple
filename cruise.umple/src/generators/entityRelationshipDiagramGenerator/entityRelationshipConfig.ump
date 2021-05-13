@@ -1,0 +1,19 @@
+namespace cruise.umple.compiler;
+
+use EntityRelationshipGenerator;
+
+mixset EntityRelationshipGenerator{
+
+use generators/entityRelationshipDiagramGenerator/Generator_CodeGvEntityRelationshipDiagram.ump;
+
+class GvEntityRelationshipDiagramGenerator
+{
+  isA SuperGvGenerator;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+}
+
+
+}

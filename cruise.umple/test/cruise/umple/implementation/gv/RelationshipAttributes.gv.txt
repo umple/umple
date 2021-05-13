@@ -37,8 +37,8 @@ digraph "RelationshipAttributes" {
   "Seminar" -> "addressSeminar" [arrowhead="none"];
 
   // All associations
-  "Person" -> "Ticket" [dir="none", label="1", tooltip="Person->Ticket"];
+  "Person" -> "Ticket" [dir="none", label="1", tooltip="Person->Ticket" labeltooltip="Person->Ticket" headtooltip="Person->Ticket" tailtooltip="Person->Ticket" labelurl="javascript:void()" tailurl="javascript:void()" headurl="javascript:void()" ];
 
-  "Seminar" -> "Ticket" [dir="none", label="*", tooltip="Seminar->Ticket"];
+  "Seminar" -> "Ticket" [dir="none", label="*", tooltip="Seminar->Ticket" labeltooltip="Seminar->Ticket" headtooltip="Seminar->Ticket" tailtooltip="Seminar->Ticket" labelurl="javascript:void()" tailurl="javascript:void()" headurl="javascript:void()" ];
 
 }

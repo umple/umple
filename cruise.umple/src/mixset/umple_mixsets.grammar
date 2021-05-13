@@ -1,0 +1,34 @@
+// The master of this part of the Umple grammar is available at
+// [*https://github.com/umple/umple/blob/master/cruise.umple/src/mixset/umple_mixsets.grammar*]
+
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
+
+//Mixsets allow creation of mixins composed from multiple locations plus some constraints regarding usage of these mixins.
+// See user manual page [*BasicMixsets*]
+
+mixsetDefinition : mixset [mixsetName] ( [[mixsetInnerContent]] | [[mixsetInlineDefinition]] )
+mixsetInnerContent- : { [[extraCode]] }
+ 
+mixsetInlineDefinition- : ( [entityType] [entityName] ( [[mixsetInnerContent]] | [entityOneElement] ) | [oneElement] )
+
+// Specialize a mixset to be a feature. 
+mixsetIsFeature : isFeature 
+
+// require statement allows adding dependencies between mixsets.
+
+requireStatement : require ( [=subfeature] )? [[requireBody]] 
+
+requireBody- : [(([[requireLinkingOptNot]])? (OPEN_ROUND_BRACKET)* [[requireTerminal]] [[requireList]])] 
+
+requireList- : ([[requireLinkingOp]] (OPEN_ROUND_BRACKET)* [[requireTerminal]] (CLOSE_ROUND_BRACKET)* )*
+
+requireLinkingOp : ([[requireLinkingOptNot]] | [=and:&|&&|and|,] | [!or:([|][|]?|or|;)] | [=xor:xor|XOR])
+
+requireLinkingOptNot- : ([=opt:opt] | [=not:not] ) 
+
+requireTerminal :  [~targetMixsetName] | [[multiplicityTerminal]]
+
+multiplicityTerminal- : [[multiplicity]] of { [~targetMixsetName] (, [~targetMixsetName] )* }
+

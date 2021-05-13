@@ -54,8 +54,8 @@ class ScoringTeam {
    Integer score;
 }
 
-class Match {
-  // A match is played in a number of games
+class CardsMatch {
+  // A cards match is played in a number of games
   Boolean isWhist; // True if whist; false if Oh Hell  
 
   // The following determines the players
@@ -115,11 +115,11 @@ class ScoringTeam
   position.association Player__ScoringTeam 0,31 192,55;
 }
 
-class Match
+class CardsMatch
 {
   position 532 48 159 82;
-  position.association Match__ScoringTeam 120,82 60,0;
-  position.association Game:games__Match 29,84 116,0;
+  position.association CardsMatch__ScoringTeam 120,82 60,0;
+  position.association Game:games__CardsMatch 29,84 116,0;
 }
 
 

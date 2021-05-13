@@ -126,6 +126,7 @@ matrix:
       services:
         - docker
     - os: osx
+      osx_image: xcode12.2
 
     # test gradle builds - commented out for now
 #    - os: linux

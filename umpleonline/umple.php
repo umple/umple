@@ -170,22 +170,22 @@ $output = $dataHandle->readData('model.ump');
   background: #C98C7D;
 }
 </style>  
-<link rel="apple-touch-icon" sizes="57x57" href="https://cruise.eecs.uottawa.ca/apple-icon-57x57.png">
-<link rel="apple-touch-icon" sizes="60x60" href="https://cruise.eecs.uottawa.ca/apple-icon-60x60.png">
-<link rel="apple-touch-icon" sizes="72x72" href="https://cruise.eecs.uottawa.ca/apple-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="76x76" href="https://cruise.eecs.uottawa.ca/apple-icon-76x76.png">
-<link rel="apple-touch-icon" sizes="114x114" href="https://cruise.eecs.uottawa.ca/apple-icon-114x114.png">
-<link rel="apple-touch-icon" sizes="120x120" href="https://cruise.eecs.uottawa.ca/apple-icon-120x120.png">
-<link rel="apple-touch-icon" sizes="144x144" href="https://cruise.eecs.uottawa.ca/apple-icon-144x144.png">
-<link rel="apple-touch-icon" sizes="152x152" href="https://cruise.eecs.uottawa.ca/apple-icon-152x152.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://cruise.eecs.uottawa.ca/apple-icon-180x180.png">
-<link rel="icon" type="image/png" sizes="192x192"  href="https://cruise.eecs.uottawa.ca/android-icon-192x192.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://cruise.eecs.uottawa.ca/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="96x96" href="https://cruise.eecs.uottawa.ca/favicon-96x96.png">
-<link rel="icon" type="image/png" sizes="16x16" href="https://cruise.eecs.uottawa.ca/favicon-16x16.png">
-<link rel="manifest" href="https://cruise.eecs.uottawa.ca/manifest.json">
+<link rel="apple-touch-icon" sizes="57x57" href="https://cruise.umple.org/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="https://cruise.umple.org/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="https://cruise.umple.org/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="https://cruise.umple.org/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="https://cruise.umple.org/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="https://cruise.umple.org/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="https://cruise.umple.org/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="https://cruise.umple.org/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://cruise.umple.org/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="https://cruise.umple.org/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://cruise.umple.org/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="https://cruise.umple.org/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://cruise.umple.org/favicon-16x16.png">
+<link rel="manifest" href="https://cruise.umple.org/manifest.json">
 <meta name="msapplication-TileColor" content="#ffffff">
-<meta name="msapplication-TileImage" content="https://cruise.eecs.uottawa.ca/ms-icon-144x144.png">
+<meta name="msapplication-TileImage" content="https://cruise.umple.org/ms-icon-144x144.png">
 <meta name="theme-color" content="#ffffff">
 </head>
 <body>
@@ -193,10 +193,10 @@ $output = $dataHandle->readData('model.ump');
   
     <div id="header" class="row">
         <span style="float: right">
-          <a href="http://www.uottawa.ca" target="uottawatab"><img height="33px" src="scripts/uottawa_ver_black.png" alt="University of Ottawa logo / Université d'Ottawa" /></a>        
+          <a href="https://www.uottawa.ca" target="uottawatab"><img height="33px" src="scripts/uottawa_ver_black.png" alt="University of Ottawa logo / Université d'Ottawa" /></a>        
         </span>       
       <div class="inRow logo">
-        <a href="http://www.umple.org"><img src="scripts/umpleonline_title.jpg" alt="UmpleOnline logo" /></a>     
+        <a href="https://cruise.umple.org/umple"><img src="scripts/umpleonline_title.jpg" alt="UmpleOnline logo" /></a>     
       </div>
       <div class="inRow">
         <p class="pagedescription">
@@ -427,6 +427,10 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/copy.png"/> 
               Encoded URL
             </li>
+            <li id="buttonCopyCommandLine" class="copyCommandLine">
+              <img src="scripts/copy.png"/> 
+              Command Script
+            </li>
             <li id="buttonCopyLocalBrowser" class="copyLocalBrowser">
               <img src="scripts/copy.png"/> 
               Store in Browser
@@ -441,38 +445,6 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/copy.png"/> 
                Download Files
             </li>                        
-          </ul>
-        
-          <ul id="taskSubmenu">
-            <li class="subtitle">TASK</li>
-            
-            <?php if ($canCreateTask) { ?>
-              <li id="buttonCreateTask">
-                <img src="scripts/copy.png"/>
-                Create a Task(beta)
-              </li>
-            <?php } ?>
-
-            <li id="buttonLoadTask">
-              <img src="scripts/copy.png"/>
-              Load a Task
-            </li>
-
-            <?php if (isset($_REQUEST["task"])) { ?>
-            <li id="buttonRequestAllZip">
-              <img src="scripts/copy.png"/> 
-              Request all Directories as a zip under this task
-            </li>
-            <?php } ?>
-            
-
-            <div id="loadTaskNameArea" style="display: none;">
-              <label id="labelLoadTaskName" for="inputLoadTaskName">Task name:</label><br>
-              <input type="text" id="inputLoadTaskName"><br>
-              
-              <span id="buttonSubmitLoadTask">
-              <a href="javascript:Action.submitLoadTask()">Load Task</a> </span>
-            </div>
           </ul>
 
           <ul class="second center-children">
@@ -762,6 +734,46 @@ $output = $dataHandle->readData('model.ump');
             </li> 
           </ul>
          </div>
+
+
+      <!-- GROUP 4 OF OPTIONS -->
+      <h3><a href="#options">TASKS</a></h3>
+
+      <div class="section">
+          <ul id="taskSubmenu">
+            
+            <?php if ($canCreateTask) { ?>
+              <li id="buttonCreateTask">
+                <img src="scripts/copy.png"/>
+                Create a Task
+              </li>
+            <?php } ?>
+
+            <li id="buttonLoadTask">
+              <img src="scripts/copy.png"/>
+              Load a Task
+            </li>
+
+            <?php if (isset($_REQUEST["task"])) { ?>
+            <li id="buttonRequestAllZip">
+              <img src="scripts/copy.png"/> 
+              Request all Directories as a zip under this task
+            </li>
+            <?php } ?>
+            
+
+            <div id="loadTaskNameArea" style="display: none;">
+              <label id="labelLoadTaskName" for="inputLoadTaskName">Task name:</label><br>
+              <input type="text" id="inputLoadTaskName"><br>
+              
+              <span id="buttonSubmitLoadTask">
+              <a href="javascript:Action.submitLoadTask()">Load Task</a> </span>
+            </div>
+          </ul>
+
+
+      </div>
+
       </div> 
     </div>
    

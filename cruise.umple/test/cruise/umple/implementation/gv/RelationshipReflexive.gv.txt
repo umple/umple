@@ -11,8 +11,8 @@ digraph "RelationshipReflexive" {
   // Attributes for Course
   // All associations
   "Course_Course" [shape=diamond, label="   isMutuallyExclusiveWith   ", tooltip="Course->Course"];
-  "Course" -> "Course_Course" [dir="none", label="*", tooltip="Course->Course"];
+  "Course" -> "Course_Course" [dir="none", label="*", tooltip="Course->Course" labeltooltip="Course->Course" headtooltip="Course->Course" tailtooltip="Course->Course" labelurl="javascript:void()" tailurl="javascript:void()" headurl="javascript:void()" ];
 
-  "Course_Course" -> "Course" [dir="none", label="*", tooltip="Course->Course"];
+  "Course_Course" -> "Course" [dir="none", label="*", tooltip="Course->Course" labeltooltip="Course->Course" headtooltip="Course->Course" tailtooltip="Course->Course" labelurl="javascript:void()" tailurl="javascript:void()" headurl="javascript:void()" ];
 
 }
