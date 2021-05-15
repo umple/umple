@@ -225,7 +225,7 @@ $output = $dataHandle->readData('model.ump');
           For help:
     <?php if(strpos($_SERVER['REQUEST_URI'], 'umple.php') !== false && strpos($_SERVER['REQUEST_URI'], 'umpleonline/umple.php') === false ) {$manpage="/manual/GettingStarted.html";} else {$manpage="http://manual.umple.org";} ?>                
     <span style="font-size: 30%; white-space:nowrap;">
-    <a class="button2" style="line-height: 1" href="<?php echo $manpage ?>" target="helppage" title="Open the Umple user manual in a seprate tab" >User manual</a>&nbsp;
+    <a class="button2" style="line-height: 1" href="<?php echo $manpage ?>" target="helppage" title="Open the Umple user manual in a separate tab" >User manual</a>&nbsp;
     <a class="button2" style="line-height: 1" href="http://questions.umple.org"
        target="questionpage" title="Open a separate tab on the StackOverflow page where you can ask Umple community members questions">Ask questions</a>&nbsp;
     <a class="button2" style="line-height: 1" href="https://github.com/umple/umple/issues/new" target="issuepage" title="Open a separate tab on the page where you can report an Umple bug or request an improvement">Report issue</a>&nbsp;

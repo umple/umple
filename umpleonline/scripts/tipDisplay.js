@@ -12,7 +12,8 @@ if (existCookie==null){
         
         //acquiring tipInformation
         var allInfo;
-        var fileNames = ["/build/reference/6600ImportantTips.txt","/build/reference/6601SecondaryTips.txt", "/build/reference/6602TertiaryTips.txt"];
+        var htmlNames = ["Importanttips.html","Secondarytips.html","Tertiarytips.html"];
+        var fileNames = ["https://github.com/umple/umple/tree/master/build/reference/6600ImportantTips.txt","https://github.com/umple/umple/tree/master/build/reference/6601SecondaryTips.txt", "https://github.com/umple/umple/tree/master/build/reference/6602TertiaryTips.txt"];
 
         for (let files=0; files<fileNames.length; files++){
             var request = new XMLHttpRequest();
@@ -23,7 +24,7 @@ if (existCookie==null){
                 for (let i=0; i<allInfo.length; i++){
                     var t=[];
                     t.push(allInfo[i].substring(0, allInfo[i].indexOf("</h2>")));
-                    var link=document.location.toString()+"/manual/"+fileNames[files].substring(fileNames[files].lastIndexOf("/")+5,fileNames[files].length-3)+"html";
+                    var link="http://manual.umple.org/manual/"+htmlNames[files];
                     t.push(allInfo[i].substring(allInfo[i].indexOf("</h2>")+6, allInfo[i].length-1)+'<span style="float: right; padding-right: 10px; display:block;"><a href='+link+' style="color:#4d4d4d; text-align:right; text-decoration:none;"><em>View All Tips</em></a></span>');
                     descrpt.push(t);
                 }

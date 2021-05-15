@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.30.2.5248.dba0a5744 modeling language!*/
+/*This code was generated using the UMPLE 1.30.2.5365.5fe756b1a modeling language!*/
 
 class Agent
 {
