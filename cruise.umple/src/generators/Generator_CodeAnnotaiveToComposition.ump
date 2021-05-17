@@ -33,19 +33,19 @@ class UmpleAnnotaiveToCompositionGenerator
   {
     StringBuilder code = new StringBuilder();
     List<Mixset> mixsetList = model.getMixsetOrFiles().stream().filter(mixset -> mixset.getIsMixset()).map(obj -> (Mixset)obj).collect(Collectors.toList());
-		for (Mixset aMixset: mixsetList)
+		code.append("/* \n");
+		code.append("Annotaive fragments are refactored into composition fragments. \n");
+		code.append("Total mixsts definitions: "+mixsetList.size());
+		code.append("\n*/ \n");
+    
+    for (Mixset aMixset: mixsetList)
 		{
-			code.append("/* \n");
-			code.append("Annotaive fragments are refactored into composition fragments. \n");
-			code.append("Total mixsts definitions: "+mixsetList.size());
-			code.append("\n*/ \n");
 			code.append("\n");
-
 			code.append("mixset "+aMixset.getMixsetName() + " { ") ;
 			for (MixsetFragment  mFragment : aMixset.getMixsetFragments())
 			{
-				code.append("\n// File: "+mFragment.getOriginalUmpFile().getFileName());
-				code.append("\n// Line: "+mFragment.getOriginalUmpLine());
+				code.append("\n// Fragment source file: "+mFragment.getOriginalUmpFile().getFileName());
+				code.append("\n// Line : "+mFragment.getOriginalUmpLine());
 				code.append("\n"+mFragment.getBody());
 				code.append("\n");
 
