@@ -441,9 +441,8 @@ class UmpleInternalParser
     }
   }
 
-  public ArrayList<MixsetInMethod> getMixsetsWithinMethod(MethodBody aMethodBody) { 
+  public void getMixsetsWithinMethod(MethodBody aMethodBody) { 
   String codeToLockAt= aMethodBody.getCodeblock().getCode(); // the code to look at. 
-  ArrayList<MixsetInMethod> mixsetInsideMethodList = new ArrayList<MixsetInMethod>();
   Pattern labelPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+\\{"); // to detect mixset def.
   Matcher matcher = labelPatternToMatch.matcher(codeToLockAt);
   while (matcher.find()) {
@@ -472,7 +471,6 @@ class UmpleInternalParser
       aMethodBody.addMixsetInMethod(mixsetInsideMethod);
     }
   }
-  return mixsetInsideMethodList;
  }
     
   
