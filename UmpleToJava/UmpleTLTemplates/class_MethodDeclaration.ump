@@ -82,7 +82,7 @@ class UmpleToJava {
       methodType = methodType.equals("") ? "void" : methodType;
     }
    // handle mixsets inside methods(uClass, aMethod);
-    ArrayList<MixsetInMethod> mixsetsWithinMethodList = aMethod.getMethodBody().getMixsetsWithinMethod();
+    List<MixsetInMethod> mixsetsWithinMethodList = aMethod.getMethodBody().getMixsetInMethods();
     for(MixsetInMethod mixsetsWithinMethodItem : mixsetsWithinMethodList)
     {
       handelMixsetInsideMethod(model, mixsetsWithinMethodItem, aMethod.getMethodBody());

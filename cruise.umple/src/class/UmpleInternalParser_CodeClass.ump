@@ -3161,7 +3161,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     CodeBlock cb = new CodeBlock("");
     String iValue = null;
     Position iPosition = null;
-  MethodBody meth = new MethodBody(cb);
+    MethodBody meth = new MethodBody(cb);
     
     //559b
     Map<String,Position> implementationPositions = new HashMap<String,Position>();
@@ -3239,6 +3239,9 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           {
             cb.setCode(token.getValue());
             aMethod.setCodePosition(token.getPosition());
+            mixset Mixset {
+              getMixsetsWithinMethod(meth);
+            }
             
             //559b
             implementationPositions.put("", token.getPosition());

@@ -440,6 +440,40 @@ class UmpleInternalParser
       
     }
   }
+
+  public ArrayList<MixsetInMethod> getMixsetsWithinMethod(MethodBody aMethodBody) { 
+  String codeToLockAt= aMethodBody.getCodeblock().getCode(); // the code to look at. 
+  ArrayList<MixsetInMethod> mixsetInsideMethodList = new ArrayList<MixsetInMethod>();
+  Pattern labelPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+\\{"); // to detect mixset def.
+  Matcher matcher = labelPatternToMatch.matcher(codeToLockAt);
+  while (matcher.find()) {
+    String mixsetDefPlusAfterCode = codeToLockAt.substring(matcher.start());
+    // mixset def. + the code after the mixset def.
+    int indexOfMixsetClosingBracket = matcher.start() + MethodBody.indexOfMixsetClosingBracket(mixsetDefPlusAfterCode);
+    String mixsetBodyWithDef = codeToLockAt.substring(matcher.start(),indexOfMixsetClosingBracket);
+    // get the name of the mixset
+    String mixsetName = matcher.group().replace("mixset", "").replace("{", "").trim(); 
+    MixsetInMethod mixsetInsideMethod = new MixsetInMethod(mixsetName,matcher.start(),indexOfMixsetClosingBracket,mixsetBodyWithDef);
+    
+    // place inner method in their right position.
+    for(MixsetInMethod tempMixsetInMethod:aMethodBody.getMixsetInMethods())
+    {
+      if(mixsetInsideMethod.getStartPositionIndex() > tempMixsetInMethod.getStartPositionIndex()
+    			 & mixsetInsideMethod.getEndPositionIndex() < tempMixsetInMethod.getEndPositionIndex())
+      { 
+        // a nested mixset should be bounded by its close parent mixset 
+        mixsetInsideMethod.setParentInnerMixset(tempMixsetInMethod);
+        tempMixsetInMethod.addChildMixset(mixsetInsideMethod);
+      }
+    }
+    // a nested mixset should not add here. 
+    if(mixsetInsideMethod.getParentInnerMixset() == null) // its not bounded by another mixset 
+    {
+      aMethodBody.addMixsetInMethod(mixsetInsideMethod);
+    }
+  }
+  return mixsetInsideMethodList;
+ }
     
   
 }
@@ -506,37 +540,5 @@ class MethodBody
 	}
 	return closeIndex;
 }
-  public ArrayList<MixsetInMethod> getMixsetsWithinMethod() { 
-  String codeToLockAt= this.getCodeblock().getCode(); // the code to look at. 
-  ArrayList<MixsetInMethod> mixsetInsideMethodList = new ArrayList<MixsetInMethod>();
-  Pattern labelPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+\\{"); // to detect mixset def.
-  Matcher matcher = labelPatternToMatch.matcher(codeToLockAt);
-  while (matcher.find()) {
-    String mixsetDefPlusAfterCode = codeToLockAt.substring(matcher.start());
-    // mixset def. + the code after the mixset def.
-    int indexOfMixsetClosingBracket = matcher.start() + indexOfMixsetClosingBracket(mixsetDefPlusAfterCode);
-    String mixsetBodyWithDef = codeToLockAt.substring(matcher.start(),indexOfMixsetClosingBracket);
-    // get the name of the mixset
-    String mixsetName = matcher.group().replace("mixset", "").replace("{", "").trim(); 
-    MixsetInMethod mixsetInsideMethod = new MixsetInMethod(mixsetName,matcher.start(),indexOfMixsetClosingBracket,mixsetBodyWithDef);
-    
-    // place inner method in their right position.
-    for(MixsetInMethod tempMixsetInMethod:mixsetInsideMethodList)
-    {
-      if(mixsetInsideMethod.getStartPositionIndex() > tempMixsetInMethod.getStartPositionIndex()
-    			 & mixsetInsideMethod.getEndPositionIndex() < tempMixsetInMethod.getEndPositionIndex())
-      { 
-        // a nested mixset should be bounded by its close parent mixset 
-        mixsetInsideMethod.setParentInnerMixset(tempMixsetInMethod);
-        tempMixsetInMethod.addChildMixset(mixsetInsideMethod);
-      }
-    }
-    // a nested mixset should not add here. 
-    if(mixsetInsideMethod.getParentInnerMixset() == null) // its not bounded by another mixset 
-    {
-      mixsetInsideMethodList.add(mixsetInsideMethod);
-    }
-  }
-  return mixsetInsideMethodList;
- }
+  
 }
