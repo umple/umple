@@ -1,3 +1,4 @@
+alert("accessed file");
 
 var existCookie = document.cookie.match(/^(.*;)?\s*tipCookie\s*=\s*[^;]+(.*)?$/);
 var htmlNames = ["Importanttips.html","Secondarytips.html","Tertiarytips.html"];
@@ -16,11 +17,15 @@ if (existCookie==null){
         
         //acquiring tipInformation
         for (let files=0; files<fileNames.length; files++){
-            var request = new XMLHttpRequest();
-            request.onreadystatechange = function () {
-                if (this.readyState=4 && this.status==200){
-                    allInfo=this.responseText;
+            jQuery.ajax({
+                url: fileNames[files],
+                async: false,
+                success: function(results){
+                    let allInfo=results;
                     allInfo=allInfo.split("<h2>");
+                    if (allInfo!=null){
+                        alert("got info");
+                    }
                     var descrpt=[];
                     for (let i=0; i<allInfo.length; i++){
                         var t=[];
@@ -30,12 +35,11 @@ if (existCookie==null){
                         descrpt.push(t);
                     }
                     localStorage.setItem('tipInfo'+files, JSON.stringify(descrpt)); //adding items to local storage
-
+                    },
+                error: function(response){
+                    descrpt.push(["couldn't access file","error"]);
                 }
-                
-            };
-            request.open('GET', fileNames[files], false);
-            request.send();
+            })
         }
             
         //display tip
@@ -57,34 +61,26 @@ if (existCookie==null){
         if (num+2>=tip.length-1){
             if (parseInt(priority)+1>=3) //renew data
                 for (let files=0; files<fileNames.length; files++){
-                    var request = new XMLHttpRequest();
-                    request.onreadystatechange = function () {
-                        if (this.readyState=4 && this.status==200){
-                            allInfo=this.responseText;                        
+                    jQuery.ajax({
+                        url: fileNames[files],
+                        async: false,
+                        success: function(results){
+                            let allInfo=results;
                             allInfo=allInfo.split("<h2>");
                             var descrpt=[];
-                            let renew=false;
-                            var oldContent=JSON.parse(localStorage.getItem('tipInfo'+files));
                             for (let i=0; i<allInfo.length; i++){
                                 var t=[];
                                 t.push(allInfo[i].substring(0, allInfo[i].indexOf("</h2>")));
                                 var link="http://manual.umple.org/manual/"+htmlNames[files];
                                 t.push(allInfo[i].substring(allInfo[i].indexOf("</h2>")+6, allInfo[i].length-1)+'<span style="float: right; padding-right: 10px; display:block;"><a href='+link+' style="color:#4d4d4d; text-align:right; text-decoration:none;"><em>View All Tips</em></a></span>');
-                                if (!oldContent.includes(t)){
-                                    renew=true;
-                                    descrpt.push(t);
-                                }
+                                descrpt.push(t);
                             }
-                            if (renew){
-                                localStorage.setItem('tipInfo'+files, JSON.stringify(descrpt)); //adding items to local storage
-                            }
-                            else{
-                                localStorage.setItem('tipInfo'+files, null);
-                            }
+                            localStorage.setItem('tipInfo'+files, JSON.stringify(descrpt)); //adding items to local storage
+                            },
+                        error: function(response){
+                            descrpt.push(["couldn't access file","error"]);
                         }
-                    };
-                    request.open('GET', fileNames[files], false);
-                    request.send();
+                    })
                     this.localStorage.setItem('priorityCount', '0');
                 }
                 
@@ -114,3 +110,5 @@ function hideExtra(){
     document.getElementById('extraInfo').classList.remove("fade-in");
     document.getElementById('extraInfo').classList.add("fade-outInst");
 }
+
+alert("finished with file");
