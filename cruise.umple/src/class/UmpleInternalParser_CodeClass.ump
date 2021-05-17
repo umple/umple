@@ -3239,11 +3239,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           {
             cb.setCode(token.getValue());
             aMethod.setCodePosition(token.getPosition());
-            //mixset Mixset {
-              if(meth.getCodeblock() != null)
-              getMixsetsWithinMethod(meth); // check and extact mixsets inside method
-            //}
-            
             //559b
             implementationPositions.put("", token.getPosition());
             langsImplementation.add("");
@@ -3359,6 +3354,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     meth.setCodeblock(cb);
     meth.setImplementationPositions(implementationPositions);
     aMethod.setMethodBody(meth);
+    //mixset Mixset {
+    if(meth.getCodeblock() != null)
+    getMixsetsWithinMethod(meth); // check and extact mixsets inside method
+            //}
 
     // Handle Class/Interface Modifications
     if (uElement instanceof UmpleClass)
