@@ -43,7 +43,8 @@ use Template;
 use FIXML;
 use Layout;
 use Class; use Attribute; use Association ; // Attribute and Association are not features.
-
+use FeatureModel;
+use AspectInjection;
 
 
 class UmpleInternalParser
@@ -117,10 +118,14 @@ class UmpleInternalParser
       setRootToken(parser.getRootToken());
       analyzeAllTokens(getRootToken());    
       postTokenAnalysis();
-      secondPostTokenAnalysis();
+      mixset StateMachine {
+        secondPostTokenAnalysis();
+      }
       //add analysis here!!! xx.validateStateMachineGuardConstraints(model);
       checkDefaultedNameConflict();
-      analyzeFeatureModel(); // lastly to analyze the feature model after all mixsets are added to umple model. 
+      mixset FeatureModel {
+        analyzeFeatureModel(); // lastly to analyze the feature model after all mixsets are added to umple model. 
+      }
     
     }
     catch (Exception ex)
@@ -264,11 +269,15 @@ class UmpleInternalParser
   {
     // See #460 - types are now nested
     t.flattenNameRecursive("type");
-    analyzeMixsetUseStatement(t, analysisStep);
+    mixset Mixset {
+      analyzeMixsetUseStatement(t, analysisStep);
+    }
     analyzeUSE(t, analysisStep);
     analyzeCoreToken(t,analysisStep);
     analyzeEnumerationToken(t, analysisStep);
-    analyzeClassToken(t,analysisStep);
+    mixset Class {
+      analyzeClassToken(t,analysisStep);
+    }
     mixset Trait {
       analyzeTraitToken(t,analysisStep);
     }
@@ -295,7 +304,9 @@ class UmpleInternalParser
       analyzeMixsetToken(t, analysisStep);
     }
     analyzeRequireStatement(t, analysisStep);
-    analyzeInjectionToken(t, analysisStep);
+    mixset AspectInjection {
+      analyzeInjectionToken(t, analysisStep);
+    }
   }
 
   // Issue#1521
@@ -371,9 +382,11 @@ class UmpleInternalParser
     {
       postTokenInterfaceAnalysis();
     }
-    if (getParseResult().getWasSuccess())
-    {
-      postTokenClassAnalysis();
+    mixset Class {
+      if (getParseResult().getWasSuccess())
+      {
+        postTokenClassAnalysis();
+      }
     }
     mixset Trace { 
       if (getParseResult().getWasSuccess())
@@ -437,15 +450,17 @@ class UmpleInternalParser
     
   }
   
-  //This is used for the cases that will be resolved by traits and we don't need to see those warnings.
-  private void secondPostTokenAnalysis()  {
-    if (getParseResult().getWasSuccess())
-    {
-      postTokenStateMachineAnalysis();
-    }
-    if (getParseResult().getWasSuccess()){
-      //Issue 492
-      checkNonReachableStates();
+  mixset StateMachine {
+    //This is used for the cases that will be resolved by traits and we don't need to see those warnings.
+    private void secondPostTokenAnalysis()  {
+      if (getParseResult().getWasSuccess())
+      {
+        postTokenStateMachineAnalysis();
+      }
+      if (getParseResult().getWasSuccess()){
+        //Issue 492
+        checkNonReachableStates();
+      }
     }
   }
   
