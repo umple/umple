@@ -976,31 +976,33 @@ class CodeBlock
 
 /*
  */
-class CodeInjection
-{
-  public CodeInjection(String a, String b, String c, UmpleClassifier d)
+mixset AspectInjection {
+  class CodeInjection
   {
-    this(a,b,new CodeBlock(c), d);
-  }
-  public void setCode(String str)
-  {
-    snippet.setCode(str);
-  }
-  public String getCode()
-  {
-    return snippet.getCode();
-  }
-  public String getConstraintCode(CodeTranslator gen)
-  {
-    return StringFormatter.format(gen.translate("Closed",constraintTree),getCode());
-  }
-  public void setCode(String lang, String code)
-  {
-    snippet.setCode(lang, code);
-  }
-  public String getCode(String lang)
-  {
-    return snippet.getCode(lang);
+    public CodeInjection(String a, String b, String c, UmpleClassifier d)
+    {
+      this(a,b,new CodeBlock(c), d);
+    }
+    public void setCode(String str)
+    {
+      snippet.setCode(str);
+    }
+    public String getCode()
+    {
+      return snippet.getCode();
+    }
+    public String getConstraintCode(CodeTranslator gen)
+    {
+      return StringFormatter.format(gen.translate("Closed",constraintTree),getCode());
+    }
+    public void setCode(String lang, String code)
+    {
+      snippet.setCode(lang, code);
+    }
+    public String getCode(String lang)
+    {
+      return snippet.getCode(lang);
+    }
   }
 }
 
