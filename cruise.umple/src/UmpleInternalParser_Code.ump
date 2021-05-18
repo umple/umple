@@ -42,7 +42,9 @@ use Structure;
 use Template;
 use FIXML;
 use Layout;
-use Class;
+use Class; use Attribute; use Association ; // Attribute and Association are not features.
+
+
 
 class UmpleInternalParser
 {
@@ -267,15 +269,31 @@ class UmpleInternalParser
     analyzeCoreToken(t,analysisStep);
     analyzeEnumerationToken(t, analysisStep);
     analyzeClassToken(t,analysisStep);
-    analyzeTraitToken(t,analysisStep);
-    analyzeTemplateToken(t,analysisStep);
-    analyzeStateMachineToken(t,analysisStep);
+    mixset Trait {
+      analyzeTraitToken(t,analysisStep);
+    }
+    mixset Template {
+      analyzeTemplateToken(t,analysisStep);
+    }
+    mixset StateMachine {
+      analyzeStateMachineToken(t,analysisStep);
+    }
     analyzeComponentToken(t,analysisStep);
-    analyzeTraceToken(t,analysisStep);
-    analyzeLayoutToken(t,analysisStep);
-    analyzeFilterToken(t,analysisStep);
-    analyzeFIXML(t, analysisStep);
-    analyzeMixsetToken(t, analysisStep);
+    mixset Trace {
+      analyzeTraceToken(t,analysisStep);
+    }
+    mixset Filter {
+      analyzeFilterToken(t,analysisStep);
+    }
+    mixset Layout {
+      analyzeLayoutToken(t,analysisStep);
+    }
+    mixset FIXML {
+      analyzeFIXML(t, analysisStep);
+    }
+    mixset Mixset {
+      analyzeMixsetToken(t, analysisStep);
+    }
     analyzeRequireStatement(t, analysisStep);
     analyzeInjectionToken(t, analysisStep);
   }
@@ -298,7 +316,9 @@ class UmpleInternalParser
     t.flattenNameRecursive("type");
     analyzeCoreToken(t,aClass,analysisStep);
     analyzeClassToken(t,aClass,analysisStep);
-    analyzeStateMachineToken(t,aClass,analysisStep);
+    mixset StateMachine {
+      analyzeStateMachineToken(t,aClass,analysisStep);
+    }
     analyzeDependentTokens(t,aClass,analysisStep);
   }
 
@@ -329,8 +349,12 @@ class UmpleInternalParser
     {
       addKey(t, aClass, unlinkedKeysTokens);
     }
-    analyzeTraceToken(t,aClass);
-    analyzeLayoutToken(t,aClass,analysisStep);
+    mixset Trace {
+      analyzeTraceToken(t,aClass);
+    }
+    mixset Layout {
+      analyzeLayoutToken(t,aClass,analysisStep);
+    }
   }
 
   // Once you have analyze all tokens, you allowed a second 'pass' to apply any additional checks
@@ -351,31 +375,34 @@ class UmpleInternalParser
     {
       postTokenClassAnalysis();
     }
-    
-    if (getParseResult().getWasSuccess())
-    {
-      postTokenTraceAnalysis();
+    mixset Trace { 
+      if (getParseResult().getWasSuccess())
+      {
+        postTokenTraceAnalysis();
+      }
     }
-
-    if (getParseResult().getWasSuccess())
-    {
-      postTokenTraitAnalysis();
+    mixset Trait {
+      if (getParseResult().getWasSuccess())
+      {
+        postTokenTraitAnalysis();
+      }  
+      if (getParseResult().getWasSuccess())
+      {
+        applyTraits();
+        //Issue 686
+        checkCodeInjections();
+      } 
+     }
+    mixset Layout {
+      if (getParseResult().getWasSuccess())
+      {
+        postTokenLayoutAnalysis();
+      }
     }
-
-    if (getParseResult().getWasSuccess())
-    {
-      applyTraits();
-      //Issue 686
-     checkCodeInjections();
-    } 
-    
-    if (getParseResult().getWasSuccess())
-    {
-      postTokenLayoutAnalysis();
-    }
-
-    if (getParseResult().getWasSuccess()) {
-      postTokenTemplateAnalysis();
+    mixset Template {
+      if (getParseResult().getWasSuccess()) {
+        postTokenTemplateAnalysis();
+      }
     }
 
     if (getParseResult().getWasSuccess()) {
