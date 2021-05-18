@@ -208,19 +208,7 @@ class UmpleModel
     }
     return null;
   }
-  mixset StateMachine {
-    public StateMachine getStateMachineDefinition(String name)
-    {
-      for (StateMachine aStateMachine : getStateMachineDefinitions())
-      {
-        if (aStateMachine.getName().equals(name))
-        {
-          return aStateMachine;
-        }
-      }
-      return null;
-    }
-  }
+
 
   public boolean hasAnalyzer(String name)
   {
@@ -866,22 +854,6 @@ class CodeBlock
   
   /*
    * @author Vahdat
-   * The following part of code may not generate proper code-style code generation.
-   * Currently, we deal with code style at the code generation level (UmpleTemplate Language);
-   */
-  mixset StateMachine {
-    public void findKeywordAndReplace(String keyword, CodeBlock cBlock, StateMachine inStateMachine){
-      if(keyword==null || keyword=="") return;
-      for (String language : codes.keySet()) {
-        String replacement=System.lineSeparator()+"\t\t//This part of code comes from the trait '"+inStateMachine.getRootStateMachine().getUmpleTrait().getName()+"' -> begins"+System.lineSeparator()+"\t\t";
-        replacement = replacement+cBlock.codes.get(language).replace(keyword, "");
-        replacement=replacement+System.lineSeparator()+"\t\t//The code coming from trait '"+inStateMachine.getRootStateMachine().getUmpleTrait().getName()+"' ends here"+System.lineSeparator()+"\t\t";
-        codes.put(language,codes.get(language).replace(keyword,replacement+keyword)) ;
-      }
-    } 
-  }
-  /*
-   * @author Vahdat
    */
 	public void removeKeyword(String keyword){
     if(keyword==null || keyword=="") return;
@@ -1307,19 +1279,6 @@ class UmpleClass
     this(name, null);
   }
 
-  mixset StateMachine {
-    public List<StateMachine> getAllStateMachines()
-    {
-      ArrayList<StateMachine> all = new ArrayList<StateMachine>();
-      all.addAll(getStateMachines());
-      for (StateMachine sm : getStateMachines())
-      {
-        all.addAll(sm.getNestedStateMachines());
-      }
-      return all;
-    }
-  }
-
   public List<TraceDirective> getAllTraceDirectives(){
     ArrayList<TraceDirective> all = new ArrayList<TraceDirective>();
     all.addAll(getTraceDirectives());
@@ -1560,72 +1519,6 @@ class UmpleClass
     }
 
     return all;
-  }
-
-  mixset StateMachine {
-    public List<StateMachine> getStateMachines(Event e)
-    {
-      List<StateMachine> allStateMachines = new ArrayList<StateMachine>();
-      for (StateMachine sm : getAllStateMachines())
-      {
-        List<Event> allEvents = sm.getEvents();
-        if (allEvents.contains(e))
-        {
-          allStateMachines.add(sm);
-        }
-      }
-      return allStateMachines;
-    }
-    public List<Event> getEvents()
-    {
-      List<Event> allEvents = new ArrayList<Event>();
-      for (StateMachine sm : getAllStateMachines())
-      {
-        allEvents.addAll(sm.getEvents());
-      }
-
-      List<Event> allUniqueEvents = new ArrayList<Event>();
-      for (Event e : allEvents)
-      {
-        if (!allUniqueEvents.contains(e))
-        {
-          allUniqueEvents.add(e);
-        }
-      }
-      return allUniqueEvents;
-    }
-
-    public Event findOrCreateEvent(String aName)
-    {
-      if (aName == null)
-      {
-        return null;
-      }
-
-      for (StateMachine sm : getStateMachines())
-      {
-        for (Event aEvent : sm.getAllEvents())
-        {
-          if (aName.equals(aEvent.getName()))
-          {
-            return aEvent;
-          }
-        }
-      }
-      return new Event(aName);
-    }
-
-    public StateMachine getStateMachine(String name)
-    {
-      for (StateMachine sm : stateMachines)
-      {
-        if (sm.getName().equals(name))
-        {
-          return sm;
-        }
-      }
-      return null;
-    }
   }
 
   public void addReferencedPackage(String aNamespace)
@@ -4706,6 +4599,7 @@ class ModelConstraintAttributeFromClass
     return ModelConstraint.SUCCESS;
   }
 }
+use stateMachine/Umple_Code_StateMachine.ump;
 use filter/Umple_Code_Filter.ump;
 use trait/Umple_Code_Trait.ump;
 use Test_Code.ump;
