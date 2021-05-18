@@ -1,0 +1,35 @@
+Tertiary tips
+Tips
+noreferences
+@@tooltip The third-priority tips that will appear in the 'tip of the day' occasionally in UmpleOnline
+
+@@description
+<h2>You can work on <em>multiple model tabs</em> in UmpleOnline.</h2>
+<p>In UmpleOnline you are able to write code in multiple tabs. The tabs appear above the text-editing area in the top-left. To add a new tab, click on the + symbol.</p>
+
+<p>You can rename a tab by double-clicking on its name, and typing the new name.</p>
+
+<p>Consider the tabs to be separate files. You can arrange for the model in a tab to <em>know about</em> the model in another tab you have named <em>Utilities</em> by including the expression <code>use utilities.ump</code></p>
+
+<p>You can select <em>Hide Tabs</em> to hide model tabs if you don't want to use them, and <em>Show Tabs</em> to show them again.</p>
+
+<p>Note that tabs can also be shown in the generated code area; these are entirely separate</p>
+
+
+<br/><br/>
+<h2>You can change the width of the text and diagram panels in UmpleOnline.</h2>
+<p>If you hover the cursor over the right edge of the text panel (just to the left of the menu) or the left edge of the diagram panel (just to the right of the menu), the cursor will change. When the cursor has changed you can press the mouse/trackpad and drag left or right to change the relative portion of the screen devoted to either panel.</p>
+
+
+<br/><br/>
+<h2>Feel free to work on either the text or the diagram panel according to your preferences.</h2>
+<p>In UmpleOnline, by toggling the T and D buttons above the text editor, you can choose to hide and show the text panel (T) or the diagram panel (D).</p>
+
+<p>Hiding the diagram panel temporarily can sometimes speed up your work, although you will receive less feedback about your model. When the diagram is visible it updates automatically 3 seconds after you stop typing new code in the model panel.</p>
+
+<p>Hiding the text panel temporarily can help you display a large diagram on the screen.</p>
+
+
+<br/><br/>
+<h2>Hovering over an item in UmpleOnline will allow you to see more info about it.</h2>
+<p>By hovering over a button or some text in UmpleOnline, a message will be displayed with extra information about that item.</p>
