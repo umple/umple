@@ -24,7 +24,7 @@ if (existCookie==null){
                             var t=[];
                             t.push(allInfo[i].substring(0, allInfo[i].indexOf("</h2>")));
                             var link="http://manual.umple.org/manual/"+htmlNames[files];
-                            t.push(allInfo[i].substring(allInfo[i].indexOf("</h2>")+6, allInfo[i].length-1)+'<span style="float: right; padding-right: 10px; display:block;"><a href='+link+' style="color:#4d4d4d; text-align:right; text-decoration:none;" target="helppage"><em>View All Tips</em></a></span>');
+                            t.push(allInfo[i].substring(allInfo[i].indexOf("</h2>")+6, allInfo[i].length-11)+'<span style="float: right; padding-right: 10px; display:block;"><a href='+link+' style="color:#4d4d4d; text-align:right; text-decoration:none;"><em>View All Tips</em></a></span>');
                             descrpt.push(t);
                         }
                         window.localStorage.setItem('tipInfo'+files, JSON.stringify(descrpt)); //adding items to local storage
@@ -49,7 +49,9 @@ if (existCookie==null){
         
         if (tip!=null){
             document.getElementById('styleTip').innerHTML = "<br/>Tip: "+tip[num+1][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more</span>';
+            jQuery('#styleTip a').attr('target', 'helppage');
             document.getElementById('extraInfo').innerHTML = tip[num+1][1];
+            jQuery('#extraInfo a').attr('target', 'helppage');
             if (num+2>=tip.length-1){
                 if (parseInt(priority)+1>=3) //renew data
                     for (let files=0; files<fileNames.length; files++){
@@ -63,7 +65,7 @@ if (existCookie==null){
                                     var t=[];
                                     t.push(allInfo[i].substring(0, allInfo[i].indexOf("</h2>")));
                                     var link="http://manual.umple.org/manual/"+htmlNames[files];
-                                    t.push(allInfo[i].substring(allInfo[i].indexOf("</h2>")+6, allInfo[i].length-1)+'<span style="float: right; padding-right: 10px; display:block;"><a href='+link+' style="color:#4d4d4d; text-align:right; text-decoration:none;" target="helppage"><em>View All Tips</em></a></span>');
+                                    t.push(allInfo[i].substring(allInfo[i].indexOf("</h2>")+6, allInfo[i].length-1)+'<span style="float: right; padding-right: 10px; display:block;"><a href='+link+' style="color:#4d4d4d; text-align:right; text-decoration:none;"><em>View All Tips</em></a></span>');
                                     descrpt.push(t);
                                 }
                                 localStorage.setItem('tipInfo'+files, JSON.stringify(descrpt)); //adding items to local storage
@@ -83,8 +85,9 @@ if (existCookie==null){
             }
         }
         let currentTime=new Date();
-        currentTime.setTime(currentTime.getTime() + (24*60*60*1000));
-        document.cookie="tipCookie=done; expires="+currentTime.toUTCString()+"; path=/";
+        currentTime.setTime(currentTime.getTime());
+        currentTime.setHours(24, 0, 0, 0);
+        document.cookie="tipCookie=done; expires="+currentTime.toString()+"; path=/";
     });
 
  
@@ -97,7 +100,7 @@ if (existCookie==null){
 function showExtra(){
     document.getElementById('extraInfo').classList.remove("fade-outInst");
     document.getElementById('extraInfo').classList.add("fade-in");
-    setTimeout(function(){hideExtra();}, 8000);
+    setTimeout(function(){hideExtra();}, 10000);
 }
 
 function hideExtra(){
