@@ -74,6 +74,10 @@ def buildAliases = [
         'testbedTests',
         'allUserManualAndExampleTests'
    ],
+   'updateUmpleOnline' : [
+   	'compileUmpleSelf', 'jar',
+   	'packageUmpleonline'
+   ]
 ]
 def expandedTaskList = []
 
@@ -903,7 +907,8 @@ task allUserManualAndExampleTests {
 // Build User manual
 // =====================
 
-task copybuilddir1(type: Copy) {
+task copybuilddir1(type: Copy){
+
 	  	from "${rootProject.projectDir.toString()}/build/reference/files"
 	  	into ("${rootProject.ext.distpath}/files")
 }
@@ -942,13 +947,12 @@ task copybuilddir8(type: Copy){
 	  	into (distpath)
 	  	dependsOn copybuilddir7	
 	  }
-task copybuilddir9(type: Copy){
+	  
+task copybuilddir(type: Copy){
 	  	from ("${rootProject.ext.umpleweb}/umple-state-classDiagram.shtml")
 	  	into (distpath)
 	  	dependsOn copybuilddir8	
 	  }
-  
-
 
  task executeDocJar (type: JavaExec){
  	
@@ -963,12 +967,14 @@ task copybuilddir9(type: Copy){
  task packageDocs {
  
  	dependsOn executeDocJar
- 	dependsOn copybuilddir9
+ 	dependsOn copybuilddir
  }
  
  // =====================
 // Package Umpleonline
 // =====================
+ 
+ 
  // Javascript compression
  
  class ConcatFiles extends DefaultTask {
@@ -1010,22 +1016,16 @@ task copybuilddir9(type: Copy){
  }
  
  task executeYui (type: JavaExec){
- 	
- 	classpath = files("${rootProject.ext.distdir}/libs/build/yuicompressor-2.4.8.jar")
- 	//classpath += sourceSets.main.runtimeClasspath
- 	args "${rootProject.ext.umpleoscripts}/tmpAllUmple.js"
+ 	classpath = configurations.ivy
+ 	main "com.yahoo.platform.yui.compressor.Bootstrap"
+ 	args =  ["${rootProject.ext.umpleoscripts}/tmpAllUmple.js", "-o", "${rootProject.ext.umpleoscripts}/allumple-min.js"]
  }
- 
- task copyMinJS (type: Copy) {
- 	dependsOn executeYui
- 	from "${rootProject.ext.umpleoscripts}/tmpAllUmple.js"
- 	into umpleoscripts
- 	rename ("tmpAllUmple.js", "allumple-min.js")
- }
+
 
  task compressAllScripts {
  	dependsOn concat
- 	dependsOn copyMinJS
+ 	dependsOn executeYui
+ 	delete "${rootProject.ext.umpleoscripts}/tmpAllUmple.js"
  }
  
  task packageUmpleonline1 (type: Copy) {
@@ -1039,7 +1039,7 @@ task copybuilddir9(type: Copy){
  task packageUmpleonline2 (type: Copy) {
  		from distdir	
  	 	into umpleoscripts
- 	 	include "ump;le.jar"
+ 	 	include "umple.jar"
  	 	dependsOn packageUmpleonline1
  	}
  	
