@@ -90,7 +90,7 @@ if (existCookie==null){
         document.cookie="tipCookie=done; expires="+currentTime.toString()+"; path=/";
     });
 
- 
+
 }
 
 // =========================================
