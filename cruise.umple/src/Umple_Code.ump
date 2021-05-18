@@ -815,52 +815,54 @@ class CodeBlock
   	this.codes.putAll(another.codes);
   }
   
-  /*
-   * @author Vahdat
-   */
-  public void ApplyTypeParameters(GeneralTPApplied inGeneralTPApplied, UmpleTrait inTrait){
-    if (inGeneralTPApplied == null && inTrait.numberOfGeneralTemplateParameters()==0) return;
-    Integer start=0,end=0;
-    boolean inProcess = false;
-    String internalCode = "";
-    for (String language : codes.keySet()) {
-      String code = codes.get(language);
-      start=0;
-      end=0;
-      inProcess = false;
-      internalCode = "";
-      for (int i=0;i<code.length();i++) {
-        if (code.charAt(i)=='#' &&!inProcess){
-          inProcess=true;
-          start = i;
-          continue;
-        }
-        if (code.charAt(i)=='#' && inProcess){
-        inProcess=false;
-        end=i;
-        String strTemp = code.substring(start+1, end);
-        Boolean replaced = false;
-        for(GeneralTemplateParameter gtp : inTrait.getGeneralTemplateParameters()){
-          if (strTemp.equals(gtp.getName())){
-            String newName = (inGeneralTPApplied!=null && inGeneralTPApplied.getParameterMapping().containsKey(gtp.getName())) ? inGeneralTPApplied.getParameterMapping().get(gtp.getName()) : gtp.getDefaultValue();
-            internalCode = internalCode+newName;
-            replaced = true;
-            break;
+  mixset Trait {
+    /*
+    * @author Vahdat
+    */
+    public void ApplyTypeParameters(GeneralTPApplied inGeneralTPApplied, UmpleTrait inTrait){
+      if (inGeneralTPApplied == null && inTrait.numberOfGeneralTemplateParameters()==0) return;
+      Integer start=0,end=0;
+      boolean inProcess = false;
+      String internalCode = "";
+      for (String language : codes.keySet()) {
+        String code = codes.get(language);
+        start=0;
+        end=0;
+        inProcess = false;
+        internalCode = "";
+        for (int i=0;i<code.length();i++) {
+          if (code.charAt(i)=='#' &&!inProcess){
+            inProcess=true;
+            start = i;
+            continue;
+          }
+          if (code.charAt(i)=='#' && inProcess){
+          inProcess=false;
+          end=i;
+          String strTemp = code.substring(start+1, end);
+          Boolean replaced = false;
+          for(GeneralTemplateParameter gtp : inTrait.getGeneralTemplateParameters()){
+            if (strTemp.equals(gtp.getName())){
+              String newName = (inGeneralTPApplied!=null && inGeneralTPApplied.getParameterMapping().containsKey(gtp.getName())) ? inGeneralTPApplied.getParameterMapping().get(gtp.getName()) : gtp.getDefaultValue();
+              internalCode = internalCode+newName;
+              replaced = true;
+              break;
+            }
+          }
+          if (!replaced) {
+            internalCode = internalCode+"#"+strTemp;
+          } else{
+            continue;
           }
         }
-        if (!replaced) {
-          internalCode = internalCode+"#"+strTemp;
-        } else{
-          continue;
+        if (!inProcess){
+          internalCode = internalCode+code.charAt(i);
         }
       }
-      if (!inProcess){
-        internalCode = internalCode+code.charAt(i);
-      }
+      codes.put(language, internalCode);
     }
-    codes.put(language, internalCode);
-   }
-  }
+    }
+}
   
   /*
    * @author Vahdat
