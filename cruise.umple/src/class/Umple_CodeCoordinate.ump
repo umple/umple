@@ -1,4 +1,6 @@
 
+namespace cruise.umple.compiler;
+
 mixset Coordinate { 
 // Fragment source file: Umple_Code.ump
 // Line : 360
