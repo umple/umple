@@ -13,7 +13,7 @@ p.pagedescription { margin-left:5px; margin-top: 0px;}
 
 /* HEADER */
 .logo { margin-top: 0px; }
-.pretext { line-height: 1.5em; }
+.pretext { line-height: normal;}
 
 /* MAIN APPLICATION CONTAINER */
 #mainApplication { overflow: hidden; }

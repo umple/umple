@@ -201,18 +201,21 @@ $output = $dataHandle->readData('model.ump');
         <p class="pagedescription">
         
         <span class="pretext">
-          Draw on the right, write (Umple) model code on the left. Analyse models and generate code.
-          <?php
+          Draw on the right, write (Umple) model code on the left. Analyse models and generate code.<br/>
+           <?php
             //alert message
             $alertMessage = @file_get_contents("ump/aalertMessage.txt");
             if($alertMessage != FALSE && !empty($alertMessage)) {
-            echo "<span style=\"color: red\"><br/>$alertMessage</span>";
+            echo "<span style=\"color: red\">$alertMessage<br/></span>";
             }
             else { //tip of the day
-              readfile("scripts/tipProcessor.html");
+              $output = readfile("scripts/tipProcessor.html");
+              if ($output != FALSE && !empty($output)){
+                $output;
+              }
             }
           ?>
-        <br/></span>
+        </span>
         <span id="gdprtext" class="pretext">        
           This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="http://privacy.umple.org" target="privacy">Click to learn about privacy.</a>
         <br/></span>

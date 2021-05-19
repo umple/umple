@@ -48,7 +48,7 @@ if (existCookie==null){
         var num = parseInt(window.localStorage.getItem('tipCount'));
         
         if (tip!=null){
-            document.getElementById('styleTip').innerHTML = "<br/>Tip: "+tip[num+1][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more</span>';
+            document.getElementById('styleTip').innerHTML = "Tip: "+tip[num+1][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more<br/></span>';
             jQuery('#styleTip a').attr('target', 'helppage');
             document.getElementById('extraInfo').innerHTML = tip[num+1][1];
             jQuery('#extraInfo a').attr('target', 'helppage');
