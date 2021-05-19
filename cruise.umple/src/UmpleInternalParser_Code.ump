@@ -42,7 +42,7 @@ use Structure;
 use Template;
 use FIXML;
 use Layout;
-use Class; use Attribute; use Association ; // Attribute and Association are not features.
+use Class; use Attribute; //use Association ; // Attribute and Association are not features.
 use FeatureModel;
 use AspectInjection;
 
