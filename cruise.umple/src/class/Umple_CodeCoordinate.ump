@@ -1,6 +1,102 @@
 
 namespace cruise.umple.compiler;
 
+class Coordinate
+{
+
+  public Point getTopLeft()
+  {
+    return new Point(x,y);
+  }
+
+  public Point getTopRight()
+  {
+    return new Point(x+width,y);
+  }
+
+  public Point getBottomLeft()
+  {
+    return new Point(x,y+height);
+  }
+
+  public Point getBottomRight()
+  {
+    return new Point(x+width,y+height);
+  }
+
+  public Point getTopMiddle()
+  {
+    return new Point(x+width/2,y);
+  }
+
+  public Point getBottomMiddle()
+  {
+    return new Point(x+width/2,y+height);
+  }
+
+  public Point getRightMiddle()
+  {
+    return new Point(x+width,y+height/2);
+  }
+
+  public Point getLeftMiddle()
+  {
+    return new Point(x,y+height/2);
+  }
+
+  public String whereIs(Coordinate neighbour)
+  {
+    int topDeltaY = getTopMiddle().getY() - neighbour.getBottomMiddle().getY();
+    int topDeltaX = getTopMiddle().getX() - neighbour.getBottomMiddle().getX();
+
+    int bottomDeltaY = neighbour.getTopMiddle().getY() - getBottomMiddle().getY();
+    int bottomDeltaX = getBottomMiddle().getX() - neighbour.getTopMiddle().getX();
+
+    if (topDeltaY > 0 && Math.abs(topDeltaY) > Math.abs(topDeltaX))
+    {
+      return "top";
+    }
+    else if (bottomDeltaY > 0 && Math.abs(bottomDeltaY) > Math.abs(bottomDeltaX))
+    {
+      return "bottom";
+    }
+    else if (neighbour.getX() < getX())
+    {
+      return "left";
+    }
+    else
+    {
+      return "right";
+    }
+  }
+
+  public int distanceTo(Coordinate other)
+  {
+    int a = other.getX() - getX();
+    int b = other.getY() - getY();
+    int c = (int) Math.round(Math.sqrt(Math.pow(a,2) + Math.pow(b,2)));
+    return c;
+  }
+
+  public String toString()
+  {
+    return "(" + getX() + "," + getY() + "," + getWidth() + "," + getHeight() + ")";
+  }
+
+  private void updateStatus()
+  {
+    if (x == -1 && y == -1 && width == -1 && height == -1)
+    {
+      setStatus(Status.Undefined);
+    }
+    else
+    {
+      setStatus(Status.Explicit);
+    }
+  }
+}
+
+
 mixset Coordinate { 
 // Fragment source file: Umple_Code.ump
 // Line : 360
