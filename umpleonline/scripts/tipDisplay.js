@@ -23,7 +23,7 @@ if (existCookie==null){
                         for (let i=0; i<allInfo.length; i++){
                             var t=[];
                             t.push(allInfo[i].substring(0, allInfo[i].indexOf("</h2>")));
-                            var link="http://manual.umple.org/manual/"+htmlNames[files];
+                            var link="https://cruise.umple.org/umple/"+htmlNames[files];
                             t.push(allInfo[i].substring(allInfo[i].indexOf("</h2>")+6, allInfo[i].length-11)+'<span style="float: right; padding-right: 10px; display:block;"><a href='+link+' style="color:#4d4d4d; text-align:right; text-decoration:none;"><em>View All Tips</em></a></span>');
                             descrpt.push(t);
                         }
@@ -64,7 +64,7 @@ if (existCookie==null){
                                 for (let i=0; i<allInfo.length; i++){
                                     var t=[];
                                     t.push(allInfo[i].substring(0, allInfo[i].indexOf("</h2>")));
-                                    var link="http://manual.umple.org/manual/"+htmlNames[files];
+                                    var link="https://cruise.umple.org/umple/"+htmlNames[files];
                                     t.push(allInfo[i].substring(allInfo[i].indexOf("</h2>")+6, allInfo[i].length-1)+'<span style="float: right; padding-right: 10px; display:block;"><a href='+link+' style="color:#4d4d4d; text-align:right; text-decoration:none;"><em>View All Tips</em></a></span>');
                                     descrpt.push(t);
                                 }
@@ -86,8 +86,8 @@ if (existCookie==null){
         }
         let currentTime=new Date();
         currentTime.setTime(currentTime.getTime());
-        currentTime.setHours(24, 0, 0, 0);
-        document.cookie="tipCookie=done; expires="+currentTime.toString()+"; path=/";
+        currentTime.setUTCHours(24, 0, 0, 0);
+        document.cookie="tipCookie=done; expires="+currentTime.toUTCString()+"; path=/";
     });
 
 
