@@ -272,19 +272,6 @@ class UmpleInternalParser
     }
   }
 
-  mixset AspectInjection {
-    // Issue#1521
-    private void analyzeInjectionToken(Token t, int analysisStep) {
-      if (t.is("toplevelBeforeCode"))
-      {
-        analyzeToplevelInjectionCode(t, analysisStep, "toplevelBeforeCode");
-      } else if (t.is("toplevelAfterCode"))
-      {
-        analyzeToplevelInjectionCode(t, analysisStep, "toplevelAfterCode");
-      }
-    }
-  }
-
   // Analyze an individual token, delegates to the various components in Umple
   private void analyzeToken(Token t, UmpleClass aClass, int analysisStep)
   {
