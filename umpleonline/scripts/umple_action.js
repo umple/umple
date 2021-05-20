@@ -148,7 +148,6 @@ Action.clicked = function(event)
     jQuery("#isExperimentCell").css("display","block");
     Layout.zoomResize();
   }
- 
   else if (action == "LoadTask")
   {
     jQuery("#loadTaskNameArea").css("display","block");

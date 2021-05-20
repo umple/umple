@@ -956,13 +956,29 @@ Page.cancelTaskResponse = function()
   }
 }
 Page.hideTask = function(){
-
     jQuery("#taskArea").css("display","none");
     jQuery("#labelTaskName").css("display","none");
     jQuery("#taskNameCell").css("display","none");
     jQuery("#instructions").css("display","none");
     jQuery("#isExperimentCell").css("display","none");
+    jQuery("#isExperiment").attr("checked", false);
     Layout.zoomResize();
+}
+Page.cancelTask = function(){
+   
+   if (jQuery("#completionURL").val()!='' || jQuery("#taskName").val()!='' || jQuery("#requestorName").val()!=''){
+
+    var answer = confirm ("Are you sure you wanna cancel your task creation process ?");
+	
+    if (answer){
+    jQuery("#taskName").val('');
+    jQuery("#requestorName").val('');
+    jQuery("#completionURL").val('');
+    jQuery("#instructions").val('');
+    Page.hideTask();
+    }
+    }
+    else{ Page.hideTask();}
 }
 
 Page.toggleTabs = function()
