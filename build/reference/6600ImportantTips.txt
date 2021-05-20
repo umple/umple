@@ -1,0 +1,44 @@
+Important tips
+Tips
+noreferences
+@@tooltip The top priority tips that will appear in the 'tip of the day' occasionally in UmpleOnline
+
+@@description
+<p>The tips below will appear as the tips of the day in UmpleOnline. You can read them all here.</p>
+
+<br/><br/>
+<h2>You can specify an association in a class or else by itself with the <em>association</em> keyword.</h2>
+<p>An association between two classes can be specified <a href="https://cruise.umple.org/umple/InlineAssociations.html">in either class (see an example in the user manual)</a> or <a href="https://cruise.umple.org/umple/IndependentlyDefinedAssociations.html">separately from either class</a>, using the <em>association</em> keyword</p>
+
+
+<br/><br/>
+<h2>You can generate code that ensures a class is a <em>singleton</em> (has only one instance).</h2>
+<p>If you specify <em>singleton;</em> in any class, then the <a href="https://cruise.umple.org/umple/SingletonPattern.html">singleton pattern</a> will be applied, meaning that there will only be one instance.</p>
+
+
+<br/><br/>
+<h2>Mark an attribute as <em>lazy</em> if you do not want it to create a constructor argument.</h2>
+<p>By default each attribute in a class becomes a constructor argument (along with associations that have a multiplicity of 1 at their other end).</p>
+
+<p>If you want to avoid this, then add the keyword <em>lazy</em> before the association. The attribute will then be initialized with a null, empty or zero value.</p>
+
+
+<br/><br/>
+<h2>The default data type for attributes in Umple is <em>String</em>.</h2>
+<p>In Umple you can specify a data type before any attribute. But if you do not, then attribute will default to type <em>String</em>.</p>
+
+
+<br/><br/>
+<h2>Core datatypes in Umple include String, Integer, Boolean, Date, Time.</h2>
+<p>If you use the datatypes String, Double, Float, Integer, Boolean, Date or Time as the types of attributes, then Umple generates code tailored to the target language.</p>
+
+<p>For example, when generating Java, an Integer attribute is implemented as an int variable. This is important to know, since the methods Umple generates to access those variables will use the Java type. If you specify <code>Integer id;</cpde> in Umple, and generate Java, then the API will have a method with signature <em>setId(int)</em></p>
+
+<p>Why does Umple then bother with an Integer datatype if it will be converted to int when generating Java? Because we want key types to be independent of the target programming language.</p>
+
+
+<br/><br/>
+<h2>With UmpleOnline, you can create <em>tasks</em> to assign to others.</h2>
+<p>Under Tasks, you can create numerous assignments with different names, instructions, Umple models, and completion URLs (such as feedback quizzes) with the option of detailed logging. Simply <a href="https://cruise.umple.org/umple/SettingupTasks.html">create a task</a> and distribute the participant URL or ask the responders to look up the name of the task under "Load Task" in order to <a href="https://cruise.umple.org/umple/RespondingtoTasks.html">start their submissions</a>.</p>
+
+<p>To acquire all the submissions, click "Request all Directories as a zip" under the task editing panel and all of the submissions will be saved on your local computer.</p>

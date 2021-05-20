@@ -213,7 +213,7 @@ TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
   // Create the physical tab element
   var createBtn = jQuery("#createTabBtn");
   var tabTemplate = jQuery('<li id="tab' + newTabId + '" class="">' + 
-    '<a class="tabname" id="tabName' + newTabId + '" href="javascript:TabControl.selectTab(\'' + newTabId + '\');">' + tabName + '</a>' + 
+    '<a class="tabname" title="Double-click to rename tab" id="tabName' + newTabId + '" href="javascript:TabControl.selectTab(\'' + newTabId + '\');">' + tabName + '</a>' + 
       '<button class="tabbtn" onclick="javascript:TabControl.deleteTab(\'' + newTabId + '\');">&times;</button></li>');
   tabTemplate.insertBefore(createBtn);
 
