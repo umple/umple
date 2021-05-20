@@ -303,7 +303,9 @@ class UmpleInternalParser
     mixset Mixset {
       analyzeMixsetToken(t, analysisStep);
     }
-    analyzeRequireStatement(t, analysisStep);
+    mixset FeatureModel {
+      analyzeRequireStatement(t, analysisStep);
+    }
     mixset AspectInjection {
       analyzeInjectionToken(t, analysisStep);
     }
@@ -618,5 +620,5 @@ use UmpleInternalParser_CodeEnumeration.ump;
 mixset Mixset{
   use mixset/UmpleInternalParser_CodeMixset.ump;
 }
-use UmpleInternalParser_CodeRequireStatement.ump;
+use UmpleInternalParser_CodeRequireStatement.ump
 use UmpleInternalParser_CodeTest.ump;
