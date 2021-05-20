@@ -122,7 +122,11 @@ class UmpleInternalParser
         secondPostTokenAnalysis();
       }
       //add analysis here!!! xx.validateStateMachineGuardConstraints(model);
-      checkDefaultedNameConflict();
+      mixset Attribute {
+        mixset Method {
+          checkDefaultedNameConflict();
+        }
+      }
       mixset FeatureModel {
         analyzeFeatureModel(); // lastly to analyze the feature model after all mixsets are added to umple model. 
       }
@@ -144,23 +148,6 @@ class UmpleInternalParser
     }
     return getParseResult();
   }
-
-  boolean addToGeneratedMethodMap(HashSet<String> generatedMethods, String className, CodeTranslator t, String translatingLabel, Attribute aAttr){
-    String generatedMethodName = t.translate(translatingLabel, aAttr);
-
-    if(generatedMethodName != null && !"".equals(generatedMethodName) && !generatedMethodName.startsWith("UNKNOWN ID")){
-
-      boolean success = generatedMethods.add(generatedMethodName);
-      if(!success){
-        getParseResult().addErrorMessage(new ErrorMessage(48,aAttr.getPosition(), aAttr.getName(), className, generatedMethodName));
-        return false;
-      }
-
-    }
-    return true;
-  }
-
-
 
   //------------------------
   // PRIVATE METHODS
@@ -285,14 +272,16 @@ class UmpleInternalParser
     }
   }
 
-  // Issue#1521
-  private void analyzeInjectionToken(Token t, int analysisStep) {
-    if (t.is("toplevelBeforeCode"))
-    {
-      analyzeToplevelInjectionCode(t, analysisStep, "toplevelBeforeCode");
-    } else if (t.is("toplevelAfterCode"))
-    {
-      analyzeToplevelInjectionCode(t, analysisStep, "toplevelAfterCode");
+  mixset AspectInjection {
+    // Issue#1521
+    private void analyzeInjectionToken(Token t, int analysisStep) {
+      if (t.is("toplevelBeforeCode"))
+      {
+        analyzeToplevelInjectionCode(t, analysisStep, "toplevelBeforeCode");
+      } else if (t.is("toplevelAfterCode"))
+      {
+        analyzeToplevelInjectionCode(t, analysisStep, "toplevelAfterCode");
+      }
     }
   }
 
@@ -302,7 +291,9 @@ class UmpleInternalParser
     // See #460 - types are now nested
     t.flattenNameRecursive("type");
     analyzeCoreToken(t,aClass,analysisStep);
-    analyzeClassToken(t,aClass,analysisStep);
+    mixset Class {
+      analyzeClassToken(t,aClass,analysisStep);
+    }
     mixset StateMachine {
       analyzeStateMachineToken(t,aClass,analysisStep);
     }
