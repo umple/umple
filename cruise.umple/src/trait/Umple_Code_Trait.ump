@@ -388,3 +388,246 @@ class UmpleClass {
 //---------------------------------------------------------------------------------------------
 //------------------------------------class end------------------------------------------------
 //---------------------------------------------------------------------------------------------
+
+class CodeBlock
+{
+    /*
+    * @author Vahdat
+    */
+    public void ApplyTypeParameters(GeneralTPApplied inGeneralTPApplied, UmpleTrait inTrait){
+      if (inGeneralTPApplied == null && inTrait.numberOfGeneralTemplateParameters()==0) return;
+      Integer start=0,end=0;
+      boolean inProcess = false;
+      String internalCode = "";
+      for (String language : codes.keySet()) {
+        String code = codes.get(language);
+        start=0;
+        end=0;
+        inProcess = false;
+        internalCode = "";
+        for (int i=0;i<code.length();i++) {
+          if (code.charAt(i)=='#' &&!inProcess){
+            inProcess=true;
+            start = i;
+            continue;
+          }
+          if (code.charAt(i)=='#' && inProcess){
+          inProcess=false;
+          end=i;
+          String strTemp = code.substring(start+1, end);
+          Boolean replaced = false;
+          for(GeneralTemplateParameter gtp : inTrait.getGeneralTemplateParameters()){
+            if (strTemp.equals(gtp.getName())){
+              String newName = (inGeneralTPApplied!=null && inGeneralTPApplied.getParameterMapping().containsKey(gtp.getName())) ? inGeneralTPApplied.getParameterMapping().get(gtp.getName()) : gtp.getDefaultValue();
+              internalCode = internalCode+newName;
+              replaced = true;
+              break;
+            }
+          }
+          if (!replaced) {
+            internalCode = internalCode+"#"+strTemp;
+          } else{
+            continue;
+          }
+        }
+        if (!inProcess){
+          internalCode = internalCode+code.charAt(i);
+        }
+      }
+      codes.put(language, internalCode);
+    }
+  }
+}
+class GeneralTPApplied {
+	Map<String,String> parameterMapping = new HashMap<String,String>();
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+  private void ApplyTypeParametersToMethod(Method newMethod){
+	for (String strType : this.getParameterMapping().keySet()) {
+		String newName = this.getParameterMapping().get(strType);
+		if (newMethod.getType().equals(strType)){
+			newMethod.setType(newName);
+		}
+		for (int i = 0; i < newMethod.numberOfMethodParameters(); i++) {
+            if(newMethod.getMethodParameter(i).getType().equals(strType)){
+            	newMethod.getMethodParameter(i).setType(newName);
+            }
+	    }
+	}
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+	public GeneralTPApplied(GeneralTPApplied another) {
+    if (another == null) return;
+    this.parameterMapping = new HashMap<String, String>(another.parameterMapping);
+    this.inheritanceName = another.inheritanceName;
+    positions = another.positions; 
+    
+    stateMachineModifiers = new ArrayList<>(another.getStateMachineModifiers());
+    parameters = new ArrayList<>( Arrays.asList(another.getParameters()));
+    methodTemplateSignatures = new ArrayList<>(another.getMethodTemplateSignatures());
+    stateMachineTemplateSignatures = new ArrayList<>(another.getStateMachineTemplateSignatures());
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+	boolean hasMethodTemplateSignature(MethodTemplateSignature inMTSignature) {
+		for (MethodTemplateSignature mTSignature : getMethodTemplateSignatures()) {
+			if (compareTwoMethdos(mTSignature.getMethod(),inMTSignature.getMethod())) return true;
+		}
+		return false;
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+	boolean hasStateMachineTemplateSignature(StateMachineTemplateSignature inSMTSignature) {
+   for (StateMachineTemplateSignature smTSignature : getStateMachineTemplateSignatures()) {
+      if (smTSignature.getSrcStateMachine().equals(inSMTSignature.getSrcStateMachine()) && smTSignature.numberOfSrcStates()==inSMTSignature.numberOfSrcStates()){
+        boolean find = true;
+      for (int  i = 0; i<smTSignature.numberOfSrcStates() ;i++) {
+        if (!smTSignature.getSrcState(i).equals(inSMTSignature.getSrcState(i))) {
+          find = false;
+          break;
+        }
+      }
+      if (!find) continue;
+      //TODO I can raise a different error for each of the following conditions
+        if (smTSignature.getModifier().equals("-") && inSMTSignature.getModifier().equals("+")) return true;
+        if (smTSignature.getModifier().equals("+") && inSMTSignature.getModifier().equals("-")) return true;
+        if (smTSignature.getModifier().equals("-") && !inSMTSignature.getAlias().equals("")) return true;
+        if (!smTSignature.getAlias().equals("")     && inSMTSignature.getModifier().equals("-")) return true;
+        if (!smTSignature.getDesStateMachine().equals(inSMTSignature.getDesStateMachine()) && smTSignature.numberOfDesStates()==0 && inSMTSignature.numberOfDesStates()==0) return true;
+        if (smTSignature.getMethodTemplateSignature()==null && inSMTSignature.getMethodTemplateSignature()==null){
+          if (smTSignature.getAlias().equals(inSMTSignature.getAlias())){
+            if ((smTSignature.getModifier().equals("+")&&inSMTSignature.getModifier().equals("+"))||(smTSignature.getModifier().equals("-")&&inSMTSignature.getModifier().equals("-")) ){
+              return true;
+            }
+          }
+          if (!smTSignature.getAlias().equals(inSMTSignature.getAlias()) && !smTSignature.getAlias().equals("") && !inSMTSignature.getAlias().equals("")) return true; 
+          if (smTSignature.getDesStateMachine().equals(inSMTSignature.getDesStateMachine())) return true;     
+        }
+        if (smTSignature.getMethodTemplateSignature()!=null && inSMTSignature.getMethodTemplateSignature()!=null){
+          if (smTSignature.getMethodTemplateSignature().getMethod().compareWithTheMethod(inSMTSignature.getMethodTemplateSignature().getMethod())){
+            if (smTSignature.getAlias().equals(inSMTSignature.getAlias())){
+              if ((smTSignature.getModifier().equals("+")&&inSMTSignature.getModifier().equals("+"))||(smTSignature.getModifier().equals("-")&&inSMTSignature.getModifier().equals("-")) ){
+                return true;
+              }
+            } else return true;
+          }        
+      }     
+      }
+    }
+    return false;
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+	Boolean hasStateMachineModifier(StateMachineModifier inSMModifier) {
+	  for (StateMachineModifier smModifier : getStateMachineModifiers()) {  
+      if(inSMModifier instanceof EventModifier && smModifier instanceof EventModifier) {
+        if (inSMModifier.getModifier().equals(smModifier.getModifier())){
+          if( inSMModifier.getSrcStateMachine().equals(smModifier.getSrcStateMachine()) && Arrays.equals(  ((EventModifier)inSMModifier).getSrcStates(), ((EventModifier)smModifier).getSrcStates() ) && ((EventModifier)inSMModifier).getMethod().compareWithTheMethod(((EventModifier)smModifier).getMethod())  ) {
+            if (((EventModifier)inSMModifier).getGuard().isEqualTo(((EventModifier)smModifier).getGuard())){
+              //raise a warning that they are equal.
+              return true;
+            }
+          }
+        } else if( inSMModifier.getSrcStateMachine().equals(smModifier.getSrcStateMachine()) && Arrays.equals(  ((EventModifier)inSMModifier).getSrcStates(), ((EventModifier)smModifier).getSrcStates() ) && ((EventModifier)inSMModifier).getMethod().compareWithTheMethod(((EventModifier)smModifier).getMethod())  ) {
+          if (((EventModifier)inSMModifier).getGuard().isEqualTo(((EventModifier)smModifier).getGuard())){
+            //raise a error that they two operations cannot be applied to one state.
+            return true;         
+          }
+        }  
+      //---------------------------------------------------------------------------------------     
+      } else if(inSMModifier instanceof StateModifier && smModifier instanceof StateModifier) {
+        if (inSMModifier.getModifier().equals(smModifier.getModifier())){
+          if( inSMModifier.getSrcStateMachine().equals(smModifier.getSrcStateMachine()) && Arrays.equals(  ((StateModifier)inSMModifier).getSrcStates(), ((StateModifier)smModifier).getSrcStates()  )  ) {
+            //raise a warning that they are equal.
+            return true;
+          }
+        } else if( inSMModifier.getSrcStateMachine().equals(smModifier.getSrcStateMachine()) && Arrays.equals(  ((StateModifier)inSMModifier).getSrcStates(), ((StateModifier)smModifier).getSrcStates()  )  ){
+          //raise a error that they two operations cannot be applied to one state.
+          return true;
+        }
+      //---------------------------------------------------------------------------------------
+      } else if (inSMModifier instanceof StateMachineModifier && smModifier instanceof StateMachineModifier){
+        if (inSMModifier.getModifier().equals(smModifier.getModifier())){
+          if (inSMModifier.getSrcStateMachine().equals(smModifier.getSrcStateMachine())){
+            //raise a warning that they are equal.
+            return true;
+          }
+        } else if (inSMModifier.getSrcStateMachine().equals(smModifier.getSrcStateMachine())){
+          //raise a error that they two operations cannot be applied to one state.
+          return true;
+        }
+      //---------------------------------------------------------------------------------------  
+      } else if(inSMModifier instanceof ExtendStateByStateMachine && smModifier instanceof ExtendStateByStateMachine) {
+        //TODO: Explore this case more.
+      }
+    }
+	  return false;
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+  public MethodTemplateSignature hasMethod(Method inMethod){
+    for (MethodTemplateSignature mTSignature : getMethodTemplateSignatures()) {
+    		Method newMethod = new Method(mTSignature.getMethod());
+    		ApplyTypeParametersToMethod(newMethod);
+			if (compareTwoMethdos(newMethod,inMethod)) return mTSignature;
+		}
+	return null;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+  private boolean compareTwoMethdos(Method method1, Method method2){
+    if (method1.getName().equals(method2.getName())){
+		 // if(method1.getType().equals(method2.getType())){
+			  Integer numberOfParams = method1.getMethodParameters().size();
+			  if ( numberOfParams== method2.getMethodParameters().size()) {
+		          boolean allSame = true;
+		          for (int i = 0; i < numberOfParams; i++)
+		          {
+		            if(!method1.getMethodParameter(i).getType().equals(method2.getMethodParameter(i).getType()))
+		            {
+		              allSame = false;
+		              break;
+		            }
+		          }
+		          if(allSame)
+		          {
+		            return true;
+		          }
+		     }
+		 // }
+      }
+	  return false;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+  public String getAssignedStateMachineNewName(String srName){
+    for (StateMachineTemplateSignature smTSignature : getStateMachineTemplateSignatures()) {
+      if (smTSignature.getSrcStateMachine().equals(srName) && smTSignature.getSrcStates().length==0 && smTSignature.getAlias()!="" ) return smTSignature.getAlias();
+    }
+    return "";
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+}
+
+class MethodTemplateSignature{
+  MethodTemplateSignature(MethodTemplateSignature another)
+  {
+    this.modifier = another.getModifier();
+    this.alias = another.getAlias();
+    this.method = new Method(another.getMethod());
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+}
