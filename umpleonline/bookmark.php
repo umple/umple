@@ -24,7 +24,7 @@ if (isset($_REQUEST["taskname"])) {
     if ($file->isDir() && substr($file->getFilename(), 0, 8) == "taskroot") 
     {
       $taskName = explode("-", $file->getFilename())[1];
-      if ($taskName == $_REQUEST["taskname"])
+      if ($taskName == strtolower($_REQUEST["taskname"]))
       {
         $tempModelId = $file->getFilename();
         $taskExist = true;
