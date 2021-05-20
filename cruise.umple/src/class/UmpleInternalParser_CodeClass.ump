@@ -5958,6 +5958,37 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     return wasDone;
   }
 
+  mixset Attribute {
+    mixset Method {
+      void checkDefaultedNameConflict(){
+        Map<String, CodeTranslator> allTranslators = model.getAllTranslators();
+        HashSet<String> generatedMethods = new HashSet<String>();
+        for(String langName : allTranslators.keySet()){
+          CodeTranslator t = allTranslators.get(langName);
+
+          for(UmpleClass aClass : model.getUmpleClasses()){
+            generatedMethods.clear();
+
+            for(Attribute aAttr : aClass.getAttributes()){
+              String modifier = aAttr.getModifier();
+
+              // Can add more!
+              if(!"internal".equals(modifier)){
+                addToGeneratedMethodMap(generatedMethods, aClass.getName(), t, "getMethod", aAttr);
+                addToGeneratedMethodMap(generatedMethods, aClass.getName(), t, "setMethod", aAttr);
+              }
+
+              if("defaulted".equals(modifier)){
+                addToGeneratedMethodMap(generatedMethods, aClass.getName(), t, "getDefaultMethod", aAttr);
+              }
+            }
+          }
+        }
+      }
+
+    }
+  }
+
 //  Replaced on fixing issue 1315  
 //  private String getCurrentNameSpace(Token inToken) {
 //    String currentNameSpace="";
