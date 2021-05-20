@@ -45,6 +45,7 @@ use Layout;
 use Class; use Attribute; //use Association ; // Attribute and Association are not features.
 use FeatureModel;
 use AspectInjection;
+use Constraint;
 
 
 class UmpleInternalParser
@@ -93,7 +94,7 @@ class UmpleInternalParser
     
     parser.addGrammarFile("/umple_core.grammar");
     parser.addGrammarFile("/umple_patterns.grammar");
-    parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
+    parser.addGrammarFile("/constraint/umple_constraints.grammar");  // TODO Under development
     parser.addGrammarFile("/umple_exceptions.grammar");
     parser.addGrammarFile("/use.grammar");
   }
@@ -403,21 +404,7 @@ class UmpleInternalParser
     
     
   }
-  
-  mixset StateMachine {
-    //This is used for the cases that will be resolved by traits and we don't need to see those warnings.
-    private void secondPostTokenAnalysis()  {
-      if (getParseResult().getWasSuccess())
-      {
-        postTokenStateMachineAnalysis();
-      }
-      if (getParseResult().getWasSuccess()){
-        //Issue 492
-        checkNonReachableStates();
-      }
-    }
-  }
-  
+
   private void postTokenModelConstraintAnalysis(){
     for(UmpleClass uClass:model.getUmpleClasses())
     {
@@ -547,7 +534,9 @@ mixset Class {
 mixset Trait{
   use trait/UmpleInternalParser_CodeTrait.ump;
 }
-use UmpleInternalParser_CodeConstraints.ump;
+mixset Constraint {
+  use constraint/UmpleInternalParser_CodeConstraints.ump;
+}
 mixset Structure {
   use strcture/UmpleInternalParser_CodeStructure.ump;
 }
@@ -574,3 +563,6 @@ mixset Mixset{
 }
 use UmpleInternalParser_CodeRequireStatement.ump
 use UmpleInternalParser_CodeTest.ump;
+mixset AspectInjection {
+  use class/UmpleInternalPraser_CodeInjection.ump;
+}

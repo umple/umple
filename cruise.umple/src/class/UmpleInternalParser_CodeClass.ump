@@ -5881,6 +5881,3 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 //  }
   
 } 
-
-
-use class/UmpleInternalPraser_CodeInjection.ump;
