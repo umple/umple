@@ -855,8 +855,8 @@ class Comment
 
 
 
-
-use class/Umple_CodeConstraint.ump ;
+use constraint/Umple_CodeConstraint.ump;
+//use class/Umple_CodeConstraint.ump ;
 use class/Umple_CodeAssociation.ump;
 use class/Umple_CodeAttribute.ump;
 use class/Umple_CodeClass.ump;
