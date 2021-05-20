@@ -966,7 +966,7 @@ Page.hideTask = function(){
 }
 Page.cancelTask = function(){
    
-   if (jQuery("#completionURL").val()!='' || jQuery("#taskName").val()!='' || jQuery("#requestorName").val()!=''){
+   if (jQuery("#completionURL").val()!='' || jQuery("#taskName").val()!='' || jQuery("#requestorName").val()!='' || jQuery("#instructions").val()!=''){
 
     var answer = confirm ("Are you sure you wanna cancel your task creation process ?");
 	
