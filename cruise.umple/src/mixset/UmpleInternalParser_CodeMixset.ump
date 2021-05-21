@@ -462,15 +462,15 @@ class CodeBlock{
     ArrayList <String> codeLabels = new ArrayList<String>();
     String codeToLockAt = getCode(codesKey);
     ArrayList<String> codeWithLabels = new ArrayList<String>();
-    Pattern labelPatternToMatch = Pattern.compile("(\\S+):");
+    Pattern labelPatternToMatch = Pattern.compile("^\\s*\\w+::",Pattern.MULTILINE);
     Matcher matcher = labelPatternToMatch.matcher(codeToLockAt);
     int lastMatchedIndex=0;
     while (matcher.find()) {
       String codeBeforeLabel = codeToLockAt.substring(lastMatchedIndex, matcher.start());
       if(!codeBeforeLabel.equals(""))
         codeWithLabels.add(codeBeforeLabel);
-      codeWithLabels.add(matcher.group()); //add the label itself to the source code.
-      codeLabels.add(matcher.group().replaceFirst(":","")); // remove colon and add it the list of labels 
+      codeWithLabels.add(matcher.group().trim()); //add the label itself to the source code.
+      codeLabels.add(matcher.group().replaceFirst("::","")); // remove colon and add it the list of labels 
       lastMatchedIndex = matcher.end();
     }
     // This for last label, to add the code after last matched label 

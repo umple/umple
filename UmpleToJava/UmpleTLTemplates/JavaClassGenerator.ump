@@ -239,12 +239,13 @@ for (StateMachine smq : uClass.getStateMachines())
     CodeBlock methodCodeBlock = aMethod.getMethodBody().getCodeblock();
     String codesKey_lang = ""; 
     String methodCode = methodCodeBlock.getCode(codesKey_lang);
-    Pattern labelPatternToMatch = Pattern.compile("^\\s*\\w+:",Pattern.MULTILINE);
+    Pattern labelPatternToMatch = Pattern.compile("^\\s*\\w+::",Pattern.MULTILINE);
     Matcher matcher = labelPatternToMatch.matcher(methodCode);
     while(matcher.find())
     {
+      String repeated = new String(new char[matcher.end() - matcher.start()]);
       methodCode = methodCode.substring(0,matcher.start()) +
-                      " ".repeat(matcher.end() - matcher.start()) + methodCode.substring(matcher.end());
+                      repeated + methodCode.substring(matcher.end());
     }
     methodCodeBlock.setCode(methodCode);
   }
@@ -315,13 +316,13 @@ for (StateMachine smq : uClass.getStateMachines())
         String afterCodeSegment = codeToInjectArray[0];
         String beforeCodeSegment = codeToInjectArray[1];
 
-        int afterIndex = methodCodeWithLabels.indexOf(firstLabel);
+        int afterIndex = methodCodeWithLabels.indexOf(firstLabel+":");
         int beforeIndex = methodCodeWithLabels.indexOf(SecondLabel);
         methodCodeWithLabels.add(afterIndex+1, "\n"+afterCodeSegment + "\n");
         methodCodeWithLabels.add(beforeIndex+1, "\n"+beforeCodeSegment + "\n");
       }
       else {
-        int indexOfLabel = methodCodeWithLabels.indexOf(methodLabelToLookat);
+        int indexOfLabel = methodCodeWithLabels.indexOf(methodLabelToLookat+":");
         if (indexOfLabel == -1) // the method does not contain the required label
         {
           return;// raise error 
