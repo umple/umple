@@ -94,7 +94,9 @@ class UmpleInternalParser
     
     parser.addGrammarFile("/umple_core.grammar");
     parser.addGrammarFile("/umple_patterns.grammar");
-    parser.addGrammarFile("/constraint/umple_constraints.grammar");  // TODO Under development
+    mixset Constraint {
+      parser.addGrammarFile("/constraint/umple_constraints.grammar");  // TODO Under development
+    }
     parser.addGrammarFile("/umple_exceptions.grammar");
     parser.addGrammarFile("/use.grammar");
   }
@@ -303,13 +305,17 @@ class UmpleInternalParser
       shouldProcessClassAgain = true;
       return;
     }
-    if (t.is("modelConstraintBody"))
-    {
-      analyzeModelConstraint(t,aClass);
+    mixset Constraint {
+      if (t.is("modelConstraintBody"))
+      {
+        analyzeModelConstraint(t,aClass);
+      }
     }
-    else if (t.is("beforeCode") || t.is("afterCode"))
-    {
-      analyzeInjectionCode(t,aClass);
+    mixset AspectInjection {
+      else if (t.is("beforeCode") || t.is("afterCode"))
+      {
+        analyzeInjectionCode(t,aClass);
+      }
     }
     else if (t.is("key") || t.is("defaultKey"))
     {
@@ -377,11 +383,12 @@ class UmpleInternalParser
       postTokenComponentAnalysis();
     }
 
-    if (getParseResult().getWasSuccess())
-    {
-      postTokenModelConstraintAnalysis();
+    mixset Constraint {
+      if (getParseResult().getWasSuccess())
+      {
+        postTokenModelConstraintAnalysis();
+      }
     }
-    
     if (getParseResult().getWasSuccess())
     {
       postTokenEnumerationAnalysis();
@@ -404,21 +411,6 @@ class UmpleInternalParser
     
     
   }
-
-  private void postTokenModelConstraintAnalysis(){
-    for(UmpleClass uClass:model.getUmpleClasses())
-    {
-      for(ModelConstraint modelConstraint:uClass.getModelConstraints())
-      {
-        ModelConstraintResult result = modelConstraint.evaluate(uClass);
-        if(result!=ModelConstraint.SUCCESS)
-        {
-          setFailedPosition(result.getPosition(),result.getError(),result.getTarget(),result.getSource());
-        }
-      }
-    }
-  }
-
 
   // Locate all 'use *.ump' references and add those files if not already parsed
   private void addNecessaryFiles()
@@ -561,7 +553,7 @@ use UmpleInternalParser_CodeEnumeration.ump;
 mixset Mixset{
   use mixset/UmpleInternalParser_CodeMixset.ump;
 }
-use UmpleInternalParser_CodeRequireStatement.ump
+use UmpleInternalParser_CodeRequireStatement.ump;
 use UmpleInternalParser_CodeTest.ump;
 mixset AspectInjection {
   use class/UmpleInternalPraser_CodeInjection.ump;
