@@ -16,6 +16,7 @@ use Coordinate ;
 use Method;
 use Class;
 use Association;
+use Constraint;
 /**
  * In Umple_Code.ump: Methods for manipulating the Model
  */
@@ -850,13 +851,9 @@ class Comment
   }
 }
 
-
-
-
-
-
-
-use class/Umple_CodeConstraint.ump ;
+mixset Constraint {
+  use constraint/Umple_CodeConstraint.ump;
+}
 use class/Umple_CodeAssociation.ump;
 use class/Umple_CodeAttribute.ump;
 use class/Umple_CodeClass.ump;

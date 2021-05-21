@@ -45,6 +45,7 @@ use Layout;
 use Class; use Attribute; //use Association ; // Attribute and Association are not features.
 use FeatureModel;
 use AspectInjection;
+use Constraint;
 
 
 class UmpleInternalParser
@@ -93,7 +94,9 @@ class UmpleInternalParser
     
     parser.addGrammarFile("/umple_core.grammar");
     parser.addGrammarFile("/umple_patterns.grammar");
-    parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
+    mixset Constraint {
+      parser.addGrammarFile("/constraint/umple_constraints.grammar");  // TODO Under development
+    }
     parser.addGrammarFile("/umple_exceptions.grammar");
     parser.addGrammarFile("/use.grammar");
   }
@@ -122,7 +125,11 @@ class UmpleInternalParser
         secondPostTokenAnalysis();
       }
       //add analysis here!!! xx.validateStateMachineGuardConstraints(model);
-      checkDefaultedNameConflict();
+      mixset Attribute {
+        mixset Method {
+          checkDefaultedNameConflict();
+        }
+      }
       mixset FeatureModel {
         analyzeFeatureModel(); // lastly to analyze the feature model after all mixsets are added to umple model. 
       }
@@ -143,49 +150,6 @@ class UmpleInternalParser
       }
     }
     return getParseResult();
-  }
-
-  boolean addToGeneratedMethodMap(HashSet<String> generatedMethods, String className, CodeTranslator t, String translatingLabel, Attribute aAttr){
-    String generatedMethodName = t.translate(translatingLabel, aAttr);
-
-    if(generatedMethodName != null && !"".equals(generatedMethodName) && !generatedMethodName.startsWith("UNKNOWN ID")){
-
-      boolean success = generatedMethods.add(generatedMethodName);
-      if(!success){
-        getParseResult().addErrorMessage(new ErrorMessage(48,aAttr.getPosition(), aAttr.getName(), className, generatedMethodName));
-        return false;
-      }
-
-    }
-    return true;
-  }
-
-  void checkDefaultedNameConflict(){
-
-    Map<String, CodeTranslator> allTranslators = model.getAllTranslators();
-
-    HashSet<String> generatedMethods = new HashSet<String>();
-    for(String langName : allTranslators.keySet()){
-      CodeTranslator t = allTranslators.get(langName);
-
-      for(UmpleClass aClass : model.getUmpleClasses()){
-        generatedMethods.clear();
-
-        for(Attribute aAttr : aClass.getAttributes()){
-          String modifier = aAttr.getModifier();
-
-          // Can add more!
-          if(!"internal".equals(modifier)){
-            addToGeneratedMethodMap(generatedMethods, aClass.getName(), t, "getMethod", aAttr);
-            addToGeneratedMethodMap(generatedMethods, aClass.getName(), t, "setMethod", aAttr);
-          }
-
-          if("defaulted".equals(modifier)){
-            addToGeneratedMethodMap(generatedMethods, aClass.getName(), t, "getDefaultMethod", aAttr);
-          }
-        }
-      }
-    }
   }
 
   //------------------------
@@ -303,20 +267,11 @@ class UmpleInternalParser
     mixset Mixset {
       analyzeMixsetToken(t, analysisStep);
     }
-    analyzeRequireStatement(t, analysisStep);
+    mixset FeatureModel {
+      analyzeRequireStatement(t, analysisStep);
+    }
     mixset AspectInjection {
       analyzeInjectionToken(t, analysisStep);
-    }
-  }
-
-  // Issue#1521
-  private void analyzeInjectionToken(Token t, int analysisStep) {
-    if (t.is("toplevelBeforeCode"))
-    {
-      analyzeToplevelInjectionCode(t, analysisStep, "toplevelBeforeCode");
-    } else if (t.is("toplevelAfterCode"))
-    {
-      analyzeToplevelInjectionCode(t, analysisStep, "toplevelAfterCode");
     }
   }
 
@@ -326,7 +281,9 @@ class UmpleInternalParser
     // See #460 - types are now nested
     t.flattenNameRecursive("type");
     analyzeCoreToken(t,aClass,analysisStep);
-    analyzeClassToken(t,aClass,analysisStep);
+    mixset Class {
+      analyzeClassToken(t,aClass,analysisStep);
+    }
     mixset StateMachine {
       analyzeStateMachineToken(t,aClass,analysisStep);
     }
@@ -348,13 +305,17 @@ class UmpleInternalParser
       shouldProcessClassAgain = true;
       return;
     }
-    if (t.is("modelConstraintBody"))
-    {
-      analyzeModelConstraint(t,aClass);
+    mixset Constraint {
+      if (t.is("modelConstraintBody"))
+      {
+        analyzeModelConstraint(t,aClass);
+      }
     }
-    else if (t.is("beforeCode") || t.is("afterCode"))
-    {
-      analyzeInjectionCode(t,aClass);
+    mixset AspectInjection {
+      else if (t.is("beforeCode") || t.is("afterCode"))
+      {
+        analyzeInjectionCode(t,aClass);
+      }
     }
     else if (t.is("key") || t.is("defaultKey"))
     {
@@ -422,11 +383,12 @@ class UmpleInternalParser
       postTokenComponentAnalysis();
     }
 
-    if (getParseResult().getWasSuccess())
-    {
-      postTokenModelConstraintAnalysis();
+    mixset Constraint {
+      if (getParseResult().getWasSuccess())
+      {
+        postTokenModelConstraintAnalysis();
+      }
     }
-    
     if (getParseResult().getWasSuccess())
     {
       postTokenEnumerationAnalysis();
@@ -449,35 +411,6 @@ class UmpleInternalParser
     
     
   }
-  
-  mixset StateMachine {
-    //This is used for the cases that will be resolved by traits and we don't need to see those warnings.
-    private void secondPostTokenAnalysis()  {
-      if (getParseResult().getWasSuccess())
-      {
-        postTokenStateMachineAnalysis();
-      }
-      if (getParseResult().getWasSuccess()){
-        //Issue 492
-        checkNonReachableStates();
-      }
-    }
-  }
-  
-  private void postTokenModelConstraintAnalysis(){
-    for(UmpleClass uClass:model.getUmpleClasses())
-    {
-      for(ModelConstraint modelConstraint:uClass.getModelConstraints())
-      {
-        ModelConstraintResult result = modelConstraint.evaluate(uClass);
-        if(result!=ModelConstraint.SUCCESS)
-        {
-          setFailedPosition(result.getPosition(),result.getError(),result.getTarget(),result.getSource());
-        }
-      }
-    }
-  }
-
 
   // Locate all 'use *.ump' references and add those files if not already parsed
   private void addNecessaryFiles()
@@ -593,7 +526,9 @@ mixset Class {
 mixset Trait{
   use trait/UmpleInternalParser_CodeTrait.ump;
 }
-use UmpleInternalParser_CodeConstraints.ump;
+mixset Constraint {
+  use constraint/UmpleInternalParser_CodeConstraints.ump;
+}
 mixset Structure {
   use strcture/UmpleInternalParser_CodeStructure.ump;
 }
@@ -620,3 +555,6 @@ mixset Mixset{
 }
 use UmpleInternalParser_CodeRequireStatement.ump;
 use UmpleInternalParser_CodeTest.ump;
+mixset AspectInjection {
+  use class/UmpleInternalPraser_CodeInjection.ump;
+}
