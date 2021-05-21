@@ -81,19 +81,21 @@ class UmpleToJava {
       // If this is not a constructor, this method should return "void"
       methodType = methodType.equals("") ? "void" : methodType;
     }
-   // handle mixsets inside methods(uClass, aMethod);
-    ArrayList<MixsetInMethod> mixsetsWithinMethodList = aMethod.getMethodBody().getMixsetsWithinMethod();
-    for(MixsetInMethod mixsetsWithinMethodItem : mixsetsWithinMethodList)
-    {
-      handelMixsetInsideMethod(model, mixsetsWithinMethodItem, aMethod.getMethodBody());
-    }
-    // End 
-    for(int i =uClass.getCodeInjections().size() ; i > 0 ; i--)
-    {
-      applyCodeInjectionToLabeledMethod(uClass, aMethod, "before");
-      applyCodeInjectionToLabeledMethod(uClass, aMethod, "after");
-      applyCodeInjectionToLabeledMethod(uClass, aMethod, "around");
-    } 
+     // handle mixsets inside methods(uClass, aMethod);
+      ArrayList<MixsetInMethod> mixsetsWithinMethodList = aMethod.getMethodBody().getMixsetsWithinMethod();
+      for(MixsetInMethod mixsetsWithinMethodItem : mixsetsWithinMethodList)
+      {
+        handelMixsetInsideMethod(model, mixsetsWithinMethodItem, aMethod.getMethodBody());
+      }
+      // End 
+      for(int i =uClass.getCodeInjections().size() ; i > 0 ; i--)
+      {
+        applyCodeInjectionToLabeledMethod(uClass, aMethod, "before");
+        applyCodeInjectionToLabeledMethod(uClass, aMethod, "after");
+        applyCodeInjectionToLabeledMethod(uClass, aMethod, "around");
+        removeLableFromMethods(aMethod);
+      }
+    
         String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("before", aMethod.getName(), aMethod.getMethodParameters()));
         String customAfterInjectionCode  = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("after", aMethod.getName(), aMethod.getMethodParameters()));
         if( (customBeforeInjectionCode != null) && (customAfterInjectionCode == null) )
