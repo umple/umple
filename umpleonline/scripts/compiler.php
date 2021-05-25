@@ -108,7 +108,7 @@ else if (isset($_REQUEST["loadTask"])) //load the task in the tasks dir
     if ($file->isDir() && substr($file->getFilename(), 0, 8) == "taskroot") 
     {
       $taskName = explode("-", $file->getFilename())[1];
-        if ($taskName == $_REQUEST["filename"])
+        if ($taskName == strtolower($_REQUEST["filename"]))
         {
           $dataHandle = dataStore()->openData("tasks/" . $file->getFilename());
           $umpleCode = $dataHandle->readData("model.ump");

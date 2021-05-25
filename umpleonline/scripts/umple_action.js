@@ -1771,9 +1771,9 @@ Action.setCaretPosition = function(line)
     if(line=="tc")
     { // resets cookies for tips
       let currentTime=new Date();
-      currentTime.setTime(currentTime.getTime());
+      currentTime.setTime(currentTime.getTime()-1);
       window.localStorage.removeItem("first_time");
-      document.cookie="tipCookie=done; expires="+currentTime.toString()+"; path=/";
+      document.cookie="tipCookie=done; expires="+currentTime.toUTCString()+"; path=/";
     }
     if(line.substr(0,2)=="cm") 
     {

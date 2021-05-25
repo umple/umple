@@ -71,6 +71,17 @@ class UmpleInternalParser
   {
     parser.addGrammarFile("/stateMachine/umple_state_machines.grammar");
   }
+  //This is used for the cases that will be resolved by traits and we don't need to see those warnings.
+  private void secondPostTokenAnalysis()  {
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenStateMachineAnalysis();
+    }
+    if (getParseResult().getWasSuccess()){
+      //Issue 492
+      checkNonReachableStates();
+    }
+  }
    
   //Check if "extra code" is likely a malformed state machine
   private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
