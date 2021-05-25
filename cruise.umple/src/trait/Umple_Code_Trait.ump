@@ -284,6 +284,7 @@ class UmpleTrait {
     return null;
   }
 
+mixset StateMachine {
   public StateMachine getStateMachine(String name){
     for (StateMachine sm : stateMachines)
     {
@@ -292,8 +293,9 @@ class UmpleTrait {
         return sm;
       }
     }
-    return null;
+    return null; 
   }
+}
  //**************************	
   public boolean hasMethod(Method comparedMethod){
   	if (getMethod(comparedMethod) != null) return true;
@@ -464,11 +466,14 @@ class GeneralTPApplied {
     this.parameterMapping = new HashMap<String, String>(another.parameterMapping);
     this.inheritanceName = another.inheritanceName;
     positions = another.positions; 
-    
-    stateMachineModifiers = new ArrayList<>(another.getStateMachineModifiers());
+    mixset StateMachine {
+      stateMachineModifiers = new ArrayList<>(another.getStateMachineModifiers());
+    }
     parameters = new ArrayList<>( Arrays.asList(another.getParameters()));
     methodTemplateSignatures = new ArrayList<>(another.getMethodTemplateSignatures());
-    stateMachineTemplateSignatures = new ArrayList<>(another.getStateMachineTemplateSignatures());
+    mixset StateMachine {
+      stateMachineTemplateSignatures = new ArrayList<>(another.getStateMachineTemplateSignatures());
+    }
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------
@@ -482,6 +487,7 @@ class GeneralTPApplied {
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------
 //---------------------------------Start--------------------------------------
+mixset StateMachine {
 	boolean hasStateMachineTemplateSignature(StateMachineTemplateSignature inSMTSignature) {
    for (StateMachineTemplateSignature smTSignature : getStateMachineTemplateSignatures()) {
       if (smTSignature.getSrcStateMachine().equals(inSMTSignature.getSrcStateMachine()) && smTSignature.numberOfSrcStates()==inSMTSignature.numberOfSrcStates()){
@@ -521,6 +527,7 @@ class GeneralTPApplied {
     }
     return false;
 	}
+}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------
 //---------------------------------Start--------------------------------------
@@ -609,12 +616,14 @@ class GeneralTPApplied {
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------
 //---------------------------------Start--------------------------------------
+mixset StateMachine {
   public String getAssignedStateMachineNewName(String srName){
     for (StateMachineTemplateSignature smTSignature : getStateMachineTemplateSignatures()) {
       if (smTSignature.getSrcStateMachine().equals(srName) && smTSignature.getSrcStates().length==0 && smTSignature.getAlias()!="" ) return smTSignature.getAlias();
     }
     return "";
   }
+}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------
 //---------------------------------Start--------------------------------------
