@@ -108,8 +108,9 @@ class UmpleTrait {
 	private boolean propagateImmutabilityToAllRelationships(boolean isImmutable){
 	    if (isImmutable)
 	    {
-	      if (this.hasStateMachines()) { return false; }
-	
+        mixset StateMachine {
+	      if (this.hasStateMachines()) { return false; } 
+        }
 	      for (AssociationVariable av : associationVariables)
 	      {
 	        if (!immutabilityAssociationRulesSatisfied(av, true)) { return false; }
