@@ -1,7 +1,7 @@
 namespace cruise.umple.nusmv;
 
 use NuSMVMetamodel.ump;
-use ModelOptimizationEngine.ump;
+use ../../stateMachine/ModelOptimizationEngine.ump;
 
 class NuSMVCoordinator
 {
