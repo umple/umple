@@ -606,7 +606,7 @@ class UmpleGenerator
     mixset Structure {
       parser.addGrammarFile("/strcture/umple_structure.grammar");
     }
-    parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
+    parser.addGrammarFile("/constraint/umple_constraints.grammar");  // TODO Under development
     mixset Layout {
        parser.addGrammarFile("/layout/umple_layout.grammar");
     }

@@ -1269,4 +1269,4 @@ use UmpleEnumeration_Code.ump;
 mixset Mixset{
   use mixset/Mixset.ump;
 }
-use FeatureModel.ump;
+use feature/FeatureModel.ump;

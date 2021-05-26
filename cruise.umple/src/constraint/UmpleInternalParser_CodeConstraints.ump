@@ -23,6 +23,20 @@ class UmpleInternalParser
     DATE;
   }
   
+  private void postTokenModelConstraintAnalysis(){
+    for(UmpleClass uClass:model.getUmpleClasses())
+    {
+      for(ModelConstraint modelConstraint:uClass.getModelConstraints())
+      {
+        ModelConstraintResult result = modelConstraint.evaluate(uClass);
+        if(result!=ModelConstraint.SUCCESS)
+        {
+          setFailedPosition(result.getPosition(),result.getError(),result.getTarget(),result.getSource());
+        }
+      }
+    }
+  }
+  
   private void analyzePrecondition (Token preconditionToken, UmpleClassifier uClassifier, Method method)
   {
     if(((PreconditionAnalyzer)model.getAnalyzer("precondition"))!=null){
