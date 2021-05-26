@@ -1770,8 +1770,9 @@ Action.setCaretPosition = function(line)
     }
     if(line=="tc")
     { // resets cookies for tips
+      Page.setFeedbackMessage("Clearing tip cookies");
       let currentTime=new Date();
-      currentTime.setTime(currentTime.getTime()-1);
+      currentTime.setTime(currentTime.getTime()-1000);
       window.localStorage.removeItem("first_time");
       document.cookie="tipCookie=done; expires="+currentTime.toUTCString()+"; path=/";
     }
