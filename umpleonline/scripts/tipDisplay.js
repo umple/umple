@@ -1,6 +1,6 @@
 let existCookie = document.cookie.match(/^(.*;)?\s*tipCookie\s*=\s*[^;]+(.*)?$/)
 var htmlNames = ["Importanttips.html","Secondarytips.html","Tertiarytips.html"];
-var fileNames = ["https://raw.githubusercontent.com/umple/umple/Issue%231636_TOTD/build/reference/6600ImportantTips.txt","https://raw.githubusercontent.com/umple/umple/Issue%231636_TOTD/build/reference/6601SecondaryTips.txt", "https://raw.githubusercontent.com/umple/umple/Issue%231636_TOTD/build/reference/6602TertiaryTips.txt"];
+var fileNames = ["https://raw.githubusercontent.com/umple/umple/master/build/reference/6600ImportantTips.txt","https://raw.githubusercontent.com/umple/umple/master/build/reference/6601SecondaryTips.txt", "https://raw.githubusercontent.com/umple/umple/master/build/reference/6602TertiaryTips.txt"];
 
 if(existCookie===null) {
     // =========================================
