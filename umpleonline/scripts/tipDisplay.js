@@ -69,9 +69,8 @@ function allocateMessage() {
         jQuery('#styleTip a').attr('target', 'helppage');
         document.getElementById('extraInfo').innerHTML = tip[loop][num][1];
         jQuery('#extraInfo a').attr('target', 'helppage');
-
-        setForNext(num, priority, tip, loop);
     }
+    setForNext(num, priority, tip, loop);
 };
 
 // =========================================
@@ -156,6 +155,7 @@ function setForNext(num, priority, tip, loop){
     if (num>=tip[loop].length-1){
         if (parseInt(priority)==2){ //renew data
             loop++;
+            let numNulls=0;
             for (let files=0; files<fileNames.length; files++){
                 jQuery.ajax({
                     url: fileNames[files],
@@ -176,11 +176,21 @@ function setForNext(num, priority, tip, loop){
                                 t.push(allInfo[i].substring(allInfo[i].indexOf("</h2>")+6, allInfo[i].length-11)+navbar);
                             }
                             var info = window.localStorage.getItem("tipInfo"+files);
-                            if (info[loop-1].includes(t)<0){
+                            let notFound = true;
+                            for (let checkLoop=0; checkLoop<loop; checkloop++){ //only if none of the previous versions have that tip
+                                if (info[checkLoop].includes(t)>=0){
+                                    notFound = false;
+                                    break;
+                                }
+                            }
+                            if (notFound){
                                 descrpt.push(t);
-                            } 
+                            }
                         }
-                        info.push([descrpt]);
+                        if (descrpt == null){
+                            numNulls++;
+                        }
+                        info.push(descrpt);
                         window.localStorage.setItem('tipInfo'+files, JSON.stringify(info));
                         },
                     error: function(response){
@@ -188,12 +198,24 @@ function setForNext(num, priority, tip, loop){
                     }
                 });
             }
-            
+            if (numNulls == 3){ //no new additions to either files
+                for (let countPriority=0; countPriority<=parseInt(priority); countPriority++){
+                    var data = JSON.parse(window.localStorage.getItem('tipInfo'+countPriority));
+                    data.pop();
+                    window.localStorage.setItem('tipInfo'+countPriority, JSON.stringify(info));
+                }
+                loop--;                
+            }
+            else{
+                window.localStorage.setItem('tipCount','0');
+            }
             window.localStorage.setItem('priorityCount', '0');
             window.localStorage.setItem("loopCount", loop);
         }
-        else window.localStorage.setItem('priorityCount', parseInt(priority)+1);
-        window.localStorage.setItem('tipCount','0');
+        else {
+            window.localStorage.setItem('priorityCount', parseInt(priority)+1);
+            window.localStorage.setItem('tipCount','0');
+        }
     }
     else{
         window.localStorage.setItem('tipCount',num+1);
