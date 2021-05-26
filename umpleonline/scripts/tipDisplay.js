@@ -12,7 +12,6 @@ if(existCookie===null) {
         window.localStorage.setItem('tipCount',0);
         window.localStorage.setItem('priorityCount',0);
         window.localStorage.setItem('loopCount',0);
-        //alert("acquiring new info");
         //acquiring tipInformation
         for (let files=0; files<fileNames.length; files++){
             jQuery.ajax({
@@ -35,11 +34,9 @@ if(existCookie===null) {
                         }
                         descrpt.push(t);
                     }
-                    //alert(descrpt);
                     var inform=[];
                     inform[0]=descrpt;
                     window.localStorage.setItem('tipInfo'+files, JSON.stringify(inform)); //adding items to local storage
-                    //alert("done with file");
                 },
                 error: function(response){
                     descrpt.push(["couldn't access file",error]);
@@ -52,10 +49,8 @@ if(existCookie===null) {
     // =========================================
     // Tip Pickers
     // =========================================
-    //alert("reached stop");
 
     jQuery(document).ajaxStop(function(){allocateMessage()});
-    //alert("passed stop");
 
     let currentTime=new Date();
     currentTime.setTime(currentTime.getTime());
@@ -64,14 +59,12 @@ if(existCookie===null) {
 }
 
 function allocateMessage() {
-    //alert("active");
     var priority = window.localStorage.getItem('priorityCount');
     var tip = JSON.parse(window.localStorage.getItem('tipInfo'+priority));
     var num = parseInt(window.localStorage.getItem('tipCount'));
     var loop = parseInt(window.localStorage.getItem('loopCount'));
 
     if (tip[loop]!=null && tip[loop][num]!=null && tip[loop][num][0]!=null && tip[loop][num][1]!=null){
-        //alert("printing...")
         document.getElementById('styleTip').innerHTML = "Tip: "+tip[loop][num][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more<br/></span>';
         jQuery('#styleTip a').attr('target', 'helppage');
         document.getElementById('extraInfo').innerHTML = tip[loop][num][1];
@@ -79,7 +72,6 @@ function allocateMessage() {
 
         setForNext(num, priority, tip, loop);
     }
-    //else alert("skipped: "+tip[loop][num][0]+ " -- loop: "+loop+" priority: "+priority+" tip: "+num);
 };
 
 // =========================================
