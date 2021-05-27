@@ -909,8 +909,10 @@ task allUserManualAndExampleTests {
 
 task copybuilddir1{
  doLast{
+ 	copy{
 	  	from "${rootProject.projectDir.toString()}/build/reference/files"
 	  	into ("${rootProject.ext.distpath}/files")
+	  	}
 	  }
 }
 task copybuilddir2{
