@@ -180,7 +180,7 @@ class AttributeTraceItem
  * An element of a trace directive that indicates to trace one or more state machines
  * or transitions
  */
-mixset StateMachine {
+//mixset StateMachine {
   class StateMachineTraceItem
   {
     depend cruise.umple.parser.Position;
@@ -209,7 +209,7 @@ mixset StateMachine {
     Boolean conditionallyWhere = true;
     conditionType = "where";
   }
-}
+//}
 /*
  * An element of a trace directive that indicates to trace one or more associations
  */
