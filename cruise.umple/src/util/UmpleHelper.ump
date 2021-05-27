@@ -37,6 +37,8 @@ class UncaughtException
     builder.append(uncaughtMethodName);
     builder.append("(){ return new UmpleSourceData().setFileNames(\"");
     String filename = uncaughtFileName.toString().replace("\"","").replace(", ","\",\"");
+    if(filename.contains("/"))
+    filename = filename.substring(filename.lastIndexOf("/") + 1);
     builder.append(filename.substring(1,filename.length()-1));
     builder.append("\").setUmpleLines(");    
     String line = uncaughtUmpleLine.toString();
