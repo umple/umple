@@ -993,13 +993,13 @@ doLast {
 }
 
  task executeDocJar (type: JavaExec){
- doLast{
+ 
  	classpath = files("${rootProject.ext.distdir}/umpledocs**.jar")
  	classpath += sourceSets.main.runtimeClasspath
  	main = "cruise.umple.docs.DocumenterMain"
  	args = ["build/reference", "${rootProject.ext.distdir}/cruise.umple/reference"]
  	jvmArgs = ['-Xmx500m']
- 	}
+ 	
  }
 
  
