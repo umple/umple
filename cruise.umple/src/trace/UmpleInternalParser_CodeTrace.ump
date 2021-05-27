@@ -352,9 +352,11 @@ class UmpleInternalParser
     {
       analyzeAttributeTraceItem(traceToken);
     }
-    if( traceItemType == 2 )
-    {
-      analyzeStateMachineTraceItem(traceToken);
+    mixset StateMachine {
+      if( traceItemType == 2 )
+      {
+        analyzeStateMachineTraceItem(traceToken);
+      }
     }
     if( traceItemType == 3 )
     {
@@ -434,30 +436,32 @@ class UmpleInternalParser
       traceItemType = 1;
     }
 
-    // --- check if state machine
-    for( StateMachine sVar : aClass.getStateMachines() )
-    {
-      if( traceToken.getValue("traceEntity").equals(sVar.getName()))
+    mixset StateMachine {
+      // --- check if state machine
+      for( StateMachine sVar : aClass.getStateMachines() )
       {
-        traceItemType = 2;
-      }
-      for( State s : sVar.getStates() )
-      {
-        if( traceToken.getValue("traceEntity").equals(s.getName()) || traceToken.getValue("traceEntity").equals(sVar.getName()+"."+s.getName()) )
+        if( traceToken.getValue("traceEntity").equals(sVar.getName()))
         {
           traceItemType = 2;
         }
-        for( Transition t : s.getTransitions() )
-          if( traceToken.getValue("traceEntity").equals(t.getEvent().getName()))
+        for( State s : sVar.getStates() )
+        {
+          if( traceToken.getValue("traceEntity").equals(s.getName()) || traceToken.getValue("traceEntity").equals(sVar.getName()+"."+s.getName()) )
           {
             traceItemType = 2;
           }
-        // check if traced state is already found
-        // no need to check nested states
-        if( traceItemType == 2 ) return traceItemType;
-        if(s.hasNestedStateMachines())
-        {
-        	traceItemType = checkNestedStateMachine(traceToken.getValue("traceEntity"),s);	
+          for( Transition t : s.getTransitions() )
+            if( traceToken.getValue("traceEntity").equals(t.getEvent().getName()))
+            {
+              traceItemType = 2;
+            }
+          // check if traced state is already found
+          // no need to check nested states
+          if( traceItemType == 2 ) return traceItemType;
+          if(s.hasNestedStateMachines())
+          {
+            traceItemType = checkNestedStateMachine(traceToken.getValue("traceEntity"),s);	
+          }
         }
       }
     }
@@ -490,22 +494,23 @@ class UmpleInternalParser
 
     return traceItemType;
   }
-  
 
-  // checks if traced state was deeply nested
-  private int checkNestedStateMachine(String value, State s){
-  	int traceItemType = -1;
-  	for( StateMachine stm : s.getNestedStateMachines())
-  	{
-  		for( State ss : stm.getStates() )
-  		{
-  			if( value.equals(ss.getName()) )
-  				return 2;
-  			if(s.hasNestedStateMachines())
-  				traceItemType = checkNestedStateMachine(value, ss);
-  		}
-  	}
-  	return traceItemType;
+  mixset StateMachine {
+    // checks if traced state was deeply nested
+    private int checkNestedStateMachine(String value, State s){
+      int traceItemType = -1;
+      for( StateMachine stm : s.getNestedStateMachines())
+      {
+        for( State ss : stm.getStates() )
+        {
+          if( value.equals(ss.getName()) )
+            return 2;
+          if(s.hasNestedStateMachines())
+            traceItemType = checkNestedStateMachine(value, ss);
+        }
+      }
+      return traceItemType;
+    }
   }
 
   /**
