@@ -50,187 +50,188 @@ class UmpleVariable
 	}
 }
 
-
-class State
-{
-	/*
-	 * Retrieve the StateMachineTraceItem associated with this State
-	 * @params method: for example entry or entry or normal, each specifying the context to call the gotten trace item
-	 * @params uClass: the umple class to look within for the trace item
-	 * @return StateMachine_Traceitem for this UmpleVariable(either association or attribute); 
-	 */
-	public TraceItem getTraced(String method, UmpleClass uClass){
-		//go through all the trace directives of uClass
-		for(TraceDirective td: uClass.getAllTraceDirectives())
-		{
-			//for all the statemachine trace items
-			for(StateMachineTraceItem smti: td.getStateMachineTraceItems())
+mixset StateMachine {
+	class State
+	{
+		/*
+		* Retrieve the StateMachineTraceItem associated with this State
+		* @params method: for example entry or entry or normal, each specifying the context to call the gotten trace item
+		* @params uClass: the umple class to look within for the trace item
+		* @return StateMachine_Traceitem for this UmpleVariable(either association or attribute); 
+		*/
+		public TraceItem getTraced(String method, UmpleClass uClass){
+			//go through all the trace directives of uClass
+			for(TraceDirective td: uClass.getAllTraceDirectives())
 			{
-				StateMachine sm = smti.getStateMachine();
-				Transition  tsn = smti.getTransition();
-				State st = smti.getState();
-				if( smti.getTraceStateMachineFlag() ) continue;
-				if( method.equals("activity") && st.equals(this) && st.hasActivities() )
-					return smti;
-				if(!(smti.getExit()||smti.getEntry())){
-					if(tsn!=null&&method.equals("transition"))
-					{
-						if(smti.getIsOut()&&smti.getIsIn()){
-							if(tsn.getFromState().equals(this)||tsn.getNextState().equals(this)){
-								return smti;
-							}
-						}
-						else if(smti.getIsOut()){
-							if(tsn.getNextState().equals(this)){
-								return smti;
-							}
-						}
-						else if(smti.getIsIn()){
-							if(tsn.getFromState().equals(this)){
-								return smti;
-							}
-						}
-						else {
-							if(tsn.getFromState().equals(this)||tsn.getNextState().equals(this)){
-								return smti;
-							}
-						}
-					}
-					else if(sm==null)
-					{
-						//if the trace item is not for a transition, and does not contain a state machine, return null
-						return null;
-					}
-					else if(sm!=null&&smti.getTraceStateMachineFlag())
-					{ 
+				//for all the statemachine trace items
+				for(StateMachineTraceItem smti: td.getStateMachineTraceItems())
+				{
+					StateMachine sm = smti.getStateMachine();
+					Transition  tsn = smti.getTransition();
+					State st = smti.getState();
+					if( smti.getTraceStateMachineFlag() ) continue;
+					if( method.equals("activity") && st.equals(this) && st.hasActivities() )
 						return smti;
-					}
-					else if(method.equals("transition"))
-					{
-						if(smti.getIsOut()){
-							if(this.equals(st))
-							{
-								return smti;
-							}
-							if(smti.getLevel()>0||smti.getLevel()==-1)
-							{
-								StateMachine root = this.getStateMachine();
-								State parent = this;
-								int level = -1;
-								//System.out.println("start");
-								while (parent != null)
-								{
-									level+=parent.getName().equals("Null")?0:1;
-									if(st.getName().equals(parent.getName())&&(level<=smti.getLevel()||smti.getLevel()==-1))
-									{
-										//System.out.println(this.getName()+" "+level);
-										return smti;
-									}
-									//System.out.println(parent.getName());
-									root = parent.getStateMachine();
-									parent = root.getParentState();
+					if(!(smti.getExit()||smti.getEntry())){
+						if(tsn!=null&&method.equals("transition"))
+						{
+							if(smti.getIsOut()&&smti.getIsIn()){
+								if(tsn.getFromState().equals(this)||tsn.getNextState().equals(this)){
+									return smti;
 								}
-								//System.out.println("end");
+							}
+							else if(smti.getIsOut()){
+								if(tsn.getNextState().equals(this)){
+									return smti;
+								}
+							}
+							else if(smti.getIsIn()){
+								if(tsn.getFromState().equals(this)){
+									return smti;
+								}
+							}
+							else {
+								if(tsn.getFromState().equals(this)||tsn.getNextState().equals(this)){
+									return smti;
+								}
 							}
 						}
-
-						if(smti.getIsIn())
-						{            
-							for(Transition t:getTransitions())
-							{
-								if(t.getNextState().equals(st))
+						else if(sm==null)
+						{
+							//if the trace item is not for a transition, and does not contain a state machine, return null
+							return null;
+						}
+						else if(sm!=null&&smti.getTraceStateMachineFlag())
+						{ 
+							return smti;
+						}
+						else if(method.equals("transition"))
+						{
+							if(smti.getIsOut()){
+								if(this.equals(st))
 								{
 									return smti;
-								}              
+								}
+								if(smti.getLevel()>0||smti.getLevel()==-1)
+								{
+									StateMachine root = this.getStateMachine();
+									State parent = this;
+									int level = -1;
+									//System.out.println("start");
+									while (parent != null)
+									{
+										level+=parent.getName().equals("Null")?0:1;
+										if(st.getName().equals(parent.getName())&&(level<=smti.getLevel()||smti.getLevel()==-1))
+										{
+											//System.out.println(this.getName()+" "+level);
+											return smti;
+										}
+										//System.out.println(parent.getName());
+										root = parent.getStateMachine();
+										parent = root.getParentState();
+									}
+									//System.out.println("end");
+								}
+							}
+
+							if(smti.getIsIn())
+							{            
+								for(Transition t:getTransitions())
+								{
+									if(t.getNextState().equals(st))
+									{
+										return smti;
+									}              
+								}
 							}
 						}
 					}
-				}
-				if((method.equals("exit")&&smti.getExit())||(method.equals("entry")&&smti.getEntry()))
-				{
-					if(this.equals(st))
+					if((method.equals("exit")&&smti.getExit())||(method.equals("entry")&&smti.getEntry()))
 					{
-						return smti;
-					}
-				}
-
-			}
-		}
-
-		return null;
-	}
-
-	public StateMachineTraceItem getTrace(String method, UmpleClass uClass, Transition t){
-		State nextState = t.getNextState();
-
-		for( TraceDirective td : uClass.getAllTraceDirectives() )
-			for( StateMachineTraceItem smti : td.getStateMachineTraceItems() )
-				if( ! smti.getTraceStateMachineFlag() )
-				{
-					State traceState = smti.getState();
-
-					if(method.equals("entry"))
-					{
-						if( traceState.getName().equals(nextState.getName()) && smti.getEntry() )
-							return smti;
-					}
-					if(method.equals("exit"))
-					{
-						if( traceState.getName().equals(this.getName()) && smti.getExit() )
-							return smti;
-					}
-					if(method.equals("state") && smti.getTransition() == null )
-					{
-						if( (traceState.getName().equals(this.getName()) ||  traceState.getName().equals(nextState.getName()) )
-								&& (smti.getEntry()==false && smti.getExit()==false) )
-							return smti;
-						if(isNested(smti, t))
+						if(this.equals(st))
 						{
 							return smti;
 						}
 					}
-					if(method.equals("transition") && smti.getTransition() != null)
-					{
-						if( smti.getTransition().getEvent().equals(t.getEvent()) )
-							return smti;
-					}
+
 				}
-				else if( smti.getTraceStateMachineFlag() )
-				{
-					if( method.equals("transition") )
-						return smti;
-				}
-
-		return null;
-	}
-
-
-	// method to trace state and its desired nested states
-	private boolean isNested(StateMachineTraceItem smti, Transition tsn){
-
-		boolean isNested = false;
-		State nextState = tsn.getNextState();
-		StateMachine root = this.getStateMachine();
-		State parent = this;
-		int level = 0;
-
-		root = parent.getStateMachine();
-		parent = root.getParentState();
-
-		while (parent != null)
-		{
-			level+=parent.getName().equals("Null")?0:1;
-			if(smti.getState().getName().equals(parent.getName())&&(level<smti.getLevel()||smti.getLevel()==-1)&& !this.getName().equals("Null") && !nextState.getName().equals("Null"))
-			{
-				return true;
 			}
-			root = parent.getStateMachine();
-			parent = root.getParentState();
+
+			return null;
 		}
 
-		return isNested;
-	}
+		public StateMachineTraceItem getTrace(String method, UmpleClass uClass, Transition t){
+			State nextState = t.getNextState();
 
+			for( TraceDirective td : uClass.getAllTraceDirectives() )
+				for( StateMachineTraceItem smti : td.getStateMachineTraceItems() )
+					if( ! smti.getTraceStateMachineFlag() )
+					{
+						State traceState = smti.getState();
+
+						if(method.equals("entry"))
+						{
+							if( traceState.getName().equals(nextState.getName()) && smti.getEntry() )
+								return smti;
+						}
+						if(method.equals("exit"))
+						{
+							if( traceState.getName().equals(this.getName()) && smti.getExit() )
+								return smti;
+						}
+						if(method.equals("state") && smti.getTransition() == null )
+						{
+							if( (traceState.getName().equals(this.getName()) ||  traceState.getName().equals(nextState.getName()) )
+									&& (smti.getEntry()==false && smti.getExit()==false) )
+								return smti;
+							if(isNested(smti, t))
+							{
+								return smti;
+							}
+						}
+						if(method.equals("transition") && smti.getTransition() != null)
+						{
+							if( smti.getTransition().getEvent().equals(t.getEvent()) )
+								return smti;
+						}
+					}
+					else if( smti.getTraceStateMachineFlag() )
+					{
+						if( method.equals("transition") )
+							return smti;
+					}
+
+			return null;
+		}
+
+
+		// method to trace state and its desired nested states
+		private boolean isNested(StateMachineTraceItem smti, Transition tsn){
+
+			boolean isNested = false;
+			State nextState = tsn.getNextState();
+			StateMachine root = this.getStateMachine();
+			State parent = this;
+			int level = 0;
+
+			root = parent.getStateMachine();
+			parent = root.getParentState();
+
+			while (parent != null)
+			{
+				level+=parent.getName().equals("Null")?0:1;
+				if(smti.getState().getName().equals(parent.getName())&&(level<smti.getLevel()||smti.getLevel()==-1)&& !this.getName().equals("Null") && !nextState.getName().equals("Null"))
+				{
+					return true;
+				}
+				root = parent.getStateMachine();
+				parent = root.getParentState();
+			}
+
+			return isNested;
+		}
+
+	}
 }
 
 class AssociationVariable
@@ -420,126 +421,128 @@ class AttributeTraceItem
 		return gen.translate("Closed",getTraceDirective().getPostfix().getCondition().getConstraint());
 	}
 }
-class StateMachineTraceItem
-{
-	depend cruise.umple.util.*;
-	depend java.util.*;
-
-	accessor = "";
-	concatinator = " + ";
-
-	public Boolean getIsPre(){
-		return conditionallyWhere;
-	}
-	public Boolean getIsPost(){
-		return !conditionallyWhere;
-	}
-	/*
-	 * @params gen: A code transator
-	 * @params o: the current context(i.e.state being traced)
-	 * @params methodname: what to call this trace
-	 * @params uClass: the current umple class uClass
-	 * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
-	 * @return the message for the trace 
-	 */
-	public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args)
+mixset StateMachine {
+	class StateMachineTraceItem
 	{
-		String name = "";
-		String extra = "";
-		String obj = "";
-		String accessor = gen.translate("traceAccessor",this);
-		String concatinator = gen.translate("traceConcatinator",this);
-		String comma = concatinator+"\",\""+concatinator;
-		String tracerName = Character.toUpperCase(getTracerType().charAt(0)) + getTracerType().substring(1);
-		String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7},{8}";
+		depend cruise.umple.util.*;
+		depend java.util.*;
 
-		if(o instanceof Transition)
-		{
-			Transition aTransition = (Transition)o;
-			name = aTransition.getEvent().getName();
-			obj = aTransition.getFromState().getName();
-			extra = "," + aTransition.getNextState().getName()+"\"";
-			for(MethodParameter param : aTransition.getEvent().getParams())
-			{
-				extra += concatinator + "\"," + param.getName()+"=\"";
-				extra += concatinator + param.getName();
-			}
+		accessor = "";
+		concatinator = " + ";
+
+		public Boolean getIsPre(){
+			return conditionallyWhere;
 		}
-		else if(o instanceof State)
-		{
-			State state = (State)o;
-			name = getStateMachine().getName()+"\"";
-			obj = state.getName();
-			for( Action a : ((State) o).getActions() )
-			{
-				if( this.getEntry() && a.getActionType().equals("entry") )
-					obj += ",actionUmpleLine=" + a.getPosition().getLineNumber();
-				if( this.getExit() && a.getActionType().equals("exit") )
-					obj += ",actionUmpleLine=" + a.getPosition().getLineNumber();
-			}
+		public Boolean getIsPost(){
+			return !conditionallyWhere;
 		}
-		else if(o instanceof Activity)
+		/*
+		* @params gen: A code transator
+		* @params o: the current context(i.e.state being traced)
+		* @params methodname: what to call this trace
+		* @params uClass: the current umple class uClass
+		* @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
+		* @return the message for the trace 
+		*/
+		public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args)
 		{
-			Activity act = (Activity)o;
-			State state = act.getState();
-			name = getStateMachine().getName()+"\"";
-			obj = state.getName();
-			if( methodname.equals("sm_da"))
-				obj += ",doActivitedStarted";
-			else if(methodname.equals("sm_di"))
-				obj += ",doActivitedInterrupted";
-		}
-		if(getTraceDirective().getTraceRecord()!=null)
-		{
-			for(Attribute record:getTraceDirective().getTraceRecord().getAttributes())
+			String name = "";
+			String extra = "";
+			String obj = "";
+			String accessor = gen.translate("traceAccessor",this);
+			String concatinator = gen.translate("traceConcatinator",this);
+			String comma = concatinator+"\",\""+concatinator;
+			String tracerName = Character.toUpperCase(getTracerType().charAt(0)) + getTracerType().substring(1);
+			String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7},{8}";
+
+			if(o instanceof Transition)
 			{
-				extra+=comma+gen.translate("attribute"+(record.getIsList()?"Many":"One"),record);
-			}
-			if(getTraceDirective().getTraceRecord().numberOfRecord()>0)
-			{
-				extra+= concatinator+"\"";
-				for(String record:getTraceDirective().getTraceRecord().getRecord())
+				Transition aTransition = (Transition)o;
+				name = aTransition.getEvent().getName();
+				obj = aTransition.getFromState().getName();
+				extra = "," + aTransition.getNextState().getName()+"\"";
+				for(MethodParameter param : aTransition.getEvent().getParams())
 				{
-					extra+=","+record.replace("\"","");
+					extra += concatinator + "\"," + param.getName()+"=\"";
+					extra += concatinator + param.getName();
 				}
-				extra+= "\"";
 			}
+			else if(o instanceof State)
+			{
+				State state = (State)o;
+				name = getStateMachine().getName()+"\"";
+				obj = state.getName();
+				for( Action a : ((State) o).getActions() )
+				{
+					if( this.getEntry() && a.getActionType().equals("entry") )
+						obj += ",actionUmpleLine=" + a.getPosition().getLineNumber();
+					if( this.getExit() && a.getActionType().equals("exit") )
+						obj += ",actionUmpleLine=" + a.getPosition().getLineNumber();
+				}
+			}
+			else if(o instanceof Activity)
+			{
+				Activity act = (Activity)o;
+				State state = act.getState();
+				name = getStateMachine().getName()+"\"";
+				obj = state.getName();
+				if( methodname.equals("sm_da"))
+					obj += ",doActivitedStarted";
+				else if(methodname.equals("sm_di"))
+					obj += ",doActivitedInterrupted";
+			}
+			if(getTraceDirective().getTraceRecord()!=null)
+			{
+				for(Attribute record:getTraceDirective().getTraceRecord().getAttributes())
+				{
+					extra+=comma+gen.translate("attribute"+(record.getIsList()?"Many":"One"),record);
+				}
+				if(getTraceDirective().getTraceRecord().numberOfRecord()>0)
+				{
+					extra+= concatinator+"\"";
+					for(String record:getTraceDirective().getTraceRecord().getRecord())
+					{
+						extra+=","+record.replace("\"","");
+					}
+					extra+= "\"";
+				}
+			}
+			for(String str: args){
+				extra+=comma+str;
+			}
+
+			String message = messageLayout+extra;
+			message = StringFormatter.format(
+					message,gen.translate("traceTimestamp",this),
+					gen.translate("traceThread",this),
+					getPosition().getFilename().replace("\\","\\\\"),
+					getPosition().getLineNumber(),
+					uClass.getName(),
+					StringFormatter.format(gen.translate("traceIdentifier",this),gen.translate("traceSelf",this)),
+					methodname,
+					obj,
+					name      		
+					);
+
+			message = TraceItemUtil.prepareTraceMessage(getTraceDirective(),gen,this,message);
+
+			message = StringFormatter.format(getExtremities(gen, name),message);
+			message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
+			if(getTraceDirective().getPostfix().getExecuteClause()!=null)
+			{
+				String execute = getTraceDirective().getPostfix().getExecuteClause();
+				execute = GeneratorHelper.doIndent(execute,gen.translate("traceIndent",this));
+				message += "\n" + execute;
+			}
+			return message;
 		}
-		for(String str: args){
-			extra+=comma+str;
-		}
-
-		String message = messageLayout+extra;
-		message = StringFormatter.format(
-				message,gen.translate("traceTimestamp",this),
-				gen.translate("traceThread",this),
-				getPosition().getFilename().replace("\\","\\\\"),
-				getPosition().getLineNumber(),
-				uClass.getName(),
-				StringFormatter.format(gen.translate("traceIdentifier",this),gen.translate("traceSelf",this)),
-				methodname,
-				obj,
-				name      		
-				);
-
-		message = TraceItemUtil.prepareTraceMessage(getTraceDirective(),gen,this,message);
-
-		message = StringFormatter.format(getExtremities(gen, name),message);
-		message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
-		if(getTraceDirective().getPostfix().getExecuteClause()!=null)
+		/* Gets and returns the if statement enclosing this trace item. The name is not used, but is required from the signature of TraceItem
+		* @return the if statement for the trace if one exists
+		*/
+		public String getExtremities(CodeTranslator gen, String name)
 		{
-			String execute = getTraceDirective().getPostfix().getExecuteClause();
-			execute = GeneratorHelper.doIndent(execute,gen.translate("traceIndent",this));
-			message += "\n" + execute;
+			return gen.translate("Closed",constraint);
 		}
-		return message;
-	}
-	/* Gets and returns the if statement enclosing this trace item. The name is not used, but is required from the signature of TraceItem
-	 * @return the if statement for the trace if one exists
-	 */
-	public String getExtremities(CodeTranslator gen, String name)
-	{
-		return gen.translate("Closed",constraint);
 	}
 }
 

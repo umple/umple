@@ -1,6 +1,6 @@
 namespace cruise.umple.nusmv;
 use TargetConfig.ump;
-use NuSMVCoordinationUnit.ump;
+//use ../generators/NuSMV/NuSMVCoordinationUnit.ump;
 
 class ModelOptimizer {
 

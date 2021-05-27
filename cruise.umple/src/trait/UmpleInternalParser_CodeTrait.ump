@@ -181,7 +181,9 @@ class UmpleInternalParser
 
   	analyzeCoreToken(t,aTrait,analysisStep);
     analyzeTraitToken(t,aTrait,analysisStep);
-    analyzeStateMachineToken(t,aTrait,analysisStep);
+    mixset StateMachine {
+      analyzeStateMachineToken(t,aTrait,analysisStep);
+    }
     analyzeDependentTokens(t,aTrait,analysisStep);
   }
 
@@ -209,12 +211,13 @@ class UmpleInternalParser
     {
       shouldConsumeComment = false;
     }
-    else if (token.is("mixsetDefinition"))
-    {
-      analyzeMixsetBodyToken(token);
-   
-    }
+    mixset Mixset {
+      else if (token.is("mixsetDefinition"))
+      {
+        analyzeMixsetBodyToken(token);
     
+      }
+    }
     else if (token.is("testCase"))
     {
       analyzeTraitTestCaseToken(token, aTrait);
@@ -494,7 +497,9 @@ class UmpleInternalParser
    private void analyzeExtraCode(Token token, UmpleTrait aTrait){
     //This is a catch all and will be used less often as the grammar gets updated.
     
-    if(extraCodeIsMalformedStateMachine(token)) setFailedPosition(token.getPosition(), 1006, "");
+    mixset StateMachine {
+      if(extraCodeIsMalformedStateMachine(token)) setFailedPosition(token.getPosition(), 1006, "");
+    }
     //Append #line comment to indicate line and position of source
     if (token.getPosition() != null)
     {
@@ -686,6 +691,7 @@ class UmpleInternalParser
 
       setFailedPosition(sub.getPosition(), 1007, sub.getValue("name"));
     }
+    mixset StateMachine {
     else if(sub.is("malformedStatemachine1")||sub.is("malformedStatemachine2"))
     {
       String extraCode = "";
@@ -719,6 +725,7 @@ class UmpleInternalParser
       aTrait.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + aTrait.getRelativePath(exception.getPosition().getFilename(),"Java"));
       aTrait.appendExtraCode("  "+extraCode+"\n");
       setFailedPosition(sub.getPosition(), 1008, sub.getValue("name"));
+    }
     }
   }
 //---------------------------------end----------------------------------------
@@ -765,7 +772,9 @@ class UmpleInternalParser
           if (getParseResult().getWasSuccess()) copyAttributesFromTraitsToClass(uClass);
           if (getParseResult().getWasSuccess()) copyMethodsFromTraitToClass(uClass);
           if (getParseResult().getWasSuccess()) copyAssociationsFromTraitToClass(uClass);
+          mixset StateMachine {
           if (getParseResult().getWasSuccess()) copyStateMachinesFromTraiToClass(uClass);
+          }
           if (getParseResult().getWasSuccess()) copyTestCasesFromTraitsToClass(uClass);
           if (getParseResult().getWasSuccess()) {
             for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
@@ -1427,12 +1436,14 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
       for(Token subToken : mainToken.getSubTokens()) {
         if (subToken.is("iEFunction") || subToken.is("functionAliasName")) {
           if (subToken.getSubToken("smName")!=null | subToken.getSubToken("smPattern")!=null ){
-              StateMachineTemplateSignature stTSignature = obtainStateMachineTemplateSignatureForTransitions(subToken);
-            if (! aGeneralTPApplied.hasStateMachineTemplateSignature(stTSignature)){  
-              aGeneralTPApplied.addStateMachineTemplateSignature(stTSignature);
-            } else {
-              getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getSrcStateMachine()));
-              return;
+              mixset StateMachine {
+                StateMachineTemplateSignature stTSignature = obtainStateMachineTemplateSignatureForTransitions(subToken);
+                if (! aGeneralTPApplied.hasStateMachineTemplateSignature(stTSignature)){  
+                  aGeneralTPApplied.addStateMachineTemplateSignature(stTSignature);
+                } else {
+                  getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getSrcStateMachine()));
+                  return;
+                }
             }
           }else{
             MethodTemplateSignature mtSignature =obtainMethodTemplateSignature(subToken);
@@ -1443,23 +1454,27 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
                 return;
             }
           }
-        } else if (subToken.is("StateMachineAliasName")){ 
-            StateMachineTemplateSignature stTSignature = obtainStateMachineTemplateSignature(subToken);
-            if (! aGeneralTPApplied.hasStateMachineTemplateSignature(stTSignature)){  
-              aGeneralTPApplied.addStateMachineTemplateSignature(stTSignature);
-            } else {
-              getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getSrcStateMachine()));
-              return;
-            } 
-        } else if (subToken.is("iEStateMachine")){ 
-            StateMachineModifier stTSignature = obtainStateMachineModifier(subToken);
-            if (! aGeneralTPApplied.hasStateMachineModifier(stTSignature)){  
-              aGeneralTPApplied.addStateMachineModifier(stTSignature);
-            } else {
-              getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getSrcStateMachine()));
-              return;
-            } 
-        } else if (subToken.is("traitAppliedParameters")){
+        } 
+        mixset StateMachine {
+          else if (subToken.is("StateMachineAliasName")){ 
+              StateMachineTemplateSignature stTSignature = obtainStateMachineTemplateSignature(subToken);
+              if (! aGeneralTPApplied.hasStateMachineTemplateSignature(stTSignature)){  
+                aGeneralTPApplied.addStateMachineTemplateSignature(stTSignature);
+              } else {
+                getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getSrcStateMachine()));
+                return;
+              } 
+          } else if (subToken.is("iEStateMachine")){ 
+              StateMachineModifier stTSignature = obtainStateMachineModifier(subToken);
+              if (! aGeneralTPApplied.hasStateMachineModifier(stTSignature)){  
+                aGeneralTPApplied.addStateMachineModifier(stTSignature);
+              } else {
+                getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getSrcStateMachine()));
+                return;
+              } 
+          } 
+        }
+        else if (subToken.is("traitAppliedParameters")){
             parameterName = subToken.getValue("pName");
             if (aGeneralTPApplied.getParameterMapping().containsKey(parameterName)){
               getParseResult().addErrorMessage(new ErrorMessage(216,subToken.getPosition(),parameterName));
@@ -1478,6 +1493,7 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
+mixset StateMachine {
   private StateMachineModifier obtainStateMachineModifier(Token inToken) {
         StateMachineModifier smModifier = null;
       String modifier=inToken.getValue("modifier");
@@ -1532,6 +1548,7 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
       } 
       return smModifier;
   }
+}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
@@ -1563,6 +1580,7 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
+mixset StateMachine {
 	private StateMachineTemplateSignature obtainStateMachineTemplateSignature(Token inToken){
   	String iEStateMachineModifier="",stateMachineAliasName ="";
 	 	String smName = inToken.getValue("smName");
@@ -1619,7 +1637,7 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
      return smTSignature;
 	}
 
-
+}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
