@@ -4,7 +4,7 @@
 
 OS         | Linux  | OSX    | Windows  
 :--------- | ------ | ------ | -------- 
-**Status** | [![Travis-CI Build Status](https://travis-ci.org/umple/umple.svg?branch=master)](https://travis-ci.org/umple/umple) | [![Travis-CI Build Status](https://travis-ci.org/umple/umple.svg?branch=master)](https://travis-ci.org/umple/umple) | [![Windows Build status](https://ci.appveyor.com/api/projects/status/1yetvadynui7r8y6?svg=true)](https://ci.appveyor.com/project/vahdat-ab/umple/branch/master) 
+**Status** | [![Travis-CI Build Status](https://travis-ci.com/umple/umple.svg?branch=master)](https://travis-ci.com/umple/umple) | [![Travis-CI Build Status](https://travis-ci.com/umple/umple.svg?branch=master)](https://travis-ci.com/umple/umple) | [![Windows Build status](https://ci.appveyor.com/api/projects/status/1yetvadynui7r8y6?svg=true)](https://ci.appveyor.com/project/vahdat-ab/umple/branch/master) 
 
 
 ## Description

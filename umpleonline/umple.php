@@ -295,6 +295,7 @@ $output = $dataHandle->readData('model.ump');
         After you click you will be taken to a page to edit the task
         You must bookmark that page so you can edit the task repeatedly.
         ">Submit Task</a> 
+        <a class = "button2" href = "javascript: Page.cancelTask()" title= "Click this to discard your task" style = "margin-left: 5px" id = "buttonCancelTask">Cancel Task</a>
     <?php } else if (isset($_REQUEST["task"])) { ?>
       <a class="button2" href="javascript:Page.editTask()" title="Each time you click this, the instructions and model given to participants will be
         updated, although existing participants will see the original

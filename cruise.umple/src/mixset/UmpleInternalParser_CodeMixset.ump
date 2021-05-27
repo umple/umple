@@ -109,31 +109,39 @@ class UmpleInternalParser
     String tokenKey ="";
     String prefix ="";
     boolean returnMixsetBody= false;
-	
-    if (token.is("state"))
-    {
-      tokenKey = "stateName";
+    mixset Class {
+      if (token.is("classDefinition"))
+      {
+        tokenKey = "name"; 
+        prefix ="class";
+        returnMixsetBody= true;
+      }
     }
-    else if (token.is("inlineStateMachine"))
-      tokenKey =  "name";
-    else if (token.is("classDefinition"))
-    {
-      tokenKey = "name"; 
-      prefix ="class";
-      returnMixsetBody= true;
+    mixset StateMachine {
+      else if (token.is("state"))
+      {
+        tokenKey = "stateName";
+      }
+      else if (token.is("inlineStateMachine"))
+      {
+        tokenKey =  "name";
+      }
     }
-    else if (token.is("traitDefinition"))
-    {
-      tokenKey = "name"; 
-      prefix ="trait";
-      returnMixsetBody= true;
+    mixset Trait {
+      else if (token.is("traitDefinition"))
+      {
+        tokenKey = "name"; 
+        prefix ="trait";
+        returnMixsetBody= true;
+      }
     }
-    else if (token.is("associationDefinition"))
-    {
-      tokenKey = "name"; 
-      prefix ="association";
+    mixset Association {
+      else if (token.is("associationDefinition"))
+      {
+        tokenKey = "name"; 
+        prefix ="association";
+      }
     }
-	  
     if(! tokenKey.equals("")) 
     {
       mixsetBody = " "+prefix +" "+ token.getValue(tokenKey) + " { " + mixsetBody + " } ";
@@ -443,100 +451,101 @@ class UmpleInternalParser
     
   
 }
+mixset AspectInjection {
+  class CodeInjection{
+    String injectionlabel = "";
+    boolean codeBlockProcessed = false;
 
-class CodeInjection{
-  String injectionlabel = "";
-  boolean codeBlockProcessed = false;
-
-  boolean hasCodeLabel()
-  {
-    return ! injectionlabel.equals("");
-  }
-}
-
-class CodeBlock{
-  depend java.util.regex.Matcher;
-  depend java.util.regex.Pattern;
-
-  public ArrayList<String> getCodeWithLabels(String codesKey) {
-    ArrayList <String> codeLabels = new ArrayList<String>();
-    String codeToLockAt = getCode(codesKey);
-    ArrayList<String> codeWithLabels = new ArrayList<String>();
-    Pattern labelPatternToMatch = Pattern.compile("(\\S+):");
-    Matcher matcher = labelPatternToMatch.matcher(codeToLockAt);
-    int lastMatchedIndex=0;
-    while (matcher.find()) {
-      String codeBeforeLabel = codeToLockAt.substring(lastMatchedIndex, matcher.start());
-      if(!codeBeforeLabel.equals(""))
-        codeWithLabels.add(codeBeforeLabel);
-      codeWithLabels.add(matcher.group()); //add the label itself to the source code.
-      codeLabels.add(matcher.group().replaceFirst(":","")); // remove colon and add it the list of labels 
-      lastMatchedIndex = matcher.end();
-    }
-    // This for last label, to add the code after last matched label 
-    String codeAfterLastLabel =codeToLockAt.substring(lastMatchedIndex); 
-    codeWithLabels.add(codeAfterLastLabel);
-    return codeWithLabels;
-  }
-
-}
-
-class MethodBody
-{
-  depend java.util.regex.Matcher;
-  depend java.util.regex.Pattern;
-
-  public static int indexOfMixsetClosingBracket(String strInput) {
-	int closeIndex = 0;
-	int numOfclosingBracket=0;
-	for(int i = 0; i< strInput.length();i++)
-	{
-		char currentChar = strInput.charAt(i);
-		if(currentChar =='{')
-		numOfclosingBracket++;
-		else if(currentChar == '}')
-			{
-			  numOfclosingBracket--;
-				if(numOfclosingBracket==0)
-			  	{
-					  closeIndex = i+1;
-					  break;
-			  	}
-			}	
-	}
-	return closeIndex;
-}
-  public ArrayList<MixsetInMethod> getMixsetsWithinMethod() { 
-  String codeToLockAt= this.getCodeblock().getCode(); // the code to look at. 
-  ArrayList<MixsetInMethod> mixsetInsideMethodList = new ArrayList<MixsetInMethod>();
-  Pattern labelPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+\\{"); // to detect mixset def.
-  Matcher matcher = labelPatternToMatch.matcher(codeToLockAt);
-  while (matcher.find()) {
-    String mixsetDefPlusAfterCode = codeToLockAt.substring(matcher.start());
-    // mixset def. + the code after the mixset def.
-    int indexOfMixsetClosingBracket = matcher.start() + indexOfMixsetClosingBracket(mixsetDefPlusAfterCode);
-    String mixsetBodyWithDef = codeToLockAt.substring(matcher.start(),indexOfMixsetClosingBracket);
-    // get the name of the mixset
-    String mixsetName = matcher.group().replace("mixset", "").replace("{", "").trim(); 
-    MixsetInMethod mixsetInsideMethod = new MixsetInMethod(mixsetName,matcher.start(),indexOfMixsetClosingBracket,mixsetBodyWithDef);
-    
-    // place inner method in their right position.
-    for(MixsetInMethod tempMixsetInMethod:mixsetInsideMethodList)
+    boolean hasCodeLabel()
     {
-      if(mixsetInsideMethod.getStartPositionIndex() > tempMixsetInMethod.getStartPositionIndex()
-    			 & mixsetInsideMethod.getEndPositionIndex() < tempMixsetInMethod.getEndPositionIndex())
-      { 
-        // a nested mixset should be bounded by its close parent mixset 
-        mixsetInsideMethod.setParentInnerMixset(tempMixsetInMethod);
-        tempMixsetInMethod.addChildMixset(mixsetInsideMethod);
+      return ! injectionlabel.equals("");
+    }
+  }
+
+  class CodeBlock{
+    depend java.util.regex.Matcher;
+    depend java.util.regex.Pattern;
+
+    public ArrayList<String> getCodeWithLabels(String codesKey) {
+      ArrayList <String> codeLabels = new ArrayList<String>();
+      String codeToLockAt = getCode(codesKey);
+      ArrayList<String> codeWithLabels = new ArrayList<String>();
+      Pattern labelPatternToMatch = Pattern.compile("(\\S+):");
+      Matcher matcher = labelPatternToMatch.matcher(codeToLockAt);
+      int lastMatchedIndex=0;
+      while (matcher.find()) {
+        String codeBeforeLabel = codeToLockAt.substring(lastMatchedIndex, matcher.start());
+        if(!codeBeforeLabel.equals(""))
+          codeWithLabels.add(codeBeforeLabel);
+        codeWithLabels.add(matcher.group()); //add the label itself to the source code.
+        codeLabels.add(matcher.group().replaceFirst(":","")); // remove colon and add it the list of labels 
+        lastMatchedIndex = matcher.end();
+      }
+      // This for last label, to add the code after last matched label 
+      String codeAfterLastLabel =codeToLockAt.substring(lastMatchedIndex); 
+      codeWithLabels.add(codeAfterLastLabel);
+      return codeWithLabels;
+    }
+
+  }
+
+  class MethodBody
+  {
+    depend java.util.regex.Matcher;
+    depend java.util.regex.Pattern;
+
+    public static int indexOfMixsetClosingBracket(String strInput) {
+    int closeIndex = 0;
+    int numOfclosingBracket=0;
+    for(int i = 0; i< strInput.length();i++)
+    {
+      char currentChar = strInput.charAt(i);
+      if(currentChar =='{')
+      numOfclosingBracket++;
+      else if(currentChar == '}')
+        {
+          numOfclosingBracket--;
+          if(numOfclosingBracket==0)
+            {
+              closeIndex = i+1;
+              break;
+            }
+        }	
+    }
+    return closeIndex;
+  }
+    public ArrayList<MixsetInMethod> getMixsetsWithinMethod() { 
+    String codeToLockAt= this.getCodeblock().getCode(); // the code to look at. 
+    ArrayList<MixsetInMethod> mixsetInsideMethodList = new ArrayList<MixsetInMethod>();
+    Pattern labelPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+\\{"); // to detect mixset def.
+    Matcher matcher = labelPatternToMatch.matcher(codeToLockAt);
+    while (matcher.find()) {
+      String mixsetDefPlusAfterCode = codeToLockAt.substring(matcher.start());
+      // mixset def. + the code after the mixset def.
+      int indexOfMixsetClosingBracket = matcher.start() + indexOfMixsetClosingBracket(mixsetDefPlusAfterCode);
+      String mixsetBodyWithDef = codeToLockAt.substring(matcher.start(),indexOfMixsetClosingBracket);
+      // get the name of the mixset
+      String mixsetName = matcher.group().replace("mixset", "").replace("{", "").trim(); 
+      MixsetInMethod mixsetInsideMethod = new MixsetInMethod(mixsetName,matcher.start(),indexOfMixsetClosingBracket,mixsetBodyWithDef);
+      
+      // place inner method in their right position.
+      for(MixsetInMethod tempMixsetInMethod:mixsetInsideMethodList)
+      {
+        if(mixsetInsideMethod.getStartPositionIndex() > tempMixsetInMethod.getStartPositionIndex()
+            & mixsetInsideMethod.getEndPositionIndex() < tempMixsetInMethod.getEndPositionIndex())
+        { 
+          // a nested mixset should be bounded by its close parent mixset 
+          mixsetInsideMethod.setParentInnerMixset(tempMixsetInMethod);
+          tempMixsetInMethod.addChildMixset(mixsetInsideMethod);
+        }
+      }
+      // a nested mixset should not add here. 
+      if(mixsetInsideMethod.getParentInnerMixset() == null) // its not bounded by another mixset 
+      {
+        mixsetInsideMethodList.add(mixsetInsideMethod);
       }
     }
-    // a nested mixset should not add here. 
-    if(mixsetInsideMethod.getParentInnerMixset() == null) // its not bounded by another mixset 
-    {
-      mixsetInsideMethodList.add(mixsetInsideMethod);
-    }
+    return mixsetInsideMethodList;
   }
-  return mixsetInsideMethodList;
- }
+  }
 }

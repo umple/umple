@@ -98,7 +98,9 @@ class TraceDirective
   1 -> 1 TracerDirective;
 
   1 -- * AttributeTraceItem;
-  1 -- * StateMachineTraceItem;
+  mixset StateMachine {
+    1 -- * StateMachineTraceItem;
+  }
   1 -- * MethodTraceItem;
   1 -- * AssociationTraceItem;
   1 -> * TraceCondition condition;
@@ -178,34 +180,36 @@ class AttributeTraceItem
  * An element of a trace directive that indicates to trace one or more state machines
  * or transitions
  */
-class StateMachineTraceItem
-{
-  depend cruise.umple.parser.Position;
+//mixset StateMachine {
+  class StateMachineTraceItem
+  {
+    depend cruise.umple.parser.Position;
 
-  isA TraceItem;
+    isA TraceItem;
 
-  ConstraintTree constraint = null;
-  tracerType = {getTraceDirective().getTracerType()}
+    ConstraintTree constraint = null;
+    tracerType = {getTraceDirective().getTracerType()}
 
-  boolean isIn = false;
-  boolean isOut = false;
+    boolean isIn = false;
+    boolean isOut = false;
 
-  boolean entry = false;
-  boolean exit = false;
+    boolean entry = false;
+    boolean exit = false;
 
-  int level = -1;
+    int level = -1;
+    
+    boolean traceStateMachineFlag = false;
+    * -- 0..1 StateMachine;
+    * -- 0..1 State;
+    * -- 0..1 Transition;
 
-  boolean traceStateMachineFlag = false;
-  * -- 0..1 StateMachine;
-  * -- 0..1 State;
-  * -- 0..1 Transition;
+    Position position = null;
+    periodClause = null;
 
-  Position position = null;
-  periodClause = null;
-
-  Boolean conditionallyWhere = true;
-  conditionType = "where";
-}
+    Boolean conditionallyWhere = true;
+    conditionType = "where";
+  }
+//}
 /*
  * An element of a trace directive that indicates to trace one or more associations
  */
@@ -287,7 +291,9 @@ class TraceRecord
 {
   boolean recordOnly = false;
   * -- * Attribute;
-  * -- * StateMachine;
+  mixset StateMachine {
+    * -- * StateMachine;
+  }
   String[] record;
 }
 

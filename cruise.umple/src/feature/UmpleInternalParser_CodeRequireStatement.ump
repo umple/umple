@@ -1,0 +1,661 @@
+/*
+Copyright: All contributers to the Umple Project.
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file analyzses require statement tokens to populate Requiregraph for Umple model.
+
+Please refer to UmpleInternalParser.ump for more details.
+*/
+
+class UmpleInternalParser
+{
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.compiler.FeatureLink.FeatureConnectingOpType;
+
+  public void analyzeRequireStatement(Token t, int analysisStep)
+  {
+    if (analysisStep != 2)
+    {
+      shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
+      return;
+    }
+    
+    if (t.is("mixsetIsFeature"))
+    {
+      FeatureModel featureModel = model.getFeatureModel();
+      if(featureModel == null)
+        featureModel = new FeatureModel("featureModel");
+      featureModel.setUmpleModel(model);
+
+      FeatureLeaf sourceFeatureLeaf;
+      Mixset sourceMixset = getMixsetFromToken(t); // the mixset containing the isFeature;
+      if(sourceMixset != null)
+      {
+        sourceFeatureLeaf = featureModel.getOrCreateFeatureLeafNode(sourceMixset.getName());
+        sourceFeatureLeaf.setMixsetOrFileNode(sourceMixset); 
+      }
+
+    }   
+    if (t.is("requireStatement"))
+    {
+      FeatureModel featureModel = model.getFeatureModel();
+      if(featureModel == null)
+        featureModel = new FeatureModel("featureModel");
+      featureModel.setUmpleModel(model);
+
+      FeatureLeaf sourceFeatureLeaf;
+      Mixset sourceMixset = getMixsetFromToken(t);
+      if(sourceMixset != null)
+      {
+        sourceFeatureLeaf = featureModel.getOrCreateFeatureLeafNode(sourceMixset.getName());
+        sourceFeatureLeaf.setMixsetOrFileNode(sourceMixset); 
+      }
+      else
+      {
+        UmpleFile ufile = new UmpleFile(t.getPosition().getFilename());
+        sourceFeatureLeaf = featureModel.getOrCreateFeatureLeafNode(ufile.getName()); 
+        sourceFeatureLeaf.setMixsetOrFileNode(ufile);
+      }
+    
+      boolean isSubFeature = t.getSubToken("subfeature") != null; 
+
+       //tokens needed for parsing require-statement
+      List<String> acceptedTokensList = Arrays.asList("requireTerminal","and","not","xor","or","opt","(",")");
+      ArrayList<Token> requireTokenList = getRequireStatementTokensAsList(t, acceptedTokensList);      
+      Token firstTokenOfRequireTokenList;
+
+      if(requireTokenList.size() == 0 ) // require [ ]
+      return;
+
+      if (requireTokenList.size() >= 1)  // has the form of : require [A and B or C .... ]
+      {
+        List<TokenTree> tokenTreeList = generateFeatureTreeTokenFromRequireStList(requireTokenList);
+        for(TokenTree tree: tokenTreeList)
+        createFeatureModelSegment(sourceFeatureLeaf,tree,isSubFeature);
+        
+        //
+        // TO Do: add tree for the feature model : Done
+        // To Do: not and opt implementaion 
+        // TO Do:  1..3 of {A, B, C} : Done 
+      }
+    
+    }
+  }  
+  /*
+  this method generates a new feature and links it with a source feature based on its token in the TokenTree.
+  It return null if either treeNode or source feature is null.
+  */
+  public FeatureNode createTargetFeature(TokenTree treeNode, FeatureNode sourceFeature, boolean isSubFeature)
+  {
+    if (treeNode == null || sourceFeature == null)
+    return null; // To Do : should raise error here 
+    FeatureNode newFeatureNode = new FeatureNode(model.getFeatureModel());
+    newFeatureNode.setName(treeNode.getNodeToken().getName());
+    FeatureLink edge = new FeatureLink();
+    edge.setFeatureConnectingOpType(treeNode.getFeatureConnectionOpType(isSubFeature));
+    edge.setSourceFeatureNode(sourceFeature);
+    edge.setIsSub(isSubFeature);
+    edge.setTargetFeatureNode(newFeatureNode); 
+    edge.setFeatureModel(model.getFeatureModel());
+    model.getFeatureModel().addFeaturelink(edge);
+    return newFeatureNode;
+  }
+  /*
+  This method takes a require-st as a token tree and then it generates its segment in the feature model 
+  */
+  public void createFeatureModelSegment(FeatureNode sourceFeature, TokenTree tokenTree, boolean isSubFeature)
+  {
+    Token node = tokenTree.getNodeToken();
+    TokenTree linkingParent = tokenTree.getParentTokenTree();
+    FeatureLink edge = null;
+    FeatureModel featureModel = model.getFeatureModel();
+    if(! tokenTree.getIsLinkingOperator())
+    {
+      if(node.is("opt") || node.is("not"))
+      {
+        if(tokenTree.getRightTokenTree().getNodeToken().is("requireTerminal"))
+        {
+          Mixset targetMixset = new Mixset(tokenTree.getRightTokenTree().getNodeToken().getSubToken("targetMixsetName").getValue());
+          FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
+          targetFeature.setMixsetOrFileNode(targetMixset);
+          edge = new FeatureLink();
+          edge.setFeatureConnectingOpType(tokenTree.getFeatureConnectionOpType(isSubFeature));
+          edge.setSourceFeatureNode(sourceFeature);
+          edge.setTargetFeatureNode(targetFeature);
+          edge.setIsSub(isSubFeature);
+          model.getFeatureModel().addFeaturelink(edge);          
+        }
+      }
+      if(node.is("requireTerminal") && node.getSubToken("lowerBound") == null)
+      {        	
+        //Mixset targetMixset = model.getMixset(node.getSubToken("targetMixsetName").getValue());
+        //if(targetMixset == null)
+        //return; // To Do: should raise warning 
+        Mixset targetMixset = new Mixset(node.getSubToken("targetMixsetName").getValue());
+        FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
+        targetFeature.setMixsetOrFileNode(targetMixset);
+        edge = new FeatureLink();
+        edge.setFeatureConnectingOpType(linkingParent.getFeatureConnectionOpType(isSubFeature));
+        edge.setSourceFeatureNode(sourceFeature);       
+        edge.setTargetFeatureNode(targetFeature);
+        edge.setIsSub(isSubFeature);
+        model.getFeatureModel().addFeaturelink(edge);
+      }
+      else if(node.is("requireTerminal") && node.getSubToken("lowerBound") != null) //  [lowerBound]..[upperBound] of [A, B, ... ]
+      {        
+        MultiplicityFeatureConnectingOpType multiplicityFeatureConnectingOpTypeEdge = new MultiplicityFeatureConnectingOpType();
+        Multiplicity featureLinkMultiplicity = multiplicityFeatureConnectingOpTypeEdge.getMultiplicity();
+        featureLinkMultiplicity.setRange(node.getSubToken("lowerBound").getValue(), node.getSubToken("upperBound").getValue());
+        multiplicityFeatureConnectingOpTypeEdge.setMultiplicity(featureLinkMultiplicity);
+        edge = (FeatureLink) multiplicityFeatureConnectingOpTypeEdge;
+
+        CompoundFeatureNode newCompoundFeatureNode = new CompoundFeatureNode(model.getFeatureModel());
+        newCompoundFeatureNode.setName("multiplicityTerminal");
+        //newCompoundFeatureNode.setIsLeaf(true);
+        edge.setTargetFeatureNode(newCompoundFeatureNode); 
+        edge.setSourceFeatureNode(sourceFeature); 
+        edge.setFeatureModel(model.getFeatureModel());
+        edge.setIsSub(isSubFeature);
+        model.getFeatureModel().addFeaturelink(edge);
+        // add child elements to newCompoundFeatureNode.
+        for(Token subToken : node.getSubTokens())
+        {
+          if(subToken.is("targetMixsetName"))
+          {
+            Mixset targetMixset = new Mixset(subToken.getValue()); //To Do: check if its a mixset.
+            FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
+            targetFeature.setMixsetOrFileNode(targetMixset);
+            newCompoundFeatureNode.addChildFeature(targetFeature);
+          }
+        }
+      } 
+ 
+    }
+    else 
+    {
+        TokenTree rightTokenTree = tokenTree.getRightTokenTree();
+        TokenTree leftTokenTree = tokenTree.getLeftTokenTree();
+        if (rightTokenTree == null || leftTokenTree == null)
+        return; //To Do: raise error since a connection node does not have left or right node 
+        //else 
+        FeatureNode intermediateFeatureNode = null;
+        boolean parentTokenEqualsCurrentNodeToken = node.is(linkingParent.getNodeToken().getName());
+        if (!parentTokenEqualsCurrentNodeToken)
+        {
+          intermediateFeatureNode = createTargetFeature(tokenTree, sourceFeature, isSubFeature);
+          createFeatureModelSegment(intermediateFeatureNode,rightTokenTree,isSubFeature);
+          createFeatureModelSegment(intermediateFeatureNode,leftTokenTree,isSubFeature);
+        }
+        else 
+        {
+          createFeatureModelSegment(sourceFeature,rightTokenTree,isSubFeature);
+          createFeatureModelSegment(sourceFeature,leftTokenTree,isSubFeature);
+        }
+
+    }
+  }
+  /*
+  This method filters unwanted tokens & changes the form of require-statement argument from 
+  nested tokens, as the parser does, to list of tokens.  
+  */
+  public ArrayList<Token> getRequireStatementTokensAsList(Token requireStatementToken, List<String> acceptedTokensList)
+  {
+    ArrayList<Token> TokenList =  new ArrayList<Token>();
+    Token terminal;
+    for(Token innerToken : requireStatementToken.getSubTokens())
+    {
+      if (! innerToken.getName().equals("") && acceptedTokensList.contains(innerToken.getName()))
+      {
+        TokenList.add(innerToken);
+      }
+      else if (innerToken.getSubTokens() != null)
+      	TokenList.addAll(getRequireStatementTokensAsList(innerToken,acceptedTokensList)); // this to obtain [and] out of [requireLinkingOp] 
+    }
+    return TokenList;
+  }
+  
+  /*
+  This methods returns the mixset in which require-statement was found.
+  It returns null if the require-statement is in a file (not inside a mixset). 
+	*/
+  private Mixset getMixsetFromToken(Token token) {
+  	Token parentToken = token.getParentToken();
+  	if (parentToken.is("mixsetDefinition"))
+  	  return model.getMixset(parentToken.getValue());
+  	
+  	return null;
+	}
+
+/*
+This method parses req-statement argument & generates a binary tree representation form the req-statment argument.
+//It returns one node (root node) if there is no argument to parse.
+*/
+private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(List<Token> tokenList)
+{
+  TokenTree rootTokenTree = new TokenTree(new Token("ROOT",""));
+  TokenTree currentTree = rootTokenTree;		
+  List<String> linkingOpList = Arrays.asList("and","or","xor");
+	ArrayList<TokenTree> tokenTreeList = new ArrayList<TokenTree>();
+  int openRoundBracketCount=0;
+  int openBracketIndex = 0;
+  ArrayList<TokenTree> tempTokenTreeList = new ArrayList<TokenTree>();
+
+  for (int i=0;i<tokenList.size();i++)
+  {
+    Token token = tokenList.get(i);
+    TokenTree rightTokenTree = new TokenTree(token);
+    if(linkingOpList.contains(token.getName()))
+    rightTokenTree.setIsLinkingOperator(true);
+    //Start(1): handel open_round_bracket by assigning a temp variable to avoid processing it when building the binary tree. 
+    //each temp variable will be replaced before method return. 
+    if(token.getName().equals("("))
+    {
+      openRoundBracketCount++;
+      if(openRoundBracketCount == 1)
+      openBracketIndex = i;
+      continue;
+    }
+    else if (token.getName().equals(")"))
+    {
+      openRoundBracketCount--;
+      if(openRoundBracketCount == 0) //last close
+      {
+        ArrayList<TokenTree> temp = generateFeatureTreeTokenFromRequireStList(tokenList.subList(openBracketIndex+1,i));
+        if(temp.size() == 1)
+        {
+          Token tempToken = new Token("requireTerminal","temp_"+tempTokenTreeList.size());
+          tempTokenTreeList.add(temp.get(0));
+          rightTokenTree.setNodeToken(tempToken);
+        }
+      }
+      else 
+      continue; 
+    } 
+    else if(openRoundBracketCount >0) //there was a bracket 
+    continue;
+    //End(1)
+    //Start(2): put each [opt/not][terminal] in a separate TokenTree if it was preceded with [terminal]
+    if(token.is("opt") || token.is("not"))
+    {
+      if(currentTree.getNodeToken().is("requireTerminal") && tokenList.get(i+1).is("requireTerminal")) // A opt B
+      {
+        rightTokenTree.setRightTokenTree(new TokenTree(tokenList.get(i+1)));
+        // setParent to rightTokenTree
+        tokenTreeList.add(rightTokenTree);
+        i++; //skip opt terminal 
+        continue;
+      }
+    }
+    //End(2)
+    currentTree.setRightTokenTree(rightTokenTree);
+    rightTokenTree.setParentTokenTree(currentTree);
+    currentTree = rightTokenTree;
+  }
+  currentTree = rootTokenTree.getRightTokenTree(); //currentTree points to the first node of the tree
+  
+  TokenTree previousLinkingSubTokenTree = null; 
+	//Start(3): building the binary tree of re-st argument 
+  while(currentTree.getRightTokenTree() != null)
+ 	{
+		TokenTree rightLinkingTokenTree = currentTree.getRightTokenTree(); //linking operator on the right of current node 	
+    if(rightLinkingTokenTree == null)
+    break;
+    if(currentTree.getNodeToken() == null || currentTree.getNodeToken().getName() == null ) 
+     continue;
+    if(currentTree.getNodeToken().is("requireTerminal") && rightLinkingTokenTree.getIsLinkingOperator())
+    {
+		// A and B --> (and A B)
+    	if (previousLinkingSubTokenTree == null)
+      {
+      	currentTree.setParentTokenTree(rightLinkingTokenTree);
+        rightLinkingTokenTree.setLeftTokenTree(currentTree);
+        rightLinkingTokenTree.setParentTokenTree(rootTokenTree);
+        rootTokenTree.setRightTokenTree(rightLinkingTokenTree);
+        previousLinkingSubTokenTree = rightLinkingTokenTree;
+      }
+      else
+	    {
+		    /*
+				this for the case : A and B or C --> (or (and A B))
+		    */
+		    if(previousLinkingSubTokenTree.getPriority() >= rightLinkingTokenTree.getPriority())
+		    { 
+		    	TokenTree linkNodeToReplace = previousLinkingSubTokenTree;
+		      while(linkNodeToReplace != null && ! linkNodeToReplace.getNodeToken().getName().equals("ROOT") )
+		      {
+		      	if (linkNodeToReplace.getPriority() >= rightLinkingTokenTree.getPriority() )
+		        {
+							previousLinkingSubTokenTree = linkNodeToReplace;
+		        }
+						linkNodeToReplace = linkNodeToReplace.getParentTokenTree();
+		      }
+		      rightLinkingTokenTree.setLeftTokenTree(previousLinkingSubTokenTree);
+          rightLinkingTokenTree.setParentTokenTree(previousLinkingSubTokenTree.getParentTokenTree());
+		      previousLinkingSubTokenTree.getParentTokenTree().setRightTokenTree(rightLinkingTokenTree); 
+		      previousLinkingSubTokenTree.setParentTokenTree(rightLinkingTokenTree);
+		      previousLinkingSubTokenTree=rightLinkingTokenTree;	
+		    }
+		    else
+			  {
+					/*
+		    	this for the case : A or B and C --> or (and A B)
+		    	*/
+		    	rightLinkingTokenTree.setLeftTokenTree(currentTree);
+					rightLinkingTokenTree.setParentTokenTree(previousLinkingSubTokenTree);
+			  	previousLinkingSubTokenTree.setRightTokenTree(rightLinkingTokenTree);
+		      previousLinkingSubTokenTree = rightLinkingTokenTree;
+		    }
+		  }
+    	// last step: set right node of terminal to null 
+    	currentTree.setRightTokenTree(null);
+  		}
+  	currentTree = rightLinkingTokenTree; // move to next node of the tree 
+		}
+  tokenTreeList.add(rootTokenTree.getRightTokenTree());
+  //End(3)
+  //Start(4): replace temp with actual values 
+  if(tempTokenTreeList.size() > 0) //there is a open & close round bracket 
+  {
+    for(TokenTree aTokenTree : tokenTreeList)
+    {
+      replaceTempTerminalWithActualValues(aTokenTree,tempTokenTreeList);
+    }
+  }
+  //End(4)
+	return tokenTreeList;	
+	}
+
+  /*
+  This method replaces each node in TokenTree that is [requireTerminal] and has a temporary value.
+  The actual value of the node, which may be a tree, is stored in tempTokenTreeList. 
+  */
+  private void replaceTempTerminalWithActualValues(TokenTree tokenTree, ArrayList<TokenTree> tempTokenTreeList)
+  {
+    Token token = tokenTree.getNodeToken();
+    if(token != null)
+    {
+      if(token.is("requireTerminal") && token.getValue().startsWith("temp_"))
+      {
+        int indexPositionInTokenValue = token.getValue().indexOf('_')  + 1; 
+        int indexOfTempTokenTreeList = Integer.parseInt(token.getValue().substring(indexPositionInTokenValue));
+        TokenTree actualValueOfBlock = tempTokenTreeList.get(indexOfTempTokenTreeList);
+        tokenTree.replaceWith(actualValueOfBlock);
+        return;// then stop
+      }		
+    }
+    if(tokenTree.getRightTokenTree() != null)
+    {
+      replaceTempTerminalWithActualValues(tokenTree.getRightTokenTree(),tempTokenTreeList);
+    }
+    if(tokenTree.getLeftTokenTree() != null)
+    {
+      replaceTempTerminalWithActualValues(tokenTree.getLeftTokenTree(),tempTokenTreeList);
+    }	
+  }
+  public void analyzeFeatureModel()
+  {
+    parseMixsetsNotUsed();
+    
+    if(model.getFeatureModel() != null)
+    model.getFeatureModel().satisfyFeatureModel();
+  }
+}
+
+
+class FeatureModel{
+  depend java.util.stream.*;
+  depend cruise.umple.compiler.FeatureLink.FeatureConnectingOpType;
+/*
+ * This method returns a leaf node from FeatureModel based on its name.
+ * return null if the leaf node is not found.   
+ */
+  public FeatureLeaf getFeatureLeafNode(String name)
+  {
+    for(FeatureNode aNode: node)
+    {
+      if(aNode.getName().equals(name) && aNode.getIsLeaf()) // isLeaf
+      return ((FeatureLeaf) aNode);
+    }
+    return null;
+  }
+  /*
+  This method does conditional addition for a FeatureLeaf based on the provided name. 
+  It returns a new FeatureLeaf if its not found, or existing FeatureLeaf if the name was found.
+  */
+  public FeatureLeaf getOrCreateFeatureLeafNode(String name)
+  {
+    FeatureLeaf aNode = getFeatureLeafNode(name);
+    if(aNode == null)
+    {
+      aNode = new FeatureLeaf(this);
+      aNode.setName(name);
+    }
+    return aNode; 
+  }
+  /*
+  This method returns true if the feature leaf has a use-statement.
+  It returns false if there is no use-statement for the mixset.
+  It returns false if there is no mixset or file in the feature leaf.
+  */
+  public boolean isUsedFeatureLeaf(FeatureLeaf featureLeaf){
+    boolean isMixset = featureLeaf.getMixsetOrFileNode().getIsMixset();
+    if(isMixset)
+    {
+      Mixset mixset = getUmpleModel().getMixset(featureLeaf.getMixsetOrFileNode().getName());
+      if(mixset != null)
+      {
+        if(mixset.getUseUmpleFile() != null)
+        return true;  // this means there is a use-statement here
+        //else there is no use-statement    
+      }
+      else 
+      {
+        return false;//there is no mixset with the specified name. 
+      }
+    }
+    return false; 
+  }
+  /*
+  This method takes a feature link (from the feature model) and decides whether the link is satisfied.
+  If the link is not satisfied, it return false.
+  Ex: the link "source--> and" for M1 and M2 is true if there are use-statements for both M1 and M2.   
+  */
+  public boolean evaluateFeatureLink(FeatureLink featureLink)
+  {
+    FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeatureNode());
+    if(featureNode.getIsLeaf())
+    {
+      if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Mandatory))
+      {
+        return isUsedFeatureLeaf((FeatureLeaf)featureNode);
+      } 
+      if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Include))
+      {
+        return isUsedFeatureLeaf((FeatureLeaf)featureNode);
+      } 
+      else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Exclude))
+      {
+        return !isUsedFeatureLeaf((FeatureLeaf)featureNode); // return true when there is no use-statement, or no def for mixset 
+      }
+      else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Optional))
+      {
+        return true;        // opt is allawys has a true value 
+      }
+      else 
+      return isUsedFeatureLeaf((FeatureLeaf)featureNode);
+    } // if not leaf node
+    else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Conjunctive))
+    { 
+      if(!featureNode.getIsLeaf())
+      {
+        List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
+        boolean result = true;
+        for(int i=0 ; i<outgoingLinks.size(); i++){
+          result = result && evaluateFeatureLink(outgoingLinks.get(i));
+        }
+        return result;
+      }
+    }
+    else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Disjunctive))
+    {   
+      if(!featureNode.getIsLeaf())
+      {
+        boolean result = false;
+        List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
+        for(int i=0 ; i<outgoingLinks.size(); i++){
+          result = result || evaluateFeatureLink(outgoingLinks.get(i));
+        }
+        return result;
+      }
+    }
+    else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.XOR))
+    { 
+      if(!featureNode.getIsLeaf())
+          {
+            List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
+            int countOfUsedTarget = 0;
+            for(int i=0 ; i < outgoingLinks.size(); i++){
+              if(evaluateFeatureLink(outgoingLinks.get(i)))  // bitwise xor (^) can not be used here because it does not mean always only one. Example: (true ^ true ^ true == true) 
+              countOfUsedTarget++;
+            }
+            return (countOfUsedTarget == 1) ? true: false;
+          }
+    }
+    else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Multiplicity))
+      {
+        MultiplicityFeatureConnectingOpType multiplicityFeatureLink = (MultiplicityFeatureConnectingOpType) featureLink;
+        int upperBound = multiplicityFeatureLink.getMultiplicity().getUpperBound();
+        int lowerBound = multiplicityFeatureLink.getMultiplicity().getLowerBound();
+        
+        int countOfUsedTarget = 0;
+          List<FeatureNode> featureNodes = ((CompoundFeatureNode)featureNode).getChildFeatures();
+          for(int k=0 ; k < featureNodes.size(); k++){
+            if(isUsedFeatureLeaf((FeatureLeaf)featureNodes.get(k)))
+            countOfUsedTarget++;
+          }
+
+        return (countOfUsedTarget <= upperBound && countOfUsedTarget >= lowerBound) ? true: false;    
+      }
+    //otherwise
+    return false;
+  }
+  /*
+  This method checks whether the use-statements plus the feature model results in valid configuration.
+  It return true If there is no feature model.
+  */
+  public boolean satisfyFeatureModel()
+  {
+    UmpleModel model = getUmpleModel();
+    boolean isSatisfied = true;
+    // get root features : has outgoing links but no incoming links
+    List <FeatureNode> rootFeatures = getRootFeatures();
+    //getNode().stream().filter(n -> (n.hasSourceFeatureLink() && n.getIsLeaf())).collect(Collectors.toList());
+    for(FeatureNode featureNode: rootFeatures)
+    {
+      List <FeatureLink> featureNodeOutgoingLinks = featureNode.getOutgoingFeatureLinks();
+      for(FeatureLink featureLink : featureNodeOutgoingLinks)
+      {
+        isSatisfied = isSatisfied && evaluateFeatureLink(featureLink);
+      }
+    }
+    return isSatisfied;
+  }
+
+  public List <FeatureNode> getRootFeatures()
+  {
+    // A root feature : has outgoing links but no incoming links.
+    List <FeatureNode> rootFeatures = getNode().stream().filter(n -> (n.hasOutgoingFeatureLinks() && (! n.hasIncomingFeatureLinks()))).collect(Collectors.toList());
+    return rootFeatures;
+  }
+}
+/*
+This class used to represent the binary tree of require-statement argument 
+Ex: require [A and B or C] will be formed as: 
+          ... or...  
+   ... and...      C
+  A           B    
+*/
+class TokenTree
+{
+  depend cruise.umple.parser.Token;
+  depend cruise.umple.compiler.FeatureLink.FeatureConnectingOpType;
+
+  Token nodeToken;
+  lazy TokenTree parentTokenTree;
+  lazy TokenTree leftTokenTree;
+  lazy TokenTree rightTokenTree;
+  
+  boolean isNegated =false;
+  boolean isOpt = false;
+  boolean isLinkingOperator = false;
+
+// This method replaces the current TokenTree with a new TokenTree.
+public void replaceWith(TokenTree newTokenTree)
+{
+  this.setNodeToken(newTokenTree.getNodeToken());
+  this.setLeftTokenTree(newTokenTree.getLeftTokenTree());
+  this.setRightTokenTree(newTokenTree.getRightTokenTree());
+  this.isLinkingOperator = newTokenTree.getIsLinkingOperator();
+  this.isOpt = newTokenTree.getIsOpt();
+  this.isNegated = newTokenTree.getIsNegated();
+}
+/*
+This method selects the the connection operator type based on the type of the (linking) token.
+If the type is not specified for the linking node, The default is Required.
+It returns null if the node is termainl node.
+*/
+public FeatureConnectingOpType getFeatureConnectionOpType(boolean isSubFeature)
+{
+  if(nodeToken != null )
+  {
+    String operator = nodeToken.getName();
+    switch (operator) {
+      case "and":
+        return FeatureConnectingOpType.Conjunctive;
+      case "or":
+        return FeatureConnectingOpType.Disjunctive;
+      case "xor":
+        return FeatureConnectingOpType.XOR;
+      case "multiplicityTerminal":
+        return FeatureConnectingOpType.Multiplicity;
+      case "opt":
+        return FeatureConnectingOpType.Optional;
+      case "not":
+        return FeatureConnectingOpType.Exclude;
+      default:
+      {
+        if(isSubFeature)
+        return FeatureConnectingOpType.Mandatory;
+        else
+        return FeatureConnectingOpType.Include;
+      }
+     }
+  }
+
+  return null;
+}
+/*
+This methods returens the priority of a node to move down in the binary tree.
+high priority node moves down & low prioriy moves up 
+not > and > xor > or > ROOT (Top of the tree)
+*/
+  public int getPriority()
+  {
+    String tokenName = nodeToken.getName();
+    switch (tokenName)
+    {
+      case "and":
+      return 3;
+      case "xor":
+      return 2;
+      case "or":
+      return 1;
+      case "ROOT":
+      return 0;
+    }
+    return -1; // lower priority, leaf nodes should not move 
+  }
+
+}
