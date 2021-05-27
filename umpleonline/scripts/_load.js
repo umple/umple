@@ -44,7 +44,7 @@ document.write('<script type="text/javascript" src="scripts/jquery/showLoading/j
 document.write('<script type="text/javascript" src="scripts/mousetrap.min.js"></script>');
 
 // Dropbox
-document.write('<script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropins.js" id="dropboxjs" data-app-key="akix6305j3tm11i"></script>');
+//document.write('<script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropins.js" id="dropboxjs" data-app-key="akix6305j3tm11i"></script>');
 
 // ====== The following minified version of the subsequent group can be commented out when testing
 // Regenerate this using the allumple-minifyscript unix script (relies on yuicompressor)
