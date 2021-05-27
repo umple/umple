@@ -1,8 +1,11 @@
-let existCookie = document.cookie.match(/^(.*;)?\s*tipCookie\s*=\s*[^;]+(.*)?$/)
+//let existCookie = document.cookie.match(/^(.*;)?\s*tipCookie\s*=\s*[^;]+(.*)?$/)
+const existCookie = (name) => (
+    document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
+)
 var htmlNames = ["Importanttips.html","Secondarytips.html","Tertiarytips.html"];
 var fileNames = ["https://raw.githubusercontent.com/umple/umple/master/build/reference/6600ImportantTips.txt","https://raw.githubusercontent.com/umple/umple/master/build/reference/6601SecondaryTips.txt", "https://raw.githubusercontent.com/umple/umple/master/build/reference/6602TertiaryTips.txt"];
 
-if(existCookie===null) {
+if(existCookie('tipCookie')=="") {
     // =========================================
     // Tip Information Gatherers
     // =========================================
@@ -44,18 +47,12 @@ if(existCookie===null) {
             });
         }
         window.localStorage.setItem("first_time","1");
+        
     }
+    jQuery(document).ajaxStop(allocateMessage());
 
-    // =========================================
-    // Tip Pickers
-    // =========================================
-
-    jQuery(document).ajaxStop(function(){allocateMessage()});
-
-    let currentTime=new Date();
-    currentTime.setTime(currentTime.getTime());
-    currentTime.setHours(24, 0, 0, 0);
-    document.cookie="tipCookie=done; expires="+currentTime.toUTCString()+"; path=/";
+    let currentTime=new Date(Date.now() + 24*60*60*1000);
+    document.cookie="tipCookie=done; expires="+currentTime.toUTCString()+"; path=/;";
 }
 
 function allocateMessage() {
@@ -69,6 +66,7 @@ function allocateMessage() {
         jQuery('#styleTip a').attr('target', 'helppage');
         document.getElementById('extraInfo').innerHTML = tip[loop][num][1];
         jQuery('#extraInfo a').attr('target', 'helppage');
+
     }
     setForNext(num, priority, tip, loop);
 };
