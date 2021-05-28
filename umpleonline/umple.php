@@ -209,9 +209,9 @@ $output = $dataHandle->readData('model.ump');
             echo "<span style=\"color: red\">$alertMessage<br/></span>";
             }
             else { //tip of the day
-              $output = readfile("scripts/tipProcessor.html");
-              if ($output != FALSE && !empty($output)){
-                $output;
+              $tipOutput = readfile("scripts/tipProcessor.html");
+              if ($tipOutput != FALSE && !empty($tipOutput)){
+                $tipOutput;
               }
             }
           ?>
