@@ -435,9 +435,11 @@ class ConstraintOperator
     {
       return;
     }
-    else if((variable instanceof ConstraintAssociation)&&value.contains("cardinality"))
-    {
-      ((ConstraintAssociation)variable).setNumberOf(true);
+    mixset Association {
+      else if((variable instanceof ConstraintAssociation)&&value.contains("cardinality"))
+      {
+        ((ConstraintAssociation)variable).setNumberOf(true);
+      }
     }
     else if((variable instanceof ConstraintTree)&&((ConstraintTree)variable).getNumberOfElements()>0)
     {
@@ -805,18 +807,20 @@ class ModelConstraint
 
   before addModelConstraint { if(numberOfModelConstraints()>0)getMostRecent().setLink(getLinkNext()); }
 
-  public void addAssociationEnd(Multiplicity multiplicity)
-  {
-    if(getModelConstraint(numberOfModelConstraints()-1) instanceof ModelConstraintAssociation)
+  mixset Association {
+    public void addAssociationEnd(Multiplicity multiplicity)
     {
-      getModelConstraint(numberOfModelConstraints()-1).addAssociationEnd(multiplicity);
+      if(getModelConstraint(numberOfModelConstraints()-1) instanceof ModelConstraintAssociation)
+      {
+        getModelConstraint(numberOfModelConstraints()-1).addAssociationEnd(multiplicity);
+      }
     }
-  }
-  public void setAssociationType(String type)
-  {
-    if(getModelConstraint(numberOfModelConstraints()-1) instanceof ModelConstraintAssociation)
+    public void setAssociationType(String type)
     {
-      getModelConstraint(numberOfModelConstraints()-1).setAssociationType(type);
+      if(getModelConstraint(numberOfModelConstraints()-1) instanceof ModelConstraintAssociation)
+      {
+        getModelConstraint(numberOfModelConstraints()-1).setAssociationType(type);
+      }
     }
   }
 
@@ -859,68 +863,68 @@ class ModelConstraint
     return results.size()>0?results.get(0):ModelConstraint.SUCCESS;
   }
 }
-class ModelConstraintAssociation
-{
-  isA ModelConstraint;
-  depend cruise.umple.compiler.*;
-  depend cruise.umple.parser.Position;
-
-  Multiplicity leftHandMultiplicity = new Multiplicity();
-  Multiplicity rightHandMultiplicity = new Multiplicity();
-  type = "--";
-  boolean left = true;
-  after constructor { leftHandMultiplicity.setBound("*"); }
-  after constructor { rightHandMultiplicity.setBound("*"); }
-  public void addAssociationEnd(Multiplicity multiplicity)
+mixset Association {
+  class ModelConstraintAssociation
   {
-    if(left)
-    {
-      leftHandMultiplicity = multiplicity;
-    }
-    else
-    {
-      rightHandMultiplicity = multiplicity;
-    }
-    left = false;
-  }
-  public void setAssociationType(String aType)
-  {
-    type = aType;
-    left = false;
-  }
+    isA ModelConstraint;
+    depend cruise.umple.compiler.*;
+    depend cruise.umple.parser.Position;
 
-  public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
-  {
-    ModelConstraintResult evaluation = super.evaluate(uClassifier);
-    if(!evaluation.equals(ModelConstraint.SUCCESS))
+    Multiplicity leftHandMultiplicity = new Multiplicity();
+    Multiplicity rightHandMultiplicity = new Multiplicity();
+    type = "--";
+    boolean left = true;
+    after constructor { leftHandMultiplicity.setBound("*"); }
+    after constructor { rightHandMultiplicity.setBound("*"); }
+    public void addAssociationEnd(Multiplicity multiplicity)
     {
-      return evaluation;
-    }
-
-    if("this".equals(getSource()))
-    {
-      setSource(uClassifier.getName());
-    }
-    if(type.equals("<-"))
-    {
-      String temp = getSource();
-      setSource(getTarget());
-      setTarget(temp);
-      Multiplicity tempMultiplicity = rightHandMultiplicity;
-      rightHandMultiplicity = leftHandMultiplicity;
-      leftHandMultiplicity = tempMultiplicity;
-    }
-    if(uClassifier instanceof UmpleClass)
-    {
-      UmpleClass uClass = null;
-      uClass = ((UmpleClass)uClassifier).getSourceModel().getUmpleClass(getSource());
-
-      if(uClass == null)
+      if(left)
       {
-        return new ModelConstraintResult(getPosition(),94,getTarget(),getSource());
+        leftHandMultiplicity = multiplicity;
+      }
+      else
+      {
+        rightHandMultiplicity = multiplicity;
+      }
+      left = false;
+    }
+    public void setAssociationType(String aType)
+    {
+      type = aType;
+      left = false;
+    }
+
+    public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
+    {
+      ModelConstraintResult evaluation = super.evaluate(uClassifier);
+      if(!evaluation.equals(ModelConstraint.SUCCESS))
+      {
+        return evaluation;
       }
 
-      mixset Association {
+      if("this".equals(getSource()))
+      {
+        setSource(uClassifier.getName());
+      }
+      if(type.equals("<-"))
+      {
+        String temp = getSource();
+        setSource(getTarget());
+        setTarget(temp);
+        Multiplicity tempMultiplicity = rightHandMultiplicity;
+        rightHandMultiplicity = leftHandMultiplicity;
+        leftHandMultiplicity = tempMultiplicity;
+      }
+      if(uClassifier instanceof UmpleClass)
+      {
+        UmpleClass uClass = null;
+        uClass = ((UmpleClass)uClassifier).getSourceModel().getUmpleClass(getSource());
+
+        if(uClass == null)
+        {
+          return new ModelConstraintResult(getPosition(),94,getTarget(),getSource());
+        }
+
         for(Association association:uClass.getAssociations())
         {
           AssociationEnd theirs = null;
@@ -1038,10 +1042,11 @@ class ModelConstraintAssociation
           }
           return ModelConstraint.SUCCESS;
         }
+        
+        return new ModelConstraintResult(getPosition(),94,getTarget(),getSource());
       }
-      return new ModelConstraintResult(getPosition(),94,getTarget(),getSource());
+      return ModelConstraint.SUCCESS;
     }
-    return ModelConstraint.SUCCESS;
   }
 }
 
