@@ -71,11 +71,8 @@ def buildAliases = [
         'buildTestUnitGeneratorAndParser',
         'testbedTests',
         'allUserManualAndExampleTests'
-   ],
-   'updateUmpleonline' : [
-   	'compileUmpleSelf', 'jar',
-   	'packageUmpleonline'
    ]
+   
 ]
 def expandedTaskList = []
 
