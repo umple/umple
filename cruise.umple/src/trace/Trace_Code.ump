@@ -241,31 +241,33 @@ class AssociationVariable
 
 		for(TraceDirective td: uClass.getAllTraceDirectives())
 		{
-			for(AssociationTraceItem ast: td.getAssociationTraceItems())
-			{
-				if(( (method.equals("associationAdd")||method.equals("associationRemove")) && ast.getTraceCardinality()))
+			mixset Association {
+				for(AssociationTraceItem ast: td.getAssociationTraceItems())
 				{
-					for(AssociationVariable variable: ast.getAssociationVariables())
+					if(( (method.equals("associationAdd")||method.equals("associationRemove")) && ast.getTraceCardinality()))
 					{
-						if(variable.getName().equals(this.getName()))
-							traceItems.add(ast);
-					}
+						for(AssociationVariable variable: ast.getAssociationVariables())
+						{
+							if(variable.getName().equals(this.getName()))
+								traceItems.add(ast);
+						}
 
-				}
-				if((method.equals("associationAdd") && ast.getTraceAdd()))
-				{
-					for(AssociationVariable variable: ast.getAssociationVariables())
-					{
-						if(variable.getName().equals(this.getName()))
-							traceItems.add(ast);
 					}
-				}
-				if((method.equals("associationRemove") && ast.getTraceRemove()))
-				{
-					for(AssociationVariable variable: ast.getAssociationVariables())
+					if((method.equals("associationAdd") && ast.getTraceAdd()))
 					{
-						if(variable.getName().equals(this.getName()))
-							traceItems.add(ast);
+						for(AssociationVariable variable: ast.getAssociationVariables())
+						{
+							if(variable.getName().equals(this.getName()))
+								traceItems.add(ast);
+						}
+					}
+					if((method.equals("associationRemove") && ast.getTraceRemove()))
+					{
+						for(AssociationVariable variable: ast.getAssociationVariables())
+						{
+							if(variable.getName().equals(this.getName()))
+								traceItems.add(ast);
+						}
 					}
 				}
 			}
@@ -344,11 +346,12 @@ class AttributeTraceItem
 				{
 					name = gen.translate("attributeOne",(Attribute)o);
 				}
-				else if(o instanceof AssociationVariable)
-				{
+				mixset Association {
+				  else if(o instanceof AssociationVariable)
+				  {
 					name = gen.translate("associationMany",(AssociationVariable)o);
+				  }
 				}
-
 				if(type==null||"".equals(type)||"Boolean".equals(type)||"boolean".equals(type)||"String".equals(type)||"int".equals(type)||"Integer".equals(type)||"float".equals(type)||"Float".equals(type)||"double".equals(type)||"Double".equals(type)||"Time".equals(type)||"Date".equals(type))
 				{
 					obj = name;
@@ -467,29 +470,31 @@ mixset StateMachine {
 					extra += concatinator + param.getName();
 				}
 			}
-			else if(o instanceof State)
-			{
-				State state = (State)o;
-				name = getStateMachine().getName()+"\"";
-				obj = state.getName();
-				for( Action a : ((State) o).getActions() )
+			mixset StateMachine {
+				else if(o instanceof State)
 				{
-					if( this.getEntry() && a.getActionType().equals("entry") )
-						obj += ",actionUmpleLine=" + a.getPosition().getLineNumber();
-					if( this.getExit() && a.getActionType().equals("exit") )
-						obj += ",actionUmpleLine=" + a.getPosition().getLineNumber();
+					State state = (State)o;
+					name = getStateMachine().getName()+"\"";
+					obj = state.getName();
+					for( Action a : ((State) o).getActions() )
+					{
+						if( this.getEntry() && a.getActionType().equals("entry") )
+							obj += ",actionUmpleLine=" + a.getPosition().getLineNumber();
+						if( this.getExit() && a.getActionType().equals("exit") )
+							obj += ",actionUmpleLine=" + a.getPosition().getLineNumber();
+					}
+					}
+				else if(o instanceof Activity)
+				{
+					Activity act = (Activity)o;
+					State state = act.getState();
+					name = getStateMachine().getName()+"\"";
+					obj = state.getName();
+					if( methodname.equals("sm_da"))
+						obj += ",doActivitedStarted";
+					else if(methodname.equals("sm_di"))
+						obj += ",doActivitedInterrupted";
 				}
-			}
-			else if(o instanceof Activity)
-			{
-				Activity act = (Activity)o;
-				State state = act.getState();
-				name = getStateMachine().getName()+"\"";
-				obj = state.getName();
-				if( methodname.equals("sm_da"))
-					obj += ",doActivitedStarted";
-				else if(methodname.equals("sm_di"))
-					obj += ",doActivitedInterrupted";
 			}
 			if(getTraceDirective().getTraceRecord()!=null)
 			{
@@ -580,10 +585,11 @@ class AssociationTraceItem
 				String comma = concatinator+"\",\""+concatinator;
 				String tracerName = Character.toUpperCase(getTracerType().charAt(0)) + getTracerType().substring(1);
 				String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7},\"";
-
-				if(o instanceof AssociationVariable)
-				{
+				mixset Association {
+				  if(o instanceof AssociationVariable)
+				  {
 					name = gen.translate("associationMany",(AssociationVariable)o);
+			  	  }
 				}
 
 				//         if(type==null||"".equals(type)||"Boolean".equals(type)||"boolean".equals(type)||"String".equals(type)||"int".equals(type)||"Integer".equals(type)||"float".equals(type)||"Float".equals(type)||"double".equals(type)||"Double".equals(type)||"Time".equals(type)||"Date".equals(type))
