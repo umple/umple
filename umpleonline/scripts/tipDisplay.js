@@ -1,4 +1,3 @@
-//let existCookie = document.cookie.match(/^(.*;)?\s*tipCookie\s*=\s*[^;]+(.*)?$/)
 const existCookie = (name) => (
     document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
 )
@@ -6,10 +5,6 @@ var htmlNames = ["Importanttips.html","Secondarytips.html","Tertiarytips.html"];
 var fileNames = ["https://raw.githubusercontent.com/umple/umple/master/build/reference/6600ImportantTips.txt","https://raw.githubusercontent.com/umple/umple/master/build/reference/6601SecondaryTips.txt", "https://raw.githubusercontent.com/umple/umple/master/build/reference/6602TertiaryTips.txt"];
 
 if(existCookie('tipCookie')=="") {
-    // =========================================
-    // Tip Information Gatherers
-    // =========================================
-    
     var firstTime = localStorage.getItem("first_time");
     if(!firstTime) {
         window.localStorage.setItem('tipCount',0);
@@ -109,7 +104,7 @@ function hideExtra(){
     document.getElementById('extraInfo').classList.add("fade-outInst");
 }
 
-function calculateDelay(){
+function calculateDelay(){ // 5s + 1s/3words + 5s (iff link exists)
     sectionHtml=document.getElementById('extraInfo').innerHTML;
     sectionText=document.getElementById('extraInfo').textContent;
 
@@ -133,7 +128,7 @@ function calculateDelay(){
         sum += 5;
     }
 
-    return sum*1000; // get Prev, Next, View All out of count, and turn into milliseconds
+    return sum*1000;
 }
 
 // =========================================
@@ -255,7 +250,7 @@ function showPrevious(){
             
             setForNext(num, priority, tip, loop);
         }
-        else if (loop-1 >= 0 && priority == 0){ //change versions
+        else if (loop-1 >= 0 && priority == 0){ //change version or "loop"
             priority=2;
             window.localStorage.setItem('priorityCount',priority);
             tip = JSON.parse(window.localStorage.getItem('tipInfo'+priority));
