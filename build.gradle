@@ -72,6 +72,10 @@ def buildAliases = [
         'testbedTests',
         'allUserManualAndExampleTests'
    ],
+   'updateUmpleonline' : [
+   	'compileUmpleSelf', 'jar',
+   	'packageUmpleonline'
+   ]
 ]
 def expandedTaskList = []
 
