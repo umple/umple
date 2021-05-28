@@ -71,6 +71,10 @@ def buildAliases = [
         'buildTestUnitGeneratorAndParser',
         'testbedTests',
         'allUserManualAndExampleTests'
+   ],
+   'updateUmpleonline' : [
+   	'compileUmpleSelf', 'packageAllJars',
+   	'packageUmpleonline'
    ]
    
 ]
@@ -207,7 +211,6 @@ subprojects{
         } else {
             // Still default to using the stable downloaded jar
             runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
-            println("cc")
         }
        }
     }
