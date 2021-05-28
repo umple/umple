@@ -3,8 +3,10 @@
 class UmpleInternalParser {
    Map<Attribute,Token> fixmlLastIntilialization = new HashMap<Attribute, Token>();
    Map<Attribute,Integer> fixmlAttributeCount = new HashMap<Attribute, Integer>();
-   Map<Association,List<Token>> afixmlLastIntilialization = new HashMap<Association, List<Token>>();
-   Map<Association,Integer> afixmlAttributeCount = new HashMap<Association, Integer>();
+   mixset Association {
+     Map<Association,List<Token>> afixmlLastIntilialization = new HashMap<Association, List<Token>>();
+     Map<Association,Integer> afixmlAttributeCount = new HashMap<Association, Integer>();
+   }
 //----------------------------------------------------------------------------  
 //---------------------------------Start--------------------------------------
 //----------------------------------------------------------------------------  
@@ -42,7 +44,9 @@ class UmpleInternalParser {
 			if (subToken.getName().equals("fixmlContent")) {
 				analyzeFIXMLContetnt(subToken);
 				//assignInitialValues(); // based-on-single-attributes
-				assignAssociationInitialValues(); // based-on-single-associations
+				mixset Association {
+				  assignAssociationInitialValues(); // based-on-single-associations
+				}
 			}
 		}
    }
@@ -103,10 +107,14 @@ class UmpleInternalParser {
 			} else if (subToken.getName().equals("endContent")){
 				UmpleClass rUClass = analyzeFIXMLEndContetnt(uClass,subToken);
 				//addAttributes(uClass, rUClass,subToken); //based-on-single-attributes
-				addAssociation(uClass, rUClass,subToken); // based-on-single-associations
+				mixset addAssociation {
+				  addAssociation(uClass, rUClass,subToken); // based-on-single-associations
+				}
 			} else if (subToken.getName().equals("extendContent")) {
 				UmpleClass rUClass = analyzeFIXMLextendedContentContetnt(subToken);
-				addAssociation(uClass, rUClass,subToken); // based-on-single-associations
+				mixset Association {
+				  addAssociation(uClass, rUClass,subToken); // based-on-single-associations
+				}
 				//addAttributes(uClass, rUClass,subToken); //based-on-single-attributes
 			}
 		}
@@ -314,6 +322,7 @@ class UmpleInternalParser {
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
+mixset Association {
    private void addAssociation(UmpleClass uClass, UmpleClass rUClass, Token mainToken){
     Multiplicity m = new Multiplicity();
 		Association aAss = getModel().getAssociation(rUClass.getName()+"_Object");
@@ -486,6 +495,7 @@ class UmpleInternalParser {
 	  value = value.subSequence(0, value.length()-2) + ")";	
 	  return value;
    }
+}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
