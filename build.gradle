@@ -47,7 +47,6 @@ def buildAliases = [
        'resetUmpleSelf',
        'compileJava',
        'packageAllJars',
-       'packageDocs'
    ],
    'quickbuild' : [
         'cleanUpUmple',
@@ -67,17 +66,12 @@ def buildAliases = [
         'packageAllJars',
         'resetVersion',
         'updateLatestVersion',
-        'packageDocs'
    ],
    'testall' : [
         'buildTestUnitGeneratorAndParser',
         'testbedTests',
         'allUserManualAndExampleTests'
    ],
-   'updateUmpleOnline' : [
-   	'compileUmpleSelf', 'jar',
-   	'packageUmpleonline'
-   ]
 ]
 def expandedTaskList = []
 
@@ -124,7 +118,6 @@ dependencies {
     ivy group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.core', version: '3.10.0'
 }
 
-
 // ===================
 //  Umple compilation
 // ===================
@@ -137,6 +130,13 @@ task downloadUmpleJar(type: Download) {
     overwrite true
     src rootProject.ext.umpleJarRemoteSource
     dest rootProject.ext.umpleJarRemoteFile
+}
+task deployUmpleJar {
+ copy{
+ 	from umpleJarRemoteFile
+ 	into "${rootProject.ext.distdir}/gradle/libs"
+ 	rename "umple-latest.jar","umple-${rootProject.ext.umpleCurrentVersion}.jar"
+ }
 }
 
 task downloadJOptSimpleVendorZip(type: Download) {
@@ -191,7 +191,7 @@ subprojects{
     def masterFile = "${projectDir.toString()}/${project.ext.masterFile}"
 
     // Compile task using remote jar
-    task ('compileUmple') {
+   task ('compileUmple') {
     	doLast{
         runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
         }
@@ -206,6 +206,7 @@ subprojects{
         } else {
             // Still default to using the stable downloaded jar
             runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
+            println("cc")
         }
        }
     }
@@ -496,7 +497,7 @@ task qaBuildingPage(type: Copy) {
     rename 'qa_updating.php', 'index.php'
     doFirst {
         println("Creating the QA landing page")
-        if (inputs.sourceFiles.isEmpty()) {throw new StopExecutionException()} 
+        inputs.sourceFiles.stopExecutionIfEmpty()
     }
 }
 
@@ -538,7 +539,8 @@ task ('resetVersion') {
     }
 }
 
-task deployUmpleOnlineJars(type: Copy) {
+//Unused
+/*task deployUmpleOnlineJars(type: Copy) {
     from "${rootProject.projectDir.toString()}/dist/gradle/libs"
     into "/h/ralph/sites/www/html/umpleonline/scripts/"
     doFirst {
@@ -550,7 +552,8 @@ task deployUmpleOnlineJars(type: Copy) {
     include "umplevml-${rootProject.ext.umpleLastVersion}.jar"
 }
 
-task deployUpdatedLib(type: Copy) {
+
+/*task deployUpdatedLib(type: Copy) {
     from "${rootProject.projectDir.toString()}/dist/gradle/libs"
     into "${rootProject.projectDir.toString()}/lib"
     doFirst {
@@ -568,7 +571,7 @@ task deploy {
     }
     dependsOn deployUmpleOnlineJars
     dependsOn deployUpdatedLib
-}
+}*/
 
 // Builds self
 task resetUmpleSelf {
@@ -707,8 +710,7 @@ task ('javaTestbedCompileUmple') {
     }
    }
 }
-
-task javaTestbedCompile (type: JavaCompile) {
+task javaTestbedCompile(type: JavaCompile) {
     options.fork = true
     classpath = files(
         rootProject.ext.classfileOutputDir,
@@ -718,16 +720,14 @@ task javaTestbedCompile (type: JavaCompile) {
     source "${rootProject.projectDir.toString()}/testbed/src"
     source "${rootProject.projectDir.toString()}/testbed/src-gen-umple"
     source "${rootProject.projectDir.toString()}/testbed/test"
-    exclude '**/*.ump', '**/.git*', '**/data', 'cruise/compiler/src-gen-umple/**'
+    exclude '**/*.ump', '**/.git*', '**/data'
     dependsOn javaTestbedCompileUmple
 }
 
 task javaTestbedTest(type: Test) {
     testClassesDirs = fileTree(
         dir: "${rootProject.projectDir.toString()}/testbed/test",
-        includes: ["**/*Test*.java", "**/AllTests.java", "**/*ErrorOutputTests.java"]
-        )
-        
+        includes: ["**/*Test*.java", "**/AllTests.java", "**/*ErrorOutputTests.java"])
     classpath = sourceSets.test.runtimeClasspath
     dependsOn javaTestbedCompile
 }
@@ -782,7 +782,6 @@ task ('rubyTestbedCompileUmple') {
     runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed/src/TestHarnessRuby.ump")
     }
 }
-
 task rubyTestbedCompile {
     dependsOn rubyTestbedCompileUmple
 }
@@ -1105,39 +1104,6 @@ doLast {
  	 	include "umplevml*.jar"
  		rename ("(.*)umplevml(.*)", 'vml.jar')
  		
- 		//Compress JS TODO
  	}
  	}
 } 
- 
-  
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-
