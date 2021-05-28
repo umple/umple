@@ -1563,18 +1563,18 @@ Action.loadExample = function loadExample()
   var diagramType="";
   if(Page.useGvStateDiagram) {
     diagramType="&diagramtype=state";
-    jQuery("#genjava").prop("selected",true);
+    //jQuery("#genjava").prop("selected",true);
   }
  else if(Page.useGvFeatureDiagram) {
     diagramType="&diagramtype=GvFeature";
-    jQuery("#genjava").prop("selected",true);
+    //jQuery("#genjava").prop("selected",true);
   }
   else if(Page.useStructureDiagram) {
     diagramType="&diagramtype=structure&generateDefault=cpp";
-    jQuery("#gencpp").prop("selected",true);
+    //jQuery("#gencpp").prop("selected",true);
   }
   else {
-    jQuery("#genjava").prop("selected",true);
+    //jQuery("#genjava").prop("selected",true);
   }
   
   var largerSelector = "#buttonLarger";
