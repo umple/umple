@@ -190,7 +190,6 @@ $output = $dataHandle->readData('model.ump');
 </head>
 <body>
   <?php if($showChrome) { ?> 
-  
     <div id="header" class="row">
         <span style="float: right">
           <a href="https://www.uottawa.ca" target="uottawatab"><img height="33px" src="scripts/uottawa_ver_black.png" alt="University of Ottawa logo / Université d'Ottawa" /></a>        
@@ -202,14 +201,21 @@ $output = $dataHandle->readData('model.ump');
         <p class="pagedescription">
         
         <span class="pretext">
-          Draw on the right, write (Umple) model code on the left. Analyse models and generate code.
-          <?php
-          $alertMessage = @file_get_contents("ump/aalertMessage.txt");
-          if($alertMessage != FALSE && !empty($alertMessage)) {
-          echo "<span style=\"color: red\"><br/>$alertMessage</span>";
-          }
+          Draw on the right, write (Umple) model code on the left. Analyse models and generate code.<br/>
+           <?php
+            //alert message
+            $alertMessage = @file_get_contents("ump/aalertMessage.txt");
+            if($alertMessage != FALSE && !empty($alertMessage)) {
+            echo "<span style=\"color: red\">$alertMessage<br/></span>";
+            }
+            else { //tip of the day
+              $tipOutput = readfile("scripts/tipProcessor.html");
+              if ($tipOutput != FALSE && !empty($tipOutput)){
+                $tipOutput;
+              }
+            }
           ?>
-        <br/></span>
+        </span>
         <span id="gdprtext" class="pretext">        
           This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="http://privacy.umple.org" target="privacy">Click to learn about privacy.</a>
         <br/></span>
@@ -222,7 +228,7 @@ $output = $dataHandle->readData('model.ump');
           For help:
     <?php if(strpos($_SERVER['REQUEST_URI'], 'umple.php') !== false && strpos($_SERVER['REQUEST_URI'], 'umpleonline/umple.php') === false ) {$manpage="/manual/GettingStarted.html";} else {$manpage="http://manual.umple.org";} ?>                
     <span style="font-size: 30%; white-space:nowrap;">
-    <a class="button2" style="line-height: 1" href="<?php echo $manpage ?>" target="helppage" title="Open the Umple user manual in a seprate tab" >User manual</a>&nbsp;
+    <a class="button2" style="line-height: 1" href="<?php echo $manpage ?>" target="helppage" title="Open the Umple user manual in a separate tab" >User manual</a>&nbsp;
     <a class="button2" style="line-height: 1" href="http://questions.umple.org"
        target="questionpage" title="Open a separate tab on the StackOverflow page where you can ask Umple community members questions">Ask questions</a>&nbsp;
     <a class="button2" style="line-height: 1" href="https://github.com/umple/umple/issues/new" target="issuepage" title="Open a separate tab on the page where you can report an Umple bug or request an improvement">Report issue</a>&nbsp;

@@ -1768,6 +1768,14 @@ Action.setCaretPosition = function(line)
       Page.setFeedbackMessage("Debug Mode");
       return;
     }
+    if(line=="tc")
+    { // resets cookies for tips
+      Page.setFeedbackMessage("Clearing tip cookies");
+      let currentTime=new Date();
+      currentTime.setTime(currentTime.getTime()-1000);
+      window.localStorage.removeItem("first_time");
+      document.cookie="tipCookie=done; expires="+currentTime.toUTCString()+"; path=/;";
+    }
     if(line.substr(0,2)=="cm") 
     {
       if(line.substr(2,1)=="0" && Page.codeMirrorOn) 
