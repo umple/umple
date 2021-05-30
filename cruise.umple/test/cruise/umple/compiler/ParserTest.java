@@ -1,10 +1,8 @@
 /*
-
  Copyright: All contributers to the Umple Project
- 
+
  This file is made available subject to the open source license found at:
  http://umple.org/license
-
 */
 
 package cruise.umple.compiler;
@@ -38,7 +36,7 @@ public class ParserTest
 
   Parser parser;
 
-  
+
 
   @Before
 
@@ -63,9 +61,9 @@ public class ParserTest
 
   }
 
-  
 
-  
+
+
 
   @Test
 
@@ -159,7 +157,7 @@ public class ParserTest
 
   }
 
-  
+
 
 
 
@@ -169,7 +167,7 @@ public class ParserTest
 
   {
 
-    
+
 
     SampleFileWriter.createFile("grammar01.txt", "program : [name] = [[value]] ;\nvalue : a | b\n\n");
 
@@ -181,7 +179,7 @@ public class ParserTest
 
   }
 
-  
+
 
 
 
@@ -1890,7 +1888,7 @@ public class ParserTest
     Assert.assertEquals("[test][name:a][value:b]", parser.toString());
 
   }
-  
+
   @Test
   public void parseAlphanumeric()
   {
@@ -1899,9 +1897,9 @@ public class ParserTest
     assertParse(true, parser.parse("name", "anythingnothing;"));
     assertParse(true, parser.parse("name", "anything_nothing;"));
   }
-  
-  
-  
+
+
+
 
 
 
@@ -1943,7 +1941,7 @@ public class ParserTest
 
   {
 
-	Parser p = new Parser("filename.ugh", null);  
+	Parser p = new Parser("filename.ugh", null);
 
 	Assert.assertEquals("filename.ugh", p.getFilename());
 
@@ -1973,9 +1971,9 @@ public class ParserTest
 
   }
 
-  
 
-  
+
+
 
   @Test
 
@@ -1987,27 +1985,27 @@ public class ParserTest
 
 	parser.setRootToken(parser.reset());
 
-	
+
 
 	parser.addRule("attribute : [=unique]? [=modifier:immutable|settable|internal|defaulted|const]? [type,name>1,0] (= [value])? ;");
 
     assertParse(true, parser.parse("attribute", "unique Integer number = 1;"));
 
-    
+
 
     Token t = parser.getRootToken();
 
     Assert.assertEquals("shoes.omg", t.getPosition().getFilename());
 
-    
+
 
     t.setPosition(new Position(1,1,1));
 
     Assert.assertEquals("shoes.omg", t.getPosition().getFilename());
 
-  }  
+  }
 
-  
+
 
   @Test
 
@@ -2025,7 +2023,7 @@ public class ParserTest
 
 	  l.add("one");
 
-	  
+
 
 	  Assert.assertEquals("this is an error zero, one", et.format(l));
 
@@ -2036,9 +2034,9 @@ public class ParserTest
 
   }
 
-  
 
-  @Test 
+
+  @Test
 
   public void errorTypeSingleton()
 
@@ -2048,11 +2046,11 @@ public class ParserTest
 
 	  ets.clear();
 
-	  
+
 
 	  ets.addErrorType(new ErrorType(1001, 10, "This is a test error {0}", "url"));
 
-	  
+
 
 	  ErrorType et = ets.getErrorTypeForCode(1001);
 
@@ -2062,7 +2060,7 @@ public class ParserTest
 
 	  Assert.assertEquals("This is a test error {0}", et.getErrorFormat());
 
-	  
+
 
 	  et = ets.getErrorTypeForCode(1002);
 
@@ -2070,9 +2068,9 @@ public class ParserTest
 
   }
 
-  
 
-  @Test 
+
+  @Test
 
   public void errorMessage()
 
@@ -2082,57 +2080,57 @@ public class ParserTest
 
 	  ets.clear();
 
-	  
+
 
 	  ets.addErrorType(new ErrorType(1002, 5, "This is a test error {0}, {1}", "url"));
 
-	  
+
 
 	  ErrorMessage em = new ErrorMessage(1002, new Position("filename",0,0,0), "zero", "one");
 
 	  Assert.assertEquals("Warning 1002 on line 0 of file \'filename\':\nThis is a test error zero, one", em.toString());
-	  
 
-	  ets.addErrorType(new ErrorType(1003, 2, "This is a test error {0}, {1}", "url"));	  
+
+	  ets.addErrorType(new ErrorType(1003, 2, "This is a test error {0}, {1}", "url"));
 	  em = new ErrorMessage(1003, new Position("filename",0,0,0), "zero", "one");
   	  Assert.assertEquals("Error 1003 on line 0 of file \'filename\':\nThis is a test error zero, one",em.toString());
 
   }
-  @Test 
+  @Test
   public void jsonMessage()
   {
 
 	  ErrorTypeSingleton ets = ErrorTypeSingleton.getInstance();
 	  ets.clear();
-	  
+
 	  ets.addErrorType(new ErrorType(1002, 5, "Test \"{0}\"", "url"));
-	  
+
 	  ParseResult pr = new ParseResult(true);
-	  
+
 	  pr.addErrorMessage(new ErrorMessage(1002, new Position("file1",0,0,0), " \\' "));
 	  pr.addErrorMessage(new ErrorMessage(1002, new Position("file2",0,0,0), " \" "));
-	  
+
 	  Assert.assertEquals("{ \"results\" : [ { \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file1\", \"message\" : \"Test \\\' \\\\' \\\'\"},{ \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file2\", \"message\" : \"Test \\\' \\\' \\\'\"}]}",pr.toJSON());
   }
-  
+
   @Test
   public void parseResultSeverity()
   {
 	  ErrorTypeSingleton ets = ErrorTypeSingleton.getInstance();
 	  ets.clear();
-	  
+
 	  ets.addErrorType(new ErrorType(1002, 5, "test1", "url1"));
 	  ets.addErrorType(new ErrorType(1003, 1, "test2", "url2"));
 
 	  ErrorMessage em = new ErrorMessage(1002, new Position("",0,0,0));
-	  
+
 	  ParseResult pr = new ParseResult(true);
-	  
+
 	  pr.addErrorMessage(em);
-	  
+
 	  Assert.assertEquals(pr.getHasWarnings(), true);
 	  Assert.assertEquals(pr.getWasSuccess(), true);
-	  
+
 	  em = new ErrorMessage(1003, new Position("",0,0,0));
 
 	  pr = new ParseResult(true);
@@ -2142,8 +2140,8 @@ public class ParserTest
 	  Assert.assertEquals(pr.getHasWarnings(), false);
 	  Assert.assertEquals(pr.getWasSuccess(), false);
   }
-  
-  @Test 
+
+  @Test
   public void staticRuleSpacing()
   {
 	  parser.addRule("test_rule1 : a b ;");
@@ -2158,9 +2156,9 @@ public class ParserTest
 	  //assertParse(false, parser.parse("test_rule2", "de f"));
 	  //assertParse(false, parser.parse("test_rule2", "d ef"));
 	  //assertParse(false, parser.parse("test_rule2", "def"));
-	  
+
   }
-  
+
   @Test
   public void staticVarRuleSpacing()
   {
@@ -2170,7 +2168,7 @@ public class ParserTest
 	  assertParse(true, parser.parse("test_rule1", "a b;"));
 	  //assertParse(false, parser.parse("test_rule1", "ab;"));
 	  //assertParse(false, parser.parse("test_rule1", "ab ;"));
-	  
+
 	  parser.addRule("test_rule2 : d [var] f");
 	  assertParse(true, parser.parse("test_rule2", "d e f"));
 	  //assertParse(false, parser.parse("test_rule2", "de f"));
@@ -2179,7 +2177,7 @@ public class ParserTest
   }
 
 
-  @Test 
+  @Test
   public void optionalRuleSpacing()
   {
 	  parser.addRule("test_rule1 : a [var]? ;");
@@ -2193,7 +2191,7 @@ public class ParserTest
 	  assertParse(true, parser.parse("test_rule1", "a;"));
   }
 
-  @Test 
+  @Test
   public void varOptionalRuleSpacing()
   {
 	  parser.addRule("test_rule1 : a [var1] [var2]? ;");
@@ -2208,71 +2206,65 @@ public class ParserTest
 	  //assertParse(true, parser.parse("test_rule1", "a b;"));
   }
 
-  @Test 
+  @Test
   public void optionalRuleSpacingHardMode()
   {
-	  
+
 	  parser.addRule("test : [[test_rule1]] | [[test_rule2]] ");
 	  parser.addRule("test_rule1 : a [var1] [var2]? ;");
 
-	  //assertParse(false, parser.parse("test", "a b; b;"));	  
-	  
+	  //assertParse(false, parser.parse("test", "a b; b;"));
+
   }
-  
+
   @Test
   public void commentEndOfLineTest()
   {
 	  parser.addRule("program : [[comment]] [var]");
-	  parser.addRule("comment : // [*inlineComment] | # [*inlineComment]");
+	  parser.addRule("comment : // [*inlineComment]");
 	  assertParse(true, parser.parse("program", "//\nblah"));
-	  assertParse(true, parser.parse("program", "#\nblah"));
   }
-  
+
   @Test
   public void commentEndOfLineTest2()
   {
 	  parser.addRule("program : [[comment]] [var]");
-	  parser.addRule("comment : // [*inlineComment] | # [*inlineComment]");
+	  parser.addRule("comment : // [*inlineComment]");
 	  assertParse(true, parser.parse("program", "//test\nblah"));
-	  assertParse(true, parser.parse("program", "#test\nblah"));
   }
-  
+
   @Test
   public void commentEndOfLineTest3()
   {
 	  parser.addRule("program : [[comment]] [var] [[comment]] [var]");
-	  parser.addRule("comment : // [*inlineComment] | # [*inlineComment]");
+	  parser.addRule("comment : // [*inlineComment]");
 	  assertParse(true, parser.parse("program", "//\nfoo\n//\nbar"));
-	  assertParse(true, parser.parse("program", "#\nfoo\n#\nbar"));
   }
-  
+
   @Test
   public void longCommentWithSpacesBasic()
   {
 	  parser.addRule("program : [[comment]] [var]");
-	  parser.addRule("comment : // [*inlineComment] | # [*inlineComment]");
+	  parser.addRule("comment : // [*inlineComment]");
 	  assertParse(true, parser.parse("program", "// \nfoobar"));
-	  assertParse(true, parser.parse("program", "# \nfoobar"));
   }
-  
+
   @Test
   public void longCommentWithSpacesModerate()
   {
 	  parser.addRule("program : [[comment]] [var]");
-	  parser.addRule("comment : // [*inlineComment] | # [*inlineComment]");
+	  parser.addRule("comment : // [*inlineComment]");
 	  assertParse(true, parser.parse("program", "//          \nfoobar"));
-	  assertParse(true, parser.parse("program", "#          \nfoobar"));
   }
-  
+
   @Test
   public void longCommentWithSpacesAdvanced()
   {
 	  parser.addRule("program : [[comment]] [var] [[comment]] [var] [[comment]] [var] [[comment]] [var] [[comment]] [var]");
-	  parser.addRule("comment : // [*inlineComment] | # [*inlineComment]");
+	  parser.addRule("comment : // [*inlineComment]");
 	  assertParse(true, parser.parse("program", "// \nfoobar\n//          \nabc\n//  \n123\n//          \nblah\n// \nstudent"));
-	  assertParse(true, parser.parse("program", "# \nfoobar\n#          \nabc\n#  \n123\n#          \nblah\n# \nstudent"));
   }
-  
+
   @Test
   public void multiLineCommentEndOfLineTest()
   {
@@ -2280,7 +2272,17 @@ public class ParserTest
 	  parser.addRule("comment : /* [**multilineComment] */");
 	  assertParse(true, parser.parse("program", "/**/\nfoobar"));
   }
-  
+
+  @Test
+  public void pythonStyleCommentTest()
+  {
+    Parser parsernew  =  new Parser(null);
+    parsernew.addRule("program- : [[comment]]");
+    parsernew.addRule("comment- : [[inlineComment]]");
+    parsernew.addRule("inlineComment- : # [*inlineComment]");
+    assertParse(true, parsernew.parse("program", "#testComment"));
+  }
+
   @Test
   public void multiLineCommentEndOfLineTest2()
   {
@@ -2288,7 +2290,7 @@ public class ParserTest
 	  parser.addRule("comment : /* [**multilineComment] */");
 	  assertParse(true, parser.parse("program", "/*test*/\nfoobar"));
   }
-  
+
   @Test
   public void multiLineCommentEndOfLineTest3()
   {
@@ -2296,7 +2298,7 @@ public class ParserTest
 	  parser.addRule("comment : /* [**multilineComment] */");
 	  assertParse(true, parser.parse("program", "/**/\nfoo\n/**/\nbar"));
   }
-  
+
   @Test
   public void multiLineCommentWithSpacesBasic()
   {
@@ -2304,7 +2306,7 @@ public class ParserTest
 	  parser.addRule("comment : /* [**multilineComment] */");
 	  assertParse(true, parser.parse("program", "/* */\nfoo"));
   }
-  
+
   @Test
   public void multiLineCommentWithSpacesModerate()
   {
@@ -2312,7 +2314,7 @@ public class ParserTest
 	  parser.addRule("comment : /* [**multilineComment] */");
 	  assertParse(true, parser.parse("program", "/*      \n  */\nfoo"));
   }
-  
+
   @Test
   public void multiLineCommentWithSpacesAdvanced()
   {
@@ -2320,7 +2322,7 @@ public class ParserTest
 	  parser.addRule("comment : /* [**multilineComment] */");
 	  assertParse(true, parser.parse("program", "/**/\nfoo\n/*     \n  */\nbar\n/*\n    \n  *\n*/\nfoobar"));
   }
-  
+
   @Test
   public void methodComment()
   {
@@ -2328,10 +2330,10 @@ public class ParserTest
 	  parser.addRule("comment : /* [**multilineComment] */");
 	  parser.addRule("concreteMethodDeclaration :  [type] [[methodDeclarator]] { [**code] }");
 	  parser.addRule("methodDeclarator : [methodName] OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET");
-	  
+
 	  assertParse(true, parser.parse("program", "/* This is a comment */\nvoid print()\n{\nSystem.out.println(\"derp\");\n}\n"));
   }
-  
+
   private void assertParse(Position expected, ParseResult result)
 
   {
@@ -2349,9 +2351,8 @@ public class ParserTest
     Assert.assertEquals(expected, result.getWasSuccess());
 
   }
-  
- 
-  
+
+
+
 
 }
-
