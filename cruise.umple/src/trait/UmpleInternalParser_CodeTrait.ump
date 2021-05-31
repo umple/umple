@@ -1736,6 +1736,7 @@ private Map<UmpleTrait, List<Attribute>> gatherAttributes(UmpleTrait inTrait, Ge
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
+mixset Association {
 private Map<UmpleTrait, List<AssociationVariable>> gatherAssociations(UmpleTrait inTrait, GeneralTPApplied inGTPApplied, UmpleClass inClass) {
      Map<UmpleTrait, List<AssociationVariable>> traitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>(); 
  	 Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
@@ -1761,6 +1762,7 @@ private Map<UmpleTrait, List<AssociationVariable>> gatherAssociations(UmpleTrait
     	 AddAssociationMapToAnother(traitAssociationVariables,tempTraitAssociationVariables);
 	 }
      return traitAssociationVariables;
+}
 }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   

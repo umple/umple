@@ -571,7 +571,7 @@ class AssociationTraceItem
 	 * @return the message for the trace 
 	 */  
 	public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args){
-
+		mixset Association {
 		for(AssociationVariable ass: uClass.getAssociationVariables())
 		{
 			if(ass.equals(o))
@@ -645,6 +645,7 @@ class AssociationTraceItem
 				}
 				return message;
 			}
+		}
 		}
 
 		return "";
