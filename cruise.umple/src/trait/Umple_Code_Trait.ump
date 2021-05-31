@@ -86,7 +86,7 @@ class UmpleTrait {
       }
     }
     return null;
-  }	
+    }	
   }
     public boolean isImmutable(){
     	return (iAmImmutable || ancestorIsImmutable);
@@ -114,10 +114,10 @@ class UmpleTrait {
 	      if (this.hasStateMachines()) { return false; } 
         }
         mixset Association {
-	      for (AssociationVariable av : associationVariables)
-	      {
-	        if (!immutabilityAssociationRulesSatisfied(av, true)) { return false; }
-	      }
+          for (AssociationVariable av : associationVariables)
+          {
+            if (!immutabilityAssociationRulesSatisfied(av, true)) { return false; }
+          }
         }
 	    }	    
 	    return notifySubclassesAncestorImmutable(isImmutable);
