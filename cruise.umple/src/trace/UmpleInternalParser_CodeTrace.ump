@@ -161,7 +161,9 @@ class UmpleInternalParser
   private void analyzeTraceStatement(UmpleClass aClass, Token token){
     traceDirective = new TraceDirective(model.getTracer());
     traceAttr = new AttributeTraceItem(traceDirective);
+    mixset Association {
     tracedAssoc = new AssociationTraceItem(traceDirective);
+    }
     mte = new MethodTraceItem(traceDirective);
     post = new Postfix(traceDirective);
     TraceRecord traceRecord = null;
@@ -219,7 +221,9 @@ class UmpleInternalParser
         if(others.isEmpty())
         {
         	cond.setConstraint(constraint);
+          mixset Association {
           tracedAssoc.setConstraint(constraint);
+          }
           mte.setConstraint(constraint);
         }
         else
@@ -395,6 +399,7 @@ class UmpleInternalParser
         traceAttr.setTraceSet(true);
       }
     }
+    mixset Association {
     //------------- trace all associations [wildcard]
     if( traceToken.getValue("traceEntity").toLowerCase().equals("allassociations") )
     {
@@ -405,6 +410,7 @@ class UmpleInternalParser
       	tracedAssoc.setTraceAdd(true);
       	tracedAssoc.setTraceRemove(true);
       }
+    }
     }
     //------------- trace all non-api methods [wildcard]
     if( traceToken.getValue("traceEntity").toLowerCase().equals("allnonapimethods") )
@@ -465,7 +471,7 @@ class UmpleInternalParser
         }
       }
     }
-
+    mixset Association {
     // --- check if association
     for( AssociationVariable aVar : aClass.getAssociationVariables() )
     {
@@ -481,6 +487,7 @@ class UmpleInternalParser
       {
         traceItemType = 3;
       }
+    }
     }
 
     // --- check if method
