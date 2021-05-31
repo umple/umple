@@ -282,13 +282,15 @@ class UmpleInternalParser
       Depend d = new Depend(token.getValue());
       aTrait.addDepend(d);
     }
-    else if (token.is("inlineAssociation"))
-    {
-      analyzeinlineAssociation(token,aTrait);
-    }
-    else if (token.is("symmetricReflexiveAssociation"))
-    {
-      analyzeSymmetricReflexiveAssociation(token,aTrait);
+    mixset Association {
+      else if (token.is("inlineAssociation"))
+      {
+        analyzeinlineAssociation(token,aTrait);
+      }
+      else if (token.is("symmetricReflexiveAssociation"))
+      {
+        analyzeSymmetricReflexiveAssociation(token,aTrait);
+      }
     }    
     else if (token.is("exception"))
     {
@@ -530,6 +532,7 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
+mixset Association {
    private void analyzeinlineAssociation(Token inlineAssociationToken, UmpleTrait aTrait){
     
     Association association = analyzeAssociation(inlineAssociationToken,aTrait.getName());
@@ -597,6 +600,7 @@ class UmpleInternalParser
     
   }
 
+
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
@@ -624,6 +628,7 @@ class UmpleInternalParser
     aTrait.addAssociation(assoc);
     */
   } 
+}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
@@ -744,10 +749,12 @@ class UmpleInternalParser
     {
       analyzeInvariant(t,inTrait);
     }
-    else if (t.is("beforeCode") || t.is("afterCode"))
-    {
-    //TODO should applied for traits
-      analyzeInjectionCode(t,inTrait);
+    mixset AspectInjection {
+      else if (t.is("beforeCode") || t.is("afterCode"))
+      {
+      //TODO should applied for traits
+        analyzeInjectionCode(t,inTrait);
+      }
     }
     else if (t.is("key") || t.is("defaultKey"))
     {
@@ -755,7 +762,9 @@ class UmpleInternalParser
     //  analyzeKey(t,aClass);
     }
     //analyzeTraceToken(t,aClass);
-    analyzeLayoutToken(t,inTrait,analysisStep);
+    mixset Layout {
+      analyzeLayoutToken(t,inTrait,analysisStep);
+    }
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -771,7 +780,9 @@ class UmpleInternalParser
         if (uClass.hasExtendsTraits()) {
           if (getParseResult().getWasSuccess()) copyAttributesFromTraitsToClass(uClass);
           if (getParseResult().getWasSuccess()) copyMethodsFromTraitToClass(uClass);
-          if (getParseResult().getWasSuccess()) copyAssociationsFromTraitToClass(uClass);
+          mixset Association {
+            if (getParseResult().getWasSuccess()) copyAssociationsFromTraitToClass(uClass);
+          }
           mixset StateMachine {
           if (getParseResult().getWasSuccess()) copyStateMachinesFromTraiToClass(uClass);
           }
@@ -987,6 +998,7 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
+mixset Association {
   private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationVariable, GeneralTPApplied inGeneralTPApplied,UmpleClass inClass, UmpleTrait inTrait) {  
     String rawRName = "";
     String rName = "";
@@ -1051,6 +1063,7 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 		    aAssociation.setSource(Association.Source.fTrait);
 	    	inClass.addAssociation(aAssociation);
 	    }
+}
 }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1141,12 +1154,13 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 		for(ConstraintTree aConstraint : inTrait.getConstraintTrees()) {
 			inClass.addConstraintTree(aConstraint);
 		}	
-		
+		mixset AspectInjection {
        // copy injection codes
        for (CodeInjection cj : inTrait.getCodeInjections()) {
                cj.setUmpleClassifier(inClass);
                inClass.addCodeInjection(cj);
        }
+    }
        // copy Extra code
        inClass.appendExtraCode(inTrait.getExtraCode());
        
@@ -1663,6 +1677,7 @@ private void copyAttributesFromTraitsToClass(UmpleClass inClass){
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
+mixset Association {
   private void copyAssociationsFromTraitToClass(UmpleClass inClass) {
     Map<UmpleTrait, List<AssociationVariable>> traiAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
 	Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
@@ -1704,6 +1719,7 @@ private void copyAttributesFromTraitsToClass(UmpleClass inClass){
 		}
 	}	
   }
+}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
@@ -1736,6 +1752,7 @@ private Map<UmpleTrait, List<Attribute>> gatherAttributes(UmpleTrait inTrait, Ge
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
+mixset Association {
 private Map<UmpleTrait, List<AssociationVariable>> gatherAssociations(UmpleTrait inTrait, GeneralTPApplied inGTPApplied, UmpleClass inClass) {
      Map<UmpleTrait, List<AssociationVariable>> traitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>(); 
  	 Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
@@ -1761,6 +1778,7 @@ private Map<UmpleTrait, List<AssociationVariable>> gatherAssociations(UmpleTrait
     	 AddAssociationMapToAnother(traitAssociationVariables,tempTraitAssociationVariables);
 	 }
      return traitAssociationVariables;
+}
 }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1931,16 +1949,18 @@ private void AddAttMapToAnother(Map<UmpleTrait, List<Attribute>> inTraitAttribut
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
+mixset Association {
 private void AddAssociationMapToAnother(Map<UmpleTrait, List<AssociationVariable>> inTraitAssociations,Map<UmpleTrait, List<AssociationVariable>> inTempTraitAssociations) {
     for (UmpleTrait uTrait : inTempTraitAssociations.keySet()) {
 		if (inTraitAssociations.containsKey(uTrait)){
 			for (AssociationVariable associationVariable : inTraitAssociations.get(uTrait)) {
 				inTraitAssociations.get(uTrait).add(associationVariable);
-			}
-		} else{
-			inTraitAssociations.put(uTrait, inTempTraitAssociations.get(uTrait));
-		}	
-	}	
+        }
+      } else{
+        inTraitAssociations.put(uTrait, inTempTraitAssociations.get(uTrait));
+      }	
+	  }	
+  }
 }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
