@@ -29,8 +29,15 @@ use Parser.ump;
 use stateMachine/StateMachine.ump;
 use Umlet.ump;
 use Umple.ump;
-use trace/Trace.ump;
-use strcture/Structure.ump;
+
+use Trace;
+mixset Trace {
+  use trace/Trace.ump;
+}
+use Structure;
+mixset Structure {
+  use strcture/Structure.ump;
+}
 use template/Template.ump;
 use UmpleDiagram.ump;
 use UmpleExceptions.ump;

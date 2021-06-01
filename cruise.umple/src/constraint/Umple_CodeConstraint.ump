@@ -752,22 +752,24 @@ class ConstraintVariable
   public abstract String getType();
 }
 
-class ConstraintState
-{
-  String getName()
+mixset StateMachine {
+  class ConstraintState
   {
-    return state==null?null:state.getName();
+    String getName()
+    {
+      return state==null?null:state.getName();
+    }
+    public String getType() { return "state"; }
   }
-  public String getType() { return "state"; }
-}
 
-class ConstraintStateMachine
-{
-  String getName()
+  class ConstraintStateMachine
   {
-    return stateMachine==null?null:stateMachine.getName();
+    String getName()
+    {
+      return stateMachine==null?null:stateMachine.getName();
+    }
+    public String getType(){ return "statemachine"; }
   }
-  public String getType(){ return "statemachine"; }
 }
 
 class ConstraintPort
@@ -924,7 +926,7 @@ mixset Association {
         {
           return new ModelConstraintResult(getPosition(),94,getTarget(),getSource());
         }
-
+        mixset Association {
         for(Association association:uClass.getAssociations())
         {
           AssociationEnd theirs = null;
@@ -1041,6 +1043,7 @@ mixset Association {
             }
           }
           return ModelConstraint.SUCCESS;
+        }
         }
         
         return new ModelConstraintResult(getPosition(),94,getTarget(),getSource());
