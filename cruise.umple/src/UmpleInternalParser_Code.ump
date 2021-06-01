@@ -39,7 +39,7 @@ use StateMachine;
 use Trait;
 use Trace;
 use Structure;
-use Template;
+//use Template;
 use FIXML;
 use Layout;
 use Class; use Attribute; //use Association ; // Attribute and Association are not features.
