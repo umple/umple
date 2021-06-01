@@ -2900,31 +2900,28 @@ Mousetrap.bind(['c'], function(e){
 
 Action.toggleTabsCheckbox = function(language)
 {
-	// Workaround for TextUml having java prefix
-	if($("inputGenerateCode").value.split(":")[1] == "TextUml"){
-		language = "TextUml";
-	}
-	
-	if(language == "java" || language == "php" || language == "cpp" 
-    || language == "ruby" || language == "sql"){
-		jQuery("#ttTabsCheckbox").show();
-		jQuery("#tabRow").show();
-		
-		if ($("inputGenerateCode").value.split(":")[1] == "UmpleSelf" || $("inputGenerateCode").value.split(":")[1] == "Json"){
-		jQuery("#ttTabsCheckbox").hide();
-		jQuery("#tabRow").hide();
-	}
-	}
-		
-	
-	
-	else{
-		jQuery("#ttTabsCheckbox").hide();
-		jQuery("#tabRow").hide();
-		if(jQuery('#buttonTabsCheckbox').is(':checked')){
-			jQuery('#buttonTabsCheckbox').click();
-		}
-	}
+  // Workaround for TextUml having java prefix
+  if($("inputGenerateCode").value.split(":")[1] == "TextUml"){
+    language = "TextUml";
+  }
+
+  if(language == "java" || language == "php" || language == "cpp" 
+    || language == "ruby" || language == "sql") {
+    jQuery("#ttTabsCheckbox").show();
+    jQuery("#tabRow").show();
+
+    if ($("inputGenerateCode").value.split(":")[1] == "UmpleSelf" || $("inputGenerateCode").value.split(":")[1] == "Json") {
+      jQuery("#ttTabsCheckbox").hide();
+      jQuery("#tabRow").hide();
+    }
+  }
+  else {
+    jQuery("#ttTabsCheckbox").hide();
+    jQuery("#tabRow").hide();
+    if(jQuery('#buttonTabsCheckbox').is(':checked')){
+      jQuery('#buttonTabsCheckbox').click();
+    }
+  }
 }
 
 // Function for splitting code into tabs for every new file, activated when checking the Show Tabs checkbox
