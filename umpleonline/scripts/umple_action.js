@@ -1768,14 +1768,6 @@ Action.setCaretPosition = function(line)
       Page.setFeedbackMessage("Debug Mode");
       return;
     }
-    if(line=="tc")
-    { // resets cookies for tips
-      Page.setFeedbackMessage("Clearing tip cookies");
-      let currentTime=new Date();
-      currentTime.setTime(currentTime.getTime()-1000);
-      window.localStorage.removeItem("first_time");
-      document.cookie="tipCookie=done; expires="+currentTime.toUTCString()+"; path=/;";
-    }
     if(line.substr(0,2)=="cm") 
     {
       if(line.substr(2,1)=="0" && Page.codeMirrorOn) 
@@ -2908,23 +2900,28 @@ Mousetrap.bind(['c'], function(e){
 
 Action.toggleTabsCheckbox = function(language)
 {
-	// Workaround for TextUml having java prefix
-	if($("inputGenerateCode").value.split(":")[1] == "TextUml"){
-		language = "TextUml";
-	}
+  // Workaround for TextUml having java prefix
+  if($("inputGenerateCode").value.split(":")[1] == "TextUml"){
+    language = "TextUml";
+  }
 
-	if(language == "java" || language == "php" || language == "cpp" 
-    || language == "ruby" || language == "sql"){
-		jQuery("#ttTabsCheckbox").show();
-		jQuery("#tabRow").show();
-	}
-	else{
-		jQuery("#ttTabsCheckbox").hide();
-		jQuery("#tabRow").hide();
-		if(jQuery('#buttonTabsCheckbox').is(':checked')){
-			jQuery('#buttonTabsCheckbox').click();
-		}
-	}
+  if(language == "java" || language == "php" || language == "cpp" 
+    || language == "ruby" || language == "sql") {
+    jQuery("#ttTabsCheckbox").show();
+    jQuery("#tabRow").show();
+
+    if ($("inputGenerateCode").value.split(":")[1] == "UmpleSelf" || $("inputGenerateCode").value.split(":")[1] == "Json") {
+      jQuery("#ttTabsCheckbox").hide();
+      jQuery("#tabRow").hide();
+    }
+  }
+  else {
+    jQuery("#ttTabsCheckbox").hide();
+    jQuery("#tabRow").hide();
+    if(jQuery('#buttonTabsCheckbox').is(':checked')){
+      jQuery('#buttonTabsCheckbox').click();
+    }
+  }
 }
 
 // Function for splitting code into tabs for every new file, activated when checking the Show Tabs checkbox
