@@ -1263,7 +1263,7 @@ class ObjectElement {
 
 use UmpleVersion.ump;
 use UmpleDiagram.ump;
-use stateMachine/StateMachine.ump;
+//use stateMachine/StateMachine.ump;
 use Umple_Code.ump;
 use UmpleEnumeration_Code.ump;
 mixset Mixset{
