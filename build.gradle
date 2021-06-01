@@ -71,10 +71,6 @@ def buildAliases = [
         'buildTestUnitGeneratorAndParser',
         'testbedTests',
         'allUserManualAndExampleTests'
-   ],
-   'updateUmpleonline' : [
-   	'compileUmpleSelf', 'packageAllJars',
-   	'packageUmpleonline'
    ]
    
 ]
@@ -1074,40 +1070,40 @@ doLast {
  }
  
  task packageUmpleonline1 {
-  doLast {
+  
    copy{
- 	 	from distdir
+ 	 	from "${rootProject.ext.distdir}/gradle/libs"	
  	 	include "umplesync**"	
  	 	into umpleoscripts
  	 	rename ("(.*)umplesync(.*)", 'umplesync.jar')
  	 }
- 	 }
+ 	 
  	 	
  }
  	
  task packageUmpleonline2 {
   dependsOn packageUmpleonline1
-  doLast {
+  
   	copy{
- 		from distdir	
+ 		from "${rootProject.ext.distdir}/gradle/libs"		
  	 	into umpleoscripts
  	 	include "umple.jar"
  	 	}
  			 	
- 	 }
+ 	 
  }
  	
  task packageUmpleonline {
   dependsOn packageUmpleonline2
   dependsOn compressAllScripts 
   
-  doLast{
+  
    copy{
- 		from distdir	
+ 		from "${rootProject.ext.distdir}/gradle/libs"	
  	 	into umpleoscripts
  	 	include "umplevml*.jar"
  		rename ("(.*)umplevml(.*)", 'vml.jar')
  		
  	}
- 	}
+ 	
 } 
