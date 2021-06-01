@@ -2918,6 +2918,10 @@ Action.toggleTabsCheckbox = function(language)
 		jQuery("#ttTabsCheckbox").show();
 		jQuery("#tabRow").show();
 	}
+	if ($("inputGenerateCode").value.split(":")[1] == "UmpleSelf" || $("inputGenerateCode").value.split(":")[1] == "Json"){
+		jQuery("#ttTabsCheckbox").hide();
+		jQuery("#tabRow").hide();
+	}
 	else{
 		jQuery("#ttTabsCheckbox").hide();
 		jQuery("#tabRow").hide();
