@@ -7,15 +7,6 @@
   $allProjects["Ruby+Umple Tests"] = "testbed_ruby/index.html";
   $allProjects["Sample Project Tests"] = "sandbox/index.html";
 
-  $url = "http://cruise.site.uottawa.ca:8080/dashboard/tab/build/detail/Umple";
-  $raw = file_get_contents($url);
-  $newlines = array("\t","\n","\r","\x20\x20","\0","\x0B");
-  $content = str_replace($newlines, "", html_entity_decode($raw));
-  $start = strpos($content,'<div class="round_corner" id="build_detail_summary_container">');
-  $start = strpos($content,'<h3 >',$start) + 5;
-  $end = strpos($content,'</h3>',$start);
-  $ccSummary = substr($content,$start,$end-$start);  
-
 ?>
 <html>
 <head>
@@ -30,7 +21,7 @@
 </head>
 <body>
   
-<h1><a href="http://cruise.site.uottawa.ca:8080/dashboard/tab/build/detail/Umple"><?php echo $ccSummary ?></a></h1>
+<h1>Umple unit test results</h1>
   
 <?php foreach($allProjects as $name => $path) { ?>
   <div class="project">
