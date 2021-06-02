@@ -263,7 +263,8 @@ for (StateMachine smq : uClass.getStateMachines())
         }
       }
     }
-    else if(!mixsetIsUsed)
+    
+    if(!mixsetIsUsed)
 	  {
 		 // delete body of unused mixsets  
 		 String mixsetInMethodCode = mixsetInMethod.getMixsetFragment();
