@@ -23,7 +23,6 @@ Page.modelDelimiter = "//$?[End_of_model]$?";
 Page.codeMirrorOn = false;
 Page.codeMirrorEditor = null;
 Page.hLine = null;
-
 Page.modelLoadingCount = 0;
 Page.layoutLoadingCount = 0;
 Page.canvasLoadingCount = 0;
@@ -663,19 +662,40 @@ Page.initCanvasArea = function()
 
 Page.initExamples = function()
 {
+ 
   jQuery("#inputExample").change(Action.loadExample);
-  jQuery("#defaultExampleOption").attr("selected",true);
+  if (sessionStorage.getItem("savedSelection") == null){
+   jQuery("#defaultExampleOption").attr("selected",true);
+  }
+  else {
+   jQuery("#inputExample option[value = \""+sessionStorage.getItem("savedSelection") +"\"]").attr("selected", true);
+  }
  
   jQuery("#inputExampleType").change(Action.setExampleType);
 
   jQuery("#inputExample2").change(Action.loadExample);
-  jQuery("#defaultExampleOption2").attr("selected",true);
-
+  if (sessionStorage.getItem("savedSelection") == null){
+   jQuery("#defaultExampleOption2").attr("selected",true);
+  }
+  else {
+   jQuery("#inputExample2 option[value = \""+sessionStorage.getItem("savedSelection") +"\"]").attr("selected", true);
+  }
+  
   jQuery("#inputExample3").change(Action.loadExample);
-  jQuery("#defaultExampleOption3").attr("selected",true);
-
+  if (sessionStorage.getItem("savedSelection") == null){
+   jQuery("#defaultExampleOption3").attr("selected",true);
+  }
+  else {
+    jQuery("#inputExample3 option[value = \""+sessionStorage.getItem("savedSelection") +"\"]").attr("selected", true);
+  } 
+ 
   jQuery("#inputExample4").change(Action.loadExample);
-  jQuery("#defaultExampleOption4").attr("selected",true);
+  if (sessionStorage.getItem("savedSelection") == null){
+   jQuery("#defaultExampleOption4").attr("selected",true);
+  }
+  else {
+   jQuery("#inputExample4 option[value = \""+sessionStorage.getItem("savedSelection") +"\"]").attr("selected", true);
+  }
 
   if (Page.useStructureDiagram) {
     jQuery("#structureModels").prop("selected",true);
@@ -1092,6 +1112,7 @@ Page.getSelectedExample = function()
   if(theExampleType == "cdModels") {
     var requiresGvClass = false; // Some class diagrams  are too complex to edit
     inputExample = jQuery("#inputExample option:selected").val();
+    sessionStorage.setItem("savedSelection", inputExample);
     if (inputExample == "GeometricSystem.ump") {
       requiresGvClass = true;
     }
@@ -1114,6 +1135,7 @@ Page.getSelectedExample = function()
   else if (theExampleType == "featureModels")
     {
        inputExample = jQuery("#inputExample4 option:selected").val(); 
+       sessionStorage.setItem("savedSelection", inputExample);
      //  if (inputExample == "BerkeleyDB_SP_featureDepend.ump")
      //  this.showFeatureDependency = true;
        if( !Page.useGvFeatureDiagram) {
@@ -1126,6 +1148,7 @@ Page.getSelectedExample = function()
 
     if(theExampleType == "smModels") {
       inputExample = jQuery("#inputExample2 option:selected").val();
+      sessionStorage.setItem("savedSelection", inputExample);
       // if diagram type is not a state machine, set to state machine
       if( !Page.useGvStateDiagram && !Page.useJointJSClassDiagram) {
          jQuery("#buttonShowGvStateDiagram").attr('checked', true); 
@@ -1134,6 +1157,7 @@ Page.getSelectedExample = function()
     }
     else {
       inputExample = jQuery("#inputExample3 option:selected").val();
+      sessionStorage.setItem("savedSelection", inputExample);
       // if diagram type is not a structure diagram, set to structure diagram
       if( !Page.useStructureDiagram) {
          jQuery("#buttonShowStructureDiagram").attr('checked', true); 
