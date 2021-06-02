@@ -1768,11 +1768,18 @@ Action.setCaretPosition = function(line)
       Page.setFeedbackMessage("Debug Mode");
       return;
     }
-    if(line=="sc")
-    { // resets cookies for survey
+    if(line=="sp")
+    { // creates Survey Pass
+      let currentTime=new Date();
+      currentTime.setTime(currentTime.getTime()+24*60*60*1000);
+      document.cookie="surveyPass=done; expires="+currentTime.toUTCString()+"; path=/;";
+    }
+    if (line=="sc")
+    {
       let currentTime=new Date();
       currentTime.setTime(currentTime.getTime()-1000);
       document.cookie="surveyCookie=done; expires="+currentTime.toUTCString()+"; path=/;";
+      window.localStorage.removeItem("surveyShown");
     }
     if(line=="tc")
     { // resets cookies for tips

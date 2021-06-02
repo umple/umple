@@ -3,6 +3,12 @@
     display: inline;
     overflow: auto;
     position: relative;
+    text-decoration: none;
+    color: mediumslateblue;
+}
+
+#surveyMessage a{
+    text-decoration: none;
     color: mediumslateblue;
 }
 

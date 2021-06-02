@@ -213,8 +213,14 @@ $output = $dataHandle->readData('model.ump');
               //survey
               $surveyMessage = @file_get_contents("ump/asurveyMessage.txt");
               if ($surveyMessage != FALSE && !empty($surveyMessage)){
-                $surveyData = json_decode($surveyMessage);
-                $random = mt_rand (1 , $surveyData->RandomizedFrequency);
+                $surveyData = json_decode($surveyMessage);              
+                $random = mt_rand(1 , $surveyData->RandomizedFrequency);
+                if (isset($_COOKIE['surveyPass'])){
+                  $random=1;
+                }
+                while (empty($random)){
+                  $random = mt_rand(1 , $surveyData->RandomizedFrequency);
+                }
                 ?><script>
                   window.randomRoll = <?php echo $random; ?>;
                 </script>

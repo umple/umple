@@ -2,18 +2,14 @@ function existSCookie(name) {
     return document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')
 }
 
-var displayingSurvey;
-
-var clickedForMoreSurvey;
-clickedForMoreSurvey = false
-var clickedStartSurvey;
-clickedStartSurvey = false
+var clickedForMoreSurvey = false;
+var clickedStartSurvey = false;
 
 var surveyData;
+var enoughEdits=false;
 
 if (existSCookie("surveyCookie") == null){
     jQuery.ajax({
-        sync: true,
         url: "ump/asurveyMessage.txt",
         success: function(data){
             surveyData = JSON.parse(data);
@@ -21,18 +17,37 @@ if (existSCookie("surveyCookie") == null){
             //var randomRoll = Math.floor(Math.random() * ((surveyData.RandomizedFrequency+1) - 1) + 1);
             //window.randomRoll = parseInt(window.randomRoll);
             console.log("randomRoll: "+window.randomRoll);
+            if (existSCookie("surveyPass") != null){
+                surveyData.MinutesBeforePrompt = 0.03;
+                surveyData.EditsBeforePrompt = 1;
+                var timeKeep=new Date();
+                timeKeep.setTime(timeKeep.getTime());
+                document.cookie="surveyPass=done; expires="+timeKeep.toUTCString()+"; path=/;";
+            }
 
             if (window.randomRoll == 1){
                 console.log("displaying...");
-                displayingSurvey = true;
-                //displaySurvey();
-                setTimeout(function(){displaySurvey()}, surveyData.MinutesBeforePrompt*60*1000);
+                var surveySeen = window.localStorage.getItem("surveyShown");
+                if (surveySeen == null || surveySeen != surveyData.SurveyURL){
+                    if (timeSurvey)
+                        clearTimeout(timeSurvey);
+                    console.log("wait "+surveyData.MinutesBeforePrompt+" mins")
+                    var timeSurvey = setTimeout(function(){if (!enoughEdits) displaySurvey()}, surveyData.MinutesBeforePrompt*60*1000);
+                    timeSurvey;
+                    var beforeInstance = TabControl.getCurrentHistory().currentIndex;
+                    document.addEventListener("mouseover", function(){
+                        if (TabControl.getCurrentHistory().currentIndex-beforeInstance == surveyData.EditsBeforePrompt && !enoughEdits){
+                            console.log("edit pass");
+                            clearTimeout(timeSurvey);
+                            displaySurvey();
+                            enoughEdits = true;
+                        }
+                    })
+                    //surveyData.MinutesBeforePrompt*60*1000
+                }
+                console.log("done loading");
+                
             }
-            else {
-                console.log("cookie set for 60");
-                setSurveyCookie(60);
-            }
-
         },
         error: function(){
             console.log("cannot find file")
@@ -40,23 +55,26 @@ if (existSCookie("surveyCookie") == null){
             setSurveyCookie(60);
         }
     });
+    window.onbeforeunload = function(){
+        if(window.randomRoll != 1){
+            console.log("set cookie for: 60 days");
+            setSurveyCookie(60)
+        }
+        else if (clickedForMoreSurvey == false && clickedStartSurvey == false){
+            console.log("set cookie for: 15 days");
+            setSurveyCookie(15)
+        }
+        else if (clickedForMoreSurvey == true && clickedStartSurvey == false){
+            console.log("set cookie for: 30 days");
+            setSurveyCookie(30);
+        }
+        else {
+            console.log("set cookie for: 60 days");
+            setSurveyCookie(60)
+        }
+    };
 }
 
-
-document.addEventListener("beforeunload", function(){
-    if (clickedForMoreSurvey == false && clickedStartSurvey == false){
-        console.log("set cookie for: 15 days");
-        setSurveyCookie(15)
-    }
-    else if (clickedForMoreSurvey == true && clickedStartSurvey == false){
-        console.log("set cookie for: 30 days");
-        setSurveyCookie(30);
-    }
-    else {
-        console.log("set cookie for: 60 days");
-        setSurveyCookie(60)
-    }
-})
 
 function setSurveyCookie(days){
     let currentTime=new Date(Date.now() + days*24*60*60*1000);
@@ -71,9 +89,8 @@ function displaySurvey(){
 
     //creating space for InvitationalMessage
     var surveyMessage = document.createElement("span");
-    surveyMessage.innerHTML=surveyData.InvitationalMessage+' <span onclick="showRecruitementMessage()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more<br/></span>';
+    surveyMessage.innerHTML='<span><a onmouseover="showRecruitementMessage()" onclick="countClicked() href="'+surveyData.SurveyURL+'" target="umplesurvey">'+surveyData.InvitationalMessage+'</a></span><br/>';
     surveyMessage.id="surveyMessage";
-    jQuery('#surveyMessage a').attr('target', 'helppage');
     surveyArea.appendChild(surveyMessage);
 
     //creating space for RecruitementMessage
@@ -84,6 +101,7 @@ function displaySurvey(){
     surveyArea.appendChild(surveyExtra);
 
     surveyExtra.addEventListener("mouseleave", function(){hideRecruitementMessage()});
+    surveyExtra.addEventListener("mouseover", function(){showRecruitementMessage()});
     console.log("done");
 }
 
@@ -93,7 +111,7 @@ function showRecruitementMessage(){
     clickedForMoreSurvey = true;
     document.getElementById('surveyExtra').classList.remove("fade-outInst");
     document.getElementById('surveyExtra').classList.add("fade-in");
-    hideWithDelay = setTimeout(function(){hideExtra()}, calculateDelay());
+    hideWithDelay = setTimeout(function(){hideRecruitementMessage()}, calculateDelay());
     hideWithDelay;
 }
 
@@ -104,6 +122,7 @@ function hideRecruitementMessage(){
 }
 
 function countClicked(){
+    window.localStorage.setItem("surveyShown", surveyData.surveyURL);
     clickedStartSurvey = true;
 }
 
