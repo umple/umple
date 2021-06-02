@@ -169,7 +169,8 @@ $output = $dataHandle->readData('model.ump');
 .active {
   background: #C98C7D;
 }
-</style>  
+</style>
+<link rel="stylesheet" href="scripts/styleSurvey.css"> 
 <link rel="apple-touch-icon" sizes="57x57" href="https://cruise.umple.org/apple-icon-57x57.png">
 <link rel="apple-touch-icon" sizes="60x60" href="https://cruise.umple.org/apple-icon-60x60.png">
 <link rel="apple-touch-icon" sizes="72x72" href="https://cruise.umple.org/apple-icon-72x72.png">
@@ -206,12 +207,36 @@ $output = $dataHandle->readData('model.ump');
             //alert message
             $alertMessage = @file_get_contents("ump/aalertMessage.txt");
             if($alertMessage != FALSE && !empty($alertMessage)) {
-            echo "<span style=\"color: red\">$alertMessage<br/></span>";
+              echo "<span style=\"color: red\">$alertMessage<br/></span>";
             }
-            else { //tip of the day
-              $tipOutput = readfile("scripts/tipProcessor.html");
-              if ($tipOutput != FALSE && !empty($tipOutput)){
-                $tipOutput;
+            else {
+              //survey
+              $surveyMessage = @file_get_contents("ump/asurveyMessage.txt");
+              if ($surveyMessage != FALSE && !empty($surveyMessage)){
+                $surveyData = json_decode($surveyMessage);
+                $random = mt_rand (1 , $surveyData->RandomizedFrequency);
+                ?><script>
+                  window.randomRoll = <?php echo $random; ?>;
+                </script>
+                <?php
+                if ($random == 1){ ?>
+                  <span id="mainSurveySpan">
+                    <script src="scripts/umple_survey.js"></script>
+                  </span>
+                  <?php
+                }
+                else{
+                  $tipOutput = readfile("scripts/tipProcessor.html");
+                  if ($tipOutput != FALSE && !empty($tipOutput)){
+                    $tipOutput;
+                  }
+                }
+              }
+              else { //tip of the day
+                $tipOutput = readfile("scripts/tipProcessor.html");
+                if ($tipOutput != FALSE && !empty($tipOutput)){
+                  $tipOutput;
+                }
               }
             }
           ?>

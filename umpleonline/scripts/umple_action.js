@@ -1768,6 +1768,12 @@ Action.setCaretPosition = function(line)
       Page.setFeedbackMessage("Debug Mode");
       return;
     }
+    if(line=="sc")
+    { // resets cookies for survey
+      let currentTime=new Date();
+      currentTime.setTime(currentTime.getTime()-1000);
+      document.cookie="surveyCookie=done; expires="+currentTime.toUTCString()+"; path=/;";
+    }
     if(line=="tc")
     { // resets cookies for tips
       Page.setFeedbackMessage("Clearing tip cookies");

@@ -56,12 +56,16 @@ function allocateMessage() {
     var num = parseInt(window.localStorage.getItem('tipCount'));
     var loop = parseInt(window.localStorage.getItem('loopCount'));
 
-    if (tip[loop]!=null && tip[loop][num]!=null && tip[loop][num][0]!=null && tip[loop][num][1]!=null){
-        document.getElementById('styleTip').innerHTML = "Tip: "+tip[loop][num][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more<br/></span>';
-        jQuery('#styleTip a').attr('target', 'helppage');
-        document.getElementById('extraInfo').innerHTML = tip[loop][num][1];
-        jQuery('#extraInfo a').attr('target', 'helppage');
-
+    if (tip[loop]!=null){
+        if (tip[loop][num]!=null){
+            if (tip[loop][num][0]!=null && tip[loop][num][1]!=null){
+                document.getElementById('styleTip').innerHTML = "Tip: "+tip[loop][num][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more<br/></span>';
+                jQuery('#styleTip a').attr('target', 'helppage');
+                document.getElementById('extraInfo').innerHTML = tip[loop][num][1];
+                jQuery('#extraInfo a').attr('target', 'helppage');
+        
+            }
+        }
     }
     setForNext(num, priority, tip, loop);
 };
