@@ -239,9 +239,9 @@ for (StateMachine smq : uClass.getStateMachines())
   {
     Mixset mixset = umodel.getMixset(mixsetInMethod.getMixsetName());
     boolean mixsetIsUsed = false;
-    if(mixset != null) // the mixset has been used. 
-    {
-    try {
+     try {
+       if(mixset != null) // the mixset has been used. 
+       {
         if(mixset.getUseUmpleFile() != null)
         {
           mixsetIsUsed = true;
