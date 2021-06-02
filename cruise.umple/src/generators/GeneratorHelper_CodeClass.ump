@@ -63,7 +63,10 @@ class GeneratorHelper
       {
 	      if(inject.hasCodeLabel())
           continue;// handle the case when labels are used. // Do nothing  
-        String comment = RubyGenerator.class.isInstance(generator)?"#":"//";
+        String comment = "//";
+        mixset RubyGenerator {
+          comment = RubyGenerator.class.isInstance(generator)?"#":"//";
+        }
         String positionString = "";
         Position p = inject.getPosition();
         Position codeP = inject.getCodePosition();
