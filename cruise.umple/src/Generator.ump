@@ -11,9 +11,6 @@ Note that some generators such as Umlet and Violet are in their own files
  */
 
 namespace cruise.umple.compiler;
-
-//use FeatureDiagramGenerator; // This feature should be moved into config. file in next step.
-
 // Allows independent code generation tools
 // Different generators will do different things regarding where the files are put, etc.
 interface CodeGenerator
@@ -59,13 +56,15 @@ interface CodeTranslator
 }
 use Umple.ump;
 use generators/GeneratorHelper_Code.ump;
+use SuperCodeGeneratorGenerator;
+// All code above belongs to the base generator file (Generator.ump)
 
 //Below mixsets use statments. All mentioned mixsets are activited.
 use CodeGenerator, UmpleGenerator, RubyGenerator , JavaGenerator , RTCppGenerator, PhpGenerator; 
 use Uigu2Generator , SqlGenerator , UmpleSelfGenerator , USEGenerator , EcoreGenerator ,TestGenerator ; 
 use PapyrusGenerator, XmiGenerator, TextUmlGenerator, ScxmlGenerator, CodeGvClassTraitDiagramGenerator
 use EventSequenceGenerator,  FeatureDiagramCo,  EntityRelationshipCon,  SimulateGenerator,  YumlGenerator;
-use XtextGenerator,  JsonGenerator,  JsonMixedGenerator,  StructureDiagramGenerator,  SuperCodeGeneratorGenerator;
+use XtextGenerator,  JsonGenerator,  JsonMixedGenerator,  StructureDiagramGenerator;
 use StateTableGenerator, SuperGvGeneratorGenerator, HtmlGenerator, UmpleModelWalkerGenerator,  CodeAnalysisGenerator;
 use AlloyGenerator,  NuSMVGenerators, NuSMVGenerator,   NuSMVOptimizerGenerator,  SimpleMetricsGenerator, CodeGvClassDiagramGenerator;
 //End 
@@ -73,7 +72,10 @@ use AlloyGenerator,  NuSMVGenerators, NuSMVGenerator,   NuSMVOptimizerGenerator,
 // Below mixsets declarations. They contain inclusion of their files. 
 mixset CodeGenerator { use generators/Generator_Code.ump; }
 mixset UmpleGenerator { use generators/Generator_CodeUmple.ump; }
-mixset RubyGenerator { use generators/Generator_CodeRuby.ump; }
+mixset RubyGenerator { 
+  use generators/Generator_CodeRuby.ump; 
+  use RubyGeneratorIntMixset;
+  }
 mixset JavaGenerator { use generators/Generator_CodeJava.ump; }
 mixset RTCppGenerator { use generators/Generator_CodeRTCpp.ump; }
 mixset PhpGenerator { use generators/Generator_CodePhp.ump; }
@@ -87,7 +89,7 @@ mixset PapyrusGenerator{ use generators/papyrus/Generator_CodePapyrus.ump; }
 mixset XmiGenerator{ use generators/xmi/Generator_CodeXmi.ump; }
 mixset TextUmlGenerator{ use generators/Generator_CodeTextUml.ump; }
 mixset ScxmlGenerator{ use generators/Generator_CodeScxml.ump; }
-use generators/statemachineDiagramGenerator/stateMachineDiagramConfig.ump;
+mixset GvStateDiagramGenerator {  use generators/statemachineDiagramGenerator/stateMachineDiagramConfig.ump;}
 mixset StateTableGenerator{ use generators/Generator_CodeStateTables.ump; }
 mixset EventSequenceGenerator{ use generators/Generator_CodeEventSequence.ump; }
 mixset SimpleMetricsGenerator{ use generators/Generator_CodeSimpleMetrics.ump; }
