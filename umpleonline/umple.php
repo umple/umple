@@ -818,7 +818,11 @@ $output = $dataHandle->readData('model.ump');
       <?php if($doLoadTaskInstruction) { ?> true  <?php } else { ?> false <?php } ?>,
       <?php if(isset($_REQUEST["task"])) { ?> true <?php } else { ?> false <?php } ?>,
       <?php if($canCreateTask) { ?> true <?php } else { ?> false <?php } ?>
-      ); //
+      ); 
+      <?php if (isset($_REQUEST['example']) && $_REQUEST["example"] != ""){?> 
+      Page.setExamples("<?php echo $_REQUEST['example'] ?>")
+      <?php } ?> 
+      //
   </script>
   <?php if ($showChrome) { ?>
     <div class="visitors-count" align="right">

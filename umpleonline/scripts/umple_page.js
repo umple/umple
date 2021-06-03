@@ -49,7 +49,6 @@ Page.showGuards = true;
 Page.modifiedDiagrams = false;
 Page.allowPinch = false;
 
-
 // The following is set called from umple.php
 Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask, doEditTask, doCreateTask)
 { 
@@ -659,17 +658,55 @@ Page.initCanvasArea = function()
 
   if (!Layout.isDiagramVisible) {Layout.showHideCanvas(false);}
 }
+Page.setExamples = function(ex)
+{
+  jQuery("#inputExample").change(Action.loadExample);
+   jQuery("#inputExample option[value = \""+ex+".ump"  +"\"]").attr("selected", true);
+ 
+  jQuery("#inputExampleType").change(Action.setExampleType);
 
+  jQuery("#inputExample2").change(Action.loadExample);
+  jQuery("#inputExample2 option[value = \""+ex+".ump" +"\"]").attr("selected", true);
+  
+  jQuery("#inputExample3").change(Action.loadExample);
+  jQuery("#inputExample3 option[value = \""+ex+".ump" +"\"]").attr("selected", true);
+ 
+  jQuery("#inputExample4").change(Action.loadExample);
+   jQuery("#inputExample4 option[value = \""+ex+".ump" +"\"]").attr("selected", true);
+  
+
+  if (Page.useStructureDiagram) {
+    jQuery("#structureModels").prop("selected",true);
+    jQuery("#itemLoadExamples").hide();
+    jQuery("#itemLoadExamples2").hide();
+    jQuery("#itemLoadExamples4").hide();      
+  }
+  else if (Page.useGvStateDiagram) {
+    jQuery("#smModels").prop("selected",true);
+    jQuery("#itemLoadExamples").hide();
+    jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples4").hide();  
+  }
+ else if (Page.useGvFeatureDiagram) {
+    jQuery("#featureModels").prop("selected",true);
+    jQuery("#itemLoadExamples").hide();
+    jQuery("#itemLoadExamples2").hide();
+    jQuery("#itemLoadExamples3").hide();    
+  }
+  else {
+    jQuery("#cdModels").prop("selected",true); 
+    jQuery("#itemLoadExamples2").hide();
+    jQuery("#itemLoadExamples3").hide(); 
+    jQuery("#itemLoadExamples4").hide();       
+  }
+}
 Page.initExamples = function()
 {
  
   jQuery("#inputExample").change(Action.loadExample);
-  if (sessionStorage.getItem("savedSelection") == null){
    jQuery("#defaultExampleOption").attr("selected",true);
-  }
-  else {
-   jQuery("#inputExample option[value = \""+sessionStorage.getItem("savedSelection") +"\"]").attr("selected", true);
-  }
+
+ 
  
   jQuery("#inputExampleType").change(Action.setExampleType);
 
