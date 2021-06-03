@@ -1769,16 +1769,23 @@ Action.setCaretPosition = function(line)
       return;
     }
     if(line=="sp")
-    { // creates Survey Pass
+    { // creates Survey Pass; modifies conditions to allow for survey to be displayed:
+      // includes setting RandomizedFrequency to 1, MinutesBeforePrompt to 5 secs, EditsBeforePrompt to 1
+      // ont-time use only
+      console.log("survey pass activated");
       let currentTime=new Date();
       currentTime.setTime(currentTime.getTime()+24*60*60*1000);
       document.cookie="surveyPass=done; expires="+currentTime.toUTCString()+"; path=/;";
+      let setToExpire=new Date();
+      setToExpire.setTime(setToExpire.getTime()-1000);
+      document.cookie="surveyCookie=done; expires="+setToExpire.toUTCString()+"; path=/;";
     }
     if (line=="sc")
-    {
-      let currentTime=new Date();
-      currentTime.setTime(currentTime.getTime()-1000);
-      document.cookie="surveyCookie=done; expires="+currentTime.toUTCString()+"; path=/;";
+    { //clears all survey cookies including whether URL has been shown already, whether the user has been skipped, and whether Survey Pass has been activated
+      let setToExpire=new Date();
+      setToExpire.setTime(setToExpire.getTime()-1000);
+      document.cookie="surveyCookie=done; expires="+setToExpire.toUTCString()+"; path=/;";
+      document.cookie="surveyPass=done; expires="+setToExpire.toUTCString()+"; path=/;";
       window.localStorage.removeItem("surveyShown");
     }
     if(line=="tc")

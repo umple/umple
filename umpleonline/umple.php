@@ -204,6 +204,7 @@ $output = $dataHandle->readData('model.ump');
         <span class="pretext">
           Draw on the right, write (Umple) model code on the left. Analyse models and generate code.<br/>
            <?php
+            $passToTip = FALSE; // dictates appearance of TOTD
             //alert message
             $alertMessage = @file_get_contents("ump/aalertMessage.txt");
             if($alertMessage != FALSE && !empty($alertMessage)) {
@@ -211,38 +212,34 @@ $output = $dataHandle->readData('model.ump');
             }
             else {
               //survey
-              $surveyMessage = @file_get_contents("ump/asurveyMessage.txt");
-              if ($surveyMessage != FALSE && !empty($surveyMessage)){
-                $surveyData = json_decode($surveyMessage);              
-                $random = mt_rand(1 , $surveyData->RandomizedFrequency);
+              $surveyMessage = @file_get_contents("ump/aaSurvey.txt");
+              if ($surveyMessage != FALSE && !empty($surveyMessage)){ // confirm file exists
+                $surveyData = json_decode($surveyMessage);
+                $randomSurveyRoll = mt_rand(1 , $surveyData->RandomizedFrequency);
+                // ensure debugging backdoor is not activated (activates with reload + "sp" + reload)
                 if (isset($_COOKIE['surveyPass'])){
-                  $random=1;
+                  $randomSurveyRoll = 1;
                 }
-                while (empty($random)){
-                  $random = mt_rand(1 , $surveyData->RandomizedFrequency);
-                }
-                ?><script>
-                  window.randomRoll = <?php echo $random; ?>;
+                ?><script> // pass JSON file and rolled number to js
+                  window.randomSurveyRoll = <?php echo $randomSurveyRoll; ?>;
+                  window.surveyData = <?php echo json_encode($surveyData); ?>;
                 </script>
+                <span id="mainSurveySpan">
+                  <script src="scripts/umple_survey.js"></script>
+                </span>
                 <?php
-                if ($random == 1){ ?>
-                  <span id="mainSurveySpan">
-                    <script src="scripts/umple_survey.js"></script>
-                  </span>
-                  <?php
-                }
-                else{
-                  $tipOutput = readfile("scripts/tipProcessor.html");
-                  if ($tipOutput != FALSE && !empty($tipOutput)){
-                    $tipOutput;
-                  }
+                if ($randomSurveyRoll != 1){
+                  $passToTip = TRUE;
                 }
               }
-              else { //tip of the day
-                $tipOutput = readfile("scripts/tipProcessor.html");
-                if ($tipOutput != FALSE && !empty($tipOutput)){
-                  $tipOutput;
-                }
+              else { 
+                $passToTip = TRUE;
+              }
+            }
+            if ($passToTip){ //tip of the day
+              $tipOutput = readfile("scripts/tipProcessor.html");
+              if ($tipOutput != FALSE && !empty($tipOutput)){
+                $tipOutput;
               }
             }
           ?>
