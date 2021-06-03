@@ -251,7 +251,9 @@ class UmpleInternalParser
     mixset StateMachine {
       analyzeStateMachineToken(t,analysisStep);
     }
-    analyzeComponentToken(t,analysisStep);
+    mixset Structure {
+      analyzeComponentToken(t,analysisStep);
+    }
     mixset Trace {
       analyzeTraceToken(t,analysisStep);
     }
@@ -378,11 +380,11 @@ class UmpleInternalParser
         postTokenTemplateAnalysis();
       }
     }
-
-    if (getParseResult().getWasSuccess()) {
-      postTokenComponentAnalysis();
+    mixset Structure {
+      if (getParseResult().getWasSuccess()) {
+        postTokenComponentAnalysis();
+      }
     }
-
     mixset Constraint {
       if (getParseResult().getWasSuccess())
       {
