@@ -372,8 +372,10 @@ class UmpleInternalParser
   }
   // this method specifies kinds of tokens to be parsed for unused mixset. 
   private void parseMixsetNotUsedToken(Token token){
-    //parse require statments. 
-    analyzeRequireStatement(token, 2);
+    mixset FeatureModel {
+      //parse require statments. 
+      analyzeRequireStatement(token, 2);
+    }
     // parse nested mixset def.
     if(token.is("mixsetDefinition"))
     {

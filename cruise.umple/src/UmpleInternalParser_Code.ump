@@ -555,7 +555,9 @@ use UmpleInternalParser_CodeEnumeration.ump;
 mixset Mixset{
   use mixset/UmpleInternalParser_CodeMixset.ump;
 }
-use UmpleInternalParser_CodeRequireStatement.ump;
+mixset FeatureModel {
+  use UmpleInternalParser_CodeRequireStatement.ump;
+}
 use UmpleInternalParser_CodeTest.ump;
 mixset AspectInjection {
   use class/UmpleInternalPraser_CodeInjection.ump;
