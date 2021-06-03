@@ -39,7 +39,7 @@ use StateMachine;
 use Trait;
 use Trace;
 use Structure;
-use Template;
+//use Template;
 use FIXML;
 use Layout;
 use Class; use Attribute; //use Association ; // Attribute and Association are not features.
@@ -251,7 +251,9 @@ class UmpleInternalParser
     mixset StateMachine {
       analyzeStateMachineToken(t,analysisStep);
     }
-    analyzeComponentToken(t,analysisStep);
+    mixset Structure {
+      analyzeComponentToken(t,analysisStep);
+    }
     mixset Trace {
       analyzeTraceToken(t,analysisStep);
     }
@@ -378,11 +380,11 @@ class UmpleInternalParser
         postTokenTemplateAnalysis();
       }
     }
-
-    if (getParseResult().getWasSuccess()) {
-      postTokenComponentAnalysis();
+    mixset Structure {
+      if (getParseResult().getWasSuccess()) {
+        postTokenComponentAnalysis();
+      }
     }
-
     mixset Constraint {
       if (getParseResult().getWasSuccess())
       {
@@ -553,7 +555,9 @@ use UmpleInternalParser_CodeEnumeration.ump;
 mixset Mixset{
   use mixset/UmpleInternalParser_CodeMixset.ump;
 }
-use UmpleInternalParser_CodeRequireStatement.ump;
+mixset FeatureModel {
+  use UmpleInternalParser_CodeRequireStatement.ump;
+}
 use UmpleInternalParser_CodeTest.ump;
 mixset AspectInjection {
   use class/UmpleInternalPraser_CodeInjection.ump;
