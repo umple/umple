@@ -1786,7 +1786,14 @@ Action.setCaretPosition = function(line)
       setToExpire.setTime(setToExpire.getTime()-1000);
       document.cookie="surveyCookie=done; expires="+setToExpire.toUTCString()+"; path=/;";
       document.cookie="surveyPass=done; expires="+setToExpire.toUTCString()+"; path=/;";
+      document.cookie="surveyRollOne=done; expires="+setToExpire.toUTCString()+"; path=/;";
       window.localStorage.removeItem("surveyShown");
+    }
+    if (line=="sr")
+    {
+      let currentTime=new Date();
+      currentTime.setTime(currentTime.getTime()+24*60*60*1000);
+      document.cookie="surveyRollOne=done; expires="+currentTime.toUTCString()+"; path=/;";
     }
     if(line=="tc")
     { // resets cookies for tips

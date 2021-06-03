@@ -17,7 +17,7 @@ if (existSCookie("surveyCookie") == null && window.surveyData!=null){
         window.surveyData.MinutesBeforePrompt = 0.03;
         window.surveyData.EditsBeforePrompt = 1;
     }
-
+    console.log("randomRoll: "+window.randomSurveyRoll);
     if (window.randomSurveyRoll == 1){ // rolled 1 in umple.php file
         console.log("displaying...");
         // ensure user has not completed this survey yet by comparing URLs
@@ -46,7 +46,7 @@ if (existSCookie("surveyCookie") == null && window.surveyData!=null){
 
     window.onbeforeunload = function(){ 
         //set timed cookies before the next appearance of the survey
-        if (existSCookie("surveyPass") != null){ /*set nothing...*/ }
+        if (existSCookie("surveyPass") != null || !displayedText){ /*set nothing...*/ }
         else if(window.randomSurveyRoll != 1){
             console.log("set cookie for: 60 days");
             setSurveyCookie(60)
