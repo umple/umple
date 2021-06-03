@@ -5,6 +5,7 @@
     position: relative;
     text-decoration: none;
     color: mediumslateblue;
+    cursor: pointer;
 }
 
 #surveyMessage a{

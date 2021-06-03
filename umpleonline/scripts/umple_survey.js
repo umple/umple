@@ -26,13 +26,17 @@ if (existSCookie("surveyCookie") == null && window.surveyData!=null){
             if (timeSurvey) // clear any loading setTimeout function
                 clearTimeout(timeSurvey);
             console.log("wait "+window.surveyData.MinutesBeforePrompt+" mins");
+            console.log("complete "+window.surveyData.EditsBeforePrompt+" edits");
             // set delay for MinutesBeforePrompt
-            var timeSurvey = setTimeout(function(){if (!displayedText) displaySurvey()}, window.surveyData.MinutesBeforePrompt*60*1000);
+            var timeSurveyUp = false;
+            var timeSurvey = setTimeout(function(){timeSurveyUp = true;}, window.surveyData.MinutesBeforePrompt*60*1000);
             timeSurvey;
             //count number of edits made to page
             var beforeInstance = TabControl.getCurrentHistory().currentIndex;
+            if (!displayedText)
             document.addEventListener("mouseover", function(){
-                if (TabControl.getCurrentHistory().currentIndex-beforeInstance == window.surveyData.EditsBeforePrompt && !displayedText){
+                console.log(TabControl.getCurrentHistory().currentIndex);
+                if (TabControl.getCurrentHistory().currentIndex-beforeInstance >= window.surveyData.EditsBeforePrompt && !displayedText && timeSurveyUp){
                     clearTimeout(timeSurvey);
                     displaySurvey();
                 }
@@ -75,18 +79,20 @@ function displaySurvey(){
 
     //creating space for InvitationalMessage
     var surveyMessage = document.createElement("span");
-    surveyMessage.innerHTML='<span><a onmouseover="showRecruitementMessage()" onclick="countClicked() href="'+surveyData.SurveyURL+'" target="umplesurvey">'+surveyData.InvitationalMessage+'</a></span><br/>';
+    surveyMessage.innerHTML='<span><a href="'+window.surveyData.SurveyURL+'" target="umplesurvey" onmouseover="showRecruitementMessage()">'+window.surveyData.InvitationalMessage+'</a></span><br/>';
     surveyMessage.id="surveyMessage";
     surveyArea.appendChild(surveyMessage);
 
     //creating space for RecruitementMessage
     var surveyExtra = document.createElement("span");
-    surveyExtra.innerHTML=surveyData.RecruitmentText +'<div style="text-align:center;"><a href="'+surveyData.SurveyURL+'" target="umplesurvey" style=" cursor: pointer; color: blue; text-decoration: underline;" onclick="countClicked()">Start Survey<br/></span></div>';
+    surveyExtra.innerHTML=window.surveyData.RecruitmentText +'<div style="text-align:center;"><a href="'+window.surveyData.SurveyURL+'" target="umplesurvey" style=" cursor: pointer; color: blue; text-decoration: underline;">Start Survey</a><br/></div>';
     surveyExtra.id="surveyExtra";
     surveyArea.appendChild(surveyExtra);
 
     surveyExtra.addEventListener("mouseleave", function(){hideRecruitementMessage()});
     surveyExtra.addEventListener("mouseover", function(){showRecruitementMessage()});
+    surveyExtra.addEventListener("click", function(){countClicked()});
+    surveyMessage.addEventListener("click", function(){countClicked()});
     console.log("done");
 }
 
