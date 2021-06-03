@@ -5,6 +5,14 @@ http://umple.org/license
  */
 namespace cruise.umple.compiler;
 
+/*Used to associated condition patern for an umple elemnt. Designed to be generic so, this elemnt
+ * can be of different types
+ */
+class Condition {
+	String condition;
+	Object element;
+}
+
 class ConstraintTree
 {
   /*
