@@ -93,7 +93,7 @@ if (isset($_REQUEST["diagramtype"])) {
   $diagramType=$_REQUEST["diagramtype"];
   if ($diagramType=="state") $diagramType = "GvState";
   else if ($diagramType=="structure") $diagramType = "structureDiagram";  
-  else if ($diagramType !="GvState" && $diagramType !="GvClass" && $diagramType !="structureDiagram") $diagramType = "class";
+  else if ($diagramType !="GvState" && $diagramType !="GvClass" && $diagramType !="structureDiagram" && $diagramType !="GvFeature") $diagramType = "class";
 }
 if ($diagramtype=="") $diagramtype = "&diagramtype=".$diagramType;
 
@@ -820,7 +820,7 @@ $output = $dataHandle->readData('model.ump');
       <?php if($canCreateTask) { ?> true <?php } else { ?> false <?php } ?>
       ); 
       <?php if (isset($_REQUEST['example']) && $_REQUEST["example"] != ""){?> 
-      Page.setExamples("<?php echo $_REQUEST['example'] ?>")
+      Page.setExamples("<?php echo $_REQUEST['example'] ?>", "<?php echo $diagramType ?>")
       <?php } ?> 
       //
   </script>
