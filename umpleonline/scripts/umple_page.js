@@ -659,9 +659,8 @@ Page.initCanvasArea = function()
   if (!Layout.isDiagramVisible) {Layout.showHideCanvas(false);}
 }
 //The purpose of this function is make sure the URL example argument selects the appropriate dropdown example
-Page.setExamples = function(ex, dia)
+Page.setExamples = function(ex)
 {
-  alert(dia);
   jQuery("#inputExample").change(Action.loadExample);
   jQuery("#inputExample option[value = \""+ex+".ump"  +"\"]").attr("selected", true);
  

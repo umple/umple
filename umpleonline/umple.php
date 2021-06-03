@@ -820,7 +820,7 @@ $output = $dataHandle->readData('model.ump');
       <?php if($canCreateTask) { ?> true <?php } else { ?> false <?php } ?>
       ); 
       <?php if (isset($_REQUEST['example']) && $_REQUEST["example"] != ""){?> 
-      Page.setExamples("<?php echo $_REQUEST['example'] ?>", "<?php echo $diagramType ?>")
+      Page.setExamples("<?php echo $_REQUEST['example'] ?>")
       <?php } ?> 
       //
   </script>
