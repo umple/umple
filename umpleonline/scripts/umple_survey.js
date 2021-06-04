@@ -19,7 +19,6 @@ if (existSCookie("surveyCookie") == null && window.surveyData!=null){
     }
     console.log("randomRoll: "+window.randomSurveyRoll);
     if (window.randomSurveyRoll == 1){ // rolled 1 in umple.php file
-        console.log("displaying...");
         // ensure user has not completed this survey yet by comparing URLs
         var surveySeen = window.localStorage.getItem("surveyShown");
         if (surveySeen == null || surveySeen != window.surveyData.SurveyURL){
@@ -46,21 +45,17 @@ if (existSCookie("surveyCookie") == null && window.surveyData!=null){
 
     window.onbeforeunload = function(){ 
         //set timed cookies before the next appearance of the survey
-        if (existSCookie("surveyPass") != null || !displayedText){ /*set nothing...*/ }
-        else if(window.randomSurveyRoll != 1){
-            console.log("set cookie for: 60 days");
+        if (existSCookie("surveyPass") != null){ /*set nothing...*/ }
+        else if(window.randomSurveyRoll != 1 || !displaySurvey){
             setSurveyCookie(60)
         }
         else if (clickedForMoreSurvey == false && clickedStartSurvey == false){ // ignored survey message
-            console.log("set cookie for: 15 days");
             setSurveyCookie(15)
         }
         else if (clickedForMoreSurvey == true && clickedStartSurvey == false){ // checked out RecruitementMessage only
-            console.log("set cookie for: 30 days");
             setSurveyCookie(30);
         }
         else {
-            console.log("set cookie for: 60 days");
             setSurveyCookie(60)
         }
     };
@@ -93,7 +88,6 @@ function displaySurvey(){
     surveyExtra.addEventListener("mouseover", function(){showRecruitementMessage()});
     surveyExtra.addEventListener("click", function(){countClicked()});
     surveyMessage.addEventListener("click", function(){countClicked()});
-    console.log("done");
 }
 
 // Show/Hide Functions

@@ -1790,7 +1790,7 @@ Action.setCaretPosition = function(line)
       window.localStorage.removeItem("surveyShown");
     }
     if (line=="sr")
-    {
+    { // sets the randomSurveyRoll to 1
       let currentTime=new Date();
       currentTime.setTime(currentTime.getTime()+24*60*60*1000);
       document.cookie="surveyRollOne=done; expires="+currentTime.toUTCString()+"; path=/;";
