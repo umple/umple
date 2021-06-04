@@ -25,6 +25,24 @@
     cursor: initial;
 }
 
+.linkToSurvey{
+    cursor: pointer;
+    color: blue;
+    text-decoration: none;
+}
+.linkToNotSurvey{
+    cursor: pointer;
+    color: #4d4d4d;
+    text-decoration: none;
+}
+
+#surveyPopUp{
+    display:flex;
+    justify-content: space-between;
+    padding-left: 25%;
+    padding-right: 25%;
+}
+
 #tipSpan{
     visibility:hidden;
 }

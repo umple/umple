@@ -16,6 +16,7 @@ if (existSCookie("surveyCookie") == null && window.surveyData!=null){
         console.log("found survey pass");
         window.surveyData.MinutesBeforePrompt = 0.03;
         window.surveyData.EditsBeforePrompt = 1;
+        displayText=false;
     }
     console.log("randomRoll: "+window.randomSurveyRoll);
     if (window.randomSurveyRoll == 1){ // rolled 1 in umple.php file
@@ -32,21 +33,22 @@ if (existSCookie("surveyCookie") == null && window.surveyData!=null){
             timeSurvey;
             //count number of edits made to page
             var beforeInstance = TabControl.getCurrentHistory().currentIndex;
-            if (!displayedText)
-            document.addEventListener("mouseover", function(){
-                console.log(TabControl.getCurrentHistory().currentIndex);
-                if (TabControl.getCurrentHistory().currentIndex-beforeInstance >= window.surveyData.EditsBeforePrompt && !displayedText && timeSurveyUp){
-                    clearTimeout(timeSurvey);
-                    displaySurvey();
-                }
-            })
+            if (!displayedText){
+                document.addEventListener("mouseover", function(){
+                    console.log(TabControl.getCurrentHistory().currentIndex);
+                    if (TabControl.getCurrentHistory().currentIndex-beforeInstance >= window.surveyData.EditsBeforePrompt && !displayedText && timeSurveyUp){
+                        clearTimeout(timeSurvey);
+                        displaySurvey();
+                    }
+                })
+            }
         }
     }
 
     window.onbeforeunload = function(){ 
         //set timed cookies before the next appearance of the survey
         if (existSCookie("surveyPass") != null){ /*set nothing...*/ }
-        else if(window.randomSurveyRoll != 1 || !displaySurvey){
+        else if(window.randomSurveyRoll != 1){
             setSurveyCookie(60)
         }
         else if (clickedForMoreSurvey == false && clickedStartSurvey == false){ // ignored survey message
@@ -80,12 +82,12 @@ function displaySurvey(){
 
     //creating space for RecruitementMessage
     var surveyExtra = document.createElement("span");
-    surveyExtra.innerHTML=window.surveyData.RecruitmentText +'<div style="text-align:center;"><a href="'+window.surveyData.SurveyURL+'" target="umplesurvey" style=" cursor: pointer; color: blue; text-decoration: underline;">Start Survey</a><br/></div>';
+    surveyExtra.innerHTML=window.surveyData.RecruitmentText +'<div id="surveyPopUp"><span class="linkToSurvey"><a href="'+window.surveyData.SurveyURL+'" target="umplesurvey"class="linkToSurvey">Start Survey</a></span><span onclick="hideRecruitementMessage()" class="linkToNotSurvey">Not Today</span></div>';
     surveyExtra.id="surveyExtra";
     surveyArea.appendChild(surveyExtra);
 
     surveyExtra.addEventListener("mouseleave", function(){hideRecruitementMessage()});
-    surveyExtra.addEventListener("mouseover", function(){showRecruitementMessage()});
+    //surveyExtra.addEventListener("mouseover", function(){showRecruitementMessage()});
     surveyExtra.addEventListener("click", function(){countClicked()});
     surveyMessage.addEventListener("click", function(){countClicked()});
 }
@@ -94,16 +96,20 @@ function displaySurvey(){
 
 function showRecruitementMessage(){
     clickedForMoreSurvey = true;
-    document.getElementById('surveyExtra').classList.remove("fade-outInst");
-    document.getElementById('surveyExtra').classList.add("fade-in");
-    hideWithDelay = setTimeout(function(){hideRecruitementMessage()}, calculateDelay());
-    hideWithDelay;
+    if (!document.getElementById('surveyExtra').classList.contains("fade-in")){
+        document.getElementById('surveyExtra').classList.remove("fade-outInst");
+        document.getElementById('surveyExtra').classList.add("fade-in");
+        hideWithDelay = setTimeout(function(){hideRecruitementMessage()}, calculateDelay());
+        hideWithDelay;
+    }
 }
 
 function hideRecruitementMessage(){
     clearTimeout(hideWithDelay);
-    document.getElementById('surveyExtra').classList.remove("fade-in");
-    document.getElementById('surveyExtra').classList.add("fade-outInst");
+    if (!document.getElementById('surveyExtra').classList.contains("fade-outInst")){
+        document.getElementById('surveyExtra').classList.remove("fade-in");
+        document.getElementById('surveyExtra').classList.add("fade-outInst");
+    }
 }
 
 // confirms user has accessed survey URL
