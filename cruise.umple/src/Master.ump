@@ -27,13 +27,23 @@ use Documenter.ump;
 use Generator.ump;
 use Json.ump;
 use Parser.ump;
-
+// code below enables umple mixsets
 use Structure;
-use Template;
-//use StateMachine;
 use Trace;
-
-
+use Coordinate ;
+use Constraint;
+use StateMachine; 
+use Trait; 
+use Filter;
+use Mixset;
+use Template;
+use FIXML;
+use Layout;
+use Class; use Attribute; 
+use Method;
+use Association;
+use FeatureModel;
+use AspectInjection;
 
 mixset StateMachine {
   use stateMachine/StateMachine.ump;
