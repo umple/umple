@@ -167,7 +167,7 @@ $output = $dataHandle->readData('model.ump');
    color: #ccc;
    }
 .active {
-  background: #C98C7D;
+  background: #B06C5B;
 }
 </style>
 <link rel="stylesheet" href="scripts/styleSurvey.css"> 
