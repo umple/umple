@@ -1771,22 +1771,24 @@ Action.setCaretPosition = function(line)
     if(line=="sp")
     { // creates Survey Pass; modifies conditions to allow for survey to be displayed:
       // includes setting RandomizedFrequency to 1, MinutesBeforePrompt to 5 secs, EditsBeforePrompt to 1
+      //console.log("survey pass");
       if (existSCookie("surveyCookie")==null && window.localStorage.getItem("surveyShown")==null){
+        //console.log("passed cookies");
         if (document.getElementById("styleTip")!=null)
           document.getElementById("styleTip").innerHTML="";
         window.randomSurveyRoll = 1;
         window.surveyData.EditsBeforePrompt=1;
         timeSurveyUp = false;
         clearTimeout(timeSurvey);
-        timeSurvey = setTimeout(function(){timeSurveyUp = true;}, 5000);
+        timeSurvey = setTimeout(function(){timeSurveyUp = true;}, 10000);
         timeSurvey;
-        notToday=false;
         displayedText=false;
         if (!displayedText){
+          //console.log("entered if");
           beforeInstance = TabControl.getCurrentHistory().currentIndex;
           document.addEventListener("mouseover", function(){
             if (TabControl.getCurrentHistory().currentIndex-beforeInstance >= 1 && !displayedText && timeSurveyUp){
-                clearTimeout(timeSurvey);
+                //console.log("displayed");
                 displaySurvey();
                 this.removeEventListener('mouseover', arguments.callee);
             }                        

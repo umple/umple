@@ -7,6 +7,7 @@ function setCookieBeforeClose(mode){
         window.onbeforeunload = function(){ 
             //set timed cookies before the next appearance of the survey
             if(window.randomSurveyRoll != 1){
+                console.log("set 60");
                 setSurveyCookie(60)
             }
             else if (notToday){
@@ -14,12 +15,15 @@ function setCookieBeforeClose(mode){
                 setSurveyCookie(1);
             }
             else if (clickedForMoreSurvey == false && clickedStartSurvey == false){ // ignored survey message
+                console.log("set 15");
                 setSurveyCookie(15);
             }
             else if (clickedForMoreSurvey == true && clickedStartSurvey == false){ // checked out RecruitementMessage only
+                console.log("set 30");
                 setSurveyCookie(30);
             }
             else {
+                console.log("set default 60");
                 setSurveyCookie(60)
             }
         };
@@ -71,7 +75,6 @@ if (existSCookie("surveyCookie") == null && window.surveyData!=null){
             if (!displayedText){
                 document.addEventListener("mouseover", function(){
                     if (TabControl.getCurrentHistory().currentIndex-beforeInstance > window.surveyData.EditsBeforePrompt && !displayedText && timeSurveyUp){
-                        clearTimeout(timeSurvey);
                         displaySurvey();
                         this.removeEventListener('mouseover', arguments.callee);
                     }                        
@@ -92,23 +95,23 @@ function displaySurvey(){
     displayedText = true;
     var surveyArea = document.getElementById("mainSurveySpan");
 
-    //creating space for InvitationalMessage
-    var surveyMessage = document.createElement("span");
-    surveyMessage.innerHTML='<span><a href="'+window.surveyData.SurveyURL+'" target="umplesurvey" onmouseover="showRecruitementMessage()">'+window.surveyData.InvitationalMessage+'</a></span><br/>';
-    surveyMessage.id="surveyMessage";
-    surveyArea.appendChild(surveyMessage);
+    if (!surveyArea.contains(document.getElementById("surveyMessage"))){
+        //creating space for InvitationalMessage
+        var surveyMessage = document.createElement("span");
+        surveyMessage.innerHTML='<span><a href="'+window.surveyData.SurveyURL+'" target="umplesurvey" onmouseover="showRecruitementMessage()">'+window.surveyData.InvitationalMessage+'</a></span><br/>';
+        surveyMessage.id="surveyMessage";
+        surveyArea.appendChild(surveyMessage);
 
-    //creating space for RecruitementMessage
-    var surveyExtra = document.createElement("span");
-    surveyExtra.innerHTML=window.surveyData.RecruitmentText +'<div id="surveyPopUp"><span class="linkToSurvey"><a href="'+window.surveyData.SurveyURL+'" target="umplesurvey"class="linkToSurvey">Start Survey</a></span><span onclick="groupHideToday()" class="linkToNotSurvey">Not Today</span></div>';
-    surveyExtra.id="surveyExtra";
-    surveyArea.appendChild(surveyExtra);
+        //creating space for RecruitementMessage
+        var surveyExtra = document.createElement("span");
+        surveyExtra.innerHTML=window.surveyData.RecruitmentText +'<div id="surveyPopUp"><span class="linkToSurvey" onclick="countClicked()"><a href="'+window.surveyData.SurveyURL+'" target="umplesurvey"class="linkToSurvey">Start Survey</a></span><span onclick="groupHideToday()" class="linkToNotSurvey">Not Today</span></div>';
+        surveyExtra.id="surveyExtra";
+        surveyArea.appendChild(surveyExtra);
 
-    surveyExtra.addEventListener("mouseleave", function(){hideRecruitementMessage()});
-    surveyExtra.addEventListener("click", function(){countClicked()});
-    surveyMessage.addEventListener("click", function(){countClicked()});
+        surveyExtra.addEventListener("mouseleave", function(){hideRecruitementMessage()});
+        surveyMessage.addEventListener("click", function(){countClicked()});
+    }
 }
-
 
 // Show/Hide Functions
 
@@ -129,7 +132,6 @@ function hideRecruitementMessage(){
 
 // confirms user has accessed survey URL
 function countClicked(){
-    if (existSCookie("surveyPass") == null)
-        window.localStorage.setItem("surveyShown", window.surveyData.surveyURL);
+    window.localStorage.setItem("surveyShown", window.surveyData.surveyURL);
     clickedStartSurvey = true;
 }
