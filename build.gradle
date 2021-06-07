@@ -4,7 +4,7 @@
 
 buildscript {
     dependencies {
-        classpath 'de.undercouch:gradle-download-task:3.4.3'
+        classpath 'de.undercouch:gradle-download-task:4.1.1'
         classpath group: 'org.yaml', name: 'snakeyaml', version: '1.19'
     }
 }
@@ -29,7 +29,6 @@ ext {
     testClassfileOutputDir = "${rootProject.ext.testBaseDir}/bin"
     distpath =  "${rootProject.projectDir.toString()}/dist/cruise.umple/reference"
     distdir = "${rootProject.projectDir.toString()}/dist"
-    umpleweb = "${rootProject.projectDir.toString()}/umplewww"
     umpleoscripts = "${rootProject.projectDir.toString()}/umpleonline/scripts"
 }
 
@@ -66,13 +65,18 @@ def buildAliases = [
         'packageAllJars',
         'resetVersion',
         'updateLatestVersion',
+        'allUserManualAndExampleTests'
    ],
    'testall' : [
         'buildTestUnitGeneratorAndParser',
         'testbedTests',
         'allUserManualAndExampleTests'
+   ],
+   'packageUmpleonline' : [
+    'packageAllJars',
+    'compileUmpleSelf',
+    'deployUmpleonline'
    ]
-   
 ]
 def expandedTaskList = []
 
@@ -105,11 +109,11 @@ dependencies {
     ivy group: 'com.yahoo.platform.yui', name: 'yuicompressor', version: '2.4.8'
     
     // Testing
-    ivy group: 'junit', name: 'junit', version: '4.12'
+    ivy group: 'junit', name: 'junit', version: '4.13.2'
 
     // Core
     ivy group: 'net.sf.jopt-simple', name: 'jopt-simple', version: '4.4'
-    ivy group: 'org.apache.ant', name: 'ant', version: '1.9.6'
+    ivy group: 'org.apache.ant', name: 'ant', version: '1.9.15'
 
     // XText/Xtend Plugin
     ivy group: 'org.eclipse.xtext', name: 'org.eclipse.xtext.ui', version: '2.9.0.beta3'
@@ -132,14 +136,6 @@ task downloadUmpleJar(type: Download) {
     src rootProject.ext.umpleJarRemoteSource
     dest rootProject.ext.umpleJarRemoteFile
 }
-task deployUmpleJar {
- copy{
- 	from umpleJarRemoteFile
- 	into "${rootProject.ext.distdir}/gradle/libs"
- 	rename "umple-latest.jar","umple-${rootProject.ext.umpleCurrentVersion}.jar"
- }
-}
-
 task downloadJOptSimpleVendorZip(type: Download) {
     onlyIfNewer true
     overwrite true
@@ -225,7 +221,10 @@ subprojects{
         exclude "**/.git*"
         doFirst {
             println("Copying from ${fromPath} to ${intoPath}")
-            inputs.sourceFiles.stopExecutionIfEmpty()
+            //inputs.sourceFiles.stopExecutionIfEmpty()
+           if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
         }
     }
     compileUmple.finalizedBy copyUmpleOutput
@@ -233,7 +232,7 @@ subprojects{
 
     task copyUmpleTest (type: Copy) {
         from "${projectDir.toString()}/test"
-        into "${rootProject.ext.testBaseDir}/workingDir/test"
+        into "${rootProject.ext.testBaseDir}/bin/test"
         duplicatesStrategy = 'warn'
         exclude "**/.git*"
         doFirst {
@@ -262,7 +261,10 @@ task copyUmpleOnlineTestFiles(type: Copy) {
     include '*.ump' // should avoid hitting the tmp model files
     doFirst {
         println("Copying .ump files from ${rootProject.projectDir.toString()}/umpleonline/ump to ${rootProject.ext.testBaseDir}/umpleonline/ump")
-        inputs.sourceFiles.stopExecutionIfEmpty()
+        //inputs.sourceFiles.stopExecutionIfEmpty()
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
     }
 }
 tasks.getByName("test").dependsOn copyUmpleOnlineTestFiles
@@ -309,8 +311,8 @@ task ('cleanUpArtifacts') {
 
 task ('cleanUpDeployment') {
  doLast{
-    delete "${rootProject.projectDir.toString()}/umple*.jar"
-    delete "/h/ralph/sites/www/html/umpleonline/scripts/umple*.jar"
+    delete "${rootProject.projectDir.toString()}/dist/gradle/libs/umple*.jar"
+    delete "${rootProject.ext.umpleoscripts}/umple*.jar"
     }
 }
 
@@ -335,7 +337,7 @@ sourceSets {
             ]
             exclude '**/*.ump', '**/.git*'
         }
-        output.classesDir = rootProject.ext.classfileOutputDir
+        java.outputDir = file(rootProject.ext.classfileOutputDir)
     }
     test {
         compileClasspath = files(
@@ -352,7 +354,7 @@ sourceSets {
             ]
             exclude '**/*.ump', '**/.git*'
         }
-        output.classesDir = rootProject.ext.testClassfileOutputDir
+        java.outputDir = file(rootProject.ext.testClassfileOutputDir)
     }
 }
 
@@ -362,16 +364,102 @@ sourceSets {
 // ===============
 
 // Grammar and error files also need to be included in the Umple jar
+
+/*task copyDocs1 {
+ copy {
+  from "cruise.umple/src/class"
+  into "${rootProject.projectDir.toString()}/dist/tmp/class"
+  include "*.grammar"
+  }
+}
+
+task copyDocs2 {
+ copy {
+  from "cruise.umple/src/constraint"
+  into "${rootProject.projectDir.toString()}/dist/tmp/constraint"
+  include "*.grammar"
+  }
+}
+task copyDocs3 {
+ copy {
+  from "cruise.umple/src/filter"
+  into "${rootProject.projectDir.toString()}/dist/tmp/filter"
+  include "*.grammar"
+  }
+}
+task copyDocs4 {
+ copy {
+  into "${rootProject.projectDir.toString()}/dist/tmp/fixml"
+  include "*.grammar"
+  }
+}
+task copyDocs5 {
+ copy {
+  from "cruise.umple/src/layout"
+  into "${rootProject.projectDir.toString()}/dist/tmp/layout"
+  include "*.grammar"
+  }
+}
+task copyDocs6 {
+ copy {
+  from "cruise.umple/src/strcture"
+  into "${rootProject.projectDir.toString()}/dist/tmp/strcture"
+  include "*.grammar"
+  }
+}
+task copyDocs7 {
+ copy {
+  from "cruise.umple/src/template"
+  into "${rootProject.projectDir.toString()}/dist/tmp/template"
+  include "*.grammar"
+  }
+}
+task copyDocs8 {
+ copy {
+  from "cruise.umple/src/trace"
+  into "${rootProject.projectDir.toString()}/dist/tmp/trace"
+  include "*.grammar"
+  }
+}
+task copyDocs9 {
+ copy {
+  from "cruise.umple/src/trait"
+  into "${rootProject.projectDir.toString()}/dist/tmp/trait"
+  include "*.grammar"
+  }
+}
+task copyDocs10 {
+ copy {
+    from "cruise.umple/src"
+    into "${rootProject.projectDir.toString()}/dist/tmp/"
+    include '*.grammar'
+    include '*.error'
+  }
+}*/
 task copyDocs(type: Copy) {
     from "cruise.umple/src"
     into rootProject.ext.classfileOutputDir
     include '*.grammar'
     include '*.error'
+    include 'trait/*.grammar','trace/*.grammar', 'template/*.grammar', 'strcture/*.grammar', 'mixset/*.grammar', 'layout/*.grammar', 'fixml/*.grammar','filter/*.grammar', 'constraint/*.grammar'
+    include 'class/*.grammar', 'stateMachine/*.grammar' 
     doFirst {
         println("Copying .grammar and .error files from cruise.umple/src to ${rootProject.ext.classfileOutputDir}")
-        inputs.sourceFiles.stopExecutionIfEmpty()
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+    
     }
 }
+tasks.getByName("compileJava").dependsOn 'copyDocs'
+tasks.getByName("compileJava").dependsOn ':UmpleParser:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn ':UmpleToJava:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn ':UmpleToPhp:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn ':UmpleToRTCpp:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn ':UmpleToRuby:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn ':UmpleToSql:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn ':UmpleToTest:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn ':cruise.umple:copyUmpleOutput'
 
 jar {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
@@ -382,12 +470,12 @@ jar {
         attributes 'Main-Class': 'cruise.umple.UmpleConsoleMain',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleMajorVersion
+                   'Version': rootProject.ext.umpleCurrentVersion
     }
     doFirst {
         println("Compiling to ${rootProject.ext.umpleCurrentJar} using " + rootProject.ext.classfileOutputDir)
     }
-    dependsOn 'copyDocs'
+    dependsOn copyDocs
 }
 
 // Task for generating the statistics jar file
@@ -395,16 +483,19 @@ task packageStatistics(type: Jar) {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
     from rootProject.ext.classfileOutputDir
     // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archiveName = "umplestats-${rootProject.ext.umpleCurrentVersion}.jar"
+    archiveFileName = "umplestats-${rootProject.ext.umpleCurrentVersion}.jar"
     manifest {
         attributes 'Main-Class': 'cruise.umple.stats.StatsMain',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleMajorVersion
+                   'Version': rootProject.ext.umpleCurrentVersion
     }
     doFirst {
         println("Compiling umplestats-${rootProject.ext.umpleCurrentVersion}.jar using " + rootProject.ext.classfileOutputDir)
     }
+    dependsOn ':processResources'
+    dependsOn 'copyDocs'
+    dependsOn ':compileJava'
 }
 
 // Task for generating the documenter jar file
@@ -412,16 +503,19 @@ task packageDocumenter(type: Jar) {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
     from rootProject.ext.classfileOutputDir
     // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archiveName = "umpledocs-${rootProject.ext.umpleCurrentVersion}.jar"
+    archiveFileName = "umpledocs-${rootProject.ext.umpleCurrentVersion}.jar"
     manifest {
         attributes 'Main-Class': 'cruise.umple.docs.DocumenterMain',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleMajorVersion
+                   'Version': rootProject.ext.umpleCurrentVersion
     }
     doFirst {
         println("Compiling umpledocs-${rootProject.ext.umpleCurrentVersion}.jar using " + rootProject.ext.classfileOutputDir)
     }
+    dependsOn ':processResources'
+    dependsOn 'copyDocs'
+    dependsOn ':compileJava'
 }
 
 // Task for generating the sync jar file
@@ -429,16 +523,19 @@ task packageSync(type: Jar) {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
     from rootProject.ext.classfileOutputDir
     // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archiveName = "umplesync-${rootProject.ext.umpleCurrentVersion}.jar"
+    archiveFileName = "umplesync-${rootProject.ext.umpleCurrentVersion}.jar"
     manifest {
         attributes 'Main-Class': 'cruise.umple.PlaygroundMain',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleMajorVersion
+                   'Version': rootProject.ext.umpleCurrentVersion
     }
     doFirst {
         println("Compiling umplesync-${rootProject.ext.umpleCurrentVersion}.jar using " + rootProject.ext.classfileOutputDir)
     }
+    dependsOn ':processResources'
+    dependsOn 'copyDocs'
+    dependsOn ':compileJava'
 }
 
 // Task for generating the run jar file
@@ -446,16 +543,19 @@ task packageRunner(type: Jar) {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
     from rootProject.ext.classfileOutputDir
     // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archiveName = "umplerunner-${rootProject.ext.umpleCurrentVersion}.jar"
+    archiveFileName = "umplerunner-${rootProject.ext.umpleCurrentVersion}.jar"
     manifest {
         attributes 'Main-Class': 'cruise.umple.UmpleRunMain',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleMajorVersion
+                   'Version': rootProject.ext.umpleCurrentVersion
     }
     doFirst {
         println("Compiling umplerun-${rootProject.ext.umpleCurrentVersion}.jar using " + rootProject.ext.classfileOutputDir)
     }
+    dependsOn ':processResources'
+    dependsOn 'copyDocs'
+    dependsOn ':compileJava'
 }
 
 // Task for generating the VML jar file
@@ -463,16 +563,19 @@ task packageVml(type: Jar) {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
     from rootProject.ext.classfileOutputDir
     // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archiveName = "umplevml-${rootProject.ext.umpleCurrentVersion}.jar"
+    archiveFileName = "umplevml-${rootProject.ext.umpleCurrentVersion}.jar"
     manifest {
         attributes 'Main-Class': 'cruise.vml.VmlConsole',
                    'Class-Path': configurations.ivy,
                    'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleMajorVersion
+                   'Version': rootProject.ext.umpleCurrentVersion
     }
     doFirst {
         println("Compiling umplevml-${rootProject.ext.umpleCurrentVersion}.jar using " + rootProject.ext.classfileOutputDir)
     }
+    dependsOn ':processResources'
+    dependsOn 'copyDocs'
+    dependsOn ':compileJava'
 }
 
 // Generate all jar files
@@ -497,7 +600,9 @@ task qaBuildingPage(type: Copy) {
     rename 'qa_updating.php', 'index.php'
     doFirst {
         println("Creating the QA landing page")
-        inputs.sourceFiles.stopExecutionIfEmpty()
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
     }
 }
 
@@ -508,7 +613,9 @@ task qaLandingPage(type: Copy) {
     include 'qa_index.php'
     doFirst {
         println("Finalizing the QA landing page")
-        inputs.sourceFiles.stopExecutionIfEmpty()
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
     }
 }
 
@@ -539,21 +646,30 @@ task ('resetVersion') {
     }
 }
 
-//Unused
-/*task deployUmpleOnlineJars(type: Copy) {
+task deployUmpleonline(type: Copy) {
     from "${rootProject.projectDir.toString()}/dist/gradle/libs"
-    into "/h/ralph/sites/www/html/umpleonline/scripts/"
+    into umpleoscripts
     doFirst {
-        println("Deploying umple online to /h/ralph/sites/www/html/umpleonline/scripts/")
-        inputs.sourceFiles.stopExecutionIfEmpty()
+        println("Deploying umple online to umpleonline/scripts/")
+        //inputs.sourceFiles.stopExecutionIfEmpty()
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
     }
     include "umplesync-${rootProject.ext.umpleLastVersion}.jar"
     include "umple-${rootProject.ext.umpleLastVersion}.jar"
     include "umplevml-${rootProject.ext.umpleLastVersion}.jar"
+    rename ("umplesync-${rootProject.ext.umpleLastVersion}.jar", 'umplesync.jar')
+    rename ("umple-${rootProject.ext.umpleLastVersion}.jar", 'umple.jar')
+    rename ("umplevml-${rootProject.ext.umpleLastVersion}.jar", "vml.jar")
+    
+    dependsOn ':jar'
+    dependsOn ':packageSync'
+    dependsOn ':packageVml'
 }
 
 
-/*task deployUpdatedLib(type: Copy) {
+task deployUpdatedLib(type: Copy) {
     from "${rootProject.projectDir.toString()}/dist/gradle/libs"
     into "${rootProject.projectDir.toString()}/lib"
     doFirst {
@@ -569,9 +685,9 @@ task deploy {
     doLast {
         println("Deployed Version: ${rootProject.ext.umpleLastVersion}")
     }
-    dependsOn deployUmpleOnlineJars
+    dependsOn deployUmpleonline
     dependsOn deployUpdatedLib
-}*/
+}
 
 // Builds self
 task resetUmpleSelf {
@@ -609,7 +725,9 @@ task copyXUnitJavaGenerator (type: Copy) {
     exclude "**/.git*", 'UmpleTToJunit.java'
     doFirst {
         println("Copying from ${rootProject.projectDir.toString()}/UmpleTToJunit/src-gen-UmpleTL/cruise/umple/unitGen/jUnit/ to ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/jUnit/")
-        inputs.sourceFiles.stopExecutionIfEmpty()
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
     }
     dependsOn compileXUnitTemplates
 }
@@ -621,7 +739,10 @@ task copyXUnitPhpGenerator (type: Copy) {
     exclude "**/.git*", 'UmpleTToPhpUnit.java'
     doFirst {
         println("Copying from ${rootProject.projectDir.toString()}/UmpleTToPhpUnit/src-gen-UmpleTL/cruise/umple/unitGen/phpUnit/ to ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/phpUnit/")
-        inputs.sourceFiles.stopExecutionIfEmpty()
+        //inputs.sourceFiles.stopExecutionIfEmpty()
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
     }
     dependsOn compileXUnitTemplates
 }
@@ -633,7 +754,9 @@ task copyXUnitRubyGenerator (type: Copy) {
     exclude "**/.git*", 'UmpleTToRubyUnit.java'
     doFirst {
         println("Copying from ${rootProject.projectDir.toString()}/UmpleTToRubyUnit/src-gen-UmpleTL/cruise/umple/unitGen/rubyUnit/ to ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/rubyUnit/")
-        inputs.sourceFiles.stopExecutionIfEmpty()
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
     }
     dependsOn compileXUnitTemplates
 }
@@ -668,7 +791,9 @@ task copyTestGenerator (type: Copy) {
     exclude "**/.git*", 'UmpleTToRubyUnit.java'
     doFirst {
         println("Copying from ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src/src-gen/cruise/umple/testgenerator/ to ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen/cruise/umple/testgenerator/")
-        inputs.sourceFiles.stopExecutionIfEmpty()
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
     }
     dependsOn compileXUnitTemplates
 }
@@ -680,7 +805,9 @@ task copyTestParser (type: Copy) {
     exclude "**/.git*", 'UmpleTToRubyUnit.java'
     doFirst {
         println("Copying from ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src/src-gen/cruise/umple/testparser/ to ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen/cruise/umple/testparser/")
-        inputs.sourceFiles.stopExecutionIfEmpty()
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
     }
     dependsOn compileXUnitTemplates
 }
@@ -807,7 +934,7 @@ task testbedTests {
 def setupUserManualAndExampleTests(language) {
     new File("${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}").mkdirs()
     def command = "ruby ${rootProject.projectDir.toString()}/build/get_testable_examples.rb " +
-    "-i ${rootProject.projectDir.toString()}/umpleonline/ump/manualexamples -i ${rootProject.projectDir.toString()}/umpleonline/ump " +
+    "-i ${rootProject.projectDir.toString()}/umpleonline/umplibrary/manualexamples -i ${rootProject.projectDir.toString()}/umpleonline/umplibrary " +
     "-o ${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language} -l ${language} -s *"
     println(command)
     def proc = command.execute();
@@ -902,11 +1029,22 @@ task allUserManualAndExampleTests {
     // Consider doing this for the other languages too
 }
 
+//Copy generated files 
+
+task copyGen {
+  copy {
+   from "${rootProject.ext.distdir}/gradle/src-gen/"
+   into "${rootProject.projectDir.toString()}/cruise.umple/src-gen-umple"
+   include "*/cruise"
+  }
+
+}
+
 // =====================
 // Build User manual
 // =====================
 
-task copybuilddir1{
+task copybuilddir{
  doLast{
  	copy{
 	  	from "${rootProject.projectDir.toString()}/build/reference/files"
@@ -914,96 +1052,20 @@ task copybuilddir1{
 	  	}
 	  }
 }
-task copybuilddir2{
- dependsOn copybuilddir1
- doLast {
-  copy{
-	  	from ("${rootProject.ext.umpleweb}/index.html")
-	  	into (distpath)	
-	  	}
-	  }
-	  }
-task copybuilddir3{
- dependsOn copybuilddir2
- doLast{
-  copy{	
-	  	from ("${rootProject.ext.umpleweb}/files/umple_logo.jpg")
-	  	into ("${rootProject.ext.distpath}/files")
-	  	
-	  }
-	  }
-	 }
-task copybuilddir4{
-dependsOn copybuilddir3	
-doLast {
- copy{
-	  	from ("${rootProject.ext.umpleweb}/files/uottawa_ver_black.png")
-	  	into ("${rootProject.ext.distpath}/files") 	
-	  }
-	  }
-}
-	  
-task copybuilddir5{
-dependsOn copybuilddir4	
-doLast {
- copy{
-	  	from ("${rootProject.ext.umpleweb}/files/umple_example_uml.jpg")
-	  	into ("${rootProject.ext.distpath}/files")
-	  	}
-	  	}
-	  	
-}
-task copybuilddir6(type: Copy) {
-dependsOn copybuilddir5	
-doLast {
- copy{
-	  	from ("${rootProject.ext.umpleweb}/syntaxhighlighter")
-	  	into ("${rootProject.ext.distpath}/syntaxhighlighter")
-	  	}
-	  	}
-	  }
-task copybuilddir7(type: Copy) {
-dependsOn copybuilddir6	
-doLast {
- copy{
-	  	from ("${rootProject.ext.umpleweb}/examples")
-	  	into ("${rootProject.ext.distpath}/examples")	
-	  }
-	  }
-}
-task copybuilddir8(type: Copy){
-dependsOn copybuilddir7	
-doLast {
- copy{
-	  	from ("${rootProject.ext.umpleweb}/umple-core-classDiagram.shtml")
-	  	into (distpath)
-	  }
-	  }
-}
-	  
-task copybuilddir(type: Copy){
-dependsOn copybuilddir8
-doLast {
- copy{
-	  	from ("${rootProject.ext.umpleweb}/umple-state-classDiagram.shtml")
-	  	into (distpath)	
-	  }
-}
-}
+
 
  task executeDocJar (type: JavaExec){
- 
- 	classpath = files("${rootProject.ext.distdir}/umpledocs**.jar")
+
+ 	classpath = files("${rootProject.ext.distdir}/gradle/libs/umpledocs**.jar")
  	classpath += sourceSets.main.runtimeClasspath
  	main = "cruise.umple.docs.DocumenterMain"
- 	args = ["build/reference", "${rootProject.ext.distdir}/cruise.umple/reference"]
+ 	args = ["${rootProject.projectDir.toString()}/build/reference", "${rootProject.ext.distdir}/cruise.umple/reference"]
  	jvmArgs = ['-Xmx500m']
  	
  }
 
  
  task packageDocs {
- 
  	dependsOn executeDocJar
  	dependsOn copybuilddir
  }
@@ -1069,41 +1131,4 @@ doLast {
  	}
  }
  
- task packageUmpleonline1 {
-  
-   copy{
- 	 	from "${rootProject.ext.distdir}/gradle/libs"	
- 	 	include "umplesync**"	
- 	 	into umpleoscripts
- 	 	rename ("(.*)umplesync(.*)", 'umplesync.jar')
- 	 }
- 	 
- 	 	
- }
- 	
- task packageUmpleonline2 {
-  dependsOn packageUmpleonline1
-  
-  	copy{
- 		from "${rootProject.ext.distdir}/gradle/libs"		
- 	 	into umpleoscripts
- 	 	include "umple.jar"
- 	 	}
- 			 	
- 	 
- }
- 	
- task packageUmpleonline {
-  dependsOn packageUmpleonline2
-  dependsOn compressAllScripts 
-  
-  
-   copy{
- 		from "${rootProject.ext.distdir}/gradle/libs"	
- 	 	into umpleoscripts
- 	 	include "umplevml*.jar"
- 		rename ("(.*)umplevml(.*)", 'vml.jar')
- 		
- 	}
- 	
-} 
+ 
