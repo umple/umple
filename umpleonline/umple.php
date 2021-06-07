@@ -216,11 +216,8 @@ $output = $dataHandle->readData('model.ump');
               if ($surveyMessage != FALSE && !empty($surveyMessage)){ // confirm file exists
                 $surveyData = json_decode($surveyMessage);
                 $randomSurveyRoll = mt_rand(1 , $surveyData->RandomizedFrequency);
-                // ensure debugging backdoor is not activated (activates with reload + "sp" + reload)
-                if (isset($_COOKIE['surveyPass'])){
-                  $randomSurveyRoll = 1;
-                }
-                ?><script> // pass JSON file and rolled number to js
+                ?>
+                <script> // pass JSON file and rolled number to js
                   window.randomSurveyRoll = <?php echo $randomSurveyRoll; ?>;
                   window.surveyData = <?php echo json_encode($surveyData); ?>;
                 </script>
