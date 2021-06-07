@@ -167,7 +167,7 @@ $output = $dataHandle->readData('model.ump');
    color: #ccc;
    }
 .active {
-  background: #A17064;
+  background: #B06C5B;
 }
 </style>  
 <link rel="apple-touch-icon" sizes="57x57" href="https://cruise.umple.org/apple-icon-57x57.png">
