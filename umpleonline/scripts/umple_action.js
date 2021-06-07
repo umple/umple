@@ -1771,7 +1771,7 @@ Action.setCaretPosition = function(line)
     if(line=="sp")
     { // creates Survey Pass; modifies conditions to allow for survey to be displayed:
       // includes setting RandomizedFrequency to 1, MinutesBeforePrompt to 5 secs, EditsBeforePrompt to 1
-      if (existSCookie("surveyCookie")==null || window.localStorage.getItem("surveyShown")==null){
+      if (existSCookie("surveyCookie")==null && window.localStorage.getItem("surveyShown")==null){
         if (document.getElementById("styleTip")!=null)
           document.getElementById("styleTip").innerHTML="";
         window.randomSurveyRoll = 1;

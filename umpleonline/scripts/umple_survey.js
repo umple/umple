@@ -118,13 +118,9 @@ function showRecruitementMessage(){
         document.getElementById('surveyExtra').classList.remove("fade-outInst");
         document.getElementById('surveyExtra').classList.add("fade-in");
     }
-    //hideWithDelay = setTimeout(function(){hideRecruitementMessage()}, calculateDelay());
-    //onsole.log("delay fadeOut by: "+calculateDelay());
-    //hideWithDelay;
 }
 
 function hideRecruitementMessage(){
-    //clearTimeout(hideWithDelay);
     if (!document.getElementById('surveyExtra').classList.contains("fade-outInst")){
         document.getElementById('surveyExtra').classList.remove("fade-in");
         document.getElementById('surveyExtra').classList.add("fade-outInst");
@@ -137,34 +133,3 @@ function countClicked(){
         window.localStorage.setItem("surveyShown", window.surveyData.surveyURL);
     clickedStartSurvey = true;
 }
-
-/*
-function calculateDelay(){ // 5s + 1s/3words + 5s (iff link exists)
-    if (document.getElementById('surveyExtra')!=null){
-        sectionHtml=document.getElementById('surveyExtra').innerHTML;
-        sectionText=document.getElementById('surveyExtra').textContent;
-
-        if (sectionText==null){
-            return null;
-        }
-        if (sectionText.length==0){
-            return 0;
-        }
-
-        let sum=5;
-
-        //counting words
-        var rem=sectionText;
-        rem=rem.replace(/\r?\n|\r/g, "");
-        var wordCount=rem.split(" ").length;
-
-        sum += Math.ceil((wordCount-5)/3);
-
-        if (sectionHtml.indexOf("href")>=0){
-            sum += 5;
-        }
-
-        return sum*1000;
-    }
-    else 10*1000;
-}*/
