@@ -42,19 +42,20 @@ class SuperCodeGenerator {
       return myType;
     }
   }
-  	
-  public String translate(String keyName, TraceItem ti)
-  {
-    if (keyName.length()>5&&"trace".equals(keyName.substring(0,5)))
+
+  mixset Trace {	
+    public String translate(String keyName, TraceItem ti)
     {
-      return TraceLookupMap.get(keyName.substring(5).toLowerCase());
-    }
-    else 
-    {
-      return "INVALID KEYNAME IN TRANSLATE";
+      if (keyName.length()>5&&"trace".equals(keyName.substring(0,5)))
+      {
+        return TraceLookupMap.get(keyName.substring(5).toLowerCase());
+      }
+      else 
+      {
+        return "INVALID KEYNAME IN TRANSLATE";
+      }
     }
   }
-
   private boolean testForPrimitiveInConstraint(ConstraintVariable variable)
   {
   	//System.out.println(variable.toString() + "###");

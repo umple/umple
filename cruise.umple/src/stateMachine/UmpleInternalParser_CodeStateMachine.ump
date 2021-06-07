@@ -943,14 +943,15 @@ class UmpleInternalParser
       {
         setFailedPosition(stateMachineToken.getPosition(), 53, sm.getName());
       }
-      
-      if(stateToken.is("trace"))
-      {
-      	if (uClassifier instanceof UmpleClass) {
-    		analyzeTraceStatement((UmpleClass)uClassifier,stateToken); 
-    	} else {
-    		//TODO--- trait's functionality for trace;
-    	}
+      mixset Trace {
+        if(stateToken.is("trace"))
+        {
+          if (uClassifier instanceof UmpleClass) {
+          analyzeTraceStatement((UmpleClass)uClassifier,stateToken); 
+        } else {
+          //TODO--- trait's functionality for trace;
+        }
+        }
       }
       
       if (!stateToken.is("state") && !stateToken.is("stateName"))

@@ -968,9 +968,11 @@ class Attribute
   after constructor { codeblock.setCode(normalizeValue(aType,aValue)); }
   before setType { codeblock.setCode(normalizeValue(aType,getValue())); }
   after setType { setValue(getValue()); }
-  before delete { 
-    if (traceRecords == null) {
-      traceRecords = new ArrayList<TraceRecord>();
+  mixset Trace {
+    before delete { 
+      if (traceRecords == null) {
+        traceRecords = new ArrayList<TraceRecord>();
+      }
     }
   }
 
