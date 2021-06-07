@@ -86,13 +86,19 @@ class UmpleModel
   1 -> * UmpleClass;
 
   // The Umple Traits contained within the model.
-  1 -> * UmpleTrait;
+  mixset Trait {
+      1 -> * UmpleTrait;
+
+  }
 
   // The Umple Templates contained within the model.
   1 -> * UmpleTemplate;
 
   // The State Machines contained within the model.
-  1 -> * StateMachine stateMachineDefinitions;
+  mixset StateMachine {
+      1 -> * StateMachine stateMachineDefinitions;
+
+  }
 
   // The Umple interfaces contained within the model.
   1 -> * UmpleInterface;
@@ -144,7 +150,10 @@ class UmpleElement
   // Methods to distinguish the subclass types
   boolean isUmpleClass() {return false;}
   boolean isUmpleInterface() {return false;}
-  boolean isUmpleTrait() {return false;}
+  mixset Trait {
+      boolean isUmpleTrait() {return false;}
+
+  }
 }
 
 /*
@@ -727,7 +736,9 @@ class UmpleClass
 
   before setExtendsClass { if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; } }
 
+  mixset StateMachine {
   before addStateMachine { if (isImmutable()) { return false; } }
+  }
 
   boolean isUmpleClass() {return true;}
 }
@@ -808,6 +819,7 @@ class UmpleTrait {
   //--- before addAssociationVariable { if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; } }
 
   //--- before setExtendsTrait { if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; } }
+
 
   before addStateMachine { if (isImmutable()) { return false; } }
 

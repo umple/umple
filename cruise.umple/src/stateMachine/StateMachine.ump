@@ -32,7 +32,9 @@ class StateMachine
   key { parentState, name }
   
   before setUmpleClass { if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; } }
-  before setUmpleTrait { if (aUmpleTrait != null && aUmpleTrait.isImmutable()) { return false; } }
+  mixset Trait {
+	  before setUmpleTrait { if (aUmpleTrait != null && aUmpleTrait.isImmutable()) { return false; } }
+  }
   //before getContainsHistoryState { if ("H".equals(name)) { containsHistoryState = true; } }
   //before getContainsDeepHistoryState { if ("HStar".equals(name)) { containsDeepHistoryState = true; } }
 

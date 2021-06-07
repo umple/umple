@@ -3,6 +3,56 @@ namespace cruise.umple.compiler;
 * This is for cloning
 * Note: This code doesn't cover deep cloning. It's a combination of  shallow and deep cloning
 */
+
+class Method {
+//----------------------------------------------------------------------------  
+//---------------------------------Start--------------------------------------
+//----------------------------------------------------------------------------
+	void setMethodParameters(List<MethodParameter> parameters){
+		methodParameters = parameters;
+ 	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------   
+	String getSignature(){
+    String result = getType()+" "+getName()+"(";
+ 			for(MethodParameter p : getMethodParameters()){
+	 			result=result+p.getType()+",";
+ 			} 	
+ 			
+ 			if (result.endsWith(",") )result =result.substring(0, result.length()-1); 
+ 			result=result+")";
+ 		  return result;
+ 		}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------   		
+boolean compareWithTheMethod(Method inMethod){
+    if (getName().equals(inMethod.getName())){
+		  if(getType().equals(inMethod.getType())){
+			  Integer numberOfParams = getMethodParameters().size();
+			  if ( numberOfParams== inMethod.getMethodParameters().size()) {
+		          boolean allSame = true;
+		          for (int i = 0; i < numberOfParams; i++)
+		          {
+		            if(!getMethodParameter(i).getType().equals(inMethod.getMethodParameter(i).getType()))
+		            {
+		              allSame = false;
+		              break;
+		            }
+		          }
+		          if(allSame)
+		          {
+		            return true;
+		          }
+		     }
+		  }  
+      }
+	  return false;
+  } 		
+}
+
+
 class Method
 {
     /**
