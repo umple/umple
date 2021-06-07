@@ -76,6 +76,7 @@ class UmpleTrait {
     return null;
   }
 
+  mixset Association {
    public AssociationVariable getAssociationVariable(String name){
     for (AssociationVariable av : associationVariables)
     {
@@ -85,7 +86,8 @@ class UmpleTrait {
       }
     }
     return null;
-  }	
+    }	
+  }
     public boolean isImmutable(){
     	return (iAmImmutable || ancestorIsImmutable);
  	}
@@ -111,14 +113,17 @@ class UmpleTrait {
         mixset StateMachine {
 	      if (this.hasStateMachines()) { return false; } 
         }
-	      for (AssociationVariable av : associationVariables)
-	      {
-	        if (!immutabilityAssociationRulesSatisfied(av, true)) { return false; }
-	      }
+        mixset Association {
+          for (AssociationVariable av : associationVariables)
+          {
+            if (!immutabilityAssociationRulesSatisfied(av, true)) { return false; }
+          }
+        }
 	    }	    
 	    return notifySubclassesAncestorImmutable(isImmutable);
 	}
 
+  mixset Association {
    protected boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, boolean myTraitImmutable){
     AssociationVariable relatedAV = myAV.getRelatedAssociation();
     UmpleTrait relatedTrait = (relatedAV == null) ? null : relatedAV.getUmpleTrait();
@@ -170,6 +175,7 @@ class UmpleTrait {
       }
     }
     return satisfied;
+  }
   }
 
    private boolean notifySubclassesAncestorImmutable(boolean isImmutable){

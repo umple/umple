@@ -49,19 +49,21 @@ class UmpleInternalParser
       if(!theColor.endsWith("\"")) theColor= theColor+"\"";
       inUmpleClassifier.setDisplayColor(theColor);
     }
-    else if (token.is("associationPosition"))
-    {
-      String name = token.getValue("name");
-      Association assoc = model.getAssociation(name);
-
-      if (assoc != null)
+    mixset Association {
+      else if (token.is("associationPosition"))
       {
-        assoc.setName(name);
-        for(Token position : token.getSubTokens())
+        String name = token.getValue("name");
+        Association assoc = model.getAssociation(name);
+
+        if (assoc != null)
         {
-          if (position.is("coordinate"))
+          assoc.setName(name);
+          for(Token position : token.getSubTokens())
           {
-            assoc.addPosition(new Coordinate(position.getIntValue("x"),position.getIntValue("y"),0,0));
+            if (position.is("coordinate"))
+            {
+              assoc.addPosition(new Coordinate(position.getIntValue("x"),position.getIntValue("y"),0,0));
+            }
           }
         }
       }
@@ -108,25 +110,26 @@ class UmpleInternalParser
         c.getCoordinates().setStatus(Coordinate.Status.Defaulted);
       }
     }
-
-    // Layout associations
-    for (int i=0; i<model.numberOfAssociations(); i++)
-    {
-      Association a = model.getAssociation(i);
-      
-      if (associationIsBetweenClassAndInterface (a)){continue;}
-      if (associationIsBetweenClassAndTrait (a)){continue;}
-      
-      int numberOfPositions = a.numberOfPositions();
-
-      if (numberOfPositions < 2)
+    mixset Association {
+      // Layout associations
+      for (int i=0; i<model.numberOfAssociations(); i++)
       {
-        Coordinate[] defaults = model.getDefaultAssociationPosition(a);
-		if (defaults==null) continue;
-        a.addPosition(defaults[0]);
-        a.addPosition(defaults[1]);
-        a.getPosition(0).setStatus(Coordinate.Status.Defaulted);
-        a.getPosition(1).setStatus(Coordinate.Status.Defaulted);
+        Association a = model.getAssociation(i);
+        
+        if (associationIsBetweenClassAndInterface (a)){continue;}
+        if (associationIsBetweenClassAndTrait (a)){continue;}
+        
+        int numberOfPositions = a.numberOfPositions();
+
+        if (numberOfPositions < 2)
+        {
+          Coordinate[] defaults = model.getDefaultAssociationPosition(a);
+      if (defaults==null) continue;
+          a.addPosition(defaults[0]);
+          a.addPosition(defaults[1]);
+          a.getPosition(0).setStatus(Coordinate.Status.Defaulted);
+          a.getPosition(1).setStatus(Coordinate.Status.Defaulted);
+        }
       }
     }    
   }  

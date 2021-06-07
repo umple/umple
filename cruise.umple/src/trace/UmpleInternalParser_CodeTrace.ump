@@ -161,7 +161,9 @@ class UmpleInternalParser
   private void analyzeTraceStatement(UmpleClass aClass, Token token){
     traceDirective = new TraceDirective(model.getTracer());
     traceAttr = new AttributeTraceItem(traceDirective);
+    mixset Association {
     tracedAssoc = new AssociationTraceItem(traceDirective);
+    }
     mte = new MethodTraceItem(traceDirective);
     post = new Postfix(traceDirective);
     TraceRecord traceRecord = null;
@@ -219,7 +221,9 @@ class UmpleInternalParser
         if(others.isEmpty())
         {
         	cond.setConstraint(constraint);
+          mixset Association {
           tracedAssoc.setConstraint(constraint);
+          }
           mte.setConstraint(constraint);
         }
         else
@@ -255,7 +259,9 @@ class UmpleInternalParser
         UmpleVariable attr = traceDirective.getUmpleClass().getAttribute(token.getValue("LHS"));
         if(attr==null)
         {
+          mixset Association {
           attr = traceDirective.getUmpleClass().getAssociationVariable(token.getValue("LHS"));
+          }
         }
         traceAttr.addUmpleVariable(attr);
       }     
@@ -395,6 +401,7 @@ class UmpleInternalParser
         traceAttr.setTraceSet(true);
       }
     }
+    mixset Association {
     //------------- trace all associations [wildcard]
     if( traceToken.getValue("traceEntity").toLowerCase().equals("allassociations") )
     {
@@ -405,6 +412,7 @@ class UmpleInternalParser
       	tracedAssoc.setTraceAdd(true);
       	tracedAssoc.setTraceRemove(true);
       }
+    }
     }
     //------------- trace all non-api methods [wildcard]
     if( traceToken.getValue("traceEntity").toLowerCase().equals("allnonapimethods") )
@@ -428,8 +436,10 @@ class UmpleInternalParser
     int traceItemType = -1;
 
     // --- check if attribute
-    UmpleVariable attr = aClass.getAttribute(traceToken.getValue("traceEntity"));  
+    UmpleVariable attr = aClass.getAttribute(traceToken.getValue("traceEntity"));
+    mixset Association {  
     attr = attr==null?aClass.getAssociationVariable(traceToken.getValue("traceEntity")):attr;
+    }
 
     if( attr != null )
     {
@@ -465,7 +475,7 @@ class UmpleInternalParser
         }
       }
     }
-
+    mixset Association {
     // --- check if association
     for( AssociationVariable aVar : aClass.getAssociationVariables() )
     {
@@ -481,6 +491,7 @@ class UmpleInternalParser
       {
         traceItemType = 3;
       }
+    }
     }
 
     // --- check if method
@@ -584,6 +595,7 @@ use UmpleInternalParser_CodeTraceAttribute.ump;
 mixset StateMachine {
   use stateMachine/UmpleInternalParser_CodeTraceStateMachine.ump;
 }
+// TODO : mix associ
 use UmpleInternalParser_CodeTraceAssociation.ump;
 use UmpleInternalParser_CodeTraceCase.ump;
 

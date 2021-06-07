@@ -755,8 +755,9 @@ class UmpleInternalParser
       }
     }
     
-    
-    analyzeMixsetDefinition(innerMixsetTokens, sm);
+    mixset Mixset {
+      analyzeMixsetDefinition(innerMixsetTokens, sm);
+    }
  
     return sm;
   }

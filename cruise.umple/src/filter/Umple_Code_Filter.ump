@@ -54,9 +54,11 @@ mixset Filter {
         }  
         }
 
-        if(f.hasAssociation())
-        {
-        markRelatedClass(f.getAssociationCount());
+        mixset Association {
+          if(f.hasAssociation())
+          {
+            markRelatedClass(f.getAssociationCount());
+          }
         }
 
         if(!f.hasSuper())
@@ -81,6 +83,7 @@ mixset Filter {
         UmpleClass clazz = umpleClasses.get(i);
         if (!clazz.getFilteredin())
         {
+          mixset Association {
             // Chop out it and its associations
             for(Association a : clazz.getAssociations())
             {      
@@ -114,6 +117,8 @@ mixset Filter {
             }
             removeUmpleClass(clazz);
             clazz.delete();
+
+          }
         }
         else {
             // Flag its interfaces to keep
@@ -146,10 +151,12 @@ mixset Filter {
     {
       return getFilterValues().length > 0;
     }
-
-    public boolean hasAssociation()
-    {
-      return getAssociationCount() > 0;
+    
+    mixset Association {
+      public boolean hasAssociation()
+	  {
+	    return getAssociationCount() > 0;
+	  }
     }
 
     public boolean hasSub()
@@ -199,6 +206,7 @@ mixset Filter {
   // Fragment source file: Umple_Code.ump
 // Line : 571
  class UmpleModel {
+  mixset Association {
    private void markRelatedClass(int asso)
     {
       ArrayList<String> names = new ArrayList<String>();
@@ -222,6 +230,7 @@ mixset Filter {
         names.add(a.getType());
       }  
     }
+  }
 
     private void markClassByName(ArrayList<String> names)
     {
