@@ -25,8 +25,9 @@ class StateMachine
   
   * -- 0..1 UmpleClass;
   
-  * -- 0..1 UmpleTrait;
-  
+  mixset Trait {
+	 * -- 0..1 UmpleTrait;  
+  }
   * nestedStateMachines -- 0..1 State parentState;
   
   key { parentState, name }
