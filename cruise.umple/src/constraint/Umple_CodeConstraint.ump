@@ -780,7 +780,7 @@ mixset StateMachine {
   }
 }
 
-mixset Structure
+mixset Structure_StateMachine
 {
 class ConstraintPort
 {

@@ -47,6 +47,7 @@ use AspectInjection;
 
 mixset StateMachine {
   use stateMachine/StateMachine.ump;
+  use Structure_StateMachine;
 }
 use Umlet.ump;
 use Umple.ump;
@@ -56,6 +57,7 @@ mixset Trace {
 }
 mixset Structure {
   use strcture/Structure.ump;
+  use Structure_StateMachine;
 }
 mixset Template {
   use template/Template.ump;

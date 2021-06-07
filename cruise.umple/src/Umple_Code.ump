@@ -12,13 +12,10 @@ Methods for the metamodel found in Umple.ump. Most of these are mixins.
 
 namespace cruise.umple.compiler;
 
-use Coordinate ;
 use Method;
 use Class;
 use Association;
 use Constraint;
-//use StateMachine; // comment on this would make failure.
-//use Trait; // comment on this would make failure.
 /**
  * In Umple_Code.ump: Methods for manipulating the Model
  */

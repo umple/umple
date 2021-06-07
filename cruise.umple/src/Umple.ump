@@ -1260,6 +1260,26 @@ class ObjectElement {
   value;  
 }
 
+class Port {
+
+  depend cruise.umple.parser.Position;
+	
+	direction { IN{} OUT{} BOTH{} }
+	type { END{} RELAY{} SERVICE{} CUSTOM{} }
+	name;
+	modifier;	
+	boolean conjugated;
+	int multiplicity;
+	boolean replicated;
+	
+	String signalType;
+		
+	before setUmpleClass { if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; } }
+	
+	1 -> 0..1 Position;
+  1 -> 0..1 Position endPosition;
+}
+
 
 use UmpleVersion.ump;
 use UmpleDiagram.ump;
