@@ -40,17 +40,28 @@ class CodeGeneratorWithSubptions
   }
 }
 
+mixset StateMachine {
+  interface CodeTranslator {
+    String translate(String id, StateMachine stm);
+    String translate(String id, State st);
+    String translate(String id, Event e);
+    String translate(String id, Activity a);
+  }
+}
+
+mixset Trace {
+  interface CodeTranslator
+  {
+    String translate(String id, TraceItem traceItem);
+  }
+}
+
 interface CodeTranslator
 {
-  String translate(String id, Attribute attribute);
-  String translate(String id, StateMachine stm);
-  String translate(String id, State st);
-  String translate(String id, Event e);
-  String translate(String id, Activity a);
+  String translate(String id, Attribute attribute);  
   String translate(String id, AssociationVariable aVar);
   String translate(String id, ConstraintTree constraint);
   String translate(String id, ConstraintVariable cv);
-  String translate(String id, TraceItem traceItem);
   // TODO: LH#171
   //String translate(String id, AssociationVariable associationVariable);
 }

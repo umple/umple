@@ -86,13 +86,19 @@ class UmpleModel
   1 -> * UmpleClass;
 
   // The Umple Traits contained within the model.
-  1 -> * UmpleTrait;
+  mixset Trait {
+      1 -> * UmpleTrait;
+
+  }
 
   // The Umple Templates contained within the model.
   1 -> * UmpleTemplate;
 
   // The State Machines contained within the model.
-  1 -> * StateMachine stateMachineDefinitions;
+  mixset StateMachine {
+      1 -> * StateMachine stateMachineDefinitions;
+
+  }
 
   // The Umple interfaces contained within the model.
   1 -> * UmpleInterface;
@@ -144,7 +150,10 @@ class UmpleElement
   // Methods to distinguish the subclass types
   boolean isUmpleClass() {return false;}
   boolean isUmpleInterface() {return false;}
-  boolean isUmpleTrait() {return false;}
+  mixset Trait {
+      boolean isUmpleTrait() {return false;}
+
+  }
 }
 
 /*
@@ -727,7 +736,9 @@ class UmpleClass
 
   before setExtendsClass { if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; } }
 
+  mixset StateMachine {
   before addStateMachine { if (isImmutable()) { return false; } }
+  }
 
   boolean isUmpleClass() {return true;}
 }
@@ -808,6 +819,7 @@ class UmpleTrait {
   //--- before addAssociationVariable { if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; } }
 
   //--- before setExtendsTrait { if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; } }
+
 
   before addStateMachine { if (isImmutable()) { return false; } }
 
@@ -968,9 +980,11 @@ class Attribute
   after constructor { codeblock.setCode(normalizeValue(aType,aValue)); }
   before setType { codeblock.setCode(normalizeValue(aType,getValue())); }
   after setType { setValue(getValue()); }
-  before delete { 
-    if (traceRecords == null) {
-      traceRecords = new ArrayList<TraceRecord>();
+  mixset Trace {
+    before delete { 
+      if (traceRecords == null) {
+        traceRecords = new ArrayList<TraceRecord>();
+      }
     }
   }
 
@@ -1258,6 +1272,26 @@ class ObjectElement {
   type;
   name;
   value;  
+}
+
+class Port {
+
+  depend cruise.umple.parser.Position;
+	
+	direction { IN{} OUT{} BOTH{} }
+	type { END{} RELAY{} SERVICE{} CUSTOM{} }
+	name;
+	modifier;	
+	boolean conjugated;
+	int multiplicity;
+	boolean replicated;
+	
+	String signalType;
+		
+	before setUmpleClass { if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; } }
+	
+	1 -> 0..1 Position;
+  1 -> 0..1 Position endPosition;
 }
 
 
