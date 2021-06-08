@@ -170,7 +170,7 @@ public class Student
         Student existingStudent = aMentor.getStudent();
         if (!studentToNewMentors.containsKey(existingStudent))
         {
-          studentToNewMentors.put(existingStudent, new Integer(existingStudent.numberOfMentors()));
+          studentToNewMentors.put(existingStudent, Integer.valueOf(existingStudent.numberOfMentors()));
         }
         Integer currentCount = studentToNewMentors.get(existingStudent);
         int nextCount = currentCount - 1;
@@ -178,7 +178,7 @@ public class Student
         {
           return wasSet;
         }
-        studentToNewMentors.put(existingStudent, new Integer(nextCount));
+        studentToNewMentors.put(existingStudent, Integer.valueOf(nextCount));
       }
       checkNewMentors.add(aMentor);
     }
