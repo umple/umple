@@ -1,8 +1,8 @@
 <?php
 date_default_timezone_set("America/New_York");
-
-require_once('../../dist/libs/php/simpletest/unit_tester.php');
-require_once('../../dist/libs/php/simpletest/reporter.php');
+$defaultPath = "true";
+require_once($defaultPath == "true" ? "../../dist/libs/php/simpletest/unit_tester.php": "../../dist/gradle/libs/php/simpletest-1.1.0/unit_tester.php");
+require_once($defaultPath == "true" ? '../../dist/libs/php/simpletest/reporter.php':'../../dist/gradle/libs/php/simpletest-1.1.0/reporter.php');
 require_once('AllTestHelper.php');
 
 $test = new TestSuite('All Tests');

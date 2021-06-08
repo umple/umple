@@ -221,7 +221,6 @@ subprojects{
         exclude "**/.git*"
         doFirst {
             println("Copying from ${fromPath} to ${intoPath}")
-            //inputs.sourceFiles.stopExecutionIfEmpty()
            if (inputs.sourceFiles.isEmpty()){
             throw new StopExecutionException(); 
            } 
@@ -232,11 +231,11 @@ subprojects{
 
     task copyUmpleTest (type: Copy) {
         from "${projectDir.toString()}/test"
-        into "${rootProject.ext.testBaseDir}/bin/test"
+        into "${rootProject.ext.testBaseDir}/workingDir/test"
         duplicatesStrategy = 'warn'
         exclude "**/.git*"
         doFirst {
-            println("Copying tests from ${projectDir.toString()}/test to ${rootProject.ext.testBaseDir}/bin/test")
+            println("Copying tests from ${projectDir.toString()}/test to ${rootProject.ext.testBaseDir}/workingDir/test")
         }
     }
 
@@ -261,7 +260,6 @@ task copyUmpleOnlineTestFiles(type: Copy) {
     include '*.ump' // should avoid hitting the tmp model files
     doFirst {
         println("Copying .ump files from ${rootProject.projectDir.toString()}/umpleonline/ump to ${rootProject.ext.testBaseDir}/umpleonline/ump")
-        //inputs.sourceFiles.stopExecutionIfEmpty()
         if (inputs.sourceFiles.isEmpty()){
             throw new StopExecutionException(); 
            } 
@@ -365,84 +363,12 @@ sourceSets {
 
 // Grammar and error files also need to be included in the Umple jar
 
-/*task copyDocs1 {
- copy {
-  from "cruise.umple/src/class"
-  into "${rootProject.projectDir.toString()}/dist/tmp/class"
-  include "*.grammar"
-  }
-}
-
-task copyDocs2 {
- copy {
-  from "cruise.umple/src/constraint"
-  into "${rootProject.projectDir.toString()}/dist/tmp/constraint"
-  include "*.grammar"
-  }
-}
-task copyDocs3 {
- copy {
-  from "cruise.umple/src/filter"
-  into "${rootProject.projectDir.toString()}/dist/tmp/filter"
-  include "*.grammar"
-  }
-}
-task copyDocs4 {
- copy {
-  into "${rootProject.projectDir.toString()}/dist/tmp/fixml"
-  include "*.grammar"
-  }
-}
-task copyDocs5 {
- copy {
-  from "cruise.umple/src/layout"
-  into "${rootProject.projectDir.toString()}/dist/tmp/layout"
-  include "*.grammar"
-  }
-}
-task copyDocs6 {
- copy {
-  from "cruise.umple/src/strcture"
-  into "${rootProject.projectDir.toString()}/dist/tmp/strcture"
-  include "*.grammar"
-  }
-}
-task copyDocs7 {
- copy {
-  from "cruise.umple/src/template"
-  into "${rootProject.projectDir.toString()}/dist/tmp/template"
-  include "*.grammar"
-  }
-}
-task copyDocs8 {
- copy {
-  from "cruise.umple/src/trace"
-  into "${rootProject.projectDir.toString()}/dist/tmp/trace"
-  include "*.grammar"
-  }
-}
-task copyDocs9 {
- copy {
-  from "cruise.umple/src/trait"
-  into "${rootProject.projectDir.toString()}/dist/tmp/trait"
-  include "*.grammar"
-  }
-}
-task copyDocs10 {
- copy {
-    from "cruise.umple/src"
-    into "${rootProject.projectDir.toString()}/dist/tmp/"
-    include '*.grammar'
-    include '*.error'
-  }
-}*/
 task copyDocs(type: Copy) {
     from "cruise.umple/src"
     into rootProject.ext.classfileOutputDir
-    include '*.grammar'
+    include '**/*.grammar'
     include '*.error'
-    include 'trait/*.grammar','trace/*.grammar', 'template/*.grammar', 'strcture/*.grammar', 'mixset/*.grammar', 'layout/*.grammar', 'fixml/*.grammar','filter/*.grammar', 'constraint/*.grammar'
-    include 'class/*.grammar', 'stateMachine/*.grammar' 
+    
     doFirst {
         println("Copying .grammar and .error files from cruise.umple/src to ${rootProject.ext.classfileOutputDir}")
         if (inputs.sourceFiles.isEmpty()){
@@ -651,7 +577,6 @@ task deployUmpleonline(type: Copy) {
     into umpleoscripts
     doFirst {
         println("Deploying umple online to umpleonline/scripts/")
-        //inputs.sourceFiles.stopExecutionIfEmpty()
         if (inputs.sourceFiles.isEmpty()){
             throw new StopExecutionException(); 
            } 
@@ -674,7 +599,9 @@ task deployUpdatedLib(type: Copy) {
     into "${rootProject.projectDir.toString()}/lib"
     doFirst {
         println("Deploying umple online to lib")
-        inputs.sourceFiles.stopExecutionIfEmpty()
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
     }
     include "umplesync-${rootProject.ext.umpleLastVersion}.jar"
     include "umple-${rootProject.ext.umpleLastVersion}.jar"
@@ -739,7 +666,6 @@ task copyXUnitPhpGenerator (type: Copy) {
     exclude "**/.git*", 'UmpleTToPhpUnit.java'
     doFirst {
         println("Copying from ${rootProject.projectDir.toString()}/UmpleTToPhpUnit/src-gen-UmpleTL/cruise/umple/unitGen/phpUnit/ to ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/phpUnit/")
-        //inputs.sourceFiles.stopExecutionIfEmpty()
         if (inputs.sourceFiles.isEmpty()){
             throw new StopExecutionException(); 
            } 
@@ -811,6 +737,12 @@ task copyTestParser (type: Copy) {
     }
     dependsOn compileXUnitTemplates
 }
+/*task generatingMutationTestGenerator {
+ doLast {
+  println ("Generating Umple Mutation Test Generator !")
+  runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/cruise.umple.mutation/src/Master.ump")
+  }
+}*/
 
 task copyTestParserFiles {
     dependsOn copyTestGenerator
@@ -820,6 +752,9 @@ task copyTestParserFiles {
 task testXUnitTemplateTest {
     dependsOn copyTestParserFiles
 }
+/*task templateTest (type: Test) { 
+  useJUnit()
+}*/
 // END SECTION
 
 task buildTestUnitGeneratorAndParser {
@@ -861,7 +796,7 @@ task javaTestbedTest(type: Test) {
 
 task phpTestbedCompileUmple {
   doLast{
-    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed/src/TestHarnessPhp.ump")
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_php/src/TestHarnessPhp.ump")
     }
 }
 
@@ -892,6 +827,13 @@ task phpTestbedCompile {
 task phpTestbedTest {
     dependsOn phpTestbedCompile
     doLast {
+    def file = new File( "${rootProject.projectDir.toString()}/testbed_php/test/AllTests.php" )
+    def newconfig = file.text.replace( "defaultPath = \"true\"", "defaultPath = \"false\"")
+    file.text = newconfig
+    
+    file = new File( "${rootProject.projectDir.toString()}/testbed_php/test/AllXmlTests.php" )
+    newconfig = file.text.replace( "defaultPath = \"true\"", "defaultPath = \"false\"")
+    file.text = newconfig
         def command = "php AllXmlTests.php"
         println(command)
         def proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_php/test"))
@@ -901,12 +843,20 @@ task phpTestbedTest {
         println(command)          
         proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_php/test"))
         proc.waitForProcessOutput(System.out, System.err);
+        
+        file = new File( "${rootProject.projectDir.toString()}/testbed_php/test/AllTests.php" )
+    	newconfig = file.text.replace( "defaultPath = \"false\"", "defaultPath = \"true\"")
+    	file.text = newconfig
+    
+    	file = new File( "${rootProject.projectDir.toString()}/testbed_php/test/AllXmlTests.php" )
+    	newconfig = file.text.replace( "defaultPath = \"false\"", "defaultPath = \"true\"")
+    	file.text = newconfig
     }
 }
 
 task ('rubyTestbedCompileUmple') {
  doLast{
-    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed/src/TestHarnessRuby.ump")
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_ruby/src/TestHarnessRuby.ump")
     }
 }
 task rubyTestbedCompile {
@@ -1059,7 +1009,7 @@ task copybuilddir{
  	classpath = files("${rootProject.ext.distdir}/gradle/libs/umpledocs**.jar")
  	classpath += sourceSets.main.runtimeClasspath
  	main = "cruise.umple.docs.DocumenterMain"
- 	args = ["${rootProject.projectDir.toString()}/build/reference", "${rootProject.ext.distdir}/cruise.umple/reference"]
+ 	args = ["${rootProject.projectDir.toString()}/build/reference", distpath]
  	jvmArgs = ['-Xmx500m']
  	
  }
