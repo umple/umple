@@ -1163,10 +1163,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   private UmpleClass analyzeClass(Token classToken)
   {
   
-    
+    mixset StateMachine {
     //Reset number of activeObjects with each class definition
     this.numberOfActiveObjects = 1;
-    
+    }
     String className = classToken.getValue("name").split(" ")[classToken.getValue("name").split(" ").length-1];
     //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
     if (Token.isValidIdentifier(className, "[A-Za-z]") != true) {
@@ -3515,10 +3515,15 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if(!uClass.hasMethod(aMethod)) 
       {
         //Issue 567 and 1351
-      if(shouldAddMethod && !uClass.getStateDependentMethods().contains(aMethod))
+        boolean stateDependentMethodsflag = true;
+        mixset StateMachine {
+        stateDependentMethodsflag = !uClass.getStateDependentMethods().contains(aMethod);
+        }
+      if(shouldAddMethod && stateDependentMethodsflag)
           uClass.addUnimplementedMethod(aMethod);
       }
     }
+    mixset Trait {
     else if (uElement instanceof UmpleTrait)
     {
         UmpleTrait uTrait = (UmpleTrait) uElement;
@@ -3550,6 +3555,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         {
           uTrait.addUnimplementedMethod(aMethod);
         }     
+    }
     } 
     else if (uElement instanceof UmpleInterface)
     {
@@ -4032,8 +4038,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
         // issue #1351 - check against state-dependent methods
         final String operationFinal = operation;
-        if (!matches && uClass.getStateDependentMethods().stream().anyMatch(
-          m -> m.getName().equals(operationFinal)))
+        boolean stateDependentMethodsFlag = true;
+        mixset StateMachine {
+          stateDependentMethodsFlag = uClass.getStateDependentMethods().stream().anyMatch(m -> m.getName().equals(operationFinal));
+        }
+        if (!matches && stateDependentMethodsFlag )
         {
           matches = true;
         }
@@ -5611,8 +5620,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   
   private void analyzeExtraCode(Token token, UmpleClass aClass)
   {
+    mixset StateMachine {
+
     //This is a catch all and will be used less often as the grammar gets updated.
     if(extraCodeIsMalformedStateMachine(token)) setFailedPosition(token.getPosition(), 1006, "");
+    }
     //Append #line comment to indicate line and position of source
     if (token.getPosition() != null)
     {
