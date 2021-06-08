@@ -58,10 +58,13 @@ class PreconditionAnalyzer
     {
       ((UmpleClass)(uClassifier)).addPreCond((Precondition)rawLine);
     }
+    mixset Trait {
     else if (uClassifier instanceof UmpleTrait)
     {
       ((UmpleTrait)(uClassifier)).addPreCond((Precondition)rawLine);  
+    }  
     }
+
     rawLine = new ConstraintTree();
   }
 }
@@ -89,9 +92,11 @@ class PostconditionAnalyzer
     {
       ((UmpleClass)(uClassifier)).addPostCond((Postcondition)rawLine);
     } 
-    else if (uClassifier instanceof UmpleTrait)
-    {
-      ((UmpleTrait)(uClassifier)).addPostCond((Postcondition)rawLine);  
+    mixset Trait {
+      else if (uClassifier instanceof UmpleTrait)
+      {
+        ((UmpleTrait)(uClassifier)).addPostCond((Postcondition)rawLine);  
+      }
     }
     rawLine = new ConstraintTree();
   }
@@ -131,9 +136,11 @@ class InvariantAnalyzer
     {
       ((UmpleClass)uClassifier).addConstraintTree(rawLine);
     } 
-    else if (uClassifier instanceof UmpleTrait)
-    {
-      ((UmpleTrait)uClassifier).addConstraintTree(rawLine);  
+    mixset Trait {
+      else if (uClassifier instanceof UmpleTrait)
+      {
+        ((UmpleTrait)uClassifier).addConstraintTree(rawLine);  
+      }
     }
     rawLine = new ConstraintTree();
   }
@@ -795,9 +802,11 @@ class ConstraintNameNameAnalyzer
             uClass = previouslyFoundAttribute.getAttribute().getUmpleClass();
             if(uClass==null)
             {
+              mixset Trait {
               uClass = previouslyFoundAttribute.getAttribute().getUmpleTrait();
               UmpleModel model = ((UmpleTrait)uClass).getSourceModel();
               uClass = model.getUmpleClass(previouslyFoundAttribute.getAttribute().getType());
+              }
             }
             else
             {
@@ -811,9 +820,11 @@ class ConstraintNameNameAnalyzer
             uClass = previouslyFoundAssociation.getAssociation().getUmpleClass();
             if(uClass==null)
             {
+              mixset Trait {
               uClass = previouslyFoundAssociation.getAssociation().getUmpleTrait();
               UmpleModel model = ((UmpleTrait)uClass).getSourceModel();
               uClass = model.getUmpleClass(previouslyFoundAssociation.getAssociation().getType());
+              }
             }
             else
             {
@@ -833,14 +844,16 @@ class ConstraintNameNameAnalyzer
 
   private static ConstraintVariable generateConstraintName(UmpleClassifier uClassifier, String value, Boolean hasParameter)
   {
-    Attribute attribute;
+    Attribute attribute = null;
     if (uClassifier instanceof UmpleClass)
     {
       attribute = ((UmpleClass)(uClassifier)).getAttribute(value);
     }
     else
     {
-      attribute = ((UmpleTrait)(uClassifier)).getAttribute(value);
+      mixset Trait {
+        attribute = ((UmpleTrait)(uClassifier)).getAttribute(value);
+      }
     }
     if(attribute!=null)
     {
@@ -850,14 +863,16 @@ class ConstraintNameNameAnalyzer
     }
     else
     {
-      AssociationVariable association;
+      AssociationVariable association = null;
       if (uClassifier instanceof UmpleClass)
       {
         association = ((UmpleClass)(uClassifier)).getAssociationVariable(value);
       }
       else
       {
-        association = ((UmpleTrait)(uClassifier)).getAssociationVariable(value);
+        mixset Trait {
+          association = ((UmpleTrait)(uClassifier)).getAssociationVariable(value);
+        }
       }
       if(association!=null)
       {
@@ -871,9 +886,11 @@ class ConstraintNameNameAnalyzer
         {
           stateMachine = ((UmpleClass)uClassifier).getStateMachine(value);
         }
+        mixset Trait {
         else if(uClassifier instanceof UmpleTrait)
         {
           stateMachine = ((UmpleTrait)uClassifier).getStateMachine(value);
+        }
         }
         if(stateMachine!=null)
         {
@@ -882,16 +899,18 @@ class ConstraintNameNameAnalyzer
         } 
         else
         {
-        	Port port = null;
-        	if (uClassifier instanceof UmpleClass)
-        	{
-        		port = ((UmpleClass)(uClassifier)).getPort(value);
-        	}
-        	if(port!=null)
-        	{
-        		ConstraintPort name = new ConstraintPort(port);
-        		return name;
-        	} 
+          mixset Structure {
+            Port port = null;
+            if (uClassifier instanceof UmpleClass)
+            {
+              port = ((UmpleClass)(uClassifier)).getPort(value);
+            }
+            if(port!=null)
+            {
+              ConstraintPort name = new ConstraintPort(port);
+              return name;
+            }
+          } 
         }
         
       }
@@ -904,6 +923,7 @@ class ConstraintNameNameAnalyzer
         return generateConstraintName(uClass,value,hasParameter);
       }
     }
+    mixset Trait {
     else if(uClassifier instanceof UmpleTrait)
     {
       for(UmpleTrait uTrait:((UmpleTrait)uClassifier).getExtendsTraits())
@@ -914,7 +934,9 @@ class ConstraintNameNameAnalyzer
           return var;
         }
       }
+    }      
     }
+
     return new ConstraintUnassignedName(value);
   }
 }

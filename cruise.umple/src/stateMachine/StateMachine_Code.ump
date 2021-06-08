@@ -477,6 +477,25 @@ class StateMachine
       return superStateMachine;
     }
   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------   	
+	public Event getEventByMethod(Method inMethod) {
+	  if (inMethod == null)
+    {
+      return null;
+    }
+    for (Transition aTransition  : getAllTransitions()) {
+      Event e = aTransition.getEvent();
+      if (e != null )
+      {
+        Method m = new Method("",e.getName(),e.getType(),false);
+        m.setMethodParameters(e.getParams());
+        if (m.compareWithTheMethod(inMethod))  return e;
+      }
+    }
+    return null;
+	}
 }
 
 class State

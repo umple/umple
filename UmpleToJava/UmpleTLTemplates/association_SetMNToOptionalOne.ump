@@ -33,7 +33,7 @@ class UmpleToJava {
         <<=gen.relatedTranslate("type",av)>> <<=gen.relatedTranslate("parameterExisting",av)>> = <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("getMethod",av)>>();
         if (!<<=existingToNewMap>>.containsKey(<<=gen.relatedTranslate("parameterExisting",av)>>))
         {
-          <<=existingToNewMap>>.put(<<=gen.relatedTranslate("parameterExisting",av)>>, new Integer(<<=gen.relatedTranslate("parameterExisting",av)>>.<<=gen.translate("numberOfMethod",av)>>()));
+          <<=existingToNewMap>>.put(<<=gen.relatedTranslate("parameterExisting",av)>>, Integer.valueOf(<<=gen.relatedTranslate("parameterExisting",av)>>.<<=gen.translate("numberOfMethod",av)>>()));
         }
         Integer currentCount = <<=existingToNewMap>>.get(<<=gen.relatedTranslate("parameterExisting",av)>>);
         int nextCount = currentCount - 1;
@@ -42,7 +42,7 @@ class UmpleToJava {
           <<# if (customSetManyPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "          ")); } #>>
           return wasSet;
         }
-        <<=existingToNewMap>>.put(<<=gen.relatedTranslate("parameterExisting",av)>>, new Integer(nextCount));
+        <<=existingToNewMap>>.put(<<=gen.relatedTranslate("parameterExisting",av)>>, Integer.valueOf(nextCount));
       }
       <<=gen.translate("parameterCheckNewMany",av)>>.add(<<=gen.translate("parameterOne",av)>>);
     }

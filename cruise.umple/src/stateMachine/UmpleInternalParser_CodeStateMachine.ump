@@ -234,14 +234,17 @@ class UmpleInternalParser
 			setFailedPosition(token.getPosition(), 15, uClassifier.getName());
 		    return;
 		}
-	  } else if (uClassifier instanceof UmpleTrait) {
-	  	if (((UmpleTrait)uClassifier).isImmutable())
-	  	{
-	  		//TODO--- trait's code	
-	  	    setFailedPosition(token.getPosition(), 15, uClassifier.getName());
-	  	    return;
-	  	}	
-	  }
+	  } 
+    mixset Trait {
+      else if (uClassifier instanceof UmpleTrait) {
+        if (((UmpleTrait)uClassifier).isImmutable())
+        {
+          //TODO--- trait's code	
+            setFailedPosition(token.getPosition(), 15, uClassifier.getName());
+            return;
+        }	
+	    }
+    }
       
       Token subToken = token.getSubToken(0);
       if (subToken.is("activeDefinition"))
@@ -467,17 +470,22 @@ class UmpleInternalParser
     }
 
     StateMachine sm = new StateMachine(name);
-    if (uClassifier instanceof UmpleTrait){
-      sm.setUmpleTrait((UmpleTrait)uClassifier);
-    } else if (uClassifier instanceof UmpleClass){
+    mixset Trait {
+      if (uClassifier instanceof UmpleTrait){
+        sm.setUmpleTrait((UmpleTrait)uClassifier);
+      }
+    } if (uClassifier instanceof UmpleClass){
       sm.setUmpleClass((UmpleClass)uClassifier);
     }
     //------------
     boolean wasSet = true;
     if (uClassifier instanceof UmpleClass) {
     	wasSet = sm.setUmpleClass((UmpleClass)uClassifier);
-    } else if (uClassifier instanceof UmpleTrait) {
-    	wasSet = sm.setUmpleTrait((UmpleTrait)uClassifier);
+    } 
+    mixset Trait {
+        else if (uClassifier instanceof UmpleTrait) {
+        wasSet = sm.setUmpleTrait((UmpleTrait)uClassifier);
+      }
     }
     //------------
     if (!wasSet)
@@ -486,10 +494,13 @@ class UmpleInternalParser
 
     	if (uClassifier instanceof UmpleClass) {
 	    	setFailedPosition(stateMachineToken.getPosition(), 15, uClassifier.getName());
-	    } else if (uClassifier instanceof UmpleTrait) {
-	    	//TODO --Trait's code
-	    	setFailedPosition(stateMachineToken.getPosition(), 15, uClassifier.getName());
-	    } 
+	    }
+      mixset Trait {
+        else if (uClassifier instanceof UmpleTrait) {
+          //TODO --Trait's code
+          setFailedPosition(stateMachineToken.getPosition(), 15, uClassifier.getName());
+        }
+      } 
     }
     
     populateStateMachine(stateMachineDefinitionToken,sm, uClassifier);
@@ -589,9 +600,12 @@ class UmpleInternalParser
 	    else
 	    {
 	      sm = new StateMachine(name);
-        if (uClassifier instanceof UmpleTrait){
-          sm.setUmpleTrait((UmpleTrait)uClassifier);
-        } else if (uClassifier instanceof UmpleClass){
+        mixset Trait {
+            if (uClassifier instanceof UmpleTrait){
+            sm.setUmpleTrait((UmpleTrait)uClassifier);
+          } 
+        }
+        if (uClassifier instanceof UmpleClass){
           sm.setUmpleClass((UmpleClass)uClassifier);
         }
 	      stateMachineNameToToken.put(name,stateMachineToken);
@@ -601,18 +615,24 @@ class UmpleInternalParser
     boolean wasSet = true;
     if (uClassifier instanceof UmpleClass) {
     	wasSet = sm.setUmpleClass((UmpleClass)uClassifier);
-    } else if (uClassifier instanceof UmpleTrait) {
+    } 
+    mixset Trait {
+       if (uClassifier instanceof UmpleTrait) {
     	wasSet = sm.setUmpleTrait((UmpleTrait)uClassifier);
+     }
     }
     if (!wasSet)
     {
     	// Future-proofing: currently all paths cause wasSet to be true
     	if (uClassifier instanceof UmpleClass) {
 	    	setFailedPosition(stateMachineToken.getPosition(), 15, uClassifier.getName());
-	    } else if (uClassifier instanceof UmpleTrait) {
-	    	//TODO --Trait's code
-	    	setFailedPosition(stateMachineToken.getPosition(), 15, uClassifier.getName());
 	    } 
+      mixset Trait {
+          if (uClassifier instanceof UmpleTrait) {
+          //TODO --Trait's code
+          setFailedPosition(stateMachineToken.getPosition(), 15, uClassifier.getName());
+        }
+      } 
     }
       
     
@@ -755,8 +775,9 @@ class UmpleInternalParser
       }
     }
     
-    
-    analyzeMixsetDefinition(innerMixsetTokens, sm);
+    mixset Mixset {
+      analyzeMixsetDefinition(innerMixsetTokens, sm);
+    }
  
     return sm;
   }
@@ -942,14 +963,15 @@ class UmpleInternalParser
       {
         setFailedPosition(stateMachineToken.getPosition(), 53, sm.getName());
       }
-      
-      if(stateToken.is("trace"))
-      {
-      	if (uClassifier instanceof UmpleClass) {
-    		analyzeTraceStatement((UmpleClass)uClassifier,stateToken); 
-    	} else {
-    		//TODO--- trait's functionality for trace;
-    	}
+      mixset Trace {
+        if(stateToken.is("trace"))
+        {
+          if (uClassifier instanceof UmpleClass) {
+          analyzeTraceStatement((UmpleClass)uClassifier,stateToken); 
+        } else {
+          //TODO--- trait's functionality for trace;
+        }
+        }
       }
       
       if (!stateToken.is("state") && !stateToken.is("stateName"))
@@ -1898,9 +1920,11 @@ class UmpleInternalParser
     {
       if(((GuardAnalyzer)model.getAnalyzer("guard"))!=null){
         UmpleClassifier uClassifier = fromState.getStateMachine().getRootStateMachine().getUmpleClass();
-    	if (fromState.getStateMachine().getRootStateMachine().getUmpleClass()==null){
+    	mixset Trait {
+        if (fromState.getStateMachine().getRootStateMachine().getUmpleClass()==null){
     		uClassifier = fromState.getStateMachine().getRootStateMachine().getUmpleTrait();
-    	}
+    	  }
+      }
         ((GuardAnalyzer)model.getAnalyzer("guard")).setUClassifier(uClassifier);
         ((GuardAnalyzer)model.getAnalyzer("guard")).setT(t);
         model.getAnalyzer("guard").analyzeToken(guardToken);

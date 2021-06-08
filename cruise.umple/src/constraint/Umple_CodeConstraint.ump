@@ -5,6 +5,14 @@ http://umple.org/license
  */
 namespace cruise.umple.compiler;
 
+/*Used to associated condition patern for an umple elemnt. Designed to be generic so, this elemnt
+ * can be of different types
+ */
+class Condition {
+	String condition;
+	Object element;
+}
+
 class ConstraintTree
 {
   /*
@@ -752,24 +760,28 @@ class ConstraintVariable
   public abstract String getType();
 }
 
-class ConstraintState
-{
-  String getName()
+mixset StateMachine {
+  class ConstraintState
   {
-    return state==null?null:state.getName();
+    String getName()
+    {
+      return state==null?null:state.getName();
+    }
+    public String getType() { return "state"; }
   }
-  public String getType() { return "state"; }
+
+  class ConstraintStateMachine
+  {
+    String getName()
+    {
+      return stateMachine==null?null:stateMachine.getName();
+    }
+    public String getType(){ return "statemachine"; }
+  }
 }
 
-class ConstraintStateMachine
+mixset Structure_StateMachine
 {
-  String getName()
-  {
-    return stateMachine==null?null:stateMachine.getName();
-  }
-  public String getType(){ return "statemachine"; }
-}
-
 class ConstraintPort
 {
   String getName()
@@ -778,7 +790,7 @@ class ConstraintPort
   }
   public String getType(){ return "port"; }
 }
-
+}
 class ModelConstraintResult
 {
   depend cruise.umple.parser.Position;
@@ -924,7 +936,7 @@ mixset Association {
         {
           return new ModelConstraintResult(getPosition(),94,getTarget(),getSource());
         }
-
+        mixset Association {
         for(Association association:uClass.getAssociations())
         {
           AssociationEnd theirs = null;
@@ -1041,6 +1053,7 @@ mixset Association {
             }
           }
           return ModelConstraint.SUCCESS;
+        }
         }
         
         return new ModelConstraintResult(getPosition(),94,getTarget(),getSource());

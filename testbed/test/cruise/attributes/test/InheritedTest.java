@@ -20,11 +20,11 @@ public class InheritedTest
   public void InheritedManyKeys()
   {
 	  ManyKeys manykeys = new ManyKeys();
-	  manykeys.addWork(new Integer(1));
-	  manykeys.addWork(new Integer(2));
+	  manykeys.addWork(Integer.valueOf(1));
+	  manykeys.addWork(Integer.valueOf(2));
 	  ManyKeys manykeys2 = new ManyKeys();
-	  manykeys2.addWork(new Integer(1));
-	  manykeys2.addWork(new Integer(2));
+	  manykeys2.addWork(Integer.valueOf(1));
+	  manykeys2.addWork(Integer.valueOf(2));
 	  
 	  Assert.assertEquals(true, manykeys.equals(manykeys2));
   }

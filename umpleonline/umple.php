@@ -167,9 +167,10 @@ $output = $dataHandle->readData('model.ump');
    color: #ccc;
    }
 .active {
-  background: #C98C7D;
+  background: #B06C5B;
 }
-</style>  
+</style>
+<link rel="stylesheet" href="scripts/styleSurvey.css"> 
 <link rel="apple-touch-icon" sizes="57x57" href="https://cruise.umple.org/apple-icon-57x57.png">
 <link rel="apple-touch-icon" sizes="60x60" href="https://cruise.umple.org/apple-icon-60x60.png">
 <link rel="apple-touch-icon" sizes="72x72" href="https://cruise.umple.org/apple-icon-72x72.png">
@@ -203,12 +204,36 @@ $output = $dataHandle->readData('model.ump');
         <span class="pretext">
           Draw on the right, write (Umple) model code on the left. Analyse models and generate code.<br/>
            <?php
+            $passToTip = FALSE; // dictates appearance of TOTD
             //alert message
             $alertMessage = @file_get_contents("ump/aalertMessage.txt");
             if($alertMessage != FALSE && !empty($alertMessage)) {
-            echo "<span style=\"color: red\">$alertMessage<br/></span>";
+              echo "<span style=\"color: red\">$alertMessage<br/></span>";
             }
-            else { //tip of the day
+            else {
+              //survey
+              $surveyMessage = @file_get_contents("ump/aaSurvey.txt");
+              if ($surveyMessage != FALSE && !empty($surveyMessage)){ // confirm file exists
+                $surveyData = json_decode($surveyMessage);
+                $randomSurveyRoll = mt_rand(1 , $surveyData->RandomizedFrequency);
+                ?>
+                <script> // pass JSON file and rolled number to js
+                  window.randomSurveyRoll = <?php echo $randomSurveyRoll; ?>;
+                  window.surveyData = <?php echo json_encode($surveyData); ?>;
+                </script>
+                <span id="mainSurveySpan">
+                  <script src="scripts/umple_survey.js"></script>
+                </span>
+                <?php
+                if ($randomSurveyRoll != 1){
+                  $passToTip = TRUE;
+                }
+              }
+              else { 
+                $passToTip = TRUE;
+              }
+            }
+            if ($passToTip){ //tip of the day
               $tipOutput = readfile("scripts/tipProcessor.html");
               if ($tipOutput != FALSE && !empty($tipOutput)){
                 $tipOutput;

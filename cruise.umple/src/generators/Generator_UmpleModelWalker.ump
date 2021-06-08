@@ -39,13 +39,7 @@ class ClassPattern {
 	String pattern;
 }
 
-/*Used to associated condition patern for an umple elemnt. Designed to be generic so, this elemnt
- * can be of different types
- */
-class Condition {
-	String condition;
-	Object element;
-}
+
 
 /*Used to persist hirarchy information for given elemnts (owner, and children) */
 class Hierarchy {

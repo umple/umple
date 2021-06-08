@@ -7,61 +7,66 @@ var fileNames = ["https://raw.githubusercontent.com/umple/umple/master/build/ref
 if(existCookie('tipCookie')=="") {
     var firstTime = localStorage.getItem("first_time");
     if(!firstTime) {
-        window.localStorage.setItem('tipCount',0);
-        window.localStorage.setItem('priorityCount',0);
-        window.localStorage.setItem('loopCount',0);
-        //acquiring tipInformation
-        for (let files=0; files<fileNames.length; files++){
-            jQuery.ajax({
-                url: fileNames[files],
-                success: function(results){
-                    let allInfo=results;
-                    allInfo=allInfo.split("<h2>");
-                    allInfo.shift();    //removes title+descrription element
-                    var descrpt=[];
-                    for (let i=0; i<allInfo.length; i++){
-                        var t=[];
-                        t.push(allInfo[i].substring(0, allInfo[i].indexOf("</h2>")));
-                        var link="https://cruise.umple.org/umple/"+htmlNames[files];
-                        var navbar='<div style="padding-right: 10px; padding-left: 10px; display:flex; justify-content:space-between;"><button class="lowerBarBtn" id="goLeft" onclick="onButtonPrevious()">&laquo <em>Previous</em></button><a href="'+link+'" class="bottomNav"><em> View All </em></a><button class="lowerBarBtn" id="goRight" onclick="onButtonNext()"><em>Next</em> &raquo</button></div>';
-                        if (i==allInfo.length-1){
-                            t.push(allInfo[i].substring(allInfo[i].indexOf("</h2>")+6, allInfo[i].length)+navbar);    
-                        }
-                        else{
-                            t.push(allInfo[i].substring(allInfo[i].indexOf("</h2>")+6, allInfo[i].length-11)+navbar);
-                        }
-                        descrpt.push(t);
-                    }
-                    var inform=[];
-                    inform[0]=descrpt;
-                    window.localStorage.setItem('tipInfo'+files, JSON.stringify(inform)); //adding items to local storage
-                },
-                error: function(response){
-                    descrpt.push(["couldn't access file",error]);
-                },
-            });
-        }
+        firstTipPopulate();
         window.localStorage.setItem("first_time","1");
-        
     }
-    jQuery(document).ajaxStop(allocateMessage());
-
+    jQuery(document).ajaxStop(function(){allocateMessage();});
     let currentTime=new Date(Date.now() + 24*60*60*1000);
     document.cookie="tipCookie=done; expires="+currentTime.toUTCString()+"; path=/;";
 }
 
-function allocateMessage() {
+function firstTipPopulate() {
+    window.localStorage.setItem('tipCount',0);
+    window.localStorage.setItem('priorityCount',0);
+    window.localStorage.setItem('loopCount',0);
+    //acquiring tipInformation
+    for (let files=0; files<fileNames.length; files++){
+        jQuery.ajax({
+            url: fileNames[files],
+            success: function(results){
+                let allInfo=results;
+                allInfo=allInfo.split("<h2>");
+                allInfo.shift();    //removes title+descrription element
+                var descrpt=[];
+                for (let i=0; i<allInfo.length; i++){
+                    var t=[];
+                    t.push(allInfo[i].substring(0, allInfo[i].indexOf("</h2>")));
+                    var link="https://cruise.umple.org/umple/"+htmlNames[files];
+                    var navbar='<div style="padding-right: 10px; padding-left: 10px; display:flex; justify-content:space-between;"><button class="lowerBarBtn" id="goLeft" onclick="onButtonPrevious()">&laquo <em>Previous</em></button><a href="'+link+'" class="bottomNav"><em> View All </em></a><button class="lowerBarBtn" id="goRight" onclick="onButtonNext()"><em>Next</em> &raquo</button></div>';
+                    if (i==allInfo.length-1){
+                        t.push(allInfo[i].substring(allInfo[i].indexOf("</h2>")+6, allInfo[i].length)+navbar);    
+                    }
+                    else{
+                        t.push(allInfo[i].substring(allInfo[i].indexOf("</h2>")+6, allInfo[i].length-11)+navbar);
+                    }
+                    descrpt.push(t);
+                }
+                var inform=[];
+                inform[0]=descrpt;
+                window.localStorage.setItem('tipInfo'+files, JSON.stringify(inform)); //adding items to local storage
+            },
+            error: function(response){
+                descrpt.push(["couldn't access file",error]);
+            },
+        });
+    }
+}
+
+function allocateMessage() { // put text into intended HTML sections
     var priority = window.localStorage.getItem('priorityCount');
     var tip = JSON.parse(window.localStorage.getItem('tipInfo'+priority));
     var num = parseInt(window.localStorage.getItem('tipCount'));
     var loop = parseInt(window.localStorage.getItem('loopCount'));
 
-    if (tip[loop]!=null && tip[loop][num]!=null && tip[loop][num][0]!=null && tip[loop][num][1]!=null){
-        document.getElementById('styleTip').innerHTML = "Tip: "+tip[loop][num][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more<br/></span>';
-        jQuery('#styleTip a').attr('target', 'helppage');
-        document.getElementById('extraInfo').innerHTML = tip[loop][num][1];
-        jQuery('#extraInfo a').attr('target', 'helppage');
-
+    if (tip[loop]!=null){
+        if (tip[loop][num]!=null){
+            if (tip[loop][num][0]!=null && tip[loop][num][1]!=null){
+                document.getElementById('styleTip').innerHTML = "Tip: "+tip[loop][num][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more<br/></span>';
+                jQuery('#styleTip a').attr('target', 'helppage');
+                document.getElementById('extraInfo').innerHTML = tip[loop][num][1];
+                jQuery('#extraInfo a').attr('target', 'helppage');
+            }
+        }
     }
     setForNext(num, priority, tip, loop);
 };

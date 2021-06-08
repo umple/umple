@@ -1,0 +1,115 @@
+#surveyMessage{
+    max-width:600px;
+    display: inline;
+    overflow: auto;
+    position: relative;
+    text-decoration: none;
+    color: mediumslateblue;
+    cursor: pointer;
+}
+
+#surveyMessage a{
+    text-decoration: none;
+    color: mediumslateblue;
+}
+
+#surveyExtra{
+    display: block;
+    visibility:hidden;
+    background-color: #dadada;
+    border: 2px solid #aaaaaa; position: absolute;
+    z-index: 50; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+    max-width: 600px;
+    padding: 10px; box-shadow: 0px 0px 5px grey;
+    margin-left:auto; margin-right:auto; margin-top: 10px; margin-bottom:0px;
+    cursor: initial;
+}
+
+.linkToSurvey{
+    cursor: pointer;
+    color: blue;
+    text-decoration: none;
+}
+.linkToNotSurvey{
+    cursor: pointer;
+    color: #4d4d4d;
+    text-decoration: none;
+}
+
+#surveyPopUp{
+    display:flex;
+    justify-content: space-between;
+    padding-left: 25%;
+    padding-right: 25%;
+}
+
+#tipSpan{
+    visibility:hidden;
+}
+
+.fade-in {
+    animation: fadeIn 0.8s both;
+    -webkit-animation: fadeIn 0.8s both;
+    -moz-animation: fadeIn 0.8s both;
+    -o-animation: fadeIn 0.8s both;
+    -ms-animation: fadeIn 0.8s both;
+}
+
+@keyframes fadeIn {
+    0% {opacity:0; display: block;}
+    100% {opacity:1; visibility:visible;}
+}
+
+@-moz-keyframes fadeIn {
+    0% {opacity:0; visibility:visible;}
+    100% {opacity:1; visibility:visible;}
+}
+
+@-webkit-keyframes fadeIn {
+    0% {opacity:0; visibility:visible;}
+    100% {opacity:1; visibility:visible;}
+}
+
+@-o-keyframes fadeIn {
+    0% {opacity:0; visibility:visible;}
+    100% {opacity:1; visibility:visible;}
+}
+
+@-ms-keyframes fadeIn {
+    0% {opacity:0; visibility:visible;}
+    100% {opacity:1; visibility:visible;}
+}
+
+
+.fade-outInst {
+    animation: fadeOut 0.8s both;
+    -webkit-animation: fadeOut 0.8s both;
+    -moz-animation: fadeOut 0.8s both;
+    -o-animation: fadeOut 0.8s both;
+    -ms-animation: fadeOut 0.8s both;
+}
+
+@keyframes fadeOut {
+    0% {opacity:1;visibility:visible;}
+    100% {opacity:0; visibility:hidden;}
+}
+
+@-moz-keyframes fadeOut {
+    0% {opacity:1; visibility:visible;}
+    100% {opacity:0; visibility:hidden;}
+}
+
+@-webkit-keyframes fadeOut {
+    0% {opacity:1; visibility:visible;}
+    100% {opacity:0; visibility:hidden;}
+}
+
+@-o-keyframes fadeOut {
+    0% {opacity:1; visibility:visible;}
+    100% {opacity:0; visibility:hidden;}
+}
+
+@-ms-keyframes fadeOut {
+    0% {opacity:1; visibility:visible;}
+    100% {opacity:0; visibility:hidden;}
+}

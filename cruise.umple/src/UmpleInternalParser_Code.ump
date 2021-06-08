@@ -32,22 +32,6 @@ Please refer to UmpleInternalParser.ump for more details.
 
 namespace cruise.umple.compiler;
 
-// enable umple features
-use Filter;
-use Mixset;
-use StateMachine;
-use Trait;
-use Trace;
-use Structure;
-use Template;
-use FIXML;
-use Layout;
-use Class; use Attribute; //use Association ; // Attribute and Association are not features.
-use FeatureModel;
-use AspectInjection;
-use Constraint;
-
-
 class UmpleInternalParser
 {
 
@@ -251,7 +235,9 @@ class UmpleInternalParser
     mixset StateMachine {
       analyzeStateMachineToken(t,analysisStep);
     }
-    analyzeComponentToken(t,analysisStep);
+    mixset Structure {
+      analyzeComponentToken(t,analysisStep);
+    }
     mixset Trace {
       analyzeTraceToken(t,analysisStep);
     }
@@ -378,11 +364,11 @@ class UmpleInternalParser
         postTokenTemplateAnalysis();
       }
     }
-
-    if (getParseResult().getWasSuccess()) {
-      postTokenComponentAnalysis();
+    mixset Structure {
+      if (getParseResult().getWasSuccess()) {
+        postTokenComponentAnalysis();
+      }
     }
-
     mixset Constraint {
       if (getParseResult().getWasSuccess())
       {
@@ -518,6 +504,16 @@ class UmpleInternalParser
       getParseResult().setHasWarnings(false);
     }
   }
+  
+  mixset Template_Strcture {
+    // This MIXSET contains common code used by Template & Strcture.
+    public boolean reAnalyze() {
+      return shouldProcessAgain;
+    }
+    public void reAnalyze(boolean re) {
+  	shouldProcessAgain = re;
+    }
+  }
 }
 use UmpleInternalParser_CodeCore.ump;
 mixset Class {
@@ -531,9 +527,11 @@ mixset Constraint {
 }
 mixset Structure {
   use strcture/UmpleInternalParser_CodeStructure.ump;
+  use Template_Strcture;
 }
 mixset Template {
   use template/UmpleInternalParser_CodeTemplate.ump;
+  use Template_Strcture;
 }
 mixset StateMachine {
   use stateMachine/UmpleInternalParser_CodeStateMachine.ump;
@@ -553,7 +551,9 @@ use UmpleInternalParser_CodeEnumeration.ump;
 mixset Mixset{
   use mixset/UmpleInternalParser_CodeMixset.ump;
 }
-use UmpleInternalParser_CodeRequireStatement.ump;
+mixset FeatureModel {
+  use UmpleInternalParser_CodeRequireStatement.ump;
+}
 use UmpleInternalParser_CodeTest.ump;
 mixset AspectInjection {
   use class/UmpleInternalPraser_CodeInjection.ump;

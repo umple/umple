@@ -1768,6 +1768,49 @@ Action.setCaretPosition = function(line)
       Page.setFeedbackMessage("Debug Mode");
       return;
     }
+    if(line=="sp")
+    { // creates Survey Pass; modifies conditions to allow for survey to be displayed:
+      // includes setting RandomizedFrequency to 1, MinutesBeforePrompt to 5 secs, EditsBeforePrompt to 1;
+      if (existSCookie("surveyCookie")==null && window.localStorage.getItem("surveyShown")==null){
+        if (document.getElementById("styleTip")!=null)
+          document.getElementById("styleTip").innerHTML="";
+        window.randomSurveyRoll = 1;
+        window.surveyData.EditsBeforePrompt=1;
+        timeSurveyUp = false;
+        clearTimeout(timeSurvey);
+        timeSurvey = setTimeout(function(){timeSurveyUp = true;}, 10000);
+        timeSurvey;
+        displayedText=false;
+        if (!displayedText){
+          beforeInstance = TabControl.getCurrentHistory().currentIndex;
+          document.addEventListener("mouseover", function(){
+            if (TabControl.getCurrentHistory().currentIndex-beforeInstance >= 1 && !displayedText && timeSurveyUp){
+                displaySurvey();
+                this.removeEventListener('mouseover', arguments.callee);
+            }                        
+          });
+        }
+      }
+      
+    }
+    if (line=="sc")
+    { // clears all survey cookies including whether URL has been shown already, whether the user has been skipped, and whether Survey Pass has been activated
+      // run twice for it to be effective
+      let setToExpire=new Date();
+      setToExpire.setTime(setToExpire.getTime()-1000);
+      document.cookie="surveyCookie=done; expires="+setToExpire.toUTCString()+"; path=/;";
+      window.localStorage.removeItem("surveyShown");
+      document.addEventListener("mouseover", function(){});
+      setCookieBeforeClose("off");
+    }
+    if(line=="tc")
+    { // resets cookies for tips
+      Page.setFeedbackMessage("Clearing tip cookies");
+      let currentTime=new Date();
+      currentTime.setTime(currentTime.getTime()-1000);
+      window.localStorage.removeItem("first_time");
+      document.cookie="tipCookie=done; expires="+currentTime.toUTCString()+"; path=/;";
+    }
     if(line.substr(0,2)=="cm") 
     {
       if(line.substr(2,1)=="0" && Page.codeMirrorOn) 
