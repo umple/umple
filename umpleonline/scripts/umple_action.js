@@ -1770,10 +1770,8 @@ Action.setCaretPosition = function(line)
     }
     if(line=="sp")
     { // creates Survey Pass; modifies conditions to allow for survey to be displayed:
-      // includes setting RandomizedFrequency to 1, MinutesBeforePrompt to 5 secs, EditsBeforePrompt to 1
-      //console.log("survey pass");
+      // includes setting RandomizedFrequency to 1, MinutesBeforePrompt to 5 secs, EditsBeforePrompt to 1;
       if (existSCookie("surveyCookie")==null && window.localStorage.getItem("surveyShown")==null){
-        //console.log("passed cookies");
         if (document.getElementById("styleTip")!=null)
           document.getElementById("styleTip").innerHTML="";
         window.randomSurveyRoll = 1;
@@ -1784,11 +1782,9 @@ Action.setCaretPosition = function(line)
         timeSurvey;
         displayedText=false;
         if (!displayedText){
-          //console.log("entered if");
           beforeInstance = TabControl.getCurrentHistory().currentIndex;
           document.addEventListener("mouseover", function(){
             if (TabControl.getCurrentHistory().currentIndex-beforeInstance >= 1 && !displayedText && timeSurveyUp){
-                //console.log("displayed");
                 displaySurvey();
                 this.removeEventListener('mouseover', arguments.callee);
             }                        

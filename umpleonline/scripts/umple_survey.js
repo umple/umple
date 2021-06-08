@@ -7,23 +7,18 @@ function setCookieBeforeClose(mode){
         window.onbeforeunload = function(){ 
             //set timed cookies before the next appearance of the survey
             if(window.randomSurveyRoll != 1){
-                console.log("set 60");
                 setSurveyCookie(60)
             }
             else if (notToday){
-                console.log("cookie set for 1 day");
                 setSurveyCookie(1);
             }
             else if (clickedForMoreSurvey == false && clickedStartSurvey == false){ // ignored survey message
-                console.log("set 15");
                 setSurveyCookie(15);
             }
             else if (clickedForMoreSurvey == true && clickedStartSurvey == false){ // checked out RecruitementMessage only
-                console.log("set 30");
                 setSurveyCookie(30);
             }
             else {
-                console.log("set default 60");
                 setSurveyCookie(60)
             }
         };
@@ -58,15 +53,12 @@ var timeSurveyUp = false;
 
 // confirm user hasn't completed any survey, is past the 15-/30-/60-day probation period (allocated onbeforeunload)
 if (existSCookie("surveyCookie") == null && window.surveyData!=null){
-    console.log("randomRoll: "+window.randomSurveyRoll);
     if (window.randomSurveyRoll == 1){ // rolled 1 in umple.php file
         // ensure user has not completed this survey yet by comparing URLs
         var surveySeen = window.localStorage.getItem("surveyShown");
         if (surveySeen == null || surveySeen != window.surveyData.SurveyURL){
             if (timeSurvey) // clear any loading setTimeout function
                 clearTimeout(timeSurvey);
-            console.log("wait "+window.surveyData.MinutesBeforePrompt+" mins");
-            console.log("complete "+window.surveyData.EditsBeforePrompt+" edits");
             // set delay for MinutesBeforePrompt
             var timeSurvey = setTimeout(function(){timeSurveyUp = true;}, window.surveyData.MinutesBeforePrompt*60*1000);
             timeSurvey;
