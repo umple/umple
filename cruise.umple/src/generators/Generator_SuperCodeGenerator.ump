@@ -63,10 +63,12 @@ class SuperCodeGenerator {
   	{
   		return false;
   	}
-  	if(variable instanceof ConstraintStateMachine)
-  	{
-  		return false;
-  	}
+  	mixset StateMachine {
+      if(variable instanceof ConstraintStateMachine)
+      {
+        return false;
+      }
+    }
     if((variable instanceof ConstraintAttribute)&&(UmpleToPrimitiveMap.containsValue(((ConstraintAttribute)variable).getAttribute().getType()) || UmpleToPrimitiveMap.containsKey(((ConstraintAttribute)variable).getAttribute().getType())))
     {
         return !"String".equals(((ConstraintAttribute)variable).getAttribute().getType());

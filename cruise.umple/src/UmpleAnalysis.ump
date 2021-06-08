@@ -387,7 +387,7 @@ class BoolLiteralAnalyzer
     rawLine.addElement(new ConstraintLiteral(token.getValue("literal")));
   }
 }
-
+mixset StateMachine {
 class StatemachineExprAnalyzer
 {
   isA Analyzer;
@@ -403,6 +403,7 @@ class StatemachineExprAnalyzer
   {
     cv = rawLine.createNew();
   }
+}
 }
 
 class AssociationExprAnalyzer
@@ -719,7 +720,7 @@ class ConstraintNameAnalyzer
     personalRawLine.addElement(cv);
   }
 }
-
+mixset StateMachine {
 class StatemachineExprStateNameAnalyzer
 {
   isA Analyzer;
@@ -763,6 +764,7 @@ class StatemachineExprStateNameAnalyzer
       //TODO: add error
     }
   }
+}
 }
 }
 
