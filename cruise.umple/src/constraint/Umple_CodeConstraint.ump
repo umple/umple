@@ -780,6 +780,8 @@ mixset StateMachine {
   }
 }
 
+mixset Structure_StateMachine
+{
 class ConstraintPort
 {
   String getName()
@@ -788,7 +790,7 @@ class ConstraintPort
   }
   public String getType(){ return "port"; }
 }
-
+}
 class ModelConstraintResult
 {
   depend cruise.umple.parser.Position;

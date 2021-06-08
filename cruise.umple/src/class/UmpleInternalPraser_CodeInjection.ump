@@ -108,29 +108,31 @@ class UmpleInternalParser
           Map.Entry mapElement = (Map.Entry)hmIterator.next(); 
           if (((UmpleClass)mapElement.getKey()).equals(model.getUmpleClass(className)))
           {
-            traitNames = (ArrayList<String>) mapElement.getValue();
-            ArrayList<String> newTraitNames = (ArrayList<String>) traitNames.clone();
-            for (String traitName : traitNames)
-            {
-              if (model.getUmpleTrait(traitName) == null)
+            mixset Trait {
+              traitNames = (ArrayList<String>) mapElement.getValue();
+              ArrayList<String> newTraitNames = (ArrayList<String>) traitNames.clone();
+              for (String traitName : traitNames)
               {
-                newTraitNames.remove(traitName);
-              }
-            } 
-            traitNames = newTraitNames;
+                if (model.getUmpleTrait(traitName) == null)
+                {
+                  newTraitNames.remove(traitName);
+                }
+              } 
+              traitNames = newTraitNames;
+            }
           }
         } 
 
         ArrayList<String> methodNames = model.getUmpleClass(className).getMethodNames();
-        
-        for (String umpleTraitName:traitNames)
-        {
-          for (Method m : model.getUmpleTrait(umpleTraitName).getMethods())
+        mixset Trait {
+          for (String umpleTraitName:traitNames)
           {
-            methodNames.add(m.getName());
+            for (Method m : model.getUmpleTrait(umpleTraitName).getMethods())
+            {
+              methodNames.add(m.getName());
+            }
           }
         }
-          
         for (String operationName : operationNames)
         {
           boolean foundMethod = false;

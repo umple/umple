@@ -836,13 +836,4 @@ class UmpleInternalParser
   private void postTokenTemplateAnalysis(){
     walker.done();
   }
-  
-  public boolean reAnalyze() {
-  	return shouldProcessAgain;
-  }
-  
-  public void reAnalyze(boolean re) {
-  	shouldProcessAgain = re;
-  }
-  
 } 
