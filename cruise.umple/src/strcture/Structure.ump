@@ -44,26 +44,8 @@ class Primitive {
 
 class Port {
 
-  depend cruise.umple.parser.Position;
-	
-	direction { IN{} OUT{} BOTH{} }
-	type { END{} RELAY{} SERVICE{} CUSTOM{} }
-	//* -- 0..1 UmpleClass;
 	* -> 0..* PortBinding bindings;
 	* -> 0..1 Protocol protocol;
-	
-	name;
-	modifier;	
-	boolean conjugated;
-	int multiplicity;
-	boolean replicated;
-	
-	String signalType;
-		
-	before setUmpleClass { if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; } }
-	
-	1 -> 0..1 Position;
-  	1 -> 0..1 Position endPosition;
 }
 
 class PortBindingInformation {

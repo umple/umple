@@ -140,9 +140,10 @@ mixset Coordinate {
       String classOne = a.getEnd(0).getClassName();
       String classTwo = a.getEnd(1).getClassName();
 
-      if(getUmpleTraitTypeParameter(classOne) || getUmpleTrait(classOne)!=null) return null;
-      if(getUmpleTraitTypeParameter(classTwo) || getUmpleTrait(classTwo)!=null) return null;
-
+      mixset Trait {
+        if(getUmpleTraitTypeParameter(classOne) || getUmpleTrait(classOne)!=null) return null;
+        if(getUmpleTraitTypeParameter(classTwo) || getUmpleTrait(classTwo)!=null) return null;
+      }
       Coordinate classOnePos = getUmpleClass(classOne).getCoordinates();
       Coordinate classTwoPos = getUmpleClass(classTwo).getCoordinates();
 

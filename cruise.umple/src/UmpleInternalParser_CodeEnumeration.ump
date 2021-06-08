@@ -97,7 +97,8 @@ class UmpleInternalParser
           return;
         }
       }
-      
+
+      mixset Trait {      
       // Check that the enumeration doesn't conflict with any traits
       for (UmpleTrait uT : model.getUmpleTraits()) {
         if (uEnum.hasSameName(uT.getName())) {
@@ -109,6 +110,7 @@ class UmpleInternalParser
                                                             "" + uT.getPosition(0).getLineNumber()));
           return;
         }
+      }
       }
       
       for (UmpleClass uClass : model.getUmpleClasses()) {
