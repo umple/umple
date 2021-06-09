@@ -661,19 +661,48 @@ Page.initCanvasArea = function()
 //The purpose of this function is make sure the URL example argument selects the appropriate dropdown example
 Page.setExamples = function(ex)
 {
+  var exValue = ex+".ump"
   jQuery("#inputExample").change(Action.loadExample);
-  jQuery("#inputExample option[value = \""+ex+".ump"  +"\"]").attr("selected", true);
+  //jQuery("#inputExample option[value = \""+ex+".ump"  +"\"]").attr("selected", true);
+  jQuery("#inputExample option").each(function(){
+  if (this.value==exValue){
+    jQuery("#inputExample option[value = \""+exValue  +"\"]").attr("selected", true);
+    return ;
+  }
+  }
+  )
  
   jQuery("#inputExampleType").change(Action.setExampleType);
 
   jQuery("#inputExample2").change(Action.loadExample);
-  jQuery("#inputExample2 option[value = \""+ex+".ump" +"\"]").attr("selected", true);
+  //jQuery("#inputExample2 option[value = \""+ex+".ump" +"\"]").attr("selected", true);
+  jQuery("#inputExample2 option").each(function(){
+  if (this.value==exValue){
+    jQuery("#inputExample2 option[value = \""+exValue  +"\"]").attr("selected", true);
+    return ;
+  }
+  }
+  )
   
   jQuery("#inputExample3").change(Action.loadExample);
-  jQuery("#inputExample3 option[value = \""+ex+".ump" +"\"]").attr("selected", true);
+  //jQuery("#inputExample3 option[value = \""+ex+".ump" +"\"]").attr("selected", true);
+  jQuery("#inputExample3 option").each(function(){
+  if (this.value==exValue){
+    jQuery("#inputExample3 option[value = \""+exValue  +"\"]").attr("selected", true);
+    return ;
+  }
+  }
+  )
  
   jQuery("#inputExample4").change(Action.loadExample);
-  jQuery("#inputExample4 option[value = \""+ex+".ump" +"\"]").attr("selected", true);
+  //jQuery("#inputExample4 option[value = \""+ex+".ump" +"\"]").attr("selected", true);
+  jQuery("#inputExample4 option").each(function(){
+  if (this.value==exValue){
+    jQuery("#inputExample4 option[value = \""+exValue  +"\"]").attr("selected", true);
+    return ;
+  }
+  }
+  )
 }
 Page.initExamples = function()
 {
@@ -1108,7 +1137,6 @@ Page.getSelectedExample = function()
   if(theExampleType == "cdModels") {
     var requiresGvClass = false; // Some class diagrams  are too complex to edit
     inputExample = jQuery("#inputExample option:selected").val();
-    sessionStorage.setItem("savedSelection", inputExample);
     if (inputExample == "GeometricSystem.ump") {
       requiresGvClass = true;
     }
@@ -1131,7 +1159,6 @@ Page.getSelectedExample = function()
   else if (theExampleType == "featureModels")
     {
        inputExample = jQuery("#inputExample4 option:selected").val(); 
-       sessionStorage.setItem("savedSelection", inputExample);
      //  if (inputExample == "BerkeleyDB_SP_featureDepend.ump")
      //  this.showFeatureDependency = true;
        if( !Page.useGvFeatureDiagram) {
@@ -1144,7 +1171,6 @@ Page.getSelectedExample = function()
 
     if(theExampleType == "smModels") {
       inputExample = jQuery("#inputExample2 option:selected").val();
-      sessionStorage.setItem("savedSelection", inputExample);
       // if diagram type is not a state machine, set to state machine
       if( !Page.useGvStateDiagram && !Page.useJointJSClassDiagram) {
          jQuery("#buttonShowGvStateDiagram").attr('checked', true); 
@@ -1153,7 +1179,6 @@ Page.getSelectedExample = function()
     }
     else {
       inputExample = jQuery("#inputExample3 option:selected").val();
-      sessionStorage.setItem("savedSelection", inputExample);
       // if diagram type is not a structure diagram, set to structure diagram
       if( !Page.useStructureDiagram) {
          jQuery("#buttonShowStructureDiagram").attr('checked', true); 
