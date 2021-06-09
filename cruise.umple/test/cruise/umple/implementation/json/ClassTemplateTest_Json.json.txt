@@ -1,1 +1,13 @@
-{"umpleClasses":[{"position": {"x": 193, "y": 66, "width": 10, "height": 20}, "attributes": [],"methods": [], "id": "NewClass", "name": "NewClass", "isAbstract": "false", "displayColor": "" , "isInterface": "false"}], "umpleAssociations":[] }
+{"umpleClasses":[{
+"position": {"x": 193,
+ "y": 66,
+  "width": 10,
+   "height": 20},
+    "attributes": [],
+    "methods": [],
+     "id": "NewClass",
+      "name": "NewClass",
+       "isAbstract": "false",
+        "displayColor": "" ,
+         "isInterface": "false"}],
+          "umpleAssociations":[] }
