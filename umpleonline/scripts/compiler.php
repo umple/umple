@@ -540,7 +540,7 @@ else if (isset($_REQUEST["umpleCode"]))
         // could not generate either because of Python problem
         // or the yuml server not delivering because it doesn't like automated systems
         $yumltxt = file_get_contents($thedir."/yuml.txt");        
-        $dltext = "<a target=\"YmlImage\" target=\"yumlimg\" href=\"http://yuml.me/diagram/plain/class/".$yumltxt.".php\">Click on this link to display the png in a different Tab (yuml.me doesn't like automated systems generating their images)</a>&nbsp;";
+        $dltext = "<a target=\"yumlimg\" href=\"http://yuml.me/diagram/plain/class/".$yumltxt.".php\">Click on this link to display the png in a different Tab (yuml.me doesn't like automated systems generating their images)</a>&nbsp;";
       }  
 
       $html = "<a target=\"YmlImage\" href=\"$yumllink\">Download the Yuml text for the yuml image</a>. You can then use this text to generate various image formats at <a target=\"yumlimg\" href=\"https://yuml.me/diagram/plain/class/draw\">yuml.me</a>&nbsp;<br/>$dltext";
