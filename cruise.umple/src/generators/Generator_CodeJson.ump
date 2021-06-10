@@ -134,7 +134,7 @@ class JsonGenerator
       if (aClass.hasParentInterface() == true)
       {
           int index = 0;
-          implementedInterfaces = StringFormatter.format(", {0}implementedInterfaces{0}: [ ","\"");
+          implementedInterfaces = StringFormatter.format(",\n {0}implementedInterfaces{0}: [ ","\"");
           for (UmpleInterface uInterface : aClass.getParentInterface())
           {
               if (index > 0)
@@ -144,7 +144,7 @@ class JsonGenerator
               implementedInterfaces += StringFormatter.format("{ {0}interfacesName{0}: {0}{1}{0} }","\"",uInterface.getName());
               index ++;
           }
-          implementedInterfaces += " \n]";
+          implementedInterfaces += " ]";
       }
        
 

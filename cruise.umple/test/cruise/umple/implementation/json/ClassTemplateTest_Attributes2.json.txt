@@ -2,21 +2,21 @@
 "position": {
 "x": 193,
  "y": 66,
-  "width": 0,
-   "height": 0},
-    "attributes": [{
-     "type" : "String",
-      "name" : "NAME",
-       "modifier" : "const",
-        "traceColor" : "black" }, {
-         "type" : "Integer",
-          "name" : "id",
-           "modifier" : "",
-            "traceColor" : "black" }],
-            "methods": [],
-             "id": "NewClass",
-              "name": "NewClass",
-               "isAbstract": "false",
-                "displayColor": "" ,
-                 "isInterface": "false"}],
-                  "umpleAssociations":[] }
+ "width": 0,
+ "height": 0},
+ "attributes": [{
+ "type" : "String",
+ "name" : "NAME",
+ "modifier" : "const",
+ "traceColor" : "black" }, {
+ "type" : "Integer",
+ "name" : "id",
+ "modifier" : "",
+ "traceColor" : "black" }],
+"methods": [],
+ "id": "NewClass",
+ "name": "NewClass",
+ "isAbstract": "false",
+ "displayColor": "" ,
+ "isInterface": "false"}],
+ "umpleAssociations":[] }
