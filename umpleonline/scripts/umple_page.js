@@ -23,6 +23,7 @@ Page.modelDelimiter = "//$?[End_of_model]$?";
 Page.codeMirrorOn = false;
 Page.codeMirrorEditor = null;
 Page.hLine = null;
+
 Page.modelLoadingCount = 0;
 Page.layoutLoadingCount = 0;
 Page.canvasLoadingCount = 0;
@@ -48,6 +49,7 @@ Page.showGuardLabels = false;
 Page.showGuards = true;
 Page.modifiedDiagrams = false;
 Page.allowPinch = false;
+
 
 // The following is set called from umple.php
 Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask, doEditTask, doCreateTask)
@@ -663,45 +665,41 @@ Page.setExamples = function(ex)
 {
   var exValue = ex+".ump"
   jQuery("#inputExample").change(Action.loadExample);
-  //jQuery("#inputExample option[value = \""+ex+".ump"  +"\"]").attr("selected", true);
   jQuery("#inputExample option").each(function(){
-  if (this.value==exValue){
-    jQuery("#inputExample option[value = \""+exValue  +"\"]").attr("selected", true);
-    return ;
-  }
-  }
+    if (this.value==exValue){
+      jQuery("#inputExample option[value = \""+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
   )
  
   jQuery("#inputExampleType").change(Action.setExampleType);
 
   jQuery("#inputExample2").change(Action.loadExample);
-  //jQuery("#inputExample2 option[value = \""+ex+".ump" +"\"]").attr("selected", true);
   jQuery("#inputExample2 option").each(function(){
-  if (this.value==exValue){
-    jQuery("#inputExample2 option[value = \""+exValue  +"\"]").attr("selected", true);
-    return ;
-  }
-  }
+    if (this.value==exValue){
+      jQuery("#inputExample2 option[value = \""+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
   )
   
   jQuery("#inputExample3").change(Action.loadExample);
-  //jQuery("#inputExample3 option[value = \""+ex+".ump" +"\"]").attr("selected", true);
   jQuery("#inputExample3 option").each(function(){
-  if (this.value==exValue){
-    jQuery("#inputExample3 option[value = \""+exValue  +"\"]").attr("selected", true);
-    return ;
-  }
-  }
+    if (this.value==exValue){
+      jQuery("#inputExample3 option[value = \""+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
   )
  
   jQuery("#inputExample4").change(Action.loadExample);
-  //jQuery("#inputExample4 option[value = \""+ex+".ump" +"\"]").attr("selected", true);
   jQuery("#inputExample4 option").each(function(){
-  if (this.value==exValue){
-    jQuery("#inputExample4 option[value = \""+exValue  +"\"]").attr("selected", true);
-    return ;
-  }
-  }
+    if (this.value==exValue){
+      jQuery("#inputExample4 option[value = \""+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
   )
 }
 Page.initExamples = function()
@@ -714,13 +712,12 @@ Page.initExamples = function()
 
   jQuery("#inputExample2").change(Action.loadExample);
   jQuery("#defaultExampleOption2").attr("selected",true);
-    
+
   jQuery("#inputExample3").change(Action.loadExample);
   jQuery("#defaultExampleOption3").attr("selected",true);
- 
+
   jQuery("#inputExample4").change(Action.loadExample);
   jQuery("#defaultExampleOption4").attr("selected",true);
-
 
   if (Page.useStructureDiagram) {
     jQuery("#structureModels").prop("selected",true);
