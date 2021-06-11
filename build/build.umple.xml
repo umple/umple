@@ -434,7 +434,6 @@
   <target name="packageUmpleonline" if="${shouldPackageUmpleOnline}">
     <copy file="${dist.dir}/${dist.umple.sync.jar}" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
     <copy file="${dist.dir}/${dist.umple.jar}" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
-    <copy file="${dist.dir}/${dist.umple.vml.jar}" tofile="umpleonline/scripts/vml.jar" overwrite="true" />
     <antcall target="compressAllScripts"/>
   </target>
 
@@ -609,17 +608,6 @@
       </manifest>
     </jar>
 
-    <echo message="Package: VML - Tool for variability modeling" />
-    <jar  destfile="${dist.dir}/${dist.umple.vml.jar}" 
-          basedir="${bin.path}" 
-          includes="cruise/umple/** en.error cruise/vml/** *.grammar *.error templates/** org/apache/** joptsimple/**">
-      <manifest>
-        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
-        <attribute name="Version" value="${umple.version}"/>
-        <attribute name="Main-Class" value="cruise.vml.VmlConsole"/>
-        <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
-      </manifest>
-    </jar>
 
 	  <!-- TODO: UNCOMMENT ONCE XTEXT IN THE MIX -->
     <!-- <copy todir="${dist.dir}/update">
@@ -650,13 +638,11 @@
   <target name="deployUmpleonlineJars" >
     <copy file="${dist.dir}/${dist.umple.sync.jar}"   tofile="/h/ralph/sites/www/html/umpleonline/scripts/umplesync.jar" overwrite="true" />
     <copy file="${dist.dir}/${dist.umple.jar}"        tofile="/h/ralph/sites/www/html/umpleonline/scripts/umple.jar"     overwrite="true" />
-    <copy file="${dist.dir}/${dist.umple.vml.jar}"    tofile="/h/ralph/sites/www/html/umpleonline/scripts/vml.jar"       overwrite="true" />
   </target>
 
   <target name="deployUpdatedLib">
     <copy file="${dist.dir}/${dist.umple.sync.jar}"   tofile="lib/umplesync.jar"  overwrite="true" />
     <copy file="${dist.dir}/${dist.umple.jar}"        tofile="lib/umple.jar"      overwrite="true" />
-    <copy file="${dist.dir}/${dist.umple.vml.jar}"    tofile="lib/vml.jar"        overwrite="true" />
   </target>
 
   <target name="deployUmpleonline" >
