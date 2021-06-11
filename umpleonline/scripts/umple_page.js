@@ -660,9 +660,51 @@ Page.initCanvasArea = function()
 
   if (!Layout.isDiagramVisible) {Layout.showHideCanvas(false);}
 }
+//The purpose of this function is make sure the URL example argument selects the appropriate dropdown example
+Page.setExamples = function(ex)
+{
+  var exValue = ex+".ump"
+  jQuery("#inputExample").change(Action.loadExample);
+  jQuery("#inputExample option").each(function(){
+    if (this.value==exValue){
+      jQuery("#inputExample option[value = \""+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
+  )
+ 
+  jQuery("#inputExampleType").change(Action.setExampleType);
 
+  jQuery("#inputExample2").change(Action.loadExample);
+  jQuery("#inputExample2 option").each(function(){
+    if (this.value==exValue){
+      jQuery("#inputExample2 option[value = \""+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
+  )
+  
+  jQuery("#inputExample3").change(Action.loadExample);
+  jQuery("#inputExample3 option").each(function(){
+    if (this.value==exValue){
+      jQuery("#inputExample3 option[value = \""+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
+  )
+ 
+  jQuery("#inputExample4").change(Action.loadExample);
+  jQuery("#inputExample4 option").each(function(){
+    if (this.value==exValue){
+      jQuery("#inputExample4 option[value = \""+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
+  )
+}
 Page.initExamples = function()
 {
+ 
   jQuery("#inputExample").change(Action.loadExample);
   jQuery("#defaultExampleOption").attr("selected",true);
  
