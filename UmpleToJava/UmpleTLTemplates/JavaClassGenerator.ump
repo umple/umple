@@ -250,7 +250,7 @@ for (StateMachine smq : uClass.getStateMachines())
             handelMixsetInsideMethod(umodel, childMixsetInMethod, mBody);
           //Then ...
           String methodCode = mBody.getCodeblock().getCode();
-          Pattern labelPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+\\{");
+          Pattern labelPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+"+"\\"+"\u007B"); //==> /u007B means an open curly bracket
           Matcher matcher = labelPatternToMatch.matcher(methodCode);
           // below code, to delete mixset def. and its closing bracket.
           if (matcher.find()) {

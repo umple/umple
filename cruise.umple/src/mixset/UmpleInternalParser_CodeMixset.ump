@@ -558,34 +558,48 @@ mixset Template {
 
   class TemplateDefinitionWalker {
     depend java.util.ArrayList;
-    private void processInlineMixset(Token aToken) 
-    {
-      Token templateTextContentToken = null ;
-      Token templateAttributeToken = aToken.getSubToken("templateAttribute");
-      for (Token templateAttributeSubToken : templateAttributeToken.getSubTokens())
+    
+    private void handleTemplateTokenContainMixset(Token codeToken) {
+      if (codeToken != null) 
       {
-        if (templateAttributeSubToken == null  || templateAttributeSubToken.getSubTokens().size() <1)
-          continue;
-        Token templateTextContent_parent =  templateAttributeSubToken.getSubToken("templateTextContent");
-        if( templateTextContent_parent != null )
-        {
-          templateTextContentToken = templateAttributeSubToken.getSubToken("templateTextContent");
-          if (templateTextContentToken == null )
-          continue;
-
-          String codeToLookAt= templateTextContentToken.getValue() ;
-          ArrayList<MixsetInMethod> mixsetWithinTemplate = MethodBody.getMixsetsFromCode(codeToLookAt);
-          if( mixsetWithinTemplate.size()  < 1 )
-            continue;
-          // else, when there is  one mixset or more ...
-          for (MixsetInMethod m : mixsetWithinTemplate) 
-          {
-            codeToLookAt = MethodBody.handelMixsetInsideMethod(this.getParser().getModel(), m, codeToLookAt);
-            templateTextContentToken.setValue(codeToLookAt);
+        String codeToLookAt = codeToken.getValue();
+        ArrayList<MixsetInMethod> mixsetWithinTemplate = MethodBody.getMixsetsFromCode(codeToLookAt);
+        if (mixsetWithinTemplate.size() > 0) {
+          for (MixsetInMethod inlineMixsetFragment : mixsetWithinTemplate) {
+            codeToLookAt = MethodBody.handelMixsetInsideMethod(this.getParser().getModel(), inlineMixsetFragment,codeToLookAt);
+            codeToken.setValue(codeToLookAt);
           }
         }
       }
     }
+    
+    private void processInlineMixset(Token aToken) {
+      Token templateTextContentToken = null;
+      Token templateAttributeToken = aToken.getSubToken("templateAttribute");
+      for (Token templateAttributeSubToken : templateAttributeToken.getSubTokens()) 
+      {
+        Token templateCodeBlock = templateAttributeSubToken.getSubToken("templateCodeBlock");
+        if (templateCodeBlock != null) 
+        {
+          // handle inline mixsets within Template CodeBlock
+          Token templateLanguageCodeToken = templateCodeBlock.getSubToken("templateLanguageCode");
+          handleTemplateTokenContainMixset(templateLanguageCodeToken);
+        }
+        // handle inline mixsets within Template templateTextContent
+        if (templateAttributeSubToken == null || templateAttributeSubToken.getSubTokens().size() < 1)
+        continue;
+        Token templateTextContent_sub = templateAttributeSubToken.getSubToken("templateTextContent");
+        if (templateTextContent_sub != null) 
+        {
+          templateTextContentToken = templateAttributeSubToken.getSubToken("templateTextContent");
+          if (templateTextContentToken == null)
+          continue;
+          //else
+          handleTemplateTokenContainMixset(templateTextContentToken);
+        }
+      }
+    }
+    
   }
   
   class MethodBody {
