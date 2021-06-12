@@ -890,8 +890,6 @@ public class UmpleMixsetTest {
     Assert.assertFalse(templateGeneratedCode.contains("I am inner , this line should NOT be included"));
     // no mixset definitions i
     Assert.assertFalse(templateGeneratedCode.contains("mixset M1"));
-    Assert.assertFalse(templateGeneratedCode.contains("mixset M1"));
-    Assert.assertFalse(templateGeneratedCode.contains("mixset M1"));
     Assert.assertFalse(templateGeneratedCode.contains("mixset M2"));
     Assert.assertFalse(templateGeneratedCode.contains("mixset M3"));
     Assert.assertFalse(templateGeneratedCode.contains("mixset Outer"));
