@@ -1,0 +1,41 @@
+//namespace cruise.umple.compiler.mixset;
+
+use M1;
+use M2;
+
+use Inner; 
+
+class TemplateMixset {
+  text <<! Print out the following :  
+  mixset M1 {
+    // M1 is used, this line should be included.
+    
+  }
+  
+  mixset Outer {
+       mixset Inner {  
+      // I am inner , this line should NOT be included.
+    }
+    
+    
+    // I am outer , this line should NOT be included.
+  }
+  
+  int x ; 
+  x ++;
+  
+  mixset M2 {
+    // M2 is used, this line should be included..
+  }
+  
+  mixset M3 {
+    // M3 is not used, this line NOT should be included..
+  }
+  
+  !>>
+  // Specification for two methods to be generated
+  
+  emit text();
+  }
+}
+
