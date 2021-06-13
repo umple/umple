@@ -516,8 +516,10 @@ mixset AspectInjection {
     }
     return closeIndex;
   }
-    public ArrayList<MixsetInMethod> getMixsetsWithinMethod() { 
-    String codeToLockAt= this.getCodeblock().getCode(); // the code to look at. 
+  public  ArrayList<MixsetInMethod> getMixsetsWithinMethod(){
+    return getMixsetsFromCode(this.getCodeblock().getCode());
+  }
+  public static ArrayList<MixsetInMethod> getMixsetsFromCode(String codeToLockAt){
     ArrayList<MixsetInMethod> mixsetInsideMethodList = new ArrayList<MixsetInMethod>();
     Pattern labelPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+\\{"); // to detect mixset def.
     Matcher matcher = labelPatternToMatch.matcher(codeToLockAt);
@@ -549,5 +551,99 @@ mixset AspectInjection {
     }
     return mixsetInsideMethodList;
   }
+  }
+}
+
+mixset Template {
+
+  class TemplateDefinitionWalker {
+    depend java.util.ArrayList;
+    
+    private void handleTemplateTokenContainMixset(Token codeToken) {
+      if (codeToken != null) 
+      {
+        String codeToLookAt = codeToken.getValue();
+        ArrayList<MixsetInMethod> mixsetWithinTemplate = MethodBody.getMixsetsFromCode(codeToLookAt);
+        if (mixsetWithinTemplate.size() > 0) {
+          for (MixsetInMethod inlineMixsetFragment : mixsetWithinTemplate) {
+            codeToLookAt = MethodBody.handelMixsetInsideMethod(this.getParser().getModel(), inlineMixsetFragment,codeToLookAt);
+            codeToken.setValue(codeToLookAt);
+          }
+        }
+      }
+    }
+    
+    private void processInlineMixset(Token aToken) {
+      Token templateTextContentToken = null;
+      Token templateAttributeToken = aToken.getSubToken("templateAttribute");
+      for (Token templateAttributeSubToken : templateAttributeToken.getSubTokens()) 
+      {
+        Token templateCodeBlock = templateAttributeSubToken.getSubToken("templateCodeBlock");
+        if (templateCodeBlock != null) 
+        {
+          // handle inline mixsets within Template CodeBlock
+          Token templateLanguageCodeToken = templateCodeBlock.getSubToken("templateLanguageCode");
+          handleTemplateTokenContainMixset(templateLanguageCodeToken);
+        }
+        // handle inline mixsets within Template templateTextContent
+        if (templateAttributeSubToken == null || templateAttributeSubToken.getSubTokens().size() < 1)
+        continue;
+        Token templateTextContent_sub = templateAttributeSubToken.getSubToken("templateTextContent");
+        if (templateTextContent_sub != null) 
+        {
+          templateTextContentToken = templateAttributeSubToken.getSubToken("templateTextContent");
+          if (templateTextContentToken == null)
+          continue;
+          //else
+          handleTemplateTokenContainMixset(templateTextContentToken);
+        }
+      }
+    }
+    
+  }
+  
+  class MethodBody {
+    public static String handelMixsetInsideMethod(UmpleModel umodel, MixsetInMethod mixsetInMethod, String  sourceCodeBody)
+    {
+      Mixset mixset = umodel.getMixset(mixsetInMethod.getMixsetName());
+      boolean mixsetIsUsed = false;
+      try {
+        if(mixset != null) // the mixset has been used. 
+        {
+         if(mixset.getUseUmpleFile() != null)
+         {
+           mixsetIsUsed = true;
+           //first process children
+           for(MixsetInMethod childMixsetInMethod : mixsetInMethod.getChildMixsets())
+             handelMixsetInsideMethod(umodel, childMixsetInMethod, sourceCodeBody);
+           //Then ...
+           String methodCode = sourceCodeBody;
+           Pattern labelPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+\\{");
+           Matcher matcher = labelPatternToMatch.matcher(methodCode);
+           // below code, to delete mixset def. and its closing bracket.
+           if (matcher.find()) {
+             String mixsetDefPlusAfterCode = methodCode.substring(matcher.start());
+             int indexOfMixsetClosingBracket = matcher.start() + MethodBody.indexOfMixsetClosingBracket(mixsetDefPlusAfterCode) - 1 ;
+             String methodCodeRemovedMixset = methodCode.substring(0,indexOfMixsetClosingBracket) + " " ; // remove closing bracket 
+             if(indexOfMixsetClosingBracket + 1 < methodCode.length())
+             methodCodeRemovedMixset = methodCodeRemovedMixset + methodCode.substring(indexOfMixsetClosingBracket +1); 
+             methodCodeRemovedMixset = methodCodeRemovedMixset.substring(0,matcher.start()) + methodCodeRemovedMixset.substring(matcher.end()+1); // remove mixset def.
+             sourceCodeBody = methodCodeRemovedMixset;
+           }
+         }
+       }
+     }
+     finally
+     {
+       if(!mixsetIsUsed)
+       {
+         // delete body of unused mixsets  
+         String mixsetInMethodCode = mixsetInMethod.getMixsetFragment();
+         String code = sourceCodeBody.replace(mixsetInMethodCode, "");
+         sourceCodeBody = code;
+       }
+     }
+     return sourceCodeBody; // after processing
+    }
   }
 }
