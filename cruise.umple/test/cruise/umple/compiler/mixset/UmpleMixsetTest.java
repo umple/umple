@@ -870,5 +870,34 @@ public class UmpleMixsetTest {
     model.run();
     Assert.assertEquals(model.getUmpleClasses().size() , 3);
   }
+  @Test
+  public void inlineMixsetsInTemplate()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseMixsetsInsideTemplate.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(true);
+    model.run();
+    String generatedFile =  umpleParserTest.pathToInput+"/TemplateMixset.java";
+    SampleFileWriter.assertFileExists(generatedFile);
+    String templateGeneratedCode = SampleFileWriter.readContent(new File(generatedFile));
+    //  included mixsets
+    Assert.assertTrue(templateGeneratedCode.contains("Print out the following "));
+    Assert.assertTrue(templateGeneratedCode.contains("M1 is used, this line should be included"));
+    Assert.assertTrue(templateGeneratedCode.contains("M2 is used, this line should be included"));
+    // not included mixsets
+    Assert.assertFalse(templateGeneratedCode.contains("M3 is not used, this line NOT should be included"));
+    Assert.assertFalse(templateGeneratedCode.contains("I am outer , this line should NOT be included"));
+    Assert.assertFalse(templateGeneratedCode.contains("I am inner , this line should NOT be included"));
+    // no mixset definitions i
+    Assert.assertFalse(templateGeneratedCode.contains("mixset M1"));
+    Assert.assertFalse(templateGeneratedCode.contains("mixset M2"));
+    Assert.assertFalse(templateGeneratedCode.contains("mixset M3"));
+    Assert.assertFalse(templateGeneratedCode.contains("mixset Outer"));
+    Assert.assertFalse(templateGeneratedCode.contains("mixset Inner"));
+    //delete generated file
+    SampleFileWriter.destroy(generatedFile);
+
+    
+  }
 
 }
