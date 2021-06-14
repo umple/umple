@@ -481,6 +481,7 @@ Action.loadFileCallback = function(response)
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   if (Object.keys(TabControl.tabs).length > 1) return;
 
+  console.log("saved for loadFile");
   TabControl.getCurrentHistory().save(response.responseText,"loadFileCallback");
   Page.setUmpleCode(response.responseText);
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
@@ -531,6 +532,7 @@ Action.loadTaskCallback = function(response)
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   if (Object.keys(TabControl.tabs).length > 1) return;
 
+  console.log("saved for loadTask");
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskCallback");
   var responseArray = response.responseText.split("task delimiter");
   Page.setUmpleCode(responseArray[0]);
@@ -556,6 +558,7 @@ Action.loadTaskExceptCodeCallback = function(response)
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   //if (Object.keys(TabControl.tabs).length > 1) return;
 
+  console.log("saved for loadTaskExceptCode");
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
   var responseArray = response.responseText.split("task delimiter");
   jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":");
@@ -1486,6 +1489,7 @@ Action.umpleCanvasClicked = function(event)
 // and then refresh the diagram.
 Action.directUpdateCommandCallback = function(response)
 {
+  console.log("the direct update one");
   Action.updateUmpleTextCallback(response);
   Action.redrawDiagram();
 }
@@ -1494,6 +1498,7 @@ Action.directUpdateCommandCallback = function(response)
 // such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
 {
+  console.log("saved for TextCallback");
   TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
   Action.freshLoad = true;
   
@@ -1509,9 +1514,9 @@ Action.updateUmpleTextCallback = function(response)
   {
     DiagramEdit.pendingChanges = false;
   }
-  else
-  {
-    DiagramEdit.doTextUpdate();
+  else{
+    //console.log('in else');
+    //DiagramEdit.doTextUpdate();
   }
   
   //Uncomment for testing purposes only - to update the image after updating the text
@@ -1543,6 +1548,8 @@ Action.setExampleType = function setExampleType()
      jQuery("#defaultExampleOption3").prop("selected",true);
    }   
 }
+
+var exampleMessageActive=-1; // used to set the display of Example Message off
 
 Action.loadExample = function loadExample()
 {
@@ -1588,6 +1595,8 @@ Action.loadExample = function loadExample()
   
   var newURL="?example="+exampleName+diagramType;
   Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+exampleName+" example</a>");
+
+  exampleMessageActive = TabControl.getCurrentHistory().currentIndex;
  // TODO - fix so history works nicely
  //   if(history.pushState) {history.pushState("", document.title, newURL);}
            
@@ -1599,6 +1608,7 @@ Action.loadExampleCallback = function(response)
   Action.freshLoad = true;
   Page.setUmpleCode(response.responseText);
   Page.hideLoading();
+  console.log("saved for loadExample");
   TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
   Action.updateUmpleDiagram();
   Action.setCaretPosition("0");
@@ -1932,6 +1942,7 @@ Action.directAddClass = function(className) {
   var umpleJson = Json.toString({"position" : {"x" : "10","y" : "10","width" : "109","height" : "41"},"name" : className});
 
   Page.setFeedbackMessage("Adding class "+className);  
+  console.log("added class");
   Action.ajax(Action.directUpdateCommandCallback,format("action=addClass&actionCode={0}",umpleJson));
 
   // After a pause to let the ajax return, then redraw the diagram.
@@ -2110,6 +2121,7 @@ Action.umpleCodeMirrorCursorActivity = function() {
 
 Action.umpleCodeMirrorTypingActivity = function() {
   if(Action.freshLoad == false) {
+    //console.log("codeMirrorEditor");
     Page.codeMirrorEditor.save();
     Action.umpleTypingActivity("codeMirrorEditor");
   }
@@ -2197,9 +2209,13 @@ Action.processTyping = function(target, manuallySynchronized)
   // Save in history after a pause in typing
   if (target != "diagramEdit") 
   {
+    console.log("saved for processTyping {not diagram edit}");
     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
   }
-  Page.setExampleMessage("");
+  //console.log ("edit made");
+  if (TabControl.getCurrentHistory().currentIndex-exampleMessageActive>2){
+    Page.setExampleMessage("");
+  }
   
   if (!Action.manualSync || manuallySynchronized)
   {

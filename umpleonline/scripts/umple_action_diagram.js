@@ -15,14 +15,19 @@ DiagramEdit.newGeneralization = null;
 //Queues and initiates updates to the text editor after the diagram is edited
 DiagramEdit.updateUmpleText = function(update)
 {
+  //console.log(update);
+  //console.log("length: "+ DiagramEdit.textChangeQueue.length+"; pending changes: "+DiagramEdit.pendingChanges);
   if(DiagramEdit.textChangeQueue.length == 0 && !DiagramEdit.pendingChanges)
   {
+    //console.log("entered if");
     DiagramEdit.pendingChanges = true;
     DiagramEdit.textChangeQueue.push(update);
     DiagramEdit.doTextUpdate();
   }
   else
   {
+    //console.log("entered else");
+    if (update.codeChange)
     DiagramEdit.textChangeQueue.push(update);
   }
   
@@ -37,7 +42,8 @@ DiagramEdit.doTextUpdate = function()
   if(update.codeChange) {
     Page.hideGeneratedCode();
   }
-  
+
+  //console.log('do text update');
   Action.ajax(Action.updateUmpleTextCallback,update.actionCode);
 }
 
@@ -54,6 +60,7 @@ DiagramEdit.addClass = function(position)
   if (!Page.repeatToolItem) Page.unselectAllToggleTools();
   Page.showModelLoading();
   Page.showLayoutLoading();
+  console.log("added class");
   DiagramEdit.updateUmpleText({ 
     actionCode: format("action=addClass&actionCode={0}",umpleJson),
     codeChange: true
@@ -79,7 +86,7 @@ DiagramEdit.addAssociation = function(line)
   if (!Page.repeatToolItem) Page.unselectAllToggleTools();
   Page.showModelLoading();
   Page.showLayoutLoading();
-  
+  console.log("removed new association");
   DiagramEdit.updateUmpleText({
     actionCode: format("action=addAssociation&actionCode={0}",umpleJson),
     codeChange: true
@@ -100,7 +107,7 @@ DiagramEdit.addTransition = function(line)
   if (!Page.repeatToolItem) Page.unselectAllToggleTools();
   Page.showModelLoading();
   Page.showLayoutLoading();
-  
+  console.log("removed new transition");
   DiagramEdit.updateUmpleText({
     actionCode: format("action=addTransition&actionCode={0}",umpleJson),
     codeChange: true
@@ -116,7 +123,7 @@ DiagramEdit.addGeneralization = function(umpleGeneralization)
   if (!Page.repeatToolItem) Page.unselectAllToggleTools();
   Page.showModelLoading();
   Page.showLayoutLoading();
-  
+  console.log("added generalization");
   DiagramEdit.updateUmpleText({
     actionCode: format("action=addGeneralization&actionCode={0}",umpleJson),
     codeChange: true
@@ -240,6 +247,7 @@ DiagramEdit.classMoved = function(targetClass)
   
   // make call to the back end to update the umple code
   Page.showLayoutLoading();
+  console.log("moved class");
   DiagramEdit.updateUmpleText({
     actionCode: format("action=editClass&actionCode={0}",editClass),
     codeChange: false
@@ -280,6 +288,7 @@ DiagramEdit.classResized = function(event, ui)
   var umpleCode = Page.getUmpleCode();
   
   Page.showLayoutLoading();
+  console.log("resized class");
   DiagramEdit.updateUmpleText({
     actionCode: format('action=editClass&actionCode={0}',editClass),
     codeChange: false
@@ -301,6 +310,7 @@ DiagramEdit.associationMoved = function(dragDivSelector, addToQueue)
   var editAssociation = Json.toString(association);
 
   Page.showLayoutLoading();
+  console.log("moved association");
   DiagramEdit.updateUmpleText({
     codeChange: false,
     actionCode: format("action=editAssociation&actionCode={0}",editAssociation)
@@ -400,6 +410,7 @@ DiagramEdit.classNameChanged = function(diagramId,oldName,newName)
   
     Page.showModelLoading();
     Page.showLayoutLoading();
+    console.log("changed class name");
     DiagramEdit.updateUmpleText({
       actionCode: format("action=editClass&actionCode={0}",editClass),
       codeChange: true
@@ -424,6 +435,7 @@ DiagramEdit.attributeNameChanged = function(diagramId,index,oldName,newAttribute
   
     var editClass = Json.toString(umpleClass);
     Page.showModelLoading();
+    console.log("changed attribute name");
     DiagramEdit.updateUmpleText({
       actionCode: format("action=editClass&actionCode={0}",editClass),
       codeChange: true
@@ -452,6 +464,7 @@ DiagramEdit.attributeNew = function(diagramId,attributeInput)
     
     var editClass = Json.toString(umpleClass);
     Page.showModelLoading();
+    console.log("created new attribute");
     DiagramEdit.updateUmpleText({
       actionCode: format("action=editClass&actionCode={0}",editClass),
       codeChange: true
@@ -503,6 +516,7 @@ DiagramEdit.classDeleted = function(diagramId)
   if (!Page.repeatToolItem) Page.unselectAllToggleTools();
   Page.showModelLoading();
   Page.showLayoutLoading();
+  console.log("deleted class");
   DiagramEdit.updateUmpleText({
     actionCode: format("action=removeClass&actionCode={0}",removeClass),
     codeChange: true
@@ -523,6 +537,7 @@ DiagramEdit.methodNew = function(diagramId, methodInput)
     var methodIndex = umpleClass.addMethod(methodInput);
     var editClass = Json.toString(umpleClass);
     Page.showModelLoading();
+    console.log("created new method");
     DiagramEdit.updateUmpleText({
       actionCode: format("action=editClass&actionCode={0}",editClass),
       codeChange: true
@@ -552,6 +567,7 @@ DiagramEdit.methodChanged = function(diagramId,index,oldName,newMethod)
     UmpleSystem.redraw(umpleClass);
     var editClass = Json.toString(umpleClass);
     Page.showModelLoading();
+    console.log("changed method");
     DiagramEdit.updateUmpleText({
       actionCode: format("action=editClass&actionCode={0}",editClass),
       codeChange: true
@@ -579,6 +595,7 @@ DiagramEdit.methodDelete = function(diagramId,index)
 
   var editClass = Json.toString(umpleClass);
   Page.showModelLoading();
+  console.log("deleted method");
   DiagramEdit.updateUmpleText({
     actionCode: format("action=editClass&actionCode={0}",editClass),
     codeChange: true
@@ -609,6 +626,7 @@ DiagramEdit.attributeDelete = function(diagramId,index)
 
   var editClass = Json.toString(umpleClass);
   Page.showModelLoading();
+  console.log("delelted attribute");
   DiagramEdit.updateUmpleText({
     actionCode: format("action=editClass&actionCode={0}",editClass),
     codeChange: true
@@ -631,6 +649,7 @@ DiagramEdit.associationDeleted = function(diagramId, addToQueue)
   
   Page.showModelLoading();
   Page.showLayoutLoading();
+  console.log("deleted association");
   DiagramEdit.updateUmpleText({
     actionCode: format("action=removeAssociation&actionCode={0}",json),
     codeChange: true
@@ -649,6 +668,7 @@ DiagramEdit.transitionDeleted = function(diagramId, addToQueue)
 
     Page.showModelLoading();
     Page.showLayoutLoading();
+    console.log("deleted transition");
     DiagramEdit.updateUmpleText({
         actionCode: format("action=removeTransition&actionCode={0}",json),
         codeChange: true
@@ -665,6 +685,7 @@ DiagramEdit.generalizationDeleted = function(diagramId, addToQueue)
   
   Page.showModelLoading();
   Page.showLayoutLoading();
+  console.log("deleted generalization");
   DiagramEdit.updateUmpleText({
     actionCode: format("action=removeGeneralization&actionCode={0}",json),
     codeChange: true
