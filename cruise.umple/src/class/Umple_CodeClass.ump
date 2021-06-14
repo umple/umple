@@ -451,12 +451,14 @@ mixset Trait {
     if(aMethod!=null&&!aMethod.isIsAbstract()){
       return true;
     }
+    mixset StateMachine {
     if (numberOfStateMachines()>0){
     	for(StateMachine sm : getStateMachines()){
     		if (sm.getEventByMethod(comparedMethod)!=null){
     			return true;
     		}
     	}
+    }
     }
     if(getExtendsClass()!=null&&getExtendsClass().hasImplementedMethodIncludingWithinParentClasses(comparedMethod)){
       return true;
@@ -601,7 +603,9 @@ mixset Trait {
     
     if (isImmutable)
     {
+      mixset StateMachine {
       if (this.hasStateMachines()) { return false; }
+      }
 
       for (AssociationVariable av : associationVariables)
       {

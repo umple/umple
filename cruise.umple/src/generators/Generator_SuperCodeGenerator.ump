@@ -63,10 +63,12 @@ class SuperCodeGenerator {
   	{
   		return false;
   	}
-  	if(variable instanceof ConstraintStateMachine)
-  	{
-  		return false;
-  	}
+  	mixset StateMachine {
+      if(variable instanceof ConstraintStateMachine)
+      {
+        return false;
+      }
+    }
     if((variable instanceof ConstraintAttribute)&&(UmpleToPrimitiveMap.containsValue(((ConstraintAttribute)variable).getAttribute().getType()) || UmpleToPrimitiveMap.containsKey(((ConstraintAttribute)variable).getAttribute().getType())))
     {
         return !"String".equals(((ConstraintAttribute)variable).getAttribute().getType());
@@ -315,13 +317,15 @@ class SuperCodeGenerator {
     {
       return ConstraintLookupMap.get("accessor")+((ConstraintMethodParameter)cv).getParameter().getName();
     }
-    else if("state".equals(id))
-    {
-      return translate("stateOne", ((ConstraintState)cv).getState());
-    }
-    else if("statemachine".equals(id))
-    {
-      return translate("getFullMethod",((ConstraintStateMachine)cv).getStateMachine())+"()";
+    mixset StateMachine {
+      else if("state".equals(id))
+      {
+        return translate("stateOne", ((ConstraintState)cv).getState());
+      }
+      else if("statemachine".equals(id))
+      {
+        return translate("getFullMethod",((ConstraintStateMachine)cv).getStateMachine())+"()";
+      }
     }
     else if("literal".equals(id))
     {
