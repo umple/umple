@@ -908,7 +908,6 @@ class ConstraintNameNameAnalyzer
         }
         } 
         mixset Structure {
-           else { 
             Port port = null;
             if (uClassifier instanceof UmpleClass)
             {
@@ -919,7 +918,6 @@ class ConstraintNameNameAnalyzer
               ConstraintPort name = new ConstraintPort(port);
               return name;
             }
-          } 
         }
         
       }
