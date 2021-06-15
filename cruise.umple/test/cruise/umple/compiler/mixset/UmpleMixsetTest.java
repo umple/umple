@@ -667,6 +667,12 @@ public class UmpleMixsetTest {
     model.run();
     PhpClassGenerator phpGenerator = new PhpClassGenerator();		
     String code = phpGenerator.getCode(model, model.getUmpleClass(0));
+    Assert.assertTrue(code.contains("M2 is used mixset."));
+    // not included mixsets
+    Assert.assertFalse(code.contains("M1 is not used mixset"));
+    // no mixset definitions 
+    Assert.assertFalse(code.contains("mixset M1 {"));
+    Assert.assertFalse(code.contains("mixset M2 {"));
     //delete generated file
     SampleFileWriter.destroy(umpleParserTest.pathToInput+"/AphpClass.java");
   }
