@@ -232,6 +232,7 @@
       <batchtest fork="yes" todir="${test.output.path}">
          <fileset dir="${project.path}/test">
           <include name="**/${junit}.java"/>
+          <include name="**/AssociationSortedWithNameSpace.java"/>
           <exclude name="**/AllTests.java"/>
         </fileset>
       </batchtest>
