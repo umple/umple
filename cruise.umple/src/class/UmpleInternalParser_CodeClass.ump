@@ -3271,12 +3271,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             String methodCode = token.getValue();
             // process mixsets inside code 
             mixset Mixset {
-              ArrayList<MixsetInMethod> mixsetInCodeList = MethodBody.getMixsetsFromCode(methodCode) ;
-              for (MixsetInMethod aMixsetInMethod : mixsetInCodeList) 
-              {
-                // update the code according to  use statements (of mixsets)
-                methodCode = MethodBody.handelMixsetInsideMethod(this.getModel(), aMixsetInMethod, methodCode);	        		
-              }
+              methodCode = processInlineMixset(token.getValue());
             } // end of MIXSET 
             cb.setCode(methodCode);
             aMethod.setCodePosition(token.getPosition());
@@ -4093,17 +4088,21 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         langs.add(sub.getValue());
       }
       if(sub.is("code"))
-      {          
+      {
+        String aspectCode = sub.getValue();
+        mixset Mixset {
+        aspectCode = processInlineMixset(sub.getValue());
+        }
         if(langs.size()==0)
         {
-          cb.setCode(sub.getValue());
+          cb.setCode(aspectCode);
           injection.setCodePosition(sub.getPosition());
         }
         else
         {
           for(String lang:langs)
             {
-                cb.setCode(lang,sub.getValue());
+                cb.setCode(lang,aspectCode);
                 if("Java".equals(lang))
                 {
                   injection.setCodePosition(sub.getPosition());
