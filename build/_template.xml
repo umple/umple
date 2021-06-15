@@ -232,6 +232,7 @@
          <fileset dir="${project.path}/test">
           <include name="**/${junit}.java"/>
           <exclude name="**/AllTests.java"/>
+          <exclude name="**/vml/**"/>
         </fileset>
       </batchtest>
       <classpath refid="project.classpath"/>

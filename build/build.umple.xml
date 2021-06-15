@@ -253,6 +253,7 @@
       <exclude name="**/.git"/>
       <exclude name="**/*.ump" />
       <exclude name="**/data" />
+      <exclude name="**/vml/**" />
       <classpath refid="project.classpath"/>
       <classpath refid="validator.project.classpath"/>
       <classpath refid="core.ivy.classpath" />
@@ -289,6 +290,7 @@
       <src path="cruise.umple.validator/src-gen-umple"/>
       <src path="cruise.umple.validator/test"/>
       <exclude name="**/*.ump" />
+      <exclude name="**/vml/**"/>
       <classpath refid="validator.ivy.classpath" />
       <classpath refid="test.ivy.classpath" />
       <classpath refid="umple.manual.classpath" />
@@ -322,6 +324,7 @@
       <src path="cruise.umplificator/src-gen-umple"/>
        <!-- <src path="cruise.umplificator/test"/>-->
       <exclude name="**/*.ump" />
+      <exclude name= "**/vml/**"/>
       <classpath refid="umplificator.ivy.classpath"/>
       <classpath refid="test.ivy.classpath"/>
     </javac>
