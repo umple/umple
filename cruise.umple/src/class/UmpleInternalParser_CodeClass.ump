@@ -3268,7 +3268,17 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
                 token.getPosition().getLineNumber()+"", token.getPosition().getFilename(), ""));
           else
           {
-            cb.setCode(token.getValue());
+            String methodCode = token.getValue();
+            // process mixsets inside code 
+            mixset Mixset {
+              ArrayList<MixsetInMethod> mixsetInCodeList = MethodBody.getMixsetsFromCode(methodCode) ;
+              for (MixsetInMethod aMixsetInMethod : mixsetInCodeList) 
+              {
+                // update the code according to  use statements (of mixsets)
+                methodCode = MethodBody.handelMixsetInsideMethod(this.getModel(), aMixsetInMethod, methodCode);	        		
+              }
+            } // end of MIXSET 
+            cb.setCode(methodCode);
             aMethod.setCodePosition(token.getPosition());
             
             //559b

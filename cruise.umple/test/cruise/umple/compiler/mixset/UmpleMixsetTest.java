@@ -12,6 +12,7 @@ import java.util.List;
 import cruise.umple.compiler.Method;
 import cruise.umple.compiler.MethodBody;
 import cruise.umple.compiler.exceptions.*;
+import cruise.umple.compiler.php.PhpClassGenerator;
 import java.io.File;
 
 public class UmpleMixsetTest {
@@ -656,6 +657,18 @@ public class UmpleMixsetTest {
     SampleFileWriter.destroy(generatedFile);
 
     
+  }
+  @Test
+  public void inlineMixsetsInsideMethodPhpCode()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseMixsetsInsideMethod_generic.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(true);
+    model.run();
+    PhpClassGenerator phpGenerator = new PhpClassGenerator();		
+    String code = phpGenerator.getCode(model, model.getUmpleClass(0));
+    //delete generated file
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/AphpClass.java");
   }
 
 }

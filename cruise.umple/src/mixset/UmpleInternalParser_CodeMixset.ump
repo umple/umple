@@ -616,7 +616,7 @@ mixset Template {
            mixsetIsUsed = true;
            //first process children
            for(MixsetInMethod childMixsetInMethod : mixsetInMethod.getChildMixsets())
-             handelMixsetInsideMethod(umodel, childMixsetInMethod, sourceCodeBody);
+             sourceCodeBody = handelMixsetInsideMethod(umodel, childMixsetInMethod, sourceCodeBody);
            //Then ...
            String methodCode = sourceCodeBody;
            Pattern labelPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+\\{");
