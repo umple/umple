@@ -1,7 +1,4 @@
-// This below mixset has been refactored from Umple_Code.ump,
-// to include Filter related code.
 
-mixset Filter { 
 // Fragment source file: Umple_Code.ump
 // Line : 562
   class UmpleModel { 
@@ -301,6 +298,4 @@ mixset Filter {
       }
       return null;
     } 
-  } 
-
-}
+  }

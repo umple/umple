@@ -10,27 +10,28 @@ namespace cruise.umple.analysis;
 
 
 external Analyzer{}
-
-class GuardAnalyzer
-{
-  isA Analyzer;
-  depend cruise.umple.parser.analysis.Analyzer;
-  depend cruise.umple.parser.Token;
-  depend cruise.umple.compiler.*;
-  depend java.util.*;
-  ConstraintTree rawLine = new ConstraintTree();
-  lazy UmpleClassifier uClassifier;
-  lazy Transition t;
-  
-  void analyze(Token token)
+mixset StateMachine {
+  class GuardAnalyzer
   {
-    Guard constraint = new Guard();
-    constraint.addElementAll(rawLine.getRoot());
-    constraint.setPosition(token.getPosition());
-    constraint.setEndPosition(token.getEndPosition());
+    isA Analyzer;
+    depend cruise.umple.parser.analysis.Analyzer;
+    depend cruise.umple.parser.Token;
+    depend cruise.umple.compiler.*;
+    depend java.util.*;
+    ConstraintTree rawLine = new ConstraintTree();
+    lazy UmpleClassifier uClassifier;
+    lazy Transition t;
+    
+    void analyze(Token token)
+    {
+      Guard constraint = new Guard();
+      constraint.addElementAll(rawLine.getRoot());
+      constraint.setPosition(token.getPosition());
+      constraint.setEndPosition(token.getEndPosition());
 
-    t.setGuard(constraint);
-    rawLine = new ConstraintTree();
+      t.setGuard(constraint);
+      rawLine = new ConstraintTree();
+    }
   }
 }
 
@@ -386,7 +387,7 @@ class BoolLiteralAnalyzer
     rawLine.addElement(new ConstraintLiteral(token.getValue("literal")));
   }
 }
-
+mixset StateMachine {
 class StatemachineExprAnalyzer
 {
   isA Analyzer;
@@ -402,6 +403,7 @@ class StatemachineExprAnalyzer
   {
     cv = rawLine.createNew();
   }
+}
 }
 
 class AssociationExprAnalyzer
@@ -718,7 +720,7 @@ class ConstraintNameAnalyzer
     personalRawLine.addElement(cv);
   }
 }
-
+mixset StateMachine {
 class StatemachineExprStateNameAnalyzer
 {
   isA Analyzer;
@@ -734,7 +736,7 @@ class StatemachineExprStateNameAnalyzer
   {
     rawLine = cv.createNew();
   }
-
+  mixset StateMachine {
   public void analyze(Token token)
   {
     StateMachine stateMachine = null;
@@ -762,6 +764,8 @@ class StatemachineExprStateNameAnalyzer
       //TODO: add error
     }
   }
+}
+}
 }
 
 class ConstraintNameNameAnalyzer
@@ -881,25 +885,29 @@ class ConstraintNameNameAnalyzer
       }
       else
       {
+        mixset StateMachine {
         StateMachine stateMachine = null;
         if(uClassifier instanceof UmpleClass)
         {
           stateMachine = ((UmpleClass)uClassifier).getStateMachine(value);
         }
+        }
         mixset Trait {
-        else if(uClassifier instanceof UmpleTrait)
-        {
-          stateMachine = ((UmpleTrait)uClassifier).getStateMachine(value);
+          mixset StateMachine {
+            else if(uClassifier instanceof UmpleTrait)
+            {
+              stateMachine = ((UmpleTrait)uClassifier).getStateMachine(value);
+            }
+          }
         }
-        }
+        mixset StateMachine {
         if(stateMachine!=null)
         {
           ConstraintStateMachine name = new ConstraintStateMachine(stateMachine);
           return name;
+        }
         } 
-        else
-        {
-          mixset Structure {
+        mixset Structure {
             Port port = null;
             if (uClassifier instanceof UmpleClass)
             {
@@ -910,7 +918,6 @@ class ConstraintNameNameAnalyzer
               ConstraintPort name = new ConstraintPort(port);
               return name;
             }
-          } 
         }
         
       }

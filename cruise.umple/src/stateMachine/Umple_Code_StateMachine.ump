@@ -1,4 +1,3 @@
-mixset StateMachine { 
 // Fragment source file: Umple_Code.ump
 // Line : 212
   class UmpleModel {
@@ -121,5 +120,3 @@ mixset Trait {
       return null;
     } 
   } 
-
-}

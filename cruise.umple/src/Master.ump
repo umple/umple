@@ -80,3 +80,8 @@ use util/Util_Code.ump;
 use util/Ant.ump;
 use Builder_Code.ump;
 use GraphWalking.ump;
+
+
+mixset FeatureModel {
+  require [Mixset];
+}

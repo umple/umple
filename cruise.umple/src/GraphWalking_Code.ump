@@ -32,139 +32,141 @@ class Graph
   public void clearNodes(){ return; }
 }
 
-class StateMachineGraph 
-{
-  // Constructor for Nested state machines
-  public StateMachineGraph(Node startNode, String smName, boolean isDepthFirst) 
+mixset StateMachine {
+  class StateMachineGraph 
   {
-    if (startNode != null)
+    // Constructor for Nested state machines
+    public StateMachineGraph(Node startNode, String smName, boolean isDepthFirst) 
     {
-      this.startNode = startNode;
-      this.startNode.visit();
-    }
-    this.smName = smName;
-    this.isDepthFirst = isDepthFirst;
-    this.isNested = true;
+      if (startNode != null)
+      {
+        this.startNode = startNode;
+        this.startNode.visit();
+      }
+      this.smName = smName;
+      this.isDepthFirst = isDepthFirst;
+      this.isNested = true;
 
-    if(isDepthFirst) 
-    {
-      this.stack = new Stack<Node>();
-      this.stack.push(this.startNode);
-    }
-    else
-    {
-      this.queue = new LinkedList<Node>();
-      this.queue.addFirst(this.startNode);
-    }
-  }
-
-  // Constructor for flat state machines
-  public StateMachineGraph(Node startNode, boolean isDepthFirst)
-  {
-    if (startNode != null)
-    {
-      this.startNode = startNode;
-      this.startNode.visit();
+      if(isDepthFirst) 
+      {
+        this.stack = new Stack<Node>();
+        this.stack.push(this.startNode);
+      }
+      else
+      {
+        this.queue = new LinkedList<Node>();
+        this.queue.addFirst(this.startNode);
+      }
     }
 
-    this.isDepthFirst = isDepthFirst;
-    this.isNested = false;
-
-    if(isDepthFirst)
+    // Constructor for flat state machines
+    public StateMachineGraph(Node startNode, boolean isDepthFirst)
     {
-      this.stack = new Stack<Node>();
-      this.stack.push(this.startNode);
+      if (startNode != null)
+      {
+        this.startNode = startNode;
+        this.startNode.visit();
+      }
+
+      this.isDepthFirst = isDepthFirst;
+      this.isNested = false;
+
+      if(isDepthFirst)
+      {
+        this.stack = new Stack<Node>();
+        this.stack.push(this.startNode);
+      }
+      else
+      {
+        this.queue = new LinkedList<Node>();
+        this.queue.addFirst(this.startNode);
+      }
     }
-    else
+
+    public Node nextNode() 
     {
-      this.queue = new LinkedList<Node>();
-      this.queue.addFirst(this.startNode);
+      if (startNode == null) return null;
+      if (this.isDepthFirst) return walkDFS();
+      return walkBFS();
     }
-  }
 
-  public Node nextNode() 
-  {
-    if (startNode == null) return null;
-    if (this.isDepthFirst) return walkDFS();
-    return walkBFS();
-  }
-
-  public void clearNodes()
-  {
-    if (startNode == null) return;
-
-    HashSet<Node> visited = new HashSet<Node>();
-    Stack<Node> nodes = new Stack<Node>();
-    nodes.push(startNode);
-    visited.add(startNode);
-
-    while (! nodes.isEmpty())
+    public void clearNodes()
     {
-      State state = (State) nodes.pop();
+      if (startNode == null) return;
+
+      HashSet<Node> visited = new HashSet<Node>();
+      Stack<Node> nodes = new Stack<Node>();
+      nodes.push(startNode);
+      visited.add(startNode);
+
+      while (! nodes.isEmpty())
+      {
+        State state = (State) nodes.pop();
+        
+        for (Transition transition: state.getTransitions()) 
+        {
+          State nextState = (State) transition.getNextState();
+          StateMachine sm = nextState.getStateMachine();
+
+          if ((! visited.contains(nextState)) && (!isNested || sm.getName().equals(this.smName)))
+          {
+            visited.add(nextState);
+            nextState.clear();
+            nodes.push(nextState) ;
+          }
+        }
+      }
+      if (this.isDepthFirst)
+      {
+        this.stack.clear();
+        this.stack.push(this.startNode);
+      }
+      else
+      {
+        this.queue.clear();
+        this.queue.addFirst(this.startNode);
+      }
+    }
+
+    private Node walkDFS () 
+    { 
+      if (stack == null || stack.isEmpty()) return null;
+      State state = (State) stack.pop();
       
       for (Transition transition: state.getTransitions()) 
       {
         State nextState = (State) transition.getNextState();
         StateMachine sm = nextState.getStateMachine();
 
-        if ((! visited.contains(nextState)) && (!isNested || sm.getName().equals(this.smName)))
+        if ((! nextState.getIsVisited()) && (!isNested || sm.getName().equals(this.smName)))
         {
-          visited.add(nextState);
-          nextState.clear();
-          nodes.push(nextState) ;
+          nextState.visit();
+          stack.push(nextState) ;
         }
       }
-    }
-    if (this.isDepthFirst)
-    {
-      this.stack.clear();
-      this.stack.push(this.startNode);
-    }
-    else
-    {
-      this.queue.clear();
-      this.queue.addFirst(this.startNode);
-    }
-  }
 
-  private Node walkDFS () 
-  { 
-    if (stack == null || stack.isEmpty()) return null;
-    State state = (State) stack.pop();
-    
-    for (Transition transition: state.getTransitions()) 
-    {
-      State nextState = (State) transition.getNextState();
-      StateMachine sm = nextState.getStateMachine();
+      return state;
+    }
 
-      if ((! nextState.getIsVisited()) && (!isNested || sm.getName().equals(this.smName)))
+    private Node walkBFS () 
+    {
+      if (queue == null || queue.isEmpty()) return null;
+      State state = (State) queue.pollLast();
+      state.visit();
+
+      for (Transition transition: state.getTransitions()) 
       {
-        nextState.visit();
-        stack.push(nextState) ;
+        State nextState = (State) transition.getNextState();
+        StateMachine sm = nextState.getStateMachine();
+        if ((! nextState.getIsVisited()) && (!isNested || sm.getName().equals(this.smName)))
+        {
+          nextState.visit();
+          queue.addFirst(nextState);
+        }
       }
+
+      return state;
     }
-
-    return state;
-  }
-
-  private Node walkBFS () 
-  {
-    if (queue == null || queue.isEmpty()) return null;
-    State state = (State) queue.pollLast();
-    state.visit();
-
-    for (Transition transition: state.getTransitions()) 
-    {
-      State nextState = (State) transition.getNextState();
-      StateMachine sm = nextState.getStateMachine();
-      if ((! nextState.getIsVisited()) && (!isNested || sm.getName().equals(this.smName)))
-      {
-        nextState.visit();
-        queue.addFirst(nextState);
-      }
-    }
-
-    return state;
   }
 }
 
