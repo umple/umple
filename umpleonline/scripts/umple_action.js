@@ -19,7 +19,11 @@ Action.gentime = new Date().getTime();
 Action.savedCanonical = "";
 Action.gdprHidden = false;
 Action.update = "";
-Action.justUpdatetoSaveLater = false;
+let justUpdatetoSaveLater = false;
+
+Action.setjustUpdatetoSaveLater = function(state){
+  justUpdatetoSaveLater = state;
+}
 
 Action.clicked = function(event)
 {
@@ -386,7 +390,7 @@ Action.redo = function()
 
 Action.redoOrUndo = function(isUndo)
 {
-  Action.justUpdatetoSaveLater = true;
+  Action.setjustUpdatetoSaveLater(true);
   var afterHistoryChange = "";
   if (Action.manualSync && Action.diagramInSync)
   {
@@ -483,7 +487,7 @@ Action.loadFileCallback = function(response)
   Action.freshLoad = true;
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   if (Object.keys(TabControl.tabs).length > 1) return;
-
+  
   console.log("saved for loadFile");
   TabControl.getCurrentHistory().save(response.responseText,"loadFileCallback");
   Page.setUmpleCode(response.responseText);
@@ -535,6 +539,7 @@ Action.loadTaskCallback = function(response)
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   if (Object.keys(TabControl.tabs).length > 1) return;
 
+  Action.setjustUpdatetoSaveLater(true);
   console.log("saved for loadTask");
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskCallback");
   var responseArray = response.responseText.split("task delimiter");
@@ -561,6 +566,7 @@ Action.loadTaskExceptCodeCallback = function(response)
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   //if (Object.keys(TabControl.tabs).length > 1) return;
 
+  Action.setjustUpdatetoSaveLater(true);
   console.log("saved for loadTaskExceptCode");
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
   var responseArray = response.responseText.split("task delimiter");
@@ -1492,7 +1498,6 @@ Action.umpleCanvasClicked = function(event)
 // and then refresh the diagram.
 Action.directUpdateCommandCallback = function(response)
 {
-  console.log("the direct update one");
   Action.updateUmpleTextCallback(response);
   Action.redrawDiagram();
 }
@@ -1501,18 +1506,17 @@ Action.directUpdateCommandCallback = function(response)
 // such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
 {
-  console.log(DiagramEdit.textChangeQueue.length+" updater: "+Action.justUpdatetoSaveLater);
-  if (!Action.justUpdatetoSaveLater){
+  if (!justUpdatetoSaveLater){
     console.log("saved for TextCallback");
     TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
-    Action.justUpdatetoSaveLater = true;
+    Action.setjustUpdatetoSaveLater(true);
   }
   else{
-    if (DiagramEdit.textChangeQueue.length == 0)
-    Action.justUpdatetoSaveLater = false;
+    if (DiagramEdit.textChangeQueue.length == 0){
+      Action.setjustUpdatetoSaveLater(false);
+    }
   }
   Action.freshLoad = true;
-  console.log("after saving history for text");
   
   Page.setUmpleCode(response.responseText, Action.update.codeChange);
   // DEBUG
@@ -1614,15 +1618,13 @@ Action.loadExample = function loadExample()
 Action.loadExampleCallback = function(response)
 {
   Action.freshLoad = true;
-  Action.justUpdatetoSaveLater = true;
+  Action.setjustUpdatetoSaveLater(true);
   Page.setUmpleCode(response.responseText);
   Page.hideLoading();
-  console.log("saved for loadExample");
-  TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
   Action.updateUmpleDiagram();
   Action.setCaretPosition("0");
   Action.updateLineNumberDisplay();
-  console.log("done with save");
+  TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
 }
 
 Action.customSizeTyped = function()
@@ -1953,6 +1955,7 @@ Action.directAddClass = function(className) {
 
   Page.setFeedbackMessage("Adding class "+className);  
   console.log("added class");
+  Action.setjustUpdatetoSaveLater(false);
   Action.ajax(Action.directUpdateCommandCallback,format("action=addClass&actionCode={0}",umpleJson));
 
   // After a pause to let the ajax return, then redraw the diagram.
@@ -2217,9 +2220,9 @@ Action.umpleTypingActivity = function(target) {
 Action.processTyping = function(target, manuallySynchronized)
 {
   // Save in history after a pause in typing
-  Action.justUpdatetoSaveLater = true;
   if (target != "diagramEdit") 
   {
+    Action.setjustUpdatetoSaveLater(true);
     console.log("saved for processTyping {not diagram edit}");
   }
 
