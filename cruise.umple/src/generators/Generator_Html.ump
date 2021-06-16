@@ -342,6 +342,9 @@ class TableElement {
   	void setTitles(String titles []) {
 		for(int index=0 ;index<columns; index++){
 			Element th = new Element(ITagsConstants.TH, headersRow);
+			if (titles[index]=="Cyclomatic Complexity") {
+			  th.addAttribute (new AttributeElement("id", "mccabeHeader"));
+			}
 			th.appendText(titles[index]);
 		}
   	}

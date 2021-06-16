@@ -390,7 +390,7 @@ class McCabeMetricVisitor {
 		doc.createParagraphElement("McCabe Metrics", false);
 		tbl = doc.createTable(4);
 		tbl.setBorder(1);
-		tbl.setTitles(new String[] {"Class Name","#Conditions","#Iterations","Total"});
+		tbl.setTitles(new String[] {"Class Name","#Conditions","#Iterations","Cyclomatic Complexity"});
 	}
 	
 	void done() {
