@@ -1,0 +1,27 @@
+
+use M2;
+
+class AspectClass {
+  
+  void doMethodOne(){  }
+  
+  void doMethodTwo(){ }
+  
+  after doMethodOne{  
+    mixset M1 {
+      // M1 code to be removed.
+      int x = 1;
+    }
+    
+  }
+  
+  after doMethodTwo{
+    mixset M2 {
+      // M2 code to stay.
+      int y =0;
+    }
+    
+  }
+  
+  
+}

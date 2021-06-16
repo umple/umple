@@ -61,21 +61,22 @@ class UmpleInternalParser
   {
     parser.addGrammarFile("/mixset/umple_mixsets.grammar"); 
   }
-	// prepare mixsets that are inside a state machine. 
-  private void analyzeMixsetDefinition(List<Token> tokenList , StateMachine stateMachine)
-  {  
-    if (tokenList.size() < 1)
-    return;
-    
-    for(Token aToken : tokenList)
-    {
-      if(stateMachine.getUmpleClass().getName() == null)
+  mixset StateMachine {
+    // prepare mixsets that are inside a state machine. 
+    private void analyzeMixsetDefinition(List<Token> tokenList , StateMachine stateMachine)
+    {  
+      if (tokenList.size() < 1)
       return;
-      //otherwise
-     	analyzeMixsetBodyToken(aToken);
-    }  
-	}
-
+      
+      for(Token aToken : tokenList)
+      {
+        if(stateMachine.getUmpleClass().getName() == null)
+        return;
+        //otherwise
+        analyzeMixsetBodyToken(aToken);
+      }  
+    }
+  }
   private void analyzeMixsetBodyToken(Token token) 
   {
     Token mixsetBodyToken = token.getSubToken("extraCode");
@@ -450,9 +451,19 @@ class UmpleInternalParser
       
     }
   }
-    
-  
+  // a helper method that process pure code to either remove it or to let mixset content stay.
+  private String processInlineMixset(String methodCode) {
+	// process mixsets inside code 
+	   ArrayList<MixsetInMethod> mixsetInCodeList = MethodBody.getMixsetsFromCode(methodCode) ;
+	  for (MixsetInMethod aMixsetInMethod : mixsetInCodeList) 
+	  {
+	    // update the code according to  use statements (of mixsets)
+	    methodCode = MethodBody.handelMixsetInsideMethod(this.getModel(), aMixsetInMethod, methodCode);	        		
+	  }
+    return methodCode;
+  }  
 }
+
 mixset AspectInjection {
   class CodeInjection{
     String injectionlabel = "";
@@ -615,7 +626,7 @@ mixset Template {
            mixsetIsUsed = true;
            //first process children
            for(MixsetInMethod childMixsetInMethod : mixsetInMethod.getChildMixsets())
-             handelMixsetInsideMethod(umodel, childMixsetInMethod, sourceCodeBody);
+             sourceCodeBody = handelMixsetInsideMethod(umodel, childMixsetInMethod, sourceCodeBody);
            //Then ...
            String methodCode = sourceCodeBody;
            Pattern labelPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+\\{");

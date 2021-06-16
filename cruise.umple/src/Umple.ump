@@ -500,10 +500,13 @@ class ConstraintVariable
     /*
      * ConstraintStates encapsulate the state data in a statemachine expression such as [sm is in state st], this is a leaf in the constraint tree/
      */
+
     class ConstraintState
     {
+      mixset StateMachine {
       State state;
       key { state }
+      }
     }
 
     /*
@@ -511,8 +514,10 @@ class ConstraintVariable
      */
     class ConstraintStateMachine
     {
+      mixset StateMachine {
       StateMachine stateMachine;
       key { stateMachine }
+      }
     }
     
     /*
@@ -820,8 +825,9 @@ class UmpleTrait {
 
   //--- before setExtendsTrait { if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; } }
 
-
+  mixset StateMachine {
   before addStateMachine { if (isImmutable()) { return false; } }
+  }
 
   boolean isUmpleTrait() {return true;}
 }
@@ -844,9 +850,10 @@ class GeneralTPApplied {
 	String[] parameters;
 	1 -> 0..1 Position positions;
 	1 -> * MethodTemplateSignature;
+  mixset StateMachine {
 	1 -> * StateMachineTemplateSignature;
 	1 -> * StateMachineModifier;
-
+  }
 }
 
 class MethodTemplateSignature{
@@ -855,6 +862,7 @@ class MethodTemplateSignature{
 	alias;
 }
 
+mixset StateMachine {
 class StateMachineTemplateSignature{
 	modifier;
 	srcStateMachine;
@@ -891,7 +899,7 @@ class ExtendStateByStateMachine{
   isA StateMachineModifier;
   String[] desStates;
 }
-
+}
 /*
  * A depend relationship indicates a package on which this class depends
  */
