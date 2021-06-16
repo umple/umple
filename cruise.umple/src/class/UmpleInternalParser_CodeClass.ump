@@ -3268,7 +3268,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
                 token.getPosition().getLineNumber()+"", token.getPosition().getFilename(), ""));
           else
           {
-            cb.setCode(token.getValue());
+            String methodCode = token.getValue();
+            // process mixsets inside code 
+            mixset Mixset {
+              methodCode = processInlineMixset(token.getValue());
+            } // end of MIXSET 
+            cb.setCode(methodCode);
             aMethod.setCodePosition(token.getPosition());
             
             //559b
@@ -4083,17 +4088,21 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         langs.add(sub.getValue());
       }
       if(sub.is("code"))
-      {          
+      {
+        String aspectCode = sub.getValue();
+        mixset Mixset {
+        aspectCode = processInlineMixset(sub.getValue());
+        }
         if(langs.size()==0)
         {
-          cb.setCode(sub.getValue());
+          cb.setCode(aspectCode);
           injection.setCodePosition(sub.getPosition());
         }
         else
         {
           for(String lang:langs)
             {
-                cb.setCode(lang,sub.getValue());
+                cb.setCode(lang,aspectCode);
                 if("Java".equals(lang))
                 {
                   injection.setCodePosition(sub.getPosition());
