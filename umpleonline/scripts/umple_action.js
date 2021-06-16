@@ -19,6 +19,7 @@ Action.gentime = new Date().getTime();
 Action.savedCanonical = "";
 Action.gdprHidden = false;
 Action.update = "";
+Action.justUpdatetoSaveLater = false;
 
 Action.clicked = function(event)
 {
@@ -385,6 +386,7 @@ Action.redo = function()
 
 Action.redoOrUndo = function(isUndo)
 {
+  Action.justUpdatetoSaveLater = true;
   var afterHistoryChange = "";
   if (Action.manualSync && Action.diagramInSync)
   {
@@ -415,6 +417,7 @@ Action.redoOrUndo = function(isUndo)
   Action.freshLoad = true;
   Page.setUmpleCode(afterHistoryChange);
   if (!Action.manualSync) Action.updateUmpleDiagram();
+
   
   setTimeout(function () { // Delay so it doesn't get erased
     // Page.setFeedbackMessage("Changed line "+theDiff[3]+" "+theDiff[1]);
@@ -1498,9 +1501,18 @@ Action.directUpdateCommandCallback = function(response)
 // such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
 {
-  console.log("saved for TextCallback");
-  TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
+  console.log(DiagramEdit.textChangeQueue.length+" updater: "+Action.justUpdatetoSaveLater);
+  if (!Action.justUpdatetoSaveLater){
+    console.log("saved for TextCallback");
+    TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
+    Action.justUpdatetoSaveLater = true;
+  }
+  else{
+    if (DiagramEdit.textChangeQueue.length == 0)
+    Action.justUpdatetoSaveLater = false;
+  }
   Action.freshLoad = true;
+  console.log("after saving history for text");
   
   Page.setUmpleCode(response.responseText, Action.update.codeChange);
   // DEBUG
@@ -1515,8 +1527,7 @@ Action.updateUmpleTextCallback = function(response)
     DiagramEdit.pendingChanges = false;
   }
   else{
-    //console.log('in else');
-    //DiagramEdit.doTextUpdate();
+    DiagramEdit.doTextUpdate();
   }
   
   //Uncomment for testing purposes only - to update the image after updating the text
@@ -1548,8 +1559,6 @@ Action.setExampleType = function setExampleType()
      jQuery("#defaultExampleOption3").prop("selected",true);
    }   
 }
-
-var exampleMessageActive=-1; // used to set the display of Example Message off
 
 Action.loadExample = function loadExample()
 {
@@ -1596,7 +1605,6 @@ Action.loadExample = function loadExample()
   var newURL="?example="+exampleName+diagramType;
   Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+exampleName+" example</a>");
 
-  exampleMessageActive = TabControl.getCurrentHistory().currentIndex;
  // TODO - fix so history works nicely
  //   if(history.pushState) {history.pushState("", document.title, newURL);}
            
@@ -1606,6 +1614,7 @@ Action.loadExample = function loadExample()
 Action.loadExampleCallback = function(response)
 {
   Action.freshLoad = true;
+  Action.justUpdatetoSaveLater = true;
   Page.setUmpleCode(response.responseText);
   Page.hideLoading();
   console.log("saved for loadExample");
@@ -1613,6 +1622,7 @@ Action.loadExampleCallback = function(response)
   Action.updateUmpleDiagram();
   Action.setCaretPosition("0");
   Action.updateLineNumberDisplay();
+  console.log("done with save");
 }
 
 Action.customSizeTyped = function()
@@ -2207,15 +2217,13 @@ Action.umpleTypingActivity = function(target) {
 Action.processTyping = function(target, manuallySynchronized)
 {
   // Save in history after a pause in typing
+  Action.justUpdatetoSaveLater = true;
   if (target != "diagramEdit") 
   {
     console.log("saved for processTyping {not diagram edit}");
-    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
   }
-  //console.log ("edit made");
-  if (TabControl.getCurrentHistory().currentIndex-exampleMessageActive>2){
-    Page.setExampleMessage("");
-  }
+
+  Page.setExampleMessage("");
   
   if (!Action.manualSync || manuallySynchronized)
   {
@@ -2239,6 +2247,11 @@ Action.processTyping = function(target, manuallySynchronized)
     
     //Page.enableDiagram(true);
   }
+
+  if (target != "diagramEdit"){
+    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
+  }
+
 }
 
 Action.updateLayoutEditorAndDiagram = function()
