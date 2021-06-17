@@ -501,3 +501,43 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
 .tabname br {
   display: none
 }
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  opacity: 0;
+  width: 120px;
+  background-color: #dadada;
+  color: #333;
+  font-weight: normal;
+  text-align: center;
+  padding: 5px 0;
+  border: 2px solid #aaaaaa;
+  padding: 5px; box-shadow: 0px 0px 5px grey;
+  border-radius: 6px;
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+.tooltiptext a{
+  text-decoration: none;
+}
+.tooltiptext a:link{
+  color: #0066CC;
+}
+.tooltiptext a:hover{
+  color: #005fbe;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.5s;
+  top: 20px;
+  left: 10px;
+}

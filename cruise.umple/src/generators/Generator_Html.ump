@@ -342,10 +342,11 @@ class TableElement {
   	void setTitles(String titles []) {
 		for(int index=0 ;index<columns; index++){
 			Element th = new Element(ITagsConstants.TH, headersRow);
-			if (titles[index]=="Cyclomatic Complexity") {
-			  th.addAttribute (new AttributeElement("id", "mccabeHeader"));
-			}
 			th.appendText(titles[index]);
+			if (titles[index]=="Cyclomatic Complexity") {
+			  th.appendText ("<span class =\"tooltiptext\"> <a target=\"helppage\" href=\"https://en.wikipedia.org/wiki/Cyclomatic_complexity\">Cyclomatic Complexity</a> = Number of Conditions + Number of Iterations + 1 </span> ");
+			  th.addAttribute(new AttributeElement(IAttributesConstants.ATTRIBUTE_CLASS, "tooltip"));
+			}
 		}
   	}
   	
