@@ -12,6 +12,7 @@ import java.util.List;
 import cruise.umple.compiler.Method;
 import cruise.umple.compiler.MethodBody;
 import cruise.umple.compiler.exceptions.*;
+import cruise.umple.compiler.php.PhpClassGenerator;
 import java.io.File;
 
 public class UmpleMixsetTest {
@@ -656,6 +657,45 @@ public class UmpleMixsetTest {
     SampleFileWriter.destroy(generatedFile);
 
     
+  }
+  @Test
+  public void inlineMixsetsInsideMethodPhpCode()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseMixsetsInsideMethod_generic.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(true);
+    model.run();
+    PhpClassGenerator phpGenerator = new PhpClassGenerator();		
+    String code = phpGenerator.getCode(model, model.getUmpleClass(0));
+    Assert.assertTrue(code.contains("M2 is used mixset."));
+    // not included mixsets
+    Assert.assertFalse(code.contains("M1 is not used mixset"));
+    // no mixset definitions 
+    Assert.assertFalse(code.contains("mixset M1 {"));
+    Assert.assertFalse(code.contains("mixset M2 {"));
+    //delete generated file
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/AphpClass.java");
+  }
+  @Test
+  public void inlineMixsetsInsideAspectCode()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseMixsetsInsideAspect.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(true);
+    model.run();
+    String code = model.getGeneratedCode().get("AspectClass");
+    Assert.assertTrue(code.contains("public void doMethodOne()"));
+    Assert.assertTrue(code.contains("public void doMethodTwo"));
+    Assert.assertTrue(code.contains("M2 code to stay"));
+    Assert.assertTrue(code.contains("int y"));
+    // not included mixsets
+    Assert.assertFalse(code.contains("M1 code to be removed"));
+    Assert.assertFalse(code.contains("int x"));
+    // no mixset definitions 
+    Assert.assertFalse(code.contains("mixset M1 {"));
+    Assert.assertFalse(code.contains("mixset M2 {"));
+    //delete generated file
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/AspectClass.java");
   }
 
 }
