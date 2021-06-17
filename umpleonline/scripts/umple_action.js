@@ -466,6 +466,7 @@ Action.loadFile = function()
   var filename = Page.getFilename();
   if (filename != "")
   {
+    Action.setjustUpdatetoSaveLater(true);
     if (Page.getModel().substring(0, 8) == "taskroot")
     {
       Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&isTask=1&filename={0}",filename));
@@ -490,7 +491,7 @@ Action.loadFileCallback = function(response)
   
   console.log("saved for loadFile");
   TabControl.getCurrentHistory().save(response.responseText,"loadFileCallback");
-  Page.setUmpleCode(response.responseText);
+  Page.setUmpleCode(response.responseText, true);
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {
     var extractedName = TabControl.extractNameFromCode(response.responseText);
@@ -2133,14 +2134,14 @@ Action.umpleCodeMirrorCursorActivity = function() {
 }
 
 Action.umpleCodeMirrorTypingActivity = function() {
-  if(Action.freshLoad == false) {
-    //console.log("codeMirrorEditor");
+  if(Action.freshLoad == false && !justUpdatetoSaveLater) {
     Page.codeMirrorEditor.save();
     Action.umpleTypingActivity("codeMirrorEditor");
   }
   else {
     Action.freshLoad = false;
   }
+    Action.setjustUpdatetoSaveLater(false);
 }
 
 Action.trimMultipleNonPrintingAndComments = function(text) {
@@ -2212,7 +2213,6 @@ Action.umpleTypingActivity = function(target) {
   {
     clearTimeout(Action.oldTimeout);
   }
-  
   if(target == "diagramEdit") Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', 500);
   else Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', Action.waiting_time);
 }
