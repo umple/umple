@@ -50,9 +50,11 @@ def buildAliases = [
    ],
    'quickbuild' : [
         'cleanUpUmple',
+        'codeGen',
+        'umpleParser',
         'resetUmpleSelf',
         'compileJava',
-        'jar',
+        'packageAllJars'
     ],
    'fullbuild' : [
         'cleanUp',
@@ -65,13 +67,14 @@ def buildAliases = [
         'compileJava',
         'packageAllJars',
         'resetVersion',
-        'packageDocs',
         'buildTestUnitGeneratorAndParser',
-        'testbedTests',
         'test',
+        'packageDocs',
+        'testbedTests',
         'allUserManualAndExampleTests'
    ],
    'testall' : [
+   'cleanUpTests',
         'buildTestUnitGeneratorAndParser',
         'testbedTests',
         'allUserManualAndExampleTests'
@@ -251,6 +254,8 @@ subprojects{
     if (project.name != "cruise.umplificator" && project.name != "sandbox" && project.name != "cruise.umple.validator") {
         rootProject.tasks.getByName("compileTestJava").dependsOn copyUmpleTest
         rootProject.tasks.getByName("compileTestJava").dependsOn ':copyUmpleOnlineTestFiles'
+        rootProject.tasks.getByName("compileTestJava").dependsOn ':copyDocs'
+        rootProject.tasks.getByName("compileTestJava").dependsOn ':compileJava'
     }
 }
 
@@ -276,6 +281,7 @@ task copyUmpleOnlineTestFiles(type: Copy) {
     }
 }
 tasks.getByName("test").dependsOn copyUmpleOnlineTestFiles
+tasks.getByName("test").dependsOn compileJava
 
 // Clean up task
 task ('cleanUp') {
@@ -318,6 +324,16 @@ task ('cleanUpDeployment') {
 test {
     workingDir = "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir"
     exclude "**/CPPCodeGenValidatorTest.class" // TODO - Fix eclipse CDT message: Unresolved inclusion: <HEADER_FILE>
+    dependsOn ':copyDocs'
+    dependsOn 'javaTestbedCompile'
+    doLast {
+     delete "${rootProject.ext.testBaseDir}/workingDir/A.java"
+     delete "${rootProject.ext.testBaseDir}/workingDir/B.java"
+     delete "${rootProject.ext.testBaseDir}/workingDir/C.java"
+    }
+}
+compileTestJava{
+  dependsOn 'javaTestbedCompile'
 }
 
 sourceSets {
@@ -809,7 +825,15 @@ task javaTestbedCompile(type: JavaCompile) {
     source "${rootProject.projectDir.toString()}/testbed/src-gen-umple"
     source "${rootProject.projectDir.toString()}/testbed/test"
     exclude '**/*.ump', '**/.git*', '**/data', '**/compiler'
+
     dependsOn javaTestbedCompileUmple
+    dependsOn ':compileJava'
+    dependsOn copyDocs
+    dependsOn ':packageDocumenter'
+    dependsOn jar
+    dependsOn ':packageSync'
+    dependsOn ':packageRunner'
+    dependsOn ':packageStatistics'
 }
 
 task javaTestbedTest(type: Test) {
@@ -877,12 +901,10 @@ task phpTestbedTest {
         def command = "php AllXmlTests.php"
         println(command)
         def proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_php/test"))
-        proc.waitForProcessOutput(System.out, System.err);
 
         command = "php AllTests.php"
         println(command)          
         proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_php/test"))
-        proc.waitForProcessOutput(System.out, System.err);
         
         file = new File( "${rootProject.projectDir.toString()}/testbed_php/test/AllTests.php" )
     	newconfig = file.text.replace( "defaultPath = \"false\"", "defaultPath = \"true\"")
@@ -916,7 +938,6 @@ task rubyTestbedTest {
         def command = "rake || true" // this shouldn't work since the rake tasks expects a different jar location
         println(command)             // so we'll allow catch it for now
         def proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_ruby"))
-        proc.waitForProcessOutput(System.out, System.err);
         println("RUBY tests completed!")
     }
 }
@@ -1067,7 +1088,7 @@ task executeDocJar (type: JavaExec){
  	main = "cruise.umple.docs.DocumenterMain"
  	args = ["${rootProject.projectDir.toString()}/build/reference", distpath]
  	jvmArgs = ['-Xmx500m']
- 	
+ 	dependsOn 'javaTestbedCompile'
  }
 
  
@@ -1077,6 +1098,7 @@ task executeDocJar (type: JavaExec){
    dependsOn copybuilddir
    dependsOn copybuilddir1
    dependsOn executeDocJar
+   dependsOn 'javaTestbedCompile'
  }
  
  // =====================
