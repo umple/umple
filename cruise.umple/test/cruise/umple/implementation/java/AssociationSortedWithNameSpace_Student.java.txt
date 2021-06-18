@@ -3,8 +3,9 @@
 
 
 import java.util.*;
+import java.io.Serializable;
 
-public class Student
+public class Student implements java.io.Serializable
 {
 
   //------------------------
@@ -26,14 +27,7 @@ public class Student
   {
     id = aId;
     ProfsPriority = 
-      new Comparator<Mentor>(){
-        @Override
-        public int compare(Mentor arg0, Mentor arg1)
-        {
-          return ((String)arg0.getName()).compareTo(
-                 ((String)arg1.getName()));
-        }
-      };
+      Comparator.comparing(Mentor::getName);
     Profs = new ArrayList<Mentor>();
   }
 
@@ -151,6 +145,16 @@ public class Student
   }
 
 
+
+  private void readObject(java.io.ObjectInputStream in)
+  throws Exception
+  {
+    in.defaultReadObject();
+
+    ProfsPriority = 
+      Comparator.comparing(Mentor::getName);
+  }
+  
   public void delete()
   {
     ArrayList<Mentor> copyOfProfs = new ArrayList<Mentor>(Profs);

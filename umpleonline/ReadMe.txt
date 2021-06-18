@@ -8,8 +8,6 @@ Key files and directories means contents created at runtime
 
   umple.php - main program of UmpleOnline
 
-  vml.php - main program of VML, an alternative tool for variability. This is obsolete and no longer works. Use Umple mixsets instead. This will be deleted shortly.
-
   simulate.php - code for the simulator (not recently maintained)
 
   umplibrary
