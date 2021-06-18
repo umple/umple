@@ -100,14 +100,6 @@ class Activity {displayColor "#BBDDFF";}
 class Transition {displayColor "#BBDDFF";}
 class Guard {displayColor "#BBDDFF";}
 
-// Purple for VML stuff
-class VmlParser {displayColor "#EECCFF";}
-class VmlSystem {displayColor "#EECCFF";}
-class Concern {displayColor "#EECCFF";}
-class VariationPoint {displayColor "#EECCFF";}
-class Variant {displayColor "#EECCFF";}
-class CodeSnippet {displayColor "#EECCFF";}
-
 // Violet for diagram stuff
 class Documenter {displayColor "#FFCCEE";}
 class ContentParser {displayColor "#FFCCEE";}
