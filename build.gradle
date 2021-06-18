@@ -484,26 +484,6 @@ task packageRunner(type: Jar) {
     dependsOn ':compileJava'
 }
 
-// Task for generating the VML jar file
-task packageVml(type: Jar) {
-    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
-    from rootProject.ext.classfileOutputDir
-    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archiveFileName = "umplevml-${rootProject.ext.umpleCurrentVersion}.jar"
-    manifest {
-        attributes 'Main-Class': 'cruise.vml.VmlConsole',
-                   'Class-Path': configurations.ivy,
-                   'Built-By': 'Cruise - University of Ottawa',
-                   'Version': rootProject.ext.umpleCurrentVersion
-    }
-    doFirst {
-        println("Compiling umplevml-${rootProject.ext.umpleCurrentVersion}.jar using " + rootProject.ext.classfileOutputDir)
-    }
-    dependsOn ':processResources'
-    dependsOn 'copyDocs'
-    dependsOn ':compileJava'
-}
-
 // Generate all jar files
 task packageAllJars {
     dependsOn jar
@@ -511,7 +491,6 @@ task packageAllJars {
     dependsOn packageDocumenter
     dependsOn packageSync
     dependsOn packageRunner
-    dependsOn packageVml
 }
 
 // =======
@@ -583,14 +562,11 @@ task deployUmpleonline(type: Copy) {
     }
     include "umplesync-${rootProject.ext.umpleLastVersion}.jar"
     include "umple-${rootProject.ext.umpleLastVersion}.jar"
-    include "umplevml-${rootProject.ext.umpleLastVersion}.jar"
     rename ("umplesync-${rootProject.ext.umpleLastVersion}.jar", 'umplesync.jar')
     rename ("umple-${rootProject.ext.umpleLastVersion}.jar", 'umple.jar')
-    rename ("umplevml-${rootProject.ext.umpleLastVersion}.jar", "vml.jar")
     
     dependsOn ':jar'
     dependsOn ':packageSync'
-    dependsOn ':packageVml'
 }
 
 
@@ -605,7 +581,6 @@ task deployUpdatedLib(type: Copy) {
     }
     include "umplesync-${rootProject.ext.umpleLastVersion}.jar"
     include "umple-${rootProject.ext.umpleLastVersion}.jar"
-    include "umplevml-${rootProject.ext.umpleLastVersion}.jar"
 }
 
 task deploy {
