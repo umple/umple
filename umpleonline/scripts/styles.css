@@ -526,12 +526,6 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
 .tooltiptext a{
   text-decoration: none;
 }
-.tooltiptext a:link{
-  color: #0066CC;
-}
-.tooltiptext a:hover{
-  color: #005fbe;
-}
 
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
