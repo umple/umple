@@ -390,7 +390,6 @@ Action.redo = function()
 
 Action.redoOrUndo = function(isUndo)
 {
-  Action.setjustUpdatetoSaveLater(true);
   var afterHistoryChange = "";
   if (Action.manualSync && Action.diagramInSync)
   {
@@ -422,6 +421,7 @@ Action.redoOrUndo = function(isUndo)
   Page.setUmpleCode(afterHistoryChange);
   if (!Action.manualSync) Action.updateUmpleDiagram();
 
+  Action.setjustUpdatetoSaveLater(true);
   
   setTimeout(function () { // Delay so it doesn't get erased
     // Page.setFeedbackMessage("Changed line "+theDiff[3]+" "+theDiff[1]);
