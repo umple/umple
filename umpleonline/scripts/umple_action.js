@@ -1510,12 +1510,6 @@ Action.updateUmpleTextCallback = function(response)
   if (!justUpdatetoSaveLater){
     console.log("saved for TextCallback");
     TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
-    Action.setjustUpdatetoSaveLater(true);
-  }
-  else{
-    if (DiagramEdit.textChangeQueue.length == 0){
-      Action.setjustUpdatetoSaveLater(false);
-    }
   }
   Action.freshLoad = true;
   
@@ -1530,8 +1524,10 @@ Action.updateUmpleTextCallback = function(response)
   if (DiagramEdit.textChangeQueue.length == 0) 
   {
     DiagramEdit.pendingChanges = false;
+    Action.setjustUpdatetoSaveLater(false);
   }
   else{
+    Action.setjustUpdatetoSaveLater(true);
     DiagramEdit.doTextUpdate();
   }
   
@@ -1618,14 +1614,15 @@ Action.loadExample = function loadExample()
 
 Action.loadExampleCallback = function(response)
 {
+  console.log("set update to "+justUpdatetoSaveLater);
   Action.freshLoad = true;
-  Action.setjustUpdatetoSaveLater(true);
   Page.setUmpleCode(response.responseText);
   Page.hideLoading();
   Action.updateUmpleDiagram();
   Action.setCaretPosition("0");
   Action.updateLineNumberDisplay();
   TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
+  Action.setjustUpdatetoSaveLater(true);
 }
 
 Action.customSizeTyped = function()
