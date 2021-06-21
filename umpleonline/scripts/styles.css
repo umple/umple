@@ -3,7 +3,7 @@ body {
   margin-top: 10px; margin-right: 9px; margin-bottom: 10px;
 }
 p, ol, ul, div, h1, h2, h3, h4, b { 
-  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; color: #000000; 
+  font-family:  Arial, Verdana, Helvetica, sans-serif; font-size: 10pt; color: #000000; 
 }
 p.pagedescription { margin-left:5px; margin-top: 0px;}
 
@@ -97,17 +97,17 @@ div.palette ul {
 div.palette ul.first { margin-top:-10px; border-top: solid black 1px; }
 div.palette ul.second { margin-top:20px; border-top: solid black 1px; }
 div.palette h3 { 
-  letter-spacing: -1px; font-family: Verdana; line-height: 13px; font-size: 10.5pt;
+  font-family: Arial; line-height: 13px; font-size: 15pt; font-weight:900; letter-spacing: -1px;
 }
 div.palette li { 
-  z-index: 1; font-family: Verdana; margin:0; list-style-type: none; border: GhostWhite solid 1px; 
+  z-index: 1; margin:0; list-style-type: none; border: GhostWhite solid 1px; 
   font-size: 9pt; 
 }
 div.palette li.disabled { z-index: 2; background-color: GhostWhite; color: Silver;}
 div.palette li.disabled  img{ z-index: 1; cursor: not-allowed; opacity: 0.25;}
 div.palette li.subtitle { 
   text-shadow: 1px 1px 4px White; font-weight: bold; text-transform: uppercase; letter-spacing: 0px;
-  color: Black; margin: 0px 5px 8px 5px; font-family: Verdana; text-align: center; 
+  color: Black; margin: 0px 5px 8px 5px; text-align: center; 
   font-size:10pt; border-bottom: Silver double;
 }
 div.palette li.selected { 
@@ -122,16 +122,21 @@ div.palette .bookmarkableUrl { padding: 2px 14px 2px 14px; }
 .bookmarkableUrl { padding: 0px 0px 0px 8px; }
 
 /* Override jQueryUI style to remove gradient and extra image loading */
-#paletteColumn .ui-state-active { background: #999; } 
-#paletteColumn h3.ui-state-active>a:link { color: #3383bb; } /* Overrides a:link rule in accordion header */
-#paletteColumn .ui-state-default { background: #eee; } 
+#paletteColumn .ui-state-active { background: #fff; } 
+#paletteColumn h3.ui-accordion-header>a:link { color: #3383bb; } /* Overrides a:link rule in accordion header */
+#paletteColumn h3.ui-accordion-header-active>a:link { color: #3383bb;} /* Overrides a:link rule in accordion header */
+#paletteColumn .ui-state-default { background: #eee; }
 #paletteColumn .ui-widget-content { background: #c9c9c9; }
 
 /* BUTTONS */
 #paletteColumn div.jQuery-palette-button { 
-  font-family: Verdana; letter-spacing: 0.1px;
-  width: 132px; height: 25px; margin: auto; padding:0; 
+  letter-spacing: 0.1px;
+  width: 132px; height: 25px; margin: auto; padding:0px;
+  line-height: 25px;
   background: #eee;
+  color: #3383bb;
+  font-weight: bold;
+  font-size: 10pt;
 }
 
 #paletteColumn div.jQuery-palette-button.ui-state-hover { 
