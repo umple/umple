@@ -433,7 +433,7 @@ $output = $dataHandle->readData('model.ump');
       <div id="palette" class="palette">
 
         <!-- GROUP 1 OF OPTIONS -->
-        <h3><a href="#">SAVE & LOAD</a></h3>
+        <h3><a href="#saveload">SAVE & LOAD</a></h3>
         
         <div class="section">
           <ul class="first" id="saveLoad">
