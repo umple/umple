@@ -215,7 +215,7 @@ $output = $dataHandle->readData('model.ump');
               $surveyMessage = @file_get_contents("ump/aaSurvey.txt");
               if ($surveyMessage != FALSE && !empty($surveyMessage)){ // confirm file exists
                 $surveyData = json_decode($surveyMessage);
-                $randomSurveyRoll = mt_rand(1 , $surveyData->RandomizedFrequency);
+                $randomSurveyRoll = mt_rand(1 , $surveyData->RandomizedFrequency);           
                 ?>
                 <script> // pass JSON file and rolled number to js
                   window.randomSurveyRoll = <?php echo $randomSurveyRoll; ?>;
@@ -233,6 +233,21 @@ $output = $dataHandle->readData('model.ump');
                 $passToTip = TRUE;
               }
             }
+            
+            if(isset($_POST['surveyLogInfo'])){
+              $data = $_POST['surveyLogInfo'];              
+              $file = fopen('ump/aaSurveyLog.txt', 'a');
+              fwrite($file, $data);
+              fclose($file);
+            }
+
+            if(isset($_POST['surveyLogInfo2'])){
+              $data = $_POST['surveyLogInfo2'];              
+              $file = fopen('ump/aaSurveyLog.txt', 'a');
+              fwrite($file, $data);
+              fclose($file);
+            }
+
             if ($passToTip){ //tip of the day
               $tipOutput = readfile("scripts/tipProcessor.html");
               if ($tipOutput != FALSE && !empty($tipOutput)){
@@ -244,19 +259,19 @@ $output = $dataHandle->readData('model.ump');
         <span id="gdprtext" class="pretext">        
           This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="http://privacy.umple.org" target="privacy">Click to learn about privacy.</a>
         <br/></span>
-
+    
     <span style="font-size: 30%; white-space:nowrap;">
-    <a class="button2" href="http://dl.umple.org" target="dlpage" title="Go to the page that gives instructions on how to download Umple for use in Docker, or Eclipse or on the command line">Download</a>&nbsp;
-    <a class="button2" href="https://alumni.uottawa.ca/donation-form?fid=bp71rD2pbt0%3d&fdesc=vj8yiR3kw2%2bPwQCmy1Z8CfKc0F1zufF0wBCY%2fxboCy4%2bHJZne7BoLhQuKHwuRN4R5bhBEciI1Gn5RbPGt1TgEQ%3d%3d" target="donatepage" title="Go to a University of Ottawa page that will enable you to donate to support Umple; even a few dollars will be much appreciated">Donate</a>&nbsp;
+    <a class="button2" style="padding-top:auto; padding-bottom: auto;" href="http://dl.umple.org" target="dlpage" title="Go to the page that gives instructions on how to download Umple for use in Docker, or Eclipse or on the command line">Download</a>&nbsp;
+    <a class="button2" style="padding-top:auto; padding-bottom: auto;" href="https://alumni.uottawa.ca/donation-form?fid=bp71rD2pbt0%3d&fdesc=vj8yiR3kw2%2bPwQCmy1Z8CfKc0F1zufF0wBCY%2fxboCy4%2bHJZne7BoLhQuKHwuRN4R5bhBEciI1Gn5RbPGt1TgEQ%3d%3d" target="donatepage" title="Go to a University of Ottawa page that will enable you to donate to support Umple; even a few dollars will be much appreciated">Donate</a>&nbsp;
     
     </span>&nbsp; &nbsp;
           For help:
     <?php if(strpos($_SERVER['REQUEST_URI'], 'umple.php') !== false && strpos($_SERVER['REQUEST_URI'], 'umpleonline/umple.php') === false ) {$manpage="/manual/GettingStarted.html";} else {$manpage="http://manual.umple.org";} ?>                
     <span style="font-size: 30%; white-space:nowrap;">
-    <a class="button2" style="line-height: 1" href="<?php echo $manpage ?>" target="helppage" title="Open the Umple user manual in a separate tab" >User manual</a>&nbsp;
-    <a class="button2" style="line-height: 1" href="http://questions.umple.org"
+    <a class="button2" style="line-height: 1; padding-top:auto; padding-bottom: auto;" href="<?php echo $manpage ?>" target="helppage" title="Open the Umple user manual in a separate tab" >User manual</a>&nbsp;
+    <a class="button2" style="line-height: 1; padding-top:auto; padding-bottom: auto;" href="http://questions.umple.org"
        target="questionpage" title="Open a separate tab on the StackOverflow page where you can ask Umple community members questions">Ask questions</a>&nbsp;
-    <a class="button2" style="line-height: 1" href="https://github.com/umple/umple/issues/new" target="issuepage" title="Open a separate tab on the page where you can report an Umple bug or request an improvement">Report issue</a>&nbsp;
+    <a class="button2" style="line-height: 1; padding-top:auto; padding-bottom: auto;" href="https://github.com/umple/umple/issues/new" target="issuepage" title="Open a separate tab on the page where you can report an Umple bug or request an improvement">Report issue</a>&nbsp;
     </span>
         </p>
       </div>
@@ -433,7 +448,7 @@ $output = $dataHandle->readData('model.ump');
       <div id="palette" class="palette">
 
         <!-- GROUP 1 OF OPTIONS -->
-        <h3><a href="#">SAVE & LOAD</a></h3>
+        <h3><a href="#saveload">SAVE & LOAD</a></h3>
         
         <div class="section">
           <ul class="first" id="saveLoad">
