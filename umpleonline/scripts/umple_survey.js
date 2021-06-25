@@ -102,6 +102,8 @@ function displaySurvey(){
 
         surveyExtra.addEventListener("mouseleave", function(){hideRecruitementMessage()});
         surveyMessage.addEventListener("click", function(){countClicked()});
+
+        sendToSurveyLog("SurveyRequested");
     }
 }
 
@@ -126,4 +128,35 @@ function hideRecruitementMessage(){
 function countClicked(){
     window.localStorage.setItem("surveyShown", window.surveyData.surveyURL);
     clickedStartSurvey = true;
+
+    sendToSurveyLog("SurveyClicked");
+}
+
+function sendToSurveyLog(action){ // action is either SurveyRequested or SurveyClicked
+    console.log("processing");
+    let recordTime=new Date(Date.now()).toString();
+    if (action=="SurveyRequested"){
+        jQuery.ajax({
+            url: 'umple.php',
+            method: 'POST',
+            data: {surveyLogInfo: "\n"+action+" "+recordTime},
+            dataType: 'html',
+        }).done(function(){
+            console.log("Success: Files sent!");
+        }).fail(function(){
+            console.log("An error occurred, the files couldn't be sent!");
+        });
+    }
+    if(action=="SurveyClicked"){
+        jQuery.ajax({
+            url: 'umple.php',
+            method: 'POST',
+            data: {surveyLogInfo2: "\n"+action+" "+recordTime},
+            dataType: 'html',
+        }).done(function(){
+            console.log("Success: Files sent!");
+        }).fail(function(){
+            console.log("An error occurred, the files couldn't be sent!");
+        });
+    }
 }
