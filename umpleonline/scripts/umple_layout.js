@@ -58,7 +58,7 @@ Layout.init = function()
 };
 
 Layout.checkLayoutNeeded = function() {
-  if(jQuery(window).innerWidth() > jQuery(window).innerHeight()) 
+  if(jQuery(window).innerWidth() > jQuery(window).innerHeight())
   {
     return {layoutType: "large"};
   }
@@ -418,6 +418,9 @@ function LargeScreenManager()
   
   this.setTextEditorSize = function(width, height)
   {
+    //Adjust the max sizes of the resizables
+    this.adjustMaxSizes();
+
     var umpleTextEditor = jQuery(editorHandle);
     
     if(width == undefined) width = umpleTextEditor.outerWidth();
@@ -427,9 +430,12 @@ function LargeScreenManager()
 
     if(!Layout.isDiagramVisible) width = width;
 
+    console.log("text editor: "+width);
+
     umpleTextEditor.outerWidth(width);
     
     Layout.adjustTextEditorHeight(height);
+
 
     if(Layout.isDiagramVisible)
       this.setUmpleCanvasSize(this.calculateLeftoverWidth() + jQuery(canvasHandle).outerWidth(), undefined);
@@ -437,7 +443,12 @@ function LargeScreenManager()
   
   this.setUmpleCanvasSize = function(width, height)
   {
+    //Adjust the max sizes of the resizables
+    this.adjustMaxSizes();
+
     var umpleCanvas = jQuery(canvasHandle);
+    console.log("body: "+jQuery("body").outerWidth(true)+"; margin-space: "+this.marginSpace+"; text: "+jQuery(editorHandle).outerWidth()+"; palette: "+jQuery(paletteHandle).outerWidth())
+    
 
     if(width == undefined) width = umpleCanvas.outerWidth();
     if(height == undefined) height = Layout.calculateMainHeight();
@@ -448,8 +459,11 @@ function LargeScreenManager()
     
     umpleCanvas.outerWidth(width);
     umpleCanvas.height(height);
-    
+
     jQuery("#palette").accordion("refresh");
+    
+    console.log("width: "+width+"; __ min: "+this.minCanvasSize.width+"; __ max: "+this.maxCanvasSize.width); //add text editor width
+    console.log("leftover: "+this.calculateLeftoverWidth());
   }
   
   ///////////////////////////////
@@ -493,14 +507,14 @@ function LargeScreenManager()
     if(Layout.isDiagramVisible && Layout.isTextVisible)
     {
       //Recalculate the max sizes of the editor and canvas
-      var maxEditorWidth = jQuery(window).innerWidth() - this.marginSpace 
-        - this.minCanvasSize.width;
+      var maxEditorWidth = jQuery("body").outerWidth(true) - this.marginSpace - jQuery(canvasHandle).outerWidth();
 
       if(Layout.isPaletteVisible) 
         maxEditorWidth -= jQuery(paletteHandle).outerWidth();
+
+      console.log("IN CALC: window width");
       
-      var maxCanvasWidth = jQuery(window).innerWidth() - this.marginSpace
-        - this.minEditorSize.width;
+      var maxCanvasWidth = jQuery("body").outerWidth(true) - this.marginSpace - jQuery(editorHandle).outerWidth();
 
       if(Layout.isPaletteVisible) 
         maxCanvasWidth -= jQuery(paletteHandle).outerWidth();
@@ -517,16 +531,21 @@ function LargeScreenManager()
   
   this.adjustAfterWindowResize = function()
   {
-    //Adjust the max sizes of the resizables
-    this.adjustMaxSizes()
-
     //Resize the palette height
     jQuery("#paletteColumn").height(this.calculateHeight());
     jQuery("#palette").accordion("refresh");
     
     //Resize the editor and canvas
     var leftoverWidth = this.calculateLeftoverWidth();
-    
+
+    if (jQuery(canvasHandle).outerWidth() + leftoverWidth <= this.minCanvasSize.width){
+      this.setTextEditorSize(jQuery(editorHandle).outerWidth(), undefined);
+    }
+    else{
+      this.setTextEditorSize(leftoverWidth + jQuery(editorHandle).outerWidth(), undefined);
+    }
+
+    /*    
     if(leftoverWidth <= 0 && jQuery(canvasHandle).outerWidth() + leftoverWidth <= this.minCanvasSize.width)
     {
       this.setTextEditorSize(jQuery(editorHandle).outerWidth() + leftoverWidth, undefined);
@@ -534,7 +553,8 @@ function LargeScreenManager()
     else
     {
       this.setTextEditorSize(leftoverWidth + jQuery(editorHandle).outerWidth(), undefined);
-    }
+    }*/
+
   }
   
   ////////////////////////////////////////
@@ -701,7 +721,7 @@ function LargeScreenManager()
 
   this.calculateLeftoverWidth = function() 
   {
-    var width = jQuery(window).innerWidth() - this.marginSpace;
+    var width = jQuery("body").outerWidth(true) - this.marginSpace;
     if(Layout.isTextVisible) width -= jQuery(editorHandle).outerWidth();
     if(Layout.isDiagramVisible) width -= jQuery(canvasHandle).outerWidth();
     if(Layout.isPaletteVisible) width -= jQuery(paletteHandle).outerWidth();
