@@ -19,6 +19,8 @@ class UmpleConsoleConfig {
   depend java.util.stream.*;
   depend joptsimple.*;
   depend java.io.*;
+  depend java.nio.file.Files;
+  depend java.nio.file.Paths;
 
   // See function initializeOptionParser() for the setup of the options
   defaulted boolean version = false; // option to print version only
@@ -32,6 +34,7 @@ class UmpleConsoleConfig {
   internal Optional<String> compile    = Optional.empty(); // option c to specify that compilation should happen
   internal Optional<String> importFile = Optional.empty(); // option i to only import an xmi
   internal Optional<String> testUmpFilesFile = Optional.empty(); // option f file with sets of files to process 
+  internal List<String[]> allLinesOfFilesToTest = null;
   internal List<String> suboptions     = Collections.<String>emptyList();
 
   String umpleFile; // first and maybe only umple file to compile
@@ -59,6 +62,25 @@ class UmpleConsoleConfig {
 
     // compile takes a bit more logic..
     this.compile = Optional.ofNullable((String)optSet.valueOf("c"));
+    
+    // Open and read any file containing other files to process for testing
+    if (testUmpFilesFile.isPresent())
+    {
+      String fileOfFiles = testUmpFilesFile.get();
+      try {
+        List<String> allLines = Files.readAllLines(Paths.get(fileOfFiles));
+        allLinesOfFilesToTest = new ArrayList<String[]>();
+        for(String aLine: allLines) {
+          allLinesOfFilesToTest.add(aLine.split(" "));
+        }
+      }
+      catch  (IOException e) {
+        System.out.println("File with files "+fileOfFiles+" from -f option cannot be opened. Ignoring");
+      }
+    }
+    
+    // DEBUG TEMP
+    System.out.println("File sets found: "+allLinesOfFilesToTest);
   }
 
   public List<File> getLinkedFilesAsFile() {
@@ -216,7 +238,7 @@ class UmpleConsoleMain
       boolean compileSuccess = model.getLastResult().getWasSuccess();
 
       // The "c" option causes an attempt to compile the resulting base language
-      // code. Not completely tested at current time.
+      // code.
       if (compileSuccess && cfg.getCompile().isPresent())
       {
         compileSuccess = CodeCompiler.compile(model, cfg.getCompile().get());
@@ -277,14 +299,14 @@ class UmpleConsoleMain
   }
 
   public static void main(String[] args)
-      {
+  {
     UmpleConsoleMain console = new UmpleConsoleMain(args);
 
     int result = console.runConsole();
     if (result < 0) {
       System.exit(result);
-      }
     }
+  }
     
   private void generateUmple(String filename)
   {
