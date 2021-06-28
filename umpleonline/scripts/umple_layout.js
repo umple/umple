@@ -585,7 +585,7 @@ function LargeScreenManager()
     if(!Layout.isTextVisible || !Layout.isDiagramVisible) return;
 
     jQuery(editorHandle).resizable({
-      start: function(event, ui){Layout.savedStartingWidth = jQuery(canvasHandle).width();},
+      start: function(event, ui){Layout.savedStartingWidth = jQuery(canvasHandle).outerWidth();},
       resize: function(event, ui){Layout.editorResizing(event, ui);},
       stop: function(event, ui){Layout.editorResized(event, ui);},
       autoHide: true,
@@ -602,7 +602,7 @@ function LargeScreenManager()
     var canvas = jQuery(canvasHandle);
     
     canvas.resizable({
-      start: function(event, ui){Layout.savedStartingWidth = jQuery(editorHandle).width();},
+      start: function(event, ui){Layout.savedStartingWidth = jQuery(editorHandle).outerWidth();},
       resize: function(event, ui){Layout.canvasResizing(event, ui);},
       stop: function(event, ui){Layout.canvasResized(event, ui);},
       autoHide: true,
@@ -641,7 +641,7 @@ function LargeScreenManager()
   {
     var currentWidth = ui.size.width;
     var deltaWidth = ui.originalSize.width - currentWidth;
-    jQuery(canvasHandle).width(Layout.savedStartingWidth + deltaWidth);
+    jQuery(canvasHandle).outerWidth(Layout.savedStartingWidth + deltaWidth);
     jQuery(modelEditorHandle).width(currentWidth);
     jQuery(layoutEditorHandle).width(currentWidth);
     console.log("resizing editor");
