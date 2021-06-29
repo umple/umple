@@ -3,12 +3,12 @@
  obtained by required methods.
 */
 trait T1{
-  Integer getData();
-  void setData(Integer);
-  Integer processData(){
+  int getData();
+  int processData(){
     int data = getData();
     data=data+2;
     setData(data);
+    return(data);
   }
 }
 class C1{

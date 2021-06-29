@@ -28,6 +28,7 @@ class UmpleConsoleConfig {
   defaulted boolean performance = false; // option to measure performance
   defaulted boolean beQuiet = false; // option q to be quiet
   defaulted boolean useExec = false; // option x to use slower but more reliable exec java compiler
+  defaulted boolean exitOnFirstFailure = false; // option e to exit on first failure with the -f option 
 
   internal Optional<String> generate   = Optional.empty(); // option g to specify what to generate
   defaulted boolean override           = false;
@@ -49,7 +50,8 @@ class UmpleConsoleConfig {
     this.version    = optSet.has("v");
     this.help       = optSet.has("help");
     this.performance = optSet.has("performance");
-    this.useExec    = optSet.has("x");    
+    this.useExec    = optSet.has("x");
+    this.exitOnFirstFailure = optSet.has("e");
     this.beQuiet    = optSet.has("quiet");    
     this.importFile = Optional.ofNullable((String)optSet.valueOf("import"));
     this.generate   = Optional.ofNullable((String)optSet.valueOf("generate"));
@@ -345,14 +347,17 @@ class UmpleConsoleMain
     UmpleConsoleMain console = new UmpleConsoleMain(args);
 
     // Run the compilation for the main command line files and mixsets
+    // Result is 1 if failed compile, -1 if compiler crashed
     int result = console.runConsole();
-    if (result < 0) {
+    if (result != 0) {
       System.exit(result);
     }
     
     // If there are any files and mixsets specified by the -f option, then try those
     UmpleConsoleConfig cfg = console.getCfg();
     if(cfg.getAllLinesOfFilesToTest() != null) {
+      int finalResult = 0;
+      String failedLines ="";
       for(String[] fileList : cfg.getAllLinesOfFilesToTest()) {
         // Change the configuration to have the new lines
         if(fileList == null || fileList.length == 0) {
@@ -362,10 +367,23 @@ class UmpleConsoleMain
           cfg.setUmpleFile(fileList[0]);
           cfg.setLinkedFiles(fileList.length > 1 ? (Arrays.asList(fileList)).subList(1, fileList.length) : Collections.<String>emptyList());
           result = console.runConsole();
-          if (result < 0) {
-            System.exit(result);
+          if (result != 0) {
+            if (cfg.getExitOnFirstFailure()) {
+              System.exit(result);
+            }
+            else {
+              finalResult = result;
+              for (String aFileInList : fileList) {
+                failedLines += " "+aFileInList;
+              }
+              failedLines +="\n";
+            }
           }      
         }
+      }
+      if(finalResult != 0) {
+        System.out.print("See the above log for the following Umple Java generation and compilation cases which failed:\n"+failedLines);
+        System.exit (finalResult);
       }
     }
   }
@@ -484,6 +502,7 @@ class UmpleConsoleMain
     optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to the entry class to compile, or with argument - to compile all outputfiles").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("f","file"), "Read in a file containing sets of umple-files to process, one set per line. Each is an independent compilation. Intended for testing.").withRequiredArg().ofType(String.class);
+    optparser.acceptsAll(Arrays.asList("e","exitonfirstfailure"), "Used with -f. Exit with nonzero on first failure of a compile specified in the file passed to -f. Otherwise exits after completing all compilations with nonzero if any failed.");    
     optparser.acceptsAll(Arrays.asList("q","quiet"), "Be quiet. Only output compilation information in case of failure");
     optparser.acceptsAll(Arrays.asList("x","useexec"), "Use an external exec call to invoke the Java compiler when using the -c option. May be needed on some platforms or with certain examples.");    
     optparser.acceptsAll(Arrays.asList("import","i"), "Indicate to read in XMI model and generate ump files").withRequiredArg().ofType(String. class);
