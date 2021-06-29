@@ -350,9 +350,12 @@ function LargeScreenManager()
   {
     if(!firstTime)
     {
-      jQuery(editorHandle).resizable('destroy');
-      jQuery(paletteHandle).resizable('destroy');
-      jQuery(canvasHandle).resizable('destroy');
+      try {jQuery(editorHandle).resizable('destroy');}
+      catch(e) {/*Already disabled*/}
+      try {jQuery(paletteHandle).resizable('destroy');}
+      catch(e) {/*Already disabled*/}
+      try {jQuery(canvasHandle).resizable('destroy');}
+      catch(e) {/*Already disabled*/}
 
       //Remove unnecessary styles
       jQuery(editorHandle).removeClass('smallScreenEditor smallScreenEditorNoMargin');
@@ -388,6 +391,7 @@ function LargeScreenManager()
   //Initializes the canvas size and resizable properties
   this.initUmpleCanvasSize = function()
   {
+    console.log("init setting 2");
     this.initCanvasResizable();
     this.setUmpleCanvasSize(this.minCanvasSize.width)
   }
@@ -436,6 +440,7 @@ function LargeScreenManager()
 
 
     if(Layout.isDiagramVisible){
+      console.log("setting from text");
       this.setUmpleCanvasSize(this.calculateLeftoverWidth() + jQuery(canvasHandle).outerWidth(), undefined);
     }
   }
@@ -503,6 +508,19 @@ function LargeScreenManager()
       this.initEditorResizable();
     }
 
+    if(jQuery(editorHandle).outerWidth() < this.minEditorSize.width || jQuery(canvasHandle).outerWidth() < this.minCanvasSize.width)
+    {
+      try {jQuery(canvasHandle).resizable('destroy');}
+      catch(e) {/*Already disabled*/}
+      try {jQuery(editorHandle).resizable('destroy');}
+      catch(e) {/*Already disabled*/}
+    }
+    else
+    {
+      this.initCanvasResizable();
+      this.initEditorResizable();
+    }
+
     this.adjustMaxSizes();
   }
 
@@ -533,9 +551,12 @@ function LargeScreenManager()
       
       this.maxEditorSize = new UmplePosition(0, 0, maxEditorWidth, 0);
       this.maxCanvasSize = new UmplePosition(0, 0, maxCanvasWidth, 0);
-    
-      jQuery(editorHandle).resizable('option', 'maxWidth', this.maxEditorSize.width);
-      jQuery(canvasHandle).resizable('option', 'maxWidth', this.maxCanvasSize.width);
+
+      if(jQuery(editorHandle).outerWidth() > this.minEditorSize.width && jQuery(canvasHandle).outerWidth() > this.minCanvasSize.width)
+      {
+        jQuery(editorHandle).resizable('option', 'maxWidth', this.maxEditorSize.width);
+        jQuery(canvasHandle).resizable('option', 'maxWidth', this.maxCanvasSize.width);
+      }
     }
     
     Action.setupPinch(); // does nothing unless there is an svg    
@@ -563,6 +584,8 @@ function LargeScreenManager()
     else{
       this.setTextEditorSize(leftoverWidth + jQuery(editorHandle).outerWidth(), undefined);
     }
+
+    this.showHideResizableAdjustment();
   }
   
   ////////////////////////////////////////
@@ -773,9 +796,12 @@ function SmallScreenManager()
     if(!firstTime)
     {
       //Reset any resizables
-      jQuery(editorHandle).resizable('destroy');
-      jQuery(canvasHandle).resizable('destroy');
-      jQuery("#mainApplication").resizable('destroy');
+      try {jQuery(editorHandle).resizable('destroy');}
+      catch (e) {/*already disabled*/}
+      try {jQuery(canvasHandle).resizable('destroy');}
+      catch (e) {/*already disabled*/}
+      try {jQuery("#mainApplication").resizable('destroy');}
+      catch (e) {/*already disabled*/};
       
       //Remove the other styles
       jQuery(editorHandle).removeClass('largeScreenEditor largeScreenEditorNoMargin');
@@ -839,6 +865,7 @@ function SmallScreenManager()
   
   this.setUmpleCanvasSize = function(width, height)
   {
+    console.log("setting size");
     if (Layout.isTextVisible)
       jQuery(canvasHandle).outerWidth(jQuery("body").width());
     else
