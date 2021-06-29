@@ -468,24 +468,27 @@ function LargeScreenManager()
   this.showHideResize = function()
   {
 
-    console.log("here2");
+    console.log("_here2");
 
     //Adjust margin spacing
-    this.adjustMarginSpace();    
+    this.adjustMarginSpace();
+    this.adjustMaxSizes();    
       
     //Adjust sizes
-    if(Layout.isDiagramVisible && !Layout.isTextVisible)
-      this.setUmpleCanvasSize(this.calculateLeftoverWidth() 
-        + jQuery(canvasHandle).outerWidth(), undefined);
-    if(Layout.isTextVisible)
-      this.setTextEditorSize(this.calculateLeftoverWidth() 
-        + jQuery(editorHandle).outerWidth(), undefined);
+    console.log("adjusting size");
+    if(Layout.isDiagramVisible && !Layout.isTextVisible){
+      this.setUmpleCanvasSize(this.calculateLeftoverWidth() + jQuery(canvasHandle).outerWidth(), undefined);
+    }
+    else{
+      if(Layout.isTextVisible)
+        this.setTextEditorSize(this.calculateLeftoverWidth() + jQuery(editorHandle).outerWidth(), undefined);
+    }
   }
 
   this.showHideResizableAdjustment = function()
   {
 
-    console.log("here3");
+    console.log("_here3");
 
     if(!Layout.isDiagramVisible || !Layout.isTextVisible)
     {
@@ -508,14 +511,22 @@ function LargeScreenManager()
     if(Layout.isDiagramVisible && Layout.isTextVisible)
     {
       //Recalculate the max sizes of the editor and canvas
-      var maxEditorWidth = jQuery("body").outerWidth(true) - this.marginSpace - this.minCanvasSize.width;
+      var maxEditorWidth = jQuery("body").outerWidth(true) - this.marginSpace;
+
+      if(Layout.isDiagramVisible)
+        maxEditorWidth -= this.minCanvasSize.width;
 
       if(Layout.isPaletteVisible) 
         maxEditorWidth -= jQuery(paletteHandle).outerWidth();
 
       console.log("IN CALC: window width");
       
-      var maxCanvasWidth = jQuery("body").outerWidth(true) - this.marginSpace - this.minEditorSize.width;
+      var maxCanvasWidth = jQuery("body").outerWidth(true) - this.marginSpace;
+
+      console.log("marginSpace in calc: "+this.marginSpace);
+
+      if(Layout.isTextVisible)
+        maxCanvasWidth -= this.minEditorSize.width;
 
       if(Layout.isPaletteVisible) 
         maxCanvasWidth -= jQuery(paletteHandle).outerWidth();
@@ -552,17 +563,6 @@ function LargeScreenManager()
     else{
       this.setTextEditorSize(leftoverWidth + jQuery(editorHandle).outerWidth(), undefined);
     }
-
-    /*    
-    if(leftoverWidth <= 0 && jQuery(canvasHandle).outerWidth() + leftoverWidth <= this.minCanvasSize.width)
-    {
-      this.setTextEditorSize(jQuery(editorHandle).outerWidth() + leftoverWidth, undefined);
-    }
-    else
-    {
-      this.setTextEditorSize(leftoverWidth + jQuery(editorHandle).outerWidth(), undefined);
-    }*/
-
   }
   
   ////////////////////////////////////////
@@ -728,10 +728,12 @@ function LargeScreenManager()
       + parseInt(jQuery('body').css('marginRight')) + 1
       + parseInt(jQuery(canvasHandle).css("marginLeft")) 
       + parseInt(jQuery(editorHandle).css("marginRight"));
+
+    console.log("margins for marginSpace: body: "+parseInt(jQuery('body').css('marginLeft'))+" _ "+parseInt(jQuery('body').css('marginRight'))+"_ canvas: "+parseInt(jQuery(canvasHandle).css("marginLeft"))+" _ editor: "+parseInt(jQuery(editorHandle).css("marginRight")));
   }
 
   this.calculateLeftoverWidth = function() 
-  {
+  { 
     var width = jQuery("body").outerWidth(true) - this.marginSpace;
     if(Layout.isTextVisible) width -= jQuery(editorHandle).outerWidth();
     if(Layout.isDiagramVisible) width -= jQuery(canvasHandle).outerWidth();
