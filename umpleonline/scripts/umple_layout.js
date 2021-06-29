@@ -391,7 +391,6 @@ function LargeScreenManager()
   //Initializes the canvas size and resizable properties
   this.initUmpleCanvasSize = function()
   {
-    console.log("init setting 2");
     this.initCanvasResizable();
     this.setUmpleCanvasSize(this.minCanvasSize.width)
   }
@@ -432,15 +431,12 @@ function LargeScreenManager()
       if(!Layout.isDiagramVisible) width = width;
     }
 
-    console.log("text editor: "+width + ", minEditorSize: "+this.minEditorSize.width);
-
     umpleTextEditor.outerWidth(width);
     
     Layout.adjustTextEditorHeight(height);
 
 
     if(Layout.isDiagramVisible){
-      console.log("setting from text");
       this.setUmpleCanvasSize(this.calculateLeftoverWidth() + jQuery(canvasHandle).outerWidth(), undefined);
     }
   }
@@ -448,8 +444,6 @@ function LargeScreenManager()
   this.setUmpleCanvasSize = function(width, height)
   {
     var umpleCanvas = jQuery(canvasHandle);
-    console.log("__ body: "+jQuery("body").outerWidth(true)+"; margin-space: "+this.marginSpace+"; text: "+jQuery(editorHandle).outerWidth()+"; palette: "+jQuery(paletteHandle).outerWidth())
-    
 
     if(width == undefined) width = umpleCanvas.outerWidth();
     if(height == undefined) height = Layout.calculateMainHeight();
@@ -461,9 +455,6 @@ function LargeScreenManager()
     umpleCanvas.height(height);
 
     jQuery("#palette").accordion("refresh");
-    
-    console.log("width: "+width+"; __ min: "+this.minCanvasSize.width+"; __ max: "+this.maxCanvasSize.width); //add text editor width
-    console.log("leftover: "+this.calculateLeftoverWidth());
   }
   
   ///////////////////////////////
@@ -473,14 +464,11 @@ function LargeScreenManager()
   this.showHideResize = function()
   {
 
-    console.log("_here2");
-
     //Adjust margin spacing
     this.adjustMarginSpace();
     this.adjustMaxSizes();    
       
     //Adjust sizes
-    console.log("adjusting size");
     if(Layout.isDiagramVisible && !Layout.isTextVisible){
       this.setUmpleCanvasSize(this.calculateLeftoverWidth() + jQuery(canvasHandle).outerWidth(), undefined);
     }
@@ -492,8 +480,6 @@ function LargeScreenManager()
 
   this.showHideResizableAdjustment = function()
   {
-
-    console.log("_here3");
 
     if(!Layout.isDiagramVisible || !Layout.isTextVisible)
     {
@@ -536,12 +522,8 @@ function LargeScreenManager()
 
       if(Layout.isPaletteVisible) 
         maxEditorWidth -= jQuery(paletteHandle).outerWidth();
-
-      console.log("IN CALC: window width");
       
       var maxCanvasWidth = jQuery("body").outerWidth(true) - this.marginSpace;
-
-      console.log("marginSpace in calc: "+this.marginSpace);
 
       if(Layout.isTextVisible)
         maxCanvasWidth -= this.minEditorSize.width;
@@ -575,10 +557,7 @@ function LargeScreenManager()
     //Resize the editor and canvas
     var leftoverWidth = this.calculateLeftoverWidth();
 
-    console.log("before text: leftover = "+leftoverWidth)
-
     if ((jQuery(canvasHandle).outerWidth() < this.minCanvasSize.width && jQuery(canvasHandle).outerWidth() + leftoverWidth >= this.minCanvasSize.width && leftoverWidth>0) || (jQuery(canvasHandle).outerWidth() + leftoverWidth <= this.minCanvasSize.width && leftoverWidth>0)){
-      console.log("___ not changing text");
       this.setTextEditorSize(jQuery(editorHandle).outerWidth(), undefined);
     }
     else{
@@ -667,7 +646,6 @@ function LargeScreenManager()
     jQuery(canvasHandle).outerWidth(Layout.savedStartingWidth + deltaWidth);
     jQuery(modelEditorHandle).width(currentWidth);
     jQuery(layoutEditorHandle).width(currentWidth);
-    console.log("resizing editor");
   }
   
   this.editorResized = function(event, ui)
@@ -689,9 +667,7 @@ function LargeScreenManager()
     jQuery(modelEditorHandle).width(Layout.savedStartingWidth - deltaWidth);
     jQuery(layoutEditorHandle).width(Layout.savedStartingWidth - deltaWidth);
     jQuery(canvasHandle).css('left', '0px'); //Corrects the resize dragging moving the canvas right
-    Action.setupPinch(); // does nothing unless there is an svg 
-         
-    console.log("resizing canvas");
+    Action.setupPinch(); // does nothing unless there is an svg
   }
   
   this.canvasResized = function(event, ui)
@@ -751,8 +727,6 @@ function LargeScreenManager()
       + parseInt(jQuery('body').css('marginRight')) + 1
       + parseInt(jQuery(canvasHandle).css("marginLeft")) 
       + parseInt(jQuery(editorHandle).css("marginRight"));
-
-    console.log("margins for marginSpace: body: "+parseInt(jQuery('body').css('marginLeft'))+" _ "+parseInt(jQuery('body').css('marginRight'))+"_ canvas: "+parseInt(jQuery(canvasHandle).css("marginLeft"))+" _ editor: "+parseInt(jQuery(editorHandle).css("marginRight")));
   }
 
   this.calculateLeftoverWidth = function() 
@@ -865,7 +839,6 @@ function SmallScreenManager()
   
   this.setUmpleCanvasSize = function(width, height)
   {
-    console.log("setting size");
     if (Layout.isTextVisible)
       jQuery(canvasHandle).outerWidth(jQuery("body").width());
     else
