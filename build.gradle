@@ -424,20 +424,21 @@ jar {
 task createSymbolicLink {
   group = "Custom"
   description = "Generates a symbolink link to the umple jar"
-
-  if (! new File ("${rootProject.projectDir.toString()}/dist/gradle/libs/umple.jar").exists() && 
-    new File ("${rootProject.projectDir.toString()}/dist/gradle/libs/${rootProject.ext.umpleCurrentJarBase}.jar").exists()){
-    exec {
-      workingDir "${rootProject.projectDir.toString()}/dist/gradle/libs/"
-      commandLine 'ln', '-s', "${rootProject.ext.umpleCurrentJarBase}.jar", 'umple.jar'
-    }
-    }
-    // This copy task is set to removed once gradle fully overtakes ant
-    //It was added because a few javatestbed tests rely on umple.jar located in the dist folder
-    copy {
-    	from "${rootProject.projectDir.toString()}/dist/gradle/libs/"
-    	into "${rootProject.projectDir.toString()}/dist"
-    	include "umple.jar"
+  doLast{
+	  if (! new File ("${rootProject.projectDir.toString()}/dist/gradle/libs/umple.jar").exists() && 
+	    new File ("${rootProject.projectDir.toString()}/dist/gradle/libs/${rootProject.ext.umpleCurrentJarBase}.jar").exists()){
+	    exec {
+	      workingDir "${rootProject.projectDir.toString()}/dist/gradle/libs/"
+	      commandLine 'ln', '-s', "${rootProject.ext.umpleCurrentJarBase}.jar", 'umple.jar'
+	    }
+	    }
+	    // This copy task is set to removed once gradle fully overtakes ant
+	    //It was added because a few javatestbed tests rely on umple.jar located in the dist folder
+	    copy {
+	    	from "${rootProject.projectDir.toString()}/dist/gradle/libs/"
+	    	into "${rootProject.projectDir.toString()}/dist"
+	    	include "umple.jar"
+	    }
     }
   
   dependsOn ":jar"  
@@ -1265,7 +1266,7 @@ task uiTestHelp {
     )
   }
 }
-task initTests {
+/*task initTests {
   group = "Custom"
   description = "Creates a temporary txt file contains the host name and the umpleonline directory. The file content will be used during the UI test."
   
@@ -1317,4 +1318,4 @@ task runRspec {
 task doWebsiteTests {
   dependsOn initTests
   dependsOn runRspec
-}
+}*/
