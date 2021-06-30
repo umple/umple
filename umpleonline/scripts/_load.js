@@ -8,7 +8,7 @@
 
 // Jquery
 document.write('<link href="scripts/jquery/showLoading/css/showLoading.css" rel="stylesheet" media="screen" /> ');
-document.write('<link href="scripts/jquery/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" media="screen" /> ');
+document.write('<link href="scripts/jquery/jquery-ui-1.12.1.min.css" rel="stylesheet" media="screen" /> ');
 
 // Syntax highlighter
 document.write('<link href="scripts/shCore.css" rel="stylesheet" type="text/css" />');
@@ -31,10 +31,12 @@ document.write('<link href="scripts/jjs/joint.css" rel="stylesheet" type="text/c
 
 //JQUERY
 // OLD document.write('<script type="text/javascript" src="scripts/jquery/jquery-1.11.1.min.js"></script>');
-document.write('<script type="text/javascript" src="scripts/jquery/jquery-2.2.4.min.js"></script>');
+// OLD document.write('<script type="text/javascript" src="scripts/jquery/jquery-2.2.4.min.js"></script>');
+document.write('<script type="text/javascript" src="scripts/jquery/jquery-3.6.0.min.js"></script>');
 // Jquery UI
 // OLD document.write('<script type="text/javascript" src="scripts/jquery/jquery-ui-1.8.17.custom.min.js"></script>');
-document.write('<script type="text/javascript" src="scripts/jquery/jquery-ui-1.10.4.custom.min.js"></script>');
+// OLD document.write('<script type="text/javascript" src="scripts/jquery/jquery-ui-1.10.4.custom.min.js"></script>');
+document.write('<script type="text/javascript" src="scripts/jquery/jquery-ui-1.12.1.min.js"></script>');
 // document.write('<script type="text/javascript" src="scripts/jquery/caretRange/caretRange.js"></script>');
 document.write('<script type="text/javascript" src="scripts/jquery.ui.touch-punch.min.js"></script>');
 // JQuery Plugins

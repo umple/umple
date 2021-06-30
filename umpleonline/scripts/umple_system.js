@@ -173,7 +173,6 @@ UmpleSystem.addClass = function(umpleClass)
 
 // remove the jquery resizable handle
 jQuery(".ui-icon-gripsmall-diagonal-se").removeClass("ui-icon-gripsmall-diagonal-se");
-jQuery(".ui-icon").removeClass("ui-icon");
   //UmpleSystem.redrawGeneralizationsTo(umpleClass);
   return umpleClass;   
 }
@@ -330,7 +329,6 @@ UmpleSystem.updateClass = function(umpleClass)
   
   //remove the jquery resizable handle
   jQuery(".ui-icon-gripsmall-diagonal-se").removeClass("ui-icon-gripsmall-diagonal-se");
-  jQuery(".ui-icon").removeClass("ui-icon");
 }
 
 UmpleSystem.redrawAssociationsFor = function(umpleClass)

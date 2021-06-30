@@ -73,6 +73,11 @@ ToolTips.tooltipEntries = {
   ttToggleGuards: ['li', "Show/Hide guards in state diagrams (hide to simplify)"],
   ttToggleTransitionLabels: ['li', "Show/Hide transition labels in state diagrams (t1, t2 etc.) to allow reference"],
   ttToggleGuardLabels: ['li', "Show/Hide guard labels on the state diagrams (g1, g2 etc.) to allow reference"],
+  SHT_button: ['a', "Show/Hide the text editor - <b>" + toggleTextEditor ],
+  SHD_button: ['a', "Show/hide diagram pane on right - <b> ctrl-D"],
+  SHA_button: ['a', "Show/hide attributes in class diagrams - <b>shift-ctrl-A"],
+  SHM_button: ['a', "Show/hide methods in class diagrams - <b>ctrl-M"],
+  
 
   // diagram type tooltips
   ttShowEditableClassDiagram: ["li", "Display a graphically editable class diagram </br><b>Shortcut: [ctrl+e]</b>"],
@@ -80,6 +85,9 @@ ToolTips.tooltipEntries = {
   ttShowGvClassDiagram: ["li", "Display a class diagram rendered using GraphViz </br><b>Shortcut: [ctrl+g]</b>"],
   ttShowGvStateDiagram: ["li", "Display a state diagram rendered using GraphViz</br><b>Shortcut: [ctrl+s]</b>"],
   ttShowStructureDiagram: ["li", "Display a graphically editable composite structure diagram </br><b>Shortcut: [ctrl+l]</b>"],
+  ECD_button: ['a', "Editable class diagram - <b>ctrl-E"],
+  GCD_button: ['a', "Graphviz class diagram - <b>ctrl-G"],
+  SD_button: ['a', "State diagram - <b>ctrl-S"],
 
   // preferences tooltips
   ttPhotoReady: ["li", "Remove editing handles from diagram"],
@@ -95,12 +103,23 @@ ToolTips.initTooltips = function()
   // Initialize the tooltips in the above tooltip dictionary
   for(var id in this.tooltipEntries)
   {
-    jQuery("#" + id).tooltip({
-      items: this.tooltipEntries[id][0],
-      content: this.tooltipEntries[id][1],
-      show: {delay: 1000},
-      position: {my:"right", at:"left", of:"#"+id}
-    });
+  //Special cases
+    if (id=="SD_button"||id=="GCD_button"||id=="ECD_button"||id=="SHT_button"||id=="SHD_button"||id=="SHA_button"||id=="SHM_button") {
+      jQuery("#" + id).tooltip({
+        items: this.tooltipEntries[id][0],
+        content: this.tooltipEntries[id][1],
+        show: {delay: 1000},
+        position: {my:"left top+25%", of:"#"+id}
+        });
+    }
+    else{
+      jQuery("#" + id).tooltip({
+        items: this.tooltipEntries[id][0],
+        content: this.tooltipEntries[id][1],
+        show: {delay: 1000},
+        position: {my:"right", at:"left", of:"#"+id}
+      });
+      }
   }
 
   //Special cases
