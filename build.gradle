@@ -47,6 +47,7 @@ def buildAliases = [
        'resetUmpleSelf',
        'compileJava',
        'packageAllJars',
+       'createSymbolicLink'
    ],
    'quickbuild' : [
         'cleanUpUmple',
@@ -66,23 +67,20 @@ def buildAliases = [
         'resetUmpleSelf',
         'compileJava',
         'packageAllJars',
+        'createSymbolicLink',
         'resetVersion',
         'buildTestUnitGeneratorAndParser',
-        'test',
         'packageDocs',
+        'templateTest',
         'testbedTests',
         'allUserManualAndExampleTests'
    ],
    'testall' : [
    'cleanUpTests',
         'buildTestUnitGeneratorAndParser',
+        'templateTest',
         'testbedTests',
         'allUserManualAndExampleTests'
-   ],
-   'templateTests' : [
-   'cleanUpTests',
-   'compileTestJava',
-    'test'
    ],
    'packageUmpleonline' : [
     'packageAllJars',
@@ -304,6 +302,8 @@ task ('cleanUpUmple') {
 task ('cleanUpArtifacts') {
   doLast{
     delete "${rootProject.projectDir.toString()}/dist/gradle/libs"
+    //Scheduled to be removed once gradle overtakes ant and files are set to proper locations
+    delete "${rootProject.projectDir.toString()}/dist/umple.jar"
     }
 }
 
@@ -319,7 +319,7 @@ task ('cleanUpDeployment') {
 // ============================
 
 test {
-    workingDir = "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir"
+    workingDir = "${rootProject.ext.testBaseDir}/workingDir"
     exclude "**/CPPCodeGenValidatorTest.class" // TODO - Fix eclipse CDT message: Unresolved inclusion: <HEADER_FILE>
     
     doLast {
@@ -355,10 +355,12 @@ sourceSets {
         runtimeClasspath = files(
             rootProject.ext.classfileOutputDir,
             rootProject.ext.testClassfileOutputDir,
+            "${rootProject.projectDir.toString()}/testbed/bin",
             configurations.ivy)
         java {
             srcDirs = [
-                rootProject.ext.testBaseDir
+                rootProject.ext.testBaseDir,
+                "${rootProject.projectDir.toString()}/testbed/bin"
             ]
             exclude '**/*.ump', '**/.git*'
         }
@@ -417,6 +419,28 @@ jar {
         println("Compiling to ${rootProject.ext.umpleCurrentJar} using " + rootProject.ext.classfileOutputDir)
     }
     dependsOn copyDocs
+}
+
+task createSymbolicLink {
+  group = "Custom"
+  description = "Generates a symbolink link to the umple jar"
+
+  if (! new File ("${rootProject.projectDir.toString()}/dist/gradle/libs/umple.jar").exists() && 
+    new File ("${rootProject.projectDir.toString()}/dist/gradle/libs/${rootProject.ext.umpleCurrentJarBase}.jar").exists()){
+    exec {
+      workingDir "${rootProject.projectDir.toString()}/dist/gradle/libs/"
+      commandLine 'ln', '-s', "${rootProject.ext.umpleCurrentJarBase}.jar", 'umple.jar'
+    }
+    }
+    // This copy task is set to removed once gradle fully overtakes ant
+    //It was added because a few javatestbed tests rely on umple.jar located in the dist folder
+    copy {
+    	from "${rootProject.projectDir.toString()}/dist/gradle/libs/"
+    	into "${rootProject.projectDir.toString()}/dist"
+    	include "umple.jar"
+    }
+  
+  dependsOn ":jar"  
 }
 
 // Task for generating the statistics jar file
@@ -790,6 +814,16 @@ task testXUnitTemplateTest {
 task buildTestUnitGeneratorAndParser {
     dependsOn testXUnitTemplateTest
 }
+task templateTest (type: Test) {
+  workingDir = "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir"
+  testClassesDirs = fileTree(
+        dir: rootProject.ext.testClassfileOutputDir,
+        includes: ["**/*.class"])
+    classpath = sourceSets.test.runtimeClasspath
+  dependsOn ":compileJava", ":compileTestJava"
+  //To be removed once classes are compiled to proper folders
+  dependsOn ":javaTestbedCompile"
+}
 
 task ('javaTestbedCompileUmple') {
   group = "Custom"
@@ -816,36 +850,30 @@ task javaTestbedCompile(type: JavaCompile) {
     description = "Compiling java testbed generated files"
     options.fork = true
     classpath = files(
-        rootProject.ext.classfileOutputDir,
-        rootProject.ext.testClassfileOutputDir,
+        "${rootProject.projectDir.toString()}/testbed/bin",
         rootProject.configurations.ivy)
-    destinationDir = file(classfileOutputDir)
+    destinationDirectory = file("${rootProject.projectDir.toString()}/testbed/bin")
     source "${rootProject.projectDir.toString()}/testbed/src"
     source "${rootProject.projectDir.toString()}/testbed/src-gen-umple"
     source "${rootProject.projectDir.toString()}/testbed/test"
-    exclude '**/*.ump', '**/.git*', '**/data', '**/compiler'
+    exclude '**/*.ump', '**/.git*', '**/data', '**/compiler/src-gen-umple'
 
     dependsOn ':compileJava'
     dependsOn ':compileTestJava'
-    dependsOn ':test'
     dependsOn javaTestbedCompileUmple
-    dependsOn copyDocs
-    dependsOn ':packageDocumenter'
-    dependsOn jar
-    dependsOn ':packageSync'
-    dependsOn ':packageRunner'
-    dependsOn ':packageStatistics'
-    dependsOn 'executeDocJar'
 }
 
 task javaTestbedTest(type: Test) {
     group = "Custom"
     description = "Testing java testbed files"
+    workingDir = "${rootProject.projectDir.toString()}/testbed"
     testClassesDirs = fileTree(
-        dir: "${rootProject.projectDir.toString()}/testbed/test",
-        includes: ["**/*Test*.java", "**/AllTests.java", "**/*ErrorOutputTests.java"])
+        dir: "${rootProject.projectDir.toString()}/testbed/bin",
+        includes: ["**/*.class"])
     classpath = sourceSets.test.runtimeClasspath
+    
     dependsOn javaTestbedCompile
+    dependsOn ':compileTestJava'
 }
 
 task phpTestbedCompileUmple {
@@ -902,12 +930,30 @@ task phpTestbedTest {
     file.text = newconfig
         def command = "php AllXmlTests.php"
         println(command)
+        new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php").mkdir()
         def proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_php/test"))
-
+        def out = new File ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php/index.txt")
+        out.write(proc.text)
+        copy {
+        from ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php")
+        into ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php")
+        include "index.txt"
+        rename ("index.txt", "index.xml")
+        }
+      
         command = "php AllTests.php"
         println(command)          
         proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_php/test"))
+        out = new File ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php/index.txt")
+        out.write(proc.text)
+        copy {
+        from ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php")
+        into ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php")
+        include "index.txt"
+        rename ("index.txt", "index.html")
+        }
         
+        delete "${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php/index.txt"
         file = new File( "${rootProject.projectDir.toString()}/testbed_php/test/AllTests.php" )
     	newconfig = file.text.replace( "defaultPath = \"false\"", "defaultPath = \"true\"")
     	file.text = newconfig
@@ -915,6 +961,8 @@ task phpTestbedTest {
     	file = new File( "${rootProject.projectDir.toString()}/testbed_php/test/AllXmlTests.php" )
     	newconfig = file.text.replace( "defaultPath = \"false\"", "defaultPath = \"true\"")
     	file.text = newconfig
+    	 println("PHP tests completed!\n"+
+        "See results at ${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php/index.html")
     }
 }
 
@@ -937,10 +985,24 @@ task rubyTestbedTest {
     dependsOn rubyTestbedCompile
     doLast {
         println("Running RUBY tests via rake task")
+        new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_ruby").mkdir()
         def command = "rake || true" // this shouldn't work since the rake tasks expects a different jar location
         println(command)             // so we'll allow catch it for now
         def proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_ruby"))
-        println("RUBY tests completed!")
+        
+        def out = new File ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_ruby/index.txt")
+        out.write(proc.text)
+        copy {
+        from ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_ruby")
+        into ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_ruby")
+        include "index.txt"
+        rename ("index.txt", "index.html")
+        }
+        
+        delete "${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_ruby/index.txt"
+        
+        println("RUBY tests completed!\n"+
+        "See results at ${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_ruby/index.html")
     }
 }
 
@@ -1168,4 +1230,91 @@ task executeDocJar (type: JavaExec){
  	}
  }
  
- 
+// =====================
+// Automated UI Test
+// =====================
+
+//This Task initiates the execution of the automated UI tests on umpleonline
+task uiTestHelp {
+  group = "Custom"
+  description = "Outputs instructions on how to launch umpleonline UI tests"
+  
+  doLast {
+    println("The umpleonline UI tests can be launched by running the 'doWebsiteTests' task \n"+
+    "You can specify a custom hostname with -Phostname=\"yourserver\"\n"+ 
+  "eg. ./gradlew doWebsiteTests -Phostname=http://cruise2.local/\n"+
+  "If no hostName is specified, the tests will be run against the public umpleonline by default (To be modified later)\n"+
+    "The default mode for this test suite is fail safe. It will run and report all failures.\n" +
+  "It can be run in fail-fast mode using -Pfailfast=true\n" +
+    "There are feature tags that allow testing of only particular features of the website.\n" +
+  "The tag can be chosen with -Ptag=featurename. If no feature name is set this way, all tests are run.\n" +
+  "eg. To run only the options menu tests, add -Ptag=optionsMenu\n" +
+    "Features tested\n" +
+    "dynamicResizing:\n" +           
+    "tests the dynamic layout of umpleonline\n" +
+  "pageLoad:\n"+                  
+    "tests the url options for umple.php\n" +
+  "exampleLoading:\n"+            
+    "tests that all examples load properly\n" +
+  "diagramEditing:\n"+            
+    "tests that the graphical editing functionality correctly modify the model\n" +
+  "positionalDiagramEditing:\n" +  
+    "tests that the graphical editing functionality leave the positional data of the model intact\n" +
+  "optionsMenu:\n" +              
+    "tests that all of the \"options\" panel menu items work correctly\n"
+    )
+  }
+}
+task initTests {
+  group = "Custom"
+  description = "Creates a temporary txt file contains the host name and the umpleonline directory. The file content will be used during the UI test."
+  
+  def host = "https://cruise.umple.org/umpleonline/"
+  def baseDir = "${rootProject.projectDir.toString()}/umpleonline/"
+  
+  if (project.hasProperty("hostName")){
+    host = hostName+"umpleonline/"
+  }
+  
+  println("Testing "+host+"umple.php")
+  
+  def tempConfig = new File ("${rootProject.projectDir.toString()}/umpleonline/testsuite/spec/temp_config.txt")
+  tempConfig.write ("host_name "+host+"\n\t"+"umpleonline_directory "+baseDir)
+}
+
+
+task runRspec {
+  group = "Custom"
+  description = "Launches the umpleonline UI test through the command line"
+  
+  def failfastoption = "--no-fail-fast"
+  def tagArg = "feature:testdebug"
+  def testOutputPath = "${rootProject.projectDir.toString()}/dist/gradle/reports/testbed_umpleonline"
+  
+  if (project.hasProperty("tag")) tagArg = "feature:"+tag
+  if (project.hasProperty("failfast")){
+    if (failfast == true) failfastoption = "--fail-fast"
+  } 
+  
+  if (tagArg=="") println("Running all Rspec tests")
+  else println("RSpec tests with tag "+tagArg)
+  
+  doLast{
+    exec {
+  	  workingDir "${rootProject.projectDir.toString()}/umpleonline/testsuite"
+  	  commandLine  'rspec', '-f', 'html', '-o', testOutputPath+"/index.html", '-t', tagArg, failfastoption, 'spec'
+    }
+    
+    //if (result.executionResult()!=0) println("No failures found.")
+    //else println("Umpleonline tests failed.")
+     println("See test results in ${rootProject.projectDir.toString()}/dist/gradle/reports/testbed_umpleonline/index.html")
+     delete "${rootProject.projectDir.toString()}/umpleonline/testsuite/spec/temp_config.txt"
+    }
+    
+    
+}
+
+task doWebsiteTests {
+  dependsOn initTests
+  dependsOn runRspec
+}
