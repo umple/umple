@@ -149,5 +149,5 @@ strictness ignore 1007;
 //$?[End_of_model]$?
 
 /*
-@@@testlanguage=none
+@@@skipjavacompile @@@skipphpcompile only compiles on Mac
 */
