@@ -358,6 +358,7 @@ class UmpleConsoleMain
     if(cfg.getAllLinesOfFilesToTest() != null) {
       int finalResult = 0;
       String failedLines ="";
+      int successCases = 0;
       for(String[] fileList : cfg.getAllLinesOfFilesToTest()) {
         // Change the configuration to have the new lines
         if(fileList == null || fileList.length == 0) {
@@ -378,9 +379,11 @@ class UmpleConsoleMain
               }
               failedLines +="\n";
             }
-          }      
+          }
+          else successCases++;     
         }
       }
+      System.out.println("Number of successful compilations from umple -f option: "+successCases);
       if(finalResult != 0) {
         System.out.print("See the above log for the following Umple Java generation and compilation cases which failed:\n"+failedLines);
         System.exit (finalResult);
