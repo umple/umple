@@ -3,16 +3,16 @@
  obtained by required methods.
 */
 trait T1{
-  Integer getData();
-  void setData(Integer);
-  Integer processData(){
+  int getData();
+  int processData(){
     int data = getData();
     data=data+2;
     setData(data);
+    return(data);
   }
 }
 class C1{
   Integer data;
   isA T1;
 }
-// @@@@@@testlanguage=none Java code not compile
+// @@@skipjavacompile @@@skipphpcompile Java code not compile

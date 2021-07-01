@@ -55,5 +55,5 @@ Integer startValue;
 //$?[End_of_model]$?
 
 /*
-@@@testlanguage=none
+@@@skipjavacompile @@@skipphpcompile
 */

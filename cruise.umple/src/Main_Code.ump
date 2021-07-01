@@ -19,32 +19,48 @@ class UmpleConsoleConfig {
   depend java.util.stream.*;
   depend joptsimple.*;
   depend java.io.*;
+  depend java.nio.file.Files;
+  depend java.nio.file.Paths;
 
-  defaulted boolean version = false;
-  defaulted boolean help = false;
-  defaulted boolean performance = false;
-  
-  internal Optional<String> generate   = Optional.empty();
+  // See function initializeOptionParser() for the setup of the options
+  defaulted boolean version = false; // option to print version only
+  defaulted boolean help = false; // option to output help only
+  defaulted boolean performance = false; // option to measure performance
+  defaulted boolean beQuiet = false; // option q to be quiet
+  defaulted boolean useExec = false; // option x to use slower but more reliable exec java compiler
+  defaulted boolean exitOnFirstFailure = false; // option e to exit on first failure with the -f option 
+
+  internal Optional<String> generate   = Optional.empty(); // option g to specify what to generate
   defaulted boolean override           = false;
-  internal Optional<String> path       = Optional.empty();
-  internal Optional<String> compile    = Optional.empty();
-  internal Optional<String> importFile = Optional.empty();
+  defaulted boolean removePrevious     = false;  
+  internal Optional<String> path       = Optional.empty(); // place to put output, otherwise in current directory
+  internal Optional<String> compile    = Optional.empty(); // option c to specify that compilation should happen
+  internal Optional<String> importFile = Optional.empty(); // option i to only import an xmi
+  internal Optional<String> testUmpFilesFile = Optional.empty(); // option f file with sets of files to process 
+  internal List<String[]> allLinesOfFilesToTest = null;
   internal List<String> suboptions     = Collections.<String>emptyList();
 
-  String umpleFile;
-  String[] linkedFiles;
+  String umpleFile; // first and maybe only umple file to compile, the main constructor argument
+  String[] linkedFiles; // other umple files to compile
 
   UmpleConsoleConfig(OptionSet optSet) {
+    // The first nonOptionArgument becomes the main file to process
     this(optSet.nonOptionArguments().size() > 0 ? optSet.nonOptionArguments().get(0) : null);
 
     this.version    = optSet.has("v");
     this.help       = optSet.has("help");
     this.performance = optSet.has("performance");
+    this.useExec    = optSet.has("x");
+    this.exitOnFirstFailure = optSet.has("e");
+    this.beQuiet    = optSet.has("quiet");    
     this.importFile = Optional.ofNullable((String)optSet.valueOf("import"));
     this.generate   = Optional.ofNullable((String)optSet.valueOf("generate"));
     this.override   = optSet.has("override");
+    this.removePrevious = optSet.has("removeprevious");
     this.path       = Optional.ofNullable((String)optSet.valueOf("path"));
+    this.testUmpFilesFile = Optional.ofNullable((String)optSet.valueOf("file"));
     
+    // Other files to process
     final List<String> files = optSet.nonOptionArguments();
     this.linkedFiles = (files.size() > 1 ? files.subList(1, files.size()) : Collections.<String>emptyList());
 
@@ -54,6 +70,26 @@ class UmpleConsoleConfig {
 
     // compile takes a bit more logic..
     this.compile = Optional.ofNullable((String)optSet.valueOf("c"));
+    
+    // Open and read any file containing other files to process for testing
+    if (testUmpFilesFile.isPresent())
+    {
+      String fileOfFiles = testUmpFilesFile.get();
+      try {
+        List<String> allLines = Files.readAllLines(Paths.get(fileOfFiles));
+        allLinesOfFilesToTest = new ArrayList<String[]>();
+        for(String aLine: allLines) {
+          allLinesOfFilesToTest.add(aLine.split(" "));
+        }
+      }
+      catch  (IOException e) {
+        System.out.println("File with files "+fileOfFiles+" from -f option cannot be opened. Ignoring");
+      }
+    }
+  }
+
+  public void setLinkedFiles(List<String> newLinkedFiles) {
+    this.linkedFiles=newLinkedFiles;
   }
 
   public List<File> getLinkedFilesAsFile() {
@@ -88,6 +124,18 @@ class UmpleConsoleConfig {
     return this.importFile;
   }
 
+  public void setTestUmpFilesFile(String testUmpFilesFile) {
+    this.testUmpFilesFile = Optional.of(testUmpFilesFile);
+  }
+
+  public Optional<String> getTestUmpFilesFile() {
+    return this.testUmpFilesFile;
+  }
+  
+  public List<String[]> getAllLinesOfFilesToTest() {
+    return this.allLinesOfFilesToTest;
+  }
+
   public void setPath(String path) {
     this.path = Optional.of(path);
   }
@@ -118,8 +166,7 @@ class UmpleConsoleMain
 {
   depend cruise.umple.compiler.*;
   depend cruise.umple.compiler.exceptions.*;
-  depend java.util.List;
-  depend java.util.Arrays;
+  depend java.util.*;
   depend joptsimple.*;
   depend java.io.*;
   depend java.text.DecimalFormat;
@@ -148,20 +195,29 @@ class UmpleConsoleMain
   }
 
   public int runConsole() {
+    // Check for options like help, version and import that don't compile arguments 
     if (preModelOptionProcess())
     {
       return 0;
     }
 
     if (cfg.getUmpleFile() == null || "".equals(cfg.getUmpleFile()))
-      {
-      System.out.println("Please specify <umple_file> to process");
-      printUsage();
-      return 1;
+    {
+      if(!cfg.getTestUmpFilesFile().isPresent()) {
+        System.out.println("Please specify <umple_file> to process");
+        printUsage();
+        return 1;
+      }
+      else {
+        // Will use -f option for files to process
+        return 0;
+      }
     }
 
     final String filename = cfg.getUmpleFile();
-    System.out.println("Processing -> " + filename);
+    if(!cfg.getBeQuiet()) {
+      System.out.println("Processing -> " + filename);
+    }
 
     final UmpleFile umpleFile = new UmpleFile(filename);
     //this loop is used to add linked umple files and to show names of them.
@@ -175,7 +231,9 @@ class UmpleConsoleMain
        
     final UmpleModel model = new UmpleModel(umpleFile);
 
+    // Process generators into the model
     if (postModelOptionProcess(model)) {
+      // Currently the above always returns false
       return 0;
     }
 
@@ -197,10 +255,37 @@ class UmpleConsoleMain
       boolean compileSuccess = model.getLastResult().getWasSuccess();
 
       // The "c" option causes an attempt to compile the resulting base language
-      // code. Not completely tested at current time.
+      // code.
       if (compileSuccess && cfg.getCompile().isPresent())
       {
-        compileSuccess = CodeCompiler.compile(model, cfg.getCompile().get());
+        if(model.isSkipcompile()) {
+          if(!cfg.getBeQuiet()) {
+            System.out.println("Skipping compilation of generated code due to @@@skipcompile in a comment.");
+          }
+        }
+        else {
+          for (GenerateTarget gt : model.getGenerates()) {
+            String generatorCodeToCompile = gt.getLanguage();
+          
+            if(generatorCodeToCompile.equals("Java") && model.isSkipjavacompile()) {
+              if(!cfg.getBeQuiet()) {
+                System.out.println("Skipping compilation of Java due to @@@skipjavacompile in a comment.");
+              }
+              continue;
+            }
+
+            if(generatorCodeToCompile.equals("Php") && model.isSkipphpcompile()) {
+              if(!cfg.getBeQuiet()) {
+                System.out.println("Skipping compilation of Php due to @@@skipphpcompile in a comment.");
+              }
+              continue;
+            }
+          
+            if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php")) {
+              compileSuccess = CodeCompiler.compile(model, generatorCodeToCompile,cfg.getUseExec(), cfg.getCompile().get());
+            }
+          }
+        }
       }
       
        // Get the performance execution.
@@ -223,7 +308,12 @@ class UmpleConsoleMain
 
       String successWord = compileSuccess ? "Success! " : "";
       
-      if(compileSuccess) {
+      // if failed but we are being quiet, we have to inform what we failed on
+      if(!compileSuccess && cfg.getBeQuiet()) {
+        System.out.println("Was attempting to process "+filename);
+      }
+      
+      if(compileSuccess && !cfg.getBeQuiet()) {
         for (String key : model. getHashMap().keySet()) {
           System.out.println("  Compiled to target language "+key);
           if(key.compareTo("Java")==0) {
@@ -234,10 +324,13 @@ class UmpleConsoleMain
         }
       }  
       
-      System.out.println(successWord + "Processed "+ cfg.getUmpleFile() + ".");
-      cfg.getLinkedFilesAsFile().stream()
-        .filter(File::exists)
-        .forEach(f -> System.out.println(successWord + "Processed "+ f.getPath() + "."));
+      // Output Processed either if not successful or not asking to be quiet
+      if(!compileSuccess || !cfg.getBeQuiet()) {
+        System.out.println(successWord + "Processed "+ cfg.getUmpleFile() + ".");
+        cfg.getLinkedFilesAsFile().stream()
+          .filter(File::exists)
+          .forEach(f -> System.out.println(successWord + "Processed "+ f.getPath() + "."));
+      }
       
       return (compileSuccess ? 0 : 1); 
     }
@@ -250,14 +343,53 @@ class UmpleConsoleMain
   }
 
   public static void main(String[] args)
-      {
+  {
     UmpleConsoleMain console = new UmpleConsoleMain(args);
 
+    // Run the compilation for the main command line files and mixsets
+    // Result is 1 if failed compile, -1 if compiler crashed
     int result = console.runConsole();
-    if (result < 0) {
+    if (result != 0) {
       System.exit(result);
+    }
+    
+    // If there are any files and mixsets specified by the -f option, then try those
+    UmpleConsoleConfig cfg = console.getCfg();
+    if(cfg.getAllLinesOfFilesToTest() != null) {
+      int finalResult = 0;
+      String failedLines ="";
+      int successCases = 0;
+      for(String[] fileList : cfg.getAllLinesOfFilesToTest()) {
+        // Change the configuration to have the new lines
+        if(fileList == null || fileList.length == 0) {
+          System.out.println("One of the lines in the file specified by -f is empty. Should be a list of files or mixsets");
+        }
+        else {
+          cfg.setUmpleFile(fileList[0]);
+          cfg.setLinkedFiles(fileList.length > 1 ? (Arrays.asList(fileList)).subList(1, fileList.length) : Collections.<String>emptyList());
+          result = console.runConsole();
+          if (result != 0) {
+            if (cfg.getExitOnFirstFailure()) {
+              System.exit(result);
+            }
+            else {
+              finalResult = result;
+              for (String aFileInList : fileList) {
+                failedLines += " "+aFileInList;
+              }
+              failedLines +="\n";
+            }
+          }
+          else successCases++;     
+        }
+      }
+      System.out.println("Number of successful compilations from umple -f option: "+successCases);
+      if(finalResult != 0) {
+        System.out.print("See the above log for the following Umple Java generation and compilation cases which failed:\n"+failedLines);
+        System.exit (finalResult);
       }
     }
+  }
     
   private void generateUmple(String filename)
   {
@@ -326,9 +458,34 @@ class UmpleConsoleMain
       cfg.getSuboptions().stream().forEach(gt::addSuboption); 
 
       model.addGenerate(Arrays.asList(gt));
+      
+      // If we have requested it, get rid of previously generated files in path matching this generator
+      if(cfg.getRemovePrevious()) {
+        String startPath = path;
+        if (path.equals("")) {startPath = ".";}
+        deletePreviouslyGenerated(startPath, "."+lang.toLowerCase());
+        
+        // If java we also delete class files
+        if(lang.equals("Java")) {
+          deletePreviouslyGenerated(startPath, ".class");
+        }
+      }
     }
     
     return false;
+  }
+  
+  // Recursively delete files ending in suffix; used to clean up before new generation
+  private void deletePreviouslyGenerated(String startPath, String suffix) {
+    File folder = new File(startPath);
+    for (File file : folder.listFiles()) {
+      if (file.getName().endsWith(suffix)) {
+        file.delete();
+      }
+      else if(file.isDirectory()) {
+        deletePreviouslyGenerated(startPath+File.separator+file.getName(),suffix);
+      }
+    }
   }
   
   private static OptionParser initializeOptionParser()
@@ -344,8 +501,13 @@ class UmpleConsoleMain
     optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
     optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: " + languages).withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("override"), "If a output language <lang> is specified using option -g, output will only generate language <lang>");
+    optparser.acceptsAll(Arrays.asList("removeprevious", "r"), "used with -g; remove previously generated code before generating new. Can help prevent leftover code causing errors. Does not work with generators specified inside a file.");
     optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to the entry class to compile, or with argument - to compile all outputfiles").withRequiredArg().ofType(String.class);
+    optparser.acceptsAll(Arrays.asList("f","file"), "Read in a file containing sets of umple-files to process, one set per line. Each is an independent compilation. Intended for testing.").withRequiredArg().ofType(String.class);
+    optparser.acceptsAll(Arrays.asList("e","exitonfirstfailure"), "Used with -f. Exit with nonzero on first failure of a compile specified in the file passed to -f. Otherwise exits after completing all compilations with nonzero if any failed.");    
+    optparser.acceptsAll(Arrays.asList("q","quiet"), "Be quiet. Only output compilation information in case of failure");
+    optparser.acceptsAll(Arrays.asList("x","useexec"), "Use an external exec call to invoke the Java compiler when using the -c option. May be needed on some platforms or with certain examples.");    
     optparser.acceptsAll(Arrays.asList("import","i"), "Indicate to read in XMI model and generate ump files").withRequiredArg().ofType(String. class);
     optparser.acceptsAll(Arrays.asList("suboption","s"), "Indicate to generate files with suboptions "+suboptionsAvail).withRequiredArg().ofType(String.class);
     
@@ -354,7 +516,7 @@ class UmpleConsoleMain
   
   private static void printUsage()
   {
-    System.out.println("For more detailed information go to http://manual.umple.org"+System.lineSeparator()
+    System.out.println("For more detailed information go to https://manual.umple.org"+System.lineSeparator()
       +"Usage: java -jar umple.jar [options] <umple_files>"+System.lineSeparator()
       +"Example: java -jar umple.jar airline.ump");
     try
