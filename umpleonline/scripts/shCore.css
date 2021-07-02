@@ -201,6 +201,7 @@
 	text-indent: 0 !important;
 	background: none !important;
 	overflow: visible !important;
+	display: none !important;
 }
 
 .syntaxhighlighter .toolbar .item.about
