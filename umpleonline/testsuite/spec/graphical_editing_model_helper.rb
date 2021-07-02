@@ -26,6 +26,7 @@ module DiagramEditingModelHelper
     wait_for_loading
     actual = evaluate_script("Page.getUmpleCode()")
     actual = actual[0..actual.index("//$?[End_of_model]$?") - 1]
+    actual = strip_whitespace(actual) == "//$?[End_of_model]$?namespace-;" ? "//$?[End_of_model]$?":actual
     expect(strip_whitespace(actual)).to eq(strip_whitespace(contents))
   end
 

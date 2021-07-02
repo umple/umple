@@ -11,11 +11,11 @@ module TestUtils
   # Same waiting implementation as above, but allows a temporary change to
   # capybara's timeout on page.has_no_selector?
   def wait_for_loading_for(timeout)
-    original_timeout = Capybara.default_wait_time
+    original_timeout = Capybara.default_max_wait_time
     loop until page.evaluate_script('jQuery.active').zero?
-    Capybara.default_wait_time = timeout
+    Capybara.default_max_wait_time = timeout
     page.has_no_selector?('.loading-indicator')
-    Capybara.default_wait_time = original_timeout
+    Capybara.default_max_wait_time = original_timeout
   end
 
   # Some methods used throughout the test suite to load umple
@@ -26,33 +26,34 @@ module TestUtils
 
   def load_umple_with_option(option_text)
     visit("umple.php?#{option_text}")
-    wait_for_loading
+    wait_for_loading_for(10)
   end  
 
   def load_umple_with_file(filename, directory)
     require 'cgi'
     file_contents = IO.read("#{directory}#{filename}")
-    url_encoded_file_contents = URI::encode(file_contents)
+    url_encoded_file_contents = CGI::escape(file_contents)
     visit("umple.php?text=#{url_encoded_file_contents}")
     wait_for_loading
   end
 
   def load_umple_with_file_and_option(filename, directory, option_text)
     file_contents = IO.read("#{directory}#{filename}")
-    url_encoded_file_contents = URI::encode(file_contents)
+    url_encoded_file_contents = CGI::escape(file_contents)
     visit("umple.php?#{option_text}&text=#{url_encoded_file_contents}")
     wait_for_loading
   end
 
   def encode_to_url(plain_text)
     require 'cgi'
-    return URI::encode(plain_text)
+    return CGI::escape(plain_text)
   end
 
   def get_file_contents(filename, directory)
     contents = IO.read("#{directory}#{filename}")
     return contents.encode(:universal_newline => true)
   end
+ 
 
   # A javascript/capybara implementation of a drag and drop. Uses javascript to 
   # create a temporary html element at the specified location, then uses the 
@@ -61,9 +62,22 @@ module TestUtils
   def click_and_drag_to_position(capybara_element, xLoc, yLoc)
     wait_for_loading
     execute_script("jQuery('body').append('<div id=\"tempPositionMarker\" style=\"position:absolute; left:#{xLoc}px; top:#{yLoc}px; width: 0px; height: 0px;\"></div>');")
-    capybara_element.drag_to(find(:css, "#tempPositionMarker"))
+    click_and_drag(capybara_element,  find("#tempPositionMarker"))
     execute_script("jQuery('#tempPositionMarker').remove();")
     wait_for_loading
+  end
+
+  #This method was added as cuprite doesn't have a native drag_to method
+  #It will exactly reproduce drag to method
+  def click_and_drag(from, to)
+    x1, y1 = from.native.node.find_position
+    x2, y2 = to.native.node.find_position
+
+    mouse = page.driver.browser.mouse
+    mouse.move(x: x1, y: y1)
+    mouse.down
+    mouse.move(x: x2, y: y2)
+    mouse.up
   end
 
   # A direct way to send modified keys to particular elements. This is only used
@@ -77,6 +91,11 @@ module TestUtils
     key_string = "alt+" + key_string if meta.include? :alt
     key_string = "ctrl+" + key_string if meta.include? :control
     key_string = "command+" + key_string if meta.include? :command
+    if key == 'a' then key_string = "shift+"+ key_string end
+    if key == 't' then
+      key_string = "ctrl+" + key if meta.include? :command
+      key_string = "ctrl+alt+shift+" + key if meta.include? :control
+    end
 
     page.driver.execute_script("Mousetrap.trigger('#{key_string}');")
   end
@@ -98,17 +117,17 @@ module TestUtils
   # These three methods allow the test suite to switch to any of the palette
   # accordion panels, and then wait for the switching animation to finish.
   def switch_to_saveandreset_panel
-    find(:css, "#ui-accordion-palette-header-0").click
+    find(:css, "#ui-id-1").click
     loop until all(:css, "div.ui-accordion-content-active").length == 1
   end
 
   def switch_to_tools_panel
-    find(:css, "#ui-accordion-palette-header-1").click
+    find(:css, "#ui-id-3").click
     loop until all(:css, "div.ui-accordion-content-active").length == 1
   end
 
   def switch_to_options_panel
-    find(:css, "#ui-accordion-palette-header-2").click
+    find(:css, "#ui-id-5").click
     loop until all(:css, "div.ui-accordion-content-active").length == 1
   end
 
@@ -119,7 +138,7 @@ module TestUtils
   end
 
   def self.set_example_directories(umpleonline_dir = "../../umpleonline/")
-    const_set(:EXAMPLE_DIRECTORY, umpleonline_dir + "ump/")
+    const_set(:EXAMPLE_DIRECTORY, umpleonline_dir + "umplibrary/")
     const_set(:TEST_EXAMPLE_DIRECTORY, umpleonline_dir + "testsuite/spec/test_examples/")
   end
 

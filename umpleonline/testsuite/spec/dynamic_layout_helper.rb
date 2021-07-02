@@ -7,6 +7,9 @@ module DynamicResizingHelper
   def setup_small
     self.class.send :include, SmallScreenHelper
   end
+  def tabs 
+    return find("#toggleTabsButton")['innerHTML']=="Show Tabs"
+  end
 
   def canvas
     size = get_element_size("umpleCanvasColumn")

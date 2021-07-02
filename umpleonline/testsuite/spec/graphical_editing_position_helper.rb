@@ -7,7 +7,7 @@ module DiagramEditingPositionHelper
   def load_umple_with_file_and_layout(filename)
     require 'cgi'
     file_contents = IO.read("#{TestUtils::TEST_EXAMPLE_DIRECTORY}#{EXAMPLE_SUBDIRECTORY}#{filename}")
-    url_encoded_file_contents = URI::encode(file_contents)
+    url_encoded_file_contents = CGI::escape(file_contents)
     visit("umple.php?showlayout&text=#{url_encoded_file_contents}")
     wait_for_loading
   end
@@ -16,7 +16,7 @@ module DiagramEditingPositionHelper
     require 'cgi'
     file_contents = IO.read("#{TestUtils::TEST_EXAMPLE_DIRECTORY}#{EXAMPLE_SUBDIRECTORY}#{filename}")
     file_contents = file_contents.split('//$?[End_of_model]$?')[0]
-    url_encoded_file_contents = URI::encode(file_contents)
+    url_encoded_file_contents = CGI::escape(file_contents)
     visit("umple.php?showlayout&text=#{url_encoded_file_contents}")
     wait_for_loading
   end

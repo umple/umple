@@ -1,7 +1,8 @@
 require 'rspec'
 require 'capybara'
 require 'capybara/dsl'
-require 'capybara/poltergeist'
+require "capybara/cuprite"
+require 'selenium-webdriver'
 require 'test_utils.rb'
 require 'load_examples_helper.rb'
 require 'graphical_editing_model_helper.rb'
@@ -10,11 +11,11 @@ require 'page_load_helper.rb'
 require 'options_panel_helper.rb'
 require 'dynamic_layout_helper.rb'
 
-Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app, {:debug => false})
+Capybara.register_driver :cuprite do |app|
+  Capybara::Cuprite::Driver.new(app, browser: :chrome)
 end
 
-Capybara.default_driver = :poltergeist
+Capybara.default_driver = :cuprite
 
 Capybara.app_host = TestUtils::HOST
 
