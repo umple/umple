@@ -428,18 +428,26 @@ class UmpleInternalParser
     String theValue = "";
     // Special comment directive to force umpleoutput directives to be added
     // In every class
-    if (token.getValue().startsWith("@outputumplesource")) { 
+    String theComment= token.getValue();
+    // Various settings indicating that no attempt should be made to compile code
+    // in certain languages as the model is incomplete or contains raw code in another language
+    if(theComment.contains("@@@skipcompile")) model.setSkipcompile(true);
+    if(theComment.contains("@@@skipphpcompile")) model.setSkipphpcompile(true);
+    if(theComment.contains("@@@skipjavacompile")) model.setSkipjavacompile(true);
+    if(theComment.contains("@@@skipcppcompile")) model.setSkipcppcompile(true);
+    if(theComment.contains("@@@skiprubycompile")) model.setSkiprubycompile(true);
+    
+    if (theComment.startsWith("@outputumplesource")) { 
       outputUmpleSource = true;
       return;
     }
-    if (!token.getValue().equals("$?[End_of_model]$?")) 
+    if (!theComment.equals("$?[End_of_model]$?")) 
     {
-      theValue = token.getValue();
-      Comment theComment = new Comment(theValue);
+      Comment newComment = new Comment(theComment);
       if(isAnnotation) {
-        theComment.setAnnotation(true);
+        newComment.setAnnotation(true);
       }
-      lastComments.add(theComment);
+      lastComments.add(newComment);
     }
   }
   
@@ -461,6 +469,14 @@ class UmpleInternalParser
     for (int i = 0; i < inlineComments.length; i++) 
     {
       theComment = inlineComments[i];
+      // Various settings indicating that no attempt should be made to compile code
+      // in certain languages as the model is incomplete or contains raw code in another language
+      if(theComment.contains("@@@skipcompile")) model.setSkipcompile(true);
+      if(theComment.contains("@@@skipphpcompile")) model.setSkipphpcompile(true);
+      if(theComment.contains("@@@skipjavacompile")) model.setSkipjavacompile(true);
+      if(theComment.contains("@@@skipcppcompile")) model.setSkipcppcompile(true);
+      if(theComment.contains("@@@skiprubycompile")) model.setSkiprubycompile(true);
+      
       if(theComment.startsWith("@outputumplesource")) {
         outputUmpleSource = true;
       }
