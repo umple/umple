@@ -64,19 +64,20 @@ ToolTips.tooltipEntries = {
   ttGenerateCode: ["li", "Click this button to generate the above code or diagram"],
 
   // show/hide elements tooltips
-  ttShowHideCanvas: ['li', "Show/Hide the diagram </br><b>Shortcut: [ctrl+d]"],
+  ttShowHideCanvas: ['li', "Show/Hide the diagram </br><b>Shortcut: [ctrl+d]</b>"],
   ttShowHideTextEditor: ['li', "Show/Hide the text editor </br><b>Shortcut: [" + toggleTextEditor + "]"],
   ttShowHideLayoutEditor: ['li', "Show/Hide the layout editor"],
-  ttToggleAttributes: ['li', "Show/Hide attributes in class diagrams </br><b>Shortcut: [shift+ctrl+a]"],
-  ttToggleMethods: ['li', "Show/Hide methods in class diagrams </br><b>Shortcut: [ctrl+m]"],
+  ttToggleAttributes: ['li', "Show/Hide attributes in class diagrams </br><b>Shortcut: [shift+ctrl+a]</b>"],
+  ttToggleMethods: ['li', "Show/Hide methods in class diagrams </br><b>Shortcut: [ctrl+m]</b>"],
+  ttToggleTraits: ['li', "Show/Hide traits; when selected any traits and their relationships are explicitly shown; when unselected, traits are merged into their client classes </br><b>Shortcut: [ctrl+r]</b>"],
   ttToggleActions: ['li', "Show/Hide actions in state diagrams (hide to simplify)"],
   ttToggleGuards: ['li', "Show/Hide guards in state diagrams (hide to simplify)"],
   ttToggleTransitionLabels: ['li', "Show/Hide transition labels in state diagrams (t1, t2 etc.) to allow reference"],
   ttToggleGuardLabels: ['li', "Show/Hide guard labels on the state diagrams (g1, g2 etc.) to allow reference"],
-  SHT_button: ['a', "Show/Hide the text editor - <b>" + toggleTextEditor ],
-  SHD_button: ['a', "Show/hide diagram pane on right - <b> ctrl-D"],
-  SHA_button: ['a', "Show/hide attributes in class diagrams - <b>shift-ctrl-A"],
-  SHM_button: ['a', "Show/hide methods in class diagrams - <b>ctrl-M"],
+  SHT_button: ['a', "Show/Hide the text editor - <b>" + toggleTextEditor +"</b>" ],
+  SHD_button: ['a', "Show/hide diagram pane on right - <b> ctrl-D</b>"],
+  SHA_button: ['a', "Show/hide attributes in class diagrams - <b>shift-ctrl-A</b>"],
+  SHM_button: ['a', "Show/hide methods in class diagrams - <b>ctrl-M</b>"],
   
 
   // diagram type tooltips
@@ -85,9 +86,9 @@ ToolTips.tooltipEntries = {
   ttShowGvClassDiagram: ["li", "Display a class diagram rendered using GraphViz </br><b>Shortcut: [ctrl+g]</b>"],
   ttShowGvStateDiagram: ["li", "Display a state diagram rendered using GraphViz</br><b>Shortcut: [ctrl+s]</b>"],
   ttShowStructureDiagram: ["li", "Display a graphically editable composite structure diagram </br><b>Shortcut: [ctrl+l]</b>"],
-  ECD_button: ['a', "Editable class diagram - <b>ctrl-E"],
-  GCD_button: ['a', "Graphviz class diagram - <b>ctrl-G"],
-  SD_button: ['a', "State diagram - <b>ctrl-S"],
+  ECD_button: ['a', "Editable class diagram - <b>ctrl-E</b>"],
+  GCD_button: ['a', "Graphviz class diagram - <b>ctrl-G</b>"],
+  SD_button: ['a', "State diagram - <b>ctrl-S</b>"],
 
   // preferences tooltips
   ttPhotoReady: ["li", "Remove editing handles from diagram"],
