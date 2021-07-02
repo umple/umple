@@ -80,7 +80,3 @@ class Rectangle
 {
   position 263 393 118 74;
 }
-
-/*
-@@@testlanguage=java,cpp,php
-*/
