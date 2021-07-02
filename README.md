@@ -2,9 +2,9 @@
 
 ### Build Status
 
-OS         | Linux  | OSX    | Windows  
-:--------- | ------ | ------ | -------- 
-**Status** | [![Travis-CI Build Status](https://travis-ci.com/umple/umple.svg?branch=master)](https://travis-ci.com/umple/umple) | [![Travis-CI Build Status](https://travis-ci.com/umple/umple.svg?branch=master)](https://travis-ci.com/umple/umple) | [![Windows Build status](https://ci.appveyor.com/api/projects/status/1yetvadynui7r8y6?svg=true)](https://ci.appveyor.com/project/vahdat-ab/umple/branch/master) 
+OS         | Linux  | OSX    | Linux Jenkins | Windows Appveyor |  
+:--------- | ------ | ------ | ------------- | ---------------- |
+**Status** | [![Travis-CI Build Status](https://travis-ci.com/umple/umple.svg?branch=master)](https://travis-ci.com/umple/umple) | [![Travis-CI Build Status](https://travis-ci.com/umple/umple.svg?branch=master)](https://travis-ci.com/umple/umple) | [![Jenkins Linux Build status](https://jenkins.umple.org/job/Umple/lastSuccessfulBuild/badge/icon?subject=Jenkins%2FLinux&build=lastCompleted:${params.BRANCH=master})](https://jenkins.umple.org/job/Umple/lastSuccessfulBuild?subject=Jenkins%2FLinux&build=lastCompleted:${params.BRANCH=master}) | [![Windows Build status](https://ci.appveyor.com/api/projects/status/1yetvadynui7r8y6?svg=true)](https://ci.appveyor.com/project/vahdat-ab/umple/branch/master) 
 
 
 ## Description

@@ -114,10 +114,12 @@ History.getPreviousVersion = function(instance)
   }
   return result;
 }
-
+var count=0;
 // Save a new version of the code
 History.save = function(instance, umpleCode, reason)
 {
+  console.log("count_saved: "+count);
+  count++;
   if (instance.getVersion(instance.currentIndex) == umpleCode) return;
 
   if (!instance.firstSave) 
