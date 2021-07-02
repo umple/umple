@@ -19,6 +19,11 @@ Action.gentime = new Date().getTime();
 Action.savedCanonical = "";
 Action.gdprHidden = false;
 Action.update = "";
+let justUpdatetoSaveLater = false;
+
+Action.setjustUpdatetoSaveLater = function(state){
+  justUpdatetoSaveLater = state;
+}
 
 Action.clicked = function(event)
 {
@@ -415,6 +420,8 @@ Action.redoOrUndo = function(isUndo)
   Action.freshLoad = true;
   Page.setUmpleCode(afterHistoryChange);
   if (!Action.manualSync) Action.updateUmpleDiagram();
+
+  Action.setjustUpdatetoSaveLater(true);
   
   setTimeout(function () { // Delay so it doesn't get erased
     // Page.setFeedbackMessage("Changed line "+theDiff[3]+" "+theDiff[1]);
@@ -459,6 +466,7 @@ Action.loadFile = function()
   var filename = Page.getFilename();
   if (filename != "")
   {
+    Action.setjustUpdatetoSaveLater(true);
     if (Page.getModel().substring(0, 8) == "taskroot")
     {
       Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&isTask=1&filename={0}",filename));
@@ -480,9 +488,10 @@ Action.loadFileCallback = function(response)
   Action.freshLoad = true;
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   if (Object.keys(TabControl.tabs).length > 1) return;
-
+  
+  console.log("saved for loadFile");
   TabControl.getCurrentHistory().save(response.responseText,"loadFileCallback");
-  Page.setUmpleCode(response.responseText);
+  Page.setUmpleCode(response.responseText, true);
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {
     var extractedName = TabControl.extractNameFromCode(response.responseText);
@@ -531,6 +540,8 @@ Action.loadTaskCallback = function(response)
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   if (Object.keys(TabControl.tabs).length > 1) return;
 
+  Action.setjustUpdatetoSaveLater(true);
+  console.log("saved for loadTask");
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskCallback");
   var responseArray = response.responseText.split("task delimiter");
   Page.setUmpleCode(responseArray[0]);
@@ -556,6 +567,8 @@ Action.loadTaskExceptCodeCallback = function(response)
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   //if (Object.keys(TabControl.tabs).length > 1) return;
 
+  Action.setjustUpdatetoSaveLater(true);
+  console.log("saved for loadTaskExceptCode");
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
   var responseArray = response.responseText.split("task delimiter");
   jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":");
@@ -1494,7 +1507,10 @@ Action.directUpdateCommandCallback = function(response)
 // such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
 {
-  TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
+  if (!justUpdatetoSaveLater){
+    console.log("saved for TextCallback");
+    TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
+  }
   Action.freshLoad = true;
   
   Page.setUmpleCode(response.responseText, Action.update.codeChange);
@@ -1508,9 +1524,10 @@ Action.updateUmpleTextCallback = function(response)
   if (DiagramEdit.textChangeQueue.length == 0) 
   {
     DiagramEdit.pendingChanges = false;
+    Action.setjustUpdatetoSaveLater(false);
   }
-  else
-  {
+  else{
+    Action.setjustUpdatetoSaveLater(true);
     DiagramEdit.doTextUpdate();
   }
   
@@ -1588,6 +1605,7 @@ Action.loadExample = function loadExample()
   
   var newURL="?example="+exampleName+diagramType;
   Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+exampleName+" example</a>");
+
  // TODO - fix so history works nicely
  //   if(history.pushState) {history.pushState("", document.title, newURL);}
            
@@ -1596,13 +1614,15 @@ Action.loadExample = function loadExample()
 
 Action.loadExampleCallback = function(response)
 {
+  console.log("set update to "+justUpdatetoSaveLater);
   Action.freshLoad = true;
   Page.setUmpleCode(response.responseText);
   Page.hideLoading();
-  TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
   Action.updateUmpleDiagram();
   Action.setCaretPosition("0");
   Action.updateLineNumberDisplay();
+  TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
+  Action.setjustUpdatetoSaveLater(true);
 }
 
 Action.customSizeTyped = function()
@@ -1932,6 +1952,8 @@ Action.directAddClass = function(className) {
   var umpleJson = Json.toString({"position" : {"x" : "10","y" : "10","width" : "109","height" : "41"},"name" : className});
 
   Page.setFeedbackMessage("Adding class "+className);  
+  console.log("added class");
+  Action.setjustUpdatetoSaveLater(false);
   Action.ajax(Action.directUpdateCommandCallback,format("action=addClass&actionCode={0}",umpleJson));
 
   // After a pause to let the ajax return, then redraw the diagram.
@@ -2109,13 +2131,14 @@ Action.umpleCodeMirrorCursorActivity = function() {
 }
 
 Action.umpleCodeMirrorTypingActivity = function() {
-  if(Action.freshLoad == false) {
+  if(Action.freshLoad == false && !justUpdatetoSaveLater) {
     Page.codeMirrorEditor.save();
     Action.umpleTypingActivity("codeMirrorEditor");
   }
   else {
     Action.freshLoad = false;
   }
+    Action.setjustUpdatetoSaveLater(false);
 }
 
 Action.trimMultipleNonPrintingAndComments = function(text) {
@@ -2187,7 +2210,6 @@ Action.umpleTypingActivity = function(target) {
   {
     clearTimeout(Action.oldTimeout);
   }
-  
   if(target == "diagramEdit") Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', 500);
   else Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', Action.waiting_time);
 }
@@ -2197,8 +2219,10 @@ Action.processTyping = function(target, manuallySynchronized)
   // Save in history after a pause in typing
   if (target != "diagramEdit") 
   {
-    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
+    Action.setjustUpdatetoSaveLater(true);
+    console.log("saved for processTyping {not diagram edit}");
   }
+
   Page.setExampleMessage("");
   
   if (!Action.manualSync || manuallySynchronized)
@@ -2223,6 +2247,11 @@ Action.processTyping = function(target, manuallySynchronized)
     
     //Page.enableDiagram(true);
   }
+
+  if (target != "diagramEdit"){
+    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
+  }
+
 }
 
 Action.updateLayoutEditorAndDiagram = function()
