@@ -39,9 +39,21 @@ class UmpleModel
 
   // The Umple file (.ump) that was used to populate the model.
   UmpleFile umpleFile;
+  
+  // Variables used for distributed code control
   Boolean distributeOn=true;
   Boolean distributeForced=false;
   Boolean distributed=false;
+  
+  // Variables used to advise not to bother trying to compile various language
+  // because the code doesn't contain coherent or complete code. 
+  // These are set to true when various @@@skip directives are found in comments
+  Boolean skipcompile=false;
+  Boolean skipjavacompile=false;
+  Boolean skipcppcompile=false;
+  Boolean skiprubycompile=false;
+  Boolean skipphpcompile=false;
+  
   Integer distributePattern=0;
   String distributeTechnology="RMI";
   defaultPackage = null;
