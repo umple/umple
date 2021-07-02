@@ -19,6 +19,11 @@ Action.gentime = new Date().getTime();
 Action.savedCanonical = "";
 Action.gdprHidden = false;
 Action.update = "";
+let justUpdatetoSaveLater = false;
+
+Action.setjustUpdatetoSaveLater = function(state){
+  justUpdatetoSaveLater = state;
+}
 
 Action.clicked = function(event)
 {
@@ -415,6 +420,8 @@ Action.redoOrUndo = function(isUndo)
   Action.freshLoad = true;
   Page.setUmpleCode(afterHistoryChange);
   if (!Action.manualSync) Action.updateUmpleDiagram();
+
+  Action.setjustUpdatetoSaveLater(true);
   
   setTimeout(function () { // Delay so it doesn't get erased
     // Page.setFeedbackMessage("Changed line "+theDiff[3]+" "+theDiff[1]);
@@ -459,6 +466,7 @@ Action.loadFile = function()
   var filename = Page.getFilename();
   if (filename != "")
   {
+    Action.setjustUpdatetoSaveLater(true);
     if (Page.getModel().substring(0, 8) == "taskroot")
     {
       Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&isTask=1&filename={0}",filename));
@@ -480,9 +488,10 @@ Action.loadFileCallback = function(response)
   Action.freshLoad = true;
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   if (Object.keys(TabControl.tabs).length > 1) return;
-
+  
+  console.log("saved for loadFile");
   TabControl.getCurrentHistory().save(response.responseText,"loadFileCallback");
-  Page.setUmpleCode(response.responseText);
+  Page.setUmpleCode(response.responseText, true);
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {
     var extractedName = TabControl.extractNameFromCode(response.responseText);
@@ -531,6 +540,8 @@ Action.loadTaskCallback = function(response)
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   if (Object.keys(TabControl.tabs).length > 1) return;
 
+  Action.setjustUpdatetoSaveLater(true);
+  console.log("saved for loadTask");
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskCallback");
   var responseArray = response.responseText.split("task delimiter");
   Page.setUmpleCode(responseArray[0]);
@@ -556,6 +567,8 @@ Action.loadTaskExceptCodeCallback = function(response)
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   //if (Object.keys(TabControl.tabs).length > 1) return;
 
+  Action.setjustUpdatetoSaveLater(true);
+  console.log("saved for loadTaskExceptCode");
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
   var responseArray = response.responseText.split("task delimiter");
   jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":");
@@ -1494,7 +1507,10 @@ Action.directUpdateCommandCallback = function(response)
 // such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
 {
-  TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
+  if (!justUpdatetoSaveLater){
+    console.log("saved for TextCallback");
+    TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
+  }
   Action.freshLoad = true;
   
   Page.setUmpleCode(response.responseText, Action.update.codeChange);
@@ -1508,9 +1524,10 @@ Action.updateUmpleTextCallback = function(response)
   if (DiagramEdit.textChangeQueue.length == 0) 
   {
     DiagramEdit.pendingChanges = false;
+    Action.setjustUpdatetoSaveLater(false);
   }
-  else
-  {
+  else{
+    Action.setjustUpdatetoSaveLater(true);
     DiagramEdit.doTextUpdate();
   }
   
@@ -1563,18 +1580,18 @@ Action.loadExample = function loadExample()
   var diagramType="";
   if(Page.useGvStateDiagram) {
     diagramType="&diagramtype=state";
-    jQuery("#genjava").prop("selected",true);
+    //jQuery("#genjava").prop("selected",true);
   }
  else if(Page.useGvFeatureDiagram) {
     diagramType="&diagramtype=GvFeature";
-    jQuery("#genjava").prop("selected",true);
+    //jQuery("#genjava").prop("selected",true);
   }
   else if(Page.useStructureDiagram) {
     diagramType="&diagramtype=structure&generateDefault=cpp";
-    jQuery("#gencpp").prop("selected",true);
+    //jQuery("#gencpp").prop("selected",true);
   }
   else {
-    jQuery("#genjava").prop("selected",true);
+    //jQuery("#genjava").prop("selected",true);
   }
   
   var largerSelector = "#buttonLarger";
@@ -1588,6 +1605,7 @@ Action.loadExample = function loadExample()
   
   var newURL="?example="+exampleName+diagramType;
   Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+exampleName+" example</a>");
+
  // TODO - fix so history works nicely
  //   if(history.pushState) {history.pushState("", document.title, newURL);}
            
@@ -1596,13 +1614,15 @@ Action.loadExample = function loadExample()
 
 Action.loadExampleCallback = function(response)
 {
+  console.log("set update to "+justUpdatetoSaveLater);
   Action.freshLoad = true;
   Page.setUmpleCode(response.responseText);
   Page.hideLoading();
-  TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
   Action.updateUmpleDiagram();
   Action.setCaretPosition("0");
   Action.updateLineNumberDisplay();
+  TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
+  Action.setjustUpdatetoSaveLater(true);
 }
 
 Action.customSizeTyped = function()
@@ -1768,6 +1788,49 @@ Action.setCaretPosition = function(line)
       Page.setFeedbackMessage("Debug Mode");
       return;
     }
+    if(line=="sp")
+    { // creates Survey Pass; modifies conditions to allow for survey to be displayed:
+      // includes setting RandomizedFrequency to 1, MinutesBeforePrompt to 5 secs, EditsBeforePrompt to 1;
+      if (existSCookie("surveyCookie")==null && window.localStorage.getItem("surveyShown")==null){
+        if (document.getElementById("styleTip")!=null)
+          document.getElementById("styleTip").innerHTML="";
+        window.randomSurveyRoll = 1;
+        window.surveyData.EditsBeforePrompt=1;
+        timeSurveyUp = false;
+        clearTimeout(timeSurvey);
+        timeSurvey = setTimeout(function(){timeSurveyUp = true;}, 10000);
+        timeSurvey;
+        displayedText=false;
+        if (!displayedText){
+          beforeInstance = TabControl.getCurrentHistory().currentIndex;
+          document.addEventListener("mouseover", function(){
+            if (TabControl.getCurrentHistory().currentIndex-beforeInstance >= 1 && !displayedText && timeSurveyUp){
+                displaySurvey();
+                this.removeEventListener('mouseover', arguments.callee);
+            }                        
+          });
+        }
+      }
+      
+    }
+    if (line=="sc")
+    { // clears all survey cookies including whether URL has been shown already, whether the user has been skipped, and whether Survey Pass has been activated
+      // run twice for it to be effective
+      let setToExpire=new Date();
+      setToExpire.setTime(setToExpire.getTime()-1000);
+      document.cookie="surveyCookie=done; expires="+setToExpire.toUTCString()+"; path=/;";
+      window.localStorage.removeItem("surveyShown");
+      document.addEventListener("mouseover", function(){});
+      setCookieBeforeClose("off");
+    }
+    if(line=="tc")
+    { // resets cookies for tips
+      Page.setFeedbackMessage("Clearing tip cookies");
+      let currentTime=new Date();
+      currentTime.setTime(currentTime.getTime()-1000);
+      window.localStorage.removeItem("first_time");
+      document.cookie="tipCookie=done; expires="+currentTime.toUTCString()+"; path=/;";
+    }
     if(line.substr(0,2)=="cm") 
     {
       if(line.substr(2,1)=="0" && Page.codeMirrorOn) 
@@ -1889,6 +1952,8 @@ Action.directAddClass = function(className) {
   var umpleJson = Json.toString({"position" : {"x" : "10","y" : "10","width" : "109","height" : "41"},"name" : className});
 
   Page.setFeedbackMessage("Adding class "+className);  
+  console.log("added class");
+  Action.setjustUpdatetoSaveLater(false);
   Action.ajax(Action.directUpdateCommandCallback,format("action=addClass&actionCode={0}",umpleJson));
 
   // After a pause to let the ajax return, then redraw the diagram.
@@ -2066,13 +2131,14 @@ Action.umpleCodeMirrorCursorActivity = function() {
 }
 
 Action.umpleCodeMirrorTypingActivity = function() {
-  if(Action.freshLoad == false) {
+  if(Action.freshLoad == false && !justUpdatetoSaveLater) {
     Page.codeMirrorEditor.save();
     Action.umpleTypingActivity("codeMirrorEditor");
   }
   else {
     Action.freshLoad = false;
   }
+    Action.setjustUpdatetoSaveLater(false);
 }
 
 Action.trimMultipleNonPrintingAndComments = function(text) {
@@ -2144,7 +2210,6 @@ Action.umpleTypingActivity = function(target) {
   {
     clearTimeout(Action.oldTimeout);
   }
-  
   if(target == "diagramEdit") Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', 500);
   else Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', Action.waiting_time);
 }
@@ -2154,8 +2219,10 @@ Action.processTyping = function(target, manuallySynchronized)
   // Save in history after a pause in typing
   if (target != "diagramEdit") 
   {
-    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
+    Action.setjustUpdatetoSaveLater(true);
+    console.log("saved for processTyping {not diagram edit}");
   }
+
   Page.setExampleMessage("");
   
   if (!Action.manualSync || manuallySynchronized)
@@ -2180,6 +2247,11 @@ Action.processTyping = function(target, manuallySynchronized)
     
     //Page.enableDiagram(true);
   }
+
+  if (target != "diagramEdit"){
+    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
+  }
+
 }
 
 Action.updateLayoutEditorAndDiagram = function()
@@ -2900,23 +2972,28 @@ Mousetrap.bind(['c'], function(e){
 
 Action.toggleTabsCheckbox = function(language)
 {
-	// Workaround for TextUml having java prefix
-	if($("inputGenerateCode").value.split(":")[1] == "TextUml"){
-		language = "TextUml";
-	}
+  // Workaround for TextUml having java prefix
+  if($("inputGenerateCode").value.split(":")[1] == "TextUml"){
+    language = "TextUml";
+  }
 
-	if(language == "java" || language == "php" || language == "cpp" 
-    || language == "ruby" || language == "sql"){
-		jQuery("#ttTabsCheckbox").show();
-		jQuery("#tabRow").show();
-	}
-	else{
-		jQuery("#ttTabsCheckbox").hide();
-		jQuery("#tabRow").hide();
-		if(jQuery('#buttonTabsCheckbox').is(':checked')){
-			jQuery('#buttonTabsCheckbox').click();
-		}
-	}
+  if(language == "java" || language == "php" || language == "cpp" 
+    || language == "ruby" || language == "sql") {
+    jQuery("#ttTabsCheckbox").show();
+    jQuery("#tabRow").show();
+
+    if ($("inputGenerateCode").value.split(":")[1] == "UmpleSelf" || $("inputGenerateCode").value.split(":")[1] == "Json") {
+      jQuery("#ttTabsCheckbox").hide();
+      jQuery("#tabRow").hide();
+    }
+  }
+  else {
+    jQuery("#ttTabsCheckbox").hide();
+    jQuery("#tabRow").hide();
+    if(jQuery('#buttonTabsCheckbox').is(':checked')){
+      jQuery('#buttonTabsCheckbox').click();
+    }
+  }
 }
 
 // Function for splitting code into tabs for every new file, activated when checking the Show Tabs checkbox

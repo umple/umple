@@ -74,7 +74,6 @@
 
   <umple-jar name="umplificator" />
   <umple-jar name="validator" />
-  <umple-jar name="vml" />
   <umple-jar name="stats" />
   <umple-jar name="docs" />
   <umple-jar name="sync" />
@@ -232,7 +231,9 @@
       <batchtest fork="yes" todir="${test.output.path}">
          <fileset dir="${project.path}/test">
           <include name="**/${junit}.java"/>
+          <include name="**/AssociationSortedWithNameSpace.java"/>
           <exclude name="**/AllTests.java"/>
+          <exclude name="**/vml/**"/>
         </fileset>
       </batchtest>
       <classpath refid="project.classpath"/>

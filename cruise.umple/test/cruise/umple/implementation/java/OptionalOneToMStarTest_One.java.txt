@@ -136,7 +136,7 @@ public class Mentor
         Mentor existingMentor = aStudent.getMentor();
         if (!mentorToNewStudents.containsKey(existingMentor))
         {
-          mentorToNewStudents.put(existingMentor, new Integer(existingMentor.numberOfStudents()));
+          mentorToNewStudents.put(existingMentor, Integer.valueOf(existingMentor.numberOfStudents()));
         }
         Integer currentCount = mentorToNewStudents.get(existingMentor);
         int nextCount = currentCount - 1;
@@ -144,7 +144,7 @@ public class Mentor
         {
           return wasSet;
         }
-        mentorToNewStudents.put(existingMentor, new Integer(nextCount));
+        mentorToNewStudents.put(existingMentor, Integer.valueOf(nextCount));
       }
       checkNewStudents.add(aStudent);
     }

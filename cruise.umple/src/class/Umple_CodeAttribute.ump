@@ -1,0 +1,128 @@
+namespace cruise.umple.compiler;
+
+class Attribute
+{
+  public Attribute(Attribute another){
+  	super(another.getName(), another.getType(), another.getModifier(), another.getValue());
+  	isAutounique = another.getIsAutounique() ;
+	isUnique = another.getIsUnique();
+	isList = another.getIsList();
+	isDerived = another.getIsDerived();
+	codeblock = another.getCodeblock();
+	isLazy = another.getIsLazy();
+	//Attribute Associations
+	comments = new ArrayList<Comment>(); // Create a deep copy of comments.
+  for (Comment comment : another.getComments())
+  {
+    comments.add(new Comment(comment));
+  }
+	position = another.getPosition();
+	endPosition = another.getEndPosition();
+	umpleClass = another.getUmpleClass();
+	umpleTrait = another.getUmpleTrait();
+  }
+
+  public boolean isConstant()
+  {
+    return "const".equals(getModifier());
+  }
+
+  public boolean isPrimitive()
+  {
+    return getType() == null || "String".equals(getType()) || "Integer".equals(getType()) || "Double".equals(getType()) || "Boolean".equals(getType()) || "Date".equals(getType()) || "Time".equals(getType());
+  }
+
+
+  public boolean isImmutable()
+  {
+    boolean varIsImmutable = super.isImmutable();
+    boolean classIsImmutable = (this.getUmpleClass() == null) ? false : getUmpleClass().isImmutable();
+
+    return (varIsImmutable || classIsImmutable);
+  }
+
+  public boolean isInternal()
+  {
+    return "internal".equals(getModifier());
+  }
+
+  public boolean isSettable()
+  {
+    return "settable".equals(getModifier());
+  }
+
+  public boolean isDefaulted()
+  {
+    return "defaulted".equals(getModifier());
+  }
+
+  public String getValue()
+  {
+    String possibleValue = codeblock.getCode();
+    return "".equals(possibleValue) ? super.getValue() : possibleValue;
+  }
+
+  public boolean setValue(String aValue)
+  {
+    aValue = normalizeValue(getType(),aValue);
+    codeblock.setCode(aValue);
+    return super.setValue(aValue);
+  }
+
+  public boolean setValue(String lang, String code)
+  {
+    codeblock.setCode(lang,code);
+    return true;
+  }
+
+  public String getFullType()
+  {
+    return this.getType() + (this.getIsList() ? "[]" : "");
+  }
+
+  public ArrayList<String> getMethodNames()
+  {
+    ArrayList<String> methodNames = new ArrayList<String>();      
+    String attributeCapitalizedName = this.getUpperCaseName();
+    if (!this.isIsList())
+    {
+      if(!this.isInternal())
+      {
+        methodNames.add("get" + attributeCapitalizedName);
+      }
+      if(this.isIsLazy() || this.isSettable() || this.isDefaulted())
+      {
+        methodNames.add("set" + attributeCapitalizedName);
+      }
+      if(this.isDefaulted()) 
+      {
+        methodNames.add("reset" + attributeCapitalizedName);
+        methodNames.add("getDefault" + attributeCapitalizedName);
+      }
+      if(this.getType() != null && this.getType().equals("Boolean"))
+      {
+        methodNames.add("is" + attributeCapitalizedName);
+      }
+    }
+    else 
+    {
+      String singularName = getUmpleClass().getSourceModel().getGlossary().getSingular(this.getName());
+      String singularCapitalizedName = singularName.substring(0, 1).toUpperCase() + singularName.substring(1);
+
+      if(!this.isInternal())
+      {
+        methodNames.add("get" + singularCapitalizedName);
+        methodNames.add("get" + attributeCapitalizedName);
+        methodNames.add("numberOf" + attributeCapitalizedName);
+        methodNames.add("has" + attributeCapitalizedName);
+        methodNames.add("indexOf" + singularCapitalizedName);
+      }
+      if(this.isIsLazy() || this.isSettable() || this.isDefaulted())
+      {
+        methodNames.add("add" + singularCapitalizedName);
+        methodNames.add("remove" + singularCapitalizedName);
+      }
+    }
+    return methodNames;
+  }
+}

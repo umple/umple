@@ -39,9 +39,21 @@ class UmpleModel
 
   // The Umple file (.ump) that was used to populate the model.
   UmpleFile umpleFile;
+  
+  // Variables used for distributed code control
   Boolean distributeOn=true;
   Boolean distributeForced=false;
   Boolean distributed=false;
+  
+  // Variables used to advise not to bother trying to compile various language
+  // because the code doesn't contain coherent or complete code. 
+  // These are set to true when various @@@skip directives are found in comments
+  Boolean skipcompile=false;
+  Boolean skipjavacompile=false;
+  Boolean skipcppcompile=false;
+  Boolean skiprubycompile=false;
+  Boolean skipphpcompile=false;
+  
   Integer distributePattern=0;
   String distributeTechnology="RMI";
   defaultPackage = null;
@@ -86,13 +98,19 @@ class UmpleModel
   1 -> * UmpleClass;
 
   // The Umple Traits contained within the model.
-  1 -> * UmpleTrait;
+  mixset Trait {
+      1 -> * UmpleTrait;
+
+  }
 
   // The Umple Templates contained within the model.
   1 -> * UmpleTemplate;
 
   // The State Machines contained within the model.
-  1 -> * StateMachine stateMachineDefinitions;
+  mixset StateMachine {
+      1 -> * StateMachine stateMachineDefinitions;
+
+  }
 
   // The Umple interfaces contained within the model.
   1 -> * UmpleInterface;
@@ -144,7 +162,10 @@ class UmpleElement
   // Methods to distinguish the subclass types
   boolean isUmpleClass() {return false;}
   boolean isUmpleInterface() {return false;}
-  boolean isUmpleTrait() {return false;}
+  mixset Trait {
+      boolean isUmpleTrait() {return false;}
+
+  }
 }
 
 /*
@@ -491,10 +512,13 @@ class ConstraintVariable
     /*
      * ConstraintStates encapsulate the state data in a statemachine expression such as [sm is in state st], this is a leaf in the constraint tree/
      */
+
     class ConstraintState
     {
+      mixset StateMachine {
       State state;
       key { state }
+      }
     }
 
     /*
@@ -502,8 +526,10 @@ class ConstraintVariable
      */
     class ConstraintStateMachine
     {
+      mixset StateMachine {
       StateMachine stateMachine;
       key { stateMachine }
+      }
     }
     
     /*
@@ -727,7 +753,9 @@ class UmpleClass
 
   before setExtendsClass { if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; } }
 
+  mixset StateMachine {
   before addStateMachine { if (isImmutable()) { return false; } }
+  }
 
   boolean isUmpleClass() {return true;}
 }
@@ -809,7 +837,9 @@ class UmpleTrait {
 
   //--- before setExtendsTrait { if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; } }
 
+  mixset StateMachine {
   before addStateMachine { if (isImmutable()) { return false; } }
+  }
 
   boolean isUmpleTrait() {return true;}
 }
@@ -832,9 +862,10 @@ class GeneralTPApplied {
 	String[] parameters;
 	1 -> 0..1 Position positions;
 	1 -> * MethodTemplateSignature;
+  mixset StateMachine {
 	1 -> * StateMachineTemplateSignature;
 	1 -> * StateMachineModifier;
-
+  }
 }
 
 class MethodTemplateSignature{
@@ -843,6 +874,7 @@ class MethodTemplateSignature{
 	alias;
 }
 
+mixset StateMachine {
 class StateMachineTemplateSignature{
 	modifier;
 	srcStateMachine;
@@ -879,7 +911,7 @@ class ExtendStateByStateMachine{
   isA StateMachineModifier;
   String[] desStates;
 }
-
+}
 /*
  * A depend relationship indicates a package on which this class depends
  */
@@ -968,9 +1000,11 @@ class Attribute
   after constructor { codeblock.setCode(normalizeValue(aType,aValue)); }
   before setType { codeblock.setCode(normalizeValue(aType,getValue())); }
   after setType { setValue(getValue()); }
-  before delete { 
-    if (traceRecords == null) {
-      traceRecords = new ArrayList<TraceRecord>();
+  mixset Trace {
+    before delete { 
+      if (traceRecords == null) {
+        traceRecords = new ArrayList<TraceRecord>();
+      }
     }
   }
 
@@ -1260,13 +1294,35 @@ class ObjectElement {
   value;  
 }
 
+class Port {
+
+  depend cruise.umple.parser.Position;
+	
+	direction { IN{} OUT{} BOTH{} }
+	type { END{} RELAY{} SERVICE{} CUSTOM{} }
+	name;
+	modifier;	
+	boolean conjugated;
+	int multiplicity;
+	boolean replicated;
+	
+	String signalType;
+		
+	before setUmpleClass { if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; } }
+	
+	1 -> 0..1 Position;
+  1 -> 0..1 Position endPosition;
+}
+
 
 use UmpleVersion.ump;
 use UmpleDiagram.ump;
-use stateMachine/StateMachine.ump;
+//use stateMachine/StateMachine.ump;
 use Umple_Code.ump;
 use UmpleEnumeration_Code.ump;
 mixset Mixset{
   use mixset/Mixset.ump;
 }
-use FeatureModel.ump;
+mixset FeatureModel {
+  use feature/FeatureModel.ump;
+}

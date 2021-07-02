@@ -1,0 +1,208 @@
+  /*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+ */
+
+namespace cruise.umple.compiler;
+
+class UmpleInternalParser
+{
+    private void analyzeInjectionToken(Token t, int analysisStep) {
+      if (t.is("toplevelBeforeCode"))
+      {
+        analyzeToplevelInjectionCode(t, analysisStep, "toplevelBeforeCode");
+      } else if (t.is("toplevelAfterCode"))
+      {
+        analyzeToplevelInjectionCode(t, analysisStep, "toplevelAfterCode");
+      }
+    }
+  
+    // Issue#1521
+  private void analyzeToplevelInjectionCode(Token injectToken, int analysisStep, String toplevelBeforeOrAfter)
+  {
+    if (analysisStep == 1) // Do not process when analysis step == 1
+    {
+      shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
+      return;
+    }
+    if (analysisStep == 2) // Do not process when analysis step == 2
+    {
+      shouldProcessAgain = true;
+      return;
+    }
+    Token classNameToken;
+    ArrayList<String> matchedClassNames = new ArrayList<String>();
+    ArrayList<String> matchingClassNamePatterns = new ArrayList<String>();
+    while (injectToken.getSubToken("className") != null)
+    {
+      classNameToken = injectToken.getSubToken("className");
+      String matchingClassNamePattern = classNameToken.getValue();
+      matchingClassNamePatterns.add(matchingClassNamePattern);
+      injectToken.removeSubToken(classNameToken); 
+    }
+
+    String beforeOrAfter = toplevelBeforeOrAfter.substring(8);
+    String beforeOrAfter2 = beforeOrAfter.substring(0, 1).toLowerCase() + beforeOrAfter.substring(1); //toLowerCase first letter
+    injectToken.getSubToken(toplevelBeforeOrAfter).setName(beforeOrAfter2);
+
+    ArrayList<String> operationNames = new ArrayList<String>();
+    for (Token subToken : injectToken.getSubTokens())
+    {
+      if (subToken.is("injectionOperation"))
+      {
+        for (Token subSubToken : subToken.getSubTokens())
+        {
+          if (subSubToken.is("operationName"))
+          {
+            operationNames.add(subSubToken.getValue());
+          }
+        }
+      }
+    }
+    
+    // get all class names in this model
+    ArrayList<String> allClassNames = new ArrayList<String>();
+    for (UmpleClass umpleClass:model.getUmpleClasses())
+    {
+      allClassNames.add(umpleClass.getName());
+    }
+
+    // get all matched class names for code injection
+    if (matchingClassNamePatterns.get(0).equals("*"))
+    {
+      for (UmpleClass umpleClass:model.getUmpleClasses())
+      {
+        matchedClassNames = allClassNames;
+      }
+    } else {
+      for (String matchingClassNamePattern : matchingClassNamePatterns)
+      {
+        ArrayList<String> matched = findAllMatchClassNames(allClassNames, matchingClassNamePattern);
+        for (String s : matched)
+        {
+          if (!matchedClassNames.contains(s))
+          {
+            matchedClassNames.add(s);
+          }
+        }
+      }
+    }
+
+    for (String className : matchedClassNames) //loop over every matched class
+    {
+      if (model.getUmpleClass(className) != null)
+      {
+        if (injectToken.getSubToken("around") != null)
+        {
+          analyzeInjectionCode(injectToken, model.getUmpleClass(className));
+          continue;
+        }
+        List<UmpleTrait> umpleTraits = model.getUmpleClass(className).getExtendsTraits();
+        ArrayList<String> traitNames = new ArrayList<String>();
+        Iterator hmIterator = unlinkedExtends.entrySet().iterator(); 
+        
+        while (hmIterator.hasNext()) { 
+          Map.Entry mapElement = (Map.Entry)hmIterator.next(); 
+          if (((UmpleClass)mapElement.getKey()).equals(model.getUmpleClass(className)))
+          {
+            mixset Trait {
+              traitNames = (ArrayList<String>) mapElement.getValue();
+              ArrayList<String> newTraitNames = (ArrayList<String>) traitNames.clone();
+              for (String traitName : traitNames)
+              {
+                if (model.getUmpleTrait(traitName) == null)
+                {
+                  newTraitNames.remove(traitName);
+                }
+              } 
+              traitNames = newTraitNames;
+            }
+          }
+        } 
+
+        ArrayList<String> methodNames = model.getUmpleClass(className).getMethodNames();
+        mixset Trait {
+          for (String umpleTraitName:traitNames)
+          {
+            for (Method m : model.getUmpleTrait(umpleTraitName).getMethods())
+            {
+              methodNames.add(m.getName());
+            }
+          }
+        }
+        for (String operationName : operationNames)
+        {
+          boolean foundMethod = false;
+          for (String methodName : methodNames) // target method names
+          {
+            if (methodName.matches(globToRegex(operationName))) // if the method matches
+            {
+              foundMethod = true;
+              String globMatched = "";
+              if (operationName.contains("*"))
+              {
+                globMatched = methodName;
+              }
+              Token singleOperationNameInjectToken = toSingleOperationNameInInjectToken(injectToken, operationName, globMatched);
+              analyzeInjectionCode(singleOperationNameInjectToken, model.getUmpleClass(className));
+            }
+          }
+          if (!foundMethod && !matchingClassNamePatterns.get(0).equals("*")) 
+          {
+            getParseResult().addErrorMessage(new ErrorMessage(1012, injectToken.getPosition(), operationName));
+          }
+        }    
+      }
+    }
+  }
+
+  //TODO I changed the parameter's type. please remove this comment;
+  private void analyzeInjectionCode(Token injectToken, UmpleClassifier uClassifier)
+  {
+    String type = injectToken.is("beforeCode") ? "before" : "after";
+    Token codeLabelToken = injectToken.getSubToken("codeLabel");
+
+    // around as aspect type
+    if( (injectToken.getSubToken("around") != null) && (codeLabelToken != null) ) {
+      type="around";
+    }
+    CodeBlock cb = new CodeBlock();
+    String operationName = getOperationName(injectToken);
+    String operationSource = getOperationSource(injectToken).toLowerCase();
+
+    if(operationSource.equals("")) {
+      operationSource = "all";
+    }
+
+    CodeInjection injection = new CodeInjection(type,operationName,"",uClassifier);
+    injection.setOperationSource(operationSource);
+    mixset Mixset {
+      // check if the aspect needs to be injected before/after a label.
+      if(codeLabelToken != null)
+      injection.setInjectionlabel(codeLabelToken.getValue());
+    }
+    List<String> operationsParameters = getOperationsParameters(injectToken);
+    for(String operationParameters : operationsParameters) {
+      injection.addParameter(operationParameters);      
+    }
+
+    makeCodeInject(injectToken,injection,cb,uClassifier);
+    injection.setSnippet(cb);
+    if (uClassifier instanceof UmpleClass) {
+      ((UmpleClass)uClassifier).addCodeInjection(injection);
+
+      if(!unanalyzedInjectionTokens.containsKey(uClassifier))
+      {
+        unanalyzedInjectionTokens.put(uClassifier, new ArrayList<Token>()); 
+      }
+
+      List<Token> currentTokens = unanalyzedInjectionTokens.get(uClassifier);
+      currentTokens.add(injectToken);
+    } else if (uClassifier instanceof UmpleTrait){
+      ((UmpleTrait)uClassifier).addCodeInjection(injection);
+    }
+  }
+}

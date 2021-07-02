@@ -1,0 +1,301 @@
+
+// Fragment source file: Umple_Code.ump
+// Line : 562
+  class UmpleModel { 
+    public void applyFilter(String fname)
+    {
+      Filter f = getFilter(fname);
+
+      if (f == null)
+      {
+        return;
+      }
+
+      if(!f.hasNestedFilter() && f.isEmpty())
+      {
+        return;
+      }
+
+      if(f.hasNestedFilter())
+      {
+        for(String fn : f.getFilterValues())
+        {
+          markIncludedClasses(getFilter(fn));
+        }
+      }
+
+      markIncludedClasses(f);
+      filterOutClasses();
+
+    }
+    private void markIncludedClasses(Filter f)
+    {
+        if (f == null || f.isEmpty()) 
+        {
+        return;
+        }
+
+        for(UmpleClass clazz : umpleClasses)
+        {
+        if(f.isIncluded(clazz))
+        {
+            clazz.setFilteredin(true);
+            if(f.hasSub())
+            {
+            addSubClasses(f.getSubCount(),clazz);
+            }
+            if(f.hasSuper())
+            {
+            addSuperClasses(f.getSuperCount(), clazz);
+            }
+        }  
+        }
+
+        mixset Association {
+          if(f.hasAssociation())
+          {
+            markRelatedClass(f.getAssociationCount());
+          }
+        }
+
+        if(!f.hasSuper())
+        {
+        for(UmpleClass clazz : umpleClasses)
+        {
+            if(clazz.getFilteredin())
+            {
+            addSuperClasses(clazz);
+            }
+        }
+        }
+    }
+
+    private void filterOutClasses()
+    {
+        List<UmpleInterface> interfacesToKeep = new ArrayList<UmpleInterface>();
+    
+        int maxIndex = umpleClasses.size() - 1;
+        for(int i=maxIndex; i>=0; i--)
+        {
+        UmpleClass clazz = umpleClasses.get(i);
+        if (!clazz.getFilteredin())
+        {
+          mixset Association {
+            // Chop out it and its associations
+            for(Association a : clazz.getAssociations())
+            {      
+            clazz.removeAssociation(a); // Remove from this end
+            
+            // Find the other end(s) and remove references too
+            for (AssociationEnd ae : a.getEnds())
+            {
+                String endClassName = ae.getClassName();
+                if(!endClassName.equals(clazz.getName()))
+                {
+                UmpleClass otherClass = getUmpleClass(endClassName);
+                if(otherClass != null) {
+                    otherClass.removeAssociation(a);
+                }
+                }
+            }
+            
+            removeAssociation(a); // from model
+            a.delete();
+            }
+            Object[] avs = clazz.getAssociationVariables().toArray();
+            for(Object avo:  avs)
+            {
+            AssociationVariable av = (AssociationVariable)avo;
+            AssociationVariable otherAv = av.getRelatedAssociation();
+            if(otherAv != null) {
+                otherAv.delete();
+            }
+            av.delete();
+            }
+            removeUmpleClass(clazz);
+            clazz.delete();
+
+          }
+        }
+        else {
+            // Flag its interfaces to keep
+            List<UmpleInterface> interfacesOfClass;
+            interfacesOfClass=clazz.getParentInterface();
+            for(UmpleInterface ui : interfacesOfClass)
+            {
+            addInterfacesRecursively(interfacesToKeep, ui);
+            }
+        }
+        }
+        
+        // Delete all other Umple interfaces
+        maxIndex = umpleInterfaces.size() - 1;
+        for(int i=maxIndex; i>=0; i--)
+        {
+        UmpleInterface theInterface = umpleInterfaces.get(i);
+        removeUmpleInterface(theInterface);
+        theInterface.delete();
+        }    
+        
+    } 
+  } 
+
+// Fragment source file: Umple_Code.ump
+// Line : 4932
+  class Filter
+  {
+    public boolean hasNestedFilter()
+    {
+      return getFilterValues().length > 0;
+    }
+    
+    mixset Association {
+      public boolean hasAssociation()
+	  {
+	    return getAssociationCount() > 0;
+	  }
+    }
+
+    public boolean hasSub()
+    {
+      return getSubCount() > 0;
+    }
+    
+    public boolean hasSuper()
+    {
+      return getSuperCount() >= 0;
+    }
+
+    public boolean isEmpty()
+    {
+      
+      return getValues().length == 0 || "*".equals(getValue(0));
+    }
+
+    public boolean isIncluded(String name)
+    {
+      if (name == null)
+      {
+        return false;
+      }
+      else
+      {
+        return values.indexOf(name) != -1;
+      }
+    }
+
+    public boolean isIncluded(UmpleClass clazz)
+    {
+      if (clazz == null)
+      {
+        return false;
+      }
+      else
+      {
+        return isIncluded(clazz.getName());
+      }
+    }
+
+  }
+
+
+
+  // Fragment source file: Umple_Code.ump
+// Line : 571
+ class UmpleModel {
+  mixset Association {
+   private void markRelatedClass(int asso)
+    {
+      ArrayList<String> names = new ArrayList<String>();
+      for(int i = 0; i<asso; i++)
+      {
+        for(UmpleClass clazz : umpleClasses)
+        {
+          if(clazz.getFilteredin())
+          {
+            addRelatedClassName(clazz,names);
+          }
+        } 
+        markClassByName(names);
+        names = new ArrayList<String>();
+      }
+    }
+    private void addRelatedClassName(UmpleClass c, ArrayList<String> names)
+    {
+      for(AssociationVariable a : c.getAssociationVariables())
+      {
+        names.add(a.getType());
+      }  
+    }
+  }
+
+    private void markClassByName(ArrayList<String> names)
+    {
+      for(UmpleClass c : umpleClasses)
+      {
+        if(names.indexOf(c.getName())>=0)
+        {
+          c.setFilteredin(true);
+        }
+      }
+    }
+
+    private void addSuperClasses(int sup, UmpleClass c)
+    {
+      if(sup==0 || c.getExtendsClass()==null)
+      {
+        return;
+      }
+      else
+      {
+        c.getExtendsClass().setFilteredin(true);
+        addSuperClasses(sup-1, c.getExtendsClass());
+      }
+    }
+    
+    private void addSuperClasses(UmpleClass c)
+    {
+      if(c.getExtendsClass()==null)
+      {
+        return;
+      }
+      else
+      {
+        c.getExtendsClass().setFilteredin(true);
+        addSuperClasses(c.getExtendsClass());
+      }
+    }
+
+    private void addSubClasses(int sub, UmpleClass c)
+    {
+      if(sub==0)
+      {
+        return;
+      }
+      else
+      {
+        for(UmpleClass s : c.getSubclasses())
+        {
+          s.setFilteredin(true);
+          addSubClasses(sub-1,s);
+        } 
+      }
+    }
+
+    public Filter getFilter(String name)
+    {
+      for (Filter aFilter : getFilters())
+      {
+        if(aFilter.getName() != null)
+        {
+          if (aFilter.getName().equals(name))
+            return aFilter;
+        }
+        else if(name==null)
+        {
+          return aFilter;
+        } 
+      }
+      return null;
+    } 
+  }

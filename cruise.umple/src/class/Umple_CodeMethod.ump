@@ -1,0 +1,434 @@
+namespace cruise.umple.compiler;
+/**
+* This is for cloning
+* Note: This code doesn't cover deep cloning. It's a combination of  shallow and deep cloning
+*/
+
+class Method {
+//----------------------------------------------------------------------------  
+//---------------------------------Start--------------------------------------
+//----------------------------------------------------------------------------
+	void setMethodParameters(List<MethodParameter> parameters){
+		methodParameters = parameters;
+ 	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------   
+	String getSignature(){
+    String result = getType()+" "+getName()+"(";
+ 			for(MethodParameter p : getMethodParameters()){
+	 			result=result+p.getType()+",";
+ 			} 	
+ 			
+ 			if (result.endsWith(",") )result =result.substring(0, result.length()-1); 
+ 			result=result+")";
+ 		  return result;
+ 		}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------   		
+boolean compareWithTheMethod(Method inMethod){
+    if (getName().equals(inMethod.getName())){
+		  if(getType().equals(inMethod.getType())){
+			  Integer numberOfParams = getMethodParameters().size();
+			  if ( numberOfParams== inMethod.getMethodParameters().size()) {
+		          boolean allSame = true;
+		          for (int i = 0; i < numberOfParams; i++)
+		          {
+		            if(!getMethodParameter(i).getType().equals(inMethod.getMethodParameter(i).getType()))
+		            {
+		              allSame = false;
+		              break;
+		            }
+		          }
+		          if(allSame)
+		          {
+		            return true;
+		          }
+		     }
+		  }  
+      }
+	  return false;
+  } 		
+}
+
+
+class Method
+{
+    /**
+   * This is for cloning
+   * Note: This code doesn't cover deep cloning. It's a combination of  shallow and deep cloning
+   */
+  public Method(Method another) {
+	  this.isAbstract = another.getIsAbstract();
+	  this.modifier = another.getModifier();
+	  this.name = another.getName() ;
+	  this.position = another.getPosition();
+	  this.codePosition = another.getCodePosition();
+	  this.endPosition = another.getEndPosition();
+	  this.type = another.getType();
+	  this.isImplemented = another.getIsImplemented();
+	  this.methodParameters = new ArrayList<MethodParameter>();
+          this.exceptions = new ArrayList<String>();
+	  for (MethodParameter mParameter : another.getMethodParameters()) {
+		  this.methodParameters.add(new MethodParameter(mParameter));
+	  }
+          for (String exception:exceptions)
+          {
+            this.addException(exception);
+          }
+	  if (another.getMethodBody()!=null){
+		  this.methodBody = new MethodBody(another.getMethodBody());
+	  } else{
+		  this.methodBody = another.getMethodBody();
+	  }
+	  this. comments = another.getComments();
+  }
+
+  public boolean getExistsInLanguage(String lang)
+  {
+    if (!hasMethodBody()){
+      return false;
+    }
+    CodeBlock codeBlock = getMethodBody().getCodeblock();
+    // Check if another language other than 'lang' is associated with the codeblock
+    if (codeBlock.hasAnAssociatedLanguage() && !codeBlock.hasCode(lang)){
+      return false;
+    }
+    return true;
+  }
+  public String toString()
+  {
+    StringBuffer methodBuffer = new StringBuffer();
+    methodBuffer.append(" " + this.getType()+ " " + this.getName());
+    methodBuffer.append("(");
+    String paramName="";
+    String paramType="";
+    String aSingleParameter="";
+    String isList="";
+    String parameters = "";
+    String finalParams= "";
+    if (this.hasMethodParameters()){
+      for (MethodParameter aMethodParam : this.getMethodParameters())
+      {
+        paramName = aMethodParam.getName();
+        paramType = aMethodParam.getType();
+        isList = aMethodParam.getIsList() ? " [] " : " ";
+        aSingleParameter = paramType + isList + paramName;
+        parameters += aSingleParameter + ",";
+      }
+      finalParams = parameters.substring(0, parameters.length()-1);
+      methodBuffer.append(finalParams);
+    }
+    methodBuffer.append(")");
+    methodBuffer.append("  {");
+    methodBuffer.append(System.getProperty("line.separator"));
+    methodBuffer.append(    this.getMethodBody().getExtraCode());
+    methodBuffer.append(System.getProperty("line.separator"));
+    methodBuffer.append("  }");
+    return methodBuffer.toString();
+  }
+  
+  
+  public boolean equals(Object o) 
+  {
+    if (o == this) return true;
+    if (!(o instanceof Method)) return false;
+    
+    Method comparedMethod = (Method) o;
+    
+    String methodName = comparedMethod.getName();
+    String methodType = comparedMethod.getType();
+    int numberOfParams = comparedMethod.getMethodParameters().size();
+    
+    if (comparedMethod.isIsConstructor()) return comparedMethod == this;
+    
+    if (this.getName().equals(methodName))
+    {
+	  if (numberOfParams == this.getMethodParameters().size())
+	  {
+	    boolean allSame = true;
+	    for (int i = 0; i < numberOfParams; i++)
+	    {
+	      if(!this.getMethodParameter(i).getType().equals(comparedMethod.getMethodParameter(i).getType()))
+	      {
+	        allSame = false;
+	        //break;
+	      }
+	    }
+	    if(allSame) return true;
+      }
+    }
+    
+    return false;
+  }
+
+  depend java.util.stream.Collectors;
+
+  public int hashCode() {
+    // Note: this uses roughly the same rules as used above to generate a hashCode
+    // so the two methods should be roughly kept in sync.
+    String name = getName();
+    String returnType = getType();
+    String params = String.join("@DELIM1@", getMethodParameters().stream().map(p ->
+                      p.getName() + "@DELIM2@" + p.getFullType()).collect(Collectors.toList()));
+    String isConstructor = String.valueOf(isIsConstructor());
+    return Arrays.asList(name, returnType, params, isConstructor).hashCode();
+  }
+}
+
+
+/*
+ */
+class MethodBody
+{
+  public MethodBody(MethodBody another) {
+	codeblock = new CodeBlock(another.getCodeblock());
+  }
+  public MethodBody(String aValue)
+  {
+    this(new CodeBlock(aValue!=null ? aValue : ""));
+  }
+  public String getExtraCode(String lang)
+  {
+  return codeblock.getCode(lang);
+  }
+  public void setExtraCode(String lang, String code)
+  {
+    codeblock.setCode(lang,code);
+  }
+}
+
+
+class MethodParameter
+{
+  /**
+   * This is for cloning
+   * Note: This code doesn't cover deep cloning. It's a combination of  shallow and deep cloning
+   */
+  public MethodParameter(MethodParameter another){
+	super(another.getName(), another.getType(), another.getModifier(), another.getValue());
+	this.isAutounique = another.getIsAutounique();
+	this.isList = another.getIsList();
+	this.isDerived = another.getIsDerived();
+	this.isLazy = another.getIsLazy();
+  }
+  public String getFullType()
+  {
+    return this.getType() + (this.getIsList() ? "[]" : "");
+  }
+}
+
+/*
+ * 
+ */
+class CodeBlock
+{	
+  /*
+   * @author Vahdat
+   * @param another a CodeBlock that we would like to make a clone of.
+   * Please maintain this method if you're going to add new attributes to the class CodeBlock.
+   * This code manually creates a clone of a state machine.
+   * 
+   */	
+  public CodeBlock(CodeBlock another){
+  	this.name = another.getName();
+  	this.codes = new HashMap<String,String>();
+  	this.codes.putAll(another.codes);
+  } 
+  /*
+   * @author Vahdat
+   */
+	public void removeKeyword(String keyword){
+    if(keyword==null || keyword=="") return;
+    for (String language : codes.keySet()) {
+    	codes.put(language, codes.get(language).replace(keyword,"")) ;
+    }
+  }  
+  
+  /*
+   * @author Vahdat
+   */
+  public void addKeyword(String keyword){
+    if(keyword==null || keyword=="") return;
+//    if (codes.isEmpty()) {
+//    	setCode(keyword);
+//    	return;
+//    }
+    for (String language : codes.keySet()) {
+    	codes.put(language, codes.get(language)+keyword) ;
+    }
+  }
+  /*
+   * @author Vahdat
+   * This function searches for a specific keyword in all langauges in the code blocks.
+   */  
+  public boolean hasKeyword(String keyword){
+    if(keyword==null || keyword=="") return false;
+    for (String language : codes.keySet()) {
+        if (codes.get(language).contains(keyword)) return true;
+      }
+    return false;
+  }
+  
+  public CodeBlock(String add)
+  {
+    this();
+    codes.put("",add);
+  }
+  public CodeBlock(String lang, String add)
+  {
+    this();
+    codes.put(lang,add);
+  }
+  public void setCode(String add)
+  {
+    if(add!=null)
+      codes.put("",add);
+    else
+      codes.put("","");
+  }
+  public void setCode(String lang, String add)
+  {
+    if(add!=null)
+      codes.put(lang,add);
+    else
+      codes.put(lang,"");
+  }
+  public String getCode()
+  {
+    return !codes.containsKey(languageUsed) ? "".equals(languageUsed) ? null : codes.get("") : codes.get(languageUsed);
+  }
+  public String getCode(String lang)
+  {
+    return codes.containsKey(lang)? codes.get(lang) : "";
+  }
+
+  public boolean hasCode(String lang)
+  {
+    return codes.containsKey(lang)? true : false;
+  }
+
+  // Will return true if any language has been associated with this code block
+  public boolean hasAnAssociatedLanguage()
+  {
+    for (String codeLang : codes.keySet())
+    {
+      if (codeLang != "")
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public String toString(){
+    String out = "";
+    for(String next:codes.values())
+    {
+      out += next;
+    }
+    return out;
+  }
+}
+
+/*
+ */
+mixset AspectInjection {
+  class CodeInjection
+  {
+    public CodeInjection(String a, String b, String c, UmpleClassifier d)
+    {
+      this(a,b,new CodeBlock(c), d);
+    }
+    public void setCode(String str)
+    {
+      snippet.setCode(str);
+    }
+    public String getCode()
+    {
+      return snippet.getCode();
+    }
+    public String getConstraintCode(CodeTranslator gen)
+    {
+      return StringFormatter.format(gen.translate("Closed",constraintTree),getCode());
+    }
+    public void setCode(String lang, String code)
+    {
+      snippet.setCode(lang, code);
+    }
+    public String getCode(String lang)
+    {
+      return snippet.getCode(lang);
+    }
+  }
+}
+
+class ExtraCode
+{
+  public void appendExtraCode(String newCode)
+  {
+    code.add(new CodeBlock(newCode));
+  }
+
+  public void appendExtraCode(CodeBlock cb)
+  {
+    code.add(cb);
+  }
+
+  public String getExtraCode()
+  {
+    String returnCode = "";
+    if(getHasCode())
+    {
+      for(CodeBlock cb : code)
+      {
+        String temp = cb.getCode();
+        returnCode += (temp == null ? "" : temp);
+      }
+    }
+    return returnCode;
+  }
+
+  public boolean getHasCode()
+  {
+    return code.size() > 0;
+  }
+}
+
+class UmpleClassifier
+{
+  public boolean hasMethod(Method comparedMethod){
+    String methodName = comparedMethod.getName();
+    String methodType = comparedMethod.getType();
+    int numberOfParams = comparedMethod.getMethodParameters().size();
+    for (Method aMethod : this.getMethods()){
+      // Compare method names
+      if (aMethod.getName().equals(methodName)){
+          // Now compare parameters
+          if (numberOfParams == aMethod.getMethodParameters().size())
+          {
+            boolean allSame = true;
+            for (int i = 0; i < numberOfParams; i++)
+            {
+              if(!aMethod.getMethodParameter(i).getType().equals(comparedMethod.getMethodParameter(i).getType()))
+              {
+                allSame = false;
+                break;
+              }
+            }
+            if(allSame)
+            {
+              if (aMethod.getSource()==Method.Source.fAuto){
+                this.removeMethod(aMethod);
+                return false;
+              }
+              return true;
+            }
+          }
+      }
+    }
+    return false;
+  }
+  
+}

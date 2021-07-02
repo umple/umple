@@ -1,0 +1,91 @@
+// The master of this part of the Umple grammar is available at
+// [*https://github.com/umple/umple/blob/master/cruise.umple/src/constraint/umple_constraints.grammar*]
+
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
+
+// Constraints in Umple.
+// This is currently under development. Constraint capability is being
+// developed in agile increments. The first step, described below,
+// allows limiting the values of attributes. Code generation is not currently enabled.
+// Constraints may appear in classes (including association classes) 
+// as well as in states.
+precondition : [ [name]? pre : [[constraint]] ]
+postcondition : [ [name]? post : [[constraint]] ]
+
+invariant : [ ([name] :)? ([[constraint]]) ]
+constraintToken : [[constraint]]
+
+// A constraint is an expression optionally be surrounded in round brackets or negated
+constraint- :  [[constraintBody]] [[linkingOp]]? |  [[constraintExpr]] [[linkingOp]]?
+//negativeConstraint : ( ! | not ) ( [[constraintName]] | [[constraint]] )   fixed issue1536 'Umple does not parse properly the guards'
+negativeConstraint : ( ! | [!constraintNegSymbol:not\s+] ) ( [[constraintName]] | [[constraint]] )
+
+// A constraint body is a constraint expression (possibly with a linking operator such as && or ||). 
+constraintBody : OPEN_ROUND_BRACKET [[constraint]] CLOSE_ROUND_BRACKET
+linkingOp- : ( [=andOp:and|&&|&] | [[equalityOperator]] | [!orOp:OPEN_ROUND_BRACKETor|\Q||\ECLOSE_ROUND_BRACKET] ) [[linkingOpBody]]
+linkingOpBody : [[constraint]]
+constraintExpr- : [[statemachineExpr]] | [[stringExpr]] | [[boolExpr]] | [[numExpr]] | [[associationExpr]]  | [[genExpr]] | [[loneBoolean]] | { [!fakeContraint:[^\n]+] }
+
+loneBoolean : [[constraintVariable]]
+
+//must be a boolean //fixing is here!!!
+boolExpr :  [[constraintVariable]] [[equalityOperator]] [[boolLiteral]] | [[boolLiteral]] [[equalityOperator]] [[constraintVariable]] | [[boolLiteral]] 
+boolLiteral : [=literal:true|false]
+
+//must be string
+stringExpr : [[stringExprOperator]] | [[stringExprPlain]] 
+stringExprPlain- : [[constraintVariable]] [[equalityOperator]] [[stringLiteral]] | [[stringLiteral]] [[equalityOperator]] [[constraintVariable]]
+stringExprOperator- : [[stringComplexExpression]] [[equalityOperator]] [[stringComplexExpression]] | [[stringComplexExpression]] [[equalityOperator]] [[stringName]] | [[stringName]] [[equalityOperator]] [[stringComplexExpression]]
+stringLiteral- : " [**quote] " | ' [**quote] '
+stringName- : [[stringLiteral]] | [[constraintVariable]]
+stringComplexExpression : [[stringPlusOperator]]
+stringPlusOperator- : [[stringName]] ( [=concat:+] [[stringPlusOperator]] )?
+
+//basically the "other" catagory, contains everything that can be equal to something else
+genExpr : [[constraintVariable]] [[equalityOperator]] [[constraintVariable]]
+
+//for floats, doubles and ints
+numExpr : [[numberExpression1]] | [[numberExpression2]] | [[numberExpression3]] | [[numberExpression4]]
+numberExpression1- : ( [[arithmeticCall]] | [[numberName]] ) [[ordinalOp]] ( [[arithmeticCall]] | [[numberName]] )
+numberExpression2- : ( [[arithmeticCall]] | [[constraintVariable]] ) [[equalityOperator]] ( [[arithmeticCall]] | [[numberLiteral]] )
+numberExpression3- : ( [[arithmeticCall]] | [[numberLiteral]] ) [[equalityOperator]]    ( [[arithmeticCall]] | [[constraintVariable]] )
+numberExpression4- : ( [[arithmeticCall]] | [[numberLiteral]] ) [[equalityOperator]]    ( [[arithmeticCall]] | [[numberLiteral]] )
+numberLiteral- : [!number:-?[0-9]+([\\.][0-9]+)?]
+numberName- : [[numberLiteral]] | [[constraintVariable]]
+arithmeticCall : OPEN_ROUND_BRACKET ( [[lowArithmeticOperatorCall]] | [[highArithmeticOperatorCall]] ) CLOSE_ROUND_BRACKET
+lowArithmeticOperatorCall- : ( [[highArithmeticOperatorCall]] | [[arithmeticResolve]] )? [=operator:+|-|>>|<<] ( [[arithmeticCall]] | [[arithmeticResolve]] ) 
+highArithmeticOperatorCall- : [[arithmeticResolve]] [=operator:*|/|^|%] ( [[highArithmeticOperatorCall]] | [[arithmeticResolve]] ) 
+arithmeticResolve- : -( [[arithmeticCall]] -) | [[numberName]]
+
+equalityOperator- :  [=equalsOp:==|equals] | [=notequalsOp:!=|/=|=!|=/=]
+ordinalOp- : [=greaterOp:greater|>=|=>|=>=] | [=lessOp:less|<=|=<|=<=] | [=moreOp:larger|>] | [=smallerOp:smaller|<]
+
+associationExpr : [[constraintVariable]] [[associationOperators]] [[associationLiteral]]
+associationOperators- : [=firstOp:cardinality|has] ( [[ordinalOp]] | [[equalityOperator]] | [=all] )?
+associationLiteral : [[constraintParameter]] ( , [[associationLiteral]] )?
+
+statemachineExpr : [[constraintVariable]] [[statemachineOperators]] [[statemachineLiteral]]
+statemachineOperators- : [=isInOp:is|state] [=ignore:==|in] | [=isNotInOp:is|state] ( [=ignore:!=] | [=ignore:not] [=ignore:in] )
+statemachineLiteral- : [=state]? [~stateName]
+
+constraintVariable- : [[negativeConstraint]] | [[constraintName]]
+constraintName : [=new]? [!name:[a-zA-Z_][a-zA-Z0-9_-]*] [[constraintIndexOperator]]* [[constraintParameterList]]? [[constraintScopeOperator]]?
+constraintIndexOperator- : [ [!index:[0-9]+] ]
+constraintScopeOperator :  ( . | -> ) [[constraintVariable]]
+constraintParameterList : OPEN_ROUND_BRACKET ([[constraintParameter]] ([=comma:,] [[constraintParameter]])*)? CLOSE_ROUND_BRACKET
+constraintParameter : [=boolLit:true|false] | [[stringLiteral]] | [[constraintVariable]] | [[numberLiteral]]
+
+modelConstraint- : [ model : [[modelConstraintBody]] ]
+modelConstraintBody : -( [[modelConstraintBody]] -) [[modelLinkingOp]]? | [[modelExpr]] [[modelLinkingOp]]?
+modelLinkingOp : ( [=and:&|&&|and|,] | [!or:([|][|]?|or|;)] ) [[modelConstraintBody]]
+modelExpr : [~source]? [[modelRelationOp]] [~target]
+modelRelationOp- : [[modelRelationOpAssociation]] | [[modelRelationOpAttribute]] | [[modelRelationOpInheritance]]
+modelRelationOpInheritance : [=subclass:isA] | [=subclass:subclass|child|>>] ( of )? | [=subclass:inherits] ( from )? | [=superclass:parent|superclass|<<] ( of )?
+modelRelationOpAttribute : [=op:has] ( attribute | attr )? [=classification:named|of]?
+modelRelationOpAssociation : [[modelRelationAssociationEnd]]? [=op:--|->|<-|-<@>|<@>-] [[modelRelationAssociationEnd]]?
+modelRelationAssociationEnd :  [!bound:(\d+|[*])] ( .. [!bound:(\d+|[*])] )?
+
+
+// NOTE: Additional grammar parts deleted while testing is ongoing.

@@ -660,9 +660,51 @@ Page.initCanvasArea = function()
 
   if (!Layout.isDiagramVisible) {Layout.showHideCanvas(false);}
 }
+//The purpose of this function is make sure the URL example argument selects the appropriate dropdown example
+Page.setExamples = function(ex)
+{
+  var exValue = ex+".ump"
+  jQuery("#inputExample").change(Action.loadExample);
+  jQuery("#inputExample option").each(function(){
+    if (this.value==exValue){
+      jQuery("#inputExample option[value = \""+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
+  )
+ 
+  jQuery("#inputExampleType").change(Action.setExampleType);
 
+  jQuery("#inputExample2").change(Action.loadExample);
+  jQuery("#inputExample2 option").each(function(){
+    if (this.value==exValue){
+      jQuery("#inputExample2 option[value = \""+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
+  )
+  
+  jQuery("#inputExample3").change(Action.loadExample);
+  jQuery("#inputExample3 option").each(function(){
+    if (this.value==exValue){
+      jQuery("#inputExample3 option[value = \""+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
+  )
+ 
+  jQuery("#inputExample4").change(Action.loadExample);
+  jQuery("#inputExample4 option").each(function(){
+    if (this.value==exValue){
+      jQuery("#inputExample4 option[value = \""+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
+  )
+}
 Page.initExamples = function()
 {
+ 
   jQuery("#inputExample").change(Action.loadExample);
   jQuery("#defaultExampleOption").attr("selected",true);
  
@@ -913,6 +955,7 @@ Page.createTask = function()
     taskName, instructions.val(), Page.getModel(), requestorName, completionURL, isExperiment));
 }
 
+
 Page.createTaskCallback = function(response)
 {
   if (response.responseText.split(" ")[0] == "Task")
@@ -953,6 +996,31 @@ Page.cancelTaskResponse = function()
   {
     window.location.href = "task.php?cancelTaskResponse=1&model=" + Page.getModel();
   }
+}
+Page.hideTask = function(){
+    jQuery("#taskArea").css("display","none");
+    jQuery("#labelTaskName").css("display","none");
+    jQuery("#taskNameCell").css("display","none");
+    jQuery("#instructions").css("display","none");
+    jQuery("#isExperimentCell").css("display","none");
+    jQuery("#isExperiment").attr("checked", false);
+    Layout.zoomResize();
+}
+Page.cancelTask = function(){
+   
+   if (jQuery("#completionURL").val()!='' || jQuery("#taskName").val()!='' || jQuery("#requestorName").val()!='' || jQuery("#instructions").val()!=''){
+
+    var answer = confirm ("Are you sure you wanna cancel your task creation process ?");
+	
+    if (answer){
+    jQuery("#taskName").val('');
+    jQuery("#requestorName").val('');
+    jQuery("#completionURL").val('');
+    jQuery("#instructions").val('');
+    Page.hideTask();
+    }
+    }
+    else{ Page.hideTask();}
 }
 
 Page.toggleTabs = function()
@@ -1057,6 +1125,7 @@ Page.resetCanvasSize = function()
 {
   Page.setUmpleCanvasSize(Layout.minCanvasSize.width, Layout.minCanvasSize.height);
 }
+
 
 Page.getSelectedExample = function()
 {

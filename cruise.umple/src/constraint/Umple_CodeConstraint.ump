@@ -1,0 +1,1269 @@
+/*
+Copyright: All contributers to the Umple Project
+This file is made available subject to the open source license found at:
+http://umple.org/license
+ */
+namespace cruise.umple.compiler;
+
+/*Used to associated condition patern for an umple elemnt. Designed to be generic so, this elemnt
+ * can be of different types
+ */
+class Condition {
+	String condition;
+	Object element;
+}
+
+class ConstraintTree
+{
+  /*
+   * Used by trees to add all the elements of another tree to this tree
+   * @param cv the constraint variable node to add to this tree(if it is a ConstraintTree it will add all of it's sub elements via the addElement method)
+   */
+  public void addElementAll(ConstraintVariable cv)
+  {
+    if(cv == null)
+    {
+      return;
+    }
+    else
+    {
+      addElement(cv);
+    }
+  }
+
+  /*
+   * Negates a sub variable of the ConstriantTree recursively trying to do as much as it can, setting this ConstraintTree to show the ! symbol if this is the deepest ConstraintTree
+   * @param variable the sub constaint variable that is being negated. ConstraintOperators will call the negate method, ConstraintTrees will attempt to go deeper down the tree if that exists, trying to find a negatable target
+   */
+  private boolean negateVariable(ConstraintVariable variable){
+    boolean wasOperationNegatable = false;
+    if((variable==null))
+    {
+      return false;
+    }
+    if(variable instanceof ConstraintOperator)
+    {
+      if(((ConstraintOperator)variable).isNegatable())
+      {
+        if(((ConstraintOperator)variable).negate())
+        {
+          return true;
+        }
+        else
+        {
+          boolean left = isNegateVariable(((ConstraintOperator)variable).getLeft());
+          boolean right = isNegateVariable(((ConstraintOperator)variable).getRight());
+          wasOperationNegatable = left&&right;
+          if(wasOperationNegatable)
+          {
+           left = negateVariable(((ConstraintOperator)variable).getLeft());
+           right = negateVariable(((ConstraintOperator)variable).getRight());            
+          }
+          else
+          {
+            ((ConstraintOperator)variable).negate();
+          }
+        }
+      }
+    }
+    else if(variable instanceof ConstraintTree)
+    {
+      wasOperationNegatable = ((ConstraintTree)variable).negate();
+    }
+    else if(variable instanceof ConstraintLiteral||variable instanceof ConstraintUnassignedName)
+    {
+      return false;
+    }
+
+    if(!wasOperationNegatable)
+    {
+      displayNegation = !displayNegation;
+      wasOperationNegatable=!wasOperationNegatable;
+    }
+    return wasOperationNegatable;
+  }
+
+/*
+To check if a subvariable of the ConstraintTree is negatable or not. Works like negateVariable but does not change the displayNegation.
+
+*/
+  private boolean isNegateVariable(ConstraintVariable variable){
+    boolean wasOperationNegatable = false;
+    if((variable==null))
+    {
+      return false;
+    }
+    if(variable instanceof ConstraintOperator)
+    {
+      if(((ConstraintOperator)variable).isNegatable())
+      {
+        return true;
+      }
+    }
+    else if(variable instanceof ConstraintTree)
+    {
+      wasOperationNegatable = ((ConstraintTree)variable).isNegatable();
+    }
+    else if(variable instanceof ConstraintLiteral||variable instanceof ConstraintUnassignedName)
+    {
+      return false;
+    }
+    if(displayNegation)
+    {
+      wasOperationNegatable=true;
+    }
+    return wasOperationNegatable;
+  }
+
+
+
+
+  /*
+   * The public counterpart to the negateVariabe method, it negates this ConstraintTree's root, starting off the recursive decent into the negation of the tree
+   */
+  public boolean negate()
+  {
+    return negateVariable(root);
+  }
+/*
+   * The public counterpart to the isNegateVariabe method, it checks negativability of this ConstraintTree's root, starting off the recursive decent into the negation of the tree
+   */
+  public boolean isNegatable()
+  {
+    return isNegateVariable(root);
+  }
+
+  /*
+   * Copies non-constraint data such as whether the tree should display the ! symbol and whether it should display ( ) around the treee
+   */
+  ConstraintTree clone(ConstraintTree tree)
+  {
+    ConstraintTree aElement = createNew();
+    aElement.setDisplayNegation(tree.getDisplayNegation());
+    aElement.setShouldDisplayBrackets(tree.getShouldDisplayBrackets());
+    return aElement;
+  }
+
+  /*
+   * Creates a new instance of this class, it is used in clone and addElement in order to copy a tree so that there is a deep copy instead of a shallow one
+   * This method needs to be overrided for sub classes of ConstaintTree to function properly.
+   */
+  ConstraintTree createNew()
+  {
+    return new ConstraintTree();
+  }
+
+  /*
+   * Adds a node to the tree, the three modes are
+   *   - if nothing exists in the tree: set the element as the root
+   *   - if the element is an operator: add the root if it is not null as an operand to the operator, and set the operator to the root
+   *   - if there exists an operator: add the element as an operand to the operator.
+   * @param element to be added to the tree
+   */
+  ConstraintVariable addElement(ConstraintVariable aElement)
+  {
+    ++numberOfElements;
+    ConstraintOperator operator = null;
+    if(aElement instanceof ConstraintOperator)
+    {
+      operator = (ConstraintOperator)aElement;
+      aElement = new ConstraintOperator(operator.getValue());
+      addElementAll(operator.getLeft());
+    }
+    else if(aElement instanceof ConstraintTree)
+    {
+      ConstraintTree list = ((ConstraintTree)aElement);
+      aElement = clone(list);
+      ((ConstraintTree)aElement).addElementAll(list.getRoot());
+    }
+    if(aElement instanceof ConstraintOperator)
+    {
+      requestor = ((ConstraintOperator)aElement);
+      requestor.addOperand(root);
+      root = requestor;
+    }
+    else
+    {
+      if(requestor!=null)
+      {
+        requestor.addOperand(aElement);
+        root = requestor;
+        requestor = null;
+      }
+      else
+      {
+        root = aElement;
+      }
+      if(aElement instanceof ConstraintNamed)
+      {
+        if(!"this".equals(((ConstraintNamed)aElement).getName()))
+        {
+          names.add(((ConstraintNamed)aElement).getName());
+        }
+      }
+      else if(aElement instanceof ConstraintTree)
+      {
+        names.addAll(((ConstraintTree)aElement).names);
+      }
+    }
+    if(aElement instanceof ConstraintOperator)
+    {
+      addElementAll(operator.getRight());
+    }
+    return aElement;
+  }
+
+  /*
+   * Whenever ConstraintTrees or named Constriants are added to the constraint tree, a record of that name is added to a set of names
+   * This method pretty prints that set of names.
+   */
+  public String getNamedNames()
+  {
+    StringBuilder builder = new StringBuilder();
+    int i=0;
+    String last = "";
+    for(String name:names)
+    {
+      if(i>=names.size()-1)
+      {
+        last = name;
+        break;
+      }
+      builder.append(name);
+      if(names.size()>2)
+      {
+        builder.append(", ");
+      }
+      else builder.append(" ");
+      ++i;
+    }
+    if(names.size()>1)builder.append("and ");
+    builder.append(last);
+    return builder.toString();
+  }
+
+  /*
+   * Iterator method, override the method from the Iterable<Constraint> interface that all ConstraintVariables inherit from
+   * Iterates over all of the root's elements, then returns itself
+   */
+  public Iterator<ConstraintVariable> iterator()
+  {
+    final ConstraintTree myself = this;
+    return new Iterator<ConstraintVariable>()
+    {
+      ConstraintTree self;
+      boolean hasReturnedSelf;
+      Iterator<ConstraintVariable> iterator;
+      {
+        self = myself;
+        hasReturnedSelf = false;
+        if(self.getRoot()!=null)
+        {
+          iterator = self.getRoot().iterator();
+        }
+      }
+      public ConstraintVariable next()
+      {
+        if(iterator==null||!iterator.hasNext())
+        {
+          hasReturnedSelf = true;
+          return self;
+        }
+        else
+        {
+          return iterator.next();
+        }
+      }
+      public boolean hasNext()
+      {
+        return !hasReturnedSelf;
+      }
+      public void remove(){}
+    };
+  }
+
+  /*
+   * Mandatory type method for the SuperGenerator to distiguish easily between different ConstraintVariable types.
+   */
+  public String getType(){ return "complex"; }
+}
+
+class TraceConstraint
+{
+  ConstraintTree createNew()
+  {
+    TraceConstraint constraint =  new TraceConstraint();
+    for(UmpleVariable uv:this.getVariables())
+    {
+      constraint.addVariable(uv);
+    }
+    return constraint;
+  }
+
+  public ConstraintVariable addElement(ConstraintVariable aElement)
+  {
+    if(aElement instanceof ConstraintUnassignedName)
+    {
+      ConstraintUnassignedName variable = (ConstraintUnassignedName)aElement;
+      MethodParameter foundParameter = null;
+      for(UmpleVariable uv:getVariables())
+      {
+        if(uv.getName().equals(variable.getValue()))
+        {
+          foundParameter = new MethodParameter(uv.getName(),uv.getType(),uv.getModifier(),uv.getValue(),false);
+        }
+      }
+      if(foundParameter!=null)
+      {
+        aElement = new ConstraintMethodParameter(foundParameter);
+      }
+    }
+    return super.addElement(aElement);
+  }
+}
+
+class Precondition
+{
+  ConstraintTree createNew()
+  {
+    return new Precondition(method);
+  }
+
+  public ConstraintVariable addElement(ConstraintVariable aElement)
+  {
+    if(aElement instanceof ConstraintUnassignedName)
+    {
+      ConstraintUnassignedName name = (ConstraintUnassignedName)aElement;
+      MethodParameter foundParameter = null;
+      for(MethodParameter param:method.getMethodParameters())
+      {
+        if(param.getName().equals(name.getValue()))
+        {
+          foundParameter = param;
+          break;
+        }
+      }
+      if(foundParameter!=null)
+      {
+        aElement = new ConstraintMethodParameter(foundParameter);
+      }
+    }
+    return super.addElement(aElement);
+  }
+}
+
+class Postcondition
+{
+  ConstraintTree createNew()
+  {
+    return new Postcondition(method);
+  }
+
+  public ConstraintVariable addElement(ConstraintVariable aElement)
+  {
+    if(aElement instanceof ConstraintUnassignedName)
+    {
+      ConstraintUnassignedName name = (ConstraintUnassignedName)aElement;
+      MethodParameter foundParameter = null;
+      for(MethodParameter param:method.getMethodParameters())
+      {
+        if(param.getName().equals(name.getValue()))
+        {
+          foundParameter = param;
+          break;
+        }
+      }
+      if(foundParameter!=null)
+      {
+        aElement = new ConstraintMethodParameter(foundParameter);
+      }
+    }
+    return super.addElement(aElement);
+  }
+}
+
+class ConstraintOperator
+{
+  /*
+   * Returns which kind of operator this is based on the number of operands it has.
+   */
+  public String getType(){ return numberOfSubConstraints()>0?numberOfSubConstraints()>1?"operatorTwo":"operatorOne":"operatorNone"; }
+
+  /*
+   * Carefully adds the operand on one side of the operator or the other, for example string literals are added in front, regardless of how they are arranged in the inputted constraint
+   * takes care of making sure cardinality calls the numberOf method, and if there is a number it puts it as the right operand(flipping ordinal operators)
+   */
+  public void addOperand(ConstraintVariable variable)
+  {
+    if(variable!=null)
+    {
+      if(variable instanceof ConstraintLiteral)
+      {
+        if(variable instanceof ConstraintNumberLiteral)
+        {
+          correctForPrimitive();
+          subConstraints.add(variable);
+        }
+        else if(numberOfSubConstraints()>0)
+        {
+          subConstraints.add(0,variable);
+        }
+        else
+        {
+          subConstraints.add(variable);
+        }
+
+      }
+      else
+      {
+        if(numberOfSubConstraints()==0&&value.contains("cardinality"))
+        {
+          correctForCardinality(variable);
+        }
+        if(numberOfSubConstraints()==1&&getLeft() instanceof ConstraintNumberLiteral)
+        {
+          subConstraints.add(0,variable);
+          flip();
+        }
+        else
+        {
+          subConstraints.add(variable);
+        }
+      }
+    }
+  }
+
+  /*
+   * Tries to set associations so that they will use the numberOf method for the size.
+   * @param variable to the corrected
+   */
+  public void correctForCardinality(ConstraintVariable variable)
+  {
+    if(variable == null)
+    {
+      return;
+    }
+    mixset Association {
+      else if((variable instanceof ConstraintAssociation)&&value.contains("cardinality"))
+      {
+        ((ConstraintAssociation)variable).setNumberOf(true);
+      }
+    }
+    else if((variable instanceof ConstraintTree)&&((ConstraintTree)variable).getNumberOfElements()>0)
+    {
+      correctForCardinality(((ConstraintTree)variable).getRoot());
+    }
+    else if(variable instanceof ConstraintOperator)
+    {
+      correctForCardinality(((ConstraintOperator)variable).getRight());
+    }
+  }
+
+  /*
+   * switches the .equals() style method for the primitive == or !=
+   */
+  public void correctForPrimitive()
+  {
+    if("object==".equals(value))
+    {
+      value = "==";
+    }
+    else if("object!=".equals(value))
+    {
+      value = "!=";
+    }
+  }
+
+  /*
+   * If the number is being put on the right, when it was originally on the left, the operator has to flip, '>' to '<' and '<' to '>'
+   */
+  public void flip()
+  {
+    if(">=".equals(value))
+    {
+      value = "<=";
+    }
+    else if(">=".equals(value))
+    {
+      value = "<=";
+    }
+    else if("<".equals(value))
+    {
+      value = ">";
+    }
+    else if(">".equals(value))
+    {
+      value = "<";
+    }
+  }
+
+  public boolean isNegatable()
+    {
+        if(".".equals(value)||",".equals(value)||"".equals(value))
+      {
+        return false;
+      }
+      return true;
+    }
+
+  /*
+   * If this method is reached by the negateVariable in ConstraintTree it means that the parent ConstraintTree doesn't have to display the negation, the operator will handle it instead.
+   */
+  public boolean negate()
+  {
+    if ("".equals(value))
+    {
+      return false;
+    }
+    else if("object==".equals(value))
+    {
+      value = "object!=";
+    }
+    else if("object!=".equals(value))
+    {
+      value = "object==";
+    }
+    else if("==".equals(value))
+    {
+      value = "!=";
+    }
+    else if("!=".equals(value))
+    {
+      value = "==";
+    }
+    else if(">".equals(value))
+    {
+      value = "<=";
+    }
+    else if(">=".equals(value))
+    {
+      value = "<";
+    }
+    else if("<=".equals(value))
+    {
+      value = ">";
+    }
+    else if("<".equals(value))
+    {
+      value = ">=";
+    }
+    else if("cardinality==".equals(value))
+    {
+      value = "cardinality!=";
+    }
+    else if("cardinality!=".equals(value))
+    {
+      value = "cardinality==";
+    }
+    else if("cardinality>".equals(value))
+    {
+      value = "cardinality<=";
+    }
+    else if("cardinality>=".equals(value))
+    {
+      value = "cardinality<";
+    }
+    else if("cardinality<=".equals(value))
+    {
+      value = "cardinality>";
+    }
+    else if("cardinality<".equals(value))
+    {
+      value = "cardinality>=";
+    }
+    else if("&&".equals(value))
+    {
+      value = "||";
+      return false;
+    }
+    else if("||".equals(value))
+    {
+      value = "&&";
+      return false;
+    }
+    if(".".equals(value)||",".equals(value))
+    {
+      return false;
+    }
+    return true;
+  }
+
+  /*
+   * Iterators over the left, then this, then the right.
+   */
+  public Iterator<ConstraintVariable> iterator()
+  {
+    final ConstraintVariable myself = this;
+    return new Iterator<ConstraintVariable>()
+    {
+      boolean hasReturnedSelf;
+      Iterator<ConstraintVariable> currentIterator;
+      ConstraintVariable self;
+      {
+        hasReturnedSelf = false;
+        self = myself;
+        if(getLeft()!=null)
+        {
+          currentIterator = getLeft().iterator();
+        }
+      }
+
+      public ConstraintVariable next()
+      {
+        if(currentIterator == null||!currentIterator.hasNext())
+        {
+          if(getRight()!=null&&!hasReturnedSelf)
+          {
+            currentIterator = getRight().iterator();
+          }
+          else
+          {
+            currentIterator = null;
+          }
+          hasReturnedSelf = true;
+          return self;
+        }
+        else
+        {
+          return currentIterator.next();
+        }
+      }
+      public boolean hasNext()
+      {
+        return (currentIterator!=null&&currentIterator.hasNext())||!hasReturnedSelf;
+      }
+      public void remove(){}
+    };
+  }
+}
+
+class ConstraintAttribute
+{
+  String getName()
+  {
+    return attribute==null?null:attribute.getName();
+  }
+  /*
+   * A method for conveniently getting the contained attribute's container class.
+   */
+  UmpleClassifier retrieveClassifier(){
+    UmpleClass containerClass = attribute.getUmpleClass();
+    if(containerClass==null)
+    {
+      UmpleTrait containerTrait = attribute.getUmpleTrait();
+      return containerTrait;
+    }
+    else
+    {
+      return containerClass;
+    }
+  }
+  public String getType(){ return getAttribute().getModifier().contains("internal")?"name":"attribute"; }
+}
+
+class ConstraintLiteral
+{
+  public String getType(){ return "literal"; }
+}
+
+class ConstraintUnassignedName
+{
+  String getName()
+  {
+    return getValue();
+  }
+  public String getType(){ return "name"; }
+}
+
+
+mixset Association {
+    class ConstraintAssociation
+  {
+    String getName()
+    {
+      return association==null?null:association.getName();
+    }
+    /*
+    * A method for conveniently getting the contained association's container class.
+    */
+    UmpleClassifier retrieveClassifier(){
+      UmpleClass containerClass = association.getUmpleClass();
+      if(containerClass==null)
+      {
+        UmpleTrait containerTrait = association.getUmpleTrait();
+        return containerTrait;
+      }
+      else
+      {
+        return containerClass;
+      }
+    }
+    public String getType(){ return numberOf?"associationNumberOf":index==-1?"associationList":"associationGet"; }
+  }
+}
+
+class ConstraintMethodParameter
+{
+  String getName()
+  {
+    return parameter==null?"":parameter.getName();
+  }
+  public String getType(){ return "method parameter"; }
+}
+
+external interface Iterable<ConstraintVariable> {}
+class ConstraintVariable
+{
+  isA "Iterable<ConstraintVariable>";
+  depend java.util.Iterator;
+  abstract;
+
+  String getValue(CodeTranslator gen){
+    return gen.translate(getType(),this);
+  }
+  UmpleClassifier retrieveClassifier(){
+    return null;
+  }
+
+  Iterator<ConstraintVariable> iterator()
+  {
+    final ConstraintVariable myself = this;
+    return new Iterator<ConstraintVariable>()
+    {
+      boolean hasReturned;
+      ConstraintVariable self;
+      {
+        hasReturned = false;
+        self = myself;
+      }
+      public ConstraintVariable next()
+      {
+        if(hasReturned)
+        {
+          return null;
+        }
+        else
+        {
+          hasReturned = true;
+          return self;
+        }
+      }
+      public boolean hasNext()
+      {
+        return !hasReturned;
+      }
+      public void remove(){}
+    };
+  }
+
+
+  public abstract String getType();
+}
+
+mixset StateMachine {
+  class ConstraintState
+  {
+    String getName()
+    {
+      return state==null?null:state.getName();
+    }
+    public String getType() { return "state"; }
+  }
+
+  class ConstraintStateMachine
+  {
+    String getName()
+    {
+      return stateMachine==null?null:stateMachine.getName();
+    }
+    public String getType(){ return "statemachine"; }
+  }
+}
+
+mixset Structure_StateMachine
+{
+class ConstraintPort
+{
+  String getName()
+  {
+    return port==null?null:port.getName();
+  }
+  public String getType(){ return "port"; }
+}
+}
+class ModelConstraintResult
+{
+  depend cruise.umple.parser.Position;
+  Position position;
+  int error;
+  target;
+  source;
+}
+
+class ModelConstraint
+{
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
+
+  Position position;
+  0..1 parentConstraint -- * ModelConstraint;
+  String source = "this";
+  lazy String target;
+  String linkNext = "";
+  lazy String link;
+  ModelConstraint mostRecent = { getModelConstraint(numberOfModelConstraints()-1) }
+
+  const ModelConstraintResult SUCCESS = new ModelConstraintResult(null,-1,null,null);
+  const ModelConstraintResult AND = new ModelConstraintResult(null,-1,null,null);
+  const ModelConstraintResult OR = new ModelConstraintResult(null,-1,null,null);
+
+  before addModelConstraint { if(numberOfModelConstraints()>0)getMostRecent().setLink(getLinkNext()); }
+
+  mixset Association {
+    public void addAssociationEnd(Multiplicity multiplicity)
+    {
+      if(getModelConstraint(numberOfModelConstraints()-1) instanceof ModelConstraintAssociation)
+      {
+        getModelConstraint(numberOfModelConstraints()-1).addAssociationEnd(multiplicity);
+      }
+    }
+    public void setAssociationType(String type)
+    {
+      if(getModelConstraint(numberOfModelConstraints()-1) instanceof ModelConstraintAssociation)
+      {
+        getModelConstraint(numberOfModelConstraints()-1).setAssociationType(type);
+      }
+    }
+  }
+
+  public ModelConstraintResult evaluate(UmpleClassifier uClassifier){
+    List<ModelConstraintResult> results = new ArrayList<ModelConstraintResult>();
+    for(ModelConstraint modelConstraint:getModelConstraints())
+    {
+      results.add(modelConstraint.evaluate(uClassifier));
+      if(!"".equals(modelConstraint.getLink()))
+      {
+        results.add("and".equals(modelConstraint.getLink())?ModelConstraint.AND:"or".equals(modelConstraint.getLink())?ModelConstraint.OR:null);
+      }
+    }
+    for(int i=1;i<results.size();)
+    {
+      if(results.get(i)==ModelConstraint.AND)
+      {
+        if(!results.get(i-1).equals(ModelConstraint.SUCCESS))
+        {
+          return results.get(i-1);
+        }
+        if(!results.get(i+1).equals(ModelConstraint.SUCCESS))
+        {
+          return results.get(i+1);
+        }
+        results.remove(i);
+        results.remove(i);
+      }
+      else
+      {
+        i+=2;
+      }
+    }
+    for(ModelConstraintResult i:results)
+    {
+      if(i==ModelConstraint.SUCCESS){
+        return ModelConstraint.SUCCESS;
+      }
+    }
+    return results.size()>0?results.get(0):ModelConstraint.SUCCESS;
+  }
+}
+mixset Association {
+  class ModelConstraintAssociation
+  {
+    isA ModelConstraint;
+    depend cruise.umple.compiler.*;
+    depend cruise.umple.parser.Position;
+
+    Multiplicity leftHandMultiplicity = new Multiplicity();
+    Multiplicity rightHandMultiplicity = new Multiplicity();
+    type = "--";
+    boolean left = true;
+    after constructor { leftHandMultiplicity.setBound("*"); }
+    after constructor { rightHandMultiplicity.setBound("*"); }
+    public void addAssociationEnd(Multiplicity multiplicity)
+    {
+      if(left)
+      {
+        leftHandMultiplicity = multiplicity;
+      }
+      else
+      {
+        rightHandMultiplicity = multiplicity;
+      }
+      left = false;
+    }
+    public void setAssociationType(String aType)
+    {
+      type = aType;
+      left = false;
+    }
+
+    public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
+    {
+      ModelConstraintResult evaluation = super.evaluate(uClassifier);
+      if(!evaluation.equals(ModelConstraint.SUCCESS))
+      {
+        return evaluation;
+      }
+
+      if("this".equals(getSource()))
+      {
+        setSource(uClassifier.getName());
+      }
+      if(type.equals("<-"))
+      {
+        String temp = getSource();
+        setSource(getTarget());
+        setTarget(temp);
+        Multiplicity tempMultiplicity = rightHandMultiplicity;
+        rightHandMultiplicity = leftHandMultiplicity;
+        leftHandMultiplicity = tempMultiplicity;
+      }
+      if(uClassifier instanceof UmpleClass)
+      {
+        UmpleClass uClass = null;
+        uClass = ((UmpleClass)uClassifier).getSourceModel().getUmpleClass(getSource());
+
+        if(uClass == null)
+        {
+          return new ModelConstraintResult(getPosition(),94,getTarget(),getSource());
+        }
+        mixset Association {
+        for(Association association:uClass.getAssociations())
+        {
+          AssociationEnd theirs = null;
+          AssociationEnd mine = null;
+          if(association.getEnd(0).getClassName().equals(uClass.getName()))
+          {
+            theirs = association.getEnd(1);
+            mine = association.getEnd(0);
+          }
+          else if(association.getEnd(1).getClassName().equals(uClass.getName()))
+          {
+            theirs = association.getEnd(0);
+            mine = association.getEnd(1);
+          }
+
+          if(!theirs.getClassName().equals(getTarget()))
+          {
+            boolean isNotMyConcern = true;
+            UmpleClass child = ((UmpleClass)uClassifier).getSourceModel().getUmpleClass(theirs.getClassName());
+
+            if(child!=null)
+            {
+              UmpleClass parent = child.getExtendsClass();
+              while(child!=null)
+              {
+                if(child.getName().equals(getTarget()))
+                {
+                  isNotMyConcern = false;
+                }
+                UmpleClass temp = parent;
+                parent = child.getExtendsClass();
+                child = temp;
+              }
+            }
+            if(isNotMyConcern)
+            {
+              continue;
+            }
+          }
+
+          String tBound = theirs.getMultiplicity().getBound();
+
+          Integer rMax = 0;
+          Integer rMin = 0;
+
+          if(rightHandMultiplicity.getBound()!=null)
+          {
+            rMax = Integer.parseInt(rightHandMultiplicity.getBound().replace("*",""+Integer.MAX_VALUE));
+            rMin = Integer.parseInt(rightHandMultiplicity.getBound().replace("*","0"));
+          }
+          else
+          {
+            rMax = Integer.parseInt(rightHandMultiplicity.getMaximum().replace("*",""+Integer.MAX_VALUE));
+            rMin = Integer.parseInt(rightHandMultiplicity.getMinimum().replace("*","0"));
+          }
+
+          if("*".equals(rightHandMultiplicity.getBound()))
+          {
+          }
+          else if(tBound==null)
+          {
+            Integer tMin = Integer.parseInt(theirs.getMultiplicity().getMinimum().replace("*","0"));
+            Integer tMax = Integer.parseInt(theirs.getMultiplicity().getMaximum().replace("*",""+Integer.MAX_VALUE));
+
+            if(tMax>rMax||tMin<rMin)
+            {
+              continue;
+            }
+          }
+          else
+          {
+            Integer itBound = Integer.parseInt(tBound.replace("*","0"));
+            if(itBound>rMax||itBound<rMin)
+            {
+              continue;
+            }
+          }
+
+          tBound = mine.getMultiplicity().getBound();
+
+          Integer lMax = 0;
+          Integer lMin = 0;
+
+          if(leftHandMultiplicity.getBound()!=null)
+          {
+            lMax = Integer.parseInt(leftHandMultiplicity.getBound().replace("*",""+Integer.MAX_VALUE));
+            lMin = Integer.parseInt(leftHandMultiplicity.getBound().replace("*","0"));
+          }
+          else
+          {
+            lMax = Integer.parseInt(leftHandMultiplicity.getMaximum().replace("*",""+Integer.MAX_VALUE));
+            lMin = Integer.parseInt(leftHandMultiplicity.getMinimum().replace("*","0"));
+          }
+
+          if("*".equals(leftHandMultiplicity.getBound()))
+          {
+          }
+          else if(tBound==null)
+          {
+            Integer tMin = Integer.parseInt(mine.getMultiplicity().getMinimum().replace("*","0"));
+            Integer tMax = Integer.parseInt(mine.getMultiplicity().getMaximum().replace("*",""+Integer.MAX_VALUE));
+
+            if(tMax>lMax||tMin<lMin)
+            {
+              continue;
+            }
+          }
+          else
+          {
+            Integer itBound = Integer.parseInt(tBound.replace("*","0"));
+            if(itBound>lMax||itBound<lMin)
+            {
+              continue;
+            }
+          }
+          return ModelConstraint.SUCCESS;
+        }
+        }
+        
+        return new ModelConstraintResult(getPosition(),94,getTarget(),getSource());
+      }
+      return ModelConstraint.SUCCESS;
+    }
+  }
+}
+
+class ModelConstraintSuperClass
+{
+  isA ModelConstraint;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
+
+  public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
+  {
+    ModelConstraintResult evaluation = super.evaluate(uClassifier);
+    if(!evaluation.equals(ModelConstraint.SUCCESS))
+    {
+      return evaluation;
+    }
+    if("this".equals(getSource()))
+    {
+      setSource(uClassifier.getName());
+    }
+    if(uClassifier instanceof UmpleClass)
+    {
+      UmpleClass child = ((UmpleClass)uClassifier).getSourceModel().getUmpleClass(getTarget());
+
+      if(child!=null)
+      {
+        UmpleClass parent = child.getExtendsClass();
+        while(child!=null)
+        {
+          if(child.getName().equals(getSource()))
+          {
+            return ModelConstraint.SUCCESS;
+          }
+          UmpleClass temp = parent;
+          parent = child.getExtendsClass();
+          child = temp;
+        }
+      }
+      else
+      {
+        if (child != null)
+        {
+		  for(UmpleInterface i:child.getParentInterface())
+		  {
+			if(i.getName().equals(getSource()))
+			{
+			   return ModelConstraint.SUCCESS;
+			}
+		  }
+        }
+      }
+      return new ModelConstraintResult(getPosition(),93,getTarget(),getSource());
+    }
+    return ModelConstraint.SUCCESS;
+  }
+}
+
+class ModelConstraintSubClass
+{
+  isA ModelConstraint;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
+
+  public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
+  {
+    ModelConstraintResult evaluation = super.evaluate(uClassifier);
+    if(!evaluation.equals(ModelConstraint.SUCCESS))
+    {
+      return evaluation;
+    }
+    if(uClassifier instanceof UmpleClass)
+    {
+      UmpleClass child = null;
+      if("this".equals(getSource()))
+      {
+        child = (UmpleClass)uClassifier;
+        setSource(child.getName());
+      }
+      else
+      {
+        child = ((UmpleClass)uClassifier).getSourceModel().getUmpleClass(getSource());
+      }
+      if(child == null)
+      {
+        return new ModelConstraintResult(getPosition(),92,getTarget(),getSource());
+      }
+
+      if(child!=null)
+      {
+        UmpleClass parent = child.getExtendsClass();
+        while(child!=null)
+        {
+          if(child.getName().equals(getTarget()))
+          {
+            return ModelConstraint.SUCCESS;
+          }
+          for(UmpleInterface i:child.getParentInterface())
+          {
+            if(i.getName().equals(getTarget()))
+            {
+              return ModelConstraint.SUCCESS;
+            }
+          }
+          UmpleClass temp = parent;
+          parent = child.getExtendsClass();
+          child = temp;
+        }
+      }
+      return new ModelConstraintResult(getPosition(),92,getTarget(),getSource());
+    }
+
+    return ModelConstraint.SUCCESS;
+  }
+}
+
+class ModelConstraintAttributeFromName
+{
+  isA ModelConstraint;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
+
+  public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
+  {
+    ModelConstraintResult evaluation = super.evaluate(uClassifier);
+    if(!evaluation.equals(ModelConstraint.SUCCESS))
+    {
+      return evaluation;
+    }
+    if(uClassifier instanceof UmpleClass)
+    {
+      UmpleClass uClass = null;
+      if("this".equals(getSource()))
+      {
+        uClass = (UmpleClass)uClassifier;
+        setSource(uClass.getName());
+      }
+      else
+      {
+        uClass = ((UmpleClass)uClassifier).getSourceModel().getUmpleClass(getSource());
+      }
+      if(uClass == null)
+      {
+        return new ModelConstraintResult(getPosition(),90,getTarget(),getSource());
+      }
+      return uClass.getAttribute(getTarget())!=null?ModelConstraint.SUCCESS:new ModelConstraintResult(getPosition(),90,getTarget(),getSource());
+    }
+    return ModelConstraint.SUCCESS;
+  }
+}
+
+class ModelConstraintAttributeFromClass
+{
+  isA ModelConstraint;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.Position;
+
+  public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
+  {
+    ModelConstraintResult evaluation = super.evaluate(uClassifier);
+    if(!evaluation.equals(ModelConstraint.SUCCESS))
+    {
+      return evaluation;
+    }
+    if(uClassifier instanceof UmpleClass)
+    {
+      UmpleClass uClass = null;
+      if("this".equals(getSource()))
+      {
+        setSource(uClassifier.getName());
+      }
+
+      uClass = ((UmpleClass)uClassifier).getSourceModel().getUmpleClass(getSource());
+      if(uClass == null)
+      {
+        return new ModelConstraintResult(getPosition(),91,getTarget(),getSource());
+      }
+
+      for(Attribute attribute:uClass.getAttributes())
+      {
+        if(getTarget().equals(attribute.getType()))
+        {
+          return ModelConstraint.SUCCESS;
+        }
+        else {
+          UmpleClass child = uClass.getSourceModel().getUmpleClass(attribute.getType());
+
+          if(child!=null)
+          {
+            UmpleClass parent = child.getExtendsClass();
+            while(child!=null)
+            {
+              if(child.getName().equals(getTarget()))
+              {
+                return ModelConstraint.SUCCESS;
+              }
+              UmpleClass temp = parent;
+              parent = child.getExtendsClass();
+              child = temp;
+            }
+          }
+        }
+      }
+      return new ModelConstraintResult(getPosition(),91,getTarget(),getSource());
+    }
+    return ModelConstraint.SUCCESS;
+  }
+}

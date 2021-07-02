@@ -196,8 +196,8 @@ class StateMachineMetrics{
     resultCode.append("   <li>#Guards - Total of Guards per class without repetition. \n");
     resultCode.append("   <li>#Actions - Total of Actions per SM. \n");
     resultCode.append("   <li>#Nested SM - Total of Nested SM: Total of states that is other state machine.\n");
-    resultCode.append("   <li>#States with Cycles - Total of Cycles: Total of Cycles (self cycles + cycles).\n");
-    resultCode.append("   <li>#Self Cycles - Total of Self Cycles: Total of self Cycles.\n</ul>\n\n");
+    resultCode.append("   <li>#Cycles - Total of cycles: Self cycles plus cycles that include two or more states.\n");
+    resultCode.append("   <li>#Self Cycles - The number of transitions that start at a state and end at the same states.\n</ul>\n\n");
     
     return;    
   }// End of method calculate()

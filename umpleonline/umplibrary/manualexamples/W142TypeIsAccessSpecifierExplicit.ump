@@ -9,4 +9,4 @@ class X {
 }
 
 //$?[End_of_model]$?
-// @@@testlanguage=none because msg says likely error
+// @@@skipjavacompile @@@skipphpcompile because msg says likely error

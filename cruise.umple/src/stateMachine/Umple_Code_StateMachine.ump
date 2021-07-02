@@ -1,0 +1,122 @@
+// Fragment source file: Umple_Code.ump
+// Line : 212
+  class UmpleModel {
+    public StateMachine getStateMachineDefinition(String name)
+    {
+      for (StateMachine aStateMachine : getStateMachineDefinitions())
+      {
+        if (aStateMachine.getName().equals(name))
+        {
+          return aStateMachine;
+        }
+      }
+      return null;
+    }
+} 
+
+// Fragment source file: Umple_Code.ump
+// Line : 873
+mixset Trait {
+
+  class CodeBlock { 
+      /*
+    * @author Vahdat
+    * The following part of code may not generate proper code-style code generation.
+    * Currently, we deal with code style at the code generation level (UmpleTemplate Language);
+    */
+    public void findKeywordAndReplace(String keyword, CodeBlock cBlock, StateMachine inStateMachine){
+      if(keyword==null || keyword=="") return;
+        for (String language : codes.keySet()) {
+          String replacement=System.lineSeparator()+"\t\t//This part of code comes from the trait '"+inStateMachine.getRootStateMachine().getUmpleTrait().getName()+"' -> begins"+System.lineSeparator()+"\t\t";
+          replacement = replacement+cBlock.codes.get(language).replace(keyword, "");
+          replacement=replacement+System.lineSeparator()+"\t\t//The code coming from trait '"+inStateMachine.getRootStateMachine().getUmpleTrait().getName()+"' ends here"+System.lineSeparator()+"\t\t";
+          codes.put(language,codes.get(language).replace(keyword,replacement+keyword)) ;
+        }
+      } 
+    
+  }
+} 
+
+// Fragment source file: Umple_Code.ump
+// Line : 1311
+ class UmpleClass {
+  public List<StateMachine> getAllStateMachines()
+  {
+      ArrayList<StateMachine> all = new ArrayList<StateMachine>();
+      all.addAll(getStateMachines());
+      for (StateMachine sm : getStateMachines())
+      {
+        all.addAll(sm.getNestedStateMachines());
+      }
+      return all;
+    } 
+  } 
+
+// Fragment source file: Umple_Code.ump
+// Line : 1566
+ class UmpleClass {
+     
+  public List<StateMachine> getStateMachines(Event e)
+  {
+      List<StateMachine> allStateMachines = new ArrayList<StateMachine>();
+      for (StateMachine sm : getAllStateMachines())
+      {
+        List<Event> allEvents = sm.getEvents();
+        if (allEvents.contains(e))
+        {
+          allStateMachines.add(sm);
+        }
+      }
+      return allStateMachines;
+    }
+    public List<Event> getEvents()
+    {
+      List<Event> allEvents = new ArrayList<Event>();
+      for (StateMachine sm : getAllStateMachines())
+      {
+        allEvents.addAll(sm.getEvents());
+      }
+
+      List<Event> allUniqueEvents = new ArrayList<Event>();
+      for (Event e : allEvents)
+      {
+        if (!allUniqueEvents.contains(e))
+        {
+          allUniqueEvents.add(e);
+        }
+      }
+      return allUniqueEvents;
+    }
+
+    public Event findOrCreateEvent(String aName)
+    {
+      if (aName == null)
+      {
+        return null;
+      }
+
+      for (StateMachine sm : getStateMachines())
+      {
+        for (Event aEvent : sm.getAllEvents())
+        {
+          if (aName.equals(aEvent.getName()))
+          {
+            return aEvent;
+          }
+        }
+      }
+      return new Event(aName);
+    }
+
+    public StateMachine getStateMachine(String name)
+    {
+      for (StateMachine sm : stateMachines)
+      {
+        if (sm.getName().equals(name))
+        {
+          return sm;
+        }
+      }
+      return null;
+    } 
+  } 

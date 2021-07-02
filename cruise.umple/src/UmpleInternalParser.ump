@@ -92,5 +92,5 @@ use UmpleParser.ump;
 use Parser.ump;
 use Umple.ump;
 use UmpleDiagram.ump;
-use stateMachine/StateMachine.ump;
+//use stateMachine/StateMachine.ump;
 use UmpleInternalParser_Code.ump;

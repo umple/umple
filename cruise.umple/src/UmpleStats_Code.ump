@@ -178,7 +178,7 @@ class MetricsCollector
     {
       _allAssociationTypes.add(key);
     }
-    Integer newInt = new Integer(currentNumberOfAssociationType(key,lookup) + 1);
+    Integer newInt = Integer.valueOf(currentNumberOfAssociationType(key,lookup) + 1);
     lookup.put(key, newInt);
   }
 }

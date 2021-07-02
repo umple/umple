@@ -790,6 +790,9 @@ class TemplateDefinitionWalker {
 	      	return;
 	  	}
     	if (aToken.is("templateAttributeDefinition")) {
+        mixset Mixset {
+          processInlineMixset(aToken);
+        }
     		analyzer.analyzeEmission(aToken);
     	} else if (aToken.is("emitMethod")) {
         	analyzer.analyzeEmitMethodDeclarator(aToken);
@@ -836,13 +839,4 @@ class UmpleInternalParser
   private void postTokenTemplateAnalysis(){
     walker.done();
   }
-  
-  public boolean reAnalyze() {
-  	return shouldProcessAgain;
-  }
-  
-  public void reAnalyze(boolean re) {
-  	shouldProcessAgain = re;
-  }
-  
 } 

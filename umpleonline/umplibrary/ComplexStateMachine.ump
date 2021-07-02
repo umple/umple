@@ -6,7 +6,7 @@ class BigStateMachineTest {
   depend java.lang.reflect.InvocationTargetException;
   depend java.lang.reflect.Method;
 
-  trace Zx,Z,B,G,X,D;
+  trace Zx,B,G,D;
   sm {
     Zxab {
      Zx {

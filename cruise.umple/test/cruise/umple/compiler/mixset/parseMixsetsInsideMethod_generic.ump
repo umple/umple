@@ -1,0 +1,18 @@
+use  M2;
+
+class AphpClass{
+  
+  name;
+  
+  void set_name_(name) {
+    $this->name = $name;
+    mixset M1 {
+      $this->name = "M1 is not used mixset." ;
+    }
+    
+    mixset M2 {  
+      $this->name = "M2 is used mixset.";
+    }
+  }
+
+}

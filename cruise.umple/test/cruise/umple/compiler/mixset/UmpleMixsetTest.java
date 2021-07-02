@@ -9,13 +9,10 @@ import cruise.umple.compiler.UmpleFile;
 import cruise.umple.compiler.UmpleModel;
 import cruise.umple.compiler.UmpleClass;
 import java.util.List;
-import cruise.umple.compiler.FeatureModel;
-import cruise.umple.compiler.FeatureLink;
-import cruise.umple.compiler.FeatureNode;
-import cruise.umple.compiler.FeatureLeaf;
 import cruise.umple.compiler.Method;
 import cruise.umple.compiler.MethodBody;
 import cruise.umple.compiler.exceptions.*;
+import cruise.umple.compiler.php.PhpClassGenerator;
 import java.io.File;
 
 public class UmpleMixsetTest {
@@ -226,24 +223,7 @@ public class UmpleMixsetTest {
     Assert.assertEquals(umpleClasses.get(0).getName(),"Target");
 
   }
-  @Test
-  public void GvfeatureDiagramConsoleNoWarnings()
-  {
-
-    String[] args = {"-generate","GvFeatureDiagram","GvFeatureConsoleTest.ump"} ;
-    SampleFileWriter.createFile("GvFeatureConsoleTest.ump", "require [A and B or C];");
-   try 
-    {
-      UmpleConsoleMain.main(args);
-      SampleFileWriter.assertFileExists("GvFeatureConsoleTestGvFeatureDiagram.gv");
-    }	
-    finally 
-    {
-     SampleFileWriter.destroy("GvFeatureConsoleTestGvFeatureDiagram.gv");
-     SampleFileWriter.destroy("GvFeatureConsoleTest.ump");
-    }
-  }   
-  
+ 
   @Test
   public void mixsetRequireStatementNoWarnings()
   {
@@ -304,226 +284,7 @@ public class UmpleMixsetTest {
     List<UmpleClass> umpleClasses = model.getUmpleClasses();
     Assert.assertEquals(umpleClasses.get(0).getAssociations().length, 2);
   }
-  @Test
-  public void parseOneReqStArgument()
-  {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_oneArgument.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
-    FeatureLink featureLink = featureModel.getFeaturelink().get(0);
-    FeatureLeaf source = ((FeatureLeaf) featureLink.getSourceFeatureNode());
-    FeatureNode target = featureLink.getTargetFeatureNode();
-    Assert.assertEquals(featureModel.getFeaturelink().size(),1); // test 
-    Assert.assertEquals(false,source.getMixsetOrFileNode().getIsMixset());  // false
-    Assert.assertEquals("reqStArgumentParse_oneArgument",source.getMixsetOrFileNode().getName());// == filename 
-    Assert.assertTrue (((FeatureLeaf) target).getMixsetOrFileNode().getIsMixset()); // true 
-    Assert.assertEquals("M1",((FeatureLeaf) target).getMixsetOrFileNode().getName()); // mixstName 
-  }
-  @Test
-  public void parseMultipleAndsOpReqStArgument()
-  {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_MultipleAndsOp.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
-    int numOfLinks = featureModel.getFeaturelink().size();// == 6;
-    int numOfFeatures = featureModel.getNode().size();// == 7   
-    Assert.assertEquals(numOfLinks,6); 
-    Assert.assertEquals(numOfFeatures,7); 
-    Assert.assertEquals(false,  ((FeatureLeaf)featureModel.getNode().get(0)).getMixsetOrFileNode().isIsMixset() );  // false: its a file
-    Assert.assertEquals(featureModel.getNode().get(1).getName(), "and");
-    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(2)).getMixsetOrFileNode().getName(),"E");
-    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(3)).getMixsetOrFileNode().getName(), "D");
-    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(4)).getMixsetOrFileNode().getName(),"C");
-    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(5)).getMixsetOrFileNode().getName(), "B");
-    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(6)).getMixsetOrFileNode().getName() ,"A"); 
-  }
-  @Test
-  public void parseMultipleOpReqStArgument()
-  {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_MultipleOp.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
-    int numOfLinks = featureModel.getFeaturelink().size();
-    int numOfFeatures = featureModel.getNode().size();
-    Assert.assertEquals(numOfLinks,7);
-    Assert.assertEquals(numOfFeatures,11);
-
-    Assert.assertEquals(false,  ((FeatureLeaf)featureModel.getNode().get(0)).getMixsetOrFileNode().isIsMixset() );  // false: its a file
-    Assert.assertEquals(featureModel.getNode().get(1).getName(), "or");
-    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(2)).getMixsetOrFileNode().getName(),"M6");
-    Assert.assertEquals(featureModel.getNode().get(3).getName(), "xor");
-    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(4)).getMixsetOrFileNode().getName() ,"M5");
-    Assert.assertEquals(featureModel.getNode().get(5).getName(), "and");
-    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(6)).getMixsetOrFileNode().getName() ,"M4");
-    Assert.assertEquals(featureModel.getNode().get(7).getName(), "multiplicityTerminal");
-    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(8)).getMixsetOrFileNode().getName() ,"M1");
-    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(9)).getMixsetOrFileNode().getName() ,"M2");
-    Assert.assertEquals(((FeatureLeaf)featureModel.getNode().get(10)).getMixsetOrFileNode().getName() ,"M3");
-  }
-
-  @Test
-  public void parseNotOptSingleReqStArgumet()
-  {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_NotOptSingleArg.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();    
-    int numOfLinks = featureModel.getFeaturelink().size();
-    Assert.assertEquals(numOfLinks,2); 
-    Assert.assertEquals(false,  ((FeatureLeaf)featureModel.getNode().get(0)).getMixsetOrFileNode().isIsMixset() );  // false: its a file
-    Assert.assertEquals(featureModel.getFeaturelink(0).getFeatureConnectingOpType().name(), "Optional");
-    Assert.assertEquals(featureModel.getFeaturelink(1).getFeatureConnectingOpType().name(), "Exclude"); 
-  }
-  @Test
-  public void parseTerminalNotOptTerminalReqStArgumet()
-  {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_TerminalOpTerminal.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
-    //source --> opt B
-    Assert.assertEquals(featureModel.getFeaturelink(0).getFeatureConnectingOpType().name(), "Optional");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(0).getSourceFeatureNode()).getMixsetOrFileNode().isIsMixset(), false); // false: its the source file
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(0).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"B");
-    //source --> and A C
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(1).getSourceFeatureNode()).getMixsetOrFileNode().isIsMixset(), false);
-    Assert.assertEquals(((FeatureNode) featureModel.getFeaturelink(1).getTargetFeatureNode()).getName() ,"and");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(2).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"C");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(3).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"A");
-  }
-  @Test
-  public void parseReqStArgumetToFeaureModel()
-  {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_featureModel.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
-    //source --> (and A B)
-    Assert.assertEquals(((FeatureNode) featureModel.getFeaturelink(0).getTargetFeatureNode()).getName() ,"and");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(1).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"B");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(2).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"A");
-    //source --> opt C
-    Assert.assertEquals(featureModel.getFeaturelink(3).getFeatureConnectingOpType().name(), "Optional");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(3).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"C");
-    //source --> not D
-    Assert.assertEquals(featureModel.getFeaturelink(4).getFeatureConnectingOpType().name(), "Exclude");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(4).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"D");
-    //source --> (xor F E)
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(5).getSourceFeatureNode()).getMixsetOrFileNode().isIsMixset(), false);
-    Assert.assertEquals(featureModel.getFeaturelink(5).getFeatureConnectingOpType().name(), "XOR");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(6).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"F");
-    Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(7).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"E"); 
-  }
-  @Test
-  public void parseReqStArgumetToSatisfyFeatureModel_1()
-  {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_featureModel.ump");//reuse ump file from parseReqStArgumetToFeaureModel()
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
-    Assert.assertEquals(featureModel.satisfyFeatureModel(), false);
-  }
-  @Test
-  public void parseReqStArgumetToSatisfyFeatureModel_2()
-  {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_validFeatureModel.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
-    Assert.assertEquals(true,featureModel.satisfyFeatureModel());
-  }
-  @Test
-  public void parseReqStArgumetToSatisfyFeatureModel_3()
-  {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_NotValidXorFeatureModel.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
-    Assert.assertEquals(false,featureModel.satisfyFeatureModel());
-  }
-  @Test
-  public void parseReqStArgumetToSatisfyFeatureModel_4()
-  {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_validSetFeatureModel.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
-    Assert.assertEquals(true,featureModel.satisfyFeatureModel());
-  }
-  @Test
-  public void parseReqStArgumetToSatisfyFeatureModel_5()
-  {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_NotvalidSetFeatureModel.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
-    Assert.assertEquals(false,featureModel.satisfyFeatureModel());
-  }
-  @Test
-  public void parseReqStArgumetToSatisfyFeatureModel_6()
-  {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_NotvalidBitWiseFeatuerModel.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
-    Assert.assertEquals(false,featureModel.satisfyFeatureModel());
-  }
  @Test
-  public void parseReqStArgumetToSatisfyFeatureModel_7()
-  {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_validCombinedOpFeatuerModel.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
-    Assert.assertEquals(true,featureModel.satisfyFeatureModel());
-  }
- @Test
-  public void parseReqStArgumetToSatisfyFeatureModel_8()
-  {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_validCombinedOpWithRoundBracket.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
-    Assert.assertEquals(true,featureModel.satisfyFeatureModel());
-  }
- @Test
-  public void parseReqStArgumetToSatisfyFeatureModel_9()
-  {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_NotvalidCombinedOpWithRoundBracket.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
-    Assert.assertEquals(false,featureModel.satisfyFeatureModel());
-  }
- @Test
-  public void parseReqStArgumetToSatisfyFeatureModel_10()
-  {
-    UmpleFile umpleFile = new  UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_validCombinedOpWithComplexRoundBracket.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
-    Assert.assertEquals(true,featureModel.satisfyFeatureModel());
-  }
-  @Test
   public void parseInlineMixsetInsideMixset()
   {
     umpleParserTest.assertNoWarningsParse("InlineMixsetInsideMixset.ump");
@@ -723,6 +484,29 @@ public class UmpleMixsetTest {
     SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"MixsetWithinMethodClass.java");
   }
 
+  @Test 
+  public void mixsetInsideMethods_deleteProperCloseBracket()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseMixsetsInsideMethod_properDeleteOfClosingBracket.ump");
+    UmpleModel umodel = new UmpleModel(umpleFile);
+    umodel.run();
+    umodel.generate();
+    UmpleClass uClass = umodel.getUmpleClass(0);
+    Method aMethod = uClass.getMethod(0);
+    String methodBodyCode= aMethod.getMethodBody().getCodeblock().getCode();
+    String keyWord1 = "//TAG_MIXSET_BEFORE_CLOSE";
+    String keyWord2 = "//TAG_MIXSET_CLOSE";
+  
+    int indexOfKeyWord1= methodBodyCode.indexOf(keyWord1);
+    int indexOfKeyWord2= methodBodyCode.indexOf(keyWord2);
+
+    Assert.assertEquals(true, methodBodyCode.contains(keyWord1));
+    Assert.assertEquals(true, methodBodyCode.contains(keyWord2));
+    Assert.assertEquals(false, methodBodyCode.substring(indexOfKeyWord1, indexOfKeyWord2).contains("}"));
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"MixsetWithinMethodClass_CloseBracket.java");
+
+  }
+
   @Test
   public void testAround_twoLabels() {
     UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"aroundInjectionTwoLabels.ump");
@@ -817,8 +601,6 @@ public class UmpleMixsetTest {
       SampleFileWriter.destroy(umpleParserTest.pathToInput+"/"+"Aclass.java");
    }
   }
-
-
  @Test
   public void reqStatmentForMixsetNotusedIsParsed()
   {
@@ -846,6 +628,74 @@ public class UmpleMixsetTest {
     model.setShouldGenerate(false);
     model.run();
     Assert.assertEquals(model.getUmpleClasses().size() , 3);
+  }
+  @Test
+  public void inlineMixsetsInTemplate()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseMixsetsInsideTemplate.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(true);
+    model.run();
+    String generatedFile =  umpleParserTest.pathToInput+"/TemplateMixset.java";
+    SampleFileWriter.assertFileExists(generatedFile);
+    String templateGeneratedCode = SampleFileWriter.readContent(new File(generatedFile));
+    //  included mixsets
+    Assert.assertTrue(templateGeneratedCode.contains("Print out the following "));
+    Assert.assertTrue(templateGeneratedCode.contains("M1 is used, this line should be included"));
+    Assert.assertTrue(templateGeneratedCode.contains("M2 is used, this line should be included"));
+    // not included mixsets
+    Assert.assertFalse(templateGeneratedCode.contains("M3 is not used, this line NOT should be included"));
+    Assert.assertFalse(templateGeneratedCode.contains("I am outer , this line should NOT be included"));
+    Assert.assertFalse(templateGeneratedCode.contains("I am inner , this line should NOT be included"));
+    // no mixset definitions i
+    Assert.assertFalse(templateGeneratedCode.contains("mixset M1"));
+    Assert.assertFalse(templateGeneratedCode.contains("mixset M2"));
+    Assert.assertFalse(templateGeneratedCode.contains("mixset M3"));
+    Assert.assertFalse(templateGeneratedCode.contains("mixset Outer"));
+    Assert.assertFalse(templateGeneratedCode.contains("mixset Inner"));
+    //delete generated file
+    SampleFileWriter.destroy(generatedFile);
+
+    
+  }
+  @Test
+  public void inlineMixsetsInsideMethodPhpCode()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseMixsetsInsideMethod_generic.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(true);
+    model.run();
+    PhpClassGenerator phpGenerator = new PhpClassGenerator();		
+    String code = phpGenerator.getCode(model, model.getUmpleClass(0));
+    Assert.assertTrue(code.contains("M2 is used mixset."));
+    // not included mixsets
+    Assert.assertFalse(code.contains("M1 is not used mixset"));
+    // no mixset definitions 
+    Assert.assertFalse(code.contains("mixset M1 {"));
+    Assert.assertFalse(code.contains("mixset M2 {"));
+    //delete generated file
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/AphpClass.java");
+  }
+  @Test
+  public void inlineMixsetsInsideAspectCode()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseMixsetsInsideAspect.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(true);
+    model.run();
+    String code = model.getGeneratedCode().get("AspectClass");
+    Assert.assertTrue(code.contains("public void doMethodOne()"));
+    Assert.assertTrue(code.contains("public void doMethodTwo"));
+    Assert.assertTrue(code.contains("M2 code to stay"));
+    Assert.assertTrue(code.contains("int y"));
+    // not included mixsets
+    Assert.assertFalse(code.contains("M1 code to be removed"));
+    Assert.assertFalse(code.contains("int x"));
+    // no mixset definitions 
+    Assert.assertFalse(code.contains("mixset M1 {"));
+    Assert.assertFalse(code.contains("mixset M2 {"));
+    //delete generated file
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/AspectClass.java");
   }
 
 }
