@@ -425,7 +425,7 @@ else if (isset($_REQUEST["umpleCode"]))
        
          $javadocdir = $workDir->makePermalink('javadoc/');
          $javadoczip = $workDir->makePermalink('javadocFromUmple.zip');
-         $html = "<a href=\"{$javadoczip}\">Download the following as a zip file</a>&nbsp;{$errhtml}
+         $html = "<a href=\"{$javadoczip}\" title=\"Downloaded code will be in a format that will help to compile and execute\">Download the following as a zip files</a>&nbsp;{$errhtml}
          <iframe width=100% height=1000 src=\"" . $javadocdir . "\">This browser does not
          support iframes, so the javadoc cannot be displayed</iframe> 
          ";
@@ -551,7 +551,7 @@ else if (isset($_REQUEST["umpleCode"]))
     {
        exec("cd $thedir; rm {$language}FromUmple.zip; zip -r {$language}FromUmple {$language}");
        $archivelink = $workDir->makePermalink($language.'FromUmple.zip');
-       echo "<a href=\"$archivelink\" class=\"zipDownloadLink\">Download the following as a zip file</a>&nbsp;{$errhtml}<p>URL_SPLIT";
+       echo "<a href=\"$archivelink\" class=\"zipDownloadLink\" title=\"Downloaded code will be in a format that will help to compile and execute\">Download the following as a zip files</a>&nbsp;{$errhtml}<p>URL_SPLIT";
        echo $sourceCode;
     }
   }
