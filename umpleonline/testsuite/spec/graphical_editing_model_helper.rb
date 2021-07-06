@@ -5,6 +5,7 @@ module DiagramEditingModelHelper
   #setup and loading functions
   def get_canvas_focus
     find(:css, '#umpleCanvas').click
+    wait_for_loading
   end
 
   def load_umple_with_file_model_helper(filename)

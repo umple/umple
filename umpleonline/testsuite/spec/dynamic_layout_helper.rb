@@ -1,5 +1,6 @@
 module DynamicResizingHelper
 
+  ERROR_MARGIN = 1 #This is the difference in pixels allowed between the actual and expected sizes
   def setup_large
     self.class.send :include, LargeScreenHelper
   end
@@ -66,6 +67,39 @@ module DynamicResizingHelper
     end
 
     wait_for_loading
+  end
+  RSpec::Matchers.define :have_expected_dimension do |expected|
+    expected.each_key do |key|
+      #begin
+        expected_size_range_x = [expected[key][:size][0]-ERROR_MARGIN, expected[key][:size][0]+ERROR_MARGIN]
+        expected_size_range_y = [expected[key][:size][1]-ERROR_MARGIN, expected[key][:size][1]+ERROR_MARGIN]
+        expected_position_range_x = [expected[key][:top_left][0]-ERROR_MARGIN, expected[key][:top_left][0]+ERROR_MARGIN]
+        expected_position_range_y = [expected[key][:top_left][1]-ERROR_MARGIN, expected[key][:top_left][1]+ERROR_MARGIN]
+      #rescue TypeError
+       # expected_size_range_x = [expected[key][0]-1, expected[0]+1]
+        #expected_size_range_y = [expected[key][1]-1, expected[1]+1]
+        #expected_position_range_x = [expected[0][key]-1, expected[0]+1]
+        #expected_position_range_y = [expected[1][key]-1, expected[1]+1]
+      #end
+    
+      match do |actual|
+        actual.each_key do |key|
+          actual[key][:size][0]>=expected_size_range_x[0]&&
+          actual[key][:size][0]<=expected_size_range_x[1]&&
+          actual[key][:size][1]>=expected_size_range_y[0]&&
+          actual[key][:size][1]<=expected_size_range_y[1]&&
+          actual[key][:top_left][0]>=expected_position_range_x[0]&&
+          actual[key][:top_left][0]<=expected_position_range_x[1]&&
+          actual[key][:top_left][1]>=expected_position_range_y[0]&&
+          actual[key][:top_left][1]<=expected_position_range_y[1]
+        end
+      end
+
+      failure_message do |actual|
+        "expected size to be #{[expected]}\nbut actual position" +
+        " was #{actual}"
+      end
+    end
   end
 end
 

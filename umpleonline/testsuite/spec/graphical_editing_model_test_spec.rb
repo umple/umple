@@ -540,7 +540,7 @@ describe "Graphical editing of diagram: model consistency",
         within("div#umpleCanvas") do
           #Ensure the generalization existed before attempting to delete it
           find(:css, "#Mentor_generalization")
-
+          find(:css, '#Mentor').click
           find(:css, '#Mentor').native.send_keys(:delete)
         end
 
