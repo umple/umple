@@ -82,7 +82,8 @@ ToolTips.tooltipEntries = {
 
   // diagram type tooltips
   ttShowEditableClassDiagram: ["li", "Display a graphically editable class diagram </br><b>Shortcut: [ctrl+e]</b>"],
-  ttShowJointJSClassDiagram: ["li", "Display a prettier graphically editable class diagram </br><b>Shortcut: [ctrl+j]</b>"],
+// TEMP DEBUG commenting out the following since joint.js is being deactivated temporarily due to issue #1786
+//  ttShowJointJSClassDiagram: ["li", "Display a prettier graphically editable class diagram </br><b>Shortcut: [ctrl+j]</b>"],
   ttShowGvClassDiagram: ["li", "Display a class diagram rendered using GraphViz </br><b>Shortcut: [ctrl+g]</b>"],
   ttShowGvStateDiagram: ["li", "Display a state diagram rendered using GraphViz</br><b>Shortcut: [ctrl+s]</b>"],
   ttShowStructureDiagram: ["li", "Display a graphically editable composite structure diagram </br><b>Shortcut: [ctrl+l]</b>"],

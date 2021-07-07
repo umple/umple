@@ -214,6 +214,10 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowHideCanvas");
   Page.initAction("buttonShowEditableClassDiagram");
   Page.initAction("buttonShowJointJSClassDiagram");
+  
+// TEMP DEBUG Hiding joint.js due to issue #1786
+  jQuery("#ttShowJointJSClassDiagram").hide();
+  
   Page.initAction("buttonShowGvClassDiagram");
   Page.initAction("buttonShowGvStateDiagram");
   Page.initAction("buttonShowGvFeatureDiagram");//buttonShowGvFeatureDiagram
@@ -478,9 +482,12 @@ Page.initCodeMirrorEditor = function() {
           Page.codeMirrorEditor.setLineClass(Page.hLine, null);
           Page.hLine = Page.codeMirrorEditor.setLineClass(Page.codeMirrorEditor.getCursor().line, "activeline");
           Action.umpleCodeMirrorCursorActivity();},
+          
+// TEMP DEBUG Took out ctrl-J from the following to deactivate joint.js for issue #1786. Add back after ctrl-e if reactivating joint.js
+//          "Ctrl-J": function(cm) {Page.clickShowJointJSClassDiagram()},
+          
         extraKeys: { // Change consistently in umple_action.js for Mousetrap
           "Ctrl-E": function(cm) {Page.clickShowEditableClassDiagram()},
-          "Ctrl-J": function(cm) {Page.clickShowJointJSClassDiagram()},
           "Ctrl-G": function(cm) {Page.clickShowGvClassDiagram()},
           "Ctrl-S": function(cm) {Page.clickShowGvStateDiagram()},
           "Ctrl-L": function(cm) {Page.clickShowStructureDiagram()},
