@@ -30,6 +30,7 @@ Note: The foreign key constraint is not defined here, as the associated class ma
         isFirst = false;
       }
       UmpleClass associatedUClass = av.getRelatedAssociation().getUmpleClass();
+      gen.toggleReadyToSetRootClass();
       List<Attribute> foreignPKList = gen.resolvePrimaryKey(associatedUClass);
       for(int i = 1; i <= av.getMultiplicity().getUpperBound(); i += 1)
       { 
