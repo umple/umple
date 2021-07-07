@@ -62,7 +62,8 @@ module TestUtils
   def click_and_drag_to_position(capybara_element, xLoc, yLoc)
     wait_for_loading
     execute_script("jQuery('body').append('<div id=\"tempPositionMarker\" style=\"position:absolute; left:#{xLoc}px; top:#{yLoc}px; width: 0px; height: 0px;\"></div>');")
-    click_and_drag(capybara_element,  find("#tempPositionMarker"))
+    wait_for_loading_for(15)
+    click_and_drag(capybara_element,  find(:css, "#tempPositionMarker"))
     execute_script("jQuery('#tempPositionMarker').remove();")
     wait_for_loading
   end
@@ -104,12 +105,15 @@ module TestUtils
   # of elements.
 
   def get_element_position(element_id)
+    wait_for_loading
     return evaluate_script("jQuery('##{element_id}').offset();")
   end
 
   def get_element_size(element_id)
     size = {}
+    wait_for_loading
     size[:width] = evaluate_script("jQuery('##{element_id}').outerWidth();")
+    wait_for_loading
     size[:height] = evaluate_script("jQuery('##{element_id}').outerHeight();")
     return size
   end

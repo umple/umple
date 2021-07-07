@@ -73,7 +73,8 @@ describe "Graphical editing of diagram: positional consistency",
     it "adds an umpleClass at a particular position" do
       load_page
       wait_for_loading
-
+      find(:css, '#umpleCanvas').click()
+      wait_for_loading
       find(:css, '#umpleCanvas').native.send_keys("c")
       expected_position = [55, 135]
       abs_canvas_pos = get_absolute_position("#umpleCanvas")
@@ -81,11 +82,10 @@ describe "Graphical editing of diagram: positional consistency",
       page.driver.click(expected_position[0] + abs_canvas_pos[0],
                         expected_position[1] + abs_canvas_pos[1])
                         
-      #evaluate_script("document.elementFromPoint(620,120).click()")
       wait_for_loading
 
-      expect(class_diagram_position_of("NewClass")).to have_position(expected_position)
-      expect(class_code_position_of("NewClass")).to have_code_position(expected_position)
+      expect(class_diagram_position_of("NewClass")).to have_position([expected_position[0]-1, expected_position[1]-2])
+      expect(class_code_position_of("NewClass")).to have_code_position([expected_position[0], expected_position[1]-1])
     end
   end
 
@@ -149,19 +149,17 @@ describe "Graphical editing of diagram: positional consistency",
       class_code = class_code_position_of "Student"
       find(:css, '#buttonAddAssociation').click
       within("div#umpleCanvas") {find(:css, "#Student").click}
-      #page.driver.click(class_position[0] + class_code[:size][0]/2, 
-       #                 class_position[1] + class_code[:size][1] - 5)
-      x = class_position[0] + class_code[:size][0]/2
-      y = class_position[1] + class_code[:size][1] - 5
-      evaluate_script("document.elementFromPoint(#{x}, #{y}).click()")
+      page.driver.click(class_position[0] + class_code[:size][0]/2, 
+                        class_position[1] + class_code[:size][1] - 9)
+      
       wait_for_loading
       code_pos = association_code_position_of(
         "Student", "Student", "roleName")[:end_two]
       actual_pos = association_diagram_position_of(
         "Student", "Student", "roleName")[:end_two]
 
-      expect(code_pos).to have_code_position([54, 45])
-      expect(actual_pos).to have_position_within_anchor_size([153, 74])
+      expect(code_pos).to have_code_position([54, 40])
+      expect(actual_pos).to have_position_within_anchor_size([151, 67])
     end
   end
 
@@ -288,8 +286,9 @@ describe "Graphical editing of diagram: positional consistency",
         load_umple_with_file_and_layout("single_class_with_reflexive_association.ump")
       end
       it "moves a class with a reflexive association" do 
+        find(:css, "#umpleAssociation_0")
         expected_pos = association_diagram_position_of("Student", "Student", "peer")
-
+        
         drag_amount = [50, 50]
         expected_pos[:end_one][:position][0] += drag_amount[0]
         expected_pos[:end_one][:position][1] += drag_amount[1]

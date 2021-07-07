@@ -9,7 +9,7 @@ module DiagramEditingPositionHelper
     file_contents = IO.read("#{TestUtils::TEST_EXAMPLE_DIRECTORY}#{EXAMPLE_SUBDIRECTORY}#{filename}")
     url_encoded_file_contents = CGI::escape(file_contents)
     visit("umple.php?showlayout&text=#{url_encoded_file_contents}")
-    wait_for_loading_for(10)
+    wait_for_loading
   end
 
   def load_umple_with_file_and_layout_ignore_position(filename)
@@ -173,7 +173,6 @@ module DiagramEditingPositionHelper
     wait_for_loading #ensure the diagram has loaded
 
     association_name = class_one_end + "__" + class_two_end
-    
     anchor_one = evaluate_script( 
       "jQuery('.#{association_name}').find('div[id$=\"_anchor0\"]')" +
       ".css(['top', 'left']);"

@@ -113,7 +113,7 @@ describe "Dynamic resizing of umpleonline layout ",
 
       it "decreases the canvas width" do
         resize_amount = 50
-        
+        wait_for_loading
         resize_right(:canvas, resize_amount)
 
         expected = {
@@ -139,7 +139,7 @@ describe "Dynamic resizing of umpleonline layout ",
 
       it "decreases the canvas width to minimum" do
         resize_amount = 1600 #this ensures the max amount of width to resize will occur
-        
+        wait_for_loading
         resize_right(:canvas, resize_amount)
 
         expected = {size:[883, 707], top_left:[707, 143.265625]}
@@ -439,7 +439,7 @@ describe "Dynamic resizing of umpleonline layout ",
 
       it "increases the height of the app" do
         resize_amount = 50
-        
+        wait_for_loading
         resize_down(:app, resize_amount)
 
         expected = {
@@ -460,7 +460,7 @@ describe "Dynamic resizing of umpleonline layout ",
 
       it "decreases the height of the app" do
         resize_amount = 50
-        
+        wait_for_loading
         resize_up(:app, resize_amount)
 
         expected = {
