@@ -26,11 +26,11 @@ init:
 - ps: choco install chocolatey-core.extension --ignore-dependencies
 
 # install the latest php (dependencies kb2919442 kb3035131 kb2999226 were failing )
-- ps: choco install php --ignore-dependencies --limitoutput
+- ps: choco install php --ignore-dependencies --limitoutput 
 
 install:
 # NOTE if changing php version, make sure you change the cache above
-- ps: $env:Path="C:\Ruby21\bin;C:/tools/ruby22/bin;C:\Program Files (x86)\Java\jdk11\bin;$($env:Path);C:\tools\php80;C:\tools\php;C:\ProgramData\chocolatey\lib\ant"
+- ps: $env:Path="C:\Ruby21\bin;C:/tools/ruby26/bin;C:\Program Files\Java\jdk11;$($env:Path);C:\tools\php80;C:\tools\php;C:\ProgramData\chocolatey\lib\ant"
 
 - ps: ant -version
 - ps: pushd build
