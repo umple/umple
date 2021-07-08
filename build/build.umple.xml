@@ -148,7 +148,6 @@
   
   <!-- Generate UmpleParser code and move to cruise.umple -->
   <target name="umpleParser">
-
     <!-- On cruiseControl the jar built here IS the stable one -->
     <condition property="umplejar.built.here" value="${umple.stable.jar}" else="${dist.dir}/${dist.umple.jar}">
       <equals arg1="${myenv}" arg2="cc" />
