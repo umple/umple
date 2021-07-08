@@ -75,6 +75,7 @@
     <deps-load-path conf="core" pathid="core.ivy.classpath" />
     <deps-load-path conf="test" pathid="test.ivy.classpath" />
 
+    <echo>Compiling Java testbed umple code to Java, then compiling Java using Java version: ${java.version}</echo>
     <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="testbed/src/TestHarness.ump"/>
     </java>
