@@ -26,7 +26,7 @@ init:
 - ps: choco install chocolatey-core.extension --ignore-dependencies
 
 # install the latest php (dependencies kb2919442 kb3035131 kb2999226 were failing )
-- ps: choco install php --ignore-dependencies
+- ps: choco install php --ignore-dependencies --limitoutput
 
 install:
 # NOTE if changing php version, make sure you change the cache above

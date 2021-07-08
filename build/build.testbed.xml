@@ -88,7 +88,7 @@
       </fileset>
     </apply>
 
-    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="11" target="11">
+    <javac compiler="javac11" debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="11" target="11">
       <src path="${project.path}/src"/>
       <src path="${project.path}/src-gen-umple"/>
       <src path="${project.path}/test"/>
