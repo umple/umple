@@ -31,7 +31,7 @@ use Parser.ump;
 use Structure;
 use Trace;
 use Coordinate ;
-use Constraint;
+//use Constraint;
 use StateMachine; 
 use Trait; 
 use Filter;
@@ -82,6 +82,6 @@ use Builder_Code.ump;
 use GraphWalking.ump;
 
 
-mixset FeatureModel {
-  require [Mixset];
-}
+//mixset FeatureModel {
+  //require [Mixset];
+//}

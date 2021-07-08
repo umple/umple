@@ -22,17 +22,21 @@
         <echo>Building Umplificator Eclipse Plugin</echo>
         <ant antfile="build/build.umplificatorplugin.xml" target="build" inheritAll="false" />
 			
+	    <!-- <echo>Building Eclipse Plugin with XText Code Editor</echo>
 	    <echo>Building Test Unit Generator And Parser</echo>
 	    <ant antfile="build/build.testgenerator.xml" target="build" inheritAll="false" />	
 
-        <!-- <echo>Building Eclipse Plugin with XText Code Editor</echo>
+        
         <ant antfile="build/build.eclipsextextplugin.xml" target="build" inheritAll="false" /> -->
 
+        
         <echo>Building Java Testbed (Testing that Umple Generated Code Works)</echo>
         <ant antfile="build/build.testbed.xml" target="build" inheritAll="false" />
+        
 
        <echo>Testing UmpleOnline Examples and Manual Examples</echo>
        <ant antfile="build/build.exampletests.xml" target="allUserManualAndExampleTests" inheritAll="false" />
+       
      </try>
 
       <finally>
@@ -41,6 +45,51 @@
     </trycatch>
 
   </target>
+  
+  
+  <target name="buildParser">
+    <deps-declare-taskdef />
+
+    <trycatch property="foo" reference="bar">
+      <try>
+        <antcall target="qaBuildingPage" />
+
+        <echo>Building Sandbox for Testing Infrastructure</echo>
+        <ant antfile="build/build.sandbox.xml" target="build" inheritAll="false" />
+
+        <echo>Building Umple</echo>
+        <ant antfile="build/build.umple.xml" target="buildParser" inheritAll="false" />
+
+        <echo>Building Eclipse Plugin</echo>
+        <ant antfile="build/build.eclipseplugin.xml" target="build" inheritAll="false" />
+
+        <echo>Building Umplificator Eclipse Plugin</echo>
+        <ant antfile="build/build.umplificatorplugin.xml" target="build" inheritAll="false" />
+			
+	    <!-- <echo>Building Eclipse Plugin with XText Code Editor</echo>
+	    <echo>Building Test Unit Generator And Parser</echo>
+	    <ant antfile="build/build.testgenerator.xml" target="build" inheritAll="false" />	
+
+        
+        <ant antfile="build/build.eclipsextextplugin.xml" target="build" inheritAll="false" /> -->
+
+        <!-- comment for parser basics only starts here
+        <echo>Building Java Testbed (Testing that Umple Generated Code Works)</echo>
+        <ant antfile="build/build.testbed.xml" target="build" inheritAll="false" />
+        
+
+       <echo>Testing UmpleOnline Examples and Manual Examples</echo>
+       <ant antfile="build/build.exampletests.xml" target="allUserManualAndExampleTests" inheritAll="false" />
+       comment ends here-->
+     </try>
+
+      <finally>
+        <antcall target="qaLandingPage" />
+      </finally>
+    </trycatch>
+
+  </target>
+  
 
   <target name="qaBuildingPage">
     <echo>Starting Build</echo>

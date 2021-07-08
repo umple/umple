@@ -248,7 +248,9 @@
       <src path="${project.path}/src"/>
       <src path="${project.path}/src-gen-umpletl"/>
       <src path="${project.path}/src-gen-umple"/>
+      
       <src path="${project.path}/test"/>
+      
       <src path="${vendors.path}/jopt-simple/src"/>
       <exclude name="**/.git"/>
       <exclude name="**/*.ump" />
@@ -745,10 +747,36 @@
     <!--antcall target="compileUmplificator" -->
     <antcall target="package" />
     <antcall target="template.test" />
+    
+     
     <antcall target="deploy" />
     <antcall target="template.resetVersion" />
   </target>
 
+<target name="buildParser" >
+    <property name="first.build" value="false" />
+    <check-connectivity />
+
+    <antcall target="deps-umple" />
+
+    <antcall target="clean" />
+    <antcall target="init" />
+    <antcall target="codegen" />
+    <antcall target="umpleParser" />
+    <antcall target="rtcpp" />
+    <antcall target="template.setVersion" />
+    <antcall target="umpleSelf" />
+    <antcall target="compile" />
+    <!--antcall target="compileValidator" -->
+    <!--antcall target="compileUmplificator" -->
+    <antcall target="package" />
+    <!-- comment for parser basics only starts here<antcall target="template.test" />
+    comment ends here-->
+     
+    <antcall target="deploy" />
+    <antcall target="template.resetVersion" />
+  </target>
+  
   <target name="build-umplificator" >
     <property name="first.build" value="false" />
     <check-connectivity />
