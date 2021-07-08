@@ -1,4 +1,4 @@
-version: 1.29.1-{build}-{branch}
+version: 1.30.2-{build}-{branch}
 
 skip_branch_with_pr: true
 
@@ -11,9 +11,10 @@ cache:
 
 - C:\Users\appveyor\.ant -> appveyor.yml
 - C:\Users\appveyor\.ivy2 -> appveyor.yml
-- C:\tools\php74 -> appveyor.yml
+- C:\tools\php80 -> appveyor.yml
 - C:\ProgramData\chocolatey\bin -> appveyor.yml
 - C:\ProgramData\chocolatey\lib -> appveyor.yml
+- C:\Program Files (x86)\Java\jdk11\bin -> appveyor.yml
 
 init:
 
