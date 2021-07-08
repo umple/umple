@@ -247,9 +247,7 @@
       <src path="${project.path}/src"/>
       <src path="${project.path}/src-gen-umpletl"/>
       <src path="${project.path}/src-gen-umple"/>
-      
       <src path="${project.path}/test"/>
-      
       <src path="${vendors.path}/jopt-simple/src"/>
       <exclude name="**/.git"/>
       <exclude name="**/*.ump" />
@@ -746,8 +744,6 @@
     <!--antcall target="compileUmplificator" -->
     <antcall target="package" />
     <antcall target="template.test" />
-    
-     
     <antcall target="deploy" />
     <antcall target="template.resetVersion" />
   </target>
