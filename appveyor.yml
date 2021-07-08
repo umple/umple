@@ -29,7 +29,7 @@ init:
 
 install:
 # NOTE if changing php version, make sure you change the cache above
-- ps: $env:Path="C:\Ruby21\bin;C:/tools/ruby22/bin;C:\Program Files (x86)\Java\jdk1.8.0\bin;$($env:Path);C:\tools\php74;C:\tools\php;C:\ProgramData\chocolatey\lib\ant"
+- ps: $env:Path="C:\Ruby21\bin;C:/tools/ruby22/bin;C:\Program Files (x86)\Java\jdk11\bin;$($env:Path);C:\tools\php74;C:\tools\php;C:\ProgramData\chocolatey\lib\ant"
 
 - ps: ant -version
 - ps: pushd build
