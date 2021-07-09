@@ -28,6 +28,8 @@ class SqlGenerator
   private static List<String> SqlPrimitives;
   private static String beforeCode;
   private static String afterCode;
+  private static String rootClass;
+  private static boolean readyToSetRootClass=false;
 
   static
   {
@@ -150,14 +152,32 @@ class SqlGenerator
       }
     }
   }
-  
+
+  public void setRootClass(UmpleClass aClass){
+    rootClass = aClass.getName();
+  }
+
+  public boolean matchesRootClass(UmpleClass aClass){
+    if (rootClass == null) return false;
+     return aClass.getName() == rootClass;
+  }
+
+  public void toggleReadyToSetRootClass(){
+    if (readyToSetRootClass)
+    {
+      readyToSetRootClass=false;
+    } 
+    else readyToSetRootClass = true;
+  }
   
   public List<Attribute> resolvePrimaryKey(UmpleClass aClass)
   {
+
     List<Attribute> result = new ArrayList<Attribute>();
     
     //Check for Primary Key
     String[] keyMembers = aClass.getKey().getMembers();
+
     if (keyMembers.length > 0)
     {
       for (String m : keyMembers)
@@ -171,7 +191,8 @@ class SqlGenerator
           UmpleClass foreignClass = getModel().getUmpleClass(attr.getType());
           if (foreignClass != null)
           {
-            for (Attribute FK : resolvePrimaryKey(foreignClass))
+            List<Attribute> foreignClassAttributeList = resolvePrimaryKey(foreignClass);
+            for (Attribute FK : foreignClassAttributeList)
             {
               result.add(attributePsudoCopy(FK, m + "_", ""));
             }
@@ -208,6 +229,12 @@ class SqlGenerator
       }
     }
 
+    if (readyToSetRootClass) // first call from outside
+    {
+      setRootClass(aClass);
+      toggleReadyToSetRootClass();
+    }
+    
     if (result.isEmpty())
     {
       if (aClass.numberOfAttributes() > 0)
@@ -224,7 +251,7 @@ class SqlGenerator
           if (av != null && av.getIsNavigable() && (av.isOptionalOne() || av.isOnlyOne() || av.isN()))
           {
             UmpleClass foreignClass = av.getRelatedAssociation().getUmpleClass();
-            if (foreignClass != null)
+            if (foreignClass != null && !matchesRootClass(foreignClass))
             {
               int maxMultiplicity = av.getMultiplicity().getUpperBound();
               List<Attribute> FK = resolvePrimaryKey(foreignClass);
@@ -235,6 +262,9 @@ class SqlGenerator
                   result.add(attributePsudoCopy(fk, foreignClass.getName() + "_", ((maxMultiplicity > 1) ? "_"+ p : "")));
                 }
               }
+            }
+            else{
+              // did a loop in recursion
             }
           }
           i++;
