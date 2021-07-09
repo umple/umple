@@ -552,7 +552,7 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
         }
 
         //updated box size
-        for (var j = 0; j < this.$box.find('.stateActions input').size(); j++) {
+        for (var j = 0; j < this.$box.find('.stateActions input').length; j++) {
             if (this.$box.find('.stateActions input')[j].value.length > this.targetInputSize) {
                 this.targetInputSize = this.$box.find('.stateActions input')[j].value.length;
                 updateFlag = true;
@@ -582,7 +582,7 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
         }
 
         //updated box size
-        for (var j = 0; j < this.$box.find('.stateActivities input').size(); j++) {
+        for (var j = 0; j < this.$box.find('.stateActivities input').length; j++) {
             if (this.$box.find('.stateActivities input')[j].value.length > this.targetInputSize) {
                 this.targetInputSize = this.$box.find('.stateActivities input')[j].value.length;
                 updateFlag = true;
@@ -633,7 +633,7 @@ joint.shapes.uml_state_machine.StateNewView = joint.dia.ElementView.extend({
     resetBoxsize: function(){
         //set box size
         var boxSize = this.model.get('size');
-        boxSize['height'] = ( this.$box.find('.stateActions').children().size() + this.$box.find('.stateActivities').children().size()) * 12+ 50;
+        boxSize['height'] = ( this.$box.find('.stateActions').children().length + this.$box.find('.stateActivities').children().length) * 12+ 50;
         boxSize['width'] = 25 + Math.floor(this.targetInputSize*6);
         this.model.set('size', boxSize);
 
