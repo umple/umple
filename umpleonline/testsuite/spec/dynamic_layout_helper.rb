@@ -13,6 +13,7 @@ module DynamicResizingHelper
   end
 
   def canvas
+    wait_for_loading
     size = get_element_size("umpleCanvasColumn")
     position = get_element_position("umpleCanvasColumn")
 
@@ -24,6 +25,7 @@ module DynamicResizingHelper
   end
 
   def editor
+    wait_for_loading
     size = get_element_size("textEditorColumn")
     position = get_element_position("textEditorColumn")
     
