@@ -1,0 +1,42 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+
+/*
+This is our internal parser implementation for the Umple language.  It uses
+a generic Parser that can read an external EBNF grammar file, and then populate
+an abstract syntax tree.
+
+The work of the UmpleInternalParser is 
+
+a) The grammar definition (defined externally in *.grammar files)
+b) Analyzing the AST to populate an Umple meta model instance
+c) Delegating to our code generator to produce the necessary artifacts (i.e. Java / PHP / Ruby code)
+
+Please refer to UmpleInternalParser_Code.ump for implementation details.
+ */
+
+ 
+ class TestParser{
+ depend java.io.*;
+ depend java.net.*;
+ depend java.util.*;
+ depend cruise.umple.parser.Token;
+ depend cruise.umple.parser.analysis.RuleBasedParser;
+ depend cruise.umple.parser.ParseResult;
+ 
+ RuleBasedParser rbp = new RuleBasedParser();
+ rbp.addGrammarFile("RuleBaseParserGrammarSample.grammar");
+ File file = new File("TestFileAsSample.txt");
+ rbp.parse(file);
+ /* To retrieve the tokens from the parse use,
+ rbp.getRootToken();  
+ */
+ 
+ }
