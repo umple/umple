@@ -6,8 +6,6 @@ include 'UmpleToRuby'
 include 'UmpleToSql'
 include 'UmpleToTest'
 include 'cruise.umple'
-include 'cruise.umple.validator'
-include 'cruise.umplificator'
 include 'sandbox'
 
 rootProject.name = 'umple'

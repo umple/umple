@@ -2367,7 +2367,6 @@ Action.updateUmpleDiagramCallback = function(response)
           //paper.scaleContentToFit({padding: 15});
         }
       };
-
       // using the umpleCanvas as the mouse wheel event target, as it is a stable entity
       var paperHolder = document.getElementById("umpleCanvas");
 
@@ -2856,12 +2855,11 @@ Mousetrap.bind(['ctrl+e'], function(e){
   return false; //equivalent to e.preventDefault();
 });
 
-/* TEMP DEBUG commenting out the ctrl-j binding temporarily due to issue 1786 
 Mousetrap.bind(['ctrl+j'], function(e){
   Page.clickShowJointJSClassDiagram();
   return false; //equivalent to e.preventDefault();
 });
-*/
+
 
 Mousetrap.bind(['ctrl+g'], function(e){
   Page.clickShowGvClassDiagram();
