@@ -425,7 +425,7 @@ else if (isset($_REQUEST["umpleCode"]))
        
          $javadocdir = $workDir->makePermalink('javadoc/');
          $javadoczip = $workDir->makePermalink('javadocFromUmple.zip');
-         $html = "<a href=\"{$javadoczip}\">Download the following as a zip file</a>&nbsp;{$errhtml}
+         $html = "<a href=\"{$javadoczip}\" title=\"Download the Javadoc website as a Zip file if you would like to be able to install it locally\">Download the following as a zip file</a>&nbsp;{$errhtml}
          <iframe width=100% height=1000 src=\"" . $javadocdir . "\">This browser does not
          support iframes, so the javadoc cannot be displayed</iframe> 
          ";
@@ -550,8 +550,14 @@ else if (isset($_REQUEST["umpleCode"]))
     else // This is where the Java, PHP and other output is placed on the screen
     {
        exec("cd $thedir; rm {$language}FromUmple.zip; zip -r {$language}FromUmple {$language}");
+       if($language=="Java") {
+         $controloextra=" As an alternative, you could also use control-o on a Mac or Linux machine to copy the Java code as well as compilation commands into your copy buffer; then in any terminal you would be able to paste the result to compile the Umple file to Java, with instructions on how to run any main program";
+       }
+       else {
+         $controloextra="";
+       }
        $archivelink = $workDir->makePermalink($language.'FromUmple.zip');
-       echo "<a href=\"$archivelink\" class=\"zipDownloadLink\">Download the following as a zip file</a>&nbsp;{$errhtml}<p>URL_SPLIT";
+       echo "<a href=\"$archivelink\" class=\"zipDownloadLink\" title=\"Download the generated code as a zip file. You can then unzip the result, compile it and run it on your own computer.".$controloextra."\">Download the following as a zip file</a>&nbsp;{$errhtml}<p>URL_SPLIT";
        echo $sourceCode;
     }
   }
