@@ -73,17 +73,19 @@ describe "Graphical editing of diagram: positional consistency",
     it "adds an umpleClass at a particular position" do
       load_page
       wait_for_loading
-
+      find(:css, '#umpleCanvas').click()
+      wait_for_loading
       find(:css, '#umpleCanvas').native.send_keys("c")
       expected_position = [55, 135]
       abs_canvas_pos = get_absolute_position("#umpleCanvas")
-
+      
       page.driver.click(expected_position[0] + abs_canvas_pos[0],
                         expected_position[1] + abs_canvas_pos[1])
+                        
       wait_for_loading
 
-      expect(class_diagram_position_of("NewClass")).to have_position(expected_position)
-      expect(class_code_position_of("NewClass")).to have_code_position(expected_position)
+      expect(class_diagram_position_of("NewClass")).to have_position([expected_position[0]-1, expected_position[1]-2])
+      expect(class_code_position_of("NewClass")).to have_code_position([expected_position[0], expected_position[1]-1])
     end
   end
 
@@ -148,15 +150,16 @@ describe "Graphical editing of diagram: positional consistency",
       find(:css, '#buttonAddAssociation').click
       within("div#umpleCanvas") {find(:css, "#Student").click}
       page.driver.click(class_position[0] + class_code[:size][0]/2, 
-                        class_position[1] + class_code[:size][1] - 5)
+                        class_position[1] + class_code[:size][1] - 9)
+      
       wait_for_loading
       code_pos = association_code_position_of(
         "Student", "Student", "roleName")[:end_two]
       actual_pos = association_diagram_position_of(
         "Student", "Student", "roleName")[:end_two]
 
-      expect(code_pos).to have_code_position([54, 45])
-      expect(actual_pos).to have_position_within_anchor_size([153, 74])
+      expect(code_pos).to have_code_position([54, 40])
+      expect(actual_pos).to have_position_within_anchor_size([151, 67])
     end
   end
 
@@ -181,8 +184,8 @@ describe "Graphical editing of diagram: positional consistency",
         anchor_code_pos = anchor_code_pos[:end_two]
       end
 
-      expect(anchor_pos).to have_position_within_anchor_size([137, 151])
-      expect(anchor_code_pos).to have_code_position([0, 23])
+      expect(anchor_pos).to have_position_within_anchor_size([135, 147])
+      expect(anchor_code_pos).to have_code_position([0, 20])
     end
 
     it "snaps the association anchor to the top edge" do
@@ -203,7 +206,7 @@ describe "Graphical editing of diagram: positional consistency",
       end
 
       expect(anchor_pos).to have_position_within_anchor_size([192, 129])
-      expect(anchor_code_pos).to have_code_position([55, 0])
+      expect(anchor_code_pos).to have_code_position([54, 0])
     end
 
     it "snaps the association anchor to the right edge" do
@@ -223,8 +226,8 @@ describe "Graphical editing of diagram: positional consistency",
         anchor_code_pos = anchor_code_pos[:end_two]
       end
 
-      expect(anchor_pos).to have_position_within_anchor_size([246, 151])
-      expect(anchor_code_pos).to have_code_position([110, 23])
+      expect(anchor_pos).to have_position_within_anchor_size([244, 147])
+      expect(anchor_code_pos).to have_code_position([109, 20])
     end
 
     it "snaps the association anchor to the bottom edge" do
@@ -244,8 +247,8 @@ describe "Graphical editing of diagram: positional consistency",
         anchor_code_pos = anchor_code_pos[:end_two]
       end
 
-      expect(anchor_pos).to have_position_within_anchor_size([192, 174])
-      expect(anchor_code_pos).to have_code_position([55, 45])
+      expect(anchor_pos).to have_position_within_anchor_size([189, 167])
+      expect(anchor_code_pos).to have_code_position([54, 40])
     end
   end
 
@@ -273,8 +276,8 @@ describe "Graphical editing of diagram: positional consistency",
                                             expected_position[0], 
                                             expected_position[1])
         wait_for_loading
-        expect(class_diagram_position_of("Student")).to have_position(expected_position) 
-        expect(class_code_position_of("Student")).to have_code_position(expected_position) 
+        expect(class_diagram_position_of("Student")).to have_position([expected_position[0], expected_position[1]-2]) 
+        expect(class_code_position_of("Student")).to have_code_position([expected_position[0]+1, expected_position[1]-1]) 
       end
     end
 
@@ -283,8 +286,9 @@ describe "Graphical editing of diagram: positional consistency",
         load_umple_with_file_and_layout("single_class_with_reflexive_association.ump")
       end
       it "moves a class with a reflexive association" do 
+        find(:css, "#umpleAssociation_0")
         expected_pos = association_diagram_position_of("Student", "Student", "peer")
-
+        
         drag_amount = [50, 50]
         expected_pos[:end_one][:position][0] += drag_amount[0]
         expected_pos[:end_one][:position][1] += drag_amount[1]
@@ -338,7 +342,7 @@ describe "Graphical editing of diagram: positional consistency",
           real_pos = real_pos[:end_two][:position][1]
           
           expect(code_pos).to eq(size_of_unmoved[:size][1])
-          expect(real_pos).to eq(242)
+          expect(real_pos).to eq(237)
         end
 
         it "moves association anchor from top to right" do
@@ -359,7 +363,7 @@ describe "Graphical editing of diagram: positional consistency",
           real_pos = real_pos[:end_two][:position][1]
 
           expect(code_pos).to eq(size_of_unmoved[:size][0])
-          expect(real_pos).to eq(221)
+          expect(real_pos).to eq(218)
         end
 
         it "moves association anchor from top to left" do
@@ -376,7 +380,7 @@ describe "Graphical editing of diagram: positional consistency",
     
 
           expect(code_pos).to eq(0)
-          expect(real_pos).to eq(206)
+          expect(real_pos).to eq(205)
         end
 
         it "moves association anchor from bottom to top" do
@@ -418,7 +422,7 @@ describe "Graphical editing of diagram: positional consistency",
           real_pos = real_pos[:end_one][:position][0]
 
           expect(code_pos).to eq(size_of_unmoved[:size][0])
-          expect(real_pos).to eq(257)
+          expect(real_pos).to eq(256)
         end
 
         it "moves association anchor from bottom to left" do
@@ -751,8 +755,8 @@ describe "Graphical editing of diagram: positional consistency",
           code_pos = code_pos[:end_two][:position]
         end
 
-        expect(code_pos).to have_position_within_anchor_size([40, 45])
-        expect(actual_pos).to have_position_within_anchor_size([116, 133])
+        expect(code_pos).to have_position_within_anchor_size([38, 40])
+        expect(actual_pos).to have_position_within_anchor_size([116, 127])
       end
 
       it "Moves the anchor right" do
@@ -770,8 +774,8 @@ describe "Graphical editing of diagram: positional consistency",
           code_pos = code_pos[:end_two][:position]
         end
 
-        expect(code_pos).to have_position_within_anchor_size([60, 45])
-        expect(actual_pos).to have_position_within_anchor_size([136, 133])
+        expect(code_pos).to have_position_within_anchor_size([58, 40])
+        expect(actual_pos).to have_position_within_anchor_size([136, 127])
       end
 
       it "Moves the anchor up" do
@@ -789,8 +793,8 @@ describe "Graphical editing of diagram: positional consistency",
           code_pos = code_pos[:end_two][:position]
         end
 
-        expect(code_pos).to have_position_within_anchor_size([50, 45])
-        expect(actual_pos).to have_position_within_anchor_size([126, 133])
+        expect(code_pos).to have_position_within_anchor_size([48, 40])
+        expect(actual_pos).to have_position_within_anchor_size([126, 127])
       end
 
       it "Moves the anchor down" do
@@ -808,8 +812,8 @@ describe "Graphical editing of diagram: positional consistency",
           code_pos = code_pos[:end_two][:position]
         end
 
-        expect(code_pos).to have_position_within_anchor_size([50, 45])
-        expect(actual_pos).to have_position_within_anchor_size([126, 133])
+        expect(code_pos).to have_position_within_anchor_size([48, 40])
+        expect(actual_pos).to have_position_within_anchor_size([126, 127])
       end
     end
   end

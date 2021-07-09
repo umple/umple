@@ -5,6 +5,7 @@ module DiagramEditingModelHelper
   #setup and loading functions
   def get_canvas_focus
     find(:css, '#umpleCanvas').click
+    wait_for_loading
   end
 
   def load_umple_with_file_model_helper(filename)
@@ -26,6 +27,7 @@ module DiagramEditingModelHelper
     wait_for_loading
     actual = evaluate_script("Page.getUmpleCode()")
     actual = actual[0..actual.index("//$?[End_of_model]$?") - 1]
+    actual = strip_whitespace(actual) == "//$?[End_of_model]$?namespace-;" ? "//$?[End_of_model]$?":actual
     expect(strip_whitespace(actual)).to eq(strip_whitespace(contents))
   end
 

@@ -17,8 +17,7 @@ describe "Page load options", :feature => :pageLoad, :helper => :pageLoad do
     expect(find(:css, "#umpleCanvas")).to have_selector("#EllipticalShape_generalization")
 
     #Check text editor
-    expect(evaluate_script("Page.getUmpleCode()")).to(
-      include(get_file_contents("2DShapes.ump", TestUtils::EXAMPLE_DIRECTORY)))
+    expect(get_file_contents("2DShapes.ump", TestUtils::EXAMPLE_DIRECTORY)).to include(evaluate_script("Page.getRawUmpleCode()"))
   end
 
   it "loads UmpleOnline with the text url option" do
@@ -26,14 +25,14 @@ describe "Page load options", :feature => :pageLoad, :helper => :pageLoad do
     load_umple_with_option("text=#{encode_to_url(umple_text)}")
     
     #Check text editor
-    expect(evaluate_script("Page.getUmpleCode()")).to include(umple_text)
+    expect(umple_text).to include(evaluate_script("Page.getRawUmpleCode()"))
 
     #Check diagram
     expect(find(:css, "#umpleCanvas")).to have_selector("#A")
   end
 
   it "loads UmpleOnline with the filename url option" do
-    load_umple_with_option("filename=cruise.local/ump/2DShapes.ump")
+    load_umple_with_option("filename=cruise.umple.org/umpleonline/umplibrary/2DShapes.ump")
 
     #Check diagram
     expect(find(:css, "#umpleCanvas")).to have_selector("#Shape2D")
@@ -41,8 +40,8 @@ describe "Page load options", :feature => :pageLoad, :helper => :pageLoad do
     expect(find(:css, "#umpleCanvas")).to have_selector("#EllipticalShape_generalization")
 
     #Check text editor
-    expect(evaluate_script("Page.getUmpleCode()")).to(
-      include(get_file_contents("2DShapes.ump", TestUtils::EXAMPLE_DIRECTORY)))    
+    expect( get_file_contents("2DShapes.ump", TestUtils::EXAMPLE_DIRECTORY)).to(
+      include(evaluate_script("Page.getRawUmpleCode()")))    
   end
 
   it "loads UmpleOnline with the model url option" do
@@ -147,7 +146,19 @@ describe "Page load options", :feature => :pageLoad, :helper => :pageLoad do
 
     it "loads UmpleOnline with code metrics as the default code to generate" do
       load_umple_with_option("generateDefault=metrics")
-      expect(page).to have_select('inputGenerateCode', selected: 'Simple metrics')
+      expect(page).to have_select('inputGenerateCode', selected: 'Simple Metrics')
+    end
+    it "loads UmpleOnline with alloy model as the default code to generate" do
+      load_umple_with_option("generateDefault=alloy")
+      expect(page).to have_select('inputGenerateCode', selected: 'Alloy Model')
+    end
+    it "loads UmpleOnline with nusmv model as the default code to generate" do
+      load_umple_with_option("generateDefault=nusmv")
+      expect(page).to have_select('inputGenerateCode', selected: 'NuSMV Model')
+    end
+    it "loads UmpleOnline with crud ui as the default code to generate" do
+      load_umple_with_option("generateDefault=uigu2")
+      expect(page).to have_select('inputGenerateCode', selected: 'CRUD User Interface')
     end
   end
 end

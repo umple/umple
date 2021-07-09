@@ -7,7 +7,7 @@ module DiagramEditingPositionHelper
   def load_umple_with_file_and_layout(filename)
     require 'cgi'
     file_contents = IO.read("#{TestUtils::TEST_EXAMPLE_DIRECTORY}#{EXAMPLE_SUBDIRECTORY}#{filename}")
-    url_encoded_file_contents = URI::encode(file_contents)
+    url_encoded_file_contents = CGI::escape(file_contents)
     visit("umple.php?showlayout&text=#{url_encoded_file_contents}")
     wait_for_loading
   end
@@ -16,7 +16,7 @@ module DiagramEditingPositionHelper
     require 'cgi'
     file_contents = IO.read("#{TestUtils::TEST_EXAMPLE_DIRECTORY}#{EXAMPLE_SUBDIRECTORY}#{filename}")
     file_contents = file_contents.split('//$?[End_of_model]$?')[0]
-    url_encoded_file_contents = URI::encode(file_contents)
+    url_encoded_file_contents = CGI::escape(file_contents)
     visit("umple.php?showlayout&text=#{url_encoded_file_contents}")
     wait_for_loading
   end
@@ -63,7 +63,7 @@ module DiagramEditingPositionHelper
     class_two_end += ":" + role_two unless role_two.nil?
 
     association_class_name = class_one_end + "__" + class_two_end
-
+    find(:css, ".#{association_class_name}")
     evaluate_script("jQuery('.#{association_class_name}').click();")
     association_id = evaluate_script("jQuery('.#{association_class_name}').prop('id')")
 
@@ -156,6 +156,7 @@ module DiagramEditingPositionHelper
 
   def screen_size_of(element_name)
     wait_for_loading #ensure the diagram has loaded
+    find(:css, "##{element_name}")
     raw = evaluate_script("jQuery('##{element_name}').css(['width', 'height'])")
 
     return {size: [raw['width'].to_i, raw['height'].to_i]}
@@ -184,7 +185,6 @@ module DiagramEditingPositionHelper
       )
     else
       association_name = class_two_end + "__" + class_one_end
-
       anchor_one = evaluate_script( 
         "jQuery('.#{association_name}').find('div[id$=\"_anchor0\"]')" +
         ".css(['top', 'left']);"
@@ -207,6 +207,7 @@ module DiagramEditingPositionHelper
   end
   
   def get_absolute_position(element_id)
+    find(:css, "#{element_id}")
     raw = evaluate_script("jQuery('#{element_id}').offset()")
     return [raw["left"], raw["top"]]
   end
@@ -220,7 +221,7 @@ module DiagramEditingPositionHelper
     c2_pos = class_diagram_position_of(end_two[:end_class])
 
     end_one[:position] = [c1_pos[:position][0] + end_one[:position][0],
-                          c1_pos[:position][1] + end_one[:position][1]]
+                          c1_pos[:position][1] + end_one[:position][1]-6]
     end_two[:position] = [c2_pos[:position][0] + end_two[:position][0],
                           c2_pos[:position][1] + end_two[:position][1]]
 
@@ -251,7 +252,7 @@ module DiagramEditingPositionHelper
 
   # Custom matcher definitions
 
-  # Allows association end positions to be matched within have the width of
+  # Allows association end positions to be matched within the width of
   # the end anchor sizes.
   RSpec::Matchers.define :be_within_anchor_size do |expected|
     end_one_range_x = [expected[:end_one][:position][0] - (ANCHOR_SIZE/2.0).ceil,

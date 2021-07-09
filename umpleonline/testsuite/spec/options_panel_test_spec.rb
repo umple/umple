@@ -141,7 +141,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
 
     describe "Clicking the show/hide actions option" do
       it "clicks the input box" do
-        reset_page_to_options unless get_checkbox_state("#buttonToggleActions")
+        reset_page_to_options_with_stateMachine 
         find(:css, "#buttonToggleActions").click
         expect(get_checkbox_state("#buttonToggleActions")).to eq(false)
         find(:css, "#buttonToggleActions").click
@@ -149,7 +149,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       end
 
       it "clicks the label text" do
-        reset_page_to_options unless get_checkbox_state("#buttonToggleActions")
+        reset_page_to_options_with_stateMachine 
         find(:css, "#labelToggleActions").click
         expect(get_checkbox_state("#buttonToggleActions")).to eq(false)
         find(:css, "#labelToggleActions").click
@@ -160,41 +160,41 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
   
   describe "Clicking the show/hide transition label option" do
       it "clicks the input box" do
-        reset_page_to_options unless get_checkbox_state("#buttonToggleTransitionLabel")
-        find(:css, "#buttonToggleTransitionLabel").click
-        expect(get_checkbox_state("#buttonToggleTransitionLabel")).to eq(false)
-        find(:css, "#buttonToggleTransitionLabel").click
-        expect(get_checkbox_state("#buttonToggleTransitionLabel")).to eq(true)
+        reset_page_to_options_with_stateMachine
+        find(:css, "#buttonToggleTransitionLabels").click
+        expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(true)
+        find(:css, "#buttonToggleTransitionLabels").click
+        expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(false)
       end
 
       it "clicks the label text" do
-        reset_page_to_options unless get_checkbox_state("#labelToggleTransitionLabel")
-        find(:css, "#labelToggleTransitionLabel").click
-        expect(get_checkbox_state("#labelToggleTransitionLabel")).to eq(false)
-        find(:css, "#labelToggleTransitionLabel").click
-        expect(get_checkbox_state("#labelToggleTransitionLabel")).to eq(true)
+        reset_page_to_options_with_stateMachine
+        find(:css, "#labelToggleTransitionLabels").click
+        expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(true)
+        find(:css, "#labelToggleTransitionLabels").click
+        expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(false)
       end
     end
-  end
+  
   
   describe "Clicking the show/hide guard label option" do
       it "clicks the input box" do
-        reset_page_to_options unless get_checkbox_state("#buttonToggleGuardLabel")
-        find(:css, "#buttonToggleGuardLabel").click
-        expect(get_checkbox_state("#buttonToggleGuardLabel")).to eq(false)
-        find(:css, "#buttonToggleGuardLabel").click
-        expect(get_checkbox_state("#buttonToggleGuardLabel")).to eq(true)
+        reset_page_to_options_with_stateMachine
+        find(:css, "#buttonToggleGuardLabels").click
+        expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(true)
+        find(:css, "#buttonToggleGuardLabels").click
+        expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(false)
       end
 
       it "clicks the label text" do
-        reset_page_to_options unless get_checkbox_state("#labelToggleGuardLabel")
-        find(:css, "#labelToggleGuardLabel").click
-        expect(get_checkbox_state("#labelToggleGuardLabel")).to eq(false)
-        find(:css, "#labelToggleGuardLabel").click
-        expect(get_checkbox_state("#labelToggleGuardLabel")).to eq(true)
+        reset_page_to_options_with_stateMachine
+        find(:css, "#labelToggleGuardLabels").click
+        expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(true)
+        find(:css, "#labelToggleGuardLabels").click
+        expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(false)
       end
     end
-  end
+  
 
   describe "Show views functionality" do
     describe "Diagram show/hide option" do
@@ -378,6 +378,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       end
       
       find(:css, "#buttonShowGvClassDiagram").click
+      wait_for_loading
       within(find(:css, "#node1")) do
         expect(find(:css, "title").native.all_text.chomp).to eq("Student") 
       end
@@ -392,6 +393,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       end
       
       find(:css, "#buttonShowGvStateDiagram").click
+      wait_for_loading
       within(find(:css, "#node1")) do
         expect(find(:css, "title").native.all_text.chomp).to eq("start_Student_study") 
       end
@@ -408,7 +410,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       find(:css, "#buttonShowStructureDiagram").click
       expect(find(:css, "#umpleCanvas")).to have_selector("#svgCanvas")
       
-      find(:css, "#buttonShowEditableClassDiagram").click
+      find(:css, "#buttonShowEditableClassDiagram").click 
       expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
     end
 
@@ -419,11 +421,13 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       end
       
       find(:css, "#buttonShowGvStateDiagram").click
+      wait_for_loading_for(10)
       within(find(:css, "#node1")) do
         expect(find(:css, "title").native.all_text.chomp).to eq("start_Student_study") 
       end
       
       find(:css, "#buttonShowGvClassDiagram").click
+      wait_for_loading_for(10)
       within(find(:css, "#node1")) do
         expect(find(:css, "title").native.all_text.chomp).to eq("Student") 
       end
@@ -436,9 +440,11 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       end
       
       find(:css, "#buttonShowStructureDiagram").click
+      wait_for_loading_for(10)
       expect(find(:css, "#umpleCanvas")).to have_selector("#svgCanvas")
       
       find(:css, "#buttonShowGvClassDiagram").click
+      wait_for_loading_for(10)
       within(find(:css, "#node1")) do
         expect(find(:css, "title").native.all_text.chomp).to eq("Student") 
       end
@@ -451,9 +457,11 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       end
       
       find(:css, "#buttonShowStructureDiagram").click
+      wait_for_loading
       expect(find(:css, "#umpleCanvas")).to have_selector("#svgCanvas")
       
       find(:css, "#buttonShowGvStateDiagram").click
+      wait_for_loading
       within(find(:css, "#node1")) do
         expect(find(:css, "title").native.all_text.chomp).to eq("start_Student_study") 
       end
@@ -530,7 +538,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         find(:css, "#buttonPhotoReady").click
         expect(find(:css, "#umpleCanvasColumn")).to have_css("div.photoReady")
         within(find(:css, "#Student")) do
-          expect(find(:css, "#Student_newAttribute").native.all_text.chomp).to eq("")
+          expect(find(:css, "#Student_newAttribute").native.all_text.chomp).to eq(" ")
         end 
 
         find(:css, "#buttonPhotoReady").click
@@ -563,26 +571,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         expect(page).to have_no_selector("div#syncNeededMessage")
         expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
         expect(page).to have_css("li#buttonSyncDiagram.disabled")
-      end
-    end
-  end
-
-  describe "Other views functionality" do
-    describe "Yuml view generation" do
-      it "clicks the image button" do
-        reset_page_to_options_with_model("simple_class.ump")
-        find(:css, "#buttonYumlImage").click
-        within_window("yumlClassDiagram") do
-          expect(page).to have_selector("#diagram")
-        end
-      end
-
-      it "clicks the label text" do
-        reset_page_to_options_with_model("simple_class.ump")
-        find(:css, "#labelYumlImage").click
-        within_window("yumlClassDiagram") do
-          expect(page).to have_selector("#diagram")
-        end
       end
     end
   end

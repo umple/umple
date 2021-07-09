@@ -16,6 +16,7 @@ describe "Example loading",
 
   describe "Switching example types" do
     it "cycles through the example type menu" do
+      wait_for_loading
       expect(page).to have_selector('#inputExample', visible: true)
       expect(page).to have_selector('#inputExample2', visible: false)
       expect(page).to have_selector('#inputExample3', visible: false)
