@@ -489,7 +489,6 @@ Action.loadFileCallback = function(response)
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   if (Object.keys(TabControl.tabs).length > 1) return;
   
-  console.log("saved for loadFile");
   TabControl.getCurrentHistory().save(response.responseText,"loadFileCallback");
   Page.setUmpleCode(response.responseText, true);
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
@@ -541,7 +540,6 @@ Action.loadTaskCallback = function(response)
   if (Object.keys(TabControl.tabs).length > 1) return;
 
   Action.setjustUpdatetoSaveLater(true);
-  console.log("saved for loadTask");
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskCallback");
   var responseArray = response.responseText.split("task delimiter");
   Page.setUmpleCode(responseArray[0]);
@@ -568,7 +566,6 @@ Action.loadTaskExceptCodeCallback = function(response)
   //if (Object.keys(TabControl.tabs).length > 1) return;
 
   Action.setjustUpdatetoSaveLater(true);
-  console.log("saved for loadTaskExceptCode");
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
   var responseArray = response.responseText.split("task delimiter");
   jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":");
@@ -1037,7 +1034,6 @@ Action.classClicked = function(event)
   
   else
   {
-    console.log("This was not selected" + Page.selectedItem);
     Action.classSelected(obj);
   }
 }
@@ -1508,8 +1504,8 @@ Action.directUpdateCommandCallback = function(response)
 Action.updateUmpleTextCallback = function(response)
 {
   if (!justUpdatetoSaveLater){
-    console.log("saved for TextCallback");
     TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
+    Page.setExampleMessage("");
   }
   Action.freshLoad = true;
   
@@ -1614,7 +1610,6 @@ Action.loadExample = function loadExample()
 
 Action.loadExampleCallback = function(response)
 {
-  console.log("set update to "+justUpdatetoSaveLater);
   Action.freshLoad = true;
   Page.setUmpleCode(response.responseText);
   Page.hideLoading();
@@ -1951,8 +1946,7 @@ Action.directAddClass = function(className) {
 
   var umpleJson = Json.toString({"position" : {"x" : "10","y" : "10","width" : "109","height" : "41"},"name" : className});
 
-  Page.setFeedbackMessage("Adding class "+className);  
-  console.log("added class");
+  Page.setFeedbackMessage("Adding class "+className);
   Action.setjustUpdatetoSaveLater(false);
   Action.ajax(Action.directUpdateCommandCallback,format("action=addClass&actionCode={0}",umpleJson));
 
@@ -2220,10 +2214,7 @@ Action.processTyping = function(target, manuallySynchronized)
   if (target != "diagramEdit") 
   {
     Action.setjustUpdatetoSaveLater(true);
-    console.log("saved for processTyping {not diagram edit}");
   }
-
-  Page.setExampleMessage("");
   
   if (!Action.manualSync || manuallySynchronized)
   {
@@ -2250,6 +2241,7 @@ Action.processTyping = function(target, manuallySynchronized)
 
   if (target != "diagramEdit"){
     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
+    Page.setExampleMessage("");
   }
 
 }
@@ -2375,7 +2367,6 @@ Action.updateUmpleDiagramCallback = function(response)
           //paper.scaleContentToFit({padding: 15});
         }
       };
-
       // using the umpleCanvas as the mouse wheel event target, as it is a stable entity
       var paperHolder = document.getElementById("umpleCanvas");
 
@@ -2868,6 +2859,7 @@ Mousetrap.bind(['ctrl+j'], function(e){
   Page.clickShowJointJSClassDiagram();
   return false; //equivalent to e.preventDefault();
 });
+
 
 Mousetrap.bind(['ctrl+g'], function(e){
   Page.clickShowGvClassDiagram();
