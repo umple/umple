@@ -214,6 +214,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowHideCanvas");
   Page.initAction("buttonShowEditableClassDiagram");
   Page.initAction("buttonShowJointJSClassDiagram");
+    
   Page.initAction("buttonShowGvClassDiagram");
   Page.initAction("buttonShowGvStateDiagram");
   Page.initAction("buttonShowGvFeatureDiagram");//buttonShowGvFeatureDiagram
@@ -478,6 +479,7 @@ Page.initCodeMirrorEditor = function() {
           Page.codeMirrorEditor.setLineClass(Page.hLine, null);
           Page.hLine = Page.codeMirrorEditor.setLineClass(Page.codeMirrorEditor.getCursor().line, "activeline");
           Action.umpleCodeMirrorCursorActivity();},
+                   
         extraKeys: { // Change consistently in umple_action.js for Mousetrap
           "Ctrl-E": function(cm) {Page.clickShowEditableClassDiagram()},
           "Ctrl-J": function(cm) {Page.clickShowJointJSClassDiagram()},

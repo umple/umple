@@ -410,7 +410,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
             this.$box.find('.classAttributes').append('<div class="attributInput"><input size="' + this.targetInputSize + '" data-attribute-index="' + tempIndex + '" type="text" value="" placeholder="Add More" readonly/> <img class="deleteAttr" src="scripts/delete.png" alt="Del"><img class="edit" src="scripts/pencil.png" alt="Edt"></div>');
         }
 
-        for (var j = 0; j < this.$box.find('.classAttributes input').size(); j++) {
+        for (var j = 0; j < this.$box.find('.classAttributes input').length; j++) {
             if (this.$box.find('.classAttributes input')[j].value.length > this.targetInputSize) {
                 this.targetInputSize = this.$box.find('.classAttributes input')[j].value.length;
                 updateFlag = true;
@@ -513,7 +513,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
     resetBoxsize: function () {
         //set box size
         var boxSize = this.model.get('size');
-        boxSize['height'] = (this.$box.find('.classAttributes').children().size() + this.$box.find('.classMethods').children().size()) * 15 + 24;
+        boxSize['height'] = (this.$box.find('.classAttributes').children().length + this.$box.find('.classMethods').children().length) * 15 + 24;
         //boxSize['width'] = 50 + Math.floor(this.targetInputSize * 6.32);
         boxSize['width'] = 35 + Math.floor(this.targetInputSize * 6);
         this.model.set('size', boxSize);
@@ -536,7 +536,7 @@ joint.shapes.umpleuml.ClassView = joint.dia.ElementView.extend({
         var jointShape = jQuery("#" + this.id);
         var xTranslate = bbox.x - 100;
         var yTranslate = bbox.y - 50;
-        if (jointShape.children().size() > 0){
+        if (jointShape.children().length > 0){
 			var rectScale = jQuery(jointShape.children().children());
 			rectScale.attr({"transform": "scale("+ widthScale + "," + heightScale +")"})
 			jointShape.attr({"transform": "translate("+ xTranslate + "," + yTranslate +")"})
