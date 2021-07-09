@@ -49,6 +49,7 @@ This file generates Sql attributes for a given class. Once all the attributes ha
   
   //Primary Key Generation
   String tKey = "";
+  gen.toggleReadyToSetRootClass();
   List<Attribute> PKList = gen.resolvePrimaryKey(uClass);
   for(Attribute PK : PKList)
   {
