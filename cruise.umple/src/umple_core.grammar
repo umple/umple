@@ -50,7 +50,7 @@ entity- : [[mixsetIsFeature]] | [[requireStatement]] | [[mixsetDefinition]] | [[
 
 // Comments follow the same conventions as C-family languages. [*UmpleComments*]
 comment- : [[inlineComment]] | [[multilineComment]] | [[annotationComment]]
-inlineComment- : // [*inlineComment]
+inlineComment- : // [*inlineComment] | # [*inlineComment]
 multilineComment- : /* [**multilineComment] */
 
 //Matches all forms of Java annotations including those with parentheses and values in quotes
