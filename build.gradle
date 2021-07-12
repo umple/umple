@@ -1115,6 +1115,8 @@ task phpUserManualAndExampleTests {
                 "Tracers3.ump",
                 "Tracers4.ump",
                 "Tracers5.ump",
+                "OBDCarSystem.ump",
+                "HtmlGeneration2.ump",
                 "ComplexStateMachine.ump", //Temporary
                 "W010SingletonMultiplicityOver12.ump"] //Temporary
         runUserManualAndExampleTests("php", "Php", excludes)
