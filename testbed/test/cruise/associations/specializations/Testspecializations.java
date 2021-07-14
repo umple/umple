@@ -2,9 +2,7 @@ package cruise.associations.specializations;
 
 
 import org.junit.*;
-import cruise.associations.specializations.Vehicle;
-import cruise.associations.specializations.Bicycle;
-import cruise.associations.specializations.Wheel;
+
 
 public class Testspecializations {
 
