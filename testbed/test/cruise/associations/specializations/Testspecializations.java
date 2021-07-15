@@ -1,6 +1,4 @@
 package cruise.associations.specializations;
-
-
 import org.junit.*;
 
 
@@ -239,9 +237,6 @@ public class Testspecializations {
         Assert.assertTrue(whale.isNumberOfFatValid_Blubber());
         Assert.assertFalse(whale.addFat(new Blubber()));
         Assert.assertFalse(whale.removeFat(ablubber));
-
-        
-
     }
 
     @Test
@@ -1279,8 +1274,39 @@ public class Testspecializations {
 
     @Test
     public void checkTy(){//tyy ty yuu yu
-        
+        Tyy aTyy=new Tyy();
+        Ty aTy=new Ty();
+        Yuu aYuu=new Yuu();
+        Yuu aYuu2=new Yuu();
+        Yuu aYuu3=new Yuu();
+        Yuu aYuu4=new Yuu();
+        Yuu aYuu5=new Yuu();
+        Yuu aYuu6=new Yuu();
+        Yuu aYuu7=new Yuu();
+        Yu aYu=new Yu();
 
+        for(int i=1; i<=3; i++){
+            aYuu.addTy(new Tyy());
+        }
+        for(int i=1; i<=5; i++){
+            aYu.addTy(new Tyy());
+        }
+
+        aYuu2.addTy(aTyy);
+        aYuu3.addTy(aTyy);
+        aYuu4.addTy(aTyy);
+        aYuu2.addTy(aTy);
+        aYuu3.addTy(aTy);
+        aYuu4.addTy(aTy);
+
+        Assert.assertFalse(aTyy.removeYu(aYuu2));
+        Assert.assertTrue(aTy.removeYu(aYuu2));
+
+        aYuu5.addTy(aTyy);
+        aYuu6.addTy(aTyy);
+        aYuu7.addTy(new Tyy());
+
+        Assert.assertFalse(aTyy.addYu(aYuu7));
     }
 
     @Test 
