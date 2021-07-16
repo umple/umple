@@ -1,0 +1,183 @@
+List of Umple Keywords
+User Manual Basics
+noreferences
+
+@@description
+
+<h2>Here is the list of all keywords in the Umple programming language. They cannot be used as identifiers.</h2>
+<ul>
+<li><span style="color:red; font-weight: bold">abstract:</span> Defines a class or method as abstract. <a href="AbstractMethods.html"><i>See Abstract Methods</i></a></li>
+<li><span style="color:red; font-weight: bold">activate:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">active:</span> Defines an object that, when initialized, runs its own thread. <a href="Active Objects"><i>See Active Objects</i></a></li>
+<li><span style="color:red; font-weight: bold">add:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">after:</span> Requests that code should be run once a few Umple-defined actions are completed. <a href="BeforeandAfterStatements.html"><i>See Before and After Statements</i></a></li>
+<li><span style="color:red; font-weight: bold">after:</span> (State Machine) Triggers a transition after a given amount of time. <a href="TimedTransitions.html"><i></i>See Timed Transitions</a></li>
+<li><span style="color:red; font-weight: bold">after every:</span> (State Machine) Continuously triggers a transition at a specified time intervals while object remains in the state. <a href="TimedTransitions.html"><i>See Timed Transitions</i></a></li>
+<li><span style="color:red; font-weight: bold">after poll:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">and:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">as:</span> Declares a function or a state machine alias subsequent to the function or state machine definition. This is optional and should be followed by an alias name<a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">assertAttribute:</span> Asserts attribute's presence in generated code. <a href="BasicTestcase.html"><i>See Basic Testcase</i></a></li>
+<li><span style="color:red; font-weight: bold">assertEqual:</span> Asserts that two objects are equal. <a href="BasicTestcase.html"><i>See Basic Testcase</i></a></li>
+<li><span style="color:red; font-weight: bold">assertFalse:</span> Asserts that condition is false. <a href="BasicTestcase.html"><i>See Basic Testcase</i></a></li>
+<li><span style="color:red; font-weight: bold">assertMethod:</span> Asserts methods's presence in generated code. <a href="BasicTestcase.html"><i>See Basic Testcase</i></a></li>
+<li><span style="color:red; font-weight: bold">assertNull:</span> Asserts that object is null. <a href="BasicTestcase.html"><i>See Basic Testcase</i></a></li>
+<li><span style="color:red; font-weight: bold">assertTrue:</span> Asserts that condition is true. <a href="BasicTestcase.html"><i>See Basic Testcase</i></a></li>
+<li><span style="color:red; font-weight: bold">association:</span> Defines an association between two classes, separate from the two classes. <a href="IndependentlyDefinedAssociations.html"><i>See Independently Defined Associations</i></a></li>
+<li><span style="color:red; font-weight: bold">association Class:</span> Defines a class to manage many to many associations. <a href="AssociationClassDefinition.html"><i>See association class definition</i></a></li>
+<li><span style="color:red; font-weight: bold">attributes:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">autounique:</span> Automatically assigns a unique value to an attribute each time a class is instantiated. <a href="UniqueAttributes.html"><i>See unique attributes</i></a></li>
+<li><span style="color:red; font-weight: bold">before:</span> Requests that code should be run once a few Umple-defined actions are completed. <a href="BeforeandAfterStatements.html"><i>See Before and After Statements</i></a></li>
+<li><span style="color:red; font-weight: bold">between:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">cardinality:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">class:</span> Defines a new class.This should be followed by a class name. <a href="ClassDefinition.html"><i>See Class Definition</i></a></li>
+<li><span style="color:red; font-weight: bold">const:</span> Defines a new constant. <a href="AttributeDefinition.html"><i></i>See Attribute Definition</a></li>
+<li><span style="color:red; font-weight: bold">deactivate:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">depend:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">displayColor:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">distributable:</span> Allows for the execution of multiple objects accross different Java Virtual Machine. <a href="BasicDistributedSystems.html"><i>See Basic Distributed Systems</i></a></li>
+<li><span style="color:red; font-weight: bold">do:</span> (State Machine) Runs a process while in a state. <a href="StateMachineActionsandDoActivities.html"><i>See State Machine Actions and Do Activities</i></a></li>
+<li><span style="color:red; font-weight: bold">during:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">else:</span> Flow control statement that executes subsequent instructions in case the if condition is not satisfied. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">emit:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">end:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">entry:</span> (State Machine) Indicates an action to perform when entering a state. <a href="StateMachineActionsandDoActivities.html"><i>See State Machine Actions and Do Activities</i></a></li>
+<li><span style="color:red; font-weight: bold">enum:</span> Defines a user-defined data type with a set of constants. <a href="EnumerationDefinition.html"><i>See Enumaration Definition</i></a></li>
+<li><span style="color:red; font-weight: bold">exit:</span> (State Machine) Indicates an action to perform when exiting a state. <a href="StateMachineActionsandDoActivities.html"><i>See State Machine Actions and Do Activities</i></a></li>
+<li><span style="color:red; font-weight: bold">extendContent:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">external:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">filter:</span> Defines a new filter. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">final:</span> (State Machine) Precedes a state name and marks it as final. <a href="FinalStates.html"><i>See Final States</i></a></li>
+<li><span style="color:red; font-weight: bold">Final:</span> (State Machine) Denotes the destination of a transition that terminates the state machine once completed. <a href="FinalStates.html"><i>See Final States</i></a></li>
+<li><span style="color:red; font-weight: bold">fixml:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">for:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">generic:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">giving:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">glossary:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">hops:</span> Within a filter directive, it indicates additional classes that can be included, which are linked to the already included classes by associations or generalizations. <a href="Filters.html"><i>See Filters</i></a></li>
+<li><span style="color:red; font-weight: bold">if:</span> Flow control statement that executes the subsequent instructions if the condition is satisfied. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">immutable:</span> Defines an attribute that only be set when initialized. <a href="AttributeDefinition.html"><i>See Attribute definition</i></a></li>
+<li><span style="color:red; font-weight: bold">include:</span> Within a filter directive, it indicates the classes that are to be included. <a href="Filters.html"><i>See Filters</i></a></li>
+<li><span style="color:red; font-weight: bold">includeFilter:</span> Within a filter directive, it indicates named filters to be included. <a href="Filters.html"><i>See Filters</i></a></li>
+<li><span style="color:red; font-weight: bold">inner:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">intercept:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">interface:</span> Defines something. <a href="interfaceDefinition"><i>See interface Definition</i></a></li>
+<li><span style="color:red; font-weight: bold">internal:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">isA:</span> Denotes a superclass, or implemented interface, or included trait. <a href="isAclause.html"><i>See isA clause</i></a></li>
+<li><span style="color:red; font-weight: bold">isFeature:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">ivar:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">key:</span> Marks an attribute or set of attributes as keys for equality and hashing. <a href="KeysforEqualityandHashing.html"><i>See Keys for Equality and Hashing</i></a></li>
+<li><span style="color:red; font-weight: bold">latency:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">lazy:</span> Initializes attributes to default values according to their types. <a href="AttributeDefinition.html"><i>See attribute definition</i></a></li>
+<li><span style="color:red; font-weight: bold">level:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">method:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">mixset:</span> Defines a new mixset. <a href="BasicMixsets.html"><i>See basic mixsets</i></a></li>
+<li><span style="color:red; font-weight: bold">model:</span> Declares certain conditions that must be satisfied by a model. <a href="ModelConstraints.html"><i>See model constraints</i></a></li>
+<li><span style="color:red; font-weight: bold">namespace:</span> Declares of group of similar entities. <a href="NamespaceDirectives.html"><i>See namespace directives</i></a></li>
+<li><span style="color:red; font-weight: bold">not:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">of:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">only:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">onThisObject:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">or:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">period:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">poll:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">pooled:</span> (State Machine) Defines a state machine type that allows for the processing . <a href="PooledStateMachines.html"><i>See Pooled State Machines</i></a></li>
+<li><span style="color:red; font-weight: bold">port:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">position:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">pre:</span> Defines a pre-condition that must be satisfied to run a method. <a href="Preconditions.html"><i>See preconditions</i></a></li>
+<li><span style="color:red; font-weight: bold">prefix:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">primitive:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">priority:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">private:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">protected:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">public:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">queued:</span> (State Machine) Placed before the state machine declaration, . <a href="QueuedStateMachines.html"><i>See Queued State Machines</i></a></li>
+<li><span style="color:red; font-weight: bold">record:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">regex:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">remove:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">require:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">resolve:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">settable:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">singleton:</span> Marks a class as a singleton class. <a href="SingletonPattern.html"><i>See singleton pattern</i></a></li>
+<li><span style="color:red; font-weight: bold">sorted:</span> Defines a criterium, that must be an attribute, through which an association would be classified. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">statemachine:</span> (State Machine) Defines something. <a href="StandaloneStateMachines.html"><i>See Standalone State Machines</i></a></li>
+<li><span style="color:red; font-weight: bold">static:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">strictness:</span> This allows the control of messages that may be issued by the umple compiler. <a href="StrictnessDirective.html"><i>See strictness Directive</i></a></li>
+<li><span style="color:red; font-weight: bold">sub:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">suffix:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">super:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">synchronous:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">template:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">test:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">test sequence:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">then:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">throws:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">timeout:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">trace:</span> Indicates the UML entity to trace. <a href="TracingBasics.html"><i>See Tracing Basics</i></a></li>
+<li><span style="color:red; font-weight: bold">tracecase:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">trait:</span> Defines a new trait. <a href="Traits.html"><i>See Traits</i></a></li>
+<li><span style="color:red; font-weight: bold">umplefile:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">unique:</span> Ensures that an attribute has a particular value for each instance of a class. <a href="UniqueAttributes.html"><i>See unique attributes</i></a></li>
+<li><span style="color:red; font-weight: bold">unspecified:</span> (State Machine) Ensures that no event in a state is ignored. <a href="UnspecifiedEvents.html"><i>See Unspecified Events</i></a></li>
+<li><span style="color:red; font-weight: bold">until:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">use:</span> Allows your program to include a model or blocks of code from another file. <a href="UseStatements.html"><i>See use statements</i></a></li>
+<li><span style="color:red; font-weight: bold">where:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">xor:</span> Defines something. <a href=""><i></i></a></li>
+
+
+
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+<li><span style="color:red; font-weight: bold">:</span> Defines something. <a href=""><i></i></a></li>
+
+</ul>

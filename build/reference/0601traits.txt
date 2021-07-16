@@ -47,7 +47,7 @@ Traits are not part of UML. A UML class diagram drawn from an Umple file contain
 
 <p>
 <b>Use with mixsets:</b>
-Creating a mixset that defines both a trait and isA statements incirporating the trait into clients allows the specification of optional functionality that can be mixed in to several classes. This is how mixins work in languages such as Ruby.
+Creating a mixset that defines both a trait and isA statements incorporating the trait into clients allows the specification of optional functionality that can be mixed in to several classes. This is how mixins work in languages such as Ruby.
 </p>
 
 <p>
