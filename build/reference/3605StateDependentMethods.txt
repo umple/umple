@@ -4,7 +4,7 @@ noreferences
 
 @@description
 
-<p>A state-dependent method is a partial method body declared within a <a href="BasicStateMachines.html">state machine<a>. Each of these partial definitions are subsequently aggregated into a single function within the Umple class as switch cases.</p>
+<p>A state-dependent method is a partial method body declared within a <a href="BasicStateMachines.html">state machine</a>. Each of these partial definitions are subsequently aggregated into a single function within the Umple class as switch cases.</p>
 
 <p>Note that while it is possible to define state-dependent methods across several state machines, the switched cases must be disjoint as the order within the cases is non-deterministic. Additionally, if a method of the same name and parameter set is provided in the same class then it is used as the default body for the function.</p>
 
