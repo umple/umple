@@ -1074,8 +1074,10 @@ class SqlGenerator
         uClass.addAssociationVariable(newAssoc);
         System.out.println("pass 5 -  parent key: "+parent_pk.getMember(0));
         AssociationVariable avFromParent = parent.getAssociationVariable(parent_pk.getMember(0));
-        newAssoc.setRelatedAssociation(avFromParent);
-        System.out.println("name of related: "+ newAssoc.getRelatedAssociation().getName());
+        newAssoc.setOneDirectionalRelatedAssociation(avFromParent);
+        System.out.println("CREATED ASSOC : \n"+newAssoc+"\n");
+        //System.out.println("of class: "+newAssoc.getUmpleClass().getName());
+        //System.out.println("name of related: "+ newAssoc.getRelatedAssociation().getName());
         System.out.println("av is only one? "+newAssoc.isOnlyOne());
         System.out.println("av is navigable? "+newAssoc.getIsNavigable());
         System.out.println("av type - "+newAssoc.getType());
@@ -1083,7 +1085,6 @@ class SqlGenerator
       }
       else {
         System.out.println("-- skipped main if");
-        System.out.println("1st Condition: " + uClass.getAssociationVariable(parent_pk.getMember(0)) == null);
       }
       return createNewIntPK(uClass);
       }
@@ -1096,7 +1097,7 @@ class SqlGenerator
     optionalToOne.setBound("1");
 
     if (uClass.getKey().getMembers().length == 0 && uClass.getAttributes().size() == 0){
-      AssociationVariable old_pk = new AssociationVariable (uClass.getExtendsClass().getName()+"_id", uClass.getAssociationVariable(uClass.getKey().getMember(0)).getType(), "", "", optionalToOne, true);
+      AssociationVariable old_pk = new AssociationVariable (uClass.getExtendsClass().getName()+"_id", uClass.getAssociationVariable(uClass.getKey().getMember(0)).getType(), "", "", optionalToOne, false);
       System.out.println("created separate assoc - "+old_pk.getName());
       uClass.addAssociationVariable(old_pk);
       Key k = new Key();
@@ -1104,8 +1105,10 @@ class SqlGenerator
       uClass.setKey(k);
       System.out.println("created pk : "+uClass.getKey().getMember(0));
 
-      if (old_pk.hasRelatedAssociation())
+      if (old_pk.hasRelatedAssociation()){
         System.out.println("name of related: "+ old_pk.getRelatedAssociation());
+        System.out.println("of class: "+old_pk.getRelatedAssociation().getUmpleClass().getName());
+      }
       System.out.println("av is only one? "+old_pk.isOnlyOne());
       System.out.println("av is navigable? "+old_pk.getIsNavigable());
       System.out.println("av type - "+old_pk.getType());
@@ -1128,7 +1131,10 @@ class SqlGenerator
             AssociationVariable pk = uClass.getAssociationVariable(preexistKey.getMember(0));
             System.out.println("__created pk : "+uClass.getKey().getMember(0));
 
+            if (pk.hasRelatedAssociation()){
             System.out.println("name of related: "+ pk.getRelatedAssociation());
+            System.out.println("of class: "+pk.getRelatedAssociation().getUmpleClass().getName());
+          }
             System.out.println("av is only one? "+pk.isOnlyOne());
             System.out.println("av is navigable? "+pk.getIsNavigable());
             System.out.println("av type - "+pk.getType());
@@ -1268,7 +1274,7 @@ class SqlGenerator
         }
         
         AssociationVariable relatedAssociation = av.getRelatedAssociation();
-        if (relatedAssociation.isOnlyOne())
+        if (relatedAssociation != null && relatedAssociation.isOnlyOne())
         { 
           UmpleClass relatedClass = getModel().getUmpleClass(av.getType());
           while (relatedClass != null)

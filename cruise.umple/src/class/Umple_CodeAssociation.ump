@@ -347,6 +347,12 @@ class AssociationVariable
     }
   }
 
+  public void setOneDirectionalRelatedAssociation(AssociationVariable other){
+    //for inheritance use
+    relatedAssociation = other;
+    isNavigable = true;
+  }
+
   public static int min(int first, int second)
   {
     return first == -1 ? second : second == -1 ? first : Math.min(first, second);

@@ -6,7 +6,7 @@ but sometimes when two tables have a foreign key referring to the same table */
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
 
-    if (av.getIsNavigable() && (av.isOptionalOne() || av.isOnlyOne() || av.isN()))
+    if (av.getIsNavigable() && (av.isOptionalOne() || av.isOnlyOne() || av.isN()) && av.hasRelatedAssociation())
     { 
       UmpleClass associatedUClass = av.getRelatedAssociation().getUmpleClass();
       gen.toggleReadyToSetRootClass();
