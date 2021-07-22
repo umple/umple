@@ -963,8 +963,6 @@ class SqlGenerator
     lookups.put("stringTemplate","StringTracer::execute(\"{0}=#{{1}}\")");
     lookups.put("executeMethods",executeMethods);
     //GeneratorHelper.prepareAllStringTracers(this,getModel(),aClass,lookups);
-
-    System.out.println("done with entire method");
   }
   
   private void generateConstructorSignature(GeneratedClass genClass)
@@ -1035,17 +1033,13 @@ class SqlGenerator
   }
 
   private Key accountForInheritance(UmpleClass uClass){
-    System.out.println("==============================\nCalled function with class: "+uClass.getName());
     UmpleClass parent = uClass.getExtendsClass();
     if (uClass == null){
-      System.out.println("class is null");
       return null;
     }
 
     if (parent == null){
-      System.out.println("class has no parent");
       if (!uClass.getIsSingleton() && uClass.getAttributes().size() > 0){ 	//not a lone class = top of heirarchy [ or num od associations ]
-        System.out.println("parent is not single");
         return createNewIntPK(uClass);
       }
       else {				// is a lone class
@@ -1053,17 +1047,13 @@ class SqlGenerator
       }
     }
     else{			// has parent
-      System.out.println("class has parent");
       Key parent_pk = accountForInheritance(parent);
-      System.out.println("after inheritance");
       if (parent_pk == null){
         return null;
       }
       else{
         //create attribute with the same name, make it the fk, return the pk
         // group all for multiple attributes in pk
-        
-        System.out.println("pass 4 - parent pk: "+ parent_pk.getMembers().length);
 
       if (uClass.getAssociationVariable(parent_pk.getMember(0)) == null){
         Multiplicity optionalToOne = new Multiplicity();
@@ -1072,19 +1062,8 @@ class SqlGenerator
         newAssoc = new AssociationVariable (parent_pk.getMember(0), parent.getAssociationVariable(parent_pk.getMember(0)).getType(), "", "", optionalToOne, true);
         //Attribute newAttri = new Attribute ();
         uClass.addAssociationVariable(newAssoc);
-        System.out.println("pass 5 -  parent key: "+parent_pk.getMember(0));
         AssociationVariable avFromParent = parent.getAssociationVariable(parent_pk.getMember(0));
         newAssoc.setOneDirectionalRelatedAssociation(avFromParent);
-        System.out.println("CREATED ASSOC : \n"+newAssoc+"\n");
-        //System.out.println("of class: "+newAssoc.getUmpleClass().getName());
-        //System.out.println("name of related: "+ newAssoc.getRelatedAssociation().getName());
-        System.out.println("av is only one? "+newAssoc.isOnlyOne());
-        System.out.println("av is navigable? "+newAssoc.getIsNavigable());
-        System.out.println("av type - "+newAssoc.getType());
-        System.out.println("Created Associations");
-      }
-      else {
-        System.out.println("-- skipped main if");
       }
       return createNewIntPK(uClass);
       }
@@ -1098,68 +1077,35 @@ class SqlGenerator
 
     if (uClass.getKey().getMembers().length == 0 && uClass.getAttributes().size() == 0){
       AssociationVariable old_pk = new AssociationVariable (uClass.getExtendsClass().getName()+"_id", "INT", "", "", optionalToOne, false);
-      System.out.println("created separate assoc - "+old_pk.getName());
       uClass.addAssociationVariable(old_pk);
       Key k = new Key();
       k.addMember(uClass.getExtendsClass().getName()+"_id");
       uClass.setKey(k);
-      System.out.println("created pk : "+uClass.getKey().getMember(0));
-
-      if (old_pk.hasRelatedAssociation()){
-        System.out.println("name of related: "+ old_pk.getRelatedAssociation());
-        System.out.println("of class: "+old_pk.getRelatedAssociation().getUmpleClass().getName());
-      }
-      System.out.println("av is only one? "+old_pk.isOnlyOne());
-      System.out.println("av is navigable? "+old_pk.getIsNavigable());
-      System.out.println("av type - "+old_pk.getType());
 
       return k;
     }
     else {
-      System.out.println("has key");
       Key preexistKey = uClass.getKey();
       Attribute old_pk;
       if (uClass.getKey().getMembers().length > 0){
-          System.out.println("has key members");
           if (uClass.getAssociationVariable(preexistKey.getMember(0)) == null){
             old_pk = uClass.getAttribute(preexistKey.getMember(0));
             preexistKey.removeMember(old_pk.getName());
             uClass.removeAttribute(old_pk);
-          }
-          else {
-            System.out.println("skipped");
-            AssociationVariable pk = uClass.getAssociationVariable(preexistKey.getMember(0));
-            System.out.println("__created pk : "+uClass.getKey().getMember(0));
-
-            if (pk.hasRelatedAssociation()){
-            System.out.println("name of related: "+ pk.getRelatedAssociation());
-            System.out.println("of class: "+pk.getRelatedAssociation().getUmpleClass().getName());
-          }
-            System.out.println("av is only one? "+pk.isOnlyOne());
-            System.out.println("av is navigable? "+pk.getIsNavigable());
-            System.out.println("av type - "+pk.getType());
-            return preexistKey;
+            AssociationVariable newAssocPK = new AssociationVariable(old_pk.getName(), old_pk.getType(), "", "", optionalToOne, false);
+            uClass.addAssociationVariable(newAssocPK);
+            preexistKey.addMember(old_pk.getName());
           }
       } 
       else{
         if (uClass.getAttributes().size() == 0 && uClass.getAssociationVariables().size() == 0)
           return null;
-        System.out.println("has no key members, taking first attri instead");
         old_pk = uClass.getAttribute(0);
-        System.out.println("attribute taken: "+old_pk.getName());
         uClass.removeAttribute(old_pk);
+        AssociationVariable newAssocPK = new AssociationVariable(old_pk.getName(), old_pk.getType(), "", "", optionalToOne, false);
+        uClass.addAssociationVariable(newAssocPK);
+        preexistKey.addMember(old_pk.getName());
       }
-
-      AssociationVariable newAssocPK = new AssociationVariable(old_pk.getName(), old_pk.getType(), "", "", optionalToOne, false);
-      uClass.addAssociationVariable(newAssocPK);
-      System.out.println("Before is old_pk null? "+ (old_pk == null));
-      preexistKey.addMember(old_pk.getName());
-      System.out.println("After");
-
-      System.out.println("name of related: "+ newAssocPK.getRelatedAssociation());
-      System.out.println("av is only one? "+newAssocPK.isOnlyOne());
-      System.out.println("av is navigable? "+newAssocPK.getIsNavigable());
-      System.out.println("av type - "+newAssocPK.getType());
       return preexistKey;
     }
   }
