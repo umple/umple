@@ -349,9 +349,20 @@ class AssociationVariable
 
   public void setOneDirectionalRelatedAssociation(AssociationVariable other){
     //for inheritance use
+
     relatedAssociation = other;
     isNavigable = true;
   }
+
+
+  public boolean isTwoDirectionalAssociation(AssociationVariable other){
+    //for inheritance use
+
+    if (!other.hasRelatedAssociation() || relatedAssociation == null)
+      return false;
+    return other.getRelatedAssociation().equals(relatedAssociation);
+  }
+
 
   public static int min(int first, int second)
   {

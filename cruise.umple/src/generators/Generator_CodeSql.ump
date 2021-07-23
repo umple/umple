@@ -1051,31 +1051,38 @@ class SqlGenerator
       if (parent_pk == null){
         return null;
       }
-      else{
-        //create attribute with the same name, make it the fk, return the pk
-        // group all for multiple attributes in pk
+      else{ 
+        String pkNames="";
+        String pkTypes="";
+        for (String parentPkMember : parent_pk.getMembers()){
+          pkNames += parentPkMember+", ";
+        }
+        //trim pkNames and pkTypes
+        pkNames = pkNames.substring(0, pkNames.length() - 2);
 
-      if (uClass.getAssociationVariable(parent_pk.getMember(0)) == null){
-        Multiplicity optionalToOne = new Multiplicity();
-        optionalToOne.setBound("1");
-        AssociationVariable newAssoc;
-        newAssoc = new AssociationVariable (parent_pk.getMember(0), parent.getAssociationVariable(parent_pk.getMember(0)).getType(), "", "", optionalToOne, true);
-        //Attribute newAttri = new Attribute ();
-        uClass.addAssociationVariable(newAssoc);
-        AssociationVariable avFromParent = parent.getAssociationVariable(parent_pk.getMember(0));
-        newAssoc.setOneDirectionalRelatedAssociation(avFromParent);
-      }
-      return createNewIntPK(uClass);
-      }
+        if (uClass.getAssociationVariable(pkNames) == null){
+          for (String parentPkMember : parent_pk.getMembers()){
+            pkTypes += parent.getAttribute(parentPkMember).getType() + ", ";
+          }
+          pkTypes = pkTypes.substring(0, pkTypes.length() - 2); 
+
+          Multiplicity optionalToOne = new Multiplicity();
+          optionalToOne.setBound("1");
+          AssociationVariable newAssoc = new AssociationVariable (pkNames, pkTypes, "", "", optionalToOne, true);
+          uClass.addAssociationVariable(newAssoc);
+          AssociationVariable avFromParent = parent.getAssociationVariable(pkNames);
+          newAssoc.setOneDirectionalRelatedAssociation(avFromParent);
+        }
+        return createNewIntPK(uClass);
+        }
     }
   }
 
   private Key createNewIntPK(UmpleClass uClass){
-    
     Multiplicity optionalToOne = new Multiplicity();
     optionalToOne.setBound("1");
 
-    if (uClass.getKey().getMembers().length == 0 && uClass.getAttributes().size() == 0){
+    if (uClass.getKey().getMembers().length == 0 && uClass.getAttributes().size() == 0){ //if there are no key members, no attributes, etc.
       AssociationVariable old_pk = new AssociationVariable (uClass.getExtendsClass().getName()+"_id", "INT", "", "", optionalToOne, false);
       uClass.addAssociationVariable(old_pk);
       Key k = new Key();
@@ -1089,12 +1096,20 @@ class SqlGenerator
       Attribute old_pk;
       if (uClass.getKey().getMembers().length > 0){
           if (uClass.getAssociationVariable(preexistKey.getMember(0)) == null){
-            old_pk = uClass.getAttribute(preexistKey.getMember(0));
-            preexistKey.removeMember(old_pk.getName());
-            uClass.removeAttribute(old_pk);
-            AssociationVariable newAssocPK = new AssociationVariable(old_pk.getName(), old_pk.getType(), "", "", optionalToOne, false);
+            String pkNames = "";
+            String pkTypes = "";
+            for (String PkMember : preexistKey.getMembers()){
+              pkNames += PkMember+", ";
+              pkTypes += uClass.getAttribute(PkMember).getType() + ", ";
+              old_pk = uClass.getAttribute(PkMember);
+              uClass.removeAttribute(old_pk);
+            }
+            //trim pkNames and pkTypes
+            pkNames = pkNames.substring(0, pkNames.length() - 2);
+            pkTypes = pkTypes.substring(0, pkTypes.length() - 2);
+            
+            AssociationVariable newAssocPK = new AssociationVariable(pkNames, pkTypes, "", "", optionalToOne, false);
             uClass.addAssociationVariable(newAssocPK);
-            preexistKey.addMember(old_pk.getName());
           }
       } 
       else{
