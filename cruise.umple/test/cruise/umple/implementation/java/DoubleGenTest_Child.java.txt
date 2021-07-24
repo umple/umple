@@ -1,0 +1,56 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+// line 9 "../../model.ump"
+// line 27 "../../model.ump"
+public class Mentor extends Person
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private String class;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Mentor(String aName, int aAge, String aClass)
+  {
+    super(aName, aAge);
+    class = aClass;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setClass(String aClass)
+  {
+    boolean wasSet = false;
+    class = aClass;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getClass()
+  {
+    return class;
+  }
+
+  public void delete()
+  {
+    super.delete();
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "class" + ":" + getClass()+ "]";
+  }
+}
