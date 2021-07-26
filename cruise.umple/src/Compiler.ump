@@ -40,20 +40,21 @@ class CodeCompiler {
       if (entryClass.equals("-") || entryClass.equals(currentElement.getName())) {
         if(generator.equals("Java")) {
           wasSuccessful = wasSuccessful & compileJava(currentElement, model, useExec, beQuiet, extra);
+          subsequentCompilation = true;
         }
         else if (generator.equals("Php")) {
-          wasSuccessful = wasSuccessful & compilePhp(currentElement, model,extra);
+          wasSuccessful = wasSuccessful & compilePhp(currentElement, model, beQuiet, extra);
+          subsequentCompilation = true;
         }
         else {
           System.out.println("Compilation of generated code not supported yet for generator "+generator);
         }
       }
     }
-    subsequentCompilation = true;
     return wasSuccessful;
   }
 
-  private static boolean compilePhp(UmpleElement aClass, UmpleModel model, String args) {
+  private static boolean compilePhp(UmpleElement aClass, UmpleModel model, boolean beQuiet, String args) {
     String path="";
     String base="";
     for (GenerateTarget gt : model.getGenerates()) {
@@ -67,8 +68,8 @@ class CodeCompiler {
     int retval=0;
 
     try {
-      if(base.contains(" ")) {
-        System.err.println("Warning: Compiling generated Php from a directory or path containing a space character may produce an error message from the Java compiler.");
+      if(base.contains(" ") && !(beQuiet && subsequentCompilation)) {
+        System.err.println("Warning: Compiling generated Php from a directory or path containing a space character may produce an error message from the PhP compiler.");
       }
       
       BufferedReader reader;
