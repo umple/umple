@@ -175,9 +175,8 @@ public class Testspecializations {
         Assert.assertEquals(1, anAnimal.numberOfLegs());
         Assert.assertTrue(aRhino.isNumberOfLegsValid_Leg());
         Assert.assertFalse(aRhino.removeLeg(aleg1));
-        Assert.assertTrue(aRhino.isNumberOfLegsValid_Leg());    
-
-    }// Write a test that asserts a runtime error
+        Assert.assertTrue(aRhino.isNumberOfLegsValid_Leg()); 
+    }   
 
     @Test
     public void checkMaxZaa(){ //Zaa Za Aqq Aq
@@ -808,7 +807,11 @@ public class Testspecializations {
 
     @Test 
     public void checkJkk(){//jkk jk kl
+        Jkk aJkk=new Jkk();
+        Jk aJk=new Jk();
+        Kl aKl=new Kl();
         
+        Assert.assertFalse(aKl.addJk(aJkk));
     }
 
     @Test
@@ -862,7 +865,17 @@ public class Testspecializations {
 
     @Test
     public void checklll(){//lll ll kkk kk
-        
+        Kkk aKkk=new Kkk();
+        Kk aKk=new Kk();
+        Lll aLll=new Lll();
+        Ll aLl=new Ll();
+
+        aKkk.addL(aLll);
+        aKkk.addL(aLl);
+
+        Assert.assertTrue(aLl.removeK(aKkk));
+        Assert.assertFalse(aLll.removeK(aKk));
+
     }
     
     @Test 
