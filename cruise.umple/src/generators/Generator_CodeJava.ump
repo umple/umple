@@ -130,7 +130,7 @@ class JavaGenerator
     
     if (lastElement == null)
     {
-      System.err.println("No classes were compiled. It is likely the source .ump file(s) contained no compilable code.");
+      System.err.println("No classes were compiled. It is likely there was no compilable code in the source .ump file(s) including "+getModel().getUmpleFile().getFileName());
     }
     
     if(mainClasses.size()>0)

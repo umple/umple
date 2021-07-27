@@ -2,6 +2,6 @@
 
 class A {
   depend java.util.List;
-  List<OtherClass> otherClassGroup;
+  List<OtherClassA> otherClassGroup;
 }
-class OtherClass {}
+class OtherClassA {}
