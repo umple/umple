@@ -22,9 +22,11 @@ class Messenger {
     }
     
     Delivered {
-      read -> read;
+      read -> Read;
     }
     Deleted { } 
+    Read { } 
+    Discarded { } 
   }
   Boolean internalContact = false;
   Boolean externalContact = false;

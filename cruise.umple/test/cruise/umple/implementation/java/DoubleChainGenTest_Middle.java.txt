@@ -1,0 +1,56 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+// line 9 "../../model.ump"
+// line 27 "../../model.ump"
+public class Employee extends Person
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Employee Attributes
+  private int id;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Employee(String aName, int aAge, int aId)
+  {
+    super(aName, aAge);
+    id = aId;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getId()
+  {
+    return id;
+  }
+
+  public void delete()
+  {
+    super.delete();
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "id" + ":" + getId()+ "]";
+  }
+}

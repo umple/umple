@@ -3,9 +3,9 @@
 // The test code demonstrates that this works
 // as expected.
 class Client {
-  const Integer minAge =18;
+  const Integer MinAge =18;
   Integer age;
-  [age >= minAge]
+  [age >= MinAge]
   [age <= 120]
   
   public static void main(String [ ] args) {

@@ -21,7 +21,7 @@ Note: The foreign key constraint is not defined here, as the associated class ma
     
     String attribute = av.isOne() ? gen.translate("attributeOne",av) : gen.translate("attributeMany",av);
  
-    if (av.isOptionalOne() || av.isOnlyOne() || av.isN())
+    if ((av.isOptionalOne() || av.isOnlyOne() || av.isN()) && av.hasRelatedAssociation())
     { 
       UmpleClass associatedUClass = av.getRelatedAssociation().getUmpleClass();
       gen.toggleReadyToSetRootClass();
