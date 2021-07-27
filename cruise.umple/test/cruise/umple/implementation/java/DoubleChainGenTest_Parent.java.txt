@@ -1,0 +1,69 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+// line 4 "../../model.ump"
+// line 22 "../../model.ump"
+public class Person
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Person Attributes
+  private String name;
+  private int age;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Person(String aName, int aAge)
+  {
+    name = aName;
+    age = aAge;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setAge(int aAge)
+  {
+    boolean wasSet = false;
+    age = aAge;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public int getAge()
+  {
+    return age;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "age" + ":" + getAge()+ "]";
+  }
+}

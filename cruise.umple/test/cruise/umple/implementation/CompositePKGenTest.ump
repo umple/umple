@@ -1,0 +1,13 @@
+namespace example;
+
+class Person{
+    name;
+    int id;
+    int age;
+    key{id, name};
+}
+
+class Mentor{
+    int class;
+    isA Person;
+}

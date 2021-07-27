@@ -167,6 +167,10 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/OneToOneTest.sql");
     SampleFileWriter.destroy(pathToInput + "/OneToOptionalOneTest.sql");
     SampleFileWriter.destroy(pathToInput + "/UnidirectionalOneTest.sql");
+    SampleFileWriter.destroy(pathToInput + "/CompositePKGenTest.sql");
+    SampleFileWriter.destroy(pathToInput + "/DoubleGenTest.sql");
+    SampleFileWriter.destroy(pathToInput + "/DoubleChainGenTest.sql");
+    SampleFileWriter.destroy(pathToInput + "/SingleGenTest.sql");
 
     SampleFileWriter.destroy(pathToInput + "/ruby/ruby_code");
     SampleFileWriter.destroy(pathToInput + "/java/java_code");
