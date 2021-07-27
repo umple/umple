@@ -6,153 +6,309 @@ noreferences
 
 <h2>Here is the list of all keywords in the Umple modeling language. These cannot be used as identifiers in cases where that would cause confusion.</h2>
 
+<p>The following tags are used to group certain keywords </p>
 <ul>
 
-<li style="margin-bottom: 20px"><span style="color:red; font-weight: bold">abstract:</span> Defines a class or method as abstract. An abstract class can not have its own instances and instances must be created from subclasses. An abstract method has no body and causes the class being abstract too. [classes] [methods] <a href="AbstractMethods.html"><i>See Abstract Methods</i></a></li>
+<li> <span style="background-color:lime">[top]</span> Keywords that can appear at the top level of an Umple model.
 
-<!-- TO BE DOCUMENTED BEFORE UNCOMMENTING
-<li style="margin-bottom: 20px"><span style="color:red; font-weight: bold">activate:</span> Denotes the trace case to be activated. [tracing] </li>
+<li> <span style="background-color:aqua">[class]</span> Keywords that can appear at the top level inside a class (and also generally inside a trait).
+
+<li> <span style="background-color:yellow">[state machine]</span> Keywords used to define state machines.
+
+<li> <span style="background-color:fuchsia">[attribute]</span> Keywords used to define attributes.
+
+<li> <span style="background-color:plum">[method]</span> Keywords used to define methods.
+
+<li> <span style="background-color:silver">[tracing]</span> Keywords specially associated with the tracing feature.
+
+<li> <span style="background-color:burlywood">[testing]</span> Keywords specially associated with the test generation feature.
+
+<!-- USE FEATURE TO BE DOCUMENTED BEFORE UNCOMMENTING
+<li> <span style="background-color:orange">[other languages]</span> Keywords specially associated with the ability to specify other languages such as USE and FixML within Umple.
 -->
 
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">active:</span> Defines an object that, when initialized, runs its own thread. [classes] <a href="ActiveObjects.html"><i>See Active Objects</i></a></li>
+</ul>
+
+<ul>
+
+<li style="margin-bottom: 20px"><span style="color:red; font-weight: bold">abstract:</span> <span style="background-color:aqua">[class]</span> <span style="background-color:plum">[method]</span>  Specifies that a class or method is abstract. An abstract class can not have its own instances and instances must be created from subclasses. An abstract method has no body in this class and causes the class to be abstract. <a href="AbstractMethods.html"><i>See Abstract Methods</i></a></li>
+
+<!-- TRACE CASE FEATURE TO BE DOCUMENTED BEFORE UNCOMMENTING
+<li style="margin-bottom: 20px"><span style="color:red; font-weight: bold">activate:</span> <span style="background-color:silver">[tracing]</span> Denotes the trace case to be activated. [tracing] </li>
+-->
+
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">active:</span> <span style="background-color:aqua">[class]</span> Specifies that instances of the class will each automatically run their own thread. [classes] <a href="ActiveObjects.html"><i>See Active Objects</i></a></li>
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">add:</span> Indicates that the tracing should occur when an association link is being added. [tracing] <a href="TracingAssociations.html"><i>See Tracing Associations</i></a></li>
 
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">after:</span> Requests that code should be injected after the existing code in one or more methods (either generated methods or methods written by the user) [methods] <a href="BeforeandAfterStatements.html"><i>See Before and After Statements</i></a></li>
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">after:</span> <span style="background-color:aqua">[class]</span> <span style="background-color:plum">[method]</span>  Requests that code should be injected after the existing code in one or more methods (either generated methods or methods written by the user) <a href="BeforeandAfterStatements.html"><i>See Before and After Statements</i></a></li>
 
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">after:</span> Triggers a transition after a given amount of time. [state machine] <a href="TimedTransitions.html"><i></i>See Timed Transitions</a></li>
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">after:</span> <span style="background-color:yellow">[state machine]</span> Triggers a transition after a given amount of time. <a href="TimedTransitions.html"><i></i>See Timed Transitions</a></li>
 
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">after every:</span> (State Machine) Continuously triggers a transition at a specified time intervals while object remains in the state. <a href="TimedTransitions.html"><i>See Timed Transitions</i></a></li>
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">after every:</span><span style="background-color:yellow">[state machine]</span> Continuously triggers a transition at a specified time intervals while the object remains in the state. <a href="TimedTransitions.html"><i>See Timed Transitions</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">all:</span> This indicates that code should be injected in every method that matches the specified pattern. <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">allow:</span> Subsequent to a <i>strictness</i> statement, this denotes an error that should be considered as a warning. <a href="StrictnessDirective.html"><i>See Strictness Directive.</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">and:</span> And Boolean operator.</li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">around:</span> Indicates that some code will be inserted around a code block  <a href="AroundStatement.html"><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">around_proceed:</span> Denotes where the original block of code around which code would be inserted should be placed.  <a href="AroundStatement.html"><i>See Around Statement</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">as:</span> Declares a function or a state machine alias subsequent to the function or state machine definition. This is optional and should be followed by an alias name.</li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">assertAttribute:</span> Asserts attribute's presence in generated code. <a href="BasicTestcase.html"><i>See Basic Testcase</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">assertEqual:</span> Asserts that two objects are equal. <a href="BasicTestcase.html"><i>See Basic Testcase</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">assertFalse:</span> Asserts that condition is false. <a href="BasicTestcase.html"><i>See Basic Testcase</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">assertMethod:</span> Asserts methods's presence in generated code. <a href="BasicTestcase.html"><i>See Basic Testcase</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">assertNull:</span> Asserts that object is null. <a href="BasicTestcase.html"><i>See Basic Testcase</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">assertTrue:</span> Asserts that condition is true. <a href="BasicTestcase.html"><i>See Basic Testcase</i></a></li>
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">association:</span> Defines an association between two classes, separate from the two classes. <a href="IndependentlyDefinedAssociations.html"><i>See Independently Defined Associations</i></a></li>
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">association Class:</span> Defines a class to manage many to many associations. <a href="AssociationClassDefinition.html"><i>See association class definition</i></a></li>
+
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">association:</span> <span style="background-color:lime">[top]</span> Defines an association between two classes, describing the links that can be defined at tun time. This keyword is used when an association is created separately from the two classes. <a href="IndependentlyDefinedAssociations.html"><i>See Independently Defined Associations</i></a></li>
+
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">associationClass:</span> <span style="background-color:lime">[top]</span> Defines a class in place of a many-to-many association. <a href="AssociationClassDefinition.html"><i>See association class definition</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">attribute/attr:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">attributes:</span> Denotes a set new of attributes to be used. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">autounique:</span> Automatically assigns a unique value to an attribute each time a class is instantiated. <a href="UniqueAttributes.html"><i>See unique attributes</i></a></li>
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">before:</span> Requests that code should be run once a few Umple-defined actions are completed. <a href="BeforeandAfterStatements.html"><i>See Before and After Statements</i></a></li>
+
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">before:</span> <span style="background-color:aqua">[class]</span> <span style="background-color:plum">[method]</span>  Requests that code should be injected before existing code in one or more methods. <a href="BeforeandAfterStatements.html"><i>See Before and After Statements</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">between:</span> Defines the associated classes. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">cardinality:</span> TBD <a href=""><i></i></a></li>
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">class:</span> Defines a new class.This should be followed by a class name. <a href="ClassDefinition.html"><i>See Class Definition</i></a></li>
+
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">class:</span> <span style="background-color:lime">[top]</span> Defines a new class.This should be followed by a class name. <a href="ClassDefinition.html"><i>See Class Definition</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">const:</span> Defines a new constant. <a href="AttributeDefinition.html"><i></i>See Attribute Definition</a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">custom:</span> This indicates that code should be injected in every custom method that matches the specified pattern. <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">deactivate:</span> Indicates the trace case to deactivate.</li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">depend:</span> Denotes a dependency on another class, interface or namespace. <a href="Dependclause.html"><i>See Depend Clause</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">disable:</span> This prevents warning(s) matching a provided expression to be raised. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">disallow:</span> Subsequent to a <i>strictness</i> statement, this denotes a warning that should be considered as an error. <a href="StrictnessDirective.html"><i>See Strictness Directive</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">displayColor:</span> This specifies an element display color.</li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">distributable:</span> Allows for the execution of multiple objects accross different Java Virtual Machine. <a href="BasicDistributedSystems.html"><i>See Basic Distributed Systems</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">do:</span> (State Machine) Runs a process while in a state. <a href="StateMachineActionsandDoActivities.html"><i>See State Machine Actions and Do Activities</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">during:</span> Defines the tracing duration. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">else:</span> Flow control statement that executes subsequent instructions in case the if condition is not satisfied. <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">emit:</span> Specifies the method to be generated <a href="BasicTemplates.html"><i>See Basic Templates</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">end:</span> End of a statement. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">entry:</span> (State Machine) Indicates an action to perform when entering a state. <a href="StateMachineActionsandDoActivities.html"><i>See State Machine Actions and Do Activities</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">enum:</span> Defines a user-defined data type with a set of constants. <a href="EnumerationDefinition.html"><i>See Enumaration Definition</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">execute:</span> Denotes the trace entity to execute. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">exit:</span> (State Machine) Indicates an action to perform when exiting a state. <a href="StateMachineActionsandDoActivities.html"><i>See State Machine Actions and Do Activities</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">expect:</span> Subsequent to a <i>strictness</i> statement, this declares that a message number should occur. <a href="StrictnessDirective.html"><i>See Strictness Directive</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">extendContent:</span> TBD <a href=""><i></i></a></li>
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">external:</span> Declares a class that is defined in a different compilation unit. </li>
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">filter:</span> Defines a new filter. <a href="Filters.html"><i>See Filters</i></a></li>
+
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">external:</span> <span style="background-color:lime">[top]</span> Declares a class that is defined in a different compilation unit. </li>
+
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">filter:</span> <span style="background-color:lime">[top]</span> Defines a new filter to allow generation of code or diagrams from only a subset of classes and/or associations. <a href="Filters.html"><i>See Filters </i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">final:</span> (State Machine) Precedes a state name and marks it as final. <a href="FinalStates.html"><i>See Final States</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">Final:</span> (State Machine) Denotes the destination of a transition that terminates the state machine once completed. <a href="FinalStates.html"><i>See Final States</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">fixml:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">for:</span> (Tracing) Preceded by an attribute, denotes the number of times the attribute's value should be changed for tracing to occur.  <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">forced:</span> Preceded by a <i>distributable</i> statement, this sets all classes to be distributable. <a href="BasicDistributedSystems.html"><i>See Basic Distributed Systems</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">generated:</span> This indicates that code should be injected in every generated method that matches the specified pattern. <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">generic:</span> Generic test declaration. <a href="GenericTesting.html"><i>See Generic Testing</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">giving:</span> Boolean operator that makes up a condition under which tracing occurs. <a href="TracingConstraints.html"><i>See Tracing Constraints</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">glossary:</span> Defines an item used to refine pluralization during code generation. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">hops:</span> Within a filter directive, it indicates additional classes that can be included, which are linked to the already included classes by associations or generalizations. <a href="Filters.html"><i>See Filters</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">if:</span> Flow control statement that executes the subsequent instructions if the condition is satisfied. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">immutable:</span> Defines an attribute that only be set when initialized. <a href="AttributeDefinition.html"><i>See Attribute definition</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">include:</span> Within a filter directive, it indicates the classes that are to be included. <a href="Filters.html"><i>See Filters</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">includeFilter:</span> Within a filter directive, it indicates named filters to be included. <a href="Filters.html"><i>See Filters</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">inner:</span> Defines a new inner non-static class. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">intercept:</span> TBD <a href=""><i></i></a></li>
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">interface:</span> Defines a new interface. <a href="interfaceDefinition.html"><i>See interface Definition</i></a></li>
+
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">interface:</span> <span style="background-color:lime">[top]</span> Defines a new interface; specifies a set of methods that a class must implement. <a href="interfaceDefinition.html"><i>See interface Definition</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">internal:</span> Denotes an internal attribute. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">isA:</span> Denotes a superclass, or implemented interface, or included trait. <a href="isAclause.html"><i>See isA clause</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">isFeature:</span> Marks a mixset as a feature.</li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">ivar:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">key:</span> Marks an attribute or set of attributes as keys for equality and hashing. <a href="KeysforEqualityandHashing.html"><i>See Keys for Equality and Hashing</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">latency:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">lazy:</span> Initializes attributes to default values according to their types. <a href="AttributeDefinition.html"><i>See attribute definition</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">level:</span> Indicates the tracing level.</li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">logLevel:</span> Indicates the logging level.</li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">method:</span> TBD <a href=""><i></i></a></li>
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">mixset:</span> Defines a new mixset. <a href="BasicMixsets.html"><i>See basic mixsets</i></a></li>
+
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">mixset:</span> <span style="background-color:lime">[top]</span> Defines a new mixset, a named block of Umple that can be optionally included in the system, in order to create a variant or product line, or separately-defined feature. <a href="BasicMixsets.html"><i>See basic mixsets</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">model:</span> Declares certain conditions that must be satisfied by a model. <a href="ModelConstraints.html"><i>See model constraints</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">modelOnly:</span> Subsequent to a <i>strictness</i> statement, this indicates that base language is not allowed or else, a warning will be raised. <a href="StrictnessDirective.html"><i>See Strictness Directive</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">named:</span> TBD <a href=""><i></i></a></li>
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">namespace:</span> Declares of group of similar entities. <a href="NamespaceDirectives.html"><i>See namespace directives</i></a></li>
+
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">namespace:</span> <span style="background-color:lime">[top]</span> Declares of group of classes that will be put in a package so as to avoid conflicts with classes having the same name in a different package. <a href="NamespaceDirectives.html"><i>See namespace directives</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">noExtraCode:</span> Subsequent to a <i>strictness</i> statement, this indicates that base language is allowed only in method body or else, an error will be raised. <a href="StrictnessDirective.html"><i>See Strictness Directive</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">not:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">of:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">off:</span> Preceded by a <i>distributable</i> statement, this prevents all classes to be distributable. <a href="BasicDistributedSystems.html"><i>See Basic Distributed Systems</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">only:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">onThisObject:</span> Defines the object on which a tracecase should be deactivated. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">or:</span> OR boolean operator. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">period:</span> Defines the trace period, that is, the time between each trace case. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">poll:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">pooled:</span> (State Machine) Defines a state machine type that allows for the processing . <a href="PooledStateMachines.html"><i>See Pooled State Machines</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">port:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">position:</span> Denotes element position.</li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">pre:</span> Defines a pre-condition that must be satisfied to run a method. <a href="Preconditions.html"><i>See preconditions</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">prefix:</span> Defines an element with a name that begins with the pattern specified. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">primitive:</span> Defines a new primitive. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">priority:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">private:</span> Sets the accessibility level of a class or its members to private.</li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">protected:</span> Sets the accessibility level of a class or its members to protected.</li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">public:</span> Sets the accessibility level of a class or its members to public.</li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">queued:</span> (State Machine) Placed before the state machine declaration, . <a href="QueuedStateMachines.html"><i>See Queued State Machines</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">record:</span> TBD. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">--redefine:</span> Namespace option used to redefine a previously defined namespace. <a href="NamespaceDirectives.html"><i>See Namespace Directives</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">regex:</span> Defines an element that matches the pattern specified. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">remove:</span> Indicates that the tracing should occur when an association is deleted. <a href="TracingAssociations.html"><i>See Tracing Associations</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">require:</span> Create a dependency on another mixset.</li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">resolve:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">RMI:</span> Preceded by a <i>distributable</i> statement, this indicated the use of Remote Method Invocation (RMI) in a distributed system. <a href="BasicDistributedSystems.html"><i>See Basic Distributed Systems</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">self:</span> This indicates a symmetric Reflexive Association <a href="ReflexiveAssociations.html"><i>See Reflexive Association</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">settable:</span> Denotes an attribute that can be set. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">singleton:</span> Marks a class as a singleton class. <a href="SingletonPattern.html"><i>See singleton pattern</i></a></li>
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">sorted:</span> Defines a criterium, that must be an attribute, through which an association would be classified. <a href=""><i></i></a></li>
+
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">sorted:</span> Defines a criterion, that must be an attribute, through which an association would be classified. <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">state:</span> (State Machine) Defines a new state. <a href="StandaloneStateMachines.html"><i>See Standalone State Machines</i></a></li>
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">statemachine:</span> (State Machine) TBD <a href="StandaloneStateMachines.html"><i>See Standalone State Machines</i></a></li>
+
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">statemachine:</span> <span style="background-color:lime">[top]</span> (State Machine) Defines a state machine template at the top-level without including it in any class <a href="StandaloneStateMachines.html"><i>See Standalone State Machines</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">static:</span> Defines an attribute or method to be static. <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">strictness:</span> This allows the control of messages that may be issued by the umple compiler. <a href="StrictnessDirective.html"><i>See strictness Directive</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">sub:</span> Within a <i>hops</i> statement, it indicates a subclass. <a href="Filters.html"><i>See Filters</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">suffix:</span> Defines an element with a name that ends with the pattern specified. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">super:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">synchronous:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">template:</span> Defines a new template. <a href="BasicTemplates.html"><i>See Basic Templates</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">test:</span> Defines a new test case. <a href="BasicTestcase.html"><i>See Basic Testcase</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">test sequence:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">then:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">throws:</span> This raises an error. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">timeout:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">top:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">trace:</span> Indicates the UML entity to trace. <a href="TracingBasics.html"><i>See Tracing Basics</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">tracer:</span> Indicates the tracer type to be used (Default is <i>Console</i>). <a href="Tracers.html"><i>See Tracers</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">tracecase:</span> Defines a new trace case. </li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">trait:</span> Defines a new trait. <a href="Traits.html"><i>See Traits</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">umplefile:</span> TBD <a href=""><i></i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">unique:</span> Ensures that an attribute has a particular value for each instance of a class. <a href="UniqueAttributes.html"><i>See unique attributes</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">unspecified:</span> (State Machine) Ensures that no event in a state is ignored. <a href="UnspecifiedEvents.html"><i>See Unspecified Events</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">until:</span> Boolean operator that makes up a condition under which tracing occurs. <a href="TracingConstraints.html"><i>See Tracing Constraints</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">use:</span> Allows your program to include a model or blocks of code from another file. <a href="UseStatements.html"><i>See use statements</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">where:</span> Boolean operator that makes up a condition under which tracing occurs. <a href="TracingConstraints.html"><i>See Tracing Constraints</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">WS:</span> Preceded by a <i>distributable</i> statement, this indicates the use of web services in a distributed system. <a href="BasicDistributedSystems.html"><i>See Basic Distributed Systems</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">xor:</span> Exclusive or logical operator.</li>
+
 </ul>
