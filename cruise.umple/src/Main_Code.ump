@@ -21,12 +21,14 @@ class UmpleConsoleConfig {
   depend java.io.*;
   depend java.nio.file.Files;
   depend java.nio.file.Paths;
+  depend java.util.regex.*;
 
   // See function initializeOptionParser() for the setup of the options
   defaulted boolean version = false; // option to print version only
   defaulted boolean help = false; // option to output help only
   defaulted boolean performance = false; // option to measure performance
   defaulted boolean beQuiet = false; // option q to be quiet
+  defaulted boolean warningIgnore = false; // option w to ignore a warning number in filename
   defaulted boolean useExec = false; // option x to use slower but more reliable exec java compiler
   defaulted boolean exitOnFirstFailure = false; // option e to exit on first failure with the -f option 
 
@@ -54,6 +56,7 @@ class UmpleConsoleConfig {
     this.useExec    = optSet.has("x");
     this.exitOnFirstFailure = optSet.has("e");
     this.beQuiet    = optSet.has("quiet");    
+    this.warningIgnore    = optSet.has("warningignore");    
     this.importFile = Optional.ofNullable((String)optSet.valueOf("import"));
     this.generate   = Optional.ofNullable((String)optSet.valueOf("generate"));
     this.umpleDirect   = Optional.ofNullable((String)optSet.valueOf("umple"));    
@@ -81,7 +84,34 @@ class UmpleConsoleConfig {
         List<String> allLines = Files.readAllLines(Paths.get(fileOfFiles));
         allLinesOfFilesToTest = new ArrayList<String[]>();
         for(String aLine: allLines) {
-          allLinesOfFilesToTest.add(aLine.split(" "));
+          // Split the line based on spaces, but converting those in quotes into code
+          List<String> listOfFilesThisLine = new ArrayList<String>();
+          Matcher m = Pattern.compile("([^\']\\S*|\'.+?\')\\s*").matcher(aLine);
+          while (m.find()) {
+            String foundString = m.group(1);
+            // foundString is either a file or (if second and subsequent) a single quoted string
+
+            if(foundString.startsWith("\'")) {
+              // We have a program -- convert
+              foundString="__UMPLE"+
+                Base64.getEncoder()
+                .encodeToString(foundString.substring(1,foundString.length()-1).getBytes());
+            }
+            else if(foundString.startsWith("W") && warningIgnore) {
+              // Potential to ignore the warning
+              Matcher m2 = Pattern.compile("\\d+").matcher(foundString);
+              if(m2.find()) {
+                String supressWarningCode="strictness ignore "+m2.group()+";";
+                listOfFilesThisLine.add(foundString);
+                foundString="__UMPLE"+
+                  Base64.getEncoder().encodeToString(supressWarningCode.getBytes());
+              }
+            }
+            listOfFilesThisLine.add(foundString);
+          }
+          //allLinesOfFilesToTest.add(aLine.split(" "));
+          allLinesOfFilesToTest
+            .add(listOfFilesThisLine.toArray(new String[listOfFilesThisLine.size()]));
         }
       }
       catch  (IOException e) {
@@ -525,6 +555,7 @@ class UmpleConsoleMain
     optparser.acceptsAll(Arrays.asList("f","file"), "Read in a file containing sets of umple-files to process, one set per line. Each is an independent compilation. Intended for testing.").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("e","exitonfirstfailure"), "Used with -f. Exit with nonzero on first failure of a compile specified in the file passed to -f. Otherwise exits after completing all compilations with nonzero if any failed.");    
     optparser.acceptsAll(Arrays.asList("q","quiet"), "Be quiet. Only output compilation information in case of failure");
+    optparser.acceptsAll(Arrays.asList("w","warningignore"), "Ignore a warning whose number is embedded in the file name if the file name starts with W. Used for testing.");
     optparser.acceptsAll(Arrays.asList("x","useexec"), "Use an external exec call to invoke the Java compiler when using the -c option. May be needed on some platforms or with certain examples.");    
     optparser.acceptsAll(Arrays.asList("import","i"), "Indicate to read in XMI model and generate ump files").withRequiredArg().ofType(String. class);
     optparser.acceptsAll(Arrays.asList("suboption","s"), "Indicate to generate files with suboptions "+suboptionsAvail).withRequiredArg().ofType(String.class);

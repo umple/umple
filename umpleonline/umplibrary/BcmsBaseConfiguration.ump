@@ -11,9 +11,10 @@
  * This file requires the referenced
  * files to be present in the same directory.
  */
+namespace bcms;
+
 use RoutesAndLocations.ump;
 
-namespace bcms;
 use CoordinationStateMachine.ump;
 use BcmsCore.ump;
 

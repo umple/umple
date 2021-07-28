@@ -27,3 +27,5 @@ class Description
 {
   position 51 229 109 45;
 }
+
+strictness allow 36;
