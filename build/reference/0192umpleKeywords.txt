@@ -19,9 +19,13 @@ noreferences
 
 <li> <span style="background-color:plum">[method]</span> Keywords used to define methods.
 
-<li> <span style="background-color:silver">[tracing]</span> Keywords specially associated with the tracing feature.
+<li> <span style="background-color:pink">[constraints]</span> Keywords specially associated with runtime constraints.
 
-<li> <span style="background-color:burlywood">[testing]</span> Keywords specially associated with the test generation feature.
+<li> <span style="background-color:bisque">[model constraints]</span> Keywords specially associated with model constraints (checked at compile time).
+
+<li> <span style="background-color:silver">[tracing]</span> Keywords specially associated with the runtime tracing.
+
+<li> <span style="background-color:burlywood">[testing]</span> Keywords specially associated with test generation.
 
 <!-- USE FEATURE TO BE DOCUMENTED BEFORE UNCOMMENTING
 <li> <span style="background-color:orange">[other languages]</span> Keywords specially associated with the ability to specify other languages such as USE and FixML within Umple.
@@ -49,11 +53,13 @@ noreferences
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">all:</span> <span style="background-color:plum">[method]</span> In the context of a before, after or around statement indicates that code should be injected in every method that matches the specified pattern (not just custom or generated code). <a href="BeforeandAfterStatements.html"><i></i></a></li>
 
+<!--STRICTNESS FEATURE FOR THIS KEYWORD TO BE FIXED AND DOCUMENTED BEFORE UNCOMMENTING
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">allow:</span> Subsequent to a <i>strictness</i> statement, this denotes an error that should be considered as a warning. <a href="StrictnessDirective.html"><i>See Strictness Directive.</i></a></li>
+-->
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">and:</span> Logical AND operator used in constraints, which include state machine guards.<a href="SimpleConstraints.html"><i>See Simple Constraints.</i></a></li>
 
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">around:</span> <span style="background-color:lime">[top]</span> <span style="background-color:aqua">[class]</span> Specifies ode will be inserted in place of matching methods. The original code is placed wherever the around_proceeed keyword is found.  <a href="AroundStatement.html"><i>See Around Statement</i></a></li>
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">around:</span> <span style="background-color:lime">[top]</span> <span style="background-color:aqua">[class]</span> Specifies code will be inserted in place of matching methods. The original code is placed wherever the around_proceeed keyword is found.  <a href="AroundStatement.html"><i>See Around Statement</i></a></li>
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">around_proceed:</span> Denotes where the original block of code around which code would be inserted should be placed.  <a href="AroundStatement.html"><i>See Around Statement</i></a></li>
 
@@ -79,7 +85,7 @@ noreferences
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">atomic:</span> TBD <a href=""><i></i></a></li>
 -->
 
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">attribute/attr:</span> In a constraint, denotes an attribute and should be followed by a matching pattern. </li>
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">attribute/attr:</span> Used in model constraints to test whether an attribute matching a pattern exists. </li>
 
 <!-- USE FEATURE TO BE DOCUMENTED BEFORE UNCOMMENTING
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">attributes:</span> Denotes a set new of attributes to be used. </li>
@@ -89,7 +95,9 @@ noreferences
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">before:</span> <span style="background-color:lime">[top]</span> <span style="background-color:aqua">[class]</span> <span style="background-color:plum">[method]</span>  Requests that code should be injected before existing code in one or more methods. <a href="BeforeandAfterStatements.html"><i>See Before and After Statements</i></a></li>
 
+<!-- USE FEATURE TO BE DOCUMENTED BEFORE UNCOMMENTING
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">between:</span> Defines the associated classes. </li>
+-->
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">cardinality:</span> Association operator that verifies that an association has a given number of links between the classes. </li>
 
@@ -109,7 +117,9 @@ noreferences
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">disable:</span> This prevents warning(s) matching a provided expression to be raised. </li>
 
+<!--STRICTNESS FEATURE FOR THIS KEYWORD TO BE FIXED AND DOCUMENTED BEFORE UNCOMMENTING
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">disallow:</span> Subsequent to a <i>strictness</i> statement, this denotes a warning that should be considered as an error. <a href="StrictnessDirective.html"><i>See Strictness Directive</i></a></li>
+-->
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">displayColor:</span> <span style="background-color:aqua">[class]</span> This specifies an element display color in a model.</li>
 
@@ -121,9 +131,11 @@ noreferences
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">else:</span> Flow control statement that executes subsequent instructions in case the if condition is not satisfied. <a href=""><i></i></a></li>
 
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">emit:</span> <span style="background-color:aqua">[class]</span> Specifies the method to be generated <a href="BasicTemplates.html"><i>See Basic Templates</i></a></li>
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">emit:</span> <span style="background-color:aqua">[class]</span> Specifies the method to be generated for a particular template <a href="BasicTemplates.html"><i>See Basic Templates</i></a></li>
 
+<!-- USE FEATURE TO BE DOCUMENTED BEFORE UNCOMMENTING
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">end:</span> End of a statement. </li>
+-->
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">entry:</span> <span style="background-color:yellow">[state machine]</span> Indicates an action to perform when entering a state. <a href="StateMachineActionsandDoActivities.html"><i>See State Machine Actions and Do Activities</i></a></li>
 
@@ -175,6 +187,8 @@ noreferences
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">hops:</span> Within a filter directive, it indicates additional classes that can be included, which are linked to the already included classes by associations or generalizations. <a href="Filters.html"><i>See Filters</i></a></li>
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">if:</span> Flow control statement that executes the subsequent instructions if the condition is satisfied. </li>
+
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">ignore:</span> Subsequent to a <i>strictness</i> statement, this denotes a warning that not appear, in order to reduce clutter during compilation. <a href="StrictnessDirective.html"><i>See Strictness Directive</i></a></li>
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">immutable:</span> <span style="background-color:aqua">[class]</span> Defines an attribute that only be set when initialized. <a href="AttributeDefinition.html"><i>See Attribute definition</i></a></li>
 

@@ -7,7 +7,16 @@ noreferences
 <p>Constraints can be used to assert that certain properties of the model are as expected,
 as shown in the examples below. Associations, attributes and generalizations can be checked.</p>
 
-<p>Why would model constraints be useful, given that a programmer can just inspect the code to see if there are statements declaring the facts in question? The answer is that Umple has sophisticated separation of concerns mechanisms including <a href="Traits.html">traits</a>, mixins and <a href="BasicMixsets.html">mixsets</a>, and the developer may not be completely sure that a given model constraint will always be true. An attribute, for example, might be only introduced into the class in a completely different file or mixset, and the developer may not be certain that the file or mixset is being included. Using a model constraint allows a developer who wants to use that attribute in a method to cause an Umple compilation error if it does not in fact exist, rather than waiting to see if Java code fails to compile.
+<p>Why would model constraints be useful, given that a programmer can just inspect the code to see if there are statements declaring the facts in question? The answer is that Umple has sophisticated separation of concerns mechanisms including <a href="Traits.html">traits</a>, mixins and <a href="BasicMixsets.html">mixsets</a>, and the developer may not be completely sure that a given model constraint will always be true. An attribute, for example, might be only introduced into the class in a completely different file or mixset, and the developer may not be certain that the file or mixset is being included. Using a model constraint allows a developer who wants to use that attribute in a method to cause an Umple compilation error if it does not in fact exist, rather than waiting to see if Java code fails to compile.</p>
+
+<p>Below is an example of a model constraint, but there are other examples in the manual pages that give help about the error messages raised by these constraints:</p>
+<ul>
+  <li><a href="E090AttributeNameNotFoundConstraint.html">Assertion that an attribute of a certain name (defined elsewhere) must exist in this class</a>
+  <li><a href="E091AttributeOfTypeNotFoundConstraint.html">Assertion that an attribute of a certain type must exist</a>
+  <li><a href="E092ClassIsNotSubclassConstraint.html">Assertion that this class is a subclass of another (with the isA statement defined elsewhere)</a>
+  <li><a href="E093ClassIsNotSuperclassConstraint.html">Assertion that this class is a superclass of another class (with the isA statement defined in that class)</a>
+  <li><a href="E094NoAssociationFoundConstraint.html">Assertion that an association exists between two classes</a>
+</ul>
 
 @@syntax
 [[modelConstraint]] [[modelConstraintBody]] [[modelLinkingOp]] [[modelExpr]] [[modelRelationOp]] [[modelRelationOpAssociation]] [[modelRelationOpAttribute]] [[modelRelationOpInheritance]] [[modelRelationAssociationEnd]]
