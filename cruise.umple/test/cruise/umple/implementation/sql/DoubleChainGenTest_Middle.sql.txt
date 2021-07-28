@@ -1,0 +1,23 @@
+-- PLEASE DO NOT EDIT THIS CODE
+-- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+CREATE DATABASE IF NOT EXISTS `example`;
+USE `example`;
+
+CREATE TABLE IF NOT EXISTS `example`.`employee`
+(
+  /*------------------------*/
+  /* MEMBER VARIABLES       */
+  /*------------------------*/
+
+  /*employee Associations*/
+  person_name VARCHAR(255),
+  
+  /*employee Attributes*/
+  id INT,
+  PRIMARY KEY(id)
+
+);
+
+
+ALTER TABLE `example`.`employee` ADD CONSTRAINT `fk_employee_person_name` FOREIGN KEY (`person_name`) REFERENCES `example`.`person`(`name`);

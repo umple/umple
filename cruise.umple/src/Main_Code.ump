@@ -297,7 +297,7 @@ class UmpleConsoleMain
             }
           
             if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php")) {
-              compileSuccess = CodeCompiler.compile(model, generatorCodeToCompile,cfg.getUseExec(), cfg.getCompile().get());
+              compileSuccess = CodeCompiler.compile(model, generatorCodeToCompile,cfg.getUseExec(), cfg.getBeQuiet(), cfg.getCompile().get());
             }
           }
         }
