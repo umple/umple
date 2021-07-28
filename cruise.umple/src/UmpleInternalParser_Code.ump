@@ -394,8 +394,9 @@ class UmpleInternalParser
     {
       postTokenTestSequeceAnalysis();
     }
-    
-    
+    // We have to look at the error messages again to see if
+    // any need to be removed
+    analyzeParseResult();
   }
 
   // Locate all 'use *.ump' references and add those files if not already parsed

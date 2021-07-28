@@ -12,3 +12,5 @@ class Point2D
   Float x;
   Float y;
 }
+
+strictness allow 36; // We are OK with this warning
