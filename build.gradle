@@ -1041,7 +1041,7 @@ def runUserManualAndExampleTests(language, languageOpt, excludes) {
       target.append(name+"\n")
     }
    
-    def cmd = "java -jar  ${rootProject.ext.umpleCurrentJar} -g ${languageOpt} --path src-gen-umple -q -c - -f  dist/gradle/test/workingDir/temp/${language}/allExamplesList.txt"
+    def cmd = "java -jar  ${rootProject.ext.umpleCurrentJar} -g ${languageOpt} --path src-gen-umple -w -q -c - -f  dist/gradle/test/workingDir/temp/${language}/allExamplesList.txt"
     def proc = cmd.execute();
     proc.waitForProcessOutput(System.out, System.err);
     if (proc.exitValue()!=0){

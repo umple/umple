@@ -2,7 +2,7 @@
 // a garage door corresponding to the diagram
 // above
 class Garage {
-  lazy Boolean entranceClear=true;
+  Boolean entranceClear=true;
   GarageDoor { 
     Closed {
       entry/{stopMotor();}  
