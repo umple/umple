@@ -1313,7 +1313,7 @@ task runRspec {
   
   
     exec {
-  	  workingDir "umpleonline/testsuite"
+  	  workingDir "${rootProject.projectDir.toString()}/umpleonline/testsuite"
   	  commandLine  'rspec', '-f', 'html', '-o', testOutputPath+"/index.html", '-t', tagArg, failfastoption, 'spec'
     }
     
