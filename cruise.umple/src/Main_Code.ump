@@ -31,6 +31,7 @@ class UmpleConsoleConfig {
   defaulted boolean exitOnFirstFailure = false; // option e to exit on first failure with the -f option 
 
   internal Optional<String> generate   = Optional.empty(); // option g to specify what to generate
+  internal Optional<String> umpleDirect   = Optional.empty(); // option u to specify umple code directly
   defaulted boolean override           = false;
   defaulted boolean removePrevious     = false;  
   internal Optional<String> path       = Optional.empty(); // place to put output, otherwise in current directory
@@ -55,6 +56,7 @@ class UmpleConsoleConfig {
     this.beQuiet    = optSet.has("quiet");    
     this.importFile = Optional.ofNullable((String)optSet.valueOf("import"));
     this.generate   = Optional.ofNullable((String)optSet.valueOf("generate"));
+    this.umpleDirect   = Optional.ofNullable((String)optSet.valueOf("umple"));    
     this.override   = optSet.has("override");
     this.removePrevious = optSet.has("removeprevious");
     this.path       = Optional.ofNullable((String)optSet.valueOf("path"));
@@ -106,6 +108,10 @@ class UmpleConsoleConfig {
 
   public void setGenerate(String generate) {
     this.generate = Optional.of(generate);
+  }
+
+  public Optional<String> getUmpleDirect() {
+    return this.umpleDirect;
   }
 
   public Optional<String> getCompile() {
@@ -201,22 +207,25 @@ class UmpleConsoleMain
       return 0;
     }
 
+    String filename = "dummy__.ump"; // used when we may not want to read any file
     if (cfg.getUmpleFile() == null || "".equals(cfg.getUmpleFile()))
     {
-      if(!cfg.getTestUmpFilesFile().isPresent()) {
-        System.out.println("Please specify <umple_file> to process");
+      // We have no filename
+      if(!cfg.getTestUmpFilesFile().isPresent() && !cfg.getUmpleDirect().isPresent()) {
+        System.out.println("Please specify an umple_file to process or use the -f or -u options");
         printUsage();
         return 1;
       }
-      else {
+      else if (!cfg.getUmpleDirect().isPresent()) {
         // Will use -f option for files to process
         return 0;
       }
     }
-
-    final String filename = cfg.getUmpleFile();
-    if(!cfg.getBeQuiet()) {
-      System.out.println("Processing -> " + filename);
+    else {
+      filename = cfg.getUmpleFile();
+      if(!cfg.getBeQuiet()) {
+        System.out.println("Processing -> " + filename);
+      }
     }
 
     final UmpleFile umpleFile = new UmpleFile(filename);
@@ -228,6 +237,12 @@ class UmpleConsoleMain
     //this loop is used to add mixset names as liked umple files.
     cfg.getLinkedMixsetAsString().stream()
         .forEach(umpleFile::addLinkedFiles);
+    
+    // This adds any special extra statement as a linked file (not really a file but ...)
+    if (cfg.getUmpleDirect().isPresent()) {
+      umpleFile.addLinkedFiles("__UMPLE"+
+        Base64.getEncoder().encodeToString(cfg.getUmpleDirect().orElse(null).getBytes()));
+    }
        
     final UmpleModel model = new UmpleModel(umpleFile);
 
@@ -499,7 +514,10 @@ class UmpleConsoleMain
     optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
     optparser.acceptsAll(Arrays.asList("performance", "p"), "Indicate time taken to parse and generate code");
     optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
+
     optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: " + languages).withRequiredArg().ofType(String.class);
+    optparser.acceptsAll(Arrays.asList("u", "umple"), "Include umple code directly as a single string, instead of or addition to in files.").withRequiredArg().ofType(String.class);
+    
     optparser.acceptsAll(Arrays.asList("override"), "If a output language <lang> is specified using option -g, output will only generate language <lang>");
     optparser.acceptsAll(Arrays.asList("removeprevious", "r"), "used with -g; remove previously generated code before generating new. Can help prevent leftover code causing errors. Does not work with generators specified inside a file.");
     optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
