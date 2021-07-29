@@ -389,7 +389,14 @@ class UmpleConsoleMain
 
   public static void main(String[] args)
   {
-    UmpleConsoleMain console = new UmpleConsoleMain(args);
+    UmpleConsoleMain console = null;
+    try {
+      console = new UmpleConsoleMain(args);
+    }
+    catch (Exception e) {   
+     System.err.println(e.getMessage());
+     return;
+    }
 
     // Run the compilation for the main command line files and mixsets
     // Result is 1 if failed compile, -1 if compiler crashed
