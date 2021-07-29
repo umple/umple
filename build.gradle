@@ -1028,23 +1028,26 @@ def runUserManualAndExampleTests(language, languageOpt, excludes) {
     println("Running user manual and example tests for ${languageOpt}")
     def testTree = fileTree(
             dir: "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}",
-            excludes : excludes)
+            excludes : excludes,
+            include: '*.ump')
             
     def names= []
     def targetPath = "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}/allExamplesList.txt"
     def target = new File(targetPath)
     
     testTree.visit{ FileVisitDetails details -> 
-    	names << details.file.path 
+    	names << details.file.name 
     }
     for (name in names){
       target.append(name+"\n")
     }
-   
-    def cmd = "java -jar  ${rootProject.ext.umpleCurrentJar} -g ${languageOpt} --path src-gen-umple -w -q -c - -f  dist/gradle/test/workingDir/temp/${language}/allExamplesList.txt"
-    def proc = cmd.execute();
-    proc.waitForProcessOutput(System.out, System.err);
-    if (proc.exitValue()!=0){
+    
+    def result = exec {
+    	workingDir "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}"	
+    	commandLine 'java', '-jar', "${rootProject.ext.umpleCurrentJar}", '-g', "${languageOpt}", "-path", 'src-gen-umple', '-w', '-q', '-c', '-', '-f', 'allExamplesList.txt' 	
+    }
+    
+    if (result.getExitValue()!=0){
     	throw new GradleException("Process exit value different from 0")
     }
 }
@@ -1289,8 +1292,9 @@ task initTests {
   if (project.hasProperty("hostName")){
     host = hostName+"umpleonline/"
   }
-  
-  println("Testing "+host+"umple.php")
+  doLast{
+    println("Testing "+host+"umple.php")
+    }
   
   def tempConfig = new File ("${rootProject.projectDir.toString()}/umpleonline/testsuite/spec/temp_config.txt")
   tempConfig.write ("host_name "+host+"\n\t"+"umpleonline_directory "+baseDir)
@@ -1312,13 +1316,13 @@ task runRspec {
     else println("RSpec tests with tag "+tagArg)
   
   
-    exec {
+    def result = exec {
   	  workingDir "${rootProject.projectDir.toString()}/umpleonline/testsuite"
   	  commandLine  'rspec', '-f', 'html', '-o', testOutputPath+"/index.html", '-t', tagArg, failfastoption, 'spec'
     }
     
-    //if (result.executionResult()!=0) println("No failures found.")
-    //else println("Umpleonline tests failed.")
+    if (result.getExitValue()!=0) println("No failures found.")
+    else println("Umpleonline tests failed.")
      println("See test results in ${rootProject.projectDir.toString()}/dist/gradle/reports/testbed_umpleonline/index.html")
      delete "${rootProject.projectDir.toString()}/umpleonline/testsuite/spec/temp_config.txt"
     }
