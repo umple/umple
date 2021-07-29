@@ -395,7 +395,7 @@ class UmpleConsoleMain
     }
     catch (Exception e) {   
      System.err.println(e.getMessage());
-     System.exit(-1);
+     return;
     }
 
     // Run the compilation for the main command line files and mixsets

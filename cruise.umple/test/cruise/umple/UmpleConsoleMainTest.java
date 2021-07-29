@@ -83,18 +83,15 @@ public class UmpleConsoleMainTest {
 
   @Test
   public void badArgument() {
-   String[] args = new String[] { "--IDONTEXIST"  };
+    String[] args = new String[] { "--IDONTEXIST"  };
    
-     try {
-   UmpleConsoleMain.main(args);
-     } catch (IllegalStateException ise) {
-      Assert.assertTrue(outErrIntercept.toString()
+    UmpleConsoleMain.main(args);
+    Assert.assertTrue(outErrIntercept.toString()
           .startsWith("Option:\'IDONTEXIST\' is not a recognized option"+System.lineSeparator()
            +"For more detailed information go to https://manual.umple.org"+System.lineSeparator()
            + "Usage: java -jar umple.jar [options] <umple_files>"+System.lineSeparator()+"Example: java -jar umple.jar airline.ump"+System.lineSeparator()));
-     }
   }
-  
+
   
    // Ignore the following - currently does exit - Probably needs adapting for RTCPP
   @Test
