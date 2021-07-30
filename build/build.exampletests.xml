@@ -107,6 +107,7 @@
             <arg value="--path" />
             <arg value="src-gen-umple" />
             <!--arg value="-r" --> <!-- Uncomment to remove prev generated java+class files before each compile -->
+            <arg value="-w" /> <!-- Suppress expected warnings for files starting W -->
             <arg value="-q" /> <!-- Comment out for more verbose trace -->
             <arg value="-c" /> <!-- Do the Java compilation of whatever is produced by Umple -->
             <arg value="-" />
@@ -178,6 +179,7 @@
             <arg value="--path" />
             <arg value="src-gen-umple" />
             <!--arg value="-r" --> <!-- Uncomment to remove prev generated java+class files before each compile -->
+            <arg value="-w" /> <!-- Suppress expected warnings for files starting W -->
             <arg value="-q" /> <!-- Comment out for more verbose trace -->
             <arg value="-c" /> <!-- Do the Java compilation of whatever is produced by Umple -->
             <arg value="-" />

@@ -80,7 +80,10 @@ use StateTableGenerator, SuperGvGeneratorGenerator, HtmlGenerator, UmpleModelWal
 use AlloyGenerator,  NuSMVGenerators, NuSMVGenerator,   NuSMVOptimizerGenerator,  SimpleMetricsGenerator, CodeGvClassDiagramGenerator;
 //End 
 
-// Below mixsets declarations. They contain inclusion of their files. 
+// Base case generator, allows compilation without generation for testing command line, since Java is default
+use generators/Generator_CodeNothing.ump;
+
+// Below mixsets declarations. They contain inclusion of their files.
 mixset CodeGenerator { use generators/Generator_Code.ump; }
 mixset UmpleGenerator { use generators/Generator_CodeUmple.ump; }
 mixset RubyGenerator { 

@@ -29,10 +29,10 @@ class Ball_Game {
     
     Moving {
       do {moving();}
-      (ballPossition==wallPosition) -> HitsWall;
-      (ballPosition==paddlePosition) -> HitsPaddle;
-      (ballPosition==brickPosition) -> HitsBrick;
-      ballOut -> behindPaddle;
+      [ballPossition==wallPosition] -> HitsWall;
+      [ballPosition==paddlePosition] -> HitsPaddle;
+      [ballPosition==brickPosition] -> HitsBrick;
+      ballOut -> BehindPaddle;
     }
    
     HitsBrick  {
@@ -59,4 +59,4 @@ class Ball_Game {
   }
 }
 //$?[End_of_model]$?
-// @@@skipcompile - example needs polishing it has missing methods and unreachable states
+// @@@skipcompile - example has missing methods

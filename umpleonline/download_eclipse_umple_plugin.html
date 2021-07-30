@@ -55,7 +55,7 @@
     about Umple, or try it online without downloading, using the <a href="http://try.umple.org">UmpleOnline tool.</a>
   </p>
 
-  <p class="intro">Umple can be used on Mac-OS, Windows or Linux. You have three downloading options described below: A) Command-line; B) Eclipse; C) Docker</p>
+  <p class="intro">Umple can be used on Mac-OS, Windows or Linux. You have several downloading options described below, including directly downloading a jar, using homebrew, using Docker, using VSCode, or using Eclipse </p>
 
 
 <p class="intro">To obtain the full tree with source code  <a href="https://github.com/umple/Umple">go to Umple's Github  main page.</a>  The list of <a href="https://github.com/umple/Umple/issues?utf8=&#10003;&q=is%3Aissue+is%3Aclosed+sort%3Aupdated-desc+"> recent changes can be found by clicking here</a></p>
@@ -66,7 +66,7 @@
 
 <h3>A. Downloading Umple for Command-Line use</h3>
 
-<p><b>Requirement:</b> An up-to-date Java 8 JDK or higher. The compiler has been tested and is also known to work under Java versions up to Java 15.</p>
+<p><b>Requirement:</b> An up-to-date Java 8 JDK or higher. The compiler has been tested and is also known to work under Java versions up to Java 16.</p>
 
 <p>Options:</p>
 
@@ -78,22 +78,35 @@
     This is also the version of the compiler used by <a href="http://try.umple.org">UmpleOnline</a><br />&nbsp;<br />
 
     <li><a class="button" href="https://github.com/umple/Umple/releases/latest/">
-    The latest official releases of the Umple command-line jar at GitHub, along with release notes</a><br/>&nbsp;<br/>
+    The latest official releases of the Umple command-line jar at GitHub, along with release notes</a> <br/> &nbsp; <br/>
     Use one of these releases if you need complete stability in the code generated from Umple. New releases are made 2-4 times a year.<br />&nbsp;<br />
+    
+    On MacOS you can install the most recent release of the Umple command line compiler using Homebrew. This will also set yourself up to be able to obtain later releases. &nbsp; <br />
+    <pre>brew install umple</pre>&nbsp;<br />
+    
+    
 
 </ul>
 
 <p>To run the Umple compiler on the command line</p>
    <ul>
-     <li>Run <pre>java -jar umple.jar &lt;options&gt; &lt;files&gt;</pre>
+     <li>Run<br/>
+     
+     <pre>java -jar umple.jar &lt;options&gt; &lt;files&gt;</pre><br/>
+     
+     or if you have downloaded Umple using Homebrew you can simply specify<br/>
+     
+     <pre>umple &lt;options&gt; &lt;files&gt;</pre><br/>
+     
+     
 
-     <li>Specify your umple file as an argument. The .ump suffix is normally used. One umple file can invoke another using the use statement. <br/>&nbsp;<br />
+     <li>Specify your umple file as an argument (more than one is allowed). The .ump suffix must be used. One umple file can invoke another using the use statement. You can also specify the names of mixsets to activate them. <br/>&nbsp;<br />
 
-     <li>You can use --help as an option to obtain the full set of command-line options. Options available include:
+     <li>You can use --help as an option to obtain the full set of command-line options. The most popular available include:
      <ul>
-     <li>-g, --generate <i>lang</i> :                          Specify the output language: Java,RTCpp,
-                                          Php,RTCpp,Ruby,SQL,Json,Ecore,TextUml,Scxml
-                                          Yuml,Cpp etc.
+     <li>-g, --generate <i>lang</i> :                          Specify the output language (Java is the default; to ensure no output is generated, specify the word 'nothing' literally): Java,RTCpp,
+                                          Php, Ruby,SQL,Json,Ecore,TextUml,Scxml
+                                          Yuml, etc.
       <li> --help :                                  Display the help message
       <li> --override :                              If a output language <lang> is
                                           specified using option -g, output
@@ -101,28 +114,20 @@
       <li> --path :                                  If a output language is specified
                                           using option -g, output source code
                                           will be placed to path
+      <li> -u, --umple &quot;<i>code</i>&quot; : Specify a valid umple program directly on the command line (can be used add extra information to the files supplied as arguments).
+
       <li> -v, --version :                           Print out the current Umple version
+
                                           number
-      <li> -c - :   Compile the generated code (i.e. go directly from Umple to an executable system)                                             
+      <li> -c - :   Compile the generated code (i.e. go directly from Umple to an executable system in Java, or to verify the syntax of generated PhP)                                             
      </ul>
    </ul>
 
-<br />&nbsp;<br />
-
-
-
-   <h3>B. Installing and running the Umple compiler in Eclipse</h3>
-
-   <p><b>Requirements</b>: Java (as above), and the latest Eclipse with modeling tools.</p>
-
-   <p>Full directions for <a href="https://github.com/umple/umple/wiki/InstallEclipsePlugin">installing the Eclipse plugin can be found on this Umple Wiki Page.</a></p>
-   
-   <p>The update site to install Umple in Eclipse is https://cruise.umple.org/org.cruise.umple.eclipse.plugin.update.site</p> 
 
   <br />&nbsp;<br />
 
 
-  <h3>C. Running UmpleOnline in your own computer's Docker installation</h3>
+  <h3>B. Running UmpleOnline in your own computer's Docker installation</h3>
 
 <p><b>Requirement</b>: <a href="https://www.docker.com/get-docker">Docker</a> installed on your computer.
 
@@ -158,9 +163,37 @@
 <p>More information about Umple in Docker can be found at <a href="http://docker.umple.org">http://docker.umple.org</a></p>
 
 
+
+  <br />&nbsp;<br />
+
+<h3>C. Running in VSCode.</h3>
+
+<p>A <a href="https://marketplace.visualstudio.com/items?itemName=digized.umple">Visual Studio Code plugin for Umple</a> is available.</p>
+
+
+
+
+<br />&nbsp;<br />
+
+   <h3>D. Installing and running the Umple compiler in Eclipse</h3>
+
+   <p><b>Requirements</b>: Java (as above), and the latest Eclipse with modeling tools.</p>
+
+   <p>Full directions for <a href="https://github.com/umple/umple/wiki/InstallEclipsePlugin">installing the Eclipse plugin can be found on this Umple Wiki Page.</a></p>
+   
+   <p>The update site to install Umple in Eclipse is https://cruise.umple.org/org.cruise.umple.eclipse.plugin.update.site</p> 
+
+
+
+
+  <br />&nbsp;<br />
+
+<h3>E. The Umplificator</h3>
+
 <p>Another tool available is the umplificator, for reverse engineering code to Umple. <a 
 href="../umplificator_1.29.1.4260.b21abf3a3.jar">The Umplificator can be downloaded
 here.</a></p>
+
 
 
   <br />&nbsp;<br />
@@ -168,6 +201,9 @@ here.</a></p>
   <h3>User Manual </h3>
 
   <p>Refer to the <a href="http://manual.umple.org">Umple user manual</a> for comprehensive help programming in Umple. The <a href="http://api.umple.org">API quick reference</a> and <a href="http://grammar.umple.org">grammar quick reference</a> may be of particular help for power users.</p>
+
+
+
 
 </body>
 </html>
