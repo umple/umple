@@ -3287,7 +3287,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             String methodCode = token.getValue();
             // process mixsets inside code 
             mixset Mixset {
-              methodCode = processInlineMixset(token.getValue());
+              methodCode = processInlineMixset(token.getValue(), meth);
             } // end of MIXSET 
             cb.setCode(methodCode);
             aMethod.setCodePosition(token.getPosition());
@@ -4107,7 +4107,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       {
         String aspectCode = sub.getValue();
         mixset Mixset {
-        aspectCode = processInlineMixset(sub.getValue());
+        aspectCode = processInlineMixset(sub.getValue(), null);
         }
         if(langs.size()==0)
         {

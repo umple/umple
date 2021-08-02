@@ -463,14 +463,18 @@ class UmpleInternalParser
     }
   }
   // a helper method that process pure code to either remove it or to let mixset content stay.
-  private String processInlineMixset(String methodCode) {
-	// process mixsets inside code 
-	   ArrayList<MixsetInMethod> mixsetInCodeList = MethodBody.getMixsetsFromCode(methodCode) ;
-	  for (MixsetInMethod aMixsetInMethod : mixsetInCodeList) 
-	  {
-	    // update the code according to  use statements (of mixsets)
-	    methodCode = MethodBody.handelMixsetInsideMethod(this.getModel(), aMixsetInMethod, methodCode);	        		
-	  }
+  private String processInlineMixset(String methodCode,  MethodBody methodBody) {
+  // process mixsets inside code 
+     ArrayList<MixsetInMethod> mixsetInCodeList = MethodBody.getMixsetsFromCode(methodCode) ;
+    for (MixsetInMethod aMixsetInMethod : mixsetInCodeList) 
+    {
+      // update the code according to  use statements (of mixsets)
+      methodCode = MethodBody.handelMixsetInsideMethod(this.getModel(), aMixsetInMethod, methodCode);
+      if(methodBody !=null)
+      {
+        methodBody.addMixsetInMethod(aMixsetInMethod);
+      }	        
+    }
     return methodCode;
   }  
 }
