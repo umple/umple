@@ -17,16 +17,11 @@ class UmpleAnnotaiveToCompositionGenerator
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
   depend java.util.stream.Collectors;
-
-
-  // Contains various aspects from an Umple file (.ump), such as umpleClasses, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
 
   fileExtension= ".ump";
  
-
   // CENTRAL GENERATE METHOD
 
  public void generate(){
@@ -36,7 +31,9 @@ class UmpleAnnotaiveToCompositionGenerator
     code.append("Annotaive fragments are refactored into composition fragments. \n");
     code.append("Total mixsts definitions: "+mixsetList.size());
     code.append("\n*/ \n");
-    
+    code.append("//*** \n");
+    code.append("//Coarse-grained variability : \n");
+
     for (Mixset aMixset: mixsetList)
     {
       code.append("\n");
@@ -50,37 +47,52 @@ class UmpleAnnotaiveToCompositionGenerator
       }
       code.append("\n}\n") ;
     }
-    
+    //
+    code.append("//*** \n");
+    code.append("//Fine-grained variability : \n");
+    //
     int labelCount= 1;
     List<UmpleClass> umpleClasses = model.getUmpleClasses().stream().filter(classM -> classM.getMethods().size() > 0).collect(Collectors.toList());
     for (UmpleClass aClass : umpleClasses)
     {
-      code.append("\n");
       String className = aClass.getName();
-      // start class definition 
-      code.append("class " + className + " { \n");
-      List<Method> methodsWithInlineMixset = aClass.getMethods().stream().filter(classM -> classM.getMethodBody().getMixsetInMethods().size() > 0).collect(Collectors.toList());
-      for (Method method : methodsWithInlineMixset)
+      String classInlineMixset ="";
+      try
       {
-        List<MixsetInMethod> mixsetInMethodList = method.getMethodBody().getMixsetInMethods();
-        for (MixsetInMethod mixsetInMethod : mixsetInMethodList)
+        List<Method> methodsWithInlineMixset = aClass.getMethods().stream().filter(classM -> classM.getMethodBody() != null).collect(Collectors.toList());
+        for (Method method : methodsWithInlineMixset)
         {
-          // prepare parameter types
-          String injectionParameters = "";
-          List<String> paramList = method.getMethodParameters().stream().map(aParam  -> aParam.getType()).collect(Collectors.toList());
-          String paramListCommaSeparated = String.join(",", paramList);
-          if(paramList.size() > 0)
-          injectionParameters = "("+paramListCommaSeparated+ ")";
-          // define a labeled aspect injection.
-          String mixsetBody = mixsetInMethod.getMixsetFragment();
-          mixsetBody = mixsetBody.substring(mixsetBody.indexOf("{"));
-          code.append(" before "+ "Lable_"+mixsetInMethod.getMixsetName()+"_"+labelCount+":"+ method.getName()+ injectionParameters+"\n  "+ mixsetBody);
-          labelCount ++;
-          // two empty line after each aspect injection.
-          code.append("\n\n");
+          List<MixsetInMethod> mixsetInMethodList = method.getMethodBody().getMixsetInMethods();
+          for (MixsetInMethod mixsetInMethod : mixsetInMethodList)
+          {
+            // prepare parameter types
+            String injectionParameters = "";
+            List<String> paramList = method.getMethodParameters().stream().map(aParam  -> aParam.getType()).collect(Collectors.toList());
+            String paramListCommaSeparated = String.join(",", paramList);
+            if(paramList.size() > 0)
+            injectionParameters = "("+paramListCommaSeparated+ ")";
+            // define a labeled aspect injection.
+            String mixsetBody = mixsetInMethod.getMixsetFragment();
+            mixsetBody = mixsetBody.substring(mixsetBody.indexOf("{"));
+            classInlineMixset+="mixset " + mixsetInMethod.getMixsetName() + " { \n";
+            classInlineMixset+="  class " + className + " { \n";            // start class definition 
+            classInlineMixset+="    before "+ "Lable_"+mixsetInMethod.getMixsetName()+"_"+labelCount+":"+ method.getName()+ injectionParameters+"\n  "+ mixsetBody;
+            classInlineMixset+="  } \n";
+            classInlineMixset+="} \n"; // end class definition.
+            labelCount ++;
+            // two empty line after each aspect injection.
+            classInlineMixset+="\n\n";
+            }
+          }
+          if(classInlineMixset.trim().length() > 1)
+          {
+            code.append(classInlineMixset);
           }
         }
-      code.append("} \n"); // end class definition.
+        catch(NullPointerException ex)
+        {
+          continue;
+        }
     }
     code.append("\n");
     model.setCode(code.toString());
