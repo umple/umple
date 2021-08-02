@@ -14,6 +14,8 @@ import cruise.umple.compiler.MethodBody;
 import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.php.PhpClassGenerator;
 import java.io.File;
+import cruise.umple.compiler.UmpleAnnotaiveToCompositionGenerator;
+
 
 public class UmpleMixsetTest {
   
