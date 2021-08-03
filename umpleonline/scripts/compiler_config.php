@@ -313,6 +313,8 @@ function generateMenu($buttonSuffix)
             <option value=\"html:CodeAnalysis\">Code Analysis</option>
             <option value=\"java:USE\">USE Model</option>
             <option value=\"java:UmpleSelf\">Internal Umple Representation</option>
+            <option id=\"genUmpleAnnotaiveToComposition\" value=\"java:UmpleAnnotaiveToComposition\" >Compositional Mixsets from Inline Mixsets </option>
+
           </select>
         </li>
         <li id=\"ttGenerateCode\">

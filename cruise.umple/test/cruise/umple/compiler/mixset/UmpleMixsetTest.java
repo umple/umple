@@ -14,6 +14,8 @@ import cruise.umple.compiler.MethodBody;
 import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.php.PhpClassGenerator;
 import java.io.File;
+import cruise.umple.compiler.UmpleAnnotaiveToCompositionGenerator;
+
 
 public class UmpleMixsetTest {
   
@@ -696,6 +698,26 @@ public class UmpleMixsetTest {
     Assert.assertFalse(code.contains("mixset M2 {"));
     //delete generated file
     SampleFileWriter.destroy(umpleParserTest.pathToInput+"/AspectClass.java");
+  }
+  @Test
+  public void refactorInlineMixsetIntoCompMixset()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseRefactorInlineMixsetIntoCompMixset.ump");
+    UmpleModel umpModel = new UmpleModel(umpleFile);
+    umpModel.setShouldGenerate(true);
+    umpModel.run();
+    UmpleAnnotaiveToCompositionGenerator umpleAnnotaiveToCompositionGenerator = new UmpleAnnotaiveToCompositionGenerator();
+    umpleAnnotaiveToCompositionGenerator.setModel(umpModel);
+    umpleAnnotaiveToCompositionGenerator.generate();
+    String generatedFile =  umpleParserTest.pathToInput+"/parseRefactorInlineMixsetIntoCompMixset_refactoredToComposition.ump";
+    SampleFileWriter.assertFileExists(generatedFile);
+    String templateGeneratedCode = SampleFileWriter.readContent(new File(generatedFile));
+    //  included mixsets
+    Assert.assertTrue(templateGeneratedCode.contains("class Bank { 1 -- 1..* Branch; }"));
+    SampleFileWriter.destroy(generatedFile);
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/Bank.java");
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/Account.java");
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/Branch.java");
   }
 
 }

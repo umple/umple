@@ -1,0 +1,29 @@
+class Bank {
+  1 -- * Account;
+  mixset Multibranch 
+  { 
+    1 -- 1..* Branch;
+  }
+  
+  /*
+  void withdraw(int amount){
+  if (amount > 0)
+  //some code 
+    mixset Multibranch 
+  {
+     amount = amount - someFees;
+  }
+  }
+  */ 
+}
+
+mixset Multibranch {
+  class Branch {
+    Integer id; String address;
+  }
+}
+
+class Account {
+  owner; Integer number; Integer balance;
+  mixset Multibranch { * -- 1 Branch;}
+}
