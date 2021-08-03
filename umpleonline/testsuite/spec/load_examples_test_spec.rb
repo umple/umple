@@ -10,7 +10,7 @@ describe "Example loading",
   :feature => :exampleLoading do
 
   before :all do
-    page.driver.resize(1024, 768)
+    Capybara.current_session.current_window.resize_to(1024, 768)
     load_page
   end
 

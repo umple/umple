@@ -1685,6 +1685,18 @@ Action.keyboardShortcut = function(event)
       event.preventDefault();
     }
   }
+  else if ((shortcut == 8 || shortcut == 46) && jQuery(".umpleClass").is(":focus")){
+  	DiagramEdit.classDeleted(document.activeElement.id);
+  	event.preventDefault();
+  }
+  else if ((shortcut == 8 || shortcut == 46) && jQuery("#umpleAssociation_0").is(":focus")){
+  	DiagramEdit.associationDeleted(document.activeElement.id);
+  	event.preventDefault();
+  }
+  else if ((shortcut == 8 || shortcut == 46) && jQuery("#Mentor_generalization").is(":focus")){
+  	DiagramEdit.generalizationDeleted(document.activeElement.id);
+  	event.preventDefault();
+  }
 }
 
 Action.getCaretPosition = function() // TIM Returns the line number

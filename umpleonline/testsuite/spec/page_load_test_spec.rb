@@ -6,7 +6,7 @@ require 'spec_helper.rb'
 
 describe "Page load options", :feature => :pageLoad, :helper => :pageLoad do 
 
-  before(:all) {page.driver.resize(1024, 768)}
+  before(:all) {Capybara.current_session.current_window.resize_to(1024, 768)}
 
   it "loads UmpleOnline with the example url option" do
     load_umple_with_option("example=2DShapes")

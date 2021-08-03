@@ -59,6 +59,7 @@ function UmpleGeneralization()
   	var idValue = isPermanent ? this.childId + "_generalization" : "newgeneralization";
     var classValue = "umpleGeneralization";
     generalizationDiv.attr("id", idValue);
+    generalizationDiv.attr("tabindex", 2);
     generalizationDiv.addClass(classValue);
     
   	var triangleHeight = new UmplePosition(0,10,0,0); 

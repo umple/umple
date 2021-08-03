@@ -26,7 +26,7 @@ module TestUtils
 
   def load_umple_with_option(option_text)
     visit("umple.php?#{option_text}")
-    wait_for_loading_for(10)
+    wait_for_loading
   end  
 
   def load_umple_with_file(filename, directory)

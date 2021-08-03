@@ -7,7 +7,7 @@ describe "Graphical editing of diagram: model consistency",
   :helper => :diagramEditing, 
   :feature => :diagramEditing do
 
-  before(:all) {page.driver.resize(1024, 768)}
+  before(:all) {Capybara.current_session.current_window.resize_to(1024, 768)}
 
   describe "Adding an umpleClass" do
     before(:each) {load_page}
@@ -49,7 +49,7 @@ describe "Graphical editing of diagram: model consistency",
         it "deletes an umpleClass" do
           within("div#umpleCanvas") {
             find(:css, '#Student').click
-            find(:css, '#Student').native.send_key(:delete)}
+            find(:css, '#Student').native.send_keys(:delete)}
 
           wait_for_loading
           verify_diagram_does_not_contain("#Student")
@@ -111,7 +111,7 @@ describe "Graphical editing of diagram: model consistency",
           find(:css, "#Student").click
         end
 
-        wait_for_loading
+        wait_for_loading_for(10)
         expect(find(:css, "#umpleCanvas")).to have_selector("#umpleAssociation_0")
         verify_text_ignore_position("after_adding_reflexive_association.ump")
       end
@@ -124,7 +124,7 @@ describe "Graphical editing of diagram: model consistency",
     context "with keyboard shortcut" do
       before(:each) {get_canvas_focus}
       it "deletes a reflexive association" do
-        within("div#umpleCanvas") {find(:css, '#umpleAssociation_0_one').native.send_keys(:delete)}
+        within("div#umpleCanvas") {find(:css, '#umpleAssociation_0').native.send_keys(:delete)}
         
         wait_for_loading
         verify_diagram_does_not_contain("#umpleAssociation_0")
@@ -137,7 +137,7 @@ describe "Graphical editing of diagram: model consistency",
         find(:css, '#buttonDeleteEntity').click
         element = within("div#umpleCanvas") {find(:css, '#umpleAssociation_0_one').click}
 
-        wait_for_loading
+        wait_for_loading_for(10)
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_text_ignore_position("after_removing_reflexive_association.ump")
       end
@@ -157,7 +157,7 @@ describe "Graphical editing of diagram: model consistency",
           find(:css, "#Student").native.send_keys(:delete)
         end
 
-        wait_for_loading
+        wait_for_loading_for(20)
         verify_diagram_does_not_contain("#Student")
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_text_ignore_position("empty_file.ump")
@@ -213,7 +213,7 @@ describe "Graphical editing of diagram: model consistency",
         find(:css, '#buttonDeleteEntity').click
         within("div#umpleCanvas") {find(:css, '#Student').click}
 
-        wait_for_loading
+        wait_for_loading_for(10)
         verify_diagram_does_not_contain("#Student")
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_diagram_does_not_contain("#umpleAssociation_1")
@@ -368,7 +368,7 @@ describe "Graphical editing of diagram: model consistency",
     context "with keyboard shortcut" do
       before(:each) {get_canvas_focus}
       it "deletes an association" do
-        within("div#umpleCanvas") {find(:css, '#umpleAssociation_0_one').native.send_keys(:delete)}
+        within("div#umpleCanvas") {find(:css, '#umpleAssociation_0').native.send_keys(:delete)}
 
         wait_for_loading
         verify_diagram_does_not_contain("#umpleAssociation_0")
@@ -431,7 +431,7 @@ describe "Graphical editing of diagram: model consistency",
     context "with keyboard shortcut" do
       before(:each) {get_canvas_focus}
       it "deletes a generalization" do
-        within('#Mentor_generalization') {all(:css, 'div.umpleAssociationSelector')[1].native.send_keys(:delete)}
+        find(:css, "#Mentor_generalization").native.send_keys(:delete)
 
         wait_for_loading
         verify_diagram_does_not_contain("#Mentor_generalization")
@@ -573,7 +573,7 @@ describe "Graphical editing of diagram: model consistency",
     context "with keyboard shortcut" do
       before(:each) {get_canvas_focus}
       it "deletes a symmetric reflexive association" do
-        within("div#umpleCanvas") {find(:css, '#umpleAssociation_0_center').native.send_keys(:delete)}
+        within("div#umpleCanvas") {find(:css, '#umpleAssociation_0').native.send_keys(:delete)}
 
         wait_for_loading
         verify_diagram_does_not_contain("#umpleAssociation_0")
@@ -603,7 +603,7 @@ describe "Graphical editing of diagram: model consistency",
       within("div#umpleCanvas") {find(:css, '#NewClass2').native.send_keys(:delete)}
 
       #delete umpleAssociation_4
-      within("div#umpleCanvas") {find(:css, '#umpleAssociation_4_one').native.send_keys(:delete)}
+      within("div#umpleCanvas") {find(:css, '#umpleAssociation_4').native.send_keys(:delete)}
 
       #delete NewClass
       within("div#umpleCanvas") {find(:css, '#NewClass').native.send_keys(:delete)}

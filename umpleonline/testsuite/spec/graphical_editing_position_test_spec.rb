@@ -10,7 +10,7 @@ describe "Graphical editing of diagram: positional consistency",
   :helper => :diagramEditing, 
   :feature => :positionalDiagramEditing do 
 
-  before(:all) {page.driver.resize(1024, 768)}
+  before(:all) {Capybara.current_session.current_window.resize_to(1024, 768)}
     
   describe "Loading umple models" do
     context "with positional data" do

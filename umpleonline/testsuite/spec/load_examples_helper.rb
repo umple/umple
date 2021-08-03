@@ -100,12 +100,13 @@ COMPOSITE_STRUCTURES_EXAMPLES = {
     select_option_by_value("#inputExampleType", "cdModels")
     select_option_by_value("#inputExample", example_name)
 
-    wait_for_loading_for(35)
+    wait_for_loading
 
     #include is used here because the website adds the model delimiter to the
     #end of the code, which is not present in the source file for the diagram
-    expect(get_example_contents(example_name))
-      .to include(evaluate_script("Page.getRawUmpleCode()"))
+    expect(evaluate_script("Page.getRawUmpleCode()"))
+      .to include(get_example_contents(example_name))
+   
 
     CLASS_EXAMPLES[example_name].each do |element|
       expect(find(:css, "#umpleCanvas")).to have_selector("##{element}")

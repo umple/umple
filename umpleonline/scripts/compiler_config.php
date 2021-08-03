@@ -313,10 +313,12 @@ function generateMenu($buttonSuffix)
             <option value=\"html:CodeAnalysis\">Code Analysis</option>
             <option value=\"java:USE\">USE Model</option>
             <option value=\"java:UmpleSelf\">Internal Umple Representation</option>
+            <option id=\"genUmpleAnnotaiveToComposition\" value=\"java:UmpleAnnotaiveToComposition\" >Compositional Mixsets from Inline Mixsets </option>
+
           </select>
         </li>
         <li id=\"ttGenerateCode\">
-          <div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQuery-palette-button\" value=\"Generate It\"></div>
+          <div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQuery-palette-button\" tabindex=\"0\" value=\"Generate It\"></div>
         </li>
         <li><div id=\"genstatus\" align=\"center\">Done. See below</div><li>
       </ul>";

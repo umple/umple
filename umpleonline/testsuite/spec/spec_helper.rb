@@ -1,7 +1,7 @@
 require 'rspec'
 require 'capybara'
 require 'capybara/dsl'
-require "capybara/cuprite"
+#require "capybara/cuprite"
 require 'selenium-webdriver'
 require 'test_utils.rb'
 require 'load_examples_helper.rb'
@@ -11,11 +11,11 @@ require 'page_load_helper.rb'
 require 'options_panel_helper.rb'
 require 'dynamic_layout_helper.rb'
 
-Capybara.register_driver :cuprite do |app|
-  Capybara::Cuprite::Driver.new(app, browser: :chrome)
+Capybara.register_driver :selenium_chrome do |app|
+  Capybara::Selenium::Driver.new(app, :browser => :chrome)
 end
 
-Capybara.default_driver = :cuprite
+Capybara.default_driver = :selenium_chrome
 
 Capybara.app_host = TestUtils::HOST
 
