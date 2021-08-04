@@ -1,7 +1,6 @@
 require 'rspec'
 require 'capybara'
 require 'capybara/dsl'
-#require "capybara/cuprite"
 require 'selenium-webdriver'
 require 'test_utils.rb'
 require 'load_examples_helper.rb'

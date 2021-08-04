@@ -51,8 +51,8 @@ describe "Dynamic resizing of umpleonline layout ",
         error_message = "improper resize after canvas disable"
         
         expect(editor()[:top_left]).to eq([10, 143.265625])
-        expect(editor()[:size]).to eq([1396, 707])
-        expect(menu()[:top_left]).to eq([1411, 143.265625])
+        expect(editor()[:size]).to eq([1381, 693])
+        expect(menu()[:top_left]).to eq([1396, 143.265625])
       end
 
       it "disables the text editor" do
@@ -61,7 +61,7 @@ describe "Dynamic resizing of umpleonline layout ",
         error_message = "improper resize after editor disable"
 
         expect(canvas()[:top_left]).to eq([194, 140.328125])
-        expect(canvas()[:size]).to eq([1396, 707])
+        expect(canvas()[:size]).to eq([1381, 693])
         expect(menu()[:top_left]).to eq([10, 140.328125])
       end
 
@@ -70,9 +70,9 @@ describe "Dynamic resizing of umpleonline layout ",
         toggle_element_visibility(:menu)
 
         expect(canvas()[:top_left]).to eq([707, 143.265625]) 
-        expect(canvas()[:size]).to eq([883, 707])
+        expect(canvas()[:size]).to eq([868, 693])
         expect(editor()[:top_left]).to eq([10, 143.265625])
-        expect(editor()[:size]).to eq([692, 707])
+        expect(editor()[:size]).to eq([692, 693])
       end
 
       it "increases the canvas width" do
@@ -106,7 +106,7 @@ describe "Dynamic resizing of umpleonline layout ",
         
         resize_left(:canvas, resize_amount)
 
-        expected = {size:[508, 707], top_left:[10, 143.265625]}
+        expected = {size:[284, 693], top_left:[10, 143.265625]}
       
         expect(editor()).to eq(expected)
 
@@ -143,7 +143,7 @@ describe "Dynamic resizing of umpleonline layout ",
         wait_for_loading
         resize_right(:canvas, resize_amount)
 
-        expected = {size:[883, 707], top_left:[707, 143.265625]}
+        expected = {size:[420, 693], top_left:[1155, 143.265625]}
       
         expect(canvas()).to eq(expected)
       end
@@ -179,7 +179,7 @@ describe "Dynamic resizing of umpleonline layout ",
         
         resize_right(:editor, resize_amount)
 
-        expected = {size:[883, 707], top_left:[707, 143.265625]}
+        expected = {size:[420, 693], top_left:[1155, 143.265625]}
       
         expect(canvas()).to eq(expected)
       end
@@ -215,7 +215,7 @@ describe "Dynamic resizing of umpleonline layout ",
         
         resize_left(:editor, resize_amount)
 
-        expected = {size:[508, 707], top_left:[10, 143.265625]}
+        expected = {size:[284, 693], top_left:[10, 143.265625]}
       
         expect(editor()).to eq(expected)
       end
@@ -300,11 +300,11 @@ describe "Dynamic resizing of umpleonline layout ",
         find(:css, "#buttonShowHideCanvas").click
         error_message = "improper resize after canvas enable"
 
-        expect(canvas()[:top_left]).to eq([1170, 143.265625])
-        expect(canvas()[:size]).to eq([420, 707])
-        expect(menu()[:top_left]).to eq([986, 143.265625])
+        expect(canvas()[:top_left]).to eq([1155, 143.265625])
+        expect(canvas()[:size]).to eq([420, 693])
+        expect(menu()[:top_left]).to eq([971, 143.265625])
         expect(editor()[:top_left]).to eq([10, 143.265625])
-        expect(editor()[:size]).to eq([971, 707])
+        expect(editor()[:size]).to eq([956, 693])
       end
 
       it "disables the text editor" do
@@ -321,7 +321,7 @@ describe "Dynamic resizing of umpleonline layout ",
         toggle_element_visibility(:menu)
 
         expect(editor()[:top_left]).to eq([10, 143.265625])
-        expect(editor()[:size]).to eq([1580, 707])
+        expect(editor()[:size]).to eq([1565, 693])
       end
 
       it "attempts to resize the text editor horizontally" do
@@ -413,10 +413,10 @@ describe "Dynamic resizing of umpleonline layout ",
         error_message = "improper resize after editor enable"
 
         expect(canvas()[:top_left]).to eq([483, 143.265625])
-        expect(canvas()[:size]).to eq([1107, 710])
+        expect(canvas()[:size]).to eq([1092, 696])
         expect(menu()[:top_left]).to eq([299, 143.265625])
         expect(editor()[:top_left]).to eq([10, 143.265625])
-        expect(editor()[:size]).to eq([284, 710])
+        expect(editor()[:size]).to eq([284, 696])
       end
 
        it "disables the menu" do
@@ -425,7 +425,7 @@ describe "Dynamic resizing of umpleonline layout ",
         toggle_element_visibility(:menu)
 
         expect(canvas()[:top_left]).to eq([10, 140.328125])
-        expect(canvas()[:size]).to eq([1580, 710])
+        expect(canvas()[:size]).to eq([1565, 696])
       end
 
       it "attempts to resize the canvas horizontally" do
@@ -509,7 +509,7 @@ describe "Dynamic resizing of umpleonline layout ",
         toggle_element_visibility(:canvas)
 
         expect(editor()[:top_left]).to eq([10, 143.265625])
-        expect(editor()[:size]).to eq([1580, 707])
+        expect(editor()[:size]).to eq([1565, 693])
       end
 
       it "disables the text editor" do
@@ -518,7 +518,7 @@ describe "Dynamic resizing of umpleonline layout ",
         toggle_element_visibility(:editor)
 
         expect(canvas()[:top_left]).to eq([10, 140.328125])
-        expect(canvas()[:size]).to eq([1580, 707])
+        expect(canvas()[:size]).to eq([1565, 693])
       end
 
       it "enables the menu" do
@@ -527,10 +527,10 @@ describe "Dynamic resizing of umpleonline layout ",
         toggle_element_visibility(:menu)
 
         expect(editor()[:top_left]).to eq([10, 143.265625])
-        expect(editor()[:size]).to eq([324, 707])
+        expect(editor()[:size]).to eq([324, 693])
         expect(menu()[:top_left]).to eq([339, 143.265625])
         expect(canvas()[:top_left]).to eq([523, 143.265625])
-        expect(canvas()[:size]).to eq([1067, 707])
+        expect(canvas()[:size]).to eq([1052, 693])
       end
 
       it "resizes the canvas" do
@@ -669,7 +669,7 @@ describe "Dynamic resizing of umpleonline layout ",
         error_message = "improper resize after editor disable"
 
         expect(canvas()[:top_left]).to eq([194, 140.328125])
-        expect(canvas()[:size]).to eq([696, 411])
+        expect(canvas()[:size]).to eq([711, 357])
         expect(menu()[:top_left]).to eq([10, 140.328125])
       end
 
@@ -678,10 +678,10 @@ describe "Dynamic resizing of umpleonline layout ",
         
         toggle_element_visibility(:menu)
 
-        expect(canvas()[:top_left]).to eq([10, 559.65625])
-        expect(canvas()[:size]).to eq([881, 412])
+        expect(canvas()[:top_left]).to eq([10, 505.65625])
+        expect(canvas()[:size]).to eq([896, 358])
         expect(editor()[:top_left]).to eq([10, 143.265625])
-        expect(editor()[:size]).to eq([880, 411])
+        expect(editor()[:size]).to eq([895, 357])
       end
 
       context "using the text editor's resize handle" do
@@ -853,8 +853,8 @@ describe "Dynamic resizing of umpleonline layout ",
         find(:css, "#buttonShowHideCanvas").click
         error_message = "improper resize after canvas enable"
 
-        expect(canvas()[:top_left]).to eq([10, 559.65625])
-        expect(canvas()[:size]).to eq([881, 412])
+        expect(canvas()[:top_left]).to eq([10, 505.65625])
+        expect(canvas()[:size]).to eq([896, 358])
         expect(menu()).to eq(original_sizes[:menu])
         expect(editor()).to eq(original_sizes[:editor])
       end
@@ -873,7 +873,7 @@ describe "Dynamic resizing of umpleonline layout ",
         toggle_element_visibility(:menu)
 
         expect(editor()[:top_left]).to eq([10, 143.265625])
-        expect(editor()[:size]).to eq([880, 411])
+        expect(editor()[:size]).to eq([895, 357])
       end
 
       context "using the text editor's resize handle" do
@@ -992,11 +992,11 @@ describe "Dynamic resizing of umpleonline layout ",
         find(:css, "#buttonShowHideTextEditor").click
         error_message = "improper resize after editor enable"
 
-        expect(canvas()[:top_left]).to eq([10, 559.65625])
-        expect(canvas()[:size]).to eq([881, 412])
-        expect(menu()[:top_left]).to eq([711, 143.265625])
+        expect(canvas()[:top_left]).to eq([10, 505.65625])
+        expect(canvas()[:size]).to eq([896, 358])
+        expect(menu()[:top_left]).to eq([726, 143.265625])
         expect(editor()[:top_left]).to eq([10, 143.265625])
-        expect(editor()[:size]).to eq([696, 411])
+        expect(editor()[:size]).to eq([711, 357])
       end
 
       it "disables the menu" do
@@ -1005,7 +1005,7 @@ describe "Dynamic resizing of umpleonline layout ",
         toggle_element_visibility(:menu)
 
         expect(canvas()[:top_left]).to eq([10, 140.328125])
-        expect(canvas()[:size]).to eq([880, 411]),error_message
+        expect(canvas()[:size]).to eq([895, 357])
       end
 
       context "using the canvas's resize handle" do
@@ -1117,7 +1117,7 @@ describe "Dynamic resizing of umpleonline layout ",
         toggle_element_visibility(:canvas)
 
         expect(editor()[:top_left]).to eq([10, 143.265625])
-        expect(editor()[:size]).to eq([880, 411])
+        expect(editor()[:size]).to eq([895, 357])
       end
 
       it "disables the text editor" do
@@ -1126,7 +1126,7 @@ describe "Dynamic resizing of umpleonline layout ",
         toggle_element_visibility(:editor)
 
         expect(canvas()[:top_left]).to eq([10, 140.328125])
-        expect(canvas()[:size]).to eq([880, 411])
+        expect(canvas()[:size]).to eq([895, 357])
       end
 
       it "enables the menu" do
@@ -1135,10 +1135,10 @@ describe "Dynamic resizing of umpleonline layout ",
         toggle_element_visibility(:menu)
 
         expect(editor()[:top_left]).to eq([10, 143.265625])
-        expect(editor()[:size]).to eq([696, 411])
-        expect(menu()[:top_left]).to eq([711, 143.265625])
-        expect(canvas()[:top_left]).to eq([10, 559.65625])
-        expect(canvas()[:size]).to eq([881, 412])
+        expect(editor()[:size]).to eq([711, 357])
+        expect(menu()[:top_left]).to eq([726, 143.265625])
+        expect(canvas()[:top_left]).to eq([10, 505.65625])
+        expect(canvas()[:size]).to eq([896, 358])
       end
 
       it "increases the height of the text editor" do

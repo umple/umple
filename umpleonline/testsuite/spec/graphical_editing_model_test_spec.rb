@@ -190,8 +190,6 @@ describe "Graphical editing of diagram: model consistency",
           #Ensure the associations existed before attempting to delete them
           find(:css, "#umpleAssociation_0")
           find(:css, "#umpleAssociation_1")
-          find(:css, '#Student').click
-          wait_for_loading
           find(:css, '#Student').native.send_keys(:delete)
         end
 

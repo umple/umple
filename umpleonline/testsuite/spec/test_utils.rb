@@ -62,23 +62,11 @@ module TestUtils
   def click_and_drag_to_position(capybara_element, xLoc, yLoc)
     wait_for_loading
     execute_script("jQuery('body').append('<div id=\"tempPositionMarker\" style=\"position:absolute; left:#{xLoc}px; top:#{yLoc}px; width: 0px; height: 0px;\"></div>');")
-    wait_for_loading_for(15)
-    click_and_drag(capybara_element,  find(:css, "#tempPositionMarker"))
+    wait_for_loading
+    target = find(:css,"#tempPositionMarker", visible: :all)
+    capybara_element.drag_to(target)
     execute_script("jQuery('#tempPositionMarker').remove();")
     wait_for_loading
-  end
-
-  #This method was added as cuprite doesn't have a native drag_to method
-  #It will exactly reproduce drag to method
-  def click_and_drag(from, to)
-    x1, y1 = from.native.node.find_position
-    x2, y2 = to.native.node.find_position
-
-    mouse = page.driver.browser.mouse
-    mouse.move(x: x1, y: y1)
-    mouse.down
-    mouse.move(x: x2, y: y2)
-    mouse.up
   end
 
   # A direct way to send modified keys to particular elements. This is only used
