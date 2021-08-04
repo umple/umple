@@ -54,7 +54,6 @@ describe "Example loading",
   describe "Loading composite structure diagrams" do
     ExampleLoaderHelper::COMPOSITE_STRUCTURES_EXAMPLES.each_key do |example|
       it "loads #{example}" do
-        check_comp_structure_example(example)
         pending("distinct elements to check against in the diagram")
         fail
       end

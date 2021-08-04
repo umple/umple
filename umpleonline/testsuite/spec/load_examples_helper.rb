@@ -97,23 +97,26 @@ COMPOSITE_STRUCTURES_EXAMPLES = {
   end
 
   def check_class_example(example_name)
+    load_page
     select_option_by_value("#inputExampleType", "cdModels")
     select_option_by_value("#inputExample", example_name)
 
-    wait_for_loading
+    wait_for_loading_for(150)
+    
 
     #include is used here because the website adds the model delimiter to the
     #end of the code, which is not present in the source file for the diagram
-    expect(evaluate_script("Page.getRawUmpleCode()"))
-      .to include(get_example_contents(example_name))
+    expect(evaluate_script("Page.getUmpleCode()"))
+      .to include(get_example_contents(example_name).split("//$?[End_of_model]$?")[0])
    
 
     CLASS_EXAMPLES[example_name].each do |element|
-      expect(find(:css, "#umpleCanvas")).to have_selector("##{element}")
+      expect(find(:css, "#umpleCanvas")).to have_selector("##{element}", wait:10)
     end
   end
 
   def check_state_example(example_name)
+    load_page
     select_option_by_value("#inputExampleType", "smModels")
     select_option_by_value("#inputExample2", example_name)
     
@@ -121,24 +124,25 @@ COMPOSITE_STRUCTURES_EXAMPLES = {
     
     #include is used here because the website adds the model delimiter to the
     #end of the code, which is not present in the source file for the diagram
-    expect(get_example_contents(example_name))
-      .to include(evaluate_script("Page.getRawUmpleCode()"))
+    expect(evaluate_script("Page.getUmpleCode()").split("//$?[End_of_model]$?")[0])
+    .to eq(get_example_contents(example_name).split("//$?[End_of_model]$?")[0])
 
     STATE_EXAMPLES[example_name].each do |element|
-      expect(find(:css, "#umpleCanvas")).to have_selector("##{element}")
+      expect(find(:css, "#umpleCanvas")).to have_selector("##{element}", wait:10)
     end
   end
 
   def check_comp_structure_example(example_name)
+    load_page
     select_option_by_value("#inputExampleType", "structureModels")
     select_option_by_value("#inputExample3", example_name)
 
     wait_for_loading_for(15)
-    expect(get_example_contents(example_name))
-      .to include(evaluate_script("Page.getRawUmpleCode()"))
+    expect(evaluate_script("Page.getUmpleCode()").split("//$?[End_of_model]$?")[0])
+    .to eq(get_example_contents(example_name).split("//$?[End_of_model]$?")[0])
   
     COMPOSITE_STRUCTURES_EXAMPLES[example_name].each do |element|
-      expect(find(:css, "#umpleCanvas")).to have_selector("##{element}")
+      expect(find(:css, "#umpleCanvas")).to have_selector("##{element}", wait:10)
     end
   end
 

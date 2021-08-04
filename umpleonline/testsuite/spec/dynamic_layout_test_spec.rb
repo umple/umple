@@ -13,7 +13,7 @@ describe "Dynamic resizing of umpleonline layout ",
   context "using a large screen layout" do
     before(:all) do
       setup_large
-      page.driver.resize_window_to(page.driver.current_window_handle,1600, 900) 
+      Capybara.page.driver.browser.manage.window.resize_to(1608, 1017) 
     end
 
     context "with the canvas, text editor and menu visible" do
@@ -26,6 +26,7 @@ describe "Dynamic resizing of umpleonline layout ",
 
       it "just loads the page" do
         if tabs then find(:css, '#toggleTabsButton').click end
+        wait_for_loading
         actual = {canvas:{size:original_sizes[:canvas][:size],
                           top_left:original_sizes[:canvas][:top_left]},
                   menu:{size:original_sizes[:menu][:size],
@@ -621,7 +622,7 @@ describe "Dynamic resizing of umpleonline layout ",
   context "using a small screen layout" do
     before(:all) do
       setup_small
-      page.driver.resize_window_to(page.driver.current_window_handle,900, 1024)
+      Capybara.page.driver.browser.manage.window.resize_to(938, 1047)
     end
 
     context "with the canvas, text editor and menu visible" do
@@ -1225,12 +1226,12 @@ describe "Dynamic resizing of umpleonline layout ",
   describe "switching between large and small screen layouts" do
     context "switching from large screen to small screen" do
       before(:each) do
-        page.driver.resize_window_to(page.driver.current_window_handle,1600, 900) 
+        Capybara.page.driver.browser.manage.window.resize_to(1608, 1017) 
         load_umple_with_option("")
       end
 
       it "changes the window size" do
-        page.driver.resize_window_to(page.driver.current_window_handle,900, 1024)
+        Capybara.page.driver.browser.manage.window.resize_to(938, 1047)
 
         actual = {canvas: canvas(), menu: menu(), editor: editor()}
 
@@ -1253,12 +1254,12 @@ describe "Dynamic resizing of umpleonline layout ",
 
     context "switching from small screen to large screen" do
       before(:each) do
-        page.driver.resize_window_to(page.driver.current_window_handle,900, 1024)
+        Capybara.page.driver.browser.manage.window.resize_to(938, 1047)
         load_umple_with_option("")
       end
 
       it "changes the window size" do
-        page.driver.resize_window_to(page.driver.current_window_handle,1600, 900) 
+        page.driver.resize_window_to(page.driver.current_window_handle,1608, 1017) 
 
         actual = {canvas: canvas(), menu: menu(), editor: editor()}
 
