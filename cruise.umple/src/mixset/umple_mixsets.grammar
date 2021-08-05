@@ -9,7 +9,7 @@
 // See user manual page [*BasicMixsets*]
 
 mixsetDefinition : mixset [mixsetName] ( [[mixsetInnerContent]] | [[mixsetInlineDefinition]] )
-mixsetInnerContent- : { [[extraCode]] }
+mixsetInnerContent- : { [[extraCode]] || [[requirement]] }
  
 mixsetInlineDefinition- : ( [entityType] [entityName] ( [[mixsetInnerContent]] | [entityOneElement] ) | [oneElement] )
 
@@ -32,3 +32,6 @@ requireTerminal :  [~targetMixsetName] | [[multiplicityTerminal]]
 
 multiplicityTerminal- : [[multiplicity]] of { [~targetMixsetName] (, [~targetMixsetName] )* }
 
+//For requirement statements
+requirement : req [reqIdentifier] [=language:md]? { [**reqContent] }
+implementReq : implements [reqIdentifier] ;
