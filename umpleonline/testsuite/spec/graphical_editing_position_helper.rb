@@ -63,6 +63,7 @@ module DiagramEditingPositionHelper
     class_two_end += ":" + role_two unless role_two.nil?
 
     association_class_name = class_one_end + "__" + class_two_end
+    wait_for_loading_for(30)
     find(:css, ".#{association_class_name}")
     evaluate_script("jQuery('.#{association_class_name}').click();")
     association_id = evaluate_script("jQuery('.#{association_class_name}').prop('id')")
@@ -355,11 +356,11 @@ module DiagramEditingPositionHelper
     end
   end
 
-  RSpec::Matchers.define :have_code_position do |expected|
+  RSpec::Matchers.define :have_code_position_within_anchor_size do |expected|
     match do |actual|
       begin
-        actual[:position][0] == expected[:position][0] &&
-        actual[:position][1] == expected[:position][1]
+        actual[:position][0] >= expected[:position][0]-ANCHOR_SIZE && actual[:position][0] <= expected[:position][0]+ANCHOR_SIZE &&
+        actual[:position][1] >= expected[:position][1]-ANCHOR_SIZE && actual[:position][1] <= expected[:position][1]+ANCHOR_SIZE 
       rescue TypeError
         actual[:position][0] == expected[0] &&
         actual[:position][1] == expected[1]

@@ -111,16 +111,19 @@ module TestUtils
   def switch_to_saveandreset_panel
     find(:css, "#ui-id-1").click
     loop until all(:css, "div.ui-accordion-content-active").length == 1
+    wait_for_loading_for(30)
   end
 
   def switch_to_tools_panel
     find(:css, "#ui-id-3").click
     loop until all(:css, "div.ui-accordion-content-active").length == 1
+    wait_for_loading_for(30)
   end
 
   def switch_to_options_panel
     find(:css, "#ui-id-5").click
     loop until all(:css, "div.ui-accordion-content-active").length == 1
+    wait_for_loading_for(30)
   end
 
   # Methods used on configuration. They set some globally used constants.

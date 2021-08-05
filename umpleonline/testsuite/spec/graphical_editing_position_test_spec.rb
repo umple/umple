@@ -73,15 +73,15 @@ describe "Graphical editing of diagram: positional consistency",
     it "adds an umpleClass at a particular position" do
       load_page
       wait_for_loading
+      find(:css, '#umpleCanvas').click
       find(:css, '#umpleCanvas').native.send_keys("c")
       expected_position = [55, 135]
       
       find("#umpleCanvas").click(x: expected_position[0], y:expected_position[1])
-          
-      wait_for_loading_for(10)
-
+      
+      loop until page.has_selector?("#NewClass", wait: 30)
       expect(class_diagram_position_of("NewClass")).to have_position([expected_position[0]-1, expected_position[1]-2])
-      expect(class_code_position_of("NewClass")).to have_code_position([expected_position[0], expected_position[1]-1])
+      expect(class_code_position_of("NewClass")).to have_code_position_within_anchor_size([expected_position[0], expected_position[1]-1])
     end
   end
 
@@ -105,7 +105,7 @@ describe "Graphical editing of diagram: positional consistency",
       actual_pos = association_diagram_position_of(
         "Student", "Student", "roleName")[:end_two]
 
-      expect(code_pos).to have_code_position([0, 22])
+      expect(code_pos).to have_code_position_within_anchor_size([0, 22])
       expect(actual_pos).to have_position_within_anchor_size([99, 51])
     end
 
@@ -125,7 +125,7 @@ describe "Graphical editing of diagram: positional consistency",
       actual_pos = association_diagram_position_of(
         "Student", "Student", "roleName")[:end_two]
 
-      expect(code_pos).to have_code_position([54, 0])
+      expect(code_pos).to have_code_position_within_anchor_size([54, 0])
       expect(actual_pos).to have_position_within_anchor_size([153, 29])
     end
 
@@ -143,7 +143,7 @@ describe "Graphical editing of diagram: positional consistency",
       actual_pos = association_diagram_position_of(
         "Student", "Student", "roleName")[:end_two]
 
-      expect(code_pos).to have_code_position([109, 22])
+      expect(code_pos).to have_code_position_within_anchor_size([109, 22])
       expect(actual_pos).to have_position_within_anchor_size([209, 51])
     end
 
@@ -161,7 +161,7 @@ describe "Graphical editing of diagram: positional consistency",
       actual_pos = association_diagram_position_of(
         "Student", "Student", "roleName")[:end_two]
 
-      expect(code_pos).to have_code_position([54, 39])
+      expect(code_pos).to have_code_position_within_anchor_size([54, 39])
       expect(actual_pos).to have_position_within_anchor_size([151, 67])
     end
   end
@@ -188,7 +188,7 @@ describe "Graphical editing of diagram: positional consistency",
       end
 
       expect(anchor_pos).to have_position_within_anchor_size([135, 147])
-      expect(anchor_code_pos).to have_code_position([0, 19])
+      expect(anchor_code_pos).to have_code_position_within_anchor_size([0, 19])
     end
 
     it "snaps the association anchor to the top edge" do
@@ -209,7 +209,7 @@ describe "Graphical editing of diagram: positional consistency",
       end
 
       expect(anchor_pos).to have_position_within_anchor_size([192, 129])
-      expect(anchor_code_pos).to have_code_position([54, 0])
+      expect(anchor_code_pos).to have_code_position_within_anchor_size([54, 0])
     end
 
     it "snaps the association anchor to the right edge" do
@@ -230,7 +230,7 @@ describe "Graphical editing of diagram: positional consistency",
       end
 
       expect(anchor_pos).to have_position_within_anchor_size([244, 147])
-      expect(anchor_code_pos).to have_code_position([110, 19])
+      expect(anchor_code_pos).to have_code_position_within_anchor_size([110, 19])
     end
 
     it "snaps the association anchor to the bottom edge" do
@@ -251,7 +251,7 @@ describe "Graphical editing of diagram: positional consistency",
       end
 
       expect(anchor_pos).to have_position_within_anchor_size([189, 167])
-      expect(anchor_code_pos).to have_code_position([54, 40])
+      expect(anchor_code_pos).to have_code_position_within_anchor_size([54, 40])
     end
   end
 
@@ -280,7 +280,7 @@ describe "Graphical editing of diagram: positional consistency",
                                             expected_position[1])
         wait_for_loading
         expect(class_diagram_position_of("Student")).to have_position([expected_position[0], expected_position[1]-1]) 
-        expect(class_code_position_of("Student")).to have_code_position([expected_position[0]+1, expected_position[1]]) 
+        expect(class_code_position_of("Student")).to have_code_position_within_anchor_size([expected_position[0]+1, expected_position[1]]) 
       end
     end
 

@@ -113,6 +113,7 @@ module LargeScreenHelper
     case element
     when :canvas
       find(:css, "#umpleCanvasColumn").hover
+      wait_for_loading
       within(find(:css, "#umpleCanvasColumn")) do
         capybara_element = find(:css, ".ui-resizable-w")
       end
@@ -120,6 +121,7 @@ module LargeScreenHelper
                                                            ".ui-resizable-w")
     when :editor
       find(:css, "#textEditorColumn").hover
+      wait_for_loading
       within(find(:css, "#textEditorColumn")) do
         capybara_element = find(:css, ".ui-resizable-e")
       end
@@ -141,6 +143,7 @@ module LargeScreenHelper
     case element
     when :canvas
       find(:css, "#umpleCanvasColumn").hover
+      wait_for_loading
       within(find(:css, "#umpleCanvasColumn")) do
         capybara_element = find(:css, ".ui-resizable-w")
       end
@@ -148,6 +151,7 @@ module LargeScreenHelper
                                                            ".ui-resizable-w")
     when :editor
       find(:css, "#textEditorColumn").hover
+      wait_for_loading
       within(find(:css, "#textEditorColumn")) do
         capybara_element = find(:css, ".ui-resizable-e")
       end
@@ -169,6 +173,7 @@ module LargeScreenHelper
     case element
     when :app
       find(:css, "#mainApplication").hover
+      wait_for_loading
       within(find(:css, "#mainApplication")) do
         capybara_element = find(:css, ".ui-resizable-s")
       end
@@ -190,6 +195,7 @@ module LargeScreenHelper
     case element
     when :app
       find(:css, "#mainApplication").hover
+      wait_for_loading
       within(find(:css, "#mainApplication")) do
         capybara_element = find(:css, ".ui-resizable-s")
       end
@@ -221,6 +227,7 @@ module SmallScreenHelper
     case element
     when :editor
       find(:css, "#textEditorColumn").hover
+      wait_for_loading
       within(find(:css, "#textEditorColumn")) do
         capybara_element = find(:css, ".ui-resizable-s")
       end
@@ -256,6 +263,7 @@ module SmallScreenHelper
     case element
     when :editor
       find(:css, "#textEditorColumn").hover
+      wait_for_loading
       within(find(:css, "#textEditorColumn")) do
         capybara_element = find(:css, ".ui-resizable-s")
       end

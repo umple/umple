@@ -62,7 +62,7 @@
   </target>
 
   <target name="testUmpleOnlineMain">
-    <property name="hostName" value="https://cruise.umple.org/umpleonline/" />
+    <property name="hostName" value="https://cruise.umple.org/test/umpleonline/" />
     <property name="env" value=""/>
     <antcall target="doWebsiteTests" />
   </target>
@@ -77,6 +77,15 @@
 
   <target name="doWebsiteTests" depends="initTests">
     <echo>Testing ${hostName}umple.php</echo>
+    <if>
+    <equals arg1="${env}" arg2="no-headless"/>
+    <then>
+    <echo>Running the tests on a proper browser </echo>
+    </then>
+    <else>
+    <echo>Running the tests on a headless browser</echo>
+    </else>
+    </if>
 
     <antcallback target="runRspec" return="test.result" />
 
