@@ -1689,11 +1689,11 @@ Action.keyboardShortcut = function(event)
   	DiagramEdit.classDeleted(document.activeElement.id);
   	event.preventDefault();
   }
-  else if ((shortcut == 8 || shortcut == 46) && jQuery("#umpleAssociation_0").is(":focus")){
+  else if ((shortcut == 8 || shortcut == 46) && (jQuery(".untracedAssociation").is(":focus")||jQuery(".redTracedAssociation").is(":focus"))){
   	DiagramEdit.associationDeleted(document.activeElement.id);
   	event.preventDefault();
   }
-  else if ((shortcut == 8 || shortcut == 46) && jQuery("#Mentor_generalization").is(":focus")){
+  else if ((shortcut == 8 || shortcut == 46) && jQuery(".umpleGeneralization").is(":focus")){
   	DiagramEdit.generalizationDeleted(document.activeElement.id);
   	event.preventDefault();
   }

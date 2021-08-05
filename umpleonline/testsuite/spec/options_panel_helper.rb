@@ -36,7 +36,6 @@ module OptionsPanelTestHelper
   end
   
   def input_model_text(new_text)
-    find(:css, "#topTextEditor").click
-    find(:css, "#topTextEditor").send_keys "#{new_text}"
+    execute_script("Page.setUmpleCode(\"#{new_text}\")")
   end
 end
