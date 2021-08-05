@@ -129,6 +129,10 @@ module TestUtils
     const_set(:HOST,  host_name)
   end
 
+  def self.set_testenv(env= "")
+    const_set(:ENV, env)
+  end
+
   def self.set_example_directories(umpleonline_dir = "../../umpleonline/")
     const_set(:EXAMPLE_DIRECTORY, umpleonline_dir + "umplibrary/")
     const_set(:TEST_EXAMPLE_DIRECTORY, umpleonline_dir + "testsuite/spec/test_examples/")
@@ -145,6 +149,7 @@ end
 # the ant build file
 host_name = ""
 umpleonline_dir = ""
+test_env = ""
 
 begin
   simple_configs = open("spec/temp_config.txt", 'r').readlines()
@@ -155,6 +160,8 @@ begin
       host_name = config_pair[1]
     elsif config_pair[0] =~ /umpleonline_directory/
       umpleonline_dir = config_pair[1]
+    elsif config_pair[0] =~ /testing_env/
+      test_env = config_pair[1]
     end
   end
 rescue Errno::ENOENT
@@ -169,5 +176,10 @@ ensure
     TestUtils.set_example_directories
   else
     TestUtils.set_example_directories(umpleonline_dir)
+  end
+  if test_env == "" or test_env.nil?
+    TestUtils.set_testenv
+  else
+    TestUtils.set_testenv test_env
   end
 end

@@ -17,6 +17,7 @@ describe "Graphical editing of diagram: model consistency",
       it "adds an umpleClass" do
         wait_for_loading
         find(:css, '#umpleCanvas').native.send_key('c')
+        wait_for_loading
         find(:css, '#umpleCanvas').click
         wait_for_loading
         verify_diagram_contains("#NewClass")
@@ -48,7 +49,6 @@ describe "Graphical editing of diagram: model consistency",
         before(:each) {get_canvas_focus}
         it "deletes an umpleClass" do
           within("div#umpleCanvas") {
-            find(:css, '#Student').click
             find(:css, '#Student').native.send_keys(:delete)}
 
           wait_for_loading
@@ -62,7 +62,6 @@ describe "Graphical editing of diagram: model consistency",
         before(:each) {get_canvas_focus}
         it "deletes an umpleClass" do
           within("div#umpleCanvas") {
-            find(:css, '#Student').click
             find(:css, '#Student').native.send_key(:backspace)}
 
           wait_for_loading
@@ -164,7 +163,6 @@ describe "Graphical editing of diagram: model consistency",
           
           #Ensure the association existed before attempting to delete it
           find(:css, "#umpleAssociation_0")
-          find(:css, "#Student").click
           find(:css, "#Student").native.send_keys(:delete)
         end
 
@@ -420,8 +418,6 @@ describe "Graphical editing of diagram: model consistency",
         within("div#umpleCanvas") do
           #Ensure the association existed before attempting to delete it
           find(:css, "#umpleAssociation_0")
-          find(:css, '#Student').click
-          wait_for_loading
           find(:css, '#Student').native.send_keys(:delete)
         end
 
