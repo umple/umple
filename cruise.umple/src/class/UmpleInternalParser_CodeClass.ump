@@ -212,7 +212,10 @@ class UmpleInternalParser
       setFailedPosition(t.getPosition(),1502,t.getValue(),t.getSubToken("reqIdentifier").getValue());
     }
     else{
+      //if () //no langguage
       // translate into comment
+      Comment reqComment = new Comment(associatedRequirements.get(t.getSubToken("reqIdentifier").getValue()).get(0).toString());
+      lastComments.add(reqComment);
       System.out.println("------------ translated to comment");
     }
   }
