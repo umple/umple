@@ -616,12 +616,15 @@ describe "Graphical editing of diagram: model consistency",
     it "deletes many elements" do
       #delete NewClass2
       within("div#umpleCanvas") {find(:css, '#NewClass2').native.send_keys(:delete)}
+      wait_for_loading_for 30
 
       #delete umpleAssociation_4
       within("div#umpleCanvas") {find(:css, '#umpleAssociation_4').native.send_keys(:delete)}
+      wait_for_loading_for 30
 
       #delete NewClass
       within("div#umpleCanvas") {find(:css, '#NewClass').native.send_keys(:delete)}
+      wait_for_loading_for 30
 
       wait_for_loading_for 30
       verify_diagram_contains "#NewClass1"

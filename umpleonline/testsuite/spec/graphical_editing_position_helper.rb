@@ -357,19 +357,25 @@ module DiagramEditingPositionHelper
   end
 
   RSpec::Matchers.define :have_code_position_within_anchor_size do |expected|
-    match do |actual|
+    
       begin
-        actual[:position][0] >= expected[:position][0]-ANCHOR_SIZE && actual[:position][0] <= expected[:position][0]+ANCHOR_SIZE &&
-        actual[:position][1] >= expected[:position][1]-ANCHOR_SIZE && actual[:position][1] <= expected[:position][1]+ANCHOR_SIZE 
+        x_range = [expected[:position][0]-3, expected[:position][0]+3]
+        y_range = [expected[:position][1]-3,  expected[:position][1]+3]
       rescue TypeError
-        actual[:position][0] == expected[0] &&
-        actual[:position][1] == expected[1]
+        x_range = [expected[0]-3, expected[0]+3]
+        y_range = [expected[1]-3, expected[1]+3]           
       end
-    end
+
+      match do |actual|
+        actual[:position][0] >= x_range[0] && 
+        actual[:position][0] <= x_range[1] &&
+        actual[:position][1] >= y_range[0] && 
+        actual[:position][1] <= y_range[1]
+      end
 
     failure_message do |actual|
       "expected code position to be #{expected}\nbut actual code position" +
-      " was #{actual}"
+      " was #{actual[:position]}"+ " with a delta of 3" 
     end
   end
 end

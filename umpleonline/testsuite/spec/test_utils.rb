@@ -69,9 +69,18 @@ module TestUtils
     wait_for_loading
   end
 
-  # A direct way to send modified keys to particular elements. This is only used
-  # because the capybara/poltergeist/phantomjs stack lacks a way of sending 
-  # modified keys (such as ctrl-t).
+  # This function has been implemented to set the document size
+  # (excluding the browser styling) using javascript/jQuery
+
+  def set_viewport_size(width, height)
+    w = evaluate_script("jQuery(window).outerWidth() - jQuery(window).innerWidth()")
+    h = evaluate_script("jQuery(window).outerHeight() - jQuery(window).innerHeight()")
+    Capybara.current_window.resize_to(width+w, height+h)
+  end
+
+
+  # This function has been implemented for the driver to differentiate
+  # between MacOs and other operating systems
 
   def send_modified_key(element_selector, key, *meta)
     wait_for_loading

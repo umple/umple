@@ -17,13 +17,16 @@ end
 
 Capybara.register_driver :headless_chrome do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w(headless disable-gpu no-sandbox disable-dev-shm-usage) }
+    chromeOptions: { args: %w(headless disable-gpu) }
   )
 
   Capybara::Selenium::Driver.new app,
     browser: :chrome,
     desired_capabilities: capabilities
 end
+
+# DO NOT RUN THESE TESTS USING THE 'NO-HEADLESS' OPTION 
+# UNLESS FOR DEBUGGING PURPOSES 
 
 Capybara.default_driver = TestUtils::ENV=="no-headless"? :selenium_chrome : :headless_chrome
 
