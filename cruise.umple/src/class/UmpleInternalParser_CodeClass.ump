@@ -60,14 +60,11 @@ class UmpleInternalParser
    */
   private void analyzeClassToken(Token t, int analysisStep)
   {
-    System.out.println(">"+t);
     if (analysisStep != 2)
     {
       shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
       return;
     }
-
-    System.out.println("2_"+t);
 
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
@@ -89,11 +86,9 @@ class UmpleInternalParser
       
     }
     else if (t.is("requirement")){
-      System.out.println("found requirement__");
       processRequirement(t);
     }
     else if (t.is("implementReq")){
-      System.out.println("implement found");
       processImplementReq(t);
     }
     else if (t.is("strictness") )
@@ -145,7 +140,6 @@ class UmpleInternalParser
     }    
     else if (t.is("inlineComment"))
     {
-      System.out.println("found here");
       analyzeComment(t, false);
       shouldConsumeComment = addToLastAttributeOrAssociation(t);
     }
@@ -198,7 +192,6 @@ class UmpleInternalParser
 
   private void processRequirement(Token t)
   {
-    System.out.println("processing requirement\n"+t);
     ArrayList<String> reqValue = new ArrayList<String>();
     reqValue.add(t.getSubToken("reqContent").getValue());
     if (t.getSubToken("language") != null){
@@ -212,11 +205,20 @@ class UmpleInternalParser
       setFailedPosition(t.getPosition(),1502,t.getValue(),t.getSubToken("reqIdentifier").getValue());
     }
     else{
-      //if () //no langguage
-      // translate into comment
-      Comment reqComment = new Comment(associatedRequirements.get(t.getSubToken("reqIdentifier").getValue()).get(0).toString());
-      lastComments.add(reqComment);
-      System.out.println("------------ translated to comment");
+      if (associatedRequirements.containsKey(t.getSubToken("reqIdentifier").getValue())){
+        String tokenValueString="";
+        if (t.getSubToken("language").getValue() == null){ // plain text
+          tokenValueString = associatedRequirements.get(t.getSubToken("reqIdentifier").getValue()).get(0).toString();
+        }
+        else if (t.getSubToken("language").getValue().equals("md")){ //markdown
+          tokenValueString = associatedRequirements.get(t.getSubToken("reqIdentifier").getValue()).get(0).toString();
+        }
+
+        if (!tokenValueString.equals("")){
+          Comment reqComment = new Comment(tokenValueString);
+          lastComments.add(reqComment);          
+        }
+      }
     }
   }
   
@@ -279,8 +281,6 @@ class UmpleInternalParser
       return;
     }
 
-    System.out.println("1_"+token);
-
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
     
@@ -299,7 +299,6 @@ class UmpleInternalParser
       processRequirement(token);
     }
     else if (token.is("implementReq")){
-      System.out.println("implement found");
       processImplementReq(token);
     }
     else if (token.is("inlineComment"))

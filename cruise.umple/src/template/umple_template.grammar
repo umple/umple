@@ -7,7 +7,7 @@
 // See user manual page: [*BasicTemplates*]
 
 templateDefinition : template [name] { [[templateContent]]* }
-templateContent- : [[comment]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[templateAttribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; |[[exception]]   | [[extraCode]]
+templateContent- : [[comment]] | [[implementReq]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[templateAttribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; |[[exception]]   | [[extraCode]]
 
 
 templateAttributeDefinition : [[templateName]] [[templateAttribute]]

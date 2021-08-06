@@ -12,11 +12,11 @@ stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]] | 
 activeDefinition : [=active] [[codeLangs]] [name]? [[moreCode]]+
 
 //Issue 148
-inlineStateMachine : [=queued]? [=pooled]? [~name] { ( [[comment]] | [[state]] | [[trace]] | [[mixsetDefinition]] | [=-||] | [[standAloneTransition]])* }
+inlineStateMachine : [=queued]? [=pooled]? [~name] { ( [[comment]] | [[implementReq]] | [[state]] | [[trace]] | [[mixsetDefinition]] | [=-||] | [[standAloneTransition]])* }
 referencedStateMachine : [name] as [definitionName] ( { [[extendedStateMachine]] } | ; )
 
 //Issue 547 and 148
-extendedStateMachine# : ( [[comment]] | [=changeType:+| - |- |*]? [[state]] | [[standAloneTransition]] )*
+extendedStateMachine# : ( [[comment]] | [[implementReq]] | [=changeType:+| - |- |*]? [[state]] | [[standAloneTransition]] )*
 
 // An enum is a state machine that has no events
 // 	stateName is prefixed with ~ to match alphanumeric names only.
@@ -26,7 +26,7 @@ enum : [~name:key] { [~stateName]? (, [~stateName])* }
 state : [=final]? [stateName] { [[stateInternal]]* } 
 
 //Issue 547 and 148
-stateInternal-# : [[comment]] | [=changeType:+| - |- |*]? [[stateEntity]] | [[standAloneTransition]] | [[concreteMethodDeclaration]] | [**extraCode]
+stateInternal-# : [[comment]] | [[implementReq]] | [=changeType:+| - |- |*]? [[stateEntity]] | [[standAloneTransition]] | [[concreteMethodDeclaration]] | [**extraCode]
 stateEntity- : [=-||] | [[mixsetDefinition]] | [[entryOrExitAction]] | [[autoTransition]] | [[transition]] | [[activity]] | [[state]] | [[trace]] | ;
 
 autoTransition : [[activity]]? [[autoTransitionBlock]]
