@@ -354,6 +354,8 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       expect(get_checkbox_state("#buttonShowStructureDiagram")).to eq(true)
       send_modified_key("#textEditorColumn", 'e', :control)
       expect(get_checkbox_state("#buttonShowEditableClassDiagram")).to eq(true)
+      send_modified_key("#textEditorColumn", "j", :control)
+      expect(get_checkbox_state("#buttonShowJointJSClassDiagram")).to eq(true)
     end
 
     it "cycles through the diagram types by clicking on the text labels" do
@@ -369,6 +371,8 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       expect(get_checkbox_state("#buttonShowStructureDiagram")).to eq(true)
       find(:css, "#labelShowEditableClassDiagram").click
       expect(get_checkbox_state("#buttonShowEditableClassDiagram")).to eq(true)
+      find(:css, "#labelShowJointJSClassDiagram").click
+      expect(get_checkbox_state("#buttonShowJointJSClassDiagram")).to eq(true)
     end
   end
 
@@ -411,20 +415,36 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
     end
 
+    it "switches from editable class diagram to jointjs class diagram and back" do
+      unless get_checkbox_state("#buttonShowEditableClassDiagram")
+        reset_page_to_options_with_model(example_file)
+      end
+
+      find(:css, "#buttonShowJointJSClassDiagram").click
+      wait_for_loading_for 40
+
+      within(find(:css, ".joint-viewport")) do
+        expect(find(:css, ".joint-element")["model-id"]).to eq("Student")
+      end
+
+      find(:css, "#buttonShowEditableClassDiagram").click
+      wait_for_loading_for(40)
+      expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
+    end
+
     it "switches from editable class diagram to compound structure diagram and back" do
-      pending("No compound structure diagram, still in development")
-        fail
-      #unless get_checkbox_state("#buttonShowEditableClassDiagram")
-       # reset_page_to_options_with_model(example_file)
-      #end
+  
+      unless get_checkbox_state("#buttonShowEditableClassDiagram")
+        reset_page_to_options_with_model(example_file)
+      end
       
-      #find(:css, "#buttonShowStructureDiagram").click
-      #wait_for_loading_for(40)
-      #expect(find(:css, "#umpleCanvas")).to have_selector("#svgCanvas")
+      find(:css, "#buttonShowStructureDiagram").click
+      wait_for_loading_for(40)
+      expect(find(:css, "#umpleCanvas")).to have_selector("#svgCanvas")
       
-      #find(:css, "#buttonShowEditableClassDiagram").click
-      #wait_for_loading_for(40) 
-      #expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
+      find(:css, "#buttonShowEditableClassDiagram").click
+      wait_for_loading_for(40) 
+      expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
     end
 
     it "switches from graphviz class diagram to graphviz state diagram and back" do
@@ -463,7 +483,28 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       end
     end
 
-    it "switches from graphviz state diagram to compound structure diagram and back" do
+    it "switches from graphviz class diagram to jointjs class diagram and back" do
+      unless get_checkbox_state("#buttonShowGvClassDiagram")
+        reset_page_to_options_with_model_and_option(example_file, 
+                                                    "diagramtype=GvClass")
+      end
+
+      find(:css, "#buttonShowJointJSClassDiagram").click
+      wait_for_loading_for 40
+
+      within(find(:css, ".joint-viewport")) do
+        expect(find(:css, ".joint-element")["model-id"]).to eq("Student")
+      end
+
+      find(:css, "#buttonShowGvClassDiagram").click
+      wait_for_loading_for(40)
+      within(find(:css, "#node1")) do
+        expect(page.evaluate_script("jQuery(\"#node1 title\").text()")).to eq("Student") 
+      end
+
+    end 
+
+    it "switches from graphviz state diagram to composite structure diagram and back" do
       unless get_checkbox_state("#buttonShowGvStateDiagram")
         reset_page_to_options_with_model_and_option(example_file, 
                                                     "diagramtype=GvState")
@@ -479,6 +520,45 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         expect(page.evaluate_script("jQuery(\"#node1 title\").text()")).to eq("start_Student_study") 
       end
     end
+
+    it "switches from graphviz state diagram to jointjs class diagram back" do
+      unless get_checkbox_state("#buttonShowGvStateDiagram")
+        reset_page_to_options_with_model_and_option(example_file, 
+                                                    "diagramtype=GvState")
+      end
+
+      find(:css, "#buttonShowJointJSClassDiagram").click
+      wait_for_loading_for 40
+
+      within(find(:css, ".joint-viewport")) do
+        expect(find(:css, ".joint-element")["model-id"]).to eq("Student")
+      end
+      
+      find(:css, "#buttonShowGvStateDiagram").click
+      wait_for_loading_for(40)
+      within(find(:css, "#node1")) do
+        expect(page.evaluate_script("jQuery(\"#node1 title\").text()")).to eq("start_Student_study") 
+      end
+    end
+
+    it "switches from jointjs class diagram to composite structure diagram and back" do
+        unless get_checkbox_state("#buttonShowStructureDiagram")
+          reset_page_to_options_with_model_and_option(example_file, 
+                                                      "diagramtype=structureDiagram")
+        end
+
+        find(:css, "#buttonShowJointJSClassDiagram").click
+        wait_for_loading_for 40
+
+        within(find(:css, ".joint-viewport")) do
+          expect(find(:css, ".joint-element")["model-id"]).to eq("Student")
+        end
+
+        find(:css, "#buttonShowStructureDiagram").click
+        wait_for_loading_for(40)
+        expect(find(:css, "#umpleCanvas")).to have_selector("#svgCanvas")
+    end
+
   end
 
   describe "Checking for no diagram code found message" do
@@ -578,7 +658,8 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         expect(page).to have_no_css("li#buttonSyncDiagram.disabled")
 
         switch_to_options_panel
-        find(:css, "#buttonManualSync").click
+        wait_for_loading
+        find(:css, "#buttonManualSync", visible: :all).click
         switch_to_tools_panel
         wait_for_loading
         expect(page).to have_no_selector("div#syncNeededMessage")

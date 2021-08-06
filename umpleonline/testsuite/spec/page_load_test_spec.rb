@@ -160,5 +160,16 @@ describe "Page load options", :feature => :pageLoad, :helper => :pageLoad do
       load_umple_with_option("generateDefault=uigu2")
       expect(page).to have_select('inputGenerateCode', selected: 'CRUD User Interface')
     end
+    it "loads UmpleOnline without any options and makes a tip of the day appears" do
+      load_page
+      wait_for_loading
+      find(:css, "#linenum").click
+      find(:css, "#linenum").send_keys(:backspace)
+      find(:css, "#linenum").send_keys("tc")
+      find(:css, "#linenum").send_keys(:enter)
+      load_page
+      wait_for_loading_for 30
+      expect(page).to have_selector("#styleTip")
+    end
   end
 end
