@@ -609,7 +609,6 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample3" id = "defaultExampleOption3" value="">Select Example</option>
                 <option name = "optionExample" value="OBDCarSystem.ump">OBD Car System</option>
                 <option name = "optionExample" value="PingPong.ump">Ping Pong</option>
-                <option name="optionExample" class="openUmprOption" value="">Select from Umpr Repository...</option>
               </select>
             </li>
 		  
