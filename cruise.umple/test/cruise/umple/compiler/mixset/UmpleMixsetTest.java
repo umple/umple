@@ -731,6 +731,7 @@ public class UmpleMixsetTest {
     GvFeatureDiagramGenerator gen = new GvFeatureDiagramGenerator();
     gen.setModel(umpModel);
     gen.generate();
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/featureDependGvFeatureDiagram.gv");
   }
 
 }
