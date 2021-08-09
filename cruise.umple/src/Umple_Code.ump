@@ -30,6 +30,7 @@ class UmpleModel
     internal Double gTime2 = 0.0;
     
     Map<String, String> hashMap = new HashMap<String, String>();
+    Map<String, ArrayList> reqList = new HashMap<String, ArrayList>(); // for storing requirements
     
   public static String[] findValidLanguages()
   {
@@ -303,8 +304,71 @@ class UmpleModel
     return allTranslators;
   }
 
+  /* 
+  * Adds the requirement information into a HashMap
+  *
+  * @param key is the identifier of the requirement
+  * @param value is an ArrayList of max 2 elements containing the content of the requirement and the language (optional)
+  */
+  public void addReq(String key, ArrayList value){
+    if (key != null && value != null && !reqList.containsKey(key)){
+      reqList.put(key, value);
+    }
+  }
 
+  /* 
+  * Returns the requirement identifier for the content passed
+  *
+  * @param text is the content or "text" of the requirement
+  */
+  public String getReqKeyByContentOnly(String text){
 
+    for (String elem : reqList.keySet()){
+      if (reqList.get(elem).get(0).equals(text)){
+        return elem;
+      }
+    }
+
+    return "";
+  }
+
+  /* 
+  * Returns the language the requirement was written in given the requirement identifier
+  *
+  * @param key is the identifier of the requirement
+  */
+  public String getReqLanguage(String key){
+    if (key != null && !reqList.containsKey(key))
+      return null;
+    
+    if (reqList.get(key).size() > 1)
+      return reqList.get(key).get(1).toString();
+    else{
+      return null; // has no language specification and is therefore by default text
+    }
+  }
+
+  /* 
+  * Returns the "text" part of the requirement given the requirement identifier
+  *
+  * @param key is the identifier of the requirement
+  */
+  public String getReqText(String key){
+    if (key == null || !reqList.containsKey(key))
+      return null;
+    return reqList.get(key).get(0).toString();
+  }
+
+  /* 
+  * Determines whether the requirement is stored in the reqList
+  *
+  * @param key is the identifier of the requirement
+  */
+  public boolean containsReqKey(String key){
+    if (key == null)
+      return false;
+    return reqList.containsKey(key);
+  }
   
   /*
    * Extracts Analyzers from a <code>RuleBasedParser</code>, assigning the

@@ -110,7 +110,7 @@ class GvClassTraitDiagramGenerator
 		          	String type = uAttribute.getType().replace("<","&lt;").replace(">","&gt;");
 		            StringBuilder attrTooltip = new StringBuilder();
 		            attrTooltip.append(type+isList+" "+uAttribute.getName()+"&#13;");
-		            attrTooltip.append(appendTooltipComment(uAttribute.getComments(), true));        
+		            attrTooltip.append(appendTooltipComment(uAttribute.getComments(), true, inClass.getSourceModel()));        
 		            code.append("<TR><td align=\"left\" href=\"\" title=\""+attrTooltip+"\">"
 		                  +"  "+uAttribute.getName()+" : "
 		                  +type+isList+"  </td></TR>");
@@ -147,7 +147,7 @@ class GvClassTraitDiagramGenerator
 		       	  String type = uMethod.getType().replace("<","&lt;").replace(">","&gt;");
 		          StringBuilder methTooltip = new StringBuilder();
 		          methTooltip.append(type+" "+uMethod.getName()+"("+parameters+")"+"&#13;");
-		          methTooltip.append(appendTooltipComment(uMethod.getComments(), true));
+		          methTooltip.append(appendTooltipComment(uMethod.getComments(), true, inUmpleClassifier.getSourceModel()));
 		      
 		          StringBuilder hrefString = new StringBuilder();
 		          hrefString.append("javascript:Action.selectMethod('");
@@ -332,7 +332,7 @@ class GvClassTraitDiagramGenerator
 	          else {
 	            StringBuilder attrTooltip = new StringBuilder();
 	            attrTooltip.append(type+isList+" "+uAttribute.getName()+"&#13;");
-	            attrTooltip.append(appendTooltipComment(uAttribute.getComments(), true));        
+	            attrTooltip.append(appendTooltipComment(uAttribute.getComments(), true, inTrait.getSourceModel()));        
 	            code.append("<TR><td COLSPAN=\"3\" align=\"left\" href=\"\" title=\""+attrTooltip+"\">"
 	                  +"  "+uAttribute.getName()+" : "
 	                  +type+isList+"  </td></TR>");
@@ -373,7 +373,7 @@ class GvClassTraitDiagramGenerator
 	       else {
 	          StringBuilder methTooltip = new StringBuilder();
 	          methTooltip.append(type+" "+uMethod.getName()+"("+parameters+")"+"&#13;");
-	          methTooltip.append(appendTooltipComment(uMethod.getComments(), true));
+	          methTooltip.append(appendTooltipComment(uMethod.getComments(), true, inUmpleTrait.getSourceModel()));
 	      
 	          StringBuilder hrefString = new StringBuilder();
 	          hrefString.append("javascript:Action.selectMethod('");

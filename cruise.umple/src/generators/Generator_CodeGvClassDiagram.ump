@@ -84,7 +84,7 @@ class GvClassDiagramGenerator
     
     // Output the tooltip : Class name followed by any comment
     code.append(",\n   tooltip=\"class "+className+"\n");
-    code.append(appendTooltipComment(uClass.getComments(), false));
+    code.append(appendTooltipComment(uClass.getComments(), false, uClass.getSourceModel()));
     code.append("\"");
 
     // Terminate the class as a whole
@@ -117,7 +117,7 @@ class GvClassDiagramGenerator
           else {
             StringBuilder attrTooltip = new StringBuilder();
             attrTooltip.append(type+isList+" "+uAttribute.getName()+"&#13;");
-            attrTooltip.append(appendTooltipComment(uAttribute.getComments(), true));        
+            attrTooltip.append(appendTooltipComment(uAttribute.getComments(), true, uClass.getSourceModel()));        
             code.append("<tr><td align=\"left\" href=\"\" title=\""+attrTooltip+"\">"
                   +"  "+uAttribute.getName()+" : "
                   +type+isList+"  </td></tr>");
@@ -174,7 +174,7 @@ class GvClassDiagramGenerator
         else {
           StringBuilder methTooltip = new StringBuilder();
           methTooltip.append(type+" "+uMethod.getName()+"("+parameters+")"+"&#13;");
-          methTooltip.append(appendTooltipComment(uMethod.getComments(), true));
+          methTooltip.append(appendTooltipComment(uMethod.getComments(), true, inUmpleClassifier.getSourceModel()));
       
           StringBuilder hrefString = new StringBuilder();
           hrefString.append("javascript:Action.selectMethod('");
@@ -472,7 +472,7 @@ class GvClassDiagramGenerator
 	    
 	    // Output the tooltip : Class name followed by any comment
 	    code.append(",\n   tooltip=\"interface "+interfaceName+"\n");
-//	    code.append(appendTooltipComment(uInterface.getComments(), false));
+//	    code.append(appendTooltipComment(uInterface.getComments(), false, uClass.getSourceModel()));
 	    code.append("\"");
 
 	    // Terminate the class as a whole

@@ -133,7 +133,7 @@ digraph "<<=filename>>" {
   } 
   
   // Add the comment to a tooltip
-  public static String appendTooltipComment(List<Comment> comments, boolean title)
+  public static String appendTooltipComment(List<Comment> comments, boolean title, UmpleModel model)
   {
     StringBuilder tooltip = new StringBuilder();;
     for (Comment uComment : comments) {
@@ -144,6 +144,11 @@ digraph "<<=filename>>" {
         text = uComment.getText().replace("\"","'");
       }
       text = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"); // Issue1584 and 1587 "Certain kinds of comments (<,>,&) result in failure to generate graphviz"
+      // model can be accessed through the class by using class's super.getSourceModel()
+      String reqKey = model.getReqKeyByContentOnly(text);
+      if (reqKey != null && reqKey.length() > 0 && model.getReqLanguage(reqKey) != null){ // comment is from a requirement
+        text = translateToHtml(text, model.getReqLanguage(reqKey));
+      }
       if(text.startsWith(" *")) {
         tooltip.append(text.substring(2)+"&#13;");
       }
@@ -153,6 +158,14 @@ digraph "<<=filename>>" {
       }
     }
     return tooltip.toString();
+  }
+
+  public static String translateToHtml (String text, String language){
+    if (language.equals("md")){
+      // translate md into html
+      return text;
+    }
+    return text;
   }
   
   public static String[] retArrows(Association uAssoc)

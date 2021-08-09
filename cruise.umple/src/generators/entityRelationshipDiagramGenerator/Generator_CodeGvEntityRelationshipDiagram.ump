@@ -68,7 +68,7 @@ class GvEntityRelationshipDiagramGenerator
 
     // Output the tooltip : Class name followed by any comment
     code.append(",\n   tooltip="+tooltip);
-    code.append(appendTooltipComment(uClass.getComments(), false));
+    code.append(appendTooltipComment(uClass.getComments(), false, uClass.getSourceModel()));
     code.append("\"");
 
     // Terminate the class as a whole
@@ -120,7 +120,7 @@ class GvEntityRelationshipDiagramGenerator
           // Create the tooltip for each attribute
           StringBuilder tooltip = new StringBuilder();
           tooltip.append(type+isList+" "+uAttribute.getName()+"&#13;");
-          tooltip.append(appendTooltipComment(uAttribute.getComments(), true));        
+          tooltip.append(appendTooltipComment(uAttribute.getComments(), true, uClass.getSourceModel()));        
 
           code.append("label="+label+", tooltip=\""+tooltip+"\"];");
           code.append("\n  \""+className+"\" -> \""+attrName+className+"\" [arrowhead=\"none\"];\n");

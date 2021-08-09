@@ -197,7 +197,7 @@ class UmpleInternalParser
     if (t.getSubToken("language") != null){
       reqValue.add(t.getSubToken("language").getValue());
     }
-    associatedRequirements.put(t.getSubToken("reqIdentifier").getValue(), reqValue);
+    model.addReq(t.getSubToken("reqIdentifier").getValue(), reqValue);
   }
 
   private void processImplementReq(Token t){
@@ -205,14 +205,9 @@ class UmpleInternalParser
       setFailedPosition(t.getPosition(),1502,t.getValue(),t.getSubToken("reqIdentifier").getValue());
     }
     else{
-      if (associatedRequirements.containsKey(t.getSubToken("reqIdentifier").getValue())){
+      if (model.containsReqKey(t.getSubToken("reqIdentifier").getValue())){
         String tokenValueString="";
-        if (t.getSubToken("language").getValue() == null){ // plain text
-          tokenValueString = associatedRequirements.get(t.getSubToken("reqIdentifier").getValue()).get(0).toString();
-        }
-        else if (t.getSubToken("language").getValue().equals("md")){ //markdown
-          tokenValueString = associatedRequirements.get(t.getSubToken("reqIdentifier").getValue()).get(0).toString();
-        }
+        tokenValueString = model.getReqText(t.getSubToken("reqIdentifier").getValue());
 
         if (!tokenValueString.equals("")){
           Comment reqComment = new Comment(tokenValueString);
