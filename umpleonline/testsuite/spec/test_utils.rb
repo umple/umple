@@ -73,8 +73,8 @@ module TestUtils
   # (excluding the browser styling) using javascript/jQuery
 
   def set_viewport_size(width, height)
-    w = evaluate_script("jQuery(window).outerWidth() - jQuery(window).innerWidth()")
-    h = evaluate_script("jQuery(window).outerHeight() - jQuery(window).innerHeight()")
+    w = evaluate_script("window.outerWidth - window.innerWidth")
+    h = evaluate_script("window.outerHeight - window.innerHeight")
     Capybara.current_window.resize_to(width+w, height+h)
   end
 
