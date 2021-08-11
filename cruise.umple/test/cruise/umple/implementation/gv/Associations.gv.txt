@@ -1,7 +1,6 @@
 digraph "Associations" {
-  size="80,10"
   rankdir="BT"
-  node [shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+  node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
 
   // Class: A
   "A" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    A    </td></tr></table>>,
