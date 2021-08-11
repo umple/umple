@@ -43,7 +43,6 @@ class GvStateDiagramGenerator
 
 digraph "<<=filename>>" {
   compound = true;
-  size="80,10"
 !>>
   emit graphStart(String filename)(graphStart(UmpleModel.VERSION_NUMBER));
 
@@ -56,7 +55,7 @@ digraph "<<=filename>>" {
   emit graphEnd(StringBuilder transitions)(graphEnd);  
 
   // Template for what is output if there is no state machine
-  nosm <<!  node [shape=box, penwidth=0];
+  nosm <<!  node [ratio="auto" shape=box, penwidth=0];
   message [label ="No state machine found in the input Umple file"];
 !>>
   emit nosm()(nosm);
@@ -142,7 +141,7 @@ digraph "<<=filename>>" {
   // Template for start state
   startState <<!
 // Start states are shown as a black circle
-node [shape = point, fillcolor="black", width=0.2 ];
+node [ratio="auto" shape = point, fillcolor="black", width=0.2 ];
 start_<<=clSmName>> [ tooltip = "<<=tooltip>>" ];
 
 !>>
@@ -151,14 +150,14 @@ start_<<=clSmName>> [ tooltip = "<<=tooltip>>" ];
   // Template for a normal node
   normalStateFormat <<!
 // Format for normal states
-node [shape = rectangle, width=1,style=rounded];
+node [ratio="auto" shape = rectangle, width=1,style=rounded];
 !>>
   emit normalStateFormat()(normalStateFormat);
 
   // Template for a pseudostate such as history or deep history
   pseudoStateFormat <<!
 // Format for normal states
-node [shape = circle, fixedsize = true, width=.3];
+node [ratio="auto" shape = circle, fixedsize = true, width=.3];
 !>>
   emit pseudoStateFormat()(pseudoStateFormat);
 
@@ -351,7 +350,7 @@ node [shape = circle, fixedsize = true, width=.3];
           appendSpaces(code, indentLevel+2);
           code.append("// Dummy notes for transitions to/from internals to boundary\n");
           appendSpaces(code, indentLevel+2);
-          code.append("node [shape = point, width = 0.005];\n");
+          code.append("node [ratio=\"auto\" shape = point, width = 0.005];\n");
 
           for (String nodeName : newInternalBoundaryTrans.values()) 
           {
