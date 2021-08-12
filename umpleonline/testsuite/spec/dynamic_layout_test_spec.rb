@@ -29,7 +29,7 @@ describe "Dynamic resizing of umpleonline layout ",
         if tabs then find(:css, '#toggleTabsButton').click end
         wait_for_loading
         file= File.open("out.txt", "w")
-      file.write(evaluate_script("window.innerWidth").to_s+" "+evaluate_script("window.innerHeight").to_s)
+      file.write(evaluate_script("window.innerWidth").to_s+" "+evaluate_script("window.innerHeight").to_s+" ")
         actual = {canvas:{size:original_sizes[:canvas][:size],
                           top_left:original_sizes[:canvas][:top_left]},
                   menu:{size:original_sizes[:menu][:size],
