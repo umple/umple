@@ -17,7 +17,7 @@ end
 
 Capybara.register_driver :headless_chrome do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w(no-sandbox headless disable-dev-shm-usage start-maximized) }
+    chromeOptions: { args: %w(no-sandbox headless disable-dev-shm-usage remote-debugging-port=9222 start-maximized) }
   )
 
   Capybara::Selenium::Driver.new app,
