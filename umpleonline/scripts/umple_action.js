@@ -132,7 +132,7 @@ Action.clicked = function(event)
   {
     if (typeof(Storage) !== "undefined") {
       localStorage.setItem("umpleLocalStorage1",Page.getUmpleCode());
-      Page.setFeedbackMessage("Model saved successfully.")
+      Page.setFeedbackMessage("Model saved. Use Load From Browser later to restore.")
     }
     else{Page.setFeedbackMessage("Unable to copy the model to browser storage. An error occurred.")}
   }
