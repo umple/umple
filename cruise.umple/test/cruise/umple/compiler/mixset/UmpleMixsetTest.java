@@ -15,6 +15,7 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.php.PhpClassGenerator;
 import java.io.File;
 import cruise.umple.compiler.UmpleAnnotaiveToCompositionGenerator;
+import cruise.umple.compiler.GvFeatureDiagramGenerator;
 
 
 public class UmpleMixsetTest {
@@ -718,6 +719,19 @@ public class UmpleMixsetTest {
     SampleFileWriter.destroy(umpleParserTest.pathToInput+"/Bank.java");
     SampleFileWriter.destroy(umpleParserTest.pathToInput+"/Account.java");
     SampleFileWriter.destroy(umpleParserTest.pathToInput+"/Branch.java");
+  }
+
+  @Test
+  public void featureDependencies()
+  { 
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"featureDepend.ump");
+    UmpleModel umpModel = new UmpleModel(umpleFile);
+    umpModel.setShouldGenerate(true);
+    umpModel.run();
+    GvFeatureDiagramGenerator gen = new GvFeatureDiagramGenerator();
+    gen.setModel(umpModel);
+    gen.generate();
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/featureDependGvFeatureDiagram.gv");
   }
 
 }
