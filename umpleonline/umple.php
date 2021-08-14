@@ -294,7 +294,7 @@ $output = $dataHandle->readData('model.ump');
     
       <table>
         <tr style="text-align:left;">
-          <th id="labelTaskName" style="display: none;"><label for="taskName">Task Name:</label></th>
+          <th id="labelTaskName" style="display: none;"><label for="taskName"><span style="color:red">&#42;</span>Task Name:</label></th>
           <th><label id="labelRequestorName" for="requestorName">Requestor Name:</label></th>
           <th id="labelCompletionURL"><label>Completion Survey URL:</label></th>
         </tr>
@@ -350,8 +350,9 @@ $output = $dataHandle->readData('model.ump');
       <a class="button2" href="javascript:Action.copyParticipantURL()" title="Click to put the participant URL in your clipboard. You can then send
         the link to participants so they can do the task">Copy Participant URL</a> &nbsp;&nbsp;&nbsp;
       <a class="button2" href="javascript:Action.launchParticipantURL()" title="Click to generate an answer to this task in the same way
-        a participant would.Do this to test the task. Note that your response will appear if you later     
+        a participant would. Do this to test the task. Note that your response will appear if you later     
         download all the responses unless you cancel the submission.">Launch Participant URL in a new tab</a>
+        <a class="button2" title="Click this to close the task editing panel and return to a normal layout." href="javascript:Page.endTaskEdit()">Exit task editing mode</a>
     <?php } else if ($doLoadTaskInstruction && substr($dataHandle->getName(), 0, 8) != "taskroot") {?>
       <a class="button2" href="javascript:Action.openInstructionInNewTab()">Open instruction in a new tab</a>&nbsp;&nbsp;
       <a id="buttonReshowInstructions" class="button2" href="javascript:Action.reshowInstructions()" style="display: none;">Re-show Instructions</a>&nbsp;&nbsp;&nbsp;
@@ -361,6 +362,7 @@ $output = $dataHandle->readData('model.ump');
           and it will no longer be editable. Make sure your name is in a
           comment in the response if that has been requested in the instructions.">Submit Response</a>&nbsp;&nbsp;&nbsp;
         <a class="button2" href="javascript:Page.cancelTaskResponse()" title="Cancel this submission. Your data will be deleted.">Cancel this task response</a>&nbsp;
+        <a class="button2" href="javascript:Page.hideTask()" title="Click to cancel this submission without losing your data.">Exit task submission</a>
       <?php } else { ?>
         This task response has already been submitted and is now read-only.
     <?php }} ?>
