@@ -27,30 +27,6 @@ Capybara.default_driver= :selenium_chrome
 Capybara.javascript_driver= :selenium_chrome
 Capybara.app_host = TestUtils::HOST
 
-=begin
-Capybara.register_driver :selenium_chrome do |app|
-  Capybara::Selenium::Driver.new(app, :browser => :chrome)
-end
-
-Capybara.register_driver :headless_chrome do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w(--no-sandbox --headless --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9222 --start-maximized) }
-  )
-
-  Capybara::Selenium::Driver.new app,
-    browser: :chrome,
-    desired_capabilities: capabilities
-end
-
-
-# DO NOT RUN THESE TESTS USING THE 'NO-HEADLESS' OPTION 
-# UNLESS FOR DEBUGGING PURPOSES 
-
-Capybara.default_driver = TestUtils::ENV=="no-headless"? :selenium_chrome : :headless_chrome
-
-Capybara.app_host = TestUtils::HOST
-=end
-
 RSpec.configure do |config|
   config.include Capybara::DSL
   config.include TestUtils

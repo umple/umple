@@ -13,23 +13,20 @@ describe "Dynamic resizing of umpleonline layout ",
   context "using a large screen layout" do
     before(:all) do
       setup_large
-      #Capybara.current_window.resize_to(1608, 1017) 
+      Capybara.current_window.resize_to(1600, 900) 
     end
 
     context "with the canvas, text editor and menu visible" do
       before(:each) do
         load_umple_with_option('')
-        set_viewport_size(1600, 900)
+       
         original_sizes = {canvas: canvas(),
                           menu: menu(),
                           editor: editor()}
       end
 
       it "just loads the page" do
-        if tabs then
-          wait_for_loading 
-          find(:css, '#toggleTabsButton').click 
-        end
+        if tabs then find(:css, '#toggleTabsButton').click end
         wait_for_loading
         file= File.open("out.txt", "w")
       file.write(evaluate_script("window.innerWidth").to_s+" "+evaluate_script("window.innerHeight").to_s+" ")
@@ -108,7 +105,7 @@ describe "Dynamic resizing of umpleonline layout ",
       end
 
       it "increases the canvas width to maximum" do
-        resize_amount = 1590 #this ensures the max amount of width to resize will occur
+        resize_amount = 1600 #this ensures the max amount of width to resize will occur
         
         resize_left(:canvas, resize_amount)
 
@@ -282,7 +279,6 @@ describe "Dynamic resizing of umpleonline layout ",
     context "with the text editor and menu visible, and the canvas hidden" do
       before(:each) do
         load_umple_with_option('nodiagram')
-        set_viewport_size(1600, 900)
         original_sizes = {canvas: canvas,
                           menu: menu,
                           editor: editor}
@@ -387,7 +383,6 @@ describe "Dynamic resizing of umpleonline layout ",
     context "with the canvas and menu visible, and the text editor hidden" do
       before(:each) do
         load_umple_with_option('notext')
-        set_viewport_size(1600, 900)
         original_sizes = {canvas: canvas,
                           menu: menu,
                           editor: editor}
@@ -492,7 +487,6 @@ describe "Dynamic resizing of umpleonline layout ",
     context "with the canvas and text editor visible, and the menu hidden" do
       before(:each) do
         load_umple_with_option('nomenu')
-        set_viewport_size(1600, 900)
         original_sizes = {canvas: canvas,
                           menu: menu,
                           editor: editor}
@@ -631,13 +625,12 @@ describe "Dynamic resizing of umpleonline layout ",
   context "using a small screen layout" do
     before(:all) do
       setup_small
-      #Capybara.page.driver.browser.manage.window.resize_to(938, 1047)
+      Capybara.current_window.resize_to(930, 935)
     end
 
     context "with the canvas, text editor and menu visible" do
       before(:each) do
         load_umple_with_option('')
-        set_viewport_size(930, 935)
         original_sizes = {canvas: canvas,
                           menu: menu,
                           editor: editor}
@@ -839,7 +832,6 @@ describe "Dynamic resizing of umpleonline layout ",
     context "with the text editor and menu visible, and the canvas hidden" do
       before(:each) do
         load_umple_with_option('nodiagram')
-        set_viewport_size(930, 935)
         original_sizes = {canvas: canvas,
                           menu: menu,
                           editor: editor}
@@ -971,7 +963,6 @@ describe "Dynamic resizing of umpleonline layout ",
     context "with the canvas and menu visible, and the text editor hidden" do
       before(:each) do
         load_umple_with_option('notext')
-        set_viewport_size(930, 935)
         original_sizes = {canvas: canvas,
                           menu: menu,
                           editor: editor}
@@ -1106,7 +1097,6 @@ describe "Dynamic resizing of umpleonline layout ",
     context "with the canvas and text editor visible, and the menu hidden" do
       before(:each) do
         load_umple_with_option('nomenu')
-        set_viewport_size(930, 935)
         original_sizes = {canvas: canvas,
                           menu: menu,
                           editor: editor}
@@ -1241,14 +1231,12 @@ describe "Dynamic resizing of umpleonline layout ",
   describe "switching between large and small screen layouts" do
     context "switching from large screen to small screen" do
       before(:each) do
-        #Capybara.page.driver.browser.manage.window.resize_to(1608, 1017) 
+        Capybara.current_window.resize_to(930, 935) 
         load_umple_with_option("")
-        set_viewport_size(1600, 900)
       end
 
       it "changes the window size" do
-        #Capybara.page.driver.browser.manage.window.resize_to(938, 1047)
-        set_viewport_size(930, 935)
+        Capybara.current_window.resize_to(930, 935)
         actual = {canvas: canvas(), menu: menu(), editor: editor()}
 
         expected = {
@@ -1270,14 +1258,12 @@ describe "Dynamic resizing of umpleonline layout ",
 
     context "switching from small screen to large screen" do
       before(:each) do
-        #Capybara.page.driver.browser.manage.window.resize_to(938, 1047)
+        Capybara.current_window.resize_to(930, 935)
         load_umple_with_option("")
-        set_viewport_size(930, 935)
       end
 
       it "changes the window size" do
-        #page.driver.resize_window_to(page.driver.current_window_handle,1608, 1017) 
-        set_viewport_size(1600, 900)
+        Capybara.current_window.resize_to(1600, 900) 
         actual = {canvas: canvas(), menu: menu(), editor: editor()}
 
         expected = {

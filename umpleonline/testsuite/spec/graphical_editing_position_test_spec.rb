@@ -10,14 +10,14 @@ describe "Graphical editing of diagram: positional consistency",
   :helper => :diagramEditing, 
   :feature => :positionalDiagramEditing do 
 
-  
+  before(:all){Capybara.current_window.resize_to(1024, 768)}
     
   describe "Loading umple models" do
     context "with positional data" do
 
       it "loads a model with a class" do
         load_umple_with_file_and_layout("single_class.ump")
-        set_viewport_size(1024, 768)
+
         find(:css, "#Student")
         
         position = class_diagram_position_of("Student")
@@ -29,7 +29,7 @@ describe "Graphical editing of diagram: positional consistency",
       it "loads a model with a reflexive association" do
 
         load_umple_with_file_and_layout("single_class_with_reflexive_association.ump")
-        set_viewport_size(1024, 768)
+
         find(:css, '#Student')
 
         association_position = 
@@ -52,7 +52,7 @@ describe "Graphical editing of diagram: positional consistency",
 
       it "loads a model with a two classes and an association" do
         load_umple_with_file_and_layout("two_classes_with_association.ump")
-        set_viewport_size(1024, 768)
+
         find(:css, "#Student")
 
         association_position = 
@@ -88,7 +88,7 @@ describe "Graphical editing of diagram: positional consistency",
   describe "Adding a reflexive association" do
     before(:each) do
       load_umple_with_file_and_layout("single_class.ump")
-      set_viewport_size(1024, 768)
+      
     end
     it "Adds a reflexive association with an anchor snapped to the left edge" do
       class_position = get_absolute_position("#Student")
@@ -260,7 +260,7 @@ describe "Graphical editing of diagram: positional consistency",
   describe "Adding a generalization" do
     before(:each) do
       load_umple_with_file_and_layout("two_classes.ump")
-      set_viewport_size(1024, 768)
+      
     end
     it "adds a generalization between two classes" do
       pending("a way to test: the position is not tracked in the code " + 
@@ -273,7 +273,7 @@ describe "Graphical editing of diagram: positional consistency",
     context "with no other features" do
       before(:each) do
         load_umple_with_file_and_layout("single_class.ump")
-        set_viewport_size(1024, 768)
+
       end
 
       it "moves the umpleClass graphically in the canvas" do
@@ -315,7 +315,7 @@ describe "Graphical editing of diagram: positional consistency",
     context "with a symmetric reflexive association" do
       before(:each) do
         load_umple_with_file_and_layout("single_class_with_symmetric_reflexive_association.ump")
-        set_viewport_size(1024, 768)
+
       end
       it "moves a class with a symmetric reflexive association" do 
         pending("implementation, symmetric reflexive position code")
@@ -326,7 +326,7 @@ describe "Graphical editing of diagram: positional consistency",
     context "with a normal association" do
       before(:each) do
         load_umple_with_file_and_layout("two_classes_with_association_centered.ump")
-        set_viewport_size(1024, 768)
+
       end
       
       #TODO these fail on a non-local server
@@ -461,7 +461,7 @@ describe "Graphical editing of diagram: positional consistency",
     context "with a generalization" do
       before(:each) do
         load_umple_with_file_and_layout("two_classes_with_generalization.ump")
-        set_viewport_size(1024, 768)
+
       end
       context "move the subclass" do
         it "moves a subclass" do
@@ -573,7 +573,7 @@ describe "Graphical editing of diagram: positional consistency",
 
       before (:each) do
         load_umple_with_file_and_layout("two_classes_with_association_top.ump")
-        set_viewport_size(1024, 768)
+
         association_id = activate_association("Mentor", "Student")
       end
 
@@ -660,7 +660,7 @@ describe "Graphical editing of diagram: positional consistency",
 
       before (:each) do
         load_umple_with_file_and_layout("two_classes_with_association_right.ump")
-        set_viewport_size(1024, 768)
+
         association_id = activate_association("Mentor", "Student")
       end
 
@@ -747,7 +747,7 @@ describe "Graphical editing of diagram: positional consistency",
 
       before (:each) do
         load_umple_with_file_and_layout("two_classes_with_association_bottom.ump")
-        set_viewport_size(1024, 768)
+
         association_id = activate_association("Mentor", "Student")
       end
 
@@ -834,14 +834,14 @@ describe "Graphical editing of diagram: positional consistency",
   describe "testing the helper functions", :feature => :testdebug do
     it "tests code_block retrieval" do
       load_umple_with_file_and_layout("two_classes_with_generalization.ump")
-      set_viewport_size(1024, 768)
+      
       expect(get_class_position_code_block("Student"))
         .to eq("{\n  position 50 30 109 45;\n}")
     end
 
     it "tests class position data retrieval from code" do
       load_umple_with_file_and_layout("two_classes_with_generalization.ump")
-      set_viewport_size(1024, 768)
+      
       expected = {position: [50, 30], size: [109, 45]}
       expect(class_code_position_of "Student").to eq(expected)
       load_umple_with_file_and_layout("single_class_with_reflexive_association.ump")
@@ -850,7 +850,7 @@ describe "Graphical editing of diagram: positional consistency",
 
     it "tests association code retreival" do
       load_umple_with_file_and_layout("two_classes_with_association.ump")
-      set_viewport_size(1024, 768)
+      
       expected = "position.association Mentor__Student 30,45 30,0"
 
       expect(retreive_association_code("Student", "Mentor", "Student"))
@@ -868,7 +868,7 @@ describe "Graphical editing of diagram: positional consistency",
 
     it "tests association positional data retrieval from code" do
       load_umple_with_file_and_layout("two_classes_with_association.ump")
-      set_viewport_size(1024, 768)
+      
       expected = {end_one: {end_class: 'Student', position: [30, 45]}, 
                   end_two: {end_class: 'Mentor', position: [30, 0]}}
       expect(association_code_position_of("Mentor", "Student"))
@@ -882,21 +882,21 @@ describe "Graphical editing of diagram: positional consistency",
 
     it "tests the class position retrieval from the diagram" do
       load_umple_with_file_and_layout("single_class.ump")
-      set_viewport_size(1024, 768)
+      
       expected = {position: [99, 29]}
       expect(class_diagram_position_of("Student")).to eq(expected)
     end
 
     it "tests the class size retrieval from the diagram" do
       load_umple_with_file_and_layout("single_class.ump")
-      set_viewport_size(1024, 768)
+      
       expected = {size: [110, 45]}
       expect(screen_size_of("Student")).to eq(expected)
     end
 
     it "tests the association anchor position retrieval from the diagram" do
       load_umple_with_file_and_layout("two_classes_with_association.ump")
-      set_viewport_size(1024, 768)
+      
       expected = {end_one: {end_class: 'Student', position: [77, 72]}, 
                   end_two: {end_class: 'Mentor', position: [77, 127]}}
 
@@ -913,7 +913,7 @@ describe "Graphical editing of diagram: positional consistency",
     it "tests transforming the diagram association position to coordinates" +
       "relative to various points" do
       load_umple_with_file_and_layout("two_classes_with_association.ump")
-      set_viewport_size(1024, 768)
+      
       pos = association_code_position_of("Mentor", "Student")
     end
   end
