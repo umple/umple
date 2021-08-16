@@ -132,7 +132,9 @@ Action.clicked = function(event)
   {
     if (typeof(Storage) !== "undefined") {
       localStorage.setItem("umpleLocalStorage1",Page.getUmpleCode());
+      Page.setFeedbackMessage("Model saved. Use Load From Browser later to restore.")
     }
+    else{Page.setFeedbackMessage("Unable to copy the model to browser storage. An error occurred.")}
   }
   else if (action == "LoadLocalBrowser")
   {
@@ -1684,6 +1686,18 @@ Action.keyboardShortcut = function(event)
       DiagramEdit.generalizationDeleted(Page.selectedGeneralization.id);
       event.preventDefault();
     }
+  }
+  else if ((shortcut == 8 || shortcut == 46) && jQuery(".umpleClass").is(":focus")){
+  	DiagramEdit.classDeleted(document.activeElement.id);
+  	event.preventDefault();
+  }
+  else if ((shortcut == 8 || shortcut == 46) && (jQuery(".untracedAssociation").is(":focus")||jQuery(".redTracedAssociation").is(":focus"))){
+  	DiagramEdit.associationDeleted(document.activeElement.id);
+  	event.preventDefault();
+  }
+  else if ((shortcut == 8 || shortcut == 46) && jQuery(".umpleGeneralization").is(":focus")){
+  	DiagramEdit.generalizationDeleted(document.activeElement.id);
+  	event.preventDefault();
   }
 }
 
