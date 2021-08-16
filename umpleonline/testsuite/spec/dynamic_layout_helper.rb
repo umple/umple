@@ -1,6 +1,6 @@
 module DynamicResizingHelper
 
-  ERROR_MARGIN = 3 #This is the difference in pixels allowed between the actual and expected sizes
+  ERROR_MARGIN = 10 #This is the difference in pixels allowed between the actual and expected sizes
   def setup_large
     self.class.send :include, LargeScreenHelper
   end
