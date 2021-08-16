@@ -24,6 +24,11 @@ let justUpdatetoSaveLater = false;
 Action.setjustUpdatetoSaveLater = function(state){
   justUpdatetoSaveLater = state;
 }
+let justUpdatetoSaveLaterForTextCallback = false;
+
+Action.setjustUpdatetoSaveLaterForTextCallback = function(state){
+  justUpdatetoSaveLaterForTextCallback = state;
+}
 
 Action.clicked = function(event)
 {
@@ -421,7 +426,7 @@ Action.redoOrUndo = function(isUndo)
 
   Action.freshLoad = true;
   Page.setUmpleCode(afterHistoryChange);
-  if (!Action.manualSync) Action.updateUmpleDiagram();
+  if (!Action.manualSync) Action.updateLayoutEditorAndDiagram();
 
   Action.setjustUpdatetoSaveLater(true);
   
@@ -490,9 +495,10 @@ Action.loadFileCallback = function(response)
   Action.freshLoad = true;
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   if (Object.keys(TabControl.tabs).length > 1) return;
-  
-  TabControl.getCurrentHistory().save(response.responseText,"loadFileCallback");
   Page.setUmpleCode(response.responseText, true);
+  console.log("[loadFile]");
+  TabControl.getCurrentHistory().save(response.responseText,"loadFileCallback");
+  Action.setjustUpdatetoSaveLater(true);
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {
     var extractedName = TabControl.extractNameFromCode(response.responseText);
@@ -542,6 +548,7 @@ Action.loadTaskCallback = function(response)
   if (Object.keys(TabControl.tabs).length > 1) return;
 
   Action.setjustUpdatetoSaveLater(true);
+  console.log("[loadTask]");
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskCallback");
   var responseArray = response.responseText.split("task delimiter");
   Page.setUmpleCode(responseArray[0]);
@@ -568,6 +575,7 @@ Action.loadTaskExceptCodeCallback = function(response)
   //if (Object.keys(TabControl.tabs).length > 1) return;
 
   Action.setjustUpdatetoSaveLater(true);
+  console.log("[loadTaskException]");
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
   var responseArray = response.responseText.split("task delimiter");
   jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":");
@@ -1505,7 +1513,9 @@ Action.directUpdateCommandCallback = function(response)
 // such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
 {
-  if (!justUpdatetoSaveLater){
+
+  if (!justUpdatetoSaveLater && !justUpdatetoSaveLaterForTextCallback){
+    console.log("[textCallback]");
     TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
     Page.setExampleMessage("");
   }
@@ -1523,9 +1533,11 @@ Action.updateUmpleTextCallback = function(response)
   {
     DiagramEdit.pendingChanges = false;
     Action.setjustUpdatetoSaveLater(false);
+    Action.setjustUpdatetoSaveLaterForTextCallback(false);
   }
   else{
     Action.setjustUpdatetoSaveLater(true);
+    Action.setjustUpdatetoSaveLaterForTextCallback(true);
     DiagramEdit.doTextUpdate();
   }
   
@@ -1613,13 +1625,15 @@ Action.loadExample = function loadExample()
 Action.loadExampleCallback = function(response)
 {
   Action.freshLoad = true;
-  Page.setUmpleCode(response.responseText);
-  Page.hideLoading();
-  Action.updateUmpleDiagram();
+  Action.setjustUpdatetoSaveLater(true);
+  Page.setUmpleCode(response.responseText, function(){
+    Page.hideLoading();
+    Action.updateUmpleDiagram()}
+  );
   Action.setCaretPosition("0");
   Action.updateLineNumberDisplay();
+  console.log("[loadExample]");
   TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
-  Action.setjustUpdatetoSaveLater(true);
 }
 
 Action.customSizeTyped = function()
@@ -1686,6 +1700,18 @@ Action.keyboardShortcut = function(event)
       DiagramEdit.generalizationDeleted(Page.selectedGeneralization.id);
       event.preventDefault();
     }
+  }
+  else if ((shortcut == 8 || shortcut == 46) && jQuery(".umpleClass").is(":focus")){
+  	DiagramEdit.classDeleted(document.activeElement.id);
+  	event.preventDefault();
+  }
+  else if ((shortcut == 8 || shortcut == 46) && (jQuery(".untracedAssociation").is(":focus")||jQuery(".redTracedAssociation").is(":focus"))){
+  	DiagramEdit.associationDeleted(document.activeElement.id);
+  	event.preventDefault();
+  }
+  else if ((shortcut == 8 || shortcut == 46) && jQuery(".umpleGeneralization").is(":focus")){
+  	DiagramEdit.generalizationDeleted(document.activeElement.id);
+  	event.preventDefault();
   }
 }
 
@@ -2127,14 +2153,14 @@ Action.umpleCodeMirrorCursorActivity = function() {
 }
 
 Action.umpleCodeMirrorTypingActivity = function() {
-  if(Action.freshLoad == false && !justUpdatetoSaveLater) {
-    Page.codeMirrorEditor.save();
+  if(Action.freshLoad == false) {
     Action.umpleTypingActivity("codeMirrorEditor");
+    Page.codeMirrorEditor.save();
   }
   else {
     Action.freshLoad = false;
   }
-    Action.setjustUpdatetoSaveLater(false);
+
 }
 
 Action.trimMultipleNonPrintingAndComments = function(text) {
@@ -2215,7 +2241,10 @@ Action.processTyping = function(target, manuallySynchronized)
   // Save in history after a pause in typing
   if (target != "diagramEdit") 
   {
-    Action.setjustUpdatetoSaveLater(true);
+    Action.setjustUpdatetoSaveLaterForTextCallback(true);
+  }
+  else{
+    Action.setjustUpdatetoSaveLaterForTextCallback(false);
   }
   
   if (!Action.manualSync || manuallySynchronized)
@@ -2223,7 +2252,7 @@ Action.processTyping = function(target, manuallySynchronized)
     Action.diagramInSync = true;
     
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor") {
-      Action.updateLayoutEditorAndDiagram();
+      Action.updateLayoutEditorAndDiagram(); 
 
       // issue#1554
       var downloadLink = document.getElementById("downloadLink");
@@ -2237,13 +2266,19 @@ Action.processTyping = function(target, manuallySynchronized)
     {
       Action.ajax(Action.updateFromDiagramCallback,Action.getLanguage());
     }
-    
     //Page.enableDiagram(true);
   }
 
   if (target != "diagramEdit"){
-    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
+    if (!justUpdatetoSaveLater){
+      console.log("[processTyping]");
+      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
+    }
+    else if (target == "umpleModelEditorText" || target == "codeMirrorEditor"){
+      Action.setjustUpdatetoSaveLater(false);
+    }
     Page.setExampleMessage("");
+    
   }
 
 }
@@ -2280,7 +2315,7 @@ Action.updateUmpleLayoutEditorCallback = function(response)
   
   Page.setUmplePositioningCode(positioning);
   Page.hideLoading();
-  Action.updateUmpleDiagramForce(false);
+  Action.updateUmpleDiagramForce(true);
 }
 
 Action.updateUmpleDiagram = function() {
@@ -2302,16 +2337,17 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   Page.showCanvasLoading();
   
   Action.ajax(Action.updateUmpleDiagramCallback, Action.getLanguage());
+
 }
 
 Action.updateUmpleDiagramCallback = function(response)
 {
   var diagramCode = "";
   var errorMessage = "";
-  
+
   diagramCode = Action.getDiagramCode(response.responseText);
   errorMessage = Action.getErrorCode(response.responseText);
-  
+    
   if(diagramCode == null || diagramCode == "" || diagramCode == "null") 
   {
     Page.enableDiagram(false);
@@ -2397,8 +2433,7 @@ Action.updateUmpleDiagramCallback = function(response)
     {
       jQuery("#umpleCanvas").html('<svg id="svgCanvas"></svg>');
       eval(diagramCode);
-    }
-    
+    }   
   }
 
   //Show the error message
@@ -2434,8 +2469,7 @@ Action.updateFromDiagramCallback = function(response)
   if(errorMessage != "")
   {
     Page.showGeneratedCode(errorMessage, "diagramUpdate");
-  }
-  
+  }  
 }
 
 // Gets the code to display from the AJAX response

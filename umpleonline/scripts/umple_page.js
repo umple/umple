@@ -918,6 +918,10 @@ Page.setUmpleCode = function(umpleCode, reason)
     }
   }
   jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
+
+  if (typeof reason === 'function'){
+    reason();
+  }
 }
 
 Page.setUmplePositioningCode = function(positioning)
