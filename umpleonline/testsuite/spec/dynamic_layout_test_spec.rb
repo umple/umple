@@ -105,7 +105,7 @@ describe "Dynamic resizing of umpleonline layout ",
       end
 
       it "increases the canvas width to maximum" do
-        resize_amount = 1600 #this ensures the max amount of width to resize will occur
+        resize_amount = 900 #this ensures the max amount of width to resize will occur
         
         resize_left(:canvas, resize_amount)
 
