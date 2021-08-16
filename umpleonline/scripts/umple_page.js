@@ -1016,7 +1016,7 @@ Page.cancelTask = function(){
    
    if (jQuery("#completionURL").val()!='' || jQuery("#taskName").val()!='' || jQuery("#requestorName").val()!='' || jQuery("#instructions").val()!=''){
 
-    var answer = confirm ("Are you sure you wanna cancel your task creation process ?");
+    var answer = confirm ("Are you sure you want to end the task creation process ?");
 	
     if (answer){
     jQuery("#taskName").val('');
@@ -1027,6 +1027,15 @@ Page.cancelTask = function(){
     }
     }
     else{ Page.hideTask();}
+}
+
+Page.endTaskEdit = function() {
+  
+    var answer = confirm ("Are you sure you want to the task editing process?");
+    if (answer){
+    	Page.hideTask();
+    }
+  
 }
 
 Page.toggleTabs = function()
