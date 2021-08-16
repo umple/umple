@@ -10,6 +10,8 @@ require 'page_load_helper.rb'
 require 'options_panel_helper.rb'
 require 'dynamic_layout_helper.rb'
 
+# DO NOT RUN THESE TESTS USING THE 'NO-HEADLESS' OPTION 
+# UNLESS FOR DEBUGGING PURPOSES 
 
 Capybara.register_driver :selenium_chrome do |app|
   options= Selenium::WebDriver::Chrome::Options.new
@@ -22,6 +24,7 @@ Capybara.register_driver :selenium_chrome do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 end
 Capybara.default_driver= :selenium_chrome
+Capybara.javascript_driver= :selenium_chrome
 Capybara.app_host = TestUtils::HOST
 
 =begin

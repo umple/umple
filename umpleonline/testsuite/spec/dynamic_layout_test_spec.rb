@@ -105,7 +105,7 @@ describe "Dynamic resizing of umpleonline layout ",
       end
 
       it "increases the canvas width to maximum" do
-        resize_amount = 1600 #this ensures the max amount of width to resize will occur
+        resize_amount = 1595 #this ensures the max amount of width to resize will occur
         
         resize_left(:canvas, resize_amount)
 
@@ -142,7 +142,7 @@ describe "Dynamic resizing of umpleonline layout ",
       end
 
       it "decreases the canvas width to minimum" do
-        resize_amount = 1600 #this ensures the max amount of width to resize will occur
+        resize_amount = 1595 #this ensures the max amount of width to resize will occur
         wait_for_loading
         resize_right(:canvas, resize_amount)
 
@@ -178,7 +178,7 @@ describe "Dynamic resizing of umpleonline layout ",
       end
 
       it "increases the text editor width to maximum" do
-        resize_amount = 1600 #this ensures the max amount of width to resize will occur
+        resize_amount = 1595 #this ensures the max amount of width to resize will occur
         
         resize_right(:editor, resize_amount)
 
@@ -214,7 +214,7 @@ describe "Dynamic resizing of umpleonline layout ",
       end
 
       it "decreases the text editor width to minimum" do
-        resize_amount = 1600 #this ensures the max amount of width to resize will occur
+        resize_amount = 1595 #this ensures the max amount of width to resize will occur
         
         resize_left(:editor, resize_amount)
 
