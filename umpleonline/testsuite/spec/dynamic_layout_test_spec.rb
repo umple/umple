@@ -1,4 +1,4 @@
-require 'spec_helper.rb'
+equire 'spec_helper.rb'
 
 # Tests the layout of umpleonline and ensures it reacts properly to all events
 # that cause a change in the layout, such as user resizing, element hiding, 
@@ -53,9 +53,9 @@ describe "Dynamic resizing of umpleonline layout ",
         find(:css, "#buttonShowHideCanvas").click
         error_message = "improper resize after canvas disable"
         
-        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625])
-        expect(editor()[:size]).to have_values_within_error_margin([1396, 707])
-        expect(menu()[:top_left]).to have_values_within_error_margin([1411, 143.265625])
+        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625]), error_message
+        expect(editor()[:size]).to have_values_within_error_margin([1381, 707]), error_message
+        expect(menu()[:top_left]).to have_values_within_error_margin([1396, 143.265625]), error_message
       end
 
       it "disables the text editor" do
@@ -63,19 +63,19 @@ describe "Dynamic resizing of umpleonline layout ",
         find(:css, "#buttonShowHideTextEditor").click
         error_message = "improper resize after editor disable"
 
-        expect(canvas()[:top_left]).to have_values_within_error_margin([194, 140.328125])
-        expect(canvas()[:size]).to have_values_within_error_margin([1396, 707])
-        expect(menu()[:top_left]).to have_values_within_error_margin([10, 140.328125])
+        expect(canvas()[:top_left]).to have_values_within_error_margin([194, 140.328125]), error_message
+        expect(canvas()[:size]).to have_values_within_error_margin([1381, 707]), error_message
+        expect(menu()[:top_left]).to have_values_within_error_margin([10, 140.328125]), error_message
       end
 
       it "disables the menu" do
         error_message = "improper resize after menu disable"
         toggle_element_visibility(:menu)
 
-        expect(canvas()[:top_left]).to have_values_within_error_margin([707, 143.265625]) 
-        expect(canvas()[:size]).to have_values_within_error_margin([883, 707])
-        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625])
-        expect(editor()[:size]).to have_values_within_error_margin([692, 707])
+        expect(canvas()[:top_left]).to have_values_within_error_margin([707, 143.265625]), error_message
+        expect(canvas()[:size]).to have_values_within_error_margin([868, 707]), error_message
+        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625]), error_message
+        expect(editor()[:size]).to have_values_within_error_margin([692, 707]), error_message
       end
 
       it "increases the canvas width" do
@@ -303,11 +303,11 @@ describe "Dynamic resizing of umpleonline layout ",
         find(:css, "#buttonShowHideCanvas").click
         error_message = "improper resize after canvas enable"
 
-        expect(canvas()[:top_left]).to have_values_within_error_margin([1170, 143.265625])
-        expect(canvas()[:size]).to have_values_within_error_margin([420, 707])
-        expect(menu()[:top_left]).to have_values_within_error_margin([986, 143.265625])
-        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625])
-        expect(editor()[:size]).to have_values_within_error_margin([971, 707])
+        expect(canvas()[:top_left]).to have_values_within_error_margin([1155, 143.265625]), error_message
+        expect(canvas()[:size]).to have_values_within_error_margin([420, 707]), error_message
+        expect(menu()[:top_left]).to have_values_within_error_margin([971, 143.265625]), error_message
+        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625]), error_message
+        expect(editor()[:size]).to have_values_within_error_margin([956, 707]), error_message
       end
 
       it "disables the text editor" do
@@ -315,7 +315,7 @@ describe "Dynamic resizing of umpleonline layout ",
         find(:css, "#buttonShowHideTextEditor").click
         error_message = "improper resize after editor disable"
 
-        expect(menu()[:top_left]).to have_values_within_error_margin([10, 140.328125])
+        expect(menu()[:top_left]).to have_values_within_error_margin([10, 140.328125]), error_message
       end
 
        it "disables the menu" do
@@ -323,8 +323,8 @@ describe "Dynamic resizing of umpleonline layout ",
         
         toggle_element_visibility(:menu)
 
-        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625])
-        expect(editor()[:size]).to have_values_within_error_margin([1580, 707])
+        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625]), error_message
+        expect(editor()[:size]).to have_values_within_error_margin([1565, 707]), error_message
       end
 
       it "attempts to resize the text editor horizontally" do
@@ -407,7 +407,7 @@ describe "Dynamic resizing of umpleonline layout ",
         find(:css, "#buttonShowHideCanvas").click
         error_message = "improper resize after canvas disable"
 
-        expect(menu()[:top_left]).to have_values_within_error_margin([10, 140.328125])
+        expect(menu()[:top_left]).to have_values_within_error_margin([10, 140.328125]), error_message
       end
 
       it "enables the text editor" do
@@ -415,11 +415,11 @@ describe "Dynamic resizing of umpleonline layout ",
         find(:css, "#buttonShowHideTextEditor").click
         error_message = "improper resize after editor enable"
 
-        expect(canvas()[:top_left]).to have_values_within_error_margin([483, 143.265625])
-        expect(canvas()[:size]).to have_values_within_error_margin([1107, 710])
-        expect(menu()[:top_left]).to have_values_within_error_margin([299, 143.265625])
-        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625])
-        expect(editor()[:size]).to have_values_within_error_margin([284, 710])
+        expect(canvas()[:top_left]).to have_values_within_error_margin([483, 143.265625]), error_message
+        expect(canvas()[:size]).to have_values_within_error_margin([1092, 710]), error_message
+        expect(menu()[:top_left]).to have_values_within_error_margin([299, 143.265625]), error_message
+        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625]), error_message
+        expect(editor()[:size]).to have_values_within_error_margin([284, 710]), error_message
       end
 
        it "disables the menu" do
@@ -427,8 +427,8 @@ describe "Dynamic resizing of umpleonline layout ",
         
         toggle_element_visibility(:menu)
 
-        expect(canvas()[:top_left]).to have_values_within_error_margin([10, 140.328125])
-        expect(canvas()[:size]).to have_values_within_error_margin([1580, 710])
+        expect(canvas()[:top_left]).to have_values_within_error_margin([10, 140.328125]), error_message
+        expect(canvas()[:size]).to have_values_within_error_margin([1565, 710]), error_message
       end
 
       it "attempts to resize the canvas horizontally" do
@@ -511,8 +511,8 @@ describe "Dynamic resizing of umpleonline layout ",
 
         toggle_element_visibility(:canvas)
 
-        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625])
-        expect(editor()[:size]).to have_values_within_error_margin([1580, 707])
+        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625]), error_message
+        expect(editor()[:size]).to have_values_within_error_margin([1565, 707]), error_message
       end
 
       it "disables the text editor" do
@@ -520,8 +520,8 @@ describe "Dynamic resizing of umpleonline layout ",
 
         toggle_element_visibility(:editor)
 
-        expect(canvas()[:top_left]).to have_values_within_error_margin([10, 140.328125])
-        expect(canvas()[:size]).to have_values_within_error_margin([1580, 707])
+        expect(canvas()[:top_left]).to have_values_within_error_margin([10, 140.328125]), error_message
+        expect(canvas()[:size]).to have_values_within_error_margin([1565, 707]), error_message
       end
 
       it "enables the menu" do
@@ -529,11 +529,11 @@ describe "Dynamic resizing of umpleonline layout ",
  
         toggle_element_visibility(:menu)
 
-        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625])
-        expect(editor()[:size]).to have_values_within_error_margin([324, 707])
-        expect(menu()[:top_left]).to have_values_within_error_margin([339, 143.265625])
-        expect(canvas()[:top_left]).to have_values_within_error_margin([523, 143.265625])
-        expect(canvas()[:size]).to have_values_within_error_margin([1067, 707])
+        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625]), error_message
+        expect(editor()[:size]).to have_values_within_error_margin([324, 707]), error_message
+        expect(menu()[:top_left]).to have_values_within_error_margin([339, 143.265625]), error_message
+        expect(canvas()[:top_left]).to have_values_within_error_margin([523, 143.265625]), error_message
+        expect(canvas()[:size]).to have_values_within_error_margin([1052, 707]), error_message
       end
 
       it "resizes the canvas" do
@@ -663,7 +663,7 @@ describe "Dynamic resizing of umpleonline layout ",
 
         actual = {menu:menu(), editor:editor()}
 
-        expect(actual).to have_expected_dimension(original_sizes)
+        expect(actual).to have_expected_dimension(original_sizes), error_message
       end
 
       it "disables the text editor" do
@@ -671,9 +671,9 @@ describe "Dynamic resizing of umpleonline layout ",
         find("#buttonShowHideTextEditor").click
         error_message = "improper resize after editor disable"
 
-        expect(canvas()[:top_left]).to have_values_within_error_margin([194, 140.328125])
-        expect(canvas()[:size]).to have_values_within_error_margin([726, 366])
-        expect(menu()[:top_left]).to have_values_within_error_margin([10, 140.328125])
+        expect(canvas()[:top_left]).to have_values_within_error_margin([194, 140.328125]), error_message
+        expect(canvas()[:size]).to have_values_within_error_margin([711, 366]), error_message
+        expect(menu()[:top_left]).to have_values_within_error_margin([10, 140.328125]), error_message
       end
 
       it "disables the menu" do
@@ -681,10 +681,10 @@ describe "Dynamic resizing of umpleonline layout ",
         
         toggle_element_visibility(:menu)
 
-        expect(canvas()[:top_left]).to have_values_within_error_margin([10, 515.15625])
-        expect(canvas()[:size]).to have_values_within_error_margin([911, 366])
-        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625])
-        expect(editor()[:size]).to have_values_within_error_margin([910, 366])
+        expect(canvas()[:top_left]).to have_values_within_error_margin([10, 515.15625]), error_message
+        expect(canvas()[:size]).to have_values_within_error_margin([896, 366]), error_message
+        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625]), error_message
+        expect(editor()[:size]).to have_values_within_error_margin([895, 366]), error_message
       end
 
       context "using the text editor's resize handle" do
@@ -856,10 +856,10 @@ describe "Dynamic resizing of umpleonline layout ",
         find(:css, "#buttonShowHideCanvas").click
         error_message = "improper resize after canvas enable"
 
-        expect(canvas()[:top_left]).to have_values_within_error_margin([10, 515.15625])
-        expect(canvas()[:size]).to have_values_within_error_margin([911, 366])
-        expect(menu()).to have_expected_element_dimension(original_sizes[:menu])
-        expect(editor()).to have_expected_element_dimension(original_sizes[:editor])
+        expect(canvas()[:top_left]).to have_values_within_error_margin([10, 515.15625]), error_message
+        expect(canvas()[:size]).to have_values_within_error_margin([896, 366]), error_message
+        expect(menu()).to have_expected_element_dimension(original_sizes[:menu]), error_message
+        expect(editor()).to have_expected_element_dimension(original_sizes[:editor]), error_message
       end
 
       it "disables the text editor" do
@@ -867,7 +867,7 @@ describe "Dynamic resizing of umpleonline layout ",
         find(:css, "#buttonShowHideTextEditor").click
         error_message = "improper resize after canvas enable"
 
-        expect(menu()[:top_left]).to have_values_within_error_margin([10, 140.328125])
+        expect(menu()[:top_left]).to have_values_within_error_margin([10, 140.328125]), error_message
       end
 
       it "disables the menu" do
@@ -875,8 +875,8 @@ describe "Dynamic resizing of umpleonline layout ",
         
         toggle_element_visibility(:menu)
 
-        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625])
-        expect(editor()[:size]).to have_values_within_error_margin([910, 366])
+        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625]), error_message
+        expect(editor()[:size]).to have_values_within_error_margin([895, 366]), error_message
       end
 
       context "using the text editor's resize handle" do
@@ -987,7 +987,7 @@ describe "Dynamic resizing of umpleonline layout ",
         find(:css, "#buttonShowHideCanvas").click
         error_message = "improper resize after canvas disable"
 
-        expect(menu()).to have_expected_element_dimension(original_sizes[:menu])
+        expect(menu()).to have_expected_element_dimension(original_sizes[:menu]), error_message
       end
 
       it "enables the text editor" do
@@ -995,11 +995,11 @@ describe "Dynamic resizing of umpleonline layout ",
         find(:css, "#buttonShowHideTextEditor").click
         error_message = "improper resize after editor enable"
 
-        expect(canvas()[:top_left]).to have_values_within_error_margin([10, 515.15625])
-        expect(canvas()[:size]).to have_values_within_error_margin([911, 366])
-        expect(menu()[:top_left]).to have_values_within_error_margin([741, 143.265625])
-        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625])
-        expect(editor()[:size]).to have_values_within_error_margin([726, 366])
+        expect(canvas()[:top_left]).to have_values_within_error_margin([10, 515.15625]), error_message
+        expect(canvas()[:size]).to have_values_within_error_margin([896, 366]), error_message
+        expect(menu()[:top_left]).to have_values_within_error_margin([726, 143.265625]), error_message
+        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625]), error_message
+        expect(editor()[:size]).to have_values_within_error_margin([711, 366]), error_message
       end
 
       it "disables the menu" do
@@ -1007,8 +1007,8 @@ describe "Dynamic resizing of umpleonline layout ",
         
         toggle_element_visibility(:menu)
 
-        expect(canvas()[:top_left]).to have_values_within_error_margin([10, 140.328125])
-        expect(canvas()[:size]).to have_values_within_error_margin([910, 366])
+        expect(canvas()[:top_left]).to have_values_within_error_margin([10, 140.328125]), error_message
+        expect(canvas()[:size]).to have_values_within_error_margin([895, 366]), error_message
       end
 
       context "using the canvas's resize handle" do
@@ -1121,8 +1121,8 @@ describe "Dynamic resizing of umpleonline layout ",
 
         toggle_element_visibility(:canvas)
 
-        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625])
-        expect(editor()[:size]).to have_values_within_error_margin([910, 366])
+        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625]), error_message
+        expect(editor()[:size]).to have_values_within_error_margin([895, 366]), error_message
       end
 
       it "disables the text editor" do
@@ -1130,8 +1130,8 @@ describe "Dynamic resizing of umpleonline layout ",
 
         toggle_element_visibility(:editor)
 
-        expect(canvas()[:top_left]).to have_values_within_error_margin([10, 140.328125])
-        expect(canvas()[:size]).to have_values_within_error_margin([910, 366])
+        expect(canvas()[:top_left]).to have_values_within_error_margin([10, 140.328125]), error_message
+        expect(canvas()[:size]).to have_values_within_error_margin([895, 366]), error_message
       end
 
       it "enables the menu" do
@@ -1139,11 +1139,11 @@ describe "Dynamic resizing of umpleonline layout ",
         
         toggle_element_visibility(:menu)
 
-        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625])
-        expect(editor()[:size]).to have_values_within_error_margin([726, 366])
-        expect(menu()[:top_left]).to have_values_within_error_margin([741, 143.265625])
-        expect(canvas()[:top_left]).to have_values_within_error_margin([10, 515.15625])
-        expect(canvas()[:size]).to have_values_within_error_margin([911, 366])
+        expect(editor()[:top_left]).to have_values_within_error_margin([10, 143.265625]), error_message
+        expect(editor()[:size]).to have_values_within_error_margin([711, 366]), error_message
+        expect(menu()[:top_left]).to have_values_within_error_margin([726, 143.265625]), error_message
+        expect(canvas()[:top_left]).to have_values_within_error_margin([10, 515.15625]), error_message
+        expect(canvas()[:size]).to have_values_within_error_margin([896, 366]), error_message
       end
 
       it "increases the height of the text editor" do
