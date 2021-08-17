@@ -26,7 +26,7 @@ module TestUtils
 
   def load_umple_with_option(option_text)
     visit("umple.php?#{option_text}")
-    wait_for_loading
+    wait_for_loading_for 20
   end  
 
   def load_umple_with_file(filename, directory)
@@ -34,14 +34,14 @@ module TestUtils
     file_contents = IO.read("#{directory}#{filename}")
     url_encoded_file_contents = CGI::escape(file_contents)
     visit("umple.php?text=#{url_encoded_file_contents}")
-    wait_for_loading
+    wait_for_loading_for 20
   end
 
   def load_umple_with_file_and_option(filename, directory, option_text)
     file_contents = IO.read("#{directory}#{filename}")
     url_encoded_file_contents = CGI::escape(file_contents)
     visit("umple.php?#{option_text}&text=#{url_encoded_file_contents}")
-    wait_for_loading
+    wait_for_loading_for 20
   end
 
   def encode_to_url(plain_text)

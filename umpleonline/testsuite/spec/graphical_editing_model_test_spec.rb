@@ -129,9 +129,7 @@ describe "Graphical editing of diagram: model consistency",
         
         wait_for_loading
         verify_diagram_does_not_contain("#umpleAssociation_0")
-        #the Page.getUmpleCode() function sends out the umple code in sequence
-        #this makes the result of the function beneath this unstable hence it is commented out
-        #verify_text_ignore_position("after_removing_reflexive_association.ump")
+        verify_text_ignore_position("after_removing_reflexive_association.ump")
       end
     end
 
@@ -142,11 +140,9 @@ describe "Graphical editing of diagram: model consistency",
         find(:css, '#buttonDeleteEntity').click
         element = within("div#umpleCanvas") {find(:css, '#umpleAssociation_0_one').click}
 
-        wait_for_loading_for(10)
+        wait_for_loading
         verify_diagram_does_not_contain("#umpleAssociation_0")
-        #the Page.getUmpleCode() function sends out the umple code in sequence
-        #this makes the result of the function beneath this unstable hence it is commented out
-        #verify_text_ignore_position("after_removing_reflexive_association.ump")
+        verify_text_ignore_position("after_removing_reflexive_association.ump")
       end
     end
   end
@@ -166,10 +162,10 @@ describe "Graphical editing of diagram: model consistency",
           find(:css, "#Student").native.send_keys(:delete)
         end
 
-        wait_for_loading_for(20)
+        wait_for_loading
         verify_diagram_does_not_contain("#Student")
         verify_diagram_does_not_contain("#umpleAssociation_0")
-        #verify_text_ignore_position("empty_file.ump")
+        verify_text_ignore_position("empty_file.ump")
       end
     end
 
@@ -186,9 +182,7 @@ describe "Graphical editing of diagram: model consistency",
         wait_for_loading
         verify_diagram_does_not_contain("#Student")
         verify_diagram_does_not_contain("#umpleAssociation_0")
-        #the Page.getUmpleCode() function sends out the umple code in sequence
-        #this makes the result of the function beneath this unstable hence it is commented out
-        #verify_text_ignore_position("empty_file.ump")
+        verify_text_ignore_position("empty_file.ump")
       end
     end
   end
@@ -213,9 +207,7 @@ describe "Graphical editing of diagram: model consistency",
         verify_diagram_does_not_contain("#Student")
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_diagram_does_not_contain("#umpleAssociation_1")
-        #the Page.getUmpleCode() function sends out the umple code in sequence
-        #this makes the result of the function beneath this unstable hence it is commented out
-        #verify_text_ignore_position("empty_file.ump")
+        verify_text_ignore_position("empty_file.ump")
       end
     end
 
@@ -236,9 +228,7 @@ describe "Graphical editing of diagram: model consistency",
         verify_diagram_does_not_contain("#Student")
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_diagram_does_not_contain("#umpleAssociation_1")
-        #the Page.getUmpleCode() function sends out the umple code in sequence
-        #this makes the result of the function beneath this unstable hence it is commented out
-        #verify_text_ignore_position("empty_file.ump")
+        verify_text_ignore_position("empty_file.ump")
       end
     end
   end
@@ -574,7 +564,7 @@ describe "Graphical editing of diagram: model consistency",
         find(:css, '#buttonDeleteEntity').click
         within("div#umpleCanvas") {find(:css, '#Mentor').click}
 
-        wait_for_loading
+        wait_for_loading_for 20
         verify_diagram_does_not_contain("#Mentor_generalization")
         verify_diagram_does_not_contain("#Mentor")
         verify_text_ignore_position("after_removing_subclass.ump")
@@ -590,9 +580,9 @@ describe "Graphical editing of diagram: model consistency",
       it "deletes a symmetric reflexive association" do
         within("div#umpleCanvas") {find(:css, '#umpleAssociation_0').native.send_keys(:delete)}
 
-        wait_for_loading
+        wait_for_loading_for 20
         verify_diagram_does_not_contain("#umpleAssociation_0")
-        #verify_text_ignore_position("after_removing_reflexive_association.ump")
+        verify_text_ignore_position("after_removing_reflexive_association.ump")
       end
     end
 
@@ -603,7 +593,7 @@ describe "Graphical editing of diagram: model consistency",
 
         wait_for_loading
         verify_diagram_does_not_contain("#umpleAssociation_0")
-        #verify_text_ignore_position("after_removing_reflexive_association.ump")
+        verify_text_ignore_position("after_removing_reflexive_association.ump")
       end
     end
   end

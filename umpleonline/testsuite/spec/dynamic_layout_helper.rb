@@ -13,7 +13,6 @@ module DynamicResizingHelper
   end
 
   def canvas
-    wait_for_loading
     size = get_element_size("umpleCanvasColumn")
     position = get_element_position("umpleCanvasColumn")
 
@@ -25,7 +24,6 @@ module DynamicResizingHelper
   end
 
   def editor
-    wait_for_loading
     size = get_element_size("textEditorColumn")
     position = get_element_position("textEditorColumn")
     
@@ -37,7 +35,6 @@ module DynamicResizingHelper
   end
 
   def menu
-    wait_for_loading
     size = get_element_size("paletteColumn")
     position = get_element_position("paletteColumn")
 
@@ -74,17 +71,17 @@ module DynamicResizingHelper
 
   RSpec::Matchers.define :have_expected_dimension do |expected|
     expected.each_key do |key|
-      #begin
+      begin
         expected_size_range_x = [expected[key][:size][0]-ERROR_MARGIN, expected[key][:size][0]+ERROR_MARGIN]
         expected_size_range_y = [expected[key][:size][1]-ERROR_MARGIN, expected[key][:size][1]+ERROR_MARGIN]
         expected_position_range_x = [expected[key][:top_left][0]-ERROR_MARGIN, expected[key][:top_left][0]+ERROR_MARGIN]
         expected_position_range_y = [expected[key][:top_left][1]-ERROR_MARGIN, expected[key][:top_left][1]+ERROR_MARGIN]
-      #rescue TypeError
-       # expected_size_range_x = [expected[key][0]-1, expected[0]+1]
-        #expected_size_range_y = [expected[key][1]-1, expected[1]+1]
-        #expected_position_range_x = [expected[0][key]-1, expected[0]+1]
-        #expected_position_range_y = [expected[1][key]-1, expected[1]+1]
-      #end
+      rescue TypeError
+        expected_size_range_x = [expected[key][0]-1, expected[0]+1]
+        expected_size_range_y = [expected[key][1]-1, expected[1]+1]
+        expected_position_range_x = [expected[0][key]-1, expected[0]+1]
+        expected_position_range_y = [expected[1][key]-1, expected[1]+1]
+      end
     
       match do |actual|
         actual.each_key do |key|
@@ -108,17 +105,17 @@ module DynamicResizingHelper
 
   RSpec::Matchers.define :have_expected_element_dimension do |expected|
     expected.each_key do |key|
-      #begin
+      begin
         expected_size_range_x = [expected[key][0]-ERROR_MARGIN, expected[key][0]+ERROR_MARGIN]
         expected_size_range_y = [expected[key][1]-ERROR_MARGIN, expected[key][1]+ERROR_MARGIN]
         expected_position_range_x = [expected[key][0]-ERROR_MARGIN, expected[key][0]+ERROR_MARGIN]
         expected_position_range_y = [expected[key][1]-ERROR_MARGIN, expected[key][1]+ERROR_MARGIN]
-      #rescue TypeError
-       # expected_size_range_x = [expected[key][0]-1, expected[0]+1]
-        #expected_size_range_y = [expected[key][1]-1, expected[1]+1]
-        #expected_position_range_x = [expected[0][key]-1, expected[0]+1]
-        #expected_position_range_y = [expected[1][key]-1, expected[1]+1]
-      #end
+      rescue TypeError
+        expected_size_range_x = [expected[key]-1, expected[0]+1]
+        expected_size_range_y = [expected[key]-1, expected[1]+1]
+        expected_position_range_x = [expected[0]-1, expected[0]+1]
+        expected_position_range_y = [expected[1]-1, expected[1]+1]
+      end
     
       match do |actual|
         actual.each_key do |key|

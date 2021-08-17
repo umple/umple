@@ -116,7 +116,7 @@ describe "Dynamic resizing of umpleonline layout ",
 
       it "decreases the canvas width" do
         resize_amount = 50
-        wait_for_loading
+
         resize_right(:canvas, resize_amount)
 
         expected = {
@@ -142,7 +142,7 @@ describe "Dynamic resizing of umpleonline layout ",
 
       it "decreases the canvas width to minimum" do
         resize_amount = 696 
-        wait_for_loading
+       
         resize_right(:canvas, resize_amount)
 
         expected = {size:[420, 707], top_left:[1170, 143.265625]}
@@ -442,7 +442,6 @@ describe "Dynamic resizing of umpleonline layout ",
 
       it "increases the height of the app" do
         resize_amount = 50
-        wait_for_loading
         resize_down(:app, resize_amount)
 
         expected = {
@@ -463,7 +462,6 @@ describe "Dynamic resizing of umpleonline layout ",
 
       it "decreases the height of the app" do
         resize_amount = 50
-        wait_for_loading
         resize_up(:app, resize_amount)
 
         expected = {
@@ -1228,7 +1226,7 @@ describe "Dynamic resizing of umpleonline layout ",
   describe "switching between large and small screen layouts" do
     context "switching from large screen to small screen" do
       before(:each) do
-        Capybara.current_window.resize_to(930, 935) 
+        Capybara.current_window.resize_to(1600, 900) 
         load_umple_with_option("")
       end
 
@@ -1247,9 +1245,21 @@ describe "Dynamic resizing of umpleonline layout ",
         expect(actual).to have_expected_dimension(expected)
       end
 
-      it "increases the browser zoom level" do
-        pending("way to set browser zoom level")
-        fail
+      it "increases the browser zoom level to 125%" do
+        page.send_keys(:control, :add)
+        page.send_keys(:control, :add)
+        actual = {canvas: canvas(), menu: menu(), editor: editor()}
+
+        expected = {
+          canvas: {size:[868, 733],
+                   top_left:[707, 110.265625]},
+          menu:   {size:[179, 733],
+                   top_left:[756, 145]},
+          editor: {size:[508, 733],
+                   top_left:[523, 110.265625]}} 
+
+        expect(actual).to have_expected_dimension(expected)
+
       end
     end
 
@@ -1264,19 +1274,30 @@ describe "Dynamic resizing of umpleonline layout ",
         actual = {canvas: canvas(), menu: menu(), editor: editor()}
 
         expected = {
-          canvas: {size:[926, 749],
-                   top_left:[664, 95]},
-          menu:   {size:[179, 749],
-                   top_left:[480, 95]},
-          editor: {size:[465, 749],
-                   top_left:[10, 95]}}
+          canvas: {size:[896, 733],
+                   top_left:[679, 110.265625]},
+          menu:   {size:[179, 733],
+                   top_left:[495, 110.265625]},
+          editor: {size:[480, 733],
+                   top_left:[10, 110.265625]}}
 
         expect(actual).to have_expected_dimension(expected)
       end
 
-      it "decreases the browser zoom level" do
-        pending("way to set browser zoom level")
-        fail
+      it "decreases the browser zoom level to 80%" do
+        page.send_keys(:control, :subtract)
+        page.send_keys(:control, :subtract)
+        actual = {canvas: canvas(), menu: menu(), editor: editor()}
+
+        expected = {
+          canvas: {size:[896, 379],
+                   top_left:[10, 495.15625]},
+          menu:   {size:[179, 379],
+                   top_left:[726, 110.265625]},
+          editor: {size:[711, 379],
+                   top_left:[10, 110.265625]}}
+
+        expect(actual).to have_expected_dimension(expected)
       end
     end
   end

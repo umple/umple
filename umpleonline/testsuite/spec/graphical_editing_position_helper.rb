@@ -80,7 +80,9 @@ module DiagramEditingPositionHelper
 
   #Element data extraction functions - positional code extraction
   def get_class_position_code_block(class_name)
-    code = evaluate_script("Page.getUmpleCode()")
+    begin
+      code = evaluate_script("Page.getUmpleCode()")
+    end while evaluate_script("Ajax.queue.length")!=0
     code = code.split("//$?[End_of_model]$?")[1]
     code = code[/class #{Regexp.quote(class_name)}\s+\{.*?\}/m]
     return code.gsub(/class #{class_name}\s+/, "") unless code.nil?
@@ -111,7 +113,9 @@ module DiagramEditingPositionHelper
       code = retreive_association_code(class_two, class_one_end, class_two_end)
       classes = [class_two, class_one]
     end
-
+    file = File.open("out.txt", "a")
+    file.write("\n aaa \n")
+    file.write(code)
     return nil unless code
 
     code = code.split()

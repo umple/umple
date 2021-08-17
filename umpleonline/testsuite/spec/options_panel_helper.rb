@@ -9,6 +9,7 @@ module OptionsPanelTestHelper
   def reset_page_to_options
     load_page
     switch_to_options_panel
+    wait_for_loading
   end
 
   def reset_page_to_options_with_option(option_text)
@@ -32,7 +33,9 @@ module OptionsPanelTestHelper
     load_page
     select_option_by_value("#inputExampleType", "smModels")
     select_option_by_value("#inputExample2", "Booking.ump")
+    wait_for_loading
     switch_to_options_panel
+    wait_for_loading
   end
   
   def input_model_text(new_text)
