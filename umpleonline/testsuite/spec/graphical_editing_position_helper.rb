@@ -113,9 +113,6 @@ module DiagramEditingPositionHelper
       code = retreive_association_code(class_two, class_one_end, class_two_end)
       classes = [class_two, class_one]
     end
-    file = File.open("out.txt", "a")
-    file.write("\n aaa \n")
-    file.write(code)
     return nil unless code
 
     code = code.split()
