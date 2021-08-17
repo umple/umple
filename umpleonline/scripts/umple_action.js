@@ -507,7 +507,10 @@ Action.loadFileCallback = function(response)
       TabControl.useActiveTabTo(TabControl.renameTab)(extractedName, true);
     }
   }
-  if (!Action.manualSync) Action.updateUmpleDiagram();
+  if (!Action.manualSync) {
+    Action.updateUmpleDiagram();
+    Action.freshLoad = false;
+  }
 }
 
 Action.loadTask = function(taskName, isBookmark)
