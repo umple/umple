@@ -651,16 +651,16 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         find(:css, "#buttonManualSync").click
         input_model_text("class Student {}")
         switch_to_tools_panel
-        wait_for_loading
+
         expect(page).to have_selector("div#syncNeededMessage")
         expect(find(:css, "#umpleCanvas")).to have_no_selector("#Student")
         expect(page).to have_no_css("li#buttonSyncDiagram.disabled")
 
         switch_to_options_panel
-        wait_for_loading
         find(:css, "#buttonManualSync", visible: :all).click
+        
         switch_to_tools_panel
-        wait_for_loading
+        
         expect(page).to have_no_selector("div#syncNeededMessage")
         expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
         expect(page).to have_css("li#buttonSyncDiagram.disabled")
