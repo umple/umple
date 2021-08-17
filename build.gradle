@@ -1260,6 +1260,9 @@ task uiTestHelp {
     println("The umpleonline UI tests can be launched by running the 'doWebsiteTests' task \n"+
     "You can specify a custom hostname with -PhostName=\"yourserver\"\n"+ 
   "eg. ./gradlew doWebsiteTests -PhostName=http://cruise2.local/\n"+
+  "The testing environment can also be specified, that is, whether they are to run on a headless browser or not.\n"+
+  "By default they are run on a headless browser but you can use a proper browser by setting the env property to no-headless.\n"+ 
+  "This can be achieved by -Penv=\"no-headless\"\n"+
   "If no hostName is specified, the tests will be run against the public umpleonline by default (To be modified later)\n"+
     "The default mode for this test suite is fail safe. It will run and report all failures.\n" +
   "It can be run in fail-fast mode using -Pfailfast=true\n" +
@@ -1288,16 +1291,21 @@ task initTests {
   
   def host = "https://cruise.umple.org/umpleonline/"
   def baseDir = "${rootProject.projectDir.toString()}/umpleonline/"
+  def testenv= ""
   
   if (project.hasProperty("hostName")){
     host = hostName+"umpleonline/"
   }
+  if (project.hasProperty("env")){
+    testenv = env
+  }
+  
   doLast{
     println("Testing "+host+"umple.php")
     }
   
   def tempConfig = new File ("${rootProject.projectDir.toString()}/umpleonline/testsuite/spec/temp_config.txt")
-  tempConfig.write ("host_name "+host+"\n\t"+"umpleonline_directory "+baseDir)
+  tempConfig.write ("host_name "+host+"\n\t"+"umpleonline_directory "+baseDir+"\n\t"+"testing_env "+testenv)
 }
 task runRspec {
   group = "Custom"
@@ -1319,13 +1327,18 @@ task runRspec {
     def result = exec {
   	  workingDir "${rootProject.projectDir.toString()}/umpleonline/testsuite"
   	  commandLine  'rspec', '-f', 'html', '-o', testOutputPath+"/index.html", '-t', tagArg, failfastoption, 'spec'
+  	  ignoreExitValue=true
     }
-    
-    if (result.getExitValue()!=0) println("No failures found.")
-    else println("Umpleonline tests failed.")
+    delete "${rootProject.projectDir.toString()}/umpleonline/testsuite/spec/temp_config.txt"
+    if (result.getExitValue()==0){ println("No failures found.")
      println("See test results in ${rootProject.projectDir.toString()}/dist/gradle/reports/testbed_umpleonline/index.html")
-     delete "${rootProject.projectDir.toString()}/umpleonline/testsuite/spec/temp_config.txt"
     }
+    else {
+    	println("See test results in ${rootProject.projectDir.toString()}/dist/gradle/reports/testbed_umpleonline/index.html")
+    	throw new GradleException("Umpleonline tests failed.")
+    }
+
+   }
 }
 task doWebsiteTests {
   dependsOn initTests
