@@ -19,11 +19,15 @@ Action.gentime = new Date().getTime();
 Action.savedCanonical = "";
 Action.gdprHidden = false;
 Action.update = "";
+
+// Regulators of whether a save occurs on not
+// false: the program proceeds and saves as normal; true: skip the save as the program would have saved earlier already
 let justUpdatetoSaveLater = false;
 
 Action.setjustUpdatetoSaveLater = function(state){
   justUpdatetoSaveLater = state;
 }
+
 let justUpdatetoSaveLaterForTextCallback = false;
 
 Action.setjustUpdatetoSaveLaterForTextCallback = function(state){
