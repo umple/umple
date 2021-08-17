@@ -448,9 +448,13 @@ Page.initUmpleTextArea = function()
   var modelEditor = jQuery("#umpleModelEditorText");
   var layoutEditor = jQuery("#umpleLayoutEditorText");
   
-  modelEditor.keyup(function(eventObject){Action.umpleTyped(eventObject);});
+  modelEditor.keyup(function(eventObject){
+    Action.freshLoad = false;
+    Action.umpleTyped(eventObject);
+  });
   modelEditor.mousedown(function(){setTimeout("jQuery(\"#linenum\").val(Action.getCaretPosition())",25)});
   layoutEditor.keyup(function(eventObject){
+    Action.freshLoad = false;
     Action.setjustUpdateNowtoSaveLater(false);
     Action.umpleCodeMirrorTypingActivity();
   }); // Fixes Issue#1571 Editing on the layout editor will not update the Umple diagram

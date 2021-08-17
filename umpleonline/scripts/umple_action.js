@@ -427,7 +427,6 @@ Action.redoOrUndo = function(isUndo)
   var rawOriginal = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
   var theDiff=Action.findDiff(rawOriginal, rawReplacement);
   var prevLine=Action.getCaretPosition();
-
   Action.freshLoad = true;
   Page.setUmpleCode(afterHistoryChange);
   if (!Action.manualSync) Action.updateLayoutEditorAndDiagram();
@@ -1535,6 +1534,7 @@ Action.updateUmpleTextCallback = function(response)
 
   if (DiagramEdit.textChangeQueue.length == 0) 
   {
+    Action.freshLoad = false;
     DiagramEdit.pendingChanges = false;
     Action.setjustUpdatetoSaveLater(false);
     Action.setjustUpdatetoSaveLaterForTextCallback(false);
@@ -2162,6 +2162,7 @@ Action.umpleCodeMirrorTypingActivity = function() {
   }
   else {
     Action.freshLoad = false;
+    Action.setjustUpdatetoSaveLaterForTextCallback(false);
   }
 
 }
