@@ -500,7 +500,6 @@ Action.loadFileCallback = function(response)
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   if (Object.keys(TabControl.tabs).length > 1) return;
   Page.setUmpleCode(response.responseText, true);
-  console.log("[loadFile]");
   TabControl.getCurrentHistory().save(response.responseText,"loadFileCallback");
   Action.setjustUpdatetoSaveLater(true);
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
@@ -555,7 +554,6 @@ Action.loadTaskCallback = function(response)
   if (Object.keys(TabControl.tabs).length > 1) return;
 
   Action.setjustUpdatetoSaveLater(true);
-  console.log("[loadTask]");
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskCallback");
   var responseArray = response.responseText.split("task delimiter");
   Page.setUmpleCode(responseArray[0]);
@@ -581,9 +579,10 @@ Action.loadTaskExceptCodeCallback = function(response)
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   //if (Object.keys(TabControl.tabs).length > 1) return;
 
-  Action.setjustUpdatetoSaveLater(true);
-  console.log("[loadTaskException]");
-  TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
+  if (!justUpdatetoSaveLater){
+    TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
+    Action.setjustUpdatetoSaveLater(true);
+  }
   var responseArray = response.responseText.split("task delimiter");
   jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":");
   jQuery("#requestorName").val(responseArray[4]);
@@ -1520,9 +1519,7 @@ Action.directUpdateCommandCallback = function(response)
 // such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
 {
-
   if (!justUpdatetoSaveLater && !justUpdatetoSaveLaterForTextCallback){
-    console.log("[textCallback]");
     TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
     Page.setExampleMessage("");
   }
@@ -1639,7 +1636,6 @@ Action.loadExampleCallback = function(response)
   );
   Action.setCaretPosition("0");
   Action.updateLineNumberDisplay();
-  console.log("[loadExample]");
   TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
 }
 
@@ -2278,7 +2274,6 @@ Action.processTyping = function(target, manuallySynchronized)
 
   if (target != "diagramEdit"){
     if (!justUpdatetoSaveLater){
-      console.log("[processTyping]");
       TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
     }
     else if (target == "umpleModelEditorText" || target == "codeMirrorEditor"){
