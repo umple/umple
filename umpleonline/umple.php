@@ -294,7 +294,7 @@ $output = $dataHandle->readData('model.ump');
     
       <table>
         <tr style="text-align:left;">
-          <th id="labelTaskName" style="display: none;"><label for="taskName">Task Name:</label></th>
+          <th id="labelTaskName" style="display: none;"><label for="taskName"><span style="color:red">&#42;</span>Task Name:</label></th>
           <th><label id="labelRequestorName" for="requestorName">Requestor Name:</label></th>
           <th id="labelCompletionURL"><label>Completion Survey URL:</label></th>
         </tr>
@@ -350,8 +350,9 @@ $output = $dataHandle->readData('model.ump');
       <a class="button2" href="javascript:Action.copyParticipantURL()" title="Click to put the participant URL in your clipboard. You can then send
         the link to participants so they can do the task">Copy Participant URL</a> &nbsp;&nbsp;&nbsp;
       <a class="button2" href="javascript:Action.launchParticipantURL()" title="Click to generate an answer to this task in the same way
-        a participant would.Do this to test the task. Note that your response will appear if you later     
+        a participant would. Do this to test the task. Note that your response will appear if you later     
         download all the responses unless you cancel the submission.">Launch Participant URL in a new tab</a>
+        <a class="button2" title="Click this to close the task editing panel and return to a normal layout." href="javascript:Page.endTaskEdit()">Exit task editing mode</a>
     <?php } else if ($doLoadTaskInstruction && substr($dataHandle->getName(), 0, 8) != "taskroot") {?>
       <a class="button2" href="javascript:Action.openInstructionInNewTab()">Open instruction in a new tab</a>&nbsp;&nbsp;
       <a id="buttonReshowInstructions" class="button2" href="javascript:Action.reshowInstructions()" style="display: none;">Re-show Instructions</a>&nbsp;&nbsp;&nbsp;
@@ -361,6 +362,7 @@ $output = $dataHandle->readData('model.ump');
           and it will no longer be editable. Make sure your name is in a
           comment in the response if that has been requested in the instructions.">Submit Response</a>&nbsp;&nbsp;&nbsp;
         <a class="button2" href="javascript:Page.cancelTaskResponse()" title="Cancel this submission. Your data will be deleted.">Cancel this task response</a>&nbsp;
+        <a class="button2" href="javascript:Page.hideTask()" title="Click to cancel this submission without losing your data.">Exit task submission</a>
       <?php } else { ?>
         This task response has already been submitted and is now read-only.
     <?php }} ?>
@@ -609,7 +611,6 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample3" id = "defaultExampleOption3" value="">Select Example</option>
                 <option name = "optionExample" value="OBDCarSystem.ump">OBD Car System</option>
                 <option name = "optionExample" value="PingPong.ump">Ping Pong</option>
-                <option name="optionExample" class="openUmprOption" value="">Select from Umpr Repository...</option>
               </select>
             </li>
 		  
@@ -629,15 +630,15 @@ $output = $dataHandle->readData('model.ump');
       
           <ul id="mainDrawMenu" class="second toggle">
             <li class="subtitle"> Draw </li>
-            <li id="buttonAddClass" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the canvas to add a new class.">
+            <li id="buttonAddClass" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the canvas to add a new class." tabindex="0">
               <img src="scripts/class.png"/> 
               Class
             </li>
-            <li id="buttonAddAssociation" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on a class to draw an association.">
+            <li id="buttonAddAssociation" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on a class to draw an association." tabindex="0">
               <img src="scripts/assoc.png"/> 
               Association
             </li>
-            <li id="buttonAddTransition" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select and click on a state to draw a transition.">
+            <li id="buttonAddTransition" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select and click on a state to draw a transition." tabindex="0">
                <img src="scripts/assoc.png"/>
                Transition
              </li>            
@@ -645,27 +646,27 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/assocbend.jpg"/> 
               Bend Assoc.
             </li> -->
-            <li id="buttonAddGeneralization" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class.">
+            <li id="buttonAddGeneralization" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class." tabindex="0">
               <img src="scripts/generalization.png"/> 
               Generalization
             </li>
-            <li id="buttonDeleteEntity" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on an element to remove it from your model.">
+            <li id="buttonDeleteEntity" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on an element to remove it from your model." tabindex="0">
               <img src="scripts/delete.png"/>
                Delete
              </li>
-            <li id="buttonUndo" name="paletteItem">
+            <li id="buttonUndo" name="paletteItem" tabindex="0">
               <img src="scripts/undo.png"> 
               Undo
             </li>
-            <li id="buttonRedo" name="paletteItem">
+            <li id="buttonRedo" name="paletteItem" tabindex="0">
               <img src="scripts/redo.png"> 
               Redo
             </li>
-            <li id="buttonReindent" name="paletteItem">
+            <li id="buttonReindent" name="paletteItem" tabindex="0">
               <img src="scripts/sync_diagram.png" /> 
               Reindent Code
             </li>
-            <li id="buttonSyncDiagram" name="paletteItem">
+            <li id="buttonSyncDiagram" name="paletteItem" tabindex="0">
               <img src="scripts/sync_diagram.png" /> 
               Sync Diagram 
             </li>

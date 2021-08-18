@@ -25,7 +25,9 @@ module DiagramEditingModelHelper
     contents = IO.read("#{TestUtils::TEST_EXAMPLE_DIRECTORY}#{EXAMPLE_SUBDIRECTORY}#{filename}")
       .encode(:universal_newline => true)
     wait_for_loading
-    actual = evaluate_script("Page.getUmpleCode()")
+    begin
+      actual = evaluate_script("Page.getUmpleCode()")
+    end while evaluate_script("Ajax.queue.length")!=0
     actual = actual[0..actual.index("//$?[End_of_model]$?") - 1]
     actual = strip_whitespace(actual) == "//$?[End_of_model]$?namespace-;" ? "//$?[End_of_model]$?":actual
     expect(strip_whitespace(actual)).to eq(strip_whitespace(contents))
