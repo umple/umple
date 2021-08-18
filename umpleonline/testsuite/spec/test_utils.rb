@@ -5,6 +5,7 @@ module TestUtils
   # broken by a change, many tests will fail.
   def wait_for_loading
     loop until page.evaluate_script('jQuery.active').zero?
+    loop until page.evaluate_script("Ajax.queue.length").zero?
     page.has_no_selector?('.loading-indicator')
   end
 
@@ -13,6 +14,7 @@ module TestUtils
   def wait_for_loading_for(timeout)
     original_timeout = Capybara.default_max_wait_time
     loop until page.evaluate_script('jQuery.active').zero?
+    loop until page.evaluate_script("Ajax.queue.length").zero?
     Capybara.default_max_wait_time = timeout
     page.has_no_selector?('.loading-indicator')
     Capybara.default_max_wait_time = original_timeout
@@ -69,25 +71,6 @@ module TestUtils
     wait_for_loading
   end
 
-  # This function has been implemented for the driver to differentiate
-  # between MacOs and other operating systems
-
-  def send_modified_key(element_selector, key, *meta)
-    wait_for_loading
-    
-    key_string = key
-    key_string = "alt+" + key_string if meta.include? :alt
-    key_string = "ctrl+" + key_string if meta.include? :control
-    key_string = "command+" + key_string if meta.include? :command
-    if key == 'a' then key_string = "shift+"+ key_string end
-    if key == 't' then
-      key_string = "ctrl+" + key if meta.include? :command
-      key_string = "ctrl+alt+shift+" + key if meta.include? :control
-    end
-
-    page.driver.execute_script("Mousetrap.trigger('#{key_string}');")
-  end
-
   # Simple javascript/jQuery implementations to retrieve size and positions
   # of elements.
 
@@ -142,6 +125,7 @@ module TestUtils
 
   def select_option_by_value(select_id, option_text)
     find(:css, select_id).find("option[value='#{option_text}']").select_option
+    wait_for_loading_for(30)
   end
 end
 

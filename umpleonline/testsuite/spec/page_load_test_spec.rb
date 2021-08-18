@@ -11,6 +11,10 @@ describe "Page load options", :feature => :pageLoad, :helper => :pageLoad do
   it "loads UmpleOnline with the example url option" do
     load_umple_with_option("example=2DShapes")
 
+    #check examples dropdown menus
+    expect(page).to have_select("inputExampleType", selected: "Class Diagrams")
+    expect(page).to have_select("inputExample", selected: "2DShapes")
+
     #Check diagram
     expect(find(:css, "#umpleCanvas")).to have_selector("#Shape2D")
     expect(find(:css, "#umpleCanvas")).to have_selector("#EllipticalShape")

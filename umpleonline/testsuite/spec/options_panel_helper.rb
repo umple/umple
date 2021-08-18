@@ -35,7 +35,6 @@ module OptionsPanelTestHelper
     select_option_by_value("#inputExample2", "Booking.ump")
     wait_for_loading
     switch_to_options_panel
-    wait_for_loading
   end
   
   def input_model_text(new_text)

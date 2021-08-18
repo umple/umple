@@ -23,6 +23,7 @@ describe "Graphical editing of diagram: model consistency",
         verify_diagram_contains("#NewClass")
 
         verify_text_ignore_position("after_adding_class.ump")
+        undo_and_redo_the_addition("#NewClass")
       end
     end
 
@@ -34,6 +35,7 @@ describe "Graphical editing of diagram: model consistency",
         verify_diagram_contains("#NewClass")
 
         verify_text_ignore_position("after_adding_class.ump")
+        undo_and_redo_the_addition("#NewClass")
       end
     end
   end
@@ -55,6 +57,7 @@ describe "Graphical editing of diagram: model consistency",
           verify_diagram_does_not_contain("#Student")
 
           verify_text_ignore_position("empty_file.ump")
+          undo_and_redo_the_deletion("#Student")
         end
       end
 
@@ -68,6 +71,7 @@ describe "Graphical editing of diagram: model consistency",
           verify_diagram_does_not_contain("#Student")
 
           verify_text_ignore_position("empty_file.ump")
+          undo_and_redo_the_deletion("#Student")
         end
       end
     end
@@ -80,6 +84,7 @@ describe "Graphical editing of diagram: model consistency",
         verify_diagram_does_not_contain("#Student")
 
         verify_text_ignore_position("empty_file.ump")
+        undo_and_redo_the_deletion("#Student")
       end
     end
   end
@@ -99,6 +104,7 @@ describe "Graphical editing of diagram: model consistency",
         wait_for_loading
         expect(find(:css, "#umpleCanvas")).to have_selector("#umpleAssociation_0")
         verify_text_ignore_position("after_adding_reflexive_association.ump")
+        undo_and_redo_the_addition("#umpleAssociation_0")
       end
     end
 
@@ -113,6 +119,7 @@ describe "Graphical editing of diagram: model consistency",
         wait_for_loading_for(10)
         expect(find(:css, "#umpleCanvas")).to have_selector("#umpleAssociation_0")
         verify_text_ignore_position("after_adding_reflexive_association.ump")
+        undo_and_redo_the_addition("#umpleAssociation_0")
       end
     end
   end
@@ -127,9 +134,11 @@ describe "Graphical editing of diagram: model consistency",
         original_text = original_text[0..original_text.index("//$?[End_of_model]$?") - 1]
         within("div#umpleCanvas") {find(:css, '#umpleAssociation_0').native.send_keys(:delete)}
         
-        wait_for_loading
+        wait_for_loading_for 20
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_text_ignore_position("after_removing_reflexive_association.ump")
+
+        #undo_and_redo_the_deletion("#umpleAssociation_0")
       end
     end
 
@@ -143,6 +152,8 @@ describe "Graphical editing of diagram: model consistency",
         wait_for_loading
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_text_ignore_position("after_removing_reflexive_association.ump")
+
+        #undo_and_redo_the_deletion("#umpleAssociation_0")
       end
     end
   end
@@ -162,10 +173,12 @@ describe "Graphical editing of diagram: model consistency",
           find(:css, "#Student").native.send_keys(:delete)
         end
 
-        wait_for_loading
+        wait_for_loading_for 20
         verify_diagram_does_not_contain("#Student")
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_text_ignore_position("empty_file.ump")
+
+        #undo_and_redo_the_deletion("#Student", "#umpleAssociation_0")
       end
     end
 
@@ -183,6 +196,8 @@ describe "Graphical editing of diagram: model consistency",
         verify_diagram_does_not_contain("#Student")
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_text_ignore_position("empty_file.ump")
+
+        #undo_and_redo_the_deletion("#Student", "#umpleAssociation_0")
       end
     end
   end
@@ -208,6 +223,7 @@ describe "Graphical editing of diagram: model consistency",
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_diagram_does_not_contain("#umpleAssociation_1")
         verify_text_ignore_position("empty_file.ump")
+        undo_and_redo_the_deletion("#Student", "#umpleAssociation_0", "#umpleAssociation_1")
       end
     end
 
@@ -229,6 +245,7 @@ describe "Graphical editing of diagram: model consistency",
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_diagram_does_not_contain("#umpleAssociation_1")
         verify_text_ignore_position("empty_file.ump")
+        undo_and_redo_the_deletion("#Student", "#umpleAssociation_0", "#umpleAssociation_1")
       end
     end
   end

@@ -12,6 +12,38 @@ module DiagramEditingModelHelper
     load_umple_with_file(filename, "#{TestUtils::TEST_EXAMPLE_DIRECTORY}#{EXAMPLE_SUBDIRECTORY}")
   end
 
+  def undo_and_redo_the_addition(id, id_2=nil, id_3=nil)
+    #undoing this action
+    find("#buttonUndo").click
+    wait_for_loading_for 20
+    verify_diagram_does_not_contain("#{id}")
+    verify_diagram_does_not_contain("#{id}")
+    verify_diagram_does_not_contain("#{id}")
+
+    #Redoing this actions
+    find("#buttonRedo").click
+    wait_for_loading_for 20
+    verify_diagram_contains("#{id}")
+    verify_diagram_contains("#{id_2}") unless id_2.nil?
+    verify_diagram_contains("#{id_3}") unless id_3.nil?
+  end
+
+  def undo_and_redo_the_deletion(id, id_2=nil, id_3=nil)
+    find("#buttonUndo").click
+    wait_for_loading_for 20
+    verify_diagram_contains("#{id}")
+    verify_diagram_contains("#{id_2}") unless id_2.nil?
+    verify_diagram_contains("#{id_3}") unless id_3.nil?
+
+    sleep(4)
+    find("#buttonRedo").click
+    sleep(4)
+    wait_for_loading_for 20
+    verify_diagram_does_not_contain("#{id}")
+    verify_diagram_does_not_contain("#{id_2}") unless id_2.nil?
+    verify_diagram_does_not_contain("#{id_3}") unless id_3.nil?
+  end
+
   #verification functions
   def verify_diagram_contains(element)
     expect(find(:css, "div#umpleCanvas")).to have_selector(element)
