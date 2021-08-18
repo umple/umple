@@ -10,7 +10,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
     
     before(:all) do
       reset_page_to_options
-      page.driver.resize(1024, 768)
+      Capybara.current_session.current_window.resize_to(1024, 768)
     end
 
     describe "Clicking the show/hide diagram option" do
@@ -32,10 +32,10 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
 
       it "uses the keyboard shortcut" do
         reset_page_to_options unless get_checkbox_state("#buttonShowHideCanvas")
-        find(:css, "#textEditorColumn").click #gives focus
-        send_modified_key("#textEditorColumn", 'd', :control)
+        
+        find(:css, "#textEditorColumn").send_keys(:control, 'd')
         expect(get_checkbox_state("#buttonShowHideCanvas")).to eq(false)
-        send_modified_key("#textEditorColumn", 'd', :control)
+        find(:css, "#textEditorColumn").send_keys(:control, 'd')
         expect(get_checkbox_state("#buttonShowHideCanvas")).to eq(true)
       end
     end
@@ -59,10 +59,10 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
 
       it "uses the keyboard shortcut" do
         reset_page_to_options unless get_checkbox_state("#buttonShowHideTextEditor")
-        find(:css, "#umpleCanvasColumn").click #gives focus
-        send_modified_key("#umpleCanvasColumn", 't', :control)
+        
+        find(:css, "#umpleCanvas").send_keys(:control, 't')
         expect(get_checkbox_state("#buttonShowHideTextEditor")).to eq(false)
-        send_modified_key("#umpleCanvasColumn", 't', :control)
+        find(:css, "#umpleCanvas").send_keys(:control, 't')
         expect(get_checkbox_state("#buttonShowHideTextEditor")).to eq(true)
       end
     end
@@ -104,10 +104,10 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
 
       it "uses the keyboard shortcut" do
         reset_page_to_options unless get_checkbox_state("#buttonToggleAttributes")
-        find(:css, "#textEditorColumn").click #gives focus
-        send_modified_key("#textEditorColumn", 'a', :control)
+       
+        find(:css, "#textEditorColumn").send_keys(:shift, :control, 'a')
         expect(get_checkbox_state("#buttonToggleAttributes")).to eq(false)
-        send_modified_key("#textEditorColumn", 'a', :control)
+        find(:css, "#textEditorColumn").send_keys(:shift, :control, 'a')
         expect(get_checkbox_state("#buttonToggleAttributes")).to eq(true)
       end
     end
@@ -131,10 +131,10 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
 
       it "uses the keyboard shortcut" do
         reset_page_to_options if get_checkbox_state("#buttonToggleMethods")
-        find(:css, "#textEditorColumn").click #gives focus
-        send_modified_key("#textEditorColumn", 'm', :control)
+        
+        find(:css, "#textEditorColumn").send_keys(:control, 'm')
         expect(get_checkbox_state("#buttonToggleMethods")).to eq(true)
-        send_modified_key("#textEditorColumn", 'm', :control)
+        find(:css, "#textEditorColumn").send_keys(:control, 'm')
         expect(get_checkbox_state("#buttonToggleMethods")).to eq(false)
       end
     end
@@ -270,16 +270,19 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
     describe "Attributes show/hide option" do
       it "hides the attributes and shows them again"  do
         reset_page_to_options_with_model("single_class_single_attribute.ump")
+        wait_for_loading_for(40)
         within(find(:css, "#Student")) do
           fail_message = "page loaded without attributes showing"
           expect(page).to have_selector("tr.attributeArea"), fail_message
         end
         find(:css, "#buttonToggleAttributes").click
+        wait_for_loading_for(40)
         within(find(:css, "#Student")) do
           fail_message = "attributes not hidden after unchecking the attributes checkbox"
           expect(page).to have_no_selector("tr.attributeArea"), fail_message
         end
         find(:css, "#buttonToggleAttributes").click
+        wait_for_loading_for(40)
         within(find(:css, "#Student")) do
           fail_message = "attributes not showing after checking the attributes checkbox"
           expect(page).to have_selector("tr.attributeArea"), fail_message
@@ -290,16 +293,19 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
     describe "Methods show/hide option" do
       it "shows the methods and hides them again"  do
         reset_page_to_options_with_model("single_class_single_method.ump")
+        wait_for_loading_for(40)
         within(find(:css, "#Student")) do
           fail_message = "page loaded with methods showing"
           expect(page).to have_no_selector("tr.methodArea"), fail_message
         end
         find(:css, "#buttonToggleMethods").click
+        wait_for_loading_for(40)
         within(find(:css, "#Student")) do
           fail_message = "methods not showing after checking the methods checkbox"
           expect(page).to have_selector("tr.methodArea"), fail_message
         end
         find(:css, "#buttonToggleMethods").click
+        wait_for_loading_for(40)
         within(find(:css, "#Student")) do
           fail_message = "methods not hidden after unchecking the methods checkbox"
           expect(page).to have_no_selector("tr.methodArea"), fail_message
@@ -310,21 +316,22 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
     describe "Actions show/hide option" do
       it "hides the actions then shows them again"  do
         reset_page_to_options_with_model_and_option("state_machine_with_action.ump", "diagramtype=state")
+        wait_for_loading_for(40)
         within(find(:css, "#umpleCanvas")) do
           fail_message = "actions not found when state machine loaded"
-          expect(find(:css, "#graph0").native.all_text).to include("doAction()"), fail_message
+          expect(find(:css, "#graph0").native.text).to include("doAction()"), fail_message
         end
         find(:css, "#buttonToggleActions").click
-        wait_for_loading
+        wait_for_loading_for(40)
         within(find(:css, "#umpleCanvas")) do
           fail_message = "actions still found after unchecking the methods checkbox"
-          expect(find(:css, "#graph0").native.all_text).not_to include("doAction()"), fail_message
+          expect(find(:css, "#graph0").native.text).not_to include("doAction()"), fail_message
         end
         find(:css, "#buttonToggleActions").click
-        wait_for_loading
+        wait_for_loading_for(40)
         within(find(:css, "#umpleCanvas")) do
           fail_message = "actions not found after checking the methods checkbox"
-          expect(find(:css, "#graph0").native.all_text).to include("doAction()"), fail_message
+          expect(find(:css, "#graph0").native.text).to include("doAction()"), fail_message
         end
       end
     end
@@ -338,15 +345,16 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         reset_page_to_options
       end
 
-      find(:css, "#textEditorColumn").click
-      send_modified_key("#textEditorColumn", 'g', :control)
+      find(:css, "#textEditorColumn").send_keys(:control, 'g')
       expect(get_checkbox_state("#buttonShowGvClassDiagram")).to eq(true)
-      send_modified_key("#textEditorColumn", 's', :control)
+      find(:css, "#textEditorColumn").send_keys(:control, 's')
       expect(get_checkbox_state("#buttonShowGvStateDiagram")).to eq(true)
-      send_modified_key("#textEditorColumn", 'l', :control)
+      find(:css, "#textEditorColumn").send_keys(:control, 'l')
       expect(get_checkbox_state("#buttonShowStructureDiagram")).to eq(true)
-      send_modified_key("#textEditorColumn", 'e', :control)
+      find(:css, "#textEditorColumn").send_keys(:control, 'e')
       expect(get_checkbox_state("#buttonShowEditableClassDiagram")).to eq(true)
+      find(:css, "#textEditorColumn").send_keys(:control, 'j')
+      expect(get_checkbox_state("#buttonShowJointJSClassDiagram")).to eq(true)
     end
 
     it "cycles through the diagram types by clicking on the text labels" do
@@ -362,6 +370,8 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       expect(get_checkbox_state("#buttonShowStructureDiagram")).to eq(true)
       find(:css, "#labelShowEditableClassDiagram").click
       expect(get_checkbox_state("#buttonShowEditableClassDiagram")).to eq(true)
+      find(:css, "#labelShowJointJSClassDiagram").click
+      expect(get_checkbox_state("#buttonShowJointJSClassDiagram")).to eq(true)
     end
   end
 
@@ -378,12 +388,13 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       end
       
       find(:css, "#buttonShowGvClassDiagram").click
-      wait_for_loading
+      wait_for_loading_for(40)
       within(find(:css, "#node1")) do
-        expect(find(:css, "title").native.all_text.chomp).to eq("Student") 
+        expect(page.evaluate_script("jQuery(\"#node1 title\").text()")).to eq("Student") 
       end
       
       find(:css, "#buttonShowEditableClassDiagram").click
+      wait_for_loading_for(40)
       expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
     end
 
@@ -393,24 +404,45 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       end
       
       find(:css, "#buttonShowGvStateDiagram").click
-      wait_for_loading
+      wait_for_loading_for(40)
       within(find(:css, "#node1")) do
-        expect(find(:css, "title").native.all_text.chomp).to eq("start_Student_study") 
+        expect(page.evaluate_script("jQuery(\"#node1 title\").text()")).to eq("start_Student_study") 
       end
       
       find(:css, "#buttonShowEditableClassDiagram").click
+      wait_for_loading_for(40)
+      expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
+    end
+
+    it "switches from editable class diagram to jointjs class diagram and back" do
+      unless get_checkbox_state("#buttonShowEditableClassDiagram")
+        reset_page_to_options_with_model(example_file)
+      end
+
+      find(:css, "#buttonShowJointJSClassDiagram").click
+      wait_for_loading_for 40
+
+      within(find(:css, ".joint-viewport")) do
+        expect(find(:css, ".joint-element")["model-id"]).to eq("Student")
+      end
+
+      find(:css, "#buttonShowEditableClassDiagram").click
+      wait_for_loading_for(40)
       expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
     end
 
     it "switches from editable class diagram to compound structure diagram and back" do
+  
       unless get_checkbox_state("#buttonShowEditableClassDiagram")
         reset_page_to_options_with_model(example_file)
       end
       
       find(:css, "#buttonShowStructureDiagram").click
+      wait_for_loading_for(40)
       expect(find(:css, "#umpleCanvas")).to have_selector("#svgCanvas")
       
-      find(:css, "#buttonShowEditableClassDiagram").click 
+      find(:css, "#buttonShowEditableClassDiagram").click
+      wait_for_loading_for(40) 
       expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
     end
 
@@ -423,13 +455,13 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       find(:css, "#buttonShowGvStateDiagram").click
       wait_for_loading_for(10)
       within(find(:css, "#node1")) do
-        expect(find(:css, "title").native.all_text.chomp).to eq("start_Student_study") 
+        expect(page.evaluate_script("jQuery(\"#node1 title\").text()")).to eq("start_Student_study") 
       end
       
       find(:css, "#buttonShowGvClassDiagram").click
       wait_for_loading_for(10)
       within(find(:css, "#node1")) do
-        expect(find(:css, "title").native.all_text.chomp).to eq("Student") 
+        expect(page.evaluate_script("jQuery(\"#node1 title\").text()")).to eq("Student") 
       end
     end
 
@@ -440,32 +472,92 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       end
       
       find(:css, "#buttonShowStructureDiagram").click
-      wait_for_loading_for(10)
+      wait_for_loading_for(40)
       expect(find(:css, "#umpleCanvas")).to have_selector("#svgCanvas")
       
       find(:css, "#buttonShowGvClassDiagram").click
-      wait_for_loading_for(10)
+      wait_for_loading_for(40)
       within(find(:css, "#node1")) do
-        expect(find(:css, "title").native.all_text.chomp).to eq("Student") 
+        expect(page.evaluate_script("jQuery(\"#node1 title\").text()")).to eq("Student") 
       end
     end
 
-    it "switches from graphviz state diagram to compound structure diagram and back" do
+    it "switches from graphviz class diagram to jointjs class diagram and back" do
+      unless get_checkbox_state("#buttonShowGvClassDiagram")
+        reset_page_to_options_with_model_and_option(example_file, 
+                                                    "diagramtype=GvClass")
+      end
+
+      find(:css, "#buttonShowJointJSClassDiagram").click
+      wait_for_loading_for 40
+
+      within(find(:css, ".joint-viewport")) do
+        expect(find(:css, ".joint-element")["model-id"]).to eq("Student")
+      end
+
+      find(:css, "#buttonShowGvClassDiagram").click
+      wait_for_loading_for(40)
+      within(find(:css, "#node1")) do
+        expect(page.evaluate_script("jQuery(\"#node1 title\").text()")).to eq("Student") 
+      end
+
+    end 
+
+    it "switches from graphviz state diagram to composite structure diagram and back" do
       unless get_checkbox_state("#buttonShowGvStateDiagram")
         reset_page_to_options_with_model_and_option(example_file, 
                                                     "diagramtype=GvState")
       end
       
       find(:css, "#buttonShowStructureDiagram").click
-      wait_for_loading
+      wait_for_loading_for(40)
       expect(find(:css, "#umpleCanvas")).to have_selector("#svgCanvas")
       
       find(:css, "#buttonShowGvStateDiagram").click
-      wait_for_loading
+      wait_for_loading_for(40)
       within(find(:css, "#node1")) do
-        expect(find(:css, "title").native.all_text.chomp).to eq("start_Student_study") 
+        expect(page.evaluate_script("jQuery(\"#node1 title\").text()")).to eq("start_Student_study") 
       end
     end
+
+    it "switches from graphviz state diagram to jointjs class diagram back" do
+      unless get_checkbox_state("#buttonShowGvStateDiagram")
+        reset_page_to_options_with_model_and_option(example_file, 
+                                                    "diagramtype=GvState")
+      end
+
+      find(:css, "#buttonShowJointJSClassDiagram").click
+      wait_for_loading_for 40
+
+      within(find(:css, ".joint-viewport")) do
+        expect(find(:css, ".joint-element")["model-id"]).to eq("Student")
+      end
+      
+      find(:css, "#buttonShowGvStateDiagram").click
+      wait_for_loading_for(40)
+      within(find(:css, "#node1")) do
+        expect(page.evaluate_script("jQuery(\"#node1 title\").text()")).to eq("start_Student_study") 
+      end
+    end
+
+    it "switches from jointjs class diagram to composite structure diagram and back" do
+        unless get_checkbox_state("#buttonShowStructureDiagram")
+          reset_page_to_options_with_model_and_option(example_file, 
+                                                      "diagramtype=structureDiagram")
+        end
+
+        find(:css, "#buttonShowJointJSClassDiagram").click
+        wait_for_loading_for 40
+
+        within(find(:css, ".joint-viewport")) do
+          expect(find(:css, ".joint-element")["model-id"]).to eq("Student")
+        end
+
+        find(:css, "#buttonShowStructureDiagram").click
+        wait_for_loading_for(40)
+        expect(find(:css, "#umpleCanvas")).to have_selector("#svgCanvas")
+    end
+
   end
 
   describe "Checking for no diagram code found message" do
@@ -474,15 +566,15 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
     it "checks for no state diagram code found message" do
       expected_message = "No state machine found in the input Umple file"
       find(:css, "#buttonShowGvStateDiagram").click
-      wait_for_loading
-      expect(find(:css, "#umpleCanvas").native.all_text).to include(expected_message)
+      wait_for_loading_for(40)
+      expect(find(:css, "#umpleCanvas").native.text).to include(expected_message)
     end
 
     it "checks for no compound structure diagram code found message" do
       expected_message = "No composite structure found in the input Umple model"
       find(:css, "#buttonShowStructureDiagram").click
-      wait_for_loading
-      expect(find(:css, "#svgCanvas").native.all_text).to include(expected_message)
+      wait_for_loading_for(40)
+      expect(find(:css, "#svgCanvas").native.text).to include(expected_message)
     end
   end
 
@@ -538,13 +630,13 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         find(:css, "#buttonPhotoReady").click
         expect(find(:css, "#umpleCanvasColumn")).to have_css("div.photoReady")
         within(find(:css, "#Student")) do
-          expect(find(:css, "#Student_newAttribute").native.all_text.chomp).to eq(" ")
+          expect(find(:css, "#Student_newAttribute").native.text.chomp).to eq(" ")
         end 
 
         find(:css, "#buttonPhotoReady").click
         expect(find(:css, "#umpleCanvasColumn")).to_not have_css("div.photoReady")
         within(find(:css, "#Student")) do
-          expect(find(:css, "#Student_newAttribute").native.all_text.chomp).to eq("-- Add More --")
+          expect(find(:css, "#Student_newAttribute").native.text.chomp).to eq("-- Add More --")
         end
       end
     end
@@ -559,15 +651,16 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         find(:css, "#buttonManualSync").click
         input_model_text("class Student {}")
         switch_to_tools_panel
-        wait_for_loading
+
         expect(page).to have_selector("div#syncNeededMessage")
         expect(find(:css, "#umpleCanvas")).to have_no_selector("#Student")
         expect(page).to have_no_css("li#buttonSyncDiagram.disabled")
 
         switch_to_options_panel
-        find(:css, "#buttonManualSync").click
+        find(:css, "#buttonManualSync", visible: :all).click
+        
         switch_to_tools_panel
-        wait_for_loading
+        
         expect(page).to have_no_selector("div#syncNeededMessage")
         expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
         expect(page).to have_css("li#buttonSyncDiagram.disabled")

@@ -1,7 +1,6 @@
 require 'rspec'
 require 'capybara'
 require 'capybara/dsl'
-require "capybara/cuprite"
 require 'selenium-webdriver'
 require 'test_utils.rb'
 require 'load_examples_helper.rb'
@@ -11,12 +10,21 @@ require 'page_load_helper.rb'
 require 'options_panel_helper.rb'
 require 'dynamic_layout_helper.rb'
 
-Capybara.register_driver :cuprite do |app|
-  Capybara::Cuprite::Driver.new(app, browser: :chrome)
+# DO NOT RUN THESE TESTS USING THE 'NO-HEADLESS' OPTION 
+# UNLESS FOR DEBUGGING PURPOSES 
+
+Capybara.register_driver :selenium_chrome do |app|
+  options= Selenium::WebDriver::Chrome::Options.new
+  options.add_argument('--headless') unless TestUtils::ENV=='no-headless'
+  options.add_argument('--no-sandbox')
+  options.add_argument('--disable-dev-shm-usage')
+  options.add_argument('--remote-debugging-port=9222')
+  options.add_argument('--start-maximized')
+
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 end
-
-Capybara.default_driver = :cuprite
-
+Capybara.default_driver= :selenium_chrome
+Capybara.javascript_driver= :selenium_chrome
 Capybara.app_host = TestUtils::HOST
 
 RSpec.configure do |config|

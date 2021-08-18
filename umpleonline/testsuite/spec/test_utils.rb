@@ -26,7 +26,7 @@ module TestUtils
 
   def load_umple_with_option(option_text)
     visit("umple.php?#{option_text}")
-    wait_for_loading_for(10)
+    wait_for_loading_for 20
   end  
 
   def load_umple_with_file(filename, directory)
@@ -34,14 +34,14 @@ module TestUtils
     file_contents = IO.read("#{directory}#{filename}")
     url_encoded_file_contents = CGI::escape(file_contents)
     visit("umple.php?text=#{url_encoded_file_contents}")
-    wait_for_loading
+    wait_for_loading_for 20
   end
 
   def load_umple_with_file_and_option(filename, directory, option_text)
     file_contents = IO.read("#{directory}#{filename}")
     url_encoded_file_contents = CGI::escape(file_contents)
     visit("umple.php?#{option_text}&text=#{url_encoded_file_contents}")
-    wait_for_loading
+    wait_for_loading_for 20
   end
 
   def encode_to_url(plain_text)
@@ -62,28 +62,15 @@ module TestUtils
   def click_and_drag_to_position(capybara_element, xLoc, yLoc)
     wait_for_loading
     execute_script("jQuery('body').append('<div id=\"tempPositionMarker\" style=\"position:absolute; left:#{xLoc}px; top:#{yLoc}px; width: 0px; height: 0px;\"></div>');")
-    wait_for_loading_for(15)
-    click_and_drag(capybara_element,  find(:css, "#tempPositionMarker"))
+    wait_for_loading
+    target = find(:css,"#tempPositionMarker", visible: :all)
+    capybara_element.drag_to(target)
     execute_script("jQuery('#tempPositionMarker').remove();")
     wait_for_loading
   end
 
-  #This method was added as cuprite doesn't have a native drag_to method
-  #It will exactly reproduce drag to method
-  def click_and_drag(from, to)
-    x1, y1 = from.native.node.find_position
-    x2, y2 = to.native.node.find_position
-
-    mouse = page.driver.browser.mouse
-    mouse.move(x: x1, y: y1)
-    mouse.down
-    mouse.move(x: x2, y: y2)
-    mouse.up
-  end
-
-  # A direct way to send modified keys to particular elements. This is only used
-  # because the capybara/poltergeist/phantomjs stack lacks a way of sending 
-  # modified keys (such as ctrl-t).
+  # This function has been implemented for the driver to differentiate
+  # between MacOs and other operating systems
 
   def send_modified_key(element_selector, key, *meta)
     wait_for_loading
@@ -123,22 +110,29 @@ module TestUtils
   def switch_to_saveandreset_panel
     find(:css, "#ui-id-1").click
     loop until all(:css, "div.ui-accordion-content-active").length == 1
+    wait_for_loading_for(30)
   end
 
   def switch_to_tools_panel
     find(:css, "#ui-id-3").click
     loop until all(:css, "div.ui-accordion-content-active").length == 1
+    wait_for_loading_for(30)
   end
 
   def switch_to_options_panel
     find(:css, "#ui-id-5").click
     loop until all(:css, "div.ui-accordion-content-active").length == 1
+    wait_for_loading_for(30)
   end
 
   # Methods used on configuration. They set some globally used constants.
 
   def self.set_host(host_name = "http://cruise.local/")
     const_set(:HOST,  host_name)
+  end
+
+  def self.set_testenv(env= "")
+    const_set(:ENV, env)
   end
 
   def self.set_example_directories(umpleonline_dir = "../../umpleonline/")
@@ -157,6 +151,7 @@ end
 # the ant build file
 host_name = ""
 umpleonline_dir = ""
+test_env = ""
 
 begin
   simple_configs = open("spec/temp_config.txt", 'r').readlines()
@@ -167,6 +162,8 @@ begin
       host_name = config_pair[1]
     elsif config_pair[0] =~ /umpleonline_directory/
       umpleonline_dir = config_pair[1]
+    elsif config_pair[0] =~ /testing_env/
+      test_env = config_pair[1]
     end
   end
 rescue Errno::ENOENT
@@ -181,5 +178,10 @@ ensure
     TestUtils.set_example_directories
   else
     TestUtils.set_example_directories(umpleonline_dir)
+  end
+  if test_env == "" or test_env.nil?
+    TestUtils.set_testenv
+  else
+    TestUtils.set_testenv test_env
   end
 end

@@ -524,6 +524,10 @@ UmpleSystem.trimOverlappingAssociations = function(umpleClass)
     }
   }
 
+  if (UmpleSystem.umpleAssociations.length == 0){
+    Action.setjustUpdatetoSaveLater(false);
+  }
+
   Page.hideLoading()
 }
 

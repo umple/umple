@@ -630,15 +630,15 @@ $output = $dataHandle->readData('model.ump');
       
           <ul id="mainDrawMenu" class="second toggle">
             <li class="subtitle"> Draw </li>
-            <li id="buttonAddClass" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the canvas to add a new class.">
+            <li id="buttonAddClass" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the canvas to add a new class." tabindex="0">
               <img src="scripts/class.png"/> 
               Class
             </li>
-            <li id="buttonAddAssociation" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on a class to draw an association.">
+            <li id="buttonAddAssociation" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on a class to draw an association." tabindex="0">
               <img src="scripts/assoc.png"/> 
               Association
             </li>
-            <li id="buttonAddTransition" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select and click on a state to draw a transition.">
+            <li id="buttonAddTransition" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select and click on a state to draw a transition." tabindex="0">
                <img src="scripts/assoc.png"/>
                Transition
              </li>            
@@ -646,27 +646,27 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/assocbend.jpg"/> 
               Bend Assoc.
             </li> -->
-            <li id="buttonAddGeneralization" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class.">
+            <li id="buttonAddGeneralization" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class." tabindex="0">
               <img src="scripts/generalization.png"/> 
               Generalization
             </li>
-            <li id="buttonDeleteEntity" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on an element to remove it from your model.">
+            <li id="buttonDeleteEntity" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on an element to remove it from your model." tabindex="0">
               <img src="scripts/delete.png"/>
                Delete
              </li>
-            <li id="buttonUndo" name="paletteItem">
+            <li id="buttonUndo" name="paletteItem" tabindex="0">
               <img src="scripts/undo.png"> 
               Undo
             </li>
-            <li id="buttonRedo" name="paletteItem">
+            <li id="buttonRedo" name="paletteItem" tabindex="0">
               <img src="scripts/redo.png"> 
               Redo
             </li>
-            <li id="buttonReindent" name="paletteItem">
+            <li id="buttonReindent" name="paletteItem" tabindex="0">
               <img src="scripts/sync_diagram.png" /> 
               Reindent Code
             </li>
-            <li id="buttonSyncDiagram" name="paletteItem">
+            <li id="buttonSyncDiagram" name="paletteItem" tabindex="0">
               <img src="scripts/sync_diagram.png" /> 
               Sync Diagram 
             </li>

@@ -318,7 +318,7 @@ function generateMenu($buttonSuffix)
           </select>
         </li>
         <li id=\"ttGenerateCode\">
-          <div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQuery-palette-button\" value=\"Generate It\"></div>
+          <div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQuery-palette-button\" tabindex=\"0\" value=\"Generate It\"></div>
         </li>
         <li><div id=\"genstatus\" align=\"center\">Done. See below</div><li>
       </ul>";
