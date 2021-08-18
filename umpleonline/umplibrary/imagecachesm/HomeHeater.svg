@@ -19,21 +19,6 @@
 <path fill="none" stroke="black" d="M766.2,-16C766.2,-16 3212.2,-16 3212.2,-16 3218.2,-16 3224.2,-22 3224.2,-28 3224.2,-28 3224.2,-568.6 3224.2,-568.6 3224.2,-574.6 3218.2,-580.6 3212.2,-580.6 3212.2,-580.6 766.2,-580.6 766.2,-580.6 760.2,-580.6 754.2,-574.6 754.2,-568.6 754.2,-568.6 754.2,-28 754.2,-28 754.2,-22 760.2,-16 766.2,-16"/>
 <text text-anchor="middle" x="1989.2" y="-565.4" font-family="Times,serif" font-size="14.00">house</text>
 </g>
-<g id="clust3" class="cluster">
-<title>clusterHeatControlSystem_smHeatingSystemHouseRoom_room</title>
-<path fill="none" stroke="black" d="M1592.2,-24C1592.2,-24 3204.2,-24 3204.2,-24 3210.2,-24 3216.2,-30 3216.2,-36 3216.2,-36 3216.2,-506.6 3216.2,-506.6 3216.2,-512.6 3210.2,-518.6 3204.2,-518.6 3204.2,-518.6 1592.2,-518.6 1592.2,-518.6 1586.2,-518.6 1580.2,-512.6 1580.2,-506.6 1580.2,-506.6 1580.2,-36 1580.2,-36 1580.2,-30 1586.2,-24 1592.2,-24"/>
-<text text-anchor="middle" x="2398.2" y="-503.4" font-family="Times,serif" font-size="14.00">room</text>
-</g>
-<g id="clust4" class="cluster">
-<title>clusterHeatControlSystem_smHeatingSystemHouseRoomRoom_noHeatReq</title>
-<path fill="none" stroke="black" d="M1622.2,-218C1622.2,-218 2378.2,-218 2378.2,-218 2384.2,-218 2390.2,-224 2390.2,-230 2390.2,-230 2390.2,-475.6 2390.2,-475.6 2390.2,-481.6 2384.2,-487.6 2378.2,-487.6 2378.2,-487.6 1622.2,-487.6 1622.2,-487.6 1616.2,-487.6 1610.2,-481.6 1610.2,-475.6 1610.2,-475.6 1610.2,-230 1610.2,-230 1610.2,-224 1616.2,-218 1622.2,-218"/>
-<text text-anchor="middle" x="2000.2" y="-472.4" font-family="Times,serif" font-size="14.00">noHeatReq</text>
-</g>
-<g id="clust5" class="cluster">
-<title>clusterHeatControlSystem_smHeatingSystemHouseRoomRoom_heatReq</title>
-<path fill="none" stroke="black" d="M2410.2,-32C2410.2,-32 3196.2,-32 3196.2,-32 3202.2,-32 3208.2,-38 3208.2,-44 3208.2,-44 3208.2,-293.2 3208.2,-293.2 3208.2,-299.2 3202.2,-305.2 3196.2,-305.2 3196.2,-305.2 2410.2,-305.2 2410.2,-305.2 2404.2,-305.2 2398.2,-299.2 2398.2,-293.2 2398.2,-293.2 2398.2,-44 2398.2,-44 2398.2,-38 2404.2,-32 2410.2,-32"/>
-<text text-anchor="middle" x="2803.2" y="-290" font-family="Times,serif" font-size="14.00">heatReq</text>
-</g>
 <g id="clust6" class="cluster">
 <title>clusterHeatControlSystem_smHeatingSystemHouseController_controller</title>
 <path fill="none" stroke="black" d="M798.2,-125C798.2,-125 1536.2,-125 1536.2,-125 1542.2,-125 1548.2,-131 1548.2,-137 1548.2,-137 1548.2,-537.6 1548.2,-537.6 1548.2,-543.6 1542.2,-549.6 1536.2,-549.6 1536.2,-549.6 798.2,-549.6 798.2,-549.6 792.2,-549.6 786.2,-543.6 786.2,-537.6 786.2,-537.6 786.2,-137 786.2,-137 786.2,-131 792.2,-125 798.2,-125"/>
@@ -48,6 +33,21 @@
 <title>clusterHeatControlSystem_smHeatingSystemHouseControllerControllerControllerOn_heaterActive</title>
 <path fill="none" stroke="black" d="M1365.2,-218C1365.2,-218 1520.2,-218 1520.2,-218 1526.2,-218 1532.2,-224 1532.2,-230 1532.2,-230 1532.2,-475.6 1532.2,-475.6 1532.2,-481.6 1526.2,-487.6 1520.2,-487.6 1520.2,-487.6 1365.2,-487.6 1365.2,-487.6 1359.2,-487.6 1353.2,-481.6 1353.2,-475.6 1353.2,-475.6 1353.2,-230 1353.2,-230 1353.2,-224 1359.2,-218 1365.2,-218"/>
 <text text-anchor="middle" x="1442.7" y="-472.4" font-family="Times,serif" font-size="14.00">heaterActive</text>
+</g>
+<g id="clust3" class="cluster">
+<title>clusterHeatControlSystem_smHeatingSystemHouseRoom_room</title>
+<path fill="none" stroke="black" d="M1592.2,-24C1592.2,-24 3204.2,-24 3204.2,-24 3210.2,-24 3216.2,-30 3216.2,-36 3216.2,-36 3216.2,-506.6 3216.2,-506.6 3216.2,-512.6 3210.2,-518.6 3204.2,-518.6 3204.2,-518.6 1592.2,-518.6 1592.2,-518.6 1586.2,-518.6 1580.2,-512.6 1580.2,-506.6 1580.2,-506.6 1580.2,-36 1580.2,-36 1580.2,-30 1586.2,-24 1592.2,-24"/>
+<text text-anchor="middle" x="2398.2" y="-503.4" font-family="Times,serif" font-size="14.00">room</text>
+</g>
+<g id="clust4" class="cluster">
+<title>clusterHeatControlSystem_smHeatingSystemHouseRoomRoom_noHeatReq</title>
+<path fill="none" stroke="black" d="M1622.2,-218C1622.2,-218 2378.2,-218 2378.2,-218 2384.2,-218 2390.2,-224 2390.2,-230 2390.2,-230 2390.2,-475.6 2390.2,-475.6 2390.2,-481.6 2384.2,-487.6 2378.2,-487.6 2378.2,-487.6 1622.2,-487.6 1622.2,-487.6 1616.2,-487.6 1610.2,-481.6 1610.2,-475.6 1610.2,-475.6 1610.2,-230 1610.2,-230 1610.2,-224 1616.2,-218 1622.2,-218"/>
+<text text-anchor="middle" x="2000.2" y="-472.4" font-family="Times,serif" font-size="14.00">noHeatReq</text>
+</g>
+<g id="clust5" class="cluster">
+<title>clusterHeatControlSystem_smHeatingSystemHouseRoomRoom_heatReq</title>
+<path fill="none" stroke="black" d="M2410.2,-32C2410.2,-32 3196.2,-32 3196.2,-32 3202.2,-32 3208.2,-38 3208.2,-44 3208.2,-44 3208.2,-293.2 3208.2,-293.2 3208.2,-299.2 3202.2,-305.2 3196.2,-305.2 3196.2,-305.2 2410.2,-305.2 2410.2,-305.2 2404.2,-305.2 2398.2,-299.2 2398.2,-293.2 2398.2,-293.2 2398.2,-44 2398.2,-44 2398.2,-38 2404.2,-32 2410.2,-32"/>
+<text text-anchor="middle" x="2803.2" y="-290" font-family="Times,serif" font-size="14.00">heatReq</text>
 </g>
 <g id="clust9" class="cluster">
 <title>clusterHeatControlSystem_smHeatingSystemFurnace_furnace</title>

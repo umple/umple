@@ -9,6 +9,11 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 688.8)">
 <title>Elevator_State_Machine</title>
 <polygon fill="white" stroke="transparent" points="-4,4 -4,-688.8 1270,-688.8 1270,4 -4,4"/>
+<g id="clust4" class="cluster">
+<title>clusterElevator_elevator_state_machine_OnFloor</title>
+<path fill="none" stroke="black" d="M292,-279.2C292,-279.2 610,-279.2 610,-279.2 616,-279.2 622,-285.2 622,-291.2 622,-291.2 622,-664.8 622,-664.8 622,-670.8 616,-676.8 610,-676.8 610,-676.8 292,-676.8 292,-676.8 286,-676.8 280,-670.8 280,-664.8 280,-664.8 280,-291.2 280,-291.2 280,-285.2 286,-279.2 292,-279.2"/>
+<text text-anchor="middle" x="451" y="-661.6" font-family="Times,serif" font-size="14.00">OnFloor</text>
+</g>
 <g id="clust1" class="cluster">
 <title>clusterElevator_elevator_state_machine_PrepareUp</title>
 <path fill="none" stroke="black" d="M642,-182C642,-182 784,-182 784,-182 790,-182 796,-188 796,-194 796,-194 796,-331.4 796,-331.4 796,-337.4 790,-343.4 784,-343.4 784,-343.4 642,-343.4 642,-343.4 636,-343.4 630,-337.4 630,-331.4 630,-331.4 630,-194 630,-194 630,-188 636,-182 642,-182"/>
@@ -23,11 +28,6 @@
 <title>clusterElevator_elevator_state_machine_InMotion</title>
 <path fill="none" stroke="black" d="M816,-8C816,-8 1110,-8 1110,-8 1116,-8 1122,-14 1122,-20 1122,-20 1122,-234.2 1122,-234.2 1122,-240.2 1116,-246.2 1110,-246.2 1110,-246.2 816,-246.2 816,-246.2 810,-246.2 804,-240.2 804,-234.2 804,-234.2 804,-20 804,-20 804,-14 810,-8 816,-8"/>
 <text text-anchor="middle" x="963" y="-231" font-family="Times,serif" font-size="14.00">InMotion</text>
-</g>
-<g id="clust4" class="cluster">
-<title>clusterElevator_elevator_state_machine_OnFloor</title>
-<path fill="none" stroke="black" d="M292,-279.2C292,-279.2 610,-279.2 610,-279.2 616,-279.2 622,-285.2 622,-291.2 622,-291.2 622,-664.8 622,-664.8 622,-670.8 616,-676.8 610,-676.8 610,-676.8 292,-676.8 292,-676.8 286,-676.8 280,-670.8 280,-664.8 280,-664.8 280,-291.2 280,-291.2 280,-285.2 286,-279.2 292,-279.2"/>
-<text text-anchor="middle" x="451" y="-661.6" font-family="Times,serif" font-size="14.00">OnFloor</text>
 </g>
 <!-- start_Elevator_elevator_state_machine -->
 <g id="node1" class="node">
