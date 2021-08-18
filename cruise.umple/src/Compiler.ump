@@ -111,6 +111,71 @@ class CodeCompiler {
     return (retval == 0);
   }
   
+  // Compiles graphviz files to various outputs: .svg (default), using dot
+  public static boolean genDotDiagram (UmpleModel model,
+    GenerateTarget gt, boolean beQuiet, String graphicFormat) {
+
+    String generator = gt.getLanguage();
+    
+    String fileroot = model.getUmpleFile().getFileName();
+    if (fileroot.endsWith(".ump")) {
+      fileroot = fileroot.substring(0, fileroot.length() - 4);
+    }
+
+    if(generator.equals("GvClassDiagram")) {
+      fileroot+="cd";
+    }
+
+    String path=model.getUmpleFile().getPath() + File.separator + gt.getPath();
+    
+    String inputFullPath=path + File.separator + fileroot + ".gv";
+    String outputFullPath=path + File.separator + fileroot + "."+ graphicFormat;
+
+    int retval=0;
+
+    try {
+      if(path.contains(" ") && !beQuiet) {
+        System.err.println("Warning: Compiling generated Graphviz files from a directory or path containing a space character may produce an error message from the PhP compiler.");
+      }
+      
+      BufferedReader reader;
+      
+      Process p = Runtime.getRuntime().exec("dot -T"+graphicFormat+" "+inputFullPath+" -o "+outputFullPath);
+      reader=new BufferedReader(new InputStreamReader(p.getInputStream())); 
+
+      // All output of the above should go to standard output
+      try {
+        retval=p.waitFor(); 
+      }
+      catch (InterruptedException e) {}
+
+      String line;
+      if(reader.ready()) {
+        line = reader.readLine();
+      }
+      else {
+        line = null;
+      }
+
+      while (line!=null) {
+        if(reader.ready()) {
+          line = reader.readLine();
+        }
+        else {
+          line = null;
+        }
+      }
+    } catch (IOException e) {
+      println(e.getMessage());
+      if(e.getMessage().startsWith("Cannot run program")) {
+        println("It is necessary to install the graphviz package that includes the dot program in order to convert .gv files directly to graphical output files");
+      }
+      retval = 999;
+    }
+    return (retval == 0);
+  }
+
+  
   private static boolean compileJava(UmpleElement aClass, UmpleModel model, boolean useExec, boolean beQuiet, String args) {
     String path="";
     String base="";

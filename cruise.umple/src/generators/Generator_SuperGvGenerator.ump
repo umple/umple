@@ -115,7 +115,9 @@ digraph "<<=filename>>" {
   {
     try
     {
-      String path = model.getUmpleFile().getPath();
+      String path = StringFormatter.addPathOrAbsolute(
+        getModel().getUmpleFile().getPath(), 
+        getOutput());
       File file = new File(path);
       file.mkdirs();
       String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName()
