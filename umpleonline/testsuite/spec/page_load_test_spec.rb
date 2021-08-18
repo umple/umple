@@ -6,7 +6,7 @@ require 'spec_helper.rb'
 
 describe "Page load options", :feature => :pageLoad, :helper => :pageLoad do 
 
-  before(:all) {page.driver.resize(1024, 768)}
+  before(:all) {Capybara.current_session.current_window.resize_to(1024, 768)}
 
   it "loads UmpleOnline with the example url option" do
     load_umple_with_option("example=2DShapes")
@@ -159,6 +159,17 @@ describe "Page load options", :feature => :pageLoad, :helper => :pageLoad do
     it "loads UmpleOnline with crud ui as the default code to generate" do
       load_umple_with_option("generateDefault=uigu2")
       expect(page).to have_select('inputGenerateCode', selected: 'CRUD User Interface')
+    end
+    it "loads UmpleOnline without any options and makes a tip of the day appears" do
+      load_page
+      wait_for_loading
+      find(:css, "#linenum").click
+      find(:css, "#linenum").send_keys(:backspace)
+      find(:css, "#linenum").send_keys("tc")
+      find(:css, "#linenum").send_keys(:enter)
+      load_page
+      wait_for_loading_for 30
+      expect(page).to have_selector("#styleTip")
     end
   end
 end

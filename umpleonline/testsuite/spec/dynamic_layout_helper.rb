@@ -1,6 +1,6 @@
 module DynamicResizingHelper
 
-  ERROR_MARGIN = 1 #This is the difference in pixels allowed between the actual and expected sizes
+  ERROR_MARGIN = 40 #This is the difference in pixels allowed between the actual and expected sizes
   def setup_large
     self.class.send :include, LargeScreenHelper
   end
@@ -13,7 +13,6 @@ module DynamicResizingHelper
   end
 
   def canvas
-    wait_for_loading
     size = get_element_size("umpleCanvasColumn")
     position = get_element_position("umpleCanvasColumn")
 
@@ -25,7 +24,6 @@ module DynamicResizingHelper
   end
 
   def editor
-    wait_for_loading
     size = get_element_size("textEditorColumn")
     position = get_element_position("textEditorColumn")
     
@@ -37,7 +35,6 @@ module DynamicResizingHelper
   end
 
   def menu
-    wait_for_loading
     size = get_element_size("paletteColumn")
     position = get_element_position("paletteColumn")
 
@@ -71,19 +68,20 @@ module DynamicResizingHelper
 
     wait_for_loading
   end
+
   RSpec::Matchers.define :have_expected_dimension do |expected|
     expected.each_key do |key|
-      #begin
+      begin
         expected_size_range_x = [expected[key][:size][0]-ERROR_MARGIN, expected[key][:size][0]+ERROR_MARGIN]
         expected_size_range_y = [expected[key][:size][1]-ERROR_MARGIN, expected[key][:size][1]+ERROR_MARGIN]
         expected_position_range_x = [expected[key][:top_left][0]-ERROR_MARGIN, expected[key][:top_left][0]+ERROR_MARGIN]
         expected_position_range_y = [expected[key][:top_left][1]-ERROR_MARGIN, expected[key][:top_left][1]+ERROR_MARGIN]
-      #rescue TypeError
-       # expected_size_range_x = [expected[key][0]-1, expected[0]+1]
-        #expected_size_range_y = [expected[key][1]-1, expected[1]+1]
-        #expected_position_range_x = [expected[0][key]-1, expected[0]+1]
-        #expected_position_range_y = [expected[1][key]-1, expected[1]+1]
-      #end
+      rescue TypeError
+        expected_size_range_x = [expected[key][0]-1, expected[0]+1]
+        expected_size_range_y = [expected[key][1]-1, expected[1]+1]
+        expected_position_range_x = [expected[0][key]-1, expected[0]+1]
+        expected_position_range_y = [expected[1][key]-1, expected[1]+1]
+      end
     
       match do |actual|
         actual.each_key do |key|
@@ -104,6 +102,59 @@ module DynamicResizingHelper
       end
     end
   end
+
+  RSpec::Matchers.define :have_expected_element_dimension do |expected|
+    expected.each_key do |key|
+      begin
+        expected_size_range_x = [expected[key][0]-ERROR_MARGIN, expected[key][0]+ERROR_MARGIN]
+        expected_size_range_y = [expected[key][1]-ERROR_MARGIN, expected[key][1]+ERROR_MARGIN]
+        expected_position_range_x = [expected[key][0]-ERROR_MARGIN, expected[key][0]+ERROR_MARGIN]
+        expected_position_range_y = [expected[key][1]-ERROR_MARGIN, expected[key][1]+ERROR_MARGIN]
+      rescue TypeError
+        expected_size_range_x = [expected[key]-1, expected[0]+1]
+        expected_size_range_y = [expected[key]-1, expected[1]+1]
+        expected_position_range_x = [expected[0]-1, expected[0]+1]
+        expected_position_range_y = [expected[1]-1, expected[1]+1]
+      end
+    
+      match do |actual|
+        actual.each_key do |key|
+          actual[key][0]>=expected_size_range_x[0]&&
+          actual[key][0]<=expected_size_range_x[1]&&
+          actual[key][1]>=expected_size_range_y[0]&&
+          actual[key][1]<=expected_size_range_y[1]&&
+          actual[key][0]>=expected_position_range_x[0]&&
+          actual[key][0]<=expected_position_range_x[1]&&
+          actual[key][1]>=expected_position_range_y[0]&&
+          actual[key][1]<=expected_position_range_y[1]
+        end
+      end
+
+      failure_message do |actual|
+        "expected size to be #{[expected]}\nbut actual position" +
+        " was #{actual}"
+      end
+    end
+  end
+
+  RSpec::Matchers.define :have_values_within_error_margin do |expected|
+    begin
+      x_range = [expected[0]-ERROR_MARGIN, expected[0]+ERROR_MARGIN]
+      y_range = [expected[1]-ERROR_MARGIN, expected[1]+ERROR_MARGIN]
+    
+    end
+    
+    match do |actual|
+      actual[0] >= x_range[0] &&
+      actual[0] <= x_range[1] &&
+      actual[1] >= y_range[0] &&
+      actual[1] <= y_range[1]
+    end
+
+    failure_message do |actual|
+      "expected value to be #{expected}\n but was #{actual} with an error margin of #{ERROR_MARGIN.to_s} px"
+    end
+  end
 end
 
 module LargeScreenHelper
@@ -113,6 +164,7 @@ module LargeScreenHelper
     case element
     when :canvas
       find(:css, "#umpleCanvasColumn").hover
+      wait_for_loading
       within(find(:css, "#umpleCanvasColumn")) do
         capybara_element = find(:css, ".ui-resizable-w")
       end
@@ -120,6 +172,7 @@ module LargeScreenHelper
                                                            ".ui-resizable-w")
     when :editor
       find(:css, "#textEditorColumn").hover
+      wait_for_loading
       within(find(:css, "#textEditorColumn")) do
         capybara_element = find(:css, ".ui-resizable-e")
       end
@@ -141,6 +194,7 @@ module LargeScreenHelper
     case element
     when :canvas
       find(:css, "#umpleCanvasColumn").hover
+      wait_for_loading
       within(find(:css, "#umpleCanvasColumn")) do
         capybara_element = find(:css, ".ui-resizable-w")
       end
@@ -148,6 +202,7 @@ module LargeScreenHelper
                                                            ".ui-resizable-w")
     when :editor
       find(:css, "#textEditorColumn").hover
+      wait_for_loading
       within(find(:css, "#textEditorColumn")) do
         capybara_element = find(:css, ".ui-resizable-e")
       end
@@ -169,6 +224,7 @@ module LargeScreenHelper
     case element
     when :app
       find(:css, "#mainApplication").hover
+      wait_for_loading
       within(find(:css, "#mainApplication")) do
         capybara_element = find(:css, ".ui-resizable-s")
       end
@@ -190,6 +246,7 @@ module LargeScreenHelper
     case element
     when :app
       find(:css, "#mainApplication").hover
+      wait_for_loading
       within(find(:css, "#mainApplication")) do
         capybara_element = find(:css, ".ui-resizable-s")
       end
@@ -221,6 +278,7 @@ module SmallScreenHelper
     case element
     when :editor
       find(:css, "#textEditorColumn").hover
+      wait_for_loading
       within(find(:css, "#textEditorColumn")) do
         capybara_element = find(:css, ".ui-resizable-s")
       end
@@ -256,6 +314,7 @@ module SmallScreenHelper
     case element
     when :editor
       find(:css, "#textEditorColumn").hover
+      wait_for_loading
       within(find(:css, "#textEditorColumn")) do
         capybara_element = find(:css, ".ui-resizable-s")
       end
