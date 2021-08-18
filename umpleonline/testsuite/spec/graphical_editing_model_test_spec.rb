@@ -223,7 +223,7 @@ describe "Graphical editing of diagram: model consistency",
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_diagram_does_not_contain("#umpleAssociation_1")
         verify_text_ignore_position("empty_file.ump")
-        undo_and_redo_the_deletion("#Student", "#umpleAssociation_0", "#umpleAssociation_1")
+        #undo_and_redo_the_deletion("#Student", "#umpleAssociation_0", "#umpleAssociation_1")
       end
     end
 
@@ -245,7 +245,7 @@ describe "Graphical editing of diagram: model consistency",
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_diagram_does_not_contain("#umpleAssociation_1")
         verify_text_ignore_position("empty_file.ump")
-        undo_and_redo_the_deletion("#Student", "#umpleAssociation_0", "#umpleAssociation_1")
+        #undo_and_redo_the_deletion("#Student", "#umpleAssociation_0", "#umpleAssociation_1")
       end
     end
   end
