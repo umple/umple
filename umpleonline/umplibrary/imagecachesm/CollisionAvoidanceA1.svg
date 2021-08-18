@@ -604,9 +604,23 @@
 </g>
 <text text-anchor="middle" x="804.7" y="-263.8" font-family="Times,serif" font-size="14.00">[emergencyDetected]</text>
 </g>
-<!-- dummyNode3_Drive_Second -->
+<!-- dummyNode3_Drive_First -->
 <g id="node24" class="node">
-<title>dummyNode3_Drive_Second</title>
+<title>dummyNode3_Drive_First</title>
+<ellipse fill="black" stroke="black" cx="725.2" cy="-137" rx="0.18" ry="0.18"/>
+</g>
+<!-- dummyNode3_Drive_First&#45;&gt;CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_First -->
+<g id="edge42" class="edge">
+<title>dummyNode3_Drive_First:w&#45;&gt;CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_First</title>
+<g id="a_edge42"><a xlink:title="From Transmission.Transmission.Drive to Transmission.Transmission.Drive.First on selectFirst">
+<path fill="none" stroke="black" d="M724.2,-137C720.14,-137 722.89,-151.31 721.2,-155 716.86,-164.47 712.41,-164.64 706.2,-173 700.52,-180.64 694.68,-189.21 689.53,-197.07"/>
+<polygon fill="black" stroke="black" points="686.53,-195.25 684.04,-205.55 692.41,-199.06 686.53,-195.25"/>
+</a>
+</g>
+</g>
+<!-- dummyNode4_Drive_Second -->
+<g id="node25" class="node">
+<title>dummyNode4_Drive_Second</title>
 <ellipse fill="black" stroke="black" cx="339.2" cy="-224" rx="0.18" ry="0.18"/>
 </g>
 <!-- CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_Second -->
@@ -618,26 +632,12 @@
 </a>
 </g>
 </g>
-<!-- dummyNode3_Drive_Second&#45;&gt;CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_Second -->
+<!-- dummyNode4_Drive_Second&#45;&gt;CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_Second -->
 <g id="edge44" class="edge">
-<title>dummyNode3_Drive_Second:w&#45;&gt;CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_Second</title>
+<title>dummyNode4_Drive_Second:w&#45;&gt;CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_Second</title>
 <g id="a_edge44"><a xlink:title="From Transmission.Transmission.Drive to Transmission.Transmission.Drive.Second on selectSecond">
 <path fill="none" stroke="black" d="M338.2,-224C304.48,-224 348.34,-186.86 382.37,-161.39"/>
 <polygon fill="black" stroke="black" points="384.79,-163.95 390.76,-155.2 380.63,-158.32 384.79,-163.95"/>
-</a>
-</g>
-</g>
-<!-- dummyNode4_Drive_First -->
-<g id="node25" class="node">
-<title>dummyNode4_Drive_First</title>
-<ellipse fill="black" stroke="black" cx="725.2" cy="-137" rx="0.18" ry="0.18"/>
-</g>
-<!-- dummyNode4_Drive_First&#45;&gt;CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_First -->
-<g id="edge42" class="edge">
-<title>dummyNode4_Drive_First:w&#45;&gt;CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_First</title>
-<g id="a_edge42"><a xlink:title="From Transmission.Transmission.Drive to Transmission.Transmission.Drive.First on selectFirst">
-<path fill="none" stroke="black" d="M724.2,-137C720.14,-137 722.89,-151.31 721.2,-155 716.86,-164.47 712.41,-164.64 706.2,-173 700.52,-180.64 694.68,-189.21 689.53,-197.07"/>
-<polygon fill="black" stroke="black" points="686.53,-195.25 684.04,-205.55 692.41,-199.06 686.53,-195.25"/>
 </a>
 </g>
 </g>
@@ -678,24 +678,24 @@
 </g>
 <text text-anchor="middle" x="965.2" y="-176.8" font-family="Times,serif" font-size="14.00">selectNeutral</text>
 </g>
-<!-- CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_First&#45;&gt;dummyNode3_Drive_Second -->
+<!-- CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_First&#45;&gt;dummyNode3_Drive_First -->
+<g id="edge41" class="edge">
+<title>CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_First&#45;&gt;dummyNode3_Drive_First:e</title>
+<g id="a_edge41"><a xlink:title="From Transmission.Transmission.Drive to Transmission.Transmission.Drive.First on selectFirst">
+<path fill="none" stroke="black" d="M717.2,-179.25C735.7,-158 748.39,-137 726.2,-137"/>
+</a>
+</g>
+<text text-anchor="middle" x="750.2" y="-176.8" font-family="Times,serif" font-size="14.00">selectFirst</text>
+</g>
+<!-- CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_First&#45;&gt;dummyNode4_Drive_Second -->
 <g id="edge43" class="edge">
-<title>CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_First&#45;&gt;dummyNode3_Drive_Second:e</title>
+<title>CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_First&#45;&gt;dummyNode4_Drive_Second:e</title>
 <g id="a_edge43"><a xlink:title="From Transmission.Transmission.Drive to Transmission.Transmission.Drive.Second on selectSecond">
 <path fill="none" stroke="black" d="M347.2,-223.7C345.24,-223.77 343.29,-223.85 341.33,-223.92"/>
 <polygon fill="black" stroke="black" points="349.24,-220.11 339.38,-224 349.51,-227.11 349.24,-220.11"/>
 </a>
 </g>
 <text text-anchor="middle" x="489.2" y="-198.8" font-family="Times,serif" font-size="14.00">selectSecond</text>
-</g>
-<!-- CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_First&#45;&gt;dummyNode4_Drive_First -->
-<g id="edge41" class="edge">
-<title>CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_First&#45;&gt;dummyNode4_Drive_First:e</title>
-<g id="a_edge41"><a xlink:title="From Transmission.Transmission.Drive to Transmission.Transmission.Drive.First on selectFirst">
-<path fill="none" stroke="black" d="M717.2,-179.25C735.7,-158 748.39,-137 726.2,-137"/>
-</a>
-</g>
-<text text-anchor="middle" x="750.2" y="-176.8" font-family="Times,serif" font-size="14.00">selectFirst</text>
 </g>
 <!-- CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_First&#45;&gt;CollisionAvoidanceA1_smCollisionAvoidanceTransmissionTransmissionDrive_Second -->
 <g id="edge45" class="edge">

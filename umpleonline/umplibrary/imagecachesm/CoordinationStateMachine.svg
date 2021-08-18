@@ -410,7 +410,7 @@
 <!-- dummyNode1_negotiation_noRouteAgreement -->
 <g id="node14" class="node">
 <title>dummyNode1_negotiation_noRouteAgreement</title>
-<ellipse fill="black" stroke="black" cx="1055.3" cy="-279" rx="0.18" ry="0.18"/>
+<ellipse fill="black" stroke="black" cx="1074.3" cy="-279" rx="0.18" ry="0.18"/>
 </g>
 <!-- Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_noRouteAgreement -->
 <g id="node24" class="node">
@@ -425,28 +425,14 @@
 <g id="edge41" class="edge">
 <title>dummyNode1_negotiation_noRouteAgreement:w&#45;&gt;Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_noRouteAgreement</title>
 <g id="a_edge41"><a xlink:title="From negotiatingRoutePlan.negotiation.negotiation to negotiatingRoutePlan.negotiation.negotiation.noRouteAgreement on receiveNoAgreeableRoute&#13;Guard: &#160;[!isPolice()]">
-<path fill="none" stroke="black" d="M1054.3,-279C991.26,-279 1127.02,-312.71 1189.3,-322.5 1301.7,-340.16 1589.78,-345.08 1701.3,-322.5 1722.03,-318.3 1743.78,-309.79 1761.93,-301.4"/>
+<path fill="none" stroke="black" d="M1073.3,-279C1010.26,-279 1146.02,-312.71 1208.3,-322.5 1316.52,-339.51 1593.92,-344.24 1701.3,-322.5 1722.03,-318.3 1743.78,-309.79 1761.93,-301.4"/>
 <polygon fill="black" stroke="black" points="1763.54,-304.51 1771.06,-297.05 1760.53,-298.19 1763.54,-304.51"/>
 </a>
 </g>
 </g>
-<!-- dummyNode2_approvingRoute_negotiation -->
+<!-- dummyNode2_negotiation_approvingRoute -->
 <g id="node15" class="node">
-<title>dummyNode2_approvingRoute_negotiation</title>
-<ellipse fill="black" stroke="black" cx="1029.3" cy="-192" rx="0.18" ry="0.18"/>
-</g>
-<!-- dummyNode2_approvingRoute_negotiation&#45;&gt;Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute -->
-<g id="edge30" class="edge">
-<title>dummyNode2_approvingRoute_negotiation:w&#45;&gt;Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute</title>
-<g id="a_edge30"><a xlink:title="From negotiatingRoutePlan.negotiation.negotiation.approvingRoute to negotiatingRoutePlan.negotiation.negotiation on routeUnacceptable&#13;Transition Action:&#10; &#160;&#160;&#160;&#160;sendDisapprovalToFSC();">
-<path fill="none" stroke="black" d="M1028.3,-192C549.68,-192 896.4,-264.81 957.3,-330 987.73,-362.57 1282.45,-365.64 1411.4,-365.4"/>
-<polygon fill="black" stroke="black" points="1403.35,-369.01 1413.3,-365.38 1403.25,-362.01 1403.35,-369.01"/>
-</a>
-</g>
-</g>
-<!-- dummyNode3_negotiation_approvingRoute -->
-<g id="node16" class="node">
-<title>dummyNode3_negotiation_approvingRoute</title>
+<title>dummyNode2_negotiation_approvingRoute</title>
 <ellipse fill="black" stroke="black" cx="592.3" cy="-279" rx="0.18" ry="0.18"/>
 </g>
 <!-- Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_approvingRoute -->
@@ -458,40 +444,54 @@
 </a>
 </g>
 </g>
-<!-- dummyNode3_negotiation_approvingRoute&#45;&gt;Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_approvingRoute -->
+<!-- dummyNode2_negotiation_approvingRoute&#45;&gt;Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_approvingRoute -->
 <g id="edge36" class="edge">
-<title>dummyNode3_negotiation_approvingRoute:w&#45;&gt;Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_approvingRoute</title>
+<title>dummyNode2_negotiation_approvingRoute:w&#45;&gt;Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_approvingRoute</title>
 <g id="a_edge36"><a xlink:title="From negotiatingRoutePlan.negotiation.negotiation to negotiatingRoutePlan.negotiation.negotiation.approvingRoute on receiveRouteProposal&#13;Guard: &#160;[!isPolice()]">
 <path fill="none" stroke="black" d="M591.3,-279C533.73,-279 656.57,-312.69 713.3,-322.5 789.5,-335.68 1335.22,-344.72 1409.3,-322.5 1422.47,-318.55 1435.44,-311.03 1446.35,-303.33"/>
 <polygon fill="black" stroke="black" points="1448.68,-305.96 1454.63,-297.19 1444.51,-300.34 1448.68,-305.96"/>
 </a>
 </g>
 </g>
-<!-- dummyNode4_negotiation_negotiation -->
-<g id="node17" class="node">
-<title>dummyNode4_negotiation_negotiation</title>
-<ellipse fill="black" stroke="black" cx="713.3" cy="-279" rx="0.18" ry="0.18"/>
+<!-- dummyNode3_negotiation_negotiation -->
+<g id="node16" class="node">
+<title>dummyNode3_negotiation_negotiation</title>
+<ellipse fill="black" stroke="black" cx="1208.3" cy="-279" rx="0.18" ry="0.18"/>
 </g>
-<!-- dummyNode4_negotiation_negotiation&#45;&gt;Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute -->
+<!-- dummyNode3_negotiation_negotiation&#45;&gt;Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute -->
 <g id="edge28" class="edge">
-<title>dummyNode4_negotiation_negotiation:w&#45;&gt;Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute</title>
+<title>dummyNode3_negotiation_negotiation:w&#45;&gt;Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute</title>
 <g id="a_edge28"><a xlink:title="From negotiatingRoutePlan.negotiation.negotiation to negotiatingRoutePlan.negotiation.negotiation on informOfNumberOfVehicles&#13;Transition Action:&#10; &#160;&#160;&#160;&#160;sendNumberOfVehicles();">
-<path fill="none" stroke="black" d="M712.3,-279C689.59,-279 699.14,-314.05 715.3,-330 739.94,-354.34 1237.18,-362.33 1411.53,-364.39"/>
-<polygon fill="black" stroke="black" points="1403.09,-367.34 1413.3,-364.51 1403.55,-360.36 1403.09,-367.34"/>
+<path fill="none" stroke="black" d="M1207.3,-279C1183.67,-279 1204.41,-314.56 1222.3,-330 1249.86,-353.8 1347.24,-361.44 1411.74,-363.88"/>
+<polygon fill="black" stroke="black" points="1402.77,-365.46 1413.3,-364.23 1404.3,-358.63 1402.77,-365.46"/>
+</a>
+</g>
+</g>
+<!-- dummyNode4_approvingRoute_negotiation -->
+<g id="node17" class="node">
+<title>dummyNode4_approvingRoute_negotiation</title>
+<ellipse fill="black" stroke="black" cx="1043.3" cy="-192" rx="0.18" ry="0.18"/>
+</g>
+<!-- dummyNode4_approvingRoute_negotiation&#45;&gt;Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute -->
+<g id="edge30" class="edge">
+<title>dummyNode4_approvingRoute_negotiation:w&#45;&gt;Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute</title>
+<g id="a_edge30"><a xlink:title="From negotiatingRoutePlan.negotiation.negotiation.approvingRoute to negotiatingRoutePlan.negotiation.negotiation on routeUnacceptable&#13;Transition Action:&#10; &#160;&#160;&#160;&#160;sendDisapprovalToFSC();">
+<path fill="none" stroke="black" d="M1042.3,-192C580.36,-192 916.86,-266.22 976.3,-330 1005.39,-361.23 1286.09,-365.08 1411.4,-365.23"/>
+<polygon fill="black" stroke="black" points="1403.29,-368.71 1413.3,-365.23 1403.3,-361.71 1403.29,-368.71"/>
 </a>
 </g>
 </g>
 <!-- dummyNode5_negotiation_planningRoute -->
 <g id="node18" class="node">
 <title>dummyNode5_negotiation_planningRoute</title>
-<ellipse fill="black" stroke="black" cx="1189.3" cy="-279" rx="0.18" ry="0.18"/>
+<ellipse fill="black" stroke="black" cx="713.3" cy="-279" rx="0.18" ry="0.18"/>
 </g>
 <!-- dummyNode5_negotiation_planningRoute&#45;&gt;Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute -->
 <g id="edge33" class="edge">
 <title>dummyNode5_negotiation_planningRoute:w&#45;&gt;Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute</title>
 <g id="a_edge33"><a xlink:title="From negotiatingRoutePlan.negotiation.negotiation to negotiatingRoutePlan.negotiation.negotiation.planningRoute on receiveNumberOfVehicles&#13;Guard: &#160;[isPolice()]">
-<path fill="none" stroke="black" d="M1188.3,-279C1164.67,-279 1185.34,-314.65 1203.3,-330 1233.62,-355.92 1341.88,-362.85 1411.17,-364.58"/>
-<polygon fill="black" stroke="black" points="1411.45,-368.09 1421.52,-364.81 1411.6,-361.09 1411.45,-368.09"/>
+<path fill="none" stroke="black" d="M712.3,-279C689.59,-279 699.14,-314.05 715.3,-330 739.94,-354.34 1237.18,-362.33 1411.53,-364.39"/>
+<polygon fill="black" stroke="black" points="1411.51,-367.89 1421.55,-364.51 1411.59,-360.89 1411.51,-367.89"/>
 </a>
 </g>
 </g>
@@ -516,37 +516,37 @@
 <g id="edge40" class="edge">
 <title>Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute&#45;&gt;dummyNode1_negotiation_noRouteAgreement:e</title>
 <g id="a_edge40"><a xlink:title="From negotiatingRoutePlan.negotiation.negotiation to negotiatingRoutePlan.negotiation.negotiation.noRouteAgreement on receiveNoAgreeableRoute&#13;Guard: &#160;[!isPolice()]">
-<path fill="none" stroke="black" d="M1413.3,-365.33C1286.87,-365.44 995.32,-362.17 965.3,-330 933.66,-296.1 1102.66,-279 1056.3,-279"/>
+<path fill="none" stroke="black" d="M1413.3,-365.16C1290.47,-364.88 1012.98,-360.82 984.3,-330 952.71,-296.06 1121.66,-279 1075.3,-279"/>
 </a>
 </g>
-<text text-anchor="middle" x="1075.3" y="-318.8" font-family="Times,serif" font-size="14.00">receiveNoAgreeableRoute [!isPolice()]</text>
+<text text-anchor="middle" x="1094.3" y="-318.8" font-family="Times,serif" font-size="14.00">receiveNoAgreeableRoute [!isPolice()]</text>
 </g>
-<!-- Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute&#45;&gt;dummyNode3_negotiation_approvingRoute -->
+<!-- Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute&#45;&gt;dummyNode2_negotiation_approvingRoute -->
 <g id="edge35" class="edge">
-<title>Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute&#45;&gt;dummyNode3_negotiation_approvingRoute:e</title>
+<title>Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute&#45;&gt;dummyNode2_negotiation_approvingRoute:e</title>
 <g id="a_edge35"><a xlink:title="From negotiatingRoutePlan.negotiation.negotiation to negotiatingRoutePlan.negotiation.negotiation.approvingRoute on receiveRouteProposal&#13;Guard: &#160;[!isPolice()]">
 <path fill="none" stroke="black" d="M1413.3,-365.09C1209.66,-365.12 537.87,-362.74 506.3,-330 475.18,-297.74 638.12,-279 593.3,-279"/>
 </a>
 </g>
 <text text-anchor="middle" x="603.3" y="-318.8" font-family="Times,serif" font-size="14.00">receiveRouteProposal [!isPolice()]</text>
 </g>
-<!-- Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute&#45;&gt;dummyNode4_negotiation_negotiation -->
+<!-- Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute&#45;&gt;dummyNode3_negotiation_negotiation -->
 <g id="edge27" class="edge">
-<title>Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute&#45;&gt;dummyNode4_negotiation_negotiation:e</title>
+<title>Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute&#45;&gt;dummyNode3_negotiation_negotiation:e</title>
 <g id="a_edge27"><a xlink:title="From negotiatingRoutePlan.negotiation.negotiation to negotiatingRoutePlan.negotiation.negotiation on informOfNumberOfVehicles&#13;Transition Action:&#10; &#160;&#160;&#160;&#160;sendNumberOfVehicles();">
-<path fill="none" stroke="black" d="M1413.3,-364.17C1242.66,-361.47 752.59,-351.85 726.3,-330 708.39,-315.12 737.58,-279 714.3,-279"/>
+<path fill="none" stroke="black" d="M1413.3,-362.29C1353.12,-358.46 1263.99,-349.6 1236.3,-330 1215.36,-315.18 1234.94,-279 1209.3,-279"/>
 </a>
 </g>
-<text text-anchor="middle" x="824.3" y="-318.8" font-family="Times,serif" font-size="14.00">informOfNumberOfVehicles / {...}</text>
+<text text-anchor="middle" x="1334.3" y="-318.8" font-family="Times,serif" font-size="14.00">informOfNumberOfVehicles / {...}</text>
 </g>
 <!-- Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute&#45;&gt;dummyNode5_negotiation_planningRoute -->
 <g id="edge32" class="edge">
 <title>Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_planningRoute&#45;&gt;dummyNode5_negotiation_planningRoute:e</title>
 <g id="a_edge32"><a xlink:title="From negotiatingRoutePlan.negotiation.negotiation to negotiatingRoutePlan.negotiation.negotiation.planningRoute on receiveNumberOfVehicles&#13;Guard: &#160;[isPolice()]">
-<path fill="none" stroke="black" d="M1413.3,-363.06C1348.31,-359.86 1248.02,-351.49 1217.3,-330 1196.28,-315.3 1215.94,-279 1190.3,-279"/>
+<path fill="none" stroke="black" d="M1413.3,-364.17C1242.66,-361.47 752.59,-351.85 726.3,-330 708.39,-315.12 737.58,-279 714.3,-279"/>
 </a>
 </g>
-<text text-anchor="middle" x="1324.8" y="-318.8" font-family="Times,serif" font-size="14.00">receiveNumberOfVehicles [isPolice()]</text>
+<text text-anchor="middle" x="833.8" y="-318.8" font-family="Times,serif" font-size="14.00">receiveNumberOfVehicles [isPolice()]</text>
 </g>
 <!-- Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_awaitingRouteApproval -->
 <g id="node22" class="node">
@@ -577,11 +577,11 @@
 </g>
 <text text-anchor="middle" x="1858.8" y="-318.8" font-family="Times,serif" font-size="14.00">noMoreRoutes / {...}</text>
 </g>
-<!-- Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_approvingRoute&#45;&gt;dummyNode2_approvingRoute_negotiation -->
+<!-- Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_approvingRoute&#45;&gt;dummyNode4_approvingRoute_negotiation -->
 <g id="edge29" class="edge">
-<title>Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_approvingRoute&#45;&gt;dummyNode2_approvingRoute_negotiation:e</title>
+<title>Crisis_crisisCoordinationStageManagingCrisisNegotiatingRoutePlanNegotiationNegotiation_approvingRoute&#45;&gt;dummyNode4_approvingRoute_negotiation:e</title>
 <g id="a_edge29"><a xlink:title="From negotiatingRoutePlan.negotiation.negotiation.approvingRoute to negotiatingRoutePlan.negotiation.negotiation on routeUnacceptable&#13;Transition Action:&#10; &#160;&#160;&#160;&#160;sendDisapprovalToFSC();">
-<path fill="none" stroke="black" d="M1440.93,-260.94C1433.61,-257.87 1425.81,-255.01 1418.3,-253 1378.99,-242.49 1367.59,-248.67 1327.3,-243 1194.67,-224.34 1164.23,-192 1030.3,-192"/>
+<path fill="none" stroke="black" d="M1440.93,-260.94C1433.61,-257.87 1425.81,-255.01 1418.3,-253 1378.99,-242.49 1367.56,-248.83 1327.3,-243 1200.81,-224.68 1172.1,-192 1044.3,-192"/>
 </a>
 </g>
 <text text-anchor="middle" x="1397.3" y="-231.8" font-family="Times,serif" font-size="14.00">routeUnacceptable / {...}</text>

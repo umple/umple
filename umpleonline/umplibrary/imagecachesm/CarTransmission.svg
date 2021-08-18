@@ -117,31 +117,31 @@
 </g>
 <text text-anchor="middle" x="800.82" y="-247.8" font-family="Times,serif" font-size="14.00">selectNeutral</text>
 </g>
-<!-- dummyNode1_drive_first -->
+<!-- dummyNode1_drive_second -->
 <g id="node4" class="node">
-<title>dummyNode1_drive_first</title>
-<ellipse fill="black" stroke="black" cx="38.82" cy="-121" rx="0.18" ry="0.18"/>
-</g>
-<!-- dummyNode1_drive_first&#45;&gt;CarTransmission_stateDrive_first -->
-<g id="edge9" class="edge">
-<title>dummyNode1_drive_first:w&#45;&gt;CarTransmission_stateDrive_first</title>
-<g id="a_edge9"><a xlink:title="From drive to drive.first on selectFirst">
-<path fill="none" stroke="black" d="M37.82,-121C-3.23,-121 77.61,-154.68 114.82,-172 137.93,-182.75 165.11,-191.05 187.66,-196.85"/>
-<polygon fill="black" stroke="black" points="187.11,-200.32 197.66,-199.35 188.81,-193.53 187.11,-200.32"/>
-</a>
-</g>
-</g>
-<!-- dummyNode2_drive_second -->
-<g id="node5" class="node">
-<title>dummyNode2_drive_second</title>
+<title>dummyNode1_drive_second</title>
 <ellipse fill="black" stroke="black" cx="149.82" cy="-121" rx="0.18" ry="0.18"/>
 </g>
-<!-- dummyNode2_drive_second&#45;&gt;CarTransmission_stateDrive_second -->
+<!-- dummyNode1_drive_second&#45;&gt;CarTransmission_stateDrive_second -->
 <g id="edge13" class="edge">
-<title>dummyNode2_drive_second:w&#45;&gt;CarTransmission_stateDrive_second</title>
+<title>dummyNode1_drive_second:w&#45;&gt;CarTransmission_stateDrive_second</title>
 <g id="a_edge13"><a xlink:title="From drive to drive.second on selectSecond">
 <path fill="none" stroke="black" d="M148.82,-121C148.29,-112 149.47,-112.18 150,-112.18 165.01,-112.17 181.4,-112.14 196.12,-112.55"/>
 <polygon fill="black" stroke="black" points="196.38,-116.07 206.5,-112.94 196.64,-109.07 196.38,-116.07"/>
+</a>
+</g>
+</g>
+<!-- dummyNode2_drive_first -->
+<g id="node5" class="node">
+<title>dummyNode2_drive_first</title>
+<ellipse fill="black" stroke="black" cx="38.82" cy="-121" rx="0.18" ry="0.18"/>
+</g>
+<!-- dummyNode2_drive_first&#45;&gt;CarTransmission_stateDrive_first -->
+<g id="edge9" class="edge">
+<title>dummyNode2_drive_first:w&#45;&gt;CarTransmission_stateDrive_first</title>
+<g id="a_edge9"><a xlink:title="From drive to drive.first on selectFirst">
+<path fill="none" stroke="black" d="M37.82,-121C-3.23,-121 77.61,-154.68 114.82,-172 137.93,-182.75 165.11,-191.05 187.66,-196.85"/>
+<polygon fill="black" stroke="black" points="187.11,-200.32 197.66,-199.35 188.81,-193.53 187.11,-200.32"/>
 </a>
 </g>
 </g>
@@ -172,23 +172,23 @@
 </g>
 <text text-anchor="middle" x="635.82" y="-247.8" font-family="Times,serif" font-size="14.00">selectNeutral</text>
 </g>
-<!-- CarTransmission_stateDrive_first&#45;&gt;dummyNode1_drive_first -->
-<g id="edge8" class="edge">
-<title>CarTransmission_stateDrive_first&#45;&gt;dummyNode1_drive_first:e</title>
-<g id="a_edge8"><a xlink:title="From drive to drive.first on selectFirst">
-<path fill="none" stroke="black" d="M178.83,-206.6C117.83,-204.85 25.07,-197.87 2.82,-172 -1.52,-166.95 0.23,-163.14 2.82,-157 11.75,-135.86 62.77,-121 39.82,-121"/>
-</a>
-</g>
-<text text-anchor="middle" x="31.82" y="-160.8" font-family="Times,serif" font-size="14.00">selectFirst</text>
-</g>
-<!-- CarTransmission_stateDrive_first&#45;&gt;dummyNode2_drive_second -->
+<!-- CarTransmission_stateDrive_first&#45;&gt;dummyNode1_drive_second -->
 <g id="edge12" class="edge">
-<title>CarTransmission_stateDrive_first&#45;&gt;dummyNode2_drive_second:e</title>
+<title>CarTransmission_stateDrive_first&#45;&gt;dummyNode1_drive_second:e</title>
 <g id="a_edge12"><a xlink:title="From drive to drive.second on selectSecond">
 <path fill="none" stroke="black" d="M178.82,-203.41C157.49,-199 135.05,-189.99 121.82,-172 117.87,-166.63 119.6,-163.29 121.82,-157 128.66,-137.62 171.37,-121 150.82,-121"/>
 </a>
 </g>
 <text text-anchor="middle" x="158.82" y="-160.8" font-family="Times,serif" font-size="14.00">selectSecond</text>
+</g>
+<!-- CarTransmission_stateDrive_first&#45;&gt;dummyNode2_drive_first -->
+<g id="edge8" class="edge">
+<title>CarTransmission_stateDrive_first&#45;&gt;dummyNode2_drive_first:e</title>
+<g id="a_edge8"><a xlink:title="From drive to drive.first on selectFirst">
+<path fill="none" stroke="black" d="M178.83,-206.6C117.83,-204.85 25.07,-197.87 2.82,-172 -1.52,-166.95 0.23,-163.14 2.82,-157 11.75,-135.86 62.77,-121 39.82,-121"/>
+</a>
+</g>
+<text text-anchor="middle" x="31.82" y="-160.8" font-family="Times,serif" font-size="14.00">selectFirst</text>
 </g>
 <!-- CarTransmission_stateDrive_first&#45;&gt;CarTransmission_stateDrive_second -->
 <g id="edge14" class="edge">
