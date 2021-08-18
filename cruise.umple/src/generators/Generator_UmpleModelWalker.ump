@@ -57,6 +57,7 @@ class UmpleModelVisitor {
 	
 	// Comment
 	void visit(Comment comment) {}
+	void visit(Requirement req) {}
 	
 	// Umple Classifiers
 	void visit(UmpleElement umpleElement) {}
@@ -173,6 +174,15 @@ class UmpleModelWalker {
 					for(Comment cmt : mth.getComments()) {
 						visitor.visit(cmt);
 					}
+
+					for(String reqId : mth.getRequirementsImplemented()) {
+						for (Requirement storedReq : model.getAllRequirements()){
+							if (storedReq.getIdentifier().equals(reqId)){
+								visitor.visit(storedReq);
+								break;
+							}
+						}
+					}
 				}
 				for(Constant cnst : classifier.getConstants()) {
 					visitor.visit(cnst);
@@ -201,6 +211,15 @@ class UmpleModelWalker {
 					
 					for(Comment cmt : clazz.getComments()) {
 						visitor.visit(cmt);
+					}
+
+					for(String reqId : clazz.getRequirementsImplemented()) {
+						for (Requirement storedReq : model.getAllRequirements()){
+							if (storedReq.getIdentifier().equals(reqId)){
+								visitor.visit(storedReq);
+								break;
+							}
+						}
 					}
 					
 					if(clazz.getParentInterface().size() > 0 || clazz.getExtendsClass() != null) {
@@ -260,6 +279,14 @@ class UmpleModelWalker {
 						for(Comment cmt : aVar.getComments()) {
 							visitor.visit(cmt);
 						}
+						for(String reqId : aVar.getRequirementsImplemented()) {
+							for (Requirement storedReq : model.getAllRequirements()){
+								if (storedReq.getIdentifier().equals(reqId)){
+									visitor.visit(storedReq);
+									break;
+								}
+							}
+						}
 					}
 					
 					for(Attribute attribute: clazz.getAttributes()) {
@@ -270,6 +297,14 @@ class UmpleModelWalker {
 						}
 						for(Comment cmt : attribute.getComments()) {
 							visitor.visit(cmt);
+						}
+						for(String reqId : attribute.getRequirementsImplemented()) {
+							for (Requirement storedReq : model.getAllRequirements()){
+								if (storedReq.getIdentifier().equals(reqId)){
+									visitor.visit(storedReq);
+									break;
+								}
+							}
 						}					
 					}
 					for(StateMachine sm: clazz.getAllStateMachines()){

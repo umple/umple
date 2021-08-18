@@ -486,18 +486,20 @@ class Parser
   {
     StringBuilder answer = new StringBuilder();
     StringBuilder queuedComments = new StringBuilder();
+    StringBuilder queuedReqs = new StringBuilder();
     for(String rule : grammarRules)
     {
       // There are three possible 'rule' types
-
       // Blank line, do nothing except output any queued comments
       if (rule.length() == 0)
       {
         if (rulesToOutput.length() == 0) {  // only output for complete grammar
           answer.append(queuedComments.toString());
+          answer.append(queuedReqs.toString());
           answer.append("<br />\n");
         }
         queuedComments = new StringBuilder();  // throw away comments so far
+        queuedReqs = new StringBuilder();
       }
       else if (rule.length() >= 2 && rule.charAt(0) == '/' &&  rule.charAt(1) == '/')
       {
@@ -505,14 +507,24 @@ class Parser
         // Skip items in the grammar marked 'TODO'
         if(!rule.matches("\\Q//TODO\\E.*"))
         {
-          queuedComments.append("<br />\n<font color=\"brown\">");
+          queuedComments.append("<br />\n<font color=\"green\">");
           // Replace URLs in [* *] by links to them
           String commentInterior=rule.replaceAll("\\Q[*http\\E(.*)\\Q*]\\E","<a style=\"color: brown\" href=\"http$1\">http$1</a>");
           // Replace user manual refs by links to the local copy of the UM
           commentInterior=commentInterior.replaceAll("\\Q[*\\E(.*)\\Q*]\\E","<a style=\"color: brown\" href=\"$1.html\">$1</a>");
           queuedComments.append(commentInterior);
+          queuedComments.append("extra");
           queuedComments.append("</font>");
         }
+      }
+      else if (rule.length() >= 10 && rule.substring(0, 10).equals("implements")){
+        System.out.println("found implem req");
+        queuedReqs.append("<br />\n<font color=\"green\">");
+        //String reqNames
+        //rule
+        queuedReqs.append(rule);
+        queuedReqs.append("extra");
+        queuedReqs.append("</font>");
       }
       else
       {
@@ -539,6 +551,7 @@ class Parser
 
             // Start by outputting any queued comments (if there are any)
             answer.append(queuedComments.toString());                 
+            answer.append(queuedReqs.toString()); 
             
             answer.append("<br />\n<a name=\"");
             answer.append(ruleName);  // anchor to link to
@@ -557,6 +570,7 @@ class Parser
             
           } // End outputting rule
           queuedComments = new StringBuilder(); // clear them whether or not output
+          queuedReqs = new StringBuilder(); // clear them whether or not output
         }
         else {
           System.out.println("UNPROCESSABLE RULE in grammar when generating manual in Parser_Code.ump. Rule="+rule);

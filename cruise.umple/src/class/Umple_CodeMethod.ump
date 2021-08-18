@@ -175,6 +175,7 @@ class Method
     String isConstructor = String.valueOf(isIsConstructor());
     return Arrays.asList(name, returnType, params, isConstructor).hashCode();
   }
+
 }
 
 

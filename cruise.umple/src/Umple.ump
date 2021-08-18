@@ -218,6 +218,9 @@ class Method
 
   // The comments associated with the method (such as the Javadoc above it).
   1 -> * Comment;
+
+  //The requirement ids implemented within the method.
+  String[] requirementsImplemented;
   
   // Specifies, for fAutoAPI methods, if the method was generated
   Boolean wasGenerated = false;
@@ -638,11 +641,13 @@ class UmpleClassifier
 class UmpleInterface
 {
   isA UmpleClassifier;
+  String[] requirementsImplemented;
 
   * -> 0..* UmpleInterface extendsInterface;
 
   // The comments associated with the Umple Interface (such as the Javadoc above it).
   1 -> * Comment;
+  
   0..1 -- * UmpleTestCase;
 
   before setPackageName { if (aPackageName == null) { return false; } }
@@ -742,6 +747,8 @@ class UmpleClass
   // The comments associated with the Umple Class (such as the Javadoc above it).
   1 -> * Comment;
 
+  String[] requirementsImplemented;
+
   //This is used to assign inheritance parameters.
   1 -> * GeneralTPApplied;
 
@@ -815,6 +822,8 @@ class UmpleTrait {
 
   // The comments associated with the Umple Trait (such as the Javadoc above it).
   1 -> * Comment;
+
+  String[] requirementsImplemented;
 
   //The template parameters which are specified when traits are defined.
   1 -> * GeneralTemplateParameter;
@@ -1021,6 +1030,8 @@ class Attribute
   source {none,fTrait}
   // The comments associated with the attribute (such as the Javadoc above it).
   1 -> * Comment;
+  
+  String[] requirementsImplemented;
 
   // In case this attribute needs to have error handling preformed
   1 -> 0..1 Position;
@@ -1138,6 +1149,7 @@ class AssociationVariable
   String scName = "";
   Boolean mulChangedToN = false;
   Boolean reqSetCode = false;
+  String[] requirementsImplemented;
 
   // The comments associated with the association (such as the Javadoc above it).
   1 -> * Comment;
@@ -1243,6 +1255,17 @@ class Comment
   // The text associated with the comment.
   text;
   Boolean annotation = false;
+}
+
+/*
+* Represents a requirement, such as those found around classes, methods, attributes and associations.
+*/
+class Requirement{
+  depend java.util.*;
+
+  identifier;
+  statement;
+  language;
 }
 
 class UmpleTemplate {

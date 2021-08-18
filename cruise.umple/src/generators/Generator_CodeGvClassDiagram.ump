@@ -85,6 +85,7 @@ class GvClassDiagramGenerator
     // Output the tooltip : Class name followed by any comment
     code.append(",\n   tooltip=\"class "+className+"\n");
     code.append(appendTooltipComment(uClass.getComments(), false, uClass.getSourceModel()));
+    //code.append(appendTooltipComment(uClass.getRequirements(), false, uClass.getSourceModel()));
     code.append("\"");
 
     // Terminate the class as a whole

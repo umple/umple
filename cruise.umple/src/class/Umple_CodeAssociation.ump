@@ -152,6 +152,7 @@ class Association
   public boolean isComposition() {
   	return this.isLeftComposition || this.isRightComposition;
   }
+
 }
 
 /*

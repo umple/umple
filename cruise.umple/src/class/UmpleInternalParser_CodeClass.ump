@@ -34,8 +34,8 @@ class UmpleInternalParser
   // List of comments populated by the parser to be added to the next class, attribute, association, method, etc.
   internal Comment[] lastComments;
   
-  // contains list of requirements - key: reqIdentifier and value: [content, language]
-  internal Map<String,ArrayList> associatedRequirements = new HashMap<String, ArrayList>();
+  // contains list of requirements
+  internal String[] lastRequirements;
   
   // last attribute made.
   internal Attribute lastattr = null;
@@ -68,6 +68,7 @@ class UmpleInternalParser
 
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
+    boolean shouldConsumeRequirement = lastRequirements.size() > 0;
 
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
     if (t.isStatic("//") || t.isStatic("/*") || t.isStatic("*/"))
@@ -86,10 +87,11 @@ class UmpleInternalParser
       
     }
     else if (t.is("requirement")){
-      processRequirement(t);
+      analyzeRequirement(t);
     }
     else if (t.is("implementReq")){
-      processImplementReq(t);
+      analyzeImplementReq(t);
+      shouldConsumeRequirement = isReqAddedToLast(t);
     }
     else if (t.is("strictness") )
     {
@@ -137,7 +139,7 @@ class UmpleInternalParser
     else if (t.is("namespaceoption"))
     {
       redefinePackageName = t.getValue("option").equals("--redefine")? new String(currentPackageName) : "";
-    }    
+    }
     else if (t.is("inlineComment"))
     {
       analyzeComment(t, false);
@@ -187,31 +189,31 @@ class UmpleInternalParser
     {
       lastComments.clear();
     }
+    if (shouldConsumeRequirement)
+    {
+      lastRequirements.clear();
+    }
 
   }  
 
-  private void processRequirement(Token t)
+  private void analyzeRequirement(Token t)
   {
-    ArrayList<String> reqValue = new ArrayList<String>();
-    reqValue.add(t.getSubToken("reqContent").getValue());
-    if (t.getSubToken("language") != null){
-      reqValue.add(t.getSubToken("language").getValue());
-    }
-    model.addReq(t.getSubToken("reqIdentifier").getValue(), reqValue);
-  }
-
-  private void processImplementReq(Token t){
-    if (t.getSubToken("reqIdentifier").getValue() == null || t.getSubToken("reqIdentifier").getValue().length() == 0){
-      setFailedPosition(t.getPosition(),1502,t.getValue(),t.getSubToken("reqIdentifier").getValue());
+    Requirement req;
+    if (t.getSubToken("language") == null || t.getSubToken("language").getValue() ==  null){
+      req = new Requirement(t.getSubToken("reqIdentifier").getValue(), t.getSubToken("reqContent").getValue(), "");
     }
     else{
-      if (model.containsReqKey(t.getSubToken("reqIdentifier").getValue())){
-        String tokenValueString="";
-        tokenValueString = model.getReqText(t.getSubToken("reqIdentifier").getValue());
+      req = new Requirement(t.getSubToken("reqIdentifier").getValue(), t.getSubToken("reqContent").getValue(), t.getSubToken("language").getValue());
+    }
+    model.addAllRequirement(req);
+    
+  }
 
-        if (!tokenValueString.equals("")){
-          Comment reqComment = new Comment(tokenValueString);
-          lastComments.add(reqComment);          
+  private void analyzeImplementReq(Token t){ 
+    if (t.hasSubTokens()){
+      for (Token sub : t.getSubTokens()){
+        if (!sub.getValue().equals("STATIC")){
+          lastRequirements.add(sub.getValue());
         }
       }
     }
@@ -260,6 +262,49 @@ class UmpleInternalParser
     return false;
   }
 
+   /*
+   * If the last attribute/association made matches the line number of the requirement implement statement, add the req id to the attribute/association.
+   * 
+   * @param t the implementsReq token that is used to see the position of the implements requirement statement
+   */
+  private boolean isReqAddedToLast(Token t)
+  {
+    if (t.getPosition() == null) {return false;}
+    if (lastattr != null)
+    {
+      if (lastattr.getPosition().getLineNum() == t.getPosition().getLineNum())
+      {
+        // this will only add the current implementReqs
+        for (String r : lastRequirements)
+        {
+          lastattr.addRequirementsImplemented(r);
+        }
+        return true;
+      }
+      else
+      {
+        lastattr = null;
+      }
+    }  
+    else if (lastassoc != null && lastassocPosition != null)
+    {
+      if (lastassocPosition.getLineNum() == t.getPosition().getLineNum())
+      {
+        // this will only add the current implementReqs
+        for (String r : lastRequirements)
+        {
+          lastassoc.addRequirementsImplemented(r);
+        }
+        return true;
+      }
+      else
+      {
+        lastassoc = null;
+      }
+    }                
+    return false;
+  }
+
   /*
    * Analyze class content tokens.
    * 
@@ -278,6 +323,7 @@ class UmpleInternalParser
 
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
+    boolean shouldConsumeRequirement = lastRequirements.size() > 0;
     
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
     if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
@@ -291,10 +337,11 @@ class UmpleInternalParser
       aClass.addDisableAutogeneratedMethodList(expressionToken.getValue());
     }
     else if (token.is("requirement")){
-      processRequirement(token);
+      analyzeRequirement(token);
     }
     else if (token.is("implementReq")){
-      processImplementReq(token);
+      analyzeImplementReq(token);
+      shouldConsumeRequirement = isReqAddedToLast(token);
     }
     else if (token.is("inlineComment"))
     {
@@ -446,6 +493,10 @@ class UmpleInternalParser
     if (shouldConsumeComment)
     {
       lastComments.clear();
+    }
+    if (shouldConsumeRequirement)
+    {
+      lastRequirements.clear();
     }
   }
   
@@ -1256,6 +1307,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       regularCommentCountEnd++;
     }
 
+    // Add requirements
+    for (String reqId: lastRequirements)
+    {
+      aClass.addRequirementsImplemented(reqId);
+    }
+
     for (Comment c : lastComments)
     {
       aClass.addCommentAt(c,regularCommentCountEnd);
@@ -1490,6 +1547,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     for (Comment c : anInterface.getComments()) {
       if(c.getText().startsWith("@umplesource")) break;
       regularCommentCountEnd++;
+    }
+
+    // Add requirements
+    for (String reqId: lastRequirements)
+    {
+      anInterface.addRequirementsImplemented(reqId);
     }
 
     for (Comment c : lastComments)
@@ -3236,6 +3299,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     // Set method position
     aMethod.setPosition(method.getPosition());
     aMethod.setEndPosition(method.getEndPosition());
+
+    // Add requirements
+    for (String reqId: lastRequirements)
+    {
+      aMethod.addRequirementsImplemented(reqId);
+    }
   
     // Add comments above the method to the method.
     for (Comment c : lastComments)
@@ -3441,8 +3510,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
     		  }
             
-          }  
-        }
+        }  
+      }
     }
     meth.setCodeblock(cb);
     meth.setImplementationPositions(implementationPositions);
@@ -4504,6 +4573,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
     }
 
+    // Add requirements
+    for (String reqId: lastRequirements)
+    {
+      yourAs.addRequirementsImplemented(reqId);
+    }
+
     // Add comments above the association to the association.
     for (Comment c : lastComments)
     {
@@ -4793,6 +4868,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       else if(!compareTypeToValueList(type, values)) {
         setFailedPosition(attributeToken.getPosition(),141,type,value);
       }
+    }
+
+    // Add requirements above the attribute to the attribute.
+    for (String reqId: lastRequirements)
+    {
+      attribute.addRequirementsImplemented(reqId);
     }
 
     // Add comments above the attribute to the attribute.
