@@ -3,7 +3,7 @@ module OptionsPanelTestHelper
   EXAMPLE_SUBDIRECTORY = "options_examples/"
 
   def get_checkbox_state(checkbox_id)
-    return find(:css, checkbox_id).checked?
+    return evaluate_script("jQuery(\"#{checkbox_id}\").is(':checked')")
   end
 
   def reset_page_to_options
