@@ -174,10 +174,10 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       it "clicks the label text" do
         reset_page_to_options_with_stateMachine
         find(:css, "#labelToggleTransitionLabels").click
-        sleep 1
+        sleep 2
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(true)
         find(:css, "#labelToggleTransitionLabels").click
-        sleep 1
+        sleep 2
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(false)
       end
     end
