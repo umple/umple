@@ -902,15 +902,17 @@ Action.copyCommandLineCode = function()
 
 Action.showCodeInSeparateWindow = function()
 {
-  codeWindow = window.open("","UmpleCode","height=700, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
+  codeWindow = window.open("","UmpleCode"+Math.random()*10000,"height=700, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
   codeWindow.document.write('<code><pre id="umpleCode">' + Page.getUmpleCode() + '</pre></code>');
+  codeWindow.document.title="Umple raw code";
   codeWindow.document.close();
 }
 
 Action.showEncodedURLCodeInSeparateWindow = function()
 {
-  codeWindow = window.open("","UmpleCode","height=500, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
+  codeWindow = window.open("","UmpleEncodedURL"+Math.random()*10000,"height=500, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
   codeWindow.document.write('<code><pre id="umpleCode">' + Page.getEncodedURL() + '</pre></code>');
+  codeWindow.document.title="Umple encoded URL";
   codeWindow.document.close();
 }
 
