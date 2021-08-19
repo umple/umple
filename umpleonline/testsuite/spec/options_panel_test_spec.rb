@@ -164,20 +164,20 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       it "clicks the input box" do
         reset_page_to_options_with_stateMachine
         find(:css, "#buttonToggleTransitionLabels").click
-        wait_for_loading
+        sleep 1
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(true)
         find(:css, "#buttonToggleTransitionLabels").click
-        wait_for_loading
+        sleep 1
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(false)
       end
 
       it "clicks the label text" do
         reset_page_to_options_with_stateMachine
         find(:css, "#labelToggleTransitionLabels").click
-        wait_for_loading
+        sleep 1
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(true)
         find(:css, "#labelToggleTransitionLabels").click
-        wait_for_loading
+        sleep 1
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(false)
       end
     end
@@ -187,23 +187,22 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       it "clicks the input box" do
         reset_page_to_options_with_stateMachine
         find(:css, "#buttonToggleGuardLabels").click
-        wait_for_loading
+        sleep 1
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(true)
         find(:css, "#buttonToggleGuardLabels").click
-        wait_for_loading
+        sleep 1
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(false)
       end
 
       it "clicks the label text" do
         reset_page_to_options_with_stateMachine
-        sleep 2
+        sleep 1
         find(:css, "#labelToggleGuardLabels").click
-        wait_for_loading
-        sleep 2
+     
+        sleep 1
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(true)
         find(:css, "#labelToggleGuardLabels").click
-        wait_for_loading
-        sleep 2
+        sleep 1
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(false)
       end
     end
@@ -215,6 +214,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         reset_page_to_options
         expect(page).to have_selector("#umpleCanvasColumn")
         find(:css, "#buttonShowHideCanvas").click
+        sleep 1
         expect(page).to have_no_selector("#umpleCanvasColumn")
       end
 
@@ -222,6 +222,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         reset_page_to_options_with_option("nodiagram")
         expect(page).to have_no_selector("#umpleCanvasColumn")
         find(:css, "#buttonShowHideCanvas").click
+        sleep 1
         expect(page).to have_selector("#umpleCanvasColumn")
       end
     end
@@ -232,7 +233,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           reset_page_to_options
           expect(page).to have_selector("#textEditorColumn")
           find(:css, "#buttonShowHideTextEditor").click
-          wait_for_loading
+          sleep 1
           expect(page).to have_no_selector("#textEditorColumn")
         end
 
@@ -249,7 +250,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           expect(page).to have_selector("#topTextEditor")
           expect(page).to have_selector("#bottomTextEditor")
           find(:css, "#buttonShowHideTextEditor").click
-          wait_for_loading
+          sleep 1
           expect(page).to have_no_selector("#topTextEditor")
           expect(page).to have_no_selector("#bottomTextEditor")
         end
@@ -262,7 +263,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           reset_page_to_options
           expect(page).to have_no_selector("#bottomTextEditor")
           find(:css, "#buttonShowHideLayoutEditor").click
-          wait_for_loading
+          sleep 1
           expect(page).to have_selector("#bottomTextEditor")
         end
 
@@ -270,7 +271,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           reset_page_to_options_with_option("showlayout")
           expect(page).to have_selector("#bottomTextEditor")
           find(:css, "#buttonShowHideLayoutEditor").click
-          wait_for_loading
+          sleep 1
           expect(page).to have_no_selector("#bottomTextEditor")
         end
       end
@@ -280,7 +281,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           reset_page_to_options_with_option("notext")
           expect(page).to have_no_selector("#textEditorColumn")
           find(:css, "#buttonShowHideLayoutEditor").click
-          wait_for_loading
+          sleep 1
           expect(page).to have_no_selector("#bottomTextEditor")
         end
       end
