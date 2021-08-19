@@ -196,11 +196,14 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
 
       it "clicks the label text" do
         reset_page_to_options_with_stateMachine
+        sleep 2
         find(:css, "#labelToggleGuardLabels").click
         wait_for_loading
+        sleep 2
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(true)
         find(:css, "#labelToggleGuardLabels").click
         wait_for_loading
+        sleep 2
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(false)
       end
     end
