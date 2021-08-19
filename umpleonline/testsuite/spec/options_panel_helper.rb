@@ -9,7 +9,7 @@ module OptionsPanelTestHelper
   def reset_page_to_options
     load_page
     switch_to_options_panel
-    wait_for_loading_for 20
+    wait_for_loading_for 15
   end
 
   def reset_page_to_options_with_option(option_text)
@@ -39,5 +39,6 @@ module OptionsPanelTestHelper
   
   def input_model_text(new_text)
     execute_script("Page.setUmpleCode(\"#{new_text}\")")
+    wait_for_loading
   end
 end

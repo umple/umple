@@ -6,6 +6,7 @@ module TestUtils
   def wait_for_loading
     loop until page.evaluate_script('jQuery.active').zero?
     loop until page.evaluate_script("Ajax.queue.length").zero?
+    loop until page.evaluate_script("DiagramEdit.textChangeQueue.length").zero?
     page.has_no_selector?('.loading-indicator')
   end
 
@@ -94,19 +95,19 @@ module TestUtils
   def switch_to_saveandreset_panel
     find(:css, "#ui-id-1").click
     loop until all(:css, "div.ui-accordion-content-active").length == 1
-    wait_for_loading_for(30)
+    wait_for_loading_for 15
   end
 
   def switch_to_tools_panel
     find(:css, "#ui-id-3").click
     loop until all(:css, "div.ui-accordion-content-active").length == 1
-    wait_for_loading_for(30)
+    wait_for_loading_for 15
   end
 
   def switch_to_options_panel
     find(:css, "#ui-id-5").click
     loop until all(:css, "div.ui-accordion-content-active").length == 1
-    wait_for_loading_for(30)
+    wait_for_loading_for 15
   end
 
   # Methods used on configuration. They set some globally used constants.
@@ -126,7 +127,7 @@ module TestUtils
 
   def select_option_by_value(select_id, option_text)
     find(:css, select_id).find("option[value='#{option_text}']").select_option
-    wait_for_loading_for(30)
+    wait_for_loading_for 15
   end
 end
 

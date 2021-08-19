@@ -98,7 +98,7 @@ COMPOSITE_STRUCTURES_EXAMPLES = {
 
   def check_class_example(example_name)
     load_page
-    wait_for_loading_for(30)
+   
     select_option_by_value("#inputExampleType", "cdModels")
     select_option_by_value("#inputExample", example_name)
 
@@ -115,7 +115,7 @@ COMPOSITE_STRUCTURES_EXAMPLES = {
 
   def check_state_example(example_name)
     load_page
-    wait_for_loading_for(30)
+
     select_option_by_value("#inputExampleType", "smModels")
     select_option_by_value("#inputExample2", example_name)
     
@@ -131,7 +131,7 @@ COMPOSITE_STRUCTURES_EXAMPLES = {
 
   def check_comp_structure_example(example_name)
     load_page
-    wait_for_loading_for(30)
+ 
     select_option_by_value("#inputExampleType", "structureModels")
     select_option_by_value("#inputExample3", example_name)
 
