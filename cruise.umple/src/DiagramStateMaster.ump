@@ -16,7 +16,7 @@ along with the user manual files
 
 @outputumplesource
 */
-use ../DiagramMaster.ump;
+use DiagramMaster.ump;
 
 // Activate this specific mixset
 use StateClassesOnly;
