@@ -262,7 +262,7 @@ describe "Graphical editing of diagram: model consistency",
           find(:css, '#umpleCanvas').native.send_keys("a")
           within("div#umpleCanvas") do
             find(:css, "#Student").click
-            sleep(1)
+            sleep(4)
             find(:css, "#Mentor").click
           end
 
@@ -281,7 +281,7 @@ describe "Graphical editing of diagram: model consistency",
           find(:css, '#umpleCanvas').native.send_keys("a")
           within("div#umpleCanvas") do
             find(:css, "#Mentor").click
-            sleep(1)
+            sleep(4)
             find(:css, "#Student").click
           end
 

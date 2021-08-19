@@ -24,6 +24,7 @@ module TestUtils
 
   def load_page
     visit "umple.php"
+    wait_for_loading
   end
 
   def load_umple_with_option(option_text)

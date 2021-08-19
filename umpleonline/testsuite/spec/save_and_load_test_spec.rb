@@ -7,7 +7,7 @@ describe "Save and Load Panel", :feature => :saveAndLoad, :helper => :saveAndLoa
     
     describe "Saves and loads back a model"  do
         
-        it "with a sinple class" do
+        it "with a single class" do
             load_umple_with_file_save_and_load_helper('simple_class.ump')
     
             code = get_text_editor_content

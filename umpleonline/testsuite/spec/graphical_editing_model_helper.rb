@@ -57,6 +57,7 @@ module DiagramEditingModelHelper
     contents = IO.read("#{TestUtils::TEST_EXAMPLE_DIRECTORY}#{EXAMPLE_SUBDIRECTORY}#{filename}")
       .encode(:universal_newline => true)
     wait_for_loading
+    loop until page.evaluate_script("Ajax.queue.length").zero?
     begin
       actual = evaluate_script("Page.getUmpleCode()")
     end while evaluate_script("Ajax.queue.length")!=0
