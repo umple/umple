@@ -93,6 +93,7 @@ ToolTips.tooltipEntries = {
   // preferences tooltips
   ttPhotoReady: ["li", "Remove editing handles from diagram"],
   ttManualSync: ["li", "Stop the diagram from syncing automatically"],
+  ttAllowPinch: ["li", "When active on GraphViz diagrams, this allows two-fingered gestures to zoom the diagram in or out to make it have any desired resolution and size (but prevents the entire browser from being zoomed in this manner)"],
 
   // other views tooltips
   ttYumlImage: ["li", "Generate a class diagram using Yuml in another window"]
