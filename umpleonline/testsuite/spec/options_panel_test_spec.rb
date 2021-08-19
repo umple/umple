@@ -658,6 +658,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
 
         switch_to_options_panel
         find(:css, "#buttonManualSync", visible: :all).click
+        sleep(3)
         
         switch_to_tools_panel
         
