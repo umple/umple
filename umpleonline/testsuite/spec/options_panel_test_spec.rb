@@ -143,8 +143,10 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       it "clicks the input box" do
         reset_page_to_options_with_stateMachine 
         find(:css, "#buttonToggleActions").click
+        sleep 2
         expect(get_checkbox_state("#buttonToggleActions")).to eq(false)
         find(:css, "#buttonToggleActions").click
+        sleep 2
         expect(get_checkbox_state("#buttonToggleActions")).to eq(true)
       end
 
@@ -152,9 +154,11 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         reset_page_to_options_with_stateMachine 
         find(:css, "#labelToggleActions").click
         wait_for_loading
+        sleep 2
         expect(get_checkbox_state("#buttonToggleActions")).to eq(false)
         find(:css, "#labelToggleActions").click
         wait_for_loading
+        sleep 2
         expect(get_checkbox_state("#buttonToggleActions")).to eq(true)
       end
     end
