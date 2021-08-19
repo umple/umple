@@ -320,12 +320,14 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         end
         find(:css, "#buttonToggleMethods").click
         wait_for_loading
+        sleep 2
         within(find(:css, "#Student")) do
           fail_message = "methods not showing after checking the methods checkbox"
           expect(page).to have_selector("tr.methodArea"), fail_message
         end
         find(:css, "#buttonToggleMethods").click
         wait_for_loading
+        sleep 2
         within(find(:css, "#Student")) do
           fail_message = "methods not hidden after unchecking the methods checkbox"
           expect(page).to have_no_selector("tr.methodArea"), fail_message
