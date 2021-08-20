@@ -121,12 +121,21 @@ class CodeCompiler {
     if (fileroot.endsWith(".ump")) {
       fileroot = fileroot.substring(0, fileroot.length() - 4);
     }
-
     if(generator.equals("GvClassDiagram")) {
       fileroot+="cd";
     }
 
-    String path=model.getUmpleFile().getPath() + File.separator + gt.getPath();
+    String path="";
+    String extraPath=gt.getPath();
+
+    if(extraPath.startsWith("/")) {
+      // Absolute
+      path=extraPath;
+    }
+    else
+    {
+      path=model.getUmpleFile().getPath() + File.separator + extraPath;
+    }
     
     String inputFullPath=path + File.separator + fileroot + ".gv";
     String outputFullPath=path + File.separator + fileroot + "."+ graphicFormat;
