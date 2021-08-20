@@ -1,0 +1,32 @@
+#~/bin/csh -fb
+set thedir=$cwd
+set thebranch=docker-`git rev-parse --abbrev-ref HEAD`-`awk '{print $3}' build/umpleversion.last.txt`
+set backedvisits=`cat umpleonline/countlog.txt`
+set backedcommands=`cat umpleonline/scripts/commandcount.txt`
+echo will build Umple docker image for system in $thedir
+echo make sure you have built umple and the manual and promoted umple first
+if (! -d umpleonline) then
+  echo This script is not being started in an umple root directory
+  exit -1
+endif
+echo 0 > umpleonline/countlog.txt
+echo 0 > umpleonline/scripts/commandcount.txt
+cd umpleonline
+# create a temporary copy of the manual
+cp -pr ../dist/cruise.umple/reference manual
+docker build -t "umple/umpleonline:recentbuild" --build-arg gitbranch=$thebranch ../umpleonline;
+rm -r manual
+cd ..
+echo $backedvisits > umpleonline/countlog.txt
+echo $backedcommands > umpleonline/scripts/commandcount.txt
+echo if the above completed successfully then run the image with the following
+echo docker run --rm -ti -p 8000:8000 -v /tmp/umpleonline-tmp81701:/var/www/ump docker.io/umple/umpleonline:recentbuild
+echo then open http://localhost:8000/umple.php
+echo
+echo When good do the following to push to docker hub
+echo docker images
+echo docker tag XXXXXXXXXXXX umple/umpleonline:latest
+echo docker push umple/umpleonline:latest
+echo docker tag XXXXXXXXXXXX umple/umpleonline:v1.XX.X
+echo docker push umple/umpleonline:v1.XX.X
+
