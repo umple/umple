@@ -63,7 +63,7 @@ module DiagramEditingPositionHelper
     class_two_end += ":" + role_two unless role_two.nil?
 
     association_class_name = class_one_end + "__" + class_two_end
-    wait_for_loading_for(30)
+    wait_for_loading
     find(:css, ".#{association_class_name}")
     evaluate_script("jQuery('.#{association_class_name}').click();")
     association_id = evaluate_script("jQuery('.#{association_class_name}').prop('id')")

@@ -3,13 +3,13 @@ module OptionsPanelTestHelper
   EXAMPLE_SUBDIRECTORY = "options_examples/"
 
   def get_checkbox_state(checkbox_id)
-    return evaluate_script("jQuery(\"#{checkbox_id}\").is(':checked')")
+    return find(:css, checkbox_id).checked?
   end
 
   def reset_page_to_options
     load_page
     switch_to_options_panel
-    wait_for_loading_for 15
+    wait_for_loading
   end
 
   def reset_page_to_options_with_option(option_text)
@@ -35,10 +35,5 @@ module OptionsPanelTestHelper
     select_option_by_value("#inputExample2", "Booking.ump")
     wait_for_loading
     switch_to_options_panel
-  end
-  
-  def input_model_text(new_text)
-    execute_script("Page.setUmpleCode(\"#{new_text}\")")
-    wait_for_loading
   end
 end

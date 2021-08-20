@@ -57,6 +57,11 @@ module TestUtils
     contents = IO.read("#{directory}#{filename}")
     return contents.encode(:universal_newline => true)
   end
+
+  def input_model_text(new_text)
+    execute_script("Page.setUmpleCode(\"#{new_text}\")")
+    wait_for_loading
+  end
  
 
   # A javascript/capybara implementation of a drag and drop. Uses javascript to 
@@ -90,24 +95,30 @@ module TestUtils
     return size
   end
 
-  # These three methods allow the test suite to switch to any of the palette
+  # These four methods allow the test suite to switch to any of the palette
   # accordion panels, and then wait for the switching animation to finish.
   def switch_to_saveandreset_panel
     find(:css, "#ui-id-1").click
     loop until all(:css, "div.ui-accordion-content-active").length == 1
-    wait_for_loading_for 15
+    wait_for_loading
   end
 
   def switch_to_tools_panel
     find(:css, "#ui-id-3").click
     loop until all(:css, "div.ui-accordion-content-active").length == 1
-    wait_for_loading_for 15
+    wait_for_loading
   end
 
   def switch_to_options_panel
     find(:css, "#ui-id-5").click
     loop until all(:css, "div.ui-accordion-content-active").length == 1
-    wait_for_loading_for 15
+    wait_for_loading
+  end
+
+  def switch_to_tasks_panel
+    find(:css, "#ui-id-7").click
+    loop until all(:css, "div.ui-accordion-content-active").length == 1
+    wait_for_loading
   end
 
   # Methods used on configuration. They set some globally used constants.

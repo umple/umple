@@ -10,6 +10,7 @@ require 'page_load_helper.rb'
 require 'options_panel_helper.rb'
 require 'dynamic_layout_helper.rb'
 require 'save_and_load_helper.rb'
+require 'tasks_panel_helper.rb'
 
 # DO NOT RUN THESE TESTS USING THE 'NO-HEADLESS' OPTION 
 # UNLESS FOR DEBUGGING PURPOSES 
@@ -37,5 +38,6 @@ RSpec.configure do |config|
   config.include PageLoadHelper, :helper => :pageLoad
   config.include OptionsPanelTestHelper, :helper => :optionsMenu
   config.include DynamicResizingHelper, :helper => :dynamicResizing
-  config.include SaveAndLoadTestHelper, :helper => :saveAndLoad 
+  config.include SaveAndLoadTestHelper, :helper => :saveAndLoad
+  config.include TaskHelper, :helper => :taskEdit 
 end

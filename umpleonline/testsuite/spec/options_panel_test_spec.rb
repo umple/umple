@@ -9,8 +9,8 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
   describe "Show views inputability" do
     
     before(:all) do
-      reset_page_to_options
       Capybara.current_session.current_window.resize_to(1024, 768)
+      reset_page_to_options
     end
 
     describe "Clicking the show/hide diagram option" do
@@ -143,10 +143,8 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       it "clicks the input box" do
         reset_page_to_options_with_stateMachine 
         find(:css, "#buttonToggleActions").click
-        sleep 2
         expect(get_checkbox_state("#buttonToggleActions")).to eq(false)
         find(:css, "#buttonToggleActions").click
-        sleep 2
         expect(get_checkbox_state("#buttonToggleActions")).to eq(true)
       end
 
@@ -154,11 +152,11 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         reset_page_to_options_with_stateMachine 
         find(:css, "#labelToggleActions").click
         wait_for_loading
-        sleep 2
+        
         expect(get_checkbox_state("#buttonToggleActions")).to eq(false)
         find(:css, "#labelToggleActions").click
         wait_for_loading
-        sleep 2
+       
         expect(get_checkbox_state("#buttonToggleActions")).to eq(true)
       end
     end
@@ -168,20 +166,16 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       it "clicks the input box" do
         reset_page_to_options_with_stateMachine
         find(:css, "#buttonToggleTransitionLabels").click
-        sleep 1
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(true)
-        find(:css, "#buttonToggleTransitionLabels").click
-        sleep 1
+        find(:css, "#buttonToggleTransitionLabels").click   
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(false)
       end
 
       it "clicks the label text" do
         reset_page_to_options_with_stateMachine
         find(:css, "#labelToggleTransitionLabels").click
-        sleep 2
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(true)
         find(:css, "#labelToggleTransitionLabels").click
-        sleep 2
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(false)
       end
     end
@@ -191,22 +185,17 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       it "clicks the input box" do
         reset_page_to_options_with_stateMachine
         find(:css, "#buttonToggleGuardLabels").click
-        sleep 1
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(true)
         find(:css, "#buttonToggleGuardLabels").click
-        sleep 1
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(false)
       end
 
       it "clicks the label text" do
         reset_page_to_options_with_stateMachine
-        sleep 1
+      
         find(:css, "#labelToggleGuardLabels").click
-     
-        sleep 1
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(true)
         find(:css, "#labelToggleGuardLabels").click
-        sleep 1
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(false)
       end
     end
@@ -218,7 +207,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         reset_page_to_options
         expect(page).to have_selector("#umpleCanvasColumn")
         find(:css, "#buttonShowHideCanvas").click
-        sleep 1
         expect(page).to have_no_selector("#umpleCanvasColumn")
       end
 
@@ -226,7 +214,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         reset_page_to_options_with_option("nodiagram")
         expect(page).to have_no_selector("#umpleCanvasColumn")
         find(:css, "#buttonShowHideCanvas").click
-        sleep 1
         expect(page).to have_selector("#umpleCanvasColumn")
       end
     end
@@ -236,8 +223,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         it "hides the text editor canvas" do
           reset_page_to_options
           expect(page).to have_selector("#textEditorColumn")
-          find(:css, "#buttonShowHideTextEditor").click
-          sleep 1
+          find(:css, "#buttonShowHideTextEditor").click         
           expect(page).to have_no_selector("#textEditorColumn")
         end
 
@@ -245,7 +231,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           reset_page_to_options_with_option("notext")
           expect(page).to have_no_selector("#textEditorColumn")
           find(:css, "#buttonShowHideTextEditor").click
-          wait_for_loading
           expect(page).to have_selector("#textEditorColumn")
         end
 
@@ -253,8 +238,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           reset_page_to_options_with_option("showlayout")
           expect(page).to have_selector("#topTextEditor")
           expect(page).to have_selector("#bottomTextEditor")
-          find(:css, "#buttonShowHideTextEditor").click
-          sleep 1
+          find(:css, "#buttonShowHideTextEditor").click 
           expect(page).to have_no_selector("#topTextEditor")
           expect(page).to have_no_selector("#bottomTextEditor")
         end
@@ -267,15 +251,13 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           reset_page_to_options
           expect(page).to have_no_selector("#bottomTextEditor")
           find(:css, "#buttonShowHideLayoutEditor").click
-          sleep 1
           expect(page).to have_selector("#bottomTextEditor")
         end
 
         it "hides the layout editor" do
           reset_page_to_options_with_option("showlayout")
           expect(page).to have_selector("#bottomTextEditor")
-          find(:css, "#buttonShowHideLayoutEditor").click
-          sleep 1
+          find(:css, "#buttonShowHideLayoutEditor").click         
           expect(page).to have_no_selector("#bottomTextEditor")
         end
       end
@@ -285,7 +267,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           reset_page_to_options_with_option("notext")
           expect(page).to have_no_selector("#textEditorColumn")
           find(:css, "#buttonShowHideLayoutEditor").click
-          sleep 1
           expect(page).to have_no_selector("#bottomTextEditor")
         end
       end
@@ -324,14 +305,14 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         end
         find(:css, "#buttonToggleMethods").click
         wait_for_loading
-        sleep 2
+        
         within(find(:css, "#Student")) do
           fail_message = "methods not showing after checking the methods checkbox"
           expect(page).to have_selector("tr.methodArea"), fail_message
         end
         find(:css, "#buttonToggleMethods").click
         wait_for_loading
-        sleep 2
+       
         within(find(:css, "#Student")) do
           fail_message = "methods not hidden after unchecking the methods checkbox"
           expect(page).to have_no_selector("tr.methodArea"), fail_message
@@ -694,12 +675,39 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       end
     end
 
-    describe "Pinch to Zoom Option" do
-      before(:all) {reset_page_to_options}
-      it "allows two-fingered gestures to zoom in/out of Graphviz diagrams" do
-        if get_checkbox_state("#buttonAllowPinch")
-          reset_page_to_options_with_model("simple_class.ump") 
+    describe "Clicking the Pinch to Zoom Option" do
+      #loads umple with the Graphviz Class Diagram option selected
+      before(:all) {reset_page_to_options_with_model_and_option("simple_class.ump", 
+        "diagramtype=GvClass")}
+      it "clicks the input box" do
+        if get_checkbox_state("#buttonShowGvClassDiagram")
+          reset_page_to_options_with_model_and_option("simple_class.ump", 
+            "diagramtype=GvClass") 
         end
+
+        expect(get_checkbox_state("#buttonShowGvClassDiagram")).to eq(true)
+
+        expect(get_checkbox_state("#buttonAllowPinch")).to eq(false)
+
+        find("#buttonAllowPinch").click
+        expect(get_checkbox_state("#buttonAllowPinch")).to eq(true)
+        
+
+
+      end
+
+      it "clicks the label text" do
+        if get_checkbox_state("#buttonShowGvClassDiagram")
+          reset_page_to_options_with_model_and_option("simple_class.ump", 
+            "diagramtype=GvClass") 
+        end
+
+        expect(get_checkbox_state("#buttonShowGvClassDiagram")).to eq(true)
+
+        expect(get_checkbox_state("#buttonAllowPinch")).to eq(false)
+
+        find("#labelAllowPinch").click
+        expect(get_checkbox_state("#buttonAllowPinch")).to eq(true)
 
       end
     end
