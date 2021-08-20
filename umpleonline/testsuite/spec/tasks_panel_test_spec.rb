@@ -42,17 +42,17 @@ describe "Tasks Panel", :feature => :taskEdit, :helper => :taskEdit  do
             find(:xpath, "//*[@id=\"taskArea\"]/div[2]/a[1]").click
             sleep 1
 
-
             #closes the task area
             find(:xpath, "//*[@id=\"taskArea\"]/div[2]/a[4]").click
             page.driver.browser.switch_to.alert.accept
-
-            load_umple_and_switch_to_tasks_panel
         end
 
         it "and reloads the task" do
             #loads the task
+            load_umple_and_switch_to_tasks_panel
+
             find("#buttonLoadTask").click
+            wait_for_loading
             find("#inputLoadTaskName").send_keys("#{taskName}")
             find(:xpath, "//*[@id=\"buttonSubmitLoadTask\"]/a").click
             wait_for_loading
@@ -63,11 +63,13 @@ describe "Tasks Panel", :feature => :taskEdit, :helper => :taskEdit  do
                 
             #hide instructions
             find("#buttonHideInstructions").click
+            wait_for_loading
 
             expect(find("#taskArea")).to have_no_selector("#instructionsHTML", visible: true)
 
             #ReShow Instructions 
             find("#buttonReshowInstructions").native.click
+            wait_for_loading
             expect(find("#instructionsHTML p")["innerHTML"]).to eq("some text")
 
             input_model_text("class Student{}")

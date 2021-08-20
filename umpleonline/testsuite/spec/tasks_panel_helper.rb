@@ -10,7 +10,7 @@ module TaskHelper
             find("#buttonCreateTask").click if page.has_no_selector?("#taskArea", visible: true)
             expect(page).to have_selector("#taskArea", visible: true)
 
-            i=1
+            i=rand(100000000000)
             while true
            
                 taskName = "task"+i.to_s 
@@ -40,7 +40,7 @@ module TaskHelper
                     return taskName
                 else
                     alert.accept
-                    i+=1
+                    i=rand(100000000000)
                 end
             end 
     end
