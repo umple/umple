@@ -198,6 +198,9 @@ class Method
   lazy Position codePosition;
   lazy Position endPosition;
 
+  //The requirement ids implemented within the method.
+  String[] requirementsImplemented  = new String[]();
+
   // The type of the method.
   type;
 
@@ -219,9 +222,6 @@ class Method
   // The comments associated with the method (such as the Javadoc above it).
   1 -> * Comment;
 
-  //The requirement ids implemented within the method.
-  String[] requirementsImplemented;
-  
   // Specifies, for fAutoAPI methods, if the method was generated
   Boolean wasGenerated = false;
 }
@@ -654,6 +654,24 @@ class UmpleInterface
   before addDepend { if (depends.contains(aDepend)) { return false; } }
 
   boolean isUmpleInterface() {return true;}
+
+  public List<Requirement> getActualRequirementsImplemented(){
+    List<Requirement> actualList = new ArrayList<Requirement>();
+
+    Requirement[] reqStorage = getSourceModel().getAllRequirements();
+    List<Requirement> reqSpace = new ArrayList<Requirement>(Arrays.asList(reqStorage));
+
+    String[] reqSelectedForClass = getRequirementsImplemented();
+    List<String> reqSelectedForClassList = new ArrayList<String>(Arrays.asList(reqSelectedForClass));
+
+    for (Requirement r : reqSpace){
+      if (reqSelectedForClassList.contains(r.getIdentifier())){
+        actualList.add(r);
+      }
+    }
+
+    return actualList;
+  }
 }
 
 /*

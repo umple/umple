@@ -176,6 +176,26 @@ class Method
     return Arrays.asList(name, returnType, params, isConstructor).hashCode();
   }
 
+  public List<Requirement> getActualRequirementsImplemented(){
+    System.out.println("start of getAct");
+    List<Requirement> actualList = new ArrayList<Requirement>();
+
+    Requirement[] reqStorage = getUmpleClass().getSourceModel().getAllRequirements();
+    List<Requirement> reqSpace = new ArrayList<Requirement>(Arrays.asList(reqStorage));
+
+    String[] reqSelectedForClass = getRequirementsImplemented();
+    List<String> reqSelectedForClassList = new ArrayList<String>(Arrays.asList(reqSelectedForClass));
+
+    for (Requirement r : reqSpace){
+      if (reqSelectedForClassList.contains(r.getIdentifier())){
+        actualList.add(r);
+      }
+    }
+    System.out.println("end of getAct");
+    
+    return actualList;
+  }
+
 }
 
 

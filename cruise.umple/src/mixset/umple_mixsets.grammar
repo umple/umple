@@ -31,7 +31,3 @@ requireLinkingOptNot- : ([=opt:opt] | [=not:not] )
 requireTerminal :  [~targetMixsetName] | [[multiplicityTerminal]]
 
 multiplicityTerminal- : [[multiplicity]] of { [~targetMixsetName] (, [~targetMixsetName] )* }
-
-//For requirement statements
-requirement : req [reqIdentifier] [=language:md]? { [**reqContent] }
-implementReq : implements [reqIdentifier] ;

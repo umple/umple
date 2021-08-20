@@ -15,7 +15,7 @@ class UmpleToJava {
   }
 
   
-<<# if (av.numberOfComments() > 0) { append(realSb, "\n  {0}", Comment.format("Attribute Javadoc", av.getComments())); } #>><<= umpleSourceFile >>
+<<# if (av.numberOfComments() > 0) { append(realSb, "\n  {0}", Comment.format("Attribute Javadoc", av.getComments())); } #>><<# if (av.numberOfRequirementsImplemented() > 0) { append(realSb, "\n  {0}", Requirement.format("Attribute Javadoc",av.getActualRequirementsImplemented())); } #>><<= umpleSourceFile >>
   /* required for Java 7. */
   @SuppressWarnings("unchecked")
   public List<<<=gen.translate("type",av)>>> <<=gen.translate("getManyMethod",av)>>_<<=gen.translate("type",av)>>()

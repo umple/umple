@@ -851,21 +851,36 @@ class Comment
 
 class Requirement{
   public static String format(String type, List<Requirement> reqSelected){
+    System.out.println("accessing format function");
     List<Comment> reqTextOnly = new ArrayList<Comment>();
+    String reqText = new String();
 
     for (Requirement req : reqSelected){
-      String reqText = req.getStatement();
+      reqText = req.getStatement();
       
-      //translate according to req.getLanguage()
-      if (req.getLanguage().equals("md"))
-        reqText = "<div markdown=\"1\">" + reqText + "</div>";
+      if (type.equals("JavadocAPI")){
+        //translate according to req.getLanguage()
+        if (req.getLanguage().equals("md"))
+          reqText = "<div markdown=\"1\">" + reqText + "</div>";
 
-      // convert text of req to comment and format like a comment
-      Comment reqComment = new Comment(reqText);      
-      reqTextOnly.add(reqComment);
+      }
+
+      String [] reqTextList = reqText.split("\n");
+
+      for (String line : reqTextList){
+        // convert text of req to comment and format like a comment
+        Comment reqComment = new Comment(line);      
+        reqTextOnly.add(reqComment);
+      }
+
+      
     }
-     
-    return Comment.format(type, reqTextOnly);
+    System.out.println("end of format");
+    
+    if (reqTextOnly.size() > 0)
+      return Comment.format(type, reqTextOnly);
+    else return "";
+
   }
 }
 

@@ -87,6 +87,7 @@ class UmpleInternalParser
       
     }
     else if (t.is("requirement")){
+      System.out.println("found req");
       analyzeRequirement(t);
     }
     else if (t.is("implementReq")){
@@ -198,6 +199,7 @@ class UmpleInternalParser
 
   private void analyzeRequirement(Token t)
   {
+    System.out.println("analyzing Req: "+t.getSubToken("reqIdentifier").getValue());
     Requirement req;
     if (t.getSubToken("language") == null || t.getSubToken("language").getValue() ==  null){
       req = new Requirement(t.getSubToken("reqIdentifier").getValue(), t.getSubToken("reqContent").getValue(), "");
@@ -213,6 +215,7 @@ class UmpleInternalParser
     if (t.hasSubTokens()){
       for (Token sub : t.getSubTokens()){
         if (!sub.getValue().equals("STATIC")){
+          System.out.println("processed subToken: "+sub.getValue());
           lastRequirements.add(sub.getValue());
         }
       }

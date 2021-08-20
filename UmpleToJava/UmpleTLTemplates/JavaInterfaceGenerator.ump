@@ -49,6 +49,7 @@ class JavaInterfaceGenerator {
 <<=gen.translate("packageDefinition",uInterface)>><<@ UmpleToJava.import_packages_interface >>
 
 <<# if (uInterface.numberOfComments() > 0) { append(realSb, "\n{0}", Comment.format("Javadoc",uInterface.getComments())); } #>>
+<<# if (uInterface.numberOfRequirementsImplemented() > 0) { append(realSb, "\n{0}", Requirement.format("Javadoc",uInterface.getActualRequirementsImplemented())); } #>>
 <<# for (Position p : uInterface.getPositions()) { #>>
 // line <<= p.getLineNumber() >> "<<= uInterface.getRelativePath(p.getFilename(),"Java") >>"
 <<# } #>>

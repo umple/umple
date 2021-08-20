@@ -126,4 +126,22 @@ class Attribute
     return methodNames;
   }
 
+  public List<Requirement> getActualRequirementsImplemented(){
+    List<Requirement> actualList = new ArrayList<Requirement>();
+
+    Requirement[] reqStorage = getUmpleClass().getSourceModel().getAllRequirements();
+    List<Requirement> reqSpace = new ArrayList<Requirement>(Arrays.asList(reqStorage));
+
+    String[] reqSelectedForClass = getRequirementsImplemented();
+    List<String> reqSelectedForClassList = new ArrayList<String>(Arrays.asList(reqSelectedForClass));
+
+    for (Requirement r : reqSpace){
+      if (reqSelectedForClassList.contains(r.getIdentifier())){
+        actualList.add(r);
+      }
+    }
+
+    return actualList;
+  }
+
 }
