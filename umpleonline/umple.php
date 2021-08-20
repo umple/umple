@@ -609,7 +609,7 @@ $output = $dataHandle->readData('model.ump');
             <li id="itemLoadExamples3">
               <select id="inputExample3" name="inputExample3" class="button" size="1" data-diagram-type="composite">
                 <option name = "optionExample3" id = "defaultExampleOption3" value="">Select Example</option>
-                <option name = "optionExample" value="OBDCarSystem.ump">OBD Car System</option>
+                <!-- <option name = "optionExample" value="OBDCarSystem.ump">OBD Car System</option> -->
                 <option name = "optionExample" value="PingPong.ump">Ping Pong</option>
               </select>
             </li>
