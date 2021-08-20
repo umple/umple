@@ -100,6 +100,8 @@
     <replace file="${java.path}/allExamplesList.txt" token=";" value="&#10;"/>
     <echo>Umple examples to be tested and Java tested are in "${java.path}/allExamplesList.txt"</echo>
 
+    <copy file="${java.path}/allExamplesList.txt" todir="${dist.dir}/qa"/>
+
     <!-- Compile in umple to Java and generate the Java -->
       <trycatch>
         <try>
@@ -173,6 +175,8 @@
 
     <replace file="${php.path}/allExamplesListPhp.txt" token=";" value="&#10;"/>
     <echo>Umple examples to be tested and Php Compiled are in "${php.path}/allExamplesListPhp.txt"</echo>
+
+    <copy file="${php.path}/allExamplesListPhp.txt" todir="${dist.dir}/qa"/>
 
     <!-- Compile in umple to Php and generate the Java -->
       <trycatch>
