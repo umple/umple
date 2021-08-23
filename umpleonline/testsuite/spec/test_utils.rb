@@ -7,7 +7,7 @@ module TestUtils
     loop until page.evaluate_script('jQuery.active').zero?
     loop until page.evaluate_script("Ajax.queue.length").zero?
     loop until page.evaluate_script("DiagramEdit.textChangeQueue.length").zero?
-    page.has_no_selector?('.loading-indicator')
+    loop until page.has_no_selector?('.loading-indicator')
   end
 
   def wait_for_loading_no_ajax
