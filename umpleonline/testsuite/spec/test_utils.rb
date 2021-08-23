@@ -4,7 +4,7 @@ module TestUtils
   # indicators on the website. It is possible that if the loading overlay is 
   # broken by a change, many tests will fail.
   def wait_for_loading
-    
+    loop until page.evaluate_script('jQuery.active').zero?
     loop until page.evaluate_script("Ajax.queue.length").zero?
     loop until page.evaluate_script("DiagramEdit.textChangeQueue.length").zero?
     page.has_no_selector?('.loading-indicator')
