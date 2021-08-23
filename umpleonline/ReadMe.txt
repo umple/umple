@@ -29,7 +29,7 @@ Key files and directories means contents created at runtime
 
   scripts - PhP and JavaScript scripts for Umpleonline
 
-  download_eclipse_umple_plugin.html - main page of http://dl.umple.org
+  download_umple.html - main page of http://dl.umple.org
 
   UmpleUpdateSite - website for automatic updating of Eclipse plugin
   

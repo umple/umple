@@ -92,11 +92,15 @@
       <!-- The following is temporarily excluded because of an odd Java error only on the server not Mac -->
       <exclude name="W010SingletonMultiplicityOver12.ump"/>
     </fileset>  
+
+    <pathconvert pathsep=";" property="javaumpfiles2" refid="javaumpfiles"/>
     
-    <echo file="${java.path}/allExamplesList.txt">${toString:javaumpfiles}</echo>
+    <echo file="${java.path}/allExamplesList.txt">${javaumpfiles2}</echo>
 
     <replace file="${java.path}/allExamplesList.txt" token=";" value="&#10;"/>
     <echo>Umple examples to be tested and Java tested are in "${java.path}/allExamplesList.txt"</echo>
+
+    <copy file="${java.path}/allExamplesList.txt" todir="${dist.dir}/qa"/>
 
     <!-- Compile in umple to Java and generate the Java -->
       <trycatch>
@@ -164,11 +168,15 @@
       <!-- The following is temporarily excluded because of an odd Java error only on the server not Mac -->
       <exclude name="W010SingletonMultiplicityOver12.ump"/>
     </fileset>  
+
+    <pathconvert pathsep=";" property="phpumpfiles2" refid="phpumpfiles"/>
     
-    <echo file="${php.path}/allExamplesListPhp.txt">${toString:phpumpfiles}</echo>
+    <echo file="${php.path}/allExamplesListPhp.txt">${phpumpfiles2}</echo>
 
     <replace file="${php.path}/allExamplesListPhp.txt" token=";" value="&#10;"/>
     <echo>Umple examples to be tested and Php Compiled are in "${php.path}/allExamplesListPhp.txt"</echo>
+
+    <copy file="${php.path}/allExamplesListPhp.txt" todir="${dist.dir}/qa"/>
 
     <!-- Compile in umple to Php and generate the Java -->
       <trycatch>
