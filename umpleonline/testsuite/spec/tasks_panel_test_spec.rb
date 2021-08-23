@@ -8,6 +8,7 @@ describe "Tasks Panel", :feature => :taskEdit, :helper => :taskEdit  do
         it "begins task creation and ends it" do
             
             find("#buttonCreateTask").click if page.has_no_selector?("#taskArea", visible: true)
+            wait_for_loading
             expect(page).to have_selector("#taskArea", visible: true)
 
             find(:xpath, "//*[@id=\"buttonCancelTask\"]").click
@@ -17,6 +18,7 @@ describe "Tasks Panel", :feature => :taskEdit, :helper => :taskEdit  do
         it "creates a task with an invalid name" do
             load_umple_and_switch_to_tasks_panel
             find("#buttonCreateTask").click if page.has_no_selector?("#taskArea", visible: true)
+            wait_for_loading
             expect(page).to have_selector("#taskArea", visible: true)
 
             find("#taskName").send_keys("///")

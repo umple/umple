@@ -329,7 +329,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           expect(find(:css, "#graph0").native.text).to include("doAction()"), fail_message
         end
         find(:css, "#buttonToggleActions").click
-        wait_for_loading
+        wait_for_loading_for 10
         within(find(:css, "#umpleCanvas")) do
           fail_message = "actions still found after unchecking the methods checkbox"
           expect(find(:css, "#graph0").native.text).not_to include("doAction()"), fail_message

@@ -172,7 +172,7 @@ module DiagramEditingPositionHelper
     class_two_end = class_two
     class_two_end += "\\\\:" + role_two unless role_two.nil?
 
-    wait_for_loading #ensure the diagram has loaded
+    wait_for_loading_for 10 #ensure the diagram has loaded
 
     association_name = class_one_end + "__" + class_two_end
     anchor_one = evaluate_script( 
