@@ -4,9 +4,14 @@ module TestUtils
   # indicators on the website. It is possible that if the loading overlay is 
   # broken by a change, many tests will fail.
   def wait_for_loading
-    loop until page.evaluate_script('jQuery.active').zero?
+    
     loop until page.evaluate_script("Ajax.queue.length").zero?
     loop until page.evaluate_script("DiagramEdit.textChangeQueue.length").zero?
+    page.has_no_selector?('.loading-indicator')
+  end
+
+  def wait_for_loading_no_ajax
+    loop until page.evaluate_script('jQuery.active').zero?
     page.has_no_selector?('.loading-indicator')
   end
 
@@ -30,7 +35,7 @@ module TestUtils
 
   def load_umple_with_option(option_text)
     visit("umple.php?#{option_text}")
-    wait_for_loading_for 20
+    wait_for_loading
   end  
 
   def load_umple_with_file(filename, directory)
@@ -38,14 +43,14 @@ module TestUtils
     file_contents = IO.read("#{directory}#{filename}")
     url_encoded_file_contents = CGI::escape(file_contents)
     visit("umple.php?text=#{url_encoded_file_contents}")
-    wait_for_loading_for 20
+    wait_for_loading
   end
 
   def load_umple_with_file_and_option(filename, directory, option_text)
     file_contents = IO.read("#{directory}#{filename}")
     url_encoded_file_contents = CGI::escape(file_contents)
     visit("umple.php?#{option_text}&text=#{url_encoded_file_contents}")
-    wait_for_loading_for 20
+    wait_for_loading
   end
 
   def encode_to_url(plain_text)
@@ -138,7 +143,7 @@ module TestUtils
 
   def select_option_by_value(select_id, option_text)
     find(:css, select_id).find("option[value='#{option_text}']").select_option
-    wait_for_loading_for 15
+    wait_for_loading
   end
 end
 

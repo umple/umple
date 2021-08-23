@@ -151,11 +151,11 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       it "clicks the label text" do
         reset_page_to_options_with_stateMachine 
         find(:css, "#labelToggleActions").click
-        wait_for_loading
+        wait_for_loading_no_ajax
         
         expect(get_checkbox_state("#buttonToggleActions")).to eq(false)
         find(:css, "#labelToggleActions").click
-        wait_for_loading
+        wait_for_loading_no_ajax
        
         expect(get_checkbox_state("#buttonToggleActions")).to eq(true)
       end
@@ -656,6 +656,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         end
 
         find(:css, "#buttonManualSync").click
+        wait_for_loading_no_ajax
         input_model_text("class Student {}")
         switch_to_tools_panel
         sleep 1
@@ -666,7 +667,8 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         switch_to_options_panel
  
         find(:css, "#buttonManualSync").click
-     
+        wait_for_loading_no_ajax
+
         switch_to_tools_panel
         
         expect(find("#umpleCanvas")).to have_no_selector("div#syncNeededMessage")
