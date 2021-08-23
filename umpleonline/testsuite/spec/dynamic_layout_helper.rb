@@ -184,7 +184,7 @@ module LargeScreenHelper
 
     xLoc = draggable_center[0] - amount
     yLoc = draggable_center[1]
-    wait_for_loading_for
+    wait_for_loading
     click_and_drag_to_position(capybara_element, xLoc, yLoc)
   end
 
