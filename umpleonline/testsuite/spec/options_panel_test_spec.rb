@@ -704,7 +704,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         switch_to_options_panel
  
         find(:css, "#buttonManualSync").click
-        wait_for_loading_no_ajax
+        wait_for_loading
 
         switch_to_tools_panel
         sleep 3
