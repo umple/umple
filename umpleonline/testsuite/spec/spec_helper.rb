@@ -20,7 +20,6 @@ Capybara.register_driver :selenium_chrome do |app|
   options.add_argument('--headless') unless TestUtils::ENV=='no-headless'
   options.add_argument('--no-sandbox')
   options.add_argument('--disable-dev-shm-usage')
-  #options.add_argument('--remote-debugging-port=9222')
   options.add_argument('--start-maximized')
 
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
@@ -28,7 +27,6 @@ end
 Capybara.default_driver= :selenium_chrome
 Capybara.javascript_driver= :selenium_chrome
 Capybara.app_host = TestUtils::HOST
-Capybara.default_max_wait_time = 5
 
 RSpec.configure do |config|
   config.include Capybara::DSL
