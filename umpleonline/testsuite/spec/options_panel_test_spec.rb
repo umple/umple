@@ -395,14 +395,24 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       end
 
       find(:css, "#labelShowGvClassDiagram").click
+      wait_for_loading
+      sleep 1
       expect(get_checkbox_state("#buttonShowGvClassDiagram")).to eq(true)
       find(:css, "#labelShowGvStateDiagram").click
+      wait_for_loading
+      sleep 1
       expect(get_checkbox_state("#buttonShowGvStateDiagram")).to eq(true)
       find(:css, "#labelShowStructureDiagram").click
+      wait_for_loading
+      sleep 1
       expect(get_checkbox_state("#buttonShowStructureDiagram")).to eq(true)
       find(:css, "#labelShowEditableClassDiagram").click
+      wait_for_loading
+      sleep 1
       expect(get_checkbox_state("#buttonShowEditableClassDiagram")).to eq(true)
       find(:css, "#labelShowJointJSClassDiagram").click
+      wait_for_loading
+      sleep 1
       expect(get_checkbox_state("#buttonShowJointJSClassDiagram")).to eq(true)
     end
   end
