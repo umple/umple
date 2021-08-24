@@ -261,7 +261,7 @@ class UmpleConsoleMain
     final UmpleFile umpleFile = new UmpleFile(filename);
     //this loop is used to add linked umple files and to show names of them.
     cfg.getLinkedFilesAsFile().stream()
-        .filter(File::exists)
+        .filter(f->f.getName().endsWith(".ump"))
         .map(File::getPath)
         .forEach(umpleFile::addLinkedFiles);
     //this loop is used to add mixset names as liked umple files.
