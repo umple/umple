@@ -1,0 +1,15 @@
+// Generic pattern for abstractions and occurrences
+// In any Umple program say 'use lib:AbstractionOccurrence.ump;' to include this pattern.
+
+// Something that has many occurrences
+// Examples include a TV show that has episodes, where the show has a name you don't want to repeat in each episode
+// Or a route that has runs, or a published book in a library where there are many copies
+trait Abstraction {}
+
+// Something representing occurrences of an abstraction
+// where both the abstraction and the occurrences need their own instances
+// It is common for modellers to make mistakes and just have one class
+// Or to consider the Occurrences as instances of the abstractions, but these are antipatterns
+trait Occurrence <Abstraction> {
+ 1 -- * Abstraction;
+}

@@ -1,0 +1,42 @@
+// This is a library of traits that can be used to build the core of transportation systems
+
+// A route such as a flight or bus route
+trait Route <Stop> {
+ routeID; // generic ID for all runs on this route, e.g. bus route number the public sees
+ * -- * Stop;
+}
+
+// A run pattern at a particular time of day that
+// is repeated on multiple days
+trait RegularlyScheduledRun <Route, ScheduledStop> {
+ isA Abstraction;
+ runId; // e.g. a flight number / Bus systems tend to hide this from public
+ String plannedDaysOfWeek; // e.g. "135" for Mon, Wed, Fri
+ * -- 1 Route;
+ Boolean forwardDirection; // only relevent if routeID is same in both directions
+ 1 -- * ScheduledStop; // contains the times of the stops in order; not all runs may stop at all stops on route.
+}
+
+// A stop on a particular regular run
+trait ScheduledStop <Stop> {
+ * -- 1 Stop;
+ Time expectedArrivalTime; // null for departure only
+ Time expectedDepartureTime; // May be same as arrival time for busses. Null for arrival only
+}
+
+trait Stop {
+  stopName; // e.g. Airport, bus station etc.
+}
+
+// People can book on this for flights. It can be late or cancelled
+trait ActualRun <RegularlyScheduledRun, Vehicle>  {
+  isA Occurrence <Abstraction = RegularlyScheduledRun>;
+  Date runDate;
+  Boolean isCancelled;
+  * -- 1 Vehicle vehicleUsed;
+}
+
+// Specific plane, bus, etc.
+trait Vehicle {
+  vehicleID;
+}
