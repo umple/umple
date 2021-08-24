@@ -20,7 +20,7 @@ Capybara.register_driver :selenium_chrome do |app|
   options.add_argument('--headless') unless TestUtils::ENV=='no-headless'
   options.add_argument('--no-sandbox')
   options.add_argument('--disable-dev-shm-usage')
-  options.add_argument('--remote-debugging-port=9222')
+  #options.add_argument('--remote-debugging-port=9222')
   options.add_argument('--start-maximized')
 
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
