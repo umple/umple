@@ -196,10 +196,10 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         reset_page_to_options_with_stateMachine
       
         find(:css, "#labelToggleGuardLabels").click
-        sleep 1
+        sleep 2
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(true)
         find(:css, "#labelToggleGuardLabels").click
-        sleep 1
+        sleep 2
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(false)
       end
     end
@@ -683,7 +683,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         wait_for_loading_no_ajax
 
         switch_to_tools_panel
-        sleep 1
+        sleep 3
         
         expect(find("#umpleCanvas")).to have_no_selector("div#syncNeededMessage")
         expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
