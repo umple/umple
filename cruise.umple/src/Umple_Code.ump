@@ -858,13 +858,6 @@ class Requirement{
 
     for (Requirement req : reqSelected){
       reqText = req.getStatement();
-      
-      if (type.equals("JavadocAPI")){
-        //translate according to req.getLanguage()
-        if (req.getLanguage().equals("md"))
-          reqText = "<div markdown=\"1\">" + reqText + "</div>";
-
-      }
 
       String [] reqTextList = reqText.split("\n");
 
@@ -880,8 +873,19 @@ class Requirement{
     if (reqTextOnly.size() > 0)
       return Comment.format(type, reqTextOnly);
     else return "";
-
   }
+
+  public String translateToHTML(String content, String lang){
+    if (language.equals("md")){
+      content = "<div markdown=\"1\">" + content + "</div>";
+    }
+    else {
+      content = "<div>"+content+"</div>";
+    }
+
+    return content;
+  }
+
 }
 
 mixset Constraint {

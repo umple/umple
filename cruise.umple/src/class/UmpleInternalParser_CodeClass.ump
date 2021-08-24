@@ -227,11 +227,13 @@ class UmpleInternalParser
 
     if (counter != 0){
       // return error
+      System.out.println("Would be an error");
     }
+    System.out.println(" ======= done with imple req");
   }
 
   private void analyzeImplementReq(Token t, UmpleClass aClass){
-    System.out.println("analyzing impl");
+    System.out.println("analyzing impl2");
     int counter=0;
 
     if (t.hasSubTokens()){
@@ -239,13 +241,16 @@ class UmpleInternalParser
         if (!sub.getValue().equals("STATIC") && aClass.getSourceModel().getAllRequirements().containsKey(sub.getValue())){
             lastRequirements.add(model.getAllRequirements().get(sub.getValue()));
         }
-        else counter++;
+        else if (!sub.getValue().equals("STATIC")) counter++;
       }
     }
 
     if (counter != 0){
+      System.out.println("sending to attribute");
       analyzeAttribute(t, aClass);
     }
+
+    System.out.println(" ======= done with imple req");
   }
   
   /*
