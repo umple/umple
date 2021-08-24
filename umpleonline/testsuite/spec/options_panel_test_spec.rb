@@ -729,7 +729,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         switch_to_options_panel
  
         page.execute_script("document.querySelector('#buttonManualSync').click()")
-
+        wait_for_loading
         switch_to_tools_panel      
         
         expect(find("#umpleCanvas")).to have_no_selector("div#syncNeededMessage")
