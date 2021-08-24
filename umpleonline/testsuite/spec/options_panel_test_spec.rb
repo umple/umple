@@ -16,21 +16,18 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
     describe "Clicking the show/hide diagram option" do
       it "clicks the input box" do
         reset_page_to_options unless get_checkbox_state("#buttonShowHideCanvas")
-        #find(:css, "#buttonShowHideCanvas").click
+
         page.execute_script("document.querySelector('#buttonShowHideCanvas').click()")
-        
         expect(get_checkbox_state("#buttonShowHideCanvas")).to eq(false)
-        #find(:css, "#buttonShowHideCanvas").click
         page.execute_script("document.querySelector('#buttonShowHideCanvas').click()")
         expect(get_checkbox_state("#buttonShowHideCanvas")).to eq(true)
       end
 
       it "clicks the label text" do
         reset_page_to_options unless get_checkbox_state("#buttonShowHideCanvas")
-        #find(:css, "#labelShowHideCanvas").click
+
         page.execute_script("document.querySelector('#labelShowHideCanvas').click()")
         expect(get_checkbox_state("#buttonShowHideCanvas")).to eq(false)
-        #find(:css, "#labelShowHideCanvas").click
         page.execute_script("document.querySelector('#labelShowHideCanvas').click()")
         expect(get_checkbox_state("#buttonShowHideCanvas")).to eq(true)
       end
@@ -48,20 +45,18 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
     describe "Clicking the show/hide text editor option" do
       it "clicks the input box" do
         reset_page_to_options unless get_checkbox_state("#buttonShowHideTextEditor")
-        #find(:css, "#buttonShowHideTextEditor").click
+
         page.execute_script("document.querySelector('#buttonShowHideTextEditor').click()")
         expect(get_checkbox_state("#buttonShowHideTextEditor")).to eq(false)
-        #find(:css, "#buttonShowHideTextEditor").click
         page.execute_script("document.querySelector('#buttonShowHideTextEditor').click()")
         expect(get_checkbox_state("#buttonShowHideTextEditor")).to eq(true)
       end
 
       it "clicks the label text" do
         reset_page_to_options unless get_checkbox_state("#buttonShowHideTextEditor")
-        #find(:css, "#labelShowHideTextEditor").click
+
         page.execute_script("document.querySelector('#labelShowHideTextEditor').click()")
         expect(get_checkbox_state("#buttonShowHideTextEditor")).to eq(false)
-        #find(:css, "#labelShowHideTextEditor").click
         page.execute_script("document.querySelector('#labelShowHideTextEditor').click()")
         expect(get_checkbox_state("#buttonShowHideTextEditor")).to eq(true)
       end
@@ -79,20 +74,18 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
     describe "Clicking the show/hide layout editor option" do
       it "clicks the input box" do
         reset_page_to_options if get_checkbox_state("#buttonShowHideLayoutEditor")
-        #find(:css, "#buttonShowHideLayoutEditor").click
+
         page.execute_script("document.querySelector('#buttonShowHideLayoutEditor').click()")
         expect(get_checkbox_state("#buttonShowHideLayoutEditor")).to eq(true)
-        #find(:css, "#buttonShowHideLayoutEditor").click
         page.execute_script("document.querySelector('#buttonShowHideLayoutEditor').click()")
         expect(get_checkbox_state("#buttonShowHideLayoutEditor")).to eq(false)
       end
 
       it "clicks the label text" do
         reset_page_to_options if get_checkbox_state("#buttonShowHideLayoutEditor")
-        #find(:css, "#labelShowHideLayoutEditor").click
+
         page.execute_script("document.querySelector('#labelShowHideLayoutEditor').click()")
         expect(get_checkbox_state("#buttonShowHideLayoutEditor")).to eq(true)
-        #find(:css, "#labelShowHideLayoutEditor").click
         page.execute_script("document.querySelector('#labelShowHideLayoutEditor').click()")
         expect(get_checkbox_state("#buttonShowHideLayoutEditor")).to eq(false)
       end
@@ -101,21 +94,19 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
     describe "Clicking the show/hide attributes option" do
       it "clicks the input box" do
         reset_page_to_options unless get_checkbox_state("#buttonToggleAttributes")
-        #find(:css, "#buttonToggleAttributes").click
+
         page.execute_script("document.querySelector('#buttonToggleAttributes').click()")
         expect(get_checkbox_state("#buttonToggleAttributes")).to eq(false)
-        #find(:css, "#buttonToggleAttributes").click
         page.execute_script("document.querySelector('#buttonToggleAttributes').click()")
         expect(get_checkbox_state("#buttonToggleAttributes")).to eq(true)
       end
 
       it "clicks the label text" do
         reset_page_to_options unless get_checkbox_state("#buttonToggleAttributes")
-        #find(:css, "#labelToggleAttributes").click
+
         page.execute_script("document.querySelector('#labelToggleAttributes').click()")
 
         expect(get_checkbox_state("#buttonToggleAttributes")).to eq(false)
-        #find(:css, "#labelToggleAttributes").click
         page.execute_script("document.querySelector('#labelToggleAttributes').click()")
         expect(get_checkbox_state("#buttonToggleAttributes")).to eq(true)
       end
@@ -133,20 +124,18 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
     describe "Clicking the show/hide methods option" do
       it "clicks the input box" do
         reset_page_to_options if get_checkbox_state("#buttonToggleMethods")
-        #find(:css, "#buttonToggleMethods").click
+
         page.execute_script("document.querySelector('#buttonToggleMethods').click()")
         expect(get_checkbox_state("#buttonToggleMethods")).to eq(true)
-        #find(:css, "#buttonToggleMethods").click
         page.execute_script("document.querySelector('#buttonToggleMethods').click()")
         expect(get_checkbox_state("#buttonToggleMethods")).to eq(false)
       end
 
       it "clicks the label text" do
         reset_page_to_options if get_checkbox_state("#buttonToggleMethods")
-        #find(:css, "#labelToggleMethods").click
+
         page.execute_script("document.querySelector('#labelToggleMethods').click()")
         expect(get_checkbox_state("#buttonToggleMethods")).to eq(true)
-        #find(:css, "#labelToggleMethods").click
         page.execute_script("document.querySelector('#labelToggleMethods').click()")
         expect(get_checkbox_state("#buttonToggleMethods")).to eq(false)
       end
@@ -164,10 +153,9 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
     describe "Clicking the show/hide actions option" do
       it "clicks the input box" do
         reset_page_to_options_with_stateMachine 
-        #find(:css, "#buttonToggleActions").click
+
         page.execute_script("document.querySelector('#buttonToggleActions').click()")
         expect(get_checkbox_state("#buttonToggleActions")).to eq(false)
-        #find(:css, "#buttonToggleActions").click
         page.execute_script("document.querySelector('#buttonToggleActions').click()")
         expect(get_checkbox_state("#buttonToggleActions")).to eq(true)
       end
@@ -187,20 +175,18 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
   describe "Clicking the show/hide transition label option" do
       it "clicks the input box" do
         reset_page_to_options_with_stateMachine
-        #find(:css, "#buttonToggleTransitionLabels").click
+
         page.execute_script("document.querySelector('#buttonToggleTransitionLabels').click()")
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(true)
-        #find(:css, "#buttonToggleTransitionLabels").click
         page.execute_script("document.querySelector('#buttonToggleTransitionLabels').click()") 
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(false)
       end
 
       it "clicks the label text" do
         reset_page_to_options_with_stateMachine
-        #find(:css, "#labelToggleTransitionLabels").click
+
         page.execute_script("document.querySelector('#labelToggleTransitionLabels').click()")
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(true)
-        #find(:css, "#labelToggleTransitionLabels").click
         page.execute_script("document.querySelector('#labelToggleTransitionLabels').click()")
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(false)
       end
@@ -210,10 +196,9 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
   describe "Clicking the show/hide guard label option" do
       it "clicks the input box" do
         reset_page_to_options_with_stateMachine
-        #find(:css, "#buttonToggleGuardLabels").click
+
         page.execute_script("document.querySelector('#buttonToggleGuardLabels').click()")
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(true)
-        #find(:css, "#buttonToggleGuardLabels").click
         page.execute_script("document.querySelector('#buttonToggleGuardLabels').click()")
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(false)
       end
@@ -221,10 +206,9 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       it "clicks the label text" do
         reset_page_to_options_with_stateMachine
       
-        #find(:css, "#labelToggleGuardLabels").click
+
         page.execute_script("document.querySelector('#labelToggleGuardLabels').click()")
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(true)
-        #find(:css, "#labelToggleGuardLabels").click
         page.execute_script("document.querySelector('#labelToggleGuardLabels').click()")
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(false)
       end
@@ -235,8 +219,8 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
     describe "Diagram show/hide option" do
       it "hides the diagram canvas" do
         reset_page_to_options
+
         expect(page).to have_selector("#umpleCanvasColumn")
-        #find(:css, "#buttonShowHideCanvas").click
         page.execute_script("document.querySelector('#buttonShowHideCanvas').click()")
         expect(page).to have_no_selector("#umpleCanvasColumn")
       end
@@ -244,7 +228,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       it "shows the diagram canvas" do
         reset_page_to_options_with_option("nodiagram")
         expect(page).to have_no_selector("#umpleCanvasColumn")
-        #find(:css, "#buttonShowHideCanvas").click
+
         page.execute_script("document.querySelector('#buttonShowHideCanvas').click()")
         expect(page).to have_selector("#umpleCanvasColumn")
       end
@@ -254,8 +238,8 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       context "with menu button" do
         it "hides the text editor canvas" do
           reset_page_to_options
+
           expect(page).to have_selector("#textEditorColumn")
-          #find(:css, "#buttonShowHideTextEditor").click 
           page.execute_script("document.querySelector('#buttonShowHideTextEditor').click()")        
           expect(page).to have_no_selector("#textEditorColumn")
         end
@@ -263,7 +247,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         it "shows the text editor canvas" do
           reset_page_to_options_with_option("notext")
           expect(page).to have_no_selector("#textEditorColumn")
-          #find(:css, "#buttonShowHideTextEditor").click
           page.execute_script("document.querySelector('#buttonShowHideTextEditor').click()")
           wait_for_loading
           expect(page).to have_selector("#textEditorColumn")
@@ -273,7 +256,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           reset_page_to_options_with_option("showlayout")
           expect(page).to have_selector("#topTextEditor")
           expect(page).to have_selector("#bottomTextEditor")
-          #find(:css, "#buttonShowHideTextEditor").click 
           page.execute_script("document.querySelector('#buttonShowHideTextEditor').click()")
           wait_for_loading
           expect(page).to have_no_selector("#topTextEditor")
@@ -295,7 +277,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         it "hides the layout editor" do
           reset_page_to_options_with_option("showlayout")
           expect(page).to have_selector("#bottomTextEditor")
-          #find(:css, "#buttonShowHideLayoutEditor").click
           page.execute_script("document.querySelector('#buttonShowHideLayoutEditor').click()")     
           expect(page).to have_no_selector("#bottomTextEditor")
         end
@@ -305,7 +286,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         it "has no effect" do
           reset_page_to_options_with_option("notext")
           expect(page).to have_no_selector("#textEditorColumn")
-          #find(:css, "#buttonShowHideLayoutEditor").click
           page.execute_script("document.querySelector('#buttonShowHideLayoutEditor').click()")
           expect(page).to have_no_selector("#bottomTextEditor")
         end
@@ -320,7 +300,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           fail_message = "page loaded without attributes showing"
           expect(page).to have_selector("tr.attributeArea"), fail_message
         end
-        #find(:css, "#buttonToggleAttributes").click
         page.execute_script("document.querySelector('#buttonToggleAttributes').click()")
         wait_for_loading
 
@@ -328,7 +307,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           fail_message = "attributes not hidden after unchecking the attributes checkbox"
           expect(page).to have_no_selector("tr.attributeArea"), fail_message
         end
-        #find(:css, "#buttonToggleAttributes").click
         page.execute_script("document.querySelector('#buttonToggleAttributes').click()")
         wait_for_loading
 
@@ -347,7 +325,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           fail_message = "page loaded with methods showing"
           expect(page).to have_no_selector("tr.methodArea"), fail_message
         end
-        #find(:css, "#buttonToggleMethods").click
         page.execute_script("document.querySelector('#buttonToggleMethods').click()")
         wait_for_loading
         
@@ -355,7 +332,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           fail_message = "methods not showing after checking the methods checkbox"
           expect(page).to have_selector("tr.methodArea"), fail_message
         end
-        #find(:css, "#buttonToggleMethods").click
         page.execute_script("document.querySelector('#buttonToggleMethods').click()")
         wait_for_loading
        
@@ -374,7 +350,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           fail_message = "actions not found when state machine loaded"
           expect(find(:css, "#graph0").native.text).to include("doAction()"), fail_message
         end
-        #find(:css, "#buttonToggleActions").click
         page.execute_script("document.querySelector('#buttonToggleActions').click()")
         wait_for_loading
 
@@ -382,7 +357,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           fail_message = "actions still found after unchecking the methods checkbox"
           expect(find(:css, "#graph0").native.text).not_to include("doAction()"), fail_message
         end
-        #find(:css, "#buttonToggleActions").click
         page.execute_script("document.querySelector('#buttonToggleActions').click()")
         wait_for_loading
 
@@ -419,19 +393,14 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         reset_page_to_options
       end
 
-      #find(:css, "#labelShowGvClassDiagram").click
       page.execute_script("document.querySelector('#labelShowGvClassDiagram').click()")
       expect(get_checkbox_state("#buttonShowGvClassDiagram")).to eq(true)
-      #find(:css, "#labelShowGvStateDiagram").click
       page.execute_script("document.querySelector('#labelShowGvStateDiagram').click()")
       expect(get_checkbox_state("#buttonShowGvStateDiagram")).to eq(true)
-      #find(:css, "#labelShowStructureDiagram").click
       page.execute_script("document.querySelector('#labelShowStructureDiagram').click()")
       expect(get_checkbox_state("#buttonShowStructureDiagram")).to eq(true)
-      #find(:css, "#labelShowEditableClassDiagram").click
       page.execute_script("document.querySelector('#labelShowEditableClassDiagram').click()")
       expect(get_checkbox_state("#buttonShowEditableClassDiagram")).to eq(true)
-      #find(:css, "#labelShowJointJSClassDiagram").click
       page.execute_script("document.querySelector('#labelShowJointJSClassDiagram').click()")
       expect(get_checkbox_state("#buttonShowJointJSClassDiagram")).to eq(true)
     end
@@ -449,14 +418,12 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         reset_page_to_options_with_model(example_file)
       end
       
-      #find(:css, "#buttonShowGvClassDiagram").click
       page.execute_script("document.querySelector('#buttonShowGvClassDiagram').click()")
       wait_for_loading
       within(find(:css, "#node1")) do
         expect(page.evaluate_script("jQuery(\"#node1 title\").text()")).to eq("Student") 
       end
       
-      #find(:css, "#buttonShowEditableClassDiagram").click
       page.execute_script("document.querySelector('#buttonShowEditableClassDiagram').click()")
       wait_for_loading
       expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
@@ -467,14 +434,12 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         reset_page_to_options_with_model(example_file)
       end
       
-      #find(:css, "#buttonShowGvStateDiagram").click
       page.execute_script("document.querySelector('#buttonShowGvStateDiagram').click()")
       wait_for_loading
       within(find(:css, "#node1")) do
         expect(page.evaluate_script("jQuery(\"#node1 title\").text()")).to eq("start_Student_study") 
       end
       
-      #find(:css, "#buttonShowEditableClassDiagram").click
       page.execute_script("document.querySelector('#buttonShowEditableClassDiagram').click()")
       wait_for_loading
       expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
@@ -485,7 +450,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         reset_page_to_options_with_model(example_file)
       end
 
-      #find(:css, "#buttonShowJointJSClassDiagram").click
       page.execute_script("document.querySelector('#buttonShowJointJSClassDiagram').click()")
       wait_for_loading
 
@@ -493,7 +457,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         expect(find(:css, ".joint-element")["model-id"]).to eq("Student")
       end
 
-      #find(:css, "#buttonShowEditableClassDiagram").click
       page.execute_script("document.querySelector('#buttonShowEditableClassDiagram').click()")
       wait_for_loading
       expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
@@ -505,12 +468,10 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         reset_page_to_options_with_model(example_file)
       end
       
-      #find(:css, "#buttonShowStructureDiagram").click
       page.execute_script("document.querySelector('#buttonShowStructureDiagram').click()")
       wait_for_loading
       expect(find(:css, "#umpleCanvas")).to have_selector("#svgCanvas")
       
-      #find(:css, "#buttonShowEditableClassDiagram").click
       page.execute_script("document.querySelector('#buttonShowEditableClassDiagram').click()")
       wait_for_loading 
       expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
@@ -522,14 +483,12 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
                                                     "diagramtype=GvClass")
       end
       
-      #find(:css, "#buttonShowGvStateDiagram").click
       page.execute_script("document.querySelector('#buttonShowGvStateDiagram').click()")
       wait_for_loading
       within(find(:css, "#node1")) do
         expect(page.evaluate_script("jQuery(\"#node1 title\").text()")).to eq("start_Student_study") 
       end
       
-      #find(:css, "#buttonShowGvClassDiagram").click
       page.execute_script("document.querySelector('#buttonShowGvClassDiagram').click()")
       wait_for_loading
       within(find(:css, "#node1")) do
@@ -543,12 +502,10 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
                                                     "diagramtype=GvClass")
       end
       
-      #find(:css, "#buttonShowStructureDiagram").click
       page.execute_script("document.querySelector('#buttonShowStructureDiagram').click()")
       wait_for_loading
       expect(find(:css, "#umpleCanvas")).to have_selector("#svgCanvas")
       
-      #find(:css, "#buttonShowGvClassDiagram").click
       page.execute_script("document.querySelector('#buttonShowGvClassDiagram').click()")
       wait_for_loading
       within(find(:css, "#node1")) do
@@ -562,7 +519,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
                                                     "diagramtype=GvClass")
       end
 
-      #find(:css, "#buttonShowJointJSClassDiagram").click
       page.execute_script("document.querySelector('#buttonShowJointJSClassDiagram').click()")
       wait_for_loading
 
@@ -570,7 +526,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         expect(find(:css, ".joint-element")["model-id"]).to eq("Student")
       end
 
-      #find(:css, "#buttonShowGvClassDiagram").click
       page.execute_script("document.querySelector('#buttonShowGvClassDiagram').click()")
       wait_for_loading
       within(find(:css, "#node1")) do
@@ -585,12 +540,10 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
                                                     "diagramtype=GvState")
       end
       
-      #find(:css, "#buttonShowStructureDiagram").click
       page.execute_script("document.querySelector('#buttonShowGvClassDiagram').click()")
       wait_for_loading
       expect(find(:css, "#umpleCanvas")).to have_selector("#svgCanvas")
       
-      #find(:css, "#buttonShowGvStateDiagram").click
       page.execute_script("document.querySelector('#buttonShowGvStateDiagram').click()")
       wait_for_loading
       within(find(:css, "#node1")) do
@@ -604,7 +557,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
                                                     "diagramtype=GvState")
       end
 
-      #find(:css, "#buttonShowJointJSClassDiagram").click
       page.execute_script("document.querySelector('#buttonShowJointJSClassDiagram').click()")
       wait_for_loading
 
@@ -612,7 +564,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         expect(find(:css, ".joint-element")["model-id"]).to eq("Student")
       end
       
-      #find(:css, "#buttonShowGvStateDiagram").click
       page.execute_script("document.querySelector('#buttonShowGvStateDiagram').click()")
       wait_for_loading
       within(find(:css, "#node1")) do
@@ -626,7 +577,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
                                                       "diagramtype=structureDiagram")
         end
 
-        #find(:css, "#buttonShowJointJSClassDiagram").click
         page.execute_script("document.querySelector('#buttonShowJointJSClassDiagram').click()")
         wait_for_loading
 
@@ -634,7 +584,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           expect(find(:css, ".joint-element")["model-id"]).to eq("Student")
         end
 
-        #find(:css, "#buttonShowStructureDiagram").click
         page.execute_script("document.querySelector('#buttonShowStructureDiagram').click()")
         wait_for_loading
         expect(find(:css, "#umpleCanvas")).to have_selector("#svgCanvas")
@@ -647,7 +596,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
 
     it "checks for no state diagram code found message" do
       expected_message = "No state machine found in the input Umple file"
-      #find(:css, "#buttonShowGvStateDiagram").click
       page.execute_script("document.querySelector('#buttonShowGvStateDiagram').click()")
       wait_for_loading
       expect(find(:css, "#umpleCanvas").native.text).to include(expected_message)
@@ -655,7 +603,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
 
     it "checks for no compound structure diagram code found message" do
       expected_message = "No composite structure found in the input Umple model"
-      #find(:css, "#buttonShowStructureDiagram").click
       page.execute_script("document.querySelector('#buttonShowStructureDiagram').click()")
       wait_for_loading
       expect(find(:css, "#svgCanvas").native.text).to include(expected_message)
@@ -670,20 +617,16 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
 
       it "clicks the input box" do
         reset_page_to_options if get_checkbox_state("#buttonPhotoReady") 
-        #find(:css, "#buttonPhotoReady").click
         page.execute_script("document.querySelector('#buttonPhotoReady').click()")
         expect(get_checkbox_state("#buttonPhotoReady")).to eq(true)
-        #find(:css, "#buttonPhotoReady").click
         page.execute_script("document.querySelector('#buttonPhotoReady').click()")
         expect(get_checkbox_state("#buttonPhotoReady")).to eq(false)
       end
 
       it "clicks the label text" do
         reset_page_to_options if get_checkbox_state("#buttonPhotoReady") 
-        #find(:css, "#labelPhotoReady").click
         page.execute_script("document.querySelector('#labelPhotoReady').click()")
         expect(get_checkbox_state("#buttonPhotoReady")).to eq(true)
-        #find(:css, "#labelPhotoReady").click
         page.execute_script("document.querySelector('#labelPhotoReady').click()")
         expect(get_checkbox_state("#buttonPhotoReady")).to eq(false)
       end
@@ -692,20 +635,16 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
     describe "Clicking the manual sync option" do
       it "clicks the input box" do
         reset_page_to_options if get_checkbox_state("#buttonManualSync") 
-        #find(:css, "#buttonManualSync").click
         page.execute_script("document.querySelector('#buttonManualSync').click()")
         expect(get_checkbox_state("#buttonManualSync")).to eq(true)
-        #find(:css, "#buttonManualSync").click
         page.execute_script("document.querySelector('#buttonManualSync').click()")
         expect(get_checkbox_state("#buttonManualSync")).to eq(false)
       end
 
       it "clicks the label text" do
         reset_page_to_options if get_checkbox_state("#buttonManualSync") 
-        #find(:css, "#labelManualSync").click
         page.execute_script("document.querySelector('#labelManualSync').click()")
         expect(get_checkbox_state("#buttonManualSync")).to eq(true)
-        #find(:css, "#labelManualSync").click
         page.execute_script("document.querySelector('#labelManualSync').click()")
         expect(get_checkbox_state("#buttonManualSync")).to eq(false)
       end
@@ -727,9 +666,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
 
         find("#buttonAllowPinch").click
         expect(get_checkbox_state("#buttonAllowPinch")).to eq(true)
-        
-
-
       end
 
       it "clicks the label text" do
@@ -756,7 +692,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         if get_checkbox_state("#buttonPhotoReady")
           reset_page_to_options_with_model("simple_class.ump") 
         end
-        #find(:css, "#buttonPhotoReady").click
         page.execute_script("document.querySelector('#buttonPhotoReady').click()")
         wait_for_loading
 
@@ -765,7 +700,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           expect(find(:css, "#Student_newAttribute").native.text.chomp).to eq(" ")
         end 
 
-        #find(:css, "#buttonPhotoReady").click
         page.execute_script("document.querySelector('#buttonPhotoReady').click()")
         wait_for_loading
 
@@ -783,7 +717,6 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           reset_page_to_options
         end
 
-        #find(:css, "#buttonManualSync").click
         page.execute_script("document.querySelector('#buttonManualSync').click()")
 
         input_model_text("class Student {}")
@@ -795,11 +728,9 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
 
         switch_to_options_panel
  
-        #find(:css, "#buttonManualSync").click
         page.execute_script("document.querySelector('#buttonManualSync').click()")
 
-        switch_to_tools_panel
-        
+        switch_to_tools_panel      
         
         expect(find("#umpleCanvas")).to have_no_selector("div#syncNeededMessage")
         expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
