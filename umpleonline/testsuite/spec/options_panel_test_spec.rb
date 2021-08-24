@@ -326,7 +326,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         end
         find(:css, "#buttonToggleMethods").click
         wait_for_loading
-        sleep 1
+        sleep 3
         
         within(find(:css, "#Student")) do
           fail_message = "methods not showing after checking the methods checkbox"
@@ -334,7 +334,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         end
         find(:css, "#buttonToggleMethods").click
         wait_for_loading
-        sleep 1
+        sleep 3
        
         within(find(:css, "#Student")) do
           fail_message = "methods not hidden after unchecking the methods checkbox"
@@ -672,6 +672,8 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           reset_page_to_options_with_model("simple_class.ump") 
         end
         find(:css, "#buttonPhotoReady").click
+        wait_for_loading
+        sleep 2
         expect(find(:css, "#umpleCanvasColumn")).to have_css("div.photoReady")
         within(find(:css, "#Student")) do
           expect(find(:css, "#Student_newAttribute").native.text.chomp).to eq(" ")
