@@ -9,7 +9,6 @@ module OptionsPanelTestHelper
   def reset_page_to_options
     load_page
     switch_to_options_panel
-    wait_for_loading
   end
 
   def reset_page_to_options_with_option(option_text)
