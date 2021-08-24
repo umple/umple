@@ -23,6 +23,7 @@ describe "Graphical editing of diagram: model consistency",
         verify_diagram_contains("#NewClass")
 
         verify_text_ignore_position("after_adding_class.ump")
+        undo_and_redo_the_addition("#NewClass")
       end
     end
 
@@ -34,6 +35,7 @@ describe "Graphical editing of diagram: model consistency",
         verify_diagram_contains("#NewClass")
 
         verify_text_ignore_position("after_adding_class.ump")
+        undo_and_redo_the_addition("#NewClass")
       end
     end
   end
@@ -55,6 +57,7 @@ describe "Graphical editing of diagram: model consistency",
           verify_diagram_does_not_contain("#Student")
 
           verify_text_ignore_position("empty_file.ump")
+          undo_and_redo_the_deletion("#Student")
         end
       end
 
@@ -68,6 +71,7 @@ describe "Graphical editing of diagram: model consistency",
           verify_diagram_does_not_contain("#Student")
 
           verify_text_ignore_position("empty_file.ump")
+          undo_and_redo_the_deletion("#Student")
         end
       end
     end
@@ -80,6 +84,7 @@ describe "Graphical editing of diagram: model consistency",
         verify_diagram_does_not_contain("#Student")
 
         verify_text_ignore_position("empty_file.ump")
+        undo_and_redo_the_deletion("#Student")
       end
     end
   end
@@ -99,6 +104,7 @@ describe "Graphical editing of diagram: model consistency",
         wait_for_loading
         expect(find(:css, "#umpleCanvas")).to have_selector("#umpleAssociation_0")
         verify_text_ignore_position("after_adding_reflexive_association.ump")
+        undo_and_redo_the_addition("#umpleAssociation_0")
       end
     end
 
@@ -110,9 +116,11 @@ describe "Graphical editing of diagram: model consistency",
           find(:css, "#Student").click
         end
 
-        wait_for_loading_for(10)
+        wait_for_loading
+
         expect(find(:css, "#umpleCanvas")).to have_selector("#umpleAssociation_0")
         verify_text_ignore_position("after_adding_reflexive_association.ump")
+        undo_and_redo_the_addition("#umpleAssociation_0")
       end
     end
   end
@@ -128,8 +136,11 @@ describe "Graphical editing of diagram: model consistency",
         within("div#umpleCanvas") {find(:css, '#umpleAssociation_0').native.send_keys(:delete)}
         
         wait_for_loading
+
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_text_ignore_position("after_removing_reflexive_association.ump")
+
+        #undo_and_redo_the_deletion("#umpleAssociation_0")
       end
     end
 
@@ -143,6 +154,8 @@ describe "Graphical editing of diagram: model consistency",
         wait_for_loading
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_text_ignore_position("after_removing_reflexive_association.ump")
+
+        #undo_and_redo_the_deletion("#umpleAssociation_0")
       end
     end
   end
@@ -166,6 +179,8 @@ describe "Graphical editing of diagram: model consistency",
         verify_diagram_does_not_contain("#Student")
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_text_ignore_position("empty_file.ump")
+
+        #undo_and_redo_the_deletion("#Student", "#umpleAssociation_0")
       end
     end
 
@@ -183,6 +198,8 @@ describe "Graphical editing of diagram: model consistency",
         verify_diagram_does_not_contain("#Student")
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_text_ignore_position("empty_file.ump")
+
+        #undo_and_redo_the_deletion("#Student", "#umpleAssociation_0")
       end
     end
   end
@@ -208,6 +225,7 @@ describe "Graphical editing of diagram: model consistency",
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_diagram_does_not_contain("#umpleAssociation_1")
         verify_text_ignore_position("empty_file.ump")
+        #undo_and_redo_the_deletion("#Student", "#umpleAssociation_0", "#umpleAssociation_1")
       end
     end
 
@@ -224,11 +242,12 @@ describe "Graphical editing of diagram: model consistency",
         find(:css, '#buttonDeleteEntity').click
         within("div#umpleCanvas") {find(:css, '#Student').click}
 
-        wait_for_loading_for(10)
+        wait_for_loading
         verify_diagram_does_not_contain("#Student")
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_diagram_does_not_contain("#umpleAssociation_1")
         verify_text_ignore_position("empty_file.ump")
+        #undo_and_redo_the_deletion("#Student", "#umpleAssociation_0", "#umpleAssociation_1")
       end
     end
   end
@@ -245,7 +264,7 @@ describe "Graphical editing of diagram: model consistency",
           find(:css, '#umpleCanvas').native.send_keys("a")
           within("div#umpleCanvas") do
             find(:css, "#Student").click
-            sleep(1)
+            sleep(4)
             find(:css, "#Mentor").click
           end
 
@@ -264,7 +283,7 @@ describe "Graphical editing of diagram: model consistency",
           find(:css, '#umpleCanvas').native.send_keys("a")
           within("div#umpleCanvas") do
             find(:css, "#Mentor").click
-            sleep(1)
+            sleep(4)
             find(:css, "#Student").click
           end
 
@@ -564,7 +583,7 @@ describe "Graphical editing of diagram: model consistency",
         find(:css, '#buttonDeleteEntity').click
         within("div#umpleCanvas") {find(:css, '#Mentor').click}
 
-        wait_for_loading_for 20
+        wait_for_loading
         verify_diagram_does_not_contain("#Mentor_generalization")
         verify_diagram_does_not_contain("#Mentor")
         verify_text_ignore_position("after_removing_subclass.ump")
@@ -580,7 +599,7 @@ describe "Graphical editing of diagram: model consistency",
       it "deletes a symmetric reflexive association" do
         within("div#umpleCanvas") {find(:css, '#umpleAssociation_0').native.send_keys(:delete)}
 
-        wait_for_loading_for 20
+        wait_for_loading
         verify_diagram_does_not_contain("#umpleAssociation_0")
         verify_text_ignore_position("after_removing_reflexive_association.ump")
       end
@@ -606,17 +625,17 @@ describe "Graphical editing of diagram: model consistency",
     it "deletes many elements" do
       #delete NewClass2
       within("div#umpleCanvas") {find(:css, '#NewClass2').native.send_keys(:delete)}
-      wait_for_loading_for 30
+      wait_for_loading
 
       #delete umpleAssociation_4
       within("div#umpleCanvas") {find(:css, '#umpleAssociation_4').native.send_keys(:delete)}
-      wait_for_loading_for 30
+      wait_for_loading
 
       #delete NewClass
       within("div#umpleCanvas") {find(:css, '#NewClass').native.send_keys(:delete)}
-      wait_for_loading_for 30
+      wait_for_loading
 
-      wait_for_loading_for 30
+      wait_for_loading
       verify_diagram_contains "#NewClass1"
       verify_diagram_contains "#NewClass3"
       verify_diagram_contains "#NewClass4"

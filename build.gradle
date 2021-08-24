@@ -381,7 +381,24 @@ task copyDocs(type: Copy) {
     
     }
 }
+task copyReusableUmpLib(type: Copy) {
+    group = "Custom"
+    description = "Copying library files that need to be included in the umple jar"
+    from "umpleonline/umplibrary/reusable"
+    into rootProject.ext.classfileOutputDir
+    include '**/*.ump'
+   
+    doFirst {
+        println("Copying library .ump files from cruise.umple/src to ${rootProject.ext.classfileOutputDir}")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+    
+    }
+}
+
 tasks.getByName("compileJava").dependsOn 'copyDocs'
+tasks.getByName("compileJava").dependsOn 'copyReusableUmpLib'
 tasks.getByName("compileJava").dependsOn ':UmpleParser:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToJava:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToPhp:copyUmpleOutput'
@@ -1289,7 +1306,7 @@ task initTests {
   group = "Custom"
   description = "Creates a temporary txt file contains the host name and the umpleonline directory. The file content will be used during the UI test."
   
-  def host = "https://cruise.umple.org/umpleonline/"
+  def host = "https://cruise.umple.org/test/umpleonline/"
   def baseDir = "${rootProject.projectDir.toString()}/umpleonline/"
   def testenv= ""
   

@@ -9,7 +9,6 @@ module OptionsPanelTestHelper
   def reset_page_to_options
     load_page
     switch_to_options_panel
-    wait_for_loading_for 20
   end
 
   def reset_page_to_options_with_option(option_text)
@@ -35,10 +34,5 @@ module OptionsPanelTestHelper
     select_option_by_value("#inputExample2", "Booking.ump")
     wait_for_loading
     switch_to_options_panel
-    wait_for_loading
-  end
-  
-  def input_model_text(new_text)
-    execute_script("Page.setUmpleCode(\"#{new_text}\")")
   end
 end

@@ -1,0 +1,39 @@
+/* Example of using builtin Umple pattern files
+to create a bus system
+*/
+
+use lib:AbstractionOccurrence.ump;
+use lib:TransportationPatternA.ump
+
+// ***********
+
+class BusRoute {
+  Integer routeNumber;
+  isA Route <Stop = BusStop>;
+}
+
+class RegularlyTimedBusRun {
+  isA RegularlyScheduledRun <
+    Route = BusRoute,
+    ScheduledStop = TimedStopAtBusStop
+   >;
+}
+
+class TimedStopAtBusStop {
+  isA ScheduledStop <Stop = BusStop>;
+}
+
+class BusStop {
+  isA Stop;
+}
+
+class BusRun {
+  isA ActualRun <
+    RegularlyScheduledRun = RegularlyTimedBusRun,
+    Vehicle = Bus
+  >;
+}
+
+class Bus {
+  isA Vehicle;
+}
