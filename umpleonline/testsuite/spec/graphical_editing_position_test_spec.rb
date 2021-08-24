@@ -72,14 +72,16 @@ describe "Graphical editing of diagram: positional consistency",
   describe "Adding an umpleClass with a particular position" do
     it "adds an umpleClass at a particular position" do
       load_page
-      wait_for_loading
+      
       find(:css, '#umpleCanvas').click
       find(:css, '#umpleCanvas').native.send_keys("c")
       expected_position = [55, 135]
       
       find("#umpleCanvas").click(x: expected_position[0], y:expected_position[1])
-      
-      expect(page).to have_selector("#NewClass", wait: 30)
+
+      wait_for_loading
+  
+      expect(page).to have_selector("#NewClass")
       expect(class_diagram_position_of("NewClass")).to have_position([expected_position[0]-1, expected_position[1]-2])
       expect(class_code_position_of("NewClass")).to have_code_position_within_anchor_size([expected_position[0], expected_position[1]-1])
     end
@@ -88,8 +90,8 @@ describe "Graphical editing of diagram: positional consistency",
   describe "Adding a reflexive association" do
     before(:each) do
       load_umple_with_file_and_layout("single_class.ump")
-      
     end
+
     it "Adds a reflexive association with an anchor snapped to the left edge" do
       class_position = get_absolute_position("#Student")
       class_code = class_code_position_of "Student"
@@ -178,6 +180,8 @@ describe "Graphical editing of diagram: positional consistency",
         find(:css, "#Left").click
       end
 
+      wait_for_loading
+
       anchor_pos = association_diagram_position_of("ACenter", "Left")
       anchor_pos = anchor_pos[:end_one]
 
@@ -198,6 +202,8 @@ describe "Graphical editing of diagram: positional consistency",
         find(:css, "#ACenter").click
         find(:css, "#Top").click
       end
+
+      wait_for_loading
 
       anchor_pos = association_diagram_position_of("ACenter", "Top")
       anchor_pos = anchor_pos[:end_one]
@@ -220,6 +226,8 @@ describe "Graphical editing of diagram: positional consistency",
         find(:css, "#Right").click
       end
       
+      wait_for_loading
+
       anchor_pos = association_diagram_position_of("ACenter", "Right")
       anchor_pos = anchor_pos[:end_one]
 
@@ -241,6 +249,8 @@ describe "Graphical editing of diagram: positional consistency",
         find(:css, "#Bottom").click
       end
       
+      wait_for_loading
+
       anchor_pos = association_diagram_position_of("ACenter", "Bottom")
       anchor_pos = anchor_pos[:end_one]
 

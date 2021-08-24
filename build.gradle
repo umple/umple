@@ -1306,7 +1306,7 @@ task initTests {
   group = "Custom"
   description = "Creates a temporary txt file contains the host name and the umpleonline directory. The file content will be used during the UI test."
   
-  def host = "https://cruise.umple.org/umpleonline/"
+  def host = "https://cruise.umple.org/test/umpleonline/"
   def baseDir = "${rootProject.projectDir.toString()}/umpleonline/"
   def testenv= ""
   

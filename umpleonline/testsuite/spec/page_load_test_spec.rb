@@ -11,6 +11,10 @@ describe "Page load options", :feature => :pageLoad, :helper => :pageLoad do
   it "loads UmpleOnline with the example url option" do
     load_umple_with_option("example=2DShapes")
 
+    #check examples dropdown menus
+    expect(page).to have_select("inputExampleType", selected: "Class Diagrams")
+    expect(page).to have_select("inputExample", selected: "2DShapes")
+
     #Check diagram
     expect(find(:css, "#umpleCanvas")).to have_selector("#Shape2D")
     expect(find(:css, "#umpleCanvas")).to have_selector("#EllipticalShape")
@@ -162,13 +166,14 @@ describe "Page load options", :feature => :pageLoad, :helper => :pageLoad do
     end
     it "loads UmpleOnline without any options and makes a tip of the day appears" do
       load_page
-      wait_for_loading
+      
       find(:css, "#linenum").click
       find(:css, "#linenum").send_keys(:backspace)
       find(:css, "#linenum").send_keys("tc")
       find(:css, "#linenum").send_keys(:enter)
+      
       load_page
-      wait_for_loading_for 30
+     
       expect(page).to have_selector("#styleTip")
     end
   end
