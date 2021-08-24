@@ -496,6 +496,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       
       find(:css, "#buttonShowGvStateDiagram").click
       wait_for_loading
+      sleep 2
       within(find(:css, "#node1")) do
         expect(page.evaluate_script("jQuery(\"#node1 title\").text()")).to eq("start_Student_study") 
       end
@@ -680,6 +681,8 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         end 
 
         find(:css, "#buttonPhotoReady").click
+        wait_for_loading
+        sleep 2
         expect(find(:css, "#umpleCanvasColumn")).to_not have_css("div.photoReady")
         within(find(:css, "#Student")) do
           expect(find(:css, "#Student_newAttribute").native.text.chomp).to eq("-- Add More --")
@@ -698,7 +701,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         wait_for_loading_no_ajax
         input_model_text("class Student {}")
         switch_to_tools_panel
-        sleep 1
+        sleep 2
         expect(find("#umpleCanvas")).to have_selector("div#syncNeededMessage")
         expect(find(:css, "#umpleCanvas")).to have_no_selector("#Student")
         expect(page).to have_no_css("li#buttonSyncDiagram.disabled")
