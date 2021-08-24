@@ -36,6 +36,7 @@ class UmpleToJava {
     if("internal".equals(av.getModifier()))
     {
       if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+      if (av.numberOfRequirements() > 0) { append(realSb, "\n  {0}\n", Requirement.format("Attribute Javadoc", av.getRequirements())); }
     }
 
     if (av.getIsInternalTransient()){ type="transient "+type; }
@@ -59,6 +60,7 @@ class UmpleToJava {
     }
     appendln(realSb, "");
     if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+    if (av.numberOfRequirements() > 0) { append(realSb, "\n  {0}\n", Requirement.format("Attribute Javadoc", av.getRequirements())); }
     append(realSb, "  private{1} int {0};", gen.translate("attributeOne",av),isTransient);
   }
   

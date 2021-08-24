@@ -16,7 +16,7 @@ umpleProgram- : ( [[comment]] | [[directive]] | ; )*
 // Directives are the top-level items in an umple file. See manual page [*TypesofDirectives*]
 // A directive is either used to configure the system or else is
 // an actual entity of the system to be modelled or generated
-directive- : [[glossary]] | [[generate]] | [[distribute]] | [[generate_path]] | [[filter]] | [[useStatement]] | [[namespace]] | [[tracerDirective]] | [[entity]] | [[debug]] | [[strictness]] | [[toplevelExtracode]] | [[toplevelException]]
+directive- : [[glossary]] | [[generate]] | [[distribute]] | [[generate_path]] | [[filter]] | [[useStatement]] | [[namespace]] | [[requirement]] | [[reqImplementation]] | [[tracerDirective]] | [[entity]] | [[debug]] | [[strictness]] | [[toplevelExtracode]] | [[toplevelException]]
 
 // A glossary item is used to fine tune pluralization during code generation
 glossary : glossary { [[word]]* }
@@ -52,6 +52,9 @@ entity- : [[mixsetIsFeature]] | [[requireStatement]] | [[mixsetDefinition]] | [[
 comment- : [[inlineComment]] | [[multilineComment]] | [[annotationComment]]
 inlineComment- : // [*inlineComment]
 multilineComment- : /* [**multilineComment] */
+
+requirement : req [reqIdentifier] { [**reqContent] }
+reqImplementation : implementsReq [reqIdentifier] (, [reqIdentifier])* ;
 
 //Matches all forms of Java annotations including those with parentheses and values in quotes
 annotationComment- : [!annotationComment:@[a-zA-Z_][a-zA-Z0-9_-]*(\((("(\w|\s|-)*")|\w|\s|=|,|\.)*\))?]
