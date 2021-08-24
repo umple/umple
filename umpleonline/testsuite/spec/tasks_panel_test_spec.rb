@@ -19,6 +19,7 @@ describe "Tasks Panel", :feature => :taskEdit, :helper => :taskEdit  do
             load_umple_and_switch_to_tasks_panel
             find("#buttonCreateTask").click if page.has_no_selector?("#taskArea", visible: true)
             wait_for_loading
+            sleep 1
             expect(page).to have_selector("#taskArea", visible: true)
 
             find("#taskName").send_keys("///")

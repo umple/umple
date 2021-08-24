@@ -185,8 +185,10 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       it "clicks the input box" do
         reset_page_to_options_with_stateMachine
         find(:css, "#buttonToggleGuardLabels").click
+        sleep 1
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(true)
         find(:css, "#buttonToggleGuardLabels").click
+        sleep 1
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(false)
       end
 
@@ -194,8 +196,10 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         reset_page_to_options_with_stateMachine
       
         find(:css, "#labelToggleGuardLabels").click
+        sleep 1
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(true)
         find(:css, "#labelToggleGuardLabels").click
+        sleep 1
         expect(get_checkbox_state("#buttonToggleGuardLabels")).to eq(false)
       end
     end
@@ -231,6 +235,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           reset_page_to_options_with_option("notext")
           expect(page).to have_no_selector("#textEditorColumn")
           find(:css, "#buttonShowHideTextEditor").click
+          sleep 1
           expect(page).to have_selector("#textEditorColumn")
         end
 
@@ -239,6 +244,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           expect(page).to have_selector("#topTextEditor")
           expect(page).to have_selector("#bottomTextEditor")
           find(:css, "#buttonShowHideTextEditor").click 
+          sleep 1
           expect(page).to have_no_selector("#topTextEditor")
           expect(page).to have_no_selector("#bottomTextEditor")
         end
@@ -251,13 +257,15 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           reset_page_to_options
           expect(page).to have_no_selector("#bottomTextEditor")
           find(:css, "#buttonShowHideLayoutEditor").click
+          sleep 1
           expect(page).to have_selector("#bottomTextEditor")
         end
 
         it "hides the layout editor" do
           reset_page_to_options_with_option("showlayout")
           expect(page).to have_selector("#bottomTextEditor")
-          find(:css, "#buttonShowHideLayoutEditor").click         
+          find(:css, "#buttonShowHideLayoutEditor").click
+          sleep 1         
           expect(page).to have_no_selector("#bottomTextEditor")
         end
       end
@@ -267,6 +275,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           reset_page_to_options_with_option("notext")
           expect(page).to have_no_selector("#textEditorColumn")
           find(:css, "#buttonShowHideLayoutEditor").click
+          sleep 1
           expect(page).to have_no_selector("#bottomTextEditor")
         end
       end
@@ -305,6 +314,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         end
         find(:css, "#buttonToggleMethods").click
         wait_for_loading
+        sleep 1
         
         within(find(:css, "#Student")) do
           fail_message = "methods not showing after checking the methods checkbox"
@@ -312,6 +322,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         end
         find(:css, "#buttonToggleMethods").click
         wait_for_loading
+        sleep 1
        
         within(find(:css, "#Student")) do
           fail_message = "methods not hidden after unchecking the methods checkbox"
@@ -329,13 +340,15 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           expect(find(:css, "#graph0").native.text).to include("doAction()"), fail_message
         end
         find(:css, "#buttonToggleActions").click
-        wait_for_loading_for 10
+        wait_for_loading
+        sleep 1
         within(find(:css, "#umpleCanvas")) do
           fail_message = "actions still found after unchecking the methods checkbox"
           expect(find(:css, "#graph0").native.text).not_to include("doAction()"), fail_message
         end
         find(:css, "#buttonToggleActions").click
         wait_for_loading
+        sleep 1
         within(find(:css, "#umpleCanvas")) do
           fail_message = "actions not found after checking the methods checkbox"
           expect(find(:css, "#graph0").native.text).to include("doAction()"), fail_message
