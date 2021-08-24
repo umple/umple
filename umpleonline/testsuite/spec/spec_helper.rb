@@ -28,6 +28,7 @@ end
 Capybara.default_driver= :selenium_chrome
 Capybara.javascript_driver= :selenium_chrome
 Capybara.app_host = TestUtils::HOST
+Capybara.default_max_wait_time = 5
 
 RSpec.configure do |config|
   config.include Capybara::DSL

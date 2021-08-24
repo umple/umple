@@ -151,11 +151,13 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       it "clicks the label text" do
         reset_page_to_options_with_stateMachine 
         find(:css, "#labelToggleActions").click
-        wait_for_loading_no_ajax
+        wait_for_loading
+        sleep 2
         
         expect(get_checkbox_state("#buttonToggleActions")).to eq(false)
         find(:css, "#labelToggleActions").click
-        wait_for_loading_no_ajax
+        wait_for_loading
+        sleep 2
        
         expect(get_checkbox_state("#buttonToggleActions")).to eq(true)
       end
@@ -166,16 +168,24 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       it "clicks the input box" do
         reset_page_to_options_with_stateMachine
         find(:css, "#buttonToggleTransitionLabels").click
+        wait_for_loading
+        sleep 1
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(true)
-        find(:css, "#buttonToggleTransitionLabels").click   
+        find(:css, "#buttonToggleTransitionLabels").click
+        wait_for_loading
+        sleep 1   
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(false)
       end
 
       it "clicks the label text" do
         reset_page_to_options_with_stateMachine
         find(:css, "#labelToggleTransitionLabels").click
+        wait_for_loading
+        sleep 1
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(true)
         find(:css, "#labelToggleTransitionLabels").click
+        wait_for_loading
+        sleep 1
         expect(get_checkbox_state("#buttonToggleTransitionLabels")).to eq(false)
       end
     end
@@ -235,6 +245,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           reset_page_to_options_with_option("notext")
           expect(page).to have_no_selector("#textEditorColumn")
           find(:css, "#buttonShowHideTextEditor").click
+          wait_for_loading
           sleep 1
           expect(page).to have_selector("#textEditorColumn")
         end
@@ -244,7 +255,8 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
           expect(page).to have_selector("#topTextEditor")
           expect(page).to have_selector("#bottomTextEditor")
           find(:css, "#buttonShowHideTextEditor").click 
-          sleep 1
+          wait_for_loading
+          sleep 2
           expect(page).to have_no_selector("#topTextEditor")
           expect(page).to have_no_selector("#bottomTextEditor")
         end
@@ -607,8 +619,10 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       it "clicks the input box" do
         reset_page_to_options if get_checkbox_state("#buttonPhotoReady") 
         find(:css, "#buttonPhotoReady").click
+        sleep 2
         expect(get_checkbox_state("#buttonPhotoReady")).to eq(true)
         find(:css, "#buttonPhotoReady").click
+        sleep 2
         expect(get_checkbox_state("#buttonPhotoReady")).to eq(false)
       end
 
