@@ -12,7 +12,7 @@ module TestUtils
 
   def wait_for_loading_no_ajax
     loop until page.evaluate_script('jQuery.active').zero?
-    page.has_no_selector?('.loading-indicator')
+    loop until page.has_no_selector?('.loading-indicator')
   end
 
   # Same waiting implementation as above, but allows a temporary change to
@@ -143,7 +143,6 @@ module TestUtils
 
   def select_option_by_value(select_id, option_text)
     find(:css, select_id).find("option[value='#{option_text}']").select_option
-    wait_for_loading
   end
 end
 

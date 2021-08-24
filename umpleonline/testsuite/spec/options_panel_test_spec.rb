@@ -521,7 +521,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
       expect(find(:css, "#umpleCanvas")).to have_selector("#svgCanvas")
       
       find(:css, "#buttonShowGvStateDiagram").click
-      wait_for_loading
+      wait_for_loading_for 10
       within(find(:css, "#node1")) do
         expect(page.evaluate_script("jQuery(\"#node1 title\").text()")).to eq("start_Student_study") 
       end
@@ -670,6 +670,7 @@ describe "Option panel functionality", :helper => :optionsMenu, :feature => :opt
         wait_for_loading_no_ajax
 
         switch_to_tools_panel
+        sleep 1
         
         expect(find("#umpleCanvas")).to have_no_selector("div#syncNeededMessage")
         expect(find(:css, "#umpleCanvas")).to have_selector("#Student")
