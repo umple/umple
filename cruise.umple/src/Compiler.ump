@@ -124,6 +124,16 @@ class CodeCompiler {
     if(generator.equals("GvClassDiagram")) {
       fileroot+="cd";
     }
+    else if(generator.equals("GvEntityRelationshipDiagram")) {
+      fileroot+="erd";
+    }
+    else if(generator.equals("GvFeatureDiagram")) {
+      fileroot+="GvFeatureDiagram";
+    }
+    else if(generator.equals("GvClassTraitDiagram")) {
+      fileroot+="cdt";
+    }
+    // Note that GV state diagrams do not have a fileroot suffix
 
     String path="";
     String extraPath=gt.getPath();
