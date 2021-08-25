@@ -117,6 +117,7 @@
     <pathconvert pathsep=";" property="javaumpfiles2" refid="javaumpfiles"/>
     
     <echo file="${java.path}/allExamplesList.txt">${javaumpfiles2}</echo>
+    <echo> DEBUG ${javaumpfiles2} </echo>
 
     <replace file="${java.path}/allExamplesList.txt" token=";" value="&#10;"/>
     <echo>Umple examples to be tested and Java tested are in "${java.path}/allExamplesList.txt"</echo>
