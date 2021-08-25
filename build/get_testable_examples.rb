@@ -12,7 +12,7 @@ def populate_possible_matches(directories, pattern)
 
     possibles.each do |filename|
       if filename =~ /#{pattern}/
-        matches << directory + "/" + filename
+        matches << directory + File::SEPARATOR + filename
       end
     end
   end
@@ -48,7 +48,7 @@ end
 def copy_to_output(filenames, output_dir)
   
   filenames.each do |filename|
-    new_filename = "#{output_dir}/#{filename.split("/")[-1]}"
+    new_filename = "#{output_dir}"+File::SEPARATOR+"#{filename.split(File::SEPARATOR)[-1]}"
     FileUtils.cp(filename, new_filename)
   end
 end

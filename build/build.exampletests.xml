@@ -7,13 +7,34 @@
   <property name="myenv" value="cc" />
 
   <property name="project.output.path" value="temp" />
-  <property name="java.path" value="${project.output.path}/java" />
-  <property name="cpp.path" value="${project.output.path}/cpp" />
-  <property name="php.path" value="${project.output.path}/php" />
-  <property name="ruby.path" value="${project.output.path}/ruby" />
+  <property name="javaorig.path" value="${project.output.path}/java" />
+  <property name="cpporig.path" value="${project.output.path}/cpp" />
+  <property name="phporig.path" value="${project.output.path}/php" />
+  <property name="rubyorig.path" value="${project.output.path}/ruby" />
 
-  <property name="manualumpfiles.path" value="umpleonline/umplibrary/manualexamples" />
-  <property name="exampleumpfiles.path" value="umpleonline/umplibrary" />
+  <property name="manualumpfilesorig.path" value="umpleonline/umplibrary/manualexamples" />
+  <property name="exampleumpfilesorig.path" value="umpleonline/umplibrary" />
+
+  <!-- if on Windows convert -->
+  <pathconvert property="manualumpfiles.path"> 
+    <path location="${manualumpfilesorig.path}"/>
+  </pathconvert>
+  <pathconvert property="exampleumpfiles.path"> 
+    <path location="${exampleumpfilesorig.path}"/>
+  </pathconvert>
+  <pathconvert property="java.path"> 
+    <path location="${javaorig.path}"/>
+  </pathconvert>
+  <pathconvert property="cpp.path"> 
+    <path location="${cpporig.path}"/>
+  </pathconvert>
+  <pathconvert property="php.path"> 
+    <path location="${phporig.path}"/>
+  </pathconvert>
+  <pathconvert property="ruby.path"> 
+    <path location="${rubyorig.path}"/>
+  </pathconvert>
+
 
   <import file="_${myenv}.xml" />
   <import file="_template.xml" />
