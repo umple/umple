@@ -234,9 +234,6 @@
 
   <target name="testSetup">
     <mkdir dir="${project.output.path}" />
-    <exec executable="ruby">
-      <arg value="-eputs('DEBUG Testing that Ruby works')" />    
-    </exec>
     <if>
       <equals arg1="${failfast}" arg2="true" />
       <then>
@@ -247,21 +244,27 @@
         <property name="failsafe" value="true" />
       </else>
     </if>
+    
+    <property name="rubyexfinderorig.path" value="build/get_testable_examples.rb" />
+    <pathconvert property="rubyexfinder.path"> 
+      <path location="${rubyexfinderorig.path}"/>
+    </pathconvert>
+
+ <exec executable="ruby">
+    <arg value="-eputs('DEBUG will run')" />    
+  </exec>
+  <echo> DEBUG ${rubyexfinder.path}</echo>
+        
     <if>
       <not>
         <equals arg1="${mode.notjava}" arg2="false" />
       </not>
       <then>
-        <property name="rubyexfinderorig.path" value="build/get_testable_examples.rb" />
-        <pathconvert property="rubyexfinder.path"> 
-          <path location="${rubyexfinderorigorig.path}"/>
-        </pathconvert>
-        
         <mkdir dir="${java.path}" />
         <mkdir dir="${java.path}/src-gen-umple" />
         <mkdir dir="${java.path}/bin" />
         <exec executable="ruby">
-          <arg value="${rubyexfinderorig.path}" />
+          <arg value="${rubyexfinder.path}" />
           <arg value="-i" />
           <arg value="${manualumpfiles.path}" />
           <arg value="-i" />
