@@ -46,12 +46,13 @@ def check_for_flags(filenames, language)
 end
 
 def copy_to_output(filenames, output_dir)
-  
+  copy_count = 0
   filenames.each do |filename|
     new_filename = "#{output_dir}"+File::SEPARATOR+"#{filename.split(File::SEPARATOR)[-1]}"
     FileUtils.cp(filename, new_filename)
-#    puts("DEBUG outputting"+new_filename)
+    copy_count = copy_count+1
   end
+  puts("Prepared "+copy_count.to_s+" examples")
 end
 
 # command line input arguments
