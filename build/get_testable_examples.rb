@@ -50,6 +50,7 @@ def copy_to_output(filenames, output_dir)
   filenames.each do |filename|
     new_filename = "#{output_dir}"+File::SEPARATOR+"#{filename.split(File::SEPARATOR)[-1]}"
     FileUtils.cp(filename, new_filename)
+    puts("DEBUG outputting"+new_filename)
   end
 end
 

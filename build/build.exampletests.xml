@@ -114,12 +114,8 @@
       <exclude name="W010SingletonMultiplicityOver12.ump"/>
     </fileset>  
 
-    <echo message="DEBUG1  ${toString:javaumpfiles}" />
-
     <pathconvert pathsep="${line.separator}" property="javaumpfiles2" refid="javaumpfiles"/>
 
-    <echo message="DEBUG1a  ${javaumpfiles2}" />
-    
     <echo file="${java.path}/allExamplesList.txt">${javaumpfiles2}</echo>
 
     <echo>Umple examples to be tested and Java tested are in "${java.path}/allExamplesList.txt"</echo>
