@@ -73,5 +73,8 @@ end
 puts("Preparing example files for "+language+" from "+search_dir.join(" ")+ " to "+output_dir)
 
 matches = populate_possible_matches(search_dir, search_pattern)
+puts("Debug1")
 matches = check_for_flags(matches, language)
+puts("Debug2")
 copy_to_output(matches, output_dir)
+puts("Debug3")
