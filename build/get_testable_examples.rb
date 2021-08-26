@@ -69,6 +69,8 @@ OptionParser.new do |option|
   option.parse!
 end
 
+puts("Preparing example files for "+language+" from "+search_dir.join(" ")+ " to "+output_dir)
+
 matches = populate_possible_matches(search_dir, search_pattern)
 matches = check_for_flags(matches, language)
 copy_to_output(matches, output_dir)
