@@ -825,6 +825,7 @@ class UmpleTrait {
   // The comments associated with the Umple Trait (such as the Javadoc above it).
   1 -> * Comment;
 
+  // The requirement associated with the Umple Trait (such as the Javadoc above it).
   1 -> * Requirement;
 
   //The template parameters which are specified when traits are defined.

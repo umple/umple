@@ -87,10 +87,9 @@ class UmpleInternalParser
       regularCommentCountEnd++;
     }
 
-    for (Requirement c : lastRequirements)
+    for (Requirement r : lastRequirements)
     {
-      aTrait.addRequirementAt(c,regularCommentCountEnd);
-      regularCommentCountEnd++;
+      aTrait.addRequirement(r);
     }
 
     // Add special position comment at the end if @outputumplesource had been 
@@ -505,10 +504,9 @@ class UmpleInternalParser
     {
       attribute.addComment(c);
     }
-    
-    for (Requirement c : lastRequirements)
+    for (Requirement r : lastRequirements)
     {
-      attribute.addRequirement(c);
+      attribute.addRequirement(r);
     }
     
     // set the last attribute made to be attribute, clear lastassoc
@@ -598,9 +596,9 @@ mixset Association {
       yourAs.addComment(c);
     }
 
-    for (Requirement c : lastRequirements)
+    for (Requirement r : lastRequirements)
     {
-      yourAs.addRequirement(c);
+      yourAs.addRequirement(r);
     }
     
     // set last association made to be yourAs. clear lastattr.
@@ -1138,7 +1136,7 @@ mixset Association {
 		
 		for(Requirement aRequirement : inTrait.getRequirements()) {
 			inClass.addRequirement(aRequirement);
-		}		
+		}
 
 		//set the dependens
 		for(Depend aDepend : inTrait.getDepends()) {
@@ -1212,7 +1210,7 @@ mixset Association {
 	       }
 	       inClass.addAssociationVariable(aVariable);    
        }
-       */	  
+       */
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1702,7 +1700,11 @@ private void copyAttributesFromTraitsToClass(UmpleClass inClass){
 			//I need some comment for users in generated code;
 			//attribute.getComment(2).setText(attribute.getComment(2).getText()+"'"+inClass.getName()+"' ");
 			attribute.setSource(Attribute.Source.fTrait);
-			inClass.addAttribute(attribute);  
+      if (attribute.hasRequirements()){
+      }
+      else{
+      }
+			inClass.addAttribute(attribute);
 		}
 	}
 }

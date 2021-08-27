@@ -8,7 +8,7 @@
 //Mixsets allow creation of mixins composed from multiple locations plus some constraints regarding usage of these mixins.
 // See user manual page [*BasicMixsets*]
 
-mixsetDefinition : mixset [mixsetName] ( [[mixsetInnerContent]] | [[mixsetInlineDefinition]] )
+mixsetDefinition : mixset [mixsetName] ( [[mixsetInnerContent]] | [[reqImplementation]] | [[requirement]] | [[mixsetInlineDefinition]] )
 mixsetInnerContent- : { [[extraCode]] }
  
 mixsetInlineDefinition- : ( [entityType] [entityName] ( [[mixsetInnerContent]] | [entityOneElement] ) | [oneElement] )

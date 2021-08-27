@@ -851,8 +851,17 @@ class Comment
 }
 
 class Requirement{
+
+  // deep copy constructor
+  public Requirement(Requirement aReq)
+  {
+    identifier = aReq.getIdentifier();
+    statement = aReq.getStatement();
+    language = aReq.getLanguage();
+  }
+
+
   public static String format(String type, List<Requirement> reqSelected){
-    System.out.println("accessing format function");
     List<Comment> reqTextOnly = new ArrayList<Comment>();
     String reqText = new String();
 
@@ -868,7 +877,6 @@ class Requirement{
       }
       
     }
-    System.out.println("end of format");
     
     if (reqTextOnly.size() > 0)
       return Comment.format(type, reqTextOnly);
