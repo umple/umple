@@ -29,16 +29,16 @@ def check_for_flags(filenames, language)
   #If this tag is missing, it will always add it to the directory
   filenames.each do |filename|
     should_add = true
-    open(filename, 'r').each do |line|
-      tag = line[/@@@testlanguage=.*/]
-      next if tag.nil?
-      if tag =~ /.*#{language}.*/
-        break
-      else
-        should_add = false
-        break
-      end
-    end
+#    open(filename, 'r').each do |line|
+#      tag = line[/@@@testlanguage=.*/]
+#      next if tag.nil?
+#      if tag =~ /.*#{language}.*/
+#        break
+#      else
+#        should_add = false
+#        break
+#      end
+#    end
     matches << filename if should_add
   end
 
