@@ -868,6 +868,8 @@ class Requirement{
     for (Requirement req : reqSelected){
       reqText = req.getStatement();
 
+      reqText = req.getIdentifier() + ": " + reqText;
+
       String [] reqTextList = reqText.split("\n");
 
       for (String line : reqTextList){
