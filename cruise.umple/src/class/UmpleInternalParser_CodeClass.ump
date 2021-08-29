@@ -148,11 +148,9 @@ class UmpleInternalParser
       shouldConsumeComment = false;
     }
     else if (t.is("requirement")){
-      System.out.println("found req");
       analyzeRequirement(t);
     }
     else if (t.is("reqImplementation")){
-      System.out.println("foundImpl");
       analyzeImplementReq(t);
       shouldConsumeRequirement = isReqAddedToLast(t);
     }
@@ -199,7 +197,6 @@ class UmpleInternalParser
 
   private void analyzeRequirement(Token t)
   {
-    System.out.println("analyzing Req: "+t.getSubToken("reqIdentifier").getValue());
     Requirement req;
     if (model.getAllRequirements().get(t.getSubToken("reqIdentifier").getValue()) != null){
       System.out.println("ERROR: requirement with that identifier already exists");
@@ -217,7 +214,6 @@ class UmpleInternalParser
   }
 
   private void analyzeImplementReq(Token t){
-    System.out.println("analyzing impl");
     int counter=0;
 
     if (t.hasSubTokens()){
@@ -232,12 +228,9 @@ class UmpleInternalParser
     if (counter != 0){
       System.out.println("ERROR: Cannot find specified requirement identifier");
     }
-
-    System.out.println(" ======= done with imple req");
   }
 
   private void analyzeImplementReq(Token t, UmpleClass aClass){
-    System.out.println("analyzing impl2");
     int counter=0;
 
     if (t.hasSubTokens()){
@@ -250,11 +243,9 @@ class UmpleInternalParser
     }
 
     if (counter != 0){
-      System.out.println("sending to attribute");
       analyzeAttribute(t, aClass);
     }
 
-    System.out.println(" ======= done with imple req");
   }
   
   /*
@@ -307,7 +298,6 @@ class UmpleInternalParser
    */
   private boolean isReqAddedToLast(Token t)
   {
-    System.out.println("adding req to last");
     if (t.getPosition() == null) {return false;}
     if (lastattr != null)
     {
@@ -338,7 +328,7 @@ class UmpleInternalParser
       {
         lastassoc = null;
       }
-    }                
+    }
     return false;
   }
 
@@ -377,27 +367,29 @@ class UmpleInternalParser
     {
       analyzeComment(token, false);
       shouldConsumeComment = addToLastAttributeOrAssociation(token);
+      shouldConsumeRequirement = isReqAddedToLast(token);
     }
     else if (token.is("annotationComment"))
     {
       analyzeComment(token, true);
       shouldConsumeComment = addToLastAttributeOrAssociation(token);
+      shouldConsumeRequirement = isReqAddedToLast(token);
     }
     else if (token.is("multilineComment"))
     {
       analyzeMultilineComment(token);
       shouldConsumeComment = false;
+      shouldConsumeRequirement = false;
     }
     else if (token.is("requirement"))
     {
-      System.out.println("found req2");
       analyzeRequirement(token);
     }
     else if (token.is("reqImplementation"))
     {
-      System.out.println("foundImpl2");
       analyzeImplementReq(token, aClass);
       shouldConsumeRequirement = isReqAddedToLast(token);
+      shouldConsumeComment = false;
     }
     else if (token.is("innerClass"))
     {
@@ -525,14 +517,13 @@ class UmpleInternalParser
     {
       analyzeException(token,aClass);
     }
-    
-    
 
     // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above
     // classes, methods, attributes, etc (whichever comes next) rather than old comments propogating everywhere.
     if (shouldConsumeComment)
     {
       lastComments.clear();
+
     }
     if (shouldConsumeRequirement)
     {
@@ -1354,8 +1345,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
 
     for (Requirement r : lastRequirements){
-      aClass.addRequirementAt(r, regularCommentCountEnd);
-      regularCommentCountEnd++;
+      aClass.addRequirement(r);
     }
     
     // Add special position comment at the end if @outputumplesource had been 
