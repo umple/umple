@@ -34,7 +34,7 @@ public class RequirementTest
   public void format_null()
   {
     String output = Requirement.format("Slashes",allTestRequirements);
-    Assert.assertEquals("null",output);
+    Assert.assertEquals(null,output);
   }
   
   @Test
