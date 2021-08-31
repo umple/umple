@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
+import java.util.*;
 
 /**
  * This is class Y

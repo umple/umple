@@ -1,0 +1,18 @@
+req R01 {
+  This is a comment we would like to add
+  multiple times in different locations.
+
+  The identifier used for this requirement is
+  R01.
+}
+
+req R02 {
+  This is a second requirement statement.
+}
+
+implementsReq R01;
+class Example {
+  implementsReq R02;
+  var1;
+  var2; implementsReq R01, R02;
+}

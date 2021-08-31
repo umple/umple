@@ -1,5 +1,5 @@
 User Manual Basics%Simple examples and basic information;
-Comments%Ways to comment Umple code;
+Comments and Requirements%Ways to comment Umple code;
 Directives%Top level statements in Umple code;
 Classes and Interfaces%Ways of dividing a system into classes and arranging a generalization hierarchy to enable inheritance (See also Traits);
 Attributes%Simple data attached to each instance of a class;
