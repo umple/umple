@@ -860,8 +860,7 @@ class Requirement{
     language = aReq.getLanguage();
   }
 
-
-  public static String format(String type, List<Requirement> reqSelected){
+  public static List<Comment> convertToComment(List<Requirement> reqSelected){
     List<Comment> reqTextOnly = new ArrayList<Comment>();
     String reqText = new String();
 
@@ -877,12 +876,14 @@ class Requirement{
         Comment reqComment = new Comment(line);      
         reqTextOnly.add(reqComment);
       }
-      
     }
-    
-    if (reqTextOnly.size() > 0)
-      return Comment.format(type, reqTextOnly);
-    else return "";
+      
+    return reqTextOnly;
+  }
+
+  public static String format(String type, List<Requirement> reqSelected){
+    List<Comment> listOfReq = convertToComment(reqSelected);
+    return Comment.format(type, listOfReq);
   }
 
   public String translateToHTML(String content, String lang){

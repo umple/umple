@@ -25,8 +25,9 @@ class UmpleToJava {
   
     appendln(realSb, "");
     
-    //if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Association Javadoc", av.getComments())); }
-    //if (av.numberOfRequirements() > 0) { append(realSb, "\n  {0}\n", Requirement.format("Association Javadoc", av.getRequirements())); }
+    //if (av.numberOfComments() > 0 && av.numberOfRequirements() > 0) { List<Comment> toComment = new ArrayList<Comment>(av.getComments()); toComment.addAll(Requirement.convertToComment(av.getRequirements())); append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", toComment)); }
+    //else if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Association Javadoc", av.getComments())); }
+    //else if (av.numberOfRequirements() > 0) { append(realSb, "\n  {0}\n", Requirement.format("Association Javadoc", av.getRequirements())); }
     
     if (av.isOne())
     {

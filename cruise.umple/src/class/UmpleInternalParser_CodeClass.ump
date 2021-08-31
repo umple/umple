@@ -73,6 +73,7 @@ class UmpleInternalParser
     if (t.isStatic("//") || t.isStatic("/*") || t.isStatic("*/"))
     {
       shouldConsumeComment = false;
+      shouldConsumeRequirement = false;
     }
     else if (t.is("useStatement") )
     {
@@ -136,16 +137,19 @@ class UmpleInternalParser
     {
       analyzeComment(t, false);
       shouldConsumeComment = addToLastAttributeOrAssociation(t);
+      shouldConsumeRequirement = shouldConsumeComment;
     }
     else if (t.is("annotationComment"))
     {
       analyzeComment(t, true);
       shouldConsumeComment = addToLastAttributeOrAssociation(t);
+      shouldConsumeRequirement = shouldConsumeComment;
     }     
     else if (t.is("multilineComment"))
     {
       analyzeMultilineComment(t);
       shouldConsumeComment = false;
+      shouldConsumeRequirement = false;
     }
     else if (t.is("requirement")){
       analyzeRequirement(t);
@@ -153,6 +157,7 @@ class UmpleInternalParser
     else if (t.is("reqImplementation")){
       analyzeImplementReq(t);
       shouldConsumeRequirement = isReqAddedToLast(t);
+      shouldConsumeComment = shouldConsumeRequirement;
     }
     else if (t.is("classDefinition"))
     {
@@ -356,6 +361,7 @@ class UmpleInternalParser
     if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
     {
       shouldConsumeComment = false;
+      shouldConsumeRequirement = false;
     }
     else if (token.is("strictnessDisableAuto"))
     {
@@ -367,13 +373,13 @@ class UmpleInternalParser
     {
       analyzeComment(token, false);
       shouldConsumeComment = addToLastAttributeOrAssociation(token);
-      shouldConsumeRequirement = isReqAddedToLast(token);
+      shouldConsumeRequirement = shouldConsumeComment;
     }
     else if (token.is("annotationComment"))
     {
       analyzeComment(token, true);
       shouldConsumeComment = addToLastAttributeOrAssociation(token);
-      shouldConsumeRequirement = isReqAddedToLast(token);
+      shouldConsumeRequirement = shouldConsumeComment;
     }
     else if (token.is("multilineComment"))
     {
@@ -389,7 +395,7 @@ class UmpleInternalParser
     {
       analyzeImplementReq(token, aClass);
       shouldConsumeRequirement = isReqAddedToLast(token);
-      shouldConsumeComment = false;
+      shouldConsumeComment = shouldConsumeRequirement;
     }
     else if (token.is("innerClass"))
     {
