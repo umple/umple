@@ -13,6 +13,6 @@ public class RequirementFullCheckWithCommentsTest extends TemplateTest {
     @Test
 	public void Y()
 	{
-		assertUmpleTemplateFor("RequirementFullCheckWithComments.ump", languagePath + "/RequirementFullCheckWithComments_Y."+ languagePath +".txt", "X");
+		assertUmpleTemplateFor("RequirementFullCheckWithComments.ump", languagePath + "/RequirementFullCheckWithComments_Y."+ languagePath +".txt", "Y");
 	}
 }
