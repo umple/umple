@@ -94,6 +94,7 @@ class JavaClassGenerator {
 
 <<=gen.translate("packageDefinition",uClass)>><<@ UmpleToJava.import_packages >>
 
+
 <<# if (uClass.numberOfComments() > 0 && uClass.numberOfRequirements() > 0) { List<Comment> toComment = new ArrayList<Comment>(uClass.getComments()); toComment.addAll(Requirement.convertToComment(uClass.getRequirements())); append(realSb, "\n{0}", Comment.format("Javadoc", toComment)); } #>>
 <<# if (uClass.numberOfComments() > 0 && uClass.numberOfRequirements() == 0) { append(realSb, "\n{0}", Comment.format("Javadoc",uClass.getComments())); } #>>
 <<# if (uClass.numberOfComments() == 0 && uClass.numberOfRequirements() > 0) { append(realSb, "\n{0}", Requirement.format("Javadoc",uClass.getRequirements())); } #>>
