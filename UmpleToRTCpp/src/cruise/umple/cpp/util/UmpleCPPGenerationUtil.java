@@ -27,6 +27,7 @@ import cruise.umple.compiler.Association;
 import cruise.umple.compiler.AssociationEnd;
 import cruise.umple.compiler.AssociationVariable;
 import cruise.umple.compiler.Comment;
+import cruise.umple.compiler.Requirement;
 import cruise.umple.compiler.UmpleClass;
 import cruise.umple.compiler.UmpleElement;
 import cruise.umple.compiler.UmpleModel;
@@ -116,6 +117,14 @@ public class UmpleCPPGenerationUtil {
 			commentStrings.add(comment.getText());
 		}
 		return commentStrings;
+	}
+
+	public static List<String> getRequirementStrings(List<Requirement> reqs){
+		List<String> reqStrings= new ArrayList<String>(reqs.size());
+		for(Requirement r: reqs){
+			reqStrings.add(r.getStatement());
+		}
+		return reqStrings;
 	}
 	
 }

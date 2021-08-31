@@ -6,7 +6,7 @@
 // [*http://umple.org/license*]
 
 traitDefinition : trait [name] [[traitParameters]]? { [[traitContent]]* }
-traitContent- : [[mixsetDefinition]] | [[testCase]] | [[requiredModelElements]] | [[comment]] | [[traitDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[abstractMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; | [[exception]] | [[extraCode]]
+traitContent- : [[mixsetDefinition]] | [[testCase]] | [[requiredModelElements]] | [[comment]] | [[reqImplementation]] | [[traitDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[abstractMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; | [[exception]] | [[extraCode]]
 traitParameters : < [[traitFullParameters]] ( , [[traitFullParameters]] )* >
 traitFullParameters : [~parameter] ([[traitParametersInterface]])? ( = [~defaultType] )?
 traitParametersInterface- : isA [~tInterface]( & [~tInterface])*

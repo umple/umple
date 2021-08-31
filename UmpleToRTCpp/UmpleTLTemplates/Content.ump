@@ -130,7 +130,7 @@ class GenClass{
 <<=headerIncludes>><<=libraryIncludes
 >><<=incompleteDeclarations>><<=namespaceOpening()
 >><<=enumerations>><<=selfIncompleteDeclarations
->><<=emitComments()>>class <<=getName()>><<#if(!classDeclarations.isEmpty())#>> : <<=classDeclarations>>{
+>><<=emitComments()>><<=emitRequirements()>>class <<=getName()>><<#if(!classDeclarations.isEmpty())#>> : <<=classDeclarations>>{
 <<=StringUtil.indent(visibilityBasedContents, 1)>>
 };
 <<=predefinitions>><<=namespaceClosing()>>

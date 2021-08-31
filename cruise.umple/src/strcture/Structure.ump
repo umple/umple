@@ -143,6 +143,7 @@ class ActiveMethod
 	0..1 -> * Monitor watchList;
   	1 -> 0..* MethodParameter;
   	1 -> * Comment;
+  	1 -> * Requirement;
   	ActiveDirectionHandler methodBody;
   	ActiveMethod inverseMethodBody;
 }
@@ -162,9 +163,10 @@ class ActiveDirectionHandler
 class ActiveDirectionHandlerBody {
   depend cruise.umple.parser.Position;
   
-	bodyType { CODE{} TRIGGER{} COMMENT{} }
+	bodyType { CODE{} TRIGGER{} COMMENT{} REQUIREMENT{}}
 	lazy CodeBlock codeblock;
 	lazy Comment comment;
+	lazy Requirement requirement;
 	lazy Trigger trigger;
 	
 	lazy Position position;

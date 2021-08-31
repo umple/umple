@@ -57,6 +57,8 @@ class UmpleModelVisitor {
 	
 	// Comment
 	void visit(Comment comment) {}
+	// Requirement
+	void visit(Requirement req) {}
 	
 	// Umple Classifiers
 	void visit(UmpleElement umpleElement) {}
@@ -173,6 +175,9 @@ class UmpleModelWalker {
 					for(Comment cmt : mth.getComments()) {
 						visitor.visit(cmt);
 					}
+					for(Requirement r : mth.getRequirements()) {
+						visitor.visit(r);
+					}
 				}
 				for(Constant cnst : classifier.getConstants()) {
 					visitor.visit(cnst);
@@ -201,6 +206,9 @@ class UmpleModelWalker {
 					
 					for(Comment cmt : clazz.getComments()) {
 						visitor.visit(cmt);
+					}
+					for(Requirement r : clazz.getRequirements()) {
+						visitor.visit(r);
 					}
 					
 					if(clazz.getParentInterface().size() > 0 || clazz.getExtendsClass() != null) {
@@ -260,6 +268,9 @@ class UmpleModelWalker {
 						for(Comment cmt : aVar.getComments()) {
 							visitor.visit(cmt);
 						}
+						for(Requirement r : aVar.getRequirements()) {
+							visitor.visit(r);
+						}
 					}
 					
 					for(Attribute attribute: clazz.getAttributes()) {
@@ -270,7 +281,10 @@ class UmpleModelWalker {
 						}
 						for(Comment cmt : attribute.getComments()) {
 							visitor.visit(cmt);
-						}					
+						}	
+						for(Requirement r : attribute.getRequirements()) {
+							visitor.visit(r);
+						}				
 					}
 					for(StateMachine sm: clazz.getAllStateMachines()){
 						visitor.visit(sm);

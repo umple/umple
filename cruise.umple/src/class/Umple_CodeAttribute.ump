@@ -16,6 +16,11 @@ class Attribute
   {
     comments.add(new Comment(comment));
   }
+	requirements = new ArrayList<Requirement>(); // Create a deep copy of requirements.
+  for (Requirement req : another.getRequirements())
+  {
+    requirements.add(new Requirement(req));
+  }
 	position = another.getPosition();
 	endPosition = another.getEndPosition();
 	umpleClass = another.getUmpleClass();
