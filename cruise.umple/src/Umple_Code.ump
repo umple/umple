@@ -886,13 +886,11 @@ class Requirement{
     return Comment.format(type, listOfReq);
   }
 
-  public String translateToHTML(String content, String lang){
-    if (language.equals("md")){
-      content = "<div markdown=\"1\">" + content + "</div>";
-    }
-    else {
-      content = "<div>"+content+"</div>";
-    }
+  public static String translateToHTML(String content, String lang){
+    // Translate from md to html
+    //if (language.equals("md")){
+    //  content = content;
+    //}
 
     return content;
   }
