@@ -18,7 +18,7 @@ Action.selectClass = function(className) {
       <p>Zoom in (ctrl-+ or cmd-+) to see detail. Click on a class to go to the API reference for that class. Hover over a class to see its comment.</p>
 
       <svg  style="overflow-x: scroll; overflow-y: scroll;" width=6500 height=4500>
-           <!--#include virtual="DiagramCoreMastercd.svg" -->
+           <!--#include virtual="DiagramStateMastercd.svg" -->
       </svg>
 
 

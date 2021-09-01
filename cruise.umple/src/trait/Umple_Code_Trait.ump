@@ -366,6 +366,7 @@ class Attribute {
     codeblock = null;
     isLazy = false;
     comments = new ArrayList<Comment>();
+    requirements = new ArrayList<Requirement>();
     boolean didAddUmpleTrait = setUmpleTrait(aUmpleTrait);
     if (!didAddUmpleTrait)
     {

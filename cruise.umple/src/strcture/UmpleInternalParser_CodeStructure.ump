@@ -68,6 +68,24 @@ class CompositeStructureTokenAnalyzer {
 
 	  return cmtList;
   }
+
+  public List<Requirement> analyzeImplementMethodReq(Token t){
+    System.out.println("analyzing impl3");
+	List<Requirement> reqList = new ArrayList<Requirement>();
+    int counter=0;
+
+    if (t.hasSubTokens()){
+      for (Token sub : t.getSubTokens()){
+        if (!sub.getValue().equals("STATIC") && parser.getModel().getAllRequirements().containsKey(sub.getValue())){
+            reqList.add(parser.getModel().getAllRequirements().get(sub.getValue()));
+        }
+        else counter++;
+      }
+    }
+
+    System.out.println(" ======= done with imple req3");
+	return reqList;
+  }
   
   public void analyzePortClassDefinition(Token token){
     if(token!=null) {
@@ -392,6 +410,18 @@ class CompositeStructureTokenAnalyzer {
 					  aMethod.getMethodBody().addActiveDirectionHandlerBody(abh);
 				  }
 			  }
+		  }
+		  else if (methodToken.is("reqImplementation")){
+			  List<Requirement> reqList = analyzeImplementMethodReq(methodToken);
+			  if(reqList!= null && reqList.size() > 0) {
+				  for(Requirement req : reqList) {
+					  ActiveDirectionHandlerBody abh = new ActiveDirectionHandlerBody();
+					  abh.setBodyType(BodyType.REQUIREMENT);
+					  abh.setRequirement(req);
+					  aMethod.getMethodBody().addActiveDirectionHandlerBody(abh);
+				  }
+			  }
+
 		  }
 		  else if (methodToken.is("code"))
 		  {

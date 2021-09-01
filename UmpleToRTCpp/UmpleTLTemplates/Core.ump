@@ -557,6 +557,7 @@ class GenClass{
 	0..1 -- * GenMethod methods sorted {priority};
 	0..1 -- * GenField fields sorted {priority};
 	0..1 -- * GenComment comments sorted {priority};
+	0..1 -- * GenRequirement requirements sorted {priority};
 	0..1 genDependClass -- * GenDepend dependencies sorted {priority};
 	0..1 genClassInterface -- * GenInterface interfaces sorted {priority};
 	
@@ -721,6 +722,13 @@ class GenClass{
 		}
 		return results;
 	}
+	String emitRequirements(){
+		String results= getRequirements().stream().map(GenRequirement::getBody).collect(Collectors.joining(NL));
+		if(!results.isEmpty()){
+			results+= NL;
+		}
+		return results;
+	}
 	
 	0..1 -- * MemberInitializer memberInitializers sorted {priority};
 	0..1 genHeaderDependClass -- * GenHeaderDepend headerDependencies sorted {priority};
@@ -836,6 +844,11 @@ introCommentT <<!//------------------------
 //------------------------!>>
 emit introComment(String comment)(introCommentT);
 
+introRequirementT <<!//------------------------
+//<<=requirement.toUpperCase()>>
+//------------------------!>>
+emit introRequirement(String requirement)(introRequirementT);
+
 
 	after constructor{
 		GenGroup globalGroup = new GenGroup(GenClass.GLOBAL_GROUP);
@@ -924,6 +937,7 @@ class GenMethod{
 	//0..1 -- * GenStereotype stereotypes;
 	* -- * GenMethodParameter parameters;	//A parameter can be owned by multiple methods in order to allow for one update in all places
 	0..1 -- * GenComment comment sorted {priority};
+	0..1 -- * GenRequirement requirement sorted {priority};
 	* -- * GenField relatedFields;
 	
 	0..1 -- * GenBody body sorted {priority};
@@ -994,6 +1008,15 @@ class GenMethod{
 	
 	String commentString(){
 		String string= this.getComment().stream().map(GenComment::getBody).collect(Collectors.joining(NL));
+		if(string.isEmpty()){
+			return string;
+		}
+		
+		return string+ NL;
+	}
+
+	String requirementString(){
+		String string= this.getRequirement().stream().map(GenRequirement::getBody).collect(Collectors.joining(NL));
 		if(string.isEmpty()){
 			return string;
 		}
@@ -1097,13 +1120,13 @@ class GenMethod{
 	indentT <<!<<=content>>!>>
 	emit indent(String content)(indentT);
 	
-declarationT <<!<<=commentString()>><<#if(isInline){#>>inline <<#
+declarationT <<!<<=commentString()>><<=requirementString()>><<#if(isInline){#>>inline <<#
 	}#>><<#if(isFriend){#>>friend <<#}#>><<#if(isStatic)#>>static <<#if(_isVirtual){#>>virtual <<#}#>><<#if(returnType!= null && !returnType.isEmpty()){#>><<=getNormalizedReturnType()>> <<#}#>><<=name>>(<<=parameters()>>)<<#if(getIsConstant()){#>> const<<#
 	}if(_isPure){#>> = 0;<<#
 	}else if(isHeader){#>>{
 <<=_indent(2, new StringBuilder(), bodyString(new ArrayList<String>()))>>	
 }<<#}else{#>>;<<#}#>>!>>
-implementationT <<!<<=commentString()>><<#if(isInline){#>>inline <<#}#>><<#if(returnType!= null && !returnType.isEmpty()){#>><<=getNormalizedReturnType()>> <<#}#>><<#
+implementationT <<!<<=commentString()>><<=requirementString()>><<#if(isInline){#>>inline <<#}#>><<#if(returnType!= null && !returnType.isEmpty()){#>><<=getNormalizedReturnType()>> <<#}#>><<#
 	if(!Visibilities.GLOBAL.equals(getVisibility()) && owner!= null && !owner.isEmpty()){#>><<=owner>>::<<#}#>><<=name>>(<<=parameters()>>)<<#if(getIsConstant()){#>> const<<#}#>><<=getInitializerCall()>>{
 <<=_indent(2, new StringBuilder(), bodyString(new ArrayList<String>()))>>	
 }!>>
@@ -1314,6 +1337,10 @@ class GenComment{
 	isA AbstractGenBody;
 }
 
+class GenRequirement{
+	isA AbstractGenBody;
+}
+
 class UniqueGenBody{
 	isA GenBody;
 	id;
@@ -1422,11 +1449,12 @@ class GenStruct{
 	Integer priority= 0;
 	0..1 -- * GenField fields;
 	0..1 -- * GenComment comments sorted {priority};
+	0..1 -- * GenRequirement requirements sorted {priority};
 	
 	indentT <<!<<=content>>!>>
 	emit indent(String content)(indentT);
 	
-declarationT <<!<<#if(hasComments()){for(GenComment comment: getComments()){#>><<=comment.getBody()>><<=NL>><<#}}#>>struct <<=name>>{
+declarationT <<!<<#if(hasComments()){for(GenComment comment: getComments()){#>><<=comment.getBody()>><<=NL>><<#}}#>><<#if(hasRequirements()){for(GenRequirement requirement: getRequirements()){#>><<=requirement.getBody()>><<=NL>><<#}}#>>struct <<=name>>{
 <<#for(GenField field: getFields()){#>>
 <<=_indent(2, new StringBuilder(), field.declaration())>>
 <<#}#>>
