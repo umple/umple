@@ -81,8 +81,8 @@ class GenConnectEntry{
 			expectedRelatedToField = relatedFromField;
 		}
 
-		return expectedFromSegment + "->" + expectedRelatedFromField.getName() + "+= " + (isReference ? "&" : "")
-				+ expectedToSegment + "->" + expectedRelatedToField.getName() + ";";
+		return expectedFromSegment + "->" + expectedRelatedToField.getName() + "+= " + (isReference ? "&" : "")
+				+ expectedToSegment + "->" + expectedRelatedFromField.getName() + ";";
 	}
 	
 	GenClass fieldOwner(String field){

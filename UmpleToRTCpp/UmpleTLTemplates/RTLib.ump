@@ -127,95 +127,91 @@ threadImplementationT <<!<<#boolean isRemote= hasRemoteClass();#>>
 #define VOID_ARGS(N) REPEAT_INC(N, VOID_ARG, COMMA)
 
 #define VAR_ARGS_MEMBERS(N, name, delim) REPEAT_INC(N, MEMBER_ARG, delim, name)
+#define VAR_ARGS_MEMBERS_WITHOUT_TYPE(N, name, delim) REPEAT_INC(N, NAMED_ARG, delim, name)
 #define INIT_VAR_ARGS_MEMBERS(N, name) REPEAT_INC(N, INIT_MEMBER_ARG, COMMA, name)
 #define INIT_VALUE_ARGS(N, name) REPEAT_INC(N, INIT_VALUE_ARG, SEMICOLON, name)
 
 #define SERIALIZE_ARGS(N, name) REPEAT_INC(N, SER_ARG, SEMICOLON, name)
 #define DESERIALIZE_ARGS(N, name) REPEAT_INC(N, DES_ARG, SEMICOLON, name)
-<<=NL>>
-#define GENERATE_METHOD_CALLBACK_SIGNATURES_ARGUMENTS(N, value)			\
-template<typename Caller, typename ReturnType, VAR_TYPES(N)>   			\
-	struct MethodCallbackSignature<Caller,ReturnType, VAR_ARGS(N)> {	\
-	typedef ReturnType(Caller::*Method)(VAR_ARGS(N)); };				\
-template<typename Caller, VAR_TYPES(N)>									\
-	struct MethodCallbackSignature<Caller, void, VAR_ARGS(N)> { 		\
-	typedef void (Caller::*Method)(VAR_ARGS(N)); };
 
-#define GENERATE_METHOD_CALLBACK_INVOKE_ARGUMENTS(N, value)																			\
-template <class BASE, class Caller, class FutureResultType, class ReturnType, VAR_TYPES(N)>										\
-class MethodCallbackInvoke<BASE,Caller,FutureResultType,ReturnType, VAR_ARGS(N)>												\
-		: public BaseMethodCallbackInvoke<BASE, Caller, FutureResultType, ReturnType> {public:									\
-	typedef typename MethodCallbackSignature<Caller, ReturnType, VAR_ARGS(N)>::Method Callback;									\
-	MethodCallbackInvoke(Caller* caller, Callback method, VAR_ARGS_MEMBERS(N, arg, COMMA), const FutureResultType& result) :	\
-		BaseMethodCallbackInvoke(caller, result), _method(method), INIT_VAR_ARGS_MEMBERS(N, arg) {}								\
-protected: VAR_ARGS_MEMBERS(N, _arg, SEMICOLON); Callback _method; };
+template <class BASE, class Caller, class FutureType, class ReturnType>
+class BaseMethodCallbackInvoke : public BASE {
+public:
+    BaseMethodCallbackInvoke(Caller* caller, const FutureType& result) :
+            _result(result), _context(caller) {}
+    ~BaseMethodCallbackInvoke() { this->release(); }
+    void run(){
+        try {
+            invokeMethod();
+        }
+        catch (std::exception& e) {
+            _result.resolveError(e.what());
+        }
+        catch (...) {
+            _result.resolveError("Invoke Error");
+        }
+        _result.notify();
+    }
+    void resolveError(const std::string& msg) {
+        _result.resolveError(msg);
+    }
+protected:
+    virtual void invokeMethod() = 0;
+    Caller* _context;
+    FutureType _result;
+};
 
-#define GENERATE_DELEGATE_INVOKE_ARGUMENTS(N, value)																	\
-template <class BASE, class Caller, class FutureType, class ReturnType, VAR_TYPES(N)>								\
-class DelegateInvoke<BASE, Caller, FutureType, ReturnType, VAR_ARGS(N)> :										\
-public MethodCallbackInvoke<BASE, Caller, FutureType, ReturnType, VAR_ARGS(N)> {public:								\
-	DelegateInvoke(Caller* caller, Callback method, VAR_ARGS_MEMBERS(N, arg, COMMA), const FutureType& result)	\
-		: MethodCallbackInvoke(caller, method, VAR_NAMED_ARGS(N, arg), result) {}									\
-	void invokeMethod() { _result.resolveData(new ReturnType((_context->*_method)(VAR_NAMED_ARGS(N, _arg))));}};	\
-template <class BASE, class Caller, class FutureType, VAR_TYPES(N)>													\
-class DelegateInvoke<BASE, Caller, FutureType, void, VAR_ARGS(N)> :												\
-public MethodCallbackInvoke<BASE, Caller, FutureType, void, VAR_ARGS(N)>{public:									\
-	DelegateInvoke(Caller* caller, Callback method, VAR_ARGS_MEMBERS(N, arg, COMMA), const FutureType& result)	\
-		: MethodCallbackInvoke(caller, method, VAR_NAMED_ARGS(N, arg), result) {}									\
-	void invokeMethod() { (_context->*_method)(VAR_NAMED_ARGS(N, _arg));}};
+//#define GENERATE_METHOD_CALLBACK_SIGNATURES_ARGUMENTS(N, value)      \
+//template<typename Caller, typename ReturnType, VAR_TYPES(N)>         \
+//  struct MethodCallbackSignature<Caller, ReturnType, VAR_ARGS(N)> {  \
+//  typedef ReturnType(Caller::*Method)(VAR_ARGS(N)); };               \
+//                                                                     \
+//template<typename Caller, VAR_TYPES(N)>                  \
+//  struct MethodCallbackSignature<Caller, void, VAR_ARGS(N)> {     \
+//  typedef void (Caller::*Method)(VAR_ARGS(N)); };
 
-#define GENERATE_DELEGATE_ARGUMENTS(N, value)																							\
-template <class Caller, class ReturnType, VAR_TYPES(N)> class Delegate<Caller, ReturnType, VAR_ARGS(N)> :						\
-	public DelegateInvoke < DelegateBase, Caller, FutureResult<ReturnType>, ReturnType, VAR_ARGS(N) > {							\
-	public:	Delegate(Caller* caller, Callback method, VAR_ARGS_MEMBERS(N, arg, COMMA), const FutureResult<ReturnType>& result)	\
-		: DelegateInvoke(caller, method, VAR_NAMED_ARGS(N, arg), result) {} };											\
-template <class Caller, VAR_TYPES(N)> class Delegate<Caller, void, VAR_TYPES(N)> :												\
-	public DelegateInvoke < DelegateBase, Caller, FutureResult<void>, void, VAR_ARGS(N) >{										\
-	public:	Delegate(Caller* caller, Callback method, VAR_ARGS_MEMBERS(N, arg, COMMA), const FutureResult<void>& result)			\
-			: DelegateInvoke(caller, method, VAR_NAMED_ARGS(N, arg), result) {}};
+template<class Caller, class ReturnType, class ... Ts>
+struct MethodCallbackSignature {
+    typedef ReturnType(Caller::*Method)(Ts...);
+};
 
-#define GENERATE_MULTICAST_ARGUMENTS(N, value)																														\
-template<class ReturnType, VAR_TYPES(N)>																													\
-class IDelegatePublisher<ReturnType, VAR_ARGS(N)> {public:																									\
-	virtual FutureResult<ReturnType> publish(VAR_ARGS_MEMBERS(N, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) = 0;						\
-};																																							\
-template <class ReturnType, VAR_TYPES(N)>																													\
-class MulticastDelegate<ReturnType, VAR_ARGS(N)> : public IDelegatePublisher<ReturnType, VAR_ARGS(N)>{private:												\
-	typedef std::vector< IDelegatePublisher<ReturnType, VAR_ARGS(N)>* > SubscribersList;																	\
-	SubscribersList subscribers;																															\
-public:																																						\
-	MulticastDelegate() {}                                                                  \
-	MulticastDelegate& operator += (IDelegatePublisher<ReturnType, VAR_ARGS(N)>* method) {                                  \
-	  subscribers.push_back(method);                                                            \
-	  return *this;}                                                                    \
-		void notify(VAR_ARGS_MEMBERS(N, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) {				\
-			typename SubscribersList::iterator it = subscribers.begin();                                            \
-			for (; it != subscribers.end(); it++) { (*it)->publish(VAR_NAMED_ARGS(N, arg), priority, delay, timeout); }	}		\
-	FutureResult<ReturnType> operator () (VAR_ARGS_MEMBERS(N, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) {              \
-	  FutureResult<ReturnType> result = publish(VAR_NAMED_ARGS(N, arg), priority, delay, timeout);                            \
-	  notify(VAR_NAMED_ARGS(N, arg), priority, delay, timeout);                      \
-	  return result;}};
+template <class BASE, class Caller, class FutureResultType, class ReturnType, class ... Ts>
+class MethodCallbackInvoke: public BaseMethodCallbackInvoke<BASE, Caller, FutureResultType, ReturnType>{
+public:
+    typedef typename MethodCallbackSignature<Caller, ReturnType, Ts...>::Method Callback;
+    MethodCallbackInvoke(Caller* caller, Callback method, Ts ... args, const FutureResultType& result) :
+    BaseMethodCallbackInvoke<BASE, Caller, FutureResultType, ReturnType>{caller, result}, _method(method), args_{args...} {}
+    protected:
+    std::tuple<Ts...> args_;
+    Callback _method;
+};
 
-#define GENERATE_ACTIVE_ARGUMENTS(N, value)																																							\
-template <class Caller, class ReturnType, VAR_TYPES(N)> class Active<Caller, ReturnType, VAR_ARGS(N)> : public ActiveConstraintUID, public MulticastDelegate<ReturnType, VAR_ARGS(N)> { public:  \
-	  typedef Delegate<Caller, ReturnType, VAR_ARGS(N)> DelegateType;                                                                \
-	  typedef typename MethodCallbackSignature<Caller, ReturnType, VAR_ARGS(N)>::Method Callback;                                                  \
-	  Active(Caller* caller, Scheduler<Caller>* sch, Callback method) :_context(caller), _sch(sch), _method(method) {}                                      \
-	  FutureResult<ReturnType> operator () (VAR_ARGS_MEMBERS(N, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) {              \
-		FutureResult<ReturnType> result = publish(VAR_NAMED_ARGS(N, arg), priority, delay, timeout); return result;};                            \
-	  FutureResult<ReturnType> publish(VAR_ARGS_MEMBERS(N, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) {                                    \
-	    FutureResult<ReturnType> result(new FutureObject<ReturnType>());                                                            \
-	    DelegateBase::Ptr pDelegate(new DelegateType(_context, _method, VAR_NAMED_ARGS(N, arg), result));                                            \
-	    _sch->schedule(pDelegate,priority,delay, timeout, _guardId, _conditionId);                                                        \
-		this->notify(VAR_NAMED_ARGS(N, arg), priority, delay, timeout);								\
-	    return result;} private: Caller* _context; Scheduler<Caller>* _sch; Callback _method; };
-<<=NL>>
-#define GENERATE_METHOD_CALLBACK_SIGNATURES(N)	REPEAT_DEC(N, GENERATE_METHOD_CALLBACK_SIGNATURES_ARGUMENTS, EMPTY)
-#define GENERATE_METHOD_CALLBACK_INVOKE(N)	REPEAT_DEC(N, GENERATE_METHOD_CALLBACK_INVOKE_ARGUMENTS, EMPTY)
-#define GENERATE_DELEGATE_INVOKE(N)	REPEAT_DEC(N, GENERATE_DELEGATE_INVOKE_ARGUMENTS, EMPTY)
-#define GENERATE_DELEGATE(N)	REPEAT_DEC(N, GENERATE_DELEGATE_ARGUMENTS, EMPTY)
-#define GENERATE_MULTICAST_METHOD(N)	REPEAT_DEC(N, GENERATE_MULTICAST_ARGUMENTS, EMPTY)
-#define GENERATE_ACTIVE_METHOD(N)	REPEAT_DEC(N, GENERATE_ACTIVE_ARGUMENTS, EMPTY)
+
+
+template <class BASE, class Caller, class FutureType, class ReturnType, class ... Ts>
+class DelegateInvoke :
+        public MethodCallbackInvoke<BASE, Caller, FutureType, ReturnType, Ts...> {
+public:
+    DelegateInvoke(Caller* caller, typename DelegateInvoke::Callback method,  Ts ... args, const FutureType& result)
+            : MethodCallbackInvoke<BASE, Caller, FutureType, ReturnType, Ts...>(caller, method, args..., result) {}
+    void invokeMethod() {
+        if constexpr (std::is_void_v<ReturnType>)
+            std::apply([&](auto ... args){(this->_context->*(this->_method))(args...);},this->args_);
+        else
+            this->_result.resolveData(new ReturnType(
+                    std::apply([&](auto ... args){(this->_context->*(this->_method))(args...);},this->args_)
+            ));
+    }
+};
+
+
+//#define GENERATE_METHOD_CALLBACK_SIGNATURES(N)  REPEAT_DEC(N, GENERATE_METHOD_CALLBACK_SIGNATURES_ARGUMENTS, EMPTY)
+//#define GENERATE_METHOD_CALLBACK_INVOKE(N)  REPEAT_DEC(N, GENERATE_METHOD_CALLBACK_INVOKE_ARGUMENTS, EMPTY)
+//#define GENERATE_DELEGATE_INVOKE(N)  REPEAT_DEC(N, GENERATE_DELEGATE_INVOKE_ARGUMENTS, EMPTY)
+//#define GENERATE_DELEGATE(N)  REPEAT_DEC(N, GENERATE_DELEGATE_ARGUMENTS, EMPTY)
+//#define GENERATE_MULTICAST_METHOD(N)  REPEAT_DEC(N, GENERATE_MULTICAST_ARGUMENTS, EMPTY)
+//#define GENERATE_ACTIVE_METHOD(N)  REPEAT_DEC(N, GENERATE_ACTIVE_ARGUMENTS, EMPTY)
+
 
 #ifdef WINDOWS_OS
 #define isnan(x) _isnan(x)
@@ -607,7 +603,7 @@ class Thread: public Runnable {
 			THREAD_TERMINATE_FUNCTION(0);
 		}
 
-		static void sleep(long ms) throw(ThreadException) {
+		static void sleep(long ms) noexcept(false) {
 			THREAD_SLEEP_FUNCTION(ms);
 		}
 
@@ -672,30 +668,30 @@ class Thread: public Runnable {
 			this->name = name;
 		}
 
-		virtual void start(Runnable *target) throw(ThreadException) {
-			runnableObject = target;
-			start();
-		}
-		
-		virtual void start() throw(ThreadException) {
-			synchronized(lock) {
-				reset();
-				CREATE_THREAD(_threadHdl,Thread::threadFunctionPointer, &thrParams);
-				_isRunning = true;
-			}
-		}
-
-		void join() throw(ThreadException) {
-			THREAD_JOIN_FUNCTION(_threadHdl);
-		}
-		
-		void wait() throw(ThreadException) {
-			lock.wait();
-		}
-
-		void wakeUp() throw(ThreadException) {
-			lock.wakeUp();
-		}
+		virtual void start(Runnable *target) noexcept(false) {
+	      runnableObject = target;
+	      start();
+	    }
+	    
+	    virtual void start() noexcept(false) {
+	      synchronized(lock) {
+	        reset();
+	        CREATE_THREAD(_threadHdl,Thread::threadFunctionPointer, &thrParams);
+	        _isRunning = true;
+	      }
+	    }
+	
+	    void join() noexcept(false) {
+	      THREAD_JOIN_FUNCTION(_threadHdl);
+	    }
+	    
+	    void wait() noexcept(false) {
+	      lock.wait();
+	    }
+	
+	    void wakeUp() noexcept(false) {
+	      lock.wakeUp();
+	    }
 
 	private:
 		mutable MutexLock lock;
@@ -733,7 +729,7 @@ public:
 		if (_ptr)
 			return _ptr;
 		else
-			throw std::exception("Null Pointer Exception");
+			throw std::runtime_error("Null Pointer Exception");
 	}
 	PT* reference() { if (_ptr) _ptr->reference(); return _ptr; }
 	PT* value() { return _ptr; }
@@ -880,7 +876,7 @@ public:
 	}
 	void resolveError(const std::string& msg) {
 		delete _error;
-		_error = new std::exception(msg.c_str());
+		_error = new std::runtime_error(msg.c_str());
 	}
 	bool hasError() const {
 		return _error != 0;
@@ -941,367 +937,286 @@ protected:
 template <typename BASE, typename T = typename BASE::DataTypePtr>
 struct ErrorProxy : public BASE {
 public:
-	ErrorProxy(T data) : BASE(data) {}
-	ErrorProxy(const ErrorProxy& proxy) : BASE(proxy) {}
-	std::string getErrorMessage() const {
-		return _data->getErrorMessage();
-	}
-	std::exception* getError() const {
-		return _data->getError();
-	}
-	void resolveError(const std::string& msg) {
-		_data->resolveError(msg);
-	}
-	bool hasError() const {
-		return _data->hasError();
-	}
+  ErrorProxy(T data) : BASE(data) {}
+  ErrorProxy(const ErrorProxy& proxy) : BASE(proxy) {}
+  std::string getErrorMessage() const {
+    return this -> _data->getErrorMessage();
+  }
+  std::exception* getError() const {
+    return this -> _data->getError();
+  }
+  void resolveError(const std::string& msg) {
+      this -> _data->resolveError(msg);
+  }
+  bool hasError() const {
+    return this -> _data->hasError();
+  }
 };
 
 template <typename BASE, class Type, typename T = typename BASE::DataTypePtr>
 struct DataProxy : public BASE {
 public:
-	DataProxy(T data) : BASE(data) {}
-	DataProxy(const DataProxy& proxy) : BASE(proxy) {}
-	Type& data() const {
-		return _data->data();
-	}
-	void resolveData(Type* data) {
-		_data->resolveData(data);
-	}
-};
-
-template<typename Caller, typename ReturnType = void, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> struct MethodCallbackSignature;
-template<typename Caller, typename ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)> struct MethodCallbackSignature { typedef ReturnType(Caller::*Method)(VAR_ARGS(ARGUMENT_UPPER_LIMIT)); };
-template<typename Caller, typename ReturnType> struct MethodCallbackSignature<Caller, ReturnType, VOID_ARGS(ARGUMENT_UPPER_LIMIT)> { typedef ReturnType(Caller::*Method)(); };
-template<typename Caller, VAR_TYPES(ARGUMENT_UPPER_LIMIT)> struct MethodCallbackSignature<Caller, void, VAR_ARGS(ARGUMENT_UPPER_LIMIT)> { typedef void (Caller::*Method)(VAR_ARGS(ARGUMENT_UPPER_LIMIT)); };
-template<typename Caller> struct MethodCallbackSignature<Caller, void, VOID_ARGS(ARGUMENT_UPPER_LIMIT)> { typedef void (Caller::*Method)(); };
-
-GENERATE_METHOD_CALLBACK_SIGNATURES(ARGUMENT_UPPER_LIMIT)
-<<=NL>>
-template <class BASE, class Caller, class FutureType, class ReturnType>
-class BaseMethodCallbackInvoke : public BASE {
-public:
-	BaseMethodCallbackInvoke(Caller* caller, const FutureType& result) :
-		_result(result), _context(caller) {}
-	~BaseMethodCallbackInvoke() { this->release(); }
-	void run(){
-		try {
-			invokeMethod();
-		}
-		catch (std::exception& e) {
-			_result.resolveError(e.what());
-		}
-		catch (...) {
-			_result.resolveError("Invoke Error");
-		}
-		_result.notify();
-	}
-	void resolveError(const std::string& msg) {
-		_result.resolveError(msg);
-	}
-protected:
-	virtual void invokeMethod() = 0;
-	Caller* _context;
-	FutureType _result;
-};
-
-template<class BASE, class Caller, class FutureType, class ReturnType, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> class MethodCallbackInvoke;
-
-template <class BASE, class Caller, class FutureType, class ReturnType = void, VAR_TYPES(ARGUMENT_UPPER_LIMIT)>
-class MethodCallbackInvoke : public BaseMethodCallbackInvoke<BASE, Caller, FutureType, ReturnType> {
-public:
-	typedef typename MethodCallbackSignature<Caller, ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)>::Method Callback;
-	MethodCallbackInvoke(Caller* caller, Callback method, VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), const FutureType& result) :
-		BaseMethodCallbackInvoke(caller, result), _method(method), INIT_VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg) {}
-protected:
-	VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, _arg, SEMICOLON);
-	Callback		_method;
-};
-
-GENERATE_METHOD_CALLBACK_INVOKE(ARGUMENT_UPPER_LIMIT)
-
-template <class BASE, class Caller, class FutureType, class ReturnType>
-class MethodCallbackInvoke<BASE, Caller, FutureType, ReturnType> : public BaseMethodCallbackInvoke<BASE, Caller, FutureType, ReturnType>{
-public:
-	typedef typename MethodCallbackSignature<Caller, ReturnType>::Method Callback;
-	MethodCallbackInvoke(Caller* caller, Callback method, const FutureType& result) :
-		BaseMethodCallbackInvoke(caller, result), _method(method) {}
-protected:
-	Callback		_method;
-};
-
-template<class BASE, class Caller, class FutureType, class ReturnType = void, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> class DelegateInvoke;
-
-template <class BASE, class Caller, class FutureType, class ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)>
-class DelegateInvoke : public MethodCallbackInvoke<BASE, Caller, FutureType, ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)> {
-public:
-	DelegateInvoke(Caller* caller, Callback method, VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), const FutureType& result)
-		: MethodCallbackInvoke(caller, method, VAR_NAMED_ARGS(N, arg), result) {}
-	void invokeMethod() {
-		_result.resolveData(new ReturnType((_context->*_method)(VAR_ARGS(ARGUMENT_UPPER_LIMIT))));
-	}
-};
-
-template <class BASE, class Caller, class FutureType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)>
-class DelegateInvoke<BASE, Caller, FutureType, void, VAR_ARGS(ARGUMENT_UPPER_LIMIT)> : public MethodCallbackInvoke<BASE, Caller, FutureType, void, VAR_ARGS(ARGUMENT_UPPER_LIMIT)>{
-public:
-	DelegateInvoke(Caller* caller, Callback method, VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), const FutureType& result)
-		: MethodCallbackInvoke(caller, method, VAR_NAMED_ARGS(N, arg), result) {}
-	void invokeMethod() {
-		(_context->*_method)(VAR_ARGS(ARGUMENT_UPPER_LIMIT));
-	}
-};
-
-GENERATE_DELEGATE_INVOKE(ARGUMENT_UPPER_LIMIT)
-
-template <class BASE, class Caller, class FutureType, class ReturnType>
-class DelegateInvoke<BASE, Caller, FutureType, ReturnType> : public MethodCallbackInvoke<BASE, Caller, FutureType, ReturnType, void>{
-public:
-	DelegateInvoke(Caller* caller, Callback method, const FutureType& result) : MethodCallbackInvoke(caller, method, result) {}
-	void invokeMethod() {
-		_result.resolveData(new ReturnType((_context->*_method)()));
-	}
-};
-
-template <class BASE, class Caller, class FutureType>
-class DelegateInvoke<BASE, Caller, FutureType> : public MethodCallbackInvoke<BASE, Caller, FutureType, void, void>{
-public:
-	DelegateInvoke(Caller* caller, Callback method, const FutureType& result) : MethodCallbackInvoke(caller, method, result) {}
-	void invokeMethod() {
-		(_context->*_method)();
-	}
+  DataProxy(T data) : BASE(data) {}
+  DataProxy(const DataProxy& proxy) : BASE(proxy) {}
+  Type& data() const {
+    return this -> _data->data();
+  }
+  void resolveData(Type* data) {
+      this -> _data->resolveData(data);
+  }
 };
 
 class DelegateBase : public Runnable, public RefPointer<DelegateBase> {
 public:
-	virtual void resolveError(const std::string& msg) = 0;
+  virtual void resolveError(const std::string& msg) = 0;
 };
 
 template <class FutureType> class FutureObject : public SharedObject, public DataResolver<FutureType>, public ErrorResolver {};
 template <> class FutureObject<void> : public SharedObject, public ErrorResolver{};
 template <class FutureType> class FutureResult : public DataProxy< ErrorProxy< SharedObjectProxy<FutureObject<FutureType>>>, FutureType>{
-public: FutureResult(SharedObjectProxy::DataTypePtr ptr) :DataProxy(ptr){}
+public: FutureResult(typename SharedObjectProxy<FutureObject<FutureType>>::DataTypePtr ptr) :DataProxy< ErrorProxy< SharedObjectProxy<FutureObject<FutureType>>>, FutureType>(ptr){}
 };
 template <> class FutureResult<void> : public ErrorProxy< SharedObjectProxy<FutureObject<void>>>{
-public:	FutureResult(SharedObjectProxy::DataTypePtr ptr) :ErrorProxy(ptr){}
+public:  FutureResult(SharedObjectProxy::DataTypePtr ptr) :ErrorProxy(ptr){}
 };
 
-template<class Caller, class ReturnType = void, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> class Delegate;
-template <class Caller, class ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)> class Delegate : public DelegateInvoke < DelegateBase, Caller, FutureResult<ReturnType>, ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT) > {
-public:	Delegate(Caller* caller, Callback method, VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), const FutureResult<ReturnType>& result) : DelegateInvoke(caller, method, VAR_NAMED_ARGS(N, arg), result) {}
-};
-template <class Caller, VAR_TYPES(ARGUMENT_UPPER_LIMIT)> class Delegate<Caller, void, VAR_TYPES(ARGUMENT_UPPER_LIMIT)> : public DelegateInvoke < DelegateBase, Caller, FutureResult<void>, void, VAR_ARGS(ARGUMENT_UPPER_LIMIT) >{
-public:	Delegate(Caller* caller, Callback method, VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), const FutureResult<void>& result) : DelegateInvoke(caller, method, VAR_NAMED_ARGS(N, arg), result) {}
-};
-template <class Caller, class ReturnType> class Delegate<Caller, ReturnType, void> : public DelegateInvoke< DelegateBase, Caller, FutureResult<ReturnType>, ReturnType, void >{
-public:	Delegate(Caller* caller, Callback method, const FutureResult<ReturnType>& result) : DelegateInvoke(caller, method, result) {}
-};
-template <class Caller> class Delegate<Caller, void, void> : public DelegateInvoke< DelegateBase, Caller, FutureResult<void>, void, void >{
-public:	Delegate(Caller* caller, Callback method, const FutureResult<void>& result) : DelegateInvoke(caller, method, result) {}
+template<class ReturnType, class ... Ts>
+struct IDelegatePublisher {
+    virtual FutureResult<ReturnType> publish(Ts ... , int priority = 0, long delay = 0, long timeout = 0) = 0;
 };
 
-GENERATE_DELEGATE(ARGUMENT_UPPER_LIMIT)
+template <class ReturnType, class ... Ts>
+class MulticastDelegate : public IDelegatePublisher<ReturnType, Ts...>{
+  typedef std::vector< IDelegatePublisher<ReturnType, Ts...>* > SubscribersList;
+  SubscribersList subscribers;
+public:
+    MulticastDelegate() {}
+    MulticastDelegate& operator += (IDelegatePublisher<ReturnType, Ts...>* method) {
+        subscribers.push_back(method);
+        return *this;
+    }
+
+    void notify(Ts ... args, int priority = 0, long delay = 0, long timeout = 0) {
+        typename SubscribersList::iterator it = subscribers.begin();
+        for (; it != subscribers.end(); it++) { (*it)->publish(args..., priority, delay, timeout); }
+    }
+
+    FutureResult<ReturnType> operator () (Ts ... args, int priority = 0, long delay = 0, long timeout = 0) {
+        FutureResult<ReturnType> result = publish(args..., priority, delay, timeout);
+        notify(args..., priority, delay, timeout);
+        return result;
+    }
+};
+
+
+template <class Caller, class ReturnType, class ... Ts>
+struct Delegate :public DelegateInvoke < DelegateBase, Caller, FutureResult<ReturnType>, ReturnType, Ts...> {
+    Delegate(Caller* caller, typename Delegate::Callback method, Ts ... args, const FutureResult<ReturnType>& result)
+    : DelegateInvoke< DelegateBase, Caller, FutureResult<ReturnType>, ReturnType, Ts...>(caller, method, args..., result) {}
+};
+
 
 template <class Caller>
 struct Request : public RefPointer<Request<Caller>> {
 public:
-	typedef std::deque<Ptr> RequestsQueue;
-	typedef typename MethodCallbackSignature<Caller, bool, int>::Method RequestGuard;
-	Request(int priority = 0, long delay = 0, long timeout = 0, Caller* caller = 0, RequestGuard guard = 0, int guardId = 0, int conditionId = 0) : _priority(priority), _delay(delay), _timeout(timeout), _context(caller), _guard(guard), _guardId(guardId), _conditionId(conditionId) {}
-	int getPriority() const { return _priority; }
-	int getDelay() const { return _delay; }
-	int getTimeout() const { return _timeout; }
-	bool filtered() {
-		if (_guard){
-			return !((_context->*_guard)(_guardId));
-		}
-		return false;
-	}
-	bool deferred() {
-		if (_guard){
-			return !((_context->*_guard)(_conditionId));
-		}
-		return false;
-	}
+  typedef std::deque<typename Request::Ptr> RequestsQueue;
+  typedef typename MethodCallbackSignature<Caller, bool, int>::Method RequestGuard;
+  Request(int priority = 0, long delay = 0, long timeout = 0, Caller* caller = 0, RequestGuard guard = 0, int guardId = 0, int conditionId = 0) : _priority(priority), _delay(delay), _timeout(timeout), _context(caller), _guard(guard), _guardId(guardId), _conditionId(conditionId) {}
+  int getPriority() const { return _priority; }
+  int getDelay() const { return _delay; }
+  int getTimeout() const { return _timeout; }
+  bool filtered() {
+    if (_guard){
+      return !((_context->*_guard)(_guardId));
+    }
+    return false;
+  }
+  bool deferred() {
+    if (_guard){
+      return !((_context->*_guard)(_conditionId));
+    }
+    return false;
+  }
 private:
-	Caller*		_context;
-	RequestGuard _guard;
-	int _guardId;
-	int _conditionId;
-	int _priority;
-	long _delay;
-	long _timeout;
+  Caller*    _context;
+  RequestGuard _guard;
+  int _guardId;
+  int _conditionId;
+  int _priority;
+  long _delay;
+  long _timeout;
 };
 
 template <class Caller>
 struct MethodAccessRequest {
-	typename Request<Caller>::Ptr request;
-	Signal ready;
-	typedef std::deque<MethodAccessRequest<Caller>*> MethodAccessRequestQueue;
+  typename Request<Caller>::Ptr request;
+  Signal ready;
+  typedef std::deque<MethodAccessRequest<Caller>*> MethodAccessRequestQueue;
 };
 
 template <class Caller> struct MethodInvokeRequest : public Request<Caller> {
 public:
-	MethodInvokeRequest(DelegateBase::Ptr requestRunnable, int priority = 0, long delay = 0, long timeout = 0, Caller* caller = 0, RequestGuard guard = 0, int guardId = 0, int conditionId = 0)
-		: _requestRunnable(requestRunnable), Request(priority, delay, timeout, caller, guard, guardId, conditionId){}
-	DelegateBase::Ptr getRequest() const { return _requestRunnable; }
+  MethodInvokeRequest(DelegateBase::Ptr requestRunnable, int priority = 0, long delay = 0, long timeout = 0, Caller* caller = 0, typename MethodInvokeRequest::RequestGuard guard = 0, int guardId = 0, int conditionId = 0)
+    : _requestRunnable(requestRunnable), Request<Caller>(priority, delay, timeout, caller, guard, guardId, conditionId){}
+  DelegateBase::Ptr getRequest() const { return _requestRunnable; }
 private:
-	DelegateBase::Ptr _requestRunnable;
+  DelegateBase::Ptr _requestRunnable;
 };
-<<=NL>>
+
+
 template <class Caller>
 class ScheduleQueue : protected Runnable {
 public:
-	ScheduleQueue() : deferringRunning(false)  {}
-	~ScheduleQueue() { try { clear(); } catch (...) {} }
-	void request(typename Request<Caller>::Ptr request, bool urgent = false) {
-		synchronized(_lock) {
-			deferringRunning = false;
-			if (request->deferred()) {
-				_deferred.push_back(request);
-			}
-			else {
-				addRequest(request, urgent);
-			}
-		}
-	}
+  ScheduleQueue() : deferringRunning(false)  {}
+  ~ScheduleQueue() { try { clear(); } catch (...) {} }
+  void request(typename Request<Caller>::Ptr request, bool urgent = false) {
+    synchronized(_lock) {
+      deferringRunning = false;
+      if (request->deferred()) {
+        _deferred.push_back(request);
+      }
+      else {
+        addRequest(request, urgent);
+      }
+    }
+  }
 
-	typename Request<Caller>* processPendingRequests(){
-		//::Sleep(1);    // DEBUG
-		Request<Caller>::Ptr request = NULL;
-	    MethodAccessRequest<Caller>* mq = NULL;
-	    processDeferred();
-	    synchronized(_lock){
-		  // ::Sleep(1);  // DEBUG
-	      request = getNextRequest();
-		  
-	    }
-	    if (request.value() != NULL) {
-	      return request.reference();
-	    }
-	    else if (_pending.empty() && !_deferred.empty() && !deferringRunning) {
-	      _thread.start(this);
-	      deferringRunning = true;
-	    }
-	    mq = new MethodAccessRequest<Caller>();
-	    _pending.push_back(mq);
-	    mq->ready.wait();
-	    request = mq->request;
-	    delete mq;
-	    return request.reference();
-	}
-	void done() {
-		synchronized(_lock) {
-			for (MethodAccessRequest<Caller>::MethodAccessRequestQueue::iterator it = _pending.begin(); it != _pending.end(); ++it) {
-				(*it)->ready.notify();
-			}
-			_pending.clear();
-		}
-	}
-	bool empty() const {
-		synchronized(_lock) {
-			return _requests.empty() && _deferred.empty();
-		}
-	}
-	int size() const {
-		synchronized(_lock) {
-			return static_cast<int>(_requests.size() + _deferred.size());
-		}
-	}
-	void clear() {
-		synchronized(_lock) {
-			_requests.clear();
-			_deferred.clear();
-		}
-		_thread.join();
-	}
+  Request<Caller>* processPendingRequests(){
+    //::Sleep(1);    // DEBUG
+      typename Request<Caller>::Ptr request = NULL;
+      MethodAccessRequest<Caller>* mq = NULL;
+      processDeferred();
+      synchronized(_lock){
+      // ::Sleep(1);  // DEBUG
+        request = getNextRequest();
+      
+      }
+      if (request.value() != NULL) {
+        return request.reference();
+      }
+      else if (_pending.empty() && !_deferred.empty() && !deferringRunning) {
+        _thread.start(this);
+        deferringRunning = true;
+      }
+      mq = new MethodAccessRequest<Caller>();
+      _pending.push_back(mq);
+      mq->ready.wait();
+      request = mq->request;
+      delete mq;
+      return request.reference();
+  }
+  void done() {
+    synchronized(_lock) {
+      for (typename MethodAccessRequest<Caller>::MethodAccessRequestQueue::iterator it = _pending.begin(); it != _pending.end(); ++it) {
+        (*it)->ready.notify();
+      }
+      _pending.clear();
+    }
+  }
+  bool empty() const {
+    synchronized(_lock) {
+      return _requests.empty() && _deferred.empty();
+    }
+  }
+  int size() const {
+    synchronized(_lock) {
+      return static_cast<int>(_requests.size() + _deferred.size());
+    }
+  }
+  void clear() {
+    synchronized(_lock) {
+      _requests.clear();
+      _deferred.clear();
+    }
+    _thread.join();
+  }
 protected:
-	void run() {
-		while (deferringRunning) { try { processDeferred(); } catch (...) {} }
-	}
+  void run() {
+    while (deferringRunning) { try { processDeferred(); } catch (...) {} }
+  }
 
 private:
-	void addRequest(typename Request<Caller>::Ptr request, bool urgent = false) {
-		if (_pending.empty()) {
-			if (urgent) {
-				_requests.push_front(request);
-			}
-			else if (request.value() &&  request->getPriority() <= 0) {
-				_requests.push_back(request);
-			}
-			else {
-				typename Request<Caller>::RequestsQueue::iterator it;
-				for (it = _requests.begin(); it != _requests.end(); ++it) {
-					if (request->getPriority() > (*it)->getPriority())
-						break;
-				}
-				_requests.insert(it, request);
-			}
-		}
-		else {
-			MethodAccessRequest<Caller>* mq = _pending.front();
-			_pending.pop_front();
-			mq->request = request;
-			mq->ready.notify();
-		}
-	}
-	void processDeferred() {
-		if (!_deferred.empty()) {
-			Request<Caller>::Ptr deferred = _deferred.front();
-		  	if (deferred.value() && !deferred->deferred()) {
-				_deferred.pop_front();
-				addRequest(deferred);
-			}
-		}
-		else {
-			deferringRunning = false;
-			return;
-		}
-	}
-	typename Request<Caller>::Ptr getNextRequest() {
-		Request<Caller>::Ptr request;
-		if (!_requests.empty()) {
-			request = _requests.front();
-			_requests.pop_front();
-		}
-		return request;
-	}
+  void addRequest(typename Request<Caller>::Ptr request, bool urgent = false) {
+    if (_pending.empty()) {
+      if (urgent) {
+        _requests.push_front(request);
+      }
+      else if (request.value() &&  request->getPriority() <= 0) {
+        _requests.push_back(request);
+      }
+      else {
+        typename Request<Caller>::RequestsQueue::iterator it;
+        for (it = _requests.begin(); it != _requests.end(); ++it) {
+          if (request->getPriority() > (*it)->getPriority())
+            break;
+        }
+        _requests.insert(it, request);
+      }
+    }
+    else {
+      MethodAccessRequest<Caller>* mq = _pending.front();
+      _pending.pop_front();
+      mq->request = request;
+      mq->ready.notify();
+    }
+  }
+  void processDeferred() {
+    if (!_deferred.empty()) {
+      typename Request<Caller>::Ptr deferred = _deferred.front();
+        if (deferred.value() && !deferred->deferred()) {
+        _deferred.pop_front();
+        addRequest(deferred);
+      }
+    }
+    else {
+      deferringRunning = false;
+      return;
+    }
+  }
+  typename Request<Caller>::Ptr getNextRequest() {
+      typename Request<Caller>::Ptr request;
+    if (!_requests.empty()) {
+      request = _requests.front();
+      _requests.pop_front();
+    }
+    return request;
+  }
 private:
-	mutable MutexLock	_lock;
-	Thread				_thread;
-	bool				deferringRunning;
-	typename Request<Caller>::RequestsQueue	_requests;
-	typename Request<Caller>::RequestsQueue	_deferred;
-	typename MethodAccessRequest<Caller>::MethodAccessRequestQueue	_pending;
+  mutable MutexLock  _lock;
+  Thread        _thread;
+  bool        deferringRunning;
+  typename Request<Caller>::RequestsQueue  _requests;
+  typename Request<Caller>::RequestsQueue  _deferred;
+  typename MethodAccessRequest<Caller>::MethodAccessRequestQueue  _pending;
 };
 
 class TimedEvent : protected Runnable {
 public:
-	TimedEvent() { }
-	virtual ~TimedEvent() { }
-	void timeout(DelegateBase::Ptr	method, long ms) {
-		_method = method;
-		_thread.start(this);
-		try{
-			_timeoutEvent.wait(ms, true);
-		}
-		catch (...) {
-			_thread.stop();
-			_method->resolveError("Timeout Exception");
-			_method = NULL;
-			_timeoutEvent.notify();
-		}
-	}
+  TimedEvent() { }
+  virtual ~TimedEvent() { }
+  void timeout(DelegateBase::Ptr  method, long ms) {
+    _method = method;
+    _thread.start(this);
+    try{
+      _timeoutEvent.wait(ms, true);
+    }
+    catch (...) {
+      _thread.stop();
+      _method->resolveError("Timeout Exception");
+      _method = NULL;
+      _timeoutEvent.notify();
+    }
+  }
 protected:
-	void run() {
-		_method->reference();
-		_method->run();
-		_timeoutEvent.notify();
-	}
+  void run() {
+    _method->reference();
+    _method->run();
+    _timeoutEvent.notify();
+  }
 private:
-	Thread				_thread;
-	DelegateBase::Ptr	_method;
-	Signal				_timeoutEvent;
+  Thread        _thread;
+  DelegateBase::Ptr  _method;
+  Signal        _timeoutEvent;
 };
 
 template <class Caller>
@@ -1370,154 +1285,83 @@ protected:
 	UID _conditionId;
 };
 
-template<class ReturnType, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> class IDelegatePublisher;
-template<class ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)>
-class IDelegatePublisher {
-public:
-	virtual FutureResult<ReturnType> publish(VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) = 0;
+template <class Caller, class ReturnType, class ... Ts>
+struct Active : public ActiveConstraintUID, public MulticastDelegate<ReturnType, Ts...> {
+    typedef Delegate<Caller, ReturnType, Ts...> DelegateType;
+    typedef typename MethodCallbackSignature<Caller, ReturnType, Ts...>::Method Callback;
+    Active(Caller* caller, Scheduler<Caller>* sch, Callback method) :_context(caller), _sch(sch), _method(method) {}
+
+    FutureResult<ReturnType> operator () (Ts ... args, int priority = 0, long delay = 0, long timeout = 0) {
+        FutureResult<ReturnType> result = publish(args..., priority, delay, timeout);
+        return result;
+    };
+
+    FutureResult<ReturnType> publish(Ts ... args, int priority = 0, long delay = 0, long timeout = 0) {
+        FutureResult<ReturnType> result(new FutureObject<ReturnType>());
+        DelegateBase::Ptr pDelegate(new DelegateType(_context, _method, args..., result));
+        _sch->schedule(pDelegate,priority,delay, timeout, _guardId, _conditionId);
+        this->notify(args..., priority, delay, timeout);
+        return result;
+    }
+private:
+    Caller* _context;
+    Scheduler<Caller>* _sch;
+    Callback _method;
 };
+
 template<class ReturnType>
 class IDelegatePublisher<ReturnType> {
 public:
-	virtual FutureResult<ReturnType> publish(int priority = 0, long delay = 0, long timeout = 0) = 0;
+  virtual FutureResult<ReturnType> publish(int priority = 0, long delay = 0, long timeout = 0) = 0;
 };
 
-template<class ReturnType, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> class MulticastDelegate;
-template <class ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)>
-class MulticastDelegate : public IDelegatePublisher<ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)> {
-private:
-	typedef std::vector< IDelegatePublisher<ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)> * > SubscribersList;
-	SubscribersList subscribers;
-public:
-	MulticastDelegate() {}
-	MulticastDelegate& operator += (const IDelegatePublisher<ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)>* method) {
-	  subscribers.push_back(method);
-	  return *this;
-	}
-	void notify(VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) {
-		typename SubscribersList::iterator it = subscribers.begin();
-		for (; it != subscribers.end(); it++) { it->publish(VAR_NAMED_ARGS(ARGUMENT_UPPER_LIMIT, arg), priority, delay, timeout); }
-	}
-	FutureResult<ReturnType> operator () (VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) {
-	FutureResult<ReturnType> result = publish(VAR_NAMED_ARGS(ARGUMENT_UPPER_LIMIT, arg), priority, delay, timeout);
-	  notify(VAR_NAMED_ARGS(ARGUMENT_UPPER_LIMIT, arg), priority, delay, timeout);
-	  return result;
-	}
-};
-template <class ReturnType>
-class MulticastDelegate<ReturnType> : public IDelegatePublisher<ReturnType>{
-private:
-	typedef std::vector< IDelegatePublisher<ReturnType> * > SubscribersList;
-	SubscribersList subscribers;
-public:
-	MulticastDelegate() {}
-	MulticastDelegate& operator += (const IDelegatePublisher<ReturnType>* method) {
-	subscribers.push_back(method);
-	  return *this;
-	}
-	void notify(int priority = 0, long delay = 0, long timeout = 0) {
-		typename SubscribersList::iterator it = subscribers.begin();
-		for (; it != subscribers.end(); it++) { (*it)->publish(priority, delay, timeout); }
-	}
-	FutureResult<ReturnType> operator () (int priority = 0, long delay = 0, long timeout = 0) {
-	  FutureResult<ReturnType> result = publish(priority, delay, timeout);
-		notify(priority, delay, timeout);
-		return result;
-	}
-};
-<<=NL>>
-GENERATE_MULTICAST_METHOD(ARGUMENT_UPPER_LIMIT)
 
-template<class Caller, class ReturnType, VAR_TYPES_DEFAULT(ARGUMENT_UPPER_LIMIT, void)> class Active;
-template <class Caller, class ReturnType, VAR_TYPES(ARGUMENT_UPPER_LIMIT)>
-class Active : public ActiveConstraintUID, public MulticastDelegate<ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)>{
-public:
-  typedef Delegate<Caller, ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)> DelegateType;
-  typedef typename MethodCallbackSignature<Caller, ReturnType, VAR_ARGS(ARGUMENT_UPPER_LIMIT)>::Method Callback;
-  Active(Caller* caller, Scheduler<Caller>* sch, Callback method) :_context(caller), _sch(sch), _method(method) {}
-  FutureResult<ReturnType> operator () (VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) {
-	  FutureResult<ReturnType> result = publish(priority, delay, timeout);
-	  return result;
-  }
-  FutureResult<ReturnType> publish(VAR_ARGS_MEMBERS(ARGUMENT_UPPER_LIMIT, arg, COMMA), int priority = 0, long delay = 0, long timeout = 0) {
-    FutureResult<ReturnType> result(new FutureObject<ReturnType>());
-    DelegateBase::Ptr pDelegate(new DelegateType(_context, _method, VAR_NAMED_ARGS(ARGUMENT_UPPER_LIMIT, arg), result));
-    _sch->schedule(pDelegate, priority, delay, timeout, _guardId, _conditionId);
-	this->notify(VAR_NAMED_ARGS(ARGUMENT_UPPER_LIMIT, arg), priority, delay, timeout);
-    return result;
-  }
-private:
-  Caller* _context;
-  Scheduler<Caller>* _sch;
-  Callback   _method;
-};
-
-template <class Caller, class ReturnType>
-class Active <Caller, ReturnType, void> : public ActiveConstraintUID, public MulticastDelegate<ReturnType> {
-public:
-	typedef Delegate<Caller, ReturnType, void> DelegateType;
-	typedef typename MethodCallbackSignature<Caller, ReturnType>::Method Callback;
-	Active(Caller* caller, Scheduler<Caller>* sch, Callback method) :_context(caller), _sch(sch), _method(method) {}
-	FutureResult<ReturnType> publish(int priority = 0, long delay = 0, long timeout = 0) {
-		FutureResult<ReturnType>  result(new FutureObject<ReturnType>());
-		DelegateBase::Ptr pDelegate(new DelegateType(_context, _method, result));
-		_sch->schedule(pDelegate, priority, delay, timeout, _guardId, _conditionId);
-		this->notify(priority, delay, timeout);
-		return result;
-	}
-private:
-	Caller* _context;
-	Scheduler<Caller>* _sch;
-	Callback   _method;
-};
-GENERATE_ACTIVE_METHOD(ARGUMENT_UPPER_LIMIT)
-
-template <class Caller>
+template <class Caller, class ReturnType, class ... Ts>
 class AsyncMethod : protected Runnable, public ActiveConstraintUID {
 public:
-	typedef Delegate<Caller, void, void> DelegateType;
-	typedef Active<Caller, void> ActiveType;
-	typedef typename MethodCallbackSignature<Caller>::Method Callback;
-	AsyncMethod(Caller* caller, Callback method, long interval = 0, long delay = 0, long timeout = 0) :_context(caller), _delegate(new DelegateType(_context, method, new FutureObject<void>())), _delay(delay), _timeout(timeout), _interval(interval), _active(false){}
-	AsyncMethod(Caller* caller, Scheduler<Caller>* sch, Callback method, long interval = 0, long delay = 0, long timeout = 0) :_context(caller), _delegate(new DelegateType(_context, method, new FutureObject<void>())), _delay(delay), _timeout(timeout), _interval(interval), _sch(sch), _active(true) {}
-	virtual ~AsyncMethod() { try { stop();  _thread.join(); } catch (...) {} }
-	void start() {
-		_run = true;
-		_thread.start(this);
-	}
-	void stop() {
-		_run = false;
-	}
+  typedef Delegate<Caller, ReturnType, Ts...> DelegateType;
+  typedef Active<Caller, ReturnType, Ts...> ActiveType;
+  typedef typename MethodCallbackSignature<Caller, ReturnType, Ts...>::Method Callback;
+  AsyncMethod(Caller* caller, Callback method, Ts...args, long interval = 0, long delay = 0, long timeout = 0) :_context(caller), _delegate(new DelegateType(_context, method, args..., new FutureObject<ReturnType>())), _delay(delay), _timeout(timeout), _interval(interval), _active(false){}
+  AsyncMethod(Caller* caller, Scheduler<Caller>* sch, Callback method, Ts...args, long interval = 0, long delay = 0, long timeout = 0) :_context(caller), _delegate(new DelegateType(_context, method, args..., new FutureObject<ReturnType>())), _delay(delay), _timeout(timeout), _interval(interval), _sch(sch), _active(true) {}
+  virtual ~AsyncMethod() { try { stop();  _thread.join(); } catch (...) {} }
+  void start() {
+    _run = true;
+    _thread.start(this);
+  }
+  void stop() {
+    _run = false;
+  }
 protected:
-	void run() {
-		while (_run) {
-			if (!_active && _delay > 0) {
-				Thread::sleep(_delay);
-			}
-			if (_interval > 0) {
-				if (_active) {
-					_sch->schedule(_delegate, -1, _delay, _timeout, _guardId, _conditionId);
-				}
-				else {
-					_delegate->run();
-					if (_timeout > 0)
-						_timeoutEvent.wait(_timeout, true);
-				}
-				Thread::sleep(_interval);
-			}
-		}
-	}
+  void run() {
+    while (_run) {
+      if (!_active && _delay > 0) {
+        Thread::sleep(_delay);
+      }
+      if (_interval > 0) {
+        if (_active) {
+          _sch->schedule(_delegate, -1, _delay, _timeout, _guardId, _conditionId);
+        }
+        else {
+          _delegate->run();
+          if (_timeout > 0)
+            _timeoutEvent.wait(_timeout, true);
+        }
+        Thread::sleep(_interval);
+      }
+    }
+  }
 private:
-	bool				_run;
-	long				_interval;
-	long				_delay;
-	long				_timeout;
-	bool				_active;
-	Thread				_thread;
-	Caller*				_context;
-	DelegateBase::Ptr	_delegate;
-	Scheduler<Caller>*	_sch;
-	Signal				_timeoutEvent;
+  bool        _run;
+  long        _interval;
+  long        _delay;
+  long        _timeout;
+  bool        _active;
+  Thread        _thread;
+  Caller*        _context;
+  DelegateBase::Ptr  _delegate;
+  Scheduler<Caller>*  _sch;
+  Signal        _timeoutEvent;
 };
 
 <<#if(isRemote){#>>
