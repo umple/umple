@@ -77,10 +77,14 @@ use PapyrusGenerator, XmiGenerator, TextUmlGenerator, ScxmlGenerator, CodeGvClas
 use EventSequenceGenerator,  FeatureDiagramCo,  EntityRelationshipCon,  SimulateGenerator,  YumlGenerator;
 use XtextGenerator,  JsonGenerator,  JsonMixedGenerator,  StructureDiagramGenerator , GvStateDiagramGenerator;
 use StateTableGenerator, SuperGvGeneratorGenerator, HtmlGenerator, UmpleModelWalkerGenerator,  CodeAnalysisGenerator;
-use AlloyGenerator,  NuSMVGenerators, NuSMVGenerator,   NuSMVOptimizerGenerator,  SimpleMetricsGenerator, CodeGvClassDiagramGenerator;
+use AlloyGenerator,  NuSMVGenerators, NuSMVGenerator,   NuSMVOptimizerGenerator,  SimpleMetricsGenerator, PlainRequirementsDocGenerator, CodeGvClassDiagramGenerator;
+use UmpleAnnotaiveToCompositionGenerator;
 //End 
 
-// Below mixsets declarations. They contain inclusion of their files. 
+// Base case generator, allows compilation without generation for testing command line, since Java is default
+use generators/Generator_CodeNothing.ump;
+
+// Below mixsets declarations. They contain inclusion of their files.
 mixset CodeGenerator { use generators/Generator_Code.ump; }
 mixset UmpleGenerator { use generators/Generator_CodeUmple.ump; }
 mixset RubyGenerator { 
@@ -121,5 +125,7 @@ mixset SuperGvGeneratorGenerator{ use generators/Generator_SuperGvGenerator.ump;
 mixset HtmlGenerator{ use generators/Generator_Html.ump;}
 mixset UmpleModelWalkerGenerator{ use generators/Generator_UmpleModelWalker.ump;}
 mixset CodeAnalysisGenerator{ use generators/Generator_CodeAnalysis.ump;}
+mixset PlainRequirementsDocGenerator{ use generators/Generator_CodePlainRequirementsDoc.ump; }
+mixset UmpleAnnotaiveToCompositionGenerator { use generators/Generator_CodeAnnotaiveToComposition.ump; }
 //End
 

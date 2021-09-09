@@ -1,0 +1,17 @@
+Requirements
+Comments and Requirements
+noreferences
+@@tooltip Defined requirements can be implemented multiple times throughout the code through an implementsReq statement.
+
+@@description
+Requirements allow for the same comment to appear in different sections of the code without typing out the comment multiple times.
+
+<p>They consist of two components: the requirement definition, which contains the comment statement to be added, and the requirement implementation, which specifies where the requirement statement should be added.<p>
+
+<p>Multiple requirements can be called through an implementsReq statement.<p>
+
+<br />
+
+@@example
+@@source manualexamples/Requirements1.ump
+@@endexample

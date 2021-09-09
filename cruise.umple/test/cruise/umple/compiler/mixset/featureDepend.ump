@@ -1,0 +1,23 @@
+mixset Evictor { require[MemoryBudget]; }  
+
+mixset EvictorDaemon { require[MemoryBudget]; }
+
+mixset LookAHEADCache { require[MemoryBudget]; }
+   
+mixset CriticalEviction { require[INCompressor]; } 
+
+mixset CPBytes{ require[CPTime]; }
+
+mixset DeleteOp { require [Evictor]; } 
+
+mixset DeleteOp { require [INCompressor]; } 
+
+mixset DeleteOp { require [ MemoryBudget]; } 
+
+mixset MemoryBudget { require [Evictor]; } 
+
+mixset MemoryBudget { require [Latches]; } 
+ 
+mixset TruncateOp { require[DeleteOp]; } 
+
+mixset Verifier{  require[INCompressor];  } 

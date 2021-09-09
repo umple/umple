@@ -83,6 +83,7 @@ class Method
 		  this.methodBody = another.getMethodBody();
 	  }
 	  this. comments = another.getComments();
+	  this. requirements = another.getRequirements();
   }
 
   public boolean getExistsInLanguage(String lang)

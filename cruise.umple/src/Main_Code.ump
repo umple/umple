@@ -21,16 +21,19 @@ class UmpleConsoleConfig {
   depend java.io.*;
   depend java.nio.file.Files;
   depend java.nio.file.Paths;
+  depend java.util.regex.*;
 
   // See function initializeOptionParser() for the setup of the options
   defaulted boolean version = false; // option to print version only
   defaulted boolean help = false; // option to output help only
   defaulted boolean performance = false; // option to measure performance
   defaulted boolean beQuiet = false; // option q to be quiet
+  defaulted boolean warningIgnore = false; // option w to ignore a warning number in filename
   defaulted boolean useExec = false; // option x to use slower but more reliable exec java compiler
   defaulted boolean exitOnFirstFailure = false; // option e to exit on first failure with the -f option 
 
   internal Optional<String> generate   = Optional.empty(); // option g to specify what to generate
+  internal Optional<String> umpleDirect   = Optional.empty(); // option u to specify umple code directly
   defaulted boolean override           = false;
   defaulted boolean removePrevious     = false;  
   internal Optional<String> path       = Optional.empty(); // place to put output, otherwise in current directory
@@ -53,8 +56,10 @@ class UmpleConsoleConfig {
     this.useExec    = optSet.has("x");
     this.exitOnFirstFailure = optSet.has("e");
     this.beQuiet    = optSet.has("quiet");    
+    this.warningIgnore    = optSet.has("warningignore");    
     this.importFile = Optional.ofNullable((String)optSet.valueOf("import"));
     this.generate   = Optional.ofNullable((String)optSet.valueOf("generate"));
+    this.umpleDirect   = Optional.ofNullable((String)optSet.valueOf("umple"));    
     this.override   = optSet.has("override");
     this.removePrevious = optSet.has("removeprevious");
     this.path       = Optional.ofNullable((String)optSet.valueOf("path"));
@@ -79,7 +84,34 @@ class UmpleConsoleConfig {
         List<String> allLines = Files.readAllLines(Paths.get(fileOfFiles));
         allLinesOfFilesToTest = new ArrayList<String[]>();
         for(String aLine: allLines) {
-          allLinesOfFilesToTest.add(aLine.split(" "));
+          // Split the line based on spaces, but converting those in quotes into code
+          List<String> listOfFilesThisLine = new ArrayList<String>();
+          Matcher m = Pattern.compile("([^\']\\S*|\'.+?\')\\s*").matcher(aLine);
+          while (m.find()) {
+            String foundString = m.group(1);
+            // foundString is either a file or (if second and subsequent) a single quoted string
+
+            if(foundString.startsWith("\'")) {
+              // We have a program -- convert
+              foundString="__UMPLE"+
+                Base64.getEncoder()
+                .encodeToString(foundString.substring(1,foundString.length()-1).getBytes());
+            }
+            else if(foundString.startsWith("W") && warningIgnore) {
+              // Potential to ignore the warning
+              Matcher m2 = Pattern.compile("\\d+").matcher(foundString);
+              if(m2.find()) {
+                String supressWarningCode="strictness ignore "+m2.group()+";";
+                listOfFilesThisLine.add(foundString);
+                foundString="__UMPLE"+
+                  Base64.getEncoder().encodeToString(supressWarningCode.getBytes());
+              }
+            }
+            listOfFilesThisLine.add(foundString);
+          }
+          //allLinesOfFilesToTest.add(aLine.split(" "));
+          allLinesOfFilesToTest
+            .add(listOfFilesThisLine.toArray(new String[listOfFilesThisLine.size()]));
         }
       }
       catch  (IOException e) {
@@ -106,6 +138,10 @@ class UmpleConsoleConfig {
 
   public void setGenerate(String generate) {
     this.generate = Optional.of(generate);
+  }
+
+  public Optional<String> getUmpleDirect() {
+    return this.umpleDirect;
   }
 
   public Optional<String> getCompile() {
@@ -201,33 +237,42 @@ class UmpleConsoleMain
       return 0;
     }
 
+    String filename = "dummy__.ump"; // used when we may not want to read any file
     if (cfg.getUmpleFile() == null || "".equals(cfg.getUmpleFile()))
     {
-      if(!cfg.getTestUmpFilesFile().isPresent()) {
-        System.out.println("Please specify <umple_file> to process");
+      // We have no filename
+      if(!cfg.getTestUmpFilesFile().isPresent() && !cfg.getUmpleDirect().isPresent()) {
+        System.out.println("Please specify an umple_file to process or use the -f or -u options");
         printUsage();
         return 1;
       }
-      else {
+      else if (!cfg.getUmpleDirect().isPresent()) {
         // Will use -f option for files to process
         return 0;
       }
     }
-
-    final String filename = cfg.getUmpleFile();
-    if(!cfg.getBeQuiet()) {
-      System.out.println("Processing -> " + filename);
+    else {
+      filename = cfg.getUmpleFile();
+      if(!cfg.getBeQuiet()) {
+        System.out.println("Processing -> " + filename);
+      }
     }
 
     final UmpleFile umpleFile = new UmpleFile(filename);
     //this loop is used to add linked umple files and to show names of them.
     cfg.getLinkedFilesAsFile().stream()
-        .filter(File::exists)
+        .filter(f->f.getName().endsWith(".ump"))
         .map(File::getPath)
         .forEach(umpleFile::addLinkedFiles);
     //this loop is used to add mixset names as liked umple files.
     cfg.getLinkedMixsetAsString().stream()
         .forEach(umpleFile::addLinkedFiles);
+    
+    // This adds any special extra statement as a linked file (not really a file but ...)
+    if (cfg.getUmpleDirect().isPresent()) {
+      umpleFile.addLinkedFiles("__UMPLE"+
+        Base64.getEncoder().encodeToString(cfg.getUmpleDirect().orElse(null).getBytes()));
+    }
        
     final UmpleModel model = new UmpleModel(umpleFile);
 
@@ -282,7 +327,10 @@ class UmpleConsoleMain
             }
           
             if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php")) {
-              compileSuccess = CodeCompiler.compile(model, generatorCodeToCompile,cfg.getUseExec(), cfg.getCompile().get());
+              compileSuccess = CodeCompiler.compile(model, generatorCodeToCompile,cfg.getUseExec(), cfg.getBeQuiet(), cfg.getCompile().get());
+            }
+            else if (generatorCodeToCompile.startsWith("Gv")) {
+              compileSuccess = CodeCompiler.genDotDiagram(model, gt, cfg.getBeQuiet(), "svg");
             }
           }
         }
@@ -344,7 +392,14 @@ class UmpleConsoleMain
 
   public static void main(String[] args)
   {
-    UmpleConsoleMain console = new UmpleConsoleMain(args);
+    UmpleConsoleMain console = null;
+    try {
+      console = new UmpleConsoleMain(args);
+    }
+    catch (Exception e) {   
+     System.err.println(e.getMessage());
+     return;
+    }
 
     // Run the compilation for the main command line files and mixsets
     // Result is 1 if failed compile, -1 if compiler crashed
@@ -499,14 +554,18 @@ class UmpleConsoleMain
     optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
     optparser.acceptsAll(Arrays.asList("performance", "p"), "Indicate time taken to parse and generate code");
     optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
+
     optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: " + languages).withRequiredArg().ofType(String.class);
+    optparser.acceptsAll(Arrays.asList("u", "umple"), "Include umple code directly as a single string, instead of or addition to in files.").withRequiredArg().ofType(String.class);
+    
     optparser.acceptsAll(Arrays.asList("override"), "If a output language <lang> is specified using option -g, output will only generate language <lang>");
     optparser.acceptsAll(Arrays.asList("removeprevious", "r"), "used with -g; remove previously generated code before generating new. Can help prevent leftover code causing errors. Does not work with generators specified inside a file.");
     optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
-    optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to the entry class to compile, or with argument - to compile all outputfiles").withRequiredArg().ofType(String.class);
+    optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to the entry class to compile, or with argument - to compile all outputfiles; compiles Java to .class, lints Php, converts Graphviz to .svg").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("f","file"), "Read in a file containing sets of umple-files to process, one set per line. Each is an independent compilation. Intended for testing.").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("e","exitonfirstfailure"), "Used with -f. Exit with nonzero on first failure of a compile specified in the file passed to -f. Otherwise exits after completing all compilations with nonzero if any failed.");    
     optparser.acceptsAll(Arrays.asList("q","quiet"), "Be quiet. Only output compilation information in case of failure");
+    optparser.acceptsAll(Arrays.asList("w","warningignore"), "Ignore a warning whose number is embedded in the file name if the file name starts with W. Used for testing.");
     optparser.acceptsAll(Arrays.asList("x","useexec"), "Use an external exec call to invoke the Java compiler when using the -c option. May be needed on some platforms or with certain examples.");    
     optparser.acceptsAll(Arrays.asList("import","i"), "Indicate to read in XMI model and generate ump files").withRequiredArg().ofType(String. class);
     optparser.acceptsAll(Arrays.asList("suboption","s"), "Indicate to generate files with suboptions "+suboptionsAvail).withRequiredArg().ofType(String.class);

@@ -1,0 +1,16 @@
+namespace example;
+
+class Person{
+    name;
+    int age;
+}
+
+class Employee{
+    int id;
+    isA Person;
+}
+
+class Admin{
+    int number;
+    isA Employee;
+}

@@ -3,6 +3,8 @@
 // This will be extended to support more of html later
 // It serves as an illustration of Umple's generation templates
 
+strictness allow 75; // We are going to allow custom constructors
+
 // Class representing either a top level html node or a collection of subnodes
 class HtmlNode {
   String getContent() {return "";};  // should be abstract

@@ -516,6 +516,7 @@ class GenField{
 	Boolean parameterized= false;
 	Boolean generatable= true;
 	0..1 -- * GenComment comments sorted {priority};
+	0..1 -- * GenRequirement requirements sorted {priority};
 	
 	assignValueCallT <<!this-><<=name>>= <<=_value>>;!>>
 	emit assignValueCall(String _value)(assignValueCallT);
@@ -604,12 +605,20 @@ declarationT <<!<<#for(GenComment comment: getComments()){
 	String body= comment.getBody();
 	if(!body.isEmpty()){
 	#>><<=body>><<=NL>><<#}
+	}#>><<#for(GenRequirement requirement: getRequirements()){
+	String body= requirement.getBody();
+	if(!body.isEmpty()){
+	#>><<=body>><<=NL>><<#}
 	}#>><<#if(isStatic){#>>static <<#}#>><<#if(isConstant){#>>const <<#}#>><<=getNormalizedType()>> <<=name>><<=initializerString()>>;!>>
 
 	emit declaration()(declarationT);
 
 implementationT <<!<<#for(GenComment comment: getComments()){
 	String body= comment.getBody();
+	if(!body.isEmpty()){
+	#>><<=body>><<=NL>><<#}
+	}#>><<#for(GenRequirement requirement: getRequirements()){
+	String body= requirement.getBody();
 	if(!body.isEmpty()){
 	#>><<=body>><<=NL>><<#}
 	}#>><<#if(isConstant){#>>const <<#}#>><<=getNormalizedType()>> <<=getGenClass().getName()>>::<<=name>>= <<=value>>;!>>

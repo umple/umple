@@ -1,0 +1,31 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.31.1.5860.78bb27cc6 modeling language!*/
+
+
+
+/**
+ * R01: This is the first requirement statement
+ * R02: This is the second requirement statement
+ */
+public class Example
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Example()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+}

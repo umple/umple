@@ -1,6 +1,5 @@
 digraph "ParameterTransition" {
   compound = true;
-  size="80,10"
 
   // Class: X
 
@@ -11,12 +10,12 @@ digraph "ParameterTransition" {
       penwidth=0.5;
         
     // Start states are shown as a black circle
-    node [shape = point, fillcolor="black", width=0.2 ];
+    node [ratio="auto" shape = point, fillcolor="black", width=0.2 ];
     start_X_stateMachine1 [ tooltip = "Class X, SM stateMachine1, State start" ];
     
         
     // Format for normal states
-    node [shape = rectangle, width=1,style=rounded];
+    node [ratio="auto" shape = rectangle, width=1,style=rounded];
     
       // State: s1a
 
@@ -43,12 +42,12 @@ digraph "ParameterTransition" {
       penwidth=0.5;
         
     // Start states are shown as a black circle
-    node [shape = point, fillcolor="black", width=0.2 ];
+    node [ratio="auto" shape = point, fillcolor="black", width=0.2 ];
     start_X_stateMachine2 [ tooltip = "Class X, SM stateMachine2, State start" ];
     
         
     // Format for normal states
-    node [shape = rectangle, width=1,style=rounded];
+    node [ratio="auto" shape = rectangle, width=1,style=rounded];
     
       // State: s2a
 

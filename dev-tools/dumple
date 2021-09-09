@@ -1,0 +1,47 @@
+#!/bin/zsh -fb
+if [ -z ${UMPLEROOT+x} ]
+then
+  export UMPLEROOT=~/umple
+fi
+echo Building Diagrams and javadoc at $UMPLEROOT
+echo On the main server check the user manual page under cruise-homedir/umple
+
+cd $UMPLEROOT/cruise.umple/src
+
+umple -g GvClassDiagram --override -c - --path $UMPLEROOT/dist/cruise.umple/reference DiagramMaster.ump
+mv $UMPLEROOT/dist/cruise.umple/reference/DiagramMastercd.svg $UMPLEROOT/dist/cruise.umple/reference/Mastercd.svg
+rm $UMPLEROOT/dist/cruise.umple/reference/DiagramMastercd.gv
+
+umple -g GvClassDiagram --override -c - --path $UMPLEROOT/dist/cruise.umple/reference DiagramCoreMaster.ump
+rm $UMPLEROOT/dist/cruise.umple/reference/DiagramCoreMastercd.gv
+
+umple -g GvClassDiagram --override -c - --path $UMPLEROOT/dist/cruise.umple/reference DiagramStateMaster.ump
+rm $UMPLEROOT/dist/cruise.umple/reference/DiagramStateMastercd.gv
+
+echo To open user diagram master open $UMPLEROOT/dist/cruise.umple/reference/umple-compiler-classDiagram.shtml
+
+#Now build javadoc
+echo About to remake the javadoc
+unset GREP_OPTIONS
+ls $UMPLEROOT/cruise.umple/src-gen-umple/*/*/*.java \
+ $UMPLEROOT/cruise.umple/src-gen-umple/*/*/*/*.java \
+ $UMPLEROOT/cruise.umple/src-gen-umple/*/*/*/*/*.java \
+ $UMPLEROOT/cruise.umple/src-gen-umple/*/*/*/*/*/*.java \
+ $UMPLEROOT/cruise.umple/src-gen-umpletl/*/*/*/*/*.java \
+ $UMPLEROOT/dist/libs/vendors/jopt-simple/src/main/java/joptsimple//*.java \
+ $UMPLEROOT/dist/libs/vendors/jopt-simple/src/main/java/joptsimple/*/*.java \
+ $UMPLEROOT/cruise.umple.nebula/src/cruise/umple/*/*.java \
+  | grep -v builder/Builder.java \
+  | grep -v UmplecAntTask.java \
+ | xargs \
+/usr/bin/javadoc \
+  -cp $UMPLEROOT/dist/libs/test/junit.jar \
+  -exclude org.junit \
+  -taglet UmplesourceTaglet \
+  -header 'Umple compiler API generated java files. Always edit <a href="https://github.com/umple/umple/tree/master/cruise.umple/src">Umple source</a>'\
+ -d $UMPLEROOT/dist/cruise.umple/reference/umple-compiler-javadoc
+
+cd $UMPLEROOT/dist/cruise.umple/reference
+cp $UMPLEROOT/umplewww/mapjavadoc.php .
+
+echo Done remaking the javadoc

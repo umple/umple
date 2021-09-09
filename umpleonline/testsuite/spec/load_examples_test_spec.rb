@@ -10,12 +10,13 @@ describe "Example loading",
   :feature => :exampleLoading do
 
   before :all do
-    page.driver.resize(1024, 768)
+    Capybara.current_session.current_window.resize_to(1024, 768)
     load_page
   end
 
   describe "Switching example types" do
     it "cycles through the example type menu" do
+      wait_for_loading
       expect(page).to have_selector('#inputExample', visible: true)
       expect(page).to have_selector('#inputExample2', visible: false)
       expect(page).to have_selector('#inputExample3', visible: false)
@@ -53,7 +54,6 @@ describe "Example loading",
   describe "Loading composite structure diagrams" do
     ExampleLoaderHelper::COMPOSITE_STRUCTURES_EXAMPLES.each_key do |example|
       it "loads #{example}" do
-        check_comp_structure_example(example)
         pending("distinct elements to check against in the diagram")
         fail
       end

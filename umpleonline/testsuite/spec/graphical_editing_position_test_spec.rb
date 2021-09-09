@@ -10,7 +10,7 @@ describe "Graphical editing of diagram: positional consistency",
   :helper => :diagramEditing, 
   :feature => :positionalDiagramEditing do 
 
-  before(:all) {page.driver.resize(1024, 768)}
+  before(:all){Capybara.current_window.resize_to(1024, 768)}
     
   describe "Loading umple models" do
     context "with positional data" do
@@ -72,18 +72,18 @@ describe "Graphical editing of diagram: positional consistency",
   describe "Adding an umpleClass with a particular position" do
     it "adds an umpleClass at a particular position" do
       load_page
-      wait_for_loading
-
+      
+      find(:css, '#umpleCanvas').click
       find(:css, '#umpleCanvas').native.send_keys("c")
       expected_position = [55, 135]
-      abs_canvas_pos = get_absolute_position("#umpleCanvas")
+      
+      find("#umpleCanvas").click(x: expected_position[0], y:expected_position[1])
 
-      page.driver.click(expected_position[0] + abs_canvas_pos[0],
-                        expected_position[1] + abs_canvas_pos[1])
       wait_for_loading
-
-      expect(class_diagram_position_of("NewClass")).to have_position(expected_position)
-      expect(class_code_position_of("NewClass")).to have_code_position(expected_position)
+  
+      expect(page).to have_selector("#NewClass")
+      expect(class_diagram_position_of("NewClass")).to have_position([expected_position[0]-1, expected_position[1]-2])
+      expect(class_code_position_of("NewClass")).to have_code_position_within_anchor_size([expected_position[0], expected_position[1]-1])
     end
   end
 
@@ -91,20 +91,24 @@ describe "Graphical editing of diagram: positional consistency",
     before(:each) do
       load_umple_with_file_and_layout("single_class.ump")
     end
+
     it "Adds a reflexive association with an anchor snapped to the left edge" do
       class_position = get_absolute_position("#Student")
       class_code = class_code_position_of "Student"
       find(:css, '#buttonAddAssociation').click
       within("div#umpleCanvas") {find(:css, "#Student").click}
-      page.driver.click(class_position[0] + 5, 
-                        class_position[1] + class_code[:size][1]/2)
+      
+      find("#Student").click(x:5, y: class_code[:size][1]/2)
+      
       wait_for_loading
+      
       code_pos = association_code_position_of(
         "Student", "Student", "roleName")[:end_two]
+      
       actual_pos = association_diagram_position_of(
         "Student", "Student", "roleName")[:end_two]
 
-      expect(code_pos).to have_code_position([0, 22])
+      expect(code_pos).to have_code_position_within_anchor_size([0, 22])
       expect(actual_pos).to have_position_within_anchor_size([99, 51])
     end
 
@@ -113,15 +117,18 @@ describe "Graphical editing of diagram: positional consistency",
       class_code = class_code_position_of "Student"
       find(:css, '#buttonAddAssociation').click
       within("div#umpleCanvas") {find(:css, "#Student").click}
-      page.driver.click(class_position[0] + class_code[:size][0]/2, 
-                        class_position[1] + 5)
+    
+      find("#Student").click(x:class_code[:size][0]/2, y: 5)
+    
       wait_for_loading
+    
       code_pos = association_code_position_of(
         "Student", "Student", "roleName")[:end_two]
+    
       actual_pos = association_diagram_position_of(
         "Student", "Student", "roleName")[:end_two]
 
-      expect(code_pos).to have_code_position([54, 0])
+      expect(code_pos).to have_code_position_within_anchor_size([54, 0])
       expect(actual_pos).to have_position_within_anchor_size([153, 29])
     end
 
@@ -130,15 +137,16 @@ describe "Graphical editing of diagram: positional consistency",
       class_code = class_code_position_of "Student"
       find(:css, '#buttonAddAssociation').click
       within("div#umpleCanvas") {find(:css, "#Student").click}
-      page.driver.click(class_position[0] + class_code[:size][0] - 5, 
-                        class_position[1] + class_code[:size][1]/2)
+      find("#Student").click(x:class_code[:size][0] - 5, y: class_code[:size][1]/2)
+  
       wait_for_loading
+  
       code_pos = association_code_position_of(
         "Student", "Student", "roleName")[:end_two]
       actual_pos = association_diagram_position_of(
         "Student", "Student", "roleName")[:end_two]
 
-      expect(code_pos).to have_code_position([109, 22])
+      expect(code_pos).to have_code_position_within_anchor_size([109, 22])
       expect(actual_pos).to have_position_within_anchor_size([209, 51])
     end
 
@@ -147,16 +155,17 @@ describe "Graphical editing of diagram: positional consistency",
       class_code = class_code_position_of "Student"
       find(:css, '#buttonAddAssociation').click
       within("div#umpleCanvas") {find(:css, "#Student").click}
-      page.driver.click(class_position[0] + class_code[:size][0]/2, 
-                        class_position[1] + class_code[:size][1] - 5)
+      find("#Student").click(x:class_code[:size][0]/2, y: class_code[:size][1] - 9)
+  
       wait_for_loading
+  
       code_pos = association_code_position_of(
         "Student", "Student", "roleName")[:end_two]
       actual_pos = association_diagram_position_of(
         "Student", "Student", "roleName")[:end_two]
 
-      expect(code_pos).to have_code_position([54, 45])
-      expect(actual_pos).to have_position_within_anchor_size([153, 74])
+      expect(code_pos).to have_code_position_within_anchor_size([54, 39])
+      expect(actual_pos).to have_position_within_anchor_size([151, 67])
     end
   end
 
@@ -171,6 +180,8 @@ describe "Graphical editing of diagram: positional consistency",
         find(:css, "#Left").click
       end
 
+      wait_for_loading
+
       anchor_pos = association_diagram_position_of("ACenter", "Left")
       anchor_pos = anchor_pos[:end_one]
 
@@ -181,8 +192,8 @@ describe "Graphical editing of diagram: positional consistency",
         anchor_code_pos = anchor_code_pos[:end_two]
       end
 
-      expect(anchor_pos).to have_position_within_anchor_size([137, 151])
-      expect(anchor_code_pos).to have_code_position([0, 23])
+      expect(anchor_pos).to have_position_within_anchor_size([135, 147])
+      expect(anchor_code_pos).to have_code_position_within_anchor_size([0, 19])
     end
 
     it "snaps the association anchor to the top edge" do
@@ -191,6 +202,8 @@ describe "Graphical editing of diagram: positional consistency",
         find(:css, "#ACenter").click
         find(:css, "#Top").click
       end
+
+      wait_for_loading
 
       anchor_pos = association_diagram_position_of("ACenter", "Top")
       anchor_pos = anchor_pos[:end_one]
@@ -203,7 +216,7 @@ describe "Graphical editing of diagram: positional consistency",
       end
 
       expect(anchor_pos).to have_position_within_anchor_size([192, 129])
-      expect(anchor_code_pos).to have_code_position([55, 0])
+      expect(anchor_code_pos).to have_code_position_within_anchor_size([54, 0])
     end
 
     it "snaps the association anchor to the right edge" do
@@ -213,6 +226,8 @@ describe "Graphical editing of diagram: positional consistency",
         find(:css, "#Right").click
       end
       
+      wait_for_loading
+
       anchor_pos = association_diagram_position_of("ACenter", "Right")
       anchor_pos = anchor_pos[:end_one]
 
@@ -223,8 +238,8 @@ describe "Graphical editing of diagram: positional consistency",
         anchor_code_pos = anchor_code_pos[:end_two]
       end
 
-      expect(anchor_pos).to have_position_within_anchor_size([246, 151])
-      expect(anchor_code_pos).to have_code_position([110, 23])
+      expect(anchor_pos).to have_position_within_anchor_size([244, 147])
+      expect(anchor_code_pos).to have_code_position_within_anchor_size([110, 19])
     end
 
     it "snaps the association anchor to the bottom edge" do
@@ -234,6 +249,8 @@ describe "Graphical editing of diagram: positional consistency",
         find(:css, "#Bottom").click
       end
       
+      wait_for_loading
+
       anchor_pos = association_diagram_position_of("ACenter", "Bottom")
       anchor_pos = anchor_pos[:end_one]
 
@@ -244,8 +261,8 @@ describe "Graphical editing of diagram: positional consistency",
         anchor_code_pos = anchor_code_pos[:end_two]
       end
 
-      expect(anchor_pos).to have_position_within_anchor_size([192, 174])
-      expect(anchor_code_pos).to have_code_position([55, 45])
+      expect(anchor_pos).to have_position_within_anchor_size([189, 167])
+      expect(anchor_code_pos).to have_code_position_within_anchor_size([54, 40])
     end
   end
 
@@ -253,6 +270,7 @@ describe "Graphical editing of diagram: positional consistency",
   describe "Adding a generalization" do
     before(:each) do
       load_umple_with_file_and_layout("two_classes.ump")
+      
     end
     it "adds a generalization between two classes" do
       pending("a way to test: the position is not tracked in the code " + 
@@ -265,6 +283,7 @@ describe "Graphical editing of diagram: positional consistency",
     context "with no other features" do
       before(:each) do
         load_umple_with_file_and_layout("single_class.ump")
+
       end
 
       it "moves the umpleClass graphically in the canvas" do
@@ -273,8 +292,8 @@ describe "Graphical editing of diagram: positional consistency",
                                             expected_position[0], 
                                             expected_position[1])
         wait_for_loading
-        expect(class_diagram_position_of("Student")).to have_position(expected_position) 
-        expect(class_code_position_of("Student")).to have_code_position(expected_position) 
+        expect(class_diagram_position_of("Student")).to have_position([expected_position[0], expected_position[1]-1]) 
+        expect(class_code_position_of("Student")).to have_code_position_within_anchor_size([expected_position[0]+1, expected_position[1]]) 
       end
     end
 
@@ -283,8 +302,9 @@ describe "Graphical editing of diagram: positional consistency",
         load_umple_with_file_and_layout("single_class_with_reflexive_association.ump")
       end
       it "moves a class with a reflexive association" do 
+        find(:css, "#umpleAssociation_0")
         expected_pos = association_diagram_position_of("Student", "Student", "peer")
-
+        
         drag_amount = [50, 50]
         expected_pos[:end_one][:position][0] += drag_amount[0]
         expected_pos[:end_one][:position][1] += drag_amount[1]
@@ -305,6 +325,7 @@ describe "Graphical editing of diagram: positional consistency",
     context "with a symmetric reflexive association" do
       before(:each) do
         load_umple_with_file_and_layout("single_class_with_symmetric_reflexive_association.ump")
+
       end
       it "moves a class with a symmetric reflexive association" do 
         pending("implementation, symmetric reflexive position code")
@@ -315,6 +336,7 @@ describe "Graphical editing of diagram: positional consistency",
     context "with a normal association" do
       before(:each) do
         load_umple_with_file_and_layout("two_classes_with_association_centered.ump")
+
       end
       
       #TODO these fail on a non-local server
@@ -337,8 +359,8 @@ describe "Graphical editing of diagram: positional consistency",
           real_pos = association_diagram_position_of("Student", "Mentor")
           real_pos = real_pos[:end_two][:position][1]
           
-          expect(code_pos).to eq(size_of_unmoved[:size][1])
-          expect(real_pos).to eq(242)
+          expect(code_pos).to be_between(size_of_unmoved[:size][1]-3, size_of_unmoved[:size][1]+3).inclusive
+          expect(real_pos).to be_between(234, 240).inclusive
         end
 
         it "moves association anchor from top to right" do
@@ -358,8 +380,8 @@ describe "Graphical editing of diagram: positional consistency",
           real_pos = association_diagram_position_of("Student", "Mentor")
           real_pos = real_pos[:end_two][:position][1]
 
-          expect(code_pos).to eq(size_of_unmoved[:size][0])
-          expect(real_pos).to eq(221)
+          expect(code_pos).to eq(size_of_unmoved[:size][0]+1)
+          expect(real_pos).to eq(219)
         end
 
         it "moves association anchor from top to left" do
@@ -376,7 +398,7 @@ describe "Graphical editing of diagram: positional consistency",
     
 
           expect(code_pos).to eq(0)
-          expect(real_pos).to eq(206)
+          expect(real_pos).to eq(205)
         end
 
         it "moves association anchor from bottom to top" do
@@ -417,7 +439,7 @@ describe "Graphical editing of diagram: positional consistency",
           real_pos = association_diagram_position_of("Student", "Mentor")
           real_pos = real_pos[:end_one][:position][0]
 
-          expect(code_pos).to eq(size_of_unmoved[:size][0])
+          expect(code_pos).to eq(size_of_unmoved[:size][0]+1)
           expect(real_pos).to eq(257)
         end
 
@@ -449,6 +471,7 @@ describe "Graphical editing of diagram: positional consistency",
     context "with a generalization" do
       before(:each) do
         load_umple_with_file_and_layout("two_classes_with_generalization.ump")
+
       end
       context "move the subclass" do
         it "moves a subclass" do
@@ -560,6 +583,7 @@ describe "Graphical editing of diagram: positional consistency",
 
       before (:each) do
         load_umple_with_file_and_layout("two_classes_with_association_top.ump")
+
         association_id = activate_association("Mentor", "Student")
       end
 
@@ -646,6 +670,7 @@ describe "Graphical editing of diagram: positional consistency",
 
       before (:each) do
         load_umple_with_file_and_layout("two_classes_with_association_right.ump")
+
         association_id = activate_association("Mentor", "Student")
       end
 
@@ -732,6 +757,7 @@ describe "Graphical editing of diagram: positional consistency",
 
       before (:each) do
         load_umple_with_file_and_layout("two_classes_with_association_bottom.ump")
+
         association_id = activate_association("Mentor", "Student")
       end
 
@@ -751,8 +777,8 @@ describe "Graphical editing of diagram: positional consistency",
           code_pos = code_pos[:end_two][:position]
         end
 
-        expect(code_pos).to have_position_within_anchor_size([40, 45])
-        expect(actual_pos).to have_position_within_anchor_size([116, 133])
+        expect(code_pos).to have_position_within_anchor_size([38, 40])
+        expect(actual_pos).to have_position_within_anchor_size([116, 127])
       end
 
       it "Moves the anchor right" do
@@ -770,8 +796,8 @@ describe "Graphical editing of diagram: positional consistency",
           code_pos = code_pos[:end_two][:position]
         end
 
-        expect(code_pos).to have_position_within_anchor_size([60, 45])
-        expect(actual_pos).to have_position_within_anchor_size([136, 133])
+        expect(code_pos).to have_position_within_anchor_size([58, 40])
+        expect(actual_pos).to have_position_within_anchor_size([136, 127])
       end
 
       it "Moves the anchor up" do
@@ -789,8 +815,8 @@ describe "Graphical editing of diagram: positional consistency",
           code_pos = code_pos[:end_two][:position]
         end
 
-        expect(code_pos).to have_position_within_anchor_size([50, 45])
-        expect(actual_pos).to have_position_within_anchor_size([126, 133])
+        expect(code_pos).to have_position_within_anchor_size([48, 40])
+        expect(actual_pos).to have_position_within_anchor_size([126, 127])
       end
 
       it "Moves the anchor down" do
@@ -808,8 +834,8 @@ describe "Graphical editing of diagram: positional consistency",
           code_pos = code_pos[:end_two][:position]
         end
 
-        expect(code_pos).to have_position_within_anchor_size([50, 45])
-        expect(actual_pos).to have_position_within_anchor_size([126, 133])
+        expect(code_pos).to have_position_within_anchor_size([48, 40])
+        expect(actual_pos).to have_position_within_anchor_size([126, 127])
       end
     end
   end
@@ -818,12 +844,14 @@ describe "Graphical editing of diagram: positional consistency",
   describe "testing the helper functions", :feature => :testdebug do
     it "tests code_block retrieval" do
       load_umple_with_file_and_layout("two_classes_with_generalization.ump")
+      
       expect(get_class_position_code_block("Student"))
         .to eq("{\n  position 50 30 109 45;\n}")
     end
 
     it "tests class position data retrieval from code" do
       load_umple_with_file_and_layout("two_classes_with_generalization.ump")
+      
       expected = {position: [50, 30], size: [109, 45]}
       expect(class_code_position_of "Student").to eq(expected)
       load_umple_with_file_and_layout("single_class_with_reflexive_association.ump")
@@ -832,6 +860,7 @@ describe "Graphical editing of diagram: positional consistency",
 
     it "tests association code retreival" do
       load_umple_with_file_and_layout("two_classes_with_association.ump")
+      
       expected = "position.association Mentor__Student 30,45 30,0"
 
       expect(retreive_association_code("Student", "Mentor", "Student"))
@@ -849,6 +878,7 @@ describe "Graphical editing of diagram: positional consistency",
 
     it "tests association positional data retrieval from code" do
       load_umple_with_file_and_layout("two_classes_with_association.ump")
+      
       expected = {end_one: {end_class: 'Student', position: [30, 45]}, 
                   end_two: {end_class: 'Mentor', position: [30, 0]}}
       expect(association_code_position_of("Mentor", "Student"))
@@ -862,18 +892,21 @@ describe "Graphical editing of diagram: positional consistency",
 
     it "tests the class position retrieval from the diagram" do
       load_umple_with_file_and_layout("single_class.ump")
+      
       expected = {position: [99, 29]}
       expect(class_diagram_position_of("Student")).to eq(expected)
     end
 
     it "tests the class size retrieval from the diagram" do
       load_umple_with_file_and_layout("single_class.ump")
+      
       expected = {size: [110, 45]}
       expect(screen_size_of("Student")).to eq(expected)
     end
 
     it "tests the association anchor position retrieval from the diagram" do
       load_umple_with_file_and_layout("two_classes_with_association.ump")
+      
       expected = {end_one: {end_class: 'Student', position: [77, 72]}, 
                   end_two: {end_class: 'Mentor', position: [77, 127]}}
 
@@ -890,6 +923,7 @@ describe "Graphical editing of diagram: positional consistency",
     it "tests transforming the diagram association position to coordinates" +
       "relative to various points" do
       load_umple_with_file_and_layout("two_classes_with_association.ump")
+      
       pos = association_code_position_of("Mentor", "Student")
     end
   end

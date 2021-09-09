@@ -593,7 +593,11 @@ class ParserDataPackage
       }
       else
       {
-        resourceStream = getClass().getResourceAsStream(file);
+        String resourceToLoad=file;
+        if(file.contains("lib:")) {
+          resourceToLoad = "/"+file.substring(file.indexOf("lib:")+4);
+        }
+        resourceStream = getClass().getResourceAsStream(resourceToLoad);
         reader = new BufferedReader(new InputStreamReader(resourceStream));
       }
       String line = reader.readLine();
@@ -611,7 +615,13 @@ class ParserDataPackage
     }
     catch(NullPointerException n)
     {
-      this.getParseResult().addErrorMessage(new ErrorMessage(1510,usePosition==null?new Position(filename,1,0,0):usePosition,filename));
+      // Special case when we don't want to read a file
+      if(filename.equals("dummy__.ump")) {
+        input="";
+      }
+      else {
+        this.getParseResult().addErrorMessage(new ErrorMessage(1510,usePosition==null?new Position(filename,1,0,0):usePosition,filename));
+      }
     }
     catch(IOException e)
     {
@@ -662,7 +672,13 @@ class ParserDataPackage
       {
         this.setParseResult(new ParseResult(false));
       }
-      this.getParseResult().addErrorMessage(new ErrorMessage(1510,usePosition==null?new Position(filename,1,0,0):usePosition,filename));
+      // Special case when we don't want to read a file
+      if(filename.equals("dummy__.ump")) {
+        input="";
+      }
+      else {
+        this.getParseResult().addErrorMessage(new ErrorMessage(1510,usePosition==null?new Position(filename,1,0,0):usePosition,filename));
+      }
     }
     couples = new HashMap<String,ParsingCouple>();    
     BalancedRule.initialize(input,this);

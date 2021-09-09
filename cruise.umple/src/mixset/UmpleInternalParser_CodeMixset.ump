@@ -368,6 +368,17 @@ class UmpleInternalParser
     
       mixsetFragmentLineNumber = mixsetFragmentPosition.getLineNumber();
       UmpleFile mixsetFragmentUmpleFile = model.getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
+      // Start: update the fragment file if the fragment came from a file included by use statement.
+      Token lookForUseStToken = token;
+		  while((lookForUseStToken = lookForUseStToken.getParentToken()) != null)  
+		  {
+		    if(lookForUseStToken.is("useStatement"))
+		    {
+		    	mixsetFragmentUmpleFile = new UmpleFile(lookForUseStToken.getSubToken("use").getValue());
+		    	break;
+		    }  		  
+		  } 
+      //End
       MixsetFragment mixsetFragment = new MixsetFragment(mixsetFragmentUmpleFile, mixsetFragmentLineNumber, mixsetBody);
     return mixsetFragment;
   }
@@ -452,14 +463,18 @@ class UmpleInternalParser
     }
   }
   // a helper method that process pure code to either remove it or to let mixset content stay.
-  private String processInlineMixset(String methodCode) {
-	// process mixsets inside code 
-	   ArrayList<MixsetInMethod> mixsetInCodeList = MethodBody.getMixsetsFromCode(methodCode) ;
-	  for (MixsetInMethod aMixsetInMethod : mixsetInCodeList) 
-	  {
-	    // update the code according to  use statements (of mixsets)
-	    methodCode = MethodBody.handelMixsetInsideMethod(this.getModel(), aMixsetInMethod, methodCode);	        		
-	  }
+  private String processInlineMixset(String methodCode,  MethodBody methodBody) {
+  // process mixsets inside code 
+     ArrayList<MixsetInMethod> mixsetInCodeList = MethodBody.getMixsetsFromCode(methodCode) ;
+    for (MixsetInMethod aMixsetInMethod : mixsetInCodeList) 
+    {
+      // update the code according to  use statements (of mixsets)
+      methodCode = MethodBody.handelMixsetInsideMethod(this.getModel(), aMixsetInMethod, methodCode);
+      if(methodBody !=null)
+      {
+        methodBody.addMixsetInMethod(aMixsetInMethod);
+      }	        
+    }
     return methodCode;
   }  
 }
