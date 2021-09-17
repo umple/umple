@@ -135,21 +135,17 @@ class GenClass{
 };
 <<=predefinitions>><<=namespaceClosing()>>
 //------------------------
-//GNU HASH FUNCTION USE
+//HASH FUNCTION USE
 //------------------------
-#ifdef __GNUC__
-using namespace __gnu_cxx;
-namespace __gnu_cxx{
-	template<> struct hash<<<=fullQualifiedName>>*>{
-		size_t operator()(<<=fullQualifiedName>>* ptr ) const {
-		    return ptr->hashCode();
-		}
-	};
+#include <unordered_map>
+namespace std {
+    template<>
+    struct hash<<<=fullQualifiedName>> *> {
+        size_t operator()(<<=fullQualifiedName>> *ptr) const {
+            return ptr->hashCode();
+        }
+    };
 }
-#include <ext/hash_map>
-#else
-#include <hash_map>
-#endif
 #endif!>>
 	emit emitHeader()(emitHeaderT);
 
