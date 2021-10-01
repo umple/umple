@@ -407,6 +407,7 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(List<Toke
 class FeatureModel{
   depend java.util.stream.*;
   depend cruise.umple.compiler.FeatureLink.FeatureConnectingOpType;
+  depend java.util.*;
 /*
  * This method returns a leaf node from FeatureModel based on its name.
  * return null if the leaf node is not found.   
@@ -501,7 +502,7 @@ class FeatureModel{
     { 
       if(!featureNode.getIsLeaf())
       {
-        return  evaluteLinkedFeatures(featureNode);;
+        return  evaluteLinkedFeatures(featureNode);
       }
     }
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Disjunctive))
@@ -575,6 +576,15 @@ class FeatureModel{
     List <FeatureNode> rootFeatures = getNode().stream().filter(n -> (n.hasOutgoingFeatureLinks() && (! n.hasIncomingFeatureLinks()))).collect(Collectors.toList());
     return rootFeatures;
   }
+
+  private boolean evaluteLinkedFeatures(FeatureNode featureNode) {
+    boolean includedFeatures = true;
+    List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
+    for(int i=0 ; i<outgoingLinks.size(); i++){
+      includedFeatures = includedFeatures && evaluateFeatureLink(outgoingLinks.get(i));
+    }
+    return includedFeatures;
+}
 }
 /*
 This class used to represent the binary tree of require-statement argument 
@@ -664,13 +674,6 @@ not > and > xor > or > ROOT (Top of the tree)
     return -1; // lower priority, leaf nodes should not move 
   }
 
-  private boolean evaluteLinkedFeatures(FeatureNode featureNode) {
-    boolean includedFeatures = true;
-    List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
-    for(int i=0 ; i<outgoingLinks.size(); i++){
-      includedFeatures = includedFeatures && evaluateFeatureLink(outgoingLinks.get(i));
-    }
-    return includedFeatures;
-}
+
 
 }
