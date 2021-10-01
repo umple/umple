@@ -484,7 +484,14 @@ class FeatureModel{
         return true;        // opt is allawys has a true value 
       }
       else 
-      return isUsedFeatureLeaf((FeatureLeaf)featureNode);
+      {
+        List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
+        boolean result = true;
+        for(int i=0 ; i<outgoingLinks.size(); i++){
+          result = result && evaluateFeatureLink(outgoingLinks.get(i));
+        }
+        return isUsedFeatureLeaf((FeatureLeaf)featureNode) && result;
+      }
     } // if not leaf node
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Conjunctive))
     { 
