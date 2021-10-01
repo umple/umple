@@ -67,7 +67,7 @@ digraph FeatureModel {
         for(int i=0 ; i < featureNodes.size(); i++){
           FeatureLeaf fLeaf = ((FeatureLeaf)featureNodes.get(i));
           appendSpaces(code,indentLevel);
-          code.append(sourceFeatureNode.getUniqueFeatureNodeName() +" -> "+ fLeaf.getName()+" ;"+"\n");
+          code.append(featureNode.getUniqueFeatureNodeName() +" -> "+ fLeaf.getName()+" ;"+"\n");
           fillColorOfFeatureNode(code,fLeaf,indentLevel);
         }
       }
