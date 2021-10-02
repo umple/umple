@@ -865,7 +865,7 @@ class Requirement{
     String reqText = new String();
 
     for (Requirement req : reqSelected){
-      reqText = req.getStatement().strip();
+      reqText = req.getStatement().trim();
 
       reqText = req.getIdentifier() + ": " + reqText;
 
