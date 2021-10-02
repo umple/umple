@@ -737,13 +737,13 @@ public class UmpleMixsetTest {
   @Test
   public void featureUseIsValid()
   {
-    UmpleFile file1 = new UmpleFile("mobileSPL_1.ump");
+    UmpleFile file1 = new UmpleFile(umpleParserTest.pathToInput,"mobileSPL_1.ump");
     UmpleModel model1 = new UmpleModel(file1);
     model1.run();
     boolean file1Test = model1.getFeatureModel().satisfyFeatureModel();
     Assert.assertTrue(file1Test);
 
-    UmpleFile file2 = new UmpleFile("mobileSPL_2.ump");
+    UmpleFile file2 = new UmpleFile(umpleParserTest.pathToInput,"mobileSPL_2.ump");
     UmpleModel model2 = new UmpleModel(file2);
     model2.run();
     boolean file2Test = model2.getFeatureModel().satisfyFeatureModel();
