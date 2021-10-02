@@ -1,0 +1,12 @@
+require subfeature [GSMProtocol opt Mp3Recording
+  and Playback and AudioFormat opt Camera];
+mixset GSMProtocol {
+  require subfeature [GSM1800 opt GSM1900]; }
+mixset AudioFormat {
+  require subfeature [1..2 of {Mp3,Wav}]; }
+mixset Mp3Recording { require [Mp3]; }
+mixset Camera { require subfeature [Resolution]; } 
+mixset Resolution{ 
+  require subfeature [0..1 of {Res21MP, Res31MP, Res50MP}];}
+
+use GSMProtocol; use GSM1800; use Playback; use AudioFormat;use Wav;
