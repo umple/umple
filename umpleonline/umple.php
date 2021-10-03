@@ -187,7 +187,7 @@ $output = $dataHandle->readData('model.ump');
 <link rel="manifest" href="https://cruise.umple.org/manifest.json">
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="msapplication-TileImage" content="https://cruise.umple.org/ms-icon-144x144.png">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#8f001a">
 </head>
 <body>
   <?php if($showChrome) { ?> 
