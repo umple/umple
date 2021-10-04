@@ -1,0 +1,47 @@
+class Main
+{
+  // The method below has three code labels plus an inline mixset (line 10). 
+  // These labels act as points of extensions.
+  
+  void main(String[] arg){
+    Hello_Label: ;
+    Beatuiful_Label: ;
+    Wonderful_Label: ;
+    mixset World {
+      System.out.print(" world !"); 
+    } 
+  }
+}
+
+// The following three mixsets inject code based on the label specified after "before".
+mixset Hello {
+  class Main
+  {
+    before Hello_Label: main(String) {
+      System.out.print(" Hello ");    
+    }
+  }
+}
+mixset Beatuiful {
+  class Main
+  {
+    before Beatuiful_Label: main(String) {
+      System.out.print(" beatuiful ");     
+    }
+  }
+}
+mixset Wonderful {
+  class Main
+  {
+    before Wonderful_Label: main(String) {
+      System.out.print(" wonderful ");
+    }
+  }
+}
+
+
+// use statements activate mixsets.
+use Hello;
+use Beatuiful;
+//use Wonderful;
+use World;

@@ -9,6 +9,7 @@ noreferences
 [[mixsetDefinition]] [[mixsetInnerContent]] [[mixsetInlineDefinition]] [[aspectBody]]
 
 @@example
-@@source manualexamples/SimpleMixsets1.ump
+@@source manualexamples/MixsetsInMethod.ump
 @@endexample
 
+//https://cruise.umple.org/umpleonline/?example=manualexamples/
