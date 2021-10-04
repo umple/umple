@@ -1,0 +1,12 @@
+Require Statement
+Mixsets and Filters
+noreferences
+
+@@description
+<p> </p>
+@@syntax
+[[mixsetDefinition]] [[mixsetInnerContent]] [[mixsetInlineDefinition]] [[aspectBody]]
+
+@@example
+@@source manualexamples/RequireStatement.ump
+@@endexample
