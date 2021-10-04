@@ -1,7 +1,7 @@
 class Main
 {
   // The method below has three code labels
-  // plus an inline mixset (line 10). 
+  // plus an inline mixset (line 11). 
   // These labels act as points of extensions.
   
   void main(String[] arg){
