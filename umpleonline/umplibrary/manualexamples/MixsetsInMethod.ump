@@ -1,6 +1,7 @@
 class Main
 {
-  // The method below has three code labels plus an inline mixset (line 10). 
+  // The method below has three code labels
+  // plus an inline mixset (line 10). 
   // These labels act as points of extensions.
   
   void main(String[] arg){
@@ -13,7 +14,8 @@ class Main
   }
 }
 
-// The following three mixsets inject code based on the label specified after "before".
+// The following three mixsets inject code 
+// based on the label specified after "before".
 mixset Hello {
   class Main
   {
@@ -38,7 +40,6 @@ mixset Wonderful {
     }
   }
 }
-
 
 // use statements activate mixsets.
 use Hello;

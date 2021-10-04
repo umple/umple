@@ -11,5 +11,3 @@ noreferences
 @@example
 @@source manualexamples/MixsetsInMethod.ump
 @@endexample
-
-//https://cruise.umple.org/umpleonline/?example=manualexamples/
