@@ -6,7 +6,7 @@ class Main
   
   void main(String[] arg){
     Hello_Label: ;
-    Beatuiful_Label: ;
+    Beautiful_Label: ;
     Wonderful_Label: ;
     mixset World {
       System.out.print(" world !"); 
@@ -24,11 +24,11 @@ mixset Hello {
     }
   }
 }
-mixset Beatuiful {
+mixset Beautiful {
   class Main
   {
-    before Beatuiful_Label: main(String) {
-      System.out.print(" beatuiful ");     
+    before Beautiful_Label: main(String) {
+      System.out.print(" beautiful ");     
     }
   }
 }
@@ -43,6 +43,6 @@ mixset Wonderful {
 
 // use statements activate mixsets.
 use Hello;
-use Beatuiful;
+use Beautiful;
 //use Wonderful;
 use World;
