@@ -3,11 +3,11 @@ Mixsets and Filters
 noreferences
 
 @@description
-<p> In Umple, code labels can be used to indicate variation points within methods’ statements. These labels can be utilized by aspects to inject code, which directly access method bodies in these specific locations. The (re)use of code labels within methods allows finer variability at the statement level. Therefore, code labels act as variability identification within statements inside methods. This counters the need for addition of hook methods in compositional approaches. 
-
+<p> Traits can include mixsets with their bodies. For example, the code below contains the 'Numerical' mixset, which ensures the implementaion of extra methods (isGreaterThan and isLessThan) when its activited by a use statement.
+</p>
 @@syntax
-[[mixsetDefinition]] [[mixsetInnerContent]] [[mixsetInlineDefinition]] [[aspectBody]]
+[[mixsetDefinition]] [[traitDefinition]] [[traitContent]] 
 
 @@example
-@@source manualexamples/RequireStatement.ump
+@@source manualexamples/MixsetInTrait.ump
 @@endexample

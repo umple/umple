@@ -1,0 +1,32 @@
+trait TEquality{
+  Boolean isEqual(Object object);
+  Boolean isNotEqual(Object object){
+    
+    return isEqual(object) ? true : false;
+  }
+  
+  mixset Numerical {
+    Boolean isGreaterThan(Object object);
+    Boolean isLessThan(Object object);
+  }
+}
+
+
+class RealNumber 
+{
+  float value;  
+  isA TEquality;
+
+  Boolean isEqual(Object object)
+  {
+    return this.value == (RealNumber)object.value; 
+  }
+}
+
+
+/* 
+   The below use statement generates an error in Umple.
+   Because the trait TEquality has the Numerical mixset, which is activited 
+   and there is no implementaion for its methods (isGreaterThan and isLessThan).
+ */             
+use Numerical; 

@@ -3,10 +3,10 @@ Mixsets and Filters
 noreferences
 
 @@description
-<p> Require statements help to specify dependencies and relationships among mixsets. For example, the mixset M1 (Line 2) requires the mixset M2 (Line 6), but both are not part of the feature model.</p>
+<p> Require statements help to specify dependencies and relationships among mixsets. In the first code example, the mixset M1 (Line 2) requires the mixset M2 (Line 6), but both are not part of the feature model.</p>
 
 <p>For feature modeling, two keywords isFeature and subfeature can be used to construct feature model segements. When a mixset acts as an optional feature; the keyword isFeature has to be included as an attribute in the mixset body.
-subfeature keyword forms a parent-child relationship between the source mixset and the target mixset and both will become features. .</p>
+subfeature keyword forms a parent-child relationship between the source mixset and the target mixset and both will become features. The second code example contains multiple features that form a feature model. Line 22 contains a use statement that produces a software variant. </p>
 
 @@syntax
 [[requireStatement]] [[requireBody]] [[requireList]] [[requireLinkingOp]] [[requireLinkingOptNot]] [[requireTerminal]] [[multiplicityTerminal]]
