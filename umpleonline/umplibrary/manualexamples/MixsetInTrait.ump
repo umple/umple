@@ -25,8 +25,8 @@ class RealNumber
 
 
 /* 
-   The below use statement generates an error in Umple.
-   Because the trait TEquality has the Numerical mixset, which is activited 
-   and there is no implementaion for its methods (isGreaterThan and isLessThan).
+   The below use statement generates an error in Umple when its activited.
+   Because the trait TEquality has the Numerical mixset, and there is no 
+   implementaion for its methods (isGreaterThan and isLessThan).
  */             
-use Numerical; 
+//use Numerical; 
