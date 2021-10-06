@@ -19,7 +19,10 @@ class RealNumber
 
   Boolean isEqual(Object object)
   {
-    return this.value == (RealNumber)object.value; 
+    if(object instanceof RealNumber)
+    return this.value == ((RealNumber) object).value;
+    else
+    return false;
   }
 }
 
