@@ -6,7 +6,6 @@ mixset GSMProtocol {
 }
 
 mixset AudioFormat {
-  
   require subfeature [1..2 of {Mp3,Wav} ];
 }
 mixset Mp3Recording {
@@ -20,4 +19,3 @@ mixset Resolution{
 }
 
 use GSMProtocol, GSM1800,  Playback, AudioFormat, Wav;
-

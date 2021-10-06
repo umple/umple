@@ -2,7 +2,7 @@ trait TEquality{
   Boolean isEqual(Object object);
   Boolean isNotEqual(Object object){
     
-    return isEqual(object) ? true : false;
+    return isEqual(object) ? false : true;
   }
   
   mixset Numerical {
@@ -10,7 +10,6 @@ trait TEquality{
     Boolean isLessThan(Object object);
   }
 }
-
 
 class RealNumber 
 {
@@ -25,7 +24,6 @@ class RealNumber
     return false;
   }
 }
-
 
 /* 
    The below use statement generates an error in Umple when its activited.
