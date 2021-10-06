@@ -33,3 +33,7 @@ class RealNumber
    implementaion for its methods (isGreaterThan and isLessThan).
  */             
 //use Numerical; 
+
+
+//$?[End_of_model]$?
+// @@@skipphpcompile
