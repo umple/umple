@@ -14,6 +14,9 @@ import cruise.umple.compiler.MethodBody;
 import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.php.PhpClassGenerator;
 import java.io.File;
+import cruise.umple.compiler.UmpleAnnotaiveToCompositionGenerator;
+import cruise.umple.compiler.GvFeatureDiagramGenerator;
+
 
 public class UmpleMixsetTest {
   
@@ -696,6 +699,57 @@ public class UmpleMixsetTest {
     Assert.assertFalse(code.contains("mixset M2 {"));
     //delete generated file
     SampleFileWriter.destroy(umpleParserTest.pathToInput+"/AspectClass.java");
+  }
+  @Test
+  public void refactorInlineMixsetIntoCompMixset()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseRefactorInlineMixsetIntoCompMixset.ump");
+    UmpleModel umpModel = new UmpleModel(umpleFile);
+    umpModel.setShouldGenerate(true);
+    umpModel.run();
+    UmpleAnnotaiveToCompositionGenerator umpleAnnotaiveToCompositionGenerator = new UmpleAnnotaiveToCompositionGenerator();
+    umpleAnnotaiveToCompositionGenerator.setModel(umpModel);
+    umpleAnnotaiveToCompositionGenerator.generate();
+    String generatedFile =  umpleParserTest.pathToInput+"/parseRefactorInlineMixsetIntoCompMixset_refactoredToComposition.ump";
+    SampleFileWriter.assertFileExists(generatedFile);
+    String templateGeneratedCode = SampleFileWriter.readContent(new File(generatedFile));
+    //  included mixsets
+    Assert.assertTrue(templateGeneratedCode.contains("class Bank { 1 -- 1..* Branch; }"));
+    SampleFileWriter.destroy(generatedFile);
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/Bank.java");
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/Account.java");
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/Branch.java");
+  }
+
+  @Test
+  public void featureDependencies()
+  { 
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"featureDepend.ump");
+    UmpleModel umpModel = new UmpleModel(umpleFile);
+    umpModel.setShouldGenerate(true);
+    umpModel.run();
+    GvFeatureDiagramGenerator gen = new GvFeatureDiagramGenerator();
+    gen.setModel(umpModel);
+    gen.generate();
+    SampleFileWriter.destroy(umpleParserTest.pathToInput+"/featureDependGvFeatureDiagram.gv");
+  }
+
+  @Test
+  public void featureUseIsValid()
+  {
+    UmpleFile file1 = new UmpleFile(umpleParserTest.pathToInput,"mobileSPL_1.ump");
+    UmpleModel model1 = new UmpleModel(file1);
+    model1.run();
+    boolean file1Test = model1.getFeatureModel().satisfyFeatureModel();
+    Assert.assertTrue(file1Test);
+
+    UmpleFile file2 = new UmpleFile(umpleParserTest.pathToInput,"mobileSPL_2.ump");
+    UmpleModel model2 = new UmpleModel(file2);
+    model2.run();
+    boolean file2Test = model2.getFeatureModel().satisfyFeatureModel();
+    Assert.assertFalse(file2Test);
+
+   
   }
 
 }

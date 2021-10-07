@@ -34,6 +34,7 @@ import cruise.umple.compiler.AnonymousFunction;
 import cruise.umple.compiler.BasicConstraint;
 import cruise.umple.compiler.CodeBlock;
 import cruise.umple.compiler.Comment;
+import cruise.umple.compiler.Requirement;
 import cruise.umple.compiler.ConstraintAttribute;
 import cruise.umple.compiler.ConstraintOperator;
 import cruise.umple.compiler.ConstraintPort;
@@ -550,6 +551,10 @@ public class UmpleStructureGenerationPolicy{
 			Comment comment = activeDirectionHandlerBody.getComment();
 			if(comment!= null&& !visited.contains(comment)){
 				visited.add(comment);
+			}
+			Requirement requirement = activeDirectionHandlerBody.getRequirement();
+			if(requirement!= null&& !visited.contains(requirement)){
+				visited.add(requirement);
 			}
 			
 			CodeBlock codeblock = activeDirectionHandlerBody.getCodeblock();

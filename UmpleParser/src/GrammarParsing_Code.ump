@@ -593,7 +593,11 @@ class ParserDataPackage
       }
       else
       {
-        resourceStream = getClass().getResourceAsStream(file);
+        String resourceToLoad=file;
+        if(file.contains("lib:")) {
+          resourceToLoad = "/"+file.substring(file.indexOf("lib:")+4);
+        }
+        resourceStream = getClass().getResourceAsStream(resourceToLoad);
         reader = new BufferedReader(new InputStreamReader(resourceStream));
       }
       String line = reader.readLine();

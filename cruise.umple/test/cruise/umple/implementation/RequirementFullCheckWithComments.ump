@@ -1,0 +1,40 @@
+req R1 {
+  There should be a class called X
+}
+req R1a {
+  The reason it should be called X is because it is secret
+}
+req R2 {
+  Class X should have several attribites
+}
+req R3 {
+  There must be a class called Y
+}
+req R4 {
+  Each instance of class X should have several Ys associated with it.
+}
+req R5 {A Y should have a c}
+
+implementsReq R1;
+class X {
+  implementsReq R1a;
+  
+  implementsReq R2;
+  a;
+  
+  implementsReq R2;
+  // This is another attribute
+  b;
+}
+
+// This is class Y
+implementsReq R3;
+class Y {
+  // This is an important attribute
+  implementsReq R5;
+  c;
+}
+association {
+  implementsReq R4;
+  1 X -- * Y;
+}

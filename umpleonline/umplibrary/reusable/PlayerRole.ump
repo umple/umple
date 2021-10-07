@@ -1,0 +1,12 @@
+// Generic pattern for players and roles
+// In any Umple program say 'use lib:PlayerRole.ump;' to include this pattern.
+
+// A player is an object that can have many roles
+// A person can be an employee and a student
+trait Player {}
+
+// A captures some functionality that a player may have
+// either temporarily or in conjunction with other roles
+trait Role <Player> {
+ * -- 1 Player;
+}

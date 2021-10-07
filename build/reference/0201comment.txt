@@ -1,5 +1,5 @@
 Umple Comments
-Comments
+Comments and Requirements
 noreferences
 @@tooltip Ways to specify comments in Umple code
 

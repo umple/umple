@@ -1,0 +1,10 @@
+req R01{
+    this is a requirement for an attribute
+}
+
+class Example {
+    implementsReq R01;
+    a;
+
+    b; implementsReq R01;
+}

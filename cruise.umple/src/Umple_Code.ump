@@ -850,6 +850,53 @@ class Comment
   }
 }
 
+class Requirement{
+
+  // deep copy constructor
+  public Requirement(Requirement aReq)
+  {
+    identifier = aReq.getIdentifier();
+    statement = aReq.getStatement();
+    language = aReq.getLanguage();
+  }
+
+  public static List<Comment> convertToComment(List<Requirement> reqSelected){
+    List<Comment> reqTextOnly = new ArrayList<Comment>();
+    String reqText = new String();
+
+    for (Requirement req : reqSelected){
+      reqText = req.getStatement().trim();
+
+      reqText = req.getIdentifier() + ": " + reqText;
+
+      String [] reqTextList = reqText.split("\n");
+
+      for (String line : reqTextList){
+        // convert text of req to comment and format like a comment
+        Comment reqComment = new Comment(line);      
+        reqTextOnly.add(reqComment);
+      }
+    }
+      
+    return reqTextOnly;
+  }
+
+  public static String format(String type, List<Requirement> reqSelected){
+    List<Comment> listOfReq = convertToComment(reqSelected);
+    return Comment.format(type, listOfReq);
+  }
+
+  public static String translateToHTML(String content, String lang){
+    // Translate from md to html
+    //if (language.equals("md")){
+    //  content = content;
+    //}
+
+    return content;
+  }
+
+}
+
 mixset Constraint {
   use constraint/Umple_CodeConstraint.ump;
 }

@@ -448,9 +448,16 @@ Page.initUmpleTextArea = function()
   var modelEditor = jQuery("#umpleModelEditorText");
   var layoutEditor = jQuery("#umpleLayoutEditorText");
   
-  modelEditor.keyup(function(eventObject){Action.umpleTyped(eventObject);});
+  modelEditor.keyup(function(eventObject){
+    Action.freshLoad = false;
+    Action.umpleTyped(eventObject);
+  });
   modelEditor.mousedown(function(){setTimeout("jQuery(\"#linenum\").val(Action.getCaretPosition())",25)});
-  layoutEditor.keyup(function(eventObject){Action.umpleCodeMirrorTypingActivity();}); // Fixes Issue#1571 Editing on the layout editor will not update the Umple diagram
+  layoutEditor.keyup(function(eventObject){
+    Action.freshLoad = false;
+    Action.setjustUpdateNowtoSaveLater(false);
+    Action.umpleCodeMirrorTypingActivity();
+  }); // Fixes Issue#1571 Editing on the layout editor will not update the Umple diagram
   modelEditor.focus(function(){Action.focusOn("umpleModelEditorText", true);});
   layoutEditor.focus(function(){Action.focusOn("umpleLayoutEditorText", true);});
   modelEditor.blur(function(){Action.focusOn("umpleModelEditorText", false);});
@@ -918,6 +925,10 @@ Page.setUmpleCode = function(umpleCode, reason)
     }
   }
   jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
+
+  if (typeof reason === 'function'){
+    reason();
+  }
 }
 
 Page.setUmplePositioningCode = function(positioning)
@@ -1012,7 +1023,7 @@ Page.cancelTask = function(){
    
    if (jQuery("#completionURL").val()!='' || jQuery("#taskName").val()!='' || jQuery("#requestorName").val()!='' || jQuery("#instructions").val()!=''){
 
-    var answer = confirm ("Are you sure you wanna cancel your task creation process ?");
+    var answer = confirm ("Are you sure you want to end the task creation process?");
 	
     if (answer){
     jQuery("#taskName").val('');
@@ -1023,6 +1034,15 @@ Page.cancelTask = function(){
     }
     }
     else{ Page.hideTask();}
+}
+
+Page.endTaskEdit = function() {
+  
+    var answer = confirm ("Are you sure you want to end the task editing process?");
+    if (answer){
+    	Page.hideTask();
+    }
+  
 }
 
 Page.toggleTabs = function()

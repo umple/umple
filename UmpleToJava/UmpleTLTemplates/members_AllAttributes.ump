@@ -35,7 +35,9 @@ class UmpleToJava {
     
     if("internal".equals(av.getModifier()))
     {
-      if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+      if (av.numberOfComments() > 0 && av.numberOfRequirements() > 0) { List<Comment> toComment = new ArrayList<Comment>(av.getComments()); toComment.addAll(Requirement.convertToComment(av.getRequirements())); append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", toComment)); }
+      else if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+      else if (av.numberOfRequirements() > 0) { append(realSb, "\n  {0}\n", Requirement.format("Attribute Javadoc", av.getRequirements())); }
     }
 
     if (av.getIsInternalTransient()){ type="transient "+type; }
@@ -58,7 +60,9 @@ class UmpleToJava {
       isFirst = false;
     }
     appendln(realSb, "");
-    if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+    if (av.numberOfComments() > 0 && av.numberOfRequirements() > 0) { List<Comment> toComment = new ArrayList<Comment>(av.getComments()); toComment.addAll(Requirement.convertToComment(av.getRequirements())); append(realSb, "\n  {0}", Comment.format("Attribute Javadoc", toComment)); }
+    else if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+    else if (av.numberOfRequirements() > 0) { append(realSb, "\n  {0}\n", Requirement.format("Attribute Javadoc", av.getRequirements())); }
     append(realSb, "  private{1} int {0};", gen.translate("attributeOne",av),isTransient);
   }
   

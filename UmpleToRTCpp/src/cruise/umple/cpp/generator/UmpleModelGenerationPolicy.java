@@ -33,6 +33,7 @@ import cruise.umple.compiler.Attribute;
 import cruise.umple.compiler.CodeBlock;
 import cruise.umple.compiler.CodeInjection;
 import cruise.umple.compiler.Comment;
+import cruise.umple.compiler.Requirement;
 import cruise.umple.compiler.ConstraintAssociation;
 import cruise.umple.compiler.ConstraintAttribute;
 import cruise.umple.compiler.ConstraintLiteral;

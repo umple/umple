@@ -17,6 +17,7 @@ namespace cruise.umple.compiler;
 class GvFeatureDiagramGenerator {
   depend cruise.umple.compiler.FeatureLink.FeatureConnectingOpType;
   UmpleModel model = null;
+  Set<String> featureSet = new HashSet<>();
   FeatureModel featureModel = null;
   // Template for what will appear at the start of each graphviz file
   graphStart(umpleVersion) <<! /*This code was generated using the UMPLE <<=umpleVersion>> modeling language! */
@@ -59,13 +60,14 @@ digraph FeatureModel {
         int upperBound = multiplicityFeatureLink.getMultiplicity().getUpperBound();
         int lowerBound = multiplicityFeatureLink.getMultiplicity().getLowerBound();        
         String minMax =""+lowerBound+".."+upperBound;
-        code.append(sourceFeatureNode.getUniqueFeatureNodeName() + getGvMultiplicityShape(minMax));
+        code.append(sourceFeatureNode.getUniqueFeatureNodeName() +"->"+ featureNode.getUniqueFeatureNodeName() +";\n");
+        code.append(featureNode.getUniqueFeatureNodeName() + getGvMultiplicityShape(minMax));
         indentLevel+=2;
         List<FeatureNode> featureNodes = ((CompoundFeatureNode) featureNode).getChildFeatures();
         for(int i=0 ; i < featureNodes.size(); i++){
           FeatureLeaf fLeaf = ((FeatureLeaf)featureNodes.get(i));
           appendSpaces(code,indentLevel);
-          code.append(sourceFeatureNode.getUniqueFeatureNodeName() +" -> "+ fLeaf.getName()+" ;"+"\n");
+          code.append(featureNode.getUniqueFeatureNodeName() +" -> "+ fLeaf.getName()+" ;"+"\n");
           fillColorOfFeatureNode(code,fLeaf,indentLevel);
         }
       }
@@ -78,6 +80,9 @@ digraph FeatureModel {
     
     List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
     for(int i=0 ; i<outgoingLinks.size(); i++){
+      boolean isAdded = featureSet.add(outgoingLinks.get(i).getTargetFeatureNode().getUniqueFeatureNodeName().trim());
+      if(!isAdded)
+        continue;
       generateFeatureNodeShape(outgoingLinks.get(i),code);
     }
   }

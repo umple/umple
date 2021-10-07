@@ -47,7 +47,7 @@ if (isset($_REQUEST["save"]))
       $dataHandle = dataStore()->createData();
       $dataHandle->writeData($filename, $input);
     }
-    $workDir = $handleData->getWorkDir();
+    $workDir = $dataHandle->getWorkDir();
     // it will inserted into an href, so we should actually permalink
     // the resulting file
     echo $workDir->makePermalink($filename);

@@ -403,7 +403,7 @@ class Documenter
     htmlOutput = htmlOutput.replace("@@EXAMPLE@@", exampleOutput);
     htmlOutput = htmlOutput.replace("@@UMPLE_GRAMMAR@@", 
       "<span class=\"notranslate\" translate=\"no\">" +
-      grammarparser.toGrammar()) + "</spsn>";
+      grammarparser.toGrammar()) + "</span>";
     return htmlOutput;
   }
   

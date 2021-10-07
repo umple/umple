@@ -93,9 +93,13 @@ class GenAssociation{
 	Boolean removeNullifyInternally= {_removeNullifyInternally()}
 	
 	0..1 -- * GenComment comments sorted {priority};
+	0..1 -- * GenRequirement requirements sorted {priority};
 	depend java.util.stream.Collectors;
 	String emitComments(){
 		return this.getComments().stream().map(GenComment::getBody).collect(Collectors.joining(NL));
+	}
+	String emitRequirements(){
+		return this.getRequirements().stream().map(GenRequirement::getBody).collect(Collectors.joining(NL));
 	}
 	
 	lazy String value;

@@ -299,6 +299,7 @@ function UmpleAssociation()
     if(this.color == "red") associationDiv.addClass("redTracedAssociation");
     else associationDiv.addClass("untracedAssociation");
     associationDiv.attr("id", this.id);
+    associationDiv.attr("tabindex", 2);
     
     var classOne = UmpleSystem.find(this.classOneId);
     var classTwo = UmpleSystem.find(this.classTwoId);
@@ -490,6 +491,7 @@ function UmpleAssociation()
     if(this.color == "red") associationDiv.addClass("redTracedAssociation");
     else associationDiv.addClass("untracedAssociation");
     associationDiv.attr("id", this.id);
+    associationDiv.attr("tabindex", 2);
     
     // set the class positions
     var umpleClass = UmpleSystem.find(this.classOneId);

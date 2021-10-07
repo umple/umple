@@ -32,11 +32,7 @@ module OptionsPanelTestHelper
     load_page
     select_option_by_value("#inputExampleType", "smModels")
     select_option_by_value("#inputExample2", "Booking.ump")
+    wait_for_loading
     switch_to_options_panel
-  end
-  
-  def input_model_text(new_text)
-    find(:css, "#topTextEditor").click
-    find(:css, "#topTextEditor").send_keys "#{new_text}"
   end
 end

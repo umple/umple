@@ -19,10 +19,19 @@ Action.gentime = new Date().getTime();
 Action.savedCanonical = "";
 Action.gdprHidden = false;
 Action.update = "";
+
+// Regulators of whether a save occurs on not
+// false: the program proceeds and saves as normal; true: skip the save as the program would have saved earlier already
 let justUpdatetoSaveLater = false;
 
 Action.setjustUpdatetoSaveLater = function(state){
   justUpdatetoSaveLater = state;
+}
+
+let justUpdatetoSaveLaterForTextCallback = false;
+
+Action.setjustUpdatetoSaveLaterForTextCallback = function(state){
+  justUpdatetoSaveLaterForTextCallback = state;
 }
 
 Action.clicked = function(event)
@@ -132,7 +141,9 @@ Action.clicked = function(event)
   {
     if (typeof(Storage) !== "undefined") {
       localStorage.setItem("umpleLocalStorage1",Page.getUmpleCode());
+      Page.setFeedbackMessage("Model saved. Use Load From Browser later to restore.")
     }
+    else{Page.setFeedbackMessage("Unable to copy the model to browser storage. An error occurred.")}
   }
   else if (action == "LoadLocalBrowser")
   {
@@ -416,10 +427,9 @@ Action.redoOrUndo = function(isUndo)
   var rawOriginal = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
   var theDiff=Action.findDiff(rawOriginal, rawReplacement);
   var prevLine=Action.getCaretPosition();
-
   Action.freshLoad = true;
   Page.setUmpleCode(afterHistoryChange);
-  if (!Action.manualSync) Action.updateUmpleDiagram();
+  if (!Action.manualSync) Action.updateLayoutEditorAndDiagram();
 
   Action.setjustUpdatetoSaveLater(true);
   
@@ -488,9 +498,9 @@ Action.loadFileCallback = function(response)
   Action.freshLoad = true;
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   if (Object.keys(TabControl.tabs).length > 1) return;
-  
-  TabControl.getCurrentHistory().save(response.responseText,"loadFileCallback");
   Page.setUmpleCode(response.responseText, true);
+  TabControl.getCurrentHistory().save(response.responseText,"loadFileCallback");
+  Action.setjustUpdatetoSaveLater(true);
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {
     var extractedName = TabControl.extractNameFromCode(response.responseText);
@@ -499,7 +509,10 @@ Action.loadFileCallback = function(response)
       TabControl.useActiveTabTo(TabControl.renameTab)(extractedName, true);
     }
   }
-  if (!Action.manualSync) Action.updateUmpleDiagram();
+  if (!Action.manualSync) {
+    Action.updateUmpleDiagram();
+    Action.freshLoad = false;
+  }
 }
 
 Action.loadTask = function(taskName, isBookmark)
@@ -565,8 +578,10 @@ Action.loadTaskExceptCodeCallback = function(response)
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   //if (Object.keys(TabControl.tabs).length > 1) return;
 
-  Action.setjustUpdatetoSaveLater(true);
-  TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
+  if (!justUpdatetoSaveLater){
+    TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
+    Action.setjustUpdatetoSaveLater(true);
+  }
   var responseArray = response.responseText.split("task delimiter");
   jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":");
   jQuery("#requestorName").val(responseArray[4]);
@@ -887,15 +902,17 @@ Action.copyCommandLineCode = function()
 
 Action.showCodeInSeparateWindow = function()
 {
-  codeWindow = window.open("","UmpleCode","height=700, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
+  codeWindow = window.open("","UmpleCode"+Math.random()*10000,"height=700, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
   codeWindow.document.write('<code><pre id="umpleCode">' + Page.getUmpleCode() + '</pre></code>');
+  codeWindow.document.title="Umple raw code";
   codeWindow.document.close();
 }
 
 Action.showEncodedURLCodeInSeparateWindow = function()
 {
-  codeWindow = window.open("","UmpleCode","height=500, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
+  codeWindow = window.open("","UmpleEncodedURL"+Math.random()*10000,"height=500, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
   codeWindow.document.write('<code><pre id="umpleCode">' + Page.getEncodedURL() + '</pre></code>');
+  codeWindow.document.title="Umple encoded URL";
   codeWindow.document.close();
 }
 
@@ -1503,7 +1520,7 @@ Action.directUpdateCommandCallback = function(response)
 // such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
 {
-  if (!justUpdatetoSaveLater){
+  if (!justUpdatetoSaveLater && !justUpdatetoSaveLaterForTextCallback){
     TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
     Page.setExampleMessage("");
   }
@@ -1519,11 +1536,14 @@ Action.updateUmpleTextCallback = function(response)
 
   if (DiagramEdit.textChangeQueue.length == 0) 
   {
+    Action.freshLoad = false;
     DiagramEdit.pendingChanges = false;
     Action.setjustUpdatetoSaveLater(false);
+    Action.setjustUpdatetoSaveLaterForTextCallback(false);
   }
   else{
     Action.setjustUpdatetoSaveLater(true);
+    Action.setjustUpdatetoSaveLaterForTextCallback(true);
     DiagramEdit.doTextUpdate();
   }
   
@@ -1611,13 +1631,14 @@ Action.loadExample = function loadExample()
 Action.loadExampleCallback = function(response)
 {
   Action.freshLoad = true;
-  Page.setUmpleCode(response.responseText);
-  Page.hideLoading();
-  Action.updateUmpleDiagram();
+  Action.setjustUpdatetoSaveLater(true);
+  Page.setUmpleCode(response.responseText, function(){
+    Page.hideLoading();
+    Action.updateUmpleDiagram()}
+  );
   Action.setCaretPosition("0");
   Action.updateLineNumberDisplay();
   TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
-  Action.setjustUpdatetoSaveLater(true);
 }
 
 Action.customSizeTyped = function()
@@ -1684,6 +1705,18 @@ Action.keyboardShortcut = function(event)
       DiagramEdit.generalizationDeleted(Page.selectedGeneralization.id);
       event.preventDefault();
     }
+  }
+  else if ((shortcut == 8 || shortcut == 46) && jQuery(".umpleClass").is(":focus")){
+  	DiagramEdit.classDeleted(document.activeElement.id);
+  	event.preventDefault();
+  }
+  else if ((shortcut == 8 || shortcut == 46) && (jQuery(".untracedAssociation").is(":focus")||jQuery(".redTracedAssociation").is(":focus"))){
+  	DiagramEdit.associationDeleted(document.activeElement.id);
+  	event.preventDefault();
+  }
+  else if ((shortcut == 8 || shortcut == 46) && jQuery(".umpleGeneralization").is(":focus")){
+  	DiagramEdit.generalizationDeleted(document.activeElement.id);
+  	event.preventDefault();
   }
 }
 
@@ -2125,14 +2158,15 @@ Action.umpleCodeMirrorCursorActivity = function() {
 }
 
 Action.umpleCodeMirrorTypingActivity = function() {
-  if(Action.freshLoad == false && !justUpdatetoSaveLater) {
-    Page.codeMirrorEditor.save();
+  if(Action.freshLoad == false) {
     Action.umpleTypingActivity("codeMirrorEditor");
+    Page.codeMirrorEditor.save();
   }
   else {
     Action.freshLoad = false;
+    Action.setjustUpdatetoSaveLaterForTextCallback(false);
   }
-    Action.setjustUpdatetoSaveLater(false);
+
 }
 
 Action.trimMultipleNonPrintingAndComments = function(text) {
@@ -2213,7 +2247,10 @@ Action.processTyping = function(target, manuallySynchronized)
   // Save in history after a pause in typing
   if (target != "diagramEdit") 
   {
-    Action.setjustUpdatetoSaveLater(true);
+    Action.setjustUpdatetoSaveLaterForTextCallback(true);
+  }
+  else{
+    Action.setjustUpdatetoSaveLaterForTextCallback(false);
   }
   
   if (!Action.manualSync || manuallySynchronized)
@@ -2221,7 +2258,7 @@ Action.processTyping = function(target, manuallySynchronized)
     Action.diagramInSync = true;
     
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor") {
-      Action.updateLayoutEditorAndDiagram();
+      Action.updateLayoutEditorAndDiagram(); 
 
       // issue#1554
       var downloadLink = document.getElementById("downloadLink");
@@ -2235,13 +2272,18 @@ Action.processTyping = function(target, manuallySynchronized)
     {
       Action.ajax(Action.updateFromDiagramCallback,Action.getLanguage());
     }
-    
     //Page.enableDiagram(true);
   }
 
   if (target != "diagramEdit"){
-    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
+    if (!justUpdatetoSaveLater){
+      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
+    }
+    else if (target == "umpleModelEditorText" || target == "codeMirrorEditor"){
+      Action.setjustUpdatetoSaveLater(false);
+    }
     Page.setExampleMessage("");
+    
   }
 
 }
@@ -2278,7 +2320,7 @@ Action.updateUmpleLayoutEditorCallback = function(response)
   
   Page.setUmplePositioningCode(positioning);
   Page.hideLoading();
-  Action.updateUmpleDiagramForce(false);
+  Action.updateUmpleDiagramForce(true);
 }
 
 Action.updateUmpleDiagram = function() {
@@ -2300,16 +2342,17 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   Page.showCanvasLoading();
   
   Action.ajax(Action.updateUmpleDiagramCallback, Action.getLanguage());
+
 }
 
 Action.updateUmpleDiagramCallback = function(response)
 {
   var diagramCode = "";
   var errorMessage = "";
-  
+
   diagramCode = Action.getDiagramCode(response.responseText);
   errorMessage = Action.getErrorCode(response.responseText);
-  
+    
   if(diagramCode == null || diagramCode == "" || diagramCode == "null") 
   {
     Page.enableDiagram(false);
@@ -2395,8 +2438,7 @@ Action.updateUmpleDiagramCallback = function(response)
     {
       jQuery("#umpleCanvas").html('<svg id="svgCanvas"></svg>');
       eval(diagramCode);
-    }
-    
+    }   
   }
 
   //Show the error message
@@ -2432,8 +2474,7 @@ Action.updateFromDiagramCallback = function(response)
   if(errorMessage != "")
   {
     Page.showGeneratedCode(errorMessage, "diagramUpdate");
-  }
-  
+  }  
 }
 
 // Gets the code to display from the AJAX response

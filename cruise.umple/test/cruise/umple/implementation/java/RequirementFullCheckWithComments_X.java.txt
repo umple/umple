@@ -1,0 +1,191 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+import java.util.*;
+
+/**
+ * R1: There should be a class called X
+ */
+public class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X Attributes
+  private String a;
+  private String b;
+
+  //X Associations
+  private List<Y> ies;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X(String aA, String aB)
+  {
+    a = aA;
+    b = aB;
+    ies = new ArrayList<Y>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setA(String aA)
+  {
+    boolean wasSet = false;
+    a = aA;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setB(String aB)
+  {
+    boolean wasSet = false;
+    b = aB;
+    wasSet = true;
+    return wasSet;
+  }
+
+  /**
+   * R1a: The reason it should be called X is because it is secret
+   * R2: Class X should have several attribites
+   */
+  public String getA()
+  {
+    return a;
+  }
+
+  /**
+   * This is another attribute
+   * R2: Class X should have several attribites
+   */
+  public String getB()
+  {
+    return b;
+  }
+  /* Code from template association_GetMany */
+  public Y getY(int index)
+  {
+    Y aY = ies.get(index);
+    return aY;
+  }
+
+  public List<Y> getIes()
+  {
+    List<Y> newIes = Collections.unmodifiableList(ies);
+    return newIes;
+  }
+
+  public int numberOfIes()
+  {
+    int number = ies.size();
+    return number;
+  }
+
+  public boolean hasIes()
+  {
+    boolean has = ies.size() > 0;
+    return has;
+  }
+
+  public int indexOfY(Y aY)
+  {
+    int index = ies.indexOf(aY);
+    return index;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  public static int minimumNumberOfIes()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToOne */
+  public Y addY(String aC)
+  {
+    return new Y(aC, this);
+  }
+
+  public boolean addY(Y aY)
+  {
+    boolean wasAdded = false;
+    if (ies.contains(aY)) { return false; }
+    X existingX = aY.getX();
+    boolean isNewX = existingX != null && !this.equals(existingX);
+    if (isNewX)
+    {
+      aY.setX(this);
+    }
+    else
+    {
+      ies.add(aY);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeY(Y aY)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aY, as it must always have a x
+    if (!this.equals(aY.getX()))
+    {
+      ies.remove(aY);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  public boolean addYAt(Y aY, int index)
+  {  
+    boolean wasAdded = false;
+    if(addY(aY))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfIes()) { index = numberOfIes() - 1; }
+      ies.remove(aY);
+      ies.add(index, aY);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveYAt(Y aY, int index)
+  {
+    boolean wasAdded = false;
+    if(ies.contains(aY))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfIes()) { index = numberOfIes() - 1; }
+      ies.remove(aY);
+      ies.add(index, aY);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addYAt(aY, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    for(int i=ies.size(); i > 0; i--)
+    {
+      Y aY = ies.get(i - 1);
+      aY.delete();
+    }
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "a" + ":" + getA()+ "," +
+            "b" + ":" + getB()+ "]";
+  }
+}

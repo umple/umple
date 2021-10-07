@@ -87,6 +87,11 @@ class UmpleInternalParser
       regularCommentCountEnd++;
     }
 
+    for (Requirement r : lastRequirements)
+    {
+      aTrait.addRequirement(r);
+    }
+
     // Add special position comment at the end if @outputumplesource had been 
     // detected earlier in a comment
     if(outputUmpleSource == true) {  
@@ -205,6 +210,9 @@ class UmpleInternalParser
 
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
+
+    // Only need to clear requirements if there actually was requirements.
+    boolean shouldConsumeRequirement = lastRequirements.size() > 0;
     
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
     if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
@@ -238,6 +246,11 @@ class UmpleInternalParser
     {
       analyzeMultilineComment(token);
       shouldConsumeComment = false;
+    }
+    else if (token.is("reqImplementation"))
+    {
+      analyzeImplementReq(token);
+      shouldConsumeRequirement = isReqAddedToLast(token);
     }
     // TODO Under development
     
@@ -302,6 +315,10 @@ class UmpleInternalParser
     if (shouldConsumeComment)
     {
       lastComments.clear();
+    }
+    if (shouldConsumeRequirement)
+    {
+      lastRequirements.clear();
     }
   }
   
@@ -487,6 +504,10 @@ class UmpleInternalParser
     {
       attribute.addComment(c);
     }
+    for (Requirement r : lastRequirements)
+    {
+      attribute.addRequirement(r);
+    }
     
     // set the last attribute made to be attribute, clear lastassoc
     lastattr = attribute;
@@ -573,6 +594,11 @@ mixset Association {
     for (Comment c : lastComments)
     {
       yourAs.addComment(c);
+    }
+
+    for (Requirement r : lastRequirements)
+    {
+      yourAs.addRequirement(r);
     }
     
     // set last association made to be yourAs. clear lastattr.
@@ -1108,6 +1134,10 @@ mixset Association {
 			inClass.addComment(aComment);
 		}		
 		
+		for(Requirement aRequirement : inTrait.getRequirements()) {
+			inClass.addRequirement(aRequirement);
+		}
+
 		//set the dependens
 		for(Depend aDepend : inTrait.getDepends()) {
 			inClass.addDepend(aDepend);
@@ -1180,7 +1210,7 @@ mixset Association {
 	       }
 	       inClass.addAssociationVariable(aVariable);    
        }
-       */	  
+       */
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1670,7 +1700,11 @@ private void copyAttributesFromTraitsToClass(UmpleClass inClass){
 			//I need some comment for users in generated code;
 			//attribute.getComment(2).setText(attribute.getComment(2).getText()+"'"+inClass.getName()+"' ");
 			attribute.setSource(Attribute.Source.fTrait);
-			inClass.addAttribute(attribute);  
+      if (attribute.hasRequirements()){
+      }
+      else{
+      }
+			inClass.addAttribute(attribute);
 		}
 	}
 }
