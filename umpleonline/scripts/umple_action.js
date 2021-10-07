@@ -675,6 +675,14 @@ Action.copyParticipantURL = function()
   Page.setFeedbackMessage("Participant URL is in copy buffer: " + copiedURL);
 }
 
+Action.openStartFreshWork = function() 
+{
+  var a= confirm("Are you sure to start from fresh?"); 
+  if(a) { 
+    window.location.href = "/umpleonline/umple.php"
+  }
+}
+
 Action.copyToClp = function(txt){
     prenode=document.createElement("PRE");
     txt = document.createTextNode(txt);

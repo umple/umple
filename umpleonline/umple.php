@@ -355,7 +355,7 @@ $output = $dataHandle->readData('model.ump');
         <a class="button2" title="Click this to close the task editing panel and return to a normal layout." href="javascript:Page.endTaskEdit()">Exit task editing mode</a>
     <?php } else if ($doLoadTaskInstruction && substr($dataHandle->getName(), 0, 8) != "taskroot") {?>
       <a class="button2" href="javascript:Action.openInstructionInNewTab()">Open instruction in a new tab</a>&nbsp;&nbsp;
-      <a id="buttonReshowInstructions" class="button2" href="javascript:Action.reshowInstructions()" style="display: none;">Re-show Instructions</a>&nbsp;&nbsp;&nbsp;
+      <a id="buttonReshowInstructions" class="button2" href="javascript:Action.reshowInstructions()" style="display: none;">Re-show Instructions</a>&nbsp;&nbsp;
       <a id="buttonHideInstructions" class="button2" href="javascript:Action.hideInstructions()">Hide Instructions</a>&nbsp;&nbsp;&nbsp;
       <?php if (!$readOnly) { ?>
         <a class="button2" href="javascript:Action.submitTaskWork()" title=" When you submit, the requestor will be able to see your response
@@ -364,6 +364,7 @@ $output = $dataHandle->readData('model.ump');
         <a class="button2" href="javascript:Page.cancelTaskResponse()" title="Cancel this submission. Your data will be deleted.">Cancel this task response</a>&nbsp;
         <a class="button2" href="javascript:Page.hideTask()" title="Click to cancel this submission without losing your data.">Exit task submission</a>
       <?php } else { ?>
+        <a class="button2" href="javascript:Action.openStartFreshWork()">Start Fresh Work</a>&nbsp;&nbsp;
         This task response has already been submitted and is now read-only.
     <?php }} ?>
     </div>
