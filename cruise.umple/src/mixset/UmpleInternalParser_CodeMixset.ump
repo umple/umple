@@ -539,12 +539,7 @@ class UmpleInternalParser
                 break;
               }
               String mixsetTargetName = mixsetNames.get(k).replaceAll("_[0-9]*", "");
-              FeatureLeaf sourceFeature=featureModel.getFeatureLeafNode(mixsetTargetName);
-              if(sourceFeature == null)
-              {
-                sourceFeature = new FeatureLeaf(model.getFeatureModel());
-                sourceFeature.setName(mixsetTargetName);
-              }
+              FeatureLeaf sourceFeature=featureModel.getOrCreateFeatureLeafNode(mixsetTargetName);
               createFeatureLink(sourceMixsetName, sourceFeature);
             }
             break;
@@ -555,8 +550,7 @@ class UmpleInternalParser
   }
 
   private void createFeatureLink(String sourceMixsetName, FeatureLeaf sourceFeatureLeaf) {
-    FeatureLeaf newFeatureNode = new FeatureLeaf(model.getFeatureModel());
-    newFeatureNode.setName(sourceMixsetName);
+    FeatureLeaf newFeatureNode = model.getFeatureModel().getOrCreateFeatureLeafNode(sourceMixsetName);
     newFeatureNode.setMixsetOrFileNode(model.getMixset(sourceMixsetName));
     FeatureLink edge = new FeatureLink();
     edge.setFeatureConnectingOpType(FeatureConnectingOpType.Optional);
