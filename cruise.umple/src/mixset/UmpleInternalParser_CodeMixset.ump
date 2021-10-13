@@ -508,9 +508,7 @@ class UmpleInternalParser
       Matcher isFeatureMatcher = isFeaturePatternToMatch.matcher(mixsetExtraCode);
       while (isFeatureMatcher.find()) {
         //when finding a match, find its mixset
-        for (int i = mixsetDefStart.size() - 1;
-        i >= 0;
-        i--) {
+        for (int i = mixsetDefStart.size() - 1; i >= 0; i--) {
           if (mixsetDefStart.get(i) <= isFeatureMatcher.start() && mixsetDefEnd.get(i) >= isFeatureMatcher.start()) {
             FeatureModel featureModel = model.getFeatureModel();
             if (featureModel == null)
@@ -527,16 +525,7 @@ class UmpleInternalParser
               FeatureLeaf sourceFeatureLeaf = featureModel.getOrCreateFeatureLeafNode(ufile.getName());
               sourceFeatureLeaf.setName(ufile.getName());
               sourceFeatureLeaf.setMixsetOrFileNode(ufile);
-              FeatureLeaf newFeatureNode = new FeatureLeaf(model.getFeatureModel());
-              newFeatureNode.setName(sourceMixsetName);
-              newFeatureNode.setMixsetOrFileNode(model.getMixset(sourceMixsetName));
-              FeatureLink edge = new FeatureLink();
-              edge.setFeatureConnectingOpType(FeatureConnectingOpType.Optional);
-              edge.setSourceFeatureNode(sourceFeatureLeaf);
-              edge.setIsSub(true);
-              edge.setTargetFeatureNode(newFeatureNode);
-              edge.setFeatureModel(model.getFeatureModel());
-              model.getFeatureModel().addFeaturelink(edge);
+              createFeatureLink(sourceMixsetName, sourceFeatureLeaf);
             }
             else
             {
@@ -556,22 +545,26 @@ class UmpleInternalParser
                 sourceFeature = new FeatureLeaf(model.getFeatureModel());
                 sourceFeature.setName(mixsetTargetName);
               }
-              FeatureLeaf newFeatureNode = new FeatureLeaf(model.getFeatureModel());
-              newFeatureNode.setMixsetOrFileNode(model.getMixset(sourceMixsetName));
-              newFeatureNode.setName(sourceMixsetName);
-              FeatureLink edge = new FeatureLink();
-              edge.setFeatureConnectingOpType(FeatureConnectingOpType.Optional);
-              edge.setSourceFeatureNode(sourceFeature);
-              edge.setIsSub(true);
-              edge.setTargetFeatureNode(newFeatureNode);
-              edge.setFeatureModel(model.getFeatureModel());
-              model.getFeatureModel().addFeaturelink(edge);
+              createFeatureLink(sourceMixsetName, sourceFeature);
             }
             break;
           }
         }
       }
     }
+  }
+
+  private void createFeatureLink(String sourceMixsetName, FeatureLeaf sourceFeatureLeaf) {
+    FeatureLeaf newFeatureNode = new FeatureLeaf(model.getFeatureModel());
+    newFeatureNode.setName(sourceMixsetName);
+    newFeatureNode.setMixsetOrFileNode(model.getMixset(sourceMixsetName));
+    FeatureLink edge = new FeatureLink();
+    edge.setFeatureConnectingOpType(FeatureConnectingOpType.Optional);
+    edge.setSourceFeatureNode(sourceFeatureLeaf);
+    edge.setIsSub(true);
+    edge.setTargetFeatureNode(newFeatureNode);
+    edge.setFeatureModel(model.getFeatureModel());
+    model.getFeatureModel().addFeaturelink(edge);
   }  
 }
 
