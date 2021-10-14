@@ -476,7 +476,26 @@ class UmpleInternalParser
       }	        
     }
     return methodCode;
-  }  
+  }
+  // This method raise warning when use same label multiple times.
+  private void checkLabelDoublication(String methodCode) {
+    ArrayList<String> labels = new ArrayList<String>();
+    ArrayList<MixsetInMethod> mixsetInsideMethodList = new ArrayList<MixsetInMethod>();
+    Pattern labelPatternToMatch = Pattern.compile("\\w+:"); // to detect mixset def.
+    Matcher matcher = labelPatternToMatch.matcher(methodCode);
+    while (matcher.find()) {
+      if(labels.contains(matcher.group()))
+      {
+        //raise error
+        System.out.println("Error "+matcher.group()+" has been multiple times.");
+        return;
+      }
+      else
+      labels.add(matcher.group());
+  }
+  
+
+
 }
 
 mixset AspectInjection {
