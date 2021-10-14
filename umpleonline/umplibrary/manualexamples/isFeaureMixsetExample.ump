@@ -1,0 +1,10 @@
+mixset Debug{
+  
+  isFeature;
+  
+  mixset ConsolePrint
+  {
+    isFeature;
+  }
+  
+}
