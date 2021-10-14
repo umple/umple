@@ -1,7 +1,10 @@
+// Because Debug contains isFeature, it is an optional feature to the base SPL.
+
 mixset Debug{
   
   isFeature;
-  
+
+  // Because ConsolePrint contains isFeature, it is an optional feature to Debug.
   mixset ConsolePrint
   {
     isFeature;
