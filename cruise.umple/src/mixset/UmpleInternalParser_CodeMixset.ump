@@ -320,7 +320,7 @@ class UmpleInternalParser
     // parse mixset fragments right away if there is a use-statement. 
     if(mixset.getUseUmpleFile() != null)
       parseMixsetWaitingFragment(mixsetFragment);
-      
+      processMixsetIsFeature(token);
       return mixset;
   }
   
@@ -476,6 +476,89 @@ class UmpleInternalParser
       }	        
     }
     return methodCode;
+  }
+    private void processMixsetIsFeature(Token token) {
+    if (token == null || token.getParentToken() == null)
+    return;
+    else if (token.getParentToken().getName().equals("ROOT")) {
+      ArrayList<String> mixsetNames = new ArrayList<String>();
+      ArrayList<Integer> mixsetDefStart = new ArrayList<Integer>();
+      ArrayList<Integer> mixsetDefEnd = new ArrayList<Integer>();
+      String mixsetExtraCode = token.getSubToken("extraCode").getValue();
+      
+      // add the current mixset to be the first element
+      mixsetNames.add(token.getSubToken("mixsetName").getValue());
+      mixsetDefStart.add(0);
+      mixsetDefEnd.add(mixsetExtraCode.length());
+      
+      // extract the start & end position of each mixset
+      Pattern mixsetDefPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+\\{");
+      Matcher mixsetDefinitionMatcher = mixsetDefPatternToMatch.matcher(mixsetExtraCode);
+      while (mixsetDefinitionMatcher.find()) {
+        String matchedStart = mixsetExtraCode.substring(mixsetDefinitionMatcher.start());
+        int indexOfMixsetClosingBracket = mixsetDefinitionMatcher.start() + MethodBody.indexOfMixsetClosingBracket(matchedStart);
+        String mixsetName = mixsetDefinitionMatcher.group().replace("mixset", "");
+        mixsetName = mixsetName.replace("{", "").trim();
+        mixsetNames.add(mixsetName + "_" + mixsetDefinitionMatcher.start());
+        mixsetDefStart.add(mixsetDefinitionMatcher.start());
+        mixsetDefEnd.add(indexOfMixsetClosingBracket);
+      }
+      // find any isFeautre within a mixset
+      Pattern isFeaturePatternToMatch = Pattern.compile("(\\s+)?isFeature");
+      Matcher isFeatureMatcher = isFeaturePatternToMatch.matcher(mixsetExtraCode);
+      while (isFeatureMatcher.find()) {
+        //when finding a match, find its mixset
+        for (int i = mixsetDefStart.size() - 1; i >= 0; i--) {
+          if (mixsetDefStart.get(i) <= isFeatureMatcher.start() && mixsetDefEnd.get(i) >= isFeatureMatcher.start()) {
+            FeatureModel featureModel = model.getFeatureModel();
+            if (featureModel == null)
+            featureModel = new FeatureModel("featureModel");
+            featureModel.setUmpleModel(model);
+            
+            UmpleFile ufile = new UmpleFile(token.getPosition().getFilename());
+            int k=0;
+            String sourceMixsetName = mixsetNames.get(i).replaceAll("_[0-9]*", "");
+            
+            // else check the ecloseing mixsets
+            if( i == 0) // isFeature palced for the root mixset, so its should be optional to the base feature
+            {
+              FeatureLeaf sourceFeatureLeaf = featureModel.getOrCreateFeatureLeafNode(ufile.getName());
+              sourceFeatureLeaf.setName(ufile.getName());
+              sourceFeatureLeaf.setMixsetOrFileNode(ufile);
+              createFeatureLink(sourceMixsetName, sourceFeatureLeaf);
+            }
+            else
+            {
+              boolean hasConainerMixset = false;
+              for (k=i-1;
+              k>0;
+              k--)
+              {
+                hasConainerMixset= mixsetDefStart.get(k) < mixsetDefStart.get(i) && mixsetDefEnd.get(k) > mixsetDefEnd.get(i) ;
+                if(hasConainerMixset)
+                break;
+              }
+              String mixsetTargetName = mixsetNames.get(k).replaceAll("_[0-9]*", "");
+              FeatureLeaf sourceFeature=featureModel.getOrCreateFeatureLeafNode(mixsetTargetName);
+              createFeatureLink(sourceMixsetName, sourceFeature);
+            }
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  private void createFeatureLink(String sourceMixsetName, FeatureLeaf sourceFeatureLeaf) {
+    FeatureLeaf newFeatureNode = model.getFeatureModel().getOrCreateFeatureLeafNode(sourceMixsetName);
+    newFeatureNode.setMixsetOrFileNode(model.getMixset(sourceMixsetName));
+    FeatureLink edge = new FeatureLink();
+    edge.setFeatureConnectingOpType(FeatureConnectingOpType.Optional);
+    edge.setSourceFeatureNode(sourceFeatureLeaf);
+    edge.setIsSub(true);
+    edge.setTargetFeatureNode(newFeatureNode);
+    edge.setFeatureModel(model.getFeatureModel());
+    model.getFeatureModel().addFeaturelink(edge);
   }  
 }
 
