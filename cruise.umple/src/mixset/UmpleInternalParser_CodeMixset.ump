@@ -492,6 +492,7 @@ class UmpleInternalParser
       }
       else
       labels.add(matcher.group());
+    }
   }
   
 
