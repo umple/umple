@@ -487,7 +487,9 @@ class UmpleInternalParser
     line = line.trim().stripLeading(); // remove space before and after
     if (line.matches("^\\w+:")) // check if start with a word followed by a colon.
     {
-      if(labels.contains(line))
+      if(line.contains("default") )
+      continue;
+      else if(labels.contains(line))
       {
         setFailedPosition(t.getPosition(), 1512, methodName);
         
