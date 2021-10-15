@@ -216,7 +216,7 @@
 1510 : 1, "http://manual.umple.org/?E1510UseFileMissing.html", File '{0}' referred to in use statement was not found ; 
 
 1511 : 2, "http://manual.umple.org/?E1511InlineMixsetIsNotSupported.html", Inline syntax for the mixset '{0}' is not supported. Please enclose the body of '{0}' with curly brackets. ; 
-1512 : 2, "http://manual.umple.org/?E1512MultipleCodeLabelsWithSameName.html", Multiple code labels having the same name should be avoided in the method '{2}'. The method definition starts at line {0}. Please consider unique names for code labels.; 
+1512 : 2, "http://manual.umple.org/?E1512MultipleCodeLabelsWithSameName.html", Multiple code labels having the same name should be avoided for the method '{0}' at line '{1}'. Please consider unique names for code labels.; 
 
 
 
