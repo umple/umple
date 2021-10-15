@@ -3428,7 +3428,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             // process mixsets inside code 
             mixset Mixset {
               methodCode = processInlineMixset(token.getValue(), meth);
-              checkLabelDoublication(methodCode);
+              checkLabelDoublication(aMethod.getName(),methodCode,token);
             } // end of MIXSET 
             cb.setCode(methodCode);
             aMethod.setCodePosition(token.getPosition());
