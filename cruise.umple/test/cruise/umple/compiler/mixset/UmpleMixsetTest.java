@@ -747,9 +747,17 @@ public class UmpleMixsetTest {
     UmpleModel model2 = new UmpleModel(file2);
     model2.run();
     boolean file2Test = model2.getFeatureModel().satisfyFeatureModel();
-    Assert.assertFalse(file2Test);
-
-   
+    Assert.assertFalse(file2Test);   
   }
+  @Test
+  public void sameLabelManyTimesWarning() {
+    UmpleFile file = new UmpleFile(umpleParserTest.pathToInput,"sameLabelManyTimes.ump");
+    int line = 5;
+    int errorCode = 1512;
+    int offset= 4;
+    int charOff = 64;
+    umpleParserTest.assertHasWarningsParse(file.getFileName(), new Position(file.getPath()+"/"+file.getFileName(),line,offset,charOff),errorCode);
+  }
+
 
 }
