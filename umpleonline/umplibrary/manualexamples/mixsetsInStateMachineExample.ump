@@ -1,0 +1,32 @@
+// This example shows how a state machine model can incorporate inline mixsets.
+class GarageDoor
+{
+  status {
+    Open { buttonOrObstacle -> Closing;  }
+    
+    Closing {
+      buttonOrObstacle -> Opening;
+      reachBottom -> Closed;
+    }
+    
+    Closed { buttonOrObstacle -> Opening; }
+    
+    Opening {
+      // HalfOpenFeature mixset below is an inline mixset.
+      // It contains an event (a part of the state machine).
+      mixset HalfOpenFeature {
+        buttonOrObstacle -> HalfOpen;
+      }
+      // end of HalfOpenFeature.
+      reachTop -> Open;
+    }
+    // HalfOpenFeature mixset here contains a state (with its content)
+    
+    mixset HalfOpenFeature {
+      HalfOpen { buttonOrObstacle -> Opening; }
+    }
+  }
+}
+
+// A use statement to activate HalfOpenFeature mixset.
+ use HalfOpenFeature;
