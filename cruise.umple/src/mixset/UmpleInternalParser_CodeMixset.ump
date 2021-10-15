@@ -478,24 +478,25 @@ class UmpleInternalParser
     return methodCode;
   }
   // This method raise warning when use same label multiple times.
-  private void checkLabelDoublication(String methodName, String methodCode, Token t) {
-    ArrayList<String> labels = new ArrayList<String>();
-    Pattern labelPatternToMatch = Pattern.compile("\\w+:"); // to detect code label def.
-    Matcher matcher = labelPatternToMatch.matcher(methodCode);
-    while (matcher.find()) {
-      if(labels.contains(matcher.group()))
+  private void checkLabelDoublication(String methodName, String methodCode, Token t){
+  Stream<String> lines = methodCode.lines();
+  ArrayList<String> labels = new ArrayList<String>();
+  List<String> linesAsList = lines.collect(Collectors.toList());
+  for (String line : linesAsList)
+  {
+    line = line.trim().stripLeading(); // remove space before and after
+    if (line.matches("^\\w+:")) // check if start with a word followed by a colon.
+    {
+      if(labels.contains(line))
       {
-        //raise error
         setFailedPosition(t.getPosition(), 1512, methodName);
-        return;
+        
       }
-      else
-      labels.add(matcher.group());
+      else 
+         labels.add(line);     
+      }
     }
   }
-  
-
-
 }
 
 mixset AspectInjection {
