@@ -1,0 +1,28 @@
+class GarageDoor
+{
+  status {
+    Open { buttonOrObstacle -> Closing;  }
+    Closing {
+      buttonOrObstacle -> Opening;
+      reachBottom -> Closed;
+    }
+    Closed { buttonOrObstacle -> Opening; }
+    Opening {
+      reachTop -> Open;
+    }
+  }
+}
+// The mixset below contains a compostional mixsets.
+mixset HalfOpenFeature {
+  class GarageDoor
+  {
+    status {
+      Opening {
+        buttonOrObstacle -> HalfOpen;
+      }   
+      HalfOpen { buttonOrObstacle -> Opening; }
+    }
+  }
+}
+// A use statement to activate HalfOpenFeature mixset.
+use HalfOpenFeature;

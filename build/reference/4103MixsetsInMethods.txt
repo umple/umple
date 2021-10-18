@@ -1,0 +1,19 @@
+Mixsets in Methods
+Mixsets and Filters
+noreferences
+
+@@description
+<p>Umple <a href="BasicMixsets.html">mixsets</a> can be used to conditionally construct variant versions of methods that enable different members of a product line to behave differently. There are multiple ways this can be done. The simplest way is to add a mixset statement <i>directly</i> into a method, as seen on line 11 of the  example below. In this example, the code on line 12 will only be part of the method if the World mixset is activated through a use statement or command line argument.</p>
+
+<p>The second way to use mixsets with methods is to create mixsets that contain <a href="BeforeandAfterStatements.html">Umple aspects</a> that inject code in methods. In the example below, the mixsets starting at lines 19, 27 and 35 all do this.</p>
+
+<p>In Umple, code labels (identifiers followed by a colon) can be used to indicate variation points at multiple points among any method’s statements. These labels can be utilized by aspects to indicate where to inject code into the methods, and can even enable <a href="AroundStatement.html">replacing the code</a> between two labels. The injected code has direct access the local scope (i.e. local variables) at the locations where it is injected. When combined with mixsets, aspect injection at labels therefore provides <i>fine grained variability</i> at the statement level. It can be used as an alternative to the approach of using hook methods (empty methods that are called and do nothing by default but can be overridden in subclasses) to provide variability.</p>
+
+<p>The main method in the example below contains three labels: Hello_Label, Beautiful_Label, and Wonderful_Label. They are utilized by the aspects of three mixsets (Hello, Beautiful, and Wonderful) to inject some print statements.</p>
+
+@@syntax
+[[mixsetDefinition]] [[mixsetInnerContent]] [[aspectBody]]
+
+@@example
+@@source manualexamples/MixsetsInMethod.ump
+@@endexample

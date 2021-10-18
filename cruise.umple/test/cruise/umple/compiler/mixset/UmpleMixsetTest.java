@@ -758,6 +758,17 @@ public class UmpleMixsetTest {
     int charOff = 64;
     umpleParserTest.assertHasWarningsParse(file.getFileName(), new Position(file.getFileName(),line,offset,charOff),errorCode);
   }
+  @Test
+  public void isFeatureKeyword()
+  {
+    UmpleFile file1 = new UmpleFile(umpleParserTest.pathToInput,"isFeatureStatements.ump");
+    UmpleModel model1 = new UmpleModel(file1);
+    model1.run();
+    boolean file1Test = model1.getFeatureModel().satisfyFeatureModel();
+    int numberOfFeatures = model1.getFeatureModel().getNode().size();
+    Assert.assertTrue(file1Test);
+    Assert.assertEquals(numberOfFeatures, 6); // 5 features + root feature 
+  }
 
 
 }
