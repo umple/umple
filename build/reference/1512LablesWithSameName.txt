@@ -6,7 +6,7 @@ noreferences
 
 <h2> Warning reporting that code labels inside methods shoube have unique names.</h2>
 
-<p> Code Lables allow aspects to inject code in specific locations inside method bodies. However, the code injection is only applied to the first encountered label. Therefore, a code label should not reused multiple times (inside a method). </p>
+<p> Code Lables allow aspects to inject code in specific locations inside method bodies. However, the code injection is only applied to the first encountered label. Therefore, a code label should not be reused multiple times (inside a method). </p>
 
 <p>If you encounter this error, you can easily rename code labels with unique names for each label inside the method body.  <br/>
 </p>
