@@ -216,8 +216,8 @@
 1510 : 1, "http://manual.umple.org/?E1510UseFileMissing.html", File '{0}' referred to in use statement was not found ; 
 
 1511 : 2, "http://manual.umple.org/?E1511InlineMixsetIsNotSupported.html", Inline syntax for the mixset '{0}' is not supported. Please enclose the body of '{0}' with curly brackets. ; 
-
-
+1512 : 4, "http://manual.umple.org/?W1512CodeLabelsInsideMethodAreNotUnique.html", Multiple code labels having the same name should be avoided for the method '{0}' at line '{1}'. Please consider unique names for code labels. ; 
+ 
 
 # Messages to be emitted when embedded code from another language is compiled and you are passing on the error. These have not yet been activated.
 2001: 5, "http://manual.umple.org/?W20xxErrorinEmbeddedCode.html", Error in Java embedded in Umple: '{0}' ;

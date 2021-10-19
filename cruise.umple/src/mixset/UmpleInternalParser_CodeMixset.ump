@@ -477,6 +477,31 @@ class UmpleInternalParser
     }
     return methodCode;
   }
+  // This method raises a warning when use same label multiple times.
+  private void checkLabelDoublication(String methodName, String methodCode, Token t){
+    Stream<String> lines = methodCode.lines();
+    ArrayList<String> labels = new ArrayList<String>();
+    List<String> linesAsList = lines.collect(Collectors.toList());
+    int lineNumber = t.getPosition().getLineNum();
+
+    for (String line : linesAsList)
+    {
+      line = line.trim().stripLeading(); // remove space before and after
+      if (line.matches("^\\w+:(.*)?")) // check if start with a word followed by a colon.
+      {
+        line = line.substring(0,line.indexOf(":"));
+        if(line.contains("default") ) //ignore multiple 'default:'
+        continue;
+        else if(labels.contains(line))
+        {
+          setFailedPosition(t.getPosition(), 1512, methodName,""+lineNumber);  
+        }
+        else 
+          labels.add(line);     
+        }
+        lineNumber++;
+      }
+  }
     private void processMixsetIsFeature(Token token) {
     if (token == null || token.getParentToken() == null)
     return;

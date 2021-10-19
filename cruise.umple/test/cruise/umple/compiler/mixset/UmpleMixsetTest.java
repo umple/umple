@@ -747,9 +747,18 @@ public class UmpleMixsetTest {
     UmpleModel model2 = new UmpleModel(file2);
     model2.run();
     boolean file2Test = model2.getFeatureModel().satisfyFeatureModel();
-    Assert.assertFalse(file2Test);
+    Assert.assertFalse(file2Test);   
   }
-   @Test
+  @Test
+  public void sameLabelManyTimesWarning() {
+    UmpleFile file = new UmpleFile(umpleParserTest.pathToInput,"sameLabelManyTimes.ump");
+    int line = 5;
+    int errorCode = 1512;
+    int offset= 4;
+    int charOff = 64;
+    umpleParserTest.assertHasWarningsParse(file.getFileName(), new Position(file.getFileName(),line,offset,charOff),errorCode);
+  }
+  @Test
   public void isFeatureKeyword()
   {
     UmpleFile file1 = new UmpleFile(umpleParserTest.pathToInput,"isFeatureStatements.ump");
@@ -760,5 +769,6 @@ public class UmpleMixsetTest {
     Assert.assertTrue(file1Test);
     Assert.assertEquals(numberOfFeatures, 6); // 5 features + root feature 
   }
+
 
 }
