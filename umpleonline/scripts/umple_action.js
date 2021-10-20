@@ -633,7 +633,7 @@ Action.loadTaskExceptCodeCallback = function(response)
 Action.submitLoadTask = function()
 {
   var taskName = jQuery("#inputLoadTaskName").val();
-  let patt = /^(\w|\.|-)+$/;
+  let patt = /^(\w|\.)+$/; // taskName Take only [ A-Z or a-z or 0-9 or _ or . ]
   if (!patt.test(taskName))//taskName.indexOf(" ") != -1 || taskName.indexOf("/") != -1 || taskName.indexOf("-") != -1 || taskName.indexOf("\\") != -1) 
   {
     window.alert("Task Name can only contain letters(case insensitive), underscores, dots, and digits!");
