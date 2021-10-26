@@ -494,14 +494,17 @@ String namespaces= listAllMakeNamespaces();
 #>>cmake_minimum_required(VERSION 3.0)
 project(<<=projectName>>)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 11)
 include_directories(${CMAKE_SOURCE_DIR})
 <<=namespaces>>
 
 set(SOURCE_FILES
 <<=includes>>)
 
-add_executable(<<=projectName>> ${SOURCE_FILES})!>>
+add_executable(<<=projectName>> ${SOURCE_FILES})
+if (NOT MSVC)
+	target_link_libraries(<<=projectName>> pthread)
+endif()!>>
 
 emit cMake()(cMakeT);
 
