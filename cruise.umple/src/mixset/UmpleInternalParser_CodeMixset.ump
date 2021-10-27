@@ -602,7 +602,7 @@ class UmpleInternalParser
       {
         // raise a warning
         Position wPosition = new Position(aMixset.getUseUmpleFile().getFileName(), aMixset.getUseUmpleLine(), 0, 0);
-        setFailedPosition(wPosition,1512, aMixset.getName(),"11111 ");
+        setFailedPosition(wPosition,1513, aMixset.getName(),""+ aMixset.getUseUmpleLine());
         }
     }
   }

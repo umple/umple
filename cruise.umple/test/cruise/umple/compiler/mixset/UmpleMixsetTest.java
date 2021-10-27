@@ -778,11 +778,10 @@ public class UmpleMixsetTest {
   
   @Test
   public void mixsetUsedHasNoDefinition()
-  {
-    
+  {  
     UmpleFile file = new UmpleFile(umpleParserTest.pathToInput,"mixsetUseNoDefinition.ump");
-    int line = 17;
-    int errorCode = 1512;
+    int line = 1;
+    int errorCode = 1513;
     int offset= 0;
     int charOff = 0;
     umpleParserTest.assertHasWarningsParse(file.getFileName(), new Position(file.getFileName(),line,offset,charOff),errorCode);
