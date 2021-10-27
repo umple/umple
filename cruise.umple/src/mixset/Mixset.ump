@@ -42,8 +42,8 @@ class Mixset {
   isA MixsetOrFile;
   boolean isFeature = false;  // Specify a mixset to be a feature. Default value is false.. 
 
-  List<MixsetInMethod> mixsetInMethod; // to store inline mixset inside methods
-  boolean isEmpty; // to specify a mixset that has definition but no body.
+  List<MixsetInMethod> mixsetInMethod = new ArrayList<MixsetInMethod>(); // to store inline mixset inside methods
+  boolean isEmpty = false; // to specify a mixset that has definition but no body.
 
   after constructor {  
     setIsMixset(true);

@@ -328,7 +328,7 @@ class UmpleInternalParser
     MixsetFragment mixsetFragment = createMixsetFragment(token);
     if(mixset == null)
     return null;
-    else (mixsetFragment == null)
+    else if (mixsetFragment == null)
     mixset.setIsEmpty(true);
     else
     mixsetFragment.setMixset(mixset);
@@ -596,13 +596,13 @@ class UmpleInternalParser
   && m.getMixsetFragments().size() < 1).collect(Collectors.toList());
     if (notUsedMixset.size() < 1)
       return;
-    for (Mixset m : notUsedMixset)
+    for (Mixset aMixset : notUsedMixset)
     {
-      if(m.mixsetInMethod.size() < 1  )
+      if(aMixset.getMixsetInMethod().size() < 1)
       {
         // raise a warning
-        Position p = new Position(m.getUseUmpleFile().getFileName(), m.getUseUmpleLine(), 0, 0);
-        setFailedPosition(p,1512, m.getName(),"11111 ");
+        Position wPosition = new Position(aMixset.getUseUmpleFile().getFileName(), aMixset.getUseUmpleLine(), 0, 0);
+        setFailedPosition(wPosition,1512, aMixset.getName(),"11111 ");
         }
     }
   }
