@@ -638,26 +638,32 @@ public class UmpleMixsetTest {
     UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"parseMixsetsInsideTemplate.ump");
     UmpleModel model = new UmpleModel(umpleFile);
     model.setShouldGenerate(true);
-    model.run();
-    String generatedFile =  umpleParserTest.pathToInput+"/TemplateMixset.java";
-    SampleFileWriter.assertFileExists(generatedFile);
-    String templateGeneratedCode = SampleFileWriter.readContent(new File(generatedFile));
-    //  included mixsets
-    Assert.assertTrue(templateGeneratedCode.contains("Print out the following "));
-    Assert.assertTrue(templateGeneratedCode.contains("M1 is used, this line should be included"));
-    Assert.assertTrue(templateGeneratedCode.contains("M2 is used, this line should be included"));
-    // not included mixsets
-    Assert.assertFalse(templateGeneratedCode.contains("M3 is not used, this line NOT should be included"));
-    Assert.assertFalse(templateGeneratedCode.contains("I am outer , this line should NOT be included"));
-    Assert.assertFalse(templateGeneratedCode.contains("I am inner , this line should NOT be included"));
-    // no mixset definitions i
-    Assert.assertFalse(templateGeneratedCode.contains("mixset M1"));
-    Assert.assertFalse(templateGeneratedCode.contains("mixset M2"));
-    Assert.assertFalse(templateGeneratedCode.contains("mixset M3"));
-    Assert.assertFalse(templateGeneratedCode.contains("mixset Outer"));
-    Assert.assertFalse(templateGeneratedCode.contains("mixset Inner"));
-    //delete generated file
-    SampleFileWriter.destroy(generatedFile);
+    try
+    {
+       model.run();
+    }
+    catch (UmpleCompilerException e)
+    {
+      String generatedFile =  umpleParserTest.pathToInput+"/TemplateMixset.java";
+      SampleFileWriter.assertFileExists(generatedFile);
+      String templateGeneratedCode = SampleFileWriter.readContent(new File(generatedFile));
+      //  included mixsets
+      Assert.assertTrue(templateGeneratedCode.contains("Print out the following "));
+      Assert.assertTrue(templateGeneratedCode.contains("M1 is used, this line should be included"));
+      Assert.assertTrue(templateGeneratedCode.contains("M2 is used, this line should be included"));
+      // not included mixsets
+      Assert.assertFalse(templateGeneratedCode.contains("M3 is not used, this line NOT should be included"));
+      Assert.assertFalse(templateGeneratedCode.contains("I am outer , this line should NOT be included"));
+      Assert.assertFalse(templateGeneratedCode.contains("I am inner , this line should NOT be included"));
+      // no mixset definitions i
+      Assert.assertFalse(templateGeneratedCode.contains("mixset M1"));
+      Assert.assertFalse(templateGeneratedCode.contains("mixset M2"));
+      Assert.assertFalse(templateGeneratedCode.contains("mixset M3"));
+      Assert.assertFalse(templateGeneratedCode.contains("mixset Outer"));
+      Assert.assertFalse(templateGeneratedCode.contains("mixset Inner"));
+      //delete generated file
+      SampleFileWriter.destroy(generatedFile);
+    }
 
     
   }
@@ -768,6 +774,18 @@ public class UmpleMixsetTest {
     int numberOfFeatures = model1.getFeatureModel().getNode().size();
     Assert.assertTrue(file1Test);
     Assert.assertEquals(numberOfFeatures, 6); // 5 features + root feature 
+  }
+  
+  @Test
+  public void mixsetUsedHasNoDefinition()
+  {
+    
+    UmpleFile file = new UmpleFile(umpleParserTest.pathToInput,"mixsetUseNoDefinition.ump");
+    int line = 17;
+    int errorCode = 1512;
+    int offset= 0;
+    int charOff = 0;
+    umpleParserTest.assertHasWarningsParse(file.getFileName(), new Position(file.getFileName(),line,offset,charOff),errorCode);
   }
 
 
