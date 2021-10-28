@@ -326,8 +326,10 @@ class UmpleInternalParser
   
   private MixsetFragment createMixsetFragment(Token token,  Mixset mixset) {  
     MixsetFragment mixsetFragment = createMixsetFragment(token);
-    if(mixsetFragment == null || mixset == null)
+    if(mixset == null)
     return null;
+    else if (mixsetFragment == null)
+    mixset.setIsEmpty(true);
     else
     mixsetFragment.setMixset(mixset);
     return mixsetFragment;
@@ -584,7 +586,27 @@ class UmpleInternalParser
     edge.setTargetFeatureNode(newFeatureNode);
     edge.setFeatureModel(model.getFeatureModel());
     model.getFeatureModel().addFeaturelink(edge);
-  }  
+  }
+
+  // This method raises warning for use statements for misets that do not have actual definitions.
+  private void checkMixsetsNotUsed() {
+    UmpleModel uModel = this.getModel();
+    Stream<Mixset> mixsetsStream = uModel.getMixsetOrFiles().stream().filter(m ->m.getIsMixset()).map(m->(Mixset)m ); 
+    List<Mixset> notUsedMixset = mixsetsStream.filter(m -> !m.getIsEmpty()).filter(m -> m.getUseUmpleFile() != null 
+  && m.getMixsetFragments().size() < 1).collect(Collectors.toList());
+    if (notUsedMixset.size() < 1)
+      return;
+    for (Mixset aMixset : notUsedMixset)
+    {
+      if(aMixset.getMixsetInMethod().size() < 1)
+      {
+        // raise a warning
+        Position wPosition = new Position(aMixset.getUseUmpleFile().getFileName(), aMixset.getUseUmpleLine(), 0, 0);
+        setFailedPosition(wPosition,1513, aMixset.getName(),""+ aMixset.getUseUmpleLine());
+        }
+    }
+  }
+
 }
 
 mixset AspectInjection {
@@ -747,6 +769,7 @@ mixset Template {
          if(mixset.getUseUmpleFile() != null)
          {
            mixsetIsUsed = true;
+           mixset.getMixsetInMethod().add(mixsetInMethod);
            //first process children
            for(MixsetInMethod childMixsetInMethod : mixsetInMethod.getChildMixsets())
              sourceCodeBody = handelMixsetInsideMethod(umodel, childMixsetInMethod, sourceCodeBody);
