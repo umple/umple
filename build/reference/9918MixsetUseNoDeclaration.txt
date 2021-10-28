@@ -4,14 +4,12 @@ noreferences
 
 @@description
 
-<h2> Warning reporting that code labels inside methods should have unique names.</h2>
+<h2> Warning reporting that mixset use statement activate a mixset that has not been declared.</h2>
 
-<p> Code Labels allow aspects to inject code in specific locations inside method bodies. However, the code injection is only applied to the first encountered label. Therefore, a code label should not be reused multiple times (inside a method). </p>
-
-<p>If you encounter this warning, you can easily rename code labels with unique names for each label inside the method body.  <br/>
+<p>If you encounter this warning, you can easily comment on the use statement which causes this warning, or you can declare the mixset with an empty body.  <br/>
 </p>
 
 
 @@example
-@@source manualexamples/W1512CodeLabelsInsideMethodAreNotUnique.ump
+@@source manualexamples/W1513MixsetUsedWithNoDeclaration.ump
 @@endexample
