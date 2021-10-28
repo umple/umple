@@ -4,11 +4,10 @@ noreferences
 
 @@description
 
-<h2> Warning reporting that mixset use statement activate a mixset that has not been declared.</h2>
+<h2> Warning reporting that a mixset use statement tries to activate a mixset that has not been declared.</h2>
 
-<p>If you encounter this warning, you can easily comment on the use statement which causes this warning, or you can declare the mixset with an empty body.  <br/>
+<p>If you encounter this warning, you can easily comment out the use statement that causes this warning, or you can declare the mixset with an empty body.  <br/>
 </p>
-
 
 @@example
 @@source manualexamples/W1513MixsetUsedWithNoDeclaration.ump
