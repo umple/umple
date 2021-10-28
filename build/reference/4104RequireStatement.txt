@@ -1,0 +1,31 @@
+Require Statement
+Mixsets and Filters
+noreferences
+
+@@description
+<p>Require statements in Umple are used to specify dependencies and relationships among mixsets.</p>
+
+<p>In the simplest case a require statement simply declares that certain code requires the presence of a certain mixset and that it would be an error if there is no use statement for this mixset. If the require statement is itself in a mixset, then it is stating that mixset requires the presence of one or more others. In the first code example below, the mixset M1 (Line 2) requires  mixset M2 (Line 6). Mote that the specification of the required mixset M2 is in square brackets: That is because the argument to the require statement is a Boolean condition involving mixsets with logical connectors</p>
+
+<p> Require statements may include the subfeature keyword to specify mixsets that are features. A require statement containing subfeature forms a parent-child relationship between the source mixset and the target mixset and both will become features.
+
+<p> When a mixset acts as an optional feature; the keyword isFeature can be included in the mixset body instead of using the require statement. The keyword isFeature makes a mixset an optional feature to the container mixset (the one which the former is nested in). If the mixset containing isFeature is a top entity element in an Umple file, the mixset becomes an  optional feature to the SPL base.</p>
+
+<p>The second code example below contains multiple features that form a feature model. Line 5 indicates that GSM1800 is required but that GSM1900 is not. Line 9 states that one or both of two sound features is required. Line 18 states that up to one of three resolution features is required (i.e. only at most one).  Line 21 contains a use statement that produces a software variant with five features.</p>
+
+@@syntax
+[[requireStatement]] [[requireBody]] [[requireList]] [[requireLinkingOp]] [[requireLinkingOptNot]] [[requireTerminal]] [[multiplicityTerminal]]
+
+@@example @@caption Example Showing mixset M1 requiring the presence of mixset M2 @@endcaption
+@@source manualexamples/RequireStatement.ump
+@@endexample
+
+@@example @@caption Example with various require statements that generates a feature diagram @@endcaption
+@@source manualexamples/RequireStatement2.ump
+@@endexample
+
+@@example @@caption Example with isFeature statements that generates optional features @@endcaption
+@@source manualexamples/isFeaureMixsetExample.ump
+@@endexample
+
+

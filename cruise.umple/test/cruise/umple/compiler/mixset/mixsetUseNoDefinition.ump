@@ -1,0 +1,18 @@
+use M1;
+use M6;
+use M2;
+
+mixset M2 {
+  class Aclass{
+  }
+}
+
+
+mixset M3 {}
+
+mixset M4{ } 
+
+mixset M6{
+
+use M7;
+}

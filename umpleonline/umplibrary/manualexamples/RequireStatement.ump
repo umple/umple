@@ -1,0 +1,6 @@
+// M1 and M2 are mixsets that are not part of the feature model.
+mixset M1 {
+ require [M2];
+}
+
+mixset M2 { }
