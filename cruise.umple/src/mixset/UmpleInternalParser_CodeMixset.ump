@@ -348,7 +348,10 @@ class UmpleInternalParser
     
     // mixset with one element
     String oneElementMixset = token.getValue("oneElement");
-    
+
+    if(mixsetBody == null)
+    return null; // because there is no fragment to add. 
+
     if(entityType != null) {
         if (oneElementMixset != null)
       {
@@ -364,9 +367,6 @@ class UmpleInternalParser
         mixsetBody = oneElementMixset;
         mixsetFragmentPosition = token.getSubToken("oneElementMixset").getPosition();     
       }
-      
-      if(mixsetBody == null)
-      return null; // because there is no fragment to add. 
     
       mixsetFragmentLineNumber = mixsetFragmentPosition.getLineNumber();
       UmpleFile mixsetFragmentUmpleFile = model.getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
