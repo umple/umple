@@ -7,6 +7,7 @@ def populate_possible_matches(directories, pattern)
   matches = []
   pattern = pattern.chomp(".ump") + "\\.ump"
   pattern = pattern.gsub("*", ".*")
+puts("DebugPattern="+pattern)
   directories.each do |directory|
     possibles = Dir.entries(directory)
 
@@ -73,8 +74,8 @@ end
 puts("Preparing example files for "+language+" from "+search_dir.join(" ")+ " to "+output_dir)
 
 matches = populate_possible_matches(search_dir, search_pattern)
-puts("Debug1")
+puts("Debug1 matches #{matches.length()}")
 matches = check_for_flags(matches, language)
-puts("Debug2")
+puts("Debug2 matches #{matches.length()}")
 copy_to_output(matches, output_dir)
 puts("Debug3")
