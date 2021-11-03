@@ -5,8 +5,8 @@ def populate_possible_matches(directories, pattern)
   #Find all the matching filename from each directory
 
   matches = []
-  pattern = pattern.chomp(".ump") + "\\.ump"
-  pattern = pattern.gsub("*", ".*")
+#  pattern = pattern.chomp(".ump") + "\\.ump"
+#  pattern = pattern.gsub("*", ".*")
 puts("DebugPattern="+pattern)
   directories.each do |directory|
     possibles = Dir.entries(directory)

@@ -41,7 +41,7 @@
 
   <!-- options -->
   <property name="logfile" value="UserManualAndExampleTests_output.txt" />
-  <property name="examplepattern" value="" />
+  <property name="examplepattern" value=".*\.ump" />
   <property name="failfast" value="true" />
   <property name="threadcount" value="4"/>
   <property name="cleanonfinish" value="true" />
