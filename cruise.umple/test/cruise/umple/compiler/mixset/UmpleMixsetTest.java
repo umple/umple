@@ -786,6 +786,13 @@ public class UmpleMixsetTest {
     int charOff = 0;
     umpleParserTest.assertHasWarningsParse(file.getFileName(), new Position(file.getFileName(),line,offset,charOff),errorCode);
   }
+  
+  @Test
+  public void mixsetWithEmptyClassError1805()
+  {  
+    UmpleFile file = new UmpleFile(umpleParserTest.pathToInput,"mixsetWithEmptyClass.ump");
+    umpleParserTest.assertHasNoWarningsParse(file.getFileName());
+  }
 
 
 }
