@@ -107,12 +107,24 @@ class GvInstanceDiagramGenerator
   // Note: don't think attributes are relevant in object diagrams REVIEW this
   private void attributeCreation(UmpleClass uClass, StringBuilder code, boolean manyClass)
   {
-    // Set up list of values for Integers
-    //Integer[] integerAttributes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     Random rand = new Random();
+    int randIndex;
+
+    // Set up random value for Integers type attributes
     int randomIntegerAttribute = rand.nextInt(10);
+
+    // Set up random value for Boolean type attributes
+    boolean randomBooleanAttribute = rand.nextBoolean();
     
-    //Integer randomSelectedIntegerAttribute = integerAttributes[randomIntegerAttribute - 1];
+    // Set up random value for Double type attributes
+    double [] randomDoubles = new double[]{1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10};
+    randIndex = rand.nextInt(10);
+    double randomDoubleAttribute = randomDoubles[randIndex];
+
+    // Set up random value for String type attributes
+    String[] randomStrings = {"Lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit", "Duis", "porttitor", "quam", "sed", "felis", "auctor", "facilisis", "Nam", "semper", "dolor", "eget", "felis"};
+    randIndex = rand.nextInt(20);
+    String randomStringAttribute = randomStrings[randIndex];
 
     // Iterate through attributes of the class]
     boolean isFirst = true;
@@ -141,6 +153,15 @@ class GvInstanceDiagramGenerator
             if ((type.equals("Integer") || type.equals("int") || type.equals("Int")) && !uAttribute.getIsList()){
               code.append("<tr><td align=\"left\" href=\"\" title=\""+attrTooltip+"\">"
                   +"  "+uAttribute.getName() + " = " + randomIntegerAttribute + "  </td></tr>");
+            } else if ((type.equals("Double") || type.equals("double")) && !uAttribute.getIsList()){
+              code.append("<tr><td align=\"left\" href=\"\" title=\""+attrTooltip+"\">"
+                  +"  "+uAttribute.getName() + " = " + randomDoubleAttribute + "  </td></tr>");
+            } else if ((type.equals("Boolean") || type.equals("boolean")) && !uAttribute.getIsList()) {
+              code.append("<tr><td align=\"left\" href=\"\" title=\""+attrTooltip+"\">"
+                  +"  "+uAttribute.getName() + " = " + randomBooleanAttribute + "  </td></tr>");
+            } else if ((type.equals("String")) && !uAttribute.getIsList()) {
+              code.append("<tr><td align=\"left\" href=\"\" title=\""+attrTooltip+"\">"
+                  +"  "+uAttribute.getName() + " = " + randomStringAttribute + "  </td></tr>");
             } else {
               code.append("<tr><td align=\"left\" href=\"\" title=\""+attrTooltip+"\">"
                   +"  "+uAttribute.getName()+" : "
