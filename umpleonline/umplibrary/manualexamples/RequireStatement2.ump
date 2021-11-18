@@ -1,0 +1,21 @@
+// These require statements form a feature model. 
+require subfeature [GSMProtocol opt Mp3Recording and Playback and AudioFormat opt Camera];
+
+mixset GSMProtocol {
+  require subfeature [GSM1800 opt GSM1900];
+}
+
+mixset AudioFormat {
+  require subfeature [1..2 of {Mp3,Wav} ];
+}
+mixset Mp3Recording {
+  require [Mp3];
+}
+mixset Camera {
+  require subfeature [Resolution];
+}
+mixset Resolution{
+  require subfeature [0..1 of {Res21MP, Res31MP, Res50MP}];
+}
+
+use GSMProtocol, GSM1800,  Playback, AudioFormat, Wav;

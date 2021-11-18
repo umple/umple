@@ -1,0 +1,37 @@
+trait TEquality{
+  Boolean isEqual(Object object);
+  Boolean isNotEqual(Object object){
+    
+    return isEqual(object) ? false : true;
+  }
+  
+  mixset Numerical {
+    Boolean isGreaterThan(Object object);
+    Boolean isLessThan(Object object);
+  }
+}
+
+class RealNumber 
+{
+  float value;  
+  isA TEquality;
+
+  Boolean isEqual(Object object)
+  {
+    if(object instanceof RealNumber)
+    return this.value == ((RealNumber) object).value;
+    else
+    return false;
+  }
+}
+
+/* 
+   The below use statement generates an error in Umple when its activited.
+   Because the trait TEquality has the Numerical mixset, and there is no 
+   implementaion for its methods (isGreaterThan and isLessThan).
+ */             
+//use Numerical; 
+
+
+//$?[End_of_model]$?
+// @@@skipphpcompile
