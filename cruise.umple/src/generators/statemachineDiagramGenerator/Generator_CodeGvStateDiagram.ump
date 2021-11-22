@@ -602,9 +602,25 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
   {
     // Find the state machine path
     String [] stateInfo = getStatePath(sm, st.getName());
+    String path = stateInfo[1];
 	
-    String tooltip = "Class "+className+", SM "+stateInfo[0]+", State "+stateInfo[1];
-		
+    String tooltip = "Class "+className+", SM "+stateInfo[0]+", State "+stateInfo[1] + "\n";
+
+    if (sm.indexOfState(st)==0) 
+    {
+      tooltip += "This is the initial state the object in " + className + " is when created.\n";
+    } 
+
+    for (Transition t: buildIncomingTransitionMap(sm).get(st)) 
+    {
+      tooltip += "This is the state we get when in state " + t.getFromState().getName() + " we enter the event " + t.getEvent().getName() + ".\n";
+    }
+
+    if (st.getTransitions().size()==0) 
+    {
+      tooltip += "This is the last state the object is.\n";
+    }
+
     // Get the state actions
     if (!hideActions)
     {
@@ -635,6 +651,43 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
     }
 	
     return tooltip;
+  }
+
+  private Map<State, List<Transition>> buildIncomingTransitionMap(StateMachine sm)
+  {
+    StateMachine smroot = sm.getRootStateMachine();
+    List<StateMachine> machines = smroot.getNestedStateMachines();
+    Map<State, List<Transition>> transitionMap = new HashMap<State, List<Transition>>();
+    if (machines == null) 
+    {
+      for (State st: sm.getStates())
+      {
+        List<Transition> allT = new ArrayList<Transition>();
+        if (transitionMap.containsKey(st)) 
+        {
+          allT = transitionMap.get(st);
+        }
+        for (Transition t: sm.getAllTransitions())
+        {
+          if (t.getNextState() == st)
+          {
+            if (!allT.contains(t))
+            {
+              allT.add(t);
+            }
+          }
+        }
+        if (transitionMap.containsKey(st)) 
+        {
+          transitionMap.replace(st, allT);
+        }
+        else 
+        {
+          transitionMap.putIfAbsent(st, allT);
+        }
+      }
+    }
+    return transitionMap;
   }
   
   // Get the smallest space indent in the code
