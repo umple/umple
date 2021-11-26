@@ -86,7 +86,7 @@ ToolTips.tooltipEntries = {
   ttShowGvClassDiagram: ["li", "Display a class diagram rendered using GraphViz </br><b>Shortcut: [ctrl+g]</b>"],
   ttShowGvStateDiagram: ["li", "Display a state diagram rendered using GraphViz</br><b>Shortcut: [ctrl+s]</b>"],
   ttShowStructureDiagram: ["li", "Display a graphically editable composite structure diagram </br><b>Shortcut: [ctrl+l]</b>"],
-  ttShowGvFeatureDiagram: ["li", "Display a feature diagram rendeed using GraphViz </br>"],
+  ttShowGvFeatureDiagram: ["li", "Display a feature diagram rendered using GraphViz </br>"],
 
   ECD_button: ['a', "Editable class diagram - <b>ctrl-E</b>"],
   GCD_button: ['a', "Graphviz class diagram - <b>ctrl-G</b>"],
