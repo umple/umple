@@ -31,6 +31,9 @@ class GvStateDiagramGenerator
   Boolean showGuardLabels = false;
   internal String display_language = "";
   lazy StateMachine root;
+  internal Map<State, List<Transition>> internalTransitionMap
+  = new HashMap<State, List<Transition>>();
+  
  
   internal Map<Transition,String> internalBoundaryTrans
     = new HashMap<Transition,String>();
@@ -609,9 +612,10 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
     if (sm.indexOfState(st)==0) 
     {
       tooltip += "This is the initial state the object in " + className + " is when created.\n";
-    } 
+    }
 
-    for (Transition t: buildIncomingTransitionMap(sm).get(st)) 
+    buildIncomingTransitionMap(sm);
+    for (Transition t:internalTransitionMap.get(st))
     {
       tooltip += "This is the state we get when in state " + t.getFromState().getName() + " we enter the event " + t.getEvent().getName() + ".\n";
     }
@@ -653,42 +657,39 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
     return tooltip;
   }
 
-  private Map<State, List<Transition>> buildIncomingTransitionMap(StateMachine sm)
+  private void buildIncomingTransitionMap(StateMachine sm)
   {
-    StateMachine smroot = sm.getRootStateMachine();
-    List<StateMachine> machines = smroot.getNestedStateMachines();
-    Map<State, List<Transition>> transitionMap = new HashMap<State, List<Transition>>();
-    if (machines == null) 
+    for (State st:sm.getStates())
     {
-      for (State st: sm.getStates())
+      List<Transition> allT = new ArrayList();
+      if(internalTransitionMap.containsKey(st))
       {
-        List<Transition> allT = new ArrayList<Transition>();
-        if (transitionMap.containsKey(st)) 
-        {
-          allT = transitionMap.get(st);
-        }
-        for (Transition t: sm.getAllTransitions())
+        allT = internalTransitionMap.get(st);
+        internalTransitionMap.remove(st, allT);
+      }
+      for (Transition t:sm.getAllTransitions())
+      {
+        if (!allT.contains(t))
         {
           if (t.getNextState() == st)
           {
-            if (!allT.contains(t))
-            {
-              allT.add(t);
-            }
+            allT.add(t);
           }
         }
-        if (transitionMap.containsKey(st)) 
-        {
-          transitionMap.replace(st, allT);
-        }
-        else 
-        {
-          transitionMap.putIfAbsent(st, allT);
-        }
+      }
+      internalTransitionMap.put(st, allT);
+    }
+
+    List<StateMachine> allS = sm.getNestedStateMachines();
+    if (allS!= null)
+    {
+      for (StateMachine sma:allS)
+      {
+        buildIncomingTransitionMap(sma);
       }
     }
-    return transitionMap;
   }
+  
   
   // Get the smallest space indent in the code
   private int getMinSpace(String[] parts)
