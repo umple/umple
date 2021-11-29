@@ -136,4 +136,3 @@ The umple project is split into many smaller subprojects; the folder hierarchy i
   * Projects for generating a UI through UIGU from Umple. These need work to incorporate them into UmpleOnline
         
 * umplewww/ *Core files from the Umple.org web pages*
-  * Includes items such as the user manual that are moved at build time into the appropriate place
