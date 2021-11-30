@@ -659,34 +659,32 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
 
   private void buildIncomingTransitionMap(StateMachine sm)
   {
-    for (State st:sm.getStates())
+    for (Transition t:sm.getAllTransitions())
     {
-      List<Transition> allT = new ArrayList();
-      if(internalTransitionMap.containsKey(st))
+      State sd = t.getNextState();
+      if (!internalTransitionMap.containsKey(sd)) 
       {
-        allT = internalTransitionMap.get(st);
-        internalTransitionMap.remove(st, allT);
-      }
-      for (Transition t:sm.getAllTransitions())
+        List<Transition> allT = new ArrayList();
+        allT.add(t);
+        internalTransitionMap.put(sd,allT);
+      } 
+      else 
       {
+        List<Transition> allT = internalTransitionMap.get(sd);
         if (!allT.contains(t))
         {
-          if (t.getNextState() == st)
-          {
-            allT.add(t);
-          }
+          internalTransitionMap.remove(sd,allT);
+          allT.add(t);
+          internalTransitionMap.put(sd,allT);
         }
       }
-      internalTransitionMap.put(st, allT);
     }
 
-    StateMachine root = sm.getRootStateMachine();
-    if (root!= null)
+    if (sm.getNestedStateMachines()!=null)
     {
-      StateMachine sm_in = cur.getState
-      for (StateMachine sma:allS)
+      for (StateMachine sm_in:sm.getNestedStateMachines())
       {
-        buildIncomingTransitionMap(sma);
+        buildIncomingTransitionMap(sm_in);
       }
     }
   }
