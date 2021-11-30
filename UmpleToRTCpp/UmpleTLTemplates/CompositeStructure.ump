@@ -27,6 +27,7 @@ class GenConnectEntry{
 	String toOwner;
 	
 	lazy Boolean inverse;
+	lazy Boolean isCompound;
 	
 	depend java.util.List;
 	
@@ -80,9 +81,15 @@ class GenConnectEntry{
 			expectedRelatedFromField = relatedToField;
 			expectedRelatedToField = relatedFromField;
 		}
-
-		return expectedFromSegment + "->" + expectedRelatedToField.getName() + "+= " + (isReference ? "&" : "")
+		
+		if (isCompound) {
+		 return expectedFromSegment + "->" + expectedRelatedToField.getName() + "+= " + (isReference ? "&" : "")
 				+ expectedToSegment + "->" + expectedRelatedFromField.getName() + ";";
+		}
+		
+
+		return expectedFromSegment + "->" + expectedRelatedFromField.getName() + "+= " + (isReference ? "&" : "")
+				+ expectedToSegment + "->" + expectedRelatedToField.getName() + ";";
 	}
 	
 	GenClass fieldOwner(String field){
