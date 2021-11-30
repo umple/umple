@@ -680,9 +680,10 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
       internalTransitionMap.put(st, allT);
     }
 
-    List<StateMachine> allS = sm.getNestedStateMachines();
-    if (allS!= null)
+    StateMachine root = sm.getRootStateMachine();
+    if (root!= null)
     {
+      StateMachine sm_in = cur.getState
       for (StateMachine sma:allS)
       {
         buildIncomingTransitionMap(sma);
