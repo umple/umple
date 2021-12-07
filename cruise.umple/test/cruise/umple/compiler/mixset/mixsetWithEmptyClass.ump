@@ -1,0 +1,7 @@
+use M2;
+class EX {
+  a;
+}
+mixset M2 class EX {
+    
+}
