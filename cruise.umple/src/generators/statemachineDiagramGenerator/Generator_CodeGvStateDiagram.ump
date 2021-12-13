@@ -611,7 +611,7 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
 
     if (sm.indexOfState(st)==0) 
     {
-      tooltip += "This is the initial state the object in " + getRootStateMachineName(st,className) + " is when created.\n";
+      tooltip += "This is the default initial state " + getRootStateMachineName(st,className) + " is when created.\n";
     }
 
     buildIncomingTransitionMap(sm);
@@ -619,7 +619,7 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
     {
       for (Transition t:internalTransitionMap.get(st))
       {
-        tooltip += "This is the state in which we get from " + t.getFromState().getName() + " when we enter the event " + t.getEvent().getName() + ".\n";
+        tooltip += "This state is entered when event " + t.getEvent().getName() + " occurs while in state " + t.getFromState().getName() + ".\n";
       }
     }
     
