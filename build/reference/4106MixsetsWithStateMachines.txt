@@ -1,0 +1,17 @@
+Mixsets with State Machine 
+Mixsets and Filters
+noreferences
+
+@@description
+<p>State machine models can contain variant units by employing mixsets. These can be inline (directly specified within a state macine) or compositional (in a separate file). For example, the mixset “HalfOpenFeature” in the code below captures the state “HalfOpen”  and with a transition from "Opening" to the “HalfOpen” state. The second code example shows an equivalent state machine model, but with a compositional mixset. </p>
+@@syntax
+[[mixsetDefinition]] [[inlineStateMachine]] [[stateEntity]] 
+
+@@example @@caption Example showing conditional transitions specified using a mixset @@endcaption
+@@source manualexamples/mixsetsInStateMachineExample.ump
+@@endexample
+
+
+@@example @@caption Example of a mixset incorporated compositionally to modify a state machine @@endcaption
+@@source manualexamples/mixsetsInStateMachineExample2.ump
+@@endexample

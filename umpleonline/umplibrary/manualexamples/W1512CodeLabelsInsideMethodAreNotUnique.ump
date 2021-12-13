@@ -1,0 +1,21 @@
+class CodeLabelExample
+{  
+  void methodToDoSomething()
+  {
+    //code 
+    Label1: ;
+    int x=0;
+    //code 
+    Label1: ; 
+    x++;
+  }
+  
+  // aspect injection in a code label.
+  after  Label1:methodToDoSomething
+  {
+   int y =0; 
+  }
+}
+// @@@skipcompile - injects code in impossible place
+
+
