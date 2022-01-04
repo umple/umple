@@ -62,5 +62,5 @@ mixset f4 class C4 {
   after event1 {
     System.out.printlin("event event1 occurred");}
 }
-use f3; use f2; use f1; use f5; use f4;
+use f1; use f5; use f4;
 
