@@ -70,7 +70,7 @@ if(file_exists($versionpath)){
 	$vfile = fopen($versionpath, "r");
 	$currentversion = fgets($vfile,1000);
 	fclose($vfile);
-	echo " | v$currentversion" ;
+	echo " | <a target=\"releasepage\" href=\"https://github.com/umple/umple/releases\">v$currentversion</a>" ;
 }
 
 
