@@ -1805,7 +1805,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         }
       }
     } 
-    System.out.println("\nmodifiableSubTokens:" + modifiableSubTokens);
+    // System.out.println("\nmodifiableSubTokens:" + modifiableSubTokens);
     int singleAssocNumber = 0;
     int assocNumber = 0;
     for(Token t : modifiableSubTokens){
