@@ -161,8 +161,6 @@ class UmpleInternalParser
     }
     else if (t.is("classDefinition"))
     {
-      //System.out.println("\n\nt is classDefinition");
-      //System.out.println(t);
       analyzeClass(t);
     }
     else if (t.is("externalDefinition"))
@@ -178,8 +176,6 @@ class UmpleInternalParser
     }
     else if (t.is("associationClassDefinition"))
     {
-      //System.out.println("\n\nt is associationClassDefinition");
-      //System.out.println(t);
       analyzeAssociationClass(t);
     }
     else if (t.is("associationDefinition"))
@@ -1310,17 +1306,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
    */
   private UmpleClass analyzeClass(Token classToken)
   {
-    //System.out.println("\n\nin analyzeClass method with classToken " + classToken);
-    // System.out.println("get root token:");
-    // System.out.println(getRootToken());
+
     mixset StateMachine {
     //Reset number of activeObjects with each class definition
     this.numberOfActiveObjects = 1;
     }
     String className = classToken.getValue("name").split(" ")[classToken.getValue("name").split(" ").length-1];
-    //System.out.print("classToken.getValue('name')=");
-    //System.out.println(classToken.getValue("name"));
-    //System.out.println("className=" + className);
     //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
     if (Token.isValidIdentifier(className, "[A-Za-z]") != true) {
       setFailedPosition(classToken.getPosition(), 100, className);
@@ -1331,17 +1322,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     UmpleClass aClass;
     //Issue 213: UmpleClass can be an AssociationClass
     if(classToken.is("associationClassDefinition")){
-        //System.out.println("classToken is associationClassDefinition");
         aClass = model.addAssociationClass(classToken.getValue("name"));
     }else{
-        //System.out.println("classToken is NOT associationClassDefinition");
         aClass = model.addUmpleClass(classToken.getValue("name"));
     }
-    if ( classToken.is("classDefinition") && "external".equals(aClass.getModifier()) ) {
-        //System.out.println("classToken is an external associationClassDefinition");
-        aClass.setModifier(""); // Remove the external modifier if a non-external specification of this class is found.
-    }
-
+    if ( classToken.is("classDefinition") && "external".equals(aClass.getModifier()) ) 
+      aClass.setModifier(""); // Remove the external modifier if a non-external specification of this class is found.
+    
     Position thePosition = classToken.getPosition();
     Position endPosition = classToken.getEndPosition();
 
@@ -1460,7 +1447,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     if(classToken.is("associationClassDefinition")) {
       analyzeAllAssociations(classToken);
     }
-    //System.out.println("\njust before analyze all tokens method..");
+
     analyzeAllTokens(classToken,aClass);
     return aClass;
   }
@@ -1804,8 +1791,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           modifiableSubTokens.addAll(inputToken.getSubTokens());
         }
       }
-    } 
-    // System.out.println("\nmodifiableSubTokens:" + modifiableSubTokens);
+    }
     int singleAssocNumber = 0;
     int assocNumber = 0;
     for(Token t : modifiableSubTokens){
