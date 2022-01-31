@@ -1787,7 +1787,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
     for (Token inputToken: inputTokens) {
       if (inputToken.is("associationClassDefinition")) {
-        if (inputToken.getValue("name").equals(classToken.getValue("name"))) {
+        if (inputToken.getValue("name").equals(classToken.getValue("name")) && !inputToken.getSubTokens().equals(classToken.getSubTokens())) {
           modifiableSubTokens.addAll(inputToken.getSubTokens());
         }
       }
