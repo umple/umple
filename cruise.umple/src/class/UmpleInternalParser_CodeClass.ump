@@ -1306,6 +1306,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
    */
   private UmpleClass analyzeClass(Token classToken)
   {
+  
     mixset StateMachine {
     //Reset number of activeObjects with each class definition
     this.numberOfActiveObjects = 1;
@@ -1327,7 +1328,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
     if ( classToken.is("classDefinition") && "external".equals(aClass.getModifier()) )
       aClass.setModifier(""); // Remove the external modifier if a non-external specification of this class is found.
-    
+
     Position thePosition = classToken.getPosition();
     Position endPosition = classToken.getEndPosition();
 
@@ -1446,6 +1447,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     if(classToken.is("associationClassDefinition")) {
       analyzeAllAssociations(classToken);
     }
+    
     analyzeAllTokens(classToken,aClass);
     return aClass;
   }
