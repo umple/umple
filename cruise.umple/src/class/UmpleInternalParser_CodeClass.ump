@@ -1775,11 +1775,26 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
   private void analyzeAssociationClass(Token classToken)
   {
+    Token rootToken = getRootToken();
+    List<Token> inputTokens = rootToken.getSubTokens();
+
     //test if Association class has at least 1 association or more than one singleEndAssociation
     List<Token> subtokens = classToken.getSubTokens();
+    List<Token> modifiableSubTokens = new ArrayList<Token>();
+    for (int i = 0; i < subtokens.size(); ++i) {
+      modifiableSubTokens.add(subtokens.get(i));
+    }
+
+    for (Token inputToken: inputTokens) {
+      if (inputToken.is("associationClassDefinition")) {
+        if (inputToken.getValue("name").equals(classToken.getValue("name")) && !inputToken.getSubTokens().equals(classToken.getSubTokens())) {
+          modifiableSubTokens.addAll(inputToken.getSubTokens());
+        }
+      }
+    }
     int singleAssocNumber = 0;
     int assocNumber = 0;
-    for(Token t : subtokens){
+    for(Token t : modifiableSubTokens){
         if(t.is("singleAssociationEnd")){
             singleAssocNumber++;
         }else if (t.is("association")){
