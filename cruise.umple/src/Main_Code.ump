@@ -1079,6 +1079,7 @@ class PlaygroundMain
 
     UmpleFile umpleFile = null;
     UmpleModel model = null;
+    boolean compilationRequired = false;
 
     // Valid values include Java, Cpp, PhP, Ruby, Json, Yuml, Xmi, Ecore, Papyrus, TextUml,
     // GvStateDiagram, GvStructureDiagram, GvClassDiagram,GvClassTraitDiagram, GvEntityRelationshipDiagram, Alloy, NuSMV, NuSMVOptimizer, GvFeatureDiagram
@@ -1092,6 +1093,15 @@ class PlaygroundMain
         if (args[argno].equals("-s"))
         {
           target.addSuboption(args[argno+1]);
+        }
+      }
+
+      // Check for compilation flag
+      for (int argno = 3; argno < args.length; argno++) 
+      {
+        if (args[argno].equals("-c"))
+        {
+          compilationRequired = true;
         }
       }
       
@@ -1127,6 +1137,21 @@ class PlaygroundMain
           client.sendToClient("ERROR!!"+errorToReport+"!!ERROR");
         }
           catch (IOException e2) {
+        }
+      }
+    }
+
+    // Compile code if required (-c after -generate option)
+    boolean successPreviousStep = model.getLastResult().getWasSuccess();
+    if(successPreviousStep && compilationRequired) 
+    {
+      for (GenerateTarget gt : model.getGenerates()) 
+      {
+        String generatorCodeToCompile = gt.getLanguage();
+        if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php")) 
+        {
+          // TODO: Remove default options in futures when syncing umplesync.jar with umple.jar
+          successPreviousStep = CodeCompiler.compile(model, generatorCodeToCompile,false, false, "-");
         }
       }
     }
