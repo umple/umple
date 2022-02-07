@@ -44,7 +44,7 @@ ToolTips.tooltipEntries = {
   ttDropboxSaver: ["li", "Click to save your model to dropbox"],
 
   // start over tooltips
-  ttStartOver: ["li", "Click to clear the text editor and the diagram"],
+  ttStartOver: ["li", "Click to clear the text editor and the diagram. Once clicked, all of your saved works will be lost."],
 
   // load example tooltips
   ttDropboxChooser: ["li", "Click to load an example from dropbox"],

@@ -379,12 +379,14 @@ Action.focusOn = function(id, gained)
 
 Action.startOver = function()
 {
+	if(confirm("All code will be deleted and cannot be recovered. Continue?")){
   Page.setUmpleCode("");
   UmpleSystem.merge(null);
   window.location = "umple.php";
   // Action.saveNewFile();
   // location.
   // location.reload();
+  }
 }
 
 Action.undo = function()
