@@ -1080,6 +1080,7 @@ class PlaygroundMain
     UmpleFile umpleFile = null;
     UmpleModel model = null;
     boolean compilationRequired = false;
+    boolean executionRequired = false;
 
     // Valid values include Java, Cpp, PhP, Ruby, Json, Yuml, Xmi, Ecore, Papyrus, TextUml,
     // GvStateDiagram, GvStructureDiagram, GvClassDiagram,GvClassTraitDiagram, GvEntityRelationshipDiagram, Alloy, NuSMV, NuSMVOptimizer, GvFeatureDiagram
@@ -1102,6 +1103,11 @@ class PlaygroundMain
         if (args[argno].equals("-c"))
         {
           compilationRequired = true;
+        }
+        else if (args[argno].equals("-cx")) 
+        {
+          compilationRequired = true;
+          executionRequired = true;
         }
       }
       
@@ -1150,10 +1156,20 @@ class PlaygroundMain
         String generatorCodeToCompile = gt.getLanguage();
         if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php")) 
         {
-          // TODO: Remove default options in futures when syncing umplesync.jar with umple.jar
+          // TODO: Remove default options in future when syncing umplesync.jar with umple.jar
           successPreviousStep = CodeCompiler.compile(model, generatorCodeToCompile,false, false, "-");
         }
       }
+    }
+
+    // Delete main file if any existing
+    String filePath = model.getUmpleFile().getPath() + File.separator + "JavaMainClasses.txt";
+    deleteFileIfExists(filePath);
+
+    // If execution required, output the main classes to a file
+    if(successPreviousStep && executionRequired) 
+    {
+      outputMainClassesToFile(model);
     }
 
     if ("-classList".equals(args[0]))
@@ -1194,6 +1210,66 @@ class PlaygroundMain
     }
 
     returnCommandResult(answer, client);
+  }
+
+  /**
+   * Output the names of the main classes if available
+   */
+  private void outputMainClassesToFile(UmpleModel model) 
+  {
+    for (String key : model.getHashMap().keySet()) 
+    {
+      if(key.compareTo("Java") == 0) 
+      {
+        // Get all main file names and make a single string
+        StringBuilder builder = new StringBuilder();
+        for (UmpleClass mainClass: CodeCompiler.getMainClasses(model)) 
+        {
+          builder = builder.append(mainClass.getName() + " ");
+        }
+        String mainFileNames = builder.toString().trim();
+        String filePath = model.getUmpleFile().getPath() + File.separator + "JavaMainClasses.txt";
+        if(!mainFileNames.isEmpty())
+        {
+          // Create or override JavaMainClasses.txt
+          try
+          {
+            File newFile = new File(filePath);
+            newFile.createNewFile();   
+          }
+          catch (IOException ex)  
+          {
+            System.out.println(ex);
+          }
+
+          // Write to the file
+          try (PrintWriter out = new PrintWriter(filePath)) 
+          {
+            out.println(mainFileNames);
+          }  
+          catch (FileNotFoundException ex) 
+          {
+            System.out.println(ex);
+          }
+        }
+      }
+    }
+  }
+
+  private void deleteFileIfExists(String path) 
+  {
+    try 
+    {
+      File existingFile = new File(path);
+      if(existingFile.exists())
+      {
+        existingFile.delete();
+      }
+    }
+    catch(Exception ex) 
+    {
+      System.out.println(ex);
+    }
   }
   
   private boolean saveCommandsCount(){
