@@ -397,7 +397,6 @@ Action.startOver = function()
 
 Action.showRefreshUmpleOnlineCompletely = function()
 {
-	console.log("showRef");
 	jQuery("#buttonStartOver").show();
 }
 
