@@ -121,7 +121,7 @@ class ScxmlGenerator
     UmpleClass parent = sm.getUmpleClass();
     return sm != null && !sm.hasStates() && !parent.hasMethods();
   }
-  
+    
   private void generateState(State state) {
   	if (isStateEmpty(state)) {
       _genStateEmptyTag(0, code, genTagAttribute("id", state.getName()));
@@ -192,7 +192,9 @@ class ScxmlGenerator
     
     if (transition.hasGuard()) {
       Guard guard = transition.getGuard();
-      cond = genTagAttribute("cond", guard.getCondition(new JavaGenerator()));
+      JavaGenerator javaGenerator = new JavaGenerator();
+      javaGenerator.setModel(model);
+      cond = genTagAttribute("cond", guard.getCondition(javaGenerator));
     }
     
     if (isTransitionEmpty(transition)) {
