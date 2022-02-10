@@ -492,9 +492,16 @@ $output = $dataHandle->readData('model.ump');
 
           <ul class="second center-children">
             <li class="subtitle">RESET</li>
-            <li id="ttStartOver"> 
-              <div id="buttonStartOver" class="jQuery-palette-button" value="Start Over"></div> 
+            <li id="ttLoadBlankModel">
+              <div id="buttonLoadBlankModel" class="jQuery-palette-button" value="Load Blank Model"></div>
             </li>
+            <li id="ttShowRefreshUmpleCompletely">
+            	<div id="buttonShowRefreshUmpleOnlineCompletely" class="jQuery-palette-button" style="height: 75px" value="Refresh UmpleOnline Completely"></div>
+            </li>
+            <li id="ttStartOver"> 
+              <div id="buttonStartOver" style="display: none;" value="Click here to completely refresh UmpleOnline (cannot be undone)"></div> 
+            </li>
+            
           </ul>
         </div>
         

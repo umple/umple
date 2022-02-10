@@ -113,6 +113,14 @@ Action.clicked = function(event)
   {
     Action.startOver();
   }
+  else if (action == "ShowRefreshUmpleOnlineCompletely")
+  {
+  	Action.showRefreshUmpleOnlineCompletely();
+  }
+  else if (action == "LoadBlankModel")
+  {
+  	 Action.loadBlankModel();
+  }
   else if (action == "PngImage")
   {
     Action.pngImage();
@@ -379,14 +387,27 @@ Action.focusOn = function(id, gained)
 
 Action.startOver = function()
 {
-	if(confirm("All code will be deleted and cannot be recovered. Continue?")){
   Page.setUmpleCode("");
   UmpleSystem.merge(null);
   window.location = "umple.php";
   // Action.saveNewFile();
   // location.
   // location.reload();
-  }
+}
+
+Action.showRefreshUmpleOnlineCompletely = function()
+{
+	console.log("showRef");
+	jQuery("#buttonStartOver").show();
+}
+
+Action.loadBlankModel = function()
+{
+  UmpleSystem.merge(null);
+  Page.showCanvasLoading(true);
+  Page.showModelLoading(true);
+  Page.showLayoutLoading(true);
+  Ajax.sendRequest("scripts/compiler.php",Action.loadExampleCallback,"exampleCode="); //left empty
 }
 
 Action.undo = function()
