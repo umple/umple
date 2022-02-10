@@ -146,6 +146,8 @@ Page.initPaletteArea = function()
   
   Page.initJQueryButton("buttonGenerateCode");
   Page.initJQueryButton("buttonStartOver");
+  Page.initJQueryButton("buttonShowRefreshUmpleOnlineCompletely")
+  Page.initJQueryButton("buttonLoadBlankModel");
   
   Page.initHighlighter("buttonAddClass");
   Page.initHighlighter("buttonAddAssociation");
@@ -245,6 +247,8 @@ Page.initPaletteArea = function()
   Page.initAction("buttonReindent");
   Page.initAction("buttonUigu");
   Page.initAction("buttonStartOver");
+  Page.initAction("buttonShowRefreshUmpleOnlineCompletely");
+  Page.initAction("buttonLoadBlankModel");
   Page.initAction("buttonGenerateCode");
   Page.initAction("buttonTabsCheckbox");
   Page.initAction("buttonSmaller");

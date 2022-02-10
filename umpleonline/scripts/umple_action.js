@@ -113,6 +113,14 @@ Action.clicked = function(event)
   {
     Action.startOver();
   }
+  else if (action == "ShowRefreshUmpleOnlineCompletely")
+  {
+  	Action.showRefreshUmpleOnlineCompletely();
+  }
+  else if (action == "LoadBlankModel")
+  {
+  	 Action.loadBlankModel();
+  }
   else if (action == "PngImage")
   {
     Action.pngImage();
@@ -385,6 +393,20 @@ Action.startOver = function()
   // Action.saveNewFile();
   // location.
   // location.reload();
+}
+
+Action.showRefreshUmpleOnlineCompletely = function()
+{
+	jQuery("#buttonStartOver").show();
+}
+
+Action.loadBlankModel = function()
+{
+  UmpleSystem.merge(null);
+  Page.showCanvasLoading(true);
+  Page.showModelLoading(true);
+  Page.showLayoutLoading(true);
+  Ajax.sendRequest("scripts/compiler.php",Action.loadExampleCallback,"exampleCode="); //left empty
 }
 
 Action.undo = function()
