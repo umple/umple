@@ -450,11 +450,11 @@ $output = $dataHandle->readData('model.ump');
           <ul class="first" id="saveLoad">
             <li class="subtitle">SAVE</li>
             <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
-            <li id="ttSaveBookmark">
+            <!--li id="ttSaveBookmark">
               <div id="menuBookmarkable" class="bookmarkableUrl">
                 <a href="umple.php?model=<?php echo $dataHandle->getName() ?>">Resave URL</a>
               </div>
-            </li>
+            </li-->
             <?php } else if (!isset($_REQUEST["task"])) { ?>
             <li id="ttSaveModel"> 
               <div id="menuBookmarkable" class="bookmarkableUrl">
@@ -496,7 +496,7 @@ $output = $dataHandle->readData('model.ump');
               <div id="buttonLoadBlankModel" class="jQuery-palette-button" value="Load Blank Model"></div>
             </li>
             <li id="ttShowRefreshUmpleCompletely">
-            	<div id="buttonShowRefreshUmpleOnlineCompletely" class="jQuery-palette-button" style="height: 75px" value="Refresh UmpleOnline Completely"></div>
+            	<div id="buttonShowRefreshUmpleOnlineCompletely" class="jQuery-palette-button" value="Reset Completely"></div>
             </li>
             <li id="ttStartOver"> 
               <div id="buttonStartOver" style="display: none;" value="Click here to completely refresh UmpleOnline (cannot be undone)"></div> 

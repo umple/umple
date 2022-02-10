@@ -31,13 +31,13 @@ else
 ToolTips.tooltipEntries = {
   // save model tooltips
   ttSaveBookmark: ["li", "Click to bookmark this model"],
-  ttSaveModel: ["li", "Click to save this model for future editing. After clicking this, you will need to use your browser to bookmark the URL. "],
+  ttSaveModel: ["li", "Click to save this model for ongoing editing.<br/><br/>After clicking this, you will need to use your browser's functionality to copy or bookmark the newly-created semi-permanent URL.<br/><br/>As you make further edits at the new URL, they will be instantly saved. You will be able to come back any time to continue editing.<br/><br/>The URL and its model will continue to be available for up to a year from the last time you edited it.<br/><br/>Do not use the new URL as a safe backup: If you (or anyone else who you give the URL) modifies or deletes the text, then your work would be lost."],
   buttonCopy: ["li", "Click to open a window containing the plain source for this model"],
-  buttonCopyCommandLine: ["li", "Click to copy a sequence of Mac/Linux shell commands that will you can paste into a terminal to create a new directory under ~/tmp, create the umple file there as test.ump and to compile the Umple and resulting Java (with the option to run the java if there is a main program present). You need to install the Java development environment and an 'umple' script for this to work. The Umple script should run 'java -jar umple.jar' with a .ump file as an argument  </br><b>Shortcut: [ctrl-o]</b>"],
-  buttonCopyEncodedURL: ["li", "Click to view a url encoded with this model. This works for very small models only. You can send people that URL so they can recreate your model in their browser."],  
-  buttonCopyLocalBrowser: ["li", "Click to save the model in in your browser local storage for later reloading using Load from Browser below"],  
-  buttonLoadLocalBrowser: ["li", "Click to load the model from what you had previously saved in this browser (above)"],
-  buttonDownloadFiles: ["li", "Click to download the currently open .ump files."],
+  buttonCopyCommandLine: ["li", "Click to copy a script to execute your model on the Linux or Mac command line.<br/><br/>After doing this, paste the result into a terminal.<br/><br/>The script will create a new directory under ~/tmp, create the umple file there as test.ump. compile the Umple and resulting Java (and suggest for you how to run the Java if there is a main program present).<br/><br/>Before doing this you need to install the Java development environment and an 'umple' script using a tool such as homebrew. The Umple script should run 'java -jar umple.jar' with a .ump file as an argument  </br><b>Shortcut: [ctrl-o]</b>"],
+  buttonCopyEncodedURL: ["li", "Click to view a url encoded with this model.<br/><br/>This only works for small models with about 5 classes or less.<br/><br/>You can send people that URL so they can recreate your model in their browser, or you can use this to embed a small example in a presentation file (such as PowerPoint)."],  
+  buttonCopyLocalBrowser: ["li", "Click to save the Umple text from the current tab in your browser local storage for later reloading using Load from Browser below.<br/><br/>This can be useful to transfer text to a different browser tab, or temporarily stash some work you may want to come back to. But it should not be used for a permanent backup."],  
+  buttonLoadLocalBrowser: ["li", "Click to load the Umple text from what you had previously saved in this browser (above).<br/><br/>This operation can be undone."],
+  buttonDownloadFiles: ["li", "Click to download your entire model, one .ump file per Umple tab.<br/><br/>This is a two-step process. After you click this, the zip file will be created and a link will appear below; you must click on that link to actually complete the download.<br/><br/>This is the best way to safely back up your work to your own computer."],
   buttonCreateTask: ["li", "Create a modeling task for participants to try.</br>You will be able to give them some instructions. The model currently appearing here will be their starting point. The instructions could be requirements to model, or changes to make. This can be for an experiment or a course assignment."],
   buttonLoadTask: ["li", "Load a model and a set of instructions that have been created by someone running an experiment or a teacher of a course. You need to enter the task name that the person gave you."],
   buttonRequestAllZip: ["li", "Create a zip file to download, containing all submissions for this task."],
@@ -45,8 +45,8 @@ ToolTips.tooltipEntries = {
 
   // start over tooltips
   //ttStartOver: ["li", "Click to clear the text editor and the diagram. Once clicked, all of your saved works will be lost."],
-  ttShowRefreshUmpleCompletely: ["li", "Click to clear the text editor and the diagram. Once clicked, all of your saved works will be lost."],
-  ttLoadBlankModel: ["li", "Click to load a blank model."],  
+  ttShowRefreshUmpleCompletely: ["li", "Click to erase your work and completely restart UmpleOnline.<br/><br/>Use this only if UmpleOnline gets into a state where things seem messed up. After doing this you will NOT be able to use the undo command to restore the model. The text and diagrams will be permanently erased. You should select 'Download Files' above first to back up your work.<br/><br/>For safety, this is a two-step process: A confirmation link will appear below that you must click on after you click on this."],
+  ttLoadBlankModel: ["li", "Click to load a blank model.<br/><br/>This can be undone using the undo command in Tools. This is the best way to start new work, but you may want to download your files first (above) to back them up."],  
   
   // load example tooltips
   ttDropboxChooser: ["li", "Click to load an example from dropbox"],
