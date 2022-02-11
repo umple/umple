@@ -440,7 +440,7 @@ $output = $dataHandle->readData('model.ump');
       </div>
     </div>
     
-    <div id="paletteColumn" class="inRow">
+    <div id="paletteColumn" class="inRow" ondrop="Action.dropHandler(event);" ondragover="Action.dragOverHandler(event);">
       <div id="palette" class="palette">
 
         <!-- GROUP 1 OF OPTIONS -->
@@ -462,6 +462,10 @@ $output = $dataHandle->readData('model.ump');
               </div>
             </li>
             <?php } ?>
+            <li id="buttonCopyClip" class="copyClip">
+              <img src="scripts/copy.png"/> 
+               Copy to Clipboard
+            </li>           
             <li id="buttonCopy" class="copy">
               <img src="scripts/copy.png"/> 
                Source to Copy
@@ -479,15 +483,20 @@ $output = $dataHandle->readData('model.ump');
               Store in Browser
             </li>
             
-            <li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
+            <!--li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
               <img src="scripts/copy.png"/> 
               Load from Browser
-            </li>
+            </li-->
 
             <li id="buttonDownloadFiles" class="downloadFiles">
               <img src="scripts/copy.png"/> 
                Download Files
-            </li>                        
+            <li class="subtitle">LOAD</li>
+            <li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
+              <img src="scripts/copy.png"/> 
+              Load from Browser
+            </li>
+            <li>Drag and drop a .ump file here to load it, or drag it to any place in the text area.</li>
           </ul>
 
           <ul class="second center-children">
