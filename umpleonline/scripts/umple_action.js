@@ -138,6 +138,10 @@ Action.clicked = function(event)
   {
     Action.uigu();
   }
+  else if (action == "CopyClip")
+  {
+    Action.copyClipboardCode();
+  }  
   else if (action == "Copy")
   {
     Action.showCodeInSeparateWindow();
@@ -424,6 +428,41 @@ Action.redo = function()
 {
   if (jQuery("#buttonRedo").hasClass("disabled")) return;
   Action.redoOrUndo(false);
+}
+
+// The following from https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop
+Action.dropHandler = function(ev) {
+  Page.setFeedbackMessage("File will be dropped")
+
+  // Prevent default behavior (Prevent file from being opened)
+  ev.preventDefault();
+
+  if (ev.dataTransfer.items) {
+    // Use DataTransferItemList interface to access the file(s)
+    for (var i = 0; i < ev.dataTransfer.items.length; i++) {
+      // If dropped items aren't files, reject them
+      if (ev.dataTransfer.items[i].kind === 'file') {
+        var file = ev.dataTransfer.items[i].getAsFile();
+        file.text().then(function(text) {
+          Page.setUmpleCode(text);
+        });
+      }
+    }
+  } else {
+    // Use DataTransfer interface to access the file(s)
+    for (var i = 0; i < ev.dataTransfer.files.length; i++) {
+       ev.dataTransfer.files[i].text().then(function(text) {
+        Page.setUmpleCode(text);
+      });
+    }
+  }
+}
+
+Action.dragOverHandler = function(ev) {
+  //console.log('File(s) in drop zone');
+
+  // Prevent default behavior (Prevent file from being opened)
+  ev.preventDefault();
 }
 
 Action.redoOrUndo = function(isUndo)
@@ -918,6 +957,12 @@ Action.uiguCallback = function(response)
   jQuery(uiguSelector).hideLoading();
   window.open("scripts/compiler.php?asUI=" + filename, "showUserInterface");
   Page.showViewDone();
+}
+
+Action.copyClipboardCode = function()
+{
+  Action.copyToClp(Page.getUmpleCode());
+  Page.setFeedbackMessage("Code has been copied to the clipboard");  
 }
 
 Action.copyCommandLineCode = function()
