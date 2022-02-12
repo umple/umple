@@ -18,6 +18,10 @@ $GLOBALS["JAVA_HOME"] = "/usr/bin/";
 $GLOBALS["ANT_EXEC"] = "/h/ralph/cruise/dev/apps/apache-ant-1.8.1/bin/ant";
 $GLOBALS["OS"] = "Linux";
 
+
+// JAVA EXECUTION SERVER 
+$GLOBALS["EXECUTION_SERVER"]= "http://localhost:4400";
+
 // For compatibility with systems that do not have UmpleOnline's shell
 // dependencies in their $PATH, add /usr/bin and /usr/local/bin to $PATH
 // in the hopes that the programs will be at those locations.
@@ -319,6 +323,9 @@ function generateMenu($buttonSuffix)
         </li>
         <li id=\"ttGenerateCode\">
           <div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQuery-palette-button\" tabindex=\"0\" value=\"Generate It\"></div>
+        </li>
+        <li id=\"ttExecuteCode\">
+          <div id=\"buttonExecuteCode".$buttonSuffix."\" class=\"jQuery-palette-button\" tabindex=\"1\" value=\"Execute It\"></div>
         </li>
         <li><div id=\"genstatus\" align=\"center\">Done. See below</div><li>
       </ul>";

@@ -64,6 +64,7 @@ ToolTips.tooltipEntries = {
   // code generation tooltip
   ttGeneratedCodeType: ["li", "Choose the language or diagram to generate"],
   ttGenerateCode: ["li", "Click this button to generate the above code or diagram"],
+  ttExecuteCode: ["li", "Click this button to execute the above code"],
 
   // show/hide elements tooltips
   ttShowHideCanvas: ['li', "Show/Hide the diagram </br><b>Shortcut: [ctrl+d]</b>"],

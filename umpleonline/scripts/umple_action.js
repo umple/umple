@@ -105,6 +105,11 @@ Action.clicked = function(event)
     var languageAndGenerate = $("inputGenerateCode").value.split(":");
     Action.generateCode(languageAndGenerate[0],languageAndGenerate[1]);
   }
+  else if (action == "ExecuteCode")
+  {
+    var languageAndExecute = $("inputGenerateCode").value.split(":");
+    Action.executeCode(languageAndExecute[0],languageAndExecute[1]);
+  }
   else if (action == "SimulateCode")
   {
     Action.simulateCode();
@@ -1312,6 +1317,21 @@ Action.generalizationSelected = function(obj)
   }
 }
 
+Action.executeCode = function(languageStyle, languageName)
+{
+  var executeCodeSelector = "#buttonExecuteCode";
+  var actualLanguage = languageName;
+  
+  jQuery(executeCodeSelector).showLoading();
+  Action.ajax(
+    function(response) { 
+      Action.executeCodeCallback(response); 
+    },
+    format("execute=true&language={0}&languageStyle={1}&model={2}", actualLanguage, languageStyle, Page.getModel()),
+    "true"
+  );
+}
+
 Action.generateCode = function(languageStyle, languageName)
 {
   var generateCodeSelector = "#buttonGenerateCode";
@@ -1363,9 +1383,19 @@ Action.photoReady = function()
   UmpleSystem.redrawCanvas();
 }
 
+Action.executeCodeCallback = function(response)
+{
+  var executeCodeSelector = "#buttonExecuteCode";
+  jQuery(executeCodeSelector).hideLoading();
+  Page.showExecutionArea();
+  Page.hideGeneratedCode();
+  Page.showExecutedResponse(response.responseText);
+}
+
 Action.generateCodeCallback = function(response, language, optionalCallback)
 {
   Page.showGeneratedCode(response.responseText,language);
+  Page.hideExecutionArea();
   Action.gentime = new Date().getTime();
 
   if(optionalCallback !== undefined)
@@ -2400,6 +2430,7 @@ Action.updateUmpleDiagramCallback = function(response)
 
     Page.setFeedbackMessage("");
     Page.hideGeneratedCode();
+    Page.hideExecutionArea();
     
     // Display editable class diagram
     if(Page.useEditableClassDiagram) {

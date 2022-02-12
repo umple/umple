@@ -119,6 +119,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Page.initCanvasArea();
   Page.initUmpleTextArea();
   Page.initSourceCodeArea();
+  Page.initCodeExecutionArea();
   jQuery(document).ready(function() {
     DropboxInitializer.initializeDropbox();
     ToolTips.initTooltips();
@@ -145,6 +146,7 @@ Page.initPaletteArea = function()
   Layout.initPaletteSize();
   
   Page.initJQueryButton("buttonGenerateCode");
+  Page.initJQueryButton("buttonExecuteCode");
   Page.initJQueryButton("buttonStartOver");
   Page.initJQueryButton("buttonShowRefreshUmpleOnlineCompletely")
   Page.initJQueryButton("buttonLoadBlankModel");
@@ -250,6 +252,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowRefreshUmpleOnlineCompletely");
   Page.initAction("buttonLoadBlankModel");
   Page.initAction("buttonGenerateCode");
+  Page.initAction("buttonExecuteCode");
   Page.initAction("buttonTabsCheckbox");
   Page.initAction("buttonSmaller");
   Page.initAction("buttonLarger");
@@ -300,6 +303,15 @@ Page.initPaletteArea = function()
       jQuery("#linetext").hide();
     }
   }
+
+  // Only show execute code button for the Java language
+  jQuery("#inputGenerateCode").on('change', function() {
+    if(this.value.split(":")[1] === 'Java') {
+      jQuery("#buttonExecuteCode").show();
+    } else {
+      jQuery("#buttonExecuteCode").hide();
+    }
+  })
 }
 
 Page.initOptions = function()
@@ -650,6 +662,24 @@ Page.initSourceCodeArea = function()
   SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
   var generatedCodeRowSelector = "#generatedCodeRow";
   jQuery(generatedCodeRowSelector).hide();
+}
+
+Page.initCodeExecutionArea = function()
+{
+  var executionAreaSelector = "#codeExecutionArea";
+  jQuery(executionAreaSelector).hide();
+}
+
+Page.showExecutionArea = function()
+{
+  var executionAreaSelector = "#codeExecutionArea";
+  jQuery(executionAreaSelector).show();
+}
+
+Page.hideExecutionArea = function()
+{
+  var executionAreaSelector = "#codeExecutionArea";
+  jQuery(executionAreaSelector).hide();
 }
 
 Page.hideGeneratedCode = function()
@@ -1230,6 +1260,10 @@ Page.showViewDone = function()
   var selector = "#buttonViewComplete";
   jQuery(selector).dialog({closeOnEscape:true, hide:'puff', height:100, width:250});
   setTimeout(function() {jQuery(selector).dialog("close");}, 2000);
+}
+
+Page.showExecutedResponse = function(responseText) {
+  jQuery("#executionMessage").html(responseText);
 }
 
 Page.showGeneratedCode = function(code,language,tabnumber)

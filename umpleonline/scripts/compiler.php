@@ -152,6 +152,8 @@ else if (isset($_REQUEST["umpleCode"]))
   $languageStyle = isset($_REQUEST["languageStyle"])?
     $_REQUEST["languageStyle"] : false;
   $outputErr = isset($_REQUEST["error"])?$_REQUEST["error"]:false;
+  $execute = isset($_REQUEST["execute"]) ? true : false;
+  $modelName = isset($_REQUEST["model"])? $_REQUEST["model"] : false;
   $uigu = False;
 
   $javadoc = false;
@@ -341,8 +343,26 @@ else if (isset($_REQUEST["umpleCode"]))
   }    
   if($toRemove) { exec($rmcommand); }
   
-  // The following is a hack. The arguments to umplesync need fixing
-  if (!$stateDiagram && !$classDiagram && !$entityRelationshipDiagram && !$yumlDiagram && !$featureDiagram) {  
+  //
+  if($execute) 
+  {
+    $command = "java -jar umplesync.jar -generate Java {$filename} -cx 2> {$errorFilename}";
+    executeCommand($command);
+    $errhtml = getErrorHtml($errorFilename);
+    if($errhtml != "") {
+      echo $errhtml;
+    } else {
+      $content = executeCode($modelName);
+      $output = json_decode($content, false);
+      if (json_last_error() === JSON_ERROR_NONE) {
+        echo $output->output.$output->errors;
+      } else {
+        echo $content;
+      }
+    }
+    return;
+  } // The following is a hack. The arguments to umplesync need fixing
+  else if (!$stateDiagram && !$classDiagram && !$entityRelationshipDiagram && !$yumlDiagram && !$featureDiagram) {  
     $command = "java -jar umplesync.jar -source {$filename} 2> {$errorFilename}";
   }
   else {
@@ -653,6 +673,26 @@ function getErrorHtml($errorFilename, $offset = 1)
      return $errhtml;
   }
   return "";
+}
+
+function executeCode($modelName) 
+{
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,"{$GLOBALS['EXECUTION_SERVER']}/run");
+  curl_setopt($ch, CURLOPT_POST, 1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, "path={$modelName}");
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  $content = curl_exec($ch);
+  if (curl_errno($ch)) {
+      $error_msg = curl_error($ch);
+  }
+  curl_close($ch);
+
+  if (isset($error_msg)) {
+    return $error_msg;
+  } else {
+    return $content;
+  }
 }
 
 // taken from http://php.net/manual/en/function.json-decode.php
