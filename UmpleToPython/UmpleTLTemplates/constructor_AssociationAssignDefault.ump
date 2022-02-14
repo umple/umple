@@ -1,0 +1,42 @@
+use constructor_AssociationAssignMandatoryMany.ump;
+use constructor_AssociationAssignOne.ump;
+
+
+class UmpleToJava {
+    constructor_AssociationAssignDefault <<!<</*constructor_AssociationAssignDefault*/>><<#
+  if (!av.getIsNavigable())
+  {
+    continue;
+  }
+
+  // if it's a specialization, skip the association code for the av
+  if ( reqSuperCode || reqCommonCode )
+  {
+    continue;
+  }
+
+  if (av.isOnlyOne())
+  {
+    #>><<@ UmpleToJava.constructor_AssociationAssignOne >><<#
+  }
+  else if (av.isOptionalMany())
+  {
+    appendln(realSb,"");
+    append(realSb, "    {0} = new ArrayList<{1}>();", gen.translate("associationMany",av), gen.getType(av));
+  }
+  else if (av.isMandatoryMany())
+  {
+    #>><<@ UmpleToJava.constructor_AssociationAssignMandatoryMany >><<#
+  }
+  else if (av.getMultiplicity().getLowerBound() > 0)
+  {
+    #>><<=gen.translate("associationMany",av)>> = new ArrayList<<<=gen.getType(av)>>>();
+    <<=gen.translate("associationMany",av)>>.add(<<=gen.translate("parameterOne",av)>>);<<#
+  }
+  else
+  {
+    continue;
+  }
+  hasBody = true;
+#>>!>>
+}

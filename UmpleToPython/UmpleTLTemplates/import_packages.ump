@@ -1,0 +1,25 @@
+class UmpleToJava {
+    import_packages <<!<</*import_packages*/>><<#
+
+  // A set for imports in order to de-duplicate.  
+  Set<String> importSet = new HashSet<String>();
+
+  // Add dependeny names into the set
+  for (Depend depend : uClass.getDepends())
+  {
+    importSet.add(depend.getName());
+    appendln(realSb, "");
+    append(realSb, "import {0};", depend.getName());
+  }
+
+  for (String anImport : gClass.getMultiLookup("import"))
+  {
+    // Test whether the import is already written OR the class is inner class (should not have import statement)
+    if (importSet.contains(anImport) | uClass.hasOuterClass()) {
+      continue;
+    }
+    appendln(realSb, "");
+    append(realSb, "import {0};", anImport);
+  }
+#>>!>>
+}

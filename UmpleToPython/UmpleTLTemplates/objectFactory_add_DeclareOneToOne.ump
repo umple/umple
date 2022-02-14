@@ -1,0 +1,15 @@
+
+use objectFactory_add_methods.ump;
+class UmpleToJava {
+    objectFactory_add_DeclareOneToOne <<!<</*objectFactory_add_DeclareOneToOne*/>><<#
+  String signature = gClass.getLookup("constructorSignature_mandatory");
+  hasBody = false;
+  arguments=gen.translate("constructorMandatory",uClass);
+  argumentscomma="";
+  if(!arguments.equals(""))
+    argumentscomma+=", ";
+  caller=gClass.getLookup("constructorSignature_caller");
+  #>>
+  <<@ UmpleToJava.objectFactory_add_methods >>
+!>>
+}

@@ -1,0 +1,21 @@
+use state_machine_Get.ump;
+use state_machine_GetFull.ump;
+
+
+class UmpleToJava {
+    state_machine_Get_All <<!<</*state_machine_Get_All*/>><<#
+{
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
+  isFirst = true;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    #>><<@ UmpleToJava.state_machine_GetFull >><<# 
+  }
+  
+  for(StateMachine sm : uClass.getAllStateMachines())
+  {
+    #>><<@ UmpleToJava.state_machine_Get >><<#
+  }
+}
+#>>!>>
+}

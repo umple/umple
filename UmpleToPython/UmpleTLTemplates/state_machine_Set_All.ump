@@ -1,0 +1,23 @@
+use state_machine_Set.ump;
+use state_machine_SetSimple.ump;
+
+
+class UmpleToJava {
+    state_machine_Set_All <<!<</*state_machine_Set_All*/>><<#
+{
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
+  for (StateMachine sm : uClass.getAllStateMachines())  
+  {
+
+    if (sm.getType() == "Simple" && sm.numberOfStates() > 0)
+    {
+      #>><<@ UmpleToJava.state_machine_SetSimple >><<#
+    }
+    else if (sm.numberOfStates() > 0)
+    {
+      #>><<@ UmpleToJava.state_machine_Set >><<#
+    }
+  }
+}
+#>>!>>
+}

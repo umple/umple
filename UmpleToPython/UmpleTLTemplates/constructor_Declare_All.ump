@@ -1,0 +1,51 @@
+use constructor_DeclareDefault.ump;
+use constructor_DeclareOneToOne.ump;
+use specializationCode_Constructor.ump;
+
+
+class UmpleToJava {
+    constructor_Declare_All <<!<</*constructor_Declare_All*/>><<#
+  boolean isOneToOne = false;
+
+  for (AssociationVariable av : uClass.getAssociationVariables()) 
+  {
+
+   #>><<@ UmpleToJava.specializationCode_Constructor >><<#
+
+    if (av.isOnlyOne() && relatedAssociation.isOnlyOne() && av.getIsNavigable() && relatedAssociation.getIsNavigable())
+    {
+      isOneToOne = true;
+      break;
+    }
+  }
+  String componentSignature="";
+  String componentSignatureCaller="";
+  String distributedConstructorCheckCode="";
+  String lastArgumentComma="";
+  if(uClass.getIsDistributed()&&model.getDistributePattern()==0)
+  {    
+    if(!uClass.isRoot()&& uClass.getExtendsClass().getIsDistributed())
+    {
+      if (!gClass.getParentClass().getLookup("constructorSignature_caller").equals(""))
+        componentSignatureCaller=",umpleComponent";
+      else
+        componentSignatureCaller="umpleComponent";  
+    }
+    if(!gClass.getLookup("constructorSignature").equals(""))
+    {
+      lastArgumentComma=",";
+      componentSignature=", UmpleRuntime.UmpleComponent umpleComponent";      
+    }
+    else
+    {
+      componentSignature="UmpleRuntime.UmpleComponent umpleComponent";
+    }  
+  } 
+  #>><<@ UmpleToJava.constructor_DeclareDefault >><<#
+  if (isOneToOne)
+  {
+    #>><<@ UmpleToJava.constructor_DeclareOneToOne >><<#
+  }
+
+#>>!>>
+}

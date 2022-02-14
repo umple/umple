@@ -1,0 +1,15 @@
+class UmpleToJava {
+  attribute_GetManySubclass <<!  /* Code from template attribute_GetManySubclass */
+<</*attribute_GetManySubclass*/>>  public <<=gen.translate("typeMany",av)>> <<=gen.translate("getMethod",av)>>(int index)
+  {
+    <<# if (customGetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetPrefixCode,gen.translate("getMethod",av));
+     append(realSb, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } #>>
+    <<= gen.translate("typeMany",av)>> <<=gen.translate("parameterOne",av)>> = super.<<=gen.translate("getMethod",av)>>(index);
+    <<# for( TraceItem traceItem : traceItems ) #>><<= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass):"")>>
+
+
+<<# if (customGetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customGetPostfixCode,gen.translate("getMethod",av));
+    append(realSb, "{0}\n",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } #>>    return <<=gen.translate("parameterOne",av)>>;
+  }
+!>>
+}

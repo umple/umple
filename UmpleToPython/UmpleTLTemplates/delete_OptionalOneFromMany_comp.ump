@@ -1,0 +1,9 @@
+class UmpleToJava {
+    delete_OptionalOneFromMany_comp <<!<</*delete_OptionalOneFromMany_comp*/>>
+    while( !<<=gen.translate("associationOne",av)>>.isEmpty() )
+    {
+      <<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>> = <<=gen.translate("associationOne",av)>>.get(0);
+      <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(null);
+      <<=gen.translate("associationOne",av)>>.remove(<<=gen.translate("parameterOne",av)>>);
+    }!>>
+}

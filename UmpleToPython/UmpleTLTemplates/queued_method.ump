@@ -1,0 +1,132 @@
+class UmpleToJava {
+    queued_method <<!<</*queued_method*/>><<#
+    public String getQueuedMethodClass(StringBuilder realSb, UmpleModel model, UmpleClass uClass, JavaGenerator gen)
+    {
+	  boolean hasQueuedMethods = false;
+	  ArrayList<Method> methodList = new ArrayList<Method>();
+	  if(uClass.hasMethods())
+	  {
+		for(Method m : uClass.getMethods())
+		{
+		  if(m.getIsQueued())
+		  {
+			methodList.add(m);
+			hasQueuedMethods = true;
+		  }
+		}
+	  }
+	
+	  if(hasQueuedMethods)
+	  {
+		appendln(realSb,"\n  private class QueuedMethodThread implements Runnable");
+		appendln(realSb,"  {");
+        append(realSb,"\n    QueuedMethodMessageQueue methodQueue;");
+        append(realSb,"\n    Thread methodRemoval;");
+        append(realSb,"\n    ");
+        appendln(realSb,"");
+		appendln(realSb,"    public QueuedMethodThread()");
+		appendln(realSb,"    {");
+		appendln(realSb,"      methodQueue = new QueuedMethodMessageQueue();");
+        appendln(realSb,"      methodRemoval = new Thread(this);");
+        appendln(realSb,"      //start the thread for queued methods of {0}", uClass.getName());
+        appendln(realSb,"      methodRemoval.start();   ");
+		appendln(realSb,"    }");
+		appendln(realSb,"\n    protected class QueuedMethodMessage");
+		appendln(realSb,"    {");
+		appendln(realSb,"      QueuedMethod type;"); 
+		appendln(realSb,"      ");  
+		appendln(realSb,"      //QueuedMethodMessage parameters");
+		appendln(realSb,"      Vector<Object> param;"); 
+		appendln(realSb,"      ");   
+		appendln(realSb,"      public QueuedMethodMessage(QueuedMethod t, Vector<Object> p)");
+		appendln(realSb,"      {");
+		appendln(realSb,"        type = t; "); 
+		appendln(realSb,"        param = p;");
+		appendln(realSb,"      }");
+		appendln(realSb,"");
+		appendln(realSb,"      @Override");
+		appendln(realSb,"      public String toString()");
+		appendln(realSb,"      {");
+		appendln(realSb,"        return type + \",\" + param;");
+		appendln(realSb,"      }");
+		appendln(realSb,"    }");
+		appendln(realSb,"  ");  
+
+		appendln(realSb,"    protected class QueuedMethodMessageQueue {");
+		appendln(realSb,"      Queue<QueuedMethodMessage> messages = new LinkedList<QueuedMethodMessage>();");
+		appendln(realSb,"      ");   
+		appendln(realSb,"      public synchronized void put(QueuedMethodMessage m)");
+		appendln(realSb,"      {");
+		appendln(realSb,"        messages.add(m); "); 
+		appendln(realSb,"        notify();");
+		appendln(realSb,"      }");
+		appendln(realSb,"");  
+		appendln(realSb,"      public synchronized QueuedMethodMessage getNext()");
+		appendln(realSb,"      {");
+		appendln(realSb,"        try {");
+		appendln(realSb,"          while (messages.isEmpty()) "); 
+		appendln(realSb,"          {");
+		appendln(realSb,"            wait();");
+		appendln(realSb,"          }");
+		appendln(realSb,"        } catch (InterruptedException e) {");
+		appendln(realSb,"          Thread.currentThread().interrupt();");
+		appendln(realSb,"          return null;");
+		appendln(realSb,"        }");
+		appendln(realSb,"");
+		appendln(realSb,"        //The element to be removed");
+		appendln(realSb,"        QueuedMethodMessage m = messages.remove(); "); 
+		appendln(realSb,"        return (m);");
+		appendln(realSb,"      }");
+		appendln(realSb,"    }");
+	
+		appendln(realSb,"\n    @Override");
+		appendln(realSb,"    public void run ()");
+		appendln(realSb,"    {");
+		appendln(realSb,"      boolean status=false;");
+		appendln(realSb,"      while (true) ");
+		appendln(realSb,"      {");
+  
+		append(realSb,"        QueuedMethodMessage qmm = methodQueue.getNext();");
+		append(realSb,"\n        if(qmm == null)  return;");
+  
+		append(realSb,"\n        switch(qmm.type)");
+		append(realSb,"\n        {");
+		for(Method m : methodList)
+		{
+		  append(realSb,"\n          case {0}", m.getName());
+		  append(realSb,"_M:");
+		  append(realSb,"\n            _{0}(", m.getName());
+	
+		  //parameters to relay to the function
+		  boolean firstParameter = true;
+		  int i = 0;
+		  for(MethodParameter mp : m.getMethodParameters())
+		  {
+			if(!firstParameter)  append(realSb, ", ");
+			append(realSb,"({0}) qmm.param.elementAt({1})", mp.getFullType(), i);
+			firstParameter = false;
+			i++;
+		  }
+	
+		  append(realSb,");");
+		  append(realSb,"\n            break;");
+		}
+		append(realSb,"\n          default:");
+		append(realSb,"\n        }");
+		append(realSb,"\n      }");
+		append(realSb,"\n    }");
+		append(realSb,"\n    public void putCallTo(QueuedMethodMessage message)");
+		append(realSb,"\n    {");
+		append(realSb,"\n      methodQueue.put(message);");
+		append(realSb,"\n    }");
+		appendln(realSb,"");
+		append(realSb,"\n    public void delete()");
+		append(realSb,"\n    {");
+		append(realSb,"\n       methodRemoval.interrupt();");
+		append(realSb,"\n    }");
+		append(realSb,"\n  }");
+	  }
+	  return realSb.toString();
+    }
+#>>!>>
+}

@@ -1,0 +1,125 @@
+use objectFactory_add_methods1.ump;
+class UmpleToJava {
+  objectFactory_add_methods <<!<</*objectFactory_add_methods*/>><<#
+  if (model.getDistributePattern()==1){
+    #>><<@ UmpleToJava.objectFactory_add_methods1 >><<#
+  }
+  else{
+  if(isInterface!=true){
+    append(realSb,"\n  {0} {1}({2}UmpleRuntime.UmpleComponent component,{3} object)",new Object[] {accessibility, "new"+uClass.getName(), arguments+argumentscomma,uClass.getName()});
+  #>>
+  {
+
+      while(true){
+        try
+        {
+          <<#if(uClass.getDistributeTechnology().equals("RMI")){#>>object.setRemoteObject(remoteFactories.get(getNodeId(component)).create<<=uClass.getName()>>(<<=caller>>));
+          object.setRealObject(object.getRemoteObject());
+          break;
+          <<#} 
+          else
+          {
+          #>>
+          <<=uClass.getName()>> proxyObject = remoteFactories.get(getNodeId(component)).create<<=uClass.getName()>>(<<=caller>>);
+          object.remoteUrl=proxyObject.remoteUrl;
+          object.remotePort=proxyObject.remotePort;
+          object.objectId=proxyObject.objectId;
+          object.setRealObject(proxyObject.realObject);
+          break;
+          <<#}
+          #>>
+        }
+        catch(Exception e) 
+        {
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }  
+      }
+      }
+
+    <<#    append(realSb,"\n  {0} {1}({2} object){",new Object[] {accessibility, "new"+uClass.getName(),uClass.getName()});
+
+    if(uClass.getDistributeTechnology().equals("RMI")){#>> 
+        
+        <<=uClass.getName()>>Remote remoteObject;
+        try{
+        remoteObject = (<<=uClass.getName()>>Remote)Class.forName(object.getClass().getName()+"Remote").getConstructor(object.getClass()).newInstance(object);
+        }
+        catch (Exception e)
+        {
+          System.err.println("Class not found " + e.toString());
+          return;
+        }
+        listOfObjects.add(remoteObject);
+        <<#}
+        else if(uClass.getDistributeTechnology().equals("WS")){
+        #>>
+    listOfObjects.add(object);
+    <<#}#>>
+    <<#if(uClass.getDistributeTechnology().equals("RMI")){#>> 
+    while(true)
+    {
+      try
+      {  
+        UnicastRemoteObject.exportObject(remoteObject,nodes.get(getThisNodeId()).getPort());
+        object.setRemoteObject(remoteObject);
+        break;
+      } 
+      catch (Exception e)
+      {
+        System.err.println("Server Exception: " + e.toString());
+        try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+      }
+    }
+    
+    <<#}
+        else if(uClass.getDistributeTechnology().equals("WS")){
+        #>>
+        object.remoteUrl=nodes.get(getThisNodeId()).getUrl();
+        object.remotePort=String.valueOf(nodes.get(getThisNodeId()).getPort());
+        object.objectId=object.getClass().getName()+String.valueOf(object.getHashCodeImpl());
+        object.setRealObject(object);
+        Endpoint e=Endpoint.create(object);
+        e.publish(object.remoteUrl+":"+object.remotePort+"/"+object.getClass().getSimpleName()+object.objectId);
+        listOfEndpoints.add(e);
+        <<#}#>>  
+    }
+    
+    <<#
+    }
+  if(isInterface==true){
+  append(realSb,"\n  {0}{1} {2}({3})",new Object[] {webMethod,accessibilityCreate, "create"+uClass.getName(), arguments});
+  #>>throws RemoteException;<<#
+  }
+  else{
+    append(realSb,"\n  {0}synchronized {1} {2}({3})",new Object[] {webMethod,accessibilityCreate, "create"+uClass.getName(), arguments});
+    if(uClass.getIsSingleton()){
+    #>>
+    {
+    <<=uClass.getName()>> object= <<=uClass.getName()>>.getInstance(UmpleRuntime.getComponent("local"));
+    <<#
+    }
+    else
+    { 
+  #>>
+    {
+    <<=uClass.getName()>> object= new <<=uClass.getName()>>(<<=caller>><<=argumentscomma>> UmpleRuntime.getComponent("local"));
+    <<#}
+    if(uClass.getDistributeTechnology().equals("WS"))
+    {
+    #>>
+    return object;
+    }
+    <<#
+    }
+    else
+    {
+    #>>
+    return object.getRemoteObject();
+    }
+  <<#
+    }
+  }
+  }  
+    #>>!>>
+}

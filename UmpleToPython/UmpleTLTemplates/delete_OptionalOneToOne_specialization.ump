@@ -1,0 +1,7 @@
+class UmpleToJava {
+    delete_OptionalOneToOne_specialization <<!<</*delete_OptionalOneToOne_specialization*/>>
+    if (<<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>() != null)
+    {
+      <<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>().delete();
+    }!>>
+}

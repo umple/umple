@@ -1,0 +1,7 @@
+class UmpleToJava {
+    delete_OptionalOneFromOptionalOne_specialization <<!<</*delete_OptionalOneFromOptionalOne_specialization*/>>
+    if (<<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>() != null)
+    {
+      <<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>().clear_<<=gen.relatedTranslate("associationOne",av)>>();
+    }!>>
+}

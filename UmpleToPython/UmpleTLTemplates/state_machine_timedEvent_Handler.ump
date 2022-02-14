@@ -1,0 +1,71 @@
+use state_machine_timedEvent_run.ump;
+use state_machine_timedEvent_run_NestedStates.ump;
+
+
+class UmpleToJava {
+    state_machine_timedEvent_Handler <<!<</*state_machine_timedEvent_Handler*/>><<#
+ 
+
+#>>
+  public static class TimedEventHandler extends TimerTask  
+  {
+    private <<= gen.translate("type",uClass) >> controller;
+    private String timeoutMethodName;
+    private double howLongInSeconds;
+    private Timer timer;
+    
+    public TimedEventHandler(<<= gen.translate("type",uClass) >> aController, String aTimeoutMethodName, double aHowLongInSeconds)
+    {
+      controller = aController;
+      timeoutMethodName = aTimeoutMethodName;
+      howLongInSeconds = aHowLongInSeconds;
+      timer = new Timer();
+      timer.schedule(this, (long)howLongInSeconds*1000);
+    }
+    
+    public void stop()
+    {
+      timer.cancel();
+    }
+    
+    public void run ()
+    {
+<<#
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    if(sm.getNestedStateMachines().isEmpty())
+    {
+      for (Event e : sm.getEvents())
+      {
+        if (e.getIsTimer())
+        {
+          #>><<@ UmpleToJava.state_machine_timedEvent_run >><<#
+        }
+      }
+    }
+    else if(!sm.getNestedStateMachines().isEmpty())
+    {
+      for (Event e : sm.getEvents())
+      {
+        if (e.getIsTimer())
+        {
+          #>><<@ UmpleToJava.state_machine_timedEvent_run >><<#
+        }
+      }
+      for(StateMachine nsm : sm.getNestedStateMachines())
+      {
+        for(Event event : nsm.getEvents())
+        {
+          if(event.getIsTimer())
+          {
+            #>><<@ UmpleToJava.state_machine_timedEvent_run_NestedStates >><<#
+          }
+        }
+      }
+    }
+  }
+#>>
+    }
+  }
+!>>
+}

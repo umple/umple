@@ -1,0 +1,7 @@
+class UmpleToJava {
+    delete_ManyFromOptionalOne_specialization <<!<</*delete_ManyFromOptionalOne_specialization*/>>
+    for( <<=gen.translate("type",av)>> orphan : <<=gen.translate("getMethod",av)>>_<<=gen.translate("type",av)>>() )
+    {
+      orphan.clear_<<=gen.relatedTranslate("associationOne",av)>>();
+    }!>>
+}

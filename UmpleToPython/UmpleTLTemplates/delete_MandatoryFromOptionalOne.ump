@@ -1,0 +1,8 @@
+class UmpleToJava {
+    delete_MandatoryFromOptionalOne <<!<</*delete_MandatoryFromOptionalOne*/>>
+    for(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>> : <<=gen.translate("associationMany",av)>>)
+    {
+      <<=gen.relatedTranslate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>,null);
+    }
+    <<=gen.translate("associationMany",av)>>.clear();!>>
+}

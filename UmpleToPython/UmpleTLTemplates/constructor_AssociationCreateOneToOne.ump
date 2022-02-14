@@ -1,0 +1,4 @@
+class UmpleToJava {
+    constructor_AssociationCreateOneToOne <<!<</*constructor_AssociationCreateOneToOne*/>>
+    <<=gen.translate("associationOne",av)>> = new <<=gen.translate("type",av)>>(<<=gen.translate("callerArgumentsForMandatory",relatedAssociation)>>);!>>
+}

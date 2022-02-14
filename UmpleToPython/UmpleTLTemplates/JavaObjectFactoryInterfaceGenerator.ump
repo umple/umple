@@ -1,0 +1,110 @@
+use UmpleNotice.ump;
+use objectFactory_add_Declare_All.ump;
+
+namespace cruise.umple.compiler.java;
+
+external interface ILang{}
+
+class JavaObjectFactoryInterfaceGenerator {
+    depend cruise.umple.compiler.*;
+    depend cruise.umple.util.*;
+    depend java.util.*;
+    depend cruise.umple.parser.Position;
+
+    isA ILang;
+
+    // Add a newline to the end of the input
+    private void appendln(StringBuilder buffer, String input, Object... variables)
+    {
+        append(buffer, input + "\n", variables);
+    }
+
+    // This method will be used to append formatted strings
+    // i.e. format("Hello {0} {1}", "andrew","forward");
+    private void append(StringBuilder buffer, String input, Object... variables)
+    {
+        buffer.append(StringFormatter.format(input,variables));
+    }
+
+    emit getCode(UmpleModel model, UmpleElement uElement)(JavaObjectFactoryInterfaceGenerator);
+
+
+    JavaObjectFactoryInterfaceGenerator <<!<</*JavaObjectFactoryInterfaceGenerator*/>><<@ UmpleToJava.UmpleNotice >>
+<<#
+  JavaGenerator gen = new JavaGenerator();
+  gen.setModel(model);
+  GeneratorHelper.generator = gen;
+  Boolean isInterface=true;
+  
+  Set<String> packageSet = new HashSet<String>();
+  packageSet.add("java.rmi.Remote");
+  packageSet.add("java.rmi.RemoteException");
+  if(model.getDistributeTechnology().equals("WS"))
+  {
+    packageSet.add("javax.jws.WebMethod");
+    packageSet.add("javax.jws.WebService");
+    packageSet.add("javax.jws.soap.SOAPBinding");
+    packageSet.add("javax.jws.soap.SOAPBinding.Style");
+  }
+  packageSet.add("javax.jws.WebMethod");
+  for(UmpleClass uClass: model.getUmpleClasses())
+  { GeneratedClass gClass = uClass.getGeneratedClass();
+    for (Depend depend : uClass.getDepends())
+      {
+        packageSet.add(depend.getName());
+      }
+      
+      for (String anImport : gClass.getMultiLookup("import"))
+      {
+        packageSet.add(anImport);
+      }    
+    if (uClass.getIsDistributed())
+    {
+      String packageName="";
+      if(!uClass.getPackageName().equals("")){
+        packageName=uClass.getPackageName()+".";
+        packageName+=uClass.getName();
+        packageSet.add(packageName);
+      }
+    }
+  }
+
+  if (model.getDefaultNamespace()!=null){#>>
+package <<=model.getDefaultNamespace()>>;
+  <<#
+  }
+  for(String packageName: packageSet)
+  {
+#>>
+import <<=packageName>>;
+<<#
+  }
+  if(model.getDistributeTechnology().equals("WS"))
+  {
+  #>>
+  @WebService
+  @SOAPBinding(style = Style.RPC)
+  <<#}
+#>>
+
+public interface IUmpleRuntime extends Remote
+{
+  <<#
+    if(model.getDistributeTechnology().equals("WS"))
+  {
+  #>>
+  @WebMethod
+  public void stopNode();
+  <<#
+  }
+  if(model.getDistributeTechnology().equals("RMI"))
+  {
+  #>>
+  public void stopNode() throws RemoteException;
+  <<#
+  }
+  #>>
+  <<@ UmpleToJava.objectFactory_add_Declare_All >>
+}
+ !>>
+}

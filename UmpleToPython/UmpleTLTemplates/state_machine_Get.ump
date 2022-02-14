@@ -1,0 +1,8 @@
+class UmpleToJava {
+    state_machine_Get <<!<</*state_machine_Get*/>>
+  public <<=gen.translate("type",sm)>> <<=gen.translate("getMethod",sm)>>()
+  {
+    return <<= gen.translate("stateOne",sm) >>;
+  }
+!>>
+}

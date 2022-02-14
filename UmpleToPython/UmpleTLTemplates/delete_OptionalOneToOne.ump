@@ -1,0 +1,7 @@
+class UmpleToJava {
+    delete_OptionalOneToOne <<!<</*delete_OptionalOneToOne*/>>
+    if (<<=gen.translate("associationOne",av)>> != null)
+    {
+      <<=gen.translate("associationOne",av)>>.delete();
+    }!>>
+}

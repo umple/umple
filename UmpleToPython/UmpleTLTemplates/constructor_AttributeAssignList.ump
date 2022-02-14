@@ -1,0 +1,11 @@
+class UmpleToJava {
+    constructor_AttributeAssignList <<!<</*constructor_AttributeAssignList*/>>
+    <<=gen.translate("attributeMany",av)>> = new ArrayList<<<=gen.translate("typeMany",av)>>>();<<#
+    if (av.getValue() != null && av.getValue() != "") { 
+      String[] values = av.getValue().split(",");
+      if (values[0] != av.getValue()) {
+        for (String value : values) { 
+          value = value.replaceAll("(?<!new)\\s+","");#>> 
+    <<=gen.translate("attributeMany",av)>>.add(<<=value>>);
+<<#}}}#>>!>>
+}

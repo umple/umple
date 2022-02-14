@@ -1,0 +1,138 @@
+use UmpleNotice.ump;
+external interface ILang{}
+
+class JavaDistributedTemplates {
+    depend cruise.umple.compiler.*;
+    depend cruise.umple.util.*;
+    depend java.util.*;
+    depend cruise.umple.parser.Position;
+
+    // Add a newline to the end of the input
+    private void appendln(StringBuilder buffer, String input, Object... variables)
+    {
+        append(buffer, input + "\n", variables);
+    }
+
+    // This method will be used to append formatted strings
+    // i.e. format("Hello {0} {1}", "andrew","forward");
+    private void append(StringBuilder buffer, String input, Object... variables)
+    {
+        buffer.append(StringFormatter.format(input,variables));
+    }
+
+    emit getproxyReadObjectCode(String remoteName, String packageName,String interfaceName,UmpleClass uClass)(ProxyreadObjectCode);
+
+    ProxyreadObjectCode <<!
+    <<#if (uClass.getExtendsClass() == null||(uClass.getExtendsClass() != null && ! uClass.getExtendsClass().getIsDistributed()))
+    {
+    #>>
+
+  public  String remoteUrl;
+  public  String objectId;
+  public  String remotePort; 
+    <<#}#>>
+  private static <<=remoteName>> umplenewInstance()
+  {
+    return new <<=remoteName>>((UmpleRuntime.UmpleNode)null);
+  }   
+
+  protected <<=remoteName>> (UmpleRuntime.UmpleNode node)
+  {
+  <<#
+    if ((uClass.getExtendsClass() != null)&&(uClass.getExtendsClass().getIsDistributed()))
+    {
+  #>>
+    super(node);
+  <<#
+    }
+    else if ((uClass.getExtendsClass() != null)&& !(uClass.getExtendsClass().getIsDistributed()))
+    {
+    appendln(realSb,"super();");
+    }
+    #>>
+  }
+
+  public void setRealObject(<<=interfaceName>> aObject)
+  {
+    <<#
+    if (uClass.getExtendsClass() != null && uClass.getExtendsClass().getIsDistributed())
+    {
+    #>>
+    super.setRealObject(aObject);
+    <<#
+    }
+    #>>
+    realObject=aObject;
+  }
+  void afterUnmarshal(Unmarshaller u, Object parent)
+  {
+    initializeConnection();
+  }
+  private void initializeConnection()
+  {
+    if(objectId.contains(<<=uClass.getName()>>.class.getName()))
+    {  
+      boolean success = false;
+      while (!success) {        
+        try 
+        {
+          URL url = new URL(remoteUrl+":"+remotePort+"/<<=remoteName>>"+objectId+"?wsdl");
+          QName qname = new QName("http://<<=packageName>>/","<<=remoteName>>Service");
+          Service service = Service.create(url, qname);
+          setRealObject(service.getPort(<<=interfaceName>>.class));
+          success = true;
+        } 
+        catch (Exception e) 
+        {
+          System.err.println("Client exception: " + e.toString());
+          e.printStackTrace();
+          try { Thread.sleep(1000); } catch (InterruptedException interruptedException) {};
+        }
+      }
+    }
+  }
+ !>>
+
+    emit getproxyReadObjectCodeRMI(String remoteName, String packageName,String interfaceName,UmpleClass uClass)(ProxyreadObjectCodeRMI);
+
+    ProxyreadObjectCodeRMI <<!
+    <<#if (uClass.getExtendsClass() == null||(uClass.getExtendsClass() != null && ! uClass.getExtendsClass().getIsDistributed()))
+    {
+    #>>
+  protected  <<=interfaceName>> remoteObject;
+    <<#}#>>  
+  public void setRemoteObject(<<=interfaceName>> aRemoteObject)
+  {
+    remoteObject=aRemoteObject;
+  }
+  public <<=interfaceName>> getRemoteObject()
+  {
+    return (<<=interfaceName>>)remoteObject;
+  }
+  private void readObject(java.io.ObjectInputStream in) throws Exception
+  {
+    try
+    {
+      in.defaultReadObject();
+      realObject=(<<=interfaceName>>)remoteObject;
+    }
+    catch(Exception e)
+    {
+      throw e;
+    }
+    
+  }
+ !>>
+
+     emit getremoteSingletonCode(String remoteName, String packageName,String interfaceName)(remoteSingleton);
+ remoteSingleton <<!
+  protected <<=remoteName>>()
+  {
+  }
+  public <<=remoteName>>(String url,String port,String objectId)
+  {
+    Endpoint.publish(url+":"+port+"/<<=remoteName>>"+objectId,this);
+  }
+
+ !>>
+}

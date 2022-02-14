@@ -1,0 +1,53 @@
+use state_machine_Event_StartStopTimer.ump;
+use state_machine_Event_StartStopTimer_NestedStates.ump;
+use state_machine_timedEvent_Handler.ump;
+
+
+class UmpleToJava {
+    state_machine_timedEvent_All <<!<</*state_machine_timedEvent_All*/>><<#
+{ 
+  boolean hasTimedEvents = false;
+  boolean hasTimedEvents_NestedStates = false;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    if(sm.getNestedStateMachines().isEmpty())
+    {
+      for (Event e : sm.getEvents())
+      {
+        if (e.getIsTimer())
+        {
+          hasTimedEvents = true;
+          #>><<@ UmpleToJava.state_machine_Event_StartStopTimer >><<#
+        }
+      }
+    }
+    else if(!sm.getNestedStateMachines().isEmpty())
+    {
+      for (Event e : sm.getEvents())
+      {
+        if (e.getIsTimer())
+        {
+          hasTimedEvents = true;
+          #>><<@ UmpleToJava.state_machine_Event_StartStopTimer >><<#
+        }
+      }
+      for(StateMachine nsm : sm.getNestedStateMachines())
+      {
+        for(Event event : nsm.getEvents())
+        {
+          if(event.getIsTimer())
+          {
+            hasTimedEvents_NestedStates = true;
+            #>><<@ UmpleToJava.state_machine_Event_StartStopTimer_NestedStates >><<#
+          }
+        }
+      }
+    }
+  }
+  if (hasTimedEvents || hasTimedEvents_NestedStates)
+  {
+    #>><<@ UmpleToJava.state_machine_timedEvent_Handler >><<#
+  }
+}
+#>>!>>
+}

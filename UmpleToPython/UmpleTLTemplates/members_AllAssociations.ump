@@ -1,0 +1,43 @@
+use specializationCode.ump;
+
+
+class UmpleToJava {
+    members_AllAssociations <<!<</*members_AllAssociations*/>><<#
+{
+  isFirst = true;
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+
+    #>><<@ UmpleToJava.specializationCode >><<#
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+    
+    if (isFirst)
+    {
+      appendln(realSb, "");
+      appendln(realSb, "");
+            
+      append(realSb,"  //{0} Associations", uClass.getName());
+      isFirst = false;
+    }
+  
+    appendln(realSb, "");
+    
+    //if (av.numberOfComments() > 0 && av.numberOfRequirements() > 0) { List<Comment> toComment = new ArrayList<Comment>(av.getComments()); toComment.addAll(Requirement.convertToComment(av.getRequirements())); append(realSb, "\n  {0}\n", Comment.format("Attribute Javadoc", toComment)); }
+    //else if (av.numberOfComments() > 0) { append(realSb, "\n  {0}\n", Comment.format("Association Javadoc", av.getComments())); }
+    //else if (av.numberOfRequirements() > 0) { append(realSb, "\n  {0}\n", Requirement.format("Association Javadoc", av.getRequirements())); }
+    
+    if (av.isOne())
+    {
+      	append(realSb, "  private{2} {0} {1};", gen.translate("type",av), gen.translate("attributeOne",av),isTransient);
+    }
+    else
+    {    
+      	append(realSb, "  private{2} List<{0}> {1};", gen.translate("typeMany",av), gen.translate("attributeMany",av),isTransient);
+    }
+  }
+}
+#>>!>>
+}
