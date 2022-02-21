@@ -8,7 +8,7 @@ http://umple.org/license
 */
 
 namespace cruise.umple.compiler;
-class JavaGenerator
+class PythonGenerator
 {
   isA CodeTranslator;
   isA SuperCodeGenerator;
@@ -3138,7 +3138,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     if ((aClass.getHasProxyPattern()||aClass.getNeedsDefaultInterface())&&getModel().getDistributePattern()==1)
     //if (aClass.getHasProxyPattern())
     {
-      filename = path + File.separator + proxyName + ".java";
+      filename = path + File.separator + proxyName + ".py";
       File file = new File(path);
       file.mkdirs();
       BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
@@ -3161,7 +3161,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     if ((aClass.getIsDistributed()||aClass.getNeedsDefaultInterface())&&getModel().getDistributePattern()==0&&aClass.getDistributeTechnology().equals("RMI"))
     //if (aClass.getHasProxyPattern())
     {
-      filename = path + File.separator + remoteName + ".java";
+      filename = path + File.separator + remoteName + ".py";
       File file = new File(path);
       file.mkdirs();
       BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
@@ -3185,7 +3185,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
 
     if ((aClass.getIsDistributed()|| aClass.getNeedsDefaultInterface()))
     {
-      filename = path + File.separator + remoteInterfaceName + ".java";
+      filename = path + File.separator + remoteInterfaceName + ".py";
       File fileRemote = new File(path);
       fileRemote.mkdirs();
       BufferedWriter bwRemote = new BufferedWriter(new FileWriter(filename));
@@ -3217,7 +3217,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       packageName=getModel().getDefaultNamespace();    
   	ILang language = new JavaObjectFactoryClassGenerator();
     String path = StringFormatter.addPathOrAbsolute(getModel().getUmpleFile().getPath(), getOutput())+packageName.replace(".", File.separator); 
-    String filename = path + File.separator + name+".java";
+    String filename = path + File.separator + name+".py";
     File file = new File(path);
     file.mkdirs();
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
@@ -3242,7 +3242,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     if (getModel().getDefaultNamespace()!=null)
       packageName=getModel().getDefaultNamespace();
     String path = StringFormatter.addPathOrAbsolute(getModel().getUmpleFile().getPath(), getOutput())+packageName.replace(".", File.separator);
-    String filename = path + File.separator + name +".java";
+    String filename = path + File.separator + name +".py";
     File file = new File(path);
     file.mkdirs();
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
@@ -3297,7 +3297,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     }
     File file = new File(path);
     file.mkdirs();   
-    String filename = path + File.separator + className + ".java";
+    String filename = path + File.separator + className + ".py";
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
     getModel().getGeneratedCode().put(aClass.getName(),contents);
 
@@ -3345,7 +3345,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
                             getOutput()) + 
                             aClass.getPackageName().replace(".", File.separator);
 
-    String filename = path + File.separator + className + ".java";
+    String filename = path + File.separator + className + ".py";
     File file = new File(path);
     file.mkdirs();
 
