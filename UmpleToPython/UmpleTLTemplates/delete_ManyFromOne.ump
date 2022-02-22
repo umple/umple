@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     delete_ManyFromOne <<!<</*delete_ManyFromOne*/>>
     for(int i=<<=gen.translate("associationMany",av)>>.size(); i > 0; i--)
     {

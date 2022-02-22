@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     equals <<!<</*equals*/>><<#
 
   StringBuilder checks = new StringBuilder();

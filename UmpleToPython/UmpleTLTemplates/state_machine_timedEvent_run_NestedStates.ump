@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     state_machine_timedEvent_run_NestedStates <<!<</*state_machine_timedEvent_run_NestedStates*/>>
       if ("<<= gen.translate("eventMethod",event,nsm) >>".equals(timeoutMethodName))
       {

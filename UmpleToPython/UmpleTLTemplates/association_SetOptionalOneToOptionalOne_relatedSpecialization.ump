@@ -1,7 +1,7 @@
 use association_GetPrivate.ump;
 
 
-class UmpleToJava {
+class UmpleToPython {
   association_SetOptionalOneToOptionalOne_relatedSpecialization <<!  /* Code from template association_SetOptionalOneToOptionalOne_relatedSpecialization */
 <</*association_SetOptionalOneToOptionalOne_relatedSpecialization*/>>  public boolean <<=gen.translate("setMethod",av)>>_<<=gen.translate("type",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterNew",av)>>)
   {
@@ -54,6 +54,6 @@ class UmpleToJava {
   }
 
 
-<<# if (mulChangedToOne || relMulChangedToOne) { #>><<@ UmpleToJava.association_GetPrivate >>
+<<# if (mulChangedToOne || relMulChangedToOne) { #>><<@ UmpleToPython.association_GetPrivate >>
 <<# } #>>!>>
 }

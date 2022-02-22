@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     constructor_AssociationAssignImmutableOptionalMany <<!<</*constructor_AssociationAssignImmutableOptionalMany*/>>
     <<=gen.translate("associationMany",av)>> = new ArrayList<<<=gen.translate("type",av)>>>();
     boolean <<=gen.translate("didAddMany",av)>> = <<=gen.translate("setManyMethod",av)>>(<<=gen.translate("parameterAll",av)>>);

@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     delete_UndirectionalMany_specialization <<!<</*delete_UndirectionalMany_specialization*/>>
     clear_<<=gen.translate("associationMany",av)>>();!>>
 }

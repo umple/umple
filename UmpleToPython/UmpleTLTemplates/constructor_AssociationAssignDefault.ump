@@ -2,7 +2,7 @@ use constructor_AssociationAssignMandatoryMany.ump;
 use constructor_AssociationAssignOne.ump;
 
 
-class UmpleToJava {
+class UmpleToPython {
     constructor_AssociationAssignDefault <<!<</*constructor_AssociationAssignDefault*/>><<#
   if (!av.getIsNavigable())
   {
@@ -17,7 +17,7 @@ class UmpleToJava {
 
   if (av.isOnlyOne())
   {
-    #>><<@ UmpleToJava.constructor_AssociationAssignOne >><<#
+    #>><<@ UmpleToPython.constructor_AssociationAssignOne >><<#
   }
   else if (av.isOptionalMany())
   {
@@ -26,7 +26,7 @@ class UmpleToJava {
   }
   else if (av.isMandatoryMany())
   {
-    #>><<@ UmpleToJava.constructor_AssociationAssignMandatoryMany >><<#
+    #>><<@ UmpleToPython.constructor_AssociationAssignMandatoryMany >><<#
   }
   else if (av.getMultiplicity().getLowerBound() > 0)
   {

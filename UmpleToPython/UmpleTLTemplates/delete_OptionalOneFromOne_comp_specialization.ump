@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     delete_OptionalOneFromOne_comp_specialization <<!<</*delete_OptionalOneFromOne_comp_specialization*/>>
     <<=gen.translate("type",av)>> <<=gen.translate("parameterExisting",av)>> = <<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>();
     super.clear_<<=gen.translate("associationOne", av)>>();

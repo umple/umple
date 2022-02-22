@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   association_GetOne_relatedSpecialization <<!  /* Code from template association_GetOne_relatedSpecialization */
 <</*association_GetOne_relatedSpecialization*/>>  public <<=gen.translate("type",av)>> <<=gen.translate("getMethod",av)>>_One<<=gen.translate("type",av)>>()
   {

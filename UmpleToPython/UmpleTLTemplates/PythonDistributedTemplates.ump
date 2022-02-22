@@ -1,7 +1,7 @@
 use UmpleNotice.ump;
 external interface ILang{}
 
-class JavaDistributedTemplates {
+class PythonDistributedTemplates {
     depend cruise.umple.compiler.*;
     depend cruise.umple.util.*;
     depend java.util.*;

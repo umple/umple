@@ -5,8 +5,8 @@ Copyright: All contributers to the Umple Project
 This file is made available subject to the open source license found at:
 http://umple.org/license
 
-This is the Umple php template master files that calls all major php template files.
-By compiling this file, Umple will regenerate all Php generator files
+This is the Umple python template master files that calls all major python template files.
+By compiling this file, Umple will regenerate all python generator files
 
 */
 
@@ -14,9 +14,9 @@ generate Java "../src-gen-UmpleTL";
 // mixset activation
 use Mixset;
 //
-use JavaObjectFactoryInterfaceGenerator.ump;
-use JavaObjectFactoryClassGenerator.ump;
-use JavaProxyGenerator.ump;
-use JavaClassGenerator.ump;
-use JavaInterfaceGenerator.ump;
-use JavaSpecGenerator.ump;
+use PythonObjectFactoryInterfaceGenerator.ump;
+use PythonObjectFactoryClassGenerator.ump;
+use PythonProxyGenerator.ump;
+use PythonClassGenerator.ump;
+use PythonInterfaceGenerator.ump;
+use PythonSpecGenerator.ump;

@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   attribute_GetUniqueSubclass <<!  /* Code from template attribute_GetUniqueSubclass */
 <</*attribute_GetUniqueCodeInjection*/>>  public static <<=av.getUmpleClass().getName()>> <<=gen.translate("getUniqueMethod",av)>>(<<=gen.translate("type", av)>> <<=gen.translate("parameterOne", av)>>)
   {

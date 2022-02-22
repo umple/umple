@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   attribute_SetMany <<!  /* Code from template attribute_SetMany */
 <</*attribute_SetMany*/>>  public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("typeMany",av)>> <<=gen.translate("parameterOne",av)>>)
   {

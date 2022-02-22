@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     constructor_AssociationAssignOneToOne <<!<</*constructor_AssociationAssignOneToOne*/>>
     if (<<=gen.translate("parameterOne",av)>> == null || <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("getMethod",av)>>() != null)
     {

@@ -4,11 +4,11 @@ use interface_AbstractMethodDeclaration.ump;
 use interface_constantDeclaration.ump;
 
 
-namespace cruise.umple.compiler.java;
+namespace cruise.umple.compiler.python;
 
 external interface ILang{}
 
-class JavaInterfaceGenerator {
+class PythonInterfaceGenerator {
     depend cruise.umple.parser.Position;
     depend cruise.umple.compiler.*;
     depend cruise.umple.util.*;
@@ -29,14 +29,14 @@ class JavaInterfaceGenerator {
         buffer.append(StringFormatter.format(input,variables));
     }
 
-    emit getCode(UmpleModel model, UmpleElement uElement)(JavaInterfaceGenerator);
+    emit getCode(UmpleModel model, UmpleElement uElement)(PythonInterfaceGenerator);
 
 
-    JavaInterfaceGenerator <<!<</*JavaInterfaceGenerator*/>><<@ UmpleToJava.UmpleNotice >>
+    PythonInterfaceGenerator <<!<</*PythonInterfaceGenerator*/>><<@ UmpleToPython.UmpleNotice >>
 <<#
   UmpleInterface uInterface = (UmpleInterface) uElement;
   //GeneratedInterface gInterface = uInterface.getGeneratedInterface();
-  JavaGenerator gen = new JavaGenerator();
+  PythonGenerator gen = new PythonGenerator();
   gen.setModel(model);
 
   String extraCode = "";
@@ -46,7 +46,7 @@ class JavaInterfaceGenerator {
   }
 
 #>>
-<<=gen.translate("packageDefinition",uInterface)>><<@ UmpleToJava.import_packages_interface >>
+<<=gen.translate("packageDefinition",uInterface)>><<@ UmpleToPython.import_packages_interface >>
 
 <<# if (uInterface.numberOfComments() > 0 && uInterface.numberOfRequirements() > 0) { List<Comment> toComment = new ArrayList<Comment>(uInterface.getComments()); toComment.addAll(Requirement.convertToComment(uInterface.getRequirements())); append(realSb, "\n{0}", Comment.format("Javadoc", toComment)); } #>>
 <<# if (uInterface.numberOfComments() > 0 && uInterface.numberOfRequirements() == 0) { append(realSb, "\n{0}", Comment.format("Javadoc",uInterface.getComments())); } #>>
@@ -57,9 +57,9 @@ class JavaInterfaceGenerator {
 public interface <<=uInterface.getName()>><<= gen.translate("isA",uInterface) >>
 {
   <<=extraCode>>
-<<# if (uInterface.hasConstants()) { #>><<@ UmpleToJava.interface_constantDeclaration >>
+<<# if (uInterface.hasConstants()) { #>><<@ UmpleToPython.interface_constantDeclaration >>
 <<# } #>>
- <<# if (uInterface.hasMethods()) { #>><<@ UmpleToJava.interface_AbstractMethodDeclaration >>
+ <<# if (uInterface.hasMethods()) { #>><<@ UmpleToPython.interface_AbstractMethodDeclaration >>
 <<# } #>>
 }!>>
 }

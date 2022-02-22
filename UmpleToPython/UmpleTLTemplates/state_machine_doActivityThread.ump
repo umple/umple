@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     state_machine_doActivityThread <<!<</*state_machine_doActivityThread*/>><<#   
   StringBuilder output = new StringBuilder();
 

@@ -1,5 +1,5 @@
 use objectFactory_add_methods.ump;
-class UmpleToJava {
+class UmpleToPython {
     objectFactory_add_DeclareDefault <<!<</*objectFactory_add_DeclareDefault*/>>
     <<#
   arguments=gClass.getLookup("constructorSignature");
@@ -8,6 +8,6 @@ class UmpleToJava {
     argumentscomma+=", ";
   caller=gClass.getLookup("constructorSignature_caller");
   #>>
-  <<@ UmpleToJava.objectFactory_add_methods >>
+  <<@ UmpleToPython.objectFactory_add_methods >>
 !>>
 }

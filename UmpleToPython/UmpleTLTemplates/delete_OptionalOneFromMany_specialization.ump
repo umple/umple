@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     delete_OptionalOneFromMany_specialization <<!<</*delete_OptionalOneFromMany_specialization*/>>
     if (<<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>() != null)
     {

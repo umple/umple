@@ -1,7 +1,7 @@
 use specializationCode.ump;
 
 
-class UmpleToJava {
+class UmpleToPython {
     members_AllHelpers <<!<</*members_AllHelpers*/>><<#
 {
 
@@ -37,7 +37,7 @@ class UmpleToJava {
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
 
-    #>><<@ UmpleToJava.specializationCode >><<#
+    #>><<@ UmpleToPython.specializationCode >><<#
     if (!av.getIsNavigable())
     {
       continue;

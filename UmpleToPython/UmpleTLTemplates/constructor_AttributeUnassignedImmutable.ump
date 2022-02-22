@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     constructor_AttributeUnassignedImmutable <<!<</*constructor_AttributeUnassignedImmutable*/>>
     <<=gen.translate("attributeCanSet",av)>> = true;!>>
 }

@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     delete_OptionalOne_specialization <<!<</*delete_OptionalOne_specialization*/>>
   public boolean <<=gen.translate("deleteMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {

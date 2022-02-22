@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   association_MinimumNumberOfMethod_relatedSpecialization <<!  /* Code from template association_MinimumNumberOfMethod_relatedSpecialization */<</*association_MinimumNumberOfMethod_relatedSpecialization*/>><<#
     String customMinimumNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("minimumNumberOfMethod",av)));
     String customMinimumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("minimumNumberOfMethod",av)));

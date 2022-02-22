@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     delete_ManyFromX_comp <<!<</*delete_ManyFromX_comp*/>>
     while (<<=gen.translate("associationMany",av)>>.size() > 0)
     {

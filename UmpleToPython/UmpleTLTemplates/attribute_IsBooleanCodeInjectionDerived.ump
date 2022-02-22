@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   attribute_IsBooleanCodeInjectionDerived <<!  /* Code from template attribute_IsBooleanCodeInjectionDerived */
 <</*attribute_IsBooleanCodeInjectionDerived*/>>  public <<=gen.translate("type",av)>> <<= gen.translate("isMethod",av) >>()
   {

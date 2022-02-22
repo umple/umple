@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   association_SetUnidirectionalOptionalOne <<!  /* Code from template association_SetUnidirectionalOptionalOne */<</*association_SetUnidirectionalOptionalOne*/>><<# String accessModifier = (av.isImmutable()) ? "private" : "public"; #>>
   <<= accessModifier >> boolean <<=gen.translate("setMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterNew",av)>>)
   {

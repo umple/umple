@@ -15,7 +15,7 @@ use attribute_GetSubclass.ump;
 use attribute_HasUnique.ump;
 use attribute_HasUniqueCodeInjection.ump;
 
-class UmpleToJava {
+class UmpleToPython {
     attribute_Get_All <<!<</*attribute_Get_All*/>><<#
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
   for (Attribute av : uClass.getAttributes()) 
@@ -55,56 +55,56 @@ class UmpleToJava {
 
     if (av.getIsList())
     {
-      #>><<@ UmpleToJava.attribute_GetMany >><<#
+      #>><<@ UmpleToPython.attribute_GetMany >><<#
     }
     else 
     {
 
       if (av.getIsDerived() && (customGetPostfixCode != null || customGetPrefixCode != null))
       {
-        #>><<@ UmpleToJava.attribute_GetDerivedCodeInjection >><<#
+        #>><<@ UmpleToPython.attribute_GetDerivedCodeInjection >><<#
       }
       else if (av.getIsDerived())
       {
-        #>><<@ UmpleToJava.attribute_GetDerived >><<#
+        #>><<@ UmpleToPython.attribute_GetDerived >><<#
       }
       else if (customGetPostfixCode != null)
       {
-        #>><<@ UmpleToJava.attribute_GetCodeInjection >><<#
+        #>><<@ UmpleToPython.attribute_GetCodeInjection >><<#
       }
       else
       {
-        #>><<@ UmpleToJava.attribute_Get >><<#
+        #>><<@ UmpleToPython.attribute_Get >><<#
       }
       
       appendln(realSb, "");
       
       if (av.getModifier().equals("defaulted") && customGetDefaultPostfixCode != null)
       {
-        #>><<@ UmpleToJava.attribute_GetDefaultedCodeInjection >><<#
+        #>><<@ UmpleToPython.attribute_GetDefaultedCodeInjection >><<#
       }
       else if (av.getModifier().equals("defaulted"))
       {
-        #>><<@ UmpleToJava.attribute_GetDefaulted >><<#
+        #>><<@ UmpleToPython.attribute_GetDefaulted >><<#
       }
       
       if (av.getIsUnique())
       {
         if (customGetUniquePostfixCode != null)
         {
-          #>><<@ UmpleToJava.attribute_GetUniqueCodeInjection >><<#
+          #>><<@ UmpleToPython.attribute_GetUniqueCodeInjection >><<#
         } 
         else 
         {
-          #>><<@ UmpleToJava.attribute_GetUnique >><<#
+          #>><<@ UmpleToPython.attribute_GetUnique >><<#
         }
         if (customHasUniquePostfixCode != null)
         {
-          #>><<@ UmpleToJava.attribute_HasUniqueCodeInjection >><<#
+          #>><<@ UmpleToPython.attribute_HasUniqueCodeInjection >><<#
         }
         else
         {
-          #>><<@ UmpleToJava.attribute_HasUnique >><<#
+          #>><<@ UmpleToPython.attribute_HasUnique >><<#
         }
       }
     }
@@ -122,11 +122,11 @@ class UmpleToJava {
       
       if (customGetPostfixCode != null)
       {
-        #>><<@ UmpleToJava.attribute_GetCodeInjection >><<#
+        #>><<@ UmpleToPython.attribute_GetCodeInjection >><<#
       }
       else
       {
-        #>><<@ UmpleToJava.attribute_Get >><<#
+        #>><<@ UmpleToPython.attribute_Get >><<#
       }
       appendln(realSb, "");
     }
@@ -160,25 +160,25 @@ class UmpleToJava {
       
       if (customGetDefaultPrefixCode!=null || customGetDefaultPostfixCode!=null)
       {
-        #>><<@ UmpleToJava.attribute_GetDefaultedSubclass >><<#
+        #>><<@ UmpleToPython.attribute_GetDefaultedSubclass >><<#
       }
       else if (customGetManyPrefixCode!=null || customGetManyPostfixCode!=null)
       {
-        #>><<@ UmpleToJava.attribute_GetManySubclass >><<#
+        #>><<@ UmpleToPython.attribute_GetManySubclass >><<#
       }
       else if (customGetUniquePrefixCode!=null || customGetUniquePostfixCode!=null)
       {
-        #>><<@ UmpleToJava.attribute_GetUniqueSubclass >><<#
+        #>><<@ UmpleToPython.attribute_GetUniqueSubclass >><<#
       }
       else if(customGetPrefixCode!=null||customGetPostfixCode!=null)
       {
         if (av.getIsDerived())
         {
-          #>><<@ UmpleToJava.attribute_GetDerivedSubclass >><<#
+          #>><<@ UmpleToPython.attribute_GetDerivedSubclass >><<#
         }
         else
         {
-          #>><<@ UmpleToJava.attribute_GetSubclass >><<#
+          #>><<@ UmpleToPython.attribute_GetSubclass >><<#
         }
       }
               

@@ -2,7 +2,7 @@ use state_machine_doActivity.ump;
 use state_machine_doActivityThread.ump;
 
 
-class UmpleToJava {
+class UmpleToPython {
     state_machine_doActivity_All <<!<</*state_machine_doActivity_All*/>><<#
 { 
   boolean hasActivities = false;
@@ -17,7 +17,7 @@ class UmpleToJava {
         for (Activity activity : state.getActivities())
         {
           hasActivities = true;
-          #>><<@ UmpleToJava.state_machine_doActivity >><<#
+          #>><<@ UmpleToPython.state_machine_doActivity >><<#
         }
       }
     }
@@ -27,13 +27,13 @@ class UmpleToJava {
       for (Activity activity : state.getActivities())
       {
         hasActivities = true;
-        #>><<@ UmpleToJava.state_machine_doActivity >><<#
+        #>><<@ UmpleToPython.state_machine_doActivity >><<#
       }
     }
   } 
   if (hasActivities)
   {
-    #>><<@ UmpleToJava.state_machine_doActivityThread >><<#
+    #>><<@ UmpleToPython.state_machine_doActivityThread >><<#
   }
 }
 #>>!>>

@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     state_machine_Event <<!<</*state_machine_Event*/>><<#
   
   // Issue 923 Fix: Prevent default implmentation of interface methods when a state machine implements them

@@ -1,12 +1,12 @@
 use proxy_AbstractMethodDeclaration.ump;
-use JavaDistributedTemplates.ump;
+use PythonDistributedTemplates.ump;
 
 
-namespace cruise.umple.compiler.java;
+namespace cruise.umple.compiler.python;
 
 external interface ILang{}
 
-class JavaProxyGenerator {
+class PythonProxyGenerator {
     depend cruise.umple.parser.Position;
     depend cruise.umple.compiler.*;
     depend cruise.umple.util.*;
@@ -27,14 +27,14 @@ class JavaProxyGenerator {
         buffer.append(StringFormatter.format(input,variables));
     }
 
-    emit getCode(UmpleModel model, UmpleElement uElement)(JavaProxyGenerator);
+    emit getCode(UmpleModel model, UmpleElement uElement)(PythonProxyGenerator);
 
 
-    JavaProxyGenerator <<!<</*JavaProxyGenerator*/>>
+    PythonProxyGenerator <<!<</*PythonProxyGenerator*/>>
 <<#
   UmpleInterface uInterface = (UmpleInterface) uElement;
   //GeneratedInterface gInterface = uInterface.getGeneratedInterface();
-  JavaGenerator gen = new JavaGenerator();
+  PythonGenerator gen = new PythonGenerator();
   gen.setModel(model);
 
   String extraCode = "";
@@ -44,7 +44,7 @@ class JavaProxyGenerator {
   }
 
 #>>
- <<# if (uInterface.hasMethods()) { #>><<@ UmpleToJava.proxy_AbstractMethodDeclaration >>
+ <<# if (uInterface.hasMethods()) { #>><<@ UmpleToPython.proxy_AbstractMethodDeclaration >>
 
 <<# } #>>!>>
 }

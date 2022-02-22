@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     queued_state_machine_queuedEvent <<!<</*queued_state_machine_queuedEvent*/>><<#
   append(realSb,"\n");
   append(realSb,"\n  //------------------------------");

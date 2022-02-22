@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   association_AddOptionalNToOptionalOne_specialization <<!  /* Code from template association_AddOptionalNToOptionalOne_specialization */
 <</*association_AddOptionalNToOptionalOne_specialization*/>>  public boolean <<=gen.translate("addMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {

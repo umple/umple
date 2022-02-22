@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   association_SetOneToMany_relatedSpecialization <<!  /* Code from template association_SetOneToMany_relatedSpecialization */
 <</*association_SetOneToMany_relatedSpecialization*/>>  public boolean <<=gen.translate("setMethod",av)>>_<<=gen.translate("type",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {

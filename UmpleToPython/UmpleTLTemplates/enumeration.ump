@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   enumeration <<!<</*enumeration*/>><<#
   append(realSb, "\n  public enum {0} { ", StringFormatter.toPascalCase(umpleEnum.getName()));
   for (int i = 0; i < umpleEnum.getEnumValues().length - 1; i++) {

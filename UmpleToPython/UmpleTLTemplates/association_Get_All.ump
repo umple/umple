@@ -9,12 +9,12 @@ use association_GetOne_specialization.ump;
 use specializationCode_Get.ump;
 
 
-class UmpleToJava {
+class UmpleToPython {
     association_Get_All <<!<</*association_Get_All*/>><<#
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
   for (AssociationVariable av : uClass.getAssociationVariables()) 
   {
-    #>><<@ UmpleToJava.specializationCode_Get >><<# 
+    #>><<@ UmpleToPython.specializationCode_Get >><<# 
 
     if (!av.getIsNavigable())
     {
@@ -49,18 +49,18 @@ class UmpleToJava {
     {
       if (reqSuperCode)
       {
-        #>><<@ UmpleToJava.association_GetOne_specialization >><<#
+        #>><<@ UmpleToPython.association_GetOne_specialization >><<#
       }
       else if (reqCommonCode)
       {
-        #>><<@ UmpleToJava.association_GetOne_relatedSpecialization >><<#
+        #>><<@ UmpleToPython.association_GetOne_relatedSpecialization >><<#
       }
       else
       {
-        #>><<@ UmpleToJava.association_GetOne >><<#
+        #>><<@ UmpleToPython.association_GetOne >><<#
         if (relatedAssoc != null && relatedAssoc.getIsSpecialized())
         {
-          #>><<@ UmpleToJava.association_GetOne_clear >><<#
+          #>><<@ UmpleToPython.association_GetOne_clear >><<#
         }
       }
     }
@@ -68,18 +68,18 @@ class UmpleToJava {
     {
       if (reqSuperCode)
       {
-        #>><<@ UmpleToJava.association_GetMany_specialization >><<#
+        #>><<@ UmpleToPython.association_GetMany_specialization >><<#
       }
       else if (reqCommonCode)
       {
-        #>><<@ UmpleToJava.association_GetMany_relatedSpecialization >><<#
+        #>><<@ UmpleToPython.association_GetMany_relatedSpecialization >><<#
       }
       else
       {
-        #>><<@ UmpleToJava.association_GetMany >><<#
+        #>><<@ UmpleToPython.association_GetMany >><<#
         if (relatedAssoc != null && relatedAssoc.getIsSpecialized())
         {
-          #>><<@ UmpleToJava.association_GetMany_clear >><<#
+          #>><<@ UmpleToPython.association_GetMany_clear >><<#
         }
       }
     }

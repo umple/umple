@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   attribute_GetManySubclass <<!  /* Code from template attribute_GetManySubclass */
 <</*attribute_GetManySubclass*/>>  public <<=gen.translate("typeMany",av)>> <<=gen.translate("getMethod",av)>>(int index)
   {

@@ -32,7 +32,7 @@ use queued_method.ump;
 use association_sorted_serializable_readObject.ump;
 
 
-namespace cruise.umple.compiler.java;
+namespace cruise.umple.compiler.python;
 
 external interface ILang{}
 
@@ -458,9 +458,9 @@ for (StateMachine smq : uClass.getStateMachines())
     AssociationVariable relatedAssociation;
     Association relatedAssoc;#>>
 
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
+  ##------------------------
+  ## CONSTRUCTOR
+  ##------------------------
 <<@ UmpleToPython.constructor_Declare_All >>
   <<#return realSb.toString();
     } 
@@ -469,9 +469,9 @@ for (StateMachine smq : uClass.getStateMachines())
     String umpleSourceFile = "";
     Integer basePythonLine = realSb.toString().split("\\n").length;#>>
 
-  //------------------------
-  // INTERFACE
-  //------------------------
+  ##------------------------
+  ## INTERFACE
+  ##------------------------
 <<@ UmpleToPython.attribute_Set_All >><<@ UmpleToPython.attribute_Get_All >><<@ UmpleToPython.attribute_IsBoolean_All >>
   <<#return realSb.toString();
     } 

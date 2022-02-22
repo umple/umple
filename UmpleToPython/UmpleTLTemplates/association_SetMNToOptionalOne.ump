@@ -1,7 +1,7 @@
 use association_GetPrivate.ump;
 
 
-class UmpleToJava {
+class UmpleToPython {
   association_SetMNToOptionalOne <<!  /* Code from template association_SetMNToOptionalOne */<</*association_SetMNToOptionalOne*/>><<#
   String existingToNewMap = StringFormatter.format("{0}ToNew{1}", relatedAssociation.getName(), av.getUpperCaseName());
   String orCheckMaxBound = av.isStar() ? "" : StringFormatter.format(" || {0}.length > {1}()", gen.translate("parameterMany",av), gen.translate("maximumNumberOfMethod",av));
@@ -68,5 +68,5 @@ class UmpleToJava {
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } #>>
     return wasSet;
   }
-<<@ UmpleToJava.association_GetPrivate >>!>>
+<<@ UmpleToPython.association_GetPrivate >>!>>
 }

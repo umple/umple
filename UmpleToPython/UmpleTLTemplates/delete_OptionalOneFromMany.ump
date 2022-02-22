@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     delete_OptionalOneFromMany <<!<</*delete_OptionalOneFromMany*/>>
     if (<<=gen.translate("associationOne",av)>> != null)
     {

@@ -10,7 +10,7 @@ use constructor_AttributeAssignList.ump;
 use specializationCode_Constructor.ump;
 
 
-class UmpleToJava {
+class UmpleToPython {
     constructor_DeclareOneToOne <<!<</*constructor_DeclareOneToOne*/>><<#
   
   String signature = gClass.getLookup("constructorSignature_mandatory");
@@ -64,27 +64,27 @@ class UmpleToJava {
     if (av.getIsList())
     {
       hasBody = true;
-      #>><<@ UmpleToJava.constructor_AttributeAssignList >><<#
+      #>><<@ UmpleToPython.constructor_AttributeAssignList >><<#
     }
     else if (av.getModifier().equals("defaulted"))
     {
       hasBody = true;
-      #>><<@ UmpleToJava.constructor_AttributeAssignDefaulted >><<# 
+      #>><<@ UmpleToPython.constructor_AttributeAssignDefaulted >><<# 
     }
     else if (av.getIsLazy())
     {
       hasBody = true;
-      #>><<@ UmpleToJava.constructor_AttributeAssignLazy >><<#
+      #>><<@ UmpleToPython.constructor_AttributeAssignLazy >><<#
     }
     else if(av.getIsUnique())
     {
       hasBody = true;
-      #>><<@ UmpleToJava.constructor_AttributeAssignUnique >><<#
+      #>><<@ UmpleToPython.constructor_AttributeAssignUnique >><<#
     }
     else
     {
       hasBody = true;
-      #>><<@ UmpleToJava.constructor_AttributeAssign >><<#
+      #>><<@ UmpleToPython.constructor_AttributeAssign >><<#
     }
   }
 
@@ -93,28 +93,28 @@ class UmpleToJava {
     if (av.getIsAutounique())
     {
       hasBody = true;
-      #>><<@ UmpleToJava.constructor_AttributeAssignAutounique >><<#
+      #>><<@ UmpleToPython.constructor_AttributeAssignAutounique >><<#
     }
   }
   
   for (AssociationVariable av : uClass.getAssociationVariables()) 
   {
-    #>><<@ UmpleToJava.specializationCode_Constructor >><<#
+    #>><<@ UmpleToPython.specializationCode_Constructor >><<#
     
     if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
     {
       hasBody = true;
-      #>><<@ UmpleToJava.constructor_AssociationCreateOneToOne >><<#
+      #>><<@ UmpleToPython.constructor_AssociationCreateOneToOne >><<#
     }
     else if ((av.isMN() || av.isN()) && (relatedAssociation.isMandatory() || relatedAssociation.isOptionalN()))
     {
       hasBody = true;
-      #>><<@ UmpleToJava.constructor_AssociationAssignOptionalMany >><<#
+      #>><<@ UmpleToPython.constructor_AssociationAssignOptionalMany >><<#
     }
     else
     {
       hasBody = true;
-      #>><<@ UmpleToJava.constructor_AssociationAssignDefault >><<#
+      #>><<@ UmpleToPython.constructor_AssociationAssignDefault >><<#
     }
   }
   

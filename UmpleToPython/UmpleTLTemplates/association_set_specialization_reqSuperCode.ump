@@ -35,7 +35,7 @@ use association_Sort.ump;
 use specializationSkip.ump;
 
 
-class UmpleToJava {
+class UmpleToPython {
   association_set_specialization_reqSuperCode <<!  /* Code from template association_set_specialization_reqSuperCode */<</*association_set_specialization_reqSuperCode*/>><<#
 	String customIsNumberOfValidPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("isNumberOfValidMethod",av)));
     String customIsNumberOfValidPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("isNumberOfValidMethod",av)));
@@ -285,7 +285,7 @@ class UmpleToJava {
         if (addNewLine) { appendln(realSb,""); }
         addNewLine = true;
         #>><<#
-        #>><<@ UmpleToJava.association_IsNumberOfValidMethod_specialization >><<#
+        #>><<@ UmpleToPython.association_IsNumberOfValidMethod_specialization >><<#
       }
       
       if (hasRequiredNumberOfMethod)
@@ -293,7 +293,7 @@ class UmpleToJava {
         if (addNewLine) { appendln(realSb,""); }
         addNewLine = true;
         #>><<#
-        #>><<@ UmpleToJava.association_RequiredNumberOfMethod_specialization >><<#
+        #>><<@ UmpleToPython.association_RequiredNumberOfMethod_specialization >><<#
       }
 
       if (hasMinimumNumberOfMethod)
@@ -301,7 +301,7 @@ class UmpleToJava {
         if (addNewLine) { appendln(realSb,""); }
         addNewLine = true;
         #>><<#
-        #>><<@ UmpleToJava.association_MinimumNumberOfMethod_specialization >><<#
+        #>><<@ UmpleToPython.association_MinimumNumberOfMethod_specialization >><<#
       }
       
       if (hasMaximumNumberOfMethod)
@@ -309,21 +309,21 @@ class UmpleToJava {
         if (addNewLine) { appendln(realSb,""); }
         addNewLine = true;
         #>><<#
-        #>><<@ UmpleToJava.association_MaximumNumberOfMethod_specialization >><<#
+        #>><<@ UmpleToPython.association_MaximumNumberOfMethod_specialization >><<#
       }
       
       if (hasAddManyToManyTemplateMethod)
       {
         if (addNewLine) { appendln(realSb,""); }
         addNewLine = true;
-        #>><<@ UmpleToJava.association_AddManyToManyMethod_specialization >><<#
+        #>><<@ UmpleToPython.association_AddManyToManyMethod_specialization >><<#
       }
       
       if (hasRemoveManyTemplateMethod)
       {
         if (addNewLine) { appendln(realSb,""); }
         addNewLine = true;
-        #>><<@ UmpleToJava.specializationSkip >><<#
+        #>><<@ UmpleToPython.specializationSkip >><<#
       }
 	    
     if (addNewLine) { appendln(realSb,""); }
@@ -331,131 +331,131 @@ class UmpleToJava {
 	
       if (includeFile == "association_SetUnidirectionalOptionalOne_specialization.jet")
       {
-        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+        #>><<@ UmpleToPython.specializationSkip >><<#    // TODO!!
       }
       else if (includeFile == "association_SetUnidirectionalOne_specialization.jet")
       {
-        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+        #>><<@ UmpleToPython.specializationSkip >><<#    // TODO!!
       }
       else if (includeFile == "association_SetOptionalOneToOne_specialization.jet")
       {
-        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+        #>><<@ UmpleToPython.specializationSkip >><<#    // TODO!!
       }
       else if (includeFile == "association_SetOneToOptionalOne_specialization.jet")
       {
-        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+        #>><<@ UmpleToPython.specializationSkip >><<#    // TODO!!
       }
       else if (includeFile == "association_AddMandatoryManyToOne_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_AddMandatoryManyToOne_specialization >><<#
+        #>><<@ UmpleToPython.association_AddMandatoryManyToOne_specialization >><<#
       }
       else if (includeFile == "association_AddMNToOnlyOne_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_AddMNToOnlyOne_specialization >><<#
+        #>><<@ UmpleToPython.association_AddMNToOnlyOne_specialization >><<#
       }
       else if (includeFile == "association_AddOptionalNToOne_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_AddOptionalNToOne_specialization >><<#
+        #>><<@ UmpleToPython.association_AddOptionalNToOne_specialization >><<#
       }
       else if (includeFile == "association_SetOptionalNToMany_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_SetOptionalNToMany_specialization >><<#
+        #>><<@ UmpleToPython.association_SetOptionalNToMany_specialization >><<#
       }
       else if (includeFile == "association_AddManyToOne_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_AddManyToOne_specialization >><<#
+        #>><<@ UmpleToPython.association_AddManyToOne_specialization >><<#
       }
       else if (includeFile == "association_SetOptionalOneToOptionalOne_specialization.jet")
       {
-        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+        #>><<@ UmpleToPython.specializationSkip >><<#    // TODO!!
       }
       else if (includeFile == "association_AddMNToMany_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_AddMNToMany_specialization >><<#
+        #>><<@ UmpleToPython.association_AddMNToMany_specialization >><<#
       }
       else if (includeFile == "association_AddMStarToMany_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_AddMStarToMany_specialization >><<#
+        #>><<@ UmpleToPython.association_AddMStarToMany_specialization >><<#
       }
       else if (includeFile == "association_SetOptionalOneToOptionalN_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_SetOptionalOneToOptionalN_specialization >><<#
+        #>><<@ UmpleToPython.association_SetOptionalOneToOptionalN_specialization >><<#
       }
       else if (includeFile == "association_SetOneToMany_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_SetOneToMany_specialization >><<#
+        #>><<@ UmpleToPython.association_SetOneToMany_specialization >><<#
       }
       else if (includeFile == "association_SetOneToManyAssociationClass_specialization.jet")
       {
-        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+        #>><<@ UmpleToPython.specializationSkip >><<#    // TODO!!
       }
       else if (includeFile == "association_SetOneToAtMostN_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_SetOneToAtMostN_specialization >><<#
+        #>><<@ UmpleToPython.association_SetOneToAtMostN_specialization >><<#
       }
       else if (includeFile == "association_SetOneToMandatoryMany_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_SetOneToMandatoryMany_specialization >><<#
+        #>><<@ UmpleToPython.association_SetOneToMandatoryMany_specialization >><<#
       }
       else if (includeFile == "association_AddManyToOptionalOne_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_AddManyToOptionalOne_specialization >><<#
+        #>><<@ UmpleToPython.association_AddManyToOptionalOne_specialization >><<#
       }
       else if (includeFile == "association_SetOptionalOneToMany_specialization.jet")
       {
-        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+        #>><<@ UmpleToPython.specializationSkip >><<#    // TODO!!
       }
       else if (includeFile == "association_AddOptionalNToOptionalOne_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_AddOptionalNToOptionalOne_specialization >><<#
+        #>><<@ UmpleToPython.association_AddOptionalNToOptionalOne_specialization >><<#
       }
       else if (includeFile == "association_AddUnidirectionalMN_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_AddUnidirectionalMN_specialization >><<#
+        #>><<@ UmpleToPython.association_AddUnidirectionalMN_specialization >><<#
       }
       else if (includeFile == "association_AddMNToOptionalOne_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_AddMNToOptionalOne_specialization >><<#
+        #>><<@ UmpleToPython.association_AddMNToOptionalOne_specialization >><<#
       }
       else if (includeFile == "association_SetNToOptionalOne_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_SetNToOptionalOne_specialization >><<#
+        #>><<@ UmpleToPython.association_SetNToOptionalOne_specialization >><<#
       }
       else if (includeFile == "association_AddUnidirectionalMany_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_AddUnidirectionalMany_specialization >><<#
+        #>><<@ UmpleToPython.association_AddUnidirectionalMany_specialization >><<#
       }
       else if (includeFile == "association_AddUnidirectionalOptionalN_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_AddUnidirectionalOptionalN_specialization >><<#
+        #>><<@ UmpleToPython.association_AddUnidirectionalOptionalN_specialization >><<#
       }
       else if (includeFile == "association_AddUnidirectionalMStar_specialization.jet")
       {
-        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+        #>><<@ UmpleToPython.specializationSkip >><<#    // TODO!!
       }
       else if (includeFile == "association_SetUnidirectionalN_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_SetUnidirectionalN_specialization >><<#
+        #>><<@ UmpleToPython.association_SetUnidirectionalN_specialization >><<#
       }
       else if (includeFile == "association_SetUnidirectionalMany_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_SetUnidirectionalMany_specialization >><<#
+        #>><<@ UmpleToPython.association_SetUnidirectionalMany_specialization >><<#
       }
       else if (includeFile == "association_SetOptionalOneToMandatoryMany_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_SetOptionalOneToMandatoryMany_specialization >><<#
+        #>><<@ UmpleToPython.association_SetOptionalOneToMandatoryMany_specialization >><<#
       }
       else if (includeFile == "association_SetOptionalOneToMandatoryMN_specialization.jet")
       {
-        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO!!
+        #>><<@ UmpleToPython.specializationSkip >><<#    // TODO!!
       }
       else if (includeFile == "association_SetOptionalNToMany.jet")
       {
-        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO?
+        #>><<@ UmpleToPython.specializationSkip >><<#    // TODO?
       }
       else if (includeFile == "specializationSkip.jet")
       {
-        #>><<@ UmpleToJava.specializationSkip >><<#    // TODO?
+        #>><<@ UmpleToPython.specializationSkip >><<#    // TODO?
       }
       else if (includeFile != null)
       {
@@ -465,27 +465,27 @@ class UmpleToJava {
       #>><<#
       if (includeFile2 == "association_SetMNToMany_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_SetMNToMany_specialization >><<#
+        #>><<@ UmpleToPython.association_SetMNToMany_specialization >><<#
       }
       else if (includeFile2 == "association_SetMStarToMany_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_SetMStarToMany_specialization >><<#
+        #>><<@ UmpleToPython.association_SetMStarToMany_specialization >><<#
       }
       else if (includeFile2 == "association_SetUnidirectionalMN_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_SetUnidirectionalMN_specialization >><<#
+        #>><<@ UmpleToPython.association_SetUnidirectionalMN_specialization >><<#
       }
       else if (includeFile2 == "association_SetMNToOptionalOne_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_SetMNToOptionalOne_specialization >><<#
+        #>><<@ UmpleToPython.association_SetMNToOptionalOne_specialization >><<#
       }
       else if (includeFile2 == "association_SetUnidirectionalOptionalN_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_SetUnidirectionalOptionalN_specialization >><<#
+        #>><<@ UmpleToPython.association_SetUnidirectionalOptionalN_specialization >><<#
       }
       else if (includeFile2 == "association_SetUnidirectionalMStar_specialization.jet")
       {
-        #>><<@ UmpleToJava.association_SetUnidirectionalMStar_specialization >><<#
+        #>><<@ UmpleToPython.association_SetUnidirectionalMStar_specialization >><<#
       }
       else if (includeFile2 != null)
       {
@@ -494,12 +494,12 @@ class UmpleToJava {
       
       if(includeFile3 == "association_Sort.jet" && !sortMethodAdded)
       {
-        #>><<@ UmpleToJava.association_Sort >><<#
+        #>><<@ UmpleToPython.association_Sort >><<#
         sortMethodAdded = true; //after the sort method has been added, this boolean stops it from being added again
       }
       else if(includeFile3 == "association_AddIndexControlFunctions.jet")
       {
-        #>><<@ UmpleToJava.association_AddIndexControlFunctions_specialization >><<#
+        #>><<@ UmpleToPython.association_AddIndexControlFunctions_specialization >><<#
       }
 #>>!>>
 }

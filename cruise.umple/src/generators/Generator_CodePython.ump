@@ -17,7 +17,7 @@ class PythonGenerator
   depend cruise.umple.util.*;
   depend cruise.umple.util.StringFormatter;
   depend cruise.umple.compiler.exceptions.*;
-  depend cruise.umple.compiler.java.*;
+  depend cruise.umple.compiler.python.*;
 
   StringBuilder uncaughtExceptions = new StringBuilder();
   UmpleClass[] mainClasses;
@@ -161,11 +161,11 @@ class PythonGenerator
   {
     if (aElement instanceof UmpleInterface)
     {
-      return new JavaInterfaceGenerator();
+      return new PythonInterfaceGenerator();
     }
     else if (aElement instanceof UmpleClass)
     {
-      return new JavaClassGenerator();
+      return new PythonClassGenerator();
     } 
     else{
         return null;        
@@ -1486,7 +1486,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     }
   }
 
-  // Translates primitive data types to their Java equivalent. Used for interfaces as they do not use attributes.
+  // Translates primitive data types to their Python equivalent. Used for interfaces as they do not use attributes.
   public String translateInterfaceType(String type)
   {
       return typeOf(type);
@@ -2700,7 +2700,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
   
   private String WriteProxyFiles(String classContents,UmpleClass aClass,String path) throws IOException 
   {
-    JavaDistributedTemplates templates= new JavaDistributedTemplates();
+    PythonDistributedTemplates templates= new PythonDistributedTemplates();
     StringBuilder classContent= new StringBuilder("");
     String classPackageName= aClass.getPackageName().length() == 0 ? "" : aClass.getPackageName() + "."; 
     String NL = System.getProperty("line.separator");
@@ -3215,7 +3215,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     String packageName="";
     if (getModel().getDefaultNamespace()!=null)
       packageName=getModel().getDefaultNamespace();    
-  	ILang language = new JavaObjectFactoryClassGenerator();
+  	ILang language = new PythonObjectFactoryClassGenerator();
     String path = StringFormatter.addPathOrAbsolute(getModel().getUmpleFile().getPath(), getOutput())+packageName.replace(".", File.separator); 
     String filename = path + File.separator + name+".py";
     File file = new File(path);
@@ -3237,7 +3237,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
   public void writeObjectFactoryInterface() throws IOException
   {     
     String name="IUmpleRuntime";
-    ILang language = new JavaObjectFactoryInterfaceGenerator();
+    ILang language = new PythonObjectFactoryInterfaceGenerator();
     String packageName="";
     if (getModel().getDefaultNamespace()!=null)
       packageName=getModel().getDefaultNamespace();
@@ -3313,9 +3313,9 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     if (aClass instanceof UmpleClass)
     {
       StringBuilder exceptionBuilder = new StringBuilder();
-      for(String key:((JavaClassGenerator)language).uncaughtExceptions.keySet())
+      for(String key:((PythonClassGenerator)language).uncaughtExceptions.keySet())
       {
-        exceptionBuilder.append(((JavaClassGenerator)language).uncaughtExceptions.get(key).toString()+System.getProperty("line.separator"));
+        exceptionBuilder.append(((PythonClassGenerator)language).uncaughtExceptions.get(key).toString()+System.getProperty("line.separator"));
       }
       String exception = exceptionBuilder.toString();
       uncaughtExceptions.append(exception);
@@ -3350,7 +3350,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     file.mkdirs();
 
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename,true));
-    String contents = new JavaClassGenerator().getExceptionHandler(uncaughtExceptions.toString(), aClass, getModel());
+    String contents = new PythonClassGenerator().getExceptionHandler(uncaughtExceptions.toString(), aClass, getModel());
     getModel().getGeneratedCode().put(aClass.getName(),getModel().getGeneratedCode().get(aClass.getName())+contents);
     try
     {
@@ -3380,7 +3380,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     TraceLookupMap.put("timestamp","System.currentTimeMillis()");
     TraceLookupMap.put("identifier","System.identityHashCode({0})");
     TraceLookupMap.put("thread","Thread.currentThread().getId()");
-    TraceLookupMap.put("self","this");
+    TraceLookupMap.put("self","self");
     TraceLookupMap.put("increment","{0}++;");
     TraceLookupMap.put("formatnonprimitive",".toString().replace(\"\\n\",\"\").replace(\",\",\";\")");
     //

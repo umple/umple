@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     delete_MandatoryFromOptionalOne <<!<</*delete_MandatoryFromOptionalOne*/>>
     for(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>> : <<=gen.translate("associationMany",av)>>)
     {

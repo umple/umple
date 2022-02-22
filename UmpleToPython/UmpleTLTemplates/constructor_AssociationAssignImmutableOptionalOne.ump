@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     constructor_AssociationAssignImmutableOptionalOne <<!<</*constructor_AssociationAssignImmutableOptionalOne*/>><<#   
     append(realSb, "\n    {0}({1});", gen.translate("setMethod",av), gen.translate("parameterOne",av));
 #>>!>>

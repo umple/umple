@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   association_IsNumberOfValidMethod <<!  /* Code from template association_IsNumberOfValidMethod */
 <</*association_IsNumberOfValidMethod*/>>  public boolean <<=gen.translate("isNumberOfValidMethod",av)>>()
   {

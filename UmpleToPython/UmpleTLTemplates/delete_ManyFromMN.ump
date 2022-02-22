@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     delete_ManyFromMN <<!<</*delete_ManyFromMN*/>>
     ArrayList<<<=gen.translate("type",av)>>> <<=gen.translate("parameterCopyOfMany",av)>> = new ArrayList<<<=gen.translate("type",av)>>>(<<=gen.translate("associationMany",av)>>);
     <<=gen.translate("associationMany",av)>>.clear();

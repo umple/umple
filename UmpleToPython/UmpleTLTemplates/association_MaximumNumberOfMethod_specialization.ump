@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   association_MaximumNumberOfMethod_specialization <<!  /* Code from template association_MaximumNumberOfMethod_specialization */<</*association_MaximumNumberOfMethod_specialization*/>><<#
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
 

@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     queued_state_machine_inner_class <<!<</*queued_state_machine_inner_class*/>><<#
   appendln(realSb,"\n  protected class Message");
   appendln(realSb,"  {");

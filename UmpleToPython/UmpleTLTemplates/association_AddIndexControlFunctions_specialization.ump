@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   association_AddIndexControlFunctions_specialization <<!  /* Code from template association_AddIndexControlFunctions_specialization */
 <</*association_AddIndexControlFunctions_specialization*/>>  public boolean <<=gen.translate("addAtMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>, int index)
   {  

@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     queued_state_machine_returnMessageTypesForEachState <<!<</*queued_state_machine_returnMessageTypesForEachState*/>><<#
   append(realSb,"\n  // A method to return a list of message types for each state of the {0}", uClass.getName()); 
   append(realSb,"state machine");

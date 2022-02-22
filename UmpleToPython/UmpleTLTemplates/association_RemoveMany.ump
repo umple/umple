@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   association_RemoveMany <<!  /* Code from template association_RemoveMany */
 <</*association_RemoveMany*/>>  public boolean <<=gen.translate("removeMethod",av)>>(<<=gen.translate("type",av)>> <<=gen.translate("parameterOne",av)>>)
   {

@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     state_machine_GetFull <<!<</*state_machine_GetFull*/>><<#
   StringBuilder output = new StringBuilder(); 
   List<StateMachine> allParents = new ArrayList<StateMachine>();

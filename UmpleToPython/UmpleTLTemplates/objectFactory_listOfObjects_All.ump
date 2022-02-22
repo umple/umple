@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     objectFactory_listOfObjects_All <<!<</*objectFactory_listOfObjects_All*/>><<#
   for(UmpleClass uClass : model.getUmpleClasses())
   {if (uClass.getIsDistributed()){

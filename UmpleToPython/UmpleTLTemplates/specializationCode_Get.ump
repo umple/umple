@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     specializationCode_Get <<!<</*specializationCode_Get*/>><<#
     AssociationVariable relatedAssociation = av.getRelatedAssociation();
     

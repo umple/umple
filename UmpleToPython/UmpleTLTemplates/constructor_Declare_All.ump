@@ -3,14 +3,14 @@ use constructor_DeclareOneToOne.ump;
 use specializationCode_Constructor.ump;
 
 
-class UmpleToJava {
+class UmpleToPython {
     constructor_Declare_All <<!<</*constructor_Declare_All*/>><<#
   boolean isOneToOne = false;
 
   for (AssociationVariable av : uClass.getAssociationVariables()) 
   {
 
-   #>><<@ UmpleToJava.specializationCode_Constructor >><<#
+   #>><<@ UmpleToPython.specializationCode_Constructor >><<#
 
     if (av.isOnlyOne() && relatedAssociation.isOnlyOne() && av.getIsNavigable() && relatedAssociation.getIsNavigable())
     {
@@ -41,10 +41,10 @@ class UmpleToJava {
       componentSignature="UmpleRuntime.UmpleComponent umpleComponent";
     }  
   } 
-  #>><<@ UmpleToJava.constructor_DeclareDefault >><<#
+  #>><<@ UmpleToPython.constructor_DeclareDefault >><<#
   if (isOneToOne)
   {
-    #>><<@ UmpleToJava.constructor_DeclareOneToOne >><<#
+    #>><<@ UmpleToPython.constructor_DeclareOneToOne >><<#
   }
 
 #>>!>>

@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     members_AllStateMachines <<!<</*members_AllStateMachines*/>><<#
 {
   isFirst = true;

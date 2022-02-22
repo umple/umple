@@ -1,8 +1,8 @@
 use objectFactory_add_methods1.ump;
-class UmpleToJava {
+class UmpleToPython {
   objectFactory_add_methods <<!<</*objectFactory_add_methods*/>><<#
   if (model.getDistributePattern()==1){
-    #>><<@ UmpleToJava.objectFactory_add_methods1 >><<#
+    #>><<@ UmpleToPython.objectFactory_add_methods1 >><<#
   }
   else{
   if(isInterface!=true){

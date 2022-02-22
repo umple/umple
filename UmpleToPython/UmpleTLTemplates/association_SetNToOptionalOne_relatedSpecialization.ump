@@ -1,7 +1,7 @@
 use association_GetPrivate.ump;
 
 
-class UmpleToJava {
+class UmpleToPython {
   association_SetNToOptionalOne_relatedSpecialization <<!  /* Code from template association_SetNToOptionalOne_relatedSpecialization */
 <</*association_SetNToOptionalOne_relatedSpecialization*/>>  public boolean <<=gen.translate("setManyMethod",av)>>_<<=gen.translate("type",av)>>(<<=gen.translate("type",av)>>... <<=gen.translate("parameterMany",av)>>)
   {
@@ -50,5 +50,5 @@ class UmpleToJava {
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } #>>
     return wasSet;
   }
-<<@ UmpleToJava.association_GetPrivate >>!>>
+<<@ UmpleToPython.association_GetPrivate >>!>>
 }

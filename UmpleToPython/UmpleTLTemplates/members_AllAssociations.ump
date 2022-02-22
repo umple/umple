@@ -1,14 +1,14 @@
 use specializationCode.ump;
 
 
-class UmpleToJava {
+class UmpleToPython {
     members_AllAssociations <<!<</*members_AllAssociations*/>><<#
 {
   isFirst = true;
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
 
-    #>><<@ UmpleToJava.specializationCode >><<#
+    #>><<@ UmpleToPython.specializationCode >><<#
     if (!av.getIsNavigable())
     {
       continue;

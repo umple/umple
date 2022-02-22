@@ -3,11 +3,11 @@ use association_set_specialization_reqCommonCode.ump;
 use association_set_specialization_reqSuperCode.ump;
 
 
-namespace cruise.umple.compiler.java;
+namespace cruise.umple.compiler.python;
 
 external interface ILang{}
 
-class JavaSpecGenerator {
+class PythonSpecGenerator {
     depend cruise.umple.compiler.*;
     depend cruise.umple.util.*;
     depend java.util.*;
@@ -27,25 +27,25 @@ class JavaSpecGenerator {
         buffer.append(StringFormatter.format(input,variables));
     }
 
-    emit getCode(UmpleModel model, UmpleElement uElement)(JavaSpecGenerator);
+    emit getCode(UmpleModel model, UmpleElement uElement)(PythonSpecGenerator);
 
 
-    JavaSpecGenerator <<!<</*JavaSpecGenerator*/>><<@ UmpleToJava.UmpleNotice >>
+    PythonSpecGenerator <<!<</*PythonSpecGenerator*/>><<@ UmpleToPython.UmpleNotice >>
 <<#
     return realSb;
 	} // end append
 	
-  public void getAssociationCode_specialization_reqSuperCode(JavaGenerator gen, String includeFile, String includeFile2, String includeFile3, StringBuilder realSb, AssociationVariable av, AssociationVariable relatedAssociation,
+  public void getAssociationCode_specialization_reqSuperCode(PythonGenerator gen, String includeFile, String includeFile2, String includeFile3, StringBuilder realSb, AssociationVariable av, AssociationVariable relatedAssociation,
   		String customSetPrefixCode, String customSetPostfixCode, String customAddPrefixCode, String customAddPostfixCode, String customRemovePrefixCode, String customRemovePostfixCode,
   		String customSetManyPrefixCode, String customSetManyPostfixCode, List<TraceItem> traceItemAssocRemoves, List<TraceItem> traceItemAssocAdds, UmpleClass uClass, boolean sortMethodAdded, String umpleSourceFile,
   		Map<String,UncaughtException> uncaughtExceptions, UmpleClass globalUmpleClass, boolean addNewLine, boolean mulChangedToOne, boolean relMulChangedToOne, boolean mulChangedToN, boolean reqSetCode, boolean relReqCommonCode, boolean relReqSetCode, String scName) 
   	{ 
   	this.uncaughtExceptions = uncaughtExceptions;
   	this.globalUmpleClass = globalUmpleClass;
-  #>><<@ UmpleToJava.association_set_specialization_reqSuperCode >><<#
+  #>><<@ UmpleToPython.association_set_specialization_reqSuperCode >><<#
      }// end super code
      
-  public void getAssociationCode_specialization_reqCommonCode(JavaGenerator gen, String includeFile, String includeFile2, String includeFile3, StringBuilder realSb, AssociationVariable av, AssociationVariable relatedAssociation,
+  public void getAssociationCode_specialization_reqCommonCode(PythonGenerator gen, String includeFile, String includeFile2, String includeFile3, StringBuilder realSb, AssociationVariable av, AssociationVariable relatedAssociation,
   		String customSetPrefixCode, String customSetPostfixCode, String customAddPrefixCode, String customAddPostfixCode, String customRemovePrefixCode, String customRemovePostfixCode,
   		String customSetManyPrefixCode, String customSetManyPostfixCode, List<TraceItem> traceItemAssocRemoves, List<TraceItem> traceItemAssocAdds, UmpleClass uClass, boolean sortMethodAdded, String umpleSourceFile,
   		Map<String,UncaughtException> uncaughtExceptions, UmpleClass globalUmpleClass, boolean addNewLine, boolean mulChangedToOne, boolean relMulChangedToOne, boolean mulChangedToN, boolean reqSetCode, boolean relReqCommonCode, boolean relReqSetCode, String scName) 
@@ -53,7 +53,7 @@ class JavaSpecGenerator {
      String self="this";
   	 this.uncaughtExceptions = uncaughtExceptions;
   	 this.globalUmpleClass = globalUmpleClass;
-  #>><<@ UmpleToJava.association_set_specialization_reqCommonCode >><<# 
+  #>><<@ UmpleToPython.association_set_specialization_reqCommonCode >><<# 
     } // end common code
     
     java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0|1|2|3|4|5|6|7|8|9]*) (.*)");

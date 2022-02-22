@@ -7,7 +7,7 @@ use attribute_SetMany_subclass.ump;
 use attribute_Set_subclass.ump;
 
 
-class UmpleToJava {
+class UmpleToPython {
     attribute_Set_All <<!<</*attribute_Set_All*/>><<#
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
   for (Attribute av : uClass.getAttributes())
@@ -38,20 +38,20 @@ class UmpleToJava {
     {
       if (av.getIsLazy())
       {
-        #>><<@ UmpleToJava.attribute_SetImmutable >><<#
+        #>><<@ UmpleToPython.attribute_SetImmutable >><<#
       }
     }
     else if (av.getModifier().equals("defaulted"))
     {
-      #>><<@ UmpleToJava.attribute_SetDefaulted >><<#
+      #>><<@ UmpleToPython.attribute_SetDefaulted >><<#
     }
     else if (av.getIsList())
     {
-      #>><<@ UmpleToJava.attribute_SetMany >><<#
+      #>><<@ UmpleToPython.attribute_SetMany >><<#
     }
     else
     {
-      #>><<@ UmpleToJava.attribute_Set >><<#
+      #>><<@ UmpleToPython.attribute_Set >><<#
     }
   }
 
@@ -84,15 +84,15 @@ class UmpleToJava {
       {
         if (av.getModifier().equals("defaulted"))
         {
-          #>><<@ UmpleToJava.attribute_SetDefaulted_subclass >><<#
+          #>><<@ UmpleToPython.attribute_SetDefaulted_subclass >><<#
         }
         else if (av.getIsList())
         {
-          #>><<@ UmpleToJava.attribute_SetMany_subclass >><<#
+          #>><<@ UmpleToPython.attribute_SetMany_subclass >><<#
         }
         else if(!av.isImmutable()||av.getIsLazy())//if(customSetPrefixCode!=null&&customSetPostfixCode!=null&&customSetPrefixCode.matches("[\\s]*if.*\\n[\\s]*.*"))
         {
-          #>><<@ UmpleToJava.attribute_Set_subclass >><<#
+          #>><<@ UmpleToPython.attribute_Set_subclass >><<#
         }
       }    
     }

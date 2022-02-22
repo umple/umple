@@ -4,7 +4,7 @@ use attribute_IsBooleanCodeInjectionDerived.ump;
 use attribute_IsBooleanDerived.ump;
 
 
-class UmpleToJava {
+class UmpleToPython {
     attribute_IsBoolean_All <<!<</*attribute_IsBoolean_All*/>><<#
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
   for (Attribute av : uClass.getAttributes()) 
@@ -23,19 +23,19 @@ class UmpleToJava {
     
     if (av.getIsDerived() && customGetPostfixCode != null)
     {
-      #>><<@ UmpleToJava.attribute_IsBooleanCodeInjectionDerived >><<#
+      #>><<@ UmpleToPython.attribute_IsBooleanCodeInjectionDerived >><<#
     }
     else if (av.getIsDerived())
     {
-      #>><<@ UmpleToJava.attribute_IsBooleanDerived >><<#
+      #>><<@ UmpleToPython.attribute_IsBooleanDerived >><<#
     }
     else if (customGetPostfixCode != null)
     {
-      #>><<@ UmpleToJava.attribute_IsBooleanCodeInjection >><<#
+      #>><<@ UmpleToPython.attribute_IsBooleanCodeInjection >><<#
     }
     else
     {
-      #>><<@ UmpleToJava.attribute_IsBoolean >><<#
+      #>><<@ UmpleToPython.attribute_IsBoolean >><<#
     }
       
     appendln(realSb, "");

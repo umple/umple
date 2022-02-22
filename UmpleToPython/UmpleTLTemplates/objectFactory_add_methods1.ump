@@ -1,5 +1,5 @@
 
-class UmpleToJava {
+class UmpleToPython {
   objectFactory_add_methods1 <<!<</*objectFactory_add_methods1*/>><<#
   if(isInterface!=true){
     append(realSb,"\n  {0} {1}({2}{3} proxy)",new Object[] {accessibility, "new"+uClass.getName(), arguments+argumentscomma,uClass.getName()});

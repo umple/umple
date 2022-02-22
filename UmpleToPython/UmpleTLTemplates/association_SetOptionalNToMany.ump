@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   association_SetOptionalNToMany <<!  /* Code from template association_SetOptionalNToMany */
 <</*association_SetOptionalNToMany*/>>  public boolean <<=gen.translate("setManyMethod",av)>>(<<=gen.translate("type",av)>>... <<=gen.translate("parameterMany",av)>>)
   {

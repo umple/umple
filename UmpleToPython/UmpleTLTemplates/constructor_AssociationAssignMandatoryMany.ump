@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     constructor_AssociationAssignMandatoryMany <<!<</*constructor_AssociationAssignMandatoryMany*/>><<#
   String requiredNumber = "";
   if (av.isN())

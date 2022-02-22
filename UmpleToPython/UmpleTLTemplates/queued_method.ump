@@ -1,6 +1,6 @@
-class UmpleToJava {
+class UmpleToPython {
     queued_method <<!<</*queued_method*/>><<#
-    public String getQueuedMethodClass(StringBuilder realSb, UmpleModel model, UmpleClass uClass, JavaGenerator gen)
+    public String getQueuedMethodClass(StringBuilder realSb, UmpleModel model, UmpleClass uClass, PythonGenerator gen)
     {
 	  boolean hasQueuedMethods = false;
 	  ArrayList<Method> methodList = new ArrayList<Method>();

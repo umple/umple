@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     state_machine_StateDependentMethods_All <<!<</*state_machine_StateDependentMethods_All*/>><<#
     // Issue #1351
     if (!uClass.getStateDependentMethods().isEmpty()) {

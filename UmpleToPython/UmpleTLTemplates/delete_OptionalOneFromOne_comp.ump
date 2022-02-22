@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     delete_OptionalOneFromOne_comp <<!<</*delete_OptionalOneFromOne_comp*/>>
     <<=gen.translate("type",av)>> <<=gen.translate("parameterExisting",av)>> = <<=gen.translate("associationOne",av)>>;
     <<=gen.translate("associationOne",av)>> = null;

@@ -3,11 +3,11 @@ use uncaught_exception.ump;
 use objectFactory_add_Declare_All.ump;
 use objectFactory_listOfObjects_All.ump;
 use objectFactory_listOfObjects_instantiation_All.ump;
-namespace cruise.umple.compiler.java;
+namespace cruise.umple.compiler.python;
 
 external interface ILang{}
 
-class JavaObjectFactoryClassGenerator {
+class PythonObjectFactoryClassGenerator {
     depend cruise.umple.compiler.*;
     depend cruise.umple.util.*;
     depend java.util.*;
@@ -28,12 +28,12 @@ class JavaObjectFactoryClassGenerator {
         buffer.append(StringFormatter.format(input,variables));
     }
 
-    emit getCode(UmpleModel model, UmpleElement uElement)(JavaObjectFactoryClassGenerator);
+    emit getCode(UmpleModel model, UmpleElement uElement)(PythonObjectFactoryClassGenerator);
 
 
-    JavaObjectFactoryClassGenerator <<!<</*JavaObjectFactoryClassGenerator*/>><<@ UmpleToJava.UmpleNotice >>
+    PythonObjectFactoryClassGenerator <<!<</*PythonObjectFactoryClassGenerator*/>><<@ UmpleToPython.UmpleNotice >>
 <<#
-  JavaGenerator gen = new JavaGenerator();
+  PythonGenerator gen = new PythonGenerator();
   gen.setModel(model);
   GeneratorHelper.generator = gen;
   Boolean isInterface=false;
@@ -503,7 +503,7 @@ public class UmpleRuntime implements IUmpleRuntime
     <<#
     }
     #>>
-    <<@ UmpleToJava.objectFactory_add_Declare_All >>
+    <<@ UmpleToPython.objectFactory_add_Declare_All >>
   public static void main (String [] args)
   {
     if (args.length>0){

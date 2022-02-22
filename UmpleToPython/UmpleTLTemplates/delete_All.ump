@@ -43,7 +43,7 @@ use specializationCode_Delete.ump;
 use specializationSkip.ump;
 
 
-class UmpleToJava {
+class UmpleToPython {
     delete_All <<!<</*delete_All*/>><<#
   String customDeletePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","delete"));
   String customDeletePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","delete"));
@@ -56,8 +56,7 @@ class UmpleToJava {
     return realSb.toString(); 
   }
   // END OF NOTE. 
-  appendln(realSb,"\n  public void delete()");
-  append(realSb,"  {");
+  appendln(realSb,"\n  def __del__(self):");
 
   boolean hasSomethingToDelete = false;  
 
@@ -70,7 +69,7 @@ class UmpleToJava {
 
   for (AssociationVariable av : uClass.getAssociationVariables()) 
   {
-    #>><<@ UmpleToJava.specializationCode_Delete >><<#
+    #>><<@ UmpleToPython.specializationCode_Delete >><<#
     
     if (!av.getIsNavigable() || av.isImmutable())
     {
@@ -79,7 +78,7 @@ class UmpleToJava {
     
     if ( reqCommonCode )      /* Same Class Specialization Case */
     {
-      #>><<@ UmpleToJava.specializationSkip >><<#
+      #>><<@ UmpleToPython.specializationSkip >><<#
     }
     else if (reqSuperCode)    /* Subclass Case */
     {
@@ -88,12 +87,12 @@ class UmpleToJava {
         if (av.isOne())
         {
           hasSomethingToDelete = true;
-          #>><<@ UmpleToJava.delete_UndirectionalOne_specialization >><<#
+          #>><<@ UmpleToPython.delete_UndirectionalOne_specialization >><<#
         }
         else if (av.isMany())
         {
           hasSomethingToDelete = true;
-          #>><<@ UmpleToJava.delete_UndirectionalMany_specialization >><<#
+          #>><<@ UmpleToPython.delete_UndirectionalMany_specialization >><<#
         }
         continue;
       }
@@ -101,23 +100,23 @@ class UmpleToJava {
      
       if (relatedAssociation.getIsComposition()) {
       	if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isOnlyOne()) {
-      		#>><<@ UmpleToJava.delete_OneFromOne_specialization >><<#
+      		#>><<@ UmpleToPython.delete_OneFromOne_specialization >><<#
       	}
       	else if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isOptionalOne()) {
-      		#>><<@ UmpleToJava.delete_OptionalOneFromOne_comp_specialization >><<#
+      		#>><<@ UmpleToPython.delete_OptionalOneFromOne_comp_specialization >><<#
       	}
       	else if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isMany()) {
-      		#>><<@ UmpleToJava.delete_ManyFromX_comp_specialization >><<#
+      		#>><<@ UmpleToPython.delete_ManyFromX_comp_specialization >><<#
       	}
       	
       	else if (relatedAssociation.isMany() && av.isOnlyOne()) {
-      		#>><<@ UmpleToJava.delete_OneFromOne_specialization >><<#
+      		#>><<@ UmpleToPython.delete_OneFromOne_specialization >><<#
       	}
       	else if (relatedAssociation.isMany() && av.isOptionalOne()) {
-      	    #>><<@ UmpleToJava.delete_OptionalOneFromOne_specialization >><<#
+      	    #>><<@ UmpleToPython.delete_OptionalOneFromOne_specialization >><<#
       	}
       	else if (relatedAssociation.isMany() && av.isMany()) {
-      	    #>><<@ UmpleToJava.delete_ManyFromX_comp_specialization >><<#
+      	    #>><<@ UmpleToPython.delete_ManyFromX_comp_specialization >><<#
       	}
       	else {
       		continue;
@@ -134,25 +133,25 @@ class UmpleToJava {
     		// of deleting one from many, this would be on the composition end, and OneFromOne would
     		// be called so the object is actually deleted. 	
     
-      	#>><<@ UmpleToJava.delete_ManyFromX_comp_specialization >><<#
+      	#>><<@ UmpleToPython.delete_ManyFromX_comp_specialization >><<#
   	  
       }
       
       else if (av.getIsComposition() && (av.isMany() && relatedAssociation.isOptionalOne() && !av.isMandatory())) { 
       	
-      	#>><<@ UmpleToJava.delete_OptionalOneFromMany_comp_specialization >><<#
+      	#>><<@ UmpleToPython.delete_OptionalOneFromMany_comp_specialization >><<#
   	  
       }
       
       else if (av.getIsComposition() && (av.isOptionalOne() && relatedAssociation.getMultiplicity().getLowerBound() > 1  && !relatedAssociation.isMandatory())) { 
       	
-      	#>><<@ UmpleToJava.delete_OptionalOneFromMN_comp_specialization >><<#
+      	#>><<@ UmpleToPython.delete_OptionalOneFromMN_comp_specialization >><<#
   	  
       }
       
       else if (av.getIsComposition() && (av.isOptionalOne() && relatedAssociation.getMultiplicity().getLowerBound() > 1  && relatedAssociation.isMandatory())) { 
       	
-      	#>><<@ UmpleToJava.delete_OptionalOneFromN_comp_specialization >><<#
+      	#>><<@ UmpleToPython.delete_OptionalOneFromN_comp_specialization >><<#
   	  
       }
       
@@ -161,62 +160,62 @@ class UmpleToJava {
       
   	    if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
   	    {
-  	      #>><<@ UmpleToJava.delete_OneFromOne_specialization >><<#
+  	      #>><<@ UmpleToPython.delete_OneFromOne_specialization >><<#
   	    }
   	    else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
   	    {
-  	      #>><<@ UmpleToJava.delete_OptionalOneFromOptionalOne_specialization >><<#
+  	      #>><<@ UmpleToPython.delete_OptionalOneFromOptionalOne_specialization >><<#
   	    }
   	    else if (av.isOnlyOne() && relatedAssociation.isOptionalOne())
   	    {
-  	      #>><<@ UmpleToJava.delete_OneFromOptionalOne_specialization >><<#
+  	      #>><<@ UmpleToPython.delete_OneFromOptionalOne_specialization >><<#
   	    }
   	    else if (av.isOptionalOne() && relatedAssociation.isOnlyOne())
   	    {
-  	      #>><<@ UmpleToJava.delete_OptionalOneFromOne_specialization >><<#
+  	      #>><<@ UmpleToPython.delete_OptionalOneFromOne_specialization >><<#
   	    }
   	    else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
   	    {
-  	      #>><<@ UmpleToJava.delete_OptionalOneFromMany_specialization >><<#
+  	      #>><<@ UmpleToPython.delete_OptionalOneFromMany_specialization >><<#
   	    }
   	    else if (av.isOptionalOne() && relatedAssociation.isN())
   	    {
-  	      #>><<@ UmpleToJava.delete_OptionalOneFromN_specialization >><<#
+  	      #>><<@ UmpleToPython.delete_OptionalOneFromN_specialization >><<#
   	    }
   	    else if (av.isOptionalOne() && relatedAssociation.isMN())
   	    {
-  	      #>><<@ UmpleToJava.delete_OptionalOneFromMN_specialization >><<#
+  	      #>><<@ UmpleToPython.delete_OptionalOneFromMN_specialization >><<#
   	    }
   	    else if (av.isOne() && relatedAssociation.isMany())
   	    {
-  	      #>><<@ UmpleToJava.delete_OneFromMany_specialization >><<#
+  	      #>><<@ UmpleToPython.delete_OneFromMany_specialization >><<#
   	    }
   	    else if (av.isMandatory() && relatedAssociation.isOptionalOne())
   	    {
-          #>><<@ UmpleToJava.delete_MandatoryFromOptionalOne_specialization >><<#
+          #>><<@ UmpleToPython.delete_MandatoryFromOptionalOne_specialization >><<#
   	    }
   	    else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN()))
   	    {
           if (relatedAssociation.getNeedsCommonCode())
           {
-            #>><<@ UmpleToJava.delete_ManyFromMN_specialization_relCommon >><<#
+            #>><<@ UmpleToPython.delete_ManyFromMN_specialization_relCommon >><<#
           }
           else
           {
-            #>><<@ UmpleToJava.delete_ManyFromMN_specialization >><<#
+            #>><<@ UmpleToPython.delete_ManyFromMN_specialization >><<#
   	      }
         }
   	    else if (av.isMany() && relatedAssociation.isMany())
   	    {
-          #>><<@ UmpleToJava.delete_ManyFromMany_specialization >><<#
+          #>><<@ UmpleToPython.delete_ManyFromMany_specialization >><<#
   	    }
   	    else if (av.isMany() && relatedAssociation.isOnlyOne()) 
   	    {
-  	      #>><<@ UmpleToJava.delete_ManyFromOne_specialization >><<#
+  	      #>><<@ UmpleToPython.delete_ManyFromOne_specialization >><<#
   	    }
   	    else if (av.isMany() && relatedAssociation.isOptionalOne())
   	    {
-  	      #>><<@ UmpleToJava.delete_ManyFromOptionalOne_specialization >><<#
+  	      #>><<@ UmpleToPython.delete_ManyFromOptionalOne_specialization >><<#
   	    }
   	    else
   	    {
@@ -231,12 +230,12 @@ class UmpleToJava {
         if (av.isOne())
         {
           hasSomethingToDelete = true;
-          #>><<@ UmpleToJava.delete_UndirectionalOne >><<#
+          #>><<@ UmpleToPython.delete_UndirectionalOne >><<#
         }
         else if (av.isMany())
         {
           hasSomethingToDelete = true;
-          #>><<@ UmpleToJava.delete_UndirectionalMany >><<#
+          #>><<@ UmpleToPython.delete_UndirectionalMany >><<#
         }
         continue;
       }
@@ -244,23 +243,23 @@ class UmpleToJava {
      
       if (relatedAssociation.getIsComposition()) {
       	if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isOnlyOne()) {
-      		#>><<@ UmpleToJava.delete_OneFromOne >><<#
+      		#>><<@ UmpleToPython.delete_OneFromOne >><<#
       	}
       	else if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isOptionalOne()) {
-      		#>><<@ UmpleToJava.delete_OptionalOneFromOne_comp >><<#
+      		#>><<@ UmpleToPython.delete_OptionalOneFromOne_comp >><<#
       	}
       	else if ((relatedAssociation.isOnlyOne() || relatedAssociation.isOptionalOne()) && av.isMany()) {
-      		#>><<@ UmpleToJava.delete_ManyFromX_comp >><<#
+      		#>><<@ UmpleToPython.delete_ManyFromX_comp >><<#
       	}
       	
       	else if (relatedAssociation.isMany() && av.isOnlyOne()) {
-      		#>><<@ UmpleToJava.delete_OneFromOne >><<#
+      		#>><<@ UmpleToPython.delete_OneFromOne >><<#
       	}
       	else if (relatedAssociation.isMany() && av.isOptionalOne()) {
-      	    #>><<@ UmpleToJava.delete_OptionalOneFromOne >><<#
+      	    #>><<@ UmpleToPython.delete_OptionalOneFromOne >><<#
       	}
       	else if (relatedAssociation.isMany() && av.isMany()) {
-      	    #>><<@ UmpleToJava.delete_ManyFromX_comp >><<#
+      	    #>><<@ UmpleToPython.delete_ManyFromX_comp >><<#
       	}
       	else {
       		continue;
@@ -277,80 +276,80 @@ class UmpleToJava {
         // of deleting one from many, this would be on the composition end, and OneFromOne would
         // be called so the object is actually deleted.   
     
-        #>><<@ UmpleToJava.delete_ManyFromX_comp >><<#
+        #>><<@ UmpleToPython.delete_ManyFromX_comp >><<#
       
       }
       
       else if (av.getIsComposition() && (av.isMany() && relatedAssociation.isOptionalOne() && !av.isMandatory())) { 
         
-        #>><<@ UmpleToJava.delete_OptionalOneFromMany_comp >><<#
+        #>><<@ UmpleToPython.delete_OptionalOneFromMany_comp >><<#
       
       }
       
       else if (av.getIsComposition() && (av.isOptionalOne() && relatedAssociation.getMultiplicity().getLowerBound() > 1  && !relatedAssociation.isMandatory())) { 
         
-        #>><<@ UmpleToJava.delete_OptionalOneFromMN_comp >><<#
+        #>><<@ UmpleToPython.delete_OptionalOneFromMN_comp >><<#
       
       }
       
       else if (av.getIsComposition() && (av.isOptionalOne() && relatedAssociation.getMultiplicity().getLowerBound() > 1  && relatedAssociation.isMandatory())) { 
         
-        #>><<@ UmpleToJava.delete_OptionalOneFromN_comp >><<#
+        #>><<@ UmpleToPython.delete_OptionalOneFromN_comp >><<#
       
       }
       else 
       {
         if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
         {
-          #>><<@ UmpleToJava.delete_OneFromOne >><<#
+          #>><<@ UmpleToPython.delete_OneFromOne >><<#
         }
         else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
         {
-          #>><<@ UmpleToJava.delete_OptionalOneFromOptionalOne >><<#
+          #>><<@ UmpleToPython.delete_OptionalOneFromOptionalOne >><<#
         }
         else if (av.isOnlyOne() && relatedAssociation.isOptionalOne())
         {
-          #>><<@ UmpleToJava.delete_OneFromOptionalOne >><<#
+          #>><<@ UmpleToPython.delete_OneFromOptionalOne >><<#
         }
         else if (av.isOptionalOne() && relatedAssociation.isOnlyOne())
         {
-          #>><<@ UmpleToJava.delete_OptionalOneFromOne >><<#
+          #>><<@ UmpleToPython.delete_OptionalOneFromOne >><<#
         }
         else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
         {
-          #>><<@ UmpleToJava.delete_OptionalOneFromMany >><<#
+          #>><<@ UmpleToPython.delete_OptionalOneFromMany >><<#
         }
         else if (av.isOptionalOne() && relatedAssociation.isN())
         {
-          #>><<@ UmpleToJava.delete_OptionalOneFromN >><<#
+          #>><<@ UmpleToPython.delete_OptionalOneFromN >><<#
         }
         else if (av.isOptionalOne() && relatedAssociation.isMN())
         {
-          #>><<@ UmpleToJava.delete_OptionalOneFromMN >><<#
+          #>><<@ UmpleToPython.delete_OptionalOneFromMN >><<#
         }
         else if (av.isOne() && relatedAssociation.isMany())
         {
-          #>><<@ UmpleToJava.delete_OneFromMany >><<#
+          #>><<@ UmpleToPython.delete_OneFromMany >><<#
         }
         else if (av.isMandatory() && relatedAssociation.isOptionalOne())
         {
-          #>><<@ UmpleToJava.delete_MandatoryFromOptionalOne >><<#
+          #>><<@ UmpleToPython.delete_MandatoryFromOptionalOne >><<#
         }
         else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN()))
         {
-          #>><<@ UmpleToJava.delete_ManyFromMN >><<#
+          #>><<@ UmpleToPython.delete_ManyFromMN >><<#
         }
         else if (av.isMany() && relatedAssociation.isMany())
         {
-          #>><<@ UmpleToJava.delete_ManyFromMany >><<#
+          #>><<@ UmpleToPython.delete_ManyFromMany >><<#
         }
         else if (av.isMany() && relatedAssociation.isOnlyOne()) 
         {
-          #>><<@ UmpleToJava.delete_ManyFromOne >><<#
+          #>><<@ UmpleToPython.delete_ManyFromOne >><<#
         }
         else if (av.isMany() && relatedAssociation.isOptionalOne())
         {
-          #>><<@ UmpleToJava.delete_ManyFromOptionalOne >><<#
+          #>><<@ UmpleToPython.delete_ManyFromOptionalOne >><<#
         }
         else
         {
@@ -398,11 +397,11 @@ class UmpleToJava {
   if (hasSomethingToDelete)
   {
     appendln(realSb, "");
-    appendln(realSb, "  }");
+    appendln(realSb, "  ");
   }
   else
   {
-    appendln(realSb, "}");
+    appendln(realSb, "");
   }
 
 #>>!>>

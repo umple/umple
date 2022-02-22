@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     state_machine_Event_StartStopTimer <<!<</*state_machine_Event_StartStopTimer*/>>
   private void <<=gen.translate("eventStartMethod",e,sm) >>()
   {

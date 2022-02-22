@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     constructor_AttributeAssignList <<!<</*constructor_AttributeAssignList*/>>
     <<=gen.translate("attributeMany",av)>> = new ArrayList<<<=gen.translate("typeMany",av)>>>();<<#
     if (av.getValue() != null && av.getValue() != "") { 

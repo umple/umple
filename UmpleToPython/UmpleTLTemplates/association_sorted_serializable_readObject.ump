@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   	association_sorted_serializable_readObject <<!
   /* Code from template association_sorted_serializable_readObject */ 
   private void readObject(java.io.ObjectInputStream in)

@@ -20,7 +20,7 @@ use constructor_StateMachineAssignDefault.ump;
 use specializationCode_Constructor.ump;
 
 
-class UmpleToJava {
+class UmpleToPython {
     constructor_DeclareDefault <<!<</*constructor_DeclareDefault*/>><<#
   // NOTE: THE BELOW CODE SHOULD BE REMOVED AFTER REFACTORING.
   // Code introduced in PR#: 1527. Should be removed when Issue#1529 is resolved. 
@@ -32,8 +32,8 @@ class UmpleToJava {
   // END OF NOTE. 
   String customConstructorPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","constructor"));
   String customConstructorPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","constructor"));  
-  String accessibility = uClass.getIsSingleton() ? "private" : "public";
-  append(realSb,"\n  {0} {1}({2}{3})",new Object[] {accessibility, uClass.getName(), gClass.getLookup("constructorSignature"),componentSignature});
+  String accessibility = uClass.getIsSingleton() ? "_" : "";
+  append(realSb,"\n  def __init__({0}):",new Object[] {componentSignature});
 
   String extraNote = null;
   
@@ -41,7 +41,6 @@ class UmpleToJava {
   
   boolean hasBody = false;
 
-  append(realSb, "  {");
 
   if (!uClass.isRoot() && !"interface".equals(uClass.getExtendsClass().getModifier()))
   {
@@ -113,32 +112,32 @@ class UmpleToJava {
     if (av.getIsList())
     {
       hasBody = true;
-      #>><<@ UmpleToJava.constructor_AttributeAssignList >><<#
+      #>><<@ UmpleToPython.constructor_AttributeAssignList >><<#
     }
     else if ("defaulted".equals(av.getModifier()))
     {
       hasBody = true;
-      #>><<@ UmpleToJava.constructor_AttributeAssignDefaulted >><<# 
+      #>><<@ UmpleToPython.constructor_AttributeAssignDefaulted >><<# 
     }
     else if (av.isImmutable() && av.getIsLazy())
     {
       hasBody = true;
-      #>><<@ UmpleToJava.constructor_AttributeUnassignedImmutable >><<#
+      #>><<@ UmpleToPython.constructor_AttributeUnassignedImmutable >><<#
     }
     else if (av.isImmutable())
     {
       hasBody = true;
-      #>><<@ UmpleToJava.constructor_AttributeAssignImmutable >><<# 
+      #>><<@ UmpleToPython.constructor_AttributeAssignImmutable >><<# 
     }
     else
     {
       hasBody = true;
       if(!av.getIsLazy()){
-         #>><<@ UmpleToJava.constructor_AttributeAssign >><<#
+         #>><<@ UmpleToPython.constructor_AttributeAssign >><<#
       }
       else
       {
-         #>><<@ UmpleToJava.constructor_AttributeAssignLazy >><<#
+         #>><<@ UmpleToPython.constructor_AttributeAssignLazy >><<#
       }
     }
     
@@ -176,19 +175,19 @@ class UmpleToJava {
     if (av.getIsAutounique())
     {
       hasBody = true;
-      #>><<@ UmpleToJava.constructor_AttributeAssignAutounique >><<#
+      #>><<@ UmpleToPython.constructor_AttributeAssignAutounique >><<#
     }
     else if (av.getIsUnique())
     {
    	  hasBody = true;
-   	  #>><<@ UmpleToJava.constructor_AttributeAssignUnique >><<#
+   	  #>><<@ UmpleToPython.constructor_AttributeAssignUnique >><<#
     }
   }
   
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
 
-    #>><<@ UmpleToJava.specializationCode_Constructor >><<#
+    #>><<@ UmpleToPython.specializationCode_Constructor >><<#
 
     if (!av.getIsNavigable() || !av.isImmutable())
     {
@@ -201,7 +200,7 @@ class UmpleToJava {
   for (AssociationVariable av : uClass.getAssociationVariables()) 
   {
 
-    #>><<@ UmpleToJava.specializationCode_Constructor >><<#
+    #>><<@ UmpleToPython.specializationCode_Constructor >><<#
 
   	if (av.isOnlyOne() && av.getRelatedAssociation().isMany() && av.getRelatedAssociation().isSorted() && av.getIsNavigable())
   	{
@@ -222,7 +221,7 @@ class UmpleToJava {
   }
   for (AssociationVariable av : uClass.getAssociationVariables()) 
   {
-    #>><<@ UmpleToJava.specializationCode_Constructor >><<#
+    #>><<@ UmpleToPython.specializationCode_Constructor >><<#
     
     if (!av.getIsNavigable())
     {
@@ -234,32 +233,32 @@ class UmpleToJava {
       if (av.isOnlyOne())
       {
         hasBody = true;
-        #>><<@ UmpleToJava.constructor_AssociationAssignUndirectionalOne >><<#
+        #>><<@ UmpleToPython.constructor_AssociationAssignUndirectionalOne >><<#
       }
       else if (av.isOptionalOne() && av.isImmutable())
       {
         hasBody = true;
-        #>><<@ UmpleToJava.constructor_AssociationAssignImmutableOptionalOne >><<#
+        #>><<@ UmpleToPython.constructor_AssociationAssignImmutableOptionalOne >><<#
       }
       else if (av.isMandatoryMany())
       {
         hasBody = true;
-        #>><<@ UmpleToJava.constructor_AssociationAssignMandatoryMany >><<#
+        #>><<@ UmpleToPython.constructor_AssociationAssignMandatoryMany >><<#
       }
       else if (av.isOptionalN() && av.isImmutable())
       {
         hasBody = true;
-        #>><<@ UmpleToJava.constructor_AssociationAssignImmutableOptionalN >><<#
+        #>><<@ UmpleToPython.constructor_AssociationAssignImmutableOptionalN >><<#
       }
       else if (av.isMany() && av.isImmutable())
       {
       	hasBody = true;
-        #>><<@ UmpleToJava.constructor_AssociationAssignImmutableOptionalMany >><<#
+        #>><<@ UmpleToPython.constructor_AssociationAssignImmutableOptionalMany >><<#
       }
       else if (av.isMany())
       {
         hasBody = true;
-        #>><<@ UmpleToJava.constructor_AssociationAssignOptionalMany >><<#
+        #>><<@ UmpleToPython.constructor_AssociationAssignOptionalMany >><<#
       }
       continue;
     }
@@ -267,16 +266,16 @@ class UmpleToJava {
     if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
     {
       hasBody = true;
-      #>><<@ UmpleToJava.constructor_AssociationAssignOneToOne >><<#
+      #>><<@ UmpleToPython.constructor_AssociationAssignOneToOne >><<#
     }
     else if ((av.isMN() || av.isN()) && (relatedAssociation.isMandatory() || relatedAssociation.isOptionalN()))
     {
       hasBody = true;
-      #>><<@ UmpleToJava.constructor_AssociationAssignOptionalMany >><<#
+      #>><<@ UmpleToPython.constructor_AssociationAssignOptionalMany >><<#
     }
     else
     {
-      #>><<@ UmpleToJava.constructor_AssociationAssignDefault >><<#
+      #>><<@ UmpleToPython.constructor_AssociationAssignDefault >><<#
     }
   }
   
@@ -293,9 +292,9 @@ class UmpleToJava {
     hasBody = true;
     for (StateMachine nestedSm : sm.getNestedStateMachines())
     {
-      #>><<@ UmpleToJava.constructor_NestedStateMachineAssignDefault >><<#
+      #>><<@ UmpleToPython.constructor_NestedStateMachineAssignDefault >><<#
     }
-    #>><<@ UmpleToJava.constructor_StateMachineAssignDefault >><<#
+    #>><<@ UmpleToPython.constructor_StateMachineAssignDefault >><<#
     if (sm.isQueued())
     {
       foundQueued = true;
@@ -347,7 +346,7 @@ class UmpleToJava {
   }
   else
   {
-    append(realSb, "}");
+    append(realSb, "");
   }
   
   // fixml attribute (create empty constructor)
@@ -372,7 +371,7 @@ class UmpleToJava {
   {
 	  if ("fixml".equals(av.getModifier()))
 	  {
-		  accessibility = uClass.getIsSingleton() ? "private" : "public";
+		  accessibility = uClass.getIsSingleton() ? "_" : "";
 		  appendln(realSb,"");
 		  appendln(realSb,"");
 		  appendln(realSb,"  {0} {1}()",new Object[] {accessibility, uClass.getName()});
@@ -390,10 +389,10 @@ class UmpleToJava {
 
   if( fixmlAttr == false && emptyConstructor == true )
   {
-	  accessibility = uClass.getIsSingleton() ? "private" : "public";
+	  accessibility = uClass.getIsSingleton() ? "_" : "";
 	  appendln(realSb,"");
 	  appendln(realSb,"");
-	  appendln(realSb,"  {0} {1}()",new Object[] {accessibility, uClass.getName()});
+	  appendln(realSb,"  {0}{1}:",new Object[] {accessibility, uClass.getName()});
 	  appendln(realSb,"  {");
 	  for( CodeInjection ci  : uClass.getCodeInjections())
 		  if( ci.getOperation().equals("emptyConstructor"))
@@ -404,7 +403,7 @@ class UmpleToJava {
   if (uClass.getIsSingleton())
   {
     appendln(realSb, "");
-    #>><<@ UmpleToJava.constructor_Singleton >><<#
+    #>><<@ UmpleToPython.constructor_Singleton >><<#
   }
 #>>!>>
 }

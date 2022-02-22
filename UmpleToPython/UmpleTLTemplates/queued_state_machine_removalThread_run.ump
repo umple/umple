@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     queued_state_machine_removalThread_run <<!<</*queued_state_machine_removalThread_run*/>>
   
   @Override

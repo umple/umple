@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     delete_OneFromMany_specialization <<!<</*delete_OneFromMany_specialization*/>>
     <<=gen.translate("type",av)>> <<=gen.translate("removeParameterOne",av)>> = <<=gen.translate("getMethod",av)>>_One<<=gen.translate("type",av)>>();
     clear_<<=gen.translate("associationOne",av)>>();

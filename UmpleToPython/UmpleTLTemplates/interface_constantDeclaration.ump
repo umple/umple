@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     interface_constantDeclaration <<!<</*interface_constantDeclaration*/>><<#
 appendln(realSb, "");
 appendln(realSb,"  // CONSTANT MEMBERS  ");

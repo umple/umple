@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
   attribute_GetDefaultedSubclass <<!  /* Code from template attribute_GetDefaultedSubclass */
 <</*attribute_GetDefaultedSubclass*/>>  public <<=gen.translate("type",av)>> <<=gen.translate("getDefaultMethod",av)>>()
   {

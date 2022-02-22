@@ -2,7 +2,7 @@ use objectFactory_add_DeclareDefault.ump;
 use objectFactory_add_DeclareOneToOne.ump;
 use objectFactory_add_methods.ump;
 
-class UmpleToJava {
+class UmpleToPython {
     objectFactory_add_Declare_All <<!<</*objectFactory_add_Declare_All*/>><<#
   for(UmpleClass uClass : model.getUmpleClasses())
   {
@@ -45,11 +45,11 @@ class UmpleToJava {
         }
       }
       caller=gClass.getLookup("constructorSignature_caller");
-    #>><<@ UmpleToJava.objectFactory_add_DeclareDefault >><<#
+    #>><<@ UmpleToPython.objectFactory_add_DeclareDefault >><<#
       if (isOneToOne)
       {
       #>>
-      <<@ UmpleToJava.objectFactory_add_DeclareOneToOne >>
+      <<@ UmpleToPython.objectFactory_add_DeclareOneToOne >>
       <<#
       }
       if (uClass.hasMethods()&&false)
@@ -95,7 +95,7 @@ class UmpleToJava {
             else{
               argumentscomma=""; 
             }
-            #>><<@ UmpleToJava.objectFactory_add_methods >><<#
+            #>><<@ UmpleToPython.objectFactory_add_methods >><<#
             
           }
         }

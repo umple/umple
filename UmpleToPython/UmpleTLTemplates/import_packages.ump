@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     import_packages <<!<</*import_packages*/>><<#
 
   // A set for imports in order to de-duplicate.  

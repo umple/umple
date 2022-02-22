@@ -1,12 +1,12 @@
-class UmpleToJava {
+class UmpleToPython {
     members_AllAttributes <<!<</*members_AllAttributes*/>><<#
 {
 
   appendln(realSb, "");
   appendln(realSb, "");
-  appendln(realSb, "  //------------------------");
-  appendln(realSb, "  // MEMBER VARIABLES");
-  append(realSb, "  //------------------------");
+  appendln(realSb, "  ##------------------------");
+  appendln(realSb, "  ## MEMBER VARIABLES");
+  append(realSb, "  ##------------------------");
 
   isFirst = true;
   for(Attribute av : uClass.getAttributes())
@@ -19,7 +19,7 @@ class UmpleToJava {
     {
       appendln(realSb, "");
       appendln(realSb, "");
-      append(realSb,"  //{0} Attributes", uClass.getName());
+      append(realSb,"  ##{0} Attributes", uClass.getName());
       isFirst = false;
     }
     

@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     state_machine_SetSimple <<!<</*state_machine_SetSimple*/>><<#
   StringBuilder allExitCases = new StringBuilder();
   StringBuilder allEnterCases = new StringBuilder();

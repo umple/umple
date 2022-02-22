@@ -1,4 +1,4 @@
-class UmpleToJava {
+class UmpleToPython {
     constructor_AttributeAssignLazy <<!<</*constructor_AttributeAssignLazy*/>><<#
   String parameterLookup = null; // av.getValue() == null ? "parameterOne" : "parameterValue";
   String defaultValue = null;

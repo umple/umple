@@ -2,7 +2,7 @@ use state_machine_timedEvent_run.ump;
 use state_machine_timedEvent_run_NestedStates.ump;
 
 
-class UmpleToJava {
+class UmpleToPython {
     state_machine_timedEvent_Handler <<!<</*state_machine_timedEvent_Handler*/>><<#
  
 
@@ -39,7 +39,7 @@ class UmpleToJava {
       {
         if (e.getIsTimer())
         {
-          #>><<@ UmpleToJava.state_machine_timedEvent_run >><<#
+          #>><<@ UmpleToPython.state_machine_timedEvent_run >><<#
         }
       }
     }
@@ -49,7 +49,7 @@ class UmpleToJava {
       {
         if (e.getIsTimer())
         {
-          #>><<@ UmpleToJava.state_machine_timedEvent_run >><<#
+          #>><<@ UmpleToPython.state_machine_timedEvent_run >><<#
         }
       }
       for(StateMachine nsm : sm.getNestedStateMachines())
@@ -58,7 +58,7 @@ class UmpleToJava {
         {
           if(event.getIsTimer())
           {
-            #>><<@ UmpleToJava.state_machine_timedEvent_run_NestedStates >><<#
+            #>><<@ UmpleToPython.state_machine_timedEvent_run_NestedStates >><<#
           }
         }
       }
