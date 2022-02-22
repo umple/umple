@@ -401,6 +401,7 @@ tasks.getByName("compileJava").dependsOn 'copyDocs'
 tasks.getByName("compileJava").dependsOn 'copyReusableUmpLib'
 tasks.getByName("compileJava").dependsOn ':UmpleParser:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToJava:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn ':UmpleToPython:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToPhp:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToRTCpp:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToRuby:copyUmpleOutput'
@@ -672,6 +673,7 @@ task codeGen {
     group = "Custom"
     description = "Generates template code by first attempting to use the latest local jar, or else the remote jar"
     dependsOn ":UmpleToJava:compileUmpleSelf"
+    dependsOn ":UmpleToPython:compileUmpleSelf"
     dependsOn ":UmpleToRTCpp:compileUmpleSelf"
     dependsOn ":UmpleToPhp:compileUmpleSelf"
     dependsOn ":UmpleToRuby:compileUmpleSelf"
