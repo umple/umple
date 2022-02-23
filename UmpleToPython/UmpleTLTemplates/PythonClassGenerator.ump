@@ -99,7 +99,7 @@ class PythonClassGenerator {
 <<# if (uClass.numberOfComments() > 0 && uClass.numberOfRequirements() == 0) { append(realSb, "\n{0}", Comment.format("Javadoc",uClass.getComments())); } #>>
 <<# if (uClass.numberOfComments() == 0 && uClass.numberOfRequirements() > 0) { append(realSb, "\n{0}", Requirement.format("Javadoc",uClass.getRequirements())); } #>>
 <<# for (Position p : uClass.getPositions()) { #>>
-// line <<= p.getLineNumber() >> "<<= uClass.getRelativePath(p.getFilename(),"Java") >>"
+## line <<= p.getLineNumber() >> "<<= uClass.getRelativePath(p.getFilename(),"Java") >>"
 <<# }
 if(model.getDistributed() && model.getDistributeTechnology().equals("WS")){
 if(model.getDistributePattern()==0 && uClass.getDistributeTechnology().equals("WS")){
@@ -116,7 +116,9 @@ String classPackageName=(uClass.getPackageName().length() == 0 ? "" : uClass.get
     appendln(realSb,NL+"@XmlAccessorType(XmlAccessType.FIELD)");
 }
 #>>
-public <<# 
+
+
+<<# 
 if (uClass.getIsStatic())
 {
   append(realSb, "{0} ", "static"); 
@@ -203,9 +205,8 @@ for (StateMachine smq : uClass.getStateMachines())
       break;
     }
   }
-  
+  append(realSb,":");
 #>>
-{
   <<#   
   getEnumerationCode(realSb, model, uClass, isFirst);
   getMemberCode(realSb, model,uClass,gClass,gen,isFirst);
@@ -581,7 +582,7 @@ for (StateMachine smq : uClass.getStateMachines())
   
 
 <<# } #>><<@ UmpleToPython.trace >><<#if(model.getMainClass() == null || model.getMainClass().getName() != uClass.getName()){#>>
-}<<#}
+<<#}
   return realSb.toString();
 }
 #>><<@ UmpleToPython.uncaught_exception>><<#}
