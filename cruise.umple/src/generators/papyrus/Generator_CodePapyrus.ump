@@ -103,6 +103,10 @@ class PapyrusGenerator
         if (uClass.getExtendsClass() != null)
         {
           code.append(StringFormatter.format("    <generalization xmi:id=\"_{0}-_generalization.0\" general=\"_{1}\"/>\n",uClass.getName(),uClass.getExtendsClass().getName()));
+          notationCode.append(StringFormatter.format("  <edges xmi:type=\"notation:Connector\" xmi:id=\"_{0}_{1}\" type=\"Generalization_Edge\" source=\"_{0}\" target=\"_{1}\">\n", uClass.getName(), uClass.getExtendsClass().getName()));
+          notationCode.append(StringFormatter.format("    <element xmi:type=\"uml:Generalization\" href=\"model.uml#_{0}-_generalization.0\"/>\n", uClass.getName()));
+          notationCode.append("    <bendpoints xmi:type=\"notation:RelativeBendpoints\" points=\"[0, 0, 0, 0]$[0, 0, 0, 0]\"/>\n");
+          notationCode.append("  </edges>\n");
         }
 
         String implementedInterfaces="";
