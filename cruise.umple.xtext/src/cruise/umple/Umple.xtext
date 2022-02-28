@@ -31,9 +31,9 @@ Anonymous_strictness_1_:
 	(strictnessLevel_1=('modelOnly'|'noExtraCode'|'none'))|
 	(message_1=('allow'|'expect'|'disallow'))(messageNumber_1=ID);
 Generate_:
-	'generate'(generate_1=('Java'|'Php'|'RTCpp'|'Ruby'|'Cpp'|'Json'|'Yuml'|'Violet'|'Umlet'|'Simulate'|'TextUml'|'GvStateDiagram'|'GvClassDiagram'|'Papyrus'|'Ecore'|'Xmi'|'Xtext'|'Sql'))';';
+	'generate'(generate_1=('Java'|'Php'|'RTCpp'|'Python'|'Ruby'|'Cpp'|'Json'|'Yuml'|'Violet'|'Umlet'|'Simulate'|'TextUml'|'GvStateDiagram'|'GvClassDiagram'|'Papyrus'|'Ecore'|'Xmi'|'Xtext'|'Sql'))';';
 Generate_path_:
-	'generate'(language_1=('Java'|'Php'|'RTCpp'|'Ruby'|'Cpp'|'Json'|'Yuml'|'Violet'|'Umlet'|'Simulate'|'TextUml'|'GvStateDiagram'|'GvClassDiagram'|'Papyrus'|'Ecore'|'Xmi'|'Xtext'|'Sql'))'"'(output_1=block)'"'(override_1=('--override'|'--override-all'))?';';
+	'generate'(language_1=('Java'|'Php'|'RTCpp'|'Python'|'Ruby'|'Cpp'|'Json'|'Yuml'|'Violet'|'Umlet'|'Simulate'|'TextUml'|'GvStateDiagram'|'GvClassDiagram'|'Papyrus'|'Ecore'|'Xmi'|'Xtext'|'Sql'))'"'(output_1=block)'"'(override_1=('--override'|'--override-all'))?';';
 UseStatement_:
 	'use'(use_1=ID)';';
 Namespace_:
@@ -125,7 +125,7 @@ CodeLangs_:
 Anonymous_codeLangs_1_:
 	','(CodeLang_1+=CodeLang_);
 CodeLang_:
-	(codeLang_1=('Java'|'RTCpp'|'Cpp'|'Php'|'Ruby'));
+	(codeLang_1=('Java'|'RTCpp'|'Cpp'|'Php'|'Python'|'Ruby'));
 MethodBody_:
 	(Anonymous_methodBody_1_1+=Anonymous_methodBody_1_)*(code_1=block)(Anonymous_methodBody_2_1+=Anonymous_methodBody_2_)*;
 Anonymous_methodBody_1_:
