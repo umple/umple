@@ -14,6 +14,7 @@
   <property name="test.output.path" value="${dist.dir}/qa/testbed_java"/>
   <property name="test.output.path.java" value="${dist.dir}/qa/testbed_java"/>
   <property name="test.output.path.php" value="${dist.dir}/qa/testbed_php"/>
+  <property name="test.output.path.python" value="${dist.dir}/qa/testbed_python"/>
   <property name="test.output.path.ruby" value="${dist.dir}/qa/testbed_ruby"/>
 
   <property name="examplepattern" value="*" />
@@ -57,6 +58,7 @@
     <antcall target="template.init" />
     <mkdir dir="${test.output.path.java}"/>
     <mkdir dir="${test.output.path.php}"/>
+    <mkdir dir="${test.output.path.python}"/>
     <mkdir dir="${test.output.path.ruby}"/>
   </target>
 
@@ -68,6 +70,7 @@
   <target name="compile">
     <antcall target="compileJava" />
     <antcall target="compilePhp" />
+    <antcall target="compilePython" />
     <antcall target="compileRuby" />
   </target>
 
@@ -141,6 +144,14 @@
 
   </target>
 
+  <target name="compilePython">
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
+
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
+      <arg value="testbed_python/src/TestHarnessPython.ump"/>
+    </java>
+  </target>
+
   <target name="compileRuby">
     <deps-load-path conf="core" pathid="core.ivy.classpath" />
 
@@ -156,6 +167,7 @@
   <target name="test">
     <antcall target="testJava" />
     <antcall target="testPhp" />
+    <antcall target="testPython" />
     <antcall target="testRuby" />
     <!--
     <antcall target="allUserManualAndExampleTests" />
@@ -220,6 +232,30 @@
     </fail>
     <echo message="PHP tests completed!"/>
   </target>
+
+    <target name="testPython"> 
+    <echo message="Running Python tests output ${test.output.path.python}/index.xml to ${test.output.path.python}"/>
+
+    <exec dir="testbed_python/test" executable="python" failonerror="true">
+      <arg line="AllTests.py -path ${test.output.path.python}" />
+    </exec>
+
+    <junitreport todir="${test.output.path.python}">
+      <fileset dir="${test.output.path.python}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${test.output.path.python}"/>
+    </junitreport>
+
+    <!-- check for error string 'rake aborted', and fail build if itis found -->
+    <fail message="Python tests failed ('rake aborted' found)">
+      <condition>
+        <contains string="${test.output.python}" substring="error" casesensitive="false"/>
+      </condition>
+    </fail>
+
+    <echo message="Python tests completed!"/>
+  </target> 
 
   <target name="testRuby">
     <echo message="Running RUBY tests via rake task ${rake_cmd} output ${test.output.path.ruby}/index.html to ${test.output.ruby}"/>
