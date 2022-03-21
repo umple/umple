@@ -2317,6 +2317,41 @@ Action.umpleTypingActivity = function(target) {
   else Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', Action.waiting_time);
 }
 
+var checkComplexityCooldown = 300000;
+var checkComplexityLastUsage = 0;
+var checkComplexityFeedbackMessage = 'Suggestion: Since there are so many classes, <a href="javascript:Page.clickShowGvClassDiagram()">switch to automated layout</a> (G).';
+var checkComplexityDisplayTime = 120000;
+Action.checkComplexity = function()
+{
+	if((Date.now() - checkComplexityCooldown) < checkComplexityLastUsage)
+	{
+		return;
+	}
+	var editorText = jQuery("#umpleModelEditorText").val();
+	var matches = editorText.match(/class( |\n)((.|\n)*?){/g);
+	if(matches == null)
+	{
+		return;
+	}
+	var numMatches = matches.length;
+	if(numMatches > 10)
+	{
+		Page.setFeedbackMessage(checkComplexityFeedbackMessage);
+		checkComplexityLastUsage = Date.now();
+		setTimeout(Action.removeCheckComplexityWarning, checkComplexityDisplayTime);
+	}
+}
+
+//since there is a cooldown on when checkComplexity is called
+//removeCheckComplexityWarning will only be called after the 5 minute cooldown has passed.
+Action.removeCheckComplexityWarning = function()
+{
+	if(Page.getFeedbackMessage() == checkComplexityFeedbackMessage)
+	{
+		Page.setFeedbackMessage("");
+	}
+}
+
 Action.processTyping = function(target, manuallySynchronized)
 {
   // Save in history after a pause in typing
@@ -2334,7 +2369,7 @@ Action.processTyping = function(target, manuallySynchronized)
     
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor") {
       Action.updateLayoutEditorAndDiagram(); 
-
+		
       // issue#1554
       var downloadLink = document.getElementById("downloadLink");
       if (downloadLink !== null){
@@ -2360,7 +2395,7 @@ Action.processTyping = function(target, manuallySynchronized)
     Page.setExampleMessage("");
     
   }
-
+	setTimeout(Action.checkComplexity,10000);
 }
 
 Action.updateLayoutEditorAndDiagram = function()
