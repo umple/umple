@@ -1,4 +1,4 @@
-FROM openjdk:17-alpine
+FROM --platform=linux/amd64 openjdk:17-alpine
 
 RUN addgroup nodeuser
 RUN adduser  -D -H -S nodeuser -G nodeuser
