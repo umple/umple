@@ -1,0 +1,264 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace cruise.umple.compiler;
+class PythonGenerator
+{
+  isA JavaGenerator;
+  depend java.io.*;
+  depend java.nio.file.*;  
+  depend cruise.umple.compiler.java.*;
+  depend cruise.umple.util.StringFormatter;
+  depend java.time.format.DateTimeFormatter;  
+  depend java.time.LocalDateTime; 
+  
+  @Override  
+  public void writeFile(UmpleElement aClass) throws IOException
+  {
+    if (!isTxlInstalled()) {
+      return;
+    } 
+    
+    String className=aClass.getName();
+    UmpleClass uClass;
+    if (aClass instanceof UmpleClass)
+    { 
+      uClass=(UmpleClass)aClass; 
+      if(uClass.getHasProxyPattern()||(uClass.getIsDistributed()&&(getModel().getDistributePattern()==1||getModel().getDistributePattern()==2)))
+      {
+        aClass.setName(className+"Impl");
+          }
+      if(uClass.hasOuterClass())
+      {
+        return ; // inner classes should not be writen in single files.
+      }
+    }
+    ILang language = getLanguageFor(aClass);
+    String contents = language.getCode(getModel(), aClass);
+
+    aClass.setName(className);
+    String path = StringFormatter.addPathOrAbsolute( 
+                  getModel().getUmpleFile().getPath(), 
+                            getOutput()) + 
+                            aClass.getPackageName().replace(".", File.separator);  
+    if (aClass instanceof UmpleClass)
+    { uClass=(UmpleClass)aClass;
+      if(uClass.getNeedsDefaultInterface()||uClass.getIsDistributed()||uClass.getHasProxyPattern()){
+        contents= super.WriteProxyFiles(contents,uClass,path);
+      }    
+      if(uClass.getHasProxyPattern()||(uClass.getIsDistributed()&&(getModel().getDistributePattern()==1||getModel().getDistributePattern()==2))){
+        className=className+"Impl";
+        //contents=contents.replaceAll("(,|, |\\(|\\( )(this)(,| ,|\\)| \\))","$1self$3");
+      }        
+    }
+    
+    File file = new File(path);
+    file.mkdirs();   
+    String filename = path + File.separator + className + ".java";
+    BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
+    getModel().getGeneratedCode().put(aClass.getName(),contents);
+
+    try
+    {
+      bw.write(contents);
+      bw.flush();
+    }
+    finally
+    {
+      bw.close();
+    }
+    
+    generateTxlFiles();
+    
+    String pythonFilename = path + File.separator + className + ".py";
+    String TXLScriptsPath = "./txl/umpleJavaToPython.txl";
+    String TXLcommand = "txl \"" + filename + "\" \"" + TXLScriptsPath + "\" -o \"" + pythonFilename + "\"";
+        
+    try {
+            
+      Process p = Runtime.getRuntime().exec(TXLcommand);    
+      BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+      String line;
+      if(reader.ready()) {
+        line = reader.readLine();
+      }
+      else {
+        line = null;
+      }
+
+      while (line!=null) {
+        if(!line.startsWith("No syntax errors detected in")) { //TODO error handling for txl
+          System.err.println(line);
+          return;
+        }
+
+        if(reader.ready()) {
+          line = reader.readLine();
+        }
+        else {
+          line = null;
+        }
+      }
+    } catch (IOException e) {
+      System.err.println(e.getMessage());
+	  return;
+    }
+    
+    /* TODO
+    if (aClass instanceof UmpleClass)
+    {
+      StringBuilder exceptionBuilder = new StringBuilder();
+      for(String key:((JavaClassGenerator)language).uncaughtExceptions.keySet())
+      {
+        exceptionBuilder.append(((JavaClassGenerator)language).uncaughtExceptions.get(key).toString()+System.getProperty("line.separator"));
+      }
+      String exception = exceptionBuilder.toString();
+      uncaughtExceptions.append(exception);
+      if(((UmpleClass)aClass).getHasMainMethod())
+      {
+        mainClasses.add((UmpleClass)aClass);
+      }
+    } */
+  }  
+  
+  private boolean isTxlInstalled()
+  {
+    //Check for TXL installation 
+	try {
+        
+  	  Process p = Runtime.getRuntime().exec("txl");    
+	  BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+	
+	  String line;
+	  if(reader.ready()) {
+	    line = reader.readLine();
+	  }
+	  else {
+	    line = null;
+	  }
+	
+	  while (line!=null) {
+	    if(!line.startsWith("TXL v")) {
+	      System.err.println(line);
+	      System.err.println("TXL is required for Python code generation. Please go to https://www.txl.ca/txl-download.html to download and install TXL.");
+	      return false;
+	    }
+	
+	    if(reader.ready()) {
+	      line = reader.readLine();
+	    }
+	    else {
+	      line = null;
+	    }
+	  }
+	} catch (IOException e) {
+	  System.err.println(e.getMessage());
+	  return false;
+	}
+	return true;
+  }
+    
+  private void generateTxlFiles() throws IOException {
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");  
+    LocalDateTime now = LocalDateTime.now();  
+
+    boolean regenerateFiles = false;
+
+    try {
+        //Look for TXL folder
+        Path tempDir = Paths.get("Txl");
+
+        if (Files.exists(tempDir)) {
+
+            //Check last update time 
+            Path tempReadme = Paths.get("Txl/README.txt");
+            if (Files.exists(tempReadme)) {
+                File readmeFile = new File("Txl/README.txt");
+                Scanner myReader = new Scanner(readmeFile);
+                
+                if (myReader.hasNextLine()) {
+                  String date = myReader.nextLine();
+
+                    if (!date.equals(dtf.format(now))) {
+                        regenerateFiles = true;
+                    } 
+                } 
+
+                myReader.close();
+            }
+
+            // If last update was valid, verify file integrity
+            if (!regenerateFiles) {
+                Path tempJavaGrm = Paths.get("Txl/Java.Grm");
+                Path tempPythonGrm = Paths.get("Txl/Python.Grm");
+                Path tempTxl = Paths.get("Txl/umpleJavaToPython.txl");
+
+                if (!Files.exists(tempJavaGrm)) regenerateFiles = true;
+                if (!Files.exists(tempPythonGrm)) regenerateFiles = true;
+                if (!Files.exists(tempTxl)) regenerateFiles = true;
+            }
+
+        } else {
+            regenerateFiles = true;
+        }
+    } catch (Exception e) {
+        System.err.println("Error while looking for Txl files.");
+    }
+
+    if (regenerateFiles) {
+    	String readmePath = "Txl/README.txt";
+    	String javaGrmPath = "Txl/Java.Grm";
+    	String pythonGrmPath = "Txl/Python.Grm";
+    	String txlTransPath = "Txl/umpleJavaToPython.txl";
+    	
+		String readmeContent = dtf.format(now) + "\nThese files were automatically generated by Umple for the python code generation and can be safely deleted after the generation.";
+        String javaGrmContent = "\ncomments\n    //\n    /*  */\nend comments\n\n%--------------------%\n%     Statements     %\n%--------------------%\n\nkeys\n return true false\nend keys\n\ndefine acess_modifier\n        'private\n    |   'public\n    |   'protected\nend define\n\n\ndefine boolean_operators\n        '&&\n    |   '|'|\nend define\n\ndefine comparator\n        '==\n    |   '!=\n    |   '>\n    |   '<\n    |   '>=\n    |   '<=\nend define\n\ndefine arithmatic_operator\n        '+\n    |   '-\n    |   '*\n    |   '/\n    |   '%\nend define\n\ndefine arithmatic_expression\n        '( [arithmatic_expression]')\n    |   [arithmatic_expression] [arithmatic_operator] [arithmatic_expression]\n    | [value]\nend define\n\ndefine variable_name\n    [id]\nend define\n\ndefine value\n        [variable_name]\n    |   [number]\n    |   [function_call]\n    |   [arithmatic_expression]\n    |   [boolean_expression]\n    |   [stringlit]\n    |   'true\n    |   'false\nend define\n\ndefine variable_declaration\n        [opt acess_modifier] [id] [assignment]\n    |   [opt acess_modifier] [id] [variable_name]';\nend define\n\ndefine assignment\n        [variable_name] '= [value] '; [NL]\nend define\n\ndefine stmt_return\n        'return [value] '; [NL]\nend define\n\ndefine statement\n        [variable_declaration]\n    |   [stmt_return]\n    |   [conditional_block]\n    |   [for_loop]\n    |   [function_call]'; [NL]\n    |   [assignment]\nend define\n\ndefine for_loop\n    'for( [id] [id] ': [variable_name] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]\nend define\n\ndefine conditional_block\n    [if] [repeat else_if] [opt else]\nend define\n\ndefine if \n    'if '( [boolean_expression] ') [NL]'{ [NL] [IN] [repeat statement] [EX] '} [NL]\nend define\n\ndefine else_if\n    'else 'if '( [boolean_expression] ') [NL]'{ [NL] [IN] [repeat statement] [EX] '} [NL]\nend define\n\ndefine else\n    'else [NL]'{ [NL] [IN] [repeat statement] [EX] '} [NL]\nend define\n\ndefine function_call\n        [variable_name] [SPOFF] '. [id]'( [SPON] [list value]')\n    |   [id] [SPOFF]'( [SPON][list value]')\nend define\n\ndefine boolean_expression\n        '( [boolean_expression] ')\n    |   [boolean_expression] [boolean_operator] [boolean_expression]\n    |   '! [boolean_expression]\n    |   [condition]\nend define\n\ndefine condition\n        [value] [comparator] [value]\n    |   [value]\nend define\n\ndefine method_parameter\n    [id] [id]\nend define\n\ndefine method_declaration\n        [acess_modifier] [id] [id] '( [list method_parameter] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]\n    |   [acess_modifier] [id] [id] '( [list method_parameter] '); [NL]\nend define\n\n\n%--------------------%\n%        Class       %\n%--------------------%\ndefine class_declaration\n    [acess_modifier] [class_type] [id] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]\nend define\n\ndefine class_type\n        'class\n    |   'interface\nend define\n\ndefine constructor\n    [acess_modifier] [id]'( [list method_parameter] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]\nend define\n\ndefine member_variable_declaration\n    [opt acess_modifier] [variable_declaration]\nend define\n\ndefine class_body_decl\n    [repeat member_variable_declaration] [opt constructor] [repeat method_declaration]\nend define\n";
+	    String pythonGrmContent = "\ninclude \"Java.Grm\"\n\n\ncompounds \n    self.\nend compounds \nredefine boolean_operator\n    'and\n    | 'or\nend redefine\n\n\nredefine variable_name\n    ...\n    |   'self._ [SPOFF] [id] [SPON]\nend redefine\nredefine assignment\n    ...\n    |   [variable_name] '= [value] [NL]\nend redefine\n\nredefine value\n    ...\n    | 'True\n    | 'False\nend redefine\nredefine statement\n    ...\n    |   [function_call] [NL]\n    | 'pass\nend redefine\n\nredefine stmt_return\n    ...\n    |   'return [value] [NL]\nend redefine\n\nredefine for_loop\n    ...\n    |'for( [id] 'in [variable_name] '): [NL] [IN] [repeat statement] [EX] [NL]\nend redefine\n\nredefine if \n    ... \n    |   'if [boolean_expression] ': [NL] [IN] [repeat statement] [EX] [NL]\nend redefine\n\nredefine else_if\n    ...\n    |   'elif [boolean_expression] ': [NL] [IN] [repeat statement] [EX] [NL]\nend redefine\n\nredefine else\n    ...\n    |   'else:  [NL] [IN] [repeat statement] [EX] [NL]\nend redefine\n\nredefine boolean_expression\n    ...\n    |   'not [boolean_expression]\nend redefine\n\nredefine method_parameter\n    ...\n    | [id]\nend redefine\n\nredefine method_declaration\n    ...\n    |   'def  [id] [SPOFF]'(self, [SPON] [list id] [SPOFF] '): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]\n    |   'def  [id] [SPOFF]'(self): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]\nend redefine\n\nredefine constructor\n    ...\n    | 'def '__init__ [SPOFF] '(self, [SPON] [list id] [SPOFF]'): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]\n    | 'def '__init__ [SPOFF] '(self): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]\nend redefine\n\nredefine class_declaration\n    ... \n    | 'class [id] [SPOFF] ': [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL]\nend redefine\n\nredefine class_body_decl\n    ...\n    | 'pass\n    | [opt constructor] [repeat method_declaration]\nend define\n\nredefine variable_declaration\n    ...\n    |   [assignment] [FL]\n    |   [variable_name]\nend define\n\nredefine function_call\n    ...\n    |   'self. [SPOFF] [id]'( [SPON][list value]')\nend define\n";
+	    String umpleJavaToPythonTxlContent = "\ninclude \"Python.Grm\"\n\n\n%--------------------%\n%     Top level      %\n%--------------------%\nfunction main\n    replace [program] \n\tP [program]\n    by\n\tP [replaceClasses]\nend function\n\ndefine program\n    [repeat class_declaration]\nend define\n\n%--------------------%\n%     General        %\n%--------------------%\nfunction translateParams PreviousParam [method_parameter]\n    replace [list id]\n        SequenceSoFar [list id]\n    deconstruct PreviousParam\n        _ [id] paramName [id]\n    by\n        SequenceSoFar [, paramName]\nend function\n\n\nfunction addMemberVariable MemberVariable [member_variable_declaration]\n    replace [repeat id]\n        SequenceSoFar [repeat id]\n    deconstruct MemberVariable\n        _[opt acess_modifier] decl [variable_declaration]\n    deconstruct decl\n        _ [id] memberName [id]';\n    by\n        SequenceSoFar [. memberName]\nend function\n\nrule replaceMemberVariableNames memberVariables [repeat id]\n    replace [variable_name]\n        name [variable_name]\n    deconstruct name \n        id [id]\n    where \n        memberVariables [contains id]\n    by\n        'self._ id\nend rule\n\nrule contains Object [id]\n    match [id]\n        Object\nend rule\n\n\n\n%--------------------%\n%     Classes        %\n%--------------------%\nrule replaceClasses\n    replace $ [class_declaration]\n        _ [acess_modifier] _ [class_type] className [id] '{ classBody [class_body_decl] '} \n    by\n    'class className ':  classBody [replaceClassBody] [replaceClassBodyNoConstructor]\nend rule\n\n\nfunction replaceClassBody\n    replace [class_body_decl]\n        declarations [repeat member_variable_declaration] oldConstructor [constructor] methods [repeat method_declaration]\n    construct memberVariables [repeat id]\n        _ [addMemberVariable each declarations]\n    construct newContructor [constructor]\n        oldConstructor [replaceMemberVariableNames memberVariables] [replaceContructor] [replaceContructorNoArgs]\n    by\n        newContructor methods  [replaceAllMethods memberVariables]\nend function\n\nfunction replaceClassBodyNoConstructor\n    replace [class_body_decl]\n        declarations [repeat member_variable_declaration] methods [repeat method_declaration]\n    construct memberVariables [repeat id]\n        _ [addMemberVariable each declarations]\n    by\n        'def __init__(self): 'raise 'NotImplementedError(\"The interface is not implemented\") methods [replaceAllMethods memberVariables]\nend function\n\nfunction replaceContructor\n    replace [constructor]\n         mod [acess_modifier] className [id]'( params [list method_parameter +] ') '{ statements [repeat statement]  '}\n    construct newParams [list id]\n    by\n        'def '__init__(self, newParams [translateParams each params]'):  statements [replaceStatements]\nend function\n\nfunction replaceContructorNoArgs\n    replace [constructor]\n         mod [acess_modifier] className [id]'() '{ statements [repeat statement]  '}\n    by\n        'def '__init__(self):  statements [replaceStatements]\nend function\n\n\n\n%--------------------%\n%     Methods        %\n%--------------------%\n\nfunction replaceAllMethods memberVariables [repeat id]\n    replace [repeat method_declaration]\n        methods [repeat method_declaration]\n    by\n        methods \n            [replaceMemberVariableNames memberVariables] \n            [replaceToString]\n            [replaceAbstractMethod]\n            [replaceAbstractMethodNoArgs]\n            [replaceMethod] \n            [replaceMethodNoArgs]\n            \nend function\n\nrule replaceMethod\n    replace [method_declaration]\n        _[acess_modifier] _[id] methodName [id]'( params [list method_parameter +] ') '{ statements [repeat statement] '}\n    construct newParams [list id]\n    by\n        'def methodName '(self, newParams [translateParams each params] '):  statements [replaceStatements]\nend rule\n\nrule replaceMethodNoArgs\n    replace [method_declaration]\n        _[acess_modifier] _[id] methodName [id]'() '{ statements [repeat statement] '}\n    by\n        'def methodName '(self):  statements [replaceStatements]\nend rule\n\nrule replaceAbstractMethod\n    replace [method_declaration]\n        _[acess_modifier] _[id] methodName [id] '( params [list method_parameter +] ');\n    construct newParams [list id]\n    by\n        'def methodName '(self, newParams [translateParams each params] '): 'raise 'NotImplementedError(\"The interface is not implemented\")\nend rule\n\nrule replaceAbstractMethodNoArgs\n    replace [method_declaration]\n        _[acess_modifier] _[id] methodName [id]'();\n    by\n        'def methodName '(self): 'raise 'NotImplementedError(\"The interface is not implemented\")\nend rule\n\nrule replaceToString\n    replace [method_declaration]\n        _[acess_modifier] _[id]  'toString '() '{ statements [repeat statement] '}\n    by\n        'def '__str__ '(self):  statements [replaceStatements]\nend rule\n\n%--------------------%\n%     Statements     %\n%--------------------%\nfunction replaceStatements\n    replace [repeat statement]\n        statements [repeat statement]\n    by \n        statements \n            [replaceAssignment] \n            [replaceReturn] \n            [replaceNoStateMents] \n            [addSelfToFunctionCalls]\n            [replaceDecleration]\n            [replaceDeclerationWithAssignment]\n            [replaceTrue]\n            [replaceFalse]\nend function\n\nfunction replaceNoStateMents\n    replace [repeat statement]\n        _ [empty]\n    by \n        'pass\nend function\n\nrule replaceAssignment\n    replace [assignment]\n        name [variable_name] '= val [value] '; \n    by \n        name '= val\nend rule\n\nrule replaceReturn\n    replace [stmt_return]\n        'return val [value] ';\n    by \n        'return val\nend rule\n\nrule addSelfToFunctionCalls\n    replace [function_call]\n        funcName [id]'( values [list value]')\n    by\n        'self. funcName '( values')\nend rule\n\nrule replaceDeclerationWithAssignment\n    replace [variable_declaration]\n        _ [id] assignment [assignment]\n    by \n        assignment\nend rule\n\nrule replaceDecleration\n    replace [variable_declaration]\n        _[id] varName [variable_name]';\n    by \n        varName\nend rule\n\nrule replaceTrue\n    replace [value]\n        'true\n    by \n        'True\nend rule\n\nrule replaceFalse\n    replace [value]\n        'false\n    by \n        'False\nend rule\n"; 
+	    	    
+		File txlFolder = new File("Txl");
+	    txlFolder.mkdirs();
+	       
+	    BufferedWriter bw = new BufferedWriter(new FileWriter(readmePath));
+	    try {
+	      bw.write(readmeContent);
+	      bw.flush();
+	    } finally {
+	      bw.close();
+	    }	
+	           
+	    bw = new BufferedWriter(new FileWriter(javaGrmPath));
+	    try {
+	      bw.write(javaGrmContent);
+	      bw.flush();
+	    } finally {
+	      bw.close();
+	    }
+	    	       
+	    bw = new BufferedWriter(new FileWriter(pythonGrmPath));
+	    try {
+	      bw.write(pythonGrmContent);
+	      bw.flush();
+	    } finally {
+	      bw.close();
+	    }
+	    	       
+	    bw = new BufferedWriter(new FileWriter(txlTransPath));
+	    try {
+	      bw.write(umpleJavaToPythonTxlContent);
+	      bw.flush();
+	    } finally {
+	      bw.close();
+	    }
+	}
+    
+  }
+  
+}
