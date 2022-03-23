@@ -24,7 +24,11 @@ class PythonGenerator
     if (!isTxlInstalled()) {
       return;
     } 
+<<<<<<< HEAD
     System.err.println("To Strings have been removed due to an issue with their generation.");
+=======
+    
+>>>>>>> 1b6c3a350 (Creation of the Umple Python generator. Extends the java generator.)
     String className=aClass.getName();
     UmpleClass uClass;
     if (aClass instanceof UmpleClass)
@@ -62,6 +66,10 @@ class PythonGenerator
     file.mkdirs();   
     String filename = path + File.separator + className + ".java";
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
+<<<<<<< HEAD
+=======
+    getModel().getGeneratedCode().put(aClass.getName(),contents);
+>>>>>>> 1b6c3a350 (Creation of the Umple Python generator. Extends the java generator.)
 
     try
     {
@@ -71,17 +79,28 @@ class PythonGenerator
     finally
     {
       bw.close();
+<<<<<<< HEAD
       contents = "";
+=======
+>>>>>>> 1b6c3a350 (Creation of the Umple Python generator. Extends the java generator.)
     }
     
     generateTxlFiles();
     
     String pythonFilename = path + File.separator + className + ".py";
     String TXLScriptsPath = "./txl/umpleJavaToPython.txl";
+<<<<<<< HEAD
     String TXLcommand = "txl " + filename + " " + TXLScriptsPath + " -o " + pythonFilename;
     try {
             
       Process p = Runtime.getRuntime().exec(TXLcommand);
+=======
+    String TXLcommand = "txl \"" + filename + "\" \"" + TXLScriptsPath + "\" -o \"" + pythonFilename + "\"";
+        
+    try {
+            
+      Process p = Runtime.getRuntime().exec(TXLcommand);    
+>>>>>>> 1b6c3a350 (Creation of the Umple Python generator. Extends the java generator.)
       BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
       String line;
@@ -105,6 +124,7 @@ class PythonGenerator
           line = null;
         }
       }
+<<<<<<< HEAD
 
       p.waitFor();
 
@@ -130,6 +150,12 @@ class PythonGenerator
     }
 
     getModel().getGeneratedCode().put(aClass.getName(),contents);
+=======
+    } catch (IOException e) {
+      System.err.println(e.getMessage());
+	  return;
+    }
+>>>>>>> 1b6c3a350 (Creation of the Umple Python generator. Extends the java generator.)
     
     /* TODO
     if (aClass instanceof UmpleClass)
@@ -153,7 +179,11 @@ class PythonGenerator
     //Check for TXL installation 
 	try {
         
+<<<<<<< HEAD
   	Process p = Runtime.getRuntime().exec("txl");    
+=======
+  	  Process p = Runtime.getRuntime().exec("txl");    
+>>>>>>> 1b6c3a350 (Creation of the Umple Python generator. Extends the java generator.)
 	  BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 	
 	  String line;
