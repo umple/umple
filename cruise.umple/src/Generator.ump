@@ -71,7 +71,7 @@ use SuperCodeGeneratorGenerator;
 // All code above belongs to the base generator file (Generator.ump)
 
 //Below mixsets use statments. All mentioned mixsets are activited.
-use CodeGenerator, UmpleGenerator, RubyGenerator , JavaGenerator , RTCppGenerator, PhpGenerator; 
+use CodeGenerator, UmpleGenerator, RubyGenerator , JavaGenerator , RTCppGenerator, PhpGenerator, PythonGenerator; 
 use Uigu2Generator , SqlGenerator , UmpleSelfGenerator , USEGenerator , EcoreGenerator ,TestGenerator ; 
 use PapyrusGenerator, XmiGenerator, TextUmlGenerator, ScxmlGenerator, CodeGvClassTraitDiagramGenerator
 use EventSequenceGenerator,  FeatureDiagramCo,  EntityRelationshipCon,  SimulateGenerator,  YumlGenerator;
@@ -92,6 +92,7 @@ mixset RubyGenerator {
   use RubyGeneratorIntMixset;
   }
 mixset JavaGenerator { use generators/Generator_CodeJava.ump; }
+mixset PythonGenerator { use generators/Generator_CodePython.ump; }
 mixset RTCppGenerator { use generators/Generator_CodeRTCpp.ump; }
 mixset PhpGenerator { use generators/Generator_CodePhp.ump; }
 mixset Uigu2Generator { use generators/Generator_CodeUigu2.ump; }

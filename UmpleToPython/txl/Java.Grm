@@ -1,0 +1,156 @@
+
+comments
+    //
+    /*  */
+end comments
+
+%--------------------%
+%     Statements     %
+%--------------------%
+
+keys
+ return true false
+end keys
+
+define acess_modifier
+        'private
+    |   'public
+    |   'protected
+end define
+
+
+define boolean_operators
+        '&&
+    |   '|'|
+end define
+
+define comparator
+        '==
+    |   '!=
+    |   '>
+    |   '<
+    |   '>=
+    |   '<=
+end define
+
+define arithmatic_operator
+        '+
+    |   '-
+    |   '*
+    |   '/
+    |   '%
+end define
+
+define arithmatic_expression
+        '( [arithmatic_expression]')
+    |   [arithmatic_expression] [arithmatic_operator] [arithmatic_expression]
+    | [value]
+end define
+
+define variable_name
+    [id]
+end define
+
+define value
+        [variable_name]
+    |   [number]
+    |   [function_call]
+    |   [arithmatic_expression]
+    |   [boolean_expression]
+    |   [stringlit]
+    |   'true
+    |   'false
+end define
+
+define variable_declaration
+        [opt acess_modifier] [id] [assignment]
+    |   [opt acess_modifier] [id] [variable_name]';
+end define
+
+define assignment
+        [variable_name] '= [value] '; [NL]
+end define
+
+define stmt_return
+        'return [value] '; [NL]
+end define
+
+define statement
+        [variable_declaration]
+    |   [stmt_return]
+    |   [conditional_block]
+    |   [for_loop]
+    |   [function_call]'; [NL]
+    |   [assignment]
+end define
+
+define for_loop
+    'for( [id] [id] ': [variable_name] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
+end define
+
+define conditional_block
+    [if] [repeat else_if] [opt else]
+end define
+
+define if 
+    'if '( [boolean_expression] ') [NL]'{ [NL] [IN] [repeat statement] [EX] '} [NL]
+end define
+
+define else_if
+    'else 'if '( [boolean_expression] ') [NL]'{ [NL] [IN] [repeat statement] [EX] '} [NL]
+end define
+
+define else
+    'else [NL]'{ [NL] [IN] [repeat statement] [EX] '} [NL]
+end define
+
+define function_call
+        [variable_name] [SPOFF] '. [id]'( [SPON] [list value]')
+    |   [id] [SPOFF]'( [SPON][list value]')
+end define
+
+define boolean_expression
+        '( [boolean_expression] ')
+    |   [boolean_expression] [boolean_operator] [boolean_expression]
+    |   '! [boolean_expression]
+    |   [condition]
+end define
+
+define condition
+        [value] [comparator] [value]
+    |   [value]
+end define
+
+define method_parameter
+    [id] [id]
+end define
+
+define method_declaration
+        [acess_modifier] [id] [id] '( [list method_parameter] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
+    |   [acess_modifier] [id] [id] '( [list method_parameter] '); [NL]
+end define
+
+
+%--------------------%
+%        Class       %
+%--------------------%
+define class_declaration
+    [acess_modifier] [class_type] [id] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
+end define
+
+define class_type
+        'class
+    |   'interface
+end define
+
+define constructor
+    [acess_modifier] [id]'( [list method_parameter] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
+end define
+
+define member_variable_declaration
+    [opt acess_modifier] [variable_declaration]
+end define
+
+define class_body_decl
+    [repeat member_variable_declaration] [opt constructor] [repeat method_declaration]
+end define
