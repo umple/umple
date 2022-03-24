@@ -30,6 +30,9 @@ class GvInstanceDiagramGenerator
   // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
+  String generatorType = "in";
+
+  boolean testBound = false;
 
 
   // Basic templates for GV elements to output
@@ -45,10 +48,10 @@ digraph "<<=filename>>" {
 
 
   // Returns what is being generated - called SuperGvGenerator
-  protected String generatorType()
-  {
-    return "cd";
-  }
+  // protected String generatorType()
+  // {
+  //   return "in";
+  // }
 
   // Create the association between a class and its parent 
   // - called VisitClass in SuperGvGenerator
@@ -59,7 +62,28 @@ digraph "<<=filename>>" {
         +" [arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
   }
 
-  // Create each class - called VisitClass in SuperGvGenerator
+  // Creat an instance for a class
+  // GV HTNL like file.. final details of algo
+  protected void instanceCreation(UmpleInstance uInstance, StringBuilder code)
+  {
+    UmpleClass uClass = uInstance.getUmpleClass();
+    String instanceName = uClass.getName() + "1";
+
+    String instanceColor = uClass.getDisplayColor();
+    if (!instanceColor.equals("")) instanceColor=" style=filled, fillcolor="+instanceColor+" ";
+    code.append("\n  // Class: "+instanceName+"\n");
+
+    code.append("  \""+instanceName+"\" ["+instanceColor+"shape=plaintext margin=0 label=");
+
+    code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"10\">"
+		   			    +"<tr><td>    <u>"+instanceName+"</u>    </td></tr>");
+
+    code.append("</table>>"); 
+    code.append("];\n");
+
+  }
+
+  // Create each class
   // Note: modify this.. says the max amount of classes is 200 maybe change to like 3 for now then add more 
   //        add random string and change the format of the box created by graphviz 
   //        would need to code append like it does bellow for class colour (??)
@@ -68,13 +92,20 @@ digraph "<<=filename>>" {
     boolean manyClass = getModel().getUmpleClasses().size() >= 200 ? true : false;
 
     String className = uClass.getName();
+    
+    // End 0 closest to uClass 
+    // End 1 furthest from uClass 
+
+    String bound0 = uClass.getAssociation(1).getEnd(0).getMultiplicity().getRange();
+    String bound1 = uClass.getAssociation(1).getEnd(1).getMultiplicity().getRange();
     // Setting the showmethods suboption to test removal of method creation in instance diagram
-    this.setSuboption("showmethods");
+    //this.setSuboption("showmethods");
     // formatting class name in object diagrams
-    String objectName = "Class: " + className;
+    String objectName = "Class: " + className + " bound0: " + bound0 + " bound1: " + bound1;
+
     String classColor = uClass.getDisplayColor();
     if (!classColor.equals("")) classColor=" style=filled, fillcolor="+classColor+" ";
-    code.append("\n  // Class: "+className+"\n");
+    code.append("\n  // Class: "+objectName+"\n");
     
     if (manyClass) {
       code.append("  \""+className+"\" ["+classColor+"shape=record, label=\"{"+className);
@@ -84,20 +115,20 @@ digraph "<<=filename>>" {
       }
     } 
     else {
-      code.append("  \""+className+"\" ["+classColor+"shape=plaintext margin=0 label=");
+      code.append("  \""+objectName+"\" ["+classColor+"shape=plaintext margin=0 label=");
 	    
       // Different cellpadding for if the class has nothing but the
       // name because of a glitch in graphviz's graphics
-      if ((uClass.getAttributes().size() == 0 || hasSuboption("hideattributes")) && 
-          (uClass.getMethods().size() == 0 || !hasSuboption("showmethods")) 
-          && !uClass.getIsAbstract()) {
-	    code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"10\">"
-		   			    +"<tr><td>    <u>"+objectName+"</u>    </td></tr>");
-      }
-      else {
+      // if ((uClass.getAttributes().size() == 0 || hasSuboption("hideattributes")) && 
+      //     (uClass.getMethods().size() == 0 || !hasSuboption("showmethods")) 
+      //     && !uClass.getIsAbstract()) {
+	    // code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"10\">"
+		  //  			    +"<tr><td>    <u>"+objectName+"</u>    </td></tr>");
+      // }
+      // else {
         code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"2\">"
                     +"<tr><td cellpadding=\"4\">    <u>"+objectName+"</u>    </td></tr>");
-		  }
+		  //}
 
       if(uClass.getIsAbstract()) {  // add abstract tag
         code.append("<tr><td cellpadding=\"4\">&laquo;abstract&raquo;"+"</td></tr>");
@@ -112,7 +143,7 @@ digraph "<<=filename>>" {
     
     
     // Output the tooltip : Class name followed by any comment
-    code.append(",\n   tooltip=\"class "+className+"\n");
+    code.append(",\n   tooltip=\"class "+objectName+"\n");
     code.append(appendTooltipComment(uClass.getComments(), false));
     code.append("\"");
 
@@ -124,6 +155,7 @@ digraph "<<=filename>>" {
   // Note: don't think attributes are relevant in object diagrams REVIEW this
   private void attributeCreation(UmpleClass uClass, StringBuilder code, boolean manyClass)
   {
+
     Random rand = new Random();
     int randIndex;
 
@@ -146,7 +178,7 @@ digraph "<<=filename>>" {
     // Iterate through attributes of the class]
     boolean isFirst = true;
 
-    if (!hasSuboption("hideattributes")) { 
+    //if (!hasSuboption("hideattributes")) { 
       for (Attribute uAttribute : uClass.getAttributes()) {
         if (!uAttribute.isConstant()) 
         {
@@ -190,7 +222,7 @@ digraph "<<=filename>>" {
           isFirst = false;
         }
       }
-    }
+   // }
   }
 
   // Create the associations in the class diagram
@@ -431,32 +463,132 @@ digraph "<<=filename>>" {
 
     // Output basic gv file header
     _graphStart(0,code,model.getUmpleFile().getSimpleFileName());
+
+    // Missing Array List partiallyCreatedObjectsQueue
+    // Used for objects that don't have all their associations yet
+    ArrayList<UmpleInstance> partiallyCreatedObjectsQueue;
     
     // Set of classes we are visiting
     // We always visit from the top of the hierarchy first
     // This set ensures we track what we have visited
     HashSet visitedClasses = new HashSet();
 
-    // Iterate through each class. 
-    for (UmpleClass uClass : model.getUmpleClasses())
-    {
-      visitClass(uClass, visitedClasses, code, associations);
-    } // End iteration through classes
+    // Set of instances we are visiting
+    // This is to ensure we don't revisit the same instance more than once
+    HashSet visitedInstances = new HashSet();
+
+
 
     // Set of instances that have been instantiated
     // from each class
-    // Key value pair being UmpleClass, UmpleInstance
-    HashSet instanceMap = new HashSet();
+    // Key value pair being UmpleClass, ArrayList<UmpleInstance>
+    HashMap instanceMap = new HashMap();
 
+    // Iterate through each class. 
+    // Add every class to instanceMap mapping with an initial
+      // empty list of UmpleInstances
+    for (UmpleClass uClass : model.getUmpleClasses())
+    {
+      visitClass(uClass, visitedClasses, code, associations);
+      if(!instanceMap.containsKey(uClass)){
+        ArrayList<UmpleInstance> umpleInstances = new ArrayList<UmpleInstance>();
+        instanceMap.put(uClass, umpleInstances); // adding the ArrayList of UmpleInstances associated to a uClass in the instanceMap
 
+      }
+    } // End iteration through classes
+
+    // get the list of associations
+    // get the ends as a list of AssociationEnds
+    // get multiplicities  +
+    // if it's a 1 -- multiplicity mark that as the first class to instanciate with new UmpleInstance (I think)
+      // then add to the arraylist of instances for that class 
+      // in instanceMap
+    HashSet visitedAssociations; // set of association lists for each class in the model
+
+    for (UmpleClass uClass : model.getUmpleClasses())
+    {
+      if(instanceMap.containsKey(uClass)){
+        visitedAssociations = new HashSet(); //hash set of visited associations for the class
+        Association[] uAssociations = uClass.getAssociations();
+        // get the association ends List
+        if(!visitedAssociations.contains(uAssociations)){
+          for (Association uAssoc : uAssociations)
+          {
+            List<AssociationEnd> uAssocEnds = uAssoc.getEnds();
+            for (AssociationEnd uAssocEnd : uAssocEnds)
+            {
+              Multiplicity uMultip = uAssocEnd.getMultiplicity();
+              if (uMultip.getLowerBound() == 1) {
+                // go to randomization algo
+
+                // Need to make sure to check if the class is in the ArrayList tracker and remove it once it's been created
+
+              } else {
+                // Add class to ArrayList keeping track of classes checked and not ready for instanciation
+              }
+            }
+          }
+        }
+      }
+      // skip checking associations if it's not in the map
+        // smg went wrong earlier
+    }
+
+    terminateCode(code, associations);
+    //writeModel();
 
   }
 
-  /* ----- Graphviz helper methods from SuperGvGenerator ----- */
+  // Outputs the instance in the GV file
+      // sortedInstances Set used to keep track of when a singleton/priority object has been identitified
+  protected void visitInstance(UmpleInstance uInstance, Set visitedInstances, Set sortedInstances, StringBuilder code, StringBuilder links)
+  {
+
+    // Ensure we only visit the instance once
+    if(visitedInstances.contains(uInstance)) {
+      return;
+    }
+
+    // Ensure we print out/handle singletons first
+    UmpleClass relatedClass = uInstance.getUmpleClass();
+    if (relatedClass != null) {
+      if (relatedClass.isSingleton()) {
+        // add to a sorted priority list of instances
+          // this list keeps track of how many singletons have been found and if an instance/instances need(s) to be printed first
+          // TO-DO: create sorted array that tracks these semi visited instances
+            // not sure if this is what partiallyCreatedObjectsQueue is for tho.. 
+      } 
+    }
+    // add instance to visitedInstances after generating it in the diagram
+    visitedInstances.add(uInstance);
+    
+    // TO-DO: need to implement prioritization of instanciation:
+      // Add weight attribute to UmpleInstance class that will track the associated UmpleClass' importance 
+      // More important instances are attributed a smaller weight
+          // If an instance belongs to a singleton class set its weight to 0
+          // If an instnace belongs to a class with a 1 -- association set its weight to 1 
+          // Other wise set it's weight to 2 (or set it to 2 by default)
+        // Once all the instances have been looped through and assigned a weight, we sort the HashSet based off the weight
+        // The loop through the sorted set and call the instanceCreation method to print the method to the GV file
+    
+    // instanceCreation method called at this point to add the instance to the graphviz file
+
+    // Once all the instances have been created we add the links
+    Set processedLinks = new HashSet();
+    for(UmpleLink uLink : uInstance.getUmpleLinks()) {
+      processedLinks.add(uLink);
+
+      // call to linkCreation to display the related links in the graphviz file
+          // TO-DO: create linkCreation method
+    }
+  
+
+  }
 
     // Actually output the class contents  
   protected void visitClass(UmpleClass uClass, Set visitedClasses, StringBuilder code, StringBuilder associations)
   {
+    
     // Ensure we only visit once
     if(visitedClasses.contains(uClass)) {
       return;
@@ -491,6 +623,8 @@ digraph "<<=filename>>" {
     }
   }
 
+  /* ----- Graphviz helper methods ----- */
+
     // Output the graphviz file to a file with the .gv suffix
   protected void writeModel()
   {
@@ -501,8 +635,9 @@ digraph "<<=filename>>" {
         getOutput());
       File file = new File(path);
       file.mkdirs();
-      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName()
-          + generatorType() + ".gv";
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".gv";
+      // String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName()
+      //     + getGeneratorType() + ".gv";
       BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
       bw.write(model.getCode());
       bw.flush();
@@ -512,6 +647,17 @@ digraph "<<=filename>>" {
     {
       throw new UmpleCompilerException("There was a problem with generating GraphViz Diagram code." + e, e);
     }
+  } 
+
+  protected void terminateCode(StringBuilder code, StringBuilder associations) {
+
+    code.append("\n  // All associations\n");
+    code.append(associations);
+
+    code.append("}\n");
+
+    model.setCode(code.toString());
+    writeModel();
   } 
   
   // Add the comment to a tooltip
