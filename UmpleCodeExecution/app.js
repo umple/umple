@@ -16,7 +16,7 @@ const basePath= __dirname+"/models/"; //current working path
 
 // Declar max usage limit and max requests
 const CPU_USAGE_LIMIT = 80;
-const MAX_REQUESTS = 3;
+const MAX_REQUESTS = 20;
 const mainFileName = "JavaMainClasses.txt";
 let numberOfRequests = 0;
 
@@ -40,6 +40,7 @@ app.post('/run' ,function(req, res)
             const path = basePath + req.body.path;
             const error = validatePath(path) || validateMainFile(path);
             if(error) {
+                numberOfRequests--;
                 return res.send(error);
             }
             console.log("Given path:",req.body.path);
@@ -48,6 +49,7 @@ app.post('/run' ,function(req, res)
             // Read main file content
             const mainFunctions = readMainFile(path);
             if(mainFunctions.length == 0 || mainFunctions[0] === '') {
+                numberOfRequests--;
                 return res.send({errors: "Main function name is not provided.", output:""});
             }
 
@@ -65,6 +67,7 @@ app.post('/run' ,function(req, res)
                 });
             } catch(err) {
                 console.log(err);
+                numberOfRequests--;
                 return res.send({errors: "Error processing your request.", output:""});
             }
         }
@@ -125,18 +128,18 @@ const canProceed = (callback) => {
     }
 
     // Check for CPU usage
-    try {
-        os.cpuUsage(function(usage){
-            if(usage >= CPU_USAGE_LIMIT) {
-                callback({errors:"Server is busy, please try in some time for code execution.", output:""})
-            } else {
-                callback(null);
-            }
-        });
-    } catch (exp) {
-        console.log("error calculating cpu usage.");
-        callback(null);
-    }
+    // try {
+    //     os.cpuUsage(function(usage){
+    //         if(usage >= CPU_USAGE_LIMIT) {
+    //             callback({errors:"Server is busy, please try in some time for code execution.", output:""})
+    //         } else {
+    //             callback(null);
+    //         }
+    //     });
+    // } catch (exp) {
+    //     console.log("error calculating cpu usage.");
+    //     callback(null);
+    // }
 }
 
 
