@@ -48,7 +48,7 @@ app.post('/run' ,function(req, res)
             // Read main file content
             const mainFunctions = readMainFile(path);
             if(mainFunctions.length == 0 || mainFunctions[0] === '') {
-                return res.send({error: "Main function name is not provided."});
+                return res.send({errors: "Main function name is not provided.", output:""});
             }
 
             console.log("Finding file: " + (mainFunctions[0] + '.class'));
@@ -65,7 +65,7 @@ app.post('/run' ,function(req, res)
                 });
             } catch(err) {
                 console.log(err);
-                return res.send({errors: "Error processing your request."});
+                return res.send({errors: "Error processing your request.", output:""});
             }
         }
     });   
@@ -98,21 +98,21 @@ const validateMainFile = (path) => {
     if(fs.existsSync(path + "/" + mainFileName)) {
         return null;
     } else {
-        return {errors:"Main file does not exist."};
+        return {errors:"Main file does not exist.", output: ""};
     }
 }
 
 const validatePath = (path) => {
     if(!path) {
-        return {errors:"Path is required."};
+        return {errors:"Path is required.", output:""};
     } else if(!fs.existsSync(path)) {
-        return {errors:'Path does not exist.'};
+        return {errors:'Path does not exist.', output:""};
     }
 
     try {
         fs.accessSync(path, fs.constants.R_OK)
     } catch {
-        return {errors: 'Access denied.'};
+        return {errors: 'Access denied.', output:""};
     }
 
     return null;
@@ -121,14 +121,14 @@ const validatePath = (path) => {
 const canProceed = (callback) => {
     // Check max number of requests allowed
     if(numberOfRequests >= MAX_REQUESTS) {
-        callback({errors:"Server is busy, please try in some time for code execution."})
+        callback({errors:"Server is busy, please try in some time for code execution.", output:""})
     }
 
     // Check for CPU usage
     try {
         os.cpuUsage(function(usage){
             if(usage >= CPU_USAGE_LIMIT) {
-                callback({errors:"Server is busy, please try in some time for code execution."})
+                callback({errors:"Server is busy, please try in some time for code execution.", output:""})
             } else {
                 callback(null);
             }

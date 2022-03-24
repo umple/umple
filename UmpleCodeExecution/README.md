@@ -4,6 +4,8 @@ This code base provides the functionality to securely execute Java code using Do
 # Setup
 1. Modify config.cfg file with correct parameters (Explained below).
 2. Run setup.sh
+3. (Optional) Run the following command to compile and use latest Javascript changes if haven't done yet.  
+__ant -DshouldPackageUmpleOnline=true -Dmyenv=wlocal -f build.umple.xml packageUmpleonline__
 
 
 # Config.cgf
@@ -20,3 +22,6 @@ Name of the temporary java container and image created for Java execution.
 This shell script contains commands to build docker images and to run the main docker container. The server will start at the following url by default.  
 __http:localhost:4400__  
 In future, the configuration of the port will be supported.
+
+# Other Issues
+1. If timeout is coming even though the docker is running, make sure that umplePath in config.cfg does not start with '~'.
