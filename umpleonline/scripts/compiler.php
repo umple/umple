@@ -332,6 +332,7 @@ else if (isset($_REQUEST["umpleCode"]))
   
   $outputFilename = "{$filename}.output";
   $errorFilename = "{$filename}.erroroutput";
+  $executionErrorFilename = "{$filename}.executionerror";
   
   // Clean up any pre-existing java. php, RTCpp, ruby or cpp files
   $thedir = dirname($outputFilename);
@@ -346,9 +347,9 @@ else if (isset($_REQUEST["umpleCode"]))
   //
   if($execute) 
   {
-    $command = "java -jar umplesync.jar -generate Java {$filename} -cx 2> {$errorFilename}";
+    $command = "java -jar umplesync.jar -generate Java {$filename} -cx 2> {$executionErrorFilename}";
     executeCommand($command);
-    $errhtml = getErrorHtml($errorFilename);
+    $errhtml = getErrorHtml($executionErrorFilename);
     if($errhtml != "") {
       echo $errhtml;
     } else {
