@@ -125,6 +125,8 @@ const canProceed = (callback) => {
     // Check max number of requests allowed
     if(numberOfRequests >= MAX_REQUESTS) {
         callback({errors:"Server is busy, please try in some time for code execution.", output:""})
+    } else {
+        callback(null);
     }
 
     // Check for CPU usage
