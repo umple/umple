@@ -246,7 +246,6 @@ class CodeCompiler {
       // Write to the error file if given
       if(!successful && errorFileName != null) {
         String error = builder.toString().trim();
-          // Create or override JavaMainClasses.txt
           try
           {
             File newFile = new File(errorFileName);
