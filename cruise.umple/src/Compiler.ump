@@ -233,7 +233,7 @@ class CodeCompiler {
       StringBuilder builder = new StringBuilder();
       while (line!=null) {
         System.err.println(translateLineToUmple(line, model));
-        builder = builder.append(translateLineToUmple(line, model));
+        builder = builder.append(translateLineToUmple(line, model)+"\n");
         if(reader.ready()) {
           line = reader.readLine();
         }
@@ -243,6 +243,7 @@ class CodeCompiler {
         successful = false;
       }
 
+      // Write to the error file if given
       if(!successful && errorFileName != null) {
         String error = builder.toString().trim();
           // Create or override JavaMainClasses.txt
