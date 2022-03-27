@@ -552,7 +552,7 @@ digraph "<<=filename>>" {
     // Ensure we print out/handle singletons first
     UmpleClass relatedClass = uInstance.getUmpleClass();
     if (relatedClass != null) {
-      if (relatedClass.isSingleton()) {
+      if (relatedClass.getIsSingleton()) {
         // add to a sorted priority list of instances
           // this list keeps track of how many singletons have been found and if an instance/instances need(s) to be printed first
           // TO-DO: create sorted array that tracks these semi visited instances
