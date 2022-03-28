@@ -835,7 +835,14 @@ function serverRun($commandLine,$rawcommand=null) {
   $positionOfErrorRedirect = strpos($commandLine,"2>");
   if($positionOfErrorRedirect !== false) {
     $errorfile = trim(substr($commandLine, $positionOfErrorRedirect+2));
-    $commandLine = substr($commandLine,0, $positionOfErrorRedirect);
+    // In cases where command is being executed we need to allow the 2> error
+    // redirect to go ahead as it is converted to a file write in Compiler.ump
+    // However for other cases we strip off the error redirect here since in
+    // server mode such error redirects will not be visible
+    $posofExecuteRequest = strpos($commandLine," -cx");
+    if($posofExecuteRequest == false) {
+      $commandLine = substr($commandLine,0, $positionOfErrorRedirect);
+    }
   }
   
   if($rawcommand == null) {$rawcommand = $commandLine;}
