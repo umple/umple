@@ -19,8 +19,19 @@ $GLOBALS["ANT_EXEC"] = "/h/ralph/cruise/dev/apps/apache-ant-1.8.1/bin/ant";
 $GLOBALS["OS"] = "Linux";
 
 
-// JAVA EXECUTION SERVER 
-$GLOBALS["EXECUTION_SERVER"]= "http://localhost:4400";
+// JAVA EXECUTION SERVER
+$configfile="../../UmpleCodeExecution/config.cfg";
+$portToUse=4400; // default
+$handle = fopen($configfile, "r");
+if ($handle) {
+  while (($line = fgets($handle)) !== false) {
+    if(substr($line,0,10) == "portToUse=") {
+      $portToUse=substr($line,10);
+    }
+  }
+}
+
+$GLOBALS["EXECUTION_SERVER"]= "http://localhost:$portToUse";
 
 // For compatibility with systems that do not have UmpleOnline's shell
 // dependencies in their $PATH, add /usr/bin and /usr/local/bin to $PATH
