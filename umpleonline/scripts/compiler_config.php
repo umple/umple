@@ -18,9 +18,17 @@ $GLOBALS["JAVA_HOME"] = "/usr/bin/";
 $GLOBALS["ANT_EXEC"] = "/h/ralph/cruise/dev/apps/apache-ant-1.8.1/bin/ant";
 $GLOBALS["OS"] = "Linux";
 
+// Trick to find the root directory of this copy of UmpleOnline
+// Assumes this script lives in /scripts; if you move this file it
+// will need to change.
+$rootDirGlobal = dirname(__DIR__);
+function rootDir(){
+    global $rootDirGlobal;
+    return $rootDirGlobal;
+}
 
 // JAVA EXECUTION SERVER
-$configfile="../../UmpleCodeExecution/config.cfg";
+$configfile=rootdir()."/../UmpleCodeExecution/config.cfg";
 $portToUse=4400; // default
 $handle = fopen($configfile, "r");
 if ($handle) {
@@ -30,7 +38,6 @@ if ($handle) {
     }
   }
 }
-
 $GLOBALS["EXECUTION_SERVER"]= "http://localhost:$portToUse";
 
 // For compatibility with systems that do not have UmpleOnline's shell
@@ -55,14 +62,6 @@ putenv("PATH=$PATH");
 // If we don't set the default timezone we get E_NOTICEs
 date_default_timezone_set('UTC');
 
-// Trick to find the root directory of this copy of UmpleOnline
-// Assumes this script lives in /scripts; if you move this file it
-// will need to change.
-$rootDirGlobal = dirname(__DIR__);
-function rootDir(){
-    global $rootDirGlobal;
-    return $rootDirGlobal;
-}
 
 /**
 A handle to read-only data. As long as it exists it should
