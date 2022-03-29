@@ -81,7 +81,7 @@ const readMainFile = (path) => {
 }
 
 const findFile = (dirPath, curPath, file)  => {
-    files = fs.readdirSync(dirPath);
+    const files = fs.readdirSync(dirPath);
 
     for(let i = 0; i < files.length; i++) {
         if (fs.statSync(dirPath + "/" + files[i]).isDirectory()) {
