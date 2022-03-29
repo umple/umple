@@ -101,7 +101,7 @@ const validateMainFile = (path) => {
     if(fs.existsSync(path + "/" + mainFileName)) {
         return null;
     } else {
-        return {errors:"Main file does not exist.", output: ""};
+        return {errors:"Cannot execute model because no Umple class was found with a public static void main() function.", output: ""};
     }
 }
 
