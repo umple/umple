@@ -2492,6 +2492,8 @@ Action.updateUmpleDiagramCallback = function(response)
 
   diagramCode = Action.getDiagramCode(response.responseText);
   errorMessage = Action.getErrorCode(response.responseText);
+  Page.hideExecutionArea();
+
     
   if(diagramCode == null || diagramCode == "" || diagramCode == "null") 
   {
@@ -2510,7 +2512,6 @@ Action.updateUmpleDiagramCallback = function(response)
 
     Page.setFeedbackMessage("");
     Page.hideGeneratedCode();
-    Page.hideExecutionArea();
     
     // Display editable class diagram
     if(Page.useEditableClassDiagram) {

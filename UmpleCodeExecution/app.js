@@ -20,7 +20,7 @@ const MAX_REQUESTS = 20;
 const mainFileName = "JavaMainClasses.txt";
 let numberOfRequests = 0;
 
-app.all('*', function(req, res, next) 
+app.all('*', (req, res, next) =>
 {
     res.header('Access-Control-Allow-Origin', '*'); // TODO CHANGE ORIGIN
     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
@@ -28,7 +28,7 @@ app.all('*', function(req, res, next)
     next();
 });
 
-app.post('/run' ,function(req, res) 
+app.post('/run' , (req, res)  => 
 {
     canProceed((err) => {
         if(err) {
@@ -54,7 +54,7 @@ app.post('/run' ,function(req, res)
             }
 
             console.log("Finding file: " + (mainFunctions[0] + '.class'));
-            const foundFilePath = findFile(path, "/" + req.body.path ,mainFunctions[0] + '.class');
+            const foundFilePath = findFile(path, "/",mainFunctions[0] + '.class');
             console.log("Found file at: ", foundFilePath);
         
             // Execute docker 
@@ -63,7 +63,7 @@ app.post('/run' ,function(req, res)
                 dockerExecution.run((err, data) =>
                 {
                     numberOfRequests--;
-                    res.send({errors: err, output: data});
+                    res.send({errors: err || "", output: data});
                 });
             } catch(err) {
                 console.log(err);
@@ -80,12 +80,12 @@ const readMainFile = (path) => {
     return fileContent.split(" ");
 }
 
-const findFile = function(dirPath, curPath, file) {
+const findFile = (dirPath, curPath, file)  => {
     files = fs.readdirSync(dirPath);
 
     for(let i = 0; i < files.length; i++) {
         if (fs.statSync(dirPath + "/" + files[i]).isDirectory()) {
-            const cur =  getAllFiles(dirPath + "/" + files[i], curPath + "/" + files[i], file)
+            const cur =  findFile(dirPath + "/" + files[i], curPath + "/" + files[i], file)
             if(cur != null) {
                 return cur;
             }
@@ -128,20 +128,6 @@ const canProceed = (callback) => {
     } else {
         callback(null);
     }
-
-    // Check for CPU usage
-    // try {
-    //     os.cpuUsage(function(usage){
-    //         if(usage >= CPU_USAGE_LIMIT) {
-    //             callback({errors:"Server is busy, please try in some time for code execution.", output:""})
-    //         } else {
-    //             callback(null);
-    //         }
-    //     });
-    // } catch (exp) {
-    //     console.log("error calculating cpu usage.");
-    //     callback(null);
-    // }
 }
 
 

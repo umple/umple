@@ -18,12 +18,25 @@ class DockerExecution {
     run(callback) {      
         // Make output folder where the output files will be written
         this.makeOutputFolder();
+        const mainFilePath = this.getNormalizedMainFilename();
+        console.log("Normalized main file: ", mainFilePath);
         
-        const command = `sh dockerTimeout.sh ${this.timeoutValue}s -i -t --network none -v ${this.basePath}${this.path}:/input/:ro -v ${this.baseOutputPath}/${this.model}:/output/ ${this.tempContainerName} ${this.mainFile}` 
+        const command = `sh dockerTimeout.sh ${this.timeoutValue}s -i -t --network none -v ${this.basePath}/${this.model}:/input/:ro -v ${this.baseOutputPath}/${this.model}:/output/ ${this.tempContainerName} ${mainFilePath}` 
         console.log("Docker command:'",command,"'"); 
         exec(command); // Execute docker for Java execution
 
         this.listenToChanges(callback);
+    }
+
+    getNormalizedMainFilename() {
+        let path = this.path;
+        if(path.startsWith('/')) {
+            path = path.substring(1);
+        }
+        if(path.endsWith('/')) {
+            path = path.substring(0, path.length - 1);
+        }
+        return path ? `${path.split('/').join('.')}.${this.mainFile}` : this.mainFile;
     }
 
     listenToChanges(callback) {
