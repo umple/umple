@@ -49,6 +49,7 @@ class UmpleConsoleConfig {
   UmpleConsoleConfig(OptionSet optSet) {
     // The first nonOptionArgument becomes the main file to process
     this(optSet.nonOptionArguments().size() > 0 ? optSet.nonOptionArguments().get(0) : null);
+    System.out.println("this is the constructor of the 'UmpleConsoleConfig' class..");
     System.out.println("optSet.nonOptionArguments().size()=" + optSet.nonOptionArguments().size());
 
     this.version    = optSet.has("v");
@@ -81,6 +82,7 @@ class UmpleConsoleConfig {
     // Open and read any file containing other files to process for testing
     if (testUmpFilesFile.isPresent())
     {
+      System.out.println("testUmpFilesFile.isPresent()=true");
       String fileOfFiles = testUmpFilesFile.get();
       try {
         List<String> allLines = Files.readAllLines(Paths.get(fileOfFiles));
@@ -412,11 +414,12 @@ class UmpleConsoleMain
      System.err.println(e.getMessage());
      return;
     }
-    System.out.println("\nwe get a console object successfully..");
+    System.out.println("\nwe get a UmpleConsoleMain object successfully..");
 
     // Run the compilation for the main command line files and mixsets
     // Result is 1 if failed compile, -1 if compiler crashed
     int result = console.runConsole();
+    System.out.println("console.runConsole()=" + result);
     if (result != 0) {
       System.exit(result);
     }
@@ -424,6 +427,7 @@ class UmpleConsoleMain
     // If there are any files and mixsets specified by the -f option, then try those
     UmpleConsoleConfig cfg = console.getCfg();
     if(cfg.getAllLinesOfFilesToTest() != null) {
+      System.out.println("cfg.getAllLinesOfFilesToTest() != null");
       int finalResult = 0;
       String failedLines ="";
       int successCases = 0;
