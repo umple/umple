@@ -34,7 +34,7 @@ $handle = fopen($configfile, "r");
 if ($handle) {
   while (($line = fgets($handle)) !== false) {
     if(substr($line,0,10) == "portToUse=") {
-      $portToUse=substr($line,10);
+      $portToUse=trim(substr($line,10));
     }
   }
 }
