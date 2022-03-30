@@ -74,14 +74,17 @@ class EcoreImportHandler
     internal UmpleImportClass currentClass = null;
 
   public void startDocument() throws SAXException {
+      System.out.println("\nthis is the 'startDocument' method of the 'EcoreImportHandler' class..");
       setModel(new UmpleImportModel(""));
   }
 
   public void endDocument() throws SAXException {
+    System.out.println("\nthis is the 'endDocument' method of the 'EcoreImportHandler' class..");
     // System.out.println("end document");
   }
 
   public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    System.out.println("\nthis is the 'startElement' method of the 'EcoreImportHandler' class..");
     currentElement = localName;
     UmpleImportModel model = getModel();    
     //load package object
@@ -167,6 +170,7 @@ class EcoreImportHandler
   }
   
   public void endElement(String uri, String localName, String qName) throws SAXException {
+      System.out.println("\nthis is the 'endElement' method of the 'EcoreImportHandler' class..");
       // reset internal values for next round of parsing
       boolean checkIsClassifiers = currentElement.equals(currentElement.equals("eClassifiers"));
     if (checkIsClassifiers && currentClass != null)
@@ -175,6 +179,7 @@ class EcoreImportHandler
   }
 
   public void characters(char[] ch, int start, int length) throws SAXException {
+    System.out.println("\nthis is the 'characters' method of the 'EcoreImportHandler' class..");
     // System.out.println("characters");
   }
     
@@ -215,7 +220,11 @@ class ScxmlImportHandler
     System.out.println("\nthis is the 'startDocument' method of the 'ScxmlImportHandler' class..");
     UmpleImportClass umpleClass = new UmpleImportClass("StateMachine", "StateMachine", "StateMachine", false, false);
     UmpleImportModel model = getModel();
+    // System.out.println("result of umple.generateUmple():");
+    // System.out.println(model.generateUmple());
     model.addUmpleImportElement(umpleClass);
+    // System.out.println("after invoking 'addUmpleImportElement' method, result of umple.generateUmple():");
+    // System.out.println(model.generateUmple());
     currentClass = umpleClass;
   }
 

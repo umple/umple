@@ -481,8 +481,8 @@ class UmpleConsoleMain
         umple = handler.readDataFromXML(filename);
       }
       System.out.println("\nafter 'readDataFromXML' method..");
-      System.out.println("result of umple.generateUmple():");
-      System.out.println(umple.generateUmple());
+      // System.out.println("result of umple.generateUmple():");
+      // System.out.println(umple.generateUmple());
       isSuccess = umple.generateUmpleFile(filename + ".ump");
       System.out.println("isSuccess=" + isSuccess);
     }
