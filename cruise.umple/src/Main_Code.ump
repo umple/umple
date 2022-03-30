@@ -50,7 +50,7 @@ class UmpleConsoleConfig {
     // The first nonOptionArgument becomes the main file to process
     this(optSet.nonOptionArguments().size() > 0 ? optSet.nonOptionArguments().get(0) : null);
     System.out.println("this is the constructor of the 'UmpleConsoleConfig' class..");
-    System.out.println("optSet.nonOptionArguments().size()=" + optSet.nonOptionArguments().size());
+    // System.out.println("optSet.nonOptionArguments().size()=" + optSet.nonOptionArguments().size());
 
     this.version    = optSet.has("v");
     this.help       = optSet.has("help");
