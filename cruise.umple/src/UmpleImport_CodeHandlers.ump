@@ -25,6 +25,8 @@ class UmpleImportHandler
       }
       */
 
+      System.out.println("\nthis is the 'readDataFromXML' method (with filename param) of the 'UmpleImportHandler' class..");
+      System.out.println("filename=" + filename);
       try (FileInputStream fis = new FileInputStream(filename)) {
         return readDataFromXML(fis);
       }
@@ -37,6 +39,7 @@ class UmpleImportHandler
    * @throws ParserConfigurationException Thrown from {@link SAXParserFactory#newSAXParser()}
    */
   public UmpleImportModel readDataFromXML(InputStream input) throws IOException, ParserConfigurationException {
+    System.out.println("\nthis is the 'readDataFromXML' method (with InputStream param) of the 'UmpleImportHandler' class..");
     if (input == null) {
       throw new NullPointerException("Input stream was null.");
     }
@@ -44,11 +47,14 @@ class UmpleImportHandler
     SAXParserFactory factory = SAXParserFactory.newInstance();
     factory.setNamespaceAware(true);
     try {
+      System.out.println("creating a SAXParser object...");
       SAXParser parser = factory.newSAXParser();
+      System.out.println("parsing...");
       parser.parse(input, this);
     } catch (Exception e) {
       this.parseException = Optional.of(e);
     }
+    System.out.println("returning model...");
 
     return model;
   }
@@ -206,6 +212,7 @@ class ScxmlImportHandler
   boolean isInitial = false;
 
   public void startDocument() throws SAXException {
+    System.out.println("\nthis is the 'startDocument' method of the 'ScxmlImportHandler' class..");
     UmpleImportClass umpleClass = new UmpleImportClass("StateMachine", "StateMachine", "StateMachine", false, false);
     UmpleImportModel model = getModel();
     model.addUmpleImportElement(umpleClass);
@@ -213,6 +220,7 @@ class ScxmlImportHandler
   }
 
   public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    System.out.println("\nthis is the 'startElement' method of the 'ScxmlImportHandler' class..");
     depth++;
     if("scxml".equals(localName)) {
       String stateMachineName = attributes.getValue("name");
@@ -258,6 +266,7 @@ class ScxmlImportHandler
   }
 
   public void characters(char[] ch, int start, int length) {
+    System.out.println("\nthis is the 'characters' method of the 'ScxmlImportHandler' class..");
     String chars = new String(ch, start, length);
     if (elemStack.peek() instanceof ImportAction) {
       ImportAction action = (ImportAction)elemStack.peek();
@@ -269,6 +278,7 @@ class ScxmlImportHandler
   }
 
   public void endElement(String uri, String localName, String qName) throws SAXException {
+    System.out.println("\nthis is the 'endElement' method of the 'ScxmlImportHandler' class..");
     depth--;
     if ("script".equals(localName)) {
       return;

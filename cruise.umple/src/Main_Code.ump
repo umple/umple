@@ -49,6 +49,7 @@ class UmpleConsoleConfig {
   UmpleConsoleConfig(OptionSet optSet) {
     // The first nonOptionArgument becomes the main file to process
     this(optSet.nonOptionArguments().size() > 0 ? optSet.nonOptionArguments().get(0) : null);
+    System.out.println("optSet.nonOptionArguments().size()=" + optSet.nonOptionArguments().size());
 
     this.version    = optSet.has("v");
     this.help       = optSet.has("help");
@@ -58,6 +59,7 @@ class UmpleConsoleConfig {
     this.beQuiet    = optSet.has("quiet");    
     this.warningIgnore    = optSet.has("warningignore");    
     this.importFile = Optional.ofNullable((String)optSet.valueOf("import"));
+    System.out.println("import file=" + this.importFile);
     this.generate   = Optional.ofNullable((String)optSet.valueOf("generate"));
     this.umpleDirect   = Optional.ofNullable((String)optSet.valueOf("umple"));    
     this.override   = optSet.has("override");
@@ -220,6 +222,10 @@ class UmpleConsoleMain
    * @throws IllegalStateException If invalid arguments are passed and joptsimple fails to parse. 
    */
   UmpleConsoleMain(String[] args) {
+    System.out.println("\nthis is the constructor of the 'UmpleConsoleMain' class..");
+    for (int i = 0; i < args.length; ++i) {
+      System.out.println("args[" + i  + "]:" + args[i]);
+    }
     optparser = initializeOptionParser();
 
     OptionSet optset = optParse(args);
@@ -231,9 +237,11 @@ class UmpleConsoleMain
   }
 
   public int runConsole() {
+    System.out.println("\nthis is the 'runConsole' method of the 'UmpleConsoleMain' class..");
     // Check for options like help, version and import that don't compile arguments 
     if (preModelOptionProcess())
     {
+      System.out.println("preMOdelOptionProcess() is true..");
       return 0;
     }
 
@@ -392,6 +400,10 @@ class UmpleConsoleMain
 
   public static void main(String[] args)
   {
+    System.out.println("\nthis is the 'main' method of the 'UmpleConsoleMain' class..");
+    for (int i = 0; i < args.length; ++i) {
+      System.out.println("args[" + i  + "]:" + args[i]);
+    }
     UmpleConsoleMain console = null;
     try {
       console = new UmpleConsoleMain(args);
@@ -400,6 +412,7 @@ class UmpleConsoleMain
      System.err.println(e.getMessage());
      return;
     }
+    System.out.println("\nwe get a console object successfully..");
 
     // Run the compilation for the main command line files and mixsets
     // Result is 1 if failed compile, -1 if compiler crashed
@@ -448,22 +461,32 @@ class UmpleConsoleMain
     
   private void generateUmple(String filename)
   {
+    System.out.println("\nthis is the 'generateUmple' method of the 'UmpleConsoleMain' class..");
+    System.out.println("filname=" + filename);
     boolean isSuccess = false;
     try
     {
       UmpleImportModel umple;
       if (filename.endsWith(".scxml")) {
+        System.out.println("\nfilename ends with '.scxml'..");
         ScxmlImportHandler handler = new ScxmlImportHandler();
         umple = handler.readDataFromXML(filename);
       } else {
+        System.out.println("\nfilename not end with '.scxml'");
         EcoreImportHandler handler = new EcoreImportHandler();
         umple = handler.readDataFromXML(filename);
       }
+      System.out.println("\nafter 'readDataFromXML' method..");
+      System.out.println("result of umple.generateUmple():");
+      System.out.println(umple.generateUmple());
       isSuccess = umple.generateUmpleFile(filename + ".ump");
+      System.out.println("isSuccess=" + isSuccess);
     }
     catch (Exception e)
     {
+      System.out.println("error in 'generateUmple' method of the 'UmpleConsoleMain' class..");
       System.err.print(e.getMessage());
+      System.out.println();
     } 
     if (isSuccess)
     {
@@ -482,6 +505,7 @@ class UmpleConsoleMain
     */
   private boolean preModelOptionProcess()
   {
+    System.out.println("\nthis is the 'preModelOptionProcess' method of the 'UmpleConsoleMain' class..");
     if (cfg.getVersion())
     {
       System.out.println("Version: " + UmpleModel.VERSION_NUMBER);
@@ -492,6 +516,8 @@ class UmpleConsoleMain
     }
     else if (cfg.getImportFile().isPresent())
     {
+      System.out.println("cfg.getImportFile():" + cfg.getImportFile());
+      System.out.println("invoking generateUmple method...");
       generateUmple(cfg.getImportFile().get());
     }
     else
@@ -590,10 +616,12 @@ class UmpleConsoleMain
 
   static OptionSet optParse(String[] args)
   {
+    System.out.println("\nthis is the 'optParse' method of the 'UmpleConsoleMain' class..");
     OptionSet optSet = null;
 
     try
     {
+      // variable `optParser` is assigned by UmpleConsoleMain method
       optSet = optparser.parse(args);
     } 
     catch (joptsimple.OptionException e)
