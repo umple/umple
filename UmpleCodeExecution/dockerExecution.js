@@ -2,17 +2,17 @@ const fs = require('fs');
 const exec = require('child_process').exec;
 
 class DockerExecution {
-    constructor(path, mainFile, model, timeoutValue = 20) {
+    constructor(path, mainFile, model) {
         this.path = path;
         this.mainFile = mainFile;
         this.model = model;
-        this.timeoutValue = timeoutValue;
-        this.outputFolder = "output/" + this.model;
+        this.outputFolder = "output/" + this.model + "_" + this.mainFile;
 
         const config = this.readConfig();
         this.basePath = config['umplePath'];
         this.baseOutputPath = config['tempPath'];
         this.tempContainerName = config['tempContainerName'];
+        this.timeoutValue = +config['timeoutValue'];
     }
 
     run(callback) {      
@@ -21,7 +21,7 @@ class DockerExecution {
         const mainFilePath = this.getNormalizedMainFilename();
         console.log("Normalized main file: ", mainFilePath);
         
-        const command = `sh dockerTimeout.sh ${this.timeoutValue}s -i -t --network none -v ${this.basePath}/${this.model}:/input/:ro -v ${this.baseOutputPath}/${this.model}:/output/ ${this.tempContainerName} ${mainFilePath}` 
+        const command = `sh dockerTimeout.sh ${this.timeoutValue}s -i -t --network none -v ${this.basePath}/${this.model}:/input/:ro -v ${this.baseOutputPath}/${this.model}_${this.mainFile}:/output/ ${this.tempContainerName} ${mainFilePath}` 
         console.log("Docker command:'",command,"'"); 
         exec(command); // Execute docker for Java execution
 

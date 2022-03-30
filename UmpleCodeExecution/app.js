@@ -14,8 +14,7 @@ const server = http.createServer(app);
 const port=4400;
 const basePath= __dirname+"/models/"; //current working path
 
-// Declar max usage limit and max requests
-const CPU_USAGE_LIMIT = 80;
+// Declare max requests
 const MAX_REQUESTS = 20;
 const mainFileName = "JavaMainClasses.txt";
 let numberOfRequests = 0;
@@ -53,23 +52,39 @@ app.post('/run' , (req, res)  =>
                 return res.send({errors: "Main function name is not provided.", output:""});
             }
 
-            console.log("Finding file: " + (mainFunctions[0] + '.class'));
-            const foundFilePath = findFile(path, "/",mainFunctions[0] + '.class');
-            console.log("Found file at: ", foundFilePath);
-        
-            // Execute docker 
-            const dockerExecution = new DockerExecution(foundFilePath, mainFunctions[0], req.body.path);
-            try {
-                dockerExecution.run((err, data) =>
-                {
-                    numberOfRequests--;
-                    res.send({errors: err || "", output: data});
-                });
-            } catch(err) {
-                console.log(err);
-                numberOfRequests--;
-                return res.send({errors: "Error processing your request.", output:""});
-            }
+            let output = "";
+            let totalServed = 0;
+            mainFunctions.forEach((mainFunction) => {
+                console.log("Finding file: " + (mainFunction + '.class'));
+                const foundFilePath = findFile(path, "/",mainFunction + '.class');
+                console.log("Found file at: ", foundFilePath);
+            
+                // Execute docker 
+                const dockerExecution = new DockerExecution(foundFilePath, mainFunction, req.body.path);
+                try {
+                    dockerExecution.run((err, data) =>
+                    {
+                        output += `<strong>For main method in class ${mainFunction}:</strong>\n`
+                        output += `${err || ""}\n`;
+                        output += `${data}\n`
+                        totalServed++;
+                        console.log("Processed request ", totalServed);
+                        if(totalServed >= mainFunctions.length) {
+                            numberOfRequests--;
+                            return res.send({errors: "", output:output});
+                        }
+                    });
+                } catch(err) {
+                    console.log(err);
+                    output += `<strong>For main method in class ${mainFunction}:</strong>\n`
+                    output += "Error processing your request\n"
+                    totalServed++;
+                    if(totalServed >= mainFunctions.length) {
+                        numberOfRequests--;
+                        return res.send({errors: "", output:output});
+                    }
+                }
+            });
         }
     });   
 });
