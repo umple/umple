@@ -1435,6 +1435,7 @@ Action.executeCodeCallback = function(response)
   Page.showExecutionArea();
   Page.hideGeneratedCode();
   Page.showExecutedResponse(response.responseText);
+  window.location.href='#codeExecutionArea';
 }
 
 Action.generateCodeCallback = function(response, language, optionalCallback)
