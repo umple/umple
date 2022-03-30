@@ -218,6 +218,7 @@ class ScxmlImportHandler
 
   public void startDocument() throws SAXException {
     System.out.println("\nthis is the 'startDocument' method of the 'ScxmlImportHandler' class..");
+    System.out.println("\n UmpleImportClass: id, name, packageName, isAbstract, isInterface");
     UmpleImportClass umpleClass = new UmpleImportClass("StateMachine", "StateMachine", "StateMachine", false, false);
     UmpleImportModel model = getModel();
     // System.out.println("result of umple.generateUmple():");
