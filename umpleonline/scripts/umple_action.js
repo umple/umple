@@ -1882,6 +1882,15 @@ Action.setCaretPosition = function(line)
     {
       // Special backdoor to turn on experimental features
       document.getElementById('advancedMode').value=1;
+
+      // Add python option
+      var pythonOption = document.createElement("option");
+      pythonOption.id = "genpython";
+      pythonOption.value = "python:Python";
+      pythonOption.text = "Python (Alpha Build)";
+
+      document.getElementById("inputGenerateCode").add(pythonOption,5);
+
       Page.setFeedbackMessage("");
       return;
     }

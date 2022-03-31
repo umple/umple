@@ -62,7 +62,6 @@ class PythonGenerator
     file.mkdirs();   
     String filename = path + File.separator + className + ".java";
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
-    getModel().getGeneratedCode().put(aClass.getName(),contents);
 
     try
     {
@@ -72,17 +71,17 @@ class PythonGenerator
     finally
     {
       bw.close();
+      contents = "";
     }
     
     generateTxlFiles();
     
     String pythonFilename = path + File.separator + className + ".py";
     String TXLScriptsPath = "./txl/umpleJavaToPython.txl";
-    String TXLcommand = "txl \"" + filename + "\" \"" + TXLScriptsPath + "\" -o \"" + pythonFilename + "\"";
-        
+    String TXLcommand = "txl " + filename + " " + TXLScriptsPath + " -o " + pythonFilename;
     try {
             
-      Process p = Runtime.getRuntime().exec(TXLcommand);    
+      Process p = Runtime.getRuntime().exec(TXLcommand);
       BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
       String line;
@@ -106,10 +105,31 @@ class PythonGenerator
           line = null;
         }
       }
+
+      p.waitFor();
+
     } catch (IOException e) {
       System.err.println(e.getMessage());
 	  return;
+    } catch (InterruptedException e) {
+      System.err.println(e.getMessage());
+	  return;
     }
+
+    try {
+      File pythonFile = new File(pythonFilename);
+      Scanner pyReader = new Scanner(pythonFile);
+      while (pyReader.hasNextLine()) {
+        contents += pyReader.nextLine() + "\n";
+      }
+      pyReader.close();
+    } catch (FileNotFoundException e) {
+      System.err.println("An error occurred while creating the output for python.");
+      e.printStackTrace();
+      return;
+    }
+
+    getModel().getGeneratedCode().put(aClass.getName(),contents);
     
     /* TODO
     if (aClass instanceof UmpleClass)
