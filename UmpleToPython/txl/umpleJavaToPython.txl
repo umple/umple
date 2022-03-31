@@ -514,6 +514,13 @@ rule replaceStaticMethod
         '@staticmethod 'def methodName'():  statements [replaceStatements]
 end rule
 
+rule replaceStaticMethod
+    replace [method_declaration]
+        _[acess_modifier] _[static] _[class_name] methodName [id]'() '{ statements [repeat statement] '}
+    by
+        '@staticmethod 'def methodName'():  statements [replaceStatements]
+end rule
+
 %--------------------%
 %     Statements     %
 %--------------------%
