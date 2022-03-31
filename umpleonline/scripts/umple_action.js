@@ -1433,7 +1433,7 @@ Action.executeCodeCallback = function(response)
   var executeCodeSelector = "#buttonExecuteCode";
   jQuery(executeCodeSelector).hideLoading();
   Page.showExecutionArea();
-  Page.hideGeneratedCode();
+  Page.hideGeneratedCodeOnly();
   Page.showExecutedResponse(response.responseText);
   window.location.href='#codeExecutionArea';
 }

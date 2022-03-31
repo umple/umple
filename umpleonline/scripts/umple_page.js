@@ -691,6 +691,11 @@ Page.hideGeneratedCode = function()
   if(!Page.useStructureDiagram) jQuery("#svgCanvas").hide();
 }
 
+Page.hideGeneratedCodeOnly = function() {
+  jQuery("#generatedCodeRow").hide();
+  jQuery("#innerGeneratedCodeRow").hide();
+}
+
 Page.initCanvasArea = function()
 {
   var canvas = jQuery("#umpleCanvas");
