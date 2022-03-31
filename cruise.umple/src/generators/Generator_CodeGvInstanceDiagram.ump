@@ -505,7 +505,7 @@ digraph "<<=filename>>" {
     // Set of instances that have been instantiated
     // from each class
     // Key value pair being UmpleClass, ArrayList<UmpleInstance>
-    HashMap instanceMap = new HashMap();
+    HashMap<UmpleClass, ArrayList<UmpleInstance>> instanceMap = new HashMap();
 
     // Iterate through each class. 
     // Add every class to instanceMap mapping with an initial
@@ -572,6 +572,43 @@ digraph "<<=filename>>" {
         // smg went wrong earlier
     }
 
+    // TO-DO: create instances by looping through singletonClasses, oneToNClasses and remainingClasses while
+        // simultaneously calling randomPercentage() to determine number of instances to make
+    for(UmpleClass uClass : singletonClasses){
+      if (!instanceMap.containsKey(uClass)){
+        UmpleInstance uInstance = new UmpleInstance(uClass);
+        ArrayList<UmpleInstance> uInstances = instanceMap.get(uClass);
+        uInstances.add(uInstance);
+        instanceMap.put(uClass, uInstances);
+
+      }
+
+    }
+
+    for (UmpleClass uClass: oneToNClasses) {
+      if (!instanceMap.containsKey(uClass)) {
+        int numInstancesToGenerate = randomPercentage();
+        ArrayList<UmpleInstance> uInstances = instanceMap.get(uClass);
+        for (int i = 0; i <= numInstancesToGenerate ; i++) {
+          UmpleInstance uInstance = new UmpleInstance(uClass);
+          uInstances.add(uInstance);
+        }
+        instanceMap.put(uClass, uInstances);
+      }
+    }
+
+    for (UmpleClass uClass: remainingClasses) {
+      if (!instanceMap.containsKey(uClass)) {
+        int numInstancesToGenerate = randomPercentage();
+        ArrayList<UmpleInstance> uInstances = instanceMap.get(uClass);
+        for(int i = 0; i <= numInstancesToGenerate ; i++) {
+          UmpleInstance uInstance = new UmpleInstance(uClass);
+          uInstances.add(uInstance);
+        }
+        instanceMap.put(uClass, uInstances);
+      }
+    }
+
     terminateCode(code, associations);
     //writeModel();
 
@@ -587,30 +624,12 @@ digraph "<<=filename>>" {
       return;
     }
 
-    // Ensure we print out/handle singletons first
-    UmpleClass relatedClass = uInstance.getUmpleClass();
-    if (relatedClass != null) {
-      if (relatedClass.getIsSingleton()) {
-        uInstance.setInstanceWeight(0);
-        // add to a sorted priority list of instances
-          // this list keeps track of how many singletons have been found and if an instance/instances need(s) to be printed first
-          // TO-DO: create sorted array that tracks these semi visited instances
-            // not sure if this is what partiallyCreatedObjectsQueue is for tho.. 
-      } 
-    }
+    
     // add instance to visitedInstances after generating it in the diagram
     visitedInstances.add(uInstance);
     
-    // TO-DO: need to implement prioritization of instanciation:
-      // Add weight attribute to UmpleInstance class that will track the associated UmpleClass' importance 
-      // More important instances are attributed a smaller weight
-          // If an instance belongs to a singleton class set its weight to 0
-          // If an instnace belongs to a class with a 1 -- association set its weight to 1 
-          // Other wise set it's weight to 2 (or set it to 2 by default)
-        // Once all the instances have been looped through and assigned a weight, we sort the HashSet based off the weight
-        // The loop through the sorted set and call the instanceCreation method to print the method to the GV file
     
-    // instanceCreation method called at this point to add the instance to the graphviz file
+
 
     // Once all the instances have been created we add the links
     Set processedLinks = new HashSet();
