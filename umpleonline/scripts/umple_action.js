@@ -1916,7 +1916,6 @@ Action.setCaretPosition = function(line)
 
       // Add python option
       if (!!!document.getElementById("genpython")) {
-        console.log("Adding python");
 
         var pythonOption = document.createElement("option");
         pythonOption.id = "genpython";
