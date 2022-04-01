@@ -851,7 +851,6 @@ $output = $dataHandle->readData('model.ump');
     <div id="innerGeneratedCodeRow"></div>
   </div>
   <div id="codeExecutionArea">
-    <p><strong>Execution Output</strong></p>
     <pre id="executionMessage"></pre>
   </div>
 

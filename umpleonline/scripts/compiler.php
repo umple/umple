@@ -352,14 +352,16 @@ else if (isset($_REQUEST["umpleCode"]))
     $errhtml = getErrorHtml($executionErrorFilename);
     if($errhtml != "") {
       echo $errhtml;
-    } else {
-      $content = executeCode($modelName);
-      $output = json_decode($content, false);
-      if (json_last_error() === JSON_ERROR_NONE) {
+    }
+    $content = executeCode($modelName, $errhtml != "");
+    $output = json_decode($content, false);
+    if (json_last_error() === JSON_ERROR_NONE) {
+      if($output->output || $output->errors) {
+        echo "<p><strong class='executionHeader'>Execution Output</strong></p>";
         echo $output->output.$output->errors;
-      } else {
-        echo $content;
       }
+    } else {
+      echo $content;
     }
     return;
   } // The following is a hack. The arguments to umplesync need fixing
@@ -676,12 +678,12 @@ function getErrorHtml($errorFilename, $offset = 1)
   return "";
 }
 
-function executeCode($modelName) 
+function executeCode($modelName, $error) 
 {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,"{$GLOBALS['EXECUTION_SERVER']}/run");
   curl_setopt($ch, CURLOPT_POST, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, "path={$modelName}");
+  curl_setopt($ch, CURLOPT_POSTFIELDS, "path={$modelName}&error={$error}");
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   $content = curl_exec($ch);
   if (curl_errno($ch)) {

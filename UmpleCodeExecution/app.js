@@ -37,11 +37,28 @@ app.post('/run' , (req, res)  =>
 
             // Extract out path and validate
             const path = basePath + req.body.path;
-            const error = validatePath(path) || validateMainFile(path);
-            if(error) {
+            const compileError = req.body.error;
+            console.log("Compilation error or warning: " + compileError);
+
+            const pathError = validatePath(path);
+            if(pathError) {
                 numberOfRequests--;
-                return res.send(error);
+                return res.send(pathError);
             }
+
+            // Check for main file error
+            const mainFileError = validateMainFile(path);
+
+            // If there were error previously and now
+            // It means, there was compilation error
+            if(mainFileError && compileError) {
+                numberOfRequests--;
+                return res.send({errors:"", output:""});
+            } else if(mainFileError) { 
+                numberOfRequests--;
+                return res.send(mainFileError);
+            }
+
             console.log("Given path:",req.body.path);
             console.log("Base path: ", path);
 
