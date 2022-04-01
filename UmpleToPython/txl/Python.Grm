@@ -52,6 +52,7 @@ end redefine
 define python_function_name
         'tuple
     |   'len
+    |   'super
 end define
 
 redefine function_call
@@ -104,12 +105,20 @@ end redefine
 define decorator
     '@ [SPOFF] [id] [SPON] [NL]
 end define
-redefine method_declaration
+
+redefine concrete_method_declaration
     ...
     |   [opt decorator] 'def  [id] [SPOFF]'(self, [SPON] [list id] [SPOFF] '): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
     |   [opt decorator] 'def  [id] [SPOFF]'(self): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
     |   [opt decorator] 'def  [id] [SPOFF]'(): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
 end redefine
+
+redefine abstract_method_declaration
+    ...
+    |   [SPOFF] '@abstractmethod [SPON] [NL] 'def  [id] [SPOFF]'(self, [SPON] [list id] [SPOFF] '): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
+    |   [SPOFF] '@abstractmethod [SPON] [NL] 'def  [id] [SPOFF]'(self): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
+end redefine
+
 
 redefine constructor
     ...
@@ -117,19 +126,35 @@ redefine constructor
     | 'def '__init__ [SPOFF] '(self): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
 end redefine
 
-redefine class_declaration
+redefine concrete_class_declaration
     ... 
-    | 'class [class_name] [SPOFF] ': [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL]
+    | [repeat import_statement] [NL] 'class [class_name] [SPOFF] [opt inheritance_group] ': [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL]
+end redefine
+
+define inheritance_group
+    '( [SPON] [list class_name] [SPOFF] ')
+end define
+
+redefine interface_declaration
+    ... 
+    |  [import_statement] [NL] 'class [class_name] [SPOFF] '(ABC): [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL]
+    |  [import_statement] [repeat import_statement] [NL] 'class [class_name] [SPOFF] '(ABC, [SPON] [list class_name] [SPOFF] '): [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL]
 end redefine
 
 redefine class_body_decl
     ...
     | 'pass
     | [opt constructor] [repeat method_declaration]
-end define
+end redefine
 
 redefine variable_declaration
     ...
     |   [assignment] [FL]
     |   [id] [FL]
-end define
+end redefine
+
+redefine import_statement
+    ...
+    |   'from [class_name] 'import [class_name] [NL]
+    |   'from [class_name] 'import [list class_name] [NL]
+end redefine 
