@@ -34,7 +34,7 @@ class GvInstanceDiagramGenerator
 
   boolean testBound = false;
 
-  Random rand = new Random();
+  Random rand = null;
 
 
   // Basic templates for GV elements to output
@@ -69,11 +69,11 @@ digraph "<<=filename>>" {
   protected void instanceCreation(UmpleInstance uInstance, StringBuilder code)
   {
     UmpleClass uClass = uInstance.getUmpleClass();
-    String instanceName = uClass.getName() + "1";
+    String instanceName = uClass.getName();
 
     String instanceColor = uClass.getDisplayColor();
     if (!instanceColor.equals("")) instanceColor=" style=filled, fillcolor="+instanceColor+" ";
-    code.append("\n  // Class: "+instanceName+"\n");
+    code.append("\n  // Instance: "+instanceName+"\n");
 
     code.append("  \""+instanceName+"\" ["+instanceColor+"shape=plaintext margin=0 label=");
 
@@ -89,6 +89,7 @@ digraph "<<=filename>>" {
   // Note: modify this.. says the max amount of classes is 200 maybe change to like 3 for now then add more 
   //        add random string and change the format of the box created by graphviz 
   //        would need to code append like it does bellow for class colour (??)
+  /**
   protected void classCreation(UmpleClass uClass, StringBuilder code)
   {
     boolean manyClass = getModel().getUmpleClasses().size() >= 200 ? true : false;
@@ -152,9 +153,11 @@ digraph "<<=filename>>" {
     // Terminate the class as a whole
     code.append("];\n");
 	}
+  **/
 
   // Create each attribute for each class - called by classCreation
   // Note: don't think attributes are relevant in object diagrams REVIEW this
+  /*
   private void attributeCreation(UmpleClass uClass, StringBuilder code, boolean manyClass)
   {
 
@@ -226,10 +229,12 @@ digraph "<<=filename>>" {
       }
    // }
   }
+  */
 
   // Create the associations in the class diagram
   // - called VisitClass in SuperGvGenerator
   // Note: will probably need to change how visit class works in SuperGvGenerator but not sure... figure that out
+/*
   protected void associationCreation(UmpleClass uClass, Association uAssoc, StringBuilder associations, String className)
   {
     AssociationEnd leftEnd = uAssoc.getEnd(0);
@@ -403,6 +408,11 @@ digraph "<<=filename>>" {
       }
     }
   }
+  */
+
+  protected void linkCreation(UmpleInstance uInstance, UmpleLink uLink, StringBuilder links, String className) {
+     
+  }
 
   // Check whether the classname starts with a vowel or not to see if we use A or An
   private String startWithVowel(String str) {
@@ -457,6 +467,7 @@ digraph "<<=filename>>" {
   }
 
   public int randomPercentage() {
+    rand = new Random();
     int percentage = rand.nextInt(100);
 
     if (percentage >= 0 || percentage <= 50) {
@@ -477,6 +488,7 @@ digraph "<<=filename>>" {
   {
     StringBuilder code = new StringBuilder();
     StringBuilder associations = new StringBuilder();
+    StringBuilder links = new StringBuilder();
 
     String className;
 
@@ -493,10 +505,7 @@ digraph "<<=filename>>" {
 
     ArrayList<UmpleClass> remainingClasses = new ArrayList<UmpleClass>(); // to be instantiated last
     
-    // Set of classes we are visiting
-    // We always visit from the top of the hierarchy first
-    // This set ensures we track what we have visited
-    HashSet visitedClasses = new HashSet();
+    
 
     // Set of instances we are visiting
     // This is to ensure we don't revisit the same instance more than once
@@ -512,7 +521,6 @@ digraph "<<=filename>>" {
       // empty list of UmpleInstances
     for (UmpleClass uClass : model.getUmpleClasses())
     {
-      visitClass(uClass, visitedClasses, code, associations);
       if(!instanceMap.containsKey(uClass)){
         ArrayList<UmpleInstance> umpleInstances = new ArrayList<UmpleInstance>();
         instanceMap.put(uClass, umpleInstances); // adding the ArrayList of UmpleInstances associated to a uClass in the instanceMap
@@ -572,10 +580,10 @@ digraph "<<=filename>>" {
         // smg went wrong earlier
     }
 
-    // TO-DO: create instances by looping through singletonClasses, oneToNClasses and remainingClasses while
+    // create instances by looping through singletonClasses, oneToNClasses and remainingClasses while
         // simultaneously calling randomPercentage() to determine number of instances to make
     for(UmpleClass uClass : singletonClasses){
-      if (!instanceMap.containsKey(uClass)){
+      if (instanceMap.containsKey(uClass)){
         UmpleInstance uInstance = new UmpleInstance(uClass);
         ArrayList<UmpleInstance> uInstances = instanceMap.get(uClass);
         uInstances.add(uInstance);
@@ -586,7 +594,7 @@ digraph "<<=filename>>" {
     }
 
     for (UmpleClass uClass: oneToNClasses) {
-      if (!instanceMap.containsKey(uClass)) {
+      if (instanceMap.containsKey(uClass)) {
         int numInstancesToGenerate = randomPercentage();
         ArrayList<UmpleInstance> uInstances = instanceMap.get(uClass);
         for (int i = 0; i <= numInstancesToGenerate ; i++) {
@@ -598,10 +606,10 @@ digraph "<<=filename>>" {
     }
 
     for (UmpleClass uClass: remainingClasses) {
-      if (!instanceMap.containsKey(uClass)) {
+      if (instanceMap.containsKey(uClass)) {
         int numInstancesToGenerate = randomPercentage();
         ArrayList<UmpleInstance> uInstances = instanceMap.get(uClass);
-        for(int i = 0; i <= numInstancesToGenerate ; i++) {
+        for(int i = -1; i < numInstancesToGenerate ; i++) {
           UmpleInstance uInstance = new UmpleInstance(uClass);
           uInstances.add(uInstance);
         }
@@ -609,14 +617,22 @@ digraph "<<=filename>>" {
       }
     }
 
-    terminateCode(code, associations);
+    for(ArrayList<UmpleInstance> instanceMapEntry : instanceMap.values()) {
+      // loop through the instances
+        // make call to visitInstance
+      for (UmpleInstance uInstance : instanceMapEntry) {
+        visitInstance(uInstance, visitedInstances, code, links);
+      }
+
+    }
+
+    terminateCode(code, links);
     //writeModel();
 
   }
 
   // Outputs the instance in the GV file
-      // sortedInstances Set used to keep track of when a singleton/priority object has been identitified
-  protected void visitInstance(UmpleInstance uInstance, Set visitedInstances, Set sortedInstances, StringBuilder code, StringBuilder links)
+  protected void visitInstance(UmpleInstance uInstance, Set visitedInstances, StringBuilder code, StringBuilder links)
   {
 
     // Ensure we only visit the instance once
@@ -627,6 +643,7 @@ digraph "<<=filename>>" {
     
     // add instance to visitedInstances after generating it in the diagram
     visitedInstances.add(uInstance);
+    instanceCreation(uInstance, code);
     
     
 
@@ -644,6 +661,7 @@ digraph "<<=filename>>" {
   }
 
     // Actually output the class contents  
+    /**
   protected void visitClass(UmpleClass uClass, Set visitedClasses, StringBuilder code, StringBuilder associations)
   {
     
@@ -680,6 +698,7 @@ digraph "<<=filename>>" {
       associationCreation(uClass, uAssoc, associations, className);
     }
   }
+  **/
 
   /* ----- Graphviz helper methods ----- */
 
