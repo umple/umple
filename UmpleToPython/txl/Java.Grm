@@ -16,7 +16,7 @@ end tokens
 %--------------------%
 
 keys
- return new if else for true false while this tuple len self True False + - * / ? ; :
+ return new if else for true false while this super self tuple len True False + - * / ? ; :
 end keys
 
 define acess_modifier
@@ -49,6 +49,8 @@ define arithmatic_operator
 end define
 
 define program
+    [repeat package_statement]  
+    [repeat import_statement]
     [repeat class_declaration]
 end define
 
@@ -90,9 +92,10 @@ define nestable_value
         [function_call]
     |    [id]
     |   'this
+    |   'super
 end define
 
-define value_no_recursion %del 1 by 1
+define value_no_recursion 
         [new_call]
     |   '( [value]')
     |   [nested_identifier]
@@ -209,19 +212,44 @@ define method_parameter
     [class_name] [id]
 end define
 
-define method_declaration
+define concrete_method_declaration
         [acess_modifier] [opt static] [class_name] [id] '( [list method_parameter] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
-    |   [acess_modifier] [opt static] [class_name] [id] '( [list method_parameter] '); [NL]
+end define
+
+define method_declaration
+        [concrete_method_declaration]
+    |   [abstract_method_declaration]
+end define
+
+define abstract_method_declaration
+    [acess_modifier] [class_name] [id] '( [list method_parameter] '); [NL]
+end define
+
+define inheritance_statement
+        'extends
+    |   'implements
 end define
 
 
 %--------------------%
 %        Class       %
 %--------------------%
+
 define class_declaration
-    [repeat package_statement]  
-    [repeat import_statement]
-    [acess_modifier] [class_type] [class_name] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
+        [concrete_class_declaration]
+    |   [interface_declaration]
+end define
+
+define concrete_class_declaration
+    [acess_modifier] 'class [class_name] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
+end define
+
+define inheritance_list
+    [inheritance_statement] [list class_name]
+end define
+
+define interface_declaration
+        [acess_modifier] 'interface [class_name] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
 end define
 
 define class_type

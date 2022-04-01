@@ -6,10 +6,120 @@ include "Python.Grm"
 %--------------------%
 function main
     replace [program] 
-	 Classes [repeat class_declaration]
+	 _[repeat package_statement] 
+     _[repeat import_statement]
+     Classes [repeat class_declaration]
     by
-	Classes [replaceClasses]
+	Classes
+        [replaceConcreteClassesWithInheritance] 
+        [replaceConcreteClassesNoInheritance]
+        [replaceInterfacesWithInheritance]
+        [replaceInterfacesNoInheritance]
+        
 end function
+
+%--------------------%
+%     Classes        %
+%--------------------%
+rule replaceConcreteClassesWithInheritance
+    replace $ [concrete_class_declaration]
+        _ [acess_modifier] 'class className [class_name] inheritances [repeat inheritance_list+] '{ classBody [class_body_decl] '} 
+    construct inheritanceClasses [list class_name]
+        _ [extractImportClasses each inheritances]
+    construct imports [repeat import_statement]
+        _ [addImportStatement each inheritanceClasses]
+    by
+    imports 'class className '( inheritanceClasses ')':  classBody  [replaceClassBody]
+end rule
+
+rule replaceConcreteClassesNoInheritance
+    replace $ [concrete_class_declaration]
+        _ [acess_modifier] 'class className [class_name] '{ classBody [class_body_decl] '} 
+    by
+    'class className ':  classBody  [replaceClassBody]
+end rule
+
+
+function extractImportClasses inheritanceList [inheritance_list]
+    replace [list class_name]
+        classes [list class_name]
+    deconstruct inheritanceList
+        _[inheritance_statement] classesToAdd [list class_name]
+    by
+        classes [, classesToAdd] 
+end function
+
+function addImportStatement a [class_name]
+    replace [repeat import_statement]
+        imports [repeat import_statement]
+    construct newImport [import_statement]
+        'from a 'import a
+    by
+        imports [. newImport]
+end function
+
+rule replaceInterfacesNoInheritance
+    replace [interface_declaration]
+        _ [acess_modifier] 'interface className [class_name] '{ classBody [class_body_decl] '} 
+    by
+        'from 'abc 'import 'ABC, 'abstractmethod 'class className '(ABC):  classBody [replaceClassBody] [replaceInterfaceBody]
+end rule
+
+rule replaceInterfacesWithInheritance
+    replace [interface_declaration]
+        _ [acess_modifier] 'interface className [class_name] inheritances [repeat inheritance_list+] '{ classBody [class_body_decl] '} 
+    construct inheritanceClasses [list class_name]
+        _ [extractImportClasses each inheritances]
+    construct imports [repeat import_statement]
+        _ [addImportStatement each inheritanceClasses]
+    by
+        'from 'abc 'import 'ABC, 'abstractmethod imports 'class className '(ABC, inheritanceClasses '):  classBody [replaceClassBody] [replaceInterfaceBody]
+end rule
+
+function replaceInterfaceBody
+   replace [class_body_decl]
+        declarations [repeat member_variable_declaration] methods [repeat method_declaration]
+    construct memberVariables [repeat id]
+        _ [addMemberVariable each declarations]
+    construct listMemberVariables [repeat id]
+        _ [addListMemberVariable each declarations]
+    by
+        '@abstractmethod 'def '__init__(self): 'pass methods [replaceAllMethods memberVariables listMemberVariables]
+end function
+
+function replaceClassBody
+    replace [class_body_decl]
+        declarations [repeat member_variable_declaration] oldConstructor [constructor] methods [repeat method_declaration]
+    construct memberVariables [repeat id]
+        _ [addMemberVariable each declarations]
+    construct listMemberVariables [repeat id]
+        _ [addListMemberVariable each declarations]
+    construct newContructor [constructor]
+        oldConstructor 
+            [replaceAllLists listMemberVariables]
+            [replaceAllMemberVariableNames memberVariables] 
+            [replaceContructor] 
+            [replaceContructorNoArgs]
+    by
+        newContructor methods [replaceAllMethods memberVariables listMemberVariables]
+end function
+
+
+function replaceContructor
+    replace [constructor]
+         mod [acess_modifier] className [id]'( params [list method_parameter +] ') '{ statements [repeat statement]  '}
+    construct newParams [list id]
+    by
+        'def '__init__(self, newParams [translateParams each params]'):  statements [replaceStatements]
+end function
+
+function replaceContructorNoArgs
+    replace [constructor]
+         mod [acess_modifier] className [id]'() '{ statements [repeat statement]  '}
+    by
+        'def '__init__(self):  statements [replaceStatements]
+end function
+
 
 %--------------------%
 %     General        %
@@ -205,53 +315,6 @@ rule replaceListAddNoIndex memberLists [repeat id]
         id '.append( value ')
 end rule
 
-
-%--------------------%
-%     Classes        %
-%--------------------%
-rule replaceClasses
-    replace $ [class_declaration]
-       _[repeat package_statement] _[repeat import_statement] _ [acess_modifier] _ [class_type] className [id] '{ classBody [class_body_decl] '} 
-    by
-    'class className ':  classBody  [replaceClassBody]
-end rule
-
-
-function replaceClassBody
-    replace [class_body_decl]
-        declarations [repeat member_variable_declaration] oldConstructor [constructor] methods [repeat method_declaration]
-    construct memberVariables [repeat id]
-        _ [addMemberVariable each declarations]
-    construct listMemberVariables [repeat id]
-        _ [addListMemberVariable each declarations]
-    construct newContructor [constructor]
-        oldConstructor 
-            [replaceAllLists listMemberVariables]
-            [replaceAllMemberVariableNames memberVariables] 
-            [replaceContructor] 
-            [replaceContructorNoArgs]
-    by
-        newContructor methods  [replaceAllMethods memberVariables listMemberVariables]
-end function
-
-
-function replaceContructor
-    replace [constructor]
-         mod [acess_modifier] className [id]'( params [list method_parameter +] ') '{ statements [repeat statement]  '}
-    construct newParams [list id]
-    by
-        'def '__init__(self, newParams [translateParams each params]'):  statements [replaceStatements]
-end function
-
-function replaceContructorNoArgs
-    replace [constructor]
-         mod [acess_modifier] className [id]'() '{ statements [repeat statement]  '}
-    by
-        'def '__init__(self):  statements [replaceStatements]
-end function
-
-
-
 %--------------------%
 %     Methods        %
 %--------------------%
@@ -264,24 +327,41 @@ function replaceAllMethods memberVariables [repeat id] memberLists [repeat id]
             [replaceAllLists memberLists]
             [replaceAllMemberVariableNames memberVariables] 
             [replaceToString]
-            [replaceMethod] 
-            [replaceMethodNoArgs]
+            [replaceAbstractMethod]
+            [replaceAbstractMethodNoArgs]
+            [replaceConcreteMethod] 
+            [replaceConcreteMethodNoArgs]
             [replaceStaticMethod]
 end function
 
-rule replaceMethod
-    replace [method_declaration]
+rule replaceConcreteMethod
+    replace [concrete_method_declaration]
         _[acess_modifier] _[class_name] methodName [id]'( params [list method_parameter +] ') '{ statements [repeat statement] '}
     construct newParams [list id]
     by
         'def methodName '(self, newParams [translateParams each params] '):  statements [replaceStatements]
 end rule
 
-rule replaceMethodNoArgs
-    replace [method_declaration]
+rule replaceConcreteMethodNoArgs
+    replace [concrete_method_declaration]
         _[acess_modifier] _[class_name] methodName [id]'() '{ statements [repeat statement] '}
     by
         'def methodName '(self):  statements [replaceStatements]
+end rule
+
+rule replaceAbstractMethod
+    replace [abstract_method_declaration]
+        _[acess_modifier] _[class_name] methodName [id] '( params [list method_parameter +] ');
+    construct newParams [list id]
+    by
+        '@abstractmethod 'def methodName '(self, newParams [translateParams each params] '): 'pass
+end rule
+
+rule replaceAbstractMethodNoArgs
+    replace [abstract_method_declaration]
+        _[acess_modifier] _[class_name] methodName [id]'();
+    by
+        '@abstractmethod 'def methodName '(self): 'pass
 end rule
 
 
@@ -329,7 +409,9 @@ function replaceStatements
             [replaceThrowError]
             [replaceNewCall]
             [replaceCasting]
-
+            [correctSuperInit]
+            [correctSuperFunctions]
+            [replaceSuperToString]
 end function
 
 
@@ -494,6 +576,27 @@ rule replaceNewCall
         id [id]
     by
         id '( vals ')
+end rule
+
+rule correctSuperInit
+    replace [nested_identifier]
+        'super( params [list value] ')
+    by
+        'super().__init__( params ')
+end rule
+
+rule correctSuperFunctions
+    replace [nested_identifier]
+        'super rep [repeat attribute_access]
+    by
+        'super() rep
+end rule
+
+rule replaceSuperToString
+    replace [nested_identifier]
+        'super().toString() rep [repeat attribute_access]
+    by
+        'super().__str__() rep
 end rule
 
 %---------------------%
