@@ -1915,12 +1915,16 @@ Action.setCaretPosition = function(line)
       document.getElementById('advancedMode').value=1;
 
       // Add python option
-      var pythonOption = document.createElement("option");
-      pythonOption.id = "genpython";
-      pythonOption.value = "python:Python";
-      pythonOption.text = "Python (Alpha Build)";
+      if (!!!document.getElementById("genpython")) {
+        console.log("Adding python");
 
-      document.getElementById("inputGenerateCode").add(pythonOption,5);
+        var pythonOption = document.createElement("option");
+        pythonOption.id = "genpython";
+        pythonOption.value = "python:Python";
+        pythonOption.text = "Python (Alpha Build)";
+        
+        document.getElementById("inputGenerateCode").add(pythonOption,5);
+      }
 
       Page.setFeedbackMessage("");
       return;
