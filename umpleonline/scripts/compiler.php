@@ -351,14 +351,14 @@ else if (isset($_REQUEST["umpleCode"]))
     executeCommand($command);
     $errhtml = getErrorHtml($executionErrorFilename);
     if($errhtml != "") {
-      echo $errhtml;
+      echo translateToLineNums($errhtml);
     }
     $content = executeCode($modelName, $errhtml != "");
     $output = json_decode($content, false);
     if (json_last_error() === JSON_ERROR_NONE) {
       if($output->output || $output->errors) {
         echo "<p><strong class='executionHeader'>Execution Output</strong></p>";
-        echo $output->output.$output->errors;
+        echo translateToLineNums($output->output.$output->errors);
       }
     } else {
       echo $content;
@@ -403,8 +403,7 @@ else if (isset($_REQUEST["umpleCode"]))
     {
       $html = "
         An error occurred interpreting your Umple code, please review it and try again.
-        If the problem persists, please email the Umple code to
-        the umple-help google group: umple-help@googlegroups.com";
+        If the problem persists, please consult the user manual or ask a question on Stack Overvlow with the umple tag";
     }
     echo $errhtml ."<p>URL_SPLIT" . $html;
     
@@ -627,6 +626,35 @@ else
   echo "Invalid use of compiler";
 }
 
+function translateToLineNums($errortext) {
+  $repPattern= '/model.ump:(\d+)/';
+
+  $findRegPattern= '/.*model.ump:(\d+).*/';
+  $findRepl='$1';
+
+  $output="";
+  $numout="";
+
+  $separator = "\r\n";
+  $line = strtok($errortext, $separator);
+  while ($line !== false) {
+    $numout =preg_replace($findRegPattern,$findRepl, $line,1,$numfound);
+    if($numfound==0) {
+      $numout="";
+    }
+    else
+    {
+      $numout -=1;
+    }
+    $replacement= '<a href="javascript:Action.setCaretPosition('.$numout.');Action.updateLineNumberDisplay();">model.ump:'.$numout.'</a>';
+
+    $output .=preg_replace($repPattern,$replacement, $line)."\n";
+    //$output = $output.$line."\n";
+    $line = strtok($separator); // get next one
+  }
+
+  return $output;
+}
 
 function getErrorHtml($errorFilename, $offset = 1) 
 {
@@ -642,7 +670,7 @@ function getErrorHtml($errorFilename, $offset = 1)
      
      if($errInfo == null)
      {
-        $errhtml .= "Couldn't read results from the Umple compiler!<br><pre>".$errorMessage."</pre>";
+        $errhtml .= "<pre>".$errorMessage."</pre>";
      }
      else
      {
