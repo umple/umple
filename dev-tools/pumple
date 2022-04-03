@@ -8,4 +8,5 @@ echo Do this after qfbumple when resting umpleonline
 ant -DshouldPackageUmpleOnline=true -Dmyenv=local -f build.umple.xml packageUmpleonline
 cd $UMPLEROOT/umpleonline/scripts
 quitserver
+startexecdocker
 

@@ -850,6 +850,9 @@ $output = $dataHandle->readData('model.ump');
     <div id="tabRow"></div>
     <div id="innerGeneratedCodeRow"></div>
   </div>
+  <div id="codeExecutionArea">
+    <pre id="executionMessage"></pre>
+  </div>
 
   <?php if($showChrome) { ?>
     <div class="spacer row"></div>
