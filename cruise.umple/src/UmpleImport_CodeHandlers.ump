@@ -254,6 +254,10 @@ class ScxmlImportHandler
       elemStack.push(onexit);
     } else if ("initial".equals(localName)) {
       isInitial = true;
+    } else if ("raise".equals(localName)){
+      ImportAction raise = new ImportAction("", "", depth, "raise");
+      elemStack.peek().addImportStateMachineElement(raise);
+      elemStack.push(raise);
     }
   }
 
