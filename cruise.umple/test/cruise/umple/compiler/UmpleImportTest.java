@@ -211,5 +211,4 @@ public class UmpleImportTest {
             "ScxmlImport_autotransition.ump",
             "ScxmlImport_autotransition.scxml.txt");
     }
-
 }

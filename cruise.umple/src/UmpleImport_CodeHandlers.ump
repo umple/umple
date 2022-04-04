@@ -259,7 +259,6 @@ class ScxmlImportHandler
       elemStack.peek().addImportStateMachineElement(raise);
       elemStack.push(raise);
     }
-    
   }
 
   public void characters(char[] ch, int start, int length) {
