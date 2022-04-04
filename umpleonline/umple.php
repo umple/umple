@@ -532,13 +532,13 @@ $output = $dataHandle->readData('model.ump');
             <li id="itemLoadExamples">
               <select id="inputExample" name="inputExample" class="button" size = "1" data-diagram-type="class">
                 <option name = "optionExample" id = "defaultExampleOption" value="">Select Example</option>
-                <option name = "optionExample" value="2DShapes.ump">2DShapes</option>
+                <option name = "optionExample" value="2DShapes.ump">2DShapes *</option>
                 <option name = "optionExample" value="AccessControl.ump">Access Control</option>
                 <option name = "optionExample" value="AccessControl2.ump">Access Control 2</option>
                 <option name = "optionExample" value="Accidents.ump">Accidents</option>
                 <option name = "optionExample" value="Accommodations.ump">Accommodations</option>
                 <option name = "optionExample" value="AfghanRainDesign.ump">Afghan Rain Design</option>
-                <option name = "optionExample" value="AirlineExample.ump">Airline</option>
+                <option name = "optionExample" value="AirlineExample.ump">Airline *</option>
                 <option name = "optionExample" value="BankingSystemA.ump">Banking System A</option>
                 <option name = "optionExample" value="BankingSystemB.ump">Banking System B</option>
                 <option name = "optionExample" value="CanalSystem.ump">Canal</option>
@@ -584,7 +584,7 @@ $output = $dataHandle->readData('model.ump');
             <li id="itemLoadExamples2">
               <select id="inputExample2" name="inputExample2" class="button" size="1" data-diagram-type="state">
                 <option name = "optionExample2" id = "defaultExampleOption2" value="">Select Example</option>
-                <option name = "optionExample" value="AgentsCommunication.ump">Agents Communicating</option>
+                <option name = "optionExample" value="AgentsCommunication.ump">Agents Communicating *</option>
                 <option name = "optionExample" value="ApplicationProcessing.ump">Application for a Grant</option>
                 <option name = "optionExample" value="Booking.ump">Booking (Airline)</option>
                 <option name = "optionExample" value="CanalLockStateMachine.ump">Canal Lock</option>
@@ -604,7 +604,7 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="HomeHeater.ump">Home Heating System</option>
                 <option name = "optionExample" value="LibraryLoanStateMachine.ump">Library Loan</option>
                 <option name = "optionExample" value="Lights.ump">Light (3 alternatives)</option>
-                <option name = "optionExample" value="MicrowaveOven2.ump">Microwave Oven</option>
+                <option name = "optionExample" value="MicrowaveOven2.ump">Microwave Oven *</option>
                 <option name = "optionExample" value="Ovens.ump">Oven (3 alternatives)</option>
                 <option name = "optionExample" value="ParliamentBill.ump">Parliament Bill</option>
                 <option name = "optionExample" value="Phone.ump">Phone and Lines</option>
@@ -612,10 +612,10 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="SecurityLight.ump">Security Light</option>
                 <option name = "optionExample" value="SpecificFlight.ump">Specific Flight (Airline)</option>
                 <option name = "optionExample" value="SpecificFlightFlat.ump">Specific Flight (Airline - Flat)</option>
-                <option name = "optionExample" value="TcpIpSimulation.ump">TCP/IP Simulation</option>
+                <option name = "optionExample" value="TcpIpSimulation.ump">TCP/IP Simulation *</option>
                 <option name = "optionExample" value="TelephoneSystem2.ump">Telephone Set Modes</option>
                 <option name = "optionExample" value="TicTacToe.ump">Tic Tac Toe or Noughts and Crosses</option>
-                <option name = "optionExample" value="TimedCommands.ump">Timed Commands</option>                     
+                <option name = "optionExample" value="TimedCommands.ump">Timed Commands *</option>                     
                 <option name = "optionExample" value="TollBooth.ump">Toll Booth</option>
                 <option name = "optionExample" value="TrafficLightsA.ump">Traffic Lights A</option>
                 <option name = "optionExample" value="TrafficLightsB.ump">Traffic Lights B</option>
