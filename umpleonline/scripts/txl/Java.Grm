@@ -282,3 +282,4 @@ end define
 define class_body_decl
     [repeat member_variable_declaration] [opt constructor] [repeat method_declaration]
 end define
+

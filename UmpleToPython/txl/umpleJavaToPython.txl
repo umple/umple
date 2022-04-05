@@ -263,23 +263,35 @@ end function
 rule replaceConcreteClassesWithInheritance
     replace $ [concrete_class_declaration]
         _ [acess_modifier] 'class className [class_name] inheritances [repeat inheritance_list+] '{ classBody [class_body_decl] '} 
+    deconstruct classBody
+        decls [repeat member_variable_declaration] _ [opt constructor] _ [repeat method_declaration]
+    construct declarationClassesToImport [repeat id]
+        _ [getClassesToImport each decls]
+    construct allClassesToImport [repeat id]
+        _ [extractInheritanceImportClasses each inheritances] [concatenateRepeatNoDuplicates declarationClassesToImport]
     construct inheritanceClasses [list class_name]
-        _ [extractImportClasses each inheritances]
+        _ [extractInheritanceBlockClasses each inheritances]
     construct imports [repeat import_statement]
-        _ [addImportStatement each inheritanceClasses]
+        _ [addImportStatement each allClassesToImport]
     by
-    imports 'class className '( inheritanceClasses ')':  classBody  [replaceClassBody]
+        imports 'class className '( inheritanceClasses ')':  classBody  [replaceClassBody]
 end rule
 
 rule replaceConcreteClassesNoInheritance
     replace $ [concrete_class_declaration]
-        _ [acess_modifier] 'class className [class_name] '{ classBody [class_body_decl] '} 
+        _ [acess_modifier] 'class className [class_name] '{ classBody [class_body_decl] '}
+    deconstruct classBody
+        decls [repeat member_variable_declaration] _ [opt constructor] _ [repeat method_declaration]
+    construct declarationClassesToImport [repeat id]
+        _ [getClassesToImport each decls] 
+    construct imports [repeat import_statement]
+        _ [addImportStatement each declarationClassesToImport]
     by
-    'class className ':  classBody  [replaceClassBody]
+    imports 'class className ':  classBody  [replaceClassBody]
 end rule
 
 
-function extractImportClasses inheritanceList [inheritance_list]
+function extractInheritanceBlockClasses inheritanceList [inheritance_list]
     replace [list class_name]
         classes [list class_name]
     deconstruct inheritanceList
@@ -288,7 +300,19 @@ function extractImportClasses inheritanceList [inheritance_list]
         classes [, classesToAdd] 
 end function
 
-function addImportStatement a [class_name]
+function extractInheritanceImportClasses inheritanceList [inheritance_list]
+    replace [repeat id]
+        classesToImport [repeat id]
+    deconstruct inheritanceList
+        _[inheritance_statement] classesToAdd [list class_name]
+    construct classIds [repeat id]
+        _ [extractListClass each classesToAdd] [extractRegularClass each classesToAdd]
+    by
+        classesToImport [. classIds] 
+end function
+
+
+function addImportStatement a [id]
     replace [repeat import_statement]
         imports [repeat import_statement]
     construct newImport [import_statement]
@@ -308,9 +332,11 @@ rule replaceInterfacesWithInheritance
     replace [interface_declaration]
         _ [acess_modifier] 'interface className [class_name] inheritances [repeat inheritance_list+] '{ classBody [class_body_decl] '} 
     construct inheritanceClasses [list class_name]
-        _ [extractImportClasses each inheritances]
+        _ [extractInheritanceBlockClasses each inheritances]
+    construct classesToImport [repeat id]
+        _ [extractInheritanceImportClasses each inheritances]
     construct imports [repeat import_statement]
-        _ [addImportStatement each inheritanceClasses]
+        _ [addImportStatement each classesToImport]
     by
         'from 'abc 'import 'ABC, 'abstractmethod imports 'class className '(ABC, inheritanceClasses '):  classBody [replaceClassBody] [replaceInterfaceBody]
 end rule
