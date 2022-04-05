@@ -64,6 +64,9 @@ class Airline {
   }
 }
 //$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java code
+// @@@skipphpcompile - Contains Java code
+// @@@skiprubycompile - Contains Java code
 // LAYOUT INFORMATION
 class Person
 {
