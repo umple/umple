@@ -3,7 +3,6 @@ const http = require('http');
 const fs = require('fs');
 const DockerExecution = require('./dockerExecution');
 const bodyParser = require('body-parser');
-const os = require('os-utils');
 const path = require('path');
 
 const app = express();
