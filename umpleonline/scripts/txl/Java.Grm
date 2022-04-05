@@ -9,6 +9,7 @@ end compounds
 
 tokens
     number  "(-\s?)?\d+(.\d+)?"
+    garbage "toString(#})*}"
 end tokens
 
 %--------------------%
@@ -16,7 +17,7 @@ end tokens
 %--------------------%
 
 keys
- return new if else for true false while this super self tuple len True False + - * / ? ; :
+ return new if else for true false while this super self tuple len True False + - * / ? ; : toString
 end keys
 
 define acess_modifier
@@ -218,6 +219,12 @@ end define
 define method_declaration
         [concrete_method_declaration]
     |   [abstract_method_declaration]
+    |   [toString_method_garbage]
+end define
+
+define toString_method_garbage
+    [acess_modifier] [opt static] [class_name] [garbage]
+    |   [empty]
 end define
 
 define abstract_method_declaration

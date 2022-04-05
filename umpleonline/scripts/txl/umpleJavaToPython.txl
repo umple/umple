@@ -460,9 +460,9 @@ function replaceAllMethods memberVariables [repeat id] memberLists [repeat id]
         methods [repeat method_declaration]
     by
         methods 
+            [removeToString_garbage]
             [replaceAllLists memberLists]
             [replaceAllMemberVariableNames memberVariables] 
-            [replaceToString]
             [replaceAbstractMethod]
             [replaceAbstractMethodNoArgs]
             [replaceConcreteMethod] 
@@ -500,12 +500,11 @@ rule replaceAbstractMethodNoArgs
         '@abstractmethod 'def methodName '(self): 'pass
 end rule
 
-
-rule replaceToString
-    replace [method_declaration]
-        _[acess_modifier] _[class_name]  'toString '() '{ statements [repeat statement] '}
+rule removeToString_garbage
+    replace [toString_method_garbage]
+       _ [acess_modifier] _[opt static] _[class_name]  _[garbage]
     by
-        'def '__str__ '(self):  statements [replaceStatements]
+  
 end rule
 
 rule replaceStaticMethod
@@ -547,7 +546,6 @@ function replaceStatements
             [replaceCasting]
             [correctSuperInit]
             [correctSuperFunctions]
-            [replaceSuperToString]
 end function
 
 
@@ -726,13 +724,6 @@ rule correctSuperFunctions
         'super rep [repeat attribute_access]
     by
         'super() rep
-end rule
-
-rule replaceSuperToString
-    replace [nested_identifier]
-        'super().toString() rep [repeat attribute_access]
-    by
-        'super().__str__() rep
 end rule
 
 %---------------------%

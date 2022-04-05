@@ -8,7 +8,7 @@ def shorten(content) :
 
 javaGrmFile = open("Java.Grm", "r")
 pythonGrmFile = open("Python.Grm", "r")
-umpleJavaToPython = open("umpleJavaToPython.Txl", "r")
+umpleJavaToPython = open("umpleJavaToPython.txl", "r")
 
 print("String javaGrmContent = \"" + shorten(javaGrmFile.read()) + "\";")
 print("String pythonGrmContent = \"" + shorten(pythonGrmFile.read()) + "\";")
