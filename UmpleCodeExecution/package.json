@@ -14,5 +14,5 @@
     "start": "pm2 start app.js --no-daemon"
   },
   "author": "",
-  "license": "ISC"
+  "license": "MIT"
 }
