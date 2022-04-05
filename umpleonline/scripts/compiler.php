@@ -320,6 +320,11 @@ else if (isset($_REQUEST["umpleCode"]))
     return;
   }
 
+  if ($language == "Python")
+  {
+    echo "To Strings have been removed due to an issue with their generation.\n";
+  }
+
   if (!$uigu)
   { // NOTuigu
   // Generate the Java, PHP, RTCpp, Ruby, Python, Cpp or Sql and put it into the right directory
