@@ -205,4 +205,10 @@ public class UmpleImportTest {
             "ScxmlImport_initial_nested_state.scxml.txt"); 
     }
 
+    @Test
+    public void ScxmlAutoTransitionTest() throws Exception {
+        assertImportFile(UmpleImportType.SCXML,
+            "ScxmlImport_autotransition.ump",
+            "ScxmlImport_autotransition.scxml.txt");
+    }
 }
