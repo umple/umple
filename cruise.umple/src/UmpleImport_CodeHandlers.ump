@@ -287,6 +287,97 @@ class ScxmlImportHandler
   }
 }
 
+class PapyrusImportHandler
+{
+
+  internal currentElement = "";
+  internal currentAttributeName = "";
+  internal currentAttributeType = "";
+  internal UmpleImportClass currentClass = null;
+
+  public void startDocument() throws SAXException {
+    // System.out.println("\nin the startDocument method of PapyrusImportHandler class...");
+    UmpleImportModel model = new UmpleImportModel("");  // set `currentPackageName` to ""
+    setModel(model);
+  }
+
+  public void endDocument() throws SAXException {
+    System.out.println("\nin the endDocument method of PapyrusImportHandler class...");
+  }
+
+  public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    System.out.println("\n\nin the startElement method of PapyrusImportHandler class...");
+    System.out.println("uri=" + uri + ", localName=" + localName + ", qName=" + qName);
+    System.out.println("attributes:");
+    for (int i = 0; i < attributes.getLength(); ++i) {
+      System.out.println(attributes.getValue(i));
+    }
+    
+    currentElement = localName;
+    UmpleImportModel model = getModel();   
+    // load class
+    if (currentElement.equals("packagedElement")) {
+      boolean isInterface = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_INTERFACE));
+      boolean isAbstract = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_ABSTRACT));
+      String currentPackageName = model.getCurrentPackageName();
+      String className = attributes.getValue(UmpleImportConstants.XMI_NAME);
+
+      // System.out.println("isInterface=" + isInterface + ".");
+      // System.out.println("isAbstract=" + isAbstract + ".");
+      // System.out.println("currentPackageName=" + currentPackageName + ".");
+      // System.out.println("className=" + className + ".");
+      
+      // String id, String name, String packageName, Boolean isAbstract, Boolean isInterface
+      UmpleImportClass umpleClass = new UmpleImportClass("Papyrus", className, currentPackageName, isAbstract, isInterface);
+      currentClass = umpleClass;
+      model.addUmpleImportElement(umpleClass);
+    } 
+    // load class attributes
+    else if (currentElement.equals("ownedAttribute")) {
+      String attributeType = attributes.getValue("xmi:type");
+      boolean isAttribute = attributeType.equals("uml:Property");
+
+      String attributeName = attributes.getValue(UmpleImportConstants.XMI_NAME);
+      // System.out.println("attrType=" + attrType + ".");
+      // System.out.println("checkIsProperty=" + checkIsProperty + ".");
+      // System.out.println("attrName=" + attrName + ".");
+
+      if (isAttribute) {
+        currentAttributeName = attributeName;
+      }
+    } else if (currentElement.equals("type")) {
+      String attributeType = attributes.getValue("xmi:type");
+      boolean isPrimitiveType = attributeType.equals("uml:PrimitiveType");
+
+      if (isPrimitiveType) {
+        String attributeRawType = attributes.getValue("href").split("#")[1];
+        // System.out.println("attributeRawType=" + attributeRawType);
+        String currentClassName = currentClass.getName();
+
+        // String id, String name, String className, String dataType
+        UmpleImportAttribute umpleAttribute = new UmpleImportAttribute("Papyrus:property", currentAttributeName, currentClassName, attributeRawType);
+        currentClass.addUmpleImportAttribute(umpleAttribute);
+      }
+    }
+  }
+
+  public void endElement(String uri, String localName, String qName) throws SAXException {
+    // System.out.println("\n\nin the endElement method of PapyrusImportHandler class...");
+    // System.out.println("uri=" + uri + ", localName=" + localName + ", qName=" + qName);
+    // reset internal values for next round of parsing
+    boolean isPackagedElement = currentElement.equals(currentElement.equals("packagedElement"));
+    if (isPackagedElement && currentClass != null)
+      currentClass = null;
+    currentElement = "";
+  }
+
+  public void characters(char[] ch, int start, int length) throws SAXException {
+    // System.out.println("\n\nin the characters method of PapyrusImportHandler class...");
+    // String chars = new String(ch, start, length);
+    // System.out.println("chars=" + chars);
+  }
+}
+
 class UmpleImportHandlerFactory {
 
   public static UmpleImportHandler create(final UmpleImportType type) {

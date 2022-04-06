@@ -1,0 +1,8 @@
+
+
+class Book
+{
+	String title;
+	Integer pageNumber;
+	Double price;
+}
