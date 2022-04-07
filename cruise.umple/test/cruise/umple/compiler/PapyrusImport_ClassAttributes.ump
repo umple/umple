@@ -6,3 +6,9 @@ class Book
 	Integer pageNumber;
 	Double price;
 }
+
+class Car
+{
+	Double price;
+	String modelYear;
+}
