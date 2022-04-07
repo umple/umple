@@ -7,14 +7,12 @@
     "body-parser": "*",
     "exports": "*",
     "express": "4.*",
-    "express-brute": "*",
     "nodemon": "^2.0.15",
-    "os-utils": "0.0.14",
     "pm2": "^5.1.2"
   },
   "scripts": {
     "start": "pm2 start app.js --no-daemon"
   },
   "author": "",
-  "license": "ISC"
+  "license": "MIT"
 }
