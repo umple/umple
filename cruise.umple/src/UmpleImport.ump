@@ -282,6 +282,8 @@ class UmpleImportConstants
   const ECORE_REFERENCE = "ecore:EReference";
   const PAPYRUS_TYPE = "xmi:type";
   const PAPYRUS_PROPERTY = "uml:Property";
+  const PAPYRUS_HREF = "href";
+  const PAPYRUS_PRIMITIVE_TYPE = "uml:PrimitiveType";
 }
 
 use UmpleImport_CodeHandlers.ump;
