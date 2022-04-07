@@ -83,7 +83,13 @@ app.post('/run' , (req, res)  =>
                     {
                         output += `<strong>For main method in class ${mainFunction}:</strong>\n`
                         output += `${err || ""}\n`;
-                        output += `${data}\n`
+                        linelimit=1000;
+                        lines = data.split("\n");
+                        output += lines.slice(0,linelimit).join("\n")+"\n";
+                        if(lines.length > linelimit+1) {
+                          output += "...\n"+lines[lines.length-1]+"\n";
+                          output += "A total of "+(lines.length-1)+" output lines were generated. The listing above has been limited to the first "+linelimit+" lines, plus the very last line\n";
+                        };
                         totalServed++;
                         console.log("Processed request ", totalServed);
                         if(totalServed >= mainFunctions.length) {
