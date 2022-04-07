@@ -286,6 +286,7 @@ class UmpleImportConstants
   const PAPYRUS_PROPERTY = "uml:Property";
   const PAPYRUS_HREF = "href";
   const PAPYRUS_PRIMITIVE_TYPE = "uml:PrimitiveType";
+  const PAPYRUS_CLASS = "uml:Class";
 }
 
 use UmpleImport_CodeHandlers.ump;

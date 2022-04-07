@@ -4,9 +4,6 @@
     <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
   </packageImport>
   <packagedElement xmi:type="uml:Class" xmi:id="_Mentor" name="Mentor">
-    <ownedAttribute xmi:type="uml:Property" xmi:id="_Mentor__Student-student" name="student" type="_Student" association="_Mentor__Student">
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Mentor__Student-students-_upperValue" value="*"/>
-    </ownedAttribute>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_name" name="name">
       <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
     </ownedAttribute>
@@ -16,10 +13,17 @@
       <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
     </ownedAttribute>
   </packagedElement>
-  <packagedElement xmi:type="uml:Association" xmi:id="_Mentor__Student" name="MentorToStudent" memberEnd="_Mentor__Student-student _Mentor__Student-mentor">
+  <packagedElement xmi:type="uml:Association" xmi:id="_Mentor__Student" name="Mentor__Student" visibility="public" memberEnd="_Mentor_Student_mentor _Mentor_Student_students" navigableOwnedEnd="_Mentor_Student_mentor _Mentor_Student_students">
     <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_eAnnotations.0" source="org.eclipse.papyrus">
       <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_details.0" key="nature" value="UML_Nature"/>
     </eAnnotations>
-    <ownedEnd xmi:type="uml:Property" xmi:id="_Mentor__Student-mentor" name="mentor" type="_Mentor" association="_Mentor__Student"/>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_Mentor_Student_mentor" name="mentor" type="_Mentor" association="_Mentor__Student">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Mentor__Student-mentor-_lowerValue" value="1"/>
+      <upperValue xmi:type="uml:LiteralInteger" xmi:id="_Mentor__Student-mentor-_upperValue" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_Mentor_Student_students" name="student" type="_Student" association="_Mentor__Student">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Mentor__Student-students-_lowerValue" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Mentor__Student-students-_upperValue" value="*"/>
+    </ownedEnd>
   </packagedElement>
 </uml:Model>

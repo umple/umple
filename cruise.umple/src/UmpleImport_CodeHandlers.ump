@@ -317,20 +317,36 @@ class PapyrusImportHandler
     UmpleImportModel model = getModel();   
     // load class
     if (currentElement.equals("packagedElement")) {
-      boolean isInterface = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_INTERFACE));
-      boolean isAbstract = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_ABSTRACT));
-      String currentPackageName = model.getCurrentPackageName();
-      String className = attributes.getValue(UmpleImportConstants.XMI_NAME);
+      String attributeType = attributes.getValue(UmpleImportConstants.PAPYRUS_TYPE);
+      boolean isClass = attributeType.equals(UmpleImportConstants.PAPYRUS_CLASS);
 
-      // System.out.println("isInterface=" + isInterface + ".");
-      // System.out.println("isAbstract=" + isAbstract + ".");
-      // System.out.println("currentPackageName=" + currentPackageName + ".");
-      // System.out.println("className=" + className + ".");
-      
-      // String id, String name, String packageName, Boolean isAbstract, Boolean isInterface
-      UmpleImportClass umpleClass = new UmpleImportClass("Papyrus", className, currentPackageName, isAbstract, isInterface);
-      currentClass = umpleClass;
-      model.addUmpleImportElement(umpleClass);
+      if (isClass) {
+        boolean isInterface = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_INTERFACE));
+        boolean isAbstract = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_ABSTRACT));
+        String currentPackageName = model.getCurrentPackageName();
+        String className = attributes.getValue(UmpleImportConstants.XMI_NAME);
+
+        // System.out.println("isInterface=" + isInterface + ".");
+        // System.out.println("isAbstract=" + isAbstract + ".");
+        // System.out.println("currentPackageName=" + currentPackageName + ".");
+        // System.out.println("className=" + className + ".");
+
+        // String id, String name, String packageName, Boolean isAbstract, Boolean isInterface
+        UmpleImportClass umpleClass = new UmpleImportClass("PapyrusClass", className, currentPackageName, isAbstract, isInterface);
+        currentClass = umpleClass;
+        model.addUmpleImportElement(umpleClass);
+      }
+
+      if (isAssociation) {
+        // String id, String name;
+        // //root class
+        // String startClass;
+        // eType
+        // String endClass;
+        //eOpposite
+        // String endClassName;
+        UmpleImportAssociation umpleAssociation = new UmpleImportAssociation("PapyrusAssociation", attrName, currentClassName, classAttrType, endClassName);
+      }
     } 
     // load class attributes
     else if (currentElement.equals("ownedAttribute")) {
