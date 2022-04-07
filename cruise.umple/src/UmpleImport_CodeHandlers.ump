@@ -369,6 +369,8 @@ class PapyrusImportHandler
     if (isPackagedElement && currentClass != null)
       currentClass = null;
     currentElement = "";
+    currentAttributeName = "";
+    currentAttributeType = "";
   }
 
   public void characters(char[] ch, int start, int length) throws SAXException {
