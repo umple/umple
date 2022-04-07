@@ -336,17 +336,6 @@ class PapyrusImportHandler
         currentClass = umpleClass;
         model.addUmpleImportElement(umpleClass);
       }
-
-      if (isAssociation) {
-        // String id, String name;
-        // //root class
-        // String startClass;
-        // eType
-        // String endClass;
-        //eOpposite
-        // String endClassName;
-        UmpleImportAssociation umpleAssociation = new UmpleImportAssociation("PapyrusAssociation", attrName, currentClassName, classAttrType, endClassName);
-      }
     } 
     // load class attributes
     else if (currentElement.equals("ownedAttribute")) {
