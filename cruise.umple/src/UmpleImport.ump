@@ -120,8 +120,10 @@ class UmpleImportType {
   // http://en.wikipedia.org/wiki/SCXML
   const UmpleImportType SCXML = new UmpleImportType("scxml", "State-Chart XML");
     
+ // http://www.eclipse.org/papyrus/
+  const UmpleImportType PAPYRUS = new UmpleImportType("uml", "Papyrus XML");
 
-  const Set<UmpleImportType> ALL = new HashSet<>(Arrays.asList(ECORE, SCXML));
+  const Set<UmpleImportType> ALL = new HashSet<>(Arrays.asList(ECORE, SCXML, PAPYRUS));
   
   /** 
    * The file type of an import, i.e. the extension. 

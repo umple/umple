@@ -35,6 +35,14 @@ public class UmpleImportTest {
         return umple.generateUmple();
     }
 
+    private static String loadPapyrusFile(final String name) throws Exception {
+        assertTrue((new File(name)).exists());
+
+        PapyrusImportHandler handler = new PapyrusImportHandler();
+        UmpleImportModel umple = handler.readDataFromXML(name);
+        return umple.generateUmple();
+    }
+
     private static void assertImportFile(final UmpleImportType type, 
             final String expectedPath, 
             final String importFile) throws Exception {
@@ -44,6 +52,8 @@ public class UmpleImportTest {
             content = loadECoreFile(realImportFile);
         } else if (type == UmpleImportType.SCXML) {
             content = loadScxmlFile(realImportFile);
+        } else if (type == UmpleImportType.PAPYRUS) {
+            content = loadPapyrusFile(realImportFile);
         } else {
             throw new IllegalArgumentException("Unknown UmpleImportType parameter = " + type);
         }
@@ -211,4 +221,13 @@ public class UmpleImportTest {
             "ScxmlImport_autotransition.ump",
             "ScxmlImport_autotransition.scxml.txt");
     }
+
+     @Test
+    public void PapyrusClassAttributesParsingTest() throws Exception {
+
+        assertImportFile(UmpleImportType.PAPYRUS,
+            "PapyrusImport_ClassAttributes.ump", 
+            "PapyrusImport_ClassAttributes.uml.txt");
+    }
+
 }
