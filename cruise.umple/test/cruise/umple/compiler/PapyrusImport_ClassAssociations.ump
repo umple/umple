@@ -1,0 +1,8 @@
+class Mentor {
+  String name;
+  1 -- * Student;
+}
+
+class Student {
+  Integer age;
+}
