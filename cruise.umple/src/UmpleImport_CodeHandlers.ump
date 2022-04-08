@@ -319,12 +319,14 @@ class PapyrusImportHandler
     if (currentElement.equals("packagedElement")) {
       String attributeType = attributes.getValue(UmpleImportConstants.PAPYRUS_TYPE);
       boolean isClass = attributeType.equals(UmpleImportConstants.PAPYRUS_CLASS);
+      boolean isAssociation = attributeType.equals(UmpleImportConstants.PAPYRUS_ASSOCIATION);
 
       if (isClass) {
         boolean isInterface = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_INTERFACE));
         boolean isAbstract = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_ABSTRACT));
         String currentPackageName = model.getCurrentPackageName();
         String className = attributes.getValue(UmpleImportConstants.XMI_NAME);
+        String classId = attributes.getValue(UmpleImportConstants.PAPYRUS_ID);
 
         // System.out.println("isInterface=" + isInterface + ".");
         // System.out.println("isAbstract=" + isAbstract + ".");
@@ -332,9 +334,38 @@ class PapyrusImportHandler
         // System.out.println("className=" + className + ".");
 
         // String id, String name, String packageName, Boolean isAbstract, Boolean isInterface
-        UmpleImportClass umpleClass = new UmpleImportClass("PapyrusClass", className, currentPackageName, isAbstract, isInterface);
+        UmpleImportClass umpleClass = new UmpleImportClass(classId, className, currentPackageName, isAbstract, isInterface);
         currentClass = umpleClass;
         model.addUmpleImportElement(umpleClass);
+      }
+
+      if (isAssociation) {
+        String associationName = attributes.getValue(UmpleImportConstants.XMI_NAME);
+        // System.out.println("associationName=" + associationName);
+
+        // String id, String name, String startClass, String endClass, String endClassName;
+        UmpleImportAssociation umpleAssociation = new UmpleImportAssociation("PapyrusAssociation", "", "Mentor", "Student", "");
+
+        // mentor
+        umpleAssociation.setOtherLowerBound(1);
+        umpleAssociation.setOtherUpperBound(1);
+
+        // student
+        umpleAssociation.setLowerBound(0);
+        umpleAssociation.setUpperBound(-1);
+
+
+        List<UmpleImportElement> umpleImportElements = model.getUmpleImportElements();
+        List<UmpleImportElement> modifiableUmpleImportElements = new ArrayList<UmpleImportElement>();
+        for (int i = 0; i < umpleImportElements.size(); ++i) {
+          modifiableUmpleImportElements.add(umpleImportElements.get(i));
+        }
+        for (int i = 0; i < modifiableUmpleImportElements.size(); ++i) {
+          if ("_Mentor".equals(modifiableUmpleImportElements.get(i).getId())) {
+            UmpleImportClass tempClass = (UmpleImportClass)modifiableUmpleImportElements.get(i);
+            tempClass.addUmpleImportAssociation(umpleAssociation);
+          }
+        }
       }
     } 
     // load class attributes
