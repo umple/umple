@@ -440,7 +440,7 @@ $output = $dataHandle->readData('model.ump');
       </div>
     </div>
     
-    <div id="paletteColumn" class="inRow">
+    <div id="paletteColumn" class="inRow" ondrop="Action.dropHandler(event);" ondragover="Action.dragOverHandler(event);">
       <div id="palette" class="palette">
 
         <!-- GROUP 1 OF OPTIONS -->
@@ -450,11 +450,11 @@ $output = $dataHandle->readData('model.ump');
           <ul class="first" id="saveLoad">
             <li class="subtitle">SAVE</li>
             <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
-            <li id="ttSaveBookmark">
+            <!--li id="ttSaveBookmark">
               <div id="menuBookmarkable" class="bookmarkableUrl">
                 <a href="umple.php?model=<?php echo $dataHandle->getName() ?>">Resave URL</a>
               </div>
-            </li>
+            </li-->
             <?php } else if (!isset($_REQUEST["task"])) { ?>
             <li id="ttSaveModel"> 
               <div id="menuBookmarkable" class="bookmarkableUrl">
@@ -462,6 +462,10 @@ $output = $dataHandle->readData('model.ump');
               </div>
             </li>
             <?php } ?>
+            <li id="buttonCopyClip" class="copyClip">
+              <img src="scripts/copy.png"/> 
+               Copy to Clipboard
+            </li>           
             <li id="buttonCopy" class="copy">
               <img src="scripts/copy.png"/> 
                Source to Copy
@@ -479,22 +483,34 @@ $output = $dataHandle->readData('model.ump');
               Store in Browser
             </li>
             
-            <li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
+            <!--li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
               <img src="scripts/copy.png"/> 
               Load from Browser
-            </li>
+            </li-->
 
             <li id="buttonDownloadFiles" class="downloadFiles">
               <img src="scripts/copy.png"/> 
                Download Files
-            </li>                        
+            <li class="subtitle">LOAD</li>
+            <li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
+              <img src="scripts/copy.png"/> 
+              Load from Browser
+            </li>
+            <li>Drag and drop a .ump file here to load it, or drag it to any place in the text area.</li>
           </ul>
 
           <ul class="second center-children">
             <li class="subtitle">RESET</li>
-            <li id="ttStartOver"> 
-              <div id="buttonStartOver" class="jQuery-palette-button" value="Start Over"></div> 
+            <li id="ttLoadBlankModel">
+              <div id="buttonLoadBlankModel" class="jQuery-palette-button" value="Load Blank Model"></div>
             </li>
+            <li id="ttShowRefreshUmpleCompletely">
+            	<div id="buttonShowRefreshUmpleOnlineCompletely" class="jQuery-palette-button" value="Reset Completely"></div>
+            </li>
+            <li id="ttStartOver"> 
+              <div id="buttonStartOver" style="display: none;" value="Click here to completely refresh UmpleOnline (cannot be undone)"></div> 
+            </li>
+            
           </ul>
         </div>
         
@@ -516,13 +532,13 @@ $output = $dataHandle->readData('model.ump');
             <li id="itemLoadExamples">
               <select id="inputExample" name="inputExample" class="button" size = "1" data-diagram-type="class">
                 <option name = "optionExample" id = "defaultExampleOption" value="">Select Example</option>
-                <option name = "optionExample" value="2DShapes.ump">2DShapes</option>
+                <option name = "optionExample" value="2DShapes.ump">2DShapes *</option>
                 <option name = "optionExample" value="AccessControl.ump">Access Control</option>
                 <option name = "optionExample" value="AccessControl2.ump">Access Control 2</option>
                 <option name = "optionExample" value="Accidents.ump">Accidents</option>
                 <option name = "optionExample" value="Accommodations.ump">Accommodations</option>
                 <option name = "optionExample" value="AfghanRainDesign.ump">Afghan Rain Design</option>
-                <option name = "optionExample" value="AirlineExample.ump">Airline</option>
+                <option name = "optionExample" value="AirlineExample.ump">Airline *</option>
                 <option name = "optionExample" value="BankingSystemA.ump">Banking System A</option>
                 <option name = "optionExample" value="BankingSystemB.ump">Banking System B</option>
                 <option name = "optionExample" value="CanalSystem.ump">Canal</option>
@@ -568,7 +584,7 @@ $output = $dataHandle->readData('model.ump');
             <li id="itemLoadExamples2">
               <select id="inputExample2" name="inputExample2" class="button" size="1" data-diagram-type="state">
                 <option name = "optionExample2" id = "defaultExampleOption2" value="">Select Example</option>
-                <option name = "optionExample" value="AgentsCommunication.ump">Agents Communicating</option>
+                <option name = "optionExample" value="AgentsCommunication.ump">Agents Communicating *</option>
                 <option name = "optionExample" value="ApplicationProcessing.ump">Application for a Grant</option>
                 <option name = "optionExample" value="Booking.ump">Booking (Airline)</option>
                 <option name = "optionExample" value="CanalLockStateMachine.ump">Canal Lock</option>
@@ -588,7 +604,7 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="HomeHeater.ump">Home Heating System</option>
                 <option name = "optionExample" value="LibraryLoanStateMachine.ump">Library Loan</option>
                 <option name = "optionExample" value="Lights.ump">Light (3 alternatives)</option>
-                <option name = "optionExample" value="MicrowaveOven2.ump">Microwave Oven</option>
+                <option name = "optionExample" value="MicrowaveOven2.ump">Microwave Oven *</option>
                 <option name = "optionExample" value="Ovens.ump">Oven (3 alternatives)</option>
                 <option name = "optionExample" value="ParliamentBill.ump">Parliament Bill</option>
                 <option name = "optionExample" value="Phone.ump">Phone and Lines</option>
@@ -596,10 +612,10 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="SecurityLight.ump">Security Light</option>
                 <option name = "optionExample" value="SpecificFlight.ump">Specific Flight (Airline)</option>
                 <option name = "optionExample" value="SpecificFlightFlat.ump">Specific Flight (Airline - Flat)</option>
-                <option name = "optionExample" value="TcpIpSimulation.ump">TCP/IP Simulation</option>
+                <option name = "optionExample" value="TcpIpSimulation.ump">TCP/IP Simulation *</option>
                 <option name = "optionExample" value="TelephoneSystem2.ump">Telephone Set Modes</option>
                 <option name = "optionExample" value="TicTacToe.ump">Tic Tac Toe or Noughts and Crosses</option>
-                <option name = "optionExample" value="TimedCommands.ump">Timed Commands</option>                     
+                <option name = "optionExample" value="TimedCommands.ump">Timed Commands *</option>                     
                 <option name = "optionExample" value="TollBooth.ump">Toll Booth</option>
                 <option name = "optionExample" value="TrafficLightsA.ump">Traffic Lights A</option>
                 <option name = "optionExample" value="TrafficLightsB.ump">Traffic Lights B</option>
@@ -833,6 +849,9 @@ $output = $dataHandle->readData('model.ump');
     <div id ="downloadArea"></div>
     <div id="tabRow"></div>
     <div id="innerGeneratedCodeRow"></div>
+  </div>
+  <div id="codeExecutionArea">
+    <pre id="executionMessage"></pre>
   </div>
 
   <?php if($showChrome) { ?>

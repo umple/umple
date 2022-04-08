@@ -24,7 +24,7 @@ class CodeCompiler {
   public static String console;
   public static boolean subsequentCompilation = false; // true if compile used more than once to quell messages
 
-  public static boolean compile(UmpleModel model, String generator, boolean useExec, boolean beQuiet, String entryClass, String... extraArgs) {
+  public static boolean compile(UmpleModel model, String generator, boolean useExec, boolean beQuiet, String entryClass, String errorFileName, String... extraArgs) {
     boolean wasSuccessful = true;
     String extra = "";
     for(String arg:extraArgs)
@@ -39,7 +39,7 @@ class CodeCompiler {
       }
       if (entryClass.equals("-") || entryClass.equals(currentElement.getName())) {
         if(generator.equals("Java")) {
-          wasSuccessful = wasSuccessful & compileJava(currentElement, model, useExec, beQuiet, extra);
+          wasSuccessful = wasSuccessful & compileJava(currentElement, model, useExec, beQuiet, errorFileName,  extra);
           subsequentCompilation = true;
         }
         else if (generator.equals("Php")) {
@@ -195,7 +195,7 @@ class CodeCompiler {
   }
 
   
-  private static boolean compileJava(UmpleElement aClass, UmpleModel model, boolean useExec, boolean beQuiet, String args) {
+  private static boolean compileJava(UmpleElement aClass, UmpleModel model, boolean useExec, boolean beQuiet, String errorFileName, String args) {
     String path="";
     String base="";
     for (GenerateTarget gt : model.getGenerates()) {
@@ -240,8 +240,10 @@ class CodeCompiler {
         line = null;
       }
 
+      StringBuilder builder = new StringBuilder();
       while (line!=null) {
         System.err.println(translateLineToUmple(line, model));
+        builder = builder.append(translateLineToUmple(line, model)+"\n");
         if(reader.ready()) {
           line = reader.readLine();
         }
@@ -250,6 +252,31 @@ class CodeCompiler {
         }
         successful = false;
       }
+
+      // Write to the error file if given
+      if(!successful && errorFileName != null) {
+        String error = builder.toString().trim();
+          try
+          {
+            File newFile = new File(errorFileName);
+            newFile.createNewFile();   
+          }
+          catch (IOException ex)  
+          {
+            System.err.println(ex);
+          }
+
+          // Write to the file
+          try (PrintWriter fileout = new PrintWriter(errorFileName)) 
+          {
+            fileout.println(error);
+          }  
+          catch (FileNotFoundException ex) 
+          {
+            System.err.println(ex);
+          }
+      }
+
     } catch (IOException e) {
       println(e.getMessage());
     }
