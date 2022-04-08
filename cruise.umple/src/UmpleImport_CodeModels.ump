@@ -164,10 +164,10 @@ class UmpleImportAssociation
     else {
       builder.append(this.generateMultiplicityBound(
           this.getOtherLowerBound(), this.getOtherUpperBound())
-          + " " + this.getEndClassName() + " -- ");
+          + (this.getEndClassName().isEmpty() ? "" : " " + this.getEndClassName()) + " -- ");
     }
     builder.append(this.generateMultiplicityBound(this.getLowerBound(),
-        this.getUpperBound()) + " " + this.getEndClass() + " " + this.getName() + ";");
+        this.getUpperBound()) + " " + this.getEndClass() + (this.getName().isEmpty() ? "" : " " + this.getName()) + ";");
       return builder.toString();
     }
     
