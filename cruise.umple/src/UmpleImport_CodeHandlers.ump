@@ -294,6 +294,7 @@ class PapyrusImportHandler
   internal currentAttributeName = "";
   internal currentAttributeType = "";
   internal UmpleImportClass currentClass = null;
+  internal UmpleImportAssociation currentAssociation = null;
 
   public void startDocument() throws SAXException {
     // System.out.println("\nin the startDocument method of PapyrusImportHandler class...");
@@ -344,28 +345,30 @@ class PapyrusImportHandler
         // System.out.println("associationName=" + associationName);
 
         // String id, String name, String startClass, String endClass, String endClassName;
-        UmpleImportAssociation umpleAssociation = new UmpleImportAssociation("PapyrusAssociation", "", "Mentor", "Student", "");
+        // UmpleImportAssociation umpleAssociation = new UmpleImportAssociation("PapyrusAssociation", "", "Mentor", "Student", "");
+        currentAssociation = new UmpleImportAssociation("PapyrusAssociation", "", "hello", "world", "");
+        System.out.println("currentAssociation is initiated...");
 
         // mentor
-        umpleAssociation.setOtherLowerBound(1);
-        umpleAssociation.setOtherUpperBound(1);
+        // umpleAssociation.setOtherLowerBound(1);
+        // umpleAssociation.setOtherUpperBound(1);
 
         // student
-        umpleAssociation.setLowerBound(0);
-        umpleAssociation.setUpperBound(-1);
+        // umpleAssociation.setLowerBound(0);
+        // umpleAssociation.setUpperBound(-1);
 
 
-        List<UmpleImportElement> umpleImportElements = model.getUmpleImportElements();
-        List<UmpleImportElement> modifiableUmpleImportElements = new ArrayList<UmpleImportElement>();
-        for (int i = 0; i < umpleImportElements.size(); ++i) {
-          modifiableUmpleImportElements.add(umpleImportElements.get(i));
-        }
-        for (int i = 0; i < modifiableUmpleImportElements.size(); ++i) {
-          if ("_Mentor".equals(modifiableUmpleImportElements.get(i).getId())) {
-            UmpleImportClass tempClass = (UmpleImportClass)modifiableUmpleImportElements.get(i);
-            tempClass.addUmpleImportAssociation(umpleAssociation);
-          }
-        }
+        // List<UmpleImportElement> umpleImportElements = model.getUmpleImportElements();
+        // List<UmpleImportElement> modifiableUmpleImportElements = new ArrayList<UmpleImportElement>();
+        // for (int i = 0; i < umpleImportElements.size(); ++i) {
+        //   modifiableUmpleImportElements.add(umpleImportElements.get(i));
+        // }
+        // for (int i = 0; i < modifiableUmpleImportElements.size(); ++i) {
+        //   if ("_Mentor".equals(modifiableUmpleImportElements.get(i).getId())) {
+        //     UmpleImportClass tempClass = (UmpleImportClass)modifiableUmpleImportElements.get(i);
+        //     tempClass.addUmpleImportAssociation(umpleAssociation);
+        //   }
+        // }
       }
     } 
     // load class attributes
@@ -401,9 +404,13 @@ class PapyrusImportHandler
     // System.out.println("\n\nin the endElement method of PapyrusImportHandler class...");
     // System.out.println("uri=" + uri + ", localName=" + localName + ", qName=" + qName);
     // reset internal values for next round of parsing
-    boolean isPackagedElement = currentElement.equals(currentElement.equals("packagedElement"));
+    currentElement = localName;
+    boolean isPackagedElement = currentElement.equals("packagedElement");
     if (isPackagedElement && currentClass != null)
       currentClass = null;
+    if (isPackagedElement && currentAssociation != null && !currentAssociation.getStartClass().isEmpty() && !currentAssociation.getEndClass().isEmpty()) {
+      currentAssociation = null;
+    }
     currentElement = "";
     currentAttributeName = "";
     currentAttributeType = "";
