@@ -5,17 +5,31 @@
   </packageImport>
   <packagedElement xmi:type="uml:Class" xmi:id="_Teacher" name="Teacher"/>
   <packagedElement xmi:type="uml:Class" xmi:id="_Student" name="Student"/>
-  <packagedElement xmi:type="uml:Association" xmi:id="_Teacher__Student" name="Teacher__Student" memberEnd="_Teacher__Student_teachers _Teacher_Student_students" navigableOwnedEnd="_Teacher__Student_teachers _Teacher_Student_students">
+  <packagedElement xmi:type="uml:Association" xmi:id="_Teacher__Student" name="Teacher__Student" memberEnd="_Teacher_Student_teachers _Teacher_Student_students" navigableOwnedEnd="_Teacher_Student_teachers _Teacher_Student_students">
     <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_q-b88LhMEeyugZJgMaAGLw" source="org.eclipse.papyrus">
       <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_details.0" key="nature" value="UML_Nature"/>
     </eAnnotations>
-    <ownedEnd xmi:type="uml:Property" xmi:id="_Teacher__Student_teachers" name="teacher" type="_Teacher" association="_Teacher__Student">
+    <ownedEnd xmi:type="uml:Property" xmi:id="_Teacher_Student_teachers" name="teacher" type="_Teacher" association="_Teacher__Student">
       <lowerValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Teacher__Student-teachers-_lowerValue" value="*"/>
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Teacher__Student-teachers-_upperValue" value="*"/>
     </ownedEnd>
     <ownedEnd xmi:type="uml:Property" xmi:id="_Teacher_Student_students" name="student" type="_Student" association="_Teacher__Student">
       <lowerValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Teacher__Student-students-_lowerValue" value="*"/>
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Teacher__Student-students-_upperValue" value="*"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_Course" name="Course"/>
+  <packagedElement xmi:type="uml:Association" xmi:id="_Student__Course" name="Student__Course" memberEnd="_Student__Course_students _Student__Course_courses" navigableOwnedEnd="_Student__Course_courses _Student__Course_students">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_5hOUILhQEeyugZJgMaAGLw" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_details.1" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_Student__Course_courses" name="course" type="_Course" association="_Student__Course">
+      <lowerValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Student__Course-courses-_lowerValue" value="*"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Student__Course-courses-_upperValue" value="*"/>
+    </ownedEnd>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_Student__Course_students" name="student" type="_Student" association="_Student__Course">
+      <lowerValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Student__Course-students-_lowerValue" value="*"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Student__Course-students-_upperValue" value="*"/>
     </ownedEnd>
   </packagedElement>
 </uml:Model>
