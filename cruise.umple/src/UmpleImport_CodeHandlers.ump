@@ -448,6 +448,8 @@ class PapyrusImportHandler
           break;
         }
       }
+
+      currentAssociation = null;
     }
 
     if (isOwnedEnd) {
