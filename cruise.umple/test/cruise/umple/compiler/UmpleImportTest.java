@@ -230,10 +230,16 @@ public class UmpleImportTest {
     }
 
     @Test
-    public void PapyrusClassAssociationParsingTest() throws Exception {
+    public void PapyrusClassAssociationOneToManyTest() throws Exception {
         assertImportFile(UmpleImportType.PAPYRUS,
-            "PapyrusImport_ClassAssociations.ump",
-            "PapyrusImport_ClassAssociations.uml.txt");
+            "PapyrusImport_ClassAssociationOneToMany.ump",
+            "PapyrusImport_ClassAssociationOneToMany.uml.txt");
     }
 
+    @Test
+    public void PapyrusClassAssociationManyToManyTest() throws Exception {
+        assertImportFile(UmpleImportType.PAPYRUS,
+            "PapyrusImport_ClassAssociationManyToMany.ump",
+            "PapyrusImport_ClassAssociationManyToMany.uml.txt");
+    }
 }

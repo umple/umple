@@ -1,0 +1,10 @@
+
+
+class Teacher
+{
+	* -- * Student;
+}
+
+class Student
+{
+}
