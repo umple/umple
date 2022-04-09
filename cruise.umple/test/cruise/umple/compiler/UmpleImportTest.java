@@ -222,12 +222,18 @@ public class UmpleImportTest {
             "ScxmlImport_autotransition.scxml.txt");
     }
 
-     @Test
+    @Test
     public void PapyrusClassAttributesParsingTest() throws Exception {
-
         assertImportFile(UmpleImportType.PAPYRUS,
             "PapyrusImport_ClassAttributes.ump", 
             "PapyrusImport_ClassAttributes.uml.txt");
+    }
+
+    @Test
+    public void PapyrusClassAssociationParsingTest() throws Exception {
+        assertImportFile(UmpleImportType.PAPYRUS,
+            "PapyrusImport_ClassAssociations.ump",
+            "PapyrusImport_ClassAssociations.uml.txt");
     }
 
 }
