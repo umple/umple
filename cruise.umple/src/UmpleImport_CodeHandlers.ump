@@ -295,6 +295,8 @@ class PapyrusImportHandler
   internal currentAttributeType = "";
   internal UmpleImportClass currentClass = null;
   internal UmpleImportAssociation currentAssociation = null;
+  internal currentOwnedEndId = "";
+  internal currentOwnedEndType = "";
 
   public void startDocument() throws SAXException {
     // System.out.println("\nin the startDocument method of PapyrusImportHandler class...");
@@ -303,7 +305,6 @@ class PapyrusImportHandler
   }
 
   public void endDocument() throws SAXException {
-    // System.out.println("\nin the endDocument method of PapyrusImportHandler class...");
   }
 
   public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -341,34 +342,15 @@ class PapyrusImportHandler
       }
 
       if (isAssociation) {
-        String associationName = attributes.getValue(UmpleImportConstants.XMI_NAME);
-        // System.out.println("associationName=" + associationName);
+        String associationId = attributes.getValue(UmpleImportConstants.PAPYRUS_ID);
+        String memberEnds = attributes.getValue(UmpleImportConstants.PAPYRUS_ASSOCIATION_MEMBER_END);
+        // System.out.println("memberEnds=" + memberEnds);
+        String startClassId = memberEnds.split(" ")[0];
+        String endClassId = memberEnds.split(" ")[1];
+        // System.out.println("startClassId=" + startClassId + ", endClassId=" + endClassId);
 
         // String id, String name, String startClass, String endClass, String endClassName;
-        // UmpleImportAssociation umpleAssociation = new UmpleImportAssociation("PapyrusAssociation", "", "Mentor", "Student", "");
-        currentAssociation = new UmpleImportAssociation("PapyrusAssociation", "", "hello", "world", "");
-        System.out.println("currentAssociation is initiated...");
-
-        // mentor
-        // umpleAssociation.setOtherLowerBound(1);
-        // umpleAssociation.setOtherUpperBound(1);
-
-        // student
-        // umpleAssociation.setLowerBound(0);
-        // umpleAssociation.setUpperBound(-1);
-
-
-        // List<UmpleImportElement> umpleImportElements = model.getUmpleImportElements();
-        // List<UmpleImportElement> modifiableUmpleImportElements = new ArrayList<UmpleImportElement>();
-        // for (int i = 0; i < umpleImportElements.size(); ++i) {
-        //   modifiableUmpleImportElements.add(umpleImportElements.get(i));
-        // }
-        // for (int i = 0; i < modifiableUmpleImportElements.size(); ++i) {
-        //   if ("_Mentor".equals(modifiableUmpleImportElements.get(i).getId())) {
-        //     UmpleImportClass tempClass = (UmpleImportClass)modifiableUmpleImportElements.get(i);
-        //     tempClass.addUmpleImportAssociation(umpleAssociation);
-        //   }
-        // }
+        currentAssociation = new UmpleImportAssociation(associationId, "", startClassId, endClassId, "");
       }
     } 
     // load class attributes
@@ -397,29 +379,104 @@ class PapyrusImportHandler
         UmpleImportAttribute umpleAttribute = new UmpleImportAttribute("Papyrus:property", currentAttributeName, currentClassName, attributeRawType);
         currentClass.addUmpleImportAttribute(umpleAttribute);
       }
+    } else if (currentElement.equals("ownedEnd")) {
+      String association = attributes.getValue(UmpleImportConstants.PAPYRUS_OWNED_END_ASSOCIATION);
+
+      if (association.equals(currentAssociation.getId())) {
+        currentOwnedEndId = attributes.getValue(UmpleImportConstants.PAPYRUS_ID);
+        currentOwnedEndType = attributes.getValue("type");
+      }
+    } else if (currentElement.equals("lowerValue") || currentElement.equals("upperValue")) {
+      boolean isLowerValue = currentElement.equals("lowerValue");
+      boolean isStartClass = currentOwnedEndId.equals(currentAssociation.getStartClass());
+      String strValue = attributes.getValue(UmpleImportConstants.PAPYRUS_OWNED_END_VALUE);
+
+      if (strValue.equals("*")) {
+        if (isStartClass) {
+          currentAssociation.setOtherLowerBound(0);
+          currentAssociation.setOtherUpperBound(-1);
+        } else {
+          currentAssociation.setLowerBound(0);
+          currentAssociation.setUpperBound(-1);
+        }
+      } else {
+        Integer value = Integer.parseInt(strValue);
+
+        if (isStartClass && isLowerValue) {
+          currentAssociation.setOtherLowerBound(value);
+        } else if (isStartClass && !isLowerValue) {
+          currentAssociation.setOtherUpperBound(value);
+        } else if (!isStartClass && isLowerValue) {
+          currentAssociation.setLowerBound(value);
+        } else {
+          currentAssociation.setUpperBound(value);
+        }
+      }
     }
   }
 
   public void endElement(String uri, String localName, String qName) throws SAXException {
     // System.out.println("\n\nin the endElement method of PapyrusImportHandler class...");
     // System.out.println("uri=" + uri + ", localName=" + localName + ", qName=" + qName);
-    // reset internal values for next round of parsing
+
     currentElement = localName;
     boolean isPackagedElement = currentElement.equals("packagedElement");
+    boolean isOwnedEnd = currentElement.equals("ownedEnd");
+    UmpleImportModel model = getModel();
+
     if (isPackagedElement && currentClass != null)
       currentClass = null;
+
     if (isPackagedElement && currentAssociation != null && !currentAssociation.getStartClass().isEmpty() && !currentAssociation.getEndClass().isEmpty()) {
-      currentAssociation = null;
+      // System.out.println("\nstartClassName=" + currentAssociation.getStartClass());
+      // System.out.println("lowerBound=" + currentAssociation.getOtherLowerBound() + ", upperBound=" + currentAssociation.getOtherUpperBound());
+      // System.out.println("\nendClassName=" + currentAssociation.getEndClass());
+      // System.out.println("lowerBound=" + currentAssociation.getLowerBound() + ", upperBound=" + currentAssociation.getUpperBound());
+
+      List<UmpleImportElement> umpleImportElements = model.getUmpleImportElements();
+      List<UmpleImportElement> modifiableUmpleImportElement = new ArrayList<UmpleImportElement>();
+      for (int i = 0; i < umpleImportElements.size(); ++i) {
+        modifiableUmpleImportElement.add(umpleImportElements.get(i));
+      }
+
+      for (int i = 0; i < modifiableUmpleImportElement.size(); ++i) {
+        UmpleImportElement umpleImportElement = modifiableUmpleImportElement.get(i);
+        String umpleImportElementName = umpleImportElement.getName();
+
+        if (currentAssociation.getStartClass().equals(umpleImportElementName)) {
+          ((UmpleImportClass)umpleImportElement).addUmpleImportAssociation(currentAssociation);
+          break;
+        }
+      }
     }
+
+    if (isOwnedEnd) {
+      String className = "";
+
+      List<UmpleImportElement> umpleImportElements = model.getUmpleImportElements();
+      for (int i = 0; i < umpleImportElements.size(); ++i) {
+        if (currentOwnedEndType.equals(umpleImportElements.get(i).getId())) {
+          className = umpleImportElements.get(i).getName();
+          break;
+        }
+      }
+
+      if (currentOwnedEndId.equals(currentAssociation.getStartClass())) {
+        currentAssociation.setStartClass(className);
+      }
+      if (currentOwnedEndId.equals(currentAssociation.getEndClass())) {
+        currentAssociation.setEndClass(className);
+      }
+      currentOwnedEndId = "";
+      currentOwnedEndType = "";
+    }
+
     currentElement = "";
     currentAttributeName = "";
     currentAttributeType = "";
   }
 
   public void characters(char[] ch, int start, int length) throws SAXException {
-    // System.out.println("\n\nin the characters method of PapyrusImportHandler class...");
-    // String chars = new String(ch, start, length);
-    // System.out.println("chars=" + chars);
   }
 }
 
