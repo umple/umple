@@ -16,11 +16,9 @@ class UmpleImportModel
   internal StringBuilder umpleBuilder = new StringBuilder();
   
   String generateUmple() {
-    // System.out.println("\nin the generateUmple method of UmpleImportModel class...");
     boolean packageExist = false;
     umpleBuilder = new StringBuilder();
     for (UmpleImportElement umpleImportElement : umpleImportElements) {     
-      // System.out.println("umpleImportElement.getName()=" + umpleImportElement.getName());
       if(umpleImportElement.getId()!=UmpleImportConstants.ECORE_REFERENCE) {
         // Append 2 new lines if there is more than 1 package
         if("ecore:EPackage".equals(umpleImportElement.getId())) {

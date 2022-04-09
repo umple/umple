@@ -299,7 +299,6 @@ class PapyrusImportHandler
   internal currentOwnedEndType = "";
 
   public void startDocument() throws SAXException {
-    // System.out.println("\nin the startDocument method of PapyrusImportHandler class...");
     UmpleImportModel model = new UmpleImportModel("");  // set `currentPackageName` to ""
     setModel(model);
   }
@@ -308,13 +307,6 @@ class PapyrusImportHandler
   }
 
   public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-    // System.out.println("\n\nin the startElement method of PapyrusImportHandler class...");
-    // System.out.println("uri=" + uri + ", localName=" + localName + ", qName=" + qName);
-    // System.out.println("attributes:");
-    // for (int i = 0; i < attributes.getLength(); ++i) {
-    //   System.out.println(attributes.getValue(i));
-    // }
-    
     currentElement = localName;
     UmpleImportModel model = getModel();   
     // load class
@@ -330,12 +322,6 @@ class PapyrusImportHandler
         String className = attributes.getValue(UmpleImportConstants.XMI_NAME);
         String classId = attributes.getValue(UmpleImportConstants.PAPYRUS_ID);
 
-        // System.out.println("isInterface=" + isInterface + ".");
-        // System.out.println("isAbstract=" + isAbstract + ".");
-        // System.out.println("currentPackageName=" + currentPackageName + ".");
-        // System.out.println("className=" + className + ".");
-
-        // String id, String name, String packageName, Boolean isAbstract, Boolean isInterface
         UmpleImportClass umpleClass = new UmpleImportClass(classId, className, currentPackageName, isAbstract, isInterface);
         currentClass = umpleClass;
         model.addUmpleImportElement(umpleClass);
@@ -344,24 +330,17 @@ class PapyrusImportHandler
       if (isAssociation) {
         String associationId = attributes.getValue(UmpleImportConstants.PAPYRUS_ID);
         String memberEnds = attributes.getValue(UmpleImportConstants.PAPYRUS_ASSOCIATION_MEMBER_END);
-        // System.out.println("memberEnds=" + memberEnds);
         String startClassId = memberEnds.split(" ")[0];
         String endClassId = memberEnds.split(" ")[1];
-        // System.out.println("startClassId=" + startClassId + ", endClassId=" + endClassId);
 
-        // String id, String name, String startClass, String endClass, String endClassName;
         currentAssociation = new UmpleImportAssociation(associationId, "", startClassId, endClassId, "");
       }
     } 
     // load class attributes
     else if (currentElement.equals("ownedAttribute")) {
       String attributeType = attributes.getValue(UmpleImportConstants.PAPYRUS_TYPE);
-      boolean isAttribute = attributeType.equals(UmpleImportConstants.PAPYRUS_PROPERTY);
-
       String attributeName = attributes.getValue(UmpleImportConstants.XMI_NAME);
-      // System.out.println("attrType=" + attrType + ".");
-      // System.out.println("checkIsProperty=" + checkIsProperty + ".");
-      // System.out.println("attrName=" + attrName + ".");
+      boolean isAttribute = attributeType.equals(UmpleImportConstants.PAPYRUS_PROPERTY);
 
       if (isAttribute) {
         currentAttributeName = attributeName;
@@ -372,10 +351,8 @@ class PapyrusImportHandler
 
       if (isPrimitiveType) {
         String attributeRawType = attributes.getValue(UmpleImportConstants.PAPYRUS_HREF).split("#")[1];
-        // System.out.println("attributeRawType=" + attributeRawType);
         String currentClassName = currentClass.getName();
 
-        // String id, String name, String className, String dataType
         UmpleImportAttribute umpleAttribute = new UmpleImportAttribute("Papyrus:property", currentAttributeName, currentClassName, attributeRawType);
         currentClass.addUmpleImportAttribute(umpleAttribute);
       }
@@ -416,9 +393,6 @@ class PapyrusImportHandler
   }
 
   public void endElement(String uri, String localName, String qName) throws SAXException {
-    // System.out.println("\n\nin the endElement method of PapyrusImportHandler class...");
-    // System.out.println("uri=" + uri + ", localName=" + localName + ", qName=" + qName);
-
     currentElement = localName;
     boolean isPackagedElement = currentElement.equals("packagedElement");
     boolean isOwnedEnd = currentElement.equals("ownedEnd");
@@ -428,11 +402,6 @@ class PapyrusImportHandler
       currentClass = null;
 
     if (isPackagedElement && currentAssociation != null && !currentAssociation.getStartClass().isEmpty() && !currentAssociation.getEndClass().isEmpty()) {
-      // System.out.println("\nstartClassName=" + currentAssociation.getStartClass());
-      // System.out.println("lowerBound=" + currentAssociation.getOtherLowerBound() + ", upperBound=" + currentAssociation.getOtherUpperBound());
-      // System.out.println("\nendClassName=" + currentAssociation.getEndClass());
-      // System.out.println("lowerBound=" + currentAssociation.getLowerBound() + ", upperBound=" + currentAssociation.getUpperBound());
-
       List<UmpleImportElement> umpleImportElements = model.getUmpleImportElements();
       List<UmpleImportElement> modifiableUmpleImportElement = new ArrayList<UmpleImportElement>();
       for (int i = 0; i < umpleImportElements.size(); ++i) {
