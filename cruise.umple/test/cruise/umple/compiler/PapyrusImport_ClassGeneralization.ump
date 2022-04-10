@@ -2,16 +2,16 @@
 
 class Shape2D
 {
- String center;
+	String center;
 }
 
 class Polygon
 {
- isA Shape2D;
+	isA Shape2D;
 }
 
 class SimplePolygon
 {
- String orientation;
- isA Polygon;
+	String orientation;
+	isA Polygon;
 }
