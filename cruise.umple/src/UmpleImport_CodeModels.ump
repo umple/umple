@@ -109,11 +109,23 @@ class UmpleImportClass
     for (UmpleImportAssociation association : umpleImportAssociations) {
       umpleBuilder.append(association.generateUmple());
     }
+    // inline generalization
+    if (umpleImportGeneralization != null) {
+      umpleBuilder.append(umpleImportGeneralization.generateUmple());
+    }
     for (ImportStateMachine stateMachine : importStateMachines) {
       umpleBuilder.append(stateMachine.generateUmple());
     }
     umpleBuilder.append(System.lineSeparator()+"}");
     return umpleBuilder.toString();
+  }
+
+  boolean addUmpleImportGeneralization(UmpleImportGeneralization aUmpleImportGeneralization) {
+    boolean wasAdded = false;
+    if (umpleImportGeneralization != null) { return false; }
+    umpleImportGeneralization = aUmpleImportGeneralization;
+    wasAdded = true;
+    return wasAdded;
   }
 }
 
@@ -149,6 +161,16 @@ class UmpleImportAttribute
       ret += " ";
     return ret;
     }
+}
+
+class UmpleImportGeneralization
+{
+  String generateUmple() {
+    StringBuilder builder = this.getUmpleBuilder();
+    builder.append(System.lineSeparator()+"\t");
+    builder.append("isA " + this.getGeneralization() + ";");
+    return builder.toString();
+  }
 }
 
 class UmpleImportAssociation

@@ -345,6 +345,25 @@ class PapyrusImportHandler
       if (isAttribute) {
         currentAttributeName = attributeName;
       }
+    } else if (currentElement.equals("generalization")) {
+      String attributeId = attributes.getValue(UmpleImportConstants.PAPYRUS_ID);
+      String attributeType = attributes.getValue(UmpleImportConstants.PAPYRUS_TYPE);
+      String general = attributes.getValue(UmpleImportConstants.PAPYRUS_GENERAL);
+      String generalization = "";
+
+      List<UmpleImportElement> umpleImportElements = model.getUmpleImportElements();
+      for (int i = 0; i < umpleImportElements.size(); ++i) {
+        UmpleImportElement umpleImportElement = umpleImportElements.get(i);
+        String umpleImportElementId = umpleImportElement.getId();
+
+        if (general.equals(umpleImportElementId)) {
+          generalization = umpleImportElement.getName();
+          break;
+        }
+      }
+
+      UmpleImportGeneralization umpleImportGeneralization = new UmpleImportGeneralization(attributeId, "", generalization);
+      currentClass.addUmpleImportGeneralization(umpleImportGeneralization);
     } else if (currentElement.equals("type")) {
       String attributeType = attributes.getValue(UmpleImportConstants.PAPYRUS_TYPE);
       boolean isPrimitiveType = attributeType.equals(UmpleImportConstants.PAPYRUS_PRIMITIVE_TYPE);

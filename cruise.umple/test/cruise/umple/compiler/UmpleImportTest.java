@@ -249,4 +249,11 @@ public class UmpleImportTest {
             "PapyrusImport_ClassAssociationOneToOne.ump",
             "PapyrusImport_ClassAssociationOneToOne.uml.txt");
     }
+
+    @Test
+    public void PapyrusClassGeneralizationTest() throws Exception {
+        assertImportFile(UmpleImportType.PAPYRUS,
+            "PapyrusImport_ClassGeneralization.ump",
+            "PapyrusImport_ClassGeneralization.uml.txt");
+    }
 }

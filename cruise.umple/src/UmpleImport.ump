@@ -197,6 +197,7 @@ class UmpleImportClass
   isA UmpleImportElement;
   
   0..1 -> * UmpleImportAttribute;
+  0..1 -> 0..1 UmpleImportGeneralization;
   0..1 -> * UmpleImportAssociation;
   0..1 -> * ImportStateMachine;
   
@@ -216,6 +217,13 @@ class UmpleImportAttribute
   lazy Integer lowerBound;
   //primitive type as default
   Integer upperBound=1;
+}
+
+class UmpleImportGeneralization
+{
+  isA UmpleImportElement;
+
+  generalization;
 }
 
 class UmpleImportAssociation
@@ -294,6 +302,7 @@ class UmpleImportConstants
   const PAPYRUS_ASSOCIATION_MEMBER_END= "memberEnd";
   const PAPYRUS_OWNED_END_ASSOCIATION = "association";
   const PAPYRUS_OWNED_END_VALUE = "value";
+  const PAPYRUS_GENERAL = "general";
 }
 
 use UmpleImport_CodeHandlers.ump;
