@@ -2698,7 +2698,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     return typeOf(aType);
   }
   
-  private String WriteProxyFiles(String classContents,UmpleClass aClass,String path) throws IOException 
+  protected String WriteProxyFiles(String classContents,UmpleClass aClass,String path) throws IOException 
   {
     JavaDistributedTemplates templates= new JavaDistributedTemplates();
     StringBuilder classContent= new StringBuilder("");

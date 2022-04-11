@@ -64,4 +64,8 @@
     <element xmi:type="uml:Class" href="model.uml#_Cheque"/>
     <layoutConstraint xmi:type="notation:Bounds" x="220" y="220"/>
   </children>
+  <edges xmi:type="notation:Connector" type="Generalization_Edge" source="_Cheque" target="_PaymentMethod">
+    <element xmi:type="uml:Generalization" href="model.uml#_Cheque-_generalization.0"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
 </notation:Diagram>

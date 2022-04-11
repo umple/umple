@@ -327,7 +327,7 @@ class UmpleConsoleMain
             }
           
             if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php")) {
-              compileSuccess = CodeCompiler.compile(model, generatorCodeToCompile,cfg.getUseExec(), cfg.getBeQuiet(), cfg.getCompile().get());
+              compileSuccess = CodeCompiler.compile(model, generatorCodeToCompile,cfg.getUseExec(), cfg.getBeQuiet(), cfg.getCompile().get(), null);
             }
             else if (generatorCodeToCompile.startsWith("Gv")) {
               compileSuccess = CodeCompiler.genDotDiagram(model, gt, cfg.getBeQuiet(), "svg");
@@ -454,6 +454,9 @@ class UmpleConsoleMain
       UmpleImportModel umple;
       if (filename.endsWith(".scxml")) {
         ScxmlImportHandler handler = new ScxmlImportHandler();
+        umple = handler.readDataFromXML(filename);
+      } else if (filename.endsWith(".uml")) {
+        PapyrusImportHandler handler = new PapyrusImportHandler();
         umple = handler.readDataFromXML(filename);
       } else {
         EcoreImportHandler handler = new EcoreImportHandler();
@@ -779,7 +782,7 @@ class PlaygroundMain
     (String msg, ConnectionToClient client)
   {
      // DEBUG Uncomment the following line to debug
-  //   System.err.println("Received client command <"+msg+">");
+    // System.err.println("Received client command <"+msg+">");
     // Split the message from the client into tokens and process as a command
     List<String> ls = ArgumentTokenizer.tokenize(msg,false);
     lastCommandStartTime = System.currentTimeMillis();
@@ -879,7 +882,7 @@ class PlaygroundMain
 
       
       returnCommandResult("-generate "+
-        "<Java|Cpp|Ruby|Ecore|Papyrus|TextUml|GvStateDiagram|"+
+        "<Java|Cpp|Ruby|Python|Ecore|Papyrus|TextUml|GvStateDiagram|"+
         "GvClassDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|GvFeatureDiagram|"+
         "Alloy|NuSMV|NuSMVOptimizer|Violet|Umlet> <filename>\n", client); // Compile filename and generate output
       returnCommandResult("<action> <deltaCode> <filename>\n", client);  
@@ -1074,6 +1077,7 @@ class PlaygroundMain
     UmpleModel model = null;
     boolean compilationRequired = false;
     boolean executionRequired = false;
+    String errorFileName = null;
 
     // Valid values include Java, Cpp, PhP, Ruby, Json, Yuml, Xmi, Ecore, Papyrus, TextUml,
     // GvStateDiagram, GvStructureDiagram, GvClassDiagram,GvClassTraitDiagram, GvEntityRelationshipDiagram, Alloy, NuSMV, NuSMVOptimizer, GvFeatureDiagram
@@ -1101,6 +1105,10 @@ class PlaygroundMain
         {
           compilationRequired = true;
           executionRequired = true;
+        }
+        else if(args[argno].equals("2>") && argno < args.length-1) 
+        {
+          errorFileName = args[argno+1];
         }
       }
       
@@ -1150,7 +1158,7 @@ class PlaygroundMain
         if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php")) 
         {
           // TODO: Remove default options in future when syncing umplesync.jar with umple.jar
-          successPreviousStep = CodeCompiler.compile(model, generatorCodeToCompile,false, false, "-");
+          successPreviousStep = CodeCompiler.compile(model, generatorCodeToCompile,false, false, "-", errorFileName);
         }
       }
     }
