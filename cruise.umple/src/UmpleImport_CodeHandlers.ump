@@ -287,6 +287,189 @@ class ScxmlImportHandler
   }
 }
 
+class PapyrusImportHandler
+{
+
+  internal currentElement = "";
+  internal currentAttributeName = "";
+  internal currentAttributeType = "";
+  internal UmpleImportClass currentClass = null;
+  internal UmpleImportAssociation currentAssociation = null;
+  internal currentOwnedEndId = "";
+  internal currentOwnedEndType = "";
+
+  public void startDocument() throws SAXException {
+    UmpleImportModel model = new UmpleImportModel("");  // set `currentPackageName` to ""
+    setModel(model);
+  }
+
+  public void endDocument() throws SAXException {
+  }
+
+  public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    currentElement = localName;
+    UmpleImportModel model = getModel();   
+    // load class
+    if (currentElement.equals("packagedElement")) {
+      String attributeType = attributes.getValue(UmpleImportConstants.PAPYRUS_TYPE);
+      boolean isClass = attributeType.equals(UmpleImportConstants.PAPYRUS_CLASS);
+      boolean isAssociation = attributeType.equals(UmpleImportConstants.PAPYRUS_ASSOCIATION);
+
+      if (isClass) {
+        boolean isInterface = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_INTERFACE));
+        boolean isAbstract = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_ABSTRACT));
+        String currentPackageName = model.getCurrentPackageName();
+        String className = attributes.getValue(UmpleImportConstants.XMI_NAME);
+        String classId = attributes.getValue(UmpleImportConstants.PAPYRUS_ID);
+
+        UmpleImportClass umpleClass = new UmpleImportClass(classId, className, currentPackageName, isAbstract, isInterface);
+        currentClass = umpleClass;
+        model.addUmpleImportElement(umpleClass);
+      }
+
+      if (isAssociation) {
+        String associationId = attributes.getValue(UmpleImportConstants.PAPYRUS_ID);
+        String memberEnds = attributes.getValue(UmpleImportConstants.PAPYRUS_ASSOCIATION_MEMBER_END);
+        String startClassId = memberEnds.split(" ")[0];
+        String endClassId = memberEnds.split(" ")[1];
+
+        currentAssociation = new UmpleImportAssociation(associationId, "", startClassId, endClassId, "");
+      }
+    } 
+    // load class attributes
+    else if (currentElement.equals("ownedAttribute")) {
+      String attributeType = attributes.getValue(UmpleImportConstants.PAPYRUS_TYPE);
+      String attributeName = attributes.getValue(UmpleImportConstants.XMI_NAME);
+      boolean isAttribute = attributeType.equals(UmpleImportConstants.PAPYRUS_PROPERTY);
+
+      if (isAttribute) {
+        currentAttributeName = attributeName;
+      }
+    } else if (currentElement.equals("generalization")) {
+      String attributeId = attributes.getValue(UmpleImportConstants.PAPYRUS_ID);
+      String attributeType = attributes.getValue(UmpleImportConstants.PAPYRUS_TYPE);
+      String general = attributes.getValue(UmpleImportConstants.PAPYRUS_GENERAL);
+      String generalization = "";
+
+      List<UmpleImportElement> umpleImportElements = model.getUmpleImportElements();
+      for (int i = 0; i < umpleImportElements.size(); ++i) {
+        UmpleImportElement umpleImportElement = umpleImportElements.get(i);
+        String umpleImportElementId = umpleImportElement.getId();
+
+        if (general.equals(umpleImportElementId)) {
+          generalization = umpleImportElement.getName();
+          break;
+        }
+      }
+
+      UmpleImportGeneralization umpleImportGeneralization = new UmpleImportGeneralization(attributeId, "", generalization);
+      currentClass.addUmpleImportGeneralization(umpleImportGeneralization);
+    } else if (currentElement.equals("type")) {
+      String attributeType = attributes.getValue(UmpleImportConstants.PAPYRUS_TYPE);
+      boolean isPrimitiveType = attributeType.equals(UmpleImportConstants.PAPYRUS_PRIMITIVE_TYPE);
+
+      if (isPrimitiveType) {
+        String attributeRawType = attributes.getValue(UmpleImportConstants.PAPYRUS_HREF).split("#")[1];
+        String currentClassName = currentClass.getName();
+
+        UmpleImportAttribute umpleAttribute = new UmpleImportAttribute("Papyrus:property", currentAttributeName, currentClassName, attributeRawType);
+        currentClass.addUmpleImportAttribute(umpleAttribute);
+      }
+    } else if (currentElement.equals("ownedEnd")) {
+      String association = attributes.getValue(UmpleImportConstants.PAPYRUS_OWNED_END_ASSOCIATION);
+
+      if (association.equals(currentAssociation.getId())) {
+        currentOwnedEndId = attributes.getValue(UmpleImportConstants.PAPYRUS_ID);
+        currentOwnedEndType = attributes.getValue("type");
+      }
+    } else if (currentElement.equals("lowerValue") || currentElement.equals("upperValue")) {
+      boolean isLowerValue = currentElement.equals("lowerValue");
+      boolean isStartClass = currentOwnedEndId.equals(currentAssociation.getStartClass());
+      String strValue = attributes.getValue(UmpleImportConstants.PAPYRUS_OWNED_END_VALUE);
+
+      if (strValue.equals("*")) {
+        if (isStartClass) {
+          currentAssociation.setOtherLowerBound(0);
+          currentAssociation.setOtherUpperBound(-1);
+        } else {
+          currentAssociation.setLowerBound(0);
+          currentAssociation.setUpperBound(-1);
+        }
+      } else {
+        Integer value = Integer.parseInt(strValue);
+
+        if (isStartClass && isLowerValue) {
+          currentAssociation.setOtherLowerBound(value);
+        } else if (isStartClass && !isLowerValue) {
+          currentAssociation.setOtherUpperBound(value);
+        } else if (!isStartClass && isLowerValue) {
+          currentAssociation.setLowerBound(value);
+        } else {
+          currentAssociation.setUpperBound(value);
+        }
+      }
+    }
+  }
+
+  public void endElement(String uri, String localName, String qName) throws SAXException {
+    currentElement = localName;
+    boolean isPackagedElement = currentElement.equals("packagedElement");
+    boolean isOwnedEnd = currentElement.equals("ownedEnd");
+    UmpleImportModel model = getModel();
+
+    if (isPackagedElement && currentClass != null)
+      currentClass = null;
+
+    if (isPackagedElement && currentAssociation != null && !currentAssociation.getStartClass().isEmpty() && !currentAssociation.getEndClass().isEmpty()) {
+      List<UmpleImportElement> umpleImportElements = model.getUmpleImportElements();
+      List<UmpleImportElement> modifiableUmpleImportElement = new ArrayList<UmpleImportElement>();
+      for (int i = 0; i < umpleImportElements.size(); ++i) {
+        modifiableUmpleImportElement.add(umpleImportElements.get(i));
+      }
+
+      for (int i = 0; i < modifiableUmpleImportElement.size(); ++i) {
+        UmpleImportElement umpleImportElement = modifiableUmpleImportElement.get(i);
+        String umpleImportElementName = umpleImportElement.getName();
+
+        if (currentAssociation.getStartClass().equals(umpleImportElementName)) {
+          ((UmpleImportClass)umpleImportElement).addUmpleImportAssociation(currentAssociation);
+          break;
+        }
+      }
+
+      currentAssociation = null;
+    }
+
+    if (isOwnedEnd) {
+      String className = "";
+
+      List<UmpleImportElement> umpleImportElements = model.getUmpleImportElements();
+      for (int i = 0; i < umpleImportElements.size(); ++i) {
+        if (currentOwnedEndType.equals(umpleImportElements.get(i).getId())) {
+          className = umpleImportElements.get(i).getName();
+          break;
+        }
+      }
+
+      if (currentOwnedEndId.equals(currentAssociation.getStartClass())) {
+        currentAssociation.setStartClass(className);
+      }
+      if (currentOwnedEndId.equals(currentAssociation.getEndClass())) {
+        currentAssociation.setEndClass(className);
+      }
+      currentOwnedEndId = "";
+      currentOwnedEndType = "";
+    }
+
+    currentElement = "";
+    currentAttributeName = "";
+    currentAttributeType = "";
+  }
+
+  public void characters(char[] ch, int start, int length) throws SAXException {
+  }
+}
+
 class UmpleImportHandlerFactory {
 
   public static UmpleImportHandler create(final UmpleImportType type) {
