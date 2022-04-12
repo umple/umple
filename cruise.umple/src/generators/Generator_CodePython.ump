@@ -80,7 +80,8 @@ class PythonGenerator
     
     String pythonFilename = path + File.separator + className + ".py";
     String TXLScriptsPath = "./txl/umpleJavaToPython.txl";
-    String TXLcommand = "txl " + filename + " " + TXLScriptsPath + " -o " + pythonFilename;
+    String[] TXLcommand = {"txl", filename, TXLScriptsPath, "-o", pythonFilename};
+    
     try {
             
       Process p = Runtime.getRuntime().exec(TXLcommand);

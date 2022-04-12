@@ -324,7 +324,7 @@ else if (isset($_REQUEST["umpleCode"]))
 
   if ($language == "Python")
   {
-    echo "To Strings have been removed due to an issue with their generation.\n";
+    echo "toString() methods have been removed due to an issue with their generation.\n";
   }
 
   if (!$uigu)
