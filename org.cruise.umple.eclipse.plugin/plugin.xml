@@ -134,6 +134,11 @@
                      style="push">
                </command>
                <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.generate.papyrus"
+                     label="Generate Papyrus Project"
+                     style="push">
+               </command>
+               <command
                      commandId="org.cruise.umple.eclipse.plugin.commands.umple.itself"
                      label="Generate Umple Internal Representation"
                      style="push">
@@ -228,6 +233,11 @@
             defaultHandler="commands.GenerateSQL"
             id="org.cruise.umple.eclipse.plugin.commands.generate.sql"
             name="generate sql code">
+      </command>
+      <command
+            defaultHandler="commands.GeneratePapyrus"
+            id="org.cruise.umple.eclipse.plugin.commands.generate.papyrus"
+            name="generate Papyrus project">
       </command>
       <command
             defaultHandler="commands.GenerateUmpleItself"
