@@ -1,0 +1,13 @@
+class A {
+}
+class B {
+}
+
+associationClass C {
+  anAttribute;
+}
+
+associationClass C {
+* A;
+* B;
+}

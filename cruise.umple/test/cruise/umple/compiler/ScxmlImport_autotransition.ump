@@ -1,0 +1,15 @@
+
+
+class StateMachine
+{
+	sm {
+		stateOne {
+			entry / {
+				System.out.println("auto transition");
+			}
+			__autotransition1__ -> stateTwo;
+		}
+		stateTwo {
+		}
+	}
+}

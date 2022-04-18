@@ -105,6 +105,11 @@ Action.clicked = function(event)
     var languageAndGenerate = $("inputGenerateCode").value.split(":");
     Action.generateCode(languageAndGenerate[0],languageAndGenerate[1]);
   }
+  else if (action == "ExecuteCode")
+  {
+    var languageAndExecute = $("inputGenerateCode").value.split(":");
+    Action.executeCode(languageAndExecute[0],languageAndExecute[1]);
+  }
   else if (action == "SimulateCode")
   {
     Action.simulateCode();
@@ -112,6 +117,14 @@ Action.clicked = function(event)
   else if (action == "StartOver")
   {
     Action.startOver();
+  }
+  else if (action == "ShowRefreshUmpleOnlineCompletely")
+  {
+  	Action.showRefreshUmpleOnlineCompletely();
+  }
+  else if (action == "LoadBlankModel")
+  {
+  	 Action.loadBlankModel();
   }
   else if (action == "PngImage")
   {
@@ -125,6 +138,10 @@ Action.clicked = function(event)
   {
     Action.uigu();
   }
+  else if (action == "CopyClip")
+  {
+    Action.copyClipboardCode();
+  }  
   else if (action == "Copy")
   {
     Action.showCodeInSeparateWindow();
@@ -387,6 +404,20 @@ Action.startOver = function()
   // location.reload();
 }
 
+Action.showRefreshUmpleOnlineCompletely = function()
+{
+	jQuery("#buttonStartOver").show();
+}
+
+Action.loadBlankModel = function()
+{
+  UmpleSystem.merge(null);
+  Page.showCanvasLoading(true);
+  Page.showModelLoading(true);
+  Page.showLayoutLoading(true);
+  Ajax.sendRequest("scripts/compiler.php",Action.loadExampleCallback,"exampleCode="); //left empty
+}
+
 Action.undo = function()
 {
   if (jQuery("#buttonUndo").hasClass("disabled")) return;
@@ -397,6 +428,41 @@ Action.redo = function()
 {
   if (jQuery("#buttonRedo").hasClass("disabled")) return;
   Action.redoOrUndo(false);
+}
+
+// The following from https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop
+Action.dropHandler = function(ev) {
+  Page.setFeedbackMessage("File will be dropped")
+
+  // Prevent default behavior (Prevent file from being opened)
+  ev.preventDefault();
+
+  if (ev.dataTransfer.items) {
+    // Use DataTransferItemList interface to access the file(s)
+    for (var i = 0; i < ev.dataTransfer.items.length; i++) {
+      // If dropped items aren't files, reject them
+      if (ev.dataTransfer.items[i].kind === 'file') {
+        var file = ev.dataTransfer.items[i].getAsFile();
+        file.text().then(function(text) {
+          Page.setUmpleCode(text);
+        });
+      }
+    }
+  } else {
+    // Use DataTransfer interface to access the file(s)
+    for (var i = 0; i < ev.dataTransfer.files.length; i++) {
+       ev.dataTransfer.files[i].text().then(function(text) {
+        Page.setUmpleCode(text);
+      });
+    }
+  }
+}
+
+Action.dragOverHandler = function(ev) {
+  //console.log('File(s) in drop zone');
+
+  // Prevent default behavior (Prevent file from being opened)
+  ev.preventDefault();
 }
 
 Action.redoOrUndo = function(isUndo)
@@ -893,6 +959,12 @@ Action.uiguCallback = function(response)
   Page.showViewDone();
 }
 
+Action.copyClipboardCode = function()
+{
+  Action.copyToClp(Page.getUmpleCode());
+  Page.setFeedbackMessage("Code has been copied to the clipboard");  
+}
+
 Action.copyCommandLineCode = function()
 {
   var pretext="sh\n";
@@ -1290,6 +1362,21 @@ Action.generalizationSelected = function(obj)
   }
 }
 
+Action.executeCode = function(languageStyle, languageName)
+{
+  var executeCodeSelector = "#buttonExecuteCode";
+  var actualLanguage = languageName;
+  
+  jQuery(executeCodeSelector).showLoading();
+  Action.ajax(
+    function(response) { 
+      Action.executeCodeCallback(response); 
+    },
+    format("execute=true&language={0}&languageStyle={1}&model={2}", actualLanguage, languageStyle, Page.getModel()),
+    "true"
+  );
+}
+
 Action.generateCode = function(languageStyle, languageName)
 {
   var generateCodeSelector = "#buttonGenerateCode";
@@ -1341,9 +1428,20 @@ Action.photoReady = function()
   UmpleSystem.redrawCanvas();
 }
 
+Action.executeCodeCallback = function(response)
+{
+  var executeCodeSelector = "#buttonExecuteCode";
+  jQuery(executeCodeSelector).hideLoading();
+  Page.showExecutionArea();
+  Page.hideGeneratedCodeOnly();
+  Page.showExecutedResponse(response.responseText);
+  window.location.href='#codeExecutionArea';
+}
+
 Action.generateCodeCallback = function(response, language, optionalCallback)
 {
   Page.showGeneratedCode(response.responseText,language);
+  Page.hideExecutionArea();
   Action.gentime = new Date().getTime();
 
   if(optionalCallback !== undefined)
@@ -1815,6 +1913,18 @@ Action.setCaretPosition = function(line)
     {
       // Special backdoor to turn on experimental features
       document.getElementById('advancedMode').value=1;
+
+      // Add python option
+      if (!!!document.getElementById("genpython")) {
+
+        var pythonOption = document.createElement("option");
+        pythonOption.id = "genpython";
+        pythonOption.value = "python:Python";
+        pythonOption.text = "Python (Alpha Build)";
+        
+        document.getElementById("inputGenerateCode").add(pythonOption,5);
+      }
+
       Page.setFeedbackMessage("");
       return;
     }
@@ -2250,6 +2360,41 @@ Action.umpleTypingActivity = function(target) {
   else Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', Action.waiting_time);
 }
 
+var checkComplexityCooldown = 300000;
+var checkComplexityLastUsage = 0;
+var checkComplexityFeedbackMessage = 'Suggestion: Since there are so many classes, <a href="javascript:Page.clickShowGvClassDiagram()">switch to automated layout</a> (G).';
+var checkComplexityDisplayTime = 120000;
+Action.checkComplexity = function()
+{
+	if((Date.now() - checkComplexityCooldown) < checkComplexityLastUsage)
+	{
+		return;
+	}
+	var editorText = jQuery("#umpleModelEditorText").val();
+	var matches = editorText.match(/class( |\n)((.|\n)*?){/g);
+	if(matches == null)
+	{
+		return;
+	}
+	var numMatches = matches.length;
+	if(numMatches > 10)
+	{
+		Page.setFeedbackMessage(checkComplexityFeedbackMessage);
+		checkComplexityLastUsage = Date.now();
+		setTimeout(Action.removeCheckComplexityWarning, checkComplexityDisplayTime);
+	}
+}
+
+//since there is a cooldown on when checkComplexity is called
+//removeCheckComplexityWarning will only be called after the 5 minute cooldown has passed.
+Action.removeCheckComplexityWarning = function()
+{
+	if(Page.getFeedbackMessage() == checkComplexityFeedbackMessage)
+	{
+		Page.setFeedbackMessage("");
+	}
+}
+
 Action.processTyping = function(target, manuallySynchronized)
 {
   // Save in history after a pause in typing
@@ -2267,7 +2412,7 @@ Action.processTyping = function(target, manuallySynchronized)
     
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor") {
       Action.updateLayoutEditorAndDiagram(); 
-
+		
       // issue#1554
       var downloadLink = document.getElementById("downloadLink");
       if (downloadLink !== null){
@@ -2293,7 +2438,7 @@ Action.processTyping = function(target, manuallySynchronized)
     Page.setExampleMessage("");
     
   }
-
+	setTimeout(Action.checkComplexity,10000);
 }
 
 Action.updateLayoutEditorAndDiagram = function()
@@ -2360,6 +2505,8 @@ Action.updateUmpleDiagramCallback = function(response)
 
   diagramCode = Action.getDiagramCode(response.responseText);
   errorMessage = Action.getErrorCode(response.responseText);
+  Page.hideExecutionArea();
+
     
   if(diagramCode == null || diagramCode == "" || diagramCode == "null") 
   {
@@ -3023,7 +3170,7 @@ Action.toggleTabsCheckbox = function(language)
     jQuery("#ttTabsCheckbox").show();
     jQuery("#tabRow").show();
 
-    if ($("inputGenerateCode").value.split(":")[1] == "UmpleSelf" || $("inputGenerateCode").value.split(":")[1] == "Json") {
+    if ($("inputGenerateCode").value.split(":")[1] == "USE" || $("inputGenerateCode").value.split(":")[1] == "UmpleSelf" || $("inputGenerateCode").value.split(":")[1] == "Json") {
       jQuery("#ttTabsCheckbox").hide();
       jQuery("#tabRow").hide();
     }

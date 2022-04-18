@@ -81,6 +81,31 @@ class ScxmlImportHandler
   isA UmpleImportHandler;
 }
 
+/*
+ * Parse Papyrus
+ */
+class PapyrusImportHandler
+{
+  depend java.io.File;
+  depend java.io.IOException;
+  depend java.io.InputStream;
+  depend java.io.FileInputStream;
+  depend java.util.Optional;
+  depend java.util.Stack;
+  depend java.util.List;
+  depend java.util.ArrayList;
+  depend java.nio.file.Paths;
+  depend javax.xml.parsers.ParserConfigurationException;
+  depend javax.xml.parsers.SAXParser;
+  depend javax.xml.parsers.SAXParserFactory;
+  depend org.xml.sax.Attributes;
+  depend org.xml.sax.SAXException;
+  depend org.xml.sax.SAXParseException;
+  depend org.xml.sax.helpers.DefaultHandler;
+
+  isA UmpleImportHandler;
+}
+
 /**
  * ImportType is a "enumeration" of information for what type of 
  * file was imported. 
@@ -97,8 +122,10 @@ class UmpleImportType {
   // http://en.wikipedia.org/wiki/SCXML
   const UmpleImportType SCXML = new UmpleImportType("scxml", "State-Chart XML");
     
+ // http://www.eclipse.org/papyrus/
+  const UmpleImportType PAPYRUS = new UmpleImportType("uml", "Papyrus XML");
 
-  const Set<UmpleImportType> ALL = new HashSet<>(Arrays.asList(ECORE, SCXML));
+  const Set<UmpleImportType> ALL = new HashSet<>(Arrays.asList(ECORE, SCXML, PAPYRUS));
   
   /** 
    * The file type of an import, i.e. the extension. 
@@ -170,6 +197,7 @@ class UmpleImportClass
   isA UmpleImportElement;
   
   0..1 -> * UmpleImportAttribute;
+  0..1 -> 0..1 UmpleImportGeneralization;
   0..1 -> * UmpleImportAssociation;
   0..1 -> * ImportStateMachine;
   
@@ -189,6 +217,13 @@ class UmpleImportAttribute
   lazy Integer lowerBound;
   //primitive type as default
   Integer upperBound=1;
+}
+
+class UmpleImportGeneralization
+{
+  isA UmpleImportElement;
+
+  generalization;
 }
 
 class UmpleImportAssociation
@@ -257,6 +292,17 @@ class UmpleImportConstants
   const ECORE_TYPE = "eType";
   const ECORE_DATATYPE = "ecore:EDataType";
   const ECORE_REFERENCE = "ecore:EReference";
+  const PAPYRUS_TYPE = "xmi:type";
+  const PAPYRUS_PROPERTY = "uml:Property";
+  const PAPYRUS_HREF = "href";
+  const PAPYRUS_PRIMITIVE_TYPE = "uml:PrimitiveType";
+  const PAPYRUS_CLASS = "uml:Class";
+  const PAPYRUS_ASSOCIATION = "uml:Association";
+  const PAPYRUS_ID = "xmi:id";
+  const PAPYRUS_ASSOCIATION_MEMBER_END= "memberEnd";
+  const PAPYRUS_OWNED_END_ASSOCIATION = "association";
+  const PAPYRUS_OWNED_END_VALUE = "value";
+  const PAPYRUS_GENERAL = "general";
 }
 
 use UmpleImport_CodeHandlers.ump;
