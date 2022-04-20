@@ -1,0 +1,15 @@
+
+
+class Teacher
+{
+	* -- * Student;
+}
+
+class Student
+{
+	* -- * Course;
+}
+
+class Course
+{
+}

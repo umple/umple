@@ -1887,6 +1887,10 @@ public class UmpleParserTest
     assertHasWarningsParse("010_associationClassProvidedIncompleteKey.ump", 1011);
   }
 
+  public void associationClassWithMultipleDefinications() {
+    assertParse("010_associationClassWithMultipleDefinications.ump");
+  }
+
   @Test
   public void inlineComments()
   {
