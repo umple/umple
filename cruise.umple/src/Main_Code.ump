@@ -462,6 +462,9 @@ class UmpleConsoleMain
       if (filename.endsWith(".scxml")) {
         ScxmlImportHandler handler = new ScxmlImportHandler();
         umple = handler.readDataFromXML(filename);
+      } else if (filename.endsWith(".uml")) {
+        PapyrusImportHandler handler = new PapyrusImportHandler();
+        umple = handler.readDataFromXML(filename);
       } else {
         EcoreImportHandler handler = new EcoreImportHandler();
         umple = handler.readDataFromXML(filename);
@@ -886,7 +889,7 @@ class PlaygroundMain
 
       
       returnCommandResult("-generate "+
-        "<Java|Cpp|Ruby|Ecore|Papyrus|TextUml|GvStateDiagram|"+
+        "<Java|Cpp|Ruby|Python|Ecore|Papyrus|TextUml|GvStateDiagram|"+
         "GvClassDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|GvFeatureDiagram|"+
         "Alloy|NuSMV|NuSMVOptimizer|Violet|Umlet> <filename>\n", client); // Compile filename and generate output
       returnCommandResult("<action> <deltaCode> <filename>\n", client);  

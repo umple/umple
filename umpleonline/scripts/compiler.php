@@ -293,7 +293,7 @@ else if (isset($_REQUEST["umpleCode"]))
     return;      
   } // end html content      
 
-  elseif (!in_array($language,array("Php","Java","Ruby","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
+  elseif (!in_array($language,array("Php","Java","Ruby","Python","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
   {  // If NOT one of the basic languages, then use umplesync.jar
     list($dataname, $dataHandle) = getOrCreateDataHandle();
     $dataHandle->writeData($dataname, $input);
@@ -303,6 +303,13 @@ else if (isset($_REQUEST["umpleCode"]))
     
     if ($language == "Experimental-Cpp" || $language == "Experimental-Sql") {
       $sourceCode = executeCommand("echo \"{$language} is under development. Output is currently only available to developers of Umple\" 2> {$errorFilename}");
+    } elseif ($language == "Papyrus") {
+      $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
+      $papyrusProjectRootPath = $workDir->getPath();
+      $command = "cd {$papyrusProjectRootPath}; rm {$language}FromUmple.zip; zip -r {$language}FromUmple.zip model";
+      exec($command);
+      $archivelink = $workDir->makePermalink($language.'FromUmple.zip');
+      echo "<a href=\"$archivelink\" class=\"zipDownloadLink\" title=\"Download the generated code as a zip file. You can then unzip the result, compile it and run it on your own computer.\">Download the following Papyrus project as a zip file</a >";
     }
     else {
       $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
@@ -322,9 +329,14 @@ else if (isset($_REQUEST["umpleCode"]))
     return;
   }
 
+  if ($language == "Python")
+  {
+    echo "toString() methods have been removed due to an issue with their generation.\n";
+  }
+
   if (!$uigu)
   { // NOTuigu
-  // Generate the Java, PHP, RTCpp, Ruby, Cpp or Sql and put it into the right directory
+  // Generate the Java, PHP, RTCpp, Ruby, Python, Cpp or Sql and put it into the right directory
   list($dataname, $dataHandle) = getOrCreateDataHandle();
   $dataHandle->writeData($dataname, "generate {$language} \"./{$language}/\" --override-all;\n" . $input);
   $workDir = $dataHandle->getWorkDir();
@@ -334,7 +346,7 @@ else if (isset($_REQUEST["umpleCode"]))
   $errorFilename = "{$filename}.erroroutput";
   $executionErrorFilename = "{$filename}.executionerror";
   
-  // Clean up any pre-existing java. php, RTCpp, ruby or cpp files
+  // Clean up any pre-existing java. php, RTCpp, ruby, python or cpp files
   $thedir = dirname($outputFilename);
   $toRemove = False;
   $rmcommand = "rm -rf ";
