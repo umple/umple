@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_ClassGeneralization" name="ClassGeneralization">
+  <packageImport xmi:type="uml:PackageImport" xmi:id="_packageImport.0">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+  </packageImport>
+  <packagedElement xmi:type="uml:Class" xmi:id="_Shape2D" name="Shape2D">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_center" name="center">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_Polygon" name="Polygon">
+    <generalization xmi:type="uml:Generalization" xmi:id="Polygon-_generalization.0" general="_Shape2D"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_SimplePolygon" name="SimplePolygon">
+    <generalization xmi:type="uml:Generalization" xmi:id="SimplePolygon-_generalization.0" general="_Polygon"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_orientation" name="orientation">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+  </packagedElement>
+</uml:Model>

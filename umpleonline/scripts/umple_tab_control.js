@@ -418,7 +418,7 @@ TabControl.deleteTab = function(tabId)
   if (Object.keys(TabControl.tabs).length > 1) {
     // Confirm deletion
     var tabName = TabControl.getTabNameDiv(tabId);
-    var result = confirm("Are you sure you want to remove " + tabName.text() + "?");
+    var result = confirm("Are you sure you want to remove the file " + tabName.text() + ".ump from the model? If you answer OK, the code will be deleted; this cannot be undone, so consider answering Cancel and saving it first.");
     if (!result) return;
 
     // If we're deleting the currently active tab, we need to navigate away

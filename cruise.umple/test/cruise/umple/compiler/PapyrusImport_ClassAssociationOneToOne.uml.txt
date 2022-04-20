@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_ClassAssociationOneToOne" name="ClassAssociationOneToOne">
+  <packageImport xmi:type="uml:PackageImport" xmi:id="_packageImport.0">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+  </packageImport>
+  <packagedElement xmi:type="uml:Class" xmi:id="_Country" name="Country"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_Capital" name="Capital"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_Key" name="Key"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_Lock" name="Lock"/>
+  <packagedElement xmi:type="uml:Association" xmi:id="_Country__Capital" name="Country__Capital" memberEnd="_Country__Capital_country _Country__Capital_capital" navigableOwnedEnd="_Country__Capital_capital _Country__Capital_country">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_yqw10LhUEeyugZJgMaAGLw" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_details.0" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_Country__Capital_country" name="country" type="_Country" association="_Country__Capital">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Country__Capital-country-_lowerValue" value="1"/>
+      <upperValue xmi:type="uml:LiteralInteger" xmi:id="_Country__Capital-country-_upperValue" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_Country__Capital_capital" name="capital" type="_Capital" association="_Country__Capital">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Country__Capital-capital-_lowerValue" value="1"/>
+      <upperValue xmi:type="uml:LiteralInteger" xmi:id="_Country__Capital-capital-_upperValue" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_Key__Lock" name="Key__Lock" memberEnd="_Key__Lock_key _Key__Lock_lock" navigableOwnedEnd="_Key__Lock_key _Key__Lock_lock">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_2FURIbhUEeyugZJgMaAGLw" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_details.0" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_Key__Lock_lock" name="lock" type="_Lock" association="_Key__Lock">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Key__Lock-key-_lowerValue" value="1"/>
+      <upperValue xmi:type="uml:LiteralInteger" xmi:id="_Key__Lock-key-_upperValue" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_Key__Lock_key" name="key" type="_Key" association="_Key__Lock">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Key__Lock-lock-_lowerValue" value="1"/>
+      <upperValue xmi:type="uml:LiteralInteger" xmi:id="_Key__Lock-lock-_upperValue" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+</uml:Model>
