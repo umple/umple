@@ -593,11 +593,11 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="CollisionAvoidanceA1.ump">Collision Avoidance - Alternative 1</option>
                 <option name = "optionExample" value="CollisionAvoidanceA2.ump">Collision Avoidance - Alternative 2</option>
                 <option name = "optionExample" value="CollisionAvoidanceA3.ump">Collision Avoidance - Alternative 3</option>
-                <option name = "optionExample" value="ComplexStateMachine.ump">Complex Symbolic</option>
+                <option name = "optionExample" value="ComplexStateMachine.ump">Complex Symbolic *</option>
                 <option name = "optionExample" value="CourseSectionFlat.ump">Course Section</option>
                 <option name = "optionExample" value="CourseSectionNested.ump">Course Section (Nested)</option>
-                <option name = "optionExample" value="DigitalWatchNested.ump">Digital Watch Nested</option>
-                <option name = "optionExample" value="DigitalWatchFlat.ump">Digital Watch (Flat)</option>
+                <option name = "optionExample" value="DigitalWatchNested.ump">Digital Watch Nested *</option>
+                <option name = "optionExample" value="DigitalWatchFlat.ump">Digital Watch (Flat) *</option>
                 <option name = "optionExample" value="Dishwasher.ump">Dishwasher</option>                
                 <option name = "optionExample" value="Elevator_State_Machine.ump">Elevator</option>
                 <option name = "optionExample" value="GarageDoor.ump">Garage Door</option>
