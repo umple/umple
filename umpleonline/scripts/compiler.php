@@ -303,6 +303,13 @@ else if (isset($_REQUEST["umpleCode"]))
     
     if ($language == "Experimental-Cpp" || $language == "Experimental-Sql") {
       $sourceCode = executeCommand("echo \"{$language} is under development. Output is currently only available to developers of Umple\" 2> {$errorFilename}");
+    } elseif ($language == "Papyrus") {
+      $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
+      $papyrusProjectRootPath = $workDir->getPath();
+      $command = "cd {$papyrusProjectRootPath}; rm {$language}FromUmple.zip; zip -r {$language}FromUmple.zip model";
+      exec($command);
+      $archivelink = $workDir->makePermalink($language.'FromUmple.zip');
+      echo "<a href=\"$archivelink\" class=\"zipDownloadLink\" title=\"Download the generated code as a zip file. You can then unzip the result, compile it and run it on your own computer.\">Download the following Papyrus project as a zip file</a >";
     }
     else {
       $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
@@ -324,7 +331,7 @@ else if (isset($_REQUEST["umpleCode"]))
 
   if ($language == "Python")
   {
-    echo "To Strings have been removed due to an issue with their generation.\n";
+    echo "toString() methods have been removed due to an issue with their generation.\n";
   }
 
   if (!$uigu)

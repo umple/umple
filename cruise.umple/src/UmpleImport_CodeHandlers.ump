@@ -338,13 +338,9 @@ class PapyrusImportHandler
     } 
     // load class attributes
     else if (currentElement.equals("ownedAttribute")) {
-      String attributeType = attributes.getValue(UmpleImportConstants.PAPYRUS_TYPE);
       String attributeName = attributes.getValue(UmpleImportConstants.XMI_NAME);
-      boolean isAttribute = attributeType.equals(UmpleImportConstants.PAPYRUS_PROPERTY);
 
-      if (isAttribute) {
-        currentAttributeName = attributeName;
-      }
+      currentAttributeName = attributeName;
     } else if (currentElement.equals("generalization")) {
       String attributeId = attributes.getValue(UmpleImportConstants.PAPYRUS_ID);
       String attributeType = attributes.getValue(UmpleImportConstants.PAPYRUS_TYPE);
@@ -384,28 +380,31 @@ class PapyrusImportHandler
       }
     } else if (currentElement.equals("lowerValue") || currentElement.equals("upperValue")) {
       boolean isLowerValue = currentElement.equals("lowerValue");
-      boolean isStartClass = currentOwnedEndId.equals(currentAssociation.getStartClass());
       String strValue = attributes.getValue(UmpleImportConstants.PAPYRUS_OWNED_END_VALUE);
 
-      if (strValue.equals("*")) {
-        if (isStartClass) {
-          currentAssociation.setOtherLowerBound(0);
-          currentAssociation.setOtherUpperBound(-1);
-        } else {
-          currentAssociation.setLowerBound(0);
-          currentAssociation.setUpperBound(-1);
-        }
-      } else {
-        Integer value = Integer.parseInt(strValue);
+      if (currentAssociation != null) {
+        boolean isStartClass = currentOwnedEndId.equals(currentAssociation.getStartClass());
 
-        if (isStartClass && isLowerValue) {
-          currentAssociation.setOtherLowerBound(value);
-        } else if (isStartClass && !isLowerValue) {
-          currentAssociation.setOtherUpperBound(value);
-        } else if (!isStartClass && isLowerValue) {
-          currentAssociation.setLowerBound(value);
+        if (strValue.equals("*")) {
+          if (isStartClass) {
+            currentAssociation.setOtherLowerBound(0);
+            currentAssociation.setOtherUpperBound(-1);
+          } else {
+            currentAssociation.setLowerBound(0);
+            currentAssociation.setUpperBound(-1);
+          }
         } else {
-          currentAssociation.setUpperBound(value);
+          Integer value = Integer.parseInt(strValue);
+
+          if (isStartClass && isLowerValue) {
+            currentAssociation.setOtherLowerBound(value);
+          } else if (isStartClass && !isLowerValue) {
+            currentAssociation.setOtherUpperBound(value);
+          } else if (!isStartClass && isLowerValue) {
+            currentAssociation.setLowerBound(value);
+          } else {
+            currentAssociation.setUpperBound(value);
+          }
         }
       }
     }
