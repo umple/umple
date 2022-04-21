@@ -60,3 +60,13 @@ class Cheque
 {
   isA PaymentMethod;
 }
+
+class Employee
+{
+  * -> 1 Gender;
+}
+
+class Gender
+{
+  code;
+}

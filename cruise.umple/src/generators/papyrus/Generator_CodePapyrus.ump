@@ -159,8 +159,12 @@ class PapyrusGenerator
 
           String associationId = as.getName() == null ? StringFormatter.format("_packagedElement.{0}",packageAssociationIndex) : as.getName();
           String associationName = as.getName() == null ? "" : StringFormatter.format(" name=\"{0}\"",as.getName());
+          String navigableOwnedEndLeft = as.getIsLeftNavigable() ? "_" + associationId + "-" + left.getRoleName() : "";
+          String navigableOwnedEndRight = as.getIsRightNavigable() ? "_" + associationId + "-" + right.getRoleName() : "";
+          navigableOwnedEndRight = navigableOwnedEndLeft.isEmpty() ? navigableOwnedEndRight : " " + navigableOwnedEndRight;
+          String navigableOwnedEnd = StringFormatter.format(" navigableOwnedEnd=\"{0}{1}\"", navigableOwnedEndLeft, navigableOwnedEndRight);
 
-          subCode.append(StringFormatter.format("  <packagedElement xmi:type=\"uml:Association\" xmi:id=\"_{0}\"{3} memberEnd=\"_{0}-{1} _{0}-{2}\" navigableOwnedEnd=\"_{0}-{1} _{0}-{2}\">\n",associationId,left.getRoleName(),right.getRoleName(),associationName));
+          subCode.append(StringFormatter.format("  <packagedElement xmi:type=\"uml:Association\" xmi:id=\"_{0}\"{3} memberEnd=\"_{0}-{1} _{0}-{2}\"{4}>\n",associationId,left.getRoleName(),right.getRoleName(),associationName, navigableOwnedEnd));
 
           subCode.append(StringFormatter.format("    <ownedEnd xmi:id=\"_{0}-{1}\" name=\"{1}\" type=\"_{2}\" association=\"_{0}\">\n",associationId,left.getRoleName(),left.getClassName()));
           subCode.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"_{0}-{1}-_upperValue\" value=\"{2}\"/>\n",associationId,left.getRoleName(),leftRange[1]));
