@@ -35,8 +35,430 @@ class StateTablesGenerator
   String output = "";
 }
 
+//temporary class
+/*
+class StateTableCompositeRow
+{
+	depend java.util.Map;
+	depend java.util.HashMap;
+	
+	ArrayList<State> uStateList;//list of states associate with row. if concurrent, there will be more than one state.
+	String sLabel; //probably will be a concatenation of associated states.
+	Integer nestingLevel;
+	StateTableCompositeRow parent;
+	Integer tableRowId;
+	
+	isPseudo=false;
+	Map<String,StateTableCell> stateEventCells = new HashMap<String,StateTableCell>();
+   Map<State,StateTableCell> stateStateCells = new HashMap<State,StateTableCell>();
+   
+   
+}
+*/
 
+//Container containing multiple concurrent states.
+class CompositeStateWrapper
+{
+	depend java.util.Map;
+	depend java.util.HashMap;
+	depend java.util.ArrayList;
+	Map<String,State> states = new HashMap<String,State>();
+	//Map<State,ArrayList<CompositeStateWrapper>> compositeStateWrapperMap = new HashMap<State,ArrayList<CompositeStateWrapper>>();
+	boolean hasChildStates = false;
+	boolean isPrimary = false; //TODO implement this system. it will be necessary for creating the state tables.
+	CompositeStateWrapper parentCsw = null;
+	Map<String,CompositeStateWrapper> childStates = new HashMap<String,CompositeStateWrapper>();
+	/*
+	CompositeStateWrapper(State state)
+	{
+		String name = state.getName();
+		states = new HashMap<String,State>();
+		states.put(name,state);
+	}
+	*/
+	
+	/*
+	CompositeStateWrapper(CompositeStateWrapper csw, State state)
+	{
+		ArrayList<State> values = new ArrayList<State>(csw.getStates().values());
+      states = new HashMap<String,State>();
+		for(State s : values){
+			String name = s.getName();
+			states.put(name,s);
+		}
+		String stateName = state.getName();
+		states.put(stateName,state);
+	}
+	*/
+	
+	//Returns copy of CompositeStateWrapper
+	CompositeStateWrapper getCopy()
+	{
+		CompositeStateWrapper csw = new CompositeStateWrapper();
+		ArrayList<State> stateList = new ArrayList<State>(states.values());
+		for(State s : stateList)
+		{
+			csw.addState(s);
+			CompositeStateWrapper childCsw = childStates.get(s.getName());
+			if(childCsw != null)
+			{
+				csw.addChildState(s.getName(), childCsw.getCopy());
+			}
+		}
+		return csw;
+	}	
+	//Returns true if CSW contains state (including child states)
+	boolean containsState(String stateName)
+	{
+		State state = states.get(stateName);
+		if(state != null)
+		{
+			return true;
+		}
+		ArrayList<CompositeStateWrapper> childStateList = new ArrayList<CompositeStateWrapper>(childStates.values());
+		for(CompositeStateWrapper csw : childStateList)
+		{
+			if(csw.containsState(stateName))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	//Returns true if Transition t would lead to CompositeStateWrapper nextCsw
+	boolean isTransition(CompositeStateWrapper nextCsw, Transition t)
+	{
+		String fromState = t.getFromState().getName();
+		String nextState = t.getNextState().getName();
+		//String tName = t.getEvent().getName();//may delete
+		if(!containsState(fromState))//This CSW isn't a valid fromState
+		{
+			return false;
+		}
+		if(!nextCsw.containsState(nextState))//Next csw doesn't contain a valid nextState
+		{
+			return false;
+		}
+		//We have deduced that the fromCsw contains the fromState and the nextCsw contains the nextState
+		ArrayList<State> fromStateList = new ArrayList<State>(states.values());
+		Map<String,State> nextCswStateMap = nextCsw.getStates();
+		for(State s : fromStateList)
+		{
+			String sName = s.getName();
+			if(!nextCswStateMap.containsKey(sName))//key not detected, investigate if transition
+			{
+				if(sName != fromState)
+				{
+					return false;
+				}
+			}
+		}
+		//We have now deduced that all states in fromCsw are equal to nextCsw 
+		ArrayList<CompositeStateWrapper> fromChildCswList = new ArrayList<CompositeStateWrapper>(childStates.values());
+		ArrayList<String> fromChildCswKeyList = new ArrayList<String>(childStates.keySet());
+		Map<String,CompositeStateWrapper> fromChildStateMap = childStates;//Just doing this to keep track of it, may change it later
+		Map<String,CompositeStateWrapper> nextChildStateMap = nextCsw.getChildStates();
+		for(String fromChildCswKey : fromChildCswKeyList)
+		{
+			CompositeStateWrapper fromChildCsw = fromChildStateMap.get(fromChildCswKey);
+			CompositeStateWrapper nextChildCsw = nextChildStateMap.get(fromChildCswKey);
+			
+			if(nextChildCsw == null && fromChildCswKey == fromState && nextCswStateMap.containsKey(nextState))
+			{
+				continue; //detected transition in this CSW, skip checking here.
+			}
+			boolean fromChildContainsState = fromChildCsw.containsState(fromState);
+			boolean nextChildContainsState = nextChildCsw.containsState(nextState);
+			//case 1, both child states don't contain transition related states, check equality and move on.
+			if(!fromChildContainsState && !nextChildContainsState)
+			{
+				if(!fromChildCsw.checkEquality(nextChildCsw))
+				{
+					return false;
+				}
+			}
+			//case 2, both child states contain transition, check recursively
+			if(fromChildContainsState && nextChildContainsState)
+			{
+				if(!fromChildCsw.isTransition(nextChildCsw,t))
+				{
+					return false;
+				}
+			}
+			//TODO case 3 and 4 occur when the transition is between concurrent branches.
+			if(!fromChildContainsState && nextChildContainsState)
+			{
+				//TODO
+			}
+			if(fromChildContainsState && !nextChildContainsState)
+			{
+				//TODO
+			}
+		}
+		
+		return true;
+	}
+	//Checks if two CompositeStateWrappers have the same states.
+	boolean checkEquality(CompositeStateWrapper csw)
+	{
+		if(csw == null)
+		{
+			return false;
+		}
+		ArrayList<State> stateList = new ArrayList<State>(csw.getStates().values());
+		if(states.size() != stateList.size())
+		{
+			return false;
+		}
+		for(State s : stateList)
+		{
+			String sName = s.getName();
+			if(!states.containsKey(sName))
+			{
+				return false;
+			}
+			CompositeStateWrapper localChildCsw = childStates.get(s.getName());
+			CompositeStateWrapper otherChildCsw = csw.getChildStates().get(s.getName());
+			if((localChildCsw == null && otherChildCsw != null) || (localChildCsw != null && otherChildCsw == null))
+			{
+				return false;
+			}
+			if(localChildCsw != null)
+			{
+				if(!localChildCsw.checkEquality(otherChildCsw))
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	//Adds state to composite state
+	void addState(State s)
+	{
+		String stateName = s.getName();
+		if(states.get(stateName) == null)
+		{
+			states.put(stateName,s);
+		}
+	}
+	
+	void addChildState(String stateName, CompositeStateWrapper csw)
+	{
+		if(childStates.get(stateName) == null)
+		{
+			childStates.put(stateName,csw);
+		}
+	}
+	
+	//traverses through the CSW's tree structure and tries to add state.
+	//Returns true if successfully added.
+	boolean addRecursiveChildState(String parent, State state)
+	{
+		//first, check if this CSW already contains child CSW associated with parent
+		CompositeStateWrapper csw = childStates.get(parent);
+		if(csw != null)
+		{
+			csw.addState(state);
+			return true;
+		}
+		//next, check if CSW contains parent state but simply has not yet instantiated childCSW
+		if(states.get(parent) != null)
+		{
+			CompositeStateWrapper newCsw = new CompositeStateWrapper();
+			newCsw.addState(state);
+			addChildState(parent,newCsw);
+			return true;
+		}
+		//parent state not contained at this level.
+		//now we need to recursively check each child CSW.
+		ArrayList<CompositeStateWrapper> childCswList = new ArrayList<CompositeStateWrapper>(childStates.values());
+		for(CompositeStateWrapper childCsw : childCswList)
+		{
+			if(childCsw.addRecursiveChildState(parent,state))
+			{
+				return true;
+			}
+		}
+		//parent state not found, returning false.
+		return false;
+	}	
+	
+	//Prints the name of the composite state.
+	//name is a conjunction of state names within the composite state.
+	String getCompositeName()
+	{
+		ArrayList<State> values = new ArrayList<State>(states.values());
+		if(values.size() < 1)
+		{
+			return null;
+		}
+		String compositeName = values.get(0).getName();
+		CompositeStateWrapper firstChildCsw = childStates.get(values.get(0).getName());
+		if(firstChildCsw != null)
+		{
+			compositeName = compositeName + " (" + firstChildCsw.getCompositeName() + ")";
+		}
+		for(int i = 1; i < values.size(); i++)
+		{
+			State s = values.get(i);
+			compositeName = compositeName + " || " + s.getName();
+			CompositeStateWrapper childCsw = childStates.get(s.getName());
+			if(childCsw != null)
+			{
+				compositeName = compositeName + " (" + childCsw.getCompositeName() + ") ";
+			}
+		}
+		return compositeName;
+	}
+	
+}
 
+//Container containing multiple transitions of the same name
+class CompositeTransitionWrapper
+{
+	depend java.util.ArrayList;
+	String tName;
+	ArrayList<Transition> transitionList = new ArrayList<Transition>();
+	
+	//adds transition to list, returns true if succesfully added, returns false if not added.
+	public boolean addTransition(Transition t)
+	{
+		if(t.getEvent().getName() != tName)
+		{
+			return false;
+		}
+		transitionList.add(t);
+		return true;
+	}
+}
+
+class CompositeStateTableRow
+{
+	depend java.util.ArrayList;
+	depend java.util.Map;
+	depend java.util.HashMap;
+	CompositeStateWrapper fromCsw;
+	String cswName;//composite name
+	
+	isPseudo=false;//TODO implement H or H* support.
+	
+	private CompositeStateWrapper findNextCsw(ArrayList<CompositeStateWrapper> cswList, ArrayList<Transition> transitionList)
+	{
+		for(CompositeStateWrapper nextCsw : cswList)
+		{
+			for(Transition t : transitionList)
+			{
+				String fromState = t.getFromState().getName();
+				if(fromCsw.isTransition(nextCsw,t))
+				{
+					return nextCsw;
+				}
+			}
+		}
+		return null;
+	}	
+	
+	private Transition findTransition(CompositeStateWrapper nextCsw, ArrayList<CompositeTransitionWrapper> ctwList)
+	{
+		for(CompositeTransitionWrapper ctw : ctwList)
+		{
+			ArrayList<Transition> transitionList = ctw.getTransitionList();
+			for(Transition t : transitionList)
+			{
+				if(fromCsw.isTransition(nextCsw,t))
+				{
+					return t;
+				}
+			}
+		}
+		return null;
+	}
+
+	private StringBuilder cswToHtmlString(CompositeStateWrapper csw)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("<span");
+		
+		//TODO derived and action support
+		
+		sb.append(">");
+		
+		//TODO guard support
+		
+		sb.append(csw.getCompositeName());
+		sb.append("</span>");
+		return(sb);	
+	}	
+	
+	private StringBuilder transitionToHtmlString(Transition t)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("<span");
+		//TODO derived support
+		sb.append(">");
+		sb.append(t.getEvent().getName());
+		//TODO add guard support
+		sb.append("</span>");
+		return(sb);
+	}
+	
+	public StringBuilder stateEventTableRowHtml(ArrayList<String> eventList, HashMap<String,CompositeTransitionWrapper> ctwMap, ArrayList<CompositeStateWrapper> cswList)
+	{
+		StringBuilder sb = new StringBuilder();
+		firstCellInRow(sb);
+		for(String eventName : eventList)//loop through event columns
+		{
+			sb.append("      <td class=\"event-entry\">");
+			ArrayList<Transition> transitionList = ctwMap.get(eventName).getTransitionList();
+			CompositeStateWrapper nextCsw = findNextCsw(cswList,transitionList);
+			if(nextCsw != null)//some kind of evaluation where we must find the corresponding csw.
+			{
+				sb.append(cswToHtmlString(nextCsw));//associated event
+			}
+			else 
+			{
+				sb.append("&nbsp;");
+			}
+			sb.append("</td>");
+		}
+		return(sb);
+	}	
+	
+	public StringBuilder stateStateTableRowHtml(HashMap<String,CompositeTransitionWrapper> ctwMap, ArrayList<CompositeStateWrapper> cswList)
+	{
+		StringBuilder sb = new StringBuilder();
+		firstCellInRow(sb);
+		ArrayList<CompositeTransitionWrapper> ctwList = new ArrayList<CompositeTransitionWrapper>(ctwMap.values());
+		for(CompositeStateWrapper nextCsw : cswList)
+		{
+			sb.append("      <td class=\"state-entry\">");
+			Transition t = findTransition(nextCsw,ctwList);
+			if(t != null)
+			{
+				sb.append(transitionToHtmlString(t));
+			}
+			else 
+			{
+				sb.append("&nbsp;");
+			}
+			sb.append("</td>");
+		}
+		
+		return(sb);
+	}
+	
+	private StringBuilder firstCellInRow(StringBuilder sb)
+	{
+		sb.append("      <td class=\"state-header\" data-parent=\"");
+		sb.append("\">");
+		sb.append(fromCsw.getCompositeName());
+		sb.append("</td>\n");
+		return(sb);
+	}
+}
 // Row in a state-state table and state-event table
 // Also iterated through as columns in a state-state-table
 class StateTableRow 
@@ -56,7 +478,7 @@ class StateTableRow
 
   // Add cells for the entire row of transitions
   public void build() 
-  {
+  {  
     boolean isDerived = false;
     StateTableRow curRow = this;
     State curState;
@@ -183,7 +605,6 @@ class StateTableRow
       {
         guardString = extractGuardString(guard, curState, event, this);
       }
-
       // Add state to the state event list in hash table
       addStateEventCell(eventLabel, t, guardString, transitionAction, isDerived);
 
@@ -361,11 +782,17 @@ class StateStateEntry
 
 class StateTable 
 {
+	depend java.util.ArrayList;
+	depend java.util.Map;
+	depend java.util.HashMap;
   UmpleClass uClass;
   StateMachine sm;
   List<String> allEvents = null; // will be populated by call to buildAllEvents
   1 -- * StateTableRow rows;  // Rows to be output for each state
-
+  //will likely have to change this one so it conforms to umple standards.
+  ArrayList<CompositeStateWrapper> primaryCswList = new ArrayList<CompositeStateWrapper>();
+  ArrayList<Transition> transitionList = new ArrayList<Transition>();
+  HashMap<String,CompositeTransitionWrapper> ctwMap = new HashMap<String,CompositeTransitionWrapper>(); 
   // Outputs the Event State table - with states as cells
   public StringBuilder stateEventTableHtml(StringBuilder sb) 
   {
@@ -394,7 +821,34 @@ class StateTable
     sb.append("</div>\n\n");
     return(sb);
   }
-
+  
+  public StringBuilder compositeStateEventTableHtml(StringBuilder sb)
+  {
+  	ArrayList<String> eventList = new ArrayList<String>(ctwMap.keySet());
+  	sb.append("<div class=\"statetable-container\">\n");
+  	sb.append("  <table class=\"statetable event-statetable\">\n");
+  	
+  	sb.append("    <tr>\n      <td class=\"event-header\">&nbsp;</td>\n");
+  	for(String e : eventList)
+  	{
+  		sb.append("      <td class=\"event-header\">");
+  		sb.append(e);
+  		sb.append("</td>\n");
+  	}
+  	sb.append("    </tr>\n");
+  	for(CompositeStateWrapper csw : primaryCswList)
+  	{
+  		CompositeStateTableRow cstRow = new CompositeStateTableRow(csw,csw.getCompositeName());
+  		sb.append("    <tr>\n");
+  		sb.append(cstRow.stateEventTableRowHtml(eventList,ctwMap,primaryCswList));//may need to change args
+  		sb.append("    </tr>\n\n");
+  	}
+  	
+  	sb.append("  </table>\n");
+  	sb.append("</div>\n\n");
+  	return(sb);
+  	
+  }
   // Outputs the State State table - with events as cells
   public StringBuilder stateStateTableHtml(StringBuilder sb) 
   {
@@ -423,6 +877,34 @@ class StateTable
     sb.append("</div>\n\n");
     return(sb);
   }
+  
+  public StringBuilder compositeStateStateTableHtml(StringBuilder sb)
+  {
+  	 sb.append("<div class=\"statetable-container\">\n");
+    sb.append("  <table class=\"statetable state-statetable\">\n");
+    
+    sb.append("    <tr>\n      <td class=\"state-header\">&nbsp;</td>\n");
+    for(CompositeStateWrapper csw : primaryCswList)
+    {
+    	String compositeStateName = csw.getCompositeName();
+    	sb.append("      <td class=\"state-header\">");
+    	sb.append(compositeStateName);
+    	sb.append("</td>\n");
+    }
+    sb.append("    </tr>\n\n");
+    
+    for(CompositeStateWrapper csw : primaryCswList)
+    {
+    	CompositeStateTableRow cstRow = new CompositeStateTableRow(csw,csw.getCompositeName());
+    	sb.append("    <tr>\n");
+    	sb.append(cstRow.stateStateTableRowHtml(ctwMap,primaryCswList));
+    	sb.append("    </tr>\n\n");
+    }
+    
+    sb.append("  </table>\n");
+    sb.append("</div>\n\n");
+    return(sb);
+  }
 
   // Builds the columns after the rest of the tables are made
   public void buildAllEvents() 
@@ -443,7 +925,211 @@ class StateTable
     int currentId = 0;
     buildRecursively(theSm, nestingLevel, currentId, null);
   }
-
+	
+	public void addTransitionsToList(State s)
+	{
+		for(Transition t : s.getTransitions())
+		{
+			transitionList.add(t);
+		}
+	}	
+	
+	public void buildRecursivelyCompositeEntry(StateMachine theSm)
+	{
+		System.out.println("Call to buildRecursivelyCompositeEntry...");
+		int nestingLevel = 0;
+		int currentId = 0;
+		CompositeStateWrapper csw = new CompositeStateWrapper();
+		buildRecursivelyComposite(theSm, nestingLevel, currentId, null);
+		System.out.println("Finished recursive build...");
+		System.out.println("Size of primaryCswList: " + primaryCswList.size());
+		
+	}
+	
+	public int buildRecursivelyComposite(StateMachine theSm,
+													 int nestingLevel,
+													 int currentId,
+													 StateTableRow parent
+													 )
+	{
+		System.out.println("Call to buildRecursivelyComposite...");
+		String sLabel;
+		StateTableRow stateRow = null;
+		String smName, clSmName;
+		boolean isPseudo = false;
+		ArrayList<CompositeStateWrapper> cswList = new ArrayList<CompositeStateWrapper>();
+		
+		Boolean isFirstState = true;
+		CompositeStateWrapper csw = new CompositeStateWrapper();
+		for(State s : theSm.getStates())
+		{
+			sLabel=s.getName();
+			if(sLabel.equals("HStar")) sLabel="H*";
+         isPseudo = sLabel.equals("H") || sLabel.equals("H*");
+         CompositeStateWrapper compositeStateWrapper = new CompositeStateWrapper();
+         compositeStateWrapper.addState(s);
+         //adds state to master list
+         addTransitionsToList(s);
+         if(s.getIsConcurrent())
+         {
+         	cswList.add(compositeStateWrapper);
+         }
+         else
+         {
+         	primaryCswList.add(compositeStateWrapper);
+         }
+		   currentId++;
+         
+         
+			for(StateMachine nestedSm : s.getNestedStateMachines())
+			{
+				
+				if(s.getIsConcurrent())
+				{
+					//invoke concurrency version of recursion
+					currentId = buildRecursivelyCompositeArray(nestedSm, nestingLevel + 1, currentId, s, cswList);
+				}
+				else 
+				{
+					//do normal processing of nested state machine
+					currentId = buildRecursivelyComposite(nestedSm, nestingLevel + 1, currentId, stateRow);
+				}
+			}
+         if(s.getIsConcurrent())
+         {
+         	//process cswList
+         	for(CompositeStateWrapper cswConcurrent : cswList)
+         	{
+         		primaryCswList.add(cswConcurrent);
+         		currentId++;
+         	}
+         	cswList.clear();
+         }
+		}
+		
+		return currentId;
+		
+		
+	}
+	
+	public int buildRecursivelyCompositeArray(StateMachine theSm,
+															int nestingLevel,
+															int currentId,
+															State parentState,
+															ArrayList<CompositeStateWrapper> cswList
+															)
+	{
+		System.out.println("Call to buildRecursivelyCompositeArray...");
+		String sLabel;
+		String parent = null;
+		if(parentState != null)
+		{
+			parent = parentState.getName();
+		}
+		//get all transitions
+		for(State s : theSm.getStates())
+		{
+			addTransitionsToList(s);
+		}
+		// this list is for nested concurrent states.
+		ArrayList<CompositeStateWrapper> nestedCswList = new ArrayList<CompositeStateWrapper>();
+		StateTableRow stateRow = null;
+		//unpack CSWs from cswList
+		ArrayList<CompositeStateWrapper> tempCswList = new ArrayList<CompositeStateWrapper>();
+		System.out.println("Unpacking cswList...");
+		//unpacks current CSW list and adds it to a temporary list
+		for(CompositeStateWrapper csw : cswList) 
+		{
+			System.out.println("Unpacked csw: " + csw.getCompositeName());
+			tempCswList.add(csw);
+		}
+		System.out.println("Size of tempCswList: " + tempCswList.size());
+		//empty cswList so it can be replaced with new composites.
+		cswList.clear();
+		//for every CSW, create a new CSW for every state and add it back to the cswList
+		if(tempCswList.size() == 0)
+		{
+			System.out.println("No existing CSWs detected, creating new CSWs...");
+			for(State s : theSm.getStates())
+			{
+				CompositeStateWrapper newCsw = new CompositeStateWrapper();
+				newCsw.addState(s);
+				System.out.println("New csw name: " + newCsw.getCompositeName());
+				cswList.add(newCsw);
+			}
+		}
+		else
+		{
+			for(CompositeStateWrapper csw : tempCswList)
+			{
+				if(parentState == null)
+				{
+					for(State s : theSm.getStates())
+					{
+						
+						//CompositeStateWrapper newCsw = new CompositeStateWrapper(csw,s);
+						CompositeStateWrapper newCsw = csw.getCopy();
+						newCsw.addState(s);
+						System.out.println("New csw name: " + newCsw.getCompositeName());
+						cswList.add(newCsw);
+					}
+				}
+				else if(csw.containsState(parent))
+				{
+					for(State s : theSm.getStates())
+					{
+						CompositeStateWrapper newCsw = csw.getCopy();//we create a copy of the csw
+						newCsw.addRecursiveChildState(parent,s);//we add the state to the csw
+						System.out.println("New csw name: " + newCsw.getCompositeName());
+						cswList.add(newCsw);
+					}
+				}
+				else//not a parent state, add csw back to list.
+				{
+					cswList.add(csw);
+				}
+			}
+	   }
+		
+		//now that the composite states for this branch have been created, proceed with rest of build
+		for(State s : theSm.getStates())
+		{			
+			for(StateMachine nestedSm : s.getNestedStateMachines())
+			{
+				currentId = buildRecursivelyCompositeArray(nestedSm, nestingLevel + 1, currentId, s, cswList);	
+			}
+		}
+		return currentId;
+		
+	}
+	
+	public String getTransitionInfo(Transition transition)
+	{
+		String name;
+		name = transition.getFromState().getName();
+		name = name + " --(";
+		name = name + transition.getEvent().getName();
+		name = name + ")--> ";
+		name = name + transition.getNextState().getName();
+		return name;
+	}
+	
+	public void consolidateTransitions(ArrayList<Transition> transitionList)
+	{
+		//HashMap<String,CompositeTransitionWrapper> ctwMap = new HashMap<String,CompositeTransitionWrapper>();
+		for(Transition t : transitionList)
+		{
+			String tName = t.getEvent().getName();
+			CompositeTransitionWrapper ctw = ctwMap.get(tName);
+			if(ctw == null)
+			{
+				ctw = new CompositeTransitionWrapper(tName);
+				ctwMap.put(tName,ctw);
+			}
+			ctw.addTransition(t);
+		}
+		//return ctwMap;
+	}
   // Walks the state machine adding rows as needed
   public int buildRecursively(StateMachine theSm, 
                               int nestingLevel, 
@@ -462,14 +1148,16 @@ class StateTable
     for (State s : theSm.getStates())
     {
       sLabel=s.getName();  // This is what is displayed
+      
       if(sLabel.equals("HStar")) sLabel="H*";
       isPseudo = sLabel.equals("H") || sLabel.equals("H*");
-
+	
       // Add a row for this state  - automatically adds to 'rows' as there is an association
       stateRow = new StateTableRow(s, sLabel, nestingLevel, parent, currentId, this);
       stateRow.build();
       currentId++;
-
+		
+		
       for (StateMachine nestedSm : s.getNestedStateMachines())
       {
       	currentId = buildRecursively(nestedSm, nestingLevel + 1, currentId, stateRow);
@@ -511,6 +1199,7 @@ class StateTablesGenerator
   public StringBuilder genCellString(StringBuilder code, String s) {
     return _genCell(0, code, s);
   }
+  
 
   // CENTRAL GENERATE METHOD
 
@@ -530,6 +1219,7 @@ class StateTablesGenerator
         smCount++;
       }
     }
+    System.out.println("Number of statemachines: " + smCount);
     if(smCount == 0) {
       // Special case. No state machine.
 
@@ -553,10 +1243,40 @@ class StateTablesGenerator
         code.append(" state machine ");
         code.append(sm.getName());
         code.append("</h2>\n\n");
-
         // Set up the state table
         StateTable st = new StateTable(uClass, sm);
-
+	
+		  st.buildRecursivelyCompositeEntry(sm);
+		  ArrayList<CompositeStateWrapper> cswList = st.getPrimaryCswList();
+		  for(CompositeStateWrapper csw : cswList)
+		  {
+		  	System.out.println("Composite State: " + csw.getCompositeName());
+		  }
+		  ArrayList<Transition> tList = st.getTransitionList();
+		  for(Transition t : tList)
+		  {
+		  	System.out.println("Transition: " + st.getTransitionInfo(t));
+		  }
+		  for(CompositeStateWrapper fromCsw : cswList)
+		  {
+		  	for(CompositeStateWrapper nextCsw : cswList)
+		  	{
+		  		for(Transition t : tList)
+		  		{
+		  			/*
+		  			System.out.println("Checking...");
+		  			System.out.println("From: " + fromCsw.getCompositeName());
+		  			System.out.println("Tran: " + st.getTransitionInfo(t));
+		  			System.out.println("Next: " + nextCsw.getCompositeName());
+		  			*/
+		  			if(fromCsw.isTransition(nextCsw,t))
+		  			{
+		  				System.out.println("CTC: " + fromCsw.getCompositeName() + " == " + st.getTransitionInfo(t) + " == " + nextCsw.getCompositeName());
+		  			}
+		  		}
+		  	}
+		  }
+		  st.consolidateTransitions(tList);
         // Build the contents of the state tables
         st.buildRecursivelyEntry(sm);
         // Now figure out the headers
@@ -573,6 +1293,14 @@ class StateTablesGenerator
 
         // Output the body of the state state table
         st.stateStateTableHtml(code);
+        
+        code.append("<h3>Composite state-event table</h3>\n");
+        
+        st.compositeStateEventTableHtml(code);
+        
+        code.append("<h3>Composite state-state table</h3>\n");
+        
+        st.compositeStateStateTableHtml(code);
 
       } // End iteration through state machines of a class
     } // End iteration through classes
