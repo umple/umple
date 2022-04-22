@@ -70,7 +70,8 @@ if(file_exists($versionpath)){
 	$vfile = fopen($versionpath, "r");
 	$currentversion = fgets($vfile,1000);
 	fclose($vfile);
-	echo " | <a target=\"releasepage\" href=\"https://github.com/umple/umple/releases\">v$currentversion</a>" ;
+	$releaseMajMin = preg_replace('/(\d+\.\d+\.\d+).*/i','${1}',$currentversion);
+	echo " | <a target=\"releasepage\" href=\"https://github.com/umple/umple/releases/v$releaseMajMin\">v$currentversion</a>" ;
 }
 
 
