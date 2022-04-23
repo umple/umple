@@ -392,21 +392,66 @@ class CompositeStateTableRow
 	private StringBuilder transitionToHtmlString(Transition t)
 	{
 		StringBuilder sb = new StringBuilder();
+		String eventName = t.getEvent().getName();
+		if(t.getEvent().isAutoTransition())
+		{
+			eventName="(auto)";
+		}
 		sb.append("<span");
 		//TODO derived support
 		sb.append(">");
-		sb.append(t.getEvent().getName());
+		sb.append(eventName);
 		//TODO add guard support
 		sb.append("</span>");
 		return(sb);
 	}
 	
-	public StringBuilder stateEventTableRowHtml(ArrayList<String> eventList, HashMap<String,CompositeTransitionWrapper> ctwMap, ArrayList<CompositeStateWrapper> cswList)
+	public StringBuilder stateEventTableRowHtml(ArrayList<String> eventList,
+	                                            HashMap<String,CompositeTransitionWrapper> ctwMap,
+	                                            ArrayList<CompositeStateWrapper> cswList,
+	                                            ArrayList<String> autoTransitionNameList
+	                                            )
 	{
 		StringBuilder sb = new StringBuilder();
+		boolean autoCellChecked = false;
 		firstCellInRow(sb);
 		for(String eventName : eventList)//loop through event columns
 		{
+			if(autoTransitionNameList.contains(eventName) && !autoCellChecked)//autoTransition detected, check 
+			{
+				CompositeStateWrapper autoNextCsw = null;
+				for(String autoTransitionName : autoTransitionNameList)
+				{
+					ArrayList<Transition> autoTransitionList = ctwMap.get(autoTransitionName).getTransitionList();
+					autoNextCsw = findNextCsw(cswList,autoTransitionList);
+					if(autoNextCsw != null)
+					{
+						break;//found a valid CSW, exiting loop
+					}
+				}
+				if(autoNextCsw != null)
+				{
+					sb.append("      <td class=\"event-entry\">");
+					sb.append(cswToHtmlString(autoNextCsw));
+					sb.append("</td>");
+				}
+				else 
+				{
+					sb.append("      <td class=\"event-entry\">");
+					sb.append("&nbsp;");
+					sb.append("</td>");
+				}
+				autoCellChecked = true;
+				continue;
+			}	
+			else if(autoTransitionNameList.contains(eventName) && autoCellChecked)
+			{
+				//sb.append("      <td class=\"event-entry\">");
+				//sb.append("&nbsp;");
+				//sb.append("</td>");
+				continue;
+			}
+			
 			sb.append("      <td class=\"event-entry\">");
 			ArrayList<Transition> transitionList = ctwMap.get(eventName).getTransitionList();
 			CompositeStateWrapper nextCsw = findNextCsw(cswList,transitionList);
@@ -820,25 +865,59 @@ class StateTable
     return(sb);
   }
   
+  //gets formatted event header from ctwMap based on given key
+  private String getFormattedEventHeader(String eventKey)
+  {
+  	CompositeTransitionWrapper ctw = ctwMap.get(eventKey);
+  	if(ctw.getTransitionList().size() == 0)
+  	{
+  		return "ERROR: CompositeTransitionWrapper missing transitions!";
+  	}
+  	Transition t = ctw.getTransitionList().get(0);
+  	Event event = t.getEvent();
+  	if(event.isAutoTransition()) 
+   {
+      return "(auto)";
+   }
+   
+   
+   return event.getName();
+  	
+  }
+  
   public StringBuilder compositeStateEventTableHtml(StringBuilder sb)
   {
   	ArrayList<String> eventList = new ArrayList<String>(ctwMap.keySet());
+  	ArrayList<String> autoTransitionList = new ArrayList<String>();
+  	boolean autoEventCreated = false;
   	sb.append("<div class=\"statetable-container\">\n");
   	sb.append("  <table class=\"statetable event-statetable\">\n");
   	
   	sb.append("    <tr>\n      <td class=\"event-header\">&nbsp;</td>\n");
   	for(String e : eventList)
   	{
+  		String eventName = getFormattedEventHeader(e);
+  		if(eventName == "(auto)" && !autoEventCreated)
+  		{
+			autoTransitionList.add(e);  			
+  			autoEventCreated = true;
+  		}
+  		else if(eventName == "(auto)" && autoEventCreated)
+  		{
+  			autoTransitionList.add(e);
+  			continue;//skip column, auto already created
+  		}
   		sb.append("      <td class=\"event-header\">");
-  		sb.append(e);
+  		sb.append(eventName);
   		sb.append("</td>\n");
+  		
   	}
   	sb.append("    </tr>\n");
   	for(CompositeStateWrapper csw : primaryCswList)
   	{
   		CompositeStateTableRow cstRow = new CompositeStateTableRow(csw,csw.getCompositeName());
   		sb.append("    <tr>\n");
-  		sb.append(cstRow.stateEventTableRowHtml(eventList,ctwMap,primaryCswList));//may need to change args
+  		sb.append(cstRow.stateEventTableRowHtml(eventList,ctwMap,primaryCswList,autoTransitionList));//may need to change args
   		sb.append("    </tr>\n\n");
   	}
   	
@@ -1017,8 +1096,7 @@ class StateTable
 															int nestingLevel,
 															int currentId,
 															State parentState,
-															ArrayList<CompositeStateWrapper> cswList
-															)
+															ArrayList<CompositeStateWrapper> cswList)
 	{
 		System.out.println("Call to buildRecursivelyCompositeArray...");
 		String sLabel;
@@ -1307,12 +1385,28 @@ class StateTablesGenerator
         st.stateStateTableHtml(code);
         
         code.append("<h3>Composite state-event table</h3>\n");
-        
-        st.compositeStateEventTableHtml(code);
+        StringBuilder compositeStateEventTable = new StringBuilder();
+        try
+        {
+        	st.compositeStateEventTableHtml(compositeStateEventTable);
+        	code.append(compositeStateEventTable);
+        }
+        catch(Exception e)
+        {
+        	code.append(e + "\n");
+        }
         
         code.append("<h3>Composite state-state table</h3>\n");
-        
-        st.compositeStateStateTableHtml(code);
+        StringBuilder compositeStateStateTable = new StringBuilder();
+        try
+        {
+        	st.compositeStateStateTableHtml(compositeStateStateTable);
+        	code.append(compositeStateStateTable);
+        }
+        catch(Exception e)
+        {
+        	code.append(e + "\n");
+        }
 
       } // End iteration through state machines of a class
     } // End iteration through classes
