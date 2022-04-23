@@ -966,8 +966,8 @@ class StateTable
          isPseudo = sLabel.equals("H") || sLabel.equals("H*");
          CompositeStateWrapper compositeStateWrapper = new CompositeStateWrapper();
          compositeStateWrapper.addState(s);
-         compositeStateWrapper.setStatePrimacy(s.getName(),true);
-         compositeStateWrapper.displayPrimacy(true);
+         //compositeStateWrapper.setStatePrimacy(s.getName(),true);
+         //compositeStateWrapper.displayPrimacy(true);
          System.out.println(compositeStateWrapper.getCompositeName());
          //adds state to master list
          addTransitionsToList(s);
@@ -1055,8 +1055,8 @@ class StateTable
 			{
 				CompositeStateWrapper newCsw = new CompositeStateWrapper();
 				newCsw.addState(s);
-				newCsw.setStatePrimacy(s.getName(),true);
-				newCsw.displayPrimacy(true);
+				//newCsw.setStatePrimacy(s.getName(),true);
+				//newCsw.displayPrimacy(true);
 				System.out.println("New csw name1: " + newCsw.getCompositeName());
 				cswList.add(newCsw);
 			}
@@ -1074,8 +1074,8 @@ class StateTable
 						//CompositeStateWrapper newCsw = new CompositeStateWrapper(csw,s);
 						CompositeStateWrapper newCsw = csw.getCopy();
 						newCsw.addState(s);
-						newCsw.setStatePrimacy(s.getName(),initialState);
-						newCsw.displayPrimacy(true);
+						//newCsw.setStatePrimacy(s.getName(),initialState);
+						//newCsw.displayPrimacy(true);
 						System.out.println("New csw name2: " + newCsw.getCompositeName());
 						cswList.add(newCsw);
 						initialState = false;
@@ -1088,8 +1088,8 @@ class StateTable
 					{
 						CompositeStateWrapper newCsw = csw.getCopy();//we create a copy of the csw
 						newCsw.addRecursiveChildState(parent,s);//we add the state to the csw
-						newCsw.setStatePrimacy(s.getName(),initialState);
-						newCsw.displayPrimacy(true);
+						//newCsw.setStatePrimacy(s.getName(),initialState);
+						//newCsw.displayPrimacy(true);
 						System.out.println("New csw name3: " + newCsw.getCompositeName());
 						cswList.add(newCsw);
 						initialState = false;
