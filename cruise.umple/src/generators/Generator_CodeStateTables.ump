@@ -39,7 +39,7 @@ class StateTablesGenerator
 
 //Container containing multiple concurrent states.
 class CompositeStateWrapper
-{
+{//cswCheckpoint
 	depend java.util.Map;
 	depend java.util.HashMap;
 	depend java.util.ArrayList;
@@ -50,7 +50,7 @@ class CompositeStateWrapper
 	CompositeStateWrapper parentCsw = null;
 	Map<String,CompositeStateWrapper> childStates = new HashMap<String,CompositeStateWrapper>();
 	Map<String,Boolean> isPrimaryMap = new HashMap<String,Boolean>();
-	
+	String guardString = "";
 	//Returns copy of CompositeStateWrapper
 	CompositeStateWrapper getCopy()
 	{
@@ -314,14 +314,19 @@ class CompositeStateWrapper
 
 //Container containing multiple transitions of the same name
 class CompositeTransitionWrapper
-{
+{//ctwcheckpoint
 	depend java.util.ArrayList;
 	String tName;
 	ArrayList<Transition> transitionList = new ArrayList<Transition>();
-	
+	boolean containsGuard = false;
+	//HashMap<Transition,String> guardStringMap = new ArrayList<Transition
 	//adds transition to list, returns true if succesfully added, returns false if not added.
 	public boolean addTransition(Transition t)
 	{
+		if(extractGuardString(t) != null)
+		{
+			containsGuard = true;
+		}
 		if(t.getEvent().getName() != tName)
 		{
 			return false;
@@ -329,6 +334,43 @@ class CompositeTransitionWrapper
 		transitionList.add(t);
 		return true;
 	}
+	
+	private String extractGuardString(Transition t)
+	{
+		if(t == null)
+		{
+			return null;
+		}
+		JavaGenerator gen = new JavaGenerator();
+		Guard guard = t.getGuard();
+		String guardString = null;
+		String eventName = t.getEvent().getName();
+		if(guard != null)
+		{
+			guardString = extractGuardStringRecursive(guard,t.getFromState(),t.getEvent());
+			System.out.println("Guard: " + guardString);
+		}
+		return guardString;
+	}
+	
+	//extracts guard string.
+	private String extractGuardStringRecursive(Guard guard, State curState, Event event)
+	{
+		JavaGenerator gen = new JavaGenerator();
+		UmpleClass umpClass = curState.getStateMachine().getUmpleClass();
+		if(umpClass == null)
+		{
+			return extractGuardStringRecursive(guard,
+											  curState.getStateMachine().getParentState(),
+											  event);
+		}
+		else 
+		{
+			gen.setModel(umpClass.getSourceModel());
+			return guard.getCondition(gen).replaceAll("\"","&quote;");
+		}
+	}
+	
 }
 
 class CompositeStateTableRow
@@ -390,15 +432,25 @@ class CompositeStateTableRow
 	}	
 	
 	private StringBuilder transitionToHtmlString(Transition t)
-	{
+	{//compositestatestatecellcheckpoint
 		StringBuilder sb = new StringBuilder();
-		String eventName = t.getEvent().getName();
-		if(t.getEvent().isAutoTransition())
+		Event event = t.getEvent();
+		String eventName = event.getName();
+		
+		if(event.isAutoTransition())
 		{
 			eventName="(auto)";
 		}
+		if(event.getIsTimer())
+		{
+			eventName="after(" + event.getTimerInSeconds() + ")";
+		}
+		String guardString = extractGuardString(t);
+		if(guardString != null)
+		{
+			eventName = eventName + " [" + guardString + "]";
+		}
 		sb.append("<span");
-		//TODO derived support
 		sb.append(">");
 		sb.append(eventName);
 		//TODO add guard support
@@ -406,17 +458,69 @@ class CompositeStateTableRow
 		return(sb);
 	}
 	
+	private HashMap<String,Boolean> getTimerCellCheckedMap(HashMap<String,ArrayList<String>> timerTransitionMap)
+	{
+		HashMap<String,Boolean> timerCellCheckedMap = new HashMap<String,Boolean>();
+		
+		for(String eventHeader : timerTransitionMap.keySet())
+		{			
+			timerCellCheckedMap.put(eventHeader,false);
+		}
+		return timerCellCheckedMap;
+	}	
+	
+	private String extractGuardString(Transition t)
+	{
+		if(t == null)
+		{
+			return null;
+		}
+		JavaGenerator gen = new JavaGenerator();
+		Guard guard = t.getGuard();
+		String guardString = null;
+		String eventName = t.getEvent().getName();
+		if(guard != null)
+		{
+			guardString = extractGuardStringRecursive(guard,t.getFromState(),t.getEvent());
+			System.out.println("Guard: " + guardString);
+		}
+		return guardString;
+	}
+	
+	//extracts guard string.
+	private String extractGuardStringRecursive(Guard guard, State curState, Event event)
+	{
+		JavaGenerator gen = new JavaGenerator();
+		UmpleClass umpClass = curState.getStateMachine().getUmpleClass();
+		if(umpClass == null)
+		{
+			return extractGuardStringRecursive(guard,
+											  curState.getStateMachine().getParentState(),
+											  event);
+		}
+		else 
+		{
+			gen.setModel(umpClass.getSourceModel());
+			return guard.getCondition(gen).replaceAll("\"","&quote;");
+		}
+	}
+	
 	public StringBuilder stateEventTableRowHtml(ArrayList<String> eventList,
 	                                            HashMap<String,CompositeTransitionWrapper> ctwMap,
 	                                            ArrayList<CompositeStateWrapper> cswList,
-	                                            ArrayList<String> autoTransitionNameList
+	                                            ArrayList<String> autoTransitionNameList,
+	                                            HashMap<String,ArrayList<String>> timerTransitionMap,
+	                                            HashMap<String,String> timerAssociationMap
 	                                            )
-	{
+	{//stateeventrowcheckpoint
+		System.out.println("TimerTransitionMap size: " + timerTransitionMap.size());
 		StringBuilder sb = new StringBuilder();
 		boolean autoCellChecked = false;
 		firstCellInRow(sb);
+		HashMap<String,Boolean> timerCellCheckedMap = getTimerCellCheckedMap(timerTransitionMap);
 		for(String eventName : eventList)//loop through event columns
 		{
+			System.out.println("Event: " + eventName);
 			if(autoTransitionNameList.contains(eventName) && !autoCellChecked)//autoTransition detected, check 
 			{
 				CompositeStateWrapper autoNextCsw = null;
@@ -446,9 +550,49 @@ class CompositeStateTableRow
 			}	
 			else if(autoTransitionNameList.contains(eventName) && autoCellChecked)
 			{
-				//sb.append("      <td class=\"event-entry\">");
-				//sb.append("&nbsp;");
-				//sb.append("</td>");
+				continue;
+			}
+			
+			//have to unpack timer check ahead of time to avoid null pointer exception
+			//if there is no timer associated with eventName, this boolean wont matter
+			boolean timerChecked = false;
+			String timerHeader = null;
+			if(timerAssociationMap.containsKey(eventName))
+			{
+				timerHeader = timerAssociationMap.get(eventName);
+				timerChecked = timerCellCheckedMap.get(timerHeader);
+				System.out.println("Timer: " + eventName + " Checked: " + timerChecked + " Header: " + timerHeader);
+				
+			}			
+			if(timerTransitionMap.containsKey(timerHeader) && !timerChecked)
+			{
+				CompositeStateWrapper timerNextCsw = null;
+				for(String timerTransitionName : timerTransitionMap.get(timerHeader))
+				{
+					ArrayList<Transition> timerTransitionList = ctwMap.get(timerTransitionName).getTransitionList();
+					timerNextCsw = findNextCsw(cswList,timerTransitionList);
+					if(timerNextCsw != null)
+					{
+						break;
+					}
+				}
+				if(timerNextCsw != null)
+				{
+					sb.append("      <td class=\"event-entry\">");
+					sb.append(cswToHtmlString(timerNextCsw));
+					sb.append("</td>");
+				}
+				else 
+				{
+					sb.append("      <td class=\"event-entry\">");
+					sb.append("&nbsp;");
+					sb.append("</td>");
+				}
+				timerCellCheckedMap.put(timerHeader,true);
+				continue;
+			}
+			else if(timerTransitionMap.containsKey(timerHeader) && timerChecked)
+			{
 				continue;
 			}
 			
@@ -468,8 +612,25 @@ class CompositeStateTableRow
 		return(sb);
 	}	
 	
-	public StringBuilder stateStateTableRowHtml(HashMap<String,CompositeTransitionWrapper> ctwMap, ArrayList<CompositeStateWrapper> cswList)
+	private CompositeTransitionWrapper findCompositeStateWrapper(Transition t, ArrayList<CompositeTransitionWrapper> ctwList)
 	{
+		if(t == null)
+		{
+			return null;
+		}
+		String eventName = t.getEvent().getName();
+		for(CompositeTransitionWrapper ctw : ctwList)
+		{
+			if(ctw.getTName() == eventName)
+			{
+				return ctw;
+			}
+		}
+		return null;
+	}	
+	
+	public StringBuilder stateStateTableRowHtml(HashMap<String,CompositeTransitionWrapper> ctwMap, ArrayList<CompositeStateWrapper> cswList)
+	{//statestaterowcheckpoint
 		StringBuilder sb = new StringBuilder();
 		firstCellInRow(sb);
 		ArrayList<CompositeTransitionWrapper> ctwList = new ArrayList<CompositeTransitionWrapper>(ctwMap.values());
@@ -478,10 +639,36 @@ class CompositeStateTableRow
 		{
 			sb.append("      <td class=\"state-entry\">");
 			Transition t = findTransition(nextCsw,ctwList);
-			if(t != null && !transitionHasOccuredList.contains(t.getEvent().getName()))
+			
+			
+			String eventName = null;
+			//Guard guard = null;
+			boolean hasGuard = false;
+			if(t != null)
+			{
+				eventName = t.getEvent().getName();
+				Guard guard = t.getGuard();
+				if(guard != null )
+			   {
+					System.out.println(eventName + " contains guard");
+			   }
+			   CompositeTransitionWrapper ctw = findCompositeStateWrapper(t,ctwList);
+			   hasGuard = ctw.getContainsGuard();
+			}
+			
+			
+			/*
+			String guardString = extractGuardString(t);
+			if(guardString != null)
+			{
+				eventName = eventName + " [" + guardString + "]";
+			}
+			*/
+			
+			if((t != null && !transitionHasOccuredList.contains(eventName)) || hasGuard)
 			{
 				sb.append(transitionToHtmlString(t));
-				transitionHasOccuredList.add(t.getEvent().getName());
+				transitionHasOccuredList.add(eventName);
 			}
 			else 
 			{
@@ -879,6 +1066,10 @@ class StateTable
    {
       return "(auto)";
    }
+   if(event.getIsTimer())
+   {
+   	return "after(" + event.getTimerInSeconds() + ")";
+   }
    
    
    return event.getName();
@@ -886,10 +1077,13 @@ class StateTable
   }
   
   public StringBuilder compositeStateEventTableHtml(StringBuilder sb)
-  {
+  {//stateeventtopcheckpoint
   	ArrayList<String> eventList = new ArrayList<String>(ctwMap.keySet());
   	ArrayList<String> autoTransitionList = new ArrayList<String>();
+  	HashMap<String,ArrayList<String>> timerTransitionMap = new HashMap<String,ArrayList<String>>();
+  	HashMap<String,String> timerAssociationMap = new HashMap<String,String>();
   	boolean autoEventCreated = false;
+  	//HashMap<String,Boolean> timerEventCreatedMap = new HashMap<String,Boolean>();
   	sb.append("<div class=\"statetable-container\">\n");
   	sb.append("  <table class=\"statetable event-statetable\">\n");
   	
@@ -897,6 +1091,12 @@ class StateTable
   	for(String e : eventList)
   	{
   		String eventName = getFormattedEventHeader(e);
+  		CompositeTransitionWrapper ctw = ctwMap.get(e);
+  		Transition t = ctw.getTransitionList().get(0);
+  		if(t == null)
+  		{
+  			System.out.println("ERROR: Event " + e + " points to null CompositeStateWrapper.");
+  		}
   		if(eventName == "(auto)" && !autoEventCreated)
   		{
 			autoTransitionList.add(e);  			
@@ -906,6 +1106,25 @@ class StateTable
   		{
   			autoTransitionList.add(e);
   			continue;//skip column, auto already created
+  		}
+  		
+  		//boolean timerChecked = false;
+  		//if(timerEventCreatedMap.containsKey()
+  		if(t.getEvent().getIsTimer())
+  		{
+  			if(timerTransitionMap.containsKey(eventName))
+  			{
+  				timerTransitionMap.get(eventName).add(e);
+  				timerAssociationMap.put(e,eventName);
+  				continue;
+  			}
+  			else 
+  			{
+  				ArrayList<String> timerEventNameList = new ArrayList<String>();
+  				timerEventNameList.add(e);
+  				timerTransitionMap.put(eventName,timerEventNameList);
+  				timerAssociationMap.put(e,eventName);
+  			}
   		}
   		sb.append("      <td class=\"event-header\">");
   		sb.append(eventName);
@@ -917,7 +1136,12 @@ class StateTable
   	{
   		CompositeStateTableRow cstRow = new CompositeStateTableRow(csw,csw.getCompositeName());
   		sb.append("    <tr>\n");
-  		sb.append(cstRow.stateEventTableRowHtml(eventList,ctwMap,primaryCswList,autoTransitionList));//may need to change args
+  		sb.append(cstRow.stateEventTableRowHtml(eventList,
+  		                                        ctwMap,
+  		                                        primaryCswList,
+  		                                        autoTransitionList,
+  		                                        timerTransitionMap,
+  		                                        timerAssociationMap));//may need to change args
   		sb.append("    </tr>\n\n");
   	}
   	
