@@ -93,6 +93,13 @@ class CompositeStateWrapper
 		String fromState = t.getFromState().getName();
 		String nextState = t.getNextState().getName();
 		//String tName = t.getEvent().getName();//may delete
+		/*
+		System.out.println("Validating...");
+		System.out.println("fromState: " + fromState);
+		System.out.println("nextState: " + nextState);
+		System.out.println("fromCsw: " + getCompositeName());
+		System.out.println("nextCsw: " + nextCsw.getCompositeName());
+		*/
 		if(!containsState(fromState))//This CSW isn't a valid fromState
 		{
 			return false;
@@ -129,8 +136,16 @@ class CompositeStateWrapper
 			{
 				continue; //detected transition in this CSW, skip checking here.
 			}
-			boolean fromChildContainsState = fromChildCsw.containsState(fromState);
-			boolean nextChildContainsState = nextChildCsw.containsState(nextState);
+			boolean fromChildContainsState = false;
+			if(fromChildCsw != null)
+			{
+				fromChildContainsState = fromChildCsw.containsState(fromState);
+			}
+			boolean nextChildContainsState = false;
+			if(nextChildCsw != null)
+			{
+				nextChildContainsState = nextChildCsw.containsState(nextState);
+			}
 			//case 1, both child states don't contain transition related states, check equality and move on.
 			if(!fromChildContainsState && !nextChildContainsState)
 			{
@@ -162,6 +177,9 @@ class CompositeStateWrapper
 		
 		return true;
 	}
+	
+	
+	
 	//Checks if two CompositeStateWrappers have the same states.
 	boolean checkEquality(CompositeStateWrapper csw)
 	{

@@ -1,0 +1,20 @@
+namespace example;
+
+class Student
+{
+  boolean stayOn;
+  status {
+    On 
+    { 
+      -> Off;
+    }
+    Off { power -> On; }
+    
+    
+    Yes
+    {
+      -> No;
+    }
+    No { test -> Yes; }
+  }
+}
