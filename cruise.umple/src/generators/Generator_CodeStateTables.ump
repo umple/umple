@@ -1292,33 +1292,33 @@ class StateTable
          System.out.println(compositeStateWrapper.getCompositeName());
          //adds state to master list
          addTransitionsToList(s);
-         if(s.getIsConcurrent())
-         {
+         //if(s.getIsConcurrent())
+         //{
          	cswList.add(compositeStateWrapper);
-         }
-         else
-         {
-         	primaryCswList.add(compositeStateWrapper);
-         }
+         //}
+         //else
+         //{
+         //	primaryCswList.add(compositeStateWrapper);
+         //}
 		   currentId++;
          
          
 			for(StateMachine nestedSm : s.getNestedStateMachines())
 			{
 				
-				if(s.getIsConcurrent())
-				{
+				//if(s.getIsConcurrent())
+				//{
 					//invoke concurrency version of recursion
 					currentId = buildRecursivelyCompositeArray(nestedSm, nestingLevel + 1, currentId, s, cswList);
-				}
-				else 
-				{
+				//}
+				//else 
+				//{
 					//do normal processing of nested state machine
 					currentId = buildRecursivelyComposite(nestedSm, nestingLevel + 1, currentId, stateRow);
-				}
+				//}
 			}
-         if(s.getIsConcurrent())
-         {
+         //if(s.getIsConcurrent())
+         //{
          	//process cswList
          	for(CompositeStateWrapper cswConcurrent : cswList)
          	{
@@ -1326,7 +1326,7 @@ class StateTable
          		currentId++;
          	}
          	cswList.clear();
-         }
+         //}
 		}
 		
 		return currentId;
