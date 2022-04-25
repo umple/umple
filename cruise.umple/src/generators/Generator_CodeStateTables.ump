@@ -548,8 +548,8 @@ class CompositeStateTableRow
 					autoNextCsw = findNextCsw(cswList,autoTransitionList);
 					if(autoNextCsw != null)
 					{
-						break;//found a valid CSW, exiting loop
-					}
+						break;//this break statement exists to prevent findNextCsw from overriding autoNextCsw with a null value.
+					}		
 				}
 				if(autoNextCsw != null)
 				{
@@ -557,7 +557,7 @@ class CompositeStateTableRow
 					sb.append(cswToHtmlString(autoNextCsw));
 					sb.append("</td>");
 				}
-				else 
+				else
 				{
 					sb.append("      <td class=\"event-entry\">");
 					sb.append("&nbsp;");
@@ -589,10 +589,12 @@ class CompositeStateTableRow
 				{
 					ArrayList<Transition> timerTransitionList = ctwMap.get(timerTransitionName).getTransitionList();
 					timerNextCsw = findNextCsw(cswList,timerTransitionList);
+					
 					if(timerNextCsw != null)
 					{
-						break;
+						break;//this break statement exists to prevent findNextCsw from overriding timerNextCsw with a null value
 					}
+					
 				}
 				if(timerNextCsw != null)
 				{
@@ -1253,6 +1255,7 @@ class StateTable
 		}
 	}	
 	
+	/*
 	public void buildRecursivelyCompositeEntry(StateMachine theSm)
 	{
 		System.out.println("Call to buildRecursivelyCompositeEntry...");
@@ -1264,16 +1267,14 @@ class StateTable
 		System.out.println("Size of primaryCswList: " + primaryCswList.size());
 		
 	}
-	
-	public int buildRecursivelyComposite(StateMachine theSm,
-													 int nestingLevel,
-													 int currentId,
-													 StateTableRow parent
-													 )
+	*/
+	public void buildRecursivelyCompositeEntry(StateMachine theSm)
 	{
 		System.out.println("Call to buildRecursivelyComposite...");
+		int nestingLevel = 0;
+		int currentId = 0;
 		String sLabel;
-		StateTableRow stateRow = null;
+		
 		String smName, clSmName;
 		boolean isPseudo = false;
 		ArrayList<CompositeStateWrapper> cswList = new ArrayList<CompositeStateWrapper>();
@@ -1309,12 +1310,12 @@ class StateTable
 				//if(s.getIsConcurrent())
 				//{
 					//invoke concurrency version of recursion
-					currentId = buildRecursivelyCompositeArray(nestedSm, nestingLevel + 1, currentId, s, cswList);
+					buildRecursivelyCompositeArray(nestedSm, s, cswList);
 				//}
 				//else 
 				//{
 					//do normal processing of nested state machine
-					currentId = buildRecursivelyComposite(nestedSm, nestingLevel + 1, currentId, stateRow);
+					//currentId = buildRecursivelyComposite(nestedSm, nestingLevel + 1, currentId, stateRow);
 				//}
 			}
          //if(s.getIsConcurrent())
@@ -1329,14 +1330,14 @@ class StateTable
          //}
 		}
 		
-		return currentId;
+		System.out.println("Finished recursive build...");
+		System.out.println("Size of primaryCswList: " + primaryCswList.size());
 		
 		
 	}
 	
-	public int buildRecursivelyCompositeArray(StateMachine theSm,
-															int nestingLevel,
-															int currentId,
+	public void buildRecursivelyCompositeArray(StateMachine theSm,
+															
 															State parentState,
 															ArrayList<CompositeStateWrapper> cswList)
 	{
@@ -1353,8 +1354,8 @@ class StateTable
 			addTransitionsToList(s);
 		}
 		// this list is for nested concurrent states.
-		ArrayList<CompositeStateWrapper> nestedCswList = new ArrayList<CompositeStateWrapper>();
-		StateTableRow stateRow = null;
+		//ArrayList<CompositeStateWrapper> nestedCswList = new ArrayList<CompositeStateWrapper>();
+
 		//unpack CSWs from cswList
 		ArrayList<CompositeStateWrapper> tempCswList = new ArrayList<CompositeStateWrapper>();
 		System.out.println("Unpacking cswList...");
@@ -1369,7 +1370,7 @@ class StateTable
 		cswList.clear();
 		//for every CSW, create a new CSW for every state and add it back to the cswList
 		if(tempCswList.size() == 0)
-		{
+		{//No CSWs detected, creating new CSWs with States as parent state.
 			System.out.println("No existing CSWs detected, creating new CSWs...");
 			for(State s : theSm.getStates())
 			{
@@ -1427,10 +1428,10 @@ class StateTable
 		{			
 			for(StateMachine nestedSm : s.getNestedStateMachines())
 			{
-				currentId = buildRecursivelyCompositeArray(nestedSm, nestingLevel + 1, currentId, s, cswList);	
+				buildRecursivelyCompositeArray(nestedSm, s, cswList);	
 			}
 		}
-		return currentId;
+		
 		
 	}
 	
