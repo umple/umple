@@ -1042,7 +1042,8 @@ class StateTable
   //will likely have to change this one so it conforms to umple standards.
   ArrayList<CompositeStateWrapper> primaryCswList = new ArrayList<CompositeStateWrapper>();
   ArrayList<Transition> transitionList = new ArrayList<Transition>();
-  HashMap<String,CompositeTransitionWrapper> ctwMap = new HashMap<String,CompositeTransitionWrapper>(); 
+  HashMap<String,CompositeTransitionWrapper> ctwMap = new HashMap<String,CompositeTransitionWrapper>();
+  boolean isConcurrent = false; 
   // Outputs the Event State table - with states as cells
   public StringBuilder stateEventTableHtml(StringBuilder sb) 
   {
@@ -1293,8 +1294,10 @@ class StateTable
          System.out.println(compositeStateWrapper.getCompositeName());
          //adds state to master list
          addTransitionsToList(s);
-         //if(s.getIsConcurrent())
-         //{
+         if(s.getIsConcurrent())
+         {
+         	isConcurrent = true;
+         }
          	cswList.add(compositeStateWrapper);
          //}
          //else
@@ -1349,9 +1352,14 @@ class StateTable
 			parent = parentState.getName();
 		}
 		//get all transitions
+		//also check concurrency
 		for(State s : theSm.getStates())
 		{
 			addTransitionsToList(s);
+			if(s.getIsConcurrent())
+			{
+				isConcurrent = true;
+			}
 		}
 		// this list is for nested concurrent states.
 		//ArrayList<CompositeStateWrapper> nestedCswList = new ArrayList<CompositeStateWrapper>();
@@ -1626,29 +1634,31 @@ class StateTablesGenerator
 
         // Output the body of the state state table
         st.stateStateTableHtml(code);
-        
-        code.append("<h3>Composite state-event table</h3>\n");
-        StringBuilder compositeStateEventTable = new StringBuilder();
-        try
+        if(st.getIsConcurrent())
         {
-        	st.compositeStateEventTableHtml(compositeStateEventTable);
-        	code.append(compositeStateEventTable);
-        }
-        catch(Exception e)
-        {
-        	code.append(e + "\n");
-        }
-        
-        code.append("<h3>Composite state-state table</h3>\n");
-        StringBuilder compositeStateStateTable = new StringBuilder();
-        try
-        {
-        	st.compositeStateStateTableHtml(compositeStateStateTable);
-        	code.append(compositeStateStateTable);
-        }
-        catch(Exception e)
-        {
-        	code.append(e + "\n");
+        	code.append("<h3>Composite state-event table</h3>\n");
+        	StringBuilder compositeStateEventTable = new StringBuilder();
+        	try
+        	{
+        		st.compositeStateEventTableHtml(compositeStateEventTable);
+        		code.append(compositeStateEventTable);
+        	}
+        	catch(Exception e)
+        	{
+        		code.append(e + "\n");
+        	}
+        	
+        	code.append("<h3>Composite state-state table</h3>\n");
+        	StringBuilder compositeStateStateTable = new StringBuilder();
+        	try
+        	{
+        		st.compositeStateStateTableHtml(compositeStateStateTable);
+        		code.append(compositeStateStateTable);
+        	}
+        	catch(Exception e)
+        	{
+        		code.append(e + "\n");
+        	}
         }
 
       } // End iteration through state machines of a class
