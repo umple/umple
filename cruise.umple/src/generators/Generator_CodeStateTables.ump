@@ -163,14 +163,15 @@ class CompositeStateWrapper
 				}
 			}
 			//TODO case 3 and 4 occur when the transition is between concurrent branches.
+			//also occurs when a transition is from a parent state to a child state and vice versa
 			if(!fromChildContainsState && nextChildContainsState)
 			{
-				return false;				
+				//return false;				
 				//TODO
 			}
 			if(fromChildContainsState && !nextChildContainsState)
 			{
-				return false;				
+				//return false;				
 				//TODO
 			}
 		}
@@ -376,7 +377,7 @@ class CompositeTransitionWrapper
 		if(guard != null)
 		{
 			guardString = extractGuardStringRecursive(guard,t.getFromState(),t.getEvent());
-			System.out.println("Guard: " + guardString);
+			//System.out.println("Guard: " + guardString);
 		}
 		return guardString;
 	}
@@ -529,7 +530,7 @@ class CompositeStateTableRow
 		if(guard != null)
 		{
 			guardString = extractGuardStringRecursive(guard,t.getFromState(),t.getEvent());
-			System.out.println("Guard: " + guardString);
+			//System.out.println("Guard: " + guardString);
 		}
 		return guardString;
 	}
@@ -560,14 +561,14 @@ class CompositeStateTableRow
 	                                            HashMap<String,String> timerAssociationMap
 	                                            )
 	{//stateeventrowcheckpoint
-		System.out.println("TimerTransitionMap size: " + timerTransitionMap.size());
+		//System.out.println("TimerTransitionMap size: " + timerTransitionMap.size());
 		StringBuilder sb = new StringBuilder();
 		boolean autoCellChecked = false;
 		firstCellInRow(sb);
 		HashMap<String,Boolean> timerCellCheckedMap = getTimerCellCheckedMap(timerTransitionMap);
 		for(String eventName : eventList)//loop through event columns
 		{
-			System.out.println("Event: " + eventName);
+			//System.out.println("Event: " + eventName);
 			if(autoTransitionNameList.contains(eventName) && !autoCellChecked)//autoTransition detected, check 
 			{
 				CompositeStateWrapper autoNextCsw = null;
@@ -608,7 +609,7 @@ class CompositeStateTableRow
 			{
 				timerHeader = timerAssociationMap.get(eventName);
 				timerChecked = timerCellCheckedMap.get(timerHeader);
-				System.out.println("Timer: " + eventName + " Checked: " + timerChecked + " Header: " + timerHeader);
+				//System.out.println("Timer: " + eventName + " Checked: " + timerChecked + " Header: " + timerHeader);
 				
 			}			
 			if(timerTransitionMap.containsKey(timerHeader) && !timerChecked)
@@ -742,7 +743,7 @@ class CompositeStateTableRow
 				Guard guard = t.getGuard();
 				if(guard != null )
 			   {
-					System.out.println(eventName + " contains guard");
+					//System.out.println(eventName + " contains guard");
 			   }
 			   CompositeTransitionWrapper ctw = findCompositeStateWrapper(t,ctwList);
 			   hasGuard = ctw.getContainsGuard();
@@ -756,11 +757,11 @@ class CompositeStateTableRow
 				eventName = eventName + " [" + guardString + "]";
 			}
 			*/
+			boolean isFirst = true;
 			if(validTransitionList.size() > 0)
 			{
-				sb.append("<span");
-				sb.append(">");
-				boolean isFirst = true;
+				
+				
 				for(Transition validTransition : validTransitionList)
 				{
 					eventName = validTransition.getEvent().getName();
@@ -772,15 +773,23 @@ class CompositeStateTableRow
 						{
 							sb.append("<br>");
 						}
+						else {
+							sb.append("<span>");
+						}
 						sb.append(transitionToHtmlString(validTransition));
+						transitionHasOccuredList.add(eventName);
 						isFirst = false;
 					}
 				}
-				sb.append("</span>");
+				
+			}
+			if(isFirst)
+			{
+				sb.append("&nbsp;");
 			}
 			else 
 			{
-				sb.append("&nbsp;");
+				sb.append("</span>");
 			}
 			/*
 			if((t != null && !transitionHasOccuredList.contains(eventName)) || hasGuard)
@@ -1222,7 +1231,7 @@ class StateTable
   		Transition t = ctw.getTransitionList().get(0);
   		if(t == null)
   		{
-  			System.out.println("ERROR: Event " + e + " points to null CompositeStateWrapper.");
+  			//System.out.println("ERROR: Event " + e + " points to null CompositeStateWrapper.");
   		}
   		if(eventName == "(auto)" && !autoEventCreated)
   		{
@@ -1403,7 +1412,7 @@ class StateTable
 	*/
 	public void buildRecursivelyCompositeEntry(StateMachine theSm)
 	{
-		System.out.println("Call to buildRecursivelyComposite...");
+		//System.out.println("Call to buildRecursivelyComposite...");
 		int nestingLevel = 0;
 		int currentId = 0;
 		String sLabel;
@@ -1423,7 +1432,7 @@ class StateTable
          compositeStateWrapper.addState(s);
          //compositeStateWrapper.setStatePrimacy(s.getName(),true);
          //compositeStateWrapper.displayPrimacy(true);
-         System.out.println(compositeStateWrapper.getCompositeName());
+         //System.out.println(compositeStateWrapper.getCompositeName());
          //adds state to master list
          addTransitionsToList(s);
          if(s.getIsConcurrent())
@@ -1465,8 +1474,8 @@ class StateTable
          //}
 		}
 		
-		System.out.println("Finished recursive build...");
-		System.out.println("Size of primaryCswList: " + primaryCswList.size());
+		//System.out.println("Finished recursive build...");
+		//System.out.println("Size of primaryCswList: " + primaryCswList.size());
 		
 		
 	}
@@ -1476,7 +1485,7 @@ class StateTable
 															State parentState,
 															ArrayList<CompositeStateWrapper> cswList)
 	{
-		System.out.println("Call to buildRecursivelyCompositeArray...");
+		//System.out.println("Call to buildRecursivelyCompositeArray...");
 		String sLabel;
 		String parent = null;
 		if(parentState != null)
@@ -1498,27 +1507,27 @@ class StateTable
 
 		//unpack CSWs from cswList
 		ArrayList<CompositeStateWrapper> tempCswList = new ArrayList<CompositeStateWrapper>();
-		System.out.println("Unpacking cswList...");
+		//System.out.println("Unpacking cswList...");
 		//unpacks current CSW list and adds it to a temporary list
 		for(CompositeStateWrapper csw : cswList) 
 		{
-			System.out.println("Unpacked csw: " + csw.getCompositeName());
+			//System.out.println("Unpacked csw: " + csw.getCompositeName());
 			tempCswList.add(csw);
 		}
-		System.out.println("Size of tempCswList: " + tempCswList.size());
+		//System.out.println("Size of tempCswList: " + tempCswList.size());
 		//empty cswList so it can be replaced with new composites.
 		cswList.clear();
 		//for every CSW, create a new CSW for every state and add it back to the cswList
 		if(tempCswList.size() == 0)
 		{//No CSWs detected, creating new CSWs with States as parent state.
-			System.out.println("No existing CSWs detected, creating new CSWs...");
+			//System.out.println("No existing CSWs detected, creating new CSWs...");
 			for(State s : theSm.getStates())
 			{
 				CompositeStateWrapper newCsw = new CompositeStateWrapper();
 				newCsw.addState(s);
 				//newCsw.setStatePrimacy(s.getName(),true);
 				//newCsw.displayPrimacy(true);
-				System.out.println("New csw name1: " + newCsw.getCompositeName());
+				//System.out.println("New csw name1: " + newCsw.getCompositeName());
 				cswList.add(newCsw);
 			}
 		}
@@ -1537,7 +1546,7 @@ class StateTable
 						newCsw.addState(s);
 						//newCsw.setStatePrimacy(s.getName(),initialState);
 						//newCsw.displayPrimacy(true);
-						System.out.println("New csw name2: " + newCsw.getCompositeName());
+						//System.out.println("New csw name2: " + newCsw.getCompositeName());
 						cswList.add(newCsw);
 						initialState = false;
 					}
@@ -1551,7 +1560,7 @@ class StateTable
 						newCsw.addRecursiveChildState(parent,s);//we add the state to the csw
 						//newCsw.setStatePrimacy(s.getName(),initialState);
 						//newCsw.displayPrimacy(true);
-						System.out.println("New csw name3: " + newCsw.getCompositeName());
+						//System.out.println("New csw name3: " + newCsw.getCompositeName());
 						cswList.add(newCsw);
 						initialState = false;
 					}
@@ -1691,7 +1700,7 @@ class StateTablesGenerator
         smCount++;
       }
     }
-    System.out.println("Number of statemachines: " + smCount);
+    //System.out.println("Number of statemachines: " + smCount);
     if(smCount == 0) {
       // Special case. No state machine.
 
@@ -1723,12 +1732,12 @@ class StateTablesGenerator
 		  for(CompositeStateWrapper csw : cswList)
 		  {
 		  	csw.displayPrimacy(false);
-		  	System.out.println("Composite State: " + csw.getCompositeName());
+		  	//System.out.println("Composite State: " + csw.getCompositeName());
 		  }
 		  ArrayList<Transition> tList = st.getTransitionList();
 		  for(Transition t : tList)
 		  {
-		  	System.out.println("Transition: " + st.getTransitionInfo(t));
+		  	//System.out.println("Transition: " + st.getTransitionInfo(t));
 		  }
 		  for(CompositeStateWrapper fromCsw : cswList)
 		  {
@@ -1744,7 +1753,7 @@ class StateTablesGenerator
 		  			*/
 		  			if(fromCsw.isTransition(nextCsw,t))
 		  			{
-		  				System.out.println("CTC: " + fromCsw.getCompositeName() + " == " + st.getTransitionInfo(t) + " == " + nextCsw.getCompositeName());
+		  				//System.out.println("CTC: " + fromCsw.getCompositeName() + " == " + st.getTransitionInfo(t) + " == " + nextCsw.getCompositeName());
 		  			}
 		  		}
 		  	}
