@@ -432,6 +432,23 @@ class CompositeStateTableRow
 		}
 		return null;
 	}
+	
+	private ArrayList<Transition> findValidTransitions(CompositeStateWrapper nextCsw, ArrayList<CompositeTransitionWrapper> ctwList)
+	{
+		ArrayList<Transition> validTransitionList = new ArrayList<Transition>();
+		for(CompositeTransitionWrapper ctw : ctwList)
+		{
+			ArrayList<Transition> transitionList = ctw.getTransitionList();
+			for(Transition t : transitionList)
+			{
+				if(fromCsw.isTransition(nextCsw,t))
+				{
+					validTransitionList.add(t);
+				}
+			}
+		}
+		return validTransitionList;
+	}
 
 	private StringBuilder cswToHtmlString(CompositeStateWrapper csw)
 	{
@@ -468,11 +485,11 @@ class CompositeStateTableRow
 		{
 			eventName = eventName + " [" + guardString + "]";
 		}
-		sb.append("<span");
-		sb.append(">");
+		//sb.append("<span");
+		//sb.append(">");
 		sb.append(eventName);
 		//TODO add guard support
-		sb.append("</span>");
+		//sb.append("</span>");
 		return(sb);
 	}
 	
@@ -659,7 +676,7 @@ class CompositeStateTableRow
 		{
 			sb.append("      <td class=\"state-entry\">");
 			Transition t = findTransition(nextCsw,ctwList);
-			
+			ArrayList<Transition> validTransitionList = findValidTransitions(nextCsw,ctwList);
 			
 			String eventName = null;
 			//Guard guard = null;
@@ -684,7 +701,33 @@ class CompositeStateTableRow
 				eventName = eventName + " [" + guardString + "]";
 			}
 			*/
-			
+			if(validTransitionList.size() > 0)
+			{
+				sb.append("<span");
+				sb.append(">");
+				boolean isFirst = true;
+				for(Transition validTransition : validTransitionList)
+				{
+					eventName = validTransition.getEvent().getName();
+					CompositeTransitionWrapper ctw = findCompositeStateWrapper(t,ctwList);
+					boolean isGuard = ctw.getContainsGuard();
+					if((validTransition != null && !transitionHasOccuredList.contains(eventName)) || isGuard)
+					{
+						if(!isFirst)
+						{
+							sb.append("<br>");
+						}
+						sb.append(transitionToHtmlString(validTransition));
+						isFirst = false;
+					}
+				}
+				sb.append("</span>");
+			}
+			else 
+			{
+				sb.append("&nbsp;");
+			}
+			/*
 			if((t != null && !transitionHasOccuredList.contains(eventName)) || hasGuard)
 			{
 				sb.append(transitionToHtmlString(t));
@@ -694,6 +737,7 @@ class CompositeStateTableRow
 			{
 				sb.append("&nbsp;");
 			}
+			*/
 			sb.append("</td>");
 		}
 		
