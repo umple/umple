@@ -417,6 +417,7 @@ class CompositeStateTableRow
 		return null;
 	}	
 	
+	
 	private Transition findTransition(CompositeStateWrapper nextCsw, ArrayList<CompositeTransitionWrapper> ctwList)
 	{
 		for(CompositeTransitionWrapper ctw : ctwList)
@@ -634,7 +635,42 @@ class CompositeStateTableRow
 			}
 			
 			sb.append("      <td class=\"event-entry\">");
-			ArrayList<Transition> transitionList = ctwMap.get(eventName).getTransitionList();
+			CompositeTransitionWrapper ctw = ctwMap.get(eventName);
+			ArrayList<Transition> transitionList = ctw.getTransitionList();
+			if(ctw.getContainsGuard())
+			{
+				boolean firstCsw = true;
+				sb.append("<span>");
+				for(Transition guardTransition : transitionList)
+				{
+					//findNextCsw look for the first single valid CSW given a transition list.
+					//in order to search every transition, we need to create a new list for each transition.
+					ArrayList<Transition> tempTransitionList = new ArrayList<Transition>();
+					tempTransitionList.add(guardTransition);
+					CompositeStateWrapper nextCsw = findNextCsw(cswList,tempTransitionList);
+					if(nextCsw != null)
+					{
+						if(!firstCsw)
+						{
+							sb.append("<br>");
+						}
+						//append CSW along with guard
+						String guardString = extractGuardString(guardTransition);
+						if(guardString != null)
+						{
+							sb.append("[" + guardString + "] ");//guard string
+						}
+						sb.append(nextCsw.getCompositeName());//CSW name
+						firstCsw = false;
+					}
+				}
+				if(firstCsw)
+				{
+					sb.append("&nbsp;");
+				}
+				sb.append("</span>");
+				continue;
+			}
 			CompositeStateWrapper nextCsw = findNextCsw(cswList,transitionList);
 			if(nextCsw != null)//some kind of evaluation where we must find the corresponding csw.
 			{
