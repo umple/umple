@@ -67,7 +67,7 @@ class CompositeStateWrapper
 		}
 		return csw;
 	}	
-	//Returns true if CSW contains state (including child states)
+	//Returns true if CSW contains state (including child states)	
 	boolean containsState(String stateName)
 	{
 		State state = states.get(stateName);
@@ -328,6 +328,16 @@ class CompositeStateWrapper
 			childCsw.displayPrimacy(dp);
 		}
 	}
+	//returns first state key. returns null if no keys.
+	public String getFirstKey()
+	{
+		ArrayList<String> keyList = new ArrayList<String>(states.keySet());
+		if(keyList.size() > 0)
+		{
+			return keyList.get(0);
+		}
+		return null;
+	}
 }
 
 //Container containing multiple transitions of the same name
@@ -398,7 +408,8 @@ class CompositeStateTableRow
 	depend java.util.HashMap;
 	CompositeStateWrapper fromCsw;
 	String cswName;//composite name
-	
+	int rowNumber;
+	int parentRowNumber;
 	isPseudo=false;//TODO implement H or H* support.
 	
 	private CompositeStateWrapper findNextCsw(ArrayList<CompositeStateWrapper> cswList, ArrayList<Transition> transitionList)
@@ -640,7 +651,7 @@ class CompositeStateTableRow
 			if(ctw.getContainsGuard())
 			{
 				boolean firstCsw = true;
-				sb.append("<span>");
+				
 				for(Transition guardTransition : transitionList)
 				{
 					//findNextCsw look for the first single valid CSW given a transition list.
@@ -653,6 +664,10 @@ class CompositeStateTableRow
 						if(!firstCsw)
 						{
 							sb.append("<br>");
+						}
+						else 
+						{
+							sb.append("<span>");
 						}
 						//append CSW along with guard
 						String guardString = extractGuardString(guardTransition);
@@ -668,7 +683,11 @@ class CompositeStateTableRow
 				{
 					sb.append("&nbsp;");
 				}
-				sb.append("</span>");
+				else 
+				{
+					sb.append("</span>");
+				}
+				sb.append("</td>");
 				continue;
 			}
 			CompositeStateWrapper nextCsw = findNextCsw(cswList,transitionList);
@@ -783,6 +802,13 @@ class CompositeStateTableRow
 	private StringBuilder firstCellInRow(StringBuilder sb)
 	{
 		sb.append("      <td class=\"state-header\" data-parent=\"");
+		//sb.append("      <td class=\"state-header\">");
+		//ArrayList<String> tempList = new ArrayList<String>(fromCsw.getStates().keySet());
+		if(rowNumber != parentRowNumber)
+		{
+			sb.append(String.valueOf(parentRowNumber));
+		}
+		
 		sb.append("\">");
 		sb.append(fromCsw.getCompositeName());
 		sb.append("</td>\n");
@@ -972,7 +998,7 @@ class StateTableRow
   private StringBuilder firstCellInRow(StringBuilder sb) 
   {
     sb.append("      <td class=\"state-header\" data-parent=\"");
-
+    
     if(this.parent != null) 
     {
       sb.append(String.valueOf(this.parent.getTableRowId()));
@@ -1233,9 +1259,22 @@ class StateTable
   		
   	}
   	sb.append("    </tr>\n");
+  	int rowNumber = 0;
+  	int parentRowNumber = 0;
+  	String parentStateName = null;
   	for(CompositeStateWrapper csw : primaryCswList)
   	{
-  		CompositeStateTableRow cstRow = new CompositeStateTableRow(csw,csw.getCompositeName());
+  		if(parentStateName == null)
+  		{
+  			parentStateName = csw.getFirstKey();//top level CSWs only have one state.
+  		}
+  		if(csw.getFirstKey() != parentStateName)
+  		{
+  			parentStateName = csw.getFirstKey();
+  			parentRowNumber = rowNumber;
+  		}
+  		CompositeStateTableRow cstRow = new CompositeStateTableRow(csw,csw.getCompositeName(),rowNumber,parentRowNumber);
+  		
   		sb.append("    <tr>\n");
   		sb.append(cstRow.stateEventTableRowHtml(eventList,
   		                                        ctwMap,
@@ -1244,6 +1283,7 @@ class StateTable
   		                                        timerTransitionMap,
   		                                        timerAssociationMap));//may need to change args
   		sb.append("    </tr>\n\n");
+  		rowNumber++;
   	}
   	
   	sb.append("  </table>\n");
@@ -1294,13 +1334,25 @@ class StateTable
     	sb.append("</td>\n");
     }
     sb.append("    </tr>\n\n");
-    
+    int rowNumber = 0;
+  	 int parentRowNumber = 0;
+  	 String parentStateName = null;
     for(CompositeStateWrapper csw : primaryCswList)
     {
-    	CompositeStateTableRow cstRow = new CompositeStateTableRow(csw,csw.getCompositeName());
+    	if(parentStateName == null)
+  		{
+  			parentStateName = csw.getFirstKey();//top level CSWs only have one state.
+  		}
+  		if(csw.getFirstKey() != parentStateName)
+  		{
+  			parentStateName = csw.getFirstKey();
+  			parentRowNumber = rowNumber;
+  		}
+    	CompositeStateTableRow cstRow = new CompositeStateTableRow(csw,csw.getCompositeName(),rowNumber,parentRowNumber);
     	sb.append("    <tr>\n");
     	sb.append(cstRow.stateStateTableRowHtml(ctwMap,primaryCswList));
     	sb.append("    </tr>\n\n");
+    	rowNumber++;
     }
     
     sb.append("  </table>\n");
