@@ -92,14 +92,9 @@ class CompositeStateWrapper
 	{
 		String fromState = t.getFromState().getName();
 		String nextState = t.getNextState().getName();
-		//String tName = t.getEvent().getName();//may delete
-		/*
-		System.out.println("Validating...");
-		System.out.println("fromState: " + fromState);
-		System.out.println("nextState: " + nextState);
-		System.out.println("fromCsw: " + getCompositeName());
-		System.out.println("nextCsw: " + nextCsw.getCompositeName());
-		*/
+		String tName = t.getEvent().getName();//may delete
+		
+		
 		if(!containsState(fromState))//This CSW isn't a valid fromState
 		{
 			return false;
@@ -108,9 +103,19 @@ class CompositeStateWrapper
 		{
 			return false;
 		}
+		
+		
 		//We have deduced that the fromCsw contains the fromState and the nextCsw contains the nextState
 		ArrayList<State> fromStateList = new ArrayList<State>(states.values());
+		ArrayList<State> nextStateList = new ArrayList<State>(nextCsw.getStates().values());
 		Map<String,State> nextCswStateMap = nextCsw.getStates();
+		ArrayList<CompositeStateWrapper> fromChildCswList = new ArrayList<CompositeStateWrapper>(childStates.values());
+		ArrayList<String> fromChildCswKeyList = new ArrayList<String>(childStates.keySet());
+		Map<String,CompositeStateWrapper> fromChildStateMap = childStates;//Just doing this to keep track of it, may change it later
+		Map<String,CompositeStateWrapper> nextChildStateMap = nextCsw.getChildStates();
+		boolean containsNextState = false;
+		boolean containsFromState = false;
+		
 		for(State s : fromStateList)
 		{
 			String sName = s.getName();
@@ -121,14 +126,24 @@ class CompositeStateWrapper
 					return false;
 				}
 			}
+			if(sName == fromState)
+			{
+				containsFromState = true;
+			}
+		}
+		for(State s : nextStateList)
+		{
+			String sName = s.getName();
+			if(sName == nextState)
+			{
+				containsNextState = true;
+			}
 		}
 		//We have now deduced that all states in fromCsw are equal to nextCsw 
-		ArrayList<CompositeStateWrapper> fromChildCswList = new ArrayList<CompositeStateWrapper>(childStates.values());
-		ArrayList<String> fromChildCswKeyList = new ArrayList<String>(childStates.keySet());
-		Map<String,CompositeStateWrapper> fromChildStateMap = childStates;//Just doing this to keep track of it, may change it later
-		Map<String,CompositeStateWrapper> nextChildStateMap = nextCsw.getChildStates();
+		
 		for(String fromChildCswKey : fromChildCswKeyList)
 		{
+			
 			CompositeStateWrapper fromChildCsw = fromChildStateMap.get(fromChildCswKey);
 			CompositeStateWrapper nextChildCsw = nextChildStateMap.get(fromChildCswKey);
 			
@@ -147,11 +162,15 @@ class CompositeStateWrapper
 				nextChildContainsState = nextChildCsw.containsState(nextState);
 			}
 			//case 1, both child states don't contain transition related states, check equality and move on.
+			//we're going off the fromChildCswKeys, does this case even occur?
 			if(!fromChildContainsState && !nextChildContainsState)
 			{
+				//crossDown
 				if(!fromChildCsw.checkEquality(nextChildCsw))
 				{
-					return false;
+				
+					   return false;
+				
 				}
 			}
 			//case 2, both child states contain transition, check recursively
@@ -159,6 +178,7 @@ class CompositeStateWrapper
 			{
 				if(!fromChildCsw.isTransition(nextChildCsw,t))
 				{
+
 					return false;
 				}
 			}
@@ -168,6 +188,15 @@ class CompositeStateWrapper
 			{
 				//return false;				
 				//TODO
+				if(containsFromState && !containsNextState)
+				{
+					//from state is present in this CSW and next state is present in a child CSW
+					if(!fromChildCsw.isTransitionToChildState(nextChildCsw,t))
+					{
+
+						return false;
+					}
+				}
 			}
 			if(fromChildContainsState && !nextChildContainsState)
 			{
@@ -179,7 +208,72 @@ class CompositeStateWrapper
 		return true;
 	}
 	
+	//checks that nextCsw contains nextState and that all other states are equal to this CSW
+	private boolean isTransitionToChildState(CompositeStateWrapper nextCsw, Transition t)
+	{
+		
+		String nextState = t.getNextState().getName();
+		ArrayList<State> nextStateList = new ArrayList<State>(nextCsw.getStates().values());
+		boolean containsNextState = false;
+		for(State s : nextStateList)
+		{
+			String sName = s.getName();
+			if(!states.containsKey(sName))//key not detected, investigate if transition
+			{
+				if(sName != nextState)
+				{
 	
+					return false;
+				}
+			}
+			if(sName == nextState)
+			{
+				containsNextState = true;
+			}
+		}
+		//either the nextState is not in the nextCsw's level and it's equal to fromCsw
+		//or the nextState here and all other states are equal
+		
+		ArrayList<CompositeStateWrapper> fromChildCswList = new ArrayList<CompositeStateWrapper>(childStates.values());
+		ArrayList<String> fromChildCswKeyList = new ArrayList<String>(childStates.keySet());
+		Map<String,CompositeStateWrapper> fromChildStateMap = childStates;//Just doing this to keep track of it, may change it later
+		Map<String,CompositeStateWrapper> nextChildStateMap = nextCsw.getChildStates();
+		
+		for(String fromChildCswKey : fromChildCswKeyList)
+		{
+			CompositeStateWrapper fromChildCsw = fromChildStateMap.get(fromChildCswKey);
+			CompositeStateWrapper nextChildCsw = nextChildStateMap.get(fromChildCswKey);
+			
+			boolean nextChildContainsState = false;
+			if(nextChildCsw != null)
+			{
+				nextChildContainsState = nextChildCsw.containsState(nextState);
+			}
+			if(nextChildContainsState && containsNextState)
+			{//found next state at this level. just compare that these are the same
+				if(!fromChildCsw.checkEquality(nextChildCsw))
+				{
+		
+					return false;
+				}
+			}
+			if(nextChildContainsState && !containsNextState)
+			{//did not find next state here, check if transition is in this state
+				if(!fromChildCsw.isTransitionToChildState(nextChildCsw, t))
+				{
+				
+					return false;
+				}
+			}
+			if(!nextChildContainsState && !containsNextState)
+			{//next state does not have this child state and the next state was not found to replace it. returning false
+	
+				return false;
+			}
+		}
+		
+		return true;
+	}
 	
 	//Checks if two CompositeStateWrappers have the same states.
 	boolean checkEquality(CompositeStateWrapper csw)
