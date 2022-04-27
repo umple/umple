@@ -1,0 +1,19 @@
+
+
+class Country
+{
+	1 -- 1 Capital;
+}
+
+class Capital
+{
+}
+
+class Key
+{
+	1 -- 1 Lock;
+}
+
+class Lock
+{
+}

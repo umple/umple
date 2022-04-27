@@ -326,8 +326,10 @@ class UmpleInternalParser
   
   private MixsetFragment createMixsetFragment(Token token,  Mixset mixset) {  
     MixsetFragment mixsetFragment = createMixsetFragment(token);
-    if(mixsetFragment == null || mixset == null)
+    if(mixset == null)
     return null;
+    else if (mixsetFragment == null)
+    mixset.setIsEmpty(true);
     else
     mixsetFragment.setMixset(mixset);
     return mixsetFragment;
@@ -346,7 +348,10 @@ class UmpleInternalParser
     
     // mixset with one element
     String oneElementMixset = token.getValue("oneElement");
-    
+
+    if(mixsetBody == null)
+    return null; // because there is no fragment to add. 
+
     if(entityType != null) {
         if (oneElementMixset != null)
       {
@@ -362,9 +367,6 @@ class UmpleInternalParser
         mixsetBody = oneElementMixset;
         mixsetFragmentPosition = token.getSubToken("oneElementMixset").getPosition();     
       }
-      
-      if(mixsetBody == null)
-      return null; // because there is no fragment to add. 
     
       mixsetFragmentLineNumber = mixsetFragmentPosition.getLineNumber();
       UmpleFile mixsetFragmentUmpleFile = model.getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
@@ -412,11 +414,11 @@ class UmpleInternalParser
       String mixsetFragmentFile = mixsetFragment.getOriginalUmpFile().getPath()+"/"+mixsetFragment.getOriginalUmpFile().getFileName();
       int mixsetFragmentLine = mixsetFragment.getOriginalUmpLine() - 1;
       String mixsetFragmentBodyExtraLine = mixsetFragment.getBody()+"\n;";
+      ParseResult parseResultBeforeParseMixset  = getParseResult();
+      Token rootTokenBeforeParseMixset = getRootToken();
       ParseResult result= parse("MixsetFragmentParsing",  mixsetFragmentBodyExtraLine, mixsetFragmentFile, null, mixsetFragmentLine,0); 
       setParseResult(result);
       Token answer = getParser().getRootToken(); // result of parsing the body of a MixsetFragment
-      //    setRootToken(answer);
-      //    model.setLastResult(result);
       answer.setName("mixsetDefinition"); //attach the mixset name for the fragment instead of ROOT
       answer.setValue(parentMixset);
       //  getIsFeature()
@@ -438,6 +440,11 @@ class UmpleInternalParser
           }
           parsedUmpfiles.put(umpFileName, false); // add current file to partially parsed files. 
         }
+      }
+      if(parseResultBeforeParseMixset.hasErrorMessages())
+      {
+        setParseResult(parseResultBeforeParseMixset);
+        setRootToken(rootTokenBeforeParseMixset);
       }
     }
   }
@@ -584,7 +591,27 @@ class UmpleInternalParser
     edge.setTargetFeatureNode(newFeatureNode);
     edge.setFeatureModel(model.getFeatureModel());
     model.getFeatureModel().addFeaturelink(edge);
-  }  
+  }
+
+  // This method raises warning for use statements for misets that do not have actual definitions.
+  private void checkMixsetsNotUsed() {
+    UmpleModel uModel = this.getModel();
+    Stream<Mixset> mixsetsStream = uModel.getMixsetOrFiles().stream().filter(m ->m.getIsMixset()).map(m->(Mixset)m ); 
+    List<Mixset> notUsedMixset = mixsetsStream.filter(m -> !m.getIsEmpty()).filter(m -> m.getUseUmpleFile() != null 
+  && m.getMixsetFragments().size() < 1).collect(Collectors.toList());
+    if (notUsedMixset.size() < 1)
+      return;
+    for (Mixset aMixset : notUsedMixset)
+    {
+      if(aMixset.getMixsetInMethod().size() < 1)
+      {
+        // raise a warning
+        Position wPosition = new Position(aMixset.getUseUmpleFile().getFileName(), aMixset.getUseUmpleLine(), 0, 0);
+        setFailedPosition(wPosition,1513, aMixset.getName(),""+ aMixset.getUseUmpleLine());
+        }
+    }
+  }
+
 }
 
 mixset AspectInjection {
@@ -747,6 +774,7 @@ mixset Template {
          if(mixset.getUseUmpleFile() != null)
          {
            mixsetIsUsed = true;
+           mixset.getMixsetInMethod().add(mixsetInMethod);
            //first process children
            for(MixsetInMethod childMixsetInMethod : mixsetInMethod.getChildMixsets())
              sourceCodeBody = handelMixsetInsideMethod(umodel, childMixsetInMethod, sourceCodeBody);

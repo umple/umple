@@ -35,6 +35,14 @@ public class UmpleImportTest {
         return umple.generateUmple();
     }
 
+    private static String loadPapyrusFile(final String name) throws Exception {
+        assertTrue((new File(name)).exists());
+
+        PapyrusImportHandler handler = new PapyrusImportHandler();
+        UmpleImportModel umple = handler.readDataFromXML(name);
+        return umple.generateUmple();
+    }
+
     private static void assertImportFile(final UmpleImportType type, 
             final String expectedPath, 
             final String importFile) throws Exception {
@@ -44,6 +52,8 @@ public class UmpleImportTest {
             content = loadECoreFile(realImportFile);
         } else if (type == UmpleImportType.SCXML) {
             content = loadScxmlFile(realImportFile);
+        } else if (type == UmpleImportType.PAPYRUS) {
+            content = loadPapyrusFile(realImportFile);
         } else {
             throw new IllegalArgumentException("Unknown UmpleImportType parameter = " + type);
         }
@@ -205,4 +215,45 @@ public class UmpleImportTest {
             "ScxmlImport_initial_nested_state.scxml.txt"); 
     }
 
+    @Test
+    public void ScxmlAutoTransitionTest() throws Exception {
+        assertImportFile(UmpleImportType.SCXML,
+            "ScxmlImport_autotransition.ump",
+            "ScxmlImport_autotransition.scxml.txt");
+    }
+
+    @Test
+    public void PapyrusClassAttributesParsingTest() throws Exception {
+        assertImportFile(UmpleImportType.PAPYRUS,
+            "PapyrusImport_ClassAttributes.ump", 
+            "PapyrusImport_ClassAttributes.uml.txt");
+    }
+
+    @Test
+    public void PapyrusClassAssociationOneToManyTest() throws Exception {
+        assertImportFile(UmpleImportType.PAPYRUS,
+            "PapyrusImport_ClassAssociationOneToMany.ump",
+            "PapyrusImport_ClassAssociationOneToMany.uml.txt");
+    }
+
+    @Test
+    public void PapyrusClassAssociationManyToManyTest() throws Exception {
+        assertImportFile(UmpleImportType.PAPYRUS,
+            "PapyrusImport_ClassAssociationManyToMany.ump",
+            "PapyrusImport_ClassAssociationManyToMany.uml.txt");
+    }
+    
+    @Test
+    public void PapyrusClassAssociationOneToOneTest() throws Exception {
+        assertImportFile(UmpleImportType.PAPYRUS,
+            "PapyrusImport_ClassAssociationOneToOne.ump",
+            "PapyrusImport_ClassAssociationOneToOne.uml.txt");
+    }
+
+    @Test
+    public void PapyrusClassGeneralizationTest() throws Exception {
+        assertImportFile(UmpleImportType.PAPYRUS,
+            "PapyrusImport_ClassGeneralization.ump",
+            "PapyrusImport_ClassGeneralization.uml.txt");
+    }
 }

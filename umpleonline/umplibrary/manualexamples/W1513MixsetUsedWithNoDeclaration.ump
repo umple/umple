@@ -1,0 +1,9 @@
+// There are two options to get rid of this warning:
+//option1: comment out the use statement below:
+use M1;
+
+// option2: remove the comment below to declare M1 with empty body :
+//mixset M1 { }
+
+//$?[End_of_model]$?
+// @@@skipcompile - there is no code to generate in this example.
