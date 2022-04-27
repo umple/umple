@@ -68,4 +68,42 @@
     <element xmi:type="uml:Generalization" href="model.uml#_Cheque-_generalization.0"/>
     <bendpoints xmi:type="notation:RelativeBendpoints" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
   </edges>
+  <children xmi:type="notation:Shape" type="2008">
+    <children xmi:type="notation:DecorationNode" type="5029"/>
+    <children xmi:type="notation:BasicCompartment" type="7017"/>
+    <children xmi:type="notation:BasicCompartment" type="7018"/>
+    <children xmi:type="notation:BasicCompartment" type="7019"/>
+    <element xmi:type="uml:Class" href="model.uml#_Employee"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="220" y="420"/>
+  </children>
+  <edges xmi:type="notation:Connector" type="4001" source="_Gender" target="_Employee">
+    <children xmi:type="notation:DecorationNode" type="6001">
+      <layoutConstraint xmi:type="notation:Location" y="-20"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" type="6002">
+      <layoutConstraint xmi:type="notation:Location" y="20"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" type="6003">
+      <layoutConstraint xmi:type="notation:Location" y="-20"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" type="6005">
+      <layoutConstraint xmi:type="notation:Location" y="20"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" type="6033">
+      <layoutConstraint xmi:type="notation:Location" y="20"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" type="6034">
+      <layoutConstraint xmi:type="notation:Location" y="-20"/>
+    </children>
+    <element xmi:type="uml:Association" href="model.uml#_Employee__Gender"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <children xmi:type="notation:Shape" type="2008">
+    <children xmi:type="notation:DecorationNode" type="5029"/>
+    <children xmi:type="notation:BasicCompartment" type="7017"/>
+    <children xmi:type="notation:BasicCompartment" type="7018"/>
+    <children xmi:type="notation:BasicCompartment" type="7019"/>
+    <element xmi:type="uml:Class" href="model.uml#_Gender"/>
+    <layoutConstraint xmi:type="notation:Bounds" x="420" y="20"/>
+  </children>
 </notation:Diagram>

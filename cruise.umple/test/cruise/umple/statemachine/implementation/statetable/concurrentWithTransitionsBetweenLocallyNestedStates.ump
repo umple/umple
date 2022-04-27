@@ -1,0 +1,51 @@
+namespace example;
+class Student
+{
+  status {
+    OverState
+    {
+      ParentState1
+      {
+        down -> ChildState2;
+        forward -> ParentState2;
+        //crossDown -> AwayChildState2;
+        ChildState1
+        {
+          action -> ChildState2;
+        }
+        ChildState2
+        {
+          action -> ChildState1;
+          //crossUp -> ParentState2;
+          up -> ParentState1;
+        }
+        ||
+        OtherChildState1
+        {
+          otherAction -> OtherChildState2;
+        }
+        OtherChildState2
+        {
+          otherAction -> OtherChildState1;
+        }
+      }
+      ParentState2
+      {
+        back -> ParentState1;
+        AwayChildState1 {
+          awayAction -> AwayChildState2;
+        }
+        AwayChildState2 {
+          awayAction -> AwayChildState1;
+        }
+      }
+      ||
+      ConcurrentParentState1 {
+        concurrentAction -> ConcurrentParentState2;
+      }
+      ConcurrentParentState2 {
+        concurrentAction -> ConcurrentParentState1;
+      }
+    }
+  }
+}
