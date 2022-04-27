@@ -31,21 +31,23 @@ public class StateTableTemplateTest extends TemplateTest
   public void tearDown()
   {
     super.tearDown();
+    
     SampleFileWriter.destroy(pathToInput + "/statetable/simple.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/nestedStateTable.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/guardedTransitionStateTable.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/guardedTransitionNestedStateTable.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/guardedTransitionDoublyNestedStateTable.html");
-    SampleFileWriter.destroy(pathToInput + "/statetable/guardedTransitionDoublyNestedStateTable2.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/transitionWithActionStateTable.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/transitionWithActionNestedStateTable.html");
-    SampleFileWriter.destroy(pathToInput + "/statetable/transitionWithActionNestedStateTable2.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/autoTransitionStateTable.html");
-    SampleFileWriter.destroy(pathToInput + "/statetable/autoTransitionStateTable2.html");
-    SampleFileWriter.destroy(pathToInput + "/statetable/autoTransitionStateTable3.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/timerTransitionStateTable.html");
-    SampleFileWriter.destroy(pathToInput + "/statetable/timerTransitionStateTable2.html");
-    SampleFileWriter.destroy(pathToInput + "/statetable/timerTransitionStateTable3.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/concurrentAlongsideNonConcurrentMultipleTransitionToSameStateWithGuardTransition.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/concurrentAutoTransitionStateTable.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/concurrentTimerTransitionStateTableDifferentTimer.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/concurrentTimerTransitionStateTableSameTimer.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/concurrentTransitionWithActionNestedStateTable.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/concurrentWithTransitionsBetweenLocallyNestedStates.html");
+    
   }
 
   @Test
@@ -98,15 +100,7 @@ public class StateTableTemplateTest extends TemplateTest
     );
   }
   
-  @Test
-  public void guardedTransitionDoublyNestedStateTable2()
-  {
-    assertUmpleTemplateFor
-    (
-      "statetable/guardedTransitionDoublyNestedStateTable2.ump",
-      "statetable/guardedTransitionDoublyNestedStateTable2.html.txt"
-    );
-  }
+ 
 
   @Test
   public void transitionWithActionStateTable() 
@@ -129,12 +123,12 @@ public class StateTableTemplateTest extends TemplateTest
   }
   
   @Test
-  public void transitionWithActionNestedStateTable2()
+  public void concurrentTransitionWithActionNestedStateTable()
   {
     assertUmpleTemplateFor
     (
-      "statetable/transitionWithActionNestedStateTable2.ump",
-      "statetable/transitionWithActionNestedStateTable2.html.txt"
+      "statetable/concurrentTransitionWithActionNestedStateTable.ump",
+      "statetable/concurrentTransitionWithActionNestedStateTable.html.txt"
     );
   }
 
@@ -148,23 +142,15 @@ public class StateTableTemplateTest extends TemplateTest
     );
   }
   
-  @Test
-  public void autoTransitionStateTable2()
-  {
-    assertUmpleTemplateFor
-    (
-      "statetable/autoTransitionStateTable2.ump",
-      "statetable/autoTransitionStateTable2.html.txt"
-    );
-  }
+  
   
   @Test
-  public void autoTransitionStateTable3()
+  public void concurrentAutoTransitionStateTable()
   {
     assertUmpleTemplateFor
     (
-      "statetable/autoTransitionStateTable3.ump",
-      "statetable/autoTransitionStateTable3.html.txt"
+      "statetable/concurrentAutoTransitionStateTable.ump",
+      "statetable/concurrentAutoTransitionStateTable.html.txt"
     );
   }
 
@@ -179,23 +165,44 @@ public class StateTableTemplateTest extends TemplateTest
   }
   
   @Test
-  public void timerTransitionStateTable2()
+  public void concurrentTimerTransitionStateTableDifferentTimer()
   {
     assertUmpleTemplateFor
     (
-      "statetable/timerTransitionStateTable2.ump",
-      "statetable/timerTransitionStateTable2.html.txt"
+      "statetable/concurrentTimerTransitionStateTableDifferentTimer.ump",
+      "statetable/concurrentTimerTransitionStateTableDifferentTimer.html.txt"
     );
   }
   
   @Test
-  public void timerTransitionStateTable3()
+  public void concurrentTimerTransitionStateTableSameTimer()
   {
     assertUmpleTemplateFor
     (
-      "statetable/timerTransitionStateTable3.ump",
-      "statetable/timerTransitionStateTable3.html.txt"
+      "statetable/concurrentTimerTransitionStateTableSameTimer.ump",
+      "statetable/concurrentTimerTransitionStateTableSameTimer.html.txt"
     );
   }
+  
+  @Test
+  public void concurrentWithTransitionsBetweenLocallyNestedStates()
+  {
+    assertUmpleTemplateFor
+    (
+      "statetable/concurrentWithTransitionsBetweenLocallyNestedStates.ump",
+      "statetable/concurrentWithTransitionsBetweenLocallyNestedStates.html.txt"
+    );
+  }
+  
+  @Test
+  public void concurrentAlongsideNonConcurrentMultipleTransitionToSameStateWithGuardTransition()
+  {
+    assertUmpleTemplateFor
+    (
+      "statetable/concurrentAlongsideNonConcurrentMultipleTransitionToSameStateWithGuardTransition.ump",
+      "statetable/concurrentAlongsideNonConcurrentMultipleTransitionToSameStateWithGuardTransition.html.txt"
+    );
+  }
+  
   
 }
