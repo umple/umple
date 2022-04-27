@@ -1,0 +1,33 @@
+namespace example;
+
+class Student
+{
+  status {
+    OverState
+    {
+      On 
+      { 
+        OnOn 
+        {
+          sleepButton -> /{someAction();} Sleep;
+          power -> Off; 
+        }
+        Sleep { power -> OnOn; }
+      }
+      Off { power -> On; }
+      ||
+      Yes
+      {
+        YesYes
+        {
+          otherButton -> /{anotherAction();} Slumber;
+          test -> No;
+        }
+        Slumber { test -> Yes; }
+      }
+      No { test -> Yes; }
+    }
+  }
+  public void someAction() {};
+  public void anotherAction() {};
+}

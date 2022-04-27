@@ -1,0 +1,21 @@
+Composite State Table
+Generators
+noreferences
+@@description
+<p>
+A composite state table is a state table which, instead of displaying single states and their transitions, displays a combination of multiple concurrent states. They are generated as part of the state table generation.
+</p>
+
+<p>
+They can be generated in UmpleOnline through "TOOLS > GENERATE > State Tables" and clicking "Generate It".
+</p>
+
+<p>
+They can also be generated through the command-line with "java -jar umple.jar -g StateTables *.ump".
+</p>
+
+@@example @@caption State Machine With Concurrent States @@endcaption
+@@source manualexamples/concurrentAlongsideNonConcurrent.ump
+@@endexample
+
+
