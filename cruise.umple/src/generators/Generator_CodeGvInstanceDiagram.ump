@@ -69,7 +69,7 @@ digraph "<<=filename>>" {
   protected void instanceCreation(UmpleInstance uInstance, StringBuilder code)
   {
     UmpleClass uClass = uInstance.getUmpleClass();
-    String instanceName = uInstance.getInstanceName();
+    String instanceName = uInstance.getInstanceName() + ": " + uClass.getName();
 
     String instanceColor = uClass.getDisplayColor();
     if (!instanceColor.equals("")) instanceColor=" style=filled, fillcolor="+instanceColor+" ";
@@ -79,6 +79,9 @@ digraph "<<=filename>>" {
 
     code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"10\">"
 		   			    +"<tr><td>    <u>"+instanceName+"</u>    </td></tr>");
+
+
+    attributeCreation(uClass, code, false);
 
     code.append("</table>>"); 
     code.append("];\n");
@@ -157,7 +160,7 @@ digraph "<<=filename>>" {
 
   // Create each attribute for each class - called by classCreation
   // Note: don't think attributes are relevant in object diagrams REVIEW this
-  /*
+  
   private void attributeCreation(UmpleClass uClass, StringBuilder code, boolean manyClass)
   {
 
@@ -182,7 +185,7 @@ digraph "<<=filename>>" {
 
     // Iterate through attributes of the class]
     boolean isFirst = true;
-
+    
     //if (!hasSuboption("hideattributes")) { 
       for (Attribute uAttribute : uClass.getAttributes()) {
         if (!uAttribute.isConstant()) 
@@ -227,9 +230,11 @@ digraph "<<=filename>>" {
           isFirst = false;
         }
       }
+      
    // }
+   
   }
-  */
+
 
   // Create the associations in the class diagram
   // - called VisitClass in SuperGvGenerator
