@@ -70,7 +70,8 @@ digraph "<<=filename>>" {
   protected void instanceCreation(UmpleInstance uInstance, StringBuilder code)
   {
     UmpleClass uClass = uInstance.getUmpleClass();
-    String instanceName = uInstance.getInstanceName() + ": " + uClass.getName();
+    int linkSize = uInstance.getFromInstance().size();
+    String instanceName = uInstance.getInstanceName() + ": " + uClass.getName() + " " + linkSize;
 
     String instanceColor = uClass.getDisplayColor();
     if (!instanceColor.equals("")) instanceColor=" style=filled, fillcolor="+instanceColor+" ";
@@ -417,6 +418,7 @@ digraph "<<=filename>>" {
   */
 
   protected void linkCreation(UmpleInstance uInstance, UmpleLink uLink, StringBuilder links, String className) {
+    
      Association uAssoc = uLink.getAssociation();
      AssociationEnd leftEnd = uAssoc.getEnd(0);
      AssociationEnd rightEnd = uAssoc.getEnd(1);
@@ -432,10 +434,10 @@ digraph "<<=filename>>" {
 
     String visualLeftEnd = leftMult+" "+leftEnd.getDisplayRoleName();
     String visualRightEnd = rightMult+" "+rightEnd.getDisplayRoleName();
-    toolTip = leftInstance + " " + "--" + " " + rightInstance;
+    toolTip = leftInstance + " " + visualLeftEnd + "--" + visualRightEnd + " " + rightInstance;
 
     links.append(noLabelAssociation(leftInstance, rightInstance, "--", toolTip));
-      
+    
   }
 
   // Check whether the classname starts with a vowel or not to see if we use A or An
@@ -656,10 +658,27 @@ digraph "<<=filename>>" {
         // make call to visitInstance
       for (UmpleInstance uInstance : instanceMapEntry) {
         partiallyCreatedObjectsQueue.add(uInstance);
-        visitInstance(uInstance, visitedInstances, code, links);
       }
-
     }
+
+    for (UmpleInstance uInstance : partiallyCreatedObjectsQueue) {
+      UmpleClass uClass = uInstance.getUmpleClass();
+      Association [] classAssociations = uClass.getAssociations();
+      for (Association uAssoc : classAssociations) {
+        AssociationEnd associatedEnd = uAssoc.getEnd(1);
+        if (uAssoc.getEnd(0).getClassName() == uClass.getName()) {
+          UmpleClass associatedClass = new UmpleClass(uAssoc.getEnd(1).getClassName());
+          UmpleInstance uInst = new UmpleInstance(associatedClass);
+          UmpleLink uLink = new UmpleLink(uAssoc, uInstance, uInst);
+          //uInstance.getUmpleLinks().add(uLink);
+        }
+        
+        visitInstance(uInstance, visitedInstances, code, links);
+        //partiallyCreatedObjectsQueue.remove(uInstance);
+
+      }
+    }
+
 
     terminateCode(code, links);
     //writeModel();
@@ -679,7 +698,6 @@ digraph "<<=filename>>" {
     // add instance to visitedInstances after generating it in the diagram
     visitedInstances.add(uInstance);
     instanceCreation(uInstance, code);
-    
     
 
 
