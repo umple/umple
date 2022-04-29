@@ -35,6 +35,7 @@ class GvInstanceDiagramGenerator
   boolean testBound = false;
 
   Random rand = null;
+  ArrayList<UmpleInstance> partiallyCreatedObjectsQueue = new ArrayList<UmpleInstance>();
 
 
   // Basic templates for GV elements to output
@@ -416,7 +417,25 @@ digraph "<<=filename>>" {
   */
 
   protected void linkCreation(UmpleInstance uInstance, UmpleLink uLink, StringBuilder links, String className) {
-     
+     Association uAssoc = uLink.getAssociation();
+     AssociationEnd leftEnd = uAssoc.getEnd(0);
+     AssociationEnd rightEnd = uAssoc.getEnd(1);
+     UmpleInstance toLink = uLink.getToInstance();
+     String toolTip;
+
+    String leftInstance = uInstance.getInstanceName();
+
+    String [] arrows = retArrows(uAssoc);
+    String leftMult = leftEnd.toSimpleString();
+    String rightMult = rightEnd.toSimpleString();
+    String rightInstance = toLink.getInstanceName();
+
+    String visualLeftEnd = leftMult+" "+leftEnd.getDisplayRoleName();
+    String visualRightEnd = rightMult+" "+rightEnd.getDisplayRoleName();
+    toolTip = leftInstance + " " + "--" + " " + rightInstance;
+
+    links.append(noLabelAssociation(leftInstance, rightInstance, "--", toolTip));
+      
   }
 
   // Check whether the classname starts with a vowel or not to see if we use A or An
@@ -636,6 +655,7 @@ digraph "<<=filename>>" {
       // loop through the instances
         // make call to visitInstance
       for (UmpleInstance uInstance : instanceMapEntry) {
+        partiallyCreatedObjectsQueue.add(uInstance);
         visitInstance(uInstance, visitedInstances, code, links);
       }
 
@@ -809,6 +829,15 @@ digraph "<<=filename>>" {
     }
 
     return arrows;
+  }
+
+  public static String noLabelAssociation(String left, String right, String arrow, String tooltip)
+  {
+    String association;
+
+    association = "  \""+left+"\" -- \""+right+"\" ["+"dir=\"none\""+", tooltip=\""+tooltip+"\"];\n";
+
+    return association;
   }
 
   public static String labelAssociation(String left, String right, String arrow, String label, String tooltip)
