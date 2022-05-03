@@ -1,10 +1,14 @@
-FROM nginx:1.19-alpine
+# This is the base slow-changing Dockerfile for the core of UmpleOnline
+# The following should be updated from values at https://hub.docker.com/_/nginx
+# Updated from 1.19-alpine in Spring 2022
+
+FROM --platform=linux/amd64 nginx:1.21-alpine
 
 MAINTAINER Umple umple-help@googlegroups.com
 
 # give php its own user and install UmpleOnline's dependencies
 RUN adduser -D -H -h /var/cache/php -s /sbin/nologin -G nginx php && \
-    apk add --no-cache openjdk11 python3 supervisor graphviz zip \
-		       php7 php7-fpm php7-sockets php7-zip php7-json
+    apk add --no-cache sudo docker openjdk11 python3 supervisor graphviz zip \
+		       php7 php7-fpm php7-sockets php7-zip php7-json php-curl bash
 
 

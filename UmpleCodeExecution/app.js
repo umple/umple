@@ -167,7 +167,9 @@ const canProceed = (callback) => {
     }
 }
 
-
+// start listening to calls to compile umple code
+// Note: Adding an extra argument after port, "0.0.0.0" , was tried
+// in order to get 2-level docker in docker working, but was removed as it made no difference.
 server.listen(port, () => {
     console.log("Listening at "+port)
 });

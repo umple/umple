@@ -5,7 +5,7 @@ endif
 echo Starting background docker for code execution in $UMPLEROOT/UmpleCodeExecution
 cd $UMPLEROOT/UmpleCodeExecution
 if (`uname -n` == 'cruise') then
-  sudo ./setup.sh
+  sudo ./setup.sh bg
 else
-  ./setup.sh
+  ./setup.sh bg
 endif
