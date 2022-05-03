@@ -7,7 +7,7 @@
 #     docker push umple/umpleonline-base:latest
 #  if just testing, then temporarily change umpleonline/DockerFile to use the :local tag
 set thedir=$cwd
-set thebranch=docker-`git rev-parse --abbrev-ref HEAD`-`awk '{print $3}' build/umpleversion.last.txt`
+set thebranch=docker-`git rev-parse --abbrev-ref HEAD`
 set backedvisits=`cat umpleonline/countlog.txt`
 set backedcommands=`cat umpleonline/scripts/commandcount.txt`
 echo will build Umple docker image for system in $thedir
