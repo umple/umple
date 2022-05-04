@@ -70,8 +70,7 @@ digraph "<<=filename>>" {
   protected void instanceCreation(UmpleInstance uInstance, StringBuilder code)
   {
     UmpleClass uClass = uInstance.getUmpleClass();
-    int linkSize = uInstance.getFromInstance().size();
-    String instanceName = uInstance.getInstanceName() + ": " + uClass.getName() + " " + linkSize;
+    String instanceName = uInstance.getInstanceName() + ": " + uClass.getName();
 
     String instanceColor = uClass.getDisplayColor();
     if (!instanceColor.equals("")) instanceColor=" style=filled, fillcolor="+instanceColor+" ";
@@ -417,7 +416,7 @@ digraph "<<=filename>>" {
   }
   */
 
-  protected void linkCreation(UmpleInstance uInstance, UmpleLink uLink, StringBuilder links, String className) {
+  protected void linkCreation(UmpleInstance uInstance, UmpleLink uLink, StringBuilder links) {
     
      Association uAssoc = uLink.getAssociation();
      AssociationEnd leftEnd = uAssoc.getEnd(0);
@@ -426,17 +425,19 @@ digraph "<<=filename>>" {
      String toolTip;
 
     String leftInstance = uInstance.getInstanceName();
-
-    String [] arrows = retArrows(uAssoc);
-    String leftMult = leftEnd.toSimpleString();
-    String rightMult = rightEnd.toSimpleString();
     String rightInstance = toLink.getInstanceName();
+    if (leftInstance != rightInstance) { // DEBUG: not sure why but links are forming to and from the same instance
+      String [] arrows = retArrows(uAssoc);
+      String leftMult = leftEnd.toSimpleString();
+      String rightMult = rightEnd.toSimpleString();
 
-    String visualLeftEnd = leftMult+" "+leftEnd.getDisplayRoleName();
-    String visualRightEnd = rightMult+" "+rightEnd.getDisplayRoleName();
-    toolTip = leftInstance + " " + visualLeftEnd + "--" + visualRightEnd + " " + rightInstance;
+      String visualLeftEnd = leftMult+" "+leftEnd.getDisplayRoleName();
+      String visualRightEnd = rightMult+" "+rightEnd.getDisplayRoleName();
+      toolTip = leftInstance + " " + visualLeftEnd + "->" + visualRightEnd + " " + rightInstance;
 
-    links.append(noLabelAssociation(leftInstance, rightInstance, "--", toolTip));
+      links.append(noLabelAssociation(leftInstance, rightInstance, "->", toolTip));
+
+    }
     
   }
 
@@ -705,6 +706,7 @@ digraph "<<=filename>>" {
     Set processedLinks = new HashSet();
     for(UmpleLink uLink : uInstance.getUmpleLinks()) {
       processedLinks.add(uLink);
+      linkCreation(uInstance, uLink, links);
 
       // call to linkCreation to display the related links in the graphviz file
           // TO-DO: create linkCreation method
@@ -853,7 +855,7 @@ digraph "<<=filename>>" {
   {
     String association;
 
-    association = "  \""+left+"\" -- \""+right+"\" ["+"dir=\"none\""+", tooltip=\""+tooltip+"\"];\n";
+    association = "  \""+left+"\" -> \""+right+"\" ["+"dir=\"none\""+", tooltip=\""+tooltip+"\"];\n";
 
     return association;
   }
