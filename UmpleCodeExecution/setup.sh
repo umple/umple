@@ -22,15 +22,17 @@ docker build -t $tempContainerName -f javaRunner/Dockerfile .
 
 # RUN MAIN CONTAINER
 
-portmap = "-p 0.0.0.0:$portToUse:4400"
+portmap="-p 0.0.0.0:$portToUse:4400"
+netcommand=""
 if [ $portToUse == '4409' ]
 then
-  portmap = ""
+  portmap=""
+  netcommand=--network="container:umpleonline_local"
 fi
 
 if [ $# -gt 0 ] && [ $1 == 'bg' ]
 then
-  docker run --restart=unless-stopped --name my$mainContainerName --network="container:umpleonline_local" -v /var/run/docker.sock:/var/run/docker.sock -v "$umplePath:/usr/src/app/models/" -v "$tempPath:/usr/src/app/output/" $portmap $mainContainerName >/dev/null 2>&1 &
+  docker run --restart=unless-stopped --name my$mainContainerName $netcommand -v /var/run/docker.sock:/var/run/docker.sock -v "$umplePath:/usr/src/app/models/" -v "$tempPath:/usr/src/app/output/" $portmap $mainContainerName >/dev/null 2>&1 &
 else
-  docker run --restart=unless-stopped --name my$mainContainerName --network="container:umpleonline_local" -v /var/run/docker.sock:/var/run/docker.sock -v "$umplePath:/usr/src/app/models/" -v "$tempPath:/usr/src/app/output/" $portmap $mainContainerName
+  docker run --restart=unless-stopped --name my$mainContainerName $netcommand -v /var/run/docker.sock:/var/run/docker.sock -v "$umplePath:/usr/src/app/models/" -v "$tempPath:/usr/src/app/output/" $portmap $mainContainerName
 fi
