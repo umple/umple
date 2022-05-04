@@ -38,6 +38,10 @@ if ($handle) {
     }
   }
 }
+if($portToUse == 4409) {
+  // Special port indicating we are in Docker ... but we are using local networking so swich back
+  $portToUse = 4400;
+}
 $GLOBALS["EXECUTION_SERVER"]= "http://localhost:$portToUse";
 
 // For compatibility with systems that do not have UmpleOnline's shell
