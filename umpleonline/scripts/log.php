@@ -63,7 +63,7 @@
     passthru("docker --version 2>&1");
 
     echo "\n<p> Git commit: ";
-    @passthru("git rev-parse --short HEAD");
+    @passthru("git rev-parse --short HEAD 2>&1");
     echo " &nbsp; Branch: ";
     @passthru("git rev-parse --abbrev-ref HEAD");
     echo " &nbsp; Updated: ";
