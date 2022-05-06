@@ -99,7 +99,7 @@ app.post('/run' , (req, res)  =>
                 } catch(err) {
                     console.log(err);
                     output += `<strong>For main method in class ${mainFunction}:</strong>\n`
-                    output += "Error processing your request\n"
+                    output += "Error processing Umple code execution request\n"
                     totalServed++;
                     if(totalServed >= mainFunctions.length) {
                         numberOfRequests--;
@@ -138,21 +138,21 @@ const validateMainFile = (path) => {
     if(fs.existsSync(path + "/" + mainFileName)) {
         return null;
     } else {
-        return {errors:"Cannot execute model because no Umple class was found with a public static void main() function.", output: ""};
+        return {errors:"Cannot execute model because no Umple class was found with a public static void main(String[] args) {} function.", output: ""};
     }
 }
 
 const validatePath = (path) => {
     if(!path) {
-        return {errors:"Path is required.", output:""};
+        return {errors:'Internal problem validating path for Umple Code Execution. No path provided. Please report to Umple developers.', output:""};
     } else if(!fs.existsSync(path)) {
-        return {errors:'Path does not exist.', output:""};
+        return {errors:'Internal problem validating path for Umple Code Execution. Path '+path+' not found. Please report to Umple developers.', output:""};
     }
 
     try {
         fs.accessSync(path, fs.constants.R_OK)
     } catch {
-        return {errors: 'Access denied.', output:""};
+        return {errors: 'Internal problem accessing oath for Umple Code Execution, Access to '+path+' denied.', output:""};
     }
 
     return null;
@@ -161,7 +161,7 @@ const validatePath = (path) => {
 const canProceed = (callback) => {
     // Check max number of requests allowed
     if(numberOfRequests >= MAX_REQUESTS) {
-        callback({errors:"Server is busy, please try in some time for code execution.", output:""})
+        callback({errors:"Umple code execution Docker server is too heavily loaded to execute your code at the same time as many others, please try again in a few seconds to execute your code. If the problem persists for many minutes, then please report to Umple developers.", output:""})
     } else {
         callback(null);
     }
