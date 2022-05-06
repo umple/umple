@@ -109,12 +109,14 @@ class CompositeStateWrapper
 		String fromState = t.getFromState().getName();
 		String nextState = t.getNextState().getName();
 		String eventName = t.getEvent().getName();
+		/* DEBUG
 		System.out.println("===========================");
 		System.out.println(getCompositeName());
 		System.out.println(nextCsw.getCompositeName());
 		System.out.println(fromState);
 		System.out.println(eventName);
 		System.out.println(nextState);
+		*/
 		//First check, does the fromCsw contain the fromState
 		//and does the nextCsw contain the nextState?
 		if(!containsState(fromState))
@@ -279,8 +281,10 @@ class CompositeStateWrapper
 		String fromState = t.getFromState().getName();
 		String nextState = t.getNextState().getName();
 		String eventName = t.getEvent().getName();
+		/* DEBUG
 		System.out.println(getCompositeName());
 		System.out.println(nextCsw.getCompositeName());
+		*/
 		
 		boolean fromCswContainsFromStateAtCurrentNestingLevel; //does the fromCsw contain the fromState at this nesting level?
 		boolean nextCswContainsNextStateAtCurrentNestingLevel; //does the nextCsw contain the nextState at this nesting level?
