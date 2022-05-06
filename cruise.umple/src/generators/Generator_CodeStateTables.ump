@@ -86,127 +86,356 @@ class CompositeStateWrapper
 		return false;
 	}
 	
+	//returns true if given state is contained at top nesting level.
+	boolean containsStateAtTop(String givenStateName)
+	{
+		for(String stateName : states.keySet())
+		{
+			if(stateName.equals(givenStateName))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 	
-	//Returns true if Transition t would lead to CompositeStateWrapper nextCsw
+	//this method does not distinguish between initial states.
+	//This means if a transition would lead to an initial state, it must be inferred from outside this method.
+	//Currently, the composite state table does this by only using the first valid result that appears.
+	//This works because the cswList is naturally ordered by primacy.
 	boolean isTransition(CompositeStateWrapper nextCsw, Transition t)
 	{
+		//get Transition info.
 		String fromState = t.getFromState().getName();
 		String nextState = t.getNextState().getName();
-		String tName = t.getEvent().getName();//may delete
-		
-		
-		if(!containsState(fromState))//This CSW isn't a valid fromState
+		String eventName = t.getEvent().getName();
+		System.out.println("===========================");
+		System.out.println(getCompositeName());
+		System.out.println(nextCsw.getCompositeName());
+		System.out.println(fromState);
+		System.out.println(eventName);
+		System.out.println(nextState);
+		//First check, does the fromCsw contain the fromState
+		//and does the nextCsw contain the nextState?
+		if(!containsState(fromState))
 		{
 			return false;
 		}
-		if(!nextCsw.containsState(nextState))//Next csw doesn't contain a valid nextState
+		if(!nextCsw.containsState(nextState))
 		{
 			return false;
 		}
 		
-		
-		//We have deduced that the fromCsw contains the fromState and the nextCsw contains the nextState
-		ArrayList<State> fromStateList = new ArrayList<State>(states.values());
-		ArrayList<State> nextStateList = new ArrayList<State>(nextCsw.getStates().values());
-		Map<String,State> nextCswStateMap = nextCsw.getStates();
-		ArrayList<CompositeStateWrapper> fromChildCswList = new ArrayList<CompositeStateWrapper>(childStates.values());
-		ArrayList<String> fromChildCswKeyList = new ArrayList<String>(childStates.keySet());
-		Map<String,CompositeStateWrapper> fromChildStateMap = childStates;//Just doing this to keep track of it, may change it later
-		Map<String,CompositeStateWrapper> nextChildStateMap = nextCsw.getChildStates();
-		boolean containsNextState = false;
-		boolean containsFromState = false;
-		
-		for(State s : fromStateList)
+		//This method is meant for the top CSW or equivalent.
+		//There being more than one state at this level should not be possible.
+		if(states.size() > 1)
 		{
-			String sName = s.getName();
-			if(!nextCswStateMap.containsKey(sName))//key not detected, investigate if transition
-			{
-				if(sName != fromState)
+			return false;
+		}
+		if(nextCsw.getStates().size() > 1)
+		{
+			return false;
+		}
+		
+		//it is possible for a nextState to be at a different nesting level
+		//or even in a different concurrent state machine than the fromState.
+		boolean fromCswContainsFromStateAtCurrentNestingLevel; //does the fromCsw contain the fromState at this nesting level?
+		boolean nextCswContainsNextStateAtCurrentNestingLevel; //does the nextCsw contain the nextState at this nesting level?
+		fromCswContainsFromStateAtCurrentNestingLevel = containsStateAtTop(fromState);
+		nextCswContainsNextStateAtCurrentNestingLevel = nextCsw.containsStateAtTop(nextState);
+		
+		// it can be assumed that the top level CSW only contains 1 concurrent state.
+		// this is because being a concurrent state also implies being a nested state.
+		// therefore, any calls to this particular validation function must meet the following conditions.
+		int numberOfConcurrentStates;
+		numberOfConcurrentStates = states.size();
+		//we can assume there's only one parent state for this method.
+		int numberOfFromChildStates = 0;
+		int numberOfNextChildStates = 0;
+		
+		ArrayList<String> fromCswStateNameList = new ArrayList<String>(states.keySet());
+		ArrayList<String> nextCswStateNameList = new ArrayList<String>(nextCsw.getStates().keySet());
+		
+		//we need to know how many child states are contained in the single parent state in this CSW level.
+		//keep in mind that, if these states are the same, the number of child states should also be the same.
+		String fromCswParentStateName = fromCswStateNameList.get(0);
+		String nextCswParentStateName = nextCswStateNameList.get(0);
+		CompositeStateWrapper fromCswChildCsw;
+		CompositeStateWrapper nextCswChildCsw;
+		//depending on the number of childStates, these might be null.
+		fromCswChildCsw = childStates.get(fromCswParentStateName);
+		nextCswChildCsw = nextCsw.getChildStates().get(nextCswParentStateName);
+		
+		//we need to check if the fromState or nextState are found at this nesting level.
+		boolean fromStateFoundHere;
+		boolean nextStateFoundHere;
+		fromStateFoundHere = fromState.equals(fromCswParentStateName);
+		nextStateFoundHere = nextState.equals(nextCswParentStateName);
+		
+		if(fromCswChildCsw != null)
+		{
+			numberOfFromChildStates = fromCswChildCsw.getStates().size();
+		}
+		if(nextCswChildCsw != null)
+		{
+			numberOfNextChildStates = nextCswChildCsw.getStates().size();
+		}
+		
+		if(fromCswParentStateName.equals(nextCswParentStateName))
+		{//both parent states are the same.
+			/*
+			if(numberOfFromChildStates == 1 && numberOfNextChildStates == 1)
+			{//In this case, both parent states are the same and have no concurrent nested states in the next nesting level.
+				if(!fromStateFoundHere && !nextStateFoundHere)
 				{
-					return false;
+					//fromState and nextState are not found in this level.
+					//additionally, both nested states are not concurrent.
+					//the initial isTransition method can be reused on the childCsws since they are in the same situation as the parentCsws.
+					return fromCswChildCsw.isTransition(nextCswChildCsw,t);
+				}
+				else if(fromStateFoundHere && !nextStateFoundHere)
+				{
+					//fromState is found here but nextState is not.
+					//both parent states are the same so the change was internal, downward pointing transition.
+					//we need to now evaluate that everything below is the same EXCEPT the nextState.
+					
+					//TODO write a validation function that checks everything EXCEPT the fromState.
+				}
+				else if(!fromStateFoundHere && nextStateFoundHere)
+				{
+					//in this case, where there exists 1 and only 1 parent state,
+					//and where said parent states are the same,
+					//if the fromState is not present but the nextState is,
+					//then this transition is the result in a child state pointing to its parent state.
+					//in such a case, the resultant state will be the initial state of the parent.
+					return true;
+				}
+				else if(fromStateFoundHere && nextStateFoundHere)
+				{
+					//it actually doesn't matter that the fromState is also found here,
+					//a transition to the parent state will cause the parent state to reset.
+					return true;
+				}
+				
+			}
+			else if(numberOfFromChildStates > 1 && numberOfNextChildStates > 1) 
+			{//in this case, we have concurrent nested states which need to be accounted for
+				if(!fromStateFoundHere && !nextStateFoundHere)
+				{
+					//transition doesn't occur at this level and there are nested, concurrent states
+					//TODO create validation function that handles concurrent states with no transition state yet detected.
+				}
+				else if(fromStateFoundHere && !nextStateFoundHere)
+				{
+					//transition originates from here but the nextState is 
+					//nested within one of the concurrent child states.
+					//TODO create a validation function that handles concurrent states while parent state contains fromState.
+				}
+				else if(!fromStateFoundHere && nextStateFoundHere)
+				{
+					//the fromState is not present but the nextState is.
+					//given that the parent states are the same,
+					//we can infer that the fromState originates from a nested state
+					//and that said state is pointing upwards to this parent state.
+					//Therefore, this transition has the effect of resetting to this parent state.
+					return true;
+				}
+				else if(fromStateFoundHere && nextStateFoundHere)
+				{
+					//this transition has the effect of resetting the parent state.
+					return true;
 				}
 			}
-			if(sName == fromState)
+			*/
+			if(!nextStateFoundHere)
 			{
-				containsFromState = true;
+				return fromCswChildCsw.isTransitionConcurrent(nextCswChildCsw,t);
+			}
+			else 
+			{
+				return true;
 			}
 		}
-		for(State s : nextStateList)
+		else 
 		{
-			String sName = s.getName();
-			if(sName == nextState)
+			//both CSWs contain their respective transition states, 
+			//however, said states are in mutually exclusive CSW trees, 
+			//therefore we can assume this is a valid transition.
+			return true;
+		}
+		
+		//inexplicable impossible case
+		//return false;
+	}
+	
+	//This method assumes the following:
+	//-the fromState and nextState are located within these CSWs.
+	//-the location of the fromState and nextState has not been found.
+	//-there are concurrent states.
+	//-the parent states are the same.
+	private boolean isTransitionConcurrent(CompositeStateWrapper nextCsw, Transition t)
+	{
+		//get Transition info.
+		String fromState = t.getFromState().getName();
+		String nextState = t.getNextState().getName();
+		String eventName = t.getEvent().getName();
+		System.out.println(getCompositeName());
+		System.out.println(nextCsw.getCompositeName());
+		
+		boolean fromCswContainsFromStateAtCurrentNestingLevel; //does the fromCsw contain the fromState at this nesting level?
+		boolean nextCswContainsNextStateAtCurrentNestingLevel; //does the nextCsw contain the nextState at this nesting level?
+		fromCswContainsFromStateAtCurrentNestingLevel = containsStateAtTop(fromState);
+		nextCswContainsNextStateAtCurrentNestingLevel = nextCsw.containsStateAtTop(nextState);
+		
+		ArrayList<String> fromStateNameList = new ArrayList<String>(states.keySet());
+		ArrayList<String> nextStateNameList = new ArrayList<String>(nextCsw.getStates().keySet());
+		ArrayList<String> diffFromStateNameList = new ArrayList<String>();//contains states present in fromStateNameList but not present in nextStateNameList
+		ArrayList<String> diffNextStateNameList = new ArrayList<String>();//contains states present in nextStateNameList but not present in fromStateNameList
+		boolean fromStateFoundHere = false;
+		boolean nextStateFoundHere = false;
+		ArrayList<String> checkEqualityList = new ArrayList<String>();
+		
+		String parentOfFromState = null;
+		String parentOfNextState = null;
+		//gather information phase
+		//as we already established the presence of the fromState and nextState
+		//in their respective CSWs as prerequisite to calling this method,
+		//the following two loops should always result in the parentOf State strings not being null.
+		for(String fromCswState : fromStateNameList)
+		{
+			if(!nextStateNameList.contains(fromCswState))
 			{
-				containsNextState = true;
+				diffFromStateNameList.add(fromCswState);
+			}
+			if(fromState.equals(fromCswState))
+			{
+				fromStateFoundHere = true;
+				parentOfFromState = fromCswState;
+			}
+			CompositeStateWrapper fromCswChildCsw = childStates.get(fromCswState);
+			if(fromCswChildCsw != null)
+			{
+				if(fromCswChildCsw.containsState(fromState))
+				{
+					parentOfFromState = fromCswState;
+				}
 			}
 		}
-		//We have now deduced that all states in fromCsw are equal to nextCsw 
-		
-		for(String fromChildCswKey : fromChildCswKeyList)
+		for(String nextCswState : nextStateNameList)
 		{
-			
-			CompositeStateWrapper fromChildCsw = fromChildStateMap.get(fromChildCswKey);
-			CompositeStateWrapper nextChildCsw = nextChildStateMap.get(fromChildCswKey);
-			
-			if(nextChildCsw == null && fromChildCswKey == fromState && nextCswStateMap.containsKey(nextState))
+			if(!fromStateNameList.contains(nextCswState))
 			{
-				continue; //detected transition in this CSW, skip checking here.
+				diffNextStateNameList.add(nextCswState);
 			}
-			boolean fromChildContainsState = false;
-			if(fromChildCsw != null)
+			if(nextState.equals(nextCswState))
 			{
-				fromChildContainsState = fromChildCsw.containsState(fromState);
+				nextStateFoundHere = true;
+				parentOfNextState = nextCswState;
 			}
-			boolean nextChildContainsState = false;
-			if(nextChildCsw != null)
+			CompositeStateWrapper nextCswChildCsw = nextCsw.getChildStates().get(nextCswState);
+			if(nextCswChildCsw != null)
 			{
-				nextChildContainsState = nextChildCsw.containsState(nextState);
-			}
-			//case 1, both child states don't contain transition related states, check equality and move on.
-			//we're going off the fromChildCswKeys, does this case even occur?
-			if(!fromChildContainsState && !nextChildContainsState)
-			{
-				//crossDown
-				if(!fromChildCsw.checkEquality(nextChildCsw))
+				if(nextCswChildCsw.containsState(nextState))
 				{
-				
-					   return false;
-				
+					parentOfNextState = nextCswState;
 				}
 			}
-			//case 2, both child states contain transition, check recursively
-			if(fromChildContainsState && nextChildContainsState)
+		}
+		
+		//decision phase
+		//
+		if(diffFromStateNameList.size() > 1 && diffNextStateNameList.size() > 1)
+		{
+			//at most, there can only be one concurrent state that's different.
+			//if there's a change in states, it will only happen to one state.
+			return false;
+		}
+		
+		if(diffFromStateNameList.size() == 1 && diffNextStateNameList.size() == 1)
+		{
+			//the transition might have resulted in a diff of 1
+			//a diff of 1 is only valid if the diffNextStateName == parentOfNextState
+			//String diffFromStateName = diffFromStateNameList.get(0);
+			String diffNextStateName = diffNextStateNameList.get(0);
+			if(diffNextStateName.equals(parentOfNextState))
 			{
-				if(!fromChildCsw.isTransition(nextChildCsw,t))
-				{
+				//the change in state occurred due to the transition.
+				//The transition was either pointing to this state
+				//or it was pointing to a childState of this state.
+				//Due to the fact that a different parent state was invoked,
+				//the state of childStates doesn't matter due to the primacy rule
 
-					return false;
-				}
-			}
-			//TODO case 3 and 4 occur when the transition is between concurrent branches.
-			//also occurs when a transition is from a parent state to a child state and vice versa
-			if(!fromChildContainsState && nextChildContainsState)
-			{
-				//return false;				
-				//TODO
-				if(containsFromState && !containsNextState)
-				{
-					//from state is present in this CSW and next state is present in a child CSW
-					if(!fromChildCsw.isTransitionToChildState(nextChildCsw,t))
-					{
-
-						return false;
+				for(String nextCswState : nextStateNameList)
+				{//normally we'd cycle based on the fromCsw, but this is more efficient
+					if(!diffNextStateName.equals(nextCswState))
+					{//this section will ignore the diffState
+						//these states are the same so we can use nextCswState
+						CompositeStateWrapper fromCswChildCsw = childStates.get(nextCswState);
+						CompositeStateWrapper nextCswChildCsw = nextCsw.getChildStates().get(nextCswState);
+						//also, since they are the same state, 
+						//there should not be any case where one is null and the other isn't.
+						//we ignore null childCsws
+						if(fromCswChildCsw != null && nextCswChildCsw != null)
+						{
+							if(!fromCswChildCsw.checkEquality(nextCswChildCsw))
+							{
+								return false;
+							}
+						}
 					}
 				}
 			}
-			if(fromChildContainsState && !nextChildContainsState)
+			else
 			{
-				//return false;				
-				//TODO
+				//the change in state was not the result of the transition.
+				//therefore, this is not a valid transition.
+				return false;
 			}
 		}
-		
+		else if(diffFromStateNameList.size() == 0 && diffFromStateNameList.size() == 0)
+		{
+			//we need to check equality on all childCsws that aren't related to the transition
+			//if there are not transitions found at this level, we need to know if the transition
+			//we need to check if the transition came from a cross and or any other transition.
+			for(String stateName : fromStateNameList)
+			{
+				if(parentOfNextState.equals(stateName) && !nextStateFoundHere)
+				{
+					//this state is not the nextState but is the parent of the nextState
+					//because of that, we need to run the validation function on the childCsws
+					CompositeStateWrapper fromCswChildCsw = childStates.get(stateName);
+					CompositeStateWrapper nextCswChildCsw = nextCsw.getChildStates().get(stateName);
+					if(fromCswChildCsw != null && nextCswChildCsw != null)
+					{
+						if(!fromCswChildCsw.isTransitionConcurrent(nextCswChildCsw,t))
+						{
+							return false;
+						}
+					}
+				}
+				else if(!parentOfNextState.equals(stateName))
+				{
+					//not related to transition.
+					//run an equality check on child CSWs if they exist.
+					CompositeStateWrapper fromCswChildCsw = childStates.get(stateName);
+					CompositeStateWrapper nextCswChildCsw = nextCsw.getChildStates().get(stateName);
+					if(fromCswChildCsw != null && nextCswChildCsw != null)
+					{
+						if(!fromCswChildCsw.checkEquality(nextCswChildCsw))
+						{
+							return false;
+						}
+					}
+				}
+				//due to primacy rule, we do not need to run any checks on child CSWs
+				//if the parent state is the nextState.
+			}
+		}
+		//all checks passed.
 		return true;
+		
 	}
+	
 	
 	//checks that nextCsw contains nextState and that all other states are equal to this CSW
 	private boolean isTransitionToChildState(CompositeStateWrapper nextCsw, Transition t)
@@ -471,7 +700,6 @@ class CompositeTransitionWrapper
 		if(guard != null)
 		{
 			guardString = extractGuardStringRecursive(guard,t.getFromState(),t.getEvent());
-			//System.out.println("Guard: " + guardString);
 		}
 		return guardString;
 	}
@@ -624,7 +852,6 @@ class CompositeStateTableRow
 		if(guard != null)
 		{
 			guardString = extractGuardStringRecursive(guard,t.getFromState(),t.getEvent());
-			//System.out.println("Guard: " + guardString);
 		}
 		return guardString;
 	}
@@ -655,14 +882,12 @@ class CompositeStateTableRow
 	                                            HashMap<String,String> timerAssociationMap
 	                                            )
 	{//stateeventrowcheckpoint
-		//System.out.println("TimerTransitionMap size: " + timerTransitionMap.size());
 		StringBuilder sb = new StringBuilder();
 		boolean autoCellChecked = false;
 		firstCellInRow(sb);
 		HashMap<String,Boolean> timerCellCheckedMap = getTimerCellCheckedMap(timerTransitionMap);
 		for(String eventName : eventList)//loop through event columns
 		{
-			//System.out.println("Event: " + eventName);
 			if(autoTransitionNameList.contains(eventName) && !autoCellChecked)//autoTransition detected, check 
 			{
 				CompositeStateWrapper autoNextCsw = null;
@@ -703,7 +928,6 @@ class CompositeStateTableRow
 			{
 				timerHeader = timerAssociationMap.get(eventName);
 				timerChecked = timerCellCheckedMap.get(timerHeader);
-				//System.out.println("Timer: " + eventName + " Checked: " + timerChecked + " Header: " + timerHeader);
 				
 			}			
 			if(timerTransitionMap.containsKey(timerHeader) && !timerChecked)
@@ -835,10 +1059,6 @@ class CompositeStateTableRow
 			{
 				eventName = t.getEvent().getName();
 				Guard guard = t.getGuard();
-				if(guard != null )
-			   {
-					//System.out.println(eventName + " contains guard");
-			   }
 			   CompositeTransitionWrapper ctw = findCompositeStateWrapper(t,ctwList);
 			   hasGuard = ctw.getContainsGuard();
 			}
@@ -1323,10 +1543,6 @@ class StateTable
   		String eventName = getFormattedEventHeader(e);
   		CompositeTransitionWrapper ctw = ctwMap.get(e);
   		Transition t = ctw.getTransitionList().get(0);
-  		if(t == null)
-  		{
-  			//System.out.println("ERROR: Event " + e + " points to null CompositeStateWrapper.");
-  		}
   		if(eventName == "(auto)" && !autoEventCreated)
   		{
 			autoTransitionList.add(e);  			
@@ -1491,22 +1707,9 @@ class StateTable
 		}
 	}	
 	
-	/*
+
 	public void buildRecursivelyCompositeEntry(StateMachine theSm)
 	{
-		System.out.println("Call to buildRecursivelyCompositeEntry...");
-		int nestingLevel = 0;
-		int currentId = 0;
-		CompositeStateWrapper csw = new CompositeStateWrapper();
-		buildRecursivelyComposite(theSm, nestingLevel, currentId, null);
-		System.out.println("Finished recursive build...");
-		System.out.println("Size of primaryCswList: " + primaryCswList.size());
-		
-	}
-	*/
-	public void buildRecursivelyCompositeEntry(StateMachine theSm)
-	{
-		//System.out.println("Call to buildRecursivelyComposite...");
 		int nestingLevel = 0;
 		int currentId = 0;
 		String sLabel;
@@ -1524,52 +1727,31 @@ class StateTable
          isPseudo = sLabel.equals("H") || sLabel.equals("H*");
          CompositeStateWrapper compositeStateWrapper = new CompositeStateWrapper();
          compositeStateWrapper.addState(s);
-         //compositeStateWrapper.setStatePrimacy(s.getName(),true);
-         //compositeStateWrapper.displayPrimacy(true);
-         //System.out.println(compositeStateWrapper.getCompositeName());
+  
          //adds state to master list
          addTransitionsToList(s);
          if(s.getIsConcurrent())
          {
          	isConcurrent = true;
          }
-         	cswList.add(compositeStateWrapper);
-         //}
-         //else
-         //{
-         //	primaryCswList.add(compositeStateWrapper);
-         //}
+         cswList.add(compositeStateWrapper);
 		   currentId++;
          
          
 			for(StateMachine nestedSm : s.getNestedStateMachines())
 			{
-				
-				//if(s.getIsConcurrent())
-				//{
-					//invoke concurrency version of recursion
-					buildRecursivelyCompositeArray(nestedSm, s, cswList);
-				//}
-				//else 
-				//{
-					//do normal processing of nested state machine
-					//currentId = buildRecursivelyComposite(nestedSm, nestingLevel + 1, currentId, stateRow);
-				//}
+				buildRecursivelyCompositeArray(nestedSm, s, cswList);
+
 			}
-         //if(s.getIsConcurrent())
-         //{
-         	//process cswList
-         	for(CompositeStateWrapper cswConcurrent : cswList)
-         	{
-         		primaryCswList.add(cswConcurrent);
-         		currentId++;
-         	}
-         	cswList.clear();
-         //}
+
+         for(CompositeStateWrapper cswConcurrent : cswList)
+         {
+         	primaryCswList.add(cswConcurrent);
+         }
+         cswList.clear();
+
 		}
 		
-		//System.out.println("Finished recursive build...");
-		//System.out.println("Size of primaryCswList: " + primaryCswList.size());
 		
 		
 	}
@@ -1579,7 +1761,7 @@ class StateTable
 															State parentState,
 															ArrayList<CompositeStateWrapper> cswList)
 	{
-		//System.out.println("Call to buildRecursivelyCompositeArray...");
+		
 		String sLabel;
 		String parent = null;
 		if(parentState != null)
@@ -1596,32 +1778,24 @@ class StateTable
 				isConcurrent = true;
 			}
 		}
-		// this list is for nested concurrent states.
-		//ArrayList<CompositeStateWrapper> nestedCswList = new ArrayList<CompositeStateWrapper>();
-
+		
 		//unpack CSWs from cswList
 		ArrayList<CompositeStateWrapper> tempCswList = new ArrayList<CompositeStateWrapper>();
-		//System.out.println("Unpacking cswList...");
+
 		//unpacks current CSW list and adds it to a temporary list
 		for(CompositeStateWrapper csw : cswList) 
 		{
-			//System.out.println("Unpacked csw: " + csw.getCompositeName());
 			tempCswList.add(csw);
 		}
-		//System.out.println("Size of tempCswList: " + tempCswList.size());
 		//empty cswList so it can be replaced with new composites.
 		cswList.clear();
 		//for every CSW, create a new CSW for every state and add it back to the cswList
 		if(tempCswList.size() == 0)
 		{//No CSWs detected, creating new CSWs with States as parent state.
-			//System.out.println("No existing CSWs detected, creating new CSWs...");
 			for(State s : theSm.getStates())
 			{
 				CompositeStateWrapper newCsw = new CompositeStateWrapper();
 				newCsw.addState(s);
-				//newCsw.setStatePrimacy(s.getName(),true);
-				//newCsw.displayPrimacy(true);
-				//System.out.println("New csw name1: " + newCsw.getCompositeName());
 				cswList.add(newCsw);
 			}
 		}
@@ -1634,13 +1808,8 @@ class StateTable
 					boolean initialState = true;
 					for(State s : theSm.getStates())
 					{
-						
-						//CompositeStateWrapper newCsw = new CompositeStateWrapper(csw,s);
 						CompositeStateWrapper newCsw = csw.getCopy();
 						newCsw.addState(s);
-						//newCsw.setStatePrimacy(s.getName(),initialState);
-						//newCsw.displayPrimacy(true);
-						//System.out.println("New csw name2: " + newCsw.getCompositeName());
 						cswList.add(newCsw);
 						initialState = false;
 					}
@@ -1652,9 +1821,6 @@ class StateTable
 					{
 						CompositeStateWrapper newCsw = csw.getCopy();//we create a copy of the csw
 						newCsw.addRecursiveChildState(parent,s);//we add the state to the csw
-						//newCsw.setStatePrimacy(s.getName(),initialState);
-						//newCsw.displayPrimacy(true);
-						//System.out.println("New csw name3: " + newCsw.getCompositeName());
 						cswList.add(newCsw);
 						initialState = false;
 					}
@@ -1674,8 +1840,6 @@ class StateTable
 				buildRecursivelyCompositeArray(nestedSm, s, cswList);	
 			}
 		}
-		
-		
 	}
 	
 	public String getTransitionInfo(Transition transition)
@@ -1691,7 +1855,7 @@ class StateTable
 	
 	public void consolidateTransitions(ArrayList<Transition> transitionList)
 	{
-		//HashMap<String,CompositeTransitionWrapper> ctwMap = new HashMap<String,CompositeTransitionWrapper>();
+
 		for(Transition t : transitionList)
 		{
 			String tName = t.getEvent().getName();
@@ -1829,29 +1993,7 @@ class StateTablesGenerator
 		  	//System.out.println("Composite State: " + csw.getCompositeName());
 		  }
 		  ArrayList<Transition> tList = st.getTransitionList();
-		  for(Transition t : tList)
-		  {
-		  	//System.out.println("Transition: " + st.getTransitionInfo(t));
-		  }
-		  for(CompositeStateWrapper fromCsw : cswList)
-		  {
-		  	for(CompositeStateWrapper nextCsw : cswList)
-		  	{
-		  		for(Transition t : tList)
-		  		{
-		  			/*
-		  			System.out.println("Checking...");
-		  			System.out.println("From: " + fromCsw.getCompositeName());
-		  			System.out.println("Tran: " + st.getTransitionInfo(t));
-		  			System.out.println("Next: " + nextCsw.getCompositeName());
-		  			*/
-		  			if(fromCsw.isTransition(nextCsw,t))
-		  			{
-		  				//System.out.println("CTC: " + fromCsw.getCompositeName() + " == " + st.getTransitionInfo(t) + " == " + nextCsw.getCompositeName());
-		  			}
-		  		}
-		  	}
-		  }
+		  
 		  st.consolidateTransitions(tList);
         // Build the contents of the state tables
         st.buildRecursivelyEntry(sm);
