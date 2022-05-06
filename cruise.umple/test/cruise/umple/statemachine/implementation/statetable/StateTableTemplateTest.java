@@ -47,7 +47,11 @@ public class StateTableTemplateTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/statetable/concurrentTimerTransitionStateTableSameTimer.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/concurrentTransitionWithActionNestedStateTable.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/concurrentWithTransitionsBetweenLocallyNestedStates.html");
-    
+    SampleFileWriter.destroy(pathToInput + "/statetable/concurrentCrossUp.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/concurrentCrossSide.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/concurrentCrossDown.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/concurrentCrossAnd.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/concurrentSelfTransition.html");
   }
 
   @Test
@@ -204,5 +208,53 @@ public class StateTableTemplateTest extends TemplateTest
     );
   }
   
+  @Test
+  public void concurrentCrossSide()
+  {
+    assertUmpleTemplateFor
+    (
+      "statetable/concurrentCrossSide.ump",
+      "statetable/concurrentCrossSide.html.txt"
+    );
+  }
   
+  @Test
+  public void concurrentCrossUp()
+  {
+    assertUmpleTemplateFor
+    (
+      "statetable/concurrentCrossUp.ump",
+      "statetable/concurrentCrossUp.html.txt"
+    );
+  }
+  
+  @Test
+  public void concurrentCrossDown()
+  {
+    assertUmpleTemplateFor
+    (
+      "statetable/concurrentCrossDown.ump",
+      "statetable/concurrentCrossDown.html.txt"
+    );
+  }
+  
+  @Test
+  public void concurrentCrossAnd()
+  {
+    assertUmpleTemplateFor
+    (
+      "statetable/concurrentCrossAnd.ump",
+      "statetable/concurrentCrossAnd.html.txt"
+    );
+  }
+  
+  @Test
+  public void concurrentSelfTransition()
+  {
+    assertUmpleTemplateFor
+    (
+      "statetable/concurrentSelfTransition.ump",
+      "statetable/concurrentSelfTransition.html.txt"
+    );
+  }
 }
