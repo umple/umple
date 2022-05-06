@@ -38,6 +38,10 @@ if ($handle) {
     }
   }
 }
+if($portToUse == 4409) {
+  // Special port indicating we are in Docker ... but we are using local networking so swich back
+  $portToUse = 4400;
+}
 $GLOBALS["EXECUTION_SERVER"]= "http://localhost:$portToUse";
 
 // For compatibility with systems that do not have UmpleOnline's shell
@@ -909,8 +913,10 @@ function serverRun($commandLine,$rawcommand=null) {
     $output = @socket_read($theSocket, 65534, PHP_BINARY_READ);
     if ($output === FALSE) {
       @socket_close($theSocket);;
-      // This usually happens at moments of overload; run as exec but give server much higher priority
-      execRun("nice -n 10 java -jar umplesync.jar ".$originalCommandLine);
+      // This usually happens at moments of overload; run as exec but 
+      execRun("java -jar umplesync.jar ".$originalCommandLine);     
+      // original: give server much higher priority using nice ... not needed any more
+      // execRun("nice -n 10 java -jar umplesync.jar ".$originalCommandLine);
       return;
     }
     if(strlen($output) == 0) {

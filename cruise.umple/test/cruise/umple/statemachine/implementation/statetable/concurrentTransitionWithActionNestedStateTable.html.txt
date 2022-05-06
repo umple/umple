@@ -244,19 +244,19 @@
     </tr>
     <tr>
       <td class="state-header" data-parent="">OverState (Yes (YesYes) || On (OnOn) )</td>
-      <td class="event-entry"><span>OverState (Yes (Slumber) || On (OnOn) )</span></td>      <td class="event-entry">&nbsp;</td>      <td class="event-entry"><span>OverState (Yes (YesYes) || On (Sleep) )</span></td>      <td class="event-entry">&nbsp;</td>    </tr>
+      <td class="event-entry"><span>OverState (Yes (Slumber) || On (OnOn) )</span></td>      <td class="event-entry"><span>OverState (No || On (OnOn) )</span></td>      <td class="event-entry"><span>OverState (Yes (YesYes) || On (Sleep) )</span></td>      <td class="event-entry"><span>OverState (Yes (YesYes) || Off)</span></td>    </tr>
 
     <tr>
       <td class="state-header" data-parent="0">OverState (Yes (Slumber) || On (OnOn) )</td>
-      <td class="event-entry">&nbsp;</td>      <td class="event-entry"><span>OverState (Yes (YesYes) || On (OnOn) )</span></td>      <td class="event-entry"><span>OverState (Yes (Slumber) || On (Sleep) )</span></td>      <td class="event-entry">&nbsp;</td>    </tr>
+      <td class="event-entry">&nbsp;</td>      <td class="event-entry"><span>OverState (Yes (YesYes) || On (OnOn) )</span></td>      <td class="event-entry"><span>OverState (Yes (Slumber) || On (Sleep) )</span></td>      <td class="event-entry"><span>OverState (Yes (Slumber) || Off)</span></td>    </tr>
 
     <tr>
       <td class="state-header" data-parent="0">OverState (No || On (OnOn) )</td>
-      <td class="event-entry">&nbsp;</td>      <td class="event-entry"><span>OverState (Yes (YesYes) || On (OnOn) )</span></td>      <td class="event-entry"><span>OverState (No || On (Sleep) )</span></td>      <td class="event-entry">&nbsp;</td>    </tr>
+      <td class="event-entry">&nbsp;</td>      <td class="event-entry"><span>OverState (Yes (YesYes) || On (OnOn) )</span></td>      <td class="event-entry"><span>OverState (No || On (Sleep) )</span></td>      <td class="event-entry"><span>OverState (No || Off)</span></td>    </tr>
 
     <tr>
       <td class="state-header" data-parent="0">OverState (Yes (YesYes) || On (Sleep) )</td>
-      <td class="event-entry"><span>OverState (Yes (Slumber) || On (Sleep) )</span></td>      <td class="event-entry">&nbsp;</td>      <td class="event-entry">&nbsp;</td>      <td class="event-entry"><span>OverState (Yes (YesYes) || On (OnOn) )</span></td>    </tr>
+      <td class="event-entry"><span>OverState (Yes (Slumber) || On (Sleep) )</span></td>      <td class="event-entry"><span>OverState (No || On (Sleep) )</span></td>      <td class="event-entry">&nbsp;</td>      <td class="event-entry"><span>OverState (Yes (YesYes) || On (OnOn) )</span></td>    </tr>
 
     <tr>
       <td class="state-header" data-parent="0">OverState (Yes (Slumber) || On (Sleep) )</td>
@@ -268,7 +268,7 @@
 
     <tr>
       <td class="state-header" data-parent="0">OverState (Yes (YesYes) || Off)</td>
-      <td class="event-entry"><span>OverState (Yes (Slumber) || Off)</span></td>      <td class="event-entry">&nbsp;</td>      <td class="event-entry">&nbsp;</td>      <td class="event-entry"><span>OverState (Yes (YesYes) || On (OnOn) )</span></td>    </tr>
+      <td class="event-entry"><span>OverState (Yes (Slumber) || Off)</span></td>      <td class="event-entry"><span>OverState (No || Off)</span></td>      <td class="event-entry">&nbsp;</td>      <td class="event-entry"><span>OverState (Yes (YesYes) || On (OnOn) )</span></td>    </tr>
 
     <tr>
       <td class="state-header" data-parent="0">OverState (Yes (Slumber) || Off)</td>
@@ -299,19 +299,19 @@
 
     <tr>
       <td class="state-header" data-parent="">OverState (Yes (YesYes) || On (OnOn) )</td>
-      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>otherButton</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>sleepButton</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>    </tr>
+      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>otherButton</span></td>      <td class="state-entry"><span>test</span></td>      <td class="state-entry"><span>sleepButton</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>power</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>    </tr>
 
     <tr>
       <td class="state-header" data-parent="0">OverState (Yes (Slumber) || On (OnOn) )</td>
-      <td class="state-entry"><span>test</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>sleepButton</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>    </tr>
+      <td class="state-entry"><span>test</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>sleepButton</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>power</span></td>      <td class="state-entry">&nbsp;</td>    </tr>
 
     <tr>
       <td class="state-header" data-parent="0">OverState (No || On (OnOn) )</td>
-      <td class="state-entry"><span>test</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>sleepButton</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>    </tr>
+      <td class="state-entry"><span>test</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>sleepButton</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>power</span></td>    </tr>
 
     <tr>
       <td class="state-header" data-parent="0">OverState (Yes (YesYes) || On (Sleep) )</td>
-      <td class="state-entry"><span>power</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>otherButton</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>    </tr>
+      <td class="state-entry"><span>power</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>otherButton</span></td>      <td class="state-entry"><span>test</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>    </tr>
 
     <tr>
       <td class="state-header" data-parent="0">OverState (Yes (Slumber) || On (Sleep) )</td>
@@ -323,7 +323,7 @@
 
     <tr>
       <td class="state-header" data-parent="0">OverState (Yes (YesYes) || Off)</td>
-      <td class="state-entry"><span>power</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>otherButton</span></td>      <td class="state-entry">&nbsp;</td>    </tr>
+      <td class="state-entry"><span>power</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>otherButton</span></td>      <td class="state-entry"><span>test</span></td>    </tr>
 
     <tr>
       <td class="state-header" data-parent="0">OverState (Yes (Slumber) || Off)</td>
