@@ -426,7 +426,7 @@ digraph "<<=filename>>" {
 
     String leftInstance = uInstance.getInstanceName();
     String rightInstance = toLink.getInstanceName();
-    if (leftInstance != rightInstance) { // DEBUG: not sure why but links are forming to and from the same instance
+    //if (leftInstance != rightInstance) { // DEBUG: not sure why but links are forming to and from the same instance
       String [] arrows = retArrows(uAssoc);
       String leftMult = leftEnd.toSimpleString();
       String rightMult = rightEnd.toSimpleString();
@@ -437,7 +437,7 @@ digraph "<<=filename>>" {
 
       links.append(noLabelAssociation(leftInstance, rightInstance, "->", toolTip));
 
-    }
+    //}
     
   }
 
@@ -700,18 +700,31 @@ digraph "<<=filename>>" {
     visitedInstances.add(uInstance);
     instanceCreation(uInstance, code);
     
-
-
-    // Once all the instances have been created we add the links
+    
     Set processedLinks = new HashSet();
+
+    Association[] instanceAssociations = uInstance.getUmpleClass().getAssociations();
+    for (Association instanceAssociation : instanceAssociations) {
+      for (AssociationEnd instanceEnd : instanceAssociation.getEnds()){
+        if (!(instanceEnd.getClassName().equals(uInstance.getUmpleClass().getName()))){
+          String cName = instanceEnd.getClassName();
+          UmpleInstance toInstance = new UmpleInstance(new UmpleClass(cName));
+          UmpleLink toInstanceLink = new UmpleLink(instanceAssociation, toInstance, uInstance);
+          linkCreation(uInstance, toInstanceLink, links);
+        }
+      }
+    }
+
+    /**
+    // Once all the instances have been created we add the links
     for(UmpleLink uLink : uInstance.getUmpleLinks()) {
       processedLinks.add(uLink);
-      linkCreation(uInstance, uLink, links);
+      //linkCreation(uInstance, uLink, links);
 
       // call to linkCreation to display the related links in the graphviz file
           // TO-DO: create linkCreation method
     }
-  
+    **/
 
   }
 
