@@ -34,6 +34,8 @@ class GvInstanceDiagramGenerator
 
   boolean testBound = false;
 
+  HashMap<UmpleClass, Integer> generatedInstances = new HashMap<UmpleClass, Integer>();
+
   Random rand = null;
   ArrayList<UmpleInstance> partiallyCreatedObjectsQueue = new ArrayList<UmpleInstance>();
 
@@ -416,7 +418,7 @@ digraph "<<=filename>>" {
   }
   */
 
-  protected void linkCreation(UmpleInstance uInstance, UmpleLink uLink, StringBuilder links) {
+  protected void linkCreation(UmpleInstance uInstance, UmpleInstance secondInstance, UmpleLink uLink, StringBuilder links) {
     
      Association uAssoc = uLink.getAssociation();
      AssociationEnd leftEnd = uAssoc.getEnd(0);
@@ -424,8 +426,8 @@ digraph "<<=filename>>" {
      UmpleInstance toLink = uLink.getToInstance();
      String toolTip;
 
-    String leftInstance = uInstance.getInstanceName();
-    String rightInstance = toLink.getInstanceName();
+    String leftInstance = uInstance.getInstanceName() + ": " + uInstance.getUmpleClass().getName();
+    String rightInstance = secondInstance.getInstanceName() + ": " + secondInstance.getUmpleClass().getName();
     //if (leftInstance != rightInstance) { // DEBUG: not sure why but links are forming to and from the same instance
       String [] arrows = retArrows(uAssoc);
       String leftMult = leftEnd.toSimpleString();
@@ -627,6 +629,7 @@ digraph "<<=filename>>" {
     for (UmpleClass uClass: oneToNClasses) {
       if (instanceMap.containsKey(uClass)) {
         int numInstancesToGenerate = randomPercentage();
+        generatedInstances.put(uClass, numInstancesToGenerate);
         ArrayList<UmpleInstance> uInstances = instanceMap.get(uClass);
         for (int i = 1; i <= numInstancesToGenerate ; i++) {
           String instanceSuffix = String.valueOf(i);
@@ -642,6 +645,7 @@ digraph "<<=filename>>" {
     for (UmpleClass uClass: remainingClasses) {
       if (instanceMap.containsKey(uClass)) {
         int numInstancesToGenerate = randomPercentage();
+        generatedInstances.put(uClass, numInstancesToGenerate);
         ArrayList<UmpleInstance> uInstances = instanceMap.get(uClass);
         for(int i = 1; i <= numInstancesToGenerate ; i++) {
           String instanceSuffix = String.valueOf(i);
@@ -708,9 +712,19 @@ digraph "<<=filename>>" {
       for (AssociationEnd instanceEnd : instanceAssociation.getEnds()){
         if (!(instanceEnd.getClassName().equals(uInstance.getUmpleClass().getName()))){
           String cName = instanceEnd.getClassName();
-          UmpleInstance toInstance = new UmpleInstance(new UmpleClass(cName));
-          UmpleLink toInstanceLink = new UmpleLink(instanceAssociation, toInstance, uInstance);
-          linkCreation(uInstance, toInstanceLink, links);
+          UmpleClass toClass = getModel().getUmpleClass(cName);
+          if (generatedInstances.containsKey(toClass)){
+            Integer maxInstances = generatedInstances.get(toClass);
+            for (int i = 1; i < maxInstances; i++) {
+              String toInstanceName = toClass.getName() + i;
+              UmpleInstance toInstance = new UmpleInstance(new UmpleClass(cName, getModel()));
+              toInstance.setInstanceName(toInstanceName);
+
+              UmpleLink toInstanceLink = new UmpleLink(instanceAssociation, toInstance, uInstance);
+              linkCreation(uInstance, toInstance, toInstanceLink, links);
+            }
+            //generatedInstances.remove(toClass);
+          }
         }
       }
     }
