@@ -35,6 +35,7 @@ class GvInstanceDiagramGenerator
   boolean testBound = false;
 
   HashMap<UmpleClass, Integer> generatedInstances = new HashMap<UmpleClass, Integer>();
+  ArrayList<String> createdLinks = new ArrayList<String>();
 
   Random rand = null;
   ArrayList<UmpleInstance> partiallyCreatedObjectsQueue = new ArrayList<UmpleInstance>();
@@ -420,26 +421,28 @@ digraph "<<=filename>>" {
 
   protected void linkCreation(UmpleInstance uInstance, UmpleInstance secondInstance, UmpleLink uLink, StringBuilder links) {
     
-     Association uAssoc = uLink.getAssociation();
-     AssociationEnd leftEnd = uAssoc.getEnd(0);
-     AssociationEnd rightEnd = uAssoc.getEnd(1);
-     UmpleInstance toLink = uLink.getToInstance();
-     String toolTip;
+      Association uAssoc = uLink.getAssociation();
+      AssociationEnd leftEnd = uAssoc.getEnd(0);
+      AssociationEnd rightEnd = uAssoc.getEnd(1);
+      UmpleInstance toLink = uLink.getToInstance();
+      String toolTip;
 
-    String leftInstance = uInstance.getInstanceName() + ": " + uInstance.getUmpleClass().getName();
-    String rightInstance = secondInstance.getInstanceName() + ": " + secondInstance.getUmpleClass().getName();
-    //if (leftInstance != rightInstance) { // DEBUG: not sure why but links are forming to and from the same instance
+      String leftInstance = uInstance.getInstanceName() + ": " + uInstance.getUmpleClass().getName();
+      String rightInstance = secondInstance.getInstanceName() + ": " + secondInstance.getUmpleClass().getName();
+      toolTip = leftInstance + " " + "->" + " " + rightInstance;
+    if (!(createdLinks.contains(leftInstance) || createdLinks.contains(rightInstance))) {
       String [] arrows = retArrows(uAssoc);
       String leftMult = leftEnd.toSimpleString();
       String rightMult = rightEnd.toSimpleString();
 
       String visualLeftEnd = leftMult+" "+leftEnd.getDisplayRoleName();
       String visualRightEnd = rightMult+" "+rightEnd.getDisplayRoleName();
-      toolTip = leftInstance + " " + visualLeftEnd + "->" + visualRightEnd + " " + rightInstance;
 
       links.append(noLabelAssociation(leftInstance, rightInstance, "->", toolTip));
+      createdLinks.add(leftInstance);
+    }
 
-    //}
+
     
   }
 
@@ -614,6 +617,7 @@ digraph "<<=filename>>" {
         // simultaneously calling randomPercentage() to determine number of instances to make
     for(UmpleClass uClass : singletonClasses){
       if (instanceMap.containsKey(uClass)){
+        generatedInstances.put(uClass, 1);
         String instanceSuffix = String.valueOf(1);
           UmpleInstance uInstance = new UmpleInstance(uClass);
           String uInstanceName = uClass.getName() + instanceSuffix;
@@ -715,13 +719,14 @@ digraph "<<=filename>>" {
           UmpleClass toClass = getModel().getUmpleClass(cName);
           if (generatedInstances.containsKey(toClass)){
             Integer maxInstances = generatedInstances.get(toClass);
-            for (int i = 1; i < maxInstances; i++) {
+            for (int i = 1; i <= maxInstances; i++) {
               String toInstanceName = toClass.getName() + i;
               UmpleInstance toInstance = new UmpleInstance(new UmpleClass(cName, getModel()));
               toInstance.setInstanceName(toInstanceName);
 
               UmpleLink toInstanceLink = new UmpleLink(instanceAssociation, toInstance, uInstance);
               linkCreation(uInstance, toInstance, toInstanceLink, links);
+
             }
             //generatedInstances.remove(toClass);
           }
