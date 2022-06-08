@@ -46,7 +46,7 @@
         
     echo "<p>Java version: ";
     passthru("java -version 2>&1");
- 
+
     $PATH = getenv("PATH");
     if(strpos($PATH, "/usr/bin") == FALSE){
       $PATH .= ":/usr/bin";
@@ -58,8 +58,17 @@
  
     echo "<p>Dot/Graphviz version: ";
     passthru("dot -V 2>&1");
- 
-   
+
+    echo "\n<p>Docker version: ";
+    passthru("docker --version 2>&1");
+
+    echo "\n<p> Git commit: ";
+    @passthru("git rev-parse --short HEAD 2>&1");
+    echo " &nbsp; Branch: ";
+    @passthru("git rev-parse --abbrev-ref HEAD");
+    echo " &nbsp; Updated: ";
+    @passthru("git log -1 --format=%cd --date=relative");
+
     $numBytesSent= socket_write($theSocket, $commandLine);
     if($numBytesSent === FALSE) {
       echo "<p>Cound not send log command to server\n";
