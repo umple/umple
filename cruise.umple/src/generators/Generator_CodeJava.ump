@@ -28,7 +28,7 @@ class JavaGenerator
   private static Map<String,String> AsIsSingularLookupMap;
   private static Map<String,String> AsIsPluralLookupMap;
   private static List<String> OneOrManyLookup;  
-  
+
   static
   {
     UpperCaseSingularLookupMap = new HashMap<String, String>();

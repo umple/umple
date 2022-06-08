@@ -70,7 +70,11 @@ if(file_exists($versionpath)){
 	$vfile = fopen($versionpath, "r");
 	$currentversion = fgets($vfile,1000);
 	fclose($vfile);
-	echo " | v$currentversion" ;
+	$releaseMajMin = preg_replace('/(\d+\.\d+\.\d+).*/i','${1}',$currentversion);
+	$currentgit=@exec("git rev-parse --short HEAD")." ".@exec("git log -1 --format=%cd --date=relative");
+  $currentversion = preg_replace('/(\d+\.\d+\.\d+\.\d+\.).*/i','${1}'.$currentgit,$currentversion);
+
+	echo " | <a target=\"releasepage\" href=\"https://github.com/umple/umple/releases/v$releaseMajMin\">v$currentversion</a>" ;
 }
 
 

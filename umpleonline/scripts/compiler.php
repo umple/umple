@@ -303,6 +303,13 @@ else if (isset($_REQUEST["umpleCode"]))
     
     if ($language == "Experimental-Cpp" || $language == "Experimental-Sql") {
       $sourceCode = executeCommand("echo \"{$language} is under development. Output is currently only available to developers of Umple\" 2> {$errorFilename}");
+    } elseif ($language == "Papyrus") {
+      $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
+      $papyrusProjectRootPath = $workDir->getPath();
+      $command = "cd {$papyrusProjectRootPath}; rm {$language}FromUmple.zip; zip -r {$language}FromUmple.zip model";
+      exec($command);
+      $archivelink = $workDir->makePermalink($language.'FromUmple.zip');
+      echo "<a href=\"$archivelink\" class=\"zipDownloadLink\" title=\"Download the generated code as a zip file. You can then unzip the result, compile it and run it on your own computer.\">Download the following Papyrus project as a zip file</a >";
     }
     else {
       $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
@@ -725,7 +732,7 @@ function executeCode($modelName, $error)
   curl_close($ch);
 
   if (isset($error_msg)) {
-    return "The docker service to execute code is not working. Please contact the system administrator for help.";
+    return "The docker service to execute code is not working. Please contact the system administrator for help.\n".$error_msg;
   } else {
     return $content;
   }
