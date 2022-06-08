@@ -1,5 +1,9 @@
 #! /bin/bash
 
+BASEDIR=$(dirname "$0")
+echo "Running setup.sh for code execution in $BASEDIR"
+cd $BASEDIR
+
 . config.cfg
 
 echo "This process will kill and remove any existing my"mainContainerName "container (ignore any error if not already running)"
@@ -18,9 +22,17 @@ docker build -t $tempContainerName -f javaRunner/Dockerfile .
 
 # RUN MAIN CONTAINER
 
+portmap="-p 0.0.0.0:$portToUse:4400"
+netcommand=""
+if [ $portToUse == '4409' ]
+then
+  portmap=""
+  netcommand=--network="container:umpleonline_local"
+fi
+
 if [ $# -gt 0 ] && [ $1 == 'bg' ]
 then
-  docker run --name my$mainContainerName -v /var/run/docker.sock:/var/run/docker.sock -v "$umplePath:/usr/src/app/models/" -v "$tempPath:/usr/src/app/output/" -p "$portToUse:4400" $mainContainerName >/dev/null 2>&1 &
+  docker run --restart=unless-stopped --name my$mainContainerName $netcommand -v /var/run/docker.sock:/var/run/docker.sock -v "$umplePath:/usr/src/app/models/" -v "$tempPath:/usr/src/app/output/" $portmap $mainContainerName >/dev/null 2>&1 &
 else
-  docker run --name my$mainContainerName -v /var/run/docker.sock:/var/run/docker.sock -v "$umplePath:/usr/src/app/models/" -v "$tempPath:/usr/src/app/output/" -p "$portToUse:4400" $mainContainerName
+  docker run --restart=unless-stopped --name my$mainContainerName $netcommand -v /var/run/docker.sock:/var/run/docker.sock -v "$umplePath:/usr/src/app/models/" -v "$tempPath:/usr/src/app/output/" $portmap $mainContainerName
 fi
