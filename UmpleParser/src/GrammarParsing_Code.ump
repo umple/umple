@@ -591,6 +591,11 @@ class ParserDataPackage
       {
         reader = new BufferedReader(new FileReader(file));
       }
+      else if (file.contains("https:")) {
+        String urlToLoad=file.substring(file.indexOf("https:"));
+        resourceStream = new URL(urlToLoad).openStream();
+        reader = new BufferedReader(new InputStreamReader(resourceStream));
+      }
       else
       {
         String resourceToLoad=file;
