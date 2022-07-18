@@ -25,7 +25,7 @@ class Analyzer
   depend java.util.*;
   depend cruise.umple.parser.*;
   depend cruise.umple.parser.Token;
-  depend java.io.*;  
+  depend java.io.*;
   depend java.lang.reflect.*;
   depend java.lang.IllegalStateException;
   
@@ -150,7 +150,8 @@ interface ParserAction
 class ParserDataPackage
 {  
   depend java.util.*;
-  depend java.io.*;  
+  depend java.io.*;
+  depend java.net.URL;
   depend cruise.umple.parser.Position;
   depend cruise.umple.parser.ParseResult;
   depend cruise.umple.parser.ErrorMessage;
