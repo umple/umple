@@ -1,4 +1,8 @@
-FROM alpine
+# This dockerfile sets up an image to run node.js, which will
+# act as a server on port 4400 to prepare to execute code
+# The actual execution of the code is done in a docker-in-docker within this
+# For that, see the Dockerfile in the javarunner directory
+FROM --platform=linux/amd64 alpine
 
 RUN apk add --update nodejs npm
 RUN apk add docker
