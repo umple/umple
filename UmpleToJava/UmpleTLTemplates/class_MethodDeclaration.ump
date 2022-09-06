@@ -316,9 +316,9 @@ class UmpleToJava {
               for(int i = -1; (i = properMethodBody.indexOf("return", i + 1)) != -1; ) {
               	//Check if return statement is on its own line
               	int lastChar = i - 1;
-              	while (properMethodBody.charAt(lastChar) == ' ')
+              	while (lastChar != -1 && properMethodBody.charAt(lastChar) == ' ')
               	  lastChar--;
-              	if (properMethodBody.charAt(lastChar) != '\n') // If it has any non-space characters before it, it's invalid
+              	if (lastChar == -1  || properMethodBody.charAt(lastChar) != '\n') // If it has any non-space characters before it, it's invalid
               	  continue;
               
                 // determine the indentation of the return
