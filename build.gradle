@@ -601,14 +601,14 @@ genOptions.ext.manOptions = ""
 
 // Create man page file from template with updated options
 task genManpage(dependsOn: genOptions, type: Copy) { 
-    from "${rootProject.projectDir.toString()}/dist/files/template.1"
-    into "${rootProject.projectDir.toString()}/dist/files/"
+    from "${rootProject.projectDir.toString()}/dev-tools/files/template.1"
+    into "${rootProject.projectDir.toString()}/dev-tools/files/"
     rename { 'umple.1' }
     
     doLast {
-	def file = new File("${rootProject.projectDir.toString()}/dist/files/umple.1")
-	file.text = file.text.replace('.SH OPTIONS', '.SH OPTIONS'+genOptions.ext.manOptions)
-	ant.gzip(src: "${rootProject.projectDir.toString()}/dist/files/umple.1", zipfile: "${rootProject.projectDir.toString()}/dist/files/umple.1.gz") 
+	def file = new File("${rootProject.projectDir.toString()}/dev-tools/files/umple.1")
+	file.text = file.text.replace('.SH OPTIONS', '.SH OPTIONS' + genOptions.ext.manOptions)
+	ant.gzip(src: "${rootProject.projectDir.toString()}/dev-tools/files/umple.1", zipfile: "${rootProject.projectDir.toString()}/dev-tools/files/umple.1.gz") 
     }
 }
 
@@ -629,17 +629,17 @@ task packageDeb(dependsOn: genManpage, type: Deb) {
         into 'usr/local/lib/umple'
         rename {'umple.jar'}
     }
-    from("${rootProject.projectDir.toString()}/dist/files/umple") {
+    from("${rootProject.projectDir.toString()}/dev-tools/files/umple") {
         into 'usr/local/bin'
         fileMode 0550
     }
-    from("${rootProject.projectDir.toString()}/dist/files/copyright") {
+    from("${rootProject.projectDir.toString()}/dev-tools/files/copyright") {
         into 'usr/share/doc/umple'
     }
     from("${rootProject.projectDir.toString()}/README.md") {
         into 'usr/share/doc/umple'
     }
-    from("${rootProject.projectDir.toString()}/dist/files/umple.1.gz") {
+    from("${rootProject.projectDir.toString()}/dev-tools/files/umple.1.gz") {
         into 'usr/share/man/man1'
     }
 }
@@ -663,11 +663,11 @@ task packageRpm(dependsOn: genManpage, type: Rpm) {
         into 'usr/local/lib/umple'
         rename {'umple.jar'}
     }
-    from("${rootProject.projectDir.toString()}/dist/files/umple") {
+    from("${rootProject.projectDir.toString()}/dev-tools/files/umple") {
         into 'usr/local/bin'
         fileMode 0550
     }      
-    from("${rootProject.projectDir.toString()}/dist/files/copyright") {
+    from("${rootProject.projectDir.toString()}/dev-tools/files/copyright") {
     	addParentDirs = false
         into 'usr/share/doc/umple'
     }
@@ -675,7 +675,7 @@ task packageRpm(dependsOn: genManpage, type: Rpm) {
     	addParentDirs = false
         into 'usr/share/doc/umple'
     }
-    from("${rootProject.projectDir.toString()}/dist/files/umple.1.gz") {
+    from("${rootProject.projectDir.toString()}/dev-tools/files/umple.1.gz") {
     	addParentDirs = false
         into 'usr/share/man/man1'
     }
