@@ -11,6 +11,7 @@ buildscript {
 
 plugins {
   id 'org.ajoberstar.grgit' version '3.0.0'
+  id 'nebula.ospackage' version '9.1.1'
 }
 
 ext {
@@ -86,6 +87,10 @@ def buildAliases = [
     'packageAllJars',
     'compileUmpleSelf',
     'deployUmpleonline'
+   ],
+   'genPackages' : [
+        'packageDeb',
+        'packageRpm'
    ]
 ]
 def expandedTaskList = []
@@ -548,6 +553,135 @@ task packageAllJars {
     dependsOn packageSync
     dependsOn packageRunner
 }
+
+// =======
+//  Generate Deb/RPM packages
+// =======
+
+// Generate options text from help message
+task genOptions(type:Exec) {
+  workingDir "${rootProject.projectDir.toString()}/dist/"
+  commandLine 'java', '-jar', 'umple.jar', '-help'
+  standardOutput = new ByteArrayOutputStream()
+  doLast {
+    def strings = standardOutput.toString().split('-----------')
+    def options = ""
+    if (strings.size() > 1) {
+    	options = strings[1] 
+    }
+    
+    for (line in options.split('\n')) {
+    	line = line.trim()
+    	
+    	if (line.startsWith('-')) {
+    	    if (!manOptions.isEmpty())
+    	    genOptions.ext.manOptions += '\n.PP\n\\fB\\'
+    	    
+    	    def tokens = ""
+	    if (line.contains(', -')) 
+	    	tokens = line.split('(?<!,)\\s+', 2)	
+	    else
+	    	tokens = line.split('\\s+', 2)
+	    
+	    if (tokens.size() > 1) {
+	    	genOptions.ext.manOptions += tokens[0].trim()
+	    	genOptions.ext.manOptions += '\\FR\n.IP\n'
+	    	genOptions.ext.manOptions += tokens[1].trim() + ' '
+	    }
+	    
+    	} else {
+    	    genOptions.ext.manOptions += line + ' '
+    	}
+    }
+    genOptions.ext.manOptions += '\n.PP\n'
+  }  
+}
+
+genOptions.ext.manOptions = ""
+
+// Create man page file from template with updated options
+task genManpage(dependsOn: genOptions, type: Copy) { 
+    from "${rootProject.projectDir.toString()}/dist/files/template.1"
+    into "${rootProject.projectDir.toString()}/dist/files/"
+    rename { 'umple.1' }
+    
+    doLast {
+	def file = new File("${rootProject.projectDir.toString()}/dist/files/umple.1")
+	file.text = file.text.replace('.SH OPTIONS', '.SH OPTIONS'+genOptions.ext.manOptions)
+	ant.gzip(src: "${rootProject.projectDir.toString()}/dist/files/umple.1", zipfile: "${rootProject.projectDir.toString()}/dist/files/umple.1.gz") 
+    }
+}
+
+// Create DEB package
+task packageDeb(dependsOn: genManpage, type: Deb) {
+    packageName = 'umple'
+    packageDescription = 'Modeling tool/programming language that enables Model-Oriented Programming'
+    maintainer = 'Umple Team <umple-help@googlegroups.com>'
+    url = 'https://www.umple.org'
+    version = "${rootProject.ext.umpleMajorVersion}"
+    release = 1
+    arch= 'all'
+    
+    requires('default-jre-headless')
+    
+    from("${rootProject.projectDir.toString()}/dist/") {
+    	include "umple-*.jar"
+        into 'usr/local/lib/umple'
+        rename {'umple.jar'}
+    }
+    from("${rootProject.projectDir.toString()}/dist/files/umple") {
+        into 'usr/local/bin'
+        fileMode 0550
+    }
+    from("${rootProject.projectDir.toString()}/dist/files/copyright") {
+        into 'usr/share/doc/umple'
+    }
+    from("${rootProject.projectDir.toString()}/README.md") {
+        into 'usr/share/doc/umple'
+    }
+    from("${rootProject.projectDir.toString()}/dist/files/umple.1.gz") {
+        into 'usr/share/man/man1'
+    }
+}
+
+// Create RPM package
+task packageRpm(dependsOn: genManpage, type: Rpm) {
+    packageName = 'umple'
+    packageDescription = 'Modeling tool/programming language that enables Model-Oriented Programming'
+    maintainer = 'Umple Team <tcltcl@uottawa.ca>'
+    url = 'https://www.umple.org'
+    version = "${rootProject.ext.umpleMajorVersion}"
+    release = 1
+    arch = 'noarch'
+    os = 'LINUX'
+    license = 'MIT'
+    
+    requires('jre-headless')
+
+    from("${rootProject.projectDir.toString()}/dist/") {
+    	include "umple-*.jar"
+        into 'usr/local/lib/umple'
+        rename {'umple.jar'}
+    }
+    from("${rootProject.projectDir.toString()}/dist/files/umple") {
+        into 'usr/local/bin'
+        fileMode 0550
+    }      
+    from("${rootProject.projectDir.toString()}/dist/files/copyright") {
+    	addParentDirs = false
+        into 'usr/share/doc/umple'
+    }
+    from("${rootProject.projectDir.toString()}/README.md") {
+    	addParentDirs = false
+        into 'usr/share/doc/umple'
+    }
+    from("${rootProject.projectDir.toString()}/dist/files/umple.1.gz") {
+    	addParentDirs = false
+        into 'usr/share/man/man1'
+    }
+}
+
+
 
 // =======
 //  Build
