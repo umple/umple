@@ -119,6 +119,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Page.initCanvasArea();
   Page.initUmpleTextArea();
   Page.initSourceCodeArea();
+  Page.initCodeExecutionArea();
   jQuery(document).ready(function() {
     DropboxInitializer.initializeDropbox();
     ToolTips.initTooltips();
@@ -145,7 +146,10 @@ Page.initPaletteArea = function()
   Layout.initPaletteSize();
   
   Page.initJQueryButton("buttonGenerateCode");
+  Page.initJQueryButton("buttonExecuteCode");
   Page.initJQueryButton("buttonStartOver");
+  Page.initJQueryButton("buttonShowRefreshUmpleOnlineCompletely")
+  Page.initJQueryButton("buttonLoadBlankModel");
   
   Page.initHighlighter("buttonAddClass");
   Page.initHighlighter("buttonAddAssociation");
@@ -156,6 +160,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonYumlImage");
   Page.initHighlighter("buttonSimulateCode");
   Page.initHighlighter("buttonUigu");
+  Page.initHighlighter("buttonCopyClip");
   Page.initHighlighter("buttonCopy");
   Page.initHighlighter("buttonCopyEncodedURL");
   Page.initHighlighter("buttonCopyCommandLine");
@@ -221,6 +226,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowStructureDiagram");
   Page.initAction("buttonShowHideLayoutEditor");
   Page.initAction("buttonManualSync");
+  Page.initAction("buttonCopyClip");
   Page.initAction("buttonCopy");
   Page.initAction("buttonCopyEncodedURL");
   Page.initAction("buttonCopyCommandLine");
@@ -245,7 +251,10 @@ Page.initPaletteArea = function()
   Page.initAction("buttonReindent");
   Page.initAction("buttonUigu");
   Page.initAction("buttonStartOver");
+  Page.initAction("buttonShowRefreshUmpleOnlineCompletely");
+  Page.initAction("buttonLoadBlankModel");
   Page.initAction("buttonGenerateCode");
+  Page.initAction("buttonExecuteCode");
   Page.initAction("buttonTabsCheckbox");
   Page.initAction("buttonSmaller");
   Page.initAction("buttonLarger");
@@ -296,6 +305,15 @@ Page.initPaletteArea = function()
       jQuery("#linetext").hide();
     }
   }
+
+  // Only show execute code button for the Java language
+  jQuery("#inputGenerateCode").on('change', function() {
+    if(this.value.split(":")[1] === 'Java') {
+      jQuery("#buttonExecuteCode").show();
+    } else {
+      jQuery("#buttonExecuteCode").hide();
+    }
+  })
 }
 
 Page.initOptions = function()
@@ -648,11 +666,34 @@ Page.initSourceCodeArea = function()
   jQuery(generatedCodeRowSelector).hide();
 }
 
+Page.initCodeExecutionArea = function()
+{
+  var executionAreaSelector = "#codeExecutionArea";
+  jQuery(executionAreaSelector).hide();
+}
+
+Page.showExecutionArea = function()
+{
+  var executionAreaSelector = "#codeExecutionArea";
+  jQuery(executionAreaSelector).show();
+}
+
+Page.hideExecutionArea = function()
+{
+  var executionAreaSelector = "#codeExecutionArea";
+  jQuery(executionAreaSelector).hide();
+}
+
 Page.hideGeneratedCode = function()
 {
   jQuery("#generatedCodeRow").hide();
   jQuery("#innerGeneratedCodeRow").hide();
   if(!Page.useStructureDiagram) jQuery("#svgCanvas").hide();
+}
+
+Page.hideGeneratedCodeOnly = function() {
+  jQuery("#generatedCodeRow").hide();
+  jQuery("#innerGeneratedCodeRow").hide();
 }
 
 Page.initCanvasArea = function()
@@ -951,7 +992,7 @@ Page.createBookmark = function()
 Page.createTask = function()
 {
   var taskName = jQuery("#taskName").val();
-  let patt = /^(\w|\.|-)+$/;
+  let patt = /^(\w|\.)+$/; // taskName Take only [ A-Z or a-z or 0-9 or _ or . ]
   if (!patt.test(taskName))//taskName.indexOf(" ") != -1 || taskName.indexOf("/") != -1 || taskName.indexOf("-") != -1 || taskName.indexOf("\\") != -1) 
   {
     window.alert("Task Name can only contain letters(case insensitive), underscores, dots, and digits!");
@@ -1228,6 +1269,10 @@ Page.showViewDone = function()
   setTimeout(function() {jQuery(selector).dialog("close");}, 2000);
 }
 
+Page.showExecutedResponse = function(responseText) {
+  jQuery("#executionMessage").html(responseText);
+}
+
 Page.showGeneratedCode = function(code,language,tabnumber)
 {
 	// Default "tabnumber" parameter to null, ie. only output to the main codeblock
@@ -1250,7 +1295,7 @@ Page.showGeneratedCode = function(code,language,tabnumber)
 
   //Set the generated content
   if(language == "java" || language == "php" || language == "cpp" 
-    || language == "ruby" || language == "xml" || language == "sql" || language == "alloy" || language == "nusmv")
+    || language == "ruby" || language == "python" || language == "xml" || language == "sql" || language == "alloy" || language == "nusmv")
   {
 		jQuery("#innerGeneratedCodeRow" + tabnumber).html(
 			formatOnce('<pre class="brush: {1};">{0}</pre>',generatedMarkup,language)

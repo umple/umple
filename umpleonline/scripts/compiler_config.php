@@ -18,6 +18,32 @@ $GLOBALS["JAVA_HOME"] = "/usr/bin/";
 $GLOBALS["ANT_EXEC"] = "/h/ralph/cruise/dev/apps/apache-ant-1.8.1/bin/ant";
 $GLOBALS["OS"] = "Linux";
 
+// Trick to find the root directory of this copy of UmpleOnline
+// Assumes this script lives in /scripts; if you move this file it
+// will need to change.
+$rootDirGlobal = dirname(__DIR__);
+function rootDir(){
+    global $rootDirGlobal;
+    return $rootDirGlobal;
+}
+
+// JAVA EXECUTION SERVER
+$configfile=rootdir()."/../UmpleCodeExecution/config.cfg";
+$portToUse=4400; // default
+$handle = fopen($configfile, "r");
+if ($handle) {
+  while (($line = fgets($handle)) !== false) {
+    if(substr($line,0,10) == "portToUse=") {
+      $portToUse=trim(substr($line,10));
+    }
+  }
+}
+if($portToUse == 4409) {
+  // Special port indicating we are in Docker ... but we are using local networking so swich back
+  $portToUse = 4400;
+}
+$GLOBALS["EXECUTION_SERVER"]= "http://localhost:$portToUse";
+
 // For compatibility with systems that do not have UmpleOnline's shell
 // dependencies in their $PATH, add /usr/bin and /usr/local/bin to $PATH
 // in the hopes that the programs will be at those locations.
@@ -40,14 +66,6 @@ putenv("PATH=$PATH");
 // If we don't set the default timezone we get E_NOTICEs
 date_default_timezone_set('UTC');
 
-// Trick to find the root directory of this copy of UmpleOnline
-// Assumes this script lives in /scripts; if you move this file it
-// will need to change.
-$rootDirGlobal = dirname(__DIR__);
-function rootDir(){
-    global $rootDirGlobal;
-    return $rootDirGlobal;
-}
 
 /**
 A handle to read-only data. As long as it exists it should
@@ -319,6 +337,9 @@ function generateMenu($buttonSuffix)
         </li>
         <li id=\"ttGenerateCode\">
           <div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQuery-palette-button\" tabindex=\"0\" value=\"Generate It\"></div>
+        </li>
+        <li id=\"ttExecuteCode\">
+          <div id=\"buttonExecuteCode".$buttonSuffix."\" class=\"jQuery-palette-button\" tabindex=\"1\" value=\"Execute It\"></div>
         </li>
         <li><div id=\"genstatus\" align=\"center\">Done. See below</div><li>
       </ul>";
@@ -828,7 +849,14 @@ function serverRun($commandLine,$rawcommand=null) {
   $positionOfErrorRedirect = strpos($commandLine,"2>");
   if($positionOfErrorRedirect !== false) {
     $errorfile = trim(substr($commandLine, $positionOfErrorRedirect+2));
-    $commandLine = substr($commandLine,0, $positionOfErrorRedirect);
+    // In cases where command is being executed we need to allow the 2> error
+    // redirect to go ahead as it is converted to a file write in Compiler.ump
+    // However for other cases we strip off the error redirect here since in
+    // server mode such error redirects will not be visible
+    $posofExecuteRequest = strpos($commandLine," -cx");
+    if($posofExecuteRequest == false) {
+      $commandLine = substr($commandLine,0, $positionOfErrorRedirect);
+    }
   }
   
   if($rawcommand == null) {$rawcommand = $commandLine;}
@@ -885,8 +913,10 @@ function serverRun($commandLine,$rawcommand=null) {
     $output = @socket_read($theSocket, 65534, PHP_BINARY_READ);
     if ($output === FALSE) {
       @socket_close($theSocket);;
-      // This usually happens at moments of overload; run as exec but give server much higher priority
-      execRun("nice -n 10 java -jar umplesync.jar ".$originalCommandLine);
+      // This usually happens at moments of overload; run as exec but 
+      execRun("java -jar umplesync.jar ".$originalCommandLine);     
+      // original: give server much higher priority using nice ... not needed any more
+      // execRun("nice -n 10 java -jar umplesync.jar ".$originalCommandLine);
       return;
     }
     if(strlen($output) == 0) {

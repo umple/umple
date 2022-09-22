@@ -1,0 +1,14 @@
+class X {
+  singleton;
+  String a;
+}
+
+mixset M1 {
+  class Y {
+    b;
+  }
+}
+
+
+
+class Z {}

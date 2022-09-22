@@ -1,0 +1,17 @@
+W1512 Code Labels Inside Method Are Not Unique 
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2> Warning reporting that code labels inside methods should have unique names.</h2>
+
+<p> Code Labels allow aspects to inject code in specific locations inside method bodies. However, the code injection is only applied to the first encountered label. Therefore, a code label should not be reused multiple times (inside a method). </p>
+
+<p>If you encounter this warning, you can easily rename code labels with unique names for each label inside the method body.  <br/>
+</p>
+
+
+@@example
+@@source manualexamples/W1512CodeLabelsInsideMethodAreNotUnique.ump
+@@endexample

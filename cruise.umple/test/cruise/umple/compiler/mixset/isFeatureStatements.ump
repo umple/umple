@@ -1,0 +1,36 @@
+mixset FeatureA
+{
+  mixset FeatureB {
+    isFeature;
+    
+    mixset FeatureB_NonFeatureMixset { }
+    
+    mixset FeatureC
+    {
+      isFeature;
+    }
+  }
+}
+
+// Another set of mixsets:
+
+
+mixset M1
+{
+  isFeature;
+  
+  mixset M2 {
+    
+    isFeature;
+  }
+  
+}
+
+// use statements & require statements: 
+
+
+use FeatureA;
+//use FeatureB;
+use M1;
+require subfeature[FeatureA];
+
