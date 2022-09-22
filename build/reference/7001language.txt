@@ -1,18 +1,28 @@
 Languages supported
-Misc
+User Manual Basics
 noreferences
 
 @@description
 <p>      
-Umple code can result in generation of various  languages. Code from these languages can be inserted into Umple, or Umple can be inserted into code for the languages.
-</p>
+Umple code can result in generation of various  languages. Code from these languages can be inserted into Umple, or Umple can be inserted into code for the languages. The resulting systems can be used as part of larger projects involving these languages.</p>
+
+<p>Here is the status of the programming languages currently:</p>
 
 <ul>
-<li>Java</li>
-<li>Php</li>
-<li>Ruby</li>
-<li>C++ is under development</li>
+
+<li>Java: Complete functionality. Umple is written in itself using embedded and generated Java. In UmpleOnline the Java code can be executed in the cloud.</li>
+
+<li>Php: reasonably comprehensive generation from Umple features.</li>
+
+<li>Ruby: Partial support. No state machine support.</li>
+
+<li>C++: Complete for basic cases, but still beta.</li>
+
+<li>Python: Under development; expected completion in late 2022.</li>
+
 </ul>
+
+<p>Umple also generates a rich assortment of other outputs. The complete current list can be seen using the command line with the --help option; the list also appears below. Several Graphviz diagrams can be generated (UML class diagrams, UML state diagrams, Entity-relationship diagrams, etc.), as can formal methods code in NuXmv and Alloy, and various forms of analysis outputs such as state tables and metrics.</p>
 
 @@syntax
 
