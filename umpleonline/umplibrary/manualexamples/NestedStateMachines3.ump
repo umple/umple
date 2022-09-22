@@ -12,7 +12,8 @@ class CourseSection
   // Example from Lethbridge and Laganiere: Object
   // Oriented Software Engineering: Practical
   // Software Development using UML and Java
-  // McGraw Hill, 2005  www.lloseng.com
+  // McGraw Hill, 2005
+  // https://www.site.uottawa.ca/school/research/lloseng/
 
   sectionId;
   Integer classSize = 0;
