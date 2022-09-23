@@ -601,19 +601,38 @@ genOptions.ext.manOptions = ""
 
 // Create man page file from template with updated options
 task genManpage(dependsOn: genOptions, type: Copy) { 
-    from "${rootProject.projectDir.toString()}/dev-tools/files/template.1"
-    into "${rootProject.projectDir.toString()}/dev-tools/files/"
+    from "${rootProject.projectDir.toString()}/build/package-files/template.1"
+    into "${rootProject.projectDir.toString()}/build/package-files/"
     rename { 'umple.1' }
     
     doLast {
-	def file = new File("${rootProject.projectDir.toString()}/dev-tools/files/umple.1")
+	def file = new File("${rootProject.projectDir.toString()}/build/package-files/umple.1")
 	file.text = file.text.replace('.SH OPTIONS', '.SH OPTIONS' + genOptions.ext.manOptions)
-	ant.gzip(src: "${rootProject.projectDir.toString()}/dev-tools/files/umple.1", zipfile: "${rootProject.projectDir.toString()}/dev-tools/files/umple.1.gz") 
+	ant.gzip(src: "${rootProject.projectDir.toString()}/build/package-files.1", zipfile: "${rootProject.projectDir.toString()}/dev-tools/files/umple.1.gz") 
+    }
+}
+
+// Create copyright from LICENSE.md
+task genCopyright(type: Copy) {
+    def info = ("Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/\n"
+    		+ "Upstream-Name: umple\n"
+		+ "Upstream-Contact: Timothy.Lethbridge <Timothy.Lethbridge@uottawa.ca>\n"
+		+ "Source: https://cruise.umple.org/umple/\n\n"
+		+ "Files:     *\n"
+		+ "License:   Expat\n")
+    from "${rootProject.projectDir.toString()}/LICENSE.md"
+    into "${rootProject.projectDir.toString()}/build/package-files/"
+    rename { 'copyright' }		
+    
+    doLast {
+	def file = new File("${rootProject.projectDir.toString()}/build/package-files/copyright")
+	def lines = file.readLines()
+	file.text = info + lines.subList(2, lines.size() - 2).join("\n")
     }
 }
 
 // Create DEB package
-task packageDeb(dependsOn: genManpage, type: Deb) {
+task packageDeb(dependsOn: [genManpage, genCopyright], type: Deb) {
     packageName = 'umple'
     packageDescription = 'Modeling tool/programming language that enables Model-Oriented Programming'
     maintainer = 'Umple Team <umple-help@googlegroups.com>'
@@ -629,23 +648,23 @@ task packageDeb(dependsOn: genManpage, type: Deb) {
         into 'usr/local/lib/umple'
         rename {'umple.jar'}
     }
-    from("${rootProject.projectDir.toString()}/dev-tools/files/umple") {
+    from("${rootProject.projectDir.toString()}/build/package-files/umple") {
         into 'usr/local/bin'
         fileMode 0550
     }
-    from("${rootProject.projectDir.toString()}/dev-tools/files/copyright") {
+    from("${rootProject.projectDir.toString()}/build/package-files/copyright") {
         into 'usr/share/doc/umple'
     }
     from("${rootProject.projectDir.toString()}/README.md") {
         into 'usr/share/doc/umple'
     }
-    from("${rootProject.projectDir.toString()}/dev-tools/files/umple.1.gz") {
+    from("${rootProject.projectDir.toString()}/build/package-files/umple.1.gz") {
         into 'usr/share/man/man1'
     }
 }
 
 // Create RPM package
-task packageRpm(dependsOn: genManpage, type: Rpm) {
+task packageRpm(dependsOn: [genManpage, genCopyright], type: Rpm) {
     packageName = 'umple'
     packageDescription = 'Modeling tool/programming language that enables Model-Oriented Programming'
     maintainer = 'Umple Team <tcltcl@uottawa.ca>'
@@ -663,19 +682,18 @@ task packageRpm(dependsOn: genManpage, type: Rpm) {
         into 'usr/local/lib/umple'
         rename {'umple.jar'}
     }
-    from("${rootProject.projectDir.toString()}/dev-tools/files/umple") {
+    from("${rootProject.projectDir.toString()}/build/package-files/umple") {
         into 'usr/local/bin'
         fileMode 0550
     }      
-    from("${rootProject.projectDir.toString()}/dev-tools/files/copyright") {
-    	addParentDirs = false
+    from("${rootProject.projectDir.toString()}/build/package-files/copyright") {
         into 'usr/share/doc/umple'
     }
     from("${rootProject.projectDir.toString()}/README.md") {
     	addParentDirs = false
         into 'usr/share/doc/umple'
     }
-    from("${rootProject.projectDir.toString()}/dev-tools/files/umple.1.gz") {
+    from("${rootProject.projectDir.toString()}/build/package-files/umple.1.gz") {
     	addParentDirs = false
         into 'usr/share/man/man1'
     }
