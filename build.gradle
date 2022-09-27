@@ -667,7 +667,7 @@ task packageDeb(dependsOn: [genManpage, genCopyright], type: Deb) {
 task packageRpm(dependsOn: [genManpage, genCopyright], type: Rpm) {
     packageName = 'umple'
     packageDescription = 'Modeling tool/programming language that enables Model-Oriented Programming'
-    maintainer = 'Umple Team <tcltcl@uottawa.ca>'
+    maintainer = 'Umple Team <umple-help@googlegroups.com>'
     url = 'https://www.umple.org'
     version = "${rootProject.ext.umpleMajorVersion}"
     release = 1
