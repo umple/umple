@@ -1,0 +1,22 @@
+from Mentor import Mentor
+
+class SubMentor2(Mentor):
+    def __init__(self, aName, aSubName):
+        super().__init__(aName)
+        self._subName = aSubName
+
+    def setSubName(self, aSubName):
+        wasSet = False
+        self._subName = aSubName
+        wasSet = True
+        return wasSet
+
+    def getSubName(self):
+        return self._subName
+
+    def delete(self):
+        super().delete()
+
+    def __str__(self):
+        return super().__str__() + "[" + "subName" + ":" + self.getSubName() + "]"
+

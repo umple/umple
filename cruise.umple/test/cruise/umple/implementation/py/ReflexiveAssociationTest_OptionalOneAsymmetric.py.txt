@@ -1,0 +1,85 @@
+from Student import Student
+
+class Student:
+    def __init__(self, aNumber):
+        self._number = aNumber
+
+    def setNumber(self, aNumber):
+        wasSet = False
+        self._number = aNumber
+        wasSet = True
+        return wasSet
+
+    def getNumber(self):
+        return self._number
+
+    def getPupil(self):
+        return self._pupil
+
+    def hasPupil(self):
+        has = not(self._pupil is None)
+        return has
+
+    def getTa(self):
+        return self._ta
+
+    def hasTa(self):
+        has = not(self._ta is None)
+        return has
+
+    def setPupil(self, aNewPupil):
+        wasSet = False
+        if aNewPupil is None :
+            existingPupil = self._pupil
+            self._pupil = None
+            if existingPupil != None and existingPupil.getTa() != None :
+                existingPupil.setTa(None)
+
+            wasSet = True
+            return wasSet
+
+        currentPupil = self.getPupil()
+        if currentPupil != None and not currentPupil.equals(aNewPupil) :
+            currentPupil.setTa(None)
+
+        self._pupil = aNewPupil
+        existingTa = aNewPupil.getTa()
+        if not self.equals(existingTa) :
+            aNewPupil.setTa(self)
+
+        wasSet = True
+        return wasSet
+
+    def setTa(self, aNewTa):
+        wasSet = False
+        if aNewTa is None :
+            existingTa = self._ta
+            self._ta = None
+            if existingTa != None and existingTa.getPupil() != None :
+                existingTa.setPupil(None)
+
+            wasSet = True
+            return wasSet
+
+        currentTa = self.getTa()
+        if currentTa != None and not currentTa.equals(aNewTa) :
+            currentTa.setPupil(None)
+
+        self._ta = aNewTa
+        existingPupil = aNewTa.getPupil()
+        if not self.equals(existingPupil) :
+            aNewTa.setPupil(self)
+
+        wasSet = True
+        return wasSet
+
+    def delete(self):
+        if not(self._pupil is None) :
+            self._pupil.setTa(None)
+
+        if not(self._ta is None) :
+            self._ta.setPupil(None)
+
+    def __str__(self):
+        return super().__str__() + "[" + "number" + ":" + self.getNumber() + "]"
+
