@@ -1,0 +1,103 @@
+from J import J
+from Y import Y
+
+class X(J):
+    def __init__(self):
+        self._ies = []
+
+    def getY(self, index):
+        aY = self._ies[index]
+        return aY
+
+    def getIes(self):
+        newIes = tuple(self._ies)
+        return newIes
+
+    def numberOfIes(self):
+        number = len(self._ies)
+        return number
+
+    def hasIes(self):
+        has = len(self._ies) > 0
+        return has
+
+    def indexOfY(self, aY):
+        index = self._ies.index(aY)
+        return index
+
+    @staticmethod
+    def minimumNumberOfIes():
+        return 0
+
+    def addY(self, aY):
+        wasAdded = False
+        if aY in self._ies :
+            return False
+
+        self._ies.append(aY)
+        if aY.indexOfX(self) != -1 :
+            wasAdded = True
+
+        else :
+            wasAdded = aY.addX(self)
+            if not wasAdded :
+                self._ies.remove(aY)
+
+        return wasAdded
+
+    def removeY(self, aY):
+        wasRemoved = False
+        if not self._ies.contains(aY) :
+            return wasRemoved
+
+        oldIndex = self._ies.index(aY)
+        self._ies.remove(oldIndex)
+        if aY.indexOfX(self) == -1 :
+            wasRemoved = True
+
+        else :
+            wasRemoved = aY.removeX(self)
+            if not wasRemoved :
+                self._ies.insert(oldIndex, aY)
+
+        return wasRemoved
+
+    def addYAt(self, aY, index):
+        wasAdded = False
+        if self.addY(aY) :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfIes() :
+                index = self.numberOfIes() - 1
+
+            self._ies.remove(aY)
+            self._ies.insert(index, aY)
+            wasAdded = True
+
+        return wasAdded
+
+    def addOrMoveYAt(self, aY, index):
+        wasAdded = False
+        if aY in self._ies :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfIes() :
+                index = self.numberOfIes() - 1
+
+            self._ies.remove(aY)
+            self._ies.insert(index, aY)
+            wasAdded = True
+
+        else :
+            wasAdded = self.addYAt(aY, index)
+
+        return wasAdded
+
+    def delete(self):
+        copyOfIes = self._ies.copy()
+        self._ies.clear()
+        for aY in copyOfIes:
+            aY.removeX(self)
+

@@ -1,0 +1,38 @@
+from Date import Date
+import os
+
+class X:
+    def __init__(self, aD, aE):
+        self._d = aD
+        self._e = aE
+        if aD.getTime() < = aE.getTime() :
+            raise RuntimeError ("Please provide a valid d and e [d>e]")
+
+    def setD(self, aD):
+        wasSet = False
+        if aD.getTime() > self.getE().getTime() :
+            self._d = aD
+            wasSet = True
+
+        return wasSet
+
+    def setE(self, aE):
+        wasSet = False
+        if self.getD().getTime() > aE.getTime() :
+            self._e = aE
+            wasSet = True
+
+        return wasSet
+
+    def getD(self):
+        return self._d
+
+    def getE(self):
+        return self._e
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return super().__str__() + "[" + "]" + os.linesep + "  " + "d" + "=" + (self.getD() != ((self.getD().toString().replaceAll("  ", "    ")) if not self.getD().equals(self) else "this") if None else "null") + os.linesep + "  " + "e" + "=" + (self.getE() != ((self.getE().toString().replaceAll("  ", "    ")) if not self.getE().equals(self) else "this") if None else "null")
+
