@@ -631,8 +631,14 @@ task genCopyright(type: Copy) {
     }
 }
 
+// Remove carriage return from script
+task removeCR {
+    def file = new File("${rootProject.projectDir.toString()}/build/package-files/umple")
+    file.text = file.text.replace('\r', '')
+}
+
 // Create DEB package
-task packageDeb(dependsOn: [genManpage, genCopyright], type: Deb) {
+task packageDeb(dependsOn: [genManpage, genCopyright, removeCR], type: Deb) {
     packageName = 'umple'
     packageDescription = 'Modeling tool/programming language that enables Model-Oriented Programming'
     maintainer = 'Umple Team <umple-help@googlegroups.com>'
@@ -650,7 +656,7 @@ task packageDeb(dependsOn: [genManpage, genCopyright], type: Deb) {
     }
     from("${rootProject.projectDir.toString()}/build/package-files/umple") {
         into 'usr/local/bin'
-        fileMode 0550
+        fileMode 0755
     }
     from("${rootProject.projectDir.toString()}/build/package-files/copyright") {
         into 'usr/share/doc/umple'
@@ -664,7 +670,7 @@ task packageDeb(dependsOn: [genManpage, genCopyright], type: Deb) {
 }
 
 // Create RPM package
-task packageRpm(dependsOn: [genManpage, genCopyright], type: Rpm) {
+task packageRpm(dependsOn: [genManpage, genCopyright, removeCR], type: Rpm) {
     packageName = 'umple'
     packageDescription = 'Modeling tool/programming language that enables Model-Oriented Programming'
     maintainer = 'Umple Team <umple-help@googlegroups.com>'
@@ -684,7 +690,7 @@ task packageRpm(dependsOn: [genManpage, genCopyright], type: Rpm) {
     }
     from("${rootProject.projectDir.toString()}/build/package-files/umple") {
         into 'usr/local/bin'
-        fileMode 0550
+        fileMode 0755
     }      
     from("${rootProject.projectDir.toString()}/build/package-files/copyright") {
         into 'usr/share/doc/umple'
