@@ -608,7 +608,7 @@ task genManpage(dependsOn: genOptions, type: Copy) {
     doLast {
 	def file = new File("${rootProject.projectDir.toString()}/build/package-files/umple.1")
 	file.text = file.text.replace('.SH OPTIONS', '.SH OPTIONS' + genOptions.ext.manOptions)
-	ant.gzip(src: "${rootProject.projectDir.toString()}/build/package-files.1", zipfile: "${rootProject.projectDir.toString()}/dev-tools/files/umple.1.gz") 
+	ant.gzip(src: "${rootProject.projectDir.toString()}/build/package-files/umple.1", zipfile: "${rootProject.projectDir.toString()}/build/package-files/umple.1.gz") 
     }
 }
 
