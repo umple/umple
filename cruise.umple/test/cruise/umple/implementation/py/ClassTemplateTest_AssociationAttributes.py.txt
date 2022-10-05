@@ -1,7 +1,7 @@
 from Position import Position
 import os
 
-class Token:
+class Token():
     def __init__(self, aP):
         self._p = aP
 
@@ -18,5 +18,5 @@ class Token:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "]" + os.linesep + "  " + "p" + "=" + (self.getP() != ((self.getP().toString().replaceAll("  ", "    ")) if not self.getP().equals(self) else "this") if None else "null")
+        return str(super()) + "[" + "]" + os.linesep + "  " + "p" + "=" + (self.getP() != ((str(self.getP()).replaceAll("  ", "    ")) if not self.getP().equals(self) else "this") if None else "null")
 

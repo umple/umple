@@ -1,4 +1,4 @@
-class Example:
+class Example():
     def __init__(self, aA, aB):
         self._a = aA
         self._b = aB
@@ -25,5 +25,5 @@ class Example:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "a" + ":" + self.getA() + "," + "b" + ":" + self.getB() + "]"
+        return str(super()) + "[" + "a" + ":" + self.getA() + "," + "b" + ":" + self.getB() + "]"
 

@@ -1,6 +1,6 @@
 from X import X
 
-class Y:
+class Y():
     def __init__(self):
         self._xs = []
 

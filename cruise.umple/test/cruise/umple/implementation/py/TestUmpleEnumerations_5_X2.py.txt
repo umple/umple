@@ -1,11 +1,12 @@
-from Fruit import Fruit
 import os
 from enum import Enum, auto
 
-class X2:
+class X2():
     class Fruit(Enum):
-        def _generate_next_value_ (name, start, count, last_values) :
+        def _generate_next_value_(name, start, count, last_values):
             return name
+        def __str__(self):
+            return str(self.value)
         Apple = auto()
         Orange = auto()
 
@@ -25,5 +26,5 @@ class X2:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "]" + os.linesep + "  " + "t" + "=" + (self.getT() != ((self.getT().toString().replaceAll("  ", "    ")) if not self.getT().equals(self) else "this") if None else "null")
+        return str(super()) + "[" + "]" + os.linesep + "  " + "t" + "=" + (self.getT() != ((str(self.getT()).replaceAll("  ", "    ")) if not self.getT().equals(self) else "this") if None else "null")
 

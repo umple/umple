@@ -1,4 +1,4 @@
-class CodeTranslator:
+class CodeTranslator():
     def __init__(self):
         pass
 

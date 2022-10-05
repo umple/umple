@@ -18,5 +18,5 @@ class Admin(Employee):
         super().delete()
 
     def __str__(self):
-        return super().__str__() + "[" + "number" + ":" + self.getNumber() + "]"
+        return str(super()) + "[" + "number" + ":" + self.getNumber() + "]"
 

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class ISomething(ABC):
+class ISomething(ABC,):
     @abstractmethod
     def __init__(self):
         pass

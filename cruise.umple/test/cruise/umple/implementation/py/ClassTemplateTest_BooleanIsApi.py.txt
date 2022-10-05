@@ -1,4 +1,4 @@
-class BoolTest:
+class BoolTest():
     def __init__(self, aTest):
         self._test = aTest
 

@@ -1,4 +1,4 @@
-class student:
+class student():
     def __init__(self, aAge, aWeight):
         self._age = aAge
         self._weight = aWeight
@@ -31,5 +31,5 @@ class student:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "age" + ":" + self.getAge() + "," + "weight" + ":" + self.getWeight() + "]"
+        return str(super()) + "[" + "age" + ":" + self.getAge() + "," + "weight" + ":" + self.getWeight() + "]"
 

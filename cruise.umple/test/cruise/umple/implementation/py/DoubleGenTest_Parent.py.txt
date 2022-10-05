@@ -1,4 +1,4 @@
-class Person:
+class Person():
     def __init__(self, aName, aAge):
         self._name = aName
         self._age = aAge
@@ -25,5 +25,5 @@ class Person:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + self.getName() + "," + "age" + ":" + self.getAge() + "]"
+        return str(super()) + "[" + "name" + ":" + self.getName() + "," + "age" + ":" + self.getAge() + "]"
 

@@ -1,4 +1,4 @@
-class Range:
+class Range():
     def __init__(self, aStart, aEnd):
         self._start = aStart
         self._end = aEnd
@@ -31,5 +31,5 @@ class Range:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "start" + ":" + self.getStart() + "," + "end" + ":" + self.getEnd() + "]"
+        return str(super()) + "[" + "start" + ":" + self.getStart() + "," + "end" + ":" + self.getEnd() + "]"
 

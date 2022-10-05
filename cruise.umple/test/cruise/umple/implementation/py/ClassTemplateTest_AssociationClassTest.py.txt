@@ -2,7 +2,7 @@ from Student import Student
 from CourseSection import CourseSection
 import os
 
-class Registration:
+class Registration():
     def __init__(self, aGrade, aStudent, aCourseSection):
         self._grade = aGrade
         didAddStudent = self.setStudent(aStudent)
@@ -65,5 +65,5 @@ class Registration:
         placeholderCourseSection.removeRegistration(self)
 
     def __str__(self):
-        return super().__str__() + "[" + "grade" + ":" + self.getGrade() + "]" + os.linesep + "  " + "student = " + (self.getStudent() != (format(id(self.getStudent()), "x")) if None else "null") + os.linesep + "  " + "courseSection = " + (self.getCourseSection() != (format(id(self.getCourseSection()), "x")) if None else "null")
+        return str(super()) + "[" + "grade" + ":" + self.getGrade() + "]" + os.linesep + "  " + "student = " + (self.getStudent() != (format(id(self.getStudent()), "x")) if None else "null") + os.linesep + "  " + "courseSection = " + (self.getCourseSection() != (format(id(self.getCourseSection()), "x")) if None else "null")
 

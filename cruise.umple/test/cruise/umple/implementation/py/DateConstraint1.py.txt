@@ -1,7 +1,7 @@
 from Date import Date
 import os
 
-class X:
+class X():
     def __init__(self, aD, aE):
         self._d = aD
         self._e = aE
@@ -34,5 +34,5 @@ class X:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "]" + os.linesep + "  " + "d" + "=" + (self.getD() != ((self.getD().toString().replaceAll("  ", "    ")) if not self.getD().equals(self) else "this") if None else "null") + os.linesep + "  " + "e" + "=" + (self.getE() != ((self.getE().toString().replaceAll("  ", "    ")) if not self.getE().equals(self) else "this") if None else "null")
+        return str(super()) + "[" + "]" + os.linesep + "  " + "d" + "=" + (self.getD() != ((str(self.getD()).replaceAll("  ", "    ")) if not self.getD().equals(self) else "this") if None else "null") + os.linesep + "  " + "e" + "=" + (self.getE() != ((str(self.getE()).replaceAll("  ", "    ")) if not self.getE().equals(self) else "this") if None else "null")
 

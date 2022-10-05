@@ -18,5 +18,5 @@ class Student(Person):
         super().delete()
 
     def __str__(self):
-        return super().__str__() + "[" + "locker" + ":" + self.getLocker() + "]"
+        return str(super()) + "[" + "locker" + ":" + self.getLocker() + "]"
 

@@ -1,4 +1,4 @@
-class MultipleConstraints:
+class MultipleConstraints():
     def __init__(self, aI, aJ):
         self._i = aI
         self._j = aJ
@@ -39,5 +39,5 @@ class MultipleConstraints:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "i" + ":" + self.getI() + "," + "j" + ":" + self.getJ() + "]"
+        return str(super()) + "[" + "i" + ":" + self.getI() + "," + "j" + ":" + self.getJ() + "]"
 

@@ -1,6 +1,6 @@
 from Y import Y
 
-class X:
+class X():
     def __init__(self, aA, aB):
         self._a = aA
         self._b = aB
@@ -116,5 +116,5 @@ class X:
             i = i - 1
 
     def __str__(self):
-        return super().__str__() + "[" + "a" + ":" + self.getA() + "," + "b" + ":" + self.getB() + "]"
+        return str(super()) + "[" + "a" + ":" + self.getA() + "," + "b" + ":" + self.getB() + "]"
 

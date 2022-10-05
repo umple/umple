@@ -3,7 +3,7 @@ from Bar2 import Bar2
 from Bar3 import Bar3
 from Bar4 import Bar4
 
-class Foo:
+class Foo():
     def __init__(self):
         self._bar1s = []
         self._bar2s = []
