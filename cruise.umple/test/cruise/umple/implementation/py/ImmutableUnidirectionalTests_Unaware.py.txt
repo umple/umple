@@ -1,4 +1,4 @@
-class Mentor:
+class Mentor():
     def __init__(self, aName):
         self._name = aName
 
@@ -9,5 +9,5 @@ class Mentor:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + self.getName() + "]"
+        return str(super()) + "[" + "name" + ":" + self.getName() + "]"
 

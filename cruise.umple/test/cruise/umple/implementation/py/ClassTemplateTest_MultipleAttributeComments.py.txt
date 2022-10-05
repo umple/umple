@@ -1,4 +1,4 @@
-class Foo:
+class Foo():
     def __init__(self, aTestAttribute1, aTestAttribute2, aTestAttribute3, aTestAttribute4):
         self._testAttribute1 = aTestAttribute1
         self._testAttribute2 = aTestAttribute2
@@ -45,5 +45,5 @@ class Foo:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "testAttribute1" + ":" + self.getTestAttribute1() + "," + "testAttribute2" + ":" + self.getTestAttribute2() + "," + "testAttribute3" + ":" + self.getTestAttribute3() + "," + "testAttribute4" + ":" + self.getTestAttribute4() + "]"
+        return str(super()) + "[" + "testAttribute1" + ":" + self.getTestAttribute1() + "," + "testAttribute2" + ":" + self.getTestAttribute2() + "," + "testAttribute3" + ":" + self.getTestAttribute3() + "," + "testAttribute4" + ":" + self.getTestAttribute4() + "]"
 

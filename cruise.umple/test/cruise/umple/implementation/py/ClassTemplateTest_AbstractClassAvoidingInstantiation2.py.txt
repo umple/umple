@@ -1,6 +1,6 @@
 from Foo import Foo
 
-class Teacher:
+class Teacher():
     def __init__(self):
         self._myFooss = []
 

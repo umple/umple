@@ -1,4 +1,4 @@
-class Student:
+class Student():
     def __init__(self, aName):
         self._name = aName
         self._canSetName = False
@@ -24,5 +24,5 @@ class Student:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + self.getName() + "," + "studentNumber" + ":" + self.getStudentNumber() + "]"
+        return str(super()) + "[" + "name" + ":" + self.getName() + "," + "studentNumber" + ":" + self.getStudentNumber() + "]"
 

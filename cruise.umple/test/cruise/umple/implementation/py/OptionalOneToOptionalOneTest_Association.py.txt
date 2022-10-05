@@ -1,6 +1,6 @@
 from Student import Student
 
-class Mentor:
+class Mentor():
     def __init__(self):
         pass
 

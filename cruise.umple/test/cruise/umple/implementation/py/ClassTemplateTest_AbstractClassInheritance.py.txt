@@ -110,5 +110,5 @@ class Teacher(Person):
         super().delete()
 
     def __str__(self):
-        return super().__str__() + "[" + "position" + ":" + self.getPosition() + "]"
+        return str(super()) + "[" + "position" + ":" + self.getPosition() + "]"
 

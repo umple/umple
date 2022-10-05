@@ -1,7 +1,7 @@
 from MySubordinate import MySubordinate
 import os
 
-class MyDriver:
+class MyDriver():
     def __init__(self, aName):
         self._name = aName
 
@@ -45,5 +45,5 @@ class MyDriver:
             existingMySubordinate.delete()
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + self.getName() + "]" + os.linesep + "  " + "mySubordinate = " + (self.getMySubordinate() != (format(id(self.getMySubordinate()), "x")) if None else "null")
+        return str(super()) + "[" + "name" + ":" + self.getName() + "]" + os.linesep + "  " + "mySubordinate = " + (self.getMySubordinate() != (format(id(self.getMySubordinate()), "x")) if None else "null")
 

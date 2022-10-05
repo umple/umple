@@ -1,7 +1,7 @@
 from list import list
 import os
 
-class Application:
+class Application():
     def __init__(self):
         self._name = None
         self._version = None
@@ -44,5 +44,5 @@ class Application:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + self.getName() + "," + "version" + ":" + self.getVersion() + "]" + os.linesep + "  " + "id" + "=" + (self.getId() != ((self.getId().toString().replaceAll("  ", "    ")) if not self.getId().equals(self) else "this") if None else "null")
+        return str(super()) + "[" + "name" + ":" + self.getName() + "," + "version" + ":" + self.getVersion() + "]" + os.linesep + "  " + "id" + "=" + (self.getId() != ((str(self.getId()).replaceAll("  ", "    ")) if not self.getId().equals(self) else "this") if None else "null")
 

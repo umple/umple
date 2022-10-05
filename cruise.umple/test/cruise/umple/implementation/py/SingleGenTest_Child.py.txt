@@ -18,5 +18,5 @@ class Mentor(Person):
         super().delete()
 
     def __str__(self):
-        return super().__str__() + "[" + "class" + ":" + self.getClass() + "]"
+        return str(super()) + "[" + "class" + ":" + self.getClass() + "]"
 

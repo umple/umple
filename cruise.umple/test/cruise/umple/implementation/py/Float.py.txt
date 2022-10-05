@@ -1,4 +1,4 @@
-class Student:
+class Student():
     def __init__(self):
         self._f1 = 1.1
         f
@@ -27,5 +27,5 @@ class Student:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "f1" + ":" + self.getF1() + "," + "f2" + ":" + self.getF2() + "]"
+        return str(super()) + "[" + "f1" + ":" + self.getF1() + "," + "f2" + ":" + self.getF2() + "]"
 

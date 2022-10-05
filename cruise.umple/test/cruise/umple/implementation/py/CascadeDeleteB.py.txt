@@ -1,6 +1,6 @@
 from C import C
 
-class B:
+class B():
     def __init__(self):
         self._myC = []
 

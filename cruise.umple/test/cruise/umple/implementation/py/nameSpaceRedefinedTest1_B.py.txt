@@ -1,4 +1,4 @@
-class B:
+class B():
     def __init__(self, aX):
         self._x = aX
 
@@ -15,5 +15,5 @@ class B:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "x" + ":" + self.getX() + "]"
+        return str(super()) + "[" + "x" + ":" + self.getX() + "]"
 

@@ -1,6 +1,6 @@
 from Bar import Bar
 
-class Foo:
+class Foo():
     def __init__(self):
         self._bars = []
 

@@ -1,19 +1,21 @@
-from Status import Status
-from Gender import Gender
 import os
 from enum import Enum, auto
 
-class C1:
+class C1():
     class Status(Enum):
-        def _generate_next_value_ (name, start, count, last_values) :
+        def _generate_next_value_(name, start, count, last_values):
             return name
+        def __str__(self):
+            return str(self.value)
         Married = auto()
         Single = auto()
         Divorced = auto()
 
     class Gender(Enum):
-        def _generate_next_value_ (name, start, count, last_values) :
+        def _generate_next_value_(name, start, count, last_values):
             return name
+        def __str__(self):
+            return str(self.value)
         Male = auto()
         Female = auto()
 
@@ -43,5 +45,5 @@ class C1:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "]" + os.linesep + "  " + "status" + "=" + (self.getStatus() != ((self.getStatus().toString().replaceAll("  ", "    ")) if not self.getStatus().equals(self) else "this") if None else "null") + os.linesep + "  " + "gender" + "=" + (self.getGender() != ((self.getGender().toString().replaceAll("  ", "    ")) if not self.getGender().equals(self) else "this") if None else "null")
+        return str(super()) + "[" + "]" + os.linesep + "  " + "status" + "=" + (self.getStatus() != ((str(self.getStatus()).replaceAll("  ", "    ")) if not self.getStatus().equals(self) else "this") if None else "null") + os.linesep + "  " + "gender" + "=" + (self.getGender() != ((str(self.getGender()).replaceAll("  ", "    ")) if not self.getGender().equals(self) else "this") if None else "null")
 

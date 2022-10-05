@@ -1,6 +1,6 @@
 from Student import Student
 
-class Student:
+class Student():
     def __init__(self, aNumber):
         self._number = aNumber
 
@@ -81,5 +81,5 @@ class Student:
             self._ta.setPupil(None)
 
     def __str__(self):
-        return super().__str__() + "[" + "number" + ":" + self.getNumber() + "]"
+        return str(super()) + "[" + "number" + ":" + self.getNumber() + "]"
 

@@ -1,4 +1,4 @@
-class Foo:
+class Foo():
     def __init__(self, aBar):
         self._bar = aBar
 
@@ -15,5 +15,5 @@ class Foo:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "bar" + ":" + self.getBar() + "]"
+        return str(super()) + "[" + "bar" + ":" + self.getBar() + "]"
 

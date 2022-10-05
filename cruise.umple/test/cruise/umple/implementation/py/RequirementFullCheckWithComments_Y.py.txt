@@ -1,7 +1,7 @@
 from X import X
 import os
 
-class Y:
+class Y():
     def __init__(self, aC, aX):
         self._c = aC
         didAddX = self.setX(aX)
@@ -41,5 +41,5 @@ class Y:
             placeholderX.removeY(self)
 
     def __str__(self):
-        return super().__str__() + "[" + "c" + ":" + self.getC() + "]" + os.linesep + "  " + "x = " + (self.getX() != (format(id(self.getX()), "x")) if None else "null")
+        return str(super()) + "[" + "c" + ":" + self.getC() + "]" + os.linesep + "  " + "x = " + (self.getX() != (format(id(self.getX()), "x")) if None else "null")
 

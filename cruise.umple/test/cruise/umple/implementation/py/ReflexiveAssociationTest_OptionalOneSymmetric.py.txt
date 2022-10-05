@@ -1,7 +1,7 @@
 from Mentor import Mentor
 import os
 
-class Mentor:
+class Mentor():
     def __init__(self, aName):
         self._name = aName
 
@@ -49,5 +49,5 @@ class Mentor:
             self._superMentor.setSuperMentor(None)
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + self.getName() + "]" + os.linesep + "  " + "superMentor = " + (self.getSuperMentor() != (format(id(self.getSuperMentor()), "x")) if None else "null")
+        return str(super()) + "[" + "name" + ":" + self.getName() + "]" + os.linesep + "  " + "superMentor = " + (self.getSuperMentor() != (format(id(self.getSuperMentor()), "x")) if None else "null")
 
