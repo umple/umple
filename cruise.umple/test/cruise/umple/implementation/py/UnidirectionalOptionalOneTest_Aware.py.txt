@@ -1,7 +1,7 @@
 from Student import Student
 import os
 
-class Mentor:
+class Mentor():
     def __init__(self, aName):
         self._name = aName
 
@@ -31,5 +31,5 @@ class Mentor:
         self._student = None
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + self.getName() + "]" + os.linesep + "  " + "student = " + (self.getStudent() != (format(id(self.getStudent()), "x")) if None else "null")
+        return str(super()) + "[" + "name" + ":" + self.getName() + "]" + os.linesep + "  " + "student = " + (self.getStudent() != (format(id(self.getStudent()), "x")) if None else "null")
 

@@ -1,6 +1,6 @@
 from Analyzer import Analyzer
 
-class Analyzer:
+class Analyzer():
     def __init__(self):
         self._children = []
         self._parent = []

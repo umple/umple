@@ -1,4 +1,4 @@
-class Mentor:
+class Mentor():
     def __init__(self):
         pass
 

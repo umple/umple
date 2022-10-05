@@ -1,6 +1,6 @@
 from Mentor import Mentor
 
-class Student:
+class Student():
     def __init__(self, aNumber):
         self._number = aNumber
         self._mentors = []
@@ -118,5 +118,5 @@ class Student:
             aMentor.removeStudent(self)
 
     def __str__(self):
-        return super().__str__() + "[" + "number" + ":" + self.getNumber() + "]"
+        return str(super()) + "[" + "number" + ":" + self.getNumber() + "]"
 

@@ -1,7 +1,7 @@
 from Mentor import Mentor
 import os
 
-class Student:
+class Student():
     def __init__(self, aNumber):
         self._number = aNumber
 
@@ -44,5 +44,5 @@ class Student:
             placeholderMentor.removeStudent(self)
 
     def __str__(self):
-        return super().__str__() + "[" + "number" + ":" + self.getNumber() + "]" + os.linesep + "  " + "mentor = " + (self.getMentor() != (format(id(self.getMentor()), "x")) if None else "null")
+        return str(super()) + "[" + "number" + ":" + self.getNumber() + "]" + os.linesep + "  " + "mentor = " + (self.getMentor() != (format(id(self.getMentor()), "x")) if None else "null")
 

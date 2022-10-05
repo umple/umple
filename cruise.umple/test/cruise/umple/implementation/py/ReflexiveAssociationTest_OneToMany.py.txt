@@ -1,6 +1,6 @@
 from OneToMany import OneToMany
 
-class OneToMany:
+class OneToMany():
     def __init__(self, aOneToMany):
         if not self.setOneToMany(aOneToMany) :
             raise RuntimeError ("Unable to create OneToMany due to aOneToMany. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")

@@ -1,6 +1,6 @@
 from Student import Student
 
-class Mentor:
+class Mentor():
     def __init__(self, aStudent):
         if not self.setStudent(aStudent) :
             raise RuntimeError ("Unable to create Mentor due to aStudent. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")

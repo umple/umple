@@ -1,6 +1,6 @@
 from Course import Course
 
-class Mentor:
+class Mentor():
     def __init__(self):
         self._cachedHashCode = -1
         self._canSetMain = True

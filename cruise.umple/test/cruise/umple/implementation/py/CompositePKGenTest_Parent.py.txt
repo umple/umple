@@ -1,4 +1,4 @@
-class Person:
+class Person():
     def __init__(self, aName, aId, aAge):
         self._cachedHashCode = -1
         self._canSetId = True
@@ -87,5 +87,5 @@ class Person:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "id" + ":" + self.getId() + "," + "name" + ":" + self.getName() + "," + "age" + ":" + self.getAge() + "]"
+        return str(super()) + "[" + "id" + ":" + self.getId() + "," + "name" + ":" + self.getName() + "," + "age" + ":" + self.getAge() + "]"
 

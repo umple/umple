@@ -1,6 +1,6 @@
 from X import X
 
-class Analyzer:
+class Analyzer():
     def __init__(self):
         self._offspring = []
 

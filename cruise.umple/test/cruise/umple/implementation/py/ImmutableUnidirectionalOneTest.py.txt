@@ -1,7 +1,7 @@
 from Mentor import Mentor
 import os
 
-class Student:
+class Student():
     def __init__(self, aNumber, aMentor):
         self._number = aNumber
         self._canSetMentor = True
@@ -30,5 +30,5 @@ class Student:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "number" + ":" + self.getNumber() + "]" + os.linesep + "  " + "mentor = " + (self.getMentor() != (format(id(self.getMentor()), "x")) if None else "null")
+        return str(super()) + "[" + "number" + ":" + self.getNumber() + "]" + os.linesep + "  " + "mentor = " + (self.getMentor() != (format(id(self.getMentor()), "x")) if None else "null")
 

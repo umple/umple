@@ -1,4 +1,4 @@
-class X2:
+class X2():
     def __init__(self):
         pass
 

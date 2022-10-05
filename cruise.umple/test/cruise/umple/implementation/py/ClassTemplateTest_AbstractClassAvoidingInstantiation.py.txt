@@ -1,6 +1,6 @@
 from Person import Person
 
-class Teacher:
+class Teacher():
     def __init__(self):
         self._myStudents = []
 

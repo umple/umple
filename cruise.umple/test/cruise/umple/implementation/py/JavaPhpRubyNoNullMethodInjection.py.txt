@@ -1,4 +1,4 @@
-class JavaPhpRubyNoNullMethodInjection:
+class JavaPhpRubyNoNullMethodInjection():
     def __init__(self):
         pass
 

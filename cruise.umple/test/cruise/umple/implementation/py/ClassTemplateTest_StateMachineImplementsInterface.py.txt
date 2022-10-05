@@ -1,0 +1,65 @@
+from Logger import Logger
+from enum import Enum, auto
+
+class FileLogger(Logger):
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        disconnected = auto()
+        connected = auto()
+
+    def __init__(self, aFileName):
+        self._fileName = aFileName
+        self.setStatus(FileLogger.Status.disconnected)
+
+    def getStatusFullName(self):
+        answer = str(self._status)
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def connect(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        match aStatus :
+            case FileLogger.Status.disconnected :
+                self.setStatus(FileLogger.Status.connected)
+                wasEventProcessed = True
+            case default :
+                pass
+        return wasEventProcessed
+
+    def disconnect(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        match aStatus :
+            case FileLogger.Status.connected :
+                self.setStatus(FileLogger.Status.disconnected)
+                wasEventProcessed = True
+            case default :
+                pass
+        return wasEventProcessed
+
+    def write(self, data):
+        wasEventProcessed = False
+        aStatus = self._status
+        match aStatus :
+            case FileLogger.Status.connected :
+                self.setStatus(FileLogger.Status.connected)
+                wasEventProcessed = True
+            case default :
+                pass
+        return wasEventProcessed
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super()) + "[" + "]"
+

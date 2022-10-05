@@ -1,4 +1,4 @@
-class Client:
+class Client():
     def __init__(self, aMinAge, aAge):
         self._minAge = aMinAge
         self._age = aAge
@@ -31,5 +31,5 @@ class Client:
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "minAge" + ":" + self.getMinAge() + "," + "age" + ":" + self.getAge() + "]"
+        return str(super()) + "[" + "minAge" + ":" + self.getMinAge() + "," + "age" + ":" + self.getAge() + "]"
 
