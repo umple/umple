@@ -1,4 +1,4 @@
-include "../Grammers/Java.Grm"
+include "Java.Grm"
 
 %Num of char in a line before TXL splits it in two. Hopefully a temporary solution.
 #pragma -width 1073741824

@@ -1,4 +1,4 @@
-include "../Grammers/Python.Grm"
+include "Python.Grm"
 include "BooleanTranslation.txl"
 include "ImportProcessing.txl"
 include "ListTranslation.txl"
