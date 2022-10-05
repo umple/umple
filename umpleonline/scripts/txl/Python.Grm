@@ -1,4 +1,8 @@
-include "Java.Grm"
+include "../Grammers/Java.Grm"
+
+%Num of char in a line before TXL splits it in two. Hopefully a temporary solution.
+#pragma -width 1073741824
+
 
 redefine boolean_operator
     ...
@@ -31,7 +35,7 @@ end redefine
 redefine statement
     ...
     |  [nested_identifier] [NL]
-    | 'pass
+    | 'pass [NL]
 end redefine
 
 redefine stmt_return
@@ -102,9 +106,10 @@ redefine method_parameter
     | [id]
 end redefine
 
-define decorator
-    '@ [SPOFF] [id] [SPON] [NL]
-end define
+redefine ternary
+    ...
+    |   [value_no_ternary] 'if [value] 'else [value]
+end redefine
 
 redefine concrete_method_declaration
     ...
@@ -157,4 +162,35 @@ redefine import_statement
     ...
     |   'from [class_name] 'import [class_name] [NL]
     |   'from [class_name] 'import [list class_name] [NL]
+    |   'import [id] [NL]
 end redefine 
+
+redefine enum_declaration
+    ...
+    | 'class [id] [SPOFF] '(Enum'): [SPON][NL] 
+        [IN] 'def '_generate_next_value_ [SPOFF] '( [SPON] 'name, 'start, 'count, 'last_values) [SPOFF] ': [SPON] [NL] 
+            [IN] 'return 'name [NL] 
+        [EX] 'def '__str__ [SPOFF] '(self): [SPON] [NL] 
+            [IN] 'return 'str [SPOFF] '(self. 'value) [SPON] [NL] 
+        [EX] [repeat enum_value_declaration] [NL]
+    [EX]
+end redefine
+
+define enum_value_declaration
+    [id] '= 'auto [SPOFF] () [SPON] [NL]
+end define
+
+redefine switch_case
+    ...
+    |   'match [value] ': [NL] [IN] [repeat switch_case_case] [opt switch_case_default] [EX]
+end redefine
+
+redefine switch_case_case
+    ...
+    |   'case [value] ': [NL] [IN] [repeat statement] [EX]
+end redefine
+
+redefine switch_case_default
+    ...
+    |   'case 'default ': [NL] [IN] [repeat statement] [EX]
+end redefine
