@@ -9,7 +9,6 @@ end compounds
 
 tokens
     number  "(-\s?)?\d+(.\d+)?"
-    garbage "toString(#})*}"
 end tokens
 
 %--------------------%
@@ -17,7 +16,7 @@ end tokens
 %--------------------%
 
 keys
- return new if else for true false while this super self tuple len True False + - * / ? ; : toString
+ return new if else for true false while this super self tuple len True False + - * / ? ; : pass
 end keys
 
 define acess_modifier
@@ -81,7 +80,7 @@ define arithmatic_expression
 end define
 
 define nested_identifier
-        [nestable_value] [repeat attribute_access]
+     [nestable_value] [SPOFF] [repeat attribute_access] [SPON]
 end define
 
 define attribute_access
@@ -93,6 +92,7 @@ define nestable_value
     |    [id]
     |   'this
     |   'super
+    |   [class_name]
 end define
 
 define value_no_recursion 
@@ -110,6 +110,7 @@ end define
 
 define value
        [value_no_ternary]
+    |   [ternary]
 end define
 
 define value_no_ternary
@@ -150,12 +151,16 @@ define statement
     |   [nested_identifier]'; [NL]
     |   [assignment] '; [NL]
     |   [throw_statement]
+    |   [switch_case]
 end define
 
 define while_loop
     'while( [value] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
 end define
 
+define ternary
+    [value_no_recursion] '? [value] ': [value]
+end define
 
 define for_loop
     'for( [variable_declaration] [value]'; [assignment]') '{ [NL] [IN] [repeat statement] [EX] '} [NL]
@@ -163,6 +168,18 @@ end define
 
 define for_in_loop
     'for( [class_name] [id] ': [nested_identifier]')'{ [NL] [IN] [repeat statement] [EX] '} [NL]
+end define
+
+define switch_case
+    'switch( [value] ') '{ [repeat switch_case_case] [opt switch_case_default] '}
+end define
+
+define switch_case_case
+    'case [value] ': [repeat statement] 'break;
+end define
+
+define switch_case_default
+    'default ': [repeat statement]
 end define
 
 define conditional_block
@@ -194,8 +211,11 @@ define function_call
 end define
 
 define boolean_expression
-       [condition] [boolean_operator] [boolean_expression]
-    |  [condition]
+        [condition] [repeat boolean_continuation]
+end define
+
+define boolean_continuation
+        [boolean_operator] [condition]
 end define
 
 define condition
@@ -203,28 +223,21 @@ define condition
     |   [value_no_recursion]
 end define
 
-define boolean_element
-        [value_no_recursion]
-end define
-
-
 define method_parameter
     [class_name] [id]
 end define
 
+define decorator
+    '@ [SPOFF] [id] [SPON] [NL]
+end define
+
 define concrete_method_declaration
-        [acess_modifier] [opt static] [class_name] [id] '( [list method_parameter] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
+        [opt decorator] [acess_modifier] [opt static] [class_name] [id] '( [list method_parameter] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
 end define
 
 define method_declaration
         [concrete_method_declaration]
     |   [abstract_method_declaration]
-    |   [toString_method_garbage]
-end define
-
-define toString_method_garbage
-    [acess_modifier] [opt static] [class_name] [garbage]
-    |   [empty]
 end define
 
 define abstract_method_declaration
@@ -275,11 +288,21 @@ define constructor
     [acess_modifier] [id]'( [list method_parameter] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
 end define
 
+define enum_declaration
+    [opt acess_modifier] 'enum [id] '{ [list id]'}
+end define
+
 define member_variable_declaration
     [opt acess_modifier] [opt static] [opt volatile] [variable_declaration]
 end define
 
 define class_body_decl
-    [repeat member_variable_declaration] [opt constructor] [repeat method_declaration]
+    [repeat class_body_element]
 end define
 
+define class_body_element
+        [enum_declaration]
+    |   [member_variable_declaration]
+    |   [constructor]
+    |   [method_declaration]
+end define
