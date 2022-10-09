@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>umple</id>
+    <version>1.31.1</version>
+    <packageSourceUrl>https://github.com/umple/umple/tree/master/build/pacakge-files/chocolatey</packageSourceUrl>
+    <owners>Timothy Lethbridge</owners>
+
+    <!-- == SOFTWARE SPECIFIC SECTION == -->
+    <title>umple</title>
+    <authors>Timothy Lethbridge</authors>
+    <projectUrl>https://cruise.umple.org/umple/</projectUrl>
+    <iconUrl>https://cruise.umple.org/umple/files/umple_logo.jpg</iconUrl>
+    <copyright>Copyright 2008-2022 Timothy C. Lethbridge, Andrew Forward, Omar Badreddin, Dusan Brestovansky, Julie Filion, Miguel Garzon, Hamoud Aljamaan, Ali Fatolahi, Julian Solano, Joshua Horacsek, Joel Hobson, Alvina Lee, Sultan Eid, Jordan Johns, Sonya Adams, James Zhao, Adam Dzialoszynski, Luna Lu, Song Bae Choi, Thomas Morrison, Sacha Bagasan, Andrew Paugh, Stuart Erskine, Russell Staughton, Christopher Hogan, Geoffrey Guest, Gabriel Blais Bourget, Robin Jastrzebski, Quinlan Jung, Blakeley Quebec Desloges, Jesus Zambrano, Ahmed Orabi, Mahmoud Orabi, Tonio Resende, Vahdat Abdelzad, Opeyemi Adesina, Aliaa Alghamdi, Tiago Nascimento, Tianyuan Chu, Fiodar Kazhamiaka, Greg Hysen, Jean-Christophe Charbonneau, Kenan Kigunda, Adriaan Cody Schuffelen, Marc Antoine Gosselin-Lavigne, Pedro Augusto Vincente, Jason Canto, Ellen Arteca, Alexi Turcotte, Karin Ng, Mark Galloway, Alexander Ringeri, Antonio Maria Pereria de Resende, Craig Bryan, Eric Telmer, Charles Wang, Chan Chun Kit, Nabil Maadarani, John Zweip, Kevin Brightwell, Warren Marivel, Ashley Merman, Xinxin Kou, Aymen Ben Rkhis, Curtis Meerkerk, Adam Kereliuk, Matthew Fritze, Michael Mkicik, Victoria Lacroix, Morgan Redshaw, Matthew Rodusek, Shikib Mehri, Amid Zakariapour, Marc de Niverville, Alex Hochheiden, Noah Murad, Katharine Cavers, Jackie Lang, Adam Bolding Jones, Chang Ding, Joshua McManus, Balaji Venkatesh, Runqing Zhang, Finn Hackett, Daniel Mitchell, Richard Hugessen, Bowei (Bernard) Yuan, Abdulaziz Algablan, Zainab Al Showely, Gloria Law, Yiran Shu, Evgeniya Vashkevich, Paul Wang, Firas Jribi, Jingyi Pan, Haowen Shi, Ralph Ngassa, Svetlana Esina, Sean O'Brien, Yukang Yin, Shuvankar Saha, Samuel Labonté, Thierry Laprade, Yanic Mainville, RJ Stead, Lovepreet Singh, Luwei Cai</copyright>
+    <licenseUrl>https://github.com/umple/umple/blob/master/LICENSE.md</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/umple/umple</projectSourceUrl>
+    <docsUrl>https://cruise.umple.org/umple/GettingStarted.html</docsUrl>
+    <mailingListUrl>http://list.umple.org</mailingListUrl>
+    <bugTrackerUrl>https://github.com/umple/umple/issues</bugTrackerUrl>
+    <tags>umple java editor state-machine modeling uml code-generation class-diagram</tags>
+    <summary>Umple is a modeling tool/programming language that enables Model-Oriented programming.</summary>
+    <description>
+      Umple is a model-oriented programming technology, allowing developers to embed modelling concepts (e.g. UML associations, state machines), patterns, generation templates, and other abstractions in traditional code, and vice versa. It generates high quality code for Java, C++ and PhP, as well as diagrams, metrics and many other artifacts. It can be embeded in the above languages as well as embed them.
+
+The project homepage is located at http://umple.org/</description>
+    <releaseNotes>https://github.com/umple/umple/releases/tag/v1.31.1</releaseNotes>
+    
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
