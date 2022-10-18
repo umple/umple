@@ -28,7 +28,7 @@ function getClassesToImport classBody [class_body_decl] declaration [member_vari
     deconstruct declaration
         _[opt acess_modifier] _[opt static] _[opt volatile] varDec [variable_declaration]
     deconstruct varDec
-        class [class_name] _ [id]';
+        class [nested_class] _ [id]';
     construct classesToImport [repeat id]
         _ [extractListClass classBody class] [extractRegularClass classBody class]
     by 
@@ -43,19 +43,32 @@ function isTypeEnum typeName [id]
 end function
 
 function extractInheritanceBlockClasses inheritanceList [inheritance_list]
-    replace [list class_name]
-        classes [list class_name]
+    replace [list nested_class]
+        classes [list nested_class]
     deconstruct inheritanceList
-        _[inheritance_statement] classesToAdd [list class_name]
+        _[inheritance_statement] classesToAdd [list nested_class]
     by
-        classes [, classesToAdd] 
+        classes [inheritanceClassFilter each classesToAdd]
+end function
+
+function inheritanceClassFilter class [nested_class]
+    replace [list nested_class]
+        classes [list nested_class]
+    construct unparsed [stringlit]
+        _ [unparse class]
+    construct filter [repeat nested_class]
+        'java.io.Serializable 
+    where not
+        filter [containsNestedClass class]
+    by
+        classes [, class]
 end function
 
 function extractInheritanceImportClasses classBody [class_body_decl] inheritanceList [inheritance_list]
     replace [repeat id]
         classesToImport [repeat id]
     deconstruct inheritanceList
-        _[inheritance_statement] classesToAdd [list class_name]
+        _[inheritance_statement] classesToAdd [list nested_class]
     construct classIds [repeat id]
         _ [extractListClass classBody each classesToAdd] [extractRegularClass classBody each classesToAdd]
     by
@@ -74,12 +87,12 @@ function addToRepeatIfNotThere elem [id]
     replace [repeat id]
         currentList [repeat id]
     where not 
-        currentList [contains elem]
+        currentList [containsId elem]
     by
         currentList [. elem]
 end function
 
-function extractListClass classBody [class_body_decl] class [class_name]
+function extractListClass classBody [class_body_decl] class [nested_class]
     replace [repeat id]
         empty [repeat id]
     deconstruct class
@@ -116,10 +129,10 @@ rule matchDefaultType
     construct defaults [repeat id]
         'byte 'short 'int 'long 'float 'double 'boolean 'char 'String 'Array
     where
-        defaults [contains id]    
+        defaults [containsId id]    
 end rule
 
-function extractRegularClass classBody [class_body_decl] class [class_name]
+function extractRegularClass classBody [class_body_decl] class [nested_class]
     replace [repeat id]
         empty [repeat id]
     deconstruct class
@@ -162,16 +175,6 @@ function addToList anys [id]
         aRep [, anys]
 end function
 
-
-function translateParams PreviousParam [method_parameter]
-    replace [list id]
-        SequenceSoFar [list id]
-    deconstruct PreviousParam
-        _ [id] paramName [id]
-    by
-        SequenceSoFar [, paramName]
-end function
-
 function addListMemberVariable MemberVariable [member_variable_declaration]
     replace [repeat id]
         SequenceSoFar [repeat id]
@@ -179,17 +182,6 @@ function addListMemberVariable MemberVariable [member_variable_declaration]
         _[opt acess_modifier] decl [variable_declaration]
     deconstruct decl
         'List '< _ [list id] '> memberName [id]';
-    by
-        SequenceSoFar [. memberName]
-end function
-
-function addMemberVariable MemberVariable [member_variable_declaration]
-    replace [repeat id]
-        SequenceSoFar [repeat id]
-    deconstruct MemberVariable
-        _[opt acess_modifier] decl [variable_declaration]
-    deconstruct decl
-        _ [class_name] memberName [id]';
     by
         SequenceSoFar [. memberName]
 end function
@@ -208,7 +200,7 @@ rule replaceMemberVariableNames memberVariables [repeat id]
     replace [nested_identifier]
          name [id] rep [repeat attribute_access]
     where 
-        memberVariables [contains name]
+        memberVariables [containsId name]
     construct underscore [id]
         '_
     construct newName [id]
@@ -221,7 +213,7 @@ rule replaceMemberVariableNamesWithThis memberVariables [repeat id]
     replace [nested_identifier]
         'this '. name [id] rep [repeat attribute_access]
     where 
-        memberVariables [contains name]
+        memberVariables [containsId name]
     construct underscore [id]
         '_
     by
@@ -232,7 +224,7 @@ rule replaceMemberVariableNamesBrackets memberVariables [repeat id]
     replace [nested_identifier]
          name [id] '[ val [value] ']  rep [repeat attribute_access]
     where 
-        memberVariables [contains name]
+        memberVariables [containsId name]
     construct underscore [id]
         '_
     construct newName [id]
@@ -242,8 +234,13 @@ rule replaceMemberVariableNamesBrackets memberVariables [repeat id]
 end rule
 
 
-rule contains Object [id]
+rule containsId Object [id]
     match [id]
+        Object
+end rule
+
+rule containsNestedClass Object [nested_class]
+    match [nested_class]
         Object
 end rule
 
@@ -257,6 +254,7 @@ function addExternalImports body [class_body_decl]
     by
         imports [addOSImportIfNeeded body]
         [addEnumImportIfNeeded body]
+        [addPickleImportIfNeeded]
 end function
 
 
@@ -290,4 +288,21 @@ end function
 function shouldEnumImport
     match * [enum_declaration]
         _ [enum_declaration]
+end function
+
+function addPickleImportIfNeeded
+    replace [repeat import_statement]
+        imports [repeat import_statement]
+    import Imports [repeat import_statement]
+    where
+        Imports [shouldImportPickle]
+    construct newImport [import_statement]
+        'import 'pickle
+    by 
+        imports [. newImport]
+end function
+
+function shouldImportPickle
+    match * [import_statement]
+        'import 'java.io.Serializable;
 end function

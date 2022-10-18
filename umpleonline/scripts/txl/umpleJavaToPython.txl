@@ -1,10 +1,9 @@
-include "Python.Grm"
+include "../Grammers/Python.Grm"
 include "BooleanTranslation.txl"
 include "ImportProcessing.txl"
 include "ListTranslation.txl"
 include "MethodTranslation.txl"
 include "StatementTranslation.txl"
-include "ConstructorTranslation.txl"
 include "EnumTranslation.txl"
 include "ClassTranslation.txl"
 
@@ -15,13 +14,12 @@ include "ClassTranslation.txl"
 function main
     replace [program] 
 	 _[repeat package_statement] 
-     _[repeat import_statement]
-     Classes [repeat class_declaration]
+     Imports [repeat import_statement]
+     classes [repeat class_declaration]
+    export Imports
     by
-	Classes
+	classes
         [replaceConcreteClassesWithInheritance] 
-        [replaceConcreteClassesNoInheritance]
         [replaceInterfacesWithInheritance]
-        [replaceInterfacesNoInheritance] 
 end function
 
