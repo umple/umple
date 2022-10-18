@@ -69,9 +69,17 @@ define imported
     |   [id]'. [imported]
 end define
 
-define class_name
+define nested_class
+    [nestable_class] [repeat nested_class_access]
+end define
+
+define nested_class_access
+    '. [nestable_class]
+end define
+
+define nestable_class
     [id]'< [list id] '>
-    | [id]   
+    | [id] 
 end define
 
 define arithmatic_expression
@@ -92,13 +100,13 @@ define nestable_value
     |    [id]
     |   'this
     |   'super
-    |   [class_name]
 end define
 
 define value_no_recursion 
         [new_call]
     |   '( [value]')
     |   [nested_identifier]
+    |   [nested_class] '. [id]
     |   [number]
     |   [stringlit]
     |   'null
@@ -106,6 +114,11 @@ define value_no_recursion
     |   'false
     |   [casting]
     |   '! [boolean_expression]
+    |   [method_reference]
+end define
+
+define method_reference
+    [nested_class] ':: [id]
 end define
 
 define value
@@ -120,12 +133,12 @@ define value_no_ternary
 end define
 
 define new_call
-    'new [class_name] '( [list value] ')
+    'new [nested_class] '( [list value] ')
 end define
 
 define variable_declaration
-        [class_name] [assignment] '; [NL]
-    |   [class_name] [nested_identifier]';
+        [nested_class] [assignment] '; [NL]
+    |   [nested_class] [nested_identifier]';
 end define
 
 define assignment
@@ -167,7 +180,7 @@ define for_loop
 end define
 
 define for_in_loop
-    'for( [class_name] [id] ': [nested_identifier]')'{ [NL] [IN] [repeat statement] [EX] '} [NL]
+    'for( [nested_class] [id] ': [nested_identifier]')'{ [NL] [IN] [repeat statement] [EX] '} [NL]
 end define
 
 define switch_case
@@ -188,6 +201,7 @@ end define
 
 define if 
     'if '( [value] ') '{  [repeat statement]  '}
+    | 'if '( [value] ') [statement]
 end define
 
 define else_if
@@ -203,7 +217,7 @@ define throw_statement
 end define
 
 define casting
-    '( [class_name]') [nested_identifier]
+    '( [nested_class]') [value]
 end define
 
 define function_call
@@ -224,15 +238,19 @@ define condition
 end define
 
 define method_parameter
-    [class_name] [id]
+    [nested_class] [id]
 end define
 
 define decorator
     '@ [SPOFF] [id] [SPON] [NL]
 end define
 
+define throws
+    'throws [list nested_class]
+end define
+
 define concrete_method_declaration
-        [opt decorator] [acess_modifier] [opt static] [class_name] [id] '( [list method_parameter] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
+        [opt decorator] [acess_modifier] [opt static] [nested_class] [id] '( [list method_parameter] ') [opt throws] [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
 end define
 
 define method_declaration
@@ -241,7 +259,7 @@ define method_declaration
 end define
 
 define abstract_method_declaration
-    [acess_modifier] [class_name] [id] '( [list method_parameter] '); [NL]
+    [acess_modifier] [nested_class] [id] '( [list method_parameter] '); [NL]
 end define
 
 define inheritance_statement
@@ -260,15 +278,15 @@ define class_declaration
 end define
 
 define concrete_class_declaration
-    [acess_modifier] 'class [class_name] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
+    [acess_modifier] 'class [nested_class] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
 end define
 
 define inheritance_list
-    [inheritance_statement] [list class_name]
+    [inheritance_statement] [list nested_class]
 end define
 
 define interface_declaration
-        [acess_modifier] 'interface [class_name] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
+        [acess_modifier] 'interface [nested_class] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
 end define
 
 define class_type
@@ -284,8 +302,12 @@ define volatile
     'volatile
 end define
 
+define transient
+    'transient
+end define
+
 define constructor
-    [acess_modifier] [id]'( [list method_parameter] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
+    [acess_modifier] [id]'( [list method_parameter] ') [opt throws] [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
 end define
 
 define enum_declaration
@@ -293,7 +315,7 @@ define enum_declaration
 end define
 
 define member_variable_declaration
-    [opt acess_modifier] [opt static] [opt volatile] [variable_declaration]
+    [opt acess_modifier] [opt transient] [opt static] [opt volatile] [variable_declaration]
 end define
 
 define class_body_decl

@@ -26,7 +26,7 @@ rule replaceNullCheck
 end rule
 
 rule replaceNotNullCheck
-    replace [boolean_expression]
+    replace [value]
         cond [condition]
     deconstruct cond
         elem [value_no_recursion] '!= 'null
@@ -70,7 +70,7 @@ rule replaceFalse
 end rule
 
 rule replaceClassMatchCheck
-    replace [boolean_expression]
+    replace [value]
         'getClass().equals( id2 [id] '.getClass())
     by  
         'type(self) 'is 'type( id2 ')
