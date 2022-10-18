@@ -17,7 +17,7 @@ class PythonGenerator
   depend cruise.umple.util.StringFormatter;
   depend cruise.umple.compiler.exceptions.*;
   
-  private static final int TXL_VERSION = 6;
+  private static final int TXL_VERSION = 7;
   
   @Override  
   public void writeFile(UmpleElement aClass) throws IOException
