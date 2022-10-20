@@ -68,20 +68,21 @@ rule replaceStaticMethod
         '@staticmethod 'def methodName '():  statements [replaceStatements] [changeKeyArgumentNameInNestedIdentifier]
 end rule
 
-rule replaceConstructor
+rule replaceConstructor memberVariables [repeat id]
     replace [constructor]
-         mod [acess_modifier] className [id]'( params [list method_parameter +] ') _ [opt throws] '{ statements [repeat statement]  '}
-    construct newParams [list id]
+         mod [acess_modifier] className [id]'( params [list method_parameter] ') _ [opt throws] '{ statements [repeat statement]  '}
+    construct selfParam [list id]
+        'self
+    construct modifiedParams [list id]
+        _ [translateParams each params]
     by
-        'def '__init__(self, newParams [translateParams each params]'):  statements [replaceStatements] [changeKeyArgumentNameInNestedIdentifier]
+        'def '__init__( selfParam [, modifiedParams] '):  
+            statements 
+                [addNoneAssignmentIfNeeded each memberVariables] 
+                [replaceStatements] 
+                [changeKeyArgumentNameInNestedIdentifier]
 end rule
 
-rule replaceConstructorNoArgs
-    replace [constructor]
-         mod [acess_modifier] className [id]'() _ [opt throws] '{ statements [repeat statement]  '}
-    by
-        'def '__init__(self):  statements [replaceStatements]
-end rule
 
 function addGetState
     replace [repeat class_body_element]
@@ -153,3 +154,20 @@ rule replaceInKeyArgument
     by 
         'input
 end rule
+
+
+function addNoneAssignmentIfNeeded memberVariable [id]
+    replace [repeat statement]
+        results [repeat statement]
+    where not
+        results [isMemberAssigned memberVariable]
+    construct noneAssignment [statement]
+        memberVariable '= 'None
+    by
+        results [. noneAssignment]
+end function
+
+rule isMemberAssigned memberVar [id]
+    match [assignment]
+        memberVar '= _ [value] 
+end rule 
