@@ -63,8 +63,7 @@ function replaceClassBody
     by
         elements [removeMemberVariableDeclarations] [replaceEnumDeclaration] 
             [replaceAllLists listMemberVariables]
-            [replaceConstructor] 
-            [replaceConstructorNoArgs]
+            [replaceConstructor memberVariables] 
             [replaceAllMethods]
             [replaceAllMemberVariableNames memberVariables] 
 end function

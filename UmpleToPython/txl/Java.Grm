@@ -16,7 +16,7 @@ end tokens
 %--------------------%
 
 keys
- return new if else for true false while this super self tuple len True False + - * / ? ; : pass
+ return new if else for true false while this super tuple len True False + - * / ? ; : pass
 end keys
 
 define acess_modifier
