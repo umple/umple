@@ -7,7 +7,7 @@
     "body-parser": "*",
     "exports": "*",
     "express": "4.*",
-    "nodemon": "^2.0.15",
+    "nodemon": "^2.0.20",
     "pm2": "^5.1.2"
   },
   "scripts": {
