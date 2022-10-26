@@ -5,9 +5,6 @@ class Student():
 
     def setNumber2(self, aNumber2):
         wasSet = False
-        if not self._canSetNumber2 :
-            return False
-
         self._canSetNumber2 = False
         self._number2 = aNumber2
         wasSet = True

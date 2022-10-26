@@ -13,5 +13,15 @@ public class PythonMNToMStarTest extends MNToMStarTest
     language = "Python";
     languagePath = "py";
   }
+
+  @Test @Ignore
+  public void MN(){
+    super.MN();
+  }
+
+  @Test @Ignore
+  public void MStar(){
+    super.MStar();
+  }
   
 }

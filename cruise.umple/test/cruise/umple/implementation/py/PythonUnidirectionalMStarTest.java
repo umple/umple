@@ -13,4 +13,9 @@ public class PythonUnidirectionalMStarTest extends UnidirectionalMStarTest
     language = "Python";
     languagePath = "py";
   }
+
+  @Test @Ignore
+  public void Aware(){
+    super.Aware();
+  }
 }

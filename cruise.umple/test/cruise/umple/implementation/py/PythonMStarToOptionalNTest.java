@@ -13,4 +13,14 @@ public class PythonMStarToOptionalNTest extends MStarToOptionalNTest
     language = "Python";
     languagePath = "py";
   }
+
+  @Test @Ignore
+  public void OptionalN(){
+    super.OptionalN();
+  }
+
+  @Test @Ignore
+  public void MStar(){
+    super.MStar();
+  }
 }

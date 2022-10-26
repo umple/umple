@@ -13,4 +13,14 @@ public class PythonOneToOptionalOneTest extends OneToOptionalOneTest
     language = "Python";
     languagePath = "py";
   }
+
+  @Test @Ignore
+  public void Subordinate(){
+    super.Subordinate();
+  }
+
+  @Test @Ignore
+  public void Driver(){
+    super.Driver();
+  }
 }

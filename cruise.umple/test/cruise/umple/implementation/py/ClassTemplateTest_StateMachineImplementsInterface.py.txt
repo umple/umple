@@ -1,7 +1,7 @@
-from Logger import Logger
+from NetworkNode import NetworkNode
 from enum import Enum, auto
 
-class FileLogger(Logger):
+class Router(NetworkNode):
     class Status(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -10,9 +10,9 @@ class FileLogger(Logger):
         disconnected = auto()
         connected = auto()
 
-    def __init__(self, aFileName):
-        self._fileName = aFileName
-        self.setStatus(FileLogger.Status.disconnected)
+    def __init__(self, aIpAddress):
+        self._ipAddress = aIpAddress
+        self.setStatus(Router.Status.disconnected)
 
     def getStatusFullName(self):
         answer = str(self._status)
@@ -25,8 +25,8 @@ class FileLogger(Logger):
         wasEventProcessed = False
         aStatus = self._status
         match aStatus :
-            case FileLogger.Status.disconnected :
-                self.setStatus(FileLogger.Status.connected)
+            case Router.Status.disconnected :
+                self.setStatus(Router.Status.connected)
                 wasEventProcessed = True
             case default :
                 pass
@@ -36,19 +36,8 @@ class FileLogger(Logger):
         wasEventProcessed = False
         aStatus = self._status
         match aStatus :
-            case FileLogger.Status.connected :
-                self.setStatus(FileLogger.Status.disconnected)
-                wasEventProcessed = True
-            case default :
-                pass
-        return wasEventProcessed
-
-    def write(self, data):
-        wasEventProcessed = False
-        aStatus = self._status
-        match aStatus :
-            case FileLogger.Status.connected :
-                self.setStatus(FileLogger.Status.connected)
+            case Router.Status.connected :
+                self.setStatus(Router.Status.disconnected)
                 wasEventProcessed = True
             case default :
                 pass
@@ -59,6 +48,9 @@ class FileLogger(Logger):
 
     def delete(self):
         pass
+
+    def errorDetected(self):
+        return False
 
     def __str__(self):
         return str(super()) + "[" + "]"

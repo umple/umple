@@ -14,4 +14,13 @@ public class PythonManyToMNTest extends ManyToMNTest
     languagePath = "py";
   }
   
+  @Test @Ignore
+  public void MN(){
+    super.MN();
+  }
+
+  @Test @Ignore
+  public void Many(){
+    super.Many();
+  }
 }
