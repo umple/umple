@@ -24,3 +24,4 @@ class Student
 // @@@skipcppcompile - main is specifically java code.
 // @@@skipphpcompile - main is specifically java code.
 // @@@skiprubycompile - main is specifically java code.
+// @@@skippythoncompile - main is specifically java code.

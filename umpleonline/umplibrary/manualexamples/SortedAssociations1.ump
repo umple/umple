@@ -115,3 +115,4 @@ class Registration
 // @@@skipcppcompile - Java-specific code in main and toString in class Academy
 // @@@skipphpcompile - Java-specific code in main and toString in class Academy
 // @@@skiprubycompile - Java-specific code in main and toString in class Academy
+// @@@skippythoncompile - Java-specific code in main and toString in class Academy
