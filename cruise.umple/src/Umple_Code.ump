@@ -230,8 +230,8 @@ class UmpleModel
     }
 
 		
-    if (language.equals("Cpp")) realLanguage="RTCpp";
-    else if (language.equals("SimpleCpp")) realLanguage="RTCpp";
+    if (language.equalsIgnoreCase("Cpp")) realLanguage="RTCpp";
+    else if (language.equalsIgnoreCase("SimpleCpp")) realLanguage="RTCpp";
     
     String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",realLanguage);
     Class<?> classDefinition = null;
