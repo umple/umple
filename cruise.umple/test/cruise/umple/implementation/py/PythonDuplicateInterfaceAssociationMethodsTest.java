@@ -22,4 +22,10 @@ public class PythonDuplicateInterfaceAssociationMethodsTest extends DuplicateInt
 	    language = "Python";
 	    languagePath = "py";
 	  }
+
+	  @Test @Ignore
+	  public void DuplicateInterfaceAssociationMethods()
+	  {
+		super.DuplicateInterfaceAssociationMethods();
+	  }
 }

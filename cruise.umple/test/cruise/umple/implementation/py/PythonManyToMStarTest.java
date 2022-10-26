@@ -13,5 +13,15 @@ public class PythonManyToMStarTest extends ManyToMStarTest
     language = "Python";
     languagePath = "py";
   }
+
+  @Test @Ignore
+  public void Many(){
+    super.Many();
+  }
+
+  @Test @Ignore
+  public void MStar(){
+    super.MStar();
+  }
   
 }

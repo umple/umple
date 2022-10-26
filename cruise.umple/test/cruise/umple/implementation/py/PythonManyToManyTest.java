@@ -14,4 +14,14 @@ public class PythonManyToManyTest extends ManyToManyTest
     language = "Python";
     languagePath = "py";
   }
+
+  @Test @Ignore
+  public void Association(){
+    super.Association();
+  }
+
+  @Test @Ignore
+  public void Association2(){
+    super.Association2();
+  }
 }

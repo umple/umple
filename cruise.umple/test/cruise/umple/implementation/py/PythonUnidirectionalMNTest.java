@@ -13,4 +13,9 @@ public class PythonUnidirectionalMNTest extends UnidirectionalMNTest
     language = "Python";
     languagePath = "py";
   }
+
+  @Test @Ignore
+  public void Aware(){
+    super.Aware();
+  }
 }

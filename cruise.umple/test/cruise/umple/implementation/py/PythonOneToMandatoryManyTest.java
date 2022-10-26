@@ -13,4 +13,14 @@ public class PythonOneToMandatoryManyTest extends OneToMandatoryManyTest
     language = "Python";
     languagePath = "py";
   }
+
+  @Test @Ignore
+  public void One(){
+    super.One();
+  }
+
+  @Test @Ignore
+  public void Many(){
+    super.Many();
+  }
 }

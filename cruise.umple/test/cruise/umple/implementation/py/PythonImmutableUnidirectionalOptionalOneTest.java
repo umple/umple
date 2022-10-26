@@ -22,4 +22,10 @@ public class PythonImmutableUnidirectionalOptionalOneTest extends ImmutableUnidi
 	    language = "Python";
 	    languagePath = "py";
 	  }
+
+	  @Test @Ignore
+	  public void Aware()
+	  {
+		super.Aware();
+	  }
 }

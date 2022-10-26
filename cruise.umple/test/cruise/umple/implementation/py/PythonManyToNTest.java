@@ -13,5 +13,15 @@ public class PythonManyToNTest extends ManyToNTest
     language = "Python";
     languagePath = "py";
   }
+
+  @Test @Ignore
+  public void N(){
+    super.N();
+  }
+
+  @Test @Ignore
+  public void Many(){
+    super.Many();
+  }
   
 }

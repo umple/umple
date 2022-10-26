@@ -14,4 +14,9 @@ public class PythonInterfaceTemplateTest extends InterfaceTemplateTest
     language = "Python";
     languagePath = "py";
   }
+
+  @Test @Ignore
+  public void Implements(){
+    super.Implements();
+  }
 }
