@@ -25,3 +25,4 @@ class Client {
 // @@@skipphpcompile - Has java code
 // @@@skipcppcompile - Has java code
 // @@@skiprubycompile - Has java code
+// @@@skippythoncompile - Has Java code

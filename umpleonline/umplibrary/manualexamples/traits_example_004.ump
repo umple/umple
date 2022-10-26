@@ -15,4 +15,4 @@ class C1{
   Integer data;
   isA T1;
 }
-// @@@skipjavacompile @@@skipphpcompile Java code not compile
+// @@@skipjavacompile @@@skipphpcompile @@@skippythoncompile Java code not compile
