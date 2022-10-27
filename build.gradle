@@ -579,8 +579,9 @@ task updateNuspec(type: Copy) {
 
 // Create Zip file for choco package including jar and bat files
 task zipUmple(type: Copy) { 
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from "${rootProject.projectDir.toString()}/dist/"
-    include "umple-*.jar"
+    include "umple-${rootProject.ext.umpleMajorVersion}*.jar"
     into "${rootProject.projectDir.toString()}/build/package-files/"
     rename {'umple.jar'}
     
