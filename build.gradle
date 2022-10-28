@@ -599,19 +599,6 @@ task genOptions(type:Exec) {
 
 genOptions.ext.manOptions = ""
 
-// Create man page file from template with updated options
-task genManpage(dependsOn: genOptions, type: Copy) { 
-    from "${rootProject.projectDir.toString()}/build/package-files/template.1"
-    into "${rootProject.projectDir.toString()}/build/package-files/"
-    rename { 'umple.1' }
-    
-    doLast {
-	def file = new File("${rootProject.projectDir.toString()}/build/package-files/umple.1")
-	file.text = file.text.replace('.SH OPTIONS', '.SH OPTIONS' + genOptions.ext.manOptions)
-	ant.gzip(src: "${rootProject.projectDir.toString()}/build/package-files/umple.1", zipfile: "${rootProject.projectDir.toString()}/build/package-files/umple.1.gz") 
-    }
-}
-
 // Create copyright from LICENSE.md
 task genCopyright(type: Copy) {
     def info = ("Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/\n"
@@ -631,6 +618,19 @@ task genCopyright(type: Copy) {
     }
 }
 
+// Create man page file from template with updated options
+task genManpage(dependsOn: [genOptions, genCopyright], type: Copy) { 
+    from "${rootProject.projectDir.toString()}/build/package-files/template.1"
+    into "${rootProject.projectDir.toString()}/build/package-files/"
+    rename { 'umple.1' }
+    
+    doLast {
+	def file = new File("${rootProject.projectDir.toString()}/build/package-files/umple.1")
+	file.text = file.text.replace('.SH OPTIONS', '.SH OPTIONS' + genOptions.ext.manOptions)
+	ant.gzip(src: "${rootProject.projectDir.toString()}/build/package-files/umple.1", zipfile: "${rootProject.projectDir.toString()}/build/package-files/umple.1.gz") 
+    }
+}
+
 // Remove carriage return from script
 task removeCR {
     def file = new File("${rootProject.projectDir.toString()}/build/package-files/umple")
@@ -638,7 +638,7 @@ task removeCR {
 }
 
 // Create DEB package
-task packageDeb(dependsOn: [genManpage, genCopyright, removeCR], type: Deb) {
+task packageDeb(dependsOn: [genManpage, removeCR], type: Deb) {
     packageName = 'umple'
     packageDescription = 'Modeling tool/programming language that enables Model-Oriented Programming'
     maintainer = 'Umple Team <umple-help@googlegroups.com>'
@@ -649,8 +649,16 @@ task packageDeb(dependsOn: [genManpage, genCopyright, removeCR], type: Deb) {
     
     requires('default-jre-headless')
     
+    def names = []
+    fileTree("${rootProject.projectDir.toString()}/dist/").matching {
+        include "umple-${rootProject.ext.umpleMajorVersion}*.jar"
+    }.visit { FileVisitDetails details -> 
+    	names << details.file.name
+    }
+    def jarfile = Collections.max(names) 
+    
     from("${rootProject.projectDir.toString()}/dist/") {
-    	include "umple-*.jar"
+    	include "${jarfile}"
         into 'usr/local/lib/umple'
         rename {'umple.jar'}
     }
@@ -670,7 +678,7 @@ task packageDeb(dependsOn: [genManpage, genCopyright, removeCR], type: Deb) {
 }
 
 // Create RPM package
-task packageRpm(dependsOn: [genManpage, genCopyright, removeCR], type: Rpm) {
+task packageRpm(dependsOn: [genManpage, removeCR], type: Rpm) {
     packageName = 'umple'
     packageDescription = 'Modeling tool/programming language that enables Model-Oriented Programming'
     maintainer = 'Umple Team <umple-help@googlegroups.com>'
@@ -682,9 +690,17 @@ task packageRpm(dependsOn: [genManpage, genCopyright, removeCR], type: Rpm) {
     license = 'MIT'
     
     requires('jre-headless')
+    
+    def names = []
+    fileTree("${rootProject.projectDir.toString()}/dist/").matching {
+        include "umple-${rootProject.ext.umpleMajorVersion}*.jar"
+    }.visit { FileVisitDetails details -> 
+    	names << details.file.name
+    }
+    def jarfile = Collections.max(names) 
 
     from("${rootProject.projectDir.toString()}/dist/") {
-    	include "umple-*.jar"
+    	include "${jarfile}"
         into 'usr/local/lib/umple'
         rename {'umple.jar'}
     }
