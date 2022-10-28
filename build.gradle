@@ -88,9 +88,10 @@ def buildAliases = [
     'deployUmpleonline'
    ],
    'prepareChocoPackage' : [
-        'updateNuspec',
         'zipUmple',
-        'updateChecksum'
+        'updateChecksum',
+        'copyLicense',
+        'updateNuspec'
    ]
 
 ]
@@ -559,24 +560,6 @@ task packageAllJars {
 //  Prepare chocolatey package files
 // =======
 
-// Update nuspec file for creating choco package
-task updateNuspec(type: Copy) {
-    from "${rootProject.projectDir.toString()}/LICENSE.md"
-    into "${rootProject.projectDir.toString()}/build/package-files/chocolatey/tools/"
-    rename {'LICENSE.txt'}
-
-    doLast {
-        def copyright = new File("${rootProject.projectDir.toString()}/build/package-files/chocolatey/tools/LICENSE.txt")
-        def lines = copyright.readLines()
-        def copyrightContent = lines.get(3)
-
-        def file = new File("${rootProject.projectDir.toString()}/build/package-files/chocolatey/umple.nuspec")
-        file.text = file.text.replaceAll(/<version>.*<\/version>/, "<version>${rootProject.ext.umpleMajorVersion}</version>")
-        file.text = file.text.replaceAll(/<releaseNotes>.*<\/releaseNotes>/, "<releaseNotes>https://github.com/umple/umple/releases/tag/v${rootProject.ext.umpleMajorVersion}</releaseNotes>")
-        file.text = file.text.replaceAll(/<copyright>.*<\/copyright>/, "<copyright>${copyrightContent}</copyright>")
-    }
-}
-
 // Create Zip file for choco package including jar and bat files
 task zipUmple(type: Copy) { 
     def names = []
@@ -603,7 +586,11 @@ task zipUmple(type: Copy) {
 }
 
 // Update checksum of umple.jar
-task updateChecksum {
+task updateChecksum(type: Copy) {
+    from "${rootProject.projectDir.toString()}/build/package-files/"
+    into "${rootProject.projectDir.toString()}/build/package-files/chocolatey/tools/"
+    include "VERIFICATION.txt"
+    
     doLast {
         ant.checksum(file: "${rootProject.projectDir.toString()}/build/package-files/umple.jar", algorithm: "SHA-256")
         // Update checksum
@@ -612,6 +599,34 @@ task updateChecksum {
         def sha256File = new File("${rootProject.projectDir.toString()}/build/package-files/umple.jar.SHA-256")
         file.text = file.text.replaceAll(/Checksum:.*/, "Checksum:${sha256File.text}")
     }
+    
+    dependsOn zipUmple
+}
+
+// Copy License file
+task copyLicense(type: Copy) {
+    from "${rootProject.projectDir.toString()}/LICENSE.md"
+    into "${rootProject.projectDir.toString()}/build/package-files/chocolatey/tools/"
+    rename {"LICENSE.txt"}
+}
+
+// Update nuspec file for creating choco package
+task updateNuspec(type: Copy) {
+    from "${rootProject.projectDir.toString()}/build/package-files/umple.nuspec"
+    into "${rootProject.projectDir.toString()}/build/package-files/chocolatey/"
+
+    doLast {
+        def copyright = new File("${rootProject.projectDir.toString()}/build/package-files/chocolatey/tools/LICENSE.txt")
+        def lines = copyright.readLines()
+        def copyrightContent = lines.get(3)
+
+        def file = new File("${rootProject.projectDir.toString()}/build/package-files/chocolatey/umple.nuspec")
+        file.text = file.text.replaceAll(/<version>.*<\/version>/, "<version>${rootProject.ext.umpleMajorVersion}</version>")
+        file.text = file.text.replaceAll(/<releaseNotes>.*<\/releaseNotes>/, "<releaseNotes>https://github.com/umple/umple/releases/tag/v${rootProject.ext.umpleMajorVersion}</releaseNotes>")
+        file.text = file.text.replaceAll(/<copyright>.*<\/copyright>/, "<copyright>${copyrightContent}</copyright>")
+    }
+    
+    dependsOn updateChecksum
 }
 
 // =======
