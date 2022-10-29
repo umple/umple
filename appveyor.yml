@@ -64,7 +64,7 @@ install:
 - cmd: java -version # using ps causes it to fail because it prints to sterr
 - cmd: ant -version
 - cmd: rake -V
-# - ps: $TXLversion = & txl -V 2>&1 # using this because the version is printed to sterr on both ps and cmd (error if txl is not intalled or version gets saved to variable if it is)
+#- cmd: txl -V # prints to the sterr on cmd and ps
 
 build_script:
 
