@@ -22,4 +22,14 @@ public class PythonAssociationSortedWithNameSpace extends AssociationSortedWithN
 	    language = "Python";
 	    languagePath = "py";
 	  }
+
+	  @Test @Ignore
+	  public void AssociationShouldHaveSortMethod1() {
+		super.AssociationShouldHaveSortMethod1();
+	  }
+
+	  @Test @Ignore
+	  public void AssociationShouldHaveSortMethod2() {
+		super.AssociationShouldHaveSortMethod2();
+	  }
 }
