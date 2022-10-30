@@ -9,4 +9,4 @@ class X {
 }
 
 //$?[End_of_model]$?
-// @@@skipjavacompile @@@skipphpcompile because msg says likely error
+// @@@skipjavacompile @@@skipphpcompile @@@skippythoncompile because msg says likely error

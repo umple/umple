@@ -1,0 +1,47 @@
+from Student import Student
+import os
+
+class Mentor():
+    def __init__(self, aName, aStudent):
+        self._name = aName
+        self._id = None
+        if aStudent is None or aStudent.getMentor() != None :
+            raise RuntimeError ("Unable to create Mentor due to aStudent. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+        self._student = aStudent
+
+    def __init__(self, aName, aNameForStudent, aNumberForStudent):
+        self._name = aName
+        self._id = None
+        self._student = Student(aNameForStudent, aNumberForStudent, self)
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def setId(self, aId):
+        wasSet = False
+        self._id = aId
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getId(self):
+        return self._id
+
+    def getStudent(self):
+        return self._student
+
+    def delete(self):
+        existingStudent = self._student
+        self._student = None
+        if not(existingStudent is None) :
+            existingStudent.delete()
+
+    def __str__(self):
+        return str(super()) + "[" + "name" + ":" + self.getName() + "," + "id" + ":" + self.getId() + "]" + os.linesep + "  " + "student = " + (self.getStudent() != (format(id(self.getStudent()), "x")) if None else "null")
+

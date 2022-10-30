@@ -1,0 +1,114 @@
+from Person import Person
+from Student import Student
+
+class Teacher(Person):
+    def __init__(self, aName, aAge, aPosition):
+        super().__init__(aName, aAge)
+        self._position = aPosition
+        self._students = []
+
+    def setPosition(self, aPosition):
+        wasSet = False
+        self._position = aPosition
+        wasSet = True
+        return wasSet
+
+    def getPosition(self):
+        return self._position
+
+    def getStudent(self, index):
+        aStudent = self._students[index]
+        return aStudent
+
+    def getStudents(self):
+        newStudents = tuple(self._students)
+        return newStudents
+
+    def numberOfStudents(self):
+        number = len(self._students)
+        return number
+
+    def hasStudents(self):
+        has = len(self._students) > 0
+        return has
+
+    def indexOfStudent(self, aStudent):
+        index = self._students.index(aStudent)
+        return index
+
+    @staticmethod
+    def minimumNumberOfStudents():
+        return 0
+
+    def addStudent(self, aName, aAge, aStudentID):
+        return Student(aName, aAge, aStudentID, self)
+
+    def addStudent(self, aStudent):
+        wasAdded = False
+        if aStudent in self._students :
+            return False
+
+        existingTeacher = aStudent.getTeacher()
+        isNewTeacher = existingTeacher != None and not self.equals(existingTeacher)
+        if isNewTeacher :
+            aStudent.setTeacher(self)
+
+        else :
+            self._students.append(aStudent)
+
+        wasAdded = True
+        return wasAdded
+
+    def removeStudent(self, aStudent):
+        wasRemoved = False
+        if not self.equals(aStudent.getTeacher()) :
+            self._students.remove(aStudent)
+            wasRemoved = True
+
+        return wasRemoved
+
+    def addStudentAt(self, aStudent, index):
+        wasAdded = False
+        if self.addStudent(aStudent) :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfStudents() :
+                index = self.numberOfStudents() - 1
+
+            self._students.remove(aStudent)
+            self._students.insert(index, aStudent)
+            wasAdded = True
+
+        return wasAdded
+
+    def addOrMoveStudentAt(self, aStudent, index):
+        wasAdded = False
+        if aStudent in self._students :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfStudents() :
+                index = self.numberOfStudents() - 1
+
+            self._students.remove(aStudent)
+            self._students.insert(index, aStudent)
+            wasAdded = True
+
+        else :
+            wasAdded = self.addStudentAt(aStudent, index)
+
+        return wasAdded
+
+    def delete(self):
+        i = len(self._students)
+        while i > 0 :
+            aStudent = self._students[i - 1]
+            aStudent.delete()
+            i = i - 1
+
+        super().delete()
+
+    def __str__(self):
+        return str(super()) + "[" + "position" + ":" + self.getPosition() + "]"
+

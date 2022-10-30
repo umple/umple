@@ -1,0 +1,45 @@
+from X import X
+import os
+
+class Y():
+    def __init__(self, aC, aX):
+        self._c = aC
+        didAddX = self.setX(aX)
+        if not didAddX :
+            raise RuntimeError ("Unable to create y due to x. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    def setC(self, aC):
+        wasSet = False
+        self._c = aC
+        wasSet = True
+        return wasSet
+
+    def getC(self):
+        return self._c
+
+    def getX(self):
+        return self._x
+
+    def setX(self, aX):
+        wasSet = False
+        if aX is None :
+            return wasSet
+
+        existingX = self._x
+        self._x = aX
+        if existingX != None and not existingX.equals(aX) :
+            existingX.removeY(self)
+
+        self._x.addY(self)
+        wasSet = True
+        return wasSet
+
+    def delete(self):
+        placeholderX = self._x
+        self._x = None
+        if not(placeholderX is None) :
+            placeholderX.removeY(self)
+
+    def __str__(self):
+        return str(super()) + "[" + "c" + ":" + self.getC() + "]" + os.linesep + "  " + "x = " + (self.getX() != (format(id(self.getX()), "x")) if None else "null")
+

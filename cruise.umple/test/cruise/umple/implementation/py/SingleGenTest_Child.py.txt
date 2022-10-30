@@ -1,0 +1,22 @@
+from Person import Person
+
+class Mentor(Person):
+    def __init__(self, aName, aAge, aClass):
+        super().__init__(aName, aAge)
+        self._class = aClass
+
+    def setClass(self, aClass):
+        wasSet = False
+        self._class = aClass
+        wasSet = True
+        return wasSet
+
+    def getClass(self):
+        return self._class
+
+    def delete(self):
+        super().delete()
+
+    def __str__(self):
+        return str(super()) + "[" + "class" + ":" + self.getClass() + "]"
+

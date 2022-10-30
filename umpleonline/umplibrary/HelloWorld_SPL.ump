@@ -43,3 +43,4 @@ require subfeature [ opt World];
 //$?[End_of_model]$?
 // @@@skipphpcompile - Contains java code
 // @@@skiprubycompile - Contains Java code
+// @@@skippythoncompile - Contains Java Code
