@@ -11,3 +11,4 @@ class PotentialVoter {
 //$?[End_of_model]$?
 // @@@skipphpcompile - Contains Java/Cpp code
 // @@@skiprubycompile - Contains Java/Cpp code
+// @@@skippythoncompile - Contains Java/Cpp Code

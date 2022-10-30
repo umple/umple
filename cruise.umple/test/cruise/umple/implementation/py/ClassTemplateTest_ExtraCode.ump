@@ -1,0 +1,9 @@
+generate Python;
+namespace example;
+
+class Mentor 
+{
+  
+  public function showMe() {}
+
+}

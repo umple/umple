@@ -1,0 +1,25 @@
+from Mentor import Mentor
+
+class Example(Mentor):
+    def __init__(self, aAttr):
+        super().__init__(aAttr)
+
+    def getAttr(self):
+        aAttr = super().getAttr()
+        return aAttr
+
+    def getDerivedAttr(self):
+        aDerivedAttr = super().getDerivedAttr()
+        return aDerivedAttr
+
+    def getListAttr(self, index):
+        aListAttr = super().getListAttr(index)
+        return aListAttr
+
+    def getDefaultedAttr(self):
+        aDefaultedAttr = super().getDefaultedAttr()
+        return aDefaultedAttr
+
+    def delete(self):
+        super().delete()
+

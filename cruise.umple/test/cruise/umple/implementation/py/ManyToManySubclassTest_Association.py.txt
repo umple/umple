@@ -1,0 +1,198 @@
+from Analyzer import Analyzer
+
+class Analyzer():
+    def __init__(self):
+        self._children = []
+        self._parent = []
+
+    def getChild(self, index):
+        aChild = self._children[index]
+        return aChild
+
+    def getChildren(self):
+        newChildren = tuple(self._children)
+        return newChildren
+
+    def numberOfChildren(self):
+        number = len(self._children)
+        return number
+
+    def hasChildren(self):
+        has = len(self._children) > 0
+        return has
+
+    def indexOfChild(self, aChild):
+        index = self._children.index(aChild)
+        return index
+
+    def getParent(self, index):
+        aParent = self._parent[index]
+        return aParent
+
+    def getParent(self):
+        newParent = tuple(self._parent)
+        return newParent
+
+    def numberOfParent(self):
+        number = len(self._parent)
+        return number
+
+    def hasParent(self):
+        has = len(self._parent) > 0
+        return has
+
+    def indexOfParent(self, aParent):
+        index = self._parent.index(aParent)
+        return index
+
+    @staticmethod
+    def minimumNumberOfChildren():
+        return 0
+
+    def addChild(self, aChild):
+        wasAdded = False
+        if aChild in self._children :
+            return False
+
+        self._children.append(aChild)
+        if aChild.indexOfParent(self) != -1 :
+            wasAdded = True
+
+        else :
+            wasAdded = aChild.addParent(self)
+            if not wasAdded :
+                self._children.remove(aChild)
+
+        return wasAdded
+
+    def removeChild(self, aChild):
+        wasRemoved = False
+        if not self._children.contains(aChild) :
+            return wasRemoved
+
+        oldIndex = self._children.index(aChild)
+        self._children.remove(oldIndex)
+        if aChild.indexOfParent(self) == -1 :
+            wasRemoved = True
+
+        else :
+            wasRemoved = aChild.removeParent(self)
+            if not wasRemoved :
+                self._children.insert(oldIndex, aChild)
+
+        return wasRemoved
+
+    def addChildAt(self, aChild, index):
+        wasAdded = False
+        if self.addChild(aChild) :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfChildren() :
+                index = self.numberOfChildren() - 1
+
+            self._children.remove(aChild)
+            self._children.insert(index, aChild)
+            wasAdded = True
+
+        return wasAdded
+
+    def addOrMoveChildAt(self, aChild, index):
+        wasAdded = False
+        if aChild in self._children :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfChildren() :
+                index = self.numberOfChildren() - 1
+
+            self._children.remove(aChild)
+            self._children.insert(index, aChild)
+            wasAdded = True
+
+        else :
+            wasAdded = self.addChildAt(aChild, index)
+
+        return wasAdded
+
+    @staticmethod
+    def minimumNumberOfParent():
+        return 0
+
+    def addParent(self, aParent):
+        wasAdded = False
+        if aParent in self._parent :
+            return False
+
+        self._parent.append(aParent)
+        if aParent.indexOfChild(self) != -1 :
+            wasAdded = True
+
+        else :
+            wasAdded = aParent.addChild(self)
+            if not wasAdded :
+                self._parent.remove(aParent)
+
+        return wasAdded
+
+    def removeParent(self, aParent):
+        wasRemoved = False
+        if not self._parent.contains(aParent) :
+            return wasRemoved
+
+        oldIndex = self._parent.index(aParent)
+        self._parent.remove(oldIndex)
+        if aParent.indexOfChild(self) == -1 :
+            wasRemoved = True
+
+        else :
+            wasRemoved = aParent.removeChild(self)
+            if not wasRemoved :
+                self._parent.insert(oldIndex, aParent)
+
+        return wasRemoved
+
+    def addParentAt(self, aParent, index):
+        wasAdded = False
+        if self.addParent(aParent) :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfParent() :
+                index = self.numberOfParent() - 1
+
+            self._parent.remove(aParent)
+            self._parent.insert(index, aParent)
+            wasAdded = True
+
+        return wasAdded
+
+    def addOrMoveParentAt(self, aParent, index):
+        wasAdded = False
+        if aParent in self._parent :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfParent() :
+                index = self.numberOfParent() - 1
+
+            self._parent.remove(aParent)
+            self._parent.insert(index, aParent)
+            wasAdded = True
+
+        else :
+            wasAdded = self.addParentAt(aParent, index)
+
+        return wasAdded
+
+    def delete(self):
+        copyOfChildren = self._children.copy()
+        self._children.clear()
+        for aChild in copyOfChildren:
+            aChild.removeParent(self)
+
+        copyOfParent = self._parent.copy()
+        self._parent.clear()
+        for aParent in copyOfParent:
+            aParent.removeChild(self)
+

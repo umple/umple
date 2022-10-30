@@ -1,0 +1,9 @@
+from Mentor import Mentor
+
+class SubMentor(Mentor):
+    def __init__(self, aName):
+        super().__init__(aName)
+
+    def delete(self):
+        super().delete()
+

@@ -74,3 +74,4 @@ class Student
 // @@@skipcppcompile - requestToRegister is specifically java code.
 // @@@skipphpcompile - requestToRegister is specifically java code.
 // @@@skiprubycompile - requestToRegister is specifically java code.
+// @@@skippythoncompile - requestToRegister is specifically java code.
