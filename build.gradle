@@ -1186,6 +1186,198 @@ task javaUserManualAndExampleTests {
     }
 }
 
+task ('setupPythonUserManualAndExampleTests') {
+  group = "Custom"
+  description = "Setting up python umpleonline and user manual examples"
+  doLast{
+    setupUserManualAndExampleTests("python");
+    }
+}
+
+
+task pythonUserManualAndExampleTests {
+    group = "Custom"
+    description = "Testing python umpleonline and Manual Examples"
+    dependsOn setupPythonUserManualAndExampleTests
+    doLast {
+        def excludes = [
+                "E0*.ump",
+                "E1*.ump",
+                "E2*.ump",
+                "E3*.ump",
+                "E4*.ump",
+                "WE1xxIdentifierInvalid1.ump",
+                "WE1xxIdentifierInvalid3.ump",
+                "WE1xxIdentifierInvalid5.ump",
+                "WE1xxIdentifierInvalid6.ump",
+                "WE1xxIdentifierInvalid7.ump",
+                "W142TypeIsAccessSpecifierAmbiguous.ump",
+                "UseStatements1.ump",
+                "NamespaceDirectives4.ump",
+                "HtmlGeneration2.ump", //Temporary
+                "OBDCarSystem.ump", //Temporary
+                "ComplexStateMachine.ump", //Temporary
+                "W010SingletonMultiplicityOver12.ump", //Temporary
+                "2DShapes.ump", // <start> Disabled until TXL bugs are fixed
+                "AbstractMethods2.ump",
+                "AccessControl.ump",
+                "AccessControl2.ump",
+                "Accidents.ump",
+                "Accommodations.ump",
+                "AfghanRainDesign.ump",
+                "AgentsCommunication.ump",
+                "Airline.ump",
+                "AirlineExample.ump",
+                "AroundStatement2.ump",
+                "AssociationClassDefinition3.ump",
+                "AssociationClassDefinition5.ump",
+                "Ball_Game.ump",
+                "BankSystem.ump",
+                "BankingSystemA.ump",
+                "BankingSystemB.ump",
+                "RoutesAndLocations.ump",
+                "BcmsCore.ump",
+                "Compositions.ump",
+                "CoordinationStateMachine.ump",
+                "BusSystemByPattern.ump",
+                "CanalSystem.ump",
+                "Claim.ump",
+                "CoOpSystem.ump",
+                "CodeInjectioninEventMethods1.ump",
+                "CommunityAssociation.ump",
+                "DMMExtensionCTF.ump",
+                "DMMModelElementHierarchy.ump",
+                "DMMOverview.ump",
+                "Decisions.ump",
+                "DelegationPattern1.ump",
+                "DigitalWatchNested.ump",
+                "Dishwasher.ump",
+                "ElectionSystem.ump",
+                "ElevatorSystemA.ump",
+                "Elevator_State_Machine.ump",
+                "ElevatorSystemB.ump",
+                "Filters-Shape3D-1.ump",
+                "GenealogyC.ump",
+                "GeometricSystem.ump",
+                "HelloWorldExamples1.ump",
+                "Hospital.ump",
+                "RE001ImmutabilityException1.ump",
+                "Insurance.ump",
+                "InventoryManagement.ump",
+                "KeysforEqualityandHashing1.ump",
+                "Library.ump",
+                "LibraryLoanStateMachine.ump",
+                "MailOrderSystemClientOrder.ump",
+                "MailOrderSystem.ump",
+                "ManufacturingPlantController.ump",
+                "MicrowaveOven2.ump",
+                "MixsetInTrait.ump",
+                "W042NamespaceCannotBeDefault.ump",
+                "OhHellWhist.ump",
+                "TelephoneSystem2.ump",
+                "PingPong.ump",
+                "Pizza.ump",
+                "PoliceSystem.ump",
+                "QueuedStateMachines1.ump",
+                "RE001ImmutabilityException1.ump",
+                "RoleNames1.ump",
+                "SecurityLight.ump",
+                "SimpleConstraints1.ump",
+                "SortedAssociations2.ump",
+                "StateDependentMethods1.ump",
+                "StateDependentMethods2.ump",
+                "StateMachineActionsandDoActivities1.ump",
+                "TcpIpSimulation.ump",
+                "TelephoneSystem.ump",
+                "TimedCommands.ump",
+                "TrafficLightsB.ump",
+                "UnspecifiedEvents2.ump",
+                "VendingMachineClassDiagram.ump",
+                "W082ConflictingModifiers.ump",
+                "W1512CodeLabelsInsideMethodAreNotUnique.ump",
+                "WarehouseSystem.ump",
+                "assocSpecEx.ump",
+                "realestate.ump",
+                "traits_example_addresses.ump",
+                "GenealogyB.ump",
+                "Hotel.ump",
+                "ManufactoringPlantController.ump",
+                "SortedAssociations1.ump",
+                "AroundStatement1.ump",
+                "DigitalWatchFlat.ump",
+                "Multiplicity3.ump",
+                "MixsetsInMethod.ump",
+                "ImmutablePattern2.ump",
+                "Phone.ump",
+                "AirlineByPattern.ump",
+                "Runway.ump",
+                "PooledStateMachines1.ump",
+                "CodeInjectioninCustomMethods1.ump",
+                "CanalLockStateMachine.ump",
+                "HelloWorld_SPL.ump",
+                "UniqueAttribute2.ump",
+                "Compositions_regAssoc.ump",
+                "GenealogyA.ump",
+                "Compositions1_eq2.ump",
+                "BasicTemplates1.ump",
+                "AssociationClassDefinition1.ump",
+                "BcmsMultipleCrisis-Multiple-Coordinator-Configuration.ump",
+                "MultiValuedAttributes1.ump",
+                "ToplevelAspect2.ump",
+                "Compositions1_eq1.ump",
+                "ActiveObjects1.ump",
+                "AbstractMethods1.ump",
+                "AssociationOneToOne.ump",
+                "Auto-Transitions1.ump",
+                "AttributeDefinition1.ump",
+                "BcmsMultiCrisisMultiCoordConfiguration.ump",
+                "BcmsBaseConfiguration.ump",
+                "ClassesasAttributeTypes2.ump",
+                "ClassesasAttributeTypes3.ump",
+                "ClassesasAttributeTypes1.ump",
+                "ClassDefinition1.ump",
+                "Compositions1.ump",
+                "Multiplicity2.ump",
+                "RE002MultiplicityException2.ump",
+                "BasicTemplates2.ump",
+                "BasicTemplates3.ump",
+                "HtmlGeneration.ump",
+                "Tracers1.ump",
+                "Tracers2.ump",
+                "Tracers3.ump",
+                "Tracers4.ump",
+                "Tracers5.ump",
+                "TracingAssociations1.ump",
+                "TracingAssociations2.ump",
+                "TracingAssociations3.ump",
+                "TracingAttributes1.ump",
+                "TracingAttributes2.ump",
+                "TracingAttributes3.ump",
+                "TracingAttributeswithConditions2.ump",
+                "TracingAttributeswithOccurrences1.ump",
+                "TracingAttributeswithOccurrences2.ump",
+                "TracingAttributeswithtimeline1.ump",
+                "TracingAttributeswithtimeline2.ump",
+                "TracingBasics1.ump",
+                "TracingBasics2.ump",
+                "TracingConstraints1.ump",
+                "TracingConstraints2.ump",
+                "TracingConstraints3.ump",
+                "TracingMethods1.ump",
+                "TracingMethods1.ump",
+                "TracingStateMachines1.ump",
+                "TracingStateMachines2.ump",
+                "TracingStateMachines3.ump",
+                "W301TracingEntityNotFound1.ump",
+                "W301TracingEntityNotFound2.ump",
+                "W302TracerNotRecognized1.ump",
+                "W302TracerNotRecognized2.ump",// <End> Disabled until TXL bugs are fixed
+                "src-gen-umple",
+                "allExamplesList.txt"]
+        runUserManualAndExampleTests("python", "Python", excludes)
+    }
+}
+
 task ('setupPhpUserManualAndExampleTests') {
    group = "Custom"
    description = "Setting up php umpleonline and user manual examples"
@@ -1233,6 +1425,7 @@ task allUserManualAndExampleTests {
       }
     dependsOn javaUserManualAndExampleTests
     dependsOn phpUserManualAndExampleTests
+    dependsOn pythonUserManualAndExampleTests
     // Consider doing this for the other languages too
 }
 

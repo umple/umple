@@ -1,0 +1,12 @@
+from Father import Father
+
+class CC(Father):
+    def __init__(self):
+        super().__init__()
+
+    def delete(self):
+        super().delete()
+
+    def someMethod1(self):
+        pass
+

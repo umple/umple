@@ -1,0 +1,47 @@
+from OneSymmetric import OneSymmetric
+import os
+
+class OneSymmetric():
+    def __init__(self, aName, aNumber, aFriend):
+        self._name = aName
+        self._number = aNumber
+        if aFriend is None or aFriend.getFriend() != None :
+            raise RuntimeError ("Unable to create OneSymmetric due to aFriend. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+        self._friend = aFriend
+
+    def __init__(self, aName, aNumber, aNameForFriend, aNumberForFriend):
+        self._name = aName
+        self._number = aNumber
+        self._friend = OneSymmetric(aNameForFriend, aNumberForFriend, self)
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def setNumber(self, aNumber):
+        wasSet = False
+        self._number = aNumber
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getNumber(self):
+        return self._number
+
+    def getFriend(self):
+        return self._friend
+
+    def delete(self):
+        existingFriend = self._friend
+        self._friend = None
+        if not(existingFriend is None) :
+            existingFriend.delete()
+
+    def __str__(self):
+        return str(super()) + "[" + "name" + ":" + self.getName() + "," + "number" + ":" + self.getNumber() + "]" + os.linesep + "  " + "friend = " + (self.getFriend() != (format(id(self.getFriend()), "x")) if None else "null")
+
