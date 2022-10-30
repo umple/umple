@@ -650,12 +650,26 @@ task packageDeb(dependsOn: [genManpage, removeCR], type: Deb) {
     requires('default-jre-headless')
     
     def names = []
+    def subNumbers = []
     fileTree("${rootProject.projectDir.toString()}/dist/").matching {
         include "umple-${rootProject.ext.umpleMajorVersion}*.jar"
     }.visit { FileVisitDetails details -> 
-    	names << details.file.name
+        names << details.file.name
+        if (details.file.name.split('\\.').length > 4) {
+            subNumbers << details.file.name.split('\\.').getAt(3).toInteger()
+            names << details.file.name
+        }
     }
-    def jarfile = Collections.max(names) 
+
+    def jarfile = ""
+    if (!names.isEmpty()) {
+        jarfile = Collections.max(names) 
+        def maxNumber = Collections.max(subNumbers)
+        def index = subNumbers.findIndexOf { it == maxNumber } 
+        jarfile = names[index]
+    } else {
+        print("No umple jar file detected.")
+    }
     
     from("${rootProject.projectDir.toString()}/dist/") {
     	include "${jarfile}"
@@ -692,12 +706,26 @@ task packageRpm(dependsOn: [genManpage, removeCR], type: Rpm) {
     requires('jre-headless')
     
     def names = []
+    def subNumbers = []
     fileTree("${rootProject.projectDir.toString()}/dist/").matching {
         include "umple-${rootProject.ext.umpleMajorVersion}*.jar"
     }.visit { FileVisitDetails details -> 
-    	names << details.file.name
+        names << details.file.name
+        if (details.file.name.split('\\.').length > 4) {
+            subNumbers << details.file.name.split('\\.').getAt(3).toInteger()
+            names << details.file.name
+        }
     }
-    def jarfile = Collections.max(names) 
+
+    def jarfile = ""
+    if (!names.isEmpty()) {
+        jarfile = Collections.max(names) 
+        def maxNumber = Collections.max(subNumbers)
+        def index = subNumbers.findIndexOf { it == maxNumber } 
+        jarfile = names[index]
+    } else {
+        print("No umple jar file detected.")
+    }
 
     from("${rootProject.projectDir.toString()}/dist/") {
     	include "${jarfile}"
