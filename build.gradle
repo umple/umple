@@ -563,15 +563,23 @@ task packageAllJars {
 // Create Zip file for choco package including jar and bat files
 task zipUmple(type: Copy) { 
     def names = []
+    def subNumbers = []
     fileTree("${rootProject.projectDir.toString()}/dist/").matching {
         include "umple-${rootProject.ext.umpleMajorVersion}*.jar"
     }.visit { FileVisitDetails details -> 
-    	names << details.file.name
+        if (details.file.name.split('\\.').length > 4) {
+            subNumbers << details.file.name.split('\\.').getAt(3).toInteger()
+            names << details.file.name
+        }
     }
 
     def jarfile = ""
     if (!names.isEmpty()) {
-        jarfile = Collections.max(names) 
+        def maxNumber = Collections.max(subNumbers)
+        def index = subNumbers.findIndexOf { it == maxNumber } 
+        jarfile = names[index]
+    } else {
+        print("No umple jar file detected.")
     }
 
     from "${rootProject.projectDir.toString()}/dist/"
