@@ -568,7 +568,11 @@ task zipUmple(type: Copy) {
     }.visit { FileVisitDetails details -> 
     	names << details.file.name
     }
-    def jarfile = Collections.max(names) 
+
+    def jarfile = ""
+    if (!names.isEmpty()) {
+        jarfile = Collections.max(names) 
+    }
 
     from "${rootProject.projectDir.toString()}/dist/"
     include "${jarfile}"
