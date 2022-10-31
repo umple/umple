@@ -98,6 +98,8 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/py/Student.py");
     SampleFileWriter.destroy(pathToInput + "/py/NetworkNode.py");
     SampleFileWriter.destroy(pathToInput + "/py/Router.py");
+    SampleFileWriter.destroy(pathToInput + "/Mentor.py");
+    SampleFileWriter.destroy(pathToInput + "/Student.py");
     
     SampleFileWriter.destroy(pathToInput + "/Tracer.java");
     SampleFileWriter.destroy(pathToInput + "/ConsoleTracer.php");
