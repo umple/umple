@@ -314,7 +314,7 @@
       <exclude name="TracingConstraints2.ump"/>
       <exclude name="TracingConstraints3.ump"/>
       <exclude name="TracingMethods1.ump"/>
-      <exclude name="TracingMethods1.ump"/>
+      <exclude name="TracingMethods2.ump"/>
       <exclude name="TracingStateMachines1.ump"/>
       <exclude name="TracingStateMachines2.ump"/>
       <exclude name="TracingStateMachines3.ump"/>

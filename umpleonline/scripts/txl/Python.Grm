@@ -133,8 +133,7 @@ end redefine
 
 redefine constructor
     ...
-    | 'def '__init__ [SPOFF] '(self, [SPON] [list id] [SPOFF]'): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
-    | 'def '__init__ [SPOFF] '(self): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
+    | 'def '__init__ [SPOFF] '( [SPON] [list id] [SPOFF]'): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
 end redefine
 
 redefine concrete_class_declaration
