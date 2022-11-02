@@ -119,15 +119,12 @@ end redefine
 
 redefine concrete_method_declaration
     ...
-    |   [opt decorator] 'def  [id] [SPOFF]'(self, [SPON] [list id] [SPOFF] '): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
-    |   [opt decorator] 'def  [id] [SPOFF]'(self): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
-    |   [opt decorator] 'def  [id] [SPOFF]'(): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
+    |   [opt decorator] 'def  [id] [SPOFF]'( [SPON] [list id] [SPOFF] '): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
 end redefine
 
 redefine abstract_method_declaration
     ...
-    |   [SPOFF] '@abstractmethod [SPON] [NL] 'def  [id] [SPOFF]'(self, [SPON] [list id] [SPOFF] '): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
-    |   [SPOFF] '@abstractmethod [SPON] [NL] 'def  [id] [SPOFF]'(self): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
+    |   [SPOFF] '@abstractmethod [SPON] [NL] 'def  [id] [SPOFF]'( [SPON] [list id] [SPOFF] '): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
 end redefine
 
 
@@ -197,4 +194,9 @@ end redefine
 redefine switch_case_default
     ...
     |   'case 'default ': [NL] [IN] [repeat statement] [EX]
+end redefine
+
+redefine statement
+    ...
+    | [import_statement]
 end redefine
