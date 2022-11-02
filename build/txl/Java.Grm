@@ -4,7 +4,7 @@ comments
 end comments
 
 compounds 
-    'self. '== '!=
+    'self. '== '!= '>= '<=
 end compounds 
 
 tokens
@@ -83,9 +83,12 @@ define nestable_class
 end define
 
 define arithmatic_expression
-       [value_no_recursion] [arithmatic_operator] [arithmatic_expression]
-    |   [value_no_recursion]
+    [value_no_recursion] [repeat arithmatic_continuation+]
 end define
+
+define arithmatic_continuation
+    [arithmatic_operator] [value_no_recursion]
+end define 
 
 define nested_identifier
      [nestable_value] [SPOFF] [repeat attribute_access] [SPON]
@@ -172,7 +175,7 @@ define while_loop
 end define
 
 define ternary
-    [value_no_recursion] '? [value] ': [value]
+    [boolean_expression] '? [value] ': [value]
 end define
 
 define for_loop
@@ -233,7 +236,7 @@ define boolean_continuation
 end define
 
 define condition
-        [value_no_recursion] [comparator] [value]
+        [value_no_recursion] [comparator] [value_no_ternary]
     |   [value_no_recursion]
 end define
 
