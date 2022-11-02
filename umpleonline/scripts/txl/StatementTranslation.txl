@@ -36,7 +36,6 @@ function replaceStatements
             [replaceCasting]
             [correctSuperInit]
             [correctSuperFunctions]
-            [replaceSuperToString]
             [replaceNewLine]
             [replaceHexIdentity]
             [replaceComparator]
@@ -141,7 +140,7 @@ end rule
 
 rule replaceTernary
     replace [ternary]
-        condition [value_no_recursion] '? opt1 [value] ': opt2 [value]
+        condition [boolean_expression] '? opt1 [value] ': opt2 [value]
     by
         '( opt1 ') 'if condition 'else opt2
 end rule
@@ -159,7 +158,6 @@ rule replaceNull
     by
         'None
 end rule
-
 
 rule replaceDecrement
     replace [assignment]
@@ -234,13 +232,6 @@ rule correctSuperFunctions
         'super() rep
 end rule
 
-rule replaceSuperToString
-    replace [nested_identifier]
-        'super().toString() rep [repeat attribute_access]
-    by
-        'super().__str__() rep
-end rule
-
 rule replaceNewLine
     replace [nested_identifier]
         'System.getProperties().getProperty("line.separator")
@@ -279,7 +270,7 @@ function replaceFirstSwitchCaseCase switch [value_no_recursion] firstCase [switc
     replace [if]
         _ [if]
     deconstruct firstCase
-        'case val [value] ': stmts [repeat statement] 'break;
+        'case val [value_no_ternary] ': stmts [repeat statement] 'break;
     construct condition [condition]
         switch '== val [fixEnumValueWithNoEnum]
     construct newIf [if]
@@ -292,7 +283,7 @@ function replaceSwitchCaseCase switch [value_no_recursion] aCase [switch_case_ca
     replace [repeat else_if]
         rep [repeat else_if]
     deconstruct aCase
-        'case val [value] ': stmts [repeat statement] 'break;
+        'case val [value_no_ternary] ': stmts [repeat statement] 'break;
     construct elseIf [else_if]
         'elif switch '== val [fixEnumValueWithNoEnum] ': stmts [replaceNoStatements]
     by 

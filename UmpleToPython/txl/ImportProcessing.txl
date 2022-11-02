@@ -3,12 +3,10 @@ function createImports classBody [class_body_decl] inheritances [repeat inherita
         empty [repeat import_statement]
     construct declarations [repeat member_variable_declaration]
         _ [^ classBody]
-    construct declarationClassesToImport [repeat id]
-        _ [getClassesToImport classBody each declarations]
-    construct allInternalClassesToImport [repeat id]
-        _ [extractInheritanceImportClasses classBody each inheritances] [concatenateRepeatNoDuplicates declarationClassesToImport]
+    construct inheritanceImports [repeat id]
+        _ [extractInheritanceImportClasses classBody each inheritances]
     construct allImports [repeat import_statement]
-        _ [addImportStatement each allInternalClassesToImport] [addExternalImports classBody]
+        _ [addImportStatement each inheritanceImports] [addExternalImports classBody]
     by
         allImports
 end function 
@@ -22,7 +20,7 @@ function addImportStatement a [id]
         imports [. newImport]
 end function
 
-function getClassesToImport classBody [class_body_decl] declaration [member_variable_declaration]
+function extractPossibleFunctionImports classBody [class_body_decl] declaration [member_variable_declaration]
     replace [repeat id]
         empty [repeat id]
     deconstruct declaration
@@ -109,18 +107,23 @@ function filterOutUnwantedTypes classBody [class_body_decl] ids [repeat id]
     replace [repeat id]
         empty [repeat id]
     by 
-        empty [addIfNotDefaultTypeOrEnum classBody each ids]
+        empty [importClassFilter classBody each ids]
 end function
 
-function addIfNotDefaultTypeOrEnum classBody [class_body_decl] id [id]
+function importClassFilter classBody [class_body_decl] type [id]
     replace [repeat id]
         current [repeat id]
     where not 
-        id [matchDefaultType]
+        type [matchDefaultType]
     where not 
-        classBody [isTypeEnum id]
+        classBody [isTypeEnum type]
+    import className [nested_class]
+    deconstruct className
+        classNameId [id]
+    where not
+        classNameId [= type]
     by
-        current [. id] 
+        current [. type]
 end function
 
 rule matchDefaultType
@@ -137,12 +140,8 @@ function extractRegularClass classBody [class_body_decl] class [nested_class]
         empty [repeat id]
     deconstruct class
         id [id]
-    where not 
-        id [matchDefaultType]
-    where not 
-        classBody [isTypeEnum id]
     by
-        empty [. id]
+        empty [importClassFilter classBody id]
 end function
 
 function listToRepeat ids [list id]
