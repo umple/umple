@@ -93,6 +93,13 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Window.java");    
     SampleFileWriter.destroy(pathToInput + "/A_Guard.php");
     SampleFileWriter.destroy(pathToInput + "/B.php");
+    SampleFileWriter.destroy(pathToInput + "/py/example");
+    SampleFileWriter.destroy(pathToInput + "/Token.py");
+    SampleFileWriter.destroy(pathToInput + "/py/Student.py");
+    SampleFileWriter.destroy(pathToInput + "/py/NetworkNode.py");
+    SampleFileWriter.destroy(pathToInput + "/py/Router.py");
+    SampleFileWriter.destroy(pathToInput + "/Mentor.py");
+    SampleFileWriter.destroy(pathToInput + "/Student.py");
     
     SampleFileWriter.destroy(pathToInput + "/Tracer.java");
     SampleFileWriter.destroy(pathToInput + "/ConsoleTracer.php");
@@ -103,12 +110,14 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/X.java");
     SampleFileWriter.destroy(pathToInput + "/X.php");
     SampleFileWriter.destroy(pathToInput + "/x.ruby");
+    SampleFileWriter.destroy(pathToInput + "/X.py");
 
     SampleFileWriter.destroy(pathToInput + "/StrobeLight.php");
     SampleFileWriter.destroy(pathToInput + "/Lamp.php");
     SampleFileWriter.destroy(pathToInput + "/Switch.php");
     SampleFileWriter.destroy(pathToInput + "/StateMachineTest.php");
 
+    SampleFileWriter.destroy(pathToInput + "/Example.py");
     SampleFileWriter.destroy(pathToInput + "/Example.php");
     SampleFileWriter.destroy(pathToInput + "/example.rb");
     SampleFileWriter.destroy(pathToInput + "/Example.java");
@@ -175,6 +184,8 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/ruby/ruby_code");
     SampleFileWriter.destroy(pathToInput + "/java/java_code");
     SampleFileWriter.destroy(pathToInput + "/php/php_code");
+    SampleFileWriter.destroy(pathToInput + "/py/python_code");
+
 
     //
     // Tear down missing comment detection tests.
@@ -201,6 +212,13 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Bar3.php");
     SampleFileWriter.destroy(pathToInput + "/Bar4.php");
     SampleFileWriter.destroy(pathToInput + "/Foo.php");
+
+    SampleFileWriter.destroy(pathToInput + "/Bar.py");
+    SampleFileWriter.destroy(pathToInput + "/Bar1.py");
+    SampleFileWriter.destroy(pathToInput + "/Bar2.py");
+    SampleFileWriter.destroy(pathToInput + "/Bar3.py");
+    SampleFileWriter.destroy(pathToInput + "/Bar4.py");
+    SampleFileWriter.destroy(pathToInput + "/Foo.py");
 
     SampleFileWriter.destroy(pathToInput + "/QueuedSMwithConcurrentStates.php");
     SampleFileWriter.destroy(pathToInput + "/NestedStatesWthSameEventNames.php");
@@ -286,6 +304,7 @@ public class TemplateTest
     
     SampleFileWriter.destroy(pathToInput + "/client.rb");
     SampleFileWriter.destroy(pathToInput + "/Client.php");
+    SampleFileWriter.destroy(pathToInput + "/Client.py");
     
     // Tear down issue 923 tests
     SampleFileWriter.destroy(pathToInput + "/java/FileLogger.java");
@@ -297,6 +316,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/MultipleConstraints.java");
     SampleFileWriter.destroy(pathToInput + "/MultipleConstraints.php");
     SampleFileWriter.destroy(pathToInput + "/multiple_constraints.rb");
+    SampleFileWriter.destroy(pathToInput + "/MultipleConstraints.py");
     
     // Tear down issue 1444 tests
     SampleFileWriter.destroy(pathToInput + "/Academy.java");
@@ -350,6 +370,11 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/student_12.rb");
     SampleFileWriter.destroy(pathToInput + "/toplevel_after_on_trait_class.rb");
     SampleFileWriter.destroy(pathToInput + "/employer.rb");
+    SampleFileWriter.destroy(pathToInput + "/Student10.py");
+    SampleFileWriter.destroy(pathToInput + "/Student11.py");
+    SampleFileWriter.destroy(pathToInput + "/Student12.py");
+    SampleFileWriter.destroy(pathToInput + "/toplevelAfterOnTraitClass.py");
+    SampleFileWriter.destroy(pathToInput + "/Employer.py");
 
    // destroying the object factory
   }

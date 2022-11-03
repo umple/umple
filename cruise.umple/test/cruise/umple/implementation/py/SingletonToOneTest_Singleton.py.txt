@@ -1,0 +1,48 @@
+from Student import Student
+import os
+
+class Mentor():
+    def __init__(self):
+        self._name = None
+
+    @staticmethod
+    def getInstance():
+        if theInstance is None :
+            theInstance = Mentor()
+
+        return theInstance
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getStudent(self):
+        return self._student
+
+    def setStudent(self, aStudent):
+        wasSet = False
+        existingStudent = self._student
+        self._student = aStudent
+        if existingStudent != None and not existingStudent.equals(aStudent) :
+            existingStudent.removeMentor(self)
+
+        if not(aStudent is None) :
+            aStudent.addMentor(self)
+
+        wasSet = True
+        return wasSet
+
+    def delete(self):
+        if not(self._student is None) :
+            placeholderStudent = self._student
+            self._student = None
+            placeholderStudent.removeMentor(self)
+
+    def __str__(self):
+        return str(super()) + "[" + "name" + ":" + self.getName() + "]" + os.linesep + "  " + "student = " + (self.getStudent() != (format(id(self.getStudent()), "x")) if None else "null")
+

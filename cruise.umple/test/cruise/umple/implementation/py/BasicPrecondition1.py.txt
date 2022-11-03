@@ -1,0 +1,28 @@
+class Client():
+    def __init__(self, aMinAge):
+        self._minAge = aMinAge
+
+    def setMinAge(self, aMinAge):
+        wasSet = False
+        self._minAge = aMinAge
+        wasSet = True
+        return wasSet
+
+    def getMinAge(self):
+        return self._minAge
+
+    def delete(self):
+        pass
+
+    def someMethod(self, arg):
+        if arg < = 5 :
+            raise RuntimeError ("Please provide a valid arg")
+
+        if self.getMinAge() > = 8 :
+            raise RuntimeError ("Please provide a valid minAge")
+
+        return 0
+
+    def __str__(self):
+        return str(super()) + "[" + "minAge" + ":" + self.getMinAge() + "]"
+

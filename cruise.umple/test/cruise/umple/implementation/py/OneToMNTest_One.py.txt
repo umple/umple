@@ -1,0 +1,132 @@
+from Pupil import Pupil
+
+class Mentor():
+    def __init__(self, aName):
+        self._name = aName
+        self._pupils = []
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getPupil(self, index):
+        aPupil = self._pupils[index]
+        return aPupil
+
+    def getPupils(self):
+        newPupils = tuple(self._pupils)
+        return newPupils
+
+    def numberOfPupils(self):
+        number = len(self._pupils)
+        return number
+
+    def hasPupils(self):
+        has = len(self._pupils) > 0
+        return has
+
+    def indexOfPupil(self, aPupil):
+        index = self._pupils.index(aPupil)
+        return index
+
+    def isNumberOfPupilsValid(self):
+        isValid = self.numberOfPupils() > = self.minimumNumberOfPupils() and self.numberOfPupils() < = self.maximumNumberOfPupils()
+        return isValid
+
+    @staticmethod
+    def minimumNumberOfPupils():
+        return 5
+
+    @staticmethod
+    def maximumNumberOfPupils():
+        return 7
+
+    def addPupil(self, aNumber):
+        if self.numberOfPupils() > = self.maximumNumberOfPupils() :
+            return None
+
+        else :
+            return Pupil(aNumber, self)
+
+    def addPupil(self, aPupil):
+        wasAdded = False
+        if aPupil in self._pupils :
+            return False
+
+        if self.numberOfPupils() > = self.maximumNumberOfPupils() :
+            return wasAdded
+
+        existingMentor = aPupil.getMentor()
+        isNewMentor = existingMentor != None and not self.equals(existingMentor)
+        if isNewMentor and existingMentor.numberOfPupils() < = self.minimumNumberOfPupils() :
+            return wasAdded
+
+        if isNewMentor :
+            aPupil.setMentor(self)
+
+        else :
+            self._pupils.append(aPupil)
+
+        wasAdded = True
+        return wasAdded
+
+    def removePupil(self, aPupil):
+        wasRemoved = False
+        if self.equals(aPupil.getMentor()) :
+            return wasRemoved
+
+        if self.numberOfPupils() < = self.minimumNumberOfPupils() :
+            return wasRemoved
+
+        self._pupils.remove(aPupil)
+        wasRemoved = True
+        return wasRemoved
+
+    def addPupilAt(self, aPupil, index):
+        wasAdded = False
+        if self.addPupil(aPupil) :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfPupils() :
+                index = self.numberOfPupils() - 1
+
+            self._pupils.remove(aPupil)
+            self._pupils.insert(index, aPupil)
+            wasAdded = True
+
+        return wasAdded
+
+    def addOrMovePupilAt(self, aPupil, index):
+        wasAdded = False
+        if aPupil in self._pupils :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfPupils() :
+                index = self.numberOfPupils() - 1
+
+            self._pupils.remove(aPupil)
+            self._pupils.insert(index, aPupil)
+            wasAdded = True
+
+        else :
+            wasAdded = self.addPupilAt(aPupil, index)
+
+        return wasAdded
+
+    def delete(self):
+        i = len(self._pupils)
+        while i > 0 :
+            aPupil = self._pupils[i - 1]
+            aPupil.delete()
+            i = i - 1
+
+    def __str__(self):
+        return str(super()) + "[" + "name" + ":" + self.getName() + "]"
+

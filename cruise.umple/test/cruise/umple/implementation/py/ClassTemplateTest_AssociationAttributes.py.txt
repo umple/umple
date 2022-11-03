@@ -1,0 +1,22 @@
+from Position import Position
+import os
+
+class Token():
+    def __init__(self, aP):
+        self._p = aP
+
+    def setP(self, aP):
+        wasSet = False
+        self._p = aP
+        wasSet = True
+        return wasSet
+
+    def getP(self):
+        return self._p
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super()) + "[" + "]" + os.linesep + "  " + "p" + "=" + (self.getP() != ((str(self.getP()).replaceAll("  ", "    ")) if not self.getP().equals(self) else "this") if None else "null")
+
