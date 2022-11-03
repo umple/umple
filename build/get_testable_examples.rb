@@ -5,15 +5,14 @@ def populate_possible_matches(directories, pattern)
   #Find all the matching filename from each directory
 
   matches = []
-#  pattern = pattern.chomp(".ump") + "\\.ump"
-#  pattern = pattern.gsub("*", ".*")
-puts("DebugPattern="+pattern)
+  pattern = pattern.chomp(".ump") + "\\.ump"
+  pattern = pattern.gsub("*", ".*")
   directories.each do |directory|
     possibles = Dir.entries(directory)
 
     possibles.each do |filename|
       if filename =~ /#{pattern}/
-        matches << directory + File::SEPARATOR + filename
+        matches << directory + "/" + filename
       end
     end
   end
@@ -30,16 +29,16 @@ def check_for_flags(filenames, language)
   #If this tag is missing, it will always add it to the directory
   filenames.each do |filename|
     should_add = true
-#    open(filename, 'r').each do |line|
-#      tag = line[/@@@testlanguage=.*/]
-#      next if tag.nil?
-#      if tag =~ /.*#{language}.*/
-#        break
-#      else
-#        should_add = false
-#        break
-#      end
-#    end
+    open(filename, 'r').each do |line|
+      tag = line[/@@@testlanguage=.*/]
+      next if tag.nil?
+      if tag =~ /.*#{language}.*/
+        break
+      else
+        should_add = false
+        break
+      end
+    end
     matches << filename if should_add
   end
 
@@ -47,13 +46,11 @@ def check_for_flags(filenames, language)
 end
 
 def copy_to_output(filenames, output_dir)
-  copy_count = 0
+  
   filenames.each do |filename|
-    new_filename = "#{output_dir}"+File::SEPARATOR+"#{filename.split(File::SEPARATOR)[-1]}"
+    new_filename = "#{output_dir}/#{filename.split("/")[-1]}"
     FileUtils.cp(filename, new_filename)
-    copy_count = copy_count+1
   end
-  puts("Prepared "+copy_count.to_s+" examples")
 end
 
 # command line input arguments
@@ -71,11 +68,6 @@ OptionParser.new do |option|
   option.parse!
 end
 
-puts("Preparing example files for "+language+" from "+search_dir.join(" ")+ " to "+output_dir)
-
 matches = populate_possible_matches(search_dir, search_pattern)
-puts("Debug1 matches #{matches.length()}")
 matches = check_for_flags(matches, language)
-puts("Debug2 matches #{matches.length()}")
 copy_to_output(matches, output_dir)
-puts("Debug3")
