@@ -1486,7 +1486,7 @@ task pythonUserManualAndExampleTests {
                 "TracingConstraints2.ump",
                 "TracingConstraints3.ump",
                 "TracingMethods1.ump",
-                "TracingMethods1.ump",
+                "TracingMethods2.ump",
                 "TracingStateMachines1.ump",
                 "TracingStateMachines2.ump",
                 "TracingStateMachines3.ump",
