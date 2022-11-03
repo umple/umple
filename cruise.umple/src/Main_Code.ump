@@ -90,21 +90,28 @@ class UmpleConsoleConfig {
           while (m.find()) {
             String foundString = m.group(1);
             // foundString is either a file or (if second and subsequent) a single quoted string
-
             if(foundString.startsWith("\'")) {
               // We have a program -- convert
               foundString="__UMPLE"+
                 Base64.getEncoder()
                 .encodeToString(foundString.substring(1,foundString.length()-1).getBytes());
             }
-            else if(foundString.startsWith("W") && warningIgnore) {
-              // Potential to ignore the warning
-              Matcher m2 = Pattern.compile("\\d+").matcher(foundString);
-              if(m2.find()) {
-                String supressWarningCode="strictness ignore "+m2.group()+";";
-                listOfFilesThisLine.add(foundString);
-                foundString="__UMPLE"+
-                  Base64.getEncoder().encodeToString(supressWarningCode.getBytes());
+            else {
+              int lastSlash = foundString.lastIndexOf(File.separator);
+              String umpFileRoot=foundString;
+              if (lastSlash != -1) {
+                umpFileRoot=foundString.substring(lastSlash+1);
+              } 
+              if(umpFileRoot.startsWith("W") && warningIgnore) {
+                // Potential to ignore the warning
+                Matcher m2 = Pattern.compile("W(\\d+)").matcher(umpFileRoot);
+                if(m2.find()) {
+                  String foundWarningNumber=m2.group().substring(1);
+                  String supressWarningCode="strictness ignore "+foundWarningNumber+";";
+                  listOfFilesThisLine.add(foundString); // Add file, then below add warning suppress
+                  foundString="__UMPLE"+
+                    Base64.getEncoder().encodeToString(supressWarningCode.getBytes());
+                }
               }
             }
             listOfFilesThisLine.add(foundString);

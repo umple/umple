@@ -395,6 +395,12 @@
       <fileset file="umplewww/files/umple_logo.jpg"/>
     </copy>
     <copy todir="${dist.path}/reference/files">
+      <fileset file="umplewww/files/umple_logoMedium.jpg"/>
+    </copy>
+    <copy todir="${dist.path}/reference/files">
+      <fileset file="umplewww/files/umple_logoMedium.png"/>
+    </copy>
+    <copy todir="${dist.path}/reference/files">
       <fileset file="umplewww/files/uottawa_ver_black.png"/>
     </copy>
     <copy todir="${dist.path}/reference/files">
