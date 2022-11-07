@@ -1,5 +1,9 @@
 class Foo():
     def __init__(self, aTestAttribute1, aTestAttribute2, aTestAttribute3, aTestAttribute4):
+        self._testAttribute4 = None
+        self._testAttribute3 = None
+        self._testAttribute2 = None
+        self._testAttribute1 = None
         self._testAttribute1 = aTestAttribute1
         self._testAttribute2 = aTestAttribute2
         self._testAttribute3 = aTestAttribute3
@@ -45,5 +49,5 @@ class Foo():
         pass
 
     def __str__(self):
-        return str(super()) + "[" + "testAttribute1" + ":" + self.getTestAttribute1() + "," + "testAttribute2" + ":" + self.getTestAttribute2() + "," + "testAttribute3" + ":" + self.getTestAttribute3() + "," + "testAttribute4" + ":" + self.getTestAttribute4() + "]"
+        return str(super()) + "[" + "testAttribute1" + ":" + str(self.getTestAttribute1()) + "," + "testAttribute2" + ":" + str(self.getTestAttribute2()) + "," + "testAttribute3" + ":" + str(self.getTestAttribute3()) + "," + "testAttribute4" + ":" + str(self.getTestAttribute4()) + "]"
 

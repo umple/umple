@@ -1,5 +1,6 @@
 class Student():
     def __init__(self):
+        self._grade = None
         self._grade = ""
 
     def setGrade(self, aGrade):
@@ -15,5 +16,5 @@ class Student():
         pass
 
     def __str__(self):
-        return str(super()) + "[" + "grade" + ":" + self.getGrade() + "]"
+        return str(super()) + "[" + "grade" + ":" + str(self.getGrade()) + "]"
 

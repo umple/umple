@@ -1,5 +1,6 @@
 class Foo():
     def __init__(self, aBar):
+        self._bar = None
         self._bar = aBar
 
     def setBar(self, aBar):
@@ -15,5 +16,5 @@ class Foo():
         pass
 
     def __str__(self):
-        return str(super()) + "[" + "bar" + ":" + self.getBar() + "]"
+        return str(super()) + "[" + "bar" + ":" + str(self.getBar()) + "]"
 

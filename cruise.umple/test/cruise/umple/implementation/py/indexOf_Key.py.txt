@@ -1,169 +1,88 @@
-<?php
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+class Student():
+    def __init__(self):
+        self._mentors = None
+        self._mentors = []
 
-class Student
-{
+    def getMentor(self, index):
+        aMentor = self._mentors[index]
+        return aMentor
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+    def getMentors(self):
+        newMentors = tuple(self._mentors)
+        return newMentors
 
-  //Student Associations
-  private $mentors;
+    def numberOfMentors(self):
+        number = len(self._mentors)
+        return number
 
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
+    def hasMentors(self):
+        has = len(self._mentors) > 0
+        return has
 
-  public function __construct()
-  {
-    $this->mentors = array();
-  }
+    def indexOfMentor(self, aMentor):
+        index = self._mentors.index(aMentor)
+        return index
 
-  //------------------------
-  // INTERFACE
-  //------------------------
+    @staticmethod
+    def minimumNumberOfMentors():
+        return 0
 
-  public function getMentor_index($index)
-  {
-    $aMentor = $this->mentors[$index];
-    return $aMentor;
-  }
+    def addMentor(self, aMentor):
+        wasAdded = False
+        if aMentor in self._mentors :
+            return False
+        self._mentors.append(aMentor)
+        if aMentor.indexOfStudent(self) != -1 :
+            wasAdded = True
+        else :
+            wasAdded = aMentor.addStudent(self)
+            if not wasAdded :
+                self._mentors.remove(aMentor)
+        return wasAdded
 
-  public function getMentors()
-  {
-    $newMentors = $this->mentors;
-    return $newMentors;
-  }
+    def removeMentor(self, aMentor):
+        wasRemoved = False
+        if not self._mentors.contains(aMentor) :
+            return wasRemoved
+        oldIndex = self._mentors.index(aMentor)
+        self._mentors.remove(oldIndex)
+        if aMentor.indexOfStudent(self) == -1 :
+            wasRemoved = True
+        else :
+            wasRemoved = aMentor.removeStudent(self)
+            if not wasRemoved :
+                self._mentors.insert(oldIndex, aMentor)
+        return wasRemoved
 
-  public function numberOfMentors()
-  {
-    $number = count($this->mentors);
-    return $number;
-  }
+    def addMentorAt(self, aMentor, index):
+        wasAdded = False
+        if self.addMentor(aMentor) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfMentors() :
+                index = self.numberOfMentors() - 1
+            self._mentors.remove(aMentor)
+            self._mentors.insert(index, aMentor)
+            wasAdded = True
+        return wasAdded
 
-  public function hasMentors()
-  {
-    $has = $this->numberOfMentors() > 0;
-    return $has;
-  }
+    def addOrMoveMentorAt(self, aMentor, index):
+        wasAdded = False
+        if aMentor in self._mentors :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfMentors() :
+                index = self.numberOfMentors() - 1
+            self._mentors.remove(aMentor)
+            self._mentors.insert(index, aMentor)
+            wasAdded = True
+        else :
+            wasAdded = self.addMentorAt(aMentor, index)
+        return wasAdded
 
-  public function indexOfMentor($aMentor)
-  {
-    $wasFound = false;
-    $index = 0;
-    foreach($this->mentors as $mentor)
-    {
-      if ($mentor->equals($aMentor))
-      {
-        $wasFound = true;
-        break;
-      }
-      $index += 1;
-    }
-    $index = $wasFound ? $index : -1;
-    return $index;
-  }
+    def delete(self):
+        copyOfMentors = self._mentors.copy()
+        self._mentors.clear()
+        for aMentor in copyOfMentors:
+            aMentor.removeStudent(self)
 
-  public static function minimumNumberOfMentors()
-  {
-    return 0;
-  }
-
-  public function addMentor($aMentor)
-  {
-    $wasAdded = false;
-    if ($this->indexOfMentor($aMentor) !== -1) { return false; }
-    $this->mentors[] = $aMentor;
-    if ($aMentor->indexOfStudent($this) != -1)
-    {
-      $wasAdded = true;
-    }
-    else
-    {
-      $wasAdded = $aMentor->addStudent($this);
-      if (!$wasAdded)
-      {
-        array_pop($this->mentors);
-      }
-    }
-    return $wasAdded;
-  }
-
-  public function removeMentor($aMentor)
-  {
-    $wasRemoved = false;
-    if ($this->indexOfMentor($aMentor) == -1)
-    {
-      return $wasRemoved;
-    }
-
-    $oldIndex = $this->indexOfMentor($aMentor);
-    unset($this->mentors[$oldIndex]);
-    if ($aMentor->indexOfStudent($this) == -1)
-    {
-      $wasRemoved = true;
-    }
-    else
-    {
-      $wasRemoved = $aMentor->removeStudent($this);
-      if (!$wasRemoved)
-      {
-        $this->mentors[$oldIndex] = $aMentor;
-        ksort($this->mentors);
-      }
-    }
-    $this->mentors = array_values($this->mentors);
-    return $wasRemoved;
-  }
-
-  public function addMentorAt($aMentor, $index)
-  {  
-    $wasAdded = false;
-    if($this->addMentor($aMentor))
-    {
-      if($index < 0 ) { $index = 0; }
-      if($index > $this->numberOfMentors()) { $index = $this->numberOfMentors() - 1; }
-      array_splice($this->mentors, $this->indexOfMentor($aMentor), 1);
-      array_splice($this->mentors, $index, 0, array($aMentor));
-      $wasAdded = true;
-    }
-    return $wasAdded;
-  }
-
-  public function addOrMoveMentorAt($aMentor, $index)
-  {
-    $wasAdded = false;
-    if($this->indexOfMentor($aMentor) !== -1)
-    {
-      if($index < 0 ) { $index = 0; }
-      if($index > $this->numberOfMentors()) { $index = $this->numberOfMentors() - 1; }
-      array_splice($this->mentors, $this->indexOfMentor($aMentor), 1);
-      array_splice($this->mentors, $index, 0, array($aMentor));
-      $wasAdded = true;
-    } 
-    else 
-    {
-      $wasAdded = $this->addMentorAt($aMentor, $index);
-    }
-    return $wasAdded;
-  }
-
-  public function equals($compareTo)
-  {
-    return $this == $compareTo;
-  }
-
-  public function delete()
-  {
-    $copyOfMentors = $this->mentors;
-    $this->mentors = array();
-    foreach ($copyOfMentors as $aMentor)
-    {
-      $aMentor->removeStudent($this);
-    }
-  }
-
-}
-?>

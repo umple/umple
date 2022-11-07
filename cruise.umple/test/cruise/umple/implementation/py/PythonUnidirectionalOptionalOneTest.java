@@ -15,7 +15,8 @@ public class PythonUnidirectionalOptionalOneTest extends UnidirectionalOptionalO
   }
 
   @Test @Ignore
-  public void Aware(){
-    super.Aware();
+  public void Unaware()
+  {
+    super.Unaware();
   }
 }
