@@ -1,9 +1,10 @@
-from Student import Student
 import os
 import pickle
 
 class Mentor():
     def __init__(self, aStudentsPriority):
+        self._students = None
+        self._studentsPriority = None
         self._studentsPriority = aStudentsPriority
         self._students = []
 
@@ -79,7 +80,7 @@ class Mentor():
             aStudent.removeMentor(self)
 
     def __str__(self):
-        return str(super()) + "[" + "]" + os.linesep + "  " + "studentsPriority" + "=" + (self.getStudentsPriority() != ((str(self.getStudentsPriority()).replaceAll("  ", "    ")) if not self.getStudentsPriority().equals(self) else "this") if None else "null")
+        return str(super()) + "[" + "]" + str(os.linesep) + "  " + "studentsPriority" + "=" + str((((str(self.getStudentsPriority()).replaceAll("  ", "    ")) if not self.getStudentsPriority().equals(self) else "this") if not(self.getStudentsPriority() is None) else "null"))
 
     def __getstate__(self):
         state = dict(self.__dict__)
