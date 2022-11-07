@@ -58,16 +58,17 @@ function replaceClassBody
     export transientMembers
     construct memberVariables [repeat id]
         _ [addMemberVariable each declarations]
-    construct listMemberVariables [repeat id]
+    export listMemberVariables [repeat id]
         _ [addListMemberVariable each declarations]
     export enumeratorDeclerations [repeat enum_declaration]
+        _ [^ elements]
+    export classMethods [repeat method_declaration]
         _ [^ elements]
     construct possibleFunctionImports [repeat id]
         _ [extractPossibleFunctionImports body each declarations]
     export possibleFunctionImports
     by
         elements [exportConstructorCount] [removeMemberVariableDeclarations] [replaceEnumDeclaration] 
-            [replaceAllLists listMemberVariables]
             [replaceAllMethods memberVariables]
             [replaceAllMemberVariableNames memberVariables] 
 end function
