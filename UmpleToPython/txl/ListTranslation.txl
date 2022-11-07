@@ -11,6 +11,7 @@ function replaceAllLists memberLists [repeat id]
             [replaceListUnmutable memberLists]
             [replaceGetListContent memberLists]
             [replaceListGetSize memberLists]
+            [replaceArrayLength memberLists]
             [replaceListGetIndex memberLists]
             [replaceListContains memberLists]
             [replaceListAddAtIndex memberLists]
@@ -61,6 +62,15 @@ end rule
 rule replaceListGetSize memberLists [repeat id]
     replace [nested_identifier]
         id [id] '.size()
+    where
+        memberLists [containsId id]
+    by 
+        'len( id ')
+end rule
+
+rule replaceArrayLength memberLists [repeat id]
+    replace [nested_identifier]
+        id [id] '.length
     where
         memberLists [containsId id]
     by 

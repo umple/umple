@@ -52,6 +52,7 @@ redefine value_no_recursion
     |   '[ [list value] ']
     |   'not [boolean_expression] 
     |   [lambda_function]
+    |   '* [SPOFF] [id] [SPON]
 end redefine
 
 define  lambda_function
@@ -62,6 +63,7 @@ define python_function_name
         'tuple
     |   'len
     |   'super
+    |   'list
 end define
 
 redefine function_call
@@ -117,20 +119,25 @@ redefine ternary
     |   [value_no_ternary] 'if [value] 'else [value]
 end redefine
 
+redefine var_arg
+    ...
+    | '* [SPOFF] [id] [SPON]
+end redefine
+
 redefine concrete_method_declaration
     ...
-    |   [opt decorator] 'def  [id] [SPOFF]'( [SPON] [list id] [SPOFF] '): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
+    |   [opt decorator] 'def  [id] [SPOFF]'( [SPON] [list method_parameter] [SPOFF] '): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
 end redefine
 
 redefine abstract_method_declaration
     ...
-    |   [SPOFF] '@abstractmethod [SPON] [NL] 'def  [id] [SPOFF]'( [SPON] [list id] [SPOFF] '): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
+    |   [SPOFF] '@abstractmethod [SPON] [NL] 'def  [id] [SPOFF]'( [SPON] [list method_parameter] [SPOFF] '): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
 end redefine
 
 
 redefine constructor
     ...
-    | 'def '__init__ [SPOFF] '( [SPON] [list id] [SPOFF]'): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
+    | 'def '__init__ [SPOFF] '( [SPON] [list method_parameter] [SPOFF]'): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
 end redefine
 
 redefine concrete_class_declaration

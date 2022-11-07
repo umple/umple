@@ -16,7 +16,7 @@ end tokens
 %--------------------%
 
 keys
- return new if else for true false while this super tuple len True False + - * / ? ; : pass
+ return new if else for true false while this super tuple len list True False + - * / ? ; : pass
 end keys
 
 define acess_modifier
@@ -242,6 +242,7 @@ end define
 
 define method_parameter
     [nested_class] [id]
+    | [var_arg]
 end define
 
 define decorator
@@ -251,6 +252,10 @@ end define
 define throws
     'throws [list nested_class]
 end define
+
+define var_arg
+    [nested_class] '... [id]
+end define 
 
 define concrete_method_declaration
         [opt decorator] [acess_modifier] [opt static] [nested_class] [id] '( [list method_parameter] ') [opt throws] [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
