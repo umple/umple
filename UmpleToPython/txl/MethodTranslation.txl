@@ -26,7 +26,7 @@ end rule
 
 rule replaceConcreteMethod
     replace [concrete_method_declaration]
-        _[acess_modifier] _[nested_class] methodName [id]'( params [list method_parameter] ') _ [opt throws] '{ statements [repeat statement] '}
+        _[acess_modifier] _[nested_identifier] methodName [id]'( params [list method_parameter] ') _ [opt throws] '{ statements [repeat statement] '}
     construct selfParam [list method_parameter]
         'self
     construct modifiedParams [list method_parameter]
@@ -43,7 +43,7 @@ end rule
 
 rule replaceAbstractMethod
     replace [abstract_method_declaration]
-        _[acess_modifier] _[nested_class] methodName [id] '( params [list method_parameter] ');
+        _[acess_modifier] _[nested_identifier] methodName [id] '( params [list method_parameter] ');
     construct selfParam [list method_parameter]
         'self
     construct modifiedParams [list method_parameter]
@@ -56,7 +56,7 @@ end rule
 
 rule replaceToString
     replace [method_declaration]
-        _[acess_modifier] _[nested_class]  'toString '() _ [opt throws] '{ statements [repeat statement] '}
+        _[acess_modifier] _[nested_identifier]  'toString '() _ [opt throws] '{ statements [repeat statement] '}
     by
         'def '__str__ '(self):  statements [replaceStatements] [targetToStringArithmatic]
 end rule
@@ -85,7 +85,7 @@ end function
 
 rule replaceStaticMethod
     replace [method_declaration]
-        _[acess_modifier] _[static] _[nested_class] methodName [id]'() _ [opt throws] '{ statements [repeat statement] '}
+        _[acess_modifier] _[static] _[nested_identifier] methodName [id]'() _ [opt throws] '{ statements [repeat statement] '}
     by
         '@staticmethod 'def methodName '():  statements [replaceStatements] [changeKeyArgumentNameInNestedIdentifier]
 end rule
@@ -149,7 +149,7 @@ end function
 
 %Rule replaces argument names that are illegal in python
 rule changeKeyArgumentNames
-    skipping [nested_class]
+    skipping [nested_identifier]
     replace $ [id]
         argName [id]
     by  
@@ -191,7 +191,7 @@ end function
 
 function translateRegularParam
     replace [method_parameter]
-        _ [nested_class] paramName [id]
+        _ [nested_identifier] paramName [id]
     construct cleanName [id]
         paramName [changeKeyArgumentNames]
     by 
@@ -200,7 +200,7 @@ end function
 
 function translateVarArgParam
     replace [method_parameter]
-        _ [nested_class] '... paramName [id]
+        _ [nested_identifier] '... paramName [id]
     construct cleanName [id]
         paramName [changeKeyArgumentNames]
     by
@@ -281,7 +281,7 @@ end rule
 
 rule doesMethodHaveVarArg seeking [id]
     match [concrete_method_declaration]
-        _ [opt decorator] _ [acess_modifier] _ [opt static] _ [nested_class] methodName [id] '( params [list method_parameter] ') _ [opt throws] '{ _ [repeat statement] '}
+        _ [opt decorator] _ [acess_modifier] _ [opt static] _ [nested_identifier] methodName [id] '( params [list method_parameter] ') _ [opt throws] '{ _ [repeat statement] '}
     where
         seeking [= methodName]
     construct varArgs [repeat var_arg]
@@ -356,7 +356,7 @@ function extractVarArgName params [list method_parameter]
     construct optVarArg [opt var_arg]
         _ [reparse varArgs]
     deconstruct optVarArg
-        _ [nested_class] '... varArgName [id]
+        _ [nested_identifier] '... varArgName [id]
     by 
         varArgName
 end function
@@ -415,7 +415,7 @@ end rule
 
 rule replaceOneToOneConstructorCall
     replace $ [value] 
-        call [function_call]
+        call [nested_identifier]
     where 
         call [containConstructorWithSelfParam]
     deconstruct call
@@ -425,14 +425,59 @@ rule replaceOneToOneConstructorCall
 end rule
 
 rule containConstructorWithSelfParam
-    match [function_call]
-        name [id] '( params [list value]')
+    match [nested_identifier]
+        instantiatedClass [callable] '( params [list value]')
+    deconstruct instantiatedClass
+        instantiatedClassGeneric [any]
+    construct optInstantiatedClassName [opt id]
+        _ [extractClassId instantiatedClassGeneric]
+    deconstruct optInstantiatedClassName
+        instantiatedClassName [id]
     import possibleFunctionImports [repeat id]
+    import className [nested_identifier]
+    deconstruct className 
+        classNameGeneric [any]
+    construct optCurrentClassName [opt id]
+        _ [extractClassId instantiatedClass]
+    deconstruct optCurrentClassName
+        currentClassName [id]
+    construct possibleImportsPlusCurrentClass [repeat id]
+        possibleFunctionImports [. currentClassName]
     where
-        possibleFunctionImports [containsId name]
+        possibleImportsPlusCurrentClass [containsId instantiatedClassName]
     where   
         params [containsSelfValue]
 end rule
+
+
+function extractClassId target [any]
+    replace [opt id]
+        result [opt id]
+    by
+        result [extractIdFromNonGenericClass target] [extractIdFromGenericClass target] [debug]
+end function
+
+function extractIdFromGenericClass class [any]
+    replace [opt id]
+        result [opt id]
+    deconstruct * [generic_class] class
+        genericClass [generic_class]
+    deconstruct genericClass
+        className[id] '< _[list id] '>
+    by
+        className 
+end function
+
+function extractIdFromNonGenericClass class [any]
+    replace [opt id]
+        result [opt id]
+    skipping [list id]
+    deconstruct * [id] class
+        className [id]
+    by
+        className
+end function
+
 
 rule containsSelfValue
     skipping [nested_identifier]
