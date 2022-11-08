@@ -12,6 +12,10 @@ function replaceStatements
             [addClassPrefixToEnum]
             [replaceForLoop]
             [replaceForInLoop]
+            [replaceAssignementIncrementBefore]
+            [replaceAssignementDecrementBefore]
+            [replaceAssignementIncrementAfter]
+            [replaceAssignementDecrementAfter]
             [replaceAssignmentStatement] 
             [replaceReturn] 
             [replaceNoStatements] 
@@ -29,8 +33,10 @@ function replaceStatements
             [replaceWhile]
             [replaceNull]
             [replaceThis]
-            [replaceIncrement]
-            [replaceDecrement]
+            [replaceIncrementBefore]
+            [replaceDecrementBefore]
+            [replaceIncrementAfter]
+            [replaceDecrementAfter]
             [replaceThrowError]
             [replaceNewCall]
             [replaceCasting]
@@ -46,6 +52,34 @@ function replaceNoStatements
     by 
         'pass  
 end function
+
+rule replaceAssignementIncrementAfter
+    replace [statement]
+        nest1 [nestable_value] '= nest2 [nestable_value] '++ ';
+    by
+        nest1 ', nest2 '= nest2 ', nest2 '+ '1
+end rule
+
+rule replaceAssignementDecrementAfter
+    replace [statement]
+        nest1 [nestable_value] '= nest2 [nestable_value] '-- ';
+    by
+        nest1 ', nest2 '= nest2 ', nest2 '- '1
+end rule
+
+rule replaceAssignementIncrementBefore
+    replace [statement]
+        nest1 [nestable_value] '= '++ nest2 [nestable_value]';
+    by
+        nest1 '= nest2 '= nest2 '+ '1
+end rule
+
+rule replaceAssignementDecrementBefore
+    replace [statement]
+        nest1 [nestable_value] '= '-- nest2 [nestable_value]';
+    by
+        nest1 '= nest2 '= nest2 '- '1
+end rule
 
 rule replaceAssignmentStatement
     replace [statement]
@@ -96,14 +130,14 @@ end rule
 
 rule replaceDeclerationWithAssignment
     replace [variable_declaration]
-        _ [nested_class] assignment [assignment] ';
+        _ [nested_identifier] assignment [assignment] ';
     by 
         assignment
 end rule
 
 rule replaceDecleration
     replace [variable_declaration]
-        _[nested_class] varName [id]';
+        _[nested_identifier] varName [id]';
     by 
         varName 
 end rule
@@ -159,27 +193,39 @@ rule replaceNull
         'None
 end rule
 
-rule replaceDecrement
-    replace [assignment]
-        nest [nestable_value] '--
-    construct decr [arithmatic_expression]
-        nest '- '1
+rule replaceDecrementBefore
+    replace [statement]
+        '-- nest [nestable_value]';
     by 
-        nest '= decr
+        nest '-= 1
 end rule
 
-rule replaceIncrement
-    replace [assignment]
-        nest [nestable_value] '++
+rule replaceIncrementBefore
+    replace [statement]
+        '++ nest [nestable_value]';
     by 
-        nest '= nest '+ '1
+        nest '+= '1
+end rule
+
+rule replaceDecrementAfter
+    replace [statement]
+        nest [nestable_value] '-- ';
+    by 
+        nest '-= 1
+end rule
+
+rule replaceIncrementAfter
+    replace [statement]
+        nest [nestable_value] '++ ';
+    by 
+        nest '+= '1
 end rule
 
 rule replaceForLoop
     replace [statement]
         'for( decl [variable_declaration] goal [value]'; assignment [assignment]') '{  stmts[repeat statement]  '} 
     deconstruct decl
-        _[nested_class] name [id] '= start [value] ';
+        _[nested_identifier] name [id] '= start [value] ';
     construct declaration [variable_declaration]
         name '= start
     construct newStatements [repeat statement]
@@ -190,7 +236,7 @@ end rule
 
 rule replaceForInLoop
     replace [for_in_loop]
-        'for( _[nested_class] var [id] ': nested [nested_identifier]')'{ stmts [repeat statement] '} 
+        'for( _[nested_identifier] var [id] ': nested [nested_identifier]')'{ stmts [repeat statement] '} 
     by 
         'for var 'in  nested':  stmts
 end rule
@@ -204,18 +250,18 @@ end rule
 
 rule replaceCasting
     replace [value]
-        '( _ [nested_class]') name [value]
+        '( _ [nested_identifier]') name [value]
     by 
         name 
 end rule
 
 rule replaceNewCall
     replace [value]
-        'new class [nested_class] '( vals [list value] ')
-    deconstruct class
-        id [id]
+        'new funcCall [function_call]
+    deconstruct funcCall
+        className [callable] '( vals [list value] ')
     by
-        id '( vals ')
+        className '( vals ')
 end rule
 
 rule correctSuperInit
@@ -331,6 +377,7 @@ function replaceDefaultReadObject
         beforeReparsed [. middle] [. afterReparsed]
 end function
 
+
 function repeatStatementToAny stmt [statement]
     replace [repeat any]
         rep [repeat any]
@@ -342,7 +389,7 @@ end function
 
 rule replaceComparator
     replace [value]
-        'Comparator.comparing( class [nested_class] ':: funcName [id] ')
+        'Comparator.comparing( class [nested_identifier] ':: funcName [id] ')
     by
         'lambda 'x ': 'x '. funcName '()
 end rule
@@ -377,15 +424,15 @@ rule addClassPrefixToEnum
         enumName [id] '.  enumVal [id]
     where
         enumName [isAnEnum]
-    import className [nested_class]
+    import className [nested_identifier]
     deconstruct className
-        root [nestable_class] accesses [repeat nested_class_access]
-    construct addedAccess [nested_class_access] 
+        root [nestable_value] accesses [repeat attribute_access]
+    construct enumAccess [attribute_access] 
         '. enumName
-    construct newClassName [nested_class]
-        root accesses [. addedAccess]
+    construct enumValueAccess [attribute_access] 
+        '. enumVal  
     by
-        newClassName '. enumVal
+        root accesses [. enumAccess] [. enumValueAccess]
 end rule
 
 function isAnEnum

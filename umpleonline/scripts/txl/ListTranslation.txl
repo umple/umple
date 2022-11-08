@@ -22,7 +22,7 @@ end function
 
 rule replaceListAssignement memberLists [repeat id]
     replace [assignment]
-        id [id] '= 'new 'ArrayList '< _[list id] '> '(') 
+        id [id] '= 'new 'ArrayList '< _[list id] '> '(')
     where
         memberLists [containsId id]
     by 

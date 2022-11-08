@@ -26,7 +26,7 @@ function extractPossibleFunctionImports classBody [class_body_decl] declaration 
     deconstruct declaration
         _[opt acess_modifier] _[opt static] _[opt volatile] varDec [variable_declaration]
     deconstruct varDec
-        class [nested_class] _ [id]';
+        class [nested_identifier] _ [id]';
     construct classesToImport [repeat id]
         _ [extractListClass classBody class] [extractRegularClass classBody class]
     by 
@@ -41,20 +41,20 @@ function isTypeEnum typeName [id]
 end function
 
 function extractInheritanceBlockClasses inheritanceList [inheritance_list]
-    replace [list nested_class]
-        classes [list nested_class]
+    replace [list nested_identifier]
+        classes [list nested_identifier]
     deconstruct inheritanceList
-        _[inheritance_statement] classesToAdd [list nested_class]
+        _[inheritance_statement] classesToAdd [list nested_identifier]
     by
         classes [inheritanceClassFilter each classesToAdd]
 end function
 
-function inheritanceClassFilter class [nested_class]
-    replace [list nested_class]
-        classes [list nested_class]
+function inheritanceClassFilter class [nested_identifier]
+    replace [list nested_identifier]
+        classes [list nested_identifier]
     construct unparsed [stringlit]
         _ [unparse class]
-    construct filter [repeat nested_class]
+    construct filter [repeat nested_identifier]
         'java.io.Serializable 
     where not
         filter [containsNestedClass class]
@@ -66,7 +66,7 @@ function extractInheritanceImportClasses classBody [class_body_decl] inheritance
     replace [repeat id]
         classesToImport [repeat id]
     deconstruct inheritanceList
-        _[inheritance_statement] classesToAdd [list nested_class]
+        _[inheritance_statement] classesToAdd [list nested_identifier]
     construct classIds [repeat id]
         _ [extractListClass classBody each classesToAdd] [extractRegularClass classBody each classesToAdd]
     by
@@ -90,7 +90,7 @@ function addToRepeatIfNotThere elem [id]
         currentList [. elem]
 end function
 
-function extractListClass classBody [class_body_decl] class [nested_class]
+function extractListClass classBody [class_body_decl] class [nested_identifier]
     replace [repeat id]
         empty [repeat id]
     deconstruct class
@@ -117,7 +117,7 @@ function importClassFilter classBody [class_body_decl] type [id]
         type [matchDefaultType]
     where not 
         classBody [isTypeEnum type]
-    import className [nested_class]
+    import className [nested_identifier]
     deconstruct className
         classNameId [id]
     where not
@@ -135,7 +135,7 @@ rule matchDefaultType
         defaults [containsId id]    
 end rule
 
-function extractRegularClass classBody [class_body_decl] class [nested_class]
+function extractRegularClass classBody [class_body_decl] class [nested_identifier]
     replace [repeat id]
         empty [repeat id]
     deconstruct class
@@ -238,8 +238,8 @@ rule containsId Object [id]
         Object
 end rule
 
-rule containsNestedClass Object [nested_class]
-    match [nested_class]
+rule containsNestedClass Object [nested_identifier]
+    match [nested_identifier]
         Object
 end rule
 

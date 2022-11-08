@@ -4,9 +4,9 @@
 %decl and inheritance and external imports
 rule replaceConcreteClassesWithInheritance
     replace $ [concrete_class_declaration]
-        _ [acess_modifier] 'class className [nested_class] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
+        _ [acess_modifier] 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
     export className 
-    construct inheritanceClasses [list nested_class]
+    construct inheritanceClasses [list nested_identifier]
         _ [extractInheritanceBlockClasses each inheritances]
     construct imports [repeat import_statement]
         _ [createImports classBody inheritances]
@@ -17,15 +17,15 @@ end rule
 %inheritance  imports
 rule replaceInterfacesWithInheritance
     replace [interface_declaration]
-        _ [acess_modifier] 'interface className [nested_class] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
+        _ [acess_modifier] 'interface className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
     export className
-    construct inheritanceClasses [list nested_class]
+    construct inheritanceClasses [list nested_identifier]
         _ [extractInheritanceBlockClasses each inheritances]
     construct imports [repeat import_statement]
         _ [createImports classBody inheritances]
-    construct AbcClass [list nested_class]
+    construct AbcClass [list nested_identifier]
         'ABC
-    construct finalInheritances [list nested_class]
+    construct finalInheritances [list nested_identifier]
         AbcClass [, inheritanceClasses]
     by
         'from 'abc 'import 'ABC, 'abstractmethod imports 'class className '(  finalInheritances '):  classBody [replaceClassBody] [replaceInterfaceBody]
@@ -117,7 +117,7 @@ function addMemberVariable MemberVariable [member_variable_declaration]
     deconstruct MemberVariable
         _[opt acess_modifier] _[opt transient] _[opt static] _[opt volatile]  decl [variable_declaration]
     deconstruct decl
-        _ [nested_class] memberName [id]';
+        _ [nested_identifier] memberName [id]';
     by
         SequenceSoFar [. memberName]
 end function
