@@ -130,7 +130,7 @@ class PythonGenerator
       pyReader.close();
     } catch (FileNotFoundException e) {
       System.err.println("Error found with compilation of " + new File(pythonFilename).getName() + " : Output might be missing a file");
-      return;
+      throw new UmpleCompilerException("Error found with compilation of " + new File(pythonFilename).getName(), e);
     }
 
     getModel().getGeneratedCode().put(aClass.getName(),contents);

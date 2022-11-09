@@ -365,7 +365,7 @@
         </try>
 
         <catch>
-          <echo>Failed to compile Umple and/or generate Python code from one or more examples and/or to compile the resulting Python</echo>
+          <echo>Failed to compile Umple and/or generate Python code from one or more examples</echo>
           <if>
             <equals arg1="${failfast}" arg2="true" />
             <then>
