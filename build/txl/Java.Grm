@@ -4,7 +4,7 @@ comments
 end comments
 
 compounds 
-    'self. '== '!= '>= '<= '+= '-=
+    'self. '== '!= '>= '<= '+= '-= '-- '++
 end compounds 
 
 tokens
@@ -16,7 +16,7 @@ end tokens
 %--------------------%
 
 keys
- return new if else for true false while this super tuple len list True False + - * / ? ; : pass not and or
+ return new if else for true false while this True False + - * / ? ; : pass not and or
 end keys
 
 define acess_modifier
@@ -68,7 +68,7 @@ define imported
 end define
 
 define generic_class
-    [id]'< [list id] '>
+    [id] [!]'< [list id] '>
 end define
 
 define arithmatic_expression
@@ -93,6 +93,7 @@ define nestable_value
     |   'this
     |   'super
     |   [generic_class]
+    |   [stringlit]
 end define
 
 define value_no_recursion 
@@ -110,7 +111,7 @@ define value_no_recursion
 end define
 
 define method_reference
-    [nested_identifier] ':: [id]
+    [nested_identifier] [!] ':: [id]
 end define
 
 define value
@@ -130,7 +131,7 @@ define new_call
 end define
 
 define variable_declaration
-        [nested_identifier] [assignment] '; [NL]
+        [nested_identifier] [assignment]'; [NL]
     |   [nested_identifier] [nested_identifier]';
 end define
 
@@ -156,7 +157,7 @@ define statement
     |   [for_loop]
     |   [for_in_loop]
     |   [while_loop]
-    |   [nested_identifier]'; [NL]
+    |   [nested_identifier] [!]'; [NL]
     |   [assignment] '; [NL]
     |   [throw_statement]
     |   [switch_case]
@@ -167,7 +168,7 @@ define while_loop
 end define
 
 define ternary
-    [boolean_expression] '? [value] ': [value]
+    [boolean_expression] [!] '? [value] ': [value]
 end define
 
 define for_loop
@@ -221,7 +222,7 @@ define callable
 end define
 
 define function_call
-        [callable] [SPOFF] '( [SPON] [list value]')
+        [callable] [!] [SPOFF]'( [SPON] [list value] ')
 end define
 
 define boolean_expression
@@ -229,7 +230,7 @@ define boolean_expression
 end define
 
 define boolean_continuation
-        [boolean_operator] [condition]
+        [boolean_operator] [!] [condition]
 end define
 
 define condition
@@ -251,7 +252,7 @@ define throws
 end define
 
 define var_arg
-    [nested_identifier] '... [id]
+    [nested_identifier] [!] '... [id]
 end define 
 
 define concrete_method_declaration

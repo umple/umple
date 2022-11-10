@@ -7,7 +7,6 @@ function replaceStatements
     by 
         statements
             [replaceDefaultReadObject]
-            [reorderNestedIdentifier]
             [replaceSwitchCase]
             [addClassPrefixToEnum]
             [replaceForLoop]
@@ -45,6 +44,9 @@ function replaceStatements
             [replaceNewLine]
             [replaceHexIdentity]
             [replaceComparator]
+            [translateToStringCall]
+            [translateEqualsCall]
+            [translateSelfEqualsCall]
 end function
 
 function replaceNoStatements
@@ -55,28 +57,28 @@ end function
 
 rule replaceAssignementIncrementAfter
     replace [statement]
-        nest1 [nestable_value] '= nest2 [nestable_value] '++ ';
+        nest1 [nested_identifier] '= nest2 [nested_identifier] '++ ';
     by
         nest1 ', nest2 '= nest2 ', nest2 '+ '1
 end rule
 
 rule replaceAssignementDecrementAfter
     replace [statement]
-        nest1 [nestable_value] '= nest2 [nestable_value] '-- ';
+        nest1 [nested_identifier] '= nest2 [nested_identifier] '-- ';
     by
         nest1 ', nest2 '= nest2 ', nest2 '- '1
 end rule
 
 rule replaceAssignementIncrementBefore
     replace [statement]
-        nest1 [nestable_value] '= '++ nest2 [nestable_value]';
+        nest1 [nested_identifier] '= '++ nest2 [nested_identifier]';
     by
         nest1 '= nest2 '= nest2 '+ '1
 end rule
 
 rule replaceAssignementDecrementBefore
     replace [statement]
-        nest1 [nestable_value] '= '-- nest2 [nestable_value]';
+        nest1 [nested_identifier] '= '-- nest2 [nested_identifier]';
     by
         nest1 '= nest2 '= nest2 '- '1
 end rule
@@ -98,8 +100,9 @@ end rule
 rule addSelfToOwnMethodCalls
     replace [nested_identifier]
         funcName [id] '( values [list value]') rep [repeat attribute_access]
+    import classMethodNames [repeat id]
     where
-        funcName [~= 'str]
+        classMethodNames [containsId funcName]
     by
         'self '. funcName '( values') rep
 end rule
@@ -195,28 +198,28 @@ end rule
 
 rule replaceDecrementBefore
     replace [statement]
-        '-- nest [nestable_value]';
+        '-- nest [nested_identifier]';
     by 
         nest '-= 1
 end rule
 
 rule replaceIncrementBefore
     replace [statement]
-        '++ nest [nestable_value]';
+        '++ nest [nested_identifier]';
     by 
         nest '+= '1
 end rule
 
 rule replaceDecrementAfter
     replace [statement]
-        nest [nestable_value] '-- ';
+        nest [nested_identifier] '-- ';
     by 
         nest '-= 1
 end rule
 
 rule replaceIncrementAfter
     replace [statement]
-        nest [nestable_value] '++ ';
+        nest [nested_identifier] '++ ';
     by 
         nest '+= '1
 end rule
@@ -452,83 +455,30 @@ function isSpecificEnum aEnum [enum_declaration]
         name [= enumName]
 end function
 %--------------------------------%
-%  Nested Identifier reordering  %
+%  Attribute access translation  %
 %--------------------------------%
 
-rule reorderNestedIdentifier
-    replace [nested_identifier]
-        nested [nested_identifier]
-    construct seeking [attribute_access]
-        '.toString() 
-    where 
-        nested [containsAttributeAccess seeking]
-    by
-        nested [reorderToString]
-end rule
-
-function reorderToString
-    replace [nested_identifier]
-        nested [nested_identifier]
-    construct funcName [id]
-        'str
-    construct seeking [attribute_access]
+rule translateToStringCall
+    replace [attribute_access]
         '.toString()
     by
-        nested [reorderSpecific seeking funcName]
-end function
+        '.__str__()
+end rule
 
-function reorderSpecific seeking [attribute_access] funcName [id]
-    replace [nested_identifier]
-        nested [nested_identifier]
-    deconstruct nested
-        root [nestable_value] rep [repeat attribute_access]
-    where 
-        nested [containsAttributeAccess seeking]
-    construct zero [number]
-        '0 
-    construct count [number]
-        zero [findCount seeking rep]
+rule translateEqualsCall
+    replace [attribute_access]
+        '.equals( val [value] ')
     by
-        nested [swap count funcName]
-end function
-
-function findCount seeking [attribute_access] rep [repeat attribute_access]
-    replace [number]
-        count [number]
-    construct repLength [number]
-        _ [length rep]
-    construct head [repeat attribute_access]
-        rep [head 1]
-    where 
-        repLength [> 0]
-    construct remaining [repeat attribute_access]
-        rep [tail 2]
-    where not
-        head [containsAttributeAccess seeking] 
-    by
-        count [+ 1] [findCount seeking remaining]
-end function
-
-function swap count [number] funcName [id]
-    replace [nested_identifier]
-        root [nestable_value] rep [repeat attribute_access]
-    construct before [repeat attribute_access]
-        rep [head count]
-    construct countWithSkip [number]
-        count [+ 2]
-    construct after [repeat attribute_access]
-        rep [tail countWithSkip]
-    by
-        funcName '( root before ') after
-end function
-
-rule containsAttributeAccess seeking [attribute_access]
-    match [attribute_access]
-        seeking
+        '.__eq__( val ')
 end rule
 
 
-
+rule translateSelfEqualsCall
+    replace [nested_identifier]
+        'equals( val [value] ')
+    by
+        'self '.__eq__( val ')
+end rule
 
 %--------------------------------%
 %  Generic Before/after search   %
