@@ -18,6 +18,7 @@ function replaceAllLists memberLists [repeat id]
             [replaceListAddNoIndex memberLists]
             [replaceListCopy]
             [replaceListSort memberLists]
+            [replaceAddAll memberLists]
 end function 
 
 rule replaceListAssignement memberLists [repeat id]
@@ -122,4 +123,13 @@ rule replaceListSort memberLists [repeat id]
         memberLists [containsId listId]
     by 
         listId '.sort( 'key '= priorityFunc ')
+end rule
+
+rule replaceAddAll memberLists [repeat id]
+    replace [nested_identifier]
+        id [id] '.addAll( value [value] ')
+    where
+        memberLists [containsId id]
+    by 
+        id '.extend( value ')
 end rule

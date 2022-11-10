@@ -64,6 +64,8 @@ function replaceClassBody
         _ [^ elements]
     export classMethods [repeat method_declaration]
         _ [^ elements]
+    export classMethodNames [repeat id]
+        _ [extractClassMethodName each classMethods]
     construct possibleFunctionImports [repeat id]
         _ [extractPossibleFunctionImports body each declarations]
     export possibleFunctionImports
@@ -71,6 +73,31 @@ function replaceClassBody
         elements [exportConstructorCount] [removeMemberVariableDeclarations] [replaceEnumDeclaration] 
             [replaceAllMethods memberVariables]
             [replaceAllMemberVariableNames memberVariables] 
+end function
+
+function extractClassMethodName method [method_declaration]
+    replace [repeat id]
+        result [repeat id]
+    by
+        result [extractConcreteMethodName method] [extractAbstractMethodName method]
+end function
+
+function extractConcreteMethodName method [method_declaration]
+    replace [repeat id]
+        result [repeat id]
+    deconstruct method
+        _[opt decorator] _[acess_modifier] _[opt static] _[nested_identifier] methodName [id] '( _[list method_parameter] ') _[opt throws] '{ _[repeat statement] '}
+    by
+        result [. methodName]
+end function
+
+function extractAbstractMethodName method [method_declaration]
+    replace [repeat id]
+        result [repeat id]
+    deconstruct method
+        _[acess_modifier] _[nested_identifier] methodName [id] '( _ [list method_parameter] ');
+    by
+        result [. methodName]
 end function
 
 function getTransientMembers decls [repeat member_variable_declaration]

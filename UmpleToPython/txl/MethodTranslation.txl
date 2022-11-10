@@ -85,9 +85,15 @@ end function
 
 rule replaceStaticMethod
     replace [method_declaration]
-        _[acess_modifier] _[static] _[nested_identifier] methodName [id]'() _ [opt throws] '{ statements [repeat statement] '}
+        _[acess_modifier] _[static] _[nested_identifier] methodName [id]'( params [list method_parameter] ') _ [opt throws] '{ statements [repeat statement] '}
+    construct selfParam [list method_parameter]
+        'self
+    construct modifiedParams [list method_parameter]
+        _ [translateParam each params]
+    construct newParams [list method_parameter]
+        selfParam [, modifiedParams] [changeKeyArgumentNames]
     by
-        '@staticmethod 'def methodName '():  statements [replaceStatements] [changeKeyArgumentNameInNestedIdentifier]
+        '@staticmethod 'def methodName '( newParams '):  statements [replaceStatements] [changeKeyArgumentNameInNestedIdentifier]
 end rule
 
 rule replaceConstructor memberVariables [repeat id]
@@ -454,7 +460,7 @@ function extractClassId target [any]
     replace [opt id]
         result [opt id]
     by
-        result [extractIdFromNonGenericClass target] [extractIdFromGenericClass target] [debug]
+        result [extractIdFromNonGenericClass target] [extractIdFromGenericClass target]
 end function
 
 function extractIdFromGenericClass class [any]
