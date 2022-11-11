@@ -12,8 +12,8 @@ function replaceAllMethods memberVariables [repeat id]
             [removeOverrideDecorator]
             [replaceToString]
             [replaceAbstractMethod]
+            [replaceUserMethod]
             [replaceConcreteMethod]
-            [replaceStaticMethod]
             [addGetState]
 end function
 
@@ -26,33 +26,74 @@ end rule
 
 rule replaceConcreteMethod
     replace [concrete_method_declaration]
-        _[acess_modifier] _[nested_identifier] methodName [id]'( params [list method_parameter] ') _ [opt throws] '{ statements [repeat statement] '}
-    construct selfParam [list method_parameter]
-        'self
-    construct modifiedParams [list method_parameter]
-        _ [translateParam each params]
+        _[acess_modifier] possibleStatic [opt static] _[nested_identifier] methodName [id]'( params [list method_parameter] ') _ [opt throws] '{ statements [repeat statement] '}
     construct newParams [list method_parameter]
-        selfParam [, modifiedParams] [changeKeyArgumentNames]
+        _ [getPythonParams params possibleStatic]
+    construct possibleStaticDecorator [repeat decorator]
+        _ [createStaticDecorator possibleStatic]
     by
-        'def methodName '( newParams '):  statements 
+        possibleStaticDecorator 'def methodName '( newParams '):  statements 
             [manageSpecialTypes params] 
             [replaceStatements] 
             [changeKeyArgumentNameInNestedIdentifier] 
             [addFunctionImports]
 end rule
 
+function createStaticDecorator possibleStatic [opt static]
+    replace [repeat decorator]
+        result [repeat decorator]
+    deconstruct possibleStatic
+        _ [static]
+    construct staticDecorator [decorator]
+        '@staticmethod
+    by
+        result [. staticDecorator]
+end function
+
 rule replaceAbstractMethod
     replace [abstract_method_declaration]
         _[acess_modifier] _[nested_identifier] methodName [id] '( params [list method_parameter] ');
-    construct selfParam [list method_parameter]
-        'self
-    construct modifiedParams [list method_parameter]
-        _ [translateParam each params]
+    construct empty [opt static]
+        _
     construct newParams [list method_parameter]
-        selfParam [, modifiedParams] [changeKeyArgumentNames]
+        _ [getPythonParams params empty]
     by
-        '@abstractmethod 'def methodName '( selfParam [, newParams] '): 'pass
+        '@abstractmethod 'def methodName '( newParams '): 'pass
 end rule
+
+rule replaceUserMethod
+    replace [concrete_method_declaration]
+        _[acess_modifier] possibleStatic [opt static] _[nested_identifier] methodName [id]'( params [list method_parameter] ') _ [opt throws] '{ content [usercode] '}
+    construct newParams [list method_parameter]
+        _ [getPythonParams params possibleStatic]
+    construct possibleStaticDecorator [repeat decorator]
+        _ [createStaticDecorator possibleStatic]
+    by
+        possibleStaticDecorator 'def methodName '( newParams '):  content 
+end rule
+
+function getPythonParams javaParams [list method_parameter] possibleStatic [opt static]
+    replace [list method_parameter]
+        _ [list method_parameter]
+    construct selfParam [list method_parameter]
+        _ [addSelfIfNotStatic possibleStatic]
+    construct modifiedParams [list method_parameter]
+        _ [translateParam each javaParams]
+    by
+        selfParam [, modifiedParams] [changeKeyArgumentNames]
+    
+end function 
+
+function addSelfIfNotStatic possibleStatic [opt static]
+    replace [list method_parameter]
+        result [list method_parameter]
+    deconstruct possibleStatic
+        _ [empty]
+    construct selfParam [method_parameter]
+        'self
+    by 
+        result [, selfParam]
+end function
 
 rule replaceToString
     replace [method_declaration]
@@ -82,19 +123,6 @@ function isString
     match [value_no_recursion]
         _ [stringlit]
 end function
-
-rule replaceStaticMethod
-    replace [method_declaration]
-        _[acess_modifier] _[static] _[nested_identifier] methodName [id]'( params [list method_parameter] ') _ [opt throws] '{ statements [repeat statement] '}
-    construct selfParam [list method_parameter]
-        'self
-    construct modifiedParams [list method_parameter]
-        _ [translateParam each params]
-    construct newParams [list method_parameter]
-        selfParam [, modifiedParams] [changeKeyArgumentNames]
-    by
-        '@staticmethod 'def methodName '( newParams '):  statements [replaceStatements] [changeKeyArgumentNameInNestedIdentifier]
-end rule
 
 rule replaceConstructor memberVariables [repeat id]
     replace [constructor]
@@ -242,6 +270,8 @@ function manageSpecialTypes params [list method_parameter]
     import listMemberVariables [repeat id]
     construct paramLists [repeat id]
         _ [extractListNameFromMethodParam each params]
+    construct paramArrays [repeat id]
+        _ [extractArrayNameFromMethodParam each params]
     construct varArgRepeat [repeat id]
         _ [reparse possibleVarArgName]
     construct allDeclarations [repeat variable_declaration]
@@ -249,29 +279,31 @@ function manageSpecialTypes params [list method_parameter]
     construct statementLists [repeat id]
         _ [extractListNameFromVariableDeclaration each allDeclarations]
     construct allLists [repeat id]
-        _ [. listMemberVariables] [. paramLists] [. varArgRepeat] [. statementLists]
+        _ [. listMemberVariables] [. paramLists] [. paramArrays] [. varArgRepeat] [. statementLists]
     by
         stmts
             [changeVarArgTypeToList possibleVarArgName]
             [addAsterixToVarArgInSuperInit possibleVarArgName]
             [replaceAllLists allLists]
-            [addAsterixToInternalFuncCalls possibleVarArgName]
+            [addAsterixToInternalFuncCalls allLists]
 
 end function
 
-rule addAsterixToInternalFuncCalls possibleVarArgName [opt id]
+rule addAsterixToInternalFuncCalls allIterables [repeat id]
     replace $ [nested_identifier]
         funcName [id] '( args [list value+] ')
-    deconstruct possibleVarArgName
-        varArgName [id]
     construct zero [number]
         '0
     construct argsLength [number]
         zero [length args]
-    construct lastArg [list value]
+    construct lastArgList [list value]
         args [tail argsLength]
+    deconstruct lastArgList
+        lastArg [nested_identifier]
+    deconstruct lastArg
+        root [id] rep [repeat attribute_access]
     where
-        lastArg [containsId varArgName]
+        allIterables [containsId root]
     import classMethods [repeat method_declaration]
     where
         classMethods [doesMethodHaveVarArg funcName]
@@ -280,7 +312,7 @@ rule addAsterixToInternalFuncCalls possibleVarArgName [opt id]
     construct allArgsButLast [list value]
         args [head argsLengthMinusOne]
     construct unpacked [value]
-        '* varArgName
+        '* lastArg
     by  
         funcName'( allArgsButLast [, unpacked] ')
 end rule
@@ -318,6 +350,24 @@ function extractListNameFromMethodParam param [method_parameter]
         result [. paramName]
 end function
 
+function extractArrayNameFromMethodParam param [method_parameter]
+    replace [repeat id]
+        result [repeat id]
+    deconstruct param
+        nested [nested_identifier] paramName [id] 
+    construct nestables [repeat nestable_value]
+        _ [^ nested]
+    construct zero [number]
+        '0
+    construct length [number]
+        zero [length nestables]
+    construct lastNestableRepeat [repeat nestable_value]
+        nestables [tail length]
+    deconstruct lastNestableRepeat
+        _ [id] '[ ']
+    by
+        result [. paramName]
+end function
 
 rule addAsterixToVarArgInSuperInit possibleVarArgName [opt id]
     replace $ [function_call]

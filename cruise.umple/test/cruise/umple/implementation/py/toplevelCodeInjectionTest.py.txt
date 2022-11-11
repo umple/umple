@@ -27,5 +27,5 @@ class Student11():
         pass
 
     def __str__(self):
-        return str(super()) + "[" + "name" + ":" + str(self.getName()) + "," + "b" + ":" + str(self.getB()) + "]"
+        return super().__str__() + "[" + "name" + ":" + str(self.getName()) + "," + "b" + ":" + str(self.getB()) + "]"
 

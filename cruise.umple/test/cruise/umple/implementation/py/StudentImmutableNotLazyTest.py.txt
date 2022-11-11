@@ -1,5 +1,8 @@
 class Student():
     def __init__(self, aNumber):
+        self._canSetNumber2 = None
+        self._number2 = None
+        self._number = None
         self._number = aNumber
         self._canSetNumber2 = True
 
@@ -20,5 +23,5 @@ class Student():
         pass
 
     def __str__(self):
-        return str(super()) + "[" + "number" + ":" + self.getNumber() + "," + "number2" + ":" + self.getNumber2() + "]"
+        return super().__str__() + "[" + "number" + ":" + str(self.getNumber()) + "," + "number2" + ":" + str(self.getNumber2()) + "]"
 

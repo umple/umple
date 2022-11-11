@@ -19,6 +19,7 @@ function replaceAllLists memberLists [repeat id]
             [replaceListCopy]
             [replaceListSort memberLists]
             [replaceAddAll memberLists]
+            [replaceToArray memberLists]
 end function 
 
 rule replaceListAssignement memberLists [repeat id]
@@ -133,3 +134,13 @@ rule replaceAddAll memberLists [repeat id]
     by 
         id '.extend( value ')
 end rule
+
+rule replaceToArray memberLists [repeat id]
+    replace [nested_identifier]
+        id [id] '.toArray( value [value] ')
+    where
+        memberLists [containsId id]
+    by 
+        id '.copy()
+end rule
+

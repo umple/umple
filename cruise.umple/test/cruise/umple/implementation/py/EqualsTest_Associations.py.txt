@@ -14,7 +14,7 @@ class Mentor():
         return self._main
 
     def hasMain(self):
-        has = not(self._main is None)
+        has = not (self._main is None)
         return has
 
     def getSecondary(self, index):
@@ -44,12 +44,12 @@ class Mentor():
         if aNewMain is None :
             existingMain = self._main
             self._main = None
-            if existingMain != null and existingMain.getMentorMain() != null :
+            if not (existingMain is None) and not (existingMain.getMentorMain() is None) :
                 existingMain.setMentorMain(None)
             wasSet = True
             return wasSet
         currentMain = self.getMain()
-        if currentMain != null and not currentMain.equals(aNewMain) :
+        if not (currentMain is None) and not currentMain.equals(aNewMain) :
             currentMain.setMentorMain(None)
         self._main = aNewMain
         existingMentorMain = aNewMain.getMentorMain()
@@ -121,9 +121,9 @@ class Mentor():
         if not self.getClass().equals(obj.getClass()) :
             return False
         compareTo = obj
-        if self.getMain() is None and compareTo.getMain() != null :
+        if self.getMain() is None and not (compareTo.getMain() is None) :
             return False
-        elif self.getMain() != null and not self.getMain().equals(compareTo.getMain()) :
+        elif not (self.getMain() is None) and not self.getMain().equals(compareTo.getMain()) :
             return False
         if self.getSecondaries().size() != compareTo.getSecondaries().size() :
             return False
@@ -131,11 +131,11 @@ class Mentor():
         while i < self.getSecondaries().size() :
             me = self.getSecondaries().get(i)
             them = compareTo.getSecondaries().get(i)
-            if me is None and them != null :
+            if me is None and not (them is None) :
                 return False
-            elif me != null and not me.equals(them) :
+            elif not (me is None) and not me.equals(them) :
                 return False
-            i = i + 1
+            i + +
 
         return True
 
@@ -143,11 +143,11 @@ class Mentor():
         if self._cachedHashCode != -1 :
             return self._cachedHashCode
         self._cachedHashCode = 17
-        if not(self.getMain() is None) :
+        if not (self.getMain() is None) :
             self._cachedHashCode = self._cachedHashCode * 23 + self.getMain().hashCode()
         else :
             self._cachedHashCode = self._cachedHashCode * 23
-        if not(self.getSecondaries() is None) :
+        if not (self.getSecondaries() is None) :
             self._cachedHashCode = self._cachedHashCode * 23 + self.getSecondaries().hashCode()
         else :
             self._cachedHashCode = self._cachedHashCode * 23
@@ -156,7 +156,7 @@ class Mentor():
         return self._cachedHashCode
 
     def delete(self):
-        if not(self._main is None) :
+        if not (self._main is None) :
             self._main.setMentorMain(None)
         while not self._secondaries.isEmpty() :
             self._secondaries[0].setMentorSecondary(None)

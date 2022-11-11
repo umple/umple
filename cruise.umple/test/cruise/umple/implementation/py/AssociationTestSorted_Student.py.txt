@@ -100,5 +100,5 @@ class Student():
             aMentor.removeStudent(self)
 
     def __str__(self):
-        return str(super()) + "[" + "id" + ":" + str(self.getId()) + "]"
+        return super().__str__() + "[" + "id" + ":" + str(self.getId()) + "]"
 

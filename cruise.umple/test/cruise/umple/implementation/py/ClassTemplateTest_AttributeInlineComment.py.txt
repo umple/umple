@@ -16,5 +16,5 @@ class Foo():
         pass
 
     def __str__(self):
-        return str(super()) + "[" + "bar" + ":" + str(self.getBar()) + "]"
+        return super().__str__() + "[" + "bar" + ":" + str(self.getBar()) + "]"
 
