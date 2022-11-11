@@ -18,5 +18,5 @@ class Token():
         pass
 
     def __str__(self):
-        return str(super()) + "[" + "]" + str(os.linesep) + "  " + "p" + "=" + str((((str(self.getP()).replaceAll("  ", "    ")) if not self.getP().equals(self) else "this") if not(self.getP() is None) else "null"))
+        return super().__str__() + "[" + "]" + str(os.linesep) + "  " + "p" + "=" + str((((self.getP().__str__().replaceAll("  ", "    ")) if not self.getP().__eq__(self) else "this") if not (self.getP() is None) else "null"))
 

@@ -9,6 +9,7 @@ end compounds
 
 tokens
     number  "(-\s?)?\d+(.\d+)?"
+    usercode "<TXL UGM>[#(</TXL UGM>)]*</TXL UGM>"
 end tokens
 
 %--------------------%
@@ -71,6 +72,10 @@ define generic_class
     [id] [!]'< [list id] '>
 end define
 
+define array_access
+    [id] [SPOFF] '[ [list value] '] [SPON]
+end define
+
 define arithmatic_expression
     [value_no_recursion] [repeat arithmatic_continuation+]
 end define
@@ -94,6 +99,7 @@ define nestable_value
     |   'super
     |   [generic_class]
     |   [stringlit]
+    |   [array_access]
 end define
 
 define value_no_recursion 
@@ -127,7 +133,7 @@ define value_no_ternary
 end define
 
 define new_call
-    'new [function_call]
+    'new [nested_identifier]
 end define
 
 define variable_declaration
@@ -176,7 +182,7 @@ define for_loop
 end define
 
 define for_in_loop
-    'for( [nested_identifier] [id] ': [nested_identifier]')'{ [NL] [IN] [repeat statement] [EX] '} [NL]
+    'for( [nested_identifier] [id] ': [value]')'{ [NL] [IN] [repeat statement] [EX] '} [NL]
 end define
 
 define switch_case
@@ -256,7 +262,12 @@ define var_arg
 end define 
 
 define concrete_method_declaration
-        [opt decorator] [acess_modifier] [opt static] [nested_identifier] [id] '( [list method_parameter] ') [opt throws] [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
+        [opt decorator] [acess_modifier] [opt static] [nested_identifier] [id] '( [list method_parameter] ') [opt throws] [NL] '{ [method_content] '} [NL]
+end define
+
+define method_content
+        [repeat statement]
+    |   [usercode]
 end define
 
 define method_declaration

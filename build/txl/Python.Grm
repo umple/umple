@@ -21,11 +21,6 @@ redefine nestable_value
     |  [array_access]
 end redefine
 
-
-define array_access
-    [id] [SPOFF] '[ [value] '] [SPON]
-end define
-
 redefine assignment
     ...
     |   [list nested_identifier+] [!] '=  [list value+] 
@@ -53,7 +48,7 @@ redefine value_no_recursion
     |   '[ [list value] ']
     |   'not [boolean_expression] 
     |   [lambda_function]
-    |   '* [SPOFF] [id] [SPON]
+    |   '* [SPOFF] [nested_identifier] [SPON]
 end redefine
 
 define  lambda_function
@@ -120,14 +115,13 @@ end redefine
 
 redefine concrete_method_declaration
     ...
-    |   [opt decorator] 'def  [id] [SPOFF]'( [SPON] [list method_parameter] [SPOFF] '): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
+    |   [repeat decorator] 'def  [id] [SPOFF]'( [SPON] [list method_parameter] [SPOFF] '): [SPON] [NL] [IN] [method_content] [NL] [EX] [NL]
 end redefine
 
 redefine abstract_method_declaration
     ...
     |   [SPOFF] '@abstractmethod [SPON] [NL] 'def  [id] [SPOFF]'( [SPON] [list method_parameter] [SPOFF] '): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
 end redefine
-
 
 redefine constructor
     ...
