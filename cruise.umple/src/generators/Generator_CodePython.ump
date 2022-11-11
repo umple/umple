@@ -20,6 +20,22 @@ class PythonGenerator
   private static final int TXL_VERSION = 14;
 
   @Override
+  public ILang getLanguageFor(UmpleElement aElement)
+  {
+    if (aElement instanceof UmpleInterface)
+    {
+      return new JavaInterfaceGenerator();
+    }
+    else if (aElement instanceof UmpleClass)
+    {
+      return new PythonClassGenerator();
+    } 
+    else{
+        return null;        
+    }
+  }
+
+  @Override
   public void writeFile(UmpleElement aClass) throws IOException
   {
     if (!isTxlInstalled()) {
