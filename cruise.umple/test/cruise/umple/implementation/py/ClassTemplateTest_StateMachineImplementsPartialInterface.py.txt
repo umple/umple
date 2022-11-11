@@ -1,7 +1,7 @@
-from Logger import Logger
+from NetworkNode import NetworkNode
 from enum import Enum, auto
 
-class FileLogger(Logger):
+class Router(NetworkNode):
     class Status(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -10,12 +10,14 @@ class FileLogger(Logger):
         disconnected = auto()
         connected = auto()
 
-    def __init__(self, aFileName):
-        self._fileName = aFileName
-        self.setStatus(FileLogger.Status.disconnected)
+    def __init__(self, aIpAddress):
+        self._status = None
+        self._ipAddress = None
+        self._ipAddress = aIpAddress
+        self.setStatus(Router.Status.disconnected)
 
     def getStatusFullName(self):
-        answer = str(self._status)
+        answer = self._status.__str__()
         return answer
 
     def getStatus(self):
@@ -24,23 +26,21 @@ class FileLogger(Logger):
     def connect(self):
         wasEventProcessed = False
         aStatus = self._status
-        match aStatus :
-            case FileLogger.Status.disconnected :
-                self.setStatus(FileLogger.Status.connected)
-                wasEventProcessed = True
-            case default :
-                pass
+        if aStatus == disconnected :
+            self.setStatus(Router.Status.connected)
+            wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def disconnect(self):
         wasEventProcessed = False
         aStatus = self._status
-        match aStatus :
-            case FileLogger.Status.connected :
-                self.setStatus(FileLogger.Status.disconnected)
-                wasEventProcessed = True
-            case default :
-                pass
+        if aStatus == connected :
+            self.setStatus(Router.Status.disconnected)
+            wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def setStatus(self, aStatus):
@@ -49,9 +49,9 @@ class FileLogger(Logger):
     def delete(self):
         pass
 
-    def write(self, data):
+    def errorDetected(self):
         return False
 
     def __str__(self):
-        return str(super()) + "[" + "]"
+        return super().__str__() + "[" + "]"
 

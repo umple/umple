@@ -5,6 +5,3 @@ class Mentor():
     def delete(self):
         pass
 
-    def showMe(self):
-        pass
-

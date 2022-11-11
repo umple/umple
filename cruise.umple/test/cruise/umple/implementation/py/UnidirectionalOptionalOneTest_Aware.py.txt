@@ -19,7 +19,7 @@ class Mentor():
         return self._student
 
     def hasStudent(self):
-        has = not(self._student is None)
+        has = not (self._student is None)
         return has
 
     def setStudent(self, aNewStudent):
@@ -32,5 +32,5 @@ class Mentor():
         self._student = None
 
     def __str__(self):
-        return str(super()) + "[" + "name" + ":" + str(self.getName()) + "]" + str(os.linesep) + "  " + "student = " + str(((format(id(self.getStudent()), "x")) if not(self.getStudent() is None) else "null"))
+        return str(super()) + "[" + "name" + ":" + str(self.getName()) + "]" + str(os.linesep) + "  " + "student = " + str(((format(id(self.getStudent()), "x")) if not (self.getStudent() is None) else "null"))
 
