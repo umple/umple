@@ -202,6 +202,7 @@
       <exclude name="LibraryLoanStateMachine.ump"/>
       <exclude name="MicrowaveOven2.ump"/>
       <exclude name="MixsetsInMethod.ump"/>
+      <exclude name="MixsetInTrait.ump"/>
       <exclude name="MultiValuedAttributes1.ump"/>
       <exclude name="Multiplicity2.ump"/>
       <exclude name="Multiplicity3.ump"/>
