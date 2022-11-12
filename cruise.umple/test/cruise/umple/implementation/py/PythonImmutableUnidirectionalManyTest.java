@@ -22,9 +22,4 @@ public class PythonImmutableUnidirectionalManyTest extends ImmutableUnidirection
 	    language = "Python";
 	    languagePath = "py";
 	  }
-
-	  @Test @Ignore
-	  public void Aware(){
-		super.Aware();
-	  }
 }

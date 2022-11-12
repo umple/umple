@@ -1,8 +1,9 @@
-from Mentor import Mentor
 import os
 
 class Student():
     def __init__(self, aNumber):
+        self._mentor = None
+        self._number = None
         self._number = aNumber
 
     def setNumber(self, aNumber):
@@ -18,28 +19,26 @@ class Student():
         return self._mentor
 
     def hasMentor(self):
-        has = not(self._mentor is None)
+        has = not (self._mentor is None)
         return has
 
     def setMentor(self, aMentor):
         wasSet = False
         existingMentor = self._mentor
         self._mentor = aMentor
-        if existingMentor != None and not existingMentor.equals(aMentor) :
+        if not (existingMentor is None) and not existingMentor.__eq__(aMentor) :
             existingMentor.removeStudent(self)
-
-        if not(aMentor is None) :
+        if not (aMentor is None) :
             aMentor.addStudent(self)
-
         wasSet = True
         return wasSet
 
     def delete(self):
-        if not(self._mentor is None) :
+        if not (self._mentor is None) :
             placeholderMentor = self._mentor
             self._mentor = None
             placeholderMentor.removeStudent(self)
 
     def __str__(self):
-        return str(super()) + "[" + "number" + ":" + self.getNumber() + "]" + os.linesep + "  " + "mentor = " + (self.getMentor() != (format(id(self.getMentor()), "x")) if None else "null")
+        return super().__str__() + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "mentor = " + str(((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null"))
 
