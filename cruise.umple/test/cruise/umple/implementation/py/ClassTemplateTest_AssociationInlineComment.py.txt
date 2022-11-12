@@ -1,7 +1,6 @@
-from Bar import Bar
-
 class Foo():
     def __init__(self):
+        self._bars = None
         self._bars = []
 
     def getBar(self, index):
@@ -25,34 +24,31 @@ class Foo():
         return index
 
     @staticmethod
-    def minimumNumberOfBars():
+    def minimumNumberOfBars(self):
         return 0
 
     def addBar(self):
+        from Bar import Bar
         return Bar(self)
 
     def addBar(self, aBar):
         wasAdded = False
         if aBar in self._bars :
             return False
-
         existingFoo = aBar.getFoo()
-        isNewFoo = existingFoo != None and not self.equals(existingFoo)
+        isNewFoo = not (existingFoo is None) and not self.__eq__(existingFoo)
         if isNewFoo :
             aBar.setFoo(self)
-
         else :
             self._bars.append(aBar)
-
         wasAdded = True
         return wasAdded
 
     def removeBar(self, aBar):
         wasRemoved = False
-        if not self.equals(aBar.getFoo()) :
+        if not self.__eq__(aBar.getFoo()) :
             self._bars.remove(aBar)
             wasRemoved = True
-
         return wasRemoved
 
     def addBarAt(self, aBar, index):
@@ -60,14 +56,11 @@ class Foo():
         if self.addBar(aBar) :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfBars() :
                 index = self.numberOfBars() - 1
-
             self._bars.remove(aBar)
             self._bars.insert(index, aBar)
             wasAdded = True
-
         return wasAdded
 
     def addOrMoveBarAt(self, aBar, index):
@@ -75,17 +68,13 @@ class Foo():
         if aBar in self._bars :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfBars() :
                 index = self.numberOfBars() - 1
-
             self._bars.remove(aBar)
             self._bars.insert(index, aBar)
             wasAdded = True
-
         else :
             wasAdded = self.addBarAt(aBar, index)
-
         return wasAdded
 
     def delete(self):
@@ -93,5 +82,5 @@ class Foo():
         while i > 0 :
             aBar = self._bars[i - 1]
             aBar.delete()
-            i = i - 1
+            i --
 

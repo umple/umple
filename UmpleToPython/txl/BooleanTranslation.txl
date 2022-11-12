@@ -26,7 +26,7 @@ rule replaceNullCheck
 end rule
 
 rule replaceNotNullCheck
-    replace [value]
+    replace [condition]
         cond [condition]
     deconstruct cond
         elem [value_no_recursion] '!= 'null

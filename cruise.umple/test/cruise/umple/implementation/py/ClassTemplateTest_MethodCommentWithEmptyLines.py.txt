@@ -6,5 +6,5 @@ class Foo():
         pass
 
     def testMethod(self):
-        pass
+	// I am a test method.
 

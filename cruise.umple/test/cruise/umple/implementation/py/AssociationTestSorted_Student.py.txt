@@ -1,8 +1,9 @@
-from Mentor import Mentor
 import pickle
 
 class Student():
     def __init__(self, aId):
+        self._mentors = None
+        self._id = None
         self._id = aId
         self._mentors = []
 
@@ -99,5 +100,5 @@ class Student():
             aMentor.removeStudent(self)
 
     def __str__(self):
-        return str(super()) + "[" + "id" + ":" + self.getId() + "]"
+        return super().__str__() + "[" + "id" + ":" + str(self.getId()) + "]"
 

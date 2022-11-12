@@ -2,6 +2,7 @@ from Mentor import Mentor
 
 class SubMentor2(Mentor):
     def __init__(self, aName, aSubName):
+        self._subName = None
         super().__init__(aName)
         self._subName = aSubName
 
@@ -18,5 +19,5 @@ class SubMentor2(Mentor):
         super().delete()
 
     def __str__(self):
-        return str(super()) + "[" + "subName" + ":" + self.getSubName() + "]"
+        return super().__str__() + "[" + "subName" + ":" + str(self.getSubName()) + "]"
 

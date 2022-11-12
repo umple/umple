@@ -1,37 +1,10 @@
-<?php
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+class Mentor():
+    def __init__(self):
+        pass
 
-class Mentor
-{
+    def delete(self):
+        pass
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+    def showMe(self):
+	
 
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
-
-  public function __construct()
-  {}
-
-  //------------------------
-  // INTERFACE
-  //------------------------
-
-  public function equals($compareTo)
-  {
-    return $this == $compareTo;
-  }
-
-  public function delete()
-  {}
-
-   public function showMe()
-  {
-    
-  }
-
-}
-?>

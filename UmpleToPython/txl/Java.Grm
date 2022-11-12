@@ -4,11 +4,12 @@ comments
 end comments
 
 compounds 
-    'self. '== '!=
+    'self. '== '!= '>= '<= '+= '-= '-- '++
 end compounds 
 
 tokens
     number  "(-\s?)?\d+(.\d+)?"
+    usercode "<TXL UGM>[#(</TXL UGM>)]*</TXL UGM>"
 end tokens
 
 %--------------------%
@@ -16,7 +17,7 @@ end tokens
 %--------------------%
 
 keys
- return new if else for true false while this super tuple len True False + - * / ? ; : pass
+ return new if else for true false while this True False + - * / ? ; : pass not and or
 end keys
 
 define acess_modifier
@@ -61,31 +62,27 @@ define import_statement
     'import [imported]';
 end define
 
-
-
 define imported
         [id]
     |   '*
     |   [id]'. [imported]
 end define
 
-define nested_class
-    [nestable_class] [repeat nested_class_access]
+define generic_class
+    [id] [!]'< [list id] '>
 end define
 
-define nested_class_access
-    '. [nestable_class]
-end define
-
-define nestable_class
-    [id]'< [list id] '>
-    | [id] 
+define array_access
+    [id] [SPOFF] '[ [list value] '] [SPON]
 end define
 
 define arithmatic_expression
-       [value_no_recursion] [arithmatic_operator] [arithmatic_expression]
-    |   [value_no_recursion]
+    [value_no_recursion] [repeat arithmatic_continuation+]
 end define
+
+define arithmatic_continuation
+    [arithmatic_operator] [value_no_recursion]
+end define 
 
 define nested_identifier
      [nestable_value] [SPOFF] [repeat attribute_access] [SPON]
@@ -100,13 +97,15 @@ define nestable_value
     |    [id]
     |   'this
     |   'super
+    |   [generic_class]
+    |   [stringlit]
+    |   [array_access]
 end define
 
 define value_no_recursion 
         [new_call]
     |   '( [value]')
     |   [nested_identifier]
-    |   [nested_class] '. [id]
     |   [number]
     |   [stringlit]
     |   'null
@@ -118,7 +117,7 @@ define value_no_recursion
 end define
 
 define method_reference
-    [nested_class] ':: [id]
+    [nested_identifier] [!] ':: [id]
 end define
 
 define value
@@ -130,23 +129,26 @@ define value_no_ternary
         [value_no_recursion]
     |   [boolean_expression]
     |   [arithmatic_expression]
+    |   [assignment]
 end define
 
 define new_call
-    'new [nested_class] '( [list value] ')
+    'new [nested_identifier]
 end define
 
 define variable_declaration
-        [nested_class] [assignment] '; [NL]
-    |   [nested_class] [nested_identifier]';
+        [nested_identifier] [assignment]'; [NL]
+    |   [nested_identifier] [nested_identifier]';
 end define
 
 define assignment
-        [nested_identifier] '= [value] 
-    |    [nested_identifier]'++
-    |    [nested_identifier]'--
-    |   [nested_identifier] '+= [value]
-    |   [nested_identifier] '-= [value]
+        [nested_identifier] [!] '=  [value]
+    |   [nested_identifier] [!] '++
+    |   [nested_identifier] [!] '--
+    |   '++ [nested_identifier]
+    |   '-- [nested_identifier]
+    |   [nested_identifier] [!] '+= [value]
+    |   [nested_identifier] [!] '-= [value]
 end define
 
 
@@ -161,7 +163,7 @@ define statement
     |   [for_loop]
     |   [for_in_loop]
     |   [while_loop]
-    |   [nested_identifier]'; [NL]
+    |   [nested_identifier] [!]'; [NL]
     |   [assignment] '; [NL]
     |   [throw_statement]
     |   [switch_case]
@@ -172,7 +174,7 @@ define while_loop
 end define
 
 define ternary
-    [value_no_recursion] '? [value] ': [value]
+    [boolean_expression] [!] '? [value] ': [value]
 end define
 
 define for_loop
@@ -180,7 +182,7 @@ define for_loop
 end define
 
 define for_in_loop
-    'for( [nested_class] [id] ': [nested_identifier]')'{ [NL] [IN] [repeat statement] [EX] '} [NL]
+    'for( [nested_identifier] [id] ': [value]')'{ [NL] [IN] [repeat statement] [EX] '} [NL]
 end define
 
 define switch_case
@@ -217,11 +219,16 @@ define throw_statement
 end define
 
 define casting
-    '( [nested_class]') [value]
+    '( [nested_identifier]') [value]
+end define
+
+define callable
+    [id]
+    | [generic_class]
 end define
 
 define function_call
-        [id][SPOFF] '( [SPON] [list value]')    
+        [callable] [!] [SPOFF]'( [SPON] [list value] ')
 end define
 
 define boolean_expression
@@ -229,16 +236,17 @@ define boolean_expression
 end define
 
 define boolean_continuation
-        [boolean_operator] [condition]
+        [boolean_operator] [!] [condition]
 end define
 
 define condition
-        [value_no_recursion] [comparator] [value]
+        [value_no_recursion] [comparator] [value_no_ternary]
     |   [value_no_recursion]
 end define
 
 define method_parameter
-    [nested_class] [id]
+    [nested_identifier] [id]
+    | [var_arg]
 end define
 
 define decorator
@@ -246,11 +254,20 @@ define decorator
 end define
 
 define throws
-    'throws [list nested_class]
+    'throws [list nested_identifier]
 end define
 
+define var_arg
+    [nested_identifier] [!] '... [id]
+end define 
+
 define concrete_method_declaration
-        [opt decorator] [acess_modifier] [opt static] [nested_class] [id] '( [list method_parameter] ') [opt throws] [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
+        [opt decorator] [acess_modifier] [opt static] [nested_identifier] [id] '( [list method_parameter] ') [opt throws] [NL] '{ [method_content] '} [NL]
+end define
+
+define method_content
+        [repeat statement]
+    |   [usercode]
 end define
 
 define method_declaration
@@ -259,7 +276,7 @@ define method_declaration
 end define
 
 define abstract_method_declaration
-    [acess_modifier] [nested_class] [id] '( [list method_parameter] '); [NL]
+    [acess_modifier] [nested_identifier] [id] '( [list method_parameter] '); [NL]
 end define
 
 define inheritance_statement
@@ -278,15 +295,15 @@ define class_declaration
 end define
 
 define concrete_class_declaration
-    [acess_modifier] 'class [nested_class] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
+    [acess_modifier] 'class [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
 end define
 
 define inheritance_list
-    [inheritance_statement] [list nested_class]
+    [inheritance_statement] [list nested_identifier]
 end define
 
 define interface_declaration
-        [acess_modifier] 'interface [nested_class] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
+        [acess_modifier] 'interface [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
 end define
 
 define class_type

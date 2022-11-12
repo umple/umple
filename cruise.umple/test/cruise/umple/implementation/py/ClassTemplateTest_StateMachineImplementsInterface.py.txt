@@ -11,11 +11,13 @@ class Router(NetworkNode):
         connected = auto()
 
     def __init__(self, aIpAddress):
+        self._status = None
+        self._ipAddress = None
         self._ipAddress = aIpAddress
         self.setStatus(Router.Status.disconnected)
 
     def getStatusFullName(self):
-        answer = str(self._status)
+        answer = self._status.__str__()
         return answer
 
     def getStatus(self):
@@ -24,23 +26,31 @@ class Router(NetworkNode):
     def connect(self):
         wasEventProcessed = False
         aStatus = self._status
-        match aStatus :
-            case Router.Status.disconnected :
-                self.setStatus(Router.Status.connected)
-                wasEventProcessed = True
-            case default :
-                pass
+        if aStatus == disconnected :
+            self.setStatus(Router.Status.connected)
+            wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def disconnect(self):
         wasEventProcessed = False
         aStatus = self._status
-        match aStatus :
-            case Router.Status.connected :
-                self.setStatus(Router.Status.disconnected)
-                wasEventProcessed = True
-            case default :
-                pass
+        if aStatus == connected :
+            self.setStatus(Router.Status.disconnected)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def errorDetected(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == connected :
+            self.setStatus(Router.Status.disconnected)
+            wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def setStatus(self, aStatus):
@@ -49,9 +59,6 @@ class Router(NetworkNode):
     def delete(self):
         pass
 
-    def errorDetected(self):
-        return False
-
     def __str__(self):
-        return str(super()) + "[" + "]"
+        return super().__str__() + "[" + "]"
 
