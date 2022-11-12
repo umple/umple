@@ -202,7 +202,6 @@
       <exclude name="LibraryLoanStateMachine.ump"/>
       <exclude name="MicrowaveOven2.ump"/>
       <exclude name="MixsetsInMethod.ump"/>
-      <exclude name="MixsetInTrait.ump"/>
       <exclude name="MultiValuedAttributes1.ump"/>
       <exclude name="Multiplicity2.ump"/>
       <exclude name="Multiplicity3.ump"/>
@@ -210,6 +209,7 @@
       <exclude name="PingPong.ump"/>
       <exclude name="Pizza.ump"/>
       <exclude name="PooledStateMachines1.ump"/>
+      <exclude name="Preconditions1.ump"/>
       <exclude name="QueuedStateMachines1.ump"/>
       <exclude name="RE002MultiplicityException2.ump"/>
       <exclude name="Runway.ump"/>

@@ -1180,6 +1180,7 @@ task pythonUserManualAndExampleTests {
                 "PingPong.ump",
                 "Pizza.ump",
                 "PooledStateMachines1.ump",
+                "Preconditions1.ump",
                 "QueuedStateMachines1.ump",
                 "RE002MultiplicityException2.ump",
                 "Runway.ump",
