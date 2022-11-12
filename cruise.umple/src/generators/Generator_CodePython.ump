@@ -17,7 +17,7 @@ class PythonGenerator
   depend cruise.umple.util.StringFormatter;
   depend cruise.umple.compiler.exceptions.*;
 
-  private static final int TXL_VERSION = 14;
+  const int TXL_VERSION = 14;
 
   @Override
   public ILang getLanguageFor(UmpleElement aElement)
