@@ -141,7 +141,12 @@ class PythonGenerator
       File pythonFile = new File(pythonFilename);
       Scanner pyReader = new Scanner(pythonFile);
       while (pyReader.hasNextLine()) {
-        contents += pyReader.nextLine() + "\n";
+        String nextLine = pyReader.nextLine();
+
+        //Remove the txl tags from umpleonline output
+        if (!nextLine.contains("<TXL UGM>") && !nextLine.contains("</TXL UGM>")) {
+          contents += nextLine + "\n";
+        }
       }
       pyReader.close();
     } catch (FileNotFoundException e) {
@@ -149,23 +154,42 @@ class PythonGenerator
       throw new UmpleCompilerException("Error found with compilation of " + new File(pythonFilename).getName(), e);
     }
 
-    getModel().getGeneratedCode().put(aClass.getName(),contents);
+    getModel().getGeneratedCode().put(aClass.getName(), contents);
 
-    /* TODO
-    if (aClass instanceof UmpleClass)
-    {
-      StringBuilder exceptionBuilder = new StringBuilder();
-      for(String key:((JavaClassGenerator)language).uncaughtExceptions.keySet())
-      {
-        exceptionBuilder.append(((JavaClassGenerator)language).uncaughtExceptions.get(key).toString()+System.getProperty("line.separator"));
+    //Remove TXL tags from generated file
+    File pyFile = new File(pythonFilename);
+    String content = "";
+    BufferedReader reader = null;
+    FileWriter pyWriter = null;
+    
+    try {
+      reader = new BufferedReader(new FileReader(pyFile));
+      String line = reader.readLine();
+
+      while (line != null) {
+        if (!line.contains("<TXL UGM>") && !line.contains("</TXL UGM>")) {
+          content += line + "\n";
+        }
+        line = reader.readLine();
       }
-      String exception = exceptionBuilder.toString();
-      uncaughtExceptions.append(exception);
-      if(((UmpleClass)aClass).getHasMainMethod())
-      {
-        mainClasses.add((UmpleClass)aClass);
+
+      pyWriter = new FileWriter(pyFile);
+      pyWriter.write(content);
+    } catch (Exception e) {
+      throw new UmpleCompilerException("Error found with cleaning of " + new File(pythonFilename).getName(), e);
+    } finally {
+      try {
+        reader.close();
+        pyWriter.close();
+      } catch (Exception e) {
+        throw new UmpleCompilerException("Error found with cleaning of " + new File(pythonFilename).getName(), e);
       }
-    } */
+    }
+
+    //Removing Java Files
+    File javaFile = new File(filename);
+    javaFile.delete();
+
   }
 
   private boolean isTxlInstalled()
