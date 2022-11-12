@@ -6,26 +6,26 @@ class Object():
         pass
 
     def example_obj(self, g):
-        pass
+	/*implementation*/
 
     def example_bool(self, b):
-        pass
+	
 
     def example_int(self, i):
-        pass
+	
 
     def example_float(self, f):
-        pass
+	
 
     def example_double(self, d):
-        pass
+	
 
     def example_string(self, s):
-        pass
+	
 
     def example_obj_array(self, gs):
-        pass
+	
 
     def example_primitive_array(self, is):
-        pass
+	
 
