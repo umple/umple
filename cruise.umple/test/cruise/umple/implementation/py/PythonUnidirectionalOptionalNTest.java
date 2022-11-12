@@ -13,9 +13,4 @@ public class PythonUnidirectionalOptionalNTest extends UnidirectionalOptionalNTe
     language = "Python";
     languagePath = "py";
   }
-
-  @Test @Ignore
-  public void Aware(){
-    super.Aware();
-  }
 }

@@ -36,4 +36,9 @@ public class PythonEqualsTest extends EqualsTest
   public void AlreadyImmutable(){
     super.AlreadyImmutable();
   }
+
+  @Test @Ignore
+  public void Associations(){
+    super.Associations();
+  }
 }

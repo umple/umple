@@ -13,14 +13,4 @@ public class PythonOptionalOneToOptionalNTest extends OptionalOneToOptionalNTest
     language = "Python";
     languagePath = "py";
   }
-
-  @Test @Ignore
-  public void N(){
-    super.N();
-  }
-
-  @Test @Ignore
-  public void One(){
-    super.One();
-  }
 }

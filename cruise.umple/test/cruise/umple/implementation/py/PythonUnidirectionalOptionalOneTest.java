@@ -13,10 +13,4 @@ public class PythonUnidirectionalOptionalOneTest extends UnidirectionalOptionalO
     language = "Python";
     languagePath = "py";
   }
-
-  @Test @Ignore
-  public void Unaware()
-  {
-    super.Unaware();
-  }
 }

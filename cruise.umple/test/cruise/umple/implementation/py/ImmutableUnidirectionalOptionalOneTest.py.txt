@@ -1,8 +1,10 @@
-from Mentor import Mentor
 import os
 
 class Student():
     def __init__(self, aNumber, aMentor):
+        self._canSetMentor = None
+        self._mentor = None
+        self._number = None
         self._number = aNumber
         self._canSetMentor = True
         self.setMentor(aMentor)
@@ -14,14 +16,13 @@ class Student():
         return self._mentor
 
     def hasMentor(self):
-        has = not(self._mentor is None)
+        has = not (self._mentor is None)
         return has
 
     def setMentor(self, aNewMentor):
         wasSet = False
         if not self._canSetMentor :
             return False
-
         self._canSetMentor = False
         self._mentor = aNewMentor
         wasSet = True
@@ -31,5 +32,5 @@ class Student():
         pass
 
     def __str__(self):
-        return str(super()) + "[" + "number" + ":" + self.getNumber() + "]" + os.linesep + "  " + "mentor = " + (self.getMentor() != (format(id(self.getMentor()), "x")) if None else "null")
+        return super().__str__() + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "mentor = " + str(((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null"))
 
