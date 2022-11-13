@@ -1,0 +1,15 @@
+from ISomething import ISomething
+
+class Something(ISomething):
+    def __init__(self):
+        pass
+
+    def delete(self):
+        pass
+
+    def getCode(self, aParam, anotherParam):
+        return ""
+
+    def isValid(self):
+        return ""
+

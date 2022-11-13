@@ -1,7 +1,7 @@
-from Student import Student
-
 class Mentor():
     def __init__(self, aName):
+        self._students = None
+        self._name = None
         self._name = aName
         self._students = []
 
@@ -42,7 +42,6 @@ class Mentor():
         wasAdded = False
         if aStudent in self._students :
             return False
-
         self._students.append(aStudent)
         wasAdded = True
         return wasAdded
@@ -52,7 +51,6 @@ class Mentor():
         if aStudent in self._students :
             self._students.remove(aStudent)
             wasRemoved = True
-
         return wasRemoved
 
     def addStudentAt(self, aStudent, index):
@@ -60,14 +58,11 @@ class Mentor():
         if self.addStudent(aStudent) :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfStudents() :
                 index = self.numberOfStudents() - 1
-
             self._students.remove(aStudent)
             self._students.insert(index, aStudent)
             wasAdded = True
-
         return wasAdded
 
     def addOrMoveStudentAt(self, aStudent, index):
@@ -75,22 +70,18 @@ class Mentor():
         if aStudent in self._students :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfStudents() :
                 index = self.numberOfStudents() - 1
-
             self._students.remove(aStudent)
             self._students.insert(index, aStudent)
             wasAdded = True
-
         else :
             wasAdded = self.addStudentAt(aStudent, index)
-
         return wasAdded
 
     def delete(self):
         self._students.clear()
 
     def __str__(self):
-        return str(super()) + "[" + "name" + ":" + self.getName() + "]"
+        return super().__str__() + "[" + "name" + ":" + str(self.getName()) + "]"
 

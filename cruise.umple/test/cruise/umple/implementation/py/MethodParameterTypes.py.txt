@@ -1,72 +1,31 @@
-<?php
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+class Object():
+    def __init__(self):
+        pass
 
-class Object
-{
+    def delete(self):
+        pass
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+    def example_obj(self, g):
+	/*implementation*/
 
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
+    def example_bool(self, b):
+	
 
-  public function __construct()
-  {}
+    def example_int(self, i):
+	
 
-  //------------------------
-  // INTERFACE
-  //------------------------
+    def example_float(self, f):
+	
 
-  public function equals($compareTo)
-  {
-    return $this == $compareTo;
-  }
+    def example_double(self, d):
+	
 
-  public function delete()
-  {}
+    def example_string(self, s):
+	
 
-  public function example_obj(Object $g)
-  {
-    /*implementation*/
-  }
+    def example_obj_array(self, gs):
+	
 
-  public function example_bool($b)
-  {
-    
-  }
+    def example_primitive_array(self, is):
+	
 
-  public function example_int($i)
-  {
-    
-  }
-
-  public function example_float($f)
-  {
-    
-  }
-
-  public function example_double($d)
-  {
-    
-  }
-
-  public function example_string($s)
-  {
-    
-  }
-
-  public function example_obj_array($gs)
-  {
-    
-  }
-
-  public function example_primitive_array($is)
-  {
-    
-  }
-
-}
-?>

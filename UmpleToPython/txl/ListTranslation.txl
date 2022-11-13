@@ -11,17 +11,20 @@ function replaceAllLists memberLists [repeat id]
             [replaceListUnmutable memberLists]
             [replaceGetListContent memberLists]
             [replaceListGetSize memberLists]
+            [replaceArrayLength memberLists]
             [replaceListGetIndex memberLists]
             [replaceListContains memberLists]
             [replaceListAddAtIndex memberLists]
             [replaceListAddNoIndex memberLists]
             [replaceListCopy]
             [replaceListSort memberLists]
+            [replaceAddAll memberLists]
+            [replaceToArray memberLists]
 end function 
 
 rule replaceListAssignement memberLists [repeat id]
     replace [assignment]
-        id [id] '= 'new 'ArrayList '< _[list id] '> '(') 
+        id [id] '= 'new 'ArrayList '< _[list id] '> '(')
     where
         memberLists [containsId id]
     by 
@@ -61,6 +64,15 @@ end rule
 rule replaceListGetSize memberLists [repeat id]
     replace [nested_identifier]
         id [id] '.size()
+    where
+        memberLists [containsId id]
+    by 
+        'len( id ')
+end rule
+
+rule replaceArrayLength memberLists [repeat id]
+    replace [nested_identifier]
+        id [id] '.length
     where
         memberLists [containsId id]
     by 
@@ -113,3 +125,22 @@ rule replaceListSort memberLists [repeat id]
     by 
         listId '.sort( 'key '= priorityFunc ')
 end rule
+
+rule replaceAddAll memberLists [repeat id]
+    replace [nested_identifier]
+        id [id] '.addAll( value [value] ')
+    where
+        memberLists [containsId id]
+    by 
+        id '.extend( value ')
+end rule
+
+rule replaceToArray memberLists [repeat id]
+    replace [nested_identifier]
+        id [id] '.toArray( value [value] ')
+    where
+        memberLists [containsId id]
+    by 
+        id '.copy()
+end rule
+

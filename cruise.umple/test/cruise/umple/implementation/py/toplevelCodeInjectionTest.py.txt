@@ -1,5 +1,7 @@
 class Student11():
     def __init__(self, aName, aB):
+        self._b = None
+        self._name = None
         self._name = aName
         self._b = aB
 
@@ -25,5 +27,5 @@ class Student11():
         pass
 
     def __str__(self):
-        return str(super()) + "[" + "name" + ":" + self.getName() + "," + "b" + ":" + self.getB() + "]"
+        return super().__str__() + "[" + "name" + ":" + str(self.getName()) + "," + "b" + ":" + str(self.getB()) + "]"
 

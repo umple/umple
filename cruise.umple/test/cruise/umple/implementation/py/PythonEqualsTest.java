@@ -15,13 +15,13 @@ public class PythonEqualsTest extends EqualsTest
     languagePath = "py";
   }
   
-  @Test @Ignore
+  @Test
   public void indexOf_noKey()
   {
     assertUmpleTemplateFor("indexOf_NoKey.ump",languagePath + "/indexOf_NoKey."+ languagePath +".txt","Student");
   }
 
-  @Test @Ignore
+  @Test
   public void indexOf_Key()
   {
     assertUmpleTemplateFor("indexOf_Key.ump",languagePath + "/indexOf_Key."+ languagePath +".txt","Student");
@@ -41,5 +41,4 @@ public class PythonEqualsTest extends EqualsTest
   public void Associations(){
     super.Associations();
   }
-
 }

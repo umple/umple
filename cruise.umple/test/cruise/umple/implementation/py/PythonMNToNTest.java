@@ -13,14 +13,4 @@ public class PythonMNToNTest extends MNToNTest
     language = "Python";
     languagePath = "py";
   }
-
-  @Test @Ignore
-  public void N(){
-    super.N();
-  }
-
-  @Test @Ignore
-  public void MN(){
-    super.MN();
-  }
 }
