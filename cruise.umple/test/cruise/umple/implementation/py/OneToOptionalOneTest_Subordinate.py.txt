@@ -1,8 +1,9 @@
-from MyDriver import MyDriver
 import os
 
 class MySubordinate():
     def __init__(self, aNumber, aMyDriver):
+        self._myDriver = None
+        self._number = None
         self._number = aNumber
         didAddMyDriver = self.setMyDriver(aMyDriver)
         if not didAddMyDriver :
@@ -24,26 +25,23 @@ class MySubordinate():
         wasSet = False
         if aNewMyDriver is None :
             return wasSet
-
         existingMySubordinate = aNewMyDriver.getMySubordinate()
-        if existingMySubordinate != None and not self.equals(existingMySubordinate) :
+        if not (existingMySubordinate is None) and not self.__eq__(existingMySubordinate) :
             return wasSet
-
         anOldMyDriver = self._myDriver
         self._myDriver = aNewMyDriver
         self._myDriver.setMySubordinate(self)
-        if not(anOldMyDriver is None) :
+        if not (anOldMyDriver is None) :
             anOldMyDriver.setMySubordinate(None)
-
         wasSet = True
         return wasSet
 
     def delete(self):
         existingMyDriver = self._myDriver
         self._myDriver = None
-        if not(existingMyDriver is None) :
+        if not (existingMyDriver is None) :
             existingMyDriver.setMySubordinate(None)
 
     def __str__(self):
-        return str(super()) + "[" + "number" + ":" + self.getNumber() + "]" + os.linesep + "  " + "myDriver = " + (self.getMyDriver() != (format(id(self.getMyDriver()), "x")) if None else "null")
+        return super().__str__() + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "myDriver = " + str(((format(id(self.getMyDriver()), "x")) if not (self.getMyDriver() is None) else "null"))
 

@@ -4,9 +4,9 @@
 %decl and inheritance and external imports
 rule replaceConcreteClassesWithInheritance
     replace $ [concrete_class_declaration]
-        _ [acess_modifier] 'class className [nested_class] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
+        _ [acess_modifier] 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
     export className 
-    construct inheritanceClasses [list nested_class]
+    construct inheritanceClasses [list nested_identifier]
         _ [extractInheritanceBlockClasses each inheritances]
     construct imports [repeat import_statement]
         _ [createImports classBody inheritances]
@@ -17,15 +17,15 @@ end rule
 %inheritance  imports
 rule replaceInterfacesWithInheritance
     replace [interface_declaration]
-        _ [acess_modifier] 'interface className [nested_class] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
+        _ [acess_modifier] 'interface className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
     export className
-    construct inheritanceClasses [list nested_class]
+    construct inheritanceClasses [list nested_identifier]
         _ [extractInheritanceBlockClasses each inheritances]
     construct imports [repeat import_statement]
         _ [createImports classBody inheritances]
-    construct AbcClass [list nested_class]
+    construct AbcClass [list nested_identifier]
         'ABC
-    construct finalInheritances [list nested_class]
+    construct finalInheritances [list nested_identifier]
         AbcClass [, inheritanceClasses]
     by
         'from 'abc 'import 'ABC, 'abstractmethod imports 'class className '(  finalInheritances '):  classBody [replaceClassBody] [replaceInterfaceBody]
@@ -43,11 +43,13 @@ function replaceInterfaceBody
     construct listMemberVariables [repeat id]
         _ [addListMemberVariable each declarations]
     by
-        '@abstractmethod 'def '__init__(self): 'pass elements [replaceAllMethods]
+        '@abstractmethod 'def '__init__(self): 'pass elements [replaceAllMethods memberVariables]
 end function
 
 function replaceClassBody
     replace [class_body_decl]
+        body [class_body_decl]
+    deconstruct body 
         elements [repeat class_body_element]
     construct declarations [repeat member_variable_declaration]
         _ [^ elements]
@@ -56,16 +58,46 @@ function replaceClassBody
     export transientMembers
     construct memberVariables [repeat id]
         _ [addMemberVariable each declarations]
-    construct listMemberVariables [repeat id]
+    export listMemberVariables [repeat id]
         _ [addListMemberVariable each declarations]
     export enumeratorDeclerations [repeat enum_declaration]
         _ [^ elements]
+    export classMethods [repeat method_declaration]
+        _ [^ elements]
+    export classMethodNames [repeat id]
+        _ [extractClassMethodName each classMethods]
+    construct possibleFunctionImports [repeat id]
+        _ [extractPossibleFunctionImports body each declarations]
+    export possibleFunctionImports
     by
-        elements [removeMemberVariableDeclarations] [replaceEnumDeclaration] 
-            [replaceAllLists listMemberVariables]
-            [replaceConstructor memberVariables] 
-            [replaceAllMethods]
+        elements [exportConstructorCount] [removeMemberVariableDeclarations] [replaceEnumDeclaration] 
+            [replaceAllMethods memberVariables]
             [replaceAllMemberVariableNames memberVariables] 
+end function
+
+function extractClassMethodName method [method_declaration]
+    replace [repeat id]
+        result [repeat id]
+    by
+        result [extractConcreteMethodName method] [extractAbstractMethodName method]
+end function
+
+function extractConcreteMethodName method [method_declaration]
+    replace [repeat id]
+        result [repeat id]
+    deconstruct method
+        _[opt decorator] _[acess_modifier] _[opt static] _[nested_identifier] methodName [id] '( _[list method_parameter] ') _[opt throws] '{ _[repeat statement] '}
+    by
+        result [. methodName]
+end function
+
+function extractAbstractMethodName method [method_declaration]
+    replace [repeat id]
+        result [repeat id]
+    deconstruct method
+        _[acess_modifier] _[nested_identifier] methodName [id] '( _ [list method_parameter] ');
+    by
+        result [. methodName]
 end function
 
 function getTransientMembers decls [repeat member_variable_declaration]
@@ -112,7 +144,26 @@ function addMemberVariable MemberVariable [member_variable_declaration]
     deconstruct MemberVariable
         _[opt acess_modifier] _[opt transient] _[opt static] _[opt volatile]  decl [variable_declaration]
     deconstruct decl
-        _ [nested_class] memberName [id]';
+        _ [nested_identifier] memberName [id]';
     by
         SequenceSoFar [. memberName]
+end function
+
+function exportConstructorCount
+    match [repeat class_body_element]
+        rep [repeat class_body_element]
+    construct zero [number]
+        '0
+    construct constructorCount [number]
+        zero [incrementIfConstructor each rep]
+    export constructorCount
+end function
+
+function incrementIfConstructor elem [class_body_element]
+    replace [number]
+        count [number]
+    deconstruct elem
+        _ [constructor]
+    by
+        count [+ '1]
 end function

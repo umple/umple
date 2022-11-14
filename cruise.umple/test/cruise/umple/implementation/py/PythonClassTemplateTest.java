@@ -33,7 +33,7 @@ public class PythonClassTemplateTest extends ClassTemplateTest
   }
   
   
-  @Test @Ignore
+  @Test
   public void Python()
   {
     language = null;
@@ -47,7 +47,7 @@ public class PythonClassTemplateTest extends ClassTemplateTest
     assertUmpleTemplateFor("ClassTemplateTest_FixmlAttributes2.ump","py/ClassTemplateTest_FixmlAttributes2.py.txt","Mentor");
   }
 
-  @Test @Ignore
+  @Test
   public void ExtraCode()
   {
     language = null;
@@ -61,12 +61,12 @@ public class PythonClassTemplateTest extends ClassTemplateTest
 	assertUmpleTemplateFor("py/ClassTemplateTest_AbstractClass.ump","py/ClassTemplateTest_AbstractClass.py.txt", "Student");
   }
 
-   @Test @Ignore
+   @Test
   public void MethodParameterTypes(){
 	  assertUmpleTemplateFor("py/MethodParameterTypes.ump", "py/MethodParameterTypes.py.txt", "Object");
   } 
 
-  @Test @Ignore
+  @Test
   public void GeneratePathTest()
   {
 	  UmpleModel model = createUmpleSystem(pathToInput , languagePath + "/ClassTemplateTest_BuildOutputPath.ump");
@@ -78,26 +78,27 @@ public class PythonClassTemplateTest extends ClassTemplateTest
     SampleFileWriter.assertFileContent(new File(pathToInput, languagePath + "/ClassTemplateTest_BuildOutputPath.ump.txt"), actual);
   }
 
-  @Test @Ignore
+
+  @Test
   public void immutableNotLazyAttributeConstructor(){
 	  assertUmpleTemplateFor("py/ImmutableNotLazyAttributeConstructor.ump","py/StudentImmutableNotLazyTest.py.txt","Student");
   }
 
-  @Test @Ignore
+  @Test
   public void StateMachineImplementsInterface(){
     assertUmpleTemplateFor("py/ClassTemplateTest_StateMachineImplementsInterface.ump", 
                            "py/ClassTemplateTest_StateMachineImplementsInterface.py.txt",
                            "Router");
   }
 
-  @Test @Ignore
+  @Test
   public void StateMachineImplementsPartialInterface(){
     assertUmpleTemplateFor("py/ClassTemplateTest_StateMachineImplementsPartialInterface.ump", 
                            "py/ClassTemplateTest_StateMachineImplementsPartialInterface.py.txt",
                            "Router");
   }
 
-  @Test @Ignore
+  @Test
   public void StateMachineDoesNotImplementInterface(){
     assertUmpleTemplateFor("py/ClassTemplateTest_StateMachineDoesNotImplementInterface.ump", 
                            "py/ClassTemplateTest_StateMachineDoesNotImplementInterface.py.txt",
@@ -110,23 +111,8 @@ public class PythonClassTemplateTest extends ClassTemplateTest
   }
 
   @Test @Ignore
-  public void Attributes(){
-    super.Attributes();
-  }
-
-  @Test @Ignore
-  public void AssociationMultilineComment(){
-    super.AssociationMultilineComment();
-  }
-
-  @Test @Ignore
   public void ClassCodeInjections_Comments(){
     super.ClassCodeInjections_Comments();
-  }
-
-  @Test @Ignore
-  public void ListAttribute(){
-    super.ListAttribute();
   }
 
   @Test @Ignore
@@ -150,13 +136,8 @@ public class PythonClassTemplateTest extends ClassTemplateTest
   }
 
   @Test @Ignore
-  public void AssociationInlineComment(){
-    super.AssociationInlineComment();
+  public void AssociationInlineComment()
+  {
+	  super.AssociationInlineComment();
   }
-
-  @Test @Ignore
-  public void MultipleAssociationComments(){
-    super.MultipleAssociationComments();
-  }
-
 }

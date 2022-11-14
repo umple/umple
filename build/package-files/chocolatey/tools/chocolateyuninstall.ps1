@@ -1,0 +1,1 @@
+﻿Uninstall-BinFile -Name 'umple'
