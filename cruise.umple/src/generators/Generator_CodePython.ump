@@ -315,6 +315,19 @@ class PythonGenerator
 	      bw.close();
 	    }
 
+      //Write TXL README File
+	    bw = new BufferedWriter(new FileWriter(ReadmePath));
+	    try {
+	      bw.write(ReadmeContent);
+	      bw.flush();
+	    }
+	    catch (Exception e) {
+	      throw new UmpleCompilerException("An error occured while generating the README.txt file.", e);
+	    }
+	    finally {
+	      bw.close();
+	    }
+
 	    //Write all other TXL files
 	    for (int i = 0; i < filesData.length; i++) {
 		    bw = new BufferedWriter(new FileWriter(filesData[i][0]));
