@@ -8,10 +8,12 @@ rule replaceConcreteClassesWithInheritance
     export className 
     construct inheritanceClasses [list nested_identifier]
         _ [extractInheritanceBlockClasses each inheritances]
+    construct translatedBody [class_body_decl]
+        classBody  [replaceClassBody]
     construct imports [repeat import_statement]
-        _ [createImports classBody inheritances]
+        _ [createImports classBody inheritances translatedBody]
     by
-        imports 'class className '( inheritanceClasses ')':  classBody  [replaceClassBody]
+        imports 'class className '( inheritanceClasses ')':  translatedBody
 end rule
 
 %inheritance  imports
@@ -21,14 +23,16 @@ rule replaceInterfacesWithInheritance
     export className
     construct inheritanceClasses [list nested_identifier]
         _ [extractInheritanceBlockClasses each inheritances]
+    construct translatedBody [class_body_decl]
+        classBody  [replaceClassBody] [replaceInterfaceBody]
     construct imports [repeat import_statement]
-        _ [createImports classBody inheritances]
+        _ [createImports classBody inheritances translatedBody]
     construct AbcClass [list nested_identifier]
         'ABC
     construct finalInheritances [list nested_identifier]
         AbcClass [, inheritanceClasses]
     by
-        'from 'abc 'import 'ABC, 'abstractmethod imports 'class className '(  finalInheritances '):  classBody [replaceClassBody] [replaceInterfaceBody]
+        'from 'abc 'import 'ABC, 'abstractmethod imports 'class className '(  finalInheritances '):  translatedBody
 end rule
 
 function replaceInterfaceBody
@@ -56,8 +60,10 @@ function replaceClassBody
     construct transientMembers [repeat id]
         _ [addIfTransient each declarations]
     export transientMembers
-    construct memberVariables [repeat id]
+    export memberVariables [repeat id]
         _ [addMemberVariable each declarations]
+    export staticMemberVariables [repeat id]
+        _ [addStaticMemberVariable each declarations]
     export listMemberVariables [repeat id]
         _ [addListMemberVariable each declarations]
     export enumeratorDeclerations [repeat enum_declaration]
@@ -72,8 +78,9 @@ function replaceClassBody
     by
         elements [exportConstructorCount] [removeMemberVariableDeclarations] [replaceEnumDeclaration] 
             [replaceAllMethods memberVariables]
-            [replaceAllMemberVariableNames memberVariables] 
 end function
+
+
 
 function extractClassMethodName method [method_declaration]
     replace [repeat id]
@@ -100,13 +107,6 @@ function extractAbstractMethodName method [method_declaration]
         result [. methodName]
 end function
 
-function getTransientMembers decls [repeat member_variable_declaration]
-    replace [repeat id]
-        result [repeat id]
-    by
-        result [addIfTransient each decls]
-end function
-
 function addIfTransient decl [member_variable_declaration]
     replace [repeat id]
         result [repeat id]
@@ -122,7 +122,7 @@ function removeMemberVariableDeclarations
     construct empty [repeat class_body_element]
         _
     by
-        empty [addIfNotMemberDecleration each elems]
+        empty [addTranslatedStaticMember each elems] [addIfNotMemberDecleration each elems]
 end function
 
 function addIfNotMemberDecleration elem [class_body_element]
@@ -138,13 +138,39 @@ function addIfNotMemberDecleration elem [class_body_element]
         keepers [. elem]
 end function
 
+function addTranslatedStaticMember elem [class_body_element]
+    replace [repeat class_body_element]
+        keepers [repeat class_body_element]
+    construct declerations [repeat member_variable_declaration]
+        _ [^ elem]
+    deconstruct declerations
+        _[opt acess_modifier] _[opt transient] 'static _[opt volatile] staticDecl [variable_declaration]
+    deconstruct staticDecl
+    _ [nested_identifier] staticMemberName [id] '= val [value]';
+    construct elemToAdd [class_body_element]
+        staticMemberName '= val
+    by
+        keepers [. elemToAdd]
+end function
+
 function addMemberVariable MemberVariable [member_variable_declaration]
     replace [repeat id]
         SequenceSoFar [repeat id]
     deconstruct MemberVariable
-        _[opt acess_modifier] _[opt transient] _[opt static] _[opt volatile]  decl [variable_declaration]
+        _[opt acess_modifier] _[opt transient] _[opt volatile]  decl [variable_declaration]
     deconstruct decl
         _ [nested_identifier] memberName [id]';
+    by
+        SequenceSoFar [. memberName]
+end function
+
+function addStaticMemberVariable MemberVariable [member_variable_declaration]
+    replace [repeat id]
+        SequenceSoFar [repeat id]
+    deconstruct MemberVariable
+        _[opt acess_modifier] _[opt transient] 'static _[opt volatile]  decl [variable_declaration]
+    deconstruct decl
+        _ [nested_identifier] memberName [id] '= _ [value] ';
     by
         SequenceSoFar [. memberName]
 end function

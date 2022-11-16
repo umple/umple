@@ -31,8 +31,12 @@ rule replaceConcreteMethod
         _ [getPythonParams params possibleStatic]
     construct possibleStaticDecorator [repeat decorator]
         _ [createStaticDecorator possibleStatic]
+    construct possibleDispatchDecorator [repeat decorator]
+        _ [getOverloadingDecorator methodName params]
+    construct decorators [repeat decorator]
+        possibleStaticDecorator [. possibleDispatchDecorator]
     by
-        possibleStaticDecorator 'def methodName '( newParams '):  statements 
+        decorators 'def methodName '( newParams '):  statements 
             [manageSpecialTypes params] 
             [replaceStatements] 
             [changeKeyArgumentNameInNestedIdentifier] 
@@ -417,7 +421,9 @@ function extractVarArgName params [list method_parameter]
         varArgName
 end function
 
-% Multiple constructors
+%-----------------------%
+% Multiple constructors %
+%-----------------------%
 function fixMultipleConstructors 
     replace [repeat class_body_element]
         rep [repeat class_body_element]
@@ -541,3 +547,101 @@ rule containsSelfValue
         'self
 end rule
 
+%-----------------------%
+%   Overloaded methods  %
+%-----------------------%
+
+function getOverloadingDecorator methodName [id] javaParams [list method_parameter] 
+    replace [repeat decorator]
+        result [repeat decorator]
+    where
+        methodName [isMethodOverloaded]
+    construct pythonTypes [list nested_identifier]
+        _ [extractPythonType each javaParams]
+    by 
+        '@dispatch( pythonTypes ')
+
+end function
+
+function extractPythonType javaParam [method_parameter]
+    replace [list nested_identifier]
+        result [list nested_identifier]
+    deconstruct javaParam
+        type [nested_identifier] _ [id]
+    construct adding [nested_identifier]
+        type 
+            [translateStringType]
+            [translateArrayListType]
+            [translateArrayType]
+            [translateBooleanType]
+            [translateDoubleType]
+    by
+        result [, adding]
+            
+end function
+
+function translateStringType
+    replace [nested_identifier]
+        'String
+    by
+        'str
+end function
+
+function translateArrayListType
+    replace [nested_identifier]
+        'ArrayList< _[list id] '>
+    by
+        'list
+end function
+
+function translateArrayType
+    replace [nested_identifier]
+        nested [nested_identifier]
+    construct nestables [repeat nestable_value]
+        _ [^ nested]
+    construct zero [number]
+        '0
+    construct length [number]
+        zero [length nestables]
+    construct lastNestable [repeat nestable_value]
+        nestables [tail length]
+    deconstruct lastNestable
+        _ [id] '[ ']
+    by
+        'list
+end function
+
+function translateBooleanType
+    replace [nested_identifier]
+        'boolean
+    by  
+        'bool
+end function
+
+function translateDoubleType
+    replace [nested_identifier]
+        'double
+    by  
+        'float
+end function
+
+function isMethodOverloaded
+    match [id]
+        methodName [id]
+    import classMethodNames [repeat id]
+    construct zero [number]
+        '0
+    construct count [number]
+        zero [incrementIfMatch methodName each classMethodNames]
+    where 
+        count [> 1]
+end function
+
+function incrementIfMatch id1[id] id2[id] 
+    replace [number]
+        result [number]
+    where
+        id1 [= id2]
+    by
+        result [+ 1]
+end function

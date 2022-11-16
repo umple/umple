@@ -36,7 +36,7 @@ end redefine
 
 redefine stmt_return
     ...
-    |   'return [value] [NL]
+    |   'return [opt value] [NL]
 end redefine
 
 
@@ -46,7 +46,7 @@ redefine value_no_recursion
     |   'False
     |   'None
     |   '[ [list value] ']
-    |   'not [boolean_expression] 
+    |   'not [value] 
     |   [lambda_function]
     |   '* [SPOFF] [nested_identifier] [SPON]
 end redefine
@@ -123,6 +123,11 @@ redefine abstract_method_declaration
     |   [SPOFF] '@abstractmethod [SPON] [NL] 'def  [id] [SPOFF]'( [SPON] [list method_parameter] [SPOFF] '): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
 end redefine
 
+redefine decorator
+    ...
+    |   '@ [SPOFF] [id] '( [SPON] [list nested_identifier][SPOFF] ') [SPON] [NL]
+end redefine
+
 redefine constructor
     ...
     | 'def '__init__ [SPOFF] '( [SPON] [list method_parameter] [SPOFF]'): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
@@ -193,4 +198,9 @@ end redefine
 redefine statement
     ...
     | [import_statement]
+end redefine
+
+redefine try_catch 
+    ...
+    |   'try ': [NL] [IN]  [repeat statement]  [EX] 'except [opt method_parameter] ': [NL] [IN] [repeat statement] [EX]
 end redefine

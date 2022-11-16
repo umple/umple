@@ -1,4 +1,4 @@
-function createImports classBody [class_body_decl] inheritances [repeat inheritance_list]
+function createImports classBody [class_body_decl] inheritances [repeat inheritance_list] translatedBody [class_body_decl]
     replace [repeat import_statement]
         empty [repeat import_statement]
     construct declarations [repeat member_variable_declaration]
@@ -6,7 +6,7 @@ function createImports classBody [class_body_decl] inheritances [repeat inherita
     construct inheritanceImports [repeat id]
         _ [extractInheritanceImportClasses classBody each inheritances]
     construct allImports [repeat import_statement]
-        _ [addImportStatement each inheritanceImports] [addExternalImports classBody]
+        _ [addImportStatement each inheritanceImports] [addExternalImports translatedBody]
     by
         allImports
 end function 
@@ -185,54 +185,6 @@ function addListMemberVariable MemberVariable [member_variable_declaration]
         SequenceSoFar [. memberName]
 end function
 
-function replaceAllMemberVariableNames memberVariables [repeat id]
-    replace [any]
-        any [any]
-    by 
-        any 
-            [replaceMemberVariableNames memberVariables] 
-            [replaceMemberVariableNamesWithThis memberVariables]
-            [replaceMemberVariableNamesBrackets memberVariables]
-end function
-
-rule replaceMemberVariableNames memberVariables [repeat id]
-    replace [nested_identifier]
-         name [id] rep [repeat attribute_access]
-    where 
-        memberVariables [containsId name]
-    construct underscore [id]
-        '_
-    construct newName [id]
-        underscore [+ name] 
-    by
-        'self '. newName rep
-end rule
-
-rule replaceMemberVariableNamesWithThis memberVariables [repeat id]
-    replace [nested_identifier]
-        'this '. name [id] rep [repeat attribute_access]
-    where 
-        memberVariables [containsId name]
-    construct underscore [id]
-        '_
-    by
-        'self '. underscore [+ name] rep
-end rule
-
-rule replaceMemberVariableNamesBrackets memberVariables [repeat id]
-    replace [nested_identifier]
-         name [id] '[ val [value] ']  rep [repeat attribute_access]
-    where 
-        memberVariables [containsId name]
-    construct underscore [id]
-        '_
-    construct newName [id]
-        underscore [+ name]
-    by
-        'self '. newName '[ val ']  rep
-end rule
-
-
 rule containsId Object [id]
     match [id]
         Object
@@ -247,13 +199,14 @@ end rule
 %  External imports  %
 %--------------------%
 
-function addExternalImports body [class_body_decl]
+function addExternalImports translatedBody [class_body_decl]
     replace [repeat import_statement]
         imports [repeat import_statement]
     by
-        imports [addOSImportIfNeeded body]
-        [addEnumImportIfNeeded body]
+        imports [addOSImportIfNeeded translatedBody]
+        [addEnumImportIfNeeded translatedBody]
         [addPickleImportIfNeeded]
+        [addMultipledispatchImportIfNeeded translatedBody]
 end function
 
 
@@ -270,7 +223,7 @@ end function
 
 function shouldOsImport
     match * [nested_identifier]
-        'System.getProperties().getProperty("line.separator")
+        'os.linesep
 end function
 
 function addEnumImportIfNeeded body [class_body_decl]
@@ -304,4 +257,20 @@ end function
 function shouldImportPickle
     match * [import_statement]
         'import 'java.io.Serializable;
+end function
+
+function addMultipledispatchImportIfNeeded body [class_body_decl]
+    replace [repeat import_statement]
+        imports [repeat import_statement]
+    where
+        body [shouldImportMultipledispatch]
+    construct newImport [import_statement]
+        'from 'multipledispatch 'import 'dispatch
+    by 
+        imports [. newImport]
+end function
+
+function shouldImportMultipledispatch
+    match * [decorator]
+        '@dispatch( _ [list nested_identifier] ')
 end function

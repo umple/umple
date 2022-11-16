@@ -36,9 +36,9 @@ end rule
 
 rule replaceBoolNegation
     replace [value_no_recursion]
-        '! expr [boolean_expression]
+        '! val [value]
     by 
-        'not expr
+        'not val
 end rule
 
 rule replaceBoolAnd

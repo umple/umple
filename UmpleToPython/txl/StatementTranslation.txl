@@ -6,6 +6,7 @@ function replaceStatements
         statements [repeat statement]
     by 
         statements
+            [replacePrivateAttributeSetting]
             [replaceDefaultReadObject]
             [replaceSwitchCase]
             [addClassPrefixToEnum]
@@ -25,6 +26,7 @@ function replaceStatements
             [replaceTernary]
             [replaceAllBoolean]
             [replaceDeclerationWithAssignment]
+            [replaceTryCatch]
             [replaceInlineIf]
             [replaceIf]
             [replaceElseIf]
@@ -45,8 +47,10 @@ function replaceStatements
             [replaceHexIdentity]
             [replaceComparator]
             [translateToStringCall]
-            [translateEqualsCall]
             [translateSelfEqualsCall]
+            [translateNestedEqualsCall]
+            [translateNestedContainsCall]
+            [replaceAllMemberVariableNames]
 end function
 
 function replaceNoStatements
@@ -92,7 +96,7 @@ end rule
 
 rule replaceReturn
     replace [stmt_return]
-        'return val [value] ';
+        'return val [opt value] ';
     by 
         'return val
 end rule
@@ -143,6 +147,18 @@ rule replaceDecleration
         _[nested_identifier] varName [id]';
     by 
         varName 
+end rule
+
+rule replaceTryCatch
+    replace [try_catch]
+        'try '{  tryStmts [repeat statement]  '} 'catch '( catchParam [method_parameter] ') '{ catchStmts [repeat statement] '}
+    deconstruct catchParam
+        'Exception _ [id]
+    by 
+        'try:
+            tryStmts
+        'except:
+            catchStmts
 end rule
 
 rule replaceIf
@@ -246,7 +262,11 @@ end rule
 
 rule replaceThrowError
     replace [throw_statement]
-        'throw 'new _[id] '( message [stringlit] ');
+        'throw 'new _[id] '( vals [list value] ');
+    construct firstVal [list value]
+        vals [head 1]
+    deconstruct firstVal
+        message [stringlit]
     by
         'raise 'RuntimeError(  message ') 
 end rule 
@@ -272,6 +292,23 @@ rule correctSuperInit
         'super( params [list value] ')
     by
         'super().__init__( params ')
+end rule
+
+rule replacePrivateAttributeSetting
+    replace [repeat statement]
+        'java.lang.reflect.Field fieldVar [id] '= modified [id] '.getClass().getDeclaredField( attributeName [stringlit] ');
+        fieldVar '.setAccessible(true);
+        fieldVar '.set( modified ', val [value] ');
+    construct attributeAccessBeginning [stringlit]
+        "._"
+    construct unparsedAttributeAccess [stringlit]
+        attributeAccessBeginning [+ attributeName]
+    construct attributeAccessParsed [opt attribute_access]
+        _ [parse unparsedAttributeAccess]
+    deconstruct attributeAccessParsed
+        attributeAccess [attribute_access]
+    by
+        modified attributeAccess '= val
 end rule
 
 rule correctSuperFunctions
@@ -323,7 +360,7 @@ function replaceFirstSwitchCaseCase switch [value_no_recursion] firstCase [switc
     construct condition [condition]
         switch '== val [fixEnumValueWithNoEnum]
     construct newIf [if]
-        'if condition ': stmts [replaceNoStatements]
+        'if condition ': stmts [replaceNoStatements] [removeBreak]
     by 
         newIf
 end function
@@ -334,7 +371,7 @@ function replaceSwitchCaseCase switch [value_no_recursion] aCase [switch_case_ca
     deconstruct aCase
         'case val [value_no_ternary] ': stmts [repeat statement] 'break;
     construct elseIf [else_if]
-        'elif switch '== val [fixEnumValueWithNoEnum] ': stmts [replaceNoStatements]
+        'elif switch '== val [fixEnumValueWithNoEnum] ': stmts [replaceNoStatements] [removeBreak]
     by 
         rep [. elseIf]
 end function
@@ -345,7 +382,7 @@ function replaceSwitchCaseDefault defaultCase [opt switch_case_default]
     deconstruct defaultCase
         'default ': stmts [repeat statement]
     by
-        'else: stmts [replaceNoStatements]
+        'else: stmts [replaceNoStatements] [removeBreak]
 
 end function
 
@@ -380,7 +417,6 @@ function replaceDefaultReadObject
         beforeReparsed [. middle] [. afterReparsed]
 end function
 
-
 function repeatStatementToAny stmt [statement]
     replace [repeat any]
         rep [repeat any]
@@ -402,8 +438,8 @@ end rule
 %--------------------------------%
 
 rule fixEnumValueWithNoEnum
-    replace $ [value]
-        val [value]
+    replace $ [nested_identifier]
+        val [nested_identifier]
     deconstruct val
         _ [id]
     import enumeratorDeclerations [repeat enum_declaration]
@@ -412,18 +448,18 @@ rule fixEnumValueWithNoEnum
 end rule
 
 rule fixEnumValueWithNoEnumCheck aEnum [enum_declaration]
-    replace [value]
+    replace [nested_identifier]
         identifier [id]
     deconstruct aEnum 
         _ [opt acess_modifier] 'enum enumName [id] '{ vals [list id]'}
     where
-        identifier [= each vals]
+        vals [containsId identifier] 
     by
         enumName '. identifier
 end rule
 
 rule addClassPrefixToEnum
-    replace [value]
+    replace [nested_identifier]
         enumName [id] '.  enumVal [id]
     where
         enumName [isAnEnum]
@@ -454,6 +490,23 @@ function isSpecificEnum aEnum [enum_declaration]
     where
         name [= enumName]
 end function
+
+rule removeBreak
+    replace $ [repeat statement]
+        stmts [repeat statement]
+    construct zero [number]
+        '0
+    construct length [number]
+        zero [length stmts]
+    construct lastStatement [repeat statement]
+        stmts [tail length]
+    deconstruct lastStatement
+        'break;
+    construct lengthMinusOne [number]
+        length [- 1]
+    by  
+        stmts [head lengthMinusOne]
+end rule
 %--------------------------------%
 %  Attribute access translation  %
 %--------------------------------%
@@ -465,20 +518,65 @@ rule translateToStringCall
         '.__str__()
 end rule
 
-rule translateEqualsCall
-    replace [attribute_access]
-        '.equals( val [value] ')
-    by
-        '.__eq__( val ')
-end rule
-
 
 rule translateSelfEqualsCall
-    replace [nested_identifier]
-        'equals( val [value] ')
+    replace [value]
+        'equals( val [value_no_ternary] ')
     by
-        'self '.__eq__( val ')
+        'self '== val 
 end rule
+
+rule translateNestedEqualsCall
+    replace [value]
+        nested [nested_identifier]
+    deconstruct nested
+        root [nestable_value] rep [repeat attribute_access]
+    construct seeking [id]
+        'equals
+    where 
+        rep [containsId seeking]
+    construct zero [number]
+        '0
+    construct repLength [number]
+        zero [length rep]
+    construct lastAttrRep [repeat attribute_access]
+        rep [tail repLength]
+    deconstruct lastAttrRep 
+        '.equals( val [value_no_ternary] ')
+    construct lengthMinusOne [number]
+        repLength [- 1]
+    construct firstAttrs [repeat attribute_access]
+        rep [head lengthMinusOne]
+    by
+        root firstAttrs '== val
+end rule
+
+rule translateNestedContainsCall
+    replace [value]
+        nested [nested_identifier]
+    deconstruct nested
+        root [nestable_value] rep [repeat attribute_access]
+    construct seeking [id]
+        'contains
+    where 
+        rep [containsId seeking]
+    construct zero [number]
+        '0
+    construct repLength [number]
+        zero [length rep]
+    construct lastAttrRep [repeat attribute_access]
+        rep [tail repLength]
+    deconstruct lastAttrRep 
+        '.contains( val [value_no_recursion] ')
+    construct lengthMinusOne [number]
+        repLength [- 1]
+    construct firstAttrs [repeat attribute_access]
+        rep [head lengthMinusOne]
+    by
+        val 'in root rep
+end rule
+
+
 
 %--------------------------------%
 %  Generic Before/after search   %
@@ -537,4 +635,74 @@ end function
 rule containsGeneric seeking [any]
     match [any]
         seeking
+end rule
+
+
+
+%--------------------------------%
+%  Member variable Corrections   %
+%--------------------------------%
+
+function replaceAllMemberVariableNames
+    replace [any]
+        any [any]
+    import memberVariables [repeat id]
+    by 
+        any 
+            [replaceMemberVariableNames memberVariables] 
+            [replaceMemberVariableNamesWithThis memberVariables]
+            [replaceMemberVariableNamesBrackets memberVariables]
+            [replaceStaticMemberVariableNames]
+end function
+
+rule replaceMemberVariableNames memberVariables [repeat id]
+    replace [nested_identifier]
+         name [id] rep [repeat attribute_access]
+    where 
+        memberVariables [containsId name]
+    construct underscore [id]
+        '_
+    construct newName [id]
+        underscore [+ name] 
+    by
+        'self '. newName rep
+end rule
+
+rule replaceStaticMemberVariableNames
+    replace [nested_identifier]
+         name [id] staticRep [repeat attribute_access]
+    import staticMemberVariables [repeat id]
+    import className [nested_identifier]
+    deconstruct className
+        root [nestable_value] rep [repeat attribute_access]
+    construct newAccess [repeat attribute_access]
+        '. name 
+    where 
+        staticMemberVariables [containsId name]
+    by
+        root rep [. newAccess] [. staticRep]
+end rule
+
+rule replaceMemberVariableNamesWithThis memberVariables [repeat id]
+    replace [nested_identifier]
+        'this '. name [id] rep [repeat attribute_access]
+    where 
+        memberVariables [containsId name]
+    construct underscore [id]
+        '_
+    by
+        'self '. underscore [+ name] rep
+end rule
+
+rule replaceMemberVariableNamesBrackets memberVariables [repeat id]
+    replace [nested_identifier]
+         name [id] '[ val [value] ']  rep [repeat attribute_access]
+    where 
+        memberVariables [containsId name]
+    construct underscore [id]
+        '_
+    construct newName [id]
+        underscore [+ name]
+    by
+        'self '. newName '[ val ']  rep
 end rule

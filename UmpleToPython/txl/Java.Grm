@@ -112,7 +112,7 @@ define value_no_recursion
     |   'true
     |   'false
     |   [casting]
-    |   '! [boolean_expression]
+    |   '! [value]
     |   [method_reference]
 end define
 
@@ -153,7 +153,7 @@ end define
 
 
 define stmt_return
-        'return [value] '; [NL]
+        'return [opt value] '; [NL]
 end define
 
 define statement
@@ -167,6 +167,7 @@ define statement
     |   [assignment] '; [NL]
     |   [throw_statement]
     |   [switch_case]
+    |   [try_catch]
 end define
 
 define while_loop
@@ -201,6 +202,10 @@ define conditional_block
     [if] [repeat else_if] [opt else]
 end define
 
+define try_catch 
+    'try '{  [repeat statement]  '} 'catch '( [method_parameter] ') '{ [repeat statement] '}
+end define
+
 define if 
     'if '( [value] ') '{  [repeat statement]  '}
     | 'if '( [value] ') [statement]
@@ -215,7 +220,7 @@ define else
 end define
 
 define throw_statement
-    'throw 'new [id] '( [stringlit] ');
+    'throw 'new [id] '( [list value] ');
 end define
 
 define casting
