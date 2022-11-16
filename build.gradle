@@ -11,6 +11,7 @@ buildscript {
 
 plugins {
   id 'org.ajoberstar.grgit' version '3.0.0'
+  id 'nebula.ospackage' version '9.1.1'
 }
 
 ext {
@@ -87,13 +88,16 @@ def buildAliases = [
     'compileUmpleSelf',
     'deployUmpleonline'
    ],
+   'genPackages' : [
+        'packageDeb',
+        'packageRpm'
+   ],
    'prepareChocoPackage' : [
         'zipUmple',
         'updateChecksum',
         'copyLicense',
         'updateNuspec'
    ]
-
 ]
 def expandedTaskList = []
 
@@ -554,6 +558,201 @@ task packageAllJars {
     dependsOn packageDocumenter
     dependsOn packageSync
     dependsOn packageRunner
+}
+
+// =======
+//  Generate Deb/RPM packages
+// =======
+
+// Generate options text from help message
+task genOptions(type:Exec) {
+  workingDir "${rootProject.projectDir.toString()}/dist/"
+  commandLine 'java', '-jar', 'umple.jar', '-help'
+  standardOutput = new ByteArrayOutputStream()
+  doLast {
+    def strings = standardOutput.toString().split('-----------')
+    def options = ""
+    if (strings.size() > 1) {
+    	options = strings[1] 
+    }
+    
+    for (line in options.split('\n')) {
+    	line = line.trim()
+    	
+    	if (line.startsWith('-')) {
+    	    if (!manOptions.isEmpty())
+    	    genOptions.ext.manOptions += '\n.PP\n\\fB\\'
+    	    
+    	    def tokens = ""
+	    if (line.contains(', -')) 
+	    	tokens = line.split('(?<!,)\\s+', 2)	
+	    else
+	    	tokens = line.split('\\s+', 2)
+	    
+	    if (tokens.size() > 1) {
+	    	genOptions.ext.manOptions += tokens[0].trim()
+	    	genOptions.ext.manOptions += '\\FR\n.IP\n'
+	    	genOptions.ext.manOptions += tokens[1].trim() + ' '
+	    }
+	    
+    	} else {
+    	    genOptions.ext.manOptions += line + ' '
+    	}
+    }
+    genOptions.ext.manOptions += '\n.PP\n'
+  }  
+}
+
+genOptions.ext.manOptions = ""
+
+// Create copyright from LICENSE.md
+task genCopyright(type: Copy) {
+    def info = ("Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/\n"
+    		+ "Upstream-Name: umple\n"
+		+ "Upstream-Contact: Timothy.Lethbridge <Timothy.Lethbridge@uottawa.ca>\n"
+		+ "Source: https://cruise.umple.org/umple/\n\n"
+		+ "Files:     *\n"
+		+ "License:   Expat\n")
+    from "${rootProject.projectDir.toString()}/LICENSE.md"
+    into "${rootProject.projectDir.toString()}/build/package-files/"
+    rename { 'copyright' }		
+    
+    doLast {
+	def file = new File("${rootProject.projectDir.toString()}/build/package-files/copyright")
+	def lines = file.readLines()
+	file.text = info + lines.subList(2, lines.size() - 2).join("\n")
+    }
+}
+
+// Create man page file from template with updated options
+task genManpage(dependsOn: [genOptions, genCopyright], type: Copy) { 
+    from "${rootProject.projectDir.toString()}/build/package-files/template.1"
+    into "${rootProject.projectDir.toString()}/build/package-files/"
+    rename { 'umple.1' }
+    
+    doLast {
+	def file = new File("${rootProject.projectDir.toString()}/build/package-files/umple.1")
+	file.text = file.text.replace('.SH OPTIONS', '.SH OPTIONS' + genOptions.ext.manOptions)
+	ant.gzip(src: "${rootProject.projectDir.toString()}/build/package-files/umple.1", zipfile: "${rootProject.projectDir.toString()}/build/package-files/umple.1.gz") 
+    }
+}
+
+// Remove carriage return from script
+task removeCR {
+    def file = new File("${rootProject.projectDir.toString()}/build/package-files/umple")
+    file.text = file.text.replace('\r', '')
+}
+
+// Create DEB package
+task packageDeb(dependsOn: [genManpage, removeCR], type: Deb) {
+    packageName = 'umple'
+    packageDescription = 'Modeling tool/programming language that enables Model-Oriented Programming'
+    maintainer = 'Umple Team <umple-help@googlegroups.com>'
+    url = 'https://www.umple.org'
+    version = "${rootProject.ext.umpleMajorVersion}"
+    release = 1
+    arch= 'all'
+    
+    requires('default-jre-headless')
+    
+    def names = []
+    def subNumbers = []
+    fileTree("${rootProject.projectDir.toString()}/dist/").matching {
+        include "umple-${rootProject.ext.umpleMajorVersion}*.jar"
+    }.visit { FileVisitDetails details -> 
+        names << details.file.name
+        if (details.file.name.split('\\.').length > 4) {
+            subNumbers << details.file.name.split('\\.').getAt(3).toInteger()
+            names << details.file.name
+        }
+    }
+
+    def jarfile = ""
+    if (!names.isEmpty()) {
+        jarfile = Collections.max(names) 
+        def maxNumber = Collections.max(subNumbers)
+        def index = subNumbers.findIndexOf { it == maxNumber } 
+        jarfile = names[index]
+    } else {
+        print("No umple jar file detected.")
+    }
+    
+    from("${rootProject.projectDir.toString()}/dist/") {
+    	include "${jarfile}"
+        into 'usr/local/lib/umple'
+        rename {'umple.jar'}
+    }
+    from("${rootProject.projectDir.toString()}/build/package-files/umple") {
+        into 'usr/local/bin'
+        fileMode 0755
+    }
+    from("${rootProject.projectDir.toString()}/build/package-files/copyright") {
+        into 'usr/share/doc/umple'
+    }
+    from("${rootProject.projectDir.toString()}/README.md") {
+        into 'usr/share/doc/umple'
+    }
+    from("${rootProject.projectDir.toString()}/build/package-files/umple.1.gz") {
+        into 'usr/share/man/man1'
+    }
+}
+
+// Create RPM package
+task packageRpm(dependsOn: [genManpage, removeCR], type: Rpm) {
+    packageName = 'umple'
+    packageDescription = 'Modeling tool/programming language that enables Model-Oriented Programming'
+    maintainer = 'Umple Team <umple-help@googlegroups.com>'
+    url = 'https://www.umple.org'
+    version = "${rootProject.ext.umpleMajorVersion}"
+    release = 1
+    arch = 'noarch'
+    os = 'LINUX'
+    license = 'MIT'
+    
+    requires('jre-headless')
+    
+    def names = []
+    def subNumbers = []
+    fileTree("${rootProject.projectDir.toString()}/dist/").matching {
+        include "umple-${rootProject.ext.umpleMajorVersion}*.jar"
+    }.visit { FileVisitDetails details -> 
+        names << details.file.name
+        if (details.file.name.split('\\.').length > 4) {
+            subNumbers << details.file.name.split('\\.').getAt(3).toInteger()
+            names << details.file.name
+        }
+    }
+
+    def jarfile = ""
+    if (!names.isEmpty()) {
+        jarfile = Collections.max(names) 
+        def maxNumber = Collections.max(subNumbers)
+        def index = subNumbers.findIndexOf { it == maxNumber } 
+        jarfile = names[index]
+    } else {
+        print("No umple jar file detected.")
+    }
+
+    from("${rootProject.projectDir.toString()}/dist/") {
+    	include "${jarfile}"
+        into 'usr/local/lib/umple'
+        rename {'umple.jar'}
+    }
+    from("${rootProject.projectDir.toString()}/build/package-files/umple") {
+        into 'usr/local/bin'
+        fileMode 0755
+    }      
+    from("${rootProject.projectDir.toString()}/build/package-files/copyright") {
+        into 'usr/share/doc/umple'
+    }
+    from("${rootProject.projectDir.toString()}/README.md") {
+    	addParentDirs = false
+        into 'usr/share/doc/umple'
+    }
+    from("${rootProject.projectDir.toString()}/build/package-files/umple.1.gz") {
+    	addParentDirs = false
+        into 'usr/share/man/man1'
+    }
 }
 
 // =======
