@@ -370,7 +370,7 @@ class UmpleConsoleMain
       
       if(compileSuccess && !cfg.getBeQuiet()) {
         for (String key : model. getHashMap().keySet()) {
-          System.out.println("  Compiled to target language "+key);
+          System.out.println("  Finished generating "+key);
           if(key.compareTo("Java")==0) {
             for (UmpleClass mainClass: CodeCompiler.getMainClasses(model)) {
               System.out.println("  Main method found. Run Java "+mainClass.getName());
