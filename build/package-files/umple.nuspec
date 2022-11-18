@@ -3,7 +3,7 @@
   <metadata>
     <id>umple</id>
     <version>1.31.1</version>
-    <packageSourceUrl>https://github.com/umple/umple/tree/master/build/pacakge-files/chocolatey</packageSourceUrl>
+    <packageSourceUrl>https://github.com/umple/umple/tree/issue1977/build/package-files/chocolatey</packageSourceUrl>
     <owners>Timothy Lethbridge</owners>
 
     <!-- == SOFTWARE SPECIFIC SECTION == -->
