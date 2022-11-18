@@ -49,6 +49,10 @@ class PythonGenerator
       return;
     }
 
+    if (!isTXLValid()) {
+      generateTxlFiles();
+    }
+
     String className=aClass.getName();
     UmpleClass uClass;
     if (aClass instanceof UmpleClass)
@@ -98,9 +102,10 @@ class PythonGenerator
       contents = "";
     }
 
-    if (!isTXLValid()) {
-      generateTxlFiles();
-    }
+    if(((UmpleClass)aClass).getHasMainMethod())
+    {
+      writeUncaughtExceptionFile((UmpleClass)aClass);
+    }    
 
     String pythonFilename = path + File.separator + className + ".py";
     String CompiledTXLPath = "./txl/umpleJavaToPython.ctxl";
