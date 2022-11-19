@@ -97,9 +97,13 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Token.py");
     SampleFileWriter.destroy(pathToInput + "/py/Student.py");
     SampleFileWriter.destroy(pathToInput + "/py/NetworkNode.py");
+    SampleFileWriter.destroy(pathToInput + "/py/NetworkNode.java");
+    SampleFileWriter.destroy(pathToInput + "/py/Object.java");
     SampleFileWriter.destroy(pathToInput + "/py/Router.py");
+    SampleFileWriter.destroy(pathToInput + "/py/Router.java");
     SampleFileWriter.destroy(pathToInput + "/Mentor.py");
     SampleFileWriter.destroy(pathToInput + "/Student.py");
+    SampleFileWriter.destroy(pathToInput + "/py/Student.java");
     
     SampleFileWriter.destroy(pathToInput + "/Tracer.java");
     SampleFileWriter.destroy(pathToInput + "/ConsoleTracer.php");
