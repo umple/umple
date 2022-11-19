@@ -1,14 +1,12 @@
-from Student import Student
-
 class Mentor():
     def __init__(self):
-        pass
+        self._student = None
 
     def getStudent(self):
         return self._student
 
     def hasStudent(self):
-        has = not(self._student is None)
+        has = not (self._student is None)
         return has
 
     def setStudent(self, aNewStudent):
@@ -16,25 +14,21 @@ class Mentor():
         if aNewStudent is None :
             existingStudent = self._student
             self._student = None
-            if existingStudent != None and existingStudent.getMentor() != None :
+            if not (existingStudent is None) and not (existingStudent.getMentor() is None) :
                 existingStudent.setMentor(None)
-
             wasSet = True
             return wasSet
-
         currentStudent = self.getStudent()
-        if currentStudent != None and not currentStudent.equals(aNewStudent) :
+        if not (currentStudent is None) and not currentStudent.__eq__(aNewStudent) :
             currentStudent.setMentor(None)
-
         self._student = aNewStudent
         existingMentor = aNewStudent.getMentor()
-        if not self.equals(existingMentor) :
+        if not self.__eq__(existingMentor) :
             aNewStudent.setMentor(self)
-
         wasSet = True
         return wasSet
 
     def delete(self):
-        if not(self._student is None) :
+        if not (self._student is None) :
             self._student.setMentor(None)
 

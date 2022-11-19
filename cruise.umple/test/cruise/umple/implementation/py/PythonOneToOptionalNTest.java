@@ -15,11 +15,6 @@ public class PythonOneToOptionalNTest extends OneToOptionalNTest
   }
 
   @Test @Ignore
-  public void OptionalN(){
-    super.OptionalN();
-  }
-
-  @Test @Ignore
   public void One(){
     super.One();
   }
