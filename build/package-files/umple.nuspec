@@ -7,7 +7,7 @@
     <packageSourceUrl>https://github.com/umple/umple/tree/master/build/package-files/chocolatey</packageSourceUrl>
     <owners>Timothy Lethbridge</owners>
     <!-- == SOFTWARE SPECIFIC SECTION == -->
-    <title>umple</title>
+    <title>Umple</title>
     <authors>Timothy Lethbridge</authors>
     <projectUrl>https://cruise.umple.org/umple/</projectUrl>
     <iconUrl>https://cruise.umple.org/umple/files/umple_logoMedium.png</iconUrl>
