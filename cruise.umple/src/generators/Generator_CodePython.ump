@@ -102,10 +102,13 @@ class PythonGenerator
       contents = "";
     }
 
-    if(((UmpleClass)aClass).getHasMainMethod())
-    {
-      writeUncaughtExceptionFile((UmpleClass)aClass);
-    }    
+    if (aClass instanceof UmpleClass) {
+      if(((UmpleClass)aClass).getHasMainMethod())
+      {
+        writeUncaughtExceptionFile((UmpleClass)aClass);
+      }
+    }
+        
 
     String pythonFilename = path + File.separator + className + ".py";
     String CompiledTXLPath = "./txl/umpleJavaToPython.ctxl";

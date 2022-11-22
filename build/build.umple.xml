@@ -199,8 +199,11 @@
       <java jar="${umplejar.touse}" fork="true" failonerror="true">
         <arg value="UmpleToTest/UmpleTLTemplates/Master.ump"/>
       </java>
-      <!-- Add txl compilation -->
-      
+      <!-- Compile TXL code -->
+      <exec executable="txl" dir="UmpleToPython/txl"  failonerror="true">
+        <arg value="-c" />
+        <arg value="umpleJavaToPython.txl" />
+      </exec>
     </parallel>
 
     <copy todir="cruise.umple/src-gen-umpletl/cruise/umple/compiler/java" overwrite="true">

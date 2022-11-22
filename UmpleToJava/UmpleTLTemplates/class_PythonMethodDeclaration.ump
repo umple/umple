@@ -113,7 +113,7 @@ class UmpleToJava {
         String customPostconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Postcondition"));
         customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
 
-        String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : "  <TXL UGM>\n\t" + aMethod.getMethodBody().getExtraCode() + "\n\t</TXL UGM>";
+        String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : "<TXL UGM>\n\t\t" + aMethod.getMethodBody().getExtraCode() + "\n\t\t</TXL UGM>";
         String properMethodBody = "    " + methodBody; 
         String override =  aMethod.getIsImplemented() ? "  @Override\n" : "";
         String paramName="";
