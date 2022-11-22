@@ -25,6 +25,7 @@ ext {
     umpleJarRemoteSource = "https://cruise.umple.org/umpleonline/scripts/umple.jar"
     umpleJarRemoteFile = "${rootProject.projectDir.toString()}/libs/umple-latest.jar"
     generatedBaseDir = "${rootProject.projectDir.toString()}/dist/gradle/src-gen"
+    txlTranslaterFile = "${rootProject.projectDir.toString()}/UmpleToPython/txl/umpleJavaToPython.txl"
     testBaseDir = "${rootProject.projectDir.toString()}/dist/gradle/test"
     classfileOutputDir = "${rootProject.projectDir.toString()}/dist/gradle/bin"
     testClassfileOutputDir = "${rootProject.ext.testBaseDir}/bin"
@@ -180,6 +181,21 @@ task prepareJOptSimpleVendor {
 
 task getVendorLibs {
     dependsOn prepareJOptSimpleVendor
+}
+
+// Compile the TXL code to ctxl code
+task ('compileTXL') {
+    doLast{
+    if (!new File(rootProject.ext.txlTranslaterFile).exists()) {
+        throw new Exception("${rootProject.ext.txlTranslaterFile} does not exist.")
+    }
+    // For the time being it may be good to print the exact command being executed
+    // so that we can check to see if issues are reproducible 
+    def command = "txl -c " + rootProject.ext.txlTranslaterFile
+    println(command)
+    def proc = command.execute();
+    proc.waitForProcessOutput(System.out, System.err);
+}
 }
 
 // Execute Umple jar
@@ -407,9 +423,26 @@ task copyReusableUmpLib(type: Copy) {
     
     }
 }
+task copyTxlFile(type: Copy) {
+    //This has to be done seperatly in order not to alter the existing task too much
+    group = "Custom"
+    description = "Copying TXL files that need to be included in the umple jar"
+    from "UmpleToPython/txl"
+    into rootProject.ext.classfileOutputDir
+    include '**/*.ctxl'
+   
+    doFirst {
+        println("Copying library .ctxl file from UmpleToPython/txl to ${rootProject.ext.classfileOutputDir}")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+        } 
+    
+    }
+}
 
 tasks.getByName("compileJava").dependsOn 'copyDocs'
 tasks.getByName("compileJava").dependsOn 'copyReusableUmpLib'
+tasks.getByName("compileJava").dependsOn 'copyTxlFile'
 tasks.getByName("compileJava").dependsOn ':UmpleParser:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToJava:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToPhp:copyUmpleOutput'
@@ -968,6 +1001,7 @@ task codeGen {
     dependsOn ":UmpleToRuby:compileUmpleSelf"
     dependsOn ":UmpleToSql:compileUmpleSelf"
     dependsOn ":UmpleToTest:compileUmpleSelf"
+    dependsOn "compileTXL"
 }
 
 // Compiles the parser to Java
