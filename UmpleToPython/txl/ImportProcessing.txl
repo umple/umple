@@ -24,9 +24,7 @@ function extractPossibleFunctionImports classBody [class_body_decl] declaration 
     replace [repeat id]
         empty [repeat id]
     deconstruct declaration
-        _[opt acess_modifier] _[opt static] _[opt volatile] varDec [variable_declaration]
-    deconstruct varDec
-        class [nested_identifier] _ [id]';
+        _[opt acess_modifier] _[opt static] _[opt volatile] class [nested_identifier] _[id] _[opt member_variable_assignment] ';
     construct classesToImport [repeat id]
         _ [extractListClass classBody class] [extractRegularClass classBody class]
     by 
@@ -178,9 +176,7 @@ function addListMemberVariable MemberVariable [member_variable_declaration]
     replace [repeat id]
         SequenceSoFar [repeat id]
     deconstruct MemberVariable
-        _[opt acess_modifier] decl [variable_declaration]
-    deconstruct decl
-        'List '< _ [list id] '> memberName [id]';
+        _[opt acess_modifier] _[opt transient] _[opt static] _[opt volatile] 'List '< _ [list id] '> memberName [id] _[opt member_variable_assignment]';
     by
         SequenceSoFar [. memberName]
 end function
@@ -207,6 +203,7 @@ function addExternalImports translatedBody [class_body_decl]
         [addEnumImportIfNeeded translatedBody]
         [addPickleImportIfNeeded]
         [addMultipledispatchImportIfNeeded translatedBody]
+        [addSysImportIfNeeded translatedBody]
 end function
 
 
@@ -272,5 +269,16 @@ end function
 
 function shouldImportMultipledispatch
     match * [decorator]
-        '@dispatch( _ [list nested_identifier] ')
+        '@dispatch( _ [list base_value] ')
+end function
+
+function addSysImportIfNeeded body [class_body_decl]
+    replace [repeat import_statement]
+        imports [repeat import_statement]
+    where
+        body [matchMainMethod]
+    construct newImport [import_statement]
+        'import 'sys
+    by 
+        imports [. newImport]
 end function

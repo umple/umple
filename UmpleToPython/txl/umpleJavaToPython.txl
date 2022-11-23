@@ -21,5 +21,6 @@ function main
 	classes
         [replaceConcreteClassesWithInheritance] 
         [replaceInterfacesWithInheritance]
+        [replaceAbstractClass]
 end function
 

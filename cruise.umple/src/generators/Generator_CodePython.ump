@@ -205,6 +205,45 @@ class PythonGenerator
 
   }
 
+  @Override
+  public void writeUncaughtExceptionFile(UmpleClass aClass)
+  {
+    try {
+       // if the name of the class has been changed for proxy pattern, change it for the exceptions too.
+    String className=aClass.getName();
+    if(aClass.getHasProxyPattern()||(aClass.getIsDistributed()&&(getModel().getDistributePattern()==1||getModel().getDistributePattern()==2)))
+      aClass.setName(className+"Impl");
+
+    ILang language = getLanguageFor(aClass);
+    
+    aClass.setName(className);
+    if(aClass.getHasProxyPattern()||(aClass.getIsDistributed()&&(getModel().getDistributePattern()==1||getModel().getDistributePattern()==2)))
+      className=className+"Impl"; 
+
+    String path = StringFormatter.addPathOrAbsolute( 
+                  getModel().getUmpleFile().getPath(), 
+                            getOutput()) + 
+                            aClass.getPackageName().replace(".", File.separator);
+
+    String filename = path + File.separator + className + ".java";
+    File file = new File(path);
+    file.mkdirs();
+
+    BufferedWriter bw = new BufferedWriter(new FileWriter(filename,true));
+    String contents = new PythonClassGenerator().getExceptionHandler("", aClass, getModel());
+    getModel().getGeneratedCode().put(aClass.getName(),getModel().getGeneratedCode().get(aClass.getName())+contents);
+    try
+    {
+      bw.write(contents);
+      bw.flush();
+    }
+    finally
+    {
+      bw.close();
+    }
+    } catch(Exception e){ e.printStackTrace(); }
+  }  
+
   private boolean isTxlInstalled()
   {
     //Check for TXL installation

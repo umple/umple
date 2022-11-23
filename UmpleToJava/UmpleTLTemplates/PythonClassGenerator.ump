@@ -584,7 +584,7 @@ for (StateMachine smq : uClass.getStateMachines())
 }<<#}
   return realSb.toString();
 }
-#>><<@ UmpleToJava.uncaught_exception>><<#}
+#>><<@ UmpleToJava.python_uncaught_exception>><<#}
 #>><<@ UmpleToJava.queued_method >><<#
 
 

@@ -25,7 +25,6 @@ function replaceStatements
             [replaceDecleration]
             [replaceTernary]
             [replaceAllBoolean]
-            [replaceDeclerationWithAssignment]
             [replaceTryCatch]
             [replaceInlineIf]
             [replaceIf]
@@ -50,7 +49,10 @@ function replaceStatements
             [translateSelfEqualsCall]
             [translateNestedEqualsCall]
             [translateNestedContainsCall]
+            [replaceIntegerValueOf]
+            [replaceDoubleValueOf]
             [replaceAllMemberVariableNames]
+            [removeSemiColonFromValues]
 end function
 
 function replaceNoStatements
@@ -58,6 +60,13 @@ function replaceNoStatements
     by 
         'pass  
 end function
+
+rule removeSemiColonFromValues
+    replace [statement]
+        val [value] ';
+    by  
+        val
+end rule
 
 rule replaceAssignementIncrementAfter
     replace [statement]
@@ -75,21 +84,21 @@ end rule
 
 rule replaceAssignementIncrementBefore
     replace [statement]
-        nest1 [nested_identifier] '= '++ nest2 [nested_identifier]';
+        nest1 [nested_identifier] '= '++ nest2 [nested_identifier] ';
     by
         nest1 '= nest2 '= nest2 '+ '1
 end rule
 
 rule replaceAssignementDecrementBefore
     replace [statement]
-        nest1 [nested_identifier] '= '-- nest2 [nested_identifier]';
+        nest1 [nested_identifier] '= '-- nest2 [nested_identifier] ';
     by
         nest1 '= nest2 '= nest2 '- '1
 end rule
 
 rule replaceAssignmentStatement
     replace [statement]
-        identifier [nested_identifier] '= val [value] '; 
+        identifier [nested_identifier] '= val [value] ';
     by 
         identifier '= val
 end rule
@@ -103,7 +112,11 @@ end rule
 
 rule addSelfToOwnMethodCalls
     replace [nested_identifier]
-        funcName [id] '( values [list value]') rep [repeat attribute_access]
+        funcName [id] extensions [repeat nestable_extension+] rep [repeat attribute_access]
+    construct firstExtension [repeat nestable_extension]
+        extensions [head 1]
+    deconstruct firstExtension
+        '( values [list value]')
     import classMethodNames [repeat id]
     where
         classMethodNames [containsId funcName]
@@ -135,18 +148,11 @@ rule replaceThis
         'self
 end rule
 
-rule replaceDeclerationWithAssignment
-    replace [variable_declaration]
-        _ [nested_identifier] assignment [assignment] ';
-    by 
-        assignment
-end rule
-
 rule replaceDecleration
-    replace [variable_declaration]
-        _[nested_identifier] varName [id]';
+    replace [statement]
+        _[nested_identifier] assignment [value]';
     by 
-        varName 
+        assignment 
 end rule
 
 rule replaceTryCatch
@@ -192,10 +198,31 @@ end rule
 
 
 rule replaceTernary
-    replace [ternary]
-        condition [boolean_expression] '? opt1 [value] ': opt2 [value]
+    replace [value]
+        val [value]
+    skipping[parentheses_value]
+    deconstruct * [ternary_terminal] val
+        '? optTrue [value] ': optFalse [value]
+    construct blankString [stringlit]
+        ""
+    construct unparsed [stringlit]
+        blankString [unparse val]
+    construct zero [number]
+        '0
+    construct questionMark [stringlit]
+        "?"
+    construct questionMarkIndex [number]
+        zero [index unparsed questionMark]
+    construct questionMarkIndexMinusOne [number]
+        questionMarkIndex [- 1]
+    construct beforeQuestionMark [stringlit]
+        unparsed [: 1 questionMarkIndexMinusOne]
+    construct defaultShouldNotSee [value]
+        'uhOh
+    construct condition [value]
+        defaultShouldNotSee [parse beforeQuestionMark]
     by
-        '( opt1 ') 'if condition 'else opt2
+        '( optTrue ') 'if condition 'else optFalse
 end rule
 
 rule replaceWhile
@@ -213,39 +240,39 @@ rule replaceNull
 end rule
 
 rule replaceDecrementBefore
-    replace [statement]
-        '-- nest [nested_identifier]';
+    replace [value]
+        '-- nest [nested_identifier]
     by 
         nest '-= 1
 end rule
 
 rule replaceIncrementBefore
-    replace [statement]
-        '++ nest [nested_identifier]';
+    replace [value]
+        '++ nest [nested_identifier]
     by 
         nest '+= '1
 end rule
 
 rule replaceDecrementAfter
-    replace [statement]
-        nest [nested_identifier] '-- ';
+    replace [value]
+        nest [nested_identifier] '--
     by 
         nest '-= 1
 end rule
 
 rule replaceIncrementAfter
-    replace [statement]
-        nest [nested_identifier] '++ ';
+    replace [value]
+        nest [nested_identifier] '++ 
     by 
         nest '+= '1
 end rule
 
 rule replaceForLoop
     replace [statement]
-        'for( decl [variable_declaration] goal [value]'; assignment [assignment]') '{  stmts[repeat statement]  '} 
+        'for( decl [double_value] '; goal [value]'; assignment [value]') '{  stmts[repeat statement]  '} 
     deconstruct decl
-        _[nested_identifier] name [id] '= start [value] ';
-    construct declaration [variable_declaration]
+        _[nested_identifier] name [id] '= start [value]
+    construct declaration [value]
         name '= start
     construct newStatements [repeat statement]
         assignment
@@ -280,9 +307,11 @@ end rule
 
 rule replaceNewCall
     replace [value]
-        'new funcCall [function_call]
-    deconstruct funcCall
-        className [callable] '( vals [list value] ')
+        'new nested [nested_identifier]
+    deconstruct nested 
+        className [id] ext [repeat nestable_extension]
+    deconstruct * [func_call_parentheses] ext
+        '( vals [list value] ')
     by
         className '( vals ')
 end rule
@@ -327,14 +356,14 @@ end rule
 
 rule replaceHexIdentity
     replace [nested_identifier]
-        'Integer.toHexString(System.identityHashCode( val [value_no_recursion] '))
+        'Integer.toHexString(System.identityHashCode( val [value] '))
     by
         'format( 'id( val '), '"x")
 end rule
 
 rule replaceSwitchCase
     replace [statement]
-        'switch( val [value_no_recursion] ') '{ cases [repeat switch_case_case]  default [opt switch_case_default] '}
+        'switch( val [value] ') '{ cases [repeat switch_case_case]  default [opt switch_case_default] '}
     construct firstCase [repeat switch_case_case]
         cases [head 1]
     construct otherCases [repeat switch_case_case]
@@ -352,26 +381,58 @@ rule replaceSwitchCase
 end rule
 
 
-function replaceFirstSwitchCaseCase switch [value_no_recursion] firstCase [switch_case_case] 
+function replaceFirstSwitchCaseCase switch [value] firstCase [switch_case_case] 
     replace [if]
         _ [if]
     deconstruct firstCase
-        'case val [value_no_ternary] ': stmts [repeat statement] 'break;
-    construct condition [condition]
-        switch '== val [fixEnumValueWithNoEnum]
+        'case val [value] ': stmts [repeat statement] 'break;
+    construct cont [value_continuation]
+        '== val [fixEnumValueWithNoEnum]
+    construct condition [value]
+        switch [appendToValue cont]
     construct newIf [if]
         'if condition ': stmts [replaceNoStatements] [removeBreak]
     by 
         newIf
 end function
 
-function replaceSwitchCaseCase switch [value_no_recursion] aCase [switch_case_case] 
+function appendToValue cont [value_continuation]
+    replace [value]
+        val [value]
+    construct emptyString [stringlit]
+        ""
+    construct spaceString [stringlit]
+        " "
+    construct unparsedVal [stringlit]
+        emptyString [unparse val]
+    construct unparsedCont [stringlit]
+        emptyString [unparse cont]
+    construct concatenated [stringlit]
+        unparsedVal [+ spaceString] [+ unparsedCont]
+    by
+        val [parse concatenated]
+end function
+
+function appendOptToValue cont [opt value_continuation]
+    replace [value]
+        val [value]
+    deconstruct cont
+        realCont [value_continuation]
+    by
+        val [appendToValue realCont]
+end function
+
+function replaceSwitchCaseCase switch [value] aCase [switch_case_case] 
     replace [repeat else_if]
         rep [repeat else_if]
     deconstruct aCase
-        'case val [value_no_ternary] ': stmts [repeat statement] 'break;
+        'case val [value] ': stmts [repeat statement] 'break;
+    construct cont [value_continuation]
+        '== val [fixEnumValueWithNoEnum]
+    construct condition [value]
+        switch [appendToValue cont]
     construct elseIf [else_if]
-        'elif switch '== val [fixEnumValueWithNoEnum] ': stmts [replaceNoStatements] [removeBreak]
+        'elif condition ': stmts [replaceNoStatements] [removeBreak]
     by 
         rep [. elseIf]
 end function
@@ -432,6 +493,20 @@ rule replaceComparator
     by
         'lambda 'x ': 'x '. funcName '()
 end rule
+
+rule replaceIntegerValueOf
+    replace [value]
+        'Integer '.valueOf( val [value] ')
+    by 
+        'int( val ')
+end rule 
+
+rule replaceDoubleValueOf
+    replace [value]
+        'Double '.valueOf( val [value] ')
+    by 
+        'float( val ')
+end rule 
 
 %--------------------------------%
 %  Switch case Enum correction   %
@@ -521,7 +596,7 @@ end rule
 
 rule translateSelfEqualsCall
     replace [value]
-        'equals( val [value_no_ternary] ')
+        'equals( val [value] ')
     by
         'self '== val 
 end rule
@@ -542,7 +617,7 @@ rule translateNestedEqualsCall
     construct lastAttrRep [repeat attribute_access]
         rep [tail repLength]
     deconstruct lastAttrRep 
-        '.equals( val [value_no_ternary] ')
+        '.equals( val [value] ')
     construct lengthMinusOne [number]
         repLength [- 1]
     construct firstAttrs [repeat attribute_access]
@@ -553,7 +628,7 @@ end rule
 
 rule translateNestedContainsCall
     replace [value]
-        nested [nested_identifier]
+        nested [nested_identifier] initalCont [opt value_continuation]
     deconstruct nested
         root [nestable_value] rep [repeat attribute_access]
     construct seeking [id]
@@ -567,13 +642,15 @@ rule translateNestedContainsCall
     construct lastAttrRep [repeat attribute_access]
         rep [tail repLength]
     deconstruct lastAttrRep 
-        '.contains( val [value_no_recursion] ')
+        '.contains( val [value] ')
     construct lengthMinusOne [number]
         repLength [- 1]
     construct firstAttrs [repeat attribute_access]
         rep [head lengthMinusOne]
+    construct cont [value_continuation]
+        'in root firstAttrs
     by
-        val 'in root rep
+        val [appendToValue cont] [appendOptToValue initalCont]
 end rule
 
 

@@ -18,20 +18,13 @@ end redefine
 redefine nestable_value
     ...
     | 'self
-    |  [array_access]
 end redefine
-
-redefine assignment
-    ...
-    |   [list nested_identifier+] [!] '=  [list value+] 
-end redefine
-
 
 redefine statement
     ...
-    |  [nested_identifier] [NL]
     | 'pass [NL]
-    |  [assignment] [NL]
+    |   [list nested_identifier+] [!] '=  [list value+] 
+    |   [import_statement]
 end redefine
 
 redefine stmt_return
@@ -40,7 +33,7 @@ redefine stmt_return
 end redefine
 
 
-redefine value_no_recursion
+redefine base_value
     ...
     |   'True
     |   'False
@@ -55,13 +48,6 @@ define  lambda_function
     'lambda [list id] ': [value]
 end define 
 
-
-redefine function_call
-    ...
-    |   [generic_class] [!] [SPOFF] '( [SPON] [list value] [!] ')
-end redefine
-
-
 redefine for_loop
     ...
     |'for [nestable_value] 'in 'range( [value] ', [value] ', [value] '): [NL] [IN] [repeat statement] [EX] [NL]
@@ -74,7 +60,7 @@ end redefine
 
 redefine while_loop
     ...
-    | [opt variable_declaration] 'while [value] ': [NL] [IN] [repeat statement] [EX] [NL]
+    | [opt value] [NL] 'while [value] ': [NL] [IN] [repeat statement] [EX] [NL]
 end redefine
 
 redefine if 
@@ -103,9 +89,9 @@ redefine method_parameter
     | [id]
 end redefine
 
-redefine ternary
+redefine ternary_terminal
     ...
-    |   [value_no_ternary] [!] 'if [value] 'else [value]
+    |   'if [!] [value] 'else [value]
 end redefine
 
 redefine var_arg
@@ -123,10 +109,6 @@ redefine abstract_method_declaration
     |   [SPOFF] '@abstractmethod [SPON] [NL] 'def  [id] [SPOFF]'( [SPON] [list method_parameter] [SPOFF] '): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
 end redefine
 
-redefine decorator
-    ...
-    |   '@ [SPOFF] [id] '( [SPON] [list nested_identifier][SPOFF] ') [SPON] [NL]
-end redefine
 
 redefine constructor
     ...
@@ -135,8 +117,13 @@ end redefine
 
 redefine concrete_class_declaration
     ... 
-    | [repeat import_statement] [NL] 'class [nested_identifier] [SPOFF] [opt inheritance_group] ': [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL]
+    | [repeat import_statement] [NL] 'class [nested_identifier] [SPOFF] [opt inheritance_group] ': [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL] [opt run_main]
 end redefine
+
+define run_main
+    'if '__name__ '== '"__main__" ': [NL] [IN]
+        [id] '.main [SPOFF] '( [SPON] 'sys.argv ')
+end define
 
 define inheritance_group
     '( [SPON] [list nested_identifier] [SPOFF] ')
@@ -151,12 +138,6 @@ redefine class_body_decl
     ...
     | 'pass
     | [opt constructor] [repeat method_declaration]
-end redefine
-
-redefine variable_declaration
-    ...
-    |   [assignment] [FL]
-    |   [id] [FL]
 end redefine
 
 redefine import_statement
@@ -180,27 +161,12 @@ define enum_value_declaration
     [id] '= 'auto [SPOFF] () [SPON] [NL]
 end define
 
-redefine switch_case
-    ...
-    |   'match [value] ': [NL] [IN] [repeat switch_case_case] [opt switch_case_default] [EX]
-end redefine
-
-redefine switch_case_case
-    ...
-    |   'case [value] ': [NL] [IN] [repeat statement] [EX]
-end redefine
-
-redefine switch_case_default
-    ...
-    |   'case 'default ': [NL] [IN] [repeat statement] [EX]
-end redefine
-
-redefine statement
-    ...
-    | [import_statement]
-end redefine
-
 redefine try_catch 
     ...
     |   'try ': [NL] [IN]  [repeat statement]  [EX] 'except [opt method_parameter] ': [NL] [IN] [repeat statement] [EX]
+end redefine
+
+redefine member_variable_declaration
+    ...
+    |   [value]
 end redefine
