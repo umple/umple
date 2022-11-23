@@ -168,5 +168,5 @@ end redefine
 
 redefine member_variable_declaration
     ...
-    |   [value]
+    |   [value] [NL]
 end redefine
