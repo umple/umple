@@ -167,15 +167,9 @@
       <exclude name="W010SingletonMultiplicityOver12.ump"/>
 
       <!-- The following is temporarily excluded because they currently contain bugs  -->
-      <exclude name="2DShapes.ump"/>
-      <exclude name="AbstractMethods1.ump"/>
-      <exclude name="AbstractMethods2.ump"/>
       <exclude name="AccessControl2.ump"/>
-      <exclude name="ActiveObjects1.ump"/>
-      <exclude name="AgentsCommunication.ump"/>
       <exclude name="AroundStatement1.ump"/>
       <exclude name="AroundStatement2.ump"/>
-      <exclude name="AssociationOneToOne.ump"/>
       <exclude name="Auto-Transitions1.ump"/>
       <exclude name="Ball_Game.ump"/>
       <exclude name="BasicTemplates1.ump"/>
@@ -184,62 +178,29 @@
       <exclude name="BcmsBaseConfiguration.ump"/>
       <exclude name="BcmsMultipleCrisis-Multiple-Coordinator-Configuration.ump"/>
       <exclude name="CanalLockStateMachine.ump"/>
-      <exclude name="ClassDefinition1.ump"/>
-      <exclude name="CoOpSystem.ump"/>
       <exclude name="CodeInjectioninCustomMethods1.ump"/>
       <exclude name="CodeInjectioninEventMethods1.ump"/>
-      <exclude name="Compositions.ump"/>
-      <exclude name="DelegationPattern1.ump"/>
-      <exclude name="DigitalWatchFlat.ump"/>
-      <exclude name="DigitalWatchNested.ump"/>
       <exclude name="Dishwasher.ump"/>
       <exclude name="Elevator_State_Machine.ump"/>
-      <exclude name="Filters-Shape3D-1.ump"/>
-      <exclude name="GeometricSystem.ump"/>
-      <exclude name="HelloWorldExamples1.ump"/>
-      <exclude name="HelloWorld_SPL.ump"/>
       <exclude name="HtmlGeneration.ump"/>
       <exclude name="LibraryLoanStateMachine.ump"/>
       <exclude name="MicrowaveOven2.ump"/>
-      <exclude name="MixsetsInMethod.ump"/>
-      <exclude name="MultiValuedAttributes1.ump"/>
-      <exclude name="Multiplicity2.ump"/>
-      <exclude name="Multiplicity3.ump"/>
       <exclude name="Phone.ump"/>
       <exclude name="PingPong.ump"/>
-      <exclude name="Pizza.ump"/>
       <exclude name="PooledStateMachines1.ump"/>
-      <exclude name="Preconditions1.ump"/>
       <exclude name="QueuedStateMachines1.ump"/>
-      <exclude name="RE002MultiplicityException2.ump"/>
       <exclude name="Runway.ump"/>
       <exclude name="SecurityLight.ump"/>
-      <exclude name="SimpleConstraints1.ump"/>
-      <exclude name="SortedAssociations1.ump"/>
-      <exclude name="SortedAssociations2.ump"/>
       <exclude name="StateDependentMethods1.ump"/>
       <exclude name="StateDependentMethods2.ump"/>
       <exclude name="StateMachineActionsandDoActivities1.ump"/>
       <exclude name="TcpIpSimulation.ump"/>
-      <exclude name="TelephoneSystem2.ump"/>
       <exclude name="TimedCommands.ump"/>
       <exclude name="TrafficLightsB.ump"/>
       <exclude name="UnspecifiedEvents2.ump"/>
       <exclude name="W082ConflictingModifiers.ump"/>
-      <exclude name="W1512CodeLabelsInsideMethodAreNotUnique.ump"/>
-      <exclude name="assocSpecEx.ump"/>
-      <exclude name="realestate.ump"/>
-      <exclude name="traits_example_addresses.ump"/>  
-
-      <!-- These tests are only failing on the jenkins -->
-      <exclude name="NullExample.ump"/>
-      <exclude name="Compositions1.ump"/>
-      <exclude name="Compositions1_eq2.ump"/>
-      <exclude name="RE001ImmutabilityException1.ump"/>
-      <exclude name="Compositions1_eq1.ump"/>
-      <exclude name="Compositions_regAssoc.ump"/>  
-
-      <!-- Tracers are not converting -->
+      
+      <!-- Tracers are out of scope for current Python Generation -->
       <exclude name="Tracers1.ump"/>
       <exclude name="Tracers2.ump"/>
       <exclude name="Tracers3.ump"/>
