@@ -239,6 +239,18 @@
 	    <arg value="AllTests.py"/>
     </exec>
 
+    <fail message="Python Import Error found">
+      <condition>
+        <contains string="${test.output.python}" substring="Import Failed" casesensitive="true"/>
+      </condition>
+    </fail>
+
+    <fail message="Python Error found">
+      <condition>
+        <contains string="${test.output.python}" substring="FAIL" casesensitive="true"/>
+      </condition>
+    </fail>
+
     <echo message="PYTHON tests completed!"/>
   </target>
 

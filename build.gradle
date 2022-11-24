@@ -1308,6 +1308,47 @@ task phpTestbedTest {
     }
 }
 
+task pythonTestbedCompileUmple {
+  group = "Custom"
+  description = "Compiling python testbed source files"
+  doLast{
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_python/src/TestHarnessPython.ump")
+    }
+}
+
+task pythonTestbedCompile {
+    group = "Custom"
+    description = "Compiling python testbed generated files"
+    dependsOn pythonTestbedCompileUmple
+
+}
+
+task pythonTestbedTest {
+    group = "Custom"
+    description = "Running python testbed tests"
+    dependsOn pythonTestbedCompile
+    doLast {
+        println("Running PYTHON tests via rake task")
+        new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python").mkdir()
+        def command = "python AllTests.py"
+        
+        def proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_python/test"))
+        def out = new File ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python/index.txt")
+        out.write(proc.text)
+        copy {
+          from ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python")
+          into ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python")
+          include "index.txt"
+          rename ("index.txt", "index.html")
+        }
+        
+        delete "${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python/index.txt"
+
+        println("PYTHON tests completed!\n"+
+        "See results at ${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python/index.html")
+    }
+}
+
 task ('rubyTestbedCompileUmple') {
  group = "Custom"
  description = "Compiling ruby testbed source files"
@@ -1353,6 +1394,7 @@ task testbedTests {
     description = "Running all testbed tests"
     dependsOn javaTestbedTest
     dependsOn phpTestbedTest
+    dependsOn pythonTestbedTest
     dependsOn rubyTestbedTest
 }
 
