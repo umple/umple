@@ -23,7 +23,7 @@ end redefine
 redefine statement
     ...
     | 'pass [NL]
-    |   [list nested_identifier+] [!] '=  [list value+] 
+    |   [list nested_identifier+] [!] '=  [list value+] [NL]
     |   [import_statement]
 end redefine
 

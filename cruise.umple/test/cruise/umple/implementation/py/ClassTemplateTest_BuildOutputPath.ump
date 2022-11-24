@@ -1,8 +1,0 @@
-generate Python "python_code";
-
-namespace example;
-
-class Student
-{
-
-}
