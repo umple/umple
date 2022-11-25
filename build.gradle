@@ -1328,7 +1328,7 @@ task pythonTestbedTest {
     description = "Running python testbed tests"
     dependsOn pythonTestbedCompile
     doLast {
-        println("Running PYTHON tests via rake task")
+        println("Running PYTHON tests")
         new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python").mkdir()
         def command = "python AllTests.py"
         
