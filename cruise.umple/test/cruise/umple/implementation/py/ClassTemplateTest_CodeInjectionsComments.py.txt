@@ -1,0 +1,32 @@
+class Student():
+    def __init__(self):
+        pass
+
+    def delete(self):
+        pass
+
+    def foo(self, a):
+        System.out.println("Starting foo with argument: " + a)
+        if a < 0 :
+            System.out.println("Returning from foo!")
+            return 0
+
+        elif a == 1 :
+            System.out.println("Returning from foo!")
+            return -1
+
+        else :
+            System.out.println("Returning from foo!")
+            return 4
+
+        i = 0
+        while i < a :
+            if i == a / 4 :
+                System.out.println("Returning from foo!")
+                return a
+
+            i = i + 1
+
+        System.out.println("Returning from foo!")
+        return 4
+

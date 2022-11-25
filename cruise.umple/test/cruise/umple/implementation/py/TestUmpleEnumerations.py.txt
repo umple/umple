@@ -1,0 +1,33 @@
+from enum import Enum, auto
+
+class Student():
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        FullTime = auto()
+        PartTime = auto()
+
+    class Grade(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        High = auto()
+
+    class RelationshipStatus(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Single = auto()
+        Married = auto()
+        Divorced = auto()
+
+    def __init__(self):
+        pass
+
+    def delete(self):
+        pass
+

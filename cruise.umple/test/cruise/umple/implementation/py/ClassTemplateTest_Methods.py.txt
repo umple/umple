@@ -1,0 +1,13 @@
+class CodeTranslator():
+    def __init__(self):
+        pass
+
+    def delete(self):
+        pass
+
+    def translate(self, id, attribute):
+        return "1"
+
+    def translate(self, id, associationVariable):
+        return "1"
+

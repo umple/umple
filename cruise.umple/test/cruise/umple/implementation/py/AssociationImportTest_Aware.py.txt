@@ -1,0 +1,21 @@
+from Student import Student
+
+class Mentor():
+    def __init__(self, aStudent):
+        if not self.setStudent(aStudent) :
+            raise RuntimeError ("Unable to create Mentor due to aStudent. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    def getStudent(self):
+        return self._student
+
+    def setStudent(self, aNewStudent):
+        wasSet = False
+        if not(aNewStudent is None) :
+            self._student = aNewStudent
+            wasSet = True
+
+        return wasSet
+
+    def delete(self):
+        self._student = None
+
