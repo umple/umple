@@ -25,6 +25,7 @@ ext {
     umpleJarRemoteSource = "https://cruise.umple.org/umpleonline/scripts/umple.jar"
     umpleJarRemoteFile = "${rootProject.projectDir.toString()}/libs/umple-latest.jar"
     generatedBaseDir = "${rootProject.projectDir.toString()}/dist/gradle/src-gen"
+    txlTranslaterFile = "${rootProject.projectDir.toString()}/UmpleToPython/txl/umpleJavaToPython.txl"
     testBaseDir = "${rootProject.projectDir.toString()}/dist/gradle/test"
     classfileOutputDir = "${rootProject.projectDir.toString()}/dist/gradle/bin"
     testClassfileOutputDir = "${rootProject.ext.testBaseDir}/bin"
@@ -180,6 +181,21 @@ task prepareJOptSimpleVendor {
 
 task getVendorLibs {
     dependsOn prepareJOptSimpleVendor
+}
+
+// Compile the TXL code to ctxl code
+task ('compileTXL') {
+    doLast{
+    if (!new File(rootProject.ext.txlTranslaterFile).exists()) {
+        throw new Exception("${rootProject.ext.txlTranslaterFile} does not exist.")
+    }
+    // For the time being it may be good to print the exact command being executed
+    // so that we can check to see if issues are reproducible 
+    def command = "txl -c " + rootProject.ext.txlTranslaterFile
+    println(command)
+    def proc = command.execute();
+    proc.waitForProcessOutput(System.out, System.err);
+}
 }
 
 // Execute Umple jar
@@ -407,9 +423,26 @@ task copyReusableUmpLib(type: Copy) {
     
     }
 }
+task copyTxlFile(type: Copy) {
+    //This has to be done seperatly in order not to alter the existing task too much
+    group = "Custom"
+    description = "Copying TXL files that need to be included in the umple jar"
+    from "UmpleToPython/txl"
+    into rootProject.ext.classfileOutputDir
+    include '**/*.ctxl'
+   
+    doFirst {
+        println("Copying library .ctxl file from UmpleToPython/txl to ${rootProject.ext.classfileOutputDir}")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+        } 
+    
+    }
+}
 
 tasks.getByName("compileJava").dependsOn 'copyDocs'
 tasks.getByName("compileJava").dependsOn 'copyReusableUmpLib'
+tasks.getByName("compileJava").dependsOn 'copyTxlFile'
 tasks.getByName("compileJava").dependsOn ':UmpleParser:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToJava:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToPhp:copyUmpleOutput'
@@ -969,6 +1002,7 @@ task codeGen {
     dependsOn ":UmpleToRuby:compileUmpleSelf"
     dependsOn ":UmpleToSql:compileUmpleSelf"
     dependsOn ":UmpleToTest:compileUmpleSelf"
+    dependsOn "compileTXL"
 }
 
 // Compiles the parser to Java
@@ -1275,6 +1309,47 @@ task phpTestbedTest {
     }
 }
 
+task pythonTestbedCompileUmple {
+  group = "Custom"
+  description = "Compiling python testbed source files"
+  doLast{
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_python/src/TestHarnessPython.ump")
+    }
+}
+
+task pythonTestbedCompile {
+    group = "Custom"
+    description = "Compiling python testbed generated files"
+    dependsOn pythonTestbedCompileUmple
+
+}
+
+task pythonTestbedTest {
+    group = "Custom"
+    description = "Running python testbed tests"
+    dependsOn pythonTestbedCompile
+    doLast {
+        println("Running PYTHON tests")
+        new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python").mkdir()
+        def command = "python AllTests.py"
+        
+        def proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_python/test"))
+        def out = new File ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python/index.txt")
+        out.write(proc.text)
+        copy {
+          from ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python")
+          into ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python")
+          include "index.txt"
+          rename ("index.txt", "index.html")
+        }
+        
+        delete "${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python/index.txt"
+
+        println("PYTHON tests completed!\n"+
+        "See results at ${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python/index.html")
+    }
+}
+
 task ('rubyTestbedCompileUmple') {
  group = "Custom"
  description = "Compiling ruby testbed source files"
@@ -1320,6 +1395,7 @@ task testbedTests {
     description = "Running all testbed tests"
     dependsOn javaTestbedTest
     dependsOn phpTestbedTest
+    dependsOn pythonTestbedTest
     dependsOn rubyTestbedTest
 }
 
@@ -1430,15 +1506,9 @@ task pythonUserManualAndExampleTests {
                 "OBDCarSystem.ump", //Temporary
                 "ComplexStateMachine.ump", //Temporary
                 "W010SingletonMultiplicityOver12.ump", //Temporary
-                "2DShapes.ump",
-                "AbstractMethods1.ump",
-                "AbstractMethods2.ump",
                 "AccessControl2.ump",
-                "ActiveObjects1.ump",
-                "AgentsCommunication.ump",
                 "AroundStatement1.ump",
                 "AroundStatement2.ump",
-                "AssociationOneToOne.ump",
                 "Auto-Transitions1.ump",
                 "Ball_Game.ump",
                 "BasicTemplates1.ump",
@@ -1447,59 +1517,28 @@ task pythonUserManualAndExampleTests {
                 "BcmsBaseConfiguration.ump",
                 "BcmsMultipleCrisis-Multiple-Coordinator-Configuration.ump",
                 "CanalLockStateMachine.ump",
-                "ClassDefinition1.ump",
-                "CoOpSystem.ump",
                 "CodeInjectioninCustomMethods1.ump",
                 "CodeInjectioninEventMethods1.ump",
-                "Compositions.ump",
-                "DelegationPattern1.ump",
-                "DigitalWatchFlat.ump",
-                "DigitalWatchNested.ump",
                 "Dishwasher.ump",
                 "Elevator_State_Machine.ump",
-                "Filters-Shape3D-1.ump",
-                "GeometricSystem.ump",
-                "HelloWorldExamples1.ump",
-                "HelloWorld_SPL.ump",
                 "HtmlGeneration.ump",
                 "LibraryLoanStateMachine.ump",
                 "MicrowaveOven2.ump",
-                "MixsetsInMethod.ump",
-                "MultiValuedAttributes1.ump",
-                "Multiplicity2.ump",
-                "Multiplicity3.ump",
                 "Phone.ump",
                 "PingPong.ump",
-                "Pizza.ump",
                 "PooledStateMachines1.ump",
-                "Preconditions1.ump",
                 "QueuedStateMachines1.ump",
-                "RE002MultiplicityException2.ump",
                 "Runway.ump",
                 "SecurityLight.ump",
-                "SimpleConstraints1.ump",
-                "SortedAssociations1.ump",
-                "SortedAssociations2.ump",
                 "StateDependentMethods1.ump",
                 "StateDependentMethods2.ump",
                 "StateMachineActionsandDoActivities1.ump",
                 "TcpIpSimulation.ump",
-                "TelephoneSystem2.ump",
                 "TimedCommands.ump",
                 "TrafficLightsB.ump",
                 "UnspecifiedEvents2.ump",
                 "W082ConflictingModifiers.ump",
-                "W1512CodeLabelsInsideMethodAreNotUnique.ump",
-                "assocSpecEx.ump",
-                "realestate.ump",
-                "traits_example_addresses.ump",
-                "NullExample.ump",
-                "Compositions1.ump",
-                "Compositions1_eq2.ump",
-                "RE001ImmutabilityException1.ump",
-                "Compositions1_eq1.ump",
-                "Compositions_regAssoc.ump",  
-                "Tracers1.ump",
+                "Tracers1.ump", //Tracers are out of scope for Beta Python Generation
                 "Tracers2.ump",
                 "Tracers3.ump",
                 "Tracers4.ump",

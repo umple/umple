@@ -1,5 +1,7 @@
 class Object {
-        void example_obj(Object g){/*implementation*/}
+        void example_obj(Object g){
+                #implementation
+        }
         void example_bool(Boolean b) {}
         void example_int(Integer i) {}
         void example_float(Float f) {}

@@ -1,7 +1,7 @@
-from Student import Student
-
 class Mentor():
     def __init__(self, aName):
+        self._students = None
+        self._name = None
         self._name = aName
         self._students = []
 
@@ -43,37 +43,32 @@ class Mentor():
         return 6
 
     def addStudent(self, aNumber):
-        if self.numberOfStudents() > = self.maximumNumberOfStudents() :
+        from Student import Student
+        if self.numberOfStudents() >= Mentor.maximumNumberOfStudents() :
             return None
-
         else :
             return Student(aNumber, self)
 
     def addStudent(self, aStudent):
         wasAdded = False
-        if aStudent in self._students :
+        if (aStudent) in self._students :
             return False
-
-        if self.numberOfStudents() > = self.maximumNumberOfStudents() :
+        if self.numberOfStudents() >= Mentor.maximumNumberOfStudents() :
             return wasAdded
-
         existingMentor = aStudent.getMentor()
-        isNewMentor = existingMentor != None and not self.equals(existingMentor)
+        isNewMentor = not (existingMentor is None) and not self == existingMentor
         if isNewMentor :
             aStudent.setMentor(self)
-
         else :
             self._students.append(aStudent)
-
         wasAdded = True
         return wasAdded
 
     def removeStudent(self, aStudent):
         wasRemoved = False
-        if not self.equals(aStudent.getMentor()) :
+        if not self == aStudent.getMentor() :
             self._students.remove(aStudent)
             wasRemoved = True
-
         return wasRemoved
 
     def addStudentAt(self, aStudent, index):
@@ -81,32 +76,25 @@ class Mentor():
         if self.addStudent(aStudent) :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfStudents() :
                 index = self.numberOfStudents() - 1
-
             self._students.remove(aStudent)
             self._students.insert(index, aStudent)
             wasAdded = True
-
         return wasAdded
 
     def addOrMoveStudentAt(self, aStudent, index):
         wasAdded = False
-        if aStudent in self._students :
+        if (aStudent) in self._students :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfStudents() :
                 index = self.numberOfStudents() - 1
-
             self._students.remove(aStudent)
             self._students.insert(index, aStudent)
             wasAdded = True
-
         else :
             wasAdded = self.addStudentAt(aStudent, index)
-
         return wasAdded
 
     def delete(self):
@@ -114,8 +102,8 @@ class Mentor():
         while i > 0 :
             aStudent = self._students[i - 1]
             aStudent.delete()
-            i = i - 1
+            i -= 1
 
     def __str__(self):
-        return str(super()) + "[" + "name" + ":" + self.getName() + "]"
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
 

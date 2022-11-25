@@ -113,7 +113,7 @@ class UmpleToJava {
         String customPostconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Postcondition"));
         customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
 
-        String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : "  <TXL UGM>\n\t" + aMethod.getMethodBody().getExtraCode() + "\n\t</TXL UGM>";
+        String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : "<TXL UGM>\n        " + aMethod.getMethodBody().getExtraCode().replace("\n", "\n    ") + "\n    </TXL UGM>";
         String properMethodBody = "    " + methodBody; 
         String override =  aMethod.getIsImplemented() ? "  @Override\n" : "";
         String paramName="";
@@ -165,8 +165,6 @@ class UmpleToJava {
           {
             model.setMainClass(uClass);
           }
-          properMethodBody = "    Thread.currentThread().setUncaughtExceptionHandler(new "+exceptionHandlerPackage+"UmpleExceptionHandler());\n"+
-                             "    Thread.setDefaultUncaughtExceptionHandler(new "+exceptionHandlerPackage+"UmpleExceptionHandler());\n"+properMethodBody;
           uClass.setHasMainMethod(true);
         }
         if (aMethod.numberOfComments() > 0 && aMethod.numberOfRequirements() > 0) { List<Comment> toComment = new ArrayList<Comment>(aMethod.getComments()); toComment.addAll(Requirement.convertToComment(aMethod.getRequirements())); append(realSb, "\n\n  {0}", Comment.format("Method Javadoc", toComment)); }

@@ -55,11 +55,11 @@ class Mentor():
         wasSet = False
         verifiedStudents = []
         for aStudent in newStudents:
-            if aStudent in verifiedStudents :
+            if (aStudent) in verifiedStudents :
                 continue
             verifiedStudents.append(aStudent)
 
-        if len(verifiedStudents) != len(newStudents) or len(verifiedStudents) != self.requiredNumberOfStudents() :
+        if len(verifiedStudents) != len(newStudents) or len(verifiedStudents) != Mentor.requiredNumberOfStudents() :
             return wasSet
         self._students.clear()
         self._students.extend(verifiedStudents)
@@ -70,5 +70,5 @@ class Mentor():
         self._students.clear()
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + str(self.getName()) + "]"
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
 

@@ -35,7 +35,7 @@ class Student():
         return index
 
     def isNumberOfMentorsValid(self):
-        isValid = self.numberOfMentors() >= self.minimumNumberOfMentors() and self.numberOfMentors() <= self.maximumNumberOfMentors()
+        isValid = self.numberOfMentors() >= Student.minimumNumberOfMentors() and self.numberOfMentors() <= Student.maximumNumberOfMentors()
         return isValid
 
     @staticmethod
@@ -48,9 +48,9 @@ class Student():
 
     def addMentor(self, aMentor):
         wasAdded = False
-        if aMentor in self._mentors :
+        if (aMentor) in self._mentors :
             return False
-        if self.numberOfMentors() >= self.maximumNumberOfMentors() :
+        if self.numberOfMentors() >= Student.maximumNumberOfMentors() :
             return wasAdded
         self._mentors.append(aMentor)
         if aMentor.indexOfStudent(self) != -1 :
@@ -63,9 +63,9 @@ class Student():
 
     def removeMentor(self, aMentor):
         wasRemoved = False
-        if not self._mentors.contains(aMentor) :
+        if not (aMentor) in self._mentors :
             return wasRemoved
-        if self.numberOfMentors() <= self.minimumNumberOfMentors() :
+        if self.numberOfMentors() <= Student.minimumNumberOfMentors() :
             return wasRemoved
         oldIndex = self._mentors.index(aMentor)
         self._mentors.remove(oldIndex)
@@ -82,17 +82,17 @@ class Student():
         wasSet = False
         verifiedMentors = []
         for aMentor in newMentors:
-            if aMentor in verifiedMentors :
+            if (aMentor) in verifiedMentors :
                 continue
             verifiedMentors.append(aMentor)
 
-        if len(verifiedMentors) != len(newMentors) or len(verifiedMentors) < self.minimumNumberOfMentors() or len(verifiedMentors) > self.maximumNumberOfMentors() :
+        if len(verifiedMentors) != len(newMentors) or len(verifiedMentors) < Student.minimumNumberOfMentors() or len(verifiedMentors) > Student.maximumNumberOfMentors() :
             return wasSet
         oldMentors = self._mentors.copy()
         self._mentors.clear()
         for aNewMentor in verifiedMentors:
             self._mentors.append(aNewMentor)
-            if aNewMentor in oldMentors :
+            if (aNewMentor) in oldMentors :
                 oldMentors.remove(aNewMentor)
             else :
                 aNewMentor.addStudent(self)
@@ -117,7 +117,7 @@ class Student():
 
     def addOrMoveMentorAt(self, aMentor, index):
         wasAdded = False
-        if aMentor in self._mentors :
+        if (aMentor) in self._mentors :
             if index < 0 :
                 index = 0
             if index > self.numberOfMentors() :
@@ -140,5 +140,5 @@ class Student():
                 aMentor.removeStudent(self)
 
     def __str__(self):
-        return super().__str__() + "[" + "number" + ":" + str(self.getNumber()) + "]"
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]"
 

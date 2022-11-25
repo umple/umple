@@ -26,7 +26,7 @@ class MySubordinate():
         if aNewMyDriver is None :
             return wasSet
         existingMySubordinate = aNewMyDriver.getMySubordinate()
-        if not (existingMySubordinate is None) and not self.__eq__(existingMySubordinate) :
+        if not (existingMySubordinate is None) and not self == existingMySubordinate :
             return wasSet
         anOldMyDriver = self._myDriver
         self._myDriver = aNewMyDriver
@@ -43,5 +43,5 @@ class MySubordinate():
             existingMyDriver.setMySubordinate(None)
 
     def __str__(self):
-        return super().__str__() + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "myDriver = " + str(((format(id(self.getMyDriver()), "x")) if not (self.getMyDriver() is None) else "null"))
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "myDriver = " + ((format(id(self.getMyDriver()), "x")) if not (self.getMyDriver() is None) else "null")
 

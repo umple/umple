@@ -1,4 +1,4 @@
-function createImports classBody [class_body_decl] inheritances [repeat inheritance_list]
+function createImports classBody [class_body_decl] inheritances [repeat inheritance_list] translatedBody [class_body_decl]
     replace [repeat import_statement]
         empty [repeat import_statement]
     construct declarations [repeat member_variable_declaration]
@@ -6,7 +6,7 @@ function createImports classBody [class_body_decl] inheritances [repeat inherita
     construct inheritanceImports [repeat id]
         _ [extractInheritanceImportClasses classBody each inheritances]
     construct allImports [repeat import_statement]
-        _ [addImportStatement each inheritanceImports] [addExternalImports classBody]
+        _ [addImportStatement each inheritanceImports] [addExternalImports translatedBody]
     by
         allImports
 end function 
@@ -24,9 +24,7 @@ function extractPossibleFunctionImports classBody [class_body_decl] declaration 
     replace [repeat id]
         empty [repeat id]
     deconstruct declaration
-        _[opt acess_modifier] _[opt static] _[opt volatile] varDec [variable_declaration]
-    deconstruct varDec
-        class [nested_identifier] _ [id]';
+        _[opt acess_modifier] _[opt static] _[opt final] _[opt volatile] class [nested_identifier] _[id] _[opt member_variable_assignment] ';
     construct classesToImport [repeat id]
         _ [extractListClass classBody class] [extractRegularClass classBody class]
     by 
@@ -174,65 +172,6 @@ function addToList anys [id]
         aRep [, anys]
 end function
 
-function addListMemberVariable MemberVariable [member_variable_declaration]
-    replace [repeat id]
-        SequenceSoFar [repeat id]
-    deconstruct MemberVariable
-        _[opt acess_modifier] decl [variable_declaration]
-    deconstruct decl
-        'List '< _ [list id] '> memberName [id]';
-    by
-        SequenceSoFar [. memberName]
-end function
-
-function replaceAllMemberVariableNames memberVariables [repeat id]
-    replace [any]
-        any [any]
-    by 
-        any 
-            [replaceMemberVariableNames memberVariables] 
-            [replaceMemberVariableNamesWithThis memberVariables]
-            [replaceMemberVariableNamesBrackets memberVariables]
-end function
-
-rule replaceMemberVariableNames memberVariables [repeat id]
-    replace [nested_identifier]
-         name [id] rep [repeat attribute_access]
-    where 
-        memberVariables [containsId name]
-    construct underscore [id]
-        '_
-    construct newName [id]
-        underscore [+ name] 
-    by
-        'self '. newName rep
-end rule
-
-rule replaceMemberVariableNamesWithThis memberVariables [repeat id]
-    replace [nested_identifier]
-        'this '. name [id] rep [repeat attribute_access]
-    where 
-        memberVariables [containsId name]
-    construct underscore [id]
-        '_
-    by
-        'self '. underscore [+ name] rep
-end rule
-
-rule replaceMemberVariableNamesBrackets memberVariables [repeat id]
-    replace [nested_identifier]
-         name [id] '[ val [value] ']  rep [repeat attribute_access]
-    where 
-        memberVariables [containsId name]
-    construct underscore [id]
-        '_
-    construct newName [id]
-        underscore [+ name]
-    by
-        'self '. newName '[ val ']  rep
-end rule
-
-
 rule containsId Object [id]
     match [id]
         Object
@@ -247,13 +186,14 @@ end rule
 %  External imports  %
 %--------------------%
 
-function addExternalImports body [class_body_decl]
+function addExternalImports translatedBody [class_body_decl]
     replace [repeat import_statement]
         imports [repeat import_statement]
     by
-        imports [addOSImportIfNeeded body]
-        [addEnumImportIfNeeded body]
+        imports [addOSImportIfNeeded translatedBody]
+        [addEnumImportIfNeeded translatedBody]
         [addPickleImportIfNeeded]
+        [addSysImportIfNeeded translatedBody]
 end function
 
 
@@ -270,7 +210,7 @@ end function
 
 function shouldOsImport
     match * [nested_identifier]
-        'System.getProperties().getProperty("line.separator")
+        'os.linesep
 end function
 
 function addEnumImportIfNeeded body [class_body_decl]
@@ -304,4 +244,16 @@ end function
 function shouldImportPickle
     match * [import_statement]
         'import 'java.io.Serializable;
+end function
+
+
+function addSysImportIfNeeded body [class_body_decl]
+    replace [repeat import_statement]
+        imports [repeat import_statement]
+    where
+        body [matchMainMethod]
+    construct newImport [import_statement]
+        'import 'sys
+    by 
+        imports [. newImport]
 end function

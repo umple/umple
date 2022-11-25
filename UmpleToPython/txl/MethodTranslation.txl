@@ -10,6 +10,7 @@ function replaceAllMethods memberVariables [repeat id]
             [replaceConstructor memberVariables]
             [fixMultipleConstructors]
             [removeOverrideDecorator]
+            [removeSurpressWarningDecorator]
             [replaceToString]
             [replaceAbstractMethod]
             [replaceUserMethod]
@@ -20,6 +21,13 @@ end function
 rule removeOverrideDecorator
     replace [opt decorator]
         '@Override
+    by 
+        _
+end rule
+
+rule removeSurpressWarningDecorator
+    replace [opt decorator]
+        '@SuppressWarnings( _ [list base_value] ')
     by 
         _
 end rule
@@ -52,7 +60,7 @@ end function
 
 rule replaceAbstractMethod
     replace [abstract_method_declaration]
-        _[acess_modifier] _[nested_identifier] methodName [id] '( params [list method_parameter] ');
+        _[acess_modifier] _ [opt 'abstract] _[nested_identifier] methodName [id] '( params [list method_parameter] ');
     construct empty [opt static]
         _
     construct newParams [list method_parameter]
@@ -63,7 +71,7 @@ end rule
 
 rule replaceUserMethod
     replace [concrete_method_declaration]
-        _[acess_modifier] possibleStatic [opt static] _[nested_identifier] methodName [id]'( params [list method_parameter] ') _ [opt throws] '{ content [usercode] '}
+        _[acess_modifier] possibleStatic [opt static] _[nested_identifier] methodName [id]'( params [list method_parameter] ') _ [opt throws] '{ _ [repeat statement] content [usercode] _[repeat statement] '}
     construct newParams [list method_parameter]
         _ [getPythonParams params possibleStatic]
     construct possibleStaticDecorator [repeat decorator]
@@ -99,28 +107,22 @@ rule replaceToString
     replace [method_declaration]
         _[acess_modifier] _[nested_identifier]  'toString '() _ [opt throws] '{ statements [repeat statement] '}
     by
-        'def '__str__ '(self):  statements [replaceStatements] [targetToStringArithmatic]
+        'def '__str__ '(self):  statements [replaceStatements] [addStrIfNeeded]
 end rule
 
-rule targetToStringArithmatic
-    replace $ [arithmatic_expression]
-        root [value_no_recursion] rep [repeat arithmatic_continuation+]
-    by
-        root rep [addStrIfNeeded]
-end rule
 
 rule addStrIfNeeded
-    skipping [arithmatic_expression]
-    replace $ [arithmatic_continuation]
-        '+ val [value_no_recursion]
+    skipping [parentheses_value]
+    replace $ [value]
+        baseVal [base_value] cont [value_continuation]
     where not
-        val [isString]
+        baseVal [isString]
     by
-        '+ 'str( val ')
+        'str( baseVal ') cont
 end rule
 
 function isString
-    match [value_no_recursion]
+    match [base_value]
         _ [stringlit]
 end function
 
@@ -274,19 +276,31 @@ function manageSpecialTypes params [list method_parameter]
         _ [extractArrayNameFromMethodParam each params]
     construct varArgRepeat [repeat id]
         _ [reparse possibleVarArgName]
-    construct allDeclarations [repeat variable_declaration]
-        _ [^ stmts]
+    construct allDeclerations [repeat statement]
+        _ [extractDeclarationFromStatement each stmts]
     construct statementLists [repeat id]
-        _ [extractListNameFromVariableDeclaration each allDeclarations]
+        _ [extractListNameFromVariableDeclaration each allDeclerations]
     construct allLists [repeat id]
         _ [. listMemberVariables] [. paramLists] [. paramArrays] [. varArgRepeat] [. statementLists]
+    import dictMemberVariables [repeat id]
+    construct allHashMaps [repeat id]
+        _ [extractHashMapNameFromVariableDeclaration each allDeclerations] [. dictMemberVariables]
     by
         stmts
             [changeVarArgTypeToList possibleVarArgName]
             [addAsterixToVarArgInSuperInit possibleVarArgName]
-            [replaceAllLists allLists]
+            [replaceAllSpecialTypes allLists allHashMaps]
             [addAsterixToInternalFuncCalls allLists]
 
+end function
+
+function extractDeclarationFromStatement stmt [statement]
+    replace [repeat statement]
+        result [repeat statement]
+    deconstruct stmt
+        _ [value] _ [value] ';
+    by
+        result [. stmt]
 end function
 
 rule addAsterixToInternalFuncCalls allIterables [repeat id]
@@ -332,11 +346,20 @@ rule doesMethodHaveVarArg seeking [id]
         varArgsLength [= 1]
 end rule
 
-function extractListNameFromVariableDeclaration decl [variable_declaration]
+function extractListNameFromVariableDeclaration decl [statement]
     replace [repeat id]
         results [repeat id]
     deconstruct decl
-        'ArrayList< _ [id] '> listName [id] '= _ [value] ';
+        'ArrayList '< _ [id] '> listName [id] _ [opt value_continuation] ';
+    by 
+        results [. listName]
+end function
+
+function extractHashMapNameFromVariableDeclaration decl [statement]
+    replace [repeat id]
+        results [repeat id]
+    deconstruct decl
+        'HashMap< _ [id] ', _ [id] '> listName [id] _ [opt value_continuation] ';
     by 
         results [. listName]
 end function
@@ -370,7 +393,7 @@ function extractArrayNameFromMethodParam param [method_parameter]
 end function
 
 rule addAsterixToVarArgInSuperInit possibleVarArgName [opt id]
-    replace $ [function_call]
+    replace $ [nested_identifier]
         'super( vals [list value] ')
     deconstruct possibleVarArgName
         varArgName [id]
@@ -417,7 +440,9 @@ function extractVarArgName params [list method_parameter]
         varArgName
 end function
 
-% Multiple constructors
+%-----------------------%
+% Multiple constructors %
+%-----------------------%
 function fixMultipleConstructors 
     replace [repeat class_body_element]
         rep [repeat class_body_element]
@@ -482,7 +507,7 @@ end rule
 
 rule containConstructorWithSelfParam
     match [nested_identifier]
-        instantiatedClass [callable] '( params [list value]')
+        instantiatedClass [id] '( params [list value]')
     deconstruct instantiatedClass
         instantiatedClassGeneric [any]
     construct optInstantiatedClassName [opt id]
@@ -516,8 +541,8 @@ end function
 function extractIdFromGenericClass class [any]
     replace [opt id]
         result [opt id]
-    deconstruct * [generic_class] class
-        genericClass [generic_class]
+    deconstruct * [nested_identifier] class
+        genericClass [nested_identifier]
     deconstruct genericClass
         className[id] '< _[list id] '>
     by
@@ -541,3 +566,91 @@ rule containsSelfValue
         'self
 end rule
 
+%-----------------------%
+%   Overloaded methods  %
+%-----------------------%
+
+function extractPythonType javaParam [method_parameter]
+    replace [list base_value]
+        result [list base_value]
+    deconstruct javaParam
+        type [nested_identifier] _ [id]
+    construct typeBase [base_value]
+        type
+    construct adding [base_value]
+        typeBase 
+            [translateStringType]
+            [translateArrayListType]
+            [translateArrayType]
+            [translateBooleanType]
+            [translateDoubleType]
+    by
+        result [, adding]
+            
+end function
+
+function translateStringType
+    replace [base_value]
+        'String
+    by
+        'str
+end function
+
+function translateArrayListType
+    replace [base_value]
+        'ArrayList< _[list id] '>
+    by
+        'list
+end function
+
+function translateArrayType
+    replace [base_value]
+        nested [nested_identifier]
+    construct nestables [repeat nestable_value]
+        _ [^ nested]
+    construct zero [number]
+        '0
+    construct length [number]
+        zero [length nestables]
+    construct lastNestable [repeat nestable_value]
+        nestables [tail length]
+    deconstruct lastNestable
+        _ [id] '[ ']
+    by
+        'list
+end function
+
+function translateBooleanType
+    replace [base_value]
+        'boolean
+    by  
+        'bool
+end function
+
+function translateDoubleType
+    replace [base_value]
+        'double
+    by  
+        'float
+end function
+
+function isMethodOverloaded
+    match [id]
+        methodName [id]
+    import classMethodNames [repeat id]
+    construct zero [number]
+        '0
+    construct count [number]
+        zero [incrementIfMatch methodName each classMethodNames]
+    where 
+        count [> 1]
+end function
+
+function incrementIfMatch id1[id] id2[id] 
+    replace [number]
+        result [number]
+    where
+        id1 [= id2]
+    by
+        result [+ 1]
+end function

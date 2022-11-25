@@ -3,9 +3,8 @@
 %---------------------%
 
 function replaceAllBoolean
-    replace [repeat statement]
-        statements [repeat statement]
-
+    replace [any]
+        statements [any]
     by
         statements
             [replaceNullCheck]
@@ -19,26 +18,24 @@ function replaceAllBoolean
 end function
 
 rule replaceNullCheck
-    replace [condition]
-        elem [value_no_recursion] '== 'null
+    replace [value]
+        base [base_value] '== 'null cont [opt value_continuation]
     by 
-        elem 'is 'None
+        base 'is 'None cont
 end rule
 
 rule replaceNotNullCheck
-    replace [condition]
-        cond [condition]
-    deconstruct cond
-        elem [value_no_recursion] '!= 'null
+    replace [value]
+        base [base_value] '!= 'null cont [opt value_continuation]
     by 
-        'not '( elem 'is 'None ')
+        'not '( base 'is 'None ') cont
 end rule
 
 rule replaceBoolNegation
-    replace [value_no_recursion]
-        '! expr [boolean_expression]
+    replace [base_value]
+        '! val [value]
     by 
-        'not expr
+        'not val
 end rule
 
 rule replaceBoolAnd
@@ -56,14 +53,14 @@ rule replaceBoolOr
 end rule
 
 rule replaceTrue
-    replace [value]
+    replace [base_value]
         'true
     by 
         'True
 end rule
 
 rule replaceFalse
-    replace [value]
+    replace [base_value]
         'false
     by 
         'False
@@ -71,7 +68,7 @@ end rule
 
 rule replaceClassMatchCheck
     replace [value]
-        'getClass().equals( id2 [id] '.getClass())
+        'getClass().equals( id2 [id] '.getClass() ')
     by  
         'type(self) 'is 'type( id2 ')
 end rule

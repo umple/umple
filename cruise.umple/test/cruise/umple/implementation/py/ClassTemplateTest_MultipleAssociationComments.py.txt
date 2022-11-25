@@ -99,10 +99,10 @@ class Foo():
 
     def addBar1(self, aBar1):
         wasAdded = False
-        if aBar1 in self._bar1s :
+        if (aBar1) in self._bar1s :
             return False
         existingFoo = aBar1.getFoo()
-        isNewFoo = not (existingFoo is None) and not self.__eq__(existingFoo)
+        isNewFoo = not (existingFoo is None) and not self == existingFoo
         if isNewFoo :
             aBar1.setFoo(self)
         else :
@@ -112,7 +112,7 @@ class Foo():
 
     def removeBar1(self, aBar1):
         wasRemoved = False
-        if not self.__eq__(aBar1.getFoo()) :
+        if not self == aBar1.getFoo() :
             self._bar1s.remove(aBar1)
             wasRemoved = True
         return wasRemoved
@@ -131,7 +131,7 @@ class Foo():
 
     def addOrMoveBar1At(self, aBar1, index):
         wasAdded = False
-        if aBar1 in self._bar1s :
+        if (aBar1) in self._bar1s :
             if index < 0 :
                 index = 0
             if index > self.numberOfBar1s() :
@@ -153,10 +153,10 @@ class Foo():
 
     def addBar2(self, aBar2):
         wasAdded = False
-        if aBar2 in self._bar2s :
+        if (aBar2) in self._bar2s :
             return False
         existingFoo = aBar2.getFoo()
-        isNewFoo = not (existingFoo is None) and not self.__eq__(existingFoo)
+        isNewFoo = not (existingFoo is None) and not self == existingFoo
         if isNewFoo :
             aBar2.setFoo(self)
         else :
@@ -166,7 +166,7 @@ class Foo():
 
     def removeBar2(self, aBar2):
         wasRemoved = False
-        if not self.__eq__(aBar2.getFoo()) :
+        if not self == aBar2.getFoo() :
             self._bar2s.remove(aBar2)
             wasRemoved = True
         return wasRemoved
@@ -185,7 +185,7 @@ class Foo():
 
     def addOrMoveBar2At(self, aBar2, index):
         wasAdded = False
-        if aBar2 in self._bar2s :
+        if (aBar2) in self._bar2s :
             if index < 0 :
                 index = 0
             if index > self.numberOfBar2s() :
@@ -207,10 +207,10 @@ class Foo():
 
     def addBar3(self, aBar3):
         wasAdded = False
-        if aBar3 in self._bar3s :
+        if (aBar3) in self._bar3s :
             return False
         existingFoo = aBar3.getFoo()
-        isNewFoo = not (existingFoo is None) and not self.__eq__(existingFoo)
+        isNewFoo = not (existingFoo is None) and not self == existingFoo
         if isNewFoo :
             aBar3.setFoo(self)
         else :
@@ -220,7 +220,7 @@ class Foo():
 
     def removeBar3(self, aBar3):
         wasRemoved = False
-        if not self.__eq__(aBar3.getFoo()) :
+        if not self == aBar3.getFoo() :
             self._bar3s.remove(aBar3)
             wasRemoved = True
         return wasRemoved
@@ -239,7 +239,7 @@ class Foo():
 
     def addOrMoveBar3At(self, aBar3, index):
         wasAdded = False
-        if aBar3 in self._bar3s :
+        if (aBar3) in self._bar3s :
             if index < 0 :
                 index = 0
             if index > self.numberOfBar3s() :
@@ -261,10 +261,10 @@ class Foo():
 
     def addBar4(self, aBar4):
         wasAdded = False
-        if aBar4 in self._bar4s :
+        if (aBar4) in self._bar4s :
             return False
         existingFoo = aBar4.getFoo()
-        isNewFoo = not (existingFoo is None) and not self.__eq__(existingFoo)
+        isNewFoo = not (existingFoo is None) and not self == existingFoo
         if isNewFoo :
             aBar4.setFoo(self)
         else :
@@ -274,7 +274,7 @@ class Foo():
 
     def removeBar4(self, aBar4):
         wasRemoved = False
-        if not self.__eq__(aBar4.getFoo()) :
+        if not self == aBar4.getFoo() :
             self._bar4s.remove(aBar4)
             wasRemoved = True
         return wasRemoved
@@ -293,7 +293,7 @@ class Foo():
 
     def addOrMoveBar4At(self, aBar4, index):
         wasAdded = False
-        if aBar4 in self._bar4s :
+        if (aBar4) in self._bar4s :
             if index < 0 :
                 index = 0
             if index > self.numberOfBar4s() :
@@ -310,23 +310,23 @@ class Foo():
         while i > 0 :
             aBar1 = self._bar1s[i - 1]
             aBar1.delete()
-            i --
+            i -= 1
 
         i = len(self._bar2s)
         while i > 0 :
             aBar2 = self._bar2s[i - 1]
             aBar2.delete()
-            i --
+            i -= 1
 
         i = len(self._bar3s)
         while i > 0 :
             aBar3 = self._bar3s[i - 1]
             aBar3.delete()
-            i --
+            i -= 1
 
         i = len(self._bar4s)
         while i > 0 :
             aBar4 = self._bar4s[i - 1]
             aBar4.delete()
-            i --
+            i -= 1
 

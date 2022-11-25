@@ -27,7 +27,7 @@ class Student():
             return wasSet
         existingMentor = self._mentor
         self._mentor = aMentor
-        if not (existingMentor is None) and not existingMentor.__eq__(aMentor) :
+        if not (existingMentor is None) and not existingMentor == aMentor :
             existingMentor.removeStudent(self)
         self._mentor.addStudent(self)
         wasSet = True
@@ -40,5 +40,5 @@ class Student():
             placeholderMentor.removeStudent(self)
 
     def __str__(self):
-        return super().__str__() + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "mentor = " + str(((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null"))
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "mentor = " + ((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null")
 

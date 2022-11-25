@@ -50,11 +50,11 @@ class Student():
         self._canSetMentors = False
         verifiedMentors = []
         for aMentor in newMentors:
-            if aMentor in verifiedMentors :
+            if (aMentor) in verifiedMentors :
                 continue
             verifiedMentors.append(aMentor)
 
-        if len(verifiedMentors) != len(newMentors) or len(verifiedMentors) < self.minimumNumberOfMentors() or len(verifiedMentors) > self.maximumNumberOfMentors() :
+        if len(verifiedMentors) != len(newMentors) or len(verifiedMentors) < Student.minimumNumberOfMentors() or len(verifiedMentors) > Student.maximumNumberOfMentors() :
             return wasSet
         self._mentors.clear()
         self._mentors.extend(verifiedMentors)
@@ -65,5 +65,5 @@ class Student():
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "number" + ":" + str(self.getNumber()) + "]"
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]"
 

@@ -26,19 +26,4 @@ public class PythonEqualsTest extends EqualsTest
   {
     assertUmpleTemplateFor("indexOf_Key.ump",languagePath + "/indexOf_Key."+ languagePath +".txt","Student");
   }
-
-  @Test @Ignore
-  public void Attributes(){
-    super.Attributes();
-  }
-
-  @Test @Ignore
-  public void AlreadyImmutable(){
-    super.AlreadyImmutable();
-  }
-
-  @Test @Ignore
-  public void Associations(){
-    super.Associations();
-  }
 }

@@ -4,7 +4,7 @@ comments
 end comments
 
 compounds 
-    'self. '== '!= '>= '<= '+= '-= '-- '++
+    '== '!= '>= '<= '+= '-= '-- '++
 end compounds 
 
 tokens
@@ -17,7 +17,7 @@ end tokens
 %--------------------%
 
 keys
- return new if else for true false while this True False + - * / ? ; : pass not and or
+ return new if else for true false while this True False + - * / ? ; : pass not and or throw
 end keys
 
 define acess_modifier
@@ -68,22 +68,6 @@ define imported
     |   [id]'. [imported]
 end define
 
-define generic_class
-    [id] [!]'< [list id] '>
-end define
-
-define array_access
-    [id] [SPOFF] '[ [list value] '] [SPON]
-end define
-
-define arithmatic_expression
-    [value_no_recursion] [repeat arithmatic_continuation+]
-end define
-
-define arithmatic_continuation
-    [arithmatic_operator] [value_no_recursion]
-end define 
-
 define nested_identifier
      [nestable_value] [SPOFF] [repeat attribute_access] [SPON]
 end define
@@ -93,80 +77,95 @@ define attribute_access
 end define
 
 define nestable_value 
-        [function_call]
-    |    [id]
+        [id] [SPOFF] [repeat nestable_extension] [SPON]
     |   'this
     |   'super
-    |   [generic_class]
-    |   [stringlit]
-    |   [array_access]
+    |   [parentheses_value]
 end define
 
-define value_no_recursion 
-        [new_call]
-    |   '( [value]')
-    |   [nested_identifier]
-    |   [number]
-    |   [stringlit]
-    |   'null
+define nestable_extension
+        [func_call_parentheses]
+    |   '< [SPON] [list id] '> [SPOFF]
+    |   '< [SPON] '? 'extends [id] '> [SPOFF]
+    |   '[ [SPON] [list value] '] [SPOFF]
+end define 
+
+define func_call_parentheses
+    '( [SPON] [list value] ') [SPOFF]
+end define
+
+define parentheses_value
+    '( [value]')
+end define 
+define base_value
+       'null
     |   'true
     |   'false
     |   [casting]
-    |   '! [boolean_expression]
-    |   [method_reference]
-end define
+    |   [number] [opt 'f]
+    |   [stringlit]
+    |   [charlit]
+    |   [nested_identifier]
+    |   '-- [nested_identifier]
+    |   '++ [nested_identifier]
+    |   [parentheses_value]
+    |   [new_call]
+    |  '! [value]
 
-define method_reference
-    [nested_identifier] [!] ':: [id]
 end define
 
 define value
-       [value_no_ternary]
-    |   [ternary]
+        [base_value] [opt value_continuation]
 end define
 
-define value_no_ternary
-        [value_no_recursion]
-    |   [boolean_expression]
-    |   [arithmatic_expression]
-    |   [assignment]
+define value_continuation
+        [boolean_operator] [value]
+    |   [arithmatic_operator] [value]
+    |   [comparator] [value]
+    |   [method_reference_terminal]
+    |   [ternary_terminal]
+    |   '++ [opt value_continuation]
+    |   '-- [opt value_continuation]
+    |   [value_continuation_assignment]
 end define
+
+define value_continuation_assignment
+    '=  [value]
+    |   '+=  [value]
+    |   '-=  [value]
+end define
+
+define ternary_terminal
+    '? [value] ': [value] %should be base_value?
+end define
+
+define method_reference_terminal
+    ':: [id]
+end define 
 
 define new_call
     'new [nested_identifier]
 end define
 
-define variable_declaration
-        [nested_identifier] [assignment]'; [NL]
-    |   [nested_identifier] [nested_identifier]';
-end define
-
-define assignment
-        [nested_identifier] [!] '=  [value]
-    |   [nested_identifier] [!] '++
-    |   [nested_identifier] [!] '--
-    |   '++ [nested_identifier]
-    |   '-- [nested_identifier]
-    |   [nested_identifier] [!] '+= [value]
-    |   [nested_identifier] [!] '-= [value]
-end define
-
 
 define stmt_return
-        'return [value] '; [NL]
+        'return [opt value] '; [NL]
 end define
 
 define statement
-        [variable_declaration]
-    |   [stmt_return]
+        [stmt_return]
     |   [conditional_block]
     |   [for_loop]
     |   [for_in_loop]
     |   [while_loop]
-    |   [nested_identifier] [!]'; [NL]
-    |   [assignment] '; [NL]
+    |   [double_value] [opt ';] [NL]
     |   [throw_statement]
     |   [switch_case]
+    |   [try_catch]
+end define
+
+define double_value
+    [value] [opt value]
 end define
 
 define while_loop
@@ -174,15 +173,15 @@ define while_loop
 end define
 
 define ternary
-    [boolean_expression] [!] '? [value] ': [value]
+    [value]  '? [!] [value] ': [value]
 end define
 
 define for_loop
-    'for( [variable_declaration] [value]'; [assignment]') '{ [NL] [IN] [repeat statement] [EX] '} [NL]
+    'for( [double_value]'; [value]'; [value]') '{ [NL] [IN] [repeat statement] [EX] '} [NL]
 end define
 
 define for_in_loop
-    'for( [nested_identifier] [id] ': [value]')'{ [NL] [IN] [repeat statement] [EX] '} [NL]
+    'for( [double_value] ': [value]')'{ [NL] [IN] [repeat statement] [EX] '} [NL]
 end define
 
 define switch_case
@@ -201,6 +200,10 @@ define conditional_block
     [if] [repeat else_if] [opt else]
 end define
 
+define try_catch 
+    'try '{  [repeat statement]  '} 'catch '( [method_parameter] ') '{ [repeat statement] '}
+end define
+
 define if 
     'if '( [value] ') '{  [repeat statement]  '}
     | 'if '( [value] ') [statement]
@@ -215,33 +218,11 @@ define else
 end define
 
 define throw_statement
-    'throw 'new [id] '( [stringlit] ');
+    'throw 'new [id] '( [list value] ');
 end define
 
 define casting
     '( [nested_identifier]') [value]
-end define
-
-define callable
-    [id]
-    | [generic_class]
-end define
-
-define function_call
-        [callable] [!] [SPOFF]'( [SPON] [list value] ')
-end define
-
-define boolean_expression
-        [condition] [repeat boolean_continuation]
-end define
-
-define boolean_continuation
-        [boolean_operator] [!] [condition]
-end define
-
-define condition
-        [value_no_recursion] [comparator] [value_no_ternary]
-    |   [value_no_recursion]
 end define
 
 define method_parameter
@@ -250,7 +231,8 @@ define method_parameter
 end define
 
 define decorator
-    '@ [SPOFF] [id] [SPON] [NL]
+        '@ [SPOFF] [id] '( [SPON] [list base_value][SPOFF] ') [SPON] [NL]
+    |   '@ [SPOFF] [id] [SPON] [NL]
 end define
 
 define throws
@@ -267,7 +249,7 @@ end define
 
 define method_content
         [repeat statement]
-    |   [usercode]
+    |   [repeat statement] [usercode] [repeat statement]
 end define
 
 define method_declaration
@@ -276,7 +258,7 @@ define method_declaration
 end define
 
 define abstract_method_declaration
-    [acess_modifier] [nested_identifier] [id] '( [list method_parameter] '); [NL]
+    [acess_modifier] [opt 'abstract] [nested_identifier] [id] '( [list method_parameter] '); [NL]
 end define
 
 define inheritance_statement
@@ -295,7 +277,7 @@ define class_declaration
 end define
 
 define concrete_class_declaration
-    [acess_modifier] 'class [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
+    [opt acess_modifier] [opt 'abstract] 'class [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
 end define
 
 define inheritance_list
@@ -303,13 +285,8 @@ define inheritance_list
 end define
 
 define interface_declaration
-        [acess_modifier] 'interface [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
-end define
-
-define class_type
-        'class
-    |   'interface
-end define
+    [opt acess_modifier] 'interface [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
+end define  
 
 define static
     'static
@@ -332,7 +309,15 @@ define enum_declaration
 end define
 
 define member_variable_declaration
-    [opt acess_modifier] [opt transient] [opt static] [opt volatile] [variable_declaration]
+    [opt acess_modifier] [opt transient] [opt static] [opt final] [opt volatile] [nested_identifier] [id] [opt member_variable_assignment]';
+end define
+
+define final
+    'final
+end define
+
+define member_variable_assignment
+    '= [value]
 end define
 
 define class_body_decl

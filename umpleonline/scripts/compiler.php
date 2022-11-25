@@ -331,7 +331,7 @@ else if (isset($_REQUEST["umpleCode"]))
 
   if ($language == "Python")
   {
-    echo "toString() methods have been removed due to an issue with their generation.\n";
+    echo "Generated Python is currently in beta. For more information please <a href='https://github.com/umple/umple/wiki/Python-Generation-Limitation'>click here</a>.<br>";
   }
 
   if (!$uigu)

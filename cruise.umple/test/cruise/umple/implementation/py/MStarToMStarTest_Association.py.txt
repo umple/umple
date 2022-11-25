@@ -35,7 +35,7 @@ class Mentor():
         return index
 
     def isNumberOfStudentsValid(self):
-        isValid = self.numberOfStudents() >= self.minimumNumberOfStudents()
+        isValid = self.numberOfStudents() >= Mentor.minimumNumberOfStudents()
         return isValid
 
     @staticmethod
@@ -44,7 +44,7 @@ class Mentor():
 
     def addStudent(self, aStudent):
         wasAdded = False
-        if aStudent in self._students :
+        if (aStudent) in self._students :
             return False
         self._students.append(aStudent)
         if aStudent.indexOfMentor(self) != -1 :
@@ -57,9 +57,9 @@ class Mentor():
 
     def removeStudent(self, aStudent):
         wasRemoved = False
-        if not self._students.contains(aStudent) :
+        if not (aStudent) in self._students :
             return wasRemoved
-        if self.numberOfStudents() <= self.minimumNumberOfStudents() :
+        if self.numberOfStudents() <= Mentor.minimumNumberOfStudents() :
             return wasRemoved
         oldIndex = self._students.index(aStudent)
         self._students.remove(oldIndex)
@@ -76,17 +76,17 @@ class Mentor():
         wasSet = False
         verifiedStudents = []
         for aStudent in newStudents:
-            if aStudent in verifiedStudents :
+            if (aStudent) in verifiedStudents :
                 continue
             verifiedStudents.append(aStudent)
 
-        if len(verifiedStudents) != len(newStudents) or len(verifiedStudents) < self.minimumNumberOfStudents() :
+        if len(verifiedStudents) != len(newStudents) or len(verifiedStudents) < Mentor.minimumNumberOfStudents() :
             return wasSet
         oldStudents = self._students.copy()
         self._students.clear()
         for aNewStudent in verifiedStudents:
             self._students.append(aNewStudent)
-            if aNewStudent in oldStudents :
+            if (aNewStudent) in oldStudents :
                 oldStudents.remove(aNewStudent)
             else :
                 aNewStudent.addMentor(self)
@@ -111,7 +111,7 @@ class Mentor():
 
     def addOrMoveStudentAt(self, aStudent, index):
         wasAdded = False
-        if aStudent in self._students :
+        if (aStudent) in self._students :
             if index < 0 :
                 index = 0
             if index > self.numberOfStudents() :
@@ -134,5 +134,5 @@ class Mentor():
                 aStudent.removeMentor(self)
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + str(self.getName()) + "]"
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
 
