@@ -1,1 +1,2 @@
-﻿Uninstall-BinFile -Name 'umple'
+﻿$ErrorActionPreference = 'Stop'
+Uninstall-BinFile -Name 'umple'

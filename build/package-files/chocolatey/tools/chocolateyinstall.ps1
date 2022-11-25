@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 
 $fileName  = 'umple-win.zip'
 $toolsPath = Split-Path $MyInvocation.MyCommand.Definition
