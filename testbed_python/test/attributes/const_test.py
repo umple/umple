@@ -4,13 +4,14 @@ import unittest
 # Must be generated into ImportModules' namespace then imported
 from ImportModules import importModules
 
-importModules(["ConstDefault", "ConstDefaultInterfaceObject"], ["associations", "test"])
+# Temporarily commented: until Date/Time is implemented
+# importModules(["ConstDefault", "ConstDefaultInterfaceObject"], ["associations", "test"])
 from ImportModules import *
 import datetime
 
 
 class ConstTest(unittest.TestCase):
-    @unittest.skip("Static variables of ConstDefault are incorrect")
+    @unittest.skip("Date/Time needs to be implemented")
     def test_constant(self):
         cd = ConstDefault.ConstDefault()
         currentDate = datetime.datetime.now()
@@ -27,7 +28,7 @@ class ConstTest(unittest.TestCase):
         self.assertEqual(datetime.strptime("00:00:00", "%H:%M:%S"), cd.TIME)
         self.assertEqual(str(currentDate), str(cd.DATE))
 
-    @unittest.skip("Static variables of ConstDefault are incorrect")
+    @unittest.skip("Date/Time needs to be implemented")
     def test_constantInterface(self):
         cd = ConstDefaultInterfaceObject.ConstDefaultInterfaceObject()
 
