@@ -166,41 +166,50 @@
       <!-- The following is temporarily excluded because of an odd Java error only on the server not Mac -->
       <exclude name="W010SingletonMultiplicityOver12.ump"/>
 
-      <!-- The following is temporarily excluded because they currently contain bugs  -->
+      <!-- Contains the Java specific TimerTask class -->
       <exclude name="AccessControl2.ump"/>
-      <exclude name="AroundStatement1.ump"/>
-      <exclude name="AroundStatement2.ump"/>
+      <exclude name="CanalLockStateMachine.ump"/>
+      <exclude name="Dishwasher.ump"/>
+      <exclude name="Elevator_State_Machine.ump"/>
+      <exclude name="LibraryLoanStateMachine.ump"/>
+      <exclude name="TimedCommands.ump"/>
+      <exclude name="TrafficLightsB.ump"/>
+
+
+      <!-- Contains the Java specific Thread class  -->
       <exclude name="Auto-Transitions1.ump"/>
       <exclude name="Ball_Game.ump"/>
+      <exclude name="BcmsBaseConfiguration.ump"/>
+      <exclude name="BcmsMultipleCrisis-Multiple-Coordinator-Configuration.ump"/>
+      <exclude name="MicrowaveOven2.ump"/>
+      <exclude name="Runway.ump"/>
+      <exclude name="StateMachineActionsandDoActivities1.ump"/>
+
+      <!-- Contains the Java specific Message class + Threading  -->
+      <exclude name="CodeInjectioninCustomMethods1.ump"/>
+      <exclude name="CodeInjectioninEventMethods1.ump"/>
+      <exclude name="QueuedStateMachines1.ump"/>
+      <exclude name="SecurityLight.ump"/>
+      <exclude name="UnspecifiedEvents2.ump"/>
+
+      <!-- Contains Java specific classes used to generate HTML -->
       <exclude name="BasicTemplates1.ump"/>
       <exclude name="BasicTemplates2.ump"/>
       <exclude name="BasicTemplates3.ump"/>
-      <exclude name="BcmsBaseConfiguration.ump"/>
-      <exclude name="BcmsMultipleCrisis-Multiple-Coordinator-Configuration.ump"/>
-      <exclude name="CanalLockStateMachine.ump"/>
-      <exclude name="CodeInjectioninCustomMethods1.ump"/>
-      <exclude name="CodeInjectioninEventMethods1.ump"/>
-      <exclude name="Dishwasher.ump"/>
-      <exclude name="Elevator_State_Machine.ump"/>
       <exclude name="HtmlGeneration.ump"/>
-      <exclude name="LibraryLoanStateMachine.ump"/>
-      <exclude name="MicrowaveOven2.ump"/>
-      <exclude name="Phone.ump"/>
-      <exclude name="PingPong.ump"/>
-      <exclude name="PooledStateMachines1.ump"/>
-      <exclude name="QueuedStateMachines1.ump"/>
-      <exclude name="Runway.ump"/>
-      <exclude name="SecurityLight.ump"/>
-      <exclude name="StateDependentMethods1.ump"/>
-      <exclude name="StateDependentMethods2.ump"/>
-      <exclude name="StateMachineActionsandDoActivities1.ump"/>
-      <exclude name="TcpIpSimulation.ump"/>
-      <exclude name="TimedCommands.ump"/>
-      <exclude name="TrafficLightsB.ump"/>
-      <exclude name="UnspecifiedEvents2.ump"/>
-      <exclude name="W082ConflictingModifiers.ump"/>
+
+      <!-- General bugs -->
+      <exclude name="AroundStatement1.ump"/>  <!-- Code Injection -->
+      <exclude name="AroundStatement2.ump"/>  <!-- Code Injection -->
+      <exclude name="PingPong.ump"/>  <!-- Code Injection -->
+      <exclude name="PooledStateMachines1.ump"/> <!-- Hashmaps failling to translate -->
+      <exclude name="StateDependentMethods1.ump"/> <!-- Return nothing on a switch case -->
+      <exclude name="StateDependentMethods2.ump"/> <!-- Return nothing on a switch case -->
+      <exclude name="TcpIpSimulation.ump"/> <!-- uses synchronized keyword -->
+      <exclude name="W082ConflictingModifiers.ump"/> <!-- Contains raw java code -->
       
-      <!-- Tracers are out of scope for current Python Generation -->
+      <!-- Contains Java specific classes for tracing -->
+      <exclude name="Phone.ump"/>
       <exclude name="Tracers1.ump"/>
       <exclude name="Tracers2.ump"/>
       <exclude name="Tracers3.ump"/>

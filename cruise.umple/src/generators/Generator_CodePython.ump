@@ -67,8 +67,18 @@ class PythonGenerator
         return ; // inner classes should not be writen in single files.
       }
     }
-    ILang language = getLanguageFor(aClass);
-    String contents = language.getCode(getModel(), aClass);
+
+    //Specific case failing for Java code which tries to Generate HTML
+    ILang language = null;
+    String contents = "";
+    
+    try {
+      language = getLanguageFor(aClass);
+      contents = language.getCode(getModel(), aClass);
+    } catch(Exception e) {
+      throw new UmpleCompilerException("An error occured during the code generation. You may have been using a feature which is not currently supported for Python code generation", e);
+    }
+   
 
     aClass.setName(className);
     String path = StringFormatter.addPathOrAbsolute(
