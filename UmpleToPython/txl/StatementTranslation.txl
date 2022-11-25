@@ -2,8 +2,8 @@
 %     Statements     %
 %--------------------%
 function replaceStatements
-    replace [repeat statement]
-        statements [repeat statement]
+    replace [any]
+        statements [any]
     by 
         statements
             [replacePrivateAttributeSetting]
@@ -38,6 +38,8 @@ function replaceStatements
             [replaceIncrementAfter]
             [replaceDecrementAfter]
             [replaceThrowError]
+            [replaceNewArrayList]
+            [replaceNewHashMap]
             [replaceNewCall]
             [replaceCasting]
             [correctSuperInit]
@@ -51,6 +53,7 @@ function replaceStatements
             [translateNestedContainsCall]
             [replaceIntegerValueOf]
             [replaceDoubleValueOf]
+            [replaceFloatF]
             [replaceAllMemberVariableNames]
             [removeSemiColonFromValues]
 end function
@@ -120,6 +123,9 @@ rule addSelfToOwnMethodCalls
     import classMethodNames [repeat id]
     where
         classMethodNames [containsId funcName]
+    import staticElements [repeat id]
+    where not
+        staticElements [containsId funcName]
     by
         'self '. funcName '( values') rep
 end rule
@@ -196,6 +202,10 @@ rule replaceElse
         'else ': statements
 end rule
 
+rule containsAssignment
+    match [value_continuation_assignment]
+        _ [value_continuation_assignment]
+end rule
 
 rule replaceTernary
     replace [value]
@@ -221,6 +231,8 @@ rule replaceTernary
         'uhOh
     construct condition [value]
         defaultShouldNotSee [parse beforeQuestionMark]
+    where not
+        condition [containsAssignment] 
     by
         '( optTrue ') 'if condition 'else optFalse
 end rule
@@ -508,6 +520,13 @@ rule replaceDoubleValueOf
         'float( val ')
 end rule 
 
+rule replaceFloatF
+    replace [base_value]
+        num [number] 'f
+    by 
+        num
+end rule 
+
 %--------------------------------%
 %  Switch case Enum correction   %
 %--------------------------------%
@@ -581,6 +600,20 @@ rule removeBreak
         length [- 1]
     by  
         stmts [head lengthMinusOne]
+end rule
+
+rule replaceNewArrayList
+    replace [base_value]
+        'new 'ArrayList< _[id] '>() 
+    by
+        '[ ']
+end rule
+
+rule replaceNewHashMap
+    replace [base_value]
+        'new 'HashMap< _ [id] ', _ [id] '>()
+    by
+        'dict()
 end rule
 %--------------------------------%
 %  Attribute access translation  %
@@ -747,15 +780,15 @@ end rule
 
 rule replaceStaticMemberVariableNames
     replace [nested_identifier]
-         name [id] staticRep [repeat attribute_access]
-    import staticMemberVariables [repeat id]
+         name [id] ext [repeat nestable_extension] staticRep [repeat attribute_access]
+    import staticElements [repeat id]
     import className [nested_identifier]
     deconstruct className
         root [nestable_value] rep [repeat attribute_access]
     construct newAccess [repeat attribute_access]
-        '. name 
+        '. name ext
     where 
-        staticMemberVariables [containsId name]
+        staticElements [containsId name]
     by
         root rep [. newAccess] [. staticRep]
 end rule

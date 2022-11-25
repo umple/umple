@@ -8,7 +8,6 @@ function replaceAllSpecialTypes lists [repeat id] hashMaps [repeat id]
     by 
         any
             [replaceRemoveAll lists]
-            [replaceListAssignement lists]
             [replaceListUnmutable lists]
             [replaceGetListContent lists]
             [replaceListGetSize lists]
@@ -23,17 +22,8 @@ function replaceAllSpecialTypes lists [repeat id] hashMaps [repeat id]
             [replaceToArray lists]
             [replacePut hashMaps]
             [replaceContainsKey hashMaps]
-            [replaceDictAssignement hashMaps]
 end function 
 
-rule replaceListAssignement memberLists [repeat id]
-    replace [value]
-        id [id] '= 'new 'ArrayList '< _[list id] '> '(')
-    where
-        memberLists [containsId id]
-    by 
-        id '= '[']
-end rule
 
 rule replaceListCopy
     replace [value]
@@ -156,16 +146,6 @@ rule replaceRemoveAll memberLists [repeat id]
     by
         id '= 'list( 'filter( 'lambda 'a ': 'not 'a 'in otherList ', id ')) cont
 
-end rule
-
-
-rule replaceDictAssignement memberLists [repeat id]
-    replace [value]
-        id [id] '= 'new 'HashMap< _ [id] ', _ [id] '>()
-    where
-        memberLists [containsId id]
-    by 
-        id '= 'dict()
 end rule
 
 rule replacePut dicts [repeat id]

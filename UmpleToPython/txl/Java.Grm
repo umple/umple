@@ -102,7 +102,7 @@ define base_value
     |   'true
     |   'false
     |   [casting]
-    |   [number]
+    |   [number] [opt 'f]
     |   [stringlit]
     |   [charlit]
     |   [nested_identifier]
@@ -126,7 +126,11 @@ define value_continuation
     |   [ternary_terminal]
     |   '++ [opt value_continuation]
     |   '-- [opt value_continuation]
-    |   '=  [value]
+    |   [value_continuation_assignment]
+end define
+
+define value_continuation_assignment
+    '=  [value]
     |   '+=  [value]
     |   '-=  [value]
 end define
@@ -305,7 +309,11 @@ define enum_declaration
 end define
 
 define member_variable_declaration
-    [opt acess_modifier] [opt transient] [opt static] [opt volatile] [nested_identifier] [id] [opt member_variable_assignment]';
+    [opt acess_modifier] [opt transient] [opt static] [opt final] [opt volatile] [nested_identifier] [id] [opt member_variable_assignment]';
+end define
+
+define final
+    'final
 end define
 
 define member_variable_assignment
