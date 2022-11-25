@@ -24,7 +24,7 @@ function extractPossibleFunctionImports classBody [class_body_decl] declaration 
     replace [repeat id]
         empty [repeat id]
     deconstruct declaration
-        _[opt acess_modifier] _[opt static] _[opt volatile] class [nested_identifier] _[id] _[opt member_variable_assignment] ';
+        _[opt acess_modifier] _[opt static] _[opt final] _[opt volatile] class [nested_identifier] _[id] _[opt member_variable_assignment] ';
     construct classesToImport [repeat id]
         _ [extractListClass classBody class] [extractRegularClass classBody class]
     by 
@@ -172,15 +172,6 @@ function addToList anys [id]
         aRep [, anys]
 end function
 
-function addListMemberVariable MemberVariable [member_variable_declaration]
-    replace [repeat id]
-        SequenceSoFar [repeat id]
-    deconstruct MemberVariable
-        _[opt acess_modifier] _[opt transient] _[opt static] _[opt volatile] 'List '< _ [list id] '> memberName [id] _[opt member_variable_assignment]';
-    by
-        SequenceSoFar [. memberName]
-end function
-
 rule containsId Object [id]
     match [id]
         Object
@@ -202,7 +193,6 @@ function addExternalImports translatedBody [class_body_decl]
         imports [addOSImportIfNeeded translatedBody]
         [addEnumImportIfNeeded translatedBody]
         [addPickleImportIfNeeded]
-        [addMultipledispatchImportIfNeeded translatedBody]
         [addSysImportIfNeeded translatedBody]
 end function
 
@@ -256,21 +246,6 @@ function shouldImportPickle
         'import 'java.io.Serializable;
 end function
 
-function addMultipledispatchImportIfNeeded body [class_body_decl]
-    replace [repeat import_statement]
-        imports [repeat import_statement]
-    where
-        body [shouldImportMultipledispatch]
-    construct newImport [import_statement]
-        'from 'multipledispatch 'import 'dispatch
-    by 
-        imports [. newImport]
-end function
-
-function shouldImportMultipledispatch
-    match * [decorator]
-        '@dispatch( _ [list base_value] ')
-end function
 
 function addSysImportIfNeeded body [class_body_decl]
     replace [repeat import_statement]

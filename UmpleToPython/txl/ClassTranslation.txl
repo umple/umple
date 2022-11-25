@@ -110,13 +110,15 @@ function replaceClassBody
     export transientMembers
     export memberVariables [repeat id]
         _ [addMemberVariable each declarations]
-    export staticMemberVariables [repeat id]
-        _ [addStaticMemberVariable each declarations]
+    export classMethods [repeat method_declaration]
+        _ [^ elements]
+    export staticElements [repeat id]
+        _ [addStaticMemberVariable each declarations] [addStaticMethod each classMethods]
     export listMemberVariables [repeat id]
         _ [addListMemberVariable each declarations]
+    export dictMemberVariables [repeat id]
+        _ [addDictMemberVariable each declarations]
     export enumeratorDeclerations [repeat enum_declaration]
-        _ [^ elements]
-    export classMethods [repeat method_declaration]
         _ [^ elements]
     export classMethodNames [repeat id]
         _ [extractClassMethodName each classMethods]
@@ -128,7 +130,23 @@ function replaceClassBody
             [replaceAllMethods memberVariables]
 end function
 
+function addListMemberVariable MemberVariable [member_variable_declaration]
+    replace [repeat id]
+        SequenceSoFar [repeat id]
+    deconstruct MemberVariable
+        _[opt acess_modifier] _[opt transient] _[opt static] _[opt final] _[opt volatile] 'List '< _ [list id] '> memberName [id] _[opt member_variable_assignment]';
+    by
+        SequenceSoFar [. memberName]
+end function
 
+function addDictMemberVariable MemberVariable [member_variable_declaration]
+    replace [repeat id]
+        SequenceSoFar [repeat id]
+    deconstruct MemberVariable
+        _[opt acess_modifier] _[opt transient] _[opt static] _[opt final] _[opt volatile] 'Map '< _ [list id] '> memberName [id] _[opt member_variable_assignment]';
+    by
+        SequenceSoFar [. memberName]
+end function
 
 function extractClassMethodName method [method_declaration]
     replace [repeat id]
@@ -159,7 +177,7 @@ function addIfTransient decl [member_variable_declaration]
     replace [repeat id]
         result [repeat id]
     deconstruct decl
-        _[opt acess_modifier] 'transient _[opt static] _[opt volatile] _[nested_identifier] _[id] _[opt member_variable_assignment]';
+        _[opt acess_modifier] 'transient _[opt static] _[opt final] _[opt volatile] _[nested_identifier] _[id] _[opt member_variable_assignment]';
     by
         result [addMemberVariable decl]
 end function
@@ -192,9 +210,9 @@ function addTranslatedStaticMember elem [class_body_element]
     construct declerations [repeat member_variable_declaration]
         _ [^ elem]
     deconstruct declerations
-        _[opt acess_modifier] _[opt transient] 'static _[opt volatile] _ [nested_identifier] staticMemberName [id] '= val [value] ';
+        _[opt acess_modifier] _[opt transient] 'static  _[opt final] _[opt volatile] _ [nested_identifier] staticMemberName [id] '= val [value] ';
     construct elemToAdd [class_body_element]
-        staticMemberName '= val 
+        staticMemberName '= val [replaceStatements]
     by
         keepers [. elemToAdd]
 end function
@@ -203,7 +221,7 @@ function addMemberVariable MemberVariable [member_variable_declaration]
     replace [repeat id]
         SequenceSoFar [repeat id]
     deconstruct MemberVariable
-        _[opt acess_modifier] _[opt transient] _[opt volatile]  _ [nested_identifier] memberName [id] _[opt member_variable_assignment] ';
+        _[opt acess_modifier] _[opt transient] _[opt final] _[opt volatile]  _ [nested_identifier] memberName [id] _[opt member_variable_assignment] ';
     by
         SequenceSoFar [. memberName]
 end function
@@ -212,9 +230,18 @@ function addStaticMemberVariable MemberVariable [member_variable_declaration]
     replace [repeat id]
         SequenceSoFar [repeat id]
     deconstruct MemberVariable
-        _[opt acess_modifier] _[opt transient] 'static _[opt volatile] _ [nested_identifier] memberName [id] '= _ [value] ';
+        _[opt acess_modifier] _[opt transient] 'static  _[opt final] _[opt volatile] _ [nested_identifier] memberName [id] '= _ [value] ';
     by
         SequenceSoFar [. memberName]
+end function
+
+function addStaticMethod method [method_declaration]
+    replace [repeat id]
+        SequenceSoFar [repeat id]
+    deconstruct method 
+        _[opt decorator] _[acess_modifier] 'static _[nested_identifier] methodName [id] '( _[list method_parameter] ') _[opt throws] '{ _[repeat statement] '}
+    by 
+        SequenceSoFar [. methodName]
 end function
 
 function exportConstructorCount

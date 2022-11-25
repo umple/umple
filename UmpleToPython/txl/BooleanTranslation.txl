@@ -3,9 +3,8 @@
 %---------------------%
 
 function replaceAllBoolean
-    replace [repeat statement]
-        statements [repeat statement]
-
+    replace [any]
+        statements [any]
     by
         statements
             [replaceNullCheck]
