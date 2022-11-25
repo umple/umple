@@ -1,6 +1,11 @@
 
 namespace cruise.statemachine.test;
 
+class CourseA
+{
+  status { }
+}
+
 class CourseB
 {
   log = "initial value";
