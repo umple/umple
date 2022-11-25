@@ -19,11 +19,11 @@ class Student():
             wasSet = True
             return wasSet
         currentMentor = self.getMentor()
-        if not (currentMentor is None) and not currentMentor.__eq__(aNewMentor) :
+        if not (currentMentor is None) and not currentMentor == aNewMentor :
             currentMentor.setStudent(None)
         self._mentor = aNewMentor
         existingStudent = aNewMentor.getStudent()
-        if not self.__eq__(existingStudent) :
+        if not self == existingStudent :
             aNewMentor.setStudent(self)
         wasSet = True
         return wasSet

@@ -19,5 +19,5 @@ class SubMentor2(Mentor):
         super().delete()
 
     def __str__(self):
-        return super().__str__() + "[" + "subName" + ":" + str(self.getSubName()) + "]"
+        return str(super().__str__()) + "[" + "subName" + ":" + str(self.getSubName()) + "]"
 

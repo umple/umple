@@ -38,11 +38,11 @@ class Student():
             wasSet = True
             return wasSet
         currentPupil = self.getPupil()
-        if not (currentPupil is None) and not currentPupil.__eq__(aNewPupil) :
+        if not (currentPupil is None) and not currentPupil == aNewPupil :
             currentPupil.setTa(None)
         self._pupil = aNewPupil
         existingTa = aNewPupil.getTa()
-        if not self.__eq__(existingTa) :
+        if not self == existingTa :
             aNewPupil.setTa(self)
         wasSet = True
         return wasSet
@@ -57,11 +57,11 @@ class Student():
             wasSet = True
             return wasSet
         currentTa = self.getTa()
-        if not (currentTa is None) and not currentTa.__eq__(aNewTa) :
+        if not (currentTa is None) and not currentTa == aNewTa :
             currentTa.setPupil(None)
         self._ta = aNewTa
         existingPupil = aNewTa.getPupil()
-        if not self.__eq__(existingPupil) :
+        if not self == existingPupil :
             aNewTa.setPupil(self)
         wasSet = True
         return wasSet
@@ -73,5 +73,5 @@ class Student():
             self._ta.setPupil(None)
 
     def __str__(self):
-        return super().__str__() + "[" + "number" + ":" + str(self.getNumber()) + "]"
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]"
 

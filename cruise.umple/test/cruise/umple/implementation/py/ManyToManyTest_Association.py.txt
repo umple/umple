@@ -40,7 +40,7 @@ class Mentor():
 
     def addStudent(self, aStudent):
         wasAdded = False
-        if aStudent in self._students :
+        if (aStudent) in self._students :
             return False
         self._students.append(aStudent)
         if aStudent.indexOfMentor(self) != -1 :
@@ -53,7 +53,7 @@ class Mentor():
 
     def removeStudent(self, aStudent):
         wasRemoved = False
-        if not self._students.contains(aStudent) :
+        if not (aStudent) in self._students :
             return wasRemoved
         oldIndex = self._students.index(aStudent)
         self._students.remove(oldIndex)
@@ -79,7 +79,7 @@ class Mentor():
 
     def addOrMoveStudentAt(self, aStudent, index):
         wasAdded = False
-        if aStudent in self._students :
+        if (aStudent) in self._students :
             if index < 0 :
                 index = 0
             if index > self.numberOfStudents() :
@@ -98,5 +98,5 @@ class Mentor():
             aStudent.removeMentor(self)
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + str(self.getName()) + "]"
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
 

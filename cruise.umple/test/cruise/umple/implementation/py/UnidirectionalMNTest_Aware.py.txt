@@ -48,18 +48,18 @@ class Mentor():
 
     def addStudent(self, aStudent):
         wasAdded = False
-        if aStudent in self._students :
+        if (aStudent) in self._students :
             return False
-        if self.numberOfStudents() < self.maximumNumberOfStudents() :
+        if self.numberOfStudents() < Mentor.maximumNumberOfStudents() :
             self._students.append(aStudent)
             wasAdded = True
         return wasAdded
 
     def removeStudent(self, aStudent):
         wasRemoved = False
-        if not self._students.contains(aStudent) :
+        if not (aStudent) in self._students :
             return wasRemoved
-        if self.numberOfStudents() <= self.minimumNumberOfStudents() :
+        if self.numberOfStudents() <= Mentor.minimumNumberOfStudents() :
             return wasRemoved
         self._students.remove(aStudent)
         wasRemoved = True
@@ -70,11 +70,11 @@ class Mentor():
         wasSet = False
         verifiedStudents = []
         for aStudent in newStudents:
-            if aStudent in verifiedStudents :
+            if (aStudent) in verifiedStudents :
                 continue
             verifiedStudents.append(aStudent)
 
-        if len(verifiedStudents) != len(newStudents) or len(verifiedStudents) < self.minimumNumberOfStudents() or len(verifiedStudents) > self.maximumNumberOfStudents() :
+        if len(verifiedStudents) != len(newStudents) or len(verifiedStudents) < Mentor.minimumNumberOfStudents() or len(verifiedStudents) > Mentor.maximumNumberOfStudents() :
             return wasSet
         self._students.clear()
         self._students.extend(verifiedStudents)
@@ -95,7 +95,7 @@ class Mentor():
 
     def addOrMoveStudentAt(self, aStudent, index):
         wasAdded = False
-        if aStudent in self._students :
+        if (aStudent) in self._students :
             if index < 0 :
                 index = 0
             if index > self.numberOfStudents() :
@@ -111,5 +111,5 @@ class Mentor():
         self._students.clear()
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + str(self.getName()) + "]"
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
 

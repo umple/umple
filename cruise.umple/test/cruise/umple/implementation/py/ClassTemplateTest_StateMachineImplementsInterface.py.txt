@@ -26,7 +26,7 @@ class Router(NetworkNode):
     def connect(self):
         wasEventProcessed = False
         aStatus = self._status
-        if aStatus == disconnected :
+        if aStatus == Router.Status.disconnected :
             self.setStatus(Router.Status.connected)
             wasEventProcessed = True
         else :
@@ -36,7 +36,7 @@ class Router(NetworkNode):
     def disconnect(self):
         wasEventProcessed = False
         aStatus = self._status
-        if aStatus == connected :
+        if aStatus == Router.Status.connected :
             self.setStatus(Router.Status.disconnected)
             wasEventProcessed = True
         else :
@@ -46,7 +46,7 @@ class Router(NetworkNode):
     def errorDetected(self):
         wasEventProcessed = False
         aStatus = self._status
-        if aStatus == connected :
+        if aStatus == Router.Status.connected :
             self.setStatus(Router.Status.disconnected)
             wasEventProcessed = True
         else :
@@ -60,5 +60,5 @@ class Router(NetworkNode):
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "]"
+        return str(super().__str__()) + "[" + "]"
 

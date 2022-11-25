@@ -483,9 +483,13 @@ function replaceDefaultReadObject
         _ [reparse before]
     construct afterReparsed [repeat statement]
         _ [reparse after]
-    construct middle [repeat statement]
+    construct clearStatement [statement]
         'self '.__dict__ '.clear()
-        'self '.__dict__ '.clear() '.update(pickle '.load(input) '.__dict__)
+    construct updateStatement [statement]
+        'self '.__dict__ '.update(pickle '.load(input) '.__dict__)
+    construct middle [repeat statement]
+        clearStatement
+        updateStatement
     by 
         beforeReparsed [. middle] [. afterReparsed]
 end function

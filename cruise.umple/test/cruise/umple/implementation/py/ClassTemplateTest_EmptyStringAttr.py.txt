@@ -16,5 +16,5 @@ class Student():
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "grade" + ":" + str(self.getGrade()) + "]"
+        return str(super().__str__()) + "[" + "grade" + ":" + str(self.getGrade()) + "]"
 

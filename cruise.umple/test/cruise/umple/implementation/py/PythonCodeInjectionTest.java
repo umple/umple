@@ -34,4 +34,9 @@ public class PythonCodeInjectionTest extends CodeInjectionTest
   public void Associations(){
     super.Associations();
   }
+
+  @Test @Ignore
+  public void ToplevelCodeInjection(){
+    super.ToplevelCodeInjection();
+  }
 }

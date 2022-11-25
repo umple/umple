@@ -1,6 +1,11 @@
 import os
 
 class Mentor():
+    MAX = 100
+    MIN = -99
+    HELLO = "Hello"
+    nextX = 1
+    mentorsById = dict()
     def __init__(self, aStr, aD, aI, aId):
         from Time import Time
         from Date import Date
@@ -41,7 +46,7 @@ class Mentor():
         self._u = Time.valueOf("12:13:14")
         self.resetV()
         self.resetW()
-        self._x, nextX = nextX, nextX + 1
+        self._x, Mentor.nextX = Mentor.nextX, Mentor.nextX + 1
         if not self.setId(aId) :
             raise RuntimeError ("Cannot create due to duplicate id. See http://manual.umple.org?RE003ViolationofUniqueness.html")
 
@@ -93,15 +98,15 @@ class Mentor():
     def setId(self, aId):
         wasSet = False
         anOldId = self.getId()
-        if not (anOldId is None) and anOldId.__eq__(aId) :
+        if not (anOldId is None) and anOldId == aId :
             return True
-        if self.hasWithId(aId) :
+        if Mentor.hasWithId(aId) :
             return wasSet
         self._id = aId
         wasSet = True
         if not (anOldId is None) :
-            mentorsById.remove(anOldId)
-        mentorsById.put(aId, self)
+            Mentor.mentorsById.remove(anOldId)
+        Mentor.mentorsById[aId] = self
         return wasSet
 
     def setP(self, aP):
@@ -202,11 +207,11 @@ class Mentor():
 
     @staticmethod
     def getWithId(aId):
-        return mentorsById.get(aId)
+        return Mentor.mentorsById.get(aId)
 
     @staticmethod
     def hasWithId(aId):
-        return not (self.getWithId(aId) is None)
+        return not (Mentor.getWithId(aId) is None)
 
     def getP(self):
         return self._p
@@ -253,8 +258,8 @@ class Mentor():
         return self._lBool
 
     def delete(self):
-        mentorsById.remove(self.getId())
+        Mentor.mentorsById.remove(self.getId())
 
     def __str__(self):
-        return super().__str__() + "[" + "x" + ":" + str(self.getX()) + "," + "str" + ":" + str(self.getStr()) + "," + "str2" + ":" + str(self.getStr2()) + "," + "someName" + ":" + str(self.getSomeName()) + "," + "lDoub" + ":" + str(self.getLDoub()) + "," + "lBool" + ":" + str(self.getLBool()) + "," + "name" + ":" + str(self.getName()) + "," + "i" + ":" + str(self.getI()) + "," + "derivedTwiceI" + ":" + str(self.getDerivedTwiceI()) + "," + "id" + ":" + str(self.getId()) + "," + "p" + ":" + str(self.getP()) + "," + "q" + ":" + str(self.getQ()) + "," + "r" + ":" + str(self.getR()) + "," + "s" + ":" + str(self.getS()) + "]" + str(os.linesep) + "  " + "d" + "=" + str((((self.getD().__str__().replaceAll("  ", "    ")) if not self.getD().__eq__(self) else "this") if not (self.getD() is None) else "null")) + str(os.linesep) + "  " + "tt" + "=" + str((((self.getTt().__str__().replaceAll("  ", "    ")) if not self.getTt().__eq__(self) else "this") if not (self.getTt() is None) else "null")) + str(os.linesep) + "  " + "u" + "=" + str((((self.getU().__str__().replaceAll("  ", "    ")) if not self.getU().__eq__(self) else "this") if not (self.getU() is None) else "null")) + str(os.linesep) + "  " + "v" + "=" + str((((self.getV().__str__().replaceAll("  ", "    ")) if not self.getV().__eq__(self) else "this") if not (self.getV() is None) else "null")) + str(os.linesep) + "  " + "w" + "=" + str((((self.getW().__str__().replaceAll("  ", "    ")) if not self.getW().__eq__(self) else "this") if not (self.getW() is None) else "null"))
+        return str(super().__str__()) + "[" + "x" + ":" + str(self.getX()) + "," + "str" + ":" + str(self.getStr()) + "," + "str2" + ":" + str(self.getStr2()) + "," + "someName" + ":" + str(self.getSomeName()) + "," + "lDoub" + ":" + str(self.getLDoub()) + "," + "lBool" + ":" + str(self.getLBool()) + "," + "name" + ":" + str(self.getName()) + "," + "i" + ":" + str(self.getI()) + "," + "derivedTwiceI" + ":" + str(self.getDerivedTwiceI()) + "," + "id" + ":" + str(self.getId()) + "," + "p" + ":" + str(self.getP()) + "," + "q" + ":" + str(self.getQ()) + "," + "r" + ":" + str(self.getR()) + "," + "s" + ":" + str(self.getS()) + "]" + str(os.linesep) + "  " + "d" + "=" + str((((self.getD().__str__().replaceAll("  ", "    ")) if not self.getD() == self else "this") if not (self.getD() is None) else "null")) + str(os.linesep) + "  " + "tt" + "=" + str((((self.getTt().__str__().replaceAll("  ", "    ")) if not self.getTt() == self else "this") if not (self.getTt() is None) else "null")) + str(os.linesep) + "  " + "u" + "=" + str((((self.getU().__str__().replaceAll("  ", "    ")) if not self.getU() == self else "this") if not (self.getU() is None) else "null")) + str(os.linesep) + "  " + "v" + "=" + str((((self.getV().__str__().replaceAll("  ", "    ")) if not self.getV() == self else "this") if not (self.getV() is None) else "null")) + str(os.linesep) + "  " + "w" + "=" + (((self.getW().__str__().replaceAll("  ", "    ")) if not self.getW() == self else "this") if not (self.getW() is None) else "null")
 

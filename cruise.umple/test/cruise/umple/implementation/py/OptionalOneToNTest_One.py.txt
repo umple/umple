@@ -7,7 +7,7 @@ class Mentor():
         self._students = []
         didAddStudents = self.setStudents(*allStudents)
         if not didAddStudents :
-            raise RuntimeError ("Unable to create Mentor, must have 4 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+            raise RuntimeError ("Unable to create Mentor, must have 3 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
     def setName(self, aName):
         wasSet = False
@@ -40,35 +40,52 @@ class Mentor():
 
     @staticmethod
     def requiredNumberOfStudents():
-        return 4
+        return 3
 
     @staticmethod
     def minimumNumberOfStudents():
-        return 4
+        return 3
 
     @staticmethod
     def maximumNumberOfStudents():
-        return 4
+        return 3
 
     def setStudents(self, *newStudents):
         newStudents = list(newStudents)
         wasSet = False
-        verifiedStudents = []
+        checkNewStudents = []
         for aStudent in newStudents:
-            if (aStudent) in verifiedStudents :
-                continue
-            verifiedStudents.append(aStudent)
+            if (aStudent) in checkNewStudents :
+                return wasSet
+            elif not (aStudent.getMentor() is None) and not self == aStudent.getMentor() :
+                return wasSet
+            checkNewStudents.append(aStudent)
 
-        if len(verifiedStudents) != len(newStudents) or len(verifiedStudents) != Mentor.requiredNumberOfStudents() :
+        if len(checkNewStudents) != Mentor.minimumNumberOfStudents() :
             return wasSet
+        self._students = list(filter(lambda a : not a in checkNewStudents, self._students))
+        for orphan in self._students:
+            self.setMentor(orphan, None)
+
         self._students.clear()
-        self._students.extend(verifiedStudents)
+        for aStudent in newStudents:
+            self.setMentor(aStudent, self)
+            self._students.append(aStudent)
+
         wasSet = True
         return wasSet
 
+    def setMentor(self, aStudent, aMentor):
+        try :
+            aStudent._mentor = aMentor
+        except :
+            raise RuntimeError ("Issue internally setting aMentor to aStudent")
+
     def delete(self):
+        for aStudent in self._students:
+            self.setMentor(aStudent, None)
+
         self._students.clear()
 
     def __str__(self):
         return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
-

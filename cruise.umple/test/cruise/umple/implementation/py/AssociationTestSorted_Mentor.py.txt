@@ -43,7 +43,7 @@ class Mentor():
 
     def addStudent(self, aStudent):
         wasAdded = False
-        if aStudent in self._students :
+        if (aStudent) in self._students :
             return False
         self._students.append(aStudent)
         if aStudent.indexOfMentor(self) != -1 :
@@ -56,7 +56,7 @@ class Mentor():
 
     def removeStudent(self, aStudent):
         wasRemoved = False
-        if not self._students.contains(aStudent) :
+        if not (aStudent) in self._students :
             return wasRemoved
         oldIndex = self._students.index(aStudent)
         self._students.remove(oldIndex)
@@ -70,7 +70,7 @@ class Mentor():
 
     def readObject(self, input):
         self.__dict__.clear()
-        self.__dict__.clear().update(pickle.load(input).__dict__)
+        self.__dict__.update(pickle.load(input).__dict__)
         self._studentsPriority = None
 
     def delete(self):
@@ -80,7 +80,7 @@ class Mentor():
             aStudent.removeMentor(self)
 
     def __str__(self):
-        return super().__str__() + "[" + "]" + str(os.linesep) + "  " + "studentsPriority" + "=" + str((((self.getStudentsPriority().__str__().replaceAll("  ", "    ")) if not self.getStudentsPriority().__eq__(self) else "this") if not (self.getStudentsPriority() is None) else "null"))
+        return str(super().__str__()) + "[" + "]" + str(os.linesep) + "  " + "studentsPriority" + "=" + (((self.getStudentsPriority().__str__().replaceAll("  ", "    ")) if not self.getStudentsPriority() == self else "this") if not (self.getStudentsPriority() is None) else "null")
 
     def __getstate__(self):
         state = dict(self.__dict__)
