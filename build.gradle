@@ -862,6 +862,7 @@ task updateNuspec(type: Copy) {
     doLast {
         def copyright = new File("${rootProject.projectDir.toString()}/build/package-files/chocolatey/tools/LICENSE.txt")
         def lines = copyright.readLines()
+        copyright.text = "From: https://github.com/umple/umple/blob/master/LICENSE.md\n" + copyright.text
         def copyrightContent = lines.get(3).split("(?<!\\G\\w+)\\s")[0]
         copyrightContent += " All the developers of Umple"
 
