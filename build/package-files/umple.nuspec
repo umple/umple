@@ -10,7 +10,7 @@
     <title>Umple</title>
     <authors>Timothy Lethbridge</authors>
     <projectUrl>https://cruise.umple.org/umple/</projectUrl>
-    <iconUrl>https://cruise.umple.org/umple/files/umple_logoMedium.png</iconUrl>
+    <iconUrl>https://rawcdn.githack.com/umple/umple/8b28f0b56efa94df5f5233bde5e6c90030cca3d9/umplewww/files/umple_logoMedium.png</iconUrl>
     <copyright>Copyright</copyright>
     <licenseUrl>https://github.com/umple/umple/blob/master/LICENSE.md</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
