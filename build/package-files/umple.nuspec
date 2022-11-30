@@ -24,7 +24,6 @@
       Umple is a model-oriented programming technology, allowing developers to embed modelling concepts (e.g. UML associations, state machines), patterns, generation templates, and other abstractions in traditional code, and vice versa. It generates high quality code for Java, C++ and PhP, as well as diagrams, metrics and many other artifacts. It can be embeded in the above languages as well as embed them.
 
       Umple needs an up-to-date Java 11 JDK or higher. The compiler has been tested and is also known to work under Java versions up to Java 16.
-
       The project homepage is located at http://umple.org/</description>
     <releaseNotes>https://github.com/umple/umple/releases/tag/v1.31.1</releaseNotes>
     <dependencies>
