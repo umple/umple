@@ -71,7 +71,7 @@ class ErrorType
 class ErrorTypeSingleton
 {
   singleton;
-  1 -> * ErrorType;
+  0..1 -> * ErrorType;
 
   depend java.io.*;
   depend java.lang.IllegalStateException;

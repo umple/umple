@@ -120,7 +120,7 @@ class RuleBasedParser
   static AnalyzerGeneratorHandler analyzerGenerator = null;
 
   //The failed position, if one exists(i.e. if the parse failed). otherwise it will be null
-  1 -> 0..1 Position failedPosition;
+  0..1 -> 0..1 Position failedPosition;
 
   //The parse's result, it will either have the value of success or failure, and should not be null after a parse
   ParseResult parseResult = null;
