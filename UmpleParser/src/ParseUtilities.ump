@@ -122,5 +122,14 @@ class Position
   key { filename, lineNumber, characterOffset, offset }
 }
 
+// By default use the version of this inclusion in the jar, but if in development mode
+// and testing modifications then use the version that is directly present
 
-use ParseUtilities_Code.ump;
+mixset inDevelopment {
+  use ParseUtilities_Code.ump;
+}
+
+use regularMode;
+mixset regularMode {
+  use lib:ParseUtilities_Code.ump;
+}

@@ -169,4 +169,14 @@ class ParsingCouple
   Integer[] positionTo;
 }
 
-use ParsingRules_Code.ump;
+// By default use the version of this inclusion in the jar, but if in development mode
+// and testing modifications then use the version that is directly present
+
+mixset inDevelopment {
+  use ParsingRules_Code.ump;
+}
+
+use regularMode;
+mixset regularMode {
+  use lib:ParsingRules_Code.ump;
+}

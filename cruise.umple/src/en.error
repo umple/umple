@@ -213,7 +213,7 @@
 1501 : 1, "http://manual.umple.org/?E15xxParsingError.html", Parsing error: Arguments to '{0}' not understood ; 
 1502 : 1, "http://manual.umple.org/?E15xxParsingError.html", Parsing error: Structure of '{0}' invalid ;
 1503 : 1, "http://manual.umple.org/?E15xxParsingError.html", Parsing error: {0}, did you mean {1} ;  
-1510 : 1, "http://manual.umple.org/?E1510UseFileMissing.html", File '{0}' referred to in use statement was not found ; 
+1510 : 3, "http://manual.umple.org/?E1510UseFileMissing.html", File '{0}' referred to in use statement was not found ; 
 
 1511 : 2, "http://manual.umple.org/?E1511InlineMixsetIsNotSupported.html", Inline syntax for the mixset '{0}' is not supported. Please enclose the body of '{0}' with curly brackets. ; 
 1512 : 4, "http://manual.umple.org/?W1512CodeLabelsInsideMethodAreNotUnique.html", Multiple code labels having the same name should be avoided for the method '{0}' at line '{1}'. Please consider unique names for code labels. ; 
