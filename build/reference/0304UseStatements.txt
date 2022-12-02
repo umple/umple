@@ -20,6 +20,8 @@ of use statements.</p>
 
 <p>Use statements work in a manner similar to 'include' directives in other languages.</p>
 
+<p>A file referred to by a use statement must be in the same directory as the file that has the use statement, or in a parent directory, or in a subdirectory named lib. There are also some builtin Umple files that can be loaded, with the prefix lib:. Finally an https URL may be used to load a file from the Internet<.p>
+
 @@syntax
 [[useStatement]]
 
