@@ -473,7 +473,7 @@ class UmpleClassifier{
       return "";
     }
     
-    if(filename.startswith("lib:")) {
+    if(filename.startsWith("lib:")) {
       return "";
     }
     
