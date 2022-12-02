@@ -333,12 +333,14 @@ class GrammarAnalyzer
   boolean mustSetupAnalyzers = true;
 }
 
-// By default use the version of this inclusion in the jar, but if in development mode
-// and testing modifications then use the version that is directly present
-
-mixset inDevelopment {
-  use GrammarParsing_Code.ump;
-}
+// By default use the version of this inclusion in the jar
+// as specified by libL: 
+// if you need to  develop changes to this inclusion
+// you would need to turn off mixset regularMode
+// By 
+//   use !regularMode;
+// And then include the version you are testing by
+//   use GrammarParsing_Code.ump;
 
 use regularMode;
 mixset regularMode {

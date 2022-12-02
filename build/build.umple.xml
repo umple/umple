@@ -272,7 +272,7 @@
       <fileset dir="${project.path}/src"><include name="**/*.error"/></fileset>
       <fileset dir="${basedir}/umpleonline/umplibrary/reusable"><include name="**/*.ump"/></fileset>
 
-      <fileset dir="${project.path}/src"><include name="util/FileUtils.ump"/></fileset>
+      <fileset dir="${basedir}/cruise.umple/src/util"><include name="FileUtils.ump"/></fileset>
       <fileset dir="${basedir}/UmpleParser/src"><include name="GrammarParsing*.ump"/></fileset>
       <fileset dir="${basedir}/UmpleParser/src"><include name="ParseUtilities*.ump"/></fileset>
       <fileset dir="${basedir}/UmpleParser/src"><include name="ParsingRules*.ump"/></fileset>
