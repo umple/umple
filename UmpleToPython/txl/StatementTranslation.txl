@@ -48,6 +48,7 @@ function replaceStatements
             [replaceHexIdentity]
             [replaceComparator]
             [translateToStringCall]
+            [translateHashCall]
             [translateSelfEqualsCall]
             [translateNestedEqualsCall]
             [translateNestedContainsCall]
@@ -628,6 +629,13 @@ rule translateToStringCall
         '.toString()
     by
         '.__str__()
+end rule
+
+rule translateHashCall
+    replace [attribute_access]
+        '.hashCode()
+    by
+        '.__hash__()
 end rule
 
 

@@ -124,7 +124,11 @@ function replaceClassBody
         _ [extractClassMethodName each classMethods]
     construct possibleFunctionImports [repeat id]
         _ [extractPossibleFunctionImports body each declarations]
+    export overloadData [repeat overload_data]
+        _
     export possibleFunctionImports
+    construct disambiguationFunctions [repeat class_body_element]
+        _ 
     by
         elements [exportConstructorCount] [removeMemberVariableDeclarations] [replaceEnumDeclaration] 
             [replaceAllMethods memberVariables]

@@ -5,17 +5,19 @@
 function replaceAllMethods memberVariables [repeat id]
     replace [repeat class_body_element]
         elems [repeat class_body_element]
+    construct filtered [repeat class_body_element]
+        _ [filterOutFunctions each elems]
     by
-        elems
+        filtered
             [replaceConstructor memberVariables]
             [fixMultipleConstructors]
             [removeOverrideDecorator]
             [removeSurpressWarningDecorator]
-            [replaceToString]
             [replaceAbstractMethod]
             [replaceUserMethod]
             [replaceConcreteMethod]
             [addGetState]
+            [addDisambiguationMethods]
 end function
 
 rule removeOverrideDecorator
@@ -40,7 +42,7 @@ rule replaceConcreteMethod
     construct possibleStaticDecorator [repeat decorator]
         _ [createStaticDecorator possibleStatic]
     by
-        possibleStaticDecorator 'def methodName '( newParams '):  statements 
+        possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  statements 
             [manageSpecialTypes params] 
             [replaceStatements] 
             [changeKeyArgumentNameInNestedIdentifier] 
@@ -66,7 +68,7 @@ rule replaceAbstractMethod
     construct newParams [list method_parameter]
         _ [getPythonParams params empty]
     by
-        '@abstractmethod 'def methodName '( newParams '): 'pass
+        '@abstractmethod 'def methodName [replaceSpecificMethodNames] '( newParams '): 'pass
 end rule
 
 rule replaceUserMethod
@@ -103,7 +105,30 @@ function addSelfIfNotStatic possibleStatic [opt static]
         result [, selfParam]
 end function
 
-rule replaceToString
+function replaceSpecificMethodNames
+    replace [id]
+        funcName [id]
+    by
+        funcName
+            [replaceToStringMethodName]
+            [replaceHashCodeMethodName]
+end function
+
+function replaceToStringMethodName
+    replace [id]
+        'toString
+    by
+        '__str__
+end function
+
+function replaceHashCodeMethodName
+    replace [id]
+        'hashCode
+    by
+        '__hash__
+end function
+
+rule replaceHashCodeMethod
     replace [method_declaration]
         _[acess_modifier] _[nested_identifier]  'toString '() _ [opt throws] '{ statements [repeat statement] '}
     by
@@ -271,7 +296,7 @@ function manageSpecialTypes params [list method_parameter]
         _ [extractVarArgName params]
     import listMemberVariables [repeat id]
     construct paramLists [repeat id]
-        _ [extractListNameFromMethodParam each params]
+        _ [extractListNameFromMethodParam each params] [extractArrayListListNameFromMethodParam each params]
     construct paramArrays [repeat id]
         _ [extractArrayNameFromMethodParam each params]
     construct varArgRepeat [repeat id]
@@ -369,6 +394,15 @@ function extractListNameFromMethodParam param [method_parameter]
         result [repeat id]
     deconstruct param
         'List< _ [id] '> paramName [id]
+    by
+        result [. paramName]
+end function
+
+function extractArrayListListNameFromMethodParam param [method_parameter]
+    replace [repeat id]
+        result [repeat id]
+    deconstruct param
+        'ArrayList< _ [id] '> paramName [id]
     by
         result [. paramName]
 end function
@@ -569,66 +603,78 @@ end rule
 %-----------------------%
 %   Overloaded methods  %
 %-----------------------%
-
-function extractPythonType javaParam [method_parameter]
-    replace [list base_value]
-        result [list base_value]
+function addOverloadArg javaParam [method_parameter]
+    replace [repeat overload_data_arg]
+        res [repeat overload_data_arg]
     deconstruct javaParam
         type [nested_identifier] _ [id]
-    construct typeBase [base_value]
-        type
-    construct adding [base_value]
-        typeBase 
-            [translateStringType]
-            [translateArrayListType]
-            [translateArrayType]
-            [translateBooleanType]
-            [translateDoubleType]
+    construct optAdding [opt overload_data_arg]
+        _
+            [translateArrayListType type]
+            [translateArrayType type]
+            [translateListType type]
+            [translateBaseTypesOverload type]
+    deconstruct optAdding  
+        adding [overload_data_arg]
     by
-        result [, adding]
-            
+        res [. adding]
+end function
+
+function translateBaseTypesOverload javaType [nested_identifier]
+    replace [opt overload_data_arg]
+    deconstruct javaType
+        baseType [id]
+    by
+        baseType [translateBaseTypes]
+end function
+
+function translateBaseTypes 
+    replace [id]
+        baseType [id]
+    by
+        baseType [translateStringType]  [translateBooleanType] [translateDoubleType]
 end function
 
 function translateStringType
-    replace [base_value]
+    replace [id]
         'String
-    by
+    by 
         'str
 end function
 
-function translateArrayListType
-    replace [base_value]
-        'ArrayList< _[list id] '>
+function translateArrayListType javaType [nested_identifier]
+    replace [opt overload_data_arg]
+    deconstruct javaType
+        'ArrayList< type [id] '>
     by
-        'list
+        'list type [translateBaseTypes]
 end function
 
-function translateArrayType
-    replace [base_value]
-        nested [nested_identifier]
-    construct nestables [repeat nestable_value]
-        _ [^ nested]
-    construct zero [number]
-        '0
-    construct length [number]
-        zero [length nestables]
-    construct lastNestable [repeat nestable_value]
-        nestables [tail length]
-    deconstruct lastNestable
-        _ [id] '[ ']
+function translateArrayType javaType [nested_identifier]
+    replace [opt overload_data_arg]
+    deconstruct javaType
+        type [id] '[ ']
     by
-        'list
+        'list type [translateBaseTypes]
 end function
 
-function translateBooleanType
-    replace [base_value]
+function translateListType javaType [nested_identifier]
+    replace [opt overload_data_arg]
+    deconstruct javaType
+        'List< type [id] '>
+    by
+        'list type [translateBaseTypes]
+end function
+
+function translateBooleanType 
+    replace [id]
         'boolean
     by  
         'bool
 end function
 
-function translateDoubleType
-    replace [base_value]
+function translateDoubleType 
+    replace [id]
         'double
     by  
         'float
@@ -653,4 +699,245 @@ function incrementIfMatch id1[id] id2[id]
         id1 [= id2]
     by
         result [+ 1]
+end function
+
+define overload_data
+    [id] [repeat overload]
+end define
+
+define overload
+    [id] [repeat overload_data_arg]
+end define 
+
+define overload_data_arg
+    [id] [opt id]
+end define
+
+function changeOverloadedMethodName params [list method_parameter]
+    replace [id]
+        methodName [id]
+    where
+        methodName [isMethodOverloaded]
+    import overloadData [repeat overload_data]
+    construct newMethodName [id]
+        methodName [!]
+    export overloadData
+        overloadData [appendToOverloadData methodName newMethodName params]
+    by
+        newMethodName
+end function
+
+
+function appendToOverloadData oldName [id] newName [id] params [list method_parameter]
+    replace [repeat overload_data]
+        data [repeat overload_data]
+    construct alreadyPresent [opt overload_data]
+        _ [getOverloadData oldName each data]
+    by
+        data [appendToExistingOverloadEntry oldName newName params] [createNewOverloadEntry oldName newName params] 
+end function
+
+function getOverloadData seeking [id] data [overload_data]
+    replace [opt overload_data]
+        result [opt overload_data]
+    deconstruct data
+        dataName [id] _ [repeat overload]
+    where dataName [= seeking]
+    by
+        data
+end function
+
+rule doesOverloadEntryExist oldName [id]
+    match [overload_data]
+        dataOldName [id] _ [repeat overload]
+    where 
+        dataOldName [= oldName]
+end rule
+
+rule appendToExistingOverloadEntry oldName [id] newName [id] param [list method_parameter]
+    replace $ [overload_data]
+        data [overload_data]
+    deconstruct data
+        dataOldName [id] overloads [repeat overload]
+    where
+        dataOldName [= oldName]
+    construct overloadArgs [repeat overload_data_arg]
+        _ [addOverloadArg each param]
+    construct newOverload [overload]
+        newName overloadArgs
+    by
+        dataOldName overloads [. newOverload]
+end rule
+
+function createNewOverloadEntry oldName [id] newName [id] param [list method_parameter]
+    replace [repeat overload_data]
+        results [repeat overload_data]
+    where not
+        results [doesOverloadEntryExist oldName]
+    construct overloadArgs [repeat overload_data_arg]
+        _ [addOverloadArg each param]
+    construct newOverloadEntry [overload_data]
+        oldName newName overloadArgs
+    by
+        results [. newOverloadEntry]
+
+end function
+
+function createDisambiguationMethod data [overload_data]
+    replace [repeat class_body_element]
+        results [repeat class_body_element]
+    deconstruct data
+        name [id] overloads [repeat overload]
+    construct stmts [repeat statement]
+        _ [addDisambiguationIf each overloads]
+    construct throwStmt [statement]
+        'raise 'TypeError( "No method matches provided parameters" ')
+    construct method [class_body_element]
+        'def name '(self, '*argv): stmts [. throwStmt] [addFunctionImports]
+    by 
+        results [. method]
+end function
+
+function addDisambiguationIf over [overload]
+    replace [repeat statement]
+        results [repeat statement]
+    deconstruct over
+        newName [id] args [repeat overload_data_arg]
+    construct zero [number]
+        '0
+    construct argLength [number]
+        zero [length args]
+    construct typeChecks [opt value_continuation]
+        _ [createDisambiguationTypeChecks args '0]
+    construct condition [value]
+        'len(argv) '== argLength typeChecks
+    construct funcCall [repeat statement]
+        _ [createDisambiguatedMethodCall newName argLength]
+    construct ifStatement [statement]
+        'if condition ':
+            funcCall
+    by
+        results [. ifStatement]
+end function
+
+function createDisambiguationTypeChecks args [repeat overload_data_arg] counter [number]
+    replace [opt value_continuation]
+    construct repFirstElem [repeat overload_data_arg]
+        args [head 1]
+    construct otherElems [repeat overload_data_arg]
+        args [tail 2] %maybe 2?
+    deconstruct repFirstElem
+        head  [overload_data_arg]
+    construct optTypeCheck [opt value]
+        _ [createTypeCheck head counter]
+    deconstruct optTypeCheck
+        typeCheck [value]
+    construct increment [number]
+        counter [+ 1]
+    construct optTypeCheckContinuation [opt value_continuation]
+        _ [createDisambiguationTypeChecks otherElems increment]
+    by
+        'and typeCheck [appendOptToValue optTypeCheckContinuation] 
+end function
+
+function createTypeCheck arg [overload_data_arg] counter [number]
+    replace [opt value]
+    construct result [opt value]
+        _ 
+        [createListTypeCheck arg counter]
+        [createNormalTypeCheck arg counter]
+    by
+        result
+end function
+
+function createNormalTypeCheck arg [overload_data_arg] counter [number]
+    replace [opt value]
+    deconstruct arg
+        type [id]
+    construct castedType [value]
+        type
+    by
+        'isinstance( 'argv '[ counter '], castedType [mutlipleTypeCheck]')
+end function
+
+function createListTypeCheck arg [overload_data_arg] counter [number]
+    replace [opt value]
+    deconstruct arg
+        'list type [id]
+    construct castedType [value]
+        type
+    by
+        '( 'isinstance(argv '[ counter '], 'list) 'and '( 'not 'len(argv '[ counter ']) 'or 'isinstance(argv '[ counter '] '[ '0 '], castedType [mutlipleTypeCheck]')))
+end function
+
+function mutlipleTypeCheck
+    replace [value]
+        original [value]
+    by
+        original [floatToFloatInt] 
+end function
+
+function floatToFloatInt
+    replace [value]
+        'float
+    by 
+        '( 'float, 'int)
+end function
+
+function addDisambiguationMethods   
+    replace [repeat class_body_element]
+        results [repeat class_body_element]
+    import overloadData [repeat overload_data]
+    construct disambiguationMethods [repeat class_body_element]
+        _ [createDisambiguationMethod each overloadData]
+    by
+        results [. disambiguationMethods]
+end function
+
+function createDisambiguatedMethodCall funcName [id] argLength [number]
+    replace [repeat statement]
+    construct funcCallArgs [list value]
+        _ [addArgvParam 0 argLength]
+    by
+        'return 'self '. funcName '( funcCallArgs ')
+end function 
+
+function addArgvParam count [number] argLength [number]
+    replace [list value]
+        result [list value]
+    where
+        argLength [> count]
+    construct param [value]
+        'argv '[ count ']
+    construct increment [number]
+        count [+ 1]
+    by
+        result [, param] [addArgvParam increment argLength]
+end function
+
+function filterOutFunctions elem [class_body_element]
+    replace $ [repeat class_body_element]
+        result [repeat class_body_element]
+    where not
+        elem
+            [checkAlreadyStrFunc]
+            [checkAlreadyHashFunc]
+    by
+        result [. elem]
+end function
+
+function checkAlreadyStrFunc
+    match [class_body_element]
+        _[opt decorator] _[acess_modifier] _[nested_identifier] 'toString '( _ [list method_parameter] ') '{ _ [method_content] '}
+    import classMethodNames [repeat id]
+    where
+        classMethodNames [containsId '__str__]
+end function
+
+function checkAlreadyHashFunc
+    match [class_body_element]
+        _[opt decorator] _[acess_modifier] _[nested_identifier] 'hashCode '( _ [list method_parameter] ') '{ _ [method_content] '}
+    import classMethodNames [repeat id]
+    where
+        classMethodNames [containsId '__hash__]
 end function

@@ -95,7 +95,7 @@ define func_call_parentheses
 end define
 
 define parentheses_value
-    '( [value]')
+    '( [list value]')
 end define 
 define base_value
        'null
