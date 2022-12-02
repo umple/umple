@@ -9,7 +9,7 @@ files containing other model or program entities (i.e. classes) within your curr
 blocks of code that are specified within <a href="BasicMixsets.html">mixsets</a>.</p>
 
 <p>A model file or mixset will only be included once, subsequent "use" commands 
-for the same file will be ignored.</p>
+for the same file will be ignored. If a mixset name is preceded by a ! then this indicates to not use the mixset, and cancels out any previous use statement that requested to use the mixset.</p>
 
 <p>A common technique is to create a 'master' Umple file that does nothing but have a list
 of use statements.</p>
