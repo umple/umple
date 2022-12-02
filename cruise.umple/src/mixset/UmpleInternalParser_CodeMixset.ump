@@ -189,23 +189,33 @@ class UmpleInternalParser
 
       for (String mixsetName : mixsetNames)
       {
-        // check if the mixset was added before 
-        Mixset mixset = model.getMixset(mixsetName.trim());
-        if(mixset == null)
-        {
-          mixset = new Mixset(mixsetName);
-          mixset.setUseUmpleFile(mixsetUseFile);
-          mixset.setUseUmpleLine(useLineNumber);
-          model.addMixsetOrFile(mixset);
+        if(mixsetName.trim().charAt(0) == '!') {
+          // request to not use the mixset, hence delete if found
+          // useful for certain conditional logic cases
+          Mixset mixsetToDelete = model.getMixset(mixsetName.trim().substring(1));
+          if (mixsetToDelete != null) {
+            model.removeMixsetOrFile(mixsetToDelete);
+          }
         }
-        else if (mixset.getUseUmpleFile() == null)
-        {
-          mixset.setUseUmpleFile(mixsetUseFile);
-          mixset.setUseUmpleLine(useLineNumber);
+        else {
+
+          // check if the mixset was added before
+          Mixset mixset = model.getMixset(mixsetName.trim());
+          if(mixset == null)
+          {
+            mixset = new Mixset(mixsetName);
+            mixset.setUseUmpleFile(mixsetUseFile);
+            mixset.setUseUmpleLine(useLineNumber);
+            model.addMixsetOrFile(mixset);
+          }
+          else if (mixset.getUseUmpleFile() == null)
+          {
+            mixset.setUseUmpleFile(mixsetUseFile);
+            mixset.setUseUmpleLine(useLineNumber);
+          }
+        // this handles the case when a mixset definition is in a file and the mixset use exists in a subsequent file.
+          parseMixset(mixset);
         }
-	   
-	    // this handles the case when a mixset definition is in a file and the mixset use exists in a subsequent file.
-	    parseMixset(mixset); 
       }
     }
   }

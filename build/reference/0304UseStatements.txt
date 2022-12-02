@@ -9,7 +9,7 @@ files containing other model or program entities (i.e. classes) within your curr
 blocks of code that are specified within <a href="BasicMixsets.html">mixsets</a>.</p>
 
 <p>A model file or mixset will only be included once, subsequent "use" commands 
-for the same file will be ignored.</p>
+for the same file will be ignored. If a mixset name is preceded by a ! then this indicates to not use the mixset, and cancels out any previous use statement that requested to use the mixset.</p>
 
 <p>A common technique is to create a 'master' Umple file that does nothing but have a list
 of use statements.</p>
@@ -19,6 +19,8 @@ of use statements.</p>
 <p>Another way to decompose a system is to have a 'core' set of files that can be included in several different systems using use statements.</p>
 
 <p>Use statements work in a manner similar to 'include' directives in other languages.</p>
+
+<p>A file referred to by a use statement must be in the same directory as the file that has the use statement, or in a parent directory, or in a subdirectory named lib. There are also some builtin Umple files that can be loaded, with the prefix lib:. Finally an https URL may be used to load a file from the Internet<.p>
 
 @@syntax
 [[useStatement]]

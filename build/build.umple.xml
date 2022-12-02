@@ -268,9 +268,16 @@
     </javac>
     
     <copy todir="${bin.path}" overwrite="true">
-	    <fileset dir="${project.path}/src"><include name="**/*.grammar"/></fileset>
-	    <fileset dir="${project.path}/src"><include name="**/*.error"/></fileset>
-	    <fileset dir="${basedir}/umpleonline/umplibrary/reusable"><include name="**/*.ump"/></fileset>
+      <fileset dir="${project.path}/src"><include name="**/*.grammar"/></fileset>
+      <fileset dir="${project.path}/src"><include name="**/*.error"/></fileset>
+      <fileset dir="${basedir}/umpleonline/umplibrary/reusable"><include name="**/*.ump"/></fileset>
+
+      <fileset dir="${project.path}/src"><include name="util/FileUtils.ump"/></fileset>
+      <fileset dir="${basedir}/UmpleParser/src"><include name="GrammarParsing*.ump"/></fileset>
+      <fileset dir="${basedir}/UmpleParser/src"><include name="ParseUtilities*.ump"/></fileset>
+      <fileset dir="${basedir}/UmpleParser/src"><include name="ParsingRules*.ump"/></fileset>
+      <fileset dir="${basedir}/UmpleParser/src"><include name="TextParser*.ump"/></fileset>
+
       <fileset dir="${basedir}/UmpleToPython/txl"><include name="umpleJavaToPython.ctxl"/></fileset>
     </copy>
     <delete file="cruise.umple/src/rules.grammar"/>

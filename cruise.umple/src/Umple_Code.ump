@@ -473,6 +473,10 @@ class UmpleClassifier{
       return "";
     }
     
+    if(filename.startsWith("lib:")) {
+      return "";
+    }
+    
     //Find path relative to namespace folders
     String packageName = getPackageName();
     if (packageName == null || packageName.equals(""))
@@ -501,7 +505,11 @@ class UmpleClassifier{
       {
         if (generates[i].getLanguage().equals(language))
         {
-          generatesPath = currentPath.resolve(Paths.get(generates[i].getPath())).normalize();
+          String genPath = generates[i].getPath();
+          if(genPath.startsWith("lib:")) {
+            genPath = genPath.substring(4);
+          }
+          generatesPath = currentPath.resolve(Paths.get(genPath)).normalize();
         }
       }
       if (generatesPath != null)
