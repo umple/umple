@@ -23,5 +23,4 @@ class Student():
         pass
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "," + "number2" + ":" + str(self.getNumber2()) + "]"
-
+        return super().__str__() + "[" + "number" + ":" + self.getNumber() + "," + "number2" + ":" + self.getNumber2() + "]"

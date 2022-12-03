@@ -46,5 +46,4 @@ class Mentor():
             self._superMentor.setSuperMentor(None)
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]" + str(os.linesep) + "  " + "superMentor = " + ((format(id(self.getSuperMentor()), "x")) if not (self.getSuperMentor() is None) else "null")
-
+        return super().__str__() + "[" + "name" + ":" + self.getName() + "]" + os.linesep + "  " + "superMentor = " + ((format(id(self.getSuperMentor()), "x")) if not (self.getSuperMentor() is None) else "null")

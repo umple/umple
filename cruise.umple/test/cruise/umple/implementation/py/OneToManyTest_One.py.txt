@@ -38,11 +38,11 @@ class Mentor():
     def minimumNumberOfStudents():
         return 0
 
-    def addStudent(self, aNumber):
+    def addStudent1(self, aNumber):
         from Student import Student
         return Student(aNumber, self)
 
-    def addStudent(self, aStudent):
+    def addStudent2(self, aStudent):
         wasAdded = False
         if (aStudent) in self._students :
             return False
@@ -96,5 +96,12 @@ class Mentor():
             i -= 1
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
+        return super().__str__() + "[" + "name" + ":" + self.getName() + "]"
 
+    def addStudent(self, *argv):
+        from Student import Student
+        if len(argv) == 1 and isinstance(argv[0], str) :
+            return self.addStudent1(argv[0])
+        if len(argv) == 1 and isinstance(argv[0], Student) :
+            return self.addStudent2(argv[0])
+        raise TypeError("No method matches provided parameters")

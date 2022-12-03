@@ -24,19 +24,19 @@ class Foo():
         return index
 
     @staticmethod
-    def minimumNumberOfBars(self):
+    def minimumNumberOfBars():
         return 0
 
-    def addBar(self):
+    def addBar1(self):
         from Bar import Bar
         return Bar(self)
 
-    def addBar(self, aBar):
+    def addBar2(self, aBar):
         wasAdded = False
-        if aBar in self._bars :
+        if (aBar) in self._bars :
             return False
         existingFoo = aBar.getFoo()
-        isNewFoo = not (existingFoo is None) and not self.__eq__(existingFoo)
+        isNewFoo = not (existingFoo is None) and not self == existingFoo
         if isNewFoo :
             aBar.setFoo(self)
         else :
@@ -46,7 +46,7 @@ class Foo():
 
     def removeBar(self, aBar):
         wasRemoved = False
-        if not self.__eq__(aBar.getFoo()) :
+        if not self == aBar.getFoo() :
             self._bars.remove(aBar)
             wasRemoved = True
         return wasRemoved
@@ -65,7 +65,7 @@ class Foo():
 
     def addOrMoveBarAt(self, aBar, index):
         wasAdded = False
-        if aBar in self._bars :
+        if (aBar) in self._bars :
             if index < 0 :
                 index = 0
             if index > self.numberOfBars() :
@@ -82,5 +82,12 @@ class Foo():
         while i > 0 :
             aBar = self._bars[i - 1]
             aBar.delete()
-            i --
+            i -= 1
 
+    def addBar(self, *argv):
+        from Bar import Bar
+        if len(argv) == 0 :
+            return self.addBar1()
+        if len(argv) == 1 and isinstance(argv[0], Bar) :
+            return self.addBar2(argv[0])
+        raise TypeError("No method matches provided parameters")

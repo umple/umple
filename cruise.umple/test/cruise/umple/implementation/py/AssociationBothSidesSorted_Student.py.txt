@@ -91,7 +91,7 @@ class Student():
             aMentor.removeStudent(self)
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "id" + ":" + str(self.getId()) + "]" + str(os.linesep) + "  " + "mentorsPriority" + "=" + (((self.getMentorsPriority().__str__().replaceAll("  ", "    ")) if not self.getMentorsPriority() == self else "this") if not (self.getMentorsPriority() is None) else "null")
+        return super().__str__() + "[" + "id" + ":" + self.getId() + "]" + os.linesep + "  " + "mentorsPriority" + "=" + (((self.getMentorsPriority().__str__().replaceAll("  ", "    ")) if not self.getMentorsPriority() == self else "this") if not (self.getMentorsPriority() is None) else "null")
 
     def __getstate__(self):
         state = dict(self.__dict__)

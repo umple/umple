@@ -134,19 +134,19 @@ class Student():
 
         return True
 
-    def hashCode(self):
+    def __hash__(self):
         if self._cachedHashCode != -1 :
             return self._cachedHashCode
         self._cachedHashCode = 17
         self._cachedHashCode = self._cachedHashCode * 23 + self.getIntId()
-        self._cachedHashCode = self._cachedHashCode * 23 + (float(self.getDoubleId())).hashCode()
+        self._cachedHashCode = self._cachedHashCode * 23 + (float(self.getDoubleId())).__hash__()
         self._cachedHashCode = self._cachedHashCode * 23 + ((1) if self.getBooleanId() else 0)
         if not (self.getStringId() is None) :
-            self._cachedHashCode = self._cachedHashCode * 23 + self.getStringId().hashCode()
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getStringId().__hash__()
         else :
             self._cachedHashCode = self._cachedHashCode * 23
         if not (self.getStringListIds() is None) :
-            self._cachedHashCode = self._cachedHashCode * 23 + self.getStringListIds().hashCode()
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getStringListIds().__hash__()
         else :
             self._cachedHashCode = self._cachedHashCode * 23
         self._canSetIntId = False
@@ -160,5 +160,4 @@ class Student():
         pass
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "stringId" + ":" + str(self.getStringId()) + "," + "booleanId" + ":" + str(self.getBooleanId()) + "," + "doubleId" + ":" + str(self.getDoubleId()) + "," + "intId" + ":" + str(self.getIntId()) + "]"
-
+        return super().__str__() + "[" + "stringId" + ":" + self.getStringId() + "," + "booleanId" + ":" + self.getBooleanId() + "," + "doubleId" + ":" + self.getDoubleId() + "," + "intId" + ":" + self.getIntId() + "]"

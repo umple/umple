@@ -1914,16 +1914,6 @@ Action.setCaretPosition = function(line)
       // Special backdoor to turn on experimental features
       document.getElementById('advancedMode').value=1;
 
-      // Add python option
-      if (!!!document.getElementById("genpython")) {
-
-        var pythonOption = document.createElement("option");
-        pythonOption.id = "genpython";
-        pythonOption.value = "python:Python";
-        pythonOption.text = "Python (Alpha Build)";
-        
-        document.getElementById("inputGenerateCode").add(pythonOption,5);
-      }
 
       Page.setFeedbackMessage("");
       return;
@@ -3165,8 +3155,8 @@ Action.toggleTabsCheckbox = function(language)
     language = "TextUml";
   }
 
-  if(language == "java" || language == "php" || language == "cpp" 
-    || language == "ruby" || language == "sql") {
+  if(language == "java" || language == "php" || language == "cpp" ||
+    language == "python" || language == "ruby" || language == "sql") {
     jQuery("#ttTabsCheckbox").show();
     jQuery("#tabRow").show();
 

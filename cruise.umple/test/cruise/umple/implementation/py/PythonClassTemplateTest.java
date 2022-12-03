@@ -134,10 +134,4 @@ public class PythonClassTemplateTest extends ClassTemplateTest
   public void ClassCodeInjections_SingleLine(){
     super.ClassCodeInjections_SingleLine();
   }
-
-  @Test @Ignore
-  public void AssociationInlineComment()
-  {
-	  super.AssociationInlineComment();
-  }
 }

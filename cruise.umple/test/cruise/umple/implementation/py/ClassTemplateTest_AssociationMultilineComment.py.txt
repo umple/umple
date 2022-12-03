@@ -27,11 +27,11 @@ class Foo():
     def minimumNumberOfBars():
         return 0
 
-    def addBar(self):
+    def addBar1(self):
         from Bar import Bar
         return Bar(self)
 
-    def addBar(self, aBar):
+    def addBar2(self, aBar):
         wasAdded = False
         if (aBar) in self._bars :
             return False
@@ -84,3 +84,10 @@ class Foo():
             aBar.delete()
             i -= 1
 
+    def addBar(self, *argv):
+        from Bar import Bar
+        if len(argv) == 0 :
+            return self.addBar1()
+        if len(argv) == 1 and isinstance(argv[0], Bar) :
+            return self.addBar2(argv[0])
+        raise TypeError("No method matches provided parameters")

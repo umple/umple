@@ -118,5 +118,4 @@ class Student():
                 aMentor.removeStudent(self)
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]"
-
+        return super().__str__() + "[" + "number" + ":" + self.getNumber() + "]"

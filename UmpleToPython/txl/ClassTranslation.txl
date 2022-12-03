@@ -124,7 +124,11 @@ function replaceClassBody
         _ [extractClassMethodName each classMethods]
     construct possibleFunctionImports [repeat id]
         _ [extractPossibleFunctionImports body each declarations]
+    export overloadData [repeat overload_data]
+        _
     export possibleFunctionImports
+    construct disambiguationFunctions [repeat class_body_element]
+        _ 
     by
         elements [exportConstructorCount] [removeMemberVariableDeclarations] [replaceEnumDeclaration] 
             [replaceAllMethods memberVariables]
@@ -159,7 +163,7 @@ function extractConcreteMethodName method [method_declaration]
     replace [repeat id]
         result [repeat id]
     deconstruct method
-        _[opt decorator] _[acess_modifier] _[opt static] _[nested_identifier] methodName [id] '( _[list method_parameter] ') _[opt throws] '{ _[repeat statement] '}
+        _[opt decorator] _[acess_modifier] _[opt static] _[nested_identifier] methodName [id] '( _[list method_parameter] ') _[opt throws] '{ _[method_content] '}
     by
         result [. methodName]
 end function
