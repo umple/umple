@@ -163,7 +163,7 @@ function extractConcreteMethodName method [method_declaration]
     replace [repeat id]
         result [repeat id]
     deconstruct method
-        _[opt decorator] _[acess_modifier] _[opt static] _[nested_identifier] methodName [id] '( _[list method_parameter] ') _[opt throws] '{ _[repeat statement] '}
+        _[opt decorator] _[acess_modifier] _[opt static] _[nested_identifier] methodName [id] '( _[list method_parameter] ') _[opt throws] '{ _[method_content] '}
     by
         result [. methodName]
 end function

@@ -46,14 +46,14 @@ class Mentor():
     def maximumNumberOfPupils():
         return 7
 
-    def addPupil(self, aNumber):
+    def addPupil1(self, aNumber):
         from Pupil import Pupil
         if self.numberOfPupils() >= Mentor.maximumNumberOfPupils() :
             return None
         else :
             return Pupil(aNumber, self)
 
-    def addPupil(self, aPupil):
+    def addPupil2(self, aPupil):
         wasAdded = False
         if (aPupil) in self._pupils :
             return False
@@ -114,5 +114,12 @@ class Mentor():
             i -= 1
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
+        return super().__str__() + "[" + "name" + ":" + self.getName() + "]"
 
+    def addPupil(self, *argv):
+        from Pupil import Pupil
+        if len(argv) == 1 and isinstance(argv[0], str) :
+            return self.addPupil1(argv[0])
+        if len(argv) == 1 and isinstance(argv[0], Pupil) :
+            return self.addPupil2(argv[0])
+        raise TypeError("No method matches provided parameters")

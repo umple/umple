@@ -139,16 +139,16 @@ class Mentor():
 
         return True
 
-    def hashCode(self):
+    def __hash__(self):
         if self._cachedHashCode != -1 :
             return self._cachedHashCode
         self._cachedHashCode = 17
         if not (self.getMain() is None) :
-            self._cachedHashCode = self._cachedHashCode * 23 + self.getMain().hashCode()
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getMain().__hash__()
         else :
             self._cachedHashCode = self._cachedHashCode * 23
         if not (self.getSecondaries() is None) :
-            self._cachedHashCode = self._cachedHashCode * 23 + self.getSecondaries().hashCode()
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getSecondaries().__hash__()
         else :
             self._cachedHashCode = self._cachedHashCode * 23
         self._canSetMain = False
@@ -161,4 +161,3 @@ class Mentor():
 
         while not self._secondaries.isEmpty() :
             self._secondaries[0].setMentorSecondary(None)
-

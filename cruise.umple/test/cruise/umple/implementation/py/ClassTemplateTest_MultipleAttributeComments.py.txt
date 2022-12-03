@@ -49,5 +49,4 @@ class Foo():
         pass
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "testAttribute1" + ":" + str(self.getTestAttribute1()) + "," + "testAttribute2" + ":" + str(self.getTestAttribute2()) + "," + "testAttribute3" + ":" + str(self.getTestAttribute3()) + "," + "testAttribute4" + ":" + str(self.getTestAttribute4()) + "]"
-
+        return super().__str__() + "[" + "testAttribute1" + ":" + self.getTestAttribute1() + "," + "testAttribute2" + ":" + self.getTestAttribute2() + "," + "testAttribute3" + ":" + self.getTestAttribute3() + "," + "testAttribute4" + ":" + self.getTestAttribute4() + "]"

@@ -93,11 +93,11 @@ class Foo():
     def minimumNumberOfBar1s():
         return 0
 
-    def addBar1(self):
+    def addBar5(self):
         from Bar1 import Bar1
         return Bar1(self)
 
-    def addBar1(self, aBar1):
+    def addBar6(self, aBar1):
         wasAdded = False
         if (aBar1) in self._bar1s :
             return False
@@ -147,11 +147,11 @@ class Foo():
     def minimumNumberOfBar2s():
         return 0
 
-    def addBar2(self):
+    def addBar7(self):
         from Bar2 import Bar2
         return Bar2(self)
 
-    def addBar2(self, aBar2):
+    def addBar8(self, aBar2):
         wasAdded = False
         if (aBar2) in self._bar2s :
             return False
@@ -201,11 +201,11 @@ class Foo():
     def minimumNumberOfBar3s():
         return 0
 
-    def addBar3(self):
+    def addBar9(self):
         from Bar3 import Bar3
         return Bar3(self)
 
-    def addBar3(self, aBar3):
+    def addBar10(self, aBar3):
         wasAdded = False
         if (aBar3) in self._bar3s :
             return False
@@ -255,11 +255,11 @@ class Foo():
     def minimumNumberOfBar4s():
         return 0
 
-    def addBar4(self):
+    def addBar11(self):
         from Bar4 import Bar4
         return Bar4(self)
 
-    def addBar4(self, aBar4):
+    def addBar12(self, aBar4):
         wasAdded = False
         if (aBar4) in self._bar4s :
             return False
@@ -330,3 +330,34 @@ class Foo():
             aBar4.delete()
             i -= 1
 
+    def addBar1(self, *argv):
+        from Bar1 import Bar1
+        if len(argv) == 0 :
+            return self.addBar5()
+        if len(argv) == 1 and isinstance(argv[0], Bar1) :
+            return self.addBar6(argv[0])
+        raise TypeError("No method matches provided parameters")
+
+    def addBar2(self, *argv):
+        from Bar2 import Bar2
+        if len(argv) == 0 :
+            return self.addBar7()
+        if len(argv) == 1 and isinstance(argv[0], Bar2) :
+            return self.addBar8(argv[0])
+        raise TypeError("No method matches provided parameters")
+
+    def addBar3(self, *argv):
+        from Bar3 import Bar3
+        if len(argv) == 0 :
+            return self.addBar9()
+        if len(argv) == 1 and isinstance(argv[0], Bar3) :
+            return self.addBar10(argv[0])
+        raise TypeError("No method matches provided parameters")
+
+    def addBar4(self, *argv):
+        from Bar4 import Bar4
+        if len(argv) == 0 :
+            return self.addBar11()
+        if len(argv) == 1 and isinstance(argv[0], Bar4) :
+            return self.addBar12(argv[0])
+        raise TypeError("No method matches provided parameters")

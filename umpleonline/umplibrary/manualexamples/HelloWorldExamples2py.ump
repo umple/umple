@@ -9,8 +9,8 @@
  */
 class Person {
   name; // Attribute, string by default
-  String toString () {git
-    return getString();
+  String __str__() {
+    return self.getName()
   }
 }
 
@@ -35,9 +35,9 @@ class Person {
     import Student
     m = Mentor.Mentor("Nick The Mentor")
     s = Student.Student("Tom The Student")
-    s.setMentor(m);
-    print("The mentor of " + s  + " is " +  s.getMentor());
-    print("The students of " +  m  + " are " +  m.getStudents());
+    s.setMentor(m)
+    print("The mentor of " + str(s)  + " is " +  str(s.getMentor()))
+    print("The students of " +  str(m)  + " are " + str(list(map(str, m.getStudents()))))
   }
 }//$?[End_of_model]$?
 

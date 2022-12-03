@@ -134,5 +134,4 @@ class Mentor():
                 aStudent.removeMentor(self)
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
-
+        return super().__str__() + "[" + "name" + ":" + self.getName() + "]"
