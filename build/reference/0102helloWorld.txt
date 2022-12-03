@@ -33,7 +33,7 @@ noreferences
 @@endexample
 
 @@example @@caption Example Showing a Simple Class with a Main Method for Python Generation @@endcaption
-@@source manualexamples/HelloWorldExamples1py.ump.ump
+@@source manualexamples/HelloWorldExamples1py.ump
 @@endexample
 
 @@example @@caption Example Showing Three Classes with an Association and Attributes (Diagram is Above) for Python Generation@@endcaption
