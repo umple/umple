@@ -29,12 +29,10 @@ Currently supported features:
 <p>
 Currently NOT supported features:
 <ul>
-    <li>State Machines</li>
     <li>Code Injection</li>
     <li>Tracing</li>
-    <li>Await function</li>
-    <li>Anything with raw Java code</li>
-    <li>Comments</li>
+    <li>await() function</li>
+    <li>Comments are currently being ignored</li>
     <li>Concurrency</li>
     <li>Any Umple code that create the following Java:
         <ul>
