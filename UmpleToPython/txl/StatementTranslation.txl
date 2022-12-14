@@ -648,7 +648,7 @@ end rule
 
 rule translateNestedEqualsCall
     replace [value]
-        nested [nested_identifier]
+        nested [nested_identifier] cont [opt value_continuation]
     deconstruct nested
         root [nestable_value] rep [repeat attribute_access]
     construct seeking [id]
@@ -667,8 +667,12 @@ rule translateNestedEqualsCall
         repLength [- 1]
     construct firstAttrs [repeat attribute_access]
         rep [head lengthMinusOne]
-    by
+    construct pythonEquals [value_continuation]
+        '== val 
+    construct newPythonEquals [value]
         root firstAttrs '== val
+    by
+         newPythonEquals [appendOptToValue cont]
 end rule
 
 rule translateNestedContainsCall
