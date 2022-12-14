@@ -98,7 +98,7 @@ class PythonGenerator
 
     File file = new File(path);
     file.mkdirs();
-    String filename = path + File.separator + className + ".java";
+    String filename = path + File.separator + className + ".japy"; //japy extension used to avoid an issue when java is generated and then python is generated.
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
 
     try
@@ -122,13 +122,15 @@ class PythonGenerator
 
     String pythonFilename = path + File.separator + className + ".py";
     String CompiledTXLPath = "./txl/umpleJavaToPython.ctxl";
-    String[] TXLcommand = {"txl", "-l", CompiledTXLPath, "-s", "2000", filename, "-o", pythonFilename};
+    String[] TXLcommand = {"txl", "-l", CompiledTXLPath, filename, "-o", pythonFilename};
 
     try {
 
       Process p = Runtime.getRuntime().exec(TXLcommand);
-      BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+      p.waitFor();
 
+      BufferedReader reader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+      
       String line;
       if(reader.ready()) {
         line = reader.readLine();
@@ -137,21 +139,41 @@ class PythonGenerator
         line = null;
       }
 
+      boolean foundError = false;
+      String error = "";
+
+
       while (line!=null) {
+        //When an error is found, the error information is always on the next line
+        if (foundError) {
+          error = line;
+        }
+
         if(line.contains("error")) {
-           System.err.println("TXL ran into an error while processing one of the files. The file may be missing from the generated code.");
-           return;
+          foundError = true;
         }
 
         if(reader.ready()) {
           line = reader.readLine();
-        }
-        else {
+        } else {
           line = null;
         }
       }
 
-      p.waitFor();
+      String errorMessage = isUnsupportedFeature(error);
+
+      if (foundError && errorMessage!=null) {
+        System.out.println("Could not Generate file '" + new File(pythonFilename).getName() + "'. This file will be missing from the output.");
+        System.out.println("Error : " + errorMessage);
+        
+        //Removing temp JaPy Files
+        File javaFile = new File(filename);
+        javaFile.delete();
+        
+        return;
+      } else if(foundError) {
+        throw new Exception("An error occured during the code translation.");
+      }
 
     } catch (IOException e) {
 	    throw new UmpleCompilerException("Unable to read the txl output", e);
@@ -212,7 +234,6 @@ class PythonGenerator
     //Removing Java Files
     File javaFile = new File(filename);
     javaFile.delete();
-
   }
 
   @Override
@@ -254,6 +275,16 @@ class PythonGenerator
     } catch(Exception e){ e.printStackTrace(); }
   }
 
+  //Checks to see if an error was using Unsupported Feature
+  private String isUnsupportedFeature(String error) {
+    if (error.contains("TimerTask")) {
+      return "TimerTask was generated. This class is currently unsupported. This class is linked to the 'after()' keyword.";
+    } else {
+      return null;
+    }
+  }
+
+  //Checks if TXL is installed on the System. Also checks if the version is the same
   private boolean isTxlInstalled()
   {
     //Check for TXL installation
@@ -288,6 +319,7 @@ class PythonGenerator
 	  return true;
   }
 
+  //Checks to see if the generated Umple TXL files are still good
   private boolean isTXLValid()
   {
     try {
@@ -330,6 +362,7 @@ class PythonGenerator
     }
   }
 
+  //Generate the TXL files required for Python Translation
   private void generateTxlFiles() throws IOException {
     //Create TXL dir
     File txlFolder = new File("txl");
