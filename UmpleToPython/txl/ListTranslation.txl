@@ -73,13 +73,17 @@ rule replaceArrayLength memberLists [repeat id]
         'len( id ')
 end rule
 
+
+
 rule replaceListGetIndex memberLists [repeat id]
-    replace [nested_identifier]
-        id [id] '.indexOf( val [value] ')
+    replace [value]
+        id [id] '.indexOf( val [value] ') cont [opt value_continuation]
     where
         memberLists [containsId id]
+    construct pythonVal [value]
+        '( '-1 'if 'not val 'in id 'else id '.index( val ') ')
     by 
-        id '.index( val ')
+        pythonVal [appendOptToValue cont]
 end rule
 
 rule replaceListContains memberLists [repeat id]
