@@ -26,7 +26,7 @@ class Foo():
         return has
 
     def indexOfBar1(self, aBar1):
-        index = self._bar1s.index(aBar1)
+        index = (-1 if not aBar1 in self._bar1s else self._bar1s.index(aBar1))
         return index
 
     def getBar2(self, index):
@@ -46,7 +46,7 @@ class Foo():
         return has
 
     def indexOfBar2(self, aBar2):
-        index = self._bar2s.index(aBar2)
+        index = (-1 if not aBar2 in self._bar2s else self._bar2s.index(aBar2))
         return index
 
     def getBar3(self, index):
@@ -66,7 +66,7 @@ class Foo():
         return has
 
     def indexOfBar3(self, aBar3):
-        index = self._bar3s.index(aBar3)
+        index = (-1 if not aBar3 in self._bar3s else self._bar3s.index(aBar3))
         return index
 
     def getBar4(self, index):
@@ -86,7 +86,7 @@ class Foo():
         return has
 
     def indexOfBar4(self, aBar4):
-        index = self._bar4s.index(aBar4)
+        index = (-1 if not aBar4 in self._bar4s else self._bar4s.index(aBar4))
         return index
 
     @staticmethod
@@ -361,3 +361,4 @@ class Foo():
         if len(argv) == 1 and isinstance(argv[0], Bar4) :
             return self.addBar12(argv[0])
         raise TypeError("No method matches provided parameters")
+

@@ -46,4 +46,5 @@ class Pupil():
             placeholderMentor.removePupil(self)
 
     def __str__(self):
-        return super().__str__() + "[" + "number" + ":" + self.getNumber() + "]" + os.linesep + "  " + "mentor = " + ((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null")
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "mentor = " + ((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null")
+

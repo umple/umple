@@ -40,7 +40,7 @@ public class PythonClassTemplateTest extends ClassTemplateTest
     assertUmpleTemplateFor("py/ClassTemplateTest_Python.ump","py/ClassTemplateTest_Python.py.txt","Mentor");
   }
   
-  @Test @Ignore
+  @Test
   public void fixmlAttribute2()
   {
     language = "Python";
@@ -54,7 +54,7 @@ public class PythonClassTemplateTest extends ClassTemplateTest
     assertUmpleTemplateFor("py/ClassTemplateTest_ExtraCode.ump","py/ClassTemplateTest_ExtraCode.py.txt","Mentor");
   }
   
-  @Test @Ignore
+  @Test
   public void abstractClass()
   {
 	language = "Python";

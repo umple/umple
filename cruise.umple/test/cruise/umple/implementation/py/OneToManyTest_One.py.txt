@@ -31,7 +31,7 @@ class Mentor():
         return has
 
     def indexOfStudent(self, aStudent):
-        index = self._students.index(aStudent)
+        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
         return index
 
     @staticmethod
@@ -96,7 +96,7 @@ class Mentor():
             i -= 1
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + self.getName() + "]"
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
 
     def addStudent(self, *argv):
         from Student import Student
@@ -105,3 +105,4 @@ class Mentor():
         if len(argv) == 1 and isinstance(argv[0], Student) :
             return self.addStudent2(argv[0])
         raise TypeError("No method matches provided parameters")
+

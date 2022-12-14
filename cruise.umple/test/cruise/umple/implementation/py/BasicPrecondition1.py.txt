@@ -1,5 +1,6 @@
 class Client():
     def __init__(self, aMinAge):
+        self._minAge = None
         self._minAge = aMinAge
 
     def setMinAge(self, aMinAge):
@@ -15,14 +16,9 @@ class Client():
         pass
 
     def someMethod(self, arg):
-        if arg < = 5 :
-            raise RuntimeError ("Please provide a valid arg")
-
-        if self.getMinAge() > = 8 :
-            raise RuntimeError ("Please provide a valid minAge")
-
-        return 0
+        // rest of stuff that we don't interpret
+        return 0;
 
     def __str__(self):
-        return str(super()) + "[" + "minAge" + ":" + self.getMinAge() + "]"
+        return str(super().__str__()) + "[" + "minAge" + ":" + str(self.getMinAge()) + "]"
 

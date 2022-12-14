@@ -50,4 +50,5 @@ class OneSymmetric():
             existingFriend.delete()
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + self.getName() + "," + "number" + ":" + self.getNumber() + "]" + os.linesep + "  " + "friend = " + ((format(id(self.getFriend()), "x")) if not (self.getFriend() is None) else "null")
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "," + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "friend = " + ((format(id(self.getFriend()), "x")) if not (self.getFriend() is None) else "null")
+

@@ -98,7 +98,7 @@ class Student():
         return has
 
     def indexOfStringListId(self, aStringListId):
-        index = self._stringListIds.index(aStringListId)
+        index = (-1 if not aStringListId in self._stringListIds else self._stringListIds.index(aStringListId))
         return index
 
     def isBooleanId(self):
@@ -160,4 +160,5 @@ class Student():
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "stringId" + ":" + self.getStringId() + "," + "booleanId" + ":" + self.getBooleanId() + "," + "doubleId" + ":" + self.getDoubleId() + "," + "intId" + ":" + self.getIntId() + "]"
+        return str(super().__str__()) + "[" + "stringId" + ":" + str(self.getStringId()) + "," + "booleanId" + ":" + str(self.getBooleanId()) + "," + "doubleId" + ":" + str(self.getDoubleId()) + "," + "intId" + ":" + str(self.getIntId()) + "]"
+

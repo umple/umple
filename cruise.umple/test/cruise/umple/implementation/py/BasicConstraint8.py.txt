@@ -1,8 +1,10 @@
 class student():
     def __init__(self, aAge, aWeight):
+        self._weight = None
+        self._age = None
         self._age = aAge
         self._weight = aWeight
-        if aAge > = 10 or (aAge > = 10) :
+        if aAge >= 10 or (aAge >= 10) :
             raise RuntimeError ("Please provide a valid age [age<10&&age<10]")
 
     def setAge(self, aAge):
@@ -10,7 +12,6 @@ class student():
         if aAge < 10 and (aAge < 10) :
             self._age = aAge
             wasSet = True
-
         return wasSet
 
     def setWeight(self, aWeight):
@@ -29,5 +30,5 @@ class student():
         pass
 
     def __str__(self):
-        return str(super()) + "[" + "age" + ":" + self.getAge() + "," + "weight" + ":" + self.getWeight() + "]"
+        return str(super().__str__()) + "[" + "age" + ":" + str(self.getAge()) + "," + "weight" + ":" + str(self.getWeight()) + "]"
 

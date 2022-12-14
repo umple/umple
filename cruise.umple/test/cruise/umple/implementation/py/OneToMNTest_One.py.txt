@@ -31,7 +31,7 @@ class Mentor():
         return has
 
     def indexOfPupil(self, aPupil):
-        index = self._pupils.index(aPupil)
+        index = (-1 if not aPupil in self._pupils else self._pupils.index(aPupil))
         return index
 
     def isNumberOfPupilsValid(self):
@@ -114,7 +114,7 @@ class Mentor():
             i -= 1
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + self.getName() + "]"
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
 
     def addPupil(self, *argv):
         from Pupil import Pupil
@@ -123,3 +123,4 @@ class Mentor():
         if len(argv) == 1 and isinstance(argv[0], Pupil) :
             return self.addPupil2(argv[0])
         raise TypeError("No method matches provided parameters")
+

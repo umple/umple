@@ -73,4 +73,5 @@ class Student():
             self._ta.setPupil(None)
 
     def __str__(self):
-        return super().__str__() + "[" + "number" + ":" + self.getNumber() + "]"
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]"
+
