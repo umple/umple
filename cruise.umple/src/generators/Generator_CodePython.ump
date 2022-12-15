@@ -76,9 +76,9 @@ class PythonGenerator
       language = getLanguageFor(aClass);
       contents = language.getCode(getModel(), aClass);
     } catch(Exception e) {
-      System.err.println("An error occured during the code generation of " + className + ". This file will be missing form the output.");
-      System.err.println("You may have been using a feature which is not currently supported for Python code generation.");
-      System.err.println("Please read the umple manual to learn more about python generation restrictions.");
+      System.err.println("Unsupported : An error occured during the code generation of " + className + ". This file will be missing form the output.");
+      System.err.println("\tYou may have been using a feature which is not currently supported for Python code generation.");
+      System.err.println("\tPlease read the umple manual to learn more about python generation restrictions.");
       return;
     }
 
@@ -126,6 +126,7 @@ class PythonGenerator
     String pythonFilename = path + File.separator + className + ".py";
     String CompiledTXLPath = "./txl/umpleJavaToPython.ctxl";
     String[] TXLcommand = {"txl", "-l", CompiledTXLPath, filename, "-o", pythonFilename};
+    boolean foundError = false;
 
     try {
 
@@ -134,7 +135,6 @@ class PythonGenerator
 
       BufferedReader reader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
-      boolean foundError = false;
       String error = "";
       String line = "";
 
@@ -163,14 +163,32 @@ class PythonGenerator
         String errorMessage = isUnsupportedFeature(error);
 
         if (errorMessage!=null) {
-          System.err.println("Could not Generate file '" + new File(pythonFilename).getName() + "'. This file will be missing from the output.");
-          System.err.println("Error : " + errorMessage);
+          System.err.println("Unsupported : Could not Generate file '" + new File(pythonFilename).getName() + "'. This file will be missing from the output.");
+          System.err.println("\t" + errorMessage);
         
+          contents = "#An Unsupported feature for Python generation was used. File could not be generated.";
+
           //Removing temp java Files
           File javaFile = new File(filename);
           javaFile.delete();
         
-          getModel().getGeneratedCode().put(aClass.getName(), "#Error while generating, no output available.");
+          //Writting empty Python file
+          File pyFile = new File(pythonFilename);
+          String pyFilename = path + File.separator + className + ".py"; 
+          bw = new BufferedWriter(new FileWriter(pyFilename));
+
+          try
+          {
+            bw.write(contents);
+            bw.flush();
+          }
+          finally
+          {
+            bw.close();
+          }
+
+          getModel().getGeneratedCode().put(aClass.getName(), contents);
+          contents = "";
 
           return;
         } else {
