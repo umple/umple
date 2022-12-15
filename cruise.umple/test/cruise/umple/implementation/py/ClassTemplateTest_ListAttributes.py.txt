@@ -30,11 +30,12 @@ class Token():
         return has
 
     def indexOfPosition(self, aPosition):
-        index = self._positions.index(aPosition)
+        index = (-1 if not aPosition in self._positions else self._positions.index(aPosition))
         return index
 
     def delete(self):
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "]"
+        return str(super().__str__()) + "[" + "]"
+

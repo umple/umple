@@ -45,7 +45,7 @@ class Student():
         return has
 
     def indexOfMentor(self, aMentor):
-        index = self._mentors.index(aMentor)
+        index = (-1 if not aMentor in self._mentors else self._mentors.index(aMentor))
         return index
 
     @staticmethod
@@ -69,7 +69,7 @@ class Student():
         wasRemoved = False
         if not (aMentor) in self._mentors :
             return wasRemoved
-        oldIndex = self._mentors.index(aMentor)
+        oldIndex = (-1 if not aMentor in self._mentors else self._mentors.index(aMentor))
         self._mentors.remove(oldIndex)
         if aMentor.indexOfStudent(self) == -1 :
             wasRemoved = True
@@ -91,7 +91,7 @@ class Student():
             aMentor.removeStudent(self)
 
     def __str__(self):
-        return super().__str__() + "[" + "id" + ":" + self.getId() + "]" + os.linesep + "  " + "mentorsPriority" + "=" + (((self.getMentorsPriority().__str__().replaceAll("  ", "    ")) if not self.getMentorsPriority() == self else "this") if not (self.getMentorsPriority() is None) else "null")
+        return str(super().__str__()) + "[" + "id" + ":" + str(self.getId()) + "]" + str(os.linesep) + "  " + "mentorsPriority" + "=" + (((self.getMentorsPriority().__str__().replaceAll("  ", "    ")) if not self.getMentorsPriority() == self else "this") if not (self.getMentorsPriority() is None) else "null")
 
     def __getstate__(self):
         state = dict(self.__dict__)

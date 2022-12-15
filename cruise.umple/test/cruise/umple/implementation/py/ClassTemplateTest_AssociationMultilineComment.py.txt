@@ -20,7 +20,7 @@ class Foo():
         return has
 
     def indexOfBar(self, aBar):
-        index = self._bars.index(aBar)
+        index = (-1 if not aBar in self._bars else self._bars.index(aBar))
         return index
 
     @staticmethod
@@ -91,3 +91,4 @@ class Foo():
         if len(argv) == 1 and isinstance(argv[0], Bar) :
             return self.addBar2(argv[0])
         raise TypeError("No method matches provided parameters")
+

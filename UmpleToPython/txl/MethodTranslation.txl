@@ -47,6 +47,7 @@ rule replaceConcreteMethod
             [replaceStatements] 
             [changeKeyArgumentNameInNestedIdentifier] 
             [addFunctionImports]
+            [addStrIfNeeded methodName]
 end rule
 
 function createStaticDecorator possibleStatic [opt static]
@@ -128,15 +129,8 @@ function replaceHashCodeMethodName
         '__hash__
 end function
 
-rule replaceHashCodeMethod
-    replace [method_declaration]
-        _[acess_modifier] _[nested_identifier]  'toString '() _ [opt throws] '{ statements [repeat statement] '}
-    by
-        'def '__str__ '(self):  statements [replaceStatements] [addStrIfNeeded]
-end rule
-
-
-rule addStrIfNeeded
+rule addStrIfNeeded functionName [id]
+    where functionName [= 'toString]
     skipping [parentheses_value]
     replace $ [value]
         baseVal [base_value] cont [value_continuation]
@@ -484,12 +478,34 @@ function fixMultipleConstructors
     where
         constructorCount [> 1]
     by
-        rep [replaceExtraConstructorNoArgs] 
-        [replaceOneToOneConstructor]
-        [replaceOneToOneConstructorCall]
-        [targetRemainingConstructor]
+        rep [fixNoArgDefaultMultipleConstructors] [fixOneToOneMultipleConstructors] 
+        
 end function
 
+function fixOneToOneMultipleConstructors
+    replace [repeat class_body_element]
+        elems [repeat class_body_element]
+    where 
+        elems [existsOneToOneConstructor]
+    by
+        elems [replaceOneToOneConstructor] [targetRemainingConstructor]
+end function
+
+function fixNoArgDefaultMultipleConstructors
+    replace [repeat class_body_element]
+        elems [repeat class_body_element]
+    where not
+        elems [existsOneToOneConstructor]
+    by
+        elems [replaceExtraConstructorNoArgs]
+end function
+
+rule existsOneToOneConstructor
+    match [constructor] 
+        'def '__init__( _ [list method_parameter] '):  stmts [repeat statement]
+    where 
+        stmts [containConstructorWithSelfParam]
+end rule
 
 rule replaceExtraConstructorNoArgs
     replace [class_body_element]

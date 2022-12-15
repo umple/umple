@@ -1,8 +1,10 @@
 class Client():
     def __init__(self, aMinAge, aAge):
+        self._age = None
+        self._minAge = None
         self._minAge = aMinAge
         self._age = aAge
-        if aAge < = aMinAge :
+        if aAge <= aMinAge :
             raise RuntimeError ("Please provide a valid age and minAge [age>minAge]")
 
     def setMinAge(self, aMinAge):
@@ -10,7 +12,6 @@ class Client():
         if self.getAge() > aMinAge :
             self._minAge = aMinAge
             wasSet = True
-
         return wasSet
 
     def setAge(self, aAge):
@@ -18,7 +19,6 @@ class Client():
         if aAge > self.getMinAge() :
             self._age = aAge
             wasSet = True
-
         return wasSet
 
     def getMinAge(self):
@@ -31,5 +31,5 @@ class Client():
         pass
 
     def __str__(self):
-        return str(super()) + "[" + "minAge" + ":" + self.getMinAge() + "," + "age" + ":" + self.getAge() + "]"
+        return str(super().__str__()) + "[" + "minAge" + ":" + str(self.getMinAge()) + "," + "age" + ":" + str(self.getAge()) + "]"
 

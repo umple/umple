@@ -198,7 +198,7 @@
       <exclude name="BasicTemplates3.ump"/>
       <exclude name="HtmlGeneration.ump"/>
 
-      <!-- General bugs -->
+      <!-- Other issues bugs -->
       <exclude name="AroundStatement1.ump"/>  <!-- Code Injection -->
       <exclude name="AroundStatement2.ump"/>  <!-- Code Injection -->
       <exclude name="PingPong.ump"/>  <!-- Code Injection -->
@@ -207,7 +207,11 @@
       <exclude name="StateDependentMethods2.ump"/> <!-- Return nothing on a switch case -->
       <exclude name="TcpIpSimulation.ump"/> <!-- uses synchronized keyword -->
       <exclude name="W082ConflictingModifiers.ump"/> <!-- Contains raw java code -->
-      
+      <exclude name="W1006StateMachineNotParsed1.ump"/>
+      <exclude name="W1007ElementNotParsed1.ump"/>
+      <exclude name="W1010ConstraintSyntaxNotProcessed1.ump"/>
+      <exclude name="NullExample.ump"/>
+
       <!-- Contains Java specific classes for tracing -->
       <exclude name="Phone.ump"/>
       <exclude name="Tracers1.ump"/>

@@ -51,4 +51,5 @@ class Student():
             existingMentor.delete()
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + self.getName() + "," + "number" + ":" + self.getNumber() + "]" + os.linesep + "  " + "mentor = " + ((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null")
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "," + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "mentor = " + ((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null")
+

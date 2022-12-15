@@ -18,7 +18,7 @@ Umple code can result in generation of various  languages. Code from these langu
 
 <li>C++: Complete for basic cases, but still beta.</li>
 
-<li>Python: Under development; expected completion in late 2022.</li>
+<li>Python: Currently in beta. <a href="Python.html">See this page for more details.</a></li>
 
 </ul>
 

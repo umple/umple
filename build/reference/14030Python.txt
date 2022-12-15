@@ -1,0 +1,51 @@
+Python
+Generators
+noreferences
+@@description
+<p>
+The Python generator in Umple takes the Java code as an input and converts it to Python using the TXL programming language.<br>
+As Python generation is in Beta, it does not currently fully support every Umple feature that Java does. 
+</p>
+
+<br>
+
+<p>
+Currently supported features:
+<ul>
+    <li>Classes</li>
+    <li>Interfaces</li>
+    <li>Abstract classes</li>
+    <li>Inheritance</li>
+    <li>Associativity</li>
+    <li>Attributes</li>
+    <li>Enumerations</li>
+    <li>Main functions</li>
+    <li>User embedded Python code</li>
+</ul>
+</p>
+
+<br><br>
+
+<p>
+Currently NOT supported features:
+<ul>
+    <li>Code Injection</li>
+    <li>Tracing</li>
+    <li>await() function</li>
+    <li>Comments are currently being ignored</li>
+    <li>Concurrency</li>
+    <li>Any Umple code that create the following Java:
+        <ul>
+            <li>extends Thread</li>
+            <li>threading</li>
+            <li>keyword synchronized</li>
+            <li>nested classes</li>
+            <li>TimerTask</li>
+        </ul>
+    </li>
+</ul>
+</p>
+
+<p>
+If any of the features that are supported appear to function incorrectly, please report it to an Umple developer or submit it <a href="https://github.com/umple/umple/issues/new">here</a>.
+</p>

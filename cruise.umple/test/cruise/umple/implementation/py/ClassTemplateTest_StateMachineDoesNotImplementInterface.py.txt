@@ -59,4 +59,5 @@ class Router(NetworkNode):
         return False
 
     def __str__(self):
-        return super().__str__() + "[" + "]"
+        return str(super().__str__()) + "[" + "]"
+

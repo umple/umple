@@ -13,9 +13,4 @@ public class PythonReflexiveAssociationTest extends ReflexiveAssociationTest
     language = "Python";
     languagePath = "py";
   }
-
-  @Test @Ignore
-  public void OneSymmetricNoParam(){
-    super.OneSymmetricNoParam();
-  }
 }

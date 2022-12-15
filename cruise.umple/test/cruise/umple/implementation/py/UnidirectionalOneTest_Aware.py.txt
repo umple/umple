@@ -31,4 +31,5 @@ class Mentor():
         self._student = None
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + self.getName() + "]" + os.linesep + "  " + "student = " + ((format(id(self.getStudent()), "x")) if not (self.getStudent() is None) else "null")
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]" + str(os.linesep) + "  " + "student = " + ((format(id(self.getStudent()), "x")) if not (self.getStudent() is None) else "null")
+

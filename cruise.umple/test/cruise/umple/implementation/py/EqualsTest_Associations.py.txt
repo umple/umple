@@ -34,7 +34,7 @@ class Mentor():
         return has
 
     def indexOfSecondary(self, aSecondary):
-        index = self._secondaries.index(aSecondary)
+        index = (-1 if not aSecondary in self._secondaries else self._secondaries.index(aSecondary))
         return index
 
     def setMain(self, aNewMain):
@@ -161,3 +161,4 @@ class Mentor():
 
         while not self._secondaries.isEmpty() :
             self._secondaries[0].setMentorSecondary(None)
+

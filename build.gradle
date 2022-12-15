@@ -1539,6 +1539,10 @@ task pythonUserManualAndExampleTests {
                 "TrafficLightsB.ump",
                 "UnspecifiedEvents2.ump",
                 "W082ConflictingModifiers.ump",
+                "W1006StateMachineNotParsed1.ump",
+                "W1007ElementNotParsed1.ump",
+                "W1010ConstraintSyntaxNotProcessed1.ump",
+                "NullExample.ump",
                 "Tracers1.ump", //Tracers are out of scope for Beta Python Generation
                 "Tracers2.ump",
                 "Tracers3.ump",

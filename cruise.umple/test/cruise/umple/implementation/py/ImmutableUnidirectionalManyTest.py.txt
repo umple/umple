@@ -31,7 +31,7 @@ class Student():
         return has
 
     def indexOfMentor(self, aMentor):
-        index = self._mentors.index(aMentor)
+        index = (-1 if not aMentor in self._mentors else self._mentors.index(aMentor))
         return index
 
     @staticmethod
@@ -61,4 +61,5 @@ class Student():
         pass
 
     def __str__(self):
-        return super().__str__() + "[" + "number" + ":" + self.getNumber() + "]"
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]"
+

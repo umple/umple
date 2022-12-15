@@ -35,7 +35,7 @@ class Mentor():
         return has
 
     def indexOfStudent(self, aStudent):
-        index = self._students.index(aStudent)
+        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
         return index
 
     @staticmethod
@@ -106,4 +106,5 @@ class Mentor():
         self._students.clear()
 
     def __str__(self):
-        return super().__str__() + "[" + "name" + ":" + self.getName() + "]"
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
+
