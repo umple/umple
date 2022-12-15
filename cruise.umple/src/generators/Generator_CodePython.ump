@@ -170,6 +170,8 @@ class PythonGenerator
           File javaFile = new File(filename);
           javaFile.delete();
         
+          getModel().getGeneratedCode().put(aClass.getName(), "#Error while generating, no output available.");
+
           return;
         } else {
           throw new Exception("An error occured during the code translation.");
