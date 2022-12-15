@@ -76,7 +76,10 @@ class PythonGenerator
       language = getLanguageFor(aClass);
       contents = language.getCode(getModel(), aClass);
     } catch(Exception e) {
-      throw new UmpleCompilerException("An error occured during the code generation. You may have been using a feature which is not currently supported for Python code generation", e);
+      System.out.println("An error occured during the code generation of " + className + ". This file will be missing form the output.");
+      System.out.println("You may have been using a feature which is not currently supported for Python code generation.");
+      System.out.println("Please read the umple manual to learn more about python generation restrictions.");
+      return;
     }
 
 
@@ -130,49 +133,47 @@ class PythonGenerator
       p.waitFor();
 
       BufferedReader reader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-      
-      String line;
-      if(reader.ready()) {
-        line = reader.readLine();
-      }
-      else {
-        line = null;
-      }
 
       boolean foundError = false;
       String error = "";
-
+      String line = "";
 
       while (line!=null) {
+
+        if(reader.ready()) {
+          line = reader.readLine();
+        } else {
+          line = null;
+          break;
+        }
+
         //When an error is found, the error information is always on the next line
         if (foundError) {
           error = line;
+          break;
         }
 
         if(line.contains("error")) {
           foundError = true;
         }
 
-        if(reader.ready()) {
-          line = reader.readLine();
-        } else {
-          line = null;
-        }
       }
 
-      String errorMessage = isUnsupportedFeature(error);
+      if (foundError) {
+        String errorMessage = isUnsupportedFeature(error);
 
-      if (foundError && errorMessage!=null) {
-        System.out.println("Could not Generate file '" + new File(pythonFilename).getName() + "'. This file will be missing from the output.");
-        System.out.println("Error : " + errorMessage);
+        if (errorMessage!=null) {
+          System.out.println("Could not Generate file '" + new File(pythonFilename).getName() + "'. This file will be missing from the output.");
+          System.out.println("Error : " + errorMessage);
         
-        //Removing temp JaPy Files
-        File javaFile = new File(filename);
-        javaFile.delete();
+          //Removing temp java Files
+          File javaFile = new File(filename);
+          javaFile.delete();
         
-        return;
-      } else if(foundError) {
-        throw new Exception("An error occured during the code translation.");
+          return;
+        } else {
+          throw new Exception("An error occured during the code translation.");
+        }
       }
 
     } catch (IOException e) {
@@ -231,7 +232,7 @@ class PythonGenerator
       }
     }
 
-    //Removing Java Files
+    //Removing temp Java Files
     File javaFile = new File(filename);
     javaFile.delete();
   }
@@ -256,7 +257,7 @@ class PythonGenerator
                             getOutput()) +
                             aClass.getPackageName().replace(".", File.separator);
 
-    String filename = path + File.separator + className + ".java";
+    String filename = path + File.separator + className + ".japy";
     File file = new File(path);
     file.mkdirs();
 
@@ -278,8 +279,24 @@ class PythonGenerator
   //Checks to see if an error was using Unsupported Feature
   private String isUnsupportedFeature(String error) {
     if (error.contains("TimerTask")) {
-      return "TimerTask was generated. This class is currently unsupported. This class is linked to the 'after()' keyword.";
-    } else {
+      return "TimerTask class was generated. This class is currently unsupported for Python generation. This class is linked to the 'after()' keyword.";
+    } 
+    else if (error.contains("extends Thread")) {
+      return "Thread extension was generated. This class is currently unsupported for Python generation.";
+    } 
+    else if (error.contains("class Message")) {
+      return "Message class was generated. This class is currently unsupported for Python generation.";
+    }   
+    else if (error.contains("HashSet >>> < <<<")) {
+      return "'pooled' keyword was used. This keyword is currently unsupported for Python generation.";
+    } 
+    else if (error.contains("synchronized")) {
+      return "'synchronized' keyword was used. This keyword is currently unsupported for Python generation.";
+    }   
+    else if (error.contains("message ) ; } static >>> { <<< getInstance ( ) ; }")) {
+      return "ConsoleTracer class was generated. This class is currently unsupported. This class is linked to the 'trace' keyword.";
+    }         
+    else {
       return null;
     }
   }
