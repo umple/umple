@@ -1,0 +1,10 @@
+PHP
+Generators
+noreferences
+@@description
+<p>
+The PHP generator supports all class diagramming features of Umple, and generates code that is fully tested.</p>
+
+<p>PHP code can be embedded in Umple, and Umple can generate PHP features such as classes, attributes and associations. This can save a lot of boilerplate programming for systems with complex class structures. The generated PHP code can then be combined with other PHP code written separately.</p>
+
+<p>State machines are not yet fully supported in PHP</p>

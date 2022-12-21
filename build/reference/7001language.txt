@@ -10,19 +10,21 @@ Umple code can result in generation of various  languages. Code from these langu
 
 <ul>
 
-<li>Java: Complete functionality. Umple is written in itself using embedded and generated Java. In UmpleOnline the Java code can be executed in the cloud.</li>
+<li><a href="Java.html">Java</a>: Complete functionality. Umple is written in itself using embedded and generated Java. In UmpleOnline the Java code can be executed in the cloud.</li>
 
-<li>Php: reasonably comprehensive generation from Umple features.</li>
+<li><a href="PHP.html">Php</a>: reasonably comprehensive generation from Umple features.</li>
 
-<li>Ruby: Partial support. No state machine support.</li>
+<li><a href="Ruby.html">Ruby</a>: Partial support. No state machine support.</li>
 
-<li>C++: Complete for basic cases, but still beta.</li>
+<li><a href="CPlusPlus.html">C++</a>: Complete for basic cases, but still beta.</li>
 
-<li>Python: Currently in beta. <a href="Python.html">See this page for more details.</a></li>
+<li><a href="Python.html">Python</a>: Currently in beta.</li>
 
 </ul>
 
-<p>Umple also generates a rich assortment of other outputs. The complete current list can be seen using the command line with the --help option; the list also appears below. Several Graphviz diagrams can be generated (UML class diagrams, UML state diagrams, Entity-relationship diagrams, etc.), as can formal methods code in NuXmv and Alloy, and various forms of analysis outputs such as state tables and metrics.</p>
+<p>Umple also generates a rich assortment of other outputs. The complete current list can be seen using the command line with the --help option; the list also appears below.</p>
+
+<p>Several Graphviz diagrams can be generated (UML class diagrams, UML state diagrams, Entity-relationship diagrams, etc.), as can formal methods code in <a href="NuSMV.html">NuXmv</a> and <a href="Alloy.html">Alloy</a>, and various forms of analysis outputs such as <a href="CompositeStateTable.html">state tables</a> and metrics.</p>
 
 @@syntax
 
