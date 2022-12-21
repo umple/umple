@@ -31,7 +31,7 @@ Currently NOT supported features:
 <ul>
     <li>Code Injection</li>
     <li>Tracing</li>
-    <li>await() function</li>
+    <li>after() function</li>
     <li>Comments are currently being ignored</li>
     <li>Concurrency</li>
     <li>Any Umple code that create the following Java:
