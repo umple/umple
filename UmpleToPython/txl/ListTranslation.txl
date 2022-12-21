@@ -1,6 +1,10 @@
 %--------------------%
 %  List replacement  %
 %--------------------%
+%This file contains logic related to translating lists and dictionnairies (or hashmaps)
+%A lot of methods for interacting with list and dicts are different between Java and Python
+%By passing the ids of lists and dicts, we can then change the methods called from them to the appropriate Python ones
+
 
 function replaceAllSpecialTypes lists [repeat id] hashMaps [repeat id]
     replace [any]

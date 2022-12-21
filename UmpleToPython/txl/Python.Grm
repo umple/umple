@@ -1,6 +1,11 @@
+%This file redefines types from Java.Grm to match python syntax
 include "Java.Grm"
 
-%Num of char in a line before TXL splits it in two. Hopefully a temporary solution.
+
+
+%Num of char in a line before TXL splits it in two. 
+%Putting it super large so lines are not split when they are too long
+%Since in python you cant do that
 #pragma -width 1073741824
 
 redefine boolean_operator
@@ -22,8 +27,9 @@ end redefine
 
 redefine statement
     ...
-    | 'pass [NL]
+    |   'pass [NL]
     |   [list nested_identifier+] [!] '=  [list value+] [NL]
+        %In python we import some modules inside functions to prevent cyclic imports
     |   [import_statement]
 end redefine
 
@@ -89,7 +95,7 @@ redefine method_parameter
     | [id]
 end redefine
 
-redefine ternary_terminal
+redefine ternary
     ...
     |   'if [!] [value] 'else [value]
 end redefine
@@ -120,6 +126,8 @@ redefine concrete_class_declaration
     | [repeat import_statement] [NL] 'class [nested_identifier] [SPOFF] [opt inheritance_group] ': [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL] [opt run_main]
 end redefine
 
+%Bit of code that runs a classes main function when you run the file
+%This then emulates the java behavior
 define run_main
     'if '__name__ '== '"__main__" ': [NL] [IN]
         [id] '.main [SPOFF] '( [SPON] 'sys.argv ')
@@ -146,6 +154,8 @@ redefine import_statement
     |   'import [id] [NL]
 end redefine 
 
+%Enums in python are just classes
+%The methods are redefined to emulate java behavior
 redefine enum_declaration
     ...
     | 'class [id] [SPOFF] '(Enum'): [SPON][NL] 
@@ -157,13 +167,19 @@ redefine enum_declaration
     [EX]
 end redefine
 
+%Auto() runs the _generate_next_value_ function to determine the value
 define enum_value_declaration
     [id] '= 'auto [SPOFF] () [SPON] [NL]
 end define
 
 redefine try_catch 
     ...
-    |   'try ': [NL] [IN]  [repeat statement]  [EX] 'except [opt method_parameter] ': [NL] [IN] [repeat statement] [EX]
+    |   'try ': [NL] [IN]  [repeat statement]  [EX] 'except [opt method_parameter] ': [NL] [IN] [repeat statement] [EX] [opt finally]
+end redefine
+
+redefine finally
+    ...
+    |   'finally: [NL] [IN] [repeat statement] [EX]
 end redefine
 
 redefine member_variable_declaration
