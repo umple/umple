@@ -1,6 +1,9 @@
 %--------------------%
 %     Statements     %
 %--------------------%
+%This file contains logic related to translating code at the statement level (ie code unside methods)
+
+%Main function that calls most others
 function replaceStatements
     replace [any]
         statements [any]
@@ -59,6 +62,11 @@ function replaceStatements
             [removeSemiColonFromValues]
 end function
 
+%In Java, you dont need to have code within brackets. For example else{} is valid.
+%In python we need a pass statement.
+%Ideally this would be a rule, but the fact that it matches empty (hence why nothing after the replace)
+%means it causes some recursion errors so it has to stay a function
+%Because it is a function it then has to be called a a few places throught this file (as funcs dont search the pattern recursivly)
 function replaceNoStatements
     replace [repeat statement]
     by 
@@ -114,6 +122,7 @@ rule replaceReturn
         'return val
 end rule
 
+%In java, we can simply put the do methodName() in python we must have self.methodName()
 rule addSelfToOwnMethodCalls
     replace [nested_identifier]
         funcName [id] extensions [repeat nestable_extension+] rep [repeat attribute_access]
@@ -147,7 +156,6 @@ rule replaceNestedStatement
         value
 end rule
 
-
 rule replaceThis
     replace [value]
         'this
@@ -164,15 +172,21 @@ end rule
 
 rule replaceTryCatch
     replace [try_catch]
-        'try '{  tryStmts [repeat statement]  '} 'catch '( catchParam [method_parameter] ') '{ catchStmts [repeat statement] '}
-    deconstruct catchParam
-        'Exception _ [id]
+        'try '{  tryStmts [repeat statement]  '} 'catch '( _ [method_parameter] ') '{ catchStmts [repeat statement] '} finally [opt finally]
     by 
         'try:
-            tryStmts
+            tryStmts [replaceNoStatements]
         'except:
-            catchStmts
+            catchStmts [replaceNoStatements]
+        finally [replaceFinally]
 end rule
+
+function replaceFinally
+    replace [opt finally]
+        'finally '{ stmts [repeat statement] '}
+    by  
+        'finally: stmts [replaceNoStatements]
+end function
 
 rule replaceIf
     replace [if]
@@ -195,7 +209,6 @@ rule replaceElseIf
         'elif bool ': statements
 end rule
 
-
 rule replaceElse
     replace [else]
         'else '{  statements [repeat statement]  '} 
@@ -208,30 +221,45 @@ rule containsAssignment
         _ [value_continuation_assignment]
 end rule
 
+%Replaces ternary statements. 
+%Java: condition ? a : b
+%Python: a if condition else b
+%This one is a little complicated, so here is a breakdown
 rule replaceTernary
     replace [value]
         val [value]
     skipping[parentheses_value]
-    deconstruct * [ternary_terminal] val
+    %This skip is for the searching deconstruct below
+    %We do not want to cross a parentheses boundary hence the skip
+    %ex: we would not want our val to be matched to "a+b+(c?x:z)" 
+    %but just the ternary "c?x:z" 
+    deconstruct * [ternary] val
         '? optTrue [value] ': optFalse [value]
     construct blankString [stringlit]
         ""
+    %We unparse the whole matched value (turn it into a string so we can munipulate it easier)
     construct unparsed [stringlit]
         blankString [unparse val]
     construct zero [number]
         '0
     construct questionMark [stringlit]
         "?"
+    %We find the index of the question mark to isolate the ternary condition
     construct questionMarkIndex [number]
         zero [index unparsed questionMark]
     construct questionMarkIndexMinusOne [number]
         questionMarkIndex [- 1]
+    %Here is the isolated condition (still unparsed) 
     construct beforeQuestionMark [stringlit]
         unparsed [: 1 questionMarkIndexMinusOne]
     construct defaultShouldNotSee [value]
         'uhOh
+    %Here we reparse the condition
     construct condition [value]
         defaultShouldNotSee [parse beforeQuestionMark]
+    %If TXL supported mutliple skips, this would not be here and instead be another skip with the one above
+    %This is to verify that we do not cross an assignment boundry from the beginning of the matched val to the question mark
+    %Ex: we would not want to replace "a = b ? c : d" with "c if a = b else d"
     where not
         condition [containsAssignment] 
     by
@@ -336,6 +364,8 @@ rule correctSuperInit
         'super().__init__( params ')
 end rule
 
+%Umple generates some strange Java code to allow an object to change the private attribute of an other
+%in certain associations. In python nothing is private anyways so we can change the other's attribute normally.
 rule replacePrivateAttributeSetting
     replace [repeat statement]
         'java.lang.reflect.Field fieldVar [id] '= modified [id] '.getClass().getDeclaredField( attributeName [stringlit] ');
@@ -374,6 +404,8 @@ rule replaceHexIdentity
         'format( 'id( val '), '"x")
 end rule
 
+%WHile the latest versions of python have a switch case functionnality, we decided to translate the 
+%switch cases to if/elif/else to support older python versions
 rule replaceSwitchCase
     replace [statement]
         'switch( val [value] ') '{ cases [repeat switch_case_case]  default [opt switch_case_default] '}
@@ -409,6 +441,9 @@ function replaceFirstSwitchCaseCase switch [value] firstCase [switch_case_case]
         newIf
 end function
 
+%Values are recursive types. Values have optional continuations which often contain values. 
+%It can then be a bother to, for example,  add a "+ 3" to an existing value.
+%This function simplifies the process.
 function appendToValue cont [value_continuation]
     replace [value]
         val [value]
@@ -416,16 +451,21 @@ function appendToValue cont [value_continuation]
         ""
     construct spaceString [stringlit]
         " "
+    %We unparse the value
     construct unparsedVal [stringlit]
         emptyString [unparse val]
+    %Unparse the continuation
     construct unparsedCont [stringlit]
         emptyString [unparse cont]
+    %Stick em together
     construct concatenated [stringlit]
         unparsedVal [+ spaceString] [+ unparsedCont]
+    %We replace the val with the reparsed concatenation
     by
         val [parse concatenated]
 end function
 
+%Utility function to add an opt value_continuation to a value
 function appendOptToValue cont [opt value_continuation]
     replace [value]
         val [value]
@@ -460,6 +500,10 @@ function replaceSwitchCaseDefault defaultCase [opt switch_case_default]
 
 end function
 
+%This function looks complicated because it uses another generic function (in TXL, generic functions are funcs that take type [any] as argument)
+%To do this a lot of casting is needed
+%This function translates in.defaultReadObject(); into the two lines self.__dict__.clear() and self.__dict__.update(pickle.load(input).__dict__)
+%These are used to deserialize an object
 function replaceDefaultReadObject
     replace [repeat statement]
         rep [repeat statement]
@@ -495,6 +539,7 @@ function replaceDefaultReadObject
         beforeReparsed [. middle] [. afterReparsed]
 end function
 
+%Casts a statement to [any] and adds it to a result repeat
 function repeatStatementToAny stmt [statement]
     replace [repeat any]
         rep [repeat any]
@@ -535,7 +580,11 @@ end rule
 %--------------------------------%
 %  Switch case Enum correction   %
 %--------------------------------%
+%In Java when doing a switch case that uses an Enum for the switch value,
+%The cases will just contain the Enum value name (ex: switch(adoorStatus){ ... case Open:) 
+%In python we always need the EnumName before the enum value (Ex: switch(adoorStatus){ ... case DoorStatus.Open:)
 
+%This rule adds the EnumName before the enumValue (ex: Open -> DoorStatus.Open)
 rule fixEnumValueWithNoEnum
     replace $ [nested_identifier]
         val [nested_identifier]
@@ -546,6 +595,7 @@ rule fixEnumValueWithNoEnum
         val [fixEnumValueWithNoEnumCheck each enumeratorDeclerations]
 end rule
 
+%This function adds the enumName of aEnum to the EnumValue if the EnumValue is a value of aEnum 
 rule fixEnumValueWithNoEnumCheck aEnum [enum_declaration]
     replace [nested_identifier]
         identifier [id]
@@ -557,6 +607,8 @@ rule fixEnumValueWithNoEnumCheck aEnum [enum_declaration]
         enumName '. identifier
 end rule
 
+%Since the Enums in python are just nested classes, we need to add the current class as prefix
+%Ex: DoorStatus.Open -> Garage.DoorStatus.Open
 rule addClassPrefixToEnum
     replace [nested_identifier]
         enumName [id] '.  enumVal [id]
@@ -589,6 +641,7 @@ function isSpecificEnum aEnum [enum_declaration]
     where
         name [= enumName]
 end function
+
 
 rule removeBreak
     replace $ [repeat statement]
@@ -646,6 +699,8 @@ rule translateSelfEqualsCall
         'self '== val 
 end rule
 
+%Translates a.equals(b) into a == b
+%Will also translate a.b.c.equals(d.e.f) into a.b.c == d.e.f
 rule translateNestedEqualsCall
     replace [value]
         nested [nested_identifier] cont [opt value_continuation]
@@ -675,6 +730,8 @@ rule translateNestedEqualsCall
          newPythonEquals [appendOptToValue cont]
 end rule
 
+%Translates a.contains(b) into b in a
+%Will also translate a.b.c.contains(d.e.f) into d.e.f == a.b.c
 rule translateNestedContainsCall
     replace [value]
         nested [nested_identifier] initalCont [opt value_continuation]
@@ -707,11 +764,19 @@ end rule
 %--------------------------------%
 %  Generic Before/after search   %
 %--------------------------------%
+%The following code relates to a function getBeforeAfter. This function was created as there is no built in function in TXL
+%that has this functionality. The function takes and returns values of the type [any], so some casting is required to use the
+%function with specific types. The function takes a target (seeking) and a repeat. It will return a two dementional array
+%of the type any. The first elem of the returned value is going to be the elements of the repeat before the target and the
+%second will be elements of the repeat after the target
 
+%Intermediate type used to create a two dimentional array of any. You cant do double repeats in TXL so this was needed.
 define sequence_any
     [repeat any]
 end define
 
+%Given a target (seeking) and a repeat, returns a two dementional array of type [any]. The first value in the two dementional array
+%are the elements in the repeat before the target, and the second value are the elements of the repeat after the target
 function getBeforeAfter seeking [any] rep [repeat any]
     replace [repeat sequence_any]
     where 
@@ -768,6 +833,10 @@ end rule
 %--------------------------------%
 %  Member variable Corrections   %
 %--------------------------------%
+%This section contains code related to treating member variables.
+%There is not public/private in Python, so we add an _ to member variables to indicate they should not be accesed this way
+%We also have to add self. to access them
+% personName -> self._personName
 
 function replaceAllMemberVariableNames
     replace [any]
@@ -783,7 +852,7 @@ end function
 
 rule replaceMemberVariableNames memberVariables [repeat id]
     replace [nested_identifier]
-         name [id] rep [repeat attribute_access]
+         name [id] rep  [repeat attribute_access]
     where 
         memberVariables [containsId name]
     construct underscore [id]
@@ -796,7 +865,7 @@ end rule
 
 rule replaceStaticMemberVariableNames
     replace [nested_identifier]
-         name [id] ext [repeat nestable_extension] staticRep [repeat attribute_access]
+        name [id] ext [repeat nestable_extension] staticRep [repeat attribute_access]
     import staticElements [repeat id]
     import className [nested_identifier]
     deconstruct className
@@ -831,4 +900,79 @@ rule replaceMemberVariableNamesBrackets memberVariables [repeat id]
         underscore [+ name]
     by
         'self '. newName '[ val ']  rep
+end rule
+
+%---------------------%
+% Boolean expressions %
+%---------------------%
+%Grouped up a few boolean related translations
+function replaceAllBoolean
+    replace [any]
+        statements [any]
+    by
+        statements
+            [replaceNullCheck]
+            [replaceNotNullCheck]
+            [replaceBoolNegation]
+            [replaceBoolAnd]
+            [replaceBoolOr]
+            [replaceTrue]
+            [replaceFalse]
+            [replaceClassMatchCheck]
+end function
+
+rule replaceNullCheck
+    replace [value]
+        base [base_value] '== 'null cont [opt value_continuation]
+    by 
+        base 'is 'None cont
+end rule
+
+rule replaceNotNullCheck
+    replace [value]
+        base [base_value] '!= 'null cont [opt value_continuation]
+    by 
+        'not '( base 'is 'None ') cont
+end rule
+
+rule replaceBoolNegation
+    replace [base_value]
+        '! val [value]
+    by 
+        'not val
+end rule
+
+rule replaceBoolAnd
+    replace [boolean_operator]
+        '&&
+    by 
+        'and
+end rule
+
+rule replaceBoolOr
+    replace [boolean_operator]
+        '|'|
+    by 
+        'or
+end rule
+
+rule replaceTrue
+    replace [base_value]
+        'true
+    by 
+        'True
+end rule
+
+rule replaceFalse
+    replace [base_value]
+        'false
+    by 
+        'False
+end rule
+
+rule replaceClassMatchCheck
+    replace [value]
+        'getClass().equals( id2 [id] '.getClass() ')
+    by  
+        'type(self) 'is 'type( id2 ')
 end rule

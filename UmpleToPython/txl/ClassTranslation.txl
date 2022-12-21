@@ -1,8 +1,10 @@
+%This files contains logic related to higher level class translation
 %--------------------%
 %     Classes        %
 %--------------------%
-%decl and inheritance and external imports
-rule replaceConcreteClassesWithInheritance
+
+%Rule to translate concrete classes
+rule replaceConcreteClasses
     replace $ [concrete_class_declaration]
         _ [opt acess_modifier] 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
     export className 
@@ -19,6 +21,7 @@ rule replaceConcreteClassesWithInheritance
         'class className '( inheritanceClasses ')':  translatedBody runMain
 end rule
 
+%Rule to translate abstract classes
 rule replaceAbstractClass
     replace [concrete_class_declaration]
         _ [opt acess_modifier] 'abstract 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
@@ -41,6 +44,8 @@ rule replaceAbstractClass
         'class className '(  finalInheritances '):  translatedBody runMain
 end rule
 
+%This func creates the if statement at the bottom of python classes when they have a static main function
+%This allows the main function to be run when we run the python file, emulating Java behavior
 function constructRunMain body [class_body_decl]
     replace [opt run_main]
         _ [opt run_main]
@@ -56,14 +61,15 @@ function constructRunMain body [class_body_decl]
         classId '.main(sys.argv)
 end function
 
+%Match rule to check if there is a static main method
 rule matchMainMethod
     match [concrete_method_declaration]
         '@staticmethod
         'def 'main( _[list method_parameter+] '): _ [method_content]
 end rule 
 
-%inheritance  imports
-rule replaceInterfacesWithInheritance
+%Rule used to translate interfaces
+rule replaceInterfaces
     replace [class_declaration]
         _ [opt acess_modifier] 'interface className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
     export className
@@ -83,6 +89,7 @@ rule replaceInterfacesWithInheritance
         'class className '(  finalInheritances '):  translatedBody
 end rule
 
+%Func contains logic to translate interface bodies
 function replaceInterfaceBody
    replace [class_body_decl]
         elements [repeat class_body_element]
@@ -98,6 +105,8 @@ function replaceInterfaceBody
         '@abstractmethod 'def '__init__(self): 'pass elements [replaceAllMethods memberVariables]
 end function
 
+%Func contains logic to translate class bodies
+%A lot of information is exported here, to be used in functions/rules all over
 function replaceClassBody
     replace [class_body_decl]
         body [class_body_decl]
@@ -123,7 +132,7 @@ function replaceClassBody
     export classMethodNames [repeat id]
         _ [extractClassMethodName each classMethods]
     construct possibleFunctionImports [repeat id]
-        _ [extractPossibleFunctionImports body each declarations]
+        _ [extractPossibleFunctionImports each declarations]
     export overloadData [repeat overload_data]
         _
     export possibleFunctionImports
@@ -134,6 +143,7 @@ function replaceClassBody
             [replaceAllMethods memberVariables]
 end function
 
+%If the argument is a memberVariable, add it to results
 function addListMemberVariable MemberVariable [member_variable_declaration]
     replace [repeat id]
         SequenceSoFar [repeat id]
@@ -143,6 +153,7 @@ function addListMemberVariable MemberVariable [member_variable_declaration]
         SequenceSoFar [. memberName]
 end function
 
+%If the argument is a Map (sometimes refered to as Dict internally), add it to results
 function addDictMemberVariable MemberVariable [member_variable_declaration]
     replace [repeat id]
         SequenceSoFar [repeat id]
@@ -152,6 +163,7 @@ function addDictMemberVariable MemberVariable [member_variable_declaration]
         SequenceSoFar [. memberName]
 end function
 
+%Class methods can be concrete or abstract. This will extract the method name from either and add it to the result repeat.
 function extractClassMethodName method [method_declaration]
     replace [repeat id]
         result [repeat id]
@@ -159,6 +171,7 @@ function extractClassMethodName method [method_declaration]
         result [extractConcreteMethodName method] [extractAbstractMethodName method]
 end function
 
+%Adds concrete method name to repeat
 function extractConcreteMethodName method [method_declaration]
     replace [repeat id]
         result [repeat id]
@@ -168,6 +181,7 @@ function extractConcreteMethodName method [method_declaration]
         result [. methodName]
 end function
 
+%Adds abstract method name to repeat
 function extractAbstractMethodName method [method_declaration]
     replace [repeat id]
         result [repeat id]
@@ -177,15 +191,18 @@ function extractAbstractMethodName method [method_declaration]
         result [. methodName]
 end function
 
+%Adds transient attributeName to result repeat
 function addIfTransient decl [member_variable_declaration]
     replace [repeat id]
         result [repeat id]
     deconstruct decl
-        _[opt acess_modifier] 'transient _[opt static] _[opt final] _[opt volatile] _[nested_identifier] _[id] _[opt member_variable_assignment]';
+        _[opt acess_modifier] 'transient _[opt static] _[opt final] _[opt volatile] _[nested_identifier] memberName [id] _[opt member_variable_assignment]';
     by
-        result [addMemberVariable decl]
+        result [. memberName]
 end function
 
+%Python does not have member variable declarations like Java does
+%This function removes all member variable declarations, except the static ones which are translated and kept
 function removeMemberVariableDeclarations
     replace [repeat class_body_element]
         elems [repeat class_body_element]
@@ -195,6 +212,7 @@ function removeMemberVariableDeclarations
         empty [addTranslatedStaticMember each elems] [addIfNotMemberDecleration each elems]
 end function
 
+%If the argument is not a member variable, add it to results
 function addIfNotMemberDecleration elem [class_body_element]
     replace [repeat class_body_element]
         keepers [repeat class_body_element]
@@ -208,6 +226,7 @@ function addIfNotMemberDecleration elem [class_body_element]
         keepers [. elem]
 end function
 
+%If the argument is a static member variable declaration, translates it and adds it to result repeat
 function addTranslatedStaticMember elem [class_body_element]
     replace [repeat class_body_element]
         keepers [repeat class_body_element]
@@ -221,6 +240,7 @@ function addTranslatedStaticMember elem [class_body_element]
         keepers [. elemToAdd]
 end function
 
+%If arg is a member variable declaration, add its name to results
 function addMemberVariable MemberVariable [member_variable_declaration]
     replace [repeat id]
         SequenceSoFar [repeat id]
@@ -230,6 +250,7 @@ function addMemberVariable MemberVariable [member_variable_declaration]
         SequenceSoFar [. memberName]
 end function
 
+%If arg is a static member variable declaration, add its name to results
 function addStaticMemberVariable MemberVariable [member_variable_declaration]
     replace [repeat id]
         SequenceSoFar [repeat id]
@@ -239,6 +260,7 @@ function addStaticMemberVariable MemberVariable [member_variable_declaration]
         SequenceSoFar [. memberName]
 end function
 
+%If arg is a static method declaration, add its name to results
 function addStaticMethod method [method_declaration]
     replace [repeat id]
         SequenceSoFar [repeat id]
@@ -248,6 +270,9 @@ function addStaticMethod method [method_declaration]
         SequenceSoFar [. methodName]
 end function
 
+%Counts how many constructors there are and exports it
+%Number is used to determin wether we need to translate constructors in a special way
+%since Python does not support multiple contructors
 function exportConstructorCount
     match [repeat class_body_element]
         rep [repeat class_body_element]
@@ -258,6 +283,7 @@ function exportConstructorCount
     export constructorCount
 end function
 
+%If arg is a constructor, increase count
 function incrementIfConstructor elem [class_body_element]
     replace [number]
         count [number]
@@ -265,4 +291,35 @@ function incrementIfConstructor elem [class_body_element]
         _ [constructor]
     by
         count [+ '1]
+end function
+
+
+
+%-----------------------%
+%   ENUM DECLARATIONS   %
+%-----------------------%
+% The following rules/funcs are responsible for translating java Enums to python enum nested classes
+
+%Translates the enum. The member functions are there to change the class behavior to better match Java
+rule replaceEnumDeclaration
+    replace [enum_declaration]
+        _ [opt acess_modifier] 'enum enumName [id] '{ vals [list id] '}
+    construct enumValDeclarations [repeat enum_value_declaration]
+        _ [generateEnumValue each vals]
+    by
+        'class enumName '(Enum'):
+            'def '_generate_next_value_('name, 'start, 'count, 'last_values)':
+                'return 'name
+            'def '__str__'(self):
+                'return 'str(self. 'value)
+        enumValDeclarations
+end rule
+
+%Every enum member is assigned the value auto(), which corresponds to the output of the _generate_next_value_ function.
+function generateEnumValue val [id]
+    replace [repeat enum_value_declaration]
+        decls [repeat enum_value_declaration]
+    construct decl [enum_value_declaration]
+        val '= 'auto()
+    by decls [. decl]
 end function

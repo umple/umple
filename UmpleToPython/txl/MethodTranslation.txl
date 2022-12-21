@@ -1,6 +1,7 @@
 %--------------------%
 %     Methods        %
 %--------------------%
+%This file contains logic for python translation at the method level
 
 function replaceAllMethods memberVariables [repeat id]
     replace [repeat class_body_element]
@@ -20,6 +21,7 @@ function replaceAllMethods memberVariables [repeat id]
             [addDisambiguationMethods]
 end function
 
+%No need to specify overrides in python
 rule removeOverrideDecorator
     replace [opt decorator]
         '@Override
@@ -27,6 +29,7 @@ rule removeOverrideDecorator
         _
 end rule
 
+%Not needed in python
 rule removeSurpressWarningDecorator
     replace [opt decorator]
         '@SuppressWarnings( _ [list base_value] ')
@@ -34,6 +37,7 @@ rule removeSurpressWarningDecorator
         _
 end rule
 
+%Replaces concrete, non user methods
 rule replaceConcreteMethod
     replace [concrete_method_declaration]
         _[acess_modifier] possibleStatic [opt static] _[nested_identifier] methodName [id]'( params [list method_parameter] ') _ [opt throws] '{ statements [repeat statement] '}
@@ -50,6 +54,7 @@ rule replaceConcreteMethod
             [addStrIfNeeded methodName]
 end rule
 
+%Creates a static decorator if needed. Otherwise returns empty
 function createStaticDecorator possibleStatic [opt static]
     replace [repeat decorator]
         result [repeat decorator]
@@ -61,6 +66,7 @@ function createStaticDecorator possibleStatic [opt static]
         result [. staticDecorator]
 end function
 
+%Translates abstract methods
 rule replaceAbstractMethod
     replace [abstract_method_declaration]
         _[acess_modifier] _ [opt 'abstract] _[nested_identifier] methodName [id] '( params [list method_parameter] ');
@@ -72,6 +78,7 @@ rule replaceAbstractMethod
         '@abstractmethod 'def methodName [replaceSpecificMethodNames] '( newParams '): 'pass
 end rule
 
+%Translates user methods, methods that contain tagged user specified code
 rule replaceUserMethod
     replace [concrete_method_declaration]
         _[acess_modifier] possibleStatic [opt static] _[nested_identifier] methodName [id]'( params [list method_parameter] ') _ [opt throws] '{ _ [repeat statement] content [usercode] _[repeat statement] '}
@@ -83,6 +90,7 @@ rule replaceUserMethod
         possibleStaticDecorator 'def methodName '( newParams '):  content 
 end rule
 
+%Given java params, which includes classes (ex: int num, String name), extracts the python params (ex: self, num, name)
 function getPythonParams javaParams [list method_parameter] possibleStatic [opt static]
     replace [list method_parameter]
         _ [list method_parameter]
@@ -95,6 +103,7 @@ function getPythonParams javaParams [list method_parameter] possibleStatic [opt 
     
 end function 
 
+%Adds the self param to param list if the method is not static
 function addSelfIfNotStatic possibleStatic [opt static]
     replace [list method_parameter]
         result [list method_parameter]
@@ -106,6 +115,7 @@ function addSelfIfNotStatic possibleStatic [opt static]
         result [, selfParam]
 end function
 
+%Some methods' names are changed during translation to match python standard
 function replaceSpecificMethodNames
     replace [id]
         funcName [id]
@@ -129,6 +139,8 @@ function replaceHashCodeMethodName
         '__hash__
 end function
 
+%In toString functions, this rule adds str() around all the non string values in the concatenation
+%This is because python does not allow string/number concatenantion like java
 rule addStrIfNeeded functionName [id]
     where functionName [= 'toString]
     skipping [parentheses_value]
@@ -145,6 +157,7 @@ function isString
         _ [stringlit]
 end function
 
+%Replaces class constructor
 rule replaceConstructor memberVariables [repeat id]
     replace [constructor]
          mod [acess_modifier] className [id]'( params [list method_parameter] ') _ [opt throws] '{ statements [repeat statement]  '}
@@ -164,6 +177,9 @@ rule replaceConstructor memberVariables [repeat id]
                 [addFunctionImports]
 end rule
 
+%For serialzation
+%In Java transient members are not serialized. If there are transient members, we then add this __getState__ function.
+%This is called when serializing the object. We can then specify not to serialize the transient members.
 function addGetState
     replace [repeat class_body_element]
         rep [repeat class_body_element]
@@ -187,6 +203,7 @@ function addGetState
         rep [. getStateFunc]
 end function
 
+%Pops a transient member from the returned state so we dont serialize it
 function createGetStatePop id [id]
     replace [repeat statement] 
         result [repeat statement] 
@@ -212,6 +229,7 @@ rule changeKeyArgumentNames
             [replaceInKeyArgument]
 end rule
 
+%Argument names that were replaced in the rule changeKeyArgumentNames are also changed in the method code
 rule changeKeyArgumentNameInNestedIdentifier
     replace $ [nested_identifier]
         root [id] rep [repeat attribute_access]
@@ -219,6 +237,7 @@ rule changeKeyArgumentNameInNestedIdentifier
         root [changeKeyArgumentNames]  rep
 end rule
 
+%in is a keyword in python, but is somethimes an argument name generated by the umple java generator
 rule replaceInKeyArgument
     replace [id]
         'in
@@ -226,6 +245,9 @@ rule replaceInKeyArgument
         'input
 end rule
 
+%At the start of constructors, we instatiate every member variable to None
+%In java we do not need this as member variable are declared before the constructor
+%This prevents error when we try to access variables that have not been instantiated yet
 function addNoneAssignments memberVariable [id]
     replace [repeat statement]
         stmts [repeat statement]
@@ -235,6 +257,7 @@ function addNoneAssignments memberVariable [id]
         noneAssignment [. stmts]
 end function
 
+%Given a java method parameter (Ex: String name), adds the python method paramter (ex: name) to the list
 function translateParam PreviousParam [method_parameter]
     replace [list method_parameter]
         SequenceSoFar [list method_parameter]
@@ -244,6 +267,7 @@ function translateParam PreviousParam [method_parameter]
         SequenceSoFar [, translated]
 end function
 
+%In this case, we just retrun the param name without the java class before it
 function translateRegularParam
     replace [method_parameter]
         _ [nested_identifier] paramName [id]
@@ -253,6 +277,7 @@ function translateRegularParam
         cleanName
 end function
 
+%Syntax for variable arguments differs between python and java
 function translateVarArgParam
     replace [method_parameter]
         _ [nested_identifier] '... paramName [id]
@@ -262,6 +287,9 @@ function translateVarArgParam
         '* cleanName
 end function
 
+%To avoid circular imports, we attempt to import most modules inside of functions
+%If any of the ids we have exported as possible imports are present in the function code, 
+% we import the module at the beginning of the function
 function addFunctionImports
     replace [repeat statement]
         stmts [repeat statement]
@@ -270,6 +298,7 @@ function addFunctionImports
         stmts [addFunctionImport each possibleFunctionImports]
 end function
 
+%Creates specific function import if needed
 function addFunctionImport seeking [id]
     replace [repeat statement]
         stmts [repeat statement]
@@ -282,6 +311,14 @@ function addFunctionImport seeking [id]
     by
         funcImport [. stmts]
 end function
+
+%This function takes care of a lot of messier types.
+%The function compiles a repeat of ids of lists from various sources (the func params, the class members, declarations inside the function)
+%It does something similar for dicts
+%The repeats of lists and dicts are then used to translate functions called from them to python equivalents
+%It also adds a line to translate the varArg argument from a tuple to a list. (Making it mutable like java varArgs)
+%If a function has a VarArg param and want to pass it on to another function with a VarArg param, it needs to add a * before the varArgName
+%This function also takes care of doing this
 
 function manageSpecialTypes params [list method_parameter]
     replace [repeat statement]
@@ -313,6 +350,8 @@ function manageSpecialTypes params [list method_parameter]
 
 end function
 
+%Returns all the declarations inside the function code.
+%These are then used to identify the ids of special type (lists, dicts)
 function extractDeclarationFromStatement stmt [statement]
     replace [repeat statement]
         result [repeat statement]
@@ -322,6 +361,7 @@ function extractDeclarationFromStatement stmt [statement]
         result [. stmt]
 end function
 
+%If we are passing a varArg to another function that takes one, add an * before the id
 rule addAsterixToInternalFuncCalls allIterables [repeat id]
     replace $ [nested_identifier]
         funcName [id] '( args [list value+] ')
@@ -401,6 +441,7 @@ function extractArrayListListNameFromMethodParam param [method_parameter]
         result [. paramName]
 end function
 
+
 function extractArrayNameFromMethodParam param [method_parameter]
     replace [repeat id]
         result [repeat id]
@@ -420,6 +461,7 @@ function extractArrayNameFromMethodParam param [method_parameter]
         result [. paramName]
 end function
 
+%Whenever a VarARg argument is passed to a parent constructor, it needs the * before the id
 rule addAsterixToVarArgInSuperInit possibleVarArgName [opt id]
     replace $ [nested_identifier]
         'super( vals [list value] ')
@@ -438,6 +480,7 @@ rule addAsterixOnMatch seeking [id]
         '* identifier
 end rule
 
+%Translates the varArg to a list (from tuple) so it is mutable like java VarArgs
 function changeVarArgTypeToList possibleVarArgName [opt id]
     replace [repeat statement]
         stmts [repeat statement]
@@ -449,6 +492,7 @@ function changeVarArgTypeToList possibleVarArgName [opt id]
         newStatement [. stmts]
 end function
 
+%Extracts varArg id if there is one. Empty if not.
 function extractVarArgName params [list method_parameter]
     replace [opt id]
         res [opt id]
@@ -468,9 +512,46 @@ function extractVarArgName params [list method_parameter]
         varArgName
 end function
 
+%This function is used to filter out function from the translated class
+function filterOutFunctions elem [class_body_element]
+    replace $ [repeat class_body_element]
+        result [repeat class_body_element]
+    where not
+        elem
+            [checkAlreadyStrFunc]
+            [checkAlreadyHashFunc]
+    by
+        result [. elem]
+end function
+
+%If the user already defined a __str__ function, we can throw out the toString function generated by umple
+function checkAlreadyStrFunc
+    match [class_body_element]
+        _[opt decorator] _[acess_modifier] _[nested_identifier] 'toString '( _ [list method_parameter] ') '{ _ [method_content] '}
+    import classMethodNames [repeat id]
+    where
+        classMethodNames [containsId '__str__]
+end function
+
+%If the user already defined a __hash__ function, we can throw out the hashCode function generated by umple
+function checkAlreadyHashFunc
+    match [class_body_element]
+        _[opt decorator] _[acess_modifier] _[nested_identifier] 'hashCode '( _ [list method_parameter] ') '{ _ [method_content] '}
+    import classMethodNames [repeat id]
+    where
+        classMethodNames [containsId '__hash__]
+end function
+
 %-----------------------%
 % Multiple constructors %
 %-----------------------%
+%Java support method overloading. Python does not.
+%To solve this we transform one of the constructors into a class method
+%There are two possible cases where this happens
+%1 In one to one relations (with other classes or with itself)
+%2 Sometimes there is one default constructor (no args) and one with args
+
+%This function takes care of both cases
 function fixMultipleConstructors 
     replace [repeat class_body_element]
         rep [repeat class_body_element]
@@ -500,6 +581,7 @@ function fixNoArgDefaultMultipleConstructors
         elems [replaceExtraConstructorNoArgs]
 end function
 
+%Checks to see if a one to one constructor exists, letting us know which case of mutliple constructors we are dealing with
 rule existsOneToOneConstructor
     match [constructor] 
         'def '__init__( _ [list method_parameter] '):  stmts [repeat statement]
@@ -507,6 +589,7 @@ rule existsOneToOneConstructor
         stmts [containConstructorWithSelfParam]
 end rule
 
+%Replace constructor with no args with a class method
 rule replaceExtraConstructorNoArgs
     replace [class_body_element]
         'def '__init__(self):  stmts [repeat statement]
@@ -518,6 +601,7 @@ rule replaceExtraConstructorNoArgs
         '@classmethod 'def 'alternateConstructor(cls): newConstructorStatements [. stmts] [. returnStatement]
 end rule
 
+%Replace one to one constructor that is only to be used inside the linked classes' constructor
 rule replaceOneToOneConstructor
     replace [class_body_element]
         'def '__init__( params [list method_parameter] '):  stmts [repeat statement]
@@ -535,6 +619,8 @@ rule replaceOneToOneConstructor
         '@classmethod 'def 'alternateConstructor( clsParam [, paramsWithoutSelf] '): newConstructorStatements [. stmts] [. returnStatement]
 end rule
 
+%In the one to one case, the constructor that is not translated calls the constructor for the linked class.
+%That other constructor has been changed to a class method, so we need to call it differently.
 rule targetRemainingConstructor
     replace $ [class_body_element]
         'def '__init__( params [list method_parameter] '):  stmts [repeat statement]
@@ -544,6 +630,7 @@ rule targetRemainingConstructor
         'def '__init__( params '):  stmts [replaceOneToOneConstructorCall]
 end rule
 
+%Changes one to one contructor call to a class method call
 rule replaceOneToOneConstructorCall
     replace $ [value] 
         call [nested_identifier]
@@ -555,6 +642,7 @@ rule replaceOneToOneConstructorCall
         className '. 'alternateConstructor( args ')
 end rule
 
+%Checks if there is a contructor called that passes self as a param, indicating a one to one constructor call
 rule containConstructorWithSelfParam
     match [nested_identifier]
         instantiatedClass [id] '( params [list value]')
@@ -580,7 +668,7 @@ rule containConstructorWithSelfParam
         params [containsSelfValue]
 end rule
 
-
+%Extracts the class name as an id, works for both generic and regular classes
 function extractClassId target [any]
     replace [opt id]
         result [opt id]
@@ -619,6 +707,37 @@ end rule
 %-----------------------%
 %   Overloaded methods  %
 %-----------------------%
+%Java supports overloaded methods. Python does not.
+%The java generator will create overloaded methods in some instances.
+%To get arround this, we rename the overloaded methods by adding numbers at the end (ex: def functionName1(): )
+%We then create a disambiguation function with the original name and takes varArg
+%This function checks the number and types passed in the varArg to decide which of the renamed functions to call
+
+%Before creating the disambiguation functions, we need to keep track of which method is linked to what parameters
+%To do this, we are using the following three intermediate types
+
+%Overload data is the type that stores all the information to overload a method
+%The first id is the original name of the function (ex: funcName)
+define overload_data
+    [id] [repeat specific_overload]
+end define
+
+%Specific overload contains all the information for a specific implementation of an overloaded method
+%The first id is the new name of the overloaded function (ex: funcName1)
+define specific_overload
+    [id] [repeat overload_data_arg]
+end define 
+
+%Overload data arg describes the type of an parameter. All together a repeat of these is used to describe the types of all the parameters of a method
+%The types used are pythonic types (so bool instead of boolean). 
+%The optional second id is to specify if the arg is a list. (ex: "list bool" is a list of booleans)
+define overload_data_arg
+    [id] [opt id]
+end define
+
+%Given a java param, adds the appropriate python type to the list of method param types
+%Ex: if given the param "String[]"
+%Will add "list str"
 function addOverloadArg javaParam [method_parameter]
     replace [repeat overload_data_arg]
         res [repeat overload_data_arg]
@@ -636,6 +755,7 @@ function addOverloadArg javaParam [method_parameter]
         res [. adding]
 end function
 
+%Translates a java base type to a python overloading arg
 function translateBaseTypesOverload javaType [nested_identifier]
     replace [opt overload_data_arg]
     deconstruct javaType
@@ -644,6 +764,7 @@ function translateBaseTypesOverload javaType [nested_identifier]
         baseType [translateBaseTypes]
 end function
 
+%Translates java base type to python
 function translateBaseTypes 
     replace [id]
         baseType [id]
@@ -658,6 +779,7 @@ function translateStringType
         'str
 end function
 
+%Translates a java arrayList to a python overloading arg (list ___ )
 function translateArrayListType javaType [nested_identifier]
     replace [opt overload_data_arg]
     deconstruct javaType
@@ -666,6 +788,7 @@ function translateArrayListType javaType [nested_identifier]
         'list type [translateBaseTypes]
 end function
 
+%Translates a java array to a python overloading arg (list ___ )
 function translateArrayType javaType [nested_identifier]
     replace [opt overload_data_arg]
     deconstruct javaType
@@ -674,6 +797,7 @@ function translateArrayType javaType [nested_identifier]
         'list type [translateBaseTypes]
 end function
 
+%Translates a java list to a python overloading arg (list ___ )
 function translateListType javaType [nested_identifier]
     replace [opt overload_data_arg]
     deconstruct javaType
@@ -696,6 +820,7 @@ function translateDoubleType
         'float
 end function
 
+%Checks the list of method names to see if the matched name is there twice. If so the method is overloaded.
 function isMethodOverloaded
     match [id]
         methodName [id]
@@ -717,24 +842,14 @@ function incrementIfMatch id1[id] id2[id]
         result [+ 1]
 end function
 
-define overload_data
-    [id] [repeat overload]
-end define
-
-define overload
-    [id] [repeat overload_data_arg]
-end define 
-
-define overload_data_arg
-    [id] [opt id]
-end define
-
+%Replaces a functionName with a unique one by adding a number at the end
 function changeOverloadedMethodName params [list method_parameter]
     replace [id]
         methodName [id]
     where
         methodName [isMethodOverloaded]
     import overloadData [repeat overload_data]
+    %TXL built in function ! is doing all the work here
     construct newMethodName [id]
         methodName [!]
     export overloadData
@@ -743,48 +858,41 @@ function changeOverloadedMethodName params [list method_parameter]
         newMethodName
 end function
 
-
+%Given an old function name, a new one (with a number at the end), and a list of java method parameters,
+%Either appends to the repeat overload_data if this is the first time we are adding an entry for oldName
+%Or appends to an already existing overload_data entry for oldName if it exists
 function appendToOverloadData oldName [id] newName [id] params [list method_parameter]
     replace [repeat overload_data]
         data [repeat overload_data]
-    construct alreadyPresent [opt overload_data]
-        _ [getOverloadData oldName each data]
     by
         data [appendToExistingOverloadEntry oldName newName params] [createNewOverloadEntry oldName newName params] 
 end function
 
-function getOverloadData seeking [id] data [overload_data]
-    replace [opt overload_data]
-        result [opt overload_data]
-    deconstruct data
-        dataName [id] _ [repeat overload]
-    where dataName [= seeking]
-    by
-        data
-end function
-
+%Checks if an overload already exists given an old functionName
 rule doesOverloadEntryExist oldName [id]
     match [overload_data]
-        dataOldName [id] _ [repeat overload]
+        dataOldName [id] _ [repeat specific_overload]
     where 
         dataOldName [= oldName]
 end rule
 
+%Appends to a overload_data entry if the oldName provided matches the oldName of the entry
 rule appendToExistingOverloadEntry oldName [id] newName [id] param [list method_parameter]
     replace $ [overload_data]
         data [overload_data]
     deconstruct data
-        dataOldName [id] overloads [repeat overload]
+        dataOldName [id] overloads [repeat specific_overload]
     where
         dataOldName [= oldName]
     construct overloadArgs [repeat overload_data_arg]
         _ [addOverloadArg each param]
-    construct newOverload [overload]
+    construct newOverload [specific_overload]
         newName overloadArgs
     by
         dataOldName overloads [. newOverload]
 end rule
 
+%Creates a new overload_data if it does not exist already
 function createNewOverloadEntry oldName [id] newName [id] param [list method_parameter]
     replace [repeat overload_data]
         results [repeat overload_data]
@@ -799,11 +907,14 @@ function createNewOverloadEntry oldName [id] newName [id] param [list method_par
 
 end function
 
+%Given an overlad_data, creates a disambiguation function
+%This function will check the params passed to it and decide which alternate function to call (ex: return funcName2())
+%This function will throw an error if there is no match
 function createDisambiguationMethod data [overload_data]
     replace [repeat class_body_element]
         results [repeat class_body_element]
     deconstruct data
-        name [id] overloads [repeat overload]
+        name [id] overloads [repeat specific_overload]
     construct stmts [repeat statement]
         _ [addDisambiguationIf each overloads]
     construct throwStmt [statement]
@@ -814,7 +925,9 @@ function createDisambiguationMethod data [overload_data]
         results [. method]
 end function
 
-function addDisambiguationIf over [overload]
+%Adds an if statement to the disambiguation function. The if statement check to see if the args match a specific function implementation
+%Inside the if we call that specific function
+function addDisambiguationIf over [specific_overload]
     replace [repeat statement]
         results [repeat statement]
     deconstruct over
@@ -825,6 +938,7 @@ function addDisambiguationIf over [overload]
         zero [length args]
     construct typeChecks [opt value_continuation]
         _ [createDisambiguationTypeChecks args '0]
+    %A check for the lenght of the args is also added first to avoid out of range errors when checking arg types
     construct condition [value]
         'len(argv) '== argLength typeChecks
     construct funcCall [repeat statement]
@@ -836,12 +950,13 @@ function addDisambiguationIf over [overload]
         results [. ifStatement]
 end function
 
+%Creates the checks for types used in the disambiguation if statements
 function createDisambiguationTypeChecks args [repeat overload_data_arg] counter [number]
     replace [opt value_continuation]
     construct repFirstElem [repeat overload_data_arg]
         args [head 1]
     construct otherElems [repeat overload_data_arg]
-        args [tail 2] %maybe 2?
+        args [tail 2] 
     deconstruct repFirstElem
         head  [overload_data_arg]
     construct optTypeCheck [opt value]
@@ -856,6 +971,8 @@ function createDisambiguationTypeChecks args [repeat overload_data_arg] counter 
         'and typeCheck [appendOptToValue optTypeCheckContinuation] 
 end function
 
+%Creates a type check for one argument
+%The check is different if the overload_data_arg represents a list or not
 function createTypeCheck arg [overload_data_arg] counter [number]
     replace [opt value]
     construct result [opt value]
@@ -866,6 +983,7 @@ function createTypeCheck arg [overload_data_arg] counter [number]
         result
 end function
 
+%In the case where overload_data_arg does not represent a list, we simply check if the arg is of a specific type
 function createNormalTypeCheck arg [overload_data_arg] counter [number]
     replace [opt value]
     deconstruct arg
@@ -886,6 +1004,8 @@ function createListTypeCheck arg [overload_data_arg] counter [number]
         '( 'isinstance(argv '[ counter '], 'list) 'and '( 'not 'len(argv '[ counter ']) 'or 'isinstance(argv '[ counter '] '[ '0 '], castedType [mutlipleTypeCheck]')))
 end function
 
+%Function used to check many types instead of just one given a specific type to check
+%This is to emulate java automatic casting behavior, (ex: you could pass an int to a function with a float arg in java)
 function mutlipleTypeCheck
     replace [value]
         original [value]
@@ -900,6 +1020,7 @@ function floatToFloatInt
         '( 'float, 'int)
 end function
 
+%Imports the global list of overloadData and creates all the disambiguation methods
 function addDisambiguationMethods   
     replace [repeat class_body_element]
         results [repeat class_body_element]
@@ -910,6 +1031,7 @@ function addDisambiguationMethods
         results [. disambiguationMethods]
 end function
 
+%Creates the call to the specific method overload with a newName (ex: return functionName2() )
 function createDisambiguatedMethodCall funcName [id] argLength [number]
     replace [repeat statement]
     construct funcCallArgs [list value]
@@ -918,6 +1040,7 @@ function createDisambiguatedMethodCall funcName [id] argLength [number]
         'return 'self '. funcName '( funcCallArgs ')
 end function 
 
+%The args passed to the specific method overload are constructed here.
 function addArgvParam count [number] argLength [number]
     replace [list value]
         result [list value]
@@ -929,31 +1052,4 @@ function addArgvParam count [number] argLength [number]
         count [+ 1]
     by
         result [, param] [addArgvParam increment argLength]
-end function
-
-function filterOutFunctions elem [class_body_element]
-    replace $ [repeat class_body_element]
-        result [repeat class_body_element]
-    where not
-        elem
-            [checkAlreadyStrFunc]
-            [checkAlreadyHashFunc]
-    by
-        result [. elem]
-end function
-
-function checkAlreadyStrFunc
-    match [class_body_element]
-        _[opt decorator] _[acess_modifier] _[nested_identifier] 'toString '( _ [list method_parameter] ') '{ _ [method_content] '}
-    import classMethodNames [repeat id]
-    where
-        classMethodNames [containsId '__str__]
-end function
-
-function checkAlreadyHashFunc
-    match [class_body_element]
-        _[opt decorator] _[acess_modifier] _[nested_identifier] 'hashCode '( _ [list method_parameter] ') '{ _ [method_content] '}
-    import classMethodNames [repeat id]
-    where
-        classMethodNames [containsId '__hash__]
 end function

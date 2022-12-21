@@ -1,3 +1,5 @@
+%Comments are removed from the program for now
+%In the future, this could be removed and comments would need to be parsed normally and translated
 comments
     //
     /*  */
@@ -8,7 +10,7 @@ compounds
 end compounds 
 
 tokens
-    number  "(-\s?)?\d+(.\d+)?"
+    %User code is code taken directly from umple in user defined functions
     usercode "<TXL UGM>[#(</TXL UGM>)]*</TXL UGM>"
 end tokens
 
@@ -16,8 +18,9 @@ end tokens
 %     Statements     %
 %--------------------%
 
+%Keys can only be defined once, so this includes python terms as well
 keys
- return new if else for true false while this True False + - * / ? ; : pass not and or throw
+ return new if else for true false while this True False + - * / ? ; : pass not and or throw try catch finally
 end keys
 
 define acess_modifier
@@ -68,6 +71,10 @@ define imported
     |   [id]'. [imported]
 end define
 
+%Important concept
+%Nested identifiers represent anything connected by dots
+%ex: a.b.c(g,h).d.e is a nested identifier
+%ids and function calls on their own are also nested_identifiers (ex: aName or funcName(a,b) )
 define nested_identifier
      [nestable_value] [SPOFF] [repeat attribute_access] [SPON]
 end define
@@ -97,12 +104,14 @@ end define
 define parentheses_value
     '( [list value]')
 end define 
+
+%base_values should have no recursion or left side ambiguity
 define base_value
        'null
     |   'true
     |   'false
     |   [casting]
-    |   [number] [opt 'f]
+    |   [opt negative_number] [number] [opt 'f] [SPON]
     |   [stringlit]
     |   [charlit]
     |   [nested_identifier]
@@ -114,6 +123,16 @@ define base_value
 
 end define
 
+define negative_number
+    '- [SPOFF]
+end define
+
+%Important concept
+%Almost all code inside functions will match to a [value]
+%This includes arithmatics ( a + 4 /5 - (d().e -4) )
+%Boolean expressions (true || isCar() && drives)
+%Assignments ( a = (b = c) )
+%and others
 define value
         [base_value] [opt value_continuation]
 end define
@@ -122,8 +141,8 @@ define value_continuation
         [boolean_operator] [value]
     |   [arithmatic_operator] [value]
     |   [comparator] [value]
-    |   [method_reference_terminal]
-    |   [ternary_terminal]
+    |   [method_reference]
+    |   [ternary]
     |   '++ [opt value_continuation]
     |   '-- [opt value_continuation]
     |   [value_continuation_assignment]
@@ -135,11 +154,11 @@ define value_continuation_assignment
     |   '-=  [value]
 end define
 
-define ternary_terminal
-    '? [value] ': [value] %should be base_value?
+define ternary
+    '? [value] ': [value]
 end define
 
-define method_reference_terminal
+define method_reference
     ':: [id]
 end define 
 
@@ -152,6 +171,9 @@ define stmt_return
         'return [opt value] '; [NL]
 end define
 
+%Every line of code inside a function is a statement
+%These include concepts like loops, if statements, switch cases ect.
+%As well as the important double value
 define statement
         [stmt_return]
     |   [conditional_block]
@@ -164,16 +186,15 @@ define statement
     |   [try_catch]
 end define
 
+%[value] by itself cannot match java declarations (ex: String aName)
+%Double value takes care of this. The first value should match the class name and the second the variable
+%name and possible assignment (ex: String aName = "Joe")
 define double_value
     [value] [opt value]
 end define
 
 define while_loop
     'while( [value] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
-end define
-
-define ternary
-    [value]  '? [!] [value] ': [value]
 end define
 
 define for_loop
@@ -201,7 +222,11 @@ define conditional_block
 end define
 
 define try_catch 
-    'try '{  [repeat statement]  '} 'catch '( [method_parameter] ') '{ [repeat statement] '}
+    'try '{  [repeat statement]  '} 'catch '( [method_parameter] ') '{ [repeat statement] '} [opt finally]
+end define
+
+define finally
+    'finally '{ [repeat statement] '}
 end define
 
 define if 
