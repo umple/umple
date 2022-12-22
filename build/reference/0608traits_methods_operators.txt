@@ -37,14 +37,18 @@ The renaming operator allows changing the name of provided methods and also thei
 The example 2 shows this operator in action. Class C1 uses trait T1 (line 12) and renames its provided method method1() to function2. There is no need to specify parentheses for the new name. Class C2 uses trait T1 (line 16) and while it renames provided method3() to function3, it also changes the visibility of the provided method to be private. Finally, class C3 uses trait T1 and renames the provided method method5(Integer) to function5. However, it also forces other provided methods of trait T1 to be removed. This feature can be really useful if there is a utility trait and we are just interested in a provided method with the name that suits our domain.
 </p>
 
+&nbsp;
+
+<p>When exploring the following examples in UmpleOnline, you can use the Options menu to control what is visible, or you can use control-R to flip back and forth between showing the diagram with the original traits, vs. the diagram collapsed into the classes to be compiled; or you can use control-M to show/hide methods.</p>
+
 @@syntax
 [[functionAliasName]] [[iEFunction]]
 
 @@example
-@@source manualexamples/traits_example_010.ump
+@@source manualexamples/traits_example_010.ump &diagramtype=GvClassTrait
 @@endexample
 
 @@example
-@@source manualexamples/traits_example_011.ump
+@@source manualexamples/traits_example_011.ump &diagramtype=GvClassTrait
 @@endexample
 

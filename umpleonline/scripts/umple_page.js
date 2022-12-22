@@ -88,6 +88,15 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     jQuery(".view_opt_class").show();
 
   }
+  else if(diagramType == "GvClassTrait")   
+  {
+    Page.useGvClassDiagram = true;
+    Page.useEditableClassDiagram = false;
+    Page.setDiagramTypeIconState('GvClass');
+    Page.useGvFeatureDiagram = false;
+    Page.showTraits=true;
+    jQuery(".view_opt_class").show();
+  } 
   else if(diagramType == "GvFeature")   
   {
     Page.useGvFeatureDiagram = true;
@@ -329,7 +338,7 @@ Page.initOptions = function()
   jQuery("#buttonToggleTransitionLabels").prop('checked',false);
   jQuery("#buttonToggleGuards").prop('checked',true);  
   jQuery("#buttonToggleGuardLabels").prop('checked',false);
-  jQuery("#buttonToggleTraits").prop('checked',false);
+  jQuery("#buttonToggleTraits").prop('checked',Page.showTraits);
   jQuery("#buttonToggleFeatureDependency").prop('checked',false);
   jQuery("#buttonAllowPinch").prop('checked',false);
   
