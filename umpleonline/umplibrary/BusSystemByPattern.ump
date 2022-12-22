@@ -2,15 +2,17 @@
 to create a bus system
 */
 
+use lib:AbstractionOccurrence.ump;
 use lib:TransportationPatternA.ump
 
 // This shows how a general pattern for
 // transportation can be adapted to
-// describe a bus sy
+// describe a bus system
+
 
 class BusRoute {
   Integer routeNumber;
-  isA Route ;
+  isA Route <Stop = BusStop>;
 }
 
 class RegularlyTimedBusRun {
@@ -21,7 +23,7 @@ class RegularlyTimedBusRun {
 }
 
 class TimedStopAtBusStop {
-  isA ScheduledStop ;
+  isA ScheduledStop <Stop = BusStop>;
 }
 
 class BusStop {
@@ -37,19 +39,18 @@ class BusRun {
 
 class Bus {
   isA Vehicle;
-}//$?[End_of_model]$?
-
+}
+//$?[End_of_model]$?
 namespace -;
-
 
 class BusRun
 {
-  position 177 352 158.609375 75.453125;
+  position 140 369 165.074997 77.6875;
 }
 
 class BusStop
 {
-  position 399 80 138.875 58.453125;
+  position 501 62 144.4375 59.887501;
 }
 
 class Bus
@@ -59,12 +60,12 @@ class Bus
 
 class TimedStopAtBusStop
 {
-  position 518 194 221.546875 75.453125;
+  position 500 254 230.925003 77.6875;
 }
 
 class RegularlyTimedBusRun
 {
-  position 131 188 207.234375 92.453125;
+  position 144 189 215.949997 95.487503;
 }
 
 class BusRoute

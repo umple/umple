@@ -10,8 +10,7 @@ class Person {
 }
 
 class TeamRole {
-  isA Role ;
-  * -- 1 SportsTeam childSportsTeam;
+  isA Role<Player=Person>;
 }
 
 class Athlete {
@@ -22,7 +21,7 @@ class Coach {
   isA TeamRole;
 }
 
-class Parent
+class ParentOfAthlete
 {
   isA TeamRole;
   * -- * Athlete;
@@ -31,6 +30,7 @@ class Parent
 
 class SportsTeam {
   nickname;
+  * -- * TeamRole;
 }
 //$?[End_of_model]$?
 
@@ -54,6 +54,7 @@ class TeamRole
 class SportsTeam
 {
   position 304 67 135.75 58.453125;
+  position.association SportsTeam__TeamRole 0,44 109,21;
 }
 
 class Coach
@@ -82,7 +83,7 @@ class Coach
   position 355 234 109 41.453125;
 }
 
-class Parent
+class ParentOfAthlete
 {
   position 203 233 109 41.453125;
 }

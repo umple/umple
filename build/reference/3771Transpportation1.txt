@@ -27,10 +27,10 @@ noreferences
 @@endexample
 
 @@example @@caption Example of use of the above transportation pattern for an airline @@endcaption
-@@source AirlineByPattern.ump
+@@source AirlineByPattern.ump &diagramtype=GvClass
 @@endexample
 
 @@example @@caption Example of use of the above transportation pattern for a bus system @@endcaption
-@@source BusSystemByPattern.ump
+@@source BusSystemByPattern.ump &diagramtype=GvClass
 @@endexample
 
