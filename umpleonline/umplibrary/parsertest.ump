@@ -1,0 +1,289 @@
+// This example demonstrates Umple's built-in parsing capability
+// written in Umple itself.
+//
+// The same parser is used for the Umple compiler.
+// This example can be used to show how to build other parsers.
+//
+// To use:
+// 1. Create a directory and put this parsertest.ump file in the directory
+// 2. Add a Library.grammar file (see below) in the same directory
+// 3. Create an input directory of files to parse (e.g. indir)
+// 4. Add at least one .txt file (see below) in the indir.
+// 5. Create an outdir (currently not used, but needs to be present)
+// 6. Ensure you have an umple compiler called umple (see http://dl.umple.org if you need one)
+// 7. Compile this file using: umple parsertest.ump -c -
+// 8. Run the program using: java -cp src-gen-umple Library indir outdir
+//
+// Sample grammar: (remove the comments from the following two lines) and put in Library.grammar
+// book : [*title] [**author] [[copy]]*
+// copy : @@Copy [barcode]
+//
+// Sample input: (remove the comments and put in a .txt file in indir
+// Practical Software Engineering
+// Tim Lethbridge
+// Robert Laganiere
+// @@Copy 77554433
+// @@Copy 77669977
+
+// Output java and class files will be put in the following
+generate Java "src-gen-umple";
+
+// This example uses the abstraction occurrence pattern to generate an association
+use lib:AbstractionOccurrence.ump;
+
+// namespace cruise.umple.parser;
+// The following define key classes such as Position, Token and ParseResult
+use lib:ParseUtilities.ump;
+use lib:TextParser.ump;
+
+// Some general utilities
+use lib:FileUtils.ump;
+
+// Core Umple parser
+// namespace cruise.umple.parser.analysis;
+use lib:GrammarParsing.ump;
+use lib:ParsingRules.ump;
+
+// Several warnings are raised that are suppressed here
+
+strictness ignore 170; // Some of the utilities use custom constructors
+strictness ignore 46; // Some of the utilties use complex attribute types
+strictness ignore 1007; // There is one attribute declaration in a utillity that is private
+strictness ignore 1006; // There is an inner class in a utility that Umple prefers to avoid
+
+namespace -;
+
+// In this example, we will be populating a simple model of books in a library
+// and reading in some books from a file.
+
+class Book {
+  title;
+  * -> * Person author;
+  isA Abstraction;
+}
+
+class Copy {
+  barcode;
+  isA Occurrence<Abstraction=Book>;
+}
+
+class Person {
+  name;
+}
+
+// This is the core Library class that contains the main method
+class Library {
+  depend java.io.*;
+  depend java.net.*;
+  depend cruise.umple.parser.*;
+  depend cruise.umple.util.SampleFileWriter;
+
+
+  singleton;
+  
+  // The following will be populated when the instance is created
+  lazy inputPath;
+  lazy outputPath;
+  lazy String[] messages;
+  
+  // Tracks whether any problems have occurred
+  Boolean seriousProblem = false;  
+  
+  // This is the parser that will be used
+  0..1 -- 0..1 BookParser parser;
+  
+  public static void main(String[] args) {
+    if (args.length < 2) {
+      println("Usage: java Library <input_dir> <output_dir>");
+      return;
+    }
+    
+    // Instantiate the singleton
+    Library theLib = Library.getInstance();
+
+    // These are input and output files for the parser
+    theLib.setInputPath(args[0]);
+    theLib.setOutputPath(args[1]);
+    
+    // Read in and process the input
+    boolean didProcessInput = theLib.processInput();
+    
+    if (didProcessInput)
+    {
+      theLib.addMessage("Success processing input!");
+    }
+    for (String message : theLib.getMessages())
+    {
+      println(message);
+    }
+    System.exit(theLib.isSeriousProblem() ? -1 : 0);
+  }
+
+  // A simple utility to save having to write so much code
+  private static void println(String output)
+  {
+    System.out.println(output);
+  }
+
+  // Core method to get input and process it
+  public boolean processInput()
+  {
+    File inputDirectory = new File(getInputPath());
+    if (!inputDirectory.exists())
+    {
+      addMessage("Unknown directory: " + getInputPath());
+      setSeriousProblem(true);
+      return false;
+    }
+
+    // Install the parser
+    setParser(new BookParser());
+
+    // Call the parser to parse all the input files
+    parseContent(inputDirectory);
+
+    if(!getSeriousProblem()) {
+      String message = "... processed input, now will prepare output";
+      addMessage(message);
+      publish(getOutputPath());
+      return true;
+    }
+    else
+    {
+      addMessage("Error: Unable to process all files in " + getInputPath());
+      setSeriousProblem(true);
+      return false;
+    }
+  }
+
+  // Calls the parser for every directory
+  private void parseContent(File inputDirectory)
+  {
+    File[] allFiles = SampleFileWriter.getAllFiles(inputDirectory);
+    for (File aFile : allFiles)
+    {
+      addMessage("\nInput file "+aFile.getName());
+      if (aFile.getName().endsWith(".txt"))
+      {
+        ParseResult pRes = parser.parse(aFile);
+        boolean parseSucceeded = parser.getWasSuccess();
+        if (!parseSucceeded)
+        {
+          addMessage("Error: Unable to parse Book at location "+
+            parser.getFailedPosition() +": " + aFile.getName() );
+          setSeriousProblem(true);
+        }
+        else {
+          // Parser was successful ... moving on to analusis
+          if(!getParser().analyze(aFile.getName()).getWasSuccess()) {
+            addMessage("Error: Unable to analyze file " +  aFile.getName());
+            setSeriousProblem(true);          
+          }
+        }
+      }
+    }
+  }
+  
+  // This method currently does nothing, but is available for use in other examples
+  // Where output should be produced from the input.
+  public boolean publish(String path){
+    addMessage("Done");
+    return(true);
+  }
+}
+
+// This class processes books in a format specified in a grammar file
+class BookParser
+{
+  depend cruise.umple.parser.analysis.*;
+  depend cruise.umple.parser.*;
+  depend java.io.*; 
+  depend java.nio.file.Paths;
+  depend java.nio.file.Path;
+  depend java.nio.file.Files;
+  depend java.io.IOException;
+
+  // This is the internal utility parser
+  RuleBasedParser rbp = new RuleBasedParser();
+
+  internal Integer init = init();
+
+  private int init()
+  {
+    // There must be a grammar file in the directory where the code is executed
+    rbp.addGrammarFile("Library.grammar");
+    init += 1;
+    return init;
+  }
+  
+  public ParseResult parse(File aFile) {
+    return rbp.parse(aFile);
+  }
+  
+  public Token getRootToken() {
+    return rbp.getRootToken();
+  }
+
+  public ParseResult getParseResult() {
+    ParseResult pRes = rbp.getParseResult();
+    if(getFailedPosition() != null) {
+      pRes.setWasSuccess(false);
+    }
+    return pRes;
+  }
+
+  public boolean getWasSuccess() {
+    return getParseResult().getWasSuccess();
+  }
+
+  public Position getFailedPosition() {
+    Position thePosition = /* rbp.getFailedPosition();
+    if(thePosition == null) {
+      thePosition = */ rbp.getAnalyzer().getFailedPosition();
+  //   }
+    return thePosition;
+  }
+
+
+  // This is called after parsing, and traverses the tree of Tokens to populate the
+  // relevant objects
+  public ParseResult analyze(String fileThatWasProcessed)
+  {
+    getLibrary().addMessage("... starting analysis of parsed input from "+fileThatWasProcessed);
+    for (Token t : getRootToken().getSubTokens())
+    {
+      if (t.is("book"))
+      {
+        Book theBook = new Book(t.getValue("title"));
+
+        getLibrary().addMessage("\nFound Book: "+theBook.getTitle()+" by:");
+
+        for (Token level1subToken : t.getSubTokens())
+        {
+          if (level1subToken.is("author"))
+          {
+            // All authors come as one token, so we need to split
+            String allAuthors = level1subToken.getValue("author");
+            for (String anAuthorString : allAuthors.split("\n"))
+            {
+              Person anAuthor=new Person(anAuthorString);
+              theBook.addAuthor(anAuthor);
+            
+              getLibrary().addMessage("  Author: "+anAuthor.getName());
+            }
+          }
+          else if (level1subToken.is("copy"))
+          {
+            Copy theCopy=new Copy(level1subToken.getValue("barcode"),theBook);
+            theBook.addCopy(theCopy);
+            
+            getLibrary().addMessage(" Copy: "+theCopy.getBarcode());
+            
+          }
+        }
+      }
+    }
+    return getParseResult();
+  }
+}
+
