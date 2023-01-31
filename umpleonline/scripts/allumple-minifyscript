@@ -13,8 +13,8 @@ cat \
  inlineeditor.js \
  CodeMirror/lib/codemirror.js \
  CodeMirror/mode/clike/clike.js \
- CodeMirror/lib/util/foldcode.js \
- CodeMirror/lib/util/searchcursor.js \
+ CodeMirror/addon/fold/foldcode.js \
+ CodeMirror/addon/search/searchcursor.js \
  dropbox/*.js \
  umple_*.js \
  structureDiagram.js \
