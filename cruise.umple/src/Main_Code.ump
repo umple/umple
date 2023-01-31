@@ -835,6 +835,17 @@ class PlaygroundMain
   // If through a socket, the socket must be closed after returning
   public void processCommand(String[] args, ConnectionToClient client)
   {
+    // Shortcut command does not get counted as a real command ... just to determine if up
+    if ("-ping".equals(args[0])) {
+      if(isServer) {
+        returnCommandResult("Server is up\n", client);        
+      }
+      else {
+        returnCommandResult("Not running as a server\n", client);        
+      }
+      return;
+    }
+
     String answer = "";
     commandsRun++;
     commandsEverRun++;
