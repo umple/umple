@@ -79,8 +79,8 @@ document.write('<script type="text/javascript" src="scripts/inlineeditor.js"></s
 // Code mirror
 document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/codemirror.js"></script>');
 document.write('<script type="text/javascript" src="scripts/CodeMirror/mode/clike/clike.js"></script>');  // contains C-like mode
-document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/util/foldcode.js"></script>');
-document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/util/searchcursor.js"></script>');
+document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/fold/foldcode.js"></script>');
+document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/search/searchcursor.js"></script>');
 
 // Dropbox internal
 

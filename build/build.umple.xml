@@ -367,8 +367,8 @@
       <fileset file="${scriptPath}/inlineeditor.js"/>
       <fileset file="${scriptPath}/CodeMirror/lib/codemirror.js"/>
       <fileset file="${scriptPath}/CodeMirror/mode/clike/clike.js"/>
-      <fileset file="${scriptPath}/CodeMirror/lib/util/foldcode.js"/>
-      <fileset file="${scriptPath}/CodeMirror/lib/util/searchcursor.js"/>
+      <fileset file="${scriptPath}/CodeMirror/addon/fold/foldcode.js"/>
+      <fileset file="${scriptPath}/CodeMirror/addon/search/searchcursor.js"/>
       <fileset dir="${scriptPath}/dropbox" includes="*.js"/>
       <fileset dir="${scriptPath}" includes="umple_*.js"/>
       <fileset file="${scriptPath}/structureDiagram.js"/>
