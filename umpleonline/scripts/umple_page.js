@@ -507,7 +507,8 @@ Page.initCodeMirrorEditor = function() {
         lineWrapping: true,
         onFocus: function(id, gained) {Action.focusOn("CodeMirror", true)},
         onBlur: function(id, gained) {Action.focusOn("CodeMirror", false)},
-        onGutterClick: foldFunc,
+        // OLD gutterClick event
+        // onGutterClick: foldFunc,
         onChange: function(ed, changes) {Action.umpleCodeMirrorTypingActivity();},
         onCursorActivity: function() {
           Page.codeMirrorEditor.setLineClass(Page.hLine, null);
@@ -538,6 +539,34 @@ Page.initCodeMirrorEditor = function() {
           }
         }
       );
+  // Event triggering changes for CodeMirror5
+	Page.codeMirrorEditor.on('focus', function (id, gained) {
+		Page.setFeedbackMessage('focus..');
+		Action.focusOn('CodeMirror', true);
+	});
+	Page.codeMirrorEditor.on('blur', function (id, gained) {
+		Page.setFeedbackMessage('blur..');
+		Action.focusOn('CodeMirror', false);
+	});
+	// NEW gutterClick event 
+	// Page.codeMirrorEditor.on('gutterClick', function () {
+	// 	Page.setFeedbackMessage('gutterClick..');
+	// 	Page.codeMirrorEditor.foldCode(CodeMirror.fold.brace);
+	// });
+	Page.codeMirrorEditor.on('change', function (ed, changes) {
+		Page.setFeedbackMessage('change..');
+		Action.umpleCodeMirrorTypingActivity();
+	});
+	Page.codeMirrorEditor.on('cursorActivity', function () {
+		Page.setFeedbackMessage('cursorActivity..');
+		Page.codeMirrorEditor.addLineClass(Page.hLine, null);
+		Page.hLine = Page.codeMirrorEditor.addLineClass(
+			Page.codeMirrorEditor.getCursor().line,
+			'activeline'
+		);
+		Action.umpleCodeMirrorCursorActivity();
+	});
+	// Event triggering events end here
   Page.hLine = Page.codeMirrorEditor.setLineClass(0, "activeline");
   Page.codeMirrorOn = true;  
 }

@@ -2,7 +2,6 @@
 
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
-  line-height: 1em; /* Added for Umple Online */
   font-family: monospace;
   height: 300px;
   color: black;
@@ -145,17 +144,6 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #a22;}
 .CodeMirror-matchingtag { background: rgba(255, 150, 0, .3); }
 .CodeMirror-activeline-background {background: #e8f2ff;}
 
-/* Added for UMPLE online */
-pre.activeline + pre {
-  margin: 0;
-}
-pre.activeline {
-  margin: 0;
-}
-pre {
-  margin: 0;
-}
-
 /* STOP */
 
 /* The rest of this file contains styles related to the mechanics of
@@ -221,35 +209,13 @@ div.CodeMirror-scroll {
   min-height: 100%;
   z-index: 3;
 }
-/* .CodeMirror-gutter {
+.CodeMirror-gutter {
   white-space: normal;
   height: 100%;
   display: inline-block;
   vertical-align: top;
   margin-bottom: -50px;
-} */
-
-/* Added for Umple online */
-.CodeMirror-gutter {
-  position: absolute; left: 0; top: 0;
-  z-index: 10;
-  background-color: #f7f7f7;
-  border-right: 1px solid #eee;
-  min-width: 2em;
-  height: 100%;
 }
-
-/* Added for Umple Online */
-.CodeMirror-gutter-text {
-  text-align: right;
-  color: #aaa;
-  padding: 0.4em 0.2em 0.4em 0.4em;
-  white-space: pre !important;
-}
-.CodeMirror-gutter-text > pre {
-  margin: 0em !important;
-}
-
 .CodeMirror-gutter-wrapper {
   position: absolute;
   z-index: 4;
@@ -271,8 +237,7 @@ div.CodeMirror-scroll {
 
 .CodeMirror-lines {
   cursor: text;
-  /* min-height: 1px; */ /* prevents collapsing before first draw */
-  padding: 0.4em !important; /* Added for Umple Online */
+  min-height: 1px; /* prevents collapsing before first draw */
 }
 
 .CodeMirror pre.CodeMirror-line,
@@ -343,9 +308,6 @@ div.CodeMirror-scroll {
 .CodeMirror-cursor {
   position: absolute;
   pointer-events: none;
-  /* Added for Umple Online */
-  margin-top: 0;
-  margin-bottom: 0;
 }
 .CodeMirror-measure pre { position: static; }
 
@@ -388,3 +350,7 @@ div.CodeMirror-dragcursors {
 
 /* Help users use markselection to safely style text background */
 span.CodeMirror-selectedtext { background: none; }
+
+#tabControl {
+  display: block !important;
+}
