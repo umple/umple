@@ -45,12 +45,12 @@ document.write('<script type="text/javascript" src="scripts/mousetrap.min.js"></
 
 // ====== The following minified version of the subsequent group can be commented out when testing
 // Regenerate this using the allumple-minifyscript unix script (relies on yuicompressor)
-document.write('<script type="text/javascript" src="scripts/allumple-min.js"></script>');
+// document.write('<script type="text/javascript" src="scripts/allumple-min.js"></script>');
 
 
 // ------ The following should be commented out, and the above min version used, except when testing 
 // If you change any constituent file, regenerate allumple-min.js as above
-/*
+/*//TEMP */
 
 //Prototype
 document.write('<script type="text/javascript" src="scripts/prototype.js"></script>');
@@ -114,7 +114,7 @@ document.write('<script type="text/javascript" src="scripts/umple_tab_control.js
 //For styling and colouring statetables
 document.write('<script type="text/javascript" src="scripts/statetable/state_table_colourer.js"></script>');
 
-*/
+//*/
 
 // ----------- END OF FILES THAT ARE MINIFIED -----------
 

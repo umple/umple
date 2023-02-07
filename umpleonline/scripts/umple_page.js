@@ -497,9 +497,9 @@ Page.initUmpleTextArea = function()
 }
 
 Page.initCodeMirrorEditor = function() {
-  var foldFunc = CodeMirror.newFoldFunction(CodeMirror.braceRangeFinder);
+  // var foldFunc = CodeMirror.newFoldFunction(CodeMirror.braceRangeFinder);
   Page.codeMirrorEditor = CodeMirror.fromTextArea(
-     document.getElementById('umpleModelEditorText'),{
+    document.getElementById('umpleModelEditorText'),{
         lineNumbers: true,
         matchBrackets: true,
         readOnly: Page.readOnly,
