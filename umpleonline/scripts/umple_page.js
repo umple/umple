@@ -540,34 +540,32 @@ Page.initCodeMirrorEditor = function() {
         }
       );
   // Event triggering changes for CodeMirror5
-	Page.codeMirrorEditor.on('focus', function (id, gained) {
-		Page.setFeedbackMessage('focus..');
-		Action.focusOn('CodeMirror', true);
-	});
-	Page.codeMirrorEditor.on('blur', function (id, gained) {
-		Page.setFeedbackMessage('blur..');
-		Action.focusOn('CodeMirror', false);
-	});
-	// NEW gutterClick event 
-	// Page.codeMirrorEditor.on('gutterClick', function () {
-	// 	Page.setFeedbackMessage('gutterClick..');
-	// 	Page.codeMirrorEditor.foldCode(CodeMirror.fold.brace);
-	// });
-	Page.codeMirrorEditor.on('change', function (ed, changes) {
-		Page.setFeedbackMessage('change..');
-		Action.umpleCodeMirrorTypingActivity();
-	});
-	Page.codeMirrorEditor.on('cursorActivity', function () {
-		Page.setFeedbackMessage('cursorActivity..');
-		Page.codeMirrorEditor.addLineClass(Page.hLine, null);
-		Page.hLine = Page.codeMirrorEditor.addLineClass(
-			Page.codeMirrorEditor.getCursor().line,
-			'activeline'
-		);
-		Action.umpleCodeMirrorCursorActivity();
-	});
-	// Event triggering events end here
-  Page.hLine = Page.codeMirrorEditor.setLineClass(0, "activeline");
+  Page.codeMirrorEditor.on('focus', function (id, gained) {
+    Page.setFeedbackMessage('focus..');
+    Action.focusOn('CodeMirror', true);
+  });
+  Page.codeMirrorEditor.on('blur', function (id, gained) {
+    Page.setFeedbackMessage('blur..');
+    Action.focusOn('CodeMirror', false);
+  });
+  // NEW gutterClick event (not working)
+  Page.codeMirrorEditor.on('gutterClick', function () {
+    Page.setFeedbackMessage('gutterClick..');
+    CodeMirror.newFoldFunction(CodeMirror.fold.brace);
+  });
+  Page.codeMirrorEditor.on('change', function (ed, changes) {
+    Page.setFeedbackMessage('change..');
+    Action.umpleCodeMirrorTypingActivity();
+  });
+  Page.codeMirrorEditor.on('cursorActivity', function () {
+    Page.setFeedbackMessage('cursorActivity..');
+    Page.codeMirrorEditor.addLineClass(Page.hLine, null);
+    Page.hLine = Page.codeMirrorEditor.addLineClass(
+    Page.codeMirrorEditor.getCursor().line,'activeline');
+    Action.umpleCodeMirrorCursorActivity();
+  });
+  // Event triggering events end here
+  Page.hLine = Page.codeMirrorEditor.addLineClass(0, "activeline");
   Page.codeMirrorOn = true;  
 }
 
