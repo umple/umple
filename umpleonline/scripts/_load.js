@@ -53,7 +53,7 @@ document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/fol
 document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/fold/foldgutter.js"></script>');
 document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/fold/brace-fold.js"></script>');
 document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/search/searchcursor.js"></script>');
-document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/edit/matchBrackets.js"></script>');
+document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/edit/matchbrackets.js"></script>');
 
 
 
