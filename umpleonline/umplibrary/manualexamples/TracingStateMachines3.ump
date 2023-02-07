@@ -1,6 +1,7 @@
 // this example will trace all states of
 // State machine GarageDoor 
 
+@SuppressWarnings("deprecation")
 class GarageDoor
 {
     // UML state machine digram for a Garage door,

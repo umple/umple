@@ -1,4 +1,4 @@
-
+@SuppressWarnings("deprecation")
 class Student
 {
   Integer id;
