@@ -1124,5 +1124,6 @@
         return "meta";
       },
     },
+    modeProps: { fold: ["brace"] },
   });
 });

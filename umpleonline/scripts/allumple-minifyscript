@@ -1,5 +1,5 @@
 #!/bin/csh -fb
-# Minify the Javascript files
+# Minify the Javascript files ... see also build.umple.xml and _load.js for same list
 
 cat \
  prototype.js \
@@ -11,12 +11,6 @@ cat \
  shCore.js \
  shBrush*.js \
  inlineeditor.js \
- CodeMirror/lib/codemirror.js \
- CodeMirror/mode/clike/clike.js \
- CodeMirror/addon/fold/foldcode.js \
- CodeMirror/addon/fold/foldgutter.js \
- CodeMirror/addon/fold/brace-fold.js \
- CodeMirror/addon/search/searchcursor.js \
  dropbox/*.js \
  umple_*.js \
  structureDiagram.js \

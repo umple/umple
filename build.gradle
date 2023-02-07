@@ -1699,23 +1699,31 @@ task executeDocJar (type: JavaExec){
  task concat (type: ConcatFiles) {
         group = "Custom"
         description = "Concatenating umpleonline scripts files into a single temporary javascript files"
- 	def  shBrush  = fileTree (umpleoscripts) {
- 		include 'shBrush*.js'
- 	}
- 	def umpf = fileTree (umpleoscripts) {
- 		include 'umple_*.js'
- 	}
- 	def drop = fileTree ("${rootProject.ext.umpleoscripts}/dropbox") {
- 		include '*.js'
- 	}
- 	files = files ('umpleonline/scripts/prototype.js', 'umpleonline/scripts/dom.js', 'umpleonline/scripts/ajax.js', 
- 	'umpleonline/scripts/helper.js', 'umpleonline/scripts/json.js', 'umpleonline/scripts/debugger.js', 'umpleonline/scripts/shCore.js',
- 	 shBrush, 'umpleonline/scripts/inlineeditor.js', 'umpleonline/scripts/CodeMirror/lib/codemirror.js', 'umpleonline/scripts/CodeMirror/mode/clike/clike.js',
- 	 'umpleonline/scripts/CodeMirror/addon/fold/foldcode.js', 'umpleonline/scripts/CodeMirror/addon/search/searchcursor.js', drop, umpf, 'umpleonline/scripts/structureDiagram.js',
- 	 'umpleonline/scripts/statetable/state_table_colourer.js'
- 	 )
- 	target = file ('umpleonline/scripts/tmpAllUmple.js')
- 	
+    def  shBrush  = fileTree (umpleoscripts) {
+      include 'shBrush*.js'
+    }
+    def umpf = fileTree (umpleoscripts) {
+      include 'umple_*.js'
+    }
+    def drop = fileTree ("${rootProject.ext.umpleoscripts}/dropbox") {
+      include '*.js'
+    }
+   files = files (
+     'umpleonline/scripts/prototype.js',
+     'umpleonline/scripts/dom.js',
+     'umpleonline/scripts/ajax.js', 
+     'umpleonline/scripts/helper.js',
+     'umpleonline/scripts/json.js',
+     'umpleonline/scripts/debugger.js',
+     'umpleonline/scripts/shCore.js',
+     shBrush,
+     'umpleonline/scripts/inlineeditor.js',
+     drop,
+     umpf,
+     'umpleonline/scripts/structureDiagram.js',
+     'umpleonline/scripts/statetable/state_table_colourer.js'
+   )
+   target = file ('umpleonline/scripts/tmpAllUmple.js')
  }
  
  task executeYui (type: JavaExec){

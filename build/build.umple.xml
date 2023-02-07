@@ -351,7 +351,7 @@
     <delete file="cruise.umple/bin/rules.grammar"/>
   </target>
 
-  <!-- Minify all JS scripts -->
+  <!-- Minify all JS scripts ... see also _Load.js and allumple-minifyscript and build.gradle -->
   <target name="compressAllScripts">
     <property name="scriptPath" value="${basedir}/umpleonline/scripts"/>
     <property name="tmpScript" value="${scriptPath}/tmpAllUmple.js"/>
@@ -365,12 +365,6 @@
       <fileset file="${scriptPath}/shCore.js"/>
       <fileset dir="${scriptPath}" includes="shBrush*.js"/>
       <fileset file="${scriptPath}/inlineeditor.js"/>
-      <fileset file="${scriptPath}/CodeMirror/lib/codemirror.js"/>
-      <fileset file="${scriptPath}/CodeMirror/mode/clike/clike.js"/>
-      <fileset file="${scriptPath}/CodeMirror/addon/fold/foldcode.js"/>
-      <fileset file="${scriptPath}/CodeMirror/addon/fold/foldgutter.js"/>
-      <fileset file="${scriptPath}/CodeMirror/addon/fold/brace-fold.js"/>
-      <fileset file="${scriptPath}/CodeMirror/addon/search/searchcursor.js"/>
       <fileset dir="${scriptPath}/dropbox" includes="*.js"/>
       <fileset dir="${scriptPath}" includes="umple_*.js"/>
       <fileset file="${scriptPath}/structureDiagram.js"/>
