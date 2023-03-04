@@ -218,9 +218,9 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
   // TEMPLATES FOR TRANSITIONS //
   
   // Template for a transition
-  transition <<!<<=start>> <<=arrow>> <<=dest>> [ <<=attributes>> ] ;
+  transition <<!<<=start>> <<=arrow>> <<=dest>> [ <<=attributes>>, URL="javascript:Action.transitionClicked(\"<<=jsInput>>\")" ] ;
 !>>
-  emit transition(String start,String arrow,String dest, String attributes)(transition);
+  emit transition(String start,String arrow,String dest, String attributes, String jsInput)(transition);
 
   // Template for transition attributes
   transitionAttributes <<!<<#if(lheadtail.length()>0) {#>> <<=lheadtail>> <<#
@@ -371,7 +371,10 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
         appendSpaces(code,  indentLevel+2);
 		
         tooltip = getStateTooltip(sm, s, className);
-        code.append(sName+" [label = "+sLabel+", tooltip = \""+tooltip+"\"];\n");
+        String enclosed = "\""+tooltip+"\"";
+        String [] infoGrab = getStatePath(s.getStateMachine(), s.getName());
+        String jsStr = "Class "+className+", SM "+infoGrab[0]+", State "+infoGrab[1];
+        code.append(sName+" [label = "+sLabel+", tooltip = \""+tooltip+"\", URL=\"javascript:Action.stateClicked(\\\""+jsStr+"\\\")\"];\n");
         if(isPseudo) _normalStateFormat(indentLevel, code);        
       }
       else 
@@ -383,6 +386,10 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
         code.append("label = \""+sLabel+"\";\n");
         appendSpaces(code,  indentLevel+2);
         code.append("style = rounded;\n");
+        String [] infoGrab = getStatePath(sm, s.getName());
+        String jsStr = "Class "+className+", SM "+infoGrab[0]+", State "+infoGrab[1];
+        appendSpaces(code,  indentLevel+2);
+        code.append("URL=\"javascript:Action.stateClicked(\\\""+jsStr+"\\\")\";\n");
       }
 
       if(isFirstState) 
@@ -395,7 +402,7 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
         tooltip = "start to "+stateInfo[1]; 
         
         _transition(2,transitions,"start_"+clSmName,"->", dest,
-          transitionAttributes(head,"","start",s.getName(), tooltip)); 
+          transitionAttributes(head,"","start",s.getName(), tooltip),null); 
       }
           
       // Output all the other transitions
@@ -469,7 +476,7 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
         String origlh = getTransitionHeadOrTailForState(t.getFromState(),uClass,true);
         String destlt = getTransitionHeadOrTailForState(t.getNextState(),uClass,false);
         tooltip = getTransitionTooltip(t, guardString); 
-
+        String onClickData=className+" "+sm.getRootStateMachine().getName()+" "+transitionLabel+" "+getStatePath(t.getFromState().getStateMachine(),t.getFromState().getName())[1]+" "+getStatePath(t.getNextState().getStateMachine(),t.getNextState().getName())[1]+" "+guardString;
         // WORKING ON
         // If we have to go through a dummy external state
         // we have to add two transitions
@@ -478,12 +485,12 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
           _transition(2,transitions,orig,"->", internalBoundaryTrans.get(t)+":e",
             transitionAttributes("dir=none, "+origlh,
             transitionLabel + guardString + transitionAction,
-            t.getFromState().getName(),t.getNextState().getName(), tooltip));        
+            t.getFromState().getName(),t.getNextState().getName(), tooltip),onClickData);        
 
           _transition(2,transitions,internalBoundaryTrans.get(t)+":w","->", dest,
             transitionAttributes(destlt,
             "",
-            t.getFromState().getName(),t.getNextState().getName(), tooltip));        
+            t.getFromState().getName(),t.getNextState().getName(), tooltip),onClickData);        
         }
         else 
         {
@@ -491,7 +498,7 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
           _transition(2,transitions,orig,"->", dest,
             transitionAttributes(origlh+destlt,
             transitionLabel + guardString + transitionAction,
-            t.getFromState().getName(),t.getNextState().getName(), tooltip));
+            t.getFromState().getName(),t.getNextState().getName(), tooltip),onClickData);
         }
         transitions.append("\n");
       }  // End iteration through the transitions
