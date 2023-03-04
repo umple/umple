@@ -1203,8 +1203,12 @@ Action.transitionClicked = function(identifier)
     selection=Action.selectStateInState(selection.startIndex,selection.endIndex,identifierState[i]);
   }
   let searchTerm=id[2];
-  if(id.length==7){
-    searchTerm=searchTerm+"\\s*"+"[\\s*"+id[6].slice(1,id[6].length-1)+"\\s*]";
+  if(id.length>6){
+    let guardStr="";
+    for(let i=5;i<id.length;i++){
+      guardStr=guardStr+id[i]+" ";
+    }
+    searchTerm=searchTerm+"\\s*"+"[\\s*"+guardStr.trim().slice(1,guardStr.trim().length-1)+"\\s*]";
   }
   searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)").replaceAll("(","\\(");
   let pattern= new RegExp(searchTerm+"[^\\n]*->[^\\n]*","s");
