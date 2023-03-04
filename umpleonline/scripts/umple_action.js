@@ -1202,7 +1202,7 @@ Action.transitionClicked = function(identifier)
   for (var i=1;i<identifierState.length;i++){
     selection=Action.selectStateInState(selection.startIndex,selection.endIndex,identifierState[i]);
   }
-  let searchTerm=id[2];
+  let searchTerm=id[2].replace("after","after~`~?:Every`~`?"); //subpar fix, could be improved
   if(id.length>6){
     let guardStr="";
     for(let i=5;i<id.length;i++){
@@ -1210,7 +1210,7 @@ Action.transitionClicked = function(identifier)
     }
     searchTerm=searchTerm+"\\s*"+"[\\s*"+guardStr.trim().slice(1,guardStr.trim().length-1)+"\\s*]";
   }
-  searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)").replaceAll("(","\\(");
+  searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)").replaceAll("(","\\(").replaceAll("~`~","(").replaceAll("`~`",")"); 
   let pattern= new RegExp(searchTerm+"[^\\n]*->[^\\n]*","s");
   console.log(searchTerm+".*->[^\\n]*");
   console.log("substr passed for"+id[2]+": "+Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex));
