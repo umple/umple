@@ -1212,8 +1212,6 @@ Action.transitionClicked = function(identifier)
   }
   searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)").replaceAll("(","\\(").replaceAll("~`~","(").replaceAll("`~`",")"); 
   let pattern= new RegExp(searchTerm+"[^\\n]*->[^\\n]*","s");
-  console.log(searchTerm+".*->[^\\n]*");
-  console.log("substr passed for"+id[2]+": "+Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex));
   let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
   Action.highlightTransition(startIndex,searchTerm,dest);
 }
