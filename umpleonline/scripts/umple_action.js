@@ -2326,7 +2326,8 @@ Action.selectStateInClass = function(className, smName, stateName)
     splitBuffer=Action.splitStates(currClass.substr(currClass.indexOf("{")+1)); //split class into un-nested SMs
     let currSM=null;
     for(let i=0;i<splitBuffer.length;i++){
-      if(splitBuffer[i].search(smName)==0){
+      let query=new RegExp("(?:queued\\s*)?"+smName);
+      if(splitBuffer[i].search(query)==0){
         currSM=splitBuffer[i]; //set currSM to un-nested SM code
         break;
       }
