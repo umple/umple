@@ -476,7 +476,7 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
         String origlh = getTransitionHeadOrTailForState(t.getFromState(),uClass,true);
         String destlt = getTransitionHeadOrTailForState(t.getNextState(),uClass,false);
         tooltip = getTransitionTooltip(t, guardString); 
-        String onClickData=className+" "+sm.getRootStateMachine().getName()+" "+transitionLabel+" "+getStatePath(t.getFromState().getStateMachine(),t.getFromState().getName())[1]+" "+getStatePath(t.getNextState().getStateMachine(),t.getNextState().getName())[1]+" "+guardString;
+        String onClickData=className+"*^*"+sm.getRootStateMachine().getName()+"*^*"+transitionLabel+"*^*"+getStatePath(t.getFromState().getStateMachine(),t.getFromState().getName())[1]+"*^*"+getStatePath(t.getNextState().getStateMachine(),t.getNextState().getName())[1]+"*^*"+guardString;
         // WORKING ON
         // If we have to go through a dummy external state
         // we have to add two transitions

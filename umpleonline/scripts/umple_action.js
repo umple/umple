@@ -1195,7 +1195,8 @@ Action.transitionClicked = function(identifier)
   if(!Action.diagramInSync) return;
   Action.elementClicked = true;
   Action.unselectAll();
-  let id = identifier.split(" ");
+  let id = identifier.split("*^*");
+  Page.setFeedbackMessage(id);
   let identifierState=id[3].split(".");
   dest=id[4];
   var selection = Action.selectStateInClass(id[0],id[1],identifierState[0]);
@@ -1205,7 +1206,7 @@ Action.transitionClicked = function(identifier)
   let searchTerm=id[2].replace("after","after~`~?:Every`~`?"); //subpar fix, could be improved
   if(id.length>6){
     let guardStr="";
-    for(let i=5;i<id.length;i++){
+    for(let i=5;i<id.length;i++){ //likely not needed anymore 
       guardStr=guardStr+id[i]+" ";
     }
     searchTerm=searchTerm+"\\s*"+"[\\s*"+guardStr.trim().slice(1,guardStr.trim().length-1)+"\\s*]";
