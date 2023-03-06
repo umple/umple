@@ -47,6 +47,8 @@ function replaceStatements
             [replaceCasting]
             [correctSuperInit]
             [correctSuperFunctions]
+             %DEBUG
+            [replacePrint]
             [replaceNewLine]
             [replaceHexIdentity]
             [replaceComparator]
@@ -389,6 +391,14 @@ rule correctSuperFunctions
     by
         'super() rep
 end rule
+
+%DEBUG
+rule replacePrint
+    replace [nested_identifier]
+        'System.out.println( val [value] ')
+    by
+        'print( val ')
+end rule 
 
 rule replaceNewLine
     replace [nested_identifier]
