@@ -47,6 +47,8 @@ function replaceStatements
             [replaceCasting]
             [correctSuperInit]
             [correctSuperFunctions]
+            %DEBUG
+            [replacePrint]
             [replaceNewLine]
             [replaceHexIdentity]
             [replaceComparator]
@@ -60,6 +62,10 @@ function replaceStatements
             [replaceFloatF]
             [replaceAllMemberVariableNames]
             [removeSemiColonFromValues]
+            %DEBUG
+            [replaceThread]
+            %DEBUG
+            [replaceThreadSleep]
 end function
 
 %In Java, you dont need to have code within brackets. For example else{} is valid.
@@ -79,6 +85,31 @@ rule removeSemiColonFromValues
     by  
         val
 end rule
+
+%DEBUG
+rule replaceThread
+    replace [statement]
+        'Thread assignment [value]
+    by
+        'threading.Thread( assignment ').start()
+end rule 
+
+%DEBUG
+% need to convert milliseconds to seconds
+rule replaceThreadSleep
+    replace [statement]
+        'Thread.sleep( val [value] ')
+    by
+        'time.sleep( val ')
+end rule
+
+%DEBUG
+%rule replaceDoActivity
+%    replace [statement]
+%        'Thread assignment [value]
+%    by
+%        'threading.Thread( assignment ').start()
+%end rule
 
 rule replaceAssignementIncrementAfter
     replace [statement]
@@ -389,6 +420,14 @@ rule correctSuperFunctions
     by
         'super() rep
 end rule
+
+%DEBUG
+rule replacePrint
+    replace [nested_identifier]
+        'System.out.println( val [value] ')
+    by
+        'print( val ')
+end rule 
 
 rule replaceNewLine
     replace [nested_identifier]

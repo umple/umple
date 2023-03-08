@@ -186,3 +186,15 @@ redefine member_variable_declaration
     ...
     |   [value] [NL]
 end redefine
+
+%DEBUG
+redefine thread
+    ...
+    |   'treading.Thread
+end redefine
+
+%DEBUG
+redefine thread_sleep
+    ...
+    |   'time.sleep( [double_value] ')
+end redefine

@@ -355,3 +355,12 @@ define class_body_element
     |   [constructor]
     |   [method_declaration]
 end define
+
+% DEBUG:defining threads, doesn't work for now
+define thread
+    'thread [member_variable_declaration]
+end define
+
+define thread_sleep
+    'thread.sleep( [double_value] ')
+end define
