@@ -22,6 +22,7 @@ Page.modelDelimiter = "//$?[End_of_model]$?";
 
 Page.codeMirrorOn = false;
 Page.codeMirrorEditor = null;
+Page.codeMirrorEditor6 = null;
 Page.hLine = null;
 
 Page.modelLoadingCount = 0;
@@ -529,6 +530,40 @@ Page.initCodeMirrorEditor = function() {
           }
         }
       );
+    
+  /* codemirror 6 */
+  const extraKeys = [
+    { key: "Ctrl-E", run: function() { Page.clickShowEditableClassDiagram() } },
+    { key: "Ctrl-J", run: function() { Page.clickShowJointJSClassDiagram() } },
+    { key: "Ctrl-G", run: function() { Page.clickShowGvClassDiagram() } },
+    { key: "Ctrl-S", run: function() { Page.clickShowGvStateDiagram() } },
+    { key: "Ctrl-L", run: function() { Page.clickShowStructureDiagram() } },
+    { key: "Ctrl-T", run: function() { Page.clickShowHideText() } },
+    { key: "Shift-Ctrl-Alt-T", run: function() { Page.clickShowHideText() } },
+    { key: "Ctrl-D", run: function() { Page.clickShowHideCanvas() } },
+    { key: "Ctrl-N", run: function() { Page.clickShowHideMenu() } },
+    { key: "trl-Alt-N", run: function() { Page.clickShowHideMenu() } },
+    { key: "Ctrl-Shift-=", run: function() { Page.clickButtonlarger() } },
+    { key: "Ctrl-Shift--", run: function() { Page.clickButtonSmaller() } },
+    { key: "Shift-Ctrl-A", run: function() { Page.clickToggleAttributes() } },
+    { key: "Ctrl-M", run: function() { Page.clickToggleMethods() } },
+    { key: "Ctrl-R", run: function() { Page.clickToggleTraits() } },
+    { key: "Ctrl-I", run: function() { Page.clickToggleTransitionLabels() } },
+    { key: "Ctrl-K", run: function() { Page.clickToggleGuardLabels() } },
+    { key: "Ctrl-O", run: function() { Page.copyCommandLineCode() } },
+    { key: "Ctrl-B", run: function() { Page.promptAndExecuteTest() } },
+    { key: "Esc", run: function(cm6) { cm6.getInputField().blur() } },
+  ]
+    
+  /* codemirror 6 */
+  const initialState = cm6.createEditorState(
+    document.getElementById("umpleModelEditorText").value, 
+    {
+      extensions: [cm6.listenChangesExtension]
+    });
+  Page.codeMirrorEditor6 = cm6.createEditorView(
+    initialState, document.getElementById("newEditor"));
+
   // Event triggering changes for CodeMirror5
   Page.codeMirrorEditor.on('focus', function (id, gained) {
     Action.focusOn('CodeMirror', true);
@@ -540,8 +575,22 @@ Page.initCodeMirrorEditor = function() {
     Page.codeMirrorEditor.foldCode(theLine);
   });
   Page.codeMirrorEditor.on('change', function (ed, changes) {
+    /* codemirror 6 */
+    Page.codeMirrorEditor6.dispatch({ 
+      changes: { 
+        from: 0, 
+        to: Page.codeMirrorEditor6.state.doc.length, 
+        insert:  document.getElementById("umpleModelEditorText").value 
+        }
+    })
     Action.umpleCodeMirrorTypingActivity();
   });
+  /* codemirror 6 */
+  Page.codeMirrorEditor6.dom.addEventListener('keydown', function (ed, changes) {
+    Action.umpleCodeMirrorTypingActivity();
+    console.log("keydown event triggered !!")
+  })  
+
   Page.codeMirrorEditor.on('cursorActivity', function () {
     Page.codeMirrorEditor.addLineClass(Page.hLine, null);
     Page.hLine = Page.codeMirrorEditor.addLineClass(

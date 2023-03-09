@@ -2001,6 +2001,10 @@ Action.setCaretPosition = function(line)
   {
     Page.codeMirrorEditor.setSelection({line: line-1,ch: 0},{line: line-1,ch: 999999});
     Page.codeMirrorEditor.focus();
+    /* codemirror 6 line highlight by number*/
+    // set cursor position in v6
+    // Page.codeMirrorEditor6.dispatch({selection: {anchor: line, head: line}})
+ 
     return;
   }
   var ctrl = document.getElementById('umpleModelEditorText');
@@ -2269,6 +2273,9 @@ Action.umpleCodeMirrorTypingActivity = function() {
   if(Action.freshLoad == false) {
     Action.umpleTypingActivity("codeMirrorEditor");
     Page.codeMirrorEditor.save();
+    /* codemirror 6 */
+    Action.umpleTypingActivity("newEditor");
+    Page.codeMirrorEditor6.save();
   }
   else {
     Action.freshLoad = false;
@@ -2400,7 +2407,10 @@ Action.processTyping = function(target, manuallySynchronized)
   {
     Action.diagramInSync = true;
     
-    if (target == "umpleModelEditorText" || target == "codeMirrorEditor") {
+    /* target == "newEditor" added for codemirror 6*/
+    if (target == "umpleModelEditorText" || target == "codeMirrorEditor" || target == "newEditor") {
+    // if (target == "newEditor") {
+      console.log(target + ": Inside processTyping")
       Action.updateLayoutEditorAndDiagram(); 
 		
       // issue#1554

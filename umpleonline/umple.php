@@ -432,8 +432,12 @@ $output = $dataHandle->readData('model.ump');
 
   <div id="mainApplication" class="row"> 
     <div id="textEditorColumn"  tabIndex="2"  class="inRow"> 
+      <!-- codemirror 5 editor -->
       <div id="topTextEditor">
         <textarea id="umpleModelEditorText" class="umpleModelEditor" wrap="off"></textarea>
+      </div>
+      <!-- codemirror 6 editor -->
+      <div id="newEditor">
       </div>
       <div id="bottomTextEditor">
         <textarea id="umpleLayoutEditorText" class="umpleLayoutEditor" wrap="off"></textarea>
@@ -839,7 +843,10 @@ $output = $dataHandle->readData('model.ump');
       <div id="umpleCanvas"  tabIndex="1" class="surface"></div>
     </div>
   </div>
- <a name="genArea"/>  
+
+  <script src="./scripts/codemirror6/editor.bundle.js"></script>
+ 
+  <a name="genArea"/>  
   <div id="generatedCodeRow" class="row">
 		<li id="ttTabsCheckbox">
 			<input id="buttonTabsCheckbox" type="checkbox" class="checkbox" name="buttonTabsCheckbox" value="buttonTabsCheckbox"/>
