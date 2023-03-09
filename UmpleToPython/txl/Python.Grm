@@ -126,6 +126,18 @@ redefine concrete_class_declaration
     | [repeat import_statement] [NL] 'class [nested_identifier] [SPOFF] [opt inheritance_group] ': [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL] [opt run_main]
 end redefine
 
+%DEBUG
+%redefine inner_class_declaration
+ %   ... 
+ %   | [repeat import_statement] [NL] 'class [nested_identifier] [SPOFF] [opt inheritance_group] ': [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL]
+%end redefine
+
+redefine new_call_inner
+    ... 
+    | [nested_identifier][SPOFF]'.[nested_identifier][SPON]
+end redefine
+
+
 %Bit of code that runs a classes main function when you run the file
 %This then emulates the java behavior
 define run_main

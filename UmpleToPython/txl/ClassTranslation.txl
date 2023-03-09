@@ -129,6 +129,9 @@ function replaceClassBody
         _ [addDictMemberVariable each declarations]
     export enumeratorDeclerations [repeat enum_declaration]
         _ [^ elements]
+    %DEBUG
+    %export inner_classes [repeat inner_class_declaration]
+        %_ [^ elements]
     export classMethodNames [repeat id]
         _ [extractClassMethodName each classMethods]
     construct possibleFunctionImports [repeat id]
@@ -140,7 +143,7 @@ function replaceClassBody
         _ 
     by
         elements [exportConstructorCount] [removeMemberVariableDeclarations] [replaceEnumDeclaration] 
-            [replaceAllMethods memberVariables]
+            [replaceAllMethods memberVariables] %[replaceInnerClass]
 end function
 
 %If the argument is a memberVariable, add it to results
