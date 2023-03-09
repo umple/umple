@@ -1140,10 +1140,10 @@ Action.stateClicked = function(identifier)
     if (!Action.diagramInSync) return;
     Action.focusOn("umpleCanvas", true);
     Action.focusOn("umpleModelEditorText", false);
-    var idSplit=identifier.split(" ");
-    var identifierClass=idSplit[1].slice(0,-1);
-    var identifierSM=idSplit[3].slice(0,-1);
-    var identifierState=idSplit[5].replace("Entry:","")
+    var idSplit=identifier.split("^*^");
+    var identifierClass=idSplit[0]
+    var identifierSM=idSplit[1]
+    var identifierState=idSplit[2].replace("Entry:","").replace("Exit:","");
     identifierState=identifierState.replace("Exit:","");
     Action.unselectAll();
     Action.elementClicked = true;
@@ -1196,23 +1196,19 @@ Action.transitionClicked = function(identifier)
   Action.elementClicked = true;
   Action.unselectAll();
   let id = identifier.split("*^*");
-  Page.setFeedbackMessage(id);
   let identifierState=id[3].split(".");
   dest=id[4];
   var selection = Action.selectStateInClass(id[0],id[1],identifierState[0]);
   for (var i=1;i<identifierState.length;i++){
     selection=Action.selectStateInState(selection.startIndex,selection.endIndex,identifierState[i]);
   }
-  let searchTerm=id[2].replace("after","after~`~?:Every`~`?"); //subpar fix, could be improved
-  if(id.length>6){
-    let guardStr="";
-    for(let i=5;i<id.length;i++){ //likely not needed anymore 
-      guardStr=guardStr+id[i]+" ";
-    }
-    searchTerm=searchTerm+"\\s*"+"[\\s*"+guardStr.trim().slice(1,guardStr.trim().length-1)+"\\s*]";
+  let searchTerm=id[2].replace("after","after~`~?:Every`~`?"); //subpar solution, could be improved
+  if(id[5]!=""){
+    let guardStr=id[5].trim();
+    searchTerm=searchTerm+"\\s*[\\s*"+guardStr.trim().slice(1,guardStr.trim().length-1)+"\\s*]";
   }
-  searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)").replaceAll("(","\\(").replaceAll("~`~","(").replaceAll("`~`",")"); 
-  let pattern= new RegExp(searchTerm+"[^\\n]*->[^\\n]*","s");
+  searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)").replaceAll("(","\\(").replaceAll("~`~","(").replaceAll("`~`",")").replaceAll(" ","\\s*").replaceAll(",","\\s*,\\s*").replaceAll("!","\\s*!\\s*").replaceAll("/","\\s*/\\s*"); 
+  let pattern= new RegExp(searchTerm+".*->","s");
   let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
   Action.highlightTransition(startIndex,searchTerm,dest);
 }
