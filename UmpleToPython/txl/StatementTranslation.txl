@@ -48,7 +48,9 @@ function replaceStatements
             [correctSuperInit]
             [correctSuperFunctions]
              %DEBUG
+            [replacePrintln]
             [replacePrint]
+            [replacePrintf]
             [replaceNewLine]
             [replaceHexIdentity]
             [replaceComparator]
@@ -393,9 +395,23 @@ rule correctSuperFunctions
 end rule
 
 %DEBUG
-rule replacePrint
+rule replacePrintln
     replace [nested_identifier]
         'System.out.println( val [value] ')
+    by
+        'print( val ')
+end rule 
+
+rule replacePrint
+    replace [nested_identifier]
+        'System.out.print( val [value] ')
+    by
+        'print( val ')
+end rule 
+
+rule replacePrintf
+    replace [nested_identifier]
+        'System.out.printf(val [value] ')
     by
         'print( val ')
 end rule 
