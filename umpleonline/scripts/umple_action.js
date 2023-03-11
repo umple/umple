@@ -1202,12 +1202,13 @@ Action.transitionClicked = function(identifier)
   for (var i=1;i<identifierState.length;i++){
     selection=Action.selectStateInState(selection.startIndex,selection.endIndex,identifierState[i]);
   }
-  let searchTerm=id[2].replace("after","after~`~?:Every`~`?"); //subpar solution, could be improved
+  let searchTerm=id[2].replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
+  searchTerm=searchTerm.replace("after","after~`~?:Every`~`?"); //subpar solution, could be improved
   if(id[5]!=""){
-    let guardStr=id[5].trim();
+    let guardStr=id[5].trim().replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
     searchTerm=searchTerm+"\\s*[\\s*"+guardStr.trim().slice(1,guardStr.trim().length-1)+"\\s*]";
   }
-  searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)").replaceAll("(","\\(").replaceAll("~`~","(").replaceAll("`~`",")").replaceAll(" ","\\s*").replaceAll(",","\\s*,\\s*").replaceAll("!","\\s*!\\s*").replaceAll("/","\\s*/\\s*"); 
+  searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)?").replaceAll("(","\\(?").replaceAll("~`~","(").replaceAll("`~`",")").replaceAll(" ","\\s*").replaceAll(",","\\s*,\\s*").replaceAll("!","\\s*!\\s*").replaceAll("/","\\s*/\\s*"); 
   let pattern= new RegExp(searchTerm+".*->","s");
   let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
   Action.highlightTransition(startIndex,searchTerm,dest);
