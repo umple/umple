@@ -1211,7 +1211,7 @@ Action.transitionClicked = function(identifier)
   searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)?").replaceAll("(","\\(?").replaceAll("~`~","(").replaceAll("`~`",")").replaceAll(" ","\\s*").replaceAll(",","\\s*,\\s*").replaceAll("!","\\s*!\\s*").replaceAll("/","\\s*/\\s*"); 
   let pattern= new RegExp(searchTerm+".*->","s");
   let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
-  Action.highlightTransition(startIndex,searchTerm,dest);
+  Action.highlightTransition(startIndex);
 }
 Action.generalizationClicked = function(event)
 {
@@ -2263,9 +2263,13 @@ Action.splitStates=function(inputStr){
         temp="";
       }
     }
-    if(curChar=='/'&&inputStr.charAt(inChar+1)=='/'){
+    if(curChar=='/'&&inputStr.charAt((parseInt(inChar)+1))=='/'){
       inComment=true;
     }
+    if(curChar=='\n'&&inComment){
+         inComment=false;
+    }
+
     if(curChar=='{'&&!inComment){ //increase depth
       temp=temp+curChar;
       depth++;
@@ -2283,9 +2287,7 @@ Action.splitStates=function(inputStr){
     }else { //push char to temp variable
         temp=temp+curChar;
     }
-    if(curChar=='\n'&&inComment){
-         inComment=false;
-    }
+
   }
   return output;
 }
@@ -2328,9 +2330,9 @@ Action.selectStateInClass = function(className, smName, stateName)
         break;
       }
     }
-    currBuffer=Action.splitStates(currSM.substr(currSM.indexOf("{")+1));
-    if (currBuffer!=null) {
-      let states = currBuffer;
+    splitBuffer=Action.splitStates(currSM.substr(currSM.indexOf("{")+1));
+    if (splitBuffer!=null) {
+      let states = splitBuffer;
       let finState=null;
       for(let i=0;i<states.length;i++){
         if(states[i].search(stateName)==0){
@@ -2373,7 +2375,7 @@ Action.selectStateInState = function(startIndex,endIndex,target){
 Action.highlightByIndex = function(startIndex,endIndex){
   Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex,Page.codeMirrorEditor.getValue()),Action.indexToPos(endIndex,Page.codeMirrorEditor.getValue()))
 }
-Action.highlightTransition = function(startIndex,startVal,endVal){
+Action.highlightTransition = function(startIndex){
   let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
