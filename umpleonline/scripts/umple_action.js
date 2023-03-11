@@ -1211,7 +1211,10 @@ Action.transitionClicked = function(identifier)
   searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)?").replaceAll("(","\\(?").replaceAll("~`~","(").replaceAll("`~`",")").replaceAll(" ","\\s*").replaceAll(",","\\s*,\\s*").replaceAll("!","\\s*!\\s*").replaceAll("/","\\s*/\\s*"); 
   let pattern= new RegExp(searchTerm+".*->","s");
   let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
-  Action.highlightTransition(startIndex);
+  let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
+  let line = Action.findEOL(cText);
+  let endIndex=startIndex+line.length;
+  Action.highlightByIndex(startIndex,endIndex);
 }
 Action.generalizationClicked = function(event)
 {
@@ -2375,12 +2378,7 @@ Action.selectStateInState = function(startIndex,endIndex,target){
 Action.highlightByIndex = function(startIndex,endIndex){
   Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex,Page.codeMirrorEditor.getValue()),Action.indexToPos(endIndex,Page.codeMirrorEditor.getValue()))
 }
-Action.highlightTransition = function(startIndex){
-  let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
-  let line = Action.findEOL(cText);
-  let endIndex=startIndex+line.length;
-  Action.highlightByIndex(startIndex,endIndex);
-}
+
 Action.findEOL = function(inputStr){ //returns ONLY depth==0 lines as an array without letting non-EOL \n's cause line breaks
   let output="";
   let temp="";
