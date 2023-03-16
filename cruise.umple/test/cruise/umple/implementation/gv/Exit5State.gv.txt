@@ -20,11 +20,11 @@ digraph "Exit5State" {
    doEntry2();
    doEntry3();
    doEntry4();
-   doEntry5();"];
+   doEntry5();", URL="javascript:Action.stateClicked(\"A^*^sm^*^s2\")"];
       // End State: s2
     // End Top and Bottom Level StateMachine: sm
 
   // All transitions
-    start_A_sm -> A_sm_s2 [  tooltip = "start to s2" ] ;
+    start_A_sm -> A_sm_s2 [  tooltip = "start to s2", URL="javascript:Action.transitionClicked(\"null\")" ] ;
   
 }

@@ -218,9 +218,9 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
   // TEMPLATES FOR TRANSITIONS //
   
   // Template for a transition
-  transition <<!<<=start>> <<=arrow>> <<=dest>> [ <<=attributes>> ] ;
+  transition <<!<<=start>> <<=arrow>> <<=dest>> [ <<=attributes>>, URL="javascript:Action.transitionClicked(\"<<=jsInput>>\")" ] ;
 !>>
-  emit transition(String start,String arrow,String dest, String attributes)(transition);
+  emit transition(String start,String arrow,String dest, String attributes, String jsInput)(transition);
 
   // Template for transition attributes
   transitionAttributes <<!<<#if(lheadtail.length()>0) {#>> <<=lheadtail>> <<#
@@ -363,6 +363,16 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
         }
       }
 
+      //string to be passed via js onClick() event to umple_action
+      String jsStr=null;
+      if(s.getConcurrentParentState()!=null){ //if state is concurrent
+      String [] infoGrab = getStatePath(sm, s.getName());
+        jsStr = className+"^*^"+infoGrab[0]+"^*^"+getConcurrentStatePath(s);
+      } else {
+        String [] infoGrab = getStatePath(sm, s.getName());
+        jsStr = className+"^*^"+infoGrab[0]+"^*^"+infoGrab[1];
+      }
+
       // Output the state (and possibly state machine) id
       if(!s.hasNestedStateMachines()) 
       {
@@ -371,7 +381,8 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
         appendSpaces(code,  indentLevel+2);
 		
         tooltip = getStateTooltip(sm, s, className);
-        code.append(sName+" [label = "+sLabel+", tooltip = \""+tooltip+"\"];\n");
+        String enclosed = "\""+tooltip+"\"";
+        code.append(sName+" [label = "+sLabel+", tooltip = \""+tooltip+"\", URL=\"javascript:Action.stateClicked(\\\""+jsStr+"\\\")\"];\n");
         if(isPseudo) _normalStateFormat(indentLevel, code);        
       }
       else 
@@ -382,7 +393,9 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
         appendSpaces(code,  indentLevel+2);
         code.append("label = \""+sLabel+"\";\n");
         appendSpaces(code,  indentLevel+2);
-        code.append("style = rounded;\n");
+        code.append("style = rounded;\n");        
+        appendSpaces(code,  indentLevel+2);
+        code.append("URL=\"javascript:Action.stateClicked(\\\""+jsStr+"\\\")\";\n");
       }
 
       if(isFirstState) 
@@ -395,7 +408,7 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
         tooltip = "start to "+stateInfo[1]; 
         
         _transition(2,transitions,"start_"+clSmName,"->", dest,
-          transitionAttributes(head,"","start",s.getName(), tooltip)); 
+          transitionAttributes(head,"","start",s.getName(), tooltip),null); 
       }
           
       // Output all the other transitions
@@ -469,7 +482,19 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
         String origlh = getTransitionHeadOrTailForState(t.getFromState(),uClass,true);
         String destlt = getTransitionHeadOrTailForState(t.getNextState(),uClass,false);
         tooltip = getTransitionTooltip(t, guardString); 
-
+        String destJs=null;
+        String origJs=null;
+        if(t.getNextState().getConcurrentParentState()!=null){
+          destJs=getConcurrentStatePath(t.getNextState());
+        } else {
+          destJs=getStatePath(t.getNextState().getStateMachine(),t.getNextState().getName())[1];
+        }
+        if(t.getFromState().getConcurrentParentState()!=null){
+          origJs=getConcurrentStatePath(t.getFromState());
+        } else {
+          origJs=getStatePath(t.getFromState().getStateMachine(),t.getFromState().getName())[1];
+        }
+        jsStr=className+"*^*"+sm.getRootStateMachine().getName()+"*^*"+transitionLabel+"*^*"+origJs+"*^*"+destJs+"*^*"+guardString;
         // WORKING ON
         // If we have to go through a dummy external state
         // we have to add two transitions
@@ -478,12 +503,12 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
           _transition(2,transitions,orig,"->", internalBoundaryTrans.get(t)+":e",
             transitionAttributes("dir=none, "+origlh,
             transitionLabel + guardString + transitionAction,
-            t.getFromState().getName(),t.getNextState().getName(), tooltip));        
+            t.getFromState().getName(),t.getNextState().getName(), tooltip),jsStr);        
 
           _transition(2,transitions,internalBoundaryTrans.get(t)+":w","->", dest,
             transitionAttributes(destlt,
             "",
-            t.getFromState().getName(),t.getNextState().getName(), tooltip));        
+            t.getFromState().getName(),t.getNextState().getName(), tooltip),jsStr);        
         }
         else 
         {
@@ -491,7 +516,7 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
           _transition(2,transitions,orig,"->", dest,
             transitionAttributes(origlh+destlt,
             transitionLabel + guardString + transitionAction,
-            t.getFromState().getName(),t.getNextState().getName(), tooltip));
+            t.getFromState().getName(),t.getNextState().getName(), tooltip),jsStr);
         }
         transitions.append("\n");
       }  // End iteration through the transitions
@@ -546,7 +571,18 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
     return new String[] {smName, statePath};
   }
 
-
+  private String getConcurrentStatePath(State s){
+    State concurrentParentState = s.getStateMachine().getParentState();
+    String output=concurrentParentState.getName()+"."+s.getName();
+    while (concurrentParentState != null) {
+      concurrentParentState = concurrentParentState.getStateMachine().getParentState();
+      if(concurrentParentState != null){
+        output=concurrentParentState.getName()+"."+output;
+      }
+    }
+    return output;
+  }
+  
   private String getTransitionTooltip(Transition t, String guardString)
   {
     // Find the state machine path the transition is coming from
