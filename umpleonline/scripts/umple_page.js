@@ -497,6 +497,7 @@ Page.initUmpleTextArea = function()
   if (!Layout.isLayoutVisible) {Layout.showHideLayoutEditor(false);}
 }
 
+/* CodeMirror 5 */
 Page.initCodeMirrorEditor = function() {
   Page.codeMirrorEditor = CodeMirror.fromTextArea(
     document.getElementById('umpleModelEditorText'),{
@@ -564,7 +565,7 @@ Page.initCodeMirrorEditor = function() {
   Page.codeMirrorEditor6 = cm6.createEditorView(
     initialState, document.getElementById("newEditor"));
 
-  // Event triggering changes for CodeMirror5
+  // Event triggering changes for CodeMirror 5
   Page.codeMirrorEditor.on('focus', function (id, gained) {
     Action.focusOn('CodeMirror', true);
   });
@@ -574,8 +575,14 @@ Page.initCodeMirrorEditor = function() {
   Page.codeMirrorEditor.on('gutterClick', function (id, theLine) {
     Page.codeMirrorEditor.foldCode(theLine);
   });
+  
+  /* codemirror 5: detect changes. See below for inverse */
+  /* This is triggered indirectly by keyUP, which causes save to element 
+    umpleModelEditorText */
   Page.codeMirrorEditor.on('change', function (ed, changes) {
-    /* codemirror 6 */
+    /* start timer to process changes 3s after after the editing is done */
+    Action.umpleCodeMirrorTypingActivity();
+    /* update codemirror 6 panel with the same changes  */
     Page.codeMirrorEditor6.dispatch({ 
       changes: { 
         from: 0, 
@@ -583,13 +590,17 @@ Page.initCodeMirrorEditor = function() {
         insert:  document.getElementById("umpleModelEditorText").value 
         }
     })
+   });
+   
+  /* codemirror 6: respond to each keyup as a change */
+  Page.codeMirrorEditor6.dom.addEventListener('keyup', function (ed, changes) {
+    /* update codemirror 5 ... see above for inverse */
+    document.getElementById('umpleModelEditorText').innerHTML
+       = Page.codeMirrorEditor6.state.doc.toString();
+    /* start timer to process changes 3s after the editing is done */
     Action.umpleCodeMirrorTypingActivity();
+    console.log("keyup event triggered in CodeMirror 6 and hopefully saved text !!"+Page.codeMirrorEditor6.state.doc.toString());
   });
-  /* codemirror 6 */
-  Page.codeMirrorEditor6.dom.addEventListener('keydown', function (ed, changes) {
-    Action.umpleCodeMirrorTypingActivity();
-    console.log("keydown event triggered !!")
-  })  
 
   Page.codeMirrorEditor.on('cursorActivity', function () {
     Page.codeMirrorEditor.addLineClass(Page.hLine, null);
@@ -600,6 +611,14 @@ Page.initCodeMirrorEditor = function() {
   // Event triggering events end here
   Page.hLine = Page.codeMirrorEditor.addLineClass(0, "activeline");
   Page.codeMirrorOn = true;  
+  
+  /* DEBUG ... testing to see if we can trigger change made in CodeMirror 6 */
+  document.getElementById('umpleModelEditorText')
+     .addEventListener('DOMSubtreeModified',function () {
+    console.log("       CM6 changes to umpleModelEditorText");
+    /* start timer to process changes 3s after after the editing is done */
+    Action.umpleCodeMirrorTypingActivity();    
+  } );
 }
 
 // Function to make the E G S icons in UmpleOnline context senstive (#1400)

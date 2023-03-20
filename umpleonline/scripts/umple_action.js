@@ -2247,6 +2247,10 @@ Action.updateLineNumberDisplay = function()
 
 Action.umpleTyped = function(eventObject)
 {
+  // DEBUG C
+  //console.log(""+ eventObject.target.id + ": DEBUG C Inside umpleTyped");
+  console.log("DEBUG C Inside umpleTyped");
+
   // This function is not called by CodeMirror
   // See umpleCodeMirrorTypingActivity if CodeMirror is on (as it normally is)
   // debug - output key code
@@ -2270,12 +2274,18 @@ Action.umpleCodeMirrorCursorActivity = function() {
 }
 
 Action.umpleCodeMirrorTypingActivity = function() {
+  // DEBUG B
+ // console.log("DEBUG B: Inside umpleCodeMirrorTypingActivity"+Action.freshLoad ? "freshLoad==true" : "");
+ console.log("DEBUG B: Inside umpleCodeMirrorTypingActivity");
+ console.log("DEBUG B1: freshLoad="+Action.freshLoad);
+
   if(Action.freshLoad == false) {
     Action.umpleTypingActivity("codeMirrorEditor");
     Page.codeMirrorEditor.save();
     /* codemirror 6 */
     Action.umpleTypingActivity("newEditor");
-    Page.codeMirrorEditor6.save();
+    // DEBUG -- need to figure out how to actually save
+    // Page.codeMirrorEditor6.save();
   }
   else {
     Action.freshLoad = false;
@@ -2341,6 +2351,9 @@ Action.removeComments = function(str)
 }
 
 Action.umpleTypingActivity = function(target) {
+   // DEBUG D
+  console.log(target + ": DEBUG D Inside umpleTypingActivity");
+  
   if (Action.manualSync && Action.diagramInSync)
   {
     if (jQuery("#umpleCanvasColumn").is(":visible")) Page.enablePaletteItem("buttonSyncDiagram", true);
@@ -2394,6 +2407,9 @@ Action.removeCheckComplexityWarning = function()
 
 Action.processTyping = function(target, manuallySynchronized)
 {
+  // DEBUG A2
+  console.log(target + ": DEBUG A2 Inside processTyping");
+
   // Save in history after a pause in typing
   if (target != "diagramEdit") 
   {
@@ -2409,10 +2425,7 @@ Action.processTyping = function(target, manuallySynchronized)
     
     /* target == "newEditor" added for codemirror 6*/
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor" || target == "newEditor") {
-    // if (target == "newEditor") {
-      console.log(target + ": Inside processTyping")
       Action.updateLayoutEditorAndDiagram(); 
-		
       // issue#1554
       var downloadLink = document.getElementById("downloadLink");
       if (downloadLink !== null){
