@@ -9,6 +9,9 @@ function replaceStatements
         statements [any]
     by 
         statements
+			[replaceTimerVariableDeclaration]
+			[replaceTimerStart]
+			[replaceTimerStop]
             [replacePrivateAttributeSetting]
             [replaceDefaultReadObject]
             [replaceSwitchCase]
@@ -47,6 +50,7 @@ function replaceStatements
             [replaceCasting]
             [correctSuperInit]
             [correctSuperFunctions]
+			
             [replaceNewLine]
             [replaceHexIdentity]
             [replaceComparator]
@@ -388,6 +392,27 @@ rule correctSuperFunctions
         'super rep [repeat attribute_access]
     by
         'super() rep
+end rule
+
+rule replaceTimerStart
+	replace [repeat statement]
+		 var [id] ' = new TimedEventHandler(this, _[value] ', val [value] ');
+	by
+		'self. var '= Timer( val ', var [+ 'Run] '()) 			
+end rule
+
+rule replaceTimerStop
+	replace [repeat statement]
+		 var [id] '.stop();
+	by
+		'self. var '.cancel() 			
+end rule
+
+rule replaceTimerVariableDeclaration
+	replace [repeat statement]
+		 'private TimedEventHandler var [id] ';
+	by
+		var '= "" 			
 end rule
 
 rule replaceNewLine
