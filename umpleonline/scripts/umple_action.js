@@ -2273,19 +2273,19 @@ Action.umpleCodeMirrorCursorActivity = function() {
   jQuery("#linenum").val(line);
 }
 
-Action.umpleCodeMirrorTypingActivity = function() {
+// Called whenever any text is changed in codemirror 5 or codemirror 6
+Action.umpleCodeMirrorTypingActivity = function(editorThatChanged) {
   // DEBUG B
  // console.log("DEBUG B: Inside umpleCodeMirrorTypingActivity"+Action.freshLoad ? "freshLoad==true" : "");
- console.log("DEBUG B: Inside umpleCodeMirrorTypingActivity");
+ console.log("DEBUG B: Inside umpleCodeMirrorTypingActivity "+editorThatChanged);
  console.log("DEBUG B1: freshLoad="+Action.freshLoad);
 
   if(Action.freshLoad == false) {
-    Action.umpleTypingActivity("codeMirrorEditor");
-    Page.codeMirrorEditor.save();
-    /* codemirror 6 */
-    Action.umpleTypingActivity("newEditor");
-    // DEBUG -- need to figure out how to actually save
-    // Page.codeMirrorEditor6.save();
+    // Start/restart timer to eventually process this by triggerink disk save and diagram update
+    Action.umpleTypingActivity(editorThatChanged);
+    if(editorThatChanged == "codeMirrorEditor") {
+      Page.codeMirrorEditor.save();
+    }
   }
   else {
     Action.freshLoad = false;
@@ -2350,6 +2350,9 @@ Action.removeComments = function(str)
     );
 }
 
+// Called each time a character is typed
+// Sets a timer or resets the time such that the function processTyping
+// ends up being called after a 3s gap in calls to this.
 Action.umpleTypingActivity = function(target) {
    // DEBUG D
   console.log(target + ": DEBUG D Inside umpleTypingActivity");
@@ -2360,8 +2363,6 @@ Action.umpleTypingActivity = function(target) {
     Action.diagramInSync = false;
     Page.enableDiagram(false);
   }
-  //Action.processTyping("codeMirrorEditor", true);
-  //return;
   if (Action.oldTimeout != null)
   {
     clearTimeout(Action.oldTimeout);
@@ -2405,10 +2406,24 @@ Action.removeCheckComplexityWarning = function()
 	}
 }
 
+// Called after a 3s delay as controlled by umpleTypingActivity when
+// text has been edited in any of the editors (indicated by target)
 Action.processTyping = function(target, manuallySynchronized)
 {
   // DEBUG A2
-  console.log(target + ": DEBUG A2 Inside processTyping");
+  console.log(target + ": DEBUG A2 Inside processTyping after 3s delay");
+  console.log("DEBUG A3: cm6 data="+cm6.getCodeMirror6UmpleText());
+  console.log("DEBUG A4");
+
+  // Update the 'other' codemirror editor
+  if (target == "codeMirrorEditor") {
+    console.log("Updating CM6 text with contents from CM5");
+    Page.setCodeMirror6Text(document.getElementById("umpleModelEditorText").value);
+  }
+  else if (target == "newEditor") {
+    Page.setUmpleCode(cm6.getCodeMirror6UmpleText());
+    console.log("Need to update CM5 text with contents from CM6");
+  }
 
   // Save in history after a pause in typing
   if (target != "diagramEdit") 
@@ -2419,11 +2434,12 @@ Action.processTyping = function(target, manuallySynchronized)
     Action.setjustUpdatetoSaveLaterForTextCallback(false);
   }
   
+  // Cause changed in text to be made to the diagram
   if (!Action.manualSync || manuallySynchronized)
   {
     Action.diagramInSync = true;
     
-    /* target == "newEditor" added for codemirror 6*/
+    // target == "newEditor" added for codemirror 6
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor" || target == "newEditor") {
       Action.updateLayoutEditorAndDiagram(); 
       // issue#1554

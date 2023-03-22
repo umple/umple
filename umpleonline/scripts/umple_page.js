@@ -484,7 +484,7 @@ Page.initUmpleTextArea = function()
   layoutEditor.keyup(function(eventObject){
     Action.freshLoad = false;
     Action.setjustUpdateNowtoSaveLater(false);
-    Action.umpleCodeMirrorTypingActivity();
+    Action.umpleCodeMirrorTypingActivity("layoutEditor");
   }); // Fixes Issue#1571 Editing on the layout editor will not update the Umple diagram
   modelEditor.focus(function(){Action.focusOn("umpleModelEditorText", true);});
   layoutEditor.focus(function(){Action.focusOn("umpleLayoutEditorText", true);});
@@ -556,7 +556,7 @@ Page.initCodeMirrorEditor = function() {
     { key: "Esc", run: function(cm6) { cm6.getInputField().blur() } },
   ]
     
-  /* codemirror 6 */
+  // codemirror 6 
   const initialState = cm6.createEditorState(
     document.getElementById("umpleModelEditorText").value, 
     {
@@ -581,25 +581,27 @@ Page.initCodeMirrorEditor = function() {
     umpleModelEditorText */
   Page.codeMirrorEditor.on('change', function (ed, changes) {
     /* start timer to process changes 3s after after the editing is done */
-    Action.umpleCodeMirrorTypingActivity();
-    /* update codemirror 6 panel with the same changes  */
+    Action.umpleCodeMirrorTypingActivity("codeMirrorEditor");
+    /* update codemirror 6 panel with the same changes  .. NO LONGER DONE HERE  */
+    // Page.setCodeMirror6Text(document.getElementById("umpleModelEditorText").value);
+   });
+   
+  // Sets the codemirror 6 text without any change trigger (hopefully)
+  Page.setCodeMirror6Text = function(textToSet) {
     Page.codeMirrorEditor6.dispatch({ 
       changes: { 
         from: 0, 
         to: Page.codeMirrorEditor6.state.doc.length, 
-        insert:  document.getElementById("umpleModelEditorText").value 
+        insert: textToSet
         }
-    })
-   });
+    } )
+  };
    
-  /* codemirror 6: respond to each keyup as a change */
+  // codemirror 6: respond to each keyup to start the process of marking a change
   Page.codeMirrorEditor6.dom.addEventListener('keyup', function (ed, changes) {
-    /* update codemirror 5 ... see above for inverse */
-    document.getElementById('umpleModelEditorText').innerHTML
-       = Page.codeMirrorEditor6.state.doc.toString();
-    /* start timer to process changes 3s after the editing is done */
-    Action.umpleCodeMirrorTypingActivity();
-    console.log("keyup event triggered in CodeMirror 6 and hopefully saved text !!"+Page.codeMirrorEditor6.state.doc.toString());
+    // start timer to process changes 3s after the editing is done
+    Action.umpleCodeMirrorTypingActivity("newEditor");
+   // console.log("keyup event triggered in CodeMirror 6 and hopefully saved text !!"+cm6.getCodeMirror6UmpleText());
   });
 
   Page.codeMirrorEditor.on('cursorActivity', function () {
@@ -612,13 +614,13 @@ Page.initCodeMirrorEditor = function() {
   Page.hLine = Page.codeMirrorEditor.addLineClass(0, "activeline");
   Page.codeMirrorOn = true;  
   
-  /* DEBUG ... testing to see if we can trigger change made in CodeMirror 6 */
-  document.getElementById('umpleModelEditorText')
+  // DOES NOT WORK - DEBUG ... testing to see if we can trigger change made in CodeMirror 6
+/*  document.getElementById('umpleModelEditorText')
      .addEventListener('DOMSubtreeModified',function () {
-    console.log("       CM6 changes to umpleModelEditorText");
-    /* start timer to process changes 3s after after the editing is done */
-    Action.umpleCodeMirrorTypingActivity();    
-  } );
+    console.log("       CM6 changes to umpleModelEditorText: "+Page.codeMirrorEditor6.state.doc.toString());
+    // start timer to process changes 3s after after the editing is done
+    Action.umpleCodeMirrorTypingActivity("notUsed");    
+  } ); */
 }
 
 // Function to make the E G S icons in UmpleOnline context senstive (#1400)

@@ -24482,6 +24482,13 @@ var cm6 = (function (exports) {
        return true;
    });
 
+   var CM6Data = new Object();
+   CM6Data.codeMirror6UmpleText="";
+
+   function getCodeMirror6UmpleText() {
+     return CM6Data.codeMirror6UmpleText;
+   }
+
    // Define StateField
    const listenChangesExtension = StateField.define({
      // we won't use the actual StateField value, null or undefined is fine
@@ -24489,8 +24496,9 @@ var cm6 = (function (exports) {
      update: (value, transaction) => {
        if (transaction.docChanged) {
          // access new content via the Transaction
-         // console.log(transaction.newDoc.toJSON());
-         console.log("Contents changed in codemirror 6 editor");
+         CM6Data.codeMirror6UmpleText = transaction.newDoc.toString();
+         // console.log("Contents changed in codemirror 6 editor: "
+         //  +CM6Data.codeMirror6UmpleText);
        }
        return null;
      },
@@ -24538,9 +24546,11 @@ var cm6 = (function (exports) {
      }])
    }
 
+   exports.CM6Data = CM6Data;
    exports.createEditorState = createEditorState;
    exports.createEditorView = createEditorView;
    exports.createKeyMap = createKeyMap;
+   exports.getCodeMirror6UmpleText = getCodeMirror6UmpleText;
    exports.listenChangesExtension = listenChangesExtension;
 
    return exports;

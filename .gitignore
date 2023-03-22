@@ -14,6 +14,8 @@ umpleonline/ump/task*
 umpleonline/ump/ATempCrash*
 umpleonline/ump/index.html
 umpleonline/ump/aalertMessage.txt
+umpleonline/scripts/codemirror6/node_modules
+
 build/UserManualAndExampleTests_output.txt
 umpleonline/manual
 umpleonline/qr*

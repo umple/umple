@@ -4,6 +4,13 @@ import { javascript } from "@codemirror/lang-javascript"
 import { lineNumbers, keymap } from "@codemirror/view"
 import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from "@codemirror/language"
 
+var CM6Data = new Object();
+CM6Data.codeMirror6UmpleText="";
+
+function getCodeMirror6UmpleText() {
+  return CM6Data.codeMirror6UmpleText;
+}
+
 // Define StateField
 const listenChangesExtension = StateField.define({
   // we won't use the actual StateField value, null or undefined is fine
@@ -11,8 +18,9 @@ const listenChangesExtension = StateField.define({
   update: (value, transaction) => {
     if (transaction.docChanged) {
       // access new content via the Transaction
-      // console.log(transaction.newDoc.toJSON());
-      console.log("Contents changed in codemirror 6 editor")
+      CM6Data.codeMirror6UmpleText = transaction.newDoc.toString();
+      // console.log("Contents changed in codemirror 6 editor: "
+      //  +CM6Data.codeMirror6UmpleText);
     }
     return null;
   },
@@ -74,4 +82,4 @@ function createKeyMap(key, operation){
 // document.getElementById("umpleModelEditorText").value, {extraKeys, extensions});
 
 
-export { createEditorState, createEditorView, createKeyMap, listenChangesExtension } 
+export { createEditorState, createEditorView, createKeyMap, listenChangesExtension, getCodeMirror6UmpleText, CM6Data } 
