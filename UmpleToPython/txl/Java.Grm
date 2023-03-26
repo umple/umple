@@ -354,6 +354,8 @@ define class_body_element
     |   [member_variable_declaration]
     |   [constructor]
     |   [method_declaration]
+    %DEBUG
+    |   [class_declaration]
 end define
 
 % DEBUG:defining threads, doesn't work for now

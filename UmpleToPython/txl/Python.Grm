@@ -190,7 +190,7 @@ end redefine
 %DEBUG
 redefine thread
     ...
-    |   'treading.Thread
+    |   'threading.Thread
 end redefine
 
 %DEBUG

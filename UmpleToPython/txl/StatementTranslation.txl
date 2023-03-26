@@ -66,6 +66,10 @@ function replaceStatements
             [replaceThread]
             %DEBUG
             [replaceThreadSleep]
+            %DEBUG
+            %[replaceExtendsThread]
+            %DEBUG
+            %[translateStringEqualsCall]
 end function
 
 %In Java, you dont need to have code within brackets. For example else{} is valid.
@@ -102,6 +106,15 @@ rule replaceThreadSleep
     by
         'time.sleep( val ')
 end rule
+
+%DEBUG
+%converts extending thread ** Extended Thread
+%rule replaceExtendsThread
+%    replace [inheritance_statement]
+%        val1 [class_declaration] val2 [inheritance_statement] 'Thread 
+%    by
+%        'class val1'(Thread):
+%end rule
 
 %DEBUG
 %rule replaceDoActivity
@@ -604,7 +617,7 @@ end rule
 
 rule replaceDoubleValueOf
     replace [value]
-        'Double '.valueOf( val [value] ')
+        'stringlit '.valueOf( val [value] ')
     by 
         'float( val ')
 end rule 
@@ -737,6 +750,14 @@ rule translateSelfEqualsCall
     by
         'self '== val 
 end rule
+
+%DEBUG
+%rule translateStringEqualsCall
+%    replace [statement]
+%        x [nested_identifier] '.equals( val [value] ')
+%    by
+%        x '== val 
+%end rule
 
 %Translates a.equals(b) into a == b
 %Will also translate a.b.c.equals(d.e.f) into a.b.c == d.e.f
