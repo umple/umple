@@ -48,7 +48,14 @@ function replaceStatements
             [correctSuperInit]
             [correctSuperFunctions]
             %DEBUG
+<<<<<<< HEAD
             [replacePrint]
+=======
+            [replacePrintln]
+            [replacePrint]
+            [replacePrintf]
+            [replaceInnerClassCreate]
+>>>>>>> issue1994_nested_classes
             [replaceNewLine]
             [replaceHexIdentity]
             [replaceComparator]
@@ -435,13 +442,46 @@ rule correctSuperFunctions
 end rule
 
 %DEBUG
+<<<<<<< HEAD
 rule replacePrint
+=======
+rule replacePrintln
+>>>>>>> issue1994_nested_classes
     replace [nested_identifier]
         'System.out.println( val [value] ')
     by
         'print( val ')
 end rule 
 
+<<<<<<< HEAD
+=======
+rule replacePrint
+    replace [nested_identifier]
+        'System.out.print( val [value] ')
+    by
+        'print( val ')
+end rule 
+
+rule replacePrintf
+    replace [nested_identifier]
+        'System.out.printf(val [value] ')
+    by
+        'print( val ')
+end rule 
+
+%   outerObject.new InnerClass(); -> outerObject.InnerClass()
+rule replaceInnerClassCreate
+    replace [new_call_inner]
+        x [nested_identifier] '.new y [nested_identifier]
+    by
+        x '. y
+end rule
+
+
+%DEBUG
+
+
+>>>>>>> issue1994_nested_classes
 rule replaceNewLine
     replace [nested_identifier]
         'System.getProperties().getProperty("line.separator")

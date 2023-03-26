@@ -119,6 +119,7 @@ define base_value
     |   '++ [nested_identifier]
     |   [parentheses_value]
     |   [new_call]
+    |   [new_call_inner] %DEBUG
     |  '! [value]
 
 end define
@@ -136,7 +137,7 @@ end define
 define value
         [base_value] [opt value_continuation]
 end define
-
+ 
 define value_continuation
         [boolean_operator] [value]
     |   [arithmatic_operator] [value]
@@ -161,6 +162,12 @@ end define
 define method_reference
     ':: [id]
 end define 
+
+%DEBUG
+define new_call_inner
+    [nested_identifier][SPOFF] '. [SPON][new_call]
+    %    outerObject.new InnerClass();
+end define
 
 define new_call
     'new [nested_identifier]
@@ -301,6 +308,12 @@ define class_declaration
     |   [interface_declaration]
 end define
 
+
+%DEBUG
+%define inner_class_declaration
+%    [opt acess_modifier] [opt static] 'class [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
+%end define
+
 define concrete_class_declaration
     [opt acess_modifier] [opt 'abstract] 'class [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
 end define
@@ -349,11 +362,13 @@ define class_body_decl
     [repeat class_body_element]
 end define
 
+%DEBUG
 define class_body_element
         [enum_declaration]
     |   [member_variable_declaration]
     |   [constructor]
     |   [method_declaration]
+<<<<<<< HEAD
     %DEBUG
     |   [class_declaration]
 end define
@@ -365,4 +380,8 @@ end define
 
 define thread_sleep
     'thread.sleep( [double_value] ')
+=======
+    %NCNC
+    %|   [class_declaration]
+>>>>>>> issue1994_nested_classes
 end define
