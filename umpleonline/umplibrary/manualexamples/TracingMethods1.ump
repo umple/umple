@@ -1,6 +1,7 @@
 // this example shows how to trace
 // non-generated method entry
 
+@SuppressWarnings("deprecation")
 class JavaMethod
 {
   trace method();

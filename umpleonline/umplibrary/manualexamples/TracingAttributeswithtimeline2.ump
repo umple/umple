@@ -2,6 +2,7 @@
 // attribute name until condition becomes true
 // and then always continue tracing 
 
+@SuppressWarnings("deprecation")
 class Student
 {
   name;

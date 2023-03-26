@@ -3,6 +3,7 @@
 // statement, trace code is injected before
 // the return
 
+@SuppressWarnings("deprecation")
 class JavaMethod
 {
   trace exit method();
