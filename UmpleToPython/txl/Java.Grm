@@ -368,20 +368,6 @@ define class_body_element
     |   [member_variable_declaration]
     |   [constructor]
     |   [method_declaration]
-<<<<<<< HEAD
-    %DEBUG
-    |   [class_declaration]
-end define
-
-% DEBUG:defining threads, doesn't work for now
-define thread
-    'thread [member_variable_declaration]
-end define
-
-define thread_sleep
-    'thread.sleep( [double_value] ')
-=======
     %NCNC
     %|   [class_declaration]
->>>>>>> issue1994_nested_classes
 end define
