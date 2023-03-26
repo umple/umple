@@ -36,8 +36,8 @@ Action.setjustUpdatetoSaveLaterForTextCallback = function(state){
 
 Action.clicked = function(event)
 {
-  Page.clickCount += 1;  
-  
+  Page.clickCount += 1;
+
   var obj = event.currentTarget;
   var action = obj.id.substring(6);
   if (action == "PhpCode")
@@ -1135,18 +1135,30 @@ Action.classClicked = function(event)
   }
 }
 
-Action.stateClicked = function(event)
+Action.stateClicked = function(identifier)
 {
-    Page.setFeedbackMessage("state clicked");
     if (!Action.diagramInSync) return;
     Action.focusOn("umpleCanvas", true);
     Action.focusOn("umpleModelEditorText", false);
-
+    var idSplit=identifier.split("^*^");
+    var identifierClass=idSplit[0]
+    var identifierSM=idSplit[1]
+    var identifierState=idSplit[2].replace("Entry:","").replace("Exit:","");
+    identifierState=identifierState.replace("Exit:","");
     Action.unselectAll();
     Action.elementClicked = true;
-    var obj = event.currentTarget;
+    var selectionIndicies=null;
+    if(identifierState.includes('.')){ //nested case
+      identifierState=identifierState.split('.');
+      selectionIndicies=Action.selectStateInClass(identifierClass,identifierSM,identifierState[0]);
+      for(let i=1;i<identifierState.length;i++){
+        selectionIndicies=Action.selectStateInState(selectionIndicies.startIndex,selectionIndicies.endIndex,identifierState[i]);
+      }
+    } else { //base case
+      selectionIndicies=Action.selectStateInClass(identifierClass,identifierSM,identifierState);
+    }
+    Action.highlightByIndex(selectionIndicies.startIndex,selectionIndicies.endIndex);
 
-    Action.selectState(obj.id);
 
 
    if (Page.selectedItem == "AddTransition")
@@ -1164,7 +1176,7 @@ Action.stateClicked = function(event)
     }
     else
     {
-        Action.stateSelected(obj);
+        //Action.stateSelected(identifier);
     }
 }
 
@@ -1178,15 +1190,31 @@ Action.associationClicked = function(event)
   Action.associationSelected(obj);
 }
 
-Action.transitionClicked = function(event)
+Action.transitionClicked = function(identifier)
 {
-    Page.setFeedbackMessage("transition clicked");
   if(!Action.diagramInSync) return;
   Action.elementClicked = true;
   Action.unselectAll();
-
-  var obj = event.currentTarget;
-  Action.transitionSelected(obj);
+  let id = identifier.split("*^*");
+  let identifierState=id[3].split(".");
+  dest=id[4];
+  var selection = Action.selectStateInClass(id[0],id[1],identifierState[0]);
+  for (var i=1;i<identifierState.length;i++){
+    selection=Action.selectStateInState(selection.startIndex,selection.endIndex,identifierState[i]);
+  }
+  let searchTerm=id[2].replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
+  searchTerm=searchTerm.replace("after","after~`~?:Every`~`?"); //subpar solution, could be improved
+  if(id[5]!=""){
+    let guardStr=id[5].trim().replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
+    searchTerm=searchTerm+"\\s*[\\s*"+guardStr.trim().slice(1,guardStr.trim().length-1)+"\\s*]";
+  }
+  searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)?").replaceAll("(","\\(?").replaceAll("~`~","(").replaceAll("`~`",")").replaceAll(" ","\\s*").replaceAll(",","\\s*,\\s*").replaceAll("!","\\s*!\\s*").replaceAll("/","\\s*/\\s*"); 
+  let pattern= new RegExp(searchTerm+".*->","s");
+  let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
+  let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
+  let line = Action.findEOL(cText);
+  let endIndex=startIndex+line.length;
+  Action.highlightByIndex(startIndex,endIndex);
 }
 Action.generalizationClicked = function(event)
 {
@@ -2216,7 +2244,7 @@ Action.selectClass = function(className)
 	Action.selectItem(scursor, ncursor);
 }
 
-// Highlights the text of the class that is currently selected.
+// Highlights the text of the state that is currently selected.
 Action.selectState = function(stateName)
 {
     var scursor = new RegExp("(class|interface|trait) "+stateName+"($|\\\s|[{])");
@@ -2224,12 +2252,156 @@ Action.selectState = function(stateName)
 
     Action.selectItem(scursor, ncursor);
 }
+Action.splitStates=function(inputStr){
+  let output=[];
+  let temp="";
+  let depth=0;
+  let inComment=false;
+  let EOLflag=false;
+  for(var inChar in inputStr){
+    let curChar=inputStr.charAt(inChar);
+    if(EOLflag&&curChar!='\n'&&curChar!=" "){
+      EOLflag=false;
+      if(curChar!='{'){
+        temp="";
+      }
+    }
+    if(curChar=='/'&&inputStr.charAt((parseInt(inChar)+1))=='/'){
+      inComment=true;
+    }
+    if(curChar=='\n'&&inComment){
+         inComment=false;
+    }
 
-Action.selectStateInClass = function(stateName, classname) 
+    if(curChar=='{'&&!inComment){ //increase depth
+      temp=temp+curChar;
+      depth++;
+    }else if(curChar=='}'&&!inComment){ //decrease depth
+      temp=temp+curChar;
+      depth--;
+      if(depth==0){
+        output.push(temp.trim());
+        temp="";
+      }
+    } else if(curChar=='\n'&&depth==0){ //flush temp at EOL when depth=0
+      EOLflag=true;
+      temp=temp+"\n";
+    } else if(curChar==' '&&depth==0&&temp==""){//ignore empty spaces when depth=0
+    }else { //push char to temp variable
+        temp=temp+curChar;
+    }
+
+  }
+  return output;
+}
+Action.indexToPos = function(index,inputText){
+  var ch=0;
+  var outputLine=0;
+  var temp="";
+  for(var i=0;i<index;i++){
+    let curChar=inputText.charAt(i);
+        if(curChar=="\n"){
+      outputLine++;
+      temp="";
+    } else {
+      temp=temp+curChar;
+    }
+  }
+  ch=temp.length;
+  output={line:outputLine,ch:ch};
+  return  output;
+}
+Action.selectStateInClass = function(className, smName, stateName) 
 {
-  if(Page.codeMirrorOn) {}
+  if(Page.codeMirrorOn) {
+    let text = Page.codeMirrorEditor.getValue();
+    let splitBuffer=Action.splitStates(text);
+    let currClass=null;
+    let pattern = new RegExp("(?:class|queued)\\s+"+className,"");
+    for(let i=0;i<splitBuffer.length;i++){
+      if(splitBuffer[i].search(pattern)==0){
+        currClass=splitBuffer[i]; //set currClass to class code
+        break;
+      }
+    }
+    splitBuffer=Action.splitStates(currClass.substr(currClass.indexOf("{")+1)); //split class into un-nested SMs
+    let currSM=null;
+    for(let i=0;i<splitBuffer.length;i++){
+      let query=new RegExp("(?:queued\\s*)?"+smName);
+      if(splitBuffer[i].search(query)==0){
+        currSM=splitBuffer[i]; //set currSM to un-nested SM code
+        break;
+      }
+    }
+    splitBuffer=Action.splitStates(currSM.substr(currSM.indexOf("{")+1));
+    if (splitBuffer!=null) {
+      let states = splitBuffer;
+      let finState=null;
+      for(let i=0;i<states.length;i++){
+        if(states[i].search(stateName)==0){
+          finState=states[i];
+          break;
+        }
+      }
+      let startIndex=text.indexOf(currClass);//index of class start
+      let endIndex=startIndex+currClass.length;
+      startIndex=text.substr(startIndex,endIndex).indexOf(currSM)+startIndex;//match[1] contains the SM definition+name
+      endIndex=startIndex+currSM.length;
+      startIndex=text.substr(startIndex,endIndex).indexOf(finState)+startIndex;//finds target state definition within target class and state machine
+      endIndex=startIndex+finState.length;
+      var outputObj={startIndex:startIndex,endIndex:startIndex+finState.length};
+      return outputObj;
+      
+    } else {
+      console.log("No matching state found with regex:"+pattern);
+    }
+  } else {
+    console.log("No matching class and state machine found for class: "+className+" and sm "+smName);
+  }
+  return null; 
+}
+Action.selectStateInState = function(startIndex,endIndex,target){
+  let temp=Page.codeMirrorEditor.getValue().substr(startIndex,endIndex-startIndex);
+  let states=Action.splitStates(temp.substr(temp.indexOf("{")+1));
+  var stateFin=null;
+  for(let i=0;i<states.length;i++){
+    if(states[i].startsWith(target)){
+      stateFin=states[i];
+      break;
+    }
+  }
+  let outputStart=temp.indexOf(stateFin)+startIndex;
+  let outputEnd=outputStart+stateFin.length;
+  let outputObj={startIndex:outputStart,endIndex:outputEnd};
+  return outputObj;
+}
+Action.highlightByIndex = function(startIndex,endIndex){
+  Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex,Page.codeMirrorEditor.getValue()),Action.indexToPos(endIndex,Page.codeMirrorEditor.getValue()))
 }
 
+Action.findEOL = function(inputStr){ //returns ONLY depth==0 lines as an array without letting non-EOL \n's cause line breaks
+  let output="";
+  let temp="";
+  let depth=0;
+  let EOLflag=false;
+  for(var inChar in inputStr){
+    let curChar=inputStr.charAt(inChar);
+    if(curChar=='{'){
+      depth++;
+      temp=temp+curChar;
+    } else if(curChar=='}'){
+      depth--;
+      temp=temp+curChar;
+    } else if(curChar==';'&&depth==0){
+      output=temp+';';
+      break;
+    } else {
+      temp=temp+curChar;
+    }
+
+  }
+  return output;
+}
 Action.delayedFocus = function(ms) 
 {
   var ctrl=document.getElementById('umpleModelEditorText');
