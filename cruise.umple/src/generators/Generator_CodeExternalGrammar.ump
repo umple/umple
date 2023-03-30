@@ -26,17 +26,7 @@ class ExternalGrammarGenerator
 
   StringBuilder code = new StringBuilder();
 
-  // Basic templates
-  topHeader <<!@top Program { expression }!>>
-  emit genTopHeader()(topHeader);
-  
-  cr <<!
-!>>
-    
   public void generate (){
-    // Output basic file header
-    _genTopHeader(0, code);
-    
     UmpleInternalParser grammarparser = new UmpleInternalParser();
     for(String file:grammarparser.getParser().getGrammarFiles()){
       grammarparser.addRulesInFile(file);
