@@ -415,11 +415,26 @@ class Parser
     return answer.toString();
   }
 
-  // Used to generate a nice html representation for the user manual
+  // Default grammar generation to html
   public String toGrammar()
   {
-    return toGrammarParts("");
+    return toGrammarHtml();
   }
+
+
+  // Used to generate a nice html representation for the user manual
+  public String toGrammarHtml()
+  {
+    return toGrammarParts("","html");
+  }
+
+  // Used to generate a lezer grammar.
+  // See https://lezer.codemirror.net/docs/guide/#writing-a-grammar
+  public String toGrammarLezer()
+  {
+    return toGrammarParts("","lezer");
+  }
+
 
   private String cleanupRule(String cleanedUpRule)
   {
@@ -482,7 +497,15 @@ class Parser
     return cleanedUpRule;
   }
 
+  // Default grammar output to html format
   public String toGrammarParts(String rulesToOutput)
+  {
+     return toGrammarParts(rulesToOutput,"html");
+  }
+
+  // Converts specific Umple rules to an alternative format
+  // If rulesToOutput is empty then all rules are output
+  public String toGrammarParts(String rulesToOutput, String grammarFormat)
   {
     StringBuilder answer = new StringBuilder();
     StringBuilder queuedComments = new StringBuilder();
