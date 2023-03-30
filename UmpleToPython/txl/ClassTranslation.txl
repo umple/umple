@@ -130,8 +130,8 @@ function replaceClassBody
     export enumeratorDeclerations [repeat enum_declaration]
         _ [^ elements]
     %DEBUG
-    %export inner_classes [repeat inner_class_declaration]
-        %_ [^ elements]
+    export inner_classes [repeat concrete_class_declaration]
+        _ [^ elements]
     export classMethodNames [repeat id]
         _ [extractClassMethodName each classMethods]
     construct possibleFunctionImports [repeat id]
@@ -142,8 +142,8 @@ function replaceClassBody
     construct disambiguationFunctions [repeat class_body_element]
         _ 
     by
-        elements [exportConstructorCount] [removeMemberVariableDeclarations] [replaceEnumDeclaration] 
-            [replaceAllMethods memberVariables] %[replaceInnerClass]
+        elements [replaceConcreteClasses] [exportConstructorCount] [removeMemberVariableDeclarations] [replaceEnumDeclaration] 
+            [replaceAllMethods memberVariables]
 end function
 
 %If the argument is a memberVariable, add it to results

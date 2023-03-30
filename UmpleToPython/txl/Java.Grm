@@ -190,6 +190,8 @@ define statement
     |   [double_value] [opt ';] [NL]
     |   [throw_statement]
     |   [switch_case]
+    %DEBUG
+    %|   [class_declaration]
     |   [try_catch]
 end define
 
@@ -369,5 +371,5 @@ define class_body_element
     |   [constructor]
     |   [method_declaration]
     %NCNC
-    %|   [class_declaration]
+    |   [concrete_class_declaration]
 end define

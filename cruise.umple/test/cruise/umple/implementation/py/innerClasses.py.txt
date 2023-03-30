@@ -1,0 +1,29 @@
+class OuterClass_3():
+    def __init__(self):
+        pass
+
+    def delete1(self):
+        pass
+
+    class InnerClassAAAA():
+        def __init__(self):
+            pass
+
+        def delete2(self):
+            pass
+
+    class InnerStaticClass():
+        def __init__(self):
+            pass
+
+        def delete3(self):
+            pass
+
+    def delete(self, *argv):
+        if len(argv) == 0 :
+            return self.delete1()
+        if len(argv) == 0 :
+            return self.delete2()
+        if len(argv) == 0 :
+            return self.delete3()
+        raise TypeError("No method matches provided parameters")
