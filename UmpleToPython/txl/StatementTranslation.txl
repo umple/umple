@@ -9,6 +9,10 @@ function replaceStatements
         statements [any]
     by 
         statements
+            %DEBUG
+            [replaceThread]
+            %DEBUG
+            [translateStringEqualsCall]
             [replacePrivateAttributeSetting]
             [replaceDefaultReadObject]
             [replaceSwitchCase]
@@ -66,13 +70,9 @@ function replaceStatements
             [replaceAllMemberVariableNames]
             [removeSemiColonFromValues]
             %DEBUG
-            [replaceThread]
-            %DEBUG
             [replaceThreadSleep]
             %DEBUG
             %[replaceExtendsThread]
-            %DEBUG
-            %[translateStringEqualsCall]
 end function
 
 %In Java, you dont need to have code within brackets. For example else{} is valid.
@@ -1024,23 +1024,24 @@ rule replaceClassMatchCheck
         'type(self) 'is 'type( id2 ')
 end rule
 
-
-
 %DEBUG
 rule replaceThread
     replace [statement]
-        'Thread assignment [value]
+        'Thread identifier [nested_identifier] '= val [value] ';
     by
-        'threading.Thread( assignment ').start()
-end rule 
+        %'thread1 = A("2")
+        %'threading.Thread(target=thread1.doActivityThread).start()
+        % name of do activity method is doActivityStateMachine1TopLevelThread1
+        'threading.Thread(target=thread1. identifier).start()
+end rule
 
 %DEBUG
 % need to convert milliseconds to seconds
 rule replaceThreadSleep
     replace [statement]
-        'Thread.sleep( val [value] ')
+        'Thread.sleep( val [number] ')
     by
-        'time.sleep( val ')
+        'time.sleep( val  [/ 1000]')
 end rule
 
 %DEBUG
@@ -1061,9 +1062,9 @@ end rule
 %end rule
 
 %DEBUG
-%rule translateStringEqualsCall
-%    replace [statement]
-%        x [nested_identifier] '.equals( val [value] ')
-%    by
-%        x '== val 
-%end rule
+rule translateStringEqualsCall
+    replace [statement]
+        x [nested_identifier] '.equals( val [value] ')
+    by
+        '( x '== val ') 
+end rule
