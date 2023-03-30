@@ -533,13 +533,18 @@ class Parser
         // Skip items in the grammar marked 'TODO'
         if(!rule.matches("\\Q//TODO\\E.*"))
         {
-          queuedComments.append("<br />\n<font color=\"brown\">");
-          // Replace URLs in [* *] by links to them
-          String commentInterior=rule.replaceAll("\\Q[*http\\E(.*)\\Q*]\\E","<a style=\"color: brown\" href=\"http$1\">http$1</a>");
-          // Replace user manual refs by links to the local copy of the UM
-          commentInterior=commentInterior.replaceAll("\\Q[*\\E(.*)\\Q*]\\E","<a style=\"color: brown\" href=\"$1.html\">$1</a>");
-          queuedComments.append(commentInterior);
-          queuedComments.append("</font>");
+          if(grammarFormat.equals("lezer")) {
+            queuedComments.append(rule); // make no change when outputting to Lezer format
+          }
+          else { // default to html formatting of comments
+            queuedComments.append("<br />\n<font color=\"brown\">");
+            // Replace URLs in [* *] by links to them
+            String commentInterior=rule.replaceAll("\\Q[*http\\E(.*)\\Q*]\\E","<a style=\"color: brown\" href=\"http$1\">http$1</a>");
+            // Replace user manual refs by links to the local copy of the UM
+            commentInterior=commentInterior.replaceAll("\\Q[*\\E(.*)\\Q*]\\E","<a style=\"color: brown\" href=\"$1.html\">$1</a>");
+            queuedComments.append(commentInterior);
+            queuedComments.append("</font>");
+          }
         }
       }
       else
