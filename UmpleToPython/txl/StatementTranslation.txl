@@ -50,7 +50,11 @@ function replaceStatements
             [replaceCasting]
             [correctSuperInit]
             [correctSuperFunctions]
-			
+            %DEBUG
+            [replacePrintln]
+            [replacePrint]
+            [replacePrintf]
+            [replaceInnerClassCreate]
             [replaceNewLine]
             [replaceHexIdentity]
             [replaceComparator]
@@ -394,6 +398,7 @@ rule correctSuperFunctions
         'super() rep
 end rule
 
+
 rule replaceTimerStart
 	replace [repeat statement]
 		 var [id] ' = new TimedEventHandler(this, temp[value] ', val [value] ');
@@ -414,6 +419,40 @@ rule replaceTimerVariableDeclaration
 	by
 		var '= "" 			
 end rule
+
+%DEBUG
+rule replacePrintln
+    replace [nested_identifier]
+        'System.out.println( val [value] ')
+    by
+        'print( val ')
+end rule 
+
+rule replacePrint
+    replace [nested_identifier]
+        'System.out.print( val [value] ')
+    by
+        'print( val ')
+end rule 
+
+rule replacePrintf
+    replace [nested_identifier]
+        'System.out.printf(val [value] ')
+    by
+        'print( val ')
+end rule 
+
+%   outerObject.new InnerClass(); -> outerObject.InnerClass()
+rule replaceInnerClassCreate
+    replace [new_call_inner]
+        x [nested_identifier] '.new y [nested_identifier]
+    by
+        x '. y
+end rule
+
+
+%DEBUG
+
 
 rule replaceNewLine
     replace [nested_identifier]
