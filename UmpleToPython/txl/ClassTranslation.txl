@@ -6,8 +6,8 @@
 %Rule to translate concrete classes
 rule replaceConcreteClasses
     replace $ [concrete_class_declaration]
-        _ [opt acess_modifier] 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
-    export className 
+        _ [opt acess_modifier] 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '}
+    export className
     construct inheritanceClasses [list nested_identifier]
         _ [extractInheritanceBlockClasses each inheritances]
     construct translatedBody [class_body_decl]
@@ -17,14 +17,14 @@ rule replaceConcreteClasses
     construct runMain [opt run_main]
         _ [constructRunMain translatedBody]
     by
-        imports 
+        imports
         'class className '( inheritanceClasses ')':  translatedBody runMain
 end rule
 
 %Rule to translate abstract classes
 rule replaceAbstractClass
     replace [concrete_class_declaration]
-        _ [opt acess_modifier] 'abstract 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
+        _ [opt acess_modifier] 'abstract 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '}
     export className
     construct inheritanceClasses [list nested_identifier]
         _ [extractInheritanceBlockClasses each inheritances]
@@ -39,8 +39,8 @@ rule replaceAbstractClass
     construct runMain [opt run_main]
         _ [constructRunMain translatedBody]
     by
-        'from 'abc 'import 'ABC, 'abstractmethod 
-        imports 
+        'from 'abc 'import 'ABC, 'abstractmethod
+        imports
         'class className '(  finalInheritances '):  translatedBody runMain
 end rule
 
@@ -57,7 +57,7 @@ function constructRunMain body [class_body_decl]
     deconstruct optClassId
         classId [id]
     by
-        'if '__name__ '== '"__main__" ': 
+        'if '__name__ '== '"__main__" ':
         classId '.main(sys.argv)
 end function
 
@@ -66,12 +66,12 @@ rule matchMainMethod
     match [concrete_method_declaration]
         '@staticmethod
         'def 'main( _[list method_parameter+] '): _ [method_content]
-end rule 
+end rule
 
 %Rule used to translate interfaces
 rule replaceInterfaces
     replace [class_declaration]
-        _ [opt acess_modifier] 'interface className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
+        _ [opt acess_modifier] 'interface className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '}
     export className
     construct inheritanceClasses [list nested_identifier]
         _ [extractInheritanceBlockClasses each inheritances]
@@ -84,8 +84,8 @@ rule replaceInterfaces
     construct finalInheritances [list nested_identifier]
         AbcClass [, inheritanceClasses]
     by
-        'from 'abc 'import 'ABC, 'abstractmethod 
-        imports 
+        'from 'abc 'import 'ABC, 'abstractmethod
+        imports
         'class className '(  finalInheritances '):  translatedBody
 end rule
 
@@ -110,7 +110,7 @@ end function
 function replaceClassBody
     replace [class_body_decl]
         body [class_body_decl]
-    deconstruct body 
+    deconstruct body
         elements [repeat class_body_element]
     construct declarations [repeat member_variable_declaration]
         _ [^ elements]
@@ -140,10 +140,10 @@ function replaceClassBody
         _
     export possibleFunctionImports
     construct disambiguationFunctions [repeat class_body_element]
-        _ 
+        _
     by
-        elements [exportConstructorCount] [removeMemberVariableDeclarations] [replaceEnumDeclaration] 
-            [replaceAllMethods memberVariables] %[replaceInnerClass]
+        elements [replaceConcreteClasses] [exportConstructorCount] [removeMemberVariableDeclarations] [replaceEnumDeclaration] 
+            [replaceAllMethods memberVariables] %
 end function
 
 %If the argument is a memberVariable, add it to results
@@ -267,9 +267,9 @@ end function
 function addStaticMethod method [method_declaration]
     replace [repeat id]
         SequenceSoFar [repeat id]
-    deconstruct method 
+    deconstruct method
         _[opt decorator] _[acess_modifier] 'static _[nested_identifier] methodName [id] '( _[list method_parameter] ') _[opt throws] '{ _[repeat statement] '}
-    by 
+    by
         SequenceSoFar [. methodName]
 end function
 
