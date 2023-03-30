@@ -435,7 +435,7 @@ class Parser
     return toGrammarParts("","lezer");
   }
 
-
+  // Converts a rule from Umple native format to html, including links to other rules
   private String cleanupRule(String cleanedUpRule)
   {
   
@@ -495,6 +495,11 @@ class Parser
     }
     
     return cleanedUpRule;
+  }
+  
+  private String cleanupRuleLezer(String cleanedUpRule)
+  {
+    return cleanedUpRule;  
   }
 
   // Default grammar output to html format
@@ -556,28 +561,18 @@ class Parser
           {
             // We are to output the rule since we are outputting all
             // or it was listed in rulesToOutput
-            String cleanedUpRule = cleanupRule(splitRule[1]);
+            if(grammarFormat.equals("lezer"))
+            {
+              String cleanedUpRule = cleanupRuleLezer(splitRule[1]);
+              genRuleLezer(ruleName, answer, queuedComments, cleanedUpRule, hasMinus, hasHash);              
+            }
+            else // default is convert to html
+            {
+              String cleanedUpRule = cleanupRule(splitRule[1]);
+              genRuleHtml(ruleName, answer, queuedComments, cleanedUpRule, hasMinus, hasHash);
+            }
 
-            // Output the rule nicely
 
-            // Start by outputting any queued comments (if there are any)
-            answer.append(queuedComments.toString());                 
-            
-            answer.append("<br />\n<a name=\"");
-            answer.append(ruleName);  // anchor to link to
-            answer.append("\" ></a>"); 
-          
-            answer.append("<b><font color=\"#2E64FE\">");
-            answer.append(ruleName);  // displayed name
-            answer.append("</font></b>");
-
-            if(hasMinus == 1) answer.append("-");
-            if(hasHash == 1) answer.append("#");
-            answer.append(" :");
-            
-            answer.append(cleanedUpRule);
-            answer.append("<br />\n");
-            
           } // End outputting rule
           queuedComments = new StringBuilder(); // clear them whether or not output
         }
@@ -587,6 +582,36 @@ class Parser
       }
     } // end for loop of every line in the rule file
     return answer.toString();
+  }
+  
+  public void genRuleHtml(String ruleName, StringBuilder answer, StringBuilder queuedComments, String cleanedUpRule, int hasMinus, int hasHash)
+  {
+    // Start by outputting any queued comments (if there are any)
+    answer.append(queuedComments.toString());                 
+
+    answer.append("<br />\n<a name=\"");
+    answer.append(ruleName);  // anchor to link to
+    answer.append("\" ></a>"); 
+
+    answer.append("<b><font color=\"#2E64FE\">");
+    answer.append(ruleName);  // displayed name
+    answer.append("</font></b>");
+
+    if(hasMinus == 1) answer.append("-");
+    if(hasHash == 1) answer.append("#");
+    answer.append(" :");
+
+    answer.append(cleanedUpRule);
+    answer.append("<br />\n");
+  }
+  
+  public void genRuleLezer(String ruleName, StringBuilder answer, StringBuilder queuedComments, String cleanedUpRule, int hasMinus, int hasHash)
+  {
+    // DEBUG this is a draft ... see genRuleHtml for other things we may need to do
+    answer.append(ruleName);
+    answer.append(" {");
+    answer.append(cleanedUpRule);
+    answer.append("}\n");
   }
   
   // Output the parse tree. The code originally here has been refactored to Token class
