@@ -396,7 +396,7 @@ end rule
 
 rule replaceTimerStart
 	replace [repeat statement]
-		 var [id] ' = new TimedEventHandler(this, _[value] ', val [value] ');
+		 var [id] ' = new TimedEventHandler(this, temp[value] ', val [value] ');
 	by
 		'self. var '= Timer( val ', var [+ 'Run] '()) 			
 end rule
