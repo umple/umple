@@ -371,5 +371,5 @@ define class_body_element
     |   [constructor]
     |   [method_declaration]
     %NCNC
-    %|   [concrete_class_declaration] %This fails with quick compile. It compiles but fails the test.   [class_declaration]
+    %|   [concrete_class_declaration] %This fails with full build, quick build passes. It compiles but fails the test.
 end define
