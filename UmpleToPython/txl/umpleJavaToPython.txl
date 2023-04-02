@@ -13,15 +13,14 @@ include "ClassTranslation.txl"
 %Main function runs the functions to translate every type of class/interface
 %Note that the TXL currently makes the assumption that 1 file = 1 class/interface
 function main
-    replace [program] 
-	 _[repeat package_statement] 
+    replace [program]
+	 _[repeat package_statement]
      Imports [repeat import_statement]
      classes [repeat class_declaration]
     export Imports
     by
 	classes
-        [replaceConcreteClasses] 
+        [replaceConcreteClasses]
         [replaceInterfaces]
         [replaceAbstractClass]
 end function
-

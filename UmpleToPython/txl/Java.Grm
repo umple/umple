@@ -5,9 +5,9 @@ comments
     /*  */
 end comments
 
-compounds 
+compounds
     '== '!= '>= '<= '+= '-= '-- '++
-end compounds 
+end compounds
 
 tokens
     %User code is code taken directly from umple in user defined functions
@@ -52,16 +52,16 @@ define arithmatic_operator
 end define
 
 define program
-    [repeat package_statement]  
+    [repeat package_statement]
     [repeat import_statement]
     [repeat class_declaration]
 end define
 
-define package_statement 
+define package_statement
     'package [imported]';
 end define
 
-define import_statement 
+define import_statement
     'import [imported]';
 end define
 
@@ -80,10 +80,10 @@ define nested_identifier
 end define
 
 define attribute_access
-       '. [nestable_value] 
+       '. [nestable_value]
 end define
 
-define nestable_value 
+define nestable_value
         [id] [SPOFF] [repeat nestable_extension] [SPON]
     |   'this
     |   'super
@@ -95,7 +95,7 @@ define nestable_extension
     |   '< [SPON] [list id] '> [SPOFF]
     |   '< [SPON] '? 'extends [id] '> [SPOFF]
     |   '[ [SPON] [list value] '] [SPOFF]
-end define 
+end define
 
 define func_call_parentheses
     '( [SPON] [list value] ') [SPOFF]
@@ -103,7 +103,7 @@ end define
 
 define parentheses_value
     '( [list value]')
-end define 
+end define
 
 %base_values should have no recursion or left side ambiguity
 define base_value
@@ -137,7 +137,7 @@ end define
 define value
         [base_value] [opt value_continuation]
 end define
- 
+
 define value_continuation
         [boolean_operator] [value]
     |   [arithmatic_operator] [value]
@@ -161,7 +161,7 @@ end define
 
 define method_reference
     ':: [id]
-end define 
+end define
 
 %DEBUG
 define new_call_inner
@@ -190,6 +190,8 @@ define statement
     |   [double_value] [opt ';] [NL]
     |   [throw_statement]
     |   [switch_case]
+    %DEBUG
+    %|   [class_declaration]
     |   [try_catch]
 end define
 
@@ -228,7 +230,7 @@ define conditional_block
     [if] [repeat else_if] [opt else]
 end define
 
-define try_catch 
+define try_catch
     'try '{  [repeat statement]  '} 'catch '( [method_parameter] ') '{ [repeat statement] '} [opt finally]
 end define
 
@@ -236,7 +238,7 @@ define finally
     'finally '{ [repeat statement] '}
 end define
 
-define if 
+define if
     'if '( [value] ') '{  [repeat statement]  '}
     | 'if '( [value] ') [statement]
 end define
@@ -273,7 +275,7 @@ end define
 
 define var_arg
     [nested_identifier] [!] '... [id]
-end define 
+end define
 
 define concrete_method_declaration
         [opt decorator] [acess_modifier] [opt static] [nested_identifier] [id] '( [list method_parameter] ') [opt throws] [NL] '{ [method_content] '} [NL]
@@ -324,7 +326,7 @@ end define
 
 define interface_declaration
     [opt acess_modifier] 'interface [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
-end define  
+end define
 
 define static
     'static
@@ -369,5 +371,7 @@ define class_body_element
     |   [constructor]
     |   [method_declaration]
     %NCNC
-    |   [class_declaration]
+
+    |   [concrete_class_declaration] %This fails with quick compile. It compiles but fails the test.   [class_declaration]
 end define
+

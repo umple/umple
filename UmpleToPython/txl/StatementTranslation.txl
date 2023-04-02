@@ -446,9 +446,9 @@ end rule
 %   outerObject.new InnerClass(); -> outerObject.InnerClass()
 rule replaceInnerClassCreate
     replace [new_call_inner]
-        x [nested_identifier] '.new y [nested_identifier]
+        outerObject [nested_identifier] '.new innerObject [nested_identifier]
     by
-        x '. y
+        outerObject '. innerObject
 end rule
 
 
