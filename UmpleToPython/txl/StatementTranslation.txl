@@ -9,6 +9,7 @@ function replaceStatements
         statements [any]
     by 
         statements
+			[translateStringEqualsCall]
 			[replaceTimerVariableDeclaration]
 			[replaceTimerStart]
 			[replaceTimerStop]
@@ -1039,4 +1040,11 @@ rule replaceClassMatchCheck
         'getClass().equals( id2 [id] '.getClass() ')
     by  
         'type(self) 'is 'type( id2 ')
+end rule
+
+rule translateStringEqualsCall
+    replace [statement]
+        x [nested_identifier] '.equals( val [value] ')
+    by
+        x '== val 
 end rule
