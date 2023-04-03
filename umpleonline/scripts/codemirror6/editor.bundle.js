@@ -19198,9 +19198,6 @@ var cm6 = (function (exports) {
    `-`, document percentages suffixed with `%`, and an optional
    column position by adding `:` and a second number after the line
    number.
-
-   The dialog can be styled with the `panel.gotoLine` theme
-   selector.
    */
    const gotoLine = view => {
        let panel = getPanel(view, createLineDialog);
@@ -19387,7 +19384,8 @@ var cm6 = (function (exports) {
                caseSensitive: false,
                literal: false,
                wholeWord: false,
-               createPanel: view => new SearchPanel(view)
+               createPanel: view => new SearchPanel(view),
+               scrollToMatch: range => EditorView.scrollIntoView(range)
            });
        }
    });
@@ -19645,10 +19643,11 @@ var cm6 = (function (exports) {
        let next = query.nextMatch(view.state, to, to);
        if (!next)
            return false;
+       let selection = EditorSelection.single(next.from, next.to);
+       let config = view.state.facet(searchConfigFacet);
        view.dispatch({
-           selection: { anchor: next.from, head: next.to },
-           scrollIntoView: true,
-           effects: announceMatch(view, next),
+           selection,
+           effects: [announceMatch(view, next), config.scrollToMatch(selection.main)],
            userEvent: "select.search"
        });
        return true;
@@ -19660,13 +19659,14 @@ var cm6 = (function (exports) {
    */
    const findPrevious = /*@__PURE__*/searchCommand((view, { query }) => {
        let { state } = view, { from } = state.selection.main;
-       let range = query.prevMatch(state, from, from);
-       if (!range)
+       let prev = query.prevMatch(state, from, from);
+       if (!prev)
            return false;
+       let selection = EditorSelection.single(prev.from, prev.to);
+       let config = view.state.facet(searchConfigFacet);
        view.dispatch({
-           selection: { anchor: range.from, head: range.to },
-           scrollIntoView: true,
-           effects: announceMatch(view, range),
+           selection,
+           effects: [announceMatch(view, prev), config.scrollToMatch(selection.main)],
            userEvent: "select.search"
        });
        return true;
@@ -19717,22 +19717,21 @@ var cm6 = (function (exports) {
        if (!next)
            return false;
        let changes = [], selection, replacement;
-       let announce = [];
+       let effects = [];
        if (next.from == from && next.to == to) {
            replacement = state.toText(query.getReplacement(next));
            changes.push({ from: next.from, to: next.to, insert: replacement });
            next = query.nextMatch(state, next.from, next.to);
-           announce.push(EditorView.announce.of(state.phrase("replaced match on line $", state.doc.lineAt(from).number) + "."));
+           effects.push(EditorView.announce.of(state.phrase("replaced match on line $", state.doc.lineAt(from).number) + "."));
        }
        if (next) {
            let off = changes.length == 0 || changes[0].from >= next.to ? 0 : next.to - next.from - replacement.length;
-           selection = { anchor: next.from - off, head: next.to - off };
-           announce.push(announceMatch(view, next));
+           selection = EditorSelection.single(next.from - off, next.to - off);
+           effects.push(announceMatch(view, next));
+           effects.push(state.facet(searchConfigFacet).scrollToMatch(selection.main));
        }
        view.dispatch({
-           changes, selection,
-           scrollIntoView: !!selection,
-           effects: announce,
+           changes, selection, effects,
            userEvent: "input.replace"
        });
        return true;
@@ -24504,6 +24503,28 @@ var cm6 = (function (exports) {
      },
    });
 
+   // highlight lines logic
+   const addLineHighlight = StateEffect.define();
+   const lineHighlightMark = Decoration.line({
+     attributes: {style: 'background-color: yellow'},
+   });
+   const lineHighlightExtension = StateField.define({
+     create() {
+       return Decoration.none;
+     },
+     update(lines, tr) {
+       lines = lines.map(tr.changes);
+       for (let e of tr.effects) {
+         if (e.is(addLineHighlight)) {
+           lines = Decoration.none;
+           lines = lines.update({add: [lineHighlightMark.range(e.value)]});
+         }
+       }
+       return lines;
+     },
+     provide: (f) => EditorView.decorations.from(f),
+   });
+
    function createEditorState(intialContents, options={}) {
 
      let extensions = [
@@ -24518,6 +24539,7 @@ var cm6 = (function (exports) {
          }
        }),
        listenChangesExtension,
+       lineHighlightExtension,
        // keymap.of(options.extraKeys)
        ...options.extensions
      ];
@@ -24547,10 +24569,12 @@ var cm6 = (function (exports) {
    }
 
    exports.CM6Data = CM6Data;
+   exports.addLineHighlight = addLineHighlight;
    exports.createEditorState = createEditorState;
    exports.createEditorView = createEditorView;
    exports.createKeyMap = createKeyMap;
    exports.getCodeMirror6UmpleText = getCodeMirror6UmpleText;
+   exports.lineHighlightExtension = lineHighlightExtension;
    exports.listenChangesExtension = listenChangesExtension;
 
    return exports;

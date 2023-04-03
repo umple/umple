@@ -2029,9 +2029,12 @@ Action.setCaretPosition = function(line)
   {
     Page.codeMirrorEditor.setSelection({line: line-1,ch: 0},{line: line-1,ch: 999999});
     Page.codeMirrorEditor.focus();
+    
     /* codemirror 6 line highlight by number*/
-    // set cursor position in v6
-    // Page.codeMirrorEditor6.dispatch({selection: {anchor: line, head: line}})
+    if(line >= 1) {
+      const docPosition = Page.codeMirrorEditor6.state.doc.line(line).from;
+      Page.codeMirrorEditor6.dispatch({effects: cm6.addLineHighlight.of(docPosition)})
+    }
  
     return;
   }

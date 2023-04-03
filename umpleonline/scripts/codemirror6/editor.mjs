@@ -1,7 +1,7 @@
-import { EditorView, basicSetup, minimalSetup } from "codemirror"
-import { EditorState, StateField } from "@codemirror/state";
+import { EditorView, basicSetup } from "codemirror"
+import { EditorState, StateEffect, StateField } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript"
-import { lineNumbers, keymap } from "@codemirror/view"
+import { lineNumbers, keymap, Decoration } from "@codemirror/view"
 import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from "@codemirror/language"
 
 var CM6Data = new Object();
@@ -26,6 +26,28 @@ const listenChangesExtension = StateField.define({
   },
 });
 
+// highlight lines logic
+const addLineHighlight = StateEffect.define();
+const lineHighlightMark = Decoration.line({
+  attributes: {style: 'background-color: yellow'},
+});
+const lineHighlightExtension = StateField.define({
+  create() {
+    return Decoration.none;
+  },
+  update(lines, tr) {
+    lines = lines.map(tr.changes);
+    for (let e of tr.effects) {
+      if (e.is(addLineHighlight)) {
+        lines = Decoration.none;
+        lines = lines.update({add: [lineHighlightMark.range(e.value)]});
+      }
+    }
+    return lines;
+  },
+  provide: (f) => EditorView.decorations.from(f),
+});
+
 function createEditorState(intialContents, options={}) {
 
   let extensions = [
@@ -40,6 +62,7 @@ function createEditorState(intialContents, options={}) {
       }
     }),
     listenChangesExtension,
+    lineHighlightExtension,
     // keymap.of(options.extraKeys)
     ...options.extensions
   ]
@@ -68,18 +91,5 @@ function createKeyMap(key, operation){
   }])
 }
 
-// let updateListenerExtension = EditorView.updateListener.of((update) => {
-//   if (update.docChanged) {
-//     // Handle the event here
-//     Page.codeMirrorEditor6.dispatch({ changes: { from: 0, 
-//       to: Page.codeMirrorEditor6.state.doc.length, 
-//       insert:  document.getElementById("umpleModelEditorText").value } })
-//   }
-// });
-
-// extensions = [updateListenerExtension]/* Add your other extensions */
-// const nextState = cm6.createEditorState(
-// document.getElementById("umpleModelEditorText").value, {extraKeys, extensions});
-
-
-export { createEditorState, createEditorView, createKeyMap, listenChangesExtension, getCodeMirror6UmpleText, CM6Data } 
+export { createEditorState, createEditorView, createKeyMap, listenChangesExtension, getCodeMirror6UmpleText, CM6Data, 
+  lineHighlightExtension, addLineHighlight } 
