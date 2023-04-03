@@ -85,6 +85,7 @@ end define
 
 define nestable_value
         [id] [SPOFF] [repeat nestable_extension] [SPON]
+    |  [stringlit] [SPOFF] [repeat nestable_extension] [SPON] %DEBUG: to match  "stringlit".equals
     |   'this
     |   'super
     |   [parentheses_value]
@@ -95,6 +96,8 @@ define nestable_extension
     |   '< [SPON] [list id] '> [SPOFF]
     |   '< [SPON] '? 'extends [id] '> [SPOFF]
     |   '[ [SPON] [list value] '] [SPOFF]
+     %DEBUG: to match  Object[]{}, Class[]{}
+    |   '[']'{ '} 
 end define
 
 define func_call_parentheses
@@ -119,7 +122,7 @@ define base_value
     |   '++ [nested_identifier]
     |   [parentheses_value]
     |   [new_call]
-    |   [new_call_inner] %DEBUG
+    |   [new_call_inner] %DEBUG: left side ambiguity?
     |  '! [value]
 
 end define
@@ -163,10 +166,9 @@ define method_reference
     ':: [id]
 end define
 
-%DEBUG
+%DEBUG: to match outerObject.new InnerClass();
 define new_call_inner
     [nested_identifier][SPOFF] '. [SPON][new_call]
-    %    outerObject.new InnerClass();
 end define
 
 define new_call
@@ -190,8 +192,6 @@ define statement
     |   [double_value] [opt ';] [NL]
     |   [throw_statement]
     |   [switch_case]
-    %DEBUG
-    %|   [class_declaration]
     |   [try_catch]
 end define
 
@@ -311,11 +311,6 @@ define class_declaration
 end define
 
 
-%DEBUG
-%define inner_class_declaration
-%    [opt acess_modifier] [opt static] 'class [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
-%end define
-
 define concrete_class_declaration
     [opt acess_modifier] [opt 'abstract] 'class [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
 end define
@@ -364,12 +359,11 @@ define class_body_decl
     [repeat class_body_element]
 end define
 
-%DEBUG
+%DEBUG: Nested class declaration
 define class_body_element
         [enum_declaration]
     |   [member_variable_declaration]
     |   [constructor]
     |   [method_declaration]
-    %NCNC
     |   [concrete_class_declaration] 
 end define
