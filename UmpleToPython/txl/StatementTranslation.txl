@@ -9,8 +9,10 @@ function replaceStatements
         statements [any]
     by 
         statements
+			[replaceTimerDeclaration]
+			[replaceTimerSchedule]
 			[translateStringEqualsCall]
-			[replaceTimerVariableDeclaration]
+			%[replaceTimerVariableDeclaration]
 			[replaceTimerStart]
 			[replaceTimerStop]
             [replacePrivateAttributeSetting]
@@ -399,27 +401,40 @@ rule correctSuperFunctions
         'super() rep
 end rule
 
+rule replaceTimerDeclaration
+	replace [statement]
+		 var [id] ' = new Timer();
+	by
+		var '= None			
+end rule
+
+rule replaceTimerSchedule
+	replace [repeat statement]
+		 var[id]'.schedule(this, (long) time[nested_identifier] '*1000); 
+	by
+		 var '= Timer( time ', 'run '()); var '.start()			
+end rule
 
 rule replaceTimerStart
 	replace [repeat statement]
 		 var [id] ' = new TimedEventHandler(this, temp[value] ', val [value] ');
 	by
-		'self. var '= Timer( val ', var [+ 'Run] '()) 			
+		'self. var '= TimedEventHandler( var ',this, temp ', val ') 			
 end rule
 
 rule replaceTimerStop
 	replace [repeat statement]
 		 var [id] '.stop();
 	by
-		'self. var '.cancel() 			
+		'self. var '.stop() 			
 end rule
 
-rule replaceTimerVariableDeclaration
-	replace [repeat statement]
-		 'private TimedEventHandler var [id] ';
-	by
-		var '= "" 			
-end rule
+%rule replaceTimerVariableDeclaration
+	%replace [repeat statement]
+		% 'private TimedEventHandler var [id] ';
+	%by
+		%var '= "" 			
+%end rule
 
 %DEBUG
 rule replacePrintln
