@@ -560,7 +560,8 @@ Page.initCodeMirrorEditor = function() {
   const initialState = cm6.createEditorState(
     document.getElementById("umpleModelEditorText").value, 
     {
-      extensions: [cm6.listenChangesExtension]
+      extensions: [cm6.listenChangesExtension,
+                  cm6.lineHighlightExtension]
     });
   Page.codeMirrorEditor6 = cm6.createEditorView(
     initialState, document.getElementById("newEditor"));
@@ -581,6 +582,7 @@ Page.initCodeMirrorEditor = function() {
     umpleModelEditorText */
   Page.codeMirrorEditor.on('change', function (ed, changes) {
     /* start timer to process changes 3s after after the editing is done */
+    console.log("onChange Triggered")
     Action.umpleCodeMirrorTypingActivity("codeMirrorEditor");
     /* update codemirror 6 panel with the same changes  .. NO LONGER DONE HERE  */
     // Page.setCodeMirror6Text(document.getElementById("umpleModelEditorText").value);
@@ -1004,6 +1006,7 @@ Page.getRawUmpleCode = function()
 
 Page.getUmpleCode = function()
 {
+  // console.log("Inside getUmpleCode")
   var modelCleaned = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
   var positioning = jQuery("#umpleLayoutEditorText").val().replace(Page.modelDelimiter, "");
   if(positioning !== "" && !positioning.includes("namespace -;")){

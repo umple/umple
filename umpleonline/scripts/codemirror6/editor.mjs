@@ -1,8 +1,9 @@
-import { EditorView, basicSetup } from "codemirror"
+import { EditorView, basicSetup, minimalSetup } from "codemirror"
 import { EditorState, StateEffect, StateField } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript"
 import { lineNumbers, keymap, Decoration } from "@codemirror/view"
 import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from "@codemirror/language"
+import { RegExpCursor } from "@codemirror/search";
 
 var CM6Data = new Object();
 CM6Data.codeMirror6UmpleText="";
@@ -91,5 +92,10 @@ function createKeyMap(key, operation){
   }])
 }
 
+function getRegExpCursorCM6(code, queryString){
+  // console.log("Code as Text: ", Text.of(code))
+  return new RegExpCursor(code, queryString);
+}
+
 export { createEditorState, createEditorView, createKeyMap, listenChangesExtension, getCodeMirror6UmpleText, CM6Data, 
-  lineHighlightExtension, addLineHighlight } 
+  lineHighlightExtension, addLineHighlight, lineHighlightMark, getRegExpCursorCM6 } 

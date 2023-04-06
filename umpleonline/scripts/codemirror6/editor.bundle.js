@@ -24568,13 +24568,20 @@ var cm6 = (function (exports) {
      }])
    }
 
+   function getRegExpCursorCM6(code, queryString){
+     // console.log("Code as Text: ", Text.of(code))
+     return new RegExpCursor(code, queryString);
+   }
+
    exports.CM6Data = CM6Data;
    exports.addLineHighlight = addLineHighlight;
    exports.createEditorState = createEditorState;
    exports.createEditorView = createEditorView;
    exports.createKeyMap = createKeyMap;
    exports.getCodeMirror6UmpleText = getCodeMirror6UmpleText;
+   exports.getRegExpCursorCM6 = getRegExpCursorCM6;
    exports.lineHighlightExtension = lineHighlightExtension;
+   exports.lineHighlightMark = lineHighlightMark;
    exports.listenChangesExtension = listenChangesExtension;
 
    return exports;

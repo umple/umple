@@ -1014,6 +1014,7 @@ Action.simulateCodeCallback = function(response)
 
 Action.classSelected = function(obj)
 {
+  // console.log("Inside classSelected")
   var previouslySelected = Page.selectedClass;
   var newClassSelected = obj;
   
@@ -1088,6 +1089,9 @@ Action.unselectAll = function()
 
 Action.classClicked = function(event)
 {
+  // DEBUG F
+  console.log("Debug F1: Inside classClicked")
+  console.log("Event: ", event)
   if (!Action.diagramInSync) return;
   Action.focusOn("umpleCanvas", true);
   Action.focusOn("umpleModelEditorText", false);
@@ -2166,6 +2170,7 @@ Action.selectMatchingText = function(text)
 // Code behind highlighting of text
 Action.selectItem = function(searchCursor, nextCursor)
 {
+  console.log("Debug F3: Inside selectItem")
 	if(Page.codeMirrorOn) {
     var scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
 
@@ -2233,6 +2238,25 @@ Action.selectItem = function(searchCursor, nextCursor)
   return;  // false - important do not return a value or it won't work in Firefox/Opera
 }
 
+// CM6: code highlighting of text
+Action.selectItemCM6 = function(start){
+  console.log("Debug F4: Inside selectItemCM6");
+  // start = "/(class|interface|trait) "+"Shape2D"+"($|\\\s|[{])/gm";
+  // console.log("RegExCursor call: ", cm6.getRegExpCursorCM6(Page.codeMirrorEditor6.state.doc, start).flat.text.toString())
+  /*
+  NOTE:
+  The following line of code is always returning -1 which indicates,
+  the regular expression generated is not able to match anything
+  in the code present in CM6 editor
+  .
+  Uncomment next 2 lines to see this issue
+  */
+  // const lineNo = cm6.getRegExpCursorCM6(Page.codeMirrorEditor6.state.doc, start).value.from
+  // console.log("LINE No: ", lineNo)
+  const docPosition = Page.codeMirrorEditor6.state.doc.line(11).from;
+  Page.codeMirrorEditor6.dispatch({effects: cm6.addLineHighlight.of(docPosition)})
+}
+
 // Highlights the text of the method that is currently selected.
 Action.selectMethod = function(methodName, type, accessMod)
 {
@@ -2245,10 +2269,15 @@ Action.selectMethod = function(methodName, type, accessMod)
 // Highlights the text of the class that is currently selected.
 Action.selectClass = function(className) 
 {
-	var scursor = new RegExp("(class|interface|trait) "+className+"($|\\\s|[{])");
+	var scursor = new RegExp("(class|interface|trait) "+className+" ($|\\\s|[{])");
+  // var scursor2 =   "/(class|interface|trait) "+className+"($|\\\s|[{])/gm";
 	var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
-
-	Action.selectItem(scursor, ncursor);
+  // console.log("Debug F2: Inside selectClass", "\n", "searchCursor1: ", scursor1, "\nsearchCursor2: ", scursor2)
+  console.log("Debug F2: Inside selectClass", "\n", "searchCursor: ", scursor, "\nnextCursor: ", ncursor)
+	// codemirror 5
+  Action.selectItem(scursor, ncursor);
+  // codemirror 6
+  Action.selectItemCM6(scursor);
 }
 
 // Highlights the text of the state that is currently selected.
@@ -2587,14 +2616,16 @@ Action.processTyping = function(target, manuallySynchronized)
 {
   // DEBUG A2
   console.log(target + ": DEBUG A2 Inside processTyping after 3s delay");
-  console.log("DEBUG A3: cm6 data="+cm6.getCodeMirror6UmpleText());
-  console.log("DEBUG A4");
+  // console.log("DEBUG A3: cm6 data="+cm6.getCodeMirror6UmpleText());
+  // console.log("DEBUG A4");
 
   // Update the 'other' codemirror editor
   if (target == "codeMirrorEditor") {
     console.log("Updating CM6 text with contents from CM5");
     Page.setCodeMirror6Text(document.getElementById("umpleModelEditorText").value);
   }
+  // TODO: uncomment this
+  // Note: Comment this to interact CM5 and CM6 with the diagram seperately
   else if (target == "newEditor") {
     Page.setUmpleCode(cm6.getCodeMirror6UmpleText());
     console.log("Need to update CM5 text with contents from CM6");
@@ -2608,15 +2639,17 @@ Action.processTyping = function(target, manuallySynchronized)
   else{
     Action.setjustUpdatetoSaveLaterForTextCallback(false);
   }
-  
+  console.log("Debug E1: Just before !Action.manualSync || manuallySynchronized", Action.manualSync, manuallySynchronized)
   // Cause changed in text to be made to the diagram
   if (!Action.manualSync || manuallySynchronized)
   {
+    console.log("Debug E1.1: Inside !Action.manualSync || manuallySynchronized")
     Action.diagramInSync = true;
     
     // target == "newEditor" added for codemirror 6
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor" || target == "newEditor") {
-      Action.updateLayoutEditorAndDiagram(); 
+    // if (target == "newEditor") {
+      Action.updateLayoutEditorAndDiagram(target); 
       // issue#1554
       var downloadLink = document.getElementById("downloadLink");
       if (downloadLink !== null){
@@ -2645,15 +2678,19 @@ Action.processTyping = function(target, manuallySynchronized)
 	setTimeout(Action.checkComplexity,10000);
 }
 
-Action.updateLayoutEditorAndDiagram = function()
+Action.updateLayoutEditorAndDiagram = function(target)
 {
-  Action.ajax(Action.updateUmpleLayoutEditor,"language=Json");
+  console.log(target + ": Inside updateLayoutEditorAndDiagram")
+  Action.ajax(Action.updateUmpleLayoutEditor,"language=Json",target);
 }
 
 Action.updateUmpleLayoutEditor = function(response)
 {
-  //Extract data from response	
+  console.log("Debug E4: Inside updateUmpleLayoutEditor")
+  //Extract data from response
+  console.log("Response: ", response)
   var codeparts = response.responseText.split('URL_SPLIT');
+  console.log("codeparts: ", codeparts)
   var errorMessage=codeparts[0];
   var umpleJson=codeparts[1];//Remove the URL_SPLIT in umpleJson
 
@@ -2672,9 +2709,11 @@ Action.updateUmpleLayoutEditor = function(response)
 
 Action.updateUmpleLayoutEditorCallback = function(response)
 {
+  console.log("Inside updateUmpleLayoutEditorCallback")
   var umpleCode = response.responseText;
+  console.log("Extracting Positioning from Response")
   var positioning = Page.splitUmpleCode(umpleCode)[1];
-  
+  // console.log("Positioning: " + positioning)
   Page.setUmplePositioningCode(positioning);
   Page.hideLoading();
   Action.updateUmpleDiagramForce(true);
@@ -2686,7 +2725,11 @@ Action.updateUmpleDiagram = function() {
 
 Action.updateUmpleDiagramForce = function(forceUpdate)
 {
+  console.log("Inside updateUmpleDiagramForce")
+  // CM5 -  Page.getUmpleCode()
+  // CM6 - cm6.getCodeMirror6UmpleText()
   var canonical = Action.trimMultipleNonPrintingAndComments(Page.getUmpleCode());
+  console.log("canonical: ", canonical)
   if(!forceUpdate) {
     if(canonical == Action.savedCanonical)   
     {
@@ -2704,6 +2747,7 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
 
 Action.updateUmpleDiagramCallback = function(response)
 {
+  console.log("Debug E6.1: Inside updateUmpleDiagramCallback")
   var diagramCode = "";
   var errorMessage = "";
 
@@ -2711,7 +2755,7 @@ Action.updateUmpleDiagramCallback = function(response)
   errorMessage = Action.getErrorCode(response.responseText);
   Page.hideExecutionArea();
 
-    
+  // console.log("diagramCode: ", diagramCode)
   if(diagramCode == null || diagramCode == "" || diagramCode == "null") 
   {
     Page.enableDiagram(false);
@@ -2807,6 +2851,7 @@ Action.updateUmpleDiagramCallback = function(response)
   }
   
   Page.hideLoading();
+  console.log("Debug E6.2: updateUmpleDiagramCallback finised")
 }
 
 Action.updateFromDiagramCallback = function(response)
@@ -3119,10 +3164,23 @@ Action.generateStructureDiagramFileCallback = function(response)
   Page.toggleStructureDiagramLink(true, response.responseText);
 }
 
-Action.ajax = function(callback,post,errors,tabIndependent)
+Action.ajax = function(callback,post,target,errors,tabIndependent)
 {
-  var modelAndPositioning = Page.getUmpleCode();
-
+  console.log("Debug E2 : Sending Ajax request - ", target)
+  // CM5 -  Page.getUmpleCode()
+  // CM6 - cm6.getCodeMirror6UmpleText()
+  var modelAndPositioning = null;
+  modelAndPositioning = Page.getUmpleCode();
+  // if-else or conditional based on target will not work here,
+  // because after first AJAX call, the `target` variable is undefined
+  // if(target == "newEditor"){
+  //   modelAndPositioning = cm6.getCodeMirror6UmpleText();
+  // }
+  // else {
+  //   modelAndPositioning = Page.getUmpleCode();
+  // }
+  console.log("Debug E3: ", target)
+  // console.log(": \nmodelAndPositioning", modelAndPositioning)
   var umpleCode = encodeURIComponent(modelAndPositioning);
   var filename = Page.getFilename();
   // var errors = typeof(errors) != 'undefined' ? errors : "false";
