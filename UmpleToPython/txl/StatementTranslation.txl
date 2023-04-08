@@ -54,6 +54,7 @@ function replaceStatements
             [correctSuperInit]
             [correctSuperFunctions]
             %DEBUG
+            [replaceDotEquals]
             [replacePrintln]
             [replacePrint]
             [replacePrintf]
@@ -401,6 +402,7 @@ rule correctSuperFunctions
         'super() rep
 end rule
 
+
 rule replaceTimerDeclaration
 	replace [statement]
 		 var [id] ' = new Timer();
@@ -437,6 +439,16 @@ end rule
 %end rule
 
 %DEBUG
+
+%DEBUG match "doActivityStateMachine1TopLevelThread1".equals(doActivityMethodName)
+rule replaceDotEquals
+    replace [value]
+        s1 [stringlit] '.equals( s2[value] ')
+    by
+        s1 == s2
+end rule 
+
+
 rule replacePrintln
     replace [nested_identifier]
         'System.out.println( val [value] ')
