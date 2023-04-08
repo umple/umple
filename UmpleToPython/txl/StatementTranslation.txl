@@ -414,29 +414,24 @@ rule replaceTimerSchedule
 	replace [repeat statement]
 		 var[id]'.schedule(this, (long) time[nested_identifier] '*1000); 
 	by
-		 var '= Timer( time ', 'run '()); var '.start()			
+		 var '= Timer( time ', 'run '); var '.start()			
 end rule
 
 rule replaceTimerStart
 	replace [repeat statement]
 		 var [id] ' = new TimedEventHandler(this, temp[value] ', val [value] ');
 	by
-		'self. var '= TimedEventHandler( var ',this, temp ', val ') 			
+		 var '= TimedEventHandler( var ',this, temp ', val ') 			
 end rule
 
 rule replaceTimerStop
 	replace [repeat statement]
 		 var [id] '.stop();
 	by
-		'self. var '.stop() 			
+		 var '.stop() 			
 end rule
 
-%rule replaceTimerVariableDeclaration
-	%replace [repeat statement]
-		% 'private TimedEventHandler var [id] ';
-	%by
-		%var '= "" 			
-%end rule
+
 
 %DEBUG
 

@@ -365,12 +365,8 @@ define class_body_element
     |   [member_variable_declaration]
     |   [constructor]
     |   [method_declaration]
-<<<<<<< HEAD
-    %NCNC
 
-    |   [concrete_class_declaration] %This fails with quick compile. It compiles but fails the test.   [class_declaration]
-=======
     |   [concrete_class_declaration] 
->>>>>>> cad77f83bc89e9c56e1835f469b0de07dea4ce82
+
 end define
 
