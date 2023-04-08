@@ -207,6 +207,8 @@ function addExternalImports translatedBody [class_body_decl]
         [addEnumImportIfNeeded translatedBody]
         [addPickleImportIfNeeded]
         [addSysImportIfNeeded translatedBody]
+        %[addThreadImports translatedBody]
+        [addTimeImports translatedBody]
 end function
 
 %Adds an Os import if needed. os is used in the __str__ methods for newLines
@@ -226,6 +228,24 @@ function shouldOsImport
     match * [nested_identifier]
         'os.linesep
 end function
+
+function addTimeImports body [class_body_decl]
+    replace [repeat import_statement]
+        imports [repeat import_statement]
+    where
+        body [shouldTimeImport]
+    construct newImport [import_statement]
+        'import time
+    by 
+        imports [. newImport]
+end function
+
+%Checks for newline in translated class body
+function shouldTimeImport
+    match * [nested_identifier]
+        'time.sleep( val [value]')
+end function
+
 
 %Adds an ENum import if needed. Enum is needed as default python doesnt handle Enums easily
 function addEnumImportIfNeeded body [class_body_decl]
