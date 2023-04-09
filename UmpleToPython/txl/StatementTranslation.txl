@@ -9,16 +9,18 @@ function replaceStatements
         statements [any]
     by 
         statements
-			[replaceTimerDeclaration]
-			[replaceTimerSchedule]
-			[translateStringEqualsCall]
-			%[replaceTimerVariableDeclaration]
-			[replaceTimerStart]
-			[replaceTimerStop]
+			
             [replacePrivateAttributeSetting]
             [replaceDefaultReadObject]
             [replaceSwitchCase]
             [addClassPrefixToEnum]
+			
+			[replaceTimerDeclaration]
+			[replaceTimerSchedule]
+			[translateStringEqualsCall]
+			[replaceTimerStart]
+			[replaceTimerStop]
+			
             [replaceForLoop]
             [replaceForInLoop]
             [replaceAssignementIncrementBefore]
@@ -72,6 +74,7 @@ function replaceStatements
             [replaceFloatF]
             [replaceAllMemberVariableNames]
             [removeSemiColonFromValues]
+			
 end function
 
 %In Java, you dont need to have code within brackets. For example else{} is valid.
@@ -91,6 +94,7 @@ rule removeSemiColonFromValues
     by  
         val
 end rule
+
 
 rule replaceAssignementIncrementAfter
     replace [statement]

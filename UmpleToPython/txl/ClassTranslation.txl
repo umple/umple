@@ -142,7 +142,7 @@ function replaceClassBody
     construct disambiguationFunctions [repeat class_body_element]
         _
     by
-        elements [replaceConcreteClasses] [exportConstructorCount] [removeMemberVariableDeclarations] [replaceEnumDeclaration]
+        elements [exportConstructorCount] [replaceConcreteClasses][removeMemberVariableDeclarations]  [replaceEnumDeclaration] 
         [replaceAllMethods memberVariables] %
 end function
 
