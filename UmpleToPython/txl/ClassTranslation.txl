@@ -21,6 +21,19 @@ rule replaceConcreteClasses
         'class className '( inheritanceClasses ')':  translatedBody runMain
 end rule
 
+%DEBUG
+rule replaceInnerClasses
+    replace $ [inner_class_declaration]
+        _ [opt acess_modifier] 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '}
+    export className
+    construct inheritanceClasses [list nested_identifier]
+        _ [extractInheritanceBlockClasses each inheritances]
+    construct translatedBody [class_body_decl]
+       classBody  [replaceClassBody]
+    by
+        'class className '( inheritanceClasses ')':  translatedBody
+end rule
+
 %Rule to translate abstract classes
 rule replaceAbstractClass
     replace [concrete_class_declaration]
@@ -107,7 +120,7 @@ end function
 
 %Func contains logic to translate class bodies
 %A lot of information is exported here, to be used in functions/rules all over
-function replaceClassBody
+function  replaceClassBody
     replace [class_body_decl]
         body [class_body_decl]
     deconstruct body
@@ -129,9 +142,6 @@ function replaceClassBody
         _ [addDictMemberVariable each declarations]
     export enumeratorDeclerations [repeat enum_declaration]
         _ [^ elements]
-    %DEBUG
-    export inner_classes [repeat concrete_class_declaration]
-        _ [^ elements]
     export classMethodNames [repeat id]
         _ [extractClassMethodName each classMethods]
     construct possibleFunctionImports [repeat id]
@@ -142,9 +152,11 @@ function replaceClassBody
     construct disambiguationFunctions [repeat class_body_element]
         _
     by
-        elements [replaceConcreteClasses] [exportConstructorCount] [removeMemberVariableDeclarations] [replaceEnumDeclaration]
-        [replaceAllMethods memberVariables] %
+        %elements  [exportConstructorCount]  [removeMemberVariableDeclarations]   [replaceEnumDeclaration]
+        elements  [exportConstructorCount] [removeMemberVariableDeclarations]  [replaceInnerClasses]  [replaceEnumDeclaration]
+        [replaceAllMethods memberVariables] 
 end function
+
 
 %If the argument is a memberVariable, add it to results
 function addListMemberVariable MemberVariable [member_variable_declaration]
@@ -204,6 +216,8 @@ function addIfTransient decl [member_variable_declaration]
         result [. memberName]
 end function
 
+
+
 %Python does not have member variable declarations like Java does
 %This function removes all member variable declarations, except the static ones which are translated and kept
 function removeMemberVariableDeclarations
@@ -252,6 +266,8 @@ function addMemberVariable MemberVariable [member_variable_declaration]
     by
         SequenceSoFar [. memberName]
 end function
+
+
 
 %If arg is a static member variable declaration, add its name to results
 function addStaticMemberVariable MemberVariable [member_variable_declaration]
