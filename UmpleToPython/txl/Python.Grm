@@ -127,10 +127,10 @@ redefine concrete_class_declaration
 end redefine
 
 %DEBUG
-redefine inner_class_declaration
-    ... 
-   | [NL] 'class [nested_identifier] [SPOFF] [opt inheritance_group] ': [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL]
-end redefine
+%redefine inner_class_declaration
+ %   ... 
+ %   | [repeat import_statement] [NL] 'class [nested_identifier] [SPOFF] [opt inheritance_group] ': [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL]
+%end redefine
 
 redefine new_call_inner
     ... 

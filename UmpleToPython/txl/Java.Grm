@@ -310,9 +310,6 @@ define class_declaration
     |   [interface_declaration]
 end define
 
-define inner_class_declaration
-    [opt acess_modifier] [opt 'abstract] 'class [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
-end define
 
 define concrete_class_declaration
     [opt acess_modifier] [opt 'abstract] 'class [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
@@ -368,8 +365,5 @@ define class_body_element
     |   [member_variable_declaration]
     |   [constructor]
     |   [method_declaration]
-    | [repeat inner_class_declaration] 
-
-    
-
+    |   [concrete_class_declaration] 
 end define

@@ -52,7 +52,6 @@ function replaceStatements
             [replacePrintln]
             [replacePrint]
             [replacePrintf]
-            [replaceThreadSleep]
             [replaceInnerClassCreate]
             [replaceNewLine]
             [replaceHexIdentity]
@@ -436,16 +435,6 @@ end rule
 
 
 %DEBUG
-rule replaceThreadSleep
-    replace [nested_identifier]
-        'Thread.sleep( val [value]')
-    deconstruct * [number] val
-        millisVal [number]
-    construct secVal [number]
-        millisVal [/ 1000]
-    by
-        'time.sleep( secVal ')
-end rule
 
 
 rule replaceNewLine

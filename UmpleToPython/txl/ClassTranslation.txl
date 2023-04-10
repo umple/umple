@@ -21,17 +21,6 @@ rule replaceConcreteClasses
         'class className '( inheritanceClasses ')':  translatedBody runMain
 end rule
 
-rule replaceInnerClasses
-    replace $ [inner_class_declaration]
-        _ [opt acess_modifier] 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '}
-    construct inheritanceClasses [list nested_identifier]
-        _ [extractInheritanceBlockClasses each inheritances]
-    construct translatedBody [class_body_decl]
-        classBody  [replaceClassBody]
-    by
-        'class className '( inheritanceClasses ')':  translatedBody
-end rule
-
 %Rule to translate abstract classes
 rule replaceAbstractClass
     replace [concrete_class_declaration]
@@ -123,12 +112,8 @@ function replaceClassBody
         body [class_body_decl]
     deconstruct body
         elements [repeat class_body_element]
-    construct inner [repeat inner_class_declaration]
-       _ [^ elements]
-    construct elements1 [repeat class_body_element]
-        elements [extractInnerClassVars]
     construct declarations [repeat member_variable_declaration]
-        _ [^ elements1]
+        _ [^ elements]
     construct transientMembers [repeat id]
         _ [addIfTransient each declarations]
     export transientMembers
@@ -144,6 +129,9 @@ function replaceClassBody
         _ [addDictMemberVariable each declarations]
     export enumeratorDeclerations [repeat enum_declaration]
         _ [^ elements]
+    %DEBUG
+    export inner_classes [repeat concrete_class_declaration]
+        _ [^ elements]
     export classMethodNames [repeat id]
         _ [extractClassMethodName each classMethods]
     construct possibleFunctionImports [repeat id]
@@ -154,17 +142,9 @@ function replaceClassBody
     construct disambiguationFunctions [repeat class_body_element]
         _
     by
-        elements  [replaceInnerClasses] [exportConstructorCount] [removeMemberVariableDeclarations] [replaceEnumDeclaration]
-        [replaceAllMethods memberVariables] 
+        elements [replaceConcreteClasses] [exportConstructorCount] [removeMemberVariableDeclarations] [replaceEnumDeclaration]
+        [replaceAllMethods memberVariables] %
 end function
-
-rule extractInnerClassVars
-    replace [repeat class_body_element]
-	innerClassVar [repeat inner_class_declaration]
-    Rest [repeat class_body_element]
-    by
-	Rest
-end rule
 
 %If the argument is a memberVariable, add it to results
 function addListMemberVariable MemberVariable [member_variable_declaration]
