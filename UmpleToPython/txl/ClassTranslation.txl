@@ -18,7 +18,7 @@ rule replaceConcreteClasses
         _ [constructRunMain translatedBody]
     by
         imports
-        'class className '( inheritanceClasses ')':  translatedBody runMain
+        'class className '( inheritanceClasses ')':  translatedBody runMain 
 end rule
 
 %Rule to translate abstract classes
@@ -39,10 +39,10 @@ rule replaceAbstractClass
     construct runMain [opt run_main]
         _ [constructRunMain translatedBody]
     by
-        'from 'abc 'import 'ABC, 'abstractmethod
+        'from 'abc 'import 'ABC, 'abstractmethod 
         imports
-        'class className '(  finalInheritances '):  translatedBody runMain
-end rule
+        'class className '(  finalInheritances '):  translatedBody runMain 
+end rule 
 
 %This func creates the if statement at the bottom of python classes when they have a static main function
 %This allows the main function to be run when we run the python file, emulating Java behavior
