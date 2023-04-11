@@ -310,8 +310,7 @@ function addFunctionImport seeking [id]
     construct imp [import_statement]
         'from seeking 'import seeking
     construct funcImport [repeat statement]
-        imp [message "w:" ] [message imp] 
-    by
+      by
         funcImport [. stmts] 
 end function
 

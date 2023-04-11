@@ -20,6 +20,7 @@ function main
     export Imports
     by
 	classes
+        [replaceInnerClasses]
         [replaceConcreteClasses]
         [replaceInterfaces]
         [replaceAbstractClass]
