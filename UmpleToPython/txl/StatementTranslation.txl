@@ -11,8 +11,6 @@ function replaceStatements
         statements
             %DEBUG
             [replaceThread]
-            %DEBUG
-            [translateStringEqualsCall]
             [replacePrivateAttributeSetting]
             [replaceDefaultReadObject]
             [replaceSwitchCase]
@@ -71,8 +69,6 @@ function replaceStatements
             [removeSemiColonFromValues]
             %DEBUG
             [replaceThreadSleep]
-            %DEBUG
-            %[replaceExtendsThread]
 end function
 
 %In Java, you dont need to have code within brackets. For example else{} is valid.
@@ -1032,7 +1028,7 @@ rule replaceThread
         %'thread1 = A("2")
         %'threading.Thread(target=thread1.doActivityThread).start()
         % name of do activity method is doActivityStateMachine1TopLevelThread1
-        'threading.Thread(target=thread1. identifier).start()
+        'threading.Thread(target= identifier).start()
 end rule
 
 %DEBUG
@@ -1042,29 +1038,4 @@ rule replaceThreadSleep
         'Thread.sleep( val [number] ')
     by
         'time.sleep( val  [/ 1000]')
-end rule
-
-%DEBUG
-%converts extending thread ** Extended Thread
-%rule replaceExtendsThread
-%    replace [inheritance_statement]
-%        val1 [class_declaration] val2 [inheritance_statement] 'Thread 
-%    by
-%        'class val1'(Thread):
-%end rule
-
-%DEBUG
-%rule replaceDoActivity
-%    replace [statement]
-%        'Thread assignment [value]
-%    by
-%        'threading.Thread( assignment ').start()
-%end rule
-
-%DEBUG
-rule translateStringEqualsCall
-    replace [statement]
-        x [nested_identifier] '.equals( val [value] ')
-    by
-        '( x '== val ') 
 end rule

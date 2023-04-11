@@ -369,5 +369,5 @@ define class_body_element
     |   [constructor]
     |   [method_declaration]
     %NCNC
-    %|   [class_declaration]
+    |   [class_declaration]
 end define
