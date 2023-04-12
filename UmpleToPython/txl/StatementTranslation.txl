@@ -19,7 +19,7 @@ function replaceStatements
 			
 			[replaceTimerDeclaration]
 			[replaceTimerSchedule]
-			[translateStringEqualsCall]
+			
 			[replaceTimerStart]
 			[replaceTimerStop]
 			
