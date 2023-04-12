@@ -153,8 +153,7 @@ function  replaceClassBody
         _
     by
 
-        %elements  [exportConstructorCount]  [removeMemberVariableDeclarations]   [replaceEnumDeclaration]
-        elements  [exportConstructorCount] [removeMemberVariableDeclarations]  [replaceInnerClasses]  [replaceEnumDeclaration]
+         elements  [exportConstructorCount] [removeMemberVariableDeclarations]  [replaceInnerClasses]  [replaceEnumDeclaration]
         [replaceAllMethods memberVariables] 
 
 end function

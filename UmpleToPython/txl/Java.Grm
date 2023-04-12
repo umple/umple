@@ -369,7 +369,7 @@ define class_body_element
     |   [member_variable_declaration]
     |   [constructor]
     |   [method_declaration]
-    |   [concrete_class_declaration] 
+    
 
 
 end define
