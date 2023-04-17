@@ -1012,6 +1012,247 @@ Action.simulateCodeCallback = function(response)
   Page.showViewDone(); 
 }
 
+Action.removeContextMenu = function(){
+  var o = document.getElementsByTagName('customContextMenu');
+  if (o.length != 0) {
+    o.item(0).remove();
+  }
+}
+
+Action.drawInput = function(inputType,classCode,className){
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+  prompt.style.border = "1px solid #ccc";
+  prompt.style.backgroundColor = "#f8f8f8";
+  prompt.style.padding = "5px";
+  prompt.style.position = "fixed";
+  var promptRect=prompt.getBoundingClientRect();
+  if(event.clientX+promptRect.width>window.innerWidth){
+    prompt.style.right=(window.innerWidth-event.clientX)+"px";
+  } else {
+    prompt.style.left = event.clientX+"px";
+  }
+  if(event.clientY+promptRect.height>window.innerHeight){
+    prompt.style.bottom=(window.innerHieght-event.clientY)+"px";
+  } else {
+    prompt.style.top = event.clientY+"px";
+  }
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.style.padding = '5px';
+  input.style.borderRadius = '3px';
+  input.style.border = '1px solid #ccc';
+  input.style.width = '200px';
+  input.style.marginLeft = '5px';
+  if(inputType=="attri"){
+    var select = document.createElement("select");
+    var option1 = document.createElement("option");
+    option1.value = "Integer";
+    option1.text = "Integer";
+    var option2 = document.createElement("option");
+    option2.value = "Double";
+    option2.text = "Double";
+    var option3 = document.createElement("option");
+    option3.value = "String";
+    option3.text = "String";
+    var option4 = document.createElement("option");
+    option4.value = "Float";
+    option4.text = "Float";
+    var option5 = document.createElement("option");
+    option5.value = "Boolean";
+    option5.text = "Boolean";
+    var option6 = document.createElement("option");
+    option6.value = "Date";
+    option6.text = "Date";
+    var option7 = document.createElement("option");
+    option7.value = "Time";
+    option7.text = "Time";
+    select.add(option1);
+    select.add(option2);
+    select.add(option3);
+    select.add(option4);
+    select.add(option5);
+    select.add(option6);
+    select.add(option7);
+    prompt.appendChild(select);
+    var input = document.createElement("input");
+    input.type = "text";
+    input.style.padding = "5px";
+    input.style.borderRadius = "3px";
+    input.style.border = "1px solid #ccc";
+    input.style.width = "200px";
+    input.style.marginLeft = "5px";
+    input.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        let orig=classCode.replaceAll("&#10","\n");
+        let newClass=orig.substr(0,orig.length-1)+"\n\t"+select.value+" "+input.value+";\n}";
+        Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
+        prompt.remove();
+        Action.removeContextMenu();
+      }
+    });
+    prompt.appendChild(input);
+  } else if(inputType=="rename"){
+    // Create a checkbox element for "Replace all occurrences of"
+    var replaceAllCheckbox = document.createElement('input');
+    replaceAllCheckbox.type = 'checkbox';
+    replaceAllCheckbox.id = 'replace-all-checkbox';
+    replaceAllCheckbox.style.marginLeft = '10px';
+    var replaceAllLabel = document.createElement('label');
+    replaceAllLabel.htmlFor = 'replace-all-checkbox';
+    replaceAllLabel.style.marginLeft = '5px';
+    replaceAllLabel.appendChild(document.createTextNode("Replace all occurrences of \'"+className+"\'?"));
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        let regex=new RegExp("class\\s+"+className);
+        let orig=Page.codeMirrorEditor.getValue().replace(regex,"class "+input.value.trim());
+        let replCheck=replaceAllCheckbox.getValue();
+        if(replCheck=="on"){
+          let regex=new RegExp("([^A-Za-z]+)("+className+")([^A-Za-z]+)");
+          let res;
+          while((res=orig.match(regex))!=null){
+            orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
+          }
+        }
+        Page.codeMirrorEditor.setValue(orig);
+        prompt.remove();
+        Action.removeContextMenu();
+      }
+    });
+    prompt.appendChild(input);
+    prompt.appendChild(replaceAllCheckbox);
+    prompt.appendChild(replaceAllLabel);
+  } else if(inputType="subclass") {
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        let subtext="\nclass "+input.value+"\n{\nisA "+className+";\n}\n";
+        Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue()+subtext);
+        prompt.remove();
+        Action.removeContextMenu();
+      }
+    });
+    prompt.appendChild(input);
+  }
+  
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", function hidePrompt(e) {
+    if (e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  });
+  // Add the prompt to the page
+  document.body.appendChild(prompt);
+  input.focus();
+}
+Action.deleteClass = function(classCode){
+  let orig=Page.codeMirrorEditor.getValue();
+  orig=orig.replace(classCode.replaceAll("&#10","\n"),"");
+  Page.codeMirrorEditor.setValue(orig);
+  Action.removeContextMenu();
+}
+Action.addAssociationGv = function(classCode, className){
+  var elems=document.getElementsByClassName("node");
+  var orig=classCode.replaceAll("&#10","\n");
+  Action.removeContextMenu();
+  for(let i=0;i<elems.length;i++){
+    elems[i].style.border="2px solid yellow";
+  }
+  //add event listener to Graphviz nodes for left click
+  for(let i=0;i<elems.length;i++){
+    elems[i].addEventListener("mousedown", function assocClass(event){
+      var elemText=event.target;
+      //iterate up to find class node
+      while(elemText.parentElement.id!="graph0"){
+        elemText=elemText.parentNode;
+      }
+      elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
+      let subtext="\t* -> 1 "+elemText+";\n}\n";
+      let newClass=orig.substr(0,orig.length-1)+subtext;
+      Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
+      let others=document.getElementsByClassName("node");
+      for(let q=0;q<others.length;q++){
+        others[q].removeEventListener("mousedown",assocClass);
+      }
+    });
+  }
+}
+Action.displayMenu = function(event) {
+  if(!Action.diagramInSync){
+    return;
+  }
+  // Remove old menu, if any
+  Action.removeContextMenu();
+  var elemText=event.target;
+  //iterate up to top of class table
+  while(elemText.parentElement.id!="graph0"){
+    elemText=elemText.parentNode;
+  }
+  //unstable - grabs class name
+  elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
+  var orig=Page.codeMirrorEditor.getValue();
+  var chosenClass=Action.splitStates(orig);
+  for(let i=0;i<chosenClass.length;i++){
+    if(chosenClass[i].startsWith("class "+elemText+"{")||chosenClass[i].startsWith("class "+elemText+" ")||chosenClass[i].startsWith("class "+elemText+"\n")){
+      chosenClass=chosenClass[i];
+    }
+  }
+  if(typeof chosenClass != 'string'){
+    return;
+  }
+  var menu = document.createElement('customContextMenu');
+  var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association"];
+  var rowFuncs = ["Action.drawInput(\"attri\",\""+chosenClass.replaceAll("\n","&#10")+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+chosenClass.replaceAll("\n","&#10")+"\",\""+elemText+"\")","Action.deleteClass(\""+chosenClass.replaceAll("\n","&#10")+"\")","Action.drawInput(\"subclass\",\""+chosenClass.replaceAll("\n","&#10")+"\",\""+elemText+"\")","Action.addAssociationGv(\""+chosenClass.replaceAll("\n","&#10")+"\",\""+elemText+"\")"];
+
+  menu.style.zIndex = "1000";
+  menu.style.border = "1px solid #ccc";
+  menu.style.backgroundColor = "#f8f8f8";
+  menu.style.padding = "5px";
+  menu.style.position = "fixed";
+  //add rows
+  for (var i = 0; i < rowContent.length; i++) {
+    var row = document.createElement("div");
+    row.style.padding = "5px";
+    row.style.borderRadius = "3px";
+    row.style.cursor = "pointer";
+    row.style.transition = "background-color 0.3s";
+    row.textContent = rowContent[i];
+    row.setAttribute('onclick',"javascript:"+rowFuncs[i]);
+    // Highlight row on hover
+    row.addEventListener("mouseover", function() {
+      this.style.backgroundColor = "#ddd";
+    });
+    row.addEventListener("mouseout", function() {
+      this.style.backgroundColor = "transparent";
+    });
+
+    //add row to context menu
+    menu.appendChild(row);
+
+  }
+
+  //set menu location at mouse, while ensuring it is on screen
+  var menuRect=menu.getBoundingClientRect();
+  if(event.clientX+menuRect.width>window.innerWidth){
+    menu.style.right=(window.innerWidth-event.clientX)+"px";
+  } else {
+    menu.style.left = event.clientX+"px";
+  }
+  if(event.clientY+menuRect.height>window.innerHeight){
+    menu.style.bottom=(window.innerHieght-event.clientY)+"px";
+  } else {
+    menu.style.top = event.clientY+"px";
+  }
+  // Add a listener to hide the menu when the user clicks outside of it
+  document.addEventListener('mousedown', function hideMenu(e) {
+    if (e.target != menu && !menu.contains(e.target)) {
+      document.removeEventListener('mousedown', hideMenu);
+      Action.removeContextMenu();
+    }
+  });
+  document.body.appendChild(menu);
+}
+
 Action.classSelected = function(obj)
 {
   var previouslySelected = Page.selectedClass;
@@ -2765,6 +3006,13 @@ Action.updateUmpleDiagramCallback = function(response)
   }
   
   Page.hideLoading();
+  if(Page.useGvClassDiagram){
+    var elems=document.getElementsByClassName("node");
+    //add event listener to Graphviz Class nodes for right click
+    for(let i=0;i<elems.length;i++){
+      elems[i].addEventListener("contextmenu", function(event){event.preventDefault();Action.displayMenu(event);});
+    }
+  }
 }
 
 Action.updateFromDiagramCallback = function(response)
