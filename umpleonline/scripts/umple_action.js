@@ -1044,6 +1044,14 @@ Action.drawInput = function(inputType,classCode,className){
   input.style.border = '1px solid #ccc';
   input.style.width = '200px';
   input.style.marginLeft = '5px';
+  var hider=function hidePrompt(e) {
+    if (e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  };
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", hider);
   if(inputType=="attri"){
     var select = document.createElement("select");
     var option1 = document.createElement("option");
@@ -1087,6 +1095,7 @@ Action.drawInput = function(inputType,classCode,className){
         let orig=classCode.replaceAll("&#10","\n");
         let newClass=orig.substr(0,orig.length-1)+"\n\t"+select.value+" "+input.value+";\n}";
         Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
+        document.removeEventListener("mousedown", hider);
         prompt.remove();
         Action.removeContextMenu();
       }
@@ -1114,6 +1123,7 @@ Action.drawInput = function(inputType,classCode,className){
             orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
           }
         }
+        document.removeEventListener("mousedown", hider);
         Page.codeMirrorEditor.setValue(orig);
         prompt.remove();
         Action.removeContextMenu();
@@ -1127,6 +1137,7 @@ Action.drawInput = function(inputType,classCode,className){
       if (e.key === 'Enter') {
         let subtext="\nclass "+input.value+"\n{\nisA "+className+";\n}\n";
         Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue()+subtext);
+        document.removeEventListener("mousedown", hider);
         prompt.remove();
         Action.removeContextMenu();
       }
@@ -1134,13 +1145,7 @@ Action.drawInput = function(inputType,classCode,className){
     prompt.appendChild(input);
   }
   
-  // Add a listener to hide the prompt when the user clicks outside of it
-  document.addEventListener("mousedown", function hidePrompt(e) {
-    if (e.target != prompt && !prompt.contains(e.target)) {
-      document.removeEventListener("mousedown", hidePrompt);
-      prompt.remove();
-    }
-  });
+
   // Add the prompt to the page
   document.body.appendChild(prompt);
   input.focus();
