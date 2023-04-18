@@ -1018,7 +1018,19 @@ Action.removeContextMenu = function(){
     o.item(0).remove();
   }
 }
-
+Action.setColor=function(classCode,className,color){
+  let classyCode=classCode.replaceAll("&#10","\n");
+  if(!classyCode.includes("displayColor")){ //if color is not already set, we can prepend it to the start of the class
+    let subtext="{\n\tdisplayColor "+color+";\n"; 
+    subtext=classyCode.substr(0,classyCode.indexOf("{"))+subtext+classyCode.substr(classyCode.indexOf("{")+1,classyCode.length-classyCode.indexOf("{")-1);
+    Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
+  } else { //otherwise, use regex to replace existing displayColor statement
+    let subtext="displayColor "+color+";"; 
+    let regex=new RegExp("displayColor\\s+.*;");
+    subtext=classyCode.replace(regex,subtext);
+    Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
+  }
+}
 Action.drawInput = function(inputType,classCode,className){
   var prompt = document.createElement('div');
   prompt.style.zIndex = "1000";
@@ -1026,6 +1038,7 @@ Action.drawInput = function(inputType,classCode,className){
   prompt.style.backgroundColor = "#f8f8f8";
   prompt.style.padding = "5px";
   prompt.style.position = "fixed";
+  prompt.id="promptBox";
   var promptRect=prompt.getBoundingClientRect();
   if(event.clientX+promptRect.width>window.innerWidth){
     prompt.style.right=(window.innerWidth-event.clientX)+"px";
@@ -1044,8 +1057,12 @@ Action.drawInput = function(inputType,classCode,className){
   input.style.border = '1px solid #ccc';
   input.style.width = '200px';
   input.style.marginLeft = '5px';
+  var inputErrorMsg = document.createElement('label');
+  inputErrorMsg.type='label';
+  inputErrorMsg.textContent='Error - Please enter an alphanumeric name.';
+  inputErrorMsg.style.color="red";
   var hider=function hidePrompt(e) {
-    if (e.target != prompt && !prompt.contains(e.target)) {
+    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
       document.removeEventListener("mousedown", hidePrompt);
       prompt.remove();
     }
@@ -1055,14 +1072,14 @@ Action.drawInput = function(inputType,classCode,className){
   if(inputType=="attri"){
     var select = document.createElement("select");
     var option1 = document.createElement("option");
-    option1.value = "Integer";
-    option1.text = "Integer";
+    option1.value = "String";
+    option1.text = "String";
     var option2 = document.createElement("option");
-    option2.value = "Double";
-    option2.text = "Double";
+    option2.value = "Integer";
+    option2.text = "Integer";
     var option3 = document.createElement("option");
-    option3.value = "String";
-    option3.text = "String";
+    option3.value = "Double";
+    option3.text = "Double";
     var option4 = document.createElement("option");
     option4.value = "Float";
     option4.text = "Float";
@@ -1092,57 +1109,95 @@ Action.drawInput = function(inputType,classCode,className){
     input.style.marginLeft = "5px";
     input.addEventListener("keydown", function(e) {
       if (e.key === "Enter") {
-        let orig=classCode.replaceAll("&#10","\n");
-        let newClass=orig.substr(0,orig.length-1)+"\n\t"+select.value+" "+input.value+";\n}";
-        Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
-        document.removeEventListener("mousedown", hider);
-        prompt.remove();
-        Action.removeContextMenu();
+        if(Action.validateAttributeName(input.value)){
+          let orig=classCode.replaceAll("&#10","\n");
+          let newClass=orig.substr(0,orig.length-1)+"\n\t"+select.value+" "+input.value+";\n}";
+          Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
+          document.removeEventListener("mousedown", hider);
+          prompt.remove();
+          Action.removeContextMenu();
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
       }
     });
     prompt.appendChild(input);
   } else if(inputType=="rename"){
-    // Create a checkbox element for "Replace all occurrences of"
-    var replaceAllCheckbox = document.createElement('input');
-    replaceAllCheckbox.type = 'checkbox';
-    replaceAllCheckbox.id = 'replace-all-checkbox';
-    replaceAllCheckbox.style.marginLeft = '10px';
     var replaceAllLabel = document.createElement('label');
     replaceAllLabel.htmlFor = 'replace-all-checkbox';
-    replaceAllLabel.style.marginLeft = '5px';
-    replaceAllLabel.appendChild(document.createTextNode("Replace all occurrences of \'"+className+"\'?"));
+    replaceAllLabel.style.marginRight = '5px';
+    replaceAllLabel.appendChild(document.createTextNode("New name for \'"+className+"\'?"));
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
-        let regex=new RegExp("class\\s+"+className);
-        let orig=Page.codeMirrorEditor.getValue().replace(regex,"class "+input.value.trim());
-        let replCheck=replaceAllCheckbox.getValue();
-        if(replCheck=="on"){
-          let regex=new RegExp("([^A-Za-z]+)("+className+")([^A-Za-z]+)");
+        if(Action.validateAttributeName(input.value)){
+          let orig=Page.codeMirrorEditor.getValue();
+          let regex=new RegExp("(\\W+)("+className+")(\\W+)");
           let res;
           while((res=orig.match(regex))!=null){
             orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
           }
+          document.removeEventListener("mousedown", hider);
+          Page.codeMirrorEditor.setValue(orig);
+          prompt.remove();
+          Action.removeContextMenu();
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
         }
-        document.removeEventListener("mousedown", hider);
-        Page.codeMirrorEditor.setValue(orig);
-        prompt.remove();
-        Action.removeContextMenu();
       }
     });
-    prompt.appendChild(input);
-    prompt.appendChild(replaceAllCheckbox);
     prompt.appendChild(replaceAllLabel);
-  } else if(inputType="subclass") {
+    prompt.appendChild(input);    
+  } else if(inputType=="subclass") {
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
-        let subtext="\nclass "+input.value+"\n{\nisA "+className+";\n}\n";
-        Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue()+subtext);
-        document.removeEventListener("mousedown", hider);
-        prompt.remove();
-        Action.removeContextMenu();
+        if(Action.validateAttributeName(input.value)){
+          let subtext="\nclass "+input.value+"\n{\nisA "+className+";\n}\n";
+          Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue()+subtext);
+          document.removeEventListener("mousedown", hider);
+          prompt.remove();
+          Action.removeContextMenu();
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
       }
     });
     prompt.appendChild(input);
+  } else if(inputType=="color"){
+    var label=document.createElement("label");
+    label.textContent="Color - ";
+    var arrow=document.createElement("span");
+    arrow.innerHTML="&#8594;";
+    arrow.style.cursor="pointer";
+    arrow.fontSize="20px";
+    arrow.style.paddingLeft="5px";
+    input.style.width="30px";
+    input.style.height="30px";
+    input.type="color";
+    var inputFunc=function setter(e) {
+      if (e.key === 'Enter') {
+        document.removeEventListener('keydown',setter);
+        Action.setColor(classCode,className,input.value);
+        prompt.remove();
+        Action.removeContextMenu();
+      }
+    };
+    document.addEventListener('keydown', inputFunc);
+    arrow.addEventListener("click", function(){
+      Action.setColor(classCode,className,input.value);
+      document.removeEventListener('keydown',inputFunc);
+      prompt.remove();
+      Action.removeContextMenu();
+    });
+    // Add event listeners for hover
+    arrow.addEventListener("mouseover", function() {
+      arrow.style.color = "blue";
+    });
+    arrow.addEventListener("mouseout", function() {
+      arrow.style.color = "black";
+    });
+    prompt.appendChild(label);
+    prompt.appendChild(input);
+    prompt.appendChild(arrow);
   }
   
 
@@ -1206,8 +1261,9 @@ Action.displayMenu = function(event) {
     return;
   }
   var menu = document.createElement('customContextMenu');
-  var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association"];
-  var rowFuncs = ["Action.drawInput(\"attri\",\""+chosenClass.replaceAll("\n","&#10")+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+chosenClass.replaceAll("\n","&#10")+"\",\""+elemText+"\")","Action.deleteClass(\""+chosenClass.replaceAll("\n","&#10")+"\")","Action.drawInput(\"subclass\",\""+chosenClass.replaceAll("\n","&#10")+"\",\""+elemText+"\")","Action.addAssociationGv(\""+chosenClass.replaceAll("\n","&#10")+"\",\""+elemText+"\")"];
+  var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color"];
+  var jsInput=chosenClass.replaceAll("\n","&#10");
+  var rowFuncs = ["Action.drawInput(\"attri\",\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+jsInput+"\",\""+elemText+"\")","Action.deleteClass(\""+jsInput+"\")","Action.drawInput(\"subclass\",\""+jsInput+"\",\""+elemText+"\")","Action.addAssociationGv(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"color\",\""+jsInput+"\",\""+elemText+"\")"];
 
   menu.style.zIndex = "1000";
   menu.style.border = "1px solid #ccc";
@@ -1250,9 +1306,17 @@ Action.displayMenu = function(event) {
   }
   // Add a listener to hide the menu when the user clicks outside of it
   document.addEventListener('mousedown', function hideMenu(e) {
+    var prompt=document.getElementById("promptBox");
     if (e.target != menu && !menu.contains(e.target)) {
-      document.removeEventListener('mousedown', hideMenu);
-      Action.removeContextMenu();
+      if(prompt!=null&&e.target != prompt && !prompt.contains(e.target)){
+
+        document.removeEventListener('mousedown', hideMenu);
+        Action.removeContextMenu();
+        
+      } else {
+        document.removeEventListener('mousedown', hideMenu);
+        Action.removeContextMenu();
+      }
     }
   });
   document.body.appendChild(menu);
