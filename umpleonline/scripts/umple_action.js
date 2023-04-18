@@ -1111,7 +1111,13 @@ Action.drawInput = function(inputType,classCode,className){
       if (e.key === "Enter") {
         if(Action.validateAttributeName(input.value)){
           let orig=classCode.replaceAll("&#10","\n");
-          let newClass=orig.substr(0,orig.length-1)+"\n\t"+select.value+" "+input.value+";\n}";
+          let newClass;
+          if(input.value.includes(":")){
+            let attriInput=input.value.split(":");
+            newClass=orig.substr(0,orig.length-1)+"\n\t"+attriInput[1].trim()+" "+attriInput[0].trim()+";\n}";
+          } else {
+            newClass=orig.substr(0,orig.length-1)+"\n\t"+select.value+" "+input.value+";\n}";
+          }
           Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
           document.removeEventListener("mousedown", hider);
           prompt.remove();
