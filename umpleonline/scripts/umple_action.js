@@ -1021,7 +1021,7 @@ Action.removeContextMenu = function(){
 Action.setColor=function(classCode,className,color){
   let classyCode=classCode.replaceAll("&#10","\n");
   if(!classyCode.includes("displayColor")){ //if color is not already set, we can prepend it to the start of the class
-    let subtext="{\n\tdisplayColor "+color+";\n"; 
+    let subtext="{  displayColor "+color+";\n"; 
     subtext=classyCode.substr(0,classyCode.indexOf("{"))+subtext+classyCode.substr(classyCode.indexOf("{")+1,classyCode.length-classyCode.indexOf("{")-1);
     Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
   } else { //otherwise, use regex to replace existing displayColor statement
@@ -1029,6 +1029,8 @@ Action.setColor=function(classCode,className,color){
     let regex=new RegExp("displayColor\\s+.*;");
     subtext=classyCode.replace(regex,subtext);
     Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
+    TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+    TabControl.saveActiveTabs();
   }
 }
 Action.drawInput = function(inputType,classCode,className){
@@ -1114,14 +1116,16 @@ Action.drawInput = function(inputType,classCode,className){
           let newClass;
           if(input.value.includes(":")){
             let attriInput=input.value.split(":");
-            newClass=orig.substr(0,orig.length-1)+"\n\t"+attriInput[1].trim()+" "+attriInput[0].trim()+";\n}";
+            newClass=orig.substr(0,orig.length-1)+"  "+attriInput[1].trim()+" "+attriInput[0].trim()+";\n}";
           } else {
-            newClass=orig.substr(0,orig.length-1)+"\n\t"+select.value+" "+input.value+";\n}";
+            newClass=orig.substr(0,orig.length-1)+"  "+select.value+" "+input.value+";\n}";
           }
           Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
           document.removeEventListener("mousedown", hider);
           prompt.remove();
           Action.removeContextMenu();
+          TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+          TabControl.saveActiveTabs();
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
         }
@@ -1142,10 +1146,12 @@ Action.drawInput = function(inputType,classCode,className){
           while((res=orig.match(regex))!=null){
             orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
           }
-          document.removeEventListener("mousedown", hider);
           Page.codeMirrorEditor.setValue(orig);
+          document.removeEventListener("mousedown", hider);
           prompt.remove();
           Action.removeContextMenu();
+          TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+          TabControl.saveActiveTabs();
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
         }
@@ -1157,9 +1163,11 @@ Action.drawInput = function(inputType,classCode,className){
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
-          let subtext="\nclass "+input.value+"\n{\nisA "+className+";\n}\n";
+          let subtext="\nclass "+input.value+"\n{\n  isA "+className+";\n}\n";
           Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue()+subtext);
           document.removeEventListener("mousedown", hider);
+          TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+          TabControl.saveActiveTabs();
           prompt.remove();
           Action.removeContextMenu();
         } else if(!document.contains(inputErrorMsg)) {
@@ -1216,6 +1224,8 @@ Action.deleteClass = function(classCode){
   orig=orig.replace(classCode.replaceAll("&#10","\n"),"");
   Page.codeMirrorEditor.setValue(orig);
   Action.removeContextMenu();
+  TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+  TabControl.saveActiveTabs();
 }
 Action.addAssociationGv = function(classCode, className){
   var elems=document.getElementsByClassName("node");
@@ -1236,6 +1246,8 @@ Action.addAssociationGv = function(classCode, className){
       let subtext="\t* -> 1 "+elemText+";\n}\n";
       let newClass=orig.substr(0,orig.length-1)+subtext;
       Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
+      TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+      TabControl.saveActiveTabs();
       let others=document.getElementsByClassName("node");
       for(let q=0;q<others.length;q++){
         others[q].removeEventListener("mousedown",assocClass);
