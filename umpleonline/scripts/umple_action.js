@@ -1219,9 +1219,29 @@ Action.drawInput = function(inputType,classCode,className){
   document.body.appendChild(prompt);
   input.focus();
 }
-Action.deleteClass = function(classCode){
+Action.deleteClass = function(classCode, className){
   let orig=Page.codeMirrorEditor.getValue();
   orig=orig.replace(classCode.replaceAll("&#10","\n"),"");
+  //deletes all associations leading to target class
+  let regex=new RegExp(".*\\s*-(>|-)\\s*.*\\s+"+className+";");
+  let res;
+  while((res=orig.match(regex))!=null){ 
+    orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+  }
+  regex=new RegExp(".*"+className+"\\s*-(>|-)\\s*.*\\s+\\w+;");
+  while((res=orig.match(regex))!=null){ 
+    orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+  }
+  //finds all children of target class and connects them to parent of target, if it exists
+  regex=new RegExp("isA\\s+"+className);
+  if(orig.match(regex)!=null){
+    let subregex=new RegExp("isA\\s+(\\w+)");
+    let parentClass="isA "+classCode.match(subregex)[1];
+    while((res=orig.match(regex))!=null){
+      orig=orig.substr(0,res.index)+parentClass+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+    }
+  }
+  //set editor code, save new state, and remove the context menu
   Page.codeMirrorEditor.setValue(orig);
   Action.removeContextMenu();
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
@@ -1281,7 +1301,7 @@ Action.displayMenu = function(event) {
   var menu = document.createElement('customContextMenu');
   var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color"];
   var jsInput=chosenClass.replaceAll("\n","&#10");
-  var rowFuncs = ["Action.drawInput(\"attri\",\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+jsInput+"\",\""+elemText+"\")","Action.deleteClass(\""+jsInput+"\")","Action.drawInput(\"subclass\",\""+jsInput+"\",\""+elemText+"\")","Action.addAssociationGv(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"color\",\""+jsInput+"\",\""+elemText+"\")"];
+  var rowFuncs = ["Action.drawInput(\"attri\",\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+jsInput+"\",\""+elemText+"\")","Action.deleteClass(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"subclass\",\""+jsInput+"\",\""+elemText+"\")","Action.addAssociationGv(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"color\",\""+jsInput+"\",\""+elemText+"\")"];
 
   menu.style.zIndex = "1000";
   menu.style.border = "1px solid #ccc";
