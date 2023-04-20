@@ -1223,7 +1223,7 @@ Action.deleteClass = function(classCode, className){
   let orig=Page.codeMirrorEditor.getValue();
   orig=orig.replace(classCode.replaceAll("&#10","\n"),"");
   //deletes all associations leading to target class
-  let regex=new RegExp(".*\\s*-(>|-)\\s*.*\\s+"+className+";");
+  let regex=new RegExp(".*\\s*-(>|-)\\s*.*\\s"+className+"(\\s+\\w+)*;");
   let res;
   while((res=orig.match(regex))!=null){ 
     orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
@@ -1235,16 +1235,16 @@ Action.deleteClass = function(classCode, className){
   //finds all children of target class and connects them to parent of target, if it exists
   regex=new RegExp("isA\\s+"+className);
   if(orig.match(regex)!=null){
-    let subregex=new RegExp("isA\\s+(\\w+)");
+    let subregex=new RegExp("isA\\s+(\\w+);");
     let test;
-    if((test=classCode.match(subregex)!=null)){ //if parent class exists, link children to it
-      let parentClass="isA "+test[1];
+    if((test=classCode.match(subregex))!=null){ //if parent class exists, link children to it
+      let parentClass="isA "+test[1]+";";
       while((res=orig.match(regex))!=null){
-        orig=orig.substr(0,res.index)+parentClass+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+        orig=orig.substr(0,res.index)+parentClass+orig.substr(res.index+res[0].length+1,orig.length-(res.index+res[0].length+1));
       }
     } else { //if parent class does not exist, delete relevant isA statements
       while((res=orig.match(regex))!=null){
-        orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+        orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length+1,orig.length-(res.index+res[0].length+1));
       }
     }
   }
