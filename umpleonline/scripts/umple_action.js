@@ -1237,10 +1237,14 @@ Action.deleteClass = function(classCode, className){
   if(orig.match(regex)!=null){
     let subregex=new RegExp("isA\\s+(\\w+)");
     let test;
-    if((test=classCode.match(subregex)!=null)){
+    if((test=classCode.match(subregex)!=null)){ //if parent class exists, link children to it
       let parentClass="isA "+test[1];
       while((res=orig.match(regex))!=null){
         orig=orig.substr(0,res.index)+parentClass+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+      }
+    } else { //if parent class does not exist, delete relevant isA statements
+      while((res=orig.match(regex))!=null){
+        orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
       }
     }
   }
