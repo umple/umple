@@ -1236,9 +1236,12 @@ Action.deleteClass = function(classCode, className){
   regex=new RegExp("isA\\s+"+className);
   if(orig.match(regex)!=null){
     let subregex=new RegExp("isA\\s+(\\w+)");
-    let parentClass="isA "+classCode.match(subregex)[1];
-    while((res=orig.match(regex))!=null){
-      orig=orig.substr(0,res.index)+parentClass+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+    let test;
+    if((test=classCode.match(subregex)!=null)){
+      let parentClass="isA "+test[1];
+      while((res=orig.match(regex))!=null){
+        orig=orig.substr(0,res.index)+parentClass+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+      }
     }
   }
   //set editor code, save new state, and remove the context menu
