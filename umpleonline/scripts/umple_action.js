@@ -1011,7 +1011,192 @@ Action.simulateCodeCallback = function(response)
   window.open("../umpleonline/simulate.php?model=" + modelId, "umpleSimulator");
   Page.showViewDone(); 
 }
+Action.drawInputState = function(inputType,stateCode,stateName){
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+  prompt.style.border = "1px solid #ccc";
+  prompt.style.backgroundColor = "#f8f8f8";
+  prompt.style.padding = "5px";
+  prompt.style.position = "fixed";
+  prompt.id="promptBox";
+  var promptRect=prompt.getBoundingClientRect();
+  if(event.clientX+promptRect.width>window.innerWidth){
+    prompt.style.right=(window.innerWidth-event.clientX)+"px";
+  } else {
+    prompt.style.left = event.clientX+"px";
+  }
+  if(event.clientY+promptRect.height>window.innerHeight){
+    prompt.style.bottom=(window.innerHieght-event.clientY)+"px";
+  } else {
+    prompt.style.top = event.clientY+"px";
+  }
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.style.padding = '5px';
+  input.style.borderRadius = '3px';
+  input.style.border = '1px solid #ccc';
+  input.style.width = '200px';
+  input.style.marginLeft = '5px';
+  var inputErrorMsg = document.createElement('label');
+  inputErrorMsg.type='label';
+  inputErrorMsg.textContent='Error - Please enter an alphanumeric name beginning with a non-numeric character.';
+  inputErrorMsg.style.color="red";
+  var hider=function hidePrompt(e) {
+    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  };
+  var unsanitizedState=stateCode.replaceAll("&#10","\n");
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", hider);
+  if(inputType=="rename"){
+    var replaceAllLabel = document.createElement('label');
+    replaceAllLabel.htmlFor = 'replace-all-checkbox';
+    replaceAllLabel.style.marginRight = '5px';
+    replaceAllLabel.appendChild(document.createTextNode("New name for \'"+stateName+"\'?"));
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        if(Action.validateAttributeName(input.value)){
+          let orig=Page.codeMirrorEditor.getValue();
+          let regex=new RegExp("(\\W+)("+stateName+")(\\W+)");
+          let res;
+          while((res=orig.match(regex))!=null){
+            orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
+          }
+          Page.codeMirrorEditor.setValue(orig);
+          document.removeEventListener("mousedown", hider);
+          prompt.remove();
+          Action.removeContextMenu();
+          //TODO - Saving/edit history doesn't seem to be working here.
+          TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+          TabControl.saveActiveTabs();
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
+      }
+    });
+    prompt.appendChild(replaceAllLabel);
+    prompt.appendChild(input);    
+  } else if(inputType=="substate") {
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        if(Action.validateAttributeName(input.value)){
+          let subtext=unsanitizedState.substr(0,unsanitizedState.length-1)+"  "+input.value+"{}}";
+          subtext=Page.codeMirrorEditor.getValue().replace(unsanitizedState,subtext);
+          Page.codeMirrorEditor.setValue(subtext);
+          document.removeEventListener("mousedown", hider);
+          prompt.remove();
+          Action.removeContextMenu();
+          //TODO - Saving/edit history doesn't seem to be working here.
+          TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+          TabControl.saveActiveTabs();
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
+      }
+    });
+    prompt.appendChild(input);
+  }
+  // Add the prompt to the page
+  document.body.appendChild(prompt);
+  input.focus();
+}
+Action.deleteState = function(stateCode,className,smName,stateName){
+  let subStates=stateName.split(",");
+  let orig=Page.codeMirrorEditor.getValue();
+  let unsanitizedState = stateCode.replaceAll("&#10","\n");
+  orig=orig.replace(unsanitizedState,"");
+  //delete any transitions leading to target state - this handles the case where there are NOT multiple states with the same name
+  //TODO - Handle case where multiple states have the same name, dot notation will be used.
+  let regex=new RegExp("[^\\n]*->\\s*([^\\S\\s]*|\\s*)("+subStates[subStates.length-1]+")(\\s+\\w+)*\\s*;");
+  let res;
+  while((res=orig.match(regex))!=null){ 
+    orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+  }
+  Page.codeMirrorEditor.setValue(orig);
+  Action.removeContextMenu();
+}
 
+Action.drawStateMenu = function(){
+  if(!Action.diagramInSync){
+    return;
+  }
+  // Remove old menu, if any
+  Action.removeContextMenu();
+  var targ=event.target;
+  //iterate up to top of graph elements
+  while(targ.parentElement.id!="graph0"){
+    targ=targ.parentNode;
+  }
+  //grabs state name
+  var elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length));
+  elemText=elemText.split("^*^"); //index 0: class, index 1: first state, index 2: remaining states
+  elemText[2]=elemText[2].split(".");
+  var orig=Page.codeMirrorEditor.getValue();
+  var chosenStateIndices=Action.selectStateInClass(elemText[0],elemText[1],elemText[2][0]);
+  for(let i=1;i<elemText[2].length;i++){
+    chosenStateIndices=Action.selectStateInState(chosenStateIndices.startIndex,chosenStateIndices.endIndex,elemText[2][i]);
+  }
+  var chosenState=orig.substr(chosenStateIndices.startIndex,chosenStateIndices.endIndex-chosenStateIndices.startIndex);
+  if(typeof chosenState != 'string'){
+    return;
+  }
+  var menu = document.createElement('customContextMenu');
+  var rowContent = ["Rename State","Delete State","Add Substate","Add Transition"];
+  var jsInput=chosenState.replaceAll("\n","&#10");
+  var rowFuncs = ["Action.drawInputState(\"rename\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.deleteState(\""+jsInput+"\",\""+elemText[0]+"\",\""+elemText[1]+"\",\""+elemText[2]+"\")","Action.drawInputState(\"substate\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")"];
+  menu.style.zIndex = "1000";
+  menu.style.border = "1px solid #ccc";
+  menu.style.backgroundColor = "#f8f8f8";
+  menu.style.padding = "5px";
+  menu.style.position = "fixed";
+  //add rows
+  for (var i = 0; i < rowContent.length; i++) {
+    var row = document.createElement("div");
+    row.style.padding = "5px";
+    row.style.borderRadius = "3px";
+    row.style.cursor = "pointer";
+    row.style.transition = "background-color 0.3s";
+    row.textContent = rowContent[i];
+    row.setAttribute('onclick',"javascript:"+rowFuncs[i]);
+    // Highlight row on hover
+    row.addEventListener("mouseover", function() {
+      this.style.backgroundColor = "#ddd";
+    });
+    row.addEventListener("mouseout", function() {
+      this.style.backgroundColor = "transparent";
+    });
+    //add row to context menu
+    menu.appendChild(row);
+  }
+  //set menu location at mouse, while ensuring it is on screen
+  var menuRect=menu.getBoundingClientRect();
+  if(event.clientX+menuRect.width>window.innerWidth){
+    menu.style.right=(window.innerWidth-event.clientX)+"px";
+  } else {
+    menu.style.left = event.clientX+"px";
+  }
+  if(event.clientY+menuRect.height>window.innerHeight){
+    menu.style.bottom=(window.innerHieght-event.clientY)+"px";
+  } else {
+    menu.style.top = event.clientY+"px";
+  }
+  // Add a listener to hide the menu when the user clicks outside of it
+  document.addEventListener('mousedown', function hideMenu(e) {
+    var prompt=document.getElementById("promptBox");
+    if (e.target != menu && !menu.contains(e.target)) {
+      if(prompt!=null&&e.target != prompt && !prompt.contains(e.target)){
+        document.removeEventListener('mousedown', hideMenu);
+        Action.removeContextMenu();
+      } else {
+        document.removeEventListener('mousedown', hideMenu);
+        Action.removeContextMenu();
+      }
+    }
+  });
+  document.body.appendChild(menu);
+}
 Action.removeContextMenu = function(){
   var o = document.getElementsByTagName('customContextMenu');
   if (o.length != 0) {
@@ -1223,7 +1408,7 @@ Action.deleteClass = function(classCode, className){
   let orig=Page.codeMirrorEditor.getValue();
   orig=orig.replace(classCode.replaceAll("&#10","\n"),"");
   //deletes all associations leading to target class
-  let regex=new RegExp(".*\\s*-(>|-)\\s*.*\\s"+className+"(\\s+\\w+)*;");
+  let regex=new RegExp(".*\\s*-(>|-)\\s*.*\\s*"+className+"(\\s+\\w+)*\\s*;");
   let res;
   while((res=orig.match(regex))!=null){ 
     orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
@@ -3125,6 +3310,17 @@ Action.updateUmpleDiagramCallback = function(response)
     //add event listener to Graphviz Class nodes for right click
     for(let i=0;i<elems.length;i++){
       elems[i].addEventListener("contextmenu", function(event){event.preventDefault();Action.displayMenu(event);});
+    }
+  }
+  if(Page.useGvStateDiagram){
+    var elems=document.getElementsByClassName("node");
+    //add event listener to Graphviz state nodes for right click
+    for(let i=0;i<elems.length;i++){
+      elems[i].addEventListener("contextmenu", function(event){event.preventDefault();Action.drawStateMenu(event);});
+    }
+    elems=document.getElementsByClassName("cluster");
+    for(let i=0;i<elems.length;i++){
+      elems[i].addEventListener("contextmenu", function(event){event.preventDefault();Action.drawStateMenu(event);});
     }
   }
 }
