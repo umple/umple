@@ -1048,15 +1048,16 @@ Action.drawInputState = function(inputType,stateCode,stateName){
     }
   };
   var unsanitizedState=stateCode.replaceAll("&#10","\n");
+  var label = document.createElement('label');
+  label.htmlFor = 'inputLabel';
+  label.style.marginRight = '5px';
   // Add a listener to hide the prompt when the user clicks outside of it
   document.addEventListener("mousedown", hider);
   if(inputType=="rename"){
-    var replaceAllLabel = document.createElement('label');
-    replaceAllLabel.htmlFor = 'replace-all-checkbox';
-    replaceAllLabel.style.marginRight = '5px';
-    replaceAllLabel.appendChild(document.createTextNode("New name for \'"+stateName+"\'?"));
+    label.appendChild(document.createTextNode("New name for \'"+stateName+"\'?"));
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
+        //only accounts for case where states all have unique names
         if(Action.validateAttributeName(input.value)){
           let orig=Page.codeMirrorEditor.getValue();
           let regex=new RegExp("(\\W+)("+stateName+")(\\W+)");
@@ -1075,10 +1076,9 @@ Action.drawInputState = function(inputType,stateCode,stateName){
           prompt.appendChild(inputErrorMsg);
         }
       }
-    });
-    prompt.appendChild(replaceAllLabel);
-    prompt.appendChild(input);    
+    });  
   } else if(inputType=="substate") {
+    label.appendChild(document.createTextNode("Name of new substate?"));
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
@@ -1096,9 +1096,57 @@ Action.drawInputState = function(inputType,stateCode,stateName){
         }
       }
     });
-    prompt.appendChild(input);
+   
+  } else if(inputType=="transition"){ //should have an indicator after user enters label so they know to press another state
+    label.appendChild(document.createTextNode("Condition for new transition?"));
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        if(Action.validateAttributeName(input.value)){
+          
+          var orig=stateCode.replaceAll("&#10","\n");
+          document.removeEventListener("mousedown", hider);
+          prompt.remove();
+          Action.removeContextMenu();
+          var assocState=function (event){
+              let targ=event.target;
+              while(targ.parentElement.id!="graph0"){
+                targ=targ.parentNode;
+              }
+              let elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length));
+              elemText=elemText.split("^*^"); //index 0: class, index 1: base state, index 2: remaining states
+              let subtext="  "+input.value+" -> "+elemText[2]+";\n}";
+              let newState=orig.substr(0,orig.length-1)+subtext;
+              Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newState));
+              //TODO - Saving/edit history doesn't seem to be working here.
+              TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+              TabControl.saveActiveTabs();
+              let others=document.getElementsByClassName("node");
+              for(let q=0;q<others.length;q++){
+                others[q].removeEventListener("mousedown",assocState);
+              }
+              elems=document.getElementsByClassName("cluster");
+              for(let q=0;q<others.length;q++){
+                others[q].removeEventListener("mousedown",assocState);
+              }  
+            };
+          //add event listener to Graphviz nodes for left click
+          var elems=document.getElementsByClassName("node");
+          for(let i=0;i<elems.length;i++){
+            elems[i].addEventListener("mousedown", assocState);
+          }       
+          elems=document.getElementsByClassName("cluster");
+          for(let i=0;i<elems.length;i++){
+            elems[i].addEventListener("mousedown", assocState);
+          }       
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
+      }
+    });
   }
   // Add the prompt to the page
+  prompt.appendChild(label);
+  prompt.appendChild(input);
   document.body.appendChild(prompt);
   input.focus();
 }
@@ -1131,7 +1179,7 @@ Action.drawStateMenu = function(){
   }
   //grabs state name
   var elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length));
-  elemText=elemText.split("^*^"); //index 0: class, index 1: first state, index 2: remaining states
+  elemText=elemText.split("^*^"); //index 0: class, index 1: base state, index 2: remaining states
   elemText[2]=elemText[2].split(".");
   var orig=Page.codeMirrorEditor.getValue();
   var chosenStateIndices=Action.selectStateInClass(elemText[0],elemText[1],elemText[2][0]);
@@ -1145,7 +1193,7 @@ Action.drawStateMenu = function(){
   var menu = document.createElement('customContextMenu');
   var rowContent = ["Rename State","Delete State","Add Substate","Add Transition"];
   var jsInput=chosenState.replaceAll("\n","&#10");
-  var rowFuncs = ["Action.drawInputState(\"rename\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.deleteState(\""+jsInput+"\",\""+elemText[0]+"\",\""+elemText[1]+"\",\""+elemText[2]+"\")","Action.drawInputState(\"substate\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")"];
+  var rowFuncs = ["Action.drawInputState(\"rename\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.deleteState(\""+jsInput+"\",\""+elemText[0]+"\",\""+elemText[1]+"\",\""+elemText[2]+"\")","Action.drawInputState(\"substate\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.drawInputState(\"transition\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")"];
   menu.style.zIndex = "1000";
   menu.style.border = "1px solid #ccc";
   menu.style.backgroundColor = "#f8f8f8";
@@ -1443,9 +1491,6 @@ Action.addAssociationGv = function(classCode, className){
   var elems=document.getElementsByClassName("node");
   var orig=classCode.replaceAll("&#10","\n");
   Action.removeContextMenu();
-  for(let i=0;i<elems.length;i++){
-    elems[i].style.border="2px solid yellow";
-  }
   //add event listener to Graphviz nodes for left click
   for(let i=0;i<elems.length;i++){
     elems[i].addEventListener("mousedown", function assocClass(event){
@@ -1455,7 +1500,7 @@ Action.addAssociationGv = function(classCode, className){
         elemText=elemText.parentNode;
       }
       elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
-      let subtext="\t* -> 1 "+elemText+";\n}\n";
+      let subtext="  * -> 1 "+elemText+";\n}\n";
       let newClass=orig.substr(0,orig.length-1)+subtext;
       Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
       TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
