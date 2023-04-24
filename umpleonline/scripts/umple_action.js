@@ -1456,12 +1456,12 @@ Action.deleteClass = function(classCode, className){
   let orig=Page.codeMirrorEditor.getValue();
   orig=orig.replace(classCode.replaceAll("&#10","\n"),"");
   //deletes all associations leading to target class
-  let regex=new RegExp(".*\\s*-(>|-)\\s*.*\\s*"+className+"(\\s+\\w+)*\\s*;");
+  let regex=new RegExp(".*\\s*(-|<)(>|-)\\s*.*\\s*"+className+"(\\s+\\w+)*\\s*;");
   let res;
   while((res=orig.match(regex))!=null){ 
     orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
   }
-  regex=new RegExp(".*"+className+"\\s*-(>|-)\\s*.*\\s+\\w+;");
+  regex=new RegExp(".*"+className+"\\s*(<|-)(>|-)\\s*.*\\s+\\w+;");
   while((res=orig.match(regex))!=null){ 
     orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
   }
