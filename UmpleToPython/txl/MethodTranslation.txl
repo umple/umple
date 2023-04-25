@@ -295,23 +295,23 @@ function addFunctionImports
         stmts [repeat statement] 
     import possibleFunctionImports [repeat id]
     by
-        stmts [addTimerImport each possibleFunctionImports][addFunctionImport each possibleFunctionImports]  
+        stmts [addFunctionImport each possibleFunctionImports][addTimerImport each possibleFunctionImports]
 end function
 
 %Creates specific function import if needed
 function addFunctionImport seeking [id]
-
     replace [repeat statement]
-        stmts [repeat statement] 
+        stmts [repeat statement]
     where 
         stmts [containsId seeking]
-	where not
-		seeking [= 'Timer]
     construct imp [import_statement]
         'from seeking 'import seeking
+    where not 
+        seeking [= Timer]    
     construct funcImport [repeat statement]
-      by
-        funcImport [. stmts] 
+        imp
+    by
+        funcImport [. stmts]
 end function
 
 function addTimerImport seeking [id]
