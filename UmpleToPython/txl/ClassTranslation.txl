@@ -21,7 +21,7 @@ rule replaceConcreteClasses
         'class className '( inheritanceClasses ')':  translatedBody runMain 
 end rule
 
-%DEBUG
+%Rule to translate nested classes
 rule replaceInnerClasses
     replace $ [inner_class_declaration]
         _ [opt acess_modifier] 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '}

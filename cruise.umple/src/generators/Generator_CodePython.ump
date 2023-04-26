@@ -316,10 +316,6 @@ class PythonGenerator
     else if (error.contains("message ) ; } static >>> { <<< getInstance ( ) ; }")) {
       return "ConsoleTracer class was generated. This class is currently unsupported. This class is linked to the 'trace' keyword.";
     }
-    //DEBUG
-    else if (error.contains(">>> . <<< equals")) {
-      return "TEMP txl cannot translate 'stringlit.equals i.e unsupported for Python generation.";
-    }
     else {
       return null;
     }

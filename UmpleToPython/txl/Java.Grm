@@ -85,7 +85,7 @@ end define
 
 define nestable_value
         [id] [SPOFF] [repeat nestable_extension] [SPON]
-    |  [stringlit] [SPOFF] [repeat nestable_extension] [SPON] %DEBUG: to match  "stringlit".equals
+    |  [stringlit] [SPOFF] [repeat nestable_extension] [SPON] % April 2023, added to match  "stringlit".equals
     |   'this
     |   'super
     |   [parentheses_value]
@@ -96,8 +96,7 @@ define nestable_extension
     |   '< [SPON] [list id] '> [SPOFF]
     |   '< [SPON] '? 'extends [id] '> [SPOFF]
     |   '[ [SPON] [list value] '] [SPOFF]
-     %DEBUG: to match  Object[]{}, Class[]{}
-    |   '[']'{ '} 
+    |   '[']'{ '} % April 2023, added to match java Code like: Object[]{}, Class[]{}
 end define
 
 define func_call_parentheses
@@ -122,7 +121,7 @@ define base_value
     |   '++ [nested_identifier]
     |   [parentheses_value]
     |   [new_call]
-    |   [new_call_inner] %DEBUG: left side ambiguity?
+    |   [new_call_inner] % April 2023
     |  '! [value]
 
 end define
@@ -166,7 +165,7 @@ define method_reference
     ':: [id]
 end define
 
-%DEBUG: to match outerObject.new InnerClass();
+% April 2023, added to match outerObject.new InnerClass();
 define new_call_inner
     [nested_identifier][SPOFF] '. [SPON][new_call]
 end define
@@ -309,7 +308,8 @@ define class_declaration
         [concrete_class_declaration]
     |   [interface_declaration]
 end define
-%DEBUG
+
+% April 2023, added to define nested classes
 define inner_class_declaration
     [opt acess_modifier] [opt 'abstract] 'class [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
 end define
@@ -362,9 +362,8 @@ define class_body_decl
     [repeat class_body_element]
 end define
 
-%DEBUG: Nested class declaration
 define class_body_element
-    [repeat inner_class_declaration] 
+    [repeat inner_class_declaration] % April 2023
     |   [enum_declaration]
     |   [member_variable_declaration]
     |   [constructor]

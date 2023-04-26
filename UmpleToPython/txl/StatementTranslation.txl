@@ -10,19 +10,15 @@ function replaceStatements
     by 
         statements
 
-            %DEBUG
             [replaceThread]
             [replacePrivateAttributeSetting]
             [replaceDefaultReadObject]
             [replaceSwitchCase]
             [addClassPrefixToEnum]
-			
 			[replaceTimerDeclaration]
 			[replaceTimerSchedule]
-			
 			[replaceTimerStart]
 			[replaceTimerStop]
-			
             [replaceForLoop]
             [replaceForInLoop]
             [replaceAssignementIncrementBefore]
@@ -57,7 +53,6 @@ function replaceStatements
             [replaceCasting]
             [correctSuperInit]
             [correctSuperFunctions]
-            %DEBUG
             [replaceDotEquals]
             [replacePrintln]
             [replacePrint]
@@ -76,8 +71,6 @@ function replaceStatements
             [replaceFloatF]
             [replaceAllMemberVariableNames]
             [removeSemiColonFromValues]
-
-            %DEBUG
             [replaceThreadSleep]
 
 end function
@@ -440,11 +433,7 @@ rule replaceTimerStop
 		 var '.stop() 			
 end rule
 
-
-
-%DEBUG
-
-%DEBUG match "doActivityStateMachine1TopLevelThread1".equals(doActivityMethodName)
+%to match Java Code "doActivityStateMachine1TopLevelThread1".equals(doActivityMethodName)
 rule replaceDotEquals
     replace [value]
         s1 [stringlit] '.equals( s2[value] ')
@@ -481,9 +470,6 @@ rule replaceInnerClassCreate
     by
         outerObject '. innerObject
 end rule
-
-
-%DEBUG
 
 
 rule replaceNewLine
@@ -1074,7 +1060,6 @@ rule replaceClassMatchCheck
 end rule
 
 
-%DEBUG
 rule replaceThread
     replace [statement]
         'Thread identifier [nested_identifier] '= val [value] ';
@@ -1085,7 +1070,6 @@ rule replaceThread
         'threading.Thread(target= identifier).start()
 end rule
 
-%DEBUG
 % need to convert milliseconds to seconds
 rule replaceThreadSleep
     replace [statement]

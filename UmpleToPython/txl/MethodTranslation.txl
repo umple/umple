@@ -307,7 +307,7 @@ function addFunctionImport seeking [id]
     construct imp [import_statement]
         'from seeking 'import seeking
     where not 
-        seeking [= Timer]    
+        seeking [= 'Timer]    
     construct funcImport [repeat statement]
         imp
     by
