@@ -1047,7 +1047,7 @@ Action.drawInputState = function(inputType,stateCode,stateName){
       prompt.remove();
     }
   };
-  var unsanitizedState=stateCode.replaceAll("&#10","\n");
+  var unsanitizedState=stateCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
   var label = document.createElement('label');
   label.htmlFor = 'inputLabel';
   label.style.marginRight = '5px';
@@ -1103,7 +1103,7 @@ Action.drawInputState = function(inputType,stateCode,stateName){
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
           
-          var orig=stateCode.replaceAll("&#10","\n");
+          var orig=stateCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
           document.removeEventListener("mousedown", hider);
           prompt.remove();
           Action.removeContextMenu();
@@ -1153,7 +1153,7 @@ Action.drawInputState = function(inputType,stateCode,stateName){
 Action.deleteState = function(stateCode,className,smName,stateName){
   let subStates=stateName.split(",");
   let orig=Page.codeMirrorEditor.getValue();
-  let unsanitizedState = stateCode.replaceAll("&#10","\n");
+  let unsanitizedState = stateCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
   orig=orig.replace(unsanitizedState,"");
   //delete any transitions leading to target state - this handles the case where there are NOT multiple states with the same name
   //TODO - Handle case where multiple states have the same name, dot notation will be used.
@@ -1192,7 +1192,7 @@ Action.drawStateMenu = function(){
   }
   var menu = document.createElement('customContextMenu');
   var rowContent = ["Rename State","Delete State","Add Substate","Add Transition"];
-  var jsInput=chosenState.replaceAll("\n","&#10");
+  var jsInput=chosenState.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
   var rowFuncs = ["Action.drawInputState(\"rename\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.deleteState(\""+jsInput+"\",\""+elemText[0]+"\",\""+elemText[1]+"\",\""+elemText[2]+"\")","Action.drawInputState(\"substate\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.drawInputState(\"transition\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")"];
   menu.style.zIndex = "1000";
   menu.style.border = "1px solid #ccc";
@@ -1252,7 +1252,7 @@ Action.removeContextMenu = function(){
   }
 }
 Action.setColor=function(classCode,className,color){
-  let classyCode=classCode.replaceAll("&#10","\n");
+  let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
   if(!classyCode.includes("displayColor")){ //if color is not already set, we can prepend it to the start of the class
     let subtext="{  displayColor "+color+";\n"; 
     subtext=classyCode.substr(0,classyCode.indexOf("{"))+subtext+classyCode.substr(classyCode.indexOf("{")+1,classyCode.length-classyCode.indexOf("{")-1);
@@ -1345,7 +1345,7 @@ Action.drawInput = function(inputType,classCode,className){
     input.addEventListener("keydown", function(e) {
       if (e.key === "Enter") {
         if(Action.validateAttributeName(input.value)){
-          let orig=classCode.replaceAll("&#10","\n");
+          let orig=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
           let newClass;
           if(input.value.includes(":")){
             let attriInput=input.value.split(":");
@@ -1454,7 +1454,7 @@ Action.drawInput = function(inputType,classCode,className){
 }
 Action.deleteClass = function(classCode, className){
   let orig=Page.codeMirrorEditor.getValue();
-  orig=orig.replace(classCode.replaceAll("&#10","\n"),"");
+  orig=orig.replace(classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\""),"");
   //deletes all associations leading to target class
   let regex=new RegExp(".*\\s*(-|<)(>|-)\\s*.*\\s*"+className+"(\\s+\\w+)*\\s*;");
   let res;
@@ -1481,6 +1481,13 @@ Action.deleteClass = function(classCode, className){
       }
     }
   }
+  //remove any associationClass definitions containing this class
+  regex=new RegExp("associationClass\\s+\\w+\\s*\\n*{(\\n*\\W*\\w*;)*(\\s*CRUD_Value\\s*{(\\s*\\w*\\s*,*)*}\\s*\\n*)*(\\n*\\W*\\w*;)*([\\s|\\t]*[*]\\s+"+className+";)(\\n*\\W*\\w*;)*(\\s*CRUD_Value\\s*{(\\s*\\w*\\s*,*)*}\\s*\\n*)*(\\n*\\W*\\w*;)*}");
+  res=null;
+  while((res=orig.match(regex))!=null){ 
+    console.log("hello");
+    orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+  }
   //set editor code, save new state, and remove the context menu
   Page.codeMirrorEditor.setValue(orig);
   Action.removeContextMenu();
@@ -1489,7 +1496,7 @@ Action.deleteClass = function(classCode, className){
 }
 Action.addAssociationGv = function(classCode, className){
   var elems=document.getElementsByClassName("node");
-  var orig=classCode.replaceAll("&#10","\n");
+  var orig=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
   Action.removeContextMenu();
   //add event listener to Graphviz nodes for left click
   for(let i=0;i<elems.length;i++){
@@ -1537,7 +1544,7 @@ Action.displayMenu = function(event) {
   }
   var menu = document.createElement('customContextMenu');
   var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color"];
-  var jsInput=chosenClass.replaceAll("\n","&#10");
+  var jsInput=chosenClass.replaceAll("\n","&#10").replaceAll("\"","&#$quot");;
   var rowFuncs = ["Action.drawInput(\"attri\",\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+jsInput+"\",\""+elemText+"\")","Action.deleteClass(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"subclass\",\""+jsInput+"\",\""+elemText+"\")","Action.addAssociationGv(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"color\",\""+jsInput+"\",\""+elemText+"\")"];
 
   menu.style.zIndex = "1000";
