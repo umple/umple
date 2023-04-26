@@ -26,12 +26,13 @@ rule replaceInnerClasses
     replace $ [inner_class_declaration]
         _ [opt acess_modifier] 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '}
     export className
-    construct inheritanceClasses [list nested_identifier]
-        _ [extractInheritanceBlockClasses each inheritances]
+    construct inheritanceInnerClasses [list nested_identifier]
+        _ [extractInheritanceBlockClasses each inheritances][print]
+    export inheritanceInnerClasses
     construct translatedBody [class_body_decl]
        classBody  [replaceClassBody]
     by
-        'class className '( inheritanceClasses ')':  translatedBody
+        'class className '( inheritanceInnerClasses ')':  translatedBody
 end rule
 
 %Rule to translate abstract classes
@@ -141,6 +142,8 @@ function  replaceClassBody
     export dictMemberVariables [repeat id]
         _ [addDictMemberVariable each declarations]
     export enumeratorDeclerations [repeat enum_declaration]
+        _ [^ elements]
+    export nestedClassDeclerations [repeat inner_class_declaration]
         _ [^ elements]
     export classMethodNames [repeat id]
         _ [extractClassMethodName each classMethods]

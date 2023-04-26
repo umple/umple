@@ -50,6 +50,7 @@ function replaceStatements
             [replaceNewArrayList]
             [replaceNewHashMap]
             [replaceNewCall]
+            [addClassPrefixToNestedClasses]
             [replaceCasting]
             [correctSuperInit]
             [correctSuperFunctions]
@@ -1078,3 +1079,34 @@ rule replaceThreadSleep
         'time.sleep( val  [/ 1000]')
 
 end rule
+
+rule addClassPrefixToNestedClasses
+    replace [nested_identifier]
+        innerClass [id]'( params [list value] ')
+    where
+        innerClass [isAnInnerClass]
+    import className [nested_identifier]
+    deconstruct className
+        root [nestable_value] accesses [repeat attribute_access]
+    construct innerAccess [attribute_access] 
+        '. innerClass( params ')
+    by
+        root accesses [. innerAccess]
+end rule
+
+function isAnInnerClass
+    match [id]
+        name [id]
+    import nestedClassDeclerations [repeat inner_class_declaration]
+    where
+        name [isSpecificInnerClass each nestedClassDeclerations]
+end function
+
+function isSpecificInnerClass aIClass [inner_class_declaration]
+    match [id]
+        name [id]
+    deconstruct aIClass
+        'class iclassName [id] _ [opt inheritance_group] ': _ [class_body_decl] 
+    where
+        name [= iclassName]
+end function
