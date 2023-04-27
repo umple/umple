@@ -1011,6 +1011,9 @@ Action.simulateCodeCallback = function(response)
   window.open("../umpleonline/simulate.php?model=" + modelId, "umpleSimulator");
   Page.showViewDone(); 
 }
+//Called by Action.drawStateMenu(), this multiuse function takes any textual input requires for 
+//menu edits on states.
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.drawInputState = function(inputType,stateCode,stateName){
   var prompt = document.createElement('div');
   prompt.style.zIndex = "1000";
@@ -1145,14 +1148,15 @@ Action.drawInputState = function(inputType,stateCode,stateName){
   document.body.appendChild(prompt);
   input.focus();
 }
+//Deletes a target state within the specific SM and Class, as well any transitions to/from target state
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.deleteState = function(stateCode,className,smName,stateName){
   let subStates=stateName.split(",");
   let orig=Page.codeMirrorEditor.getValue();
   let unsanitizedState = stateCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
   orig=orig.replace(unsanitizedState,"");
   //delete any transitions leading to target state - this handles the case where there are NOT multiple states with the same name
-  //TODO - Handle case where multiple states have the same name, dot notation will be used.
-  let regex=new RegExp("[^{};]*->\\s*([^\\S\\s]*|\\s*)("+subStates[subStates.length-1]+")(\\s+\\w+)*\\s*;");
+ let regex=new RegExp("[^{};]*->\\s*([^\\S\\s]*|\\s*)(\\/\\s*{[^}]*})*([^\\S\\s]*|\\s*)("+subStates[subStates.length-1]+")(\\s+\\w+)*\\s*;");
   let res;
   while((res=orig.match(regex))!=null){ 
     orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
@@ -1161,7 +1165,9 @@ Action.deleteState = function(stateCode,className,smName,stateName){
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
   Action.removeContextMenu();
 }
-
+//Action.drawStateMenu() is triggered by contextmenu event on Graphviz State Diagram "node" elements
+//Draws a div containing the editing options for state GV diagrams, as well as calling the related function when clicked
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.drawStateMenu = function(){
   if(!Action.diagramInSync){
     return;
@@ -1241,12 +1247,18 @@ Action.drawStateMenu = function(){
   });
   document.body.appendChild(menu);
 }
+//Searches the document for any element matching the "customContextMenu" tag, and removes it. 
+//Removes context menu on state and class diagrams
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.removeContextMenu = function(){
   var o = document.getElementsByTagName('customContextMenu');
   if (o.length != 0) {
     o.item(0).remove();
   }
 }
+//Called from Action.drawInput(), searches for existing displayColor definitions in the class code, replaces it if it exists,
+//prepends a new displayColor statement to the start of the class if one doesn't exist.
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.setColor=function(classCode,className,color){
   let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
   if(!classyCode.includes("displayColor")){ //if color is not already set, we can prepend it to the start of the class
@@ -1264,6 +1276,9 @@ Action.setColor=function(classCode,className,color){
 
   }
 }
+//Multiuse function called whenever a user wants to use a menu edit function that requires user input
+//allows users to input their text/color selection, listens for "enter", then performs the relevant edit
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.drawInput = function(inputType,classCode,className){
   var prompt = document.createElement('div');
   prompt.style.zIndex = "1000";
@@ -1445,6 +1460,11 @@ Action.drawInput = function(inputType,classCode,className){
   document.body.appendChild(prompt);
   input.focus();
 }
+//Searches for existing associations, children, and associationClasses related to the target class
+//Associations are: deleted
+//Children are: pointed to parent (if exists)
+//associationClasses are: deleted
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.deleteClass = function(classCode, className){
   let orig=Page.codeMirrorEditor.getValue();
   orig=orig.replace(classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\""),"");
@@ -1485,6 +1505,8 @@ Action.deleteClass = function(classCode, className){
   Action.removeContextMenu();
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
 }
+//Adds an association to a class, this function is called by Action.displayMenu() when the user selects "Add Association"
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.addAssociationGv = function(classCode, className){
   var elems=document.getElementsByClassName("node");
   var orig=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
@@ -1509,6 +1531,9 @@ Action.addAssociationGv = function(classCode, className){
     });
   }
 }
+//Action.displayMenu() is triggered by contextmenu event on Graphviz Class "node" elements
+//Draws a div containing the editing options for class GV diagrams, as well as calling the related function when clicked
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.displayMenu = function(event) {
   if(!Action.diagramInSync){
     return;
