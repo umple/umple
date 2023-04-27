@@ -1069,9 +1069,7 @@ Action.drawInputState = function(inputType,stateCode,stateName){
           document.removeEventListener("mousedown", hider);
           prompt.remove();
           Action.removeContextMenu();
-          //TODO - Saving/edit history doesn't seem to be working here.
-          TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
-          TabControl.saveActiveTabs();
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
         }
@@ -1088,9 +1086,7 @@ Action.drawInputState = function(inputType,stateCode,stateName){
           document.removeEventListener("mousedown", hider);
           prompt.remove();
           Action.removeContextMenu();
-          //TODO - Saving/edit history doesn't seem to be working here.
-          TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
-          TabControl.saveActiveTabs();
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
         }
@@ -1118,8 +1114,7 @@ Action.drawInputState = function(inputType,stateCode,stateName){
               let newState=orig.substr(0,orig.length-1)+subtext;
               Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newState));
               //TODO - Saving/edit history doesn't seem to be working here.
-              TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
-              TabControl.saveActiveTabs();
+              TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
               let others=document.getElementsByClassName("node");
               for(let q=0;q<others.length;q++){
                 others[q].removeEventListener("mousedown",assocState);
@@ -1157,12 +1152,13 @@ Action.deleteState = function(stateCode,className,smName,stateName){
   orig=orig.replace(unsanitizedState,"");
   //delete any transitions leading to target state - this handles the case where there are NOT multiple states with the same name
   //TODO - Handle case where multiple states have the same name, dot notation will be used.
-  let regex=new RegExp("[^\\n]*->\\s*([^\\S\\s]*|\\s*)("+subStates[subStates.length-1]+")(\\s+\\w+)*\\s*;");
+  let regex=new RegExp("[^{};]*->\\s*([^\\S\\s]*|\\s*)("+subStates[subStates.length-1]+")(\\s+\\w+)*\\s*;");
   let res;
   while((res=orig.match(regex))!=null){ 
     orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
   }
   Page.codeMirrorEditor.setValue(orig);
+  TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
   Action.removeContextMenu();
 }
 
@@ -1262,8 +1258,10 @@ Action.setColor=function(classCode,className,color){
     let regex=new RegExp("displayColor\\s+.*;");
     subtext=classyCode.replace(regex,subtext);
     Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
-    TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
-    TabControl.saveActiveTabs();
+    setTimeout(function(){
+        TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+    }, 100);
+
   }
 }
 Action.drawInput = function(inputType,classCode,className){
@@ -1357,8 +1355,7 @@ Action.drawInput = function(inputType,classCode,className){
           document.removeEventListener("mousedown", hider);
           prompt.remove();
           Action.removeContextMenu();
-          TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
-          TabControl.saveActiveTabs();
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
         }
@@ -1383,8 +1380,7 @@ Action.drawInput = function(inputType,classCode,className){
           document.removeEventListener("mousedown", hider);
           prompt.remove();
           Action.removeContextMenu();
-          TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
-          TabControl.saveActiveTabs();
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
         }
@@ -1399,8 +1395,7 @@ Action.drawInput = function(inputType,classCode,className){
           let subtext="\nclass "+input.value+"\n{\n  isA "+className+";\n}\n";
           Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue()+subtext);
           document.removeEventListener("mousedown", hider);
-          TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
-          TabControl.saveActiveTabs();
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
           prompt.remove();
           Action.removeContextMenu();
         } else if(!document.contains(inputErrorMsg)) {
@@ -1446,8 +1441,6 @@ Action.drawInput = function(inputType,classCode,className){
     prompt.appendChild(input);
     prompt.appendChild(arrow);
   }
-  
-
   // Add the prompt to the page
   document.body.appendChild(prompt);
   input.focus();
@@ -1490,8 +1483,7 @@ Action.deleteClass = function(classCode, className){
   //set editor code, save new state, and remove the context menu
   Page.codeMirrorEditor.setValue(orig);
   Action.removeContextMenu();
-  TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
-  TabControl.saveActiveTabs();
+  TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
 }
 Action.addAssociationGv = function(classCode, className){
   var elems=document.getElementsByClassName("node");
@@ -1509,8 +1501,7 @@ Action.addAssociationGv = function(classCode, className){
       let subtext="  * -> 1 "+elemText+";\n}\n";
       let newClass=orig.substr(0,orig.length-1)+subtext;
       Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
-      TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
-      TabControl.saveActiveTabs();
+      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
       let others=document.getElementsByClassName("node");
       for(let q=0;q<others.length;q++){
         others[q].removeEventListener("mousedown",assocClass);
