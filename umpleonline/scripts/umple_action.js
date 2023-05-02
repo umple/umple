@@ -1192,8 +1192,10 @@ Action.drawStateMenu = function(){
   if(typeof chosenState != 'string'){
     return;
   }
+  //this section generates the context menu, grabbing option names and associated functions from the vars below 
   var menu = document.createElement('customContextMenu');
   var rowContent = ["Rename State","Delete State","Add Substate","Add Transition"];
+  //need to sanitize any linebreaks or quotes that could break the generated HTML
   var jsInput=chosenState.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
   var rowFuncs = ["Action.drawInputState(\"rename\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.deleteState(\""+jsInput+"\",\""+elemText[0]+"\",\""+elemText[1]+"\",\""+elemText[2]+"\")","Action.drawInputState(\"substate\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.drawInputState(\"transition\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")"];
   menu.style.zIndex = "1000";
@@ -1210,7 +1212,7 @@ Action.drawStateMenu = function(){
     row.style.transition = "background-color 0.3s";
     row.textContent = rowContent[i];
     row.setAttribute('onclick',"javascript:"+rowFuncs[i]);
-    // Highlight row on hover
+    //Highlight row on hover
     row.addEventListener("mouseover", function() {
       this.style.backgroundColor = "#ddd";
     });
@@ -1232,7 +1234,7 @@ Action.drawStateMenu = function(){
   } else {
     menu.style.top = event.clientY+"px";
   }
-  // Add a listener to hide the menu when the user clicks outside of it
+  //Add an event listener to hide the menu when the user clicks outside of it
   document.addEventListener('mousedown', function hideMenu(e) {
     var prompt=document.getElementById("promptBox");
     if (e.target != menu && !menu.contains(e.target)) {
@@ -1280,6 +1282,7 @@ Action.setColor=function(classCode,className,color){
 //allows users to input their text/color selection, listens for "enter", then performs the relevant edit
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.drawInput = function(inputType,classCode,className){
+  //creating input div
   var prompt = document.createElement('div');
   prompt.style.zIndex = "1000";
   prompt.style.border = "1px solid #ccc";
@@ -1287,6 +1290,7 @@ Action.drawInput = function(inputType,classCode,className){
   prompt.style.padding = "5px";
   prompt.style.position = "fixed";
   prompt.id="promptBox";
+  //draw at mouse location
   var promptRect=prompt.getBoundingClientRect();
   if(event.clientX+promptRect.width>window.innerWidth){
     prompt.style.right=(window.innerWidth-event.clientX)+"px";
@@ -1318,6 +1322,7 @@ Action.drawInput = function(inputType,classCode,className){
   // Add a listener to hide the prompt when the user clicks outside of it
   document.addEventListener("mousedown", hider);
   if(inputType=="attri"){
+    //create the attribute dropdown list
     var select = document.createElement("select");
     var option1 = document.createElement("option");
     option1.value = "String";
@@ -1348,6 +1353,7 @@ Action.drawInput = function(inputType,classCode,className){
     select.add(option6);
     select.add(option7);
     prompt.appendChild(select);
+    //create the text input for attribute name
     var input = document.createElement("input");
     input.type = "text";
     input.style.padding = "5px";
@@ -1360,10 +1366,10 @@ Action.drawInput = function(inputType,classCode,className){
         if(Action.validateAttributeName(input.value)){
           let orig=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
           let newClass;
-          if(input.value.includes(":")){
+          if(input.value.includes(":")){ //In the case users wish to type in the format - "newAttrName:Type" - instead of using dropdown
             let attriInput=input.value.split(":");
             newClass=orig.substr(0,orig.length-1)+"  "+attriInput[1].trim()+" "+attriInput[0].trim()+";\n}";
-          } else {
+          } else { //if users use dropdown and type attribute name in text box
             newClass=orig.substr(0,orig.length-1)+"  "+select.value+" "+input.value+";\n}";
           }
           Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
