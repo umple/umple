@@ -1011,6 +1011,619 @@ Action.simulateCodeCallback = function(response)
   window.open("../umpleonline/simulate.php?model=" + modelId, "umpleSimulator");
   Page.showViewDone(); 
 }
+//Called by Action.drawStateMenu(), this multiuse function takes any textual input requires for 
+//menu edits on states.
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.drawInputState = function(inputType,stateCode,stateName){
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+  prompt.style.border = "1px solid #ccc";
+  prompt.style.backgroundColor = "#f8f8f8";
+  prompt.style.padding = "5px";
+  prompt.style.position = "fixed";
+  prompt.id="promptBox";
+  var promptRect=prompt.getBoundingClientRect();
+  if(event.clientX+promptRect.width>window.innerWidth){
+    prompt.style.right=(window.innerWidth-event.clientX)+"px";
+  } else {
+    prompt.style.left = event.clientX+"px";
+  }
+  if(event.clientY+promptRect.height>window.innerHeight){
+    prompt.style.bottom=(window.innerHieght-event.clientY)+"px";
+  } else {
+    prompt.style.top = event.clientY+"px";
+  }
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.style.padding = '5px';
+  input.style.borderRadius = '3px';
+  input.style.border = '1px solid #ccc';
+  input.style.width = '200px';
+  input.style.marginLeft = '5px';
+  var inputErrorMsg = document.createElement('label');
+  inputErrorMsg.type='label';
+  inputErrorMsg.textContent='Error - Please enter an alphanumeric name beginning with a non-numeric character.';
+  inputErrorMsg.style.color="red";
+  var hider=function hidePrompt(e) {
+    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  };
+  var unsanitizedState=stateCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+  var label = document.createElement('label');
+  label.htmlFor = 'inputLabel';
+  label.style.marginRight = '5px';
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", hider);
+  if(inputType=="rename"){
+    label.appendChild(document.createTextNode("New name for \'"+stateName+"\'?"));
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        //only accounts for case where states all have unique names
+        if(Action.validateAttributeName(input.value)){
+          let orig=Page.codeMirrorEditor.getValue();
+          let regex=new RegExp("(\\W+)("+stateName+")(\\W+)");
+          let res;
+          while((res=orig.match(regex))!=null){
+            orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
+          }
+          Page.codeMirrorEditor.setValue(orig);
+          document.removeEventListener("mousedown", hider);
+          prompt.remove();
+          Action.removeContextMenu();
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
+      }
+    });  
+  } else if(inputType=="substate") {
+    label.appendChild(document.createTextNode("Name of new substate?"));
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        if(Action.validateAttributeName(input.value)){
+          let subtext=unsanitizedState.substr(0,unsanitizedState.length-1)+"  "+input.value+"{}}";
+          subtext=Page.codeMirrorEditor.getValue().replace(unsanitizedState,subtext);
+          Page.codeMirrorEditor.setValue(subtext);
+          document.removeEventListener("mousedown", hider);
+          prompt.remove();
+          Action.removeContextMenu();
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
+      }
+    });
+   
+  } else if(inputType=="transition"){ //should have an indicator after user enters label so they know to press another state
+    label.appendChild(document.createTextNode("Condition for new transition?"));
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        if(Action.validateAttributeName(input.value)){
+          
+          var orig=stateCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+          document.removeEventListener("mousedown", hider);
+          prompt.remove();
+          Action.removeContextMenu();
+          var assocState=function (event){
+              let targ=event.target;
+              while(targ.parentElement.id!="graph0"){
+                targ=targ.parentNode;
+              }
+              let elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length));
+              elemText=elemText.split("^*^"); //index 0: class, index 1: base state, index 2: remaining states
+              let subtext="  "+input.value+" -> "+elemText[2]+";\n}";
+              let newState=orig.substr(0,orig.length-1)+subtext;
+              Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newState));
+              //TODO - Saving/edit history doesn't seem to be working here.
+              TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+              let others=document.getElementsByClassName("node");
+              for(let q=0;q<others.length;q++){
+                others[q].removeEventListener("mousedown",assocState);
+              }
+              elems=document.getElementsByClassName("cluster");
+              for(let q=0;q<others.length;q++){
+                others[q].removeEventListener("mousedown",assocState);
+              }  
+            };
+          //add event listener to Graphviz nodes for left click
+          var elems=document.getElementsByClassName("node");
+          for(let i=0;i<elems.length;i++){
+            elems[i].addEventListener("mousedown", assocState);
+          }       
+          elems=document.getElementsByClassName("cluster");
+          for(let i=0;i<elems.length;i++){
+            elems[i].addEventListener("mousedown", assocState);
+          }       
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
+      }
+    });
+  }
+  // Add the prompt to the page
+  prompt.appendChild(label);
+  prompt.appendChild(input);
+  document.body.appendChild(prompt);
+  input.focus();
+}
+//Deletes a target state within the specific SM and Class, as well any transitions to/from target state
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.deleteState = function(stateCode,className,smName,stateName){
+  let subStates=stateName.split(",");
+  let orig=Page.codeMirrorEditor.getValue();
+  let unsanitizedState = stateCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+  orig=orig.replace(unsanitizedState,"");
+  //delete any transitions leading to target state - this handles the case where there are NOT multiple states with the same name
+ let regex=new RegExp("[^{};]*->\\s*([^\\S\\s]*|\\s*)(\\/\\s*{[^}]*})*([^\\S\\s]*|\\s*)("+subStates[subStates.length-1]+")(\\s+\\w+)*\\s*;");
+  let res;
+  while((res=orig.match(regex))!=null){ 
+    orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+  }
+  Page.codeMirrorEditor.setValue(orig);
+  TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+  Action.removeContextMenu();
+}
+//Action.drawStateMenu() is triggered by contextmenu event on Graphviz State Diagram "node" elements
+//Draws a div containing the editing options for state GV diagrams, as well as calling the related function when clicked
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.drawStateMenu = function(){
+  if(!Action.diagramInSync){
+    return;
+  }
+  // Remove old menu, if any
+  Action.removeContextMenu();
+  var targ=event.target;
+  //iterate up to top of graph elements
+  while(targ.parentElement.id!="graph0"){
+    targ=targ.parentNode;
+  }
+  //grabs state name
+  var elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length));
+  elemText=elemText.split("^*^"); //index 0: class, index 1: base state, index 2: remaining states
+  elemText[2]=elemText[2].split(".");
+  var orig=Page.codeMirrorEditor.getValue();
+  var chosenStateIndices=Action.selectStateInClass(elemText[0],elemText[1],elemText[2][0]);
+  for(let i=1;i<elemText[2].length;i++){
+    chosenStateIndices=Action.selectStateInState(chosenStateIndices.startIndex,chosenStateIndices.endIndex,elemText[2][i]);
+  }
+  var chosenState=orig.substr(chosenStateIndices.startIndex,chosenStateIndices.endIndex-chosenStateIndices.startIndex);
+  if(typeof chosenState != 'string'){
+    return;
+  }
+  //this section generates the context menu, grabbing option names and associated functions from the vars below 
+  var menu = document.createElement('customContextMenu');
+  var rowContent = ["Rename State","Delete State","Add Substate","Add Transition"];
+  //need to sanitize any linebreaks or quotes that could break the generated HTML
+  var jsInput=chosenState.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
+  var rowFuncs = ["Action.drawInputState(\"rename\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.deleteState(\""+jsInput+"\",\""+elemText[0]+"\",\""+elemText[1]+"\",\""+elemText[2]+"\")","Action.drawInputState(\"substate\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.drawInputState(\"transition\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")"];
+  menu.style.zIndex = "1000";
+  menu.style.border = "1px solid #ccc";
+  menu.style.backgroundColor = "#f8f8f8";
+  menu.style.padding = "5px";
+  menu.style.position = "fixed";
+  //add rows
+  for (var i = 0; i < rowContent.length; i++) {
+    var row = document.createElement("div");
+    row.style.padding = "5px";
+    row.style.borderRadius = "3px";
+    row.style.cursor = "pointer";
+    row.style.transition = "background-color 0.3s";
+    row.textContent = rowContent[i];
+    row.setAttribute('onclick',"javascript:"+rowFuncs[i]);
+    //Highlight row on hover
+    row.addEventListener("mouseover", function() {
+      this.style.backgroundColor = "#ddd";
+    });
+    row.addEventListener("mouseout", function() {
+      this.style.backgroundColor = "transparent";
+    });
+    //add row to context menu
+    menu.appendChild(row);
+  }
+  //set menu location at mouse, while ensuring it is on screen
+  var menuRect=menu.getBoundingClientRect();
+  if(event.clientX+menuRect.width>window.innerWidth){
+    menu.style.right=(window.innerWidth-event.clientX)+"px";
+  } else {
+    menu.style.left = event.clientX+"px";
+  }
+  if(event.clientY+menuRect.height>window.innerHeight){
+    menu.style.bottom=(window.innerHieght-event.clientY)+"px";
+  } else {
+    menu.style.top = event.clientY+"px";
+  }
+  //Add an event listener to hide the menu when the user clicks outside of it
+  document.addEventListener('mousedown', function hideMenu(e) {
+    var prompt=document.getElementById("promptBox");
+    if (e.target != menu && !menu.contains(e.target)) {
+      if(prompt!=null&&e.target != prompt && !prompt.contains(e.target)){
+        document.removeEventListener('mousedown', hideMenu);
+        Action.removeContextMenu();
+      } else {
+        document.removeEventListener('mousedown', hideMenu);
+        Action.removeContextMenu();
+      }
+    }
+  });
+  document.body.appendChild(menu);
+}
+//Searches the document for any element matching the "customContextMenu" tag, and removes it. 
+//Removes context menu on state and class diagrams
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.removeContextMenu = function(){
+  var o = document.getElementsByTagName('customContextMenu');
+  if (o.length != 0) {
+    o.item(0).remove();
+  }
+}
+//Called from Action.drawInput(), searches for existing displayColor definitions in the class code, replaces it if it exists,
+//prepends a new displayColor statement to the start of the class if one doesn't exist.
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.setColor=function(classCode,className,color){
+  let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+  if(!classyCode.includes("displayColor")){ //if color is not already set, we can prepend it to the start of the class
+    let subtext="{  displayColor "+color+";\n"; 
+    subtext=classyCode.substr(0,classyCode.indexOf("{"))+subtext+classyCode.substr(classyCode.indexOf("{")+1,classyCode.length-classyCode.indexOf("{")-1);
+    Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
+  } else { //otherwise, use regex to replace existing displayColor statement
+    let subtext="displayColor "+color+";"; 
+    let regex=new RegExp("displayColor\\s+.*;");
+    subtext=classyCode.replace(regex,subtext);
+    Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
+    setTimeout(function(){
+        TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+    }, 100);
+
+  }
+}
+//Multiuse function called whenever a user wants to use a menu edit function that requires user input
+//allows users to input their text/color selection, listens for "enter", then performs the relevant edit
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.drawInput = function(inputType,classCode,className){
+  //creating input div
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+  prompt.style.border = "1px solid #ccc";
+  prompt.style.backgroundColor = "#f8f8f8";
+  prompt.style.padding = "5px";
+  prompt.style.position = "fixed";
+  prompt.id="promptBox";
+  //draw at mouse location
+  var promptRect=prompt.getBoundingClientRect();
+  if(event.clientX+promptRect.width>window.innerWidth){
+    prompt.style.right=(window.innerWidth-event.clientX)+"px";
+  } else {
+    prompt.style.left = event.clientX+"px";
+  }
+  if(event.clientY+promptRect.height>window.innerHeight){
+    prompt.style.bottom=(window.innerHieght-event.clientY)+"px";
+  } else {
+    prompt.style.top = event.clientY+"px";
+  }
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.style.padding = '5px';
+  input.style.borderRadius = '3px';
+  input.style.border = '1px solid #ccc';
+  input.style.width = '200px';
+  input.style.marginLeft = '5px';
+  var inputErrorMsg = document.createElement('label');
+  inputErrorMsg.type='label';
+  inputErrorMsg.textContent='Error - Please enter an alphanumeric name.';
+  inputErrorMsg.style.color="red";
+  var hider=function hidePrompt(e) {
+    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  };
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", hider);
+  if(inputType=="attri"){
+    //create the attribute dropdown list
+    var select = document.createElement("select");
+    var option1 = document.createElement("option");
+    option1.value = "String";
+    option1.text = "String";
+    var option2 = document.createElement("option");
+    option2.value = "Integer";
+    option2.text = "Integer";
+    var option3 = document.createElement("option");
+    option3.value = "Double";
+    option3.text = "Double";
+    var option4 = document.createElement("option");
+    option4.value = "Float";
+    option4.text = "Float";
+    var option5 = document.createElement("option");
+    option5.value = "Boolean";
+    option5.text = "Boolean";
+    var option6 = document.createElement("option");
+    option6.value = "Date";
+    option6.text = "Date";
+    var option7 = document.createElement("option");
+    option7.value = "Time";
+    option7.text = "Time";
+    select.add(option1);
+    select.add(option2);
+    select.add(option3);
+    select.add(option4);
+    select.add(option5);
+    select.add(option6);
+    select.add(option7);
+    prompt.appendChild(select);
+    //create the text input for attribute name
+    var input = document.createElement("input");
+    input.type = "text";
+    input.style.padding = "5px";
+    input.style.borderRadius = "3px";
+    input.style.border = "1px solid #ccc";
+    input.style.width = "200px";
+    input.style.marginLeft = "5px";
+    input.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        if(Action.validateAttributeName(input.value)){
+          let orig=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+          let newClass;
+          if(input.value.includes(":")){ //In the case users wish to type in the format - "newAttrName:Type" - instead of using dropdown
+            let attriInput=input.value.split(":");
+            newClass=orig.substr(0,orig.length-1)+"  "+attriInput[1].trim()+" "+attriInput[0].trim()+";\n}";
+          } else { //if users use dropdown and type attribute name in text box
+            newClass=orig.substr(0,orig.length-1)+"  "+select.value+" "+input.value+";\n}";
+          }
+          Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
+          document.removeEventListener("mousedown", hider);
+          prompt.remove();
+          Action.removeContextMenu();
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
+      }
+    });
+    prompt.appendChild(input);
+  } else if(inputType=="rename"){
+    var replaceAllLabel = document.createElement('label');
+    replaceAllLabel.htmlFor = 'replace-all-checkbox';
+    replaceAllLabel.style.marginRight = '5px';
+    replaceAllLabel.appendChild(document.createTextNode("New name for \'"+className+"\'?"));
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        if(Action.validateAttributeName(input.value)){
+          let orig=Page.codeMirrorEditor.getValue();
+          let regex=new RegExp("(\\W+)("+className+")(\\W+)");
+          let res;
+          while((res=orig.match(regex))!=null){
+            orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
+          }
+          Page.codeMirrorEditor.setValue(orig);
+          document.removeEventListener("mousedown", hider);
+          prompt.remove();
+          Action.removeContextMenu();
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
+      }
+    });
+    prompt.appendChild(replaceAllLabel);
+    prompt.appendChild(input);    
+  } else if(inputType=="subclass") {
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        if(Action.validateAttributeName(input.value)){
+          let subtext="\nclass "+input.value+"\n{\n  isA "+className+";\n}\n";
+          Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue()+subtext);
+          document.removeEventListener("mousedown", hider);
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+          prompt.remove();
+          Action.removeContextMenu();
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
+      }
+    });
+    prompt.appendChild(input);
+  } else if(inputType=="color"){
+    var label=document.createElement("label");
+    label.textContent="Color - ";
+    var arrow=document.createElement("span");
+    arrow.innerHTML="&#8594;";
+    arrow.style.cursor="pointer";
+    arrow.fontSize="20px";
+    arrow.style.paddingLeft="5px";
+    input.style.width="30px";
+    input.style.height="30px";
+    input.type="color";
+    var inputFunc=function setter(e) {
+      if (e.key === 'Enter') {
+        document.removeEventListener('keydown',setter);
+        Action.setColor(classCode,className,input.value);
+        prompt.remove();
+        Action.removeContextMenu();
+      }
+    };
+    document.addEventListener('keydown', inputFunc);
+    arrow.addEventListener("click", function(){
+      Action.setColor(classCode,className,input.value);
+      document.removeEventListener('keydown',inputFunc);
+      prompt.remove();
+      Action.removeContextMenu();
+    });
+    // Add event listeners for hover
+    arrow.addEventListener("mouseover", function() {
+      arrow.style.color = "blue";
+    });
+    arrow.addEventListener("mouseout", function() {
+      arrow.style.color = "black";
+    });
+    prompt.appendChild(label);
+    prompt.appendChild(input);
+    prompt.appendChild(arrow);
+  }
+  // Add the prompt to the page
+  document.body.appendChild(prompt);
+  input.focus();
+}
+//Searches for existing associations, children, and associationClasses related to the target class
+//Associations are: deleted
+//Children are: pointed to parent (if exists)
+//associationClasses are: deleted
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.deleteClass = function(classCode, className){
+  let orig=Page.codeMirrorEditor.getValue();
+  orig=orig.replace(classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\""),"");
+  //deletes all associations leading to target class
+  let regex=new RegExp(".*\\s*(-|<)(>|-)\\s*.*\\s*"+className+"(\\s+\\w+)*\\s*;");
+  let res;
+  while((res=orig.match(regex))!=null){ 
+    orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+  }
+  regex=new RegExp(".*"+className+"\\s*(<|-)(>|-)\\s*.*\\s+\\w+;");
+  while((res=orig.match(regex))!=null){ 
+    orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+  }
+  //finds all children of target class and connects them to parent of target, if it exists
+  regex=new RegExp("isA\\s+"+className);
+  if(orig.match(regex)!=null){
+    let subregex=new RegExp("isA\\s+(\\w+);");
+    let test;
+    if((test=classCode.match(subregex))!=null){ //if parent class exists, link children to it
+      let parentClass="isA "+test[1]+";";
+      while((res=orig.match(regex))!=null){
+        orig=orig.substr(0,res.index)+parentClass+orig.substr(res.index+res[0].length+1,orig.length-(res.index+res[0].length+1));
+      }
+    } else { //if parent class does not exist, delete relevant isA statements
+      while((res=orig.match(regex))!=null){
+        orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length+1,orig.length-(res.index+res[0].length+1));
+      }
+    }
+  }
+  //remove any associationClass definitions containing this class
+  regex=new RegExp("associationClass\\s+\\w+\\s*\\n*{(\\n*\\W*\\w*;)*(\\s*CRUD_Value\\s*{(\\s*\\w*\\s*,*)*}\\s*\\n*)*(\\n*\\W*\\w*;)*([\\s|\\t]*[*]\\s+"+className+";)(\\n*\\W*\\w*;)*(\\s*CRUD_Value\\s*{(\\s*\\w*\\s*,*)*}\\s*\\n*)*(\\n*\\W*\\w*)*?}");
+  res=null;
+  while((res=orig.match(regex))!=null){ 
+    orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+  }
+  //set editor code, save new state, and remove the context menu
+  Page.codeMirrorEditor.setValue(orig);
+  Action.removeContextMenu();
+  TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+}
+//Adds an association to a class, this function is called by Action.displayMenu() when the user selects "Add Association"
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.addAssociationGv = function(classCode, className){
+  var elems=document.getElementsByClassName("node");
+  var orig=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+  Action.removeContextMenu();
+  //add event listener to Graphviz nodes for left click
+  for(let i=0;i<elems.length;i++){
+    elems[i].addEventListener("mousedown", function assocClass(event){
+      var elemText=event.target;
+      //iterate up to find class node
+      while(elemText.parentElement.id!="graph0"){
+        elemText=elemText.parentNode;
+      }
+      elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
+      let subtext="  * -> 1 "+elemText+";\n}\n";
+      let newClass=orig.substr(0,orig.length-1)+subtext;
+      Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
+      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+      let others=document.getElementsByClassName("node");
+      for(let q=0;q<others.length;q++){
+        others[q].removeEventListener("mousedown",assocClass);
+      }
+    });
+  }
+}
+//Action.displayMenu() is triggered by contextmenu event on Graphviz Class "node" elements
+//Draws a div containing the editing options for class GV diagrams, as well as calling the related function when clicked
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.displayMenu = function(event) {
+  if(!Action.diagramInSync){
+    return;
+  }
+  // Remove old menu, if any
+  Action.removeContextMenu();
+  var elemText=event.target;
+  //iterate up to top of class table
+  while(elemText.parentElement.id!="graph0"){
+    elemText=elemText.parentNode;
+  }
+  //unstable - grabs class name
+  elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
+  var orig=Page.codeMirrorEditor.getValue();
+  var chosenClass=Action.splitStates(orig);
+  for(let i=0;i<chosenClass.length;i++){
+    if(chosenClass[i].startsWith("class "+elemText+"{")||chosenClass[i].startsWith("class "+elemText+" ")||chosenClass[i].startsWith("class "+elemText+"\n")){
+      chosenClass=chosenClass[i];
+    }
+  }
+  if(typeof chosenClass != 'string'){
+    return;
+  }
+  var menu = document.createElement('customContextMenu');
+  var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color"];
+  var jsInput=chosenClass.replaceAll("\n","&#10").replaceAll("\"","&#$quot");;
+  var rowFuncs = ["Action.drawInput(\"attri\",\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+jsInput+"\",\""+elemText+"\")","Action.deleteClass(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"subclass\",\""+jsInput+"\",\""+elemText+"\")","Action.addAssociationGv(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"color\",\""+jsInput+"\",\""+elemText+"\")"];
+
+  menu.style.zIndex = "1000";
+  menu.style.border = "1px solid #ccc";
+  menu.style.backgroundColor = "#f8f8f8";
+  menu.style.padding = "5px";
+  menu.style.position = "fixed";
+  //add rows
+  for (var i = 0; i < rowContent.length; i++) {
+    var row = document.createElement("div");
+    row.style.padding = "5px";
+    row.style.borderRadius = "3px";
+    row.style.cursor = "pointer";
+    row.style.transition = "background-color 0.3s";
+    row.textContent = rowContent[i];
+    row.setAttribute('onclick',"javascript:"+rowFuncs[i]);
+    // Highlight row on hover
+    row.addEventListener("mouseover", function() {
+      this.style.backgroundColor = "#ddd";
+    });
+    row.addEventListener("mouseout", function() {
+      this.style.backgroundColor = "transparent";
+    });
+
+    //add row to context menu
+    menu.appendChild(row);
+
+  }
+
+  //set menu location at mouse, while ensuring it is on screen
+  var menuRect=menu.getBoundingClientRect();
+  if(event.clientX+menuRect.width>window.innerWidth){
+    menu.style.right=(window.innerWidth-event.clientX)+"px";
+  } else {
+    menu.style.left = event.clientX+"px";
+  }
+  if(event.clientY+menuRect.height>window.innerHeight){
+    menu.style.bottom=(window.innerHieght-event.clientY)+"px";
+  } else {
+    menu.style.top = event.clientY+"px";
+  }
+  // Add a listener to hide the menu when the user clicks outside of it
+  document.addEventListener('mousedown', function hideMenu(e) {
+    var prompt=document.getElementById("promptBox");
+    if (e.target != menu && !menu.contains(e.target)) {
+      if(prompt!=null&&e.target != prompt && !prompt.contains(e.target)){
+
+        document.removeEventListener('mousedown', hideMenu);
+        Action.removeContextMenu();
+        
+      } else {
+        document.removeEventListener('mousedown', hideMenu);
+        Action.removeContextMenu();
+      }
+    }
+  });
+  document.body.appendChild(menu);
+}
 
 Action.classSelected = function(obj)
 {
@@ -2765,6 +3378,24 @@ Action.updateUmpleDiagramCallback = function(response)
   }
   
   Page.hideLoading();
+  if(Page.useGvClassDiagram){
+    var elems=document.getElementsByClassName("node");
+    //add event listener to Graphviz Class nodes for right click
+    for(let i=0;i<elems.length;i++){
+      elems[i].addEventListener("contextmenu", function(event){event.preventDefault();Action.displayMenu(event);});
+    }
+  }
+  if(Page.useGvStateDiagram){
+    var elems=document.getElementsByClassName("node");
+    //add event listener to Graphviz state nodes for right click
+    for(let i=0;i<elems.length;i++){
+      elems[i].addEventListener("contextmenu", function(event){event.preventDefault();Action.drawStateMenu(event);});
+    }
+    elems=document.getElementsByClassName("cluster");
+    for(let i=0;i<elems.length;i++){
+      elems[i].addEventListener("contextmenu", function(event){event.preventDefault();Action.drawStateMenu(event);});
+    }
+  }
 }
 
 Action.updateFromDiagramCallback = function(response)
