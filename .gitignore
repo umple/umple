@@ -23,6 +23,11 @@ umpleonline/countlog.txt
 umpleonline/scripts/commandcount.txt
 umpleonline/scripts/specialPort.txt
 umpleonline/scripts/versionRunning.txt
+# Ignore the node_modules.
+# One can easily install the required 'node_modules' 
+# by executing the command "npm install".
+umpleonline/scripts/codemirror6-plugins/lang-umple/node_modules/
+umpleonline/scripts/codemirror6-plugins/umpleLezerTest/node_modules/
 umpleonline/testsuite/spec/temp_config.txt
 UmpleCodeExecution/config.cfg.bak
 UmpleCodeExecution/config.cfg
