@@ -415,12 +415,27 @@ class Parser
     return answer.toString();
   }
 
-  // Used to generate a nice html representation for the user manual
+  // Default grammar generation to html
   public String toGrammar()
   {
-    return toGrammarParts("");
+    return toGrammarHtml();
   }
 
+
+  // Used to generate a nice html representation for the user manual
+  public String toGrammarHtml()
+  {
+    return toGrammarParts("","html");
+  }
+
+  // Used to generate a lezer grammar.
+  // See https://lezer.codemirror.net/docs/guide/#writing-a-grammar
+  public String toGrammarLezer()
+  {
+    return toGrammarParts("","lezer");
+  }
+
+  // Converts a rule from Umple native format to html, including links to other rules
   private String cleanupRule(String cleanedUpRule)
   {
   
@@ -481,8 +496,29 @@ class Parser
     
     return cleanedUpRule;
   }
+  
+  private String cleanupRuleLezer(String cleanedUpRule)
+  {
+  
 
+    // Constant strings (i.e. keywords) and explicit special characters
+    cleanedUpRule = cleanedUpRule.replaceAll("([(]|\\s)([a-zA-Z_{}.,:;\\-\\\"<>]+|/|//|/\\*|\\*/|\\[|\\])(\\s|$|[)])", "$1\"$2\"$3");
+
+    // Replace all references to rules using [[ ]] with plain rule names as required by Lezer
+    cleanedUpRule = cleanedUpRule.replaceAll("\\Q[[\\E([a-zA-Z_]*)\\Q]]\\E", "$1");
+  
+    return cleanedUpRule;  
+  }
+
+  // Default grammar output to html format
   public String toGrammarParts(String rulesToOutput)
+  {
+     return toGrammarParts(rulesToOutput,"html");
+  }
+
+  // Converts specific Umple rules to an alternative format
+  // If rulesToOutput is empty then all rules are output
+  public String toGrammarParts(String rulesToOutput, String grammarFormat)
   {
     StringBuilder answer = new StringBuilder();
     StringBuilder queuedComments = new StringBuilder();
@@ -495,7 +531,12 @@ class Parser
       {
         if (rulesToOutput.length() == 0) {  // only output for complete grammar
           answer.append(queuedComments.toString());
-          answer.append("<br />\n");
+          if(grammarFormat.equals("lezer")) {
+            answer.append("\n");
+          }
+          else{ // default html
+            answer.append("<br />\n");
+          }
         }
         queuedComments = new StringBuilder();  // throw away comments so far
       }
@@ -505,13 +546,19 @@ class Parser
         // Skip items in the grammar marked 'TODO'
         if(!rule.matches("\\Q//TODO\\E.*"))
         {
-          queuedComments.append("<br />\n<font color=\"brown\">");
-          // Replace URLs in [* *] by links to them
-          String commentInterior=rule.replaceAll("\\Q[*http\\E(.*)\\Q*]\\E","<a style=\"color: brown\" href=\"http$1\">http$1</a>");
-          // Replace user manual refs by links to the local copy of the UM
-          commentInterior=commentInterior.replaceAll("\\Q[*\\E(.*)\\Q*]\\E","<a style=\"color: brown\" href=\"$1.html\">$1</a>");
-          queuedComments.append(commentInterior);
-          queuedComments.append("</font>");
+          if(grammarFormat.equals("lezer")) {
+            queuedComments.append(rule); // make no change when outputting to Lezer format
+            queuedComments.append("\n");            
+          }
+          else { // default to html formatting of comments
+            queuedComments.append("<br />\n<font color=\"brown\">");
+            // Replace URLs in [* *] by links to them
+            String commentInterior=rule.replaceAll("\\Q[*http\\E(.*)\\Q*]\\E","<a style=\"color: brown\" href=\"http$1\">http$1</a>");
+            // Replace user manual refs by links to the local copy of the UM
+            commentInterior=commentInterior.replaceAll("\\Q[*\\E(.*)\\Q*]\\E","<a style=\"color: brown\" href=\"$1.html\">$1</a>");
+            queuedComments.append(commentInterior);
+            queuedComments.append("</font>");
+          }
         }
       }
       else
@@ -533,28 +580,22 @@ class Parser
           {
             // We are to output the rule since we are outputting all
             // or it was listed in rulesToOutput
-            String cleanedUpRule = cleanupRule(splitRule[1]);
-
-            // Output the rule nicely
-
+            
             // Start by outputting any queued comments (if there are any)
             answer.append(queuedComments.toString());                 
             
-            answer.append("<br />\n<a name=\"");
-            answer.append(ruleName);  // anchor to link to
-            answer.append("\" ></a>"); 
-          
-            answer.append("<b><font color=\"#2E64FE\">");
-            answer.append(ruleName);  // displayed name
-            answer.append("</font></b>");
+            if(grammarFormat.equals("lezer"))
+            {
+              String cleanedUpRule = cleanupRuleLezer(splitRule[1]);
+              genRuleLezer(ruleName, answer, cleanedUpRule, hasMinus, hasHash);              
+            }
+            else // default is convert to html
+            {
+              String cleanedUpRule = cleanupRule(splitRule[1]);
+              genRuleHtml(ruleName, answer, cleanedUpRule, hasMinus, hasHash);
+            }
 
-            if(hasMinus == 1) answer.append("-");
-            if(hasHash == 1) answer.append("#");
-            answer.append(" :");
-            
-            answer.append(cleanedUpRule);
-            answer.append("<br />\n");
-            
+
           } // End outputting rule
           queuedComments = new StringBuilder(); // clear them whether or not output
         }
@@ -564,6 +605,34 @@ class Parser
       }
     } // end for loop of every line in the rule file
     return answer.toString();
+  }
+  
+  public void genRuleHtml(String ruleName, StringBuilder answer,  String cleanedUpRule, int hasMinus, int hasHash)
+  {
+    answer.append("<br />\n<a name=\"");
+    answer.append(ruleName);  // anchor to link to
+    answer.append("\" ></a>"); 
+
+    answer.append("<b><font color=\"#2E64FE\">");
+    answer.append(ruleName);  // displayed name
+    answer.append("</font></b>");
+
+    if(hasMinus == 1) answer.append("-");
+    if(hasHash == 1) answer.append("#");
+    answer.append(" :");
+
+    answer.append(cleanedUpRule);
+    answer.append("<br />\n");
+  }
+  
+  public void genRuleLezer(String ruleName, StringBuilder answer, String cleanedUpRule, int hasMinus, int hasHash)
+  {
+    // DEBUG this is a draft ... see genRuleHtml for other things we may need to do
+    if(ruleName.equals("program")) { answer.append("@top "); }
+    answer.append(ruleName);
+    answer.append(" {");
+    answer.append(cleanedUpRule);
+    answer.append("}\n");
   }
   
   // Output the parse tree. The code originally here has been refactored to Token class

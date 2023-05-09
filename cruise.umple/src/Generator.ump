@@ -77,7 +77,7 @@ use PapyrusGenerator, XmiGenerator, TextUmlGenerator, ScxmlGenerator, CodeGvClas
 use EventSequenceGenerator,  FeatureDiagramCo,  EntityRelationshipCon,  SimulateGenerator,  YumlGenerator;
 use XtextGenerator,  JsonGenerator,  JsonMixedGenerator,  StructureDiagramGenerator , GvStateDiagramGenerator;
 use StateTableGenerator, SuperGvGeneratorGenerator, HtmlGenerator, UmpleModelWalkerGenerator,  CodeAnalysisGenerator;
-use AlloyGenerator,  NuSMVGenerators, NuSMVGenerator,   NuSMVOptimizerGenerator,  SimpleMetricsGenerator, PlainRequirementsDocGenerator, CodeGvClassDiagramGenerator;
+use AlloyGenerator,  NuSMVGenerators, NuSMVGenerator,   NuSMVOptimizerGenerator,  SimpleMetricsGenerator, PlainRequirementsDocGenerator, CodeGvClassDiagramGenerator, ExternalGrammarGenerator;
 use UmpleAnnotaiveToCompositionGenerator;
 //End 
 
@@ -109,6 +109,7 @@ mixset GvStateDiagramGenerator {  use generators/statemachineDiagramGenerator/st
 mixset StateTableGenerator{ use generators/Generator_CodeStateTables.ump; }
 mixset EventSequenceGenerator{ use generators/Generator_CodeEventSequence.ump; }
 mixset SimpleMetricsGenerator{ use generators/Generator_CodeSimpleMetrics.ump; }
+mixset ExternalGrammarGenerator{ use generators/Generator_CodeExternalGrammar.ump; }
 mixset CodeGvClassDiagramGenerator{ use generators/Generator_CodeGvClassDiagram.ump;}
 mixset CodeGvClassTraitDiagramGenerator{ use generators/Generator_CodeGvClassTraitDiagram.ump; }
 mixset FeatureDiagramCo{ use generators/featureDiagramGenerator/FeatureDiagramConfig.ump; }
