@@ -1754,6 +1754,8 @@ Action.classClicked = function(event)
 
 Action.stateClicked = function(identifier)
 {
+    console.log("Debug G1: Inside stateClicked")
+    console.log("Event: ", event)
     if (!Action.diagramInSync) return;
     Action.focusOn("umpleCanvas", true);
     Action.focusOn("umpleModelEditorText", false);
@@ -2650,7 +2652,11 @@ Action.setCaretPosition = function(line)
     /* codemirror 6 line highlight by number*/
     if(line >= 1) {
       const docPosition = Page.codeMirrorEditor6.state.doc.line(line).from;
-      Page.codeMirrorEditor6.dispatch({effects: cm6.addLineHighlight.of(docPosition)})
+      // Page.codeMirrorEditor6.dispatch({effects: cm6.addLineHighlight.of(docPosition)})
+      Page.codeMirrorEditor6.dispatch({
+        selection: { anchor: docPosition },
+        scrollIntoView: true
+      })
     }
  
     return;
@@ -2864,10 +2870,33 @@ Action.selectItemCM6 = function(start){
   .
   Uncomment next 2 lines to see this issue
   */
-  // const lineNo = cm6.getRegExpCursorCM6(Page.codeMirrorEditor6.state.doc, start).value.from
-  // console.log("LINE No: ", lineNo)
-  const docPosition = Page.codeMirrorEditor6.state.doc.line(11).from;
-  Page.codeMirrorEditor6.dispatch({effects: cm6.addLineHighlight.of(docPosition)})
+  let code = Page.codeMirrorEditor6.state.doc.toString();
+  // console.log("CODE: ", code)
+  // console.log("TYPE: ", typeof code)
+  const matched = cm6.getRegExpCursorCM6(Page.codeMirrorEditor6.state.doc, start)
+  console.log("matched: ", matched)
+  let matchedBlockStart = matched.value.from;
+  let matchedBlockEnd = matched.value.to;
+  console.log("Start Position No: ", matchedBlockStart)
+  console.log("End Position No: ", matchedBlockEnd)
+  console.log("Start Line No: ", Page.codeMirrorEditor6.state.doc.lineAt(matchedBlockStart))
+  console.log("End Line No: ", Page.codeMirrorEditor6.state.doc.lineAt(matchedBlockEnd))
+  
+  // const startLine = Page.codeMirrorEditor6.state.doc.lineAt(matchedBlockStart);
+  // let docPosition = startLine.from;
+  // Page.codeMirrorEditor6.dispatch({
+  //   effects: cm6.addLineHighlight.of(matchedBlockStart)
+  // })
+  // Page.codeMirrorEditor6.dispatch({
+  //   effects: cm6.addLineHighlight.of([
+  //     cm6.lineHighlightMark.range(matchedBlockStart, matchedBlockEnd)
+  //   ])
+  // });
+
+  Page.codeMirrorEditor6.dispatch({
+    selection: { anchor: cm6.getSelectionRange(matchedBlockStart, matchedBlockEnd)},
+    scrollIntoView: true
+  })
 }
 
 // Highlights the text of the method that is currently selected.
@@ -2886,7 +2915,7 @@ Action.selectClass = function(className)
   // var scursor2 =   "/(class|interface|trait) "+className+"($|\\\s|[{])/gm";
 	var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
   // console.log("Debug F2: Inside selectClass", "\n", "searchCursor1: ", scursor1, "\nsearchCursor2: ", scursor2)
-  console.log("Debug F2: Inside selectClass", "\n", "searchCursor: ", scursor, "\nnextCursor: ", ncursor)
+  //  console.log("Debug F2: Inside selectClass", "\n", "searchCursor: ", scursor, "\nnextCursor: ", ncursor)
 	// codemirror 5
   Action.selectItem(scursor, ncursor);
   // codemirror 6
@@ -3342,7 +3371,7 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   // CM5 -  Page.getUmpleCode()
   // CM6 - cm6.getCodeMirror6UmpleText()
   var canonical = Action.trimMultipleNonPrintingAndComments(Page.getUmpleCode());
-  console.log("canonical: ", canonical)
+  // console.log("canonical: ", canonical)
   if(!forceUpdate) {
     if(canonical == Action.savedCanonical)   
     {
