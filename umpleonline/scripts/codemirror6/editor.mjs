@@ -13,43 +13,6 @@ function getCodeMirror6UmpleText() {
   return CM6Data.codeMirror6UmpleText;
 }
 
-// // Define StateField
-// const listenChangesExtension = StateField.define({
-//   // we won't use the actual StateField value, null or undefined is fine
-//   create: () => null,
-//   update: (value, transaction) => {
-//     if (transaction.docChanged) {
-//       // access new content via the Transaction
-//       CM6Data.codeMirror6UmpleText = transaction.newDoc.toString();
-//       // console.log("Contents changed in codemirror 6 editor: "
-//       //  +CM6Data.codeMirror6UmpleText);
-//     }
-//     return null;
-//   },
-// });
-
-// highlight lines logic
-// const addLineHighlight = StateEffect.define();
-// const lineHighlightMark = Decoration.line({
-//   attributes: {style: 'background-color: yellow'},
-// });
-// const lineHighlightExtension = StateField.define({
-//   create() {
-//     return Decoration.none;
-//   },
-//   update(lines, tr) {
-//     lines = lines.map(tr.changes);
-//     for (let e of tr.effects) {
-//       if (e.is(addLineHighlight)) {
-//         lines = Decoration.none;
-//         lines = lines.update({add: [lineHighlightMark.range(e.value)]});
-//       }
-//     }
-//     return lines;
-//   },
-//   provide: (f) => EditorView.decorations.from(f),
-// });
-
 function createEditorState(intialContents, options={}) {
 
   let extensions = [
@@ -60,13 +23,8 @@ function createEditorState(intialContents, options={}) {
     syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
     EditorView.domEventHandlers({
       keydown(e, view) {
-        // console.log("change: ", e)
       }
     }),
-    // listenChangesExtension,
-    // lineHighlightExtension,
-    // keymap.of(options.extraKeys)
-    // ...options.extensions
   ]
   
   let startState = EditorState.create({
@@ -104,12 +62,5 @@ function getRegExpCursorCM6(code, queryString){
   return cursor.next();
 }
 
-function getSelectionRange(startPosition, endPosition) {
-  console.log("Inside getSelectionRange(): ", startPosition, endPosition)
-  return EditorSelection.create([
-    EditorSelection.range(startPosition, endPosition)
-  ])
-}
-
 export { createEditorState, createEditorView, createKeyMap, getCodeMirror6UmpleText, CM6Data, 
-  getRegExpCursorCM6, getSelectionRange } 
+  getRegExpCursorCM6, EditorSelection } 

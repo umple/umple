@@ -1755,7 +1755,7 @@ Action.classClicked = function(event)
 Action.stateClicked = function(identifier)
 {
     console.log("Debug G1: Inside stateClicked")
-    console.log("Event: ", event)
+    console.log("Identifier: ", identifier)
     if (!Action.diagramInSync) return;
     Action.focusOn("umpleCanvas", true);
     Action.focusOn("umpleModelEditorText", false);
@@ -1764,19 +1764,29 @@ Action.stateClicked = function(identifier)
     var identifierSM=idSplit[1]
     var identifierState=idSplit[2].replace("Entry:","").replace("Exit:","");
     identifierState=identifierState.replace("Exit:","");
+    console.log("identifierState: ", identifierState)
     Action.unselectAll();
     Action.elementClicked = true;
     var selectionIndicies=null;
+    var selectionIndiciesCM6=null;
     if(identifierState.includes('.')){ //nested case
+      console.log("stateClicked - if - nested case")
       identifierState=identifierState.split('.');
       selectionIndicies=Action.selectStateInClass(identifierClass,identifierSM,identifierState[0]);
+      console.log("identifierState.length: ", identifierState.length)
       for(let i=1;i<identifierState.length;i++){
+        console.log("Inside for-loop... iterating states within a state")
         selectionIndicies=Action.selectStateInState(selectionIndicies.startIndex,selectionIndicies.endIndex,identifierState[i]);
       }
     } else { //base case
+      console.log("stateClicked - else - base case")
       selectionIndicies=Action.selectStateInClass(identifierClass,identifierSM,identifierState);
+      console.log("selectionIndicies: ", selectionIndicies)
+      selectionIndiciesCM6 = Action.selectStateInClassCM6(identifierClass,identifierSM,identifierState);
+      console.log("selectionIndiciesCM6: ", selectionIndiciesCM6)
     }
     Action.highlightByIndex(selectionIndicies.startIndex,selectionIndicies.endIndex);
+    Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex);
 
 
 
@@ -2881,20 +2891,9 @@ Action.selectItemCM6 = function(start){
   console.log("End Position No: ", matchedBlockEnd)
   console.log("Start Line No: ", Page.codeMirrorEditor6.state.doc.lineAt(matchedBlockStart))
   console.log("End Line No: ", Page.codeMirrorEditor6.state.doc.lineAt(matchedBlockEnd))
-  
-  // const startLine = Page.codeMirrorEditor6.state.doc.lineAt(matchedBlockStart);
-  // let docPosition = startLine.from;
-  // Page.codeMirrorEditor6.dispatch({
-  //   effects: cm6.addLineHighlight.of(matchedBlockStart)
-  // })
-  // Page.codeMirrorEditor6.dispatch({
-  //   effects: cm6.addLineHighlight.of([
-  //     cm6.lineHighlightMark.range(matchedBlockStart, matchedBlockEnd)
-  //   ])
-  // });
 
   Page.codeMirrorEditor6.dispatch({
-    selection: { anchor: cm6.getSelectionRange(matchedBlockStart, matchedBlockEnd)},
+    selection: { anchor: matchedBlockStart },
     scrollIntoView: true
   })
 }
@@ -2905,7 +2904,10 @@ Action.selectMethod = function(methodName, type, accessMod)
 	var scursor = new RegExp(accessMod+" "+type+" "+methodName+"(\\\s|[(])");
 	var ncursor = new RegExp("(public|protected|private|class) [A-Za-z]");
 
-	Action.selectItem(scursor, ncursor);
+	// codemirror 5
+  Action.selectItem(scursor, ncursor);
+  // codemirror 6
+  Action.selectItemCM6(scursor);
 }
 
 // Highlights the text of the class that is currently selected.
@@ -2928,7 +2930,10 @@ Action.selectState = function(stateName)
     var scursor = new RegExp("(class|interface|trait) "+stateName+"($|\\\s|[{])");
     var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
 
-    Action.selectItem(scursor, ncursor);
+	// codemirror 5
+  Action.selectItem(scursor, ncursor);
+  // codemirror 6
+  Action.selectItemCM6(scursor);
 }
 Action.splitStates=function(inputStr){
   let output=[];
@@ -2991,6 +2996,7 @@ Action.indexToPos = function(index,inputText){
 }
 Action.selectStateInClass = function(className, smName, stateName) 
 {
+  console.log("Debug: Inside selectStateInClass")
   if(Page.codeMirrorOn) {
     let text = Page.codeMirrorEditor.getValue();
     let splitBuffer=Action.splitStates(text);
@@ -3038,7 +3044,66 @@ Action.selectStateInClass = function(className, smName, stateName)
   }
   return null; 
 }
+
+Action.selectStateInClassCM6 = function(className, smName, stateName) 
+{
+  console.log("Debug: Inside selectStateInClass CM6");
+  if(Page.codeMirrorOn) {
+    var text = Page.codeMirrorEditor6.state.doc.toString();
+    let splitBuffer=Action.splitStates(text);
+    let currClass=null;
+    let pattern = new RegExp("(?:class|queued)\\s+"+className,"");
+    for(let i=0;i<splitBuffer.length;i++){
+      if(splitBuffer[i].search(pattern)==0){
+        currClass=splitBuffer[i]; //set currClass to class code
+        break;
+      }
+    }
+    // console.log("currClass: ", currClass)
+    splitBuffer=Action.splitStates(currClass.substr(currClass.indexOf("{")+1)); //split class into un-nested SMs
+    let currSM=null;
+    for(let i=0;i<splitBuffer.length;i++){
+      let query=new RegExp("(?:queued\\s*)?"+smName);
+      if(splitBuffer[i].search(query)==0){
+        currSM=splitBuffer[i]; //set currSM to un-nested SM code
+        break;
+      }
+    }
+    // console.log("currSM: ", currSM)
+    splitBuffer=Action.splitStates(currSM.substr(currSM.indexOf("{")+1));
+    if (splitBuffer!=null) {
+      let states = splitBuffer;
+      let finState=null;
+      for(let i=0;i<states.length;i++){
+        if(states[i].search(stateName)==0){
+          finState=states[i];
+          break;
+        }
+      }
+      let startIndex=text.indexOf(currClass);//index of class start
+      let endIndex=startIndex+currClass.length;
+      // console.log("initial startIndex: ", startIndex)
+      // console.log("initial endIndex: ", endIndex)
+      startIndex=text.substr(startIndex,endIndex).indexOf(currSM)+startIndex;//match[1] contains the SM definition+name
+      endIndex=startIndex+currSM.length;
+      startIndex=text.substr(startIndex,endIndex).indexOf(finState)+startIndex;//finds target state definition within target class and state machine
+      endIndex=startIndex+finState.length;
+      // console.log("startIndex: ", startIndex)
+      // console.log("endIndex: ", endIndex)
+      var outputObj={startIndex:startIndex,endIndex:startIndex+finState.length};
+      return outputObj;
+      
+    } else {
+      console.log("No matching state found with regex:"+pattern);
+    }
+  } else {
+    console.log("No matching class and state machine found for class: "+className+" and sm "+smName);
+  }
+  return null; 
+}
+
 Action.selectStateInState = function(startIndex,endIndex,target){
+  console.log("Debug: Inside selectStateInState")
   let temp=Page.codeMirrorEditor.getValue().substr(startIndex,endIndex-startIndex);
   let states=Action.splitStates(temp.substr(temp.indexOf("{")+1));
   var stateFin=null;
@@ -3054,7 +3119,35 @@ Action.selectStateInState = function(startIndex,endIndex,target){
   return outputObj;
 }
 Action.highlightByIndex = function(startIndex,endIndex){
-  Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex,Page.codeMirrorEditor.getValue()),Action.indexToPos(endIndex,Page.codeMirrorEditor.getValue()))
+  Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex,Page.codeMirrorEditor.getValue()),
+  Action.indexToPos(endIndex,Page.codeMirrorEditor.getValue()))
+}
+
+Action.highlightByIndexCM6 = function(startIndex,endIndex){
+  let startSelection = Action.indexToPos(startIndex,Page.codeMirrorEditor6.state.doc.toString());
+  let startDocPosition = Page.codeMirrorEditor6.state.doc.line(startSelection.line +1).from;
+  console.log("selection start: ", startSelection)
+  console.log("selection start Document Position: ", startDocPosition)
+  let endSelection = Action.indexToPos(endIndex,Page.codeMirrorEditor6.state.doc.toString());
+  let endDocPosition = Page.codeMirrorEditor6.state.doc.line(endSelection.line +1).from;
+  console.log("selection end: ", endSelection)
+  console.log("selection end Document Position: ", endDocPosition)
+
+  // following code selects first line of intended block
+  // Page.codeMirrorEditor6.dispatch({ 
+  //   selection: { anchor: startDocPosition }, 
+  //   scrollIntoView: true 
+  // })
+
+  // following is for multiple selection ranges
+  Page.codeMirrorEditor6.dispatch({
+    selection: cm6.EditorSelection.create([
+      cm6.EditorSelection.range(startDocPosition, endDocPosition),
+      // cm6.EditorSelection.range(endDocPosition, endDocPosition+1),
+      // cm6.EditorSelection.cursor(endDocPosition+1)
+    ]),
+    scrollIntoView: true
+  })
 }
 
 Action.findEOL = function(inputStr){ //returns ONLY depth==0 lines as an array without letting non-EOL \n's cause line breaks
