@@ -1821,6 +1821,7 @@ Action.associationClicked = function(event)
 
 Action.transitionClicked = function(identifier)
 {
+  console.log("Inside transitionClicked: ")
   if(!Action.diagramInSync) return;
   Action.elementClicked = true;
   Action.unselectAll();
@@ -1844,6 +1845,7 @@ Action.transitionClicked = function(identifier)
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
   Action.highlightByIndex(startIndex,endIndex);
+  Action.highlightByIndexCM6(startIndex,endIndex);
 }
 Action.generalizationClicked = function(event)
 {
