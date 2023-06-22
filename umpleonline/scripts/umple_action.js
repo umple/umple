@@ -2862,42 +2862,25 @@ Action.selectItem = function(searchCursor, nextCursor)
       theEnd.ch = 999;
       break;
     }
-
+    console.log("start of selection: ", start)
+    console.log("start of selection: ", theEnd)
     Page.codeMirrorEditor.setSelection(start,theEnd);
+
+    // select code for class in CM6
+    let startDocPosition = Page.codeMirrorEditor6.state.doc.line(start.line +1).from;
+    let endDocPosition = Page.codeMirrorEditor6.state.doc.line(theEnd.line +1).from;
+    // Page.codeMirrorEditor.setSelection(start,theEnd);
+    Page.codeMirrorEditor6.dispatch({
+      selection: cm6.EditorSelection.create([
+        cm6.EditorSelection.range(startDocPosition, endDocPosition),
+        // cm6.EditorSelection.range(endDocPosition, endDocPosition+1),
+        // cm6.EditorSelection.cursor(endDocPosition+1)
+      ]),
+      scrollIntoView: true
+    })
     return;    //true 
   }
   return;  // false - important do not return a value or it won't work in Firefox/Opera
-}
-
-// CM6: code highlighting of text
-Action.selectItemCM6 = function(start){
-  console.log("Debug F4: Inside selectItemCM6");
-  // start = "/(class|interface|trait) "+"Shape2D"+"($|\\\s|[{])/gm";
-  // console.log("RegExCursor call: ", cm6.getRegExpCursorCM6(Page.codeMirrorEditor6.state.doc, start).flat.text.toString())
-  /*
-  NOTE:
-  The following line of code is always returning -1 which indicates,
-  the regular expression generated is not able to match anything
-  in the code present in CM6 editor
-  .
-  Uncomment next 2 lines to see this issue
-  */
-  let code = Page.codeMirrorEditor6.state.doc.toString();
-  // console.log("CODE: ", code)
-  // console.log("TYPE: ", typeof code)
-  const matched = cm6.getRegExpCursorCM6(Page.codeMirrorEditor6.state.doc, start)
-  console.log("matched: ", matched)
-  let matchedBlockStart = matched.value.from;
-  let matchedBlockEnd = matched.value.to;
-  console.log("Start Position No: ", matchedBlockStart)
-  console.log("End Position No: ", matchedBlockEnd)
-  console.log("Start Line No: ", Page.codeMirrorEditor6.state.doc.lineAt(matchedBlockStart))
-  console.log("End Line No: ", Page.codeMirrorEditor6.state.doc.lineAt(matchedBlockEnd))
-
-  Page.codeMirrorEditor6.dispatch({
-    selection: { anchor: matchedBlockStart },
-    scrollIntoView: true
-  })
 }
 
 // Highlights the text of the method that is currently selected.
@@ -2906,24 +2889,16 @@ Action.selectMethod = function(methodName, type, accessMod)
 	var scursor = new RegExp(accessMod+" "+type+" "+methodName+"(\\\s|[(])");
 	var ncursor = new RegExp("(public|protected|private|class) [A-Za-z]");
 
-	// codemirror 5
   Action.selectItem(scursor, ncursor);
-  // codemirror 6
-  Action.selectItemCM6(scursor);
 }
 
 // Highlights the text of the class that is currently selected.
 Action.selectClass = function(className) 
 {
 	var scursor = new RegExp("(class|interface|trait) "+className+" ($|\\\s|[{])");
-  // var scursor2 =   "/(class|interface|trait) "+className+"($|\\\s|[{])/gm";
 	var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
-  // console.log("Debug F2: Inside selectClass", "\n", "searchCursor1: ", scursor1, "\nsearchCursor2: ", scursor2)
-  //  console.log("Debug F2: Inside selectClass", "\n", "searchCursor: ", scursor, "\nnextCursor: ", ncursor)
-	// codemirror 5
+
   Action.selectItem(scursor, ncursor);
-  // codemirror 6
-  Action.selectItemCM6(scursor);
 }
 
 // Highlights the text of the state that is currently selected.
@@ -2932,11 +2907,9 @@ Action.selectState = function(stateName)
     var scursor = new RegExp("(class|interface|trait) "+stateName+"($|\\\s|[{])");
     var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
 
-	// codemirror 5
   Action.selectItem(scursor, ncursor);
-  // codemirror 6
-  Action.selectItemCM6(scursor);
 }
+
 Action.splitStates=function(inputStr){
   let output=[];
   let temp="";
