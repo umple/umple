@@ -6,6 +6,10 @@
 // Layout initialization and maintenance is located in umple_layout.js.
 
 Page = new Object();
+
+// Refactoring definitive text location
+Page.currentUmpleTextBeingEdited = "";
+
 Page.selectedItem = null;
 Page.selectedClass = null;
 Page.selectedAssociation = null;
@@ -625,6 +629,17 @@ Page.initCodeMirrorEditor = function() {
   } ); */
 }
 
+// Refactoring definitive text location
+Page.UpdateCurrentUmpleTextBeingEdited = function(codeToSave){
+  Page.currentUmpleTextBeingEdited = codeToSave;
+  
+  // Backup save for CM5 CodeMirror 5 to be deleted 
+  jQuery("#umpleModelEditorText").val(codeToSave);
+  
+  // Update the content in CM6 CodeMirror 6
+  // TODO
+}
+
 // Function to make the E G S icons in UmpleOnline context senstive (#1400)
 Page.setDiagramTypeIconState = function(diagramType){
   buttonList = ['ECD_button','GCD_button','SD_button'];
@@ -1058,7 +1073,9 @@ Page.setUmpleCode = function(umpleCode, reason)
       Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
     }
   }
-  jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
+  // Refactoring definitive text location
+  Page.updateCurrentUmpleTextBeingEdited(modelAndPositioning[0]);
+  //OLD jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
 
   if (typeof reason === 'function'){
     reason();

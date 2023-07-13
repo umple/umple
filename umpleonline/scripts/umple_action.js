@@ -4523,7 +4523,9 @@ Action.reindent = function(lines, cursorPos)
   {
     Page.codeMirrorEditor.setValue(codeAfterIndent);
   }
-  jQuery("#umpleModelEditorText").val(codeAfterIndent);
+  
+  // Refactoring definitive text location
+  Page.updateCurrentUmpleTextBeingEdited(codeAfterIndent);
 
   var cursorLine = Page.getRawUmpleCode().split("\n")[cursorPos.line];
   var whiteSpace = cursorLine.match(/^\s*/)[0].length;
