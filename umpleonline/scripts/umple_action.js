@@ -1704,7 +1704,7 @@ Action.classClicked = function(event)
 {
   // DEBUG F
   console.log("Debug F1: Inside classClicked")
-  console.log("Event: ", event)
+  // console.log("Event: ", event)
   if (!Action.diagramInSync) return;
   Action.focusOn("umpleCanvas", true);
   Action.focusOn("umpleModelEditorText", false);
@@ -2804,8 +2804,11 @@ Action.selectItem = function(searchCursor, nextCursor)
   console.log("Debug F3: Inside selectItem")
 	if(Page.codeMirrorOn) {
     var scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
-
+    console.log("scursor: ", scursor)
+    console.log("nextCursor: ", nextCursor)
+    
     if(!scursor.findNext()) {
+      console.log("scursor.findNext() is NULL or EMPTY !")
       return; // false
     }
 
@@ -2863,24 +2866,33 @@ Action.selectItem = function(searchCursor, nextCursor)
       break;
     }
     console.log("start of selection: ", start)
-    console.log("start of selection: ", theEnd)
+    console.log("end of selection: ", theEnd)
     Page.codeMirrorEditor.setSelection(start,theEnd);
-
-    // select code for class in CM6
-    let startDocPosition = Page.codeMirrorEditor6.state.doc.line(start.line +1).from;
-    let endDocPosition = Page.codeMirrorEditor6.state.doc.line(theEnd.line +1).from;
-    // Page.codeMirrorEditor.setSelection(start,theEnd);
-    Page.codeMirrorEditor6.dispatch({
-      selection: cm6.EditorSelection.create([
-        cm6.EditorSelection.range(startDocPosition, endDocPosition),
-        // cm6.EditorSelection.range(endDocPosition, endDocPosition+1),
-        // cm6.EditorSelection.cursor(endDocPosition+1)
-      ]),
-      scrollIntoView: true
-    })
     return;    //true 
   }
   return;  // false - important do not return a value or it won't work in Firefox/Opera
+}
+
+Action.selectItemCM6 = function(searchCursor, nextCursor, className){
+  console.log("Debug F4: Inside selectItemCM6")
+  if(Page.codeMirrorOn) {
+    var text = Page.codeMirrorEditor6.state.doc.toString();
+    let splitBuffer=Action.splitStates(text);
+    let currClass=null;
+    for(let i=0;i<splitBuffer.length;i++){
+      if(splitBuffer[i].search(searchCursor)==0){
+        currClass=splitBuffer[i];
+        break;
+      }
+    }
+    console.log("currClass: ", currClass)
+    let startIndex=text.indexOf(currClass);
+    let endIndex=startIndex+currClass.length;
+    // console.log("startIndex:", startIndex)
+    // console.log("endIndex:", endIndex)
+    var outputObj={startIndex: startIndex,endIndex: endIndex};
+    return outputObj;
+  }
 }
 
 // Highlights the text of the method that is currently selected.
@@ -2895,10 +2907,12 @@ Action.selectMethod = function(methodName, type, accessMod)
 // Highlights the text of the class that is currently selected.
 Action.selectClass = function(className) 
 {
-	var scursor = new RegExp("(class|interface|trait) "+className+" ($|\\\s|[{])");
+	var scursor = new RegExp("(class|interface|trait) "+className+"($|\\\s|[{])");
 	var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
 
   Action.selectItem(scursor, ncursor);
+  var selectionIndiciesCM6 = Action.selectItemCM6(scursor, ncursor, className);
+  Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex);
 }
 
 // Highlights the text of the state that is currently selected.

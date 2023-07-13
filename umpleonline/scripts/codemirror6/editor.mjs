@@ -3,7 +3,7 @@ import { EditorSelection, EditorState, StateEffect, StateField } from "@codemirr
 import { javascript } from "@codemirror/lang-javascript"
 import { lineNumbers, keymap, Decoration } from "@codemirror/view"
 import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from "@codemirror/language"
-import { RegExpCursor } from "@codemirror/search";
+import { SearchCursor, RegExpCursor } from "@codemirror/search";
 import { Text } from "@codemirror/text"
 
 var CM6Data = new Object();
@@ -21,6 +21,7 @@ function createEditorState(intialContents, options={}) {
     lineNumbers(),
     bracketMatching(),
     syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+    EditorView.lineWrapping,
     EditorView.domEventHandlers({
       keydown(e, view) {
       }
@@ -63,4 +64,4 @@ function getRegExpCursorCM6(code, queryString){
 }
 
 export { createEditorState, createEditorView, createKeyMap, getCodeMirror6UmpleText, CM6Data, 
-  getRegExpCursorCM6, EditorSelection } 
+  getRegExpCursorCM6, EditorSelection, SearchCursor, RegExpCursor, Text } 
