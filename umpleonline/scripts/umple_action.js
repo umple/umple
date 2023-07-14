@@ -3336,6 +3336,7 @@ Action.removeCheckComplexityWarning = function()
 
 // Called after a 3s delay as controlled by umpleTypingActivity when
 // text has been edited in any of the editors (indicated by target)
+// Target can be diagramEdit (when diagram changed), newEditor for CM6, codeMirrorEditor (will be obsolete)
 Action.processTyping = function(target, manuallySynchronized)
 {
   // DEBUG A2
@@ -3345,12 +3346,16 @@ Action.processTyping = function(target, manuallySynchronized)
 
   // Update the 'other' codemirror editor
   if (target == "codeMirrorEditor") {
+    // A change has been made in the CM5 editor so get that text and set it as the definitive text
     console.log("Updating CM6 text with contents from CM5");
-    Page.setCodeMirror6Text(document.getElementById("umpleModelEditorText").value);
+    // Refactoring definitive text location
+    Page.setUmpleCode(document.getElementById("umpleModelEditorText").value);
+    // OLD Page.setCodeMirror6Text(document.getElementById("umpleModelEditorText").value);
   }
   // TODO: uncomment this
   // Note: Comment this to interact CM5 and CM6 with the diagram seperately
   else if (target == "newEditor") {
+    // A change has been made in the CM6 editor so get that text and set it as the definitive text
     Page.setUmpleCode(cm6.getCodeMirror6UmpleText());
     console.log("Need to update CM5 text with contents from CM6");
   }
@@ -3401,6 +3406,21 @@ Action.processTyping = function(target, manuallySynchronized)
   }
 	setTimeout(Action.checkComplexity,10000);
 }
+
+// Refactoring definitive text location
+// This function stores just the core umple code, NOT the layout
+Action.updateCurrentUmpleTextBeingEdited = function(codeToSave){
+  // Back up the data in the main editor
+  Page.currentUmpleTextBeingEdited = codeToSave;
+  
+  // Backup save for CM5 CodeMirror 5 to be deleted 
+  jQuery("#umpleModelEditorText").val(codeToSave);
+  
+  // Update the content in CM6 CodeMirror 6
+  console.log("In updateCurrentUmpleTextBeingEdited ... about to call Page.setCodeMirror6Text");
+  Page.blahblah("stuff");
+  Page.setCodeMirror6Text(codeToSave);
+};
 
 Action.updateLayoutEditorAndDiagram = function(target)
 {
@@ -4525,7 +4545,7 @@ Action.reindent = function(lines, cursorPos)
   }
   
   // Refactoring definitive text location
-  Page.updateCurrentUmpleTextBeingEdited(codeAfterIndent);
+  Action.updateCurrentUmpleTextBeingEdited(codeAfterIndent);
 
   var cursorLine = Page.getRawUmpleCode().split("\n")[cursorPos.line];
   var whiteSpace = cursorLine.match(/^\s*/)[0].length;

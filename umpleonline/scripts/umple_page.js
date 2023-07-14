@@ -55,6 +55,11 @@ Page.showGuards = true;
 Page.modifiedDiagrams = false;
 Page.allowPinch = false;
 
+  Page.blahblah = function (theString) {
+    console.log("In blah blah "+theString);
+  }
+
+
 
 // The following is set called from umple.php
 Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask, doEditTask, doCreateTask)
@@ -580,6 +585,7 @@ Page.initCodeMirrorEditor = function() {
   Page.codeMirrorEditor.on('gutterClick', function (id, theLine) {
     Page.codeMirrorEditor.foldCode(theLine);
   });
+
   
   /* codemirror 5: detect changes. See below for inverse */
   /* This is triggered indirectly by keyUP, which causes save to element 
@@ -591,9 +597,9 @@ Page.initCodeMirrorEditor = function() {
     /* update codemirror 6 panel with the same changes  .. NO LONGER DONE HERE  */
     // Page.setCodeMirror6Text(document.getElementById("umpleModelEditorText").value);
    });
-   
+      
   // Sets the codemirror 6 text without any change trigger (hopefully)
-  Page.setCodeMirror6Text = function(textToSet) {
+  Page.setCodeMirror6Text = function (textToSet) {
     Page.codeMirrorEditor6.dispatch({ 
       changes: { 
         from: 0, 
@@ -601,7 +607,7 @@ Page.initCodeMirrorEditor = function() {
         insert: textToSet
         }
     } )
-  };
+  }
    
   // codemirror 6: respond to each keyup to start the process of marking a change
   Page.codeMirrorEditor6.dom.addEventListener('keyup', function (ed, changes) {
@@ -627,17 +633,6 @@ Page.initCodeMirrorEditor = function() {
     // start timer to process changes 3s after after the editing is done
     Action.umpleCodeMirrorTypingActivity("notUsed");    
   } ); */
-}
-
-// Refactoring definitive text location
-Page.UpdateCurrentUmpleTextBeingEdited = function(codeToSave){
-  Page.currentUmpleTextBeingEdited = codeToSave;
-  
-  // Backup save for CM5 CodeMirror 5 to be deleted 
-  jQuery("#umpleModelEditorText").val(codeToSave);
-  
-  // Update the content in CM6 CodeMirror 6
-  // TODO
 }
 
 // Function to make the E G S icons in UmpleOnline context senstive (#1400)
@@ -1060,21 +1055,28 @@ Page.splitUmpleCode = function(umpleCode)
   return modelAndPositioning;
 }  
 
+// Takes as an argument the full file with core code and layout info
+// Called by fuunctions such as loadExampeCallback and loadFileCallback
+// Also called by updateUmpleTextCallback which is triggered by diagram edit by directUpdateCommandCallback  
+// Updates all text editors, and then can call a function called reason
 Page.setUmpleCode = function(umpleCode, reason)
 {
   var modelAndPositioning = Page.splitUmpleCode(umpleCode);
 
+  // Update the layout editor with the second part of the combined file
   jQuery("#umpleLayoutEditorText").val(modelAndPositioning[1]);
 
   if(Page.codeMirrorOn) {
     // issue#1409  Do not Set the umple code if codeChange is false(i.e. reason is false)
     if (!((typeof reason === 'boolean') && reason == false))
     {
+      // Update the codemirror 5 editor itself
       Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
     }
   }
   // Refactoring definitive text location
-  Page.updateCurrentUmpleTextBeingEdited(modelAndPositioning[0]);
+  // Update Codemirror 6 and the backup variable
+  Action.updateCurrentUmpleTextBeingEdited(modelAndPositioning[0]);
   //OLD jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
 
   if (typeof reason === 'function'){
