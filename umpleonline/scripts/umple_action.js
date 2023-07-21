@@ -2804,8 +2804,8 @@ Action.selectItem = function(searchCursor, nextCursor)
   console.log("Debug F3: Inside selectItem")
 	if(Page.codeMirrorOn) {
     var scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
-    console.log("scursor: ", scursor)
-    console.log("nextCursor: ", nextCursor)
+    // console.log("scursor: ", scursor)
+    // console.log("nextCursor: ", nextCursor)
     
     if(!scursor.findNext()) {
       console.log("scursor.findNext() is NULL or EMPTY !")
@@ -2865,8 +2865,8 @@ Action.selectItem = function(searchCursor, nextCursor)
       theEnd.ch = 999;
       break;
     }
-    console.log("start of selection: ", start)
-    console.log("end of selection: ", theEnd)
+    // console.log("start of selection: ", start)
+    // console.log("end of selection: ", theEnd)
     Page.codeMirrorEditor.setSelection(start,theEnd);
     return;    //true 
   }
@@ -2885,7 +2885,7 @@ Action.selectItemCM6 = function(searchCursor, nextCursor, className){
         break;
       }
     }
-    console.log("currClass: ", currClass)
+    // console.log("currClass: ", currClass)
     let startIndex=text.indexOf(currClass);
     let endIndex=startIndex+currClass.length;
     // console.log("startIndex:", startIndex)
@@ -3115,12 +3115,12 @@ Action.highlightByIndex = function(startIndex,endIndex){
 Action.highlightByIndexCM6 = function(startIndex,endIndex){
   let startSelection = Action.indexToPos(startIndex,Page.codeMirrorEditor6.state.doc.toString());
   let startDocPosition = Page.codeMirrorEditor6.state.doc.line(startSelection.line +1).from;
-  console.log("selection start: ", startSelection)
-  console.log("selection start Document Position: ", startDocPosition)
+  // console.log("selection start: ", startSelection)
+  // console.log("selection start Document Position: ", startDocPosition)
   let endSelection = Action.indexToPos(endIndex,Page.codeMirrorEditor6.state.doc.toString());
   let endDocPosition = Page.codeMirrorEditor6.state.doc.line(endSelection.line +1).from;
-  console.log("selection end: ", endSelection)
-  console.log("selection end Document Position: ", endDocPosition)
+  // console.log("selection end: ", endSelection)
+  // console.log("selection end Document Position: ", endDocPosition)
 
   // following code selects first line of intended block
   // Page.codeMirrorEditor6.dispatch({ 
@@ -3356,7 +3356,18 @@ Action.processTyping = function(target, manuallySynchronized)
   // Note: Comment this to interact CM5 and CM6 with the diagram seperately
   else if (target == "newEditor") {
     // A change has been made in the CM6 editor so get that text and set it as the definitive text
-    Page.setUmpleCode(cm6.getCodeMirror6UmpleText());
+    // Note: Following line results in Blanking out of everything
+    // Page.setUmpleCode(cm6.getCodeMirror6UmpleText());
+    // console.log("CM6 Code: ", cm6.getCodeMirror6UmpleText())
+
+    // Note: Line below updates CM6 with latest edited code
+    Page.setCodeMirror6Text(Page.codeMirrorEditor6.state.doc.toString());
+    // console.log("CM6 Code: ", Page.codeMirrorEditor6.state.doc.toString())
+
+    // Note: The below line updates contents of CM5 with latest CM6
+    // BUT after the update, diagram keeps updating iteratively
+    Page.setUmpleCode(Page.codeMirrorEditor6.state.doc.toString())
+
     console.log("Need to update CM5 text with contents from CM6");
   }
 
@@ -3418,7 +3429,7 @@ Action.updateCurrentUmpleTextBeingEdited = function(codeToSave){
   
   // Update the content in CM6 CodeMirror 6
   console.log("In updateCurrentUmpleTextBeingEdited ... about to call Page.setCodeMirror6Text");
-  Page.blahblah("stuff");
+  // Page.blahblah("stuff");
   Page.setCodeMirror6Text(codeToSave);
 };
 
