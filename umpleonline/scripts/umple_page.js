@@ -590,13 +590,14 @@ Page.initCodeMirrorEditor = function() {
   /* codemirror 5: detect changes. See below for inverse */
   /* This is triggered indirectly by keyUP, which causes save to element 
     umpleModelEditorText */
-  Page.codeMirrorEditor.on('change', function (ed, changes) {
-    /* start timer to process changes 3s after after the editing is done */
-    console.log("onChange Triggered")
-    Action.umpleCodeMirrorTypingActivity("codeMirrorEditor");
-    /* update codemirror 6 panel with the same changes  .. NO LONGER DONE HERE  */
-    // Page.setCodeMirror6Text(document.getElementById("umpleModelEditorText").value);
-   });
+  // Removing CM5
+  // Page.codeMirrorEditor.on('change', function (ed, changes) {
+  //   /* start timer to process changes 3s after after the editing is done */
+  //   console.log("onChange Triggered")
+  //   Action.umpleCodeMirrorTypingActivity("codeMirrorEditor");
+  //   /* update codemirror 6 panel with the same changes  .. NO LONGER DONE HERE  */
+  //   // Page.setCodeMirror6Text(document.getElementById("umpleModelEditorText").value);
+  //  });
       
   // Sets the codemirror 6 text without any change trigger (hopefully)
   Page.setCodeMirror6Text = function (textToSet) {
