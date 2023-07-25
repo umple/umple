@@ -2901,7 +2901,11 @@ Action.selectMethod = function(methodName, type, accessMod)
 	var scursor = new RegExp(accessMod+" "+type+" "+methodName+"(\\\s|[(])");
 	var ncursor = new RegExp("(public|protected|private|class) [A-Za-z]");
 
-  Action.selectItem(scursor, ncursor);
+  // Removing CM5
+  // Action.selectItem(scursor, ncursor);
+
+  var selectionIndiciesCM6 = Action.selectItemCM6(scursor, ncursor, className);
+  Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex);
 }
 
 // Highlights the text of the class that is currently selected.
@@ -2910,7 +2914,9 @@ Action.selectClass = function(className)
 	var scursor = new RegExp("(class|interface|trait) "+className+"($|\\\s|[{])");
 	var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
 
-  Action.selectItem(scursor, ncursor);
+  // Removing CM5
+  // Action.selectItem(scursor, ncursor);
+
   var selectionIndiciesCM6 = Action.selectItemCM6(scursor, ncursor, className);
   Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex);
 }
