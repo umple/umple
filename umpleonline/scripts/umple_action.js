@@ -1770,15 +1770,19 @@ Action.stateClicked = function(identifier)
     var selectionIndicies=null;
     var selectionIndiciesCM6=null;
     if(identifierState.includes('.')){ //nested case
-      console.log("stateClicked - if - nested case")
+      console.log("stateClicked - nested state case")
       identifierState=identifierState.split('.');
-      selectionIndicies=Action.selectStateInClass(identifierClass,identifierSM,identifierState[0]);
-      console.log("selectionIndicies: ", selectionIndicies)
+      // Removing CM5
+      // selectionIndicies=Action.selectStateInClass(identifierClass,identifierSM,identifierState[0]);
+      selectionIndiciesCM6=Action.selectStateInClassCM6(identifierClass,identifierSM,identifierState[0]);
+      // console.log("selectionIndicies: ", selectionIndicies)
       console.log("identifierState.length: ", identifierState.length)
       for(let i=1;i<identifierState.length;i++){
-        console.log("Inside for-loop... iterating states within a state")
-        selectionIndicies=Action.selectStateInState(selectionIndicies.startIndex,selectionIndicies.endIndex,identifierState[i]);
-        // selectionIndiciesCM6=Action.selectStateInStateCM6(selectionIndicies.startIndex,selectionIndicies.endIndex,identifierState[i]);
+        console.log("Iterating states within Identified state ...")
+        // console.log("selectionIndiciesCM6.startIndex: ", selectionIndiciesCM6.startIndex)
+        // Removing CM5
+        // selectionIndicies=Action.selectStateInState(selectionIndicies.startIndex,selectionIndicies.endIndex,identifierState[i]);
+        selectionIndiciesCM6=Action.selectStateInStateCM6(selectionIndiciesCM6.startIndex,selectionIndiciesCM6.endIndex,identifierState[i]);
       }
     } else { //base case
       console.log("stateClicked - else - base case")
@@ -3048,6 +3052,12 @@ Action.selectStateInClass = function(className, smName, stateName)
   return null; 
 }
 
+/*
+  Returns the start and ending position of state inside a state machine in a specific class
+  Parameters: stateName - state that has to be searched
+              smName - state machine inside which state has to be searched
+              className - class inside which state machine containing the state exists
+*/
 Action.selectStateInClassCM6 = function(className, smName, stateName) 
 {
   console.log("Debug: Inside selectStateInClass CM6");
@@ -3105,12 +3115,14 @@ Action.selectStateInClassCM6 = function(className, smName, stateName)
   return null; 
 }
 
+
 Action.selectStateInState = function(startIndex,endIndex,target){
   console.log("Debug: Inside selectStateInState")
+  // console.log("Parameters: ", startIndex, endIndex, target)
   let temp=Page.codeMirrorEditor.getValue().substr(startIndex,endIndex-startIndex);
-  console.log("code for NestedState: ", temp)
+  // console.log("code for NestedState: ", temp)
   let states=Action.splitStates(temp.substr(temp.indexOf("{")+1));
-  console.log("states: ", states)
+  // console.log("states: ", states)
   var stateFin=null;
   for(let i=0;i<states.length;i++){
     if(states[i].startsWith(target)){
@@ -3118,32 +3130,37 @@ Action.selectStateInState = function(startIndex,endIndex,target){
       break;
     }
   }
-  console.log("stateFin: ", stateFin)
+  // console.log("stateFin: ", stateFin)
+  // console.log("startIndex: ", startIndex)
+  let outputStart=temp.indexOf(stateFin)+startIndex;
+  let outputEnd=outputStart+stateFin.length;
+  let outputObj={startIndex:outputStart,endIndex:outputEnd};
+  // console.log("outputObj: ", outputObj)
+  return outputObj;
+}
+
+/*
+  Returns the start and ending position of target state within given indices range
+*/
+Action.selectStateInStateCM6 = function(startIndex,endIndex,target){
+  console.log("Debug: Inside selectStateInState CM6")
+  var temp = Page.codeMirrorEditor6.state.doc.toString().substr(startIndex,endIndex-startIndex);
+  // console.log("code for NestedState: ", temp)
+  let states=Action.splitStates(temp.substr(temp.indexOf("{")+1));
+  // console.log("states: ", states)
+  var stateFin=null;
+  for(let i=0;i<states.length;i++){
+    if(states[i].startsWith(target)){
+      stateFin=states[i];
+      break;
+    }
+  }
+  // console.log("stateFin: ", stateFin)
   let outputStart=temp.indexOf(stateFin)+startIndex;
   let outputEnd=outputStart+stateFin.length;
   let outputObj={startIndex:outputStart,endIndex:outputEnd};
   return outputObj;
 }
-
-// Action.selectStateInStateCM6 = function(startIndex,endIndex,target){
-//   console.log("Debug: Inside selectStateInState CM6")
-//   var temp = Page.codeMirrorEditor6.state.doc.toString().substr(startIndex,endIndex-startIndex);
-//   console.log("code for NestedState: ", temp)
-//   let states=Action.splitStates(temp.substr(temp.indexOf("{")+1));
-//   console.log("states: ", states)
-//   var stateFin=null;
-//   for(let i=0;i<states.length;i++){
-//     if(states[i].startsWith(target)){
-//       stateFin=states[i];
-//       break;
-//     }
-//   }
-//   console.log("stateFin: ", stateFin)
-//   let outputStart=temp.indexOf(stateFin)+startIndex;
-//   let outputEnd=outputStart+stateFin.length;
-//   let outputObj={startIndex:outputStart,endIndex:outputEnd};
-//   return outputObj;
-// }
 
 Action.highlightByIndex = function(startIndex,endIndex){
   Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex,Page.codeMirrorEditor.getValue()),
