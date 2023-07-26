@@ -2851,82 +2851,90 @@ Action.selectMatchingText = function(text)
   return false;
 }
 
+// Removing CM5
 // Code behind highlighting of text
-Action.selectItem = function(searchCursor, nextCursor)
-{
-  console.log("Debug F3: Inside selectItem")
-	if(Page.codeMirrorOn) {
-    var scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
-    // console.log("scursor: ", scursor)
-    // console.log("nextCursor: ", nextCursor)
+// Action.selectItem = function(searchCursor, nextCursor)
+// {
+//   console.log("Debug F3: Inside selectItem")
+// 	if(Page.codeMirrorOn) {
+//     var scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
+//     // console.log("scursor: ", scursor)
+//     // console.log("nextCursor: ", nextCursor)
     
-    if(!scursor.findNext()) {
-      console.log("scursor.findNext() is NULL or EMPTY !")
-      return; // false
-    }
+//     if(!scursor.findNext()) {
+//       console.log("scursor.findNext() is NULL or EMPTY !")
+//       return; // false
+//     }
 
-    // Have found declaration of class. Now have to search for the next class or end
-    var start = scursor.from();
+//     // Have found declaration of class. Now have to search for the next class or end
+//     var start = scursor.from();
 
-    var theEnd=new Object();
+//     var theEnd=new Object();
 
-    theEnd.line = Page.codeMirrorEditor.lineCount();
-    theEnd.ch = 9999;
+//     theEnd.line = Page.codeMirrorEditor.lineCount();
+//     theEnd.ch = 9999;
     
-    scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor,scursor.to());
+//     scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor,scursor.to());
     
-    while(scursor.findNext()) 
-    {
-      var endObject = scursor.from();
+//     while(scursor.findNext())
+//     {
+//       var endObject = scursor.from();
       
-      //This is checking if the class declaration found was in a single line comment.
-      innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
-      var commentFound = innerCursor.findPrevious();
-      if(commentFound && innerCursor.from().line == endObject.line) 
-      {
-        //The class declaration found was actually in a single line comment, keep searching
-        continue;
-      }
+//       //This is checking if the class declaration found was in a single line comment.
+//       innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
+//       var commentFound = innerCursor.findPrevious();
+//       if(commentFound && innerCursor.from().line == endObject.line) 
+//       {
+//         //The class declaration found was actually in a single line comment, keep searching
+//         continue;
+//       }
 
-      //Check if the found class declaration is in a multiline comment
-      innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
-      //Search backwards for a /* or */
-      var commentFound = innerCursor.findPrevious();
-      if (commentFound) 
-      {
-        if(commentFound[0] === "/*") 
-        {
-          //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
+//       //Check if the found class declaration is in a multiline comment
+//       innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
+//       //Search backwards for a /* or */
+//       var commentFound = innerCursor.findPrevious();
+//       if (commentFound) 
+//       {
+//         if(commentFound[0] === "/*") 
+//         {
+//           //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
           
-          //Look for the exit marker
-          innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
-          var commentFound = innerCursor.findNext();
+//           //Look for the exit marker
+//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
+//           var commentFound = innerCursor.findNext();
           
-          if(commentFound) 
-          {
-            var commentEnd = innerCursor.from();
-            if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch))
-            {
-              //The class declaration found is in a multiline comment, keep looking
-              continue;
-            }
-          }
-        }
-      }
+//           if(commentFound) 
+//           {
+//             var commentEnd = innerCursor.from();
+//             if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch))
+//             {
+//               //The class declaration found is in a multiline comment, keep looking
+//               continue;
+//             }
+//           }
+//         }
+//       }
       
-      theEnd.line = endObject.line -1;
-      theEnd.ch = 999;
-      break;
-    }
-    // console.log("start of selection: ", start)
-    // console.log("end of selection: ", theEnd)
-    Page.codeMirrorEditor.setSelection(start,theEnd);
-    return;    //true 
-  }
-  return;  // false - important do not return a value or it won't work in Firefox/Opera
-}
+//       theEnd.line = endObject.line -1;
+//       theEnd.ch = 999;
+//       break;
+//     }
+//     // console.log("start of selection: ", start)
+//     // console.log("end of selection: ", theEnd)
+//     Page.codeMirrorEditor.setSelection(start,theEnd);
+//     return;    //true 
+//   }
+//   return;  // false - important do not return a value or it won't work in Firefox/Opera
+// }
 
-Action.selectItemCM6 = function(searchCursor, nextCursor, className){
+/*
+  Called by Action.selectClass() or Action.selectMethod() or Action.selectState()
+  Returns an object containing start and end indices of item (class or method or state)
+  based on the searchCursor parameter
+  Parameters: searchCursor - a regular expression object created in either of Caller methods 
+                              with target class name or method name or state name
+*/
+Action.selectItemCM6 = function(searchCursor){
   console.log("Debug F4: Inside selectItemCM6")
   if(Page.codeMirrorOn) {
     var text = Page.codeMirrorEditor6.state.doc.toString();
@@ -2951,39 +2959,42 @@ Action.selectItemCM6 = function(searchCursor, nextCursor, className){
 // Highlights the text of the method that is currently selected.
 Action.selectMethod = function(methodName, type, accessMod)
 {
+  console.log("Inside selectMethod: ")
 	var scursor = new RegExp(accessMod+" "+type+" "+methodName+"(\\\s|[(])");
 	var ncursor = new RegExp("(public|protected|private|class) [A-Za-z]");
 
   // Removing CM5
   // Action.selectItem(scursor, ncursor);
 
-  var selectionIndiciesCM6 = Action.selectItemCM6(scursor, ncursor, className);
+  var selectionIndiciesCM6 = Action.selectItemCM6(scursor);
   Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex);
 }
 
 // Highlights the text of the class that is currently selected.
 Action.selectClass = function(className) 
 {
+  console.log("Inside selectClass: ")
 	var scursor = new RegExp("(class|interface|trait) "+className+"($|\\\s|[{])");
 	var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
 
   // Removing CM5
   // Action.selectItem(scursor, ncursor);
 
-  var selectionIndiciesCM6 = Action.selectItemCM6(scursor, ncursor, className);
+  var selectionIndiciesCM6 = Action.selectItemCM6(scursor);
   Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex);
 }
 
 // Highlights the text of the state that is currently selected.
 Action.selectState = function(stateName)
 {
+  console.log("Inside selectState: ")
     var scursor = new RegExp("(class|interface|trait) "+stateName+"($|\\\s|[{])");
     var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
 
   // Removing CM5
   // Action.selectItem(scursor, ncursor);
 
-  var selectionIndiciesCM6 = Action.selectItemCM6(scursor, ncursor, className);
+  var selectionIndiciesCM6 = Action.selectItemCM6(scursor);
   Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex);
 }
 
