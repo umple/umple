@@ -1844,18 +1844,38 @@ Action.associationClicked = function(event)
   Action.associationSelected(obj);
 }
 
+/*
+  Called when a transition is clicked in the state digram
+  Internally calls Action.selectStateInClassCM6() and Action.selectStateInStateCM6() 
+  to locate selected class, start and end states in the code present in code editor
+  and highlights the target transition between the start and end states
+
+  Parameters: identifier - complete name of target that was clicked in state machine diagram (See example below)
+              CourseSection*^*status*^*openRegistration*^*Planned*^*Open.NotEnoughStudents*^*
+              CourseSection - class name
+              status - state-machine name
+              openRegistration - transition name
+              Planned - start state
+              Open.NotEnoughStudents - end state
+*/
 Action.transitionClicked = function(identifier)
 {
   console.log("Inside transitionClicked: ")
+  console.log("identifier: ", identifier)
   if(!Action.diagramInSync) return;
+  if(typeof identifier === "string" && identifier === null) return;
   Action.elementClicked = true;
   Action.unselectAll();
   let id = identifier.split("*^*");
   let identifierState=id[3].split(".");
   dest=id[4];
-  var selection = Action.selectStateInClass(id[0],id[1],identifierState[0]);
+  // Remove CM5
+  // var selection = Action.selectStateInClass(id[0],id[1],identifierState[0]);
+  var selection = Action.selectStateInClassCM6(id[0],id[1],identifierState[0]);
   for (var i=1;i<identifierState.length;i++){
-    selection=Action.selectStateInState(selection.startIndex,selection.endIndex,identifierState[i]);
+    // Remove CM5
+    // selection=Action.selectStateInState(selection.startIndex,selection.endIndex,identifierState[i]);
+    selection=Action.selectStateInStateCM6(selection.startIndex,selection.endIndex,identifierState[i]);
   }
   let searchTerm=id[2].replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
   searchTerm=searchTerm.replace("after","after~`~?:Every`~`?"); //subpar solution, could be improved
@@ -1865,11 +1885,15 @@ Action.transitionClicked = function(identifier)
   }
   searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)?").replaceAll("(","\\(?").replaceAll("~`~","(").replaceAll("`~`",")").replaceAll(" ","\\s*").replaceAll(",","\\s*,\\s*").replaceAll("!","\\s*!\\s*").replaceAll("/","\\s*/\\s*"); 
   let pattern= new RegExp(searchTerm+".*->","s");
-  let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
-  let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
+  // Remove CM5
+  // let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
+  // let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
+  let startIndex=Page.codeMirrorEditor6.state.doc.toString().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
+  let cText = Page.codeMirrorEditor6.state.doc.toString().substr(startIndex);
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
-  Action.highlightByIndex(startIndex,endIndex);
+  // Remove CM5
+  // Action.highlightByIndex(startIndex,endIndex);
   Action.highlightByIndexCM6(startIndex,endIndex);
 }
 Action.generalizationClicked = function(event)
