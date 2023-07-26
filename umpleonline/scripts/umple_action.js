@@ -1184,11 +1184,11 @@ Action.drawStateMenu = function(){
   elemText=elemText.split("^*^"); //index 0: class, index 1: base state, index 2: remaining states
   elemText[2]=elemText[2].split(".");
   var orig=Page.codeMirrorEditor.getValue();
-  // Remove CM5
+  // Removing CM5
   // var chosenStateIndices=Action.selectStateInClass(elemText[0],elemText[1],elemText[2][0]);
   var chosenStateIndices=Action.selectStateInClassCM6(elemText[0],elemText[1],elemText[2][0]);
   for(let i=1;i<elemText[2].length;i++){
-    // Remove CM5
+    // Removing CM5
     // chosenStateIndices=Action.selectStateInState(chosenStateIndices.startIndex,chosenStateIndices.endIndex,elemText[2][i]);
     chosenStateIndices=Action.selectStateInStateCM6(chosenStateIndices.startIndex,chosenStateIndices.endIndex,elemText[2][i]);
   }
@@ -1873,11 +1873,11 @@ Action.transitionClicked = function(identifier)
   let id = identifier.split("*^*");
   let identifierState=id[3].split(".");
   dest=id[4];
-  // Remove CM5
+  // Removing CM5
   // var selection = Action.selectStateInClass(id[0],id[1],identifierState[0]);
   var selection = Action.selectStateInClassCM6(id[0],id[1],identifierState[0]);
   for (var i=1;i<identifierState.length;i++){
-    // Remove CM5
+    // Removing CM5
     // selection=Action.selectStateInState(selection.startIndex,selection.endIndex,identifierState[i]);
     selection=Action.selectStateInStateCM6(selection.startIndex,selection.endIndex,identifierState[i]);
   }
@@ -1889,14 +1889,14 @@ Action.transitionClicked = function(identifier)
   }
   searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)?").replaceAll("(","\\(?").replaceAll("~`~","(").replaceAll("`~`",")").replaceAll(" ","\\s*").replaceAll(",","\\s*,\\s*").replaceAll("!","\\s*!\\s*").replaceAll("/","\\s*/\\s*"); 
   let pattern= new RegExp(searchTerm+".*->","s");
-  // Remove CM5
+  // Removing CM5
   // let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
   // let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
   let startIndex=Page.codeMirrorEditor6.state.doc.toString().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
   let cText = Page.codeMirrorEditor6.state.doc.toString().substr(startIndex);
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
-  // Remove CM5
+  // Removing CM5
   // Action.highlightByIndex(startIndex,endIndex);
   Action.highlightByIndexCM6(startIndex,endIndex);
 }
@@ -3047,7 +3047,7 @@ Action.indexToPos = function(index,inputText){
   return  output;
 }
 
-// Remove CM5
+// Removing CM5
 // Action.selectStateInClass = function(className, smName, stateName)
 // {
 //   console.log("Debug: Inside selectStateInClass")
@@ -3162,7 +3162,7 @@ Action.selectStateInClassCM6 = function(className, smName, stateName)
   return null; 
 }
 
-// Remove CM5
+// Removing CM5
 // Action.selectStateInState = function(startIndex,endIndex,target){
 //   console.log("Debug: Inside selectStateInState")
 //   // console.log("Parameters: ", startIndex, endIndex, target)
@@ -3214,7 +3214,13 @@ Action.highlightByIndex = function(startIndex,endIndex){
   Action.indexToPos(endIndex,Page.codeMirrorEditor.getValue()))
 }
 
+/*
+  Highlights specific code in codemirror6 editor with startIndex and endIndex
+  Parameters: startIndex, endIndex
+              Exact position of start and end characters of code block to be highlighted in code-editor
+*/
 Action.highlightByIndexCM6 = function(startIndex,endIndex){
+  console.log("Inside highlightByIndexCM6: Highlighting code ...")
   let startSelection = Action.indexToPos(startIndex,Page.codeMirrorEditor6.state.doc.toString());
   let startDocPosition = Page.codeMirrorEditor6.state.doc.line(startSelection.line +1).from;
   // console.log("selection start: ", startSelection)
