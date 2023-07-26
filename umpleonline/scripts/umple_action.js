@@ -1752,6 +1752,23 @@ Action.classClicked = function(event)
   }
 }
 
+/*
+  Called whenever a state or nested state is clicked in a state diagram
+  Internally calls Action.selectStateInClassCM6() if single-level state is clicked in diagram
+  or
+  calls Action.selectStateInStateCM6() if nested-state is clicked in  diagram
+  Highlights the corresponding code for diagram part clicked, in the code editor
+
+  Parameters: identifier - complete name of target that was clicked in state machine diagram (See example below)
+              Single State -> CourseSection^*^status^*^Open
+                              CourseSection - Class name
+                              status - state-machine name
+                              open - state name
+              Nested State -> CourseSection^*^status^*^Open.NotEnoughStudents
+                              CourseSection - class name
+                              status - state-machine name
+                              Open.NotEnoughStudents - nested state
+*/
 Action.stateClicked = function(identifier)
 {
     console.log("Debug G1: Inside stateClicked")
