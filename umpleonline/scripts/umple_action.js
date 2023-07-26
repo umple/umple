@@ -1184,9 +1184,13 @@ Action.drawStateMenu = function(){
   elemText=elemText.split("^*^"); //index 0: class, index 1: base state, index 2: remaining states
   elemText[2]=elemText[2].split(".");
   var orig=Page.codeMirrorEditor.getValue();
-  var chosenStateIndices=Action.selectStateInClass(elemText[0],elemText[1],elemText[2][0]);
+  // Remove CM5
+  // var chosenStateIndices=Action.selectStateInClass(elemText[0],elemText[1],elemText[2][0]);
+  var chosenStateIndices=Action.selectStateInClassCM6(elemText[0],elemText[1],elemText[2][0]);
   for(let i=1;i<elemText[2].length;i++){
-    chosenStateIndices=Action.selectStateInState(chosenStateIndices.startIndex,chosenStateIndices.endIndex,elemText[2][i]);
+    // Remove CM5
+    // chosenStateIndices=Action.selectStateInState(chosenStateIndices.startIndex,chosenStateIndices.endIndex,elemText[2][i]);
+    chosenStateIndices=Action.selectStateInStateCM6(chosenStateIndices.startIndex,chosenStateIndices.endIndex,elemText[2][i]);
   }
   var chosenState=orig.substr(chosenStateIndices.startIndex,chosenStateIndices.endIndex-chosenStateIndices.startIndex);
   if(typeof chosenState != 'string'){
@@ -3042,56 +3046,58 @@ Action.indexToPos = function(index,inputText){
   output={line:outputLine,ch:ch};
   return  output;
 }
-Action.selectStateInClass = function(className, smName, stateName) 
-{
-  console.log("Debug: Inside selectStateInClass")
-  if(Page.codeMirrorOn) {
-    let text = Page.codeMirrorEditor.getValue();
-    let splitBuffer=Action.splitStates(text);
-    let currClass=null;
-    let pattern = new RegExp("(?:class|queued)\\s+"+className,"");
-    for(let i=0;i<splitBuffer.length;i++){
-      if(splitBuffer[i].search(pattern)==0){
-        currClass=splitBuffer[i]; //set currClass to class code
-        break;
-      }
-    }
-    splitBuffer=Action.splitStates(currClass.substr(currClass.indexOf("{")+1)); //split class into un-nested SMs
-    let currSM=null;
-    for(let i=0;i<splitBuffer.length;i++){
-      let query=new RegExp("(?:queued\\s*)?"+smName);
-      if(splitBuffer[i].search(query)==0){
-        currSM=splitBuffer[i]; //set currSM to un-nested SM code
-        break;
-      }
-    }
-    splitBuffer=Action.splitStates(currSM.substr(currSM.indexOf("{")+1));
-    if (splitBuffer!=null) {
-      let states = splitBuffer;
-      let finState=null;
-      for(let i=0;i<states.length;i++){
-        if(states[i].search(stateName)==0){
-          finState=states[i];
-          break;
-        }
-      }
-      let startIndex=text.indexOf(currClass);//index of class start
-      let endIndex=startIndex+currClass.length;
-      startIndex=text.substr(startIndex,endIndex).indexOf(currSM)+startIndex;//match[1] contains the SM definition+name
-      endIndex=startIndex+currSM.length;
-      startIndex=text.substr(startIndex,endIndex).indexOf(finState)+startIndex;//finds target state definition within target class and state machine
-      endIndex=startIndex+finState.length;
-      var outputObj={startIndex:startIndex,endIndex:startIndex+finState.length};
-      return outputObj;
+
+// Remove CM5
+// Action.selectStateInClass = function(className, smName, stateName)
+// {
+//   console.log("Debug: Inside selectStateInClass")
+//   if(Page.codeMirrorOn) {
+//     let text = Page.codeMirrorEditor.getValue();
+//     let splitBuffer=Action.splitStates(text);
+//     let currClass=null;
+//     let pattern = new RegExp("(?:class|queued)\\s+"+className,"");
+//     for(let i=0;i<splitBuffer.length;i++){
+//       if(splitBuffer[i].search(pattern)==0){
+//         currClass=splitBuffer[i]; //set currClass to class code
+//         break;
+//       }
+//     }
+//     splitBuffer=Action.splitStates(currClass.substr(currClass.indexOf("{")+1)); //split class into un-nested SMs
+//     let currSM=null;
+//     for(let i=0;i<splitBuffer.length;i++){
+//       let query=new RegExp("(?:queued\\s*)?"+smName);
+//       if(splitBuffer[i].search(query)==0){
+//         currSM=splitBuffer[i]; //set currSM to un-nested SM code
+//         break;
+//       }
+//     }
+//     splitBuffer=Action.splitStates(currSM.substr(currSM.indexOf("{")+1));
+//     if (splitBuffer!=null) {
+//       let states = splitBuffer;
+//       let finState=null;
+//       for(let i=0;i<states.length;i++){
+//         if(states[i].search(stateName)==0){
+//           finState=states[i];
+//           break;
+//         }
+//       }
+//       let startIndex=text.indexOf(currClass);//index of class start
+//       let endIndex=startIndex+currClass.length;
+//       startIndex=text.substr(startIndex,endIndex).indexOf(currSM)+startIndex;//match[1] contains the SM definition+name
+//       endIndex=startIndex+currSM.length;
+//       startIndex=text.substr(startIndex,endIndex).indexOf(finState)+startIndex;//finds target state definition within target class and state machine
+//       endIndex=startIndex+finState.length;
+//       var outputObj={startIndex:startIndex,endIndex:startIndex+finState.length};
+//       return outputObj;
       
-    } else {
-      console.log("No matching state found with regex:"+pattern);
-    }
-  } else {
-    console.log("No matching class and state machine found for class: "+className+" and sm "+smName);
-  }
-  return null; 
-}
+//     } else {
+//       console.log("No matching state found with regex:"+pattern);
+//     }
+//   } else {
+//     console.log("No matching class and state machine found for class: "+className+" and sm "+smName);
+//   }
+//   return null;
+// }
 
 /*
   Returns the start and ending position of state inside a state machine in a specific class
@@ -3156,29 +3162,29 @@ Action.selectStateInClassCM6 = function(className, smName, stateName)
   return null; 
 }
 
-
-Action.selectStateInState = function(startIndex,endIndex,target){
-  console.log("Debug: Inside selectStateInState")
-  // console.log("Parameters: ", startIndex, endIndex, target)
-  let temp=Page.codeMirrorEditor.getValue().substr(startIndex,endIndex-startIndex);
-  // console.log("code for NestedState: ", temp)
-  let states=Action.splitStates(temp.substr(temp.indexOf("{")+1));
-  // console.log("states: ", states)
-  var stateFin=null;
-  for(let i=0;i<states.length;i++){
-    if(states[i].startsWith(target)){
-      stateFin=states[i];
-      break;
-    }
-  }
-  // console.log("stateFin: ", stateFin)
-  // console.log("startIndex: ", startIndex)
-  let outputStart=temp.indexOf(stateFin)+startIndex;
-  let outputEnd=outputStart+stateFin.length;
-  let outputObj={startIndex:outputStart,endIndex:outputEnd};
-  // console.log("outputObj: ", outputObj)
-  return outputObj;
-}
+// Remove CM5
+// Action.selectStateInState = function(startIndex,endIndex,target){
+//   console.log("Debug: Inside selectStateInState")
+//   // console.log("Parameters: ", startIndex, endIndex, target)
+//   let temp=Page.codeMirrorEditor.getValue().substr(startIndex,endIndex-startIndex);
+//   // console.log("code for NestedState: ", temp)
+//   let states=Action.splitStates(temp.substr(temp.indexOf("{")+1));
+//   // console.log("states: ", states)
+//   var stateFin=null;
+//   for(let i=0;i<states.length;i++){
+//     if(states[i].startsWith(target)){
+//       stateFin=states[i];
+//       break;
+//     }
+//   }
+//   // console.log("stateFin: ", stateFin)
+//   // console.log("startIndex: ", startIndex)
+//   let outputStart=temp.indexOf(stateFin)+startIndex;
+//   let outputEnd=outputStart+stateFin.length;
+//   let outputObj={startIndex:outputStart,endIndex:outputEnd};
+//   // console.log("outputObj: ", outputObj)
+//   return outputObj;
+// }
 
 /*
   Returns the start and ending position of target state within given indices range
