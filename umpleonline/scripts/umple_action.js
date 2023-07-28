@@ -1015,6 +1015,8 @@ Action.simulateCodeCallback = function(response)
 //menu edits on states.
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.drawInputState = function(inputType,stateCode,stateName){
+  console.log("Inside drawInputState: ")
+  console.log("with inputType: ", inputType)
   var prompt = document.createElement('div');
   prompt.style.zIndex = "1000";
   prompt.style.border = "1px solid #ccc";
@@ -1057,18 +1059,27 @@ Action.drawInputState = function(inputType,stateCode,stateName){
   // Add a listener to hide the prompt when the user clicks outside of it
   document.addEventListener("mousedown", hider);
   if(inputType=="rename"){
+    console.log("Renaming State ...")
     label.appendChild(document.createTextNode("New name for \'"+stateName+"\'?"));
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         //only accounts for case where states all have unique names
         if(Action.validateAttributeName(input.value)){
-          let orig=Page.codeMirrorEditor.getValue();
+          // Removing CM5
+          // let orig=Page.codeMirrorEditor.getValue();
+
+          // get contents of codemirror 6 editor
+          let orig = Page.codeMirrorEditor6.state.doc.toString();
           let regex=new RegExp("(\\W+)("+stateName+")(\\W+)");
           let res;
           while((res=orig.match(regex))!=null){
             orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
           }
-          Page.codeMirrorEditor.setValue(orig);
+          // Removing CM5
+          // Page.codeMirrorEditor.setValue(orig);
+
+          // update content of codemirror 6 editor with updated code/text
+          Page.setCodeMirror6Text(orig);
           document.removeEventListener("mousedown", hider);
           prompt.remove();
           Action.removeContextMenu();
@@ -1169,6 +1180,7 @@ Action.deleteState = function(stateCode,className,smName,stateName){
 //Draws a div containing the editing options for state GV diagrams, as well as calling the related function when clicked
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.drawStateMenu = function(){
+  console.log("Inside drawStateMenu: ")
   if(!Action.diagramInSync){
     return;
   }
@@ -1183,7 +1195,9 @@ Action.drawStateMenu = function(){
   var elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length));
   elemText=elemText.split("^*^"); //index 0: class, index 1: base state, index 2: remaining states
   elemText[2]=elemText[2].split(".");
-  var orig=Page.codeMirrorEditor.getValue();
+  // Removing CM5
+  // var orig=Page.codeMirrorEditor.getValue();
+  var orig = Page.codeMirrorEditor6.state.doc.toString();
   // Removing CM5
   // var chosenStateIndices=Action.selectStateInClass(elemText[0],elemText[1],elemText[2][0]);
   var chosenStateIndices=Action.selectStateInClassCM6(elemText[0],elemText[1],elemText[2][0]);
@@ -1193,6 +1207,7 @@ Action.drawStateMenu = function(){
     chosenStateIndices=Action.selectStateInStateCM6(chosenStateIndices.startIndex,chosenStateIndices.endIndex,elemText[2][i]);
   }
   var chosenState=orig.substr(chosenStateIndices.startIndex,chosenStateIndices.endIndex-chosenStateIndices.startIndex);
+  console.log("chosenState: ", chosenState)
   if(typeof chosenState != 'string'){
     return;
   }
@@ -2338,6 +2353,7 @@ Action.directUpdateCommandCallback = function(response)
 // such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
 {
+  console.log("Inside updateUmpleTextCallback: ")
   if (!justUpdatetoSaveLater && !justUpdatetoSaveLaterForTextCallback){
     TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
     Page.setExampleMessage("");
@@ -4058,6 +4074,7 @@ Action.generateStructureDiagramFileCallback = function(response)
 Action.ajax = function(callback,post,target,errors,tabIndependent)
 {
   console.log("Debug E2 : Sending Ajax request - ", target)
+  // console.log("callback : ", callback)
   // CM5 -  Page.getUmpleCode()
   // CM6 - cm6.getCodeMirror6UmpleText()
   var modelAndPositioning = null;
@@ -4070,7 +4087,7 @@ Action.ajax = function(callback,post,target,errors,tabIndependent)
   // else {
   //   modelAndPositioning = Page.getUmpleCode();
   // }
-  console.log("Debug E3: ", target)
+  // console.log("Debug E3: ", target)
   // console.log(": \nmodelAndPositioning", modelAndPositioning)
   var umpleCode = encodeURIComponent(modelAndPositioning);
   var filename = Page.getFilename();

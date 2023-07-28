@@ -1017,7 +1017,7 @@ Page.getRawUmpleCode = function()
 
 Page.getUmpleCode = function()
 {
-  // console.log("Inside getUmpleCode")
+  console.log("Inside getUmpleCode")
   var modelCleaned = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
   var positioning = jQuery("#umpleLayoutEditorText").val().replace(Page.modelDelimiter, "");
   if(positioning !== "" && !positioning.includes("namespace -;")){
