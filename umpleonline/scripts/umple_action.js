@@ -1065,25 +1065,36 @@ Action.drawInputState = function(inputType,stateCode,stateName){
       if (e.key === 'Enter') {
         //only accounts for case where states all have unique names
         if(Action.validateAttributeName(input.value)){
+          console.log("Getting code from codemirror editor ...")
+
           // Removing CM5
           // let orig=Page.codeMirrorEditor.getValue();
 
           // get contents of codemirror 6 editor
           let orig = Page.codeMirrorEditor6.state.doc.toString();
+
           let regex=new RegExp("(\\W+)("+stateName+")(\\W+)");
           let res;
           while((res=orig.match(regex))!=null){
             orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
           }
+          console.log("Setting updated code to codemirror editor ...")
           // Removing CM5
           // Page.codeMirrorEditor.setValue(orig);
 
           // update content of codemirror 6 editor with updated code/text
           Page.setCodeMirror6Text(orig);
+
+          // Action.processTyping("codeMirrorEditor")
+          setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+
           document.removeEventListener("mousedown", hider);
+          console.log("Removing mousedown event ...")
           prompt.remove();
           Action.removeContextMenu();
-          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+          // Remove CM5
+          // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+          TabControl.getCurrentHistory().save(orig, "menuUpdate");
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
         }
