@@ -618,6 +618,7 @@ TabControl.addCallbackToRequestQueue = function(callback)
  */
 TabControl.getCurrentHistory = function()
 {
+  console.log("Inside TabControl.getCurrentHistory() ...")
   if (!TabControl.activeTab) return History.getInstance();
   return TabControl.tabs[TabControl.activeTab.id].history;
 }

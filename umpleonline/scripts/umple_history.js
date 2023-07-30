@@ -118,6 +118,7 @@ History.getPreviousVersion = function(instance)
 // Save a new version of the code
 History.save = function(instance, umpleCode, reason)
 {
+  console.log("History.save() :  Saving a new version of code ...")
   if (instance.getVersion(instance.currentIndex) == umpleCode) return;
 
   console.log("========== saved");

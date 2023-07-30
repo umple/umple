@@ -1207,7 +1207,7 @@ Action.drawStateMenu = function(){
     chosenStateIndices=Action.selectStateInStateCM6(chosenStateIndices.startIndex,chosenStateIndices.endIndex,elemText[2][i]);
   }
   var chosenState=orig.substr(chosenStateIndices.startIndex,chosenStateIndices.endIndex-chosenStateIndices.startIndex);
-  console.log("chosenState: ", chosenState)
+  // console.log("chosenState: ", chosenState)
   if(typeof chosenState != 'string'){
     return;
   }
@@ -3475,14 +3475,14 @@ Action.removeCheckComplexityWarning = function()
 Action.processTyping = function(target, manuallySynchronized)
 {
   // DEBUG A2
-  console.log(target + ": DEBUG A2 Inside processTyping after 3s delay");
+  console.log("Inside Action.processTyping() after 3s delay with target: ", target);
   // console.log("DEBUG A3: cm6 data="+cm6.getCodeMirror6UmpleText());
   // console.log("DEBUG A4");
 
   // Update the 'other' codemirror editor
   if (target == "codeMirrorEditor") {
     // A change has been made in the CM5 editor so get that text and set it as the definitive text
-    console.log("Updating CM6 text with contents from CM5");
+    // console.log("Updating CM6 text with contents from CM5");
     // Refactoring definitive text location
     Page.setUmpleCode(document.getElementById("umpleModelEditorText").value);
     // OLD Page.setCodeMirror6Text(document.getElementById("umpleModelEditorText").value);
@@ -3503,7 +3503,7 @@ Action.processTyping = function(target, manuallySynchronized)
     // BUT after the update, diagram keeps updating iteratively
     Page.setUmpleCode(Page.codeMirrorEditor6.state.doc.toString())
 
-    console.log("Need to update CM5 text with contents from CM6");
+    // console.log("Need to update CM5 text with contents from CM6");
   }
 
   // Save in history after a pause in typing
@@ -3514,11 +3514,11 @@ Action.processTyping = function(target, manuallySynchronized)
   else{
     Action.setjustUpdatetoSaveLaterForTextCallback(false);
   }
-  console.log("Debug E1: Just before !Action.manualSync || manuallySynchronized", Action.manualSync, manuallySynchronized)
+  // console.log("Debug E1: Just before !Action.manualSync || manuallySynchronized", Action.manualSync, manuallySynchronized)
   // Cause changed in text to be made to the diagram
   if (!Action.manualSync || manuallySynchronized)
   {
-    console.log("Debug E1.1: Inside !Action.manualSync || manuallySynchronized")
+  // console.log("Debug E1.1: Inside !Action.manualSync || manuallySynchronized")
     Action.diagramInSync = true;
     
     // target == "newEditor" added for codemirror 6
@@ -3578,9 +3578,9 @@ Action.updateUmpleLayoutEditor = function(response)
 {
   console.log("Debug E4: Inside updateUmpleLayoutEditor")
   //Extract data from response
-  console.log("Response: ", response)
+  // console.log("Response: ", response)
   var codeparts = response.responseText.split('URL_SPLIT');
-  console.log("codeparts: ", codeparts)
+  // console.log("codeparts: ", codeparts)
   var errorMessage=codeparts[0];
   var umpleJson=codeparts[1];//Remove the URL_SPLIT in umpleJson
 
@@ -4073,7 +4073,7 @@ Action.generateStructureDiagramFileCallback = function(response)
 
 Action.ajax = function(callback,post,target,errors,tabIndependent)
 {
-  console.log("Debug E2 : Sending Ajax request - ", target)
+  console.log("Debug E2 : Action.ajax() with target: ", target)
   // console.log("callback : ", callback)
   // CM5 -  Page.getUmpleCode()
   // CM6 - cm6.getCodeMirror6UmpleText()
