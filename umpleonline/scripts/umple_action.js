@@ -1198,8 +1198,13 @@ Action.drawInputState = function(inputType,stateCode,stateName){
 //Deletes a target state within the specific SM and Class, as well any transitions to/from target state
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.deleteState = function(stateCode,className,smName,stateName){
+  console.log("Inside Action.deleteState ...")
   let subStates=stateName.split(",");
-  let orig=Page.codeMirrorEditor.getValue();
+  console.log("Getting code from codemirror editor ...")
+  // Removing CM5
+  // let orig=Page.codeMirrorEditor.getValue();
+  let orig=Page.codeMirrorEditor6.state.doc.toString();
+  console.log("Deleting State: ", stateName)
   let unsanitizedState = stateCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
   orig=orig.replace(unsanitizedState,"");
   //delete any transitions leading to target state - this handles the case where there are NOT multiple states with the same name
@@ -1208,8 +1213,16 @@ Action.deleteState = function(stateCode,className,smName,stateName){
   while((res=orig.match(regex))!=null){ 
     orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
   }
-  Page.codeMirrorEditor.setValue(orig);
-  TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+  console.log("Setting updated code to codemirror editor ...")
+  // Removing CM5
+  // Page.codeMirrorEditor.setValue(orig);
+  Page.setCodeMirror6Text(orig);
+
+  setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+
+  // Removing CM5
+  // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+  TabControl.getCurrentHistory().save(orig, "menuUpdate");
   Action.removeContextMenu();
 }
 //Action.drawStateMenu() is triggered by contextmenu event on Graphviz State Diagram "node" elements
