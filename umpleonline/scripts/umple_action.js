@@ -3605,6 +3605,7 @@ Action.processTyping = function(target, manuallySynchronized)
 // Refactoring definitive text location
 // This function stores just the core umple code, NOT the layout
 Action.updateCurrentUmpleTextBeingEdited = function(codeToSave){
+  console.log("Inside Action.updateCurrentUmpleTextBeingEdited() ...")
   // Back up the data in the main editor
   Page.currentUmpleTextBeingEdited = codeToSave;
   
@@ -3612,7 +3613,6 @@ Action.updateCurrentUmpleTextBeingEdited = function(codeToSave){
   jQuery("#umpleModelEditorText").val(codeToSave);
   
   // Update the content in CM6 CodeMirror 6
-  console.log("In updateCurrentUmpleTextBeingEdited ... about to call Page.setCodeMirror6Text");
   // Page.blahblah("stuff");
   Page.setCodeMirror6Text(codeToSave);
 };
@@ -3665,8 +3665,7 @@ Action.updateUmpleDiagram = function() {
 Action.updateUmpleDiagramForce = function(forceUpdate)
 {
   console.log("Inside updateUmpleDiagramForce")
-  // CM5 -  Page.getUmpleCode()
-  // CM6 - cm6.getCodeMirror6UmpleText()
+  // Removing CM5
   var canonical = Action.trimMultipleNonPrintingAndComments(Page.getUmpleCode());
   // console.log("canonical: ", canonical)
   if(!forceUpdate) {

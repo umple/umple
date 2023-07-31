@@ -601,6 +601,7 @@ Page.initCodeMirrorEditor = function() {
       
   // Sets the codemirror 6 text without any change trigger (hopefully)
   Page.setCodeMirror6Text = function (textToSet) {
+    console.log("Inside Page.setCodeMirror6Text() ...")
     Page.codeMirrorEditor6.dispatch({ 
       changes: { 
         from: 0, 
@@ -1062,9 +1063,11 @@ Page.splitUmpleCode = function(umpleCode)
 // Updates all text editors, and then can call a function called reason
 Page.setUmpleCode = function(umpleCode, reason)
 {
+  console.log("Inside Page.setUmpleCode() ...")
   var modelAndPositioning = Page.splitUmpleCode(umpleCode);
 
   // Update the layout editor with the second part of the combined file
+  console.log("Setting positioningCode into umpleLayoutEditorText html element ...")
   jQuery("#umpleLayoutEditorText").val(modelAndPositioning[1]);
 
   if(Page.codeMirrorOn) {
@@ -1072,11 +1075,13 @@ Page.setUmpleCode = function(umpleCode, reason)
     if (!((typeof reason === 'boolean') && reason == false))
     {
       // Update the codemirror 5 editor itself
+      console.log("Setting modelCode to codeMirror editor ...")
       Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
     }
   }
   // Refactoring definitive text location
   // Update Codemirror 6 and the backup variable
+  console.log("Setting modelCode to codeMirror 6 ...")
   Action.updateCurrentUmpleTextBeingEdited(modelAndPositioning[0]);
   //OLD jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
 
