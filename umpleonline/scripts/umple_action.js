@@ -1092,7 +1092,7 @@ Action.drawInputState = function(inputType,stateCode,stateName){
           console.log("Removing mousedown event ...")
           prompt.remove();
           Action.removeContextMenu();
-          // Remove CM5
+          // Removing CM5
           // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
           TabControl.getCurrentHistory().save(orig, "menuUpdate");
         } else if(!document.contains(inputErrorMsg)) {
@@ -1101,17 +1101,31 @@ Action.drawInputState = function(inputType,stateCode,stateName){
       }
     });  
   } else if(inputType=="substate") {
+    console.log("Substating state ...")
     label.appendChild(document.createTextNode("Name of new substate?"));
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
           let subtext=unsanitizedState.substr(0,unsanitizedState.length-1)+"  "+input.value+"{}}";
-          subtext=Page.codeMirrorEditor.getValue().replace(unsanitizedState,subtext);
-          Page.codeMirrorEditor.setValue(subtext);
+          console.log("Getting original code and adding substate ...")
+          // Removing CM5
+          // subtext=Page.codeMirrorEditor.getValue().replace(unsanitizedState,subtext);
+          subtext=Page.codeMirrorEditor6.state.doc.toString().replace(unsanitizedState,subtext);
+
+          console.log("Setting updated code with substate into codemirror editor ...")
+          // Removing CM5
+          // Page.codeMirrorEditor.setValue(subtext);
+          Page.setCodeMirror6Text(subtext);
+
+          setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+
           document.removeEventListener("mousedown", hider);
+          console.log("Removing mousedown event ...")
           prompt.remove();
           Action.removeContextMenu();
-          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+          // Removing CM5
+          // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+          TabControl.getCurrentHistory().save(subtext, "menuUpdate");
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
         }
