@@ -1133,6 +1133,7 @@ Action.drawInputState = function(inputType,stateCode,stateName){
     });
    
   } else if(inputType=="transition"){ //should have an indicator after user enters label so they know to press another state
+    console.log("Adding Transition ...")
     label.appendChild(document.createTextNode("Condition for new transition?"));
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
@@ -1142,6 +1143,7 @@ Action.drawInputState = function(inputType,stateCode,stateName){
           document.removeEventListener("mousedown", hider);
           prompt.remove();
           Action.removeContextMenu();
+          console.log("Waiting to select target state for transition ...")
           var assocState=function (event){
               let targ=event.target;
               while(targ.parentElement.id!="graph0"){
@@ -1151,9 +1153,18 @@ Action.drawInputState = function(inputType,stateCode,stateName){
               elemText=elemText.split("^*^"); //index 0: class, index 1: base state, index 2: remaining states
               let subtext="  "+input.value+" -> "+elemText[2]+";\n}";
               let newState=orig.substr(0,orig.length-1)+subtext;
-              Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newState));
+              console.log("New state created ...")
+              // Removing CM5
+              // Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newState));
+              console.log("Replacing original state with new state in the code ...")
+              Page.setCodeMirror6Text(Page.codeMirrorEditor6.state.doc.toString().replace(orig,newState));
+
+              setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+
               //TODO - Saving/edit history doesn't seem to be working here.
-              TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+              // Removing CM5
+              // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+              TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
               let others=document.getElementsByClassName("node");
               for(let q=0;q<others.length;q++){
                 others[q].removeEventListener("mousedown",assocState);
@@ -1825,7 +1836,7 @@ Action.stateClicked = function(identifier)
     var identifierSM=idSplit[1]
     var identifierState=idSplit[2].replace("Entry:","").replace("Exit:","");
     identifierState=identifierState.replace("Exit:","");
-    console.log("identifierState: ", identifierState)
+    // console.log("identifierState: ", identifierState)
     Action.unselectAll();
     Action.elementClicked = true;
     var selectionIndicies=null;
@@ -1837,7 +1848,7 @@ Action.stateClicked = function(identifier)
       // selectionIndicies=Action.selectStateInClass(identifierClass,identifierSM,identifierState[0]);
       selectionIndiciesCM6=Action.selectStateInClassCM6(identifierClass,identifierSM,identifierState[0]);
       // console.log("selectionIndicies: ", selectionIndicies)
-      console.log("identifierState.length: ", identifierState.length)
+      // console.log("identifierState.length: ", identifierState.length)
       for(let i=1;i<identifierState.length;i++){
         console.log("Iterating states within Identified state ...")
         // console.log("selectionIndiciesCM6.startIndex: ", selectionIndiciesCM6.startIndex)
