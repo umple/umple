@@ -37,7 +37,7 @@ textArea {
   -webkit-border-radius: 4px; width:100%; height:100%; margin:0px; 
 }
 textArea.umpleModelEditor { resize:none; }
-textArea.umpleLayoutEditor {overflow-y: scroll; resize: none; border: 1px solid gray; }
+textArea.umpleLayoutEditor {overflow-y: scroll; /* resize: none; */ border: 1px solid gray; }
 .CodeMirror-scroll { 
   box-sizing:border-box; -moz-box-sizing:border-box; -moz-border-radius: 4px; 
   -webkit-border-radius: 4px; border-radius: 4px;
@@ -594,7 +594,7 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
   overflow: auto !important;
 }
 .cm-editor {
-  max-height: 335px !important;
+  max-height: 90% !important;
 }
 
 
@@ -609,5 +609,25 @@ div[role=tooltip] {
 }
 
 
+/* Removing CM5 */
+div#topTextEditor {
+  display: none !important;
+}
 
+/* codemirror 6 editor */
+div#newEditor {
+  position: relative;
+  height: 80%;
+}
 
+/* layout editor */
+div#bottomTextEditor {
+  display: block !important;
+}
+
+/* makes layout editor resizable vertically */
+textarea#umpleLayoutEditorText {
+  resize: vertical;
+}
+
+.cm-content, .cm-gutter { min-height: 750px; }
