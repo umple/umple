@@ -613,17 +613,26 @@ Page.initCodeMirrorEditor = function() {
    
   // codemirror 6: respond to each keyup to start the process of marking a change
   Page.codeMirrorEditor6.dom.addEventListener('keyup', function (ed, changes) {
+    console.log("keyup Event Triggered ...")
     // start timer to process changes 3s after the editing is done
     Action.umpleCodeMirrorTypingActivity("newEditor");
    // console.log("keyup event triggered in CodeMirror 6 and hopefully saved text !!"+cm6.getCodeMirror6UmpleText());
   });
 
-  Page.codeMirrorEditor.on('cursorActivity', function () {
-    Page.codeMirrorEditor.addLineClass(Page.hLine, null);
-    Page.hLine = Page.codeMirrorEditor.addLineClass(
-    Page.codeMirrorEditor.getCursor().line,'activeline');
+  // Removing CM5
+  // CM5 cursorActivity event
+  // Page.codeMirrorEditor.on('cursorActivity', function () {
+  //   Page.codeMirrorEditor.addLineClass(Page.hLine, null);
+  //   Page.hLine = Page.codeMirrorEditor.addLineClass(
+  //   Page.codeMirrorEditor.getCursor().line,'activeline');
+  //   Action.umpleCodeMirrorCursorActivity();
+  // });
+
+  Page.codeMirrorEditor6.dom.addEventListener('mousedown', function () {
+    console.log("mousedown Event Triggered by CM6 editor ...")
     Action.umpleCodeMirrorCursorActivity();
   });
+
   // Event triggering events end here
   Page.hLine = Page.codeMirrorEditor.addLineClass(0, "activeline");
   Page.codeMirrorOn = true;  

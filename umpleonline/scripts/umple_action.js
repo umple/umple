@@ -3354,6 +3354,7 @@ Action.delayedFocus = function(ms)
 
 Action.updateLineNumberDisplay = function()
 {
+  console.log("Inside Action.updateLineNumberDisplay()...")
   jQuery("#linenum").val(Action.getCaretPosition());
 }
 
@@ -3381,8 +3382,13 @@ Action.umpleTyped = function(eventObject)
 }
 
 Action.umpleCodeMirrorCursorActivity = function() {
-  var line = Page.codeMirrorEditor.getCursor(true).line+1;
-  jQuery("#linenum").val(line);
+  console.log("Inside Action.umpleCodeMirrorCursorActivity()...")
+  // Removing CM5
+  // var line = Page.codeMirrorEditor.getCursor(true).line+1;
+  var docPosition = Page.codeMirrorEditor6.state.selection.main.head;
+  var line = Page.codeMirrorEditor6.state.doc.lineAt(docPosition);
+  console.log("line: ", line.number)
+  jQuery("#linenum").val(line.number);
 }
 
 // Called whenever any text is changed in codemirror 5 or codemirror 6
