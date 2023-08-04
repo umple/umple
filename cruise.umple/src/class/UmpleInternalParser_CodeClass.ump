@@ -2430,6 +2430,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
         for (int i=0; i < numCurAssocVar; i++) {
           AssociationVariable curAssocVar = uClass.getAssociationVariable(uClassAssocVarClassNames[i], uClassAssocVarNames[i]);
+          if (curAssocVar == null)
+          {
+             // Issue 2040  ... looking in an extraneous superclass
+             continue;
+          }
 
           AssociationVariable supAssocVar = superClass.getAssociationVariable(curAssocVar.getType(), curAssocVar.getName());
           if (supAssocVar == null) continue;
