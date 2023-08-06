@@ -1022,13 +1022,24 @@ Page.canShowHovers = function()
 
 Page.getRawUmpleCode = function()
 {
+  console.log("Inside Page.getRawUmpleCode ...")
+  console.log("Reading Model Code from 'umpleModelEditorText' html element ...")
   return document.getElementById('umpleModelEditorText').value;
+}
+
+// CM6 function corresponding to CM5 Page.getRawUmpleCode()
+Page.getRawUmpleCodeCM6 = function()
+{
+  console.log("Reading Model Code from CM6 editor ...")
+  return Page.codeMirrorEditor6.state.doc.toString();
 }
 
 Page.getUmpleCode = function()
 {
-  console.log("Inside getUmpleCode ...")
+  console.log("Inside Page.getUmpleCode ...")
   var modelCleaned = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
+  // var modelCleaned = Page.getRawUmpleCodeCM6().replace(Page.modelDelimiter, "");
+  console.log("Reading Positioning Code from 'umpleLayoutEditorText' html element ...")
   var positioning = jQuery("#umpleLayoutEditorText").val().replace(Page.modelDelimiter, "");
   if(positioning !== "" && !positioning.includes("namespace -;")){
    // prepend namespace cancellation to prevent namespace redefinition errors
@@ -1049,6 +1060,7 @@ Page.getEncodedURL = function()
 
 Page.splitUmpleCode = function(umpleCode)
 {
+  console.log("Inside Page.splitUmpleCode ...")
   var splitIndex = umpleCode.indexOf(Page.modelDelimiter);
   if (splitIndex == -1)
   {
