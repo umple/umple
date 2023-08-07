@@ -59,6 +59,8 @@ Page.allowPinch = false;
     console.log("In blah blah "+theString);
   }
 
+// generate a random id
+Page.sessionID = Math.random().toString(36).substr(2, 9);
 
 
 // The following is set called from umple.php
@@ -75,6 +77,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Layout.isPaletteVisible = doShowMenu;  
   Layout.isLayoutVisible = doShowLayout;
   Page.readOnly = doReadOnly;
+  console.log("Page.sessionID: ", Page.sessionID)
 
   TabControl.init();
   jQuery(".layoutListItem").hide();
