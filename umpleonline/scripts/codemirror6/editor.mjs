@@ -1,9 +1,10 @@
 import { EditorView, basicSetup } from "codemirror"
-import { EditorSelection, EditorState } from "@codemirror/state";
+import { ChangeSet, EditorSelection, EditorState, Text } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript"
 import { lineNumbers } from "@codemirror/view"
 import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from "@codemirror/language"
-import { Text } from "@codemirror/text"
+// import { Text } from "@codemirror/text"
+// import {  } from "@codemirror/collab";
 
 function createEditorState(intialContents, options={}) {
 
@@ -35,4 +36,5 @@ function createEditorView(state, parent){
   });
 }
 
-export { createEditorState, createEditorView, EditorSelection, Text } 
+export { createEditorState, createEditorView, EditorSelection, Text,
+          ChangeSet } 

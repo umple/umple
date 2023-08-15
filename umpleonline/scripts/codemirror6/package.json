@@ -11,16 +11,22 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@codemirror/collab": "^6.0.0",
     "@codemirror/lang-javascript": "^6.1.4",
     "@codemirror/language": "^6.6.0",
     "@codemirror/search": "^6.3.0",
-    "@codemirror/state": "^6.2.0",
+    "@codemirror/state": "^6.2.1",
     "@codemirror/text": "^0.19.6",
     "@codemirror/view": "^6.9.0",
+    "axios": "^1.4.0",
     "codemirror": "^6.0.1",
     "deepmerge": "^4.3.1",
     "estree-walker": "^3.0.3",
-    "rollup": "^3.20.0"
+    "nodemon": "^2.0.22",
+    "rollup": "^3.20.0",
+    "socket.io": "^4.7.2",
+    "typescript": "^5.1.6",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.0.1"
