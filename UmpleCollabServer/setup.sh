@@ -24,4 +24,9 @@ docker build -t $mainContainerName .
 # RUN MAIN CONTAINER
 portmap="-p 0.0.0.0:$portToUse:8000"
 
-docker run $portmap --name $mainContainerName $mainContainerName
+if [ $# -gt 0 ] && [ $1 == 'bg' ]
+then
+  docker run $portmap --name $mainContainerName $mainContainerName >/dev/null 2>&1 &
+else
+  docker run $portmap --name $mainContainerName $mainContainerName
+fi 
