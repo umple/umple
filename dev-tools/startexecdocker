@@ -12,9 +12,8 @@ endif
 
 echo Starting background docker for umple collaboration in $UMPLEROOT/UmpleCollabServer
 cd $UMPLEROOT/UmpleCollabServer
-./setup.sh
-# if (`uname -n` == 'cruise') then
-#   sudo ./setup.sh bg
-# else
-#   ./setup.sh bg
-# endif
+if (`uname -n` == 'cruise') then
+  sudo ./setup.sh bg
+else
+  ./setup.sh bg
+endif
