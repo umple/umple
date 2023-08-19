@@ -14,7 +14,7 @@ let doc = Text.of(["Start document"])
 let pending: ((value: any) => void)[] = []
 
 let io = new Server(server, {
-	path: "/api",
+	path: "/collabapitest",
 	cors: {
 		origin: "*",
 		methods: ["GET", "POST"]
