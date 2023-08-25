@@ -15,3 +15,6 @@ Port that the Nginx redirects to the Docker image.
 This shell script contains commands to build docker images and to run the main docker container. The server will start at the following url by default.  
 __http:localhost:8000__  
 
+# APIs
+`/healthCheck`
+- to check if collab server is up and running

@@ -2,9 +2,12 @@ import { Server, Socket } from 'socket.io';
 import * as http from 'http';
 import {ChangeSet, Text} from "@codemirror/state"
 import {Update} from "@codemirror/collab"
+import express from 'express';
 
-const server = http.createServer();
+const app = express();
+const server = http.createServer(app);
 const port = 8000;
+
 
 // The updates received so far (updates.length gives the current
 // version)
@@ -12,6 +15,15 @@ let updates: Update[] = []
 // The current document
 let doc = Text.of(["Start document"])
 let pending: ((value: any) => void)[] = []
+
+app.get('/healthCheck', (req: any, res: any)=>{
+	const data = {
+		uptime: process.uptime(),
+		message: 'Collab_Server is running !!!',
+		date: new Date()
+	  }
+	res.status(200).send(data);
+})
 
 let io = new Server(server, {
 	path: "/collabapitest",
