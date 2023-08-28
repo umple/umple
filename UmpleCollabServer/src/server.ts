@@ -19,14 +19,14 @@ let updates: Update[] = []
 let doc = Text.of(["Start document"])
 let pending: ((value: any) => void)[] = []
 
-app.get('/healthCheck', (req: any, res: any)=>{
-	const data = {
-		uptime: process.uptime(),
-		message: 'Collab_Server is running !!!',
-		date: new Date()
-	  }
-	res.status(200).send(data);
-})
+// app.get('/collabapitest/healthCheck', (req: any, res: any)=>{
+// 	const data = {
+// 		uptime: process.uptime(),
+// 		message: 'Collab_Server is running !!!',
+// 		date: new Date()
+// 	  }
+// 	res.status(200).send(data);
+// })
 
 let io = new Server(server, {
 	path: apiPath,
@@ -36,9 +36,13 @@ let io = new Server(server, {
 	}
 });
 
+io.on('connect_error', (err) => {
+	console.log(`could not connect due to ${err.message}`);
+});
+
 // listening for connections from clients
 io.on('connection', (socket: Socket) =>{
-
+	console.log("Collaboration client connected! ")
 	socket.on('pullUpdates', (version: number) => {
 		if (version < updates.length) {
 			socket.emit("pullUpdateResponse", JSON.stringify(updates.slice(version)))
