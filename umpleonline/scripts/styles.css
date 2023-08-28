@@ -604,9 +604,9 @@ div#topTextEditor {
   overflow: hidden !important;
 }
 
-div[role=tooltip] {
+/* div[role=tooltip] {
   display: none !important;
-}
+} */
 
 
 /* Removing CM5 */

@@ -3387,7 +3387,7 @@ Action.umpleCodeMirrorCursorActivity = function() {
   // var line = Page.codeMirrorEditor.getCursor(true).line+1;
   var docPosition = Page.codeMirrorEditor6.state.selection.main.head;
   var line = Page.codeMirrorEditor6.state.doc.lineAt(docPosition);
-  console.log("line: ", line.number)
+  // console.log("line: ", line.number)
   jQuery("#linenum").val(line.number);
 }
 
