@@ -18,3 +18,11 @@ __http:localhost:8000__
 # APIs
 `/healthCheck`
 - to check if collab server is up and running
+
+# Configurable Path for Collaboration
+- Update path key in default.json to update the configurable path on collab_server
+- By default path is set to `/collabapitest`
+- You can use the default configuration file i.e. default.json as it is OR You can extend the default config file by creating other configuration files for development, production, QA, staging, etc.
+- say you want to create a configuration for local/development environment.
+    - Create a development.json file using default.json under config directory
+    - set NODE_ENV=development

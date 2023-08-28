@@ -3,10 +3,13 @@ import * as http from 'http';
 import {ChangeSet, Text} from "@codemirror/state"
 import {Update} from "@codemirror/collab"
 import express from 'express';
+import config from 'config';
 
 const app = express();
 const server = http.createServer(app);
-const port = 8000;
+
+const port:string = config.get('collab_server.port');
+const apiPath:string = config.get('collab_server.path')
 
 
 // The updates received so far (updates.length gives the current
@@ -26,7 +29,7 @@ app.get('/healthCheck', (req: any, res: any)=>{
 })
 
 let io = new Server(server, {
-	path: "/collabapitest",
+	path: apiPath,
 	cors: {
 		origin: "*",
 		methods: ["GET", "POST"]
@@ -73,4 +76,8 @@ io.on('connection', (socket: Socket) =>{
 })
 
 // start listening to calls to collaborate
-server.listen(port, () => console.log(`Collab server listening on port: ${port}`));
+server.listen(port, () => {
+	console.log(`Collab server listening on port: ${port}`)
+	// console.log(`Connect your client to path: ${apiPath}`)
+	// console.log(server.address())
+});
