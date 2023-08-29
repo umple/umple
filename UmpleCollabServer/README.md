@@ -5,6 +5,8 @@ This code base provides the functionality to facilitate CodeMirror 6 collaborati
 1. Create config.cfg file from config.cfg.template with correct parameters (Explained below).
 2. Run ./setup.sh
 
+Note that for full UmpleOnline setup, the setup.sh is run by ../dev-tools/startexecdocker, which starts multiple docker images needed for various micro-services.
+
 
 # Config.cfg
 __portToUse__
