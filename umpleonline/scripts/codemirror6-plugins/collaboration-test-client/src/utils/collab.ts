@@ -3,10 +3,7 @@ import { Text, ChangeSet } from "@codemirror/state"
 import { Update, receiveUpdates, sendableUpdates, collab, getSyncedVersion } from "@codemirror/collab"
 import { Socket } from "socket.io-client"
 
-function pushUpdates(
-	socket: Socket,
-	version: number,
-	fullUpdates: readonly Update[]
+function pushUpdates(socket: Socket, filekey: string, version: number,fullUpdates: readonly Update[]
 ): Promise<boolean> {
 	// Strip off transaction data
 	const updates = fullUpdates.map(u => ({
@@ -16,7 +13,7 @@ function pushUpdates(
 	}))
 
 	return new Promise(function(resolve) {
-		socket.emit('pushUpdates', version, JSON.stringify(updates));
+		socket.emit('pushUpdates', filekey, version, JSON.stringify(updates)); // fileKey argument to be added here
 
 		socket.once('pushUpdateResponse', function(status: boolean) {
 			resolve(status);
@@ -24,13 +21,10 @@ function pushUpdates(
 	});
 }
 
-function pullUpdates(
-	socket: Socket,
-	version: number
-): Promise<readonly Update[]> {
+function pullUpdates(socket: Socket, filekey:string, version: number): Promise<readonly Update[]> {
 	return new Promise(function(resolve) {
-		socket.emit('pullUpdates', version);
-
+		socket.emit('pullUpdates', filekey, version); // fileKey argument to be added here
+		// console.log("Emitted pullUpdates with filekey: ", filekey)
 		socket.once('pullUpdateResponse', function(updates: any) {
 			resolve(JSON.parse(updates));
 		});
@@ -40,6 +34,8 @@ function pullUpdates(
 	})));
 }
 
+// emits getDocument event and waits for server to return version and document
+// once the promise is resolved, values are returned back to calling line
 export function getDocument(socket: Socket): Promise<{version: number, doc: Text}> {
 	return new Promise(function(resolve) {
 		socket.emit('getDocument');
@@ -53,35 +49,36 @@ export function getDocument(socket: Socket): Promise<{version: number, doc: Text
 	});
 }
 
-export const peerExtension = (socket: Socket, startVersion: number) => {
+export const peerExtension = (socket: Socket, filekey:string, startVersion: number) => {
+	// console.log("filekey inside PeerExtension! ", filekey)
 	const plugin = ViewPlugin.fromClass(class {
 		private pushing = false
 		private done = false
 
-		constructor(private view: EditorView) { this.pull() }
+		constructor(private view: EditorView) { this.pull(filekey) }
 
 		update(update: ViewUpdate) {
-			if (update.docChanged || update.transactions.length) this.push()
+			if (update.docChanged || update.transactions.length) this.push(filekey)
 		}
 
-		async push() {
+		async push(filekey: string) {
 			const updates = sendableUpdates(this.view.state)
 			if (this.pushing || !updates.length) return
 			this.pushing = true
 			const version = getSyncedVersion(this.view.state)
-			const success = await pushUpdates(socket, version, updates)
+			const success = await pushUpdates(socket, filekey, version, updates)  // filekey added here
 			console.log(success)
 			this.pushing = false
 			// Regardless of whether the push failed or new updates came in
 			// while it was running, try again if there's updates remaining
 			if (sendableUpdates(this.view.state).length)
-				setTimeout(() => this.push(), 100)
+				setTimeout(() => this.push(filekey), 100)
 		}
 
-		async pull() {
+		async pull(filekey: string) {
 			while (!this.done) {
 				const version = getSyncedVersion(this.view.state)
-				const updates = await pullUpdates(socket, version)
+				const updates = await pullUpdates(socket, filekey, version)    // filekeyadded here
 				this.view.dispatch(receiveUpdates(this.view.state, updates))
 			}
 		}
