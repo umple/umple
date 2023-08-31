@@ -37,14 +37,17 @@ class EditorElement extends Component<props, state> {
 	// componentDidMount() is called only once, when the page loads
 	// i.e. when client loads/reloads the URL
 	async componentDidMount() {
-		console.log("filekey in EditorElement: ", this.props.filekey)
+		// DEBUG
+		// console.log("filekey in EditorElement: ", this.props.filekey)
 		const { version, doc } = await getDocument(this.props.socket);
+		// DEBUG
 		// console.log(`Version: ${version} Doc: ${doc} after getDocument()`)
 		this.setState({
 			version,
 			doc: doc.toString(),
 			filekey: this.props.filekey
 		})
+		// DEBUG
 		// console.log("this.state: ", this.state.doc, this.state.doc, this.state.filekey)
 
 		this.props.socket.on('connect', () => {
@@ -77,7 +80,8 @@ class EditorElement extends Component<props, state> {
 	}
 
 	render() {
-		console.log("this.state: ", this.state)
+		// DEBUG
+		// console.log("this.state: ", this.state)
 		if (this.state.version !== null && this.state.doc !== null) {
 			return (
 				<>

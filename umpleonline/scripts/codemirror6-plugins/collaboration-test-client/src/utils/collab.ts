@@ -12,10 +12,15 @@ function pushUpdates(socket: Socket, filekey: string, version: number,fullUpdate
 		effects: u.effects
 	}))
 
+	// creates a Promise for sending updates via a socket connection
+	// When the updates are sent, it waits for a response with a boolean status, 
+	// and once that response is received, the Promise is resolved with that status
+	// this ensures that updates were successfully received or processed by the other side of the socket connection.
 	return new Promise(function(resolve) {
 		socket.emit('pushUpdates', filekey, version, JSON.stringify(updates)); // fileKey argument to be added here
 
 		socket.once('pushUpdateResponse', function(status: boolean) {
+			// console.log("status: ", status)
 			resolve(status);
 		});
 	});
