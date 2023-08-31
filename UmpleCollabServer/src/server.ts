@@ -123,15 +123,20 @@ io.on('connection', (socket: Socket) =>{
 		collabfilemap.set(fileKey, currentCollabDoc)
 	})
 
-	socket.on('getDocument', (fileKey) => {
-		// if(collabfilemap.has(fileKey)){
+	socket.on('getDocument', (fileKey, initText) => {
+		// DEBUG
+		console.log(`getDocument event: ${fileKey} ${initText}`)
 			let currentCollabDoc: collabDoc = getOrCreate(fileKey)
 			let updates: Update[] = currentCollabDoc.updates
 			let doc: Text = currentCollabDoc.doc
+			if(doc.length == 0){
+				doc = Text.of([initText])
+				currentCollabDoc.doc = doc
+			}
+			else{
+				console.log(`${fileKey} - Document text present on server`)
+			}
 			socket.emit('getDocumentResponse', updates.length, doc.toString());
-			// DEBUG
-			// socket.emit('getDocumentResponse', 1, "Test Document");
-		// }
 	})
 })
 
@@ -147,7 +152,7 @@ function getOrCreate(fileKey: string): collabDoc {
 		collabfilemap.set(fileKey, 
 			{
 				updates: [],
-				doc: Text.of(["Intialized"]),
+				doc: Text.of([""]),
 				pending: []
 			});
 	}

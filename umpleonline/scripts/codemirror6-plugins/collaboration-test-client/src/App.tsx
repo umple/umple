@@ -3,27 +3,23 @@ import { io } from "socket.io-client";
 
 // var socket: any;
 
-const socket = io("http://localhost:8000", {
-  path: "/collabapitest"
-  // query:{
-  //   "umpdir": "default",
-  //   "filename": "untitled.ump",
-  //   "inittext": ""
-  // }
-});
+// for local testing
+// const socket = io("http://localhost:8000", {
+//   path: "/collabapitest"
+// });
 
 // The following socket settings are for connecting to umple test server
 // the path has to be made configurable as well in server code
-// const socket = io("https://cruise.umple.org", {
-//   path: "/collabapitest"
-// });
+const socket = io("https://cruise.umple.org", {
+  path: "/collabapitest"
+});
 
 function App() {
   // using URLSearchParams to access parameters from the URL entered
   const queryParameters = new URLSearchParams(window.location.search)
   const umpdir = queryParameters.get("umpdir")
   const filename = queryParameters.get("filename")
-  // const initText = queryParameters.get("inittext")
+  const initText = queryParameters.get("inittext")
   const filekey = umpdir+"_"+filename
 
   return (
@@ -36,7 +32,7 @@ function App() {
         </p>
       </div>
       {/* <EditorElement socket={socket}/> */}
-      <EditorElement socket={socket} filekey={filekey}/>
+      <EditorElement socket={socket} filekey={filekey} inittext={initText!}/>
     </>
   )
 }

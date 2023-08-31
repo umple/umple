@@ -41,9 +41,9 @@ function pullUpdates(socket: Socket, filekey:string, version: number): Promise<r
 
 // emits getDocument event and waits for server to return version and document
 // once the promise is resolved, values are returned back to calling line
-export function getDocument(socket: Socket): Promise<{version: number, doc: Text}> {
+export function getDocument(socket: Socket, filekey:string, inittext: string): Promise<{version: number, doc: Text}> {
 	return new Promise(function(resolve) {
-		socket.emit('getDocument');
+		socket.emit('getDocument', filekey, inittext); // filekey,inittext added to send to server for initialization of editor
 
 		socket.once('getDocumentResponse', function(version: number, doc: string) {
 			resolve({

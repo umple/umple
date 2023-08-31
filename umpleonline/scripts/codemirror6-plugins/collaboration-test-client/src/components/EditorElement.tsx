@@ -22,6 +22,7 @@ type props = {
 	socket: Socket;
 	className?: String;
 	filekey: string;
+	inittext: string;
 }
 
 class EditorElement extends Component<props, state> {
@@ -39,7 +40,7 @@ class EditorElement extends Component<props, state> {
 	async componentDidMount() {
 		// DEBUG
 		// console.log("filekey in EditorElement: ", this.props.filekey)
-		const { version, doc } = await getDocument(this.props.socket);
+		const { version, doc } = await getDocument(this.props.socket, this.props.filekey, this.props.inittext);
 		// DEBUG
 		// console.log(`Version: ${version} Doc: ${doc} after getDocument()`)
 		this.setState({
