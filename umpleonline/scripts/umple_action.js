@@ -1015,8 +1015,9 @@ Action.simulateCodeCallback = function(response)
 //menu edits on states.
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.drawInputState = function(inputType,stateCode,stateName){
-  console.log("Inside drawInputState: ")
-  console.log("with inputType: ", inputType)
+  // DEBUG
+  // console.log("Inside drawInputState: ")
+  // console.log("with inputType: ", inputType)
   var prompt = document.createElement('div');
   prompt.style.zIndex = "1000";
   prompt.style.border = "1px solid #ccc";
@@ -1198,7 +1199,7 @@ Action.drawInputState = function(inputType,stateCode,stateName){
 //Deletes a target state within the specific SM and Class, as well any transitions to/from target state
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.deleteState = function(stateCode,className,smName,stateName){
-  console.log("Inside Action.deleteState ...")
+  // console.log("Inside Action.deleteState ...")
   let subStates=stateName.split(",");
   console.log("Getting code from codemirror editor ...")
   // Removing CM5
@@ -1229,7 +1230,7 @@ Action.deleteState = function(stateCode,className,smName,stateName){
 //Draws a div containing the editing options for state GV diagrams, as well as calling the related function when clicked
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.drawStateMenu = function(){
-  console.log("Inside drawStateMenu: ")
+  // console.log("Inside drawStateMenu: ")
   if(!Action.diagramInSync){
     return;
   }
@@ -1771,7 +1772,7 @@ Action.unselectAll = function()
 Action.classClicked = function(event)
 {
   // DEBUG F
-  console.log("Debug F1: Inside classClicked")
+  // console.log("Debug F1: Inside classClicked")
   // console.log("Event: ", event)
   if (!Action.diagramInSync) return;
   Action.focusOn("umpleCanvas", true);
@@ -1839,8 +1840,8 @@ Action.classClicked = function(event)
 */
 Action.stateClicked = function(identifier)
 {
-    console.log("Debug G1: Inside stateClicked")
-    console.log("Identifier: ", identifier)
+    // console.log("Debug G1: Inside stateClicked")
+    // console.log("Identifier: ", identifier)
     if (!Action.diagramInSync) return;
     Action.focusOn("umpleCanvas", true);
     Action.focusOn("umpleModelEditorText", false);
@@ -1928,8 +1929,8 @@ Action.associationClicked = function(event)
 */
 Action.transitionClicked = function(identifier)
 {
-  console.log("Inside transitionClicked: ")
-  console.log("identifier: ", identifier)
+  // console.log("Inside transitionClicked: ")
+  // console.log("identifier: ", identifier)
   if(!Action.diagramInSync) return;
   if(typeof identifier === "string" && identifier === null) return;
   Action.elementClicked = true;
@@ -2402,7 +2403,7 @@ Action.directUpdateCommandCallback = function(response)
 // such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
 {
-  console.log("Inside updateUmpleTextCallback: ")
+  // console.log("Inside updateUmpleTextCallback: ")
   if (!justUpdatetoSaveLater && !justUpdatetoSaveLaterForTextCallback){
     TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
     Page.setExampleMessage("");
@@ -3000,7 +3001,7 @@ Action.selectMatchingText = function(text)
                               with target class name or method name or state name
 */
 Action.selectItemCM6 = function(searchCursor){
-  console.log("Debug F4: Inside selectItemCM6")
+  // console.log("Debug F4: Inside selectItemCM6")
   if(Page.codeMirrorOn) {
     var text = Page.codeMirrorEditor6.state.doc.toString();
     let splitBuffer=Action.splitStates(text);
@@ -3024,7 +3025,7 @@ Action.selectItemCM6 = function(searchCursor){
 // Highlights the text of the method that is currently selected.
 Action.selectMethod = function(methodName, type, accessMod)
 {
-  console.log("Inside selectMethod: ")
+  // console.log("Inside selectMethod: ")
 	var scursor = new RegExp(accessMod+" "+type+" "+methodName+"(\\\s|[(])");
 	var ncursor = new RegExp("(public|protected|private|class) [A-Za-z]");
 
@@ -3038,7 +3039,7 @@ Action.selectMethod = function(methodName, type, accessMod)
 // Highlights the text of the class that is currently selected.
 Action.selectClass = function(className) 
 {
-  console.log("Inside selectClass: ")
+  // console.log("Inside selectClass: ")
 	var scursor = new RegExp("(class|interface|trait) "+className+"($|\\\s|[{])");
 	var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
 
@@ -3052,7 +3053,7 @@ Action.selectClass = function(className)
 // Highlights the text of the state that is currently selected.
 Action.selectState = function(stateName)
 {
-  console.log("Inside selectState: ")
+  // console.log("Inside selectState: ")
     var scursor = new RegExp("(class|interface|trait) "+stateName+"($|\\\s|[{])");
     var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
 
@@ -3183,7 +3184,7 @@ Action.indexToPos = function(index,inputText){
 */
 Action.selectStateInClassCM6 = function(className, smName, stateName) 
 {
-  console.log("Debug: Inside selectStateInClass CM6");
+  // console.log("Debug: Inside selectStateInClass CM6");
   if(Page.codeMirrorOn) {
     var text = Page.codeMirrorEditor6.state.doc.toString();
     let splitBuffer=Action.splitStates(text);
@@ -3266,7 +3267,7 @@ Action.selectStateInClassCM6 = function(className, smName, stateName)
   Returns the start and ending position of target state within given indices range
 */
 Action.selectStateInStateCM6 = function(startIndex,endIndex,target){
-  console.log("Debug: Inside selectStateInState CM6")
+  // console.log("Debug: Inside selectStateInState CM6")
   var temp = Page.codeMirrorEditor6.state.doc.toString().substr(startIndex,endIndex-startIndex);
   // console.log("code for NestedState: ", temp)
   let states=Action.splitStates(temp.substr(temp.indexOf("{")+1));
@@ -3296,7 +3297,7 @@ Action.highlightByIndex = function(startIndex,endIndex){
               Exact position of start and end characters of code block to be highlighted in code-editor
 */
 Action.highlightByIndexCM6 = function(startIndex,endIndex){
-  console.log("Inside highlightByIndexCM6: Highlighting code ...")
+  // console.log("Inside highlightByIndexCM6: Highlighting code ...")
   let startSelection = Action.indexToPos(startIndex,Page.codeMirrorEditor6.state.doc.toString());
   let startDocPosition = Page.codeMirrorEditor6.state.doc.line(startSelection.line +1).from;
   // console.log("selection start: ", startSelection)
@@ -3354,7 +3355,7 @@ Action.delayedFocus = function(ms)
 
 Action.updateLineNumberDisplay = function()
 {
-  console.log("Inside Action.updateLineNumberDisplay()...")
+  // console.log("Inside Action.updateLineNumberDisplay()...")
   jQuery("#linenum").val(Action.getCaretPosition());
 }
 
@@ -3362,7 +3363,7 @@ Action.umpleTyped = function(eventObject)
 {
   // DEBUG C
   //console.log(""+ eventObject.target.id + ": DEBUG C Inside umpleTyped");
-  console.log("DEBUG C Inside umpleTyped");
+  // console.log("DEBUG C Inside umpleTyped");
 
   // This function is not called by CodeMirror
   // See umpleCodeMirrorTypingActivity if CodeMirror is on (as it normally is)
@@ -3382,7 +3383,7 @@ Action.umpleTyped = function(eventObject)
 }
 
 Action.umpleCodeMirrorCursorActivity = function() {
-  console.log("Inside Action.umpleCodeMirrorCursorActivity()...")
+  // console.log("Inside Action.umpleCodeMirrorCursorActivity()...")
   // Removing CM5
   // var line = Page.codeMirrorEditor.getCursor(true).line+1;
   var docPosition = Page.codeMirrorEditor6.state.selection.main.head;
@@ -3393,10 +3394,8 @@ Action.umpleCodeMirrorCursorActivity = function() {
 
 // Called whenever any text is changed in codemirror 5 or codemirror 6
 Action.umpleCodeMirrorTypingActivity = function(editorThatChanged) {
-  // DEBUG B
- // console.log("DEBUG B: Inside umpleCodeMirrorTypingActivity"+Action.freshLoad ? "freshLoad==true" : "");
- console.log("DEBUG B: Inside umpleCodeMirrorTypingActivity "+editorThatChanged);
- console.log("DEBUG B1: freshLoad="+Action.freshLoad);
+  // DEBUG
+  console.log("Inside Action.umpleCodeMirrorTypingActivity...")
 
   if(Action.freshLoad == false) {
     // Start/restart timer to eventually process this by triggerink disk save and diagram update
@@ -3472,8 +3471,8 @@ Action.removeComments = function(str)
 // Sets a timer or resets the time such that the function processTyping
 // ends up being called after a 3s gap in calls to this.
 Action.umpleTypingActivity = function(target) {
-   // DEBUG D
-  console.log(target + ": DEBUG D Inside umpleTypingActivity");
+  // DEBUG D
+  // console.log(target + ": DEBUG D Inside umpleTypingActivity");
   
   if (Action.manualSync && Action.diagramInSync)
   {
@@ -3529,37 +3528,32 @@ Action.removeCheckComplexityWarning = function()
 // Target can be diagramEdit (when diagram changed), newEditor for CM6, codeMirrorEditor (will be obsolete)
 Action.processTyping = function(target, manuallySynchronized)
 {
-  // DEBUG A2
-  console.log("Inside Action.processTyping() after 3s delay with target: ", target);
-  // console.log("DEBUG A3: cm6 data="+cm6.getCodeMirror6UmpleText());
-  // console.log("DEBUG A4");
+  // DEBUG
+  console.log("Inside Action.processTyping ...", target)
 
   // Update the 'other' codemirror editor
-  if (target == "codeMirrorEditor") {
+  // if (target == "codeMirrorEditor") {
     // A change has been made in the CM5 editor so get that text and set it as the definitive text
     // console.log("Updating CM6 text with contents from CM5");
     // Refactoring definitive text location
-    Page.setUmpleCode(document.getElementById("umpleModelEditorText").value);
+    // Page.setUmpleCode(document.getElementById("umpleModelEditorText").value);
     // OLD Page.setCodeMirror6Text(document.getElementById("umpleModelEditorText").value);
-  }
+  // }
   // TODO: uncomment this
   // Note: Comment this to interact CM5 and CM6 with the diagram seperately
-  else if (target == "newEditor") {
+  // else if (target == "newEditor") {
     // A change has been made in the CM6 editor so get that text and set it as the definitive text
     // Note: Following line results in Blanking out of everything
     // Page.setUmpleCode(cm6.getCodeMirror6UmpleText());
     // console.log("CM6 Code: ", cm6.getCodeMirror6UmpleText())
 
-    // Note: Line below updates CM6 with latest edited code
-    Page.setCodeMirror6Text(Page.codeMirrorEditor6.state.doc.toString());
+    // Below line not needed anymore after migrating to CM6
+    // Page.setCodeMirror6Text(Page.codeMirrorEditor6.state.doc.toString());
     // console.log("CM6 Code: ", Page.codeMirrorEditor6.state.doc.toString())
+    // Page.setUmpleCode(Page.codeMirrorEditor6.state.doc.toString())
 
-    // Note: The below line updates contents of CM5 with latest CM6
-    // BUT after the update, diagram keeps updating iteratively
-    Page.setUmpleCode(Page.codeMirrorEditor6.state.doc.toString())
-
-    // console.log("Need to update CM5 text with contents from CM6");
-  }
+    document.getElementById("umpleModelEditorText").value = Page.codeMirrorEditor6.state.doc.toString()
+  //}
 
   // Save in history after a pause in typing
   if (target != "diagramEdit") 
@@ -3597,6 +3591,7 @@ Action.processTyping = function(target, manuallySynchronized)
 
   if (target != "diagramEdit"){
     if (!justUpdatetoSaveLater){
+      // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
       TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
     }
     else if (target == "umpleModelEditorText" || target == "codeMirrorEditor"){
@@ -3611,7 +3606,7 @@ Action.processTyping = function(target, manuallySynchronized)
 // Refactoring definitive text location
 // This function stores just the core umple code, NOT the layout
 Action.updateCurrentUmpleTextBeingEdited = function(codeToSave){
-  console.log("Inside Action.updateCurrentUmpleTextBeingEdited() ...")
+  // console.log("Inside Action.updateCurrentUmpleTextBeingEdited() ...")
   // Back up the data in the main editor
   Page.currentUmpleTextBeingEdited = codeToSave;
   
@@ -3625,13 +3620,13 @@ Action.updateCurrentUmpleTextBeingEdited = function(codeToSave){
 
 Action.updateLayoutEditorAndDiagram = function(target)
 {
-  console.log(target + ": Inside updateLayoutEditorAndDiagram")
+  // console.log(target + ": Inside updateLayoutEditorAndDiagram")
   Action.ajax(Action.updateUmpleLayoutEditor,"language=Json",target);
 }
 
 Action.updateUmpleLayoutEditor = function(response)
 {
-  console.log("Debug E4: Inside updateUmpleLayoutEditor")
+  // console.log("Debug E4: Inside updateUmpleLayoutEditor")
   //Extract data from response
   // console.log("Response: ", response)
   var codeparts = response.responseText.split('URL_SPLIT');
@@ -3654,9 +3649,9 @@ Action.updateUmpleLayoutEditor = function(response)
 
 Action.updateUmpleLayoutEditorCallback = function(response)
 {
-  console.log("Inside updateUmpleLayoutEditorCallback")
+  // console.log("Inside updateUmpleLayoutEditorCallback")
   var umpleCode = response.responseText;
-  console.log("Extracting Positioning from Response")
+  // console.log("Extracting Positioning from Response")
   var positioning = Page.splitUmpleCode(umpleCode)[1];
   // console.log("Positioning: " + positioning)
   Page.setUmplePositioningCode(positioning);
@@ -3670,7 +3665,7 @@ Action.updateUmpleDiagram = function() {
 
 Action.updateUmpleDiagramForce = function(forceUpdate)
 {
-  console.log("Inside updateUmpleDiagramForce")
+  // console.log("Inside updateUmpleDiagramForce")
   // Removing CM5
   var canonical = Action.trimMultipleNonPrintingAndComments(Page.getUmpleCode());
   // console.log("canonical: ", canonical)
@@ -3691,7 +3686,7 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
 
 Action.updateUmpleDiagramCallback = function(response)
 {
-  console.log("Debug E6.1: Inside updateUmpleDiagramCallback")
+  // console.log("Debug E6.1: Inside updateUmpleDiagramCallback")
   var diagramCode = "";
   var errorMessage = "";
 
@@ -4127,7 +4122,7 @@ Action.generateStructureDiagramFileCallback = function(response)
 
 Action.ajax = function(callback,post,target,errors,tabIndependent)
 {
-  console.log("Debug E2 : Action.ajax() with target: ", target)
+  // console.log("Debug E2 : Action.ajax() with target: ", target)
   // console.log("callback : ", callback)
   // CM5 -  Page.getUmpleCode()
   // CM6 - cm6.getCodeMirror6UmpleText()

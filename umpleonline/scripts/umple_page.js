@@ -5,6 +5,10 @@
 // Initializing and maintaining the features on the screen in UmpleOnline
 // Layout initialization and maintenance is located in umple_layout.js.
 
+// const { getDocument } = require('./codemirror6-plugins/collaboration-test-client/src/utils/collab.ts');
+// import React from 'react';
+// import ReactDOM from 'react-dom';
+
 Page = new Object();
 
 // Refactoring definitive text location
@@ -566,6 +570,7 @@ Page.initCodeMirrorEditor = function() {
   ]
     
   // codemirror 6 
+  // comment the following when trying to mount react app
   const initialState = cm6.createEditorState(
     document.getElementById("umpleModelEditorText").value, 
     {
@@ -574,6 +579,23 @@ Page.initCodeMirrorEditor = function() {
     });
   Page.codeMirrorEditor6 = cm6.createEditorView(
     initialState, document.getElementById("newEditor"));
+
+  // trying to mount react app
+  // console.log("Mounting React component...")
+  // const rootElement = document.getElementById('newEditor');
+  // const App = () => {
+  //   return(
+  //     <div>
+  //       <h1>From React App</h1>
+  //     </div>
+  //   );
+  // }
+
+  // ReactDOM.render(
+  //   React.createElement(App),
+  //   rootElement
+  // )
+
 
   // Event triggering changes for CodeMirror 5
   Page.codeMirrorEditor.on('focus', function (id, gained) {
@@ -601,7 +623,8 @@ Page.initCodeMirrorEditor = function() {
       
   // Sets the codemirror 6 text without any change trigger (hopefully)
   Page.setCodeMirror6Text = function (textToSet) {
-    console.log("Inside Page.setCodeMirror6Text() ...")
+    // DEBUG
+    // console.log("Inside Page.setCodeMirror6Text() ...")
     Page.codeMirrorEditor6.dispatch({ 
       changes: { 
         from: 0, 
@@ -615,7 +638,8 @@ Page.initCodeMirrorEditor = function() {
   Page.codeMirrorEditor6.dom.addEventListener('keyup', function (ed, changes) {
     console.log("keyup Event Triggered ...")
     // start timer to process changes 3s after the editing is done
-    Action.umpleCodeMirrorTypingActivity("newEditor");
+    // Action.umpleCodeMirrorTypingActivity("newEditor");
+    setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
    // console.log("keyup event triggered in CodeMirror 6 and hopefully saved text !!"+cm6.getCodeMirror6UmpleText());
   });
 
@@ -1022,24 +1046,27 @@ Page.canShowHovers = function()
 
 Page.getRawUmpleCode = function()
 {
-  console.log("Inside Page.getRawUmpleCode ...")
-  console.log("Reading Model Code from 'umpleModelEditorText' html element ...")
+  // DEBUG
+  // console.log("Inside Page.getRawUmpleCode ...")
+  // console.log("Reading Model Code from 'umpleModelEditorText' html element ...")
   return document.getElementById('umpleModelEditorText').value;
 }
 
 // CM6 function corresponding to CM5 Page.getRawUmpleCode()
 Page.getRawUmpleCodeCM6 = function()
 {
-  console.log("Reading Model Code from CM6 editor ...")
+  // DEBUG
+  // console.log("Reading Model Code from CM6 editor ...")
   return Page.codeMirrorEditor6.state.doc.toString();
 }
 
 Page.getUmpleCode = function()
 {
-  console.log("Inside Page.getUmpleCode ...")
+  // DEBUG
+  // console.log("Inside Page.getUmpleCode ...")
   var modelCleaned = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
   // var modelCleaned = Page.getRawUmpleCodeCM6().replace(Page.modelDelimiter, "");
-  console.log("Reading Positioning Code from 'umpleLayoutEditorText' html element ...")
+  // console.log("Reading Positioning Code from 'umpleLayoutEditorText' html element ...")
   var positioning = jQuery("#umpleLayoutEditorText").val().replace(Page.modelDelimiter, "");
   if(positioning !== "" && !positioning.includes("namespace -;")){
    // prepend namespace cancellation to prevent namespace redefinition errors
@@ -1060,7 +1087,8 @@ Page.getEncodedURL = function()
 
 Page.splitUmpleCode = function(umpleCode)
 {
-  console.log("Inside Page.splitUmpleCode ...")
+  // DEBUG
+  // console.log("Inside Page.splitUmpleCode ...")
   var splitIndex = umpleCode.indexOf(Page.modelDelimiter);
   if (splitIndex == -1)
   {
@@ -1084,11 +1112,12 @@ Page.splitUmpleCode = function(umpleCode)
 // Updates all text editors, and then can call a function called reason
 Page.setUmpleCode = function(umpleCode, reason)
 {
-  console.log("Inside Page.setUmpleCode() ...")
+  // DEBUG
+  // console.log("Inside Page.setUmpleCode() ...")
   var modelAndPositioning = Page.splitUmpleCode(umpleCode);
 
   // Update the layout editor with the second part of the combined file
-  console.log("Setting positioningCode into umpleLayoutEditorText html element ...")
+  // console.log("Setting positioningCode into umpleLayoutEditorText html element ...")
   jQuery("#umpleLayoutEditorText").val(modelAndPositioning[1]);
 
   if(Page.codeMirrorOn) {
@@ -1096,13 +1125,13 @@ Page.setUmpleCode = function(umpleCode, reason)
     if (!((typeof reason === 'boolean') && reason == false))
     {
       // Update the codemirror 5 editor itself
-      console.log("Setting modelCode to codeMirror editor ...")
+      // console.log("Setting modelCode to codeMirror editor ...")
       Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
     }
   }
   // Refactoring definitive text location
   // Update Codemirror 6 and the backup variable
-  console.log("Setting modelCode to codeMirror 6 ...")
+  // console.log("Setting modelCode to codeMirror 6 ...")
   Action.updateCurrentUmpleTextBeingEdited(modelAndPositioning[0]);
   //OLD jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
 
@@ -1121,6 +1150,9 @@ Page.umpleCanvasId = function()
   return "umpleCanvas";
 }
 
+// Page.createBookmark() is called when Save & Collaborate button is clicked in umpleonline ui
+// this method internally calls Page.connectCollabServer() which connects the current client to the UmpleCollabServer
+// and enables the current users to collaborate by sharing the collaborative URL
 Page.createBookmark = function()
 {
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
@@ -1652,4 +1684,14 @@ jQuery.fn.selectRange = function(start, end) {
        range.select();
     }
   });
+}
+
+// checks if the uel of current page is bookmark or not
+Page.isBookmarkURL = function() {
+  const currentURL = window.location.href;
+  const modelName = currentURL.substring(currentURL.indexOf("?model=") + 1) 
+  if(currentURL.includes("model") && modelName.length!=0){
+    return true;
+  }
+  return false;
 }

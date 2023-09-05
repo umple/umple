@@ -302,7 +302,7 @@ TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
  */
 TabControl.saveTab = function(tabId, umpleCode)
 {
-  console.log("Inside TabControl.saveTab() ...")
+  // console.log("Inside TabControl.saveTab() ...")
   var filename = TabControl.getTabFilename(TabControl.tabs[tabId].name);
   var modelname = Page.getModel();
   localStorage[filename] = umpleCode;
@@ -335,7 +335,7 @@ TabControl.saveTabCallback = function(tabId)
  */
 TabControl.selectTab = function(tabId)
 { 
-  console.log("Inside TabControl.selectTab() ...")
+  // console.log("Inside TabControl.selectTab() ...")
   if (TabControl.activeTab) {
     // Do nothing if already selected
     if (tabId == TabControl.activeTab.id) return;
@@ -623,7 +623,7 @@ TabControl.addCallbackToRequestQueue = function(callback)
  */
 TabControl.getCurrentHistory = function()
 {
-  console.log("Inside TabControl.getCurrentHistory() ...")
+  // console.log("Inside TabControl.getCurrentHistory() ...")
   if (!TabControl.activeTab) return History.getInstance();
   return TabControl.tabs[TabControl.activeTab.id].history;
 }
