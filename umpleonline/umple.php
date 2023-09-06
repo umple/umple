@@ -847,17 +847,10 @@ $output = $dataHandle->readData('model.ump');
     </div>
   </div>
 
+  <!-- Added for including codemirror6 editor -->
   <script src="./scripts/codemirror6/editor.bundle.js"></script>
-  <!-- bundle.js contains both codemirror6 editor and functionalities for collaboration client-side  -->
-  <!-- <script src="./scripts/codemirror6/bundle.js"></script> -->
-  <!-- <script src="./scripts/codemirror6/editor.js"></script> -->
+  <!-- Added for sockets usage in client-side -->
   <script src="./scripts/socket.io/socket.io.js"></script>
-
-  <!-- Trying to mount collaboration-test-client-app into umple-online -->
-  <!-- <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script> -->
-  <!-- <div id="root"></div>
-  <script type="module" crossorigin src="./scripts/index-2a6966a6.js"></script> -->
 
   <a name="genArea"/>  
   <div id="generatedCodeRow" class="row">

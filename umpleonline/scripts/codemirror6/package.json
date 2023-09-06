@@ -17,22 +17,12 @@
     "@codemirror/language": "^6.6.0",
     "@codemirror/search": "^6.3.0",
     "@codemirror/state": "^6.2.1",
-    "@codemirror/text": "^0.19.6",
     "@codemirror/view": "^6.17.1",
-    "@types/node": "^20.5.9",
     "codemirror": "^6.0.1",
-    "deepmerge": "^4.3.1",
-    "estree-walker": "^3.0.3",
-    "rollup": "^3.20.0",
-    "rollup-plugin-typescript": "^1.0.1",
-    "socket.io-client": "^4.6.2",
-    "typescript": "^5.2.2"
+    "rollup": "^3.20.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.4",
-    "@rollup/plugin-node-resolve": "^15.2.1",
-    "@types/es6-promise": "^3.3.0",
-    "rollup-plugin-typescript2": "^0.35.0",
-    "typescript": "^5.2.2"
+    "@rollup/plugin-node-resolve": "^15.2.1"
   }
 }

@@ -25215,8 +25215,6 @@ var cm6 = (function (exports) {
        return state.field(collabField).version;
    }
 
-   // import { Text } from "@codemirror/text"
-
    function createEditorState(intialContents, options={}) {
 
      let extensions = [

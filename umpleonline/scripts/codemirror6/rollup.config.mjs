@@ -1,25 +1,19 @@
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-import typescript from 'rollup-plugin-typescript2';
 
 export default {
   input: [
-    "./editor.mjs",
-    // "./collab.ts"
+    "./editor.mjs"
     ],
   output: {
     file: "./editor.bundle.js",
     format: "iife",
-    name: "cm6",
-    // inlineDynamicImports: false
+    name: "cm6"
   },
   plugins: [
     resolve({
-      extensions: ['.mjs', 
-      // '.ts'
-    ]
+      extensions: ['.mjs']
     }),
-    commonjs(), 
-    typescript()
+    commonjs()
   ]
 }

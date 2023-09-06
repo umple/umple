@@ -5,7 +5,6 @@ import { EditorView, ViewPlugin, ViewUpdate, lineNumbers, keymap, Decoration } f
 import { receiveUpdates, sendableUpdates, collab, getSyncedVersion } from "@codemirror/collab"
 import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from "@codemirror/language"
 import { SearchCursor, RegExpCursor } from "@codemirror/search";
-// import { Text } from "@codemirror/text"
 
 function createEditorState(intialContents, options={}) {
 
