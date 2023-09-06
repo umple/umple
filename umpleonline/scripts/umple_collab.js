@@ -11,8 +11,8 @@ Collab.connectCollabServer = async function() {
   if(Page.isBookmarkURL()){
     // DEBUG
     console.log("Current Page is Bookmark URL --- connecting to Collab Server!")
-    var socket = io("http://localhost:8000", {
-      path: "/collabapitest"
+    var socket = io(CollabServerConfig.serverURL, {
+      path: CollabServerConfig.serverPath
     });
 
     // DEBUG

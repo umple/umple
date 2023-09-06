@@ -115,6 +115,9 @@ document.write('<script type="text/javascript" src="scripts/umple_restore.js"></
 document.write('<script type="text/javascript" src="scripts/umple_action_diagram.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_tooltips.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_tab_control.js"></script>');
+// The following script includes configuration file for collab_server
+// where serverURL and path have to be set to connect specific instance of a collaboration server
+document.write('<script type="text/javascript" src="scripts/collab-server-config.js"></script>')
 document.write('<script type="text/javascript" src="scripts/umple_collab.js"></script>');
 
 //For styling and colouring statetables
