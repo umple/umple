@@ -3361,10 +3361,8 @@ Action.updateLineNumberDisplay = function()
 
 Action.umpleTyped = function(eventObject)
 {
-  // DEBUG C
-  //console.log(""+ eventObject.target.id + ": DEBUG C Inside umpleTyped");
-  // console.log("DEBUG C Inside umpleTyped");
-
+  // DEBUG
+  console.log("Inside Action.umpleTyped()...")
   // This function is not called by CodeMirror
   // See umpleCodeMirrorTypingActivity if CodeMirror is on (as it normally is)
   // debug - output key code
@@ -3388,7 +3386,6 @@ Action.umpleCodeMirrorCursorActivity = function() {
   // var line = Page.codeMirrorEditor.getCursor(true).line+1;
   var docPosition = Page.codeMirrorEditor6.state.selection.main.head;
   var line = Page.codeMirrorEditor6.state.doc.lineAt(docPosition);
-  // console.log("line: ", line.number)
   jQuery("#linenum").val(line.number);
 }
 
@@ -3471,9 +3468,7 @@ Action.removeComments = function(str)
 // Sets a timer or resets the time such that the function processTyping
 // ends up being called after a 3s gap in calls to this.
 Action.umpleTypingActivity = function(target) {
-  // DEBUG D
-  // console.log(target + ": DEBUG D Inside umpleTypingActivity");
-  
+  console.log("Inside Action.umpleTypingActivity()...")
   if (Action.manualSync && Action.diagramInSync)
   {
     if (jQuery("#umpleCanvasColumn").is(":visible")) Page.enablePaletteItem("buttonSyncDiagram", true);
@@ -3530,30 +3525,7 @@ Action.processTyping = function(target, manuallySynchronized)
 {
   // DEBUG
   console.log("Inside Action.processTyping ...", target)
-
-  // Update the 'other' codemirror editor
-  // if (target == "codeMirrorEditor") {
-    // A change has been made in the CM5 editor so get that text and set it as the definitive text
-    // console.log("Updating CM6 text with contents from CM5");
-    // Refactoring definitive text location
-    // Page.setUmpleCode(document.getElementById("umpleModelEditorText").value);
-    // OLD Page.setCodeMirror6Text(document.getElementById("umpleModelEditorText").value);
-  // }
-  // TODO: uncomment this
-  // Note: Comment this to interact CM5 and CM6 with the diagram seperately
-  // else if (target == "newEditor") {
-    // A change has been made in the CM6 editor so get that text and set it as the definitive text
-    // Note: Following line results in Blanking out of everything
-    // Page.setUmpleCode(cm6.getCodeMirror6UmpleText());
-    // console.log("CM6 Code: ", cm6.getCodeMirror6UmpleText())
-
-    // Below line not needed anymore after migrating to CM6
-    // Page.setCodeMirror6Text(Page.codeMirrorEditor6.state.doc.toString());
-    // console.log("CM6 Code: ", Page.codeMirrorEditor6.state.doc.toString())
-    // Page.setUmpleCode(Page.codeMirrorEditor6.state.doc.toString())
-
-    document.getElementById("umpleModelEditorText").value = Page.codeMirrorEditor6.state.doc.toString()
-  //}
+  document.getElementById("umpleModelEditorText").value = Page.codeMirrorEditor6.state.doc.toString();
 
   // Save in history after a pause in typing
   if (target != "diagramEdit") 
@@ -3563,16 +3535,11 @@ Action.processTyping = function(target, manuallySynchronized)
   else{
     Action.setjustUpdatetoSaveLaterForTextCallback(false);
   }
-  // console.log("Debug E1: Just before !Action.manualSync || manuallySynchronized", Action.manualSync, manuallySynchronized)
   // Cause changed in text to be made to the diagram
   if (!Action.manualSync || manuallySynchronized)
   {
-  // console.log("Debug E1.1: Inside !Action.manualSync || manuallySynchronized")
     Action.diagramInSync = true;
-    
-    // target == "newEditor" added for codemirror 6
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor" || target == "newEditor") {
-    // if (target == "newEditor") {
       Action.updateLayoutEditorAndDiagram(target); 
       // issue#1554
       var downloadLink = document.getElementById("downloadLink");
@@ -3591,7 +3558,6 @@ Action.processTyping = function(target, manuallySynchronized)
 
   if (target != "diagramEdit"){
     if (!justUpdatetoSaveLater){
-      // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
       TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
     }
     else if (target == "umpleModelEditorText" || target == "codeMirrorEditor"){
@@ -3626,11 +3592,10 @@ Action.updateLayoutEditorAndDiagram = function(target)
 
 Action.updateUmpleLayoutEditor = function(response)
 {
-  // console.log("Debug E4: Inside updateUmpleLayoutEditor")
+  // DEBUG
+  // console.log("Inside Action.updateUmpleLayoutEditor()...")
   //Extract data from response
-  // console.log("Response: ", response)
   var codeparts = response.responseText.split('URL_SPLIT');
-  // console.log("codeparts: ", codeparts)
   var errorMessage=codeparts[0];
   var umpleJson=codeparts[1];//Remove the URL_SPLIT in umpleJson
 
@@ -3649,6 +3614,7 @@ Action.updateUmpleLayoutEditor = function(response)
 
 Action.updateUmpleLayoutEditorCallback = function(response)
 {
+  // DEBUG
   // console.log("Inside updateUmpleLayoutEditorCallback")
   var umpleCode = response.responseText;
   // console.log("Extracting Positioning from Response")
@@ -3665,10 +3631,9 @@ Action.updateUmpleDiagram = function() {
 
 Action.updateUmpleDiagramForce = function(forceUpdate)
 {
+  // DEBUG
   // console.log("Inside updateUmpleDiagramForce")
-  // Removing CM5
   var canonical = Action.trimMultipleNonPrintingAndComments(Page.getUmpleCode());
-  // console.log("canonical: ", canonical)
   if(!forceUpdate) {
     if(canonical == Action.savedCanonical)   
     {
