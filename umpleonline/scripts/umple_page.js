@@ -5,10 +5,6 @@
 // Initializing and maintaining the features on the screen in UmpleOnline
 // Layout initialization and maintenance is located in umple_layout.js.
 
-// const { getDocument } = require('./codemirror6-plugins/collaboration-test-client/src/utils/collab.ts');
-// import React from 'react';
-// import ReactDOM from 'react-dom';
-
 Page = new Object();
 
 // Refactoring definitive text location
@@ -574,28 +570,17 @@ Page.initCodeMirrorEditor = function() {
   const initialState = cm6.createEditorState(
     document.getElementById("umpleModelEditorText").value, 
     {
-      extensions: [cm6.listenChangesExtension,
-                  cm6.lineHighlightExtension]
+      extensions: []
     });
   Page.codeMirrorEditor6 = cm6.createEditorView(
     initialState, document.getElementById("newEditor"));
 
-  // trying to mount react app
-  // console.log("Mounting React component...")
-  // const rootElement = document.getElementById('newEditor');
-  // const App = () => {
-  //   return(
-  //     <div>
-  //       <h1>From React App</h1>
-  //     </div>
-  //   );
-  // }
-
-  // ReactDOM.render(
-  //   React.createElement(App),
-  //   rootElement
-  // )
-
+  // monitor codemirror6 state to listen to any changes in editor contents and update diagram accordingly
+  // Page.codeMirrorEditor6.dom.addEventListener("input", () => {
+  //   console.log("Input event triggered...")
+  //   const newText = Page.codeMirrorEditor6.state.doc.toString();
+  //   setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+  // });
 
   // Event triggering changes for CodeMirror 5
   Page.codeMirrorEditor.on('focus', function (id, gained) {
