@@ -17,7 +17,7 @@ Layout.screenThresholdWidth = 945;
 // The handles for the main layout controlling features
 var canvasHandle = "#umpleCanvasColumn";
 var editorHandle = "#textEditorColumn";
-var modelEditorHandle = "#topTextEditor";
+var modelEditorHandle = "#newEditor";
 var paletteHandle = "#paletteColumn";
 var layoutEditorHandle = "#bottomTextEditor";
 

@@ -597,13 +597,6 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
   max-height: 90% !important;
 }
 
-
-/* for testing */
-div#topTextEditor {
-  height: 50% !important;
-  overflow: hidden !important;
-}
-
 /* div[role=tooltip] {
   display: none !important;
 } */
@@ -617,14 +610,10 @@ div#topTextEditor {
 /* codemirror 6 editor */
 div#newEditor {
   position: relative;
-  height: 80%;
+  height: 90%;
 }
 
-/* layout editor */
-div#bottomTextEditor {
-  display: block !important;
-}
-
+/* DEBUG */
 /* makes layout editor resizable vertically */
 textarea#umpleLayoutEditorText {
   resize: vertical;
