@@ -24,7 +24,7 @@ Collab.connectCollabServer = async function() {
     console.log("Socket Info: ", socket)
 
     const umpdir = Page.getModel();
-    const filename = TabControl.activeTab.name;
+    const filename = TabControl.activeTab != null ? TabControl.activeTab.name : "Untitled";
     // const filename = "untitled";
     const inittext = Page.codeMirrorEditor6.state.doc.toString();
     // const inittext = "Test Content";
