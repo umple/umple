@@ -440,7 +440,7 @@ $output = $dataHandle->readData('model.ump');
         <textarea id="umpleModelEditorText" class="umpleModelEditor" wrap="off"></textarea>
       </div>
       <!-- codemirror 6 editor -->
-      <div id="newEditor" style="float:left; width:100%">
+      <div id="newEditor" style="width:100%">
       </div>
       <div id="bottomTextEditor">
         <textarea id="umpleLayoutEditorText" class="umpleLayoutEditor" wrap="off"></textarea>
