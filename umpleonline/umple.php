@@ -411,7 +411,7 @@ $output = $dataHandle->readData('model.ump');
         Collab.connectCollabServer()
       </script> -->
     <?php } else if (!isset($_REQUEST["task"])) { ?>
-      <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save & Collaborate</a>
+      <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate</a>
     <?php } ?>
 
     </span>
@@ -465,7 +465,7 @@ $output = $dataHandle->readData('model.ump');
             <?php } else if (!isset($_REQUEST["task"])) { ?>
             <li id="ttSaveModel"> 
               <div id="menuBookmarkable" class="bookmarkableUrl">
-                <a href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Save as URL</a>
+                <a href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Save & Collaborate</a>
               </div>
             </li>
             <?php } ?>
