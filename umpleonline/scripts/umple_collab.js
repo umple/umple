@@ -11,8 +11,13 @@ Collab.connectCollabServer = async function() {
   if(Page.isBookmarkURL()){
     // DEBUG
     console.log("Current Page is Bookmark URL --- connecting to Collab Server!")
-    var socket = io(CollabServerConfig.serverURL, {
-      path: CollabServerConfig.serverPath
+
+    // setup default values CollabServerConfig is not set by creating collab-server-config.js
+    // The client will try to connect to serverURL: https://cruise.umple.org and serverPath: /collabapi
+    const serverURL = typeof CollabServerConfig !== 'undefined' ? CollabServerConfig.serverURL : "https://cruise.umple.org"
+    const serverPath = typeof CollabServerConfig !== 'undefined' ? CollabServerConfig.serverPath : "/collabapi" 
+    var socket = io(serverURL, {
+      path: serverPath
     });
 
     // DEBUG

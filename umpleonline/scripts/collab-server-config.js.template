@@ -7,5 +7,5 @@
 // serverPath - the path or api-path at which the server is listening for clients to connect through sockets
 var CollabServerConfig = {
     serverURL: "https://cruise.umple.org",
-    serverPath: "/collabapitest"
+    serverPath: "/collabapi"
 }
