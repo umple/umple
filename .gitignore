@@ -36,8 +36,6 @@ UmpleCodeExecution/config.cfg
 UmpleCollabServer/config.cfg.bak
 UmpleCollabServer/config.cfg
 
-umpleonline/scripts/collab-server-config.js
-
 # generated Umple code that is not saved
 src-gen-umple/
 src-gen/
