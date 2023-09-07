@@ -1,4 +1,4 @@
-import { basicSetup } from "codemirror"
+import { minimalSetup } from "codemirror"
 import { EditorSelection, EditorState, Text, ChangeSet, StateEffect } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript"
 import { EditorView, ViewPlugin, ViewUpdate, lineNumbers, keymap, Decoration } from "@codemirror/view"
@@ -9,7 +9,7 @@ import { SearchCursor, RegExpCursor } from "@codemirror/search";
 function createEditorState(intialContents, options={}) {
 
   let extensions = [
-    basicSetup, 
+    minimalSetup, 
     javascript(),
     lineNumbers(),
     bracketMatching(),
