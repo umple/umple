@@ -36,8 +36,29 @@ function createEditorView(state, parent){
   });
 }
 
+// a custom plugin to listen for any changes in the code editor
+// and update the digram accordingly without triggering any events
+const changeListenerPlugin = ViewPlugin.fromClass(class {
+  constructor(view) {
+    this.view = view;
+    this.lastContent = view.state.doc.toString();
+  }
+  update(update) {
+    if (update.docChanged) {
+      const newContent = update.state.doc.toString();
+      if (newContent !== this.lastContent) {
+        // DEBUG
+        console.log('Editor content changed...', 'Update the Diagram!');
+        this.lastContent = newContent;
+        setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+      }
+    }
+  }
+});
+
+
 export { createEditorState, createEditorView, 
-  EditorSelection, SearchCursor, RegExpCursor,
+  EditorSelection, SearchCursor, RegExpCursor, changeListenerPlugin,
   EditorView, ViewPlugin, ViewUpdate, Text, ChangeSet, StateEffect,
   receiveUpdates, sendableUpdates, collab, getSyncedVersion
 }
