@@ -2780,6 +2780,8 @@ Action.setCaretPosition = function(line)
     Page.codeMirrorEditor.setSelection({line: line-1,ch: 0},{line: line-1,ch: 999999});
     Page.codeMirrorEditor.focus();
     
+    // DEBUG
+    // console.log("Inside Action.setCaretPosition() ... Line number: ", line)
     /* codemirror 6 line highlight by number*/
     if(line >= 1) {
       const docPosition = Page.codeMirrorEditor6.state.doc.line(line).from;

@@ -1,6 +1,7 @@
-import { minimalSetup } from "codemirror"
+import { basicSetup } from "codemirror"
 import { EditorSelection, EditorState, Text, ChangeSet, StateEffect } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript"
+import { umple } from "./umple.js"
 import { EditorView, ViewPlugin, ViewUpdate, lineNumbers, keymap, Decoration } from "@codemirror/view"
 import { receiveUpdates, sendableUpdates, collab, getSyncedVersion } from "@codemirror/collab"
 import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from "@codemirror/language"
@@ -9,8 +10,8 @@ import { SearchCursor, RegExpCursor } from "@codemirror/search";
 function createEditorState(intialContents, options={}) {
 
   let extensions = [
-    minimalSetup, 
-    javascript(),
+    basicSetup,
+    umple(),
     lineNumbers(),
     bracketMatching(),
     syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
