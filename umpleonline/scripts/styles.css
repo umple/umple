@@ -594,7 +594,7 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
   overflow: auto !important;
 }
 .cm-editor {
-  max-height: 90% !important;
+  max-height: 99% !important;
 }
 
 /* div[role=tooltip] {
@@ -610,7 +610,7 @@ div#topTextEditor {
 /* codemirror 6 editor */
 div#newEditor {
   position: relative;
-  height: 90%;
+  /* height: 90%; */
 }
 
 /* DEBUG */
