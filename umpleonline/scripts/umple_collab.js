@@ -37,7 +37,11 @@ Collab.connectCollabServer = async function() {
 
     // DEBUG
     console.log("Version: ", getDocumentResponse.version, "Doc: ", getDocumentResponse.doc)
-    Page.setCodeMirror6Text(getDocumentResponse.doc)
+    // when response document coming from collaboration server has some content,
+    // then only update the code editor
+    if(getDocumentResponse.doc.length != 0){
+      Page.setCodeMirror6Text(getDocumentResponse.doc);
+    }
     // call Action.processTyping() to load diagram based on the editor content
     setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
 
