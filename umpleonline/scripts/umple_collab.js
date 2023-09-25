@@ -21,7 +21,20 @@ Collab.connectCollabServer = async function() {
     });
 
     // DEBUG
-    console.log("Socket Info: ", socket)
+    // console.log("Socket Info: ", socket)
+
+    const connectionTimeout = setTimeout(() => {
+      console.error('Connection to Collaboration server timed out!');
+      console.log("Collaboration server is disconnected/down !")
+      Page.setFeedbackMessage("Cannot Collaborate right now!")
+    }, 5000); // 5 seconds timeout
+
+    socket.on('connect', () => {
+      clearTimeout(connectionTimeout);
+      console.log("Connected to Collab Server....")
+      // set a feedback message for connected umpleonline window
+      Page.setFeedbackMessage("Connected to Collab Server")
+    })
 
     const umpdir = Page.getModel();
     const filename = TabControl.activeTab != null ? TabControl.activeTab.name : "Untitled";
