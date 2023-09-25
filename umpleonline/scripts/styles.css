@@ -584,10 +584,6 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
   width: 29 px !important;
 }
 
-.cm-activeLine.cm-line {
-  background-color: #d7d4f0 !important;
-}
-
 /* make codemirro 6 scrollable */
 .cm-scroller {
   padding: 1px;
