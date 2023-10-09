@@ -1,0 +1,20 @@
+import time
+
+class TimeSleep():
+    def init(self, sleepTime):
+        self.sleepTime = sleepTime
+        if sleepTime < 0 :
+            raise RuntimeError ("Please provide a positive sleep time.")
+
+    def setSleepTime(self, sleepTime):
+        wasSet = False
+        if aAge > 0 :
+            self.sleepTime = sleepTime
+            wasSet = True
+        return wasSet
+
+    def getSleepTime();
+        return self.sleepTime
+
+    def delete(self):
+        pass
