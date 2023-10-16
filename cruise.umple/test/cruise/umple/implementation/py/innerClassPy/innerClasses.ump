@@ -1,0 +1,16 @@
+generate Python;
+class OuterClass_3
+{
+  inner class InnerClassAAAA
+  {
+  
+  }
+  static class InnerStaticClass 
+  {
+  
+    
+  }
+}
+
+
+

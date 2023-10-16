@@ -1,6 +1,6 @@
 class OuterClass_2():
     def __init__(self):
-        self._x = None
+        pass
 
     def delete(self):
         pass
