@@ -1,0 +1,128 @@
+from enum import Enum, auto
+
+class X():
+    class Sm(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        s1 = auto()
+        s4 = auto()
+
+    class SmS1(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        s2 = auto()
+        s3 = auto()
+
+    class SmS4(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        s5 = auto()
+
+    def __init__(self):
+        self._smS4 = None
+        self._smS1 = None
+        self._sm = None
+        self.setSmS1(X.SmS1.Null)
+        self.setSmS4(X.SmS4.Null)
+        self.setSm(X.Sm.s1)
+
+    def getSmFullName(self):
+        answer = self._sm.__str__()
+        if self._smS1 != X.SmS1.Null :
+            answer += "." + self._smS1.__str__()
+        if self._smS4 != X.SmS4.Null :
+            answer += "." + self._smS4.__str__()
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def getSmS1(self):
+        return self._smS1
+
+    def getSmS4(self):
+        return self._smS4
+
+    def goToS5(self):
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm == X.Sm.s4 :
+            self.exitSmS4()
+            self.setSmS4(X.SmS4.s5)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def goToS3(self):
+        wasEventProcessed = False
+        aSmS1 = self._smS1
+        if aSmS1 == X.SmS1.s2 :
+            self.exitSmS1()
+            self.setSmS1(X.SmS1.s3)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def goToS4(self):
+        wasEventProcessed = False
+        aSmS1 = self._smS1
+        if aSmS1 == X.SmS1.s2 :
+            self.exitSm()
+            self.setSm(X.Sm.s4)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitSm(self):
+        if self._sm == X.Sm.s1 :
+            self.exitSmS1()
+        elif self._sm == X.Sm.s4 :
+            self.exitSmS4()
+
+    def setSm(self, aSm):
+        self._sm = aSm
+        if self._sm == X.Sm.s1 :
+            if self._smS1 == X.SmS1.Null :
+                self.setSmS1(X.SmS1.s2)
+        elif self._sm == X.Sm.s4 :
+            if self._smS4 == X.SmS4.Null :
+                self.setSmS4(X.SmS4.s5)
+
+    def exitSmS1(self):
+        if self._smS1 == X.SmS1.s2 :
+            self.setSmS1(X.SmS1.Null)
+        elif self._smS1 == X.SmS1.s3 :
+            self.setSmS1(X.SmS1.Null)
+
+    def setSmS1(self, aSmS1):
+        self._smS1 = aSmS1
+        if self._sm != X.Sm.s1 and aSmS1 != X.SmS1.Null :
+            self.setSm(X.Sm.s1)
+        if self._smS1 == X.SmS1.s3 :
+            self.delete()
+
+    def exitSmS4(self):
+        if self._smS4 == X.SmS4.s5 :
+            self.setSmS4(X.SmS4.Null)
+
+    def setSmS4(self, aSmS4):
+        self._smS4 = aSmS4
+        if self._sm != X.Sm.s4 and aSmS4 != X.SmS4.Null :
+            self.setSm(X.Sm.s4)
+        if self._smS4 == X.SmS4.s5 :
+            self.delete()
+
+    def delete(self):
+        pass
+
