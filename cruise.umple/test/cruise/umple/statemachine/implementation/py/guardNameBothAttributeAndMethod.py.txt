@@ -58,5 +58,4 @@ class A():
         return True
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "repeatCheck" + ":" 
-+ str(self.getRepeatCheck()) + "]"
+        return str(super().__str__()) + "[" + "repeatCheck" + ":" + str(self.getRepeatCheck()) + "]"

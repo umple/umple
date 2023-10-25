@@ -38,7 +38,7 @@ class A():
         wasEventProcessed = False
         aStatus = self._status
         if aStatus == A.Status.s1 :
-            if self.getRepeatCheck() < self.repeatCheck(z) :      
+            if self.getRepeatCheck() != self.repeatCheck() :
                 self.setStatus(A.Status.s2)
                 wasEventProcessed = True
         else :
@@ -57,5 +57,5 @@ class A():
         return True
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "repeatCheck" + ":" 
-+ str(self.getRepeatCheck()) + "]"
+        return str(super().__str__()) + "[" + "repeatCheck" + ":" + str(self.getRepeatCheck()) + "]"
+
