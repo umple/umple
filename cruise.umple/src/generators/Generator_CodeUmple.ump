@@ -92,7 +92,9 @@ class UmpleGenerator
     NIL(0, "", ""),
     LPAREN(1, "OPEN_ROUND_BRACKET", "("),
     RPAREN(2, "CLOSE_ROUND_BRACKET", ")"),
-    COMMA(3, "COMMA", ",");
+    COMMA(3, "COMMA", ","),
+    LCURLY(4, "OPEN_CURLY_BRACKET","{"),
+    RCURLY(5, "CLOSE_CURLY_BRACKET","}");
 
     private int id;
     private String value;
