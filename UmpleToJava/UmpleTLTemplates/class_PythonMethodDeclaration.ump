@@ -8,7 +8,7 @@ class UmpleToJava {
       {
         List<TraceItem> traceItems= aMethod.getTraced("method",uClass);
 
-        if(!aMethod.getExistsInLanguage("Java") || aMethod.getSource() == Method.Source.fAutoAPI)
+        if(!aMethod.getExistsInLanguage("Python") || aMethod.getSource() == Method.Source.fAutoAPI)
           continue;
 
 
