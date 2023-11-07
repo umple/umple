@@ -73,6 +73,7 @@ function replaceStatements
             [replaceAllMemberVariableNames]
             [removeSemiColonFromValues]
             [replaceThreadSleep]
+            [replaceThreadStart]
 
 end function
 
@@ -1077,7 +1078,14 @@ rule replaceThreadSleep
         'Thread.sleep( val [number] ')
     by
         'time.sleep( val  [/ 1000]')
+end rule
 
+% DEBUG: convert start(); to self.start()
+rule replaceThreadStart
+    replace [statement]
+        'start()
+    by
+        'self.start()
 end rule
 
 rule addClassPrefixToNestedClasses
