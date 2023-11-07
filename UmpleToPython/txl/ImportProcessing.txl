@@ -209,6 +209,7 @@ function addExternalImports translatedBody [class_body_decl]
     by
         imports [addOSImportIfNeeded translatedBody]
         [addTimeImportIfNeeded translatedBody]
+        [addThreadImportIfNeeded translatedBody]
         [addEnumImportIfNeeded translatedBody]
         [addPickleImportIfNeeded]
         [addSysImportIfNeeded translatedBody]
