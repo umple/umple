@@ -1,0 +1,30 @@
+class Mentor:
+    class Status:
+        Ok, Final = range(2)
+
+    def __init__(self):
+        self.status = self.Status.Ok
+
+    def get_status_full_name(self):
+        return self.status.name
+
+    def get_status(self):
+        return self.status
+
+    def flip(self):
+        was_event_processed = False
+
+        if self.status == self.Status.Ok:
+            self.set_status(self.Status.Final)
+            was_event_processed = True
+
+        return was_event_processed
+
+    def set_status(self, a_status):
+        self.status = a_status
+
+        if self.status == self.Status.Final:
+            self.delete()
+
+    def delete(self):
+        print("Deleted mentor")
