@@ -6,9 +6,9 @@ class OuterClass_1
   static class InnerStaticClass 
   {
   
-    void increaseY()
+  void increaseY() 
     {
-      y++;
+      OuterClass_1.y +=1
     }
     
   }

@@ -26,7 +26,7 @@ public class PythonInnerClassTest extends TemplateTest {
     tracerPath = null;
   }
 	
-  @Test @Ignore
+  @Test
   public void TestInnerStaticClass()
   {
     assertUmpleTemplateFor("/innerStatic.ump", "/innerStatic.py.txt", "OuterClass_1");

@@ -14,4 +14,5 @@ class OuterClass_1():
             pass
 
         def increaseY(self):
-            y +=1
+          OuterClass_1.y +=1
+
