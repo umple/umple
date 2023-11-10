@@ -197,6 +197,15 @@ rule replaceTryCatch
         finally [replaceFinally]
 end rule
 
+rule replaceThreadStart
+    replace [statement]
+        'start() newLine [NL]
+    by 
+        'super().__init__() 
+        newLine 
+        'self.start()
+end rule
+
 function replaceFinally
     replace [opt finally]
         'finally '{ stmts [repeat statement] '}
@@ -1078,14 +1087,6 @@ rule replaceThreadSleep
         'Thread.sleep( val [number] ')
     by
         'time.sleep( val  [/ 1000]')
-end rule
-
-% DEBUG: convert start(); to self.start()
-rule replaceThreadStart
-    replace [statement]
-        'start()
-    by
-        'self.start()
 end rule
 
 rule addClassPrefixToNestedClasses
