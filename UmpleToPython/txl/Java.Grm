@@ -35,8 +35,8 @@ end define
 
 define keywords
         [acess_modifier]
-    |   [acess_modifier] 'synchronized'
-    |   'synchronized'
+    |   '[acess_modifier] synchronized'
+    |   'synchronized
 end define
 
 define boolean_operator
