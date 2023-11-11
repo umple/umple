@@ -29,6 +29,21 @@ rule removeOverrideDecorator
         _
 end rule
 
+%DEBUG
+function replaceSynchronizedName
+    replace [id]
+        'synchronized
+    by 
+        's
+end function
+
+%function replaceToStringMethodName
+%    replace [id]
+%        'toString
+%    by
+%        '__str__
+%end function
+
 %Not needed in python
 rule removeSurpressWarningDecorator
     replace [opt decorator]
@@ -121,6 +136,7 @@ function replaceSpecificMethodNames
         funcName [id]
     by
         funcName
+            [replaceSynchronizedName]
             [replaceToStringMethodName]
             [replaceHashCodeMethodName]
 end function

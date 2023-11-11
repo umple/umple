@@ -29,15 +29,20 @@ define acess_modifier
     |   'protected
 end define
 
-%TODO
-%might have to add an empty terminal
-%ensure no ambiguity in grammar
-
+%DEBUG
 define keywords
         [acess_modifier]
     |   '[acess_modifier] synchronized'
     |   'synchronized
 end define
+
+%DEBUG
+% Potential change
+%define keywords
+%    |   '[opt acess_modifier] synchronized'
+%end define
+%
+
 
 define boolean_operator
         '&&
