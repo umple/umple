@@ -29,6 +29,16 @@ define acess_modifier
     |   'protected
 end define
 
+%TODO
+%might have to add an empty terminal
+%ensure no ambiguity in grammar
+
+define keywords
+        [acess_modifier]
+    |   'synchronized
+    |   '[acess_modifier] synchronized'
+end define
+
 define boolean_operator
         '&&
     |   '|'|
