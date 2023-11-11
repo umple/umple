@@ -35,8 +35,8 @@ end define
 
 define keywords
         [acess_modifier]
-    |   'synchronized
-    |   '[acess_modifier] synchronized'
+    |   [acess_modifier] 'synchronized'
+    |   'synchronized'
 end define
 
 define boolean_operator
@@ -384,6 +384,3 @@ define class_body_element
     |   [constructor]
     |   [method_declaration]
 end define
-
-
-
