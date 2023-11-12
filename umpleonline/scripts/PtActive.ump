@@ -1,0 +1,22 @@
+generate Python;
+
+class A {
+  depend time;
+  name;
+ 
+  active Python {
+    print("Object "+getName()+"is now active")
+    for i in range(1,9):
+      print(" "+name+" was here")
+      print(" "+name+" was also here")
+      time.sleep(1)
+      print(" "+name+" was here too")
+  }
+
+  public static void main(String[] argv) {
+    print("Preparing to launch active objects")
+    A.A("Obj1")
+    A.A("Obj2")
+    print("Launched active objects in their own threads")
+  }
+}
