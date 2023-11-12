@@ -30,13 +30,6 @@ define acess_modifier
 end define
 
 %DEBUG
-define keywords
-        [acess_modifier]
-    |   '[acess_modifier] synchronized'
-    |   'synchronized
-end define
-
-%DEBUG
 % Potential change
 %define keywords
 %    |   '[opt acess_modifier] synchronized'
@@ -293,7 +286,7 @@ define var_arg
 end define
 
 define concrete_method_declaration
-        [opt decorator] [acess_modifier] [opt static] [nested_identifier] [id] '( [list method_parameter] ') [opt throws] [NL] '{ [method_content] '} [NL]
+        [opt decorator] [acess_modifier] [opt synchronized] [opt static] [nested_identifier] [id] '( [list method_parameter] ') [opt throws] [NL] '{ [method_content] '} [NL]
 end define
 
 define method_content
@@ -344,6 +337,11 @@ end define
 
 define interface_declaration
     [opt acess_modifier] 'interface [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
+end define
+
+%DEBUG
+define synchronized
+    'synchronized
 end define
 
 define static
