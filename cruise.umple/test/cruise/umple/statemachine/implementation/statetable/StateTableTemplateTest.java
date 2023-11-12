@@ -42,7 +42,7 @@ public class StateTableTemplateTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/statetable/autoTransitionStateTable.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/timerTransitionStateTable.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/concurrentAlongsideNonConcurrentMultipleTransitionToSameStateWithGuardTransition.html");
-    SampleFileWriter.destroy(pathToInput + "/statetable/concurrentAutoTransitionStateTable.html");
+    //SampleFileWriter.destroy(pathToInput + "/statetable/concurrentAutoTransitionStateTable.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/concurrentTimerTransitionStateTableDifferentTimer.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/concurrentTimerTransitionStateTableSameTimer.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/concurrentTransitionWithActionNestedStateTable.html");
