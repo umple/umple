@@ -63,8 +63,10 @@ rule replaceConcreteMethod
         _ [createStaticDecorator possibleStatic]
     construct newStatements [repeat statement]
         _ [createNewSyncStatements statements possibleSynchronized]
+    construct second [repeat statement]
+        _ [test statements possibleSynchronized]
     by
-        possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  newStatements 
+        possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  newStatements [. second]
             [manageSpecialTypes params] 
             [replaceStatements] 
             [changeKeyArgumentNameInNestedIdentifier] 
@@ -72,7 +74,22 @@ rule replaceConcreteMethod
             [addStrIfNeeded methodName]
 end rule
 
+%DEBUG
 function createNewSyncStatements statements [repeat statement] possibleSynchronized [opt synchronized]
+    replace [repeat statement]
+        s [repeat statement]
+    deconstruct possibleSynchronized
+        _ [synchronized]
+    construct stateDeclaration [repeat statement]
+        'lock '. 'acquire '( ')
+    construct stateDeclaration2 [repeat statement]
+        'lock '. 'release '( ')
+    by
+         stateDeclaration [. statements]  [. stateDeclaration2]
+end function
+
+%DEBUG
+function test statements [repeat statement] possibleSynchronized [opt synchronized]
     replace [repeat statement]
         s [repeat statement]
     deconstruct not possibleSynchronized
@@ -82,7 +99,7 @@ function createNewSyncStatements statements [repeat statement] possibleSynchroni
     construct stateDeclaration2 [repeat statement]
         'lock '. 'release '( ')
     by
-         stateDeclaration [. statements]  [. stateDeclaration2]
+        statements
 end function
 
 % s [. stateDeclaration] [. stateDeclaration2]
@@ -375,6 +392,22 @@ function addFunctionImport seeking [id]
 end function
 
 function addTimerImport seeking [id]
+    replace [repeat statement] 
+        stmts [repeat statement] 
+    where
+        stmts [containsId 'Timer] 
+	where 
+		seeking [= 'Timer]
+    construct imp [import_statement]
+        'from 'threading 'import seeking
+    construct funcImport [repeat statement]
+        imp 
+    by
+        funcImport [. stmts]  
+end function
+
+%DEBUG
+function addSynchronizedImport seeking [id] possibleSynchronized [synchronized]
     replace [repeat statement] 
         stmts [repeat statement] 
     where
