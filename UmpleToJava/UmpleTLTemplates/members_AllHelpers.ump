@@ -17,7 +17,7 @@ class UmpleToJava {
 
   for (Attribute av : uClass.getAttributes())
   { // Issue 2046 unique immutable
-    if (av.isImmutable() && av.isIsLazy() || av.getIsUnique())
+    if (av.isImmutable() && (av.isIsLazy() || av.getIsUnique()))
     {
       if (isFirst)
       {

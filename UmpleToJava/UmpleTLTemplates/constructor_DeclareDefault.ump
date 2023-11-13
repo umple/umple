@@ -120,7 +120,7 @@ class UmpleToJava {
       hasBody = true;
       #>><<@ UmpleToJava.constructor_AttributeAssignDefaulted >><<# 
     }
-    else if (av.isImmutable() && av.getIsLazy() || av.getIsUnique())
+    else if (av.isImmutable() && (av.getIsLazy() || av.getIsUnique()))
     {
       hasBody = true;
       #>><<@ UmpleToJava.constructor_AttributeUnassignedImmutable >><<#
