@@ -391,4 +391,5 @@ end define
 define lock_statement
         'lockacquire
     |   'lockrelease
+    |   'lockthreading
 end define
