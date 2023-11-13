@@ -519,10 +519,18 @@ public class UmpleParserTest
   @Test
   public void operationNotFound()
   {
-	  assertHasWarningsParse("1012_operationNotFound1.ump", 1012);
-	  assertHasWarningsParse("1014_operationNotFound1.ump", 1014);
+    assertHasWarningsParse("1012_operationNotFound1.ump", 1012);
+    assertHasWarningsParse("1014_operationNotFound1.ump", 1014);
   }
-
+  @Test
+  public void extraBracketsWarning()
+  {
+    assertHasWarningsParse("1016_ExtrabracketTest1.ump", 1016);
+    assertHasWarningsParse("1016_ExtrabracketTest2.ump", 1016);
+    assertHasWarningsParse("1016_ExtrabracketTest3.ump", 1016);
+    assertHasWarningsParse("1016_ExtrabracketTest4.ump", 1016);
+    assertHasWarningsParse("1016_ExtrabracketTest5.ump", 1016);
+  }
   @Test
   public void validAssociationsForImmutableClass()
   {
