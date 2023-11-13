@@ -61,12 +61,12 @@ rule replaceConcreteMethod
         _ [getPythonParams params possibleStatic]
     construct possibleStaticDecorator [repeat decorator]
         _ [createStaticDecorator possibleStatic]
-    construct newStatements [repeat statement]
+    construct newSyncStatements [repeat statement]
         _ [createNewSyncStatements statements possibleSynchronized]
-    construct second [repeat statement]
-        _ [test statements possibleSynchronized]
+    construct nonSyncStatements [repeat statement]
+        _ [createNonSyncStatements statements possibleSynchronized]
     by
-        possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  newStatements [. second]
+        possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  newSyncStatements [. nonSyncStatements]
             [manageSpecialTypes params] 
             [replaceStatements] 
             [changeKeyArgumentNameInNestedIdentifier] 
@@ -89,15 +89,11 @@ function createNewSyncStatements statements [repeat statement] possibleSynchroni
 end function
 
 %DEBUG
-function test statements [repeat statement] possibleSynchronized [opt synchronized]
+function createNonSyncStatements statements [repeat statement] possibleSynchronized [opt synchronized]
     replace [repeat statement]
         s [repeat statement]
     deconstruct not possibleSynchronized
         _ [synchronized]
-    construct stateDeclaration [repeat statement]
-        'lock '. 'acquire '( ')
-    construct stateDeclaration2 [repeat statement]
-        'lock '. 'release '( ')
     by
         statements
 end function
@@ -372,7 +368,7 @@ function addFunctionImports
         stmts [repeat statement] 
     import possibleFunctionImports [repeat id]
     by
-        stmts [addFunctionImport each possibleFunctionImports][addTimerImport each possibleFunctionImports]
+        stmts [addFunctionImport each possibleFunctionImports][addTimerImport each possibleFunctionImports][addSynchronizedImport each possibleFunctionImports]
 end function
 
 %Creates specific function import if needed
@@ -407,7 +403,7 @@ function addTimerImport seeking [id]
 end function
 
 %DEBUG
-function addSynchronizedImport seeking [id] possibleSynchronized [synchronized]
+function addSynchronizedImport seeking [id]
     replace [repeat statement] 
         stmts [repeat statement] 
     where
@@ -415,7 +411,7 @@ function addSynchronizedImport seeking [id] possibleSynchronized [synchronized]
 	where 
 		seeking [= 'Timer]
     construct imp [import_statement]
-        'from 'threading 'import seeking
+        'import threading
     construct funcImport [repeat statement]
         imp 
     by
