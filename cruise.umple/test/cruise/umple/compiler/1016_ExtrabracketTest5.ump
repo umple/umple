@@ -1,9 +1,8 @@
 class X{
-  String x;
+  String abc;
 
 }
 {
 class Y{
-  String x;
-
+  String a;
 }

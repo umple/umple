@@ -1,4 +1,4 @@
 (
-Class X{
-	String x;
+class X{
+	String abc;
 }
