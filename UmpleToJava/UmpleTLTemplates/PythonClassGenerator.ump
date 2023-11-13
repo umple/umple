@@ -23,7 +23,7 @@ use state_machine_Events_All.ump;
 use state_machine_Get_All.ump;
 use state_machine_Set_All.ump;
 use state_machine_StateDependentMethods_All.ump;
-use state_machine_doActivity_All.ump;
+use PythonDoActivities/state_machine_python_doActivity_All.ump;
 use state_machine_timedEvent_All.ump;
 use toString_declare.ump;
 use trace.ump;
