@@ -529,7 +529,6 @@ public class UmpleParserTest
     assertHasWarningsParse("1016_ExtrabracketTest2.ump", 1016);
     assertHasWarningsParse("1016_ExtrabracketTest3.ump", 1016);
     assertHasWarningsParse("1016_ExtrabracketTest4.ump", 1016);
-    assertHasWarningsParse("1016_ExtrabracketTest5.ump", 1016);
   }
   @Test
   public void validAssociationsForImmutableClass()

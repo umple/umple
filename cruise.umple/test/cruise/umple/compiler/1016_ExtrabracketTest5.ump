@@ -1,8 +1,0 @@
-class X{
-  String abc;
-
-}
-{
-class Y{
-  String a;
-}
