@@ -30,7 +30,7 @@ rule removeOverrideDecorator
 end rule
 
 %DEBUG
-function replaceSynchronizedName
+function removeSynchronizedInMethod
     replace [id]
         'synchronized
     by 
@@ -53,15 +53,18 @@ rule removeSurpressWarningDecorator
 end rule
 
 %Replaces concrete, non user methods
+%DEBUG
 rule replaceConcreteMethod
     replace [concrete_method_declaration]
-        _[acess_modifier] possibleStatic [opt static] _[nested_identifier] methodName [id]'( params [list method_parameter] ') _ [opt throws] '{ statements [repeat statement] '}
+        _[acess_modifier] possibleSynchronized [opt synchronized] possibleStatic [opt static] _[nested_identifier] methodName [id]'( params [list method_parameter] ') _ [opt throws] '{ statements [repeat statement] '}
     construct newParams [list method_parameter]
         _ [getPythonParams params possibleStatic]
     construct possibleStaticDecorator [repeat decorator]
         _ [createStaticDecorator possibleStatic]
+    construct newStatements [repeat statement]
+        _ [createNewSyncStatements statements possibleSynchronized]
     by
-        possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  statements 
+        possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  newStatements 
             [manageSpecialTypes params] 
             [replaceStatements] 
             [changeKeyArgumentNameInNestedIdentifier] 
@@ -69,6 +72,20 @@ rule replaceConcreteMethod
             [addStrIfNeeded methodName]
 end rule
 
+function createNewSyncStatements statements [repeat statement] possibleSynchronized [opt synchronized]
+    replace [repeat statement]
+        s [repeat statement]
+    deconstruct not possibleSynchronized
+        _ [synchronized]
+    construct stateDeclaration [repeat statement]
+        'lock '. 'acquire '( ')
+    construct stateDeclaration2 [repeat statement]
+        'lock '. 'release '( ')
+    by
+         stateDeclaration [. statements]  [. stateDeclaration2]
+end function
+
+% s [. stateDeclaration] [. stateDeclaration2]
 %Creates a static decorator if needed. Otherwise returns empty
 function createStaticDecorator possibleStatic [opt static]
     replace [repeat decorator]
@@ -80,6 +97,31 @@ function createStaticDecorator possibleStatic [opt static]
     by
         result [. staticDecorator]
 end function
+
+%DEBUG
+%should create lock statement if sync keyword is used else return empty
+function createSyncDecorator possibleSync [opt synchronized]
+    replace [lock_statement]
+        result [lock_statement]
+    deconstruct possibleSync
+        _ [synchronized]
+    construct lock [lock_statement]
+        'lockacquire
+    by
+        lock
+end function
+
+%DEBUG
+%function replaceSynchronizedWithLocksInsideMethods possibleSynchronized [opt synchronized]
+%    replace [repeat decorator]
+%        result [repeat decorator]
+%    deconstruct possibleSynchronized
+%        _ [synchronized]
+%    construct staticDecorator [decorator]
+%        '@staticmethod
+%    by
+%        result [. staticDecorator]
+%end function
 
 %Translates abstract methods
 rule replaceAbstractMethod
@@ -93,6 +135,8 @@ rule replaceAbstractMethod
         '@abstractmethod 'def methodName [replaceSpecificMethodNames] '( newParams '): 'pass
 end rule
 
+%TODO
+%Implment synchronized logic for user methods?
 %Translates user methods, methods that contain tagged user specified code
 rule replaceUserMethod
     replace [concrete_method_declaration]
@@ -136,7 +180,7 @@ function replaceSpecificMethodNames
         funcName [id]
     by
         funcName
-            [replaceSynchronizedName]
+            [removeSynchronizedInMethod]
             [replaceToStringMethodName]
             [replaceHashCodeMethodName]
 end function

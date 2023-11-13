@@ -387,3 +387,8 @@ define class_body_element
     |   [constructor]
     |   [method_declaration]
 end define
+
+define lock_statement
+        'lockacquire
+    |   'lockrelease
+end define
