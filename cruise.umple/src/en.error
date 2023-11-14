@@ -207,7 +207,7 @@
 1014: 3, "http://manual.umple.org/?W1014ExcludedMethodNotFoundInjection.html", Excluded method '{0}' cannot be found. The exclusion was ignored. ;
 # Issue 1483
 1015: 3, "http://manual.umple.org/?BasicStateMachines.html", Methods in standalone state machines might not be correctly generated. State machines can be used in traits or put directly in a class to achieve the same effect. ;
-1016: 3, "http://manual.umple.org/?UnmatchedorExtraBrackets.html", Extra Open Or Closing Bracket encountered. ;
+1016: 3, "http://manual.umple.org/?W1016UnmatchedorExtraBrackets.html", Extra Open Or Closing Bracket encountered. ;
 
 1500 : 1, "http://manual.umple.org/?E15xxParsingError.html", Parsing error: '{0}' not understood ; 
 1501 : 1, "http://manual.umple.org/?E15xxParsingError.html", Parsing error: Arguments to '{0}' not understood ; 
