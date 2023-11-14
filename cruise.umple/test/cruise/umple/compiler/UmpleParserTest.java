@@ -522,7 +522,8 @@ public class UmpleParserTest
     assertHasWarningsParse("1012_operationNotFound1.ump", 1012);
     assertHasWarningsParse("1014_operationNotFound1.ump", 1014);
   }
-  @Test @Ignore
+  //Issue 2023
+  @Test 
   public void extraBracketsWarning()
   {
     assertHasWarningsParse("1016_ExtrabracketTest1.ump", 1016);
