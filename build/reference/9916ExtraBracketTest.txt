@@ -1,4 +1,4 @@
-W1016 Unmatched or Extra Curly/Round Brackets on top level
+W1016 Unmatched or Extra Brackets
 Errors and Warnings 1000+
 noreferences
 

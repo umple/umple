@@ -64,9 +64,7 @@ class UmpleInternalParser
       shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
       return;
     }
-    //Reveal the current class token
-    //System.out.print("Token:" + t);
-    
+
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
     boolean shouldConsumeRequirement = lastRequirements.size() > 0;
@@ -357,8 +355,6 @@ class UmpleInternalParser
     {
       return;
     }
-    //Reveals the current detected class token
-    //System.out.print("Token:" + token);
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
     boolean shouldConsumeRequirement = lastRequirements.size() > 0;
@@ -528,9 +524,6 @@ class UmpleInternalParser
     else if (token.is("exception"))
     {
       analyzeException(token,aClass);
-    }
-    else if (token.is("checkForUnintendedBracket")){
-        setFailedPosition(token.getPosition(),1016);
     }
 
     // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above

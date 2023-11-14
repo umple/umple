@@ -29,16 +29,13 @@ associationClassDefinition : associationClass [name] { [[associationClassContent
 enumerationDefinition : enum [name] { [enumValue](, [enumValue])* }
 
 // The following items can be found inside the body of classes or association classes
-classContent- :  [[comment]] | [[reqImplementation]] | [[innerClass]] | [[mixsetDefinition]] | [[distributable]] | [[proxyPattern]] | [[strictness]] | [[classDefinition]] | [[trace]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[primitiveDefinition]] | [[portDefinition]] | [[portBindingDefinition]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[testCase]] | [[genericTestCase]] | [[testSequence]] | [[testClassInit]] | [[stateMachine]] | [[activeMethodDefinition]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[modelConstraint]] | [[invariant]] | ; | [[enumerationDefinition]] | [[exception]] | [[extraCode]]
+classContent- : [[comment]] | [[reqImplementation]] | [[innerClass]] | [[mixsetDefinition]] | [[distributable]] | [[proxyPattern]] | [[strictness]] | [[classDefinition]] | [[trace]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[primitiveDefinition]] | [[portDefinition]] | [[portBindingDefinition]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[testCase]] | [[genericTestCase]] | [[testSequence]] | [[testClassInit]] | [[stateMachine]] | [[activeMethodDefinition]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[modelConstraint]] | [[invariant]] | ; | [[enumerationDefinition]] | [[exception]] | [[extraCode]]
 associationClassContent- :  [[comment]] | [[reqImplementation]] | [[classDefinition]] | [[position]] | [[displayColor]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[association]] | [[inlineAssociation]] | [[singleAssociationEnd]] | [[attribute]] | [[stateMachine]] | [[enumerationDefinition]] | ; | [[extraCode]]
 innerClass : [[innerStaticClass]] | [[innerNonStaticClass]]
 innerStaticClass : static [[classDefinition]]
 innerNonStaticClass : inner [[classDefinition]]
 
-openCurlBracket- : {
-closeCurlBracket- : }
 checkForUnintendedBracket : OPEN_ROUND_BRACKET | CLOSE_ROUND_BRACKET | OPEN_CURLY_BRACKET | CLOSE_CURLY_BRACKET
-//checkForUnintendedBracket : {
 
 // Interfaces: Note that if the format of an abstractMethodDeclaration is not
 // followed, then the body will extraCode and passed to the base language
