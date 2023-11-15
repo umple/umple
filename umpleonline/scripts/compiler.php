@@ -415,7 +415,7 @@ else if (isset($_REQUEST["umpleCode"]))
     {
       $html = "
         An error occurred interpreting your Umple code, please review it and try again.
-        If the problem persists, please consult the user manual or ask a question on Stack Overvlow with the umple tag";
+        If the problem persists, please consult the user manual or ask a question on Stack Overflow with the umple tag";
     }
     echo $errhtml ."<p>URL_SPLIT" . $html;
     
