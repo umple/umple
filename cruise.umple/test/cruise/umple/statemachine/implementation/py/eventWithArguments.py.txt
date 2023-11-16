@@ -1,0 +1,86 @@
+from enum import Enum, auto
+
+class LightFixture():
+    class Bulb(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Off = auto()
+        Dimmed = auto()
+        On = auto()
+
+    def __init__(self):
+        self._bulb = None
+        self._brightness = None
+        self._brightness = 0
+        self.setBulb(LightFixture.Bulb.Off)
+
+    def setBrightness(self, aBrightness):
+        wasSet = False
+        self._brightness = aBrightness
+        wasSet = True
+        return wasSet
+
+    def getBrightness(self):
+        return self._brightness
+
+    def getBulbFullName(self):
+        answer = self._bulb.__str__()
+        return answer
+
+    def getBulb(self):
+        return self._bulb
+
+    def turnDimmer(self, lightval):
+        wasEventProcessed = False
+        aBulb = self._bulb
+        if aBulb == LightFixture.Bulb.Off :
+            self.setBulb(LightFixture.Bulb.Off)
+            wasEventProcessed = True
+        elif aBulb == LightFixture.Bulb.Dimmed :
+            self.setBulb(LightFixture.Bulb.Dimmed)
+            wasEventProcessed = True
+        elif aBulb == LightFixture.Bulb.On :
+            self.setBulb(LightFixture.Bulb.Dimmed)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def flipSwitch(self):
+        wasEventProcessed = False
+        aBulb = self._bulb
+        if aBulb == LightFixture.Bulb.Off :
+            self.setBulb(LightFixture.Bulb.Dimmed)
+            wasEventProcessed = True
+        elif aBulb == LightFixture.Bulb.Dimmed :
+            self.setBulb(LightFixture.Bulb.Off)
+            wasEventProcessed = True
+        elif aBulb == LightFixture.Bulb.On :
+            self.setBulb(LightFixture.Bulb.Off)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def entry(self):
+        wasEventProcessed = False
+        aBulb = self._bulb
+        if aBulb == LightFixture.Bulb.Dimmed :
+            if dimmer > 99 :
+                self.setBulb(LightFixture.Bulb.On)
+                wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def setBulb(self, aBulb):
+        self._bulb = aBulb
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "brightness" + ":" + str(self.getBrightness()) + "]"
+
