@@ -3,7 +3,7 @@ use state_machine_python_doActivityThread.ump;
 
 
 class UmpleToJava {
-    state_machine_doActivity_All <<!<</*state_machine_doActivity_All*/>><<#
+    state_machine_python_doActivity_All <<!<</*state_machine_python_doActivity_All*/>><<#
 { 
   boolean hasActivities = false;
   for(StateMachine sm : uClass.getStateMachines())
@@ -17,7 +17,7 @@ class UmpleToJava {
         for (Activity activity : state.getActivities())
         {
           hasActivities = true;
-          #>><<@ UmpleToJava.state_machine_doActivity >><<#
+          #>><<@ UmpleToJava.state_machine_python_doActivity >><<#
         }
       }
     }
@@ -27,14 +27,16 @@ class UmpleToJava {
       for (Activity activity : state.getActivities())
       {
         hasActivities = true;
-        #>><<@ UmpleToJava.state_machine_doActivity >><<#
+        #>><<@ UmpleToJava.state_machine_python_doActivity >><<#
       }
     }
   } 
   if (hasActivities)
   {
-    #>><<@ UmpleToJava.state_machine_doActivityThread >><<#
+    #>><<@ UmpleToJava.state_machine_python_doActivityThread >><<#
   }
 }
+        //DEBUG
+        System.out.println("realSb: " + realSb);
 #>>!>>
 }

@@ -1,5 +1,5 @@
 class UmpleToJava {
-    state_machine_doActivityThread <<!<</*state_machine_doActivityThread*/>><<#   
+    state_machine_python_doActivityThread <<!<</*state_machine_python_doActivityThread*/>><<#   
   StringBuilder output = new StringBuilder();
 
   isFirst = true;
@@ -60,7 +60,9 @@ class UmpleToJava {
     {
       controller = aController;
       doActivityMethodName = aDoActivityMethodName;
-      start();
+      // The equivalent of "start();" for starting a python thread
+      super().__init__();
+      self.start();
     }
     
     public void run()

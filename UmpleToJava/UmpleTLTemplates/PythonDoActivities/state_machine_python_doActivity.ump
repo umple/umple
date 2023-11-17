@@ -1,5 +1,5 @@
 class UmpleToJava {
-    state_machine_doActivity <<!<</*state_machine_doActivity*/>><<#
+    state_machine_python_doActivity <<!<</*state_machine_python_doActivity*/>><<#
   Event e = activity.getOnCompletionEvent();
   String postTransition = e != null ? gen.translate("eventMethod",e) : null; 
 #>>

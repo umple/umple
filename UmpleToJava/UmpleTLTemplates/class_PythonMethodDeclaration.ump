@@ -117,6 +117,8 @@ class UmpleToJava {
         customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
 
         String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : "<TXL UGM>\n        " + aMethod.getMethodBody().getExtraCode().replace("\n", "\n    ") + "\n    </TXL UGM>";
+        //DEBUG
+        System.out.println("methodBody: " + methodBody);
         String properMethodBody = "    " + methodBody; 
         String override =  aMethod.getIsImplemented() ? "  @Override\n" : "";
         String paramName="";
