@@ -66,6 +66,7 @@ class State
   Boolean isDeepHistoryState = false;
   Boolean finalState = false;
   Boolean isVisited = false;
+  String displayColor = "";
   //State mostRecentState; //will be in dot notation, if used by historyState, only look at first part?
   
   Position position = null;
