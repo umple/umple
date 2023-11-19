@@ -81,15 +81,11 @@ function createNewSyncStatements statements [repeat statement] possibleSynchroni
     deconstruct possibleSynchronized
         _ [synchronized]
     construct stateDeclaration [repeat statement]
-        'import 'threading
-    construct stateDeclaration1 [repeat statement]
-        'umplePythonSyncLock '= 'threading.Lock '( ')
-    construct stateDeclaration2 [repeat statement]
         'umplePythonSyncLock '. 'acquire '( ')
-    construct stateDeclaration3 [repeat statement]
+    construct stateDeclaration2 [repeat statement]
         'umplePythonSyncLock '. 'release '( ')
     by
-         stateDeclaration [. stateDeclaration1] [. stateDeclaration2] [. statements]  [. stateDeclaration3]
+         stateDeclaration [. statements]  [. stateDeclaration2]
 end function
 
 %DEBUG
