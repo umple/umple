@@ -5,18 +5,29 @@ class UmpleToJava {
 #>>
   private void <<= gen.translate("doActivityMethod",activity)>>()
   {
-    try
-    {
-      <<#Position p = activity.getPosition();
-      if (p != null) {
-      realSb.append("\n      // line " + p.getLineNumber() + " \"" + uClass.getRelativePath(p.getFilename(),"Java") + "\"");
-    } #>>
+      <TXL UGM>
+        try:
+        <<#Position p = activity.getPosition();
+        if (p != null) {
+        realSb.append("\n        # line " + p.getLineNumber() + " \"" + uClass.getRelativePath(p.getFilename(),"Java") + "\"");
+        String activityCode = activity.getActivityCode();
+        String[] lines = activityCode.split("\\r?\\n");
+        // The first line in the activity code needs 3 tabs
+        boolean isFirstLine = true;
+        for (String line : lines) {
+            if (isFirstLine) {
+                realSb.append("\n").append("            ").append(line);
+                isFirstLine = false;
+            } else {
+                realSb.append("\n").append("  ").append(line);
+            }
+        }
+      } #>>
     <<# 
 	if (p != null) { 
 	   int javaline = realSb.toString().split("\\n").length;
 	   addUncaughtExceptionVariables(gen.translate("doActivityMethod",activity),p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline-2,activity.getActivityCode().split("\\n").length); 
 	  } #>>
-      <<= activity.getActivityCode() >>
       <<# if (postTransition != null)
       { 
         for (Activity a : state.getActivities())
@@ -27,11 +38,9 @@ class UmpleToJava {
         }
         append(realSb, "\n      {0}();",postTransition); 
       } #>>
-    }
-    catch (InterruptedException e)
-    {
-
-    }
+        except :
+          pass
+      </TXL UGM>
   }
 !>>
 }
