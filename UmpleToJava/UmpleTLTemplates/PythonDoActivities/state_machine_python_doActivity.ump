@@ -8,6 +8,8 @@ class UmpleToJava {
       <TXL UGM>
         try:
         <<#Position p = activity.getPosition();
+        // TXL PYTHON DEBUG
+        System.out.println("Position P: " + p);
         if (p != null) {
         realSb.append("\n        # line " + p.getLineNumber() + " \"" + uClass.getRelativePath(p.getFilename(),"Java") + "\"");
         String activityCode = activity.getActivityCode();
@@ -39,7 +41,7 @@ class UmpleToJava {
         append(realSb, "\n      {0}();",postTransition); 
       } #>>
         except :
-          pass
+            pass
       </TXL UGM>
   }
 !>>

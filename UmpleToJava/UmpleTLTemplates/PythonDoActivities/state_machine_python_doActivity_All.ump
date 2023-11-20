@@ -36,7 +36,5 @@ class UmpleToJava {
     #>><<@ UmpleToJava.state_machine_python_doActivityThread >><<#
   }
 }
-        //DEBUG
-        System.out.println("realSb: " + realSb);
 #>>!>>
 }

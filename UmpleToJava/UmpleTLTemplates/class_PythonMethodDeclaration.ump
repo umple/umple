@@ -8,12 +8,8 @@ class UmpleToJava {
       {
         List<TraceItem> traceItems= aMethod.getTraced("method",uClass);
 
-        // DEBUG: Method
-        System.out.println("Method Name: " + aMethod.getName());
-        System.out.println("Python: " + aMethod.getExistsInLanguage("Python"));
         if(!aMethod.getExistsInLanguage("Python") || aMethod.getSource() == Method.Source.fAutoAPI)
           continue;
-
 
         Position p = aMethod.getCodePosition();
         String positionHeader = "";        
@@ -117,8 +113,6 @@ class UmpleToJava {
         customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
 
         String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : "<TXL UGM>\n        " + aMethod.getMethodBody().getExtraCode().replace("\n", "\n    ") + "\n    </TXL UGM>";
-        //DEBUG
-        System.out.println("methodBody: " + methodBody);
         String properMethodBody = "    " + methodBody; 
         String override =  aMethod.getIsImplemented() ? "  @Override\n" : "";
         String paramName="";

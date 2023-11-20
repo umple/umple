@@ -8,7 +8,7 @@ class UmpleToJava {
     {
       for (Activity activity : state.getActivities())
       {
-        //DEBUG
+        // TXL PYTHON DEBUG
         System.out.println("Activity: " + activity.getActivityCode());
         if (isFirst)
         {
