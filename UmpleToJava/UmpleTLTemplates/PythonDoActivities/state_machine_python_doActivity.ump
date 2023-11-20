@@ -9,19 +9,28 @@ class UmpleToJava {
         try:
         <<#Position p = activity.getPosition();
         // TXL PYTHON DEBUG
-        System.out.println("Position P: " + p);
+        System.out.println("Position P: " + p.getCharacterOffset());
         if (p != null) {
         realSb.append("\n        # line " + p.getLineNumber() + " \"" + uClass.getRelativePath(p.getFilename(),"Java") + "\"");
         String activityCode = activity.getActivityCode();
         String[] lines = activityCode.split("\\r?\\n");
         // The first line in the activity code needs 3 tabs
         boolean isFirstLine = true;
+        // Each line in the activityCode needs to be indented 12 spaces
         for (String line : lines) {
             if (isFirstLine) {
                 realSb.append("\n").append("            ").append(line);
                 isFirstLine = false;
             } else {
-                realSb.append("\n").append("  ").append(line);
+                // lines after the first line have a position offset 
+                // that affects how many spaces need to be indented
+                if (p.getCharacterOffset() > 10) {
+                  int removeExtraSpace = p.getCharacterOffset() - 10;
+                  line = line.substring(removeExtraSpace);
+                  realSb.append("\n").append(line);
+                } else if (p.getCharacterOffset() < 10 && p.getCharacterOffset() >= 0) {
+                  realSb.append("\n").append(" ".repeat(10 - p.getCharacterOffset())).append(line);
+                }
             }
         }
       } #>>
