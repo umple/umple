@@ -709,6 +709,8 @@ class Parser
     input = input.replace("-(","OPEN_ROUND_BRACKET");
     input = input.replace("-)","CLOSE_ROUND_BRACKET");
     input = input.replace("-||","DOUBLE_OR_BARS");
+    input = input.replace("-{","OPEN_CURLY_BRACKET");
+    input = input.replace("-}","CLOSE_CURLY_BRACKET");
 
     grammarRules.add(input);
     TextParser ruleParser = new TextParser(input);
@@ -750,6 +752,8 @@ class Parser
       definition = definition.replace("OPEN_ROUND_BRACKET","(");
       definition = definition.replace("CLOSE_ROUND_BRACKET",")");
       definition = definition.replace("DOUBLE_OR_BARS","||");
+      definition = definition.replace("OPEN_CURLY_BRACKET","{");
+      definition = definition.replace("CLOSE_CURLY_BRACKET","}");
       newRule.addDefinition(definition);
       ruleParser.nextAt("|");
     }
