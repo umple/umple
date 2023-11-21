@@ -57,12 +57,13 @@ end rule
 rule replaceConcreteMethod
     replace [concrete_method_declaration]
         _[acess_modifier] possibleSynchronized [opt synchronized] possibleStatic [opt static] _[nested_identifier] methodName [id]'( params [list method_parameter] ') _ [opt throws] '{ statements [repeat statement] '}
+    export possibleSynchronized
     construct newParams [list method_parameter]
         _ [getPythonParams params possibleStatic]
     construct possibleStaticDecorator [repeat decorator]
         _ [createStaticDecorator possibleStatic]
     construct newSyncStatements [repeat statement]
-        _ [createNewSyncStatements statements possibleSynchronized methodName]
+        _ [createNewSyncStatements statements possibleSynchronized]
     construct nonSyncStatements [repeat statement]
         _ [createNonSyncStatements statements possibleSynchronized]
     by
@@ -75,19 +76,18 @@ rule replaceConcreteMethod
 end rule
 
 %DEBUG
-function createNewSyncStatements statements [repeat statement] possibleSynchronized [opt synchronized] methodName [id]
+function createNewSyncStatements statements [repeat statement] possibleSynchronized [opt synchronized]
     replace [repeat statement]
         s [repeat statement]
     deconstruct possibleSynchronized
         _ [synchronized]
     import className [nested_identifier]
-    construct stateDeclaration [repeat statement]
+    construct stateDeclaration [statement]
         className '. 'umplePythonSyncLock '. 'acquire '( ')
-    construct stateDeclaration2 [repeat statement]
+    construct stateDeclaration2 [statement]
         className '. 'umplePythonSyncLock '. 'release '( ')
-    
     by
-         stateDeclaration [. statements]  [. stateDeclaration2]
+         stateDeclaration statements [. stateDeclaration2]
 end function
 
 %DEBUG

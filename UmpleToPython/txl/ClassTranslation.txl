@@ -16,9 +16,12 @@ rule replaceConcreteClasses
         _ [createImports classBody inheritances translatedBody]
     construct runMain [opt run_main]
         _ [constructRunMain translatedBody]
+    construct stateDeclaration2 [statement]
+        'umplePythonSyncLock '= 'threading.Lock '( ')
+    import possibleSynchronized [opt synchronized]
     by
         imports
-        'class className '( inheritanceClasses ')':  translatedBody runMain 
+        'class className '( inheritanceClasses ')': stateDeclaration2 translatedBody runMain 
 end rule
 
 %Rule to translate nested classes
