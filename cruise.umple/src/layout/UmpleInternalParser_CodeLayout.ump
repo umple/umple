@@ -45,8 +45,6 @@ class UmpleInternalParser
     { // See near clone in UmpleInternalParser_CodeClass.ump
       String theColor = token.getValue("colorValue");
       if(theColor.startsWith("=")) theColor=theColor.substring(1,theColor.length());
-      if(!theColor.startsWith("\"")) theColor= "\""+theColor;
-      if(!theColor.endsWith("\"")) theColor= theColor+"\"";
       inUmpleClassifier.setDisplayColor(theColor);
     }
     mixset Association {

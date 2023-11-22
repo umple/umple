@@ -1756,8 +1756,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       {  // Note: See near clone in UmpleInternalParser_CodeLayout.ump
         String theColor = childToken.getValue("colorValue");
         if(theColor.startsWith("=")) theColor=theColor.substring(1,theColor.length());
-        if(!theColor.startsWith("\"")) theColor= "\""+theColor;
-        if(!theColor.endsWith("\"")) theColor= theColor+"\"";         
         aInterface.setDisplayColor(theColor);
       }
       else if (childToken.is("extraCode") || childToken.is("exception"))
