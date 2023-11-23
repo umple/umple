@@ -402,12 +402,20 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
       else 
       {
         // Start of a subgraph
+        String getColor = s.getDisplayColor();
+        // Initialize a string for background color
+        String bgroundColor = "style = rounded;";
+        // If the color is not empty, set the display style to filled and rounded
+        // and apply the retrieved color as the fill color
+        if (!getColor.equals("")) {
+        bgroundColor = "style = \"filled, rounded\" fillcolor = \"" + getColor + "\"";
+        }
         appendSpaces(code,  indentLevel+1);
         code.append("subgraph "+sName+" {\n");
         appendSpaces(code,  indentLevel+2);
         code.append("label = \""+sLabel+"\";\n");
         appendSpaces(code,  indentLevel+2);
-        code.append("style = rounded;\n");        
+        code.append(bgroundColor + " \n");
         appendSpaces(code,  indentLevel+2);
         code.append("URL=\"javascript:Action.stateClicked(\\\""+jsStr+"\\\")\";\n");
       }
