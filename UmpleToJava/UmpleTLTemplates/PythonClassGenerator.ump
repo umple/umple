@@ -582,8 +582,6 @@ for (StateMachine smq : uClass.getStateMachines())
 
 <<# } #>><<@ UmpleToJava.trace >><<#if(model.getMainClass() == null || model.getMainClass().getName() != uClass.getName()){#>>
 }<<#}
-  // TXL PYTHON DEBUG
-  System.out.println("realSb: "+ realSb);
   return realSb.toString();
 }
 #>><<@ UmpleToJava.python_uncaught_exception>><<#}

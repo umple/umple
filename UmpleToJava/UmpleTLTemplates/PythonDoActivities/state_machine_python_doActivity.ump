@@ -8,8 +8,6 @@ class UmpleToJava {
       <TXL UGM>
         try:
         <<#Position p = activity.getPosition();
-        // TXL PYTHON DEBUG
-        System.out.println("Position P: " + p.getCharacterOffset());
         if (p != null) {
         realSb.append("\n        # line " + p.getLineNumber() + " \"" + uClass.getRelativePath(p.getFilename(),"Java") + "\"");
         String activityCode = activity.getActivityCode();
