@@ -1,0 +1,15 @@
+generate GvStateDiagram;
+namespace example;
+
+class LightBulb {
+ state {
+   Off {
+   displayColour = red;
+     turnOn -> On;
+   }
+   On {
+     turnOff -> Off;
+     displayColour = yellow;
+   }
+ }
+}
