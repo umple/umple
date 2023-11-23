@@ -4,9 +4,9 @@ noreferences
 
 @@description
 
-<p>This example has been built for the <a href="http://cserg0.site.uottawa.ca/cma2012/guidelines.htm">Comparing Modeling Approaches Workshop</a></p>
+<p>This example has been built for the <a href="https://dl.acm.org/doi/pdf/10.1145/2459031.2459032">Comparing Modeling Approaches Workshop</a></p>
 
-<p>Note that this file is too large for the 'Open In UmpleOnline' to work in most browsers. You will need to copy the text to the clipboard and paste it into <a href="http://try.umple.org">UmpleOnline</a>.</p>
+<p>Note that this file is too large for the 'Open In UmpleOnline' to work in most browsers. You will need to copy the text to the clipboard and paste it into <a href="https://try.umple.org">UmpleOnline</a>.</p>
 
 @@example
 @@source CoordinationStateMachine.ump &diagramtype=state
