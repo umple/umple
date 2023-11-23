@@ -1,0 +1,24 @@
+W1016 Unmatched or Extra Brackets
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>Umple semantic warning issued when a extra bracket is added</h2>
+
+<p>When either a extra curly or extra round bracket is found. A warning will be raised.<br/>
+Warning will show line number and removing the extra bracket will resolve the issue.
+</p>
+
+
+@@example
+@@source manualexamples/W1016ExtraBracket.ump
+@@endexample
+
+@@example
+@@source manualexamples/W1016ExtraBracket2.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/W1016ExtraBracketSol.ump
+@@endexample
