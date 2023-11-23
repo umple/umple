@@ -17,7 +17,7 @@ class UmpleToJava {
 	   addUncaughtExceptionVariables(gen.translate("doActivityMethod",activity),p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline-2,activity.getActivityCode().split("\\n").length); 
 	  } #>>
       <<= activity.getActivityCode() >>
-      Thread.sleep(55);
+      Thread.sleep(1);
       <<# if (postTransition != null)
       { 
         for (Activity a : state.getActivities())
