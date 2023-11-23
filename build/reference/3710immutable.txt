@@ -12,7 +12,7 @@ noreferences
 
 <p>Individual attributes and associations can be marked as immutable instead of the entire class. An attribute can be marked as <a href="LazyImmutableAttributes.html">lazy immutable</a> if it needs to be initialized after the constructor has finished. An immutable class cannot have an association to a non-immutable class.</p>
 
-<p><a href="http://en.wikipedia.org/wiki/Immutable_object" target="wikipedia">For more details on the Immutable pattern, see this Wikipedia page.</a></p>
+<p><a href="https://en.wikipedia.org/wiki/Immutable_object" target="wikipedia">For more details on the Immutable pattern, see this Wikipedia page.</a></p>
 
 <br />
 
