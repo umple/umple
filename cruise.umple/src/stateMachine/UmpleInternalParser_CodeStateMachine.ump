@@ -1120,6 +1120,12 @@ class UmpleInternalParser
       {
       	fromState.addAction(analyzeAction(subToken, fromState));
       }
+      else if (subToken.is("displayColor")){
+          String theColor = subToken.getValue("colorValue");
+      theColor = theColor.replace("=", ""); // Remove all '=' characters
+          theColor = theColor.replace("\"", ""); // Remove all '"' characters
+          fromState.setDisplayColor(theColor);
+      }
       else if (subToken.is("||"))
       {
         if (fromState.numberOfNestedStateMachines() == 0) { continue; }
