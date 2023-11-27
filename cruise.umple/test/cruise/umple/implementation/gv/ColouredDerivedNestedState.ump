@@ -1,0 +1,31 @@
+generate GvStateDiagram;
+namespace example;
+
+class Car {
+  state {
+    Off {
+      turnOn -> Running;
+    }
+    Running {
+        displayColor lightgreen;
+
+      state {
+      displayColor pink;
+        Idle {
+          displayColor yellow;
+          accelerate -> Moving;
+        }
+        Moving {
+          displayColor green;
+          decelerate -> Idle;
+          stop -> Stopped;
+        }
+        Stopped {
+          displayColor red;
+          accelerate -> Moving;
+          turnOff -> Off;
+        }
+      }
+    }
+  }
+}

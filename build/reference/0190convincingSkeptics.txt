@@ -33,7 +33,7 @@ noreferences
 
 <li><b>Use just like a pre-processor:</b> Programmers have been confidently using pre-processors for half a century.</li><br/>
 
-<li><b>Fully open source with a liberal license:</b> If you dont like something about Umple you can fix it and contribute to the community. But there are no restrictions on what you do with Umple or its generated code since it uses an <a href="http://umple.org/license">MIT-style license</a>.</li><br/>
+<li><b>Fully open source with a liberal license:</b> If you dont like something about Umple you can fix it and contribute to the community. But there are no restrictions on what you do with Umple or its generated code since it uses an <a href="https://umple.org/license">MIT-style license</a>.</li><br/>
 
 <li><b>Commitment to the future:</b> The team at the University of Ottawa developing Umple plan to continue active development for the years to come. This will not become one of those research programs that comes to an end and is then abandoned. We recognize that ideas can take decades to percolate to the community. We plan to be right there supporting Umple as this happens.</li><br/>
 

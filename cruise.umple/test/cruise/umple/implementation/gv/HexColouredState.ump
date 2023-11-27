@@ -1,0 +1,35 @@
+generate GvStateDiagram;
+namespace example;
+
+class GarageDoor
+{
+   status {
+
+      	Open {
+      	displayColour = "#FFFF00";
+      	buttonOrObstacle -> Closing;
+      	 }
+
+	Closing {
+	      	displayColour = "#008000";
+          buttonOrObstacle -> Opening;
+          reachBottom -> Closed;
+      	}
+
+      	Closed {
+        displayColour = "#FF0000";
+      	buttonOrObstacle -> Opening;
+      	}
+
+      	Opening {
+      	  displayColour = "#FFA500";
+          buttonOrObstacle -> HalfOpen;
+          reachTop -> Open;
+      	}
+
+      	HalfOpen {
+      	 buttonOrObstacle -> Opening;
+      	 displayColour = "#FFC0CB";
+      	  }
+  }
+}
