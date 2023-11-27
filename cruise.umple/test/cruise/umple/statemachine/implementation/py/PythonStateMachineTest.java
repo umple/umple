@@ -17,6 +17,13 @@ public class PythonStateMachineTest extends StateMachineTest
     languagePath = "py";
   }
   
-  
+
+  @Test
+  @Override
+  public void testTwoParameterGuard_1()
+  {
+    assertUmpleTemplateFor(languagePath + "/testTwoParameterGuardPython.ump",languagePath + "/testTwoParameterGuard."+ languagePath +".txt","A_Guard");
+  }
+
 
 }
