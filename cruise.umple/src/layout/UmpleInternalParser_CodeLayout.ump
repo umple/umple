@@ -42,9 +42,14 @@ class UmpleInternalParser
       inUmpleClassifier.setCoordinates(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
     }
     else if (token.is("displayColor"))
-    { // See near clone in UmpleInternalParser_CodeClass.ump
+    { // See near clone in UmpleInternalParser_CodeClass.ump and UmpleInternalParser_CodeStateMachine.ump
       String theColor = token.getValue("colorValue");
+      // Optionally users may add an equals sign, which we take out
       if(theColor.startsWith("=")) theColor=theColor.substring(1,theColor.length());
+      // Optionally users may add quotation marks around the colour, which we take out
+      theColor=theColor.replace('\"',' ');
+      // Remove all spaces that may have been before any quotation marks or after the equals sign
+      theColor="\""+theColor.trim()+"\"";
       inUmpleClassifier.setDisplayColor(theColor);
     }
     mixset Association {

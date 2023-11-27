@@ -22,7 +22,7 @@ digraph "ColouredDerivedNestedState" {
 
      subgraph clusterCar_state_Running {
       label = "Running";
-      style = "filled, rounded" fillcolor = "lightgreen" 
+      style = "filled, rounded" fillcolor ="lightgreen" 
       URL="javascript:Action.stateClicked(\"Car^*^state^*^Running\")";
 
       // StateMachine: Running
@@ -39,7 +39,7 @@ digraph "ColouredDerivedNestedState" {
 
        subgraph clusterCar_stateRunning_state {
         label = "state";
-        style = "filled, rounded" fillcolor = "pink" 
+        style = "filled, rounded" fillcolor ="pink" 
         URL="javascript:Action.stateClicked(\"Car^*^state^*^Running.state\")";
 
         // Bottom Level StateMachine: state
@@ -54,17 +54,17 @@ digraph "ColouredDerivedNestedState" {
         
           // State: Idle
 
-          Car_stateRunningState_Idle [label = Idle,style = "filled, rounded", fillcolor = "yellow", tooltip = "Class Car, SM state, State Running.state.Idle", URL="javascript:Action.stateClicked(\"Car^*^state^*^Running.state.Idle\")"];
+          Car_stateRunningState_Idle [label = Idle,style = "filled, rounded", fillcolor ="yellow", tooltip = "Class Car, SM state, State Running.state.Idle", URL="javascript:Action.stateClicked(\"Car^*^state^*^Running.state.Idle\")"];
           // End State: Idle
 
           // State: Moving
 
-          Car_stateRunningState_Moving [label = Moving,style = "filled, rounded", fillcolor = "green", tooltip = "Class Car, SM state, State Running.state.Moving", URL="javascript:Action.stateClicked(\"Car^*^state^*^Running.state.Moving\")"];
+          Car_stateRunningState_Moving [label = Moving,style = "filled, rounded", fillcolor ="green", tooltip = "Class Car, SM state, State Running.state.Moving", URL="javascript:Action.stateClicked(\"Car^*^state^*^Running.state.Moving\")"];
           // End State: Moving
 
           // State: Stopped
 
-          Car_stateRunningState_Stopped [label = Stopped,style = "filled, rounded", fillcolor = "red", tooltip = "Class Car, SM state, State Running.state.Stopped", URL="javascript:Action.stateClicked(\"Car^*^state^*^Running.state.Stopped\")"];
+          Car_stateRunningState_Stopped [label = Stopped,style = "filled, rounded", fillcolor ="red", tooltip = "Class Car, SM state, State Running.state.Stopped", URL="javascript:Action.stateClicked(\"Car^*^state^*^Running.state.Stopped\")"];
           // End State: Stopped
         // End Bottom Level StateMachine: state
        }
