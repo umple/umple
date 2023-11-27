@@ -393,7 +393,7 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
         // and apply the retrieved color as the fill color
 
       if (!getColor.equals("")) {
-      bgroundColor = "style = \"filled, rounded\", fillcolor = \"" + getColor + "\",";
+      bgroundColor = "style = \"filled, rounded\", fillcolor =" + getColor + ",";
         }
 
         code.append(sName + " [label = " + sLabel + "," + bgroundColor + " tooltip = \"" + tooltip + "\", URL=\"javascript:Action.stateClicked(\\\"" + jsStr + "\\\")\"];\n");
@@ -408,7 +408,7 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
         // If the color is not empty, set the display style to filled and rounded
         // and apply the retrieved color as the fill color
         if (!getColor.equals("")) {
-        bgroundColor = "style = \"filled, rounded\" fillcolor = \"" + getColor + "\"";
+        bgroundColor = "style = \"filled, rounded\" fillcolor =" + getColor;
         }
         appendSpaces(code,  indentLevel+1);
         code.append("subgraph "+sName+" {\n");

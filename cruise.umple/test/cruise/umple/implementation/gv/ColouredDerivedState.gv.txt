@@ -15,12 +15,12 @@ digraph "ColouredDerivedState" {
     
       // State: Off
 
-      LightBulb_state_Off [label = Off,style = "filled, rounded", fillcolor = " red", tooltip = "Class LightBulb, SM state, State Off", URL="javascript:Action.stateClicked(\"LightBulb^*^state^*^Off\")"];
+      LightBulb_state_Off [label = Off,style = "filled, rounded", fillcolor ="red", tooltip = "Class LightBulb, SM state, State Off", URL="javascript:Action.stateClicked(\"LightBulb^*^state^*^Off\")"];
       // End State: Off
 
       // State: On
 
-      LightBulb_state_On [label = On,style = "filled, rounded", fillcolor = " yellow", tooltip = "Class LightBulb, SM state, State On", URL="javascript:Action.stateClicked(\"LightBulb^*^state^*^On\")"];
+      LightBulb_state_On [label = On,style = "filled, rounded", fillcolor ="yellow", tooltip = "Class LightBulb, SM state, State On", URL="javascript:Action.stateClicked(\"LightBulb^*^state^*^On\")"];
       // End State: On
     // End Top and Bottom Level StateMachine: state
 
