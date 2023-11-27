@@ -198,3 +198,8 @@ redefine member_variable_declaration
     ...
     |   [value] [NL]
 end redefine
+
+redefine thread_start
+        ...
+    |   'super().__init__() [NL] 'self.start()
+end redefine

@@ -10,7 +10,6 @@ function replaceStatements
     by 
         statements
 
-            [replaceThread]
             [replacePrivateAttributeSetting]
             [replaceDefaultReadObject]
             [replaceSwitchCase]
@@ -72,6 +71,7 @@ function replaceStatements
             [replaceFloatF]
             [replaceAllMemberVariableNames]
             [removeSemiColonFromValues]
+            [replaceAutoTransitionExitSM]
             [replaceThreadSleep]
 
 end function
@@ -1060,24 +1060,20 @@ rule replaceClassMatchCheck
         'type(self) 'is 'type( id2 ')
 end rule
 
-
-rule replaceThread
-    replace [statement]
-        'Thread identifier [nested_identifier] '= val [value] ';
-    by
-        %'thread1 = A("2")
-        %'threading.Thread(target=thread1.doActivityThread).start()
-        % name of do activity method is doActivityStateMachine1TopLevelThread1
-        'threading.Thread(target= identifier).start()
-end rule
-
 % need to convert milliseconds to seconds
 rule replaceThreadSleep
     replace [statement]
         'Thread.sleep( val [number] ')
     by
         'time.sleep( val  [/ 1000]')
+end rule
 
+% self.exitSm() is making the python AutoTransition not work, comment out for workaround.
+rule replaceAutoTransitionExitSM
+    replace [statement]
+        'exitSm()
+    by
+        'exit()
 end rule
 
 rule addClassPrefixToNestedClasses
