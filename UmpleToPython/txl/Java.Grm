@@ -192,6 +192,7 @@ define statement
     |   [throw_statement]
     |   [switch_case]
     |   [try_catch]
+    |   [thread_start]
 end define
 
 %[value] by itself cannot match java declarations (ex: String aName)
@@ -297,6 +298,10 @@ end define
 define inheritance_statement
         'extends
     |   'implements
+end define
+
+define thread_start
+    'start();
 end define
 
 

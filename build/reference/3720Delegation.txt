@@ -4,14 +4,14 @@ noreferences
 @@tooltip Delegation is a pattern that generates code by which an object asks for work to be done by a neighbouring object, connected using an association
 
 @@description
-<p><a href="http://en.wikipedia.org/wiki/Delegation_pattern">Delegation</a> is one of the most fundamental patterns, that underpins many more sophisticated patterns found in the <a href="http://en.wikipedia.org/wiki/Design_Patterns">Gang of Four book</a>.  To simplify code, reduce coupling, and adhere to the <a href="http://en.wikipedia.org/wiki/Law_of_Demeter">'Law of Demeter'</a>, it encourages you to create one-line methods that do nothing other than call methods in neighbouring classes. Other code in your class then calls the delegation methods, rather than also calling the methods in the neighbouring classes. That way, very few methods (just the delegation methods) actually need to traverse associations</p>
+<p><a href="https://en.wikipedia.org/wiki/Delegation_pattern">Delegation</a> is one of the most fundamental patterns, that underpins many more sophisticated patterns found in the <a href="https://en.wikipedia.org/wiki/Design_Patterns">Gang of Four book</a>.  To simplify code, reduce coupling, and adhere to the <a href="https://en.wikipedia.org/wiki/Law_of_Demeter">'Law of Demeter'</a>, it encourages you to create one-line methods that do nothing other than call methods in neighbouring classes. Other code in your class then calls the delegation methods, rather than also calling the methods in the neighbouring classes. That way, very few methods (just the delegation methods) actually need to traverse associations</p>
 
 <p>In Umple there is no special syntax for delegation, however the notation for <a href="DerivedAttributes.html">derived attributes</a> has the effect of creating delegation methods in the manner shown in the example below.</p>
 
 <p>Delegation methods can also be used to help build occurrences of other patterns such as
 <ul>
-<li><a href="http://en.wikipedia.org/wiki/Adapter_pattern">Adapter</a>: You create a delegation method that calls a method with a different name in a class you are trying to adapt for use in your system.
-<li><a href="http://en.wikipedia.org/wiki/Facade_pattern">Facade</a>: You create a class that does a lot of its work by calling other classes in the system.
+<li><a href="https://en.wikipedia.org/wiki/Adapter_pattern">Adapter</a>: You create a delegation method that calls a method with a different name in a class you are trying to adapt for use in your system.
+<li><a href="https://en.wikipedia.org/wiki/Facade_pattern">Facade</a>: You create a class that does a lot of its work by calling other classes in the system.
 </ul>
 </p>
 
