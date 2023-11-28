@@ -1,0 +1,38 @@
+from enum import Enum, auto
+
+class Garage():
+    class GarageDoor(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Closed = auto()
+        Opening = auto()
+
+    def __init__(self):
+        self._garageDoor = None
+        self.setGarageDoor(Garage.GarageDoor.Closed)
+
+    def getGarageDoorFullName(self):
+        answer = self._garageDoor.__str__()
+        return answer
+
+    def getGarageDoor(self):
+        return self._garageDoor
+
+    def pressButton(self):
+        wasEventProcessed = False
+        aGarageDoor = self._garageDoor
+        if aGarageDoor == Garage.GarageDoor.Closed :
+            turnLightOn()
+            self.setGarageDoor(Garage.GarageDoor.Opening)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def setGarageDoor(self, aGarageDoor):
+        self._garageDoor = aGarageDoor
+
+    def delete(self):
+        pass
