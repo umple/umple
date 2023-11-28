@@ -4,4 +4,4 @@ echo This resets dependencies and is needed only after installing a fresh repo o
 echo or to clean up.
 echo This should take 1-2 minutes and does not run tests. Do not interrupt. Then do full build
 echo You should always have done 'git pull' before running this and resolved conflicts
-ant -Dmyenv=$buildenv first-build
+ant -Dmyenv=wlocal first-build
