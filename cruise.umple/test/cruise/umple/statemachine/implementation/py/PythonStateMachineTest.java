@@ -55,4 +55,12 @@ public class PythonStateMachineTest extends StateMachineTest
     Event.setNextAutoTransitionId(1);
   }
 
+@Override
+@Test
+  public void checkExternalTransitions_withExitActions_1()
+  {
+    assertUmpleTemplateFor(languagePath + "/checkExternalTransitions_withExitActions_1Python.ump",languagePath + "/checkExternalTransitions_withExitActions_1."+ languagePath +".txt","X");
+  }
+  
+
 }
