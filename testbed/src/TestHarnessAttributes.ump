@@ -135,6 +135,10 @@ class ItemWithUniqueId {
   unique id;
 }
 
+class ItemWithUniqueImmutableId {
+  unique immutable id;
+}
+
 class ConstDefault
 {
   const int I1;

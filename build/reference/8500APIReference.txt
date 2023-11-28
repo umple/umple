@@ -248,7 +248,7 @@ td
  </tr>
  <tr class=xl68 height=15 style='height:15.0pt'>
   <td height=15 class=xl74 style='height:15.0pt'><a
-  href="http://attributes.umple.org">API GENERATED FROM ATTRIBUTES</a></td>
+  href="https://umple.org/attributes">API GENERATED FROM ATTRIBUTES</a></td>
   <td class=xl68>&nbsp;</td>
   <td class=xl68>&nbsp;</td>
   <td class=xl68>&nbsp;</td>
@@ -591,7 +591,7 @@ td
  </tr>
  <tr class=xl68 height=15 style='height:15.0pt'>
   <td height=15 class=xl74 colspan=2 style='height:15.0pt;mso-ignore:colspan'><a
-  href="http://associations.umple.org">API GENERATED FROM ASSOCIATIONS</a></td>
+  href="https://umple.org/associations">API GENERATED FROM ASSOCIATIONS</a></td>
   <td class=xl68>&nbsp;</td>
   <td class=xl68>&nbsp;</td>
   <td class=xl68>&nbsp;</td>
@@ -1038,7 +1038,7 @@ td
  </tr>
  <tr class=xl68 height=15 style='height:15.0pt'>
   <td height=15 class=xl74 colspan=2 style='height:15.0pt;mso-ignore:colspan'><a
-  href="http://statemachines.umple.org">API GENGERATED FROM STATE MACHINES</a></td>
+  href="https://umple.org/statemachines">API GENGERATED FROM STATE MACHINES</a></td>
   <td class=xl68>&nbsp;</td>
   <td class=xl68>&nbsp;</td>
   <td class=xl68>&nbsp;</td>
