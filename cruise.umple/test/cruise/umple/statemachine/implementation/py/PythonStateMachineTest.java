@@ -24,6 +24,7 @@ public class PythonStateMachineTest extends StateMachineTest
   {
     super.tearDown();
   }
+
   @Test
   @Override
   public void testTwoParameterGuard_1()
@@ -66,8 +67,14 @@ public class PythonStateMachineTest extends StateMachineTest
   {
     assertUmpleTemplateFor(languagePath + "/checkExternalTransitions_withExitActions_1Python.ump",languagePath + "/checkExternalTransitions_withExitActions_1."+ languagePath +".txt","X");
   }
-  
 
+//Generates unsupported feature
+@Override @Ignore
+@Test
+public void queuedSMwithConcurrentStatesTest_2()
+{
+  assertUmpleTemplateFor("/queuedSMwithConcurrentStatesTest_2Python.ump",languagePath + "/queuedSMwithConcurrentStatesTest_2."+ languagePath +".txt","QueuedSMwithConcurrentStates_2");
+}
 
 @Override @Ignore
   @Test
