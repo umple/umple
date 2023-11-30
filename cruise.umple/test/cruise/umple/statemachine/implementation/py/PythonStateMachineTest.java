@@ -197,4 +197,62 @@ public class PythonStateMachineTest extends StateMachineTest
   assertUmpleTemplateFor("entryExitActionDuplicates.ump",languagePath + "/entryExitActionDuplicates." + languagePath + ".txt", "Duplicate");    
   }
   
+//Generates unsupported feature
+@Override @Ignore
+@Test
+public void queuedSMwithConcurrentStatesTest_2()
+{
+  assertUmpleTemplateFor("/queuedSMwithConcurrentStatesTest_2Python.ump",languagePath + "/queuedSMwithConcurrentStatesTest_2."+ languagePath +".txt","QueuedSMwithConcurrentStates_2");
+}
+
+@Override
+  @Test
+  public void doActivity()
+  {
+    assertUmpleTemplateFor(languagePath + "/doActivityPython.ump",languagePath + "/doActivity."+ languagePath +".txt","Switch");
+  }
+
+  @Override
+  @Test
+  public void doActivity_Multiple()
+  {
+    assertUmpleTemplateFor(languagePath + "/doActivityPython.ump",languagePath + "/doActivityMultiple."+ languagePath +".txt","Lamp");
+  }
+
+  @Override
+  @Test
+  public void doActivityMultipleInSameState()
+  {
+    assertUmpleTemplateFor(languagePath + "/doActivityMultiPython.ump",languagePath + "/doActivityMulti."+ languagePath +".txt","X", true, false);
+  }
+
+  @Override
+  @Test
+  public void doActivityMultiMixin()
+  {
+    assertUmpleTemplateFor(languagePath + "/doActivityMultiMixinPython.ump",languagePath + "/doActivityMultiMixin."+ languagePath +".txt","X");
+  }
+
+  @Override
+  @Test
+  public void doActivityNestedStateMachine()
+  {
+	  assertUmpleTemplateFor(languagePath + "/doActivityNestedStateMachinePython.ump",languagePath + "/doActivityNestedStateMachine."+ languagePath +".txt","Course");
+  }
+
+  @Override
+  @Test
+  public void doActivityNoTransitions()
+  {
+    assertUmpleTemplateFor(languagePath + "/doActivityNoTransitionsPython.ump",languagePath + "/doActivityNoTransitions."+ languagePath +".txt","LightFixture");
+  }
+
+  // Auto transition does not work
+  @Override @Ignore
+  @Test
+  public void doActivitiesWithAutoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+
+  }
+
 }
