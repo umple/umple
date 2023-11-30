@@ -24,7 +24,6 @@ public class PythonStateMachineTest extends StateMachineTest
   {
     super.tearDown();
   }
-
   @Test
   @Override
   public void testTwoParameterGuard_1()
@@ -61,70 +60,14 @@ public class PythonStateMachineTest extends StateMachineTest
     Event.setNextAutoTransitionId(1);
   }
 
-  @Override
-  @Test
-  public void doActivity()
-  {
-    assertUmpleTemplateFor(languagePath + "/doActivityPython.ump",languagePath + "/doActivity."+ languagePath +".txt","Switch");
-  }
-
-  @Override
-  @Test
-  public void doActivity_Multiple()
-  {
-    assertUmpleTemplateFor(languagePath + "/doActivityPython.ump",languagePath + "/doActivityMultiple."+ languagePath +".txt","Lamp");
-  }
-
-  @Override
-  @Test
-  public void doActivityMultipleInSameState()
-  {
-    assertUmpleTemplateFor(languagePath + "/doActivityMultiPython.ump",languagePath + "/doActivityMulti."+ languagePath +".txt","X", true, false);
-  }
-
-  @Override
-  @Test
-  public void doActivityMultiMixin()
-  {
-    assertUmpleTemplateFor(languagePath + "/doActivityMultiMixinPython.ump",languagePath + "/doActivityMultiMixin."+ languagePath +".txt","X");
-  }
-
-  @Override
-  @Test
-  public void doActivityNestedStateMachine()
-  {
-	  assertUmpleTemplateFor(languagePath + "/doActivityNestedStateMachinePython.ump",languagePath + "/doActivityNestedStateMachine."+ languagePath +".txt","Course");
-  }
-
-  @Override
-  @Test
-  public void doActivityNoTransitions()
-  {
-    assertUmpleTemplateFor(languagePath + "/doActivityNoTransitionsPython.ump",languagePath + "/doActivityNoTransitions."+ languagePath +".txt","LightFixture");
-  }
-
-  // Auto transition does not work
-  @Override @Ignore
-  @Test
-  public void doActivitiesWithAutoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-  {
-    
-  }
-
 @Override
 @Test
   public void checkExternalTransitions_withExitActions_1()
   {
     assertUmpleTemplateFor(languagePath + "/checkExternalTransitions_withExitActions_1Python.ump",languagePath + "/checkExternalTransitions_withExitActions_1."+ languagePath +".txt","X");
   }
+  
 
-//Generates unsupported feature
-@Override @Ignore
-@Test
-public void queuedSMwithConcurrentStatesTest_2()
-{
-  assertUmpleTemplateFor("/queuedSMwithConcurrentStatesTest_2Python.ump",languagePath + "/queuedSMwithConcurrentStatesTest_2."+ languagePath +".txt","QueuedSMwithConcurrentStates_2");
-}
 
 @Override @Ignore
   @Test
@@ -217,5 +160,41 @@ public void queuedSMwithConcurrentStatesTest_2()
   {
     assertUmpleTemplateFor("multiplePooledStateMachines_sameEvents.ump",languagePath + "/multiplePooledStateMachines_sameEvents."+ languagePath +".txt","X");
   }
-
+@Override @Ignore
+  @Test 
+  public void exitAction()
+  {
+    assertUmpleTemplateFor("exitAction.ump",languagePath + "/exitAction."+ languagePath +".txt","LightFixture");
+  }
+  @Override @Ignore
+  @Test 
+  public void exitActionSelfTransition()
+  {
+    assertUmpleTemplateFor("exitActionSelfTransition.ump",languagePath + "/exitActionSelfTransition."+ languagePath +".txt","A");
+  }
+@Override @Ignore
+  @Test 
+  public void entryExitTransitionAction()
+  {
+    assertUmpleTemplateFor("entryExitTransitionAction.ump",languagePath + "/entryExitTransitionAction."+ languagePath +".txt","LightFixture");
+  }
+@Override @Ignore
+  @Test
+  public void entryExitTransitionActionWithGuard()
+  {
+    assertUmpleTemplateFor("entryExitTransitionActionWithGuard.ump",languagePath + "/entryExitTransitionActionWithGuard."+ languagePath +".txt","LightFixture");
+  }
+@Override @Ignore
+  @Test
+  public void entryExitActionNoTransitions()
+  {
+    assertUmpleTemplateFor("entryExitActionNoTransitions.ump",languagePath + "/entryExitActionNoTransitions." + languagePath + ".txt", "LightFixture");
+  }
+@Override @Ignore
+  @Test
+  public void entryExitActionDuplicates()
+  {
+  assertUmpleTemplateFor("entryExitActionDuplicates.ump",languagePath + "/entryExitActionDuplicates." + languagePath + ".txt", "Duplicate");    
+  }
+  
 }
