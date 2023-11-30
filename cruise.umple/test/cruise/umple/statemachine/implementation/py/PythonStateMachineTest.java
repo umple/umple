@@ -55,4 +55,17 @@ public class PythonStateMachineTest extends StateMachineTest
     Event.setNextAutoTransitionId(1);
   }
 
+  @Override
+  @Test
+  public void doActivity()
+  {
+    assertUmpleTemplateFor(languagePath + "/doActivityPython.ump",languagePath + "/doActivity."+ languagePath +".txt","Switch");
+  }
+
+  @Override
+  @Test
+  public void doActivity_Multiple()
+  {
+    assertUmpleTemplateFor(languagePath + "/doActivityPython.ump",languagePath + "/doActivityMultiple."+ languagePath +".txt","Lamp");
+  }
 }
