@@ -1,0 +1,80 @@
+from enum import Enum, auto
+from threading import Thread
+import time
+
+class X():
+    class Sm(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        s1 = auto()
+        s2 = auto()
+
+    def __init__(self):
+        self._doActivity1SmS1Thread = None
+        self._doActivity0SmS1Thread = None
+        self._sm = None
+        self.setSm(X.Sm.s1)
+
+    def getSmFullName(self):
+        answer = self._sm.__str__()
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def e1(self):
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm == X.Sm.s1 :
+            self.exitSm()
+            self.setSm(X.Sm.s2)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitSm(self):
+        if self._sm == X.Sm.s1 :
+            if not (self._doActivity0SmS1Thread is None) :
+                self._doActivity0SmS1Thread.interrupt()
+            if not (self._doActivity1SmS1Thread is None) :
+                self._doActivity1SmS1Thread.interrupt()
+
+    def setSm(self, aSm):
+        self._sm = aSm
+        if self._sm == X.Sm.s1 :
+            self._doActivity0SmS1Thread = X.DoActivityThread(self, "doActivity0SmS1")
+            self._doActivity1SmS1Thread = X.DoActivityThread(self, "doActivity1SmS1")
+
+    def doActivity0SmS1(self):
+        try:
+            blah1()
+        except :
+            pass
+
+    def doActivity1SmS1(self):
+        try:
+            blah2()
+        except :
+            pass
+
+    class DoActivityThread(Thread):
+        def __init__(self, aController, aDoActivityMethodName):
+            self._doActivityMethodName = None
+            self._controller = None
+            self._controller = aController
+            self._doActivityMethodName = aDoActivityMethodName
+            super().__init__()
+            self.start()
+
+        def run(self):
+            if "doActivity0SmS1" == self._doActivityMethodName :
+                self._controller.doActivity0SmS1()
+            elif "doActivity1SmS1" == self._doActivityMethodName :
+                self._controller.doActivity1SmS1()
+
+    def delete(self):
+        pass
+

@@ -74,6 +74,43 @@ public class PythonStateMachineTest extends StateMachineTest
   {
     assertUmpleTemplateFor(languagePath + "/doActivityPython.ump",languagePath + "/doActivityMultiple."+ languagePath +".txt","Lamp");
   }
+
+  @Override
+  @Test
+  public void doActivityMultipleInSameState()
+  {
+    assertUmpleTemplateFor(languagePath + "/doActivityMultiPython.ump",languagePath + "/doActivityMulti."+ languagePath +".txt","X", true, false);
+  }
+
+  @Override
+  @Test
+  public void doActivityMultiMixin()
+  {
+    assertUmpleTemplateFor(languagePath + "/doActivityMultiMixinPython.ump",languagePath + "/doActivityMultiMixin."+ languagePath +".txt","X");
+  }
+
+  @Override
+  @Test
+  public void doActivityNestedStateMachine()
+  {
+	  assertUmpleTemplateFor(languagePath + "/doActivityNestedStateMachinePython.ump",languagePath + "/doActivityNestedStateMachine."+ languagePath +".txt","Course");
+  }
+
+  @Override
+  @Test
+  public void doActivityNoTransitions()
+  {
+    assertUmpleTemplateFor(languagePath + "/doActivityNoTransitionsPython.ump",languagePath + "/doActivityNoTransitions."+ languagePath +".txt","LightFixture");
+  }
+
+  // Auto transition does not work
+  @Override @Ignore
+  @Test
+  public void doActivitiesWithAutoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+    
+  }
+
 @Override
 @Test
   public void checkExternalTransitions_withExitActions_1()
