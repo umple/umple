@@ -355,5 +355,10 @@ public void queuedSMwithConcurrentStatesTest_2()
   {
 	assertUmpleTemplateFor("pooledStateMachine_timedEvents.ump",languagePath + "/pooledStateMachine_timedEvents."+ languagePath +".txt","Mentor");
   }
-  
+  @Override
+  @Test
+  public void testRegionFinalStates_6()
+  {
+    assertUmpleTemplateFor(languagePath + "/testRegionFinalStates_6Python.ump",languagePath + "/testRegionFinalStates_6."+ languagePath +".txt","X");
+  }
 }
