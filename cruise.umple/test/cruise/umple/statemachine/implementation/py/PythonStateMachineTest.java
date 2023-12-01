@@ -349,5 +349,11 @@ public void queuedSMwithConcurrentStatesTest_2()
   {
     assertUmpleTemplateFor("eventlessStateMachine_PooledStateMachine.ump",languagePath + "/eventlessStateMachine_PooledStateMachine."+ languagePath +".txt","X");
   }
+  @Override @Ignore
+  @Test
+  public void pooledStateMachine_timedEvents()
+  {
+	assertUmpleTemplateFor("pooledStateMachine_timedEvents.ump",languagePath + "/pooledStateMachine_timedEvents."+ languagePath +".txt","Mentor");
+  }
   
 }
