@@ -1,0 +1,186 @@
+from enum import Enum, auto
+
+class X():
+    class Sm(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        s1 = auto()
+        s2 = auto()
+
+    class SmS1(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        s1a = auto()
+        s1b = auto()
+
+    class SmS2(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        s2a = auto()
+        s2b = auto()
+
+    def __init__(self):
+        self._timeouts2bTos1bHandler = None
+        self._timeouts1aTos1bHandler = None
+        self._smS2 = None
+        self._smS1 = None
+        self._sm = None
+        self.setSmS1(X.SmS1.Null)
+        self.setSmS2(X.SmS2.Null)
+        self.setSm(X.Sm.s1)
+
+    def getSmFullName(self):
+        answer = self._sm.__str__()
+        if self._smS1 != X.SmS1.Null :
+            answer += "." + self._smS1.__str__()
+        if self._smS2 != X.SmS2.Null :
+            answer += "." + self._smS2.__str__()
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def getSmS1(self):
+        return self._smS1
+
+    def getSmS2(self):
+        return self._smS2
+
+    def timeouts1aTos1b(self):
+        wasEventProcessed = False
+        aSmS1 = self._smS1
+        if aSmS1 == X.SmS1.s1a :
+            self.exitSmS1()
+            self.setSmS1(X.SmS1.s1b)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e1(self):
+        wasEventProcessed = False
+        aSmS1 = self._smS1
+        if aSmS1 == X.SmS1.s1b :
+            self.exitSm()
+            self.setSm(X.Sm.s2)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e2(self):
+        wasEventProcessed = False
+        aSmS2 = self._smS2
+        if aSmS2 == X.SmS2.s2a :
+            self.exitSm()
+            self.setSm(X.Sm.s1)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def timeouts2bTos1b(self):
+        wasEventProcessed = False
+        aSmS2 = self._smS2
+        if aSmS2 == X.SmS2.s2b :
+            self.exitSm()
+            self.setSmS1(X.SmS1.s1b)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitSm(self):
+        if self._sm == X.Sm.s1 :
+            self.exitSmS1()
+        elif self._sm == X.Sm.s2 :
+            self.exitSmS2()
+
+    def setSm(self, aSm):
+        self._sm = aSm
+        if self._sm == X.Sm.s1 :
+            if self._smS1 == X.SmS1.Null :
+                self.setSmS1(X.SmS1.s1a)
+        elif self._sm == X.Sm.s2 :
+            if self._smS2 == X.SmS2.Null :
+                self.setSmS2(X.SmS2.s2a)
+
+    def exitSmS1(self):
+        if self._smS1 == X.SmS1.s1a :
+            self.setSmS1(X.SmS1.Null)
+            self.stopTimeouts1aTos1bHandler()
+        elif self._smS1 == X.SmS1.s1b :
+            self.setSmS1(X.SmS1.Null)
+
+    def setSmS1(self, aSmS1):
+        self._smS1 = aSmS1
+        if self._sm != X.Sm.s1 and aSmS1 != X.SmS1.Null :
+            self.setSm(X.Sm.s1)
+        if self._smS1 == X.SmS1.s1a :
+            self.startTimeouts1aTos1bHandler()
+
+    def exitSmS2(self):
+        if self._smS2 == X.SmS2.s2a :
+            self.setSmS2(X.SmS2.Null)
+        elif self._smS2 == X.SmS2.s2b :
+            self.setSmS2(X.SmS2.Null)
+            self.stopTimeouts2bTos1bHandler()
+
+    def setSmS2(self, aSmS2):
+        self._smS2 = aSmS2
+        if self._sm != X.Sm.s2 and aSmS2 != X.SmS2.Null :
+            self.setSm(X.Sm.s2)
+        if self._smS2 == X.SmS2.s2b :
+            self.startTimeouts2bTos1bHandler()
+
+    def startTimeouts1aTos1bHandler(self):
+        self._timeouts1aTos1bHandler = self.TimedEventHandler(self, "timeouts1aTos1b", 2)
+
+    def stopTimeouts1aTos1bHandler(self):
+        self._timeouts1aTos1bHandler.stop()
+
+    def startTimeouts2bTos1bHandler(self):
+        self._timeouts2bTos1bHandler = self.TimedEventHandler(self, "timeouts2bTos1b", 3)
+
+    def stopTimeouts2bTos1bHandler(self):
+        self._timeouts2bTos1bHandler.stop()
+
+    class TimedEventHandler():
+        def __init__(self, aController, aTimeoutMethodName, aHowLongInSeconds):
+            from threading import Timer
+            self._timer = None
+            self._howLongInSeconds = None
+            self._timeoutMethodName = None
+            self._controller = None
+            self._controller = aController
+            self._timeoutMethodName = aTimeoutMethodName
+            self._howLongInSeconds = aHowLongInSeconds
+            self._timer = None
+            self._timer = Timer(self._howLongInSeconds, self.run)
+            self._timer.start()
+
+        def stop(self):
+            self._timer.cancel()
+
+        def run(self):
+            if "timeouts1aTos1b" == self._timeoutMethodName :
+                shouldRestart = not self._controller.timeouts1aTos1b()
+                if shouldRestart :
+                    self._controller.startTimeouts1aTos1bHandler()
+                return
+            if "timeouts2bTos1b" == self._timeoutMethodName :
+                shouldRestart = not self._controller.timeouts2bTos1b()
+                if shouldRestart :
+                    self._controller.startTimeouts2bTos1bHandler()
+                return
+
+    def delete(self):
+        pass
