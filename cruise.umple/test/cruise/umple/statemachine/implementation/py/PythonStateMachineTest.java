@@ -1,5 +1,7 @@
 package cruise.umple.statemachine.implementation.py;
 
+import java.lang.reflect.Field;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -90,6 +92,17 @@ public class PythonStateMachineTest extends StateMachineTest
 @Override @Ignore
   @Test
   public void pooledStateMachineWithConcurrentStates_autoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException{}
+
+  @Override @Ignore
+  @Test
+  public void pooledStateMachine_timedEvents_and_autoTansitions() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+	Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+	f1.setAccessible(true);
+	f1.setInt(null, 1);
+	
+	assertUmpleTemplateFor("pooledStateMachine_timedEvents_and_autoTansitions.ump",languagePath + "/pooledStateMachine_timedEvents_and_autoTansitions."+ languagePath +".txt","X");
+  }
 
 @Override @Ignore
 @Test
@@ -247,13 +260,24 @@ public void queuedSMwithConcurrentStatesTest_2()
     assertUmpleTemplateFor(languagePath + "/doActivityNoTransitionsPython.ump",languagePath + "/doActivityNoTransitions."+ languagePath +".txt","LightFixture");
   }
 
+  @Override
+  @Test
+  public void activeObject()
+  {
+    assertUmpleTemplateFor(languagePath + "/activeObjectPython.ump", languagePath + "/activeObject."+ languagePath + ".txt", "Lamp");
+  }
+
   // Auto transition does not work
   @Override @Ignore
   @Test
   public void doActivitiesWithAutoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
   {
-
+    Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+    f1.setAccessible(true);
+    f1.setInt(null, 1);
+    assertUmpleTemplateFor("doActivitiesWithAutoTransition.ump",languagePath + "/doActivitiesWithAutoTransition."+languagePath +".txt","LightFixture");
   }
+
   @Override @Ignore
   @Test
   public void equivalentGuards()

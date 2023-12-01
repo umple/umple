@@ -1,0 +1,161 @@
+from enum import Enum, auto
+from threading import Thread
+import time
+
+class Lamp():
+    class StateMachine1(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        topLevel = auto()
+
+    class StateMachine1TopLevel(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        thread1 = auto()
+
+    class StateMachine2(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        topLevel = auto()
+
+    class StateMachine2TopLevel(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        thread1 = auto()
+
+    def __init__(self, aLog):
+        self._doActivityStateMachine2TopLevelThread1Thread = None
+        self._doActivityStateMachine1TopLevelThread1Thread = None
+        self._stateMachine2TopLevel = None
+        self._stateMachine2 = None
+        self._stateMachine1TopLevel = None
+        self._stateMachine1 = None
+        self._log = None
+        self._log = aLog
+        self.setStateMachine1TopLevel(Lamp.StateMachine1TopLevel.Null)
+        self.setStateMachine1(Lamp.StateMachine1.topLevel)
+        self.setStateMachine2TopLevel(Lamp.StateMachine2TopLevel.Null)
+        self.setStateMachine2(Lamp.StateMachine2.topLevel)
+
+    def setLog(self, aLog):
+        wasSet = False
+        self._log = aLog
+        wasSet = True
+        return wasSet
+
+    def getLog(self):
+        return self._log
+
+    def getStateMachine1FullName(self):
+        answer = self._stateMachine1.__str__()
+        if self._stateMachine1TopLevel != Lamp.StateMachine1TopLevel.Null :
+            answer += "." + self._stateMachine1TopLevel.__str__()
+        return answer
+
+    def getStateMachine2FullName(self):
+        answer = self._stateMachine2.__str__()
+        if self._stateMachine2TopLevel != Lamp.StateMachine2TopLevel.Null :
+            answer += "." + self._stateMachine2TopLevel.__str__()
+        return answer
+
+    def getStateMachine1(self):
+        return self._stateMachine1
+
+    def getStateMachine2(self):
+        return self._stateMachine2
+
+    def getStateMachine1TopLevel(self):
+        return self._stateMachine1TopLevel
+
+    def getStateMachine2TopLevel(self):
+        return self._stateMachine2TopLevel
+
+    def exitStateMachine1(self):
+        if self._stateMachine1 == Lamp.StateMachine1.topLevel :
+            self.exitStateMachine1TopLevel()
+
+    def setStateMachine1(self, aStateMachine1):
+        self._stateMachine1 = aStateMachine1
+        if self._stateMachine1 == Lamp.StateMachine1.topLevel :
+            if self._stateMachine1TopLevel == Lamp.StateMachine1TopLevel.Null :
+                self.setStateMachine1TopLevel(Lamp.StateMachine1TopLevel.thread1)
+
+    def exitStateMachine2(self):
+        if self._stateMachine2 == Lamp.StateMachine1.topLevel :
+            self.exitStateMachine2TopLevel()
+
+    def setStateMachine2(self, aStateMachine2):
+        self._stateMachine2 = aStateMachine2
+        if self._stateMachine2 == Lamp.StateMachine1.topLevel :
+            if self._stateMachine2TopLevel == Lamp.StateMachine2TopLevel.Null :
+                self.setStateMachine2TopLevel(Lamp.StateMachine2TopLevel.thread1)
+
+    def exitStateMachine1TopLevel(self):
+        if self._stateMachine1TopLevel == Lamp.StateMachine1TopLevel.thread1 :
+            self.setStateMachine1TopLevel(Lamp.StateMachine1TopLevel.Null)
+            if not (self._doActivityStateMachine1TopLevelThread1Thread is None) :
+                self._doActivityStateMachine1TopLevelThread1Thread.interrupt()
+
+    def setStateMachine1TopLevel(self, aStateMachine1TopLevel):
+        self._stateMachine1TopLevel = aStateMachine1TopLevel
+        if self._stateMachine1 != Lamp.StateMachine1.topLevel and aStateMachine1TopLevel != Lamp.StateMachine1TopLevel.Null :
+            self.setStateMachine1(Lamp.StateMachine1.topLevel)
+        if self._stateMachine1TopLevel == Lamp.StateMachine1TopLevel.thread1 :
+            self._doActivityStateMachine1TopLevelThread1Thread = Lamp.DoActivityThread(self, "doActivityStateMachine1TopLevelThread1")
+
+    def exitStateMachine2TopLevel(self):
+        if self._stateMachine2TopLevel == Lamp.StateMachine1TopLevel.thread1 :
+            self.setStateMachine2TopLevel(Lamp.StateMachine2TopLevel.Null)
+            if not (self._doActivityStateMachine2TopLevelThread1Thread is None) :
+                self._doActivityStateMachine2TopLevelThread1Thread.interrupt()
+
+    def setStateMachine2TopLevel(self, aStateMachine2TopLevel):
+        self._stateMachine2TopLevel = aStateMachine2TopLevel
+        if self._stateMachine2 != Lamp.StateMachine2.topLevel and aStateMachine2TopLevel != Lamp.StateMachine2TopLevel.Null :
+            self.setStateMachine2(Lamp.StateMachine2.topLevel)
+        if self._stateMachine2TopLevel == Lamp.StateMachine1TopLevel.thread1 :
+            self._doActivityStateMachine2TopLevelThread1Thread = Lamp.DoActivityThread(self, "doActivityStateMachine2TopLevelThread1")
+
+    def doActivityStateMachine1TopLevelThread1(self):
+        try:
+            log = "Active entry"
+        except :
+            pass
+
+    def doActivityStateMachine2TopLevelThread1(self):
+        try:
+            log = "Active entry"
+        except :
+            pass
+
+    class DoActivityThread(Thread):
+        def __init__(self, aController, aDoActivityMethodName):
+            self._doActivityMethodName = None
+            self._controller = None
+            self._controller = aController
+            self._doActivityMethodName = aDoActivityMethodName
+            super().__init__()
+            self.start()
+
+        def run(self):
+            if "doActivityStateMachine1TopLevelThread1" == self._doActivityMethodName :
+                self._controller.doActivityStateMachine1TopLevelThread1()
+            elif "doActivityStateMachine2TopLevelThread1" == self._doActivityMethodName :
+                self._controller.doActivityStateMachine2TopLevelThread1()
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "log" + ":" + str(self.getLog()) + "]"
+
