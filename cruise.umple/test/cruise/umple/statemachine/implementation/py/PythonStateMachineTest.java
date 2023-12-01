@@ -254,5 +254,11 @@ public void queuedSMwithConcurrentStatesTest_2()
   {
 
   }
+  @Override @Ignore
+  @Test
+  public void equivalentGuards()
+  {
+    assertUmpleTemplateFor("equivalentGuards.ump",languagePath + "/equivalentGuards."+ languagePath +".txt","A");
+  }
 
 }
