@@ -62,13 +62,72 @@ public class PythonStateMachineTest extends StateMachineTest
     Event.setNextAutoTransitionId(1);
   }
 
-@Override
-@Test
+  @Override
+  @Test
   public void checkExternalTransitions_withExitActions_1()
   {
     assertUmpleTemplateFor(languagePath + "/checkExternalTransitions_withExitActions_1Python.ump",languagePath + "/checkExternalTransitions_withExitActions_1."+ languagePath +".txt","X");
   }
-  
+ 
+  @Override @Ignore
+  @Test
+  public void queuedWithNestingStatesATM()
+  {
+    assertUmpleTemplateFor("queuedWithNestingStatesATM.ump",languagePath + "/queuedWithNestingStatesATM."+ languagePath +".txt","AutomatedTellerMachine");
+  }
+
+  @Override @Ignore
+  @Test
+  public void stateMachine_unSpecifiedReception_QSM() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+	Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+	f1.setAccessible(true);
+	f1.setInt(null, 1);
+    
+	assertUmpleTemplateFor("stateMachine_unSpecifiedReception_QSM.ump",languagePath + "/stateMachine_unSpecifiedReception_QSM."+ languagePath +".txt","QSMwithUnspecifiedRecep");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedStateMachine_implements()
+  {
+	assertUmpleTemplateFor("queuedStateMachine_implementsInterface.ump",languagePath + "/queuedStateMachine_interfaceX."+ languagePath +".txt","IX");
+    assertUmpleTemplateFor("queuedStateMachine_implementsInterface.ump",languagePath + "/queuedStateMachine_implementsInterface."+ languagePath +".txt","X");
+    
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedWithNestingStateMachines()
+  {
+    assertUmpleTemplateFor("queuedWithNestedStateMachines.ump",languagePath + "/queuedWithNestedStateMachines."+ languagePath +".txt","QueuedWithNestedStateMachines");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedStateMachine_timedEvents()
+  {
+	assertUmpleTemplateFor("queuedStateMachine_timedEvents.ump",languagePath + "/queuedStateMachine_timedEvents."+ languagePath +".txt","Mentor");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedStateMachine_autoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+	Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+	f1.setAccessible(true);
+	f1.setInt(null, 1);
+	
+	assertUmpleTemplateFor("queuedStateMachine_autoTransition.ump",languagePath + "/queuedStateMachine_autoTransition."+ languagePath +".txt","Light");
+  }
+
+  @Override @Ignore
+  @Test
+  public void testMultipleQSMs()
+  {
+    assertUmpleTemplateFor("testMultipleQSMs.ump",languagePath + "/testMultipleQSMs."+ languagePath +".txt","X");
+  }
+
 
 
 @Override @Ignore
