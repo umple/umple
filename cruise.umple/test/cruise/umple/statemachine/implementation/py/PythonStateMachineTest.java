@@ -174,6 +174,12 @@ public class PythonStateMachineTest extends StateMachineTest
 
   @Override @Ignore
   @Test
+  public void guardNegSymbolSpacing() {
+    assertUmpleTemplateFor("guardNegSymbolSpacing.ump",languagePath + "/guardNegSymbolSpacing."+ languagePath +".txt","Agent");
+  }
+
+  @Override @Ignore
+  @Test
   public void checkExternalTransitions_noExitActions_1()
   {
     assertUmpleTemplateFor("checkExternalTransitions_noExitActions_1.ump",languagePath + "/checkExternalTransitions_noExitActions_1."+ languagePath +".txt","X");
