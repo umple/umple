@@ -96,13 +96,6 @@ public class PythonStateMachineTest extends StateMachineTest
 
   @Override @Ignore
   @Test
-  public void queuedSMwithConcurrentStatesTest_2()
-  {
-    assertUmpleTemplateFor("queuedSMwithConcurrentStatesTest_2.ump",languagePath + "/queuedSMwithConcurrentStatesTest_2."+ languagePath +".txt","QueuedSMwithConcurrentStates_2");
-  }
-
-  @Override @Ignore
-  @Test
   public void queuedStateMachine()
   {
     assertUmpleTemplateFor("queuedStateMachine.ump",languagePath + "/queuedStateMachine."+ languagePath +".txt","Course");
@@ -170,13 +163,6 @@ public class PythonStateMachineTest extends StateMachineTest
   public void queuedWithConcurrentStateMachines()
   {
     assertUmpleTemplateFor("queuedWithConcurrentStateMachines.ump",languagePath + "/queuedWithConcurrentStateMachines."+ languagePath +".txt","QueuedWithConcurrentStateMachines");
-  }
-
-  @Override @Ignore
-  @Test
-  public void queuedWithNestingStateMachines()
-  {
-    assertUmpleTemplateFor("queuedWithNestedStateMachines.ump",languagePath + "/queuedWithNestedStateMachines."+ languagePath +".txt","QueuedWithNestedStateMachines");
   }
 
   @Override @Ignore
