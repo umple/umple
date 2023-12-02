@@ -494,7 +494,11 @@ public void queuedSMwithConcurrentStatesTest_2()
   {
     assertUmpleTemplateFor("multipleQSM_sameEvents.ump",languagePath + "/multipleQSM_sameEvents."+ languagePath +".txt","X");
   }
-  
-
+    @Override @Ignore
+  @Test
+  public void nestedStatesOfQSMwithSameEventNames()
+  {
+    assertUmpleTemplateFor("nestedStatesOfQSMwithSameEventNames.ump",languagePath + "/nestedStatesOfQSMwithSameEventNames."+ languagePath +".txt","NestedStatesWthSameEventNames");
+  }
 
 }
