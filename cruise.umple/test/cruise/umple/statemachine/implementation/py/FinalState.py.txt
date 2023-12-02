@@ -1,30 +1,39 @@
-class Mentor:
-    class Status:
-        Ok, Final = range(2)
+from enum import Enum, auto
+
+class Mentor():
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Ok = auto()
+        Final = auto()
 
     def __init__(self):
-        self.status = self.Status.Ok
+        self._status = None
+        self.setStatus(Mentor.Status.Ok)
 
-    def get_status_full_name(self):
-        return self.status.name
+    def getStatusFullName(self):
+        answer = self._status.__str__()
+        return answer
 
-    def get_status(self):
-        return self.status
+    def getStatus(self):
+        return self._status
 
     def flip(self):
-        was_event_processed = False
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == Mentor.Status.Ok :
+            self.setStatus(Mentor.Status.Final)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
 
-        if self.status == self.Status.Ok:
-            self.set_status(self.Status.Final)
-            was_event_processed = True
-
-        return was_event_processed
-
-    def set_status(self, a_status):
-        self.status = a_status
-
-        if self.status == self.Status.Final:
+    def setStatus(self, aStatus):
+        self._status = aStatus
+        if self._status == Mentor.Status.Final :
             self.delete()
 
     def delete(self):
-        print("Deleted mentor")
+        pass
