@@ -1,0 +1,32 @@
+class X{
+  status{
+    s1{
+      exit /{print("t4");}
+      e2-> s2;
+      s11{
+        exit /{print("t3");}
+        s111{
+          exit /{print("t2");}
+          s111{
+            exit /{print("t1");}
+            e-> Final;
+            d1-> fState1;
+          }
+        }
+      }
+      final fState1{}
+      ||
+      s12{
+        s122{
+          d2->fState2;
+        }
+        final fState2{};
+      }      
+    } 
+    s2{
+      e4-> Final;
+      e3-> s3;  
+    } 
+    final s3{}
+  }
+}

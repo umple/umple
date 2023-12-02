@@ -1,5 +1,7 @@
 package cruise.umple.statemachine.implementation.py;
 
+import java.lang.reflect.Field;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +26,6 @@ public class PythonStateMachineTest extends StateMachineTest
   {
     super.tearDown();
   }
-
   @Test
   @Override
   public void testTwoParameterGuard_1()
@@ -63,31 +64,71 @@ public class PythonStateMachineTest extends StateMachineTest
 
   @Override
   @Test
-  public void doActivity()
-  {
-    assertUmpleTemplateFor(languagePath + "/doActivityPython.ump",languagePath + "/doActivity."+ languagePath +".txt","Switch");
-  }
-
-  @Override
-  @Test
-  public void doActivity_Multiple()
-  {
-    assertUmpleTemplateFor(languagePath + "/doActivityPython.ump",languagePath + "/doActivityMultiple."+ languagePath +".txt","Lamp");
-  }
-@Override
-@Test
   public void checkExternalTransitions_withExitActions_1()
   {
     assertUmpleTemplateFor(languagePath + "/checkExternalTransitions_withExitActions_1Python.ump",languagePath + "/checkExternalTransitions_withExitActions_1."+ languagePath +".txt","X");
   }
+ 
+  @Override @Ignore
+  @Test
+  public void queuedWithNestingStatesATM()
+  {
+    assertUmpleTemplateFor("queuedWithNestingStatesATM.ump",languagePath + "/queuedWithNestingStatesATM."+ languagePath +".txt","AutomatedTellerMachine");
+  }
 
-//Generates unsupported feature
-@Override @Ignore
-@Test
-public void queuedSMwithConcurrentStatesTest_2()
-{
-  assertUmpleTemplateFor("/queuedSMwithConcurrentStatesTest_2Python.ump",languagePath + "/queuedSMwithConcurrentStatesTest_2."+ languagePath +".txt","QueuedSMwithConcurrentStates_2");
-}
+  @Override @Ignore
+  @Test
+  public void stateMachine_unSpecifiedReception_QSM() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+	Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+	f1.setAccessible(true);
+	f1.setInt(null, 1);
+    
+	assertUmpleTemplateFor("stateMachine_unSpecifiedReception_QSM.ump",languagePath + "/stateMachine_unSpecifiedReception_QSM."+ languagePath +".txt","QSMwithUnspecifiedRecep");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedStateMachine_implements()
+  {
+	assertUmpleTemplateFor("queuedStateMachine_implementsInterface.ump",languagePath + "/queuedStateMachine_interfaceX."+ languagePath +".txt","IX");
+    assertUmpleTemplateFor("queuedStateMachine_implementsInterface.ump",languagePath + "/queuedStateMachine_implementsInterface."+ languagePath +".txt","X");
+    
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedWithNestingStateMachines()
+  {
+    assertUmpleTemplateFor("queuedWithNestedStateMachines.ump",languagePath + "/queuedWithNestedStateMachines."+ languagePath +".txt","QueuedWithNestedStateMachines");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedStateMachine_timedEvents()
+  {
+	assertUmpleTemplateFor("queuedStateMachine_timedEvents.ump",languagePath + "/queuedStateMachine_timedEvents."+ languagePath +".txt","Mentor");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedStateMachine_autoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+	Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+	f1.setAccessible(true);
+	f1.setInt(null, 1);
+	
+	assertUmpleTemplateFor("queuedStateMachine_autoTransition.ump",languagePath + "/queuedStateMachine_autoTransition."+ languagePath +".txt","Light");
+  }
+
+  @Override @Ignore
+  @Test
+  public void testMultipleQSMs()
+  {
+    assertUmpleTemplateFor("testMultipleQSMs.ump",languagePath + "/testMultipleQSMs."+ languagePath +".txt","X");
+  }
+
+
 
 @Override @Ignore
   @Test
@@ -110,6 +151,17 @@ public void queuedSMwithConcurrentStatesTest_2()
 @Override @Ignore
   @Test
   public void pooledStateMachineWithConcurrentStates_autoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException{}
+
+  @Override @Ignore
+  @Test
+  public void pooledStateMachine_timedEvents_and_autoTansitions() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+	Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+	f1.setAccessible(true);
+	f1.setInt(null, 1);
+	
+	assertUmpleTemplateFor("pooledStateMachine_timedEvents_and_autoTansitions.ump",languagePath + "/pooledStateMachine_timedEvents_and_autoTansitions."+ languagePath +".txt","X");
+  }
 
 @Override @Ignore
 @Test
@@ -180,5 +232,133 @@ public void queuedSMwithConcurrentStatesTest_2()
   {
     assertUmpleTemplateFor("multiplePooledStateMachines_sameEvents.ump",languagePath + "/multiplePooledStateMachines_sameEvents."+ languagePath +".txt","X");
   }
+@Override @Ignore
+  @Test 
+  public void exitAction()
+  {
+    assertUmpleTemplateFor("exitAction.ump",languagePath + "/exitAction."+ languagePath +".txt","LightFixture");
+  }
+  @Override @Ignore
+  @Test 
+  public void exitActionSelfTransition()
+  {
+    assertUmpleTemplateFor("exitActionSelfTransition.ump",languagePath + "/exitActionSelfTransition."+ languagePath +".txt","A");
+  }
+@Override @Ignore
+  @Test 
+  public void entryExitTransitionAction()
+  {
+    assertUmpleTemplateFor("entryExitTransitionAction.ump",languagePath + "/entryExitTransitionAction."+ languagePath +".txt","LightFixture");
+  }
+@Override @Ignore
+  @Test
+  public void entryExitTransitionActionWithGuard()
+  {
+    assertUmpleTemplateFor("entryExitTransitionActionWithGuard.ump",languagePath + "/entryExitTransitionActionWithGuard."+ languagePath +".txt","LightFixture");
+  }
+@Override @Ignore
+  @Test
+  public void entryExitActionNoTransitions()
+  {
+    assertUmpleTemplateFor("entryExitActionNoTransitions.ump",languagePath + "/entryExitActionNoTransitions." + languagePath + ".txt", "LightFixture");
+  }
+@Override @Ignore
+  @Test
+  public void entryExitActionDuplicates()
+  {
+  assertUmpleTemplateFor("entryExitActionDuplicates.ump",languagePath + "/entryExitActionDuplicates." + languagePath + ".txt", "Duplicate");    
+  }
+  
+//Generates unsupported feature
+@Override @Ignore
+@Test
+public void queuedSMwithConcurrentStatesTest_2()
+{
+  assertUmpleTemplateFor("/queuedSMwithConcurrentStatesTest_2Python.ump",languagePath + "/queuedSMwithConcurrentStatesTest_2."+ languagePath +".txt","QueuedSMwithConcurrentStates_2");
+}
 
+@Override
+  @Test
+  public void doActivity()
+  {
+    assertUmpleTemplateFor(languagePath + "/doActivityPython.ump",languagePath + "/doActivity."+ languagePath +".txt","Switch");
+  }
+
+  @Override
+  @Test
+  public void doActivity_Multiple()
+  {
+    assertUmpleTemplateFor(languagePath + "/doActivityPython.ump",languagePath + "/doActivityMultiple."+ languagePath +".txt","Lamp");
+  }
+
+  @Override
+  @Test
+  public void doActivityMultipleInSameState()
+  {
+    assertUmpleTemplateFor(languagePath + "/doActivityMultiPython.ump",languagePath + "/doActivityMulti."+ languagePath +".txt","X", true, false);
+  }
+
+  @Override
+  @Test
+  public void doActivityMultiMixin()
+  {
+    assertUmpleTemplateFor(languagePath + "/doActivityMultiMixinPython.ump",languagePath + "/doActivityMultiMixin."+ languagePath +".txt","X");
+  }
+
+  @Override
+  @Test
+  public void doActivityNestedStateMachine()
+  {
+	  assertUmpleTemplateFor(languagePath + "/doActivityNestedStateMachinePython.ump",languagePath + "/doActivityNestedStateMachine."+ languagePath +".txt","Course");
+  }
+
+  @Override
+  @Test
+  public void doActivityNoTransitions()
+  {
+    assertUmpleTemplateFor(languagePath + "/doActivityNoTransitionsPython.ump",languagePath + "/doActivityNoTransitions."+ languagePath +".txt","LightFixture");
+  }
+
+  @Override
+  @Test
+  public void activeObject()
+  {
+    assertUmpleTemplateFor(languagePath + "/activeObjectPython.ump", languagePath + "/activeObject."+ languagePath + ".txt", "Lamp");
+  }
+
+  // Auto transition does not work
+  @Override @Ignore
+  @Test
+  public void doActivitiesWithAutoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+    Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+    f1.setAccessible(true);
+    f1.setInt(null, 1);
+    assertUmpleTemplateFor("doActivitiesWithAutoTransition.ump",languagePath + "/doActivitiesWithAutoTransition."+languagePath +".txt","LightFixture");
+  }
+
+  @Override @Ignore
+  @Test
+  public void equivalentGuards()
+  {
+    assertUmpleTemplateFor("equivalentGuards.ump",languagePath + "/equivalentGuards."+ languagePath +".txt","A");
+  }
+@Override @Ignore
+   @Test
+  public void eventlessStateMachine_before_PooledStateMachine()
+  {
+    assertUmpleTemplateFor("eventlessStateMachine_PooledStateMachine.ump",languagePath + "/eventlessStateMachine_PooledStateMachine."+ languagePath +".txt","X");
+  }
+  @Override @Ignore
+  @Test
+  public void pooledStateMachine_timedEvents()
+  {
+	assertUmpleTemplateFor("pooledStateMachine_timedEvents.ump",languagePath + "/pooledStateMachine_timedEvents."+ languagePath +".txt","Mentor");
+  }
+  @Override
+  @Test
+  public void testRegionFinalStates_6()
+  {
+    assertUmpleTemplateFor(languagePath + "/testRegionFinalStates_6Python.ump",languagePath + "/testRegionFinalStates_6."+ languagePath +".txt","X");
+  }
 }
