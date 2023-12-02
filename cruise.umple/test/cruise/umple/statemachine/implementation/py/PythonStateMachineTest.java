@@ -470,4 +470,41 @@ public void queuedSMwithConcurrentStatesTest_2()
   {
     assertUmpleTemplateFor(languagePath + "/testRegionFinalStates_6Python.ump",languagePath + "/testRegionFinalStates_6."+ languagePath +".txt","X");
   }
+@Override @Ignore
+@Test
+  public void multipleQSM()
+  {
+    assertUmpleTemplateFor("multipleQSM.ump",languagePath + "/multipleQSM."+ languagePath +".txt","X");
+  }
+@Override @Ignore
+  @Test
+  public void multipleQSM_EventlessStateMachine()
+  {
+    assertUmpleTemplateFor("multipleQSM_EventlessStateMachine.ump",languagePath + "/multipleQSM_EventlessStateMachine."+ languagePath +".txt","X");
+  }
+  @Override @Ignore
+  @Test
+  public void multipleQSMe_nestedStates()
+  {
+    assertUmpleTemplateFor("multipleQSMe_nestedStates.ump",languagePath + "/multipleQSMe_nestedStates."+ languagePath +".txt","X");
+  }
+  @Override @Ignore
+  @Test
+  public void multipleQSM_sameEvents()
+  {
+    assertUmpleTemplateFor("multipleQSM_sameEvents.ump",languagePath + "/multipleQSM_sameEvents."+ languagePath +".txt","X");
+  }
+  @Override @Ignore
+  @Test
+  public void testMultipleQSMs()
+  {
+    assertUmpleTemplateFor("testMultipleQSMs.ump",lnguagePath + "/testMultipleQSMs."+ languagePath +".txt","X");
+  }
+@Override @Ignore
+  @Test
+  public void eventlessStateMachine_before_QueuedStateMachine()
+  {
+    assertUmpleTemplateFor("eventlessStateMachine_QueuedStateMachine.ump",languagePath + "/eventlessStateMachine_QueuedStateMachine."+ languagePath +".txt","X");
+  }
+
 }
