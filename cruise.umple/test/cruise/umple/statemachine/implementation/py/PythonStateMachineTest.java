@@ -500,5 +500,11 @@ public void queuedSMwithConcurrentStatesTest_2()
   {
     assertUmpleTemplateFor("nestedStatesOfQSMwithSameEventNames.ump",languagePath + "/nestedStatesOfQSMwithSameEventNames."+ languagePath +".txt","NestedStatesWthSameEventNames");
   }
-
+@Override @Ignore 
+@Test
+  public void nestedState_StateMachine_timedEvents()
+  {
+  	assertUmpleTemplateFor("nestedStates_StateMachine_timedEvent.ump",languagePath + "/nestedStates_StateMachine_timedEvent."+ languagePath +".txt","Window");
+  }
+  
 }
