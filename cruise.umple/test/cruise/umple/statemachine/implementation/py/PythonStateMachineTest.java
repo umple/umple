@@ -20,7 +20,7 @@ public class PythonStateMachineTest extends StateMachineTest
     language = "Python";
     languagePath = "py";
   }
-  
+
 @After
   public void tearDown()
   {
@@ -38,26 +38,26 @@ public class PythonStateMachineTest extends StateMachineTest
   public void guardNameBothAttributeAndMethod()
   {
 	// Reset autotransition counter so isn't carried over to the next test (it's passed from the java test to the php test)
-	Event.setNextAutoTransitionId(1); 
+	Event.setNextAutoTransitionId(1);
 	assertUmpleTemplateFor(languagePath + "/guardNameBothAttributeAndMethodPython.ump",languagePath + "/guardNameBothAttributeAndMethod."+ languagePath +".txt","A");
-	Event.setNextAutoTransitionId(1); 
+	Event.setNextAutoTransitionId(1);
   }
-  
+
   @Override
   @Test
   public void guardNameBothAttributeAndMethod2()
   {
-	Event.setNextAutoTransitionId(1); 
+	Event.setNextAutoTransitionId(1);
 	assertUmpleTemplateFor(languagePath + "/guardNameBothAttributeAndMethod2Python.ump",languagePath + "/guardNameBothAttributeAndMethod2."+ languagePath +".txt","A");
     Event.setNextAutoTransitionId(1);
   }
-  
+
 
   @Override
   @Test
   public void guardNameBothAttributeAndMethod3()
   {
-	Event.setNextAutoTransitionId(1); 
+	Event.setNextAutoTransitionId(1);
 	assertUmpleTemplateFor(languagePath + "/guardNameBothAttributeAndMethod3Python.ump",languagePath + "/guardNameBothAttributeAndMethod3."+ languagePath +".txt","A");
     Event.setNextAutoTransitionId(1);
   }
@@ -68,7 +68,7 @@ public class PythonStateMachineTest extends StateMachineTest
   {
     assertUmpleTemplateFor(languagePath + "/checkExternalTransitions_withExitActions_1Python.ump",languagePath + "/checkExternalTransitions_withExitActions_1."+ languagePath +".txt","X");
   }
- 
+
   @Override @Ignore
   @Test
   public void queuedWithNestingStatesATM()
@@ -78,12 +78,19 @@ public class PythonStateMachineTest extends StateMachineTest
 
   @Override @Ignore
   @Test
+  public void checkExternalTransitions_noExitActions_1()
+  {
+    assertUmpleTemplateFor("checkExternalTransitions_noExitActions_1.ump",languagePath + "/checkExternalTransitions_noExitActions_1."+ languagePath +".txt","X");
+  }
+
+  @Override @Ignore
+  @Test
   public void stateMachine_unSpecifiedReception_QSM() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
   {
 	Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
 	f1.setAccessible(true);
 	f1.setInt(null, 1);
-    
+
 	assertUmpleTemplateFor("stateMachine_unSpecifiedReception_QSM.ump",languagePath + "/stateMachine_unSpecifiedReception_QSM."+ languagePath +".txt","QSMwithUnspecifiedRecep");
   }
 
@@ -93,7 +100,7 @@ public class PythonStateMachineTest extends StateMachineTest
   {
 	assertUmpleTemplateFor("queuedStateMachine_implementsInterface.ump",languagePath + "/queuedStateMachine_interfaceX."+ languagePath +".txt","IX");
     assertUmpleTemplateFor("queuedStateMachine_implementsInterface.ump",languagePath + "/queuedStateMachine_implementsInterface."+ languagePath +".txt","X");
-    
+
   }
 
   @Override @Ignore
@@ -117,7 +124,7 @@ public class PythonStateMachineTest extends StateMachineTest
 	Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
 	f1.setAccessible(true);
 	f1.setInt(null, 1);
-	
+
 	assertUmpleTemplateFor("queuedStateMachine_autoTransition.ump",languagePath + "/queuedStateMachine_autoTransition."+ languagePath +".txt","Light");
   }
 
@@ -147,7 +154,7 @@ public class PythonStateMachineTest extends StateMachineTest
   public void pooledStateMachine_autoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
   {
 	 }
-  
+
 @Override @Ignore
   @Test
   public void pooledStateMachineWithConcurrentStates_autoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException{}
@@ -159,7 +166,7 @@ public class PythonStateMachineTest extends StateMachineTest
 	Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
 	f1.setAccessible(true);
 	f1.setInt(null, 1);
-	
+
 	assertUmpleTemplateFor("pooledStateMachine_timedEvents_and_autoTansitions.ump",languagePath + "/pooledStateMachine_timedEvents_and_autoTansitions."+ languagePath +".txt","X");
   }
 
@@ -181,7 +188,7 @@ public class PythonStateMachineTest extends StateMachineTest
   @Test
   public void pooledStateMachine_UnspecifiedReception() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
   {
-	 
+
      assertUmpleTemplateFor("pooledStateMachine_UnspecifiedReception.ump",languagePath + "/pooledStateMachine_UnspecifiedReception."+ languagePath +".txt","PooledSMwithUnspecifiedReception");
   }
   @Override @Ignore
@@ -233,19 +240,19 @@ public class PythonStateMachineTest extends StateMachineTest
     assertUmpleTemplateFor("multiplePooledStateMachines_sameEvents.ump",languagePath + "/multiplePooledStateMachines_sameEvents."+ languagePath +".txt","X");
   }
 @Override @Ignore
-  @Test 
+  @Test
   public void exitAction()
   {
     assertUmpleTemplateFor("exitAction.ump",languagePath + "/exitAction."+ languagePath +".txt","LightFixture");
   }
   @Override @Ignore
-  @Test 
+  @Test
   public void exitActionSelfTransition()
   {
     assertUmpleTemplateFor("exitActionSelfTransition.ump",languagePath + "/exitActionSelfTransition."+ languagePath +".txt","A");
   }
 @Override @Ignore
-  @Test 
+  @Test
   public void entryExitTransitionAction()
   {
     assertUmpleTemplateFor("entryExitTransitionAction.ump",languagePath + "/entryExitTransitionAction."+ languagePath +".txt","LightFixture");
@@ -266,9 +273,9 @@ public class PythonStateMachineTest extends StateMachineTest
   @Test
   public void entryExitActionDuplicates()
   {
-  assertUmpleTemplateFor("entryExitActionDuplicates.ump",languagePath + "/entryExitActionDuplicates." + languagePath + ".txt", "Duplicate");    
+  assertUmpleTemplateFor("entryExitActionDuplicates.ump",languagePath + "/entryExitActionDuplicates." + languagePath + ".txt", "Duplicate");
   }
-  
+
 //Generates unsupported feature
 @Override @Ignore
 @Test
