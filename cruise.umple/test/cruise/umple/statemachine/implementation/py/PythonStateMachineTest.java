@@ -71,6 +71,116 @@ public class PythonStateMachineTest extends StateMachineTest
 
   @Override @Ignore
   @Test
+  public void eventlessStateMachine_before_QueuedStateMachine()
+  {
+    assertUmpleTemplateFor("eventlessStateMachine_QueuedStateMachine.ump",languagePath + "/eventlessStateMachine_QueuedStateMachine."+ languagePath +".txt","X");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedSM_UnspecifiedReception() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+  Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+  f1.setAccessible(true);
+  f1.setInt(null, 1);
+
+    assertUmpleTemplateFor("queuedSM_UnspecifiedRecep.ump",languagePath + "/queuedSM_UnspecifiedRecep."+ languagePath +".txt","AutomatedTellerMachine");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedSMwithConcurrentStatesTest()
+  {
+    assertUmpleTemplateFor("queuedSMwithConcurrentStatesTest.ump",languagePath + "/queuedSMwithConcurrentStatesTest."+ languagePath +".txt","QueuedSMwithConcurrentStates");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedSMwithConcurrentStatesTest_2()
+  {
+    assertUmpleTemplateFor("queuedSMwithConcurrentStatesTest_2.ump",languagePath + "/queuedSMwithConcurrentStatesTest_2."+ languagePath +".txt","QueuedSMwithConcurrentStates_2");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedStateMachine()
+  {
+    assertUmpleTemplateFor("queuedStateMachine.ump",languagePath + "/queuedStateMachine."+ languagePath +".txt","Course");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedStateMachine_2()
+  {
+    assertUmpleTemplateFor("queuedStateMachine_2.ump",languagePath + "/queuedStateMachine_2."+ languagePath +".txt","GarageDoor");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedStateMachine_timedEvents_and_autoTansitions() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+  Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+  f1.setAccessible(true);
+  f1.setInt(null, 1);
+
+  assertUmpleTemplateFor("queuedStateMachine_timedEvents_and_autoTansitions.ump",languagePath + "/queuedStateMachine_timedEvents_and_autoTansitions."+ languagePath +".txt","X");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedStateMachine_timedTransition_1()
+  {
+    assertUmpleTemplateFor("queuedStateMachine_timedTransition_1.ump",languagePath + "/queuedStateMachine_timedTransition_1."+ languagePath +".txt","X");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedStateMachine_timedTransition_2()
+  {
+    assertUmpleTemplateFor("queuedStateMachine_timedTransition_2.ump",languagePath + "/queuedStateMachine_timedTransition_2."+ languagePath +".txt","X");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedStateMachine_withParameters()
+  {
+    assertUmpleTemplateFor("queuedStateMachine_withParameters.ump",languagePath + "/queuedStateMachine_withParameters."+ languagePath +".txt","LightFixture");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedStateMachine_withParameters_1()
+  {
+    assertUmpleTemplateFor("queuedStateMachine_withParameters_1.ump",languagePath + "/queuedStateMachine_withParameters_1."+ languagePath +".txt","LightFixture");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedWithConcurrensStatesCourseAttempt() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+  Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+  f1.setAccessible(true);
+  f1.setInt(null, 1);
+
+  assertUmpleTemplateFor("queuedWithConcurrensStatesCourseAttempt.ump",languagePath + "/queuedWithConcurrensStatesCourseAttempt."+ languagePath +".txt","CourseAttempt");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedWithConcurrentStateMachines()
+  {
+    assertUmpleTemplateFor("queuedWithConcurrentStateMachines.ump",languagePath + "/queuedWithConcurrentStateMachines."+ languagePath +".txt","QueuedWithConcurrentStateMachines");
+  }
+
+  @Override @Ignore
+  @Test
+  public void queuedWithNestingStateMachines()
+  {
+    assertUmpleTemplateFor("queuedWithNestedStateMachines.ump",languagePath + "/queuedWithNestedStateMachines."+ languagePath +".txt","QueuedWithNestedStateMachines");
+  }
+
+  @Override @Ignore
+  @Test
   public void queuedWithNestingStatesATM()
   {
     assertUmpleTemplateFor("queuedWithNestingStatesATM.ump",languagePath + "/queuedWithNestingStatesATM."+ languagePath +".txt","AutomatedTellerMachine");
