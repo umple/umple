@@ -494,17 +494,7 @@ public void queuedSMwithConcurrentStatesTest_2()
   {
     assertUmpleTemplateFor("multipleQSM_sameEvents.ump",languagePath + "/multipleQSM_sameEvents."+ languagePath +".txt","X");
   }
-  @Override @Ignore
-  @Test
-  public void testMultipleQSMs()
-  {
-    assertUmpleTemplateFor("testMultipleQSMs.ump",lnguagePath + "/testMultipleQSMs."+ languagePath +".txt","X");
-  }
-@Override @Ignore
-  @Test
-  public void eventlessStateMachine_before_QueuedStateMachine()
-  {
-    assertUmpleTemplateFor("eventlessStateMachine_QueuedStateMachine.ump",languagePath + "/eventlessStateMachine_QueuedStateMachine."+ languagePath +".txt","X");
-  }
+  
+
 
 }
