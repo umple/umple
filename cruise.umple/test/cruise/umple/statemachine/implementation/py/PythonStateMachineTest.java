@@ -21,10 +21,29 @@ public class PythonStateMachineTest extends StateMachineTest
     languagePath = "py";
   }
 
-@After
+	@After
   public void tearDown()
   {
     super.tearDown();
+	SampleFileWriter.destroy(pathToInput + "/Animal.py");
+	SampleFileWriter.destroy(pathToInput + "/Bear.py");
+	SampleFileWriter.destroy(pathToInput + "/Cat.py");
+	SampleFileWriter.destroy(pathToInput + "/Course.py");
+	SampleFileWriter.destroy(pathToInput + "/Cow.py");
+	SampleFileWriter.destroy(pathToInput + "/Dog.py");
+	SampleFileWriter.destroy(pathToInput + "/Game.py");
+	SampleFileWriter.destroy(pathToInput + "/LightFixture.py");
+	SampleFileWriter.destroy(pathToInput + "/Moose.py");
+	SampleFileWriter.destroy(pathToInput + "/Player.py");
+	SampleFileWriter.destroy(pathToInput + "/Session.py");
+	SampleFileWriter.destroy(pathToInput + "/Sheep.py");
+	SampleFileWriter.destroy(pathToInput + "/stateMachineWithNegativeNumberGuard.py");
+	SampleFileWriter.destroy(pathToInput + "/stateMachineWithNegativeNumberGuard2.py");
+	SampleFileWriter.destroy(pathToInput + "/stateMachineWithStringComparisonGuard.py");
+	SampleFileWriter.destroy(pathToInput + "/ThingInWorld.py");
+	SampleFileWriter.destroy(pathToInput + "/World.py");
+	SampleFileWriter.destroy(pathToInput + "/py/A.py");
+	SampleFileWriter.destroy(pathToInput + "/py/X.py");
   }
   @Test
   @Override
