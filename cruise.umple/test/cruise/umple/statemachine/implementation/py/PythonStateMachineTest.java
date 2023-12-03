@@ -545,4 +545,10 @@ public void queuedSMwithConcurrentStatesTest_2()
   {
     assertUmpleTemplateFor(languagePath + "/noDefaultEntryMethodGenerated_2Python.ump",languagePath + "/noDefaultEntryMethodGenerated_2."+ languagePath +".txt","X");    
   }
+  @Override @Ignore
+  @Test
+  public void parallelSm_sameNameDiffStatesEntryExitActions()
+  {
+    assertUmpleTemplateFor("parallelSm_sameNameDiffStatesEntryExitActions.ump",languagePath + "/parallelSm_sameNameDiffStatesEntryExitActions."+ languagePath +".txt","X");
+  }
 }
