@@ -507,4 +507,30 @@ public void queuedSMwithConcurrentStatesTest_2()
   	assertUmpleTemplateFor("nestedStates_StateMachine_timedEvent.ump",languagePath + "/nestedStates_StateMachine_timedEvent."+ languagePath +".txt","Window");
   }
   
+  @Override @Ignore
+  @Test
+  public void refactorFinalState_hasAllInvalidElements()
+  {
+	  assertUmpleTemplateFor(languagePath + "/refactorFinalState_hasAllInvalidElementsPython.ump",languagePath + "/refactorFinalState_hasAllInvalidElements."+ languagePath +".txt","X");
+  }
+
+  @Override @Ignore
+  @Test
+  public void parallelSm_diffNamesDiffStatesEntryExitActions()
+  {
+    assertUmpleTemplateFor(languagePath + "/parallelSm_diffNamesDiffStatesEntryExitActionsPython.ump",languagePath + "/parallelSm_diffNamesDiffStatesEntryExitActions."+ languagePath +".txt","X");
+  }
+
+  @Override @Ignore
+  @Test
+  public void noDefaultEntryMethodGenerated()
+  {
+    assertUmpleTemplateFor(languagePath + "/noDefaultEntryMethodGeneratedPython.ump",languagePath + "/noDefaultEntryMethodGenerated."+ languagePath +".txt","X");    
+  }
+  
+  @Test
+  public void noDefaultEntryMethodGenerated_2()
+  {
+    assertUmpleTemplateFor(languagePath + "/noDefaultEntryMethodGenerated_2Python.ump",languagePath + "/noDefaultEntryMethodGenerated_2."+ languagePath +".txt","X");    
+  }
 }
