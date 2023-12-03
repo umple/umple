@@ -9,7 +9,6 @@ class UmpleToJava {
         try:
         <<#Position p = activity.getPosition();
         if (p != null) {
-        realSb.append("\n        # line " + p.getLineNumber() + " \"" + uClass.getRelativePath(p.getFilename(),"Java") + "\"");
         String activityCode = activity.getActivityCode();
         String[] lines = activityCode.split("\\r?\\n");
         // The first line in the activity code needs 3 tabs
