@@ -1,0 +1,76 @@
+from enum import Enum, auto
+
+class LightFixture():
+    class Bulb(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        On = auto()
+        Off = auto()
+
+    class AnotherBulb(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        On = auto()
+        Amber = auto()
+
+    def __init__(self):
+        self._anotherBulb = None
+        self._bulb = None
+        self.setBulb(LightFixture.Bulb.On)
+        self.setAnotherBulb(LightFixture.AnotherBulb.On)
+
+    def getBulbFullName(self):
+        answer = self._bulb.__str__()
+        return answer
+
+    def getAnotherBulbFullName(self):
+        answer = self._anotherBulb.__str__()
+        return answer
+
+    def getBulb(self):
+        return self._bulb
+
+    def getAnotherBulb(self):
+        return self._anotherBulb
+
+    def flip(self):
+        wasEventProcessed = False
+        aBulb = self._bulb
+        aAnotherBulb = self._anotherBulb
+        if aBulb == LightFixture.Bulb.On :
+            self.setBulb(LightFixture.Bulb.Off)
+            wasEventProcessed = True
+        elif aBulb == LightFixture.Bulb.Off :
+            self.setBulb(LightFixture.Bulb.On)
+            wasEventProcessed = True
+        else :
+            pass
+        if aAnotherBulb == LightFixture.AnotherBulb.On :
+            self.setAnotherBulb(LightFixture.AnotherBulb.Amber)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def unflip(self):
+        wasEventProcessed = False
+        aAnotherBulb = self._anotherBulb
+        if aAnotherBulb == LightFixture.AnotherBulb.Amber :
+            self.setAnotherBulb(LightFixture.AnotherBulb.On)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def setBulb(self, aBulb):
+        self._bulb = aBulb
+
+    def setAnotherBulb(self, aAnotherBulb):
+        self._anotherBulb = aAnotherBulb
+
+    def delete(self):
+        pass
