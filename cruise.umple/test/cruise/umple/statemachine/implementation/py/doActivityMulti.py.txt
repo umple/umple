@@ -50,14 +50,12 @@ class X():
 
     def doActivity0SmS1(self):
         try:
-        # line 7 "../doActivityMultiPython.ump"
             blah1()
         except :
             pass
 
     def doActivity1SmS1(self):
         try:
-        # line 8 "../doActivityMultiPython.ump"
             blah2()
         except :
             pass
