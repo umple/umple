@@ -506,6 +506,18 @@ public void queuedSMwithConcurrentStatesTest_2()
   {
   	assertUmpleTemplateFor("nestedStates_StateMachine_timedEvent.ump",languagePath + "/nestedStates_StateMachine_timedEvent."+ languagePath +".txt","Window");
   }
+  @Override @Ignore
+  @Test
+  public void sameEvent_twoStates_differentStatemachines()
+  {
+    assertUmpleTemplateFor("sameEvent_twoStates_differentStateMachines.ump",languagePath + "/sameEvent_twoStates_differentStatemachines."+ languagePath +".txt","LightFixture");
+  }
+  @Override @Ignore
+  @Test
+  public void nestedStates_exitInnerBeforeOutter()
+  {
+    assertUmpleTemplateFor("nestedStates_exitInnerBeforeOutter.ump",languagePath + "/nestedStates_exitInnerBeforeOutter."+ languagePath +".txt","LightFixture");
+  }
   
   @Override @Ignore
   @Test
