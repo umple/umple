@@ -1,0 +1,69 @@
+from enum import Enum, auto
+
+class X():
+    class Sm(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        on = auto()
+        idle = auto()
+        off = auto()
+
+    def __init__(self):
+        self._sm = None
+        self.setSm(X.Sm.on)
+
+    def getSmFullName(self):
+        answer = self._sm.__str__()
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def turnOff(self):
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm == X.Sm.on :
+            self.setSm(X.Sm.off)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def goIdle(self):
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm == X.Sm.on :
+            self.setSm(X.Sm.idle)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def buttonPressed(self):
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm == X.Sm.idle :
+            self.setSm(X.Sm.on)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def turnOn(self):
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm == X.Sm.off :
+            self.setSm(X.Sm.on)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def setSm(self, aSm):
+        self._sm = aSm
+
+    def delete(self):
+        pass
+

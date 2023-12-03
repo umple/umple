@@ -1,0 +1,84 @@
+from enum import Enum, auto
+from threading import Thread
+import time
+
+class Course():
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Open = auto()
+
+    class StatusOpen(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        statusOpen = auto()
+
+    def __init__(self):
+        self._doActivityStatusOpenStatusOpenThread = None
+        self._statusOpen = None
+        self._status = None
+        self.setStatusOpen(Course.StatusOpen.Null)
+        self.setStatus(Course.Status.Open)
+
+    def getStatusFullName(self):
+        answer = self._status.__str__()
+        if self._statusOpen != Course.StatusOpen.Null :
+            answer += "." + self._statusOpen.__str__()
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def getStatusOpen(self):
+        return self._statusOpen
+
+    def exitStatus(self):
+        if self._status == Course.Status.Open :
+            self.exitStatusOpen()
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+        if self._status == Course.Status.Open :
+            if self._statusOpen == Course.StatusOpen.Null :
+                self.setStatusOpen(Course.StatusOpen.statusOpen)
+
+    def exitStatusOpen(self):
+        if self._statusOpen == Course.StatusOpen.statusOpen :
+            self.setStatusOpen(Course.StatusOpen.Null)
+            if not (self._doActivityStatusOpenStatusOpenThread is None) :
+                self._doActivityStatusOpenStatusOpenThread.interrupt()
+
+    def setStatusOpen(self, aStatusOpen):
+        self._statusOpen = aStatusOpen
+        if self._status != Course.Status.Open and aStatusOpen != Course.StatusOpen.Null :
+            self.setStatus(Course.Status.Open)
+        if self._statusOpen == Course.StatusOpen.statusOpen :
+            self._doActivityStatusOpenStatusOpenThread = Course.DoActivityThread(self, "doActivityStatusOpenStatusOpen")
+
+    def doActivityStatusOpenStatusOpen(self):
+        try:
+            keepGoing()
+        except :
+            pass
+
+    class DoActivityThread(Thread):
+        def __init__(self, aController, aDoActivityMethodName):
+            self._doActivityMethodName = None
+            self._controller = None
+            self._controller = aController
+            self._doActivityMethodName = aDoActivityMethodName
+            super().__init__()
+            self.start()
+
+        def run(self):
+            if "doActivityStatusOpenStatusOpen" == self._doActivityMethodName :
+                self._controller.doActivityStatusOpenStatusOpen()
+
+    def delete(self):
+        pass
+

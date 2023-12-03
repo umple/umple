@@ -1,0 +1,42 @@
+from enum import Enum, auto
+
+class LightFixture():
+    class Light(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        On = auto()
+        Off = auto()
+
+    def __init__(self):
+        self._light = None
+        self.setLight(LightFixture.Light.On)
+
+    def getLightFullName(self):
+        answer = self._light.__str__()
+        return answer
+
+    def getLight(self):
+        return self._light
+
+    def flip(self):
+        wasEventProcessed = False
+        aLight = self._light
+        if aLight == LightFixture.Light.On :
+            self.setLight(LightFixture.Light.Off)
+            wasEventProcessed = True
+        elif aLight == LightFixture.Light.Off :
+            self.setLight(LightFixture.Light.On)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def setLight(self, aLight):
+        print("About to flip")
+        self._light = aLight
+        print("Just flipped")
+
+    def delete(self):
+        pass
