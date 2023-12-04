@@ -1,0 +1,111 @@
+from enum import Enum, auto
+
+class Animal():
+    class State(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        alive = auto()
+        dead = auto()
+
+    class StateAlive(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        normal = auto()
+        zombie = auto()
+
+    def __init__(self, aIsAlive):
+        self._stateAlive = None
+        self._state = None
+        self._isAlive = None
+        self._isAlive = aIsAlive
+        self.setStateAlive(Animal.StateAlive.Null)
+        self.setState(Animal.State.alive)
+
+    def setIsAlive(self, aIsAlive):
+        wasSet = False
+        self._isAlive = aIsAlive
+        wasSet = True
+        return wasSet
+
+    def getIsAlive(self):
+        return self._isAlive
+
+    def isIsAlive(self):
+        return self._isAlive
+
+    def getStateFullName(self):
+        answer = self._state.__str__()
+        if self._stateAlive != Animal.StateAlive.Null :
+            answer += "." + self._stateAlive.__str__()
+        return answer
+
+    def getState(self):
+        return self._state
+
+    def getStateAlive(self):
+        return self._stateAlive
+
+    def kill(self):
+        wasEventProcessed = False
+        aState = self._state
+        if aState == Animal.State.alive :
+            self.exitState()
+            self.setState(Animal.State.dead)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def zombify(self):
+        wasEventProcessed = False
+        aStateAlive = self._stateAlive
+        if aStateAlive == Animal.StateAlive.normal :
+            self.exitStateAlive()
+            self.setStateAlive(Animal.StateAlive.zombie)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def haveBaby(self):
+        wasEventProcessed = False
+        aStateAlive = self._stateAlive
+        if aStateAlive == Animal.StateAlive.zombie :
+            self.exitStateAlive()
+            self.setStateAlive(Animal.StateAlive.normal)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitState(self):
+        if self._state == Animal.State.alive :
+            self.exitStateAlive()
+
+    def setState(self, aState):
+        self._state = aState
+        if self._state == Animal.State.alive :
+            if self._stateAlive == Animal.StateAlive.Null :
+                self.setStateAlive(Animal.StateAlive.normal)
+
+    def exitStateAlive(self):
+        if self._stateAlive == Animal.StateAlive.normal :
+            self.setStateAlive(Animal.StateAlive.Null)
+        elif self._stateAlive == Animal.StateAlive.zombie :
+            self.setStateAlive(Animal.StateAlive.Null)
+
+    def setStateAlive(self, aStateAlive):
+        self._stateAlive = aStateAlive
+        if self._state != Animal.State.alive and aStateAlive != Animal.StateAlive.Null :
+            self.setState(Animal.State.alive)
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "isAlive" + ":" + str(self.getIsAlive()) + "]"

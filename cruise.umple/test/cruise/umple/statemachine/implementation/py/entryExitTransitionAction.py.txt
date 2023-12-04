@@ -1,0 +1,45 @@
+from enum import Enum, auto
+
+class LightFixture():
+    class Bulb(Enum):
+        def _generate_next_value_(name, start, count, last_values):      
+            return name
+        def __str__(self):
+            return str(self.value)
+        On = auto()
+        Off = auto()
+
+    def __init__(self):
+        self._bulb = None
+        self.setBulb(LightFixture.Bulb.On)
+
+    def getBulbFullName(self):
+        answer = self._bulb.__str__()
+        return answer
+
+    def getBulb(self):
+        return self._bulb
+
+    def push(self):
+        wasEventProcessed = False
+        aBulb = self._bulb
+        if aBulb == LightFixture.Bulb.On :
+            self.exitBulb()
+            doTransition()
+            self.setBulb(LightFixture.Bulb.Off)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitBulb(self):
+        if self._bulb == LightFixture.Bulb.On :
+            doExit()
+
+    def setBulb(self, aBulb):
+        self._bulb = aBulb
+        if self._bulb == LightFixture.Bulb.On :
+            doEntry()
+
+    def delete(self):
+        pass

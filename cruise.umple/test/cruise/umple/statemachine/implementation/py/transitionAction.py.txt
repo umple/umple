@@ -1,0 +1,37 @@
+from enum import Enum, auto
+
+class Course():
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Open = auto()
+
+    def __init__(self):
+        self._status = None
+        self.setStatus(Course.Status.Open)
+
+    def getStatusFullName(self):
+        answer = self._status.__str__()
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def register(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == Course.Status.Open :
+            print("transition")
+            self.setStatus(Course.Status.Open)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+
+    def delete(self):
+        pass

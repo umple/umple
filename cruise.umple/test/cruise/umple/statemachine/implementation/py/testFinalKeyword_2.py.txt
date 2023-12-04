@@ -1,0 +1,147 @@
+from enum import Enum, auto
+
+class X():
+    class Sm(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        s1 = auto()
+        Final = auto()
+        s3 = auto()
+
+    class SmS1(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        s2 = auto()
+
+    class SmS3(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        s4 = auto()
+
+    class SmS3S4(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        s5 = auto()
+
+    def __init__(self):
+        self._smS3S4 = None
+        self._smS3 = None
+        self._smS1 = None
+        self._sm = None
+        self.setSmS1(X.SmS1.Null)
+        self.setSmS3(X.SmS3.Null)
+        self.setSmS3S4(X.SmS3S4.Null)
+        self.setSm(X.Sm.s1)
+
+    def getSmFullName(self):
+        answer = self._sm.__str__()
+        if self._smS1 != X.SmS1.Null :
+            answer += "." + self._smS1.__str__()
+        if self._smS3 != X.SmS3.Null :
+            answer += "." + self._smS3.__str__()
+        if self._smS3S4 != X.SmS3S4.Null :
+            answer += "." + self._smS3S4.__str__()
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def getSmS1(self):
+        return self._smS1
+
+    def getSmS3(self):
+        return self._smS3
+
+    def getSmS3S4(self):
+        return self._smS3S4
+
+    def goToS3(self):
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm == X.Sm.s1 :
+            self.exitSm()
+            self.setSm(X.Sm.s3)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def goToFinal(self):
+        wasEventProcessed = False
+        aSmS1 = self._smS1
+        aSmS3S4 = self._smS3S4
+        if aSmS1 == X.SmS1.s2 :
+            self.exitSm()
+            self.setSm(X.Sm.Final)
+            wasEventProcessed = True
+        else :
+            pass
+        if aSmS3S4 == X.SmS3S4.s5 :
+            self.exitSm()
+            self.setSm(X.Sm.Final)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitSm(self):
+        if self._sm == X.Sm.s1 :
+            self.exitSmS1()
+        elif self._sm == X.Sm.s3 :
+            self.exitSmS3()
+
+    def setSm(self, aSm):
+        self._sm = aSm
+        if self._sm == X.Sm.s1 :
+            if self._smS1 == X.SmS1.Null :
+                self.setSmS1(X.SmS1.s2)
+        elif self._sm == X.Sm.Final :
+            self.delete()
+        elif self._sm == X.Sm.s3 :
+            if self._smS3 == X.SmS3.Null :
+                self.setSmS3(X.SmS3.s4)
+
+    def exitSmS1(self):
+        if self._smS1 == X.SmS1.s2 :
+            self.setSmS1(X.SmS1.Null)
+
+    def setSmS1(self, aSmS1):
+        self._smS1 = aSmS1
+        if self._sm != X.Sm.s1 and aSmS1 != X.SmS1.Null :
+            self.setSm(X.Sm.s1)
+
+    def exitSmS3(self):
+        if self._smS3 == X.SmS3.s4 :
+            self.exitSmS3S4()
+            self.setSmS3(X.SmS3.Null)
+
+    def setSmS3(self, aSmS3):
+        self._smS3 = aSmS3
+        if self._sm != X.Sm.s3 and aSmS3 != X.SmS3.Null :
+            self.setSm(X.Sm.s3)
+        if self._smS3 == X.SmS3.s4 :
+            if self._smS3S4 == X.SmS3S4.Null :
+                self.setSmS3S4(X.SmS3S4.s5)
+
+    def exitSmS3S4(self):
+        if self._smS3S4 == X.SmS3S4.s5 :
+            self.setSmS3S4(X.SmS3S4.Null)
+
+    def setSmS3S4(self, aSmS3S4):
+        self._smS3S4 = aSmS3S4
+        if self._smS3 != X.SmS3.s4 and aSmS3S4 != X.SmS3S4.Null :
+            self.setSmS3(X.SmS3.s4)
+
+    def delete(self):
+        pass

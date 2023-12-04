@@ -1,0 +1,117 @@
+from enum import Enum, auto
+
+class Mentor():
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Ok = auto()
+        NotOkay = auto()
+        NotOk = auto()
+
+    def __init__(self):
+        self._timeoutNotOkayToOkHandler = None
+        self._timeoutOkToNotOkHandler = None
+        self._status = None
+        self._howLongUntilOk = None
+        self._howLongUntilOk = 3
+        self.setStatus(Mentor.Status.Ok)
+
+    def setHowLongUntilOk(self, aHowLongUntilOk):
+        wasSet = False
+        self._howLongUntilOk = aHowLongUntilOk
+        wasSet = True
+        return wasSet
+
+    def getHowLongUntilOk(self):
+        return self._howLongUntilOk
+
+    def getStatusFullName(self):
+        answer = self._status.__str__()
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def timeoutOkToNotOk(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == Mentor.Status.Ok :
+            self.exitStatus()
+            self.setStatus(Mentor.Status.NotOk)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def timeoutNotOkayToOk(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == Mentor.Status.NotOkay :
+            self.exitStatus()
+            self.setStatus(Mentor.Status.Ok)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitStatus(self):
+        if self._status == Mentor.Status.Ok :
+            self.stopTimeoutOkToNotOkHandler()
+        elif self._status == Mentor.Status.NotOkay :
+            self.stopTimeoutNotOkayToOkHandler()
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+        if self._status == Mentor.Status.Ok :
+            self.startTimeoutOkToNotOkHandler()
+        elif self._status == Mentor.Status.NotOkay :
+            self.startTimeoutNotOkayToOkHandler()
+
+    def startTimeoutOkToNotOkHandler(self):
+        self._timeoutOkToNotOkHandler = self.TimedEventHandler(self, "timeoutOkToNotOk", 4)
+
+    def stopTimeoutOkToNotOkHandler(self):
+        self._timeoutOkToNotOkHandler.stop()
+
+    def startTimeoutNotOkayToOkHandler(self):
+        self._timeoutNotOkayToOkHandler = self.TimedEventHandler(self, "timeoutNotOkayToOk", self._howLongUntilOk)
+
+    def stopTimeoutNotOkayToOkHandler(self):
+        self._timeoutNotOkayToOkHandler.stop()
+
+    class TimedEventHandler():
+        def __init__(self, aController, aTimeoutMethodName, aHowLongInSeconds):
+            from threading import Timer
+            self._timer = None
+            self._howLongInSeconds = None
+            self._timeoutMethodName = None
+            self._controller = None
+            self._controller = aController
+            self._timeoutMethodName = aTimeoutMethodName
+            self._howLongInSeconds = aHowLongInSeconds
+            self._timer = None
+            self._timer = Timer(self._howLongInSeconds, self.run)
+            self._timer.start()
+
+        def stop(self):
+            self._timer.cancel()
+
+        def run(self):
+            if "timeoutOkToNotOk" == self._timeoutMethodName :
+                shouldRestart = not self._controller.timeoutOkToNotOk()
+                if shouldRestart :
+                    self._controller.startTimeoutOkToNotOkHandler()
+                return
+            if "timeoutNotOkayToOk" == self._timeoutMethodName :
+                shouldRestart = not self._controller.timeoutNotOkayToOk()
+                if shouldRestart :
+                    self._controller.startTimeoutNotOkayToOkHandler()
+                return
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "howLongUntilOk" + ":" + str(self.getHowLongUntilOk()) + "]"

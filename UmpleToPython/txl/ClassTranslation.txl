@@ -6,8 +6,8 @@
 %Rule to translate concrete classes
 rule replaceConcreteClasses
     replace $ [concrete_class_declaration]
-        _ [opt acess_modifier] 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
-    export className 
+        _ [opt acess_modifier] 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '}
+    export className
     construct inheritanceClasses [list nested_identifier]
         _ [extractInheritanceBlockClasses each inheritances]
     construct translatedBody [class_body_decl]
@@ -17,14 +17,28 @@ rule replaceConcreteClasses
     construct runMain [opt run_main]
         _ [constructRunMain translatedBody]
     by
-        imports 
-        'class className '( inheritanceClasses ')':  translatedBody runMain
+        imports
+        'class className '( inheritanceClasses ')':  translatedBody runMain 
+end rule
+
+%Rule to translate nested classes
+rule replaceInnerClasses
+    replace $ [inner_class_declaration]
+        _ [opt acess_modifier] 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '}
+    export className
+    construct inheritanceInnerClasses [list nested_identifier]
+        _ [extractInheritanceBlockClasses each inheritances][print]
+    export inheritanceInnerClasses
+    construct translatedBody [class_body_decl]
+       classBody  [replaceClassBody]
+    by
+        'class className '( inheritanceInnerClasses ')':  translatedBody
 end rule
 
 %Rule to translate abstract classes
 rule replaceAbstractClass
     replace [concrete_class_declaration]
-        _ [opt acess_modifier] 'abstract 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
+        _ [opt acess_modifier] 'abstract 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '}
     export className
     construct inheritanceClasses [list nested_identifier]
         _ [extractInheritanceBlockClasses each inheritances]
@@ -40,9 +54,9 @@ rule replaceAbstractClass
         _ [constructRunMain translatedBody]
     by
         'from 'abc 'import 'ABC, 'abstractmethod 
-        imports 
-        'class className '(  finalInheritances '):  translatedBody runMain
-end rule
+        imports
+        'class className '(  finalInheritances '):  translatedBody runMain 
+end rule 
 
 %This func creates the if statement at the bottom of python classes when they have a static main function
 %This allows the main function to be run when we run the python file, emulating Java behavior
@@ -57,7 +71,7 @@ function constructRunMain body [class_body_decl]
     deconstruct optClassId
         classId [id]
     by
-        'if '__name__ '== '"__main__" ': 
+        'if '__name__ '== '"__main__" ':
         classId '.main(sys.argv)
 end function
 
@@ -66,12 +80,12 @@ rule matchMainMethod
     match [concrete_method_declaration]
         '@staticmethod
         'def 'main( _[list method_parameter+] '): _ [method_content]
-end rule 
+end rule
 
 %Rule used to translate interfaces
 rule replaceInterfaces
     replace [class_declaration]
-        _ [opt acess_modifier] 'interface className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '} 
+        _ [opt acess_modifier] 'interface className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '}
     export className
     construct inheritanceClasses [list nested_identifier]
         _ [extractInheritanceBlockClasses each inheritances]
@@ -84,8 +98,8 @@ rule replaceInterfaces
     construct finalInheritances [list nested_identifier]
         AbcClass [, inheritanceClasses]
     by
-        'from 'abc 'import 'ABC, 'abstractmethod 
-        imports 
+        'from 'abc 'import 'ABC, 'abstractmethod
+        imports
         'class className '(  finalInheritances '):  translatedBody
 end rule
 
@@ -107,10 +121,10 @@ end function
 
 %Func contains logic to translate class bodies
 %A lot of information is exported here, to be used in functions/rules all over
-function replaceClassBody
+function  replaceClassBody
     replace [class_body_decl]
         body [class_body_decl]
-    deconstruct body 
+    deconstruct body
         elements [repeat class_body_element]
     construct declarations [repeat member_variable_declaration]
         _ [^ elements]
@@ -129,6 +143,8 @@ function replaceClassBody
         _ [addDictMemberVariable each declarations]
     export enumeratorDeclerations [repeat enum_declaration]
         _ [^ elements]
+    export nestedClassDeclerations [repeat inner_class_declaration]
+        _ [^ elements]
     export classMethodNames [repeat id]
         _ [extractClassMethodName each classMethods]
     construct possibleFunctionImports [repeat id]
@@ -137,11 +153,14 @@ function replaceClassBody
         _
     export possibleFunctionImports
     construct disambiguationFunctions [repeat class_body_element]
-        _ 
+        _
     by
-        elements [exportConstructorCount] [removeMemberVariableDeclarations] [replaceEnumDeclaration] 
-            [replaceAllMethods memberVariables]
+
+         elements  [exportConstructorCount] [removeMemberVariableDeclarations]  [replaceInnerClasses]  [replaceEnumDeclaration]
+        [replaceAllMethods memberVariables] 
+
 end function
+
 
 %If the argument is a memberVariable, add it to results
 function addListMemberVariable MemberVariable [member_variable_declaration]
@@ -201,6 +220,8 @@ function addIfTransient decl [member_variable_declaration]
         result [. memberName]
 end function
 
+
+
 %Python does not have member variable declarations like Java does
 %This function removes all member variable declarations, except the static ones which are translated and kept
 function removeMemberVariableDeclarations
@@ -250,6 +271,8 @@ function addMemberVariable MemberVariable [member_variable_declaration]
         SequenceSoFar [. memberName]
 end function
 
+
+
 %If arg is a static member variable declaration, add its name to results
 function addStaticMemberVariable MemberVariable [member_variable_declaration]
     replace [repeat id]
@@ -264,9 +287,9 @@ end function
 function addStaticMethod method [method_declaration]
     replace [repeat id]
         SequenceSoFar [repeat id]
-    deconstruct method 
+    deconstruct method
         _[opt decorator] _[acess_modifier] 'static _[nested_identifier] methodName [id] '( _[list method_parameter] ') _[opt throws] '{ _[repeat statement] '}
-    by 
+    by
         SequenceSoFar [. methodName]
 end function
 
