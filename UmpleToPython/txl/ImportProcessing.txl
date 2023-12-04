@@ -59,7 +59,7 @@ function extractInheritanceBlockClasses inheritanceList [inheritance_list]
     deconstruct inheritanceList
         _[inheritance_statement] classesToAdd [list nested_identifier]
     by
-        classes [inheritanceClassFilter each classesToAdd]
+        classes [inheritanceClassFilter each classesToAdd] 
 end function
 
 %Inherited class / implemented interface name filter
@@ -72,8 +72,10 @@ function inheritanceClassFilter class [nested_identifier]
         'java.io.Serializable 
     where not
         filter [containsNestedClass class]
+	where not 
+		unparsed [= 'TimerTask]
     by
-        classes [, class]
+        classes [, class] 
 end function
 
 %From the list of inherited classes / implemented interfaces
@@ -86,7 +88,7 @@ function extractInheritanceImportClasses inheritanceList [inheritance_list]
     construct classIds [repeat id]
         _ [extractListClass each classesToAdd] [extractRegularClass each classesToAdd]
     by
-        classesToImport [. classIds] 
+        classesToImport [. classIds]
 end function
 
 %Used to merge to repeats and ensure there are no duplicates
@@ -145,8 +147,10 @@ function importClassFilter type [id]
         classNameId [id]
     where not
         classNameId [= type]
+	where not 
+		type [= 'TimerTask]
     by
-        current [. type]
+        current [. type] 
 end function
 
 %Checks if type is a default Java type
@@ -207,6 +211,8 @@ function addExternalImports translatedBody [class_body_decl]
         [addEnumImportIfNeeded translatedBody]
         [addPickleImportIfNeeded]
         [addSysImportIfNeeded translatedBody]
+        [addThreadImportIfNeeded translatedBody]
+        [addTimeImportIfNeeded translatedBody]
 end function
 
 %Adds an Os import if needed. os is used in the __str__ methods for newLines
@@ -274,4 +280,40 @@ function addSysImportIfNeeded body [class_body_decl]
         'import 'sys
     by 
         imports [. newImport]
+end function
+
+%Adds Thread import if needed
+function addThreadImportIfNeeded body [class_body_decl]
+    replace [repeat import_statement]
+        imports [repeat import_statement]
+    where
+        body [shouldThreadImport]
+    construct newImport [import_statement]
+        'from 'threading 'import 'Thread
+    by 
+        imports [. newImport]
+end function
+
+%Checks for thread in translated class body
+function shouldThreadImport
+    match * [nested_identifier]
+        'Thread
+end function
+
+%Adds time import if needed
+function addTimeImportIfNeeded body [class_body_decl]
+    replace [repeat import_statement]
+        imports [repeat import_statement]
+    where
+        body [shouldTimeImport]
+    construct newImport [import_statement]
+        'import 'time
+    by 
+        imports [. newImport]
+end function
+
+%Checks for time.sleep in translated class body
+function shouldTimeImport
+    match * [nested_identifier]
+        'Thread
 end function

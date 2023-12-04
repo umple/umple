@@ -9,10 +9,15 @@ function replaceStatements
         statements [any]
     by 
         statements
+
             [replacePrivateAttributeSetting]
             [replaceDefaultReadObject]
             [replaceSwitchCase]
             [addClassPrefixToEnum]
+			[replaceTimerDeclaration]
+			[replaceTimerSchedule]
+			[replaceTimerStart]
+			[replaceTimerStop]
             [replaceForLoop]
             [replaceForInLoop]
             [replaceAssignementIncrementBefore]
@@ -44,9 +49,15 @@ function replaceStatements
             [replaceNewArrayList]
             [replaceNewHashMap]
             [replaceNewCall]
+            [addClassPrefixToNestedClasses]
             [replaceCasting]
             [correctSuperInit]
             [correctSuperFunctions]
+            [replaceDotEquals]
+            [replacePrintln]
+            [replacePrint]
+            [replacePrintf]
+            [replaceInnerClassCreate]
             [replaceNewLine]
             [replaceHexIdentity]
             [replaceComparator]
@@ -60,6 +71,9 @@ function replaceStatements
             [replaceFloatF]
             [replaceAllMemberVariableNames]
             [removeSemiColonFromValues]
+            [replaceAutoTransitionExitSM]
+            [replaceThreadSleep]
+
 end function
 
 %In Java, you dont need to have code within brackets. For example else{} is valid.
@@ -79,6 +93,7 @@ rule removeSemiColonFromValues
     by  
         val
 end rule
+
 
 rule replaceAssignementIncrementAfter
     replace [statement]
@@ -389,6 +404,74 @@ rule correctSuperFunctions
     by
         'super() rep
 end rule
+
+
+rule replaceTimerDeclaration
+	replace [statement]
+		 var [id] ' = new Timer();
+	by
+		var '= None			
+end rule
+
+rule replaceTimerSchedule
+	replace [repeat statement]
+		 var[id]'.schedule(this, (long) time[nested_identifier] '*1000); 
+	by
+		 var '= Timer( time ', 'self.run '); var '.start()			
+end rule
+
+rule replaceTimerStart
+	replace [repeat statement]
+		 var [id] ' = new TimedEventHandler(this, temp[value] ', val [value] ');
+	by
+		 var '= self.TimedEventHandler( 'this, temp ', val ') 			
+end rule
+
+rule replaceTimerStop
+	replace [repeat statement]
+		 var [id] '.stop();
+	by
+		 var '.stop() 			
+end rule
+
+%to match Java Code "doActivityStateMachine1TopLevelThread1".equals(doActivityMethodName)
+rule replaceDotEquals
+    replace [value]
+        s1 [stringlit] '.equals( s2[value] ')
+    by
+        s1 == s2
+end rule 
+
+
+rule replacePrintln
+    replace [nested_identifier]
+        'System.out.println( val [value] ')
+    by
+        'print( val ')
+end rule 
+
+rule replacePrint
+    replace [nested_identifier]
+        'System.out.print( val [value] ')
+    by
+        'print( val ')
+end rule 
+
+rule replacePrintf
+    replace [nested_identifier]
+        'System.out.printf(val [value] ')
+    by
+        'print( val ')
+end rule 
+
+%   outerObject.new InnerClass(); -> outerObject.InnerClass()
+rule replaceInnerClassCreate
+    replace [new_call_inner]
+        outerObject [nested_identifier] '.new innerObject [nested_identifier]
+    by
+        outerObject '. innerObject
+end rule
+
 
 rule replaceNewLine
     replace [nested_identifier]
@@ -976,3 +1059,50 @@ rule replaceClassMatchCheck
     by  
         'type(self) 'is 'type( id2 ')
 end rule
+
+% need to convert milliseconds to seconds
+rule replaceThreadSleep
+    replace [statement]
+        'Thread.sleep( val [number] ')
+    by
+        'time.sleep( val  [/ 1000]')
+end rule
+
+% self.exitSm() is making the python AutoTransition not work, comment out for workaround.
+rule replaceAutoTransitionExitSM
+    replace [statement]
+        'exitSm()
+    by
+        'exit()
+end rule
+
+rule addClassPrefixToNestedClasses
+    replace [nested_identifier]
+        innerClass [id]'( params [list value] ')
+    where
+        innerClass [isAnInnerClass]
+    import className [nested_identifier]
+    deconstruct className
+        root [nestable_value] accesses [repeat attribute_access]
+    construct innerAccess [attribute_access] 
+        '. innerClass( params ')
+    by
+        root accesses [. innerAccess]
+end rule
+
+function isAnInnerClass
+    match [id]
+        name [id]
+    import nestedClassDeclerations [repeat inner_class_declaration]
+    where
+        name [isSpecificInnerClass each nestedClassDeclerations]
+end function
+
+function isSpecificInnerClass aIClass [inner_class_declaration]
+    match [id]
+        name [id]
+    deconstruct aIClass
+        'class iclassName [id] _ [opt inheritance_group] ': _ [class_body_decl] 
+    where
+        name [= iclassName]
+end function
