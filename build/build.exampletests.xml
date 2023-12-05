@@ -166,25 +166,29 @@
       <!-- The following is temporarily excluded because of an odd Java error only on the server not Mac -->
       <exclude name="W010SingletonMultiplicityOver12.ump"/>
 
-      <!-- Contains the Java specific TimerTask class -->
+      <!-- Contains the Java specific TimerTask class-->
+      <exclude name="Dishwasher.ump"/> <!-- uses synchronized keyword -->
+      <!-- April 2023, no longer excluded 
       <exclude name="AccessControl2.ump"/>
       <exclude name="CanalLockStateMachine.ump"/>
-      <exclude name="Dishwasher.ump"/>
       <exclude name="Elevator_State_Machine.ump"/>
       <exclude name="LibraryLoanStateMachine.ump"/>
       <exclude name="TimedCommands.ump"/>
       <exclude name="TrafficLightsB.ump"/>
+       -->
 
 
-      <!-- Contains the Java specific Thread class  -->
+      <!-- Contains the Java specific Thread class -->
+      <!-- April 2023, no longer excluded 
       <exclude name="Auto-Transitions1.ump"/>
-      <exclude name="Ball_Game.ump"/>
       <exclude name="BcmsBaseConfiguration.ump"/>
       <exclude name="BcmsMultipleCrisis-Multiple-Coordinator-Configuration.ump"/>
+      <exclude name="Ball_Game.ump"/>
       <exclude name="MicrowaveOven2.ump"/>
-      <exclude name="Runway.ump"/>
+      <exclude name="Runway.ump"/> 
       <exclude name="StateMachineActionsandDoActivities1.ump"/>
-
+      -->
+      
       <!-- Contains the Java specific Message class + Threading  -->
       <exclude name="CodeInjectioninCustomMethods1.ump"/>
       <exclude name="CodeInjectioninEventMethods1.ump"/>

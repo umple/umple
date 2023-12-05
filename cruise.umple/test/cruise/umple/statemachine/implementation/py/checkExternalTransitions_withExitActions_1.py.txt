@@ -1,0 +1,237 @@
+from enum import Enum, auto
+
+class X():
+    class Sm(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        on = auto()
+        off = auto()
+
+    class SmOn(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        s1 = auto()
+        s2 = auto()
+
+    class SmOnS1(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        m1 = auto()
+        m2 = auto()
+
+    def __init__(self):
+        self._smOnS1 = None
+        self._smOn = None
+        self._sm = None
+        self.setSmOn(X.SmOn.Null)
+        self.setSmOnS1(X.SmOnS1.Null)
+        self.setSm(X.Sm.on)
+
+    def getSmFullName(self):
+        answer = self._sm.__str__()
+        if self._smOn != X.SmOn.Null :
+            answer += "." + self._smOn.__str__()
+        if self._smOnS1 != X.SmOnS1.Null :
+            answer += "." + self._smOnS1.__str__()
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def getSmOn(self):
+        return self._smOn
+
+    def getSmOnS1(self):
+        return self._smOnS1
+
+    def e1(self):
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm == X.Sm.on :
+            self.exitSm()
+            self.setSm(X.Sm.off)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e2(self):
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm == X.Sm.on :
+            self.exitSm()
+            self.setSm(X.Sm.on)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e3(self):
+        wasEventProcessed = False
+        aSmOn = self._smOn
+        if aSmOn == X.SmOn.s1 :
+            self.exitSmOn()
+            self.setSmOn(X.SmOn.s2)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e4(self):
+        wasEventProcessed = False
+        aSmOn = self._smOn
+        if aSmOn == X.SmOn.s1 :
+            self.exitSmOn()
+            self.setSmOn(X.SmOn.s1)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e5(self):
+        wasEventProcessed = False
+        aSmOn = self._smOn
+        if aSmOn == X.SmOn.s1 :
+            self.exitSm()
+            self.setSm(X.Sm.on)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e6(self):
+        wasEventProcessed = False
+        aSmOn = self._smOn
+        if aSmOn == X.SmOn.s1 :
+            self.exitSm()
+            self.setSm(X.Sm.off)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e7(self):
+        wasEventProcessed = False
+        aSmOnS1 = self._smOnS1
+        if aSmOnS1 == X.SmOnS1.m1 :
+            self.exitSmOnS1()
+            self.setSmOnS1(X.SmOnS1.m2)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e8(self):
+        wasEventProcessed = False
+        aSmOnS1 = self._smOnS1
+        if aSmOnS1 == X.SmOnS1.m1 :
+            self.exitSmOnS1()
+            self.setSmOnS1(X.SmOnS1.m1)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e9(self):
+        wasEventProcessed = False
+        aSmOnS1 = self._smOnS1
+        if aSmOnS1 == X.SmOnS1.m1 :
+            self.exitSmOn()
+            self.setSmOn(X.SmOn.s1)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e10(self):
+        wasEventProcessed = False
+        aSmOnS1 = self._smOnS1
+        if aSmOnS1 == X.SmOnS1.m1 :
+            self.exitSmOn()
+            self.setSmOn(X.SmOn.s2)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e11(self):
+        wasEventProcessed = False
+        aSmOnS1 = self._smOnS1
+        if aSmOnS1 == X.SmOnS1.m1 :
+            self.exitSm()
+            self.setSm(X.Sm.on)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e12(self):
+        wasEventProcessed = False
+        aSmOnS1 = self._smOnS1
+        if aSmOnS1 == X.SmOnS1.m1 :
+            self.exitSm()
+            self.setSm(X.Sm.off)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitSm(self):
+        if self._sm == X.Sm.on :
+            self.exitSmOn()
+            self.on_exit_action()
+
+    def setSm(self, aSm):
+        self._sm = aSm
+        if self._sm == X.Sm.on :
+            if self._smOn == X.SmOn.Null :
+                self.setSmOn(X.SmOn.s1)
+
+    def exitSmOn(self):
+        if self._smOn == X.SmOn.s1 :
+            self.exitSmOnS1()
+            self.s1_exit_action()
+            self.setSmOn(X.SmOn.Null)
+        elif self._smOn == X.SmOn.s2 :
+            self.setSmOn(X.SmOn.Null)
+
+    def setSmOn(self, aSmOn):
+        self._smOn = aSmOn
+        if self._sm != X.Sm.on and aSmOn != X.SmOn.Null :
+            self.setSm(X.Sm.on)
+        if self._smOn == X.SmOn.s1 :
+            if self._smOnS1 == X.SmOnS1.Null :
+                self.setSmOnS1(X.SmOnS1.m1)
+
+    def exitSmOnS1(self):
+        if self._smOnS1 == X.SmOnS1.m1 :
+            self.m1_exit_action()
+            self.setSmOnS1(X.SmOnS1.Null)
+        elif self._smOnS1 == X.SmOnS1.m2 :
+            self.setSmOnS1(X.SmOnS1.Null)
+
+    def setSmOnS1(self, aSmOnS1):
+        self._smOnS1 = aSmOnS1
+        if self._smOn != X.SmOn.s1 and aSmOnS1 != X.SmOnS1.Null :
+            self.setSmOn(X.SmOn.s1)
+
+    def delete(self):
+        pass
+
+    def on_exit_action(self):
+        print("exited on")
+
+    def s1_exit_action(self):
+        print("exited s1")
+
+    def m1_exit_action(self):
+        print("exited m1")
+

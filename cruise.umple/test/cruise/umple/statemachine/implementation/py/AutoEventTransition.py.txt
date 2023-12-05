@@ -1,0 +1,39 @@
+from enum import Enum, auto
+
+class Light():
+    class Bulb(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Off = auto()
+        On = auto()
+
+    def __init__(self):
+        self._bulb = None
+        self.setBulb(Light.Bulb.Off)
+
+    def getBulbFullName(self):
+        answer = self._bulb.__str__()
+        return answer
+
+    def getBulb(self):
+        return self._bulb
+
+    def __autotransition1__(self):
+        wasEventProcessed = False
+        aBulb = self._bulb
+        if aBulb == Light.Bulb.Off :
+            self.setBulb(Light.Bulb.On)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def setBulb(self, aBulb):
+        self._bulb = aBulb
+        if self._bulb == Light.Bulb.Off :
+            self.__autotransition1__()
+
+    def delete(self):
+        pass

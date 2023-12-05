@@ -1,0 +1,26 @@
+class OuterClass_2():
+    def __init__(self):
+        self._x = None
+
+    def delete(self):
+        pass
+
+    class InnerClass():
+        def __init__(self, aX):
+            self._x = None
+            self._x = aX
+
+        def setX(self, aX):
+            wasSet = False
+            self._x = aX
+            wasSet = True
+            return wasSet
+
+        def getX(self):
+            return self._x
+
+        def delete(self):
+            pass
+
+        def __str__(self):
+            return str(super().__str__()) + "[" + "x" + ":" + str(self.getX()) + "]"

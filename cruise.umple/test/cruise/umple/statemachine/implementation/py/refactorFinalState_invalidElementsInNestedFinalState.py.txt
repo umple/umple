@@ -1,0 +1,120 @@
+from enum import Enum, auto
+
+class X():
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        on = auto()
+        off = auto()
+        FINAL = auto()
+
+    class StatusFINAL(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        nestedSm = auto()
+
+    class StatusFINALNestedSm(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        nestedFinal = auto()
+
+    def __init__(self):
+        self._statusFINALNestedSm = None
+        self._statusFINAL = None
+        self._status = None
+        self.setStatusFINAL(X.StatusFINAL.Null)
+        self.setStatusFINALNestedSm(X.StatusFINALNestedSm.Null)
+        self.setStatus(X.Status.on)
+
+    def getStatusFullName(self):
+        answer = self._status.__str__()
+        if self._statusFINAL != X.StatusFINAL.Null :
+            answer += "." + self._statusFINAL.__str__()
+        if self._statusFINALNestedSm != X.StatusFINALNestedSm.Null :
+            answer += "." + self._statusFINALNestedSm.__str__()
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def getStatusFINAL(self):
+        return self._statusFINAL
+
+    def getStatusFINALNestedSm(self):
+        return self._statusFINALNestedSm
+
+    def turnoff(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == X.Status.on :
+            self.setStatus(X.Status.off)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def powerOff(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == X.Status.on :
+            self.setStatus(X.Status.FINAL)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def turnOn(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == X.Status.off :
+            self.setStatus(X.Status.on)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitStatus(self):
+        if self._status == X.Status.FINAL :
+            self.exitStatusFINAL()
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+        if self._status == X.Status.FINAL :
+            if self._statusFINAL == X.StatusFINAL.Null :
+                self.setStatusFINAL(X.StatusFINAL.nestedSm)
+
+    def exitStatusFINAL(self):
+        if self._statusFINAL == X.StatusFINAL.nestedSm :
+            self.exitStatusFINALNestedSm()
+            self.setStatusFINAL(X.StatusFINAL.Null)
+
+    def setStatusFINAL(self, aStatusFINAL):
+        self._statusFINAL = aStatusFINAL
+        if self._status != X.Status.FINAL and aStatusFINAL != X.StatusFINAL.Null :
+            self.setStatus(X.Status.FINAL)
+        if self._statusFINAL == X.StatusFINAL.nestedSm :
+            if self._statusFINALNestedSm == X.StatusFINALNestedSm.Null :
+                self.setStatusFINALNestedSm(X.StatusFINALNestedSm.nestedFinal)
+
+    def exitStatusFINALNestedSm(self):
+        if self._statusFINALNestedSm == X.StatusFINALNestedSm.nestedFinal :
+            self.setStatusFINALNestedSm(X.StatusFINALNestedSm.Null)
+
+    def setStatusFINALNestedSm(self, aStatusFINALNestedSm):
+        self._statusFINALNestedSm = aStatusFINALNestedSm
+        if self._statusFINAL != X.StatusFINAL.nestedSm and aStatusFINALNestedSm != X.StatusFINALNestedSm.Null :
+            self.setStatusFINAL(X.StatusFINAL.nestedSm)
+        if self._statusFINALNestedSm == X.StatusFINALNestedSm.nestedFinal :
+            entry()
+            self.delete()
+
+    def delete(self):
+        pass

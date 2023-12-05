@@ -1,0 +1,120 @@
+from enum import Enum, auto
+
+class X():
+    class Sm1(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        s1 = auto()
+        s2 = auto()
+
+    class Sm2(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        s1 = auto()
+        s2 = auto()
+
+    def __init__(self):
+        self._sm2_timeouts1Tos2Handler = None
+        self._sm1_timeouts1Tos2Handler = None
+        self._sm2 = None
+        self._sm1 = None
+        self.setSm1(X.Sm1.s1)
+        self.setSm2(X.Sm2.s1)
+
+    def getSm1FullName(self):
+        answer = self._sm1.__str__()
+        return answer
+
+    def getSm2FullName(self):
+        answer = self._sm2.__str__()
+        return answer
+
+    def getSm1(self):
+        return self._sm1
+
+    def getSm2(self):
+        return self._sm2
+
+    def timeouts1Tos2(self):
+        wasEventProcessed = False
+        aSm1 = self._sm1
+        aSm2 = self._sm2
+        if aSm1 == X.Sm1.s1 :
+            self.exitSm1()
+            self.setSm1(X.Sm1.s2)
+            wasEventProcessed = True
+        else :
+            pass
+        if aSm2 == X.Sm1.s1 :
+            self.exitSm2()
+            self.setSm2(X.Sm2.s2)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitSm1(self):
+        if self._sm1 == X.Sm1.s1 :
+            self.stopSm1_timeouts1Tos2Handler()
+
+    def setSm1(self, aSm1):
+        self._sm1 = aSm1
+        if self._sm1 == X.Sm1.s1 :
+            self.startSm1_timeouts1Tos2Handler()
+
+    def exitSm2(self):
+        if self._sm2 == X.Sm1.s1 :
+            self.stopSm2_timeouts1Tos2Handler()
+
+    def setSm2(self, aSm2):
+        self._sm2 = aSm2
+        if self._sm2 == X.Sm1.s1 :
+            self.startSm2_timeouts1Tos2Handler()
+
+    def startSm1_timeouts1Tos2Handler(self):
+        self._sm1_timeouts1Tos2Handler = self.TimedEventHandler(self, "sm1_timeouts1Tos2", 1)
+
+    def stopSm1_timeouts1Tos2Handler(self):
+        self._sm1_timeouts1Tos2Handler.stop()
+
+    def startSm2_timeouts1Tos2Handler(self):
+        self._sm2_timeouts1Tos2Handler = self.TimedEventHandler(self, "sm2_timeouts1Tos2", 1)
+
+    def stopSm2_timeouts1Tos2Handler(self):
+        self._sm2_timeouts1Tos2Handler.stop()
+
+    class TimedEventHandler():
+        def __init__(self, aController, aTimeoutMethodName, aHowLongInSeconds):
+            from threading import Timer
+            self._timer = None
+            self._howLongInSeconds = None
+            self._timeoutMethodName = None
+            self._controller = None
+            self._controller = aController
+            self._timeoutMethodName = aTimeoutMethodName
+            self._howLongInSeconds = aHowLongInSeconds
+            self._timer = None
+            self._timer = Timer(self._howLongInSeconds, self.run)
+            self._timer.start()
+
+        def stop(self):
+            self._timer.cancel()
+
+        def run(self):
+            if "sm1_timeouts1Tos2" == self._timeoutMethodName :
+                shouldRestart = not self._controller.timeouts1Tos2()
+                if shouldRestart :
+                    self._controller.startSm1_timeouts1Tos2Handler()
+                return
+            if "sm2_timeouts1Tos2" == self._timeoutMethodName :
+                shouldRestart = not self._controller.timeouts1Tos2()
+                if shouldRestart :
+                    self._controller.startSm2_timeouts1Tos2Handler()
+                return
+
+    def delete(self):
+        pass

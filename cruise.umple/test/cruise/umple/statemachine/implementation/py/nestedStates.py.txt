@@ -1,0 +1,91 @@
+from enum import Enum, auto
+
+class LightFixture():
+    class Bulb(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Off = auto()
+        On = auto()
+
+    class BulbOn(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        Normal = auto()
+        Dimmed = auto()
+
+    def __init__(self):
+        self._bulbOn = None
+        self._bulb = None
+        self.setBulbOn(LightFixture.BulbOn.Null)
+        self.setBulb(LightFixture.Bulb.Off)
+
+    def getBulbFullName(self):
+        answer = self._bulb.__str__()
+        if self._bulbOn != LightFixture.BulbOn.Null :
+            answer += "." + self._bulbOn.__str__()
+        return answer
+
+    def getBulb(self):
+        return self._bulb
+
+    def getBulbOn(self):
+        return self._bulbOn
+
+    def flip(self):
+        wasEventProcessed = False
+        aBulb = self._bulb
+        if aBulb == LightFixture.Bulb.Off :
+            self.setBulb(LightFixture.Bulb.On)
+            wasEventProcessed = True
+        elif aBulb == LightFixture.Bulb.On :
+            self.exitBulb()
+            self.setBulb(LightFixture.Bulb.Off)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def touch(self):
+        wasEventProcessed = False
+        aBulbOn = self._bulbOn
+        if aBulbOn == LightFixture.BulbOn.Normal :
+            self.exitBulbOn()
+            self.setBulbOn(LightFixture.BulbOn.Dimmed)
+            wasEventProcessed = True
+        elif aBulbOn == LightFixture.BulbOn.Dimmed :
+            self.exitBulb()
+            self.setBulb(LightFixture.Bulb.Off)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitBulb(self):
+        if self._bulb == LightFixture.Bulb.On :
+            self.exitBulbOn()
+
+    def setBulb(self, aBulb):
+        self._bulb = aBulb
+        if self._bulb == LightFixture.Bulb.On :
+            if self._bulbOn == LightFixture.BulbOn.Null :
+                self.setBulbOn(LightFixture.BulbOn.Normal)
+
+    def exitBulbOn(self):
+        if self._bulbOn == LightFixture.BulbOn.Normal :
+            self.setBulbOn(LightFixture.BulbOn.Null)
+        elif self._bulbOn == LightFixture.BulbOn.Dimmed :
+            self.setBulbOn(LightFixture.BulbOn.Null)
+
+    def setBulbOn(self, aBulbOn):
+        self._bulbOn = aBulbOn
+        if self._bulb != LightFixture.Bulb.On and aBulbOn != LightFixture.BulbOn.Null :
+            self.setBulb(LightFixture.Bulb.On)
+
+    def delete(self):
+        pass
+

@@ -1,0 +1,130 @@
+from enum import Enum, auto
+
+class X():
+    class Sm(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        on = auto()
+        off = auto()
+
+    class SmOn(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        m1 = auto()
+        m2 = auto()
+
+    class SmOnM1(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        t2 = auto()
+        t3 = auto()
+
+    def __init__(self):
+        self._smOnM1 = None
+        self._smOn = None
+        self._sm = None
+        self.setSmOn(X.SmOn.Null)
+        self.setSmOnM1(X.SmOnM1.Null)
+        self.setSm(X.Sm.on)
+
+    def getSmFullName(self):
+        answer = self._sm.__str__()
+        if self._smOn != X.SmOn.Null :
+            answer += "." + self._smOn.__str__()
+        if self._smOnM1 != X.SmOnM1.Null :
+            answer += "." + self._smOnM1.__str__()
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def getSmOn(self):
+        return self._smOn
+
+    def getSmOnM1(self):
+        return self._smOnM1
+
+    def e1(self):
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm == X.Sm.on :
+            self.exitSm()
+            self.setSm(X.Sm.off)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e2(self):
+        wasEventProcessed = False
+        aSmOn = self._smOn
+        if aSmOn == X.SmOn.m1 :
+            self.exitSmOn()
+            self.setSmOn(X.SmOn.m2)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e3(self):
+        wasEventProcessed = False
+        aSmOnM1 = self._smOnM1
+        if aSmOnM1 == X.SmOnM1.t2 :
+            self.exitSmOnM1()
+            self.setSmOnM1(X.SmOnM1.t3)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitSm(self):
+        if self._sm == X.Sm.on :
+            self.exitSmOn()
+            on_exit_action()
+        elif self._sm == X.Sm.off :
+            off_exit_action()
+
+    def setSm(self, aSm):
+        self._sm = aSm
+        if self._sm == X.Sm.on :
+            if self._smOn == X.SmOn.Null :
+                self.setSmOn(X.SmOn.m1)
+
+    def exitSmOn(self):
+        if self._smOn == X.SmOn.m1 :
+            self.exitSmOnM1()
+            m1_exit_action()
+            self.setSmOn(X.SmOn.Null)
+        elif self._smOn == X.SmOn.m2 :
+            self.setSmOn(X.SmOn.Null)
+
+    def setSmOn(self, aSmOn):
+        self._smOn = aSmOn
+        if self._sm != X.Sm.on and aSmOn != X.SmOn.Null :
+            self.setSm(X.Sm.on)
+        if self._smOn == X.SmOn.m1 :
+            if self._smOnM1 == X.SmOnM1.Null :
+                self.setSmOnM1(X.SmOnM1.t2)
+
+    def exitSmOnM1(self):
+        if self._smOnM1 == X.SmOnM1.t2 :
+            t2_exit_action()
+            self.setSmOnM1(X.SmOnM1.Null)
+        elif self._smOnM1 == X.SmOnM1.t3 :
+            self.setSmOnM1(X.SmOnM1.Null)
+
+    def setSmOnM1(self, aSmOnM1):
+        self._smOnM1 = aSmOnM1
+        if self._smOn != X.SmOn.m1 and aSmOnM1 != X.SmOnM1.Null :
+            self.setSmOn(X.SmOn.m1)
+
+    def delete(self):
+        pass
