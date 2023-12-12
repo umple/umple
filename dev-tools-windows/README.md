@@ -18,6 +18,9 @@ Java must be installed to run all of these. Some require graphviz, php, ruby, tx
 
 <h2>For developers:</h2>
 
+** **Run commands with commandName OR commandName.bat | Example: bumple OR bumple.bat** **
+
+
  bumple
   - does a full build of Umple (make sure you have done git pull first
   - you should run this before creating any pull request 
