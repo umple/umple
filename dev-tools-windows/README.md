@@ -1,8 +1,9 @@
-Welcome To Umple Development Using Windows!
+<h1>Welcome To Umple Development Using Windows!</h1>
 
 This directory contains files that you can run built-in umple commands to speed up your Umple Development.
 
-First-Time Setup:
+**💻First-Time Setup:💻**
+
 - With Windows Search Bar, search for "Edit the system environment variables"
   - <img src=https://github.com/umple/umple/assets/30543699/79dd6983-3870-4dc8-9928-71b622cff29a height="450" width="400">
   - Click on Environment Variables
@@ -15,7 +16,7 @@ First-Time Setup:
 
 Java must be installed to run all of these. Some require graphviz, php, ruby, txl and other dependencies as well
 
-For developers:
+<h2>For developers:</h2>
 
  bumple
   - does a full build of Umple (make sure you have done git pull first
