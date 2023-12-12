@@ -4,12 +4,14 @@ This directory contains files that you can run built-in umple commands to speed 
 
 First-Time Setup:
 - With Windows Search Bar, search for "Edit the system environment variables"
-  - <img src=https://github.com/umple/umple/assets/30543699/79dd6983-3870-4dc8-9928-71b622cff29a height="400" width="300">
+  - <img src=https://github.com/umple/umple/assets/30543699/79dd6983-3870-4dc8-9928-71b622cff29a height="450" width="400">
   - Click on Environment Variables
-  - <img src=https://github.com/umple/umple/assets/30543699/d998fc55-a26c-431e-bd7e-d2440ef65799 height="400" width="300">
+  - <img src=https://github.com/umple/umple/assets/30543699/d998fc55-a26c-431e-bd7e-d2440ef65799 >
 - Under System Variables, edit the variable with name "Path" and add the current Path.
   - Locate the Current Path Value by copying the path of this README.file
   - An Example Current Path would be C:/../../umple/dev-tools-windows
+  - <img src=https://github.com/umple/umple/assets/30543699/6f659ce4-de05-45dc-864e-d23c0ff43809 >
+
 
 Java must be installed to run all of these. Some require graphviz, php, ruby, txl and other dependencies as well
 
