@@ -1,0 +1,67 @@
+from enum import Enum, auto
+from threading import Thread
+import time
+
+class Switch():
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        On = auto()
+        Off = auto()
+
+    def __init__(self):
+        self._doActivityStatusOffThread = None
+        self._status = None
+        self.setStatus(Switch.Status.On)
+
+    def getStatusFullName(self):
+        answer = self._status.__str__()
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def press(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == Switch.Status.On :
+            self.setStatus(Switch.Status.Off)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitStatus(self):
+        if self._status == Switch.Status.Off :
+            if not (self._doActivityStatusOffThread is None) :
+                self._doActivityStatusOffThread.interrupt()
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+        if self._status == Switch.Status.Off :
+            self._doActivityStatusOffThread = Switch.DoActivityThread(self, "doActivityStatusOff")
+
+    def doActivityStatusOff(self):
+        try:
+            keepDoing()
+        except :
+            pass
+
+    class DoActivityThread(Thread):
+        def __init__(self, aController, aDoActivityMethodName):
+            self._doActivityMethodName = None
+            self._controller = None
+            self._controller = aController
+            self._doActivityMethodName = aDoActivityMethodName
+            super().__init__()
+            self.start()
+
+        def run(self):
+            if "doActivityStatusOff" == self._doActivityMethodName :
+                self._controller.doActivityStatusOff()
+
+    def delete(self):
+        pass
+

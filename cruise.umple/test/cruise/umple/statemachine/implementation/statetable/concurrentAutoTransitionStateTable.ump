@@ -20,7 +20,7 @@ class Student
       }
       No 
       { 
-        test -> Yes; 
+        power -> Yes; 
       }
     }
   }

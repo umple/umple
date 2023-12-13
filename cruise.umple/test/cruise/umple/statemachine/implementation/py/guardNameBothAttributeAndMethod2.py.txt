@@ -1,0 +1,61 @@
+from enum import Enum, auto
+
+class A():
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        s1 = auto()
+        s2 = auto()
+
+    def __init__(self):
+        self._status = None
+        self._repeatCheck = None
+        self._repeatCheck = False
+        self.setStatus(A.Status.s1)
+
+    def setRepeatCheck(self, aRepeatCheck):
+        wasSet = False
+        self._repeatCheck = aRepeatCheck
+        wasSet = True
+        return wasSet
+
+    def getRepeatCheck(self):
+        return self._repeatCheck
+
+    def isRepeatCheck(self):
+        return self._repeatCheck
+
+    def getStatusFullName(self):
+        answer = self._status.__str__()
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def __autotransition1__(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == A.Status.s1 :
+            if self.getRepeatCheck() < self.repeatCheck(z) :
+                self.setStatus(A.Status.s2)
+                wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+        if self._status == A.Status.s1 :
+            self.__autotransition1__()
+
+    def delete(self):
+        pass
+
+    def repeatCheck(self):
+        return True
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "repeatCheck" + ":" + str(self.getRepeatCheck()) + "]"
+

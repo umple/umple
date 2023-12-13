@@ -1,0 +1,74 @@
+class UmpleToJava {
+    state_machine_python_doActivityThread <<!<</*state_machine_python_doActivityThread*/>><<#   
+  StringBuilder output = new StringBuilder();
+
+  isFirst = true;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    List<StateMachine> allNested = sm.getNestedStateMachines();
+    
+    for (StateMachine nestedSm : allNested)
+    {
+      for (State state : nestedSm.getStates())
+      {
+        for (Activity activity : state.getActivities())
+        {
+          if (isFirst)
+          {
+            output.append(StringFormatter.format("if"));
+            isFirst = false;
+          }
+          else
+          {
+            output.append(StringFormatter.format("\n        else if"));
+          }
+          output.append(StringFormatter.format(" (\"{0}\".equals(doActivityMethodName))\n",gen.translate("doActivityMethod",activity)));
+          output.append(StringFormatter.format("      {\n"));
+          output.append(StringFormatter.format("        controller.{0}();\n",gen.translate("doActivityMethod",activity)));
+          output.append(StringFormatter.format("      }"));
+        }
+      }
+    }
+    
+    for (State state : sm.getStates())
+    {
+      for (Activity activity : state.getActivities())
+      {
+        if (isFirst)
+        {
+          output.append(StringFormatter.format("if"));
+          isFirst = false;
+        }
+        else
+        {
+          output.append(StringFormatter.format("\n        else if"));
+        }
+        output.append(StringFormatter.format(" (\"{0}\".equals(doActivityMethodName))\n",gen.translate("doActivityMethod",activity)));
+        output.append(StringFormatter.format("      {\n"));
+        output.append(StringFormatter.format("        controller.{0}();\n",gen.translate("doActivityMethod",activity)));
+        output.append(StringFormatter.format("      }"));
+      }
+    }
+  }
+#>>
+  private static class DoActivityThread extends Thread
+  {
+    <<=gen.translate("type",uClass)>> controller;
+    String doActivityMethodName;
+    
+    public DoActivityThread(<<=gen.translate("type",uClass)>> aController,String aDoActivityMethodName)
+    {
+      controller = aController;
+      doActivityMethodName = aDoActivityMethodName;
+      // The equivalent of "start();" for starting a python thread
+      super().__init__();
+      self.start();
+    }
+    
+    public void run()
+    {
+      <<= output >>
+    }
+  }
+!>>
+}
