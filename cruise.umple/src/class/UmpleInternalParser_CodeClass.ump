@@ -223,37 +223,27 @@ class UmpleInternalParser
 
   private void analyzeImplementReq(Token t){
     int counter=0;
+    String badReq="";
 
     if (t.hasSubTokens()){
       for (Token sub : t.getSubTokens()){
         if (!sub.getValue().equals("STATIC") && model.getAllRequirements().containsKey(sub.getValue())){
             lastRequirements.add(model.getAllRequirements().get(sub.getValue()));
         }
-        else if (!sub.getValue().equals("STATIC")) counter++;
+        else if (!sub.getValue().equals("STATIC")) {
+          counter++;
+          badReq+=" "+sub.getValue();
+        }
       }
     }
 
     if (counter != 0){
-      System.out.println("ERROR: Cannot find specified requirement identifier");
+      setFailedPosition(t.getPosition(), 401, badReq);
     }
   }
 
-  private void analyzeImplementReq(Token t, UmpleClass aClass){
-    int counter=0;
-
-    if (t.hasSubTokens()){
-      for (Token sub : t.getSubTokens()){
-        if (!sub.getValue().equals("STATIC") && aClass.getSourceModel().getAllRequirements().containsKey(sub.getValue())){
-            lastRequirements.add(model.getAllRequirements().get(sub.getValue()));
-        }
-        else if (!sub.getValue().equals("STATIC")) counter++;
-      }
-    }
-
-    if (counter != 0){
-      analyzeAttribute(t, aClass);
-    }
-
+  private void analyzeImplementReq(Token t, UmpleClass aClass) {
+    analyzeImplementReq(t);
   }
   
   /*
