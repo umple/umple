@@ -1,0 +1,23 @@
+class student():
+    def __init__(self, aAge):
+        self._age = None
+        self._age = aAge
+        if aAge <= 18 :
+            raise RuntimeError ("Please provide a valid age [age>18]")
+
+    def setAge(self, aAge):
+        wasSet = False
+        if aAge > 18 :
+            self._age = aAge
+            wasSet = True
+        return wasSet
+
+    def getAge(self):
+        return self._age
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "age" + ":" + str(self.getAge()) + "]"
+

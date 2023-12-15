@@ -2,6 +2,7 @@
 // native logging API
 tracer JavaAPI;
 
+@SuppressWarnings("deprecation")
 class Student
 {
   Integer id;

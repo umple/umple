@@ -1,0 +1,100 @@
+import os
+import pickle
+
+class Mentor():
+    def __init__(self, aName, aStudentsPriority):
+        self._students = None
+        self._studentsPriority = None
+        self._name = None
+        self._name = aName
+        self._studentsPriority = aStudentsPriority
+        self._students = []
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def setStudentsPriority(self, aStudentsPriority):
+        wasSet = False
+        self._studentsPriority = aStudentsPriority
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getStudentsPriority(self):
+        return self._studentsPriority
+
+    def getStudent(self, index):
+        aStudent = self._students[index]
+        return aStudent
+
+    def getStudents(self):
+        newStudents = tuple(self._students)
+        return newStudents
+
+    def numberOfStudents(self):
+        number = len(self._students)
+        return number
+
+    def hasStudents(self):
+        has = len(self._students) > 0
+        return has
+
+    def indexOfStudent(self, aStudent):
+        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
+        return index
+
+    @staticmethod
+    def minimumNumberOfStudents():
+        return 0
+
+    def addStudent(self, aStudent):
+        wasAdded = False
+        if (aStudent) in self._students :
+            return False
+        self._students.append(aStudent)
+        if aStudent.indexOfMentor(self) != -1 :
+            wasAdded = True
+        else :
+            wasAdded = aStudent.addMentor(self)
+            if not wasAdded :
+                self._students.remove(aStudent)
+        return wasAdded
+
+    def removeStudent(self, aStudent):
+        wasRemoved = False
+        if not (aStudent) in self._students :
+            return wasRemoved
+        oldIndex = (-1 if not aStudent in self._students else self._students.index(aStudent))
+        self._students.remove(oldIndex)
+        if aStudent.indexOfMentor(self) == -1 :
+            wasRemoved = True
+        else :
+            wasRemoved = aStudent.removeMentor(self)
+            if not wasRemoved :
+                self._students.insert(oldIndex, aStudent)
+        return wasRemoved
+
+    def readObject(self, input):
+        self.__dict__.clear()
+        self.__dict__.update(pickle.load(input).__dict__)
+        self._studentsPriority = None
+
+    def delete(self):
+        copyOfStudents = self._students.copy()
+        self._students.clear()
+        for aStudent in copyOfStudents:
+            aStudent.removeMentor(self)
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]" + str(os.linesep) + "  " + "studentsPriority" + "=" + (((self.getStudentsPriority().__str__().replaceAll("  ", "    ")) if not self.getStudentsPriority() == self else "this") if not (self.getStudentsPriority() is None) else "null")
+
+    def __getstate__(self):
+        state = dict(self.__dict__)
+        state.pop("_studentsPriority")
+        return state
+

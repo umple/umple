@@ -1,0 +1,61 @@
+from enum import Enum, auto
+
+class A_Guard():
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        S1 = auto()
+        S2 = auto()
+        S3 = auto()
+
+    def __init__(self):
+        self._status = None
+        self.setStatus(A_Guard.Status.S1)
+
+    def getStatusFullName(self):
+        answer = self._status.__str__()
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def e1(self, myB):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == A_Guard.Status.S1 :
+            if self.checkGuard1(myB) :
+                self.setStatus(A_Guard.Status.S2)
+                wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e2(self, myB, mySecondB):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == A_Guard.Status.S2 :
+            if self.checkGuard1(myB) :
+                self.setStatus(A_Guard.Status.S3)
+                wasEventProcessed = True
+        elif aStatus == A_Guard.Status.S3 :
+            if self.checkGuard2(myB, mySecondB) :
+                self.setStatus(A_Guard.Status.S1)
+                wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+
+    def delete(self):
+        pass
+
+    def checkGuard1(self, myB):
+        return True
+
+    def checkGuard2(self, myB, mySecondB):
+        return True
+

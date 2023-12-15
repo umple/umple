@@ -1,0 +1,102 @@
+from X import X
+
+class Analyzer():
+    def __init__(self):
+        self._offspring = []
+
+    def getOffspring(self, index):
+        aOffspring = self._offspring[index]
+        return aOffspring
+
+    def getOffspring(self):
+        newOffspring = tuple(self._offspring)
+        return newOffspring
+
+    def numberOfOffspring(self):
+        number = len(self._offspring)
+        return number
+
+    def hasOffspring(self):
+        has = len(self._offspring) > 0
+        return has
+
+    def indexOfOffspring(self, aOffspring):
+        index = self._offspring.index(aOffspring)
+        return index
+
+    @staticmethod
+    def minimumNumberOfOffspring():
+        return 0
+
+    def addOffspring(self, aOffspring):
+        wasAdded = False
+        if aOffspring in self._offspring :
+            return False
+
+        self._offspring.append(aOffspring)
+        if aOffspring.indexOfParent(self) != -1 :
+            wasAdded = True
+
+        else :
+            wasAdded = aOffspring.addParent(self)
+            if not wasAdded :
+                self._offspring.remove(aOffspring)
+
+        return wasAdded
+
+    def removeOffspring(self, aOffspring):
+        wasRemoved = False
+        if not self._offspring.contains(aOffspring) :
+            return wasRemoved
+
+        oldIndex = self._offspring.index(aOffspring)
+        self._offspring.remove(oldIndex)
+        if aOffspring.indexOfParent(self) == -1 :
+            wasRemoved = True
+
+        else :
+            wasRemoved = aOffspring.removeParent(self)
+            if not wasRemoved :
+                self._offspring.insert(oldIndex, aOffspring)
+
+        return wasRemoved
+
+    def addOffspringAt(self, aOffspring, index):
+        wasAdded = False
+        if self.addOffspring(aOffspring) :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfOffspring() :
+                index = self.numberOfOffspring() - 1
+
+            self._offspring.remove(aOffspring)
+            self._offspring.insert(index, aOffspring)
+            wasAdded = True
+
+        return wasAdded
+
+    def addOrMoveOffspringAt(self, aOffspring, index):
+        wasAdded = False
+        if aOffspring in self._offspring :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfOffspring() :
+                index = self.numberOfOffspring() - 1
+
+            self._offspring.remove(aOffspring)
+            self._offspring.insert(index, aOffspring)
+            wasAdded = True
+
+        else :
+            wasAdded = self.addOffspringAt(aOffspring, index)
+
+        return wasAdded
+
+    def delete(self):
+        copyOfOffspring = self._offspring.copy()
+        self._offspring.clear()
+        for aOffspring in copyOfOffspring:
+            aOffspring.removeParent(self)
+

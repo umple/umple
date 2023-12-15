@@ -35,3 +35,4 @@ class RealNumber
 
 //$?[End_of_model]$?
 // @@@skipphpcompile
+// @@@skippythoncompile - Contains Java Code

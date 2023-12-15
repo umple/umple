@@ -1,0 +1,122 @@
+class Mentor():
+    def __init__(self, aName, *allStudents):
+        allStudents = list(allStudents)
+        self._students = None
+        self._name = None
+        self._name = aName
+        self._students = []
+        didAddStudents = self.setStudents(*allStudents)
+        if not didAddStudents :
+            raise RuntimeError ("Unable to create Mentor, must have 2 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getStudent(self, index):
+        aStudent = self._students[index]
+        return aStudent
+
+    def getStudents(self):
+        newStudents = tuple(self._students)
+        return newStudents
+
+    def numberOfStudents(self):
+        number = len(self._students)
+        return number
+
+    def hasStudents(self):
+        has = len(self._students) > 0
+        return has
+
+    def indexOfStudent(self, aStudent):
+        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
+        return index
+
+    def isNumberOfStudentsValid(self):
+        isValid = self.numberOfStudents() >= Mentor.minimumNumberOfStudents() and self.numberOfStudents() <= Mentor.maximumNumberOfStudents()
+        return isValid
+
+    @staticmethod
+    def requiredNumberOfStudents():
+        return 2
+
+    @staticmethod
+    def minimumNumberOfStudents():
+        return 2
+
+    @staticmethod
+    def maximumNumberOfStudents():
+        return 2
+
+    def addStudent(self, aStudent):
+        wasAdded = False
+        if (aStudent) in self._students :
+            return False
+        if self.numberOfStudents() >= Mentor.maximumNumberOfStudents() :
+            return wasAdded
+        self._students.append(aStudent)
+        if aStudent.indexOfMentor(self) != -1 :
+            wasAdded = True
+        else :
+            wasAdded = aStudent.addMentor(self)
+            if not wasAdded :
+                self._students.remove(aStudent)
+        return wasAdded
+
+    def removeStudent(self, aStudent):
+        wasRemoved = False
+        if not (aStudent) in self._students :
+            return wasRemoved
+        if self.numberOfStudents() <= Mentor.minimumNumberOfStudents() :
+            return wasRemoved
+        oldIndex = (-1 if not aStudent in self._students else self._students.index(aStudent))
+        self._students.remove(oldIndex)
+        if aStudent.indexOfMentor(self) == -1 :
+            wasRemoved = True
+        else :
+            wasRemoved = aStudent.removeMentor(self)
+            if not wasRemoved :
+                self._students.insert(oldIndex, aStudent)
+        return wasRemoved
+
+    def setStudents(self, *newStudents):
+        newStudents = list(newStudents)
+        wasSet = False
+        verifiedStudents = []
+        for aStudent in newStudents:
+            if (aStudent) in verifiedStudents :
+                continue
+            verifiedStudents.append(aStudent)
+
+        if len(verifiedStudents) != len(newStudents) or len(verifiedStudents) < Mentor.minimumNumberOfStudents() or len(verifiedStudents) > Mentor.maximumNumberOfStudents() :
+            return wasSet
+        oldStudents = self._students.copy()
+        self._students.clear()
+        for aNewStudent in verifiedStudents:
+            self._students.append(aNewStudent)
+            if (aNewStudent) in oldStudents :
+                oldStudents.remove(aNewStudent)
+            else :
+                aNewStudent.addMentor(self)
+
+        for anOldStudent in oldStudents:
+            anOldStudent.removeMentor(self)
+
+        wasSet = True
+        return wasSet
+
+    def delete(self):
+        copyOfStudents = self._students.copy()
+        self._students.clear()
+        for aStudent in copyOfStudents:
+            aStudent.removeMentor(self)
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
+

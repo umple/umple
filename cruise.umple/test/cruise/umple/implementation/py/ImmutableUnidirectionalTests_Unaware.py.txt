@@ -1,0 +1,14 @@
+class Mentor():
+    def __init__(self, aName):
+        self._name = None
+        self._name = aName
+
+    def getName(self):
+        return self._name
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
+

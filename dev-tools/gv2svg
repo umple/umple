@@ -1,0 +1,7 @@
+#!/bin/csh -fb
+echo Converting  $1.gv to $1.svg
+dot -Tsvg $1.gv -o $1.svg
+if ($2 == '-v') then
+  echo opening $1.svg in default application
+  open $1.svg
+endif

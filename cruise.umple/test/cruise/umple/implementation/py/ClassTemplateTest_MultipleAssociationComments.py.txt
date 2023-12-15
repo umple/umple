@@ -1,0 +1,364 @@
+class Foo():
+    def __init__(self):
+        self._bar4s = None
+        self._bar3s = None
+        self._bar2s = None
+        self._bar1s = None
+        self._bar1s = []
+        self._bar2s = []
+        self._bar3s = []
+        self._bar4s = []
+
+    def getBar1(self, index):
+        aBar1 = self._bar1s[index]
+        return aBar1
+
+    def getBar1s(self):
+        newBar1s = tuple(self._bar1s)
+        return newBar1s
+
+    def numberOfBar1s(self):
+        number = len(self._bar1s)
+        return number
+
+    def hasBar1s(self):
+        has = len(self._bar1s) > 0
+        return has
+
+    def indexOfBar1(self, aBar1):
+        index = (-1 if not aBar1 in self._bar1s else self._bar1s.index(aBar1))
+        return index
+
+    def getBar2(self, index):
+        aBar2 = self._bar2s[index]
+        return aBar2
+
+    def getBar2s(self):
+        newBar2s = tuple(self._bar2s)
+        return newBar2s
+
+    def numberOfBar2s(self):
+        number = len(self._bar2s)
+        return number
+
+    def hasBar2s(self):
+        has = len(self._bar2s) > 0
+        return has
+
+    def indexOfBar2(self, aBar2):
+        index = (-1 if not aBar2 in self._bar2s else self._bar2s.index(aBar2))
+        return index
+
+    def getBar3(self, index):
+        aBar3 = self._bar3s[index]
+        return aBar3
+
+    def getBar3s(self):
+        newBar3s = tuple(self._bar3s)
+        return newBar3s
+
+    def numberOfBar3s(self):
+        number = len(self._bar3s)
+        return number
+
+    def hasBar3s(self):
+        has = len(self._bar3s) > 0
+        return has
+
+    def indexOfBar3(self, aBar3):
+        index = (-1 if not aBar3 in self._bar3s else self._bar3s.index(aBar3))
+        return index
+
+    def getBar4(self, index):
+        aBar4 = self._bar4s[index]
+        return aBar4
+
+    def getBar4s(self):
+        newBar4s = tuple(self._bar4s)
+        return newBar4s
+
+    def numberOfBar4s(self):
+        number = len(self._bar4s)
+        return number
+
+    def hasBar4s(self):
+        has = len(self._bar4s) > 0
+        return has
+
+    def indexOfBar4(self, aBar4):
+        index = (-1 if not aBar4 in self._bar4s else self._bar4s.index(aBar4))
+        return index
+
+    @staticmethod
+    def minimumNumberOfBar1s():
+        return 0
+
+    def addBar5(self):
+        from Bar1 import Bar1
+        return Bar1(self)
+
+    def addBar6(self, aBar1):
+        wasAdded = False
+        if (aBar1) in self._bar1s :
+            return False
+        existingFoo = aBar1.getFoo()
+        isNewFoo = not (existingFoo is None) and not self == existingFoo
+        if isNewFoo :
+            aBar1.setFoo(self)
+        else :
+            self._bar1s.append(aBar1)
+        wasAdded = True
+        return wasAdded
+
+    def removeBar1(self, aBar1):
+        wasRemoved = False
+        if not self == aBar1.getFoo() :
+            self._bar1s.remove(aBar1)
+            wasRemoved = True
+        return wasRemoved
+
+    def addBar1At(self, aBar1, index):
+        wasAdded = False
+        if self.addBar1(aBar1) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfBar1s() :
+                index = self.numberOfBar1s() - 1
+            self._bar1s.remove(aBar1)
+            self._bar1s.insert(index, aBar1)
+            wasAdded = True
+        return wasAdded
+
+    def addOrMoveBar1At(self, aBar1, index):
+        wasAdded = False
+        if (aBar1) in self._bar1s :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfBar1s() :
+                index = self.numberOfBar1s() - 1
+            self._bar1s.remove(aBar1)
+            self._bar1s.insert(index, aBar1)
+            wasAdded = True
+        else :
+            wasAdded = self.addBar1At(aBar1, index)
+        return wasAdded
+
+    @staticmethod
+    def minimumNumberOfBar2s():
+        return 0
+
+    def addBar7(self):
+        from Bar2 import Bar2
+        return Bar2(self)
+
+    def addBar8(self, aBar2):
+        wasAdded = False
+        if (aBar2) in self._bar2s :
+            return False
+        existingFoo = aBar2.getFoo()
+        isNewFoo = not (existingFoo is None) and not self == existingFoo
+        if isNewFoo :
+            aBar2.setFoo(self)
+        else :
+            self._bar2s.append(aBar2)
+        wasAdded = True
+        return wasAdded
+
+    def removeBar2(self, aBar2):
+        wasRemoved = False
+        if not self == aBar2.getFoo() :
+            self._bar2s.remove(aBar2)
+            wasRemoved = True
+        return wasRemoved
+
+    def addBar2At(self, aBar2, index):
+        wasAdded = False
+        if self.addBar2(aBar2) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfBar2s() :
+                index = self.numberOfBar2s() - 1
+            self._bar2s.remove(aBar2)
+            self._bar2s.insert(index, aBar2)
+            wasAdded = True
+        return wasAdded
+
+    def addOrMoveBar2At(self, aBar2, index):
+        wasAdded = False
+        if (aBar2) in self._bar2s :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfBar2s() :
+                index = self.numberOfBar2s() - 1
+            self._bar2s.remove(aBar2)
+            self._bar2s.insert(index, aBar2)
+            wasAdded = True
+        else :
+            wasAdded = self.addBar2At(aBar2, index)
+        return wasAdded
+
+    @staticmethod
+    def minimumNumberOfBar3s():
+        return 0
+
+    def addBar9(self):
+        from Bar3 import Bar3
+        return Bar3(self)
+
+    def addBar10(self, aBar3):
+        wasAdded = False
+        if (aBar3) in self._bar3s :
+            return False
+        existingFoo = aBar3.getFoo()
+        isNewFoo = not (existingFoo is None) and not self == existingFoo
+        if isNewFoo :
+            aBar3.setFoo(self)
+        else :
+            self._bar3s.append(aBar3)
+        wasAdded = True
+        return wasAdded
+
+    def removeBar3(self, aBar3):
+        wasRemoved = False
+        if not self == aBar3.getFoo() :
+            self._bar3s.remove(aBar3)
+            wasRemoved = True
+        return wasRemoved
+
+    def addBar3At(self, aBar3, index):
+        wasAdded = False
+        if self.addBar3(aBar3) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfBar3s() :
+                index = self.numberOfBar3s() - 1
+            self._bar3s.remove(aBar3)
+            self._bar3s.insert(index, aBar3)
+            wasAdded = True
+        return wasAdded
+
+    def addOrMoveBar3At(self, aBar3, index):
+        wasAdded = False
+        if (aBar3) in self._bar3s :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfBar3s() :
+                index = self.numberOfBar3s() - 1
+            self._bar3s.remove(aBar3)
+            self._bar3s.insert(index, aBar3)
+            wasAdded = True
+        else :
+            wasAdded = self.addBar3At(aBar3, index)
+        return wasAdded
+
+    @staticmethod
+    def minimumNumberOfBar4s():
+        return 0
+
+    def addBar11(self):
+        from Bar4 import Bar4
+        return Bar4(self)
+
+    def addBar12(self, aBar4):
+        wasAdded = False
+        if (aBar4) in self._bar4s :
+            return False
+        existingFoo = aBar4.getFoo()
+        isNewFoo = not (existingFoo is None) and not self == existingFoo
+        if isNewFoo :
+            aBar4.setFoo(self)
+        else :
+            self._bar4s.append(aBar4)
+        wasAdded = True
+        return wasAdded
+
+    def removeBar4(self, aBar4):
+        wasRemoved = False
+        if not self == aBar4.getFoo() :
+            self._bar4s.remove(aBar4)
+            wasRemoved = True
+        return wasRemoved
+
+    def addBar4At(self, aBar4, index):
+        wasAdded = False
+        if self.addBar4(aBar4) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfBar4s() :
+                index = self.numberOfBar4s() - 1
+            self._bar4s.remove(aBar4)
+            self._bar4s.insert(index, aBar4)
+            wasAdded = True
+        return wasAdded
+
+    def addOrMoveBar4At(self, aBar4, index):
+        wasAdded = False
+        if (aBar4) in self._bar4s :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfBar4s() :
+                index = self.numberOfBar4s() - 1
+            self._bar4s.remove(aBar4)
+            self._bar4s.insert(index, aBar4)
+            wasAdded = True
+        else :
+            wasAdded = self.addBar4At(aBar4, index)
+        return wasAdded
+
+    def delete(self):
+        i = len(self._bar1s)
+        while i > 0 :
+            aBar1 = self._bar1s[i - 1]
+            aBar1.delete()
+            i -= 1
+
+        i = len(self._bar2s)
+        while i > 0 :
+            aBar2 = self._bar2s[i - 1]
+            aBar2.delete()
+            i -= 1
+
+        i = len(self._bar3s)
+        while i > 0 :
+            aBar3 = self._bar3s[i - 1]
+            aBar3.delete()
+            i -= 1
+
+        i = len(self._bar4s)
+        while i > 0 :
+            aBar4 = self._bar4s[i - 1]
+            aBar4.delete()
+            i -= 1
+
+    def addBar1(self, *argv):
+        from Bar1 import Bar1
+        if len(argv) == 0 :
+            return self.addBar5()
+        if len(argv) == 1 and isinstance(argv[0], Bar1) :
+            return self.addBar6(argv[0])
+        raise TypeError("No method matches provided parameters")
+
+    def addBar2(self, *argv):
+        from Bar2 import Bar2
+        if len(argv) == 0 :
+            return self.addBar7()
+        if len(argv) == 1 and isinstance(argv[0], Bar2) :
+            return self.addBar8(argv[0])
+        raise TypeError("No method matches provided parameters")
+
+    def addBar3(self, *argv):
+        from Bar3 import Bar3
+        if len(argv) == 0 :
+            return self.addBar9()
+        if len(argv) == 1 and isinstance(argv[0], Bar3) :
+            return self.addBar10(argv[0])
+        raise TypeError("No method matches provided parameters")
+
+    def addBar4(self, *argv):
+        from Bar4 import Bar4
+        if len(argv) == 0 :
+            return self.addBar11()
+        if len(argv) == 1 and isinstance(argv[0], Bar4) :
+            return self.addBar12(argv[0])
+        raise TypeError("No method matches provided parameters")
+

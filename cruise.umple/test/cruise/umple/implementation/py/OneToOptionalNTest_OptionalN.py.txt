@@ -1,0 +1,50 @@
+import os
+
+class Student():
+    def __init__(self, aNumber, aMentor):
+        self._mentor = None
+        self._number = None
+        self._number = aNumber
+        didAddMentor = self.setMentor(aMentor)
+        if not didAddMentor :
+            raise RuntimeError ("Unable to create student due to mentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    def setNumber(self, aNumber):
+        wasSet = False
+        self._number = aNumber
+        wasSet = True
+        return wasSet
+
+    def getNumber(self):
+        return self._number
+
+    def getMentor(self):
+        return self._mentor
+
+    def setMentor(self, aMentor):
+        from Mentor import Mentor
+        wasSet = False
+        if aMentor is None :
+            return wasSet
+        if aMentor.numberOfStudents() >= Mentor.maximumNumberOfStudents() :
+            return wasSet
+        existingMentor = self._mentor
+        self._mentor = aMentor
+        if not (existingMentor is None) and not existingMentor == aMentor :
+            didRemove = existingMentor.removeStudent(self)
+            if not didRemove :
+                self._mentor = existingMentor
+                return wasSet
+        self._mentor.addStudent(self)
+        wasSet = True
+        return wasSet
+
+    def delete(self):
+        placeholderMentor = self._mentor
+        self._mentor = None
+        if not (placeholderMentor is None) :
+            placeholderMentor.removeStudent(self)
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "mentor = " + ((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null")
+

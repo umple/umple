@@ -1,0 +1,31 @@
+class Object():
+    def __init__(self):
+        pass
+
+    def delete(self):
+        pass
+
+    def example_obj(self, g):
+        #implementation
+
+    def example_bool(self, b):
+        
+
+    def example_int(self, i):
+        
+
+    def example_float(self, f):
+        
+
+    def example_double(self, d):
+        
+
+    def example_string(self, s):
+        
+
+    def example_obj_array(self, gs):
+        
+
+    def example_primitive_array(self, is):
+        
+

@@ -1,0 +1,43 @@
+class UmpleToJava {
+    python_uncaught_exception <<!<</*python_uncaught_exception*/>><<#
+java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0|1|2|3|4|5|6|7|8|9]*) \"(.*)\"");
+private void addUncaughtExceptionVariables(int javaline, String code, String methodname)
+{
+
+  String[] lines = code.split("\\n");
+  java.util.regex.Matcher matcher = lineNumberPattern.matcher(lines[0]);
+  if(matcher.matches())
+  {
+    if(!uncaughtExceptions.containsKey(methodname))
+    {
+      uncaughtExceptions.put(methodname,new UncaughtException(globalUmpleClass.getName(), methodname));
+    }
+    int fileIndex = matcher.group(2).lastIndexOf('/') + 1;
+    uncaughtExceptions.get(methodname).addUncaughtFileName(matcher.group(2).substring(fileIndex));
+    uncaughtExceptions.get(methodname).addUncaughtUmpleLine(Integer.parseInt(matcher.group(1)));
+    uncaughtExceptions.get(methodname).addUncaughtJavaLine(javaline+1);
+    // Subtract two to compensate for the comments at the top and bottom of each inject statement 
+    uncaughtExceptions.get(methodname).addUncaughtLength(lines.length-2);
+  }  
+}
+private void addUncaughtExceptionVariables(String methodname, String filename, int umpleline, int javaline, int length)
+{
+  if(!uncaughtExceptions.containsKey(methodname))
+  {
+    uncaughtExceptions.put(methodname,new UncaughtException(globalUmpleClass.getName(), methodname));
+  }
+  
+  uncaughtExceptions.get(methodname).addUncaughtFileName(filename);
+  uncaughtExceptions.get(methodname).addUncaughtUmpleLine(umpleline-1);
+  uncaughtExceptions.get(methodname).addUncaughtJavaLine(javaline+1);
+  uncaughtExceptions.get(methodname).addUncaughtLength(length);
+}
+public String getExceptionHandler(String exceptions, UmpleClass uClass, UmpleModel model) { 
+  StringBuilder realSb = new StringBuilder();
+   if(model.getMainClass() != null && model.getMainClass().getName() == uClass.getName()){#>>
+}
+<<#
+  }
+  return realSb.toString();
+#>>!>>
+}

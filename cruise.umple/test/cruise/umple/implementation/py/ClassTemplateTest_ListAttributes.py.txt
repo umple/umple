@@ -1,0 +1,41 @@
+class Token():
+    def __init__(self):
+        self._positions = None
+        self._positions = []
+
+    def addPosition(self, aPosition):
+        wasAdded = False
+        wasAdded = self._positions.append(aPosition)
+        return wasAdded
+
+    def removePosition(self, aPosition):
+        wasRemoved = False
+        wasRemoved = self._positions.remove(aPosition)
+        return wasRemoved
+
+    def getPosition(self, index):
+        aPosition = self._positions[index]
+        return aPosition
+
+    def getPositions(self):
+        newPositions = self._positions.copy()
+        return newPositions
+
+    def numberOfPositions(self):
+        number = len(self._positions)
+        return number
+
+    def hasPositions(self):
+        has = len(self._positions) > 0
+        return has
+
+    def indexOfPosition(self, aPosition):
+        index = (-1 if not aPosition in self._positions else self._positions.index(aPosition))
+        return index
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "]"
+

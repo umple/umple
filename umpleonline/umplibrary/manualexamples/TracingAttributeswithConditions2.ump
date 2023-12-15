@@ -2,6 +2,7 @@
 // this example injects trace code in attribute
 // setter with specified postcondition
 
+@SuppressWarnings("deprecation")
 class Student
 {
   name;

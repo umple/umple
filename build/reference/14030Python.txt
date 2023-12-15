@@ -1,0 +1,83 @@
+Python
+Generators
+noreferences
+@@description
+<p>
+The Python generator in Umple takes the Java code as an input and converts it to Python using the TXL transformation technology. This works in UmpleOnline, although currently Python code cannot be executed in UmpleOnline.</p>
+
+<p>The Python generator also works on the command line, but if you are generating Python on the command line you need to install <a target="txl" href="https://www.txl.ca">version 10.8b of FreeTXL</a> first.</p>
+
+<p>Since Python generation is in Beta, it does not currently fully support every Umple feature that Java does. 
+</p>
+
+<br>
+
+<p>
+Currently supported features (fully tested in every Umple build):
+<ul>
+    <li><a href="ClassDefinition.html">Classes</a></li>
+
+    <li><a href="interfaceDefinition.html">Interfaces</a></li>
+
+    <li>Abstract classes</a></li>
+
+    <li><a href="isAclause.html">Inheritance</a></li>
+
+    <li><a href="AssociationDefinition.html">Associations</a></li>
+
+    <li><a href="AttributeDefinition.html">Attributes</a></li>
+
+    <li><a href="EnumerationDefinition.html">Enumerations</a></li>
+
+    <li>Main functions and other embedded Python code. See the last two <a href="HelloWorldExamples.html">Hello World examples</a> for some tips on the use of main methods. Specify <code>public static void main(String [ ] args) {  </code> followed on subsequent lines by Python code, followed by a <code>}</code></li>
+
+    <li>Features that generate Umple internally first, before then generating Python, such as <a href="BasicMixsets.html">mixsets</a> and <a href="Traits.html">traits</a>.</li>
+
+    <li>Following Concurrency Features:
+        <ul>
+            <li>Active Block and Do Activities</li>
+            <li>After Keyword</li>
+        </ul>
+    </li>
+
+    <li>Any Umple code that create the following Java:
+        <ul>
+            <li>extends Thread</li>
+            <li>threading</li>
+            <li>nested classes</li>
+            <li>TimerTask</li>
+        </ul>
+    </li>
+</ul>
+</p>
+
+<br><br>
+
+<p>
+Currently Partially supported features:
+<ul>
+    <li>Aspect oriented code Injection.</li>
+    <li>State machines (see limitations below)</li>
+</ul>
+</p>
+
+<br><br>
+
+<p>
+Currently unsupported features:
+<ul>
+    <li>Tracing</li>
+    <li>after() capability in state machines (to enable delayed transitions)</li>
+    <li>Comments are currently being ignored and do not appear in the Python</li>
+    <li>Concurrency</li>
+    <li>Any Umple code that create the following Java:
+        <ul>
+            <li>keyword synchronized</li>
+        </ul>
+    </li>
+</ul>
+</p>
+
+<p>
+If any of the features that are supported appear to function incorrectly, please report it to an Umple developer or submit it <a href="https://github.com/umple/umple/issues/new">here</a>.
+</p>

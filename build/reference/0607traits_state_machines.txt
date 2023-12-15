@@ -27,23 +27,28 @@ Like the way <a href="TraitTemplateParameters.html">template parameters</a> defi
 
 <p align = "justify">
 The final example below shows how two classes can reuse the same state machine using a trait. This functionality is equivalent to that achieved using <a href="StandaloneStateMachines.html">standalone state machines</a>.
+
+&nbsp;
+
+<p>When exploring the following examples in UmpleOnline, you can use the Options menu to control what is visible, or you can use control-R to flip back and forth between showing the diagram with the original traits, vs. the diagram collapsed into the classes to be compiled; or you can use control-M to show/hide methods; or control-S and control-G to alternate between state and class diagrams.</p>
 </p>
 
+<p>When exploring the following examples in UmpleOnline, you can use the Options menu to control what is visible, or you can use control-R to flip back and forth between showing the diagram with the original traits, vs. the diagram collapsed into the classes to be compiled; or you can use control-M to show/hide methods.</p>
 
 @@example @@caption Example 1: Building a class with two state machines @@endcaption
-@@source manualexamples/traits_example_012.ump
+@@source manualexamples/traits_example_012.ump &diagramtype=GvClassTrait
 @@endexample
 
 @@example @@caption Example 2: Events as provided methods @@endcaption
-@@source manualexamples/traits_example_013.ump
+@@source manualexamples/traits_example_013.ump &diagramtype=GvClassTrait
 @@endexample
 
 @@example @@caption Example 3: Satisfying required methods@@endcaption
-@@source manualexamples/traits_example_014.ump
+@@source manualexamples/traits_example_014.ump &diagramtype=GvClassTrait
 @@endexample
 
 @@example @@caption Example 4: Use of template parameters @@endcaption
-@@source manualexamples/traits_example_015.ump
+@@source manualexamples/traits_example_015.ump &diagramtype=GvClassTrait
 @@endexample
 
 @@example @@caption Example 5: Equivalence to standalone state machines@@endcaption

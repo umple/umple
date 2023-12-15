@@ -1,0 +1,164 @@
+class Mentor():
+    def __init__(self):
+        self._canSetSecondaries = None
+        self._canSetMain = None
+        self._cachedHashCode = None
+        self._secondaries = None
+        self._main = None
+        self._cachedHashCode = -1
+        self._canSetMain = True
+        self._canSetSecondaries = True
+        self._secondaries = []
+
+    def getMain(self):
+        return self._main
+
+    def hasMain(self):
+        has = not (self._main is None)
+        return has
+
+    def getSecondary(self, index):
+        aSecondary = self._secondaries[index]
+        return aSecondary
+
+    def getSecondaries(self):
+        newSecondaries = tuple(self._secondaries)
+        return newSecondaries
+
+    def numberOfSecondaries(self):
+        number = len(self._secondaries)
+        return number
+
+    def hasSecondaries(self):
+        has = len(self._secondaries) > 0
+        return has
+
+    def indexOfSecondary(self, aSecondary):
+        index = (-1 if not aSecondary in self._secondaries else self._secondaries.index(aSecondary))
+        return index
+
+    def setMain(self, aNewMain):
+        wasSet = False
+        if not self._canSetMain :
+            return False
+        if aNewMain is None :
+            existingMain = self._main
+            self._main = None
+            if not (existingMain is None) and not (existingMain.getMentorMain() is None) :
+                existingMain.setMentorMain(None)
+            wasSet = True
+            return wasSet
+        currentMain = self.getMain()
+        if not (currentMain is None) and not currentMain == aNewMain :
+            currentMain.setMentorMain(None)
+        self._main = aNewMain
+        existingMentorMain = aNewMain.getMentorMain()
+        if not self == existingMentorMain :
+            aNewMain.setMentorMain(self)
+        wasSet = True
+        return wasSet
+
+    @staticmethod
+    def minimumNumberOfSecondaries():
+        return 0
+
+    def addSecondary(self, aSecondary):
+        wasAdded = False
+        if not self._canSetSecondaries :
+            return False
+        if (aSecondary) in self._secondaries :
+            return False
+        existingMentorSecondary = aSecondary.getMentorSecondary()
+        if existingMentorSecondary is None :
+            aSecondary.setMentorSecondary(self)
+        elif not self == existingMentorSecondary :
+            existingMentorSecondary.removeSecondary(aSecondary)
+            self.addSecondary(aSecondary)
+        else :
+            self._secondaries.append(aSecondary)
+        wasAdded = True
+        return wasAdded
+
+    def removeSecondary(self, aSecondary):
+        wasRemoved = False
+        if not self._canSetSecondaries :
+            return False
+        if (aSecondary) in self._secondaries :
+            self._secondaries.remove(aSecondary)
+            aSecondary.setMentorSecondary(None)
+            wasRemoved = True
+        return wasRemoved
+
+    def addSecondaryAt(self, aSecondary, index):
+        wasAdded = False
+        if self.addSecondary(aSecondary) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfSecondaries() :
+                index = self.numberOfSecondaries() - 1
+            self._secondaries.remove(aSecondary)
+            self._secondaries.insert(index, aSecondary)
+            wasAdded = True
+        return wasAdded
+
+    def addOrMoveSecondaryAt(self, aSecondary, index):
+        wasAdded = False
+        if (aSecondary) in self._secondaries :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfSecondaries() :
+                index = self.numberOfSecondaries() - 1
+            self._secondaries.remove(aSecondary)
+            self._secondaries.insert(index, aSecondary)
+            wasAdded = True
+        else :
+            wasAdded = self.addSecondaryAt(aSecondary, index)
+        return wasAdded
+
+    def equals(self, obj):
+        if obj is None :
+            return False
+        if not type(self) is type(obj) :
+            return False
+        compareTo = obj
+        if self.getMain() is None and not (compareTo.getMain() is None) :
+            return False
+        elif not (self.getMain() is None) and not self.getMain() == compareTo.getMain() :
+            return False
+        if self.getSecondaries().size() != compareTo.getSecondaries().size() :
+            return False
+        i = 0
+        while i < self.getSecondaries().size() :
+            me = self.getSecondaries().get(i)
+            them = compareTo.getSecondaries().get(i)
+            if me is None and not (them is None) :
+                return False
+            elif not (me is None) and not me == them :
+                return False
+            i += 1
+
+        return True
+
+    def __hash__(self):
+        if self._cachedHashCode != -1 :
+            return self._cachedHashCode
+        self._cachedHashCode = 17
+        if not (self.getMain() is None) :
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getMain().__hash__()
+        else :
+            self._cachedHashCode = self._cachedHashCode * 23
+        if not (self.getSecondaries() is None) :
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getSecondaries().__hash__()
+        else :
+            self._cachedHashCode = self._cachedHashCode * 23
+        self._canSetMain = False
+        self._canSetSecondaries = False
+        return self._cachedHashCode
+
+    def delete(self):
+        if not (self._main is None) :
+            self._main.setMentorMain(None)
+
+        while not self._secondaries.isEmpty() :
+            self._secondaries[0].setMentorSecondary(None)
+

@@ -1,0 +1,20 @@
+class Foo():
+    def __init__(self, aBar):
+        self._bar = None
+        self._bar = aBar
+
+    def setBar(self, aBar):
+        wasSet = False
+        self._bar = aBar
+        wasSet = True
+        return wasSet
+
+    def getBar(self):
+        return self._bar
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "bar" + ":" + str(self.getBar()) + "]"
+

@@ -1,0 +1,63 @@
+from enum import Enum, auto
+
+class X():
+    class Sm(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        s1 = auto()
+        s2 = auto()
+
+    def __init__(self):
+        self._sm = None
+        self.setSm(X.Sm.s1)
+
+    def getSmFullName(self):
+        answer = self._sm.__str__()
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def hh(self):
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm == X.Sm.s1 :
+            self.exitSm()
+            self.setSm(X.Sm.s2)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def hhh(self):
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm == X.Sm.s2 :
+            self.exitSm()
+            self.setSm(X.Sm.s1)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitSm(self):
+        if self._sm == X.Sm.s1 :
+            if not condition2 :
+                print("s1 exit!")
+        elif self._sm == X.Sm.s2 :
+            if condition4 :
+                print("s2 exit!")
+
+    def setSm(self, aSm):
+        self._sm = aSm
+        if self._sm == X.Sm.s1 :
+            if condition :
+                print("s1 entry!")
+        elif self._sm == X.Sm.s2 :
+            if condition3 :
+                print("s2 entry!")
+
+    def delete(self):
+        pass

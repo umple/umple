@@ -14,6 +14,9 @@ umpleonline/ump/task*
 umpleonline/ump/ATempCrash*
 umpleonline/ump/index.html
 umpleonline/ump/aalertMessage.txt
+umpleonline/scripts/codemirror6/node_modules
+umpleonline/scripts/codemirror6-plugins/collaboration-test-client/node_modules
+
 build/UserManualAndExampleTests_output.txt
 umpleonline/manual
 umpleonline/qr*
@@ -21,8 +24,16 @@ umpleonline/countlog.txt
 umpleonline/scripts/commandcount.txt
 umpleonline/scripts/specialPort.txt
 umpleonline/scripts/versionRunning.txt
+# Ignore the node_modules.
+# One can easily install the required 'node_modules' 
+# by executing the command "npm install".
+umpleonline/scripts/codemirror6-plugins/lang-umple/node_modules/
+umpleonline/scripts/codemirror6-plugins/umpleLezerTest/node_modules/
+umpleonline/testsuite/spec/temp_config.txt
 UmpleCodeExecution/config.cfg.bak
 UmpleCodeExecution/config.cfg
+UmpleCollabServer/config.cfg.bak
+UmpleCollabServer/config.cfg
 
 # generated Umple code that is not saved
 src-gen-umple/
@@ -59,9 +70,21 @@ src-gen-[Uu]mple[Tt][Ll]/
 *.war
 *.ear
 
+# generated files for package
+build/package-files/chocolatey/tools/VERIFICATION.txt
+build/package-files/chocolatey/tools/LICENSE.txt
+build/package-files/chocolatey/tools/umple-win.zip
+build/package-files/chocolatey/umple.nuspec
+build/package-files/chocolatey/*.nupkg
+build/package-files/umple.jar.SHA-256
+build/package-files/copyright
+build/package-files/umple.1
+build/package-files/umple.1.gz
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
 # Gradle
 .gradle
 
+__pycache__/

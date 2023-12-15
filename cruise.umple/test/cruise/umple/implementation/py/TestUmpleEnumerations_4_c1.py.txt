@@ -1,0 +1,31 @@
+import os
+from enum import Enum, auto
+
+class C1():
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Married = auto()
+        Single = auto()
+        Divorced = auto()
+
+    def __init__(self, aStatus):
+        self._status = aStatus
+
+    def setStatus(self, aStatus):
+        wasSet = False
+        self._status = aStatus
+        wasSet = True
+        return wasSet
+
+    def getStatus(self):
+        return self._status
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super()) + "[" + "]" + os.linesep + "  " + "status" + "=" + (self.getStatus() != ((str(self.getStatus()).replaceAll("  ", "    ")) if not self.getStatus().equals(self) else "this") if None else "null")
+

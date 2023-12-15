@@ -1,0 +1,20 @@
+class Student():
+    def __init__(self):
+        self._grade = None
+        self._grade = ""
+
+    def setGrade(self, aGrade):
+        wasSet = False
+        self._grade = aGrade
+        wasSet = True
+        return wasSet
+
+    def getGrade(self):
+        return self._grade
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "grade" + ":" + str(self.getGrade()) + "]"
+

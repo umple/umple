@@ -1,0 +1,120 @@
+from Y import Y
+
+class X():
+    def __init__(self, aA, aB):
+        self._a = aA
+        self._b = aB
+        self._ies = []
+
+    def setA(self, aA):
+        wasSet = False
+        self._a = aA
+        wasSet = True
+        return wasSet
+
+    def setB(self, aB):
+        wasSet = False
+        self._b = aB
+        wasSet = True
+        return wasSet
+
+    def getA(self):
+        return self._a
+
+    def getB(self):
+        return self._b
+
+    def getY(self, index):
+        aY = self._ies[index]
+        return aY
+
+    def getIes(self):
+        newIes = tuple(self._ies)
+        return newIes
+
+    def numberOfIes(self):
+        number = len(self._ies)
+        return number
+
+    def hasIes(self):
+        has = len(self._ies) > 0
+        return has
+
+    def indexOfY(self, aY):
+        index = self._ies.index(aY)
+        return index
+
+    @staticmethod
+    def minimumNumberOfIes():
+        return 0
+
+    def addY(self, aC):
+        return Y(aC, self)
+
+    def addY(self, aY):
+        wasAdded = False
+        if aY in self._ies :
+            return False
+
+        existingX = aY.getX()
+        isNewX = existingX != None and not self.equals(existingX)
+        if isNewX :
+            aY.setX(self)
+
+        else :
+            self._ies.append(aY)
+
+        wasAdded = True
+        return wasAdded
+
+    def removeY(self, aY):
+        wasRemoved = False
+        if not self.equals(aY.getX()) :
+            self._ies.remove(aY)
+            wasRemoved = True
+
+        return wasRemoved
+
+    def addYAt(self, aY, index):
+        wasAdded = False
+        if self.addY(aY) :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfIes() :
+                index = self.numberOfIes() - 1
+
+            self._ies.remove(aY)
+            self._ies.insert(index, aY)
+            wasAdded = True
+
+        return wasAdded
+
+    def addOrMoveYAt(self, aY, index):
+        wasAdded = False
+        if aY in self._ies :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfIes() :
+                index = self.numberOfIes() - 1
+
+            self._ies.remove(aY)
+            self._ies.insert(index, aY)
+            wasAdded = True
+
+        else :
+            wasAdded = self.addYAt(aY, index)
+
+        return wasAdded
+
+    def delete(self):
+        i = len(self._ies)
+        while i > 0 :
+            aY = self._ies[i - 1]
+            aY.delete()
+            i = i - 1
+
+    def __str__(self):
+        return str(super()) + "[" + "a" + ":" + self.getA() + "," + "b" + ":" + self.getB() + "]"
+

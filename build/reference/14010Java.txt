@@ -1,0 +1,13 @@
+Java
+Generators
+noreferences
+@@description
+<p>
+The Java generator is the most full-featured of all the Umple code generators.</p>
+
+<p>Java code can be embedded in Umple, and Umple can generate Java from all its modeling features.</p>
+
+<p>Java code can be executed in UmpleOnline if one or more of the classes has a main method. UmpleOnline guards against compile-time and run-time Java errors when executing code. It provides feedback about the relevant line of code where any error occurs.</p>
+
+<p>The Umple compiler itself is written in Umple with embedded Java, and the Java generator is then used to generate the compiler. All Umple features are supported by this generator
+</p>

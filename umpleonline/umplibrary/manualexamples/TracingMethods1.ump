@@ -1,6 +1,7 @@
 // this example shows how to trace
 // non-generated method entry
 
+@SuppressWarnings("deprecation")
 class JavaMethod
 {
   trace method();
@@ -14,3 +15,4 @@ class JavaMethod
 // @@@skipcppcompile - Contains Java Code
 // @@@skipphpcompile - Contains Java Code
 // @@@skiprubycompile - Contains Java Code
+// @@@skippythoncompile - Contains Java Code

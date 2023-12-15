@@ -1,0 +1,35 @@
+class student():
+    def __init__(self, aAge, aWeight):
+        self._weight = None
+        self._age = None
+        self._age = aAge
+        self._weight = aWeight
+        if aWeight >= 3 and aAge <= 18 :
+            raise RuntimeError ("Please provide a valid age and weight [weight<3||age>18]")
+
+    def setAge(self, aAge):
+        wasSet = False
+        if self.getWeight() < 3 or aAge > 18 :
+            self._age = aAge
+            wasSet = True
+        return wasSet
+
+    def setWeight(self, aWeight):
+        wasSet = False
+        if aWeight < 3 or self.getAge() > 18 :
+            self._weight = aWeight
+            wasSet = True
+        return wasSet
+
+    def getAge(self):
+        return self._age
+
+    def getWeight(self):
+        return self._weight
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "age" + ":" + str(self.getAge()) + "," + "weight" + ":" + str(self.getWeight()) + "]"
+

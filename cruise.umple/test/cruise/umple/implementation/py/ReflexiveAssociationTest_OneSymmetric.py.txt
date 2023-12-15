@@ -1,0 +1,54 @@
+import os
+
+class OneSymmetric():
+    @classmethod
+    def alternateConstructor(cls, aName, aNumber, aFriend):
+        self = cls.__new__(cls)
+        self._friend = None
+        self._number = None
+        self._name = None
+        self._name = aName
+        self._number = aNumber
+        if aFriend is None or not (aFriend.getFriend() is None) :
+            raise RuntimeError ("Unable to create OneSymmetric due to aFriend. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        self._friend = aFriend
+        return self
+
+    def __init__(self, aName, aNumber, aNameForFriend, aNumberForFriend):
+        self._friend = None
+        self._number = None
+        self._name = None
+        self._name = aName
+        self._number = aNumber
+        self._friend = OneSymmetric.alternateConstructor(aNameForFriend, aNumberForFriend, self)
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def setNumber(self, aNumber):
+        wasSet = False
+        self._number = aNumber
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getNumber(self):
+        return self._number
+
+    def getFriend(self):
+        return self._friend
+
+    def delete(self):
+        existingFriend = self._friend
+        self._friend = None
+        if not (existingFriend is None) :
+            existingFriend.delete()
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "," + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "friend = " + ((format(id(self.getFriend()), "x")) if not (self.getFriend() is None) else "null")
+

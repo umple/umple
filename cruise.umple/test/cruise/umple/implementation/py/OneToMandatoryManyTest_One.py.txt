@@ -1,0 +1,118 @@
+class Mentor():
+    def __init__(self, aName):
+        self._students = None
+        self._name = None
+        self._name = aName
+        self._students = []
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getStudent(self, index):
+        aStudent = self._students[index]
+        return aStudent
+
+    def getStudents(self):
+        newStudents = tuple(self._students)
+        return newStudents
+
+    def numberOfStudents(self):
+        number = len(self._students)
+        return number
+
+    def hasStudents(self):
+        has = len(self._students) > 0
+        return has
+
+    def indexOfStudent(self, aStudent):
+        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
+        return index
+
+    def isNumberOfStudentsValid(self):
+        isValid = self.numberOfStudents() >= Mentor.minimumNumberOfStudents()
+        return isValid
+
+    @staticmethod
+    def minimumNumberOfStudents():
+        return 5
+
+    def addStudent1(self, aNumber):
+        from Student import Student
+        aNewStudent = Student(aNumber, self)
+        return aNewStudent
+
+    def addStudent2(self, aStudent):
+        wasAdded = False
+        if (aStudent) in self._students :
+            return False
+        existingMentor = aStudent.getMentor()
+        isNewMentor = not (existingMentor is None) and not self == existingMentor
+        if isNewMentor and existingMentor.numberOfStudents() <= Mentor.minimumNumberOfStudents() :
+            return wasAdded
+        if isNewMentor :
+            aStudent.setMentor(self)
+        else :
+            self._students.append(aStudent)
+        wasAdded = True
+        return wasAdded
+
+    def removeStudent(self, aStudent):
+        wasRemoved = False
+        if self == aStudent.getMentor() :
+            return wasRemoved
+        if self.numberOfStudents() <= Mentor.minimumNumberOfStudents() :
+            return wasRemoved
+        self._students.remove(aStudent)
+        wasRemoved = True
+        return wasRemoved
+
+    def addStudentAt(self, aStudent, index):
+        wasAdded = False
+        if self.addStudent(aStudent) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfStudents() :
+                index = self.numberOfStudents() - 1
+            self._students.remove(aStudent)
+            self._students.insert(index, aStudent)
+            wasAdded = True
+        return wasAdded
+
+    def addOrMoveStudentAt(self, aStudent, index):
+        wasAdded = False
+        if (aStudent) in self._students :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfStudents() :
+                index = self.numberOfStudents() - 1
+            self._students.remove(aStudent)
+            self._students.insert(index, aStudent)
+            wasAdded = True
+        else :
+            wasAdded = self.addStudentAt(aStudent, index)
+        return wasAdded
+
+    def delete(self):
+        i = len(self._students)
+        while i > 0 :
+            aStudent = self._students[i - 1]
+            aStudent.delete()
+            i -= 1
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
+
+    def addStudent(self, *argv):
+        from Student import Student
+        if len(argv) == 1 and isinstance(argv[0], str) :
+            return self.addStudent1(argv[0])
+        if len(argv) == 1 and isinstance(argv[0], Student) :
+            return self.addStudent2(argv[0])
+        raise TypeError("No method matches provided parameters")
+

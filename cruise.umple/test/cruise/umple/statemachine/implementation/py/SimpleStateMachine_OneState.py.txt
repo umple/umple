@@ -1,0 +1,28 @@
+from enum import Enum, auto
+
+class Student():
+    class Grade(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Pass = auto()
+
+    def __init__(self):
+        self._grade = None
+        self.setGrade(Student.Grade.Pass)
+
+    def getGradeFullName(self):
+        answer = self._grade.__str__()
+        return answer
+
+    def getGrade(self):
+        return self._grade
+
+    def setGrade(self, aGrade):
+        self._grade = aGrade
+        return True
+
+    def delete(self):
+        pass
+

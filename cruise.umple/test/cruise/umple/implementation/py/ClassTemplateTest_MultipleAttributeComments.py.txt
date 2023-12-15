@@ -1,0 +1,53 @@
+class Foo():
+    def __init__(self, aTestAttribute1, aTestAttribute2, aTestAttribute3, aTestAttribute4):
+        self._testAttribute4 = None
+        self._testAttribute3 = None
+        self._testAttribute2 = None
+        self._testAttribute1 = None
+        self._testAttribute1 = aTestAttribute1
+        self._testAttribute2 = aTestAttribute2
+        self._testAttribute3 = aTestAttribute3
+        self._testAttribute4 = aTestAttribute4
+
+    def setTestAttribute1(self, aTestAttribute1):
+        wasSet = False
+        self._testAttribute1 = aTestAttribute1
+        wasSet = True
+        return wasSet
+
+    def setTestAttribute2(self, aTestAttribute2):
+        wasSet = False
+        self._testAttribute2 = aTestAttribute2
+        wasSet = True
+        return wasSet
+
+    def setTestAttribute3(self, aTestAttribute3):
+        wasSet = False
+        self._testAttribute3 = aTestAttribute3
+        wasSet = True
+        return wasSet
+
+    def setTestAttribute4(self, aTestAttribute4):
+        wasSet = False
+        self._testAttribute4 = aTestAttribute4
+        wasSet = True
+        return wasSet
+
+    def getTestAttribute1(self):
+        return self._testAttribute1
+
+    def getTestAttribute2(self):
+        return self._testAttribute2
+
+    def getTestAttribute3(self):
+        return self._testAttribute3
+
+    def getTestAttribute4(self):
+        return self._testAttribute4
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "testAttribute1" + ":" + str(self.getTestAttribute1()) + "," + "testAttribute2" + ":" + str(self.getTestAttribute2()) + "," + "testAttribute3" + ":" + str(self.getTestAttribute3()) + "," + "testAttribute4" + ":" + str(self.getTestAttribute4()) + "]"
+

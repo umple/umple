@@ -1,0 +1,73 @@
+class Student():
+    def __init__(self, aNumber, *allMentors):
+        allMentors = list(allMentors)
+        self._canSetMentors = None
+        self._mentors = None
+        self._number = None
+        self._number = aNumber
+        self._canSetMentors = True
+        self._mentors = []
+        didAddMentors = self.setMentors(*allMentors)
+        if not didAddMentors :
+            raise RuntimeError ("Unable to create Student, must have 3 mentors. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    def getNumber(self):
+        return self._number
+
+    def getMentor(self, index):
+        aMentor = self._mentors[index]
+        return aMentor
+
+    def getMentors(self):
+        newMentors = tuple(self._mentors)
+        return newMentors
+
+    def numberOfMentors(self):
+        self._number = len(self._mentors)
+        return self._number
+
+    def hasMentors(self):
+        has = len(self._mentors) > 0
+        return has
+
+    def indexOfMentor(self, aMentor):
+        index = (-1 if not aMentor in self._mentors else self._mentors.index(aMentor))
+        return index
+
+    @staticmethod
+    def requiredNumberOfMentors():
+        return 3
+
+    @staticmethod
+    def minimumNumberOfMentors():
+        return 3
+
+    @staticmethod
+    def maximumNumberOfMentors():
+        return 3
+
+    def setMentors(self, *newMentors):
+        newMentors = list(newMentors)
+        wasSet = False
+        if not self._canSetMentors :
+            return False
+        self._canSetMentors = False
+        verifiedMentors = []
+        for aMentor in newMentors:
+            if (aMentor) in verifiedMentors :
+                continue
+            verifiedMentors.append(aMentor)
+
+        if len(verifiedMentors) != len(newMentors) or len(verifiedMentors) != Student.requiredNumberOfMentors() :
+            return wasSet
+        self._mentors.clear()
+        self._mentors.extend(verifiedMentors)
+        wasSet = True
+        return wasSet
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]"
+

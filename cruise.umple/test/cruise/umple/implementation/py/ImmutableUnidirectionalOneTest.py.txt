@@ -1,0 +1,34 @@
+import os
+
+class Student():
+    def __init__(self, aNumber, aMentor):
+        self._canSetMentor = None
+        self._mentor = None
+        self._number = None
+        self._number = aNumber
+        self._canSetMentor = True
+        if not self.setMentor(aMentor) :
+            raise RuntimeError ("Unable to create Student due to aMentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    def getNumber(self):
+        return self._number
+
+    def getMentor(self):
+        return self._mentor
+
+    def setMentor(self, aNewMentor):
+        wasSet = False
+        if not self._canSetMentor :
+            return False
+        self._canSetMentor = False
+        if not (aNewMentor is None) :
+            self._mentor = aNewMentor
+            wasSet = True
+        return wasSet
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "mentor = " + ((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null")
+

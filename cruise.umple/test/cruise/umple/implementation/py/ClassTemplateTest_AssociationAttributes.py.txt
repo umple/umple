@@ -1,0 +1,22 @@
+import os
+
+class Token():
+    def __init__(self, aP):
+        self._p = None
+        self._p = aP
+
+    def setP(self, aP):
+        wasSet = False
+        self._p = aP
+        wasSet = True
+        return wasSet
+
+    def getP(self):
+        return self._p
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "]" + str(os.linesep) + "  " + "p" + "=" + (((self.getP().__str__().replaceAll("  ", "    ")) if not self.getP() == self else "this") if not (self.getP() is None) else "null")
+

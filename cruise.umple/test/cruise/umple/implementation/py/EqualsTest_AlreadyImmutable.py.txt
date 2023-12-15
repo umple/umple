@@ -1,0 +1,76 @@
+class Student():
+    def __init__(self, aDoubleId, aBooleanId, aStringId):
+        self._canSetIntId = None
+        self._cachedHashCode = None
+        self._stringId = None
+        self._booleanId = None
+        self._doubleId = None
+        self._intId = None
+        self._cachedHashCode = -1
+        self._canSetIntId = True
+        self._doubleId = aDoubleId
+        self._booleanId = aBooleanId
+        self._stringId = aStringId
+
+    def setIntId(self, aIntId):
+        wasSet = False
+        if not self._canSetIntId :
+            return False
+        self._canSetIntId = False
+        self._intId = aIntId
+        wasSet = True
+        return wasSet
+
+    def getIntId(self):
+        return self._intId
+
+    def getDoubleId(self):
+        return self._doubleId
+
+    def getBooleanId(self):
+        return self._booleanId
+
+    def getStringId(self):
+        return self._stringId
+
+    def isBooleanId(self):
+        return self._booleanId
+
+    def equals(self, obj):
+        if obj is None :
+            return False
+        if not type(self) is type(obj) :
+            return False
+        compareTo = obj
+        if self.getIntId() != compareTo.getIntId() :
+            return False
+        if self.getDoubleId() != compareTo.getDoubleId() :
+            return False
+        if self.getBooleanId() != compareTo.getBooleanId() :
+            return False
+        if self.getStringId() is None and not (compareTo.getStringId() is None) :
+            return False
+        elif not (self.getStringId() is None) and not self.getStringId() == compareTo.getStringId() :
+            return False
+        return True
+
+    def __hash__(self):
+        if self._cachedHashCode != -1 :
+            return self._cachedHashCode
+        self._cachedHashCode = 17
+        self._cachedHashCode = self._cachedHashCode * 23 + self.getIntId()
+        self._cachedHashCode = self._cachedHashCode * 23 + (float(self.getDoubleId())).__hash__()
+        self._cachedHashCode = self._cachedHashCode * 23 + ((1) if self.getBooleanId() else 0)
+        if not (self.getStringId() is None) :
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getStringId().__hash__()
+        else :
+            self._cachedHashCode = self._cachedHashCode * 23
+        self._canSetIntId = False
+        return self._cachedHashCode
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "stringId" + ":" + str(self.getStringId()) + "," + "booleanId" + ":" + str(self.getBooleanId()) + "," + "doubleId" + ":" + str(self.getDoubleId()) + "," + "intId" + ":" + str(self.getIntId()) + "]"
+

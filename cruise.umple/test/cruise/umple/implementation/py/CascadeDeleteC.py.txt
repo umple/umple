@@ -1,0 +1,50 @@
+from D import D
+from B import B
+
+class C():
+    def __init__(self, aMyD, aB):
+        if aMyD is None or aMyD.getC() != None :
+            raise RuntimeError ("Unable to create C due to aMyD. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+        self._myD = aMyD
+        didAddB = self.setB(aB)
+        if not didAddB :
+            raise RuntimeError ("Unable to create myC due to b. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    def __init__(self, aB):
+        self._myD = D(self)
+        didAddB = self.setB(aB)
+        if not didAddB :
+            raise RuntimeError ("Unable to create myC due to b. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    def getMyD(self):
+        return self._myD
+
+    def getB(self):
+        return self._b
+
+    def setB(self, aB):
+        wasSet = False
+        if aB is None :
+            return wasSet
+
+        existingB = self._b
+        self._b = aB
+        if existingB != None and not existingB.equals(aB) :
+            existingB.removeMyC(self)
+
+        self._b.addMyC(self)
+        wasSet = True
+        return wasSet
+
+    def delete(self):
+        existingMyD = self._myD
+        self._myD = None
+        if not(existingMyD is None) :
+            existingMyD.delete()
+
+        placeholderB = self._b
+        self._b = None
+        if not(placeholderB is None) :
+            placeholderB.removeMyC(self)
+

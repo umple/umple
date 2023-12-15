@@ -1,0 +1,47 @@
+import os
+
+class MyDriver():
+    def __init__(self, aName):
+        self._mySubordinate = None
+        self._name = None
+        self._name = aName
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getMySubordinate(self):
+        return self._mySubordinate
+
+    def hasMySubordinate(self):
+        has = not (self._mySubordinate is None)
+        return has
+
+    def setMySubordinate(self, aNewMySubordinate):
+        wasSet = False
+        if not (self._mySubordinate is None) and not self._mySubordinate == aNewMySubordinate and self == self._mySubordinate.getMyDriver() :
+            return wasSet
+        self._mySubordinate = aNewMySubordinate
+        anOldMyDriver = (aNewMySubordinate.getMyDriver()) if not (aNewMySubordinate is None) else None
+        if not self == anOldMyDriver :
+            if not (anOldMyDriver is None) :
+                anOldMyDriver.mySubordinate = None
+            if not (self._mySubordinate is None) :
+                self._mySubordinate.setMyDriver(self)
+        wasSet = True
+        return wasSet
+
+    def delete(self):
+        existingMySubordinate = self._mySubordinate
+        self._mySubordinate = None
+        if not (existingMySubordinate is None) :
+            existingMySubordinate.delete()
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]" + str(os.linesep) + "  " + "mySubordinate = " + ((format(id(self.getMySubordinate()), "x")) if not (self.getMySubordinate() is None) else "null")
+

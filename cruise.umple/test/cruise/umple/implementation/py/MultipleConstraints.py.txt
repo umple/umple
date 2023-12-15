@@ -1,0 +1,41 @@
+class MultipleConstraints():
+    def __init__(self, aI, aJ):
+        self._j = None
+        self._i = None
+        self._i = aI
+        self._j = aJ
+        if aI < 0 :
+            raise RuntimeError ("Please provide a valid i [i>=0]")
+        if aJ < 0 :
+            raise RuntimeError ("Please provide a valid j [j>=0]")
+        if aI < aJ :
+            raise RuntimeError ("Please provide a valid i and j [i>=j]")
+
+    def setI(self, aI):
+        wasSet = False
+        if aI >= self.getJ() :
+            if aI >= 0 :
+                self._i = aI
+                wasSet = True
+        return wasSet
+
+    def setJ(self, aJ):
+        wasSet = False
+        if aJ >= 0 :
+            if self.getI() >= aJ :
+                self._j = aJ
+                wasSet = True
+        return wasSet
+
+    def getI(self):
+        return self._i
+
+    def getJ(self):
+        return self._j
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "i" + ":" + str(self.getI()) + "," + "j" + ":" + str(self.getJ()) + "]"
+

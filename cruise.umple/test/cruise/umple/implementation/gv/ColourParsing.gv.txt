@@ -1,0 +1,11 @@
+digraph "ColourParsing" {
+  rankdir="BT"
+  node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+
+  // Class: A
+  "A" [ style=filled, fillcolor="red" shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    A    </td></tr><hr/><tr><td align="left" href="" title="String b&#13;">  b : String  </td></tr></table>>,
+   tooltip="class A
+"];
+
+  // All associations
+}

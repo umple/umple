@@ -1,0 +1,23 @@
+class OneSymmetricNoParam():
+    @classmethod
+    def alternateConstructor(cls, aFriend):
+        self = cls.__new__(cls)
+        self._friend = None
+        if aFriend is None or not (aFriend.getFriend() is None) :
+            raise RuntimeError ("Unable to create OneSymmetricNoParam due to aFriend. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        self._friend = aFriend
+        return self
+
+    def __init__(self):
+        self._friend = None
+        self._friend = OneSymmetricNoParam.alternateConstructor(self)
+
+    def getFriend(self):
+        return self._friend
+
+    def delete(self):
+        existingFriend = self._friend
+        self._friend = None
+        if not (existingFriend is None) :
+            existingFriend.delete()
+

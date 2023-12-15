@@ -1,0 +1,29 @@
+class Example():
+    def __init__(self, aA, aB):
+        self._a = aA
+        self._b = aB
+
+    def setA(self, aA):
+        wasSet = False
+        self._a = aA
+        wasSet = True
+        return wasSet
+
+    def setB(self, aB):
+        wasSet = False
+        self._b = aB
+        wasSet = True
+        return wasSet
+
+    def getA(self):
+        return self._a
+
+    def getB(self):
+        return self._b
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super()) + "[" + "a" + ":" + self.getA() + "," + "b" + ":" + self.getB() + "]"
+

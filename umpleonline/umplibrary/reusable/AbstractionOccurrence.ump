@@ -11,5 +11,5 @@ trait Abstraction {}
 // It is common for modellers to make mistakes and just have one class
 // Or to consider the Occurrences as instances of the abstractions, but these are antipatterns
 trait Occurrence <Abstraction> {
- 1 -- * Abstraction;
+ * -- 1 Abstraction;
 }

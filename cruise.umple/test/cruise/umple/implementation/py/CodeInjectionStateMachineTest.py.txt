@@ -1,0 +1,43 @@
+from enum import Enum, auto
+
+class Example():
+    class Light(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        On = auto()
+        Off = auto()
+
+    def __init__(self):
+        self.setLight(Example.Light.On)
+
+    def getLightFullName(self):
+        answer = str(self._light)
+        return answer
+
+    def getLight(self):
+        return self._light
+
+    def flip(self):
+        wasEventProcessed = False
+        aLight = self._light
+        match aLight :
+            case Example.Light.On :
+                self.setLight(Example.Light.Off)
+                wasEventProcessed = True
+            case Example.Light.Off :
+                self.setLight(Example.Light.On)
+                wasEventProcessed = True
+            case default :
+                pass
+        return wasEventProcessed
+
+    def setLight(self, aLight):
+        System.out.println("About to flip")
+        self._light = aLight
+        System.out.println("Just flipped")
+
+    def delete(self):
+        pass
+

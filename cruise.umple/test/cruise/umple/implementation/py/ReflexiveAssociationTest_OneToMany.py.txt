@@ -1,0 +1,19 @@
+class OneToMany():
+    def __init__(self, aOneToMany):
+        self._oneToMany = None
+        if not self.setOneToMany(aOneToMany) :
+            raise RuntimeError ("Unable to create OneToMany due to aOneToMany. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    def getOneToMany(self):
+        return self._oneToMany
+
+    def setOneToMany(self, aNewOneToMany):
+        wasSet = False
+        if not (aNewOneToMany is None) :
+            self._oneToMany = aNewOneToMany
+            wasSet = True
+        return wasSet
+
+    def delete(self):
+        self._oneToMany = None
+

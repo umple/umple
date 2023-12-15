@@ -1,0 +1,6 @@
+//Remove the extra bracket
+//Removes the warning
+class A {
+  attr;
+  attr2;
+}

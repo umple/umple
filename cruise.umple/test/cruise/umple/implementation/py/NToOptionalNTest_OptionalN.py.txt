@@ -1,0 +1,92 @@
+class Student():
+    def __init__(self, aNumber):
+        self._mentors = None
+        self._number = None
+        self._number = aNumber
+        self._mentors = []
+
+    def setNumber(self, aNumber):
+        wasSet = False
+        self._number = aNumber
+        wasSet = True
+        return wasSet
+
+    def getNumber(self):
+        return self._number
+
+    def getMentor(self, index):
+        aMentor = self._mentors[index]
+        return aMentor
+
+    def getMentors(self):
+        newMentors = tuple(self._mentors)
+        return newMentors
+
+    def numberOfMentors(self):
+        self._number = len(self._mentors)
+        return self._number
+
+    def hasMentors(self):
+        has = len(self._mentors) > 0
+        return has
+
+    def indexOfMentor(self, aMentor):
+        index = (-1 if not aMentor in self._mentors else self._mentors.index(aMentor))
+        return index
+
+    def isNumberOfMentorsValid(self):
+        isValid = self.numberOfMentors() >= Student.minimumNumberOfMentors() and self.numberOfMentors() <= Student.maximumNumberOfMentors()
+        return isValid
+
+    @staticmethod
+    def requiredNumberOfMentors():
+        return 5
+
+    @staticmethod
+    def minimumNumberOfMentors():
+        return 5
+
+    @staticmethod
+    def maximumNumberOfMentors():
+        return 5
+
+    def addMentor(self, aMentor):
+        wasAdded = False
+        if (aMentor) in self._mentors :
+            return False
+        if self.numberOfMentors() >= Student.maximumNumberOfMentors() :
+            return wasAdded
+        self._mentors.append(aMentor)
+        if aMentor.indexOfStudent(self) != -1 :
+            wasAdded = True
+        else :
+            wasAdded = aMentor.addStudent(self)
+            if not wasAdded :
+                self._mentors.remove(aMentor)
+        return wasAdded
+
+    def removeMentor(self, aMentor):
+        wasRemoved = False
+        if not (aMentor) in self._mentors :
+            return wasRemoved
+        if self.numberOfMentors() <= Student.minimumNumberOfMentors() :
+            return wasRemoved
+        oldIndex = (-1 if not aMentor in self._mentors else self._mentors.index(aMentor))
+        self._mentors.remove(oldIndex)
+        if aMentor.indexOfStudent(self) == -1 :
+            wasRemoved = True
+        else :
+            wasRemoved = aMentor.removeStudent(self)
+            if not wasRemoved :
+                self._mentors.insert(oldIndex, aMentor)
+        return wasRemoved
+
+    def delete(self):
+        copyOfMentors = self._mentors.copy()
+        self._mentors.clear()
+        for aMentor in copyOfMentors:
+            aMentor.removeStudent(self)
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]"
+

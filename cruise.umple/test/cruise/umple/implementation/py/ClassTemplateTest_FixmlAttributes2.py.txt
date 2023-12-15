@@ -1,0 +1,52 @@
+class Mentor():
+    def __init__(self, aCapacity, aId, aName):
+        self._name = None
+        self._id = None
+        self._capacity = None
+        self._capacity = aCapacity
+        self._id = aId
+        self._name = aName
+
+    @classmethod
+    def alternateConstructor(cls):
+        self = cls.__new__(cls)
+        self._name = None
+        self._id = None
+        self._capacity = None
+        self._capacity = "31"
+        self._name = "Umple"
+        return self
+
+    def setCapacity(self, aCapacity):
+        wasSet = False
+        self._capacity = aCapacity
+        wasSet = True
+        return wasSet
+
+    def setId(self, aId):
+        wasSet = False
+        self._id = aId
+        wasSet = True
+        return wasSet
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def getCapacity(self):
+        return self._capacity
+
+    def getId(self):
+        return self._id
+
+    def getName(self):
+        return self._name
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "capacity" + ":" + str(self.getCapacity()) + "," + "id" + ":" + str(self.getId()) + "," + "name" + ":" + str(self.getName()) + "]"
+

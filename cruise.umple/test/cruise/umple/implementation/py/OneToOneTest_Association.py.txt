@@ -1,0 +1,55 @@
+import os
+
+class Mentor():
+    @classmethod
+    def alternateConstructor(cls, aName, aStudent):
+        self = cls.__new__(cls)
+        self._student = None
+        self._id = None
+        self._name = None
+        self._name = aName
+        self._id = None
+        if aStudent is None or not (aStudent.getMentor() is None) :
+            raise RuntimeError ("Unable to create Mentor due to aStudent. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        self._student = aStudent
+        return self
+
+    def __init__(self, aName, aNameForStudent, aNumberForStudent):
+        from Student import Student
+        self._student = None
+        self._id = None
+        self._name = None
+        self._name = aName
+        self._id = None
+        self._student = Student.alternateConstructor(aNameForStudent, aNumberForStudent, self)
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def setId(self, aId):
+        wasSet = False
+        self._id = aId
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getId(self):
+        return self._id
+
+    def getStudent(self):
+        return self._student
+
+    def delete(self):
+        existingStudent = self._student
+        self._student = None
+        if not (existingStudent is None) :
+            existingStudent.delete()
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "," + "id" + ":" + str(self.getId()) + "]" + str(os.linesep) + "  " + "student = " + ((format(id(self.getStudent()), "x")) if not (self.getStudent() is None) else "null")
+

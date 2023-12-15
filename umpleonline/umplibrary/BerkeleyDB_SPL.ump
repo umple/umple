@@ -171,6 +171,7 @@ mixset Logging {
 // @@@skipjavacompile - Generates no language code
 // @@@skipphpcompile - Contains no language code
 // @@@skiprubycompile - Contains no language code
+// @@@skippythoncompile - Contains no language code
 
 
 

@@ -1,0 +1,64 @@
+from NetworkNode import NetworkNode
+from enum import Enum, auto
+
+class Router(NetworkNode):
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        disconnected = auto()
+        connected = auto()
+
+    def __init__(self, aIpAddress):
+        self._status = None
+        self._ipAddress = None
+        self._ipAddress = aIpAddress
+        self.setStatus(Router.Status.disconnected)
+
+    def getStatusFullName(self):
+        answer = self._status.__str__()
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def connect(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == Router.Status.disconnected :
+            self.setStatus(Router.Status.connected)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def disconnect(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == Router.Status.connected :
+            self.setStatus(Router.Status.disconnected)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def errorDetected(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == Router.Status.connected :
+            self.setStatus(Router.Status.disconnected)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "]"
+

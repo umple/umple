@@ -1,0 +1,36 @@
+import os
+
+class Student():
+    def __init__(self, aNumber):
+        self._mentor = None
+        self._number = None
+        self._number = aNumber
+
+    def setNumber(self, aNumber):
+        wasSet = False
+        self._number = aNumber
+        wasSet = True
+        return wasSet
+
+    def getNumber(self):
+        return self._number
+
+    def getMentor(self):
+        return self._mentor
+
+    def hasMentor(self):
+        has = not (self._mentor is None)
+        return has
+
+    def delete(self):
+        if not (self._mentor is None) :
+            if self._mentor.numberOfStudents() <= 3 :
+                self._mentor.delete()
+            else :
+                placeholderMentor = self._mentor
+                self._mentor = None
+                placeholderMentor.removeStudent(self)
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "mentor = " + ((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null")
+

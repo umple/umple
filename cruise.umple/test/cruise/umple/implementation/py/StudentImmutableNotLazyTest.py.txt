@@ -1,0 +1,27 @@
+class Student():
+    def __init__(self, aNumber):
+        self._canSetNumber2 = None
+        self._number2 = None
+        self._number = None
+        self._number = aNumber
+        self._canSetNumber2 = True
+
+    def setNumber2(self, aNumber2):
+        wasSet = False
+        self._canSetNumber2 = False
+        self._number2 = aNumber2
+        wasSet = True
+        return wasSet
+
+    def getNumber(self):
+        return self._number
+
+    def getNumber2(self):
+        return self._number2
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "," + "number2" + ":" + str(self.getNumber2()) + "]"
+

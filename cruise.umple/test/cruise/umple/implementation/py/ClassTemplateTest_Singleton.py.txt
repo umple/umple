@@ -1,0 +1,14 @@
+class Application():
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def getInstance():
+        if theInstance is None :
+            theInstance = Application()
+
+        return theInstance
+
+    def delete(self):
+        pass
+

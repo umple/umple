@@ -1,0 +1,265 @@
+import os
+
+class Mentor():
+    MAX = 100
+    MIN = -99
+    HELLO = "Hello"
+    nextX = 1
+    mentorsById = dict()
+    def __init__(self, aStr, aD, aI, aId):
+        from Time import Time
+        from Date import Date
+        self._canSetStr2 = None
+        self._x = None
+        self._w = None
+        self._v = None
+        self._u = None
+        self._tt = None
+        self._s = None
+        self._r = None
+        self._q = None
+        self._p = None
+        self._id = None
+        self._i = None
+        self._t = None
+        self._d = None
+        self._name = None
+        self._lBool = None
+        self._lDoub = None
+        self._someName = None
+        self._str2 = None
+        self._str = None
+        self._str = aStr
+        self._canSetStr2 = True
+        self._someName = None
+        self._lDoub = 0
+        self._lBool = False
+        self._name = "Johannes"
+        self._d = aD
+        self._t = Time()
+        self._i = aI
+        self.resetP()
+        self._q = "chicken"
+        self.resetR()
+        self._s = "123"
+        self._tt = Date.valueOf("1978-12-25")
+        self._u = Time.valueOf("12:13:14")
+        self.resetV()
+        self.resetW()
+        self._x, Mentor.nextX = Mentor.nextX, Mentor.nextX + 1
+        if not self.setId(aId) :
+            raise RuntimeError ("Cannot create due to duplicate id. See http://manual.umple.org?RE003ViolationofUniqueness.html")
+
+    def setStr2(self, aStr2):
+        wasSet = False
+        if not self._canSetStr2 :
+            return False
+        self._canSetStr2 = False
+        self._str2 = aStr2
+        wasSet = True
+        return wasSet
+
+    def setSomeName(self, aSomeName):
+        wasSet = False
+        self._someName = aSomeName
+        wasSet = True
+        return wasSet
+
+    def setLDoub(self, aLDoub):
+        wasSet = False
+        self._lDoub = aLDoub
+        wasSet = True
+        return wasSet
+
+    def setLBool(self, aLBool):
+        wasSet = False
+        self._lBool = aLBool
+        wasSet = True
+        return wasSet
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def setD(self, aD):
+        wasSet = False
+        self._d = aD
+        wasSet = True
+        return wasSet
+
+    def setI(self, aI):
+        wasSet = False
+        self._i = aI
+        wasSet = True
+        return wasSet
+
+    def setId(self, aId):
+        wasSet = False
+        anOldId = self.getId()
+        if not (anOldId is None) and anOldId == aId :
+            return True
+        if Mentor.hasWithId(aId) :
+            return wasSet
+        self._id = aId
+        wasSet = True
+        if not (anOldId is None) :
+            Mentor.mentorsById.remove(anOldId)
+        Mentor.mentorsById[aId] = self
+        return wasSet
+
+    def setP(self, aP):
+        wasSet = False
+        self._p = aP
+        wasSet = True
+        return wasSet
+
+    def resetP(self):
+        wasReset = False
+        self._p = self.getDefaultP()
+        wasReset = True
+        return wasReset
+
+    def setQ(self, aQ):
+        wasSet = False
+        self._q = aQ
+        wasSet = True
+        return wasSet
+
+    def setR(self, aR):
+        wasSet = False
+        self._r = aR
+        wasSet = True
+        return wasSet
+
+    def resetR(self):
+        wasReset = False
+        self._r = self.getDefaultR()
+        wasReset = True
+        return wasReset
+
+    def setTt(self, aTt):
+        wasSet = False
+        self._tt = aTt
+        wasSet = True
+        return wasSet
+
+    def setU(self, aU):
+        wasSet = False
+        self._u = aU
+        wasSet = True
+        return wasSet
+
+    def setV(self, aV):
+        wasSet = False
+        self._v = aV
+        wasSet = True
+        return wasSet
+
+    def resetV(self):
+        wasReset = False
+        self._v = self.getDefaultV()
+        wasReset = True
+        return wasReset
+
+    def setW(self, aW):
+        wasSet = False
+        self._w = aW
+        wasSet = True
+        return wasSet
+
+    def resetW(self):
+        wasReset = False
+        self._w = self.getDefaultW()
+        wasReset = True
+        return wasReset
+
+    def getStr(self):
+        return self._str
+
+    def getStr2(self):
+        return self._str2
+
+    def getSomeName(self):
+        return self._someName
+
+    def getLDoub(self):
+        return self._lDoub
+
+    def getLBool(self):
+        return self._lBool
+
+    def getName(self):
+        return self._name
+
+    def getD(self):
+        return self._d
+
+    def getI(self):
+        return self._i
+
+    def getDerivedTwiceI(self):
+        return self._i * 2
+
+    def getId(self):
+        return self._id
+
+    @staticmethod
+    def getWithId(aId):
+        return Mentor.mentorsById.get(aId)
+
+    @staticmethod
+    def hasWithId(aId):
+        return not (Mentor.getWithId(aId) is None)
+
+    def getP(self):
+        return self._p
+
+    def getDefaultP(self):
+        return "robot"
+
+    def getQ(self):
+        return self._q
+
+    def getR(self):
+        return self._r
+
+    def getDefaultR(self):
+        return ""
+
+    def getS(self):
+        return self._s
+
+    def getTt(self):
+        return self._tt
+
+    def getU(self):
+        return self._u
+
+    def getV(self):
+        return self._v
+
+    def getDefaultV(self):
+        from Date import Date
+        return Date.valueOf("1978-12-26")
+
+    def getW(self):
+        return self._w
+
+    def getDefaultW(self):
+        from Time import Time
+        return Time.valueOf("12:59:59")
+
+    def getX(self):
+        return self._x
+
+    def isLBool(self):
+        return self._lBool
+
+    def delete(self):
+        Mentor.mentorsById.remove(self.getId())
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "x" + ":" + str(self.getX()) + "," + "str" + ":" + str(self.getStr()) + "," + "str2" + ":" + str(self.getStr2()) + "," + "someName" + ":" + str(self.getSomeName()) + "," + "lDoub" + ":" + str(self.getLDoub()) + "," + "lBool" + ":" + str(self.getLBool()) + "," + "name" + ":" + str(self.getName()) + "," + "i" + ":" + str(self.getI()) + "," + "derivedTwiceI" + ":" + str(self.getDerivedTwiceI()) + "," + "id" + ":" + str(self.getId()) + "," + "p" + ":" + str(self.getP()) + "," + "q" + ":" + str(self.getQ()) + "," + "r" + ":" + str(self.getR()) + "," + "s" + ":" + str(self.getS()) + "]" + str(os.linesep) + "  " + "d" + "=" + str((((self.getD().__str__().replaceAll("  ", "    ")) if not self.getD() == self else "this") if not (self.getD() is None) else "null")) + str(os.linesep) + "  " + "tt" + "=" + str((((self.getTt().__str__().replaceAll("  ", "    ")) if not self.getTt() == self else "this") if not (self.getTt() is None) else "null")) + str(os.linesep) + "  " + "u" + "=" + str((((self.getU().__str__().replaceAll("  ", "    ")) if not self.getU() == self else "this") if not (self.getU() is None) else "null")) + str(os.linesep) + "  " + "v" + "=" + str((((self.getV().__str__().replaceAll("  ", "    ")) if not self.getV() == self else "this") if not (self.getV() is None) else "null")) + str(os.linesep) + "  " + "w" + "=" + (((self.getW().__str__().replaceAll("  ", "    ")) if not self.getW() == self else "this") if not (self.getW() is None) else "null")
+

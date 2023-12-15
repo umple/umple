@@ -1,0 +1,94 @@
+class Foo():
+    def __init__(self):
+        self._bars = None
+        self._bars = []
+
+    def getBar(self, index):
+        aBar = self._bars[index]
+        return aBar
+
+    def getBars(self):
+        newBars = tuple(self._bars)
+        return newBars
+
+    def numberOfBars(self):
+        number = len(self._bars)
+        return number
+
+    def hasBars(self):
+        has = len(self._bars) > 0
+        return has
+
+    def indexOfBar(self, aBar):
+        index = (-1 if not aBar in self._bars else self._bars.index(aBar))
+        return index
+
+    @staticmethod
+    def minimumNumberOfBars():
+        return 0
+
+    def addBar1(self):
+        from Bar import Bar
+        return Bar(self)
+
+    def addBar2(self, aBar):
+        wasAdded = False
+        if (aBar) in self._bars :
+            return False
+        existingFoo = aBar.getFoo()
+        isNewFoo = not (existingFoo is None) and not self == existingFoo
+        if isNewFoo :
+            aBar.setFoo(self)
+        else :
+            self._bars.append(aBar)
+        wasAdded = True
+        return wasAdded
+
+    def removeBar(self, aBar):
+        wasRemoved = False
+        if not self == aBar.getFoo() :
+            self._bars.remove(aBar)
+            wasRemoved = True
+        return wasRemoved
+
+    def addBarAt(self, aBar, index):
+        wasAdded = False
+        if self.addBar(aBar) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfBars() :
+                index = self.numberOfBars() - 1
+            self._bars.remove(aBar)
+            self._bars.insert(index, aBar)
+            wasAdded = True
+        return wasAdded
+
+    def addOrMoveBarAt(self, aBar, index):
+        wasAdded = False
+        if (aBar) in self._bars :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfBars() :
+                index = self.numberOfBars() - 1
+            self._bars.remove(aBar)
+            self._bars.insert(index, aBar)
+            wasAdded = True
+        else :
+            wasAdded = self.addBarAt(aBar, index)
+        return wasAdded
+
+    def delete(self):
+        i = len(self._bars)
+        while i > 0 :
+            aBar = self._bars[i - 1]
+            aBar.delete()
+            i -= 1
+
+    def addBar(self, *argv):
+        from Bar import Bar
+        if len(argv) == 0 :
+            return self.addBar1()
+        if len(argv) == 1 and isinstance(argv[0], Bar) :
+            return self.addBar2(argv[0])
+        raise TypeError("No method matches provided parameters")
+

@@ -1,0 +1,148 @@
+class Mentor():
+    def __init__(self, aName, *allStudents):
+        allStudents = list(allStudents)
+        self._students = None
+        self._name = None
+        self._name = aName
+        self._students = []
+        didAddStudents = self.setStudents(*allStudents)
+        if not didAddStudents :
+            raise RuntimeError ("Unable to create Mentor, must have 3 to 4 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getStudent(self, index):
+        aStudent = self._students[index]
+        return aStudent
+
+    def getStudents(self):
+        newStudents = tuple(self._students)
+        return newStudents
+
+    def numberOfStudents(self):
+        number = len(self._students)
+        return number
+
+    def hasStudents(self):
+        has = len(self._students) > 0
+        return has
+
+    def indexOfStudent(self, aStudent):
+        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
+        return index
+
+    @staticmethod
+    def minimumNumberOfStudents():
+        return 3
+
+    @staticmethod
+    def maximumNumberOfStudents():
+        return 4
+
+    def addStudent(self, aStudent):
+        wasAdded = False
+        if (aStudent) in self._students :
+            return False
+        if self.numberOfStudents() >= Mentor.maximumNumberOfStudents() :
+            return wasAdded
+        existingMentor = aStudent.getMentor()
+        if not (existingMentor is None) and existingMentor.numberOfStudents() <= Mentor.minimumNumberOfStudents() :
+            return wasAdded
+        elif not (existingMentor is None) :
+            existingMentor.students.remove(aStudent)
+        self._students.append(aStudent)
+        self.setMentor(aStudent, self)
+        wasAdded = True
+        return wasAdded
+
+    def removeStudent(self, aStudent):
+        wasRemoved = False
+        if (aStudent) in self._students and self.numberOfStudents() > Mentor.minimumNumberOfStudents() :
+            self._students.remove(aStudent)
+            self.setMentor(aStudent, None)
+            wasRemoved = True
+        return wasRemoved
+
+    def setStudents(self, *newStudents):
+        newStudents = list(newStudents)
+        wasSet = False
+        if len(newStudents) < Mentor.minimumNumberOfStudents() or len(newStudents) > Mentor.maximumNumberOfStudents() :
+            return wasSet
+        checkNewStudents = []
+        mentorToNewStudents = dict()
+        for aStudent in newStudents:
+            if (aStudent) in checkNewStudents :
+                return wasSet
+            elif not (aStudent.getMentor() is None) and not self == aStudent.getMentor() :
+                existingMentor = aStudent.getMentor()
+                if not (existingMentor) in mentorToNewStudents :
+                    mentorToNewStudents[existingMentor] = int(existingMentor.numberOfStudents())
+                currentCount = mentorToNewStudents.get(existingMentor)
+                nextCount = currentCount - 1
+                if nextCount < 3 :
+                    return wasSet
+                mentorToNewStudents[existingMentor] = int(nextCount)
+            checkNewStudents.append(aStudent)
+
+        self._students = list(filter(lambda a : not a in checkNewStudents, self._students))
+        for orphan in self._students:
+            self.setMentor(orphan, None)
+
+        self._students.clear()
+        for aStudent in newStudents:
+            if not (aStudent.getMentor() is None) :
+                aStudent.getMentor().students.remove(aStudent)
+            self.setMentor(aStudent, self)
+            self._students.append(aStudent)
+
+        wasSet = True
+        return wasSet
+
+    def setMentor(self, aStudent, aMentor):
+        try :
+            aStudent._mentor = aMentor
+        except :
+            raise RuntimeError ("Issue internally setting aMentor to aStudent")
+
+    def addStudentAt(self, aStudent, index):
+        wasAdded = False
+        if self.addStudent(aStudent) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfStudents() :
+                index = self.numberOfStudents() - 1
+            self._students.remove(aStudent)
+            self._students.insert(index, aStudent)
+            wasAdded = True
+        return wasAdded
+
+    def addOrMoveStudentAt(self, aStudent, index):
+        wasAdded = False
+        if (aStudent) in self._students :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfStudents() :
+                index = self.numberOfStudents() - 1
+            self._students.remove(aStudent)
+            self._students.insert(index, aStudent)
+            wasAdded = True
+        else :
+            wasAdded = self.addStudentAt(aStudent, index)
+        return wasAdded
+
+    def delete(self):
+        for aStudent in self._students:
+            self.setMentor(aStudent, None)
+
+        self._students.clear()
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
+

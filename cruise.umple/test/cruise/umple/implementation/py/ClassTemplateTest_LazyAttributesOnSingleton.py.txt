@@ -1,0 +1,48 @@
+from list import list
+import os
+
+class Application():
+    def __init__(self):
+        self._name = None
+        self._version = None
+
+    @staticmethod
+    def getInstance():
+        if theInstance is None :
+            theInstance = Application()
+
+        return theInstance
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def setVersion(self, aVersion):
+        wasSet = False
+        self._version = aVersion
+        wasSet = True
+        return wasSet
+
+    def setId(self, aId):
+        wasSet = False
+        self._id = aId
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getVersion(self):
+        return self._version
+
+    def getId(self):
+        return self._id
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super()) + "[" + "name" + ":" + self.getName() + "," + "version" + ":" + self.getVersion() + "]" + os.linesep + "  " + "id" + "=" + (self.getId() != ((str(self.getId()).replaceAll("  ", "    ")) if not self.getId().equals(self) else "this") if None else "null")
+

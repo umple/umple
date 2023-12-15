@@ -1,0 +1,43 @@
+from enum import Enum, auto
+
+class Light():
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        On = auto()
+        Off = auto()
+
+    def __init__(self):
+        self._status = None
+        self.setStatus(Light.Status.On)
+
+    def getStatusFullName(self):
+        answer = self._status.__str__()
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def flip(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == Light.Status.On :
+            self.setStatus(Light.Status.Off)
+            wasEventProcessed = True
+        elif aStatus == Light.Status.Off :
+            self.setStatus(Light.Status.On)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+        if self._status == Light.Status.On :
+            print("entry")
+            print("entry2")
+
+    def delete(self):
+        pass

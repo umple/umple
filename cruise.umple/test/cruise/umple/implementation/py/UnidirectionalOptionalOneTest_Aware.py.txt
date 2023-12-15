@@ -1,0 +1,36 @@
+import os
+
+class Mentor():
+    def __init__(self, aName):
+        self._student = None
+        self._name = None
+        self._name = aName
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getStudent(self):
+        return self._student
+
+    def hasStudent(self):
+        has = not (self._student is None)
+        return has
+
+    def setStudent(self, aNewStudent):
+        wasSet = False
+        self._student = aNewStudent
+        wasSet = True
+        return wasSet
+
+    def delete(self):
+        self._student = None
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]" + str(os.linesep) + "  " + "student = " + ((format(id(self.getStudent()), "x")) if not (self.getStudent() is None) else "null")
+

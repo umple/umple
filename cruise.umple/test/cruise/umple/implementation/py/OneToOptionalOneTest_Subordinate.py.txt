@@ -1,0 +1,47 @@
+import os
+
+class MySubordinate():
+    def __init__(self, aNumber, aMyDriver):
+        self._myDriver = None
+        self._number = None
+        self._number = aNumber
+        didAddMyDriver = self.setMyDriver(aMyDriver)
+        if not didAddMyDriver :
+            raise RuntimeError ("Unable to create mySubordinate due to myDriver. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    def setNumber(self, aNumber):
+        wasSet = False
+        self._number = aNumber
+        wasSet = True
+        return wasSet
+
+    def getNumber(self):
+        return self._number
+
+    def getMyDriver(self):
+        return self._myDriver
+
+    def setMyDriver(self, aNewMyDriver):
+        wasSet = False
+        if aNewMyDriver is None :
+            return wasSet
+        existingMySubordinate = aNewMyDriver.getMySubordinate()
+        if not (existingMySubordinate is None) and not self == existingMySubordinate :
+            return wasSet
+        anOldMyDriver = self._myDriver
+        self._myDriver = aNewMyDriver
+        self._myDriver.setMySubordinate(self)
+        if not (anOldMyDriver is None) :
+            anOldMyDriver.setMySubordinate(None)
+        wasSet = True
+        return wasSet
+
+    def delete(self):
+        existingMyDriver = self._myDriver
+        self._myDriver = None
+        if not (existingMyDriver is None) :
+            existingMyDriver.setMySubordinate(None)
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "myDriver = " + ((format(id(self.getMyDriver()), "x")) if not (self.getMyDriver() is None) else "null")
+
