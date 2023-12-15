@@ -60,4 +60,8 @@ uminify
 
 <h2>Notes:</h2>
 
-Windows being different compared to Linux and MacOs, not all commands from "dev-tools" directory are converted. For any non-included commands, please refer to "dev-tools" directory, open up the script files and apply accordingly.
+Windows being different compared to Linux and MacOs, 
+
+Not all commands from "dev-tools" directory are converted. For any non-included commands, 
+
+Please refer to "dev-tools" directory, open up the script files and apply accordingly.
