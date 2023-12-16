@@ -32,17 +32,19 @@ but sometimes when two tables have a foreign key referring to the same table */
             allAttributesOneQuoted += gen.translate("attributeOneQuoted", foreignPK) + ", ";
           }
         }
-
-        if (!av.isTwoDirectionalAssociation(av.getRelatedAssociation())){
-          appendln(realSb, "ALTER TABLE {0} ADD CONSTRAINT `fk_{5}_{2}_{6}` FOREIGN KEY (`{3}`) REFERENCES {1}({4});", gen.translate("typeWithPackage", uClass),
-                                                                                                                          gen.translate("typeWithPackage", associatedUClass), 
-                                                                                                                          gen.translate("type", associatedUClass), 
-                                                                                                                          allAttributesOne.substring(0, allAttributesOne.length()-4), 
-                                                                                                                          allAttributesOneQuoted.substring(0, allAttributesOneQuoted.length()-2),
-                                                                                                                          uClass.getName().toLowerCase(),
-                                                                                                                          allAttributesOneWithoutClassName.substring(0, allAttributesOneWithoutClassName.length()-1));
-          
+        if(foreignPKList.size() > 0){
+          if (!av.isTwoDirectionalAssociation(av.getRelatedAssociation())){
+            appendln(realSb, "ALTER TABLE {0} ADD CONSTRAINT `fk_{5}_{2}_{6}` FOREIGN KEY (`{3}`) REFERENCES {1}({4});", gen.translate("typeWithPackage", uClass),
+                                                                                                                            gen.translate("typeWithPackage", associatedUClass), 
+                                                                                                                            gen.translate("type", associatedUClass), 
+                                                                                                                            allAttributesOne.substring(0, allAttributesOne.length()-4), 
+                                                                                                                            allAttributesOneQuoted.substring(0, allAttributesOneQuoted.length()-2),
+                                                                                                                            uClass.getName().toLowerCase(),
+                                                                                                                            allAttributesOneWithoutClassName.substring(0, allAttributesOneWithoutClassName.length()-1));
+            
+          }
         }
+
 
       }
     }

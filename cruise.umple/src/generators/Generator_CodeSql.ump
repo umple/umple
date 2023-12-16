@@ -1032,7 +1032,7 @@ class SqlGenerator
     genClass.setLookup("constructorSignature_caller", signatureCaller.toString());
   }
 
-  private Key accountForInheritance(UmpleClass uClass){
+private Key accountForInheritance(UmpleClass uClass){
     UmpleClass parent = uClass.getExtendsClass();
     if (uClass == null){
       return null;
@@ -1051,30 +1051,39 @@ class SqlGenerator
       if (parent_pk == null){
         return null;
       }
-      else{ 
+      while(parent != null){
         String pkNames="";
         String pkTypes="";
-        for (String parentPkMember : parent_pk.getMembers()){
-          pkNames += parentPkMember+", ";
-        }
-        //trim pkNames and pkTypes
-        pkNames = pkNames.substring(0, pkNames.length() - 2);
-
-        if (uClass.getAssociationVariable(pkNames) == null){
           for (String parentPkMember : parent_pk.getMembers()){
-            pkTypes += parent.getAttribute(parentPkMember).getType() + ", ";
+            pkNames += parentPkMember+", ";
           }
-          pkTypes = pkTypes.substring(0, pkTypes.length() - 2); 
+          //trim pkNames and pkTypes
+          pkNames = pkNames.substring(0, pkNames.length() - 2);
+          
+          if (uClass.getAssociationVariable(pkNames) == null){
+            for (String parentPkMember : parent_pk.getMembers()){
+              if(parent.getAttribute(parentPkMember) != null){
+                pkTypes += parent.getAttribute(parentPkMember).getType() + ", ";             
+              }
+            }
+            if(pkTypes.length() > 2){
+              pkTypes = pkTypes.substring(0, pkTypes.length() - 2); 
+            }
 
-          Multiplicity optionalToOne = new Multiplicity();
-          optionalToOne.setBound("1");
-          AssociationVariable newAssoc = new AssociationVariable (pkNames, pkTypes, "", "", optionalToOne, true);
-          uClass.addAssociationVariable(newAssoc);
-          AssociationVariable avFromParent = parent.getAssociationVariable(pkNames);
-          newAssoc.setOneDirectionalRelatedAssociation(avFromParent);
-        }
+            Multiplicity optionalToOne = new Multiplicity();
+            optionalToOne.setBound("1");
+            AssociationVariable newAssoc = new AssociationVariable (pkNames, pkTypes, "", "", optionalToOne, true);
+            uClass.addAssociationVariable(newAssoc);
+            AssociationVariable avFromParent = parent.getAssociationVariable(pkNames);
+            newAssoc.setOneDirectionalRelatedAssociation(avFromParent);            
+          }
+          //Check for multiple inheritence
+          parent = parent.getExtendsClass();
+          if(parent != null){
+            parent_pk = parent.getKey();              
+          }
+      }
         return createNewIntPK(uClass);
-        }
     }
   }
 
