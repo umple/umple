@@ -31,6 +31,7 @@ class GvStateDiagramGenerator
   Boolean showGuardLabels = false;
   internal String display_language = "";
   lazy StateMachine root;
+  Boolean increaseSeps = false;
  
   internal Map<Transition,String> internalBoundaryTrans
     = new HashMap<Transition,String>();
@@ -74,6 +75,7 @@ digraph "<<=filename>>" {
     showTransitionLabels = hasSuboption("showtransitionlabels");
     showGuardLabels = hasSuboption("showguardlabels");
     display_language = getDisplayLanguage();
+    double sepVal = getSuboptionValue(); //gets the desired seperator value. Graphviz default is 0.5
     
     // Output basic gv file header
     _graphStart(0,code,model.getUmpleFile().getSimpleFileName());
@@ -82,6 +84,13 @@ digraph "<<=filename>>" {
     // or multiple state machines in any class
     // If so, we will need to put boxes around the state machines
     int smCount = 0;
+
+//checks if the seperator value is not 0.5 (Graphviz default). If it isn't it applies the desired seperator value to nodesep and ranksep
+  if (sepVal != 0.5){ 
+    code.append("nodesep =" + sepVal +";");  //injects sepVal(desired seperator value) into nodesep
+    code.append("ranksep =" + sepVal +";");  //injects sepVal(desired seperator value) into ranksep
+  }
+
     for (UmpleClass uClass : model.getUmpleClasses()) 
     {
       for (StateMachine sm : uClass.getStateMachines()) 

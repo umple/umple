@@ -1,0 +1,25 @@
+generate GvStateDiagram -s "increaseseperator=2";
+namespace example;
+
+class GarageDoor
+{
+   status {
+      	Open { buttonOrObstacle -> Closing;  }
+      
+	Closing {
+          buttonOrObstacle -> Opening;
+          reachBottom -> Closed;
+      	}
+
+      	Closed { buttonOrObstacle -> Opening; }
+
+      	Opening {
+          buttonOrObstacle -> HalfOpen;
+          reachTop -> Open;
+      	}
+
+      	HalfOpen { buttonOrObstacle -> Opening; }
+  }
+
+
+}

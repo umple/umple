@@ -41,6 +41,13 @@ digraph "<<=filename>>" {
     // This set ensures we track what we have visited
     HashSet visitedClasses = new HashSet();
 
+    //gets the desired seperator value. Graphviz default is 0.5
+    double sepVal = getSuboptionValue(); 
+    //checks if the seperator value is not 0.5 (Graphviz default). If it isn't it applies the desired seperator value to nodesep and ranksep
+    if (sepVal != 0.5){
+    code.append("nodesep =" + sepVal +";"); //injects sepVal(desired seperator value) into nodesep
+    code.append("ranksep =" + sepVal +";"); //injects sepVal(desired seperator value) into ranksep
+  }
     // Iterate through each class. 
     for (UmpleClass uClass : model.getUmpleClasses())
     {

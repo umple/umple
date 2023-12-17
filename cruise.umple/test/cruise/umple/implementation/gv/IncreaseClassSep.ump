@@ -1,0 +1,70 @@
+generate GvClassDiagram -s "increaseseperator=2";
+namespace example;
+
+class CanalNetwork {
+  name;
+  0..1 -- * CanalNetwork subNetwork;
+  0..1 -- * Craft activeVessels;
+  * -- * SegEnd;
+}
+
+class SegEnd {
+  name;
+  GPSCoord location;
+}
+
+class Segment {
+  Float waterLevel; // m above sea level 
+  1..* -- 2 SegEnd;
+}
+
+class Lock {
+  isA Segment;
+  Float maxLevel;
+  Float minLevel;
+}
+
+class Bend {
+  isA SegEnd;
+}
+
+class EntryAndExitPoint {
+  isA SegEnd;
+}
+
+class MooringPoint {
+  isA SegEnd;
+}
+
+class Obstacle {
+  isA SegEnd;
+  0..1 downstreamObstacle -- * Craft upStreamQueue;
+  0..1 upstreamObstacle -- * Craft downStreamQueue;  
+}
+
+class LowBridge {
+  isA Obstacle;
+}
+
+class LockGate {
+  isA Obstacle;
+}
+
+class Craft {
+  lazy GPSCoord location;
+}
+
+class Trip {
+  0..1 -> 1..* SegEnd;
+  0..1 -- 1 Craft;
+}
+
+class Transponder {
+  id;
+  0..1 -- 0..1 Craft;
+}
+
+class GPSCoord {
+   Float lattitide;
+   Float longitude;
+}
