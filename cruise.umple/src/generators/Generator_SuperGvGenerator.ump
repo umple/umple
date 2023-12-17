@@ -35,19 +35,20 @@ digraph "<<=filename>>" {
 
     // Output basic gv file header
     _graphStart(0,code,model.getUmpleFile().getSimpleFileName());
-    
+
     // Set of classes we are visiting
     // We always visit from the top of the hierarchy first
     // This set ensures we track what we have visited
     HashSet visitedClasses = new HashSet();
 
-    //gets the desired seperator value. Graphviz default is 0.5
-    double sepVal = getSuboptionValue(); 
-    //checks if the seperator value is not 0.5 (Graphviz default). If it isn't it applies the desired seperator value to nodesep and ranksep
+    //gets the desired separator value. Graphviz default is 0.5
+    double sepVal = getSuboptionValue("gvseparator", 0.5); 
+    //checks if the separator value is not 0.5 (Graphviz default).
+    // If it isn't it applies the desired separator value to nodesep and ranksep
     if (sepVal != 0.5){
-    code.append("nodesep =" + sepVal +";"); //injects sepVal(desired seperator value) into nodesep
-    code.append("ranksep =" + sepVal +";"); //injects sepVal(desired seperator value) into ranksep
-  }
+      code.append("nodesep =" + sepVal +";"); //injects sepVal(desired separator value) into nodesep
+      code.append("ranksep =" + sepVal +";"); //injects sepVal(desired separator value) into ranksep
+    }
     // Iterate through each class. 
     for (UmpleClass uClass : model.getUmpleClasses())
     {
