@@ -31,7 +31,6 @@ class GvStateDiagramGenerator
   Boolean showGuardLabels = false;
   internal String display_language = "";
   lazy StateMachine root;
-  Boolean increaseSeps = false;
  
   internal Map<Transition,String> internalBoundaryTrans
     = new HashMap<Transition,String>();
