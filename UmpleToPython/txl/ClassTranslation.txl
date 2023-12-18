@@ -16,26 +16,34 @@ rule replaceConcreteClasses
         _ [createImports classBody inheritances translatedBody]
     construct runMain [opt run_main]
         _ [constructRunMain translatedBody]
-    construct newTranslatedBody [class_body_decl]
-        _ [createGlobalPythonSyncLock translatedBody]
+
+
+    construct emptyDeclaration [repeat statement]
+        %none
+
+    construct umplePythonSyncLockStatement [repeat statement]
+        emptyDeclaration [createUmplePythonSyncLock translatedBody]
+
+    import possibleSynchronized [opt synchronized]
     by
         imports
-        'class className '( inheritanceClasses ')':  newTranslatedBody runMain
+        'class className '( inheritanceClasses ')':  umplePythonSyncLockStatement translatedBody runMain
 end rule
 
 
-% DEBUG
-function createGlobalPythonSyncLock translatedBody [class_body_decl]
-    replace [class_body_decl]
-      s [class_body_decl]
+function createUmplePythonSyncLock translatedBody [class_body_decl]
+    replace [repeat statement]
+      s [repeat statement]
+
     import possibleSynchronized [opt synchronized]
     deconstruct possibleSynchronized
       _ [synchronized]
-    construct stateDeclaration2 [statement]
+    construct stateDeclaration2 [repeat statement]
         'umplePythonSyncLock '= 'threading.Lock '( ')
     by
-        stateDeclaration2 translatedBody
+      stateDeclaration2
 end function
+
 
 %Rule to translate nested classes
 rule replaceInnerClasses
