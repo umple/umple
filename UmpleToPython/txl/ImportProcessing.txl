@@ -321,7 +321,7 @@ function addThreadImportForSynchronizedIfNeeded body [class_body_decl]
     deconstruct possibleSynchronized
       _ [synchronized] 
     construct newImport [import_statement]
-        'from ' threading 'import 'lock
+        'from ' threading 'import 'Lock
     by 
         imports [. newImport]
 end function
