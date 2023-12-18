@@ -68,9 +68,8 @@ Please refer to "dev-tools" directory, open up the script files and apply accord
 
 <h2>Extra Commands:</h2>
 
-Developing for changes in Umple require constant testing and the following commands are references for development while testing your code in the /dist/ file.
+Developing for changes in Umple require constant testing, start testing your developed code by going to the **dist** folder and creating yourFileName.ump.
 
-Commands not included in Wiki for development but is often used:
 
 Test the current built umple.jar file with your created test file:
 - java -jar umple.jar -c java yourFileName.ump
