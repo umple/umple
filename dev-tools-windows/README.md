@@ -65,3 +65,24 @@ Windows being different compared to Linux and MacOs,
 Not all commands from "dev-tools" directory are converted. For any non-included commands, 
 
 Please refer to "dev-tools" directory, open up the script files and apply accordingly.
+
+<h2>Extra Commands:</h2>
+
+Developing for changes in Umple require constant testing and the following commands are references for development while testing your code in the /dist/ file.
+
+Commands not included in Wiki for development but is often used:
+
+Test the current built umple.jar file with your created test file:
+- java -jar umple.jar -c java yourFileName.ump
+
+Generate GVClass diagram with your created test file:
+- java -jar umple.jar -g GvClassDiagram yourFileName.ump
+
+Generate GVStateClass diagram with your created test file:
+- java -jar umple.jar -g GvStateDiagram yourFileName.ump
+
+Generate SGV (Visible) diagrams with your created test file:
+- dot -Tsvg yourFileName.gv -o yourFileName.svg
+
+Generate SGV (Visible) diagrams with your created test file with SubOptions:
+- dot -Tsvg yourFileName.gv -o yourFileName.svg -s subOptionName
