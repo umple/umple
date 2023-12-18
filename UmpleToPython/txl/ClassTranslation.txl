@@ -39,7 +39,7 @@ function createUmplePythonSyncLock translatedBody [class_body_decl]
     deconstruct possibleSynchronized
       _ [synchronized]
     construct stateDeclaration2 [repeat statement]
-        'umplePythonSyncLock '= 'threading.Lock '( ')
+        'umplePythonSyncLock '= 'Lock '( ')
     by
       stateDeclaration2
 end function
