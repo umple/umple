@@ -116,4 +116,10 @@ public class GvCdGeneratorTest extends TemplateTest
     language = null;
     assertUmplePartialTemplateFor("gv/ColourParsingTest3.ump","gv/ColourParsingTest3.gv.txt");
   } 
+  @Test
+  public void nodeSeparationCd()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/IncreaseClassSep.ump","gv/IncreaseClassSep.gv.txt");
+  }
 }
