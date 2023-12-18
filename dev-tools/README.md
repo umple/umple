@@ -6,7 +6,7 @@ For Unix, Mac and Linux users (or Windows users with Cygwin or similar):
   - The following are scripts to automate common tasks
   - They assume either that your git working set is at ~/umple or that you
   - have created a symbolic link from ~/umple to the repo location. If not,
-  - the do setenv UMPLEROOT {repo} to point $UMPLEROOT to your umple repo
+  - then do setenv UMPLEROOT {repo} to point $UMPLEROOT to your umple repo
 
 It is suggested that you add this directory to your path.
 
