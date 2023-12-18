@@ -76,7 +76,7 @@ digraph "<<=filename>>" {
     display_language = getDisplayLanguage();
     
     //get the desired separator value. Graphviz default is 0.5
-    double sepVal = getSuboptionValue("gvseparator", 0.5); 
+    double sepVal = getSuboptionValue("gvseparator", 1.0); 
     
     // Output basic gv file header
     _graphStart(0,code,model.getUmpleFile().getSimpleFileName());
@@ -88,9 +88,10 @@ digraph "<<=filename>>" {
 
     //check if the separator value is not 0.5 (Graphviz default).
     // If it isn't it applies the desired separator value to nodesep and ranksep
-    if (sepVal != 0.5){ 
-      code.append("nodesep =" + sepVal +";");  //injects sepVal(desired separator value) into nodesep
-      code.append("ranksep =" + sepVal +";");  //injects sepVal(desired separator value) into ranksep
+    if (sepVal != 1.0){
+      Double graphVizSepVal = sepVal/2.0;
+      code.append("nodesep =" + graphVizSepVal +";");  //injects desired separator value into nodesep
+      code.append("ranksep =" + graphVizSepVal +";");  //injects desired separator value into ranksep
     }
 
     for (UmpleClass uClass : model.getUmpleClasses()) 

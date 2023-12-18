@@ -41,13 +41,14 @@ digraph "<<=filename>>" {
     // This set ensures we track what we have visited
     HashSet visitedClasses = new HashSet();
 
-    //gets the desired separator value. Graphviz default is 0.5
-    double sepVal = getSuboptionValue("gvseparator", 0.5); 
-    //checks if the separator value is not 0.5 (Graphviz default).
+    //gets the desired separator value. Graphviz default is 0.5 but for Umple we use 1.0 for 'normal'
+    double sepVal = getSuboptionValue("gvseparator", 1.0); 
+    //checks if the separator value is not 1.0 (Umple default which will be 0.5 in Graphviz).
     // If it isn't it applies the desired separator value to nodesep and ranksep
-    if (sepVal != 0.5){
-      code.append("nodesep =" + sepVal +";"); //injects sepVal(desired separator value) into nodesep
-      code.append("ranksep =" + sepVal +";"); //injects sepVal(desired separator value) into ranksep
+    if (sepVal != 1.0){
+      Double graphVizSepVal = sepVal/2.0;
+      code.append("nodesep =" + graphVizSepVal +";"); //injects sepVal(desired separator value) into nodesep
+      code.append("ranksep =" + graphVizSepVal +";"); //injects sepVal(desired separator value) into ranksep
     }
     // Iterate through each class. 
     for (UmpleClass uClass : model.getUmpleClasses())

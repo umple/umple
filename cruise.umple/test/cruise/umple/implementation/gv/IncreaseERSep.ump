@@ -1,4 +1,4 @@
-generate GvEntityRelationshipDiagram -s "gvseparator=2";
+generate GvEntityRelationshipDiagram -s "gvseparator=4";
 namespace example;
 
 class X {

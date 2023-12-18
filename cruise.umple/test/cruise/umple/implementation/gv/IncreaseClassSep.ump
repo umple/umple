@@ -1,4 +1,4 @@
-generate GvClassDiagram -s "gvseparator=2.0";
+generate GvClassDiagram -s "gvseparator=4.0";
 namespace example;
 
 class CanalNetwork {
