@@ -210,6 +210,7 @@ function addExternalImports translatedBody [class_body_decl]
         imports [addOSImportIfNeeded translatedBody]
         [addTimeImportIfNeeded translatedBody]
         [addThreadImportIfNeeded translatedBody]
+        [addThreadImportForSynchronizedIfNeeded translatedBody]
         [addEnumImportIfNeeded translatedBody]
         [addPickleImportIfNeeded]
         [addSysImportIfNeeded translatedBody]
@@ -308,6 +309,19 @@ function addThreadImportIfNeeded body [class_body_decl]
         body [shouldThreadImport]
     construct newImport [import_statement]
         'from 'threading 'import 'Thread
+    by 
+        imports [. newImport]
+end function
+
+%Adds an Thread import if synchronized keyword is being used 
+function addThreadImportForSynchronizedIfNeeded body [class_body_decl]
+    replace [repeat import_statement]
+        imports [repeat import_statement]
+    import possibleSynchronized [opt synchronized]
+    deconstruct possibleSynchronized
+      _ [synchronized] 
+    construct newImport [import_statement]
+        'from ' threading 'import 'lock
     by 
         imports [. newImport]
 end function
