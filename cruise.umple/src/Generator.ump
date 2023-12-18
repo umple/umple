@@ -19,6 +19,7 @@ interface CodeGenerator
   boolean setOutput(String aString);
   boolean setSuboption(String subopt);
   boolean hasSuboption(String subopt);
+  double getSuboptionValue(String subopt, Double defaultVal);
   void generate();
   void prepare();
   void postpare();
@@ -37,6 +38,30 @@ class CodeGeneratorWithSubptions
   public boolean setSuboption(String subopt)
   {
     return suboptions.add(subopt);
+  }
+
+//this is used to get the separator value after the =  for suboptions and can be used for any other
+  public double getSuboptionValue(String subopt, Double defaultVal){
+    double ret = defaultVal; //define the default return value 0.5 because that is graphviz default
+    String partOfString = subopt; //we want to check which suboption contains the prefix
+    String modifiedString = "";
+
+    for (String s : suboptions) { //iterates through each suboption to find the suboption that contains the prefix
+      if (s.contains(partOfString)) { //checks to see if prefix is in our suboptions []
+        String originalString = s; //save the string of the full suboption. for example (gvseparator=10)
+        
+         // Find the position of '='
+        int equalsPosition = originalString.indexOf('=');
+
+        // Extract everything after '='
+        // Add 1 to skip the '=' character itself
+        if (equalsPosition != -1) { // Check if '=' is found
+          modifiedString = originalString.substring(equalsPosition + 1);
+          ret = Double.parseDouble(modifiedString); //save the value of the double
+        }
+      }
+    }
+    return ret;
   }
 }
 
