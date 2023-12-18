@@ -1,0 +1,264 @@
+digraph "IncreaseClassSep" {
+  rankdir="BT"
+  node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+nodesep =2.0;ranksep =2.0;
+  // Class: CanalNetwork
+  "CanalNetwork" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    CanalNetwork    </td></tr><hr/><tr><td align="left" href="" title="String name&#13;">  name : String  </td></tr></table>>,
+   tooltip="class CanalNetwork
+"];
+
+  // Class: SegEnd
+  "SegEnd" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    SegEnd    </td></tr><hr/><tr><td align="left" href="" title="String name&#13;">  name : String  </td></tr><tr><td align="left" href="" title="GPSCoord location&#13;">  location : GPSCoord  </td></tr></table>>,
+   tooltip="class SegEnd
+"];
+
+  // Class: Segment
+  "Segment" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    Segment    </td></tr><hr/><tr><td align="left" href="" title="Float waterLevel&#13;m above sea level&#13;">  waterLevel : Float  </td></tr></table>>,
+   tooltip="class Segment
+"];
+
+  // Class: Lock
+  "Lock" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    Lock    </td></tr><hr/><tr><td align="left" href="" title="Float maxLevel&#13;">  maxLevel : Float  </td></tr><tr><td align="left" href="" title="Float minLevel&#13;">  minLevel : Float  </td></tr></table>>,
+   tooltip="class Lock
+"];
+  "Lock" -> "Segment" [arrowhead="empty"; samehead="gen"];
+
+
+  // Class: Bend
+  "Bend" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    Bend    </td></tr></table>>,
+   tooltip="class Bend
+"];
+  "Bend" -> "SegEnd" [arrowhead="empty"; samehead="gen"];
+
+
+  // Class: EntryAndExitPoint
+  "EntryAndExitPoint" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    EntryAndExitPoint    </td></tr></table>>,
+   tooltip="class EntryAndExitPoint
+"];
+  "EntryAndExitPoint" -> "SegEnd" [arrowhead="empty"; samehead="gen"];
+
+
+  // Class: MooringPoint
+  "MooringPoint" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    MooringPoint    </td></tr></table>>,
+   tooltip="class MooringPoint
+"];
+  "MooringPoint" -> "SegEnd" [arrowhead="empty"; samehead="gen"];
+
+
+  // Class: Obstacle
+  "Obstacle" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    Obstacle    </td></tr></table>>,
+   tooltip="class Obstacle
+"];
+  "Obstacle" -> "SegEnd" [arrowhead="empty"; samehead="gen"];
+
+
+  // Class: LowBridge
+  "LowBridge" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    LowBridge    </td></tr></table>>,
+   tooltip="class LowBridge
+"];
+  "LowBridge" -> "Obstacle" [arrowhead="empty"; samehead="gen"];
+
+
+  // Class: LockGate
+  "LockGate" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    LockGate    </td></tr></table>>,
+   tooltip="class LockGate
+"];
+  "LockGate" -> "Obstacle" [arrowhead="empty"; samehead="gen"];
+
+
+  // Class: Craft
+  "Craft" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    Craft    </td></tr><hr/><tr><td align="left" href="" title="GPSCoord location&#13;">  location : GPSCoord  </td></tr></table>>,
+   tooltip="class Craft
+"];
+
+  // Class: Trip
+  "Trip" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    Trip    </td></tr></table>>,
+   tooltip="class Trip
+"];
+
+  // Class: Transponder
+  "Transponder" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    Transponder    </td></tr><hr/><tr><td align="left" href="" title="String id&#13;">  id : String  </td></tr></table>>,
+   tooltip="class Transponder
+"];
+
+  // Class: GPSCoord
+  "GPSCoord" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    GPSCoord    </td></tr><hr/><tr><td align="left" href="" title="Float lattitide&#13;">  lattitide : Float  </td></tr><tr><td align="left" href="" title="Float longitude&#13;">  longitude : Float  </td></tr></table>>,
+   tooltip="class GPSCoord
+"];
+
+  // All associations
+  "CanalNetwork" -> "CanalNetwork" [dir="none", taillabel="0..1 ", headlabel="* subNetwork", tooltip="CanalNetwork 0..1  -- * subNetwork CanalNetwork
+
+A CanalNetwork called subNetwork may have a CanalNetwork. It can have none or just 1. 
+
+A CanalNetwork has some CanalNetworks called subNetwork. It can have none, and there is no upper bound defined.
+
+" headtooltip="CanalNetwork 0..1  -- * subNetwork CanalNetwork
+
+A CanalNetwork called subNetwork may have a CanalNetwork. It can have none or just 1. 
+
+A CanalNetwork has some CanalNetworks called subNetwork. It can have none, and there is no upper bound defined.
+
+" tailtooltip="CanalNetwork 0..1  -- * subNetwork CanalNetwork
+
+A CanalNetwork called subNetwork may have a CanalNetwork. It can have none or just 1. 
+
+A CanalNetwork has some CanalNetworks called subNetwork. It can have none, and there is no upper bound defined.
+
+" tailurl="javascript:void()" headurl="javascript:void()" ];
+  "CanalNetwork" -> "Craft" [dir="none", taillabel="0..1 ", headlabel="* activeVessels", tooltip="CanalNetwork 0..1  -- * activeVessels Craft
+
+A Craft called activeVessels may have a CanalNetwork. It can have none or just 1. 
+
+A CanalNetwork has some Crafts called activeVessels. It can have none, and there is no upper bound defined.
+
+" headtooltip="CanalNetwork 0..1  -- * activeVessels Craft
+
+A Craft called activeVessels may have a CanalNetwork. It can have none or just 1. 
+
+A CanalNetwork has some Crafts called activeVessels. It can have none, and there is no upper bound defined.
+
+" tailtooltip="CanalNetwork 0..1  -- * activeVessels Craft
+
+A Craft called activeVessels may have a CanalNetwork. It can have none or just 1. 
+
+A CanalNetwork has some Crafts called activeVessels. It can have none, and there is no upper bound defined.
+
+" tailurl="javascript:void()" headurl="javascript:void()" ];
+  "CanalNetwork" -> "SegEnd" [dir="none", taillabel="* ", headlabel="* ", tooltip="CanalNetwork *  -- *  SegEnd
+
+A SegEnd has some CanalNetworks. It can have none, and there is no upper bound defined.
+
+A CanalNetwork has some SegEnds. It can have none, and there is no upper bound defined.
+
+" headtooltip="CanalNetwork *  -- *  SegEnd
+
+A SegEnd has some CanalNetworks. It can have none, and there is no upper bound defined.
+
+A CanalNetwork has some SegEnds. It can have none, and there is no upper bound defined.
+
+" tailtooltip="CanalNetwork *  -- *  SegEnd
+
+A SegEnd has some CanalNetworks. It can have none, and there is no upper bound defined.
+
+A CanalNetwork has some SegEnds. It can have none, and there is no upper bound defined.
+
+" tailurl="javascript:void()" headurl="javascript:void()" ];
+  "Segment" -> "SegEnd" [dir="none", taillabel="1..* ", headlabel="2 ", tooltip="Segment 1..*  -- 2  SegEnd
+
+A SegEnd has at least 1 Segment and can never have none. And there is no upper bound defined.
+
+A Segment has 2 SegEnds. 
+When a Segment is created, its 2 SegEnds must be assigned.
+
+" headtooltip="Segment 1..*  -- 2  SegEnd
+
+A SegEnd has at least 1 Segment and can never have none. And there is no upper bound defined.
+
+A Segment has 2 SegEnds. 
+When a Segment is created, its 2 SegEnds must be assigned.
+
+" tailtooltip="Segment 1..*  -- 2  SegEnd
+
+A SegEnd has at least 1 Segment and can never have none. And there is no upper bound defined.
+
+A Segment has 2 SegEnds. 
+When a Segment is created, its 2 SegEnds must be assigned.
+
+" tailurl="javascript:void()" headurl="javascript:void()" ];
+  "Obstacle" -> "Craft" [dir="none", taillabel="0..1 downstreamObstacle", headlabel="* upStreamQueue", tooltip="Obstacle 0..1 downstreamObstacle -- * upStreamQueue Craft
+
+A Craft called upStreamQueue may have an Obstacle called downstreamObstacle. It can have none or just 1. 
+
+An Obstacle called downstreamObstacle has some Crafts called upStreamQueue. It can have none, and there is no upper bound defined.
+
+" headtooltip="Obstacle 0..1 downstreamObstacle -- * upStreamQueue Craft
+
+A Craft called upStreamQueue may have an Obstacle called downstreamObstacle. It can have none or just 1. 
+
+An Obstacle called downstreamObstacle has some Crafts called upStreamQueue. It can have none, and there is no upper bound defined.
+
+" tailtooltip="Obstacle 0..1 downstreamObstacle -- * upStreamQueue Craft
+
+A Craft called upStreamQueue may have an Obstacle called downstreamObstacle. It can have none or just 1. 
+
+An Obstacle called downstreamObstacle has some Crafts called upStreamQueue. It can have none, and there is no upper bound defined.
+
+" tailurl="javascript:void()" headurl="javascript:void()" ];
+  "Obstacle" -> "Craft" [dir="none", taillabel="0..1 upstreamObstacle", headlabel="* downStreamQueue", tooltip="Obstacle 0..1 upstreamObstacle -- * downStreamQueue Craft
+
+A Craft called downStreamQueue may have an Obstacle called upstreamObstacle. It can have none or just 1. 
+
+An Obstacle called upstreamObstacle has some Crafts called downStreamQueue. It can have none, and there is no upper bound defined.
+
+" headtooltip="Obstacle 0..1 upstreamObstacle -- * downStreamQueue Craft
+
+A Craft called downStreamQueue may have an Obstacle called upstreamObstacle. It can have none or just 1. 
+
+An Obstacle called upstreamObstacle has some Crafts called downStreamQueue. It can have none, and there is no upper bound defined.
+
+" tailtooltip="Obstacle 0..1 upstreamObstacle -- * downStreamQueue Craft
+
+A Craft called downStreamQueue may have an Obstacle called upstreamObstacle. It can have none or just 1. 
+
+An Obstacle called upstreamObstacle has some Crafts called downStreamQueue. It can have none, and there is no upper bound defined.
+
+" tailurl="javascript:void()" headurl="javascript:void()" ];
+  "Trip" -> "SegEnd" [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="1..* ", tooltip="Trip 0..1  -> 1..*  SegEnd
+
+A SegEnd may have a Trip. It can have none or just 1. 
+
+A Trip has at least 1 SegEnd and can never have none. And there is no upper bound defined.
+
+" headtooltip="Trip 0..1  -> 1..*  SegEnd
+
+A SegEnd may have a Trip. It can have none or just 1. 
+
+A Trip has at least 1 SegEnd and can never have none. And there is no upper bound defined.
+
+" tailtooltip="Trip 0..1  -> 1..*  SegEnd
+
+A SegEnd may have a Trip. It can have none or just 1. 
+
+A Trip has at least 1 SegEnd and can never have none. And there is no upper bound defined.
+
+" tailurl="javascript:void()" headurl="javascript:void()" ];
+  "Trip" -> "Craft" [dir="none", taillabel="0..1 ", headlabel="1 ", tooltip="Trip 0..1  -- 1  Craft
+
+A Craft may have a Trip. It can have none or just 1. 
+
+A Trip has A Craft. It must always have exactly, one, and can never have none. And there is an upper bound of at most one Craft.
+
+" headtooltip="Trip 0..1  -- 1  Craft
+
+A Craft may have a Trip. It can have none or just 1. 
+
+A Trip has A Craft. It must always have exactly, one, and can never have none. And there is an upper bound of at most one Craft.
+
+" tailtooltip="Trip 0..1  -- 1  Craft
+
+A Craft may have a Trip. It can have none or just 1. 
+
+A Trip has A Craft. It must always have exactly, one, and can never have none. And there is an upper bound of at most one Craft.
+
+" tailurl="javascript:void()" headurl="javascript:void()" ];
+  "Transponder" -> "Craft" [dir="none", taillabel="0..1 ", headlabel="0..1 ", tooltip="Transponder 0..1  -- 0..1  Craft
+
+A Craft may have a Transponder. It can have none or just 1. 
+
+A Transponder may have a Craft. It can have none or just 1. 
+
+" headtooltip="Transponder 0..1  -- 0..1  Craft
+
+A Craft may have a Transponder. It can have none or just 1. 
+
+A Transponder may have a Craft. It can have none or just 1. 
+
+" tailtooltip="Transponder 0..1  -- 0..1  Craft
+
+A Craft may have a Transponder. It can have none or just 1. 
+
+A Transponder may have a Craft. It can have none or just 1. 
+
+" tailurl="javascript:void()" headurl="javascript:void()" ];
+}
