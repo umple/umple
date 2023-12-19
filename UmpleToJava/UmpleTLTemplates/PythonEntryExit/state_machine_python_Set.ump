@@ -152,7 +152,9 @@ class UmpleToJava {
             exitJavaLine++;
           }
           isFirstExit = false;
-          exitActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
+          exitActions.append(StringFormatter.format("if self._{0} == ", sm.getName()));
+          exitActions.append(StringFormatter.format("{0}.", uClass.getName()));
+          exitActions.append(StringFormatter.format("{0}.{1} :", StringFormatter.toPascalCase(sm.getName()), gen.translate("stateOne",state)));
           exitJavaLine++;
         }
         hasExit = true;
@@ -170,7 +172,8 @@ class UmpleToJava {
           
           final String relativePath = sm_temp.getUmpleClass().getRelativePath(p.getFilename(),"Java");
           
-          exitActions.append("\n        // line " + p.getLineNumber() + " \"" + relativePath + "\"");
+          // TODO: decide whether or not we want to keep comments
+          // exitActions.append("\n        // line " + p.getLineNumber() + " \"" + relativePath + "\"");
           addUncaughtExceptionVariables(gen.translate("exitMethod",sm),
                                         relativePath.replace("\\","/").replaceAll(".*/",""),
                                         p.getLineNumber(),
@@ -194,6 +197,7 @@ class UmpleToJava {
       }
     }
     
+    //TODO: look at if we need to keep these statements for break;
     if (hasThisEntry)
     {
       entryJavaLine++;
@@ -201,7 +205,6 @@ class UmpleToJava {
     
     if (hasThisExit)
     {
-      exitActions.append("\n        break;");
       exitJavaLine++;
     }
     
@@ -211,14 +214,13 @@ class UmpleToJava {
   #>>
   private void <<=gen.translate("exitMethod",sm)>>()
   {
+    <TXL UGM>
     <<# if (customExitPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customExitPrefixCode,gen.translate("exitMethod",sm));
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customExitPrefixCode, "    ")); } #>>
-    switch(<<= gen.translate("stateMachineOne",sm) >>)
-    {
       <<= exitActions >>
-    }
     <<# if (customExitPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customExitPostfixCode,gen.translate("exitMethod",sm)); 
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customExitPostfixCode, "    ")); } #>>
+    </TXL UGM>
   }
 
 
