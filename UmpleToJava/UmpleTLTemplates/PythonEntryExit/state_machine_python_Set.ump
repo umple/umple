@@ -74,9 +74,7 @@ class UmpleToJava {
             entryActions.append("\n      ");
             entryJavaLine++;
           }
-          entryActions.append(StringFormatter.format("if self._{0} == ", sm.getName()));
-          entryActions.append(StringFormatter.format("{0}.", uClass.getName()));
-          entryActions.append(StringFormatter.format("{0}.{1} :", StringFormatter.toPascalCase(sm.getName()), gen.translate("stateOne",state)));
+          entryActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
           entryJavaLine++;
         }
         hasEntry = true;
@@ -92,8 +90,7 @@ class UmpleToJava {
           StateMachine sm_temp=sm;
           if (sm.getUmpleClass()==null) sm_temp=sm.getRootStateMachine();
           final String relativePath = sm_temp.getUmpleClass().getRelativePath(p.getFilename(),"Java");
-          // TODO: decide whether or not we want to keep comments
-          //entryActions.append("\n        // line " + p.getLineNumber() + " \"" + relativePath + "\"");
+          entryActions.append("\n        // line " + p.getLineNumber() + " \"" + relativePath + "\"");
           entryFileNames.add(relativePath.replace("\\","/").replaceAll(".*/",""));
           entryUmpleLineNumbers.add(p.getLineNumber());
           entryJavaLineNumbers.add(entryJavaLine-1);
@@ -196,6 +193,7 @@ class UmpleToJava {
     
     if (hasThisEntry)
     {
+      entryActions.append("\n        break;");
       entryJavaLine++;
     }
     
@@ -238,18 +236,24 @@ class UmpleToJava {
   } #>>
   private void <<=gen.translate("setMethod",sm)>>(<<= gen.translate("type",sm) >> <<= gen.translate("parameterOne",sm) >>)
   {
-    <TXL UGM>
+    // TXL PYTHON DEBUG
+    System.out.println("TESTING ENTRY");
     <<# if (customSetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPrefixCode,gen.translate("setMethod",sm)); 
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    <<= gen.translate("stateMachineOne",sm) >> = <<= gen.translate("parameterOne",sm) >>;
 <<# if (parentState != null) { #>>
     if (<<= gen.translate("stateMachineOne",parentSm) >> != <<= gen.translate("type",parentSm) >>.<<= gen.translate("stateOne",parentState) >> && <<= gen.translate("parameterOne",sm) >> != <<= gen.translate("type",sm) >>.<<= gen.translate("stateNull",sm) >>) { <<=gen.translate("setMethod",parentSm)>>(<<= gen.translate("type",parentSm) >>.<<= gen.translate("stateOne",parentState) >>); }
 <<# } #>>
     <<# if (customSetPostfixCode != null) {  addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",sm));
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
 <<# if (hasEntry) { #>>
-      self._<<= sm.getName()>> = a<<= StringFormatter.toPascalCase(sm.getName())>>
+
+    // entry actions and do activities
+    switch(<<= gen.translate("stateMachineOne",sm) >>)
+    {
+      // TXL PYTHON DEBUG
       <<= entryActions >>
-    </TXL UGM>
+    }
 <<# } #>>
 <<# if (parentState != null) { #>>
   <<# if (sm.getContainsDeepHistoryState()) { #>>
