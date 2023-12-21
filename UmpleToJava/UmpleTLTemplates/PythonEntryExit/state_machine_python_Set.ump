@@ -74,7 +74,7 @@ class UmpleToJava {
             entryActions.append("\n      ");
             entryJavaLine++;
           }
-          entryActions.append(StringFormatter.format("if self._{0} == ", sm.getName()));
+          entryActions.append(StringFormatter.format("  if self._{0} == ", sm.getName()));
           entryActions.append(StringFormatter.format("{0}.", uClass.getName()));
           entryActions.append(StringFormatter.format("{0}.{1} :", StringFormatter.toPascalCase(sm.getName()), gen.translate("stateOne",state)));
           entryJavaLine++;
@@ -115,7 +115,7 @@ class UmpleToJava {
           entryActions.append("\n        {");
           entryJavaLine++;  
           
-          entryActions.append("\n          " + actionCode);
+          entryActions.append("\n              " + actionCode);
           entryJavaLine+=actionCode.split("\\n").length;
           
 
@@ -129,12 +129,12 @@ class UmpleToJava {
         {
           for (Activity activity : state.getActivities())
           {
-            entryActions.append("\n        " + action.getActionCode().substring(0, action.getActionCode().length() - 1).concat(traceItemActivity.trace(gen, activity,"sm_di", uClass))+" }");
+            entryActions.append("\n            " + action.getActionCode().substring(0, action.getActionCode().length() - 1).concat(traceItemActivity.trace(gen, activity,"sm_di", uClass))+" }");
             entryJavaLine+=action.getActionCode().split("\\n").length;
           }
         }
         else{
-          entryActions.append("\n        " + action.getActionCode());
+          entryActions.append("\n            " + action.getActionCode());
           entryJavaLine+=action.getActionCode().split("\\n").length;
         }
 
@@ -152,7 +152,7 @@ class UmpleToJava {
             exitJavaLine++;
           }
           isFirstExit = false;
-          exitActions.append(StringFormatter.format("if self._{0} == ", sm.getName()));
+          exitActions.append(StringFormatter.format("  if self._{0} == ", sm.getName()));
           exitActions.append(StringFormatter.format("{0}.", uClass.getName()));
           exitActions.append(StringFormatter.format("{0}.{1} :", StringFormatter.toPascalCase(sm.getName()), gen.translate("stateOne",state)));
           exitJavaLine++;
@@ -248,16 +248,16 @@ class UmpleToJava {
 <<# } #>>
     <<# if (customSetPostfixCode != null) {  addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",sm));
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
+        self._<<= sm.getName()>> = a<<= StringFormatter.toPascalCase(sm.getName())>>
 <<# if (hasEntry) { #>>
-      self._<<= sm.getName()>> = a<<= StringFormatter.toPascalCase(sm.getName())>>
       <<= entryActions >>
-    </TXL UGM>
 <<# } #>>
 <<# if (parentState != null) { #>>
   <<# if (sm.getContainsDeepHistoryState()) { #>>
     if (<<= gen.translate("parameterOne",sm) >> == <<= gen.translate("type",sm)  >>.HStar) { <<= gen.translate("stateMachineOne",sm) >> = <<= gen.translate("stateMachineOne", sm) >>HStar;}
   <<# } #>>
 <<# } #>>
+    </TXL UGM>
   }
 !>>
 }

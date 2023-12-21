@@ -2172,7 +2172,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     return hasTimedEvents;
   }
   
-  private void prepareDoActivityThread(StateMachine sm)
+  protected void prepareDoActivityThread(StateMachine sm)
   {
     for(State state : sm.getStates())
     {
