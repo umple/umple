@@ -11,7 +11,6 @@ class UmpleToJava {
         if(!aMethod.getExistsInLanguage("Python") || aMethod.getSource() == Method.Source.fAutoAPI)
           continue;
 
-
         Position p = aMethod.getCodePosition();
         String positionHeader = "";        
 

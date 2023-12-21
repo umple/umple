@@ -5,7 +5,7 @@ noreferences
 @@description
 
 <p>The following describes how to use the <a 
-href="http://try.umple.org">UmpleOnline tool accessible online at 
+href="https://try.umple.org">UmpleOnline tool accessible online at 
 try.umple.org</a></p>
 
 <p>For information about writing Umple models or code in UmpleOnline, look at the <a href="GettingStarted.html">Getting
@@ -20,8 +20,8 @@ column of this page, including information about defining <a href="ClassDefiniti
 <ul>
 
 <li><b>To explore examples of Umple</b>, In the centre pane, select a pre-prepared example from the 'TOOLS' menu. You can also directly access these examples using a
-URL whose last component is the name of the example. For example <a href="http://try.umple.org/?example=2DShapes">click
-here to jump to the 2DShapes example: http://try.umple.org/?example=2DShapes</a></li>
+URL whose last component is the name of the example. For example <a href="https://try.umple.org/?example=2DShapes">click
+here to jump to the 2DShapes example: https://try.umple.org/?example=2DShapes</a></li>
 
 <br />
 
@@ -87,9 +87,9 @@ graphical pane, as described later.
     <li><b>Load a URL you saved using one of the saving methods 1 and 2 above.</b><br /></li>
     <li><b>Put a .ump file on the web (saved from Eclipse or using saving method 3 above), and load it using the filename argument to Umpleonline.</b> The filename
     argument's syntax is ?filename=X, where X is the URL of the file containing
-    the Umple file, <i>minus the leading 'http://'</i>. So, for example there
+    the Umple file, <i>minus the leading 'https://'</i>. So, for example there
     is a .ump file in the repository at the following URL: <a href="https://raw.githubusercontent.com/umple/umple/master/cruise.umple/src/Umple.ump">   https://raw.githubusercontent.com/umple/umple/master/cruise.umple/src/Umple.ump
-    </a>. This can be loaded into Umple using the following URL: <a href="http://try.umple.org/?filename=raw.githubusercontent.com/umple/umple/master/cruise.umple/src/Umple.ump">   http://try.umple.org/?filename=raw.githubusercontent.com/umple/umple/master/cruise.umple/src/Umple.ump</a><br /></li> 
+    </a>. This can be loaded into Umple using the following URL: <a href="https://try.umple.org/?filename=raw.githubusercontent.com/umple/umple/master/cruise.umple/src/Umple.ump">   https://try.umple.org/?filename=raw.githubusercontent.com/umple/umple/master/cruise.umple/src/Umple.ump</a><br /></li> 
     <li><b>Paste Umple code into UmpleOnline.</b> Note however, that you have to make
     sure the pasted file contains the layout information, as described under the saving methods above.
   </ol>

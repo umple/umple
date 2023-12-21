@@ -102,8 +102,8 @@ class UmpleToJava {
   } 
   
   for (Attribute av : uClass.getAttributes())
-  {
-    if (av.getIsAutounique() || av.getIsUnique() || av.isConstant() || "theInstance".equals(gen.translate("attributeOne",av)) || av.getIsDerived())
+  { // Issue 2046, workaround for unique immutable 
+    if (av.getIsAutounique() || av.getIsUnique() && !av.isImmutable() || av.isConstant() || "theInstance".equals(gen.translate("attributeOne",av)) || av.getIsDerived())
     {
       continue;
     }
@@ -120,7 +120,7 @@ class UmpleToJava {
       hasBody = true;
       #>><<@ UmpleToJava.constructor_AttributeAssignDefaulted >><<# 
     }
-    else if (av.isImmutable() && av.getIsLazy())
+    else if (av.isImmutable() && (av.getIsLazy() || av.getIsUnique()))
     {
       hasBody = true;
       #>><<@ UmpleToJava.constructor_AttributeUnassignedImmutable >><<#

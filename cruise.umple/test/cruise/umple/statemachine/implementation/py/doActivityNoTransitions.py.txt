@@ -1,0 +1,57 @@
+from enum import Enum, auto
+from threading import Thread
+import time
+
+class LightFixture():
+    class Bulb(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        On = auto()
+        Off = auto()
+
+    def __init__(self):
+        self._doActivityBulbOnThread = None
+        self._bulb = None
+        self.setBulb(LightFixture.Bulb.On)
+
+    def getBulbFullName(self):
+        answer = self._bulb.__str__()
+        return answer
+
+    def getBulb(self):
+        return self._bulb
+
+    def exitBulb(self):
+        if self._bulb == LightFixture.Bulb.On :
+            if not (self._doActivityBulbOnThread is None) :
+                self._doActivityBulbOnThread.interrupt()
+
+    def setBulb(self, aBulb):
+        self._bulb = aBulb
+        if self._bulb == LightFixture.Bulb.On :
+            self._doActivityBulbOnThread = LightFixture.DoActivityThread(self, "doActivityBulbOn")
+
+    def doActivityBulbOn(self):
+        try:
+            doActivity()
+        except :
+            pass
+
+    class DoActivityThread(Thread):
+        def __init__(self, aController, aDoActivityMethodName):
+            self._doActivityMethodName = None
+            self._controller = None
+            self._controller = aController
+            self._doActivityMethodName = aDoActivityMethodName
+            super().__init__()
+            self.start()
+
+        def run(self):
+            if "doActivityBulbOn" == self._doActivityMethodName :
+                self._controller.doActivityBulbOn()
+
+    def delete(self):
+        pass
+

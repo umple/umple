@@ -12,7 +12,7 @@ use equals.ump;
 use import_packages.ump;
 use members_AllAssociations.ump;
 use members_AllAttributes.ump;
-use members_AllDoActivities.ump;
+use PythonDoActivities/members_python_AllDoActivities.ump;
 use members_AllHelpers.ump;
 use members_AllStateMachines.ump;
 use members_AllStatics.ump;
@@ -23,7 +23,7 @@ use state_machine_Events_All.ump;
 use state_machine_Get_All.ump;
 use state_machine_Set_All.ump;
 use state_machine_StateDependentMethods_All.ump;
-use state_machine_doActivity_All.ump;
+use PythonDoActivities/state_machine_python_doActivity_All.ump;
 use state_machine_timedEvent_All.ump;
 use toString_declare.ump;
 use trace.ump;
@@ -443,7 +443,7 @@ for (StateMachine smq : uClass.getStateMachines())
   append(realSb,"  //------------------------\n");
    }  
 
-  #>><<@ UmpleToJava.members_AllStatics >><<@ UmpleToJava.members_AllAttributes >><<@ UmpleToJava.members_AllStateMachines >><<@ UmpleToJava.members_AllDoActivities >><<@ UmpleToJava.members_AllAssociations >><<@ UmpleToJava.members_AllHelpers >>
+  #>><<@ UmpleToJava.members_AllStatics >><<@ UmpleToJava.members_AllAttributes >><<@ UmpleToJava.members_AllStateMachines >><<@ UmpleToJava.members_python_AllDoActivities >><<@ UmpleToJava.members_AllAssociations >><<@ UmpleToJava.members_AllHelpers >>
   <<#return realSb.toString();
     }
   private UmpleClass globalUmpleClass = null;
@@ -508,7 +508,7 @@ for (StateMachine smq : uClass.getStateMachines())
   <<#return realSb.toString();
     } 
     private String getStateMachine2Code(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
-  {#>><<@ UmpleToJava.state_machine_doActivity_All >><<@ UmpleToJava.state_machine_timedEvent_All >>
+  {#>><<@ UmpleToJava.state_machine_python_doActivity_All >><<@ UmpleToJava.state_machine_timedEvent_All >>
   <<#return realSb.toString();
     } 
     private String getDeleteCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)

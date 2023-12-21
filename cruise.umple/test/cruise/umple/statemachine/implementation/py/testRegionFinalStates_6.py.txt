@@ -1,0 +1,257 @@
+from enum import Enum, auto
+
+class X():
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        s1 = auto()
+        Final = auto()
+        s2 = auto()
+        s3 = auto()
+
+    class StatusS1S11(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        s11 = auto()
+        fState1 = auto()
+
+    class StatusS1S11S11(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        s111 = auto()
+
+    class StatusS1S11S11S111(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        s111 = auto()
+
+    class StatusS1S12(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        s12 = auto()
+
+    class StatusS1S12S12(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        s122 = auto()
+        fState2 = auto()
+
+    def __init__(self):
+        self._statusS1S12S12 = None
+        self._statusS1S12 = None
+        self._statusS1S11S11S111 = None
+        self._statusS1S11S11 = None
+        self._statusS1S11 = None
+        self._status = None
+        self.setStatusS1S11(X.StatusS1S11.Null)
+        self.setStatusS1S11S11(X.StatusS1S11S11.Null)
+        self.setStatusS1S11S11S111(X.StatusS1S11S11S111.Null)
+        self.setStatusS1S12(X.StatusS1S12.Null)
+        self.setStatusS1S12S12(X.StatusS1S12S12.Null)
+        self.setStatus(X.Status.s1)
+
+    def getStatusFullName(self):
+        answer = self._status.__str__()
+        if self._statusS1S11 != X.StatusS1S11.Null :
+            answer += "." + self._statusS1S11.__str__()
+        if self._statusS1S11S11 != X.StatusS1S11S11.Null :
+            answer += "." + self._statusS1S11S11.__str__()
+        if self._statusS1S11S11S111 != X.StatusS1S11S11S111.Null :
+            answer += "." + self._statusS1S11S11S111.__str__()
+        if self._statusS1S12 != X.StatusS1S12.Null :
+            answer += "." + self._statusS1S12.__str__()
+        if self._statusS1S12S12 != X.StatusS1S12S12.Null :
+            answer += "." + self._statusS1S12S12.__str__()
+        if self._statusS1S11S11S111 != X.StatusS1S11S11S111.Null :
+            answer += "." + self._statusS1S11S11S111.__str__()
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def getStatusS1S11(self):
+        return self._statusS1S11
+
+    def getStatusS1S11S11(self):
+        return self._statusS1S11S11
+
+    def getStatusS1S11S11S111(self):
+        return self._statusS1S11S11S111
+
+    def getStatusS1S12(self):
+        return self._statusS1S12
+
+    def getStatusS1S12S12(self):
+        return self._statusS1S12S12
+
+    def e2(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == X.Status.s1 :
+            self.exitStatus()
+            self.setStatus(X.Status.s2)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e4(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == X.Status.s2 :
+            self.setStatus(X.Status.Final)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e3(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == X.Status.s2 :
+            self.setStatus(X.Status.s3)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e(self):
+        wasEventProcessed = False
+        aStatusS1S11S11S111 = self._statusS1S11S11S111
+        if aStatusS1S11S11S111 == X.StatusS1S11S11.s111 :
+            self.exitStatus()
+            self.setStatus(X.Status.Final)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def d1(self):
+        wasEventProcessed = False
+        aStatusS1S11S11S111 = self._statusS1S11S11S111
+        if aStatusS1S11S11S111 == X.StatusS1S11S11.s111 :
+            self.exitStatusS1S11()
+            self.setStatusS1S11(X.StatusS1S11.fState1)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def d2(self):
+        wasEventProcessed = False
+        aStatusS1S12S12 = self._statusS1S12S12
+        if aStatusS1S12S12 == X.StatusS1S12S12.s122 :
+            self.exitStatusS1S12S12()
+            self.setStatusS1S12S12(X.StatusS1S12S12.fState2)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitStatus(self):
+        if self._status == X.Status.s1 :
+            self.exitStatusS1S11()
+            self.exitStatusS1S12()
+            print("t4")
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+        if self._status == X.Status.s1 :
+            if self._statusS1S11 == X.StatusS1S11.Null :
+                self.setStatusS1S11(X.StatusS1S11.s11)
+            if self._statusS1S12 == X.StatusS1S12.Null :
+                self.setStatusS1S12(X.StatusS1S12.s12)
+        elif self._status == X.Status.Final :
+            self.delete()
+        elif self._status == X.Status.s3 :
+            self.delete()
+
+    def exitStatusS1S11(self):
+        if self._statusS1S11 == X.StatusS1S11.s11 :
+            self.exitStatusS1S11S11()
+            print("t3")
+            self.setStatusS1S11(X.StatusS1S11.Null)
+        elif self._statusS1S11 == X.StatusS1S11.fState1 :
+            self.setStatusS1S11(X.StatusS1S11.Null)
+
+    def setStatusS1S11(self, aStatusS1S11):
+        self._statusS1S11 = aStatusS1S11
+        if self._status != X.Status.s1 and aStatusS1S11 != X.StatusS1S11.Null :
+            self.setStatus(X.Status.s1)
+        if self._statusS1S11 == X.StatusS1S11.s11 :
+            if self._statusS1S11S11 == X.StatusS1S11S11.Null :
+                self.setStatusS1S11S11(X.StatusS1S11S11.s111)
+        elif self._statusS1S11 == X.StatusS1S11.fState1 :
+            if self._statusS1S12S12 == X.StatusS1S12S12.fState2 :
+                self.delete()
+
+    def exitStatusS1S11S11(self):
+        if self._statusS1S11S11 == X.StatusS1S11S11.s111 :
+            self.exitStatusS1S11S11S111()
+            print("t2")
+            self.setStatusS1S11S11(X.StatusS1S11S11.Null)
+
+    def setStatusS1S11S11(self, aStatusS1S11S11):
+        self._statusS1S11S11 = aStatusS1S11S11
+        if self._statusS1S11 != X.StatusS1S11.s11 and aStatusS1S11S11 != X.StatusS1S11S11.Null :
+            self.setStatusS1S11(X.StatusS1S11.s11)
+        if self._statusS1S11S11 == X.StatusS1S11S11.s111 :
+            if self._statusS1S11S11S111 == X.StatusS1S11S11S111.Null :
+                self.setStatusS1S11S11S111(X.StatusS1S11S11S111.s111)
+
+    def exitStatusS1S11S11S111(self):
+        if self._statusS1S11S11S111 == X.StatusS1S11S11.s111 :
+            print("t1")
+            self.setStatusS1S11S11S111(X.StatusS1S11S11S111.Null)
+
+    def setStatusS1S11S11S111(self, aStatusS1S11S11S111):
+        self._statusS1S11S11S111 = aStatusS1S11S11S111
+        if self._statusS1S11S11 != X.StatusS1S11S11.s111 and aStatusS1S11S11S111 != X.StatusS1S11S11S111.Null :
+            self.setStatusS1S11S11(X.StatusS1S11S11.s111)
+
+    def exitStatusS1S12(self):
+        if self._statusS1S12 == X.StatusS1S12.s12 :
+            self.exitStatusS1S12S12()
+            self.setStatusS1S12(X.StatusS1S12.Null)
+
+    def setStatusS1S12(self, aStatusS1S12):
+        self._statusS1S12 = aStatusS1S12
+        if self._status != X.Status.s1 and aStatusS1S12 != X.StatusS1S12.Null :
+            self.setStatus(X.Status.s1)
+        if self._statusS1S12 == X.StatusS1S12.s12 :
+            if self._statusS1S12S12 == X.StatusS1S12S12.Null :
+                self.setStatusS1S12S12(X.StatusS1S12S12.s122)
+
+    def exitStatusS1S12S12(self):
+        if self._statusS1S12S12 == X.StatusS1S12S12.s122 :
+            self.setStatusS1S12S12(X.StatusS1S12S12.Null)
+        elif self._statusS1S12S12 == X.StatusS1S12S12.fState2 :
+            self.setStatusS1S12S12(X.StatusS1S12S12.Null)
+
+    def setStatusS1S12S12(self, aStatusS1S12S12):
+        self._statusS1S12S12 = aStatusS1S12S12
+        if self._statusS1S12 != X.StatusS1S12.s12 and aStatusS1S12S12 != X.StatusS1S12S12.Null :
+            self.setStatusS1S12(X.StatusS1S12.s12)
+        if self._statusS1S12S12 == X.StatusS1S12S12.fState2 :
+            if self._statusS1S11 == X.StatusS1S11.fState1 :
+                self.delete()
+
+    def delete(self):
+        pass

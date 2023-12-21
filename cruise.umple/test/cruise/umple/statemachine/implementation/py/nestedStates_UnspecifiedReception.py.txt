@@ -1,0 +1,146 @@
+from enum import Enum, auto
+
+class NestedStatesWthSameEventNames():
+    class Sm(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        nestedState1 = auto()
+        nestedState2 = auto()
+        state5 = auto()
+
+    class SmNestedState1(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        state1 = auto()
+        state2 = auto()
+
+    class SmNestedState2(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        state3 = auto()
+        state4 = auto()
+
+    def __init__(self):
+        self._smNestedState2 = None
+        self._smNestedState1 = None
+        self._sm = None
+        self.setSmNestedState1(NestedStatesWthSameEventNames.SmNestedState1.Null)
+        self.setSmNestedState2(NestedStatesWthSameEventNames.SmNestedState2.Null)
+        self.setSm(NestedStatesWthSameEventNames.Sm.nestedState1)
+
+    def getSmFullName(self):
+        answer = self._sm.__str__()
+        if self._smNestedState1 != NestedStatesWthSameEventNames.SmNestedState1.Null :
+            answer += "." + self._smNestedState1.__str__()
+        if self._smNestedState2 != NestedStatesWthSameEventNames.SmNestedState2.Null :
+            answer += "." + self._smNestedState2.__str__()
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def getSmNestedState1(self):
+        return self._smNestedState1
+
+    def getSmNestedState2(self):
+        return self._smNestedState2
+
+    def e1(self):
+        wasEventProcessed = False
+        aSmNestedState1 = self._smNestedState1
+        if aSmNestedState1 == NestedStatesWthSameEventNames.SmNestedState1.state1 :
+            self.exitSmNestedState1()
+            self.setSmNestedState1(NestedStatesWthSameEventNames.SmNestedState1.state2)
+            wasEventProcessed = True
+        else :
+            wasEventProcessed = self.unspecified(self.getSmNestedState1().__str__(), "e1")
+        return wasEventProcessed
+
+    def unspecified(self, state, event):
+        wasEventProcessed = False
+        aSmNestedState1 = self._smNestedState1
+        aSmNestedState2 = self._smNestedState2
+        if aSmNestedState1 == NestedStatesWthSameEventNames.SmNestedState1.state1 :
+            self.exitSmNestedState1()
+            self.setSmNestedState1(NestedStatesWthSameEventNames.SmNestedState1.state1)
+            wasEventProcessed = True
+        else :
+            pass
+        if aSmNestedState2 == NestedStatesWthSameEventNames.SmNestedState2.state4 :
+            self.exitSm()
+            self.setSm(NestedStatesWthSameEventNames.Sm.nestedState2)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e2(self):
+        wasEventProcessed = False
+        aSmNestedState1 = self._smNestedState1
+        if aSmNestedState1 == NestedStatesWthSameEventNames.SmNestedState1.state2 :
+            self.exitSm()
+            self.setSm(NestedStatesWthSameEventNames.Sm.state5)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def e4(self):
+        wasEventProcessed = False
+        aSmNestedState2 = self._smNestedState2
+        if aSmNestedState2 == NestedStatesWthSameEventNames.SmNestedState2.state4 :
+            self.exitSm()
+            self.setSm(NestedStatesWthSameEventNames.Sm.state5)
+            wasEventProcessed = True
+        else :
+            wasEventProcessed = self.unspecified(self.getSmNestedState2().__str__(), "e4")
+        return wasEventProcessed
+
+    def exitSm(self):
+        if self._sm == NestedStatesWthSameEventNames.Sm.nestedState1 :
+            self.exitSmNestedState1()
+        elif self._sm == NestedStatesWthSameEventNames.Sm.nestedState2 :
+            self.exitSmNestedState2()
+
+    def setSm(self, aSm):
+        self._sm = aSm
+        if self._sm == NestedStatesWthSameEventNames.Sm.nestedState1 :
+            if self._smNestedState1 == NestedStatesWthSameEventNames.SmNestedState1.Null :
+                self.setSmNestedState1(NestedStatesWthSameEventNames.SmNestedState1.state1)
+        elif self._sm == NestedStatesWthSameEventNames.Sm.nestedState2 :
+            if self._smNestedState2 == NestedStatesWthSameEventNames.SmNestedState2.Null :
+                self.setSmNestedState2(NestedStatesWthSameEventNames.SmNestedState2.state3)
+
+    def exitSmNestedState1(self):
+        if self._smNestedState1 == NestedStatesWthSameEventNames.SmNestedState1.state1 :
+            self.setSmNestedState1(NestedStatesWthSameEventNames.SmNestedState1.Null)
+        elif self._smNestedState1 == NestedStatesWthSameEventNames.SmNestedState1.state2 :
+            self.setSmNestedState1(NestedStatesWthSameEventNames.SmNestedState1.Null)
+
+    def setSmNestedState1(self, aSmNestedState1):
+        self._smNestedState1 = aSmNestedState1
+        if self._sm != NestedStatesWthSameEventNames.Sm.nestedState1 and aSmNestedState1 != NestedStatesWthSameEventNames.SmNestedState1.Null :
+            self.setSm(NestedStatesWthSameEventNames.Sm.nestedState1)
+
+    def exitSmNestedState2(self):
+        if self._smNestedState2 == NestedStatesWthSameEventNames.SmNestedState2.state3 :
+            self.setSmNestedState2(NestedStatesWthSameEventNames.SmNestedState2.Null)
+        elif self._smNestedState2 == NestedStatesWthSameEventNames.SmNestedState2.state4 :
+            self.setSmNestedState2(NestedStatesWthSameEventNames.SmNestedState2.Null)
+
+    def setSmNestedState2(self, aSmNestedState2):
+        self._smNestedState2 = aSmNestedState2
+        if self._sm != NestedStatesWthSameEventNames.Sm.nestedState2 and aSmNestedState2 != NestedStatesWthSameEventNames.SmNestedState2.Null :
+            self.setSm(NestedStatesWthSameEventNames.Sm.nestedState2)
+
+    def delete(self):
+        pass
+

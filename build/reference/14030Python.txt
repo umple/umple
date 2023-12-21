@@ -33,6 +33,21 @@ Currently supported features (fully tested in every Umple build):
 
     <li>Features that generate Umple internally first, before then generating Python, such as <a href="BasicMixsets.html">mixsets</a> and <a href="Traits.html">traits</a>.</li>
 
+    <li>Following Concurrency Features:
+        <ul>
+            <li>Active Block and Do Activities</li>
+            <li>After Keyword</li>
+        </ul>
+    </li>
+
+    <li>Any Umple code that create the following Java:
+        <ul>
+            <li>extends Thread</li>
+            <li>threading</li>
+            <li>nested classes</li>
+            <li>TimerTask</li>
+        </ul>
+    </li>
 </ul>
 </p>
 
@@ -57,11 +72,7 @@ Currently unsupported features:
     <li>Concurrency</li>
     <li>Any Umple code that create the following Java:
         <ul>
-            <li>extends Thread</li>
-            <li>threading</li>
             <li>keyword synchronized</li>
-            <li>nested classes</li>
-            <li>TimerTask</li>
         </ul>
     </li>
 </ul>
