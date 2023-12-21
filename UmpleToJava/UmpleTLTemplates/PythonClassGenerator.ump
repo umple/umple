@@ -21,7 +21,7 @@ use queued_state_machine_queuedEvent.ump;
 use queued_state_machine_removalThread_run.ump;
 use state_machine_Events_All.ump;
 use state_machine_Get_All.ump;
-use PythonEntryExit/state_machine_python_Set_All.ump;
+use state_machine_Set_All.ump;
 use state_machine_StateDependentMethods_All.ump;
 use PythonDoActivities/state_machine_python_doActivity_All.ump;
 use state_machine_timedEvent_All.ump;
@@ -477,7 +477,7 @@ for (StateMachine smq : uClass.getStateMachines())
     } 
     private String getStateMachine1Code(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
   {
-    Integer baseJavaLine = realSb.toString().split("\\n").length;#>><<@ UmpleToJava.state_machine_Get_All >><<@ UmpleToJava.state_machine_StateDependentMethods_All >><<@ UmpleToJava.state_machine_Events_All >><<@ UmpleToJava.state_machine_python_Set_All >><<#
+    Integer baseJavaLine = realSb.toString().split("\\n").length;#>><<@ UmpleToJava.state_machine_Get_All >><<@ UmpleToJava.state_machine_StateDependentMethods_All >><<@ UmpleToJava.state_machine_Events_All >><<@ UmpleToJava.state_machine_Set_All >><<#
     return realSb.toString(); 
   } 
   private String getAssociationCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
