@@ -439,26 +439,4 @@ class PythonGenerator
       throw new UmpleCompilerException("An error occured while generating the TXL file.", e);
     }
   }
-  
-  @Override
-  protected void prepareDoActivityThread(StateMachine sm)
-  {
-    for(State state : sm.getStates())
-    {
-      for (Activity activity : state.getActivities())
-      {
-          String code = StringFormatter.format("  if not (self._{0} is None) :\n              self._{0}.interrupt()",translate("doActivityThread",activity));
-          Action interruptAction = new Action(code);
-          interruptAction.setIsInternal(true);
-          interruptAction.setActionType("exit");
-          state.addAction(interruptAction);
-
-          String entryCode = StringFormatter.format("self._{0} = " + sm.getUmpleClass().getName() + ".DoActivityThread(self,\"{1}\")",translate("doActivityThread",activity),translate("doActivityMethod",activity));
-          Action entryAction = new Action(entryCode);
-          entryAction.setIsInternal(true);
-          entryAction.setActionType("entry");
-          state.addAction(entryAction);
-      }
-    }
-  }
 }
