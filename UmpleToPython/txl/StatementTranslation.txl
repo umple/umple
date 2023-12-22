@@ -26,7 +26,8 @@ function replaceStatements
             [replaceAssignementDecrementAfter]
             [replaceAssignmentStatement] 
             [replaceReturn] 
-            [replaceNoStatements] 
+            [replaceNoStatements]
+            [replaceNoStatementsWComments] 
             [addSelfToOwnMethodCalls]
             [replaceThisFunctionCall]
             [replaceNestedStatement]
@@ -84,7 +85,13 @@ end function
 function replaceNoStatements
     replace [repeat statement]
     by 
-        'pass  
+    'pass  
+end function
+function replaceNoStatementsWComments
+    replace [repeat statement]
+    c [ comment_NL]
+    by 
+        c 'pass  
 end function
 
 rule removeSemiColonFromValues
@@ -190,9 +197,10 @@ rule replaceTryCatch
         'try '{  tryStmts [repeat statement]  '} 'catch '( _ [method_parameter] ') '{ catchStmts [repeat statement] '} finally [opt finally]
     by 
         'try:
-            tryStmts [replaceNoStatements]
+            tryStmts [replaceNoStatements][replaceNoStatementsWComments] 
+
         'except:
-            catchStmts [replaceNoStatements]
+            catchStmts [replaceNoStatements][replaceNoStatementsWComments] 
         finally [replaceFinally]
 end rule
 
@@ -200,7 +208,7 @@ function replaceFinally
     replace [opt finally]
         'finally '{ stmts [repeat statement] '}
     by  
-        'finally: stmts [replaceNoStatements]
+        'finally: stmts [replaceNoStatements][replaceNoStatementsWComments] 
 end function
 
 rule replaceIf
@@ -519,7 +527,7 @@ function replaceFirstSwitchCaseCase switch [value] firstCase [switch_case_case]
     construct condition [value]
         switch [appendToValue cont]
     construct newIf [if]
-        'if condition ': stmts [replaceNoStatements] [removeBreak]
+        'if condition ': stmts [replaceNoStatements][replaceNoStatementsWComments]  [removeBreak]
     by 
         newIf
 end function
@@ -568,7 +576,7 @@ function replaceSwitchCaseCase switch [value] aCase [switch_case_case]
     construct condition [value]
         switch [appendToValue cont]
     construct elseIf [else_if]
-        'elif condition ': stmts [replaceNoStatements] [removeBreak]
+        'elif condition ': stmts [replaceNoStatements][replaceNoStatementsWComments]  [removeBreak]
     by 
         rep [. elseIf]
 end function
@@ -579,7 +587,7 @@ function replaceSwitchCaseDefault defaultCase [opt switch_case_default]
     deconstruct defaultCase
         'default ': stmts [repeat statement]
     by
-        'else: stmts [replaceNoStatements] [removeBreak]
+        'else: stmts [replaceNoStatements][replaceNoStatementsWComments]  [removeBreak]
 
 end function
 
