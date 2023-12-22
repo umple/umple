@@ -135,6 +135,9 @@ function replaceInterfaceBody
         _ [^ elements]
     export enumeratorDeclerations [repeat enum_declaration]
         _ [^ elements]
+    construct possibleSynchronized [opt synchronized]
+        %None
+    export possibleSynchronized
     construct memberVariables [repeat id]
         _ [addMemberVariable each declarations]
     construct listMemberVariables [repeat id]
