@@ -208,7 +208,7 @@ function addExternalImports translatedBody [class_body_decl]
         imports [repeat import_statement]
     by
         imports [addOSImportIfNeeded translatedBody]
-%        [addThreadImportForSynchronizedIfNeeded translatedBody]
+        [addThreadImportForSynchronizedIfNeeded translatedBody]
         [addEnumImportIfNeeded translatedBody]
         [addPickleImportIfNeeded]
         [addSysImportIfNeeded translatedBody]
@@ -295,12 +295,6 @@ function addThreadImportIfNeeded body [class_body_decl]
         imports [. newImport]
 end function
 
-%Checks for thread in translated class body
-function shouldThreadImport
-    match * [nested_identifier]
-        'Thread
-end function
-
 %Adds time import if needed
 function addTimeImportIfNeeded body [class_body_decl]
     replace [repeat import_statement]
@@ -314,17 +308,23 @@ function addTimeImportIfNeeded body [class_body_decl]
 end function
 
 %Adds an Thread import if synchronized keyword is being used
-%function addThreadImportForSynchronizedIfNeeded body [class_body_decl]
-%    replace [repeat import_statement]
-%        imports [repeat import_statement]
-%    import possibleSynchronized [opt synchronized]
-%    deconstruct possibleSynchronized
-%      _ [synchronized]
-%    construct newImport [import_statement]
-%        'from ' threading 'import 'Lock
-%    by 
-%        imports [. newImport]
-%end function
+function addThreadImportForSynchronizedIfNeeded body [class_body_decl]
+    replace [repeat import_statement]
+        imports [repeat import_statement]
+    import possibleSynchronized [opt synchronized]
+    deconstruct possibleSynchronized
+      _ [synchronized]
+    construct newImport [import_statement]
+        'from ' threading 'import 'Lock
+    by 
+        imports [. newImport]
+end function
+
+%Checks for time.sleep in translated class body
+function shouldTimeImport
+    match * [nested_identifier]
+        'Thread
+end function
 
 %Checks for thread in translated class body
 function shouldThreadImport
