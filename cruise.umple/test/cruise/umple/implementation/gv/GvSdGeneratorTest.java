@@ -32,6 +32,9 @@ public class GvSdGeneratorTest extends TemplateTest {
     SampleFileWriter.destroy(pathToInput + "/gv/Activity5State.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/ActivityMore5State.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/HideActionState.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/ColouredDerivedState.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/ColouredDerivedNestedState.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/HexColouredState.gv");
 		
     // Transition tests
     SampleFileWriter.destroy(pathToInput + "/gv/Transition.gv");
@@ -133,6 +136,25 @@ public class GvSdGeneratorTest extends TemplateTest {
     language = null;
     assertUmplePartialTemplateFor("gv/HideActionState.ump","gv/HideActionState.gv.txt");
   }
+
+  @Test
+  public void colour_generator()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/ColouredDerivedState.ump","gv/ColouredDerivedState.gv.txt");
+  }
+  @Test
+  public void nested_colour_generator()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/ColouredDerivedNestedState.ump","gv/ColouredDerivedNestedState.gv.txt");
+  }
+   @Test
+  public void nested_hex_colour_generator()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/HexColouredState.ump","gv/HexColouredState.gv.txt");
+  }
 	
   /********* TRANSITION TESTS **********/
   @Test
@@ -225,4 +247,12 @@ public class GvSdGeneratorTest extends TemplateTest {
     language = null;
     assertUmplePartialTemplateFor("gv/ParameterTransition.ump","gv/ParameterTransition.gv.txt");
   }
+  
+  @Test
+  public void nodeSeparationSd()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/IncreaseStateSep.ump","gv/IncreaseStateSep.gv.txt");
+  }
+
 }

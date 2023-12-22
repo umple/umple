@@ -1,0 +1,55 @@
+from enum import Enum, auto
+
+class Garage():
+    class GarageDoor(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Open = auto()
+        Closing = auto()
+
+    def __init__(self, aEntranceClear):
+        self._garageDoor = None
+        self._entranceClear = None
+        self._entranceClear = aEntranceClear
+        self.setGarageDoor(Garage.GarageDoor.Open)
+
+    def setEntranceClear(self, aEntranceClear):
+        wasSet = False
+        self._entranceClear = aEntranceClear
+        wasSet = True
+        return wasSet
+
+    def getEntranceClear(self):
+        return self._entranceClear
+
+    def isEntranceClear(self):
+        return self._entranceClear
+
+    def getGarageDoorFullName(self):
+        answer = self._garageDoor.__str__()
+        return answer
+
+    def getGarageDoor(self):
+        return self._garageDoor
+
+    def pressButton(self):
+        wasEventProcessed = False
+        aGarageDoor = self._garageDoor
+        if aGarageDoor == Garage.GarageDoor.Open :
+            if self.getEntranceClear() :
+                self.setGarageDoor(Garage.GarageDoor.Closing)
+                wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def setGarageDoor(self, aGarageDoor):
+        self._garageDoor = aGarageDoor
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "entranceClear" + ":" + str(self.getEntranceClear()) + "]"

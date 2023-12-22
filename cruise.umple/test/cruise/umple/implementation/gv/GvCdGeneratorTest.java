@@ -32,6 +32,9 @@ public class GvCdGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/gv/ManyClasscd.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/ManyClassAbstractcd.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/EmptyClasscd.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/ColourParsingcd.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/ColourParsingTest2cd.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/ColourParsingTest3cd.gv");
   }
 
   @Test
@@ -95,4 +98,28 @@ public class GvCdGeneratorTest extends TemplateTest
     language = null;
     assertUmplePartialTemplateFor("gv/ManyClassAbstract.ump","gv/ManyClassAbstract.gv.txt");
   } 
+   @Test
+  public void colour_parsing_error_test()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/ColourParsing.ump","gv/ColourParsing.gv.txt");
+  } 
+  @Test
+  public void colour_parsing_error_test2()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/ColourParsingTest2.ump","gv/ColourParsingTest2.gv.txt");
+  } 
+  @Test
+  public void colour_parsing_error_test3()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/ColourParsingTest3.ump","gv/ColourParsingTest3.gv.txt");
+  } 
+  @Test
+  public void nodeSeparationCd()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/IncreaseClassSep.ump","gv/IncreaseClassSep.gv.txt");
+  }
 }

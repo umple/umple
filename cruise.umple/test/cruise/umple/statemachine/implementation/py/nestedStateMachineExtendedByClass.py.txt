@@ -1,0 +1,263 @@
+from ThingInWorld import ThingInWorld
+import os
+from enum import Enum, auto
+
+class Animal(ThingInWorld):
+    class State(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        alive = auto()
+        dead = auto()
+
+    class StateAlive(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        normal = auto()
+        zombie = auto()
+
+    class StateAliveNormal(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        baby = auto()
+        adult = auto()
+
+    def __init__(self, aIsAlive, aWorld):
+        self._world = None
+        self._drops = None
+        self._stateAliveNormal = None
+        self._stateAlive = None
+        self._state = None
+        self._isAlive = None
+        super().__init__()
+        self._isAlive = aIsAlive
+        self._drops = []
+        didAddWorld = self.setWorld(aWorld)
+        if not didAddWorld :
+            raise RuntimeError ("Unable to create animal due to world. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        self.setStateAlive(Animal.StateAlive.Null)
+        self.setStateAliveNormal(Animal.StateAliveNormal.Null)
+        self.setState(Animal.State.alive)
+
+    def setIsAlive(self, aIsAlive):
+        wasSet = False
+        self._isAlive = aIsAlive
+        wasSet = True
+        return wasSet
+
+    def getIsAlive(self):
+        return self._isAlive
+
+    def isIsAlive(self):
+        return self._isAlive
+
+    def getStateFullName(self):
+        answer = self._state.__str__()
+        if self._stateAlive != Animal.StateAlive.Null :
+            answer += "." + self._stateAlive.__str__()
+        if self._stateAliveNormal != Animal.StateAliveNormal.Null :
+            answer += "." + self._stateAliveNormal.__str__()
+        return answer
+
+    def getState(self):
+        return self._state
+
+    def getStateAlive(self):
+        return self._stateAlive
+
+    def getStateAliveNormal(self):
+        return self._stateAliveNormal
+
+    def kill(self):
+        wasEventProcessed = False
+        aState = self._state
+        if aState == Animal.State.alive :
+            self.exitState()
+            self.setState(Animal.State.dead)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def haveBaby(self):
+        wasEventProcessed = False
+        aStateAlive = self._stateAlive
+        if aStateAlive == Animal.StateAlive.zombie :
+            self.exitStateAlive()
+            self.setStateAliveNormal(Animal.StateAliveNormal.adult)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def growUp(self):
+        wasEventProcessed = False
+        aStateAliveNormal = self._stateAliveNormal
+        if aStateAliveNormal == Animal.StateAliveNormal.baby :
+            self.exitStateAliveNormal()
+            self.setStateAliveNormal(Animal.StateAliveNormal.adult)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def zombify(self):
+        wasEventProcessed = False
+        aStateAliveNormal = self._stateAliveNormal
+        if aStateAliveNormal == Animal.StateAliveNormal.adult :
+            self.exitStateAlive()
+            self.setStateAlive(Animal.StateAlive.zombie)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitState(self):
+        if self._state == Animal.State.alive :
+            self.exitStateAlive()
+
+    def setState(self, aState):
+        self._state = aState
+        if self._state == Animal.State.alive :
+            if self._stateAlive == Animal.StateAlive.Null :
+                self.setStateAlive(Animal.StateAlive.normal)
+
+    def exitStateAlive(self):
+        if self._stateAlive == Animal.StateAlive.normal :
+            self.exitStateAliveNormal()
+            self.setStateAlive(Animal.StateAlive.Null)
+        elif self._stateAlive == Animal.StateAlive.zombie :
+            self.setStateAlive(Animal.StateAlive.Null)
+
+    def setStateAlive(self, aStateAlive):
+        self._stateAlive = aStateAlive
+        if self._state != Animal.State.alive and aStateAlive != Animal.StateAlive.Null :
+            self.setState(Animal.State.alive)
+        if self._stateAlive == Animal.StateAlive.normal :
+            if self._stateAliveNormal == Animal.StateAliveNormal.Null :
+                self.setStateAliveNormal(Animal.StateAliveNormal.baby)
+
+    def exitStateAliveNormal(self):
+        if self._stateAliveNormal == Animal.StateAliveNormal.baby :
+            self.setStateAliveNormal(Animal.StateAliveNormal.Null)
+        elif self._stateAliveNormal == Animal.StateAliveNormal.adult :
+            self.setStateAliveNormal(Animal.StateAliveNormal.Null)
+
+    def setStateAliveNormal(self, aStateAliveNormal):
+        self._stateAliveNormal = aStateAliveNormal
+        if self._stateAlive != Animal.StateAlive.normal and aStateAliveNormal != Animal.StateAliveNormal.Null :
+            self.setStateAlive(Animal.StateAlive.normal)
+
+    def getDrop(self, index):
+        aDrop = self._drops[index]
+        return aDrop
+
+    def getDrops(self):
+        newDrops = tuple(self._drops)
+        return newDrops
+
+    def numberOfDrops(self):
+        number = len(self._drops)
+        return number
+
+    def hasDrops(self):
+        has = len(self._drops) > 0
+        return has
+
+    def indexOfDrop(self, aDrop):
+        index = (-1 if not aDrop in self._drops else self._drops.index(aDrop))
+        return index
+
+    def getWorld(self):
+        return self._world
+
+    @staticmethod
+    def minimumNumberOfDrops():
+        return 0
+
+    def addDrop(self, aDrop):
+        wasAdded = False
+        if (aDrop) in self._drops :
+            return False
+        self._drops.append(aDrop)
+        if aDrop.indexOfAnimal(self) != -1 :
+            wasAdded = True
+        else :
+            wasAdded = aDrop.addAnimal(self)
+            if not wasAdded :
+                self._drops.remove(aDrop)
+        return wasAdded
+
+    def removeDrop(self, aDrop):
+        wasRemoved = False
+        if not (aDrop) in self._drops :
+            return wasRemoved
+        oldIndex = (-1 if not aDrop in self._drops else self._drops.index(aDrop))
+        self._drops.remove(oldIndex)
+        if aDrop.indexOfAnimal(self) == -1 :
+            wasRemoved = True
+        else :
+            wasRemoved = aDrop.removeAnimal(self)
+            if not wasRemoved :
+                self._drops.insert(oldIndex, aDrop)
+        return wasRemoved
+
+    def addDropAt(self, aDrop, index):
+        wasAdded = False
+        if self.addDrop(aDrop) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfDrops() :
+                index = self.numberOfDrops() - 1
+            self._drops.remove(aDrop)
+            self._drops.insert(index, aDrop)
+            wasAdded = True
+        return wasAdded
+
+    def addOrMoveDropAt(self, aDrop, index):
+        wasAdded = False
+        if (aDrop) in self._drops :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfDrops() :
+                index = self.numberOfDrops() - 1
+            self._drops.remove(aDrop)
+            self._drops.insert(index, aDrop)
+            wasAdded = True
+        else :
+            wasAdded = self.addDropAt(aDrop, index)
+        return wasAdded
+
+    def setWorld(self, aWorld):
+        wasSet = False
+        if aWorld is None :
+            return wasSet
+        existingWorld = self._world
+        self._world = aWorld
+        if not (existingWorld is None) and not existingWorld == aWorld :
+            existingWorld.removeAnimal(self)
+        self._world.addAnimal(self)
+        wasSet = True
+        return wasSet
+
+    def delete(self):
+        copyOfDrops = self._drops.copy()
+        self._drops.clear()
+        for aDrop in copyOfDrops:
+            aDrop.removeAnimal(self)
+
+        placeholderWorld = self._world
+        self._world = None
+        if not (placeholderWorld is None) :
+            placeholderWorld.removeAnimal(self)
+        super().delete()
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "isAlive" + ":" + str(self.getIsAlive()) + "]" + str(os.linesep) + "  " + "world = " + ((format(id(self.getWorld()), "x")) if not (self.getWorld() is None) else "null")

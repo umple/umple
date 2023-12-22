@@ -1,0 +1,73 @@
+from enum import Enum, auto
+
+class A():
+    class Sm(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        created = auto()
+        initialized = auto()
+
+    def __init__(self):
+        self._sm = None
+        self._result = None
+        self._result = False
+        self.setSm(A.Sm.created)
+
+    def setResult(self, aResult):
+        wasSet = False
+        self._result = aResult
+        wasSet = True
+        return wasSet
+
+    def getResult(self):
+        return self._result
+
+    def getSmFullName(self):
+        answer = self._sm.__str__()
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def init(self):
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm == A.Sm.created :
+            if self.getResult() == False :
+                self.exitSm()
+                self.setSm(A.Sm.created)
+                wasEventProcessed = True
+            if self.getResult() == True :
+                self.exitSm()
+                self.setSm(A.Sm.initialized)
+                wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def getback(self):
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm == A.Sm.initialized :
+            self.setSm(A.Sm.created)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitSm(self):
+        if self._sm == A.Sm.created :
+            execute_exit_code()
+
+    def setSm(self, aSm):
+        self._sm = aSm
+        if self._sm == A.Sm.created :
+            execute_entry_code()
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "result" + ":" + str(self.getResult()) + "]"

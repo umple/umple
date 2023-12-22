@@ -26,7 +26,7 @@ noreferences
 
 <p>Under development: Composite structure diagrams, ports and active methods are currently under development. Code generation only works in C++</p>
 
-<p>See also the <a href="http://en.wikipedia.org/wiki/Composite_structure_diagram">Wikipedia page on Composite Structure Diagrams</a>.</p>
+<p>See also the <a href="https://en.wikipedia.org/wiki/Composite_structure_diagram">Wikipedia page on Composite Structure Diagrams</a>.</p>
 
 @@syntax
 [[portDefinition]] [[typedPortName]] [[portMultiplicity]] [[portBindingDefinition]]  [[bindinHandler]] [[activeMethodDefinition]] [[portWatch]] [[activeMethodDeclarator]] [[activeMethodBody]] [[activeDirectionHandler]] [[activeTrigger]] [[activeDirectionHandler]] [[activeTriggerBody]] [[deferredList]] [[activeTriggerDefinition]] [[thenDefinition]] [[resolveDefinition]] [[hitchConstraint]] [[constraintList]] [[basicConstraint]] [[timeConstraint]] [[messageConstraint]] [[invoke]] [[anonymousTriggerBody]]  [[primitiveDefinition]] 

@@ -1,0 +1,131 @@
+from enum import Enum, auto
+
+class LightFixture():
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Off = auto()
+        On = auto()
+
+    class StatusOnMotorIdle(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        MotorIdle = auto()
+        MotorRunning = auto()
+
+    class StatusOnFanIdle(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        FanIdle = auto()
+        FanRunning = auto()
+
+    def __init__(self):
+        self._statusOnFanIdle = None
+        self._statusOnMotorIdle = None
+        self._status = None
+        self.setStatusOnMotorIdle(LightFixture.StatusOnMotorIdle.Null)
+        self.setStatusOnFanIdle(LightFixture.StatusOnFanIdle.Null)
+        self.setStatus(LightFixture.Status.Off)
+
+    def getStatusFullName(self):
+        answer = self._status.__str__()
+        if self._statusOnMotorIdle != LightFixture.StatusOnMotorIdle.Null :
+            answer += "." + self._statusOnMotorIdle.__str__()
+        if self._statusOnFanIdle != LightFixture.StatusOnFanIdle.Null :
+            answer += "." + self._statusOnFanIdle.__str__()
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def getStatusOnMotorIdle(self):
+        return self._statusOnMotorIdle
+
+    def getStatusOnFanIdle(self):
+        return self._statusOnFanIdle
+
+    def turnOn(self):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == LightFixture.Status.Off :
+            self.setStatus(LightFixture.Status.On)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def flip(self):
+        wasEventProcessed = False
+        aStatusOnMotorIdle = self._statusOnMotorIdle
+        if aStatusOnMotorIdle == LightFixture.StatusOnMotorIdle.MotorIdle :
+            self.exitStatusOnMotorIdle()
+            self.setStatusOnMotorIdle(LightFixture.StatusOnMotorIdle.MotorRunning)
+            wasEventProcessed = True
+        elif aStatusOnMotorIdle == LightFixture.StatusOnMotorIdle.MotorRunning :
+            self.exitStatusOnMotorIdle()
+            self.setStatusOnMotorIdle(LightFixture.StatusOnMotorIdle.MotorIdle)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def flop(self):
+        wasEventProcessed = False
+        aStatusOnFanIdle = self._statusOnFanIdle
+        if aStatusOnFanIdle == LightFixture.StatusOnFanIdle.FanIdle :
+            self.exitStatusOnFanIdle()
+            self.setStatusOnFanIdle(LightFixture.StatusOnFanIdle.FanRunning)
+            wasEventProcessed = True
+        elif aStatusOnFanIdle == LightFixture.StatusOnFanIdle.FanRunning :
+            self.exitStatusOnFanIdle()
+            self.setStatusOnFanIdle(LightFixture.StatusOnFanIdle.FanIdle)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitStatus(self):
+        if self._status == LightFixture.Status.On :
+            self.exitStatusOnMotorIdle()
+            self.exitStatusOnFanIdle()
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+        if self._status == LightFixture.Status.On :
+            if self._statusOnMotorIdle == LightFixture.StatusOnMotorIdle.Null :
+                self.setStatusOnMotorIdle(LightFixture.StatusOnMotorIdle.MotorIdle)
+            if self._statusOnFanIdle == LightFixture.StatusOnFanIdle.Null :
+                self.setStatusOnFanIdle(LightFixture.StatusOnFanIdle.FanIdle)
+
+    def exitStatusOnMotorIdle(self):
+        if self._statusOnMotorIdle == LightFixture.StatusOnMotorIdle.MotorIdle :
+            self.setStatusOnMotorIdle(LightFixture.StatusOnMotorIdle.Null)
+        elif self._statusOnMotorIdle == LightFixture.StatusOnMotorIdle.MotorRunning :
+            self.setStatusOnMotorIdle(LightFixture.StatusOnMotorIdle.Null)
+
+    def setStatusOnMotorIdle(self, aStatusOnMotorIdle):
+        self._statusOnMotorIdle = aStatusOnMotorIdle
+        if self._status != LightFixture.Status.On and aStatusOnMotorIdle != LightFixture.StatusOnMotorIdle.Null :
+            self.setStatus(LightFixture.Status.On)
+
+    def exitStatusOnFanIdle(self):
+        if self._statusOnFanIdle == LightFixture.StatusOnFanIdle.FanIdle :
+            self.setStatusOnFanIdle(LightFixture.StatusOnFanIdle.Null)
+        elif self._statusOnFanIdle == LightFixture.StatusOnFanIdle.FanRunning :
+            self.setStatusOnFanIdle(LightFixture.StatusOnFanIdle.Null)
+
+    def setStatusOnFanIdle(self, aStatusOnFanIdle):
+        self._statusOnFanIdle = aStatusOnFanIdle
+        if self._status != LightFixture.Status.On and aStatusOnFanIdle != LightFixture.StatusOnFanIdle.Null :
+            self.setStatus(LightFixture.Status.On)
+
+    def delete(self):
+        pass

@@ -36,7 +36,7 @@ class UmpleToJava {
     
     if (av.isImmutable())
     {
-      if (av.getIsLazy())
+      if (av.getIsLazy() || av.getIsUnique())
       {
         #>><<@ UmpleToJava.attribute_SetImmutable >><<#
       }

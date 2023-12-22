@@ -208,12 +208,12 @@ function addExternalImports translatedBody [class_body_decl]
         imports [repeat import_statement]
     by
         imports [addOSImportIfNeeded translatedBody]
-        [addTimeImportIfNeeded translatedBody]
-        [addThreadImportIfNeeded translatedBody]
 %        [addThreadImportForSynchronizedIfNeeded translatedBody]
         [addEnumImportIfNeeded translatedBody]
         [addPickleImportIfNeeded]
         [addSysImportIfNeeded translatedBody]
+        [addThreadImportIfNeeded translatedBody]
+        [addTimeImportIfNeeded translatedBody]
 end function
 
 %Adds an Os import if needed. os is used in the __str__ methods for newLines
@@ -283,25 +283,7 @@ function addSysImportIfNeeded body [class_body_decl]
         imports [. newImport]
 end function
 
-%Adds an time import if needed
-function addTimeImportIfNeeded body [class_body_decl]
-    replace [repeat import_statement]
-        imports [repeat import_statement]
-    where
-        body [shouldTimeImport]
-    construct newImport [import_statement]
-        'import 'time
-    by 
-        imports [. newImport]
-end function
-
-%Checks for time.sleep in translated class body
-function shouldTimeImport
-    match * [nested_identifier]
-        'time.sleep( val  [value]')
-end function
-
-%Adds an Thread import if needed
+%Adds Thread import if needed
 function addThreadImportIfNeeded body [class_body_decl]
     replace [repeat import_statement]
         imports [repeat import_statement]
@@ -309,6 +291,24 @@ function addThreadImportIfNeeded body [class_body_decl]
         body [shouldThreadImport]
     construct newImport [import_statement]
         'from 'threading 'import 'Thread
+    by 
+        imports [. newImport]
+end function
+
+%Checks for thread in translated class body
+function shouldThreadImport
+    match * [nested_identifier]
+        'Thread
+end function
+
+%Adds time import if needed
+function addTimeImportIfNeeded body [class_body_decl]
+    replace [repeat import_statement]
+        imports [repeat import_statement]
+    where
+        body [shouldTimeImport]
+    construct newImport [import_statement]
+        'import 'time
     by 
         imports [. newImport]
 end function

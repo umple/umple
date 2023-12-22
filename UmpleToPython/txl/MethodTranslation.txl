@@ -381,8 +381,10 @@ function addFunctionImport seeking [id]
         stmts [containsId seeking]
     construct imp [import_statement]
         'from seeking 'import seeking
-    where not
+    where not 
         seeking [= 'Timer]
+	where not 
+		seeking [= 'TimedEventHandler]
     construct funcImport [repeat statement]
         imp
     by
