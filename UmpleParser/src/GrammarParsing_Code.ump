@@ -972,7 +972,7 @@ class GrammarAnalyzer {
   public void terminal(Token token) 
   {
     String value = getValue(token,"terminal");
-    value = value.replace("-(","(").replace("-)",")").replace("OPEN_ROUND_BRACKET","(").replace("CLOSE_ROUND_BRACKET",")");
+    value = value.replace("-(","(").replace("-)",")").replace("-{","{").replace("-}","}").replace("OPEN_ROUND_BRACKET","(").replace("CLOSE_ROUND_BRACKET",")").replace("OPEN_CURLY_BRACKET","{").replace("CLOSE_CURLY_BRACKET","}");
     
     String regex = "\\Q"+value+"\\E";
     
@@ -1005,7 +1005,7 @@ class GrammarAnalyzer {
     boolean makeTerminal = true;
     modifier = modifier==null?"":modifier;
     premodifier = premodifier==null?"":premodifier;
-    value = value==null?"":value.replace("OPEN_ROUND_BRACKET","(").replace("CLOSE_ROUND_BRACKET",")");
+    value = value==null?"":value.replace("OPEN_ROUND_BRACKET","(").replace("CLOSE_ROUND_BRACKET",")").replace("OPEN_CURLY_BRACKET","{").replace("CLOSE_CURLY_BRACKET","}");
     String regex;
     boolean post = false;
     if("-".equals(name)&&"||".equals(value))

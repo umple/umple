@@ -1,0 +1,7 @@
+//The warning is generated as the code
+// has a extra bracket on top (Could be open or close)
+(
+class A {
+  attr;
+  attr2;
+}

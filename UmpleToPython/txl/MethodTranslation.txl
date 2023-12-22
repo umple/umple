@@ -370,7 +370,7 @@ function addFunctionImports
         stmts [repeat statement]
     import possibleFunctionImports [repeat id]
     by
-        stmts [addFunctionImport each possibleFunctionImports][addTimerImport each possibleFunctionImports][addSynchronizedImport each possibleFunctionImports]
+        stmts [addFunctionImport each possibleFunctionImports][addTimerImport each possibleFunctionImports]
 end function
 
 %Creates specific function import if needed
@@ -381,8 +381,10 @@ function addFunctionImport seeking [id]
         stmts [containsId seeking]
     construct imp [import_statement]
         'from seeking 'import seeking
-    where not
+    where not 
         seeking [= 'Timer]
+	where not 
+		seeking [= 'TimedEventHandler]
     construct funcImport [repeat statement]
         imp
     by
@@ -398,22 +400,6 @@ function addTimerImport seeking [id]
 		seeking [= 'Timer]
     construct imp [import_statement]
         'from 'threading 'import seeking
-    construct funcImport [repeat statement]
-        imp
-    by
-        funcImport [. stmts]
-end function
-
-%DEBUG
-function addSynchronizedImport seeking [id]
-    replace [repeat statement]
-        stmts [repeat statement]
-    where
-        stmts [containsId 'Timer]
-	where
-		seeking [= 'Timer]
-    construct imp [import_statement]
-        'import threading
     construct funcImport [repeat statement]
         imp
     by

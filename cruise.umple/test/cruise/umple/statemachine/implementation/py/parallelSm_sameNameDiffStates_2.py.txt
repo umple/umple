@@ -1,0 +1,340 @@
+from enum import Enum, auto
+
+class X():
+    class Sm(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        s0 = auto()
+        s1 = auto()
+
+    class SmS0T1(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        t1 = auto()
+
+    class SmS0T2(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        t2 = auto()
+        t3 = auto()
+
+    class SmS1(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        s2 = auto()
+        s3 = auto()
+
+    class SmS1S2T1(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        t1 = auto()
+        t4 = auto()
+
+    class SmS1S2T6(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        t6 = auto()
+
+    class SmS1S2T2(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        t2 = auto()
+        t5 = auto()
+
+    class SmS1S3T7(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        t7 = auto()
+        t8 = auto()
+
+    class SmS1S3T6(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        t6 = auto()
+        t9 = auto()
+
+    def __init__(self):
+        self._smS1S3T6 = None
+        self._smS1S3T7 = None
+        self._smS1S2T2 = None
+        self._smS1S2T6 = None
+        self._smS1S2T1 = None
+        self._smS1 = None
+        self._smS0T2 = None
+        self._smS0T1 = None
+        self._sm = None
+        self.setSmS0T1(X.SmS0T1.Null)
+        self.setSmS0T2(X.SmS0T2.Null)
+        self.setSmS1(X.SmS1.Null)
+        self.setSmS1S2T1(X.SmS1S2T1.Null)
+        self.setSmS1S2T6(X.SmS1S2T6.Null)
+        self.setSmS1S2T2(X.SmS1S2T2.Null)
+        self.setSmS1S3T7(X.SmS1S3T7.Null)
+        self.setSmS1S3T6(X.SmS1S3T6.Null)
+        self.setSm(X.Sm.s0)
+
+    def getSmFullName(self):
+        answer = self._sm.__str__()
+        if self._smS0T1 != X.SmS0T1.Null :
+            answer += "." + self._smS0T1.__str__()
+        if self._smS0T2 != X.SmS0T2.Null :
+            answer += "." + self._smS0T2.__str__()
+        if self._smS1 != X.SmS1.Null :
+            answer += "." + self._smS1.__str__()
+        if self._smS1S2T1 != X.SmS1S2T1.Null :
+            answer += "." + self._smS1S2T1.__str__()
+        if self._smS1S2T6 != X.SmS1S2T6.Null :
+            answer += "." + self._smS1S2T6.__str__()
+        if self._smS1S2T2 != X.SmS1S2T2.Null :
+            answer += "." + self._smS1S2T2.__str__()
+        if self._smS1S3T7 != X.SmS1S3T7.Null :
+            answer += "." + self._smS1S3T7.__str__()
+        if self._smS1S3T6 != X.SmS1S3T6.Null :
+            answer += "." + self._smS1S3T6.__str__()
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def getSmS0T1(self):
+        return self._smS0T1
+
+    def getSmS0T2(self):
+        return self._smS0T2
+
+    def getSmS1(self):
+        return self._smS1
+
+    def getSmS1S2T1(self):
+        return self._smS1S2T1
+
+    def getSmS1S2T6(self):
+        return self._smS1S2T6
+
+    def getSmS1S2T2(self):
+        return self._smS1S2T2
+
+    def getSmS1S3T7(self):
+        return self._smS1S3T7
+
+    def getSmS1S3T6(self):
+        return self._smS1S3T6
+
+    def goS1(self):
+        wasEventProcessed = False
+        aSmS0T1 = self._smS0T1
+        aSmS0T2 = self._smS0T2
+        if aSmS0T1 == X.SmS0T1.t1 :
+            self.exitSm()
+            self.setSm(X.Sm.s1)
+            wasEventProcessed = True
+        else :
+            pass
+        if aSmS0T2 == X.SmS0T2.t2 :
+            self.exitSm()
+            self.setSm(X.Sm.s1)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def goT4(self):
+        wasEventProcessed = False
+        aSmS1S2T1 = self._smS1S2T1
+        if aSmS1S2T1 == X.SmS0T1.t1 :
+            self.exitSmS1S2T1()
+            self.setSmS1S2T1(X.SmS1S2T1.t4)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def goT5(self):
+        wasEventProcessed = False
+        aSmS1S2T6 = self._smS1S2T6
+        aSmS1S2T2 = self._smS1S2T2
+        if aSmS1S2T6 == X.SmS1S2T6.t6 :
+            self.exitSmS1S2T6()
+            self.setSmS1S2T2(X.SmS1S2T2.t5)
+            self.setSmS1S2T6(X.SmS1S2T6.t6)
+            wasEventProcessed = True
+        else :
+            pass
+        if aSmS1S2T2 == X.SmS0T2.t2 :
+            self.exitSmS1S2T2()
+            self.setSmS1S2T2(X.SmS1S2T2.t5)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def goT8(self):
+        wasEventProcessed = False
+        aSmS1S3T7 = self._smS1S3T7
+        if aSmS1S3T7 == X.SmS1S3T7.t7 :
+            self.exitSmS1S3T7()
+            self.setSmS1S3T7(X.SmS1S3T7.t8)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def goT9(self):
+        wasEventProcessed = False
+        aSmS1S3T6 = self._smS1S3T6
+        if aSmS1S3T6 == X.SmS1S2T6.t6 :
+            self.exitSmS1S3T6()
+            self.setSmS1S3T6(X.SmS1S3T6.t9)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitSm(self):
+        if self._sm == X.Sm.s0 :
+            self.exitSmS0T1()
+            self.exitSmS0T2()
+        elif self._sm == X.Sm.s1 :
+            self.exitSmS1()
+
+    def setSm(self, aSm):
+        self._sm = aSm
+        if self._sm == X.Sm.s0 :
+            if self._smS0T1 == X.SmS0T1.Null :
+                self.setSmS0T1(X.SmS0T1.t1)
+            if self._smS0T2 == X.SmS0T2.Null :
+                self.setSmS0T2(X.SmS0T2.t2)
+        elif self._sm == X.Sm.s1 :
+            if self._smS1 == X.SmS1.Null :
+                self.setSmS1(X.SmS1.s2)
+
+    def exitSmS0T1(self):
+        if self._smS0T1 == X.SmS0T1.t1 :
+            self.setSmS0T1(X.SmS0T1.Null)
+
+    def setSmS0T1(self, aSmS0T1):
+        self._smS0T1 = aSmS0T1
+        if self._sm != X.Sm.s0 and aSmS0T1 != X.SmS0T1.Null :
+            self.setSm(X.Sm.s0)
+
+    def exitSmS0T2(self):
+        if self._smS0T2 == X.SmS0T2.t2 :
+            self.setSmS0T2(X.SmS0T2.Null)
+        elif self._smS0T2 == X.SmS0T2.t3 :
+            self.setSmS0T2(X.SmS0T2.Null)
+
+    def setSmS0T2(self, aSmS0T2):
+        self._smS0T2 = aSmS0T2
+        if self._sm != X.Sm.s0 and aSmS0T2 != X.SmS0T2.Null :
+            self.setSm(X.Sm.s0)
+
+    def exitSmS1(self):
+        if self._smS1 == X.SmS1.s2 :
+            self.exitSmS1S2T1()
+            self.exitSmS1S2T6()
+            self.exitSmS1S2T2()
+            self.setSmS1(X.SmS1.Null)
+        elif self._smS1 == X.SmS1.s3 :
+            self.exitSmS1S3T7()
+            self.exitSmS1S3T6()
+            self.setSmS1(X.SmS1.Null)
+
+    def setSmS1(self, aSmS1):
+        self._smS1 = aSmS1
+        if self._sm != X.Sm.s1 and aSmS1 != X.SmS1.Null :
+            self.setSm(X.Sm.s1)
+        if self._smS1 == X.SmS1.s2 :
+            if self._smS1S2T1 == X.SmS1S2T1.Null :
+                self.setSmS1S2T1(X.SmS1S2T1.t1)
+            if self._smS1S2T6 == X.SmS1S2T6.Null :
+                self.setSmS1S2T6(X.SmS1S2T6.t6)
+            if self._smS1S2T2 == X.SmS1S2T2.Null :
+                self.setSmS1S2T2(X.SmS1S2T2.t2)
+        elif self._smS1 == X.SmS1.s3 :
+            if self._smS1S3T7 == X.SmS1S3T7.Null :
+                self.setSmS1S3T7(X.SmS1S3T7.t7)
+            if self._smS1S3T6 == X.SmS1S3T6.Null :
+                self.setSmS1S3T6(X.SmS1S3T6.t6)
+
+    def exitSmS1S2T1(self):
+        if self._smS1S2T1 == X.SmS0T1.t1 :
+            self.setSmS1S2T1(X.SmS1S2T1.Null)
+        elif self._smS1S2T1 == X.SmS1S2T1.t4 :
+            self.setSmS1S2T1(X.SmS1S2T1.Null)
+
+    def setSmS1S2T1(self, aSmS1S2T1):
+        self._smS1S2T1 = aSmS1S2T1
+        if self._smS1 != X.SmS1.s2 and aSmS1S2T1 != X.SmS1S2T1.Null :
+            self.setSmS1(X.SmS1.s2)
+
+    def exitSmS1S2T6(self):
+        if self._smS1S2T6 == X.SmS1S2T6.t6 :
+            self.setSmS1S2T6(X.SmS1S2T6.Null)
+
+    def setSmS1S2T6(self, aSmS1S2T6):
+        self._smS1S2T6 = aSmS1S2T6
+        if self._smS1 != X.SmS1.s2 and aSmS1S2T6 != X.SmS1S2T6.Null :
+            self.setSmS1(X.SmS1.s2)
+
+    def exitSmS1S2T2(self):
+        if self._smS1S2T2 == X.SmS0T2.t2 :
+            self.setSmS1S2T2(X.SmS1S2T2.Null)
+        elif self._smS1S2T2 == X.SmS1S2T2.t5 :
+            self.setSmS1S2T2(X.SmS1S2T2.Null)
+
+    def setSmS1S2T2(self, aSmS1S2T2):
+        self._smS1S2T2 = aSmS1S2T2
+        if self._smS1 != X.SmS1.s2 and aSmS1S2T2 != X.SmS1S2T2.Null :
+            self.setSmS1(X.SmS1.s2)
+
+    def exitSmS1S3T7(self):
+        if self._smS1S3T7 == X.SmS1S3T7.t7 :
+            self.setSmS1S3T7(X.SmS1S3T7.Null)
+        elif self._smS1S3T7 == X.SmS1S3T7.t8 :
+            self.setSmS1S3T7(X.SmS1S3T7.Null)
+
+    def setSmS1S3T7(self, aSmS1S3T7):
+        self._smS1S3T7 = aSmS1S3T7
+        if self._smS1 != X.SmS1.s3 and aSmS1S3T7 != X.SmS1S3T7.Null :
+            self.setSmS1(X.SmS1.s3)
+
+    def exitSmS1S3T6(self):
+        if self._smS1S3T6 == X.SmS1S2T6.t6 :
+            self.setSmS1S3T6(X.SmS1S3T6.Null)
+        elif self._smS1S3T6 == X.SmS1S3T6.t9 :
+            self.setSmS1S3T6(X.SmS1S3T6.Null)
+
+    def setSmS1S3T6(self, aSmS1S3T6):
+        self._smS1S3T6 = aSmS1S3T6
+        if self._smS1 != X.SmS1.s3 and aSmS1S3T6 != X.SmS1S3T6.Null :
+            self.setSmS1(X.SmS1.s3)
+
+    def delete(self):
+        pass
+

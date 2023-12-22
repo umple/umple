@@ -1,0 +1,13 @@
+generate Python;
+namespace example;
+
+class X {
+  sm {
+    s1 {
+      do {blah1()};
+      do {blah2()};
+      e1 -> s2;
+    }
+    s2 {}
+  }
+}
