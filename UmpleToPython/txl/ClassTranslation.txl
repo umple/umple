@@ -16,15 +16,11 @@ rule replaceConcreteClasses
         _ [createImports classBody inheritances translatedBody]
     construct runMain [opt run_main]
         _ [constructRunMain translatedBody]
-
-
     construct emptyDeclaration [repeat statement]
         %none
-
     construct umplePythonSyncLockStatement [repeat statement]
         emptyDeclaration [createUmplePythonSyncLock translatedBody]
-
-    import possibleSynchronized [opt synchronized]
+    %import possibleSynchronized [opt synchronized]
     by
         imports
         'class className '( inheritanceClasses ')':  umplePythonSyncLockStatement translatedBody runMain
@@ -48,15 +44,19 @@ end function
 %Rule to translate nested classes
 rule replaceInnerClasses
     replace $ [inner_class_declaration]
-        _ [opt acess_modifier] 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '}
-    export className
+        _ [opt acess_modifier] 'class className  [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '}
+    export className  %This was originally className
     construct inheritanceInnerClasses [list nested_identifier]
         _ [extractInheritanceBlockClasses each inheritances][print]
     export inheritanceInnerClasses
     construct translatedBody [class_body_decl]
        classBody  [replaceClassBody]
+    construct emptyDeclaration [repeat statement]
+        %none
+    construct umplePythonSyncLockStatement [repeat statement]
+        emptyDeclaration [createUmplePythonSyncLock translatedBody]
     by
-        'class className '( inheritanceInnerClasses ')':  translatedBody
+        'class className  '( inheritanceInnerClasses ')': umplePythonSyncLockStatement translatedBody
 end rule
 
 %Rule to translate abstract classes
