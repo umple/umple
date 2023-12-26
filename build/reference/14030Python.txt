@@ -73,6 +73,7 @@ Currently unsupported features:
     <li>Any Umple code that create the following Java:
         <ul>
             <li>keyword synchronized</li>
+            <li>see issue #2070 and #2071 for more information</li>
         </ul>
     </li>
 </ul>
