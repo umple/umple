@@ -1,0 +1,18 @@
+-- PLEASE DO NOT EDIT THIS CODE
+-- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+CREATE DATABASE IF NOT EXISTS `example`;
+USE `example`;
+
+CREATE TABLE IF NOT EXISTS `example`.`person`
+(
+  /*------------------------*/
+  /* MEMBER VARIABLES       */
+  /*------------------------*/
+  
+  /*person Attributes*/
+  name VARCHAR(255),
+  age INT,
+  PRIMARY KEY(name)
+
+);

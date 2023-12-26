@@ -247,4 +247,12 @@ public class GvSdGeneratorTest extends TemplateTest {
     language = null;
     assertUmplePartialTemplateFor("gv/ParameterTransition.ump","gv/ParameterTransition.gv.txt");
   }
+  
+  @Test
+  public void nodeSeparationSd()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/IncreaseStateSep.ump","gv/IncreaseStateSep.gv.txt");
+  }
+
 }
