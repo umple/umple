@@ -1,6 +1,6 @@
 #PLEASE DO NOT EDIT THIS CODE
 #This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
-
+# line 1 "checkExternalTransitions_withExitActions_2.ump"
 from enum import Enum, auto
 
 class X():
@@ -104,15 +104,15 @@ class X():
     def exitSm(self):
         if self._sm == X.Sm.on :
             self.exitSmOn()
-
+            # line 4 "checkExternalTransitions_withExitActions_2.ump"
             on_exit_action()
         elif self._sm == X.Sm.off :
-
+            # line 18 "checkExternalTransitions_withExitActions_2.ump"
             off_exit_action()
 
     def setSm(self, aSm):
         self._sm = aSm
-
+        # entry actions and do activities
         if self._sm == X.Sm.on :
             if self._smOn == X.SmOn.Null :
                 self.setSmOn(X.SmOn.m1)
@@ -120,7 +120,7 @@ class X():
     def exitSmOn(self):
         if self._smOn == X.SmOn.m1 :
             self.exitSmOnM1()
-
+            # line 7 "checkExternalTransitions_withExitActions_2.ump"
             m1_exit_action()
             self.setSmOn(X.SmOn.Null)
         elif self._smOn == X.SmOn.m2 :
@@ -137,7 +137,7 @@ class X():
 
     def exitSmOnM1(self):
         if self._smOnM1 == X.SmOnM1.t2 :
-
+            # line 10 "checkExternalTransitions_withExitActions_2.ump"
             t2_exit_action()
             self.setSmOnM1(X.SmOnM1.Null)
         elif self._smOnM1 == X.SmOnM1.t3 :
