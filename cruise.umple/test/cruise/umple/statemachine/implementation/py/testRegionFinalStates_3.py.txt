@@ -1,6 +1,13 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class X():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X State Machines
     class Sm(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -59,6 +66,9 @@ class X():
         s9 = auto()
         s10 = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._smS1S8S8 = None
         self._smS1S8 = None
@@ -75,6 +85,9 @@ class X():
         self.setSmS1S8S8(X.SmS1S8S8.Null)
         self.setSm(X.Sm.s1)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getSmFullName(self):
         answer = self._sm.__str__()
         if self._smS1S2 != X.SmS1S2.Null :
@@ -120,6 +133,7 @@ class X():
             self.setSmS1S2S2(X.SmS1S2S2.s4)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -131,6 +145,7 @@ class X():
             self.setSmS1S5S5(X.SmS1S5S5.s7)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -142,6 +157,7 @@ class X():
             self.setSmS1S8S8(X.SmS1S8S8.s10)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -153,6 +169,7 @@ class X():
 
     def setSm(self, aSm):
         self._sm = aSm
+        # entry actions and do activities
         if self._sm == X.Sm.s1 :
             if self._smS1S2 == X.SmS1S2.Null :
                 self.setSmS1S2(X.SmS1S2.s2)
@@ -170,6 +187,7 @@ class X():
         self._smS1S2 = aSmS1S2
         if self._sm != X.Sm.s1 and aSmS1S2 != X.SmS1S2.Null :
             self.setSm(X.Sm.s1)
+        # entry actions and do activities
         if self._smS1S2 == X.SmS1S2.s2 :
             if self._smS1S2S2 == X.SmS1S2S2.Null :
                 self.setSmS1S2S2(X.SmS1S2S2.s3)
@@ -184,6 +202,7 @@ class X():
         self._smS1S2S2 = aSmS1S2S2
         if self._smS1S2 != X.SmS1S2.s2 and aSmS1S2S2 != X.SmS1S2S2.Null :
             self.setSmS1S2(X.SmS1S2.s2)
+        # entry actions and do activities
         if self._smS1S2S2 == X.SmS1S2S2.s4 :
             if self._smS1S5S5 == X.SmS1S5S5.s7 and self._smS1S8S8 == X.SmS1S8S8.s10 :
                 self.delete()
@@ -197,6 +216,7 @@ class X():
         self._smS1S5 = aSmS1S5
         if self._sm != X.Sm.s1 and aSmS1S5 != X.SmS1S5.Null :
             self.setSm(X.Sm.s1)
+        # entry actions and do activities
         if self._smS1S5 == X.SmS1S5.s5 :
             if self._smS1S5S5 == X.SmS1S5S5.Null :
                 self.setSmS1S5S5(X.SmS1S5S5.s6)
@@ -211,6 +231,7 @@ class X():
         self._smS1S5S5 = aSmS1S5S5
         if self._smS1S5 != X.SmS1S5.s5 and aSmS1S5S5 != X.SmS1S5S5.Null :
             self.setSmS1S5(X.SmS1S5.s5)
+        # entry actions and do activities
         if self._smS1S5S5 == X.SmS1S5S5.s7 :
             if self._smS1S2S2 == X.SmS1S2S2.s4 and self._smS1S8S8 == X.SmS1S8S8.s10 :
                 self.delete()
@@ -224,6 +245,7 @@ class X():
         self._smS1S8 = aSmS1S8
         if self._sm != X.Sm.s1 and aSmS1S8 != X.SmS1S8.Null :
             self.setSm(X.Sm.s1)
+        # entry actions and do activities
         if self._smS1S8 == X.SmS1S8.s8 :
             if self._smS1S8S8 == X.SmS1S8S8.Null :
                 self.setSmS1S8S8(X.SmS1S8S8.s9)
@@ -238,9 +260,11 @@ class X():
         self._smS1S8S8 = aSmS1S8S8
         if self._smS1S8 != X.SmS1S8.s8 and aSmS1S8S8 != X.SmS1S8S8.Null :
             self.setSmS1S8(X.SmS1S8.s8)
+        # entry actions and do activities
         if self._smS1S8S8 == X.SmS1S8S8.s10 :
             if self._smS1S2S2 == X.SmS1S2S2.s4 and self._smS1S5S5 == X.SmS1S5S5.s7 :
                 self.delete()
 
     def delete(self):
         pass
+

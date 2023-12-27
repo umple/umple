@@ -1,6 +1,14 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor State Machines
     class Status(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -10,6 +18,10 @@ class Mentor():
         NotOkay = auto()
         NotOk = auto()
 
+    #Helper Variables
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._timeoutNotOkayToOkHandler = None
         self._timeoutOkToNotOkHandler = None
@@ -18,6 +30,9 @@ class Mentor():
         self._howLongUntilOk = 3
         self.setStatus(Mentor.Status.Ok)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setHowLongUntilOk(self, aHowLongUntilOk):
         wasSet = False
         self._howLongUntilOk = aHowLongUntilOk
@@ -42,6 +57,7 @@ class Mentor():
             self.setStatus(Mentor.Status.NotOk)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -53,6 +69,7 @@ class Mentor():
             self.setStatus(Mentor.Status.Ok)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -64,6 +81,7 @@ class Mentor():
 
     def setStatus(self, aStatus):
         self._status = aStatus
+        # entry actions and do activities
         if self._status == Mentor.Status.Ok :
             self.startTimeoutOkToNotOkHandler()
         elif self._status == Mentor.Status.NotOkay :
@@ -115,3 +133,4 @@ class Mentor():
 
     def __str__(self):
         return str(super().__str__()) + "[" + "howLongUntilOk" + ":" + str(self.getHowLongUntilOk()) + "]"
+
