@@ -1,8 +1,15 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 from threading import Thread
 import time
 
 class X():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X State Machines
     class Sm(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -11,12 +18,19 @@ class X():
         s1 = auto()
         s2 = auto()
 
+    #X Do Activity Threads
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._doActivity1SmS1Thread = None
         self._doActivity0SmS1Thread = None
         self._sm = None
         self.setSm(X.Sm.s1)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getSmFullName(self):
         answer = self._sm.__str__()
         return answer
@@ -32,6 +46,7 @@ class X():
             self.setSm(X.Sm.s2)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -44,6 +59,7 @@ class X():
 
     def setSm(self, aSm):
         self._sm = aSm
+        # entry actions and do activities
         if self._sm == X.Sm.s1 :
             self._doActivity0SmS1Thread = X.DoActivityThread(self, "doActivity0SmS1")
             self._doActivity1SmS1Thread = X.DoActivityThread(self, "doActivity1SmS1")
@@ -66,6 +82,7 @@ class X():
             self._controller = None
             self._controller = aController
             self._doActivityMethodName = aDoActivityMethodName
+            # The equivalent of "start();" for starting a python thread
             super().__init__()
             self.start()
 
