@@ -1,120 +1,166 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class X():
-    class Status(Enum):
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X State Machines
+    class Sm(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
         def __str__(self):
             return str(self.value)
-        on = auto()
-        off = auto()
-        FINAL = auto()
+        s1 = auto()
+        Final = auto()
+        s3 = auto()
 
-    class StatusFINAL(Enum):
+    class SmS1(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
         def __str__(self):
             return str(self.value)
         Null = auto()
-        nestedSm = auto()
+        s2 = auto()
 
-    class StatusFINALNestedSm(Enum):
+    class SmS3(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
         def __str__(self):
             return str(self.value)
         Null = auto()
-        nestedFinal = auto()
+        s4 = auto()
 
+    class SmS3S4(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Null = auto()
+        s5 = auto()
+
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
-        self._statusFINALNestedSm = None
-        self._statusFINAL = None
-        self._status = None
-        self.setStatusFINAL(X.StatusFINAL.Null)
-        self.setStatusFINALNestedSm(X.StatusFINALNestedSm.Null)
-        self.setStatus(X.Status.on)
+        self._smS3S4 = None
+        self._smS3 = None
+        self._smS1 = None
+        self._sm = None
+        self.setSmS1(X.SmS1.Null)
+        self.setSmS3(X.SmS3.Null)
+        self.setSmS3S4(X.SmS3S4.Null)
+        self.setSm(X.Sm.s1)
 
-    def getStatusFullName(self):
-        answer = self._status.__str__()
-        if self._statusFINAL != X.StatusFINAL.Null :
-            answer += "." + self._statusFINAL.__str__()
-        if self._statusFINALNestedSm != X.StatusFINALNestedSm.Null :
-            answer += "." + self._statusFINALNestedSm.__str__()
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def getSmFullName(self):
+        answer = self._sm.__str__()
+        if self._smS1 != X.SmS1.Null :
+            answer += "." + self._smS1.__str__()
+        if self._smS3 != X.SmS3.Null :
+            answer += "." + self._smS3.__str__()
+        if self._smS3S4 != X.SmS3S4.Null :
+            answer += "." + self._smS3S4.__str__()
         return answer
 
-    def getStatus(self):
-        return self._status
+    def getSm(self):
+        return self._sm
 
-    def getStatusFINAL(self):
-        return self._statusFINAL
+    def getSmS1(self):
+        return self._smS1
 
-    def getStatusFINALNestedSm(self):
-        return self._statusFINALNestedSm
+    def getSmS3(self):
+        return self._smS3
 
-    def turnoff(self):
+    def getSmS3S4(self):
+        return self._smS3S4
+
+    def goToS3(self):
         wasEventProcessed = False
-        aStatus = self._status
-        if aStatus == X.Status.on :
-            self.setStatus(X.Status.off)
+        aSm = self._sm
+        if aSm == X.Sm.s1 :
+            self.exitSm()
+            self.setSm(X.Sm.s3)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
-    def powerOff(self):
+    def goToFinal(self):
         wasEventProcessed = False
-        aStatus = self._status
-        if aStatus == X.Status.on :
-            self.setStatus(X.Status.FINAL)
+        aSmS1 = self._smS1
+        aSmS3S4 = self._smS3S4
+        if aSmS1 == X.SmS1.s2 :
+            self.exitSm()
+            self.setSm(X.Sm.Final)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
+            pass
+        if aSmS3S4 == X.SmS3S4.s5 :
+            self.exitSm()
+            self.setSm(X.Sm.Final)
+            wasEventProcessed = True
+        else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
-    def turnOn(self):
-        wasEventProcessed = False
-        aStatus = self._status
-        if aStatus == X.Status.off :
-            self.setStatus(X.Status.on)
-            wasEventProcessed = True
-        else :
-            pass
-        return wasEventProcessed
+    def exitSm(self):
+        if self._sm == X.Sm.s1 :
+            self.exitSmS1()
+        elif self._sm == X.Sm.s3 :
+            self.exitSmS3()
 
-    def exitStatus(self):
-        if self._status == X.Status.FINAL :
-            self.exitStatusFINAL()
-
-    def setStatus(self, aStatus):
-        self._status = aStatus
-        if self._status == X.Status.FINAL :
-            if self._statusFINAL == X.StatusFINAL.Null :
-                self.setStatusFINAL(X.StatusFINAL.nestedSm)
-
-    def exitStatusFINAL(self):
-        if self._statusFINAL == X.StatusFINAL.nestedSm :
-            self.exitStatusFINALNestedSm()
-            self.setStatusFINAL(X.StatusFINAL.Null)
-
-    def setStatusFINAL(self, aStatusFINAL):
-        self._statusFINAL = aStatusFINAL
-        if self._status != X.Status.FINAL and aStatusFINAL != X.StatusFINAL.Null :
-            self.setStatus(X.Status.FINAL)
-        if self._statusFINAL == X.StatusFINAL.nestedSm :
-            if self._statusFINALNestedSm == X.StatusFINALNestedSm.Null :
-                self.setStatusFINALNestedSm(X.StatusFINALNestedSm.nestedFinal)
-
-    def exitStatusFINALNestedSm(self):
-        if self._statusFINALNestedSm == X.StatusFINALNestedSm.nestedFinal :
-            self.setStatusFINALNestedSm(X.StatusFINALNestedSm.Null)
-
-    def setStatusFINALNestedSm(self, aStatusFINALNestedSm):
-        self._statusFINALNestedSm = aStatusFINALNestedSm
-        if self._statusFINAL != X.StatusFINAL.nestedSm and aStatusFINALNestedSm != X.StatusFINALNestedSm.Null :
-            self.setStatusFINAL(X.StatusFINAL.nestedSm)
-        if self._statusFINALNestedSm == X.StatusFINALNestedSm.nestedFinal :
-            entry()
+    def setSm(self, aSm):
+        self._sm = aSm
+        # entry actions and do activities
+        if self._sm == X.Sm.s1 :
+            if self._smS1 == X.SmS1.Null :
+                self.setSmS1(X.SmS1.s2)
+        elif self._sm == X.Sm.Final :
             self.delete()
+        elif self._sm == X.Sm.s3 :
+            if self._smS3 == X.SmS3.Null :
+                self.setSmS3(X.SmS3.s4)
+
+    def exitSmS1(self):
+        if self._smS1 == X.SmS1.s2 :
+            self.setSmS1(X.SmS1.Null)
+
+    def setSmS1(self, aSmS1):
+        self._smS1 = aSmS1
+        if self._sm != X.Sm.s1 and aSmS1 != X.SmS1.Null :
+            self.setSm(X.Sm.s1)
+
+    def exitSmS3(self):
+        if self._smS3 == X.SmS3.s4 :
+            self.exitSmS3S4()
+            self.setSmS3(X.SmS3.Null)
+
+    def setSmS3(self, aSmS3):
+        self._smS3 = aSmS3
+        if self._sm != X.Sm.s3 and aSmS3 != X.SmS3.Null :
+            self.setSm(X.Sm.s3)
+        # entry actions and do activities
+        if self._smS3 == X.SmS3.s4 :
+            if self._smS3S4 == X.SmS3S4.Null :
+                self.setSmS3S4(X.SmS3S4.s5)
+
+    def exitSmS3S4(self):
+        if self._smS3S4 == X.SmS3S4.s5 :
+            self.setSmS3S4(X.SmS3S4.Null)
+
+    def setSmS3S4(self, aSmS3S4):
+        self._smS3S4 = aSmS3S4
+        if self._smS3 != X.SmS3.s4 and aSmS3S4 != X.SmS3S4.Null :
+            self.setSmS3(X.SmS3.s4)
 
     def delete(self):
         pass
+

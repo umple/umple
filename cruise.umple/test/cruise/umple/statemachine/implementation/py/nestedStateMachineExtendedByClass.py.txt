@@ -1,8 +1,16 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from ThingInWorld import ThingInWorld
 import os
 from enum import Enum, auto
 
 class Animal(ThingInWorld):
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Animal Attributes
+    #Animal State Machines
     class State(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -29,6 +37,10 @@ class Animal(ThingInWorld):
         baby = auto()
         adult = auto()
 
+    #Animal Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aIsAlive, aWorld):
         self._world = None
         self._drops = None
@@ -46,6 +58,9 @@ class Animal(ThingInWorld):
         self.setStateAliveNormal(Animal.StateAliveNormal.Null)
         self.setState(Animal.State.alive)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setIsAlive(self, aIsAlive):
         wasSet = False
         self._isAlive = aIsAlive
@@ -55,6 +70,7 @@ class Animal(ThingInWorld):
     def getIsAlive(self):
         return self._isAlive
 
+    # Code from template attribute_IsBoolean 
     def isIsAlive(self):
         return self._isAlive
 
@@ -83,6 +99,7 @@ class Animal(ThingInWorld):
             self.setState(Animal.State.dead)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -94,6 +111,7 @@ class Animal(ThingInWorld):
             self.setStateAliveNormal(Animal.StateAliveNormal.adult)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -105,6 +123,7 @@ class Animal(ThingInWorld):
             self.setStateAliveNormal(Animal.StateAliveNormal.adult)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -116,6 +135,7 @@ class Animal(ThingInWorld):
             self.setStateAlive(Animal.StateAlive.zombie)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -125,6 +145,7 @@ class Animal(ThingInWorld):
 
     def setState(self, aState):
         self._state = aState
+        # entry actions and do activities
         if self._state == Animal.State.alive :
             if self._stateAlive == Animal.StateAlive.Null :
                 self.setStateAlive(Animal.StateAlive.normal)
@@ -140,6 +161,7 @@ class Animal(ThingInWorld):
         self._stateAlive = aStateAlive
         if self._state != Animal.State.alive and aStateAlive != Animal.StateAlive.Null :
             self.setState(Animal.State.alive)
+        # entry actions and do activities
         if self._stateAlive == Animal.StateAlive.normal :
             if self._stateAliveNormal == Animal.StateAliveNormal.Null :
                 self.setStateAliveNormal(Animal.StateAliveNormal.baby)
@@ -155,6 +177,7 @@ class Animal(ThingInWorld):
         if self._stateAlive != Animal.StateAlive.normal and aStateAliveNormal != Animal.StateAliveNormal.Null :
             self.setStateAlive(Animal.StateAlive.normal)
 
+    # Code from template association_GetMany 
     def getDrop(self, index):
         aDrop = self._drops[index]
         return aDrop
@@ -175,13 +198,16 @@ class Animal(ThingInWorld):
         index = (-1 if not aDrop in self._drops else self._drops.index(aDrop))
         return index
 
+    # Code from template association_GetOne 
     def getWorld(self):
         return self._world
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfDrops():
         return 0
 
+    # Code from template association_AddManyToManyMethod 
     def addDrop(self, aDrop):
         wasAdded = False
         if (aDrop) in self._drops :
@@ -195,6 +221,7 @@ class Animal(ThingInWorld):
                 self._drops.remove(aDrop)
         return wasAdded
 
+    # Code from template association_RemoveMany 
     def removeDrop(self, aDrop):
         wasRemoved = False
         if not (aDrop) in self._drops :
@@ -209,6 +236,7 @@ class Animal(ThingInWorld):
                 self._drops.insert(oldIndex, aDrop)
         return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addDropAt(self, aDrop, index):
         wasAdded = False
         if self.addDrop(aDrop) :
@@ -235,6 +263,7 @@ class Animal(ThingInWorld):
             wasAdded = self.addDropAt(aDrop, index)
         return wasAdded
 
+    # Code from template association_SetOneToMany 
     def setWorld(self, aWorld):
         wasSet = False
         if aWorld is None :
@@ -261,3 +290,4 @@ class Animal(ThingInWorld):
 
     def __str__(self):
         return str(super().__str__()) + "[" + "isAlive" + ":" + str(self.getIsAlive()) + "]" + str(os.linesep) + "  " + "world = " + ((format(id(self.getWorld()), "x")) if not (self.getWorld() is None) else "null")
+
