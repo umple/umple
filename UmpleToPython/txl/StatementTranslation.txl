@@ -72,7 +72,6 @@ function replaceStatements
             [replaceFloatF]
             [replaceAllMemberVariableNames]
             [removeSemiColonFromValues]
-            [replaceAutoTransitionExitSM]
             [replaceThreadSleep]
 
 end function
@@ -1074,14 +1073,6 @@ rule replaceThreadSleep
         'Thread.sleep( val [number] ')
     by
         'time.sleep( val  [/ 1000]')
-end rule
-
-% self.exitSm() is making the python AutoTransition not work, comment out for workaround.
-rule replaceAutoTransitionExitSM
-    replace [statement]
-        'exitSm()
-    by
-        'exit()
 end rule
 
 rule addClassPrefixToNestedClasses
