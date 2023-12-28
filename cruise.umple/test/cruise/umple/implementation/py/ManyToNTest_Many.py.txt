@@ -1,4 +1,16 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 3 "../ManyToNTest.ump"
+
 class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName, *allStudents):
         allStudents = list(allStudents)
         self._students = None
@@ -9,6 +21,9 @@ class Mentor():
         if not didAddStudents :
             raise RuntimeError ("Unable to create Mentor, must have 2 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setName(self, aName):
         wasSet = False
         self._name = aName
@@ -18,6 +33,7 @@ class Mentor():
     def getName(self):
         return self._name
 
+    # Code from template association_GetMany 
     def getStudent(self, index):
         aStudent = self._students[index]
         return aStudent
@@ -38,22 +54,27 @@ class Mentor():
         index = (-1 if not aStudent in self._students else self._students.index(aStudent))
         return index
 
+    # Code from template association_IsNumberOfValidMethod 
     def isNumberOfStudentsValid(self):
         isValid = self.numberOfStudents() >= Mentor.minimumNumberOfStudents() and self.numberOfStudents() <= Mentor.maximumNumberOfStudents()
         return isValid
 
+    # Code from template association_RequiredNumberOfMethod 
     @staticmethod
     def requiredNumberOfStudents():
         return 2
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfStudents():
         return 2
 
+    # Code from template association_MaximumNumberOfMethod 
     @staticmethod
     def maximumNumberOfStudents():
         return 2
 
+    # Code from template association_AddManyToManyMethod 
     def addStudent(self, aStudent):
         wasAdded = False
         if (aStudent) in self._students :
@@ -69,6 +90,7 @@ class Mentor():
                 self._students.remove(aStudent)
         return wasAdded
 
+    # Code from template association_AddMNToMany 
     def removeStudent(self, aStudent):
         wasRemoved = False
         if not (aStudent) in self._students :
@@ -85,6 +107,7 @@ class Mentor():
                 self._students.insert(oldIndex, aStudent)
         return wasRemoved
 
+    # Code from template association_SetMNToMany 
     def setStudents(self, *newStudents):
         newStudents = list(newStudents)
         wasSet = False
