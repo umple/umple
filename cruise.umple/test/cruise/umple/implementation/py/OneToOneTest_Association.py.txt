@@ -1,6 +1,17 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 3 "../OneToOneTest.ump"
 import os
 
 class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     @classmethod
     def alternateConstructor(cls, aName, aStudent):
         self = cls.__new__(cls)
@@ -23,6 +34,9 @@ class Mentor():
         self._id = None
         self._student = Student.alternateConstructor(aNameForStudent, aNumberForStudent, self)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setName(self, aName):
         wasSet = False
         self._name = aName
@@ -41,6 +55,7 @@ class Mentor():
     def getId(self):
         return self._id
 
+    # Code from template association_GetOne 
     def getStudent(self):
         return self._student
 
