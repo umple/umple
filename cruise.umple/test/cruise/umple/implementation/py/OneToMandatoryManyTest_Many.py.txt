@@ -1,140 +1,67 @@
 #PLEASE DO NOT EDIT THIS CODE
 #This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
-# line 3 "../OneToMandatoryManyTest.ump"
+# line 9 "../OneToMandatoryManyTest.ump"
+import os
 
-class Mentor():
+class Student():
     #------------------------
     # MEMBER VARIABLES
     #------------------------
-    #Mentor Attributes
-    #Mentor Associations
+    #Student Attributes
+    #Student Associations
     #------------------------
     # CONSTRUCTOR
     #------------------------
-    def __init__(self, aName):
-        self._students = None
-        self._name = None
-        self._name = aName
-        self._students = []
+    def __init__(self, aNumber, aMentor):
+        self._mentor = None
+        self._number = None
+        self._number = aNumber
+        didAddMentor = self.setMentor(aMentor)
+        if not didAddMentor :
+            raise RuntimeError ("Unable to create student due to mentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
     #------------------------
     # INTERFACE
     #------------------------
-    def setName(self, aName):
+    def setNumber(self, aNumber):
         wasSet = False
-        self._name = aName
+        self._number = aNumber
         wasSet = True
         return wasSet
 
-    def getName(self):
-        return self._name
+    def getNumber(self):
+        return self._number
 
-    # Code from template association_GetMany 
-    def getStudent(self, index):
-        aStudent = self._students[index]
-        return aStudent
+    # Code from template association_GetOne 
+    def getMentor(self):
+        return self._mentor
 
-    def getStudents(self):
-        newStudents = tuple(self._students)
-        return newStudents
-
-    def numberOfStudents(self):
-        number = len(self._students)
-        return number
-
-    def hasStudents(self):
-        has = len(self._students) > 0
-        return has
-
-    def indexOfStudent(self, aStudent):
-        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
-        return index
-
-    # Code from template association_IsNumberOfValidMethod 
-    def isNumberOfStudentsValid(self):
-        isValid = self.numberOfStudents() >= Mentor.minimumNumberOfStudents()
-        return isValid
-
-    # Code from template association_MinimumNumberOfMethod 
-    @staticmethod
-    def minimumNumberOfStudents():
-        return 5
-
-    # Code from template association_AddMandatoryManyToOne 
-    def addStudent1(self, aNumber):
-        from Student import Student
-        aNewStudent = Student(aNumber, self)
-        return aNewStudent
-
-    def addStudent2(self, aStudent):
-        wasAdded = False
-        if (aStudent) in self._students :
-            return False
-        existingMentor = aStudent.getMentor()
-        isNewMentor = not (existingMentor is None) and not self == existingMentor
-        if isNewMentor and existingMentor.numberOfStudents() <= Mentor.minimumNumberOfStudents() :
-            return wasAdded
-        if isNewMentor :
-            aStudent.setMentor(self)
-        else :
-            self._students.append(aStudent)
-        wasAdded = True
-        return wasAdded
-
-    def removeStudent(self, aStudent):
-        wasRemoved = False
-        #Unable to remove aStudent, as it must always have a mentor
-        if self == aStudent.getMentor() :
-            return wasRemoved
-        #mentor already at minimum (5)
-        if self.numberOfStudents() <= Mentor.minimumNumberOfStudents() :
-            return wasRemoved
-        self._students.remove(aStudent)
-        wasRemoved = True
-        return wasRemoved
-
-    # Code from template association_AddIndexControlFunctions 
-    def addStudentAt(self, aStudent, index):
-        wasAdded = False
-        if self.addStudent(aStudent) :
-            if index < 0 :
-                index = 0
-            if index > self.numberOfStudents() :
-                index = self.numberOfStudents() - 1
-            self._students.remove(aStudent)
-            self._students.insert(index, aStudent)
-            wasAdded = True
-        return wasAdded
-
-    def addOrMoveStudentAt(self, aStudent, index):
-        wasAdded = False
-        if (aStudent) in self._students :
-            if index < 0 :
-                index = 0
-            if index > self.numberOfStudents() :
-                index = self.numberOfStudents() - 1
-            self._students.remove(aStudent)
-            self._students.insert(index, aStudent)
-            wasAdded = True
-        else :
-            wasAdded = self.addStudentAt(aStudent, index)
-        return wasAdded
+    # Code from template association_SetOneToMandatoryMany 
+    def setMentor(self, aMentor):
+        from Mentor import Mentor
+        wasSet = False
+        #Must provide mentor to student
+        if aMentor is None :
+            return wasSet
+        if not (self._mentor is None) and self._mentor.numberOfStudents() <= Mentor.minimumNumberOfStudents() :
+            return wasSet
+        existingMentor = self._mentor
+        self._mentor = aMentor
+        if not (existingMentor is None) and not existingMentor == aMentor :
+            didRemove = existingMentor.removeStudent(self)
+            if not didRemove :
+                self._mentor = existingMentor
+                return wasSet
+        self._mentor.addStudent(self)
+        wasSet = True
+        return wasSet
 
     def delete(self):
-        i = len(self._students)
-        while i > 0 :
-            aStudent = self._students[i - 1]
-            aStudent.delete()
-            i -= 1
+        placeholderMentor = self._mentor
+        self._mentor = None
+        if not (placeholderMentor is None) :
+            placeholderMentor.removeStudent(self)
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
-
-    def addStudent(self, *argv):
-        from Student import Student
-        if len(argv) == 1 and isinstance(argv[0], str) :
-            return self.addStudent1(argv[0])
-        if len(argv) == 1 and isinstance(argv[0], Student) :
-            return self.addStudent2(argv[0])
-        raise TypeError("No method matches provided parameters")
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "mentor = " + ((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null")
 
