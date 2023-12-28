@@ -1,0 +1,9 @@
+generate Python;
+namespace com.me.at.uottawa;
+
+interface RootDoWork
+{
+  
+     void doWork();
+
+}
