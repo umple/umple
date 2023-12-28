@@ -1,6 +1,18 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
 import os
 
 class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #Student Associations
+    #Helper Variables
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aNumber, aMentor):
         self._canSetMentor = None
         self._mentor = None
@@ -10,12 +22,17 @@ class Student():
         if not self.setMentor(aMentor) :
             raise RuntimeError ("Unable to create Student due to aMentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getNumber(self):
         return self._number
 
+    # Code from template association_GetOne
     def getMentor(self):
         return self._mentor
 
+    # Code from template association_SetUnidirectionalOne
     def setMentor(self, aNewMentor):
         wasSet = False
         if not self._canSetMentor :
@@ -31,4 +48,3 @@ class Student():
 
     def __str__(self):
         return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "mentor = " + ((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null")
-
