@@ -27,7 +27,7 @@ class Student():
     def getNumber(self):
         return self._number
 
-    # Code from template association_GetOne
+    # Code from template association_GetOne 
     def getMentor(self):
         return self._mentor
 
@@ -35,7 +35,7 @@ class Student():
         has = not (self._mentor is None)
         return has
 
-    # Code from template association_SetUnidirectionalOptionalOne
+    # Code from template association_SetUnidirectionalOptionalOne 
     def setMentor(self, aNewMentor):
         wasSet = False
         if not self._canSetMentor :
@@ -50,3 +50,4 @@ class Student():
 
     def __str__(self):
         return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "mentor = " + ((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null")
+
