@@ -18,7 +18,7 @@ public class DoubleGenTest extends TemplateTest
   public void Parent()
   {
     assertUmpleTemplateFor("DoubleGenTest.ump",languagePath + "/DoubleGenTest_Parent."+ languagePath +".txt","Person");
- }
+  }
   
   @Test
   public void Child()
