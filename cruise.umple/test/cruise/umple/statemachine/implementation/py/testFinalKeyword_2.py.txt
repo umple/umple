@@ -1,6 +1,13 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class X():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X State Machines
     class Sm(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -34,6 +41,9 @@ class X():
         Null = auto()
         s5 = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._smS3S4 = None
         self._smS3 = None
@@ -44,6 +54,9 @@ class X():
         self.setSmS3S4(X.SmS3S4.Null)
         self.setSm(X.Sm.s1)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getSmFullName(self):
         answer = self._sm.__str__()
         if self._smS1 != X.SmS1.Null :
@@ -74,6 +87,7 @@ class X():
             self.setSm(X.Sm.s3)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -86,12 +100,14 @@ class X():
             self.setSm(X.Sm.Final)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         if aSmS3S4 == X.SmS3S4.s5 :
             self.exitSm()
             self.setSm(X.Sm.Final)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -103,6 +119,7 @@ class X():
 
     def setSm(self, aSm):
         self._sm = aSm
+        # entry actions and do activities
         if self._sm == X.Sm.s1 :
             if self._smS1 == X.SmS1.Null :
                 self.setSmS1(X.SmS1.s2)
@@ -130,6 +147,7 @@ class X():
         self._smS3 = aSmS3
         if self._sm != X.Sm.s3 and aSmS3 != X.SmS3.Null :
             self.setSm(X.Sm.s3)
+        # entry actions and do activities
         if self._smS3 == X.SmS3.s4 :
             if self._smS3S4 == X.SmS3S4.Null :
                 self.setSmS3S4(X.SmS3S4.s5)
@@ -145,3 +163,4 @@ class X():
 
     def delete(self):
         pass
+

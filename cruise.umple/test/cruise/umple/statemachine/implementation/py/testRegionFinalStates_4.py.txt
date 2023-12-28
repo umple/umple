@@ -1,6 +1,13 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class X():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X State Machines
     class Sm(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -53,6 +60,9 @@ class X():
         s2Start = auto()
         s2Final = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._smS2 = None
         self._smS1O2O2 = None
@@ -67,6 +77,9 @@ class X():
         self.setSmS2(X.SmS2.Null)
         self.setSm(X.Sm.s1)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getSmFullName(self):
         answer = self._sm.__str__()
         if self._smS1O1 != X.SmS1O1.Null :
@@ -107,6 +120,7 @@ class X():
             self.setSm(X.Sm.s2)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -118,6 +132,7 @@ class X():
             self.setSm(X.Sm.Final)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -129,6 +144,7 @@ class X():
             self.setSmS1O1O1(X.SmS1O1O1.o1Final)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -140,6 +156,7 @@ class X():
             self.setSmS1O2O2(X.SmS1O2O2.o2Final)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -151,6 +168,7 @@ class X():
             self.setSmS2(X.SmS2.s2Final)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -163,6 +181,7 @@ class X():
 
     def setSm(self, aSm):
         self._sm = aSm
+        # entry actions and do activities
         if self._sm == X.Sm.s1 :
             if self._smS1O1 == X.SmS1O1.Null :
                 self.setSmS1O1(X.SmS1O1.o1)
@@ -183,6 +202,7 @@ class X():
         self._smS1O1 = aSmS1O1
         if self._sm != X.Sm.s1 and aSmS1O1 != X.SmS1O1.Null :
             self.setSm(X.Sm.s1)
+        # entry actions and do activities
         if self._smS1O1 == X.SmS1O1.o1 :
             if self._smS1O1O1 == X.SmS1O1O1.Null :
                 self.setSmS1O1O1(X.SmS1O1O1.o1Start)
@@ -197,6 +217,7 @@ class X():
         self._smS1O1O1 = aSmS1O1O1
         if self._smS1O1 != X.SmS1O1.o1 and aSmS1O1O1 != X.SmS1O1O1.Null :
             self.setSmS1O1(X.SmS1O1.o1)
+        # entry actions and do activities
         if self._smS1O1O1 == X.SmS1O1O1.o1Final :
             if self._smS1O2O2 == X.SmS1O2O2.o2Final :
                 self.delete()
@@ -210,6 +231,7 @@ class X():
         self._smS1O2 = aSmS1O2
         if self._sm != X.Sm.s1 and aSmS1O2 != X.SmS1O2.Null :
             self.setSm(X.Sm.s1)
+        # entry actions and do activities
         if self._smS1O2 == X.SmS1O2.o2 :
             if self._smS1O2O2 == X.SmS1O2O2.Null :
                 self.setSmS1O2O2(X.SmS1O2O2.o2Start)
@@ -224,6 +246,7 @@ class X():
         self._smS1O2O2 = aSmS1O2O2
         if self._smS1O2 != X.SmS1O2.o2 and aSmS1O2O2 != X.SmS1O2O2.Null :
             self.setSmS1O2(X.SmS1O2.o2)
+        # entry actions and do activities
         if self._smS1O2O2 == X.SmS1O2O2.o2Final :
             if self._smS1O1O1 == X.SmS1O1O1.o1Final :
                 self.delete()
@@ -238,6 +261,7 @@ class X():
         self._smS2 = aSmS2
         if self._sm != X.Sm.s2 and aSmS2 != X.SmS2.Null :
             self.setSm(X.Sm.s2)
+        # entry actions and do activities
         if self._smS2 == X.SmS2.s2Final :
             self.delete()
 

@@ -1,6 +1,16 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
 import os
 
 class OneSymmetric():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #OneSymmetric Attributes
+    #OneSymmetric Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     @classmethod
     def alternateConstructor(cls, aName, aNumber, aFriend):
         self = cls.__new__(cls)
@@ -22,6 +32,9 @@ class OneSymmetric():
         self._number = aNumber
         self._friend = OneSymmetric.alternateConstructor(aNameForFriend, aNumberForFriend, self)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setName(self, aName):
         wasSet = False
         self._name = aName
@@ -40,6 +53,7 @@ class OneSymmetric():
     def getNumber(self):
         return self._number
 
+    # Code from template association_GetOne 
     def getFriend(self):
         return self._friend
 

@@ -1,8 +1,16 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 from threading import Thread
 import time
 
 class Lamp():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Lamp Attributes
+    #Lamp State Machines
     class StateMachine1(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -33,6 +41,10 @@ class Lamp():
         Null = auto()
         thread1 = auto()
 
+    #Lamp Do Activity Threads
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aLog):
         self._doActivityStateMachine2TopLevelThread1Thread = None
         self._doActivityStateMachine1TopLevelThread1Thread = None
@@ -47,6 +59,9 @@ class Lamp():
         self.setStateMachine2TopLevel(Lamp.StateMachine2TopLevel.Null)
         self.setStateMachine2(Lamp.StateMachine2.topLevel)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setLog(self, aLog):
         wasSet = False
         self._log = aLog
@@ -86,6 +101,7 @@ class Lamp():
 
     def setStateMachine1(self, aStateMachine1):
         self._stateMachine1 = aStateMachine1
+        # entry actions and do activities
         if self._stateMachine1 == Lamp.StateMachine1.topLevel :
             if self._stateMachine1TopLevel == Lamp.StateMachine1TopLevel.Null :
                 self.setStateMachine1TopLevel(Lamp.StateMachine1TopLevel.thread1)
@@ -96,6 +112,7 @@ class Lamp():
 
     def setStateMachine2(self, aStateMachine2):
         self._stateMachine2 = aStateMachine2
+        # entry actions and do activities
         if self._stateMachine2 == Lamp.StateMachine1.topLevel :
             if self._stateMachine2TopLevel == Lamp.StateMachine2TopLevel.Null :
                 self.setStateMachine2TopLevel(Lamp.StateMachine2TopLevel.thread1)
@@ -110,6 +127,7 @@ class Lamp():
         self._stateMachine1TopLevel = aStateMachine1TopLevel
         if self._stateMachine1 != Lamp.StateMachine1.topLevel and aStateMachine1TopLevel != Lamp.StateMachine1TopLevel.Null :
             self.setStateMachine1(Lamp.StateMachine1.topLevel)
+        # entry actions and do activities
         if self._stateMachine1TopLevel == Lamp.StateMachine1TopLevel.thread1 :
             self._doActivityStateMachine1TopLevelThread1Thread = Lamp.DoActivityThread(self, "doActivityStateMachine1TopLevelThread1")
 
@@ -123,6 +141,7 @@ class Lamp():
         self._stateMachine2TopLevel = aStateMachine2TopLevel
         if self._stateMachine2 != Lamp.StateMachine2.topLevel and aStateMachine2TopLevel != Lamp.StateMachine2TopLevel.Null :
             self.setStateMachine2(Lamp.StateMachine2.topLevel)
+        # entry actions and do activities
         if self._stateMachine2TopLevel == Lamp.StateMachine1TopLevel.thread1 :
             self._doActivityStateMachine2TopLevelThread1Thread = Lamp.DoActivityThread(self, "doActivityStateMachine2TopLevelThread1")
 
@@ -144,6 +163,7 @@ class Lamp():
             self._controller = None
             self._controller = aController
             self._doActivityMethodName = aDoActivityMethodName
+            # The equivalent of "start();" for starting a python thread
             super().__init__()
             self.start()
 

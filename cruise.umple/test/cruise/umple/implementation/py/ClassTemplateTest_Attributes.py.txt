@@ -1,3 +1,6 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 import os
 
 class Mentor():
@@ -6,6 +9,18 @@ class Mentor():
     HELLO = "Hello"
     nextX = 1
     mentorsById = dict()
+    #------------------------
+    # STATIC VARIABLES
+    #------------------------
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Autounique Attributes
+    #Helper Variables
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aStr, aD, aI, aId):
         from Time import Time
         from Date import Date
@@ -50,6 +65,10 @@ class Mentor():
         if not self.setId(aId) :
             raise RuntimeError ("Cannot create due to duplicate id. See http://manual.umple.org?RE003ViolationofUniqueness.html")
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template attribute_SetImmutable 
     def setStr2(self, aStr2):
         wasSet = False
         if not self._canSetStr2 :
@@ -109,6 +128,7 @@ class Mentor():
         Mentor.mentorsById[aId] = self
         return wasSet
 
+    # Code from template attribute_SetDefaulted 
     def setP(self, aP):
         wasSet = False
         self._p = aP
@@ -127,6 +147,7 @@ class Mentor():
         wasSet = True
         return wasSet
 
+    # Code from template attribute_SetDefaulted 
     def setR(self, aR):
         wasSet = False
         self._r = aR
@@ -151,6 +172,7 @@ class Mentor():
         wasSet = True
         return wasSet
 
+    # Code from template attribute_SetDefaulted 
     def setV(self, aV):
         wasSet = False
         self._v = aV
@@ -163,6 +185,7 @@ class Mentor():
         wasReset = True
         return wasReset
 
+    # Code from template attribute_SetDefaulted 
     def setW(self, aW):
         wasSet = False
         self._w = aW
@@ -205,10 +228,12 @@ class Mentor():
     def getId(self):
         return self._id
 
+    # Code from template attribute_GetUnique 
     @staticmethod
     def getWithId(aId):
         return Mentor.mentorsById.get(aId)
 
+    # Code from template attribute_HasUnique 
     @staticmethod
     def hasWithId(aId):
         return not (Mentor.getWithId(aId) is None)
@@ -216,6 +241,7 @@ class Mentor():
     def getP(self):
         return self._p
 
+    # Code from template attribute_GetDefaulted 
     def getDefaultP(self):
         return "robot"
 
@@ -225,6 +251,7 @@ class Mentor():
     def getR(self):
         return self._r
 
+    # Code from template attribute_GetDefaulted 
     def getDefaultR(self):
         return ""
 
@@ -240,6 +267,7 @@ class Mentor():
     def getV(self):
         return self._v
 
+    # Code from template attribute_GetDefaulted 
     def getDefaultV(self):
         from Date import Date
         return Date.valueOf("1978-12-26")
@@ -247,6 +275,7 @@ class Mentor():
     def getW(self):
         return self._w
 
+    # Code from template attribute_GetDefaulted 
     def getDefaultW(self):
         from Time import Time
         return Time.valueOf("12:59:59")
@@ -254,6 +283,7 @@ class Mentor():
     def getX(self):
         return self._x
 
+    # Code from template attribute_IsBoolean 
     def isLBool(self):
         return self._lBool
 

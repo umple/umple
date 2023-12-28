@@ -1,6 +1,18 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
 import os
 
 class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #Student Associations
+    #Helper Variables
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aNumber, aMentor):
         self._canSetMentor = None
         self._mentor = None
@@ -9,9 +21,13 @@ class Student():
         self._canSetMentor = True
         self.setMentor(aMentor)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getNumber(self):
         return self._number
 
+    # Code from template association_GetOne 
     def getMentor(self):
         return self._mentor
 
@@ -19,6 +35,7 @@ class Student():
         has = not (self._mentor is None)
         return has
 
+    # Code from template association_SetUnidirectionalOptionalOne 
     def setMentor(self, aNewMentor):
         wasSet = False
         if not self._canSetMentor :

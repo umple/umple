@@ -1,8 +1,22 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 9 "../UnidirectionalNTest.ump"
+
 class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aNumber):
         self._number = None
         self._number = aNumber
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setNumber(self, aNumber):
         wasSet = False
         self._number = aNumber

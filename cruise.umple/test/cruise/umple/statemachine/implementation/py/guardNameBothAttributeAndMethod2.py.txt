@@ -1,6 +1,14 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class A():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #A Attributes
+    #A State Machines
     class Status(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -9,12 +17,18 @@ class A():
         s1 = auto()
         s2 = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._status = None
         self._repeatCheck = None
         self._repeatCheck = False
         self.setStatus(A.Status.s1)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setRepeatCheck(self, aRepeatCheck):
         wasSet = False
         self._repeatCheck = aRepeatCheck
@@ -24,6 +38,7 @@ class A():
     def getRepeatCheck(self):
         return self._repeatCheck
 
+    # Code from template attribute_IsBoolean 
     def isRepeatCheck(self):
         return self._repeatCheck
 
@@ -42,16 +57,19 @@ class A():
                 self.setStatus(A.Status.s2)
                 wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
     def setStatus(self, aStatus):
         self._status = aStatus
+        # entry actions and do activities
         if self._status == A.Status.s1 :
             self.__autotransition1__()
 
     def delete(self):
         pass
+
 
     def repeatCheck(self):
         return True

@@ -1,8 +1,23 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 1 "indexOf_NoKey.ump"
+
 class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._mentors = None
         self._mentors = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template association_GetMany 
     def getMentor(self, index):
         aMentor = self._mentors[index]
         return aMentor
@@ -23,10 +38,12 @@ class Student():
         index = (-1 if not aMentor in self._mentors else self._mentors.index(aMentor))
         return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfMentors():
         return 0
 
+    # Code from template association_AddManyToManyMethod 
     def addMentor(self, aMentor):
         wasAdded = False
         if (aMentor) in self._mentors :
@@ -40,6 +57,7 @@ class Student():
                 self._mentors.remove(aMentor)
         return wasAdded
 
+    # Code from template association_RemoveMany 
     def removeMentor(self, aMentor):
         wasRemoved = False
         if not (aMentor) in self._mentors :
@@ -54,6 +72,7 @@ class Student():
                 self._mentors.insert(oldIndex, aMentor)
         return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addMentorAt(self, aMentor, index):
         wasAdded = False
         if self.addMentor(aMentor) :

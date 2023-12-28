@@ -1,6 +1,14 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class LightFixture():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #LightFixture Attributes
+    #LightFixture State Machines
     class Bulb(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -10,12 +18,18 @@ class LightFixture():
         Off = auto()
         Amber = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._bulb = None
         self._brightness = None
         self._brightness = 0
         self.setBulb(LightFixture.Bulb.On)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setBrightness(self, aBrightness):
         wasSet = False
         self._brightness = aBrightness
@@ -45,6 +59,7 @@ class LightFixture():
             self.setBulb(LightFixture.Bulb.On)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -56,3 +71,4 @@ class LightFixture():
 
     def __str__(self):
         return str(super().__str__()) + "[" + "brightness" + ":" + str(self.getBrightness()) + "]"
+

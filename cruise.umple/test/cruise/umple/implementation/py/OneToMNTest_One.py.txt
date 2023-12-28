@@ -1,10 +1,25 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 3 "../OneToMNTest.ump"
+
 class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName):
         self._pupils = None
         self._name = None
         self._name = aName
         self._pupils = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setName(self, aName):
         wasSet = False
         self._name = aName
@@ -14,6 +29,7 @@ class Mentor():
     def getName(self):
         return self._name
 
+    # Code from template association_GetMany 
     def getPupil(self, index):
         aPupil = self._pupils[index]
         return aPupil
@@ -34,18 +50,22 @@ class Mentor():
         index = (-1 if not aPupil in self._pupils else self._pupils.index(aPupil))
         return index
 
+    # Code from template association_IsNumberOfValidMethod 
     def isNumberOfPupilsValid(self):
         isValid = self.numberOfPupils() >= Mentor.minimumNumberOfPupils() and self.numberOfPupils() <= Mentor.maximumNumberOfPupils()
         return isValid
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfPupils():
         return 5
 
+    # Code from template association_MaximumNumberOfMethod 
     @staticmethod
     def maximumNumberOfPupils():
         return 7
 
+    # Code from template association_AddMNToOnlyOne 
     def addPupil1(self, aNumber):
         from Pupil import Pupil
         if self.numberOfPupils() >= Mentor.maximumNumberOfPupils() :
@@ -72,14 +92,17 @@ class Mentor():
 
     def removePupil(self, aPupil):
         wasRemoved = False
+        #Unable to remove aPupil, as it must always have a mentor
         if self == aPupil.getMentor() :
             return wasRemoved
+        #mentor already at minimum (5)
         if self.numberOfPupils() <= Mentor.minimumNumberOfPupils() :
             return wasRemoved
         self._pupils.remove(aPupil)
         wasRemoved = True
         return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addPupilAt(self, aPupil, index):
         wasAdded = False
         if self.addPupil(aPupil) :
