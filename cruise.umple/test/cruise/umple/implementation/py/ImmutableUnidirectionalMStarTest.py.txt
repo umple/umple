@@ -22,7 +22,7 @@ class Student():
         self._mentors = []
         didAddMentors = self.setMentors(*allMentors)
         if not didAddMentors :
-            raise RuntimeError ("Unable to create Student, must have 2 to 4 mentors. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+            raise RuntimeError ("Unable to create Student, must have at least 1 mentors. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
     #------------------------
     # INTERFACE
@@ -30,7 +30,7 @@ class Student():
     def getNumber(self):
         return self._number
 
-    # Code from template association_GetMany
+    # Code from template association_GetMany 
     def getMentor(self, index):
         aMentor = self._mentors[index]
         return aMentor
@@ -51,17 +51,12 @@ class Student():
         index = (-1 if not aMentor in self._mentors else self._mentors.index(aMentor))
         return index
 
-    # Code from template association_MinimumNumberOfMethod
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfMentors():
-        return 2
+        return 1
 
-    # Code from template association_MaximumNumberOfMethod
-    @staticmethod
-    def maximumNumberOfMentors():
-        return 4
-
-    # Code from template association_SetUnidirectionalMN
+    # Code from template association_SetUnidirectionalMStar 
     def setMentors(self, *newMentors):
         newMentors = list(newMentors)
         wasSet = False
@@ -74,7 +69,7 @@ class Student():
                 continue
             verifiedMentors.append(aMentor)
 
-        if len(verifiedMentors) != len(newMentors) or len(verifiedMentors) < Student.minimumNumberOfMentors() or len(verifiedMentors) > Student.maximumNumberOfMentors() :
+        if len(verifiedMentors) != len(newMentors) or len(verifiedMentors) < Student.minimumNumberOfMentors() :
             return wasSet
         self._mentors.clear()
         self._mentors.extend(verifiedMentors)
@@ -86,3 +81,4 @@ class Student():
 
     def __str__(self):
         return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]"
+

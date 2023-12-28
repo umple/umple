@@ -12,7 +12,7 @@ class Student():
     #------------------------
     # CONSTRUCTOR
     #------------------------
-    def __init__(self, aNumber, *allMentors):z
+    def __init__(self, aNumber, *allMentors):
         allMentors = list(allMentors)
         self._canSetMentors = None
         self._mentors = None
@@ -30,7 +30,7 @@ class Student():
     def getNumber(self):
         return self._number
 
-    # Code from template association_GetMany
+    # Code from template association_GetMany 
     def getMentor(self, index):
         aMentor = self._mentors[index]
         return aMentor
@@ -51,17 +51,17 @@ class Student():
         index = (-1 if not aMentor in self._mentors else self._mentors.index(aMentor))
         return index
 
-    # Code from template association_MinimumNumberOfMethod
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfMentors():
         return 0
 
-    # Code from template association_MaximumNumberOfMethod
+    # Code from template association_MaximumNumberOfMethod 
     @staticmethod
     def maximumNumberOfMentors():
         return 3
 
-    # Code from template association_SetUnidirectionalOptionalN
+    # Code from template association_SetUnidirectionalOptionalN 
     def setMentors(self, *newMentors):
         newMentors = list(newMentors)
         wasSet = False
@@ -86,3 +86,4 @@ class Student():
 
     def __str__(self):
         return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]"
+
