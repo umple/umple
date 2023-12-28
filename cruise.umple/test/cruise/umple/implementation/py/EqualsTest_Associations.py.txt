@@ -1,4 +1,16 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 13 "EqualsTest.ump"
+
 class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Associations
+    #Helper Variables
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._canSetSecondaries = None
         self._canSetMain = None
@@ -10,6 +22,10 @@ class Mentor():
         self._canSetSecondaries = True
         self._secondaries = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template association_GetOne 
     def getMain(self):
         return self._main
 
@@ -17,6 +33,7 @@ class Mentor():
         has = not (self._main is None)
         return has
 
+    # Code from template association_GetMany 
     def getSecondary(self, index):
         aSecondary = self._secondaries[index]
         return aSecondary
@@ -37,6 +54,7 @@ class Mentor():
         index = (-1 if not aSecondary in self._secondaries else self._secondaries.index(aSecondary))
         return index
 
+    # Code from template association_SetOptionalOneToOptionalOne 
     def setMain(self, aNewMain):
         wasSet = False
         if not self._canSetMain :
@@ -58,10 +76,12 @@ class Mentor():
         wasSet = True
         return wasSet
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfSecondaries():
         return 0
 
+    # Code from template association_AddManyToOptionalOne 
     def addSecondary(self, aSecondary):
         wasAdded = False
         if not self._canSetSecondaries :
@@ -89,6 +109,7 @@ class Mentor():
             wasRemoved = True
         return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addSecondaryAt(self, aSecondary, index):
         wasAdded = False
         if self.addSecondary(aSecondary) :

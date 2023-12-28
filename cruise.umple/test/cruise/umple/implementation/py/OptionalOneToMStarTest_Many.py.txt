@@ -1,11 +1,24 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
 import os
 
 class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #Student Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aNumber):
         self._mentor = None
         self._number = None
         self._number = aNumber
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setNumber(self, aNumber):
         wasSet = False
         self._number = aNumber
@@ -15,6 +28,7 @@ class Student():
     def getNumber(self):
         return self._number
 
+    # Code from template association_GetOne 
     def getMentor(self):
         return self._mentor
 
@@ -22,7 +36,13 @@ class Student():
         has = not (self._mentor is None)
         return has
 
+    # Code from template association_SetOptionalOneToMandatoryMany 
     def setMentor(self, aMentor):
+        #
+        # This source of this source generation is association_SetOptionalOneToMandatoryMany.jet
+        # This set file assumes the generation of a maximumNumberOfXXX method does not exist because 
+        # it's not required (No upper bound)
+        #   
         wasSet = False
         existingMentor = self._mentor
         if existingMentor is None :
@@ -35,6 +55,7 @@ class Student():
                 if existingMentor.minimumNumberOfStudents() < existingMentor.numberOfStudents() :
                     existingMentor.removeStudent(self)
                     existingMentor = aMentor
+                    # aMentor == null
                     wasSet = True
             else :
                 if existingMentor.minimumNumberOfStudents() < existingMentor.numberOfStudents() :

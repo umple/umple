@@ -1,6 +1,13 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class X():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X State Machines
     class Sm(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -44,6 +51,9 @@ class X():
         t2 = auto()
         t5 = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._smS1T2 = None
         self._smS1T1 = None
@@ -56,6 +66,9 @@ class X():
         self.setSmS1T2(X.SmS1T2.Null)
         self.setSm(X.Sm.s0)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getSmFullName(self):
         answer = self._sm.__str__()
         if self._smS0T1 != X.SmS0T1.Null :
@@ -91,6 +104,7 @@ class X():
             self.setSm(X.Sm.s1)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -102,6 +116,7 @@ class X():
             self.setSmS0T2(X.SmS0T2.t3)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -113,6 +128,7 @@ class X():
             self.setSmS1T1(X.SmS1T1.t4)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -124,6 +140,7 @@ class X():
             self.setSmS1T2(X.SmS1T2.t5)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -137,6 +154,7 @@ class X():
 
     def setSm(self, aSm):
         self._sm = aSm
+        # entry actions and do activities
         if self._sm == X.Sm.s0 :
             if self._smS0T1 == X.SmS0T1.Null :
                 self.setSmS0T1(X.SmS0T1.t1)
@@ -192,3 +210,4 @@ class X():
 
     def delete(self):
         pass
+

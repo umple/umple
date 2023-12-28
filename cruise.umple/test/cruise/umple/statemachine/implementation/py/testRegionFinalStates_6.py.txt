@@ -1,6 +1,13 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class X():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X State Machines
     class Status(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -53,6 +60,9 @@ class X():
         s122 = auto()
         fState2 = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._statusS1S12S12 = None
         self._statusS1S12 = None
@@ -67,6 +77,9 @@ class X():
         self.setStatusS1S12S12(X.StatusS1S12S12.Null)
         self.setStatus(X.Status.s1)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getStatusFullName(self):
         answer = self._status.__str__()
         if self._statusS1S11 != X.StatusS1S11.Null :
@@ -109,6 +122,7 @@ class X():
             self.setStatus(X.Status.s2)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -119,6 +133,7 @@ class X():
             self.setStatus(X.Status.Final)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -129,6 +144,7 @@ class X():
             self.setStatus(X.Status.s3)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -140,6 +156,7 @@ class X():
             self.setStatus(X.Status.Final)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -151,6 +168,7 @@ class X():
             self.setStatusS1S11(X.StatusS1S11.fState1)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -162,6 +180,7 @@ class X():
             self.setStatusS1S12S12(X.StatusS1S12S12.fState2)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -169,10 +188,12 @@ class X():
         if self._status == X.Status.s1 :
             self.exitStatusS1S11()
             self.exitStatusS1S12()
+
             print("t4")
 
     def setStatus(self, aStatus):
         self._status = aStatus
+        # entry actions and do activities
         if self._status == X.Status.s1 :
             if self._statusS1S11 == X.StatusS1S11.Null :
                 self.setStatusS1S11(X.StatusS1S11.s11)
@@ -186,6 +207,7 @@ class X():
     def exitStatusS1S11(self):
         if self._statusS1S11 == X.StatusS1S11.s11 :
             self.exitStatusS1S11S11()
+
             print("t3")
             self.setStatusS1S11(X.StatusS1S11.Null)
         elif self._statusS1S11 == X.StatusS1S11.fState1 :
@@ -195,6 +217,7 @@ class X():
         self._statusS1S11 = aStatusS1S11
         if self._status != X.Status.s1 and aStatusS1S11 != X.StatusS1S11.Null :
             self.setStatus(X.Status.s1)
+        # entry actions and do activities
         if self._statusS1S11 == X.StatusS1S11.s11 :
             if self._statusS1S11S11 == X.StatusS1S11S11.Null :
                 self.setStatusS1S11S11(X.StatusS1S11S11.s111)
@@ -205,6 +228,7 @@ class X():
     def exitStatusS1S11S11(self):
         if self._statusS1S11S11 == X.StatusS1S11S11.s111 :
             self.exitStatusS1S11S11S111()
+
             print("t2")
             self.setStatusS1S11S11(X.StatusS1S11S11.Null)
 
@@ -212,12 +236,14 @@ class X():
         self._statusS1S11S11 = aStatusS1S11S11
         if self._statusS1S11 != X.StatusS1S11.s11 and aStatusS1S11S11 != X.StatusS1S11S11.Null :
             self.setStatusS1S11(X.StatusS1S11.s11)
+        # entry actions and do activities
         if self._statusS1S11S11 == X.StatusS1S11S11.s111 :
             if self._statusS1S11S11S111 == X.StatusS1S11S11S111.Null :
                 self.setStatusS1S11S11S111(X.StatusS1S11S11S111.s111)
 
     def exitStatusS1S11S11S111(self):
         if self._statusS1S11S11S111 == X.StatusS1S11S11.s111 :
+
             print("t1")
             self.setStatusS1S11S11S111(X.StatusS1S11S11S111.Null)
 
@@ -235,6 +261,7 @@ class X():
         self._statusS1S12 = aStatusS1S12
         if self._status != X.Status.s1 and aStatusS1S12 != X.StatusS1S12.Null :
             self.setStatus(X.Status.s1)
+        # entry actions and do activities
         if self._statusS1S12 == X.StatusS1S12.s12 :
             if self._statusS1S12S12 == X.StatusS1S12S12.Null :
                 self.setStatusS1S12S12(X.StatusS1S12S12.s122)
@@ -249,9 +276,11 @@ class X():
         self._statusS1S12S12 = aStatusS1S12S12
         if self._statusS1S12 != X.StatusS1S12.s12 and aStatusS1S12S12 != X.StatusS1S12S12.Null :
             self.setStatusS1S12(X.StatusS1S12.s12)
+        # entry actions and do activities
         if self._statusS1S12S12 == X.StatusS1S12S12.fState2 :
             if self._statusS1S11 == X.StatusS1S11.fState1 :
                 self.delete()
 
     def delete(self):
         pass
+

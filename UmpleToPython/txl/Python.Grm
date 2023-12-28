@@ -8,6 +8,11 @@ include "Java.Grm"
 %Since in python you cant do that
 #pragma -width 1073741824
 
+comments 
+    '# 
+    '\
+end comments
+
 redefine boolean_operator
     ...
     |'and
@@ -203,3 +208,13 @@ redefine thread_start
         ...
     |   'super().__init__() [NL] 'self.start()
 end redefine
+
+%added python comments
+redefine comment_NL
+    ...
+	| '# [comment] [NL]
+end redefine
+
+define endofline
+    [opt comment] [NL] 
+end define

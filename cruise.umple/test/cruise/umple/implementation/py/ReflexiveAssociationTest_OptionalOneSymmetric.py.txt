@@ -1,11 +1,24 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
 import os
 
 class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName):
         self._superMentor = None
         self._name = None
         self._name = aName
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setName(self, aName):
         wasSet = False
         self._name = aName
@@ -15,6 +28,7 @@ class Mentor():
     def getName(self):
         return self._name
 
+    # Code from template association_GetOne 
     def getSuperMentor(self):
         return self._superMentor
 
@@ -22,6 +36,7 @@ class Mentor():
         has = not (self._superMentor is None)
         return has
 
+    # Code from template association_SetOptionalOneToOptionalOne 
     def setSuperMentor(self, aNewSuperMentor):
         wasSet = False
         if aNewSuperMentor is None :

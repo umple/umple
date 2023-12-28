@@ -1,4 +1,15 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
+
 class OneSymmetricNoParam():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #OneSymmetricNoParam Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     @classmethod
     def alternateConstructor(cls, aFriend):
         self = cls.__new__(cls)
@@ -12,6 +23,10 @@ class OneSymmetricNoParam():
         self._friend = None
         self._friend = OneSymmetricNoParam.alternateConstructor(self)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template association_GetOne 
     def getFriend(self):
         return self._friend
 

@@ -1,7 +1,22 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 8 "../OptionalOneToOptionalOneTest.ump"
+
 class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._mentor = None
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template association_GetOne 
     def getMentor(self):
         return self._mentor
 
@@ -9,6 +24,7 @@ class Student():
         has = not (self._mentor is None)
         return has
 
+    # Code from template association_SetOptionalOneToOptionalOne 
     def setMentor(self, aNewMentor):
         wasSet = False
         if aNewMentor is None :

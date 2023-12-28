@@ -1,10 +1,25 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
 class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #Student Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aNumber):
         self._mentors = None
         self._number = None
         self._number = aNumber
         self._mentors = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setNumber(self, aNumber):
         wasSet = False
         self._number = aNumber
@@ -14,6 +29,7 @@ class Student():
     def getNumber(self):
         return self._number
 
+    # Code from template association_GetMany 
     def getMentor(self, index):
         aMentor = self._mentors[index]
         return aMentor
@@ -34,10 +50,12 @@ class Student():
         index = (-1 if not aMentor in self._mentors else self._mentors.index(aMentor))
         return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfMentors():
         return 0
 
+    # Code from template association_AddManyToManyMethod 
     def addMentor(self, aMentor):
         wasAdded = False
         if (aMentor) in self._mentors :
@@ -51,6 +69,7 @@ class Student():
                 self._mentors.remove(aMentor)
         return wasAdded
 
+    # Code from template association_RemoveMany 
     def removeMentor(self, aMentor):
         wasRemoved = False
         if not (aMentor) in self._mentors :
@@ -65,6 +84,7 @@ class Student():
                 self._mentors.insert(oldIndex, aMentor)
         return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addMentorAt(self, aMentor, index):
         wasAdded = False
         if self.addMentor(aMentor) :

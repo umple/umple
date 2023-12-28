@@ -1,6 +1,13 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class X():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X State Machines
     class Sm(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -43,6 +50,9 @@ class X():
         t3 = auto()
         t4 = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._smS1BB = None
         self._smS1B = None
@@ -55,6 +65,9 @@ class X():
         self.setSmS1BB(X.SmS1BB.Null)
         self.setSm(X.Sm.s1)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getSmFullName(self):
         answer = self._sm.__str__()
         if self._smS1A != X.SmS1A.Null :
@@ -90,6 +103,7 @@ class X():
             self.setSmS1AA(X.SmS1AA.t2)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -102,6 +116,7 @@ class X():
             self.setSmS1A(X.SmS1A.a)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -113,6 +128,7 @@ class X():
             self.setSm(X.Sm.s2)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -123,6 +139,7 @@ class X():
 
     def setSm(self, aSm):
         self._sm = aSm
+        # entry actions and do activities
         if self._sm == X.Sm.s1 :
             if self._smS1A == X.SmS1A.Null :
                 self.setSmS1A(X.SmS1A.a)
@@ -132,6 +149,7 @@ class X():
     def exitSmS1A(self):
         if self._smS1A == X.SmS1A.a :
             self.exitSmS1AA()
+
             exit_a_action()
             self.setSmS1A(X.SmS1A.Null)
 
@@ -139,6 +157,7 @@ class X():
         self._smS1A = aSmS1A
         if self._sm != X.Sm.s1 and aSmS1A != X.SmS1A.Null :
             self.setSm(X.Sm.s1)
+        # entry actions and do activities
         if self._smS1A == X.SmS1A.a :
             if self._smS1AA == X.SmS1AA.Null :
                 self.setSmS1AA(X.SmS1AA.t1)
@@ -157,6 +176,7 @@ class X():
     def exitSmS1B(self):
         if self._smS1B == X.SmS1B.b :
             self.exitSmS1BB()
+
             exit_b_action()
             self.setSmS1B(X.SmS1B.Null)
 
@@ -164,6 +184,7 @@ class X():
         self._smS1B = aSmS1B
         if self._sm != X.Sm.s1 and aSmS1B != X.SmS1B.Null :
             self.setSm(X.Sm.s1)
+        # entry actions and do activities
         if self._smS1B == X.SmS1B.b :
             if self._smS1BB == X.SmS1BB.Null :
                 self.setSmS1BB(X.SmS1BB.t3)

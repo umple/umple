@@ -1,11 +1,25 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 3 "../OneToOptionalOneTest.ump"
 import os
 
 class MyDriver():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #MyDriver Attributes
+    #MyDriver Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName):
         self._mySubordinate = None
         self._name = None
         self._name = aName
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setName(self, aName):
         wasSet = False
         self._name = aName
@@ -15,6 +29,7 @@ class MyDriver():
     def getName(self):
         return self._name
 
+    # Code from template association_GetOne 
     def getMySubordinate(self):
         return self._mySubordinate
 
@@ -22,9 +37,11 @@ class MyDriver():
         has = not (self._mySubordinate is None)
         return has
 
+    # Code from template association_SetOptionalOneToOne 
     def setMySubordinate(self, aNewMySubordinate):
         wasSet = False
         if not (self._mySubordinate is None) and not self._mySubordinate == aNewMySubordinate and self == self._mySubordinate.getMyDriver() :
+            #Unable to setMySubordinate, as existing mySubordinate would become an orphan
             return wasSet
         self._mySubordinate = aNewMySubordinate
         anOldMyDriver = (aNewMySubordinate.getMyDriver()) if not (aNewMySubordinate is None) else None

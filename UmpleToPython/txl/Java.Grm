@@ -51,9 +51,13 @@ define arithmatic_operator
     |   '%
 end define
 
+%comment can appear before package_statement, before import and afer
 define program
+    [repeat comment_NL]
     [repeat package_statement]
+    [repeat comment_NL]
     [repeat import_statement]
+    [repeat comment_NL]
     [repeat class_declaration]
 end define
 
@@ -193,6 +197,7 @@ define statement
     |   [switch_case]
     |   [try_catch]
     |   [thread_start]
+    |   [comment_NL]
 end define
 
 %[value] by itself cannot match java declarations (ex: String aName)
@@ -373,6 +378,11 @@ define class_body_element
     |   [member_variable_declaration]
     |   [constructor]
     |   [method_declaration]
+    |   [comment_NL]
+end define
+
+define comment_NL
+	[comment] [NL]
 end define
 
 

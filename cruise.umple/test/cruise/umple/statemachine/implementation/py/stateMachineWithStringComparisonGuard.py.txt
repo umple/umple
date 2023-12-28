@@ -1,6 +1,14 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class stateMachineWithStringComparisonGuard():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #stateMachineWithStringComparisonGuard Attributes
+    #stateMachineWithStringComparisonGuard State Machines
     class CommandControl(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -11,12 +19,18 @@ class stateMachineWithStringComparisonGuard():
         COMMAND_VALIDITY = auto()
         EXECUTION = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._commandControl = None
         self._cmdString = None
         self._cmdString = ""
         self.setCommandControl(stateMachineWithStringComparisonGuard.CommandControl.IDLE)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setCmdString(self, aCmdString):
         wasSet = False
         self._cmdString = aCmdString
@@ -48,6 +62,7 @@ class stateMachineWithStringComparisonGuard():
                 self.setCommandControl(stateMachineWithStringComparisonGuard.CommandControl.EXECUTION)
                 wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -59,3 +74,4 @@ class stateMachineWithStringComparisonGuard():
 
     def __str__(self):
         return str(super().__str__()) + "[" + "cmdString" + ":" + str(self.getCmdString()) + "]"
+

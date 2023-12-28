@@ -1,6 +1,13 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class X():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X State Machines
     class Sm(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -66,6 +73,9 @@ class X():
         s8 = auto()
         s9 = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._smO1S7S7 = None
         self._smO1S7 = None
@@ -84,6 +94,9 @@ class X():
         self.setSmO1S7S7(X.SmO1S7S7.Null)
         self.setSm(X.Sm.o1)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getSmFullName(self):
         answer = self._sm.__str__()
         if self._smO1S1 != X.SmO1S1.Null :
@@ -138,6 +151,7 @@ class X():
             self.setSmO1S1S2S2(X.SmO1S1S2S2.s4)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -149,6 +163,7 @@ class X():
             self.setSmO1S7S7(X.SmO1S7S7.s9)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -159,6 +174,7 @@ class X():
 
     def setSm(self, aSm):
         self._sm = aSm
+        # entry actions and do activities
         if self._sm == X.Sm.o1 :
             if self._smO1S1 == X.SmO1S1.Null :
                 self.setSmO1S1(X.SmO1S1.s1)
@@ -175,6 +191,7 @@ class X():
         self._smO1S1 = aSmO1S1
         if self._sm != X.Sm.o1 and aSmO1S1 != X.SmO1S1.Null :
             self.setSm(X.Sm.o1)
+        # entry actions and do activities
         if self._smO1S1 == X.SmO1S1.s1 :
             if self._smO1S1S2 == X.SmO1S1S2.Null :
                 self.setSmO1S1S2(X.SmO1S1S2.s2)
@@ -190,6 +207,7 @@ class X():
         self._smO1S1S2 = aSmO1S1S2
         if self._smO1S1 != X.SmO1S1.s1 and aSmO1S1S2 != X.SmO1S1S2.Null :
             self.setSmO1S1(X.SmO1S1.s1)
+        # entry actions and do activities
         if self._smO1S1S2 == X.SmO1S1S2.s2 :
             if self._smO1S1S2S2 == X.SmO1S1S2S2.Null :
                 self.setSmO1S1S2S2(X.SmO1S1S2S2.s3)
@@ -204,6 +222,7 @@ class X():
         self._smO1S1S2S2 = aSmO1S1S2S2
         if self._smO1S1S2 != X.SmO1S1S2.s2 and aSmO1S1S2S2 != X.SmO1S1S2S2.Null :
             self.setSmO1S1S2(X.SmO1S1S2.s2)
+        # entry actions and do activities
         if self._smO1S1S2S2 == X.SmO1S1S2S2.s4 :
             if self._smO1S1S5S5 == X.SmO1S1S5S5.s6 and self._smO1S7S7 == X.SmO1S7S7.s9 :
                 self.delete()
@@ -217,6 +236,7 @@ class X():
         self._smO1S1S5 = aSmO1S1S5
         if self._smO1S1 != X.SmO1S1.s1 and aSmO1S1S5 != X.SmO1S1S5.Null :
             self.setSmO1S1(X.SmO1S1.s1)
+        # entry actions and do activities
         if self._smO1S1S5 == X.SmO1S1S5.s5 :
             if self._smO1S1S5S5 == X.SmO1S1S5S5.Null :
                 self.setSmO1S1S5S5(X.SmO1S1S5S5.s6)
@@ -229,6 +249,7 @@ class X():
         self._smO1S1S5S5 = aSmO1S1S5S5
         if self._smO1S1S5 != X.SmO1S1S5.s5 and aSmO1S1S5S5 != X.SmO1S1S5S5.Null :
             self.setSmO1S1S5(X.SmO1S1S5.s5)
+        # entry actions and do activities
         if self._smO1S1S5S5 == X.SmO1S1S5S5.s6 :
             if self._smO1S1S2S2 == X.SmO1S1S2S2.s4 and self._smO1S7S7 == X.SmO1S7S7.s9 :
                 self.delete()
@@ -242,6 +263,7 @@ class X():
         self._smO1S7 = aSmO1S7
         if self._sm != X.Sm.o1 and aSmO1S7 != X.SmO1S7.Null :
             self.setSm(X.Sm.o1)
+        # entry actions and do activities
         if self._smO1S7 == X.SmO1S7.s7 :
             if self._smO1S7S7 == X.SmO1S7S7.Null :
                 self.setSmO1S7S7(X.SmO1S7S7.s8)
@@ -256,6 +278,7 @@ class X():
         self._smO1S7S7 = aSmO1S7S7
         if self._smO1S7 != X.SmO1S7.s7 and aSmO1S7S7 != X.SmO1S7S7.Null :
             self.setSmO1S7(X.SmO1S7.s7)
+        # entry actions and do activities
         if self._smO1S7S7 == X.SmO1S7S7.s9 :
             if self._smO1S1S2S2 == X.SmO1S1S2S2.s4 and self._smO1S1S5S5 == X.SmO1S1S5S5.s6 :
                 self.delete()

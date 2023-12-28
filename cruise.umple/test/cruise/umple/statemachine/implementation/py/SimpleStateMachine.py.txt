@@ -1,15 +1,28 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor State Machines
     class Status(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
         def __str__(self):
             return str(self.value)
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._status = None
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getStatusFullName(self):
         answer = self._status.__str__()
         return answer

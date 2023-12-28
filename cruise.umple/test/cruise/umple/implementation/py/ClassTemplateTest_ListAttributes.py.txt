@@ -1,8 +1,23 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 3 "../ClassTemplateTest_ListAttributes.ump"
+
 class Token():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Token Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._positions = None
         self._positions = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template attribute_SetMany 
     def addPosition(self, aPosition):
         wasAdded = False
         wasAdded = self._positions.append(aPosition)
@@ -13,6 +28,7 @@ class Token():
         wasRemoved = self._positions.remove(aPosition)
         return wasRemoved
 
+    # Code from template attribute_GetMany 
     def getPosition(self, index):
         aPosition = self._positions[index]
         return aPosition
