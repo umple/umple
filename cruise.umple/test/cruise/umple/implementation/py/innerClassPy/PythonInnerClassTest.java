@@ -29,7 +29,7 @@ public class PythonInnerClassTest extends TemplateTest {
   @Test
   public void TestInnerStaticClass()
   {
-    assertUmpleTemplateFor("/innerStatic.ump", "/innerStatic.py.txt", "OuterClass_1");
+    assertUmpleTemplateFor("/innerStatic.ump", "/InnerStatic.py.txt", "OuterClass_1");
   }
 
   @Test
