@@ -161,7 +161,7 @@ class SampleFileWriter
           }
           
           while (expectedLine != null && (expectedLine.indexOf("// line") != -1 ||
-                    actualLine.indexOf("# line") != -1 ||
+                    expectedLine.indexOf("# line") != -1 ||
                     expectedLine.indexOf("/* Code from template") != -1 ||  
                     (skippedActualLineDifference == true && expectedLine.trim().isEmpty()) ||      
                     expectedLine.matches("\\s*\\/\\/ END OF UMPLE (BEFORE|AFTER) INJECTION")||

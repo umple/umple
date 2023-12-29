@@ -1,4 +1,16 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 1 "EqualsTest.ump"
+
 class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #Helper Variables
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aIntId, aDoubleId, aBooleanId, aStringId):
         self._canSetStringListIds = None
         self._canSetStringId = None
@@ -23,6 +35,9 @@ class Student():
         self._stringId = aStringId
         self._stringListIds = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setIntId(self, aIntId):
         wasSet = False
         if not self._canSetIntId :
@@ -55,6 +70,7 @@ class Student():
         wasSet = True
         return wasSet
 
+    # Code from template attribute_SetMany 
     def addStringListId(self, aStringListId):
         wasAdded = False
         if not self._canSetStringListIds :
@@ -81,6 +97,7 @@ class Student():
     def getStringId(self):
         return self._stringId
 
+    # Code from template attribute_GetMany 
     def getStringListId(self, index):
         aStringListId = self._stringListIds[index]
         return aStringListId
@@ -101,6 +118,7 @@ class Student():
         index = (-1 if not aStringListId in self._stringListIds else self._stringListIds.index(aStringListId))
         return index
 
+    # Code from template attribute_IsBoolean 
     def isBooleanId(self):
         return self._booleanId
 

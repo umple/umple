@@ -1,6 +1,13 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class LightFixture():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #LightFixture State Machines
     class Status(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -27,6 +34,9 @@ class LightFixture():
         FanIdle = auto()
         FanRunning = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._statusOnFanIdle = None
         self._statusOnMotorIdle = None
@@ -35,6 +45,9 @@ class LightFixture():
         self.setStatusOnFanIdle(LightFixture.StatusOnFanIdle.Null)
         self.setStatus(LightFixture.Status.Off)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getStatusFullName(self):
         answer = self._status.__str__()
         if self._statusOnMotorIdle != LightFixture.StatusOnMotorIdle.Null :
@@ -59,6 +72,7 @@ class LightFixture():
             self.setStatus(LightFixture.Status.On)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -74,6 +88,7 @@ class LightFixture():
             self.setStatusOnMotorIdle(LightFixture.StatusOnMotorIdle.MotorIdle)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -89,6 +104,7 @@ class LightFixture():
             self.setStatusOnFanIdle(LightFixture.StatusOnFanIdle.FanIdle)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -99,6 +115,7 @@ class LightFixture():
 
     def setStatus(self, aStatus):
         self._status = aStatus
+        # entry actions and do activities
         if self._status == LightFixture.Status.On :
             if self._statusOnMotorIdle == LightFixture.StatusOnMotorIdle.Null :
                 self.setStatusOnMotorIdle(LightFixture.StatusOnMotorIdle.MotorIdle)
@@ -129,3 +146,4 @@ class LightFixture():
 
     def delete(self):
         pass
+

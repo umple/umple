@@ -1,6 +1,16 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
 import os
 
 class X():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aD, aE):
         self._e = None
         self._d = None
@@ -9,6 +19,9 @@ class X():
         if aD.getTime() <= aE.getTime() :
             raise RuntimeError ("Please provide a valid d and e [d>e]")
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setD(self, aD):
         wasSet = False
         if aD.getTime() > self.getE().getTime() :

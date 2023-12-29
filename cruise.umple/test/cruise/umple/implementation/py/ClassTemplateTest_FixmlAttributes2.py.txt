@@ -1,4 +1,15 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
+
 class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aCapacity, aId, aName):
         self._name = None
         self._id = None
@@ -17,6 +28,9 @@ class Mentor():
         self._name = "Umple"
         return self
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setCapacity(self, aCapacity):
         wasSet = False
         self._capacity = aCapacity

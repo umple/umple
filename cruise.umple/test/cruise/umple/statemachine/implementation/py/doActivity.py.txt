@@ -1,8 +1,15 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 from threading import Thread
 import time
 
 class Switch():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Switch State Machines
     class Status(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -11,11 +18,18 @@ class Switch():
         On = auto()
         Off = auto()
 
+    #Switch Do Activity Threads
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._doActivityStatusOffThread = None
         self._status = None
         self.setStatus(Switch.Status.On)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getStatusFullName(self):
         answer = self._status.__str__()
         return answer
@@ -30,6 +44,7 @@ class Switch():
             self.setStatus(Switch.Status.Off)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -40,6 +55,7 @@ class Switch():
 
     def setStatus(self, aStatus):
         self._status = aStatus
+        # entry actions and do activities
         if self._status == Switch.Status.Off :
             self._doActivityStatusOffThread = Switch.DoActivityThread(self, "doActivityStatusOff")
 
@@ -55,6 +71,7 @@ class Switch():
             self._controller = None
             self._controller = aController
             self._doActivityMethodName = aDoActivityMethodName
+            # The equivalent of "start();" for starting a python thread
             super().__init__()
             self.start()
 

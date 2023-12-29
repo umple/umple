@@ -1,4 +1,16 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 1 "EqualsTest_AlreadyImmutable.ump"
+
 class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #Helper Variables
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aDoubleId, aBooleanId, aStringId):
         self._canSetIntId = None
         self._cachedHashCode = None
@@ -12,6 +24,10 @@ class Student():
         self._booleanId = aBooleanId
         self._stringId = aStringId
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template attribute_SetImmutable 
     def setIntId(self, aIntId):
         wasSet = False
         if not self._canSetIntId :
@@ -33,6 +49,7 @@ class Student():
     def getStringId(self):
         return self._stringId
 
+    # Code from template attribute_IsBoolean 
     def isBooleanId(self):
         return self._booleanId
 

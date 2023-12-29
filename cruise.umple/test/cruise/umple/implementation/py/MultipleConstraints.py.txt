@@ -1,4 +1,15 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
 class MultipleConstraints():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #MultipleConstraints Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aI, aJ):
         self._j = None
         self._i = None
@@ -11,6 +22,9 @@ class MultipleConstraints():
         if aI < aJ :
             raise RuntimeError ("Please provide a valid i and j [i>=j]")
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setI(self, aI):
         wasSet = False
         if aI >= self.getJ() :
