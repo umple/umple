@@ -1,11 +1,24 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from Mentor import Mentor
 
 class SubMentor2(Mentor):
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #SubMentor2 Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName, aSubName):
         self._subName = None
         super().__init__(aName)
         self._subName = aSubName
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setSubName(self, aSubName):
         wasSet = False
         self._subName = aSubName

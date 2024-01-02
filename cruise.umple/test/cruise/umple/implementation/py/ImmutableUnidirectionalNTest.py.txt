@@ -1,4 +1,17 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
 class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #Student Associations
+    #Helper Variables
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aNumber, *allMentors):
         allMentors = list(allMentors)
         self._canSetMentors = None
@@ -11,9 +24,13 @@ class Student():
         if not didAddMentors :
             raise RuntimeError ("Unable to create Student, must have 3 mentors. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getNumber(self):
         return self._number
 
+    # Code from template association_GetMany 
     def getMentor(self, index):
         aMentor = self._mentors[index]
         return aMentor
@@ -34,18 +51,22 @@ class Student():
         index = (-1 if not aMentor in self._mentors else self._mentors.index(aMentor))
         return index
 
+    # Code from template association_RequiredNumberOfMethod 
     @staticmethod
     def requiredNumberOfMentors():
         return 3
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfMentors():
         return 3
 
+    # Code from template association_MaximumNumberOfMethod 
     @staticmethod
     def maximumNumberOfMentors():
         return 3
 
+    # Code from template association_SetUnidirectionalN 
     def setMentors(self, *newMentors):
         newMentors = list(newMentors)
         wasSet = False

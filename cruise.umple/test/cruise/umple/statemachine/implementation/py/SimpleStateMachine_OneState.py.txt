@@ -1,6 +1,13 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student State Machines
     class Grade(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -8,10 +15,16 @@ class Student():
             return str(self.value)
         Pass = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._grade = None
         self.setGrade(Student.Grade.Pass)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getGradeFullName(self):
         answer = self._grade.__str__()
         return answer

@@ -1,6 +1,13 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class X():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X State Machines
     class Sm1(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -17,6 +24,10 @@ class X():
         s1 = auto()
         s2 = auto()
 
+    #Helper Variables
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._sm2_timeouts1Tos2Handler = None
         self._sm1_timeouts1Tos2Handler = None
@@ -25,6 +36,9 @@ class X():
         self.setSm1(X.Sm1.s1)
         self.setSm2(X.Sm2.s1)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getSm1FullName(self):
         answer = self._sm1.__str__()
         return answer
@@ -48,12 +62,14 @@ class X():
             self.setSm1(X.Sm1.s2)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         if aSm2 == X.Sm1.s1 :
             self.exitSm2()
             self.setSm2(X.Sm2.s2)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -63,6 +79,7 @@ class X():
 
     def setSm1(self, aSm1):
         self._sm1 = aSm1
+        # entry actions and do activities
         if self._sm1 == X.Sm1.s1 :
             self.startSm1_timeouts1Tos2Handler()
 
@@ -72,6 +89,7 @@ class X():
 
     def setSm2(self, aSm2):
         self._sm2 = aSm2
+        # entry actions and do activities
         if self._sm2 == X.Sm1.s1 :
             self.startSm2_timeouts1Tos2Handler()
 
@@ -118,3 +136,4 @@ class X():
 
     def delete(self):
         pass
+

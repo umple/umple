@@ -1,6 +1,14 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class LightFixture():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #LightFixture Attributes
+    #LightFixture State Machines
     class Bulb(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -10,12 +18,18 @@ class LightFixture():
         Dimmed = auto()
         On = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._bulb = None
         self._brightness = None
         self._brightness = 0
         self.setBulb(LightFixture.Bulb.Off)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setBrightness(self, aBrightness):
         wasSet = False
         self._brightness = aBrightness
@@ -36,15 +50,19 @@ class LightFixture():
         wasEventProcessed = False
         aBulb = self._bulb
         if aBulb == LightFixture.Bulb.Off :
+
             self.setBulb(LightFixture.Bulb.Off)
             wasEventProcessed = True
         elif aBulb == LightFixture.Bulb.Dimmed :
+
             self.setBulb(LightFixture.Bulb.Dimmed)
             wasEventProcessed = True
         elif aBulb == LightFixture.Bulb.On :
+
             self.setBulb(LightFixture.Bulb.Dimmed)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -61,6 +79,7 @@ class LightFixture():
             self.setBulb(LightFixture.Bulb.Off)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -72,6 +91,7 @@ class LightFixture():
                 self.setBulb(LightFixture.Bulb.On)
                 wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 

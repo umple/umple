@@ -1,10 +1,25 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# line 1 "MNToMStarTest.ump"
+
 class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName):
         self._students = None
         self._name = None
         self._name = aName
         self._students = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setName(self, aName):
         wasSet = False
         self._name = aName
@@ -14,6 +29,7 @@ class Mentor():
     def getName(self):
         return self._name
 
+    # Code from template association_GetMany 
     def getStudent(self, index):
         aStudent = self._students[index]
         return aStudent
@@ -34,14 +50,17 @@ class Mentor():
         index = (-1 if not aStudent in self._students else self._students.index(aStudent))
         return index
 
+    # Code from template association_IsNumberOfValidMethod 
     def isNumberOfStudentsValid(self):
         isValid = self.numberOfStudents() >= Mentor.minimumNumberOfStudents()
         return isValid
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfStudents():
         return 3
 
+    # Code from template association_AddManyToManyMethod 
     def addStudent(self, aStudent):
         wasAdded = False
         if (aStudent) in self._students :
@@ -55,6 +74,7 @@ class Mentor():
                 self._students.remove(aStudent)
         return wasAdded
 
+    # Code from template association_AddMStarToMany 
     def removeStudent(self, aStudent):
         wasRemoved = False
         if not (aStudent) in self._students :
@@ -71,6 +91,7 @@ class Mentor():
                 self._students.insert(oldIndex, aStudent)
         return wasRemoved
 
+    # Code from template association_SetMStarToMany 
     def setStudents(self, *newStudents):
         newStudents = list(newStudents)
         wasSet = False
@@ -97,6 +118,7 @@ class Mentor():
         wasSet = True
         return wasSet
 
+    # Code from template association_AddIndexControlFunctions 
     def addStudentAt(self, aStudent, index):
         wasAdded = False
         if self.addStudent(aStudent) :

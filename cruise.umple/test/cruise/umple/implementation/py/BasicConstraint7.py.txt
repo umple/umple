@@ -1,4 +1,15 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
 class student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #student Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aAge, aWeight):
         self._weight = None
         self._age = None
@@ -7,6 +18,9 @@ class student():
         if (aAge > 18) :
             raise RuntimeError ("Please provide a valid age [age<=18]")
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setAge(self, aAge):
         wasSet = False
         if (aAge <= 18) :

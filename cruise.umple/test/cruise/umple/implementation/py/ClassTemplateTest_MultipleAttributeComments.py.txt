@@ -1,4 +1,15 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
+
 class Foo():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Foo Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aTestAttribute1, aTestAttribute2, aTestAttribute3, aTestAttribute4):
         self._testAttribute4 = None
         self._testAttribute3 = None
@@ -9,6 +20,9 @@ class Foo():
         self._testAttribute3 = aTestAttribute3
         self._testAttribute4 = aTestAttribute4
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setTestAttribute1(self, aTestAttribute1):
         wasSet = False
         self._testAttribute1 = aTestAttribute1
@@ -33,15 +47,39 @@ class Foo():
         wasSet = True
         return wasSet
 
+    #*
+    
+    #   * Inline comment above attribute.
+    
+    #   
     def getTestAttribute1(self):
         return self._testAttribute1
 
+    #*
+    
+    #   * Multiple inline comments
+    
+    #   * above attribute.
+    
+    #   
     def getTestAttribute2(self):
         return self._testAttribute2
 
+    #*
+    
+    #   * Multiline comment above attribute.
+    
+    #   
     def getTestAttribute3(self):
         return self._testAttribute3
 
+    #*
+    
+    #   * Multiple multiline comments
+    
+    #   * above attribute.
+    
+    #   
     def getTestAttribute4(self):
         return self._testAttribute4
 

@@ -1,11 +1,25 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 9 "../OptionalOneToMNTest.ump"
 import os
 
 class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #Student Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aNumber):
         self._mentor = None
         self._number = None
         self._number = aNumber
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setNumber(self, aNumber):
         wasSet = False
         self._number = aNumber
@@ -15,6 +29,7 @@ class Student():
     def getNumber(self):
         return self._number
 
+    # Code from template association_GetOne 
     def getMentor(self):
         return self._mentor
 

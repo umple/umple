@@ -1,6 +1,17 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 9 "../OneToOptionalOneTest.ump"
 import os
 
 class MySubordinate():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #MySubordinate Attributes
+    #MySubordinate Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aNumber, aMyDriver):
         self._myDriver = None
         self._number = None
@@ -9,6 +20,9 @@ class MySubordinate():
         if not didAddMyDriver :
             raise RuntimeError ("Unable to create mySubordinate due to myDriver. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setNumber(self, aNumber):
         wasSet = False
         self._number = aNumber
@@ -18,15 +32,19 @@ class MySubordinate():
     def getNumber(self):
         return self._number
 
+    # Code from template association_GetOne 
     def getMyDriver(self):
         return self._myDriver
 
+    # Code from template association_SetOneToOptionalOne 
     def setMyDriver(self, aNewMyDriver):
         wasSet = False
         if aNewMyDriver is None :
+            #Unable to setMyDriver to null, as mySubordinate must always be associated to a myDriver
             return wasSet
         existingMySubordinate = aNewMyDriver.getMySubordinate()
         if not (existingMySubordinate is None) and not self == existingMySubordinate :
+            #Unable to setMyDriver, the current myDriver already has a mySubordinate, which would be orphaned if it were re-assigned
             return wasSet
         anOldMyDriver = self._myDriver
         self._myDriver = aNewMyDriver

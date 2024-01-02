@@ -1,6 +1,13 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class A_Guard():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #A_Guard State Machines
     class Status(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -10,10 +17,16 @@ class A_Guard():
         S2 = auto()
         S3 = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._status = None
         self.setStatus(A_Guard.Status.S1)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getStatusFullName(self):
         answer = self._status.__str__()
         return answer
@@ -29,6 +42,7 @@ class A_Guard():
                 self.setStatus(A_Guard.Status.S2)
                 wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -44,6 +58,7 @@ class A_Guard():
                 self.setStatus(A_Guard.Status.S1)
                 wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -53,8 +68,10 @@ class A_Guard():
     def delete(self):
         pass
 
+
     def checkGuard1(self, myB):
         return True
+
 
     def checkGuard2(self, myB, mySecondB):
         return True

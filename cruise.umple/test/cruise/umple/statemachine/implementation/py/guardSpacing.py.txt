@@ -1,6 +1,14 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class Garage():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Garage Attributes
+    #Garage State Machines
     class GarageDoor(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -9,12 +17,18 @@ class Garage():
         Open = auto()
         Closing = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aEntranceClear):
         self._garageDoor = None
         self._entranceClear = None
         self._entranceClear = aEntranceClear
         self.setGarageDoor(Garage.GarageDoor.Open)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setEntranceClear(self, aEntranceClear):
         wasSet = False
         self._entranceClear = aEntranceClear
@@ -24,6 +38,7 @@ class Garage():
     def getEntranceClear(self):
         return self._entranceClear
 
+    # Code from template attribute_IsBoolean 
     def isEntranceClear(self):
         return self._entranceClear
 
@@ -42,6 +57,7 @@ class Garage():
                 self.setGarageDoor(Garage.GarageDoor.Closing)
                 wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -53,3 +69,4 @@ class Garage():
 
     def __str__(self):
         return str(super().__str__()) + "[" + "entranceClear" + ":" + str(self.getEntranceClear()) + "]"
+

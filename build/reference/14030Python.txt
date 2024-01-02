@@ -33,10 +33,12 @@ Currently supported features (fully tested in every Umple build):
 
     <li>Features that generate Umple internally first, before then generating Python, such as <a href="BasicMixsets.html">mixsets</a> and <a href="Traits.html">traits</a>.</li>
 
-    <li>Following Concurrency Features:
+    <li>Comments are transferred into the Python</li>
+
+    <li>Following State Machine Features:
         <ul>
-            <li>Active Block and Do Activities</li>
-            <li>After Keyword</li>
+            <li>Concurrency: Active block and do activities</li>
+            <li>after() capability(to enable delayed transitions)</li>
         </ul>
     </li>
 
@@ -67,12 +69,10 @@ Currently Partially supported features:
 Currently unsupported features:
 <ul>
     <li>Tracing</li>
-    <li>after() capability in state machines (to enable delayed transitions)</li>
-    <li>Comments are currently being ignored and do not appear in the Python</li>
-    <li>Concurrency</li>
     <li>Any Umple code that create the following Java:
         <ul>
             <li>keyword synchronized</li>
+            <li>see issue #2070 and #2071 for more information</li>
         </ul>
     </li>
 </ul>

@@ -1,6 +1,13 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class LightFixture():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #LightFixture State Machines
     class Bulb(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -18,12 +25,18 @@ class LightFixture():
         Normal = auto()
         Dimmed = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._bulbOn = None
         self._bulb = None
         self.setBulbOn(LightFixture.BulbOn.Null)
         self.setBulb(LightFixture.Bulb.Off)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getBulbFullName(self):
         answer = self._bulb.__str__()
         if self._bulbOn != LightFixture.BulbOn.Null :
@@ -47,6 +60,7 @@ class LightFixture():
             self.setBulb(LightFixture.Bulb.Off)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -62,6 +76,7 @@ class LightFixture():
             self.setBulb(LightFixture.Bulb.Off)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -71,6 +86,7 @@ class LightFixture():
 
     def setBulb(self, aBulb):
         self._bulb = aBulb
+        # entry actions and do activities
         if self._bulb == LightFixture.Bulb.On :
             if self._bulbOn == LightFixture.BulbOn.Null :
                 self.setBulbOn(LightFixture.BulbOn.Normal)
