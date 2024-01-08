@@ -28,15 +28,17 @@ $diagramtype = "";
 $isCachedExample = false;
 $imageoutput="";
 $messageURL="";
+$actualExample="";
 if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
-  $cachedimage= "umplibrary/imagecache/".htmlspecialchars($_REQUEST['example']).".svg";
+  $actualExample=preg_replace("/[^a-zA-Z0-9_\-\/]/",'',$_REQUEST["example"]);
+  $cachedimage= "umplibrary/imagecache/".$actualExample.".svg";
   if (file_exists($cachedimage))
   {
     $isCachedExample=true;
   }
   else
   {
-    $cachedimage= "umplibrary/imagecachesm/".htmlspecialchars($_REQUEST['example']).".svg";
+    $cachedimage= "umplibrary/imagecachesm/".$actualExample.".svg";
     if (file_exists($cachedimage))
     {
       $isCachedExample=true;
@@ -44,7 +46,7 @@ if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
     }
     else
     {
-      $cachedimage= "umplibrary/imagecachestructure/".htmlspecialchars($_REQUEST['example']).".svg";
+      $cachedimage= "umplibrary/imagecachestructure/".$actualExample.".svg";
       if (file_exists($cachedimage))
       {
         $isCachedExample=true;
@@ -54,7 +56,7 @@ if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
   }
   if($isCachedExample) {
     $imageoutput = "<br/><iframe src=\"".$cachedimage."\"></iframe><br\>";
-    $messageURL = "<a href=\"?example=".$_REQUEST['example'].$diagramtype."\">URL for ".$_REQUEST['example']." example</a>";
+    $messageURL = "<a href=\"?example=".$actualExample.$diagramtype."\">URL for ".$actualExample." example</a>";
   }
 }
 
@@ -886,8 +888,8 @@ $output = $dataHandle->readData('model.ump');
       <?php if(isset($_REQUEST["task"])) { ?> true <?php } else { ?> false <?php } ?>,
       <?php if($canCreateTask) { ?> true <?php } else { ?> false <?php } ?>
       ); 
-      <?php if (isset($_REQUEST['example']) && $_REQUEST["example"] != ""){?> 
-      Page.setExamples("<?php echo $_REQUEST['example'] ?>")
+      <?php if (isset($_REQUEST['example']) && $actualExample != ""){?> 
+      Page.setExamples("<?php echo $actualExample ?>")
       <?php } ?> 
       //
   </script>

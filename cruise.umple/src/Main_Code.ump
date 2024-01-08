@@ -1215,13 +1215,23 @@ class PlaygroundMain
     }
     else if ("-source".equals(args[0]))
     {
+      String langCommentDelimiter = "//"; // Default for Java, PHP, C++
+      for (GenerateTarget gt : model.getGenerates()) 
+      {
+        String lang = gt.getLanguage();
+        if (lang.equals("Ruby") || lang.equals("Python")) 
+        {
+          langCommentDelimiter = "# ";
+          break;
+        }
+      }
       for (Map.Entry<String, String> generatedCode : model.getGeneratedCode().entrySet()) {
         if (answer.length() > 0)
         {
           answer += "\n\n\n\n";
         }
-				answer += "//%% NEW FILE " + generatedCode.getKey() + " BEGINS HERE %%\n\n";
-				answer += generatedCode.getValue();
+        answer += langCommentDelimiter+"%% NEW FILE " + generatedCode.getKey() + " BEGINS HERE %%\n\n";
+        answer += generatedCode.getValue();
       }
     }
     else if ("-generate".equals(args[0]))

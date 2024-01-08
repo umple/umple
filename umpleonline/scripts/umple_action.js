@@ -4414,7 +4414,7 @@ Action.generateTabsCode = function(theCode)
   theCode.split('URL_SPLIT')[1].split("\n").forEach(function(theLine){
 
     // If New File Beginning
-    if(theLine.indexOf("//%%") >= 0){
+    if( (theLine.indexOf("//%%") >= 0) || (theLine.indexOf("# %%") >= 0)){
       intFileCounter++;
       strFileName = theLine.slice(14);
       strFileName = strFileName.substr(0, strFileName.indexOf(' '));
