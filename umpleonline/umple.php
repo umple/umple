@@ -30,7 +30,7 @@ $imageoutput="";
 $messageURL="";
 $actualExample="";
 if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
-  $actualExample=preg_replace("/[^a-zA-Z0-9_\-]/",'',$_REQUEST["example"]);
+  $actualExample=preg_replace("/[^a-zA-Z0-9_\-\/]/",'',$_REQUEST["example"]);
   $cachedimage= "umplibrary/imagecache/".$actualExample.".svg";
   if (file_exists($cachedimage))
   {

@@ -513,7 +513,7 @@ function extractFilename()
     // If the argument is example=X then copy the example and open it
     elseif (isset($_REQUEST['example']) && $_REQUEST["example"] != "")
     {
-        $theActualExample=preg_replace("/[^a-zA-Z0-9_\-]/",'',$_REQUEST["example"]);
+        $theActualExample=preg_replace("/[^a-zA-Z0-9_\-\/]/",'',$_REQUEST["example"]);
         $fileToCopy = getExamplePath($theActualExample.'.ump');
         if(!file_exists($fileToCopy)){
             $fileToCopy = getExamplePath('NullExample.ump');
