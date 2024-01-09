@@ -331,7 +331,7 @@ else if (isset($_REQUEST["umpleCode"]))
 
   if ($language == "Python")
   {
-    echo "Generated Python is currently in beta. For more information please <a href='https://cruise.umple.org/umple/Python.html'>click here</a>.<br>";
+    echo "Generated Python has a few limitations. For more information please <a target='pythoninfo' href='https://cruise.umple.org/umple/Python.html'>click here</a>.<br>";
   }
 
   if (!$uigu)
