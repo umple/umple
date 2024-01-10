@@ -12,13 +12,13 @@ Umple code can result in generation of various  languages. Code from these langu
 
 <li><a href="Java.html">Java</a>: Complete functionality. Umple is written in itself using embedded and generated Java. In UmpleOnline the Java code can be executed in the cloud.</li>
 
+<li><a href="Python.html">Python</a>: Very comprehensive support, with a few minor gaps..</li>
+
 <li><a href="PHP.html">Php</a>: reasonably comprehensive generation from Umple features.</li>
 
 <li><a href="Ruby.html">Ruby</a>: Partial support. No state machine support.</li>
 
 <li><a href="CPlusPlus.html">C++</a>: Complete for basic cases, but still beta.</li>
-
-<li><a href="Python.html">Python</a>: Currently in beta.</li>
 
 </ul>
 
