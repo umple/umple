@@ -15,7 +15,7 @@ The Python generator in Umple allows you to embed Python code in Umple. Almost e
 
 <p>Currently Partially supported features:
 <ul>
-    <li>Aspect oriented code Injection.</li>
+    <li>Aspect oriented code Injection (before and after methods).</li>
 </ul>
 </p>
 
