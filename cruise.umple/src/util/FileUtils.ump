@@ -1,0 +1,178 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Helper classes that re needed by the Umple system, but are not key to understanding the metamodel
+
+Note that SampleFileWriter is extended for use in the core Umple compiler with another mixin
+
+*/
+
+namespace cruise.umple.util;
+
+class SampleFileWriter 
+{
+  depend java.util.*;
+  depend java.io.*;
+  
+  public static File[] getAllFiles(File inputDirectory)
+  {
+    File[] allFiles = inputDirectory.listFiles();
+    Arrays.sort(allFiles, new Comparator<File>(){
+      public int compare(File f1, File f2)
+      {
+        return f1.getName().compareTo(f2.getName());
+      } 
+    });
+    return allFiles;
+  }
+
+  public static  String readContent(File filename){
+     return readContent(filename, null);
+  }
+  
+  public static String readContent(File filename, String exclusionPattern)
+  {
+    BufferedReader reader = null;
+    StringBuffer answer = new StringBuffer();
+    
+    try
+    {
+      reader = new BufferedReader(new FileReader(filename));
+      String nextLine = null;
+      while (( nextLine = reader.readLine()) != null)
+      {
+        if(exclusionPattern != null) {
+          nextLine = nextLine.replaceAll(exclusionPattern, "");
+        }
+        answer.append(nextLine);
+        answer.append("\n");
+      } 
+      
+    }
+    catch (Exception e)
+    {
+      throw new RuntimeException("Unable to read content",e);
+    }
+    finally
+    {
+      closeAsRequired(reader);
+    }    
+    return answer.toString();
+    
+  }
+ 
+  public static void closeAsRequired(BufferedReader reader)
+  {
+    if (reader != null)
+    {
+      try
+      {
+        reader.close();
+      }
+      catch (IOException e)
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+  
+  public static void closeAsRequired(InputStream reader)
+  {
+    if (reader != null)
+    {
+      try
+      {
+        reader.close();
+      }
+      catch (IOException e)
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+  
+  public static String rationalize(String rawPath)
+  {
+    String path = rawPath;
+    File f = new File(path);
+    if (f.exists())
+    {
+      return path;
+    }
+    
+    path = "../cruise.umple/" + rawPath;
+    f = new File(path);
+    if (f.exists())
+    {
+      return path;
+    }
+    
+    path = "/h/ralph/umple/trunk/cruise.umple/" + rawPath;
+    f = new File(path);
+    if (f.exists())
+    {
+      return path;
+    }
+
+    // TODO: this shouldn't be hardcoded - see issue 751
+    path = "dist/gradle/test/workingDir/" + rawPath;
+    return path;
+  }
+  
+  public static void createFile(String filename, String input)
+  {
+    File f = new File(filename);
+    f.getAbsoluteFile().getParentFile().mkdirs();
+    
+    try
+    {
+      BufferedWriter out = new BufferedWriter(new FileWriter(filename));
+      out.write(input);
+      out.close();
+    }
+    catch (IOException e)
+    {
+      throw new RuntimeException("Unable to create file [" + filename + "]", e);
+    }
+  }
+  
+  /**
+   * Deletes a file or directory.
+   * @param filenames File paths to destroy
+   */
+  public static void destroy(String... filenames)
+  {
+    for (String filename: filenames) {
+    File file = new File(filename);
+    
+    if (file.isDirectory())
+    {
+      destroy(file);
+    }
+    else
+    {
+      file.delete();
+    }
+  }
+  }
+  
+  private static void destroy(File path)
+  {
+    if( path.exists() ) {
+      File[] files = path.listFiles();
+      for(int i=0; i<files.length; i++) {
+        if(files[i].isDirectory()) {
+          destroy(files[i]);
+        }
+        else {
+          files[i].delete();
+        }
+      }
+    }
+    path.delete();
+  }
+}

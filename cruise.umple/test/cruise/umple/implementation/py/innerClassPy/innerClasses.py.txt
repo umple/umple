@@ -1,0 +1,60 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 2 "innerClasses.ump"
+
+class OuterClass_3():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self):
+        pass
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def delete(self):
+        pass
+
+    #PLEASE DO NOT EDIT THIS CODE
+    #This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+    # line 4 "innerClasses.ump"
+
+    class InnerClassAAAA():
+        #------------------------
+        # MEMBER VARIABLES
+        #------------------------
+        #------------------------
+        # CONSTRUCTOR
+        #------------------------
+        def __init__(self):
+            pass
+
+        #------------------------
+        # INTERFACE
+        #------------------------
+        def delete(self):
+            pass
+
+    #PLEASE DO NOT EDIT THIS CODE
+    #This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+    # line 8 "innerClasses.ump"
+
+    class InnerStaticClass():
+        #------------------------
+        # MEMBER VARIABLES
+        #------------------------
+        #------------------------
+        # CONSTRUCTOR
+        #------------------------
+        def __init__(self):
+            pass
+
+        #------------------------
+        # INTERFACE
+        #------------------------
+        def delete(self):
+            pass
+

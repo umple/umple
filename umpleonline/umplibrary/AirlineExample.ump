@@ -67,6 +67,7 @@ class Airline {
 // @@@skipcppcompile - Contains Java code
 // @@@skipphpcompile - Contains Java code
 // @@@skiprubycompile - Contains Java code
+// @@@skippythoncompile - Contains Java code
 // LAYOUT INFORMATION
 class Person
 {

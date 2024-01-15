@@ -90,21 +90,28 @@ class UmpleConsoleConfig {
           while (m.find()) {
             String foundString = m.group(1);
             // foundString is either a file or (if second and subsequent) a single quoted string
-
             if(foundString.startsWith("\'")) {
               // We have a program -- convert
               foundString="__UMPLE"+
                 Base64.getEncoder()
                 .encodeToString(foundString.substring(1,foundString.length()-1).getBytes());
             }
-            else if(foundString.startsWith("W") && warningIgnore) {
-              // Potential to ignore the warning
-              Matcher m2 = Pattern.compile("\\d+").matcher(foundString);
-              if(m2.find()) {
-                String supressWarningCode="strictness ignore "+m2.group()+";";
-                listOfFilesThisLine.add(foundString);
-                foundString="__UMPLE"+
-                  Base64.getEncoder().encodeToString(supressWarningCode.getBytes());
+            else {
+              int lastSlash = foundString.lastIndexOf(File.separator);
+              String umpFileRoot=foundString;
+              if (lastSlash != -1) {
+                umpFileRoot=foundString.substring(lastSlash+1);
+              } 
+              if(umpFileRoot.startsWith("W") && warningIgnore) {
+                // Potential to ignore the warning
+                Matcher m2 = Pattern.compile("W(\\d+)").matcher(umpFileRoot);
+                if(m2.find()) {
+                  String foundWarningNumber=m2.group().substring(1);
+                  String supressWarningCode="strictness ignore "+foundWarningNumber+";";
+                  listOfFilesThisLine.add(foundString); // Add file, then below add warning suppress
+                  foundString="__UMPLE"+
+                    Base64.getEncoder().encodeToString(supressWarningCode.getBytes());
+                }
               }
             }
             listOfFilesThisLine.add(foundString);
@@ -363,7 +370,7 @@ class UmpleConsoleMain
       
       if(compileSuccess && !cfg.getBeQuiet()) {
         for (String key : model. getHashMap().keySet()) {
-          System.out.println("  Compiled to target language "+key);
+          System.out.println("  Finished generating "+key);
           if(key.compareTo("Java")==0) {
             for (UmpleClass mainClass: CodeCompiler.getMainClasses(model)) {
               System.out.println("  Main method found. Run Java "+mainClass.getName());
@@ -553,6 +560,7 @@ class UmpleConsoleMain
     String languages = String.join(",", UmpleModel.validLanguages );
     String suboptionsAvail = "(With GvStateDiagram: hideactions, hideguards, showtransitionlabels, showguardlabels, Java, Cpp) ";
     suboptionsAvail += "(With GvClassDiagram or GvClassTraitDiagram or GvEntityRelationshipDiagram: hideattributes, showmethods)";
+    suboptionsAvail += " (With all Gv: gvseparator=n.n where n.n is greater than 1.0 to separate nodes more than default, or less than one to make the diagram tighter)";
 
     optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
     optparser.acceptsAll(Arrays.asList("performance", "p"), "Indicate time taken to parse and generate code");
@@ -828,6 +836,17 @@ class PlaygroundMain
   // If through a socket, the socket must be closed after returning
   public void processCommand(String[] args, ConnectionToClient client)
   {
+    // Shortcut command does not get counted as a real command ... just to determine if up
+    if ("-ping".equals(args[0])) {
+      if(isServer) {
+        returnCommandResult("Server is up\n", client);        
+      }
+      else {
+        returnCommandResult("Not running as a server\n", client);        
+      }
+      return;
+    }
+
     String answer = "";
     commandsRun++;
     commandsEverRun++;
@@ -1196,13 +1215,23 @@ class PlaygroundMain
     }
     else if ("-source".equals(args[0]))
     {
+      String langCommentDelimiter = "//"; // Default for Java, PHP, C++
+      for (GenerateTarget gt : model.getGenerates()) 
+      {
+        String lang = gt.getLanguage();
+        if (lang.equals("Ruby") || lang.equals("Python")) 
+        {
+          langCommentDelimiter = "# ";
+          break;
+        }
+      }
       for (Map.Entry<String, String> generatedCode : model.getGeneratedCode().entrySet()) {
         if (answer.length() > 0)
         {
           answer += "\n\n\n\n";
         }
-				answer += "//%% NEW FILE " + generatedCode.getKey() + " BEGINS HERE %%\n\n";
-				answer += generatedCode.getValue();
+        answer += langCommentDelimiter+"%% NEW FILE " + generatedCode.getKey() + " BEGINS HERE %%\n\n";
+        answer += generatedCode.getValue();
       }
     }
     else if ("-generate".equals(args[0]))

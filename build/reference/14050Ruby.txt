@@ -1,0 +1,10 @@
+Ruby
+Generators
+noreferences
+@@description
+<p>
+The Ruby generator supports all class diagramming features of Umple, and generates code that is fully tested.</p>
+
+<p>Ruby code can be embedded in Umple, and Umple can generate Ruby features such as classes, attributes and associations. This can save a lot of boilerplate programming for systems with complex class structures. The generated Ruby code can then be combined with other Ruby code written separately.</p>
+
+<p>The Umple developers do not intended to extend the Ruby generator to support state machines, since there are already Gems in Ruby that provide this capability.</p>

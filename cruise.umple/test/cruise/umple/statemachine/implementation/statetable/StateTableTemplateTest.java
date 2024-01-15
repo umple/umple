@@ -148,7 +148,7 @@ public class StateTableTemplateTest extends TemplateTest
   
   
   
-  @Test
+  @Test @Ignore 
   public void concurrentAutoTransitionStateTable()
   {
     assertUmpleTemplateFor

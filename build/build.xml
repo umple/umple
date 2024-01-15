@@ -75,6 +75,12 @@
     <ant antfile="build/build.umple.xml" target="first-build" inheritAll="true" />
   </target>
 
+  <!-- Just run the example tests -->  
+  <target name="allUserManualAndExampleTests" >
+    <ant antfile="build/build.exampletests.xml" target="allUserManualAndExampleTests" inheritAll="false" />
+  </target>
+
+
   <!-- Turn *.ump code in the parser project into *.java -->  
   <target name="umpleParser" >
     <ant antfile="build/build.umple.xml" target="umpleParser" inheritAll="true" />
@@ -124,6 +130,11 @@
     <ant antfile="build/build.testbed.xml" target="compilePhp" inheritAll="true" />
   </target>
 
+  <!-- Compile the Python testbed program against the latest umple.jar -->
+  <target name="compilePython" >
+    <ant antfile="build/build.testbed.xml" target="compilePython" inheritAll="true" />
+  </target>
+
   <!-- Compile the Ruby testbed program against the latest umple.jar -->
   <target name="compileRuby" >
     <ant antfile="build/build.testbed.xml" target="compileRuby" inheritAll="true" />
@@ -142,6 +153,11 @@
   <!-- Test the PHP testbed program against the latest umple.jar -->
   <target name="testPhp" >
     <ant antfile="build/build.testbed.xml" target="testPhp" inheritAll="true" />
+  </target>
+
+  <!-- Test the Python testbed program against the latest umple.jar -->
+  <target name="testPython" >
+    <ant antfile="build/build.testbed.xml" target="testPython" inheritAll="true" />
   </target>
 
   <!-- Test the Ruby testbed program against the latest umple.jar -->

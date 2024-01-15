@@ -1,0 +1,29 @@
+class Person():
+    def __init__(self, aName, aAge):
+        self._name = aName
+        self._age = aAge
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def setAge(self, aAge):
+        wasSet = False
+        self._age = aAge
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getAge(self):
+        return self._age
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super()) + "[" + "name" + ":" + self.getName() + "," + "age" + ":" + self.getAge() + "]"
+

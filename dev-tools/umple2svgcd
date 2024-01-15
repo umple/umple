@@ -1,0 +1,13 @@
+#!/bin/csh -fb
+echo Drawing class diagrams in  .ump file $1 as $1:r"cd.svg" and opening it
+echo 'Arguments to this command can include'
+echo '  -s followdd by either hideattributes or showmethods'
+echo '  mixsets with filters to specify diagram versions'
+umple $1 -g GvClassDiagram $2 $3 $4 $5 $6 $7 $8
+if ($status == 0) then
+  gv2svg $1:r"cd" -v
+  exit 0
+else
+  echo not displaying svg class diagram due to error
+  exit 1
+endif

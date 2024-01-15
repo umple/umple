@@ -1,0 +1,9 @@
+from abc import ABC, abstractmethod
+from ISomething import ISomething
+from IGarbage import IGarbage
+
+class ISecondChild(ABC, ISomething, IGarbage):
+    @abstractmethod
+    def __init__(self):
+        pass
+

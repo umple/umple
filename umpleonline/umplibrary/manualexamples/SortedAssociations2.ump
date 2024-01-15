@@ -96,3 +96,4 @@ class Student {
 // @@@skipcppcompile - Has Java code
 // @@@skipphpcompile - Has Java code
 // @@@skiprubycompile - Has Java code
+// @@@skippythoncompile - Has Java code

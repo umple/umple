@@ -1,0 +1,41 @@
+import os
+from enum import Enum, auto
+
+class A():
+    class Month(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        O = auto()
+        P = auto()
+        Q = auto()
+
+    def __init__(self, aM, aP):
+        self._m = aM
+        self._p = aP
+
+    def setM(self, aM):
+        wasSet = False
+        self._m = aM
+        wasSet = True
+        return wasSet
+
+    def setP(self, aP):
+        wasSet = False
+        self._p = aP
+        wasSet = True
+        return wasSet
+
+    def getM(self):
+        return self._m
+
+    def getP(self):
+        return self._p
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super()) + "[" + "]" + os.linesep + "  " + "m" + "=" + (self.getM() != ((str(self.getM()).replaceAll("  ", "    ")) if not self.getM().equals(self) else "this") if None else "null") + os.linesep + "  " + "p" + "=" + (self.getP() != ((str(self.getP()).replaceAll("  ", "    ")) if not self.getP().equals(self) else "this") if None else "null")
+

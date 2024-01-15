@@ -3,6 +3,7 @@
 // statement, trace code is injected before
 // the return
 
+@SuppressWarnings("deprecation")
 class JavaMethod
 {
   trace exit method();
@@ -16,3 +17,4 @@ class JavaMethod
 // @@@skipcppcompile - Contains Java Code
 // @@@skipphpcompile - Contains Java Code
 // @@@skiprubycompile - Contains Java Code
+// @@@skippythoncompile - Contains Java Code

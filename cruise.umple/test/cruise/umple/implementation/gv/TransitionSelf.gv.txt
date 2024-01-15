@@ -15,13 +15,13 @@ digraph "TransitionSelf" {
     
       // State: s1
 
-      A_sm_s1 [label = s1, tooltip = "Class A, SM sm, State s1"];
+      A_sm_s1 [label = s1, tooltip = "Class A, SM sm, State s1", URL="javascript:Action.stateClicked(\"A^*^sm^*^s1\")"];
       // End State: s1
     // End Top and Bottom Level StateMachine: sm
 
   // All transitions
-    start_A_sm -> A_sm_s1 [  tooltip = "start to s1" ] ;
-    A_sm_s1 -> A_sm_s1 [  label = "e1", tooltip = "From s1 to s1 on e1" ] ;
+    start_A_sm -> A_sm_s1 [  tooltip = "start to s1", URL="javascript:Action.transitionClicked(\"null\")" ] ;
+    A_sm_s1 -> A_sm_s1 [  label = "e1", tooltip = "From s1 to s1 on e1", URL="javascript:Action.transitionClicked(\"A*^*sm*^*e1*^*s1*^*s1*^*\")" ] ;
   
 
 }

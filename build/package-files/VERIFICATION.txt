@@ -1,0 +1,23 @@
+VERIFICATION
+
+Verification is intended to assist the Chocolatey moderators and community
+in verifying that this package's contents are trustworthy.
+ 
+The package can be verified by:
+
+1. Go to 
+
+	https://github.com/umple/umple/releases/tag/v1.31.1
+
+	to download the jar file.
+
+2. You can use one of the following methods to obtain the checksum: 
+   - Use powershell function 'Get-FileHash' - Get-Filehash umple.jar
+   - Use Chocolatey utility 'checksum.exe'  - checksum -t sha256 -f umple.jar
+
+   Checksum:848b3c15d64c2a7f188be4c44256302bc4fcbe128c54e514001bebcee6c9178c
+
+
+
+
+

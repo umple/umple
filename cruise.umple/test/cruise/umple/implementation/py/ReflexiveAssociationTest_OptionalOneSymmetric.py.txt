@@ -1,0 +1,65 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+import os
+
+class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self, aName):
+        self._superMentor = None
+        self._name = None
+        self._name = aName
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    # Code from template association_GetOne 
+    def getSuperMentor(self):
+        return self._superMentor
+
+    def hasSuperMentor(self):
+        has = not (self._superMentor is None)
+        return has
+
+    # Code from template association_SetOptionalOneToOptionalOne 
+    def setSuperMentor(self, aNewSuperMentor):
+        wasSet = False
+        if aNewSuperMentor is None :
+            existingSuperMentor = self._superMentor
+            self._superMentor = None
+            if not (existingSuperMentor is None) and not (existingSuperMentor.getSuperMentor() is None) :
+                existingSuperMentor.setSuperMentor(None)
+            wasSet = True
+            return wasSet
+        currentSuperMentor = self.getSuperMentor()
+        if not (currentSuperMentor is None) and not currentSuperMentor == aNewSuperMentor :
+            currentSuperMentor.setSuperMentor(None)
+        self._superMentor = aNewSuperMentor
+        existingSuperMentor = aNewSuperMentor.getSuperMentor()
+        if not self == existingSuperMentor :
+            aNewSuperMentor.setSuperMentor(self)
+        wasSet = True
+        return wasSet
+
+    def delete(self):
+        if not (self._superMentor is None) :
+            self._superMentor.setSuperMentor(None)
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]" + str(os.linesep) + "  " + "superMentor = " + ((format(id(self.getSuperMentor()), "x")) if not (self.getSuperMentor() is None) else "null")
+

@@ -3,6 +3,13 @@
 // classes. This is an alternative to using 
 // standalone state machines (see an equivalent model
 // in the state machine section of the manual)
+/*
+  To see different diagram views in UmpleOnline:
+    Use control-g for auto-layout as a class diagram
+    Use control-r to switch between trait view and
+       plain classes resulting from applying traits
+    Use control-s to show the resulting state diagram
+*/
 
 class MotorController {
   isA DeviceWithStatus;

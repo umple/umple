@@ -13,7 +13,7 @@ Comments should be used just like in any programming language.
 </p>
 
 <p>
-Comments immediately before <a href="ClassDefinition.html">class definitions</a>, <a href="AttributeDefinition.html">attribute definitions</a>, <a href="AssociationDefinition.html">association definitions</a> and <a href="MethodDefinition.html">method definitions</a>, as well as comments embedded in methods will be output into the generated code. Comments before definitions in Java will use Javadoc style; this means that when you generate JavaDoc output the API documentation will contain the comments. You are encouraged to create your Java comments using <a href="http://docs.oracle.com/javase/7/docs/technotes/tools/solaris/javadoc.html#javadoctags">Javadoc tags.</a>
+Comments immediately before <a href="ClassDefinition.html">class definitions</a>, <a href="AttributeDefinition.html">attribute definitions</a>, <a href="AssociationDefinition.html">association definitions</a> and <a href="MethodDefinition.html">method definitions</a>, as well as comments embedded in methods will be output into the generated code. Comments before definitions in Java will use Javadoc style; this means that when you generate JavaDoc output the API documentation will contain the comments. You are encouraged to create your Java comments using <a href="https://docs.oracle.com/javase/7/docs/technotes/tools/solaris/javadoc.html#javadoctags">Javadoc tags.</a>
 </p>
 
 <p>
