@@ -1,6 +1,14 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class Animal():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Animal Attributes
+    #Animal State Machines
     class State(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -18,6 +26,9 @@ class Animal():
         normal = auto()
         zombie = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aIsAlive):
         self._stateAlive = None
         self._state = None
@@ -26,6 +37,9 @@ class Animal():
         self.setStateAlive(Animal.StateAlive.Null)
         self.setState(Animal.State.alive)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setIsAlive(self, aIsAlive):
         wasSet = False
         self._isAlive = aIsAlive
@@ -35,6 +49,7 @@ class Animal():
     def getIsAlive(self):
         return self._isAlive
 
+    # Code from template attribute_IsBoolean 
     def isIsAlive(self):
         return self._isAlive
 
@@ -58,6 +73,7 @@ class Animal():
             self.setState(Animal.State.dead)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -69,6 +85,7 @@ class Animal():
             self.setStateAlive(Animal.StateAlive.zombie)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -80,6 +97,7 @@ class Animal():
             self.setStateAlive(Animal.StateAlive.normal)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -89,6 +107,7 @@ class Animal():
 
     def setState(self, aState):
         self._state = aState
+        # entry actions and do activities
         if self._state == Animal.State.alive :
             if self._stateAlive == Animal.StateAlive.Null :
                 self.setStateAlive(Animal.StateAlive.normal)
@@ -109,3 +128,4 @@ class Animal():
 
     def __str__(self):
         return str(super().__str__()) + "[" + "isAlive" + ":" + str(self.getIsAlive()) + "]"
+

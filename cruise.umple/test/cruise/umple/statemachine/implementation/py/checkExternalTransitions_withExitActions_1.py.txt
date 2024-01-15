@@ -1,6 +1,13 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
 from enum import Enum, auto
 
 class X():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X State Machines
     class Sm(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -27,6 +34,9 @@ class X():
         m1 = auto()
         m2 = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._smOnS1 = None
         self._smOn = None
@@ -35,6 +45,9 @@ class X():
         self.setSmOnS1(X.SmOnS1.Null)
         self.setSm(X.Sm.on)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getSmFullName(self):
         answer = self._sm.__str__()
         if self._smOn != X.SmOn.Null :
@@ -60,6 +73,7 @@ class X():
             self.setSm(X.Sm.off)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -71,6 +85,7 @@ class X():
             self.setSm(X.Sm.on)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -82,6 +97,7 @@ class X():
             self.setSmOn(X.SmOn.s2)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -93,6 +109,7 @@ class X():
             self.setSmOn(X.SmOn.s1)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -104,6 +121,7 @@ class X():
             self.setSm(X.Sm.on)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -115,6 +133,7 @@ class X():
             self.setSm(X.Sm.off)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -126,6 +145,7 @@ class X():
             self.setSmOnS1(X.SmOnS1.m2)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -137,6 +157,7 @@ class X():
             self.setSmOnS1(X.SmOnS1.m1)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -148,6 +169,7 @@ class X():
             self.setSmOn(X.SmOn.s1)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -159,6 +181,7 @@ class X():
             self.setSmOn(X.SmOn.s2)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -170,6 +193,7 @@ class X():
             self.setSm(X.Sm.on)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
@@ -181,16 +205,19 @@ class X():
             self.setSm(X.Sm.off)
             wasEventProcessed = True
         else :
+            # Other states do respond to this event
             pass
         return wasEventProcessed
 
     def exitSm(self):
         if self._sm == X.Sm.on :
             self.exitSmOn()
+
             self.on_exit_action()
 
     def setSm(self, aSm):
         self._sm = aSm
+        # entry actions and do activities
         if self._sm == X.Sm.on :
             if self._smOn == X.SmOn.Null :
                 self.setSmOn(X.SmOn.s1)
@@ -198,6 +225,7 @@ class X():
     def exitSmOn(self):
         if self._smOn == X.SmOn.s1 :
             self.exitSmOnS1()
+
             self.s1_exit_action()
             self.setSmOn(X.SmOn.Null)
         elif self._smOn == X.SmOn.s2 :
@@ -207,12 +235,14 @@ class X():
         self._smOn = aSmOn
         if self._sm != X.Sm.on and aSmOn != X.SmOn.Null :
             self.setSm(X.Sm.on)
+        # entry actions and do activities
         if self._smOn == X.SmOn.s1 :
             if self._smOnS1 == X.SmOnS1.Null :
                 self.setSmOnS1(X.SmOnS1.m1)
 
     def exitSmOnS1(self):
         if self._smOnS1 == X.SmOnS1.m1 :
+
             self.m1_exit_action()
             self.setSmOnS1(X.SmOnS1.Null)
         elif self._smOnS1 == X.SmOnS1.m2 :
@@ -226,11 +256,14 @@ class X():
     def delete(self):
         pass
 
+
     def on_exit_action(self):
         print("exited on")
 
+
     def s1_exit_action(self):
         print("exited s1")
+
 
     def m1_exit_action(self):
         print("exited m1")

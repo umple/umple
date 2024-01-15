@@ -1,7 +1,17 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
 import os
 import pickle
 
 class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #Student Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aId, aMentorsPriority):
         self._mentors = None
         self._mentorsPriority = None
@@ -10,6 +20,9 @@ class Student():
         self._mentorsPriority = aMentorsPriority
         self._mentors = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setId(self, aId):
         wasSet = False
         self._id = aId
@@ -28,6 +41,7 @@ class Student():
     def getMentorsPriority(self):
         return self._mentorsPriority
 
+    # Code from template association_GetMany 
     def getMentor(self, index):
         aMentor = self._mentors[index]
         return aMentor
@@ -48,10 +62,12 @@ class Student():
         index = (-1 if not aMentor in self._mentors else self._mentors.index(aMentor))
         return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfMentors():
         return 0
 
+    # Code from template association_AddManyToManyMethod 
     def addMentor(self, aMentor):
         wasAdded = False
         if (aMentor) in self._mentors :
@@ -65,6 +81,7 @@ class Student():
                 self._mentors.remove(aMentor)
         return wasAdded
 
+    # Code from template association_RemoveMany 
     def removeMentor(self, aMentor):
         wasRemoved = False
         if not (aMentor) in self._mentors :
@@ -79,6 +96,7 @@ class Student():
                 self._mentors.insert(oldIndex, aMentor)
         return wasRemoved
 
+    # Code from template association_sorted_serializable_readObject 
     def readObject(self, input):
         self.__dict__.clear()
         self.__dict__.update(pickle.load(input).__dict__)

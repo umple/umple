@@ -1,6 +1,17 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 9 "../OneToOptionalNTest.ump"
 import os
 
 class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #Student Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aNumber, aMentor):
         self._mentor = None
         self._number = None
@@ -9,6 +20,9 @@ class Student():
         if not didAddMentor :
             raise RuntimeError ("Unable to create student due to mentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setNumber(self, aNumber):
         wasSet = False
         self._number = aNumber
@@ -18,14 +32,18 @@ class Student():
     def getNumber(self):
         return self._number
 
+    # Code from template association_GetOne 
     def getMentor(self):
         return self._mentor
 
+    # Code from template association_SetOneToAtMostN 
     def setMentor(self, aMentor):
         from Mentor import Mentor
         wasSet = False
+        #Must provide mentor to student
         if aMentor is None :
             return wasSet
+        #mentor already at maximum (6)
         if aMentor.numberOfStudents() >= Mentor.maximumNumberOfStudents() :
             return wasSet
         existingMentor = self._mentor

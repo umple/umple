@@ -1,12 +1,32 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
+
 class Foo():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Foo Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._bars = None
         self._bars = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template association_GetMany 
     def getBar(self, index):
         aBar = self._bars[index]
         return aBar
 
+    #*
+    
+    #   * I am a multiline comment above an association.
+    
+    #   
     def getBars(self):
         newBars = tuple(self._bars)
         return newBars
@@ -23,10 +43,12 @@ class Foo():
         index = (-1 if not aBar in self._bars else self._bars.index(aBar))
         return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfBars():
         return 0
 
+    # Code from template association_AddManyToOne 
     def addBar1(self):
         from Bar import Bar
         return Bar(self)
@@ -46,11 +68,13 @@ class Foo():
 
     def removeBar(self, aBar):
         wasRemoved = False
+        #Unable to remove aBar, as it must always have a foo
         if not self == aBar.getFoo() :
             self._bars.remove(aBar)
             wasRemoved = True
         return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addBarAt(self, aBar, index):
         wasAdded = False
         if self.addBar(aBar) :

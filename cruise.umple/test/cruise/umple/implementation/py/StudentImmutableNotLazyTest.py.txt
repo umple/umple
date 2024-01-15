@@ -1,4 +1,16 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
+
 class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #Helper Variables
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aNumber):
         self._canSetNumber2 = None
         self._number2 = None
@@ -6,6 +18,10 @@ class Student():
         self._number = aNumber
         self._canSetNumber2 = True
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template attribute_SetImmutable 
     def setNumber2(self, aNumber2):
         wasSet = False
         self._canSetNumber2 = False

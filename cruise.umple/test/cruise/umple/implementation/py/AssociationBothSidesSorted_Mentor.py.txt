@@ -1,7 +1,17 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
 import os
 import pickle
 
 class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName, aStudentsPriority):
         self._students = None
         self._studentsPriority = None
@@ -10,6 +20,9 @@ class Mentor():
         self._studentsPriority = aStudentsPriority
         self._students = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setName(self, aName):
         wasSet = False
         self._name = aName
@@ -28,6 +41,7 @@ class Mentor():
     def getStudentsPriority(self):
         return self._studentsPriority
 
+    # Code from template association_GetMany 
     def getStudent(self, index):
         aStudent = self._students[index]
         return aStudent
@@ -48,10 +62,12 @@ class Mentor():
         index = (-1 if not aStudent in self._students else self._students.index(aStudent))
         return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfStudents():
         return 0
 
+    # Code from template association_AddManyToManyMethod 
     def addStudent(self, aStudent):
         wasAdded = False
         if (aStudent) in self._students :
@@ -65,6 +81,7 @@ class Mentor():
                 self._students.remove(aStudent)
         return wasAdded
 
+    # Code from template association_RemoveMany 
     def removeStudent(self, aStudent):
         wasRemoved = False
         if not (aStudent) in self._students :
@@ -79,6 +96,7 @@ class Mentor():
                 self._students.insert(oldIndex, aStudent)
         return wasRemoved
 
+    # Code from template association_sorted_serializable_readObject 
     def readObject(self, input):
         self.__dict__.clear()
         self.__dict__.update(pickle.load(input).__dict__)
