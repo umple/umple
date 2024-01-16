@@ -17,9 +17,9 @@ Historically, developers have traced software using various techniques:
 
 <li>Using tracepoints or breakpoints in a debugger.</li>
 
-<li>Using a tool Like <a href="http://dtrace.org/blogs/about/">DTrace</a> (also <a href="http://hub.opensolaris.org/bin/view/Community+Group+dtrace/WebHome">see here</a>) that specifies a trace script to dynamically patch live running code.</li>
+<li>Using a tool Like <a href="https://dtrace.org/about/">DTrace</a> that specifies a trace script to dynamically patch live running code.</li>
 
-<li>Using a tool like <a href="http://lttng.org/">LTTNG</a> to insert tracepoints.</li>
+<li>Using a tool like <a href="https://lttng.org/">LTTNG</a> to insert tracepoints.</li>
 
 </ul>
 
@@ -42,7 +42,7 @@ MOTL syntax is designed to be be usable independently of Umple. For example, tra
 <br>
 
 <p align="justify">
-MOTL can be used to generate tracing directives for different types of tracers. At its simplest level, if the phrase 'tracer Console;' is used (or no <a href="Tracers.html">tracer</a> statement is included), then trace output is directed to <i>standard error</i>. Generation of tracing for <a href="http://dtrace.org/blogs/about/">DTrace</a> and <a href="http://lttng.org/">LTTNG</a> is under development.
+MOTL can be used to generate tracing directives for different types of tracers. At its simplest level, if the phrase 'tracer Console;' is used (or no <a href="Tracers.html">tracer</a> statement is included), then trace output is directed to <i>standard error</i>. Generation of tracing for <a href="https://dtrace.org/about/">DTrace</a> and <a href="https://lttng.org/">LTTNG</a> is under development.
 </p>
 
 <br>
@@ -65,4 +65,4 @@ The following pages describe how to use MOTL. Many aspects of MOTL are under dev
 
 <hr />
 
-<i>The MOTL project has been sponsored by NSERC, Ericsson and Defence Research and Development Canada, in the <a href="http://dmct.dorsal.polymtl.ca/">Distributed Multi-Core Tracing Project managed by Ecole Polytechnique de Montreal</a></i>
+<i>The MOTL project has been sponsored by NSERC, Ericsson and Defence Research and Development Canada, in the <a href="https://dmct.dorsal.polymtl.ca/">Distributed Multi-Core Tracing Project managed by Ecole Polytechnique de Montreal</a></i>

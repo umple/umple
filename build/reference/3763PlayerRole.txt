@@ -1,0 +1,25 @@
+Player Role
+Patterns
+noreferences
+@@tooltip This pattern enables you to avoid making subclasses of a key class that could play different roles, and instead arranges for the subclasses to be of a designated Role class.
+
+@@description
+<p>When modeling, it is common to encounter situations where one wants to make multiple subclasses, but can not or should not for various reasons. One reason not to create a subclass is because instances may need to change class as their roles in the system change. Another reason not to create a subclass is because an instance may need to play two or more roles smultaneously.</p>
+
+<p>The solution is to create a Role class and to link it by a many-to-one association to the main class (which we will call the Player class).</p>
+
+<p>To use this pattern, add a use statement to incorporate the built-in PlayerRole.ump file. Then use isA statements to declare which class is a Player, and which is an Role (of which Player). Follow what is show in the second block of code below.</p>
+
+<p>This is one of several patterns in Umple Umple that are built into the language as of 1.32 via a use statement. See the code below.</p>
+
+&nbsp;
+
+@@example @@caption The Player Role pattern code that is imported by specifying use lib:PlayerRole.ump @@endcaption 
+@@source reusable/PlayerRole.ump &diagramtype=GvClassTrait
+@@endexample
+
+@@example @@caption Example of the Player-Role pattern to specify a system for a child sports team @@endcaption
+@@source manualexamples/ChildSportsByPattern.ump
+@@endexample
+
+

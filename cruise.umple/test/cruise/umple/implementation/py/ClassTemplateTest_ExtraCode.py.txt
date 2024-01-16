@@ -1,0 +1,23 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
+
+class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self):
+        pass
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def delete(self):
+        pass
+
+    def showMe(self):
+        
+

@@ -1,0 +1,22 @@
+class Mentor():
+    def __init__(self, aId):
+        self._id = aId
+
+    def __init__(self):
+        pass
+
+    def setId(self, aId):
+        wasSet = False
+        self._id = aId
+        wasSet = True
+        return wasSet
+
+    def getId(self):
+        return self._id
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super()) + "[" + "id" + ":" + self.getId() + "]"
+

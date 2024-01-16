@@ -10,7 +10,7 @@ noreferences
 
 <li><p>If you are given a URL to load a task, then just click on it (or copy and paste it). Make sure the URL start with https://cruise.eecs.uottawa.ca/umpleonline, or else is a URL in your own university or company that you trust.</p>
 
-<li><p>If you are instead given a taskname, you can load the task as follows: Go to <a href="http://try.umple.org" target="uol">UmpleOnline</a>; open up the menu in the center that says <b>SAVE & LOAD</b>; and click on <b>Load a Task</b>. This will display a field where you can type the task name, and then hit <b>Load Task</b>.</p>
+<li><p>If you are instead given a taskname, you can load the task as follows: Go to <a href="https://try.umple.org" target="uol">UmpleOnline</a>; open up the menu in the center that says <b>SAVE & LOAD</b>; and click on <b>Load a Task</b>. This will display a field where you can type the task name, and then hit <b>Load Task</b>.</p>
 
 <li><p>After you have loaded the task you will see a set of instructions at the top. These have been set by a task requestor; simply do what the instructions say. Normally this involves writing Umple models. See the rest of this user manual for information about how to do that, including the page about <a href="UsingUmpleOnline.html">UmpleOnline itself</a>.</p>
 

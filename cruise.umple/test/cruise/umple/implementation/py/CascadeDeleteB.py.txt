@@ -1,0 +1,96 @@
+from C import C
+
+class B():
+    def __init__(self):
+        self._myC = []
+
+    def getMyC(self, index):
+        aMyC = self._myC[index]
+        return aMyC
+
+    def getMyC(self):
+        newMyC = tuple(self._myC)
+        return newMyC
+
+    def numberOfMyC(self):
+        number = len(self._myC)
+        return number
+
+    def hasMyC(self):
+        has = len(self._myC) > 0
+        return has
+
+    def indexOfMyC(self, aMyC):
+        index = self._myC.index(aMyC)
+        return index
+
+    @staticmethod
+    def minimumNumberOfMyC():
+        return 0
+
+    def addMyC(self, aMyD):
+        return C(aMyD, self)
+
+    def addMyC(self, aMyC):
+        wasAdded = False
+        if aMyC in self._myC :
+            return False
+
+        existingB = aMyC.getB()
+        isNewB = existingB != None and not self.equals(existingB)
+        if isNewB :
+            aMyC.setB(self)
+
+        else :
+            self._myC.append(aMyC)
+
+        wasAdded = True
+        return wasAdded
+
+    def removeMyC(self, aMyC):
+        wasRemoved = False
+        if not self.equals(aMyC.getB()) :
+            self._myC.remove(aMyC)
+            wasRemoved = True
+
+        return wasRemoved
+
+    def addMyCAt(self, aMyC, index):
+        wasAdded = False
+        if self.addMyC(aMyC) :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfMyC() :
+                index = self.numberOfMyC() - 1
+
+            self._myC.remove(aMyC)
+            self._myC.insert(index, aMyC)
+            wasAdded = True
+
+        return wasAdded
+
+    def addOrMoveMyCAt(self, aMyC, index):
+        wasAdded = False
+        if aMyC in self._myC :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfMyC() :
+                index = self.numberOfMyC() - 1
+
+            self._myC.remove(aMyC)
+            self._myC.insert(index, aMyC)
+            wasAdded = True
+
+        else :
+            wasAdded = self.addMyCAt(aMyC, index)
+
+        return wasAdded
+
+    def delete(self):
+        while len(self._myC) > 0 :
+            aMyC = self._myC[len(self._myC) - 1]
+            aMyC.delete()
+            self._myC.remove(aMyC)
+

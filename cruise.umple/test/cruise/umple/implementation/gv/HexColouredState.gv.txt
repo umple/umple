@@ -1,0 +1,59 @@
+digraph "HexColouredState" {
+  compound = true;
+
+  // Class: GarageDoor
+
+    // Top and Bottom Level StateMachine: status
+    
+    // Start states are shown as a black circle
+    node [ratio="auto" shape = point, fillcolor="black", width=0.2 ];
+    start_GarageDoor_status [ tooltip = "Class GarageDoor, SM status, State start" ];
+    
+        
+    // Format for normal states
+    node [ratio="auto" shape = rectangle, width=1,style=rounded];
+    
+      // State: Open
+
+      GarageDoor_status_Open [label = Open,style = "filled, rounded", fillcolor ="#FFFF00", tooltip = "Class GarageDoor, SM status, State Open", URL="javascript:Action.stateClicked(\"GarageDoor^*^status^*^Open\")"];
+      // End State: Open
+
+      // State: Closing
+
+      GarageDoor_status_Closing [label = Closing,style = "filled, rounded", fillcolor ="#008000", tooltip = "Class GarageDoor, SM status, State Closing", URL="javascript:Action.stateClicked(\"GarageDoor^*^status^*^Closing\")"];
+      // End State: Closing
+
+      // State: Closed
+
+      GarageDoor_status_Closed [label = Closed,style = "filled, rounded", fillcolor ="#FF0000", tooltip = "Class GarageDoor, SM status, State Closed", URL="javascript:Action.stateClicked(\"GarageDoor^*^status^*^Closed\")"];
+      // End State: Closed
+
+      // State: Opening
+
+      GarageDoor_status_Opening [label = Opening,style = "filled, rounded", fillcolor ="#FFA500", tooltip = "Class GarageDoor, SM status, State Opening", URL="javascript:Action.stateClicked(\"GarageDoor^*^status^*^Opening\")"];
+      // End State: Opening
+
+      // State: HalfOpen
+
+      GarageDoor_status_HalfOpen [label = HalfOpen,style = "filled, rounded", fillcolor ="#FFC0CB", tooltip = "Class GarageDoor, SM status, State HalfOpen", URL="javascript:Action.stateClicked(\"GarageDoor^*^status^*^HalfOpen\")"];
+      // End State: HalfOpen
+    // End Top and Bottom Level StateMachine: status
+
+  // All transitions
+    start_GarageDoor_status -> GarageDoor_status_Open [  tooltip = "start to Open", URL="javascript:Action.transitionClicked(\"null\")" ] ;
+    GarageDoor_status_Opening -> GarageDoor_status_Open [  label = "reachTop", tooltip = "From Opening to Open on reachTop", URL="javascript:Action.transitionClicked(\"GarageDoor*^*status*^*reachTop*^*Opening*^*Open*^*\")" ] ;
+  
+  GarageDoor_status_Open -> GarageDoor_status_Closing [  label = "buttonOrObstacle", tooltip = "From Open to Closing on buttonOrObstacle", URL="javascript:Action.transitionClicked(\"GarageDoor*^*status*^*buttonOrObstacle*^*Open*^*Closing*^*\")" ] ;
+  
+  GarageDoor_status_Closing -> GarageDoor_status_Closed [  label = "reachBottom", tooltip = "From Closing to Closed on reachBottom", URL="javascript:Action.transitionClicked(\"GarageDoor*^*status*^*reachBottom*^*Closing*^*Closed*^*\")" ] ;
+  
+  GarageDoor_status_Closing -> GarageDoor_status_Opening [  label = "buttonOrObstacle", tooltip = "From Closing to Opening on buttonOrObstacle", URL="javascript:Action.transitionClicked(\"GarageDoor*^*status*^*buttonOrObstacle*^*Closing*^*Opening*^*\")" ] ;
+  
+  GarageDoor_status_Closed -> GarageDoor_status_Opening [  label = "buttonOrObstacle", tooltip = "From Closed to Opening on buttonOrObstacle", URL="javascript:Action.transitionClicked(\"GarageDoor*^*status*^*buttonOrObstacle*^*Closed*^*Opening*^*\")" ] ;
+  
+  GarageDoor_status_HalfOpen -> GarageDoor_status_Opening [  label = "buttonOrObstacle", tooltip = "From HalfOpen to Opening on buttonOrObstacle", URL="javascript:Action.transitionClicked(\"GarageDoor*^*status*^*buttonOrObstacle*^*HalfOpen*^*Opening*^*\")" ] ;
+  
+  GarageDoor_status_Opening -> GarageDoor_status_HalfOpen [  label = "buttonOrObstacle", tooltip = "From Opening to HalfOpen on buttonOrObstacle", URL="javascript:Action.transitionClicked(\"GarageDoor*^*status*^*buttonOrObstacle*^*Opening*^*HalfOpen*^*\")" ] ;
+  
+
+}

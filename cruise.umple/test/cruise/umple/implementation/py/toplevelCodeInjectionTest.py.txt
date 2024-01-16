@@ -1,0 +1,31 @@
+class Student11():
+    def __init__(self, aName, aB):
+        self._b = None
+        self._name = None
+        self._name = aName
+        self._b = aB
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def setB(self, aB):
+        wasSet = False
+        self._b = aB
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getB(self):
+        return self._b
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return super().__str__() + "[" + "name" + ":" + str(self.getName()) + "," + "b" + ":" + str(self.getB()) + "]"
+

@@ -8,7 +8,7 @@
 
 // Jquery
 document.write('<link href="scripts/jquery/showLoading/css/showLoading.css" rel="stylesheet" media="screen" /> ');
-document.write('<link href="scripts/jquery/jquery-ui-1.12.1.min.css" rel="stylesheet" media="screen" /> ');
+document.write('<link href="scripts/jquery/jquery-ui-1.13.2.min.css" rel="stylesheet" media="screen" /> ');
 
 // Syntax highlighter
 document.write('<link href="scripts/shCore.css" rel="stylesheet" type="text/css" />');
@@ -30,14 +30,9 @@ document.write('<link href="scripts/jjs/joint.css" rel="stylesheet" type="text/c
 // *** JAVASCRIPT ***
 
 //JQUERY
-// OLD document.write('<script type="text/javascript" src="scripts/jquery/jquery-1.11.1.min.js"></script>');
-// OLD document.write('<script type="text/javascript" src="scripts/jquery/jquery-2.2.4.min.js"></script>');
-document.write('<script type="text/javascript" src="scripts/jquery/jquery-3.6.0.min.js"></script>');
+document.write('<script type="text/javascript" src="scripts/jquery/jquery-3.6.3.min.js"></script>');
 // Jquery UI
-// OLD document.write('<script type="text/javascript" src="scripts/jquery/jquery-ui-1.8.17.custom.min.js"></script>');
-// OLD document.write('<script type="text/javascript" src="scripts/jquery/jquery-ui-1.10.4.custom.min.js"></script>');
-document.write('<script type="text/javascript" src="scripts/jquery/jquery-ui-1.12.1.min.js"></script>');
-// document.write('<script type="text/javascript" src="scripts/jquery/caretRange/caretRange.js"></script>');
+document.write('<script type="text/javascript" src="scripts/jquery/jquery-ui-1.13.2.min.js"></script>');
 document.write('<script type="text/javascript" src="scripts/jquery.ui.touch-punch.min.js"></script>');
 // JQuery Plugins
 document.write('<script type="text/javascript" src="scripts/jquery/showLoading/js/jquery.showLoading.min.js"></script>');
@@ -47,6 +42,20 @@ document.write('<script type="text/javascript" src="scripts/mousetrap.min.js"></
 
 // Dropbox
 //document.write('<script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropins.js" id="dropboxjs" data-app-key="akix6305j3tm11i"></script>');
+
+
+// CodeMirror (cannot be minified due to logic that includes other files)
+document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/codemirror.js"></script>');
+document.write('<script type="text/javascript" src="scripts/CodeMirror/mode/clike/clike.js"></script>');  // contains C-like mode
+
+// CodeMirror addons
+document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/fold/foldcode.js"></script>');
+document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/fold/foldgutter.js"></script>');
+document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/fold/brace-fold.js"></script>');
+document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/search/searchcursor.js"></script>');
+document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/edit/matchbrackets.js"></script>');
+
+
 
 // ====== The following minified version of the subsequent group can be commented out when testing
 // Regenerate this using the allumple-minifyscript unix script (relies on yuicompressor)
@@ -80,12 +89,6 @@ document.write('<script type="text/javascript" src="scripts/shBrushXml.js"></scr
 
 //INLINE EDITING
 document.write('<script type="text/javascript" src="scripts/inlineeditor.js"></script>');
-
-// Code mirror
-document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/codemirror.js"></script>');
-document.write('<script type="text/javascript" src="scripts/CodeMirror/mode/clike/clike.js"></script>');  // contains C-like mode
-document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/util/foldcode.js"></script>');
-document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/util/searchcursor.js"></script>');
 
 // Dropbox internal
 

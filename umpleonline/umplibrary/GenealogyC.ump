@@ -7,7 +7,7 @@
   Last updated: June 8, 2010
 */
 //Namespace for core of the system.
-namespace Geneology.core;
+namespace GenealogyC.core;
 
 class Person{
  name;

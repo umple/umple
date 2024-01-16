@@ -1,0 +1,94 @@
+digraph "ColouredDerivedNestedState" {
+  compound = true;
+
+  // Class: Car
+
+    // Top Level StateMachine: state
+    
+    // Start states are shown as a black circle
+    node [ratio="auto" shape = point, fillcolor="black", width=0.2 ];
+    start_Car_state [ tooltip = "Class Car, SM state, State start" ];
+    
+        
+    // Format for normal states
+    node [ratio="auto" shape = rectangle, width=1,style=rounded];
+    
+      // State: Off
+
+      Car_state_Off [label = Off, tooltip = "Class Car, SM state, State Off", URL="javascript:Action.stateClicked(\"Car^*^state^*^Off\")"];
+      // End State: Off
+
+      // State: Running
+
+     subgraph clusterCar_state_Running {
+      label = "Running";
+      style = "filled, rounded" fillcolor ="lightgreen" 
+      URL="javascript:Action.stateClicked(\"Car^*^state^*^Running\")";
+
+      // StateMachine: Running
+      
+      // Start states are shown as a black circle
+      node [ratio="auto" shape = point, fillcolor="black", width=0.2 ];
+      start_Car_stateRunning [ tooltip = "Class Car, SM state, State Running.start" ];
+      
+            
+      // Format for normal states
+      node [ratio="auto" shape = rectangle, width=1,style=rounded];
+      
+        // State: state
+
+       subgraph clusterCar_stateRunning_state {
+        label = "state";
+        style = "filled, rounded" fillcolor ="pink" 
+        URL="javascript:Action.stateClicked(\"Car^*^state^*^Running.state\")";
+
+        // Bottom Level StateMachine: state
+        
+        // Start states are shown as a black circle
+        node [ratio="auto" shape = point, fillcolor="black", width=0.2 ];
+        start_Car_stateRunningState [ tooltip = "Class Car, SM state, State Running.state.start" ];
+        
+                
+        // Format for normal states
+        node [ratio="auto" shape = rectangle, width=1,style=rounded];
+        
+          // State: Idle
+
+          Car_stateRunningState_Idle [label = Idle,style = "filled, rounded", fillcolor ="yellow", tooltip = "Class Car, SM state, State Running.state.Idle", URL="javascript:Action.stateClicked(\"Car^*^state^*^Running.state.Idle\")"];
+          // End State: Idle
+
+          // State: Moving
+
+          Car_stateRunningState_Moving [label = Moving,style = "filled, rounded", fillcolor ="green", tooltip = "Class Car, SM state, State Running.state.Moving", URL="javascript:Action.stateClicked(\"Car^*^state^*^Running.state.Moving\")"];
+          // End State: Moving
+
+          // State: Stopped
+
+          Car_stateRunningState_Stopped [label = Stopped,style = "filled, rounded", fillcolor ="red", tooltip = "Class Car, SM state, State Running.state.Stopped", URL="javascript:Action.stateClicked(\"Car^*^state^*^Running.state.Stopped\")"];
+          // End State: Stopped
+        // End Bottom Level StateMachine: state
+       }
+        // End State: state
+      // End StateMachine: Running
+     }
+      // End State: Running
+    // End Top Level StateMachine: state
+
+  // All transitions
+    start_Car_state -> Car_state_Off [  tooltip = "start to Off", URL="javascript:Action.transitionClicked(\"null\")" ] ;
+    Car_stateRunningState_Stopped -> Car_state_Off [  label = "turnOff", tooltip = "From Running.state.Stopped to Off on turnOff", URL="javascript:Action.transitionClicked(\"Car*^*state*^*turnOff*^*Running.state.Stopped*^*Off*^*\")" ] ;
+  
+  Car_state_Off -> Car_stateRunningState_Idle [  lhead=clusterCar_state_Running,  label = "turnOn", tooltip = "From Off to Running on turnOn", URL="javascript:Action.transitionClicked(\"Car*^*state*^*turnOn*^*Off*^*Running*^*\")" ] ;
+  
+  start_Car_stateRunning -> Car_stateRunningState_Idle [  lhead=clusterCar_stateRunning_state,  tooltip = "start to Running.state", URL="javascript:Action.transitionClicked(\"null\")" ] ;
+    start_Car_stateRunningState -> Car_stateRunningState_Idle [  tooltip = "start to Running.state.Idle", URL="javascript:Action.transitionClicked(\"null\")" ] ;
+    Car_stateRunningState_Moving -> Car_stateRunningState_Idle [  label = "decelerate", tooltip = "From Running.state.Moving to Running.state.Idle on decelerate", URL="javascript:Action.transitionClicked(\"Car*^*state*^*decelerate*^*Running.state.Moving*^*Running.state.Idle*^*\")" ] ;
+  
+  Car_stateRunningState_Idle -> Car_stateRunningState_Moving [  label = "accelerate", tooltip = "From Running.state.Idle to Running.state.Moving on accelerate", URL="javascript:Action.transitionClicked(\"Car*^*state*^*accelerate*^*Running.state.Idle*^*Running.state.Moving*^*\")" ] ;
+  
+  Car_stateRunningState_Stopped -> Car_stateRunningState_Moving [  label = "accelerate", tooltip = "From Running.state.Stopped to Running.state.Moving on accelerate", URL="javascript:Action.transitionClicked(\"Car*^*state*^*accelerate*^*Running.state.Stopped*^*Running.state.Moving*^*\")" ] ;
+  
+  Car_stateRunningState_Moving -> Car_stateRunningState_Stopped [  label = "stop", tooltip = "From Running.state.Moving to Running.state.Stopped on stop", URL="javascript:Action.transitionClicked(\"Car*^*state*^*stop*^*Running.state.Moving*^*Running.state.Stopped*^*\")" ] ;
+  
+
+}

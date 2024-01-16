@@ -27,8 +27,12 @@ Traits define their required interfaces through the keyword &apos;<i>isA</i>&apo
 The example 1 below shows how required interfaces are used and applied. There is a hierarchical design for required methods in terms of interfaces, making it reusable and consistent. Traits T1 and T2  have the same required interface (lines 14 and 18) and if there is a modification in the required interface it will be applied to both. Classes C1 and C2 have to implement interfaces I1 (Line 29) and I2 (line 32) to be able to use trait T1 and T2.
 </p>
 
+&nbsp;
+
+<p>When exploring the following example in UmpleOnline, you can use the Options menu to control what is visible, or you can use control-R to flip back and forth between showing the diagram with the original traits, vs. the diagram collapsed into the classes to be compiled; or you can use control-M to show/hide methods.</p>
+
 @@example
-@@source manualexamples/traits_example_009.ump
+@@source manualexamples/traits_example_009.ump &diagramtype=GvClassTrait
 @@endexample
 
 

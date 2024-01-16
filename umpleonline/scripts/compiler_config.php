@@ -111,7 +111,10 @@ class ReadOnlyDataHandle{
 Provides access to a data object, allowing exclusive read/write
 access.
 The data is released on destruction.
+The AllowDynamicProperties constraint is added due to changes in php 8.2
+See https://www.php.net/manual/en/migration82.deprecated.php
 */
+#[AllowDynamicProperties]
 class DataHandle extends ReadOnlyDataHandle{
     function __construct($root){
         $this->root = $root;
@@ -160,6 +163,7 @@ Represents a working directory based on a data object. The directory
 is guaranteed to exist for the lifetime of this object and no
 longer. Implies the existence of a corresponding DataHandle.
 */
+#[AllowDynamicProperties]
 class WorkDir{
     function __construct($root){
         $this->root = $root;
@@ -203,6 +207,7 @@ class WorkDir{
     }
 }
 
+#[AllowDynamicProperties]
 class DataStore{
     function __construct($root){
         $this->root = rootDir().'/'.$root;
@@ -308,7 +313,8 @@ function generateMenu($buttonSuffix)
             <option id=\"genjava\" value=\"java:Java\">Java Code</option>
             <option id=\"genjavadoc\" value=\"javadoc:javadoc\">Java API Doc</option>
             <option id=\"genphp\" value=\"php:Php\">PHP Code</option>
-            <option id=\"gencpp\" value=\"cpp:RTCpp\">C++ Code</option>
+            <option id=\"genpython\" value=\"python:Python\">Python Code</option>
+            <option id=\"gencpp\" value=\"cpp:RTCpp\">C++ Code (Beta)</option>
             <option id=\"genruby\" value=\"ruby:Ruby\">Ruby Code</option>
             <option id=\"genalloy\" value=\"alloy:Alloy\">Alloy Model</option>
         <option id=\"gennusmv\" value=\"nusmv:NuSMV\">NuSMV Model</option>
@@ -512,7 +518,8 @@ function extractFilename()
     // If the argument is example=X then copy the example and open it
     elseif (isset($_REQUEST['example']) && $_REQUEST["example"] != "")
     {
-        $fileToCopy = getExamplePath(htmlspecialchars($_REQUEST['example']).'.ump');
+        $theActualExample=preg_replace("/[^a-zA-Z0-9_\-\/]/",'',$_REQUEST["example"]);
+        $fileToCopy = getExamplePath($theActualExample.'.ump');
         if(!file_exists($fileToCopy)){
             $fileToCopy = getExamplePath('NullExample.ump');
         }
@@ -523,6 +530,7 @@ function extractFilename()
     }
     elseif (isset($_REQUEST['text']) && $_REQUEST["text"] != "")
     {
+        // The actual Umple code (must be very short) follows the ?text= in the URL
         $dataHandle = dataStore()->createData();
         $dataHandle->writeData('model.ump', urldecode(urldecode($_REQUEST["text"])));
     }
@@ -534,21 +542,23 @@ function extractFilename()
     }
 
     // The only other option is that there is a filename option
+    // This will load the relevant file from the intenet through http or https.
     else
     {
+        $rootOfOnlineUmpToLoad = $_REQUEST["filename"];
         $dataHandle = dataStore()->createData();
         $dataToWrite = '';
-        if(!substr($_REQUEST["filename"],-4)==".ump") {
-            $dataToWrite = "// URL in filename argument must end in .ump and the initial http:// must be omitted";
+        if(strcmp(substr($rootOfOnlineUmpToLoad,-4),".ump")) {
+            $dataToWrite = "// URL in filename argument must end in .ump and the initial http:// or https:// must be omitted";
         }
         else
         {
-            $dataToWrite = file_get_contents("http://" . $_REQUEST["filename"]);
-            if(substr($http_response_header[0],-2)!="OK") {
+            $dataToWrite = file_get_contents("https://" . $rootOfOnlineUmpToLoad);
+            if($dataToWrite == null || substr($http_response_header[0],-2)!="OK") {
                 // try https
-                $dataToWrite = file_get_contents("https://" . $_REQUEST["filename"]);
-                if(substr($http_response_header[0],-2)!="OK") {         
-                    $dataToWrite = "// URL of the Umple file to be loaded in the URL after ?filename= must omit the initial http:// and end with .ump.\n// The file must be accessible from our server.\n// Could not load http://" . $_REQUEST["filename"];
+                $dataToWrite = file_get_contents("http://" . $rootOfOnlineUmpToLoad);
+                if($dataToWrite == null || substr($http_response_header[0],-2)!="OK") {         
+                    $dataToWrite = "// URL of the Umple file to be loaded in the URL after ?filename= must omit the initial http:// or https:// and end with .ump.\n// The file must be accessible from our server.\n// Could not load https://" . $rootOfOnlineUmpToLoad ." xxxx" . substr($rootOfOnlineUmpToLoad,-4);
                 }
             }
         }

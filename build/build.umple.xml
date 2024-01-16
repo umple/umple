@@ -199,7 +199,11 @@
       <java jar="${umplejar.touse}" fork="true" failonerror="true">
         <arg value="UmpleToTest/UmpleTLTemplates/Master.ump"/>
       </java>
-      
+      <!-- Compile TXL code -->
+      <exec executable="txl" dir="UmpleToPython/txl"  failonerror="true">
+        <arg value="-c" />
+        <arg value="umpleJavaToPython.txl" />
+      </exec>
     </parallel>
 
     <copy todir="cruise.umple/src-gen-umpletl/cruise/umple/compiler/java" overwrite="true">
@@ -264,9 +268,17 @@
     </javac>
     
     <copy todir="${bin.path}" overwrite="true">
-	    <fileset dir="${project.path}/src"><include name="**/*.grammar"/></fileset>
-	    <fileset dir="${project.path}/src"><include name="**/*.error"/></fileset>
-	    <fileset dir="${basedir}/umpleonline/umplibrary/reusable"><include name="**/*.ump"/></fileset>
+      <fileset dir="${project.path}/src"><include name="**/*.grammar"/></fileset>
+      <fileset dir="${project.path}/src"><include name="**/*.error"/></fileset>
+      <fileset dir="${basedir}/umpleonline/umplibrary/reusable"><include name="**/*.ump"/></fileset>
+
+      <fileset dir="${basedir}/cruise.umple/src/util"><include name="FileUtils.ump"/></fileset>
+      <fileset dir="${basedir}/UmpleParser/src"><include name="GrammarParsing*.ump"/></fileset>
+      <fileset dir="${basedir}/UmpleParser/src"><include name="ParseUtilities*.ump"/></fileset>
+      <fileset dir="${basedir}/UmpleParser/src"><include name="ParsingRules*.ump"/></fileset>
+      <fileset dir="${basedir}/UmpleParser/src"><include name="TextParser*.ump"/></fileset>
+
+      <fileset dir="${basedir}/UmpleToPython/txl"><include name="umpleJavaToPython.ctxl"/></fileset>
     </copy>
     <delete file="cruise.umple/src/rules.grammar"/>
     <delete file="cruise.umple/bin/rules.grammar"/>
@@ -339,7 +351,7 @@
     <delete file="cruise.umple/bin/rules.grammar"/>
   </target>
 
-  <!-- Minify all JS scripts -->
+  <!-- Minify all JS scripts ... see also _Load.js and allumple-minifyscript and build.gradle -->
   <target name="compressAllScripts">
     <property name="scriptPath" value="${basedir}/umpleonline/scripts"/>
     <property name="tmpScript" value="${scriptPath}/tmpAllUmple.js"/>
@@ -353,10 +365,6 @@
       <fileset file="${scriptPath}/shCore.js"/>
       <fileset dir="${scriptPath}" includes="shBrush*.js"/>
       <fileset file="${scriptPath}/inlineeditor.js"/>
-      <fileset file="${scriptPath}/CodeMirror/lib/codemirror.js"/>
-      <fileset file="${scriptPath}/CodeMirror/mode/clike/clike.js"/>
-      <fileset file="${scriptPath}/CodeMirror/lib/util/foldcode.js"/>
-      <fileset file="${scriptPath}/CodeMirror/lib/util/searchcursor.js"/>
       <fileset dir="${scriptPath}/dropbox" includes="*.js"/>
       <fileset dir="${scriptPath}" includes="umple_*.js"/>
       <fileset file="${scriptPath}/structureDiagram.js"/>
@@ -393,6 +401,12 @@
     </copy>
     <copy todir="${dist.path}/reference/files">
       <fileset file="umplewww/files/umple_logo.jpg"/>
+    </copy>
+    <copy todir="${dist.path}/reference/files">
+      <fileset file="umplewww/files/umple_logoMedium.jpg"/>
+    </copy>
+    <copy todir="${dist.path}/reference/files">
+      <fileset file="umplewww/files/umple_logoMedium.png"/>
     </copy>
     <copy todir="${dist.path}/reference/files">
       <fileset file="umplewww/files/uottawa_ver_black.png"/>
@@ -513,7 +527,7 @@
 
     <jar destfile="${dist.dir}/${dist.umple.jar}"
          basedir="${bin.path}"
-         includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar *.ump"
+         includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar *.ump *.ctxl"
          excludes="**/*Test.class">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
@@ -538,7 +552,7 @@
 
     <jar  destfile="${dist.dir}/${dist.umple.sync.jar}" 
           basedir="${bin.path}" 
-          includes="cruise/umple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar *.ump">
+          includes="cruise/umple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar *.ump *.ctxl">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -558,7 +572,7 @@
 
     <jar  destfile="${dist.dir}/${dist.umple.docs.jar}" 
           basedir="${bin.path}" 
-          includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar">
+          includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar *.ctxl">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>

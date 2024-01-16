@@ -1,0 +1,46 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 9 "../OptionalOneToNTest.ump"
+import os
+
+class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #Student Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self, aNumber):
+        self._mentor = None
+        self._number = None
+        self._number = aNumber
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def setNumber(self, aNumber):
+        wasSet = False
+        self._number = aNumber
+        wasSet = True
+        return wasSet
+
+    def getNumber(self):
+        return self._number
+
+    # Code from template association_GetOne 
+    def getMentor(self):
+        return self._mentor
+
+    def hasMentor(self):
+        has = not (self._mentor is None)
+        return has
+
+    def delete(self):
+        if not (self._mentor is None) :
+            self._mentor.delete()
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "mentor = " + ((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null")
+

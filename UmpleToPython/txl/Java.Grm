@@ -1,23 +1,26 @@
+%Comments are removed from the program for now
+%In the future, this could be removed and comments would need to be parsed normally and translated
 comments
     //
     /*  */
 end comments
 
-compounds 
-    'self. '== '!=
-end compounds 
+compounds
+    '== '!= '>= '<= '+= '-= '-- '++
+end compounds
 
 tokens
-    number  "(-\s?)?\d+(.\d+)?"
-    garbage "toString(#})*}"
+    %User code is code taken directly from umple in user defined functions
+    usercode "<TXL UGM>[#(</TXL UGM>)]*</TXL UGM>"
 end tokens
 
 %--------------------%
 %     Statements     %
 %--------------------%
 
+%Keys can only be defined once, so this includes python terms as well
 keys
- return new if else for true false while this super self tuple len True False + - * / ? ; : toString
+ return new if else for true false while this True False + - * / ? ; : pass not and or throw try catch finally
 end keys
 
 define acess_modifier
@@ -48,21 +51,23 @@ define arithmatic_operator
     |   '%
 end define
 
+%comment can appear before package_statement, before import and afer
 define program
-    [repeat package_statement]  
+    [repeat comment_NL]
+    [repeat package_statement]
+    [repeat comment_NL]
     [repeat import_statement]
+    [repeat comment_NL]
     [repeat class_declaration]
 end define
 
-define package_statement 
+define package_statement
     'package [imported]';
 end define
 
-define import_statement 
+define import_statement
     'import [imported]';
 end define
-
-
 
 define imported
         [id]
@@ -70,107 +75,177 @@ define imported
     |   [id]'. [imported]
 end define
 
-define class_name
-    [id]'< [list id] '>
-    | [id]   
-end define
-
-define arithmatic_expression
-       [value_no_recursion] [arithmatic_operator] [arithmatic_expression]
-    |   [value_no_recursion]
-end define
-
+%Important concept
+%Nested identifiers represent anything connected by dots
+%ex: a.b.c(g,h).d.e is a nested identifier
+%ids and function calls on their own are also nested_identifiers (ex: aName or funcName(a,b) )
 define nested_identifier
-        [nestable_value] [repeat attribute_access]
+     [nestable_value] [SPOFF] [repeat attribute_access] [SPON]
 end define
 
 define attribute_access
-       '. [nestable_value] 
+       '. [nestable_value]
 end define
 
-define nestable_value 
-        [function_call]
-    |    [id]
+define nestable_value
+        [id] [SPOFF] [repeat nestable_extension] [SPON]
+    |  [stringlit] [SPOFF] [repeat nestable_extension] [SPON] % April 2023, added to match  "stringlit".equals
     |   'this
     |   'super
+    |   [parentheses_value]
 end define
 
-define value_no_recursion 
-        [new_call]
-    |   '( [value]')
-    |   [nested_identifier]
-    |   [number]
-    |   [stringlit]
-    |   'null
+define nestable_extension
+        [func_call_parentheses]
+    |   '< [SPON] [list id] '> [SPOFF]
+    |   '< [SPON] '? 'extends [id] '> [SPOFF]
+    |   '[ [SPON] [list value] '] [SPOFF]
+    |   '[']'{ '} % April 2023, added to match java Code like: Object[]{}, Class[]{}
+end define
+
+define func_call_parentheses
+    '( [SPON] [list value] ') [SPOFF]
+end define
+
+define parentheses_value
+    '( [list value]')
+end define
+
+%base_values should have no recursion or left side ambiguity
+define base_value
+       'null
     |   'true
     |   'false
     |   [casting]
-    |   '! [boolean_expression]
+    |   [opt negative_number] [number] [opt 'f] [SPON]
+    |   [stringlit]
+    |   [charlit]
+    |   [nested_identifier]
+    |   '-- [nested_identifier]
+    |   '++ [nested_identifier]
+    |   [parentheses_value]
+    |   [new_call]
+    |   [new_call_inner] % April 2023
+    |  '! [value]
+
 end define
 
+define negative_number
+    '- [SPOFF]
+end define
+
+%Important concept
+%Almost all code inside functions will match to a [value]
+%This includes arithmatics ( a + 4 /5 - (d().e -4) )
+%Boolean expressions (true || isCar() && drives)
+%Assignments ( a = (b = c) )
+%and others
 define value
-       [value_no_ternary]
+        [base_value] [opt value_continuation]
 end define
 
-define value_no_ternary
-        [value_no_recursion]
-    |   [boolean_expression]
-    |   [arithmatic_expression]
+define value_continuation
+        [boolean_operator] [value]
+    |   [arithmatic_operator] [value]
+    |   [comparator] [value]
+    |   [method_reference]
+    |   [ternary]
+    |   '++ [opt value_continuation]
+    |   '-- [opt value_continuation]
+    |   [value_continuation_assignment]
+end define
+
+define value_continuation_assignment
+    '=  [value]
+    |   '+=  [value]
+    |   '-=  [value]
+end define
+
+define ternary
+    '? [value] ': [value]
+end define
+
+define method_reference
+    ':: [id]
+end define
+
+% April 2023, added to match outerObject.new InnerClass();
+define new_call_inner
+    [nested_identifier][SPOFF] '. [SPON][new_call]
 end define
 
 define new_call
-    'new [class_name] '( [list value] ')
-end define
-
-define variable_declaration
-        [class_name] [assignment] '; [NL]
-    |   [class_name] [nested_identifier]';
-end define
-
-define assignment
-        [nested_identifier] '= [value] 
-    |    [nested_identifier]'++
-    |    [nested_identifier]'--
-    |   [nested_identifier] '+= [value]
-    |   [nested_identifier] '-= [value]
+    'new [nested_identifier]
 end define
 
 
 define stmt_return
-        'return [value] '; [NL]
+        'return [opt value] '; [NL]
 end define
 
+%Every line of code inside a function is a statement
+%These include concepts like loops, if statements, switch cases ect.
+%As well as the important double value
 define statement
-        [variable_declaration]
-    |   [stmt_return]
+        [stmt_return]
     |   [conditional_block]
     |   [for_loop]
     |   [for_in_loop]
     |   [while_loop]
-    |   [nested_identifier]'; [NL]
-    |   [assignment] '; [NL]
+    |   [double_value] [opt ';] [NL]
     |   [throw_statement]
+    |   [switch_case]
+    |   [try_catch]
+    |   [thread_start]
+    |   [comment_NL]
+end define
+
+%[value] by itself cannot match java declarations (ex: String aName)
+%Double value takes care of this. The first value should match the class name and the second the variable
+%name and possible assignment (ex: String aName = "Joe")
+define double_value
+    [value] [opt value]
 end define
 
 define while_loop
     'while( [value] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
 end define
 
-
 define for_loop
-    'for( [variable_declaration] [value]'; [assignment]') '{ [NL] [IN] [repeat statement] [EX] '} [NL]
+    'for( [double_value]'; [value]'; [value]') '{ [NL] [IN] [repeat statement] [EX] '} [NL]
 end define
 
 define for_in_loop
-    'for( [class_name] [id] ': [nested_identifier]')'{ [NL] [IN] [repeat statement] [EX] '} [NL]
+    'for( [double_value] ': [value]')'{ [NL] [IN] [repeat statement] [EX] '} [NL]
+end define
+
+define switch_case
+    'switch( [value] ') '{ [repeat switch_case_case] [opt switch_case_default] '}
+end define
+
+define switch_case_case
+    'case [value] ': [repeat statement] 'break;
+end define
+
+define switch_case_default
+    'default ': [repeat statement]
 end define
 
 define conditional_block
     [if] [repeat else_if] [opt else]
 end define
 
-define if 
+define try_catch
+    'try '{  [repeat statement]  '} 'catch '( [method_parameter] ') '{ [repeat statement] '} [opt finally]
+end define
+
+define finally
+    'finally '{ [repeat statement] '}
+end define
+
+define if
     'if '( [value] ') '{  [repeat statement]  '}
+    | 'if '( [value] ') [statement]
 end define
 
 define else_if
@@ -182,58 +257,56 @@ define else
 end define
 
 define throw_statement
-    'throw 'new [id] '( [stringlit] ');
+    'throw 'new [id] '( [list value] ');
 end define
 
 define casting
-    '( [class_name]') [nested_identifier]
+    '( [nested_identifier]') [value]
 end define
-
-define function_call
-        [id][SPOFF] '( [SPON] [list value]')    
-end define
-
-define boolean_expression
-       [condition] [boolean_operator] [boolean_expression]
-    |  [condition]
-end define
-
-define condition
-        [value_no_recursion] [comparator] [value]
-    |   [value_no_recursion]
-end define
-
-define boolean_element
-        [value_no_recursion]
-end define
-
 
 define method_parameter
-    [class_name] [id]
+    [nested_identifier] [id]
+    | [var_arg]
+end define
+
+define decorator
+        '@ [SPOFF] [id] '( [SPON] [list base_value][SPOFF] ') [SPON] [NL]
+    |   '@ [SPOFF] [id] [SPON] [NL]
+end define
+
+define throws
+    'throws [list nested_identifier]
+end define
+
+define var_arg
+    [nested_identifier] [!] '... [id]
 end define
 
 define concrete_method_declaration
-        [acess_modifier] [opt static] [class_name] [id] '( [list method_parameter] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
+        [opt decorator] [acess_modifier] [opt static] [nested_identifier] [id] '( [list method_parameter] ') [opt throws] [NL] '{ [method_content] '} [NL]
+end define
+
+define method_content
+        [repeat statement]
+    |   [repeat statement] [usercode] [repeat statement]
 end define
 
 define method_declaration
         [concrete_method_declaration]
     |   [abstract_method_declaration]
-    |   [toString_method_garbage]
-end define
-
-define toString_method_garbage
-    [acess_modifier] [opt static] [class_name] [garbage]
-    |   [empty]
 end define
 
 define abstract_method_declaration
-    [acess_modifier] [class_name] [id] '( [list method_parameter] '); [NL]
+    [acess_modifier] [opt 'abstract] [nested_identifier] [id] '( [list method_parameter] '); [NL]
 end define
 
 define inheritance_statement
         'extends
     |   'implements
+end define
+
+define thread_start
+    'start();
 end define
 
 
@@ -246,21 +319,21 @@ define class_declaration
     |   [interface_declaration]
 end define
 
+% April 2023, added to define nested classes
+define inner_class_declaration
+    [opt acess_modifier] [opt 'abstract] 'class [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
+end define
+
 define concrete_class_declaration
-    [acess_modifier] 'class [class_name] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
+    [opt acess_modifier] [opt 'abstract] 'class [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
 end define
 
 define inheritance_list
-    [inheritance_statement] [list class_name]
+    [inheritance_statement] [list nested_identifier]
 end define
 
 define interface_declaration
-        [acess_modifier] 'interface [class_name] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
-end define
-
-define class_type
-        'class
-    |   'interface
+    [opt acess_modifier] 'interface [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
 end define
 
 define static
@@ -271,15 +344,46 @@ define volatile
     'volatile
 end define
 
+define transient
+    'transient
+end define
+
 define constructor
-    [acess_modifier] [id]'( [list method_parameter] ') [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
+    [acess_modifier] [id]'( [list method_parameter] ') [opt throws] [NL] '{ [NL] [IN] [repeat statement] [EX] '} [NL]
+end define
+
+define enum_declaration
+    [opt acess_modifier] 'enum [id] '{ [list id]'}
 end define
 
 define member_variable_declaration
-    [opt acess_modifier] [opt static] [opt volatile] [variable_declaration]
+    [opt acess_modifier] [opt transient] [opt static] [opt final] [opt volatile] [nested_identifier] [id] [opt member_variable_assignment]';
+end define
+
+define final
+    'final
+end define
+
+define member_variable_assignment
+    '= [value]
 end define
 
 define class_body_decl
-    [repeat member_variable_declaration] [opt constructor] [repeat method_declaration]
+    [repeat class_body_element]
 end define
+
+define class_body_element
+    [repeat inner_class_declaration] % April 2023
+    |   [enum_declaration]
+    |   [member_variable_declaration]
+    |   [constructor]
+    |   [method_declaration]
+    |   [comment_NL]
+end define
+
+define comment_NL
+	[comment] [NL]
+end define
+
+
 

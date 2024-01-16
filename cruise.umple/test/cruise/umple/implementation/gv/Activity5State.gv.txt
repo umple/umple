@@ -20,11 +20,11 @@ digraph "Activity5State" {
    doThisContinuouslyWhileOn2();
    doThisContinuouslyWhileOn3();
    doThisContinuouslyWhileOn4();
-   doThisContinuouslyWhileOn5();"];
+   doThisContinuouslyWhileOn5();", URL="javascript:Action.stateClicked(\"A^*^sm^*^s2\")"];
       // End State: s2
     // End Top and Bottom Level StateMachine: sm
 
   // All transitions
-    start_A_sm -> A_sm_s2 [  tooltip = "start to s2" ] ;
+    start_A_sm -> A_sm_s2 [  tooltip = "start to s2", URL="javascript:Action.transitionClicked(\"null\")" ] ;
   
 }
