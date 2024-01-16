@@ -111,7 +111,10 @@ class ReadOnlyDataHandle{
 Provides access to a data object, allowing exclusive read/write
 access.
 The data is released on destruction.
+The AllowDynamicProperties constraint is added due to changes in php 8.2
+See https://www.php.net/manual/en/migration82.deprecated.php
 */
+#[AllowDynamicProperties]
 class DataHandle extends ReadOnlyDataHandle{
     function __construct($root){
         $this->root = $root;
@@ -160,6 +163,7 @@ Represents a working directory based on a data object. The directory
 is guaranteed to exist for the lifetime of this object and no
 longer. Implies the existence of a corresponding DataHandle.
 */
+#[AllowDynamicProperties]
 class WorkDir{
     function __construct($root){
         $this->root = $root;
@@ -203,6 +207,7 @@ class WorkDir{
     }
 }
 
+#[AllowDynamicProperties]
 class DataStore{
     function __construct($root){
         $this->root = rootDir().'/'.$root;
