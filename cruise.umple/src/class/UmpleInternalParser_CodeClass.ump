@@ -16,8 +16,11 @@ namespace cruise.umple.compiler;
 
 class UmpleInternalParser
 {
+  
   depend java.util.regex.*;
   depend cruise.umple.parser.Token;
+
+  
   
   internal AssociationVariable[] unlinkedAssociationVariables;
   internal Association[] unlinkedAssociations;
@@ -203,11 +206,55 @@ class UmpleInternalParser
   private void analyzeRequirement(Token t)
   {
     Requirement req;
-    if (model.getAllRequirements().get(t.getSubToken("reqIdentifier").getValue()) != null){
-      System.out.println("ERROR: requirement with that identifier already exists");
+    String id1 = t.getSubToken("reqIdentifier").getValue(); // extract identifier
+    Requirement existingRequirement = model.getAllRequirements().get(id1); // Retrieves the existing requirement with the same identifier from the model
+
+    if (existingRequirement != null) { // Checks if a requirement with the same identifier already exists in the model.
+    // DEBUG 2053
+   
+    // Requirement with the same identifier already exists, combine them
+    // Print the existing requirement before combining
+   
+    // Concatenate the content of the existing requirement with the new content
+    String newContent = t.getSubToken("reqContent") != null ? t.getSubToken("reqContent").getValue() : "";
+    String combinedContent = existingRequirement.getStatement() + " "+ newContent;
+    String input = combinedContent;
+   
+    // Define the pattern for a key-value pair
+    Pattern pattern = Pattern.compile("(\\w+):([^;]+);");
+
+        // Create a matcher for the input string
+    Matcher matcher = pattern.matcher(input);
+
+        // Variables to store combined content and language
+    String combinedContent1 = "";
+    String combinedLanguage1 = "";
+
+        // Find all matches
+        while (matcher.find()) {
+            // Extract key and value from each match
+            String key = matcher.group(1).trim();
+            String value = matcher.group(2).trim();
+
+            // Concatenate content and language separately based on the key
+            if (key.equals("content")) {
+                combinedContent1 += value;
+            } else if (key.equals("language")) {
+               if (!combinedLanguage1.equals("") && !combinedLanguage1.equals(value)) {
+            setFailedPosition(t.getPosition(), 402, id1,combinedLanguage1,value);
+            combinedContent1=" "; 
+            combinedLanguage1=" ";
+        }
+           else{
+           combinedLanguage1=value;
+           }
+            }
+        }
+  
+    req = new Requirement(id1, combinedContent1, combinedLanguage1);// Create new requirement 
     }
 
-    if (t.getSubToken("language") == null || t.getSubToken("language").getValue() ==  null){
+   else if (t.getSubToken("language") == null || t.getSubToken("language").getValue() ==  null){
       req = new Requirement(t.getSubToken("reqIdentifier").getValue(), t.getSubToken("reqContent").getValue(), "");
     }
     else{
@@ -215,25 +262,43 @@ class UmpleInternalParser
     }
     Map<String, Requirement> newAllReq = model.getAllRequirements();
     newAllReq.put(t.getSubToken("reqIdentifier").getValue(), req);
-    model.setAllRequirements(newAllReq);    
-  }
+    model.setAllRequirements(newAllReq);   
+}
 
-  private void analyzeImplementReq(Token t){
-    int counter=0;
+  private void analyzeImplementReq(Token t) {
+    analyzeImplementReqInternal(t, false);// Method to analyze requirements implementation during the first pass
+}
 
-    if (t.hasSubTokens()){
-      for (Token sub : t.getSubTokens()){
-        if (!sub.getValue().equals("STATIC") && model.getAllRequirements().containsKey(sub.getValue())){
-            lastRequirements.add(model.getAllRequirements().get(sub.getValue()));
+private void analyzeImplementReqDuringSecondPass(Token t) {
+    analyzeImplementReqInternal(t, true);// Method to analyze requirements implementation during the second pass
+}
+
+private void analyzeImplementReqInternal(Token t, boolean isSecondPass) {
+    int counter = 0;// Counter to track requirements not found during the first pass
+    List<String> requirementsIdentifiers = new ArrayList<>();// List to store identifiers of requirements found in the token
+
+    if (t.hasSubTokens()) {
+        for (Token sub : t.getSubTokens()) {
+            if (!sub.getValue().equals("STATIC")) {
+                if (model.getAllRequirements().containsKey(sub.getValue())) {
+                    requirementsIdentifiers.add(sub.getValue());
+                } else {
+                    if (isSecondPass) {
+                        System.out.println("ERROR: Cannot find specified requirement identifier");
+                    } else {
+                        counter++;
+                    }
+                }
+            }
         }
-        else if (!sub.getValue().equals("STATIC")) counter++;
-      }
     }
-
-    if (counter != 0){
-      System.out.println("ERROR: Cannot find specified requirement identifier");
+ // During the second pass, add the found requirements to the 'lastRequirements' list
+    if (isSecondPass) {
+        for (String reqIdentifier : requirementsIdentifiers) {
+            lastRequirements.add(model.getAllRequirements().get(reqIdentifier));
+        }
     }
-  }
+}
 
   private void analyzeImplementReq(Token t, UmpleClass aClass){
     int counter=0;
@@ -4716,20 +4781,29 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
    */
   private void analyzeAttribute(Token attributeToken, UmpleClass aClass)
   {
+    
     boolean isAutounique = attributeToken.getValue("autounique") != null;
     boolean isUnique = attributeToken.getValue("unique") != null;
     boolean isLazy = attributeToken.getValue("lazy") != null;
     boolean isIvar = attributeToken.getValue("ivar") != null;
     boolean isList = attributeToken.getValue("list") != null;
     boolean isConstant = "const".equals(attributeToken.getValue("modifier"));
+    // Debug issue 2051
+
+    // Print the value before calling isValidIdentifier
+    
+    
+    
     boolean validName = Token.isValidIdentifier(attributeToken.getValue("name"));
+
+
+
+    
     boolean properName = !Token.isValidIdentifier(attributeToken.getValue("name"), "[A-Z]");
     boolean looksLikeAssociation = attributeToken.getValue("name").contains("--") || attributeToken.getValue("name").contains("->");
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("<-") || attributeToken.getValue("name").contains("..");
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("*");
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("<@>-") || attributeToken.getValue("name").contains("-<@>");
-    
-    
     String modifier = attributeToken.getValue("modifier");
     String type = attributeToken.getValue("type");
     String name = attributeToken.getValue("name");

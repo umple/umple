@@ -188,6 +188,9 @@
 302: 4,  "http://manual.umple.org/?W302TracerNotRecognized.html", Tracer not recognized - Console tracer is defaulted ;
 303: 1,  "http://manual.umple.org/?PageBeingDeveloped.html", Parsing error: Incorrect attribute trace prefix '{0}' (Prefix can be set/get/both) ;
 
+#Messages related to Requirements
+402: 4,  "http://manual.umple.org/?PageBeingDeveloped.html", Error: Different languages encountered for:'{0}' the languages are: '{1}' and '{2}' ;
+
 # Messages relating to deprecated features starting with 901
 901: 4, "http://manual.umple.org/?W901DeprecatedKeywordConstant.html", Keyword "constant" deprecated, please use "const" ;
 
