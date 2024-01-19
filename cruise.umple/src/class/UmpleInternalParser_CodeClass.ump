@@ -205,12 +205,56 @@ class UmpleInternalParser
 
   private void analyzeRequirement(Token t)
   {
-    Requirement req;
-    if (model.getAllRequirements().get(t.getSubToken("reqIdentifier").getValue()) != null){
-      System.out.println("ERROR: requirement with that identifier already exists");
+     Requirement req;
+    String id1 = t.getSubToken("reqIdentifier").getValue(); // extract identifier
+    Requirement existingRequirement = model.getAllRequirements().get(id1); // Retrieves the existing requirement with the same identifier from the model
+
+    if (existingRequirement != null) { // Checks if a requirement with the same identifier already exists in the model.
+    // DEBUG 2053
+   
+    // Requirement with the same identifier already exists, combine them
+    // Print the existing requirement before combining
+   
+    // Concatenate the content of the existing requirement with the new content
+    String newContent = t.getSubToken("reqContent") != null ? t.getSubToken("reqContent").getValue() : "";
+    String combinedContent = existingRequirement.getStatement() + " "+ newContent;
+    String input = combinedContent;
+   
+    // Define the pattern for a key-value pair
+    Pattern pattern = Pattern.compile("(\\w+):([^;]+);");
+
+        // Create a matcher for the input string
+    Matcher matcher = pattern.matcher(input);
+
+        // Variables to store combined content and language
+    String combinedContent1 = "";
+    String combinedLanguage1 = "";
+
+        // Find all matches
+        while (matcher.find()) {
+            // Extract key and value from each match
+            String key = matcher.group(1).trim();
+            String value = matcher.group(2).trim();
+
+            // Concatenate content and language separately based on the key
+            if (key.equals("content")) {
+                combinedContent1 += value;
+            } else if (key.equals("language")) {
+               if (!combinedLanguage1.equals("") && !combinedLanguage1.equals(value)) {
+            setFailedPosition(t.getPosition(), 402, id1,combinedLanguage1,value);
+            combinedContent1=" "; 
+            combinedLanguage1=" ";
+        }
+           else{
+           combinedLanguage1=value;
+           }
+            }
+        }
+  
+    req = new Requirement(id1, combinedContent1, combinedLanguage1);// Create new requirement 
     }
 
-    if (t.getSubToken("language") == null || t.getSubToken("language").getValue() ==  null){
+   else if (t.getSubToken("language") == null || t.getSubToken("language").getValue() ==  null){
       req = new Requirement(t.getSubToken("reqIdentifier").getValue(), t.getSubToken("reqContent").getValue(), "");
     }
     else{
@@ -218,7 +262,7 @@ class UmpleInternalParser
     }
     Map<String, Requirement> newAllReq = model.getAllRequirements();
     newAllReq.put(t.getSubToken("reqIdentifier").getValue(), req);
-    model.setAllRequirements(newAllReq);    
+    model.setAllRequirements(newAllReq); 
   }
 
   private void analyzeImplementReq(Token t){
