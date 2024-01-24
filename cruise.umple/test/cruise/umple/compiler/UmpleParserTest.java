@@ -1420,6 +1420,14 @@ public class UmpleParserTest
   	  assertNoWarningsParse("429_sharedAttributeName_Refinements.ump");
 
   }
+   @Test
+  public void ReqSameNameCombine()
+  {
+	  assertHasWarningsParse("450_ReqSameWarning.ump", 402);
+          assertNoWarningsParse("450_ReqSameNoLang.ump");
+          assertNoWarningsParse("450_ReqSameOneBlank.ump");
+          assertNoWarningsParse("450_ReqSameLang.ump");
+  }
 
   @Test
   public void associationName()
