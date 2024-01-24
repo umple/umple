@@ -204,7 +204,6 @@ class UmpleInternalParser
   }  
 
     private void analyzeRequirement(Token t) {
-    // DEBUG 2053
     String reqID = t.getSubToken("reqIdentifier").getValue(); // extract new requirement identifier
     String newContent = t.getSubToken("reqContent").getValue();// extract content 
     String newLanguage = "";// Initialize language
@@ -227,8 +226,6 @@ class UmpleInternalParser
 
 
         // Requirement with the same identifier already exists, combine them
-        // DEBUG t the existing requirement before combining
-
         // Concatenate the content of the existing requirement with the new content
         newContent = existingContent + " " + newContent;
         if (newLanguage.equals("")) {
