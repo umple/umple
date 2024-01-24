@@ -1,0 +1,12 @@
+req A text{
+  This is the first requirement.
+}
+
+req A python{
+  This is the second requirement.
+}
+
+class X {
+ implementsReq A;
+  a;
+}
