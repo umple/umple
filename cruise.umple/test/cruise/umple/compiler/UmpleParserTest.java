@@ -1424,7 +1424,7 @@ public class UmpleParserTest
   public void ReqSameNameCombine()
   {
 	  assertHasWarningsParse("450_ReqSameWarning.ump", 402);
-          assertNoWarningsParse("450_ReqSameNoLang.ump");
+          assertNoWarningsParse("450_ReqSameNolang.ump");
           assertNoWarningsParse("450_ReqSameOneBlank.ump");
           assertNoWarningsParse("450_ReqSameLang.ump");
   }
