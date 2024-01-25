@@ -540,10 +540,18 @@ public class UmpleParserTest
   @Test
   public void operationNotFound()
   {
-	  assertHasWarningsParse("1012_operationNotFound1.ump", 1012);
-	  assertHasWarningsParse("1014_operationNotFound1.ump", 1014);
+    assertHasWarningsParse("1012_operationNotFound1.ump", 1012);
+    assertHasWarningsParse("1014_operationNotFound1.ump", 1014);
   }
-
+  //Issue 2023
+  @Test 
+  public void extraBracketsWarning()
+  {
+    assertHasWarningsParse("1016_ExtrabracketTest1.ump", 1016);
+    assertHasWarningsParse("1016_ExtrabracketTest2.ump", 1016);
+    assertHasWarningsParse("1016_ExtrabracketTest3.ump", 1016);
+    assertHasWarningsParse("1016_ExtrabracketTest4.ump", 1016);
+  }
   @Test
   public void validAssociationsForImmutableClass()
   {
@@ -1433,6 +1441,14 @@ public class UmpleParserTest
   	  assertNoWarningsParse("429_sharedAttributeName_Refinements.ump");
 
   }
+   @Test
+  public void ReqSameNameCombine()
+  {
+	  assertHasWarningsParse("450_ReqSameWarning.ump", 402);
+          assertNoWarningsParse("450_ReqSameNolang.ump");
+          assertNoWarningsParse("450_ReqSameOneBlank.ump");
+          assertNoWarningsParse("450_ReqSameLang.ump");
+  }
 
   @Test
   public void associationName()
@@ -1906,6 +1922,10 @@ public class UmpleParserTest
   public void AssociationClassIncompletKeyWarning()
   {
     assertHasWarningsParse("010_associationClassProvidedIncompleteKey.ump", 1011);
+  }
+
+  public void associationClassWithMultipleDefinications() {
+    assertParse("010_associationClassWithMultipleDefinications.ump");
   }
 
   @Test

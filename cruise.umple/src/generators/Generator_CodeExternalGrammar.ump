@@ -1,0 +1,63 @@
+/*Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This generates a file for the Umple grammar using an external format. Default is Lezer
+  generate ExternalGrammar;
+in your umple file, or the command line option
+  -g ExternalGrammar
+*/
+
+namespace cruise.umple.compiler;
+
+class ExternalGrammarGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String output = "";
+
+  StringBuilder code = new StringBuilder();
+
+  public void generate (){
+    UmpleInternalParser grammarparser = new UmpleInternalParser();
+    for(String file:grammarparser.getParser().getGrammarFiles()){
+      grammarparser.addRulesInFile(file);
+    }     
+    
+    code.append(grammarparser.toGrammarLezer());
+    
+    model.setCode(code.toString());
+    writeModel();
+    return;
+  }
+  
+  // Output the grammar to a file 
+  void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + "umple.grammar";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating external grammar output." + e, e);
+    }
+  } 
+     
+} // END CLASS
+

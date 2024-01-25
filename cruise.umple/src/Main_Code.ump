@@ -90,21 +90,28 @@ class UmpleConsoleConfig {
           while (m.find()) {
             String foundString = m.group(1);
             // foundString is either a file or (if second and subsequent) a single quoted string
-
             if(foundString.startsWith("\'")) {
               // We have a program -- convert
               foundString="__UMPLE"+
                 Base64.getEncoder()
                 .encodeToString(foundString.substring(1,foundString.length()-1).getBytes());
             }
-            else if(foundString.startsWith("W") && warningIgnore) {
-              // Potential to ignore the warning
-              Matcher m2 = Pattern.compile("\\d+").matcher(foundString);
-              if(m2.find()) {
-                String supressWarningCode="strictness ignore "+m2.group()+";";
-                listOfFilesThisLine.add(foundString);
-                foundString="__UMPLE"+
-                  Base64.getEncoder().encodeToString(supressWarningCode.getBytes());
+            else {
+              int lastSlash = foundString.lastIndexOf(File.separator);
+              String umpFileRoot=foundString;
+              if (lastSlash != -1) {
+                umpFileRoot=foundString.substring(lastSlash+1);
+              } 
+              if(umpFileRoot.startsWith("W") && warningIgnore) {
+                // Potential to ignore the warning
+                Matcher m2 = Pattern.compile("W(\\d+)").matcher(umpFileRoot);
+                if(m2.find()) {
+                  String foundWarningNumber=m2.group().substring(1);
+                  String supressWarningCode="strictness ignore "+foundWarningNumber+";";
+                  listOfFilesThisLine.add(foundString); // Add file, then below add warning suppress
+                  foundString="__UMPLE"+
+                    Base64.getEncoder().encodeToString(supressWarningCode.getBytes());
+                }
               }
             }
             listOfFilesThisLine.add(foundString);
@@ -327,7 +334,7 @@ class UmpleConsoleMain
             }
           
             if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php")) {
-              compileSuccess = CodeCompiler.compile(model, generatorCodeToCompile,cfg.getUseExec(), cfg.getBeQuiet(), cfg.getCompile().get());
+              compileSuccess = CodeCompiler.compile(model, generatorCodeToCompile,cfg.getUseExec(), cfg.getBeQuiet(), cfg.getCompile().get(), null);
             }
             else if (generatorCodeToCompile.startsWith("Gv")) {
               compileSuccess = CodeCompiler.genDotDiagram(model, gt, cfg.getBeQuiet(), "svg");
@@ -363,7 +370,7 @@ class UmpleConsoleMain
       
       if(compileSuccess && !cfg.getBeQuiet()) {
         for (String key : model. getHashMap().keySet()) {
-          System.out.println("  Compiled to target language "+key);
+          System.out.println("  Finished generating "+key);
           if(key.compareTo("Java")==0) {
             for (UmpleClass mainClass: CodeCompiler.getMainClasses(model)) {
               System.out.println("  Main method found. Run Java "+mainClass.getName());
@@ -454,6 +461,9 @@ class UmpleConsoleMain
       UmpleImportModel umple;
       if (filename.endsWith(".scxml")) {
         ScxmlImportHandler handler = new ScxmlImportHandler();
+        umple = handler.readDataFromXML(filename);
+      } else if (filename.endsWith(".uml")) {
+        PapyrusImportHandler handler = new PapyrusImportHandler();
         umple = handler.readDataFromXML(filename);
       } else {
         EcoreImportHandler handler = new EcoreImportHandler();
@@ -550,6 +560,7 @@ class UmpleConsoleMain
     String languages = String.join(",", UmpleModel.validLanguages );
     String suboptionsAvail = "(With GvStateDiagram: hideactions, hideguards, showtransitionlabels, showguardlabels, Java, Cpp) ";
     suboptionsAvail += "(With GvClassDiagram or GvClassTraitDiagram or GvEntityRelationshipDiagram: hideattributes, showmethods)";
+    suboptionsAvail += " (With all Gv: gvseparator=n.n where n.n is greater than 1.0 to separate nodes more than default, or less than one to make the diagram tighter)";
 
     optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
     optparser.acceptsAll(Arrays.asList("performance", "p"), "Indicate time taken to parse and generate code");
@@ -779,7 +790,7 @@ class PlaygroundMain
     (String msg, ConnectionToClient client)
   {
      // DEBUG Uncomment the following line to debug
-  //   System.err.println("Received client command <"+msg+">");
+    // System.err.println("Received client command <"+msg+">");
     // Split the message from the client into tokens and process as a command
     List<String> ls = ArgumentTokenizer.tokenize(msg,false);
     lastCommandStartTime = System.currentTimeMillis();
@@ -825,6 +836,17 @@ class PlaygroundMain
   // If through a socket, the socket must be closed after returning
   public void processCommand(String[] args, ConnectionToClient client)
   {
+    // Shortcut command does not get counted as a real command ... just to determine if up
+    if ("-ping".equals(args[0])) {
+      if(isServer) {
+        returnCommandResult("Server is up\n", client);        
+      }
+      else {
+        returnCommandResult("Not running as a server\n", client);        
+      }
+      return;
+    }
+
     String answer = "";
     commandsRun++;
     commandsEverRun++;
@@ -879,7 +901,7 @@ class PlaygroundMain
 
       
       returnCommandResult("-generate "+
-        "<Java|Cpp|Ruby|Ecore|Papyrus|TextUml|GvStateDiagram|"+
+        "<Java|Cpp|Ruby|Python|Ecore|Papyrus|TextUml|GvStateDiagram|"+
         "GvClassDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|GvFeatureDiagram|"+
         "Alloy|NuSMV|NuSMVOptimizer|Violet|Umlet> <filename>\n", client); // Compile filename and generate output
       returnCommandResult("<action> <deltaCode> <filename>\n", client);  
@@ -1072,6 +1094,9 @@ class PlaygroundMain
 
     UmpleFile umpleFile = null;
     UmpleModel model = null;
+    boolean compilationRequired = false;
+    boolean executionRequired = false;
+    String errorFileName = null;
 
     // Valid values include Java, Cpp, PhP, Ruby, Json, Yuml, Xmi, Ecore, Papyrus, TextUml,
     // GvStateDiagram, GvStructureDiagram, GvClassDiagram,GvClassTraitDiagram, GvEntityRelationshipDiagram, Alloy, NuSMV, NuSMVOptimizer, GvFeatureDiagram
@@ -1085,6 +1110,24 @@ class PlaygroundMain
         if (args[argno].equals("-s"))
         {
           target.addSuboption(args[argno+1]);
+        }
+      }
+
+      // Check for compilation flag
+      for (int argno = 3; argno < args.length; argno++) 
+      {
+        if (args[argno].equals("-c"))
+        {
+          compilationRequired = true;
+        }
+        else if (args[argno].equals("-cx")) 
+        {
+          compilationRequired = true;
+          executionRequired = true;
+        }
+        else if(args[argno].equals("2>") && argno < args.length-1) 
+        {
+          errorFileName = args[argno+1];
         }
       }
       
@@ -1124,6 +1167,31 @@ class PlaygroundMain
       }
     }
 
+    // Compile code if required (-c after -generate option)
+    boolean successPreviousStep = model.getLastResult().getWasSuccess();
+    if(successPreviousStep && compilationRequired) 
+    {
+      for (GenerateTarget gt : model.getGenerates()) 
+      {
+        String generatorCodeToCompile = gt.getLanguage();
+        if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php")) 
+        {
+          // TODO: Remove default options in future when syncing umplesync.jar with umple.jar
+          successPreviousStep = CodeCompiler.compile(model, generatorCodeToCompile,false, false, "-", errorFileName);
+        }
+      }
+    }
+
+    // Delete main file if any existing
+    String filePath = model.getUmpleFile().getPath() + File.separator + "JavaMainClasses.txt";
+    deleteFileIfExists(filePath);
+
+    // If execution required, output the main classes to a file
+    if(successPreviousStep && executionRequired) 
+    {
+      outputMainClassesToFile(model);
+    }
+
     if ("-classList".equals(args[0]))
     {
       for (UmpleClass aClass : model.getUmpleClasses())
@@ -1147,13 +1215,23 @@ class PlaygroundMain
     }
     else if ("-source".equals(args[0]))
     {
+      String langCommentDelimiter = "//"; // Default for Java, PHP, C++
+      for (GenerateTarget gt : model.getGenerates()) 
+      {
+        String lang = gt.getLanguage();
+        if (lang.equals("Ruby") || lang.equals("Python")) 
+        {
+          langCommentDelimiter = "# ";
+          break;
+        }
+      }
       for (Map.Entry<String, String> generatedCode : model.getGeneratedCode().entrySet()) {
         if (answer.length() > 0)
         {
           answer += "\n\n\n\n";
         }
-				answer += "//%% NEW FILE " + generatedCode.getKey() + " BEGINS HERE %%\n\n";
-				answer += generatedCode.getValue();
+        answer += langCommentDelimiter+"%% NEW FILE " + generatedCode.getKey() + " BEGINS HERE %%\n\n";
+        answer += generatedCode.getValue();
       }
     }
     else if ("-generate".equals(args[0]))
@@ -1162,6 +1240,66 @@ class PlaygroundMain
     }
 
     returnCommandResult(answer, client);
+  }
+
+  /**
+   * Output the names of the main classes if available
+   */
+  private void outputMainClassesToFile(UmpleModel model) 
+  {
+    for (String key : model.getHashMap().keySet()) 
+    {
+      if(key.compareTo("Java") == 0) 
+      {
+        // Get all main file names and make a single string
+        StringBuilder builder = new StringBuilder();
+        for (UmpleClass mainClass: CodeCompiler.getMainClasses(model)) 
+        {
+          builder = builder.append(mainClass.getName() + " ");
+        }
+        String mainFileNames = builder.toString().trim();
+        String filePath = model.getUmpleFile().getPath() + File.separator + "JavaMainClasses.txt";
+        if(!mainFileNames.isEmpty())
+        {
+          // Create or override JavaMainClasses.txt
+          try
+          {
+            File newFile = new File(filePath);
+            newFile.createNewFile();   
+          }
+          catch (IOException ex)  
+          {
+            System.out.println(ex);
+          }
+
+          // Write to the file
+          try (PrintWriter out = new PrintWriter(filePath)) 
+          {
+            out.println(mainFileNames);
+          }  
+          catch (FileNotFoundException ex) 
+          {
+            System.out.println(ex);
+          }
+        }
+      }
+    }
+  }
+
+  private void deleteFileIfExists(String path) 
+  {
+    try 
+    {
+      File existingFile = new File(path);
+      if(existingFile.exists())
+      {
+        existingFile.delete();
+      }
+    }
+    catch(Exception ex) 
+    {
+      System.out.println(ex);
+    }
   }
   
   private boolean saveCommandsCount(){

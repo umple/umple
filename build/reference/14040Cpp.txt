@@ -1,0 +1,10 @@
+CPlusPlus
+Generators
+noreferences
+@@description
+<p>
+The C++ generator is in beta because it has a few bugs in certain aspects. When generating C++ on the command line use the Cpp as the generator name.</p>
+
+<p>C++ code can be embedded in Umple, and Umple is designed to generate C++ from its modeling features.</p>
+
+

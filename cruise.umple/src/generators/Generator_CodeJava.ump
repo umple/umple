@@ -28,7 +28,7 @@ class JavaGenerator
   private static Map<String,String> AsIsSingularLookupMap;
   private static Map<String,String> AsIsPluralLookupMap;
   private static List<String> OneOrManyLookup;  
-  
+
   static
   {
     UpperCaseSingularLookupMap = new HashMap<String, String>();
@@ -2698,7 +2698,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     return typeOf(aType);
   }
   
-  private String WriteProxyFiles(String classContents,UmpleClass aClass,String path) throws IOException 
+  protected String WriteProxyFiles(String classContents,UmpleClass aClass,String path) throws IOException 
   {
     JavaDistributedTemplates templates= new JavaDistributedTemplates();
     StringBuilder classContent= new StringBuilder("");
@@ -3379,6 +3379,8 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     TraceLookupMap.put("templatelttng","LTTngUst.{0}( {1} );");
     TraceLookupMap.put("timestamp","System.currentTimeMillis()");
     TraceLookupMap.put("identifier","System.identityHashCode({0})");
+    // The following is deprecated as of Java 19; as of Java 19 threadId should be used
+    // But we need to wait at least 3 years after intro of Java 19 ... see issue #2018
     TraceLookupMap.put("thread","Thread.currentThread().getId()");
     TraceLookupMap.put("self","this");
     TraceLookupMap.put("increment","{0}++;");

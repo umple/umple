@@ -65,5 +65,5 @@ if (`uname` == "Darwin") then
 endif
 echo running docker run --rm -ti -p "$port":8000 $volcommand umple/umpleonline$image
 echo  ... use control-c to cancel
-docker run --rm -ti -p "$port":8000 $volcommand umple/umpleonline$image >/dev/null
+docker run --rm -ti --name umpleonline_local -p "$port":8000 -v /var/run/docker.sock:/var/run/docker.sock $volcommand umple/umpleonline$image >/dev/null
 echo Docker image quit

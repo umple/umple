@@ -5,6 +5,7 @@ class Student {
   Integer id;
 }
 
+@SuppressWarnings("deprecation")
 class Professor {
   1 -- * Student supervisor;
   

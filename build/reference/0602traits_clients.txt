@@ -23,8 +23,10 @@ When clients use traits, they obtain all provided methods defined in the traits.
 Note that it is allowed for abstract <a href="ClassDefinition.html">classes</a> to use traits without satisfying their required methods. Such required methods are then considered as abstract methods of the abstract class. Then, all concrete subclasses of the abstract class are required to implement those abstract methods. This process ensures that required methods will finally be implemented. It is worth noting that <a href="interfaceDefinition.html">interfaces</a> cannot use traits because they cannot have concrete methods in their definitions.
 </p>
 
+<p>When exploring the following example in UmpleOnline, you can use the Options menu to control what is visible, or you can use control-R to flip back and forth between showing the diagram with the original traits, vs. the diagram collapsed into the classes to be compiled; or you can use control-M to show/hide methods.</p>
+
 @@example
-@@source manualexamples/traits_example_002.ump
+@@source manualexamples/traits_example_002.ump &diagramtype=GvClassTrait
 @@endexample
 
 

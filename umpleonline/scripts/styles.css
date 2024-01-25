@@ -569,3 +569,7 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
   top: 20px;
   left: 10px;
 }
+
+.executionHeader {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}

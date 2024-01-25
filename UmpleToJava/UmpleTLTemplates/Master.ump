@@ -20,3 +20,4 @@ use JavaProxyGenerator.ump;
 use JavaClassGenerator.ump;
 use JavaInterfaceGenerator.ump;
 use JavaSpecGenerator.ump;
+use PythonClassGenerator.ump;

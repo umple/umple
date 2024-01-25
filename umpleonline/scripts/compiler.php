@@ -152,6 +152,8 @@ else if (isset($_REQUEST["umpleCode"]))
   $languageStyle = isset($_REQUEST["languageStyle"])?
     $_REQUEST["languageStyle"] : false;
   $outputErr = isset($_REQUEST["error"])?$_REQUEST["error"]:false;
+  $execute = isset($_REQUEST["execute"]) ? true : false;
+  $modelName = isset($_REQUEST["model"])? $_REQUEST["model"] : false;
   $uigu = False;
 
   $javadoc = false;
@@ -291,7 +293,7 @@ else if (isset($_REQUEST["umpleCode"]))
     return;      
   } // end html content      
 
-  elseif (!in_array($language,array("Php","Java","Ruby","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
+  elseif (!in_array($language,array("Php","Java","Ruby","Python","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
   {  // If NOT one of the basic languages, then use umplesync.jar
     list($dataname, $dataHandle) = getOrCreateDataHandle();
     $dataHandle->writeData($dataname, $input);
@@ -301,6 +303,13 @@ else if (isset($_REQUEST["umpleCode"]))
     
     if ($language == "Experimental-Cpp" || $language == "Experimental-Sql") {
       $sourceCode = executeCommand("echo \"{$language} is under development. Output is currently only available to developers of Umple\" 2> {$errorFilename}");
+    } elseif ($language == "Papyrus") {
+      $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
+      $papyrusProjectRootPath = $workDir->getPath();
+      $command = "cd {$papyrusProjectRootPath}; rm {$language}FromUmple.zip; zip -r {$language}FromUmple.zip model";
+      exec($command);
+      $archivelink = $workDir->makePermalink($language.'FromUmple.zip');
+      echo "<a href=\"$archivelink\" class=\"zipDownloadLink\" title=\"Download the generated code as a zip file. You can then unzip the result, compile it and run it on your own computer.\">Download the following Papyrus project as a zip file</a >";
     }
     else {
       $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
@@ -320,9 +329,14 @@ else if (isset($_REQUEST["umpleCode"]))
     return;
   }
 
+  if ($language == "Python")
+  {
+    echo "Generated Python has a few limitations. For more information please <a target='pythoninfo' href='https://cruise.umple.org/umple/Python.html'>click here</a>.<br>";
+  }
+
   if (!$uigu)
   { // NOTuigu
-  // Generate the Java, PHP, RTCpp, Ruby, Cpp or Sql and put it into the right directory
+  // Generate the Java, PHP, RTCpp, Ruby, Python, Cpp or Sql and put it into the right directory
   list($dataname, $dataHandle) = getOrCreateDataHandle();
   $dataHandle->writeData($dataname, "generate {$language} \"./{$language}/\" --override-all;\n" . $input);
   $workDir = $dataHandle->getWorkDir();
@@ -330,8 +344,9 @@ else if (isset($_REQUEST["umpleCode"]))
   
   $outputFilename = "{$filename}.output";
   $errorFilename = "{$filename}.erroroutput";
+  $executionErrorFilename = "{$filename}.executionerror";
   
-  // Clean up any pre-existing java. php, RTCpp, ruby or cpp files
+  // Clean up any pre-existing java. php, RTCpp, ruby, python or cpp files
   $thedir = dirname($outputFilename);
   $toRemove = False;
   $rmcommand = "rm -rf ";
@@ -341,8 +356,28 @@ else if (isset($_REQUEST["umpleCode"]))
   }    
   if($toRemove) { exec($rmcommand); }
   
-  // The following is a hack. The arguments to umplesync need fixing
-  if (!$stateDiagram && !$classDiagram && !$entityRelationshipDiagram && !$yumlDiagram && !$featureDiagram) {  
+  //
+  if($execute) 
+  {
+    $command = "java -jar umplesync.jar -generate Java {$filename} -cx 2> {$executionErrorFilename}";
+    executeCommand($command);
+    $errhtml = getErrorHtml($executionErrorFilename);
+    if($errhtml != "") {
+      echo translateToLineNums($errhtml);
+    }
+    $content = executeCode($modelName, $errhtml != "");
+    $output = json_decode($content, false);
+    if (json_last_error() === JSON_ERROR_NONE) {
+      if($output->output || $output->errors) {
+        echo "<p><strong class='executionHeader'>Execution Output</strong></p>";
+        echo translateToLineNums($output->output.$output->errors);
+      }
+    } else {
+      echo $content;
+    }
+    return;
+  } // The following is a hack. The arguments to umplesync need fixing
+  else if (!$stateDiagram && !$classDiagram && !$entityRelationshipDiagram && !$yumlDiagram && !$featureDiagram) {  
     $command = "java -jar umplesync.jar -source {$filename} 2> {$errorFilename}";
   }
   else {
@@ -380,8 +415,7 @@ else if (isset($_REQUEST["umpleCode"]))
     {
       $html = "
         An error occurred interpreting your Umple code, please review it and try again.
-        If the problem persists, please email the Umple code to
-        the umple-help google group: umple-help@googlegroups.com";
+        If the problem persists, please consult the user manual or ask a question on Stack Overflow with the umple tag";
     }
     echo $errhtml ."<p>URL_SPLIT" . $html;
     
@@ -604,6 +638,35 @@ else
   echo "Invalid use of compiler";
 }
 
+function translateToLineNums($errortext) {
+  $repPattern= '/model.ump:(\d+)/';
+
+  $findRegPattern= '/.*model.ump:(\d+).*/';
+  $findRepl='$1';
+
+  $output="";
+  $numout="";
+
+  $separator = "\r\n";
+  $line = strtok($errortext, $separator);
+  while ($line !== false) {
+    $numout =preg_replace($findRegPattern,$findRepl, $line,1,$numfound);
+    if($numfound==0) {
+      $numout="";
+    }
+    else
+    {
+      $numout -=1;
+    }
+    $replacement= '<a href="javascript:Action.setCaretPosition('.$numout.');Action.updateLineNumberDisplay();">model.ump:'.$numout.'</a>';
+
+    $output .=preg_replace($repPattern,$replacement, $line)."\n";
+    //$output = $output.$line."\n";
+    $line = strtok($separator); // get next one
+  }
+
+  return $output;
+}
 
 function getErrorHtml($errorFilename, $offset = 1) 
 {
@@ -619,7 +682,7 @@ function getErrorHtml($errorFilename, $offset = 1)
      
      if($errInfo == null)
      {
-        $errhtml .= "Couldn't read results from the Umple compiler!<br><pre>".$errorMessage."</pre>";
+        $errhtml .= "<pre>".$errorMessage."</pre>";
      }
      else
      {
@@ -653,6 +716,26 @@ function getErrorHtml($errorFilename, $offset = 1)
      return $errhtml;
   }
   return "";
+}
+
+function executeCode($modelName, $error) 
+{
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,"{$GLOBALS['EXECUTION_SERVER']}/run");
+  curl_setopt($ch, CURLOPT_POST, 1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, "path={$modelName}&error={$error}");
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  $content = curl_exec($ch);
+  if (curl_errno($ch)) {
+      $error_msg = curl_error($ch);
+  }
+  curl_close($ch);
+
+  if (isset($error_msg)) {
+    return "The docker service to execute code is not working. Please contact the system administrator for help.\n".$error_msg;
+  } else {
+    return $content;
+  }
 }
 
 // taken from http://php.net/manual/en/function.json-decode.php

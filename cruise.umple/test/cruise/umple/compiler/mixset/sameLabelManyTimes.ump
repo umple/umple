@@ -1,0 +1,12 @@
+class CodeLabelExample
+{  
+  void methodToDoSomething()
+  {
+    //code 
+    Label1: ;
+    int x=0;
+    //code 
+    Label1:  
+    x++;
+  }
+}

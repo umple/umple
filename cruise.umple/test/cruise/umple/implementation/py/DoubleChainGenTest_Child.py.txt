@@ -1,0 +1,22 @@
+from Employee import Employee
+
+class Admin(Employee):
+    def __init__(self, aName, aAge, aId, aNumber):
+        super().__init__(aName, aAge, aId)
+        self._number = aNumber
+
+    def setNumber(self, aNumber):
+        wasSet = False
+        self._number = aNumber
+        wasSet = True
+        return wasSet
+
+    def getNumber(self):
+        return self._number
+
+    def delete(self):
+        super().delete()
+
+    def __str__(self):
+        return str(super()) + "[" + "number" + ":" + self.getNumber() + "]"
+

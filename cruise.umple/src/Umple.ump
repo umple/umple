@@ -87,7 +87,12 @@ class UmpleModel
   
   internal List<File> linkedFiles = new ArrayList<File>();
 
-  
+  // Whether tracer output should be generated if needed
+  // These are set to false when tracer classes are created by generators
+  Boolean generateConsole = true;
+  Boolean generateFile = true;
+  Boolean generateString = true;
+  Boolean generateLog4j = true;
   
   // The Umple Enumerations contained within the model
   1 -> * UmpleEnumeration enums;

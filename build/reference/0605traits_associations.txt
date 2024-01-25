@@ -23,16 +23,20 @@ As each subject must have a notification mechanism to let observers know about c
 The second example below is a concrete example of the use of traits to incorporate functionality (in this case dated addresses) that is needed in otherwise unrelated classes (Persons and Businesses). The third examples shows the use of traits that have associations along with other features of Umple.
 </p>
 
+&nbsp;
+
+<p>When exploring the following examples in UmpleOnline, you can use the Options menu to control what is visible, or you can use control-R to flip back and forth between showing the diagram with the original traits, vs. the diagram collapsed into the classes to be compiled; or you can use control-M to show/hide methods.</p>
+
 
 @@example @@caption Example of the Observable pattern using traits with associations @@endcaption
-@@source manualexamples/traits_example_005.ump
+@@source manualexamples/traits_example_005.ump &diagramtype=GvClassTrait
 @@endexample
 
 @@example @@caption Example showing traits with associations to manage addresses @@endcaption
-@@source manualexamples/traits_example_addresses.ump
+@@source manualexamples/traits_example_addresses.ump &diagramtype=GvClassTrait
 @@endexample
 
 @@example @@caption Example that also includes state machines and mixsets @@endcaption
-@@source manualexamples/traits_example_multifeature.ump
+@@source manualexamples/traits_example_multifeature.ump &diagramtype=GvClassTrait
 @@endexample
 

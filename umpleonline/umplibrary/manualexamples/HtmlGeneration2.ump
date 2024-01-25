@@ -64,5 +64,5 @@ class TimesTable {
 //$?[End_of_model]$?
 
 /*
-@@@skipjavacompile @@@skipphpcompile
+@@@skipjavacompile @@@skipphpcompile @@@skippythoncompile
 */

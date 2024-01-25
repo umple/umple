@@ -462,3 +462,4 @@ strictness ignore 46;
 // @@@skipcppcompile - Contains Java Code
 // @@@skipphpcompile - Contains Java Code
 // @@@skiprubycompile - Contains Java Code
+// @@@skippythoncompile - Contains Java Code

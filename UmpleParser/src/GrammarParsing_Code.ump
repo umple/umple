@@ -17,6 +17,7 @@ class Analyzer
    * Note: This method makes heavy use of reflection
    * Todo: consider simplifying and making use of the inheritance structure
    */
+  @SuppressWarnings("unchecked")   
   public void analyzeToken(Token token)
   {
     prepare(token);
@@ -54,7 +55,7 @@ class Analyzer
           }
           try{
             List<Analyzer> originalChildren = analyzer.getChildren();
-            analyzer = analyzer.getClass().newInstance();
+            analyzer = analyzer.getClass().getDeclaredConstructor().newInstance();
             for(Analyzer child:originalChildren)
             {
               analyzer.addChild(child);
@@ -591,6 +592,11 @@ class ParserDataPackage
       {
         reader = new BufferedReader(new FileReader(file));
       }
+      else if (file.contains("https:")) {
+        String urlToLoad=file.substring(file.indexOf("https:"));
+        resourceStream = new URL(urlToLoad).openStream();
+        reader = new BufferedReader(new InputStreamReader(resourceStream));
+      }
       else
       {
         String resourceToLoad=file;
@@ -803,6 +809,7 @@ class GrammarAnalyzer {
     }
     setFailedPosition(parser.getFailedPosition());
     setParseResult(getData().getParseResult());
+
     if(mustSetupAnalyzers)
     {
       setupAnalyzers();
@@ -965,7 +972,7 @@ class GrammarAnalyzer {
   public void terminal(Token token) 
   {
     String value = getValue(token,"terminal");
-    value = value.replace("-(","(").replace("-)",")").replace("OPEN_ROUND_BRACKET","(").replace("CLOSE_ROUND_BRACKET",")");
+    value = value.replace("-(","(").replace("-)",")").replace("-{","{").replace("-}","}").replace("OPEN_ROUND_BRACKET","(").replace("CLOSE_ROUND_BRACKET",")").replace("OPEN_CURLY_BRACKET","{").replace("CLOSE_CURLY_BRACKET","}");
     
     String regex = "\\Q"+value+"\\E";
     
@@ -996,10 +1003,9 @@ class GrammarAnalyzer {
     String modifier = getValue(token,"modifier");
     String value = getValue(token,"value");
     boolean makeTerminal = true;
-
     modifier = modifier==null?"":modifier;
     premodifier = premodifier==null?"":premodifier;
-    value = value==null?"":value.replace("OPEN_ROUND_BRACKET","(").replace("CLOSE_ROUND_BRACKET",")");
+    value = value==null?"":value.replace("OPEN_ROUND_BRACKET","(").replace("CLOSE_ROUND_BRACKET",")").replace("OPEN_CURLY_BRACKET","{").replace("CLOSE_CURLY_BRACKET","}");
     String regex;
     boolean post = false;
     if("-".equals(name)&&"||".equals(value))

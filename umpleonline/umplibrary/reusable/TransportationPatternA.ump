@@ -1,4 +1,7 @@
-// This is a library of traits that can be used to build the core of transportation systems
+// This is a library of traits that can be used
+// to build the core of transportation systems
+
+use lib:AbstractionOccurrence.ump;
 
 // A route such as a flight or bus route
 trait Route <Stop> {
