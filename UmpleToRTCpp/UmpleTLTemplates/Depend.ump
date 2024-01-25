@@ -501,7 +501,10 @@ include_directories(${CMAKE_SOURCE_DIR})
 set(SOURCE_FILES
 <<=includes>>)
 
-add_executable(<<=projectName>> ${SOURCE_FILES})!>>
+add_executable(<<=projectName>> ${SOURCE_FILES})
+if (NOT MSVC)
+	target_link_libraries(<<=projectName>> pthread)
+endif()!>>
 
 emit cMake()(cMakeT);
 
