@@ -203,23 +203,42 @@ class UmpleInternalParser
 
   }  
 
-  private void analyzeRequirement(Token t)
-  {
-    Requirement req;
-    if (model.getAllRequirements().get(t.getSubToken("reqIdentifier").getValue()) != null){
-      System.out.println("ERROR: requirement with that identifier already exists");
+    private void analyzeRequirement(Token t) {
+    String reqID = t.getSubToken("reqIdentifier").getValue(); // extract new requirement identifier
+    String newContent = t.getSubToken("reqContent").getValue();// extract content 
+    String newLanguage = "";// Initialize language
+    
+    if (!(t.getSubToken("reqLanguage") == null || t.getSubToken("reqLanguage").getValue() == null)) {
+        newLanguage = t.getSubToken("reqLanguage").getValue();// get the language of the sub token
     }
 
-    if (t.getSubToken("language") == null || t.getSubToken("language").getValue() ==  null){
-      req = new Requirement(t.getSubToken("reqIdentifier").getValue(), t.getSubToken("reqContent").getValue(), "");
+    Requirement existingRequirement = model.getAllRequirements().get(reqID); // Retrieves any existing requirement with the same identifier from the model
+
+    if (existingRequirement != null) { // Checks if a requirement with the same identifier already exists in the model.
+        String existingLanguage = existingRequirement.getLanguage();// get the language of the existing requirement
+
+        if (!(existingLanguage.equals("") || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
+            setFailedPosition(t.getPosition(), 402, reqID,existingLanguage,newLanguage);
+            return;// return if different languages are encountered
+        }
+
+        String existingContent = existingRequirement.getStatement();// retrieve the content of the existing requirement
+
+
+        // Requirement with the same identifier already exists, combine them
+        // Concatenate the content of the existing requirement with the new content
+        newContent = existingContent + " " + newContent;
+        if (newLanguage.equals("")) {
+            newLanguage = existingLanguage;
+        }
     }
-    else{
-      req = new Requirement(t.getSubToken("reqIdentifier").getValue(), t.getSubToken("reqContent").getValue(), t.getSubToken("language").getValue());
-    }
+    // DEBUG
+    Requirement req = new Requirement(reqID, newContent, newLanguage);// Create new requirement 
     Map<String, Requirement> newAllReq = model.getAllRequirements();
     newAllReq.put(t.getSubToken("reqIdentifier").getValue(), req);
-    model.setAllRequirements(newAllReq);    
-  }
+    model.setAllRequirements(newAllReq);
+}
+
 
   private void analyzeImplementReq(Token t){
     int counter=0;
