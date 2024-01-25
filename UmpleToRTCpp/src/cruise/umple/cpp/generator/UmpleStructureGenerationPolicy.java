@@ -97,7 +97,7 @@ public class UmpleStructureGenerationPolicy{
 	}
 	
 	@GenerationValueAnnotation(fieldName= IStructureConstants.PORTS)
-	public static List<Port> getPosrts(@GenerationBaseElement UmpleClass element){
+	public static List<Port> getPorts(@GenerationBaseElement UmpleClass element){
 		return element.getPorts();
 	}
 	

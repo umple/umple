@@ -720,22 +720,22 @@ class GenAssociation{
 		return null;
 	}
 	
-	String getAddBody(){
+	String getAddBody(GenMethod method){
 		String addType= addDecision();
 		if(addType!= null){
 			switch (addType) {
 			case ADD_DIRECTLY:
-				return attributeAddDirectly();
+				return attributeAddDirectly(method);
 			case ADD_REMOVE_EXISTING_OR_THIS:
-				return attributeAddRemoveExistingOrThis();
+				return attributeAddRemoveExistingOrThis(method);
 			case ADD_REMOVE_EXISTING:
-				return attributeAddRemoveExisting();
+				return attributeAddRemoveExisting(method);
 			case ADD_CHECK_NEW_OTHER_EXISTING:
-				return attributeAddCheckNewOtherExisting();
+				return attributeAddCheckNewOtherExisting(method);
 			case ADD_SET_IF_NEW:
-				return attributeAddSetIfNew();
+				return attributeAddSetIfNew(method);
 			case ADD_AND_AND_CHECK:
-				return attributeAddAndCheck();
+				return attributeAddAndCheck(method);
 			default:
 				break;
 			}
