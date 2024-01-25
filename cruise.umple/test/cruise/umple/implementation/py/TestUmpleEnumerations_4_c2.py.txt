@@ -1,0 +1,49 @@
+import os
+from enum import Enum, auto
+
+class C2():
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Married = auto()
+        Single = auto()
+        Divorced = auto()
+
+    class Gender(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Male = auto()
+        Female = auto()
+
+    def __init__(self, aGender, aStatus):
+        self._gender = aGender
+        self._status = aStatus
+
+    def setGender(self, aGender):
+        wasSet = False
+        self._gender = aGender
+        wasSet = True
+        return wasSet
+
+    def setStatus(self, aStatus):
+        wasSet = False
+        self._status = aStatus
+        wasSet = True
+        return wasSet
+
+    def getGender(self):
+        return self._gender
+
+    def getStatus(self):
+        return self._status
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super()) + "[" + "]" + os.linesep + "  " + "gender" + "=" + (self.getGender() != ((str(self.getGender()).replaceAll("  ", "    ")) if not self.getGender().equals(self) else "this") if None else "null") + os.linesep + "  " + "status" + "=" + (self.getStatus() != ((str(self.getStatus()).replaceAll("  ", "    ")) if not self.getStatus().equals(self) else "this") if None else "null")
+

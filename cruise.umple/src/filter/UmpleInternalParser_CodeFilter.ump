@@ -1,0 +1,134 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file analyzses trace related tokens to populate the Umple meta model for
+traces.
+
+Please refer to UmpleInternalParser.ump for more details.
+
+ */
+
+namespace cruise.umple.compiler;
+
+use UmpleFilterModel.ump;
+
+class UmpleInternalParser
+{
+
+  after init {
+    parser.addGrammarFile("/filter/umple_filter.grammar"); 
+  }
+  
+  //------------------------------------------
+  //----------  Diagram analysis Code  -------
+  //------------------------------------------
+
+  private void analyzeFilterToken(Token token, int analysisStep)
+  {
+    if (analysisStep == 1)
+    {
+      shouldProcessAgain = true;
+    }
+    else if (analysisStep == 2)
+    {
+      if(token.is("filter"))
+      {
+        String name = token.getValue("filterName");
+        Filter f = new Filter(name);
+        for(Token t : token.getSubTokens())
+        {
+          if(t.is("super"))
+          {
+            addSuperValue(f,t);
+          }
+          if(t.is("sub"))
+          {
+            addSubValue(f,t);
+          }
+          mixset Association {
+            if(t.is("association"))
+	        {
+	          addAssociationValue(f,t);
+          	}
+          }
+          if(t.is("filterValue"))
+          {
+            addClassValue(f,t);
+          }
+          if(t.is("filterCombinedValue"))
+          {
+            addCombinedFilter(f,t);
+          }
+        }
+        model.addFilter(f);
+      }
+    }
+  }
+
+  private void addCombinedFilter(Filter f, Token t)
+  {
+    for(Token nt : t.getSubTokens())
+    {
+      if("filterName".equals(nt.getName()))
+      {
+        f.addFilterValue(nt.getValue("filterName"));
+      }
+    }
+  }
+
+  private void addSuperValue(Filter f, Token t)
+  {
+    for(Token nt : t.getSubTokens())
+    {
+      if("superNum".equals(nt.getName()))
+      {
+        int superNum = Integer.parseInt(nt.getValue("superNum"));
+        f.setSuperCount(superNum);
+      }
+    }
+  }
+
+  private void addSubValue(Filter f, Token t)
+  {
+    for(Token nt : t.getSubTokens())
+    {
+      if("subNum".equals(nt.getName()))
+      {
+        int subNum = Integer.parseInt(nt.getValue("subNum"));
+        f.setSubCount(subNum);
+      }
+    }
+  }
+  
+  mixset Association {
+    private void addAssociationValue(Filter f, Token t)
+    {
+      for(Token nt : t.getSubTokens())
+      {
+        if("associationNum".equals(nt.getName()))
+        {
+          int associationNum = Integer.parseInt(nt.getValue("associationNum"));
+          f.setAssociationCount(associationNum);
+        }
+      }
+    }
+  }
+
+  private void addClassValue(Filter f, Token t)
+  {
+    for(Token nt : t.getSubTokens())
+    {
+      if(nt.getValue("classname")!=null)
+      {
+        // TODO, the filter should have direct *->* connections to classes, not
+        // simply their names
+        String aValue = nt.getValue("classname");
+        f.addValue(aValue);
+      }
+    }
+  }
+}

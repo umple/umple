@@ -1,0 +1,19 @@
+@SuppressWarnings("deprecation")
+class Student
+{
+  name;
+  Integer id;
+  // trace attribute id and record provided string
+  // message as part of  the trace output
+  trace id record "i am tracing attribute id";
+  
+  status {
+    s1 { e1 -> s2; }
+    s2 {}
+  }
+  // trace whenever we enter/exit state "s1" and
+  // record attribute name
+  trace s1 record name;
+}
+//$?[End_of_model]$?
+// @@@skipphpcompile - Skipped due to issue 698

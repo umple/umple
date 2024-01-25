@@ -1,0 +1,77 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+ */
+
+namespace cruise.umple.compiler;
+
+class RTCppGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend java.util.*;
+  depend java.io.*;
+  depend cruise.umple.util.*;
+
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.cpp.generator.UmpleCppPoliciesProcessor;
+  depend cruise.umple.cpp.core.ContentsDescriptor;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String output = "";
+
+
+  public void generate()
+  {
+  	try {
+  		final StringBuilder code = new StringBuilder();
+  		new UmpleCppPoliciesProcessor() {
+			@Override
+			public void handleGeneratedContents(List<ContentsDescriptor> contentsDescriptor) {
+				try {
+					for(ContentsDescriptor descriptor:contentsDescriptor){
+						generateContents(model, code, descriptor.getFileName(), descriptor.getContents(), descriptor.getPath());
+					}
+				} catch (IOException e) {
+					throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
+				}
+				
+			}
+		}.generateRootElement(model);
+		model.setCode(code.toString());
+	} catch (Exception e) {
+		throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
+	}
+  }
+  
+  protected void generateContents(UmpleModel model ,StringBuilder model_code, String filename, String content, String owingFolder) throws IOException {		
+		 String path = model.getUmpleFile().getPath() + "/";
+		 owingFolder= owingFolder.replace(".", "::").replace("::", "/");
+		 String qualifiedPath = path+ owingFolder;
+		 File folder = new File(qualifiedPath);
+		 if (!folder.exists()) {
+			 folder.mkdirs();
+		 }
+		 
+		 File folderFile = new File(qualifiedPath+ "/"+ filename); 	
+		 
+		 if (!folderFile.exists()) {
+		 	folderFile.createNewFile();
+		 }
+		 
+		 model.getGeneratedCode().put(filename,content);
+		 
+		 model_code.append(content);
+		 model_code.append("\n\n");
+		 
+		 BufferedWriter output = new BufferedWriter(new FileWriter(folderFile));
+		 output.write(content);
+		 output.close();
+	}
+  
+}

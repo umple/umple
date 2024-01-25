@@ -1,0 +1,21 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 7 "ExternalClassTest.ump"
+from Exception import Exception
+
+class MyException(Exception):
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self, aMessage, aParent):
+        super().__init__(aMessage, aParent)
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def delete(self):
+        pass
+

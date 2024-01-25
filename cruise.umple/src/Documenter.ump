@@ -9,6 +9,13 @@ Model for generating documentation such as the Umple user manual
 See Documenter_Code.ump for the methods injected into these classes
 */
 
+namespace cruise.umple.compiler;
+
+use Parser.ump;
+use Parser_Code.ump;
+use UmpleParser.ump;
+external Position {}
+
 namespace cruise.umple.docs;
 
 /*
@@ -57,6 +64,9 @@ class Content
   
   // URL of Youtube Video (if any)
   videoURL = null;
+  
+  // Tooltip to display when hovering (if any)
+  tooltip = null;
 }
 
 class ManualExample {
@@ -72,6 +82,7 @@ class ManualExample {
 class Group
 {
   name;
+  lazy tooltip;
   1 -> * Content;
 }
 

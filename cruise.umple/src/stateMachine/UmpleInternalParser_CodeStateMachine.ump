@@ -1,0 +1,2112 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file analyzes token related State Machines and populates the State Machine
+related meta model entities in Umple.
+
+Please refer to UmpleInternalParser.ump for more details.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class UmpleInternalParser
+{
+  internal StateMachine placeholderStateMachine = null;
+  internal Map<String,Token> stateMachineNameToToken = new HashMap<String, Token>();
+  internal Map<State,List<Token>> possiblyUnknownStates = new HashMap<State,List<Token>>();
+  internal List<Token> stateNames = null;
+  internal List<Token> transitionNames = null;
+  internal List<Token> ignoredTransitions = new ArrayList<Token>();
+  internal List<Token> innerMixsetTokens = null;
+  
+  
+  //------------------------
+  // CONSTANTS
+  //------------------------
+  internal const String GUARD = "guard";
+  internal const String LONE_BOOLEAN = "loneBoolean";
+  internal const String CONSTRAINT_BODY = "constraintBody";
+  internal const String LINKING_OP_BODY = "linkingOpBody";
+  internal const String NEGATIVE_CONSTRAINT = "negativeConstraint";
+  internal const String NEGATIVE_CONSTRAINT_APPLIED = "negativeConstraintApplied";
+  internal const String NUMBER = "number";
+  internal const String QUOTE = "quote";
+  internal const String CONCAT = "concat";
+  internal const String BOOL_LITERAL = "boolLiteral";
+  internal const String CONSTRAINT_NAME = "constraintName";
+  internal const String NUMBER_LITERAL = "numberLiteral";
+  internal const String ASSOCIATION_EXPR = "associationExpr";
+  internal const String STATEMACHINE_EXPR = "statemachineExpr";
+  internal const String FINAL_STATE_KEYWORD = "Final";
+   
+  internal const Integer LHS_POSITION = 0;
+  internal const Integer OPERATOR_POSITION = 1;
+  internal const Integer RHS_POSITION = 2;
+  internal const String EQUALS_OP = "equalsOp";
+  internal const String NOT_EQUALS_OP = "notequalsOp";
+  internal const String AND_OP = "andOp";
+  internal const String OR_OP = "orOp";
+  internal const String GREATER_THAN_OR_EQUAL = "greaterOp";
+  internal const String GREATER_THAN = "moreOp";
+  internal const String LESS_THAN_OR_EQUAL = "lessOp";
+  internal const String LESS_THAN = "smallerOp";
+  internal const String OP = "Op";
+  internal const String OPERATOR = "operator";
+  private static final  String STATIC = "STATIC";
+  
+  // Allow to declare several active objects within the same class, the name of the generated state-machine
+  // will be "stateMachine<numberOfActiveObjects>"
+  private static int numberOfActiveObjects = 1;
+  
+  //Issue 531. Number of ocurrences of a given state in a state machine. 
+  //More than one means that the transition is ambiguous and should generate a warning message 
+  private int numberOfOcurrences;
+
+  after init
+  {
+    parser.addGrammarFile("/stateMachine/umple_state_machines.grammar");
+  }
+  //This is used for the cases that will be resolved by traits and we don't need to see those warnings.
+  private void secondPostTokenAnalysis()  {
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenStateMachineAnalysis();
+    }
+    if (getParseResult().getWasSuccess()){
+      //Issue 492
+      checkNonReachableStates();
+    }
+  }
+   
+  //Check if "extra code" is likely a malformed state machine
+  private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
+    String code = extraCodeToken.getValue();
+    String[] parts = code.split("\\{");
+    if(parts.length < 2) return false; // This means there are no opening brackets
+    if(!Token.isValidIdentifier(parts[0].trim())) return false; //This means we don't have an identifier. If the SM name is misspelt, that should be picked up elsewhere.
+    return true; //We have an identifier followed by a { followe by something else that is probably a state machine
+  }
+  
+  //Checks to see if stateName is alpha-numeric or HStar, for deep history
+  private void checkStateNameOfToken(Token myToken){
+    
+    boolean shouldBeLast = false;
+    
+    //Issue 148
+    if (myToken.is("transition") || myToken.is("autoTransition") || myToken.is("standAloneTransition"))
+    {
+      String[] stateNames;
+      
+      if(myToken.is("transition") || myToken.is("autoTransition") )	
+        stateNames = myToken.getValue("stateName").split("\\.");
+      else
+    	stateNames = myToken.getValue("fromState").split("\\.");
+    	
+      for(String stateName : stateNames)
+      {
+        if(shouldBeLast){setFailedPosition(myToken.getPosition(), 152, myToken.getValue("stateName"));}
+        
+        if (stateName.equals("HStar") || stateName.equals("H")){
+          shouldBeLast = true; //HStar and H must be the last state in dotNotation
+          continue;
+        }
+        
+        if(!myToken.isValidIdentifier(stateName)){
+          setFailedPosition(myToken.getPosition(), 152, myToken.getValue("stateName"));
+        }
+      }
+    }
+    else{
+      if(!myToken.isValidIdentifier(myToken.getValue("stateName"))){
+          setFailedPosition(myToken.getPosition(), 152, myToken.getValue("stateName"));
+        }
+    }
+  }
+  
+  // Analyze state machine related tokens
+  private void analyzeStateMachineToken(Token token, int analysisStep)
+  {
+    if (analysisStep != 1)
+    {
+      return;
+    }
+  
+    if (token.is("stateMachineDefinition"))
+    {
+      analyzeStateMachineDefinition(token);
+    }
+  }  
+  
+  private String getThreadName(Token activeToken)
+  {
+    Token name = activeToken.getSubToken("name");
+    
+    if (name == null)
+    {
+      return "thread1";
+    }
+    return name.getValue();
+  }
+  
+  private String getActiveCode(Token activeToken)
+  {
+    Token code = activeToken.getSubToken("code");
+    
+    return code.getValue();
+  }
+  
+  private void analyzeActiveObject(Token activeToken, UmpleClassifier uClassifier)
+  {
+    transformIntoStateMachineToken(activeToken);
+    analyzeStateMachine(activeToken, uClassifier);
+  }
+  
+  // Restructure the [activeDefinition] token into a state machine token with a do activity
+  private void transformIntoStateMachineToken(Token stateMachineToken)
+  {
+    Token activeToken = stateMachineToken.detach("name","stateMachine" + numberOfActiveObjects);
+    Token stateToken = new Token("state","START_TOKEN");
+    Token subState = new Token("state", "START_TOKEN");
+    Token doActivity = new Token("activity", "START_TOKEN");
+
+    stateMachineToken.addSubToken(new Token("{", "STATIC"));
+         
+    stateToken.addSubToken(new Token("stateName","topLevel"));
+    stateToken.addSubToken(new Token("{", "STATIC"));
+    
+    subState.addSubToken(new Token("stateName", getThreadName(activeToken)));
+    subState.addSubToken(new Token("{", "STATIC"));
+    
+    doActivity.addSubToken(new Token("do", "STATIC"));
+    
+    // Add all multilingual code blocks to our do activity
+    int numLangs = 0;
+    List<Token> subTokens = activeToken.getSubTokens(); 
+    for (Token t: subTokens)
+    {
+      if(t.is("codeLang"))
+      {
+        doActivity.addSubToken(t.copy());
+        doActivity.addSubToken(new Token("{", "STATIC"));
+        doActivity.addSubToken(activeToken.getSubToken("code",numLangs).copy());
+        doActivity.addSubToken(new Token("}", "STATIC"));
+        numLangs++;
+      }
+    }
+    if (numLangs == 0)
+    {
+      // If no languages are specified in active block
+      doActivity.addSubToken(new Token("{", "STATIC"));
+      doActivity.addSubToken(activeToken.getSubToken("code",0).copy());
+      doActivity.addSubToken(new Token("}", "STATIC"));
+    }
+
+    //Copy position information to the new do activity token
+    doActivity.setPosition(activeToken.getPosition());
+    doActivity.setEndPosition(activeToken.getEndPosition());
+
+    subState.addSubToken(doActivity);
+    stateToken.addSubToken(new Token("}", "STATIC"));
+    stateToken.addSubToken(subState);
+    stateToken.addSubToken(new Token("}", "STATIC"));
+    stateMachineToken.addSubToken(stateToken);
+    stateMachineToken.addSubToken(new Token("}", "STATIC"));
+  }
+
+  // Analyze state machine related tokens within the context of an Umple class
+  private void analyzeStateMachineToken(Token token, UmpleClassifier uClassifier, int analysisStep)
+  {
+    if (analysisStep != 1)
+    {
+      return;
+    }
+    
+    if (token.is("stateMachine"))
+    {
+      if (uClassifier instanceof UmpleClass) {
+	  	if (((UmpleClass)uClassifier).isImmutable())
+		{
+			setFailedPosition(token.getPosition(), 15, uClassifier.getName());
+		    return;
+		}
+	  } 
+    mixset Trait {
+      else if (uClassifier instanceof UmpleTrait) {
+        if (((UmpleTrait)uClassifier).isImmutable())
+        {
+          //TODO--- trait's code	
+            setFailedPosition(token.getPosition(), 15, uClassifier.getName());
+            return;
+        }	
+	    }
+    }
+      
+      Token subToken = token.getSubToken(0);
+      if (subToken.is("activeDefinition"))
+      {
+        analyzeActiveObject(subToken, uClassifier);
+        numberOfActiveObjects++;
+      }
+      
+      if (subToken.is("enum") || subToken.is("inlineStateMachine"))
+      {
+        analyzeStateMachine(subToken,uClassifier);
+      }
+      
+      if (subToken.is("referencedStateMachine"))
+      {
+        analyzedReferencedStateMachine(subToken,uClassifier);
+      }
+    }
+  }
+
+  private int numberOfActiveObjectsInClass(Token token, UmpleClassifier uClassifier)
+  {
+    int activeObjects = 0;
+    
+    Token parent = token.getParentToken();
+    if (parent != null)
+    {
+      for (Token sub : parent.getSubTokens())
+      {
+        if (sub.is("stateMachine"))
+        {
+          if (sub.getSubToken(0).is("activeDefinition"))
+          {
+            activeObjects++;
+          }
+        }
+      }
+    }
+    
+    return activeObjects;
+  }
+  
+  private void postTokenStateMachineAnalysis()
+  {
+    // Generate error message for issue 354. Check for conflicting names between
+    // state machines and attributes as well as state machines and association names
+    checkStateMachineNameConflict();
+
+    for(Iterator<Map.Entry<State, List<Token>>> i = possiblyUnknownStates.entrySet().iterator(); i.hasNext();){
+    	Map.Entry<State, List<Token>> entry = (Map.Entry<State, List<Token>>)i.next();
+    	List<Token> tokens = (List<Token>)entry.getValue();
+		for(int j = 0; j < tokens.size(); j++){
+			//Issue 148
+			if(tokens.get(j).is("standAloneTransition"))
+			{
+			  setFailedPosition(tokens.get(j).getPosition(), 50, entry.getKey().getName());
+			}
+			else
+			  setFailedPosition(tokens.get(j).getPosition(), 50, tokens.get(j).getValue("stateName"));
+		}    
+    }
+    possiblyUnknownStates = new HashMap<State,List<Token>>();
+  }
+  
+  /*
+  	Check for name conflicts between state machines and attributes/association names
+  	Author: Blake Quebec Desloges
+  */
+  private void checkStateMachineNameConflict()
+  {
+    for(UmpleClass C : model.getUmpleClasses())
+    {    
+      // Create the list of attribute names 
+      List<String> existingAttributeNames = new ArrayList<String>();
+      for (Attribute attr : C.getAttributes())
+      {
+      	existingAttributeNames.add(attr.getName());
+      }
+      
+      //Create the list of state machine names while checking for conflicts with attributes
+      List<String> existingStateMachineNames = new ArrayList<String>();
+      for (StateMachine sm : C.getStateMachines())
+      {
+      	// Check if the current state machine conflicts with an attribute name
+      	if (existingAttributeNames.contains(sm.getName()))
+      	{
+      	   Token stateMachineToken = stateMachineNameToToken.get(sm.getName());
+          setFailedPosition(stateMachineToken.getPosition(), 52, sm.getName());
+       }
+       else
+          existingStateMachineNames.add(sm.getName());
+      }
+      
+      Boolean foundQueued = false;
+      Boolean foundPooled = false;
+      Boolean foundRegularSM = false;
+      Boolean foundEventlessRegularSM = false;
+      Token stateMachineToken=null;
+      
+      for (StateMachine sm : C.getStateMachines())
+      {
+        if(sm.getQueued())
+        {
+          foundQueued = true;
+          stateMachineToken = stateMachineNameToToken.get(sm.getName());
+        }
+        else if(sm.getPooled())
+        {
+          foundPooled = true;
+          stateMachineToken = stateMachineNameToToken.get(sm.getName());
+        }
+        else if(!sm.getQueued() && !sm.getPooled())
+        {
+          if(sm.getEvents().isEmpty())
+          {
+            foundEventlessRegularSM = true;
+            foundRegularSM = true;
+            stateMachineToken = stateMachineNameToToken.get(sm.getName());
+          }
+          else
+          {
+            foundEventlessRegularSM = false;
+            foundRegularSM = true;
+            stateMachineToken = stateMachineNameToToken.get(sm.getName());
+          }
+        }  
+      }
+      
+      if (foundQueued == true && foundPooled == true && foundRegularSM == true)
+      {
+        //raise an error if QSM, PooledSM and RegularSM are used in the same class
+        setFailedPosition(stateMachineToken.getPosition(), 58, C.getName());
+      }
+      else if(foundQueued == true && foundPooled == true && foundRegularSM == false)
+      {
+        //raise an error if QSM and PooledSM are used in the same class
+        setFailedPosition(stateMachineToken.getPosition(), 59, C.getName());
+      }
+      else if(foundQueued == false && foundPooled == true && foundRegularSM == true && foundEventlessRegularSM == false)
+      {
+        //raise an error if PooledSM and RegularSM are used in the same class
+        setFailedPosition(stateMachineToken.getPosition(), 60, C.getName());
+      }
+      else if(foundQueued == true && foundPooled == false && foundRegularSM == true && foundEventlessRegularSM == false)
+      {
+        //raise an error if QSM and RegularSM are used in the same class
+        setFailedPosition(stateMachineToken.getPosition(), 61, C.getName());
+      }
+
+      List<String> existingAssociationNames = new ArrayList<String>();
+      List<Association> visitedAssociations = new ArrayList<Association>();
+      for(Association assoc : C.getAssociations())
+      {
+        if (visitedAssociations.contains(assoc))
+        {
+          continue;
+        }
+        
+      	AssociationEnd firstEnd = assoc.getEnd(0);
+      	AssociationEnd secondEnd = assoc.getEnd(1);
+      	
+      	Boolean checkFirstEnd = !firstEnd.getClassName().equals(C.getName());
+      	Boolean checkSecondEnd = !secondEnd.getClassName().equals(C.getName());
+      	Boolean associationIsReflexive = !checkFirstEnd && !checkSecondEnd;
+      	
+      	// check names on other-class end of associations to other classes
+        if ((checkFirstEnd || associationIsReflexive) && assoc.getIsLeftNavigable())
+        {
+          // Check if the association name is the same as a state machine name
+          if (existingStateMachineNames.contains(firstEnd.getRoleName()))
+          {
+             setFailedPosition(assoc.getTokenPosition(), 52, firstEnd.getRoleName());
+          }
+          else
+          {
+            existingAssociationNames.add(firstEnd.getRoleName());
+          }
+          
+        }
+        if ((checkSecondEnd || associationIsReflexive) && assoc.getIsRightNavigable())
+        {
+          // Check if the association name is the same as a state machine name
+          if (existingStateMachineNames.contains(secondEnd.getRoleName()))
+          {
+             setFailedPosition(assoc.getTokenPosition(), 52, secondEnd.getRoleName());
+          }
+          else
+          {
+            existingAssociationNames.add(secondEnd.getRoleName());
+          }
+        }
+         
+        if (associationIsReflexive)
+        { 
+          // The UmpleClass is only expected to have duplicate references to reflexive associations
+          visitedAssociations.add(assoc);
+        }
+      }
+    }
+  }
+  
+  
+  private void analyzeStateMachineDefinition(Token stateMachineDefinitionToken)
+  {
+    StateMachine smd = analyzeStateMachine(stateMachineDefinitionToken,null);
+    model.addStateMachineDefinition(smd);
+  }
+
+  private void analyzedReferencedStateMachine(Token stateMachineToken, UmpleClassifier uClassifier)
+  {
+    String name = stateMachineToken.getValue("name");
+
+    if(!Token.isValidIdentifier(stateMachineToken.getValue("name"))){
+    	setFailedPosition(stateMachineToken.getPosition(), 150, stateMachineToken.getValue("name"));
+    }
+
+    String definitionName = stateMachineToken.getValue("definitionName");
+      
+    Token stateMachineDefinitionToken = stateMachineNameToToken.get(definitionName);
+    if (stateMachineDefinitionToken == null)
+    {
+      return;
+    }
+
+    StateMachine sm = new StateMachine(name);
+    mixset Trait {
+      if (uClassifier instanceof UmpleTrait){
+        sm.setUmpleTrait((UmpleTrait)uClassifier);
+      }
+    } if (uClassifier instanceof UmpleClass){
+      sm.setUmpleClass((UmpleClass)uClassifier);
+    }
+    //------------
+    boolean wasSet = true;
+    if (uClassifier instanceof UmpleClass) {
+    	wasSet = sm.setUmpleClass((UmpleClass)uClassifier);
+    } 
+    mixset Trait {
+        else if (uClassifier instanceof UmpleTrait) {
+        wasSet = sm.setUmpleTrait((UmpleTrait)uClassifier);
+      }
+    }
+    //------------
+    if (!wasSet)
+    {
+    	// Future-proofing: currently all paths cause wasSet to be true
+
+    	if (uClassifier instanceof UmpleClass) {
+	    	setFailedPosition(stateMachineToken.getPosition(), 15, uClassifier.getName());
+	    }
+      mixset Trait {
+        else if (uClassifier instanceof UmpleTrait) {
+          //TODO --Trait's code
+          setFailedPosition(stateMachineToken.getPosition(), 15, uClassifier.getName());
+        }
+      } 
+    }
+    
+    populateStateMachine(stateMachineDefinitionToken,sm, uClassifier);
+    Token extendedStateMachineTokens = stateMachineToken.getSubToken("extendedStateMachine");
+    if (extendedStateMachineTokens != null)
+    {
+      populateStateMachine(extendedStateMachineTokens, sm, uClassifier);
+    }
+
+  }
+  //Issue 531
+  private void checkUnclearTransition(Token t){
+       for(Token subToken : t.getSubTokens()){
+           if(subToken.getValue("stateName") != null && subToken.is("state"))
+               stateNames.add(subToken);
+           if((subToken.is("transition")||subToken.is("autoTransition")) && subToken.getValue("stateName") != null)
+               transitionNames.add(subToken);
+           if(subToken.is("mixsetDefinition"))
+           {
+             innerMixsetTokens.add(subToken); 
+             
+           }  
+           if(subToken.hasSubTokens())
+               checkUnclearTransition(subToken);
+               
+       }       
+   }
+
+  private StateMachine analyzeStateMachine(Token stateMachineToken, UmpleClassifier uClassifier)
+  {
+    placeholderStateMachine = new StateMachine("PLACE_HOLDER");
+    String name = stateMachineToken.getValue("name");
+
+    if (name.equals("timer"))
+    {
+      getParseResult().addErrorMessage(new ErrorMessage(75, stateMachineToken.getSubToken("name").getPosition(), "" + stateMachineToken.getSubToken("name").getPosition().getLineNumber()));
+    }
+
+    if(!Token.isValidIdentifier(stateMachineToken.getValue("name"))){
+    	setFailedPosition(stateMachineToken.getPosition(), 150, stateMachineToken.getValue("name"));
+    }
+    
+    //Issue 531
+    stateNames = new ArrayList<Token>();
+    transitionNames = new ArrayList<Token>();
+    innerMixsetTokens = new ArrayList<Token>();   
+    
+    checkUnclearTransition(stateMachineToken);
+    for(Token transition : transitionNames){
+        numberOfOcurrences = 0;
+        for(Token state : stateNames)
+            if(transition.getValue("stateName").equals(state.getValue("stateName")))
+                numberOfOcurrences++;
+        if(numberOfOcurrences > 1)
+            getParseResult().addErrorMessage(new ErrorMessage(66,transition.getPosition(), transition.getValue("stateName")));
+    }
+
+     //Issue200
+    StateMachine sm = null;
+    
+    if ((uClassifier != null) && (uClassifier instanceof UmpleClass)) 
+    {
+	    if(((UmpleClass)uClassifier).getStateMachine(name) != null)
+	    {
+	      	sm = ((UmpleClass)uClassifier).getStateMachine(name);
+	    }
+    }
+    
+    if(sm == null)
+    {
+    
+	    if(model.getStateMachineDefinition(name) != null)
+	    {
+	      sm = model.getStateMachineDefinition(name);
+	      Token stateToken;
+	      
+	      List<Token> smToken = stateMachineToken.getSubTokens();
+	      int i = 0;
+	      
+	      while(i < stateMachineToken.numberOfSubTokens())
+	      {
+	    	  stateToken = smToken.get(i);
+	    	  if(stateToken.is("state"))
+	    	  {
+	    		  
+	    		  stateMachineNameToToken.get(name).addSubToken(stateToken.copy());
+	    		  i++;
+	    	  }
+	    	  else
+	    	  {
+	    		  i++;
+	    	  }
+	    		  
+	      }
+	      
+	    }
+	    else
+	    {
+	      sm = new StateMachine(name);
+        mixset Trait {
+            if (uClassifier instanceof UmpleTrait){
+            sm.setUmpleTrait((UmpleTrait)uClassifier);
+          } 
+        }
+        if (uClassifier instanceof UmpleClass){
+          sm.setUmpleClass((UmpleClass)uClassifier);
+        }
+	      stateMachineNameToToken.put(name,stateMachineToken);
+	    }
+    }
+    
+    boolean wasSet = true;
+    if (uClassifier instanceof UmpleClass) {
+    	wasSet = sm.setUmpleClass((UmpleClass)uClassifier);
+    } 
+    mixset Trait {
+       if (uClassifier instanceof UmpleTrait) {
+    	wasSet = sm.setUmpleTrait((UmpleTrait)uClassifier);
+     }
+    }
+    if (!wasSet)
+    {
+    	// Future-proofing: currently all paths cause wasSet to be true
+    	if (uClassifier instanceof UmpleClass) {
+	    	setFailedPosition(stateMachineToken.getPosition(), 15, uClassifier.getName());
+	    } 
+      mixset Trait {
+          if (uClassifier instanceof UmpleTrait) {
+          //TODO --Trait's code
+          setFailedPosition(stateMachineToken.getPosition(), 15, uClassifier.getName());
+        }
+      } 
+    }
+      
+    
+    if(stateMachineToken.is("pooled"))
+    {
+      sm.setPooled(true);
+    }
+    
+    if(stateMachineToken.is("queued"))
+    {
+      sm.setQueued(true);
+    }
+    
+    populateStateMachine(stateMachineToken, sm, uClassifier);
+
+    //Place all states from transitions that weren't declared in the StateMachine
+    //TODO: start at level of transition
+    //TOcheck: multiple transitions to same state?
+    ArrayList<Transition> allTransitions = sm.getAllTransitions();
+    ArrayList<Transition> removeTransitions = new ArrayList<Transition>();
+    
+    while (placeholderStateMachine.numberOfStates() > 0)
+    {
+      State s = placeholderStateMachine.getState(0);
+      if (s.getName().indexOf('.') > 0)
+      {
+        for (Transition t : allTransitions)
+        {
+          boolean notFound = false;
+          
+          if (t.getNextState().equals(s))
+          {
+            String toState = s.getName();
+            String tmpName = toState;
+            String[] stateNames = tmpName.split("\\.");
+            //Strip last state from dotNotation
+            //If the super state does not have a state machine then the state will be added to the top level sm
+            //TODO: check that the top level doesn't have a state with the same name
+            while(tmpName.contains(".") && !notFound){
+              tmpName = tmpName.substring(0,tmpName.lastIndexOf('.'));
+              State superState = sm.findState(tmpName);
+              if(superState != null)
+              {
+                for (StateMachine nesSm : superState.getNestedStateMachines()){
+                  //TODO: add support for concurrent sm
+                  s.setStateMachine(nesSm);
+                  break;
+                }
+                s.setName(stateNames[stateNames.length - 1]);
+                if (s.getIsHistoryState())
+                {
+                  possiblyUnknownStates.remove(s);
+                  s.getStateMachine().setContainsHistoryState(true);
+                }
+                if (s.getIsDeepHistoryState())
+                {
+                  possiblyUnknownStates.remove(s);
+                  s.getStateMachine().setContainsDeepHistoryState(true);
+                  addDeepHistoryStatesToNestedStateMachines(s);
+                }
+                break;
+              }
+              else
+                notFound = true;
+              
+              if(!tmpName.contains("."))
+              {
+                //TODO: check to make sure there are no other states at this level with same name
+                s.setName(stateNames[stateNames.length - 1]);
+                if (s.getIsHistoryState() || s.getIsDeepHistoryState())
+                {
+                  setFailedPosition(stateMachineToken.getPosition(), 64, sm.getName());
+                }
+                s.setStateMachine(sm);
+                break;
+              }
+            }
+            
+            if(notFound) 
+	        {
+	          notFound = true;
+	          removeTransitions.add(t);
+	          placeholderStateMachine.deleteState(s);
+	          possiblyUnknownStates.remove(s);
+	          t.getFromState().deleteTransition(t);
+	          getParseResult().addErrorMessage(new ErrorMessage(68,t.getPosition(), toState,t.getPosition().getLineNumber()+""));
+	        }
+          }
+        }
+      }
+      else
+      {
+        if (s.getIsHistoryState() || s.getIsDeepHistoryState())
+        {
+          //TODO: find transition token to raise error at correct position
+          setFailedPosition(stateMachineToken.getPosition(), 65, sm.getName());
+        }
+        s.setStateMachine(sm);
+      }
+    }
+    
+    for (Transition t : removeTransitions)
+    {
+    	sm.getAllTransitions().remove(t);
+    }
+    
+    
+    if(sm.getQueued() || sm.getPooled())
+    {
+      
+      if(sm.getEvents().isEmpty())
+      { 
+        if(!sm.getNestedStateMachines().isEmpty())
+        {
+          boolean nsmEvents=false;
+          for(StateMachine nsm: sm.getNestedStateMachines())
+          {
+            if(!nsm.getEvents().isEmpty())
+            {
+              nsmEvents=true;
+            }
+          }
+          if(!nsmEvents && sm.getQueued())
+          {
+            setFailedPosition(stateMachineToken.getPosition(), 56, sm.getName());
+          }
+          else if (!nsmEvents && sm.getPooled())
+          {
+            setFailedPosition(stateMachineToken.getPosition(), 57, sm.getName());
+          }
+        }
+        else if(sm.getNestedStateMachines().isEmpty() && sm.getQueued())
+        {
+          setFailedPosition(stateMachineToken.getPosition(), 56, sm.getName());
+        }
+        else if(sm.getNestedStateMachines().isEmpty() && sm.getPooled())
+        {
+          setFailedPosition(stateMachineToken.getPosition(), 57, sm.getName());
+        }
+      }
+    }
+    
+    mixset Mixset {
+      analyzeMixsetDefinition(innerMixsetTokens, sm);
+    }
+ 
+    return sm;
+  }
+
+  private State createStateFromTransition(Token transitionToken, StateMachine sm)
+  {
+    checkStateNameOfToken(transitionToken);
+    
+    String name = transitionToken.getValue("stateName");
+    State nextState = null;
+    
+    // Issue 140 - Final state keyword defines the final state for the top-level state machine
+    if (FINAL_STATE_KEYWORD.equals(name))
+    {
+      StateMachine superStateMachine = sm.getSuperStateMachine();
+      nextState = superStateMachine.findState(name);
+      if (nextState == null) 
+      {
+        nextState = new State(name,superStateMachine);
+      }
+      
+      //Issue492
+      nextState.setPosition(transitionToken.getSubToken("stateName").getPosition());
+    }
+    else
+    {
+      nextState = sm.findState(name);
+      if (nextState == null)
+      {
+        nextState = placeholderStateMachine.findState(name);
+        if(nextState != null)possiblyUnknownStates.get(nextState).add(transitionToken);
+      }
+
+      if (nextState == null)
+      {
+        nextState = new State(name,placeholderStateMachine);
+        //Issue492
+        nextState.setPosition(transitionToken.getSubToken("stateName").getPosition());
+        possiblyUnknownStates.put(nextState, new ArrayList<Token>());
+        possiblyUnknownStates.get(nextState).add(transitionToken);
+      }
+    }
+    
+   
+    return nextState;
+  }
+  
+   private State createStateFromStandAloneTransition(Token transitionToken, StateMachine sm){
+	    checkStateNameOfToken(transitionToken);
+	    
+	    String name = transitionToken.getValue("toState");
+	    State nextState;
+	    
+	    nextState = sm.findState(name);
+	    
+	    if ("Final".equals(name))
+	    {
+	      nextState = new State(name,sm);
+	      //Issue 492
+	      nextState.setPosition(transitionToken.getSubToken("toState").getPosition());
+	    }
+	    else
+	    {
+	      if (nextState == null)
+	      {
+	        nextState = placeholderStateMachine.findState(name);
+	        if(nextState != null)possiblyUnknownStates.get(nextState).add(transitionToken);
+	      }
+
+	      if (nextState == null)
+	      {
+	        nextState = new State(name,placeholderStateMachine);
+	        //Issue 492
+	        nextState.setPosition(transitionToken.getSubToken("toState").getPosition());
+	        possiblyUnknownStates.put(nextState, new ArrayList<Token>());
+	        possiblyUnknownStates.get(nextState).add(transitionToken);
+	      }
+	    }
+	    
+	    return nextState;
+	  }
+	  
+	  
+  private void addDeepHistoryStatesToNestedStateMachines(State deepState)
+  {
+    StateMachine sm = deepState.getStateMachine();
+    for (StateMachine nesSm : sm.getNestedStateMachines())
+    {
+      if (nesSm.getDeepHistoryState() == null)
+      {
+        State s = new State("HStar", nesSm);
+        nesSm.setContainsDeepHistoryState(true);
+      }
+    }
+  }
+  
+  private String createDotNotationName(String stateName, StateMachine sm)
+  {
+    String finalName = stateName;
+    State pState = sm.getParentState();
+    StateMachine root = null;
+    while (pState != null)
+    {
+      finalName = pState.getName().concat("." + finalName);
+      root = pState.getStateMachine();
+      pState = root.getParentState();
+    }
+    return finalName;
+  }
+
+  private State createStateFromDefinition(Token stateToken, StateMachine sm)
+  {
+    checkStateNameOfToken(stateToken);
+    
+    State s = sm.findState(stateToken.getValue("stateName"),false);
+    if (s == null)
+    {
+      s = placeholderStateMachine.findState(stateToken.getValue("stateName"));
+      if (s == null)
+      {
+        String dotName = createDotNotationName(stateToken.getValue("stateName"), sm);
+        s = placeholderStateMachine.findState(dotName);
+      
+      }
+      if (s != null)
+      {
+        s.setName(stateToken.getValue("stateName"));
+        s.setStateMachine(sm);
+      }
+    }
+    if (s == null)
+    {
+      s = new State(stateToken.getValue("stateName"),sm);
+      //Issue 492
+      s.setPosition(stateToken.getPosition());
+    }
+    if (s.getIsHistoryState() || s.getIsDeepHistoryState())
+    {
+      setFailedPosition(stateToken.getPosition(), 63, stateToken.getName());
+    }
+    possiblyUnknownStates.remove(s);
+    
+
+    return s;
+  }
+
+  private void populateStateMachine(Token stateMachineToken, StateMachine sm, UmpleClassifier uClassifier)
+  {
+    boolean isFirst;
+    boolean isFinalState = false;
+    String changeType = null;
+    
+    if (sm.getStates().size() != 0)
+    	isFirst = false;
+    else
+    	isFirst = true;
+    
+    checkStateMachineForDuplicateEvents(stateMachineToken);
+    
+    for(Token stateToken : stateMachineToken.getSubTokens())
+    {
+      if(stateToken.is("pooled"))
+      {
+        sm.setPooled(true);
+      }
+      
+      if(stateToken.is("queued"))
+      {
+        sm.setQueued(true);
+      }    
+      
+      //Issue 148
+       if(stateToken.is("standAloneTransition") && !ignoredTransitions.contains(stateToken))
+      {
+    	  if(stateToken.getValue("event") != null)
+    	    analyzeStandAloneTransition(false,stateToken, stateToken.getValue("fromState"), null, sm);
+    	  else
+            analyzeStandAloneTransition(true,stateToken, stateToken.getValue("fromState"), null, sm);
+      }
+      
+      // Concurrency is only allowed between nested state-machines
+      if (stateToken.is("||"))
+      {
+        setFailedPosition(stateMachineToken.getPosition(), 53, sm.getName());
+      }
+      mixset Trace {
+        if(stateToken.is("trace"))
+        {
+          if (uClassifier instanceof UmpleClass) {
+          analyzeTraceStatement((UmpleClass)uClassifier,stateToken); 
+        } else {
+          //TODO--- trait's functionality for trace;
+        }
+        }
+      }
+      
+      if (!stateToken.is("state") && !stateToken.is("stateName"))
+      {
+        if (stateToken.is("changeType")) { changeType = stateToken.getValue(); }      
+        continue;
+      }
+
+      if ("-".equals(changeType))
+      {
+        State deleteMe = sm.findState(stateToken.getValue("stateName"));
+        if (deleteMe != null) { deleteMe.delete(); }
+      }
+      else
+      {
+        State s = createStateFromDefinition(stateToken,sm);
+        s.setFinalState(isFinalState);
+        if (isFirst)
+        {
+          s.setIsStartState(true);
+        }
+        isFirst = false;
+        isFinalState = false;
+        analyzeState(stateToken, s);
+        changeType = null;
+        
+        for(Token state : stateToken.getSubTokens())
+        {
+        	  if(state.is("standAloneTransition") && !ignoredTransitions.contains(state))
+             {
+           	  analyzeStandAloneTransition(false,state, state.getValue("fromState"), null, sm); 
+             }
+        }
+      }
+    }
+  }
+  
+  /* Issue 925 - Final states cannot have do activities, exit actions, transitions, 
+                 nor nested state machines
+  */
+  private boolean analyzeFinalState(Token finalStateToken, State finalState)
+  {
+  	   boolean foundInvalidElement = false;
+  	   
+       for (Token subToken : finalStateToken.getSubTokens())
+	   {
+		   // Final states are only allowed to contain entry actions
+		   if (isEntryActionToken(subToken)) 
+		   {
+				finalState.addAction(analyzeAction(subToken, finalState));
+		   } else if(subToken.is("final")) 
+		   {
+				finalState.setFinalState(true);
+		   } else if(!foundInvalidElement && isInvalidFinalStateElement(subToken))
+		   {
+		   		foundInvalidElement = true;
+		   }
+	   }
+	   
+	   return foundInvalidElement;
+  }
+  
+  // Helper function for issue 925
+  private boolean isEntryActionToken(Token stateToken)
+  {
+	   return stateToken.is("entryOrExitAction") && (stateToken.getValue("type").equals("entry"));
+  }
+  
+  // Helper function for issue 925
+  private boolean isExitActionToken(Token stateToken)
+  {
+	   return stateToken.is("entryOrExitAction") && (stateToken.getValue("type").equals("exit"));
+  }
+  
+  // Helper function for issue 925
+  private boolean isInvalidFinalStateElement(Token stateToken)
+  {
+	   return stateToken.is("activity") || stateToken.is("transition") || stateToken.is("state") || isExitActionToken(stateToken);
+  }
+  
+  
+  
+
+  private void analyzeState(Token stateToken, State fromState)
+  {
+    // Issue 140 - States cannot be named Final because it is a reserved keyword
+    if (fromState.getName().equals(FINAL_STATE_KEYWORD))
+    {
+      getParseResult().addErrorMessage(new ErrorMessage(74, fromState.getPosition(), "" + fromState.getPosition().getLineNumber()));
+      return;
+    }
+    
+    boolean addNewSm = true;
+    boolean isConcurrentState = false;
+    boolean isFinalState = false;
+    String changeType = null;
+    
+    if (stateToken.getSubToken("final") != null)
+    {
+    	boolean foundInvalidElement = analyzeFinalState(stateToken, fromState);
+    	if (foundInvalidElement)
+    	{
+    		getParseResult().addErrorMessage(new ErrorMessage(72,
+    		                                                  fromState.getPosition(),
+    		                                                  fromState.getName(),
+    		                                                  fromState.getStateMachine().getName()));
+    	}
+    	return;
+    }
+    
+    for(Token subToken : stateToken.getSubTokens())
+    {
+      
+      if (subToken.is("extraCode"))
+      {
+        if(!subToken.getValue().trim().equals(""))
+        {
+          setFailedPosition(subToken.getPosition(),1006, subToken.getValue() );
+        }
+      }
+      else if (subToken.is("changeType"))
+      {
+        changeType = subToken.getValue();
+      }
+      else if (subToken.is("final"))
+      {
+        fromState.setFinalState(true);
+      }
+      else if (subToken.is("transition") && !ignoredTransitions.contains(subToken))
+      {
+        analyzeTransition(false,subToken, fromState, changeType); 
+      }
+      else if (subToken.is("autoTransition") && !ignoredTransitions.contains(subToken))
+      {
+        analyzeTransition(true,subToken, fromState, changeType);
+      }
+      else if (subToken.is("concreteMethodDeclaration"))
+      {
+        analyzeStateDependentMethod(subToken, fromState);
+      }
+      else if (subToken.is("activity"))
+      {
+        analyzeActivity(subToken, fromState);
+      }
+      else if (subToken.is("entryOrExitAction"))
+      {
+      	fromState.addAction(analyzeAction(subToken, fromState));
+      }
+      else if (subToken.is("displayColor"))
+      { // See near clone in UmpleInternalParser_CodeClass.ump and UmpleInternalParser_CodeLayout.ump
+          String theColor = subToken.getValue("colorValue");
+          // Optionally users may add an equals sign, which we take out
+          if(theColor.startsWith("=")) theColor=theColor.substring(1,theColor.length());
+          // Optionally users may add quotation marks around the colour, which we take out
+          theColor=theColor.replace('\"',' ');
+          // Remove all spaces that may have been before any quotation marks or after the equals sign
+          theColor="\""+theColor.trim()+"\"";
+          fromState.setDisplayColor(theColor);
+      }
+      else if (subToken.is("||"))
+      {
+        if (fromState.numberOfNestedStateMachines() == 0) { continue; }
+        int previousSmIndex = fromState.numberOfNestedStateMachines() - 1;
+              StateMachine nestedSm = fromState.getNestedStateMachine(previousSmIndex);
+              if (nestedSm.numberOfStates() == 0) { continue; }
+              nestedSm.setName(nestedSm.getState(0).getName());
+              addNewSm = true;
+              isConcurrentState = true;
+      }
+      else if (subToken.is("state"))
+      {
+        StateMachine nestedStateMachine = null;
+        if (addNewSm)
+        {
+          //Issue 580
+          for(StateMachine nested : fromState.getNestedStateMachines())
+            if (nested.getName() == fromState.getName())
+            	nestedStateMachine = nested;
+          
+          if(nestedStateMachine == null)
+          {	  
+            nestedStateMachine = new StateMachine(fromState.getName());
+            fromState.addNestedStateMachine(nestedStateMachine);
+          }
+        }
+        else
+        {
+          int lastIndex = fromState.numberOfNestedStateMachines() - 1;
+          nestedStateMachine = fromState.getNestedStateMachine(lastIndex);
+        }
+        
+        // Issue 778
+        if (isConcurrentState && addNewSm)
+        {
+          State duplicateState = checkParentForParallelSmsWithSameName(subToken.getValue("stateName"), fromState);
+          if (duplicateState != null)
+          {
+            getParseResult().addErrorMessage(new ErrorMessage(73,
+                                                              fromState.getPosition(),
+                                                              fromState.getName(),
+                                                              duplicateState.getName(),
+                                                              "" + duplicateState.getPosition().getLineNumber(),
+                                                              "" + subToken.getPosition().getLineNumber()));
+          }
+        }
+        
+        State s = createStateFromDefinition(subToken,nestedStateMachine);
+        //alignStateDefinitionWithStateMachine(s,nestedStateMachine);
+        if (addNewSm)
+        {
+                  if (isConcurrentState)
+                  {
+                    nestedStateMachine.setName(s.getName());
+                  }
+          s.setIsStartState(true);
+        }
+        addNewSm = false;
+        
+        analyzeState(subToken, s);
+      }
+    }
+  }
+  
+  // Issue 778 - Check if the parallel state machine has the same name as one of the states in 
+  //             its parent composite state. If we find a state with the same name, we return it to provide the corresponding error message.
+  private State checkParentForParallelSmsWithSameName(String parallelSmName, State parentState)
+  {
+    for (StateMachine nsm : parentState.getNestedStateMachines()) 
+    {
+      for (State s : nsm.getStates()) 
+      {
+        if (s.getName().equals(parallelSmName)) 
+        {
+          return s;
+        }
+      }
+    }
+    
+    return null;
+  }
+  
+  //Issue 148
+   
+   private void analyzeStandAloneTransition(boolean isAutoTransition, Token transitionToken, String state, String changeType, StateMachine sm2){
+	   
+	   State fromState;
+	   
+	   fromState = sm2.findState(state);
+	   
+	   if (fromState == null)
+	   {
+		    
+		   fromState = placeholderStateMachine.findState(state);
+	       if(fromState != null)possiblyUnknownStates.get(fromState).add(transitionToken);
+	   }
+
+	   if (fromState == null)
+	   {
+		    fromState = new State(state,placeholderStateMachine);
+		    
+		    //Issue 492
+		    
+		    fromState.setPosition(transitionToken.getSubToken("fromState").getPosition());
+		    
+	        possiblyUnknownStates.put(fromState, new ArrayList<Token>());
+	        possiblyUnknownStates.get(fromState).add(transitionToken);
+	   }
+	   
+	   State nextState = createStateFromStandAloneTransition(transitionToken,fromState.getStateMachine());
+	    
+	    Transition t; 
+	    if ("-".equals(changeType))
+	    {
+	      t = Transition.createPlaceholder(nextState);
+	    }
+	    else
+	    {
+	      t = new Transition(fromState, nextState);
+	    }
+
+	    t.setAutoTransition(isAutoTransition);
+	    
+	    //Issue 519
+	    t.setPosition(transitionToken.getPosition());
+
+	    String eventName = transitionToken.getValue("event");
+	    String eventTimerAmount = transitionToken.getValue("timer");
+	    String name="";
+	    String type="";
+	    String paramType="";
+	    String paramName="";
+	    if (eventName == null && eventTimerAmount != null)
+	    {
+	      eventName = fromState.newTimedEventName(nextState);
+	    }
+
+	    Token guardToken = transitionToken.getSubToken("guard");
+	    if (guardToken != null)
+	    {
+	      ((GuardAnalyzer)model.getAnalyzer("guard")).setUClassifier( sm2.getUmpleClass());
+              ((GuardAnalyzer)model.getAnalyzer("guard")).setT(t);
+              model.getAnalyzer("guard").analyzeToken(guardToken);
+	    }
+
+	    Token actionToken = transitionToken.getSubToken("action");
+	    if (actionToken != null)
+	    {
+	      
+	      t.setAction(analyzeAction(actionToken,fromState));
+	    }
+	    if (eventName != null || isAutoTransition)
+	    {
+	      StateMachine sm = fromState.getStateMachine();
+	      UmpleClass uClass = sm.getUmpleClass();
+	      Event event = isAutoTransition ? Event.createAutoTransition() : uClass == null ? sm.findOrCreateEvent(eventName) : uClass.findOrCreateEvent(eventName);
+	      if (eventTimerAmount != null)
+	      {
+	        event.setIsTimer(true);
+	        event.setTimerInSeconds(eventTimerAmount);
+	      }
+	      
+	      if(event.getName().equals("unspecified") && !sm.getPooled())
+	      {
+	        event.setUnspecified(true);
+	      }
+	      
+	      if(event.getName().equals("unspecified") && sm.getPooled())
+	      {
+	        Token eventToken = transitionToken.getSubToken("event");
+	        setFailedPosition(eventToken.getPosition(),62, sm.getName());
+	      }
+	      
+	      t.setEvent(event);
+	      
+	      if ("-".equals(changeType))
+	      {
+	        fromState.removeTransition(t);      
+	      }
+	     
+	     for (Token subEventToken : transitionToken.getSubTokens())
+	     {
+	     	Event aEvent = sm.getEvent(event.getName());
+	        
+	      	if (subEventToken.is("parameterList"))
+	      	{
+	      		if ( aEvent == event && ! event.hasParams() )
+	      		{
+	      			for(Token parameterToken : subEventToken.getSubTokens())
+	      			{
+	      				boolean isList = false;
+	      				if (parameterToken.is("parameter"))
+	      				{
+	      					if (parameterToken.getSubToken("type") != null)
+	      					{
+	      						paramType = parameterToken.getSubToken("type").getValue();
+	      					}
+	      					if (parameterToken.getSubToken("list") != null)
+	      					{
+	      						isList = parameterToken.getSubToken("list").getValue() != null;
+	      					}
+	      					
+	      					paramName = parameterToken.getSubToken("name").getValue();
+	      					MethodParameter aParameter  = new MethodParameter(paramName,paramType,null,null, false);
+	      					aParameter.setIsList(isList);
+	      					if (event.getParams().contains(aParameter))
+	      					{
+	      						break;
+	      					}
+	      					else
+	      					{
+	      						event.addParam(aParameter);
+	      					}
+	      				}
+	      			}
+	      		}
+	      		else
+	      		{ 
+	      			for(Token parameterSecondToken : subEventToken.getSubTokens())
+	      			{
+	      				boolean isListt = false;
+	      				if (parameterSecondToken.is("parameter"))
+	      				{
+	      					String paramTypee="";
+	      					if (parameterSecondToken.getSubToken("type") != null)
+	      					{
+	      						type = parameterSecondToken.getSubToken("type").getValue();
+	      					}
+	      					if (parameterSecondToken.getSubToken("list") != null)
+	      					{
+	      						isListt = parameterSecondToken.getSubToken("list").getValue() != null;
+	      					}
+	      					name = parameterSecondToken.getSubToken("name").getValue();
+	      				}	
+	      			}
+	      		
+	      			for (int i=1; i <= event.getParams().size(); i++)
+	      			{
+	      			    if (!event.getArgs().contains(type) || !event.getArgs().contains(name))
+	      			    {
+	      			    	setFailedPosition(transitionToken.getPosition(), 51, event.getArgs());
+	      			    	
+	      			    }
+	      			}
+	      		}
+	      	}
+	      }
+	      
+	      for(Token subToken : transitionToken.getSubTokens())
+	      {
+	        if (subToken.is("activity"))
+	        {
+	          t.setAutoTransition(false);
+	          Activity act = analyzeActivity(subToken, fromState);
+	          act.setOnCompletionEvent(event);
+	        }
+	    }      
+	    
+	    }
+	  }
+
+	//Code written by Eric Telmer
+  private void checkStateMachineForDuplicateEvents(Token stateMachineToken){
+    for (Token subToken : stateMachineToken.getSubTokens()){
+      if (subToken.is("state")){
+        checkStateForDuplicateEvents(subToken, null);
+      }
+    }
+  }
+  
+  //Checks if there is a transition in a state that will never be reached
+	private void checkStateForDuplicateEvents(Token stateToken, Set<String> superStateEvents)
+	{
+    Set<String> unguardedEvents = new HashSet<String>();
+    List<Token> subStates = new ArrayList<Token>();
+    boolean priorAutoTransitionExists = false;
+    String priorAutoTransitionState = null;
+    List<Token> transitions = new ArrayList<Token>();
+    List<Token> activityTransform = new ArrayList<Token>();
+    List<Token> guardedTransitions = new ArrayList<Token>();
+    
+    
+    if(superStateEvents == null){
+      superStateEvents = new HashSet<String>();
+    }
+    
+    if(superStateEvents.contains(null)){
+      priorAutoTransitionExists = true;
+    }
+    
+    for(Token subToken : stateToken.getSubTokens()){
+      if(subToken.is("transition"))
+      {
+        transitions.add(subToken);  
+      }
+      else if(subToken.is("autoTransition") && subToken.getSubToken("guard") == null){
+        if(priorAutoTransitionExists)
+        {
+          if(subToken.getSubToken("activity") != null){
+            activityTransform.add(subToken);
+          }else{
+            ignoredTransitions.add(subToken);
+          }
+          if (!subToken.getValue("stateName").equals(priorAutoTransitionState)){
+            // Issue 657: Only display warning if auto-transitions go to different states
+            setFailedPosition(subToken.getPosition(), 69, subToken.getValue("stateName"), ""+subToken.getPosition().getLineNumber());
+          }
+        }
+        priorAutoTransitionState = subToken.getValue("stateName");
+        priorAutoTransitionExists = true;
+        superStateEvents.add(null);
+      }
+      else if(subToken.is("autoTransition"))
+      {
+        transitions.add(subToken);  
+      }
+      else if(subToken.is("state")){
+        subStates.add(subToken);
+      }
+    }
+    
+    for(Token subToken : transitions)
+    {
+    	//If there is ever a transition past an auto transition, raise an error        
+        if(priorAutoTransitionExists){
+          setFailedPosition(subToken.getPosition(), 54, subToken.getValue("event"));
+          ignoredTransitions.add(subToken);
+        }
+        //if a unguarded transition with the same event has been seen,
+        // in this state or it's super, raise an error
+        if(unguardedEvents.contains(subToken.getValue("event"))){
+          setFailedPosition(subToken.getPosition(), 54, subToken.getValue("event"));
+          ignoredTransitions.add(subToken);
+        }
+        if(superStateEvents.contains(subToken.getValue("event"))){
+          setFailedPosition(subToken.getPosition(), 55, subToken.getValue("event"));
+          ignoredTransitions.add(subToken);	
+        }
+        if(subToken.getValue("guard") == null){
+          if((subToken.getValue("event") == null) && (subToken.getValue("timer") == null)){
+            {
+              priorAutoTransitionExists = true;
+            }
+          }
+          //System.out.println("added: " + subToken.getValue("event"));
+          
+          if(subToken.getValue("timer") == null)
+          	unguardedEvents.add(subToken.getValue("event"));
+        }
+        else
+        {
+          Boolean guardsAreEqual = false;
+          for(Token guardedTransition : guardedTransitions){
+            Boolean subTokenIsAutoTransition = subToken.is("autoTransition");
+            Boolean guardTransitionIsAutoTransition = guardedTransition.is("autoTransition");
+            if ((guardTransitionIsAutoTransition && subTokenIsAutoTransition) 
+              || (!guardTransitionIsAutoTransition && guardedTransition.getValue("event") != null && guardedTransition.getValue("event") == subToken.getValue("event"))
+              || (!guardTransitionIsAutoTransition && guardedTransition.getValue("event") != null && guardedTransition.getValue("event").equals(subToken.getValue("event"))) 
+              || (!guardTransitionIsAutoTransition && guardedTransition.getValue("timer") != null && guardedTransition.getValue("timer") == subToken.getValue("timer"))
+              || (!guardTransitionIsAutoTransition && guardedTransition.getValue("timer") != null && guardedTransition.getValue("timer").equals(subToken.getValue("timer"))))
+            {
+              Position subTokenPosition = subToken.getPosition();
+              String subTokenValue = subToken.getValue("event");
+              if (subTokenIsAutoTransition)
+              {
+                subTokenValue = "(Auto Transition)";
+              }
+              guardsAreEqual = compareExpressions(guardedTransition.getSubToken("guard"), subToken.getSubToken("guard"), false, false);
+              if (guardsAreEqual)
+              {
+                setFailedPosition(subTokenPosition, 70, subTokenValue);
+                ignoredTransitions.add(subToken);
+                break;
+              }
+            }
+          }
+          if (!guardsAreEqual)
+          {
+            guardedTransitions.add(subToken);    
+          }
+        }
+    }
+    
+    unguardedEvents.addAll(superStateEvents);
+    
+    for(Token subState : subStates){
+      Set<String> unguardedEventsAux = new HashSet<String>();
+      unguardedEventsAux.addAll(unguardedEvents);
+      checkStateForDuplicateEvents(subState, unguardedEventsAux);
+    }
+
+    for(Token autoTransition: activityTransform){
+      transformAutoTransitionToActivity(autoTransition);
+    }
+    
+    return;
+	}
+	
+   private Boolean compareExpressions(Token exprOne, Token exprTwo, Boolean exprOneNegation, Boolean exprTwoNegation)
+   {
+    
+     Token exprOneCopy = exprOne.copy();
+     Token exprTwoCopy = exprTwo.copy();
+    
+     Boolean exprOneNeedsTraversal = checkIfExpressionNeedsTraversal(exprOneCopy);
+     Boolean exprTwoNeedsTraversal = checkIfExpressionNeedsTraversal(exprTwoCopy);
+    
+     if (exprOneCopy.is(NEGATIVE_CONSTRAINT))
+     {
+       exprOneNegation = switchNegation(exprOneNegation);
+       exprOneCopy.setName(NEGATIVE_CONSTRAINT_APPLIED);
+     }
+     if (exprTwoCopy.is(NEGATIVE_CONSTRAINT))
+     {
+       exprTwoNegation = switchNegation(exprTwoNegation);
+       exprTwoCopy.setName(NEGATIVE_CONSTRAINT_APPLIED);
+     }
+     
+     if (exprOneNeedsTraversal || exprTwoNeedsTraversal)
+     {
+       if (exprOneNeedsTraversal)
+       {
+         Integer startIndexOne = getSubTokenStartIndex(exprOneCopy);
+         exprOneCopy = exprOneCopy.getSubToken(startIndexOne + LHS_POSITION);
+       }
+       if (exprTwoNeedsTraversal)
+       {
+         Integer startIndexTwo = getSubTokenStartIndex(exprTwoCopy);
+         exprTwoCopy = exprTwoCopy.getSubToken(startIndexTwo + LHS_POSITION);
+       }
+       return compareExpressions(exprOneCopy, exprTwoCopy, exprOneNegation, exprTwoNegation);
+     }
+     else if (exprOneCopy.getName().equals(exprTwoCopy.getName()) || (tokenIsGeneric(exprOneCopy) && tokenIsGeneric(exprTwoCopy)))
+     {
+       Integer startIndexOne = getSubTokenStartIndex(exprOneCopy);
+       Integer startIndexTwo = getSubTokenStartIndex(exprTwoCopy);
+       Token operatorOne = getExpressionOperator(exprOneCopy, startIndexOne);
+       Token operatorTwo = getExpressionOperator(exprTwoCopy, startIndexTwo);
+       
+       if ((operatorOne == null) == (operatorTwo == null))
+       {
+         if (operatorOne != null)
+         {
+           return compareExpressionsWithOperands(exprOneCopy, exprTwoCopy, operatorOne, operatorTwo, exprOneNegation, exprTwoNegation, startIndexOne, startIndexTwo);
+         }
+         else
+         {
+           Token exprOneNoOperator = exprOneCopy;
+           Token exprTwoNoOperator = exprTwoCopy;
+           if (!expressionIsBasicValue(exprOneCopy))
+           {
+             exprOneNoOperator = exprOneCopy.getSubToken(startIndexOne + LHS_POSITION);
+           }
+           if (!expressionIsBasicValue(exprTwoCopy)){
+             exprTwoNoOperator = exprTwoCopy.getSubToken(startIndexTwo + LHS_POSITION);
+           }
+           
+           Boolean exprOneIsBasicValue = expressionIsBasicValue(exprOneNoOperator);
+           Boolean exprTwoIsBasicValue = expressionIsBasicValue(exprTwoNoOperator);
+           if (exprOneIsBasicValue == exprTwoIsBasicValue)
+           {
+             if(exprOneIsBasicValue)
+             {
+               return (exprOneNoOperator.toString().equals(exprTwoNoOperator.toString())) && exprOneNegation == exprTwoNegation;
+             }
+             else
+             {
+               return compareExpressions(exprOneNoOperator, exprTwoNoOperator, exprOneNegation, exprTwoNegation);
+             }
+           }
+         }
+       }
+     }
+     return false;
+   }
+   
+   private Boolean checkIfExpressionNeedsTraversal(Token token)
+   {
+     Integer startIndex = getSubTokenStartIndex(token);
+     Token operator = getExpressionOperator(token, startIndex);
+     if (tokenIsGeneric(token) && operator == null)
+     {
+       return true;
+     }
+     else if (token.is(LONE_BOOLEAN) && (token.getSubToken(NEGATIVE_CONSTRAINT) != null))
+     {
+       return true;
+     }
+     return false;
+   }
+   
+   private Integer getSubTokenStartIndex(Token expression)
+   {
+     int i = 0;
+      for (Token token : expression.getSubTokens())
+      {
+        if(!STATIC.equals(token.getValue()))
+        {
+          break;
+        }
+        i++;
+      }
+      return i;
+    }
+   
+   private Token getExpressionOperator(Token expression, Integer startIndex)
+   {
+     Integer operatorPosition = startIndex + OPERATOR_POSITION;
+     if (operatorPosition < expression.getSubTokens().size()-1)
+     {
+       Token operator = expression.getSubToken(operatorPosition);
+       String operatorName = operator.getName();
+       if (operatorName.contains(OP) || OPERATOR.equals(operatorName))
+       {
+         return operator;
+       }
+     }
+     return null;
+   }
+   
+   private Boolean switchNegation(Boolean negation)
+   {
+     if (negation)
+     {
+       return false;
+     }
+     else
+     {
+       return true;
+     }
+   }
+   
+   private Boolean tokenIsGeneric(Token token)
+   {
+     return token.is(GUARD) || token.is(CONSTRAINT_BODY) || token.is(LINKING_OP_BODY) || token.is(NEGATIVE_CONSTRAINT);
+   }
+
+   private Boolean compareExpressionsWithOperands(Token exprOne, Token exprTwo, Token opOneToken, Token opTwoToken, Boolean exprOneNegation, Boolean exprTwoNegation, Integer startIndexOne, Integer startIndexTwo)
+   {
+     Token exprOneLHS = exprOne.getSubToken(startIndexOne + LHS_POSITION);
+     Token exprOneRHS = exprOne.getSubToken(startIndexOne + RHS_POSITION);
+     Token exprTwoLHS = exprTwo.getSubToken(startIndexTwo + LHS_POSITION);
+     Token exprTwoRHS = exprTwo.getSubToken(startIndexTwo + RHS_POSITION);
+     
+     String opOne = applyOperatorNegation(opOneToken, exprOneNegation);
+     exprOneNegation = checkIfNegationApplied(opOneToken, opOne, exprOneNegation);
+     String opTwo = applyOperatorNegation(opTwoToken, exprTwoNegation);
+     exprTwoNegation = checkIfNegationApplied(opTwoToken, opTwo, exprTwoNegation);
+
+     if (operatorsAreEqual(opOne, opTwo, opOneToken.getValue(), opTwoToken.getValue(), exprOneNegation, exprTwoNegation))
+     {
+       if (compareExpressions(exprOneLHS, exprTwoLHS, exprOneNegation, exprTwoNegation) && compareExpressions(exprOneRHS, exprTwoRHS, exprOneNegation, exprTwoNegation))
+       {
+         return true;
+       }
+       else if (operandOrderDoesNotMatter(opOne, opOneToken.getValue()))
+       {
+         if (compareExpressions(exprOneLHS, exprTwoRHS, exprOneNegation, exprTwoNegation) && compareExpressions(exprOneRHS, exprTwoLHS, exprOneNegation, exprTwoNegation))
+         {
+           return true;
+         }
+       }
+     }
+     else if (numericalExprOperatorsAreOpposite(opOne, opTwo))
+     {
+       if (compareExpressions(exprOneLHS, exprTwoRHS, false, false) && compareExpressions(exprOneRHS, exprTwoLHS, false, false))
+       {
+         return true;
+       }
+     }
+     return false;
+   }
+   
+   private String applyOperatorNegation(Token operatorToken, Boolean exprNegation)
+   {
+     String operator = operatorToken.getName();
+     if (exprNegation)
+     {
+       if (EQUALS_OP.equals(operator))
+       {
+         operator = NOT_EQUALS_OP;
+       }
+       else if (NOT_EQUALS_OP.equals(operator))
+       {
+         operator = EQUALS_OP;
+       }
+       else if (GREATER_THAN_OR_EQUAL.equals(operator))
+       {
+         operator = LESS_THAN;
+       }
+       else if (LESS_THAN_OR_EQUAL.equals(operator))
+       {
+         operator = GREATER_THAN;
+       }
+       else if (GREATER_THAN.equals(operator))
+       {
+         operator = LESS_THAN_OR_EQUAL;
+       }
+       else if (LESS_THAN.equals(operator))
+       {
+         operator = GREATER_THAN_OR_EQUAL;
+       }
+     }
+     return operator;
+   }
+   
+   private Boolean checkIfNegationApplied(Token operatorToken, String operator, Boolean exprNegation)
+   {
+     if (operatorToken.getName().equals(operator)){
+       return exprNegation;
+     }
+     else
+     {
+       return false;
+     }
+   }
+   
+   private Boolean operatorsAreEqual(String opOne, String opTwo, String opOneValue, String opTwoValue, Boolean exprOneNegation, Boolean exprTwoNegation)
+   {
+     if (opOne.equals(opTwo))
+     {
+       if (OPERATOR.equals(opOne) && (opOneValue.equals(opTwoValue)))
+       {
+         return true;
+       }
+       else if (!OPERATOR.equals(opOne))
+       {
+         return true; 
+       }  
+     }
+     else if (operatorIsAndOrOr(opOne) && operatorIsAndOrOr(opTwo) && exprOneNegation != exprTwoNegation)
+     {
+       return true;
+     }
+     return false;
+   }
+  
+   private Boolean operandOrderDoesNotMatter(String operatorName, String operatorValue)
+   {
+     return EQUALS_OP.equals(operatorName) || NOT_EQUALS_OP.equals(operatorName) || OR_OP.equals(operatorName) 
+         || AND_OP.equals(operatorName) || "+".equals(operatorValue) || "*".equals(operatorValue);
+   }
+  
+   private Boolean operatorIsAndOrOr(String operator)
+   {
+     return AND_OP.equals(operator) || OR_OP.equals(operator);
+   }
+
+   private Boolean numericalExprOperatorsAreOpposite(String operatorOne, String operatorTwo)
+   {
+     if ((GREATER_THAN.equals(operatorOne) && LESS_THAN.equals(operatorTwo)) || (GREATER_THAN.equals(operatorTwo) && LESS_THAN.equals(operatorOne)))
+     {
+       return true;
+     }
+     else if ((LESS_THAN_OR_EQUAL.equals(operatorOne) && GREATER_THAN_OR_EQUAL.equals(operatorTwo)) || (LESS_THAN_OR_EQUAL.equals(operatorTwo) && GREATER_THAN_OR_EQUAL.equals(operatorOne)))
+     {
+       return true;
+     }
+     return false;
+   }
+
+   private Boolean expressionIsBasicValue(Token expression)
+   {
+    if (expression.is(BOOL_LITERAL) || expression.is(NUMBER_LITERAL) || expression.is(CONSTRAINT_NAME) || expression.is(QUOTE)
+        || expression.getSubToken(CONCAT) != null || expression.is(NUMBER) || expression.is(ASSOCIATION_EXPR) || expression.is(STATEMACHINE_EXPR))
+     {
+       return true;
+     }
+     return false;
+   }
+  
+	//End Telmer
+
+  private void transformAutoTransitionToActivity(Token autoTransition){
+    if(autoTransition.getSubToken("activity") == null) return;
+    Token parent = autoTransition.getParentToken();
+    parent.removeSubToken(autoTransition);
+    
+    Token activity = autoTransition.getSubToken("activity").copy();
+    parent.addSubToken(activity);
+  }
+
+  private Activity analyzeActivity(Token activityToken, State fromState)
+  {
+    Activity act= new Activity("", fromState);
+    CodeBlock cb = new CodeBlock();
+    
+    List<String> codelangs = new ArrayList<String>();
+    Map<String,Position> implementationPositions = new HashMap<String,Position>();
+
+    for(Token tkn: activityToken.getSubTokens())
+    {
+      if(tkn.is("codeLang")){
+        codelangs.add(tkn.getValue());
+        implementationPositions.put(tkn.getValue(), tkn.getPosition());
+      }
+      else if(tkn.is("code"))
+      {
+        if(codelangs.isEmpty())
+        {
+          cb.setCode(tkn.getValue());
+          implementationPositions.put("", tkn.getPosition());
+        } 
+        else 
+        {
+          for(String lang: codelangs){
+            cb.setCode(lang, tkn.getValue());
+          }
+          codelangs.clear();
+        }
+      }
+    }
+    act.setCodeblock(cb);
+    act.setImplementationPositions(implementationPositions);
+    act.setPosition(activityToken.getPosition());
+    act.setEndPosition(activityToken.getEndPosition());
+    return act;
+  }
+  
+  private Action analyzeAction(Token actionToken, State fromState){
+  	Action action= new Action("");
+  	CodeBlock cb = new CodeBlock();
+  	List<String> codelangs = new ArrayList<String>();
+    String guardCode = "";
+    int statementIndex = 0;
+  	for(Token tkn: actionToken.getSubTokens()){
+      if (tkn.is("guardCode"))
+      {
+        guardCode = tkn.getSubToken("code").getValue();
+      }
+  	  if(tkn.is("codeLang")){
+  		  codelangs.add(tkn.getValue());
+  	  } 
+      else if(tkn.is("code"))
+      {
+    		if(codelangs.isEmpty())
+    		{
+          if (!guardCode.equals("") && statementIndex == 0)
+          {
+            cb.setCode("if (" + guardCode + ")\n        {\n          " + tkn.getValue() + "\n        }");
+          }
+          else 
+          {
+    		    cb.setCode(tkn.getValue());
+          }
+          statementIndex++;
+    		} 
+    		else {
+    		  for(String lang: codelangs)
+          {
+    		    cb.setCode(lang, tkn.getValue());
+          }
+          codelangs.clear();
+      	}
+      }
+    }
+    action.setCodeblock(cb);
+    	
+    action.setPosition(actionToken.getPosition());
+    action.setEndPosition(actionToken.getEndPosition());
+    action.setActionType(actionToken.getValue("type"));
+        
+    return action;
+  }
+
+  private void analyzeTransition(boolean isAutoTransition, Token transitionToken, State fromState, String changeType)
+  {
+    State nextState = createStateFromTransition(transitionToken,fromState.getStateMachine());
+    
+    Transition t; 
+    if ("-".equals(changeType))
+    {
+      t = Transition.createPlaceholder(nextState);
+    }
+    else
+    {
+      t = new Transition(fromState, nextState);
+    }
+
+    t.setAutoTransition(isAutoTransition);
+    
+    //Issue 519
+    t.setPosition(transitionToken.getPosition());
+
+    String eventName = transitionToken.getValue("event");
+    String eventTimerAmount = transitionToken.getValue("timer");
+    String name="";
+    String type="";
+    String paramType="";
+    String paramName="";
+    if (eventName == null && eventTimerAmount != null)
+    {
+      eventName = fromState.newTimedEventName(nextState);
+    }
+
+    Token guardToken = transitionToken.getSubToken("guard");
+    if (guardToken != null)
+    {
+      if(((GuardAnalyzer)model.getAnalyzer("guard"))!=null){
+        UmpleClassifier uClassifier = fromState.getStateMachine().getRootStateMachine().getUmpleClass();
+    	mixset Trait {
+        if (fromState.getStateMachine().getRootStateMachine().getUmpleClass()==null){
+    		uClassifier = fromState.getStateMachine().getRootStateMachine().getUmpleTrait();
+    	  }
+      }
+        ((GuardAnalyzer)model.getAnalyzer("guard")).setUClassifier(uClassifier);
+        ((GuardAnalyzer)model.getAnalyzer("guard")).setT(t);
+        model.getAnalyzer("guard").analyzeToken(guardToken);
+      }
+    }
+
+    Token actionToken = transitionToken.getSubToken("action");
+    if (actionToken != null)
+    {
+      
+      t.setAction(analyzeAction(actionToken,fromState));
+    }
+    if (eventName != null || isAutoTransition)
+    {
+      StateMachine sm = fromState.getStateMachine();
+      UmpleClass uClass = sm.getUmpleClass();
+      Event event = isAutoTransition ? Event.createAutoTransition() : uClass == null ? sm.findOrCreateEvent(eventName) : uClass.findOrCreateEvent(eventName);
+      if (eventTimerAmount != null)
+      {
+        event.setIsTimer(true);
+        event.setTimerInSeconds(eventTimerAmount);
+      }
+      
+      if(event.getName().equals("unspecified") && !sm.getPooled())
+      {
+        event.setUnspecified(true);
+      }
+      
+      if(event.getName().equals("unspecified") && sm.getPooled())
+      {
+        Token eventToken = transitionToken.getSubToken("event");
+        setFailedPosition(eventToken.getPosition(),62, sm.getName());
+      }
+      
+      t.setEvent(event);
+      
+      if ("-".equals(changeType))
+      {
+        fromState.removeTransition(t);      
+      }
+     
+     for (Token subEventToken : transitionToken.getSubTokens())
+     {
+     	Event aEvent = sm.getEvent(event.getName());
+        
+      	if (subEventToken.is("parameterList"))
+      	{
+      		if ( aEvent == event && ! event.hasParams() )
+      		{
+      			for(Token parameterToken : subEventToken.getSubTokens())
+      			{
+      				boolean isList = false;
+      				if (parameterToken.is("parameter"))
+      				{
+      					if (parameterToken.getSubToken("type") != null)
+      					{
+      						paramType = parameterToken.getSubToken("type").getValue();
+      					}
+      					if (parameterToken.getSubToken("list") != null)
+      					{
+      						isList = parameterToken.getSubToken("list").getValue() != null;
+      					}
+      					
+      					paramName = parameterToken.getSubToken("name").getValue();
+      					MethodParameter aParameter  = new MethodParameter(paramName,paramType,null,null, false);
+      					aParameter.setIsList(isList);
+      					if (event.getParams().contains(aParameter))
+      					{
+      						break;
+      					}
+      					else
+      					{
+      						event.addParam(aParameter);
+      					}
+      				}
+      			}
+      		}
+      		else
+      		{ 
+      			for(Token parameterSecondToken : subEventToken.getSubTokens())
+      			{
+      				boolean isListt = false;
+      				if (parameterSecondToken.is("parameter"))
+      				{
+      					String paramTypee="";
+      					if (parameterSecondToken.getSubToken("type") != null)
+      					{
+      						type = parameterSecondToken.getSubToken("type").getValue();
+      					}
+      					if (parameterSecondToken.getSubToken("list") != null)
+      					{
+      						isListt = parameterSecondToken.getSubToken("list").getValue() != null;
+      					}
+      					name = parameterSecondToken.getSubToken("name").getValue();
+      				}	
+      			}
+      		
+      			for (int i=1; i <= event.getParams().size(); i++)
+      			{
+      			    if (!event.getArgs().contains(type) || !event.getArgs().contains(name))
+      			    {
+      			    	setFailedPosition(transitionToken.getPosition(), 51, event.getArgs());
+      			    	
+      			    }
+      			}
+      		}
+      	}
+      }
+      
+      for(Token subToken : transitionToken.getSubTokens())
+      {
+        if (subToken.is("activity"))
+        {
+          t.setAutoTransition(false);
+          Activity act = analyzeActivity(subToken, fromState);
+          act.setOnCompletionEvent(event);
+        }
+    }      
+    
+    }
+
+  }
+
+  private void analyzeStateDependentMethod(Token methodToken, State fromState){
+    StateMachine sm = fromState.getStateMachine();
+    
+    // Make sure we retrieve the same Umple class for nested children as well
+    UmpleClass uClass = null;
+    StateMachine smRunner = sm;
+    int depth = 0;//issue1483
+
+    while (uClass == null && depth<100)
+    {
+      uClass = smRunner.getUmpleClass();
+      if (smRunner.getParentState() != null)
+    	  smRunner = smRunner.getParentState().getStateMachine();
+      depth++;
+    }
+    
+    if(uClass == null)//issue1483
+    {
+      setFailedPosition(methodToken.getPosition(), 1015);
+      return;
+    }
+
+    // Retrieve method analyzed using the method token
+    Method analyzedMethod = analyzeMethod(methodToken, null, true);
+    Method classMethod = uClass.getMethod(analyzedMethod);
+
+    // Generate warning if any of the method definitions have conflicting method modifiers
+    int methodPrototypeIndex = uClass.getStateDependentMethods().indexOf(analyzedMethod);
+    if (methodPrototypeIndex >= 0) {
+      String methodPrototypeModifier = uClass.getStateDependentMethods().get(methodPrototypeIndex)
+                                         .getModifier().trim();
+      if (!methodPrototypeModifier.equals(analyzedMethod.getModifier().trim())) {
+        setFailedPosition(methodToken.getPosition(), 82,
+          analyzedMethod.getName(), analyzedMethod.getModifier().trim(), methodPrototypeModifier);
+      }
+      if (classMethod != null && !methodPrototypeModifier.equals(classMethod.getModifier().trim())) {
+        setFailedPosition(classMethod.getPosition(), 82,
+          classMethod.getName(), classMethod.getModifier().trim(), methodPrototypeModifier);
+      }
+    }
+
+    // Strip off existing method if it exists, and make it the default implementation
+    if (classMethod != null) {
+      uClass.addStateDependentMethod(classMethod, null);
+      uClass.removeMethod(classMethod);
+    }
+
+    // Add current state-dependent method body to the Umple class
+    uClass.addStateDependentMethod(analyzedMethod, fromState);
+  }
+} 

@@ -58,8 +58,10 @@ TabControl.init = function()
  */
 TabControl.showTabs = function()
 {
+  jQuery('#toggleTabsButton').html('Hide Tabs');
   jQuery("#tabControl").show();
   localStorage[TabControl.showHideKey] = true;
+ // document.getElementById("toggleTabsButton").innerHTML = "Hide Tabs"; 
 }
 
 /**
@@ -67,8 +69,10 @@ TabControl.showTabs = function()
  */
 TabControl.hideTabs = function()
 {
+  jQuery('#toggleTabsButton').html('Show Tabs');  
   jQuery("#tabControl").hide();
   delete localStorage[TabControl.showHideKey];
+ // document.getElementById("toggleTabsButton").innerHTML = "Show Tabs";  
 }
 
 /**
@@ -165,6 +169,14 @@ TabControl.extractNameFromCode = function(code)
  */
 TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
 {
+  if (Page.readOnly && name == 'afterTabControlInit')
+  {
+    return;
+  } else if (name == 'afterTabControlInit')
+  {
+    name = null;
+  }
+
   // Enforce maximum number of tabs
   if (Object.keys(TabControl.tabs).length == TabControl.maxTabs) return;
 
@@ -201,7 +213,7 @@ TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
   // Create the physical tab element
   var createBtn = jQuery("#createTabBtn");
   var tabTemplate = jQuery('<li id="tab' + newTabId + '" class="">' + 
-    '<a class="tabname" id="tabName' + newTabId + '" href="javascript:TabControl.selectTab(\'' + newTabId + '\');">' + tabName + '</a>' + 
+    '<a class="tabname" title="Double-click to rename tab" id="tabName' + newTabId + '" href="javascript:TabControl.selectTab(\'' + newTabId + '\');">' + tabName + '</a>' + 
       '<button class="tabbtn" onclick="javascript:TabControl.deleteTab(\'' + newTabId + '\');">&times;</button></li>');
   tabTemplate.insertBefore(createBtn);
 
@@ -291,11 +303,18 @@ TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
 TabControl.saveTab = function(tabId, umpleCode)
 {
   var filename = TabControl.getTabFilename(TabControl.tabs[tabId].name);
+  var modelname = Page.getModel();
   localStorage[filename] = umpleCode;
+  if (String(Page.getFilename()).indexOf("tasks") !== -1)
+  {
+    filename = "tasks/" + filename;
+    modelname = "tasks/" + modelname;
+  }
+  var umpleCodeWithoutAmpersand = umpleCode.replace(/&/g, "%26").replace(/\+/g, "%2B");
   TabControl.addToRequestQueue(
     "scripts/compiler.php",
     TabControl.saveTabCallback(tabId),
-    format("save=1&&lock=1&&model={2}&&umpleCode={0}&&filename={1}", umpleCode, filename, Page.getModel()));
+    format("save=1&&lock=1&&model={2}&&umpleCode={0}&&filename={1}", umpleCodeWithoutAmpersand, filename, modelname));
 }
 
 TabControl.saveTabCallback = function(tabId)
@@ -391,11 +410,15 @@ TabControl.loadAllTabsCallback = function(response)
  */
 TabControl.deleteTab = function(tabId)
 {
+  if (Page.readOnly)
+  {
+    return;
+  } 
   // Don't delete if we only have one tab
   if (Object.keys(TabControl.tabs).length > 1) {
     // Confirm deletion
     var tabName = TabControl.getTabNameDiv(tabId);
-    var result = confirm("Are you sure you want to remove " + tabName.text() + "?");
+    var result = confirm("Are you sure you want to remove the file " + tabName.text() + ".ump from the model? If you answer OK, the code will be deleted; this cannot be undone, so consider answering Cancel and saving it first.");
     if (!result) return;
 
     // If we're deleting the currently active tab, we need to navigate away
@@ -437,6 +460,10 @@ TabControl.deleteTab = function(tabId)
  */
 TabControl.renameTab = function(tabId, newName, updateUI)
 {
+  if (Page.readOnly)
+  {
+    return;
+  } 
   // If the new name already exists, return
   if (TabControl.reservedNames.hasOwnProperty(newName)) return;
 

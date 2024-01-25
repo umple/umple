@@ -1,0 +1,25 @@
+/*Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This generates nothing from Umple
+  generate Nothing;
+in your umple file, or the command line option
+  -g Nothing
+The purpose is when you want to lint, i.e. see if there are errors and warnings, but produce no output
+*/
+
+namespace cruise.umple.compiler;
+
+class NothingGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  UmpleModel model = null;
+
+  public void generate (){
+    model.setCode("nothing");
+    return;
+  }
+} // END CLASS
+

@@ -28,12 +28,11 @@ module OptionsPanelTestHelper
     switch_to_options_panel
   end
 
-  # TODO the manualsync tests require a reliable method of inputting text into
-  # the codemirror editor that will trigger all the normal events caused by a 
-  # user inputting text. Currently any tests that call this helper function
-  # will result in a pending test.
-  def input_model_text(new_text)
-    pending("proper input text method that triggers all normal events")
-    fail
+  def reset_page_to_options_with_stateMachine
+    load_page
+    select_option_by_value("#inputExampleType", "smModels")
+    select_option_by_value("#inputExample2", "Booking.ump")
+    wait_for_loading
+    switch_to_options_panel
   end
 end

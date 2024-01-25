@@ -1,0 +1,43 @@
+/*
+  Genealogy system (A) - sample UML class diagram in Umple
+  From Book by Lethbridge and Laganiere, McGraw Hill 2004
+  Object-Oriented Software Engineering: Practical Software Engineering using UML and Java
+  See https://www.site.uottawa.ca/school/research/lloseng/
+  Last updated: June 8, 2010
+*/
+//Namespace for core of the system.
+namespace GenealogyA.core;
+
+class Person{
+ name;
+ sex;
+ placeOfBirth;
+ dateOfBirth;
+ placeOfDeath;
+ dateOfDeath;
+}
+
+class Union{
+ placeOfMarriage;
+ dateOfMarriage;
+ dateOfDivorce;
+ * -- 0..2 Person partner;
+}
+
+association {
+ * Person child -- 0..1 Union parents;
+}
+
+//$?[End_of_model]$?
+//Positioning
+
+class Person
+{
+  position 72 26 165 143;
+}
+
+class Union
+{
+  position.association Person:partner__Union 30,0 8,143;
+  position 63 282 184 92;
+}

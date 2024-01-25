@@ -1,0 +1,57 @@
+/*
+  Genealogy system (C) - sample UML class diagram in Umple
+  From Book by Lethbridge and Laganiere, McGraw Hill 2004
+  Object-Oriented Software Engineering: Practical Software Engineering using UML and Java
+  See https://www.site.uottawa.ca/school/research/lloseng/
+  This version properly accounts for adoptions and multiple marriages.
+  Last updated: June 8, 2010
+*/
+//Namespace for core of the system.
+namespace GenealogyC.core;
+
+class Person{
+ name;
+ sex;
+ placeOfBirth;
+ dateOfBirth;
+ placeOfDeath;
+ dateOfDeath;
+}
+
+class Union{
+ placeOfMarriage;
+ dateOfMarriage;
+ dateOfDivorce;
+ * -- 0..2 Person parent;
+}
+
+class Adoption {
+ dateOfAdoption;
+ * -- 0..1 Union adoptiveParents;
+ * -- 0..1 Person adoptedChild;
+}
+
+association {
+ * Person child -- 0..1 Union parents;
+}
+//$?[End_of_model]$?
+
+//Positioning
+
+class Union
+{
+  position 217 341 183 96;
+  position.association Person:parent__Union 150,0 131,143;
+}
+
+class Adoption
+{
+  position 30 203 179 58;
+  position.association Adoption__Union:adoptiveParents 84,58 0,10;
+  position.association Adoption__Person:adoptedChild 76,0 0,106;
+}
+
+class Person
+{
+  position 236 30 165 143;
+}

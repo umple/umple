@@ -1,0 +1,25 @@
+/*
+ Example 2: showing how states in traits can be
+ obtained by required methods.
+ 
+  To see different diagram views in UmpleOnline:
+    Use control-g for auto-layout
+      (if not already showing)
+    Use control-r to switch between trait view and
+       plain classes resulting from applying traits
+    Use control-m to show/hide methods 
+*/
+trait T1{
+  int getData();
+  int processData(){
+    int data = getData();
+    data=data+2;
+    setData(data);
+    return(data);
+  }
+}
+class C1{
+  Integer data;
+  isA T1;
+}
+// @@@skipjavacompile @@@skipphpcompile @@@skippythoncompile Java code not compile

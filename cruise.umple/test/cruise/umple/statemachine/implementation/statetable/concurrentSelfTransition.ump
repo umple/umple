@@ -1,0 +1,42 @@
+namespace example;
+class Student
+{
+  status
+  {
+    ParentState1
+    {
+      changeParent -> ParentState2;
+      ChildState1
+      {
+        event1 -> ChildState2;
+      }
+      ChildState2
+      {
+        event1 -> ChildState1;
+      }
+    }
+    ParentState2
+    {
+      selfTransition -> ParentState2;
+      changeParent -> ParentState1;
+      ChildState3
+      {
+        event2 -> ChildState4;
+      }
+      ChildState4
+      {
+        event2 -> ChildState3;
+      }
+      ||
+      ChildState5
+      {
+        event3 -> ChildState6;
+      }
+      ChildState6
+      {
+        event3 -> ChildState5;
+      }
+    }
+  }
+}
+

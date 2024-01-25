@@ -1,0 +1,21 @@
+/*
+  Example 1: showing how traits are combined with
+  Umple mixins.
+
+  To see different diagram views in UmpleOnline:
+    Use control-g for auto-layout as a class diagram
+    Use control-r to switch between trait view and
+       plain classes resulting from applying traits
+    Use control-m to show/hide methods
+*/
+trait T1{
+  void method1();
+  void method2(){/*impl… */ }
+}
+trait T1{
+  void method3(){/*impl… */ }
+}
+class C1{
+  isA T1;
+  void method1(){/*impl… */ }    
+}

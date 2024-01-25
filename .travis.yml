@@ -21,6 +21,10 @@ addons:
 
 before_install:
   - ./travis/deps.sh # run linux or osx depending on environment
+  - chmod +x gradlew
+
+install:
+  - true # See https://github.com/travis-ci/travis-ci/issues/8667
 
 env:
   global:
@@ -30,79 +34,83 @@ env:
     - ANT_EXAMPLES='ant -f build.exampletests.xml'
 
 script:
-  - php --version ; ruby -v
-  - cd build/
-  - ant bootstrap
+  # Gradle build (TODO: figure out why test needs to be run twice)
+  - if [ "$USE_GRADLE" ]; then ./gradlew fullbuild && ./gradlew testall; fi
+
+  - if [ -z "$USE_GRADLE" ]; then php --version ; ruby -v; fi
+  - if [ -z "$USE_GRADLE" ]; then cd build/; fi
+  - if [ -z "$USE_GRADLE" ]; then ant bootstrap; fi
   # We resolve all of the dependencies before, this way the command will be unlikely to time out
-  # Temporarily commenting out the following line
-  - ant deps-resolve-all
+
+  - if [ -z "$USE_GRADLE" ]; then ant deps-resolve-all; fi
 
   # Do a modified version of `first-build` (build using last successful build)
-  - $ANT_FIRST clean init codegen umpleParser rtcpp template.setVersion resetUmpleSelf
-  # taking compileValidator compileUmplificator out of the following
-  - $ANT_FIRST compile 
-  - $ANT_FIRST package template.resetVersion
+  - if [ -z "$USE_GRADLE" ]; then $ANT_FIRST clean init codegen umpleParser rtcpp template.setVersion resetUmpleSelf; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_FIRST compile; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_FIRST package template.resetVersion; fi
 
   # Do a modified version of `build`to create new jars
-  - $ANT_BUILD clean init codegen umpleParser rtcpp template.setVersion resetUmpleSelf
-  - $ANT_BUILD compile 
-  - $ANT_BUILD package 
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD clean init codegen umpleParser rtcpp template.setVersion resetUmpleSelf; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD compile; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD package; fi
   
   # Repeat creation of the compiler in case last build made a bad compiler
-  - $ANT_BUILD codegen umpleParser rtcpp template.setVersion resetUmpleSelf
-  - $ANT_BUILD compile
-  - $ANT_BUILD package
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD codegen umpleParser rtcpp template.setVersion resetUmpleSelf; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD compile; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD package; fi
   
   # Run the unit tests
-  - $ANT_BUILD template.test template.resetVersion
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD template.test template.resetVersion; fi
 
   # Build and run the testbed (tests that test generated code)
-  - $ANT_TESTBED clean template.clean init
-  - $ANT_TESTBED compile 
-  - $ANT_TESTBED test 
+  - if [ -z "$USE_GRADLE" ]; then $ANT_TESTBED clean template.clean init; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_TESTBED compile; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_TESTBED test; fi
   
   # Compile all known Umple examples and verify they compile in Java
-  - $ANT_EXAMPLES allUserManualAndExampleTests   
-  - $ANT_TESTBED template.resetVersion 
+  - if [ -z "$USE_GRADLE" ]; then $ANT_EXAMPLES allUserManualAndExampleTests; fi
+  - if [ -z "$USE_GRADLE" ]; then $ANT_TESTBED template.resetVersion; fi
   
   # Build the user manual and copy it to a subfolder of UmpleOnline
-  - $ANT_BUILD packageDocs travisCopyManual
+  - if [ -z "$USE_GRADLE" ]; then $ANT_BUILD packageDocs travisCopyManual; fi
  
   # Set up UmpleOnline to be packaged into its Docker image, then build the image.
-  - if [ "$HAVE_DOCKER" ]; then
-        $ANT_BUILD -DshouldPackageUmpleOnline=true packageUmpleonline &&
-        docker build -t "umple/umpleonline-base:local"
-                     -f ../umpleonline/Dockerfile-base ../umpleonline &&
-        docker build -t "umple/umpleonline:recentbuild" ../umpleonline;
-    fi
+#  - if [ "$HAVE_DOCKER" ]; then
+#        $ANT_BUILD -DshouldPackageUmpleOnline=true packageUmpleonline &&
+#        docker build -t "umple/umpleonline-base:local"
+#                     -f ../umpleonline/Dockerfile-base ../umpleonline &&
+#        docker build -t "umple/umpleonline:recentbuild" 
+#                     --build-arg gitbranch=$TRAVIS_BRANCH ../umpleonline;
+#    fi
 
-after_success:
-    if ( [ "$HAVE_DOCKER" ] && [ "$TRAVIS_SECURE_ENV_VARS" ] ); then
-        docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
-        DOCKER_IMAGE_NAME="umple/umpleonline:recentbuild" &&
-        DOCKER_HASH_NAME="umple/umpleonline:$TRAVIS_COMMIT" &&
-        docker push "$DOCKER_IMAGE_NAME" &&
-        if [ "$TRAVIS_PULL_REQUEST" != 'false' ]; then
-            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:pr-$TRAVIS_PULL_REQUEST" &&
-            docker push "umple/umpleonline:pr-$TRAVIS_PULL_REQUEST";
-        elif [ "$TRAVIS_BRANCH" = 'master' ]; then
-            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:latest" &&
-            docker push "umple/umpleonline:latest" &&
-            docker tag "$DOCKER_IMAGE_NAME" "$DOCKER_HASH_NAME" &&
-            docker push "$DOCKER_HASH_NAME";
-        elif [ "$TRAVIS_BRANCH" = 'latest' ]; then
-            echo 'The branch name is "latest", not pushing branch tag';
-        elif ( echo "$TRAVIS_BRANCH" | grep -Eq '^pr\-[0-9]*$' ); then
-            echo 'The branch name looks like a pull request tag, not pushing branch tag';
-        else
-            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:$TRAVIS_BRANCH" &&
-            docker push "umple/umpleonline:$TRAVIS_BRANCH";
-        fi &&
-        if [ "$TRAVIS_TAG" ]; then
-            docker tag "umple/umpleonline-base:local" "umple/umpleonline-base:latest" &&
-            docker push "umple/umpleonline-base:latest";
-        fi
-    fi
+# Commenting out docker since will use bdock tool and manual pushing
+#after_success:
+#    if ( [ "$HAVE_DOCKER" ] && [ "$TRAVIS_SECURE_ENV_VARS" ] ); then
+#        docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
+#        DOCKER_IMAGE_NAME="umple/umpleonline:recentbuild" &&
+#        DOCKER_HASH_NAME="umple/umpleonline:$TRAVIS_COMMIT" &&
+#        docker push "$DOCKER_IMAGE_NAME" &&
+#        if [ "$TRAVIS_PULL_REQUEST" != 'false' ]; then
+#            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:pr-$TRAVIS_PULL_REQUEST" &&
+#            docker push "umple/umpleonline:pr-$TRAVIS_PULL_REQUEST";
+#        elif [ "$TRAVIS_BRANCH" = 'master' ]; then
+#            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:latest" &&
+#            docker push "umple/umpleonline:latest" &&
+#            docker tag "$DOCKER_IMAGE_NAME" "$DOCKER_HASH_NAME" &&
+#            docker push "$DOCKER_HASH_NAME";
+#        elif [ "$TRAVIS_BRANCH" = 'latest' ]; then
+#            echo 'The branch name is "latest", not pushing branch tag';
+#        elif ( echo "$TRAVIS_BRANCH" | grep -Eq '^pr\-[0-9]*$' ); then
+#            echo 'The branch name looks like a pull request tag, not pushing branch tag';
+#        else
+#            docker tag "$DOCKER_IMAGE_NAME" "umple/umpleonline:$TRAVIS_BRANCH" &&
+#            docker push "umple/umpleonline:$TRAVIS_BRANCH";
+#        fi &&
+#        if [ "$TRAVIS_TAG" ]; then
+#            docker tag "umple/umpleonline-base:local" "umple/umpleonline-base:latest" &&
+#            docker push "umple/umpleonline-base:latest";
+#        fi
+#    fi
 
 matrix:
   include:
@@ -114,8 +122,19 @@ matrix:
             - ant
             - ant-optional
       # only Linux supports Docker right now
-      env:
-        - HAVE_DOCKER=1
-      services:
-        - docker
-    - os: osx
+#      env:
+#        - HAVE_DOCKER=1
+#      services:
+#        - docker
+#    - os: osx
+#      osx_image: xcode12.2
+
+    # test gradle builds - commented out for now
+#    - os: linux
+#      jdk: openjdk12
+#      env:
+#        - USE_GRADLE=1
+#        # TODO: test Docker
+#    - os: osx
+#      env:
+#        - USE_GRADLE=1

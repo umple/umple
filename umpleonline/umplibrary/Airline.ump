@@ -1,0 +1,103 @@
+// Airline system - sample UML class diagram in Umple
+// From Book by Lethbridge and Laganiere, McGraw Hill 2004
+// Object-Oriented Software Engineering: Practical Software Engineering using UML and Java
+// See https://www.site.uottawa.ca/school/research/lloseng/
+
+namespace Airline;
+
+class Airline{
+  1 -- * RegularFlight;
+  1 -- * Person;
+}
+
+class RegularFlight{
+  Time time;
+  unique Integer flightNumber;
+  1 -- * SpecificFlight;
+}
+
+class SpecificFlight{
+  unique Date date;
+}
+
+class PassengerRole
+{
+  isA PersonRole;
+  immutable String name ;
+  1 -- * Booking;
+}
+  
+
+class EmployeeRole
+{
+  String jobFunction ;
+  isA PersonRole;
+  * -- 0..1 EmployeeRole supervisor;
+  * -- * SpecificFlight;
+}
+
+class Person
+{
+  settable String name;
+  Integer idNumber;
+  1 -- 0..2 PersonRole;
+}
+
+class PersonRole{}
+
+class Booking{
+  String seatNumber;
+  * Booking -- 1 SpecificFlight;
+}
+
+//$?[End_of_model]$?
+// LAYOUT INFORMATION
+
+class Airline
+{
+  position 389 228 109 40;
+  position.association Airline__Person 16,0 78,75;
+  position.association Airline__RegularFlight 30,45 51,0;
+}
+
+class RegularFlight
+{
+  position 368 347 168 75;
+  position.association RegularFlight__SpecificFlight 0,38 109,22;
+}
+
+class SpecificFlight
+{
+  position 214 363 109 58;
+}
+
+class PassengerRole
+{
+  position 1 193 112 58;
+  position.association Booking__PassengerRole 58,58 40,0;
+}
+
+class EmployeeRole
+{
+  position 208 183 150 58;
+  position.association EmployeeRole__EmployeeRole:supervisor 15,58 0,30;
+  position.association EmployeeRole__SpecificFlight 68,58 62,0;
+}
+
+class Person
+{
+  position 327 39 146 75;
+  position.association Person__PersonRole 0,10 110,24;
+}
+
+class PersonRole
+{
+  position 38 25 109 45;
+}
+
+class Booking
+{
+  position 19 365 154 58;
+  position.association Booking__SpecificFlight 154,33 0,35;
+  position.association Booking:Booking__SpecificFlight 154,41 0,43;
+}

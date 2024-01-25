@@ -1,0 +1,13 @@
+Mixsets with Traits 
+Mixsets and Filters
+noreferences
+
+@@description
+<p> Traits can include mixsets with their bodies. For example, the code below contains the 'Numerical' mixset, which ensures the implementaion of extra methods (isGreaterThan and isLessThan) when its activited by a use statement.
+</p>
+@@syntax
+[[mixsetDefinition]] [[traitDefinition]] [[traitContent]] 
+
+@@example
+@@source manualexamples/MixsetInTrait.ump
+@@endexample

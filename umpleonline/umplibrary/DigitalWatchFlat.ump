@@ -1,0 +1,169 @@
+// Xholon Digital Watch UML state machine written in Umple
+// From Empir Software Eng (2009) 14:685–719 DOI 10.1007/s10664-009-9106-z
+// By Cruz-Lemus, Genero, Manso, Morasca and Piattini
+// This is the flat version of the state machine
+strictness ignore 1012;
+
+class DigitalWatch {
+  //  sx indicates that button X has been pressed
+  // notSx indicates button x has been released 
+  sm {
+    // Main state displaying time
+    time {
+      s1 -> date;
+      s2 -> bothOff;
+      s3 -> paused;
+      s3during2Secs -> alarmTime;
+    }
+    date {
+      notS1 -> time;
+    }
+    
+    // States related to timer
+    paused {
+      s1 -> running;
+      s2 / {zero();} -> paused;
+      s3 -> time;
+    }
+    running {
+      s1 -> paused;
+      s2 -> lapRunning;
+      s3 -> time;
+    }
+    lapRunning {
+      s1 -> lapPaused;
+      s2 -> running;
+      s3 -> time;
+    }
+    lapPaused {
+      s1 -> lapRunning;
+      s2 -> paused;
+      s3 -> time;
+    }
+    
+    
+    // States related to turning on and off charm or chime
+    bothOff {
+      notS2 -> time;
+      s1 -> chimeOn;
+    }
+    chimeOn {
+      notS2 -> time;
+      s1 -> bothOn;
+    }
+    bothOn {
+      notS2 -> time;
+      s1 -> alarmOn;
+    }
+    alarmOn {
+      s1 -> bothOff;
+      notS2 -> time;
+    }
+    
+    // States related to alarm update
+    alarmTime {
+      s1 -> alarmMinute;
+      s2 / {alarmHour++;} -> alarmHour;
+      s3 -> second;
+    }
+    alarmHour {
+      s1 -> alarmMinute;
+      s2 /  {alarmHour++;} -> alarmHour;
+      s3 -> second;
+    }
+    alarmMinute {
+      s1 -> alarmHour;
+      s2 /  {alarmMinute++;} -> alarmMinute;
+      s3 -> second;
+    }   
+    
+    // States related to time update
+    second {
+     s1 -> minute;
+     s2 / {secondzero();} -> second;
+     s3 -> time;
+    }
+    minute {
+     s1 -> hour;
+     s2 / {minute++;} -> minute;
+     s3 -> time;
+    }
+    hour {
+     s1 -> month;
+     s2 / {hour++;} -> hour;
+     s3 -> time;
+    }
+    month {
+     s1 -> day;
+     s2 / {month++;} -> month;
+     s3 -> time;
+    }
+    day {
+     s1 -> year;
+     s2 / {day++;} -> day;
+     s3 -> time;
+    }
+    year {
+     s1 -> second;
+     s2 / {year++;} -> year;
+     s3 -> time;
+    } 
+  }
+  Integer day=1;
+  Integer month=1;
+  Integer year=2014;
+  Integer hour=10;
+  Integer minute=10;
+  Integer second=0;
+  Integer alarmHour=6;
+  Integer alarmMinute=5;
+  Integer alarmSecond=0;
+  Integer timer=0;
+  void secondzero() {
+    setSecond(0);
+  }
+  void zero() {
+    setTimer(0);
+  }
+
+  // Tracing code and main method to randomly call
+  // events. Each time this is executed,
+  // the result will be different
+
+  depend java.util.*;
+  after generated s1,s2,s3*,notS2 {
+    String method=Thread.currentThread()
+     .getStackTrace()[1].getMethodName();
+    System.out.println("Pressed: "+method
+     +"  ResultState="+getSmFullName()+" Clock: "
+     +year+"-"+month+"-"+day+" "
+     +hour+":"+minute+":"+second
+     +" Alarm="
+     +alarmHour+":"+alarmMinute+":"+alarmSecond
+    );
+  }
+  
+  public static void main (String[] args) {
+    DigitalWatch dw=new DigitalWatch();
+    
+    List<Runnable> methods = new ArrayList<>();
+    methods.add(dw::s1); // date and rotate
+    methods.add(dw::s2); // alarm and change
+    methods.add(dw::s3); // chrono, time upd and exit
+    methods.add(dw::notS2);
+    methods.add(dw::notS1);
+    methods.add(dw::s3during2Secs); // to alarm upd
+    methods.add(dw::s3during2Secs); // ... more common
+    
+    for(int i=1;i<30;i++) {
+      int randomNumber = new 
+        Random().nextInt(methods.size());
+      methods.get(randomNumber).run();
+    }
+  }
+}
+
+//$?[End_of_model]$?
+// @@@skipphpcompile - Contains Java/Cpp Code
+// @@@skiprubycompile - Contains Java/Cpp Code
+// @@@skippythoncompile - Contains Java/Cpp Code

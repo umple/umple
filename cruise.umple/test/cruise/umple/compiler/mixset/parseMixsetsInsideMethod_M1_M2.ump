@@ -11,8 +11,7 @@ class MixsetWithinMethodClass
       x++;    
       int i = 0;
       System.out.println("mixset M1 ... ");
-      mixset InnerMixset 
-      {
+      mixset InnerMixset {
         //code for InnerMixset
       }
     //extra code for the mixset M1 

@@ -1,0 +1,24 @@
+namespace sports.core;
+
+class Equipment
+{
+  name;
+  Integer weight;
+}
+
+namespace sports.baseball;
+
+class Baseball
+{
+  depend sports.core.*;
+
+  public boolean isRequired(Equipment eq)
+  {
+    return eq.getName().equals("bat");
+  }
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code
+// @@@skippythoncompile - Contains Java Code

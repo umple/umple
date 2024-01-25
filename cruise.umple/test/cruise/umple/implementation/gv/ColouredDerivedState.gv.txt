@@ -1,0 +1,34 @@
+digraph "ColouredDerivedState" {
+  compound = true;
+
+  // Class: LightBulb
+
+    // Top and Bottom Level StateMachine: state
+    
+    // Start states are shown as a black circle
+    node [ratio="auto" shape = point, fillcolor="black", width=0.2 ];
+    start_LightBulb_state [ tooltip = "Class LightBulb, SM state, State start" ];
+    
+        
+    // Format for normal states
+    node [ratio="auto" shape = rectangle, width=1,style=rounded];
+    
+      // State: Off
+
+      LightBulb_state_Off [label = Off,style = "filled, rounded", fillcolor ="red", tooltip = "Class LightBulb, SM state, State Off", URL="javascript:Action.stateClicked(\"LightBulb^*^state^*^Off\")"];
+      // End State: Off
+
+      // State: On
+
+      LightBulb_state_On [label = On,style = "filled, rounded", fillcolor ="yellow", tooltip = "Class LightBulb, SM state, State On", URL="javascript:Action.stateClicked(\"LightBulb^*^state^*^On\")"];
+      // End State: On
+    // End Top and Bottom Level StateMachine: state
+
+  // All transitions
+    start_LightBulb_state -> LightBulb_state_Off [  tooltip = "start to Off", URL="javascript:Action.transitionClicked(\"null\")" ] ;
+    LightBulb_state_On -> LightBulb_state_Off [  label = "turnOff", tooltip = "From On to Off on turnOff", URL="javascript:Action.transitionClicked(\"LightBulb*^*state*^*turnOff*^*On*^*Off*^*\")" ] ;
+  
+  LightBulb_state_Off -> LightBulb_state_On [  label = "turnOn", tooltip = "From Off to On on turnOn", URL="javascript:Action.transitionClicked(\"LightBulb*^*state*^*turnOn*^*Off*^*On*^*\")" ] ;
+  
+
+}

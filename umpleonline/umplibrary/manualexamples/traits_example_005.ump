@@ -1,0 +1,21 @@
+/*
+  Example 1: implementing observable pattern
+  with traits and associations.
+
+  To see different diagram views in UmpleOnline:
+    Use control-g for auto-layout
+      (if not already showing)
+    Use control-r to switch between trait view and
+       plain classes resulting from applying traits
+    Use control-m to show/hide methods
+*/
+class Dashboard{
+  void update (Sensor sensor){ /* code */ }
+}
+class Sensor{
+  isA Subject< Observer = Dashboard >;
+}
+trait Subject <Observer>{
+  0..1  -> * Observer;
+  void notifyObservers() { /* code */ }
+}

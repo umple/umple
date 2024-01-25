@@ -18,11 +18,26 @@ Action.freshLoad = false;
 Action.gentime = new Date().getTime();
 Action.savedCanonical = "";
 Action.gdprHidden = false;
+Action.update = "";
+
+// Regulators of whether a save occurs on not
+// false: the program proceeds and saves as normal; true: skip the save as the program would have saved earlier already
+let justUpdatetoSaveLater = false;
+
+Action.setjustUpdatetoSaveLater = function(state){
+  justUpdatetoSaveLater = state;
+}
+
+let justUpdatetoSaveLaterForTextCallback = false;
+
+Action.setjustUpdatetoSaveLaterForTextCallback = function(state){
+  justUpdatetoSaveLaterForTextCallback = state;
+}
 
 Action.clicked = function(event)
 {
-  Page.clickCount += 1;  
-  
+  Page.clickCount += 1;
+
   var obj = event.currentTarget;
   var action = obj.id.substring(6);
   if (action == "PhpCode")
@@ -90,6 +105,11 @@ Action.clicked = function(event)
     var languageAndGenerate = $("inputGenerateCode").value.split(":");
     Action.generateCode(languageAndGenerate[0],languageAndGenerate[1]);
   }
+  else if (action == "ExecuteCode")
+  {
+    var languageAndExecute = $("inputGenerateCode").value.split(":");
+    Action.executeCode(languageAndExecute[0],languageAndExecute[1]);
+  }
   else if (action == "SimulateCode")
   {
     Action.simulateCode();
@@ -97,6 +117,14 @@ Action.clicked = function(event)
   else if (action == "StartOver")
   {
     Action.startOver();
+  }
+  else if (action == "ShowRefreshUmpleOnlineCompletely")
+  {
+  	Action.showRefreshUmpleOnlineCompletely();
+  }
+  else if (action == "LoadBlankModel")
+  {
+  	 Action.loadBlankModel();
   }
   else if (action == "PngImage")
   {
@@ -110,10 +138,18 @@ Action.clicked = function(event)
   {
     Action.uigu();
   }
+  else if (action == "CopyClip")
+  {
+    Action.copyClipboardCode();
+  }  
   else if (action == "Copy")
   {
     Action.showCodeInSeparateWindow();
   }
+  else if (action == "CopyCommandLine")
+  {
+    Action.copyCommandLineCode();
+  }  
   else if (action == "CopyEncodedURL")
   {
     Action.showEncodedURLCodeInSeparateWindow();
@@ -122,7 +158,9 @@ Action.clicked = function(event)
   {
     if (typeof(Storage) !== "undefined") {
       localStorage.setItem("umpleLocalStorage1",Page.getUmpleCode());
+      Page.setFeedbackMessage("Model saved. Use Load From Browser later to restore.")
     }
+    else{Page.setFeedbackMessage("Unable to copy the model to browser storage. An error occurred.")}
   }
   else if (action == "LoadLocalBrowser")
   {
@@ -132,6 +170,52 @@ Action.clicked = function(event)
         Page.setUmpleCode(textToLoad);
       }
     }
+  }
+  else if (action == "CreateTask") 
+  {
+    jQuery("#taskArea").css("display","block");
+    //jQuery("#taskNameArea").css("display","block");
+    jQuery("#labelTaskName").css("display","block");
+    jQuery("#taskNameCell").css("display","block");
+    jQuery("#instructions").css("display","block");
+    jQuery("#isExperimentCell").css("display","block");
+    Layout.zoomResize();
+  }
+  else if (action == "LoadTask")
+  {
+    jQuery("#loadTaskNameArea").css("display","block");
+  }
+  else if (action == "LoadThisTask")
+  {
+    Action.loadTask(Page.getModel().split("-")[1], false);
+  }
+  else if (action == "RequestLoadTaskURL")
+  {
+    var taskname = Page.getModel().split("-")[1];
+    Action.copyToClp(window.location.hostname + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+  }
+  else if (action == "RequestAllZip") 
+  {
+    if (document.getElementById("downloadTaskDirLink") === null)
+    {
+      var link = document.createElement("a");
+      link.setAttribute("href", "scripts/tab_control.php?downloadTaskUserDir=1&taskid=" + Page.getModel());
+      link.setAttribute('id', "downloadTaskDirLink");
+      var linkText = document.createTextNode("Download ZIP File From Here");
+      link.appendChild(linkText);
+      
+      var node = document.createElement("LI");   
+      node.appendChild(link);
+      document.getElementById("taskSubmenu").appendChild(node);
+    }
+    else
+    {
+      document.getElementById("downloadTaskDirLink").setAttribute("href", "scripts/tab_control.php?downloadTaskUserDir=1&taskid=" + Page.getModel());
+    }
+
+    setTimeout(function () {
+      document.getElementById("downloadTaskDirLink").remove();
+    }, 30000);
   }
   else if (action == "DownloadFiles")
   {
@@ -150,7 +234,9 @@ Action.clicked = function(event)
       var node = document.createElement("LI");   
       node.appendChild(link);
       document.getElementById("saveLoad").appendChild(node);
-    } else {
+    }
+    else 
+    {
       document.getElementById("downloadLink").setAttribute("href", "scripts/tab_control.php?download=1&&model=" + Page.getModel());
     }
 
@@ -165,6 +251,15 @@ Action.clicked = function(event)
   else if (action == "Redo")
   {
     Action.redo();
+  }
+  else if (action == "Reindent") 
+  { 
+    var lines = Page.getRawUmpleCode().split("\n");
+    var cursorPos = Page.codeMirrorEditor.getCursor(true);
+    var whiteSpace = lines[cursorPos.line].match(/^\s*/)[0].length;
+    var lengthToFirstCh = cursorPos.ch - whiteSpace;
+    cursorPos.ch = lengthToFirstCh;
+    Action.reindent(lines, cursorPos);
   }
   else if (action == "ShowHideTextEditor")
   {
@@ -212,7 +307,8 @@ Action.clicked = function(event)
   }
   else if (action == "SyncDiagram")
   {
-    Action.processTyping("umpleModelEditorText", true);
+    Action.processTyping("codeMirrorEditor", true);
+    Page.codeMirrorEditor.focus();
   }
   else if (action == "PhotoReady")
   {
@@ -239,10 +335,18 @@ Action.clicked = function(event)
   else if (action == "ToggleTransitionLabels")
   {
     Action.toggleTransitionLabels();
-  }  
+  }
+  else if (action == "ToggleGuards")
+  {
+    Action.toggleGuards();
+  }
   else if (action == "ToggleGuardLabels")
   {
     Action.toggleGuardLabels();
+  }
+  else if (action == "AllowPinch")
+  {
+    Action.allowPinch();
   }
   else if (action == "ToggleFeatureDependency")
   {
@@ -300,6 +404,20 @@ Action.startOver = function()
   // location.reload();
 }
 
+Action.showRefreshUmpleOnlineCompletely = function()
+{
+	jQuery("#buttonStartOver").show();
+}
+
+Action.loadBlankModel = function()
+{
+  UmpleSystem.merge(null);
+  Page.showCanvasLoading(true);
+  Page.showModelLoading(true);
+  Page.showLayoutLoading(true);
+  Ajax.sendRequest("scripts/compiler.php",Action.loadExampleCallback,"exampleCode="); //left empty
+}
+
 Action.undo = function()
 {
   if (jQuery("#buttonUndo").hasClass("disabled")) return;
@@ -310,6 +428,41 @@ Action.redo = function()
 {
   if (jQuery("#buttonRedo").hasClass("disabled")) return;
   Action.redoOrUndo(false);
+}
+
+// The following from https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop
+Action.dropHandler = function(ev) {
+  Page.setFeedbackMessage("File will be dropped")
+
+  // Prevent default behavior (Prevent file from being opened)
+  ev.preventDefault();
+
+  if (ev.dataTransfer.items) {
+    // Use DataTransferItemList interface to access the file(s)
+    for (var i = 0; i < ev.dataTransfer.items.length; i++) {
+      // If dropped items aren't files, reject them
+      if (ev.dataTransfer.items[i].kind === 'file') {
+        var file = ev.dataTransfer.items[i].getAsFile();
+        file.text().then(function(text) {
+          Page.setUmpleCode(text);
+        });
+      }
+    }
+  } else {
+    // Use DataTransfer interface to access the file(s)
+    for (var i = 0; i < ev.dataTransfer.files.length; i++) {
+       ev.dataTransfer.files[i].text().then(function(text) {
+        Page.setUmpleCode(text);
+      });
+    }
+  }
+}
+
+Action.dragOverHandler = function(ev) {
+  //console.log('File(s) in drop zone');
+
+  // Prevent default behavior (Prevent file from being opened)
+  ev.preventDefault();
 }
 
 Action.redoOrUndo = function(isUndo)
@@ -328,9 +481,59 @@ Action.redoOrUndo = function(isUndo)
   {
     afterHistoryChange = "";
   }
+  
+  var delimiterLoc = afterHistoryChange.indexOf(Page.modelDelimiter);
+  var rawReplacement = "";
+  if(delimiterLoc == -1) {
+    rawReplacement = afterHistoryChange;
+  }
+  else {
+    rawReplacement = afterHistoryChange.substring(0,delimiterLoc);
+  }
+  var rawOriginal = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
+  var theDiff=Action.findDiff(rawOriginal, rawReplacement);
+  var prevLine=Action.getCaretPosition();
   Action.freshLoad = true;
   Page.setUmpleCode(afterHistoryChange);
-  if (!Action.manualSync) Action.updateUmpleDiagram();
+  if (!Action.manualSync) Action.updateLayoutEditorAndDiagram();
+
+  Action.setjustUpdatetoSaveLater(true);
+  
+  setTimeout(function () { // Delay so it doesn't get erased
+    // Page.setFeedbackMessage("Changed line "+theDiff[3]+" "+theDiff[1]);
+    if(theDiff[1] == theDiff[2])
+    {
+      // change was in diagram so leave caret where it is
+      Action.setCaretPosition(prevLine);
+    }
+    else
+    {
+      // set line number to where change occurred
+      Action.setCaretPosition(theDiff[3]);
+    }   
+  }, 300);
+}
+
+Action.findDiff = function(oldString, newString)
+{
+
+  var lineNumber = 0; // line number in newString
+  
+  var lOld = oldString.length, lNew = newString.length;
+  var l=lOld; // Assume old is shorter
+  if (lNew < l) l=lNew; // Actually new is shorter
+  var i=0;
+
+  while(i < l && oldString.charAt(i) === newString.charAt(i)) {
+    i++;
+    if(oldString.charAt(i) === '\n' && newString.charAt(i) === '\n') lineNumber++;
+  }
+  
+  // i is now the character index where the difference begins
+  var startChange=newString.substring(i,1);
+  
+  // Tuple is length of old, length of new, position of change, line number chg
+  return [lOld, lNew, i, lineNumber+1];
 }
 
 // Initial load of a file (e.g. example or blank) at initialization
@@ -339,7 +542,15 @@ Action.loadFile = function()
   var filename = Page.getFilename();
   if (filename != "")
   {
-    Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&filename={0}",filename));
+    Action.setjustUpdatetoSaveLater(true);
+    if (Page.getModel().substring(0, 8) == "taskroot")
+    {
+      Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&isTask=1&filename={0}",filename));
+    } 
+    else 
+    {
+      Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&filename={0}",filename));
+    }
   }
   else
   {
@@ -353,9 +564,9 @@ Action.loadFileCallback = function(response)
   Action.freshLoad = true;
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
   if (Object.keys(TabControl.tabs).length > 1) return;
-
+  Page.setUmpleCode(response.responseText, true);
   TabControl.getCurrentHistory().save(response.responseText,"loadFileCallback");
-  Page.setUmpleCode(response.responseText);
+  Action.setjustUpdatetoSaveLater(true);
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {
     var extractedName = TabControl.extractNameFromCode(response.responseText);
@@ -364,7 +575,239 @@ Action.loadFileCallback = function(response)
       TabControl.useActiveTabTo(TabControl.renameTab)(extractedName, true);
     }
   }
+  if (!Action.manualSync) {
+    Action.updateUmpleDiagram();
+    Action.freshLoad = false;
+  }
+}
+
+Action.loadTask = function(taskName, isBookmark)
+{
+  jQuery("#showInstrcutionsArea").css("display","block");
+  if (!isBookmark)
+  {
+    Ajax.sendRequest("bookmark.php", Action.loadTaskBookmark,format("taskname={0}&model={0}",taskName));
+    //Ajax.sendRequest("scripts/compiler.php",Action.loadTaskCallback,format("loadTask=1&filename={0}",taskName));
+  } else {
+    if (Page.getModel().split("-")[0] == "task") // it is in task bookmark page. instruction can not be edited.
+    {
+      Ajax.sendRequest("scripts/compiler.php",Action.loadTaskExceptCodeCallback,format("loadTask=1&loadInstructionAsHTML=1&filename={0}",taskName));
+    }
+    else
+    {
+      Ajax.sendRequest("scripts/compiler.php",Action.loadTaskExceptCodeCallback,format("loadTask=1&filename={0}",taskName));
+    }
+  }
+}
+
+Action.loadTaskBookmark = function(response)
+{
+  if (response.responseText.split(" ")[0] == "Task")
+  {
+    window.alert("Load Task Failed! " + response.responseText);
+  }
+  else
+  {
+    window.location.href = "umple.php?model=" + response.responseText;
+  }
+}
+
+Action.loadTaskCallback = function(response)
+{
+  Action.freshLoad = true;
+  // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
+  if (Object.keys(TabControl.tabs).length > 1) return;
+
+  Action.setjustUpdatetoSaveLater(true);
+  TabControl.getCurrentHistory().save(response.responseText,"loadTaskCallback");
+  var responseArray = response.responseText.split("task delimiter");
+  Page.setUmpleCode(responseArray[0]);
+  //jQuery("#textareaShowInstrcutions").val(responseArray[1]);
+  //jQuery("#labelShowInstructions").text("Task Instructions: " + responseArray[2]);
+  if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
+  {
+    var extractedName = TabControl.extractNameFromCode(responseArray[0]);
+    if (extractedName)
+    {
+      TabControl.useActiveTabTo(TabControl.renameTab)(extractedName, true);
+    }
+  }
   if (!Action.manualSync) Action.updateUmpleDiagram();
+  TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+  TabControl.saveActiveTabs();
+  window.location.href = "bookmark.php?taskname=" + responseArray[2] + "&model=" + responseArray[3];
+}
+
+Action.loadTaskExceptCodeCallback = function(response)
+{
+  Action.freshLoad = true;
+  // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
+  //if (Object.keys(TabControl.tabs).length > 1) return;
+
+  if (!justUpdatetoSaveLater){
+    TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
+    Action.setjustUpdatetoSaveLater(true);
+  }
+  var responseArray = response.responseText.split("task delimiter");
+  jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":");
+  jQuery("#requestorName").val(responseArray[4]);
+  jQuery("#labelInstructions").css("display","block");
+  jQuery("#taskArea").css("display","block");
+  if (Page.getModel().split("-")[0] == "task") // it is in task bookmark page. instruction can not be edited.
+  {
+    jQuery("#labelInstructions").text("Instructions for task \"" + responseArray[2] + "\":               Requestor Name:" + responseArray[4]);
+    jQuery("#labelCompletionURL").css("display", "none");
+    jQuery("#completionURLCell").css("display", "none");
+    jQuery("#labelRequestorName").css("display", "none");
+    jQuery("#requestorName").css("display", "none");
+    jQuery("#instructionsHTML").html(responseArray[1]);
+  }
+  else 
+  {
+    jQuery("#instructions").val(responseArray[1]);
+    jQuery("#instructions").css("display","block");
+    jQuery("#completionURL").val(responseArray[5]);
+    jQuery("#isExperimentCell").css("display", "inline");
+    jQuery("#isExperiment").prop('checked', responseArray[6] == 'true');
+    jQuery('#instructions').each(function () {
+      this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+    }).on('input', function () {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+    });
+
+    //jQuery("#completionURL").css("width", responseArray[5].length + "ch");
+  }
+  // jQuery('#instructions').each(function () {
+  //   this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+  // }).on('input', function () {
+  //   this.style.height = 'auto';
+  //   this.style.height = (this.scrollHeight) + 'px';
+  // });
+
+  if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
+  {
+    var extractedName = TabControl.extractNameFromCode(responseArray[0]);
+    if (extractedName)
+    {
+      TabControl.useActiveTabTo(TabControl.renameTab)(extractedName, true);
+    }
+  }
+  Layout.zoomResize();
+}
+
+Action.submitLoadTask = function()
+{
+  var taskName = jQuery("#inputLoadTaskName").val();
+  let patt = /^(\w|\.)+$/; // taskName Take only [ A-Z or a-z or 0-9 or _ or . ]
+  if (!patt.test(taskName))//taskName.indexOf(" ") != -1 || taskName.indexOf("/") != -1 || taskName.indexOf("-") != -1 || taskName.indexOf("\\") != -1) 
+  {
+    window.alert("Task Name can only contain letters(case insensitive), underscores, dots, and digits!");
+    return;
+  }
+  Action.loadTask(taskName, false);
+}
+
+Action.submitTaskWork =function()
+{
+  Ajax.sendRequest("task.php", Action.submitTaskWorkCallback, format("submitTaskWork=1&model={0}&responseURL={1}", Page.getModel(), window.location.href));
+}
+
+Action.submitTaskWorkCallback = function(response)
+{
+  window.alert("Successfully submitted Task!");
+  var responseArray = response.responseText.split("task submit delimiter");
+  if (responseArray[0] == "")
+  {
+    window.location.href = responseArray[2];
+  }
+  else
+  {
+    window.location.href = responseArray[0] + "?task=" + responseArray[1] + "&url=" + responseArray[2];
+  }
+}
+
+Action.launchParticipantURL = function()
+{
+  var taskname = Page.getModel().split("-")[1];
+  window.open("bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname);
+}
+
+Action.copyParticipantURL = function()
+{
+  var taskname = Page.getModel().split("-")[1];
+  var copiedURL = window.location.hostname + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + "/bookmark.php?loadTaskWithURL=1&taskname=" + taskname + "&model=" + taskname;
+  Action.copyToClp(copiedURL);
+  Page.setFeedbackMessage("Participant URL is in copy buffer: " + copiedURL);
+}
+
+Action.openStartFreshWork = function() 
+{
+  var a= confirm("Are you sure to start from fresh?"); 
+  if(a) { 
+    window.location.href = "/umpleonline/umple.php"
+  }
+}
+
+Action.copyToClp = function(txt){
+    prenode=document.createElement("PRE");
+    txt = document.createTextNode(txt);
+    prenode.appendChild(txt);
+    var m = document;
+    var w = window;
+    var b = m.body;
+    b.appendChild(prenode);
+
+    if (b.createTextRange) {
+        var d = b.createTextRange();
+        d.moveToElementText(txt);
+        d.select();
+        m.execCommand('copy');
+    } 
+    else {
+        var d = m.createRange();
+        var g = w.getSelection;
+        d.selectNodeContents(txt);
+        g().removeAllRanges();
+        g().addRange(d);
+        m.execCommand('copy');
+        g().removeAllRanges();
+    }
+    prenode.remove();
+}
+
+Action.openInstructionInNewTab = function()
+{
+  jQuery("#buttonReshowInstructions").css("display", "inline");
+  // var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
+  // winPrint.document.write("<!DOCTYPE html><html><head><title>Instructions</title></head><body>" + jQuery("#instructionsHTML").html() + "</body></html>");
+  // winPrint.document.close();
+  // winPrint.focus();
+  var tab = window.open('about:blank', '_blank');
+  tab.document.write(jQuery("#instructionsHTML").html()); // where 'html' is a variable containing your HTML
+  tab.document.close();
+  jQuery("#instructionsHTML").css("display", "none");
+  jQuery("#labelInstructions").css("display", "none");
+  jQuery("#buttonHideInstructions").css("display", "none");
+  Layout.zoomResize();
+}
+
+Action.reshowInstructions = function()
+{
+  jQuery("#instructionsHTML").css("display", "block");
+  jQuery("#labelInstructions").css("display", "inline");
+  jQuery("#buttonReshowInstructions").css("display", "none");
+  jQuery("#buttonHideInstructions").css("display", "inline");
+  Layout.zoomResize();
+}
+
+Action.hideInstructions = function()
+{
+  jQuery("#instructionsHTML").css("display", "none");
+  jQuery("#labelInstructions").css("display", "none");
+  jQuery("#buttonHideInstructions").css("display", "none");
+  jQuery("#buttonReshowInstructions").css("display", "inline");
+  Layout.zoomResize();
 }
 
 Action.saveNewFile = function()
@@ -400,6 +843,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery("#buttonShowEditableClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('editableClass');
     jQuery(".view_opt_class").show();
+    jQuery(".view_opt_class_palette").show();
 
   }
   else if(newDiagramType.type == "JointJSClass") { 
@@ -414,7 +858,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery("#buttonShowJointJSClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('JointJSClass');
     jQuery(".view_opt_class").show();
-
+    jQuery(".view_opt_class_palette").show();
   }  
   else if(newDiagramType.type == "GvClass") { 
     if(Page.useGvClassDiagram) return;
@@ -515,17 +959,40 @@ Action.uiguCallback = function(response)
   Page.showViewDone();
 }
 
+Action.copyClipboardCode = function()
+{
+  Action.copyToClp(Page.getUmpleCode());
+  Page.setFeedbackMessage("Code has been copied to the clipboard");  
+}
+
+Action.copyCommandLineCode = function()
+{
+  var pretext="sh\n";
+  pretext+="echo Will compile umple file. Requires umple command to be installed\n";
+  pretext+="cd ~/tmp\n";
+  pretext+="mkdir testump-$$\n";
+  pretext+="cd testump-$$\n";
+  pretext+="cat >> test.ump <<ENDUMP\n";
+  var posttext="\nENDUMP\n";
+  posttext+="umple test.ump -c -\n";
+  posttext+="echo Use ctrl-D to exit back to the original shell\n\n";
+  Action.copyToClp(pretext+Page.getUmpleCode()+posttext);
+  Page.setFeedbackMessage("Shell code to compile on command line was copied to clipboard");  
+}
+
 Action.showCodeInSeparateWindow = function()
 {
-  codeWindow = window.open("","UmpleCode","height=700, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
+  codeWindow = window.open("","UmpleCode"+Math.random()*10000,"height=700, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
   codeWindow.document.write('<code><pre id="umpleCode">' + Page.getUmpleCode() + '</pre></code>');
+  codeWindow.document.title="Umple raw code";
   codeWindow.document.close();
 }
 
 Action.showEncodedURLCodeInSeparateWindow = function()
 {
-  codeWindow = window.open("","UmpleCode","height=500, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
+  codeWindow = window.open("","UmpleEncodedURL"+Math.random()*10000,"height=500, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
   codeWindow.document.write('<code><pre id="umpleCode">' + Page.getEncodedURL() + '</pre></code>');
+  codeWindow.document.title="Umple encoded URL";
   codeWindow.document.close();
 }
 
@@ -543,6 +1010,619 @@ Action.simulateCodeCallback = function(response)
   var modelId = response.responseText;
   window.open("../umpleonline/simulate.php?model=" + modelId, "umpleSimulator");
   Page.showViewDone(); 
+}
+//Called by Action.drawStateMenu(), this multiuse function takes any textual input requires for 
+//menu edits on states.
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.drawInputState = function(inputType,stateCode,stateName){
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+  prompt.style.border = "1px solid #ccc";
+  prompt.style.backgroundColor = "#f8f8f8";
+  prompt.style.padding = "5px";
+  prompt.style.position = "fixed";
+  prompt.id="promptBox";
+  var promptRect=prompt.getBoundingClientRect();
+  if(event.clientX+promptRect.width>window.innerWidth){
+    prompt.style.right=(window.innerWidth-event.clientX)+"px";
+  } else {
+    prompt.style.left = event.clientX+"px";
+  }
+  if(event.clientY+promptRect.height>window.innerHeight){
+    prompt.style.bottom=(window.innerHieght-event.clientY)+"px";
+  } else {
+    prompt.style.top = event.clientY+"px";
+  }
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.style.padding = '5px';
+  input.style.borderRadius = '3px';
+  input.style.border = '1px solid #ccc';
+  input.style.width = '200px';
+  input.style.marginLeft = '5px';
+  var inputErrorMsg = document.createElement('label');
+  inputErrorMsg.type='label';
+  inputErrorMsg.textContent='Error - Please enter an alphanumeric name beginning with a non-numeric character.';
+  inputErrorMsg.style.color="red";
+  var hider=function hidePrompt(e) {
+    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  };
+  var unsanitizedState=stateCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+  var label = document.createElement('label');
+  label.htmlFor = 'inputLabel';
+  label.style.marginRight = '5px';
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", hider);
+  if(inputType=="rename"){
+    label.appendChild(document.createTextNode("New name for \'"+stateName+"\'?"));
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        //only accounts for case where states all have unique names
+        if(Action.validateAttributeName(input.value)){
+          let orig=Page.codeMirrorEditor.getValue();
+          let regex=new RegExp("(\\W+)("+stateName+")(\\W+)");
+          let res;
+          while((res=orig.match(regex))!=null){
+            orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
+          }
+          Page.codeMirrorEditor.setValue(orig);
+          document.removeEventListener("mousedown", hider);
+          prompt.remove();
+          Action.removeContextMenu();
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
+      }
+    });  
+  } else if(inputType=="substate") {
+    label.appendChild(document.createTextNode("Name of new substate?"));
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        if(Action.validateAttributeName(input.value)){
+          let subtext=unsanitizedState.substr(0,unsanitizedState.length-1)+"  "+input.value+"{}}";
+          subtext=Page.codeMirrorEditor.getValue().replace(unsanitizedState,subtext);
+          Page.codeMirrorEditor.setValue(subtext);
+          document.removeEventListener("mousedown", hider);
+          prompt.remove();
+          Action.removeContextMenu();
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
+      }
+    });
+   
+  } else if(inputType=="transition"){ //should have an indicator after user enters label so they know to press another state
+    label.appendChild(document.createTextNode("Condition for new transition?"));
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        if(Action.validateAttributeName(input.value)){
+          
+          var orig=stateCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+          document.removeEventListener("mousedown", hider);
+          prompt.remove();
+          Action.removeContextMenu();
+          var assocState=function (event){
+              let targ=event.target;
+              while(targ.parentElement.id!="graph0"){
+                targ=targ.parentNode;
+              }
+              let elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length));
+              elemText=elemText.split("^*^"); //index 0: class, index 1: base state, index 2: remaining states
+              let subtext="  "+input.value+" -> "+elemText[2]+";\n}";
+              let newState=orig.substr(0,orig.length-1)+subtext;
+              Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newState));
+              //TODO - Saving/edit history doesn't seem to be working here.
+              TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+              let others=document.getElementsByClassName("node");
+              for(let q=0;q<others.length;q++){
+                others[q].removeEventListener("mousedown",assocState);
+              }
+              elems=document.getElementsByClassName("cluster");
+              for(let q=0;q<others.length;q++){
+                others[q].removeEventListener("mousedown",assocState);
+              }  
+            };
+          //add event listener to Graphviz nodes for left click
+          var elems=document.getElementsByClassName("node");
+          for(let i=0;i<elems.length;i++){
+            elems[i].addEventListener("mousedown", assocState);
+          }       
+          elems=document.getElementsByClassName("cluster");
+          for(let i=0;i<elems.length;i++){
+            elems[i].addEventListener("mousedown", assocState);
+          }       
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
+      }
+    });
+  }
+  // Add the prompt to the page
+  prompt.appendChild(label);
+  prompt.appendChild(input);
+  document.body.appendChild(prompt);
+  input.focus();
+}
+//Deletes a target state within the specific SM and Class, as well any transitions to/from target state
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.deleteState = function(stateCode,className,smName,stateName){
+  let subStates=stateName.split(",");
+  let orig=Page.codeMirrorEditor.getValue();
+  let unsanitizedState = stateCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+  orig=orig.replace(unsanitizedState,"");
+  //delete any transitions leading to target state - this handles the case where there are NOT multiple states with the same name
+ let regex=new RegExp("[^{};]*->\\s*([^\\S\\s]*|\\s*)(\\/\\s*{[^}]*})*([^\\S\\s]*|\\s*)("+subStates[subStates.length-1]+")(\\s+\\w+)*\\s*;");
+  let res;
+  while((res=orig.match(regex))!=null){ 
+    orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+  }
+  Page.codeMirrorEditor.setValue(orig);
+  TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+  Action.removeContextMenu();
+}
+//Action.drawStateMenu() is triggered by contextmenu event on Graphviz State Diagram "node" elements
+//Draws a div containing the editing options for state GV diagrams, as well as calling the related function when clicked
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.drawStateMenu = function(){
+  if(!Action.diagramInSync){
+    return;
+  }
+  // Remove old menu, if any
+  Action.removeContextMenu();
+  var targ=event.target;
+  //iterate up to top of graph elements
+  while(targ.parentElement.id!="graph0"){
+    targ=targ.parentNode;
+  }
+  //grabs state name
+  var elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length));
+  elemText=elemText.split("^*^"); //index 0: class, index 1: base state, index 2: remaining states
+  elemText[2]=elemText[2].split(".");
+  var orig=Page.codeMirrorEditor.getValue();
+  var chosenStateIndices=Action.selectStateInClass(elemText[0],elemText[1],elemText[2][0]);
+  for(let i=1;i<elemText[2].length;i++){
+    chosenStateIndices=Action.selectStateInState(chosenStateIndices.startIndex,chosenStateIndices.endIndex,elemText[2][i]);
+  }
+  var chosenState=orig.substr(chosenStateIndices.startIndex,chosenStateIndices.endIndex-chosenStateIndices.startIndex);
+  if(typeof chosenState != 'string'){
+    return;
+  }
+  //this section generates the context menu, grabbing option names and associated functions from the vars below 
+  var menu = document.createElement('customContextMenu');
+  var rowContent = ["Rename State","Delete State","Add Substate","Add Transition"];
+  //need to sanitize any linebreaks or quotes that could break the generated HTML
+  var jsInput=chosenState.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
+  var rowFuncs = ["Action.drawInputState(\"rename\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.deleteState(\""+jsInput+"\",\""+elemText[0]+"\",\""+elemText[1]+"\",\""+elemText[2]+"\")","Action.drawInputState(\"substate\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.drawInputState(\"transition\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")"];
+  menu.style.zIndex = "1000";
+  menu.style.border = "1px solid #ccc";
+  menu.style.backgroundColor = "#f8f8f8";
+  menu.style.padding = "5px";
+  menu.style.position = "fixed";
+  //add rows
+  for (var i = 0; i < rowContent.length; i++) {
+    var row = document.createElement("div");
+    row.style.padding = "5px";
+    row.style.borderRadius = "3px";
+    row.style.cursor = "pointer";
+    row.style.transition = "background-color 0.3s";
+    row.textContent = rowContent[i];
+    row.setAttribute('onclick',"javascript:"+rowFuncs[i]);
+    //Highlight row on hover
+    row.addEventListener("mouseover", function() {
+      this.style.backgroundColor = "#ddd";
+    });
+    row.addEventListener("mouseout", function() {
+      this.style.backgroundColor = "transparent";
+    });
+    //add row to context menu
+    menu.appendChild(row);
+  }
+  //set menu location at mouse, while ensuring it is on screen
+  var menuRect=menu.getBoundingClientRect();
+  if(event.clientX+menuRect.width>window.innerWidth){
+    menu.style.right=(window.innerWidth-event.clientX)+"px";
+  } else {
+    menu.style.left = event.clientX+"px";
+  }
+  if(event.clientY+menuRect.height>window.innerHeight){
+    menu.style.bottom=(window.innerHieght-event.clientY)+"px";
+  } else {
+    menu.style.top = event.clientY+"px";
+  }
+  //Add an event listener to hide the menu when the user clicks outside of it
+  document.addEventListener('mousedown', function hideMenu(e) {
+    var prompt=document.getElementById("promptBox");
+    if (e.target != menu && !menu.contains(e.target)) {
+      if(prompt!=null&&e.target != prompt && !prompt.contains(e.target)){
+        document.removeEventListener('mousedown', hideMenu);
+        Action.removeContextMenu();
+      } else {
+        document.removeEventListener('mousedown', hideMenu);
+        Action.removeContextMenu();
+      }
+    }
+  });
+  document.body.appendChild(menu);
+}
+//Searches the document for any element matching the "customContextMenu" tag, and removes it. 
+//Removes context menu on state and class diagrams
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.removeContextMenu = function(){
+  var o = document.getElementsByTagName('customContextMenu');
+  if (o.length != 0) {
+    o.item(0).remove();
+  }
+}
+//Called from Action.drawInput(), searches for existing displayColor definitions in the class code, replaces it if it exists,
+//prepends a new displayColor statement to the start of the class if one doesn't exist.
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.setColor=function(classCode,className,color){
+  let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+  if(!classyCode.includes("displayColor")){ //if color is not already set, we can prepend it to the start of the class
+    let subtext="{  displayColor "+color+";\n"; 
+    subtext=classyCode.substr(0,classyCode.indexOf("{"))+subtext+classyCode.substr(classyCode.indexOf("{")+1,classyCode.length-classyCode.indexOf("{")-1);
+    Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
+  } else { //otherwise, use regex to replace existing displayColor statement
+    let subtext="displayColor "+color+";"; 
+    let regex=new RegExp("displayColor\\s+.*;");
+    subtext=classyCode.replace(regex,subtext);
+    Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
+    setTimeout(function(){
+        TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+    }, 100);
+
+  }
+}
+//Multiuse function called whenever a user wants to use a menu edit function that requires user input
+//allows users to input their text/color selection, listens for "enter", then performs the relevant edit
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.drawInput = function(inputType,classCode,className){
+  //creating input div
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+  prompt.style.border = "1px solid #ccc";
+  prompt.style.backgroundColor = "#f8f8f8";
+  prompt.style.padding = "5px";
+  prompt.style.position = "fixed";
+  prompt.id="promptBox";
+  //draw at mouse location
+  var promptRect=prompt.getBoundingClientRect();
+  if(event.clientX+promptRect.width>window.innerWidth){
+    prompt.style.right=(window.innerWidth-event.clientX)+"px";
+  } else {
+    prompt.style.left = event.clientX+"px";
+  }
+  if(event.clientY+promptRect.height>window.innerHeight){
+    prompt.style.bottom=(window.innerHieght-event.clientY)+"px";
+  } else {
+    prompt.style.top = event.clientY+"px";
+  }
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.style.padding = '5px';
+  input.style.borderRadius = '3px';
+  input.style.border = '1px solid #ccc';
+  input.style.width = '200px';
+  input.style.marginLeft = '5px';
+  var inputErrorMsg = document.createElement('label');
+  inputErrorMsg.type='label';
+  inputErrorMsg.textContent='Error - Please enter an alphanumeric name.';
+  inputErrorMsg.style.color="red";
+  var hider=function hidePrompt(e) {
+    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  };
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", hider);
+  if(inputType=="attri"){
+    //create the attribute dropdown list
+    var select = document.createElement("select");
+    var option1 = document.createElement("option");
+    option1.value = "String";
+    option1.text = "String";
+    var option2 = document.createElement("option");
+    option2.value = "Integer";
+    option2.text = "Integer";
+    var option3 = document.createElement("option");
+    option3.value = "Double";
+    option3.text = "Double";
+    var option4 = document.createElement("option");
+    option4.value = "Float";
+    option4.text = "Float";
+    var option5 = document.createElement("option");
+    option5.value = "Boolean";
+    option5.text = "Boolean";
+    var option6 = document.createElement("option");
+    option6.value = "Date";
+    option6.text = "Date";
+    var option7 = document.createElement("option");
+    option7.value = "Time";
+    option7.text = "Time";
+    select.add(option1);
+    select.add(option2);
+    select.add(option3);
+    select.add(option4);
+    select.add(option5);
+    select.add(option6);
+    select.add(option7);
+    prompt.appendChild(select);
+    //create the text input for attribute name
+    var input = document.createElement("input");
+    input.type = "text";
+    input.style.padding = "5px";
+    input.style.borderRadius = "3px";
+    input.style.border = "1px solid #ccc";
+    input.style.width = "200px";
+    input.style.marginLeft = "5px";
+    input.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        if(Action.validateAttributeName(input.value)){
+          let orig=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+          let newClass;
+          if(input.value.includes(":")){ //In the case users wish to type in the format - "newAttrName:Type" - instead of using dropdown
+            let attriInput=input.value.split(":");
+            newClass=orig.substr(0,orig.length-1)+"  "+attriInput[1].trim()+" "+attriInput[0].trim()+";\n}";
+          } else { //if users use dropdown and type attribute name in text box
+            newClass=orig.substr(0,orig.length-1)+"  "+select.value+" "+input.value+";\n}";
+          }
+          Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
+          document.removeEventListener("mousedown", hider);
+          prompt.remove();
+          Action.removeContextMenu();
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
+      }
+    });
+    prompt.appendChild(input);
+  } else if(inputType=="rename"){
+    var replaceAllLabel = document.createElement('label');
+    replaceAllLabel.htmlFor = 'replace-all-checkbox';
+    replaceAllLabel.style.marginRight = '5px';
+    replaceAllLabel.appendChild(document.createTextNode("New name for \'"+className+"\'?"));
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        if(Action.validateAttributeName(input.value)){
+          let orig=Page.codeMirrorEditor.getValue();
+          let regex=new RegExp("(\\W+)("+className+")(\\W+)");
+          let res;
+          while((res=orig.match(regex))!=null){
+            orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
+          }
+          Page.codeMirrorEditor.setValue(orig);
+          document.removeEventListener("mousedown", hider);
+          prompt.remove();
+          Action.removeContextMenu();
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
+      }
+    });
+    prompt.appendChild(replaceAllLabel);
+    prompt.appendChild(input);    
+  } else if(inputType=="subclass") {
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        if(Action.validateAttributeName(input.value)){
+          let subtext="\nclass "+input.value+"\n{\n  isA "+className+";\n}\n";
+          Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue()+subtext);
+          document.removeEventListener("mousedown", hider);
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+          prompt.remove();
+          Action.removeContextMenu();
+        } else if(!document.contains(inputErrorMsg)) {
+          prompt.appendChild(inputErrorMsg);
+        }
+      }
+    });
+    prompt.appendChild(input);
+  } else if(inputType=="color"){
+    var label=document.createElement("label");
+    label.textContent="Color - ";
+    var arrow=document.createElement("span");
+    arrow.innerHTML="&#8594;";
+    arrow.style.cursor="pointer";
+    arrow.fontSize="20px";
+    arrow.style.paddingLeft="5px";
+    input.style.width="30px";
+    input.style.height="30px";
+    input.type="color";
+    var inputFunc=function setter(e) {
+      if (e.key === 'Enter') {
+        document.removeEventListener('keydown',setter);
+        Action.setColor(classCode,className,input.value);
+        prompt.remove();
+        Action.removeContextMenu();
+      }
+    };
+    document.addEventListener('keydown', inputFunc);
+    arrow.addEventListener("click", function(){
+      Action.setColor(classCode,className,input.value);
+      document.removeEventListener('keydown',inputFunc);
+      prompt.remove();
+      Action.removeContextMenu();
+    });
+    // Add event listeners for hover
+    arrow.addEventListener("mouseover", function() {
+      arrow.style.color = "blue";
+    });
+    arrow.addEventListener("mouseout", function() {
+      arrow.style.color = "black";
+    });
+    prompt.appendChild(label);
+    prompt.appendChild(input);
+    prompt.appendChild(arrow);
+  }
+  // Add the prompt to the page
+  document.body.appendChild(prompt);
+  input.focus();
+}
+//Searches for existing associations, children, and associationClasses related to the target class
+//Associations are: deleted
+//Children are: pointed to parent (if exists)
+//associationClasses are: deleted
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.deleteClass = function(classCode, className){
+  let orig=Page.codeMirrorEditor.getValue();
+  orig=orig.replace(classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\""),"");
+  //deletes all associations leading to target class
+  let regex=new RegExp(".*\\s*(-|<)(>|-)\\s*.*\\s*"+className+"(\\s+\\w+)*\\s*;");
+  let res;
+  while((res=orig.match(regex))!=null){ 
+    orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+  }
+  regex=new RegExp(".*"+className+"\\s*(<|-)(>|-)\\s*.*\\s+\\w+;");
+  while((res=orig.match(regex))!=null){ 
+    orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+  }
+  //finds all children of target class and connects them to parent of target, if it exists
+  regex=new RegExp("isA\\s+"+className);
+  if(orig.match(regex)!=null){
+    let subregex=new RegExp("isA\\s+(\\w+);");
+    let test;
+    if((test=classCode.match(subregex))!=null){ //if parent class exists, link children to it
+      let parentClass="isA "+test[1]+";";
+      while((res=orig.match(regex))!=null){
+        orig=orig.substr(0,res.index)+parentClass+orig.substr(res.index+res[0].length+1,orig.length-(res.index+res[0].length+1));
+      }
+    } else { //if parent class does not exist, delete relevant isA statements
+      while((res=orig.match(regex))!=null){
+        orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length+1,orig.length-(res.index+res[0].length+1));
+      }
+    }
+  }
+  //remove any associationClass definitions containing this class
+  regex=new RegExp("associationClass\\s+\\w+\\s*\\n*{(\\n*\\W*\\w*;)*(\\s*CRUD_Value\\s*{(\\s*\\w*\\s*,*)*}\\s*\\n*)*(\\n*\\W*\\w*;)*([\\s|\\t]*[*]\\s+"+className+";)(\\n*\\W*\\w*;)*(\\s*CRUD_Value\\s*{(\\s*\\w*\\s*,*)*}\\s*\\n*)*(\\n*\\W*\\w*)*?}");
+  res=null;
+  while((res=orig.match(regex))!=null){ 
+    orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
+  }
+  //set editor code, save new state, and remove the context menu
+  Page.codeMirrorEditor.setValue(orig);
+  Action.removeContextMenu();
+  TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+}
+//Adds an association to a class, this function is called by Action.displayMenu() when the user selects "Add Association"
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.addAssociationGv = function(classCode, className){
+  var elems=document.getElementsByClassName("node");
+  var orig=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+  Action.removeContextMenu();
+  //add event listener to Graphviz nodes for left click
+  for(let i=0;i<elems.length;i++){
+    elems[i].addEventListener("mousedown", function assocClass(event){
+      var elemText=event.target;
+      //iterate up to find class node
+      while(elemText.parentElement.id!="graph0"){
+        elemText=elemText.parentNode;
+      }
+      elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
+      let subtext="  * -> 1 "+elemText+";\n}\n";
+      let newClass=orig.substr(0,orig.length-1)+subtext;
+      Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
+      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+      let others=document.getElementsByClassName("node");
+      for(let q=0;q<others.length;q++){
+        others[q].removeEventListener("mousedown",assocClass);
+      }
+    });
+  }
+}
+//Action.displayMenu() is triggered by contextmenu event on Graphviz Class "node" elements
+//Draws a div containing the editing options for class GV diagrams, as well as calling the related function when clicked
+//Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+Action.displayMenu = function(event) {
+  if(!Action.diagramInSync){
+    return;
+  }
+  // Remove old menu, if any
+  Action.removeContextMenu();
+  var elemText=event.target;
+  //iterate up to top of class table
+  while(elemText.parentElement.id!="graph0"){
+    elemText=elemText.parentNode;
+  }
+  //unstable - grabs class name
+  elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
+  var orig=Page.codeMirrorEditor.getValue();
+  var chosenClass=Action.splitStates(orig);
+  for(let i=0;i<chosenClass.length;i++){
+    if(chosenClass[i].startsWith("class "+elemText+"{")||chosenClass[i].startsWith("class "+elemText+" ")||chosenClass[i].startsWith("class "+elemText+"\n")){
+      chosenClass=chosenClass[i];
+    }
+  }
+  if(typeof chosenClass != 'string'){
+    return;
+  }
+  var menu = document.createElement('customContextMenu');
+  var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color"];
+  var jsInput=chosenClass.replaceAll("\n","&#10").replaceAll("\"","&#$quot");;
+  var rowFuncs = ["Action.drawInput(\"attri\",\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+jsInput+"\",\""+elemText+"\")","Action.deleteClass(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"subclass\",\""+jsInput+"\",\""+elemText+"\")","Action.addAssociationGv(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"color\",\""+jsInput+"\",\""+elemText+"\")"];
+
+  menu.style.zIndex = "1000";
+  menu.style.border = "1px solid #ccc";
+  menu.style.backgroundColor = "#f8f8f8";
+  menu.style.padding = "5px";
+  menu.style.position = "fixed";
+  //add rows
+  for (var i = 0; i < rowContent.length; i++) {
+    var row = document.createElement("div");
+    row.style.padding = "5px";
+    row.style.borderRadius = "3px";
+    row.style.cursor = "pointer";
+    row.style.transition = "background-color 0.3s";
+    row.textContent = rowContent[i];
+    row.setAttribute('onclick',"javascript:"+rowFuncs[i]);
+    // Highlight row on hover
+    row.addEventListener("mouseover", function() {
+      this.style.backgroundColor = "#ddd";
+    });
+    row.addEventListener("mouseout", function() {
+      this.style.backgroundColor = "transparent";
+    });
+
+    //add row to context menu
+    menu.appendChild(row);
+
+  }
+
+  //set menu location at mouse, while ensuring it is on screen
+  var menuRect=menu.getBoundingClientRect();
+  if(event.clientX+menuRect.width>window.innerWidth){
+    menu.style.right=(window.innerWidth-event.clientX)+"px";
+  } else {
+    menu.style.left = event.clientX+"px";
+  }
+  if(event.clientY+menuRect.height>window.innerHeight){
+    menu.style.bottom=(window.innerHieght-event.clientY)+"px";
+  } else {
+    menu.style.top = event.clientY+"px";
+  }
+  // Add a listener to hide the menu when the user clicks outside of it
+  document.addEventListener('mousedown', function hideMenu(e) {
+    var prompt=document.getElementById("promptBox");
+    if (e.target != menu && !menu.contains(e.target)) {
+      if(prompt!=null&&e.target != prompt && !prompt.contains(e.target)){
+
+        document.removeEventListener('mousedown', hideMenu);
+        Action.removeContextMenu();
+        
+      } else {
+        document.removeEventListener('mousedown', hideMenu);
+        Action.removeContextMenu();
+      }
+    }
+  });
+  document.body.appendChild(menu);
 }
 
 Action.classSelected = function(obj)
@@ -616,6 +1696,7 @@ Action.unselectAll = function()
   Action.classSelected(null);
   Action.associationSelected(null);
   Action.generalizationSelected(null);
+  Action.transitionSelected(null);
 }
 
 Action.classClicked = function(event)
@@ -667,6 +1748,51 @@ Action.classClicked = function(event)
   }
 }
 
+Action.stateClicked = function(identifier)
+{
+    if (!Action.diagramInSync) return;
+    Action.focusOn("umpleCanvas", true);
+    Action.focusOn("umpleModelEditorText", false);
+    var idSplit=identifier.split("^*^");
+    var identifierClass=idSplit[0]
+    var identifierSM=idSplit[1]
+    var identifierState=idSplit[2].replace("Entry:","").replace("Exit:","");
+    identifierState=identifierState.replace("Exit:","");
+    Action.unselectAll();
+    Action.elementClicked = true;
+    var selectionIndicies=null;
+    if(identifierState.includes('.')){ //nested case
+      identifierState=identifierState.split('.');
+      selectionIndicies=Action.selectStateInClass(identifierClass,identifierSM,identifierState[0]);
+      for(let i=1;i<identifierState.length;i++){
+        selectionIndicies=Action.selectStateInState(selectionIndicies.startIndex,selectionIndicies.endIndex,identifierState[i]);
+      }
+    } else { //base case
+      selectionIndicies=Action.selectStateInClass(identifierClass,identifierSM,identifierState);
+    }
+    Action.highlightByIndex(selectionIndicies.startIndex,selectionIndicies.endIndex);
+
+
+
+   if (Page.selectedItem == "AddTransition")
+    {
+        if (DiagramEdit.newTransition == null)
+        {
+            Action.canCreateByDrag = false;
+            DiagramEdit.createTransitionPartOne(event);
+        }
+        else
+        {
+            DiagramEdit.createTransitionPartTwo(event);
+            setTimeout(function(){ Action.canCreateByDrag = true; }, 500);
+        }
+    }
+    else
+    {
+        //Action.stateSelected(identifier);
+    }
+}
+
 Action.associationClicked = function(event)
 {
   if (!Action.diagramInSync) return;
@@ -677,6 +1803,32 @@ Action.associationClicked = function(event)
   Action.associationSelected(obj);
 }
 
+Action.transitionClicked = function(identifier)
+{
+  if(!Action.diagramInSync) return;
+  Action.elementClicked = true;
+  Action.unselectAll();
+  let id = identifier.split("*^*");
+  let identifierState=id[3].split(".");
+  dest=id[4];
+  var selection = Action.selectStateInClass(id[0],id[1],identifierState[0]);
+  for (var i=1;i<identifierState.length;i++){
+    selection=Action.selectStateInState(selection.startIndex,selection.endIndex,identifierState[i]);
+  }
+  let searchTerm=id[2].replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
+  searchTerm=searchTerm.replace("after","after~`~?:Every`~`?"); //subpar solution, could be improved
+  if(id[5]!=""){
+    let guardStr=id[5].trim().replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
+    searchTerm=searchTerm+"\\s*[\\s*"+guardStr.trim().slice(1,guardStr.trim().length-1)+"\\s*]";
+  }
+  searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)?").replaceAll("(","\\(?").replaceAll("~`~","(").replaceAll("`~`",")").replaceAll(" ","\\s*").replaceAll(",","\\s*,\\s*").replaceAll("!","\\s*!\\s*").replaceAll("/","\\s*/\\s*"); 
+  let pattern= new RegExp(searchTerm+".*->","s");
+  let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
+  let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
+  let line = Action.findEOL(cText);
+  let endIndex=startIndex+line.length;
+  Action.highlightByIndex(startIndex,endIndex);
+}
 Action.generalizationClicked = function(event)
 {
   if (!Action.diagramInSync) return;
@@ -705,6 +1857,26 @@ Action.associationHover = function(event,isHovering)
     }
   }
 }
+
+Action.transitionHover = function(event,isHovering)
+{
+    if (!Action.diagramInSync) return;
+    var updateTransition = event.currentTarget;
+    var umpleTransition = UmpleSystem.findTransition(updateTransition.id);
+
+    if (updateAssociation != null && Page.canShowHovers())
+    {
+        var hoverCount = 2;
+        var selector = "#" + updateAssociation.id + "_hover";
+
+        for (var i=0; i<hoverCount; i++)
+        {
+            if (isHovering) jQuery(selector+i).show();
+            else jQuery(selector+i).hide();
+        }
+    }
+}
+
 
 Action.generalizationHover = function(event,isHovering)
 {
@@ -758,6 +1930,43 @@ Action.associationSelected = function(obj)
   }
 }
 
+Action.transitionSelected = function(obj)
+{
+    // Page.setFeedbackMessage("transition selected");
+    var isSelected = (obj == null) ? false : true;
+    var updateObj = null;
+
+    if (Page.selectedItem == "DeleteEntity" && obj != null)
+    {
+        var addToQueue = false;
+        DiagramEdit.transitionDeleted(obj.id, addToQueue);
+        return;
+    }
+
+    if (obj != null)
+    {
+        Page.selectedTransition = obj;
+        updateObj = obj;
+    }
+    else if (Page.selectedTransition != null)
+    {
+        updateObj = Page.selectedTransition;
+        Page.selectedTransition = null;
+    }
+    else
+    {
+        return;
+    }
+
+    var anchorCount = 2;
+    var anchorSelector = "#" + updateObj.id + "_anchor";
+    for (var i=0; i<anchorCount; i++)
+    {
+        if (isSelected) jQuery(anchorSelector + i).show();
+        else jQuery(anchorSelector + i).hide();
+    }
+}
+
 Action.generalizationSelected = function(obj)
 {
   var isSelected = (obj == null) ? false : true;
@@ -792,6 +2001,21 @@ Action.generalizationSelected = function(obj)
     if (isSelected) jQuery(anchorSelector + i).show();
     else jQuery(anchorSelector + i).hide();
   }
+}
+
+Action.executeCode = function(languageStyle, languageName)
+{
+  var executeCodeSelector = "#buttonExecuteCode";
+  var actualLanguage = languageName;
+  
+  jQuery(executeCodeSelector).showLoading();
+  Action.ajax(
+    function(response) { 
+      Action.executeCodeCallback(response); 
+    },
+    format("execute=true&language={0}&languageStyle={1}&model={2}", actualLanguage, languageStyle, Page.getModel()),
+    "true"
+  );
 }
 
 Action.generateCode = function(languageStyle, languageName)
@@ -845,9 +2069,20 @@ Action.photoReady = function()
   UmpleSystem.redrawCanvas();
 }
 
+Action.executeCodeCallback = function(response)
+{
+  var executeCodeSelector = "#buttonExecuteCode";
+  jQuery(executeCodeSelector).hideLoading();
+  Page.showExecutionArea();
+  Page.hideGeneratedCodeOnly();
+  Page.showExecutedResponse(response.responseText);
+  window.location.href='#codeExecutionArea';
+}
+
 Action.generateCodeCallback = function(response, language, optionalCallback)
 {
   Page.showGeneratedCode(response.responseText,language);
+  Page.hideExecutionArea();
   Action.gentime = new Date().getTime();
 
   if(optionalCallback !== undefined)
@@ -873,6 +2108,10 @@ Action.classMouseDown = function(event)
   {
     DiagramEdit.createGeneralizationPartOne(event);
   }
+  else if (Page.selectedItem == "AddTransition" && DiagramEdit.newTransition == null)
+  {
+      DiagramEdit.createTransitionPartOne(event);
+  }
 }
 
 Action.classMouseUp = function(event)
@@ -886,6 +2125,9 @@ Action.classMouseUp = function(event)
   else if (Page.selectedItem == "AddGeneralization" && DiagramEdit.newGeneralization != null)
   {
     DiagramEdit.createGeneralizationPartTwo(event);
+  }
+  else if (Page.selectedItem == "AddTransition" && DiagramEdit.newTransition != null){
+    DiagramEdit.createTransitionPartTwo(event);
   }
 }
 
@@ -907,6 +2149,10 @@ Action.mouseMove = function(event)
   if (DiagramEdit.newAssociation != null && Page.selectedItem == "AddAssociation")
   {
     Action.drawAssociationLine(event, DiagramEdit.newAssociation);
+  }
+  if (DiagramEdit.newTransition != null && Page.selectedItem == "AddTransition")
+  {
+    Action.drawTransitionLine(event, Diagramedit.newTransition);
   }
   if (DiagramEdit.newGeneralization != null && Page.selectedItem == "AddGeneralization")
   {
@@ -945,6 +2191,15 @@ Action.drawAssociationLine = function(event, newAssociation)
   jQuery(canvasSelector).append(newAssociation.drawable());
 }
 
+Action.drawTransitionLine = function(event, newTransition)
+{
+    var canvasSelector = "#" + Page.umpleCanvasId();
+    var mousePosition = new UmplePosition(event.pageX, event.pageY,0,0);
+    newTransition.toStatePosition = mousePosition.subtract(UmpleSystem.position());
+    jQuery(canvasSelector).append(newTransition.drawable());
+}
+
+
 Action.drawGeneralizationLine = function(event, newGeneralization)
 {
   var canvasSelector = "#" + Page.umpleCanvasId();
@@ -979,6 +2234,14 @@ Action.umpleCanvasClicked = function(event)
       DiagramEdit.removeNewAssociation();
     }
   }
+  else if (Page.selectedItem == "AddTransition" && DiagramEdit.newTransition != null)
+  {
+    if (Page.clickCount >1)
+    {
+      DiagramEdit.removeNewTransition();
+    }
+  }
+
   else if (Page.selectedItem == "AddGeneralization" && DiagramEdit.newGeneralization != null)
   {
     if (Page.clickCount > 1)
@@ -1004,10 +2267,13 @@ Action.directUpdateCommandCallback = function(response)
 // such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
 {
-  TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
+  if (!justUpdatetoSaveLater && !justUpdatetoSaveLaterForTextCallback){
+    TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
+    Page.setExampleMessage("");
+  }
   Action.freshLoad = true;
-
-  Page.setUmpleCode(response.responseText);
+  
+  Page.setUmpleCode(response.responseText, Action.update.codeChange);
   // DEBUG
   // Page.setFeedbackMessage("update text callback -");
   // Page.catFeedbackMessage(response.responseText);
@@ -1017,10 +2283,14 @@ Action.updateUmpleTextCallback = function(response)
 
   if (DiagramEdit.textChangeQueue.length == 0) 
   {
+    Action.freshLoad = false;
     DiagramEdit.pendingChanges = false;
+    Action.setjustUpdatetoSaveLater(false);
+    Action.setjustUpdatetoSaveLaterForTextCallback(false);
   }
-  else
-  {
+  else{
+    Action.setjustUpdatetoSaveLater(true);
+    Action.setjustUpdatetoSaveLaterForTextCallback(true);
     DiagramEdit.doTextUpdate();
   }
   
@@ -1073,18 +2343,18 @@ Action.loadExample = function loadExample()
   var diagramType="";
   if(Page.useGvStateDiagram) {
     diagramType="&diagramtype=state";
-    jQuery("#genjava").prop("selected",true);
+    //jQuery("#genjava").prop("selected",true);
   }
  else if(Page.useGvFeatureDiagram) {
     diagramType="&diagramtype=GvFeature";
-    jQuery("#genjava").prop("selected",true);
+    //jQuery("#genjava").prop("selected",true);
   }
   else if(Page.useStructureDiagram) {
     diagramType="&diagramtype=structure&generateDefault=cpp";
-    jQuery("#gencpp").prop("selected",true);
+    //jQuery("#gencpp").prop("selected",true);
   }
   else {
-    jQuery("#genjava").prop("selected",true);
+    //jQuery("#genjava").prop("selected",true);
   }
   
   var largerSelector = "#buttonLarger";
@@ -1098,6 +2368,7 @@ Action.loadExample = function loadExample()
   
   var newURL="?example="+exampleName+diagramType;
   Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+exampleName+" example</a>");
+
  // TODO - fix so history works nicely
  //   if(history.pushState) {history.pushState("", document.title, newURL);}
            
@@ -1107,12 +2378,14 @@ Action.loadExample = function loadExample()
 Action.loadExampleCallback = function(response)
 {
   Action.freshLoad = true;
-  Page.setUmpleCode(response.responseText);
-  Page.hideLoading();
-  TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
-  Action.updateUmpleDiagram();
+  Action.setjustUpdatetoSaveLater(true);
+  Page.setUmpleCode(response.responseText, function(){
+    Page.hideLoading();
+    Action.updateUmpleDiagram()}
+  );
   Action.setCaretPosition("0");
   Action.updateLineNumberDisplay();
+  TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
 }
 
 Action.customSizeTyped = function()
@@ -1179,6 +2452,18 @@ Action.keyboardShortcut = function(event)
       DiagramEdit.generalizationDeleted(Page.selectedGeneralization.id);
       event.preventDefault();
     }
+  }
+  else if ((shortcut == 8 || shortcut == 46) && jQuery(".umpleClass").is(":focus")){
+  	DiagramEdit.classDeleted(document.activeElement.id);
+  	event.preventDefault();
+  }
+  else if ((shortcut == 8 || shortcut == 46) && (jQuery(".untracedAssociation").is(":focus")||jQuery(".redTracedAssociation").is(":focus"))){
+  	DiagramEdit.associationDeleted(document.activeElement.id);
+  	event.preventDefault();
+  }
+  else if ((shortcut == 8 || shortcut == 46) && jQuery(".umpleGeneralization").is(":focus")){
+  	DiagramEdit.generalizationDeleted(document.activeElement.id);
+  	event.preventDefault();
   }
 }
 
@@ -1269,6 +2554,8 @@ Action.setCaretPosition = function(line)
     {
       // Special backdoor to turn on experimental features
       document.getElementById('advancedMode').value=1;
+
+
       Page.setFeedbackMessage("");
       return;
     }
@@ -1277,6 +2564,49 @@ Action.setCaretPosition = function(line)
       document.getElementById('advancedMode').value=2;
       Page.setFeedbackMessage("Debug Mode");
       return;
+    }
+    if(line=="sp")
+    { // creates Survey Pass; modifies conditions to allow for survey to be displayed:
+      // includes setting RandomizedFrequency to 1, MinutesBeforePrompt to 5 secs, EditsBeforePrompt to 1;
+      if (existSCookie("surveyCookie")==null && window.localStorage.getItem("surveyShown")==null){
+        if (document.getElementById("styleTip")!=null)
+          document.getElementById("styleTip").innerHTML="";
+        window.randomSurveyRoll = 1;
+        window.surveyData.EditsBeforePrompt=1;
+        timeSurveyUp = false;
+        clearTimeout(timeSurvey);
+        timeSurvey = setTimeout(function(){timeSurveyUp = true;}, 10000);
+        timeSurvey;
+        displayedText=false;
+        if (!displayedText){
+          beforeInstance = TabControl.getCurrentHistory().currentIndex;
+          document.addEventListener("mouseover", function(){
+            if (TabControl.getCurrentHistory().currentIndex-beforeInstance >= 1 && !displayedText && timeSurveyUp){
+                displaySurvey();
+                this.removeEventListener('mouseover', arguments.callee);
+            }                        
+          });
+        }
+      }
+      
+    }
+    if (line=="sc")
+    { // clears all survey cookies including whether URL has been shown already, whether the user has been skipped, and whether Survey Pass has been activated
+      // run twice for it to be effective
+      let setToExpire=new Date();
+      setToExpire.setTime(setToExpire.getTime()-1000);
+      document.cookie="surveyCookie=done; expires="+setToExpire.toUTCString()+"; path=/;";
+      window.localStorage.removeItem("surveyShown");
+      document.addEventListener("mouseover", function(){});
+      setCookieBeforeClose("off");
+    }
+    if(line=="tc")
+    { // resets cookies for tips
+      Page.setFeedbackMessage("Clearing tip cookies");
+      let currentTime=new Date();
+      currentTime.setTime(currentTime.getTime()-1000);
+      window.localStorage.removeItem("first_time");
+      document.cookie="tipCookie=done; expires="+currentTime.toUTCString()+"; path=/;";
     }
     if(line.substr(0,2)=="cm") 
     {
@@ -1398,7 +2728,8 @@ Action.directAddClass = function(className) {
 
   var umpleJson = Json.toString({"position" : {"x" : "10","y" : "10","width" : "109","height" : "41"},"name" : className});
 
-  Page.setFeedbackMessage("Adding class "+className);  
+  Page.setFeedbackMessage("Adding class "+className);
+  Action.setjustUpdatetoSaveLater(false);
   Action.ajax(Action.directUpdateCommandCallback,format("action=addClass&actionCode={0}",umpleJson));
 
   // After a pause to let the ajax return, then redraw the diagram.
@@ -1526,11 +2857,164 @@ Action.selectClass = function(className)
 	Action.selectItem(scursor, ncursor);
 }
 
-Action.selectStateInClass = function(stateName, classname) 
+// Highlights the text of the state that is currently selected.
+Action.selectState = function(stateName)
 {
-  if(Page.codeMirrorOn) {}
+    var scursor = new RegExp("(class|interface|trait) "+stateName+"($|\\\s|[{])");
+    var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
+
+    Action.selectItem(scursor, ncursor);
+}
+Action.splitStates=function(inputStr){
+  let output=[];
+  let temp="";
+  let depth=0;
+  let inComment=false;
+  let EOLflag=false;
+  for(var inChar in inputStr){
+    let curChar=inputStr.charAt(inChar);
+    if(EOLflag&&curChar!='\n'&&curChar!=" "){
+      EOLflag=false;
+      if(curChar!='{'){
+        temp="";
+      }
+    }
+    if(curChar=='/'&&inputStr.charAt((parseInt(inChar)+1))=='/'){
+      inComment=true;
+    }
+    if(curChar=='\n'&&inComment){
+         inComment=false;
+    }
+
+    if(curChar=='{'&&!inComment){ //increase depth
+      temp=temp+curChar;
+      depth++;
+    }else if(curChar=='}'&&!inComment){ //decrease depth
+      temp=temp+curChar;
+      depth--;
+      if(depth==0){
+        output.push(temp.trim());
+        temp="";
+      }
+    } else if(curChar=='\n'&&depth==0){ //flush temp at EOL when depth=0
+      EOLflag=true;
+      temp=temp+"\n";
+    } else if(curChar==' '&&depth==0&&temp==""){//ignore empty spaces when depth=0
+    }else { //push char to temp variable
+        temp=temp+curChar;
+    }
+
+  }
+  return output;
+}
+Action.indexToPos = function(index,inputText){
+  var ch=0;
+  var outputLine=0;
+  var temp="";
+  for(var i=0;i<index;i++){
+    let curChar=inputText.charAt(i);
+        if(curChar=="\n"){
+      outputLine++;
+      temp="";
+    } else {
+      temp=temp+curChar;
+    }
+  }
+  ch=temp.length;
+  output={line:outputLine,ch:ch};
+  return  output;
+}
+Action.selectStateInClass = function(className, smName, stateName) 
+{
+  if(Page.codeMirrorOn) {
+    let text = Page.codeMirrorEditor.getValue();
+    let splitBuffer=Action.splitStates(text);
+    let currClass=null;
+    let pattern = new RegExp("(?:class|queued)\\s+"+className,"");
+    for(let i=0;i<splitBuffer.length;i++){
+      if(splitBuffer[i].search(pattern)==0){
+        currClass=splitBuffer[i]; //set currClass to class code
+        break;
+      }
+    }
+    splitBuffer=Action.splitStates(currClass.substr(currClass.indexOf("{")+1)); //split class into un-nested SMs
+    let currSM=null;
+    for(let i=0;i<splitBuffer.length;i++){
+      let query=new RegExp("(?:queued\\s*)?"+smName);
+      if(splitBuffer[i].search(query)==0){
+        currSM=splitBuffer[i]; //set currSM to un-nested SM code
+        break;
+      }
+    }
+    splitBuffer=Action.splitStates(currSM.substr(currSM.indexOf("{")+1));
+    if (splitBuffer!=null) {
+      let states = splitBuffer;
+      let finState=null;
+      for(let i=0;i<states.length;i++){
+        if(states[i].search(stateName)==0){
+          finState=states[i];
+          break;
+        }
+      }
+      let startIndex=text.indexOf(currClass);//index of class start
+      let endIndex=startIndex+currClass.length;
+      startIndex=text.substr(startIndex,endIndex).indexOf(currSM)+startIndex;//match[1] contains the SM definition+name
+      endIndex=startIndex+currSM.length;
+      startIndex=text.substr(startIndex,endIndex).indexOf(finState)+startIndex;//finds target state definition within target class and state machine
+      endIndex=startIndex+finState.length;
+      var outputObj={startIndex:startIndex,endIndex:startIndex+finState.length};
+      return outputObj;
+      
+    } else {
+      console.log("No matching state found with regex:"+pattern);
+    }
+  } else {
+    console.log("No matching class and state machine found for class: "+className+" and sm "+smName);
+  }
+  return null; 
+}
+Action.selectStateInState = function(startIndex,endIndex,target){
+  let temp=Page.codeMirrorEditor.getValue().substr(startIndex,endIndex-startIndex);
+  let states=Action.splitStates(temp.substr(temp.indexOf("{")+1));
+  var stateFin=null;
+  for(let i=0;i<states.length;i++){
+    if(states[i].startsWith(target)){
+      stateFin=states[i];
+      break;
+    }
+  }
+  let outputStart=temp.indexOf(stateFin)+startIndex;
+  let outputEnd=outputStart+stateFin.length;
+  let outputObj={startIndex:outputStart,endIndex:outputEnd};
+  return outputObj;
+}
+Action.highlightByIndex = function(startIndex,endIndex){
+  Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex,Page.codeMirrorEditor.getValue()),Action.indexToPos(endIndex,Page.codeMirrorEditor.getValue()))
 }
 
+Action.findEOL = function(inputStr){ //returns ONLY depth==0 lines as an array without letting non-EOL \n's cause line breaks
+  let output="";
+  let temp="";
+  let depth=0;
+  let EOLflag=false;
+  for(var inChar in inputStr){
+    let curChar=inputStr.charAt(inChar);
+    if(curChar=='{'){
+      depth++;
+      temp=temp+curChar;
+    } else if(curChar=='}'){
+      depth--;
+      temp=temp+curChar;
+    } else if(curChar==';'&&depth==0){
+      output=temp+';';
+      break;
+    } else {
+      temp=temp+curChar;
+    }
+
+  }
+  return output;
+}
 Action.delayedFocus = function(ms) 
 {
   var ctrl=document.getElementById('umpleModelEditorText');
@@ -1568,12 +3052,14 @@ Action.umpleCodeMirrorCursorActivity = function() {
 
 Action.umpleCodeMirrorTypingActivity = function() {
   if(Action.freshLoad == false) {
-    Page.codeMirrorEditor.save();
     Action.umpleTypingActivity("codeMirrorEditor");
+    Page.codeMirrorEditor.save();
   }
   else {
     Action.freshLoad = false;
+    Action.setjustUpdatetoSaveLaterForTextCallback(false);
   }
+
 }
 
 Action.trimMultipleNonPrintingAndComments = function(text) {
@@ -1639,14 +3125,49 @@ Action.umpleTypingActivity = function(target) {
     Action.diagramInSync = false;
     Page.enableDiagram(false);
   }
-  
+  //Action.processTyping("codeMirrorEditor", true);
+  //return;
   if (Action.oldTimeout != null)
   {
     clearTimeout(Action.oldTimeout);
   }
-  
   if(target == "diagramEdit") Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', 500);
   else Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', Action.waiting_time);
+}
+
+var checkComplexityCooldown = 300000;
+var checkComplexityLastUsage = 0;
+var checkComplexityFeedbackMessage = 'Suggestion: Since there are so many classes, <a href="javascript:Page.clickShowGvClassDiagram()">switch to automated layout</a> (G).';
+var checkComplexityDisplayTime = 120000;
+Action.checkComplexity = function()
+{
+	if((Date.now() - checkComplexityCooldown) < checkComplexityLastUsage)
+	{
+		return;
+	}
+	var editorText = jQuery("#umpleModelEditorText").val();
+	var matches = editorText.match(/class( |\n)((.|\n)*?){/g);
+	if(matches == null)
+	{
+		return;
+	}
+	var numMatches = matches.length;
+	if(numMatches > 10)
+	{
+		Page.setFeedbackMessage(checkComplexityFeedbackMessage);
+		checkComplexityLastUsage = Date.now();
+		setTimeout(Action.removeCheckComplexityWarning, checkComplexityDisplayTime);
+	}
+}
+
+//since there is a cooldown on when checkComplexity is called
+//removeCheckComplexityWarning will only be called after the 5 minute cooldown has passed.
+Action.removeCheckComplexityWarning = function()
+{
+	if(Page.getFeedbackMessage() == checkComplexityFeedbackMessage)
+	{
+		Page.setFeedbackMessage("");
+	}
 }
 
 Action.processTyping = function(target, manuallySynchronized)
@@ -1654,17 +3175,19 @@ Action.processTyping = function(target, manuallySynchronized)
   // Save in history after a pause in typing
   if (target != "diagramEdit") 
   {
-    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
+    Action.setjustUpdatetoSaveLaterForTextCallback(true);
   }
-  Page.setExampleMessage("");
+  else{
+    Action.setjustUpdatetoSaveLaterForTextCallback(false);
+  }
   
   if (!Action.manualSync || manuallySynchronized)
   {
     Action.diagramInSync = true;
     
     if (target == "umpleModelEditorText" || target == "codeMirrorEditor") {
-      Action.updateLayoutEditorAndDiagram();
-      
+      Action.updateLayoutEditorAndDiagram(); 
+		
       // issue#1554
       var downloadLink = document.getElementById("downloadLink");
       if (downloadLink !== null){
@@ -1677,9 +3200,20 @@ Action.processTyping = function(target, manuallySynchronized)
     {
       Action.ajax(Action.updateFromDiagramCallback,Action.getLanguage());
     }
-    
     //Page.enableDiagram(true);
   }
+
+  if (target != "diagramEdit"){
+    if (!justUpdatetoSaveLater){
+      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
+    }
+    else if (target == "umpleModelEditorText" || target == "codeMirrorEditor"){
+      Action.setjustUpdatetoSaveLater(false);
+    }
+    Page.setExampleMessage("");
+    
+  }
+	setTimeout(Action.checkComplexity,10000);
 }
 
 Action.updateLayoutEditorAndDiagram = function()
@@ -1714,7 +3248,7 @@ Action.updateUmpleLayoutEditorCallback = function(response)
   
   Page.setUmplePositioningCode(positioning);
   Page.hideLoading();
-  Action.updateUmpleDiagramForce(false);
+  Action.updateUmpleDiagramForce(true);
 }
 
 Action.updateUmpleDiagram = function() {
@@ -1736,16 +3270,19 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   Page.showCanvasLoading();
   
   Action.ajax(Action.updateUmpleDiagramCallback, Action.getLanguage());
+
 }
 
 Action.updateUmpleDiagramCallback = function(response)
 {
   var diagramCode = "";
   var errorMessage = "";
-  
+
   diagramCode = Action.getDiagramCode(response.responseText);
   errorMessage = Action.getErrorCode(response.responseText);
-  
+  Page.hideExecutionArea();
+
+    
   if(diagramCode == null || diagramCode == "" || diagramCode == "null") 
   {
     Page.enableDiagram(false);
@@ -1803,7 +3340,6 @@ Action.updateUmpleDiagramCallback = function(response)
           //paper.scaleContentToFit({padding: 15});
         }
       };
-
       // using the umpleCanvas as the mouse wheel event target, as it is a stable entity
       var paperHolder = document.getElementById("umpleCanvas");
 
@@ -1824,14 +3360,15 @@ Action.updateUmpleDiagramCallback = function(response)
     else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram )
     {
       jQuery("#umpleCanvas").html(format('{0}', diagramCode));
+      jQuery("#umpleCanvas").children().first().attr("id", "svgCanvas");
+      Action.setupPinch();
     }
     //Display structure diagram
     else if(Page.useStructureDiagram)
     {
       jQuery("#umpleCanvas").html('<svg id="svgCanvas"></svg>');
       eval(diagramCode);
-    }
-    
+    }   
   }
 
   //Show the error message
@@ -1841,6 +3378,24 @@ Action.updateUmpleDiagramCallback = function(response)
   }
   
   Page.hideLoading();
+  if(Page.useGvClassDiagram){
+    var elems=document.getElementsByClassName("node");
+    //add event listener to Graphviz Class nodes for right click
+    for(let i=0;i<elems.length;i++){
+      elems[i].addEventListener("contextmenu", function(event){event.preventDefault();Action.displayMenu(event);});
+    }
+  }
+  if(Page.useGvStateDiagram){
+    var elems=document.getElementsByClassName("node");
+    //add event listener to Graphviz state nodes for right click
+    for(let i=0;i<elems.length;i++){
+      elems[i].addEventListener("contextmenu", function(event){event.preventDefault();Action.drawStateMenu(event);});
+    }
+    elems=document.getElementsByClassName("cluster");
+    for(let i=0;i<elems.length;i++){
+      elems[i].addEventListener("contextmenu", function(event){event.preventDefault();Action.drawStateMenu(event);});
+    }
+  }
 }
 
 Action.updateFromDiagramCallback = function(response)
@@ -1867,8 +3422,7 @@ Action.updateFromDiagramCallback = function(response)
   if(errorMessage != "")
   {
     Page.showGeneratedCode(errorMessage, "diagramUpdate");
-  }
-  
+  }  
 }
 
 // Gets the code to display from the AJAX response
@@ -2024,9 +3578,19 @@ Action.toggleTransitionLabels = function()
   Action.redrawDiagram();
 }
 
+Action.toggleGuards = function()
+{
+  Page.showGuards = !Page.showGuards;
+  Action.redrawDiagram();
+}
 Action.toggleGuardLabels = function()
 {
   Page.showGuardLabels = !Page.showGuardLabels;
+  Action.redrawDiagram();
+}
+Action.allowPinch = function()
+{
+  Page.allowPinch = !Page.allowPinch;
   Action.redrawDiagram();
 }
 Action.toggleFeatureDependency = function()
@@ -2060,11 +3624,13 @@ Action.redrawDiagram = function()
 
       Page.enablePaletteItem('buttonAddClass', true);
       Page.enablePaletteItem('buttonAddAssociation', true);
+      Page.enablePaletteItem('buttonAddTransition', true);
       Page.enablePaletteItem('buttonAddGeneralization', true);
       Page.enablePaletteItem('buttonDeleteEntity', true);
     
       Page.initToggleTool('buttonAddClass');
       Page.initToggleTool('buttonAddAssociation');
+      Page.initToggleTool('buttonAddTransition');
       Page.initToggleTool('buttonAddGeneralization');
       Page.initToggleTool('buttonDeleteEntity');
     }
@@ -2161,7 +3727,6 @@ Action.ajax = function(callback,post,errors,tabIndependent)
     }
     callback(response);
   } : callback;
-
   Ajax.sendRequest("scripts/compiler.php",wrappedCallback,format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
 }
 
@@ -2284,6 +3849,7 @@ Mousetrap.bind(['ctrl+j'], function(e){
   return false; //equivalent to e.preventDefault();
 });
 
+
 Mousetrap.bind(['ctrl+g'], function(e){
   Page.clickShowGvClassDiagram();
   return false; //equivalent to e.preventDefault();
@@ -2346,6 +3912,11 @@ Mousetrap.bind(['ctrl+b'], function(e){
   return false;
 });
 
+Mousetrap.bind(['ctrl+o'], function(e){
+  Action.copyCommandLineCode();
+  return false;
+});
+
 // Functions for editing the diagram - using shift
 Mousetrap.bind(['g'], function(e){
   if(jQuery('#umpleCanvasColumn').hasClass('focus') 
@@ -2382,23 +3953,28 @@ Mousetrap.bind(['c'], function(e){
 
 Action.toggleTabsCheckbox = function(language)
 {
-	// Workaround for TextUml having java prefix
-	if($("inputGenerateCode").value.split(":")[1] == "TextUml"){
-		language = "TextUml";
-	}
+  // Workaround for TextUml having java prefix
+  if($("inputGenerateCode").value.split(":")[1] == "TextUml"){
+    language = "TextUml";
+  }
 
-	if(language == "java" || language == "php" || language == "cpp" 
-    || language == "ruby" || language == "sql"){
-		jQuery("#ttTabsCheckbox").show();
-		jQuery("#tabRow").show();
-	}
-	else{
-		jQuery("#ttTabsCheckbox").hide();
-		jQuery("#tabRow").hide();
-		if(jQuery('#buttonTabsCheckbox').is(':checked')){
-			jQuery('#buttonTabsCheckbox').click();
-		}
-	}
+  if(language == "java" || language == "php" || language == "cpp" ||
+    language == "python" || language == "ruby" || language == "sql") {
+    jQuery("#ttTabsCheckbox").show();
+    jQuery("#tabRow").show();
+
+    if ($("inputGenerateCode").value.split(":")[1] == "USE" || $("inputGenerateCode").value.split(":")[1] == "UmpleSelf" || $("inputGenerateCode").value.split(":")[1] == "Json") {
+      jQuery("#ttTabsCheckbox").hide();
+      jQuery("#tabRow").hide();
+    }
+  }
+  else {
+    jQuery("#ttTabsCheckbox").hide();
+    jQuery("#tabRow").hide();
+    if(jQuery('#buttonTabsCheckbox').is(':checked')){
+      jQuery('#buttonTabsCheckbox').click();
+    }
+  }
 }
 
 // Function for splitting code into tabs for every new file, activated when checking the Show Tabs checkbox
@@ -2445,7 +4021,7 @@ Action.generateTabsCode = function(theCode)
   theCode.split('URL_SPLIT')[1].split("\n").forEach(function(theLine){
 
     // If New File Beginning
-    if(theLine.indexOf("//%%") >= 0){
+    if( (theLine.indexOf("//%%") >= 0) || (theLine.indexOf("# %%") >= 0)){
       intFileCounter++;
       strFileName = theLine.slice(14);
       strFileName = strFileName.substr(0, strFileName.indexOf(' '));
@@ -2493,6 +4069,7 @@ Action.getLanguage = function()
   if(Page.useGvStateDiagram) { 
     if(!Page.showActions) language=language+".hideactions";
     if(Page.showTransitionLabels) language=language+".showtransitionlabels";
+    if(!Page.showGuards) language=language+".hideguards";    
     if(Page.showGuardLabels) language=language+".showguardlabels";
     language=language+"."+$("inputGenerateCode").value.split(":")[1];
   }
@@ -2528,4 +4105,229 @@ Action.hidegdpr = function()
 {
   jQuery('#gdprtext').hide();
   Action.gdprHidden = true;
+}
+
+Action.reindent = function(lines, cursorPos)
+{
+  var offset = "";
+  var codeAfterIndent = "";
+  var len = lines.length;
+  var inBlockComment = false;
+  var statementEnd = true; // i.e. have semicolon at the end of the statement.
+  var statementEndIndentSpace = 0;
+  var indexOfCursor = -1;
+  for (var i = 0; i < len; i++) 
+  {
+    var trimmedLine = lines[i].trim();
+
+    // remove quotation
+    var indexOfFirstQuote  = trimmedLine.indexOf("\"");
+    var indexOfLastQuote = trimmedLine.indexOf("\"", indexOfFirstQuote + 1);
+    while (indexOfFirstQuote != -1 && indexOfLastQuote != -1)
+    {
+      trimmedLine = trimmedLine.slice(0, indexOfFirstQuote) + trimmedLine.slice(indexOfLastQuote+1, trimmedLine.length);
+      indexOfFirstQuote  = trimmedLine.indexOf("\"");
+      indexOfLastQuote = trimmedLine.indexOf("\"", indexOfFirstQuote + 1);
+    }
+
+    // remove comment
+    if (trimmedLine.indexOf("//") != -1)
+    {
+      trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("//")).trim();
+    }
+
+    if (inBlockComment)
+    {
+      if (trimmedLine.indexOf("*/") != -1)
+      {
+        trimmedLine = trimmedLine.substr(trimmedLine.indexOf("*/") + 2).trim();
+        inBlockComment = false;
+      }
+      else {
+        if (i != lines.length -1)
+        {
+          codeAfterIndent += lines[i] + "\n";
+        } else {
+          codeAfterIndent += lines[i];
+        }
+        continue;
+      }
+    }
+    else if (trimmedLine.indexOf("/*") != -1)
+    {
+      if (trimmedLine.indexOf("*/") == -1)
+      {
+        inBlockComment = true;
+        trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("/*")).trim();
+      }
+      else
+      {
+        trimmedLine = trimmedLine.substr(0, trimmedLine.indexOf("/*")) + trimmedLine.substr(trimmedLine.indexOf("*/") + 2).trim(); // remove block comment for trimmed line
+      }
+      
+    }
+    
+    var indexOfOpenCurlyBrace = trimmedLine.indexOf("{");
+    var indexOfCloseCurlyBrace = trimmedLine.indexOf("}");
+    var indexOfSemiColon = trimmedLine.indexOf(";");
+    
+    if (indexOfSemiColon != -1 && indexOfSemiColon != trimmedLine.length - 1 && trimmedLine.substr(indexOfSemiColon+1).trim().charAt(0) != "}")
+    {
+      lines.splice(i + 1, 0, trimmedLine.substr(indexOfSemiColon + 1));
+      if (i <= cursorPos.line)
+      {
+        cursorPos.line++;
+      }
+      lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfSemiColon + 1);
+      Action.reindent(lines, cursorPos);
+      return;
+    }
+
+    var doNotIndent = indexOfOpenCurlyBrace != -1 && indexOfCloseCurlyBrace != -1 && indexOfCloseCurlyBrace - indexOfOpenCurlyBrace < 40 && trimmedLine.substr(0, indexOfCloseCurlyBrace).indexOf("{", indexOfOpenCurlyBrace + 1) == -1;
+    if (doNotIndent)
+    {
+      if (indexOfCloseCurlyBrace != trimmedLine.length - 1)
+      {
+        lines.splice(i + 1, 0, trimmedLine.substr(indexOfCloseCurlyBrace + 1));
+        if (i <= cursorPos.line)
+        {
+          cursorPos.line++;
+        }
+        lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfCloseCurlyBrace + 1);
+        Action.reindent(lines, cursorPos);
+        return;
+      }
+      
+      if (!statementEnd)
+      {
+        if (trimmedLine.slice(-1) == "{")
+        {
+          statementEnd = true;
+        } 
+        else 
+        {
+          lines[i] = offset + lines[i].match(/^\s*/)[0].substr(statementEndIndentSpace) + lines[i].trim();
+          if (trimmedLine.indexOf(";") == trimmedLine.length - 1)
+          {
+            statementEnd = true;
+          }
+        }
+      }
+      else
+      {
+        lines[i] = offset + lines[i].trim();
+      }
+    }
+    else 
+    {
+      if (indexOfOpenCurlyBrace != -1 && indexOfOpenCurlyBrace != trimmedLine.length - 1) // put code after an open curly bracket to next line
+      {
+        lines.splice(i + 1, 0, trimmedLine.substr(indexOfOpenCurlyBrace + 1));
+        lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfOpenCurlyBrace + 1);
+        if (i <= cursorPos.line)
+        {
+          cursorPos.line++;
+        }
+        Action.reindent(lines, cursorPos);
+        return;
+      }
+
+      if (indexOfCloseCurlyBrace != -1 && trimmedLine.length > 1)
+      {
+        if (indexOfCloseCurlyBrace == 0)
+        {
+          lines.splice(i + 1, 0, trimmedLine.substr(1));
+          lines[i] = "}";
+          if (i <= cursorPos.line)
+          {
+            cursorPos.line++;
+          }
+        } else {
+          lines.splice(i + 1, 0, "}");
+          if (i <= cursorPos.line)
+          {
+            cursorPos.line++;
+          }
+          if (indexOfCloseCurlyBrace != trimmedLine.length - 1) // there is code after close curly bracket
+          {
+            lines.splice(i + 2, 0, trimmedLine.substr(indexOfCloseCurlyBrace + 1));
+            if (i <= cursorPos.line)
+            {
+              cursorPos.line++;
+            }
+          }
+          lines[i] = lines[i].substr(0, lines[i].match(/^\s*/)[0].length + indexOfCloseCurlyBrace);
+        }
+        Action.reindent(lines, cursorPos);
+        return;
+      }
+
+
+      if (statementEnd && trimmedLine.indexOf(";") != trimmedLine.length - 1 && trimmedLine.slice(-1) != "{" && trimmedLine.slice(-1) != "}" && trimmedLine.slice(-2) != "||")
+      {
+        statementEnd = false;
+        statementEndIndentSpace = lines[i].match(/^\s*/)[0].length;
+      }
+
+      if (indexOfCloseCurlyBrace != -1)
+      {
+        offset = offset.substr(2);
+      }
+
+      if (!statementEnd)
+      {
+        if (trimmedLine.slice(-1) == "{" || trimmedLine.slice(-2) == "||" && trimmedLine.slice(-1) == "}")
+        {
+          statementEnd = true;
+          lines[i] = offset + lines[i].trim();
+        } 
+        else 
+        {
+          lines[i] = offset + lines[i].match(/^\s*/)[0].substr(statementEndIndentSpace) + lines[i].trim();
+          if (trimmedLine.indexOf(";") == trimmedLine.length - 1)
+          {
+            statementEnd = true;
+          }
+        }
+      }
+      else
+      {
+        lines[i] = offset + lines[i].trim();
+      }
+
+      if (indexOfOpenCurlyBrace != -1)
+      {
+        offset += "  ";
+      }
+    }
+
+    if (i != lines.length -1)
+    {
+      codeAfterIndent += lines[i] + "\n";
+    } else {
+      codeAfterIndent += lines[i];
+    }
+  }
+  
+  if(Page.codeMirrorOn) 
+  {
+    Page.codeMirrorEditor.setValue(codeAfterIndent);
+  }
+  jQuery("#umpleModelEditorText").val(codeAfterIndent);
+
+  var cursorLine = Page.getRawUmpleCode().split("\n")[cursorPos.line];
+  var whiteSpace = cursorLine.match(/^\s*/)[0].length;
+  if (cursorPos.ch >= cursorLine.trim().length) 
+  {
+    Page.codeMirrorEditor.setCursor(cursorPos.line, cursorLine.trim().length + whiteSpace);
+  }
+  else if (cursorPos.ch >= 0)
+  {
+    Page.codeMirrorEditor.setCursor(cursorPos.line, cursorPos.ch+whiteSpace);
+  }
+  else
+  {
+    Page.codeMirrorEditor.setCursor(cursorPos.line, 0);
+  }
+  Page.codeMirrorEditor.focus();
 }

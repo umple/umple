@@ -897,6 +897,16 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("testRegionFinalStates_6.ump",languagePath + "/testRegionFinalStates_6."+ languagePath +".txt","X");
   }
 
-
+  @Test
+  public void duplicateTimeoutVariableAndMethod()
+  {
+    assertUmpleTemplateFor("duplicateTimeoutVariableAndMethod.ump",languagePath + "/duplicateTimeoutVariableAndMethod." + languagePath +".txt","X");
+  }
   
+  // Issue 1600
+  @Test
+  public void guardsOnEntryAndExit()
+  {
+    assertUmpleTemplateFor("1600_guardsOnEntryAndExit.ump",languagePath + "/1600_guardsOnEntryAndExit." + languagePath +".txt","X");
+  }
 }

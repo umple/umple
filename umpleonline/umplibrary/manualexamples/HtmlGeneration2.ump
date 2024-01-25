@@ -1,0 +1,68 @@
+// Umple program demonstrating generation
+// of the html generation library for Umple
+
+use ../HtmlGeneration.ump;
+
+class TimesTable {
+  public static void main(String[] argv) {
+    int times = 10; // default
+    HtmlGen h = new HtmlGen();
+    HtmlRegularNode p;
+
+    if(argv.length > 0) {
+      times=Integer.parseInt(argv[0]);
+    }
+    
+    // Specify the table main header
+    h.h(1, "Multiplication Table: "+times);
+
+    // Generate an explanatory paragraph
+    p = h.p("The following is a ");
+    p.taggedText("i","","simple");
+    p.text(" multiplication table");
+    
+    // Generate another paragraph with some subnodes
+    // showing a slightly different use of the API
+    p = new HtmlRegularNode("p","");    
+    h.addNode(p);
+    p.text("Nodes in ");
+    p.taggedText("font", "color=\"red\"", "red");
+    p.text(" are powers of 3");
+
+    h.h(2, "The table");
+
+    // Create a table at the top level
+    HtmlTable t=h.table();
+
+    // Add the top row of the table
+    HtmlRow r;
+    r=t.tr();
+    r.td("*");
+    for(int i=1; i<= times; i++) {
+      r.td().taggedText("b","",""+i);;
+    }
+
+    // Add the interior rows of the table
+    for(int i=1; i<= times; i++) {
+      r=t.tr();
+      r.td().taggedText("b","",""+i);
+      for(int j=1; j<= times; j++) {
+        String output=""+i*j;
+        if((i*j)%3==0) {
+          HtmlCell c = r.td();
+          c.taggedText("font", "color=\"red\"",output);
+        }
+        else {
+          r.td(output);
+        }
+      }
+    }
+    
+    System.out.println(h.wholefile()); 
+  }
+}
+//$?[End_of_model]$?
+
+/*
+@@@skipjavacompile @@@skipphpcompile @@@skippythoncompile
+*/

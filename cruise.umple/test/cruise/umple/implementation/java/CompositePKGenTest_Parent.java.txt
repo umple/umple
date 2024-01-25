@@ -1,0 +1,153 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+// line 4 "../../model.ump"
+// line 19 "../../model.ump"
+public class Person
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Person Attributes
+  private String name;
+  private int id;
+  private int age;
+
+  //Helper Variables
+  private int cachedHashCode;
+  private boolean canSetId;
+  private boolean canSetName;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Person(String aName, int aId, int aAge)
+  {
+    cachedHashCode = -1;
+    canSetId = true;
+    canSetName = true;
+    name = aName;
+    id = aId;
+    age = aAge;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    if (!canSetName) { return false; }
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    if (!canSetId) { return false; }
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setAge(int aAge)
+  {
+    boolean wasSet = false;
+    age = aAge;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public int getId()
+  {
+    return id;
+  }
+
+  public int getAge()
+  {
+    return age;
+  }
+
+  public boolean equals(Object obj)
+  {
+    if (obj == null) { return false; }
+    if (!getClass().equals(obj.getClass())) { return false; }
+
+    Person compareTo = (Person)obj;
+  
+    if (getId() == null && compareTo.getId() != null)
+    {
+      return false;
+    }
+    else if (getId() != null && !getId().equals(compareTo.getId()))
+    {
+      return false;
+    }
+
+    if (getName() == null && compareTo.getName() != null)
+    {
+      return false;
+    }
+    else if (getName() != null && !getName().equals(compareTo.getName()))
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  public int hashCode()
+  {
+    if (cachedHashCode != -1)
+    {
+      return cachedHashCode;
+    }
+    cachedHashCode = 17;
+    if (getId() != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + getId().hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
+
+    if (getName() != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + getName().hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
+
+    canSetId = false;
+    canSetName = false;
+    return cachedHashCode;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "id" + ":" + getId()+ "," +
+            "name" + ":" + getName()+ "," +
+            "age" + ":" + getAge()+ "]";
+  }
+}

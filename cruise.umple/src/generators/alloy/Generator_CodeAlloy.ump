@@ -1,0 +1,84 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file generates Alloy code
+  generate Alloy;
+in your umple file, or the command line option
+  -g Alloy
+
+ */
+
+use AlloyMetaModel.ump;
+use AlloyUtility.ump;
+use AlloySignature.ump;
+use AlloyFact.ump;
+
+namespace cruise.umple.compiler;
+
+class AlloyGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.alloy.*;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String output = "";
+
+  Utility utility = new Utility();
+  
+  public void generate(){
+  
+    final String className = "UmpleObject";
+    StringBuilder code = new StringBuilder(); 
+    
+    AlloyModel alloyModel = new AlloyModel(model);
+    utility.addString(code,alloyModel.getModelNamespace());
+    utility.addString(code,alloyModel.comment());
+    
+    for(Statement openSt : alloyModel.getImportStatements())
+      utility.addString(code,openSt.print());
+    
+    for(Signature sig : alloyModel.getSignatures())
+      utility.addString(code,sig.printSignature());
+      
+    for(Fact constraint : alloyModel.getFacts())
+      utility.addString(code,constraint.print());
+    
+    //This generates bidirectionality rules for every association within Umple model 
+    terminateCode(code);
+  }
+  
+  private void terminateCode(StringBuilder code) {
+    model.setCode(code.toString());
+    writeModel();
+  } 
+  
+  // Output the Alloy file to a file with the .als suffix
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".als";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating Alloy code." + e, e);
+    }
+  } 
+}

@@ -1,0 +1,36 @@
+class Student {
+ boolean guard;
+ status {
+   ParentState1{
+     changeParent -> ParentState2;
+     NonConcurrentSubState1 {
+       changeNonCon -> NonConcurrentSubState2;
+     }
+     NonConcurrentSubState2 {
+       changeNonCon -> NonConcurrentSubState1;
+     }
+   }
+   
+   ParentState2{
+     changeParent -> ParentState1;
+     ConcurrentSubState1 {
+       change1 -> ConcurrentSubState2;
+     }
+     ConcurrentSubState2 {
+       double1 -> ConcurrentSubState1;
+       double2 -> ConcurrentSubState1;
+     }
+     ||
+     Css1 {
+       guarded [guard] -> Css2;
+       guarded [!guard] -> Css3;
+     }
+     Css2 {
+       guarded -> Css1;
+     } 
+     Css3 {
+       guarded -> Css1;
+     }
+   }
+  }
+}

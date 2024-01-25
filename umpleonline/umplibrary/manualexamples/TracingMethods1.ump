@@ -1,0 +1,18 @@
+// this example shows how to trace
+// non-generated method entry
+
+@SuppressWarnings("deprecation")
+class JavaMethod
+{
+  trace method();
+    
+  int method( int x ) {
+    x += 5;
+    return x;
+  }
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code
+// @@@skippythoncompile - Contains Java Code

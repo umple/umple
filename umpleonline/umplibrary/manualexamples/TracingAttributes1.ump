@@ -1,0 +1,11 @@
+// This traces setId() and setName()
+@SuppressWarnings("deprecation")
+class Student
+{
+  Integer id;
+  String name;
+  trace id;
+  trace set name;
+}
+//$?[End_of_model]$?
+// @@@skipphpcompile - Skipped due to issue 698

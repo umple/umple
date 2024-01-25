@@ -158,7 +158,7 @@
           <!--#else -->
             <div class="menu1-level1-no">
           <!--#endif -->
-            <a href="http://www.lloseng.com"
+            <a href="https://www.site.uottawa.ca/school/research/lloseng/"
                 onfocus="blurLink(this);">
               Textbook
             </a>

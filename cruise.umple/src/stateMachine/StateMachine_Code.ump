@@ -1,0 +1,901 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+State machine extensions
+
+*/
+
+namespace cruise.umple.compiler;
+
+class StateMachine
+{
+  
+  public boolean getHasExitAction()
+  {
+    return getHasAction("exit");
+  }
+  
+  public boolean getHasEntryAction()
+  {
+    return getHasAction("entry");
+  }
+  
+  private boolean getHasAction(String actionType)
+  {
+    for(State state : getStates())
+    {
+      for(Action action : state.getActions())
+      {
+        if (actionType.equals(action.getActionType()))
+        {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  
+  public Event getEvent(String eventName)
+  {
+    if (eventName == null)
+    {
+      return null;
+    }
+    for (State aState : states)
+    {
+      for (int i=0; i<aState.numberOfTransitions(); i++)
+      {
+        Transition aTransition = aState.getTransition(i);
+        Event e = aTransition.getEvent();
+        if (e != null && eventName.equals(e.getName()))
+        {
+          return e;
+        }
+      }
+    }
+    return null;
+  }
+  
+  public List<Guard> getAllGuards() {
+		List<Guard> allGuards = new ArrayList<Guard>();
+		for( Transition transition : getAllTransitions() ) {
+			if( transition.getGuard() != null && !has(allGuards, transition.getGuard())) {
+				Guard guard = transition.getGuard();
+				allGuards.add( guard );
+			}
+		}
+		return allGuards;
+	}
+  
+  public List<Event> getAllEvents()
+  {
+    ArrayList<Event> allEvents = new ArrayList<Event>();
+    ArrayList<StateMachine> allSearch = new ArrayList<StateMachine>();
+    ArrayList<StateMachine> alreadySearched = new ArrayList<StateMachine>();
+    allSearch.add(this);
+    while (!allSearch.isEmpty())
+    {
+      StateMachine sm = allSearch.remove(0);
+      if (alreadySearched.contains(sm))
+      {
+        continue;
+      }
+      alreadySearched.add(sm);
+      if (sm.getParentState() != null)
+      {
+        allSearch.add(sm.getParentState().getStateMachine());
+        allSearch.addAll(sm.getParentState().getNestedStateMachines());
+      }
+      for (State aState : sm.states)
+      {
+        allSearch.addAll(aState.getNestedStateMachines());
+        for (int i=0; i<aState.numberOfTransitions(); i++)
+        {
+          
+          Transition aTransition = aState.getTransition(i);
+          Event e = aTransition.getEvent();
+          if (e != null && !allEvents.contains(e))
+          {
+            allEvents.add(e);
+          }
+        }
+      }
+    }
+    return allEvents;
+  }
+  
+  public List<Event> getEvents()
+  {
+    ArrayList<Event> allEvents = new ArrayList<Event>();
+    
+    for (State aState : states)
+    {
+      for (int i=0; i<aState.numberOfTransitions(); i++)
+      {
+        Transition aTransition = aState.getTransition(i);
+        Event e = aTransition.getEvent();
+        if (e != null && !allEvents.contains(e))
+        {
+          allEvents.add(e);
+        }
+      }
+    }
+    return allEvents;
+  }
+  
+  public ArrayList<Transition> getAllTransitions()
+  {
+    ArrayList<Transition> allTransitions = new ArrayList<Transition>();
+    ArrayList<StateMachine> allStateMachines = new ArrayList<StateMachine>();
+    allStateMachines.add(this);
+    addNestedStateMachinesTo(allStateMachines, this);
+    for (StateMachine sm : allStateMachines)
+    {
+      for (State state : sm.getStates())
+      {
+        for (Transition t : state.getTransitions())
+        {
+					//preventing duplicated transitions (Issue #760) - Temporary solution to facilitate analyzable output by nuXmv code generator...
+					if( !has(allTransitions, t) )
+          	allTransitions.add(t);
+        }
+      }
+    }
+    return allTransitions;
+  }
+  //introduced to prevent duplicated transition - Issue #760
+  private <E> boolean has( List<E> objectList, E whatToFind ) {
+  	boolean yes = false;
+  	for(E st : objectList) {
+  		if( st.equals(whatToFind) ) {
+  			yes = true;
+  			break;
+  		}
+  	}
+  	return yes;
+	}
+
+  //Issue 519
+  public boolean deleteState(State aState)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aState, as it must always have a stateMachine
+    if (this.equals(aState.getStateMachine()))
+    {
+      states.remove(aState);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public State getDeepHistoryState()
+  {
+    for (State s : this.getStates())
+    {
+      if (s.getIsDeepHistoryState() == true)
+      {
+          return s;
+      }
+    }
+    return null;
+  }
+
+  public State findState(String aName)
+  {
+    boolean isFinal = "Final".equals(aName);
+    boolean searchNestedStateMachines = !isFinal;
+    boolean isAtRoot = isFinal;
+    return findState(aName,searchNestedStateMachines,isAtRoot);
+  }
+
+  public State findState(String aName, boolean searchNestedStateMachines)
+  {
+    boolean isFinal = "Final".equals(aName);
+    searchNestedStateMachines = !isFinal && searchNestedStateMachines;
+    boolean isAtRoot = isFinal;
+    return findState(aName,searchNestedStateMachines,isAtRoot); 
+  } 
+  
+  public List<State> getFinalStates()
+  {
+    List<StateMachine> all = new ArrayList<StateMachine>();
+    all.add(this);
+    all.addAll(getNestedStateMachines());
+    return getFinalStatesIn(all);
+  }
+  
+  public boolean hasFinalStates()
+  {
+    return !getFinalStates().isEmpty();
+  }
+  
+  private List<State> getFinalStatesIn(List<StateMachine> allStateMachines)
+  {
+    List<State> all = new ArrayList<State>();
+    for (StateMachine sm : allStateMachines)
+    {
+      for(State s : sm.getStates())
+      {
+        if (s.isFinalState())
+        {
+          all.add(s);
+          break;
+        }
+      }
+    }
+    return all;    
+  }
+
+  public Event findOrCreateEvent(String aName)
+  {
+    for (Event aEvent : getAllEvents())
+    {
+      if (aEvent.getName().equals(aName))
+      {
+        return aEvent;
+      }
+    }  
+    return new Event(aName);
+  }
+  
+  public State getStartState()
+  {
+    for (State aState : states)
+    {
+      if (aState.getIsStartState())
+      {
+        return aState;
+      }
+    }
+    return null;
+  }
+  
+  public State getNullState()
+  {
+    for (State aState : states)
+    {
+      if (aState.getName() == "Null")
+      {
+        return aState;
+      }
+    }
+    return null;
+  }
+  
+  public String getType()
+  {
+    for (State aState : states)
+    {
+      if (aState.getType() == "Complex")
+      {
+        return "Complex";
+      }
+    }
+    return "Simple";
+  }
+  
+  public List<StateMachine> getNestedStateMachines()
+  {
+    return getNestedStateMachines(true); // original - do it recursively
+  }
+  
+  public List<StateMachine> getImmediateNestedStateMachines()
+  {
+    return getNestedStateMachines(false); // just next level
+  }
+  
+  private List<StateMachine> getNestedStateMachines(boolean recursive)
+  {
+    ArrayList<StateMachine> all = new ArrayList<StateMachine>();
+    addNestedStateMachinesTo(all,this, recursive);
+    return all;
+  }
+  
+  private void addNestedStateMachinesTo(List<StateMachine> all, StateMachine sm)
+  {
+    addNestedStateMachinesTo(all, sm, true);
+  }
+
+  private void addNestedStateMachinesTo(List<StateMachine> all, StateMachine sm, boolean recursive)
+  {
+    for (State s : sm.states)
+    {
+      for (StateMachine nestedSm : s.getNestedStateMachines())
+      {
+        all.add(nestedSm);
+        if(recursive) addNestedStateMachinesTo(all, nestedSm, recursive);
+      }
+    }
+  }  
+  
+  public State findStateDotNotaion(String aName)
+  {
+    //TODO: add suport to look deeper first
+    //look at this level for first name in s1.s2.s3, then check nested sms for s1
+    //then go up until you find then go down
+    
+    StateMachine root = this;
+    State state;
+    
+    String[] stateNames = aName.split("\\.");
+    int stateNameIndex = 0;
+    String stateNameToFind = stateNames[stateNameIndex];
+    
+    //find first state in dot notation by looking at level of transition
+    //then looking in each parent state machine until at top
+    while (true)
+    {
+      state = root.findState(stateNameToFind, false);
+      if (state != null)//we found the first state
+      {
+        root = state.getStateMachine();
+        break;
+      }
+      else
+      {
+        state = root.getParentState();
+        if(state == null){return null;}
+        root = state.getStateMachine();
+      }
+    }
+    
+    //Starting at the state found above, search nested state machines for the 
+    //next item in stateNames until at end of stateNames
+    stateNameIndex = 1;
+    while(stateNameIndex < stateNames.length)
+    {
+      State tmpState = null;
+      stateNameToFind = stateNames[stateNameIndex];
+      for (StateMachine sm : state.getNestedStateMachines())
+      {  
+        tmpState = sm.findState(stateNameToFind, false);
+        if(tmpState != null){
+          break;}
+      }
+      //if the next state in dot noation is not found in previous state in dot notation, return null
+      state = tmpState;
+      if(state == null){return null;}
+             
+      stateNameIndex += 1;
+    }
+    
+    return state;
+  }
+  
+  private State findState(String aName, boolean searchNestedStateMachines, boolean didFindRoot)
+  {
+    
+    StateMachine root = this;
+    if (!didFindRoot && searchNestedStateMachines)
+    {
+      root = getRootStateMachine();
+    }
+    
+    for (State aState : root.states)
+    {
+      if (aState.getName().indexOf('.') > 0)
+      {
+        //this is a state in placeHolderStateMachine saved from a transition
+        //that used dot-notation to transition to a state that hadn't been declared yet
+        if (aName.endsWith(aState.getName()))//aName must be in dot notation
+        {
+          root.recentSearchDepth=0;
+          return aState;
+        }
+      }
+      if (aState.getName().equals(aName))
+      {
+        root.recentSearchDepth=0;
+        return aState;
+      }
+      
+      if (searchNestedStateMachines)
+      {
+        for (StateMachine nestedSm : aState.getNestedStateMachines()) 
+        {
+          State potentialMatch = nestedSm.findState(aName,true,true);
+          if (potentialMatch != null)
+          {
+            recentSearchDepth=nestedSm.recentSearchDepth+2;
+            return potentialMatch;
+          } 
+        }
+      }
+    }
+    //must be last so that searching placeHolderStateMachine for states that
+    //were declared in a transition earlier works
+    if(aName.indexOf('.') > 0)
+    {
+      return findStateDotNotaion(aName);
+    }
+    return null;
+  }
+  
+  public StateMachine getRootStateMachine()
+  {
+    StateMachine root = this;
+    
+    State parent = getParentState();
+    while (parent != null)
+    {
+      root = parent.getStateMachine();
+      parent = root.getParentState();
+    }
+    
+    return root;
+  }
+  
+  public String getFullName()
+  {
+    if (getParentState() == null)
+    {
+      return name;
+    }
+    else
+    {
+      // Issue 1001 - Append the name of the composite state that the concurrent state machine is in
+      String appendToFullName = name;
+      if (getParentState().getIsConcurrent()) 
+      {
+        if(!getParentState().getName().equals(getParentState().getStateMachine().getName())) 
+        {
+        	appendToFullName = parentState.getName() + "." + appendToFullName;
+        }
+      }
+      return getParentState().getStateMachine().getFullName() + StringFormatter.toPascalCase(appendToFullName);
+    }
+  }
+  
+  public State addState(String aName, int index)
+  {
+    State newState = new State(aName,this);
+    states.remove(newState);
+    states.add(index,newState);
+    return newState;
+  }
+  
+  /*
+   * Issue 935 - A helper function to retrieve the super state machine (state machine that has no parent state)
+   */
+  public StateMachine getSuperStateMachine() 
+  {
+    if (getParentState() == null) 
+    {
+      return this;
+    } 
+    else 
+    {
+      StateMachine superStateMachine = getParentState().getStateMachine();
+      while(superStateMachine.getParentState() != null) 
+      {
+        superStateMachine = superStateMachine.getParentState().getStateMachine();
+      }
+      return superStateMachine;
+    }
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------   	
+	public Event getEventByMethod(Method inMethod) {
+	  if (inMethod == null)
+    {
+      return null;
+    }
+    for (Transition aTransition  : getAllTransitions()) {
+      Event e = aTransition.getEvent();
+      if (e != null )
+      {
+        Method m = new Method("",e.getName(),e.getType(),false);
+        m.setMethodParameters(e.getParams());
+        if (m.compareWithTheMethod(inMethod))  return e;
+      }
+    }
+    return null;
+	}
+}
+
+class State
+{
+
+  public boolean isSameState(State state, StateMachine relativeTo)
+  {
+    if (this.equals(state))
+    {
+      return true;
+    }
+    
+    State mySuper = findSuperState(this,relativeTo);
+    State yourSuper = findSuperState(state,relativeTo);
+    return mySuper != null && mySuper.equals(yourSuper); 
+  }
+
+  // return true of this is a substate of or same as possibleSuperState
+  public boolean isSubstateOf(State possibleSuperState) {
+    if(this.equals(possibleSuperState)) {
+      return true;
+    }
+    State parent = this.getStateMachine().getParentState();
+    if(parent == null) {
+      return false;
+    }
+    else {
+      return parent.isSubstateOf(possibleSuperState);
+    }
+  }
+  
+  private State findSuperState(State me, StateMachine lookFor)
+  {
+    if (me == null || lookFor == null)
+    {
+      return null;
+    }
+    else if (lookFor.equals(me.getStateMachine()))
+    {
+      return me;
+    }
+    else
+    {
+      return findSuperState(me.getStateMachine().getParentState(),lookFor);
+    }
+  } 
+  
+  //Issue 519
+  public boolean deleteTransition(Transition aTransition)
+  {
+    boolean wasRemoved = false;
+    
+    if (this.equals(aTransition.getFromState()))
+    {
+      transitions.remove(aTransition);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public Transition addTransition(State nextState, int index)
+  {
+    Transition newTransition = new Transition(this,nextState);
+    transitions.remove(newTransition);
+    transitions.add(index,newTransition);
+    return newTransition;
+  }
+
+  public void addAction(Action newAction, int index)
+  {
+    addAction(newAction);
+    actions.remove(newAction);
+    actions.add(index,newAction);
+  }
+
+  public String getType()
+  {
+    return numberOfTransitions() == 0 && numberOfNestedStateMachines() == 0 && numberOfActions() == 0 ? "Simple" : "Complex";
+  }
+  
+  public String newTimedEventName(State toState)
+  {
+    String templateName;
+    if (toState == null)
+    {
+      templateName = "timeout"+ name  + "To";
+    }
+    else
+    {
+      templateName = "timeout"+ name  + "To" + toState.name;
+    }
+  
+    String currentName = templateName;
+    int index = 2;
+    while (stateMachine.getEvent(currentName) != null)
+    {
+      currentName = templateName + index;
+      index += 1;
+    }
+    return currentName;
+  }
+  
+  public List<Transition> getTransitionsFor(Event e)
+  {
+    List<Transition> all = new ArrayList<Transition>();
+    for(Transition aTransition : transitions)
+    {
+      if (e.equals(aTransition.getEvent()))
+      {
+        all.add(aTransition);
+      }
+    }
+    return all;
+  }
+  
+  public boolean getHasExitAction()
+  {
+    return getHasAction("exit");
+  }
+  
+  public boolean getHasEntryAction()
+  {
+    return getHasAction("entry");
+  }
+  
+  private boolean getHasAction(String actionType)
+  {
+    for(Action action : getActions())
+    {
+      if (actionType.equals(action.getActionType()))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+	/*
+	 * @author: Vahdat
+	 */
+	public List<Action> getActionsByType(String actionType)
+  {
+  	List<Action> actions = new ArrayList<Action>(); 
+	  for(Action action : getActions())
+	  {
+	    if (actionType.equals(action.getActionType()))
+	    {
+	    	actions.add(action);
+	    }
+	  }
+	  return actions;
+  }
+
+  public StateMachine exitableStateMachine(State nextState)
+  {
+    if (getHasExitAction() && !equals(nextState))
+    {
+      return getStateMachine();
+    }
+    State currentState = getStateMachine().getParentState();
+    while (currentState != null)
+    {
+      StateMachine sm = currentState.getStateMachine();
+      if (currentState.getHasExitAction() && !currentState.equals(nextState))
+      {
+        return sm;
+      }
+      else
+      {
+        currentState = sm.getParentState();
+      }
+    }
+    return null;
+  }
+  
+  public StateMachine exitableSelfTransition(State nextState)
+  {
+    if (getHasExitAction() && equals(nextState))
+    {
+      return getStateMachine();
+    }
+    return null;
+  }
+
+  public void visit()
+  {
+    this.isVisited = true;
+  }
+
+  public void clear()
+  {
+    this.isVisited = false;
+  }
+
+  public boolean isVisited() 
+  {
+    return this.isVisited;
+  }
+  
+  /* Issue 935
+     A helper function to obtain the concurrent parent state
+  */
+  public State getConcurrentParentState(){
+    State concurrentParentState = getStateMachine().getParentState();
+    while (concurrentParentState != null) {
+      if (concurrentParentState.getIsConcurrent()) {
+        return concurrentParentState;
+      } else {
+        concurrentParentState = concurrentParentState.getStateMachine().getParentState();
+      }
+    }
+    return null;
+  }
+  
+  /* Issue 140
+  	 A helper function to obtain the concurrent region
+  */
+  public State getConcurrentRegion() {
+    State concurrentRegion = getConcurrentParentState();
+    if (concurrentRegion != null) {
+      State traverser = concurrentRegion.getStateMachine().getParentState();
+      while (traverser != null) {
+        if (traverser.getIsConcurrent()) {
+          concurrentRegion = traverser;
+        }
+        traverser = traverser.getStateMachine().getParentState();
+      }
+    } else if (this.getIsConcurrent()) {
+      concurrentRegion = this;
+    }
+    return concurrentRegion;
+  }
+ 
+  /* Issue 1351
+    A helper function to obtain the root state machine
+  */
+  public StateMachine getRootStateMachine() {
+	  State runner = this;
+	  while (runner.getStateMachine().getParentState() != null) {
+		  runner = runner.getStateMachine().getParentState();
+	  }
+	  return runner.getStateMachine();
+  }
+}
+
+class Transition
+{
+  public static Transition createPlaceholder(State nextState)
+  {
+    StateMachine nullSm = new StateMachine("null");
+    State nullState = new State("null",nullSm);
+    return new Transition(nullState, nextState);
+  }
+  
+  /*
+   * Issue 935 Helper Function - Determine the state machine to exit in a transition
+   */
+   public StateMachine getSmToExit(StateMachine defaultToExit){
+    StateMachine smToExit = defaultToExit;
+    if (fromState.getStateMachine().getParentState() != null && nextState.getStateMachine().getParentState() != null) {
+      State fromStateSuperParent = fromState.getStateMachine().getParentState();
+      if (nextState.equals(fromStateSuperParent)) {
+        smToExit = fromStateSuperParent.getStateMachine();
+      } else if(nextState.equals(fromState)) {
+        smToExit = fromState.getStateMachine();
+      } else {
+        boolean foundSmToExit = false;
+        
+        // First, traverse up "nextState" and see if it is contained in "fromState"
+        State nextStateTraverser = nextState;
+        while (nextStateTraverser.getStateMachine().getParentState() != null && !foundSmToExit) {
+          State nextStateSuperParent = nextStateTraverser.getStateMachine().getParentState();
+          if (nextStateSuperParent.equals(fromState)) {
+            smToExit = nextStateTraverser.getStateMachine();
+            foundSmToExit = true;
+          } else if (nextStateSuperParent.equals(fromStateSuperParent)) {
+            smToExit = fromState.getStateMachine();
+            foundSmToExit = true;
+          } else {
+            nextStateTraverser = nextStateSuperParent;
+          }
+        }
+        
+        // If we did not find smToExit, traverse up "fromState" and see if it is contained in "nextState"
+        State fromStateTraverser = fromState;
+        while (fromStateTraverser.getStateMachine().getParentState() != null && !foundSmToExit) {
+          if (fromStateTraverser.getStateMachine().getParentState().equals(nextState)) {
+            smToExit = nextState.getStateMachine();
+            foundSmToExit = true;
+          } else {
+            fromStateTraverser = fromStateTraverser.getStateMachine().getParentState();
+          }
+        }
+        
+        if (!foundSmToExit && fromStateTraverser.equals(nextStateTraverser)) {
+          for (StateMachine nsm : fromStateTraverser.getStateMachine().getNestedStateMachines()) {
+            if (nsm.getParentState().equals(fromStateTraverser)) {
+              smToExit = nsm;
+              break;
+            }
+          }
+        }
+      }
+    } else if (nextState.getStateMachine().getParentState() != null) {
+      // Need to see if "nextState" is contained within "fromState"
+      State nextStateTraverser = nextState.getStateMachine().getParentState();
+      while (nextStateTraverser.getStateMachine().getParentState() != null) {
+        nextStateTraverser = nextStateTraverser.getStateMachine().getParentState();
+      }
+      if (nextStateTraverser.equals(fromState)) {
+        for (StateMachine nsm : fromState.getStateMachine().getNestedStateMachines()) {
+          if (nsm.getParentState().equals(fromState)) {
+            smToExit = nsm;
+            break;
+          }
+        }
+      }
+    }
+    
+    return smToExit;
+  }
+  
+  /*
+    Issue 140/935 - A helper function to determine if a transition is an and-cross transition
+  */
+  public boolean isTransitionAndCross(State commonConcurrentParent) 
+  {
+     // We've already determined that fromState and nextState are in the same concurrent parent state
+     // However, we need to check if fromState and nextState belong to different state machines
+     // within the concurrent parent state
+     StateMachine fromStateSm = fromState.getStateMachine();
+     StateMachine nextStateSm = nextState.getStateMachine();
+     
+     while (!fromStateSm.getParentState().equals(commonConcurrentParent)) {
+       fromStateSm = fromStateSm.getParentState().getStateMachine();
+     }
+     
+     while (!nextStateSm.getParentState().equals(commonConcurrentParent)) {
+       nextStateSm = nextStateSm.getParentState().getStateMachine();
+     }
+     return !fromStateSm.equals(nextStateSm);
+   }
+}
+
+class Event
+{
+  private static int nextAutoTransitionId = 1;
+
+  public static Event createAutoTransition()
+  {
+    Event e = new Event("__autotransition" + Event.nextAutoTransitionId + "__");
+    e.setAutoTransition(true);
+    Event.nextAutoTransitionId += 1;
+    return e;
+  }
+  
+  public static void setNextAutoTransitionId(int value) {
+    Event.nextAutoTransitionId = value;
+  }
+  
+  public String getArgs()
+  {
+  	String args="";
+    String paramName="";
+    String paramType="";
+    String aSingleParameter="";
+    String isList="";
+    String parameters = "";
+    String finalParams= "";
+
+     if(this.hasParams() == true)
+     {
+       for (MethodParameter aEventParam : this.getParams())
+       {
+         paramName = aEventParam.getName();
+         paramType = aEventParam.getType();
+         isList = aEventParam.getIsList() ? " [] " : " ";
+         aSingleParameter = paramType + isList + paramName;
+         parameters += aSingleParameter + ",";
+       }
+       finalParams = parameters.substring(0, parameters.length()-1);
+       args=finalParams;
+     }
+     return args;
+  }
+  
+  
+  public boolean compareWithAnotherEvent(Event inEvent){
+    if (!equals(inEvent)) return false;
+    if (numberOfParams() != inEvent.numberOfParams()) return false;
+      for (int i = 0; i < inEvent.numberOfParams(); i++) {
+        if (!getParam(i).getType().equals(inEvent.getParam(i).getType())) return false;
+      }
+    return true;
+  }
+     
+  class Guard
+  {
+    String getCondition(CodeTranslator gen){
+  	  return gen.translate("Plain",this);
+    }
+  }
+}

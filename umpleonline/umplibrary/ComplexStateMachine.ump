@@ -1,0 +1,85 @@
+// Sample UML state machine written in Umple
+// Shows nested states and transitions among those states.
+// This has a main program, so can be executed
+// Supply arguments, or use the default arguments
+
+class BigStateMachineTest {
+  depend java.lang.reflect.InvocationTargetException;
+  depend java.lang.reflect.Method;
+
+  sm {
+    Zxab {
+     Zx {
+       Z {
+         e3-> X;
+         e2 -> A;
+       }
+       X {
+       }
+       e5 -> G;
+     }
+     A {
+       e5 -> D;
+       e3 -> B;
+     }
+     B {
+       e3 -> Ge;
+     }
+    e1 -> E;
+    e4 -> Ge;
+    }
+    D {
+      e5 -> X;
+      e2 -> E;
+    }
+    Ge {
+     G {
+       e1 -> B;
+     }
+     E {
+       e1 -> G;
+       e2 -> G;
+     }
+    }
+  }
+   depend java.lang.reflect.Method;
+   depend java.util.*;
+
+   public static void main(String [ ] args) {
+     String[] altargs= {"2","3", "1", "5", "1"};
+     String[] realargs = null;
+     if(args.length == 0 || args[0].length()==0) {
+       realargs=altargs;
+      }
+      else {
+        realargs=args;
+      }
+      BigStateMachineTest b = new BigStateMachineTest();
+      Class c = b.getClass();
+      
+      System.out.println("Initial "
+                +b.getSmFullName());
+      Method[] mlist = c.getDeclaredMethods();
+      String ev;
+      for (int i=0; i<realargs.length; i++) {
+        ev="e"+realargs[i];
+        for(Method m : mlist) {
+          if(m.getName().equals(ev)) {
+            try {
+              m.invoke(b);
+              System.out.println("after "+ev+" "
+                +b.getSmFullName());
+            }
+            catch (Exception ex){}
+          }
+        }
+      }
+      System.out.println("Ending in State "+b.getSmFullName());
+    }
+}
+    
+//$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code
+// @@@skippythoncompile - Contains Java Code

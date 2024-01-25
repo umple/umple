@@ -1,0 +1,4 @@
+ext {
+  umpleOutputDir = "src-gen-umple"
+  masterFile = "src/Master.ump"
+}

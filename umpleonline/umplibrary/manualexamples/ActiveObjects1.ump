@@ -1,0 +1,21 @@
+class A {
+  name;
+ 
+  active {
+    System.out.println("Object "+getName()+"is now active");
+    for (int i = 1; i < 10; i++) {
+      System.out.println(" "+name+" was here");
+      Thread.sleep(1000);
+    }
+  }
+
+  public static void main(String[] argv) {
+    new A("1");
+    new A("2");
+  }
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java code
+// @@@skipphpcompile - Contains Java code
+// @@@skiprubycompile - Contains Java code
+// @@@skippythoncompile - Contains Java Code

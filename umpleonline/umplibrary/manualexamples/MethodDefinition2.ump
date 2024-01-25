@@ -1,0 +1,22 @@
+generate Java;
+
+// A class with a method that has arguments
+class Person
+{
+  name;
+  
+  String displayName(String greeting, String property)
+  {
+    return(
+      greeting +
+      ", my " +
+      property +
+      " is " +
+      getName());
+  }
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code
+// @@@skippythoncompile - Contains Java Code

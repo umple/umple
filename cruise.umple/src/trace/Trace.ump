@@ -1,0 +1,302 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+The tracing meta model.
+
+It currently only supports tracing of attributes, but we are currently in the process
+of enhancing the Umple syntax and meta model to support richer trace objects.
+
+ */
+
+namespace cruise.umple.compiler;
+
+class UmpleModel
+{
+  String traceType = {getTracer().getName()}
+  TracerDirective tracer = new TracerDirective("console");
+}
+
+class UmpleClass
+{
+  0..1 -- * TraceDirective;
+  0..1 -- * TraceCase;
+}
+
+class UmpleVariable 
+{
+	depend java.util.*;
+}
+
+/*
+ * ----- Tracer Directive MetaModel
+ * A statement found in Umple that directs tracing technology
+ * to be used in generted code
+ */
+class TracerDirective
+{
+  String name;
+  Boolean verbosity = false;
+  1 -- * TracerArgument;
+  1 -- 0..1 TraceMessageSwitch;
+  1 -- 0..1 LogConfiguration;
+}
+
+class TracerArgument
+{
+  String argument;
+}
+
+class TraceMessageSwitch
+{
+  Boolean on = false;
+  Boolean off = false;
+  1 -> * MessageComponent option;
+}
+
+class MessageComponent
+{
+  String component;
+}
+
+class LogConfiguration
+{
+  Integer monitorInterval = 0;
+  String rootLogger = "info";
+  boolean generateConfig = true;
+  1 -- * LoggerLevelToAppender;
+}
+
+class LoggerLevelToAppender
+{
+  1 -> * Appender;
+  1 -> * Level;
+}
+
+class Level 
+{
+  String level;
+}
+
+class Appender 
+{
+  String appender;
+}
+
+/*
+ * ----- Trace Directive MetaModel
+ * A statement found in Umple that directs code to be generated
+ * to trace a model element and generate output using some tracing tool
+ */
+class TraceDirective
+{
+  autounique id;
+  String tracerType = {getTracerDirective().getName()}
+  1 -> 1 TracerDirective;
+
+  1 -- * AttributeTraceItem;
+  mixset StateMachine {
+    1 -- * StateMachineTraceItem;
+  }
+  1 -- * MethodTraceItem;
+  1 -- * AssociationTraceItem;
+  1 -> * TraceCondition condition;
+  1 -- 0..1 Postfix;
+  1 -- 0..1 TraceRecord;
+}
+
+class Postfix 
+{
+  Integer occurences = 0;
+  Double periodClause = 0;
+  Double duringClause = 0;
+  executeClause = null;
+  1 -> 0..1 Condition;
+  1 -> 0..1 TraceRecord;
+  1 -> * LogLevel;
+}
+
+class Condition 
+{
+  ConstraintTree constraint = null;
+  Boolean conditionallyWhere = true;
+  conditionType = "where";
+}
+
+//class TraceRecord 
+//{
+// Boolean recordOnly = false;
+// * -> * UmpleVariable;
+// * -> * Attribute;
+// 1 -> * Record;
+//}
+
+class Record 
+{
+  String recordString;
+}
+
+class LogLevel 
+{
+  String level;
+}
+
+interface TraceItem
+{
+  depend java.util.*;
+  public String getTracerType();
+  public Boolean getIsPre();
+  public Boolean getIsPost();
+  public String trace(CodeTranslator gen, Object o, String template, UmpleClass uClass, String... args);//old
+  public String getPeriodClause();
+  public String getExtremities(CodeTranslator gen, String name);
+}
+/*
+ * An element of a trace directive that indicates to trace one or more attributes
+ */
+class AttributeTraceItem
+{
+  depend cruise.umple.parser.Position;
+
+  isA TraceItem;
+  tracerType = {getTraceDirective().getTracerType()}
+
+  boolean traceSet = false;
+  boolean traceGet = false;
+  boolean traceConstructor = false;
+
+  forClause = null;
+  periodClause = null;
+  duringClause = null;
+  * -> * UmpleVariable;
+
+  Position position = null;
+}
+
+/*
+ * An element of a trace directive that indicates to trace one or more state machines
+ * or transitions
+ */
+mixset StateMachine {
+  class StateMachineTraceItem
+  {
+    depend cruise.umple.parser.Position;
+
+    isA TraceItem;
+
+    ConstraintTree constraint = null;
+    tracerType = {getTraceDirective().getTracerType()}
+
+    boolean isIn = false;
+    boolean isOut = false;
+
+    boolean entry = false;
+    boolean exit = false;
+
+    int level = -1;
+    
+    boolean traceStateMachineFlag = false;
+    * -- 0..1 StateMachine;
+    * -- 0..1 State;
+    * -- 0..1 Transition;
+
+    Position position = null;
+    periodClause = null;
+
+    Boolean conditionallyWhere = true;
+    conditionType = "where";
+  }
+}
+/*
+ * An element of a trace directive that indicates to trace one or more associations
+ */
+ mixset Association {
+  class AssociationTraceItem
+  {
+    depend cruise.umple.parser.Position;
+
+    isA TraceItem;
+    
+    ConstraintTree constraint = null;
+    tracerType = {getTraceDirective().getTracerType()}
+
+    * -> * AssociationVariable;
+    * -> * Association;
+
+    //default case tracing Cardinality
+    boolean traceCardinality = true;
+    boolean traceAdd = false;
+    boolean traceRemove = false;
+
+    Position position = null;
+    periodClause = null;
+    Boolean conditionallyWhere = false; 
+    conditionType = "where";
+  }
+ }
+
+class MethodTraceItem
+{
+  depend cruise.umple.parser.Position;
+
+  isA TraceItem;
+  
+  ConstraintTree constraint = null;
+  tracerType = {getTraceDirective().getTracerType()}
+  
+  boolean entry = false;
+  boolean exit = false;
+  
+  * -> * Method;
+  
+  Position position = null;
+  periodClause = null;
+  Boolean conditionallyWhere = true; 
+  conditionType = "where";
+}
+
+/*
+ * Future work - initial implementation is done
+ * A group of trace directives that can be switched on or off by other
+ * trace directives
+ */
+class TraceCase
+{
+  name = null;
+  boolean activation = false;
+  1 -> * TraceDirective;
+}
+
+/*
+ * Discarded metamodel
+ */
+class TraceCondition
+{
+  // condition may be where, until, after, or giving
+  conditionType = null;
+  boolean preCondition  = false;
+  boolean postCondition = false;
+  lhs = null;
+  0..1 -> 1 ConditionRhs rhs;
+}
+
+class ConditionRhs
+{
+  rhs = null;
+  comparisonOperator = null;
+}
+
+class TraceRecord
+{
+  boolean recordOnly = false;
+  * -- * Attribute;
+  mixset StateMachine {
+    * -- * StateMachine;
+  }
+  String[] record;
+}
+
+use Trace_Code.ump;

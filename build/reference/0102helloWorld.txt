@@ -1,6 +1,7 @@
 Hello World Examples
 User Manual Basics
 noreferences
+@@tooltip Basic examples showing how Umple code is written
 
 @@description
 <p>As is customary when introducing a new language, here are some 'hello world' examples for Umple. Load these examples into UmpleOnline by clicking on the links. Then generate Java code by clicking on the 'Generate' button. Next click on the 'download zip file' link and run 'javac' on the result or else compile it in Eclipse.</p>
@@ -29,4 +30,12 @@ noreferences
 
 @@example @@caption Example Showing Three Classes with an Association and Attributes (Diagram is Above) @@endcaption
 @@source manualexamples/HelloWorldExamples2.ump
+@@endexample
+
+@@example @@caption Example Showing a Simple Class with a Main Method for Python Generation @@endcaption
+@@source manualexamples/HelloWorldExamples1py.ump
+@@endexample
+
+@@example @@caption Example Showing Three Classes with an Association and Attributes (Diagram is Above) for Python Generation@@endcaption
+@@source manualexamples/HelloWorldExamples2py.ump
 @@endexample

@@ -1,0 +1,36 @@
+Transportation Pattern A
+Patterns
+noreferences
+@@tooltip This is an example of a high level pattern that can be re-used to create transporation systems for different vehicle types.
+
+@@description
+<p>Transportation systems for airlines, bus networks and train networks have many things in common. This is a high level pattern to capture one way of representing common features of those models.</p>
+
+<p>The pattern consists of traits representing
+ <ul>
+   <li>Generic Routes with an ID
+   <li>RegularlyScheduledRun on those routes
+   <li>ActualRun (occurrences) of the above
+   <li>ScheduledStop
+   <li>Vehicles used
+ </ul</p>
+</p>
+
+<p>This is only one possible design for a transportation system, but it illustrates some possibilities. The two examples show how the design has been applied to create an airline system and a bus system.</p>
+
+<p>Experiment with the diagrams in UmpleOnline. You can use control-G and Control-E to switch layout; you can use control-R to toggle between viewing traits or collapsed classes.</p>
+
+&nbsp;
+
+@@example @@caption Transportation pattern code that is imported by specifying use lib:TransportationPatternA.ump @@endcaption 
+@@source reusable/TransportationPatternA.ump &diagramtype=GvClassTrait
+@@endexample
+
+@@example @@caption Example of use of the above transportation pattern for an airline @@endcaption
+@@source AirlineByPattern.ump &diagramtype=GvClass
+@@endexample
+
+@@example @@caption Example of use of the above transportation pattern for a bus system @@endcaption
+@@source BusSystemByPattern.ump &diagramtype=GvClass
+@@endexample
+

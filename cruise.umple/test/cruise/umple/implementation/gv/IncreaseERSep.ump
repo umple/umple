@@ -1,0 +1,8 @@
+generate GvEntityRelationshipDiagram -s "gvseparator=4";
+namespace example;
+
+class X {
+  a;
+  Date date;
+  Time time;
+}

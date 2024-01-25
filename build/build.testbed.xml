@@ -14,12 +14,13 @@
   <property name="test.output.path" value="${dist.dir}/qa/testbed_java"/>
   <property name="test.output.path.java" value="${dist.dir}/qa/testbed_java"/>
   <property name="test.output.path.php" value="${dist.dir}/qa/testbed_php"/>
+  <property name="test.output.path.python" value="${dist.dir}/qa/testbed_python"/>
   <property name="test.output.path.ruby" value="${dist.dir}/qa/testbed_ruby"/>
 
   <property name="examplepattern" value="*" />
-  <property name="manualumpfiles.path" value="umpleonline/ump/manualexamples"/>
+  <property name="manualumpfiles.path" value="umpleonline/umplibrary/manualexamples"/>
   <property name="manualumpfiles.bin.path" value="${manualumpfiles.path}/bin"/>
-  <property name="exampleumpfiles.path" value="umpleonline/ump"/>
+  <property name="exampleumpfiles.path" value="umpleonline/umplibrary"/>
   <property name="exampleumpfiles.bin.path" value="${exampleumpfiles.path}/bin"/>
 
   <!-- Options for allUserManualExampleTests target-->
@@ -57,6 +58,7 @@
     <antcall target="template.init" />
     <mkdir dir="${test.output.path.java}"/>
     <mkdir dir="${test.output.path.php}"/>
+    <mkdir dir="${test.output.path.python}"/>
     <mkdir dir="${test.output.path.ruby}"/>
   </target>
 
@@ -68,6 +70,7 @@
   <target name="compile">
     <antcall target="compileJava" />
     <antcall target="compilePhp" />
+    <antcall target="compilePython" />
     <antcall target="compileRuby" />
   </target>
 
@@ -75,6 +78,7 @@
     <deps-load-path conf="core" pathid="core.ivy.classpath" />
     <deps-load-path conf="test" pathid="test.ivy.classpath" />
 
+    <echo>Compiling Java testbed umple code to Java, then compiling Java using Java version: ${java.version}</echo>
     <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="testbed/src/TestHarness.ump"/>
     </java>
@@ -87,7 +91,7 @@
       </fileset>
     </apply>
 
-    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.8" target="1.8">
+    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="11" target="11">
       <src path="${project.path}/src"/>
       <src path="${project.path}/src-gen-umple"/>
       <src path="${project.path}/test"/>
@@ -140,6 +144,14 @@
 
   </target>
 
+  <target name="compilePython">
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
+
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
+      <arg value="testbed_python/src/TestHarnessPython.ump"/>
+    </java>
+  </target>
+
   <target name="compileRuby">
     <deps-load-path conf="core" pathid="core.ivy.classpath" />
 
@@ -155,6 +167,7 @@
   <target name="test">
     <antcall target="testJava" />
     <antcall target="testPhp" />
+    <antcall target="testPython" />
     <antcall target="testRuby" />
     <!--
     <antcall target="allUserManualAndExampleTests" />
@@ -218,6 +231,27 @@
       </condition>
     </fail>
     <echo message="PHP tests completed!"/>
+  </target>
+
+  <target name="testPython">
+    <echo message="Running PYTHON tests from command line"/>
+    <exec executable="python" dir="testbed_python/test/" output="${test.output.path.python}/index.html" outputproperty="test.output.python">
+	    <arg value="AllTests.py"/>
+    </exec>
+
+    <fail message="Python Import Error found">
+      <condition>
+        <contains string="${test.output.python}" substring="Import Failed" casesensitive="true"/>
+      </condition>
+    </fail>
+
+    <fail message="Python Error found">
+      <condition>
+        <contains string="${test.output.python}" substring="FAIL" casesensitive="true"/>
+      </condition>
+    </fail>
+
+    <echo message="PYTHON tests completed!"/>
   </target>
 
   <target name="testRuby">

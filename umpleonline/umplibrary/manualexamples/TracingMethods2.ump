@@ -1,0 +1,20 @@
+// this example shows how to trace generated
+// method exit. In case of methods with a return
+// statement, trace code is injected before
+// the return
+
+@SuppressWarnings("deprecation")
+class JavaMethod
+{
+  trace exit method();
+    
+  int method( int x ) {
+    x += 5;
+    return x;
+  }
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code
+// @@@skippythoncompile - Contains Java Code

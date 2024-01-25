@@ -1,0 +1,125 @@
+/*
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+*/
+
+namespace cruise.umple.compiler;
+
+class USEGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  UmpleModel model = null;
+  String output = "";
+
+  
+  private String getAssociationName(Association as) {
+    String firstEndName = as.getEnd(0).getDisplayRoleName();
+    String secondEndName = as.getEnd(1).getDisplayRoleName();
+    if(firstEndName.equals(secondEndName)) {
+      if("".equals(firstEndName)) {
+        return as.getName();
+      } else {
+        return firstEndName;
+      }
+    } else {
+      return firstEndName + "__" + secondEndName;
+    }
+  }
+  
+  private String getUSEType(Attribute av) {
+    String typeName = av.getType() == null ? "String" : av.getType();
+    if ("Date".equals(typeName) || "Time".equals(typeName))
+    {
+       typeName = "String";
+    }
+    else if ("Double".equals(typeName) || "Float".equals(typeName))
+    {
+      typeName = "Real";
+    }
+    return typeName;
+  }
+  
+  
+  indent <<!    !>>
+  
+  useAssociationEnd <<!
+  <<=ae.getClassName()>>[<<#
+  Multiplicity m = ae.getMultiplicity();
+  if(m.getBound() == null) {
+  #>><<=m.getMinimum()>> -- <<=m.getMaximum()>><<#
+  } else {
+  #>><<=m.getBound()>><<#
+  } #>>]!>>
+  private emit useAssociationEnd(AssociationEnd ae)(useAssociationEnd);
+  
+  wholefile <<!<<# ArrayList<Association> externalAssociations = new ArrayList<Association>(); 
+    #>>model <<=model.getUmpleFile().getSimpleFileName()>>
+<<# for(UmpleClass uClass : model.getUmpleClasses()) { #>>
+
+class <<=uClass.getName()>><<# if(uClass.getExtendsClass() != null) { #>><<=uClass.getExtendsClass().getName()>><<# } #>>
+
+<<# if(uClass.getAttributes().size() > 0) { #>>
+  attributes
+<<# } #>>
+<<# for(Attribute av : uClass.getAttributes()) { #>>
+<<@indent>><<# if(av.getIsList()) { #>><<=getModel().getGlossary().getPlural(av.getName())>><<# } else { #>><<=getModel().getGlossary().getSingular(av.getName())>><<# } #>> : <<=getUSEType(av)>>
+
+<<# } #>>
+<<# for(CodeInjection ci : uClass.getCodeInjections()) { #>>
+<<=ci.getType()>> <<=ci.getOperation()>> { <<=ci.getCode()>> }
+<<# } #>>
+end
+<<# }
+java.util.HashSet<Association> processed = new java.util.HashSet<Association>();
+for(UmpleClass uClass : model.getUmpleClasses()) {
+  for(Association as : uClass.getAssociations()) {
+    if(processed.contains(as)) {
+      continue;
+    }
+    processed.add(as);
+#>>
+
+association <<=getAssociationName(as)>> between <<=useAssociationEnd(as.getEnd(0))>> <<=useAssociationEnd(as.getEnd(1))>>
+end
+<<#
+  }
+} 
+#>>!>>
+  
+  emit generateTemplate()(wholefile);
+  
+  public void generate()
+  {
+    model.setCode(generateTemplate());
+    writeModel();
+  }
+
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".use";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating USE code." + e, e);
+    }
+  }
+
+}
+
+

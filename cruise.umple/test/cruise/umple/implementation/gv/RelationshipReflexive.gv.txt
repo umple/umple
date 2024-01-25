@@ -1,7 +1,6 @@
 digraph "RelationshipReflexive" {
-  size="80,10"
   rankdir="BT"
-  node [shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+  node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
 
   // Class: Course
   "Course" [shape=rectangle, label="   Course   ",
@@ -11,8 +10,8 @@ digraph "RelationshipReflexive" {
   // Attributes for Course
   // All associations
   "Course_Course" [shape=diamond, label="   isMutuallyExclusiveWith   ", tooltip="Course->Course"];
-  "Course" -> "Course_Course" [dir="none", label="*", tooltip="Course->Course"];
+  "Course" -> "Course_Course" [dir="none", label="*", tooltip="Course->Course" labeltooltip="Course->Course" headtooltip="Course->Course" tailtooltip="Course->Course" labelurl="javascript:void()" tailurl="javascript:void()" headurl="javascript:void()" ];
 
-  "Course_Course" -> "Course" [dir="none", label="*", tooltip="Course->Course"];
+  "Course_Course" -> "Course" [dir="none", label="*", tooltip="Course->Course" labeltooltip="Course->Course" headtooltip="Course->Course" tailtooltip="Course->Course" labelurl="javascript:void()" tailurl="javascript:void()" headurl="javascript:void()" ];
 
 }

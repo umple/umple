@@ -1,0 +1,61 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
+from enum import Enum, auto
+
+class LightFixture():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #LightFixture State Machines
+    class Light(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        On = auto()
+        Off = auto()
+
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self):
+        self._light = None
+        self.setLight(LightFixture.Light.On)
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def getLightFullName(self):
+        answer = self._light.__str__()
+        return answer
+
+    def getLight(self):
+        return self._light
+
+    def flip(self):
+        wasEventProcessed = False
+        aLight = self._light
+        if aLight == LightFixture.Light.On :
+            self.setLight(LightFixture.Light.Off)
+            wasEventProcessed = True
+        elif aLight == LightFixture.Light.Off :
+            self.setLight(LightFixture.Light.On)
+            wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
+        return wasEventProcessed
+
+    def setLight(self, aLight):
+
+        print("About to flip")
+        # END OF UMPLE BEFORE INJECTION
+        self._light = aLight
+
+        print("Just flipped")
+        # END OF UMPLE AFTER INJECTION
+
+    def delete(self):
+        pass
+

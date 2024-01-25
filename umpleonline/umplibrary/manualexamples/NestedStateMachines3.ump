@@ -1,0 +1,77 @@
+// Example with an opportunity to nest states, to
+// avoid repeating transitions
+
+class Course {
+  code;
+  description;
+  1 -- * CourseSection;
+}
+
+class CourseSection
+{
+  // Example from Lethbridge and Laganiere: Object
+  // Oriented Software Engineering: Practical
+  // Software Development using UML and Java
+  // McGraw Hill, 2005
+  // https://www.site.uottawa.ca/school/research/lloseng/
+
+  sectionId;
+  Integer classSize = 0;
+  Integer minimumClassSize = 10;
+  Integer maximumClassSize = 100;
+  
+  // State machine controlling status
+  status
+  {
+    Planned {
+      openRegistration -> OpenNotEnoughStudents;
+    }
+    OpenNotEnoughStudents {
+      closeRegistration -> Cancelled;
+      cancel -> Cancelled;
+      register
+        [getClassSize() > getMinimumClassSize()]
+        -> OpenEnoughStudents;
+    }
+    OpenEnoughStudents {
+      closeRegistration -> Closed;
+      cancel -> Cancelled;
+      register
+        [getClassSize() > getMaximumClassSize()]
+        -> Closed;
+    }
+    Cancelled {}
+    Closed {}
+  }
+
+  boolean requestToRegister(Student aStudent)
+  {
+    register();
+    return setClassSize(getClassSize()+1);
+  }
+}
+
+class Student {
+  // Remainder of class defined elsewhere
+}//$?[End_of_model]$?
+
+class Course
+{
+  position 50 30 109 45;
+  position.association Course__CourseSection 106,80 30,0;
+}
+
+class CourseSection
+{
+  position 40 149 201 111;
+}
+
+class Student
+{
+  position 260 65 109 45;
+}
+
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code
+// @@@skippythoncompile - Contains Java Code

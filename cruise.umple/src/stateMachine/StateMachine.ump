@@ -1,0 +1,389 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+State machine meta-model
+
+*/
+
+namespace cruise.umple.compiler;
+
+/*
+ * An entity in a running program that can have a set of values (states) and which
+ * changes values by taking transitions in response to various events.
+ */
+class StateMachine
+{
+  depend cruise.umple.util.*;
+  Integer recentSearchDepth = -1;
+  name;
+  Boolean containsHistoryState = false;
+  Boolean containsDeepHistoryState = false;
+  
+  * -- 0..1 UmpleClass;
+  
+  mixset Trait {
+	 * -- 0..1 UmpleTrait;  
+  }
+  * nestedStateMachines -- 0..1 State parentState;
+  
+  key { parentState, name }
+  
+  before setUmpleClass { if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; } }
+  mixset Trait {
+	  before setUmpleTrait { if (aUmpleTrait != null && aUmpleTrait.isImmutable()) { return false; } }
+  }
+  //before getContainsHistoryState { if ("H".equals(name)) { containsHistoryState = true; } }
+  //before getContainsDeepHistoryState { if ("HStar".equals(name)) { containsDeepHistoryState = true; } }
+
+  
+  
+  Boolean queued = false;
+  Boolean pooled = false;
+}
+
+/*
+ * One of the values in which a state machine can be at any given point in time
+ */
+class State
+{
+  depend cruise.umple.parser.Position;
+
+  isA Node;
+  name;
+  Boolean isConcurrent = { numberOfNestedStateMachines() > 1 }
+    
+  1 -- * Activity;
+  0..1 -> * Action;
+  * -- 1 StateMachine;
+
+  Boolean isStartState = false;
+  Boolean isInternal = false;  // for code generation only e.g. ouside scope of nested state
+  Boolean isHistoryState = false;
+  Boolean isDeepHistoryState = false;
+  Boolean finalState = false;
+  Boolean isVisited = false;
+  String displayColor = "";
+  //State mostRecentState; //will be in dot notation, if used by historyState, only look at first part?
+  
+  Position position = null;
+  before getIsHistoryState { if ("H".equals(name)) { isHistoryState = true; } }
+  before getIsDeepHistoryState { if ("HStar".equals(name)) { isDeepHistoryState = true; } }
+  before isFinalState { if ("Final".equals(name)) { finalState = true; } }
+}
+
+/* 
+ * Some code to execute for an extended period while in a state
+ * This code is found after they keyword 'do' in Umple
+ * The code is executed in a separate threat, and can be terminated by
+ * an outgoing transition. Upon completion of the activity, any
+ * autotransition will be taken 
+ */
+class Activity
+{
+  depend cruise.umple.parser.Position;
+  depend java.util.*;
+
+  lazy Position position;
+  lazy Position endPosition;
+  activityCode;  // target language code
+  Map<String,Position> implementationPositions = new HashMap<String,Position>();
+  
+    
+  * -> 0..1 Event onCompletionEvent;
+  
+  CodeBlock codeblock = null;
+  after constructor {codeblock = aActivityCode!=null ? new CodeBlock(aActivityCode) : new CodeBlock();}
+  before generated setActivityCode {codeblock.setCode(aActivityCode);}
+  after getActivityCode{
+  	if (codeblock.getCode()!=null)
+  	  return codeblock.getCode();
+  	  else
+  	
+  	}
+  after setCodeblock {
+  	if(activityCode!=null){
+  	  activityCode+= aCodeblock.getCode();
+  	}
+  	else
+  	  activityCode = aCodeblock.getCode();
+  }
+  void setActivityCode(String lang, String code)
+  {
+  	if(activityCode!=null){
+  	  activityCode+= lang+code;
+  	}
+  	else
+  	  activityCode = lang+code;
+  	codeblock.setCode(lang,code);
+  }
+
+}
+/* 
+ * Specifies, within a state, what happens with a certain event (method call) occurs
+ * Normally the state machine will go to a new state after executing various actions and
+ * activities.
+ * The guard is a boolean condition that may prevent triggering the transition
+ */
+class Transition
+{
+  depend cruise.umple.parser.Position;
+  Boolean isInternal = false;
+  Boolean autoTransition = false;
+
+  * -> 0..1 Event; 
+  * -- 1 State fromState;  
+  * nextTransition -- 1 State nextState;
+  * -> 0..1 Guard;
+  0..1 -> 0..1 Action;
+  
+  key { fromState, event, nextState, guard, action } 
+  
+  //Issue 519
+  Position position = null;
+  
+}
+
+/*
+ * A quickly-executed block of code that is run upon entry or exit from a state
+ */
+class Action
+{
+  depend cruise.umple.parser.Position;
+  
+  lazy actionType;
+  lazy Position position;
+  lazy Position endPosition;
+  actionCode;  // target language code
+  Boolean isInternal = false;
+  
+  CodeBlock codeblock = null;
+  after constructor {codeblock = aActionCode!=null ? new CodeBlock(aActionCode) : new CodeBlock();}
+  before generated setActionCode {codeblock.setCode(aActionCode);}
+  after getActionCode{
+  	if (codeblock.getCode()!=null)
+  	  return codeblock.getCode();
+  	  else
+  	
+  	}
+  after setCodeblock {
+  	if(actionCode!=null){
+  	  actionCode+= aCodeblock.getCode();
+  	}
+  	else
+  	  actionCode = aCodeblock.getCode();
+  }
+  void setActionCode(String lang, String code)
+  {
+  	if(actionCode!=null){
+  	  actionCode+= lang+code;
+  	}
+  	else 
+  	  actionCode = lang+code;
+  	codeblock.setCode(lang,code);
+  }
+  
+  key { actionType, actionCode, position } 
+
+}
+
+class Event
+{
+  name;
+  //String args = null;
+  
+  Boolean isTimer = false;
+  Boolean autoTransition = false;
+  timerInSeconds = "0";  // TODO: how do you specify milliseconds etc.
+
+  Boolean isInternal = false;  // for code generation only e.g. ouside scope of nested state
+
+  Boolean unspecified = false;
+  
+  // The event parameters.
+  1 -> 0..* MethodParameter params;
+  // The type of the method.
+  type = "Boolean";
+    
+  key { name }
+}
+
+/*
+ * A boolean condition that is checked when an event method is called
+ * If the result is true the transition may be taken
+ */
+class Guard
+{
+  depend cruise.umple.parser.Position;
+  depend java.util.*;
+  
+  isA ConstraintTree;
+  
+  lazy Position position;
+  lazy Position endPosition; 
+  
+  private ArrayDeque<String> expressionQueue( ConstraintOperator operator ) {
+		ArrayDeque<String> tempNodes = new ArrayDeque<String>();
+		ConstraintVariable left = operator.getLeft(), right = operator.getRight();
+
+		if( left != null ) 
+			add( left, tempNodes);
+		
+		if( operator != null ) {
+			if( operator .getValue().equals("object==") )
+				tempNodes.offer( "==" );
+			else if( operator .getValue().equals("object!=") )
+				tempNodes.offer( "!=" );
+			else
+				tempNodes.offer( operator .getValue() );
+		}
+		
+		if( right != null ) 
+			add(right, tempNodes);
+		
+		return tempNodes;
+	}
+	
+	private boolean add(ConstraintVariable element, ArrayDeque<String> nodes) {
+		if(element == null) return false;
+		if( element instanceof ConstraintTree ) {
+		
+			ConstraintTree exprTree = (ConstraintTree) element; 
+			ConstraintVariable root = exprTree.getRoot();
+			if( exprTree.getDisplayNegation() )
+				nodes.offer("!");
+				
+			if( exprTree.getShouldDisplayBrackets() )
+				nodes.offer("(");
+			
+			if( root != null && root instanceof ConstraintOperator )
+				for( String node : expressionQueue( (ConstraintOperator ) root ) )
+					nodes.offer( node );
+				
+			else if( root != null && root instanceof ConstraintTree  ) {
+						
+				ArrayDeque<String> tempNodes = new ArrayDeque<String>();
+				if( ((ConstraintTree) root).getDisplayNegation())
+					nodes.offer("!");
+				if( ((ConstraintTree) root).getDisplayBrackets())
+					nodes.offer("(");
+				ConstraintVariable newRoot = ((ConstraintTree) root).getRoot();
+				add( newRoot, tempNodes);
+				while( !tempNodes.isEmpty() )
+					nodes.offer( tempNodes.poll() );
+				if( ((ConstraintTree) root).getDisplayBrackets())
+					nodes.offer(")");
+			}
+			
+			else if( exprTree.getNumberOfElements() == 1 ){
+        //Issue 1151 : Literal is added as root element
+        if(exprTree.getRoot() instanceof ConstraintLiteral )
+           nodes.offer(((ConstraintLiteral)exprTree.getRoot()).getValue());
+        else 
+				   nodes.offer(exprTree.getNames().first());
+      }
+			
+			if( exprTree.getShouldDisplayBrackets() )
+				nodes.add(")");
+		}
+		
+		if( element instanceof ConstraintOperator )
+			for( String node : expressionQueue( (ConstraintOperator) element ) )
+				nodes.offer( node );
+				
+		if( element instanceof ConstraintNamed )
+			nodes.offer( ((ConstraintNamed) element).getName() );
+		
+		if( element instanceof ConstraintLiteral ) 
+			nodes.offer( ((ConstraintLiteral) element).getValue() );
+			
+		return true;
+	}
+	
+	//This builds an expression queue (of String type) from this Guard object. These include negation, operators, variable names etc.
+	public ArrayDeque<String> getQueuedExpression() {				
+		ArrayDeque<String> nodes = new ArrayDeque<String>();
+		add( this, nodes ); 
+		return nodes;
+	}
+
+  //checks the input string and reports if it is an operator or not
+  private boolean isOperator(String variable){
+		switch( variable ){
+			case "+" : return true;
+			case "-" : return true;
+			case "*" : return true;
+			case "/" : return true;
+			case "%" : return true;
+			case "&&" : return true;
+			case "||" : return true;
+			case "==" : return true;
+			case "!=" : return true;
+			case ">=" : return true;
+			case "<=" : return true;
+			case "<" : return true;
+			case ">" : return true;
+			case ">>" : return true;
+			case "<<" : return true;
+			case "+=" : return true;
+			case "-=" : return true;
+			case "*=" : return true;
+			case "%=" : return true;
+			case "/=" : return true;
+			case ">>=" : return true;
+			case "<<=" : return true;
+			//case "^" : return true;
+			default : return false;
+		}		
+	}
+
+	//This converts a guard expression into its equivalent string representation
+  public String getExpression() {
+		ArrayDeque<String> nodes = getQueuedExpression();
+		String temp = "";//, lastVariable = "";
+		if( this == null ) return temp;
+		
+		while( nodes.size() > 1) {
+			String variable = nodes.poll();
+			if( isOperator(variable) )
+				temp += " "+ variable +" ";
+			else
+				temp += variable;
+			//lastVariable = variable;
+		}
+		temp += nodes.poll();
+		
+		return temp;	
+	}
+}
+
+class UmpleClass {
+  depend java.util.*;
+  0..1 -- * Method stateDependentMethods;
+  private Map<Method, Map<State, MethodBody>> stateDependentMethodBodyMap = new HashMap<Method, Map<State, MethodBody>>();
+  
+  // See issue #1351. Adds a state-dependent method mapping for the current Umple class.
+  public boolean addStateDependentMethod(Method method, State state)
+  {
+    boolean wasAdded = false;
+    if (!stateDependentMethods.contains(method))
+    {
+      stateDependentMethods.add(method);
+    }
+    Map<State, MethodBody> stateMap = stateDependentMethodBodyMap
+                                     	.computeIfAbsent(method, k -> new HashMap<State, MethodBody>());
+    stateMap.put(state, method.getMethodBody());
+    return wasAdded;
+  }
+
+  public Map<Method, Map<State, MethodBody>> getStateDependentMethodBodyMap()
+  {
+    return stateDependentMethodBodyMap;
+  }
+}
+
+//use Umple.ump;
+use StateMachine_Code.ump;

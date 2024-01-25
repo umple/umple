@@ -42,12 +42,33 @@
   if($isSuccess) {
     echo "<p>Successfully established connection to server\n";
    
-    echo "\n<p>php version: ";
-    passthru("php -version");
+    echo "\n<p>php version: ".PHP_VERSION;
         
     echo "<p>Java version: ";
     passthru("java -version 2>&1");
-    
+
+    $PATH = getenv("PATH");
+    if(strpos($PATH, "/usr/bin") == FALSE){
+      $PATH .= ":/usr/bin";
+    }
+    if(strpos($PATH, "/usr/local/bin") == FALSE){
+      $PATH .= ":/usr/local/bin";
+    }
+    putenv("PATH=$PATH");
+ 
+    echo "<p>Dot/Graphviz version: ";
+    passthru("dot -V 2>&1");
+
+    echo "\n<p>Docker version: ";
+    passthru("docker --version 2>&1");
+
+    echo "\n<p> Git commit: ";
+    @passthru("git rev-parse --short HEAD 2>&1");
+    echo " &nbsp; Branch: ";
+    @passthru("git rev-parse --abbrev-ref HEAD");
+    echo " &nbsp; Updated: ";
+    @passthru("git log -1 --format=%cd --date=relative");
+
     $numBytesSent= socket_write($theSocket, $commandLine);
     if($numBytesSent === FALSE) {
       echo "<p>Cound not send log command to server\n";
@@ -72,7 +93,13 @@
         $readMoreLines = FALSE;
       }
       else {
-        echo $output;
+         $output2 = str_replace("JVM up: ", "JVM up: <span style='color: red'>", $output);
+         $output3 = str_replace("Version: ", "</span>Version: ", $output2);
+         $output2 = str_replace("run since start: ", "run since start: <span style='color: green'>", $output3);
+         $output3 = str_replace(" log: ", "</span> log: ", $output2);
+         $output2 = str_replace("since July 2019: ", "since July 2019: <span style='color: blue'>", $output3);
+         $output3 = str_replace("Number of clients queued: ", "</span>Number of clients queued: ", $output2);
+        echo $output3;
       }
     }
     echo "</pre>\n";

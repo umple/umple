@@ -1,0 +1,56 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+// line 14 "../../model.ump"
+// line 32 "../../model.ump"
+public class Admin extends Employee
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Admin Attributes
+  private int number;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Admin(String aName, int aAge, int aId, int aNumber)
+  {
+    super(aName, aAge, aId);
+    number = aNumber;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setNumber(int aNumber)
+  {
+    boolean wasSet = false;
+    number = aNumber;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getNumber()
+  {
+    return number;
+  }
+
+  public void delete()
+  {
+    super.delete();
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "number" + ":" + getNumber()+ "]";
+  }
+}

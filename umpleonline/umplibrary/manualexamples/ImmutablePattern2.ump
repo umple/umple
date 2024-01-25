@@ -1,0 +1,16 @@
+// An example of one immutable class making reference to another
+
+class Path
+{
+  immutable;
+  1 -> * Point2D pathElements;
+}
+
+class Point2D
+{
+  immutable;
+  Float x;
+  Float y;
+}
+
+strictness allow 36; // We are OK with this warning

@@ -1,6 +1,7 @@
 Immutable Pattern
 Patterns
 noreferences
+@@tooltip Immutable is a pattern whereby attributes and 1-ended associations, or entire classes are not allowed to change values after creation
 
 @@description
 <p>Mark a class as immutable to force all its contents to be immutable. The code ensures all attributes and associations can only be set in the constructor, and cannot be modified again subsequently.</p>
@@ -11,7 +12,7 @@ noreferences
 
 <p>Individual attributes and associations can be marked as immutable instead of the entire class. An attribute can be marked as <a href="LazyImmutableAttributes.html">lazy immutable</a> if it needs to be initialized after the constructor has finished. An immutable class cannot have an association to a non-immutable class.</p>
 
-<p><a href="http://en.wikipedia.org/wiki/Immutable_object" target="wikipedia">For more details on the Immutable pattern, see this Wikipedia page.</a></p>
+<p><a href="https://en.wikipedia.org/wiki/Immutable_object" target="wikipedia">For more details on the Immutable pattern, see this Wikipedia page.</a></p>
 
 <br />
 

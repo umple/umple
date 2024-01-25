@@ -1,0 +1,12 @@
+
+//The tracer used is not recognized,
+//the Console tracer will be used
+tracer OtherTracer;
+
+@SuppressWarnings("deprecation")
+class A {
+  Integer id;
+  
+  trace id;
+}
+// @@@skipphpcompile See issue 596 (PHP tracing causes issues)

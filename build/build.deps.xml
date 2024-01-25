@@ -149,8 +149,6 @@
     <echo>Installing Ivy v${ivy.install.version}</echo>
     <get src="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
          dest="${ivy.jar.file}" usetimestamp="true" />
-    <!-- COMMENTED OUT AS WAS GETTING 503 ERROR get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
-         dest="${ivy.jar.file}" usetimestamp="true" / -->
 
     <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.jar.file}" />
 
@@ -180,9 +178,9 @@
       <else>
         <echo>Fetching umple-${umple.version}</echo>
 
-        <echo level="warning">WARNING: This is merely wget-ing http://cruise.eecs.uottawa.ca/umpleonline/scripts/umple.jar</echo>
+        <echo level="warning">WARNING: This is merely wget-ing https://cruise.umple.org/umpleonline/scripts/umple.jar</echo>
         <mkdir dir="${umple.deps.dir}" />
-        <get src="http://cruise.eecs.uottawa.ca/umpleonline/scripts/umple.jar"
+        <get src="https://cruise.umple.org/umpleonline/scripts/umple.jar"
              dest="${umple.stable.jar}"
              usetimestamp="true" />
         <copy file="${umple.stable.jar}" tofile="${umple.stable.jar}" />
@@ -216,8 +214,8 @@
 
         <echo>Fetching org.eclipse.cdt.core_5.5.0.jar</echo>
 
-        <echo level="warning">WARNING: This is merely wget-itng https://cruise.site.uottawa.ca/preserved-deps/org.eclipse.cdt.core_5.5.0.201309180223.jar</echo>
-        <get src="https://cruise.site.uottawa.ca/preserved-deps/org.eclipse.cdt.core_5.5.0.201309180223.jar"
+        <echo level="warning">WARNING: This is merely wget-itng https://cruise.umple.org/preserved-deps/org.eclipse.cdt.core_5.5.0.201309180223.jar</echo>
+        <get src="https://cruise.umple.org/preserved-deps/org.eclipse.cdt.core_5.5.0.201309180223.jar"
              dest="${umple.deps.manual.dir}/"
              usetimestamp="true" />
       </else>

@@ -1,0 +1,66 @@
+include 'UmpleParser'
+include 'UmpleToJava'
+include 'UmpleToPhp'
+include 'UmpleToRTCpp'
+include 'UmpleToRuby'
+include 'UmpleToSql'
+include 'UmpleToTest'
+include 'cruise.umple'
+include 'sandbox'
+
+rootProject.name = 'umple'
+
+/*
+The Umple Gradle build has the following directory hierarchy:
+umple
+    build.gradle <- The build file of the root Gradle project
+    ...
+    UmpleParser <- A subproject under control of the root project
+    ...
+    UmpleToJava <- A subproject under control of the root project
+    ...  
+*/
+
+// Rename the build files of each subproject so that the names identify the subproject. This makes it much easier to
+// keep track of what file you're changing when you have multiple build files open in an editor
+rootProject.children.each {project ->
+    switch(project.name) {
+        case "cruise.umple":
+            project.buildFileName = "CruiseUmpleBuild.gradle"
+            break      
+        case "UmpleParser":
+            project.buildFileName = "UmpleParserBuild.gradle"
+            break
+        case "UmpleToJava":
+            project.buildFileName = "UmpleToJavaBuild.gradle"
+            break
+        case "UmpleToPhp":
+            project.buildFileName = "UmpleToPhpBuild.gradle"
+            break
+        case "UmpleToRTCpp":
+            project.buildFileName = "UmpleToRTCppBuild.gradle"
+            break
+        case "UmpleToRuby":
+            project.buildFileName = "UmpleToRubyBuild.gradle"
+            break
+        case "UmpleToSql":
+            project.buildFileName = "UmpleToSqlBuild.gradle"
+            break
+        case "UmpleToTest":
+            project.buildFileName = "UmpleToTestBuild.gradle"
+            break
+        case "cruise.umple.validator":
+            project.buildFileName = "CruiseUmpleValidatorBuild.gradle"
+            break
+        case "cruise.umplificator":
+            project.buildFileName = "CruiseUmplificatorBuild.gradle"
+            break
+        case "sandbox":
+            project.buildFileName = "SandboxBuild.gradle"
+            break
+        default:
+            throw new IllegalArgumentException("Invalid subproject name : " + project.name);
+    }
+       
+    assert project.buildFile.isFile()
+}

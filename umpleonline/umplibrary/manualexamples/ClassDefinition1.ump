@@ -1,0 +1,35 @@
+
+class Student
+{
+  firstName;   // attribute - defaults to String
+  lastName;
+  Integer number;  // attribute with type Integer
+  * -- * Address;  // Many-to-many association
+  
+  // Method, whose content is not processed by Umple
+  public String fullName()  
+  {
+    return getFirstName() + " " + getLastName();
+  } 
+}
+
+class Address
+{
+  String[] line;  // Multi-valued attribute
+}//$?[End_of_model]$?
+
+class Address
+{
+  position 47 160 109 64;
+}
+
+class Student
+{
+  position.association Address__Student 30,100 30,0;
+  position 47 23 141 100;
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java code
+// @@@skipphpcompile - Contains Java code also, issue 700 (line 17)
+// @@@skiprubycompile - Contains Java code
+// @@@skippythoncompile - Contains Java Code

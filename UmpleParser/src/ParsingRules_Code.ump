@@ -992,7 +992,7 @@ class ParsingCouple
             else
             {
               positionFrom.add(levels.get(level));
-              positionTo.add(new Integer(i));
+              positionTo.add(Integer.valueOf(i));
             }
             if(braceLikeIndex!=-1&&braceLikeClose[braceLikeIndex].equals(close))
             {
@@ -1053,7 +1053,7 @@ class ParsingCouple
               else
               {
                 positionFrom.add(levels.get(level));
-                positionTo.add(new Integer(i));
+                positionTo.add(Integer.valueOf(i));
               }
             }          
             i+=braceLikeClose[braceLikeIndex].length()-1;
@@ -1072,7 +1072,7 @@ class ParsingCouple
             else
             {
               positionFrom.add(levels.get(level));
-              positionTo.add(new Integer(i));
+              positionTo.add(Integer.valueOf(i));
             }
           }
           quoteLikeIndex = -1;

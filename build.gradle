@@ -1,0 +1,1845 @@
+// =======================================
+//  Miscellaneous root project properties
+// =======================================
+
+buildscript {
+    dependencies {
+        classpath 'de.undercouch:gradle-download-task:4.1.1'
+        classpath group: 'org.yaml', name: 'snakeyaml', version: '1.19'
+    }
+}
+
+plugins {
+  id 'org.ajoberstar.grgit' version '3.0.0'
+  id 'nebula.ospackage' version '9.1.1'
+}
+
+ext {
+    umpleLastVersionFile = new File("${rootProject.projectDir.toString()}/build/umpleversion.last.txt")
+    umpleMajorVersionFile = new File("${rootProject.projectDir.toString()}/build/umpleversion.txt")
+    umpleLastVersion = new org.yaml.snakeyaml.Yaml().load(rootProject.ext.umpleLastVersionFile.newInputStream()).version
+    umpleMajorVersion = new org.yaml.snakeyaml.Yaml().load(rootProject.ext.umpleMajorVersionFile.newInputStream()).version
+    umpleCurrentVersion = "${rootProject.ext.umpleMajorVersion}.${grgit.log().size()}.${grgit.head().getAbbreviatedId(9)}"
+    umpleCurrentJarBase = "umple-${rootProject.ext.umpleCurrentVersion}"
+    umpleCurrentJar = "${rootProject.projectDir.toString()}/dist/gradle/libs/${rootProject.ext.umpleCurrentJarBase}.jar"
+    umpleJarRemoteSource = "https://cruise.umple.org/umpleonline/scripts/umple.jar"
+    umpleJarRemoteFile = "${rootProject.projectDir.toString()}/libs/umple-latest.jar"
+    generatedBaseDir = "${rootProject.projectDir.toString()}/dist/gradle/src-gen"
+    txlTranslaterFile = "${rootProject.projectDir.toString()}/UmpleToPython/txl/umpleJavaToPython.txl"
+    testBaseDir = "${rootProject.projectDir.toString()}/dist/gradle/test"
+    classfileOutputDir = "${rootProject.projectDir.toString()}/dist/gradle/bin"
+    testClassfileOutputDir = "${rootProject.ext.testBaseDir}/bin"
+    distpath =  "${rootProject.projectDir.toString()}/dist/cruise.umple/reference"
+    distdir = "${rootProject.projectDir.toString()}/dist"
+    umpleweb = "${rootProject.projectDir.toString()}/umplewww"
+    umpleoscripts = "${rootProject.projectDir.toString()}/umpleonline/scripts"
+}
+
+// For the time being, we may want to keep the build directory separate
+// from the current one that's being used until this project overtakes
+// the ant build system
+buildDir  = "${rootProject.projectDir.toString()}/dist/gradle/"
+
+// Define aliases for build variants
+def buildAliases = [
+    'firstbuild' : [
+       'cleanUp',
+       'codeGen',
+       'umpleParser',
+       'resetUmpleSelf',
+       'compileJava',
+       'packageAllJars',
+       'createSymbolicLink'
+   ],
+   'quickbuild' : [
+        'cleanUpUmple',
+        'codeGen',
+        'umpleParser',
+        'resetUmpleSelf',
+        'compileJava',
+        'packageAllJars'
+    ],
+   'fullbuild' : [
+        'cleanUp',
+        'qaBuildingPage',
+        'buildSandbox',
+        'codeGen',
+        'umpleParser',
+        'setVersion',
+        'resetUmpleSelf',
+        'compileJava',
+        'packageAllJars',
+        'createSymbolicLink',
+        'resetVersion',
+        'buildTestUnitGeneratorAndParser',
+        'packageDocs',
+        'test',
+        'testbedTests',
+        'allUserManualAndExampleTests'
+   ],
+   'testall' : [
+   'cleanUpTests',
+        'buildTestUnitGeneratorAndParser',
+        'test',
+        'testbedTests',
+        'allUserManualAndExampleTests'
+   ],
+   'packageUmpleonline' : [
+    'packageAllJars',
+    'compileUmpleSelf',
+    'deployUmpleonline'
+   ],
+   'genPackages' : [
+        'packageDeb',
+        'packageRpm'
+   ],
+   'prepareChocoPackage' : [
+        'zipUmple',
+        'updateChecksum',
+        'copyLicense',
+        'updateNuspec'
+   ]
+]
+def expandedTaskList = []
+
+gradle.startParameter.taskNames.each {
+    expandedTaskList << (buildAliases[it] ? buildAliases[it] : it)
+}
+
+gradle.startParameter.taskNames = expandedTaskList.flatten()
+
+
+apply plugin: 'java'
+
+// See ivy.xml for which third-party libraries are required by the various flavours of Umple build
+configurations {
+    ivy
+}
+
+repositories {
+    maven {
+        name 'central'
+        url 'https://repo1.maven.org/maven2'
+    }
+    maven {
+        name 'jboss'
+        url 'https://repository.jboss.org/nexus/content/groups/public-jboss'
+    }
+}
+
+dependencies {
+    // Javascript compression for UmpleOnline scripts
+    ivy group: 'com.yahoo.platform.yui', name: 'yuicompressor', version: '2.4.8'
+    
+    // Testing
+    ivy group: 'junit', name: 'junit', version: '4.13.2'
+
+    // Core
+    ivy group: 'net.sf.jopt-simple', name: 'jopt-simple', version: '4.4'
+    ivy group: 'org.apache.ant', name: 'ant', version: '1.9.15'
+
+    // XText/Xtend Plugin
+    ivy group: 'org.eclipse.xtext', name: 'org.eclipse.xtext.ui', version: '2.9.0.beta3'
+    ivy group: 'org.eclipse.xtend', name: 'org.eclipse.xtend.core', version: '2.26.0.M1'
+
+    // Eclipse Plugin dependencies
+    ivy group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.core', version: '3.17.0'
+}
+
+// ===================
+//  Umple compilation
+// ===================
+
+// Download task for updating Umple jar
+apply plugin: 'de.undercouch.download'
+
+task downloadUmpleJar(type: Download) {
+    onlyIfNewer true
+    overwrite true
+    src rootProject.ext.umpleJarRemoteSource
+    dest rootProject.ext.umpleJarRemoteFile
+}
+task downloadJOptSimpleVendorZip(type: Download) {
+    onlyIfNewer true
+    overwrite true
+    src "https://codeload.github.com/pholser/jopt-simple/zip/jopt-simple-4.4"
+    dest "${rootProject.projectDir.toString()}/dist/gradle/libs/vendors/jopt-simple-4.4.zip"
+}
+
+task downloadAndUnzipJOptSimpleVendor(dependsOn: downloadJOptSimpleVendorZip, type: Copy) {
+    from zipTree(downloadJOptSimpleVendorZip.dest)
+    into "${rootProject.projectDir.toString()}/dist/gradle/libs/vendors/"
+}
+
+task prepareJOptSimpleVendor {
+    dependsOn downloadAndUnzipJOptSimpleVendor
+    doLast {
+        delete "${rootProject.projectDir.toString()}/dist/gradle/libs/vendors/jopt-simple-4.4.zip"
+        delete "${rootProject.projectDir.toString()}/dist/gradle/libs/vendors/jopt-simple-jopt-simple-4.4/src/test"
+    }
+}
+
+task getVendorLibs {
+    dependsOn prepareJOptSimpleVendor
+}
+
+// Compile the TXL code to ctxl code
+task ('compileTXL') {
+    doLast{
+    if (!new File(rootProject.ext.txlTranslaterFile).exists()) {
+        throw new Exception("${rootProject.ext.txlTranslaterFile} does not exist.")
+    }
+    // For the time being it may be good to print the exact command being executed
+    // so that we can check to see if issues are reproducible 
+    def command = "txl -c " + rootProject.ext.txlTranslaterFile
+    println(command)
+    def proc = command.execute();
+    proc.waitForProcessOutput(System.out, System.err);
+}
+}
+
+// Execute Umple jar
+def runUmpleJar(umpleJar, masterFile, args="") {
+    if (!new File(umpleJar).exists()) {
+        throw new Exception("${umpleJar} does not exist.")
+    }
+    // For the time being it may be good to print the exact command being executed
+    // so that we can check to see if issues are reproducible via the jar itself
+    def command = "java -jar " + umpleJar + " " + masterFile + " " + args
+    println(command)
+    def proc = command.execute();
+    proc.waitForProcessOutput(System.out, System.err);
+}
+
+subprojects{
+    // Make sure we load all the subproject properties first
+    evaluationDependsOn(":${project.name}")
+
+    // Clean up task
+    task ('cleanUp')  {
+    	doLast {
+        delete project.ext.umpleOutputDir
+        }
+    }
+
+    def masterFile = "${projectDir.toString()}/${project.ext.masterFile}"
+
+    // Compile task using remote jar
+   task ('compileUmple') {
+    	doLast{
+        runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
+        }
+    }
+    compileUmple.dependsOn(":downloadUmpleJar")
+
+    // Compile task using local jar, or fallback to remote
+    task ('compileUmpleSelf') {
+    	doLast{
+        if (new File(rootProject.ext.umpleCurrentJar).exists()) {
+            runUmpleJar(rootProject.ext.umpleCurrentJar, masterFile)
+        } else {
+            // Still default to using the stable downloaded jar
+            runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
+        }
+       }
+    }
+    compileUmpleSelf.dependsOn(":downloadUmpleJar")
+
+    // Copy task for parent project
+    def fromPath = "${projectDir.toString()}/${project.ext.umpleOutputDir}"
+    def intoPath = project.hasProperty("generationDir") ?
+                        "${rootProject.projectDir.toString()}/${project.ext.generationDir}"
+                        :
+                        "${rootProject.projectDir.toString()}/dist/gradle/src-gen/${project.name}/"
+    task copyUmpleOutput (type: Copy) {
+        from fromPath
+        into intoPath
+        duplicatesStrategy = 'warn'
+        exclude "**/.git*"
+        doFirst {
+            println("Copying from ${fromPath} to ${intoPath}")
+           if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+        }
+    }
+    compileUmple.finalizedBy copyUmpleOutput
+    compileUmpleSelf.finalizedBy copyUmpleOutput
+
+    task copyUmpleTest (type: Copy) {
+        from "${projectDir.toString()}/test"
+        into "${rootProject.ext.testBaseDir}/workingDir/test"
+        duplicatesStrategy = 'warn'
+        exclude "**/.git*", "**/vml"
+        doFirst {
+            println("Copying tests from ${projectDir.toString()}/test to ${rootProject.ext.testBaseDir}/workingDir/test")
+        }
+    }
+
+    if (project.name != "cruise.umplificator" && project.name != "sandbox" && project.name != "cruise.umple.validator") {
+        rootProject.tasks.getByName("compileTestJava").dependsOn copyUmpleTest
+        rootProject.tasks.getByName("compileTestJava").dependsOn ':copyUmpleOnlineTestFiles'
+        rootProject.tasks.getByName("compileTestJava").dependsOn ':copyDocs'
+        rootProject.tasks.getByName("compileTestJava").dependsOn ':compileJava'
+    }
+}
+
+// Copies libraries for RTCpp
+task copyRTCppLibs(type: Copy) {
+    from "${rootProject.projectDir.toString()}/cruise.umple.nebula/src",
+            "${rootProject.projectDir.toString()}/UmpleToRTCpp/src"
+    into "${rootProject.projectDir.toString()}/dist/gradle/src-gen/rtcpp"
+    exclude '.git*'
+}
+
+// Files in this directory are used during testing
+task copyUmpleOnlineTestFiles(type: Copy) {
+    from "${rootProject.projectDir.toString()}/umpleonline/umplibrary"
+    into "${rootProject.ext.testBaseDir}/umpleonline/umplibrary"
+    include '*.ump' // should avoid hitting the tmp model files
+    doFirst {
+        println("Copying .ump files from ${rootProject.projectDir.toString()}/umpleonline/umplibrary to ${rootProject.ext.testBaseDir}/umpleonline/umplibrary")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+    }
+}
+
+// Clean up task
+task ('cleanUp') {
+ doLast{
+    delete "${rootProject.projectDir.toString()}/dist/gradle"
+    }
+}
+
+// Delete the tests dir
+task ('cleanUpTests') {
+ doLast{
+    delete rootProject.ext.testBaseDir
+    }
+}
+
+// Delete only cruise umple components
+task ('cleanUpUmple') {
+ doLast{
+    delete "${rootProject.projectDir.toString()}/dist/gradle/src-gen/cruise.umple"
+    }
+}
+
+task ('cleanUpArtifacts') {
+  doLast{
+    delete "${rootProject.projectDir.toString()}/dist/gradle/libs"
+    //Scheduled to be removed once gradle overtakes ant and files are set to proper locations
+    delete "${rootProject.projectDir.toString()}/dist/umple.jar"
+    }
+}
+
+task ('cleanUpDeployment') {
+ doLast{
+    delete "${rootProject.projectDir.toString()}/dist/gradle/libs/umple*.jar"
+    delete "${rootProject.ext.umpleoscripts}/umple*.jar"
+    }
+}
+
+// ============================
+//  Java tests and compilation
+// ============================
+
+test {
+    workingDir = "${rootProject.ext.testBaseDir}/workingDir"
+    exclude "**/CPPCodeGenValidatorTest.class" // TODO - Fix eclipse CDT message: Unresolved inclusion: <HEADER_FILE>
+}
+
+sourceSets {
+    main {
+        compileClasspath = files(
+            rootProject.ext.classfileOutputDir,
+            configurations.ivy)
+        java {
+            srcDirs = [
+                rootProject.ext.generatedBaseDir,
+                "${rootProject.projectDir.toString()}/dist/gradle/libs/vendors/jopt-simple-jopt-simple-4.4/src/main/java/joptsimple"
+            ]
+            exclude '**/*.ump', '**/.git*'
+        }
+        java.outputDir = file(rootProject.ext.classfileOutputDir)
+    }
+    test {
+        compileClasspath = files(
+            rootProject.ext.classfileOutputDir,
+            rootProject.ext.testClassfileOutputDir,
+            configurations.ivy)
+        runtimeClasspath = files(
+            rootProject.ext.classfileOutputDir,
+            rootProject.ext.testClassfileOutputDir,
+            configurations.ivy)
+        java {
+            srcDirs = [
+                rootProject.ext.testBaseDir,
+                "${rootProject.projectDir.toString()}/testbed/bin"
+            ]
+            exclude '**/*.ump', '**/.git*'
+        }
+        java.outputDir = file(rootProject.ext.testClassfileOutputDir)
+    }
+}
+
+
+// ===============
+//  Jar packaging
+// ===============
+
+// Grammar and error files also need to be included in the Umple jar
+
+task copyDocs(type: Copy) {
+    group = "Custom"
+    description = "Copying grammar and error files that need to be included in the umple jar"
+    from "cruise.umple/src"
+    into rootProject.ext.classfileOutputDir
+    include '**/*.grammar'
+    include '*.error'
+    exclude "**/feature", "**/generators", "**/util", "**/sync"
+    
+    doFirst {
+        println("Copying .grammar and .error files from cruise.umple/src to ${rootProject.ext.classfileOutputDir}")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+    
+    }
+}
+task copyReusableUmpLib(type: Copy) {
+    group = "Custom"
+    description = "Copying library files that need to be included in the umple jar"
+    from "umpleonline/umplibrary/reusable"
+    into rootProject.ext.classfileOutputDir
+    include '**/*.ump'
+   
+    doFirst {
+        println("Copying library .ump files from cruise.umple/src to ${rootProject.ext.classfileOutputDir}")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+    
+    }
+}
+task copyTxlFile(type: Copy) {
+    //This has to be done seperatly in order not to alter the existing task too much
+    group = "Custom"
+    description = "Copying TXL files that need to be included in the umple jar"
+    from "UmpleToPython/txl"
+    into rootProject.ext.classfileOutputDir
+    include '**/*.ctxl'
+   
+    doFirst {
+        println("Copying library .ctxl file from UmpleToPython/txl to ${rootProject.ext.classfileOutputDir}")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+        } 
+    
+    }
+}
+
+tasks.getByName("compileJava").dependsOn 'copyDocs'
+tasks.getByName("compileJava").dependsOn 'copyReusableUmpLib'
+tasks.getByName("compileJava").dependsOn 'copyTxlFile'
+tasks.getByName("compileJava").dependsOn ':UmpleParser:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn ':UmpleToJava:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn ':UmpleToPhp:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn ':UmpleToRTCpp:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn ':UmpleToRuby:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn ':UmpleToSql:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn ':UmpleToTest:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn ':cruise.umple:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn copyRTCppLibs
+tasks.getByName("compileJava").dependsOn getVendorLibs
+
+jar {
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
+    from rootProject.ext.classfileOutputDir
+    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
+    archivesBaseName = rootProject.ext.umpleCurrentJarBase
+    manifest {
+        attributes 'Main-Class': 'cruise.umple.UmpleConsoleMain',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleCurrentVersion
+    }
+    doFirst {
+        println("Compiling to ${rootProject.ext.umpleCurrentJar} using " + rootProject.ext.classfileOutputDir)
+    }
+    dependsOn copyDocs
+}
+
+task createSymbolicLink {
+  group = "Custom"
+  description = "Generates a symbolink link to the umple jar"
+  doLast{
+	  if (! new File ("${rootProject.projectDir.toString()}/dist/gradle/libs/umple.jar").exists() && 
+	    new File ("${rootProject.projectDir.toString()}/dist/gradle/libs/${rootProject.ext.umpleCurrentJarBase}.jar").exists()){
+	    exec {
+	      workingDir "${rootProject.projectDir.toString()}/dist/gradle/libs/"
+	      commandLine 'ln', '-s', "${rootProject.ext.umpleCurrentJarBase}.jar", 'umple.jar'
+	    }
+	    }
+	    // This copy task is set to removed once gradle fully overtakes ant
+	    //It was added because a few javatestbed tests rely on umple.jar located in the dist folder
+	    copy {
+	    	from "${rootProject.projectDir.toString()}/dist/gradle/libs/"
+	    	into "${rootProject.projectDir.toString()}/dist"
+	    	include "umple.jar"
+	    }
+    }
+  
+  dependsOn ":jar"  
+}
+
+// Task for generating the statistics jar file
+task packageStatistics(type: Jar) {
+    group = "Custom"
+    description = "Generating the statistics jar file"
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
+    from rootProject.ext.classfileOutputDir
+    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
+    archiveFileName = "umplestats-${rootProject.ext.umpleCurrentVersion}.jar"
+    manifest {
+        attributes 'Main-Class': 'cruise.umple.stats.StatsMain',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleCurrentVersion
+    }
+    doFirst {
+        println("Compiling umplestats-${rootProject.ext.umpleCurrentVersion}.jar using " + rootProject.ext.classfileOutputDir)
+    }
+    dependsOn ':processResources'
+    dependsOn 'copyDocs'
+    dependsOn ':compileJava'
+}
+
+// Task for generating the documenter jar file
+task packageDocumenter(type: Jar) {
+    group = "Custom"
+    description = "Generating the documenter jar file"
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
+    from rootProject.ext.classfileOutputDir
+    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
+    archiveFileName = "umpledocs-${rootProject.ext.umpleCurrentVersion}.jar"
+    manifest {
+        attributes 'Main-Class': 'cruise.umple.docs.DocumenterMain',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleCurrentVersion
+    }
+    doFirst {
+        println("Compiling umpledocs-${rootProject.ext.umpleCurrentVersion}.jar using " + rootProject.ext.classfileOutputDir)
+    }
+    dependsOn ':processResources'
+    dependsOn 'copyDocs'
+    dependsOn ':compileJava'
+}
+
+// Task for generating the sync jar file
+task packageSync(type: Jar) {
+    group = "Custom"
+    description = "Generating the sync jar file"
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
+    from rootProject.ext.classfileOutputDir
+    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
+    archiveFileName = "umplesync-${rootProject.ext.umpleCurrentVersion}.jar"
+    manifest {
+        attributes 'Main-Class': 'cruise.umple.PlaygroundMain',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleCurrentVersion
+    }
+    doFirst {
+        println("Compiling umplesync-${rootProject.ext.umpleCurrentVersion}.jar using " + rootProject.ext.classfileOutputDir)
+    }
+    dependsOn ':processResources'
+    dependsOn 'copyDocs'
+    dependsOn ':compileJava'
+}
+
+// Task for generating the run jar file
+task packageRunner(type: Jar) {
+    group = "Custom"
+    description = "Generating the run jar file"
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
+    from rootProject.ext.classfileOutputDir
+    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
+    archiveFileName = "umplerunner-${rootProject.ext.umpleCurrentVersion}.jar"
+    manifest {
+        attributes 'Main-Class': 'cruise.umple.UmpleRunMain',
+                   'Class-Path': configurations.ivy,
+                   'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleCurrentVersion
+    }
+    doFirst {
+        println("Compiling umplerun-${rootProject.ext.umpleCurrentVersion}.jar using " + rootProject.ext.classfileOutputDir)
+    }
+    dependsOn ':processResources'
+    dependsOn 'copyDocs'
+    dependsOn ':compileJava'
+}
+
+// Generate all jar files
+task packageAllJars {
+    group = "Custom"
+    description = "Generates all necessary jar files"
+    dependsOn jar
+    dependsOn packageStatistics
+    dependsOn packageDocumenter
+    dependsOn packageSync
+    dependsOn packageRunner
+}
+
+// =======
+//  Generate Deb/RPM packages
+// =======
+
+// Generate options text from help message
+task genOptions(type:Exec) {
+  workingDir "${rootProject.projectDir.toString()}/dist/"
+  commandLine 'java', '-jar', 'umple.jar', '-help'
+  standardOutput = new ByteArrayOutputStream()
+  doLast {
+    def strings = standardOutput.toString().split('-----------')
+    def options = ""
+    if (strings.size() > 1) {
+    	options = strings[1] 
+    }
+    
+    for (line in options.split('\n')) {
+    	line = line.trim()
+    	
+    	if (line.startsWith('-')) {
+    	    if (!manOptions.isEmpty())
+    	    genOptions.ext.manOptions += '\n.PP\n\\fB\\'
+    	    
+    	    def tokens = ""
+	    if (line.contains(', -')) 
+	    	tokens = line.split('(?<!,)\\s+', 2)	
+	    else
+	    	tokens = line.split('\\s+', 2)
+	    
+	    if (tokens.size() > 1) {
+	    	genOptions.ext.manOptions += tokens[0].trim()
+	    	genOptions.ext.manOptions += '\\FR\n.IP\n'
+	    	genOptions.ext.manOptions += tokens[1].trim() + ' '
+	    }
+	    
+    	} else {
+    	    genOptions.ext.manOptions += line + ' '
+    	}
+    }
+    genOptions.ext.manOptions += '\n.PP\n'
+  }  
+}
+
+genOptions.ext.manOptions = ""
+
+// Create copyright from LICENSE.md
+task genCopyright(type: Copy) {
+    def info = ("Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/\n"
+    		+ "Upstream-Name: umple\n"
+		+ "Upstream-Contact: Timothy.Lethbridge <Timothy.Lethbridge@uottawa.ca>\n"
+		+ "Source: https://cruise.umple.org/umple/\n\n"
+		+ "Files:     *\n"
+		+ "License:   Expat\n")
+    from "${rootProject.projectDir.toString()}/LICENSE.md"
+    into "${rootProject.projectDir.toString()}/build/package-files/"
+    rename { 'copyright' }		
+    
+    doLast {
+	def file = new File("${rootProject.projectDir.toString()}/build/package-files/copyright")
+	def lines = file.readLines()
+	file.text = info + lines.subList(2, lines.size() - 2).join("\n")
+    }
+}
+
+// Create man page file from template with updated options
+task genManpage(dependsOn: [genOptions, genCopyright], type: Copy) { 
+    from "${rootProject.projectDir.toString()}/build/package-files/template.1"
+    into "${rootProject.projectDir.toString()}/build/package-files/"
+    rename { 'umple.1' }
+    
+    doLast {
+	def file = new File("${rootProject.projectDir.toString()}/build/package-files/umple.1")
+	file.text = file.text.replace('.SH OPTIONS', '.SH OPTIONS' + genOptions.ext.manOptions)
+	ant.gzip(src: "${rootProject.projectDir.toString()}/build/package-files/umple.1", zipfile: "${rootProject.projectDir.toString()}/build/package-files/umple.1.gz") 
+    }
+}
+
+// Remove carriage return from script
+task removeCR {
+    def file = new File("${rootProject.projectDir.toString()}/build/package-files/umple")
+    file.text = file.text.replace('\r', '')
+}
+
+// Create DEB package
+task packageDeb(dependsOn: [genManpage, removeCR], type: Deb) {
+    packageName = 'umple'
+    packageDescription = 'Modeling tool/programming language that enables Model-Oriented Programming'
+    maintainer = 'Umple Team <umple-help@googlegroups.com>'
+    url = 'https://www.umple.org'
+    version = "${rootProject.ext.umpleMajorVersion}"
+    release = 1
+    arch= 'all'
+    
+    requires('default-jre-headless')
+    
+    def names = []
+    def subNumbers = []
+    fileTree("${rootProject.projectDir.toString()}/dist/").matching {
+        include "umple-${rootProject.ext.umpleMajorVersion}*.jar"
+    }.visit { FileVisitDetails details -> 
+        names << details.file.name
+        if (details.file.name.split('\\.').length > 4) {
+            subNumbers << details.file.name.split('\\.').getAt(3).toInteger()
+            names << details.file.name
+        }
+    }
+
+    def jarfile = ""
+    if (!names.isEmpty()) {
+        jarfile = Collections.max(names) 
+        def maxNumber = Collections.max(subNumbers)
+        def index = subNumbers.findIndexOf { it == maxNumber } 
+        jarfile = names[index]
+    } else {
+        print("No umple jar file detected.")
+    }
+    
+    from("${rootProject.projectDir.toString()}/dist/") {
+    	include "${jarfile}"
+        into 'usr/local/lib/umple'
+        rename {'umple.jar'}
+    }
+    from("${rootProject.projectDir.toString()}/build/package-files/umple") {
+        into 'usr/local/bin'
+        fileMode 0755
+    }
+    from("${rootProject.projectDir.toString()}/build/package-files/copyright") {
+        into 'usr/share/doc/umple'
+    }
+    from("${rootProject.projectDir.toString()}/README.md") {
+        into 'usr/share/doc/umple'
+    }
+    from("${rootProject.projectDir.toString()}/build/package-files/umple.1.gz") {
+        into 'usr/share/man/man1'
+    }
+}
+
+// Create RPM package
+task packageRpm(dependsOn: [genManpage, removeCR], type: Rpm) {
+    packageName = 'umple'
+    packageDescription = 'Modeling tool/programming language that enables Model-Oriented Programming'
+    maintainer = 'Umple Team <umple-help@googlegroups.com>'
+    url = 'https://www.umple.org'
+    version = "${rootProject.ext.umpleMajorVersion}"
+    release = 1
+    arch = 'noarch'
+    os = 'LINUX'
+    license = 'MIT'
+    
+    requires('jre-headless')
+    
+    def names = []
+    def subNumbers = []
+    fileTree("${rootProject.projectDir.toString()}/dist/").matching {
+        include "umple-${rootProject.ext.umpleMajorVersion}*.jar"
+    }.visit { FileVisitDetails details -> 
+        names << details.file.name
+        if (details.file.name.split('\\.').length > 4) {
+            subNumbers << details.file.name.split('\\.').getAt(3).toInteger()
+            names << details.file.name
+        }
+    }
+
+    def jarfile = ""
+    if (!names.isEmpty()) {
+        jarfile = Collections.max(names) 
+        def maxNumber = Collections.max(subNumbers)
+        def index = subNumbers.findIndexOf { it == maxNumber } 
+        jarfile = names[index]
+    } else {
+        print("No umple jar file detected.")
+    }
+
+    from("${rootProject.projectDir.toString()}/dist/") {
+    	include "${jarfile}"
+        into 'usr/local/lib/umple'
+        rename {'umple.jar'}
+    }
+    from("${rootProject.projectDir.toString()}/build/package-files/umple") {
+        into 'usr/local/bin'
+        fileMode 0755
+    }      
+    from("${rootProject.projectDir.toString()}/build/package-files/copyright") {
+        into 'usr/share/doc/umple'
+    }
+    from("${rootProject.projectDir.toString()}/README.md") {
+    	addParentDirs = false
+        into 'usr/share/doc/umple'
+    }
+    from("${rootProject.projectDir.toString()}/build/package-files/umple.1.gz") {
+    	addParentDirs = false
+        into 'usr/share/man/man1'
+    }
+}
+
+// =======
+//  Prepare chocolatey package files
+// =======
+
+// Create Zip file for choco package including jar and bat files
+task zipUmple(type: Copy) { 
+    def names = []
+    def subNumbers = []
+    fileTree("${rootProject.projectDir.toString()}/dist/").matching {
+        include "umple-${rootProject.ext.umpleMajorVersion}*.jar"
+    }.visit { FileVisitDetails details -> 
+        if (details.file.name.split('\\.').length > 4) {
+            subNumbers << details.file.name.split('\\.').getAt(3).toInteger()
+            names << details.file.name
+        }
+    }
+
+    def jarfile = ""
+    if (!names.isEmpty()) {
+        def maxNumber = Collections.max(subNumbers)
+        def index = subNumbers.findIndexOf { it == maxNumber } 
+        jarfile = names[index]
+    } else {
+        print("No umple jar file detected.")
+    }
+
+    from "${rootProject.projectDir.toString()}/dist/"
+    include "${jarfile}"
+    into "${rootProject.projectDir.toString()}/build/package-files/"
+    rename {'umple.jar'}
+    
+    doLast {
+        ant.zip(destfile: "${rootProject.projectDir.toString()}/build/package-files/chocolatey/tools/umple-win.zip") {
+            fileset(dir: "${rootProject.projectDir.toString()}/build/package-files/") {
+                include(name: 'umple.jar')
+                include(name: 'umple.bat')
+            }
+        }
+    }
+}
+
+// Update checksum of umple.jar
+task updateChecksum(type: Copy) {
+    from "${rootProject.projectDir.toString()}/build/package-files/"
+    into "${rootProject.projectDir.toString()}/build/package-files/chocolatey/tools/"
+    include "VERIFICATION.txt"
+    
+    doLast {
+        ant.checksum(file: "${rootProject.projectDir.toString()}/build/package-files/umple.jar", algorithm: "SHA-256")
+        // Update checksum
+        def file = new File("${rootProject.projectDir.toString()}/build/package-files/chocolatey/tools/VERIFICATION.txt")
+        file.text = file.text.replaceAll(/tag\/v.*/, "tag/v${rootProject.ext.umpleMajorVersion}")
+        def sha256File = new File("${rootProject.projectDir.toString()}/build/package-files/umple.jar.SHA-256")
+        file.text = file.text.replaceAll(/Checksum:.*/, "Checksum:${sha256File.text}")
+    }
+    
+    dependsOn zipUmple
+}
+
+// Copy License file
+task copyLicense(type: Copy) {
+    from "${rootProject.projectDir.toString()}/LICENSE.md"
+    into "${rootProject.projectDir.toString()}/build/package-files/chocolatey/tools/"
+    rename {"LICENSE.txt"}
+}
+
+// Update nuspec file for creating choco package
+task updateNuspec(type: Copy) {
+    from "${rootProject.projectDir.toString()}/build/package-files/umple.nuspec"
+    into "${rootProject.projectDir.toString()}/build/package-files/chocolatey/"
+
+    doLast {
+        def copyright = new File("${rootProject.projectDir.toString()}/build/package-files/chocolatey/tools/LICENSE.txt")
+        def lines = copyright.readLines()
+        copyright.text = "From: https://github.com/umple/umple/blob/master/LICENSE.md\n" + copyright.text
+        def copyrightContent = lines.get(3).split("(?<!\\G\\w+)\\s")[0]
+        copyrightContent += " All the developers of Umple"
+
+        def file = new File("${rootProject.projectDir.toString()}/build/package-files/chocolatey/umple.nuspec")
+        file.text = file.text.replaceAll(/<version>.*<\/version>/, "<version>${rootProject.ext.umpleMajorVersion}</version>")
+        file.text = file.text.replaceAll(/<releaseNotes>.*<\/releaseNotes>/, "<releaseNotes>https://github.com/umple/umple/releases/tag/v${rootProject.ext.umpleMajorVersion}</releaseNotes>")
+        file.text = file.text.replaceAll(/<copyright>.*<\/copyright>/, "<copyright>${copyrightContent}</copyright>")
+    }
+    
+    dependsOn updateChecksum
+}
+
+// =======
+//  Build
+// =======
+
+// Create in-progress QA landing page
+task qaBuildingPage(type: Copy) {
+    group = "Custom"
+    description = "Create in-progress QA landing page"
+    from "${rootProject.projectDir.toString()}/build/"
+    into "${rootProject.projectDir.toString()}/dist/qa/"
+    include 'qa_updating.php'
+    rename 'qa_updating.php', 'index.php'
+    doFirst {
+        println("Creating the QA landing page")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+    }
+}
+
+// Copy the completed QA landing page
+task qaLandingPage(type: Copy) {
+    group = "Custom"
+    description = "Copy the completed QA landing page"
+    from "${rootProject.projectDir.toString()}/build/"
+    into "${rootProject.projectDir.toString()}/dist/qa/"
+    include 'qa_index.php'
+    doFirst {
+        println("Finalizing the QA landing page")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+    }
+}
+
+// Builds the sandbox project
+task ('buildSandbox') {
+  group = "Custom"
+  description = "Builds the sandbox project"
+  doLast{
+    delete "${rootProject.projectDir.toString()}/sandbox/bin"
+    delete "${rootProject.projectDir.toString()}/dist/sandbox"
+    }
+}
+task('sandbox_compileJava').mustRunAfter 'buildSandbox'
+
+// Update files to show generated version
+task ('setVersion') {
+  doLast{
+    ant.replaceregexp(match:'@UMPLE_VERSION@', replace: rootProject.ext.umpleCurrentVersion, flags:'g', byline:true) {
+        fileset(dir: "${rootProject.projectDir.toString()}/dist/gradle", includes: '**/*.java')
+    }
+    }
+}
+
+// Revert generated version
+task ('resetVersion') {
+  doLast{
+    ant.replaceregexp(match:rootProject.ext.umpleCurrentVersion, replace: '@UMPLE_VERSION@', flags:'g', byline:true) {
+        fileset(dir: "${rootProject.projectDir.toString()}/dist/gradle", includes: '**/*.java')
+    }
+    }
+}
+
+task deployUmpleonline(type: Copy) {
+    group = "Custom"
+    description = "Copying the generated jar files to the umpleonline scripts folder"
+    from "${rootProject.projectDir.toString()}/dist/gradle/libs"
+    into umpleoscripts
+    doFirst {
+        println("Deploying umple online to umpleonline/scripts/")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+    }
+    include "umplesync-${rootProject.ext.umpleCurrentVersion}.jar"
+    include "umple-${rootProject.ext.umpleCurrentVersion}.jar"
+    rename ("umplesync-${rootProject.ext.umpleCurrentVersion}.jar", 'umplesync.jar')
+    rename ("umple-${rootProject.ext.umpleCurrentVersion}.jar", 'umple.jar')
+  
+    dependsOn ':jar'
+    dependsOn ':packageSync'
+}
+
+
+task deployUpdatedLib(type: Copy) {
+    group = "Custom"
+    description = "Copying the generated jar files to the lib folder"
+    from "${rootProject.projectDir.toString()}/dist/gradle/libs"
+    into "${rootProject.projectDir.toString()}/lib"
+    doFirst {
+        println("Deploying umple online to lib")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+    }
+    include "umplesync-${rootProject.ext.umpleLastVersion}.jar"
+    include "umple-${rootProject.ext.umpleLastVersion}.jar"
+}
+
+task deploy {
+    group = "Custom"
+    description = "Deploys umple jars to the umpleonline scripts and libs"
+    doLast {
+        println("Deployed Version: ${rootProject.ext.umpleLastVersion}")
+    }
+    dependsOn deployUmpleonline
+    dependsOn deployUpdatedLib
+}
+
+// Builds self
+task resetUmpleSelf {
+    group = "Custom"
+    description = ""
+    dependsOn ':cruise.umple:compileUmpleSelf'
+}
+
+// Generates template code by first attempting to use
+// the latest local jar, or else the remote jar
+task codeGen {
+    group = "Custom"
+    description = "Generates template code by first attempting to use the latest local jar, or else the remote jar"
+    dependsOn ":UmpleToJava:compileUmpleSelf"
+    dependsOn ":UmpleToRTCpp:compileUmpleSelf"
+    dependsOn ":UmpleToPhp:compileUmpleSelf"
+    dependsOn ":UmpleToRuby:compileUmpleSelf"
+    dependsOn ":UmpleToSql:compileUmpleSelf"
+    dependsOn ":UmpleToTest:compileUmpleSelf"
+    dependsOn "compileTXL"
+}
+
+// Compiles the parser to Java
+task umpleParser {
+    group = "Custom"
+    description = "Compiles the parser to Java"
+    dependsOn ":UmpleParser:compileUmple"
+}
+
+task ('compileXUnitTemplates') {
+ group = "Custom"
+ description = "Generating the template files"
+ doLast{
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/UmpleTToJunit/UmpleTLTemplates/Master.ump")
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/UmpleTToPhpUnit/UmpleTLTemplates/Master.ump")
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/UmpleTToRubyUnit/UmpleTLTemplates/Master.ump")
+    }
+}
+
+task copyXUnitJavaGenerator (type: Copy) {
+    group = "Custom"
+    description = "Copying the generated jUnit test generator files"
+    from "${rootProject.projectDir.toString()}/UmpleTToJunit/src-gen-UmpleTL/cruise/umple/unitGen/jUnit/"
+    into "${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/jUnit/"
+    duplicatesStrategy = 'warn'
+    exclude "**/.git*", 'UmpleTToJunit.java'
+    doFirst {
+        println("Copying from ${rootProject.projectDir.toString()}/UmpleTToJunit/src-gen-UmpleTL/cruise/umple/unitGen/jUnit/ to ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/jUnit/")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+    }
+    dependsOn compileXUnitTemplates
+}
+
+task copyXUnitPhpGenerator (type: Copy) {
+    group = "Custom"
+    description = "Copying the generated phpUnit test generator files"
+    from "${rootProject.projectDir.toString()}/UmpleTToPhpUnit/src-gen-UmpleTL/cruise/umple/unitGen/phpUnit/"
+    into "${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/phpUnit/"
+    duplicatesStrategy = 'warn'
+    exclude "**/.git*", 'UmpleTToPhpUnit.java'
+    doFirst {
+        println("Copying from ${rootProject.projectDir.toString()}/UmpleTToPhpUnit/src-gen-UmpleTL/cruise/umple/unitGen/phpUnit/ to ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/phpUnit/")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+    }
+    dependsOn compileXUnitTemplates
+}
+
+task copyXUnitRubyGenerator (type: Copy) {
+    group = "Custom"
+    description = "Copying the generated rubyUnit test generator files"
+    from "${rootProject.projectDir.toString()}/UmpleTToRubyUnit/src-gen-UmpleTL/cruise/umple/unitGen/rubyUnit/"
+    into "${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/rubyUnit/"
+    duplicatesStrategy = 'warn'
+    exclude "**/.git*", 'UmpleTToRubyUnit.java'
+    doFirst {
+        println("Copying from ${rootProject.projectDir.toString()}/UmpleTToRubyUnit/src-gen-UmpleTL/cruise/umple/unitGen/rubyUnit/ to ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen-umpletl/cruise/umple/unitGen/rubyUnit/")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+    }
+    dependsOn compileXUnitTemplates
+}
+
+task copyXUnitGenerators {
+    group = "Custom"
+    description = "Copying all unit test generator"
+    dependsOn copyXUnitJavaGenerator
+    dependsOn copyXUnitPhpGenerator
+    dependsOn copyXUnitRubyGenerator
+}
+
+task generateTestParser {
+    group = "Custom"
+    description = "Generating Umple Test Parser"
+    dependsOn copyXUnitGenerators
+    doLast {
+        println("Generating Umple Test Parser!")
+        runUmpleJar(rootProject.ext.umpleCurrentJar, "cruise.umple.test-parser/src/ump/Master.ump")
+    }
+}
+
+// These tasks seem to be doing nothing in build.testgenerator.xml
+// BEGIN SECTION
+task compileTestParser {
+    group = "Custom"
+    description = "Compiling Umple Test Parser"
+    dependsOn generateTestParser
+    doLast {
+        println("Compiling Umple Test Parser!")
+    }
+}
+
+task copyTestGenerator (type: Copy) {
+    group = "Custom"
+    description = "Moving testgenerator files one level above"
+    from "${rootProject.projectDir.toString()}/cruise.umple.test-parser/src/src-gen/cruise/umple/testgenerator/"
+    into "${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen/cruise/umple/testgenerator/"
+    duplicatesStrategy = 'warn'
+    exclude "**/.git*", 'UmpleTToRubyUnit.java'
+    doFirst {
+        println("Copying from ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src/src-gen/cruise/umple/testgenerator/ to ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen/cruise/umple/testgenerator/")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+    }
+    dependsOn compileXUnitTemplates
+}
+
+task copyTestParser (type: Copy) {
+    group = "Custom"
+    description = "Copying the generated parser test files to the src-gen folder one level above"
+    from "${rootProject.projectDir.toString()}/cruise.umple.test-parser/src/src-gen/cruise/umple/testparser/"
+    into "${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen/cruise/umple/testparser/"
+    duplicatesStrategy = 'warn'
+    exclude "**/.git*", 'UmpleTToRubyUnit.java'
+    doFirst {
+        println("Copying from ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src/src-gen/cruise/umple/testparser/ to ${rootProject.projectDir.toString()}/cruise.umple.test-parser/src-gen/cruise/umple/testparser/")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+    }
+    dependsOn compileXUnitTemplates
+}
+
+task copyTestParserFiles {
+    group = "Custom"
+    description = "Copying generator test and parser test files"
+    dependsOn copyTestGenerator
+    dependsOn copyTestParser
+}
+
+task testXUnitTemplateTest {
+    dependsOn copyTestParserFiles
+}
+
+// END SECTION
+
+task buildTestUnitGeneratorAndParser {
+    dependsOn testXUnitTemplateTest
+}
+test {
+  workingDir = "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir"
+  def testName = project.hasProperty("junit") ? junit:"*"
+  testClassesDirs = fileTree(
+        dir: rootProject.ext.testClassfileOutputDir,
+        includes: ["**/${testName}.class"])
+    classpath = sourceSets.test.runtimeClasspath
+
+    doLast {
+     delete "${rootProject.ext.testBaseDir}/workingDir/A.java"
+     delete "${rootProject.ext.testBaseDir}/workingDir/B.java"
+     delete "${rootProject.ext.testBaseDir}/workingDir/C.java"
+    }  
+    
+  dependsOn ":compileJava", ":compileTestJava"
+  dependsOn ':copyDocs'
+    dependsOn copyUmpleOnlineTestFiles
+    dependsOn compileJava
+}
+
+task ('javaTestbedCompileUmple') {
+  group = "Custom"
+  description = "Compiling java testbed source files"
+  doLast{
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed/src/TestHarness.ump")
+    
+    def testTree = fileTree(
+        dir: "${rootProject.projectDir.toString()}/testbed/src/runtime",
+        include: "*.ump")
+    testTree.each { f ->
+        runUmpleJar(rootProject.ext.umpleCurrentJar, f)
+    }
+    testTree = fileTree(
+        dir: "${rootProject.projectDir.toString()}/testbed/test/cruise/compiler/src/",
+        include: "*.ump")
+    testTree.each { f ->
+        runUmpleJar(rootProject.ext.umpleCurrentJar, f)
+    }
+   }
+}
+task javaTestbedCompile(type: JavaCompile) {
+    group = "Custom"
+    description = "Compiling java testbed generated files"
+    options.fork = true
+    classpath = files(
+        "${rootProject.projectDir.toString()}/testbed/bin",
+        rootProject.configurations.ivy)
+    destinationDirectory = file("${rootProject.projectDir.toString()}/testbed/bin")
+    source "${rootProject.projectDir.toString()}/testbed/src"
+    source "${rootProject.projectDir.toString()}/testbed/src-gen-umple"
+    source "${rootProject.projectDir.toString()}/testbed/test"
+    exclude '**/*.ump', '**/.git*', '**/data', '**/compiler/src-gen-umple'
+
+    dependsOn ':compileJava'
+    dependsOn ':compileTestJava'
+    dependsOn javaTestbedCompileUmple
+}
+
+task javaTestbedTest(type: Test) {
+    group = "Custom"
+    description = "Testing java testbed files"
+    workingDir = "${rootProject.projectDir.toString()}/testbed"
+    testClassesDirs = fileTree(
+        dir: "${rootProject.projectDir.toString()}/testbed/bin",
+        includes: ["**/*.class"])
+    classpath = files("${rootProject.projectDir.toString()}/testbed/bin",
+            configurations.ivy)
+    
+    dependsOn javaTestbedCompile
+    dependsOn ':compileTestJava'
+}
+
+task phpTestbedCompileUmple {
+  group = "Custom"
+  description = "Compiling php testbed source files"
+  doLast{
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_php/src/TestHarnessPhp.ump")
+    }
+}
+
+task phpDownloadSimpleTestZip(type: Download) {
+    group = "Custom"
+    description = "Downloading php simple test for php unit testing"
+    onlyIfNewer true
+    overwrite true
+    src "https://github.com/git-mirror/simpletest/archive/1.1.0.tar.gz"
+    dest "${rootProject.projectDir.toString()}/dist/gradle/libs/php/1.1.0.tar.gz"
+}
+
+task phpDownloadAndUnzipSimpleTest(dependsOn: phpDownloadSimpleTestZip, type: Copy) {
+    group = "Custom"
+    description = "Unzipping php simple test"
+    from tarTree(phpDownloadSimpleTestZip.dest)
+    into "${rootProject.projectDir.toString()}/dist/gradle/libs/php/"
+}
+
+task phpPrepareSimpleTest {
+    group = "Custom"
+    description = "Deleting the compressed php simple test file"
+    dependsOn phpDownloadAndUnzipSimpleTest
+    doLast {
+        delete "${rootProject.projectDir.toString()}/dist/gradle/libs/php/1.1.0.tar.gz"
+    }
+}
+
+task phpTestbedCompile {
+    group = "Custom"
+    description = "Compiling php testbed generated files"
+    dependsOn phpTestbedCompileUmple
+    dependsOn phpPrepareSimpleTest
+}
+
+task phpTestbedTest {
+    group = "Custom"
+    description = "Running php testbed tests"
+    dependsOn phpTestbedCompile
+    doLast {
+    def file = new File( "${rootProject.projectDir.toString()}/testbed_php/test/AllTests.php" )
+    def newconfig = file.text.replace( "defaultPath = \"true\"", "defaultPath = \"false\"")
+    file.text = newconfig
+    
+    file = new File( "${rootProject.projectDir.toString()}/testbed_php/test/AllXmlTests.php" )
+    newconfig = file.text.replace( "defaultPath = \"true\"", "defaultPath = \"false\"")
+    file.text = newconfig
+        def command = "php AllXmlTests.php"
+        println(command)
+        new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php").mkdir()
+        def proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_php/test"))
+        def out = new File ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php/index.txt")
+        out.write(proc.text)
+        copy {
+          from ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php")
+          into ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php")
+          include "index.txt"
+          rename ("index.txt", "index.xml")
+        }
+      
+        command = "php AllTests.php"
+        println(command)          
+        proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_php/test"))
+        out = new File ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php/index.txt")
+        out.write(proc.text)
+        copy {
+          from ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php")
+          into ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php")
+          include "index.txt"
+          rename ("index.txt", "index.html")
+        }
+        
+        delete "${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php/index.txt"
+        file = new File( "${rootProject.projectDir.toString()}/testbed_php/test/AllTests.php" )
+    	newconfig = file.text.replace( "defaultPath = \"false\"", "defaultPath = \"true\"")
+    	file.text = newconfig
+    
+    	file = new File( "${rootProject.projectDir.toString()}/testbed_php/test/AllXmlTests.php" )
+    	newconfig = file.text.replace( "defaultPath = \"false\"", "defaultPath = \"true\"")
+    	file.text = newconfig
+    	 println("PHP tests completed!\n"+
+        "See results at ${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_php/index.html")
+    }
+}
+
+task pythonTestbedCompileUmple {
+  group = "Custom"
+  description = "Compiling python testbed source files"
+  doLast{
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_python/src/TestHarnessPython.ump")
+    }
+}
+
+task pythonTestbedCompile {
+    group = "Custom"
+    description = "Compiling python testbed generated files"
+    dependsOn pythonTestbedCompileUmple
+
+}
+
+task pythonTestbedTest {
+    group = "Custom"
+    description = "Running python testbed tests"
+    dependsOn pythonTestbedCompile
+    doLast {
+        println("Running PYTHON tests")
+        new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python").mkdir()
+        def command = "python AllTests.py"
+        
+        def proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_python/test"))
+        def out = new File ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python/index.txt")
+        out.write(proc.text)
+        copy {
+          from ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python")
+          into ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python")
+          include "index.txt"
+          rename ("index.txt", "index.html")
+        }
+        
+        delete "${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python/index.txt"
+
+        println("PYTHON tests completed!\n"+
+        "See results at ${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python/index.html")
+    }
+}
+
+task ('rubyTestbedCompileUmple') {
+ group = "Custom"
+ description = "Compiling ruby testbed source files"
+ doLast{
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_ruby/src/TestHarnessRuby.ump")
+    }
+}
+task rubyTestbedCompile {
+    group = "Custom"
+    description = "Compiling ruby testbed generated files"
+    dependsOn rubyTestbedCompileUmple
+}
+
+task rubyTestbedTest {
+    group = "Custom"
+    description = "Running ruby testbed tests"
+    dependsOn rubyTestbedCompile
+    doLast {
+        println("Running RUBY tests via rake task")
+        new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_ruby").mkdir()
+        def command = "rake || true" // this shouldn't work since the rake tasks expects a different jar location
+        println(command)             // so we'll allow catch it for now
+        def proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_ruby"))
+        
+        def out = new File ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_ruby/index.txt")
+        out.write(proc.text)
+        copy {
+        from ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_ruby")
+        into ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_ruby")
+        include "index.txt"
+        rename ("index.txt", "index.html")
+        }
+        
+        delete "${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_ruby/index.txt"
+        
+        println("RUBY tests completed!\n"+
+        "See results at ${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_ruby/index.html")
+    }
+}
+
+task testbedTests {
+    group = "Custom"
+    description = "Running all testbed tests"
+    dependsOn javaTestbedTest
+    dependsOn phpTestbedTest
+    dependsOn pythonTestbedTest
+    dependsOn rubyTestbedTest
+}
+
+def setupUserManualAndExampleTests(language) {
+    new File("${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}").mkdirs()
+    def command = "ruby ${rootProject.projectDir.toString()}/build/get_testable_examples.rb " +
+    "-i ${rootProject.projectDir.toString()}/umpleonline/umplibrary/manualexamples -i ${rootProject.projectDir.toString()}/umpleonline/umplibrary " +
+    "-o ${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language} -l ${language} -s *"
+    println(command)
+    def proc = command.execute();
+    proc.waitForProcessOutput(System.out, System.err);
+}
+
+def runUserManualAndExampleTests(language, languageOpt, excludes) {
+    println("Running user manual and example tests for ${languageOpt}")
+    def testTree = fileTree(
+            dir: "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}",
+            excludes : excludes,
+            include: '*.ump')
+            
+    def names= []
+    def targetPath = "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}/allExamplesList.txt"
+    def target = new File(targetPath)
+    
+    testTree.visit{ FileVisitDetails details -> 
+    	names << details.file.name 
+    }
+    for (name in names){
+      target.append(name+"\n")
+    }
+    
+    def result = exec {
+    	workingDir "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}"	
+    	commandLine 'java', '-jar', "${rootProject.ext.umpleCurrentJar}", '-g', "${languageOpt}", "-path", 'src-gen-umple', '-w', '-q', '-c', '-', '-f', 'allExamplesList.txt' 	
+    }
+    
+    if (result.getExitValue()!=0){
+    	throw new GradleException("Process exit value different from 0")
+    }
+}
+
+task ('setupJavaUserManualAndExampleTests') {
+  group = "Custom"
+  description = "Setting up java umpleonline and user manual examples"
+  doLast{
+    setupUserManualAndExampleTests("java");
+    }
+}
+
+task javaUserManualAndExampleTests {
+    group = "Custom"
+    description = "Testing java umpleonline and Manual Examples"
+    dependsOn setupJavaUserManualAndExampleTests
+    doLast {
+        def excludes = [
+                "E0*.ump",
+                "E1*.ump",
+                "E2*.ump",
+                "E3*.ump",
+                "E4*.ump",
+                "WE1xxIdentifierInvalid1.ump",
+                "WE1xxIdentifierInvalid3.ump",
+                "WE1xxIdentifierInvalid5.ump",
+                "WE1xxIdentifierInvalid6.ump",
+                "WE1xxIdentifierInvalid7.ump",
+                "W142TypeIsAccessSpecifierAmbiguous.ump",
+                "UseStatements1.ump",
+                "NamespaceDirectives4.ump",
+                "HtmlGeneration2.ump", //Temporary
+                "OBDCarSystem.ump", //Temporary
+                "ComplexStateMachine.ump", //Temporary
+                "W010SingletonMultiplicityOver12.ump", //Temporary
+                "src-gen-umple",
+                "allExamplesList.txt"]
+        runUserManualAndExampleTests("java", "Java", excludes)
+    }
+}
+
+task ('setupPythonUserManualAndExampleTests') {
+  group = "Custom"
+  description = "Setting up python umpleonline and user manual examples"
+  doLast{
+    setupUserManualAndExampleTests("python");
+    }
+}
+
+
+task pythonUserManualAndExampleTests {
+    group = "Custom"
+    description = "Testing python umpleonline and Manual Examples"
+    dependsOn setupPythonUserManualAndExampleTests
+    doLast {
+               def excludes = [
+                "E0*.ump",
+                "E1*.ump",
+                "E2*.ump",
+                "E3*.ump",
+                "E4*.ump",
+                "WE1xxIdentifierInvalid1.ump",
+                "WE1xxIdentifierInvalid3.ump",
+                "WE1xxIdentifierInvalid5.ump",
+                "WE1xxIdentifierInvalid6.ump",
+                "WE1xxIdentifierInvalid7.ump",
+                "W142TypeIsAccessSpecifierAmbiguous.ump",
+                "UseStatements1.ump",
+                "NamespaceDirectives4.ump",
+                "HtmlGeneration2.ump", //Temporary
+                "OBDCarSystem.ump", //Temporary
+                "ComplexStateMachine.ump", //Temporary
+                "W010SingletonMultiplicityOver12.ump", //Temporary
+                "AccessControl2.ump",
+                "AroundStatement1.ump",
+                "AroundStatement2.ump",
+                "Auto-Transitions1.ump",
+                "Ball_Game.ump",
+                "BasicTemplates1.ump",
+                "BasicTemplates2.ump",
+                "BasicTemplates3.ump",
+                "BcmsBaseConfiguration.ump",
+                "BcmsMultipleCrisis-Multiple-Coordinator-Configuration.ump",
+                "CanalLockStateMachine.ump",
+                "CodeInjectioninCustomMethods1.ump",
+                "CodeInjectioninEventMethods1.ump",
+                "Dishwasher.ump",
+                "Elevator_State_Machine.ump",
+                "HtmlGeneration.ump",
+                "LibraryLoanStateMachine.ump",
+                "MicrowaveOven2.ump",
+                "Phone.ump",
+                "PingPong.ump",
+                "PooledStateMachines1.ump",
+                "QueuedStateMachines1.ump",
+                "Runway.ump",
+                "SecurityLight.ump",
+                "StateDependentMethods1.ump",
+                "StateDependentMethods2.ump",
+                "StateMachineActionsandDoActivities1.ump",
+                "TcpIpSimulation.ump",
+                "TimedCommands.ump",
+                "TrafficLightsB.ump",
+                "UnspecifiedEvents2.ump",
+                "W082ConflictingModifiers.ump",
+                "W1006StateMachineNotParsed1.ump",
+                "W1007ElementNotParsed1.ump",
+                "W1010ConstraintSyntaxNotProcessed1.ump",
+                "NullExample.ump",
+                "Tracers1.ump", //Tracers are out of scope for Beta Python Generation
+                "Tracers2.ump",
+                "Tracers3.ump",
+                "Tracers4.ump",
+                "Tracers5.ump",
+                "TracingAssociations1.ump",
+                "TracingAssociations2.ump",
+                "TracingAssociations3.ump",
+                "TracingAttributes1.ump",
+                "TracingAttributes2.ump",
+                "TracingAttributes3.ump",
+                "TracingAttributeswithConditions2.ump",
+                "TracingAttributeswithOccurrences1.ump",
+                "TracingAttributeswithOccurrences2.ump",
+                "TracingAttributeswithtimeline1.ump",
+                "TracingAttributeswithtimeline2.ump",
+                "TracingBasics1.ump",
+                "TracingBasics2.ump",
+                "TracingConstraints1.ump",
+                "TracingConstraints2.ump",
+                "TracingConstraints3.ump",
+                "TracingMethods1.ump",
+                "TracingMethods2.ump",
+                "TracingStateMachines1.ump",
+                "TracingStateMachines2.ump",
+                "TracingStateMachines3.ump",
+                "W301TracingEntityNotFound1.ump",
+                "W301TracingEntityNotFound2.ump",
+                "W302TracerNotRecognized1.ump",
+                "W302TracerNotRecognized2.ump",// <End> Disabled until TXL bugs are fixed
+                "src-gen-umple",
+                "allExamplesList.txt"]
+        runUserManualAndExampleTests("python", "Python", excludes)
+    }
+}
+
+task ('setupPhpUserManualAndExampleTests') {
+   group = "Custom"
+   description = "Setting up php umpleonline and user manual examples"
+   doLast {
+    setupUserManualAndExampleTests("php");
+    }
+}
+
+task phpUserManualAndExampleTests {
+    group = "Custom"
+    description = "Testing php umpleonline and Manual Examples"
+    dependsOn setupPhpUserManualAndExampleTests
+    doLast {
+        def excludes = [
+                "E0*.ump",
+                "E1*.ump",
+                "E2*.ump",
+                "E3*.ump",
+                "E4*.ump",
+                "WE1xxIdentifierInvalid1.ump",
+                "WE1xxIdentifierInvalid3.ump",
+                "WE1xxIdentifierInvalid5.ump",
+                "WE1xxIdentifierInvalid6.ump",
+                "WE1xxIdentifierInvalid7.ump",
+                "UseStatements1.ump",
+                "Tracers2.ump",
+                "Tracers3.ump",
+                "Tracers4.ump",
+                "Tracers5.ump",
+                "OBDCarSystem.ump",
+                "HtmlGeneration2.ump",
+                "ComplexStateMachine.ump", //Temporary
+                "W010SingletonMultiplicityOver12.ump"] //Temporary
+        runUserManualAndExampleTests("php", "Php", excludes)
+    }
+}
+
+// Testing UmpleOnline Examples and Manual Examples
+task allUserManualAndExampleTests {
+    group = "Custom"
+    description = "Building and testing umpleonline and Manual Examples"
+
+    doLast{
+      delete "${rootProject.ext.testBaseDir}/workingDir/temp"
+      }
+    dependsOn javaUserManualAndExampleTests
+    dependsOn phpUserManualAndExampleTests
+    dependsOn pythonUserManualAndExampleTests
+    // Consider doing this for the other languages too
+}
+
+// =====================
+// Build User manual
+// =====================
+
+
+task copybuilddir1{
+ doLast{
+  copy{
+	from rootProject.ext.umpleweb
+	into distpath
+	include '*/index.html', 'umple-state-classDiagram.shtml', 'umple-core-classDiagram.shtml', 'umple-compiler-classDiagram.shtml', "examples/*",
+	   'syntaxhighlighter/*',"*/umple_logo.jpg", "*/uottawa_ver_black.png", '*/umple_example_uml.jpg', '*/Octocat.jpg'	
+	  }
+       }
+}
+task copybuilddir (type: Copy){
+ doLast{
+  from "${rootProject.projectDir.toString()}/build/reference"
+  into distpath
+  }
+}
+
+task executeDocJar (type: JavaExec){
+        group = "Custom"
+        description = "Running the umple documenter jar to update the user manual"
+ 	classpath = files("${rootProject.ext.distdir}/gradle/libs/umpledocs**.jar")
+ 	classpath += sourceSets.main.runtimeClasspath
+ 	main = "cruise.umple.docs.DocumenterMain"
+ 	args = ["${rootProject.projectDir.toString()}/build/reference", distpath]
+ 	jvmArgs = ['-Xmx500m']
+ }
+
+ 
+ task packageDocs {
+   group = "Custom"
+   description = "Building the user manual"
+   dependsOn copybuilddir
+   dependsOn copybuilddir1
+   dependsOn executeDocJar
+ }
+ 
+ // =====================
+// Package Umpleonline
+// =====================
+ 
+ 
+ // Javascript compression
+ 
+ class ConcatFiles extends DefaultTask {
+    @InputFiles
+    FileCollection files
+          @OutputFile
+    File target
+          @TaskAction
+    void concat() {
+        target.withWriter { writer ->
+            files.each { file ->
+                file.withReader { reader ->
+                    writer << reader << '\n'
+                }
+            }
+        }
+    }
+}
+
+ 
+ task concat (type: ConcatFiles) {
+        group = "Custom"
+        description = "Concatenating umpleonline scripts files into a single temporary javascript files"
+    def  shBrush  = fileTree (umpleoscripts) {
+      include 'shBrush*.js'
+    }
+    def umpf = fileTree (umpleoscripts) {
+      include 'umple_*.js'
+    }
+    def drop = fileTree ("${rootProject.ext.umpleoscripts}/dropbox") {
+      include '*.js'
+    }
+   files = files (
+     'umpleonline/scripts/prototype.js',
+     'umpleonline/scripts/dom.js',
+     'umpleonline/scripts/ajax.js', 
+     'umpleonline/scripts/helper.js',
+     'umpleonline/scripts/json.js',
+     'umpleonline/scripts/debugger.js',
+     'umpleonline/scripts/shCore.js',
+     shBrush,
+     'umpleonline/scripts/inlineeditor.js',
+     drop,
+     umpf,
+     'umpleonline/scripts/structureDiagram.js',
+     'umpleonline/scripts/statetable/state_table_colourer.js'
+   )
+   target = file ('umpleonline/scripts/tmpAllUmple.js')
+ }
+ 
+ task executeYui (type: JavaExec){
+   group = "Custom"
+   description = "Running the yui compressor that is used to minify javascript files "
+ 	classpath = configurations.ivy
+ 	main "com.yahoo.platform.yui.compressor.Bootstrap"
+ 	args =  ["${rootProject.ext.umpleoscripts}/tmpAllUmple.js", "-o", "${rootProject.ext.umpleoscripts}/allumple-min.js"]
+ 	
+ }
+
+
+ task compressAllScripts {
+   group = "Custom"
+   description = "Minifying javascript files"
+ 	dependsOn concat
+ 	dependsOn executeYui
+ doLast{
+ 	delete "${rootProject.ext.umpleoscripts}/tmpAllUmple.js"
+ 	}
+ }
+ 
+// =====================
+// Automated UI Test
+// =====================
+
+//This Task initiates the execution of the automated UI tests on umpleonline
+task uiTestHelp {
+  group = "Custom"
+  description = "Outputs instructions on how to launch umpleonline UI tests"
+  
+  doLast {
+    println("The umpleonline UI tests can be launched by running the 'doWebsiteTests' task \n"+
+    "You can specify a custom hostname with -PhostName=\"yourserver\"\n"+ 
+  "eg. ./gradlew doWebsiteTests -PhostName=http://cruise2.local/\n"+
+  "The testing environment can also be specified, that is, whether they are to run on a headless browser or not.\n"+
+  "By default they are run on a headless browser but you can use a proper browser by setting the env property to no-headless.\n"+ 
+  "This can be achieved by -Penv=\"no-headless\"\n"+
+  "If no hostName is specified, the tests will be run against the public umpleonline by default (To be modified later)\n"+
+    "The default mode for this test suite is fail safe. It will run and report all failures.\n" +
+  "It can be run in fail-fast mode using -Pfailfast=true\n" +
+    "There are feature tags that allow testing of only particular features of the website.\n" +
+  "The tag can be chosen with -Ptag=featurename. If no feature name is set this way, all tests are run.\n" +
+  "eg. To run only the options menu tests, add -Ptag=optionsMenu\n" +
+    "Features tested\n" +
+    "dynamicResizing:\n" +           
+    "tests the dynamic layout of umpleonline\n" +
+  "pageLoad:\n"+                  
+    "tests the url options for umple.php\n" +
+  "exampleLoading:\n"+            
+    "tests that all examples load properly\n" +
+  "diagramEditing:\n"+            
+    "tests that the graphical editing functionality correctly modify the model\n" +
+  "positionalDiagramEditing:\n" +  
+    "tests that the graphical editing functionality leave the positional data of the model intact\n" +
+  "optionsMenu:\n" +              
+    "tests that all of the \"options\" panel menu items work correctly\n"
+    )
+  }
+}
+task initTests {
+  group = "Custom"
+  description = "Creates a temporary txt file contains the host name and the umpleonline directory. The file content will be used during the UI test."
+  
+  def host = "https://cruise.umple.org/test/umpleonline/"
+  def baseDir = "${rootProject.projectDir.toString()}/umpleonline/"
+  def testenv= ""
+  
+  if (project.hasProperty("hostName")){
+    host = hostName+"umpleonline/"
+  }
+  if (project.hasProperty("env")){
+    testenv = env
+  }
+  
+  doLast{
+    println("Testing "+host+"umple.php")
+    }
+  
+  def tempConfig = new File ("${rootProject.projectDir.toString()}/umpleonline/testsuite/spec/temp_config.txt")
+  tempConfig.write ("host_name "+host+"\n\t"+"umpleonline_directory "+baseDir+"\n\t"+"testing_env "+testenv)
+}
+task runRspec {
+  group = "Custom"
+  description = "Launches the umpleonline UI test through the command line"
+  doLast{
+    def failfastoption = "--no-fail-fast"
+    def tagArg = "~feature:testdebug"
+    def testOutputPath = "${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_umpleonline"
+  
+    if (project.hasProperty("tag")) tagArg = "feature:"+tag
+    if (project.hasProperty("failfast")){
+      if (failfast == true) failfastoption = "--fail-fast"
+    } 
+  
+    if (tagArg=="~feature:testdebug") println("Running all Rspec tests")
+    else println("RSpec tests with tag "+tagArg)
+  
+  
+    def result = exec {
+  	  workingDir "${rootProject.projectDir.toString()}/umpleonline/testsuite"
+  	  commandLine  'rspec', '-f', 'html', '-o', testOutputPath+"/index.html", '-t', tagArg, failfastoption, 'spec'
+  	  ignoreExitValue=true
+    }
+    delete "${rootProject.projectDir.toString()}/umpleonline/testsuite/spec/temp_config.txt"
+    if (result.getExitValue()==0){ println("No failures found.")
+     println("See test results in ${rootProject.projectDir.toString()}/dist/gradle/reports/testbed_umpleonline/index.html")
+    }
+    else {
+    	println("See test results in ${rootProject.projectDir.toString()}/dist/gradle/reports/testbed_umpleonline/index.html")
+    	throw new GradleException("Umpleonline tests failed.")
+    }
+
+   }
+}
+task doWebsiteTests {
+  dependsOn initTests
+  dependsOn runRspec
+}

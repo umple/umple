@@ -1,0 +1,83 @@
+// This is a more fully-featured state machine for
+// a garage door corresponding to the diagram
+// above
+class Garage {
+  Boolean entranceClear=true;
+  GarageDoor { 
+    Closed {
+      entry/{stopMotor();}  
+      entry/{triggerEnergySaveMode();}
+      exit/ {triggerNormalEnergyMode();}
+      pressButton -> /{turnLightOn();} Opening; 
+    }
+    Opening {
+      entry/{runMotorForward();}
+      openingCompleted -> Open;
+    }
+    Open {
+      entry/{stopMotor();}
+      // do {wait(60000); turnLightOff();}
+      pressButton [getEntranceClear()] -> Closing;
+    }
+    Closing {
+      entry/{runMotorInReverse();}
+      closingCompleted -> Closed;
+      pressButton -> /{flashLightOn();} Opening; 
+    }
+  }
+  
+  boolean runMotorInReverse() {
+     System.out.println(
+       "Running motor in reverse");
+    return true;
+  }
+  
+  boolean flashLightOn() {
+     System.out.println("Flashing light on");
+    return true;
+  }
+
+  boolean turnLightOn() {
+     System.out.println("Turning light on");
+    return true;
+  }
+  
+   boolean turnLightOff() {
+     System.out.println(
+       "Turning light off");
+    return true;
+  }
+  
+  boolean runMotorForward() {
+     System.out.println(
+       "Running motor forwards");
+    return true;
+  }
+
+  boolean triggerEnergySaveMode() {
+     System.out.println(
+       "Triggering Energy Saving Mode");
+    return true;
+  }
+
+  boolean stopMotor() {
+     System.out.println("Stopping motor");
+    return true;
+  }
+
+  boolean triggerNormalEnergyMode() {
+     System.out.println(
+       "Triggering Normal Energy Mode");
+         return true;
+  }
+  
+  boolean waitawhile() {
+    System.out.println("Waiting");
+    return true;
+  }
+  
+  boolean test() {
+          System.out.println("Testing");
+         return true;
+  }
+}

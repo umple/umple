@@ -1,0 +1,22 @@
+from Person import Person
+
+class Employee(Person):
+    def __init__(self, aName, aAge, aId):
+        super().__init__(aName, aAge)
+        self._id = aId
+
+    def setId(self, aId):
+        wasSet = False
+        self._id = aId
+        wasSet = True
+        return wasSet
+
+    def getId(self):
+        return self._id
+
+    def delete(self):
+        super().delete()
+
+    def __str__(self):
+        return str(super()) + "[" + "id" + ":" + self.getId() + "]"
+

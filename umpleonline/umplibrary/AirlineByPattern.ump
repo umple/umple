@@ -1,0 +1,72 @@
+/* Example of using builtin Umple pattern files
+*/
+
+use lib:AbstractionOccurrence.ump;
+use lib:TransportationPatternA.ump
+
+// This shows how a general pattern for
+// transportation can be adapted to
+// describe an airline
+
+
+class AirlineRoute {
+  isA Route <Stop = Airport>;
+}
+
+class RegularFlight {
+  isA RegularlyScheduledRun <
+    Route = AirlineRoute,
+    ScheduledStop = AirportStop
+   >;
+}
+
+class AirportStop {
+  isA ScheduledStop <Stop = Airport>;
+}
+
+class Airport {
+  isA Stop;
+}
+
+class SpecificFlight {
+  isA ActualRun <
+    RegularlyScheduledRun = RegularFlight,
+    Vehicle = Airplane
+  >;
+}
+
+class Airplane {
+  isA Vehicle;
+}
+//$?[End_of_model]$?
+
+namespace -;
+class AirlineRoute
+{
+  position 88 31 127.925003 59.887501;
+}
+
+class RegularFlight
+{
+  position 90 178 215.949997 95.487503;
+}
+
+class AirportStop
+{
+  position 422 171 230.925003 77.6875;
+}
+
+class Airport
+{
+  position 414 34 144.4375 59.887501;
+}
+
+class SpecificFlight
+{
+  position 99 342 165.074997 77.6875;
+}
+
+class Airplane
+{
+  position 425 356 139.087494 59.887501;
+}

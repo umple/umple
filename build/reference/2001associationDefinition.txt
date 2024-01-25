@@ -1,6 +1,7 @@
 Association Definition
 Associations
 noreferences
+@@tooltip Overview of Umple associations, and their various types
 
 @@description
 <p>      

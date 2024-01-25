@@ -1,0 +1,27 @@
+/* BcmsBaseConfiguration.ump
+ *
+ * This UML class diagram in Umple is for the
+ * bCMS car crash management system
+ * See http://cserg0.site.uottawa.ca/cma2012/CaseStudy.pdf
+ * and http://www.cs.colostate.edu/remodd/v1/content/repository-model-driven-development-remodd-overview
+ *
+ * Master file to build the base version of
+ * bCMS that has just one crisis and one
+ * police coordinator and one fire coordinator. 
+ * This file requires the referenced
+ * files to be present in the same directory.
+ */
+namespace bcms;
+
+use RoutesAndLocations.ump;
+
+use CoordinationStateMachine.ump;
+use BcmsCore.ump;
+
+class CrisisManagementSystem {
+  1 -> 0..1 Crisis;
+  1 -> 2 StationCoordinator;
+}
+
+//$?[End_of_model]$?
+// @@@skipcompile - there are many method calls that need adding to make this complete

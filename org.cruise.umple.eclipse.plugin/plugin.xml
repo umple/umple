@@ -134,6 +134,11 @@
                      style="push">
                </command>
                <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.generate.papyrus"
+                     label="Generate Papyrus Project"
+                     style="push">
+               </command>
+               <command
                      commandId="org.cruise.umple.eclipse.plugin.commands.umple.itself"
                      label="Generate Umple Internal Representation"
                      style="push">
@@ -146,6 +151,11 @@
                <command
                      commandId="org.cruise.umple.eclipse.plugin.commands.simple.metrics"
                      label="Generate Simple Metrics"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.cruise.umple.eclipse.plugin.commands.generate.papyrusToUmple"
+                     label="Papyrus to Umple"
                      style="push">
                </command>
             </menu>
@@ -230,6 +240,11 @@
             name="generate sql code">
       </command>
       <command
+            defaultHandler="commands.GeneratePapyrus"
+            id="org.cruise.umple.eclipse.plugin.commands.generate.papyrus"
+            name="generate Papyrus project">
+      </command>
+      <command
             defaultHandler="commands.GenerateUmpleItself"
             id="org.cruise.umple.eclipse.plugin.commands.umple.itself"
             name="generate umpleitself">
@@ -243,6 +258,11 @@
             defaultHandler="commands.GenerateSimpleMetrics"
             id="org.cruise.umple.eclipse.plugin.commands.simple.metrics"
             name="generate simple metrics">
+      </command>
+      <command
+            defaultHandler="commands.GenerateUmple"
+            id="org.cruise.umple.eclipse.plugin.commands.generate.papyrusToUmple"
+            name="Papyrus to Umple">
       </command>
    </extension>
    <extension

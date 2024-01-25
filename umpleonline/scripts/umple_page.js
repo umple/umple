@@ -9,7 +9,10 @@ Page = new Object();
 Page.selectedItem = null;
 Page.selectedClass = null;
 Page.selectedAssociation = null;
+Page.selectedTransition = null;
 Page.selectedGeneralization = null;
+Page.canEditTask = false;
+Page.canCreateTask = true;
 Page.codeEffect = null;
 Page.clickCount = 0;
 Page.repeatToolItem = false;
@@ -25,9 +28,6 @@ Page.modelLoadingCount = 0;
 Page.layoutLoadingCount = 0;
 Page.canvasLoadingCount = 0;
 Page.onLoadingCompleteCallbacks = [];
-
-Page.cursorPos = { line: 0, ch: 0 };
-Page.setUmpleCodeInvokedFirstTime = true;
 
 // Global options
 Page.readOnly = false; // initially allow editing
@@ -46,18 +46,27 @@ Page.showCanvas = true;
 Page.showTraits = false;
 Page.showTransitionLabels = false;
 Page.showGuardLabels = false;
+Page.showGuards = true;
 Page.modifiedDiagrams = false;
+Page.allowPinch = false;
+
 
 // The following is set called from umple.php
-Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault)
+Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask, doEditTask, doCreateTask)
 { 
+  if(performance.navigation.type == 2)
+  {
+    location.reload(true);
+  }
+  Page.canEditTask = doEditTask;
+  Page.canCreateTask = doCreateTask;
   Layout.isDiagramVisible = doShowDiagram;  
   Layout.isTextVisible = doShowText;  
   Layout.isPaletteVisible = doShowMenu;  
   Layout.isLayoutVisible = doShowLayout;
   Page.readOnly = doReadOnly;
 
-  TabControl.init()
+  TabControl.init();
   jQuery(".layoutListItem").hide();
 
   // Set diagram type - anything else means use the default editable class diagram
@@ -79,6 +88,15 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     jQuery(".view_opt_class").show();
 
   }
+  else if(diagramType == "GvClassTrait")   
+  {
+    Page.useGvClassDiagram = true;
+    Page.useEditableClassDiagram = false;
+    Page.setDiagramTypeIconState('GvClass');
+    Page.useGvFeatureDiagram = false;
+    Page.showTraits=true;
+    jQuery(".view_opt_class").show();
+  } 
   else if(diagramType == "GvFeature")   
   {
     Page.useGvFeatureDiagram = true;
@@ -99,6 +117,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   else
   {
     jQuery(".view_opt_class").show();
+    jQuery(".view_opt_class_palette").show();
   }
 
   jQuery.noConflict();
@@ -109,6 +128,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Page.initCanvasArea();
   Page.initUmpleTextArea();
   Page.initSourceCodeArea();
+  Page.initCodeExecutionArea();
   jQuery(document).ready(function() {
     DropboxInitializer.initializeDropbox();
     ToolTips.initTooltips();
@@ -117,6 +137,10 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   if(Page.readOnly) {jQuery("#" + Page.umpleCanvasId()).addClass("photoReady");}
 
   Action.loadFile();
+  if (doLoadTask)
+  {
+    Action.loadTask(jQuery("#model").val().split("-")[1], true); // load task instruction
+  }
   
   jQuery(generateDefault).prop("selected",true);
 };
@@ -131,20 +155,39 @@ Page.initPaletteArea = function()
   Layout.initPaletteSize();
   
   Page.initJQueryButton("buttonGenerateCode");
+  Page.initJQueryButton("buttonExecuteCode");
   Page.initJQueryButton("buttonStartOver");
+  Page.initJQueryButton("buttonShowRefreshUmpleOnlineCompletely")
+  Page.initJQueryButton("buttonLoadBlankModel");
   
   Page.initHighlighter("buttonAddClass");
   Page.initHighlighter("buttonAddAssociation");
+  Page.initHighlighter("buttonAddTransition");
   Page.initHighlighter("buttonAddGeneralization");
   Page.initHighlighter("buttonDeleteEntity");
   Page.initHighlighter("buttonPngImage");
   Page.initHighlighter("buttonYumlImage");
   Page.initHighlighter("buttonSimulateCode");
   Page.initHighlighter("buttonUigu");
+  Page.initHighlighter("buttonCopyClip");
   Page.initHighlighter("buttonCopy");
   Page.initHighlighter("buttonCopyEncodedURL");
+  Page.initHighlighter("buttonCopyCommandLine");
   Page.initHighlighter("buttonCopyLocalBrowser");
   Page.initHighlighter("buttonLoadLocalBrowser");
+  if (Page.canEditTask)
+  {
+    //Page.initHighlighter("buttonEditTask");
+    //Page.initHighlighter("buttonLoadThisTask");
+    Page.initHighlighter("buttonRequestAllZip");
+    Page.initHighlighter("buttonRequestLoadTaskURL");
+  }
+  if (Page.canCreateTask)
+  {
+    Page.initHighlighter("buttonCreateTask");
+  }
+  Page.initHighlighter("buttonLoadTask")
+  
   Page.initHighlighter("buttonDownloadFiles");
   Page.initHighlighter("buttonSmaller");
   Page.initHighlighter("buttonLarger");
@@ -154,13 +197,16 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonToggleAttributes");
   Page.initHighlighter("buttonToggleActions");
   Page.initHighlighter("buttonToggleTransitionLabels");
+  Page.initHighlighter("buttonToggleGuards");
   Page.initHighlighter("buttonToggleGuardLabels");
   Page.initHighlighter("buttonToggleTraits");
   Page.initHighlighter("buttonToggleFeatureDependency");
-
+  Page.initHighlighter("buttonallowPinch");
+  Page.initHighlighter("buttonReindent");
   
   Page.initToggleTool("buttonAddClass");
   Page.initToggleTool("buttonAddAssociation");
+  Page.initToggleTool("buttonAddTransition");
   Page.initToggleTool("buttonAddGeneralization");
   Page.initToggleTool("buttonDeleteEntity");
    
@@ -182,22 +228,42 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowHideCanvas");
   Page.initAction("buttonShowEditableClassDiagram");
   Page.initAction("buttonShowJointJSClassDiagram");
+    
   Page.initAction("buttonShowGvClassDiagram");
   Page.initAction("buttonShowGvStateDiagram");
   Page.initAction("buttonShowGvFeatureDiagram");//buttonShowGvFeatureDiagram
   Page.initAction("buttonShowStructureDiagram");
   Page.initAction("buttonShowHideLayoutEditor");
   Page.initAction("buttonManualSync");
+  Page.initAction("buttonCopyClip");
   Page.initAction("buttonCopy");
   Page.initAction("buttonCopyEncodedURL");
+  Page.initAction("buttonCopyCommandLine");
   Page.initAction("buttonCopyLocalBrowser");
   Page.initAction("buttonLoadLocalBrowser");
+  if (Page.canEditTask)
+  {
+    //Page.initAction("buttonEditTask");
+    //Page.initAction("buttonLoadThisTask");
+    Page.initAction("buttonRequestAllZip");
+    Page.initAction("buttonRequestLoadTaskURL");
+  }
+  if (Page.canCreateTask)
+  {
+    Page.initAction("buttonCreateTask");
+  }
+  Page.initAction("buttonLoadTask");
+
   Page.initAction("buttonDownloadFiles");
   Page.initAction("buttonUndo");
   Page.initAction("buttonRedo");
+  Page.initAction("buttonReindent");
   Page.initAction("buttonUigu");
   Page.initAction("buttonStartOver");
+  Page.initAction("buttonShowRefreshUmpleOnlineCompletely");
+  Page.initAction("buttonLoadBlankModel");
   Page.initAction("buttonGenerateCode");
+  Page.initAction("buttonExecuteCode");
   Page.initAction("buttonTabsCheckbox");
   Page.initAction("buttonSmaller");
   Page.initAction("buttonLarger");
@@ -209,13 +275,16 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleTraits");
   Page.initAction("buttonToggleFeatureDependency");
   Page.initAction("buttonToggleTransitionLabels");
+  Page.initAction("buttonToggleGuards");
   Page.initAction("buttonToggleGuardLabels");
+  Page.initAction("buttonAllowPinch");
     
   Page.initLabels();
 
   Page.enablePaletteItem("buttonUndo", false);
   Page.enablePaletteItem("buttonRedo", false);
   Page.enablePaletteItem("buttonSyncDiagram", false);
+  Page.enablePaletteItem("buttonAddTransition", false);
 
   jQuery("#genstatus").hide();
   jQuery("#buttonViewComplete").hide();
@@ -245,6 +314,15 @@ Page.initPaletteArea = function()
       jQuery("#linetext").hide();
     }
   }
+
+  // Only show execute code button for the Java language
+  jQuery("#inputGenerateCode").on('change', function() {
+    if(this.value.split(":")[1] === 'Java') {
+      jQuery("#buttonExecuteCode").show();
+    } else {
+      jQuery("#buttonExecuteCode").hide();
+    }
+  })
 }
 
 Page.initOptions = function()
@@ -258,10 +336,11 @@ Page.initOptions = function()
   jQuery("#buttonToggleAttributes").prop('checked',true);
   jQuery("#buttonToggleActions").prop('checked',true);
   jQuery("#buttonToggleTransitionLabels").prop('checked',false);
+  jQuery("#buttonToggleGuards").prop('checked',true);  
   jQuery("#buttonToggleGuardLabels").prop('checked',false);
-  jQuery("#buttonToggleTraits").prop('checked',false);
+  jQuery("#buttonToggleTraits").prop('checked',Page.showTraits);
   jQuery("#buttonToggleFeatureDependency").prop('checked',false);
-
+  jQuery("#buttonAllowPinch").prop('checked',false);
   
   if(Page.useEditableClassDiagram)
    jQuery("#buttonShowEditableClassDiagram").prop('checked', true);
@@ -396,9 +475,16 @@ Page.initUmpleTextArea = function()
   var modelEditor = jQuery("#umpleModelEditorText");
   var layoutEditor = jQuery("#umpleLayoutEditorText");
   
-  modelEditor.keyup(function(eventObject){Action.umpleTyped(eventObject);});
+  modelEditor.keyup(function(eventObject){
+    Action.freshLoad = false;
+    Action.umpleTyped(eventObject);
+  });
   modelEditor.mousedown(function(){setTimeout("jQuery(\"#linenum\").val(Action.getCaretPosition())",25)});
-  layoutEditor.keyup(function(eventObject){Action.umpleCodeMirrorTypingActivity();}); // Fixes Issue#1571 Editing on the layout editor will not update the Umple diagram
+  layoutEditor.keyup(function(eventObject){
+    Action.freshLoad = false;
+    Action.setjustUpdateNowtoSaveLater(false);
+    Action.umpleCodeMirrorTypingActivity();
+  }); // Fixes Issue#1571 Editing on the layout editor will not update the Umple diagram
   modelEditor.focus(function(){Action.focusOn("umpleModelEditorText", true);});
   layoutEditor.focus(function(){Action.focusOn("umpleLayoutEditorText", true);});
   modelEditor.blur(function(){Action.focusOn("umpleModelEditorText", false);});
@@ -411,22 +497,14 @@ Page.initUmpleTextArea = function()
 }
 
 Page.initCodeMirrorEditor = function() {
-  var foldFunc = CodeMirror.newFoldFunction(CodeMirror.braceRangeFinder);
   Page.codeMirrorEditor = CodeMirror.fromTextArea(
-     document.getElementById('umpleModelEditorText'),{
+    document.getElementById('umpleModelEditorText'),{
         lineNumbers: true,
         matchBrackets: true,
         readOnly: Page.readOnly,
         mode: "text/x-umple",
         lineWrapping: true,
-        onFocus: function(id, gained) {Action.focusOn("CodeMirror", true)},
-        onBlur: function(id, gained) {Action.focusOn("CodeMirror", false)},
-        onGutterClick: foldFunc,
-        onChange: function(ed, changes) {Action.umpleCodeMirrorTypingActivity();},
-        onCursorActivity: function() {
-          Page.codeMirrorEditor.setLineClass(Page.hLine, null);
-          Page.hLine = Page.codeMirrorEditor.setLineClass(Page.codeMirrorEditor.getCursor().line, "activeline");
-          Action.umpleCodeMirrorCursorActivity();},
+                   
         extraKeys: { // Change consistently in umple_action.js for Mousetrap
           "Ctrl-E": function(cm) {Page.clickShowEditableClassDiagram()},
           "Ctrl-J": function(cm) {Page.clickShowJointJSClassDiagram()},
@@ -445,12 +523,33 @@ Page.initCodeMirrorEditor = function() {
           "Ctrl-R": function(cm) {Page.clickToggleTraits()},
           "Ctrl-I": function(cm) {Page.clickToggleTransitionLabels()},
           "Ctrl-K": function(cm) {Page.clickToggleGuardLabels()},
+          "Ctrl-O": function(cm) {Action.copyCommandLineCode()},
           "Ctrl-B": function(cm) {Action.promptAndExecuteTest()},
           "Esc": function(cm) {cm.getInputField().blur()}
           }
         }
       );
-  Page.hLine = Page.codeMirrorEditor.setLineClass(0, "activeline");
+  // Event triggering changes for CodeMirror5
+  Page.codeMirrorEditor.on('focus', function (id, gained) {
+    Action.focusOn('CodeMirror', true);
+  });
+  Page.codeMirrorEditor.on('blur', function (id, gained) {
+    Action.focusOn('CodeMirror', false);
+  });
+  Page.codeMirrorEditor.on('gutterClick', function (id, theLine) {
+    Page.codeMirrorEditor.foldCode(theLine);
+  });
+  Page.codeMirrorEditor.on('change', function (ed, changes) {
+    Action.umpleCodeMirrorTypingActivity();
+  });
+  Page.codeMirrorEditor.on('cursorActivity', function () {
+    Page.codeMirrorEditor.addLineClass(Page.hLine, null);
+    Page.hLine = Page.codeMirrorEditor.addLineClass(
+    Page.codeMirrorEditor.getCursor().line,'activeline');
+    Action.umpleCodeMirrorCursorActivity();
+  });
+  // Event triggering events end here
+  Page.hLine = Page.codeMirrorEditor.addLineClass(0, "activeline");
   Page.codeMirrorOn = true;  
 }
 
@@ -557,10 +656,17 @@ Page.clickToggleFeatureDependency= function() {
 Page.clickToggleTransitionLabels = function() {
   jQuery('#buttonToggleTransitionLabels').trigger('click');
 }
-
+Page.clickToggleGuardLabels = function() {
+  jQuery('#buttonToggleGuards').trigger('click');
+}
 Page.clickToggleGuardLabels = function() {
   jQuery('#buttonToggleGuardLabels').trigger('click');
 }
+
+Page.clickAllowPinch = function() {
+  jQuery('#buttonAllowPinch').trigger('click');
+}
+
 
 Page.isPhotoReady = function()
 {
@@ -580,11 +686,34 @@ Page.initSourceCodeArea = function()
   jQuery(generatedCodeRowSelector).hide();
 }
 
+Page.initCodeExecutionArea = function()
+{
+  var executionAreaSelector = "#codeExecutionArea";
+  jQuery(executionAreaSelector).hide();
+}
+
+Page.showExecutionArea = function()
+{
+  var executionAreaSelector = "#codeExecutionArea";
+  jQuery(executionAreaSelector).show();
+}
+
+Page.hideExecutionArea = function()
+{
+  var executionAreaSelector = "#codeExecutionArea";
+  jQuery(executionAreaSelector).hide();
+}
+
 Page.hideGeneratedCode = function()
 {
   jQuery("#generatedCodeRow").hide();
   jQuery("#innerGeneratedCodeRow").hide();
   if(!Page.useStructureDiagram) jQuery("#svgCanvas").hide();
+}
+
+Page.hideGeneratedCodeOnly = function() {
+  jQuery("#generatedCodeRow").hide();
+  jQuery("#innerGeneratedCodeRow").hide();
 }
 
 Page.initCanvasArea = function()
@@ -601,9 +730,51 @@ Page.initCanvasArea = function()
 
   if (!Layout.isDiagramVisible) {Layout.showHideCanvas(false);}
 }
+//The purpose of this function is make sure the URL example argument selects the appropriate dropdown example
+Page.setExamples = function(ex)
+{
+  var exValue = ex+".ump"
+  jQuery("#inputExample").change(Action.loadExample);
+  jQuery("#inputExample option").each(function(){
+    if (this.value==exValue){
+      jQuery("#inputExample option[value = \""+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
+  )
+ 
+  jQuery("#inputExampleType").change(Action.setExampleType);
 
+  jQuery("#inputExample2").change(Action.loadExample);
+  jQuery("#inputExample2 option").each(function(){
+    if (this.value==exValue){
+      jQuery("#inputExample2 option[value = \""+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
+  )
+  
+  jQuery("#inputExample3").change(Action.loadExample);
+  jQuery("#inputExample3 option").each(function(){
+    if (this.value==exValue){
+      jQuery("#inputExample3 option[value = \""+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
+  )
+ 
+  jQuery("#inputExample4").change(Action.loadExample);
+  jQuery("#inputExample4 option").each(function(){
+    if (this.value==exValue){
+      jQuery("#inputExample4 option[value = \""+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
+  )
+}
 Page.initExamples = function()
 {
+ 
   jQuery("#inputExample").change(Action.loadExample);
   jQuery("#defaultExampleOption").attr("selected",true);
  
@@ -665,6 +836,11 @@ Page.enableDiagram = function(doEnable)
   Page.enablePaletteItem("buttonDeleteEntity", doEnable);
   Page.showDiagramSyncNeeded(!doEnable);
 }
+Page.enableTransition = function(doEnable)
+{
+    Page.enablePaletteItem("buttonAddTransition", doEnable);
+    Page.enablePaletteItem("buttonAddAssociation", !doEnable);
+}
 
 Page.enableEditDragAndResize = function(doEnable)
 {
@@ -711,6 +887,8 @@ Page.unselectAllToggleTools = function()
   if(temp) unselected = true;
   temp = DiagramEdit.removeNewAssociation();
   if(temp) unselected = true;
+  temp = DiagramEdit.removeNewTransition();
+  if(temp) unselected = true;
   temp = DiagramEdit.removeNewGeneralization();
   if(temp) unselected = true;
   
@@ -730,6 +908,7 @@ Page.selectToggleTool = function(toolSelected)
   {
     DiagramEdit.removeNewClass();
     DiagramEdit.removeNewAssociation();
+    DiagramEdit.removeNewTransition();
     DiagramEdit.removeNewGeneralization();
   }
   
@@ -768,7 +947,7 @@ Page.getUmpleCode = function()
 Page.getEncodedURL = function()
 {
   var server=window.location.href.split("?")[0];
-  if(server.substr(0,42)=="http://cruise.site.uottawa.ca/umpleonline/") {
+  if(server.substr(0,37)=="https://cruise.umple.org/umpleonline/") {
     server = "http://try.umple.org/";
   }
   return server+"?text=" + encodeURIComponent(Page.getUmpleCode());
@@ -800,22 +979,17 @@ Page.setUmpleCode = function(umpleCode, reason)
   jQuery("#umpleLayoutEditorText").val(modelAndPositioning[1]);
 
   if(Page.codeMirrorOn) {
-    // issue#1409  Set the cursor position after update code mirror text.
-    if (Page.setUmpleCodeInvokedFirstTime == true)
-    {
-      Page.setUmpleCodeInvokedFirstTime = false;
-      Page.cursorPos = Page.codeMirrorEditor.getCursor(true);
-    }
-    
-
-    if (DiagramEdit.textChangeQueue.length == 0) 
+    // issue#1409  Do not Set the umple code if codeChange is false(i.e. reason is false)
+    if (!((typeof reason === 'boolean') && reason == false))
     {
       Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
-      Page.codeMirrorEditor.setCursor(Page.cursorPos.line, Page.cursorPos.ch, false);
-      Page.setUmpleCodeInvokedFirstTime = true;
     }
   }
   jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
+
+  if (typeof reason === 'function'){
+    reason();
+  }
 }
 
 Page.setUmplePositioningCode = function(positioning)
@@ -833,6 +1007,103 @@ Page.createBookmark = function()
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
   window.location.href = "bookmark.php?model=" + Page.getModel();
+}
+
+Page.createTask = function()
+{
+  var taskName = jQuery("#taskName").val();
+  let patt = /^(\w|\.)+$/; // taskName Take only [ A-Z or a-z or 0-9 or _ or . ]
+  if (!patt.test(taskName))//taskName.indexOf(" ") != -1 || taskName.indexOf("/") != -1 || taskName.indexOf("-") != -1 || taskName.indexOf("\\") != -1) 
+  {
+    window.alert("Task Name can only contain letters(case insensitive), underscores, dots, and digits!");
+    return;
+  }
+  var requestorName = jQuery("#requestorName").val();
+  var instructions = jQuery("#instructions");
+  var completionURL = jQuery("#completionURL").val();
+  var isExperiment = jQuery("#isExperiment").is(':checked');
+  // jQuery("#labelInstructions").hide();
+  TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+  TabControl.saveActiveTabs();
+  Ajax.sendRequest("task.php",Page.createTaskCallback,format("taskName={0}&instructions={1}&model={2}&requestorName={3}&completionURL={4}&isExperiment={5}", 
+    taskName, instructions.val(), Page.getModel(), requestorName, completionURL, isExperiment));
+}
+
+
+Page.createTaskCallback = function(response)
+{
+  if (response.responseText.split(" ")[0] == "Task")
+  {
+    window.alert("Not able to create a task with that name. " + response.responseText);
+  }
+  else 
+  {
+    //window.alert("Successfully created a Task! Now you will be navaigate to task modfication page");
+    window.location.href = "umple.php?task=1&model=" + response.responseText;
+  }
+}
+
+Page.editTask = function()
+{
+  var instructions = jQuery("#instructions");
+  var taskName = jQuery("#model").val().split("-")[1];
+  var requestorName = jQuery("#requestorName").val();
+  var completionURL = jQuery("#completionURL").val();
+  var isExperiment = jQuery("#isExperiment").is(':checked');
+  TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+  TabControl.saveActiveTabs();
+  Ajax.sendRequest("task.php", Page.editTaskCallback, "edit=1&taskName=" + taskName + "&instructions=" + instructions.val() + "&model=" 
+    + Page.getModel() + "&requestorName=" + requestorName + "&completionURL=" + completionURL + "&isExperiment=" + isExperiment);
+  //window.location.href = "task.php?edit=1&taskName=" + taskName + "&instructions=" + instructions.val() + "&model=" + Page.getModel() + "&requestorName=" + requestorName;
+  //window.alert("Successfully edit Task " + taskName + "!");
+}
+
+Page.editTaskCallback = function(response)
+{
+  Page.setFeedbackMessage('Changes saved');
+}
+
+Page.cancelTaskResponse = function()
+{
+  var answer = confirm("Are you sure to cancel this task response?");
+  if (answer)
+  {
+    window.location.href = "task.php?cancelTaskResponse=1&model=" + Page.getModel();
+  }
+}
+Page.hideTask = function(){
+    jQuery("#taskArea").css("display","none");
+    jQuery("#labelTaskName").css("display","none");
+    jQuery("#taskNameCell").css("display","none");
+    jQuery("#instructions").css("display","none");
+    jQuery("#isExperimentCell").css("display","none");
+    jQuery("#isExperiment").attr("checked", false);
+    Layout.zoomResize();
+}
+Page.cancelTask = function(){
+   
+   if (jQuery("#completionURL").val()!='' || jQuery("#taskName").val()!='' || jQuery("#requestorName").val()!='' || jQuery("#instructions").val()!=''){
+
+    var answer = confirm ("Are you sure you want to end the task creation process?");
+	
+    if (answer){
+    jQuery("#taskName").val('');
+    jQuery("#requestorName").val('');
+    jQuery("#completionURL").val('');
+    jQuery("#instructions").val('');
+    Page.hideTask();
+    }
+    }
+    else{ Page.hideTask();}
+}
+
+Page.endTaskEdit = function() {
+  
+    var answer = confirm ("Are you sure you want to end the task editing process?");
+    if (answer){
+    	Page.hideTask();
+    }
+  
 }
 
 Page.toggleTabs = function()
@@ -938,6 +1209,7 @@ Page.resetCanvasSize = function()
   Page.setUmpleCanvasSize(Layout.minCanvasSize.width, Layout.minCanvasSize.height);
 }
 
+
 Page.getSelectedExample = function()
 {
   var inputExample = "";
@@ -1017,6 +1289,10 @@ Page.showViewDone = function()
   setTimeout(function() {jQuery(selector).dialog("close");}, 2000);
 }
 
+Page.showExecutedResponse = function(responseText) {
+  jQuery("#executionMessage").html(responseText);
+}
+
 Page.showGeneratedCode = function(code,language,tabnumber)
 {
 	// Default "tabnumber" parameter to null, ie. only output to the main codeblock
@@ -1039,7 +1315,7 @@ Page.showGeneratedCode = function(code,language,tabnumber)
 
   //Set the generated content
   if(language == "java" || language == "php" || language == "cpp" 
-    || language == "ruby" || language == "xml" || language == "sql" || language == "alloy" || language == "nusmv")
+    || language == "ruby" || language == "python" || language == "xml" || language == "sql" || language == "alloy" || language == "nusmv")
   {
 		jQuery("#innerGeneratedCodeRow" + tabnumber).html(
 			formatOnce('<pre class="brush: {1};">{0}</pre>',generatedMarkup,language)

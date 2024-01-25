@@ -1,0 +1,8 @@
+generate Python "../src-gen-umple";
+
+use ../../testbed/src/TestHarnessAssociations.ump;
+use ../../testbed/src/TestHarnessAttributesPython.ump;
+use ../../testbed/src/TestHarnessStateMachinePython.ump;
+use ../../testbed/src/TestHarnessPatternsImmutable.ump;
+use ../../testbed/src/TestHarnessConstraints.ump;
+use LocalHarness.ump;

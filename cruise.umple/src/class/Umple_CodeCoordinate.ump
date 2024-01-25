@@ -1,0 +1,293 @@
+
+namespace cruise.umple.compiler;
+
+class Coordinate
+{
+
+  public Point getTopLeft()
+  {
+    return new Point(x,y);
+  }
+
+  public Point getTopRight()
+  {
+    return new Point(x+width,y);
+  }
+
+  public Point getBottomLeft()
+  {
+    return new Point(x,y+height);
+  }
+
+  public Point getBottomRight()
+  {
+    return new Point(x+width,y+height);
+  }
+
+  public Point getTopMiddle()
+  {
+    return new Point(x+width/2,y);
+  }
+
+  public Point getBottomMiddle()
+  {
+    return new Point(x+width/2,y+height);
+  }
+
+  public Point getRightMiddle()
+  {
+    return new Point(x+width,y+height/2);
+  }
+
+  public Point getLeftMiddle()
+  {
+    return new Point(x,y+height/2);
+  }
+
+  public String whereIs(Coordinate neighbour)
+  {
+    int topDeltaY = getTopMiddle().getY() - neighbour.getBottomMiddle().getY();
+    int topDeltaX = getTopMiddle().getX() - neighbour.getBottomMiddle().getX();
+
+    int bottomDeltaY = neighbour.getTopMiddle().getY() - getBottomMiddle().getY();
+    int bottomDeltaX = getBottomMiddle().getX() - neighbour.getTopMiddle().getX();
+
+    if (topDeltaY > 0 && Math.abs(topDeltaY) > Math.abs(topDeltaX))
+    {
+      return "top";
+    }
+    else if (bottomDeltaY > 0 && Math.abs(bottomDeltaY) > Math.abs(bottomDeltaX))
+    {
+      return "bottom";
+    }
+    else if (neighbour.getX() < getX())
+    {
+      return "left";
+    }
+    else
+    {
+      return "right";
+    }
+  }
+
+  public int distanceTo(Coordinate other)
+  {
+    int a = other.getX() - getX();
+    int b = other.getY() - getY();
+    int c = (int) Math.round(Math.sqrt(Math.pow(a,2) + Math.pow(b,2)));
+    return c;
+  }
+
+  public String toString()
+  {
+    return "(" + getX() + "," + getY() + "," + getWidth() + "," + getHeight() + ")";
+  }
+
+  private void updateStatus()
+  {
+    if (x == -1 && y == -1 && width == -1 && height == -1)
+    {
+      setStatus(Status.Undefined);
+    }
+    else
+    {
+      setStatus(Status.Explicit);
+    }
+  }
+}
+
+
+mixset Coordinate { 
+// Fragment source file: Umple_Code.ump
+// Line : 360
+ class UmpleModel {
+    public Coordinate getDefaultClassPosition(int numDefaults)
+    {
+      int xIndex  = 0;
+      int yIndex = 0;
+      int yOffset = 0;
+      int xOffset = 0;
+
+      xIndex = (numDefaults-1) / (maxYLevels);
+      yIndex = (numDefaults-1) % (maxYLevels);
+      yOffset = (yIndex * levelOffset.getY()) + initialOffset.getY();
+      xOffset = (xIndex * levelOffset.getX()) + initialOffset.getX();
+
+      return new Coordinate(xOffset,yOffset,classSize.getWidth(),classSize.getHeight());
+    }
+
+    public Coordinate getDefaultInterfacePosition(int numDefaults)
+    {
+      int xIndex  = 0;
+      int yIndex = 0;
+      int yOffset = 0;
+      int xOffset = 0;
+
+      xIndex = (numDefaults-1) / (maxYLevels);
+      yIndex = (numDefaults-1) % (maxYLevels);
+      yOffset = (yIndex * levelOffset.getY()) + initialOffset.getY();
+      xOffset = (xIndex * levelOffset.getX()) + initialOffset.getX() + 2*classSize.getWidth();
+
+      return new Coordinate(xOffset,yOffset,classSize.getWidth(),classSize.getHeight());
+    }
+
+    public Coordinate[] getDefaultAssociationPosition(Association a)
+    {
+      Coordinate[] defaults = new Coordinate[2];
+      int offsetY = offsetFromEdge.getX();
+      int offsetX = offsetFromEdge.getY();
+
+      String classOne = a.getEnd(0).getClassName();
+      String classTwo = a.getEnd(1).getClassName();
+
+      mixset Trait {
+        if(getUmpleTraitTypeParameter(classOne) || getUmpleTrait(classOne)!=null) return null;
+        if(getUmpleTraitTypeParameter(classTwo) || getUmpleTrait(classTwo)!=null) return null;
+      }
+      Coordinate classOnePos = getUmpleClass(classOne).getCoordinates();
+      Coordinate classTwoPos = getUmpleClass(classTwo).getCoordinates();
+
+      if (classOne.equals(classTwo))
+      {
+        return getDefaultReflexiveAssociationPosition(a);
+      }
+
+      int num = 1;
+      String tempClass1 = "";
+      String tempClass2 = "";
+      for (Association temp : getAssociations())
+      {
+        tempClass1 = temp.getEnd(0).getClassName();
+        tempClass2 = temp.getEnd(1).getClassName();
+
+        if (temp.getName().equals(a.getName()) &&
+            tempClass1.equals(classOne)        &&
+            tempClass2.equals(classTwo))
+        {
+          break;
+        }
+
+        if (tempClass1.equals(classOne) && tempClass2.equals(classTwo)){ ++num; break; }
+        else if (tempClass1.equals(classTwo) && tempClass2.equals(classOne)){ ++num; break; }
+      }
+
+      Coordinate classOneNoX = new Coordinate(classOnePos.getX(),classOnePos.getY(),classOnePos.getWidth(),classOnePos.getHeight());
+      Coordinate classTwoNoX = new Coordinate(classTwoPos.getX(),classTwoPos.getY(),classTwoPos.getWidth(),classTwoPos.getHeight());
+      Coordinate classOneNoY = new Coordinate(classOnePos.getX(),classOnePos.getY(),classOnePos.getWidth(),classOnePos.getHeight());
+      Coordinate classTwoNoY = new Coordinate(classTwoPos.getX(),classTwoPos.getY(),classTwoPos.getWidth(),classTwoPos.getHeight());
+      classOneNoX.setX(0);
+      classTwoNoX.setX(0);
+      classOneNoY.setY(0);
+      classTwoNoY.setY(0);
+      String whereVert = classOneNoX.whereIs(classTwoNoX);
+      String whereHorz = classOneNoY.whereIs(classTwoNoY);
+
+      // alternative 1: left/right wall of class one to left/right wall of class two
+      int offsetOneX = whereHorz.equals("right")? classOnePos.getWidth() : 0;
+      int offsetTwoX = whereHorz.equals("right")? 0 : classTwoPos.getWidth();
+      int offsetOneY = num > 1 ? (num+1)*offsetY : offsetY;
+      int offsetTwoY = num > 1 ? (num+1)*offsetY : offsetY;
+      Coordinate offsetOne = new Coordinate(offsetOneX, offsetOneY, 0, 0);
+      Coordinate offsetTwo = new Coordinate(offsetTwoX, offsetTwoY, 0, 0);
+      Coordinate start = new Coordinate(classOnePos.getX() + offsetOne.getX(),
+          classOnePos.getY() + offsetOne.getY(),
+          0,0);
+      Coordinate end = new Coordinate(  classTwoPos.getX() + offsetTwo.getX(),
+          classTwoPos.getY() + offsetTwo.getY(),
+          0,0);
+
+      int distance = start.distanceTo(end);
+
+      // alternative 2: top/bottom wall of class one to top/bottom wall of class two
+      int altXOne = num*offsetX;
+      int altXTwo = num*offsetX;
+      int altYOne = whereVert.equals("top")? 0 : classOnePos.getHeight();
+      int altYTwo = whereVert.equals("top")? classTwoPos.getHeight() : 0;
+      Coordinate altOffsetOne = new Coordinate(altXOne, altYOne, 0, 0);
+      Coordinate altOffsetTwo = new Coordinate(altXTwo, altYTwo, 0, 0);
+      Coordinate altStart = new Coordinate(classOnePos.getX() + altOffsetOne.getX(),
+          classOnePos.getY() + altOffsetOne.getY(),
+          0,0);
+      Coordinate altEnd = new Coordinate(  classTwoPos.getX() + altOffsetTwo.getX(),
+          classTwoPos.getY() + altOffsetTwo.getY(),
+          0,0);
+
+      int altDistance = altStart.distanceTo(altEnd);
+
+      // choose alternative that generates the shortest line
+      if (altDistance < distance)
+      {
+        defaults[0] = altOffsetOne;
+        defaults[1] = altOffsetTwo;
+      }
+      else
+      {
+        defaults[0] = offsetOne;
+        defaults[1] = offsetTwo;
+      }
+
+      return defaults;
+    }
+
+    private Coordinate[] getDefaultReflexiveAssociationPosition(Association a)
+    {
+      Coordinate[] defaults = new Coordinate[2];
+      String name  = a.getEnd(0).getClassName();
+      Coordinate position = getUmpleClass(name).getCoordinates();
+
+      // determine which corner the association should be positioned at
+      int index = 0;
+      for (int i=0; i < numberOfAssociations(); i++)
+      {
+        Association current = getAssociation(i);
+        if (current.getEnd(0).getClassName().equals(name) && current.getEnd(1).getClassName().equals(name))
+        {
+          if (current.numberOfPositions() > 0)
+          {
+            if (current.getPosition(0).getStatus().equals(Coordinate.Status.Defaulted))
+            {
+              index += 1;
+            }
+          }
+        }
+      }
+
+      Coordinate offsetOne = new Coordinate(0,0,0,0);
+      Coordinate offsetTwo = new Coordinate(0,0,0,0);
+
+      if (index % 4 == 0)
+      {
+        offsetOne.setX(reflexiveSegmentLength);
+        offsetOne.setY(position.getHeight());
+        offsetTwo.setX(0);
+        offsetTwo.setY(position.getHeight() - reflexiveSegmentLength);
+      }
+      else if (index % 4 == 1)
+      {
+        offsetOne.setX(position.getWidth() - reflexiveSegmentLength);
+        offsetOne.setY(position.getHeight());
+        offsetTwo.setX(position.getWidth());
+        offsetTwo.setY(position.getHeight() - reflexiveSegmentLength);
+      }
+      else if (index % 4 == 2)
+      {
+        offsetOne.setX(position.getWidth() - reflexiveSegmentLength);
+        offsetOne.setY(0);
+        offsetTwo.setX(position.getWidth());
+        offsetTwo.setY(reflexiveSegmentLength);
+      }
+      else
+      {
+        offsetOne.setX(reflexiveSegmentLength);
+        offsetOne.setY(0);
+        offsetTwo.setX(0);
+        offsetTwo.setY(reflexiveSegmentLength);
+      }
+
+      defaults[0] = offsetOne;
+      defaults[1] = offsetTwo;
+
+      return defaults;
+    } } 
+
+}

@@ -1,0 +1,12 @@
+
+// this example traces attribute name whenever
+// its value is changed for 5 times 
+
+@SuppressWarnings("deprecation")
+class Student
+{
+  name;
+  trace name for 5;
+}
+//$?[End_of_model]$?
+// @@@skipphpcompile - Skipped due to issue 698

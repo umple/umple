@@ -1,0 +1,650 @@
+namespace cruise.umple.compiler;
+
+//---------------------------------------------------------------------------------------------
+//------------------------------------class start----------------------------------------------
+//---------------------------------------------------------------------------------------------
+class UmpleModel {
+ 
+  public UmpleTrait getUmpleTrait(String name){
+    for (UmpleTrait aTrait : getUmpleTraits())
+    {
+      if (aTrait.getName().equals(name))
+      {
+        return aTrait;
+      }
+    }
+    return null;
+  }
+  
+   public UmpleTrait addUmpleTrait(String name)
+  {
+    UmpleTrait newTrait = getUmpleTrait(name);
+    if (newTrait == null)
+    {
+      newTrait = new UmpleTrait(name, this);
+      addUmpleTrait(newTrait);
+    }
+    return newTrait;
+  }
+  
+}
+//---------------------------------------------------------------------------------------------
+//------------------------------------class end------------------------------------------------
+//---------------------------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------------------------
+//------------------------------------class start----------------------------------------------
+//---------------------------------------------------------------------------------------------
+class UmpleTrait {
+
+	public GeneralTPApplied getGeneralTPAppliedByName(String name){
+	    for (GeneralTPApplied gTPApplied : getGeneralTPApplieds()) {
+			if (gTPApplied.getInheritanceName().equals(name)) {
+				return gTPApplied;
+			}
+		}
+		return null;
+    }
+	public boolean hasGeneralTemplateParameter(String name){
+		for (GeneralTemplateParameter gtParameter : getGeneralTemplateParameters()) {
+			if (gtParameter.getName().equals(name)) return true;
+		}
+		return false;	
+	}
+
+  public boolean hasCascadeMethod (Method aMethod, Boolean inAbstract) {
+	  if (hasMethod(aMethod) && getMethod(aMethod).isIsAbstract() ==inAbstract ) return  true;
+	  if (hasExtendsTraits()) {
+		  for (UmpleTrait uTrait : getExtendsTraits()) {
+			  if (uTrait.hasCascadeMethod(aMethod,inAbstract)) {
+				  return true; 
+			  }
+		  }
+	  }	  
+	  return false;
+  }
+
+	public Attribute getAttribute(String name)
+  {
+    for (Attribute av : attributes)
+    {
+      if (av.getName().equals(name))
+      {
+        return av;
+      }
+    }
+    return null;
+  }
+
+  mixset Association {
+   public AssociationVariable getAssociationVariable(String name){
+    for (AssociationVariable av : associationVariables)
+    {
+      if (av.getName().equals(name))
+      {
+        return av;
+      }
+    }
+    return null;
+    }	
+  }
+    public boolean isImmutable(){
+    	return (iAmImmutable || ancestorIsImmutable);
+ 	}
+
+	public boolean setImmutable() {
+    
+   		boolean wasSet = false;
+    	
+    	if (extendsTraits != null && !ancestorIsImmutable) { return wasSet; }
+    	
+    	if (propagateImmutabilityToAllRelationships(true)) 
+    	{ 
+      	iAmImmutable = true;
+      	wasSet = true;
+    	}	
+    	
+    	return wasSet;
+ 	}
+ //**************************
+	private boolean propagateImmutabilityToAllRelationships(boolean isImmutable){
+	    if (isImmutable)
+	    {
+        mixset StateMachine {
+	      if (this.hasStateMachines()) { return false; } 
+        }
+        mixset Association {
+          for (AssociationVariable av : associationVariables)
+          {
+            if (!immutabilityAssociationRulesSatisfied(av, true)) { return false; }
+          }
+        }
+	    }	    
+	    return notifySubclassesAncestorImmutable(isImmutable);
+	}
+
+  mixset Association {
+   protected boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, boolean myTraitImmutable){
+    AssociationVariable relatedAV = myAV.getRelatedAssociation();
+    UmpleTrait relatedTrait = (relatedAV == null) ? null : relatedAV.getUmpleTrait();
+    boolean relatedTraitImmutable = (relatedTrait == null) ? false : ((relatedTrait == this) ? myTraitImmutable : relatedTrait.isImmutable());
+
+    return immutabilityAssociationRulesSatisfied(myAV, this, myTraitImmutable, relatedAV, relatedTrait, relatedTraitImmutable);
+  } 	
+
+   protected static  boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, UmpleTrait myTrait, boolean myTraitImmutable, AssociationVariable yourAV, UmpleTrait yourTrait, boolean yourTraitImmutable){
+    boolean satisfied = false;
+    if (myAV == null || yourAV == null)
+    {
+      satisfied = true;
+    }
+    else if (!myTraitImmutable && !yourTraitImmutable && !"immutable".equals(myAV.getModifier()) && !"immutable".equals(yourAV.getModifier()))
+    {
+      satisfied = true;
+    } 
+    else if (myAV.getIsNavigable() && yourAV.getIsNavigable())
+    {
+      //satisfied = false;
+    }
+    else if (myTrait == null && yourTrait == null)
+    {
+      satisfied = true;
+    }
+    else if (!yourAV.getIsNavigable() && (yourTrait == null || yourTraitImmutable))
+    {
+      if (yourTrait != null && yourTrait == myTrait && myAV.isMandatory())
+      {
+        // reflexive associations may not be mandatory:
+        //satisfied = false
+      }
+      else
+      {
+        satisfied = true;
+      }
+    }
+    else if (!myAV.getIsNavigable() && (myTrait == null || myTraitImmutable))
+    {
+      if (myTrait != null && yourTrait == myTrait && yourAV.isMandatory())
+      {
+        // reflexive associations may not be mandatory:
+        //satisfied = false
+      }
+      else
+      {
+        satisfied = true;
+      }
+    }
+    return satisfied;
+  }
+  }
+
+   private boolean notifySubclassesAncestorImmutable(boolean isImmutable){
+    boolean notified = true;
+    List<UmpleTrait> wereSet = new ArrayList<UmpleTrait>();
+    for (UmpleTrait subtrait : getSubTraits())
+    {
+      notified = subtrait.setAncestorIsImmutable(isImmutable);
+      if (!notified)
+      {
+        for (UmpleTrait wasSet : wereSet)
+        {
+          wasSet.setAncestorIsImmutable(!isImmutable);
+        }
+        return notified;
+      }
+    }
+    return notified;
+  }
+
+   protected boolean setAncestorIsImmutable(boolean isImmutable){
+    if (iAmImmutable)
+    {
+      ancestorIsImmutable = isImmutable;
+      return true;
+    }
+    else
+    {
+      boolean success = propagateImmutabilityToAllRelationships(isImmutable);
+      if (success) { ancestorIsImmutable = isImmutable; }
+      return success;
+    }
+  } 
+  
+  private boolean enforceImmutabilityInheritanceRules(UmpleTrait newSuperTrait){
+    // A subclass may not be immutable if the superclass is not immutable
+    if (iAmImmutable && newSuperTrait != null && !newSuperTrait.isImmutable()) { return false; }
+    boolean ancestorImmutable = (newSuperTrait == null) ? false : newSuperTrait.isImmutable();
+    return setAncestorIsImmutable(ancestorImmutable);
+  } 	
+  
+  public boolean setExtendsTrait(UmpleTrait aExtendsTrait)
+  {
+    boolean wasSet = false;
+    
+    if (!enforceImmutabilityInheritanceRules(aExtendsTrait)) { return false; }
+    //TODO I changed original code in order to run the program. Later, I should provide multi inheritance checking.
+    UmpleTrait existingExtendsTrait = extendsTraits.get(0);
+    extendsTraits.add(0, aExtendsTrait);
+    if (existingExtendsTrait != null && !existingExtendsTrait.equals(aExtendsTrait))
+    {
+      existingExtendsTrait.removeSubTrait(this);
+    }
+    if (aExtendsTrait != null)
+    {
+      aExtendsTrait.addSubTrait(this);
+    }
+    wasSet = true;
+    // line 727 "../../../../src/Umple_Code.ump"
+    if(aExtendsTrait!=null&&aExtendsTrait.getMethods()!=null)
+        for(Method method:aExtendsTrait.getMethods())
+        {
+          if(this.hasMethod(method))
+          {
+            Method aMethod = this.getMethod(method);
+            
+            if(aMethod.getMethodBody().getExtraCode("")==null||"".equals(aMethod.getMethodBody().getExtraCode("")))
+            {
+              aMethod.getMethodBody().setExtraCode("",method.getMethodBody().getExtraCode(""));
+              while(aMethod.hasMethodParameters())
+              {
+                aMethod.removeMethodParameter(aMethod.getMethodParameter(0));
+              }
+              for(MethodParameter mp:method.getMethodParameters())
+              {
+                aMethod.addMethodParameter(mp);
+              }
+              if(!"".equals(aMethod.getMethodBody().getExtraCode("")))
+              {
+                aMethod.setIsImplemented(false);
+              }
+            }
+          }
+        }
+    return wasSet;
+  }  
+
+   public Method getMethod(Method comparedMethod){
+    String methodName = comparedMethod.getName();
+    int numberOfParams = comparedMethod.getMethodParameters().size();
+    for (Method aMethod : this.getMethods()){
+      // Compare method names
+      if (aMethod.getName().equals(methodName)){  
+        // Now compare parameters
+        if (numberOfParams == aMethod.getMethodParameters().size())
+        {
+          boolean allSame = true;
+          for (int i = 0; i < numberOfParams; i++)
+          {
+            if(!aMethod.getMethodParameter(i).getType().equals(comparedMethod.getMethodParameter(i).getType()))
+            {
+              allSame = false;
+              break;
+            }
+          }
+          if(allSame)
+          {
+            return aMethod;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+mixset StateMachine {
+  public StateMachine getStateMachine(String name){
+    for (StateMachine sm : stateMachines)
+    {
+      if (sm.getName().equals(name))
+      {
+        return sm;
+      }
+    }
+    return null; 
+  }
+}
+ //**************************	
+  public boolean hasMethod(Method comparedMethod){
+  	if (getMethod(comparedMethod) != null) return true;
+	return false;
+  }
+
+
+//This section is related to codes which is going to support general templates for traits
+//--------------------------------------------------------------------------------------
+//----------------------------------start-----------------------------------------------
+	public boolean hasDefinedParameter(String name, String type) {
+		for (GeneralTemplateParameter gTparameter : getGeneralTemplateParameters()) {
+			if (gTparameter.getName().equals(name) && gTparameter.getType().equals(type)) return true;
+		}
+		return false;
+	}
+	
+	public void setDefinedParameterType(String name, String type) {
+		for (GeneralTemplateParameter gTparameter : getGeneralTemplateParameters()) {
+			if (gTparameter.getName().equals(name)) gTparameter.setType(type);
+		}
+	}
+
+	public Integer getGeneralTemplateParameterIndexByName(String name, String type) {
+		for (int i = 0; i<numberOfGeneralTemplateParameters();i++) {
+			if(getGeneralTemplateParameter(i).getName().equals(name) && getGeneralTemplateParameter(i).getType().equals(type)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	public GeneralTemplateParameter getGeneralTemplateParameterByName(String name) {
+    for (int i = 0; i<numberOfGeneralTemplateParameters();i++) {
+      if(getGeneralTemplateParameter(i).getName().equals(name)) {
+        return getGeneralTemplateParameter(i);
+      }
+    }
+    return null;
+  }
+//--------------------------------------------------------------------------------------
+//------------------------------------end-----------------------------------------------
+  
+}
+//---------------------------------------------------------------------------------------------
+//------------------------------------class end------------------------------------------------
+//---------------------------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------------------------
+//------------------------------------class start----------------------------------------------
+//---------------------------------------------------------------------------------------------
+class Attribute {
+
+  public Attribute(String aName, String aType, String aModifier, String aValue, boolean aIsAutounique, UmpleTrait aUmpleTrait)
+  {
+    super(aName, aType, aModifier, aValue);
+    isAutounique = aIsAutounique;
+    isUnique = false;
+    isList = false;
+    isDerived = false;
+    codeblock = null;
+    isLazy = false;
+    comments = new ArrayList<Comment>();
+    requirements = new ArrayList<Requirement>();
+    boolean didAddUmpleTrait = setUmpleTrait(aUmpleTrait);
+    if (!didAddUmpleTrait)
+    {
+      throw new RuntimeException("Unable to create attribute due to umpleTrait");
+    }
+    //TODO The following lines should be removed or used correctly for UmpleTrait;
+    // line 569 "../../../../src/Umple.ump"
+    codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();
+  }
+}
+//---------------------------------------------------------------------------------------------
+//------------------------------------class end------------------------------------------------
+//---------------------------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------------------------
+//------------------------------------class start----------------------------------------------
+//---------------------------------------------------------------------------------------------
+class UmpleClass {
+
+	public GeneralTPApplied getGeneralTPAppliedByName(String name) {
+		for (GeneralTPApplied gTPApplied : getGeneralTPApplieds()) {
+			if (gTPApplied.getInheritanceName().equals(name)) {
+				return gTPApplied;
+			}
+		}
+		return null;
+	}
+}
+//---------------------------------------------------------------------------------------------
+//------------------------------------class end------------------------------------------------
+//---------------------------------------------------------------------------------------------
+
+class CodeBlock
+{
+    /*
+    * @author Vahdat
+    */
+    public void ApplyTypeParameters(GeneralTPApplied inGeneralTPApplied, UmpleTrait inTrait){
+      if (inGeneralTPApplied == null && inTrait.numberOfGeneralTemplateParameters()==0) return;
+      Integer start=0,end=0;
+      boolean inProcess = false;
+      String internalCode = "";
+      for (String language : codes.keySet()) {
+        String code = codes.get(language);
+        start=0;
+        end=0;
+        inProcess = false;
+        internalCode = "";
+        for (int i=0;i<code.length();i++) {
+          if (code.charAt(i)=='#' &&!inProcess){
+            inProcess=true;
+            start = i;
+            continue;
+          }
+          if (code.charAt(i)=='#' && inProcess){
+          inProcess=false;
+          end=i;
+          String strTemp = code.substring(start+1, end);
+          Boolean replaced = false;
+          for(GeneralTemplateParameter gtp : inTrait.getGeneralTemplateParameters()){
+            if (strTemp.equals(gtp.getName())){
+              String newName = (inGeneralTPApplied!=null && inGeneralTPApplied.getParameterMapping().containsKey(gtp.getName())) ? inGeneralTPApplied.getParameterMapping().get(gtp.getName()) : gtp.getDefaultValue();
+              internalCode = internalCode+newName;
+              replaced = true;
+              break;
+            }
+          }
+          if (!replaced) {
+            internalCode = internalCode+"#"+strTemp;
+          } else{
+            continue;
+          }
+        }
+        if (!inProcess){
+          internalCode = internalCode+code.charAt(i);
+        }
+      }
+      codes.put(language, internalCode);
+    }
+  }
+}
+class GeneralTPApplied {
+	Map<String,String> parameterMapping = new HashMap<String,String>();
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+  private void ApplyTypeParametersToMethod(Method newMethod){
+	for (String strType : this.getParameterMapping().keySet()) {
+		String newName = this.getParameterMapping().get(strType);
+		if (newMethod.getType().equals(strType)){
+			newMethod.setType(newName);
+		}
+		for (int i = 0; i < newMethod.numberOfMethodParameters(); i++) {
+            if(newMethod.getMethodParameter(i).getType().equals(strType)){
+            	newMethod.getMethodParameter(i).setType(newName);
+            }
+	    }
+	}
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+	public GeneralTPApplied(GeneralTPApplied another) {
+    if (another == null) return;
+    this.parameterMapping = new HashMap<String, String>(another.parameterMapping);
+    this.inheritanceName = another.inheritanceName;
+    positions = another.positions; 
+    mixset StateMachine {
+      stateMachineModifiers = new ArrayList<>(another.getStateMachineModifiers());
+    }
+    parameters = new ArrayList<>( Arrays.asList(another.getParameters()));
+    methodTemplateSignatures = new ArrayList<>(another.getMethodTemplateSignatures());
+    mixset StateMachine {
+      stateMachineTemplateSignatures = new ArrayList<>(another.getStateMachineTemplateSignatures());
+    }
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+	boolean hasMethodTemplateSignature(MethodTemplateSignature inMTSignature) {
+		for (MethodTemplateSignature mTSignature : getMethodTemplateSignatures()) {
+			if (compareTwoMethdos(mTSignature.getMethod(),inMTSignature.getMethod())) return true;
+		}
+		return false;
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+mixset StateMachine {
+	boolean hasStateMachineTemplateSignature(StateMachineTemplateSignature inSMTSignature) {
+   for (StateMachineTemplateSignature smTSignature : getStateMachineTemplateSignatures()) {
+      if (smTSignature.getSrcStateMachine().equals(inSMTSignature.getSrcStateMachine()) && smTSignature.numberOfSrcStates()==inSMTSignature.numberOfSrcStates()){
+        boolean find = true;
+      for (int  i = 0; i<smTSignature.numberOfSrcStates() ;i++) {
+        if (!smTSignature.getSrcState(i).equals(inSMTSignature.getSrcState(i))) {
+          find = false;
+          break;
+        }
+      }
+      if (!find) continue;
+      //TODO I can raise a different error for each of the following conditions
+        if (smTSignature.getModifier().equals("-") && inSMTSignature.getModifier().equals("+")) return true;
+        if (smTSignature.getModifier().equals("+") && inSMTSignature.getModifier().equals("-")) return true;
+        if (smTSignature.getModifier().equals("-") && !inSMTSignature.getAlias().equals("")) return true;
+        if (!smTSignature.getAlias().equals("")     && inSMTSignature.getModifier().equals("-")) return true;
+        if (!smTSignature.getDesStateMachine().equals(inSMTSignature.getDesStateMachine()) && smTSignature.numberOfDesStates()==0 && inSMTSignature.numberOfDesStates()==0) return true;
+        if (smTSignature.getMethodTemplateSignature()==null && inSMTSignature.getMethodTemplateSignature()==null){
+          if (smTSignature.getAlias().equals(inSMTSignature.getAlias())){
+            if ((smTSignature.getModifier().equals("+")&&inSMTSignature.getModifier().equals("+"))||(smTSignature.getModifier().equals("-")&&inSMTSignature.getModifier().equals("-")) ){
+              return true;
+            }
+          }
+          if (!smTSignature.getAlias().equals(inSMTSignature.getAlias()) && !smTSignature.getAlias().equals("") && !inSMTSignature.getAlias().equals("")) return true; 
+          if (smTSignature.getDesStateMachine().equals(inSMTSignature.getDesStateMachine())) return true;     
+        }
+        if (smTSignature.getMethodTemplateSignature()!=null && inSMTSignature.getMethodTemplateSignature()!=null){
+          if (smTSignature.getMethodTemplateSignature().getMethod().compareWithTheMethod(inSMTSignature.getMethodTemplateSignature().getMethod())){
+            if (smTSignature.getAlias().equals(inSMTSignature.getAlias())){
+              if ((smTSignature.getModifier().equals("+")&&inSMTSignature.getModifier().equals("+"))||(smTSignature.getModifier().equals("-")&&inSMTSignature.getModifier().equals("-")) ){
+                return true;
+              }
+            } else return true;
+          }        
+      }     
+      }
+    }
+    return false;
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+	Boolean hasStateMachineModifier(StateMachineModifier inSMModifier) {
+	  for (StateMachineModifier smModifier : getStateMachineModifiers()) {  
+      if(inSMModifier instanceof EventModifier && smModifier instanceof EventModifier) {
+        if (inSMModifier.getModifier().equals(smModifier.getModifier())){
+          if( inSMModifier.getSrcStateMachine().equals(smModifier.getSrcStateMachine()) && Arrays.equals(  ((EventModifier)inSMModifier).getSrcStates(), ((EventModifier)smModifier).getSrcStates() ) && ((EventModifier)inSMModifier).getMethod().compareWithTheMethod(((EventModifier)smModifier).getMethod())  ) {
+            if (((EventModifier)inSMModifier).getGuard().isEqualTo(((EventModifier)smModifier).getGuard())){
+              //raise a warning that they are equal.
+              return true;
+            }
+          }
+        } else if( inSMModifier.getSrcStateMachine().equals(smModifier.getSrcStateMachine()) && Arrays.equals(  ((EventModifier)inSMModifier).getSrcStates(), ((EventModifier)smModifier).getSrcStates() ) && ((EventModifier)inSMModifier).getMethod().compareWithTheMethod(((EventModifier)smModifier).getMethod())  ) {
+          if (((EventModifier)inSMModifier).getGuard().isEqualTo(((EventModifier)smModifier).getGuard())){
+            //raise a error that they two operations cannot be applied to one state.
+            return true;         
+          }
+        }  
+      //---------------------------------------------------------------------------------------     
+      } else if(inSMModifier instanceof StateModifier && smModifier instanceof StateModifier) {
+        if (inSMModifier.getModifier().equals(smModifier.getModifier())){
+          if( inSMModifier.getSrcStateMachine().equals(smModifier.getSrcStateMachine()) && Arrays.equals(  ((StateModifier)inSMModifier).getSrcStates(), ((StateModifier)smModifier).getSrcStates()  )  ) {
+            //raise a warning that they are equal.
+            return true;
+          }
+        } else if( inSMModifier.getSrcStateMachine().equals(smModifier.getSrcStateMachine()) && Arrays.equals(  ((StateModifier)inSMModifier).getSrcStates(), ((StateModifier)smModifier).getSrcStates()  )  ){
+          //raise a error that they two operations cannot be applied to one state.
+          return true;
+        }
+      //---------------------------------------------------------------------------------------
+      } else if (inSMModifier instanceof StateMachineModifier && smModifier instanceof StateMachineModifier){
+        if (inSMModifier.getModifier().equals(smModifier.getModifier())){
+          if (inSMModifier.getSrcStateMachine().equals(smModifier.getSrcStateMachine())){
+            //raise a warning that they are equal.
+            return true;
+          }
+        } else if (inSMModifier.getSrcStateMachine().equals(smModifier.getSrcStateMachine())){
+          //raise a error that they two operations cannot be applied to one state.
+          return true;
+        }
+      //---------------------------------------------------------------------------------------  
+      } else if(inSMModifier instanceof ExtendStateByStateMachine && smModifier instanceof ExtendStateByStateMachine) {
+        //TODO: Explore this case more.
+      }
+    }
+	  return false;
+	}
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+  public MethodTemplateSignature hasMethod(Method inMethod){
+    for (MethodTemplateSignature mTSignature : getMethodTemplateSignatures()) {
+    		Method newMethod = new Method(mTSignature.getMethod());
+    		ApplyTypeParametersToMethod(newMethod);
+			if (compareTwoMethdos(newMethod,inMethod)) return mTSignature;
+		}
+	return null;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+  private boolean compareTwoMethdos(Method method1, Method method2){
+    if (method1.getName().equals(method2.getName())){
+		 // if(method1.getType().equals(method2.getType())){
+			  Integer numberOfParams = method1.getMethodParameters().size();
+			  if ( numberOfParams== method2.getMethodParameters().size()) {
+		          boolean allSame = true;
+		          for (int i = 0; i < numberOfParams; i++)
+		          {
+		            if(!method1.getMethodParameter(i).getType().equals(method2.getMethodParameter(i).getType()))
+		            {
+		              allSame = false;
+		              break;
+		            }
+		          }
+		          if(allSame)
+		          {
+		            return true;
+		          }
+		     }
+		 // }
+      }
+	  return false;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+mixset StateMachine {
+  public String getAssignedStateMachineNewName(String srName){
+    for (StateMachineTemplateSignature smTSignature : getStateMachineTemplateSignatures()) {
+      if (smTSignature.getSrcStateMachine().equals(srName) && smTSignature.getSrcStates().length==0 && smTSignature.getAlias()!="" ) return smTSignature.getAlias();
+    }
+    return "";
+  }
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+}
+
+class MethodTemplateSignature{
+  MethodTemplateSignature(MethodTemplateSignature another)
+  {
+    this.modifier = another.getModifier();
+    this.alias = another.getAlias();
+    this.method = new Method(another.getMethod());
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------
+//---------------------------------Start--------------------------------------
+}

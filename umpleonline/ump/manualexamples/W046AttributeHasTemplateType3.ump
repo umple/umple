@@ -1,6 +1,0 @@
-// The following shows how to avoid
-// the message using an association
-class A {
-  0..1 -- * OtherClass;
-}
-class OtherClass {}

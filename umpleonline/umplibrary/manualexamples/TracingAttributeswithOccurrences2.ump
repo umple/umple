@@ -1,0 +1,11 @@
+
+// this example traces attribute name whenever
+// its value is accessed for 5 times 
+
+@SuppressWarnings("deprecation")
+class Student
+{
+  name;
+  trace get name for 5;
+}
+// @@@skipphpcompile See issue 596 (PHP tracing causes issues)

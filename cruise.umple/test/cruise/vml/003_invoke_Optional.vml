@@ -1,8 +1,0 @@
-Concern C
-{
-  VariationPoint VP2 {
-    Kind: Optional;
-    do what;
-  }
-}
-invoke(C,VP2);

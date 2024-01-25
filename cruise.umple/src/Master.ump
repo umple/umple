@@ -22,16 +22,46 @@ strictness allow 36; // don't worry about multiplicity of directed associations
 strictness allow 170; // allow custom constructors
 strictness allow 31; // dont worry about namespaces
 
+
 use Documenter.ump;
 use Generator.ump;
 use Json.ump;
 use Parser.ump;
-use StateMachine.ump;
+// code below enables umple mixsets
+use Structure;
+use Trace;
+use Coordinate ;
+use Constraint;
+use StateMachine; 
+use Trait; 
+use Filter;
+use Mixset;
+use Template;
+use FIXML;
+use Layout;
+use Class; use Attribute; 
+use Method;
+use Association;
+use FeatureModel;
+use AspectInjection;
+
+mixset StateMachine {
+  use stateMachine/StateMachine.ump;
+  use Structure_StateMachine;
+}
 use Umlet.ump;
 use Umple.ump;
-use Trace.ump;
-use Structure.ump;
-use Template.ump;
+
+mixset Trace {
+  use trace/Trace.ump;
+}
+mixset Structure {
+  use strcture/Structure.ump;
+  use Structure_StateMachine;
+}
+mixset Template {
+  use template/Template.ump;
+}
 use UmpleDiagram.ump;
 use UmpleExceptions.ump;
 use util/UmpleHelper.ump;
@@ -41,7 +71,6 @@ use UmpleInternalParser.ump;
 use UmpleXtextParser.ump;
 use UmpleSync.ump;
 use Violet.ump;
-use Vml.ump;
 use UmpleImport.ump;
 //use Plugin.ump;
 
@@ -51,3 +80,8 @@ use util/Util_Code.ump;
 use util/Ant.ump;
 use Builder_Code.ump;
 use GraphWalking.ump;
+
+
+mixset FeatureModel {
+  require [Mixset];
+}

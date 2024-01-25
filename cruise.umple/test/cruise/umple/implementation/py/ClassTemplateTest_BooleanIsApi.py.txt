@@ -1,0 +1,19 @@
+class BoolTest():
+    def __init__(self, aTest):
+        self._test = aTest
+
+    def setTest(self, aTest):
+        wasSet = False
+        self._test = aTest
+        wasSet = True
+        return wasSet
+
+    def isTest(self):
+        return self._test
+
+    def getTest(self):
+        return self._test
+
+    def delete(self):
+        pass
+

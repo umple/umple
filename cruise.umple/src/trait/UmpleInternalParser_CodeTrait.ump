@@ -1,0 +1,2096 @@
+
+namespace cruise.umple.compiler;
+
+//************************************************************************************* 
+//************************************NEW CLASS****************************************
+//*************************************************************************************  
+class UmpleModel{
+
+boolean getUmpleTraitTypeParameter(String value) {
+	for(UmpleTrait uTrait : getUmpleTraits()){
+		for(GeneralTemplateParameter gTParameter : uTrait.getGeneralTemplateParameters()){
+			if (gTParameter.getName().equals(value)) return true;
+		}
+	}
+	return false;
+}
+//----------------------------------------------------------------------------  
+//---------------------------------Start--------------------------------------
+//----------------------------------------------------------------------------   
+}
+//************************************************************************************* 
+//************************************NEW CLASS****************************************
+//*************************************************************************************  
+class UmpleInternalParser
+{
+  after init  {
+    parser.addGrammarFile("/trait/umple_traits.grammar");
+  }
+
+//----------------------------------------------------------------------------  
+//---------------------------------Start--------------------------------------
+//----------------------------------------------------------------------------   
+
+  private boolean isUmpleTrait(String elementName){
+    return (model.getUmpleTrait(elementName) != null) ? true: false;
+  }
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private void analyzeTraitToken(Token t, int analysisStep)
+  {
+   if (analysisStep != 2)
+    {
+      shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
+      return;
+    }
+    if (t.is("traitDefinition"))
+    {
+      analyzeTrait(t);
+    }
+    
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private UmpleTrait analyzeTrait (Token traitToken) {
+   String traitName = traitToken.getValue("name").split(" ")[traitToken.getValue("name").split(" ").length-1];
+    //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
+    if (Token.isValidIdentifier(traitName, "[A-Za-z]") != true) {
+      setFailedPosition(traitToken.getPosition(), 200, traitName);
+    }
+    else if ( traitName.matches("[a-z].*") ){ // Warn when class name does not start with a capital letter.    
+      setFailedPosition(traitToken.getPosition(), 201, traitName);
+    }  
+    UmpleTrait aTrait;
+    aTrait = model.addUmpleTrait(traitToken.getValue("name"));
+    
+    Position thePosition = traitToken.getPosition();
+    Position endPosition = traitToken.getEndPosition();
+
+    // Set the original .ump file and line number
+    aTrait.addPosition(thePosition);
+    aTrait.addEndPosition(endPosition);
+    
+    // Add all the comments in the comment list to the Umple Trait.
+    // But add them before any umplesource special comments
+    int regularCommentCountEnd = 0;
+    for (Comment c : aTrait.getComments()) {
+      if(c.getText().startsWith("@umplesource")) break;
+      regularCommentCountEnd++;
+    }
+
+    for (Comment c : lastComments)
+    {
+      aTrait.addCommentAt(c,regularCommentCountEnd);
+      regularCommentCountEnd++;
+    }
+
+    for (Requirement r : lastRequirements)
+    {
+      aTrait.addRequirement(r);
+    }
+
+    // Add special position comment at the end if @outputumplesource had been 
+    // detected earlier in a comment
+    if(outputUmpleSource == true) {  
+      String path = null;
+      if( thePosition.getFilename() == null ){
+        path = "";
+      }else{
+        path = Paths.get(thePosition.getFilename()).getFileName().toString();
+      }
+      aTrait.addComment(new Comment("@umplesource " + path + " "+thePosition.getLineNumber()));
+    }
+    
+  	// If the "abstract" keyword is parsed, make the Umple trait an abstract trait.
+    if (traitToken.getValue("abstract") != null)
+    {
+      boolean wasSet = aTrait.setIsAbstract(true);
+      
+      // Ensure the value was set.
+      if (wasSet == false)
+      {
+//TODO 3 I should change the code of error
+        setFailedPosition(traitToken.getPosition(), 0, "Unable to make class abstract!");
+      }
+    }
+    
+	addExtendsTo(traitToken, aTrait, unlinkedExtends, unlinkedExtendsTokens);
+
+    // If the "singleton" keyword is parsed, make the Umple class a singleton.
+    if (traitToken.getValue("singleton") != null)
+    {
+      aTrait.setIsSingleton(true);
+    }
+    
+    if("".equals(aTrait.getPackageName())){
+      //If one day traits are going to be a modular-runtime elements and there is a need for package use, the following code can be useful.
+      //setFailedPosition(classToken.getPosition(), 30, aClass.getName(), currentPackageName);
+      //aClass.setPackageName(currentPackageName); 
+      aTrait.setPackageName(currentPackageName);
+  	}
+  	
+    if (aTrait.getIsSingleton()) 
+    {
+      traitToken.setName(traitToken.getName());  
+    }  
+	
+    if (traitToken.getValue("immutable") != null)
+    {
+      boolean wasSet = aTrait.setImmutable();
+      if (!wasSet)
+      {
+        // Future-proofing: currently all paths cause wasSet to be true
+//TODO 3 I should change the code of error    
+        setFailedPosition(traitToken.getPosition(), 14, traitToken.getName());
+      }
+    }
+
+   if (traitToken.getValue("traitParameters") != null ) {
+    	proccessGeneralTemplateParameters(traitToken.getSubToken("traitParameters"), aTrait);
+    }
+	
+    analyzeAllTokens(traitToken,aTrait);
+         
+    return aTrait; 
+  }
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private void analyzeAllTokens(Token rootToken, UmpleTrait aTrait){
+    int analysisStep = 0;
+    shouldProcessClassAgain = true;
+    do
+    {
+      analysisStep += 1;
+      shouldProcessClassAgain = false;
+      for(Token token : rootToken.getSubTokens())
+      {
+        analyzeToken(token,aTrait,analysisStep);
+        if (!getParseResult().getWasSuccess())
+        {
+          return;
+        }
+      }
+    }
+    while (shouldProcessClassAgain);
+  }
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private void analyzeToken(Token t, UmpleTrait aTrait, int analysisStep){
+
+  	analyzeCoreToken(t,aTrait,analysisStep);
+    analyzeTraitToken(t,aTrait,analysisStep);
+    mixset StateMachine {
+      analyzeStateMachineToken(t,aTrait,analysisStep);
+    }
+    analyzeDependentTokens(t,aTrait,analysisStep);
+  }
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+  private void analyzeCoreToken(Token t, UmpleTrait aTrait, int analysisStep){
+    
+  } 
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private void analyzeTraitToken(Token token, UmpleTrait aTrait, int analysisStep){
+    if (analysisStep != 1)
+    {
+      return;
+    }
+
+    // Only need to clear comments if there actually was comments.
+    boolean shouldConsumeComment = lastComments.size() > 0;
+
+    // Only need to clear requirements if there actually was requirements.
+    boolean shouldConsumeRequirement = lastRequirements.size() > 0;
+    
+    // Determine what the current token is primarily, and based on that the analysis procedure is determined.
+    if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
+    {
+      shouldConsumeComment = false;
+    }
+    mixset Mixset {
+      else if (token.is("mixsetDefinition"))
+      {
+        analyzeMixsetBodyToken(token);
+    
+      }
+    }
+    else if (token.is("testCase"))
+    {
+      analyzeTraitTestCaseToken(token, aTrait);
+   
+    }
+    
+    else if (token.is("inlineComment"))
+    {
+      analyzeComment(token, false);
+      shouldConsumeComment = addToLastAttributeOrAssociation(token);
+    }
+    else if (token.is("annotationComment"))
+    {
+      analyzeComment(token, true);
+      shouldConsumeComment = addToLastAttributeOrAssociation(token);
+    }
+    else if (token.is("multilineComment"))
+    {
+      analyzeMultilineComment(token);
+      shouldConsumeComment = false;
+    }
+    else if (token.is("reqImplementation"))
+    {
+      analyzeImplementReq(token);
+      shouldConsumeRequirement = isReqAddedToLast(token);
+    }
+    // TODO Under development
+    
+    else if (token.is("traitDefinition"))
+    {
+      UmpleTrait childTrait = analyzeTrait(token);
+      boolean wasSet = childTrait.addExtendsTrait(aTrait);
+      if (!wasSet)
+      {
+//TODO 4 I should change the code of error      
+        setFailedPosition(token.getPosition(), 16, childTrait.getName(), aTrait.getName());
+      }
+    }
+    else if (token.is("constantDeclaration"))
+    {
+      analyzeConstant(token,aTrait);
+    }
+    else if(token.is("constantDeclarationDeprecated"))
+    {
+//TODO 5 I should change the code of error    
+      setFailedPosition(token.getPosition(), 901);
+      analyzeConstant(token,aTrait);
+    }
+    else if (token.is("attribute"))
+    {
+      analyzeAttribute(token,aTrait);
+    }
+    else if (token.is("extraCode"))
+    {
+      analyzeExtraCode(token,aTrait);
+    }
+    else if (token.is("abstractMethodDeclaration"))
+    {
+      analyzeMethod(token,aTrait);
+    }
+    else if (token.is("concreteMethodDeclaration"))
+    {
+      analyzeMethod(token,aTrait);
+    }
+    else if (token.is("depend"))
+    {
+      Depend d = new Depend(token.getValue());
+      aTrait.addDepend(d);
+    }
+    mixset Association {
+      else if (token.is("inlineAssociation"))
+      {
+        analyzeinlineAssociation(token,aTrait);
+      }
+      else if (token.is("symmetricReflexiveAssociation"))
+      {
+        analyzeSymmetricReflexiveAssociation(token,aTrait);
+      }
+    }    
+    else if (token.is("exception"))
+    {
+      analyzeException(token,aTrait);
+    }
+
+    // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above
+    // classes, methods, attributes, etc (whichever comes next) rather than old comments propogating everywhere.
+    if (shouldConsumeComment)
+    {
+      lastComments.clear();
+    }
+    if (shouldConsumeRequirement)
+    {
+      lastRequirements.clear();
+    }
+  }
+  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+   private void analyzeAttribute(Token attributeToken, UmpleTrait aTrait){
+    boolean isAutounique = attributeToken.getValue("autounique") != null;
+    boolean isUnique = attributeToken.getValue("unique") != null;
+    boolean isLazy = attributeToken.getValue("lazy") != null;
+    boolean isIvar = attributeToken.getValue("ivar") != null;
+    boolean isConstant = "const".equals(attributeToken.getValue("modifier"));
+    boolean validName = Token.isValidIdentifier(attributeToken.getValue("name"));
+    boolean properName = !Token.isValidIdentifier(attributeToken.getValue("name"), "[A-Z]");
+    boolean looksLikeAssociation = attributeToken.getValue("name").contains("--") || attributeToken.getValue("name").contains("->");
+
+    looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("<-") || attributeToken.getValue("name").contains("..");
+    looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("*");
+    
+    String modifier = attributeToken.getValue("modifier");
+    String type = attributeToken.getValue("type");
+    String name = attributeToken.getValue("name");
+    String value = attributeToken.getValue("value");
+    String derivedValue = attributeToken.getValue("code");
+    
+    if(!validName)
+    {
+      if(looksLikeAssociation){      
+        setFailedPosition(attributeToken.getPosition(), 132, name);
+      } 
+      else if(isConstant){
+        setFailedPosition(attributeToken.getPosition(), 160, name);
+      }
+      else {
+        setFailedPosition(attributeToken.getPosition(), 130, name);
+      }
+      
+      return;
+    }
+      
+    
+    if(!properName && !isConstant){
+      setFailedPosition(attributeToken.getPosition(), 131, name);
+    }
+    else if(properName && isConstant){
+      setFailedPosition(attributeToken.getPosition(), 161, name);
+    }
+    
+    //allow singleton with constant and predefined variables
+    if (aTrait.getIsSingleton() && !isConstant && !isLazy && (value == null)) 
+    {
+      isLazy = true;
+      setFailedPosition(attributeToken.getPosition(), 1, name);
+    }
+    
+    // check to see if type has angle brackets <>
+    if (type != null)
+    {
+      int lang_pos = type.lastIndexOf('<');
+      int rang_pos = type.lastIndexOf('>');
+      if (lang_pos > 0 && rang_pos > 0 && lang_pos < rang_pos)
+      {
+//TODO 6 I should change the code of error      
+        setFailedPosition(attributeToken.getPosition(), 46, name, aTrait.getName(), type);
+      }
+    }
+    
+    if (isLazyRedundant(isLazy, value))
+    {
+//TODO 7 I should change the code of error
+      setFailedPosition(attributeToken.getPosition(), 3, aTrait.getName(), name);
+    }
+
+    for(Attribute aAttribute : aTrait.getAttributes()){
+      if (aAttribute.getName().equals(name)){
+//TODO 8 I should change the code of error    
+        setFailedPosition(attributeToken.getPosition(), 22, aTrait.getName(), name);
+      }
+    }
+    CodeBlock languageSpecificCode = new CodeBlock();
+    if (derivedValue != null)
+    {
+      value = "";
+      List<String> codelangs = new ArrayList<String>();
+      for(Token tkn: attributeToken.getSubTokens())
+      {
+      if(tkn.is("codeLang"))
+      {
+        codelangs.add(tkn.getValue());
+      } else if(tkn.is("code")) {
+        if(codelangs.isEmpty())
+        {
+          languageSpecificCode.setCode(tkn.getValue());
+        } else {
+          for(String lang: codelangs)
+          {
+            languageSpecificCode.setCode(lang, tkn.getValue());
+          }
+          codelangs.clear();
+        }
+      }
+      }
+    }
+
+    if ("defaulted".equals(modifier) && value == null)
+    {
+      setFailedPosition(attributeToken.getPosition(), 6, attributeToken.getValue("name"));
+      return;
+    }
+
+    if (isUnique)
+    {
+      UniqueIdentifier uniqueIdentifier = new UniqueIdentifier(name,type,modifier,value);
+      aTrait.setUniqueIdentifier(uniqueIdentifier);
+    }
+
+    if (isAutounique)
+    {
+      type = "Integer";
+    }
+
+    if(type != null)
+    { 
+      Matcher m = Pattern.compile("([a-zA-Z_][0-9a-zA-Z_]*(<(.*)>)?)").matcher(type);
+      if(!m.matches()) 
+      {
+        setFailedPosition(attributeToken.getPosition(), 140, type);
+        return;
+      }
+    }
+        
+    if(type != null && value != null)
+    {
+      if(!compareTypeToValue(type,value))
+      {
+        setFailedPosition(attributeToken.getPosition(),141,type,value);  
+      }
+    }
+    else if (type == null && value != null)
+    {
+      type = inferType(value, type);
+    }
+    else if(type == null)
+    {
+      type = "String";
+    }
+
+
+    if(attributeToken.getValue("modifier") != null)
+    {
+      if((attributeToken.getValue("modifier").contains("const")) && (attributeToken.getValue("value") == null))
+      {
+        value = defaultConstantValue(type, attributeToken);
+      }
+    }
+
+    Attribute attribute = new Attribute(name,type,modifier,value,isAutounique,aTrait);
+    attribute.setIsUnique(isUnique);
+    attribute.setIsLazy(isLazy);
+	attribute.setIsIvar(isIvar);
+    boolean isList = attributeToken.getValue("list") != null;
+
+    if (name == null)
+    {
+      String rawName = StringFormatter.toCamelCase(type); 
+      name = isList ? model.getGlossary().getPlural(rawName) : rawName;
+    }
+
+    if (derivedValue != null)
+    {
+      attribute.setEndPosition(attributeToken.getEndPosition());
+      attribute.setIsDerived(true);
+      attribute.setCodeblock(languageSpecificCode);
+    }
+
+    // set position regardless of derivedValue    
+    attribute.setPosition(attributeToken.getPosition());
+
+    attribute.setIsList(isList);
+
+    // Add comments above the attribute to the attribute.
+    for (Comment c : lastComments)
+    {
+      attribute.addComment(c);
+    }
+    for (Requirement r : lastRequirements)
+    {
+      attribute.addRequirement(r);
+    }
+    
+    // set the last attribute made to be attribute, clear lastassoc
+    lastattr = attribute;
+    lastassoc = null;
+  }  
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+   private void analyzeExtraCode(Token token, UmpleTrait aTrait){
+    //This is a catch all and will be used less often as the grammar gets updated.
+    
+    mixset StateMachine {
+      if(extraCodeIsMalformedStateMachine(token)) setFailedPosition(token.getPosition(), 1006, "");
+    }
+    //Append #line comment to indicate line and position of source
+    if (token.getPosition() != null)
+    {
+      String extraCodeLineNumberComment = " line " + token.getPosition().getLineNumber() + " " + aTrait.getRelativePath(token.getPosition().getFilename(),"Java");
+	  String rubyComment = "#" + extraCodeLineNumberComment;
+	  String otherComment = "//" + extraCodeLineNumberComment;
+ 	  if(aTrait.hasExtraCode())
+	  {
+	    rubyComment = System.getProperty("line.separator") + rubyComment;
+	    otherComment = System.getProperty("line.separator") + otherComment;
+	  }
+      CodeBlock cb = new CodeBlock();
+      cb.setCode(otherComment);
+      cb.setCode("Ruby", rubyComment);
+      aTrait.appendExtraCode(true,cb);
+      aTrait.appendExtraCode("  " + token.getValue());
+      // Issue 516 Fix : Michael Kmicik
+      setFailedPosition(token.getPosition(), 1007, token.getValue("name"));
+    }
+    else
+    {
+      aTrait.appendExtraCode(token.getValue());
+      // Issue 516 Fix : Michael Kmicik
+      setFailedPosition(token.getPosition(), 1007, token.getValue("name"));
+    }
+  }
+  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+mixset Association {
+   private void analyzeinlineAssociation(Token inlineAssociationToken, UmpleTrait aTrait){
+    
+    Association association = analyzeAssociation(inlineAssociationToken,aTrait.getName());
+
+    if (!getParseResult().getWasSuccess())
+    {
+      return;
+    }
+
+    AssociationEnd myEnd = association.getEnd(0);
+    AssociationEnd yourEnd = association.getEnd(1);
+
+    AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
+    myAs.setIsComposition(association.getIsLeftComposition());
+    AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
+    yourAs.setIsComposition(association.getIsRightComposition());
+
+    myAs.setRelatedAssociation(yourAs);
+    
+    if(!"".equals(myEnd.getPriority())) { myAs.setPriority(myEnd.getPriority()); }
+    if(!"".equals(yourEnd.getPriority())) { yourAs.setPriority(yourEnd.getPriority()); }
+    
+    if (association.isImmutable())
+    {
+      boolean set = myAs.setImmutable();
+      if (set)
+      {
+        yourAs.setImmutable();
+      }
+      else
+      {
+      	//TODO traits' errors
+        setFailedPosition(inlineAssociationToken.getPosition(),17);
+      }
+    }
+
+    // Add comments above the association to the association.
+    for (Comment c : lastComments)
+    {
+      yourAs.addComment(c);
+    }
+
+    for (Requirement r : lastRequirements)
+    {
+      yourAs.addRequirement(r);
+    }
+    
+    // set last association made to be yourAs. clear lastattr.
+    lastassoc = yourAs;
+    lastassocPosition = inlineAssociationToken.getPosition();
+    lastattr = null;
+    
+
+    boolean added = aTrait.addAssociationVariable(yourAs);
+    if (added)
+    {
+      unlinkedAssociationVariables.add(yourAs);
+      aTrait.addAssociation(association);
+    }
+    else
+    {
+      if (aTrait.isImmutable()) {
+      	//TODO traits' errors
+      	setFailedPosition(inlineAssociationToken.getPosition(),17);
+      } else {
+      	//TODO traits' errors
+      	setFailedPosition(inlineAssociationToken.getPosition(),13);
+      }
+    }
+    
+  }
+
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+   private void analyzeSymmetricReflexiveAssociation(Token symmetricReflexiveAssociationToken, UmpleTrait aTrait){
+    /*
+    String myName = symmetricReflexiveAssociationToken.getValue("roleName");
+    String myType = aTrait.getName();
+    String myModifier = "symmetricreflexive";
+    String myBound = symmetricReflexiveAssociationToken.getValue("bound");
+    String myLowerBound = symmetricReflexiveAssociationToken.getValue("lowerBound");
+    String myUpperBound = symmetricReflexiveAssociationToken.getValue("upperBound");
+    Multiplicity myMult = new Multiplicity();
+    myMult.setBound(myBound);
+    myMult.setRange(myLowerBound,myUpperBound);
+
+    AssociationVariable myAs = new AssociationVariable(myName,myType,myModifier,null,myMult,true);
+    AssociationVariable yourAs = new AssociationVariable(myName,myType,myModifier,null,myMult,true);
+
+    myAs.setRelatedAssociation(yourAs);
+    aTrait.addAssociationVariable(yourAs);
+    
+    AssociationEnd leftEnd = new AssociationEnd(null,myType,myModifier,myType,myMult);
+    AssociationEnd rightEnd = new AssociationEnd(myName,myType,myModifier,myType,myMult);
+    Association assoc = new Association(false, true, false, false, leftEnd, rightEnd);
+    aTrait.addAssociation(assoc);
+    */
+  } 
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private void analyzeException(Token exception, UmpleTrait aTrait){
+    Token sub = exception.getSubToken(0);
+    if(sub.is("misnamedAttribute"))
+    {
+      if(!Token.isValidIdentifier(sub.getValue("name")))
+      {
+        boolean looksLikeAssociation = sub.getValue("name").contains("--") || sub.getValue("name").contains("->");
+        looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("<-") || sub.getValue("name").contains("..");
+        looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("*");
+        if(looksLikeAssociation)
+        {
+          setFailedPosition(sub.getPosition(), 132, sub.getValue("name"));
+        }
+        else 
+        {
+          setFailedPosition(sub.getPosition(), 130, sub.getValue("name"));
+        }
+        return;
+      }
+      if(Token.isValidIdentifier(sub.getValue("name"), "[A-Z]"))
+      {
+        setFailedPosition(sub.getPosition(), 131, sub.getValue("name"));
+      }
+      String type = sub.getValue("type");
+      if(type!=null)
+      {
+        if(!Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w|<|>|,)*", type))
+        {
+          setFailedPosition(sub.getPosition(), 140, type);
+        }
+      }
+    }
+    else if(sub.is("malformedStatement1")||sub.is("malformedStatement2"))
+    {
+      String extraCode = "";
+      for(Token token:sub.getSubTokens())
+      {
+        if(token.is("stuff"))
+        {
+          extraCode += token.getValue()+ " ";
+        }
+      }
+      if(sub.getValue("innerstuff")!=null)
+      {
+        extraCode += "{"+sub.getValue("innerstuff")+"};";
+      }
+      else
+      {
+        extraCode += ";";
+      }
+
+      final String relativePath = aTrait.getRelativePath(exception.getPosition().getFilename(),"Java");
+      CodeBlock cb = new CodeBlock();
+      String rubyComment = ("# line " + exception.getPosition().getLineNumber() + " " + relativePath);
+      String otherComment = ("// line " + exception.getPosition().getLineNumber() + " " + relativePath);
+
+      cb.setCode(otherComment);
+      cb.setCode("Ruby", rubyComment);
+
+      aTrait.appendExtraCode(true,cb);
+      aTrait.appendExtraCode("  "+extraCode+"\n");
+
+      setFailedPosition(sub.getPosition(), 1007, sub.getValue("name"));
+    }
+    mixset StateMachine {
+    else if(sub.is("malformedStatemachine1")||sub.is("malformedStatemachine2"))
+    {
+      String extraCode = "";
+      for(Token token:sub.getSubTokens())
+      {
+        if(token.is("stuff"))
+        {
+          if(!"".equals(token.getValue())&&!token.getValue().contains(" ")&&!Token.isValidIdentifier(token.getValue()))
+          {
+            setFailedPosition(token.getPosition(), 150, token.getValue("name"));
+          }
+          extraCode += token.getValue()+ " ";
+        }
+      }
+      extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
+      aTrait.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + aTrait.getRelativePath(exception.getPosition().getFilename(),"Java"));
+      aTrait.appendExtraCode("  "+extraCode+"\n");
+      setFailedPosition(sub.getPosition(), 1006, sub.getValue("name"));
+    }
+    else if(sub.is("malformedMethod"))
+    {
+      String extraCode = "";
+      for(Token token:sub.getSubTokens())
+      {
+        if(token.is("stuff"))
+        {
+          extraCode += token.getValue()+ " ";
+        }
+      }
+      extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
+      aTrait.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + aTrait.getRelativePath(exception.getPosition().getFilename(),"Java"));
+      aTrait.appendExtraCode("  "+extraCode+"\n");
+      setFailedPosition(sub.getPosition(), 1008, sub.getValue("name"));
+    }
+    }
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+   private void analyzeDependentTokens(Token t, UmpleTrait inTrait, int analysisStep){
+    if(analysisStep == 1 || shouldProcessClassAgain)
+    {
+      shouldProcessClassAgain = true;
+      return;
+    }
+
+    // Methods after this point will occur on analysisStep > 1
+    
+    if (t.is("invariant"))
+    {
+      analyzeInvariant(t,inTrait);
+    }
+    mixset AspectInjection {
+      else if (t.is("beforeCode") || t.is("afterCode"))
+      {
+      //TODO should applied for traits
+        analyzeInjectionCode(t,inTrait);
+      }
+    }
+    else if (t.is("key") || t.is("defaultKey"))
+    {
+    //TODO should applied for traits
+    //  analyzeKey(t,aClass);
+    }
+    //analyzeTraceToken(t,aClass);
+    mixset Layout {
+      analyzeLayoutToken(t,inTrait,analysisStep);
+    }
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+
+  private void applyTraits(){
+    //semantic analysis of traits
+    //----------------------------------
+    checkTemplateParametersValidity();
+    //---------------------------------
+    if (getParseResult().getWasSuccess()) {
+      for (UmpleClass uClass : getModel().getUmpleClasses()) {
+        if (uClass.hasExtendsTraits()) {
+          if (getParseResult().getWasSuccess()) copyAttributesFromTraitsToClass(uClass);
+          if (getParseResult().getWasSuccess()) copyMethodsFromTraitToClass(uClass);
+          mixset Association {
+            if (getParseResult().getWasSuccess()) copyAssociationsFromTraitToClass(uClass);
+          }
+          mixset StateMachine {
+          if (getParseResult().getWasSuccess()) copyStateMachinesFromTraiToClass(uClass);
+          }
+          if (getParseResult().getWasSuccess()) copyTestCasesFromTraitsToClass(uClass);
+          if (getParseResult().getWasSuccess()) {
+            for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
+              recursiveApplyTraits(uClass,uTrait);
+              if ( ! getParseResult().getWasSuccess() ) return;  
+            }  
+          }
+        }
+      }
+      if (getParseResult().getWasSuccess()) checkAllRequiredMethodsAndInterfaces();
+    }	
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private void recursiveApplyTraits(UmpleClass inClass, UmpleTrait inTrait) {
+	  if (inTrait.hasExtendsTraits()) {
+		  applyTraitProperties(inClass, inTrait);
+		  for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+			  recursiveApplyTraits(inClass,uTrait);
+		  }
+	  } else {
+		  applyTraitProperties(inClass, inTrait);
+	  }
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------    
+private void copyMethodsFromTraitToClass(UmpleClass inClass){
+    Map<UmpleTrait, List<Method>> traitMethods = new HashMap<UmpleTrait, List<Method>>();
+	Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
+	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
+		checkClassSupportTraitsInterfaces(inClass.getGeneralTPAppliedByName(uTrait.getName()),inClass);
+		if ( ! getParseResult().getWasSuccess() ) return;
+		tempTraitMethods = gatherConcreteMethods(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()));
+		if ( ! getParseResult().getWasSuccess() ) return;
+		checkMethodComeFromTraitsIsAvaiableInClass(tempTraitMethods,inClass);
+		if (CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(traitMethods,tempTraitMethods,inClass)) return;
+		AddMethodMapToAnother(traitMethods,tempTraitMethods);
+	}
+	for (UmpleTrait t1 : traitMethods.keySet()) {
+		for (Method method : traitMethods.get(t1)) {
+			method.getComment(2).setText(method.getComment(2).getText()+"'"+inClass.getName()+"' ");
+			method.setSource(Method.Source.fTrait);
+			inClass.addMethod(method);   
+		}
+	}
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppliedByName, UmpleClassifier inUmpleClassifier) {
+	if (inGeneralTPAppliedByName == null) return;
+	String type = "class";
+	if (inUmpleClassifier instanceof UmpleTrait) {type = "trait";} 
+	for (GeneralTemplateParameter gtParameter : model.getUmpleTrait(inGeneralTPAppliedByName.getInheritanceName()).getGeneralTemplateParameters()){
+		String bindingValue= inGeneralTPAppliedByName.getParameterMapping().get(gtParameter.getName());
+		if (bindingValue==null && gtParameter.getDefaultValue()!=null) continue;
+		if (bindingValue.equals("Boolean")| bindingValue.equals("Integer") | bindingValue.equals("Float") | bindingValue.equals("String")| bindingValue.equals("Double")| bindingValue.equals("Date")| bindingValue.equals("Time")){
+			if (gtParameter.numberOfInterfacesAndClass()>0){
+				getParseResult().addErrorMessage( new ErrorMessage( 221, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName()) ); 
+			 	return;	
+			}
+			
+		} else {
+			UmpleClass uClass = model.getUmpleClass(bindingValue);
+			UmpleInterface uInterface = model.getUmpleInterface(bindingValue);
+			if (uClass==null & uInterface==null){
+				getParseResult().addErrorMessage( new ErrorMessage( 221, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName()) ); 
+			 	return;
+			} else {
+				for (String str : gtParameter.getInterfacesAndClass()){
+					if (getModel().getUmpleClass(str)!=null) {
+						if (!checkClassExtensionInHierarchy(uClass,str)) {
+							getParseResult().addErrorMessage( new ErrorMessage( 225, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName(), str ) ); 
+					 		return;
+						}
+					} else if (getModel().getUmpleInterface(str)!=null){ 
+						if (!checkInterfaceImplementationInHeirarchy(uClass,str)) {
+							getParseResult().addErrorMessage( new ErrorMessage( 206, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName(), str ) ); 
+					 		return;
+						}
+					}
+				}	
+			}	
+		}
+	}
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+ private boolean checkInterfaceImplementationInHeirarchy(UmpleClass inClass,String name) {
+	if (inClass==null) return false;
+    for(UmpleInterface uInterface : inClass.getParentInterface()){
+		if (uInterface.getName().equals(name)){	return true; }
+		if (CheckInterfaceInInTerfaceHierarchy(uInterface,name)) {return true;}
+	}
+	return checkInterfaceImplementationInHeirarchy(inClass.getExtendsClass(),name);
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private boolean CheckInterfaceInInTerfaceHierarchy(UmpleInterface inInterface,	String name) {
+	  for (UmpleInterface uInterface : inInterface.getExtendsInterface()) {
+		  if (uInterface.getName().equals(name)) {return true;}
+		  if (CheckInterfaceInInTerfaceHierarchy(uInterface,name)) {return true;}
+	  }
+	return false;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+  private boolean checkClassExtensionInHierarchy(UmpleClass inClass, String name){
+        if (inClass==null) return false;
+		if (inClass.getName().equals(name)){return true; }
+		if (inClass.hasExtendsClass()) {
+			if (inClass.getExtendsClass().getName().equals(name)){return true; }
+		} else return false;				
+		return checkClassExtensionInHierarchy(inClass.getExtendsClass(),name);
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------     
+   private Map<UmpleTrait, List<Method>> gatherConcreteMethods (UmpleTrait inTrait, GeneralTPApplied inGTPApplied) 
+  {
+	 Map<UmpleTrait, List<Method>> traitMethods = new HashMap<UmpleTrait, List<Method>>(); 
+ 	 Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
+ 	 //----------------------------------------------------------------------------------------
+  	 if (inGTPApplied!=null){
+	 	 for (MethodTemplateSignature mTSignature : inGTPApplied.getMethodTemplateSignatures()) {
+	 		Method tempMethod = inTrait.getMethod(mTSignature.getMethod()); 
+		 	if ( tempMethod == null || (tempMethod != null && tempMethod.isIsAbstract())){
+				getParseResult().addErrorMessage(new ErrorMessage(212,inTrait.getPosition(0),mTSignature.getMethod().getName(),inTrait.getName()));	
+				return traitMethods;
+			}
+		 }
+ 	 }
+ 	 //----------------------------------------------------------------------------------------
+ 	 List<Method> methods = new ArrayList<Method>();	  
+ 	 for (Method method : inTrait.getMethods()) {
+    	 if (! method.isIsAbstract()){ 
+    	 	 Method newMethod = new Method(method);
+    	 	 ApplyTypeParametersToMethod(newMethod,inGTPApplied,inTrait);
+    	 	 newMethod.getMethodBody().getCodeblock().ApplyTypeParameters(inGTPApplied,inTrait);
+ 			 methods.add(newMethod);
+	 	 }
+	 }
+     traitMethods.put(inTrait,methods);
+     //----------------------------------------------------------------------------------------
+     for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+       GeneralTPApplied newGTParameter = inTrait.getGeneralTPAppliedByName(uTrait.getName())!=null ? new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName())) : null;
+       if (newGTParameter!=null){
+         ApplyTypeParametersToTypeParameters(newGTParameter, inGTPApplied,inTrait);       
+     	   checkClassSupportTraitsInterfaces(newGTParameter,inTrait);
+     	 }
+ 		   if ( ! getParseResult().getWasSuccess() ) return traitMethods;
+     	 tempTraitMethods = gatherConcreteMethods(uTrait,getNewGeneralTPAppliedWithP2P(inTrait,uTrait,inGTPApplied));	 
+    	 if ( ! getParseResult().getWasSuccess() ) return traitMethods;
+    	 if (CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(traitMethods,tempTraitMethods,inTrait)) return traitMethods;
+    	 AddMethodMapToAnother(traitMethods,tempTraitMethods);
+	 }
+	 ApplyExludeIncludeAliasToMethod(traitMethods, inGTPApplied);
+     return traitMethods;
+  }
+  
+ //---------------------------------end----------------------------------------
+ //----------------------------------------------------------------------------   
+ //---------------------------------Start--------------------------------------    
+
+  private void ApplyTypeParametersToTypeParameters(GeneralTPApplied newGTPA, GeneralTPApplied currentGTPA, UmpleTrait inTrait) {
+    if (currentGTPA == null && inTrait.getGeneralTemplateParameters().size()==0) return;
+    for (GeneralTemplateParameter gtp : inTrait.getGeneralTemplateParameters()){
+      String newName = (currentGTPA!=null && currentGTPA.getParameterMapping().containsKey(gtp.getName())) ? currentGTPA.getParameterMapping().get(gtp.getName()) : gtp.getDefaultValue();
+      for(Map.Entry<String,String> entry : newGTPA.getParameterMapping().entrySet()){
+        if (entry.getValue().equals(gtp.getName()) ){
+          entry.setValue(newName);
+        }
+      }
+    }
+  } 
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------    
+  private void ApplyTypeParametersToMethod(Method newMethod, GeneralTPApplied inGeneralTPApplied, UmpleTrait inTrait){
+     if (inGeneralTPApplied == null && inTrait.getGeneralTemplateParameters().size()==0) return;
+     for (GeneralTemplateParameter gtp : inTrait.getGeneralTemplateParameters()){
+       String newName = (inGeneralTPApplied!=null && inGeneralTPApplied.getParameterMapping().containsKey(gtp.getName())) ? inGeneralTPApplied.getParameterMapping().get(gtp.getName()) : gtp.getDefaultValue();
+       if (newMethod.getType().equals(gtp.getName())){
+         newMethod.setType(newName);
+       }
+       for (int i = 0; i < newMethod.numberOfMethodParameters(); i++) {
+         if(newMethod.getMethodParameter(i).getType().equals(gtp.getName())){
+           newMethod.getMethodParameter(i).setType(newName);
+         }
+       }
+     }
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+  private void ApplyTypeParametersToAttribute(Attribute newAttribute, GeneralTPApplied inGTPApplied, UmpleTrait inTrait){
+    if (inGTPApplied == null && inTrait.getGeneralTemplateParameters().size()==0) return;
+    for (GeneralTemplateParameter gtp : inTrait.getGeneralTemplateParameters()){
+      String newName = (inGTPApplied!=null && inGTPApplied.getParameterMapping().containsKey(gtp.getName())) ? inGTPApplied.getParameterMapping().get(gtp.getName()) : gtp.getDefaultValue();
+      if (newAttribute.getType().equals(gtp.getName())){
+        newAttribute.setType(newName);
+      }
+    }
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+mixset Association {
+  private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationVariable, GeneralTPApplied inGeneralTPApplied,UmpleClass inClass, UmpleTrait inTrait) {  
+    String rawRName = "";
+    String rName = "";
+    boolean bidirectional = inAssociationVariable.getRelatedAssociation().getIsNavigable();
+    if (inGeneralTPApplied != null || inTrait.getGeneralTemplateParameters().size()>0) {
+      for (GeneralTemplateParameter gtp : inTrait.getGeneralTemplateParameters()){
+        String newName = (inGeneralTPApplied!=null && inGeneralTPApplied.getParameterMapping().containsKey(gtp.getName())) ? inGeneralTPApplied.getParameterMapping().get(gtp.getName()) : gtp.getDefaultValue();
+        if (inAssociationVariable.getType().equals(gtp.getName())){
+              //----------------------------------------------------------------
+             String tempOldName = StringFormatter.toCamelCase(gtp.getName());
+             String oldName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(tempOldName) : tempOldName;
+              if (inAssociationVariable.getName().equals(oldName)){
+                rawRName = StringFormatter.toCamelCase(newName);
+                rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;  
+                inAssociationVariable.setName(rName);
+              } else{
+                rawRName = StringFormatter.toCamelCase(inAssociationVariable.getName());
+                rName = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName;                      
+              }
+              
+              inAssociationVariable.setType(newName);
+              if (getModel().getUmpleClass(newName)==null){
+                  if (getModel().getUmpleInterface(newName)!=null){
+                      if (bidirectional){
+                        setFailedPosition(inTrait.getPosition(0), 213, "trait "+inTrait.getName());
+                        return;
+                      }
+                  } 
+              }
+              return;     
+        }
+      }
+    }
+    if (getModel().getUmpleClass(inAssociationVariable.getType())==null){
+        if (getModel().getUmpleInterface(inAssociationVariable.getType())!=null && bidirectional){
+            setFailedPosition(inTrait.getPosition(0), 213, "trait "+inTrait.getName());
+            return;
+        }
+    }
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+  private void addAssociation(String lName, String rName, AssociationVariable inAssociationVariable, UmpleClass inClass, UmpleClass relatedClass) {	
+        AssociationEnd leftEnd = new AssociationEnd(lName, inClass.getName(), inAssociationVariable.getRelatedAssociation().getModifier(), inClass.getName(), inAssociationVariable.getRelatedAssociation().getMultiplicity());
+		AssociationEnd rightEnd = new AssociationEnd(rName,relatedClass.getName(), inAssociationVariable.getModifier(),relatedClass.getName(),inAssociationVariable.getMultiplicity());		
+		Association aAssociation = new Association(inAssociationVariable.getRelatedAssociation().getIsNavigable(), inAssociationVariable.getIsNavigable(),false,false,leftEnd,rightEnd);
+		aAssociation.setName(rName);
+		getModel().addAssociation(aAssociation);	    
+		AssociationEnd myEnd = aAssociation.getEnd(0);
+	    AssociationEnd yourEnd = aAssociation.getEnd(1);
+	    AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),aAssociation.getIsLeftNavigable());
+              myAs.setIsComposition(aAssociation.getIsLeftComposition());
+	    AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),aAssociation.getIsRightNavigable());
+	    yourAs.setIsComposition(aAssociation.getIsRightComposition());
+
+	    myAs.setRelatedAssociation(yourAs); 
+	    boolean added = inClass.addAssociationVariable(yourAs);
+	    if (added)
+	    {
+		    relatedClass.addAssociationVariable(myAs);
+		    aAssociation.setSource(Association.Source.fTrait);
+	    	inClass.addAssociation(aAssociation);
+	    }
+}
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  	
+  private void checkTypeParameterAvailability(GeneralTPApplied inGeneralTPApplied) {
+		if (inGeneralTPApplied == null ) return;
+    UmpleTrait localTrait = getModel().getUmpleTrait(inGeneralTPApplied.getInheritanceName());
+    if (localTrait==null) {
+    	/*
+    	 * This is necessary because the current approach in Umple is that it raises a warning for no seeing the trait.
+    	 * However, in this case I need to raise an error because I cannot continue. 
+    	 */ 
+    	getParseResult().addErrorMessage(new ErrorMessage(202,inGeneralTPApplied.getPositions(),inGeneralTPApplied.getInheritanceName()));
+    	return;
+    }
+    for (GeneralTemplateParameter gtp : localTrait.getGeneralTemplateParameters()) {
+	    if (! inGeneralTPApplied.getParameterMapping().containsKey(gtp.getName()) && gtp.getDefaultValue().equals("") ){
+	 	   getParseResult().addErrorMessage(new ErrorMessage(219,inGeneralTPApplied.getPositions(),gtp.getName(),localTrait.getName())); 
+	 	   return;
+	    }
+    }	
+    for (String	typeName : inGeneralTPApplied.getParameterMapping().keySet()) {
+	    if (!localTrait.hasGeneralTemplateParameter(typeName)){
+	 	   getParseResult().addErrorMessage(new ErrorMessage(215,inGeneralTPApplied.getPositions(),typeName)); 
+	 	   return;
+	    }
+    }	
+  }
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+  private void applyTraitProperties(UmpleClass inClass, UmpleTrait inTrait) {
+		//set the singleton pattern
+		if (! inClass.getIsSingleton()) inClass.setIsSingleton(inTrait.getIsSingleton());
+		
+		//set abstract keyword
+		//if (! inClass.getIsAbstract())	inClass.setIsAbstract(inTrait.getIsAbstract());
+		
+		//set the comments
+		for(Comment aComment : inTrait.getComments()) {
+			inClass.addComment(aComment);
+		}		
+		
+		for(Requirement aRequirement : inTrait.getRequirements()) {
+			inClass.addRequirement(aRequirement);
+		}
+
+		//set the dependens
+		for(Depend aDepend : inTrait.getDepends()) {
+			inClass.addDepend(aDepend);
+		}		
+							
+		// copy Precondition
+		for(Precondition aPrecondition : inTrait.getPreConds()) {
+			inClass.addPreCond(aPrecondition);
+		}	
+		
+		// copy Postcondition
+		for(Postcondition aPostcondition : inTrait.getPostConds()) {
+			inClass.addPostCond(aPostcondition);
+		}	
+		
+		for (UmpleTestCase tc: inTrait.getUmpleTestCases())
+		{
+			//copyTestCasesFromTraitsToClass(inClass);
+			//inClass.addUmpleTestCase(tc);
+			//copyTestCasefromExtendedTrait(inClass, inTrait);
+		}					
+
+		//copy attributes
+		/*
+		for(Attribute aAttribute : inTrait.getAttributes()) {
+			//check for attributes which have already existed.
+			Integer index = inTrait.getGeneralTemplateParameterIndexByName(aAttribute.getName(),"attribute");
+			if (index>=0){
+				if (inClass.hasGeneralTPApplieds()) {
+					GeneralTPApplied gtp = inClass.getGeneralTPAppliedByName(inTrait.getName());
+					if (gtp != null){
+						aAttribute.setName(	gtp.getParameter(index));
+						inClass.addAttribute(aAttribute);
+					}
+							
+				}
+			} else {
+				inClass.addAttribute(aAttribute);
+			}
+		}
+		*/
+		
+		// copy Constraints
+		for(ConstraintTree aConstraint : inTrait.getConstraintTrees()) {
+			inClass.addConstraintTree(aConstraint);
+		}	
+		mixset AspectInjection {
+       // copy injection codes
+       for (CodeInjection cj : inTrait.getCodeInjections()) {
+               cj.setUmpleClassifier(inClass);
+               inClass.addCodeInjection(cj);
+       }
+    }
+       // copy Extra code
+       inClass.appendExtraCode(inTrait.getExtraCode());
+       
+       // copy associations
+       /*
+       for (AssociationVariable aVariable : inTrait.getAssociationVariables()) {
+    	   aVariable.setUmpleClass(inClass);
+    	   UmpleClass relatedAss =  model.getUmpleClass(aVariable.getType()); 	   
+    	   aVariable.getRelatedAssociation().setUmpleClass(relatedAss);
+    	   aVariable.getRelatedAssociation().setType(inClass.getName());
+	       String rawName = StringFormatter.toCamelCase(inTrait.getName());
+	       String name = aVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
+	       if (name.equals(aVariable.getRelatedAssociation().getName())){
+	    	   rawName = StringFormatter.toCamelCase(inClass.getName());
+	    	   name = aVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
+	    	   aVariable.getRelatedAssociation().setName(name);
+	       }
+	       inClass.addAssociationVariable(aVariable);    
+       }
+       */
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+	private void postTokenTraitAnalysis() {
+		addUnlinkedExtendTraits();
+		if ( getParseResult().getWasSuccess() ) {
+			checkTraitsNamesWithClasses();
+			checkTraitsNameWithInterfaces();
+			checkCyclicTraitInheritance();
+			checkTypeParametersAvailability();
+		}
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private void addUnlinkedExtendTraits()
+  {  
+    for (UmpleClassifier c : unlinkedExtends.keySet())
+    {
+      UmpleTrait child = null; // unlinkedExtends guaranteed to contain only UmpleTraits
+      if (c instanceof UmpleTrait){
+        child = (UmpleTrait) c;
+      }  
+    
+      List<String> extendsNames = unlinkedExtends.get(child);    
+      List<Token>  extendsToken = unlinkedExtendsTokens.get(child);
+
+      if (extendsNames == null)
+      {
+        continue;
+      }
+
+      for (int i=0; i < extendsNames.size();i++){
+        String extendName= extendsNames.get(i);
+        Position pos;
+		try
+		{
+			pos = extendsToken.get(i).getPosition();
+		}
+		catch(Exception e)
+		{
+			pos = new Position("",0,0,0);
+		}
+        if (isUmpleTrait(extendName) ) {
+			
+			//checking cyclically
+			if (child.getName().equals(extendName)) {
+				setFailedPosition(pos, 204, child.getName());
+			    return;
+			}
+			
+			UmpleTrait parent = model.getUmpleTrait(extendName);
+		     
+		    boolean wasSet = child.addExtendsTrait(parent);
+		    if (!wasSet) {
+				// TODO 1: the error code should be chnaged.            
+			    setFailedPosition(pos, 16, child.getName(), parent.getName());
+			    return;
+		    }
+		    /*
+		    try
+		    {
+		    	child.setExtendsToken(extendsToken.get(i));
+		    }
+		    catch(Exception e){}   	  
+		    */     
+        } else if(!isUmpleClass(extendName)){
+        	child.addRequiredInterface(model.getUmpleInterface(extendName));
+        } else {
+			setFailedPosition(pos, 202, extendName);
+			return;
+		}
+      }
+    }
+  }  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------	 
+  private void checkTypeParametersAvailability() {
+    for (UmpleClass uClass : getModel().getUmpleClasses()) {
+      for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
+        checkTypeParametersValid(uClass, uTrait);
+      }     
+      for (GeneralTPApplied gTPApplied : uClass.getGeneralTPApplieds()) {
+        checkTypeParameterAvailability(gTPApplied);
+      }
+    }
+    for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
+      for (UmpleTrait inTrait : uTrait.getExtendsTraits()) {
+        checkTypeParametersValid(uTrait, inTrait);
+      } 
+      for (GeneralTPApplied gTPApplied : uTrait.getGeneralTPApplieds()) {
+        checkTypeParameterAvailability(gTPApplied);
+      }
+    }
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private void checkTypeParametersValid(UmpleClassifier inUmpleClassifier, UmpleTrait uTrait) {
+    if (uTrait.numberOfGeneralTemplateParameters()>0){
+      boolean requireGTPApplied = false;
+       String requiredTPName = "";
+      for (GeneralTemplateParameter gtp :uTrait.getGeneralTemplateParameters()){
+        if (gtp.getDefaultValue().equals("")){
+          requireGTPApplied = true;
+          requiredTPName = gtp.getName();
+        }
+      }     
+      if (requireGTPApplied){
+        boolean find = false;
+        List<GeneralTPApplied> gtpApplied = (inUmpleClassifier instanceof UmpleClass) ? ((UmpleClass)inUmpleClassifier).getGeneralTPApplieds() : ((UmpleTrait)inUmpleClassifier).getGeneralTPApplieds();
+        for (GeneralTPApplied gTPApplied : gtpApplied) {
+          if(gTPApplied.getInheritanceName().equals(uTrait.getName()))  find = true; 
+        }
+        if (!find){
+          getParseResult().addErrorMessage( new ErrorMessage( 219, inUmpleClassifier.getPosition(0),requiredTPName , uTrait.getName() ) ); 
+          return;
+        }
+      }
+    }
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------	
+	//Check traits to have unique names;
+	private void checkTraitsNamesWithClasses() {
+		for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
+			for(UmpleClass uClass : getModel().getUmpleClasses()) {
+				if (uTrait.getName().equals(uClass.getName())) {
+          			getParseResult().addErrorMessage(new ErrorMessage(203,uTrait.getPosition(0),"class",uTrait.getName()));
+          			return;
+				}
+			}
+		}
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------	
+  private void checkTraitsNameWithInterfaces() {
+	  for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
+		  for (UmpleInterface uInterface : getModel().getUmpleInterfaces()) {
+			  if (uTrait.getName().equals(uInterface.getName())) {
+        			getParseResult().addErrorMessage(new ErrorMessage(203,uTrait.getPosition(0),"interface",uTrait.getName()));
+        			return;
+				}
+		  }
+	  }
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+	private void checkCyclicTraitInheritance() {
+		 for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
+			if (uTrait.hasExtendsTraits()) {
+				checkCyclicTraitInheritance(uTrait,uTrait);
+			}
+		}
+	 }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------	  
+	 private void checkCyclicTraitInheritance(UmpleTrait base, UmpleTrait root) {
+		 if (base.getExtendsTraits().contains(root)) {
+			 getParseResult().addErrorMessage(new ErrorMessage(205,base.getPosition(0),base.getName(), root.getName()));
+			 return;
+		 } else {
+			 for (UmpleTrait uTrait :base.getExtendsTraits()) {
+				 checkCyclicTraitInheritance(uTrait,root);
+				 return;
+			 }
+		 }
+	 }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private void checkAllRequiredMethodsAndInterfaces() {
+	  if ( getParseResult().getWasSuccess() ) {
+		  for(UmpleClass uClass : getModel().getUmpleClasses()) {
+			  for(UmpleTrait uTrait : uClass.getExtendsTraits())  {
+				recursiveCheckRequiredMethods(uClass,uTrait,uClass.getGeneralTPAppliedByName(uTrait.getName()));
+				recursiveCheckRequiredInterfaces(uClass, uTrait,uTrait.getName());
+			  }
+		  }
+	  }
+  }  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inTrait,String topTrait) {
+	for (UmpleInterface uInterface : inTrait.getRequiredInterfaces()) {
+		if (inClass.isIsAbstract()){
+    		inClass.addParentInterface(uInterface);
+    	} else if (!checkInterfaceImplementationInHeirarchy(inClass,uInterface.getName())){
+			getParseResult().addErrorMessage(new ErrorMessage(222,inClass.getPosition(0),inClass.getName(),uInterface.getName(),topTrait));
+		    return;
+		}
+	}
+	for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+		recursiveCheckRequiredInterfaces(inClass,uTrait,topTrait);
+	}
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private void recursiveCheckRequiredMethods(UmpleClass inClass, UmpleTrait inTrait, GeneralTPApplied inGeneralTPApplied) {
+	  if ( !getParseResult().getWasSuccess() ) return; 
+	  for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+      GeneralTPApplied newGeneralTPApplied =inTrait.getGeneralTPAppliedByName(uTrait.getName())!=null ? new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName())) : null;
+      if (newGeneralTPApplied!=null)  ApplyTypeParametersToTypeParameters(newGeneralTPApplied,inGeneralTPApplied,inTrait);
+      recursiveCheckRequiredMethods(inClass,uTrait,newGeneralTPApplied);
+    }
+	  for (Method uMethod : inTrait.getMethods() ) {
+		  if (uMethod.isIsAbstract()) {
+			  Method newMethod = new Method(uMethod);
+			  ApplyTypeParametersToMethod(newMethod,inGeneralTPApplied,inTrait);
+			  if(inClass.isIsAbstract()){
+				  newMethod.getComment(2).setText(newMethod.getComment(2).getText()+"'"+inClass.getName()+"' ");
+				  newMethod.setSource(Method.Source.fTrait);
+					inClass.addMethod(newMethod);   
+			  } else  if(!inClass.hasImplementedMethodIncludingWithinParentClasses(newMethod)){
+				  getParseResult().addErrorMessage(new ErrorMessage(208,newMethod.getPosition(),newMethod.getName(),inTrait.getName(),inClass.getName()));
+				  return;
+			  }
+		  }
+	  }
+  } 
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+//****************************************************************************************
+//This section is related to codes which is going to support general templates for traits
+//****************************************************************************************
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private void proccessGeneralTemplateParameters(Token mainToken, UmpleTrait aTrait) {
+	  String name = "";
+	   for (Token subToken : mainToken.getSubTokens()) {		   
+		   if (subToken.is("traitFullParameters")){
+			   name = subToken.getSubToken(0).getValue();
+			   GeneralTemplateParameter gtParameter = new GeneralTemplateParameter(name,"");
+			   if (aTrait.hasGeneralTemplateParameter(name)){
+					  getParseResult().addErrorMessage(new ErrorMessage(214,subToken.getPosition(),name,aTrait.getName() ));
+					  return;
+			   }
+			   for (int i =1;i<subToken.numberOfSubTokens(); i++){
+				   if(subToken.getSubToken(i).is("tInterface")){
+					   gtParameter.addInterfacesAndClass(subToken.getSubToken(i).getValue());
+				   } else if(subToken.getSubToken(i).is("defaultType")){
+             //This code will be executed once. A parameter has always a default value;
+             gtParameter.setDefaultValue(subToken.getSubToken(i).getValue());
+           }
+			   }
+			   aTrait.addGeneralTemplateParameter(gtParameter);
+		   }
+	  }
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+	private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifier aClassifier, String extendName) {
+      GeneralTPApplied aGeneralTPApplied = new GeneralTPApplied(extendName);
+      aGeneralTPApplied.setPositions(mainToken.getPosition());
+      String parameterName;
+      for(Token subToken : mainToken.getSubTokens()) {
+        if (subToken.is("iEFunction") || subToken.is("functionAliasName")) {
+          if (subToken.getSubToken("smName")!=null | subToken.getSubToken("smPattern")!=null ){
+              mixset StateMachine {
+                StateMachineTemplateSignature stTSignature = obtainStateMachineTemplateSignatureForTransitions(subToken);
+                if (! aGeneralTPApplied.hasStateMachineTemplateSignature(stTSignature)){  
+                  aGeneralTPApplied.addStateMachineTemplateSignature(stTSignature);
+                } else {
+                  getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getSrcStateMachine()));
+                  return;
+                }
+            }
+          }else{
+            MethodTemplateSignature mtSignature =obtainMethodTemplateSignature(subToken);
+            if (! aGeneralTPApplied.hasMethodTemplateSignature(mtSignature)){ 
+              aGeneralTPApplied.addMethodTemplateSignature(mtSignature);
+            } else {
+              getParseResult().addErrorMessage(new ErrorMessage(211,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),mtSignature.getMethod().getName() ));
+                return;
+            }
+          }
+        } 
+        mixset StateMachine {
+          else if (subToken.is("StateMachineAliasName")){ 
+              StateMachineTemplateSignature stTSignature = obtainStateMachineTemplateSignature(subToken);
+              if (! aGeneralTPApplied.hasStateMachineTemplateSignature(stTSignature)){  
+                aGeneralTPApplied.addStateMachineTemplateSignature(stTSignature);
+              } else {
+                getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getSrcStateMachine()));
+                return;
+              } 
+          } else if (subToken.is("iEStateMachine")){ 
+              StateMachineModifier stTSignature = obtainStateMachineModifier(subToken);
+              if (! aGeneralTPApplied.hasStateMachineModifier(stTSignature)){  
+                aGeneralTPApplied.addStateMachineModifier(stTSignature);
+              } else {
+                getParseResult().addErrorMessage(new ErrorMessage(229,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),stTSignature.getSrcStateMachine()));
+                return;
+              } 
+          } 
+        }
+        else if (subToken.is("traitAppliedParameters")){
+            parameterName = subToken.getValue("pName");
+            if (aGeneralTPApplied.getParameterMapping().containsKey(parameterName)){
+              getParseResult().addErrorMessage(new ErrorMessage(216,subToken.getPosition(),parameterName));
+              return;
+            }
+            aGeneralTPApplied.getParameterMapping().put(parameterName, subToken.getValue("rName"));       
+        } 
+      }
+    if (aClassifier instanceof UmpleClass) {
+      ((UmpleClass)aClassifier).addGeneralTPApplied(aGeneralTPApplied);
+    } else if (aClassifier instanceof UmpleTrait) {
+      ((UmpleTrait)aClassifier).addGeneralTPApplied(aGeneralTPApplied);
+    }
+	}
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+mixset StateMachine {
+  private StateMachineModifier obtainStateMachineModifier(Token inToken) {
+        StateMachineModifier smModifier = null;
+      String modifier=inToken.getValue("modifier");
+      String smName = inToken.getValue("smName");
+      if (inToken.getValue("StateNames")==null){
+       smModifier = new StateMachineModifier(modifier,smName,"");
+      } else {
+        List<String> states = new ArrayList<String>();      
+        String eventName="";
+        Token t = inToken;        
+        while(t!=null && t.getSubToken("StateNames")!=null){      
+          if(t.getSubToken("StateNames").getSubToken("StateNamesPassing")!=null){
+            states.add(t.getSubToken("StateNames").getValue("sName"));
+          }else{
+            if( inToken.getSubToken("iEParameterList")!=null)
+                 eventName = t.getSubToken("StateNames").getValue("sName");
+            else
+             states.add(t.getSubToken("StateNames").getValue("sName"));   
+          }
+          t =  t.getSubToken("StateNames").getSubToken("StateNamesPassing");
+        }  
+        if (eventName.equals("") && states.size() >0 && inToken.getSubToken("guardOption")==null){
+           smModifier = new StateModifier(modifier,smName,"");
+           for(String state:states)  ((StateModifier)smModifier).addSrcState(state);
+        } else {
+            smModifier = new EventModifier(modifier,smName,"");
+            for(String state:states)  ((EventModifier)smModifier).addSrcState(state);
+            Method method = new Method("", eventName, "Boolean", false);
+            extractIEParameters(inToken, method);
+            ((EventModifier)smModifier).setMethod(method);
+            if (inToken.getSubToken("guardOption")!=null){
+                Token guardToken = inToken.getSubToken("guardOption").getSubToken("guard");
+                if (guardToken != null)
+                {
+                  //01 is a dummy name
+                  StateMachine tempSM = new StateMachine("01");
+                  UmpleClass tempClass = new UmpleClass("01");
+                  tempClass.addStateMachine(tempSM);
+                  State s1 = new State("s1", tempSM);
+                  State s2 = new State("s2", tempSM);
+                  Transition t1 = new Transition(s1, s2); 
+                  ((GuardAnalyzer)model.getAnalyzer("guard")).setUClassifier(tempClass);
+                  ((GuardAnalyzer)model.getAnalyzer("guard")).setT(t1);
+                  model.getAnalyzer("guard").analyzeToken(guardToken);
+                  ((EventModifier)smModifier).setGuard(t1.getGuard());
+                  tempSM.delete();
+                  tempClass.delete();
+                }
+            }
+        }
+        
+      } 
+      return smModifier;
+  }
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private void extractIEParameters(Token inToken, Method method) {
+    if (inToken.getSubToken("iEParameterList") != null){
+        for (Token subToken : inToken.getSubToken("iEParameterList").getSubTokens()) {
+          if (subToken.is("parameter")) {
+            method.addMethodParameter(new MethodParameter("", subToken.getValue(), "", "", false));
+          }
+        }
+    }
+  }  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+  private MethodTemplateSignature obtainMethodTemplateSignature(Token inToken) {
+	  String modifier="",aliasName ="";
+    String methodName = inToken.getValue("methodName");
+    String iEVisibility = "";
+      if (inToken.getValue("modifier") != null) modifier = inToken.getValue("modifier");
+    if (inToken.getValue("aliasName") != null) aliasName = inToken.getValue("aliasName");
+    if (inToken.getValue("iEVisibility") != null)  iEVisibility = inToken.getValue("iEVisibility");
+    Method method = new Method(iEVisibility, methodName, "", false); 
+    extractIEParameters(inToken, method);     
+    MethodTemplateSignature mtSignature = new MethodTemplateSignature(modifier,aliasName, method); 
+    return mtSignature;
+  }
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+mixset StateMachine {
+	private StateMachineTemplateSignature obtainStateMachineTemplateSignature(Token inToken){
+  	String iEStateMachineModifier="",stateMachineAliasName ="";
+	 	String smName = inToken.getValue("smName");
+	 	String smDesName = "";
+		if (inToken.getValue("iEStateMachineModifier") != null) iEStateMachineModifier = inToken.getValue("iEStateMachineModifier");
+	 	if (inToken.getValue("smDesName") != null) stateMachineAliasName = inToken.getValue("smDesName");
+	 	Token smDesNameToken = inToken.getSubToken("DesStateNames");
+	 	if (smDesNameToken!=null){
+	 		smDesName = stateMachineAliasName;
+	 		stateMachineAliasName="";
+	 	}
+		StateMachineTemplateSignature smTSignature = new StateMachineTemplateSignature(iEStateMachineModifier, smName, smDesName, stateMachineAliasName);	 
+	 	extractStatesFromTemplateSignature(inToken,smTSignature,"src");
+	 	extractStatesFromTemplateSignature(smDesNameToken,smTSignature,"des"); 	
+ 		return smTSignature;
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+	private void extractStatesFromTemplateSignature(Token inToken,StateMachineTemplateSignature inStateMachineTemplateSignature,String type){
+		while(inToken!=null && inToken.getSubToken("StateNames")!=null){  		
+			if (type=="src")	{
+				inStateMachineTemplateSignature.addSrcState(inToken.getSubToken("StateNames").getValue("sName"));
+			}	else if (type=="des"){
+				inStateMachineTemplateSignature.addDesState(inToken.getSubToken("StateNames").getValue("sName"));
+			}
+		inToken =  inToken.getSubToken("StateNames").getSubToken("StateNamesPassing");
+		}  	
+ 	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+	private StateMachineTemplateSignature obtainStateMachineTemplateSignatureForTransitions(Token inToken) {
+     String smPattern="";
+     String stateMachineAliasName =inToken.getValue("aliasName");
+     String smName = "";
+     String modifier = "";
+     String eventName = inToken.getValue("methodName");
+     MethodTemplateSignature mtSignature = null;
+     if (inToken.getValue("smName") != null) smName = inToken.getValue("smName");
+     if (inToken.getValue("smPattern") != null) smPattern = inToken.getValue("smPattern"); 
+     if (inToken.getValue("modifier") != null) modifier = inToken.getValue("modifier");          
+     Method method = new Method("public", eventName, "", false); 
+     if (inToken.getSubToken("iEParameterList") != null){
+      for (Token subToken : inToken.getSubToken("iEParameterList").getSubTokens()) {
+        if (subToken.is("parameter")) {
+            method.addMethodParameter(new MethodParameter("", subToken.getValue(), "", "", false));
+        }
+      }
+     }
+     StateMachineTemplateSignature smTSignature = new StateMachineTemplateSignature(modifier, smName,"", stateMachineAliasName);
+     mtSignature = new MethodTemplateSignature(smPattern,stateMachineAliasName,method);
+     smTSignature.setMethodTemplateSignature(mtSignature);
+     return smTSignature;
+	}
+
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private void copyAttributesFromTraitsToClass(UmpleClass inClass){
+	Map<UmpleTrait, List<Attribute>> traitAttributes = new HashMap<UmpleTrait, List<Attribute>>();
+	Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new HashMap<UmpleTrait, List<Attribute>>();
+	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
+		tempTraitAttributes = gatherAttributes(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()));
+		if ( ! getParseResult().getWasSuccess() ) return;
+		if (checkAttComeFromTraitsIsAvaiableInClass(tempTraitAttributes,inClass) ) return;
+		if (CheckAttComeFromTraitsIsAvaialbleInOtherTraits(traitAttributes,tempTraitAttributes)) return;
+		AddAttMapToAnother(traitAttributes,tempTraitAttributes);
+	}
+	for (UmpleTrait t1 : traitAttributes.keySet()) {
+		for (Attribute attribute : traitAttributes.get(t1)) {
+			//I need some comment for users in generated code;
+			//attribute.getComment(2).setText(attribute.getComment(2).getText()+"'"+inClass.getName()+"' ");
+			attribute.setSource(Attribute.Source.fTrait);
+      if (attribute.hasRequirements()){
+      }
+      else{
+      }
+			inClass.addAttribute(attribute);
+		}
+	}
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+mixset Association {
+  private void copyAssociationsFromTraitToClass(UmpleClass inClass) {
+    Map<UmpleTrait, List<AssociationVariable>> traiAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
+	Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
+	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
+		tempTraitAssociationVariables = gatherAssociations(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()),inClass);
+		if ( ! getParseResult().getWasSuccess() ) return;
+		//checkMethodComeFromTraitsIsAvaiableInClass(tempTraitAssociations,inClass);
+		//if (CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(traitMethods,tempTraitAssociations,inClass)) return;
+		AddAssociationMapToAnother(traiAssociationVariables,tempTraitAssociationVariables);
+	}
+	for (UmpleTrait t1 : traiAssociationVariables.keySet()) {
+		for (AssociationVariable associationVariable : traiAssociationVariables.get(t1)) {
+            AssociationVariable relAsso = associationVariable.getRelatedAssociation();
+            String tempOldName = StringFormatter.toCamelCase(relAsso.getType());
+            String oldName = relAsso.getMultiplicity().isMany() ? model.getGlossary().getPlural(tempOldName) : tempOldName;
+             if (relAsso.getName().equals(oldName)){
+                 String rawRName = StringFormatter.toCamelCase(inClass.getName());
+                 relAsso.setName(relAsso.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawRName) : rawRName);
+             }
+  
+             if (model.getUmpleClass(associationVariable.getType())!=null){
+                 addAssociation(relAsso.getName(), associationVariable.getName(), associationVariable,inClass, model.getUmpleClass(associationVariable.getType()));
+                 if (associationVariable.getIsNavigable())
+                   {                  
+                       inClass.addReferencedPackage(model.getUmpleClass(associationVariable.getType()).getPackageName());
+                   }
+                   if (associationVariable.getRelatedAssociation().getIsNavigable())
+                   {
+                       model.getUmpleClass(associationVariable.getType()).addReferencedPackage(inClass.getPackageName());
+                   }        
+             } else if (model.getUmpleInterface(associationVariable.getType())!=null){
+                 
+                 addAssociation(relAsso.getName(), associationVariable.getName(), associationVariable,inClass, new UmpleClass(associationVariable.getType()));
+                 if (associationVariable.getRelatedAssociation().getIsNavigable())
+                   {
+                       inClass.addReferencedPackage(model.getUmpleInterface(associationVariable.getType()).getPackageName());
+                   }     
+             }  		
+		}
+	}	
+  }
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private Map<UmpleTrait, List<Attribute>> gatherAttributes(UmpleTrait inTrait, GeneralTPApplied inGTPApplied) {
+	 Map<UmpleTrait, List<Attribute>> traitAttributes = new HashMap<UmpleTrait, List<Attribute>>(); 
+	 Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new HashMap<UmpleTrait, List<Attribute>>();
+	 //----------------------------------------------------------------------------------------
+	 List<Attribute> attributes = new ArrayList<Attribute>();	  
+	 for (Attribute attribute : inTrait.getAttributes()) {
+		 Attribute newAttribute = new Attribute(attribute);
+	 	 ApplyTypeParametersToAttribute(newAttribute,inGTPApplied,inTrait);
+		 attributes.add(newAttribute);
+	 }
+    traitAttributes.put(inTrait,attributes);
+    //----------------------------------------------------------------------------------------
+    for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+      GeneralTPApplied newGTParameter = inTrait.getGeneralTPAppliedByName(uTrait.getName())!=null ? new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName())) : null;
+      if (newGTParameter!=null){
+         ApplyTypeParametersToTypeParameters(newGTParameter, inGTPApplied,inTrait);       
+         checkClassSupportTraitsInterfaces(newGTParameter,inTrait);
+      }
+      if ( ! getParseResult().getWasSuccess() ) return traitAttributes;
+    	tempTraitAttributes = gatherAttributes(uTrait,getNewGeneralTPAppliedWithP2P(inTrait,uTrait,inGTPApplied));   	 
+   	 	if ( ! getParseResult().getWasSuccess() ) return traitAttributes;
+   	 	if (CheckAttComeFromTraitsIsAvaialbleInOtherTraits(traitAttributes, tempTraitAttributes)) return traitAttributes;
+   	 	AddAttMapToAnother(traitAttributes,tempTraitAttributes);
+	}
+    return traitAttributes;
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+mixset Association {
+private Map<UmpleTrait, List<AssociationVariable>> gatherAssociations(UmpleTrait inTrait, GeneralTPApplied inGTPApplied, UmpleClass inClass) {
+     Map<UmpleTrait, List<AssociationVariable>> traitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>(); 
+ 	 Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
+ 	 //----------------------------------------------------------------------------------------
+ 	 List<AssociationVariable> associationVariables = new ArrayList<AssociationVariable>();	  
+ 	 for (AssociationVariable associationVariable : inTrait.getAssociationVariables()) {
+ 		 	AssociationVariable newAssociationVariable = new AssociationVariable(associationVariable);
+ 		 	AssociationVariable tempAssociationVariable = new AssociationVariable(associationVariable.getRelatedAssociation());
+ 		 	newAssociationVariable.setRelatedAssociation(tempAssociationVariable);
+    	 	ApplyTypeParametersToAssociation(newAssociationVariable,inGTPApplied,inClass, inTrait);
+    	 	associationVariables.add(newAssociationVariable);
+	 }
+ 	traitAssociationVariables.put(inTrait,associationVariables);
+     //----------------------------------------------------------------------------------------
+     for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+       GeneralTPApplied newGTParameter = inTrait.getGeneralTPAppliedByName(uTrait.getName())!=null ? new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName())) : null;     
+       if (newGTParameter!=null){
+         ApplyTypeParametersToTypeParameters(newGTParameter, inGTPApplied,inTrait);       
+    	   tempTraitAssociationVariables = gatherAssociations(uTrait,newGTParameter,inClass);   
+    	 }	 
+    	 if ( ! getParseResult().getWasSuccess() ) return traitAssociationVariables;
+//    	 if (CheckAssociationsComeFromTraitsIsAvaialbleInOtherTraits(traitAssociations,tempTraitAssociations,inTrait)) return traitAssociations;
+    	 AddAssociationMapToAnother(traitAssociationVariables,tempTraitAssociationVariables);
+	 }
+     return traitAssociationVariables;
+}
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+//****************************************************************************************
+//end of a special section
+//****************************************************************************************
+  private boolean compareTwoMethdos(Method method1, Method method2) {
+	  if (method1.getName().equals(method2.getName())){
+		 // if(method1.getType().equals(method2.getType())){
+			  Integer numberOfParams = method1.getMethodParameters().size();
+			  if ( numberOfParams== method2.getMethodParameters().size()) {
+		          boolean allSame = true;
+		          for (int i = 0; i < numberOfParams; i++)
+		          {
+		            if(!method1.getMethodParameter(i).getType().equals(method2.getMethodParameter(i).getType()))
+		            {
+		              allSame = false;
+		              break;
+		            }
+		          }
+		          if(allSame)
+		          {
+		            return true;
+		          }
+		     }
+		 // }  
+      }
+	  return false;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private boolean checkAttComeFromTraitsIsAvaiableInClass(Map<UmpleTrait, List<Attribute>> inTraitAttributes, UmpleClass inClass) {
+	for (UmpleTrait uTrait : inTraitAttributes.keySet()){
+    	for (int i = 0; i < inTraitAttributes.get(uTrait).size(); i++) {
+    		Attribute attribute= inTraitAttributes.get(uTrait).get(i);
+			Attribute internalAttribute = inClass.getAttribute(attribute.getName());
+			if (internalAttribute !=null) {
+				if (internalAttribute.getType().equals(attribute.getType())){
+					setFailedPosition(internalAttribute.getPosition(), 218, internalAttribute.getName(),uTrait.getName(),"class", inClass.getName());
+					inTraitAttributes.get(uTrait).remove(i);
+				} else{
+					getParseResult().addErrorMessage(new ErrorMessage(206,inClass.getPosition(0),attribute.getName(), uTrait.getName(),inClass.getName() ));	
+					return true;
+				}
+			}			
+		}
+	}
+	return false;
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private boolean CheckAttComeFromTraitsIsAvaialbleInOtherTraits(	Map<UmpleTrait, List<Attribute>> inTraitAttributes,Map<UmpleTrait, List<Attribute>> inTempTraitAttributes) {
+	for (UmpleTrait uTrait : inTempTraitAttributes.keySet()){    	
+    	for (int j = 0; j < inTempTraitAttributes.get(uTrait).size(); j++) {
+    		Attribute attribute = inTempTraitAttributes.get(uTrait).get(j);
+			for (UmpleTrait internalTrait : inTraitAttributes.keySet()) {
+				for (int i = 0; i < inTraitAttributes.get(internalTrait).size(); i++) {
+					Attribute internalAttribute = inTraitAttributes.get(internalTrait).get(i);
+					if (attribute.getName().equals(internalAttribute.getName())){
+						if(attribute.getType().equals(internalAttribute.getType()) && !uTrait.equals(internalTrait)){
+							setFailedPosition(internalAttribute.getPosition(), 218, internalAttribute.getName(),uTrait.getName(),"trait", internalTrait.getName());
+							inTempTraitAttributes.get(uTrait).remove(j);
+						} else if (uTrait.equals(internalTrait) && attribute.getType().equals(internalAttribute.getType())){
+							inTraitAttributes.get(internalTrait).remove(internalAttribute);
+						} else {
+							if (uTrait.equals(internalTrait)){
+								getParseResult().addErrorMessage(new ErrorMessage(217,uTrait.getPosition(0),attribute.getName(), uTrait.getName(),attribute.getType() ,internalAttribute.getType()));	
+							} else{
+								getParseResult().addErrorMessage(new ErrorMessage(206,uTrait.getPosition(0),attribute.getName(), uTrait.getName(),internalTrait.getName() ));	
+								
+							}
+							return true;
+						}
+					}
+				}
+			}
+		}
+	}	
+	return false;
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private GeneralTPApplied getNewGeneralTPAppliedWithP2P(UmpleTrait inTrait, UmpleTrait uTrait,GeneralTPApplied inGTPApplied) {
+    GeneralTPApplied newGeneralTPApplied = null;
+    if (inTrait.getGeneralTPAppliedByName(uTrait.getName()) !=null) {  
+      newGeneralTPApplied = new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName()));
+      ApplyTypeParametersToTypeParameters(newGeneralTPApplied,inGTPApplied,inTrait);
+    }
+    return newGeneralTPApplied;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private void checkMethodComeFromTraitsIsAvaiableInClass(Map<UmpleTrait, List<Method>> inTempTraitMethods, UmpleClass inClass) {
+	for (UmpleTrait uTrait : inTempTraitMethods.keySet()){
+		for (int i = 0; i < inTempTraitMethods.get(uTrait).size(); i++) {
+			if (inClass.hasMethod(inTempTraitMethods.get(uTrait).get(i))){
+				inTempTraitMethods.get(uTrait).remove(i);
+			}
+		}
+	}
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private boolean CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(Map<UmpleTrait, List<Method>> inTraitMethods,Map<UmpleTrait, List<Method>> inTempTraitMethods, UmpleClassifier inClassifier) {
+	for (UmpleTrait uTrait : inTraitMethods.keySet()){
+		for (Method method : inTraitMethods.get(uTrait)) {
+			for (UmpleTrait internalTrait : inTempTraitMethods.keySet()) {
+				for (int i = 0; i < inTempTraitMethods.get(internalTrait).size(); i++) {
+					Method internalMethod = inTempTraitMethods.get(internalTrait).get(i);
+					if (compareTwoMethdos(method, internalMethod)){
+						if (uTrait.equals(internalTrait)){
+							inTempTraitMethods.get(internalTrait).remove(i);
+						} else if (inClassifier instanceof UmpleTrait){
+							if (uTrait.equals((UmpleTrait)inClassifier)){
+								inTempTraitMethods.get(internalTrait).remove(i);
+							} else {
+								getParseResult().addErrorMessage(new ErrorMessage(210,inClassifier.getPosition(0),"trait", inClassifier.getName(),method.getName(),uTrait.getName(),internalTrait.getName()));	
+								return true;
+							}
+						} else {
+							String type = "trait";	
+							if (inClassifier instanceof UmpleClass) type = "class";
+		
+							getParseResult().addErrorMessage(new ErrorMessage(210,inClassifier.getPosition(0),type, inClassifier.getName(),method.getName(),uTrait.getName(),internalTrait.getName()));	
+							return true;
+						}
+					}
+				}
+			}
+		}
+	}	
+	return false;
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private void AddMethodMapToAnother(Map<UmpleTrait, List<Method>> inTraitMethods,Map<UmpleTrait, List<Method>> inTempTraitMethods) {
+	for (UmpleTrait uTrait : inTempTraitMethods.keySet()) {
+		if (inTraitMethods.containsKey(uTrait)){
+			for (Method method : inTempTraitMethods.get(uTrait)) {
+				inTraitMethods.get(uTrait).add(method);
+			}
+		} else{
+			inTraitMethods.put(uTrait, inTempTraitMethods.get(uTrait));
+		}	
+	}	
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private void AddAttMapToAnother(Map<UmpleTrait, List<Attribute>> inTraitAttributes,Map<UmpleTrait, List<Attribute>> inTempTraitAttributes) {
+	for (UmpleTrait uTrait : inTempTraitAttributes.keySet()) {
+		if (inTraitAttributes.containsKey(uTrait)){
+			for (Attribute attribute : inTempTraitAttributes.get(uTrait)) {
+				inTraitAttributes.get(uTrait).add(attribute);
+			}
+		} else{
+			inTraitAttributes.put(uTrait, inTempTraitAttributes.get(uTrait));
+		}	
+	}
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+mixset Association {
+private void AddAssociationMapToAnother(Map<UmpleTrait, List<AssociationVariable>> inTraitAssociations,Map<UmpleTrait, List<AssociationVariable>> inTempTraitAssociations) {
+    for (UmpleTrait uTrait : inTempTraitAssociations.keySet()) {
+		if (inTraitAssociations.containsKey(uTrait)){
+			for (AssociationVariable associationVariable : inTraitAssociations.get(uTrait)) {
+				inTraitAssociations.get(uTrait).add(associationVariable);
+        }
+      } else{
+        inTraitAssociations.put(uTrait, inTempTraitAssociations.get(uTrait));
+      }	
+	  }	
+  }
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private void ApplyExludeIncludeAliasToMethod(Map<UmpleTrait, List<Method>> intraitMethods, GeneralTPApplied inGTPApplied){
+  if (inGTPApplied == null) return; 
+  for(Map.Entry<UmpleTrait, List<Method>> entry : intraitMethods.entrySet()){
+    List<Method> shouldBeIncluded = new ArrayList<Method>();
+    for(Iterator<Method> iterator = entry.getValue().iterator(); iterator.hasNext();){
+      Method method = iterator.next();
+      MethodTemplateSignature mTSignature = inGTPApplied.hasMethod(method);
+     if (mTSignature!=null){
+       if (mTSignature.getModifier().equals("-")){
+         iterator.remove();
+       } else if (mTSignature.getModifier().equals("+")){
+         if (!mTSignature.getAlias().equals("")){
+           Method temMethod = new Method(method);
+           temMethod.setName(mTSignature.getAlias());
+           if (checkMethodInMapTraitsMethod(intraitMethods,temMethod)!=null){
+             getParseResult().addErrorMessage(new ErrorMessage(220,inGTPApplied.getPositions(),mTSignature.getAlias(),mTSignature.getMethod().getName()));  
+             return;
+           }
+           method.setName(mTSignature.getAlias());
+
+           }
+         if (!mTSignature.getMethod().getModifier().equals("")){
+           method.setModifier(mTSignature.getMethod().getModifier());
+           //here I must check this new name is unique.
+         }
+         shouldBeIncluded.add(method);
+      } else if (mTSignature.getModifier().equals("")){
+        if (!mTSignature.getAlias().equals("")){
+           Method temMethod = new Method(method);
+           temMethod.setName(mTSignature.getAlias());
+           if (checkMethodInMapTraitsMethod(intraitMethods,temMethod)!=null){
+             getParseResult().addErrorMessage(new ErrorMessage(220,inGTPApplied.getPositions(),mTSignature.getAlias(),mTSignature.getMethod().getName()));  
+             return;
+           }
+          method.setName(mTSignature.getAlias());
+        }           
+        if (!mTSignature.getMethod().getModifier().equals("")){
+          method.setModifier(mTSignature.getMethod().getModifier());
+        }
+      }
+     }
+    }
+    if (shouldBeIncluded.size()>0)  intraitMethods.put(entry.getKey(), shouldBeIncluded) ;
+  }  
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+   private Method checkMethodInMapTraitsMethod(Map<UmpleTrait, List<Method>> inTraitMethods, Method inMethod){
+	   for (UmpleTrait uTrait : inTraitMethods.keySet()) {
+		   for (Method method : inTraitMethods.get(uTrait)) {
+			   if (compareTwoMethdos(method, inMethod)){
+				   return method;
+			   }	
+		   }
+	   }
+	   return null;
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+   private void checkTemplateParametersValidity() {
+	   List<String> multipleClasses = new ArrayList<String>();
+	   for ( UmpleTrait uTrait: getModel().getUmpleTraits()) {
+		   for (GeneralTemplateParameter gtParameter : uTrait.getGeneralTemplateParameters()) {
+			   multipleClasses.clear();
+			   for (String str : gtParameter.getInterfacesAndClass()) {
+				   if (getModel().getUmpleClass(str)!=null) {
+					   multipleClasses.add(str);
+					   if (multipleClasses.size()>=2){
+						   getParseResult().addErrorMessage( new ErrorMessage( 224, uTrait.getPosition(0), gtParameter.getName(), uTrait.getName(),multipleClasses.get(0),multipleClasses.get(1) ) ); 
+						   return;
+					   }
+				   } else if (getModel().getUmpleInterface(str)!=null) {
+					   
+				   } else {
+					   getParseResult().addErrorMessage( new ErrorMessage( 223, uTrait.getPosition(0), str, gtParameter.getName(), uTrait.getName()) ); 
+					   return;
+				   }
+			   }
+		   }	
+	   }
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+
+}
+mixset FIXML {
+  use fixml/UmpleInternalParser_FIXML.ump;
+}
+mixset StateMachine {
+use stateMachine/UmpleInternalParser_CodeTrait_StateMachine.ump;
+}
+

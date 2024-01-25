@@ -52,7 +52,7 @@ class UmpleToJava {
 		
 			append(realSb,"\n  {");
 		
-			append(realSb,"\n    Vector v = new Vector({0});", aMethod.numberOfMethodParameters());
+			append(realSb,"\n    Vector<Object> v = new Vector<Object>({0});", aMethod.numberOfMethodParameters());
 			for ( int i=0; i < aMethod.numberOfMethodParameters(); i++)
 			{
 			  append(realSb,"\n    v.add({0}, {1});",i, aMethod.getMethodParameter(i).getName());
@@ -81,11 +81,13 @@ class UmpleToJava {
       // If this is not a constructor, this method should return "void"
       methodType = methodType.equals("") ? "void" : methodType;
     }
-   // handle mixsets inside methods(uClass, aMethod);
+    // handle mixsets inside methods(uClass, aMethod);
+    mixset Mixset {
     ArrayList<MixsetInMethod> mixsetsWithinMethodList = aMethod.getMethodBody().getMixsetsWithinMethod();
     for(MixsetInMethod mixsetsWithinMethodItem : mixsetsWithinMethodList)
     {
       handelMixsetInsideMethod(model, mixsetsWithinMethodItem, aMethod.getMethodBody());
+    }
     }
     // End 
     for(int i =uClass.getCodeInjections().size() ; i > 0 ; i--)
@@ -167,8 +169,9 @@ class UmpleToJava {
                              "    Thread.setDefaultUncaughtExceptionHandler(new "+exceptionHandlerPackage+"UmpleExceptionHandler());\n"+properMethodBody;
           uClass.setHasMainMethod(true);
         }
-        
-        if (aMethod.numberOfComments() > 0) { append(realSb, "\n\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
+        if (aMethod.numberOfComments() > 0 && aMethod.numberOfRequirements() > 0) { List<Comment> toComment = new ArrayList<Comment>(aMethod.getComments()); toComment.addAll(Requirement.convertToComment(aMethod.getRequirements())); append(realSb, "\n\n  {0}", Comment.format("Method Javadoc", toComment)); }
+        else if (aMethod.numberOfComments() > 0) { append(realSb, "\n\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
+        else if (aMethod.numberOfRequirements() > 0) { append(realSb, "\n\n  {0}", Requirement.format("Method Javadoc",aMethod.getRequirements())); }
         
         append(realSb,"\n");
         int javaline = realSb.toString().split("\\n").length+(aMethod.numberOfComments() > 0?0:1);
@@ -313,9 +316,9 @@ class UmpleToJava {
               for(int i = -1; (i = properMethodBody.indexOf("return", i + 1)) != -1; ) {
               	//Check if return statement is on its own line
               	int lastChar = i - 1;
-              	while (properMethodBody.charAt(lastChar) == ' ')
+              	while (lastChar != -1 && properMethodBody.charAt(lastChar) == ' ')
               	  lastChar--;
-              	if (properMethodBody.charAt(lastChar) != '\n') // If it has any non-space characters before it, it's invalid
+              	if (lastChar == -1  || properMethodBody.charAt(lastChar) != '\n') // If it has any non-space characters before it, it's invalid
               	  continue;
               
                 // determine the indentation of the return

@@ -1,0 +1,153 @@
+Setting up Tasks
+UmpleOnline
+noreferences
+
+@@description
+
+<p> The following describes how to set up <em><b>tasks</b></em> in UmpleOnline. A task can be an assignment in a course that some students are asked to submit, or an experiment in modeling conducted by a researcher.</p>
+
+<p><em>This is currently a beta feature. Please raise issues to help us improve it. Some aspects may not work perfectly yet, although it works and can be used in courses. We expect to take this out of beta in late September 2020.</em></p>
+
+<br/>&nbsp;
+
+<p><b>People involved:</b> We refer to the person <em>creating</em> a task (professor, teacher, researcher) as the <b>requestor</b>. We refer to the people doing the tasks (students, research subjects) as <b>responders</b></p>
+
+<br/>&nbsp;
+
+<p><b>Task names:</b> Each task in UmpleOnline has a unique name that can contain alphanumeric characters, underscores and dots. Names are case insensitive and cannot contain spaces or special characters. Requestors should select a meaningful name. For example an assignment in a course at the University of Ottawa could have task name <em>UOtt_2020_SEG2105F.A1</em> Responders would use this name to find the task or else they can be given a URL to be able to respond to the task (described below).</p>
+
+
+<br/>&nbsp;
+
+<h2>What information does the requestor provide to set up the task?</h2>
+
+<p>When setting up a task, the requestor provides the following information:</p>
+
+<ul>
+<li><p><b>The requestor's name.</b> This might be their personal name, the name of the course, the name of the institution, or a combination. Responders will see this at the top of their task instructions.</p></li>
+
+<li>
+<p><b>Instructions.</b> These are written in <a href="https://github.github.com/gfm/" target="markdown">Markdown</a> format. So for example, to make a heading appear in the instructions, start a line with =, or more equals signs for lower-level headings. To make bullet lists start the line with *. To emphasize text in a line use * before and after. Use ``` before and after blocks of code. URLs will generate links to open a page in another browser tab.</p>
+
+<p>It is best to keep instructions relatively short as they take up space on the screen that will be unavailable for modeling, unless the responder asks for them to be hidden. For lengthy instructions, we suggest providing a link to another page. Instructions should include, if appropriate, a request for the responder to include their name and/or ID in the model. UmpleOnline is (at the current time) a login-free system, so responses will be anonymous by default.</p>
+</li>
+
+<li>
+<p><b>An Umple model</b> (optional). The requestor can populate Umpleonline in the normal way (i.e. text and diagram) with a model of any level of sophistication, including one with many tabs (Umple files). Initiating the request with a pre-prepared model can be useful when the instructions are to make improvements, or fix bugs, or add new features. Both requestors and responders have the power to use all the features of UmpleOnline when creating or responding to a request.
+</p>
+
+<p>If no Umple model is entered, then responders will have to start modeling from scratch, and will be presented with an empty text pane and diagram.</p>
+</li>
+
+<li>
+<p><b>A completion URL </b> (optional) After the responder completes and submits the task, they will be taken to this URL, and the taskname and the URL of the reponse will also be passed to the URL as additional arguments. This could be a URL in a custom tool, or in a survey tool like SurveyMonkey. <a href="UsingCompletionURLs.html">More detailed explanation for how to do this is in a separate manual page</a>. The completion URL can be used to ask questions in an experiment after the task is done, simply to record the response in a database, or to ask test questions of students.</p>
+
+<p> If no completion URL is given, the responder is returned to their model after submission, but it becomes read-only.</p>
+</li>
+
+<li><p><b>Is the task is an experiment requiring detailed logging?</b> (this feature is still currently under development) The requestor can select a checkbox requesting that detailed logs of every stage of the modeling process be recorded, as performed by each responder. This is most useful for those conducting experiments. Researchers ought to have received ethics approval to run experiments that track data at this level of detail.</p></li>
+
+</ul>
+
+
+
+<br/>&nbsp;
+
+<h2>What is the process of setting up a task?</h2>
+
+<ol>
+<li><p>Anyone can set up a task. Select the <b>SAVE & LOAD</b> menu in UmpleOnline From there click on <b>Create a Task</b> which appears below the TASK heading.</p>
+
+<li><p>The task creation pane will appear, allowing the requestor to enter the information described above (requestor name, instructions, model etc.). It is very important at this point to <em>bookmark</em> the URL that appears, or to copy and paste it somewhere safe. For security reasons it will not be possible for the requestor to edit their task or retrieve responses unless they know the randomly-generated URL.</p>
+
+<li><p>When task preparation is complete, or if the requestor wants to save their work, they select <b>Submit Task</b><p>
+
+<li><p>The requestor can continue to edit the task, selecting <b>Save Changes to this Task</b> at any point. Any information can be edited except the task name.</p>
+
+<li><p>To test the task and see how it will appear to responders, the requestor can select <b>Launch Participant URL in a new tab</b>. Any work done will be recorded as an actual response, unless deleted. Another alternative for testing is to click <b>Copy Participant URL</b> and to paste this into the URL bar of the browser.<p>
+</ol>
+
+
+
+<br/>&nbsp;
+
+<h2>How do requestors ask responders to do a task?</h2>
+
+<p>There are two ways:</p>
+
+<ul>
+<li><p>Give the responders the task name and ask them to go to the <b>SAVE & LOAD</b> menu, to select <b>Load a Task</b> and enter the task name.</p>
+
+<li><p>Give them the URL obtained from selecting <b>Copy Participant URL</b>; clicking on this URL will create a new individual response (a new secret URL) for the person clicking. Note you can't give them the URL that appears from selecting Launch Participant URL in a new tab because that is an individual response from <em>you</em> and you would be giving all participants access to the same response!</p>
+</ul>
+
+<p>Note: If the requestor edits the model of a task after a responder creates a response, the responder will not have access to rhe revised model. However, responders will have access to revised instructions.</p>
+
+<p>Requestors can distribute the task name or the participant URL via email, a learning management system, or any other means.</p>
+
+
+
+<br/>&nbsp;
+
+
+<h2>How do responders respond to a task?</h2>
+
+<p>This information is <a href="RespondingtoTasks.html">in a separate manual page intended for responders</a>. The tool is designed, however, such that responders should not need to access any help. They just read the instructions provided by the requestor, do the task, and submit.</p>
+
+<p>There are a few points responders should be aware of in certain circumstances.
+
+<ol>
+
+<li>Responders would benefit from bookmarking the URL of their response if they want to be able to continue their work in several sessions before submitting (if they lose their URL they will not be able to recover their work easily, although see below for alternatives).
+
+<li>Responders ought to provide their name or other ID in their response as a comment, if the requestor wants this. So tell them to do so in your instructions.
+
+<li>Responders need to choose <b>Submit task</b> when they are done.
+
+<li>Responders cannot go back to edit their response after submitting (they can look at it, but it will be read only).
+
+<li>A responder can delete their work by clicking on <b>Cancel this task response</b> before submission (but not afterwards).
+
+
+</ol>
+</p>
+
+
+
+<br/>&nbsp;
+
+
+
+<h2>How can the requestor obtain submissions?</h2>
+
+<p>Submissions can be obtained in the following ways. The first two of these will work even before submission.</p>
+
+<ul>
+
+<li>Responders can be asked to simply send the URL of their submission to the requestor (e.g. in an email, or in some other tool).</li>
+
+<li>The responder can click on the link <b>Request all Directories as a zip under this task</b> from the task editing pane. This will work even if a responder has forgotten to submit, so could be useful in an emergency where a a responder forgets their response URL or closes their browser.
+
+<li>If the requestor has set up a <b>Completion URL</b> the response URL will be passed to this. <a href="UsingCompletionURLs.html">The requestor can use their own software, or a tool like SurveyMonkey to gather the URLs along with answers to other questions.</a></li>
+
+</ul>
+
+<p>Additionally, a responder could in some cases want to copy and paste their Umple model (text or diagram) into a separate file, and requestors might ask them to do this in the instructions</p>
+
+<p>If a responder loses the URL of their submission, they might be able to obtain their model by clicking on the 'Restore Saved State' link that appears for a short period when UmpleOnline is relaunched. This does not, however, restore their submission: they would have to create a new submission and copy and paste the retrieved model into it. </p>
+
+
+<br/>&nbsp;
+
+
+<h2>How long do submissions persist?</h2>
+
+<p>It is intended that submissions will persist for a year after they are last edited, but it is recommended that requestors and responders not rely on this, and back up their Umple code somewhere else.</p>
+
+
+<br/>&nbsp;
+
+
+<hr />
+
+<p><a href="PrivacyandRisks.html">See here for the statement regarding <b>privacy and other risks when using UmpleOnline</b>.</a></p>

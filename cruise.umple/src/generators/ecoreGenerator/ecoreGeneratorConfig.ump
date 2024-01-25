@@ -1,0 +1,25 @@
+namespace cruise.umple.compiler;
+
+use EoreGenerator;
+
+mixset EoreGenerator{
+
+class EcoreGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  EcoreGenModel genModel = null;
+  String output = "";
+}
+
+use generators/ecoreGenerator/Generator_CodeEcore.ump;
+
+
+}

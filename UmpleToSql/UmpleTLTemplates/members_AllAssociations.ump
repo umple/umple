@@ -21,16 +21,17 @@ Note: The foreign key constraint is not defined here, as the associated class ma
     
     String attribute = av.isOne() ? gen.translate("attributeOne",av) : gen.translate("attributeMany",av);
  
-    if (av.isOptionalOne() || av.isOnlyOne() || av.isN())
+    if ((av.isOptionalOne() || av.isOnlyOne() || av.isN()) && av.hasRelatedAssociation())
     { 
-      if (isFirst)
+      UmpleClass associatedUClass = av.getRelatedAssociation().getUmpleClass();
+      gen.toggleReadyToSetRootClass();
+      List<Attribute> foreignPKList = gen.resolvePrimaryKey(associatedUClass);
+      if (isFirst && foreignPKList.size()>0)
       {
         appendln(realSb, "");
         appendln(realSb,"  /*{0} Associations*/", gen.translate("type", uClass));
         isFirst = false;
       }
-      UmpleClass associatedUClass = av.getRelatedAssociation().getUmpleClass();
-      List<Attribute> foreignPKList = gen.resolvePrimaryKey(associatedUClass);
       for(int i = 1; i <= av.getMultiplicity().getUpperBound(); i += 1)
       { 
 	    for(Attribute foreignPK : foreignPKList)

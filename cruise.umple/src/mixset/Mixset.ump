@@ -1,0 +1,107 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Mixset meta-model
+
+*/
+
+class UmpleModel {
+  // This mixin adds the complete set of Mixsets and files to the
+  // model.
+     0..1 -- * MixsetOrFile;
+}
+// A MixsetOrFile is an umple entity that is subject to require logic
+class MixsetOrFile {
+  UmpleFile useUmpleFile = null; // File where the use statement was encountered
+  Integer useUmpleLine = 0; 
+  Boolean isMixset = false;
+  abstract String getName();
+
+}
+// This class already exists in the util subdirectory
+// It is used for the main file, and there is code
+// to add linkedfiles. It would seem logical to consider 
+// using UmpleFile as a subclass of MixsetOrFile. An
+// instance would have to be populated for every file
+// not just the main file.
+class UmpleFile {
+  isA MixsetOrFile;
+  String getName() {
+    return getSimpleFileName();
+  }
+}
+// A mixset is a block of code that may or may not be included by a use statement
+// It consists of one or more fragments that are encountered anywhere in the Umple source
+// including in other mixsets
+class Mixset {
+  mixsetName; // name of the mixset
+  isA MixsetOrFile;
+  boolean isFeature = false;  // Specify a mixset to be a feature. Default value is false.. 
+
+  List<MixsetInMethod> mixsetInMethod = new ArrayList<MixsetInMethod>(); // to store inline mixset inside methods
+  boolean isEmpty = false; // to specify a mixset that has definition but no body.
+
+  after constructor {  
+    setIsMixset(true);
+    setIsEmpty(false);
+  }
+  
+  // Used fragments are those that have been parsed because a use statement was previously 
+  // encountered.
+  // If a use statement had been previously encountered, the fragment is parsed and put here
+  // directly
+  // 0..1 usedAsPartOf -- * MixsetFragment usedFragments;
+
+  // Waiting ragments are those not yet parsed since no use statement was found yet
+  // All new fragments are added here
+  // Upon a use statement, all waiting fragments are parsed and put in usedFragments
+  // 0..1 -- * MixsetFragment waitingFragments;
+  
+  // use (parsed) fragments and waiting (unparsed) fragments will be stored as MixsetFragments.
+  // The isParsed filed of MixsetFragment is used to differentiate between them.
+  // The aim is to easly change from waiting fragments to used fragments. Instead of copying and deleteing.  
+  0..1 -- * MixsetFragment mixsetFragments;
+  
+  String getName() {
+    return mixsetName;
+  }  
+}
+
+
+// Each mixset statement creates a MixSetFragment
+class MixsetFragment {
+
+  // The following attributes are used when generating the virtual
+  // file for parsing, so any bugs can point back to the original file
+  UmpleFile originalUmpFile; // where the fragment came from
+  Integer originalUmpLine; // line in originaUmpFile
+
+  boolean isParsed = false; // by default a fragment is not parsed, then this will be changed after parsing.
+  // This is the text of the fragment
+  // Note that it might be prefixed contextually thus:
+  // if top level, the body is whatever is found in the curly brackets
+  // if class X mixset Y {}, then wrapped in class X { }
+  // if class X { mixset Y {...}} then wrapped in class X { }
+  // if class X { mixset Y a; then just there are no curly brackets, and a is wrapped in class X {}
+  body;
+}
+
+class MethodBody
+{
+  0..1 -- * MixsetInMethod;
+}
+
+// This class keeps references to mixsets which are iside methods
+class MixsetInMethod
+{
+  String mixsetName; 
+  int startPositionIndex; //relative to the original body of the method 
+  int endPositionIndex;
+  MixsetInMethod parentInnerMixset = null; // to determine if its inner mixset
+  MixsetInMethod[] childMixsets;
+  String mixsetFragment;
+}

@@ -1,0 +1,13 @@
+generate Python;
+
+class OuterClass_2
+{
+  inner class InnerClass
+  {
+    int x;
+  
+  }
+
+}
+
+

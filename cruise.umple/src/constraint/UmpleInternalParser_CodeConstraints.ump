@@ -1,0 +1,170 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file analyze class related umple meta model tokens such class declarations,
+associations and attributes and populates the umple meta model.
+
+Please refer to UmpleInternalParser.ump for more detailsub.
+
+ */
+
+namespace cruise.umple.compiler;
+
+class UmpleInternalParser
+{
+  private enum DataType {
+    BOOL,
+    NUMBER,
+    STRING,
+    DATE;
+  }
+  
+  private void postTokenModelConstraintAnalysis(){
+    for(UmpleClass uClass:model.getUmpleClasses())
+    {
+      for(ModelConstraint modelConstraint:uClass.getModelConstraints())
+      {
+        ModelConstraintResult result = modelConstraint.evaluate(uClass);
+        if(result!=ModelConstraint.SUCCESS)
+        {
+          setFailedPosition(result.getPosition(),result.getError(),result.getTarget(),result.getSource());
+        }
+      }
+    }
+  }
+  
+  private void analyzePrecondition (Token preconditionToken, UmpleClassifier uClassifier, Method method)
+  {
+    if(((PreconditionAnalyzer)model.getAnalyzer("precondition"))!=null){
+      ((PreconditionAnalyzer)model.getAnalyzer("precondition")).setUClassifier(uClassifier);
+      ((PreconditionAnalyzer)model.getAnalyzer("precondition")).setMethod(method);
+      model.getAnalyzer("precondition").analyzeToken(preconditionToken);
+    }
+    
+  }
+
+  private void analyzePostcondition (Token postconditionToken, UmpleClassifier uClassifier, Method method)
+  {
+    if(((PostconditionAnalyzer)model.getAnalyzer("postcondition"))!=null){
+      ((PostconditionAnalyzer)model.getAnalyzer("postcondition")).setUClassifier(uClassifier);
+      ((PostconditionAnalyzer)model.getAnalyzer("postcondition")).setMethod(method);
+      model.getAnalyzer("postcondition").analyzeToken(postconditionToken);
+    }
+  }
+    
+  /*
+   * Analyzes a token recognized as a constraint
+   * 
+   * @param invariantToken The token containing the constraint.
+   * @param aClass The Umple class for which an attribute is being constrained.
+   */
+  private void analyzeInvariant (Token invariantToken, UmpleClassifier uClassifier)
+  {
+    if(((InvariantAnalyzer)model.getAnalyzer("invariant"))!=null){
+      ((InvariantAnalyzer)model.getAnalyzer("invariant")).setUClassifier(uClassifier);
+      model.getAnalyzer("invariant").analyzeToken(invariantToken);
+      if (uClassifier instanceof UmpleClass) {
+        List<String> variableNames = new ArrayList<>();
+        for (Attribute attr: ((UmpleClass)uClassifier).getAttributes()) {
+          variableNames.add(attr.getName());
+        }
+        List<ConstraintTree> constraintTrees = ((UmpleClass)uClassifier).getConstraintTrees();
+        String className = ((UmpleClass)uClassifier).getName();
+        DataType type = checkVariableNamesAndTypes(variableNames, constraintTrees.get(constraintTrees.size() - 1), invariantToken, className);
+        if (type != DataType.BOOL && type != null) {
+          setFailedPosition(invariantToken.getPosition(), 29);
+        }
+      }
+    }
+  }
+     
+/*
+ * Analyzes a token recognized as a model contraint.
+ *
+ * @param modelConstraintToken The token containing the constraint.
+ */
+  private void analyzeModelConstraint(Token modelConstraintToken, UmpleClassifier uClassifier)
+  {
+    if(((ModelConstraintBodyAnalyzer)model.getAnalyzer("modelConstraintBody"))!=null){
+      model.getAnalyzer("modelConstraintBody").analyzeToken(modelConstraintToken);
+      uClassifier.addModelConstraint(((ModelConstraintBodyAnalyzer)model.getAnalyzer("modelConstraintBody")).getModelConstraint());
+      ((ModelConstraintBodyAnalyzer)model.getAnalyzer("modelConstraintBody")).reset();
+    }
+  }
+  
+  private DataType getDataType(String type) {
+    if ("Float".equals(type) || "Double".equals(type) || "Integer".equals(type)) {
+      return DataType.NUMBER;
+    }
+    if ("boolean".equals(type) || "Boolean".equals(type)) {
+      return DataType.BOOL;
+    }
+    if ("String".equals(type)) {
+      return DataType.STRING;
+    }
+    if ("Date".equals(type) || "Time".equals(type)) {
+      return DataType.DATE;
+    }
+    // Null represents some type other than the Umple built in types
+    return null;
+  }
+
+  private DataType checkVariableNamesAndTypes(List<String> variableNames, ConstraintVariable cur, Token token, String className) {
+    if (cur instanceof ConstraintOperator) {
+      DataType type1 = checkVariableNamesAndTypes(variableNames, ((ConstraintOperator)cur).getLeft(), token, className);
+      DataType type2 = checkVariableNamesAndTypes(variableNames, ((ConstraintOperator)cur).getRight(), token, className);
+      if (type1 != type2 && type1 != null && type2 != null) {
+        // Data types must match, or be of non built in type
+        setFailedPosition(token.getPosition(), 29);
+      } else if ((type1 == DataType.STRING || type2 == DataType.STRING) &&
+                 !("object==".equals(((ConstraintOperator)cur).getValue()) ||
+                   "object!=".equals(((ConstraintOperator)cur).getValue()))) {
+        // Strings can only be compared with == or !=
+        setFailedPosition(token.getPosition(), 29);
+      } else if ((type1 == DataType.BOOL || type2 == DataType.BOOL) &&
+                 !("object==".equals(((ConstraintOperator)cur).getValue()) ||
+                   "object!=".equals(((ConstraintOperator)cur).getValue()) ||
+                   "||".equals(((ConstraintOperator)cur).getValue()) ||
+                   "&&".equals(((ConstraintOperator)cur).getValue()))) {
+        // Booleans can only be compared with ==, !=, ||, or &&
+        setFailedPosition(token.getPosition(), 29);
+      } else if ((type1 == DataType.NUMBER || type2 == DataType.NUMBER ||
+                  type1 == DataType.DATE || type2 == DataType.DATE) &&
+                  ("||".equals(((ConstraintOperator)cur).getValue()) ||
+                  "&&".equals(((ConstraintOperator)cur).getValue()))) {
+        // Numbers and Dates cannot be compared with || or &&
+        setFailedPosition(token.getPosition(), 29);
+      }
+      return DataType.BOOL;
+    } else if (cur instanceof ConstraintTree) {
+      DataType type = checkVariableNamesAndTypes(variableNames, ((ConstraintTree)cur).getRoot(), token, className);
+      if (((ConstraintTree)cur).getDisplayNegation()) {
+        if (type != DataType.BOOL && type != null) {
+          // Not operator can only act on booleans
+          setFailedPosition(token.getPosition(), 29);
+        }
+      }
+      return type;
+    } else if (cur instanceof ConstraintLiteral) {
+      if (cur instanceof ConstraintNumberLiteral) {
+        return DataType.NUMBER;
+      } else {
+        return DataType.STRING;
+      }
+    } else if (cur instanceof ConstraintNamed) {
+      if (!variableNames.contains(((ConstraintNamed)cur).getName())) {
+        setFailedPosition(token.getPosition(), 28, ((ConstraintNamed)cur).getName(), className);
+      }
+      if (cur instanceof ConstraintAttribute) {
+        return getDataType(((ConstraintAttribute)cur).getAttribute().getType());
+      } else {
+        // TODO: add checks for other types of ConstraintNamed such as ConstraintMethodParameter
+      }
+    }
+    return null;
+  }
+}

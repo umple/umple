@@ -15,7 +15,7 @@ module ExampleLoaderHelper
   "OhHellWhist.ump" => ["Card", "Trick_generalization", "umpleAssociation_8"],
   "Claim.ump" => ["Claim", "Clamor", "umpleAssociation_0"],
   "CommunityAssociation.ump" => ["CommunityResidence", "Rink_generalization", "umpleAssociation_5"],
-  "Compositions.ump" => ["Composition", "", ""],
+  "Compositions.ump" => ["Building", "Floor", "Wheel"],
   "CoOpSystem.ump" => ["Job", "Resume", "umpleAssociation_11"],
   "DMMOverview.ump" => ["SourceObject", "SourceRelationship_generalization", "umpleAssociation_6"],
   "DMMSourceObjectHierarchy.ump" => ["Contains", "SourceUnit_generalization", "umpleAssociation_7"],
@@ -76,7 +76,7 @@ STATE_EXAMPLES = {
   "TollBooth.ump" => ["clust2", "edge19", "node11"],
   "TrafficLightsA.ump" => ["edge10", "node6"],
   "TrafficLightsB.ump" => ["clust6", "node30", "edge24"],
-  "HomeHeater.ump" => ["edge23", "node37"]
+  "HomeHeater.ump" => ["edge23", "node25"]
 }
 
 COMPOSITE_STRUCTURES_EXAMPLES = {
@@ -97,47 +97,50 @@ COMPOSITE_STRUCTURES_EXAMPLES = {
   end
 
   def check_class_example(example_name)
+    load_page
+   
     select_option_by_value("#inputExampleType", "cdModels")
     select_option_by_value("#inputExample", example_name)
-
-    wait_for_loading
 
     #include is used here because the website adds the model delimiter to the
     #end of the code, which is not present in the source file for the diagram
     expect(evaluate_script("Page.getUmpleCode()"))
-      .to include(get_example_contents(example_name))
+      .to include(get_example_contents(example_name).split("//$?[End_of_model]$?")[0])
+   
 
     CLASS_EXAMPLES[example_name].each do |element|
-      expect(find(:css, "#umpleCanvas")).to have_selector("##{element}")
+      expect(find(:css, "#umpleCanvas")).to have_selector("##{element}", wait:10)
     end
   end
 
   def check_state_example(example_name)
+    load_page
+
     select_option_by_value("#inputExampleType", "smModels")
     select_option_by_value("#inputExample2", example_name)
     
-    wait_for_loading 
-    
+    wait_for_loading
     #include is used here because the website adds the model delimiter to the
     #end of the code, which is not present in the source file for the diagram
     expect(evaluate_script("Page.getUmpleCode()"))
-      .to include(get_example_contents(example_name))
+      .to include(get_example_contents(example_name).split("//$?[End_of_model]$?")[0])
 
     STATE_EXAMPLES[example_name].each do |element|
-      expect(find(:css, "#umpleCanvas")).to have_selector("##{element}")
+      expect(find(:css, "#umpleCanvas")).to have_selector("##{element}", wait:10)
     end
   end
 
   def check_comp_structure_example(example_name)
+    load_page
+ 
     select_option_by_value("#inputExampleType", "structureModels")
     select_option_by_value("#inputExample3", example_name)
 
-    wait_for_loading
     expect(evaluate_script("Page.getUmpleCode()"))
-      .to include(get_example_contents(example_name))
+      .to include(get_example_contents(example_name).split("//$?[End_of_model]$?")[0])
   
     COMPOSITE_STRUCTURES_EXAMPLES[example_name].each do |element|
-      expect(find(:css, "#umpleCanvas")).to have_selector("##{element}")
+      expect(find(:css, "#umpleCanvas")).to have_selector("##{element}", wait:10)
     end
   end
 

@@ -1,0 +1,155 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This class provides helper methods of class related code generation.
+
+Please refer to GeneratorHelper_Code.ump for more details.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class GeneratorHelper
+{
+
+  // Remove all internally added classes
+  public static void postpareClass(UmpleModel model)
+  {
+    int maxIndex = model.numberOfUmpleClasses() - 1;
+    for (int i=maxIndex; i>=0; i--)
+    {
+      UmpleClass c = model.getUmpleClass(i);
+      if (c.getIsInternal())
+      {
+        model.removeUmpleClass(c);
+      }
+    }
+  }
+  
+  // Remove all internally added attributes / associations of a class
+  private static void postpareClass(UmpleClass aClass)
+  {
+    int maxIndex = aClass.numberOfCodeInjections() - 1;
+    for (int i=maxIndex; i>=0; i--)
+    {
+      CodeInjection ci = aClass.getCodeInjection(i);
+      if (ci.getIsInternal())
+      {
+        aClass.removeCodeInjection(ci);
+      }
+    }
+    
+    maxIndex = aClass.numberOfDepends() - 1;
+    for (int i=maxIndex; i>=0; i--)
+    {
+      Depend d = aClass.getDepend(i);
+      if (d.getIsInternal())
+      {
+        aClass.removeDepend(d);
+      }      
+    }  
+  }  
+  
+  public static String toCode(List<CodeInjection> allCodeInjections)
+  {
+    String asCode = null;
+    if (allCodeInjections != null)
+    {
+      for (CodeInjection inject : allCodeInjections)
+      {
+        mixset Mixset {
+	      if(inject.hasCodeLabel())
+          continue;// handle the case when labels are used. // Do nothing  
+        }
+        String comment = "//";
+        mixset RubyGeneratorIntMixset {
+          comment = RubyGenerator.class.isInstance(generator)?"#":"//";
+        }
+        String positionString = "";
+        Position p = inject.getPosition();
+        Position codeP = inject.getCodePosition();
+        String injectFooter = "";
+        String injectType = inject.getType();
+        if (codeP != null) {
+            positionString =  comment + " line " + codeP.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
+            if (injectType != null) {
+                injectFooter = "\n"+ comment +" END OF UMPLE " + injectType.toUpperCase() + " INJECTION";
+            }
+        }
+        else if (p != null) {
+            positionString =  comment +" line " + p.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
+            if (injectType != null) {
+                injectFooter = "\n"+ comment +" END OF UMPLE " + injectType.toUpperCase() + " INJECTION";
+            }
+        }
+        if (asCode == null)
+        {
+          if(inject.getConstraintTree()!=null&&generator!=null)
+          {
+            asCode = positionString + inject.getConstraintCode(generator) + injectFooter;
+          }
+          
+          else asCode = (inject.getCode()!=null)?positionString + inject.getCode() + injectFooter:positionString + injectFooter;
+
+        }
+        else
+        {
+          if(inject.getConstraintTree()!=null&&generator!=null)
+          {
+            asCode = StringFormatter.format("{0}\n{1}{2}{3}",asCode,positionString,inject.getConstraintCode(generator), injectFooter);
+          }
+          else asCode = StringFormatter.format("{0}\n{1}{2}{3}",asCode,positionString,inject.getCode(), injectFooter);
+        }
+      }
+    }
+    if (asCode == null)
+    {
+      return null;
+    }
+    return asCode;
+  }  
+
+  public static String doIndent(String code, String indents)
+  {
+    StringBuilder builder = new StringBuilder(code.length() + indents.length()); //Assume generally only one line, will expand otherwise
+    builder.append(indents); //Indent first line
+    for (int i = 0; i < code.length(); i++)
+    {
+      builder.append(code.charAt(i));
+      if (code.charAt(i) == '\n')
+      {
+        builder.append(indents);
+      }
+    }
+    return builder.toString();
+  }
+  
+  public static boolean isValidReturnStatement(String statement) {
+    int returnInd = statement.indexOf("return");
+  	if (returnInd == -1) {
+  	  return false;
+  	}
+  	if (statement.trim().substring(0,2).equals("//")) { // Can't be in a comment
+  	  return false;
+  	}
+  	if (!(statement.charAt(returnInd + 6) == ';' || statement.charAt(returnInd + 6) == ' ')){
+  	  return false;
+  	}
+  	//Check if it's in a quote
+	int openQuote = statement.indexOf("\"");
+	while (openQuote != -1 && openQuote < returnInd){
+	  int closeQuote = statement.indexOf("\"",openQuote + 1);
+	  if (closeQuote > returnInd){
+	  	return false;
+	  }
+	  openQuote = statement.indexOf("\"",closeQuote + 1);
+	}
+	return true;
+  }
+
+}
+

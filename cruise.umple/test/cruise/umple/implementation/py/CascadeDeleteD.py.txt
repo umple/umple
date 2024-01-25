@@ -1,0 +1,21 @@
+from C import C
+
+class D():
+    def __init__(self, aC):
+        if aC is None or aC.getMyD() != None :
+            raise RuntimeError ("Unable to create D due to aC. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+        self._c = aC
+
+    def __init__(self, aBForC):
+        self._c = C(self, aBForC)
+
+    def getC(self):
+        return self._c
+
+    def delete(self):
+        existingC = self._c
+        self._c = None
+        if not(existingC is None) :
+            existingC.delete()
+

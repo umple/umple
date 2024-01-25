@@ -1,0 +1,13 @@
+// The following solves the problem
+// by either making the association unndirected
+// or making the bounds have soft constraints
+
+namespace W036UnmanagedMultiplicity2;
+
+class X {
+  0..1 -> * B first;
+  * -> * B second;
+  0..2 -- * B third;
+}
+
+class B {}

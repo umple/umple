@@ -1,12 +1,22 @@
 #!/bin/csh -fb
 if ! $?UMPLEROOT then
-  setenv UMPLEROOT ~/umple
+  if ( $cwd:t == 'build' ) then
+    if ( $1 == 'here' ) then
+      setenv UMPLEROOT `dirname "$cwd"`
+    else
+      echo If in a build directory specify \'bumple here\' to avoid default
+      exit
+    endif
+  else
+    setenv UMPLEROOT ~/umple
+  endif
 endif
 cd $UMPLEROOT/build
-if ($OSTYPE == 'cygwin' || $OSTYPE == 'msys' | $OSTYPE == 'win32') then
-  set buildenv="wlocal"
-else
-  set buildenv="local"
+set buildenv="local"
+if ( $?OSTYPE ) then
+  if ( $OSTYPE == 'cygwin' || $OSTYPE == 'msys' | $OSTYPE == 'win32' ) then
+    set buildenv="wlocal"
+  endif
 endif
 echo Doing FULL build of Umple at $UMPLEROOT using ant -Dmyenv=$buildenv
 echo Building repo at $UMPLEROOT
@@ -26,6 +36,9 @@ if ($status == 0 || $failedstatus == 0) then
   echo The word FAILED or ERROR was found in the above. Build was NOT SUCCESSFUL.
   echo Build log is at $logfile
   echo Test log can be opened in a web browser at $UMPLEROOT/dist/qa/index.php
+  echo The following is a snippet of the log with the problem
+  grep -C3 -i -n -m 1  'Error ' $logfile 
+  grep -C3 -i -n -m 1  'failed' $logfile
 else
   rm $logfile
   echo Script bumple ended normally at $UMPLEROOT

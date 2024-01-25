@@ -1,0 +1,18 @@
+generate Sql;
+
+namespace example;
+
+class Person{
+    name;
+    int age;
+}
+
+class Mentor{
+    class;
+    isA Person;
+}
+
+class Student{
+    int locker;
+    isA Person;
+}

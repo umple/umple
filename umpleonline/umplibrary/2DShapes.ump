@@ -1,0 +1,96 @@
+// 2D Shapes class hierarchy - sample UML class
+// diagram in Umple
+// From Book by Lethbridge and Laganiere, McGraw Hill 2004
+// Object-Oriented Software Engineering:
+//   Practical Software Engineering using UML and Java
+// See https://www.site.uottawa.ca/school/research/lloseng/
+
+//Namespace for core of the system.
+namespace Shapes.core;
+
+class Shape2D {
+ center;
+}
+//Abstract
+class EllipticalShape {
+ isA Shape2D;
+ semiMajorAxis;
+}
+//Abstract
+class Polygon { 
+ isA Shape2D;
+}
+class Circle {
+ isA EllipticalShape;
+}
+class Ellipse{
+ isA EllipticalShape;
+}
+class SimplePolygon {
+ orientation;
+ isA Polygon;
+}
+class ArbitraryPolygon {
+ points;
+ isA Polygon;
+}
+class Rectangle {
+ isA SimplePolygon;
+ height;
+ width;
+}
+class RegularPolygon {
+ numPoints;
+ radius;
+ isA SimplePolygon;
+}
+
+class Shape2D {
+  public static void main(String [] argc) {
+    Shape2D s = new
+      RegularPolygon("0,0","0","3","100");
+    System.out.println(s);
+  }
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java code
+// @@@skipphpcompile - Contains Java code
+// @@@skiprubycompile - Contains Java code
+// @@@skippythoncompile - Contains Java code
+// Positioning
+class Shape2D
+{
+  position 243 18 120 62;
+}
+class Polygon
+{
+  position 100 152 109 40;
+}
+class EllipticalShape
+{
+  position 389 145 168 60;
+}
+class Ellipse
+{
+  position 354 274 109 40;
+}
+class Circle
+{
+  position 498 275 109 40;
+}
+class ArbitraryPolygon
+{
+  position 19 266 117 60;
+}
+class SimplePolygon
+{
+  position 163 266 148 60;
+}
+class RegularPolygon
+{
+  position 76 395 144 74;
+}
+class Rectangle
+{
+  position 263 393 118 74;
+}

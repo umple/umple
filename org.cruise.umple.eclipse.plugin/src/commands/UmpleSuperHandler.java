@@ -13,6 +13,8 @@ import org.eclipse.swt.graphics.Color;
 
 import cruise.umple.compiler.UmpleFile;
 import cruise.umple.compiler.UmpleModel;
+import cruise.umple.compiler.UmpleImportModel;
+import cruise.umple.compiler.PapyrusImportHandler;
 
 public class UmpleSuperHandler {
 	
@@ -38,6 +40,24 @@ public class UmpleSuperHandler {
 	        	refreshProjectFoler(editorInput);
 			} catch (Exception e) {
 				showErrorMessage(e.getMessage());
+			}
+		} else if (iFile.getFileExtension().toLowerCase().equals("uml")) {
+			String fileName = iFile.getName();
+			String absolutePath = iFile.getLocation().toString();
+			PapyrusImportHandler handler = new PapyrusImportHandler();
+			boolean parsingSuccess = false;
+			try {
+				UmpleImportModel umple = handler.readDataFromXML(absolutePath);
+				parsingSuccess = umple.generateUmpleFile(absolutePath + ".ump");
+				refreshProjectFoler(editorInput);
+			} catch (Exception e) {
+				showErrorMessage(e.getMessage());
+			}
+
+			if (parsingSuccess) {
+				showMessage("Success! Processed "+ absolutePath + ".");
+			} else {
+				showErrorMessage("No file generated, parsing error.");
 			}
 		} else{ 
 			showErrorMessage("Please select an Umple file. The file must have .ump extension.");

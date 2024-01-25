@@ -1,0 +1,32 @@
+Abstraction Occurrence
+Patterns
+noreferences
+@@tooltip This pattern allows you to tag two classes to be connected by a special one-to many association indicating that the instances of the abstraction class contain information that is in common to many occurrences that are described by a separate class.
+
+
+@@description
+<p>When modeling, it is common to encounter situations where there will be objects (abstractions) that need to store information that will not vary among many other objects (occurrences). We want to avoid duplicating the data in each occurrence.</p>
+
+<p>Examples include:
+<ul>
+<li>Books (abstraction) have a title and an author; but there are many copies (occurrence) in the library that are separately borrowed by clients. We do not want to duplicate the title and author in each copy object.</li>
+<li>TV series (abstraction) have stars, a name and a studio; but there are many episodes (occurrences).</li>
+</ul></p>
+
+<p>It is an <i>antipattern</i> (i.e. poor design) to use the same class for both abstraction and occurrence. It is also an antipattern to use generalization (i.e. erroneously making the occurence a subclass of the abstraction) because that would result in duplication of data in the attributes of the occurrences. This is often not well-understood by inexperienced modelers.</p>
+
+<p>The solution is to create a one-to-many association between the abstraction class and the association class. Umple provides a built-in pattern to make abstraction-occurrence relationships explicit, although  using an ordinary association would be a valid alternative.</p>
+
+<p>To use this pattern, add a use statement to incorporate the built-in AbstractionOccurrence.ump file. Then use isA statements to declare which class is an Abstraction, and which is an occurrence (of which Abstraction). Follow what is show in the second block of code below.</p>
+
+<p>This is one of several patterns in Umple Umple that are built into the language as of 1.32 via a use statement. See the code below.</p>
+
+@@example @@caption The Abstraction-Occurrence pattern code that is imported by specifying use lib:AbstractionOccurrence.ump @@endcaption
+@@source reusable/AbstractionOccurrence.ump &diagramtype=GvClassTrait
+@@endexample
+
+@@example @@caption Example of the Abstraction-Occurrence pattern to specify a library @@endcaption
+@@source manualexamples/LibraryByPattern.ump
+@@endexample
+
+

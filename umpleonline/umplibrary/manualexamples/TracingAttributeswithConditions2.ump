@@ -1,0 +1,11 @@
+
+// this example injects trace code in attribute
+// setter with specified postcondition
+
+@SuppressWarnings("deprecation")
+class Student
+{
+  name;
+  trace name giving [name == "john"];
+}
+// @@@skipphpcompile See issue 596 (PHP tracing causes issues)

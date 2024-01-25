@@ -1,7 +1,6 @@
 digraph "ColouredEntity" {
-  size="80,10"
   rankdir="BT"
-  node [shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+  node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
 
   // Class: X
   "X" [ style=filled, fillcolor="#FFCCCC", shape=rectangle, label="   X   ",
@@ -32,8 +31,8 @@ digraph "ColouredEntity" {
 
   // All associations
   "Y_X" [shape=diamond, label="   test   ", tooltip="Y->X"];
-  "Y" -> "Y_X" [dir="back", arrowtail="open", label="0..1", tooltip="Y->X"];
+  "Y" -> "Y_X" [dir="back", arrowtail="open", label="0..1", tooltip="Y->X" labeltooltip="Y->X" headtooltip="Y->X" tailtooltip="Y->X" labelurl="javascript:void()" tailurl="javascript:void()" headurl="javascript:void()" ];
 
-  "Y_X" -> "X" [dir="back", arrowtail="open", label="*", tooltip="Y->X"];
+  "Y_X" -> "X" [dir="back", arrowtail="open", label="*", tooltip="Y->X" labeltooltip="Y->X" headtooltip="Y->X" tailtooltip="Y->X" labelurl="javascript:void()" tailurl="javascript:void()" headurl="javascript:void()" ];
 
 }

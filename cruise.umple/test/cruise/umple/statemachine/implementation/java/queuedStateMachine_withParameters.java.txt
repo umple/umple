@@ -207,7 +207,7 @@ public class LightFixture implements Runnable
 
   public void turnDimmer (Integer lightval)
   {
-    Vector v = new Vector(1);
+    Vector<Object> v = new Vector<Object>(1);
     v.add(0, lightval);
     queue.put(new Message(MessageType.turnDimmer_M, v));
   }

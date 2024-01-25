@@ -1,7 +1,0 @@
-// This traces  getId() method
-class Student
-{
-  Integer id;
-  trace get id;
-}
-// @@@skipphpcompile See issue 596 (PHP tracing causes issues)

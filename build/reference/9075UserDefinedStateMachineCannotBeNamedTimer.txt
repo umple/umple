@@ -1,0 +1,20 @@
+E075 UserDefinedStateMachineCannotBeNamedTimer
+Errors and Warnings 51-99
+noreferences
+
+@@description
+
+<h2>Umple error reported when a user-defined state machine is named 'timer'</h2>
+
+<p>
+In Umple, 'timer' cannot be used as a state machine name. This is because generated code for 'after' statements  creates timers and there would be a naming conflict in the generated code. To fix the problem, give the state machine a slightly different name,
+</p>
+
+
+@@example
+@@source manualexamples/E075UserDefinedStateMachineCannotBeNamedTimer1.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/E075UserDefinedStateMachineCannotBeNamedTimer2.ump
+@@endexample

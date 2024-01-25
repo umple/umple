@@ -1,0 +1,6 @@
+umplePath=umpleonline/ump
+tempPath=/tmp
+mainContainerName=code_execution
+tempContainerName=java_execution
+portToUse=4400
+timeoutValue=20

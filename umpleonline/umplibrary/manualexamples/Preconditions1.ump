@@ -1,0 +1,14 @@
+class PotentialVoter {
+  Integer age;
+  
+  int vote(int candidate) {
+    [pre: age >= 18]
+    [pre: candidate > 0]
+    // rest of stuff that we do not interpret
+     return 0;
+  }
+}
+//$?[End_of_model]$?
+// @@@skipphpcompile - Contains Java/Cpp code
+// @@@skiprubycompile - Contains Java/Cpp code
+// @@@skippythoncompile - Contains Java/Cpp Code

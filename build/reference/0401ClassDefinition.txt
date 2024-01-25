@@ -1,16 +1,19 @@
 Class Definition
 Classes and Interfaces
 noreferences
+@@tooltip Classes are structured data types that have attributes, methods and other elements; they can be instantiated to create objects
 
 @@description
 <p>      
-A class definition defines an object-oriented class available for use as a type in the system you are developing. Objects (chunks of data) are created as <i>instances</i> of the class. A class describes the structure of that data in terms of <a href="AttributeDefinition.html">attributes</a> (simple data like strings and numbers), <a href="AssociationDefinition.html">associations</a> (links to and from other objects), as well as other items described in this manual.
+A class definition defines an object-oriented class available for use as a type in the system you are developing. Objects (chunks of data) are created as <i>instances</i> of the class. A class describes the structure of that data in terms of <a href="AttributeDefinition.html">attributes</a> (simple data like strings and numbers), <a href="AssociationDefinition.html">associations</a> (links to and from other objects), <a href="BasicStateMachines.html">state machines</a>, as well as many <a href="ClassContent.html">other things</a> described in this manual.
 </p>
 
 <p>To define a class in Umple, specify the keyword 'class', followed by the name of the class (starting in a capital letter in order to respect naming conventions as well as to avoid a 
 <a href="WE1xxIdentifierInvalid.html">warning</a>) and then the body of the class within curly brackets.</p>
 
 <p>The body can contain <a href="ClassContent.html">various elements that are listed in the Class Content page</a>.</p>
+
+<p><a href="Traits.html">Traits</a> can be used to add the same set of items to several unrelated classes.</a>.</p>
 
 <p>The following UML diagram shows two classes: a Student class and an Address class, linked by an association. The corresponding Umple is below.</p>
 

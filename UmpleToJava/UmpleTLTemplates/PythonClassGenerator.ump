@@ -1,0 +1,603 @@
+use UmpleNotice.ump;
+use association_Get_All.ump;
+use association_Set_All.ump;
+use attribute_Get_All.ump;
+use attribute_IsBoolean_All.ump;
+use attribute_Set_All.ump;
+use class_PythonMethodDeclaration.ump;
+use constructor_Declare_All.ump;
+use delete_All.ump;
+use enumerations_All.ump;
+use equals.ump;
+use import_packages.ump;
+use members_AllAssociations.ump;
+use members_AllAttributes.ump;
+use PythonDoActivities/members_python_AllDoActivities.ump;
+use members_AllHelpers.ump;
+use members_AllStateMachines.ump;
+use members_AllStatics.ump;
+use queued_state_machine_inner_class.ump;
+use queued_state_machine_queuedEvent.ump;
+use queued_state_machine_removalThread_run.ump;
+use state_machine_Events_All.ump;
+use state_machine_Get_All.ump;
+use state_machine_Set_All.ump;
+use state_machine_StateDependentMethods_All.ump;
+use PythonDoActivities/state_machine_python_doActivity_All.ump;
+use state_machine_timedEvent_All.ump;
+use toString_declare.ump;
+use trace.ump;
+use python_uncaught_exception.ump;
+use queued_method.ump;
+use association_sorted_serializable_readObject.ump;
+
+
+namespace cruise.umple.compiler.java;
+
+external interface ILang{}
+
+class PythonClassGenerator {
+    depend cruise.umple.compiler.*;
+    depend cruise.umple.util.*;
+    depend java.util.*;
+    depend cruise.umple.parser.Position;
+    depend java.util.regex.Matcher;
+    depend java.util.regex.Pattern;
+
+    isA ILang;
+
+    // Add a newline to the end of the input
+    private void appendln(StringBuilder buffer, String input, Object... variables)
+    {
+        append(buffer, input + NL, variables);
+    }
+
+    // This method will be used to append formatted strings
+    // i.e. format("Hello {0} {1}", "andrew","forward");
+    private void append(StringBuilder buffer, String input, Object... variables)
+    {
+        buffer.append(StringFormatter.format(input,variables));
+    }
+
+    emit getCode(UmpleModel model, UmpleElement uElement)(JavaClassGenerator);
+
+
+    JavaClassGenerator <<!<</*JavaClassGenerator*/>><<@ UmpleToJava.UmpleNotice >>
+<<#
+  UmpleClass uClass = (UmpleClass) uElement;
+  globalUmpleClass = uClass;  
+  GeneratedClass gClass = uClass.getGeneratedClass();
+  JavaGenerator gen = new JavaGenerator();
+  gen.setModel(model);
+  GeneratorHelper.generator = gen;
+
+  HashMap<String,String> codeInjectionMap = new HashMap<String,String>();
+  for (CodeInjection inject : uClass.getCodeInjections())
+  {
+    String operation = StringFormatter.toUnderscore(inject.getOperation());
+    String key = inject.getType() + ":" + operation;
+    String newCodeToInject = "";
+    String injectCode = inject.getConstraintTree()==null?inject.getCode():inject.getConstraintCode(gen);
+    if (codeInjectionMap.containsKey(key))
+    {
+      newCodeToInject = StringFormatter.format("{0}\n    {1}",codeInjectionMap.get(key),injectCode);
+    }
+    else
+    {
+      newCodeToInject = injectCode;
+    }
+    codeInjectionMap.put(key,newCodeToInject);
+  }
+
+  boolean isFirst = true;
+#>>
+
+<<=gen.translate("packageDefinition",uClass)>><<@ UmpleToJava.import_packages >>
+
+
+<<# if (uClass.numberOfComments() > 0 && uClass.numberOfRequirements() > 0) { List<Comment> toComment = new ArrayList<Comment>(uClass.getComments()); toComment.addAll(Requirement.convertToComment(uClass.getRequirements())); append(realSb, "\n{0}", Comment.format("Javadoc", toComment)); } #>>
+<<# if (uClass.numberOfComments() > 0 && uClass.numberOfRequirements() == 0) { append(realSb, "\n{0}", Comment.format("Javadoc",uClass.getComments())); } #>>
+<<# if (uClass.numberOfComments() == 0 && uClass.numberOfRequirements() > 0) { append(realSb, "\n{0}", Requirement.format("Javadoc",uClass.getRequirements())); } #>>
+<<# for (Position p : uClass.getPositions()) { #>>
+// line <<= p.getLineNumber() >> "<<= uClass.getRelativePath(p.getFilename(),"Java") >>"
+<<# }
+if(model.getDistributed() && model.getDistributeTechnology().equals("WS")){
+if(model.getDistributePattern()==0 && uClass.getDistributeTechnology().equals("WS")){
+String classPackageName=(uClass.getPackageName().length() == 0 ? "" : uClass.getPackageName() + ".")+"I"+uClass.getName()+"Impl";
+#>>
+@WebService(endpointInterface = "<<#append(realSb,classPackageName);#>>")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(factoryMethod="umplenewInstance", propOrder={<<#if (uClass.getExtendsClass() == null||(uClass.getExtendsClass() != null && ! uClass.getExtendsClass().getIsDistributed()))
+    {
+    #>>"remoteUrl", "objectId", "remotePort"<<#
+    }#>>})
+<<#}  
+  else
+    appendln(realSb,NL+"@XmlAccessorType(XmlAccessType.FIELD)");
+}
+#>>
+public <<# 
+if (uClass.getIsStatic())
+{
+  append(realSb, "{0} ", "static"); 
+}
+
+if (uClass.getIsAbstract()) { append(realSb, "{0} ", "abstract"); } #>>class <<=uClass.getName()>><<= gen.translate("isA",uClass) >><<#
+boolean hasParentInterface=uClass.hasParentInterface();
+
+if(uClass.getNeedsDefaultInterface())
+{
+  if (hasParentInterface == false){
+        if(model.getDistributePattern()==0){
+          append(realSb," implements java.io.Serializable");
+          append(realSb,", I"+uClass.getName()+"Impl");
+        }
+        else if(model.getDistributePattern()==1&&uClass.getIsDistributed())
+          append(realSb," implements java.io.Serializable , I"+uClass.getName());
+        else if(model.getDistributePattern()==2)
+           append(realSb," implements java.io.Serializable ,I"+uClass.getName().substring(0,uClass.getName().length()-4)); 
+        hasParentInterface=true;
+      }
+      else{
+          if(model.getDistributePattern()==0)
+          {
+            append(realSb," ,java.io.Serializable");
+            append(realSb,", I"+uClass.getName()+"Impl");            
+          }
+        else if(model.getDistributePattern()==1&&uClass.getIsDistributed())
+          append(realSb," ,java.io.Serializable , I"+uClass.getName());
+        else if(model.getDistributePattern()==2)
+           append(realSb," ,java.io.Serializable ,I"+uClass.getName().substring(0,uClass.getName().length()-4));
+      } 
+}
+else if(model.getDistributed())
+{
+  if (hasParentInterface == false){
+        if(!uClass.getIsDistributed())
+          append(realSb," implements java.io.Serializable");
+      }
+      else{
+          if(!uClass.getIsDistributed())
+            append(realSb," ,java.io.Serializable");
+      } 
+}
+else if(uClass.getIsInternalSerializable())//issue#1444
+{
+  if (hasParentInterface == false)
+  {
+    append(realSb," implements java.io.Serializable");
+    hasParentInterface=true;
+  }
+  else
+  {
+    append(realSb," ,java.io.Serializable");
+  } 
+}
+
+
+
+boolean implementsRunnable = false;
+
+for (StateMachine smq : uClass.getStateMachines())
+  {
+    if (smq.isQueued())
+    { 
+      if (hasParentInterface == false){
+        append(realSb," implements Runnable");
+      }
+      else{
+        append(realSb,", Runnable");
+      }
+      implementsRunnable = true;
+      break;
+    }
+    else if(smq.isPooled())
+    {
+      if (hasParentInterface == false){
+        append(realSb," implements Runnable");
+      }
+      else{
+        append(realSb,", Runnable");
+      }
+      implementsRunnable = true; 
+      break;
+    }
+  }
+
+#>>
+{
+  <<#   
+  getEnumerationCode(realSb, model, uClass, isFirst);
+  getMemberCode(realSb, model,uClass,gClass,gen,isFirst);
+  getConstructorCode(realSb, model,uClass,gClass,gen,isFirst, false);
+  getProxyReferenceCode(realSb, model,uClass);
+  getDistributedMethodsCode(realSb, model,uClass);
+  getAttributeCode(realSb, model,uClass,gClass,gen,isFirst,false);
+  getStateMachine1Code(realSb, model,uClass,gClass,gen,isFirst,false);
+  getAssociationCode(realSb, model,uClass,gClass,gen,isFirst,false);
+  getEqualsCode(realSb, model,uClass,gClass,gen,isFirst);
+  getStateMachine2Code(realSb, model,uClass,gClass,gen,isFirst);
+  getDeleteCode(realSb, model,uClass,gClass,gen,isFirst,false);
+  getExtraMethodsCode(realSb, model,uClass,gClass,gen,isFirst);
+  getQueuedMethodClass(realSb, model, uClass, gen);
+  getInnerClasses(realSb, model,uClass,isFirst);
+  getAllExtraCode(realSb, model,uClass,gClass,gen,isFirst);
+  return realSb;
+    }
+
+  private void getInnerClasses(StringBuilder realSb, UmpleModel model, UmpleClass uClass, boolean isFirst)
+  {
+    for(UmpleClass innerClass: uClass.getInnerClasses())
+    {
+      String innerClassContent = getCode(model, innerClass);
+      append(realSb, GeneratorHelper.doIndent(innerClassContent, "  "));
+    }
+  }
+  private void getEnumerationCode(StringBuilder realSb, UmpleModel model, UmpleClass uClass, boolean isFirst)
+  {
+    #>><<@ UmpleToJava.enumerations_All >><<#
+  }
+  mixset Mixset {
+  public void handelMixsetInsideMethod(UmpleModel umodel, MixsetInMethod mixsetInMethod, MethodBody mBody)
+  {
+    Mixset mixset = umodel.getMixset(mixsetInMethod.getMixsetName());
+    boolean mixsetIsUsed = false;
+    try {
+       if(mixset != null) // the mixset has been used. 
+       {
+        if(mixset.getUseUmpleFile() != null)
+        {
+          mixsetIsUsed = true;
+          //first process children
+          for(MixsetInMethod childMixsetInMethod : mixsetInMethod.getChildMixsets())
+            handelMixsetInsideMethod(umodel, childMixsetInMethod, mBody);
+          //Then ...
+          String methodCode = mBody.getCodeblock().getCode();
+          Pattern labelPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+"+"\\"+"\u007B"); //==> /u007B means an open curly bracket
+          Matcher matcher = labelPatternToMatch.matcher(methodCode);
+          // below code, to delete mixset def. and its closing bracket.
+          if (matcher.find()) {
+            String mixsetDefPlusAfterCode = methodCode.substring(matcher.start());
+            int indexOfMixsetClosingBracket = matcher.start() + MethodBody.indexOfMixsetClosingBracket(mixsetDefPlusAfterCode) - 1 ;
+            String methodCodeRemovedMixset = methodCode.substring(0,indexOfMixsetClosingBracket) + " " ; // remove closing bracket 
+            if(indexOfMixsetClosingBracket + 1 < methodCode.length())
+            methodCodeRemovedMixset = methodCodeRemovedMixset + methodCode.substring(indexOfMixsetClosingBracket +1); 
+            methodCodeRemovedMixset = methodCodeRemovedMixset.substring(0,matcher.start()) + methodCodeRemovedMixset.substring(matcher.end()+1); // remove mixset def.
+            mBody.getCodeblock().setCode(methodCodeRemovedMixset);
+          }
+        }
+      }
+    }
+    finally
+    {
+      if(!mixsetIsUsed)
+      {
+        // delete body of unused mixsets  
+        String mixsetInMethodCode = mixsetInMethod.getMixsetFragment();
+        String code = mBody.getCodeblock().getCode().replace(mixsetInMethodCode, "");
+        mBody.getCodeblock().setCode(code);
+      }
+    } 
+  }
+
+  }
+  // This method allows the injection of some code before/after a code label inside a method of an umple class. 
+  private void applyCodeInjectionToLabeledMethod(UmpleClass uClass, Method aMethod, String aspectType) {
+    List<CodeInjection> uClassCodeInectionList = uClass.getApplicableCodeInjectionsCustomMethod(aspectType, aMethod.getName(), aMethod.getMethodParameters());
+    if(uClassCodeInectionList.size() == 0 )
+    {
+      // no code to inject 
+      // return;
+    }
+    CodeBlock methodCodeBlock = aMethod.getMethodBody().getCodeblock();
+    String codesKey_lang = ""; // the type of a language that the method belongs to
+    ArrayList<String> methodCodeWithLabels = methodCodeBlock.getCodeWithLabels(codesKey_lang);
+    ArrayList<Integer> indexToRemoveList = new ArrayList<Integer>();
+    for (CodeInjection codeInjectionItem: uClassCodeInectionList)
+    {
+    	// the condition below keeps only codeInjection item(s) which has code labels.
+      // also, codeInjection(s) that has been processed should not be processed again.
+      if(!codeInjectionItem.hasCodeLabel() || codeInjectionItem.getCodeBlockProcessed() ) 
+        continue;
+      //else 
+      String methodLabelToLookat = codeInjectionItem.getInjectionlabel();
+      String codeToAdd = codeInjectionItem.getCode(codesKey_lang);
+
+    	if (codeInjectionItem.getType().equals("around"))
+      {
+        String[] BoundLabels = methodLabelToLookat.split("-");
+        String firstLabel = BoundLabels[0]+":";
+        String SecondLabel = BoundLabels[1]; 
+        String[] codeToInjectArray = codeToAdd.split("around_proceed:");
+        String afterCodeSegment = codeToInjectArray[0];
+        String beforeCodeSegment = codeToInjectArray[1];
+
+        int afterIndex = methodCodeWithLabels.indexOf(firstLabel);
+        int beforeIndex = methodCodeWithLabels.indexOf(SecondLabel);
+        methodCodeWithLabels.add(afterIndex+1, "\n"+afterCodeSegment + "\n");
+        methodCodeWithLabels.add(beforeIndex+1, "\n"+beforeCodeSegment + "\n");
+      }
+      else {
+        int indexOfLabel = methodCodeWithLabels.indexOf(methodLabelToLookat);
+        if (indexOfLabel == -1) // the method does not contain the required label
+        {
+          return;// raise error 
+          // raise warning 
+        }
+        else if (codeInjectionItem.getType().equals("before"))
+        {
+          methodCodeWithLabels.add(indexOfLabel, "\n"+codeToAdd + "\n");
+        }
+        else if (codeInjectionItem.getType().equals("after"))
+        {
+          if(indexOfLabel < methodCodeWithLabels.size())
+            methodCodeWithLabels.add(indexOfLabel+1, "\n"+codeToAdd + "\n");
+          else
+            methodCodeWithLabels.add("\n"+codeToAdd + "\n");
+        }
+      }
+
+      // at the end, remove the codeInjection belongs to labeled aspect
+      // otherwise it will be added to the code when handling aspects 
+      //uClassCodeInectionList.remove(codeInjectionItem); // causes error:ConcurrentModificationException
+      //indexToRemoveList.add(uClassCodeInectionList.indexOf(codeInjectionItem));
+      // update the method code with addition 
+      String resultCode="";
+      for (String stringItem : methodCodeWithLabels)
+      {
+        resultCode += stringItem ;
+      }
+      aMethod.getMethodBody().getCodeblock().setCode(codesKey_lang, resultCode);
+      codeInjectionItem.setCodeBlockProcessed(true);
+    }
+  }
+  /*
+   * Issue 1008 - A helper function to determine if a class uses an enum defined in the model
+   */
+  private boolean classUsesEnum(String enumName, UmpleClass uClass) 
+  {
+    // Check if the class has any attributes that use the enum
+     for (Attribute a : uClass.getAttributes()) {
+       if (a.getType().equals(enumName)) {
+         return true;
+       }
+     }
+
+     // Check if the class has any methods that use the enum as their return type, or as parameters
+     for (Method m : uClass.getMethods()) {
+       if (m.getType().equals(enumName)) {
+         return true;
+       } else {
+         for (MethodParameter p : m.getMethodParameters()) {
+           if (p.getType().equals(enumName)) {
+             return true;
+           }
+         }
+       }
+      }
+
+    // Check if the class has any event methods that use the enum in their parameters
+    for (StateMachine sm : uClass.getStateMachines()) {
+      for (Event e : sm.getEvents()) {
+        for (MethodParameter p : e.getParams()) {
+          if (p.getType().contentEquals(enumName)) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
+  }
+
+    private String getDistributedMethodsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass)
+    {if(uClass.getHasProxyPattern()||uClass.getIsDistributed()){#>>
+  //------------------------
+  // Returning the Hashcode
+  //------------------------
+  public int getHashCode()
+  {
+    return hashCode();
+  }
+    <<#
+    }return realSb.toString();
+    }
+    private String getProxyReferenceCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass)
+    {if(uClass.getIsDistributed()&&model.getDistributePattern()==1){#>>
+  //------------------------
+  // Reference to the proxy
+  //------------------------
+  <<=uClass.getName().substring(0,uClass.getName().length()-4)>> self;
+
+  public void setSelf(<<=uClass.getName().substring(0,uClass.getName().length()-4)>> proxy)
+  {
+  <<#if (uClass.getExtendsClass()!=null && uClass.getExtendsClass().getIsDistributed())
+  {
+  #>>
+    super.setSelf(proxy);
+    <<#}#>>
+    self=proxy;
+  }
+
+    <<#}return realSb.toString();
+    }
+
+    private String getMemberCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  { 
+    String self="this";
+
+    if(uClass.getIsDistributed()&&model.getDistributePattern()==1)
+      self="self";
+    String isTransient="";
+    if (uClass.getIsDistributed() && model.getDistributePattern()==0)
+      isTransient=" transient ";
+
+  // comment with the name of the test cases the class has 
+  if(uClass.hasUmpleTestCases()){
+  append(realSb,"\n\n  //------------------------\n");
+  append(realSb,"  // {0} Testcases: \n", uClass.getName());
+  append(realSb,"  //.........................\n");
+  for(UmpleTestCase tc : uClass.getUmpleTestCases()){
+  append(realSb,"  // test  {0} \n", tc.getName());      
+  }
+  append(realSb,"  //------------------------\n");
+   }  
+
+  #>><<@ UmpleToJava.members_AllStatics >><<@ UmpleToJava.members_AllAttributes >><<@ UmpleToJava.members_AllStateMachines >><<@ UmpleToJava.members_python_AllDoActivities >><<@ UmpleToJava.members_AllAssociations >><<@ UmpleToJava.members_AllHelpers >>
+  <<#return realSb.toString();
+    }
+  private UmpleClass globalUmpleClass = null;
+  public Map<String,UncaughtException> uncaughtExceptions = new HashMap<String,UncaughtException>();
+
+
+
+    private String getConstructorCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
+  {
+    Integer baseJavaLine = realSb.toString().split("\\n").length;
+    boolean reqSuperCode, reqCommonCode;
+    AssociationVariable relatedAssociation;
+    Association relatedAssoc;#>>
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+<<@ UmpleToJava.constructor_Declare_All >>
+  <<#return realSb.toString();
+    } 
+    private String getAttributeCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
+  { 
+    String umpleSourceFile = "";
+    Integer baseJavaLine = realSb.toString().split("\\n").length;#>>
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+<<@ UmpleToJava.attribute_Set_All >><<@ UmpleToJava.attribute_Get_All >><<@ UmpleToJava.attribute_IsBoolean_All >>
+  <<#return realSb.toString();
+    } 
+    private String getStateMachine1Code(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
+  {
+    Integer baseJavaLine = realSb.toString().split("\\n").length;#>><<@ UmpleToJava.state_machine_Get_All >><<@ UmpleToJava.state_machine_StateDependentMethods_All >><<@ UmpleToJava.state_machine_Events_All >><<@ UmpleToJava.state_machine_Set_All >><<#
+    return realSb.toString(); 
+  } 
+  private String getAssociationCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
+  { String self="this";
+
+    if(uClass.getIsDistributed()&&model.getDistributePattern()==1)
+      self="self";
+
+    String umpleSourceFile = "";
+    Integer baseJavaLine = realSb.toString().split("\\n").length+3;#>><<@ UmpleToJava.association_Get_All >><<@ UmpleToJava.association_Set_All >><<#
+    if(uClass.getIsInternalSerializable() && !uClass.getIsDistributed())
+    {
+      boolean hasInternalTransientAttributes = false;
+      for(Attribute av:uClass.getAttributes())
+        hasInternalTransientAttributes=av.getIsInternalTransient()?true:hasInternalTransientAttributes;
+      if(hasInternalTransientAttributes)
+      {
+        #>><<@ UmpleToJava.association_sorted_serializable_readObject>><<#
+      }
+    }
+    return realSb.toString();
+    } 
+
+    private String getEqualsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {#>>
+<<# if (uClass.getKey().isProvided()) { #>><<@ UmpleToJava.equals >>
+<<# } #>>
+  <<#return realSb.toString();
+    } 
+    private String getStateMachine2Code(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {#>><<@ UmpleToJava.state_machine_python_doActivity_All >><<@ UmpleToJava.state_machine_timedEvent_All >>
+  <<#return realSb.toString();
+    } 
+    private String getDeleteCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
+  {
+    String self="this";
+    if(uClass.getIsDistributed()&&model.getDistributePattern()==1)
+      self="self";
+
+    Integer baseJavaLine = realSb.toString().split("\\n").length+1; #>><<@ UmpleToJava.delete_All >>
+    <<# for (StateMachine smq : uClass.getStateMachines())
+     {
+       if (smq.isPooled())
+       {#>><<@ UmpleToJava.queued_state_machine_inner_class >><<@ UmpleToJava.queued_state_machine_queuedEvent >><<@ UmpleToJava.queued_state_machine_removalThread_run >>
+       <<# break;
+       }       
+       if (smq.isQueued())
+       {#>><<@ UmpleToJava.queued_state_machine_inner_class >><<@ UmpleToJava.queued_state_machine_queuedEvent >><<@ UmpleToJava.queued_state_machine_removalThread_run >>
+       <<# break;
+       }
+     }
+     #>>
+  <<#return realSb.toString();
+    } 
+    private String getExtraMethodsCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {#>>
+<<# if (uClass.hasMethods()) { #>><<@ UmpleToJava.class_PythonMethodDeclaration >>
+<<# } #>><<# 
+   boolean matchFound = false;
+   UmpleClass parent = uClass.getExtendsClass(); 
+   if(uClass.getExtraCode() != null)
+   {
+     matchFound = java.util.regex.Pattern.compile(".*((public)|(protected)|(private))\\s+(String)\\s+(toString)\\s*\\(\\s*\\).*", java.util.regex.Pattern.DOTALL).matcher(uClass.getExtraCode()).matches();
+   }
+   if(parent!=null && parent.getExtraCode() != null)
+   {
+     matchFound = java.util.regex.Pattern.compile(".*((public)|(protected)|(private))\\s+(String)\\s+(toString)\\s*\\(\\s*\\).*", java.util.regex.Pattern.DOTALL).matcher(parent.getExtraCode()).matches();
+   }
+   if(!matchFound)
+   for(Method meth: uClass.getMethods())
+   {
+     if("toString".equals(meth.getName()))
+     {
+       matchFound = true;
+       break;
+     }
+   }
+   if(!matchFound && parent!=null)
+   for(Method meth: parent.getMethods())
+   {
+     if("toString".equals(meth.getName()))
+     {
+       matchFound = true;
+       break;
+     }
+   }
+   if (uClass.getAttributes().size()>0 && !matchFound){ #>><<@ UmpleToJava.toString_declare >>
+<<# } #>>
+  <<#return realSb.toString();
+    } 
+    private String getAllExtraCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {#>>
+<<# 
+  boolean isMainClass = false;
+  if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { #>>  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+
+  <<=uClass.getExtraCode()>>
+
+
+<<# } #>><<@ UmpleToJava.trace >><<#if(model.getMainClass() == null || model.getMainClass().getName() != uClass.getName()){#>>
+}<<#}
+  return realSb.toString();
+}
+#>><<@ UmpleToJava.python_uncaught_exception>><<#}
+#>><<@ UmpleToJava.queued_method >><<#
+
+
+/* This function is meant purely to properly end the emit code in Umple
+   Should never be called
+   Only purpose is to make sure the 'if (numSpaces > 0)' part of the template
+   Doesn't cause errors */
+private StringBuilder endTemplate()
+{
+  GeneratorHelper.generator = null;
+  int numSpaces = 0;
+  StringBuilder newCode = null;
+  StringBuilder sb = null;
+  String spaces = "";
+#>>!>>
+}
