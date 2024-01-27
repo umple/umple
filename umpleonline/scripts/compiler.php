@@ -479,7 +479,7 @@ else if (isset($_REQUEST["umpleCode"]))
       $svgcode = readTemporaryFile("{$thedir}/stateDiagram.svg");
       $gvlink = $workDir->makePermalink('model'.$generatorType.'.gv');      
       $svglink = $workDir->makePermalink('stateDiagram.svg');
-      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a target=\"_blank\" href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       $changesToMake = 1;
