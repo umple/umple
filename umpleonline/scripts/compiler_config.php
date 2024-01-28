@@ -532,7 +532,8 @@ function extractFilename()
     {
         // The actual Umple code (must be very short) follows the ?text= in the URL
         $dataHandle = dataStore()->createData();
-        $dataHandle->writeData('model.ump', urldecode(urldecode($_REQUEST["text"])));
+        $rawUmpleForFile=$_REQUEST["text"];
+        $dataHandle->writeData('model.ump', strip_tags(urldecode(urldecode($rawUmpleForFile))));
     }
     // Starting from scratch; so simply create a blank model
     elseif (!isset($_REQUEST['filename']) || $_REQUEST["filename"] == "")
