@@ -19,6 +19,10 @@ echo Use argument bg to make it work in the background
 REM KILL EXISTING CONTAINER
 docker container kill my%mainContainerName%
 docker container rm my%mainContainerName%
+docker rmi -f %mainContainerName%
+docker container kill my%tempContainerName%
+docker container rm my%tempContainerName%
+docker rmi -f %tempContainerName%
 
 REM BUILD DOCKERFILES
 docker build -t %mainContainerName% .
@@ -36,7 +40,7 @@ if "%portToUse%"=="4409" (
 echo %BASEDIR%%umplePath%:/usr/src/app/models/ -v %BASEDIR%%tempPath%:/usr/src/app/output/
 
 if "%~1"=="bg" (
-  docker run --restart=unless-stopped --name my%mainContainerName% %netcommand% -v /var/run/docker.sock:/var/run/docker.sock -v "%BASEDIR%%umplePath%:/usr/src/app/models/" -v "%tempPath%:/usr/src/app/output/" %portmap% %mainContainerName% >nul 2>&1
+  docker run --restart=unless-stopped --name my%mainContainerName% %netcommand% -v /var/run/docker.sock:/var/run/docker.sock -v "%BASEDIR%%umplePath%:/usr/src/app/models/" -v "%CURRENT_DIR%/%tempPath%:/usr/src/app/output/" %portmap% -e BASE_DIR=%BASEDIR%  %mainContainerName% >nul 2>&1
 ) else (
-  docker run --restart=unless-stopped --name my%mainContainerName% %netcommand% -v /var/run/docker.sock:/var/run/docker.sock -v "%BASEDIR%%umplePath%:/usr/src/app/models/" -v "%tempPath%:/usr/src/app/output/" %portmap% %mainContainerName%
+  docker run --restart=unless-stopped --name my%mainContainerName% %netcommand% -v /var/run/docker.sock:/var/run/docker.sock -v "%BASEDIR%%umplePath%:/usr/src/app/models/" -v "%CURRENT_DIR%/%tempPath%:/usr/src/app/output/" %portmap% -e BASE_DIR=%BASEDIR% %mainContainerName%
 )
