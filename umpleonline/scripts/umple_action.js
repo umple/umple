@@ -1537,6 +1537,7 @@ Action.addAssociationGv = function(classCode, className){
     });
   }
 }
+ 
 //Action.displayMenu() is triggered by contextmenu event on Graphviz Class "node" elements
 //Draws a div containing the editing options for class GV diagrams, as well as calling the related function when clicked
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
