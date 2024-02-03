@@ -1606,6 +1606,7 @@ Action.addAssociationGv = function(classCode, className){
     });
   }
 }
+ 
 //Action.displayMenu() is triggered by contextmenu event on Graphviz Class "node" elements
 //Draws a div containing the editing options for class GV diagrams, as well as calling the related function when clicked
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
@@ -3759,22 +3760,48 @@ Action.updateUmpleDiagramCallback = function(response)
   Page.hideLoading();
   if(Page.useGvClassDiagram){
     var elems=document.getElementsByClassName("node");
-    //add event listener to Graphviz Class nodes for right click
+    // Add event listener to Graphviz Class nodes for right click
     for(let i=0;i<elems.length;i++){
-      elems[i].addEventListener("contextmenu", function(event){event.preventDefault();Action.displayMenu(event);});
+      elems[i].addEventListener("contextmenu", function(event){
+        event.preventDefault();
+        Action.displayMenu(event);
+      });
+      // Add event listener for double click, calling the same function as right-click
+      elems[i].addEventListener("dblclick", function(event){
+        event.preventDefault(); // Prevent the default double-click behavior
+        Action.displayMenu(event); // Call the same function to display the menu
+      });
     }
   }
   if(Page.useGvStateDiagram){
+    //add double click to display menu, issue#2081
     var elems=document.getElementsByClassName("node");
-    //add event listener to Graphviz state nodes for right click
+    // Add event listener to Graphviz state nodes for right click
     for(let i=0;i<elems.length;i++){
-      elems[i].addEventListener("contextmenu", function(event){event.preventDefault();Action.drawStateMenu(event);});
+      elems[i].addEventListener("contextmenu", function(event){
+        event.preventDefault();
+        Action.drawStateMenu(event);
+      });
+      // Add event listener for double click, calling the same function as right-click
+      elems[i].addEventListener("dblclick", function(event){
+        event.preventDefault(); // Prevent the default double-click behavior
+        Action.drawStateMenu(event); // Call the same function to display the menu
+      });
     }
     elems=document.getElementsByClassName("cluster");
+    // Add event listener to Graphviz clusters for right click
     for(let i=0;i<elems.length;i++){
-      elems[i].addEventListener("contextmenu", function(event){event.preventDefault();Action.drawStateMenu(event);});
+      elems[i].addEventListener("contextmenu", function(event){
+        event.preventDefault();
+        Action.drawStateMenu(event);
+      });
+      // Add event listener for double click on clusters, calling the same function as right-click
+      elems[i].addEventListener("dblclick", function(event){
+        event.preventDefault(); // Prevent the default double-click behavior
+        Action.drawStateMenu(event); // Call the same function to display the menu
+      });
     }
-  }
+  }  
 }
 
 Action.updateFromDiagramCallback = function(response)
