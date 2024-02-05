@@ -39,6 +39,13 @@ class UmpleInternalParser
   internal String[] parsedUmpleFiles;
   internal Boolean shouldProcessAgain = false;
   internal Boolean shouldProcessClassAgain = false;
+  
+//DEBUG
+  static boolean debugAIP=false;
+  
+  public static void debugPrint(String s) {
+    if (debugAIP) System.out.println(s);
+  }
 
   after constructor { init(); }
 
@@ -165,6 +172,9 @@ class UmpleInternalParser
   // analyzeToken and quits early if a problem arises
   private void analyzeAllTokens(Token rootToken)
   {
+// DEBUG
+    debugPrint("\nAAT DL-169-UmpleInternalParser_Code.ump-analyzeAllToken STARTING ");
+  
     int analysisStep = 0;
     shouldProcessAgain = true;
     do
@@ -173,9 +183,12 @@ class UmpleInternalParser
       shouldProcessAgain = false;
       for(Token t : rootToken.getSubTokens())
       {
-        System.out.println("DL-176-UmpleInternalParser_Code.ump-analyzeAllToken-analyzeToken is being called!");
-        System.out.println("DL-177-UmpleInternalParser_Code.ump-analysisStep"+analysisStep);
+// DEBUG
+        debugPrint(" AAT DL-176-UmpleInternalParser_Code.ump-analyzeAllToken-analyzeToken is being called!");
+        debugPrint(" AAT DL-177-UmpleInternalParser_Code.ump-analysisStep"+analysisStep);
         analyzeToken(t,analysisStep);
+// DEBUG
+        debugPrint(" AAT DL-184-UmpleInternalParser_Code.ump-shouldProcessAgain="+shouldProcessAgain);
         if (!getParseResult().getWasSuccess())
         {
           return;
@@ -226,9 +239,16 @@ class UmpleInternalParser
     analyzeCoreToken(t,analysisStep);
     analyzeEnumerationToken(t, analysisStep);
     mixset Class {
-      System.out.println("L-229-UmpleInternalParser_Code.ump-analyze class token is called!");
+//DEBUG 
+      debugPrint("\nAT L-231-UmpleInternalParser_Code.ump-analyze class token is called! t="+t);
       analyzeClassToken(t,analysisStep);
-      System.out.println("L-231-UmpleInternalParser_Code.ump-analysisStep"+analysisStep);
+      debugPrint("AT L-233-UmpleInternalParser_Code.ump-analysisStep"+analysisStep);
+ 
+ // DEBUG ... this may not work     
+      // Analyse requirements at the top level because analyse class token will only occur at pass 1
+      if (t.is("requirement") && analysisStep == 1){
+        analyzeRequirement(t);
+      }
     }
     mixset Trait {
       analyzeTraitToken(t,analysisStep);
