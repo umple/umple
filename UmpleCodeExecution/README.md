@@ -17,18 +17,23 @@ If you development the project on Windows, MUST set eof to LF
 
 **umplePath**  
 Path to the Umple's ump folder where temporary user folders are created. The full path to umpleonline/ump
+
 **tempPath**  
 A directory where temporary files can be written. Suggested: /tmp
+
 **mainContainerName**  
 Name of the always running container and image. Use the default unless you are running more than one instance.
+
 **tempContainerName**  
 Name of the temporary java container and image created for Java execution. Use the default unless you are running more than one instance.
-**portToUse**
+
+**portToUse**  
 Port that the Umple Php code uses to communicate with the Docker image. Suggested: 4400. If you are running more than one instance, then each would need a new port.
-**timeoutValue**
+
+**timeoutValue**  
 How many seconds execution will run before the execution is ended. Default 20, but reduce if the server resources are limited.
 
-# Setup.sh
+# Setup.sh or setup.bat
 
 This shell script contains commands to build docker images and to run the main docker container. The server will start at the following url by default.  
 **http:localhost:4400**
