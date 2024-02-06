@@ -20,8 +20,14 @@ class DockerExecution {
         this.makeOutputFolder();
         const mainFilePath = this.getNormalizedMainFilename();
         console.log("Normalized main file: ", mainFilePath);
+        let command;
+        //if BASE_DIR environment variable exist, it means the docker was launced on Windows
+        if(process.env['BASE_DIR']){
+            command = `sh dockerTimeout.sh ${this.timeoutValue}s -i -t --network none -v $BASE_DIR/umpleonline/ump/${this.model}:/input/:ro -v $BASE_DIR/umpleCodeExecution/tmp/${this.model}_${this.mainFile}:/output/ ${this.tempContainerName} ${mainFilePath}` 
+        }else{
+            command = `sh dockerTimeout.sh ${this.timeoutValue}s -i -t --network none -v ${this.basePath}/${this.model}:/input/:ro -v ${this.baseOutputPath}/${this.model}_${this.mainFile}:/output/ ${this.tempContainerName} ${mainFilePath}` 
+        }
         
-        const command = `sh dockerTimeout.sh ${this.timeoutValue}s -i -t --network none -v ${this.basePath}/${this.model}:/input/:ro -v ${this.baseOutputPath}/${this.model}_${this.mainFile}:/output/ ${this.tempContainerName} ${mainFilePath}` 
         console.log("Docker command:'",command,"'"); 
         exec(command); // Execute docker for Java execution
 

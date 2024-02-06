@@ -2,6 +2,10 @@
 
 This code base provides the functionality to securely execute Java code using Docker containers.
 
+# IMPORTANT
+
+If you development the project on Windows, MUST set eof to LF
+
 # Setup
 
 1. Create config.cfg file from config.cfg.template with correct parameters (Explained below).
@@ -29,7 +33,7 @@ Port that the Umple Php code uses to communicate with the Docker image. Suggeste
 **timeoutValue**  
 How many seconds execution will run before the execution is ended. Default 20, but reduce if the server resources are limited.
 
-# Setup.sh
+# Setup.sh or setup.bat
 
 This shell script contains commands to build docker images and to run the main docker container. The server will start at the following url by default.  
 **http:localhost:4400**
