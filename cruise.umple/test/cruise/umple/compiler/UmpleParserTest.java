@@ -1428,6 +1428,21 @@ public class UmpleParserTest
           assertNoWarningsParse("450_ReqSameOneBlank.ump");
           assertNoWarningsParse("450_ReqSameLang.ump");
   }
+  
+   @Test
+  public void ImplementsPrecedeReq()
+  {
+	  assertHasWarningsParse("451_ReqMismatch401Warning.ump", 401);
+	  assertNoWarningsParse("451_ReqNoWarning.ump");
+          assertNoWarningsParse("451_Req2Combination1.ump");
+          assertNoWarningsParse("451_Req2Combination2.ump");
+          assertNoWarningsParse("451_Req2Combination3.ump");
+          assertNoWarningsParse("451_ReqAssociation.ump");
+          assertNoWarningsParse("451_ReqClassCombination.ump");
+          assertNoWarningsParse("451_ReqMixset.ump");
+          assertNoWarningsParse("451_ReqMixsetCombination1.ump");
+          assertNoWarningsParse("451_ReqMixsetCombination2.ump");
+  }
 
   @Test
   public void associationName()
