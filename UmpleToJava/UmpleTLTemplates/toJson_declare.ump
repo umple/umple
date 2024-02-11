@@ -67,9 +67,11 @@ class UmpleToJava {
 		  
 	  }
 	//ret += " \"{ \"\n+";
+	//ret += " \"{ \"\n";
 	ret += " System.getProperties().getProperty(\"line.separator\") \n            ";  
-	ret += "+super.toString().replaceAll(\"@\",\" : \")  \n 			";
-	ret += " + System.getProperties().getProperty(\"line.separator\") \n            ";      
+	//ret += "+ super.toString().replaceAll(\"@\" , \" : \"+ \" \\n \"+ \" objectId: \" )  \n 		";
+	  ret += "+ super.toString().replaceAll(\"@\" , \" : \"+ \"\\n YZobjectId: \")  \n 		";
+	ret += "+ System.getProperties().getProperty(\"line.separator\") \n            ";      
 	
 	ret += " +\"{ \"\n";
 	  boolean firstStr = true;
@@ -94,8 +96,8 @@ class UmpleToJava {
 				
 			
 	  }
+	  ret += "+ \" } \" \n";
 	 
-	  ret += "+ \"}\" \n";
 	
 	  for(int m=0;m<displayedAttributes.size();m++)
 	  {          
@@ -108,8 +110,7 @@ class UmpleToJava {
 	      ret += " + System.getProperties().getProperty(\"line.separator\") +\n            ";
 	      ret += "\"  \" + " +  "\""+reflexiveNames.get(m)+" : \"+("+reflexive.get(m)+"!=null?Integer.toHexString(System.identityHashCode("+reflexive.get(m)+")):\"null\")";
 	  }
-	  
-	  System.out.print(ret);
+	 
 	  append(realSb,"\n    return {0};", ret);
 	  #>>
   }!>>
