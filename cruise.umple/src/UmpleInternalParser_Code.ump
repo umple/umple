@@ -39,17 +39,13 @@ class UmpleInternalParser
   internal String[] parsedUmpleFiles;
   internal Boolean shouldProcessAgain = false;
   internal Boolean shouldProcessClassAgain = false;
-  
-  
-//DEBUG
-  static boolean debugAIP = false;
 
-  // Overloaded debugPrint method with a string and an integer argument
-  public static void debugPrint(String s, int i) {
-   if (debugAIP && i == 1) {
-        System.out.println(s + ": " + i);
-    }
-}
+//DEBUG
+  static boolean debugAIP=false;
+  
+  public static void debugPrint(String s) {
+    if (debugAIP) System.out.println(s);
+  }
   after constructor { init(); }
 
   public UmpleInternalParser()
@@ -176,7 +172,7 @@ class UmpleInternalParser
   private void analyzeAllTokens(Token rootToken)
   {
 // DEBUG
-    debugPrint("\nAAT DL-169-UmpleInternalParser_Code.ump-analyzeAllToken STARTING ",1);
+    debugPrint("\nAAT DL-169-UmpleInternalParser_Code.ump-analyzeAllToken STARTING ");
   
     int analysisStep = 0;
     shouldProcessAgain = true;
@@ -187,11 +183,11 @@ class UmpleInternalParser
       for(Token t : rootToken.getSubTokens())
       {
 // DEBUG
-        debugPrint(" AAT DL-176-UmpleInternalParser_Code.ump-analyzeAllToken-analyzeToken is being called!",2);
-        debugPrint(" AAT DL-177-UmpleInternalParser_Code.ump-analysisStep"+analysisStep,2);
+        debugPrint(" AAT DL-176-UmpleInternalParser_Code.ump-analyzeAllToken-analyzeToken is being called!");
+        debugPrint(" AAT DL-177-UmpleInternalParser_Code.ump-analysisStep"+analysisStep);
         analyzeToken(t,analysisStep);
 // DEBUG
-        debugPrint(" AAT DL-184-UmpleInternalParser_Code.ump-shouldProcessAgain="+shouldProcessAgain,2);
+        debugPrint(" AAT DL-184-UmpleInternalParser_Code.ump-shouldProcessAgain="+shouldProcessAgain);
         if (!getParseResult().getWasSuccess())
         {
           return;
@@ -243,9 +239,9 @@ class UmpleInternalParser
     analyzeEnumerationToken(t, analysisStep);
     mixset Class {
 //DEBUG 
-      debugPrint("\nAT L-231-UmpleInternalParser_Code.ump-analyze class token is called! t="+t,1);
+      debugPrint("\nAT L-231-UmpleInternalParser_Code.ump-analyze class token is called! t="+t);
       analyzeClassToken(t,analysisStep);
-      debugPrint("AT L-233-UmpleInternalParser_Code.ump-analysisStep"+analysisStep,1);
+      debugPrint("AT L-233-UmpleInternalParser_Code.ump-analysisStep"+analysisStep);
  
  // DEBUG ... this may not work     
       // Analyse requirements at the top level because analyse class token will only occur at pass 1
