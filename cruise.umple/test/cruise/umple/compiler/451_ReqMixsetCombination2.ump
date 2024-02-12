@@ -1,0 +1,10 @@
+implementsReq A;
+req A text { 
+ This is the second requirement.
+} 
+mixset B{
+class X {
+a;
+}
+}
+use B;

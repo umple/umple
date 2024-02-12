@@ -1,0 +1,11 @@
+implementsReq A;
+req A text { 
+ This is the second requirement.
+} 
+req B {
+  This is the first requirement.
+}
+class X {
+a;
+b;
+}

@@ -1,0 +1,10 @@
+implementsReq A;
+req A text {  
+This is the second requirement.
+}
+ class Y{
+ 1 -- * X;
+}
+class X {
+a;
+}
