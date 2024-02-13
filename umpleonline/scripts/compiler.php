@@ -150,7 +150,7 @@ else if (isset($_REQUEST["umpleCode"]))
   }
   
   $languageStyle = isset($_REQUEST["languageStyle"])?
-    $_REQUEST["languageStyle"] : false;
+  $_REQUEST["languageStyle"] : false;
   $outputErr = isset($_REQUEST["error"])?$_REQUEST["error"]:false;
   $execute = isset($_REQUEST["execute"]) ? true : false;
   $modelName = isset($_REQUEST["model"])? $_REQUEST["model"] : false;
@@ -341,7 +341,7 @@ else if (isset($_REQUEST["umpleCode"]))
   $dataHandle->writeData($dataname, "generate {$language} \"./{$language}/\" --override-all;\n" . $input);
   $workDir = $dataHandle->getWorkDir();
   $filename = $workDir->getPath().'/'.$dataname;
-  
+
   $outputFilename = "{$filename}.output";
   $errorFilename = "{$filename}.erroroutput";
   $executionErrorFilename = "{$filename}.executionerror";
@@ -356,15 +356,38 @@ else if (isset($_REQUEST["umpleCode"]))
   }    
   if($toRemove) { exec($rmcommand); }
   
-  //
+
+  // The following is a hack. The arguments to umplesync need fixing
+  if (!$stateDiagram && !$classDiagram && !$entityRelationshipDiagram && !$yumlDiagram && !$featureDiagram) { 
+    echo "\nget here|------------\n" . $filename . "||\n"; 
+    $command = "java -jar umplesync.jar -source {$filename} 2> {$errorFilename}";
+    
+  }
+  else {
+      // The following is used for outputting diagrams only
+      $thedir = dirname($outputFilename);
+      exec("rm -rf " . $thedir . "/modelcd.gv " . $thedir . "/model.gv " . $thedir . "modelcdt.gv " . $thedir . "/modelerd.gv");
+      $command = "java -jar umplesync.jar -generate " . $language . " {$filename} " . $suboptions . " 2> {$errorFilename}";
+  }
+  // Took off 1> {$outputFilename}  in two commands above
+  $resultFromCommand = executeCommand($command);
+  
+  echo "output filename: ". $outputFilename;
+  $dataHandle->writeData(basename($outputFilename), $resultFromCommand);
+  //exec("( ulimit -t 10; " . $command . ")");
+  
   if($execute) 
   {
     $command = "java -jar umplesync.jar -generate Java {$filename} -cx 2> {$executionErrorFilename}";
+    echo "filename: $filename \n";
+    echo "filename2: $executionErrorFilename \n";
+    echo "cmd: $command";
     executeCommand($command);
     $errhtml = getErrorHtml($executionErrorFilename);
     if($errhtml != "") {
       echo translateToLineNums($errhtml);
     }
+    echo 'cmd:';
     $content = executeCode($modelName, $errhtml != "");
     $output = json_decode($content, false);
     if (json_last_error() === JSON_ERROR_NONE) {
@@ -376,25 +399,12 @@ else if (isset($_REQUEST["umpleCode"]))
       echo $content;
     }
     return;
-  } // The following is a hack. The arguments to umplesync need fixing
-  else if (!$stateDiagram && !$classDiagram && !$entityRelationshipDiagram && !$yumlDiagram && !$featureDiagram) {  
-    $command = "java -jar umplesync.jar -source {$filename} 2> {$errorFilename}";
-  }
-  else {
-      // The following is used for outputting diagrams only
-      $thedir = dirname($outputFilename);
-      exec("rm -rf " . $thedir . "/modelcd.gv " . $thedir . "/model.gv " . $thedir . "modelcdt.gv " . $thedir . "/modelerd.gv");
-      $command = "java -jar umplesync.jar -generate " . $language . " {$filename} " . $suboptions . " 2> {$errorFilename}";
-  }
-  // Took off 1> {$outputFilename}  in two commands above
-  $resultFromCommand = executeCommand($command);
+  } 
 
-  $dataHandle->writeData(basename($outputFilename), $resultFromCommand);
-  //exec("( ulimit -t 10; " . $command . ")");
-  
   // Restore file so it doesn't have the 'generate' command in front
   $dataHandle->writeData($dataname, $input);
-  
+  echo "\ndatanem2: " . $dataname;
+
   $sourceCode = $resultFromCommand;
   
   $sourceCode = str_replace("<?php","",$sourceCode);
@@ -723,7 +733,11 @@ function executeCode($modelName, $error)
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,"{$GLOBALS['EXECUTION_SERVER']}/run");
   curl_setopt($ch, CURLOPT_POST, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, "path={$modelName}&error={$error}");
+  $language = $_REQUEST["language"];
+  echo "\n language is $language";
+  echo "\n language is " . $_REQUEST["language"];
+  echo "path={$modelName}&error={$error}&language={$language}";
+  curl_setopt($ch, CURLOPT_POSTFIELDS, "path={$modelName}&error={$error}&language={$language}");
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   $content = curl_exec($ch);
   if (curl_errno($ch)) {

@@ -42,7 +42,10 @@ class DockerExecution {
         if(path.endsWith('/')) {
             path = path.substring(0, path.length - 1);
         }
-        return path ? `${path.split('/').join('.')}.${this.mainFile}` : this.mainFile;
+        if(path.split('/')[0]=="Python"){
+            return path ? `${path}/${this.mainFile}.py` : this.mainFile;
+        }
+        return path ? `${path.split('/').join('.')}.${this.mainFile}` : this.mainFile;    
     }
 
     listenToChanges(callback) {
@@ -65,7 +68,7 @@ class DockerExecution {
                         if(errorData) {
                             console.log("Error file: ", errorData)
                         }
-                        console.log("Complete file: ", completeData);
+                        console.log("Complete file: \n", completeData);
 
                         callback(errorData, completeData.toString())
                     });
@@ -83,7 +86,7 @@ class DockerExecution {
                 }
 
                 // If time is finished, remove directory and clear timer
-                this.deleteOutputFolder();
+                // this.deleteOutputFolder();
                 clearInterval(intid);
             });
         }, 1000);

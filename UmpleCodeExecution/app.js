@@ -37,6 +37,8 @@ app.post('/run' , (req, res)  =>
             // Extract out path and validate
             const path = basePath + req.body.path;
             const compileError = req.body.error;
+            const language = req.body.language;
+            console.log(`language is ${language}`);
             console.log("Compilation error or warning: " + compileError);
 
             const pathError = validatePath(path);
@@ -71,8 +73,17 @@ app.post('/run' , (req, res)  =>
             let output = "";
             let totalServed = 0;
             mainFunctions.forEach((mainFunction) => {
-                console.log("Finding file: " + (mainFunction + '.class'));
-                const foundFilePath = findFile(path, "/",mainFunction + '.class');
+                let foundFilePath;
+                if(language==="Python"){
+                    console.log(`languague is python`);
+                    console.log("Finding file: " + (mainFunction + '.py'));
+                    foundFilePath = findFile(path, "/", mainFunction + '.py');
+                }else if(language==="Java"){
+                    console.log("Language is java ------------");
+                    console.log("Finding file: " + (mainFunction + '.class'));
+                    foundFilePath = findFile(path, "/",mainFunction + '.class');
+                }
+
                 console.log("Found file at: ", foundFilePath);
             
                 // Execute docker 
