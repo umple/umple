@@ -66,37 +66,41 @@ class UmpleToJava {
 		}
 		  
 	  }
-	//ret += " \"{ \"\n+";
-	//ret += " \"{ \"\n";
-	ret += " System.getProperties().getProperty(\"line.separator\") \n            ";  
-	//ret += "+ super.toString().replaceAll(\"@\" , \" : \"+ \" \\n \"+ \" objectId: \" )  \n 		";
-	  ret += "+ super.toString().replaceAll(\"@\" , \" : \"+ \"\\n YZobjectId: \")  \n 		";
-	ret += "+ System.getProperties().getProperty(\"line.separator\") \n            ";      
-	
-	ret += " +\"{ \"\n";
-	  boolean firstStr = true;
-	
+	//String  s = "\"*\" +";
+	ret +=" \"{ \"\n+";
+
+	ret += " System.getProperties().getProperty(\"line.separator\") \n            "; 
+	ret += "+ super.toString().replaceAll(\"@\" , \": \"+ \"\\n \\'ObjectId\\':\\'\")";
+	ret+= "+ \"\\',\"";
+	ret += "+ System.getProperties().getProperty(\"line.separator\") \n            ";    
+
+	boolean firstStr = true;
+	ret += " +\"   \"";
 	  for(int m=0;m<displayedPrimitives.size();m++)
 	  {
 		  	if(firstStr)
 			  	firstStr = false;
 			if ((m == displayedPrimitives.size()-1) &&(displayedPrimitives.size()!=1)){
-                ret += "+ \" , \" ";
-				ret += "+ System.getProperties().getProperty(\"line.separator\") \n            ";  
-				ret += "+\n          \"" + nameOfPrimitives.get(m) + "\" + \":\" + " + displayedPrimitives.get(m); 
+				ret += "+ System.getProperties().getProperty(\"line.separator\") \n";  
+				ret += " +\"   \"";
+				ret += "+\n           \" \\'" + nameOfPrimitives.get(m) + "\\'\" + \":\\'\" + " + displayedPrimitives.get(m)+ " + \"\\' \"\n";
+				
+			}
+			else if((m != displayedPrimitives.size()-1) &&(displayedPrimitives.size()!=1)){
+				//ret += "+ System.getProperties().getProperty(\"line.separator\") \n";  
+				
+				ret += "+\n           \" \\'" + nameOfPrimitives.get(m) + "\\'\" + \":\\'\" + " + displayedPrimitives.get(m)+ " + \"\\' \"\n";
+				ret += "+\",\"";
 			}
 			else{
-				//ret += "+ \" ....... \" ";
-		  		ret += "+\n            \"" + nameOfPrimitives.get(m) + "\" + \":\" + " + displayedPrimitives.get(m)+"\n"; 
-			}
-			for (int tmp=0; tmp<m; tmp++){
-				ret+= "		";
+		  		ret += "+\n           \" \\'" + nameOfPrimitives.get(m) + "\\'\" + \":\\'\" + " + displayedPrimitives.get(m)+ " \n"; 
+				//ret += "+ \"*\" ";
 			}
 			
 				
 			
 	  }
-	  ret += "+ \" } \" \n";
+	  //ret += "+ \"\\' \" \n";
 	 
 	
 	  for(int m=0;m<displayedAttributes.size();m++)
@@ -110,7 +114,8 @@ class UmpleToJava {
 	      ret += " + System.getProperties().getProperty(\"line.separator\") +\n            ";
 	      ret += "\"  \" + " +  "\""+reflexiveNames.get(m)+" : \"+("+reflexive.get(m)+"!=null?Integer.toHexString(System.identityHashCode("+reflexive.get(m)+")):\"null\")";
 	  }
-	 
+		//ret += "+ \" }\" \n ";
+
 	  append(realSb,"\n    return {0};", ret);
 	  #>>
   }!>>
