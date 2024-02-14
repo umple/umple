@@ -4,6 +4,7 @@ nohup.out
 
 # Temporary
 /ump
+UmpleCodeExecution/tmp
 
 # umple specific
 umpleonline/ump/
