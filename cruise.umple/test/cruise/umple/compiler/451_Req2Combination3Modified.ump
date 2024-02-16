@@ -1,6 +1,7 @@
-// Combination of 2 requirements with implementsReq statement preceding it
+// Combination of 2 requirements and implementations
 // Should not produce 401 warning
 implementsReq A;
+implementsReq B;
 class X {
   a;
   b;
@@ -8,7 +9,7 @@ class X {
 req A text {
   This is the second requirement.
 } 
-implementsReq B;
 req B { 
-  This is the first requirement.
+ This is the first requirement.
 }
+

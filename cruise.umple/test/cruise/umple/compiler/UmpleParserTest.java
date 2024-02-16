@@ -1433,6 +1433,7 @@ public class UmpleParserTest
   public void ImplementsPrecedeReq()
   {
 	  assertHasWarningsParse("451_ReqMismatch401Warning.ump", 401);
+	  assertHasWarningsParse("451_ReqMismatch401Warning Modified.ump", 401);
 	  assertNoWarningsParse("451_ReqNoWarning.ump");
           assertNoWarningsParse("451_Req2Combination1.ump");
           assertNoWarningsParse("451_Req2Combination2.ump");
@@ -1442,6 +1443,14 @@ public class UmpleParserTest
           assertNoWarningsParse("451_ReqMixset.ump");
           assertNoWarningsParse("451_ReqMixsetCombination1.ump");
           assertNoWarningsParse("451_ReqMixsetCombination2.ump");
+          assertNoWarningsParse("451_ReqMixsetNoUse.ump");
+          assertNoWarningsParse("451_Req2Combination3Modified.ump");
+          assertNoWarningsParse("451_Req2Combination1Modified.ump");
+          assertNoWarningsParse("451_ReqAssociationModified.ump");
+          assertNoWarningsParse("451_ReqMixsetClassOutside.ump");
+          assertNoWarningsParse("451_ReqMixsetOutputGenerated.ump");
+          
+
   }
 
   @Test

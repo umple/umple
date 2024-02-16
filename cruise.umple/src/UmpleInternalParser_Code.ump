@@ -40,12 +40,7 @@ class UmpleInternalParser
   internal Boolean shouldProcessAgain = false;
   internal Boolean shouldProcessClassAgain = false;
 
-//DEBUG
-  static boolean debugAIP=false;
-  
-  public static void debugPrint(String s) {
-    if (debugAIP) System.out.println(s);
-  }
+
   after constructor { init(); }
 
   public UmpleInternalParser()
@@ -171,9 +166,6 @@ class UmpleInternalParser
   // analyzeToken and quits early if a problem arises
   private void analyzeAllTokens(Token rootToken)
   {
-// DEBUG
-    debugPrint("\nAAT DL-169-UmpleInternalParser_Code.ump-analyzeAllToken STARTING ");
-  
     int analysisStep = 0;
     shouldProcessAgain = true;
     do
@@ -182,12 +174,7 @@ class UmpleInternalParser
       shouldProcessAgain = false;
       for(Token t : rootToken.getSubTokens())
       {
-// DEBUG
-        debugPrint(" AAT DL-176-UmpleInternalParser_Code.ump-analyzeAllToken-analyzeToken is being called!");
-        debugPrint(" AAT DL-177-UmpleInternalParser_Code.ump-analysisStep"+analysisStep);
         analyzeToken(t,analysisStep);
-// DEBUG
-        debugPrint(" AAT DL-184-UmpleInternalParser_Code.ump-shouldProcessAgain="+shouldProcessAgain);
         if (!getParseResult().getWasSuccess())
         {
           return;
@@ -238,10 +225,7 @@ class UmpleInternalParser
     analyzeCoreToken(t,analysisStep);
     analyzeEnumerationToken(t, analysisStep);
     mixset Class {
-//DEBUG 
-      debugPrint("\nAT L-231-UmpleInternalParser_Code.ump-analyze class token is called! t="+t);
       analyzeClassToken(t,analysisStep);
-      debugPrint("AT L-233-UmpleInternalParser_Code.ump-analysisStep"+analysisStep);
  
  // DEBUG ... this may not work     
       // Analyse requirements at the top level because analyse class token will only occur at pass 1
