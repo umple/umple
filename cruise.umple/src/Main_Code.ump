@@ -1249,7 +1249,7 @@ class PlaygroundMain
   {
     for (String key : model.getHashMap().keySet()) 
     {
-      if(key.compareTo("Java") == 0) 
+      if(key.compareTo("Java") == 0 || key.compareTo("Python") == 0) 
       {
         // Get all main file names and make a single string
         StringBuilder builder = new StringBuilder();
@@ -1258,7 +1258,7 @@ class PlaygroundMain
           builder = builder.append(mainClass.getName() + " ");
         }
         String mainFileNames = builder.toString().trim();
-        String filePath = model.getUmpleFile().getPath() + File.separator + "JavaMainClasses.txt";
+        String filePath = model.getUmpleFile().getPath() + File.separator + key + "MainClasses.txt";
         if(!mainFileNames.isEmpty())
         {
           // Create or override JavaMainClasses.txt

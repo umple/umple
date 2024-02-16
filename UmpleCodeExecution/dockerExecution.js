@@ -2,11 +2,12 @@ const fs = require('fs');
 const exec = require('child_process').exec;
 
 class DockerExecution {
-    constructor(path, mainFile, model) {
+    constructor(path, mainFile, model, language="Java") {
         this.path = path;
         this.mainFile = mainFile;
         this.model = model;
         this.outputFolder = "output/" + this.model + "_" + this.mainFile;
+        this.language=language;
 
         const config = this.readConfig();
         this.basePath = config['umplePath'];
@@ -42,7 +43,9 @@ class DockerExecution {
         if(path.endsWith('/')) {
             path = path.substring(0, path.length - 1);
         }
-        if(path.split('/')[0]=="Python"){
+        const pathArr=path.split('/');
+
+        if(this.language=="Python"){
             return path ? `${path}/${this.mainFile}.py` : this.mainFile;
         }
         return path ? `${path.split('/').join('.')}.${this.mainFile}` : this.mainFile;    

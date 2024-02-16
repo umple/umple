@@ -4,9 +4,9 @@ exec  2> "/output/errors"
 
 cd /input/
 
-first=$(echo $@ | cut -d'/' -f1)
+py=$(echo $@ | cut -d'.' -f2)
 
-if [ $first = "Python" ]; then
+if [ $py = "py" ]; then
     echo "Python result:"
     python $@
 else
