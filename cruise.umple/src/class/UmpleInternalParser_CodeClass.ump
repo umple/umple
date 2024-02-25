@@ -203,7 +203,9 @@ class UmpleInternalParser
 
   }  
 
+  private static int counter = 0;
   private void analyzeRequirement(Token t) {
+   if(counter <= 1){
     String reqID = t.getSubToken("reqIdentifier").getValue(); // extract new requirement identifier
     String newContent = t.getSubToken("reqContent").getValue();// extract content 
 
@@ -236,17 +238,27 @@ class UmpleInternalParser
     Requirement req = new Requirement(reqID, newContent, newLanguage);// Create new requirement 
     // Add the new requirement
     model.getAllRequirements().put(reqID, req);
+    //System.out.println("The requirement identifier is: "+reqID);
+    //System.out.println("The requirement is: "+req);
+    }
+    counter+=1;
+    //System.out.println("The value of the counter is: ");
+    //System.out.println(counter);
 }
 
   private void analyzeImplementReq(Token t, int analysisStep) {
+  //System.out.println("Inside Analyze Requirmenet");
+  /*System.out.println("Inside Analyze Requirmenet analysis step: "+analysisStep);
     if (analysisStep != 2) { // Check if it's the second pass, otherwise, skip analysis
         shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
         return;
-    }
+    }*/
+    //System.out.println("Inside Analyze Requirmenet after if");
     int counter = 0;
     String badReq = "";
 
-    if (analysisStep == 2) { // Do processing only if it is the second parse 
+    //if (analysisStep == 2) { // Do processing only if it is the second parse 
+     //System.out.println("The analysis step is:"+analysisStep);
 
     if (t.hasSubTokens()) {
         
@@ -265,7 +277,7 @@ class UmpleInternalParser
             }
         }
       }
-    }
+    //}
 
     if (counter != 0) {
       setFailedPosition(t.getPosition(), 401, badReq); // If there are requirements not found, set failed position with code 401

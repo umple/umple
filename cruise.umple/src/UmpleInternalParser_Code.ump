@@ -226,10 +226,13 @@ class UmpleInternalParser
     analyzeEnumerationToken(t, analysisStep);
     mixset Class {
       analyzeClassToken(t,analysisStep);
+      //System.out.println("The analysis step in AT-229 is: "+analysisStep);
  
  // DEBUG ... this may not work     
       // Analyse requirements at the top level because analyse class token will only occur at pass 1
       if (t.is("requirement") && analysisStep == 1){
+        //System.out.println("It reaches AT-233");
+        //System.out.println("The analysis step in AT-234 is: "+analysisStep);
         analyzeRequirement(t);
       }
     }
