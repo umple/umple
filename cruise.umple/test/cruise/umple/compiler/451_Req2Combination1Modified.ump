@@ -1,13 +1,14 @@
-// Association with the implementsReq not involved
+// 2 requirements combination
 // Should not produce 401 warning
 implementsReq A;
 class X {
   a;
+  b;
 }
-req A text {  
+req A text { 
   This is the second requirement.
-}
-class Y{
- 1 -- * X;
+} 
+req B {
+  This is the first requirement.
 }
 

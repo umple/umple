@@ -1,11 +1,14 @@
+// Combination of 2 requirements with one requirement not having an ImplementsREq
+// Should not produce 401 warning
 implementsReq A;
+class X {
+  a;
+  b;
+}
 req A text { 
  This is the second requirement.
 } 
 req B {
   This is the first requirement.
 }
-class X {
-a;
-b;
-}
+

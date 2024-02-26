@@ -62,13 +62,8 @@ class UmpleInternalParser
     if (analysisStep != 2)
     {
       shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
-// DEBUG
-      debugPrint("\n ACT ENTERING BUT NOT PROCESSING due to analysisStep not 2 t="+t);
       return;
     }
-
-// DEBUG
-      debugPrint("\n ACT ENTERING Will process analysis ste is 2; t="+t);
 
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
@@ -157,17 +152,12 @@ class UmpleInternalParser
       shouldConsumeRequirement = false;
     }
     else if (t.is("requirement")){
-// DEBUG
-      debugPrint("\n ACT L-156-UmpleInternalParser_CodeClass.ump-analyzeClassToken-analysis step:"+ analysisStep);
-      debugPrint(" ACT L-157 is requirement");
       analyzeRequirement(t);
     }
     else if (t.is("reqImplementation")){
       analyzeImplementReq(t,analysisStep);
       shouldConsumeRequirement = isReqAddedToLast(t);
-      shouldConsumeComment = shouldConsumeRequirement;
-      debugPrint("\n ACT L-164-UmpleInternalParser_CodeClass.ump-analyzeClassToken-Requirement Implementation is being analyzed! analysis step:"+ analysisStep);
-      debugPrint(" ACT L-165 is reqImplementation");      
+      shouldConsumeComment = shouldConsumeRequirement;   
     }
     else if (t.is("classDefinition"))
     {
@@ -213,7 +203,9 @@ class UmpleInternalParser
 
   }  
 
+  private static int counter = 0;
   private void analyzeRequirement(Token t) {
+   if(counter <= 1){
     String reqID = t.getSubToken("reqIdentifier").getValue(); // extract new requirement identifier
     String newContent = t.getSubToken("reqContent").getValue();// extract content 
 
@@ -246,66 +238,49 @@ class UmpleInternalParser
     Requirement req = new Requirement(reqID, newContent, newLanguage);// Create new requirement 
     // Add the new requirement
     model.getAllRequirements().put(reqID, req);
-// DEBUG
-    debugPrint("\n AR 245 analyzeRequirement:model.getAllRequirements() after adding: " + model.getAllRequirements());
-    debugPrint(" AR 246 req added:"+req);
+    //System.out.println("The requirement identifier is: "+reqID);
+    //System.out.println("The requirement is: "+req);
+    }
+    counter+=1;
+    //System.out.println("The value of the counter is: ");
+    //System.out.println(counter);
 }
 
   private void analyzeImplementReq(Token t, int analysisStep) {
+  //System.out.println("Inside Analyze Requirmenet");
+  /*System.out.println("Inside Analyze Requirmenet analysis step: "+analysisStep);
     if (analysisStep != 2) { // Check if it's the second pass, otherwise, skip analysis
         shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
         return;
-    }
+    }*/
+    //System.out.println("Inside Analyze Requirmenet after if");
     int counter = 0;
     String badReq = "";
 
-    if (analysisStep == 2) { // Do processing only if it is the second parse 
-// DEBUG
-    // Expected value for analysisStep is 2
-    debugPrint("\n AIR 260 In the analyzeImplementReq method!****");
-    debugPrint(" AIR Analysis step: " + analysisStep);
+    //if (analysisStep == 2) { // Do processing only if it is the second parse 
+     //System.out.println("The analysis step is:"+analysisStep);
 
     if (t.hasSubTokens()) {
-        debugPrint(" AIR It has tokens!");
-        debugPrint(" AIR This from analyzeImplementReq - model.getAllRequirements() before loop: " + model.getAllRequirements());
+        
 
         for (Token sub : t.getSubTokens()) {
             String subValue = sub.getValue(); // Declare subValue to store the result of sub.getValue()
 
-            // DEBUG
-            debugPrint("  AIR DL-265 - sub.getValue(): " + subValue); // should display A if the token is static
-            debugPrint("  AIR DL-266 - model.getAllRequirements(): " + model.getAllRequirements()); // should display the requirement A
-            debugPrint("  AIR DL-267 - The requirement is present in the model:" + model.getAllRequirements().containsKey(subValue));// should display true if A is present
-            debugPrint("  AIR DL-268 - Is the subvalue not static:" + !subValue.equals("STATIC"));// should return true if the token is not STATIC 
-            debugPrint("  AIR DL-269 - Trying to get the identifier:" + t.getSubToken("reqIdentifier").getValue());
-            debugPrint("  AIR DL-270 - Analysis step: " + analysisStep);// should  be 2 as we want the processing in the second parse
 
             if (!subValue.equals("STATIC")) {
-              debugPrint("  AIR L-273 - The value is not STATIC");
                 if (model.getAllRequirements().containsKey(subValue)) {
-                    debugPrint("  AIR L-275 - Requirement in model");
                     lastRequirements.add(model.getAllRequirements().get(subValue)); // If requirement is found add it to lastRequirement list
-                    debugPrint("Requirement found:" + lastRequirements);
                 } else {
                     counter++;
-                    debugPrint("  AIR L-280 - Not STATIC but NO Requirement in model");
                     badReq += " " + subValue;
-                    debugPrint("  AIR The req is not static in one case!");
                 }
             }
         }
-//DEBUG
-      debugPrint(" AIR model.getAllRequirements() after loop: " + model.getAllRequirements());
       }
-    }
+    //}
 
     if (counter != 0) {
-// DEBUG
-       debugPrint(" AIR No requirements found!");
       setFailedPosition(t.getPosition(), 401, badReq); // If there are requirements not found, set failed position with code 401
-    }
-    for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-      debugPrint(" AIR ste ---"+ste);
     }
   }
 

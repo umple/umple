@@ -1,7 +1,9 @@
+// Requirement mismatch with requirment before class
+// Should produce 401 warning
 implementsReq A;
 req B text { 
  This is the second requirement.
 } 
 class X {
-a;
+ a;
 }

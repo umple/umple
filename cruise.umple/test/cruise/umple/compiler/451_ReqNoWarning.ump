@@ -1,7 +1,9 @@
+// Ideal case Requirement and class Combination
+// No 401 warning
 implementsReq A;
 class X {
-a;
+  a;
 }
 req A text {  
-This is the second requirement.
+  This is the second requirement.
 } 
