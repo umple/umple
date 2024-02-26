@@ -1928,7 +1928,7 @@ public class StructurePointsHandler{
 					if(portList!= null && !portList.isEmpty()){
 						for(Object port: portList){
 							addInitConnectorBody(genClass, generationValueGetter, portInitConnectionsMethod, port, port,
-									fromSubComponent, toSubComponent, false);
+									fromSubComponent, toSubComponent, false, false);
 						}
 						
 						List<?> activeMethods = generationValueGetter.getList(fromComplexPort, IStructureConstants.ACTIVE_METHODS);
@@ -1938,7 +1938,7 @@ public class StructurePointsHandler{
 //								addInitConnectorBody(genClass, generationValueGetter, portInitConnectionsMethod, activeMethod, conjugatedActiveMethod,
 //										fromSubComponent, toSubComponent, false);
 								addInitConnectorBody(genClass, generationValueGetter, portInitConnectionsMethod, conjugatedActiveMethod , activeMethod,
-										toSubComponent, fromSubComponent, true);
+										toSubComponent, fromSubComponent, true, false);
 //								addInitConnectorBody(genClass, generationValueGetter, portInitConnectionsMethod, conjugatedActiveMethod , activeMethod,
 //										toSubComponent, fromSubComponent, true);
 							}
@@ -1947,14 +1947,14 @@ public class StructurePointsHandler{
 				}
 			}else{
 				addInitConnectorBody(genClass, generationValueGetter, portInitConnectionsMethod, fromPort, toPort,
-						fromSubComponent, toSubComponent, false);
+						fromSubComponent, toSubComponent, false, true);
 			}
 		}
 	}
 
 	private static void addInitConnectorBody(GenClass genClass, GenerationPolicyRegistry generationValueGetter,
 			GenMethod portInitConnectionsMethod, Object fromPort, Object toPort, Object fromSubComponent,
-			Object toSubComponent, boolean inverse) {
+			Object toSubComponent, boolean inverse, boolean isCompound) {
 		if(fromSubComponent== null || !fromSubComponent.getClass().isInstance(toSubComponent)){
 			return;
 		}
@@ -2005,6 +2005,7 @@ public class StructurePointsHandler{
 		
 		//boolean isReference= !genClass.getIsRemote();	//isReference(generationValueGetter, sourceType)
 		GenConnectEntry aBody = new GenConnectEntry(null, target, targetParent, source, sourceParent);
+		aBody.setIsCompound(isCompound);
 		aBody.setInverse(inverse);
 		portInitConnectionsMethod.addBody(aBody);
 		//portInitConnectionsMethod.addBody(new GenBody(source+ "+= "+(isReference?"&":"")+ target+";"));

@@ -1,0 +1,11 @@
+#!/bin/bash
+# restores the latest compiler from dist/libs to dist
+# use if a bad compiler is built
+if [ -z ${UMPLEROOT+x} ]
+then
+  export UMPLEROOT=~/umple
+fi
+echo will restore compiler from the previous release from dist/libs to dist
+cp -pr $UMPLEROOT/dist/libs/`ls -t $UMPLEROOT/dist/libs | head -1` $UMPLEROOT/dist
+
+
