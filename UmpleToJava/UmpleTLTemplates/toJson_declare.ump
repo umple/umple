@@ -66,15 +66,13 @@ class UmpleToJava {
 		}
 		  
 	  }
-	//String  s = "\"*\" +";
-	ret +=" \"{ \"\n+";
-
-	ret += " System.getProperties().getProperty(\"line.separator\") \n            "; 
-	ret += "+ super.toString().replaceAll(\"@\" , \": \"+ \"\\n \\'ObjectId\\':\\'\")";
+	
+	ret += "super.toString().replaceAll(\"@\" ,  \"\\n{ \"+ \"\\n \\'ObjectId\\':\\'\")";
 	ret+= "+ \"\\',\"";
 	ret += "+ System.getProperties().getProperty(\"line.separator\") \n            ";    
 
 	boolean firstStr = true;
+	
 	ret += " +\"   \"";
 	  for(int m=0;m<displayedPrimitives.size();m++)
 	  {
@@ -83,26 +81,19 @@ class UmpleToJava {
 			if ((m == displayedPrimitives.size()-1) &&(displayedPrimitives.size()!=1)){
 				ret += "+ System.getProperties().getProperty(\"line.separator\") \n";  
 				ret += " +\"   \"";
-				ret += "+\n           \" \\'" + nameOfPrimitives.get(m) + "\\'\" + \":\\'\" + " + displayedPrimitives.get(m)+ " + \"\\' \"\n";
+				ret += "+\n           \" \\'" + nameOfPrimitives.get(m) + "\\'\" + \":\\'\" + " + displayedPrimitives.get(m)+ " + \"\\'\\n}\"\n";
 				
 			}
 			else if((m != displayedPrimitives.size()-1) &&(displayedPrimitives.size()!=1)){
 				//ret += "+ System.getProperties().getProperty(\"line.separator\") \n";  
 				
-				ret += "+\n           \" \\'" + nameOfPrimitives.get(m) + "\\'\" + \":\\'\" + " + displayedPrimitives.get(m)+ " + \"\\' \"\n";
+				ret += "+\n           \" \\'" + nameOfPrimitives.get(m) + "\\'\" + \":\\'\" + " + displayedPrimitives.get(m)+ " + \"\\'\"\n";
 				ret += "+\",\"";
 			}
 			else{
 		  		ret += "+\n           \" \\'" + nameOfPrimitives.get(m) + "\\'\" + \":\\'\" + " + displayedPrimitives.get(m)+ " \n"; 
-				//ret += "+ \"*\" ";
-			}
-			
-				
-			
+			}			
 	  }
-	  //ret += "+ \"\\' \" \n";
-	 
-	
 	  for(int m=0;m<displayedAttributes.size();m++)
 	  {          
 		  ret += " + System.getProperties().getProperty(\"line.separator\") +\n            ";      
@@ -114,8 +105,6 @@ class UmpleToJava {
 	      ret += " + System.getProperties().getProperty(\"line.separator\") +\n            ";
 	      ret += "\"  \" + " +  "\""+reflexiveNames.get(m)+" : \"+("+reflexive.get(m)+"!=null?Integer.toHexString(System.identityHashCode("+reflexive.get(m)+")):\"null\")";
 	  }
-		//ret += "+ \" }\" \n ";
-
 	  append(realSb,"\n    return {0};", ret);
 	  #>>
   }!>>

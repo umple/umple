@@ -334,6 +334,20 @@ class UmpleModel
     }
     return false;
   }
+  //function that return true if a model has a generator that contains a suboption
+  public boolean modelHasSuboption(String gen, String subOption){
+    boolean flag=false;
+    for (GenerateTarget target : getGenerates()){
+      if (target.tarHasSubOption(subOption)){
+        flag=true;
+        break;
+      }
+    }
+    if(gen=="JavaGenerator"&&flag){
+      return true;
+    } 
+    return false;
+  }
 }
 
 /*
@@ -377,6 +391,14 @@ class Depend
  */
 class UmpleElement
 {
+depend cruise.umple.compiler.*;
+depend cruise.umple.util.*;
+depend java.util.*;
+depend cruise.umple.parser.Position;
+depend java.util.regex.Matcher;
+depend java.util.regex.Pattern;
+depend java.lang.*;
+
   public void appendExtraCode(String newCode)
   {
     appendExtraCode(newCode,true);
@@ -576,8 +598,7 @@ class UmpleVariable
 /*
  */
 class GeneratedElement
-{
-
+{   
   private Map<String, String> lookups = new HashMap<String, String>();
   private Map<String, List<String>> multiLookups = new HashMap<String,List<String>>();
 

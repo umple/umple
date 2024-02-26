@@ -22,18 +22,18 @@ class JavaGenerator
   StringBuilder uncaughtExceptions = new StringBuilder();
   UmpleClass[] mainClasses;
 
-  
+
   private static Map<String,String> UpperCaseSingularLookupMap;
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;
   private static Map<String,String> AsIsPluralLookupMap;
-  private static List<String> OneOrManyLookup;  
+  private static List<String> OneOrManyLookup;
 
   static
   {
     UpperCaseSingularLookupMap = new HashMap<String, String>();
     UpperCaseSingularLookupMap.put("parameterOne", "a{0}");
-    UpperCaseSingularLookupMap.put("removeParameterOne", "placeholder{0}");    
+    UpperCaseSingularLookupMap.put("removeParameterOne", "placeholder{0}");
     UpperCaseSingularLookupMap.put("parameterNew", "aNew{0}");
     UpperCaseSingularLookupMap.put("parameterNext", "next{0}");
     UpperCaseSingularLookupMap.put("addMethod", "add{0}");
@@ -56,7 +56,7 @@ class JavaGenerator
     UpperCaseSingularLookupMap.put("resetMethod", "reset{0}");
     UpperCaseSingularLookupMap.put("getMethod", "get{0}");
     UpperCaseSingularLookupMap.put("isMethod", "is{0}");
-    UpperCaseSingularLookupMap.put("getFullMethod", "get{0}FullName");    
+    UpperCaseSingularLookupMap.put("getFullMethod", "get{0}FullName");
     UpperCaseSingularLookupMap.put("isFinalMethod", "is{0}Final");
     UpperCaseSingularLookupMap.put("getDefaultMethod", "getDefault{0}");
     UpperCaseSingularLookupMap.put("didAdd", "didAdd{0}");
@@ -64,7 +64,7 @@ class JavaGenerator
     UpperCaseSingularLookupMap.put("associationCanSetOne","canSet{0}");
     UpperCaseSingularLookupMap.put("attributeCanSetOne","canSet{0}");
     UpperCaseSingularLookupMap.put("eventStartMethod", "start{0}Handler");
-    UpperCaseSingularLookupMap.put("eventStopMethod", "stop{0}Handler");    
+    UpperCaseSingularLookupMap.put("eventStopMethod", "stop{0}Handler");
     UpperCaseSingularLookupMap.put("stateNull", "Null");
     UpperCaseSingularLookupMap.put("doExitMethod", "doExit{0}");
     UpperCaseSingularLookupMap.put("doEventMethod", "do{0}");
@@ -97,18 +97,23 @@ class JavaGenerator
     AsIsSingularLookupMap.put("stateString","\"{0}\"");
     AsIsSingularLookupMap.put("eventMethod","{0}");
     AsIsSingularLookupMap.put("eventHandler", "{0}Handler");
-        
+
     AsIsPluralLookupMap = new HashMap<String, String>();
     AsIsPluralLookupMap.put("associationMany","{0}");
     AsIsPluralLookupMap.put("attributeMany","{0}");
-    
+
     OneOrManyLookup = new ArrayList<String>();
     OneOrManyLookup.add("attribute");
     OneOrManyLookup.add("parameter");
   }
-  
+
   public void generate()
   {
+  // DEBUG
+  System.out.println("The following will print if it has the suboption");
+  if (hasSuboption("genJson")) {
+    System.out.println("Has suboption genJson"+System.identityHashCode(this));
+   }
     prepare();
     UmpleElement lastElement = null;
     try{
@@ -120,19 +125,19 @@ class JavaGenerator
           continue;
         }
         writeFile(currentElement);
-        
+
         lastElement = currentElement;
       }
     }
     catch(Exception e){
       throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
     }
-    
+
     if (lastElement == null)
     {
       System.err.println("No classes were compiled. It is likely there was no compilable code in the source .ump file(s) including "+getModel().getUmpleFile().getFileName());
     }
-    
+
     if(mainClasses.size()>0)
     {
       for(UmpleClass uClass : mainClasses)
@@ -146,17 +151,17 @@ class JavaGenerator
 	    {
 	      writeObjectFactoryClass();
         writeObjectFactoryInterface();
-	    }    
+	    }
 	    catch(Exception e)
       {
-        throw new UmpleCompilerException("There was a problem with generating the Object factory. " + e, e);	
+        throw new UmpleCompilerException("There was a problem with generating the Object factory. " + e, e);
       }
     }
-	  
+
     postpare();
   }
-  
-  
+
+
   public ILang getLanguageFor(UmpleElement aElement)
   {
     if (aElement instanceof UmpleInterface)
@@ -166,27 +171,27 @@ class JavaGenerator
     else if (aElement instanceof UmpleClass)
     {
       return new JavaClassGenerator();
-    } 
+    }
     else{
-        return null;        
+        return null;
     }
   }
-  
+
   public boolean isNullable(UmpleVariable av)
   {
     return !UmpleToPrimitiveMap.containsKey(av.getType());
   }
-  
+
   public String relatedTranslate(String name, AssociationVariable av)
   {
     return translate(name,av.getRelatedAssociation());
   }
-  
+
   public String translate(String keyName, State state)
   {
     String singularName = state.getName();
     String pluralName = getModel().getGlossary().getPlural(singularName);
-  
+
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
       return StringFormatter.format(UpperCasePluralLookupMap.get(keyName),getUpperCaseName(pluralName));
@@ -207,7 +212,7 @@ class JavaGenerator
     {
       return getUpperCaseName(state.getStateMachine().getName());
     }
-    
+
     return "UNKNOWN ID: " + keyName;
   }
 
@@ -221,20 +226,20 @@ class JavaGenerator
     }
     if ("doActivityMethod".equals(keyName))
     {
-      return StringFormatter.format("doActivity{0}{1}", threadNum,  GeneratorHelper.getFullActivityName(a.getState())); 
+      return StringFormatter.format("doActivity{0}{1}", threadNum,  GeneratorHelper.getFullActivityName(a.getState()));
     }
     else if ("doActivityThread".equals(keyName))
     {
-      return StringFormatter.format("doActivity{0}{1}Thread", threadNum, GeneratorHelper.getFullActivityName(a.getState())); 
+      return StringFormatter.format("doActivity{0}{1}Thread", threadNum, GeneratorHelper.getFullActivityName(a.getState()));
     }
     return "UNKNOWN ID: " + keyName;
   }
-  
+
   public String translate(String keyName, StateMachine sm)
   {
     String singularName = sm.getFullName();
     String pluralName = getModel().getGlossary().getPlural(singularName);
-  
+
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
       return StringFormatter.format(UpperCasePluralLookupMap.get(keyName),getUpperCaseName(pluralName));
@@ -272,11 +277,11 @@ class JavaGenerator
       }
       return allEnums;
     }
-       
+
     else if ("listMessageTypesStates".equals(keyName))
     {
       String allEnums = "";
-      
+
       if(sm.getNestedStateMachines().isEmpty())
       {
         for(State state : sm.getStates())
@@ -309,7 +314,7 @@ class JavaGenerator
                 }
               }
             }
-          
+
             int countingAutoTrans = 0;
             int countingUnspec = 0;
             int countingResult = 0;
@@ -323,7 +328,7 @@ class JavaGenerator
               if(t.getEvent().isUnspecified())
               {
                 countingUnspec++;
-              }    
+              }
             }
             countingResult = countingAutoTrans+countingUnspec;
             if(countingResult == countingSize)
@@ -371,7 +376,7 @@ class JavaGenerator
                 }
               }
             }
-          
+
             int countAutoTrans = 0;
             int countUnspec = 0;
             int result = 0;
@@ -407,7 +412,7 @@ class JavaGenerator
         {
           String exitEve=null;
           String enterEve=null;
-          
+
           if (nsm.getParentState() != null)
           {
             State parentState = nsm.getParentState();
@@ -467,7 +472,7 @@ class JavaGenerator
                   }
                 }
               }
-            
+
               int countNestedAutoTrans = 0;
               int countNestedUnspec = 0;
               int nestedResult = 0;
@@ -488,7 +493,7 @@ class JavaGenerator
               {
                 allEventEnums += "MessageType.null_M";
               }
-          
+
               String exEvent ="";
               String enEvent ="";
               int sizeTrans = state.getTransitions().size();
@@ -497,7 +502,7 @@ class JavaGenerator
                 int exCount = 0;
                 int enCount = 0;
                 int countResult = 0;
-                exEvent = translate("exitMethod",s);  
+                exEvent = translate("exitMethod",s);
                 enEvent = translate("enterMethod",s);
                 for(Transition t : state.getTransitions())
                 {
@@ -515,24 +520,24 @@ class JavaGenerator
                 {
                   allEventEnums += "MessageType.null_M";
                 }
-              }     
+              }
             }
             else if(state.getTransitions().isEmpty())
             {
               allEventEnums += "MessageType.null_M";
             }
-            
+
             allEnums += allEventEnums;
             allEnums += ")));";
-          }       
+          }
         }
       }
       return allEnums;
-    } 
-        
+    }
+
     return "UNKNOWN ID: " + keyName;
   }
-  
+
   public String translate(String keyName, Event event)
   {
     String singularName = event.getName();
@@ -554,9 +559,9 @@ class JavaGenerator
     {
       return StringFormatter.format(AsIsSingularLookupMap.get(keyName),singularName);
     }
-    
+
     return "UNKNOWN ID: " + keyName;
-  }  
+  }
 
   public String translate(String keyName, Event event, StateMachine sm)
   {
@@ -605,15 +610,15 @@ class JavaGenerator
     {
       return StringFormatter.format(AsIsSingularLookupMap.get(keyName),singularName);
     }
-    
+
     return "UNKNOWN ID: " + keyName;
-  }  
-  
+  }
+
   public String translate(String name, UmpleInterface aInterface)
   {
     if ("packageDefinition".equals(name))
     {
-      return aInterface.getPackageName().length() == 0 ? "" : "package " + aInterface.getPackageName() + ";"; 
+      return aInterface.getPackageName().length() == 0 ? "" : "package " + aInterface.getPackageName() + ";";
     }
     if ("isA".equals(name))
     {
@@ -621,7 +626,7 @@ class JavaGenerator
     }
     return "";
   }
-  
+
   public String translate(String methodType)
   {
     if ("String".equals(methodType))
@@ -639,10 +644,10 @@ class JavaGenerator
     if ("void".equals(methodType))
     {
       return "";
-    }        
+    }
     return "null";
   }
-  
+
   public String translate(String keyName, UmpleClass aClass)
   {
     if ("constructorMandatory".equals(keyName))
@@ -654,7 +659,7 @@ class JavaGenerator
       if(aClass.hasOuterClass())
       return "";
       else
-      return aClass.getPackageName().length() == 0 ? "" : "package " + aClass.getPackageName() + ";"; 
+      return aClass.getPackageName().length() == 0 ? "" : "package " + aClass.getPackageName() + ";";
     }
     else if ("type".equals(keyName))
     {
@@ -668,20 +673,20 @@ class JavaGenerator
     {
       return "delete";
     }
-    
+
     else if ("listEventsForQSM".equals(keyName))
     {
       String allEnums = "";
-      
+
       String evName="";
       boolean sameEvName=false;
-      List<String> evList=new ArrayList<String>();         
-      
+      List<String> evList=new ArrayList<String>();
+
       for(StateMachine stm : aClass.getStateMachines())
       {
         List<StateMachine> allNested = stm.getNestedStateMachines();
         boolean nestedSMhasEvent=false;
-        
+
         if (!stm.getNestedStateMachines().isEmpty() && !stm.getEvents().isEmpty())
         {
           for(StateMachine nestedSm : allNested)
@@ -694,11 +699,11 @@ class JavaGenerator
               }
             }
           }
-        
+
           if (nestedSMhasEvent == true)
           {
-            String allNesEvenEnums = "";          
-          
+            String allNesEvenEnums = "";
+
             for(Event event : stm.getEvents())
             {
               for(int i=0; i<evList.size(); i++)
@@ -708,7 +713,7 @@ class JavaGenerator
                   sameEvName=true;
                 }
               }
-         
+
               if(sameEvName == false)
               {
                 if (!event.isAutoTransition())
@@ -718,7 +723,7 @@ class JavaGenerator
                     if(!evName.equals(event.getName()))
                     {
                       evList.add(event.getName());
-             
+
                       if (allEnums.length() > 0)
                       {
                         allEnums += ", ";
@@ -732,7 +737,7 @@ class JavaGenerator
               }
               sameEvName=false;
             }
-            
+
             boolean found = false;
             for (StateMachine nsm : stm.getNestedStateMachines())
             {
@@ -745,7 +750,7 @@ class JavaGenerator
                     sameEvName=true;
                   }
                 }
-          
+
                 if(sameEvName == false)
                 {
                   if(event.getIsInternal() == false)
@@ -762,12 +767,12 @@ class JavaGenerator
                 sameEvName=false;
               }
             }
-            
+
             if(allEnums.length() > 0 && found == true)
             {
               allEnums += ", ";
             }
-            
+
             for (StateMachine nsm : stm.getNestedStateMachines())
             {
               for (Event event : nsm.getEvents())
@@ -779,7 +784,7 @@ class JavaGenerator
                     sameEvName=true;
                   }
                 }
-          
+
                 if(sameEvName == false)
                 {
                   if(event.getIsInternal() == false)
@@ -791,15 +796,15 @@ class JavaGenerator
                         if(!evName.equals(event.getName()))
                         {
                           evList.add(event.getName());
-              
+
                           if (allNesEvenEnums.length() > 0)
                           {
                             allNesEvenEnums += ", ";
                           }
                           allNesEvenEnums += translate("eventMethod",event);
-                          allNesEvenEnums += "_M"; 
+                          allNesEvenEnums += "_M";
                           evName=event.getName();
-                        } 
+                        }
                       }
                     }
                   }
@@ -821,7 +826,7 @@ class JavaGenerator
                   sameEvName=true;
                 }
               }
-              
+
               if(sameEvName == false)
               {
                 if (!event.isAutoTransition())
@@ -831,7 +836,7 @@ class JavaGenerator
                     if( !evName.equals(event.getName()))
                     {
                       evList.add(event.getName());
-             
+
                       if (allEnums.length() > 0)
                       {
                         allEnums += ", ";
@@ -845,7 +850,7 @@ class JavaGenerator
               }
               sameEvName=false;
             }
-          }  
+          }
         }
         else if (!stm.getNestedStateMachines().isEmpty() && stm.getEvents().isEmpty())
         {
@@ -860,7 +865,7 @@ class JavaGenerator
                   sameEvName=true;
                 }
               }
-          
+
               if(sameEvName == false)
               {
                 if(event.getIsInternal() == false)
@@ -872,16 +877,16 @@ class JavaGenerator
                       if( !evName.equals(event.getName()))
                       {
                         evList.add(event.getName());
-             
+
                         if (allEnums.length() > 0 )
                         {
                           allEnums += ", ";
                         }
                         allEnums += translate("eventMethod",event);
-                        allEnums += "_M"; 
+                        allEnums += "_M";
                         evName=event.getName();
                       }
-                    } 
+                    }
                   }
                 }
               }
@@ -893,7 +898,7 @@ class JavaGenerator
         {
           for(Event event : stm.getEvents())
           {
-          
+
             for(int i=0; i<evList.size(); i++)
             {
               if(evList.get(i).equals(event.getName()))
@@ -901,7 +906,7 @@ class JavaGenerator
                 sameEvName=true;
               }
             }
-              
+
             if(sameEvName == false)
             {
               if (!event.isAutoTransition())
@@ -911,7 +916,7 @@ class JavaGenerator
                   if( !evName.equals(event.getName()))
                   {
                     evList.add(event.getName());
-              
+
                     if (allEnums.length() > 0)
                     {
                       allEnums += ", ";
@@ -929,20 +934,20 @@ class JavaGenerator
       }
       return allEnums;
     }
-    
+
     else if ("listEventsForPooledSM".equals(keyName))
     {
       String allEnums = "";
-      
+
       String evName="";
       boolean sameEvName=false;
-      List<String> evList=new ArrayList<String>();         
+      List<String> evList=new ArrayList<String>();
 
       for(StateMachine sm : aClass.getStateMachines())
       {
         List<StateMachine> allNested = sm.getNestedStateMachines();
-        boolean nestedSMhasEvent=false;       
-        
+        boolean nestedSMhasEvent=false;
+
         if (!sm.getNestedStateMachines().isEmpty() && !sm.getEvents().isEmpty())
         {
           for(StateMachine nestedSm : allNested)
@@ -953,7 +958,7 @@ class JavaGenerator
               {
                 nestedSMhasEvent=true;
               }
-            } 
+            }
           }
 
           if (nestedSMhasEvent == true)
@@ -991,9 +996,9 @@ class JavaGenerator
               }
               sameEvName=false;
             }
-            
+
             boolean foundNotSameEv = false;
-            
+
             for (StateMachine nsm : sm.getNestedStateMachines())
             {
               for (Event event : nsm.getEvents())
@@ -1022,7 +1027,7 @@ class JavaGenerator
                     sameEvName=true;
                   }
                 }
-          
+
                 if(sameEvName == false)
                 {
                   if(event.getIsInternal() == false)
@@ -1034,13 +1039,13 @@ class JavaGenerator
                         if( !evName.equals(event.getName()))
                         {
                           evList.add(event.getName());
-             
+
                           if (allNesEvenEnums.length() > 0)
                           {
                             allNesEvenEnums += ", ";
                           }
                           allNesEvenEnums += translate("eventMethod",event);
-                          allNesEvenEnums += "_M"; 
+                          allNesEvenEnums += "_M";
                           evName=event.getName();
                         }
                       }
@@ -1089,7 +1094,7 @@ class JavaGenerator
               }
               sameEvName = false;
             }
-          }  
+          }
         }
         else if (!sm.getNestedStateMachines().isEmpty() && sm.getEvents().isEmpty())
         {
@@ -1104,7 +1109,7 @@ class JavaGenerator
                   sameEvName=true;
                 }
               }
-          
+
               if(sameEvName == false)
               {
                 if(event.getIsInternal() == false)
@@ -1116,16 +1121,16 @@ class JavaGenerator
                       if(!evName.equals(event.getName()))
                       {
                         evList.add(event.getName());
-             
+
                         if (allEnums.length() > 0 )
                         {
                           allEnums += ", ";
                         }
                         allEnums += translate("eventMethod",event);
-                        allEnums += "_M"; 
+                        allEnums += "_M";
                         evName=event.getName();
                       }
-                    } 
+                    }
                   }
                 }
               }
@@ -1169,8 +1174,8 @@ class JavaGenerator
             sameEvName=false;
           }
         }
-        
-        
+
+
         if(sm.getNestedStateMachines().isEmpty())
         {
           for(State state : sm.getStates())
@@ -1210,7 +1215,7 @@ class JavaGenerator
             }
             else if(state.getTransitions().isEmpty())
             {
-              if (!allEnums.contains("null_M")) 
+              if (!allEnums.contains("null_M"))
               {
                 if(!allEnums.equals(""))
                 {
@@ -1248,7 +1253,7 @@ class JavaGenerator
               result = countAutoTrans+countUnspec;
               if(result == size)
               {
-                if (!allEnums.contains("null_M")) 
+                if (!allEnums.contains("null_M"))
                 {
                   if(!allEnums.equals(""))
                   {
@@ -1263,7 +1268,7 @@ class JavaGenerator
             }
             else if(state.getTransitions().isEmpty())
             {
-              if (!allEnums.contains("null_M")) 
+              if (!allEnums.contains("null_M"))
               {
                 if(!allEnums.equals(""))
                 {
@@ -1286,12 +1291,12 @@ class JavaGenerator
               exitEve = translate("exitMethod",parentState);
               enterEve = translate("enterMethod",parentState);
             }
-        
+
             for(State state : nsm.getStates())
             {
               String allEventEnums = "";
               if(!state.getTransitions().isEmpty())
-              { 
+              {
                 int countNestedAutoTrans = 0;
                 int countNestedUnspec = 0;
                 int countExit = 0;
@@ -1320,7 +1325,7 @@ class JavaGenerator
                 nestedResult = countNestedAutoTrans+countNestedUnspec+countExit+countEnter;
                 if(nestedResult == nestedSize)
                 {
-                  if (!allEnums.contains("null_M")) 
+                  if (!allEnums.contains("null_M"))
                   {
                     if(!allEnums.equals(""))
                     {
@@ -1335,7 +1340,7 @@ class JavaGenerator
               }
               else if(state.getTransitions().isEmpty())
               {
-                if (!allEnums.contains("null_M")) 
+                if (!allEnums.contains("null_M"))
                 {
                   if(!allEnums.equals(""))
                   {
@@ -1347,7 +1352,7 @@ class JavaGenerator
                   }
                 }
               }
-            }        
+            }
           }
         }
       }
@@ -1357,7 +1362,7 @@ class JavaGenerator
     {
       String allMethodsEnum = "";
       Boolean foundQueuedMethod = false;
-      
+
       for(Method m : aClass.getMethods())
       {
         if(m.getIsQueued())
@@ -1374,11 +1379,11 @@ class JavaGenerator
         }
       }
       return allMethodsEnum;
-    } 
-    
+    }
+
     return "UNKNOWN ID: " + keyName;
   }
-  
+
   public String umpleCVarToLanguagePrimitive(String name, ConstraintVariable expr) {
     if ((expr instanceof ConstraintAttribute)&&"Date".equals(((ConstraintAttribute)expr).getAttribute().getType()))
     {
@@ -1389,7 +1394,7 @@ class JavaGenerator
       return name;
     }
   }
-  
+
   private String getImplementsForInterfaces(UmpleInterface uInterface)
   {
       String implementedInterfaces = "";
@@ -1400,9 +1405,9 @@ class JavaGenerator
       else{
           for (UmpleInterface aInterface : uInterface.getExtendsInterface())
           {
-              implementedInterfaces += aInterface.getName() + ", " ; 
+              implementedInterfaces += aInterface.getName() + ", " ;
           }
-          implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-2); 
+          implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-2);
           return " extends " + implementedInterfaces;
       }
   }
@@ -1415,22 +1420,22 @@ class JavaGenerator
       extendsString = getExtendClassesNames(uClass);
       implementsString = getImplementsInterfacesNames(uClass);
 
-      return extendsString + implementsString; 
+      return extendsString + implementsString;
   }
 /*
 the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real name has changed because of proxy pattern mechanism
 */
   private String getExtendClassesNames(UmpleClass uClass)
   {
-      UmpleClass parent = uClass.getExtendsClass();  
+      UmpleClass parent = uClass.getExtendsClass();
       if (parent == null)
       {
           return "";
       }
       else{
         if(parent.getIsDistributed()&&uClass.getIsDistributed()&&(getModel().getDistributePattern()==1))
-          return   " extends " + parent.getName()+"Impl"; 
-        return   " extends " + parent.getName();   
+          return   " extends " + parent.getName()+"Impl";
+        return   " extends " + parent.getName();
       }
   }
 
@@ -1447,34 +1452,34 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         for (UmpleInterface uInterface : uClass.getParentInterface())
         {
               implementedInterfaces += uInterface.getName() + "," ;
-        }            
-        implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1); 
+        }
+        implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1);
         return " implements " + implementedInterfaces;
-      }  
+      }
   }
 
   public String translate(String keyName, Attribute av)
   {
     return translate(keyName,av,av.getIsList());
   }
-  
+
   public String translate(String keyName, AssociationVariable av)
   {
     return translate(keyName,av,av.isMany());
   }
 
-  // Translates Date and Time values, has to be used for interfaces as they do not use attributes. 
+  // Translates Date and Time values, has to be used for interfaces as they do not use attributes.
   public String translateInterfaceValue(String value, String type)
   {
     if (value == null)
     {
       return "null";
     }
-      
+
     boolean isString = value.startsWith("\"") && value.endsWith("\"");
     if (isString && "Date".equals(type))
     {
-      return "Date.valueOf("+ value +")";      
+      return "Date.valueOf("+ value +")";
     }
     else if (isString && "Time".equals(type))
     {
@@ -1491,7 +1496,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
   {
       return typeOf(type);
   }
-  
+
   private String translate(String keyName, UmpleVariable av, boolean isMany)
   {
     if (OneOrManyLookup.contains(keyName))
@@ -1499,7 +1504,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       String realKeyName = isMany ? keyName + "Many" : keyName + "One";
       return translate(realKeyName,av,isMany);
     }
-    
+
     String singularName = isMany ? getModel().getGlossary().getSingular(av.getName()) : av.getName();
     String pluralName = isMany ? av.getName() : getModel().getGlossary().getPlural(av.getName());
 
@@ -1525,13 +1530,13 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       {
         return "null";
       }
-      
-      
-      
+
+
+
       boolean isString = av.getValue().startsWith("\"") && av.getValue().endsWith("\"");
       if (isString && "Date".equals(av.getType()))
       {
-        return "Date.valueOf("+ av.getValue() +")";      
+        return "Date.valueOf("+ av.getValue() +")";
       }
       else if (isString && "Time".equals(av.getType()))
       {
@@ -1554,7 +1559,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     {
       return isNullable(av) ? getType(av) : av.getType();
     }
-    
+
     if (av instanceof AssociationVariable)
     {
       AssociationVariable assVar = (AssociationVariable)av;
@@ -1584,7 +1589,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
             {
               classToRemoveConstructorString = classToRemoveConstructorString.replaceAll("\\b"+parameterType+"\\b", classToRemove.getName()+"."+parameterType);
             }
-          
+
         }
         return classToRemoveConstructorString;
 
@@ -1610,10 +1615,10 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         String actualLookup = attVar.getIsList() ? "attributeCanSetMany" : "attributeCanSetOne";
         return translate(actualLookup,av,isMany);
       }
-      else if ("hasUniqueMethod".equals(keyName)) 
+      else if ("hasUniqueMethod".equals(keyName))
       {
         return "hasWith" + attVar.getUpperCaseName();
-      } 
+      }
       else if ("getUniqueMethod".equals(keyName))
       {
         return "getWith" + attVar.getUpperCaseName();
@@ -1623,10 +1628,10 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         return attVar.getUmpleClass().getName().toLowerCase() + "s" + "By" + attVar.getUpperCaseName();
       }
     }
-    
+
     return "UNKNOWN ID: " + keyName;
   }
-  
+
 
 
   public void prepare()
@@ -1636,37 +1641,37 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     {
       prepare(aClass);
     }
-    
+
     for (UmpleClass aClass : getModel().getUmpleClasses())
     {
       GeneratedClass genClass = aClass.getGeneratedClass();
       generateSecondaryConstructorSignatures(genClass);
       addImports(aClass,genClass);
     }
-    
+
     if( getModel().getTracer().getName().equals("log4j") )
     {
       addLog4jVarImport();
     }
-    
+
     if( getModel().getTracer().getName().equals("javaapi") )
     {
       addJavaLogAPIImport();
     }
-    
+
     if( getModel().getTracer().getName().equals("lttngjni") )
     {
       addJavaLttngJniImport();
     }
-    
+
     if( getModel().getTracer().getName().equals("lttng") )
     {
       addJavaLttngImport();
     }
-    
+
     addRelatedImports();
   }
-  
+
   private void addLog4jVarImport() {
     for(UmpleClass umpleClass : getModel().getUmpleClasses())
     {
@@ -1698,7 +1703,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       umpleClass.addDepend(new Depend("org.lttng.ust.LTTngUst"));
     }
   }
-  
+
   private void addJavaLttngImport(){
     for(UmpleClass umpleClass : getModel().getUmpleClasses())
     {
@@ -1715,7 +1720,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       umpleClass.addAttribute(loggerAttr);
     }
   }
-  
+
 
   public static String typeOf(String aType)
   {
@@ -1763,15 +1768,15 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     }
   }
 
-  
+
   //------------------------
   // PRIVATE METHODS
   //------------------------
-  
+
   private String getUpperCaseName(String name)
   {
     return StringFormatter.toPascalCase(name);
-  }  
+  }
 
   private void injectIntoUnique(String method, String injection, String when, Attribute av, UmpleClass aClass)
   {
@@ -1785,12 +1790,12 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     CodeInjection set = new CodeInjection(when, method, code, aClass);
     aClass.addCodeInjection(set);
   }
-  
+
   private void injectIntoUniqueSet(String injection, String when, Attribute av, UmpleClass aClass)
   {
     injectIntoUnique(translate("setMethod", av), injection, when, av, aClass);
   }
-  
+
   private void injectIntoUniqueDelete(String injection, String when, Attribute av, UmpleClass aClass)
   {
     injectIntoUnique("delete", injection, when, av, aClass);
@@ -1810,21 +1815,21 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
           if (!av.getIsSpecialization()) continue;
           Association relatedAssoc = aClass.getAssociation(aClass.indexOfAssociationVariable(av));
           av.setNeedsCommonCode( relatedAssoc.getEnd(av.getRelevantEnd()).getNeedsCommonCode());
-          av.setNeedsSuperCode( relatedAssoc.getEnd(av.getRelevantEnd()).getNeedsSuperCode());          
+          av.setNeedsSuperCode( relatedAssoc.getEnd(av.getRelevantEnd()).getNeedsSuperCode());
           av.setMulChangedToOne( relatedAssoc.getEnd(av.getRelevantEnd()).getMulChangedToOne());
           av.setMulChangedToN( relatedAssoc.getEnd(av.getRelevantEnd()).getMulChangedToN());
           av.setReqSetCode( relatedAssoc.getEnd(av.getRelevantEnd()).getReqSetCode());
           av.setScName( relatedAssoc.getEnd(av.getRelevantEnd()).getSuperClassName());
-        } 
+        }
         catch ( IndexOutOfBoundsException wat )
         {
           // In this situation, the association was either symmetric reflexive or there was some
           // issue with traits (it appears that it is possible for traits to have more associationVariables
           // than they have associations). Either way, these are currently unsupported with respect to specializations.
-        } 
+        }
       }
     }
-    
+
     if (aClass.getGeneratedClass() != null)
     {
       GeneratedClass genClass = aClass.createGeneratedClass(getModel());
@@ -1845,9 +1850,9 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       generateConstructorSignature(genClass);
       prepareCodeInjection(aClass);
     }
-    
+
     prepareConstraints(aClass);
-    
+
     Map<String,String> lookups = new HashMap<String,String>();
     String executeMethods = "public static void handle(String message) { getInstance().addTrace(message); }\n";
     executeMethods += "public void reset() { getInstance().traces.clear(); }";
@@ -1920,12 +1925,12 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     lookups.put("callHandle","{0}.handle(name+\" = \"+value);");
     GeneratorHelper.prepareAllTracers(this,getModel(),aClass,lookups);
     //prepareAllTraces(this,getModel(),aClass,lookups);
-    
+
     //Add  entry / exit methods to start and stop the timed events in Java
     boolean hasTimedEvents = false;
-    boolean foundQueued = false;    
+    boolean foundQueued = false;
     boolean foundPooled = false;
-    
+
     for (StateMachine sm : aClass.getStateMachines())
     {
       // Make sure state machine name is decapitalized
@@ -1943,15 +1948,15 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         foundPooled = true;
       }
     }
-        
+
     if (hasTimedEvents)
     {
       if(!foundQueued && !foundPooled)
       {
         aClass.addDepend(new Depend("java.util.*"));
       }
-    } 
-    
+    }
+
     boolean hasTimedEvent_NestedState = false;
     for (StateMachine sm : aClass.getStateMachines())
     {
@@ -1969,39 +1974,39 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         }
       }
     }
-     
-   
+
+
     if (hasTimedEvent_NestedState)
     {
       if(!foundQueued && !foundPooled)
       {
         aClass.addDepend(new Depend("java.util.*"));
       }
-    }            
+    }
   }
-  
+
   private void prepareCodeInjection(UmpleClass aClass)
   {
     prepareCodeInjectionForAttributes(aClass);
     prepareCodeInjectionForAssociations(aClass);
   }
-  
+
   private void prepareCodeInjectionForAttributes(UmpleClass aClass)
-  { 
+  {
     for(Attribute av : aClass.getAttributes())
     {
       prepareCodeInjectionForAttribute(aClass, av);
     }
   }
-  
+
   private void prepareCodeInjectionForAssociations(UmpleClass aClass)
-  { 
+  {
     for(AssociationVariable av : aClass.getAssociationVariables())
     {
       prepareCodeInjectionForAssociation(aClass, av);
     }
   }
-  
+
   private void prepareCodeInjectionForAttribute(UmpleClass aClass, Attribute av)
   {
     if ((av.isImmutable() || aClass.getKey().isMember(av)))
@@ -2011,7 +2016,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       set.setIsInternal(true);
       aClass.addCodeInjection(set);
     }
-    
+
     if (aClass.getKey().isMember(av))
     {
       String code = StringFormatter.format("if (!{0}) { return false; }",translate("attributeCanSet",av));
@@ -2020,15 +2025,15 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       inject.setIsInternal(true);
       aClass.addCodeInjection(inject);
     }
-      
+
     if (av.getIsUnique())
     {
       injectIntoUniqueSet(
         av.getType() + " {2} = {3}();" + "\n" +
-        "if ({2} != null && {2}.equals({1})) {" + "\n" + 
+        "if ({2} != null && {2}.equals({1})) {" + "\n" +
         "  return true;" + "\n" +
-        "}" + "\n" + 
-        "if ({4}({1})) {" + "\n" + 
+        "}" + "\n" +
+        "if ({4}({1})) {" + "\n" +
         "  return wasSet;" + "\n" +
         "}", "before", av, aClass);
       injectIntoUniqueSet(
@@ -2040,7 +2045,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         "{5}.remove({3}());", "before", av, aClass);
     }
   }
-  
+
   private void prepareCodeInjectionForAssociation(UmpleClass aClass, AssociationVariable av)
   {
     if (aClass.getKey().isMember(av))
@@ -2051,7 +2056,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       inject.setIsInternal(true);
       aClass.addCodeInjection(inject);
     }
-      
+
     if (av.isImmutable())
     {
       String code = StringFormatter.format("if (!{0}) { return false; }\n{0} = false;",translate("associationCanSet",av));
@@ -2060,7 +2065,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       set.setIsInternal(true);
       aClass.addCodeInjection(set);
     }
-      
+
     if (av.isMany())
     {
       String code = StringFormatter.format("if ({0}.contains({1})) { return false; }",translate("attributeMany",av),translate("parameterOne",av));
@@ -2068,12 +2073,12 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       set.setIsInternal(true);
       aClass.addCodeInjection(set);
     }
-      
+
     if(av.isSorted())
-    { 
-      String codeblock = 
+    {
+      String codeblock =
         "{ |x, y| "+
-              "x.get_"+av.getPriority() +"() <=> "+ 
+              "x.get_"+av.getPriority() +"() <=> "+
               "y.get_"+ av.getPriority() +"()"+
               "}";
       String java_code = StringFormatter.format("if(wasAdded)\n    Collections.sort({0}, {0}Priority);\n",translate("attributeMany",av));
@@ -2089,7 +2094,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       aClass.addCodeInjection(set);
     }
   }
-   
+
   private boolean prepareTimedEvents(StateMachine sm)
   {
     boolean hasTimedEvents = false;
@@ -2107,7 +2112,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
           hasTimedEvents = true;
           Action entryAction = new Action(StringFormatter.format("{0}();",translate("eventStartMethod",e)));
           entryAction.setActionType("entry");
-        
+
           Action exitAction = new Action(StringFormatter.format("{0}();",translate("eventStopMethod",e)));
           exitAction.setActionType("exit");
 
@@ -2115,29 +2120,29 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
           t.getFromState().addAction(exitAction);
         }
       }
-    } 
+    }
     else if(!sm.getNestedStateMachines().isEmpty())
     {
 		/**
-		fix for issue 552 
+		fix for issue 552
 		**/
-		
+
 		for (State s : sm.getStates())
       {
-		
+
         for (Transition t : s.getTransitions())
         {
           Event e = t.getEvent();
-	
+
           if (!e.getIsTimer())
           {
             continue;
           }
           hasTimedEvents = true;
-			
+
           Action entryAction = new Action(StringFormatter.format("{0}();",translate("eventStartMethod",e)));
           entryAction.setActionType("entry");
-        
+
           Action exitAction = new Action(StringFormatter.format("{0}();",translate("eventStopMethod",e)));
           exitAction.setActionType("exit");
 
@@ -2159,7 +2164,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
             hasTimedEvents = true;
             Action entryAction = new Action(StringFormatter.format("{0}();",translate("eventStartMethod",e)));
             entryAction.setActionType("entry");
-        
+
             Action exitAction = new Action(StringFormatter.format("{0}();",translate("eventStopMethod",e)));
             exitAction.setActionType("exit");
 
@@ -2171,7 +2176,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     }
     return hasTimedEvents;
   }
-  
+
   private void prepareDoActivityThread(StateMachine sm)
   {
     for(State state : sm.getStates())
@@ -2192,7 +2197,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       }
     }
   }
-  
+
  /*
  * Issue 140 - For final states in concurrent state machines, we need to make sure that all
  *             state machines within a region are in their final states before calling delete()
@@ -2200,34 +2205,34 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
    private String prepareConcurrentFinalStatesFor(State concurrentRegion, StateMachine currentSm) {
      List<State> finalStatesInRegion = new ArrayList<State>();
      String deleteActionCode = "";
-     
+
      for (StateMachine nested : concurrentRegion.getNestedStateMachines()) {
        finalStatesInRegion.addAll(nested.getFinalStates());
      }
-     
+
      if (!finalStatesInRegion.isEmpty()) {
        deleteActionCode = "if (";
        for (int i = 0; i < finalStatesInRegion.size() - 1; i++) {
          if (!finalStatesInRegion.get(i).getStateMachine().equals(currentSm)) {
            StateMachine sameRegionSm = finalStatesInRegion.get(i).getStateMachine();
            if (i + 1 == finalStatesInRegion.size() - 1 && finalStatesInRegion.get(finalStatesInRegion.size() - 1).getStateMachine().equals(currentSm)) {
-             deleteActionCode += StringFormatter.format("{0} == {1}.{2}) { {3}(); }", 
+             deleteActionCode += StringFormatter.format("{0} == {1}.{2}) { {3}(); }",
                  translate("stateMachineOne", sameRegionSm),
                  translate("type", sameRegionSm),
                  translate("stateOne", finalStatesInRegion.get(i)),
                  translate("deleteMethod",currentSm.getUmpleClass()));
            } else {
-             deleteActionCode += StringFormatter.format("{0} == {1}.{2} && ", 
+             deleteActionCode += StringFormatter.format("{0} == {1}.{2} && ",
                  translate("stateMachineOne", sameRegionSm),
                  translate("type", sameRegionSm),
                  translate("stateOne", finalStatesInRegion.get(i)));
            }
          }
        }
-       
+
        if (!finalStatesInRegion.get(finalStatesInRegion.size() - 1).getStateMachine().equals(currentSm)) {
          StateMachine sameRegionSm = finalStatesInRegion.get(finalStatesInRegion.size() - 1).getStateMachine();
-         deleteActionCode += StringFormatter.format("{0} == {1}.{2}) { {3}(); }", 
+         deleteActionCode += StringFormatter.format("{0} == {1}.{2}) { {3}(); }",
                                                     translate("stateMachineOne", sameRegionSm),
                                                     translate("type", sameRegionSm),
                                                     translate("stateOne", finalStatesInRegion.get(finalStatesInRegion.size() - 1)),
@@ -2238,34 +2243,34 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
      } else {
        deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",currentSm.getUmpleClass()));
      }
-     
+
      return deleteActionCode;
   }
-  
+
   private void prepareFinalStatesFor(StateMachine sm){
     Map<String,String> lookups = new HashMap<String,String>();
     String deleteActionCode = "";
-    
+
     if (sm.getParentState() != null) {
       State concurrentRegion = sm.getParentState().getConcurrentRegion();
       // Issue 140
       if (concurrentRegion != null) {
         deleteActionCode = prepareConcurrentFinalStatesFor(concurrentRegion, sm);
       } else {
-        deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",sm.getUmpleClass())); 
+        deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",sm.getUmpleClass()));
       }
     } else {
-      deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",sm.getUmpleClass())); 
+      deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",sm.getUmpleClass()));
     }
-    
+
     lookups.put("deleteActionCode",deleteActionCode);
     GeneratorHelper.prepareFinalState(sm,lookups);
   }
-  
+
   private void prepareNestedStatesFor(StateMachine sm, StateMachine parentSm, int concurrentIndex)
   {
-    prepareFinalStatesFor(sm);  
-    prepareDoActivityThread(sm); 
+    prepareFinalStatesFor(sm);
+    prepareDoActivityThread(sm);
     if (sm.getParentState() != null && sm.getStartState() != null)
     {
       State parentState = sm.getParentState();
@@ -2285,7 +2290,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
           ,translate("setMethod",sm)
           ,translate("stateOne",sm.getStartState()))
       );
-      GeneratorHelper.prepareNestedStateMachine(sm,concurrentIndex,lookups);    
+      GeneratorHelper.prepareNestedStateMachine(sm,concurrentIndex,lookups);
     }
 
     for (State s : sm.getStates())
@@ -2297,40 +2302,40 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         nestedSmIndex += 1;
       }
     }
-    
+
     Map<String,String> lookups = new HashMap<String,String>();
     lookups.put("callEvent","{0}();");
     GeneratorHelper.prepareAutoTransitions(sm,this,lookups);
   }
-  
+
   private void generateConstructorSignature(GeneratedClass genClass)
   {
     StringBuffer signature = new StringBuffer();
     StringBuffer signatureCaller = new StringBuffer();
-    
+
     UmpleClass uClass = genClass.getUClass();
-    
-    for (Attribute av : uClass.getAttributes()) 
+
+    for (Attribute av : uClass.getAttributes())
     {
       if (av.getIsAutounique() || av.getIsList() || "defaulted".equals(av.getModifier()) || av.getIsLazy() || ( av.getValue() != null && ! av.getModifier().equals("fixml")))
       {
         continue;
       }
 
-      if (signature.length() > 0) 
+      if (signature.length() > 0)
       {
         signature.append(", ");
         signatureCaller.append(", ");
       }
-        
+
       signature.append(StringFormatter.format("{0} {1}",typeOf(av),nameOf(av)));
-      signatureCaller.append(nameOf(av));      
+      signatureCaller.append(nameOf(av));
     }
 
     // This is the list of association variables that might use variable arguments in the constructor
     List<AssociationVariable> manyConstructorAVs = new ArrayList<AssociationVariable>();
-    
-    for (AssociationVariable av : uClass.getAssociationVariables()) 
+
+    for (AssociationVariable av : uClass.getAssociationVariables())
     {
       if (!associationShouldAppearInConstructor(av))
       {
@@ -2341,30 +2346,30 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         manyConstructorAVs.add(av);
         continue;
       }
-      
-      if (signature.length() > 0) 
+
+      if (signature.length() > 0)
       {
         signature.append(", ");
         signatureCaller.append(", ");
       }
-      
+
       signature.append(StringFormatter.format("{0} {1}",typeOf(av),nameOf(av)));
-      signatureCaller.append(nameOf(av));      
+      signatureCaller.append(nameOf(av));
     }
-    
+
     // Insert the parent class's contructor signature, with attention given to special
     // cases where the signature is modified if variable arguments are present.
-    
-    boolean parentConstructorContainsMany = false;   
-    if (uClass.getExtendsClass() != null) 
+
+    boolean parentConstructorContainsMany = false;
+    if (uClass.getExtendsClass() != null)
     {
       GeneratedClass parent = genClass.getParentClass();
       String parentSignature = parent.getLookup("constructorSignature");
       String parentSignatureCaller = parent.getLookup("constructorSignature_caller");
-      
+
       String parentSignatureToPrepend = "";
       String parentSignatureCallerToPrepend = "";
-    
+
       if ((signature.length() == 0) && (manyConstructorAVs.size() == 0))
       {
         // if the child class will add nothing to the signature
@@ -2382,29 +2387,29 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         }
         else
         {
-          //else push the variable argument parameter to the end of the constructor. 
-               
+          //else push the variable argument parameter to the end of the constructor.
+
           int idx = Math.max(parentSignature.lastIndexOf(","),0);
           if ((signature.length() > 0) && (idx == 0))
           {
             // if there was no comma in the parent signature, compensate.
             signature.append(", ");
             signatureCaller.append(", ");
-          }   
+          }
           signature.append(parentSignature.substring(idx));
           parentSignatureToPrepend = parentSignature.substring(0, idx);
-          
+
           idx = Math.max(parentSignatureCaller.lastIndexOf(","),0);
           signatureCaller.append(parentSignatureCaller.substring(idx));
           parentSignatureCallerToPrepend = parentSignatureCaller.substring(0, idx);
         }
       }
-      else 
+      else
       {
         // else simply prepend the parent signature, as-is, to the child signature.
         parentSignatureToPrepend = parentSignature;
         parentSignatureCallerToPrepend = parentSignatureCaller;
-        
+
         // also, check if the presence of arrays in the parent signature signals that the child
         // signature should use arrays for arguments that could otherwise use variable arguments.
         if (parentSignature.contains("[]"))
@@ -2412,7 +2417,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
           parentConstructorContainsMany = true;
         }
       }
-      
+
       // prepend the parent signature to the child signature
       if (parentSignatureToPrepend.length() > 0)
       {
@@ -2428,34 +2433,34 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         }
       }
     }
-    
+
     // finally, append constructor parameter(s) that could be variable arguments or arrays depending on circumstances
     for (AssociationVariable manyAV : manyConstructorAVs)
     {
-      if (signature.length() > 0) 
+      if (signature.length() > 0)
       {
         signature.append(", ");
         signatureCaller.append(", ");
       }
       String typeModifier = ((manyConstructorAVs.size() > 1) || (parentConstructorContainsMany)) ? "[]" : "...";
       signature.append(StringFormatter.format("{0}{1} {2}",typeOf(manyAV),typeModifier,nameOf(manyAV)));
-      signatureCaller.append(nameOf(manyAV));     
+      signatureCaller.append(nameOf(manyAV));
     }
 
     genClass.setLookup("constructorSignature", signature.toString());
     genClass.setLookup("constructorSignature_caller", signatureCaller.toString());
   }
-  
-  
+
+
   private boolean associationShouldAppearInConstructor(AssociationVariable av)
   {
     boolean shouldAppear = true;
     AssociationVariable relatedAv = av.getRelatedAssociation();
-    
+
     if ((av.getMultiplicity().getLowerBound() == 0 && !av.isImmutable()) || !av.getIsNavigable())
     {
       shouldAppear = false;
-    }   
+    }
     else if (relatedAv.getIsNavigable())
     {
       if (av.isMandatoryMany() && relatedAv.isMandatory())
@@ -2473,21 +2478,21 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     }
     return shouldAppear;
   }
-  
+
   private void generateSecondaryConstructorSignatures(GeneratedClass genClass)
   {
     UmpleClass uClass = genClass.getUClass();
-    
+
     String mandatorySignature = genClass.getLookup("constructorSignature");
-    
-    for (AssociationVariable av : uClass.getAssociationVariables()) 
+
+    for (AssociationVariable av : uClass.getAssociationVariables())
     {
       AssociationVariable relatedAv = av.getRelatedAssociation();
       if (av.isOnlyOne() && relatedAv.isOnlyOne() && av.getIsNavigable() && relatedAv.getIsNavigable())
       {
         UmpleClass relatedClass = getModel().getUmpleClass(av.getType());
         GeneratedClass relatedGen = relatedClass.getGeneratedClass();
-        
+
         String selfParameter = StringFormatter.format("{0} {1}",typeOf(relatedAv),nameOf(relatedAv));
         String selfFor = StringFormatter.format("For{0}",av.getUpperCaseName());
         String newParameters = relatedGen.getLookup("constructorSignature");
@@ -2495,23 +2500,23 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         newParameters = StringFormatter.appendParameter(newParameters, selfFor);
 
         String relatedParameter = StringFormatter.format("{0} {1}",typeOf(av),nameOf(av));
-        
+
         mandatorySignature = StringFormatter.replaceParameter(mandatorySignature, relatedParameter, newParameters);
         genClass.setLookup("constructorSignature_mandatory", mandatorySignature);
-        
+
         String relatedFor = StringFormatter.format("For{0}",relatedAv.getUpperCaseName());
         String relatedCaller = genClass.getLookup("constructorSignature_caller");
         String relatedCallerParameter = nameOf(av);
         String mandatorySignatureCaller = StringFormatter.replaceParameter(relatedCaller, relatedCallerParameter, "_THIS_");
         mandatorySignatureCaller = StringFormatter.appendParameter(mandatorySignatureCaller, relatedFor);
         mandatorySignatureCaller = StringFormatter.replaceParameter(mandatorySignatureCaller, "_THIS_" + relatedFor, "this");
-        
+
         String mandatoryCallerId = "constructorSignature_mandatory_" + relatedAv.getName();
         relatedGen.setLookup(mandatoryCallerId, mandatorySignatureCaller);
       }
     }
   }
-  
+
   private void addRelatedImports()
   {
     for (UmpleClass aClass : getModel().getUmpleClasses())
@@ -2522,40 +2527,40 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       if (aClass.hasParentInterface())
       {
         for(UmpleInterface interfaceParent: aClass.getParentInterface())
-        { 
+        {
           if (!aClass.getPackageName().equals(interfaceParent.getPackageName()))
           {
-            genClass.addMultiLookup("import", interfaceParent.getPackageName() + ".*");  
+            genClass.addMultiLookup("import", interfaceParent.getPackageName() + ".*");
           }
         }
       }
-      
+
       if (aClass.getExtendsClass() != null)
       {
         if (!aClass.getPackageName().equals(aClass.getExtendsClass().getPackageName()))
         {
-          genClass.addMultiLookup("import", aClass.getExtendsClass().getPackageName() + ".*");  
+          genClass.addMultiLookup("import", aClass.getExtendsClass().getPackageName() + ".*");
         }
-        
+
         //add related imports in multilevel
         UmpleClass rootUClass = aClass;
-        while (!rootUClass.isRoot()) 
+        while (!rootUClass.isRoot())
         {
             addImports(rootUClass.getExtendsClass(), genClass);
             rootUClass = rootUClass.getExtendsClass();
         }
       }
-      
-      for (AssociationVariable av : aClass.getAssociationVariables()) 
+
+      for (AssociationVariable av : aClass.getAssociationVariables())
       {
         if (!av.getIsNavigable())
         {
           continue;
         }
-        
+
         AssociationVariable relatedAssociation = av.getRelatedAssociation();
         if (relatedAssociation.isOnlyOne())
-        { 
+        {
           UmpleClass relatedClass = getModel().getUmpleClass(av.getType());
           while (relatedClass != null)
           {
@@ -2566,16 +2571,16 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       }
     }
   }
-  
+
   private void addAttributeImports(UmpleClass aClass, GeneratedClass genClass)
   {
     String timeImport = "java.sql.Time";
     String dateImport = "java.sql.Date";
     String utilImport = "java.util.*";
-    
-    for (Attribute av : aClass.getAttributes()) 
+
+    for (Attribute av : aClass.getAttributes())
     {
-      
+
       if ("Time".equals(av.getType()))
       {
         genClass.addMultiLookup("import", timeImport);
@@ -2584,7 +2589,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       {
         genClass.addMultiLookup("import", dateImport);
       }
-      
+
       if (av.getIsList() || av.getIsUnique())
       {
         genClass.addMultiLookup("import", utilImport);
@@ -2594,20 +2599,20 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
   private void addImports(UmpleClass aClass, GeneratedClass genClass)
   {
     addAttributeImports(aClass,genClass);
-      
-    for (AssociationVariable av : aClass.getAssociationVariables()) 
+
+    for (AssociationVariable av : aClass.getAssociationVariables())
     {
       if (!av.getIsNavigable())
       {
         continue;
       }
-      
+
       if (av.isMany())
       {
         genClass.addMultiLookup("import", "java.util.*");
       }
     }
-    
+
     for (String namespace : aClass.getNamespaces())
     {
       if (!namespace.equals(aClass.getPackageName()))
@@ -2625,7 +2630,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         break;
       }
     }
-    
+
     for (Method m : aClass.getMethods())
     {
       if(m.getIsQueued())
@@ -2652,7 +2657,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     }
 
     if(aClass.getIsDistributed()==true)
-    { 
+    {
         if(getModel().getDistributePattern()==0){
           genClass.addMultiLookup("import", "java.io.Serializable");
           if(aClass.getDistributeTechnology().equals("WS"))
@@ -2664,8 +2669,8 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
             genClass.addMultiLookup("import", "javax.jws.WebService");
             genClass.addMultiLookup("import", "javax.xml.bind.Unmarshaller");
             genClass.addMultiLookup("import", "javax.xml.bind.annotation.*");
-          } 
-        } 
+          }
+        }
         else if (getModel().getDistributePattern()==1)
         {
           if(aClass.getDistributeTechnology()=="RMI")
@@ -2685,24 +2690,24 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
   {
     return nameOf(av.getName(),av.getIsList());
   }
-  
+
   private String nameOf(AssociationVariable av)
   {
     boolean hasMultiple = av.isMany();
     return nameOf(av.getName(),hasMultiple);
   }
-  
+
   private static String typeOf(UmpleVariable var)
   {
     String aType = var.getType();
     return typeOf(aType);
   }
-  
-  protected String WriteProxyFiles(String classContents,UmpleClass aClass,String path) throws IOException 
+
+  protected String WriteProxyFiles(String classContents,UmpleClass aClass,String path) throws IOException
   {
     JavaDistributedTemplates templates= new JavaDistributedTemplates();
     StringBuilder classContent= new StringBuilder("");
-    String classPackageName= aClass.getPackageName().length() == 0 ? "" : aClass.getPackageName() + "."; 
+    String classPackageName= aClass.getPackageName().length() == 0 ? "" : aClass.getPackageName() + ".";
     String NL = System.getProperty("line.separator");
     String proxyName=aClass.getName();
     StringBuilder proxyContent = new StringBuilder("");
@@ -2728,7 +2733,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     if(getModel().getDistributePattern()==2)
       remoteInterfaceName=aClass.getName();
     /* if distributed class has a distributable interface parent and does not need parent interface the remote interface needs to know the name of it
-    */    
+    */
 
     if(aClass.getExtendsClass()!=null){
       extendsProxy=" extends "+aClass.getExtendsClass().getName();
@@ -2740,11 +2745,11 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         {
           extendsProxy=" extends "+aClass.getExtendsClass().getName().substring(0,aClass.getExtendsClass().getName().length()-4);
         }
-        
+
       if(aClass.getExtendsClass().getNeedsDefaultInterface()||aClass.getExtendsClass().getHasProxyPattern()||aClass.getExtendsClass().getIsDistributed()){
         parentDefaultInterface=", I"+aClass.getExtendsClass().getName();
           parentDefaultInterface+="Impl";
-      } 
+      }
     }
 
     realClassName=aClass.getName();
@@ -2754,14 +2759,14 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     {
       proxyImplements=" implements java.io.Serializable";
       for(UmpleInterface interfaceParent: aClass.getParentInterface())
-      { 
+      {
         proxyImplements+=", "+interfaceParent.getName();
         if(interfaceParent.getIsDistributable()){
           parentInterface=interfaceParent;
           parentDefaultInterface+=" ,"+interfaceParent.getName();
         }
       }
-    }    
+    }
 
 
     if(!aClass.getIsDistributed())
@@ -2783,7 +2788,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       defaultNamespace="import "+getModel().getDefaultNamespace()+".UmpleRuntime;"+NL;
     }
     String remoteImports="";
-   
+
     if(aClass.getNeedsDefaultInterface())
     {
       remoteImports="import java.rmi.RemoteException;"+NL;
@@ -2796,7 +2801,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       String[] tokensInMethod = line.split(" |<|>|\\(|\\)|,");
 
       if (tokensInMethod!=null && tokensInMethod.length>0){
-        if ((tokensInMethod[0].contains("import"))||(tokensInMethod[0].contains("package"))||(lineNumber<3)) 
+        if ((tokensInMethod[0].contains("import"))||(tokensInMethod[0].contains("package"))||(lineNumber<3))
         {
           remoteContent.append(line+NL);
           proxyPrecode.append(line+NL);
@@ -2804,7 +2809,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         }
       }
       if((scopeDepth==0)&&(line.contains("class "+realClassName)))
-      { 
+      {
 
       if(aClass.getDistributeTechnology().equals("WS"))
         {
@@ -2812,7 +2817,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
 
           remoteInterfaceContent.append("import javax.jws.WebMethod;"+NL+"import javax.jws.WebService;"+NL+"import javax.jws.soap.SOAPBinding;"+NL+"import javax.jws.soap.SOAPBinding.Style;"+NL+remoteImports+"@WebService"+NL+"@SOAPBinding(style = Style.RPC)"+NL+"public interface "+remoteInterfaceName+parentDefaultInterface+NL+"{"+NL);
 
-          
+
           remoteContent.append(NL+"import javax.jws.WebService;"+NL+"import javax.xml.ws.Endpoint;"+NL+"@WebService(endpointInterface = \""+classPackageName+remoteInterfaceName+"\")"+NL+"public class " + remoteName+extendsRemoteProxy+" implements "+remoteInterfaceName+NL+"{");
         }
         else{
@@ -2827,19 +2832,19 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
           remoteContent.append("    realObject=aObject;"+NL+"  }"+NL);
           remoteContent.append("  public "+remoteName+"()"+NL+"  {}"+NL);
           remoteContent.append("  public "+remoteName+"("+realClassName+" aObject)"+NL+"  {"+NL+"  ");
-          remoteContent.append(remoteClassSuperCall+"    realObject=aObject;"+NL+"  }"+NL); 
+          remoteContent.append(remoteClassSuperCall+"    realObject=aObject;"+NL+"  }"+NL);
         }
-        
-        
+
+
         proxyPrecode.append(remoteImports+"import java.io.Serializable;"+NL+defaultNamespace+"public class "+proxyName+extendsProxy+proxyImplements+NL+"{");
 
           if(getModel().getDistributePattern()==0){
             realObjectType="transient "+realObjectType;
             proxyContent.append(NL+"  "+realObjectType+" realObject=this;"+NL);
           }
-          else{   
+          else{
             proxyContent.append(NL+"  "+realObjectType+" realObject;"+NL);
-          }  
+          }
 
       }
       boolean isSerializable=true;
@@ -2857,24 +2862,24 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         for(int i=0;i<tokensInMethod.length;i+=1)
         {
           if (tokensInMethod[i].contains("public")||tokensInMethod[i].contains("private"))
-          { 
+          {
             if(endSignature>3)
             if(!line.substring(endSignature-1).contains(";"))
               isMethod=true;
           }
-       
+
           if (tokensInMethod[i].equals("abstract")||((tokensInMethod[i].contains("List")&&aClass.getDistributeTechnology().equals("WS"))))
           {
             isMethod=false;
             break;
-          }   
+          }
           if (tokensInMethod[i].equals("enum"))
           {
             if(i<tokensInMethod.length-2)
               methodBlacklist.add(tokensInMethod[i+1]);
             isMethod=false;
             break;
-          }     
+          }
           if((tokensInMethod[i].equals("static")))
           {
             isNonStatic=false;
@@ -2882,22 +2887,22 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
           if ((tokensInMethod[i].contains("["))||(tokensInMethod[i].equals("toString"))||(tokensInMethod[i].equals("hashCode"))||tokensInMethod[i].contains("private"))
           {
             isSerializable=false;
-          }  
+          }
         }
         String methodType="";
         if (startSignature>=endSignature)
-          isMethod=false;  
-        else{   
-          methodType=line.substring(0,startSignature).replaceAll("\\s+$", "");// trimming the spaces on the right          
+          isMethod=false;
+        else{
+          methodType=line.substring(0,startSignature).replaceAll("\\s+$", "");// trimming the spaces on the right
           for(String blackListedType: methodBlacklist)
           {
             if(methodType.indexOf(blackListedType)>=0)
             {
               isMethod=false;
               break;
-            } 
+            }
           }
-          }          
+          }
         if(isMethod)
         {
           String methodName=methodType.substring(methodType.lastIndexOf(" ")+1);
@@ -2915,7 +2920,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
           String arguments=line.substring(startSignature+1,endSignature).replaceAll("^\\s+", "");// trimming the spaces on the left
           int depth=0;
           for (int i=0;i<arguments.length();i+=1)
-          { 
+          {
             if((arguments.charAt(i)=='(')||(arguments.charAt(i)=='['))
               depth+=1;
             else if((arguments.charAt(i)==')')||(arguments.charAt(i)==']'))
@@ -2933,15 +2938,15 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
               String lastArgument="";
               String remoteRealObject="realObject";
               if(arguments.length()>0)
-              { 
-                lastArgument=", ";      
+              {
+                lastArgument=", ";
               }
               else
               {
-                callerSignature="";  
-              }  
+                callerSignature="";
+              }
           if (methodName.equals("equals"))
-            hasEquals=true;     
+            hasEquals=true;
           if ((!methodName.equals(realClassName))&&(isSerializable==true))
           {
             if((!methodName.equals("equals")||getModel().getDistributePattern()==0)&&isNonStatic)
@@ -2949,18 +2954,18 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
               if(!aClass.getIsDistributed() && ( aClass.getHasProxyPattern() || !aClass.getIsDefaultInterfaceRemoteRMI()))
               {
                 if (parentInterface==null||methodName.equals("setRealSelf")||methodName.equals("getHashCode")||methodName.equals("delete"))
-                  remoteInterfaceContent.append(methodType+methodName+methodPostfix+"("+arguments+");"+NL);                 
+                  remoteInterfaceContent.append(methodType+methodName+methodPostfix+"("+arguments+");"+NL);
               }
               else
               {
                 if (parentInterface==null||methodName.equals("getHashCode")||methodName.equals("delete"))
                   if(aClass.getDistributeTechnology().equals("RMI"))
-                    remoteInterfaceContent.append(methodType+methodName+methodPostfix+"("+arguments+") throws RemoteException;"+NL); 
+                    remoteInterfaceContent.append(methodType+methodName+methodPostfix+"("+arguments+") throws RemoteException;"+NL);
                   if(aClass.getDistributeTechnology().equals("WS"))
                     remoteInterfaceContent.append("@WebMethod"+NL+methodType+methodName+methodPostfix+"("+arguments+");"+NL);
-                     
+
               }
-            }               
+            }
             boolean doesThrow=false;
             String methodDeclarationLine="";
             if(line.substring(endSignature).contains("throws"))
@@ -2988,9 +2993,9 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
               if(!doesThrow && isNonStatic)
               {
                 proxyContent.append(methodDeclarationLine+"    while(true)"+NL+"      try{"+NL+"        "+returnString+"realObject."+methodName+methodPostfix+"("+callerSignature+");"+NL+breakString+"        }"+NL+"    catch(Exception e) {System.err.println(e.toString());}"+NL+"  }"+NL);
-                methodDeclarationLine=methodDeclarationLine.replace(" "+methodName," "+methodName+methodPostfix); 
+                methodDeclarationLine=methodDeclarationLine.replace(" "+methodName," "+methodName+methodPostfix);
 
-                remoteContent.append(methodDeclarationLine+"    while(true)"+NL+"      try{"+NL+"        "+returnString+remoteRealObject+"."+methodName+methodPostfix+"("+callerSignature+");"+NL+breakString+"        }"+NL+"    catch(Exception e) {System.err.println(e.toString());}"+NL+"  }"+NL);               
+                remoteContent.append(methodDeclarationLine+"    while(true)"+NL+"      try{"+NL+"        "+returnString+remoteRealObject+"."+methodName+methodPostfix+"("+callerSignature+");"+NL+breakString+"        }"+NL+"    catch(Exception e) {System.err.println(e.toString());}"+NL+"  }"+NL);
               }
               if(doesThrow && !isNonStatic&&(getModel().getDistributePattern()==1||getModel().getDistributePattern()==2))
               {
@@ -3000,30 +3005,30 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
               if(!doesThrow && !isNonStatic&&(getModel().getDistributePattern()==1||getModel().getDistributePattern()==2))
               {
                 proxyContent.append(methodDeclarationLine+"    while(true)"+NL+"      try{"+NL+"        "+returnString+realClassName+"."+methodName+methodPostfix+"("+callerSignature+");"+NL+"        }"+NL+"    catch(Exception e) {System.err.println(e.toString());}"+NL+"  }"+NL);
-                
+
               }
               if(isNonStatic)
               {
-                classContent.append(methodType+methodName+methodPostfix+"("+line.substring(startSignature+1)+NL); 
+                classContent.append(methodType+methodName+methodPostfix+"("+line.substring(startSignature+1)+NL);
               }
-              else 
+              else
                 classContent.append(line+NL);
             }
-            else  
+            else
               classContent.append(line+NL);
 
-              
-          }   
+
+          }
           else if (methodName.equals(realClassName)||methodName.equals(proxyName))
-          {           
+          {
 
             if(arguments.length()==0)
-            { 
-              hasNoArgumentConstructor=true;        
+            {
+              hasNoArgumentConstructor=true;
             }
 
             if(aClass.getIsDistributed())
-            { 
+            {
              if(getModel().getDistributePattern()==0 && arguments.contains("UmpleRuntime.UmpleComponent umpleComponent"))
              {
               callerSignature=callerSignature.substring(0,callerSignature.length()-14);
@@ -3034,7 +3039,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
               else
               {
                 arguments=arguments.substring(0,arguments.length()-42);
-              }  
+              }
               proxyContent.append(methodType+methodName+"("+arguments+")"+NL+"  {"+NL);
               proxyContent.append(NL+"this("+callerSignature+"UmpleRuntime.getComponent(\""+aClass.getName()+"\"));"+NL+"  }"+NL+"");
             }
@@ -3050,14 +3055,14 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
             classContent.append(line+NL);
         }
         else if(!line.equals("}"))
-          classContent.append(line+NL);       
+          classContent.append(line+NL);
       }
       else{
           classContent.append(line+NL);
           }
-       
+
       scopeDepth += line.length() - line.replace("{", "").length(); // counting the number of "{" in the line and increasing the scopeDepth
-      scopeDepth -= line.length() - line.replace("}", "").length(); // counting the number of "}" in the line and increasing the scopeDepth      
+      scopeDepth -= line.length() - line.replace("}", "").length(); // counting the number of "}" in the line and increasing the scopeDepth
     }
     remoteInterfaceContent.append("}");
     if(getModel().getDistributePattern()==0)
@@ -3087,10 +3092,10 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         }
       }
       else{
-       proxyContent.append(NL+"  public boolean equals(Object obj)"+NL+"  {"); 
+       proxyContent.append(NL+"  public boolean equals(Object obj)"+NL+"  {");
       proxyContent.append("    if(obj.getClass()!=this.getClass())"+NL+"      return false;"+NL+"    return (getHashCode()==(("+aClass.getName()+")obj).getHashCode());"+NL+"  }");
         }
-    
+
     if(aClass.getIsSingleton())
     {
       if(getModel().getDistributePattern()==1){
@@ -3098,8 +3103,8 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
         proxyContent.append("  public static "+aClass.getName()+" getInstance()"+NL+"{"+NL+"if(theInstance == null)"+NL+"{"+NL+"theInstance = new "+aClass.getName()+"();"+NL+"}"+NL+"return theInstance;"+NL+"}");
         }
         proxyContent.append("  public static "+aClass.getName()+" getInstance(UmpleRuntime.UmpleComponent umpleComponent)"+NL+"{"+NL+"if(theInstance == null)"+NL+"{"+NL+"theInstance = new "+aClass.getName()+"(umpleComponent);"+NL+"}"+NL+"return theInstance;"+NL+"}");
-    }  
-    }  
+    }
+    }
     remoteContent.append(NL+"}");
       classContent.append(proxyContent.toString());
       classContent.append(NL+"}");
@@ -3119,10 +3124,10 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
 	    File file = new File(path);
 	    file.mkdirs();
 	    BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
-	
+
 	    //putting the code in the model and writing the file.
 	    getModel().getGeneratedCode().put(interfaceName,interfaceContent);
-	
+
 	    try
 	    {
 	      bw.write(interfaceContent);
@@ -3131,7 +3136,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
 	    finally
 	    {
 	      bw.close();
-	    } 
+	    }
     }
 */
     // write generated proxy code
@@ -3142,10 +3147,10 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       File file = new File(path);
       file.mkdirs();
       BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
-  
+
       //putting the code in the model and writing the file.
       getModel().getGeneratedCode().put(proxyName+"Proxy",proxyPrecode.toString());
-  
+
       try
       {
         bw.write(proxyPrecode.toString());
@@ -3154,7 +3159,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       finally
       {
         bw.close();
-      } 
+      }
     }
 
         // write generated server proxy code
@@ -3165,10 +3170,10 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       File file = new File(path);
       file.mkdirs();
       BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
-  
+
       //putting the code in the model and writing the file.
       getModel().getGeneratedCode().put(remoteName,remoteContent.toString());
-  
+
       try
       {
         bw.write(remoteContent.toString());
@@ -3177,7 +3182,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       finally
       {
         bw.close();
-      } 
+      }
     }
 
 
@@ -3201,7 +3206,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       finally
       {
         bwRemote.close();
-      } 
+      }
     }
     if (getModel().getDistributePattern()==0)
       return classContent.toString();
@@ -3214,15 +3219,15 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     String name="UmpleRuntime";
     String packageName="";
     if (getModel().getDefaultNamespace()!=null)
-      packageName=getModel().getDefaultNamespace();    
+      packageName=getModel().getDefaultNamespace();
   	ILang language = new JavaObjectFactoryClassGenerator();
-    String path = StringFormatter.addPathOrAbsolute(getModel().getUmpleFile().getPath(), getOutput())+packageName.replace(".", File.separator); 
+    String path = StringFormatter.addPathOrAbsolute(getModel().getUmpleFile().getPath(), getOutput())+packageName.replace(".", File.separator);
     String filename = path + File.separator + name+".java";
     File file = new File(path);
     file.mkdirs();
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
     String contents = language.getCode(getModel(),new UmpleElement(name));
-    getModel().getGeneratedCode().put(name,contents); 
+    getModel().getGeneratedCode().put(name,contents);
      try
     {
       bw.write(contents);
@@ -3231,11 +3236,11 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     finally
     {
       bw.close();
-    }  
-                       	
+    }
+
   }
   public void writeObjectFactoryInterface() throws IOException
-  {     
+  {
     String name="IUmpleRuntime";
     ILang language = new JavaObjectFactoryInterfaceGenerator();
     String packageName="";
@@ -3247,7 +3252,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     file.mkdirs();
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
     String contents = language.getCode(getModel(),new UmpleElement(name));
-    getModel().getGeneratedCode().put(name,contents); 
+    getModel().getGeneratedCode().put(name,contents);
      try
     {
       bw.write(contents);
@@ -3256,17 +3261,17 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     finally
     {
       bw.close();
-    }  
-                        
+    }
+
   }
   public void writeFile(UmpleElement aClass) throws IOException
   {
-    
+
     String className=aClass.getName();
     UmpleClass uClass;
     if (aClass instanceof UmpleClass)
-    { 
-      uClass=(UmpleClass)aClass; 
+    {
+      uClass=(UmpleClass)aClass;
       if(uClass.getHasProxyPattern()||(uClass.getIsDistributed()&&(getModel().getDistributePattern()==1||getModel().getDistributePattern()==2)))
       {
         aClass.setName(className+"Impl");
@@ -3280,23 +3285,23 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     String contents = language.getCode(getModel(), aClass);
 
     aClass.setName(className);
-    String path = StringFormatter.addPathOrAbsolute( 
-                  getModel().getUmpleFile().getPath(), 
-                            getOutput()) + 
-                            aClass.getPackageName().replace(".", File.separator);  
+    String path = StringFormatter.addPathOrAbsolute(
+                  getModel().getUmpleFile().getPath(),
+                            getOutput()) +
+                            aClass.getPackageName().replace(".", File.separator);
     if (aClass instanceof UmpleClass)
     { uClass=(UmpleClass)aClass;
       if(uClass.getNeedsDefaultInterface()||uClass.getIsDistributed()||uClass.getHasProxyPattern()){
         contents= WriteProxyFiles(contents,uClass,path);
-      }    
+      }
       if(uClass.getHasProxyPattern()||(uClass.getIsDistributed()&&(getModel().getDistributePattern()==1||getModel().getDistributePattern()==2))){
         className=className+"Impl";
         //contents=contents.replaceAll("(,|, |\\(|\\( )(this)(,| ,|\\)| \\))","$1self$3");
-          }    
-          
+          }
+
     }
     File file = new File(path);
-    file.mkdirs();   
+    file.mkdirs();
     String filename = path + File.separator + className + ".java";
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
     getModel().getGeneratedCode().put(aClass.getName(),contents);
@@ -3335,14 +3340,14 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       aClass.setName(className+"Impl");
 
     ILang language = getLanguageFor(aClass);
-    
+
     aClass.setName(className);
     if(aClass.getHasProxyPattern()||(aClass.getIsDistributed()&&(getModel().getDistributePattern()==1||getModel().getDistributePattern()==2)))
-      className=className+"Impl"; 
+      className=className+"Impl";
 
-    String path = StringFormatter.addPathOrAbsolute( 
-                  getModel().getUmpleFile().getPath(), 
-                            getOutput()) + 
+    String path = StringFormatter.addPathOrAbsolute(
+                  getModel().getUmpleFile().getPath(),
+                            getOutput()) +
                             aClass.getPackageName().replace(".", File.separator);
 
     String filename = path + File.separator + className + ".java";
@@ -3362,7 +3367,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       bw.close();
     }
     } catch(Exception e){ e.printStackTrace(); }
-  }  
+  }
 
   public void initializeLangaugeBasedVariables() {
     UmpleToPrimitiveMap.put("Integer","int");
