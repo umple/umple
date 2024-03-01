@@ -1271,7 +1271,7 @@ Action.displayTransitionMenu = function(event) {
     selection=Action.selectStateInState(selection.startIndex,selection.endIndex,identifierState[i]);
   }
   //var classcode=selection.replaceAll("\n","&#10").replaceAll("\"","&#$quot");;
-  console.log(selection);
+
   let searchTerm=id[2].replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
   searchTerm=searchTerm.replace("after","after~`~?:Every`~`?"); //subpar solution, could be improved
   if(id[5]!=""){
@@ -1285,7 +1285,7 @@ Action.displayTransitionMenu = function(event) {
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
   let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
-  console.log(code);
+  
   
   
   //need to sanitize any linebreaks or quotes that could break the generated HTML
@@ -1295,9 +1295,9 @@ Action.displayTransitionMenu = function(event) {
 
   // Just for demonstration, log actions instead of actual function calls
   var rowFuncs = [
-    "Action.renameTransition(\""+code+"\")",
-    "Action.changeTransition(\""+code+"\")",
-    "Action.deleteTransition(\""+code+"\")"
+    "Action.renameTransition(\""+startIndex+"\",\""+endIndex+"\")",
+    "Action.changeTransition(\""+startIndex+"\",\""+endIndex+"\")",
+    "Action.deleteTransition(\""+startIndex+"\",\""+endIndex+"\")"
   
   ];
 
@@ -1357,7 +1357,21 @@ Action.displayTransitionMenu = function(event) {
   });
   document.body.appendChild(menu);
 }
-Action.changeTransition = function(classCode) {
+Action.changeTransition = function(startIndex,endIndex) {
+  let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+   // Assuming classCode contains the full transition line, including condition and destination
+   let trimmedString = classCode.trim().replace(/;$/, "");
+
+   // Split the string into condition (with guard) and destination parts
+   let parts = trimmedString.split("->");
+   parts[0] = parts[0].trim(); // Condition part
+   parts[1] = parts[1].trim(); // Destination part
+
+   // Ensure there are two parts (condition and destination)
+   if (parts.length != 2) {
+       console.log("Invalid transition format.");
+       return;
+   }
   var prompt = document.createElement('div');
     prompt.style.zIndex = "1000";
     prompt.style.border = "1px solid #ccc";
@@ -1371,7 +1385,7 @@ Action.changeTransition = function(classCode) {
 
     var input = document.createElement('input');
     input.type = 'text';
-    
+    input.value=parts[1];
     input.style.padding = '5px';
     input.style.margin = '5px';
     input.style.width = '200px';
@@ -1388,7 +1402,14 @@ Action.changeTransition = function(classCode) {
     // Add the prompt to the document body
     document.body.appendChild(prompt);
     input.focus(); // Automatically focus the input
-
+    var hider=function hidePrompt(e) {
+      if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+        document.removeEventListener("mousedown", hidePrompt);
+        prompt.remove();
+      }
+    };
+    // Add a listener to hide the prompt when the user clicks outside of it
+    document.addEventListener("mousedown", hider);
     // Event listener for the submit action
     submitButton.addEventListener('click', function() {
         // Validate input value is not empty
@@ -1396,19 +1417,7 @@ Action.changeTransition = function(classCode) {
             console.log("Input for new destination state is empty.");
             return;
         }
-        // Assuming classCode contains the full transition line, including condition and destination
-        let trimmedString = classCode.trim().replace(/;$/, "");
-
-        // Split the string into condition (with guard) and destination parts
-        let parts = trimmedString.split("->");
-        parts[0] = parts[0].trim(); // Condition part
-        parts[1] = parts[1].trim(); // Destination part
-
-        // Ensure there are two parts (condition and destination)
-        if (parts.length != 2) {
-            console.log("Invalid transition format.");
-            return;
-        }
+       
 
         // Create the modified transition string with the new destination
         let modifiedTransition = parts[0] + " -> " + input.value.trim() + ";";
@@ -1421,11 +1430,13 @@ Action.changeTransition = function(classCode) {
 
         Action.removeContextMenu();
         TabControl.getCurrentHistory().save(Page.getUmpleCode(), "changeTransitionDestination");
+        document.removeEventListener("mousedown",hider);
         prompt.remove(); // Remove the prompt after processing
     });
 };
 
-  Action.deleteTransition = function(classCode) {
+  Action.deleteTransition = function(startIndex,endIndex) {
+    let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
   
   let orig=Page.codeMirrorEditor.getValue();
   
@@ -1438,7 +1449,18 @@ Action.changeTransition = function(classCode) {
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
 };
 
-  Action.renameTransition = function(classCode) {
+  Action.renameTransition = function(startIndex,endIndex) {
+    let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+    // Assuming classCode contains the full transition line, including condition and destination
+    let trimmedString = classCode.trim().replace(/;$/, "");
+
+    // Split the string into condition (with guard) and destination parts
+    let parts = trimmedString.split("->");
+
+    // Trim each part separately
+    parts[0] = parts[0].trim(); // Condition part
+    parts[1] = parts[1].trim(); // Destination part
+
     // Create the input prompt for renaming the transition condition
     var prompt = document.createElement('div');
     prompt.style.zIndex = "1000";
@@ -1453,7 +1475,7 @@ Action.changeTransition = function(classCode) {
 
     var input = document.createElement('input');
     input.type = 'text';
-    
+    input.value = parts[0];
     input.style.padding = '5px';
     input.style.margin = '5px';
     input.style.width = '200px';
@@ -1470,7 +1492,14 @@ Action.changeTransition = function(classCode) {
     // Add the prompt to the document body
     document.body.appendChild(prompt);
     input.focus(); // Automatically focus the input
-
+    var hider=function hidePrompt(e) {
+      if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+        document.removeEventListener("mousedown", hidePrompt);
+        prompt.remove();
+      }
+    };
+    // Add a listener to hide the prompt when the user clicks outside of it
+    document.addEventListener("mousedown", hider);
     // Event listener for the submit action
     submitButton.addEventListener('click', function() {
         // Validate input value is not empty
@@ -1478,16 +1507,7 @@ Action.changeTransition = function(classCode) {
             console.log("Input for new transition condition is empty.");
             return;
         }
-        // Assuming classCode contains the full transition line, including condition and destination
-        let trimmedString = classCode.trim().replace(/;$/, "");
-
-        // Split the string into condition (with guard) and destination parts
-        let parts = trimmedString.split("->");
-
-        // Trim each part separately
-        parts[0] = parts[0].trim(); // Condition part
-        parts[1] = parts[1].trim(); // Destination part
-    
+        
         // Create the modified transition string
         let modifiedTransition = input.value.trim() + " -> " + parts[1] + ";";
         
@@ -1500,6 +1520,7 @@ Action.changeTransition = function(classCode) {
 
         Action.removeContextMenu();
         TabControl.getCurrentHistory().save(Page.getUmpleCode(), "renameTransition");
+        document.removeEventListener("mousedown",hider);
         prompt.remove(); // Remove the prompt after processing
     });
 };
@@ -2010,7 +2031,13 @@ Action.renameAttribute = function(classCode, className, attributeName, attribute
  // Add the prompt to the document body
  document.body.appendChild(prompt);
  input.focus(); // Automatically focus the input
-
+ var hider=function hidePrompt(e) {
+  if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+    document.removeEventListener("mousedown", hidePrompt);
+    prompt.remove();
+  }
+};
+document.addEventListener("mousedown", hider);
  // Event listener for the submit action
  submitButton.addEventListener('click', function() {
   if(Action.validateAttributeName(input.value.trim())){
@@ -2033,6 +2060,7 @@ Action.renameAttribute = function(classCode, className, attributeName, attribute
 
     Action.removeContextMenu();
     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+    document.removeEventListener("mousedown", hider);
     prompt.remove(); // Remove the prompt after processing
     }
  });
@@ -2049,7 +2077,7 @@ Action.changeAttributeType = function(classCode, className, attributeName, curre
   prompt.style.top = '50%';
   prompt.style.transform = 'translate(-50%, -50%)';
   prompt.id = "promptBox";
-
+  
   var select = document.createElement("select");
   // Add options to the select
   ["String", "Integer", "Double", "Float", "Boolean", "Date", "Time"].forEach(function(type) {
@@ -2071,6 +2099,15 @@ Action.changeAttributeType = function(classCode, className, attributeName, curre
 
   document.body.appendChild(prompt);
   select.focus(); // Automatically focus the select dropdown
+  var hider=function hidePrompt(e) {
+    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  };
+  document.addEventListener("mousedown", hider);
+  
+  
 
   // Event listener for the submit button action
     submitButton.addEventListener('click', function() {
@@ -2093,7 +2130,13 @@ Action.changeAttributeType = function(classCode, className, attributeName, curre
         
         Action.removeContextMenu();
         TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+        document.removeEventListener("mousedown", hider);
         prompt.remove(); // Remove the prompt after processing
+        
+      }
+      else{
+        document.removeEventListener("mousedown", hider);
+        prompt.remove();
       }
       })
     };
@@ -3936,6 +3979,10 @@ Action.updateUmpleDiagramCallback = function(response)
         transitionElems[i].addEventListener("dblclick", function(event) {
             event.preventDefault(); // Prevent the default click behavior
             Action.displayTransitionMenu(event);
+        });
+        transitionElems[i].addEventListener("contextmenu", function(event){
+          event.preventDefault();
+          Action.displayTransitionMenu(event);
         });
     }
     elems=document.getElementsByClassName("cluster");
