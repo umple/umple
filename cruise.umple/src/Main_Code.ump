@@ -1183,8 +1183,10 @@ class PlaygroundMain
     }
 
     // Delete main file if any existing
-    String filePath = model.getUmpleFile().getPath() + File.separator + "JavaMainClasses.txt";
-    deleteFileIfExists(filePath);
+    String javaPath = model.getUmpleFile().getPath() + File.separator + "JavaMainClasses.txt";
+    String PythonPath = model.getUmpleFile().getPath() + File.separator + "PythonMainClasses.txt";
+    deleteFileIfExists(javaPath);
+    deleteFileIfExists(PythonPath);
 
     // If execution required, output the main classes to a file
     if(successPreviousStep && executionRequired) 
