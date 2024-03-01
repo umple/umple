@@ -110,9 +110,9 @@ class JavaGenerator
   public void generate()
   {
   // DEBUG
-  System.out.println("The following will print if it has the suboption");
+  //System.out.println("The following will print if it has the suboption");
   if (hasSuboption("genJson")) {
-    System.out.println("Has suboption genJson"+System.identityHashCode(this));
+    //System.out.println("Has suboption genJson"+System.identityHashCode(this));
    }
     prepare();
     UmpleElement lastElement = null;

@@ -1,18 +1,18 @@
 class UmpleToJava {
     toJson_declare <<!<</*toJson_declare*/>>
 
-  public String toString()
+  public String toJson()
   {
     <<#
-	  String customToStringPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","toString"));
-	  String customToStringPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","toString"));
-	  if (customToStringPrefixCode != null) 
+	  String customToJsonPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","toJson"));
+	  String customToJsonPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","toJson"));
+	  if (customToJsonPrefixCode != null) 
 	  {
-		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customToStringPrefixCode, "    "));
+		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customToJsonPrefixCode, "    "));
 	  }
-	  if (customToStringPostfixCode != null) 
+	  if (customToJsonPostfixCode != null) 
 	  {
-		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customToStringPostfixCode, "    "));
+		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customToJsonPostfixCode, "    "));
 	  }
 	  String ret = "";
 
@@ -67,7 +67,7 @@ class UmpleToJava {
 		  
 	  }
 	
-	ret += "super.toString().replaceAll(\"@\" ,  \"\\n{ \"+ \"\\n \\'ObjectId\\':\\'\")";
+	ret += "super.toJson().replaceAll(\"@\" ,  \"\\n{ \"+ \"\\n \\'ObjectId\\':\\'\")";
 	ret+= "+ \"\\',\"";
 	ret += "+ System.getProperties().getProperty(\"line.separator\") \n            ";    
 
