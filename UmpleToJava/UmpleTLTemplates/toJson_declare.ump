@@ -1,0 +1,123 @@
+class UmpleToJava {
+    toJson_declare <<!<</*toJson_declare*/>>
+
+  public String toJson()
+  {
+    <<#
+
+	  String customToJsonPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","toJson"));
+	  String customToJsonPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","toJson"));
+	  if (customToJsonPrefixCode != null) 
+	  {
+		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customToJsonPrefixCode, "    "));
+	  }
+	  if (customToJsonPostfixCode != null) 
+	  {
+		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customToJsonPostfixCode, "    "));
+	  }
+	  String ret = "";
+
+	  LinkedList<String> displayedAttributes = new LinkedList<String>();
+	  LinkedList<String> nameOfAttributes = new LinkedList<String>();
+	  LinkedList<String> displayedPrimitives = new LinkedList<String>();
+	  LinkedList<String> nameOfPrimitives = new LinkedList<String>();
+	  List<String> keys = new ArrayList<String>();
+	  List<String> reflexiveNames = new ArrayList<String>();
+	  List<String> reflexive = new ArrayList<String>();
+	  for(String k: uClass.getKey().getMembers())
+		  keys.add(k);
+	  for(Attribute av: uClass.getAttributes())
+	  {
+	      
+		  if(!av.getIsList()&&!"internal".equals(av.getModifier())&&!"const".equals(av.getModifier())&&("String".equals(av.getType())||"int".equals(av.getType())||"Integer".equals(av.getType())||"boolean".equals(av.getType().toLowerCase())||"float".equals(av.getType())||"Float".equals(av.getType())||"double".equals(av.getType())||"Double".equals(av.getType())||"byte".equals(av.getType())||"Byte".equals(av.getType())||"char".equals(av.getType())||"Character".equals(av.getType())||"long".equals(av.getType())||"Long".equals(av.getType())||"short".equals(av.getType())||"Short".equals(av.getType())))
+		  {
+			  if(av.getIsAutounique() || keys.contains(av.getName())){
+				  nameOfPrimitives.addFirst(av.getName());
+				  displayedPrimitives.addFirst(gen.translate("getMethod",av)+"()");
+			  }
+			  else {
+				  nameOfPrimitives.addLast(av.getName());
+				  displayedPrimitives.addLast(gen.translate("getMethod",av)+"()");
+			  }
+		  }
+		  else if(!av.getIsList()&&!"const".equals(av.getModifier())&&!"internal".equals(av.getModifier()))
+		  {
+			  if(av.getIsAutounique() || keys.contains(av.getName())){
+				  nameOfAttributes.addFirst(av.getName());
+				  displayedAttributes.addFirst(gen.translate("getMethod",av)+"()");
+			  }
+			  else {
+				  nameOfAttributes.addLast(av.getName());
+				  displayedAttributes.addLast(gen.translate("getMethod",av)+"()");
+			  }
+		  }
+	  }
+	  for(AssociationVariable av: uClass.getAssociationVariables())
+	  {
+	    if(av.isIsNavigable()&&av.getUmpleClass()!=av.getRelatedAssociation().getUmpleClass())
+	    {
+	      if("1".equals(av.getMultiplicity().getMinimum())||"0".equals(av.getMultiplicity().getMinimum())||"1".equals(av.getMultiplicity().getBound()))
+	      {
+	        if("1".equals(av.getMultiplicity().getMaximum())||"1".equals(av.getMultiplicity().getBound()))
+	        {
+	          reflexiveNames.add(av.getName());
+	          reflexive.add(gen.translate("getMethod",av)+"()");
+		    }
+		  }
+		}
+		  
+	  }
+    if(super.toString()!=null){
+    //debug
+    System.out.print("------toString not null");
+       ret += "super.toString().replaceAll(\"@\" ,  \"\\n{ \"+ \"\\n \\'ObjectId\\':\\'\")";
+       System.out.print("name of super's class====="+super.getClass());
+    }
+    else{
+     //debug
+    System.out.print("------toString is null");
+       ret += "super.toJson().replaceAll(\"@\" ,  \"\\n{ \"+ \"\\n \\'ObjectId\\':\\'\")";
+    }
+   
+	ret+= "+ \"\\',\"";
+	ret += "+ System.getProperties().getProperty(\"line.separator\") \n            ";    
+
+	boolean firstStr = true;
+	
+	ret += " +\"   \"";
+	  for(int m=0;m<displayedPrimitives.size();m++)
+	  {
+		  	if(firstStr)
+			  	firstStr = false;
+			if ((m == displayedPrimitives.size()-1) &&(displayedPrimitives.size()!=1)){
+				ret += "+ System.getProperties().getProperty(\"line.separator\") \n";  
+				ret += " +\"   \"";
+				ret += "+\n           \" \\'" + nameOfPrimitives.get(m) + "\\'\" + \":\\'\" + " + displayedPrimitives.get(m)+ " + \"\\'\\n}\"\n";
+				
+			}
+			else if((m != displayedPrimitives.size()-1) &&(displayedPrimitives.size()!=1)){
+				//ret += "+ System.getProperties().getProperty(\"line.separator\") \n";  
+				
+				ret += "+\n           \" \\'" + nameOfPrimitives.get(m) + "\\'\" + \":\\'\" + " + displayedPrimitives.get(m)+ " + \"\\'\"\n";
+				ret += "+\",\"";
+			}
+			else{
+		  		ret += "+\n           \" \\'" + nameOfPrimitives.get(m) + "\\'\" + \":\\'\" + " + displayedPrimitives.get(m)+ " \n"; 
+			}			
+	  }
+	  for(int m=0;m<displayedAttributes.size();m++)
+	  {          
+		  ret += " + System.getProperties().getProperty(\"line.separator\") +\n            ";      
+		  ret += "\"  \" + " + "\"" + nameOfAttributes.get(m) + "\" + \":\" + (" + displayedAttributes.get(m) + " != null ? !" + displayedAttributes.get(m) + ".equals(this)  ? " + displayedAttributes.get(m) + ".toString().replaceAll(\"  \",\"    \") : \"this\" : \"null\")";
+
+	  }
+	  for(int m=0;m<reflexive.size();m++){
+		
+	      ret += " + System.getProperties().getProperty(\"line.separator\") +\n            ";
+	      ret += "\"  \" + " +  "\""+reflexiveNames.get(m)+" : \"+("+reflexive.get(m)+"!=null?Integer.toHexString(System.identityHashCode("+reflexive.get(m)+")):\"null\")";
+	  }
+	  append(realSb,"\n    return {0};", ret);
+	  #>>
+  }!>>
+}
+
