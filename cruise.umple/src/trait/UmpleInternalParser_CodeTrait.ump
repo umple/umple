@@ -249,7 +249,7 @@ class UmpleInternalParser
     }
     else if (token.is("reqImplementation"))
     {
-      analyzeImplementReq(token,analysisStep);
+      analyzeImplementReq(token);
       shouldConsumeRequirement = isReqAddedToLast(token);
     }
     // TODO Under development
