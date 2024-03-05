@@ -89,7 +89,7 @@ class DockerExecution {
                 }
 
                 // If time is finished, remove directory and clear timer
-                // this.deleteOutputFolder();
+                this.deleteOutputFolder();
                 clearInterval(intid);
             });
         }, 1000);

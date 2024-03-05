@@ -8,7 +8,7 @@ py=$(echo $@ | cut -d'.' -f2)
 
 if [ $py = "py" ]; then
     echo "Python result:"
-    python $@
+    python3 $@
 else
     echo "Java result:"
     java $@
