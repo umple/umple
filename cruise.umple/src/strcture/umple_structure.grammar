@@ -21,7 +21,7 @@ portBindingDefinition :  ( [~fromClassname] . )? [fromPort] -> ( [~toClassname] 
 bindinHandler : { [**code] } | ;
 
 // Port Watchlist Definition
-portWatch- : ( [[constraintList]] | [[comment]] )*
+portWatch- : ( [[constraintList]] | [[comment]] | [[reqImplementation]] )*
 
 // Active Method Definition
 activeMethodDefinition :  [[portWatch]]? [=modifier:public|protected|private]? [type]? [=activeType:atomic|synchronous|intercept]? [=active] [[activeMethodDeclarator]] [[activeMethodBody]]+
@@ -30,7 +30,7 @@ activeMethodDeclarator : [~methodName] [[parameterList]]?
 //activeMethodBody : [[activeDirectionHandler]] { ( [[activeTrigger]] )* [**code] }
 activeMethodBody : [[activeMethodBodyContent]] [[inverseDirectionHandler]]?
 inverseDirectionHandler : -> [[portWatch]]? [[activeMethodDeclarator]] [[activeMethodBodyContent]]
-activeMethodBodyContent : { ( [[comment]] | [[activeTrigger]] | [**code] )* }
+activeMethodBodyContent : { ( [[comment]] | [[reqImplementation]] | [[activeTrigger]] | [**code] )* }
 
 activeTrigger : [[hitchConstraint]]? [[constraintList]]? [=trigger:/] [[activeTriggerBody]] [[thenDefinition]]? [[resolveDefinition]]?
 activeTriggerBody- : ( [[deferredList]] | [[activeTriggerDefinition]] )

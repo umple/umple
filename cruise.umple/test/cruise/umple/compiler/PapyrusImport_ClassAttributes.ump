@@ -1,0 +1,14 @@
+
+
+class Book
+{
+	String title;
+	Integer pageNumber;
+	Double price;
+}
+
+class Car
+{
+	Double price;
+	String modelYear;
+}

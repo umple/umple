@@ -132,5 +132,13 @@ public class GvErdGeneratorTest extends TemplateTest {
 	public void Relationship_Attributes_Test() {
 		language = null;
 	    assertUmplePartialTemplateFor("gv/RelationshipAttributes.ump","gv/RelationshipAttributes.gv.txt");
-	}	
+	}
+	
+  @Test
+  public void nodeSeparationErd()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/IncreaseERSep.ump","gv/IncreaseERSep.gv.txt");
+  }
+
 }

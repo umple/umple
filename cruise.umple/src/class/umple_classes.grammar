@@ -16,9 +16,9 @@ externalDefinition : external [=interface]? [name] { [[classContent]]* }
 // An Interface can only contain method. See [*interfaceDefinition*]
 interfaceDefinition : interface [name] { [[depend]]* [[interfaceBody]] }
 
-// Associations can be declared outside the body of classes. 
+// Associations can be declared outside the body of classes.
 // See user manual page [*IndependentlyDefinedAssociations*]
-associationDefinition : association [name]? { ([[comment]] | [[mixsetDefinition]] | [[association]])* }
+associationDefinition : association [name]? { ([[comment]] | [[reqImplementation]] | [[mixsetDefinition]] | [[association]])* }
 
 // Associations that would be many-many can also become full-fledged classes too
 // See user manual page [*AssociationClassDefinition*]
@@ -29,18 +29,19 @@ associationClassDefinition : associationClass [name] { [[associationClassContent
 enumerationDefinition : enum [name] { [enumValue](, [enumValue])* }
 
 // The following items can be found inside the body of classes or association classes
-classContent- : [[comment]] | [[innerClass]] | [[mixsetDefinition]] | [[distributable]] | [[proxyPattern]] | [[strictness]] | [[classDefinition]] | [[trace]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[primitiveDefinition]] | [[portDefinition]] | [[portBindingDefinition]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[testCase]] | [[genericTestCase]] | [[testSequence]] | [[testClassInit]] | [[stateMachine]] | [[activeMethodDefinition]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[modelConstraint]] | [[invariant]] | ; | [[enumerationDefinition]] | [[exception]] | [[extraCode]] 
-associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[displayColor]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[association]] | [[inlineAssociation]] | [[singleAssociationEnd]] | [[attribute]] | [[stateMachine]] | [[enumerationDefinition]] | ; | [[extraCode]]
+classContent- : [[comment]] | [[reqImplementation]] | [[innerClass]] | [[mixsetDefinition]] | [[distributable]] | [[proxyPattern]] | [[strictness]] | [[classDefinition]] | [[trace]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[primitiveDefinition]] | [[portDefinition]] | [[portBindingDefinition]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[testCase]] | [[genericTestCase]] | [[testSequence]] | [[testClassInit]] | [[stateMachine]] | [[activeMethodDefinition]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[modelConstraint]] | [[invariant]] | ; | [[enumerationDefinition]] | [[exception]] | [[extraCode]]
+associationClassContent- :  [[comment]] | [[reqImplementation]] | [[classDefinition]] | [[position]] | [[displayColor]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[association]] | [[inlineAssociation]] | [[singleAssociationEnd]] | [[attribute]] | [[stateMachine]] | [[enumerationDefinition]] | ; | [[extraCode]]
 innerClass : [[innerStaticClass]] | [[innerNonStaticClass]]
 innerStaticClass : static [[classDefinition]]
 innerNonStaticClass : inner [[classDefinition]]
 
+checkForUnintendedBracket : OPEN_ROUND_BRACKET | CLOSE_ROUND_BRACKET | OPEN_CURLY_BRACKET | CLOSE_CURLY_BRACKET
 
 // Interfaces: Note that if the format of an abstractMethodDeclaration is not
 // followed, then the body will extraCode and passed to the base language
 // See user manual page [*interfaceDefinition*]
 interfaceBody- : [[interfaceMemberDeclaration]]*
-interfaceMemberDeclaration : [[comment]] | [[constantDeclaration]] | [[constantDeclarationDeprecated]] | [[abstractMethodDeclaration]] | [[position]] | [[displayColor]] | [[isA]] | [[interfaceTest]] | [[distributableInterface]] | [[exception]] | [[extraCode]]
+interfaceMemberDeclaration : [[comment]] | [[reqImplementation]] | [[constantDeclaration]] | [[constantDeclarationDeprecated]] | [[abstractMethodDeclaration]] | [[position]] | [[displayColor]] | [[isA]] | [[interfaceTest]] | [[distributableInterface]] | [[exception]] | [[extraCode]]
 distributableInterface : [[distributable]]
 // Constants in interfaces (e.g. const String ACONSTANT="aValue";)
 // Note: in Classes const is a modifier
@@ -53,7 +54,7 @@ constantDeclaration : [=internal]? const [[typedName]] (= [**value])? ;
 distributable- : [=distributable:distributable] [=distributeTech:RMI|WS]? ;
 proxyPattern- : [=proxyPattern:proxyPattern] ;
 moreCode- : [[codeLangs]] { [**code] }
-codeLangs- : ([=codeLang:Java|RTCpp|SimpleCpp|Cpp|Php|Ruby|Alloy|UmpleSelf] ( , [=codeLang:Java|Alloy|RTCpp|SimpleCpp|Cpp|Php|Ruby|UmpleSelf] )* )?
+codeLangs- : ([=codeLang:Java|RTCpp|SimpleCpp|Cpp|Php|Ruby|Python|Alloy|UmpleSelf] ( , [=codeLang:Java|Alloy|RTCpp|SimpleCpp|Cpp|Php|Ruby|Python|UmpleSelf] )* )?
 
 // Methods: The code in concrete methods is passed to the base language
 // See user manual page [*MethodDefinition*]
@@ -66,7 +67,7 @@ methodThrowsExceptions : throws [~exception] ( , [~exception] )*
 parameterList : OPEN_ROUND_BRACKET ([[parameter]] ( , [[parameter]] )* )? CLOSE_ROUND_BRACKET
 parameter : [[typedName]]
 
-testCase : [=isTimed:before|after]? [=isConcrete:JUnit|PhpUnit|RubyUnit]? [=isOverride:override]? test [~testCaseName] { ( [[assertion]] | [[testAction]] | [[testInit]] | [[testInitAtt]] | [[testInitAttWithMethodCall]] | [[comment]] | [[ifStatement]] | [[forStatement]] )* }
+testCase : [=isTimed:before|after]? [=isConcrete:JUnit|PhpUnit|RubyUnit]? [=isOverride:override]? test [~testCaseName] { ( [[assertion]] | [[testAction]] | [[testInit]] | [[testInitAtt]] | [[testInitAttWithMethodCall]] | [[comment]] | [[reqImplementation]] | [[ifStatement]] | [[forStatement]] )* }
 assertion : [=isTimed:before|after]? [=assertType:assertTrue|assertFalse|assertEqual|assertNull|assertMethod] [**code] ;
 testAction : [~objectName] ( (.)[~methodName] )? OPEN_ROUND_BRACKET  [[testActionParameterList]] CLOSE_ROUND_BRACKET ;
 testMethodCall : [~objectName] ( (.)[~methodName] )? OPEN_ROUND_BRACKET  [[testActionParameterList]] CLOSE_ROUND_BRACKET

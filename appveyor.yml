@@ -11,7 +11,7 @@ cache:
 
 - C:\Users\appveyor\.ant -> appveyor.yml
 - C:\Users\appveyor\.ivy2 -> appveyor.yml
-- C:\tools\php80 -> appveyor.yml
+- C:\tools\php83 -> appveyor.yml
 - C:\ProgramData\chocolatey\bin -> appveyor.yml
 - C:\ProgramData\chocolatey\lib -> appveyor.yml
 - C:\Program Files\Java\jdk11\bin -> appveyor.yml
@@ -28,9 +28,25 @@ init:
 # install the latest php (dependencies kb2919442 kb3035131 kb2999226 were failing )
 - ps: choco install php --ignore-dependencies --limitoutput --no-progress 
 
+# Download the latest TXL version (this requires editing the install script)
+# Extract the files
+# Remove the need for user input
+# Run the installer (if Admin is required us this : -Verb RunAs)
+- ps: |
+    $zipPath = "C:\TXL\Txlinstaller.zip"
+    $path = "C:\TXL"
+    New-Item "C:\TXL" -itemType Directory
+    Invoke-Webrequest "https://cruise.umple.org/txldl/Txl108bwin64.zip" -OutFile $zipPath
+    Expand-Archive -Path $zipPath -DestinationPath $path
+    $installPath = (Get-ChildItem -Path C:\TXL -Filter "*Txl*" -Recurse -Directory).Fullname + "\InstallTxl.bat" 
+    $content = Get-Content -Path $installPath
+    $newContent = $content -replace 'pause', ':: pause'
+    $newContent | Set-Content -Path $installPath
+    Start-Process $installPath 
+
 install:
 # NOTE if changing php version, make sure you change the cache above
-- ps: $env:Path="C:\Ruby23\bin;C:\Program Files\Java\jdk11\bin;$($env:Path);C:\tools\php80;C:\tools\php;C:\ProgramData\chocolatey\lib\ant"
+- ps: $env:Path="C:\Ruby23\bin;C:\Program Files\Java\jdk11\bin;$($env:Path);C:\tools\php83;C:\tools\php;C:\ProgramData\chocolatey\lib\ant"
 - ps: $env:JAVA_HOME="C:\Program Files\Java\jdk11" 
 - ps: echo "Path is $env:Path"
 - ps: echo "Java versions available"
@@ -48,6 +64,7 @@ install:
 - cmd: java -version # using ps causes it to fail because it prints to sterr
 - cmd: ant -version
 - cmd: rake -V
+#- cmd: txl -V # prints to the sterr on cmd and ps
 
 build_script:
 

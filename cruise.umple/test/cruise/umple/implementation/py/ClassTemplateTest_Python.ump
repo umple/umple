@@ -1,0 +1,6 @@
+generate Python;
+namespace example;
+
+class Mentor 
+{
+}

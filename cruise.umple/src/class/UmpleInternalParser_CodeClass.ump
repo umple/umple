@@ -33,6 +33,8 @@ class UmpleInternalParser
 
   // List of comments populated by the parser to be added to the next class, attribute, association, method, etc.
   internal Comment[] lastComments;
+
+  internal Requirement[] lastRequirements;
   
   // last attribute made.
   internal Attribute lastattr = null;
@@ -65,11 +67,13 @@ class UmpleInternalParser
 
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
+    boolean shouldConsumeRequirement = lastRequirements.size() > 0;
 
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
     if (t.isStatic("//") || t.isStatic("/*") || t.isStatic("*/"))
     {
       shouldConsumeComment = false;
+      shouldConsumeRequirement = false;
     }
     else if (t.is("useStatement") )
     {
@@ -133,16 +137,27 @@ class UmpleInternalParser
     {
       analyzeComment(t, false);
       shouldConsumeComment = addToLastAttributeOrAssociation(t);
+      shouldConsumeRequirement = shouldConsumeComment;
     }
     else if (t.is("annotationComment"))
     {
       analyzeComment(t, true);
       shouldConsumeComment = addToLastAttributeOrAssociation(t);
+      shouldConsumeRequirement = shouldConsumeComment;
     }     
     else if (t.is("multilineComment"))
     {
       analyzeMultilineComment(t);
       shouldConsumeComment = false;
+      shouldConsumeRequirement = false;
+    }
+    else if (t.is("requirement")){
+      analyzeRequirement(t);
+    }
+    else if (t.is("reqImplementation")){
+      analyzeImplementReq(t);
+      shouldConsumeRequirement = isReqAddedToLast(t);
+      shouldConsumeComment = shouldConsumeRequirement;
     }
     else if (t.is("classDefinition"))
     {
@@ -171,17 +186,84 @@ class UmpleInternalParser
     {
       analyzeToplevelException(t);
     }
-
+    else if (t.is("checkForUnintendedBracket"))
+    {
+      setFailedPosition(t.getPosition(),1016);
+    }
     // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above
     // classes, methods, attributes, etc (whichever comes next) rather than old comments propogating everywhere.
     if (shouldConsumeComment)
     {
       lastComments.clear();
     }
+    if (shouldConsumeRequirement)
+    {
+      lastRequirements.clear();
+    }
 
   }  
 
+    private void analyzeRequirement(Token t) {
+    String reqID = t.getSubToken("reqIdentifier").getValue(); // extract new requirement identifier
+    String newContent = t.getSubToken("reqContent").getValue();// extract content 
+    String newLanguage = "";// Initialize language
+    
+    if (!(t.getSubToken("reqLanguage") == null || t.getSubToken("reqLanguage").getValue() == null)) {
+        newLanguage = t.getSubToken("reqLanguage").getValue();// get the language of the sub token
+    }
 
+    Requirement existingRequirement = model.getAllRequirements().get(reqID); // Retrieves any existing requirement with the same identifier from the model
+
+    if (existingRequirement != null) { // Checks if a requirement with the same identifier already exists in the model.
+        String existingLanguage = existingRequirement.getLanguage();// get the language of the existing requirement
+
+        if (!(existingLanguage.equals("") || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
+            setFailedPosition(t.getPosition(), 402, reqID,existingLanguage,newLanguage);
+            return;// return if different languages are encountered
+        }
+
+        String existingContent = existingRequirement.getStatement();// retrieve the content of the existing requirement
+
+
+        // Requirement with the same identifier already exists, combine them
+        // Concatenate the content of the existing requirement with the new content
+        newContent = existingContent + " " + newContent;
+        if (newLanguage.equals("")) {
+            newLanguage = existingLanguage;
+        }
+    }
+    // DEBUG
+    Requirement req = new Requirement(reqID, newContent, newLanguage);// Create new requirement 
+    Map<String, Requirement> newAllReq = model.getAllRequirements();
+    newAllReq.put(t.getSubToken("reqIdentifier").getValue(), req);
+    model.setAllRequirements(newAllReq);
+}
+
+
+  private void analyzeImplementReq(Token t){
+    int counter=0;
+    String badReq="";
+
+    if (t.hasSubTokens()){
+      for (Token sub : t.getSubTokens()){
+        if (!sub.getValue().equals("STATIC") && model.getAllRequirements().containsKey(sub.getValue())){
+            lastRequirements.add(model.getAllRequirements().get(sub.getValue()));
+        }
+        else if (!sub.getValue().equals("STATIC")) {
+          counter++;
+          badReq+=" "+sub.getValue();
+        }
+      }
+    }
+
+    if (counter != 0){
+      setFailedPosition(t.getPosition(), 401, badReq);
+    }
+  }
+
+  private void analyzeImplementReq(Token t, UmpleClass aClass) {
+    analyzeImplementReq(t);
+  }
   
   /*
    * If the last attribute/association made matches the line number of the comment, add the comment to the attribute/association.
@@ -226,6 +308,47 @@ class UmpleInternalParser
     return false;
   }
 
+     /*
+   * If the last attribute/association made matches the line number of the requirement implement statement, add the req id to the attribute/association.
+   * 
+   * @param t the implementsReq token that is used to see the position of the implements requirement statement
+   */
+  private boolean isReqAddedToLast(Token t)
+  {
+    if (t.getPosition() == null) {return false;}
+    if (lastattr != null)
+    {
+      if (lastattr.getPosition().getLineNum() == t.getPosition().getLineNum())
+      {
+        for (Requirement r : lastRequirements)
+        {
+          lastattr.addRequirement(r);
+        }
+        return true;
+      }
+      else
+      {
+        lastattr = null;
+      }
+    }  
+    else if (lastassoc != null && lastassocPosition != null)
+    {
+      if (lastassocPosition.getLineNum() == t.getPosition().getLineNum())
+      {
+        for (Requirement r : lastRequirements)
+        {
+          lastassoc.addRequirement(r);
+        }
+        return true;
+      }
+      else
+      {
+        lastassoc = null;
+      }
+    }
+    return false;
+  }
+
   /*
    * Analyze class content tokens.
    * 
@@ -241,14 +364,15 @@ class UmpleInternalParser
     {
       return;
     }
-
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
+    boolean shouldConsumeRequirement = lastRequirements.size() > 0;
     
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
     if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
     {
       shouldConsumeComment = false;
+      shouldConsumeRequirement = false;
     }
     else if (token.is("strictnessDisableAuto"))
     {
@@ -260,16 +384,29 @@ class UmpleInternalParser
     {
       analyzeComment(token, false);
       shouldConsumeComment = addToLastAttributeOrAssociation(token);
+      shouldConsumeRequirement = shouldConsumeComment;
     }
     else if (token.is("annotationComment"))
     {
       analyzeComment(token, true);
       shouldConsumeComment = addToLastAttributeOrAssociation(token);
+      shouldConsumeRequirement = shouldConsumeComment;
     }
     else if (token.is("multilineComment"))
     {
       analyzeMultilineComment(token);
       shouldConsumeComment = false;
+      shouldConsumeRequirement = false;
+    }
+    else if (token.is("requirement"))
+    {
+      analyzeRequirement(token);
+    }
+    else if (token.is("reqImplementation"))
+    {
+      analyzeImplementReq(token, aClass);
+      shouldConsumeRequirement = isReqAddedToLast(token);
+      shouldConsumeComment = shouldConsumeRequirement;
     }
     else if (token.is("innerClass"))
     {
@@ -334,7 +471,6 @@ class UmpleInternalParser
     {
       analyzeAttribute(token,aClass);
     }
-    
     else if (token.is("testCase"))
     {
       analyzeClassTestCase(token,aClass);
@@ -398,14 +534,17 @@ class UmpleInternalParser
     {
       analyzeException(token,aClass);
     }
-    
-    
 
     // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above
     // classes, methods, attributes, etc (whichever comes next) rather than old comments propogating everywhere.
     if (shouldConsumeComment)
     {
       lastComments.clear();
+
+    }
+    if (shouldConsumeRequirement)
+    {
+      lastRequirements.clear();
     }
   }
   
@@ -1178,7 +1317,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
    */
   private UmpleClass analyzeClass(Token classToken)
   {
-  
+
     mixset StateMachine {
     //Reset number of activeObjects with each class definition
     this.numberOfActiveObjects = 1;
@@ -1220,6 +1359,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       aClass.addCommentAt(c,regularCommentCountEnd);
       regularCommentCountEnd++;
+    }
+
+    for (Requirement r : lastRequirements){
+      aClass.addRequirement(r);
     }
     
     // Add special position comment at the end if @outputumplesource had been 
@@ -1457,6 +1600,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       anInterface.addCommentAt(c,regularCommentCountEnd);
       regularCommentCountEnd++;
     }
+
+    for (Requirement r : lastRequirements){
+      anInterface.addRequirement(r);
+    }
     
     // Add special position comment at the end if @outputumplesource had been 
     // detected earlier in a comment
@@ -1615,11 +1762,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
       
       else if (childToken.is("displayColor"))
-      {  // Note: See near clone in UmpleInternalParser_CodeLayout.ump
+      {  // Note: See near clones in UmpleInternalParser_CodeLayout.ump and UmpleInternalParser_CodeStateMachine.ump
         String theColor = childToken.getValue("colorValue");
+        // Optionally users may add an equals sign, which we take out
         if(theColor.startsWith("=")) theColor=theColor.substring(1,theColor.length());
-        if(!theColor.startsWith("\"")) theColor= "\""+theColor;
-        if(!theColor.endsWith("\"")) theColor= theColor+"\"";         
+        // Optionally users may add quotation marks around the colour, which we take out
+        theColor=theColor.replace('\"',' ');
+        // Remove all spaces that may have been before any quotation marks or after the equals sign
+        theColor="\""+theColor.trim()+"\"";
         aInterface.setDisplayColor(theColor);
       }
       else if (childToken.is("extraCode") || childToken.is("exception"))
@@ -1639,11 +1789,26 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
   private void analyzeAssociationClass(Token classToken)
   {
+    Token rootToken = getRootToken();
+    List<Token> inputTokens = rootToken.getSubTokens();
+
     //test if Association class has at least 1 association or more than one singleEndAssociation
     List<Token> subtokens = classToken.getSubTokens();
+    List<Token> modifiableSubTokens = new ArrayList<Token>();
+    for (int i = 0; i < subtokens.size(); ++i) {
+      modifiableSubTokens.add(subtokens.get(i));
+    }
+
+    for (Token inputToken: inputTokens) {
+      if (inputToken.is("associationClassDefinition")) {
+        if (inputToken.getValue("name").equals(classToken.getValue("name")) && !inputToken.getSubTokens().equals(classToken.getSubTokens())) {
+          modifiableSubTokens.addAll(inputToken.getSubTokens());
+        }
+      }
+    }
     int singleAssocNumber = 0;
     int assocNumber = 0;
-    for(Token t : subtokens){
+    for(Token t : modifiableSubTokens){
         if(t.is("singleAssociationEnd")){
             singleAssocNumber++;
         }else if (t.is("association")){
@@ -2279,6 +2444,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
         for (int i=0; i < numCurAssocVar; i++) {
           AssociationVariable curAssocVar = uClass.getAssociationVariable(uClassAssocVarClassNames[i], uClassAssocVarNames[i]);
+          if (curAssocVar == null)
+          {
+             // Issue 2040  ... looking in an extraneous superclass
+             continue;
+          }
 
           AssociationVariable supAssocVar = superClass.getAssociationVariable(curAssocVar.getType(), curAssocVar.getName());
           if (supAssocVar == null) continue;
@@ -3203,6 +3373,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       aMethod.addComment(c);
     }
 
+    for (Requirement r : lastRequirements){
+      aMethod.addRequirement(r);
+    }
+
     // Go through all the sub tokens of the "method token" to obtain details about it, using them to populate a method instance.
     List<String> langs = new ArrayList<String>();
     CodeBlock cb = new CodeBlock("");
@@ -3287,7 +3461,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             String methodCode = token.getValue();
             // process mixsets inside code 
             mixset Mixset {
-              methodCode = processInlineMixset(token.getValue());
+              methodCode = processInlineMixset(token.getValue(), meth);
+              checkLabelDoublication(aMethod.getName(),methodCode,token);
             } // end of MIXSET 
             cb.setCode(methodCode);
             aMethod.setCodePosition(token.getPosition());
@@ -4107,7 +4282,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       {
         String aspectCode = sub.getValue();
         mixset Mixset {
-        aspectCode = processInlineMixset(sub.getValue());
+        aspectCode = processInlineMixset(sub.getValue(), null);
         }
         if(langs.size()==0)
         {
@@ -4469,6 +4644,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       yourAs.addComment(c);
     }
+
+    for (Requirement r : lastRequirements){
+      yourAs.addRequirement(r);
+    }
     
     // set last association made to be yourAs. clear lastattr.
     lastassoc = yourAs;
@@ -4759,6 +4938,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     for (Comment c : lastComments)
     {
       attribute.addComment(c);
+    }
+
+    for (Requirement r : lastRequirements){
+      attribute.addRequirement(r);
     }
     
     // set the last attribute made to be attribute, clear lastassoc
@@ -5693,6 +5876,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       "strictness",
       "generate",
       "use",
+      "req",
+      "implementsReq",
       "namespace"};
     String identifier = token.getValue("identifier");
     boolean isNotProperIdentifier = true;

@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="scripts/styles_download.css" rel="stylesheet" type="text/css" />
+  <title>Downloading and Installing Umple</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+<style>
+
+.button {
+   border-top: 1px solid #d3bc8f;
+   background: #bf5f3f;
+   background: -webkit-gradient(linear, left top, left bottom, from(#9a4d34), to(#bf5f3f));
+   background: -webkit-linear-gradient(top, #9a4d34, #bf5f3f);
+   background: -moz-linear-gradient(top, #9a4d34, #bf5f3f);
+   background: -ms-linear-gradient(top, #9a4d34, #bf5f3f);
+   background: -o-linear-gradient(top, #9a4d34, #bf5f3f);
+   padding: 6.5px 13px;
+   -webkit-border-radius: 9px;
+   -moz-border-radius: 9px;
+   border-radius: 9px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 16px;
+   font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+.button:hover {
+   border-top-color: #810b09;
+   background: #810b09;
+   color: #ccc;
+   }
+.button:active {
+   border-top-color: #810b09;
+   background: #810b09;
+   }
+
+</style>
+
+</head>
+<body>
+
+  <span class="header" summary="University of Ottawa banner"><a href="http://www.umple.org" target="_blank"><img src="scripts/umpleonline_logo.jpg" alt="Umple logo" class="UmpleLogo" /></a><img src="scripts/bg_header_title.jpg" class="uOttawa" alt="Blank" /></span>
+
+<h1> Downloading and installing <a href="http://www.umple.org">Umple</a></h1>
+
+  <p class="intro">
+    Below are instructions for downloading and installing Umple, a model-oriented programming technology that lets you model
+    in code.  Here is <a href="http://umple.org">more information</a>
+    about Umple, or try it online without downloading, using the <a href="https://try.umple.org">UmpleOnline tool.</a>
+  </p>
+
+  <p class="intro">Umple can be used on Mac-OS, Windows or Linux. You have several downloading options described below, including directly downloading a jar, using homebrew, using Docker, using VSCode, or using Eclipse </p>
+
+
+<p class="intro">To obtain the full tree with source code  <a href="https://github.com/umple/Umple">go to Umple's Github  main page.</a>  The list of <a href="https://github.com/umple/Umple/issues?utf8=&#10003;&q=is%3Aissue+is%3Aclosed+sort%3Aupdated-desc+"> recent changes can be found by clicking here</a></p>
+
+&nbsp; <br/>
+
+
+
+<h3>A. Downloading Umple for Command-Line use</h3>
+
+<p><b>Prerequisite dependency:</b> An up-to-date Java 8 JDK or higher. The compiler has been tested and is also known to work under Java versions up to Java 16. If Java is not installed, then on Ubuntu first run <tt>apt install default-jdk</tt> or on Mac run <tt>brew install openjdk</tt>  or on Windows <tt>choco install openjdk</tt> .</p>
+
+<p>Options:</p>
+
+ <ul>
+
+    <li><a class="button" href="https://try.umple.org/scripts/umple.jar">The latest build of the command-line
+     compiler from continuous integration.</a><br/> &nbsp;<br/>
+     This is built after every merge to master from our continuous build process, which can occur as frequently as every few hours, or as infrequently as every few weeks, depending on season. This version is thoroughly tested and will always contain the latest enhancements and fixes.
+    This is also the version of the compiler used by <a href="https://try.umple.org">UmpleOnline</a><br />&nbsp;<br />
+
+    <li><a class="button" href="https://github.com/umple/Umple/releases/latest/">
+    The latest official releases of the Umple command-line jar at GitHub, along with release notes</a> <br/> &nbsp; <br/>
+    Use one of these releases if you need complete stability in the code generated from Umple. New releases are made 2-4 times a year.<br />&nbsp;<br />
+    </li>
+    <li>On MacOS and Linux you can install the most recent release of the Umple command line compiler using Homebrew. This will also set yourself up to obtain later releases automatically. If you haven't installed Homebrew, you can install it using the directions at <a target="brew" href="https://brew.sh">https://brew.sh</a> ... and then do  &nbsp; <br />
+    <pre>brew install umple</pre>
+    <p>After running this, there will be a command <tt>umple</tt> that executes the Umple jar file</p>
+    <p>Note that this will try to install openjdk as a dependency in homebrew first (if not already there), so it may take some time. If you have java installed outside of homebrew, you can avoid an unneeded installation by specifying --ignore-depenencies and then adding a symbolic link to the existing java executable when if you receive a message saying that the homebrew java command cannoth be found.<p>
+
+</ul>
+
+<p>To run the Umple compiler on the command line</p>
+   <ul>
+     <li>Run<br/>
+     
+     <pre>java -jar umple.jar &lt;options&gt; &lt;files&gt;</pre><br/>
+     
+     or if you have downloaded Umple using Homebrew or have installed the umple wrapper script some other way you can simply specify<br/>
+     
+     <pre>umple &lt;options&gt; &lt;files&gt;</pre><br/>
+     
+     
+
+     <li>Specify your umple file as an argument (more than one is allowed). The .ump suffix must be used. One umple file can invoke another using the use statement. You can also specify the names of mixsets to activate them. <br/>&nbsp;<br />
+
+     <li>You can use --help as an option to obtain the full set of command-line options. The most popular available include:
+     <ul>
+     <li>-g, --generate <i>lang</i> :                          Specify the output language (Java is the default; to ensure no output is generated, specify the word 'nothing' literally): Java,RTCpp,
+                                          Php, Ruby,SQL,Json,Ecore,TextUml,Scxml
+                                          Yuml, etc.
+      <li> --help :                                  Display the help message
+      <li> --override :                              If a output language <lang> is
+                                          specified using option -g, output
+                                          will only generate language <lang>
+      <li> --path :                                  If a output language is specified
+                                          using option -g, output source code
+                                          will be placed to path
+      <li> -u, --umple &quot;<i>code</i>&quot; : Specify a valid umple program directly on the command line (can be used add extra information to the files supplied as arguments).
+
+      <li> -v, --version :                           Print out the current Umple version
+
+                                          number
+      <li> -c - :   Compile the generated code (i.e. go directly from Umple to an executable system in Java, or to verify the syntax of generated PhP)                                             
+     </ul>
+   </ul>
+
+
+  <br />&nbsp;<br />
+
+
+  <h3>B. Running UmpleOnline in your own computer's Docker installation</h3>
+
+<p><b>Requirement</b>: <a href="https://www.docker.com/get-docker">Docker</a> installed on your computer.
+
+<p>Umple provides a Docker image of Umpleonline that allows you to explore all the features of Umple through a web browser, with the server running locally on your computer. To use this, do the following after installing Docker. Further information can be found on <a href="https://hub.docker.com/r/umple/umpleonline/">Umple's Docker Hub page</a></p>
+
+<ul>
+
+<li>Make sure Docker is actually running on your computer
+
+<li>Pull the latest image (do this every time, so you get any changes):
+
+<pre>
+  docker pull umple/umpleonline
+</pre>
+
+
+<li>Create a directory on your local machine to store your data (or reuse one that you had created previously for this purpose). In the example below we will use '~/umpledata'. As the image runs, a subdirectory of this will be created for each web session, containing the .ump files being edited, and the generated outputs. You can use the Umpleonline bookmarking capability to create a subdirectory within your local-machine directory that has a fixed name; you you can then access this repeatedly to keep working on the same models.
+
+<br/>&nbsp;
+
+<li>In a terminal (console), invoke the image (you can change the first 8000 to be another port both here and in the next instruction if you prefer):
+
+<pre>
+  docker run --rm -ti -p 8000:8000 -v ~/umpledata:/var/www/ump umple/umpleonline >/dev/null
+</pre>
+
+<li>In a web browser, go to the following link: <a href="http://localhost:8000/umple.php">http://localhost:8000/umple.php</a><br/>&nbsp;<br/>
+
+<li>To quit the image: a) If started as above in Linux or Mac, hit control-c; or b) run 'docker ps' to find the name of the running image and kill it using 'docker kill image'.
+
+</ul>
+
+<p>You can also accomplish the above  by downloading and installing our script called <a href="https://raw.githubusercontent.com/umple/umple/master/dev-tools/udock">udock</a> and passing it the optional argument -d {dir} for your local storage directory (otherwise data will be stored in a temporary directory)<p>
+
+<p>More information about Umple in Docker can be found at <a href="http://docker.umple.org">http://docker.umple.org</a></p>
+
+<p>New Docker images are produced for each release of Umple, with occasional interim images. A list of Docker images can be found at <a href="https://hub.docker.com/r/umple/umpleonline/tags/"> the Umpleonline DockerHub site</a>. The image tagged 'latest' will be downloaded by default.</p>
+
+
+  <br />&nbsp;<br />
+
+<h3>C. Running in VSCode.</h3>
+
+<p>A <a href="https://marketplace.visualstudio.com/items?itemName=digized.umple">Visual Studio Code plugin for Umple</a> is available.</p>
+
+
+
+
+<br />&nbsp;<br />
+
+   <h3>D. Installing and running the Umple compiler in Eclipse</h3>
+
+   <p><b>Requirements</b>: Java (as above), and the latest Eclipse with modeling tools.</p>
+
+   <p>Full directions for <a href="https://github.com/umple/umple/wiki/InstallEclipsePlugin">installing the Eclipse plugin can be found on this Umple Wiki Page.</a></p>
+   
+   <p>The update site to install Umple in Eclipse is <tt>https://cruise.umple.org/org.cruise.umple.eclipse.plugin.update.site</tt></p> 
+
+
+
+
+  <br />&nbsp;<br />
+
+<h3>E. The Umplificator</h3>
+
+<p>Another tool available is the umplificator, for reverse engineering code to Umple. <a 
+href="../umplificator_1.29.1.4260.b21abf3a3.jar">The Umplificator can be downloaded
+here.</a></p>
+
+
+
+  <br />&nbsp;<br />
+
+  <h3>User Manual </h3>
+
+  <p>Refer to the <a href="http://manual.umple.org">Umple user manual</a> for comprehensive help programming in Umple. The <a href="http://api.umple.org">API quick reference</a> and <a href="http://grammar.umple.org">grammar quick reference</a> may be of particular help for power users.</p>
+
+
+
+
+</body>
+</html>
+

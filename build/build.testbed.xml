@@ -14,6 +14,7 @@
   <property name="test.output.path" value="${dist.dir}/qa/testbed_java"/>
   <property name="test.output.path.java" value="${dist.dir}/qa/testbed_java"/>
   <property name="test.output.path.php" value="${dist.dir}/qa/testbed_php"/>
+  <property name="test.output.path.python" value="${dist.dir}/qa/testbed_python"/>
   <property name="test.output.path.ruby" value="${dist.dir}/qa/testbed_ruby"/>
 
   <property name="examplepattern" value="*" />
@@ -31,7 +32,7 @@
 
   <property name="php.simpletest.version" value="1.2" />
   <property name="php.simpletest.url" 
-            value="https://github.com/simpletest/simpletest/archive/v${php.simpletest.version}.0.tar.gz" />
+            value="https://codeload.github.com/simpletest/simpletest/tar.gz/refs/tags/v${php.simpletest.version}.0" />
   <property name="php.libs.dir" value="${dist.dir}/libs/php" />
 
   <path id="project.classpath">
@@ -57,6 +58,7 @@
     <antcall target="template.init" />
     <mkdir dir="${test.output.path.java}"/>
     <mkdir dir="${test.output.path.php}"/>
+    <mkdir dir="${test.output.path.python}"/>
     <mkdir dir="${test.output.path.ruby}"/>
   </target>
 
@@ -68,6 +70,7 @@
   <target name="compile">
     <antcall target="compileJava" />
     <antcall target="compilePhp" />
+    <antcall target="compilePython" />
     <antcall target="compileRuby" />
   </target>
 
@@ -141,6 +144,14 @@
 
   </target>
 
+  <target name="compilePython">
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
+
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
+      <arg value="testbed_python/src/TestHarnessPython.ump"/>
+    </java>
+  </target>
+
   <target name="compileRuby">
     <deps-load-path conf="core" pathid="core.ivy.classpath" />
 
@@ -156,6 +167,7 @@
   <target name="test">
     <antcall target="testJava" />
     <antcall target="testPhp" />
+    <antcall target="testPython" />
     <antcall target="testRuby" />
     <!--
     <antcall target="allUserManualAndExampleTests" />
@@ -219,6 +231,27 @@
       </condition>
     </fail>
     <echo message="PHP tests completed!"/>
+  </target>
+
+  <target name="testPython">
+    <echo message="Running PYTHON tests from command line"/>
+    <exec executable="python" dir="testbed_python/test/" output="${test.output.path.python}/index.html" outputproperty="test.output.python">
+	    <arg value="AllTests.py"/>
+    </exec>
+
+    <fail message="Python Import Error found">
+      <condition>
+        <contains string="${test.output.python}" substring="Import Failed" casesensitive="true"/>
+      </condition>
+    </fail>
+
+    <fail message="Python Error found">
+      <condition>
+        <contains string="${test.output.python}" substring="FAIL" casesensitive="true"/>
+      </condition>
+    </fail>
+
+    <echo message="PYTHON tests completed!"/>
   </target>
 
   <target name="testRuby">

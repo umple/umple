@@ -1,0 +1,52 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 3 "../UnidirectionalOptionalOneTest.ump"
+import os
+
+class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self, aName):
+        self._student = None
+        self._name = None
+        self._name = aName
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    # Code from template association_GetOne 
+    def getStudent(self):
+        return self._student
+
+    def hasStudent(self):
+        has = not (self._student is None)
+        return has
+
+    # Code from template association_SetUnidirectionalOptionalOne 
+    def setStudent(self, aNewStudent):
+        wasSet = False
+        self._student = aNewStudent
+        wasSet = True
+        return wasSet
+
+    def delete(self):
+        self._student = None
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]" + str(os.linesep) + "  " + "student = " + ((format(id(self.getStudent()), "x")) if not (self.getStudent() is None) else "null")
+

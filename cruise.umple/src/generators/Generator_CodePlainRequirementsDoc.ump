@@ -1,0 +1,66 @@
+/*Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This generates simple metrics from Umple
+  generate PlainRequirementsDoc;
+in your umple file, or the command line option
+  -g PlainRequirementsDoc
+*/
+
+namespace cruise.umple.compiler;
+
+class PlainRequirementsDocGenerator
+{
+  isA CodeGenerator;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+  
+  UmpleModel model = null;
+  String output = "";
+
+  HtmlDocument doc = new HtmlDocument(true);
+
+  void generate(){
+    doc.createParagraphElement("Plain Requirements Doc from "+model.getUmpleFile().getSimpleFileName()+".ump", false);
+    UmpleModelWalker walker = new UmpleModelWalker(model);
+    walker.accept(new ReqVisitor(doc));
+    model.setCode(doc.toString());
+    writeModel();
+    return;
+  }
+  
+  void writeModel(){
+    try {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".html";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e) {
+      throw new UmpleCompilerException("There was a problem with generating RequirementDoc code. ;)" + e, e);
+    }
+  }
+}
+
+class ReqVisitor {
+    depend java.io.IOException;
+	isA UmpleModelVisitor;
+	HtmlDocument doc;
+    // TO DO: 
+    // use a List to gather all of the requirements in the visit function below, sort them in alphabetical order
+    // in void done() create paragraph elements with them
+
+    // Requirement
+	void visit(Requirement req) {	
+        String text = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
+        doc.createParagraphElement(""+req.getIdentifier()+": "+text, false);
+	}
+}

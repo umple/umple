@@ -241,6 +241,11 @@
       <classpath refid="core.ivy.classpath"/>
       <classpath refid="test.ivy.classpath"/>
     </junit>
+    <delete>
+    	<fileset dir="cruise.umple/test/cruise/umple/statemachine/implementation">
+        <include name="Agent.php"/>
+      </fileset>
+    </delete>  
 
     <junitreport todir="${test.output.path}">
       <fileset dir="${test.output.path}">

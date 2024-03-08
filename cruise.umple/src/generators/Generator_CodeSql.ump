@@ -131,11 +131,11 @@ class SqlGenerator
       }
       for (AssociationVariable av : aClass.getAssociationVariables())
       {
-        if (getModel().indexOfUmpleClass(av.getRelatedAssociation().getUmpleClass()) >= i)
+        if (av.hasRelatedAssociation() && getModel().indexOfUmpleClass(av.getRelatedAssociation().getUmpleClass()) >= i)
         {
           continue;
         }
-        if ((av.isMN() && !av.isOptionalOne()) || (av.getRelatedAssociation().isMN() && !av.getRelatedAssociation().isOptionalOne()))
+        if (av.hasRelatedAssociation() && ((av.isMN() && !av.isOptionalOne()) || (av.getRelatedAssociation().isMN() && !av.getRelatedAssociation().isOptionalOne())))
         {
           //ToDo: Create new internal association class that replaces the association described by av and av.getRelatedAssociaiton()
           /*
@@ -151,6 +151,7 @@ class SqlGenerator
         }
       }
     }
+    
   }
 
   public void setRootClass(UmpleClass aClass){
@@ -879,6 +880,8 @@ class SqlGenerator
   
   private void prepare(UmpleClass aClass)
   {
+    accountForInheritance(aClass);
+
     if (aClass.getGeneratedClass() != null)
     {
       return;
@@ -902,6 +905,7 @@ class SqlGenerator
       aClass.addDepend(new Depend("singleton"));
     }
     
+
     
     for(Attribute av : aClass.getAttributes())
     {
@@ -959,7 +963,6 @@ class SqlGenerator
     lookups.put("stringTemplate","StringTracer::execute(\"{0}=#{{1}}\")");
     lookups.put("executeMethods",executeMethods);
     //GeneratorHelper.prepareAllStringTracers(this,getModel(),aClass,lookups);
-
   }
   
   private void generateConstructorSignature(GeneratedClass genClass)
@@ -1029,6 +1032,104 @@ class SqlGenerator
     genClass.setLookup("constructorSignature_caller", signatureCaller.toString());
   }
 
+  private Key accountForInheritance(UmpleClass uClass){
+    UmpleClass parent = uClass.getExtendsClass();
+    if (uClass == null){
+      return null;
+    }
+
+    if (parent == null){
+      if (!uClass.getIsSingleton() && uClass.getAttributes().size() > 0){ 	//not a lone class = top of heirarchy [ or num od associations ]
+        return createNewIntPK(uClass);
+      }
+      else {				// is a lone class
+        return null;
+      }
+    }
+    else{			// has parent
+      Key parent_pk = accountForInheritance(parent);
+      if (parent_pk == null){
+        return null;
+      }
+      else{
+        String pkNames="";
+        String pkTypes="";
+        for (String parentPkMember : parent_pk.getMembers()){
+          pkNames += parentPkMember+", ";
+        }
+        //trim pkNames and pkTypes
+        pkNames = pkNames.substring(0, pkNames.length() - 2);
+        
+        if (uClass.getAssociationVariable(pkNames) == null){
+          for (String parentPkMember : parent_pk.getMembers()){
+            if(parent.getAttribute(parentPkMember) != null){
+              pkTypes += parent.getAttribute(parentPkMember).getType() + ", ";             
+            }
+          }
+          if(pkTypes.length() > 2){
+            pkTypes = pkTypes.substring(0, pkTypes.length() - 2); 
+          }
+          
+          Multiplicity optionalToOne = new Multiplicity();
+          optionalToOne.setBound("1");
+          AssociationVariable newAssoc = new AssociationVariable (pkNames, pkTypes, "", "", optionalToOne, true);
+          uClass.addAssociationVariable(newAssoc);
+          AssociationVariable avFromParent = parent.getAssociationVariable(pkNames);
+          newAssoc.setOneDirectionalRelatedAssociation(avFromParent);            
+        }
+        return createNewIntPK(uClass);
+      }
+    }
+  }
+
+  private Key createNewIntPK(UmpleClass uClass){
+    Multiplicity optionalToOne = new Multiplicity();
+    optionalToOne.setBound("1");
+
+    if (uClass.getKey().getMembers().length == 0 && uClass.getAttributes().size() == 0){ //if there are no key members, no attributes, etc.
+      AssociationVariable old_pk = new AssociationVariable (uClass.getExtendsClass().getName()+"_id", "INT", "", "", optionalToOne, false);
+      uClass.addAssociationVariable(old_pk);
+      Key k = new Key();
+      k.addMember(uClass.getExtendsClass().getName()+"_id");
+      uClass.setKey(k);
+
+      return k;
+    }
+    else {
+      Key preexistKey = uClass.getKey();
+      Attribute old_pk;
+      if (uClass.getKey().getMembers().length > 0){
+          if (uClass.getAssociationVariable(preexistKey.getMember(0)) == null){
+            String pkNames = "";
+            String pkTypes = "";
+            for (String PkMember : preexistKey.getMembers()){
+              pkNames += PkMember+", ";
+              pkTypes += uClass.getAttribute(PkMember).getType() + ", ";
+              old_pk = uClass.getAttribute(PkMember);
+              uClass.removeAttribute(old_pk);
+            }
+            //trim pkNames and pkTypes
+            pkNames = pkNames.substring(0, pkNames.length() - 2);
+            pkTypes = pkTypes.substring(0, pkTypes.length() - 2);
+            
+            AssociationVariable newAssocPK = new AssociationVariable(pkNames, pkTypes, "", "", optionalToOne, false);
+            uClass.addAssociationVariable(newAssocPK);
+          }
+      } 
+      else{
+        if (uClass.getAttributes().size() == 0 && uClass.getAssociationVariables().size() == 0)
+          return null;
+        old_pk = uClass.getAttribute(0);
+        uClass.removeAttribute(old_pk);
+        AssociationVariable newAssocPK = new AssociationVariable(old_pk.getName(), old_pk.getType(), "", "", optionalToOne, false);
+        uClass.addAssociationVariable(newAssocPK);
+        preexistKey.addMember(old_pk.getName());
+      }
+      return preexistKey;
+    }
+  }
+
+
   public String nameOf(Attribute av)
   {
     return nameOf(av.getName(),false);
@@ -1049,7 +1150,7 @@ class SqlGenerator
     for (AssociationVariable av : uClass.getAssociationVariables()) 
     {
       AssociationVariable relatedAv = av.getRelatedAssociation();
-      if (av.isOnlyOne() && relatedAv.isOnlyOne() && av.getIsNavigable() && relatedAv.getIsNavigable())
+      if (relatedAv != null && av.isOnlyOne() && relatedAv.isOnlyOne() && av.getIsNavigable() && relatedAv.getIsNavigable())
       {
         UmpleClass relatedClass = getModel().getUmpleClass(av.getType());
         GeneratedClass relatedGen = relatedClass.getGeneratedClass();
@@ -1138,7 +1239,7 @@ class SqlGenerator
         }
         
         AssociationVariable relatedAssociation = av.getRelatedAssociation();
-        if (relatedAssociation.isOnlyOne())
+        if (relatedAssociation != null && relatedAssociation.isOnlyOne())
         { 
           UmpleClass relatedClass = getModel().getUmpleClass(av.getType());
           while (relatedClass != null)

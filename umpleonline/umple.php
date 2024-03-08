@@ -28,15 +28,17 @@ $diagramtype = "";
 $isCachedExample = false;
 $imageoutput="";
 $messageURL="";
+$actualExample="";
 if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
-  $cachedimage= "umplibrary/imagecache/".htmlspecialchars($_REQUEST['example']).".svg";
+  $actualExample=preg_replace("/[^a-zA-Z0-9_\-\/]/",'',$_REQUEST["example"]);
+  $cachedimage= "umplibrary/imagecache/".$actualExample.".svg";
   if (file_exists($cachedimage))
   {
     $isCachedExample=true;
   }
   else
   {
-    $cachedimage= "umplibrary/imagecachesm/".htmlspecialchars($_REQUEST['example']).".svg";
+    $cachedimage= "umplibrary/imagecachesm/".$actualExample.".svg";
     if (file_exists($cachedimage))
     {
       $isCachedExample=true;
@@ -44,7 +46,7 @@ if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
     }
     else
     {
-      $cachedimage= "umplibrary/imagecachestructure/".htmlspecialchars($_REQUEST['example']).".svg";
+      $cachedimage= "umplibrary/imagecachestructure/".$actualExample.".svg";
       if (file_exists($cachedimage))
       {
         $isCachedExample=true;
@@ -54,7 +56,7 @@ if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
   }
   if($isCachedExample) {
     $imageoutput = "<br/><iframe src=\"".$cachedimage."\"></iframe><br\>";
-    $messageURL = "<a href=\"?example=".$_REQUEST['example'].$diagramtype."\">URL for ".$_REQUEST['example']." example</a>";
+    $messageURL = "<a href=\"?example=".$actualExample.$diagramtype."\">URL for ".$actualExample." example</a>";
   }
 }
 
@@ -93,7 +95,7 @@ if (isset($_REQUEST["diagramtype"])) {
   $diagramType=$_REQUEST["diagramtype"];
   if ($diagramType=="state") $diagramType = "GvState";
   else if ($diagramType=="structure") $diagramType = "structureDiagram";  
-  else if ($diagramType !="GvState" && $diagramType !="GvClass" && $diagramType !="structureDiagram" && $diagramType !="GvFeature") $diagramType = "class";
+  else if ($diagramType !="GvState" && $diagramType !="GvClass" && $diagramType !="structureDiagram" && $diagramType !="GvFeature" && $diagramType !="GvClassTrait" ) $diagramType = "class";
 }
 if ($diagramtype=="") $diagramtype = "&diagramtype=".$diagramType;
 
@@ -187,7 +189,7 @@ $output = $dataHandle->readData('model.ump');
 <link rel="manifest" href="https://cruise.umple.org/manifest.json">
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="msapplication-TileImage" content="https://cruise.umple.org/ms-icon-144x144.png">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#8f001a">
 </head>
 <body>
   <?php if($showChrome) { ?> 
@@ -294,7 +296,7 @@ $output = $dataHandle->readData('model.ump');
     
       <table>
         <tr style="text-align:left;">
-          <th id="labelTaskName" style="display: none;"><label for="taskName">Task Name:</label></th>
+          <th id="labelTaskName" style="display: none;"><label for="taskName"><span style="color:red">&#42;</span>Task Name:</label></th>
           <th><label id="labelRequestorName" for="requestorName">Requestor Name:</label></th>
           <th id="labelCompletionURL"><label>Completion Survey URL:</label></th>
         </tr>
@@ -350,18 +352,21 @@ $output = $dataHandle->readData('model.ump');
       <a class="button2" href="javascript:Action.copyParticipantURL()" title="Click to put the participant URL in your clipboard. You can then send
         the link to participants so they can do the task">Copy Participant URL</a> &nbsp;&nbsp;&nbsp;
       <a class="button2" href="javascript:Action.launchParticipantURL()" title="Click to generate an answer to this task in the same way
-        a participant would.Do this to test the task. Note that your response will appear if you later     
+        a participant would. Do this to test the task. Note that your response will appear if you later     
         download all the responses unless you cancel the submission.">Launch Participant URL in a new tab</a>
+        <a class="button2" title="Click this to close the task editing panel and return to a normal layout." href="javascript:Page.endTaskEdit()">Exit task editing mode</a>
     <?php } else if ($doLoadTaskInstruction && substr($dataHandle->getName(), 0, 8) != "taskroot") {?>
       <a class="button2" href="javascript:Action.openInstructionInNewTab()">Open instruction in a new tab</a>&nbsp;&nbsp;
-      <a id="buttonReshowInstructions" class="button2" href="javascript:Action.reshowInstructions()" style="display: none;">Re-show Instructions</a>&nbsp;&nbsp;&nbsp;
+      <a id="buttonReshowInstructions" class="button2" href="javascript:Action.reshowInstructions()" style="display: none;">Re-show Instructions</a>&nbsp;&nbsp;
       <a id="buttonHideInstructions" class="button2" href="javascript:Action.hideInstructions()">Hide Instructions</a>&nbsp;&nbsp;&nbsp;
       <?php if (!$readOnly) { ?>
         <a class="button2" href="javascript:Action.submitTaskWork()" title=" When you submit, the requestor will be able to see your response
           and it will no longer be editable. Make sure your name is in a
           comment in the response if that has been requested in the instructions.">Submit Response</a>&nbsp;&nbsp;&nbsp;
         <a class="button2" href="javascript:Page.cancelTaskResponse()" title="Cancel this submission. Your data will be deleted.">Cancel this task response</a>&nbsp;
+        <a class="button2" href="javascript:Page.hideTask()" title="Click to cancel this submission without losing your data.">Exit task submission</a>
       <?php } else { ?>
+        <a class="button2" href="javascript:Action.openStartFreshWork()">Start Fresh Work</a>&nbsp;&nbsp;
         This task response has already been submitted and is now read-only.
     <?php }} ?>
     </div>
@@ -437,7 +442,7 @@ $output = $dataHandle->readData('model.ump');
       </div>
     </div>
     
-    <div id="paletteColumn" class="inRow">
+    <div id="paletteColumn" class="inRow" ondrop="Action.dropHandler(event);" ondragover="Action.dragOverHandler(event);">
       <div id="palette" class="palette">
 
         <!-- GROUP 1 OF OPTIONS -->
@@ -447,11 +452,11 @@ $output = $dataHandle->readData('model.ump');
           <ul class="first" id="saveLoad">
             <li class="subtitle">SAVE</li>
             <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
-            <li id="ttSaveBookmark">
+            <!--li id="ttSaveBookmark">
               <div id="menuBookmarkable" class="bookmarkableUrl">
                 <a href="umple.php?model=<?php echo $dataHandle->getName() ?>">Resave URL</a>
               </div>
-            </li>
+            </li-->
             <?php } else if (!isset($_REQUEST["task"])) { ?>
             <li id="ttSaveModel"> 
               <div id="menuBookmarkable" class="bookmarkableUrl">
@@ -459,6 +464,10 @@ $output = $dataHandle->readData('model.ump');
               </div>
             </li>
             <?php } ?>
+            <li id="buttonCopyClip" class="copyClip">
+              <img src="scripts/copy.png"/> 
+               Copy to Clipboard
+            </li>           
             <li id="buttonCopy" class="copy">
               <img src="scripts/copy.png"/> 
                Source to Copy
@@ -476,22 +485,34 @@ $output = $dataHandle->readData('model.ump');
               Store in Browser
             </li>
             
-            <li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
+            <!--li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
               <img src="scripts/copy.png"/> 
               Load from Browser
-            </li>
+            </li-->
 
             <li id="buttonDownloadFiles" class="downloadFiles">
               <img src="scripts/copy.png"/> 
                Download Files
-            </li>                        
+            <li class="subtitle">LOAD</li>
+            <li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
+              <img src="scripts/copy.png"/> 
+              Load from Browser
+            </li>
+            <li>Drag and drop a .ump file here to load it, or drag it to any place in the text area.</li>
           </ul>
 
           <ul class="second center-children">
             <li class="subtitle">RESET</li>
-            <li id="ttStartOver"> 
-              <div id="buttonStartOver" class="jQuery-palette-button" value="Start Over"></div> 
+            <li id="ttLoadBlankModel">
+              <div id="buttonLoadBlankModel" class="jQuery-palette-button" value="Load Blank Model"></div>
             </li>
+            <li id="ttShowRefreshUmpleCompletely">
+            	<div id="buttonShowRefreshUmpleOnlineCompletely" class="jQuery-palette-button" value="Reset Completely"></div>
+            </li>
+            <li id="ttStartOver"> 
+              <div id="buttonStartOver" style="display: none;" value="Click here to completely refresh UmpleOnline (cannot be undone)"></div> 
+            </li>
+            
           </ul>
         </div>
         
@@ -513,13 +534,13 @@ $output = $dataHandle->readData('model.ump');
             <li id="itemLoadExamples">
               <select id="inputExample" name="inputExample" class="button" size = "1" data-diagram-type="class">
                 <option name = "optionExample" id = "defaultExampleOption" value="">Select Example</option>
-                <option name = "optionExample" value="2DShapes.ump">2DShapes</option>
+                <option name = "optionExample" value="2DShapes.ump">2DShapes *</option>
                 <option name = "optionExample" value="AccessControl.ump">Access Control</option>
                 <option name = "optionExample" value="AccessControl2.ump">Access Control 2</option>
                 <option name = "optionExample" value="Accidents.ump">Accidents</option>
                 <option name = "optionExample" value="Accommodations.ump">Accommodations</option>
                 <option name = "optionExample" value="AfghanRainDesign.ump">Afghan Rain Design</option>
-                <option name = "optionExample" value="AirlineExample.ump">Airline</option>
+                <option name = "optionExample" value="AirlineExample.ump">Airline *</option>
                 <option name = "optionExample" value="BankingSystemA.ump">Banking System A</option>
                 <option name = "optionExample" value="BankingSystemB.ump">Banking System B</option>
                 <option name = "optionExample" value="CanalSystem.ump">Canal</option>
@@ -565,7 +586,7 @@ $output = $dataHandle->readData('model.ump');
             <li id="itemLoadExamples2">
               <select id="inputExample2" name="inputExample2" class="button" size="1" data-diagram-type="state">
                 <option name = "optionExample2" id = "defaultExampleOption2" value="">Select Example</option>
-                <option name = "optionExample" value="AgentsCommunication.ump">Agents Communicating</option>
+                <option name = "optionExample" value="AgentsCommunication.ump">Agents Communicating *</option>
                 <option name = "optionExample" value="ApplicationProcessing.ump">Application for a Grant</option>
                 <option name = "optionExample" value="Booking.ump">Booking (Airline)</option>
                 <option name = "optionExample" value="CanalLockStateMachine.ump">Canal Lock</option>
@@ -574,18 +595,18 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="CollisionAvoidanceA1.ump">Collision Avoidance - Alternative 1</option>
                 <option name = "optionExample" value="CollisionAvoidanceA2.ump">Collision Avoidance - Alternative 2</option>
                 <option name = "optionExample" value="CollisionAvoidanceA3.ump">Collision Avoidance - Alternative 3</option>
-                <option name = "optionExample" value="ComplexStateMachine.ump">Complex Symbolic</option>
+                <option name = "optionExample" value="ComplexStateMachine.ump">Complex Symbolic *</option>
                 <option name = "optionExample" value="CourseSectionFlat.ump">Course Section</option>
                 <option name = "optionExample" value="CourseSectionNested.ump">Course Section (Nested)</option>
-                <option name = "optionExample" value="DigitalWatchNested.ump">Digital Watch Nested</option>
-                <option name = "optionExample" value="DigitalWatchFlat.ump">Digital Watch (Flat)</option>
+                <option name = "optionExample" value="DigitalWatchNested.ump">Digital Watch Nested *</option>
+                <option name = "optionExample" value="DigitalWatchFlat.ump">Digital Watch (Flat) *</option>
                 <option name = "optionExample" value="Dishwasher.ump">Dishwasher</option>                
                 <option name = "optionExample" value="Elevator_State_Machine.ump">Elevator</option>
                 <option name = "optionExample" value="GarageDoor.ump">Garage Door</option>
                 <option name = "optionExample" value="HomeHeater.ump">Home Heating System</option>
                 <option name = "optionExample" value="LibraryLoanStateMachine.ump">Library Loan</option>
                 <option name = "optionExample" value="Lights.ump">Light (3 alternatives)</option>
-                <option name = "optionExample" value="MicrowaveOven2.ump">Microwave Oven</option>
+                <option name = "optionExample" value="MicrowaveOven2.ump">Microwave Oven *</option>
                 <option name = "optionExample" value="Ovens.ump">Oven (3 alternatives)</option>
                 <option name = "optionExample" value="ParliamentBill.ump">Parliament Bill</option>
                 <option name = "optionExample" value="Phone.ump">Phone and Lines</option>
@@ -593,10 +614,10 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="SecurityLight.ump">Security Light</option>
                 <option name = "optionExample" value="SpecificFlight.ump">Specific Flight (Airline)</option>
                 <option name = "optionExample" value="SpecificFlightFlat.ump">Specific Flight (Airline - Flat)</option>
-                <option name = "optionExample" value="TcpIpSimulation.ump">TCP/IP Simulation</option>
+                <option name = "optionExample" value="TcpIpSimulation.ump">TCP/IP Simulation *</option>
                 <option name = "optionExample" value="TelephoneSystem2.ump">Telephone Set Modes</option>
                 <option name = "optionExample" value="TicTacToe.ump">Tic Tac Toe or Noughts and Crosses</option>
-                <option name = "optionExample" value="TimedCommands.ump">Timed Commands</option>                     
+                <option name = "optionExample" value="TimedCommands.ump">Timed Commands *</option>                     
                 <option name = "optionExample" value="TollBooth.ump">Toll Booth</option>
                 <option name = "optionExample" value="TrafficLightsA.ump">Traffic Lights A</option>
                 <option name = "optionExample" value="TrafficLightsB.ump">Traffic Lights B</option>
@@ -607,9 +628,8 @@ $output = $dataHandle->readData('model.ump');
             <li id="itemLoadExamples3">
               <select id="inputExample3" name="inputExample3" class="button" size="1" data-diagram-type="composite">
                 <option name = "optionExample3" id = "defaultExampleOption3" value="">Select Example</option>
-                <option name = "optionExample" value="OBDCarSystem.ump">OBD Car System</option>
+                <!-- <option name = "optionExample" value="OBDCarSystem.ump">OBD Car System</option> -->
                 <option name = "optionExample" value="PingPong.ump">Ping Pong</option>
-                <option name="optionExample" class="openUmprOption" value="">Select from Umpr Repository...</option>
               </select>
             </li>
 		  
@@ -629,15 +649,15 @@ $output = $dataHandle->readData('model.ump');
       
           <ul id="mainDrawMenu" class="second toggle">
             <li class="subtitle"> Draw </li>
-            <li id="buttonAddClass" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the canvas to add a new class.">
+            <li id="buttonAddClass" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the canvas to add a new class." tabindex="0">
               <img src="scripts/class.png"/> 
               Class
             </li>
-            <li id="buttonAddAssociation" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on a class to draw an association.">
+            <li id="buttonAddAssociation" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on a class to draw an association." tabindex="0">
               <img src="scripts/assoc.png"/> 
               Association
             </li>
-            <li id="buttonAddTransition" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select and click on a state to draw a transition.">
+            <li id="buttonAddTransition" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select and click on a state to draw a transition." tabindex="0">
                <img src="scripts/assoc.png"/>
                Transition
              </li>            
@@ -645,27 +665,27 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/assocbend.jpg"/> 
               Bend Assoc.
             </li> -->
-            <li id="buttonAddGeneralization" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class.">
+            <li id="buttonAddGeneralization" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class." tabindex="0">
               <img src="scripts/generalization.png"/> 
               Generalization
             </li>
-            <li id="buttonDeleteEntity" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on an element to remove it from your model.">
+            <li id="buttonDeleteEntity" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on an element to remove it from your model." tabindex="0">
               <img src="scripts/delete.png"/>
                Delete
              </li>
-            <li id="buttonUndo" name="paletteItem">
+            <li id="buttonUndo" name="paletteItem" tabindex="0">
               <img src="scripts/undo.png"> 
               Undo
             </li>
-            <li id="buttonRedo" name="paletteItem">
+            <li id="buttonRedo" name="paletteItem" tabindex="0">
               <img src="scripts/redo.png"> 
               Redo
             </li>
-            <li id="buttonReindent" name="paletteItem">
+            <li id="buttonReindent" name="paletteItem" tabindex="0">
               <img src="scripts/sync_diagram.png" /> 
               Reindent Code
             </li>
-            <li id="buttonSyncDiagram" name="paletteItem">
+            <li id="buttonSyncDiagram" name="paletteItem" tabindex="0">
               <img src="scripts/sync_diagram.png" /> 
               Sync Diagram 
             </li>
@@ -832,6 +852,9 @@ $output = $dataHandle->readData('model.ump');
     <div id="tabRow"></div>
     <div id="innerGeneratedCodeRow"></div>
   </div>
+  <div id="codeExecutionArea">
+    <pre id="executionMessage"></pre>
+  </div>
 
   <?php if($showChrome) { ?>
     <div class="spacer row"></div>
@@ -852,8 +875,8 @@ $output = $dataHandle->readData('model.ump');
       <?php if(isset($_REQUEST["task"])) { ?> true <?php } else { ?> false <?php } ?>,
       <?php if($canCreateTask) { ?> true <?php } else { ?> false <?php } ?>
       ); 
-      <?php if (isset($_REQUEST['example']) && $_REQUEST["example"] != ""){?> 
-      Page.setExamples("<?php echo $_REQUEST['example'] ?>")
+      <?php if (isset($_REQUEST['example']) && $actualExample != ""){?> 
+      Page.setExamples("<?php echo $actualExample ?>")
       <?php } ?> 
       //
   </script>

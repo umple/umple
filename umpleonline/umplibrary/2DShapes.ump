@@ -1,7 +1,9 @@
-// 2D Shapes class hierarchy - sample UML class diagram in Umple
+// 2D Shapes class hierarchy - sample UML class
+// diagram in Umple
 // From Book by Lethbridge and Laganiere, McGraw Hill 2004
-// Object-Oriented Software Engineering: Practical Software Engineering using UML and Java
-// See http://www.lloseng.com
+// Object-Oriented Software Engineering:
+//   Practical Software Engineering using UML and Java
+// See https://www.site.uottawa.ca/school/research/lloseng/
 
 //Namespace for core of the system.
 namespace Shapes.core;
@@ -42,7 +44,19 @@ class RegularPolygon {
  radius;
  isA SimplePolygon;
 }
+
+class Shape2D {
+  public static void main(String [] argc) {
+    Shape2D s = new
+      RegularPolygon("0,0","0","3","100");
+    System.out.println(s);
+  }
+}
 //$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java code
+// @@@skipphpcompile - Contains Java code
+// @@@skiprubycompile - Contains Java code
+// @@@skippythoncompile - Contains Java code
 // Positioning
 class Shape2D
 {

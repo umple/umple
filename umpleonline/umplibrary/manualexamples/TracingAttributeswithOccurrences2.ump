@@ -2,6 +2,7 @@
 // this example traces attribute name whenever
 // its value is accessed for 5 times 
 
+@SuppressWarnings("deprecation")
 class Student
 {
   name;

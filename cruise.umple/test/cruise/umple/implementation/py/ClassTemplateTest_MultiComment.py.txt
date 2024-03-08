@@ -1,0 +1,29 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+#*
+
+#   * This is a student
+
+#   * Multiple comments
+
+#   * on several lines
+
+#   
+
+
+class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self):
+        pass
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def delete(self):
+        pass
+

@@ -1,0 +1,99 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+/**
+ * This is class Y
+ * R3: There must be a class called Y
+ */
+public class Y
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Y Attributes
+  private String c;
+
+  //Y Associations
+  private X x;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Y(String aC, X aX)
+  {
+    c = aC;
+    boolean didAddX = setX(aX);
+    if (!didAddX)
+    {
+      throw new RuntimeException("Unable to create y due to x. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setC(String aC)
+  {
+    boolean wasSet = false;
+    c = aC;
+    wasSet = true;
+    return wasSet;
+  }
+
+  /**
+   * This is an important attribute
+   * R5: A Y should have a c
+   */
+  public String getC()
+  {
+    return c;
+  }
+  /* Code from template association_GetOne */
+  public X getX()
+  {
+    return x;
+  }
+  /* Code from template association_SetOneToMany */
+  public boolean setX(X aX)
+  {
+    boolean wasSet = false;
+    if (aX == null)
+    {
+      return wasSet;
+    }
+
+    X existingX = x;
+    x = aX;
+    if (existingX != null && !existingX.equals(aX))
+    {
+      existingX.removeY(this);
+    }
+    x.addY(this);
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    X placeholderX = x;
+    this.x = null;
+    if(placeholderX != null)
+    {
+      placeholderX.removeY(this);
+    }
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "c" + ":" + getC()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "x = "+(getX()!=null?Integer.toHexString(System.identityHashCode(getX())):"null");
+  }
+}

@@ -1,0 +1,56 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+// line 14 "../../model.ump"
+// line 32 "../../model.ump"
+public class Student extends Person
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private int locker;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(String aName, int aAge, int aLocker)
+  {
+    super(aName, aAge);
+    locker = aLocker;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setLocker(int aLocker)
+  {
+    boolean wasSet = false;
+    locker = aLocker;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getLocker()
+  {
+    return locker;
+  }
+
+  public void delete()
+  {
+    super.delete();
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "locker" + ":" + getLocker()+ "]";
+  }
+}

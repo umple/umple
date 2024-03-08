@@ -32,7 +32,7 @@ function firstTipPopulate() {
                     var t=[];
                     t.push(allInfo[i].substring(0, allInfo[i].indexOf("</h2>")));
                     var link="https://cruise.umple.org/umple/"+htmlNames[files];
-                    var navbar='<div style="padding-right: 10px; padding-left: 10px; display:flex; justify-content:space-between;"><button class="lowerBarBtn" id="goLeft" onclick="onButtonPrevious()">&laquo <em>Previous</em></button><a href="'+link+'" class="bottomNav"><em> View All </em></a><button class="lowerBarBtn" id="goRight" onclick="onButtonNext()"><em>Next</em> &raquo</button></div>';
+                    var navbar='<div style="padding-right: 10px; padding-left: 10px; display:flex; justify-content:space-between;"><button class="lowerBarBtn" id="goLeft" onclick="onButtonPrevious()">&laquo <em>Previous</em></button><a href="'+link+'" class="bottomNav"><em> View All </em></a><button class="bottomNav" onclick="hideTip()"><em>X Close</em></button><button class="lowerBarBtn" id="goRight" onclick="onButtonNext()"><em>Next</em> &raquo</button></div>';
                     if (i==allInfo.length-1){
                         t.push(allInfo[i].substring(allInfo[i].indexOf("</h2>")+6, allInfo[i].length)+navbar);    
                     }
@@ -61,7 +61,7 @@ function allocateMessage() { // put text into intended HTML sections
     if (tip[loop]!=null){
         if (tip[loop][num]!=null){
             if (tip[loop][num][0]!=null && tip[loop][num][1]!=null){
-                document.getElementById('styleTip').innerHTML = "Tip: "+tip[loop][num][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more<br/></span>';
+                document.getElementById('styleTip').innerHTML = "Tip: "+tip[loop][num][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more</span>    <span onclick="hideTip()" style=" cursor: pointer; color: blue; text-decoration: underline;">X Close<br/></span>';
                 jQuery('#styleTip a').attr('target', 'helppage');
                 document.getElementById('extraInfo').innerHTML = tip[loop][num][1];
                 jQuery('#extraInfo a').attr('target', 'helppage');
@@ -107,6 +107,15 @@ function hideExtra(){
     clearTimeout(hideWithDelay);
     document.getElementById('extraInfo').classList.remove("fade-in");
     document.getElementById('extraInfo').classList.add("fade-outInst");
+}
+
+function hideTip(){
+    clearTimeout(hideWithDelay);
+    document.getElementById('extraInfo').classList.remove("fade-in");
+    document.getElementById('extraInfo').classList.remove("fade-outInst");
+    jQuery('#extraInfo a').attr('target', 'helppage');
+    document.getElementById('styleTip').innerHTML = "";
+    jQuery('#styleTip a').attr('target', 'helppage');
 }
 
 function calculateDelay(){ // 5s + 1s/3words + 5s (iff link exists)
@@ -166,7 +175,7 @@ function setForNext(num, priority, tip, loop){
                             var t=[];
                             t.push(allInfo[i].substring(0, allInfo[i].indexOf("</h2>")));
                             var link="https://cruise.umple.org/umple/"+htmlNames[files];
-                            var navbar='<div style="padding-right: 10px; padding-left: 10px; display:flex; justify-content:space-between;"><button class="lowerBarBtn" id="goLeft" onclick="onButtonPrevious()">&laquo <em>Previous</em></button><a href="'+link+'" class="bottomNav"><em> View All </em></a><button class="lowerBarBtn" id="goRight" onclick="onButtonNext()"><em>Next</em> &raquo</button></div>';
+                            var navbar='<div style="padding-right: 10px; padding-left: 10px; display:flex; justify-content:space-between;"><button class="lowerBarBtn" id="goLeft" onclick="onButtonPrevious()">&laquo <em>Previous</em></button><a href="'+link+'" class="bottomNav"><em> View All </em></a><button class="bottomNav" onclick="hideTip()"><em>X Close</em></button><button class="lowerBarBtn" id="goRight" onclick="onButtonNext()"><em>Next</em> &raquo</button></div>';
                             if (i==allInfo.length-1){
                                 t.push(allInfo[i].substring(allInfo[i].indexOf("</h2>")+6, allInfo[i].length)+navbar);    
                             }
@@ -248,7 +257,7 @@ function showPrevious(){
             }
             window.localStorage.setItem('tipCount',num);
 
-            document.getElementById('styleTip').innerHTML = "Tip: "+tip[loop][num][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more<br/></span>';
+            document.getElementById('styleTip').innerHTML = "Tip: "+tip[loop][num][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more</span>      <span onclick="hideTip()" style=" cursor: pointer; color: blue; text-decoration: underline;">X Close<br/></span>';
             jQuery('#styleTip a').attr('target', 'helppage');
             document.getElementById('extraInfo').innerHTML = tip[loop][num][1];
             jQuery('#extraInfo a').attr('target', 'helppage');
@@ -270,7 +279,7 @@ function showPrevious(){
             }
             window.localStorage.setItem('tipCount',num);
 
-            document.getElementById('styleTip').innerHTML = "Tip: "+tip[loop][num][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more<br/></span>';
+            document.getElementById('styleTip').innerHTML = "Tip: "+tip[loop][num][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more</span>    <span onclick="hideTip()" style=" cursor: pointer; color: blue; text-decoration: underline;">X Close<br/></span>';
             jQuery('#styleTip a').attr('target', 'helppage');
             document.getElementById('extraInfo').innerHTML = tip[loop][num][1];
             jQuery('#extraInfo a').attr('target', 'helppage');
@@ -280,7 +289,7 @@ function showPrevious(){
     }
     else{
         document.getElementById('extraInfo').style.visibility = 'hidden';
-        document.getElementById('styleTip').innerHTML = "Tip: "+tip[loop][num-2][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more<br/></span>';
+        document.getElementById('styleTip').innerHTML = "Tip: "+tip[loop][num-2][0] + ' <span onclick="showExtra()" style=" cursor: pointer; color: blue; text-decoration: underline;">Click for more</span>    <span onclick="hideTip()" style=" cursor: pointer; color: blue; text-decoration: underline;">X Close<br/></span>';
         jQuery('#styleTip a').attr('target', 'helppage');
         document.getElementById('extraInfo').innerHTML = tip[loop][num-2][1];
         jQuery('#extraInfo a').attr('target', 'helppage');

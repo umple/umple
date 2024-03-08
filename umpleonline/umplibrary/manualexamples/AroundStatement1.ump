@@ -23,3 +23,4 @@ class AroundClass
 }//$?[End_of_model]$?
 
 // @@@skipphpcompile - contains java code
+// @@@skippythoncompile - Contains Java Code

@@ -2,6 +2,8 @@
 // From Empir Software Eng (2009) 14:685–719 DOI 10.1007/s10664-009-9106-z
 // By Cruz-Lemus, Genero, Manso, Morasca and Piattini
 // This is the flat version of the state machine
+strictness ignore 1012;
+
 class DigitalWatch {
   //  sx indicates that button X has been pressed
   // notSx indicates button x has been released 
@@ -107,14 +109,14 @@ class DigitalWatch {
      s3 -> time;
     } 
   }
-  Integer day=0;
-  Integer month=0;
+  Integer day=1;
+  Integer month=1;
   Integer year=2014;
-  Integer hour=0;
-  Integer minute=0;
+  Integer hour=10;
+  Integer minute=10;
   Integer second=0;
-  Integer alarmHour=0;
-  Integer alarmMinute=0;
+  Integer alarmHour=6;
+  Integer alarmMinute=5;
   Integer alarmSecond=0;
   Integer timer=0;
   void secondzero() {
@@ -123,8 +125,45 @@ class DigitalWatch {
   void zero() {
     setTimer(0);
   }
+
+  // Tracing code and main method to randomly call
+  // events. Each time this is executed,
+  // the result will be different
+
+  depend java.util.*;
+  after generated s1,s2,s3*,notS2 {
+    String method=Thread.currentThread()
+     .getStackTrace()[1].getMethodName();
+    System.out.println("Pressed: "+method
+     +"  ResultState="+getSmFullName()+" Clock: "
+     +year+"-"+month+"-"+day+" "
+     +hour+":"+minute+":"+second
+     +" Alarm="
+     +alarmHour+":"+alarmMinute+":"+alarmSecond
+    );
+  }
+  
+  public static void main (String[] args) {
+    DigitalWatch dw=new DigitalWatch();
+    
+    List<Runnable> methods = new ArrayList<>();
+    methods.add(dw::s1); // date and rotate
+    methods.add(dw::s2); // alarm and change
+    methods.add(dw::s3); // chrono, time upd and exit
+    methods.add(dw::notS2);
+    methods.add(dw::notS1);
+    methods.add(dw::s3during2Secs); // to alarm upd
+    methods.add(dw::s3during2Secs); // ... more common
+    
+    for(int i=1;i<30;i++) {
+      int randomNumber = new 
+        Random().nextInt(methods.size());
+      methods.get(randomNumber).run();
+    }
+  }
 }
 
 //$?[End_of_model]$?
 // @@@skipphpcompile - Contains Java/Cpp Code
 // @@@skiprubycompile - Contains Java/Cpp Code
+// @@@skippythoncompile - Contains Java/Cpp Code

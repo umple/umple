@@ -32,6 +32,8 @@ class GenPackage{
 #ifndef <<=fullName>>
 #define <<=fullName>>
 
+#include <condition_variable>
+
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__) || defined(_WIN64)
 #define WINDOWS_OS
 // NO PREPROCESSOR DEFINITION FOR PRAGMA
@@ -130,26 +132,21 @@ class GenClass{
 <<=headerIncludes>><<=libraryIncludes
 >><<=incompleteDeclarations>><<=namespaceOpening()
 >><<=enumerations>><<=selfIncompleteDeclarations
->><<=emitComments()>>class <<=getName()>><<#if(!classDeclarations.isEmpty())#>> : <<=classDeclarations>>{
+>><<=emitComments()>><<=emitRequirements()>>class <<=getName()>><<#if(!classDeclarations.isEmpty())#>> : <<=classDeclarations>>{
 <<=StringUtil.indent(visibilityBasedContents, 1)>>
 };
 <<=predefinitions>><<=namespaceClosing()>>
 //------------------------
-//GNU HASH FUNCTION USE
+//HASH FUNCTION USE
 //------------------------
-#ifdef __GNUC__
-using namespace __gnu_cxx;
-namespace __gnu_cxx{
-	template<> struct hash<<<=fullQualifiedName>>*>{
-		size_t operator()(<<=fullQualifiedName>>* ptr ) const {
-		    return ptr->hashCode();
-		}
-	};
+#include <unordered_map>
+namespace std{
+    template<> struct hash<<<=fullQualifiedName>> *> {
+        size_t operator()(<<=fullQualifiedName>>* ptr ) const {
+            return ptr->hashCode();
+        }
+    };
 }
-#include <ext/hash_map>
-#else
-#include <hash_map>
-#endif
 #endif!>>
 	emit emitHeader()(emitHeaderT);
 

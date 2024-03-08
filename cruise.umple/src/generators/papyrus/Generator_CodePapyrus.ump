@@ -103,6 +103,10 @@ class PapyrusGenerator
         if (uClass.getExtendsClass() != null)
         {
           code.append(StringFormatter.format("    <generalization xmi:id=\"_{0}-_generalization.0\" general=\"_{1}\"/>\n",uClass.getName(),uClass.getExtendsClass().getName()));
+          notationCode.append(StringFormatter.format("  <edges xmi:type=\"notation:Connector\" xmi:id=\"_{0}_{1}\" type=\"Generalization_Edge\" source=\"_{0}\" target=\"_{1}\">\n", uClass.getName(), uClass.getExtendsClass().getName()));
+          notationCode.append(StringFormatter.format("    <element xmi:type=\"uml:Generalization\" href=\"model.uml#_{0}-_generalization.0\"/>\n", uClass.getName()));
+          notationCode.append("    <bendpoints xmi:type=\"notation:RelativeBendpoints\" points=\"[0, 0, 0, 0]$[0, 0, 0, 0]\"/>\n");
+          notationCode.append("  </edges>\n");
         }
 
         String implementedInterfaces="";
@@ -155,8 +159,12 @@ class PapyrusGenerator
 
           String associationId = as.getName() == null ? StringFormatter.format("_packagedElement.{0}",packageAssociationIndex) : as.getName();
           String associationName = as.getName() == null ? "" : StringFormatter.format(" name=\"{0}\"",as.getName());
+          String navigableOwnedEndLeft = as.getIsLeftNavigable() ? "_" + associationId + "-" + left.getRoleName() : "";
+          String navigableOwnedEndRight = as.getIsRightNavigable() ? "_" + associationId + "-" + right.getRoleName() : "";
+          navigableOwnedEndRight = navigableOwnedEndLeft.isEmpty() ? navigableOwnedEndRight : " " + navigableOwnedEndRight;
+          String navigableOwnedEnd = StringFormatter.format(" navigableOwnedEnd=\"{0}{1}\"", navigableOwnedEndLeft, navigableOwnedEndRight);
 
-          subCode.append(StringFormatter.format("  <packagedElement xmi:type=\"uml:Association\" xmi:id=\"_{0}\"{3} memberEnd=\"_{0}-{1} _{0}-{2}\" navigableOwnedEnd=\"_{0}-{1} _{0}-{2}\">\n",associationId,left.getRoleName(),right.getRoleName(),associationName));
+          subCode.append(StringFormatter.format("  <packagedElement xmi:type=\"uml:Association\" xmi:id=\"_{0}\"{3} memberEnd=\"_{0}-{1} _{0}-{2}\"{4}>\n",associationId,left.getRoleName(),right.getRoleName(),associationName, navigableOwnedEnd));
 
           subCode.append(StringFormatter.format("    <ownedEnd xmi:id=\"_{0}-{1}\" name=\"{1}\" type=\"_{2}\" association=\"_{0}\">\n",associationId,left.getRoleName(),left.getClassName()));
           subCode.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"_{0}-{1}-_upperValue\" value=\"{2}\"/>\n",associationId,left.getRoleName(),leftRange[1]));

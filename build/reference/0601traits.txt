@@ -47,7 +47,7 @@ Traits are not part of UML. A UML class diagram drawn from an Umple file contain
 
 <p>
 <b>Use with mixsets:</b>
-Creating a mixset that defines both a trait and isA statements incirporating the trait into clients allows the specification of optional functionality that can be mixed in to several classes. This is how mixins work in languages such as Ruby.
+Creating a mixset that defines both a trait and isA statements incorporating the trait into clients allows the specification of optional functionality that can be mixed in to several classes. This is how mixins work in languages such as Ruby.
 </p>
 
 <p>
@@ -58,17 +58,18 @@ The trait elements will appear in all classes that include that trait. In the fi
 <p> The example 2 below shows a trait called TEquality. It has a required methods named isEqual and a provided method named isNotEqual. The provided methods uses the required method to satisfy part of its functionality.
 </p> 
 
+<p>When exploring the following examples in UmpleOnline, you can use the Options menu to control what is visible, or you can use control-R to flip back and forth between showing the diagram with the original traits, vs. the diagram collapsed into the classes to be compiled; or you can use control-M to show/hide methods.</p>
 <br />
 
 @@syntax
 [[traitDefinition]] [[traitContent]]
 
 @@example
-@@source manualexamples/traits_example_003.ump
+@@source manualexamples/traits_example_003.ump &diagramtype=GvClassTrait
 @@endexample
 
 @@example
-@@source manualexamples/traits_example_001.ump
+@@source manualexamples/traits_example_001.ump &diagramtype=GvClassTrait&diagramtype=GvClassTrait
 @@endexample
 
 

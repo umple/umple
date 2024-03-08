@@ -1,0 +1,15 @@
+#!/bin/csh -fb
+echo Drawing state machines in  .ump file $1 as $1:r"sm.svg" and opening it
+echo 'Arguments to this command can include'
+echo '  -s followed by any of hideactions, hideguards, showtransitionlabels, showguardlabels'
+echo '  mixsets with filters to specify diagram versions, such as including only certain classes'
+umple $1 -g GvStateDiagram
+# The following line would need to be removed if the generator changes to add the sm suffix
+mv $1:r".gv" $1:r"sm.gv"
+if ($status == 0) then
+  gv2svg $1:r"sm" -v
+  exit 0
+else
+  echo not displaying svg state machine due to error
+  exit 1
+endif

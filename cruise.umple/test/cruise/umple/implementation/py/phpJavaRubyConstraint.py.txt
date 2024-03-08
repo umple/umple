@@ -1,0 +1,35 @@
+class Range():
+    def __init__(self, aStart, aEnd):
+        self._start = aStart
+        self._end = aEnd
+        if aStart > = aEnd :
+            raise RuntimeError ("Please provide a valid end and start [start<end]")
+
+    def setStart(self, aStart):
+        wasSet = False
+        if aStart < self.getEnd() :
+            self._start = aStart
+            wasSet = True
+
+        return wasSet
+
+    def setEnd(self, aEnd):
+        wasSet = False
+        if self.getStart() < aEnd :
+            self._end = aEnd
+            wasSet = True
+
+        return wasSet
+
+    def getStart(self):
+        return self._start
+
+    def getEnd(self):
+        return self._end
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super()) + "[" + "start" + ":" + self.getStart() + "," + "end" + ":" + self.getEnd() + "]"
+

@@ -189,23 +189,33 @@ class UmpleInternalParser
 
       for (String mixsetName : mixsetNames)
       {
-        // check if the mixset was added before 
-        Mixset mixset = model.getMixset(mixsetName.trim());
-        if(mixset == null)
-        {
-          mixset = new Mixset(mixsetName);
-          mixset.setUseUmpleFile(mixsetUseFile);
-          mixset.setUseUmpleLine(useLineNumber);
-          model.addMixsetOrFile(mixset);
+        if(mixsetName.trim().charAt(0) == '!') {
+          // request to not use the mixset, hence delete if found
+          // useful for certain conditional logic cases
+          Mixset mixsetToDelete = model.getMixset(mixsetName.trim().substring(1));
+          if (mixsetToDelete != null) {
+            model.removeMixsetOrFile(mixsetToDelete);
+          }
         }
-        else if (mixset.getUseUmpleFile() == null)
-        {
-          mixset.setUseUmpleFile(mixsetUseFile);
-          mixset.setUseUmpleLine(useLineNumber);
+        else {
+
+          // check if the mixset was added before
+          Mixset mixset = model.getMixset(mixsetName.trim());
+          if(mixset == null)
+          {
+            mixset = new Mixset(mixsetName);
+            mixset.setUseUmpleFile(mixsetUseFile);
+            mixset.setUseUmpleLine(useLineNumber);
+            model.addMixsetOrFile(mixset);
+          }
+          else if (mixset.getUseUmpleFile() == null)
+          {
+            mixset.setUseUmpleFile(mixsetUseFile);
+            mixset.setUseUmpleLine(useLineNumber);
+          }
+        // this handles the case when a mixset definition is in a file and the mixset use exists in a subsequent file.
+          parseMixset(mixset);
         }
-	   
-	    // this handles the case when a mixset definition is in a file and the mixset use exists in a subsequent file.
-	    parseMixset(mixset); 
       }
     }
   }
@@ -320,14 +330,16 @@ class UmpleInternalParser
     // parse mixset fragments right away if there is a use-statement. 
     if(mixset.getUseUmpleFile() != null)
       parseMixsetWaitingFragment(mixsetFragment);
-      
+      processMixsetIsFeature(token);
       return mixset;
   }
   
   private MixsetFragment createMixsetFragment(Token token,  Mixset mixset) {  
     MixsetFragment mixsetFragment = createMixsetFragment(token);
-    if(mixsetFragment == null || mixset == null)
+    if(mixset == null)
     return null;
+    else if (mixsetFragment == null)
+    mixset.setIsEmpty(true);
     else
     mixsetFragment.setMixset(mixset);
     return mixsetFragment;
@@ -346,7 +358,10 @@ class UmpleInternalParser
     
     // mixset with one element
     String oneElementMixset = token.getValue("oneElement");
-    
+
+    if(mixsetBody == null)
+    return null; // because there is no fragment to add. 
+
     if(entityType != null) {
         if (oneElementMixset != null)
       {
@@ -362,12 +377,20 @@ class UmpleInternalParser
         mixsetBody = oneElementMixset;
         mixsetFragmentPosition = token.getSubToken("oneElementMixset").getPosition();     
       }
-      
-      if(mixsetBody == null)
-      return null; // because there is no fragment to add. 
     
       mixsetFragmentLineNumber = mixsetFragmentPosition.getLineNumber();
       UmpleFile mixsetFragmentUmpleFile = model.getUmpleFile(); // where the mixset keyword is encountered. Not the use statement 
+      // Start: update the fragment file if the fragment came from a file included by use statement.
+      Token lookForUseStToken = token;
+		  while((lookForUseStToken = lookForUseStToken.getParentToken()) != null)  
+		  {
+		    if(lookForUseStToken.is("useStatement"))
+		    {
+		    	mixsetFragmentUmpleFile = new UmpleFile(lookForUseStToken.getSubToken("use").getValue());
+		    	break;
+		    }  		  
+		  } 
+      //End
       MixsetFragment mixsetFragment = new MixsetFragment(mixsetFragmentUmpleFile, mixsetFragmentLineNumber, mixsetBody);
     return mixsetFragment;
   }
@@ -401,11 +424,11 @@ class UmpleInternalParser
       String mixsetFragmentFile = mixsetFragment.getOriginalUmpFile().getPath()+"/"+mixsetFragment.getOriginalUmpFile().getFileName();
       int mixsetFragmentLine = mixsetFragment.getOriginalUmpLine() - 1;
       String mixsetFragmentBodyExtraLine = mixsetFragment.getBody()+"\n;";
+      ParseResult parseResultBeforeParseMixset  = getParseResult();
+      Token rootTokenBeforeParseMixset = getRootToken();
       ParseResult result= parse("MixsetFragmentParsing",  mixsetFragmentBodyExtraLine, mixsetFragmentFile, null, mixsetFragmentLine,0); 
       setParseResult(result);
       Token answer = getParser().getRootToken(); // result of parsing the body of a MixsetFragment
-      //    setRootToken(answer);
-      //    model.setLastResult(result);
       answer.setName("mixsetDefinition"); //attach the mixset name for the fragment instead of ROOT
       answer.setValue(parentMixset);
       //  getIsFeature()
@@ -427,6 +450,11 @@ class UmpleInternalParser
           }
           parsedUmpfiles.put(umpFileName, false); // add current file to partially parsed files. 
         }
+      }
+      if(parseResultBeforeParseMixset.hasErrorMessages())
+      {
+        setParseResult(parseResultBeforeParseMixset);
+        setRootToken(rootTokenBeforeParseMixset);
       }
     }
   }
@@ -452,16 +480,148 @@ class UmpleInternalParser
     }
   }
   // a helper method that process pure code to either remove it or to let mixset content stay.
-  private String processInlineMixset(String methodCode) {
-	// process mixsets inside code 
-	   ArrayList<MixsetInMethod> mixsetInCodeList = MethodBody.getMixsetsFromCode(methodCode) ;
-	  for (MixsetInMethod aMixsetInMethod : mixsetInCodeList) 
-	  {
-	    // update the code according to  use statements (of mixsets)
-	    methodCode = MethodBody.handelMixsetInsideMethod(this.getModel(), aMixsetInMethod, methodCode);	        		
-	  }
+  private String processInlineMixset(String methodCode,  MethodBody methodBody) {
+  // process mixsets inside code 
+     ArrayList<MixsetInMethod> mixsetInCodeList = MethodBody.getMixsetsFromCode(methodCode) ;
+    for (MixsetInMethod aMixsetInMethod : mixsetInCodeList) 
+    {
+      // update the code according to  use statements (of mixsets)
+      methodCode = MethodBody.handelMixsetInsideMethod(this.getModel(), aMixsetInMethod, methodCode);
+      if(methodBody !=null)
+      {
+        methodBody.addMixsetInMethod(aMixsetInMethod);
+      }	        
+    }
     return methodCode;
-  }  
+  }
+  // This method raises a warning when use same label multiple times.
+  private void checkLabelDoublication(String methodName, String methodCode, Token t){
+    Stream<String> lines = methodCode.lines();
+    ArrayList<String> labels = new ArrayList<String>();
+    List<String> linesAsList = lines.collect(Collectors.toList());
+    int lineNumber = t.getPosition().getLineNum();
+
+    for (String line : linesAsList)
+    {
+      line = line.trim().stripLeading(); // remove space before and after
+      if (line.matches("^\\w+:(.*)?")) // check if start with a word followed by a colon.
+      {
+        line = line.substring(0,line.indexOf(":"));
+        if(line.contains("default") ) //ignore multiple 'default:'
+        continue;
+        else if(labels.contains(line))
+        {
+          setFailedPosition(t.getPosition(), 1512, methodName,""+lineNumber);  
+        }
+        else 
+          labels.add(line);     
+        }
+        lineNumber++;
+      }
+  }
+    private void processMixsetIsFeature(Token token) {
+    if (token == null || token.getParentToken() == null)
+    return;
+    else if (token.getParentToken().getName().equals("ROOT")) {
+      ArrayList<String> mixsetNames = new ArrayList<String>();
+      ArrayList<Integer> mixsetDefStart = new ArrayList<Integer>();
+      ArrayList<Integer> mixsetDefEnd = new ArrayList<Integer>();
+      String mixsetExtraCode = token.getSubToken("extraCode").getValue();
+      
+      // add the current mixset to be the first element
+      mixsetNames.add(token.getSubToken("mixsetName").getValue());
+      mixsetDefStart.add(0);
+      mixsetDefEnd.add(mixsetExtraCode.length());
+      
+      // extract the start & end position of each mixset
+      Pattern mixsetDefPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+\\{");
+      Matcher mixsetDefinitionMatcher = mixsetDefPatternToMatch.matcher(mixsetExtraCode);
+      while (mixsetDefinitionMatcher.find()) {
+        String matchedStart = mixsetExtraCode.substring(mixsetDefinitionMatcher.start());
+        int indexOfMixsetClosingBracket = mixsetDefinitionMatcher.start() + MethodBody.indexOfMixsetClosingBracket(matchedStart);
+        String mixsetName = mixsetDefinitionMatcher.group().replace("mixset", "");
+        mixsetName = mixsetName.replace("{", "").trim();
+        mixsetNames.add(mixsetName + "_" + mixsetDefinitionMatcher.start());
+        mixsetDefStart.add(mixsetDefinitionMatcher.start());
+        mixsetDefEnd.add(indexOfMixsetClosingBracket);
+      }
+      // find any isFeautre within a mixset
+      Pattern isFeaturePatternToMatch = Pattern.compile("(\\s+)?isFeature");
+      Matcher isFeatureMatcher = isFeaturePatternToMatch.matcher(mixsetExtraCode);
+      while (isFeatureMatcher.find()) {
+        //when finding a match, find its mixset
+        for (int i = mixsetDefStart.size() - 1; i >= 0; i--) {
+          if (mixsetDefStart.get(i) <= isFeatureMatcher.start() && mixsetDefEnd.get(i) >= isFeatureMatcher.start()) {
+            FeatureModel featureModel = model.getFeatureModel();
+            if (featureModel == null)
+            featureModel = new FeatureModel("featureModel");
+            featureModel.setUmpleModel(model);
+            
+            UmpleFile ufile = new UmpleFile(token.getPosition().getFilename());
+            int k=0;
+            String sourceMixsetName = mixsetNames.get(i).replaceAll("_[0-9]*", "");
+            
+            // else check the ecloseing mixsets
+            if( i == 0) // isFeature palced for the root mixset, so its should be optional to the base feature
+            {
+              FeatureLeaf sourceFeatureLeaf = featureModel.getOrCreateFeatureLeafNode(ufile.getName());
+              sourceFeatureLeaf.setName(ufile.getName());
+              sourceFeatureLeaf.setMixsetOrFileNode(ufile);
+              createFeatureLink(sourceMixsetName, sourceFeatureLeaf);
+            }
+            else
+            {
+              boolean hasConainerMixset = false;
+              for (k=i-1;
+              k>0;
+              k--)
+              {
+                hasConainerMixset= mixsetDefStart.get(k) < mixsetDefStart.get(i) && mixsetDefEnd.get(k) > mixsetDefEnd.get(i) ;
+                if(hasConainerMixset)
+                break;
+              }
+              String mixsetTargetName = mixsetNames.get(k).replaceAll("_[0-9]*", "");
+              FeatureLeaf sourceFeature=featureModel.getOrCreateFeatureLeafNode(mixsetTargetName);
+              createFeatureLink(sourceMixsetName, sourceFeature);
+            }
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  private void createFeatureLink(String sourceMixsetName, FeatureLeaf sourceFeatureLeaf) {
+    FeatureLeaf newFeatureNode = model.getFeatureModel().getOrCreateFeatureLeafNode(sourceMixsetName);
+    newFeatureNode.setMixsetOrFileNode(model.getMixset(sourceMixsetName));
+    FeatureLink edge = new FeatureLink();
+    edge.setFeatureConnectingOpType(FeatureConnectingOpType.Optional);
+    edge.setSourceFeatureNode(sourceFeatureLeaf);
+    edge.setIsSub(true);
+    edge.setTargetFeatureNode(newFeatureNode);
+    edge.setFeatureModel(model.getFeatureModel());
+    model.getFeatureModel().addFeaturelink(edge);
+  }
+
+  // This method raises warning for use statements for misets that do not have actual definitions.
+  private void checkMixsetsNotUsed() {
+    UmpleModel uModel = this.getModel();
+    Stream<Mixset> mixsetsStream = uModel.getMixsetOrFiles().stream().filter(m ->m.getIsMixset()).map(m->(Mixset)m ); 
+    List<Mixset> notUsedMixset = mixsetsStream.filter(m -> !m.getIsEmpty()).filter(m -> m.getUseUmpleFile() != null 
+  && m.getMixsetFragments().size() < 1).collect(Collectors.toList());
+    if (notUsedMixset.size() < 1)
+      return;
+    for (Mixset aMixset : notUsedMixset)
+    {
+      if(aMixset.getMixsetInMethod().size() < 1)
+      {
+        // raise a warning
+        Position wPosition = new Position(aMixset.getUseUmpleFile().getFileName(), aMixset.getUseUmpleLine(), 0, 0);
+        setFailedPosition(wPosition,1513, aMixset.getName(),""+ aMixset.getUseUmpleLine());
+        }
+    }
+  }
+
 }
 
 mixset AspectInjection {
@@ -624,6 +784,7 @@ mixset Template {
          if(mixset.getUseUmpleFile() != null)
          {
            mixsetIsUsed = true;
+           mixset.getMixsetInMethod().add(mixsetInMethod);
            //first process children
            for(MixsetInMethod childMixsetInMethod : mixsetInMethod.getChildMixsets())
              sourceCodeBody = handelMixsetInsideMethod(umodel, childMixsetInMethod, sourceCodeBody);

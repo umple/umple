@@ -1,0 +1,20 @@
+/* Example of using builtin Umple
+ * Abstraction Occurrence pattern file
+*/
+
+use lib:AbstractionOccurrence.ump;
+
+class Author {
+ name;
+}
+
+class Book {
+  isA Abstraction;
+  title;
+  * -- * Author;
+}
+
+class CopyOfBook {
+  isA Occurrence <Abstraction = Book>;
+  Integer barcode;
+}

@@ -1,3 +1,4 @@
+@SuppressWarnings("deprecation")
 class Student
 {
   name;
@@ -16,6 +17,7 @@ class Student
   trace name for 5;
 }
 
+@SuppressWarnings("deprecation")
 class Professor {
   name;
   1 -- * Student supervisor;

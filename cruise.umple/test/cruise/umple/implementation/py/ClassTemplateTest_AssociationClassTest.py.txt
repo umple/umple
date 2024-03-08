@@ -1,0 +1,69 @@
+from Student import Student
+from CourseSection import CourseSection
+import os
+
+class Registration():
+    def __init__(self, aGrade, aStudent, aCourseSection):
+        self._grade = aGrade
+        didAddStudent = self.setStudent(aStudent)
+        if not didAddStudent :
+            raise RuntimeError ("Unable to create registration due to student")
+
+        didAddCourseSection = self.setCourseSection(aCourseSection)
+        if not didAddCourseSection :
+            raise RuntimeError ("Unable to create registration due to courseSection")
+
+    def setGrade(self, aGrade):
+        wasSet = False
+        self._grade = aGrade
+        wasSet = True
+        return wasSet
+
+    def getGrade(self):
+        return self._grade
+
+    def getStudent(self):
+        return self._student
+
+    def getCourseSection(self):
+        return self._courseSection
+
+    def setStudent(self, aStudent):
+        wasSet = False
+        if aStudent is None :
+            return wasSet
+
+        existingStudent = self._student
+        self._student = aStudent
+        if existingStudent != None and not existingStudent.equals(aStudent) :
+            existingStudent.removeRegistration(self)
+
+        self._student.addRegistration(self)
+        wasSet = True
+        return wasSet
+
+    def setCourseSection(self, aCourseSection):
+        wasSet = False
+        if aCourseSection is None :
+            return wasSet
+
+        existingCourseSection = self._courseSection
+        self._courseSection = aCourseSection
+        if existingCourseSection != None and not existingCourseSection.equals(aCourseSection) :
+            existingCourseSection.removeRegistration(self)
+
+        self._courseSection.addRegistration(self)
+        wasSet = True
+        return wasSet
+
+    def delete(self):
+        placeholderStudent = self._student
+        self._student = None
+        placeholderStudent.removeRegistration(self)
+        placeholderCourseSection = self._courseSection
+        self._courseSection = None
+        placeholderCourseSection.removeRegistration(self)
+
+    def __str__(self):
+        return str(super()) + "[" + "grade" + ":" + self.getGrade() + "]" + os.linesep + "  " + "student = " + (self.getStudent() != (format(id(self.getStudent()), "x")) if None else "null") + os.linesep + "  " + "courseSection = " + (self.getCourseSection() != (format(id(self.getCourseSection()), "x")) if None else "null")
+

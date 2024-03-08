@@ -17,3 +17,8 @@ use InnerMixset;
 
 // InnerClass should not added to umple model.
 // should have 0 attributes.
+
+mixset InnerMixset { 
+  // code
+
+}

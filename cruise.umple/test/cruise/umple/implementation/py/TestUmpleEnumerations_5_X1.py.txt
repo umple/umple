@@ -1,0 +1,31 @@
+import os
+from enum import Enum, auto
+
+class X1():
+    class Month(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        January = auto()
+        February = auto()
+        March = auto()
+
+    def __init__(self, aMonth):
+        self._month = aMonth
+
+    def setMonth(self, aMonth):
+        wasSet = False
+        self._month = aMonth
+        wasSet = True
+        return wasSet
+
+    def getMonth(self):
+        return self._month
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super()) + "[" + "]" + os.linesep + "  " + "month" + "=" + (self.getMonth() != ((str(self.getMonth()).replaceAll("  ", "    ")) if not self.getMonth().equals(self) else "this") if None else "null")
+

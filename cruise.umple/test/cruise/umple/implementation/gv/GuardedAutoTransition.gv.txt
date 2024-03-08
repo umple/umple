@@ -1,25 +1,24 @@
 digraph "GuardedAutoTransition" {
   compound = true;
-  size="80,10"
 
   // Class: X
 
     // Top and Bottom Level StateMachine: sm
     
     // Start states are shown as a black circle
-    node [shape = point, fillcolor="black", width=0.2 ];
+    node [ratio="auto" shape = point, fillcolor="black", width=0.2 ];
     start_X_sm [ tooltip = "Class X, SM sm, State start" ];
     
         
     // Format for normal states
-    node [shape = rectangle, width=1,style=rounded];
+    node [ratio="auto" shape = rectangle, width=1,style=rounded];
     
       // State: s1
 
       X_sm_s1 [label = s1, tooltip = "Class X, SM sm, State s1&#13;Entry:
    System.out.println(&quot;Starting first sleep&quot;);&#13;Activity:
    Thread.sleep(2000);
-   System.out.println(&quot;Ending first sleep&quot;);"];
+   System.out.println(&quot;Ending first sleep&quot;);", URL="javascript:Action.stateClicked(\"X^*^sm^*^s1\")"];
       // End State: s1
 
       // State: s2
@@ -27,13 +26,13 @@ digraph "GuardedAutoTransition" {
       X_sm_s2 [label = s2, tooltip = "Class X, SM sm, State s2&#13;Entry:
    System.out.println(&quot;Starting second sleep&quot;);&#13;Activity:
    Thread.sleep(2000);
-   System.out.println(&quot;Ending second sleep&quot;);"];
+   System.out.println(&quot;Ending second sleep&quot;);", URL="javascript:Action.stateClicked(\"X^*^sm^*^s2\")"];
       // End State: s2
     // End Top and Bottom Level StateMachine: sm
 
   // All transitions
-    start_X_sm -> X_sm_s1 [  tooltip = "start to s1" ] ;
-    X_sm_s1 -> X_sm_s2 [  label = "[guard]", tooltip = "From s1 to s2 automatically&#13;Guard: [guard]" ] ;
+    start_X_sm -> X_sm_s1 [  tooltip = "start to s1", URL="javascript:Action.transitionClicked(\"null\")" ] ;
+    X_sm_s1 -> X_sm_s2 [  label = "[guard]", tooltip = "From s1 to s2 automatically&#13;Guard: [guard]", URL="javascript:Action.transitionClicked(\"X*^*sm*^**^*s1*^*s2*^*[guard]\")" ] ;
   
 
 }

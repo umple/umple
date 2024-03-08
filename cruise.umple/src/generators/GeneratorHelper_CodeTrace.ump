@@ -28,16 +28,18 @@ private static void postpareTrace(UmpleModel aModel)
   //*********************************************** 
   // Process traces based on tracer selected
   // Current Tracers supported ( Console / File / String / Log4j / LTTNG  )
-  static private boolean generateConsole = true;
-  static private boolean generateFile = true;
-  static private boolean generateString = true;
-  static private boolean generateLog4j = true ;
 
-  public static boolean getWillGenerateString(){
-  	return generateString;
+  public static boolean getWillGenerateString(UmpleModel aModel){
+  	return aModel.getGenerateString();
   }
   
   public static  void prepareAllTracers(CodeTranslator t, UmpleModel model, UmpleClass aClass, Map<String,String> templateLookups){
+  
+    Boolean generateConsole = model.getGenerateConsole();
+    Boolean generateFile = model.getGenerateFile();
+    Boolean generateString = model.getGenerateString();
+    Boolean generateLog4j = model.getGenerateLog4j() ;
+  
     for(TraceDirective td: aClass.getAllTraceDirectives())
     {
       if(templateLookups.containsKey("dependTracer"))
@@ -64,7 +66,7 @@ private static void postpareTrace(UmpleModel aModel)
       {
         if(generateConsole)
         {
-          generateConsole=false;
+          model.setGenerateConsole(false);
           prepareConsoleTracer(model,templateLookups);
         }
       }
@@ -72,7 +74,7 @@ private static void postpareTrace(UmpleModel aModel)
       {
         if(generateFile)
         {
-          generateFile=false;          
+          model.setGenerateFile(false);
           if(model.getTracer().numberOfTracerArguments()>0)
           {
             templateLookups.put("filename","\""+td.getTracerDirective().getTracerArgument(0).getArgument()+"\"");
@@ -88,13 +90,13 @@ private static void postpareTrace(UmpleModel aModel)
       {
         if(generateString)
         {
-          generateString=false;
+          model.setGenerateString(false);
           prepareStringTracer(model,templateLookups);
         }
       }
       else if ("log4j".equals(td.getTracerType()))
       {
-        generateLog4j=false;
+        model.setGenerateLog4j(false);
         prepareLog4jTracer(model,templateLookups);
       }
     }

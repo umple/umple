@@ -18,6 +18,32 @@ $GLOBALS["JAVA_HOME"] = "/usr/bin/";
 $GLOBALS["ANT_EXEC"] = "/h/ralph/cruise/dev/apps/apache-ant-1.8.1/bin/ant";
 $GLOBALS["OS"] = "Linux";
 
+// Trick to find the root directory of this copy of UmpleOnline
+// Assumes this script lives in /scripts; if you move this file it
+// will need to change.
+$rootDirGlobal = dirname(__DIR__);
+function rootDir(){
+    global $rootDirGlobal;
+    return $rootDirGlobal;
+}
+
+// JAVA EXECUTION SERVER
+$configfile=rootdir()."/../UmpleCodeExecution/config.cfg";
+$portToUse=4400; // default
+$handle = fopen($configfile, "r");
+if ($handle) {
+  while (($line = fgets($handle)) !== false) {
+    if(substr($line,0,10) == "portToUse=") {
+      $portToUse=trim(substr($line,10));
+    }
+  }
+}
+if($portToUse == 4409) {
+  // Special port indicating we are in Docker ... but we are using local networking so swich back
+  $portToUse = 4400;
+}
+$GLOBALS["EXECUTION_SERVER"]= "http://localhost:$portToUse";
+
 // For compatibility with systems that do not have UmpleOnline's shell
 // dependencies in their $PATH, add /usr/bin and /usr/local/bin to $PATH
 // in the hopes that the programs will be at those locations.
@@ -40,14 +66,6 @@ putenv("PATH=$PATH");
 // If we don't set the default timezone we get E_NOTICEs
 date_default_timezone_set('UTC');
 
-// Trick to find the root directory of this copy of UmpleOnline
-// Assumes this script lives in /scripts; if you move this file it
-// will need to change.
-$rootDirGlobal = dirname(__DIR__);
-function rootDir(){
-    global $rootDirGlobal;
-    return $rootDirGlobal;
-}
 
 /**
 A handle to read-only data. As long as it exists it should
@@ -93,7 +111,10 @@ class ReadOnlyDataHandle{
 Provides access to a data object, allowing exclusive read/write
 access.
 The data is released on destruction.
+The AllowDynamicProperties constraint is added due to changes in php 8.2
+See https://www.php.net/manual/en/migration82.deprecated.php
 */
+#[AllowDynamicProperties]
 class DataHandle extends ReadOnlyDataHandle{
     function __construct($root){
         $this->root = $root;
@@ -142,6 +163,7 @@ Represents a working directory based on a data object. The directory
 is guaranteed to exist for the lifetime of this object and no
 longer. Implies the existence of a corresponding DataHandle.
 */
+#[AllowDynamicProperties]
 class WorkDir{
     function __construct($root){
         $this->root = $root;
@@ -185,6 +207,7 @@ class WorkDir{
     }
 }
 
+#[AllowDynamicProperties]
 class DataStore{
     function __construct($root){
         $this->root = rootDir().'/'.$root;
@@ -290,7 +313,8 @@ function generateMenu($buttonSuffix)
             <option id=\"genjava\" value=\"java:Java\">Java Code</option>
             <option id=\"genjavadoc\" value=\"javadoc:javadoc\">Java API Doc</option>
             <option id=\"genphp\" value=\"php:Php\">PHP Code</option>
-            <option id=\"gencpp\" value=\"cpp:RTCpp\">C++ Code</option>
+            <option id=\"genpython\" value=\"python:Python\">Python Code</option>
+            <option id=\"gencpp\" value=\"cpp:RTCpp\">C++ Code (Beta)</option>
             <option id=\"genruby\" value=\"ruby:Ruby\">Ruby Code</option>
             <option id=\"genalloy\" value=\"alloy:Alloy\">Alloy Model</option>
         <option id=\"gennusmv\" value=\"nusmv:NuSMV\">NuSMV Model</option>
@@ -313,10 +337,15 @@ function generateMenu($buttonSuffix)
             <option value=\"html:CodeAnalysis\">Code Analysis</option>
             <option value=\"java:USE\">USE Model</option>
             <option value=\"java:UmpleSelf\">Internal Umple Representation</option>
+            <option id=\"genUmpleAnnotaiveToComposition\" value=\"java:UmpleAnnotaiveToComposition\" >Compositional Mixsets from Inline Mixsets </option>
+
           </select>
         </li>
         <li id=\"ttGenerateCode\">
-          <div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQuery-palette-button\" value=\"Generate It\"></div>
+          <div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQuery-palette-button\" tabindex=\"0\" value=\"Generate It\"></div>
+        </li>
+        <li id=\"ttExecuteCode\">
+          <div id=\"buttonExecuteCode".$buttonSuffix."\" class=\"jQuery-palette-button\" tabindex=\"1\" value=\"Execute It\"></div>
         </li>
         <li><div id=\"genstatus\" align=\"center\">Done. See below</div><li>
       </ul>";
@@ -489,7 +518,8 @@ function extractFilename()
     // If the argument is example=X then copy the example and open it
     elseif (isset($_REQUEST['example']) && $_REQUEST["example"] != "")
     {
-        $fileToCopy = getExamplePath(htmlspecialchars($_REQUEST['example']).'.ump');
+        $theActualExample=preg_replace("/[^a-zA-Z0-9_\-\/]/",'',$_REQUEST["example"]);
+        $fileToCopy = getExamplePath($theActualExample.'.ump');
         if(!file_exists($fileToCopy)){
             $fileToCopy = getExamplePath('NullExample.ump');
         }
@@ -500,8 +530,10 @@ function extractFilename()
     }
     elseif (isset($_REQUEST['text']) && $_REQUEST["text"] != "")
     {
+        // The actual Umple code (must be very short) follows the ?text= in the URL
         $dataHandle = dataStore()->createData();
-        $dataHandle->writeData('model.ump', urldecode(urldecode($_REQUEST["text"])));
+        $rawUmpleForFile=$_REQUEST["text"];
+        $dataHandle->writeData('model.ump', strip_tags(urldecode(urldecode($rawUmpleForFile))));
     }
     // Starting from scratch; so simply create a blank model
     elseif (!isset($_REQUEST['filename']) || $_REQUEST["filename"] == "")
@@ -511,21 +543,23 @@ function extractFilename()
     }
 
     // The only other option is that there is a filename option
+    // This will load the relevant file from the intenet through http or https.
     else
     {
+        $rootOfOnlineUmpToLoad = $_REQUEST["filename"];
         $dataHandle = dataStore()->createData();
         $dataToWrite = '';
-        if(!substr($_REQUEST["filename"],-4)==".ump") {
-            $dataToWrite = "// URL in filename argument must end in .ump and the initial http:// must be omitted";
+        if(strcmp(substr($rootOfOnlineUmpToLoad,-4),".ump")) {
+            $dataToWrite = "// URL in filename argument must end in .ump and the initial http:// or https:// must be omitted";
         }
         else
         {
-            $dataToWrite = file_get_contents("http://" . $_REQUEST["filename"]);
-            if(substr($http_response_header[0],-2)!="OK") {
+            $dataToWrite = file_get_contents("https://" . $rootOfOnlineUmpToLoad);
+            if($dataToWrite == null || substr($http_response_header[0],-2)!="OK") {
                 // try https
-                $dataToWrite = file_get_contents("https://" . $_REQUEST["filename"]);
-                if(substr($http_response_header[0],-2)!="OK") {         
-                    $dataToWrite = "// URL of the Umple file to be loaded in the URL after ?filename= must omit the initial http:// and end with .ump.\n// The file must be accessible from our server.\n// Could not load http://" . $_REQUEST["filename"];
+                $dataToWrite = file_get_contents("http://" . $rootOfOnlineUmpToLoad);
+                if($dataToWrite == null || substr($http_response_header[0],-2)!="OK") {         
+                    $dataToWrite = "// URL of the Umple file to be loaded in the URL after ?filename= must omit the initial http:// or https:// and end with .ump.\n// The file must be accessible from our server.\n// Could not load https://" . $rootOfOnlineUmpToLoad ." xxxx" . substr($rootOfOnlineUmpToLoad,-4);
                 }
             }
         }
@@ -826,7 +860,14 @@ function serverRun($commandLine,$rawcommand=null) {
   $positionOfErrorRedirect = strpos($commandLine,"2>");
   if($positionOfErrorRedirect !== false) {
     $errorfile = trim(substr($commandLine, $positionOfErrorRedirect+2));
-    $commandLine = substr($commandLine,0, $positionOfErrorRedirect);
+    // In cases where command is being executed we need to allow the 2> error
+    // redirect to go ahead as it is converted to a file write in Compiler.ump
+    // However for other cases we strip off the error redirect here since in
+    // server mode such error redirects will not be visible
+    $posofExecuteRequest = strpos($commandLine," -cx");
+    if($posofExecuteRequest == false) {
+      $commandLine = substr($commandLine,0, $positionOfErrorRedirect);
+    }
   }
   
   if($rawcommand == null) {$rawcommand = $commandLine;}
@@ -883,8 +924,10 @@ function serverRun($commandLine,$rawcommand=null) {
     $output = @socket_read($theSocket, 65534, PHP_BINARY_READ);
     if ($output === FALSE) {
       @socket_close($theSocket);;
-      // This usually happens at moments of overload; run as exec but give server much higher priority
-      execRun("nice -n 10 java -jar umplesync.jar ".$originalCommandLine);
+      // This usually happens at moments of overload; run as exec but 
+      execRun("java -jar umplesync.jar ".$originalCommandLine);     
+      // original: give server much higher priority using nice ... not needed any more
+      // execRun("nice -n 10 java -jar umplesync.jar ".$originalCommandLine);
       return;
     }
     if(strlen($output) == 0) {

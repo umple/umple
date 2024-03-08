@@ -403,7 +403,7 @@ class Documenter
     htmlOutput = htmlOutput.replace("@@EXAMPLE@@", exampleOutput);
     htmlOutput = htmlOutput.replace("@@UMPLE_GRAMMAR@@", 
       "<span class=\"notranslate\" translate=\"no\">" +
-      grammarparser.toGrammar()) + "</spsn>";
+      grammarparser.toGrammar()) + "</span>";
     return htmlOutput;
   }
   
@@ -712,16 +712,9 @@ class Template
         "<img height=\"25\" src=\"files/indicator_blocks.gif\" alt=\"Umple Logo\" />&nbsp;" +
         "Umple </a></div>" + "\n" +
         
-// Code from Google for translation
-
-"<div id=\"google_translate_element\"></div><script type=\"text/javascript\">" +
-"function googleTranslateElementInit() {" +
-"  new google.translate.TranslateElement({pageLanguage: 'en', layout:" +
-"google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');" +
-"}" +
-"</script><script type=\"text/javascript\"" +
-"src=\"//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit\"></script>" +
-
+// Code from Google to inject translation - script is at end
+"<div id=\"google_translate_element\"></div>" +
+// End of code from Google
         "@@NAVIGATION@@" + "\n" +
         "<div class=\"level1\"><a href=\"UmpleUserManualCombined.html\">Combined Version</a></div>\n" +  
         "<div class=\"level1\"><a title=\"Click here to open an editor in Github on the original source for this manual page.\nYou can submit a pull request after making your changes\" href=\"https://github.com/umple/umple/tree/master/build/reference/@@SRCFILENAME@@\">Edit on Github</a></div>\n" +                
@@ -739,7 +732,20 @@ class Template
         
         "      <h2><i>User Manual @@PREVNEXT@@</i></h2>"  + "\n" +
         
-// Code from Google for custom search
+// Code from Google to inject custom search -- scripts are at end
+"<gcse:search></gcse:search>" + "\n" +
+// End code from Google
+        Template.HtmlCoreTemplate +
+        "      </td>" + "\n" +
+        "    </tr>" + "\n" +
+        "  </tbody></table>" + 
+        Template.HtmlHighlighterTemplate +
+        "<script language=\"javascript\">" + "\n" +
+        "@@SECTIONSTOHIDE@@" + "\n" +        
+        "</script>" + "\n" +
+
+// The following are at the end in case they fail to load
+// Script from Google for search
 
 "<script>" + "\n" +
 "  (function() {" + "\n" +
@@ -752,33 +758,19 @@ class Template
 "    s.parentNode.insertBefore(gcse, s);" + "\n" +
 "  })();" + "\n" +
 "</script>" + "\n" +
-"<gcse:search></gcse:search>" + "\n" +
 
-/*
-"<div style=\"border:1px solid black\" id=\"cse\" style=\"width: 100%;\">Loading</div>" + "\n" +
-"<script src=\"http://www.google.com/jsapi\" type=\"text/javascript\"></script>" + "\n" +
-"<script type=\"text/javascript\"> " + "\n" +
-"  google.load('search', '1', {language : 'en', style : google.loader.themes.V2_DEFAULT});" + "\n" +
-"  google.setOnLoadCallback(function() {" + "\n" +
-"    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(" + "\n" +
-"      '014719661006816508785:azyvserhylq', customSearchOptions);" + "\n" +
-"    customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);" + "\n" +
-"    var options = new google.search.DrawOptions();" + "\n" +
-"    options.setAutoComplete(true);" + "\n" +
-"    customSearchControl.draw('cse', options);" + "\n" +
-"  }, true);" + "\n" +
-"</script>" + "\n" +
-*/
-        
-/// End code from Google
-        Template.HtmlCoreTemplate +
-        "      </td>" + "\n" +
-        "    </tr>" + "\n" +
-        "  </tbody></table>" + 
-        Template.HtmlHighlighterTemplate +
-        "<script language=\"javascript\">" + "\n" +
-        "@@SECTIONSTOHIDE@@" + "\n" +        
-        "</script>" + "\n" +
+// Script from Google for translation
+"<script type=\"text/javascript\">" +"\n" +
+"function googleTranslateElementInit() {" +"\n" +
+"  new google.translate.TranslateElement({pageLanguage: 'en', layout:" +
+"google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');" +"\n" +
+"}" +
+"</script>"+"\n" +
+"<script type=\"text/javascript\"" +"\n" +
+"src=\"//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit\"></script>" +"\n" +
+
+// End of Google scripts
+
         "</body>" + "\n" +
         "</html>";
     return template; 

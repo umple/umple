@@ -1,0 +1,13 @@
+class Student():
+    def __init__(self, aB):
+        self._b = aB
+
+    def getC(self):
+        return 1 + 1
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super()) + "[" + "c" + ":" + self.getC() + "]"
+

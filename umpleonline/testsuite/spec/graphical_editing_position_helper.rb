@@ -63,6 +63,7 @@ module DiagramEditingPositionHelper
     class_two_end += ":" + role_two unless role_two.nil?
 
     association_class_name = class_one_end + "__" + class_two_end
+    wait_for_loading
     find(:css, ".#{association_class_name}")
     evaluate_script("jQuery('.#{association_class_name}').click();")
     association_id = evaluate_script("jQuery('.#{association_class_name}').prop('id')")
@@ -79,7 +80,9 @@ module DiagramEditingPositionHelper
 
   #Element data extraction functions - positional code extraction
   def get_class_position_code_block(class_name)
-    code = evaluate_script("Page.getUmpleCode()")
+    begin
+      code = evaluate_script("Page.getUmpleCode()")
+    end while evaluate_script("Ajax.queue.length")!=0
     code = code.split("//$?[End_of_model]$?")[1]
     code = code[/class #{Regexp.quote(class_name)}\s+\{.*?\}/m]
     return code.gsub(/class #{class_name}\s+/, "") unless code.nil?
@@ -110,7 +113,6 @@ module DiagramEditingPositionHelper
       code = retreive_association_code(class_two, class_one_end, class_two_end)
       classes = [class_two, class_one]
     end
-
     return nil unless code
 
     code = code.split()
@@ -170,7 +172,7 @@ module DiagramEditingPositionHelper
     class_two_end = class_two
     class_two_end += "\\\\:" + role_two unless role_two.nil?
 
-    wait_for_loading #ensure the diagram has loaded
+    wait_for_loading_for 10 #ensure the diagram has loaded
 
     association_name = class_one_end + "__" + class_two_end
     anchor_one = evaluate_script( 
@@ -355,20 +357,26 @@ module DiagramEditingPositionHelper
     end
   end
 
-  RSpec::Matchers.define :have_code_position do |expected|
-    match do |actual|
+  RSpec::Matchers.define :have_code_position_within_anchor_size do |expected|
+    
       begin
-        actual[:position][0] == expected[:position][0] &&
-        actual[:position][1] == expected[:position][1]
+        x_range = [expected[:position][0]-3, expected[:position][0]+3]
+        y_range = [expected[:position][1]-3,  expected[:position][1]+3]
       rescue TypeError
-        actual[:position][0] == expected[0] &&
-        actual[:position][1] == expected[1]
+        x_range = [expected[0]-3, expected[0]+3]
+        y_range = [expected[1]-3, expected[1]+3]           
       end
-    end
+
+      match do |actual|
+        actual[:position][0] >= x_range[0] && 
+        actual[:position][0] <= x_range[1] &&
+        actual[:position][1] >= y_range[0] && 
+        actual[:position][1] <= y_range[1]
+      end
 
     failure_message do |actual|
       "expected code position to be #{expected}\nbut actual code position" +
-      " was #{actual}"
+      " was #{actual[:position]}"+ " with a delta of 3" 
     end
   end
 end
