@@ -1058,6 +1058,7 @@ Action.drawInputState = function(inputType,stateCode,stateName){
   document.addEventListener("mousedown", hider);
   if(inputType=="rename"){
     label.appendChild(document.createTextNode("New name for \'"+stateName+"\'?"));
+    input.value = stateName;
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         //only accounts for case where states all have unique names
@@ -1665,6 +1666,7 @@ Action.drawInput = function(inputType,classCode,className){
     replaceAllLabel.htmlFor = 'replace-all-checkbox';
     replaceAllLabel.style.marginRight = '5px';
     replaceAllLabel.appendChild(document.createTextNode("New name for \'"+className+"\'?"));
+    input.value = className;
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
@@ -3961,8 +3963,14 @@ Action.updateUmpleDiagramCallback = function(response)
       for (let j = 1; j < attributeAnchors.length; j++) {
         let titleText = attributeAnchors[j].getAttribute("xlink:title");
         let [attributeType, attributeName] = titleText.split(' ');
-        attributeAnchors[j].addEventListener("click", function (event) {
+        attributeAnchors[j].addEventListener("contextmenu", function (event) {
           event.preventDefault();
+          event.stopPropagation();
+          Action.displayAttributeMenu(event, attributeName, attributeType); // Calls the testing function
+        });
+        attributeAnchors[j].addEventListener("dblclick", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
           Action.displayAttributeMenu(event, attributeName, attributeType); // Calls the testing function
         });
       }
