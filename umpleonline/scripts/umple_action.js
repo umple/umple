@@ -3945,6 +3945,17 @@ Action.updateUmpleDiagramCallback = function(response)
         event.preventDefault(); // Prevent the default double-click behavior
         Action.displayMenu(event); // Call the same function to display the menu
       });
+      var transitionElems = document.getElementsByClassName("edge");
+    for (let i = 0; i < transitionElems.length; i++) {
+        transitionElems[i].addEventListener("dblclick", function(event) {
+            event.preventDefault(); // Prevent the default click behavior
+            Action.displayTransitionMenu(event);
+        });
+        transitionElems[i].addEventListener("contextmenu", function(event){
+          event.preventDefault();
+          Action.displayTransitionMenu(event);
+        });
+    }
       var attributeAnchors = elems[i].getElementsByTagName("a");
       // Start from 1 to skip the first <a> element which is for the class name
       for (let j = 1; j < attributeAnchors.length; j++) {
