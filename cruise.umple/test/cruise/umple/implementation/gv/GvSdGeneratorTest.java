@@ -50,6 +50,9 @@ public class GvSdGeneratorTest extends TemplateTest {
     SampleFileWriter.destroy(pathToInput + "/gv/GuardedAutoTransition.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/TimedTransition.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/ParameterTransition.gv");
+    
+    SampleFileWriter.destroy(pathToInput + "/gv/IncreaseStateSep.gv");
+    
   }
 
   /********* STATE TESTS **********/
