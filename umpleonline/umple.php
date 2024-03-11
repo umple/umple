@@ -465,23 +465,23 @@ $output = $dataHandle->readData('model.ump');
             </li>
             <?php } ?>
             <li id="buttonCopyClip" class="copyClip">
-              <img src="scripts/copy.png"/> 
+              <img src="scripts/copy.png" alt="Copy to Clipboard icon"/> 
                Copy to Clipboard
             </li>           
             <li id="buttonCopy" class="copy">
-              <img src="scripts/copy.png"/> 
+              <img src="scripts/copy.png" alt="Source to Copy icon"/> 
                Source to Copy
             </li>
             <li id="buttonCopyEncodedURL" class="copyEncoded">
-              <img src="scripts/copy.png"/> 
+              <img src="scripts/copy.png" alt="Copy Encoded URL icon"/> 
               Encoded URL
             </li>
             <li id="buttonCopyCommandLine" class="copyCommandLine">
-              <img src="scripts/copy.png"/> 
+              <img src="scripts/copy.png" alt="Copy Command Line Script icon"/> 
               Command Script
             </li>
             <li id="buttonCopyLocalBrowser" class="copyLocalBrowser">
-              <img src="scripts/copy.png"/> 
+              <img src="scripts/copy.png" alt="Store in Local Browser icon"/> 
               Store in Browser
             </li>
             
@@ -650,15 +650,15 @@ $output = $dataHandle->readData('model.ump');
           <ul id="mainDrawMenu" class="second toggle">
             <li class="subtitle"> Draw </li>
             <li id="buttonAddClass" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the canvas to add a new class." tabindex="0">
-              <img src="scripts/class.png"/> 
+              <img src="scripts/class.png" alt="Icon to click on to create a new class in editable mode"/> 
               Class
             </li>
             <li id="buttonAddAssociation" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on a class to draw an association." tabindex="0">
-              <img src="scripts/assoc.png"/> 
+              <img src="scripts/assoc.png" alt="Icon to click on to create an association in editable mode"/> 
               Association
             </li>
             <li id="buttonAddTransition" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select and click on a state to draw a transition." tabindex="0">
-               <img src="scripts/assoc.png"/>
+               <img src="scripts/assoc.png" alt="Icon to click on to create a new transition in certain state modes"/>
                Transition
              </li>            
             <!-- <li id="buttonBendAssociation" class="toggleToolItem" name="paletteItem">
@@ -666,27 +666,27 @@ $output = $dataHandle->readData('model.ump');
               Bend Assoc.
             </li> -->
             <li id="buttonAddGeneralization" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class." tabindex="0">
-              <img src="scripts/generalization.png"/> 
+              <img src="scripts/generalization.png" alt="Icon to click on to create a generalization (subclass relationship) in editable mode"/> 
               Generalization
             </li>
             <li id="buttonDeleteEntity" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on an element to remove it from your model." tabindex="0">
-              <img src="scripts/delete.png"/>
+              <img src="scripts/delete.png" alt="Icon to click on to delete and item in editable mode"/>
                Delete
              </li>
             <li id="buttonUndo" name="paletteItem" tabindex="0">
-              <img src="scripts/undo.png"> 
+              <img src="scripts/undo.png" alt="Icon to click on to undo the last action"> 
               Undo
             </li>
             <li id="buttonRedo" name="paletteItem" tabindex="0">
-              <img src="scripts/redo.png"> 
+              <img src="scripts/redo.png" alt="Icon to click on to redo an undone item in editable mode"> 
               Redo
             </li>
             <li id="buttonReindent" name="paletteItem" tabindex="0">
-              <img src="scripts/sync_diagram.png" /> 
+              <img src="scripts/sync_diagram.png" alt="Icon to click on to reindent the code"/> 
               Reindent Code
             </li>
             <li id="buttonSyncDiagram" name="paletteItem" tabindex="0">
-              <img src="scripts/sync_diagram.png" /> 
+              <img src="scripts/sync_diagram.png" alt="Icon to sync the diagram manually when automatic syncing is off"/> 
               Sync Diagram 
             </li>
         </ul>
@@ -804,19 +804,19 @@ $output = $dataHandle->readData('model.ump');
             
             <?php if ($canCreateTask) { ?>
               <li id="buttonCreateTask">
-                <img src="scripts/copy.png"/>
+                <img src="scripts/copy.png" alt="Icon to click on to create a task"/>
                 Create a Task
               </li>
             <?php } ?>
 
             <li id="buttonLoadTask">
-              <img src="scripts/copy.png"/>
+              <img src="scripts/copy.png" alt="Icon to click on to load a task"/>
               Load a Task
             </li>
 
             <?php if (isset($_REQUEST["task"])) { ?>
             <li id="buttonRequestAllZip">
-              <img src="scripts/copy.png"/> 
+              <img src="scripts/copy.png" alt="Icon to click on to get a zip file with task submissions"/> 
               Request all Directories as a zip under this task
             </li>
             <?php } ?>
