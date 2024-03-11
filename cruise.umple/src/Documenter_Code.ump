@@ -683,6 +683,7 @@ class Template
         "<head>" + "\n" +
         "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" + "\n" +
         "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />" + "\n" +
+        "  <meta name=\"description\" content=\"Umple User Manual page for @@TITLE@@\"/>" + "\n" +
         "  <link rel=\"stylesheet\" type=\"text/css\" href=\"files/layout.css\" />" + "\n" +
         "  <script type=\"text/javascript\" src=\"files/script.js\"></script>" + "\n" +
         "  <title>Umple User Manual: @@TITLE@@</title>" + "\n" +
@@ -713,7 +714,7 @@ class Template
         "Umple </a></div>" + "\n" +
         
 // Code from Google to inject translation - script is at end
-"<div id=\"google_translate_element\"></div>" +
+"<div id=\"google_translate_element\" style=\"min-height: 23px\"></div>" +
 // End of code from Google
         "@@NAVIGATION@@" + "\n" +
         "<div class=\"level1\"><a href=\"UmpleUserManualCombined.html\">Combined Version</a></div>\n" +  
@@ -733,7 +734,7 @@ class Template
         "      <h2><i>User Manual @@PREVNEXT@@</i></h2>"  + "\n" +
         
 // Code from Google to inject custom search -- scripts are at end
-"<gcse:search></gcse:search>" + "\n" +
+"<div style=\"min-height: 61px\"><gcse:search></gcse:search></div>" + "\n" +
 // End code from Google
         Template.HtmlCoreTemplate +
         "      </td>" + "\n" +
