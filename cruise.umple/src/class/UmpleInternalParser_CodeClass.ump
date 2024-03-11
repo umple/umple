@@ -237,17 +237,20 @@ class UmpleInternalParser
     // create new requirement
     Requirement req = new Requirement(reqID, newContent, newLanguage);// Create new requirement 
     // Add the new requirement
-    model.getAllRequirements().put(reqID, req);
+    req.addReqToken(t);// new addition
+   
+    model.getAllRequirements().put(reqID, req);// We are not going to need this anymore
     //System.out.println("The requirement identifier is: "+reqID);
     //System.out.println("The requirement is: "+req);
     //}
     //counter+=1;
     //System.out.println("The value of the counter is: ");
     //System.out.println(counter);
+
   }
 
   private void analyzeImplementReq(Token t) {
-  System.out.println("Inside Analyze Requirmenet");
+  //System.out.println("Inside Analyze Requirmenet");
   /*System.out.println("Inside Analyze Requirmenet analysis step: "+analysisStep);
     if (analysisStep != 2) { // Check if it's the second pass, otherwise, skip analysis
         shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
@@ -261,9 +264,16 @@ class UmpleInternalParser
      //System.out.println("The analysis step is:"+analysisStep);
      System.out.println("******************************************");
      String reqImpID = t.getSubToken("reqIdentifier").getValue();// Identifier that has been identified 
-     System.out.println("The requirement implementation is:"+reqImpID);
-     reqImplementations.addReqImplementation(reqImpID);// Should we do it to lastRequirement
+     //System.out.println("The requirement implementation is:"+reqImpID);
+     //reqImplementations.addReqImplementation(reqImpID);// Should we do it to lastRequirement
+     //addReqImplementation.add(reqImpID);
      //ReqImplementation reqImpl = new ReqImplementation();
+     //ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
+     //reqImplementation.addReqImplementation(reqImplementation);
+     // new addition
+     Requirement reqNew = new Requirement(reqImpID, "","");// Create new requirement 
+     ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);// Instantiate the requirement implementation
+     reqNew.addReqImplementation(reqImplementation);
      System.out.println("******************************************");
 
     if (t.hasSubTokens()) {

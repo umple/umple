@@ -74,7 +74,7 @@ class UmpleModel
   Map<String, Requirement> allRequirements = new HashMap<String, Requirement>();
   
   // The core list of all requirement implementation annotations found while parsing
-  * -> * ReqImplementation allReqImplementations;
+  * -> * ReqImplementation reqImplementations;
 
   // data for default class positioning
   internal Coordinate levelOffset = new Coordinate(200,100,0,0);
