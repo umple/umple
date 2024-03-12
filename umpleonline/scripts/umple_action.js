@@ -1059,7 +1059,6 @@ Action.drawInputState = function(inputType,stateCode,stateName){
   if(inputType=="rename"){
     label.appendChild(document.createTextNode("New name for \'"+stateName+"\'?"));
     input.value = stateName;
-    input.value = stateName;
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         //only accounts for case where states all have unique names
@@ -1871,7 +1870,6 @@ Action.drawInput = function(inputType,classCode,className){
     replaceAllLabel.style.marginRight = '5px';
     replaceAllLabel.appendChild(document.createTextNode("New name for \'"+className+"\'?"));
     input.value = className;
-    input.value = className;
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
@@ -2111,7 +2109,6 @@ Action.displayMenu = function(event) {
 }
 
 
-
 Action.displayAttributeMenu = function(event, attributeName, attributeType) {
   if(!Action.diagramInSync){
     return;
@@ -2246,13 +2243,6 @@ Action.renameAttribute = function(classCode, className, attributeName, attribute
   }
 };
 document.addEventListener("mousedown", hider);
- var hider=function hidePrompt(e) {
-  if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
-    document.removeEventListener("mousedown", hidePrompt);
-    prompt.remove();
-  }
-};
-document.addEventListener("mousedown", hider);
  // Event listener for the submit action
  submitButton.addEventListener('click', function() {
   if(Action.validateAttributeName(input.value.trim())){
@@ -2276,7 +2266,6 @@ document.addEventListener("mousedown", hider);
     Action.removeContextMenu();
     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
     document.removeEventListener("mousedown", hider);
-    document.removeEventListener("mousedown", hider);
     prompt.remove(); // Remove the prompt after processing
     }
  });
@@ -2293,7 +2282,6 @@ Action.changeAttributeType = function(classCode, className, attributeName, curre
   prompt.style.top = '50%';
   prompt.style.transform = 'translate(-50%, -50%)';
   prompt.id = "promptBox";
-  
   
   var select = document.createElement("select");
   // Add options to the select
@@ -2316,15 +2304,6 @@ Action.changeAttributeType = function(classCode, className, attributeName, curre
 
   document.body.appendChild(prompt);
   select.focus(); // Automatically focus the select dropdown
-  var hider=function hidePrompt(e) {
-    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
-      document.removeEventListener("mousedown", hidePrompt);
-      prompt.remove();
-    }
-  };
-  document.addEventListener("mousedown", hider);
-  
-  
   var hider=function hidePrompt(e) {
     if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
       document.removeEventListener("mousedown", hidePrompt);
@@ -2357,13 +2336,7 @@ Action.changeAttributeType = function(classCode, className, attributeName, curre
         Action.removeContextMenu();
         TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
         document.removeEventListener("mousedown", hider);
-        document.removeEventListener("mousedown", hider);
         prompt.remove(); // Remove the prompt after processing
-        
-      }
-      else{
-        document.removeEventListener("mousedown", hider);
-        prompt.remove();
         
       }
       else{
@@ -4202,14 +4175,7 @@ Action.updateUmpleDiagramCallback = function(response)
         let titleText = attributeAnchors[j].getAttribute("xlink:title");
         let [attributeType, attributeName] = titleText.split(' ');
         attributeAnchors[j].addEventListener("contextmenu", function (event) {
-        attributeAnchors[j].addEventListener("contextmenu", function (event) {
           event.preventDefault();
-          event.stopPropagation();
-          Action.displayAttributeMenu(event, attributeName, attributeType); // Calls the testing function
-        });
-        attributeAnchors[j].addEventListener("dblclick", function (event) {
-          event.preventDefault();
-          event.stopPropagation();
           event.stopPropagation();
           Action.displayAttributeMenu(event, attributeName, attributeType); // Calls the testing function
         });
@@ -5209,3 +5175,5 @@ Action.reindent = function(lines, cursorPos)
   }
   Page.codeMirrorEditor.focus();
 }
+
+
