@@ -1286,17 +1286,36 @@ Action.displayTransitionMenu = function(event) {
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
   let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  console.log(code);
+   let pattern2 = new RegExp("^(.*?)\\s*(\\[(.*?)\\])?\\s*(\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\w+);?$", "s");
+
+  const match = code.match(pattern2);
+
   
-  
-  
+      let eventName= match[1].trim();
+      let guard= match[3] ? match[3].trim() : null;
+      let action= match[5] ? match[5].trim() : null;
+      let destinationState= match[6].trim();
+      if(guard===null){
+        guard="";
+      }
+      //
+      if(action===null){
+        action="";
+      }
+      //
+      console.log(eventName);
+      console.log(guard);
+      console.log(action);
+      console.log(destinationState);
   //need to sanitize any linebreaks or quotes that could break the generated HTML
   //var jsInput=chosenState.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
   var menu = document.createElement('customContextMenu');
-  var rowContent = ["Change Event Name", "Change Destination State", "Delete Transition"];
-
-  // Just for demonstration, log actions instead of actual function calls
+  var rowContent = ["Change or Add Event Name","Change or Add Guard","Change or Add Action", "Change Destination State", "Delete Transition"];
   var rowFuncs = [
-    "Action.renameTransition(\""+startIndex+"\",\""+endIndex+"\")",
+    "Action.modifyTransitionEventName(\""+startIndex+"\",\""+endIndex+"\",\""+eventName+"\")",
+    "Action.modifyTransitionGuard(\""+startIndex+"\",\""+endIndex+"\",\""+guard+"\",\""+eventName+"\",\""+action+"\")",
+    "Action.modifyTransitionAction(\""+startIndex+"\",\""+endIndex+"\",\""+action+"\")",
     "Action.changeTransition(\""+startIndex+"\",\""+endIndex+"\")",
     "Action.deleteTransition(\""+startIndex+"\",\""+endIndex+"\")"
   
@@ -1449,19 +1468,203 @@ Action.changeTransition = function(startIndex,endIndex) {
   Action.removeContextMenu();
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
 };
+Action.modifyTransitionGuard = function(startIndex,endIndex,guard,eventName,action) {
+  let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  // Create the input prompt for renaming the transition condition
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+  prompt.style.border = "1px solid #ccc";
+  prompt.style.backgroundColor = "#f8f8f8";
+  prompt.style.padding = "5px";
+  prompt.style.position = "absolute";
+  prompt.style.left = '50%';
+  prompt.style.top = '50%';
+  prompt.style.transform = 'translate(-50%, -50%)';
+  prompt.id = "promptBox";
 
-  Action.renameTransition = function(startIndex,endIndex) {
-    let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
-    // Assuming classCode contains the full transition line, including condition and destination
-    let trimmedString = classCode.trim().replace(/;$/, "");
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.value = guard;
+  input.style.padding = '5px';
+  input.style.margin = '5px';
+  input.style.width = '200px';
+
+  var submitButton = document.createElement('button');
+  submitButton.textContent = 'Change/Add Guard';
+  submitButton.style.padding = '5px';
+  submitButton.style.marginLeft = '5px';
+
+  // Append elements to the prompt
+  prompt.appendChild(input);
+  prompt.appendChild(submitButton);
+
+  // Add the prompt to the document body
+  document.body.appendChild(prompt);
+  input.focus(); // Automatically focus the input
+  var hider=function hidePrompt(e) {
+    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  };
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", hider);
+  // Event listener for the submit action
+  submitButton.addEventListener('click', function() {
+    // Validate input value is not empty
+    
+    let trimmedString = classCode.trim();
 
     // Split the string into condition (with guard) and destination parts
     let parts = trimmedString.split("->");
-
-    // Trim each part separately
-    parts[0] = parts[0].trim(); // Condition part
+    parts[0] = parts[0].trim(); 
     parts[1] = parts[1].trim(); // Destination part
 
+    // Ensure there are two parts (condition and destination)
+    if (parts.length != 2) {
+        console.log("Invalid transition format.");
+        return;
+    }
+    let modifiedTransition = "";
+    if (input.value.trim() === "") {
+      if (guard === null || guard === "") {
+        return;
+     }
+     else{
+       pattern=new RegExp("\\[\\s*(.*?)\\s*\\]", "g");
+       modifiedTransition = classCode.replace(pattern,"");
+     }
+    }
+    else{
+      if (guard === null || guard === "") {
+        if(action==null || action === ""){
+          parts[0]=eventName+" ["+input.value.trim()+"]";
+          console.log("add guard"+parts[0]);
+        }
+        else{
+          parts[0]=eventName+" ["+input.value.trim()+"]"+" /{" +action+"}"
+          console.log("add guard"+parts[0]);
+        }
+        modifiedTransition = parts[0]+ " -> " + parts[1];
+  
+      }
+      else{
+        modifiedTransition = classCode.replace(guard,input.value.trim());
+      }
+    }
+  
+    
+    // Assuming classyCode is meant to represent the original content where the transition is to be found
+    let orig = Page.codeMirrorEditor.getValue();
+    let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
+
+    // Update the editor with the new content
+    Page.codeMirrorEditor.setValue(updatedContent);
+
+    Action.removeContextMenu();
+    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "modifyGuard");
+    document.removeEventListener("mousedown",hider);
+    prompt.remove(); // Remove the prompt after processing
+});
+};
+
+Action.modifyTransitionAction = function(startIndex,endIndex,currentAction) {
+  let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  if(currentAction===null){
+    currentAction="";
+  }
+  // Create the input prompt for  the transition condition
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+    prompt.style.border = "1px solid #ccc";
+    prompt.style.backgroundColor = "#f8f8f8";
+    prompt.style.padding = "5px";
+    prompt.style.position = "absolute";
+    prompt.style.left = '50%';
+    prompt.style.top = '50%';
+    prompt.style.transform = 'translate(-50%, -50%)';
+    prompt.id = "promptBox";
+
+  var textarea = document.createElement('textarea');
+  textarea.style.width = '300px';
+    textarea.style.height = '100px';
+    textarea.value = currentAction || ""; // Pre-fill the textarea with the current action if any
+    // Styling for the textarea omitted for brevity...
+    
+  var submitButton = document.createElement('button');
+  submitButton.textContent = 'Change/Add Action';
+  submitButton.style.padding = '5px';
+  submitButton.style.marginLeft = '5px';
+
+  // Append elements to the prompt
+  prompt.appendChild(textarea);
+  prompt.appendChild(submitButton);
+
+  // Add the prompt to the document body
+  document.body.appendChild(prompt);
+  textarea.focus(); // Automatically focus the input
+  var hider=function hidePrompt(e) {
+    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  };
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", hider);
+  // Event listener for the submit action
+  submitButton.addEventListener('click', function() {
+      // Validate input value is not empty
+      
+      let trimmedString = classCode.trim();
+
+      // Split the string into condition (with guard) and destination parts
+      let parts = trimmedString.split("->");
+      parts[0] = parts[0].trim(); 
+      parts[1] = parts[1].trim(); // Destination part
+
+      // Ensure there are two parts (condition and destination)
+      if (parts.length != 2) {
+          console.log("Invalid transition format.");
+          return;
+      }
+      let modifiedTransition = "";
+      if (textarea.value.trim() === "") {
+        if (currentAction === null || currentAction === "") {
+          return;
+       }
+       else{
+         pattern=new RegExp("/\\s*\\{.*?\\}\\s*->", "g");
+         modifiedTransition = classCode.replace(pattern," ->");
+       }
+      }
+      else{
+        if (currentAction === null || currentAction === "") {
+          modifiedTransition = parts[0]+"/{"+textarea.value.trim()+"}"+ " -> " + parts[1];
+          console.log("add action"+modifiedTransition);
+    
+        }
+        else{
+          modifiedTransition = classCode.replace(currentAction,textarea.value.trim());
+        }
+      }
+    
+      
+      // Assuming classyCode is meant to represent the original content where the transition is to be found
+      let orig = Page.codeMirrorEditor.getValue();
+      let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
+
+      // Update the editor with the new content
+      Page.codeMirrorEditor.setValue(updatedContent);
+
+      Action.removeContextMenu();
+      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "modifyAction");
+      document.removeEventListener("mousedown",hider);
+      prompt.remove(); // Remove the prompt after processing
+  });
+};
+  Action.modifyTransitionEventName = function(startIndex,endIndex,eventName) {
+    let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+    
     // Create the input prompt for renaming the transition condition
     var prompt = document.createElement('div');
     prompt.style.zIndex = "1000";
@@ -1476,13 +1679,13 @@ Action.changeTransition = function(startIndex,endIndex) {
 
     var input = document.createElement('input');
     input.type = 'text';
-    input.value = parts[0];
+    input.value = eventName;
     input.style.padding = '5px';
     input.style.margin = '5px';
     input.style.width = '200px';
 
     var submitButton = document.createElement('button');
-    submitButton.textContent = 'Rename';
+    submitButton.textContent = 'Change/Add Event Name';
     submitButton.style.padding = '5px';
     submitButton.style.marginLeft = '5px';
 
@@ -1510,7 +1713,7 @@ Action.changeTransition = function(startIndex,endIndex) {
         }
         
         // Create the modified transition string
-        let modifiedTransition = input.value.trim() + " -> " + parts[1] + ";";
+        let modifiedTransition = classCode.replace(eventName,input.value.trim());
         
         // Assuming classyCode is meant to represent the original content where the transition is to be found
         let orig = Page.codeMirrorEditor.getValue();
@@ -3949,14 +4152,22 @@ Action.updateUmpleDiagramCallback = function(response)
       });
       var transitionElems = document.getElementsByClassName("edge");
     for (let i = 0; i < transitionElems.length; i++) {
-        transitionElems[i].addEventListener("dblclick", function(event) {
-            event.preventDefault(); // Prevent the default click behavior
-            Action.displayTransitionMenu(event);
-        });
-        transitionElems[i].addEventListener("contextmenu", function(event){
-          event.preventDefault();
-          Action.displayTransitionMenu(event);
-        });
+      transitionElems[i].addEventListener("dblclick", function(event) {
+        event.preventDefault(); // Prevent the default click behavior
+        console.log("Double-clicked on edge with index:", i);
+        if (this.id) {
+            console.log("Edge ID:", this.id);
+        }
+        Action.displayTransitionMenu(event);
+    });
+    transitionElems[i].addEventListener("contextmenu", function(event) {
+        event.preventDefault();
+        console.log("Right-clicked on edge with index:", i);
+        if (this.id) {
+            console.log("Edge ID:", this.id);
+        }
+        Action.displayTransitionMenu(event);
+    });
     }
       var attributeAnchors = elems[i].getElementsByTagName("a");
       // Start from 1 to skip the first <a> element which is for the class name
@@ -3994,15 +4205,26 @@ Action.updateUmpleDiagramCallback = function(response)
       });
     }
     var transitionElems = document.getElementsByClassName("edge");
+    console.log(transitionElems.length + " edges found");
+    
     for (let i = 0; i < transitionElems.length; i++) {
-        transitionElems[i].addEventListener("dblclick", function(event) {
-            event.preventDefault(); // Prevent the default click behavior
-            Action.displayTransitionMenu(event);
-        });
-        transitionElems[i].addEventListener("contextmenu", function(event){
-          event.preventDefault();
-          Action.displayTransitionMenu(event);
-        });
+      console.log("Attaching listener to", transitionElems[i].id);
+      transitionElems[i].addEventListener("dblclick", function(event) {
+        event.preventDefault(); // Prevent the default click behavior
+        console.log("Double-clicked on edge with index:", i);
+        if (this.id) {
+            console.log("Edge ID:", this.id);
+        }
+        Action.displayTransitionMenu(event);
+    });
+    transitionElems[i].addEventListener("contextmenu", function(event) {
+        event.preventDefault();
+        console.log("Right-clicked on edge with index:", i);
+        if (this.id) {
+            console.log("Edge ID:", this.id);
+        }
+        Action.displayTransitionMenu(event);
+    });
     }
     elems=document.getElementsByClassName("cluster");
     // Add event listener to Graphviz clusters for right click
