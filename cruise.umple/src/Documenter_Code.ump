@@ -708,13 +708,13 @@ class Template
         "  <table class=\"body\" >" + "\n" +
         "  <tbody>" + "\n" +
         "  <tr>" + "\n" +
-        "    <td class=\"menu\">" + "\n" +
+        "    <td class=\"menu\" style=\"width: 170px; min-width: 170px\">" + "\n" +
         "      <div class=\"title\"><a href=\"https://cruise.umple.org/umple\">" +
         "<img height=\"25\" src=\"files/indicator_blocks.gif\" alt=\"Umple Logo\" />&nbsp;" +
         "Umple </a></div>" + "\n" +
         
 // Code from Google to inject translation - script is at end
-"<div id=\"google_translate_element\" style=\"min-height: 23px\"></div>" +
+"<div id=\"google_translate_element\" style=\"min-height: 24px\"></div>" +
 // End of code from Google
         "@@NAVIGATION@@" + "\n" +
         "<div class=\"level1\"><a href=\"UmpleUserManualCombined.html\">Combined Version</a></div>\n" +  
@@ -728,7 +728,9 @@ class Template
         "" + "\n" +
         
         "<span style=\"float: right\">"+
-        "  <a title=\"Umple is led by Timothy Lethbridge, professor at the University of Ottawa. Much of the development has been by graduate students at uOttawa.\" href=\"https://www.uottawa.ca\" target=\"uottawatab\"><img height=\"20px\" src=\"files/uottawa_ver_black.png\" alt=\"University of Ottawa logo / Université d'Ottawa\" /></a>"+
+        "  <a title=\"The Umple website and UmpleOnline are hosted using facilities provided by the Digital Research Alliance of Canada to Canadian university faculty members.\" href=\"https://alliancecan.ca/en\" target=\"alliancecantab\"><img height=\"16px\" style=\"vertical-align:top\" src=\"files/DRAC_logo.jpeg\" alt=\"Digital Research Alliance of Canada logo\" /></a>&nbsp;"+
+        "  <a title=\"We acknowledge the support of the Natural Sciences and Engineering Research Council of Canada (NSERC) grant number 752498 for ongoing support of research into Umple. /Nous remercions le Conseil de recherches en sciences naturelles et en génie du Canada (CRSNG) de son soutien.\" href=\"https://www.nserc-crsng.gc.ca/ase-oro/Details-Detailles_eng.asp?id=752498\" target=\"NSERCtab\"><img height=\"18px\" style=\"vertical-align:top\" src=\"files/NSERC_BLACK.png\" alt=\"NSERC logo\" /></a>&nbsp;"+        
+        "  <a title=\"Umple is led by Timothy Lethbridge, professor in Electrical Engineering and Computer Science, Faculty of Engineering at the University of Ottawa. Much of the development has been by graduate and undergraduate students at uOttawa.\" href=\"https://www.uottawa.ca/faculty-engineering/school-electrical-engineering-computer-science\" target=\"uottawatab\"><img height=\"20px\" src=\"files/uottawa_ver_black.png\" alt=\"University of Ottawa logo / Université d'Ottawa\" /></a>"+
         "</span>"+
         
         "      <h2><i>User Manual @@PREVNEXT@@</i></h2>"  + "\n" +
