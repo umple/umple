@@ -1625,6 +1625,10 @@ Action.displayMenu = function(event) {
   });
   document.body.appendChild(menu);
 }
+Action.displayAssociMenu = function(event) {
+  console.log('Edit Association clicked');
+
+};
 
 Action.displayAttributeMenu = function(event, attributeName, attributeType) {
   if(!Action.diagramInSync){
@@ -1988,7 +1992,10 @@ Action.classClicked = function(event)
     Action.classSelected(obj);
   }
 }
-
+Action.associationClicked = function(associationDetails) 
+{
+  console.log("Association selected:", associationDetails);
+}
 Action.stateClicked = function(identifier)
 {
     if (!Action.diagramInSync) return;
@@ -3089,6 +3096,18 @@ Action.selectMethod = function(methodName, type, accessMod)
 	Action.selectItem(scursor, ncursor);
 }
 
+Action.selectAssociation = function(associationDetails) {
+  console.log("Association selected:", associationDetails);
+  var detailsArray = associationDetails.split(',');
+  var className = detailsArray[0];
+  var scursor = new RegExp("(class|interface|trait) "+className+"($|\\\s|[{])");
+	var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
+
+	Action.selectItem(scursor, ncursor);
+  
+}
+
+
 // Highlights the text of the class that is currently selected.
 Action.selectClass = function(className) 
 {
@@ -3652,6 +3671,17 @@ Action.updateUmpleDiagramCallback = function(response)
           Action.displayAttributeMenu(event, attributeName, attributeType); // Calls the testing function
         });
       }
+      var associationElems = document.getElementsByClassName("edge");
+    for (let i = 0; i < associationElems.length; i++) {
+        associationElems[i].addEventListener("dblclick", function(event) {
+            event.preventDefault(); // Prevent the default click behavior
+            Action.displayAssociMenu(event);
+        });
+        associationElems[i].addEventListener("contextmenu", function(event) {
+          event.preventDefault(); // Prevent the default click behavior
+          Action.displayAssociMenu(event);
+      });
+    }
     }
   }
   
