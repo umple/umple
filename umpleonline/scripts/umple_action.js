@@ -1285,37 +1285,16 @@ Action.displayTransitionMenu = function(event) {
   let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
-  let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
-  console.log(code);
-   let pattern2 = new RegExp("^(.*?)\\s*(\\[(.*?)\\])?\\s*(\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\w+);?$", "s");
-
-  const match = code.match(pattern2);
-
   
-      let eventName= match[1].trim();
-      let guard= match[3] ? match[3].trim() : null;
-      let action= match[5] ? match[5].trim() : null;
-      let destinationState= match[6].trim();
-      if(guard===null){
-        guard="";
-      }
-      //
-      if(action===null){
-        action="";
-      }
-      //
-      console.log(eventName);
-      console.log(guard);
-      console.log(action);
-      console.log(destinationState);
+
   //need to sanitize any linebreaks or quotes that could break the generated HTML
   //var jsInput=chosenState.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
   var menu = document.createElement('customContextMenu');
   var rowContent = ["Change or Add Event Name","Change or Add Guard","Change or Add Action", "Change Destination State", "Delete Transition"];
   var rowFuncs = [
-    "Action.modifyTransitionEventName(\""+startIndex+"\",\""+endIndex+"\",\""+eventName+"\")",
-    "Action.modifyTransitionGuard(\""+startIndex+"\",\""+endIndex+"\",\""+guard+"\",\""+eventName+"\",\""+action+"\")",
-    "Action.modifyTransitionAction(\""+startIndex+"\",\""+endIndex+"\",\""+action+"\")",
+    "Action.modifyTransitionEventName(\""+startIndex+"\",\""+endIndex+"\")",
+    "Action.modifyTransitionGuard(\""+startIndex+"\",\""+endIndex+"\")",
+    "Action.modifyTransitionAction(\""+startIndex+"\",\""+endIndex+"\")",
     "Action.changeTransition(\""+startIndex+"\",\""+endIndex+"\")",
     "Action.deleteTransition(\""+startIndex+"\",\""+endIndex+"\")"
   
@@ -1468,8 +1447,17 @@ Action.changeTransition = function(startIndex,endIndex) {
   Action.removeContextMenu();
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
 };
-Action.modifyTransitionGuard = function(startIndex,endIndex,guard,eventName,action) {
+Action.modifyTransitionGuard = function(startIndex,endIndex) {
   let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  let pattern2 = new RegExp("^(.*?)\\s*(\\[(.*?)\\])?\\s*(\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\w+);?$", "s");
+
+  const match = classCode.match(pattern2);
+
+  
+      let eventName= match[1].trim();
+      let guard= match[3] ? match[3].trim() : null;
+      let action= match[5] ? match[5].trim() : null;
+      let destinationState= match[6].trim();
   // Create the input prompt for renaming the transition condition
   var prompt = document.createElement('div');
   prompt.style.zIndex = "1000";
@@ -1568,8 +1556,17 @@ Action.modifyTransitionGuard = function(startIndex,endIndex,guard,eventName,acti
 });
 };
 
-Action.modifyTransitionAction = function(startIndex,endIndex,currentAction) {
+Action.modifyTransitionAction = function(startIndex,endIndex) {
   let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  let pattern2 = new RegExp("^(.*?)\\s*(\\[(.*?)\\])?\\s*(\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\w+);?$", "s");
+
+  const match = classCode.match(pattern2);
+
+  
+      let eventName= match[1].trim();
+      let guard= match[3] ? match[3].trim() : null;
+      let currentAction= match[5] ? match[5].trim() : null;
+      let destinationState= match[6].trim();
   if(currentAction===null){
     currentAction="";
   }
@@ -1662,9 +1659,17 @@ Action.modifyTransitionAction = function(startIndex,endIndex,currentAction) {
       prompt.remove(); // Remove the prompt after processing
   });
 };
-  Action.modifyTransitionEventName = function(startIndex,endIndex,eventName) {
+  Action.modifyTransitionEventName = function(startIndex,endIndex) {
     let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
-    
+    let pattern2 = new RegExp("^(.*?)\\s*(\\[(.*?)\\])?\\s*(\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\w+);?$", "s");
+
+  const match = classCode.match(pattern2);
+
+  
+      let eventName= match[1].trim();
+      let guard= match[3] ? match[3].trim() : null;
+      let action= match[5] ? match[5].trim() : null;
+      let destinationState= match[6].trim();
     // Create the input prompt for renaming the transition condition
     var prompt = document.createElement('div');
     prompt.style.zIndex = "1000";
@@ -2573,6 +2578,29 @@ Action.transitionClicked = function(identifier)
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
   Action.highlightByIndex(startIndex,endIndex);
+  let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  console.log(code);
+   let pattern2 = new RegExp("^(.*?)\\s*(\\[(.*?)\\])?\\s*(\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\w+);?$", "s");
+
+  const match = code.match(pattern2);
+
+  
+      let eventName= match[1].trim();
+      let guard= match[3] ? match[3].trim() : null;
+      let action= match[5] ? match[5].trim() : null;
+      let destinationState= match[6].trim();
+      if(guard===null){
+        guard="";
+      }
+      //
+      if(action===null){
+        action="";
+      }
+      //
+      console.log("name "+eventName);
+      console.log("guard "+guard);
+      console.log("action "+action);
+      console.log("dstate "+destinationState);
 
 }
 
