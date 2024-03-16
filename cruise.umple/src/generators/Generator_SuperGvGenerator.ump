@@ -205,7 +205,7 @@ digraph "<<=filename>>" {
   public static String labelAssociation(String left, String right, String arrow, String label, String tooltip)
   {
     String association;
-    String associationDetails = left + "," + right;
+    String associationDetails = left + "," + right+ "," + label;
     String hrefAction = "javascript:Action.selectAssociation('" + associationDetails + "')";
     association = "  \""+left+"\" -> \""+right+"\" ["+arrow+
         ", label=\""+label+"\""+", tooltip=\""+tooltip+"\" labeltooltip=\""+tooltip+"\" headtooltip=\"" + tooltip + "\" tailtooltip=\"" + tooltip + "\" URL=\"" + hrefAction + "\"" +  // Use URL for embedding clickable actions
