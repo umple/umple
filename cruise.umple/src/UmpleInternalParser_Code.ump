@@ -120,7 +120,7 @@ class UmpleInternalParser
         analyzeFeatureModel(); // lastly to analyze the feature model after all mixsets are added to umple model. 
       } 
       // The call to analyzeAllRequirements is here
-      //analyzeAllRequirements(getRootToken());
+      analyzeAllRequirements();
     
     }
     catch (Exception ex)
@@ -328,32 +328,34 @@ class UmpleInternalParser
     }
   }
 
-/*  private void analyzeAllRequirements(Token t)
-  {
-//DEBUG
-    //System.out.println("Entering the method analyzeAllRequirements");  
-    Requirement req = new Requirement("","", "");// Create new requirement 
-    //System.out.println("Requirement"+req);  
-    ReqImplementation reqImpls = new ReqImplementation("",t);
-    List<ReqImplementation> reqImplementations = requirements.getReqImplementations(); // Access reqImplementations list
-    List<Token> reqTokens = requirements.getReqToken(); // Access reqTokens list
-    for (ReqImplementation reqImpl : reqImplementations) {
-            Token reqToken = reqImpl.getReqToken(); // Assuming getReqToken method exists in ReqImplementation class
-            boolean tokenFound = false;
-            for (Token token : reqTokens) {
-                if (token.equals(reqToken)) { // Assuming equals method is properly implemented in Token class
-                    tokenFound = true;
-                    break;
-                }
-            }
-            if (!tokenFound) {
-                System.out.println("Warning: No matching token found for requirement implementation: " + reqImpl.getIdentifier());
-            }
-        }	
-  }*/
   // Once you have analyze all tokens, you allowed a second 'pass' to apply any additional checks
   // Each step in the process might "fail", so we check the status before calling each delegate
   // token post token analysis method
+  
+  private void analyzeAllRequirements()
+  {
+    // model.getReqImplementations();
+     //model.getAllRequirements();
+     for (ReqImplementation reqImpl : model.getReqImplementations())//Loop through requirement implementations ID
+     {
+       String reqImplID = reqImpl.getIdentifier();
+       Requirement foundRequirement = model.getAllRequirements().get(reqImplID); // mapping the requirement
+       if(foundRequirement == null) // null then we need to raise an error 
+       {
+         System.out.println("There is an error!");
+       }
+       else
+       {
+         System.out.println("There is an no error!");
+       }
+       //for(String reqID : model.getAllRequirements().keySet())//Loop through requirement ID
+       //{
+       
+       }
+       
+     //}
+  
+  }
   private void postTokenAnalysis()
   {
     analyzeParseResult();

@@ -233,19 +233,28 @@ class UmpleInternalParser
         if (newLanguage.equals("")) {
             newLanguage = existingLanguage;
         }
+        existingRequirement.addReqToken(t);// new addition
+        existingRequirement.setStatement(newContent);
+        //System.out.println(existingRequirement.getStatement());
+        
     }
+    else
+    {
+    // If existing requirement is null
     // create new requirement
-    Requirement req = new Requirement(reqID, newContent, newLanguage);// Create new requirement 
+      System.out.println("Entering in the else part");
+      Requirement req = new Requirement(reqID, newContent, newLanguage);// Create new requirement 
     // Add the new requirement
-    req.addReqToken(t);// new addition
+      req.addReqToken(t);// new addition
    
-    model.getAllRequirements().put(reqID, req);// We are not going to need this anymore
+      model.getAllRequirements().put(reqID, req);// We are not going to need this anymore
     //System.out.println("The requirement identifier is: "+reqID);
     //System.out.println("The requirement is: "+req);
     //}
     //counter+=1;
     //System.out.println("The value of the counter is: ");
     //System.out.println(counter);
+    }
 
   }
 
@@ -271,12 +280,12 @@ class UmpleInternalParser
      //ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
      //reqImplementation.addReqImplementation(reqImplementation);
      // new addition
-     Requirement reqNew = new Requirement(reqImpID, "","");// Create new requirement 
+     //Requirement reqNew = new Requirement(reqImpID, "","");// Create new requirement 
      ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);// Instantiate the requirement implementation
-     reqNew.addReqImplementation(reqImplementation);
+     model.addReqImplementation(reqImplementation);
      System.out.println("******************************************");
-
-    if (t.hasSubTokens()) {
+     // REMOVE THE CODE BELOW
+   /* if (t.hasSubTokens()) {
         
 
         for (Token sub : t.getSubTokens()) {
@@ -292,12 +301,16 @@ class UmpleInternalParser
                 }
             }
         }
-      }
+      }*/
     //}
 
-    if (counter != 0) {
-      setFailedPosition(t.getPosition(), 401, badReq); // If there are requirements not found, set failed position with code 401
-    }
+    //if (counter != 0) {
+      //setFailedPosition(t.getPosition(), 401, badReq); // If there are requirements not found, set failed position with code 401
+      //String reqID = t.getSubToken("reqIdentifier").getValue(); 
+      //Requirement ImpRequirement = model.getAllRequirements().get(reqID);
+      //setFailedPosition(ImpRequirement.getReqToken(), 401,reqImpID);
+      setFailedPosition(t.getPosition(), 401,reqImpID);// There is a need to use reqToken here
+   // }
   }
 
   private void analyzeImplementReq(Token t, UmpleClass aClass) {
