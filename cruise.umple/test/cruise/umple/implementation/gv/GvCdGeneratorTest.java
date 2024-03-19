@@ -35,6 +35,8 @@ public class GvCdGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/gv/ColourParsingcd.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/ColourParsingTest2cd.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/ColourParsingTest3cd.gv");
+
+    SampleFileWriter.destroy(pathToInput + "/gv/IncreaseClassSepcd.gv");
   }
 
   @Test
