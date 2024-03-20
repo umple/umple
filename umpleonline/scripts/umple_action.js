@@ -1627,10 +1627,432 @@ Action.displayMenu = function(event) {
   });
   document.body.appendChild(menu);
 }
-Action.displayAssociMenu = function(event) {
-  console.log('Edit Association clicked');
+Action.displayAssociMenu = function(event,associationLink) {
+  const regex = /Action\.selectAssociation\('([^']+)'\)/;
 
+  // Use the regex to extract the content
+  const associationDetails = associationLink.match(regex);
+
+      
+  // associationDetails array contains the extracted information
+  let indices = Action.selectAssociation(associationDetails[1]);
+ 
+  var detailsArray = associationDetails[1].split(',');
+
+  if(detailsArray.length==4){
+    var className = detailsArray[0].trim();
+    var endInfo = detailsArray[2].split(' ');
+    var startInfo = detailsArray[3].split(' ');
+ 
+  }
+  else{
+    var endInfo = detailsArray[2].split(' ');
+    var startInfo = detailsArray[2].split(' ');
+    var className = detailsArray[0].trim();
+    
+  }
+  var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
+  var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
+  if (Page.codeMirrorOn) {
+      scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
+
+      if (!scursor.findNext()) {
+          return; // false
+      }
+
+      // Have found declaration of class. Now have to search for the next class or end
+      var theStart = scursor.from();
+
+      var theEnd = new Object();
+
+      theEnd.line = Page.codeMirrorEditor.lineCount();
+      theEnd.ch = 9999;
+
+      scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
+
+      while (scursor.findNext()) {
+          var endObject = scursor.from();
+
+          //This is checking if the class declaration found was in a single line comment.
+          innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
+          var commentFound = innerCursor.findPrevious();
+          if (commentFound && innerCursor.from().line == endObject.line) {
+              //The class declaration found was actually in a single line comment, keep searching
+              continue;
+          }
+
+          //Check if the found class declaration is in a multiline comment
+          innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
+          //Search backwards for a /* or */
+          var commentFound = innerCursor.findPrevious();
+          if (commentFound) {
+              if (commentFound[0] === "/*") {
+                  //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
+
+                  //Look for the exit marker
+                  innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
+                  var commentFound = innerCursor.findNext();
+
+                  if (commentFound) {
+                      var commentEnd = innerCursor.from();
+                      if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
+                          //The class declaration found is in a multiline comment, keep looking
+                          continue;
+                      }
+                  }
+              }
+          }
+
+          theEnd.line = endObject.line - 1;
+          theEnd.ch = 999;
+          break;
+      }
+
+      Page.codeMirrorEditor.setSelection(theStart, theEnd);
+      var classCode = Page.codeMirrorEditor.getSelection();//get the class code for where the association belong
+     
+    }
+    var jsInput=classCode.replaceAll("\n","&#10").replaceAll("\"","&#$quot");;
+  let isEnd=1;//0 as start 1 as end
+  let startIndex = indices.startIndex;
+  let endIndex = indices.endIndex;   
+  Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex,Page.codeMirrorEditor.getValue()),Action.indexToPos(endIndex,Page.codeMirrorEditor.getValue()))
+  var selectedText = Page.codeMirrorEditor.getSelection();
+
+  if(selectedText.includes(endInfo[0].trim())==false){
+    isEnd=3;
+  }
+  var menu = document.createElement('customContextMenu');
+  var rowContent = ["Alter start multiplicity","Alter start role name","Alter end multiplicity","Alter end role name","Delete the association."];
+  var rowFuncs = [
+    "Action.modifyMultiplicity(\""+jsInput+"\",\""+selectedText+"\",\""+startInfo[0]+"\",\""+0+"\")",
+    "Action.modifyRoleName(\""+jsInput+"\",\""+selectedText+"\",\""+startInfo[1]+"\",\""+startInfo[0]+"\",\""+0+"\")",
+    "Action.modifyMultiplicity(\""+jsInput+"\",\""+selectedText+"\",\""+endInfo[0]+"\",\""+isEnd+"\")",
+    "Action.modifyRoleName(\""+jsInput+"\",\""+selectedText+"\",\""+endInfo[1]+"\",\""+startInfo[0]+"\",\""+1+"\")",
+    "Action.deleteAssociation(\""+jsInput+"\",\""+selectedText+"\")"
+
+  ];
+
+  menu.style.zIndex = "1000";
+  menu.style.border = "1px solid #ccc";
+  menu.style.backgroundColor = "#f8f8f8";
+  menu.style.padding = "5px";
+  menu.style.position = "fixed";
+  //add rows
+  for (var i = 0; i < rowContent.length; i++) {
+    var row = document.createElement("div");
+    row.style.padding = "5px";
+    row.style.borderRadius = "3px";
+    row.style.cursor = "pointer";
+    row.style.transition = "background-color 0.3s";
+    row.textContent = rowContent[i];
+    row.setAttribute('onclick',"javascript:"+rowFuncs[i]);
+    // Highlight row on hover
+    row.addEventListener("mouseover", function() {
+      this.style.backgroundColor = "#ddd";
+    });
+    row.addEventListener("mouseout", function() {
+      this.style.backgroundColor = "transparent";
+    });
+
+    //add row to context menu
+    menu.appendChild(row);
+
+  }
+
+  //set menu location at mouse, while ensuring it is on screen
+  var menuRect=menu.getBoundingClientRect();
+  if(event.clientX+menuRect.width>window.innerWidth){
+    menu.style.right=(window.innerWidth-event.clientX)+"px";
+  } else {
+    menu.style.left = event.clientX+"px";
+  }
+  if(event.clientY+menuRect.height>window.innerHeight){
+    menu.style.bottom=(window.innerHieght-event.clientY)+"px";
+  } else {
+    menu.style.top = event.clientY+"px";
+  }
+  // Add a listener to hide the menu when the user clicks outside of it
+  document.addEventListener('mousedown', function hideMenu(e) {
+    var prompt=document.getElementById("promptBox");
+    if (e.target != menu && !menu.contains(e.target)) {
+      if(prompt!=null&&e.target != prompt && !prompt.contains(e.target)){
+
+        document.removeEventListener('mousedown', hideMenu);
+        Action.removeContextMenu();
+
+      } else {
+        document.removeEventListener('mousedown', hideMenu);
+        Action.removeContextMenu();
+      }
+    }
+  });
+  document.body.appendChild(menu);
 };
+Action.validateMultiplicity = function(multiplicity) {
+  // Check if not empty
+  if (!multiplicity) return false;
+
+  // Validate '*' or a single positive integer including '0'
+  if (multiplicity === "*" || multiplicity.match(/^\d+$/)) return true;
+
+  // Validate range formats including "n..m", "0..*", "1..*", "n..*", "0..m", "1..m"
+  if (multiplicity.match(/^(\d+|\*)\.\.(\d+|\*)$/)) {
+    const parts = multiplicity.split('..');
+    const lowerBound = parts[0];
+    const upperBound = parts[1];
+
+    // Handle '*' in either part of the range
+    if (lowerBound === '*' || upperBound === '*') {
+      // Validate "0..*" or "n..*" where n > 0
+      if (lowerBound === '0' || lowerBound.match(/^\d+$/) && lowerBound !== '0') return true;
+    } else {
+      // Validate "n..m" where n <= m
+      const n = parseInt(lowerBound, 10);
+      const m = parseInt(upperBound, 10);
+
+      if (n <= m) return true;
+    }
+  }
+
+  // If none of the above conditions met, return false
+  return false;
+};
+Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
+  let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+  if(isStart==1){
+    var isEnd=true;
+    
+  }
+  else if(isStart==3){
+    alert("unable to change end multiplicity for associationClass");
+    return;
+  }
+  else{
+    var isEnd=false;
+    ;
+  }
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+  prompt.style.border = "1px solid #ccc";
+  prompt.style.backgroundColor = "#f8f8f8";
+  prompt.style.padding = "5px";
+  prompt.style.position = "absolute";
+  prompt.style.left = '50%';
+  prompt.style.top = '50%';
+  prompt.style.transform = 'translate(-50%, -50%)';
+  prompt.id = "promptBox";
+ 
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.value = mult; // Pre-fill with the current attribute name
+  input.style.padding = '5px';
+  input.style.margin = '5px';
+  input.style.width = '200px';
+ 
+  var submitButton = document.createElement('button');
+  submitButton.textContent = 'Change';
+  submitButton.style.padding = '5px';
+  submitButton.style.marginLeft = '5px';
+ 
+  // Append elements to the prompt
+  prompt.appendChild(input);
+  prompt.appendChild(submitButton);
+ 
+  // Add the prompt to the document body
+  document.body.appendChild(prompt);
+  input.focus(); // Automatically focus the input
+  var hider=function hidePrompt(e) {
+    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  };
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", hider);
+  // Event listener for the submit action
+  submitButton.addEventListener('click', function() {
+    if(Action.validateMultiplicity(input.value.trim())){
+    var escapedOldMult = mult.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    
+    let updatedAssociationString;
+    
+    if (isEnd) {
+        // If it's the end multiplicity and there are two occurrences, replace the second one
+        const parts = selectedText.split(new RegExp(escapedOldMult));
+        if (parts.length === 3) { // Assuming exactly two occurrences
+            updatedAssociationString = parts[0] + mult.trim() + parts[1] + input.value.trim() + parts[2];
+        } else if (parts.length === 2) { // Assuming only one occurrence (end multiplicity)
+            updatedAssociationString = parts[0] + input.value.trim() + parts[1];
+        }
+    } else {
+        // If it's the start multiplicity, simply replace the first occurrence
+        updatedAssociationString = selectedText.replace(new RegExp(escapedOldMult), input.value.trim());
+    }
+    let orig=Page.codeMirrorEditor.getValue();
+    if((classyCode.includes(selectedText))==false){
+      orig=orig.replace(selectedText,updatedAssociationString);
+    }
+    else{
+    let modifiedClassCode = classyCode;
+    modifiedClassCode = modifiedClassCode.replace(selectedText,updatedAssociationString);
+     orig=orig.replace(classyCode,modifiedClassCode);
+    }
+    
+    Page.codeMirrorEditor.setValue(orig);
+    // Apply updatedAssociationString to the Umple code as needed
+    
+     Action.removeContextMenu();
+     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+     prompt.remove(); // Remove the prompt after processing
+  }
+  else {
+    // If the format is invalid, display a message
+    alert("Invalid multiplicity format. Please enter a valid format (e.g., '*', '1', '0..1', '1..*', or '2..5').");
+    input.focus(); // Re-focus on the input to allow the user to correct it
+}
+  });
+ };
+
+Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
+  let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+  if(isStart==1){
+    var isEnd=true;
+    
+  }
+  else{
+    var isEnd=false;
+    ;
+  }
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+  prompt.style.border = "1px solid #ccc";
+  prompt.style.backgroundColor = "#f8f8f8";
+  prompt.style.padding = "5px";
+  prompt.style.position = "absolute";
+  prompt.style.left = '50%';
+  prompt.style.top = '50%';
+  prompt.style.transform = 'translate(-50%, -50%)';
+  prompt.id = "promptBox";
+ 
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.value = roleName; // Pre-fill with the current attribute name
+  input.style.padding = '5px';
+  input.style.margin = '5px';
+  input.style.width = '200px';
+ 
+  var submitButton = document.createElement('button');
+  submitButton.textContent = 'Change';
+  submitButton.style.padding = '5px';
+  submitButton.style.marginLeft = '5px';
+ 
+  // Append elements to the prompt
+  prompt.appendChild(input);
+  prompt.appendChild(submitButton);
+ 
+  // Add the prompt to the document body
+  document.body.appendChild(prompt);
+  input.focus(); // Automatically focus the input
+  var hider=function hidePrompt(e) {
+    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  };
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", hider);
+  // Event listener for the submit action
+  submitButton.addEventListener('click', function() {
+    var newRoleName = input.value.trim();
+    if(roleName==""){
+      var connectionPattern = /(\s*<-\s*|\s*><\s*|\s*--\s*|\s*->\s*|\s*<@>-\s*|\s*-\s*<@>\s*)/;
+    var parts = selectedText.split(connectionPattern);
+    var startPart = parts[0].trim(); // "1 parent"
+    var updatedStartPart, updatedEndPart;
+    var updatedAssociationString;
+    if(parts.length>2){
+      var endPart = parts[2].trim(); // "* FunctionalArea child;"
+      if (isEnd) {
+        if((endPart.includes("sorted"))){
+          var endParts2 = endPart.split("sorted");
+          var endParts = endPart.split(";");
+          updatedEndPart = endParts2[0].trim()+" "+newRoleName+""+"sorted"+endParts2[1];
+        }
+        else{
+        var endParts = endPart.split(";");
+          updatedEndPart = endParts[0].trim()+" "+newRoleName+";";
+        }
+      } else {
+        if((classyCode.includes(selectedText))==false){
+          updatedStartPart = startPart.trim()+" "+newRoleName;
+        }
+        else{
+          updatedStartPart = mult.trim()+" "+newRoleName;
+        }
+        if((startPart.includes("sorted"))){
+          var startParts = startPart.split("sorted");
+
+          updatedStartPart = mult.trim()+" "+newRoleName+""+"sorted"+startParts[1];
+        }
+      }
+      updatedAssociationString = isEnd ? (startPart + parts[1] + updatedEndPart) : (updatedStartPart + parts[1] + endPart);
+    }
+    else{
+      parts = selectedText.split(" ");
+      if (isEnd==false) {
+        updatedStartPart = mult.trim()+" "+newRoleName;
+        updatedAssociationString = updatedStartPart+" "+parts[1].trim()+";";
+      } else {
+        endParts = selectedText.split(";");
+        updatedAssociationString = endParts[0].trim()+" "+newRoleName+";";
+      }
+    }
+    }
+    else{
+      updatedAssociationString = selectedText.replace(roleName, newRoleName);
+    }
+    
+    let orig=Page.codeMirrorEditor.getValue();
+    if((classyCode.includes(selectedText))==false){
+      orig=orig.replace(selectedText,updatedAssociationString);
+    }
+    else{
+    let modifiedClassCode = classyCode;
+    modifiedClassCode = modifiedClassCode.replace(selectedText,updatedAssociationString);
+     orig=orig.replace(classyCode,modifiedClassCode);
+    }
+    
+    Page.codeMirrorEditor.setValue(orig);
+    // Apply updatedAssociationString to the Umple code as needed
+    
+     Action.removeContextMenu();
+     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+     prompt.remove(); // Remove the prompt after processing
+  
+  });
+ };
+
+   
+Action.deleteAssociation = function(classCode,selectedText){
+  let orig=Page.codeMirrorEditor.getValue();
+  let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+  if((classyCode.includes(selectedText))==false){
+    orig=orig.replace(selectedText,"");
+  }
+  else{
+  let modifiedClassCode = classyCode;
+    modifiedClassCode = modifiedClassCode.replace(selectedText,"");
+  
+    orig=orig.replace(classyCode,modifiedClassCode);
+  }
+    
+    Page.codeMirrorEditor.setValue(orig);
+  
+  
+  Action.removeContextMenu();
+  TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+}
 
 Action.displayAttributeMenu = function(event, attributeName, attributeType) {
   if(!Action.diagramInSync){
@@ -1666,7 +2088,6 @@ Action.displayAttributeMenu = function(event, attributeName, attributeType) {
   menuHeader.style.fontWeight = "bold";
   menu.appendChild(menuHeader);
   var rowContent = ["Rename Attribute", "Change Type", "Delete Attribute"];
-  
   var jsInput=chosenClass.replaceAll("\n","&#10").replaceAll("\"","&#$quot");;
   var rowFuncs = [
     "Action.renameAttribute(\""+jsInput+"\",\""+elemText+"\",\""+attributeName+"\",\""+attributeType+"\")",
@@ -1994,10 +2415,7 @@ Action.classClicked = function(event)
     Action.classSelected(obj);
   }
 }
-Action.associationClicked = function(associationDetails) 
-{
-  console.log("Association selected:", associationDetails);
-}
+
 Action.stateClicked = function(identifier)
 {
     if (!Action.diagramInSync) return;
@@ -3084,9 +3502,6 @@ Action.selectItem = function(searchCursor, nextCursor)
     }
 
     Page.codeMirrorEditor.setSelection(start,theEnd);
-    var selectedText = Page.codeMirrorEditor.getSelection();
-
-console.log(selectedText);
     return;    //true 
   }
   return;  // false - important do not return a value or it won't work in Firefox/Opera
@@ -3103,7 +3518,6 @@ Action.selectMethod = function(methodName, type, accessMod)
 
 
 Action.selectAssociation = function(associationDetails) {
-  console.log("Association selected:", associationDetails);
   var detailsArray = associationDetails.split(',');
   var className = detailsArray[0];
   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
@@ -3188,35 +3602,35 @@ Action.selectAssociation = function(associationDetails) {
 
       var startEscaped = start.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       var endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      var patternString = startEscaped + "(?:\\s+sorted\\s+{.*?})?" + "(\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped + "(?:\\s+sorted\\s+{.*?})?";
+      var patternString = startEscaped + "(?:\\s+sorted\\s+{.*?})?" + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped + "(?:\\s+sorted\\s+{.*?})?" + "\\s*;";
 
       var pattern = new RegExp(patternString, "g");
       var code = Page.codeMirrorEditor.getValue();
       //Finding matches using the constructed pattern
       var matches = selectedText.match(pattern);
       if (matches) {
-          console.log(matches[0]);
+          
           startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
           endIndex = startIndex + matches[0].length;
           Action.highlightByIndex(startIndex, endIndex);
-          return;
+          return { startIndex: startIndex, endIndex: endIndex };
       } else {
           if (endEscaped.startsWith("1")) { // this for simple writing association
               end = endEscaped.substring(2).trim();
               endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-              patternString = startEscaped + "\\s+" + endEscaped;
+              patternString = startEscaped + "\\s+" + endEscaped+ "\\s*;";
               pattern = new RegExp(patternString, "g");
               matches = selectedText.match(pattern);
               if (matches == null) {
-                  patternString = startEscaped + "\\s+.*?" + endEscaped;
+                  patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
                   pattern = new RegExp(patternString, "g");
                   matches = selectedText.match(pattern);
               }
-              console.log(matches[0]);
+              
               startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
               endIndex = startIndex + matches[0].length;
               Action.highlightByIndex(startIndex, endIndex);
-              return;
+              return { startIndex: startIndex, endIndex: endIndex };
           } else {
               if (startEscaped.trim().includes(' ')) {
                   var newstart = startEscaped.split(' ');
@@ -3224,21 +3638,20 @@ Action.selectAssociation = function(associationDetails) {
               } else {
                   startEscaped += " " + className;
               }
-              console.log("start:", startEscaped);
-              console.log("end:", endEscaped);
-              patternString = startEscaped + "(\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped;
+              
+              patternString = startEscaped + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped+ "\\s*;";
               pattern = new RegExp(patternString, "g");
               matches = code.match(pattern);
               if (matches == null) {
-                  patternString = startEscaped + "\\s+.*?" + endEscaped;
+                  patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
                   pattern = new RegExp(patternString, "g");
                   matches = code.match(pattern);
               }
-              console.log(matches[0]);
+              
               startIndex = code.indexOf(matches[0]);
               endIndex = startIndex + matches[0].length;
               Action.highlightByIndex(startIndex, endIndex);
-              return;
+              return { startIndex: startIndex, endIndex: endIndex };
 
           }
       }
@@ -3251,17 +3664,16 @@ Action.selectAssociation = function(associationDetails) {
 
       var startEscaped = start.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       var endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      var patternString = startEscaped + ".*?" + endEscaped;
+      var patternString = startEscaped + ".*?" + endEscaped+ "\\s*;";
       var pattern = new RegExp(patternString, "g");
       var code = Page.codeMirrorEditor.getValue();
       //Finding matches using the constructed pattern
       var matches = selectedText.match(pattern);
       if (matches) {
-          console.log(matches[0]);
           startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
           endIndex = startIndex + matches[0].length;
           Action.highlightByIndex(startIndex, endIndex);
-          return;
+          return { startIndex: startIndex, endIndex: endIndex };
       }
 
   }
@@ -3831,19 +4243,23 @@ Action.updateUmpleDiagramCallback = function(response)
           Action.displayAttributeMenu(event, attributeName, attributeType); // Calls the testing function
         });
       }
+    }
       var associationElems = document.getElementsByClassName("edge");
     for (let i = 0; i < associationElems.length; i++) {
-        associationElems[i].addEventListener("dblclick", function(event) {
+      var associationAnchors = associationElems[i].getElementsByTagName("a");
+      for (let j = 0; j < associationAnchors.length; j++) {
+        let associationLink = associationAnchors[j].getAttribute("xlink:href");
+        associationAnchors[j].addEventListener("dblclick", function(event) {
             event.preventDefault(); // Prevent the default click behavior
-            Action.displayAssociMenu(event);
+            Action.displayAssociMenu(event,associationLink);
         });
-        associationElems[i].addEventListener("contextmenu", function(event) {
+        associationAnchors[j].addEventListener("contextmenu", function(event) {
           event.preventDefault(); // Prevent the default click behavior
-          Action.displayAssociMenu(event);
+          Action.displayAssociMenu(event,associationLink);
       });
     }
-    }
   }
+}
   
 
   if(Page.useGvStateDiagram){
