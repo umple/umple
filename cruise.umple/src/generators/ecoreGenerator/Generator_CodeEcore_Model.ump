@@ -86,7 +86,7 @@ class EcorePackage {
 
   String nsURI;
   String nsPrefix;
-  0..1 -> * EcoreDataType dataTypes;
+  // 0..1 -> * EcoreDataType dataTypes;
   0..1 -> * EcoreClass classes;
   0..1 -> * EcoreEnum enums;
   
@@ -118,8 +118,8 @@ class EcorePackage {
       return new String[]{EcoreGenModel.ecorePrimitiveTypeMap.get(eType)};
     }else if(EcoreGenModel.umplePrimitiveTypeMap.containsKey(eType)){
       String existingType = EcoreGenModel.umplePrimitiveTypeMap.get(eType);
-      EcoreDataType dataType = new EcoreDataType(eType, getIntent()+1, existingType, 0);
-      addDataType(dataType);
+      // EcoreDataType dataType = new EcoreDataType(eType, getIntent()+1, existingType, 0);
+      // addDataType(dataType);
       return new String[]{"#//"+eType};
     }else{
       String actualEType = "";
@@ -160,8 +160,8 @@ class EcorePackage {
       }else if(EcoreGenModel.ecoreGenericTypeMap.containsKey(existingType)){
         typeArgs.set(0, existingType);
       }else{
-        EcoreDataType dataType = new EcoreDataType(actualEType, getIntent()+1, existingType, typeArgs.size()-1);
-        addDataType(dataType);
+        // EcoreDataType dataType = new EcoreDataType(actualEType, getIntent()+1, existingType, typeArgs.size()-1);
+        // addDataType(dataType);
         typeArgs.set(0, "#//"+actualEType);
       }
       return typeArgs.toArray(new String[0]);
@@ -183,7 +183,7 @@ class EcorePackage {
   List<EcoreGenericNode> getNodeChildren(){
     List<EcoreGenericNode> nodes = super.getNodeChildren();
     
-    nodes.addAll(getDataTypes());
+    // nodes.addAll(getDataTypes());
     nodes.addAll(getClasses());
     nodes.addAll(getEnums());
     
@@ -191,7 +191,7 @@ class EcorePackage {
   }
   
   Integer getNodeChildCount(){
-    return numberOfClasses() + numberOfDataTypes() + numberOfEnums();
+    return numberOfClasses() + numberOfEnums();
   }  
 
   xmlHeader <<!<?xml version="1.0" encoding="UTF-8"?>!>>
@@ -202,6 +202,7 @@ class EcorePackage {
   };
 }
 
+/*
 class EcoreDataType {
   depend java.util.*;
 
@@ -240,6 +241,7 @@ class EcoreDataType {
     return typeArgumentCount;
   }
 }
+*/
 
 class EcoreTypeParameter {
   depend java.util.Map;

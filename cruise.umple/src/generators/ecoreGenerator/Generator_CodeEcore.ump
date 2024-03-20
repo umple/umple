@@ -136,12 +136,14 @@ class EcoreGenerator {
         }
       }
       
+      /*
       for(StateMachine sm : uClass.getStateMachines()){
         String smName = sm.getName();
         String enumerationName = "#//" + StringFormatter.toPascalCase(sm.getName());
         EcoreAttribute eAttribute = new EcoreAttribute(smName, eClass.getIntent()+1, enumerationName);
         eClass.addAttribute(eAttribute);
       }
+      */
     }
   }
   
