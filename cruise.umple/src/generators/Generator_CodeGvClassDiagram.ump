@@ -340,7 +340,7 @@ class GvClassDiagramGenerator
                 nlDesc += "It can have none or just 1. \n";
               }
               else {
-                nlDesc += "And there is an upppppper bound of at most " + rightMultInt2 + " " + getClassWithRoleName(rightEnd, rightMult2) + ".\n";
+                nlDesc += "And there is an upper bound of at most " + rightMultInt2 + " " + getClassWithRoleName(rightEnd, rightMult2) + ".\n";
               }
             
           } 
