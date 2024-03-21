@@ -77,8 +77,8 @@ io.on('connect_error', (err) => {
 
 // listening for connections from clients
 io.on('connection', (socket: Socket) =>{
-
-  console.log("Client connected! ")
+  // DEBUG
+  console.log("Client connected! ", "Socket ID: ", socket.id)
   
   // core socket event that sends updates to a requesting client
   // when the client requests for them to be pulled
@@ -86,7 +86,7 @@ io.on('connection', (socket: Socket) =>{
   socket.on('pullUpdates', (fileKey: string, version: number) => {
     // DEBUG
     // console.log("inside pullUpdates with filekey: ", fileKey)
-    console.log(`pullUpdates fileKey: ${fileKey}`)
+    console.log(`pullUpdates - fileKey: ${fileKey} update number: ${version}`)
     let currentCollabDoc: collabDoc = getOrCreate(fileKey)
     let updates: Update[] = currentCollabDoc.updates
     let pending: ((value: any) => void)[] = currentCollabDoc.pending
@@ -108,10 +108,13 @@ io.on('connection', (socket: Socket) =>{
   // fileKey parameter should come from the client - umpdir_filename
   socket.on('pushUpdates', (fileKey: string, version, docUpdates) => {
     // DEBUG
-    console.log(`pushUpdates fileKey: ${fileKey}`)
+    console.log(`pushUpdates - fileKey: ${fileKey} update number: ${version}`)
     let currentCollabDoc : collabDoc = getOrCreate(fileKey)
     let updates: Update[] = currentCollabDoc.updates
     docUpdates = JSON.parse(docUpdates);
+    // DEBUG
+    console.log(`document (10 chars): ${currentCollabDoc.doc.slice(0, 10)}`)
+    console.log("document updates: ", docUpdates.toString())
 
     try {
       // DEBUG
@@ -148,7 +151,7 @@ io.on('connection', (socket: Socket) =>{
 
   socket.on('getDocument', (fileKey, initText) => {
     // DEBUG
-    console.log(`getDocument event: ${fileKey} ${initText}`)
+    console.log(`getDocument event: ${fileKey}`) // ${initText}
       let currentCollabDoc: collabDoc = getOrCreate(fileKey)
       let updates: Update[] = currentCollabDoc.updates
       let doc: Text = currentCollabDoc.doc
