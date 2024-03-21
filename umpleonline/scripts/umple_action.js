@@ -1266,7 +1266,6 @@ Action.displayTransitionMenu = function(event) {
   var elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("transitionClicked(&quot;")+"transitionClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("transitionClicked(&quot;")+"transitionClicked(&quot;".length));
   elemText=elemText.replaceAll("&amp;","&");
   let id = elemText.split("*^*");
-  console.log(elemText);
   let identifierState=id[3].split(".");
   dest=id[4].split(".");
   
@@ -1277,10 +1276,8 @@ Action.displayTransitionMenu = function(event) {
   let searchTerm=id[2].replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
   searchTerm=searchTerm.replace("after","after~`~?:Every`~`?"); //subpar solution, could be improved
   if(id[5]!=""){
-    console.log(id[5]);
     let guardStr=id[5].trim().replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
     searchTerm=searchTerm+"\\s*[\\s*"+guardStr.trim().slice(1,guardStr.trim().length-1)+"\\s*]";
-    console.log(searchTerm);
   }
   searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)?").replaceAll("(","\\(?").replaceAll("~`~","(").replaceAll("`~`",")").replaceAll(" ","\\s*").replaceAll(",","\\s*,\\s*").replaceAll("!","\\s*!\\s*").replaceAll("/","\\s*/\\s*"); 
   searchTerm=searchTerm.replaceAll("&&","&{1,2}");
@@ -1290,11 +1287,9 @@ Action.displayTransitionMenu = function(event) {
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
   let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
-  console.log(code);
    let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
 
    const match =code.trim().match(pattern2);
-  console.log(startIndex,endIndex);
   // Extracting captured groups based on the updated pattern
   let eventName = match[1].trim();
   let guard = match[3] ? match[3].trim() : (match[7] ? match[7].trim() : null);
@@ -1471,7 +1466,7 @@ Action.changeTransition = function(dest,startIndex,endIndex) {
 };
 
 Action.modifyTransitionGuard = function(startIndex,endIndex) {
-  console.log(startIndex,endIndex);
+
   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
   let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
   const match =classCode.trim().match(pattern2);
@@ -1557,17 +1552,16 @@ Action.modifyTransitionGuard = function(startIndex,endIndex) {
       if (guard === null || guard === "") {
         if(action==null || action === ""){
           parts[0]=eventName+" ["+input.value.trim()+"]";
-          console.log("add guard"+parts[0]);
+  
         }
         else{
-          if(part[1].includes(action)){
+          if(parts[1].includes(action)){
             parts[0]=eventName+" ["+input.value.trim()+"]";
           }
           else{
             parts[0]=eventName+" ["+input.value.trim()+"]"+" /{" +action+"}"
           }
           
-          console.log("add guard"+parts[0]);
         }
         modifiedTransition = parts[0]+ " -> " + parts[1];
   
@@ -1596,8 +1590,6 @@ Action.modifyTransitionAction = function(startIndex,endIndex) {
   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
   let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
   const match =classCode.trim().match(pattern2);
-  console.log(classCode);
-  console.log(match);
   // Extracting captured groups based on the updated pattern
   
   let guard = match[3] ? match[3].trim() : (match[7] ? match[7].trim() : null);
@@ -1677,7 +1669,7 @@ Action.modifyTransitionAction = function(startIndex,endIndex) {
       else{
         if (currentAction === null || currentAction === "") {
           modifiedTransition = parts[0]+"/{"+textarea.value.trim()+"}"+ " -> " + parts[1];
-          console.log("add action"+modifiedTransition);
+      
     
         }
         else{
@@ -2609,22 +2601,23 @@ Action.transitionClicked = function(identifier)
   let searchTerm=id[2].replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
   searchTerm=searchTerm.replace("after","after~`~?:Every`~`?"); //subpar solution, could be improved
   if(id[5]!=""){
-    console.log(id[5]);
+  
     let guardStr=id[5].trim().replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
     searchTerm=searchTerm+"\\s*[\\s*"+guardStr.trim().slice(1,guardStr.trim().length-1)+"\\s*]";
-    console.log(searchTerm);
+ 
   }
   searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)?").replaceAll("(","\\(?").replaceAll("~`~","(").replaceAll("`~`",")").replaceAll(" ","\\s*").replaceAll(",","\\s*,\\s*").replaceAll("!","\\s*!\\s*").replaceAll("/","\\s*/\\s*"); 
   searchTerm=searchTerm.replaceAll("&&","&{1,2}");
   let pattern= new RegExp(searchTerm+".*->","s");
-  console.log(pattern);
+
   let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
   let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
   Action.highlightByIndex(startIndex,endIndex);
+  /*
   let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
-  console.log(code);
+
    let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
 
    const match =code.trim().match(pattern2);
@@ -2634,18 +2627,7 @@ Action.transitionClicked = function(identifier)
    let guard = match[3] ? match[3].trim() : (match[7] ? match[7].trim() : null);
    let action = match[5] ? match[5].trim() : (match[9] ? match[9].trim() : null);
    let destinationState = match[10].trim();
-      if(guard===null){
-        guard="";
-      }
-      //
-      if(action===null){
-        action="";
-      }
-      //
-    console.log(eventName); 
-    console.log(guard); 
-    console.log(action); 
-    console.log(destinationState); 
+*/
 }
 
 
