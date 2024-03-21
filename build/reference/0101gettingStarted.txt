@@ -23,11 +23,13 @@ code)</li>
 <br />
 
 <li><b>Add UML modeling constructs directly into your programs, when you 
-are programming in Java, PHP, C++ or  Ruby</b>. For example, when programming in 
+are programming in Java, Python, PHP, C++ or  Ruby</b>. For example, when programming in 
 Java, you can directly add a UML <a href="BasicStateMachines.html">state machine</a> into your code. This can 
 save you a lot of coding. The Umple compiler acts as a pre-processor, 
 first compiling the state machine to Java, and then compiling the Java 
-into an executable program.</li>
+into an executable program. Java methods found in the Umple code will be unchanged in the generated output.
+The same works for languages like  Python and C++, although methods have to be tagged with the relevant language. See the <a href="HelloWorldExamples.html">Hello World examples</a>
+to see how to do this.</li>
 
 <br />
 
