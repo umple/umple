@@ -2951,7 +2951,10 @@ Action.classClicked = function(event)
     Action.classSelected(obj);
   }
 }
-
+Action.associationClicked = function(associationDetails) 
+{
+  console.log("Association selected:", associationDetails);
+}
 Action.stateClicked = function(identifier)
 {
     if (!Action.diagramInSync) return;
@@ -4054,6 +4057,9 @@ Action.selectItem = function(searchCursor, nextCursor)
     }
 
     Page.codeMirrorEditor.setSelection(start,theEnd);
+    var selectedText = Page.codeMirrorEditor.getSelection();
+
+console.log(selectedText);
     return;    //true 
   }
   return;  // false - important do not return a value or it won't work in Firefox/Opera
