@@ -1,11 +1,13 @@
 /*
  * Introductory example of Umple showing classes,
  * attribute, association, generalization, methods
- * and the mixin capability. Generate java and run this.
+ * and the mixin capability.
+ * Generate either Python or Cpp and run this.
  * 
  * The output will be:
  * The mentor of Tom The Student is Nick The Mentor
  * The students of Nick The Mentor are [Tom The Student]
+ *
  * If you try to execute this with Java, it will
  * indicate there is no Java main program. See
  * the separate Java example in the user manual.
