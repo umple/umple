@@ -1,0 +1,23 @@
+/*
+ * Simple Hello World example for Umple.
+ * Compile this with Umple specifying either
+ * -g Python or -g Cpp
+ *
+ * Or specify in UmpleOnline either Python or C++
+ * in the generate menu
+ */
+class HelloWorld {
+  public static void main(String [ ] args) Python{
+    print("Hello World")
+  }
+  
+  public static void main(String [ ] args) Cpp{
+    cout<<"Hello World!";
+  }
+}
+
+//$?[End_of_model]$?
+// @@@skipphpcompile - Contains Python Code
+// @@@skiprubycompile - Contains Python Code
+// @@@skipjavacompile - Contains Python Code
+
