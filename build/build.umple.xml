@@ -421,6 +421,9 @@
       <fileset file="umplewww/files/DRAC_logo.jpeg"/>
     </copy>
     <copy todir="${dist.path}/reference/files">
+      <fileset file="umplewww/files/FB-logo.jpg"/>
+    </copy>
+    <copy todir="${dist.path}/reference/files">
       <fileset file="umplewww/files/umple_example_uml.jpg"/>
     </copy>
     <copy todir="${dist.path}/reference/syntaxhighlighter">
