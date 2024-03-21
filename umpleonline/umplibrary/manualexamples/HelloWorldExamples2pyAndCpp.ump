@@ -9,7 +9,7 @@
  */
 class Person {
   name; // Attribute, string by default
-  String __str__() {
+  String __str__() Python {
     return self.getName()
   }
 }

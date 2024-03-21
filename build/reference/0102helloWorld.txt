@@ -4,12 +4,14 @@ noreferences
 @@tooltip Basic examples showing how Umple code is written
 
 @@description
-<p>As is customary when introducing a new language, here are some 'hello world' examples for Umple. Load these examples into UmpleOnline by clicking on the links. Then generate Java code by clicking on the 'Generate' button. Next click on the 'download zip file' link and run 'javac' on the result or else compile it in Eclipse.</p>
+<p>As is customary when introducing a new language, here are some 'hello world' examples for Umple.</p>
 
-<p><b>First example below:</b> This looks identical to how a Java 'hello world' example would look, illustrating a key feature of Umple: Umple <i>adds</i> features to existing languages: Code in the original language can and does remain the same. Umple just replaces and simplifies some (or a lot) of it.</p>
+<p>The first two examples demonstrate executable Umple programs with embedded Java main programs. Load these examples into UmpleOnline by clicking on the links. The click 'Execute It' to see the output. Or generate Java code by clicking on the 'Generate It' button; then click on the 'download zip file' link and run 'javac' on the result, followed by 'java' on the resulting class file.</p>
+
+<p><b>About the first example below:</b> This contains just Java code and is the same as a plain Java program; it illustrates a key feature of Umple: Umple <i>adds</i> features to existing languages: Code in the original language can and does remain the same. Umple just replaces and simplifies some (or a lot) of it.</p>
 
 
-<p><b>Second example below:</b> This shows some very simple features of Umple: An attribute, an association, a generalization, some Java methods and the mixin capability:<br/>
+<p><b>About the second example below:</b> This shows some very simple features of Umple: An attribute, an association, a generalization, some Java methods and the mixin capability:
 <ul>
 <li><a href="AttributeDefinition.html">Attributes</a> look very much like variables in Java or other similar programming languages; however they are more than that: Umple generates code for setting and getting each attribute. You can also add lots of other features to attributes, such as making them immutable (so they cannot change), adding constraints, or making them part of a 'key'.</p>
 <li>An <a href="AssociationDefinition.html">association</a> such as the one shown here maintains links between objects at run-time. Here the student can get its mentors, and the mentor can find his or her optional student.
@@ -23,19 +25,25 @@ noreferences
 
 <img src="examples/MentorStudent.png" alt="UML class diagram showing superclass Person (with attribute name), and with subclasses Student and Mentor. There is a 0..1 -- * association between the subclasses."/>
 
+&nbsp;<br/>
 
-@@example @@caption Example Showing a Simple Class with a Main Method @@endcaption
+<p><b>About the third and fourth examples below:</b> These are the same as the first two examples, except that they contain embedded main programs in Python and C++. After you load these into UmpleOnline, select either Python or C++ from the 'GENERATE' menu, then select 'Generate It'.</p>
+
+&nbsp;<br/>
+
+
+@@example @@caption Example Showing a Simple Class with a Java Main Method @@endcaption
 @@source manualexamples/HelloWorldExamples1.ump
 @@endexample
 
-@@example @@caption Example Showing Three Classes with an Association and Attributes (Diagram is Above) @@endcaption
+@@example @@caption Example Showing Three Classes with an Association and Attributes (Diagram is Above) and a Java Main Method @@endcaption
 @@source manualexamples/HelloWorldExamples2.ump
 @@endexample
 
-@@example @@caption Example Showing a Simple Class with a Main Method for Python Generation @@endcaption
+@@example @@caption Example Showing a Simple Class with a Main Method for Python Generation or C++ @@endcaption
 @@source manualexamples/HelloWorldExamples1pyAndCpp.ump
 @@endexample
 
-@@example @@caption Example Showing Three Classes with an Association and Attributes (Diagram is Above) for Python Generation@@endcaption
+@@example @@caption Example Showing Three Classes with an Association and Attributes (Diagram is Above) for Python and C++ Generation@@endcaption
 @@source manualexamples/HelloWorldExamples2pyAndCpp.ump
 @@endexample
