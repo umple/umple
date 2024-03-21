@@ -1537,6 +1537,7 @@ Action.addAssociationGv = function(classCode, className){
     });
   }
 }
+ 
 //Action.displayMenu() is triggered by contextmenu event on Graphviz Class "node" elements
 //Draws a div containing the editing options for class GV diagrams, as well as calling the related function when clicked
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
@@ -1624,6 +1625,246 @@ Action.displayMenu = function(event) {
   });
   document.body.appendChild(menu);
 }
+
+Action.displayAttributeMenu = function(event, attributeName, attributeType) {
+  if(!Action.diagramInSync){
+    return;
+  }
+  // Remove old menu, if any
+  Action.removeContextMenu();
+  var elemText=event.target;
+  attributeName = attributeName.trim();
+  //iterate up to top of class table
+  while(elemText.parentElement.id!="graph0"){
+    elemText=elemText.parentNode;
+  }
+  //unstable - grabs class name
+  elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
+  var orig=Page.codeMirrorEditor.getValue();
+  var chosenClass=Action.splitStates(orig);
+  for(let i=0;i<chosenClass.length;i++){
+    if(chosenClass[i].startsWith("class "+elemText+"{")||chosenClass[i].startsWith("class "+elemText+" ")||chosenClass[i].startsWith("class "+elemText+"\n")){
+      chosenClass=chosenClass[i];
+    }
+  }
+  if(typeof chosenClass != 'string'){
+    return;
+  }
+  
+  // Create context menu for attribute
+  var menu = document.createElement('customContextMenu');
+  var menuHeader = document.createElement('div');
+  menuHeader.textContent = "Attribute: " + attributeName + "Type: " + attributeType;
+  menuHeader.style.padding = "5px";
+  menuHeader.style.borderBottom = "1px solid #ccc";
+  menuHeader.style.fontWeight = "bold";
+  menu.appendChild(menuHeader);
+  var rowContent = ["Rename Attribute", "Change Type", "Delete Attribute"];
+  
+  var jsInput=chosenClass.replaceAll("\n","&#10").replaceAll("\"","&#$quot");;
+  var rowFuncs = [
+    "Action.renameAttribute(\""+jsInput+"\",\""+elemText+"\",\""+attributeName+"\",\""+attributeType+"\")",
+    "Action.changeAttributeType(\""+jsInput+"\",\""+elemText+"\",\""+attributeName+"\",\""+attributeType+"\")",
+    "Action.deleteAttribute(\""+jsInput+"\",\""+elemText+"\",\""+attributeName+"\",\""+attributeType+"\")"
+  ];
+
+
+  // Set common styles for the menu
+  menu.style.zIndex = "1000";
+  menu.style.border = "1px solid #ccc";
+  menu.style.backgroundColor = "#f8f8f8";
+  menu.style.padding = "5px";
+  menu.style.position = "fixed";
+  
+  // Add rows for each action in the context menu
+  for (var i = 0; i < rowContent.length; i++) {
+    var row = document.createElement("div");
+    row.style.padding = "5px";
+    row.style.borderRadius = "3px";
+    row.style.cursor = "pointer";
+    row.style.transition = "background-color 0.3s";
+    row.textContent = rowContent[i];
+    row.setAttribute('onclick', "javascript:" + rowFuncs[i]);
+    
+    // Event listeners for visual feedback on hover
+    row.addEventListener("mouseover", function() {
+      this.style.backgroundColor = "#ddd";
+    });
+    row.addEventListener("mouseout", function() {
+      this.style.backgroundColor = "transparent";
+    });
+    
+    menu.appendChild(row); // Add row to context menu
+  }
+
+  // Position the menu at the mouse location while ensuring it is on screen
+  var menuRect = menu.getBoundingClientRect();
+  if (event.clientX + menuRect.width > window.innerWidth) {
+    menu.style.right = (window.innerWidth - event.clientX) + "px";
+  } else {
+    menu.style.left = event.clientX + "px";
+  }
+  if (event.clientY + menuRect.height > window.innerHeight) {
+    menu.style.bottom = (window.innerHeight - event.clientY) + "px";
+  } else {
+    menu.style.top = event.clientY + "px";
+  }
+  
+  // Add an event listener to hide the menu when the user clicks outside of it
+  document.addEventListener('mousedown', function hideMenu(e) {
+    if (e.target != menu && !menu.contains(e.target)) {
+      document.removeEventListener('mousedown', hideMenu);
+      Action.removeContextMenu();
+    }
+  });
+
+  document.body.appendChild(menu); // Add the menu to the page
+};
+
+Action.renameAttribute = function(classCode, className, attributeName, attributeType) {
+ // Create the input prompt for renaming an attribute
+ var prompt = document.createElement('div');
+ prompt.style.zIndex = "1000";
+ prompt.style.border = "1px solid #ccc";
+ prompt.style.backgroundColor = "#f8f8f8";
+ prompt.style.padding = "5px";
+ prompt.style.position = "absolute";
+ prompt.style.left = '50%';
+ prompt.style.top = '50%';
+ prompt.style.transform = 'translate(-50%, -50%)';
+ prompt.id = "promptBox";
+
+ var input = document.createElement('input');
+ input.type = 'text';
+ input.value = attributeName; // Pre-fill with the current attribute name
+ input.style.padding = '5px';
+ input.style.margin = '5px';
+ input.style.width = '200px';
+
+ var submitButton = document.createElement('button');
+ submitButton.textContent = 'Rename';
+ submitButton.style.padding = '5px';
+ submitButton.style.marginLeft = '5px';
+
+ // Append elements to the prompt
+ prompt.appendChild(input);
+ prompt.appendChild(submitButton);
+
+ // Add the prompt to the document body
+ document.body.appendChild(prompt);
+ input.focus(); // Automatically focus the input
+
+ // Event listener for the submit action
+ submitButton.addEventListener('click', function() {
+  if(Action.validateAttributeName(input.value.trim())){
+    let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+    let hasType = classyCode.includes(attributeName + " :");
+    let attrRegexWithType = new RegExp("\\b" + attributeName + "\\s*:\\s*\\w+\\s*;\\n?", "g");
+    let attrRegexWithoutType = new RegExp("\\b" + attributeName + "\\s*;\\n?", "g");
+    let newAttributeDeclaration = hasType ?
+      attributeType + " " + input.value.trim()+";\n" :
+      input.value.trim()+";\n";
+    let modifiedClassCode = classyCode;
+    modifiedClassCode = modifiedClassCode.replace(attrRegexWithType, newAttributeDeclaration);
+    modifiedClassCode = modifiedClassCode.replace(attrRegexWithoutType, newAttributeDeclaration);
+    let globalAttrRegex = new RegExp("\\b" + attributeName + "\\b", "g");
+    modifiedClassCode = modifiedClassCode.replace(globalAttrRegex, input.value.trim());
+    let orig=Page.codeMirrorEditor.getValue();
+
+    orig=orig.replace(classyCode,modifiedClassCode);
+    Page.codeMirrorEditor.setValue(orig);
+
+    Action.removeContextMenu();
+    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+    prompt.remove(); // Remove the prompt after processing
+    }
+ });
+};
+
+Action.changeAttributeType = function(classCode, className, attributeName, currentType) {
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+  prompt.style.border = "1px solid #ccc";
+  prompt.style.backgroundColor = "#f8f8f8";
+  prompt.style.padding = "5px";
+  prompt.style.position = "absolute";
+  prompt.style.left = '50%';
+  prompt.style.top = '50%';
+  prompt.style.transform = 'translate(-50%, -50%)';
+  prompt.id = "promptBox";
+
+  var select = document.createElement("select");
+  // Add options to the select
+  ["String", "Integer", "Double", "Float", "Boolean", "Date", "Time"].forEach(function(type) {
+    var option = document.createElement("option");
+    option.value = type;
+    option.text = type;
+    if (type === currentType) { // Mark the current type as selected
+      option.selected = true;
+    }
+    select.appendChild(option);
+  });
+
+  var submitButton = document.createElement('button');
+  submitButton.textContent = 'Change Type';
+  submitButton.style.padding = '5px';
+  submitButton.style.margin = '5px';
+  prompt.appendChild(select);
+  prompt.appendChild(submitButton);
+
+  document.body.appendChild(prompt);
+  select.focus(); // Automatically focus the select dropdown
+
+  // Event listener for the submit button action
+    submitButton.addEventListener('click', function() {
+      var selectedType = select.options[select.selectedIndex].value;
+
+      if (selectedType !== currentType) { // Proceed only if the type has been changed
+        let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+        let attrRegexWithType = new RegExp("\\b" + currentType + "\\s" + attributeName + "\\s*;", "g");
+        let attrRegexWithoutType = new RegExp("\\b" + attributeName + "\\s*;\\n?", "g");
+        let modifiedClassCode = classyCode;
+        modifiedClassCode = modifiedClassCode.replace(attrRegexWithType, "");
+        modifiedClassCode = modifiedClassCode.replace(attrRegexWithoutType, "");
+        modifiedClassCode = modifiedClassCode.substr(0,modifiedClassCode.length-1)+"  "+selectedType+" "+attributeName+";\n}";
+        let orig=Page.codeMirrorEditor.getValue();
+        
+        orig=orig.replace(classyCode,modifiedClassCode);
+        // Update the editor with the new code
+
+        Page.codeMirrorEditor.setValue(orig);
+        
+        Action.removeContextMenu();
+        TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+        prompt.remove(); // Remove the prompt after processing
+      }
+      })
+    };
+
+
+Action.deleteAttribute = function(classCode, className, attributeName, attributeType) {
+  // Decode HTML entities in the classCode to work with actual line breaks and quotes
+  let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+  let attrRegexWithType = new RegExp("\\b" + attributeType + "\\s" + attributeName + "\\s*;", "g");
+  let attrRegexWithoutType = new RegExp("\\b" + attributeName + "\\s*;\\n?", "g");
+  // Use the regex to replace the attribute line with an empty string
+  let modifiedClassCode = classyCode;
+  modifiedClassCode = modifiedClassCode.replace(attrRegexWithType, "");
+  modifiedClassCode = modifiedClassCode.replace(attrRegexWithoutType, "");
+  
+  let orig=Page.codeMirrorEditor.getValue();
+  
+  orig=orig.replace(classyCode,modifiedClassCode);
+  // Update the editor with the new code
+
+  Page.codeMirrorEditor.setValue(orig);
+  
+  Action.removeContextMenu();
+  TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+};
+
+
+
 
 Action.classSelected = function(obj)
 {
@@ -3281,6 +3522,16 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
 
 }
 
+//Action.displayAttributeMenu = function(event, attributeName, attributeType) {
+  // For testing: Display an alert or log to the console
+  //alert("Attribute clicked:\nName: " + attributeName + "\nType: " + attributeType);
+  // Or use console.log if you prefer not to use an alert
+  // console.log("Attribute clicked: Name - " + attributeName + ", Type - " + attributeType);
+  
+  // Prevent the default click behavior just in case
+  //event.preventDefault();
+//};
+
 Action.updateUmpleDiagramCallback = function(response)
 {
   var diagramCode = "";
@@ -3388,22 +3639,60 @@ Action.updateUmpleDiagramCallback = function(response)
   Page.hideLoading();
   if(Page.useGvClassDiagram){
     var elems=document.getElementsByClassName("node");
-    //add event listener to Graphviz Class nodes for right click
+    // Add event listener to Graphviz Class nodes for right click
     for(let i=0;i<elems.length;i++){
-      elems[i].addEventListener("contextmenu", function(event){event.preventDefault();Action.displayMenu(event);});
+      elems[i].addEventListener("contextmenu", function(event){
+        event.preventDefault();
+        Action.displayMenu(event);
+      });
+      // Add event listener for double click, calling the same function as right-click
+      elems[i].addEventListener("dblclick", function(event){
+        event.preventDefault(); // Prevent the default double-click behavior
+        Action.displayMenu(event); // Call the same function to display the menu
+      });
+      var attributeAnchors = elems[i].getElementsByTagName("a");
+      // Start from 1 to skip the first <a> element which is for the class name
+      for (let j = 1; j < attributeAnchors.length; j++) {
+        let titleText = attributeAnchors[j].getAttribute("xlink:title");
+        let [attributeType, attributeName] = titleText.split(' ');
+        attributeAnchors[j].addEventListener("click", function (event) {
+          event.preventDefault();
+          Action.displayAttributeMenu(event, attributeName, attributeType); // Calls the testing function
+        });
+      }
     }
   }
+  
+
   if(Page.useGvStateDiagram){
+    //add double click to display menu, issue#2081
     var elems=document.getElementsByClassName("node");
-    //add event listener to Graphviz state nodes for right click
+    // Add event listener to Graphviz state nodes for right click
     for(let i=0;i<elems.length;i++){
-      elems[i].addEventListener("contextmenu", function(event){event.preventDefault();Action.drawStateMenu(event);});
+      elems[i].addEventListener("contextmenu", function(event){
+        event.preventDefault();
+        Action.drawStateMenu(event);
+      });
+      // Add event listener for double click, calling the same function as right-click
+      elems[i].addEventListener("dblclick", function(event){
+        event.preventDefault(); // Prevent the default double-click behavior
+        Action.drawStateMenu(event); // Call the same function to display the menu
+      });
     }
     elems=document.getElementsByClassName("cluster");
+    // Add event listener to Graphviz clusters for right click
     for(let i=0;i<elems.length;i++){
-      elems[i].addEventListener("contextmenu", function(event){event.preventDefault();Action.drawStateMenu(event);});
+      elems[i].addEventListener("contextmenu", function(event){
+        event.preventDefault();
+        Action.drawStateMenu(event);
+      });
+      // Add event listener for double click on clusters, calling the same function as right-click
+      elems[i].addEventListener("dblclick", function(event){
+        event.preventDefault(); // Prevent the default double-click behavior
+        Action.drawStateMenu(event); // Call the same function to display the menu
+      });
     }
-  }
+  }  
 }
 
 Action.updateFromDiagramCallback = function(response)

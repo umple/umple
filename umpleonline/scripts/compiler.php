@@ -479,7 +479,7 @@ else if (isset($_REQUEST["umpleCode"]))
       $svgcode = readTemporaryFile("{$thedir}/stateDiagram.svg");
       $gvlink = $workDir->makePermalink('model'.$generatorType.'.gv');      
       $svglink = $workDir->makePermalink('stateDiagram.svg');
-      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a target=\"_GraphVizOutput\" href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       $changesToMake = 1;
@@ -504,7 +504,7 @@ else if (isset($_REQUEST["umpleCode"]))
       $gvlink = $workDir->makePermalink('modelGvFeatureDiagram.gv');
       $svglink = $workDir->makePermalink('featureDiagram.svg');
       
-      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a target=\"_GraphVizOutput\" href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       $changesToMake = 1;
@@ -525,7 +525,7 @@ else if (isset($_REQUEST["umpleCode"]))
       $svgcode = readTemporaryFile("{$thedir}/classDiagram.svg");
       $gvlink = $workDir->makePermalink('model'.$generatorType.'.gv');
       $svglink = $workDir->makePermalink('classDiagram.svg');
-      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a target=\"_GraphVizOutput\" href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       $changesToMake = 1;
@@ -546,7 +546,7 @@ else if (isset($_REQUEST["umpleCode"]))
       $svgcode = readTemporaryFile("{$thedir}/entityRelationshipDiagram.svg");
       $gvlink = $workDir->makePermalink('modelerd.gv');
       $erdiagramlink = $workDir->makePermalink('entityRelationshipDiagram.svg');
-      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$erdiagramlink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a target=\"_GraphVizOutput\" href=\"$erdiagramlink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       $changesToMake = 1;

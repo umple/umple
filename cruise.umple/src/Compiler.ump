@@ -218,7 +218,13 @@ class CodeCompiler {
       
       // Method 1: Use tool provider
       if(!useExec) {
-        PipedInputStream in = new PipedInputStream(8192);
+        // Determine a safe size of the output stream to capture any error messages
+        // The larger the file the more error messages are likely
+        // There were crashes when the buffer was not large enough for the number of messages
+        File theFile = new File(filename);
+        int bufferSizeToUse = Math.max(16384,((int)theFile.length() )*3);
+
+        PipedInputStream in = new PipedInputStream(bufferSizeToUse);
         out = new PipedOutputStream(in);
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         compiler.run(null, null, out, "-cp",base,filename);
