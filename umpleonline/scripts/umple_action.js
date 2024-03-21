@@ -1264,28 +1264,50 @@ Action.displayTransitionMenu = function(event) {
   }
   //grabs state name
   var elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("transitionClicked(&quot;")+"transitionClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("transitionClicked(&quot;")+"transitionClicked(&quot;".length));
+  elemText=elemText.replaceAll("&amp;","&");
   let id = elemText.split("*^*");
+  console.log(elemText);
   let identifierState=id[3].split(".");
-  dest=id[4];
+  dest=id[4].split(".");
+  
   var selection = Action.selectStateInClass(id[0],id[1],identifierState[0]);
   for (var i=1;i<identifierState.length;i++){
     selection=Action.selectStateInState(selection.startIndex,selection.endIndex,identifierState[i]);
   }
-  //var classcode=selection.replaceAll("\n","&#10").replaceAll("\"","&#$quot");;
-
   let searchTerm=id[2].replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
   searchTerm=searchTerm.replace("after","after~`~?:Every`~`?"); //subpar solution, could be improved
   if(id[5]!=""){
+    console.log(id[5]);
     let guardStr=id[5].trim().replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
     searchTerm=searchTerm+"\\s*[\\s*"+guardStr.trim().slice(1,guardStr.trim().length-1)+"\\s*]";
+    console.log(searchTerm);
   }
   searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)?").replaceAll("(","\\(?").replaceAll("~`~","(").replaceAll("`~`",")").replaceAll(" ","\\s*").replaceAll(",","\\s*,\\s*").replaceAll("!","\\s*!\\s*").replaceAll("/","\\s*/\\s*"); 
+  searchTerm=searchTerm.replaceAll("&&","&{1,2}");
   let pattern= new RegExp(searchTerm+".*->","s");
   let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
   let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
-  
+  let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  console.log(code);
+   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
+
+   const match =code.trim().match(pattern2);
+  console.log(startIndex,endIndex);
+  // Extracting captured groups based on the updated pattern
+  let eventName = match[1].trim();
+  let guard = match[3] ? match[3].trim() : (match[7] ? match[7].trim() : null);
+  let action = match[5] ? match[5].trim() : (match[9] ? match[9].trim() : null);
+  let destinationState = match[10].trim();
+     if(guard===null){
+       guard="";
+     }
+     //
+     if(action===null){
+       action="";
+     }
+     //
 
   //need to sanitize any linebreaks or quotes that could break the generated HTML
   //var jsInput=chosenState.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
@@ -1295,7 +1317,7 @@ Action.displayTransitionMenu = function(event) {
     "Action.modifyTransitionEventName(\""+startIndex+"\",\""+endIndex+"\")",
     "Action.modifyTransitionGuard(\""+startIndex+"\",\""+endIndex+"\")",
     "Action.modifyTransitionAction(\""+startIndex+"\",\""+endIndex+"\")",
-    "Action.changeTransition(\""+startIndex+"\",\""+endIndex+"\")",
+    "Action.changeTransition(\""+destinationState+"\",\""+startIndex+"\",\""+endIndex+"\")",
     "Action.deleteTransition(\""+startIndex+"\",\""+endIndex+"\")"
   
   ];
@@ -1356,7 +1378,7 @@ Action.displayTransitionMenu = function(event) {
   });
   document.body.appendChild(menu);
 }
-Action.changeTransition = function(startIndex,endIndex) {
+Action.changeTransition = function(dest,startIndex,endIndex) {
   let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
    // Assuming classCode contains the full transition line, including condition and destination
    let trimmedString = classCode.trim().replace(/;$/, "");
@@ -1417,9 +1439,9 @@ Action.changeTransition = function(startIndex,endIndex) {
             return;
         }
        
-
+        
         // Create the modified transition string with the new destination
-        let modifiedTransition = parts[0] + " -> " + input.value.trim() + ";";
+        let modifiedTransition = parts[0] + " -> " + parts[1].replace(dest,input.value.trim()) + ";";
         
         let orig = Page.codeMirrorEditor.getValue();
         let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
@@ -1447,17 +1469,25 @@ Action.changeTransition = function(startIndex,endIndex) {
   Action.removeContextMenu();
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
 };
+
 Action.modifyTransitionGuard = function(startIndex,endIndex) {
+  console.log(startIndex,endIndex);
+  let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
   let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
-  let pattern2 = new RegExp("^(.*?)\\s*(\\[(.*?)\\])?\\s*(\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\w+);?$", "s");
+  const match =classCode.trim().match(pattern2);
 
-  const match = classCode.match(pattern2);
-
-  
-      let eventName= match[1].trim();
-      let guard= match[3] ? match[3].trim() : null;
-      let action= match[5] ? match[5].trim() : null;
-      let destinationState= match[6].trim();
+  // Extracting captured groups based on the updated pattern
+  let eventName = match[1].trim();
+  let guard = match[3] ? match[3].trim() : (match[7] ? match[7].trim() : null);
+  let action = match[5] ? match[5].trim() : (match[9] ? match[9].trim() : null);
+  let destinationState = match[10].trim();
+     if(guard===null){
+       guard="";
+     }
+     //
+     if(action===null){
+       action="";
+     }
   // Create the input prompt for renaming the transition condition
   var prompt = document.createElement('div');
   prompt.style.zIndex = "1000";
@@ -1530,7 +1560,13 @@ Action.modifyTransitionGuard = function(startIndex,endIndex) {
           console.log("add guard"+parts[0]);
         }
         else{
-          parts[0]=eventName+" ["+input.value.trim()+"]"+" /{" +action+"}"
+          if(part[1].includes(action)){
+            parts[0]=eventName+" ["+input.value.trim()+"]";
+          }
+          else{
+            parts[0]=eventName+" ["+input.value.trim()+"]"+" /{" +action+"}"
+          }
+          
           console.log("add guard"+parts[0]);
         }
         modifiedTransition = parts[0]+ " -> " + parts[1];
@@ -1557,16 +1593,20 @@ Action.modifyTransitionGuard = function(startIndex,endIndex) {
 };
 
 Action.modifyTransitionAction = function(startIndex,endIndex) {
+  let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
   let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
-  let pattern2 = new RegExp("^(.*?)\\s*(\\[(.*?)\\])?\\s*(\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\w+);?$", "s");
-
-  const match = classCode.match(pattern2);
-
+  const match =classCode.trim().match(pattern2);
+  console.log(classCode);
+  console.log(match);
+  // Extracting captured groups based on the updated pattern
   
-      let eventName= match[1].trim();
-      let guard= match[3] ? match[3].trim() : null;
-      let currentAction= match[5] ? match[5].trim() : null;
-      let destinationState= match[6].trim();
+  let guard = match[3] ? match[3].trim() : (match[7] ? match[7].trim() : null);
+  let currentAction = match[5] ? match[5].trim() : (match[9] ? match[9].trim() : null);
+  
+     if(guard===null){
+       guard="";
+     }
+     //
   if(currentAction===null){
     currentAction="";
   }
@@ -2560,7 +2600,8 @@ Action.transitionClicked = function(identifier)
   Action.unselectAll();
   let id = identifier.split("*^*");
   let identifierState=id[3].split(".");
-  dest=id[4];
+  dest=id[4].split(".");
+  
   var selection = Action.selectStateInClass(id[0],id[1],identifierState[0]);
   for (var i=1;i<identifierState.length;i++){
     selection=Action.selectStateInState(selection.startIndex,selection.endIndex,identifierState[i]);
@@ -2568,11 +2609,15 @@ Action.transitionClicked = function(identifier)
   let searchTerm=id[2].replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
   searchTerm=searchTerm.replace("after","after~`~?:Every`~`?"); //subpar solution, could be improved
   if(id[5]!=""){
+    console.log(id[5]);
     let guardStr=id[5].trim().replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
     searchTerm=searchTerm+"\\s*[\\s*"+guardStr.trim().slice(1,guardStr.trim().length-1)+"\\s*]";
+    console.log(searchTerm);
   }
   searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)?").replaceAll("(","\\(?").replaceAll("~`~","(").replaceAll("`~`",")").replaceAll(" ","\\s*").replaceAll(",","\\s*,\\s*").replaceAll("!","\\s*!\\s*").replaceAll("/","\\s*/\\s*"); 
+  searchTerm=searchTerm.replaceAll("&&","&{1,2}");
   let pattern= new RegExp(searchTerm+".*->","s");
+  console.log(pattern);
   let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
   let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
   let line = Action.findEOL(cText);
@@ -2580,15 +2625,15 @@ Action.transitionClicked = function(identifier)
   Action.highlightByIndex(startIndex,endIndex);
   let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
   console.log(code);
-   let pattern2 = new RegExp("^(.*?)\\s*(\\[(.*?)\\])?\\s*(\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\w+);?$", "s");
+   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
 
-  const match = code.match(pattern2);
-
-  
-      let eventName= match[1].trim();
-      let guard= match[3] ? match[3].trim() : null;
-      let action= match[5] ? match[5].trim() : null;
-      let destinationState= match[6].trim();
+   const match =code.trim().match(pattern2);
+ 
+   // Extracting captured groups based on the updated pattern
+   let eventName = match[1].trim();
+   let guard = match[3] ? match[3].trim() : (match[7] ? match[7].trim() : null);
+   let action = match[5] ? match[5].trim() : (match[9] ? match[9].trim() : null);
+   let destinationState = match[10].trim();
       if(guard===null){
         guard="";
       }
@@ -2597,11 +2642,10 @@ Action.transitionClicked = function(identifier)
         action="";
       }
       //
-      console.log("name "+eventName);
-      console.log("guard "+guard);
-      console.log("action "+action);
-      console.log("dstate "+destinationState);
-
+    console.log(eventName); 
+    console.log(guard); 
+    console.log(action); 
+    console.log(destinationState); 
 }
 
 
@@ -4182,18 +4226,10 @@ Action.updateUmpleDiagramCallback = function(response)
     for (let i = 0; i < transitionElems.length; i++) {
       transitionElems[i].addEventListener("dblclick", function(event) {
         event.preventDefault(); // Prevent the default click behavior
-        console.log("Double-clicked on edge with index:", i);
-        if (this.id) {
-            console.log("Edge ID:", this.id);
-        }
         Action.displayTransitionMenu(event);
     });
     transitionElems[i].addEventListener("contextmenu", function(event) {
-        event.preventDefault();
-        console.log("Right-clicked on edge with index:", i);
-        if (this.id) {
-            console.log("Edge ID:", this.id);
-        }
+        event.preventDefault();       
         Action.displayTransitionMenu(event);
     });
     }
@@ -4233,24 +4269,14 @@ Action.updateUmpleDiagramCallback = function(response)
       });
     }
     var transitionElems = document.getElementsByClassName("edge");
-    console.log(transitionElems.length + " edges found");
     
     for (let i = 0; i < transitionElems.length; i++) {
-      console.log("Attaching listener to", transitionElems[i].id);
       transitionElems[i].addEventListener("dblclick", function(event) {
         event.preventDefault(); // Prevent the default click behavior
-        console.log("Double-clicked on edge with index:", i);
-        if (this.id) {
-            console.log("Edge ID:", this.id);
-        }
         Action.displayTransitionMenu(event);
     });
     transitionElems[i].addEventListener("contextmenu", function(event) {
         event.preventDefault();
-        console.log("Right-clicked on edge with index:", i);
-        if (this.id) {
-            console.log("Edge ID:", this.id);
-        }
         Action.displayTransitionMenu(event);
     });
     }
