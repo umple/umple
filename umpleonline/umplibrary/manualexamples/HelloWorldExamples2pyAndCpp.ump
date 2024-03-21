@@ -6,6 +6,9 @@
  * The output will be:
  * The mentor of Tom The Student is Nick The Mentor
  * The students of Nick The Mentor are [Tom The Student]
+ * If you try to execute this with Java, it will
+ * indicate there is no Java main program. See
+ * the separate Java example in the user manual.
  */
 class Person {
   name; // Attribute, string by default
@@ -73,7 +76,3 @@ class Mentor
 }
 
 //$?[End_of_model]$?
-// @@@skipcppcompile - Contains Python code
-// @@@skipphpcompile - Contains Python code
-// @@@skiprubycompile - Contains Python code
-// @@@skipjavacompile - Contains Python Code
