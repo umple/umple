@@ -2516,10 +2516,16 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
       updatedAssociationString = isEnd ? (startPart + parts[1] + updatedEndPart) : (updatedStartPart + parts[1] + endPart);
     }
     else{
-      parts = selectedText.split(" ");
+      let parts2 = selectedText.split(";")
+      parts=parts2[0].split(" ");
       if (isEnd==false) {
         updatedStartPart = mult.trim()+" "+newRoleName;
-        updatedAssociationString = updatedStartPart+" "+parts[1].trim()+";";
+        if(parts.length>2){
+          updatedAssociationString = updatedStartPart+" "+parts[1].trim()+" "+parts[2].trim()+";";
+        }
+        else{
+          updatedAssociationString = updatedStartPart+" "+parts[1].trim()+";";
+        }
       } else {
         endParts = selectedText.split(";");
         updatedAssociationString = endParts[0].trim()+" "+newRoleName+";";
