@@ -23,6 +23,7 @@ digraph "<<=filename>>" {
   rankdir="BT"
   node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
 !>>
+
   emit graphStart(String filename)(graphStart(UmpleModel.VERSION_NUMBER));
 
   // CENTRAL GENERATE METHOD
@@ -204,9 +205,11 @@ digraph "<<=filename>>" {
   public static String labelAssociation(String left, String right, String arrow, String label, String tooltip)
   {
     String association;
-
+    String associationDetails = left + "," + right+ "," + label;
+    String hrefAction = "javascript:Action.selectAssociation('" + associationDetails + "')";
     association = "  \""+left+"\" -> \""+right+"\" ["+arrow+
-        ", label=\""+label+"\""+", tooltip=\""+tooltip+"\" labeltooltip=\""+tooltip+"\" headtooltip=\"" + tooltip + "\" tailtooltip=\"" + tooltip + "\" labelurl=\"javascript:void()\" tailurl=\"javascript:void()\" headurl=\"javascript:void()\" ];\n";
+        ", label=\""+label+"\""+", tooltip=\""+tooltip+"\" labeltooltip=\""+tooltip+"\" headtooltip=\"" + tooltip + "\" tailtooltip=\"" + tooltip + "\" URL=\"" + hrefAction + "\"" +  // Use URL for embedding clickable actions
+      " ];\n";
 
     return association;
   }
@@ -215,10 +218,12 @@ digraph "<<=filename>>" {
   public static String twoLabelAssociation(String left, String right, String arrow, String hLabel, String tLabel, String tooltip)
   {
     String association;
-
+    String associationDetails = left + "," + right + "," + hLabel + "," + tLabel;
+    String hrefAction = "javascript:Action.selectAssociation('" + associationDetails + "')";
     association = "  \""+left+"\" -> \""+right+"\" ["+arrow+
         ", taillabel=\""+tLabel+"\""+", headlabel=\""+hLabel+"\""+
-        ", tooltip=\""+tooltip+"\" headtooltip=\"" + tooltip + "\" tailtooltip=\"" + tooltip + "\" tailurl=\"javascript:void()\" headurl=\"javascript:void()\" ];\n";
+        ", tooltip=\""+tooltip+"\" headtooltip=\"" + tooltip + "\" tailtooltip=\"" + tooltip + "\" URL=\"" + hrefAction + "\"" +  // Use URL for embedding clickable actions
+      " ];\n";
 
     return association;
   }
