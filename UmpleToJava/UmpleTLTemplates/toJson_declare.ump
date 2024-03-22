@@ -1,12 +1,12 @@
 class UmpleToJava {
-    toJson_declare <<!<</*toJson_declare*/>>
-
-  public String toJson()
-  {
-    <<#
-
-	  String customToJsonPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","toJson"));
-	  String customToJsonPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","toJson"));
+  toJson_helper <<!<</*toJson_helper*/>>
+  private boolean toJsonHelper(StringBuilder toJsonOutput, HashSet<Object> visitedList, int nestLevel, boolean atConcreteClass){
+      /**
+      String indent = "  ".repeat(nestLevel);
+      boolean alreadyVisited = false;
+      boolean haveOutputItem = false;
+      String customToJsonPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","toJsonHelper"));
+	  String customToJsonPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","toJsonHelper"));
 	  if (customToJsonPrefixCode != null) 
 	  {
 		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customToJsonPrefixCode, "    "));
@@ -15,7 +15,6 @@ class UmpleToJava {
 	  {
 		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customToJsonPostfixCode, "    "));
 	  }
-	  String ret = "";
 
 	  LinkedList<String> displayedAttributes = new LinkedList<String>();
 	  LinkedList<String> nameOfAttributes = new LinkedList<String>();
@@ -67,57 +66,81 @@ class UmpleToJava {
 		}
 		  
 	  }
-    if(super.toString()!=null){
-    //debug
-    System.out.print("------toString not null");
-       ret += "super.toString().replaceAll(\"@\" ,  \"\\n{ \"+ \"\\n \\'ObjectId\\':\\'\")";
-       System.out.print("name of super's class====="+super.getClass());
-    }
-    else{
-     //debug
-    System.out.print("------toString is null");
-       ret += "super.toJson().replaceAll(\"@\" ,  \"\\n{ \"+ \"\\n \\'ObjectId\\':\\'\")";
-    }
-   
-	ret+= "+ \"\\',\"";
-	ret += "+ System.getProperties().getProperty(\"line.separator\") \n            ";    
+    if(atConcreteClass) {
+      // This will not be true in a super call; output header
+      toJsonOutput.append(indent+"this.toString().split(\"@\")[0]"+ "+\" : {\\n\"+"+indent+"  \"umpleObjectID : \"+"+"System.identityHashCode(this)+");
 
-	boolean firstStr = true;
-	
-	ret += " +\"   \"";
-	  for(int m=0;m<displayedPrimitives.size();m++)
-	  {
-		  	if(firstStr)
-			  	firstStr = false;
-			if ((m == displayedPrimitives.size()-1) &&(displayedPrimitives.size()!=1)){
-				ret += "+ System.getProperties().getProperty(\"line.separator\") \n";  
-				ret += " +\"   \"";
-				ret += "+\n           \" \\'" + nameOfPrimitives.get(m) + "\\'\" + \":\\'\" + " + displayedPrimitives.get(m)+ " + \"\\'\\n}\"\n";
-				
-			}
-			else if((m != displayedPrimitives.size()-1) &&(displayedPrimitives.size()!=1)){
-				//ret += "+ System.getProperties().getProperty(\"line.separator\") \n";  
-				
-				ret += "+\n           \" \\'" + nameOfPrimitives.get(m) + "\\'\" + \":\\'\" + " + displayedPrimitives.get(m)+ " + \"\\'\"\n";
-				ret += "+\",\"";
-			}
-			else{
-		  		ret += "+\n           \" \\'" + nameOfPrimitives.get(m) + "\\'\" + \":\\'\" + " + displayedPrimitives.get(m)+ " \n"; 
-			}			
-	  }
-	  for(int m=0;m<displayedAttributes.size();m++)
-	  {          
-		  ret += " + System.getProperties().getProperty(\"line.separator\") +\n            ";      
-		  ret += "\"  \" + " + "\"" + nameOfAttributes.get(m) + "\" + \":\" + (" + displayedAttributes.get(m) + " != null ? !" + displayedAttributes.get(m) + ".equals(this)  ? " + displayedAttributes.get(m) + ".toString().replaceAll(\"  \",\"    \") : \"this\" : \"null\")";
+      // Check if we have already visited this object. If so we will not output details
+      alreadyVisited = visitedList.contains(this);
+      if(!alreadyVisited) {
+        visitedList.add(this);
+      }
+    }
+    
+    // There is no superclass of this class
+    
+    if(alreadyVisited) {
+      toJsonOutput.append("\\n");
+    }
+    else {
+      // Check if this class has a superclass. If it does, we make a call to output superclass content 
+      // This will keep calling super so the topmost attributes and associations appear first
+      if(uClass.hasExtendsClass()){
+        haveOutputItem = super.toJson(toJsonOutput, visitedList, nestLevel, false);
+      }
+      // When an object has not already been visited, output its details
+      toJsonOutput.append("\",\"+\n");
+      
+      // When an object has not already been visited, output its details
+      //toJsonOutput.append(indent+"  \"name\" : \""+getName()+"\"");
+      toJsonOutput.append("\",\"+\n");
+      //toJsonOutput.append(indent+"  \"id\" : "+getId());
+      toJsonOutput.append("\",\"+\n");      
+      
+      toJsonOutput.append(indent+"  \"addresses: [\"+\n");
+      haveOutputItem = false;
+      
+      toJsonOutput.append("\n");
+      toJsonOutput.append(indent+"\"  ]\"+");         
+    }
 
-	  }
-	  for(int m=0;m<reflexive.size();m++){
-		
-	      ret += " + System.getProperties().getProperty(\"line.separator\") +\n            ";
-	      ret += "\"  \" + " +  "\""+reflexiveNames.get(m)+" : \"+("+reflexive.get(m)+"!=null?Integer.toHexString(System.identityHashCode("+reflexive.get(m)+")):\"null\")";
-	  }
-	  append(realSb,"\n    return {0};", ret);
-	  #>>
-  }!>>
+    // Finalize the output of the concrete class
+    if(atConcreteClass) {
+      if(!alreadyVisited) {
+        toJsonOutput.append("\n");
+      }
+      toJsonOutput.append(indent+"\"}\"");
+    }
+    haveOutputItem = true;
+    
+//DEBUG to be removed later
+System.out.println(toJsonOutput);
+    append(realSb,"\n    return {0};", toJsonOutput);
+    return haveOutputItem;
+**/
+
+  }!>>  
+  
+  toJson_declare <<!<</*toJson_declare*/>>
+  /** 
+  * Generate Json for this object and connected objects visited objects to enable avoidance of infinite loops
+  *
+  * @param toJsonOutput  Output is aded to this as the network of objects is traversed
+  * @param visitedList  Every concrete object visited is added so we don't re-outpu
+  * @param nestLevel    As we output deeper objects, indent them more
+  * @param atConcreteClass false when we are recursing to a superclass
+  *     so we get the superclass data
+  * @return whether or not anything was output (so we can tell whether we need to output a comma)
+  */  
+  public String toJson()
+  {
+    HashSet<Object> visitedList = new HashSet<Object>();
+    StringBuilder toJsonOutput = new StringBuilder();
+    toJsonOutput.append("{\n");
+    this.toJsonHelper(toJsonOutput, visitedList,1,true);
+    toJsonOutput.append("\n}");
+    return(toJsonOutput.toString());
+  }
+  !>>
+    
 }
-

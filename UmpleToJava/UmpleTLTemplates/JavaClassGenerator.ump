@@ -27,6 +27,7 @@ use state_machine_doActivity_All.ump;
 use state_machine_timedEvent_All.ump;
 use toString_declare.ump;
 use toJson_declare.ump;
+//use toJsonHelper.ump;
 use trace.ump;
 use uncaught_exception.ump;
 use queued_method.ump;
@@ -569,7 +570,8 @@ for (StateMachine smq : uClass.getStateMachines())
    if (uClass.getAttributes().size()>0 && !matchFound){ #>><<@ UmpleToJava.toString_declare >>
 <<# } #>>
   <<#return realSb.toString();
-    } 
+    }
+   
     private String getJsonGenerationCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
   {
      #>>
@@ -577,9 +579,8 @@ for (StateMachine smq : uClass.getStateMachines())
     //  umple test1.ump -g Java -s genJson
     <<#
     if (model.modelHasSuboption("Java", "genJson")){#>>
-      <<@ UmpleToJava.toJson_declare >>
+      <<@ UmpleToJava.toJson_declare >> <<@ UmpleToJava.toJson_helper>>
       <<#}#>>
-    
     <<#return realSb.toString();
   } 
     private String getAllExtraCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)

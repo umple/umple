@@ -4,6 +4,7 @@ class UmpleToJava {
   public String toString()
   {
     <<#
+    
 	  String customToStringPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","toString"));
 	  String customToStringPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","toString"));
 	  if (customToStringPrefixCode != null) 
@@ -66,7 +67,8 @@ class UmpleToJava {
 		}
 		  
 	  }
-	  ret += "super.toString() + \"[\"";
+	  
+      ret += "super.toString() + \"[\"";
 	  boolean firstStr = true;
 	  for(int m=0;m<displayedPrimitives.size();m++)
 	  {
@@ -88,6 +90,7 @@ class UmpleToJava {
 	      ret += "\"  \" + " +  "\""+reflexiveNames.get(m)+" = \"+("+reflexive.get(m)+"!=null?Integer.toHexString(System.identityHashCode("+reflexive.get(m)+")):\"null\")";
 	  }
 	  append(realSb,"\n    return {0};", ret);
+
 	  #>>
   }!>>
 }
