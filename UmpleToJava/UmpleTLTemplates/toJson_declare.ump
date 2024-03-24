@@ -1,11 +1,12 @@
 class UmpleToJava {
   toJson_helper <<!<</*toJson_helper*/>>
-  private boolean toJsonHelper(StringBuilder toJsonOutput, HashSet<Object> visitedList, int nestLevel, boolean atConcreteClass){
-      /**
+  public boolean toJsonHelper(StringBuilder toJsonOutput, HashSet<Object> visitedList, int nestLevel, boolean atConcreteClass){
+      
       String indent = "  ".repeat(nestLevel);
       boolean alreadyVisited = false;
       boolean haveOutputItem = false;
-      String customToJsonPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","toJsonHelper"));
+      
+      <<#String customToJsonPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","toJsonHelper"));
 	  String customToJsonPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","toJsonHelper"));
 	  if (customToJsonPrefixCode != null) 
 	  {
@@ -15,7 +16,7 @@ class UmpleToJava {
 	  {
 		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customToJsonPostfixCode, "    "));
 	  }
-
+      String ret = "";
 	  LinkedList<String> displayedAttributes = new LinkedList<String>();
 	  LinkedList<String> nameOfAttributes = new LinkedList<String>();
 	  LinkedList<String> displayedPrimitives = new LinkedList<String>();
@@ -53,22 +54,14 @@ class UmpleToJava {
 	  }
 	  for(AssociationVariable av: uClass.getAssociationVariables())
 	  {
-	    if(av.isIsNavigable()&&av.getUmpleClass()!=av.getRelatedAssociation().getUmpleClass())
-	    {
-	      if("1".equals(av.getMultiplicity().getMinimum())||"0".equals(av.getMultiplicity().getMinimum())||"1".equals(av.getMultiplicity().getBound()))
-	      {
-	        if("1".equals(av.getMultiplicity().getMaximum())||"1".equals(av.getMultiplicity().getBound()))
-	        {
-	          reflexiveNames.add(av.getName());
-	          reflexive.add(gen.translate("getMethod",av)+"()");
-		    }
-		  }
-		}
-		  
+	    
+		  reflexiveNames.add(av.getName());
+          reflexive.add(gen.translate("getMethod",av)+"()");
 	  }
+	  #>>
     if(atConcreteClass) {
       // This will not be true in a super call; output header
-      toJsonOutput.append(indent+"this.toString().split(\"@\")[0]"+ "+\" : {\\n\"+"+indent+"  \"umpleObjectID : \"+"+"System.identityHashCode(this)+");
+      toJsonOutput.append(indent+"\'"+this.toString().split("@")[0]+ "\' : {\n"+indent+  "\'umpleObjectID\' : "+System.identityHashCode(this));
 
       // Check if we have already visited this object. If so we will not output details
       alreadyVisited = visitedList.contains(this);
@@ -78,30 +71,49 @@ class UmpleToJava {
     }
     
     // There is no superclass of this class
-    
+    <<#boolean hasSuperClass =uClass.hasExtendsClass();#>>
     if(alreadyVisited) {
       toJsonOutput.append("\\n");
     }
     else {
       // Check if this class has a superclass. If it does, we make a call to output superclass content 
       // This will keep calling super so the topmost attributes and associations appear first
-      if(uClass.hasExtendsClass()){
-        haveOutputItem = super.toJson(toJsonOutput, visitedList, nestLevel, false);
-      }
+      <<#if(hasSuperClass){#>>
+        haveOutputItem = super.toJsonHelper(toJsonOutput, visitedList, nestLevel, false);
+      <<#}#>>
       // When an object has not already been visited, output its details
-      toJsonOutput.append("\",\"+\n");
-      
-      // When an object has not already been visited, output its details
-      //toJsonOutput.append(indent+"  \"name\" : \""+getName()+"\"");
-      toJsonOutput.append("\",\"+\n");
-      //toJsonOutput.append(indent+"  \"id\" : "+getId());
-      toJsonOutput.append("\",\"+\n");      
-      
-      toJsonOutput.append(indent+"  \"addresses: [\"+\n");
-      haveOutputItem = false;
-      
       toJsonOutput.append("\n");
-      toJsonOutput.append(indent+"\"  ]\"+");         
+      
+      // When an object has not already been visited, output its details
+      toJsonOutput.append(indent);
+      toJsonOutput.append("<<#
+        for (int m1=0;m1<displayedPrimitives.size();m1++){
+          if (m1==(displayedPrimitives.size()-1)){
+            realSb.append("\'" + nameOfPrimitives.get(m1) + "\'" + " : "+  displayedPrimitives.get(m1)+"\\n");
+          }
+          else{
+            realSb.append("\'" + nameOfPrimitives.get(m1) + "\'" + " : "+  displayedPrimitives.get(m1)+",\\n"); 
+          }
+        }
+        //ret += "m2="+displayedAttributes.size();
+        //for(int m2=0;m2<displayedAttributes.size();m2++)
+	    //{             
+	      
+		  //ret += "\"  \" + " + "\"" + nameOfAttributes.get(m2) + "\" + \":\" + (" + displayedAttributes.get(m2) + " != null ? !" + displayedAttributes.get(m2) + ".equals(this)  ? " + displayedAttributes.get(m2) + ".toString().replaceAll(\"  \",\"    \") : \"this\" : \"null\")";
+	    //}
+	    for(int m3=0;m3<reflexive.size();m3++){       
+	      if(m3==(reflexive.size()-1)){
+	        realSb.append("---\'" + reflexiveNames.get(m3) + "\'" + " : "+  reflexive.get(m3)+",\\n"); 
+	      }
+	      else{
+	      //"---" is for debug, will remove later
+	        realSb.append("---\'" + reflexiveNames.get(m3) + "\'" + " : "+  reflexive.get(m3)+"\\n"); 
+	      }
+         
+	    }  
+	    realSb.append(ret);  
+      #>>");
+
     }
 
     // Finalize the output of the concrete class
@@ -109,17 +121,15 @@ class UmpleToJava {
       if(!alreadyVisited) {
         toJsonOutput.append("\n");
       }
-      toJsonOutput.append(indent+"\"}\"");
+      toJsonOutput.append(indent+"}");
     }
     haveOutputItem = true;
     
-//DEBUG to be removed later
-System.out.println(toJsonOutput);
-    append(realSb,"\n    return {0};", toJsonOutput);
-    return haveOutputItem;
-**/
 
-  }!>>  
+  return haveOutputItem;
+  }
+
+  !>>  
   
   toJson_declare <<!<</*toJson_declare*/>>
   /** 

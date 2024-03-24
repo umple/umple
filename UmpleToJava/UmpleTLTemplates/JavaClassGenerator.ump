@@ -581,7 +581,8 @@ for (StateMachine smq : uClass.getStateMachines())
     if (model.modelHasSuboption("Java", "genJson")){#>>
       <<@ UmpleToJava.toJson_declare >> <<@ UmpleToJava.toJson_helper>>
       <<#}#>>
-    <<#return realSb.toString();
+    <<#
+    return realSb.toString();
   } 
     private String getAllExtraCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
   {#>>
