@@ -15,7 +15,7 @@ const basePath= __dirname+"/models/"; //current working path
 
 // Declare max requests
 const MAX_REQUESTS = 20;
-const mainFileName = "JavaMainClasses.txt";
+let mainFileName;
 let numberOfRequests = 0;
 
 app.all('*', (req, res, next) =>
@@ -37,6 +37,10 @@ app.post('/run' , (req, res)  =>
             // Extract out path and validate
             const path = basePath + req.body.path;
             const compileError = req.body.error;
+            const language = req.body.language;
+            console.log(`language is ${language}`);
+            mainFileName=language+"MainClasses.txt";
+
             console.log("Compilation error or warning: " + compileError);
 
             const pathError = validatePath(path);
@@ -71,12 +75,21 @@ app.post('/run' , (req, res)  =>
             let output = "";
             let totalServed = 0;
             mainFunctions.forEach((mainFunction) => {
-                console.log("Finding file: " + (mainFunction + '.class'));
-                const foundFilePath = findFile(path, "/",mainFunction + '.class');
+                let foundFilePath;
+                if(language==="Python"){
+                    console.log(`languague is python`);
+                    console.log("Finding file: " + (mainFunction + '.py'));
+                    foundFilePath = findFile(path, "/", mainFunction + '.py');
+                }else if(language==="Java"){
+                    console.log("Language is java ------------");
+                    console.log("Finding file: " + (mainFunction + '.class'));
+                    foundFilePath = findFile(path, "/",mainFunction + '.class');
+                }
+
                 console.log("Found file at: ", foundFilePath);
             
                 // Execute docker 
-                const dockerExecution = new DockerExecution(foundFilePath, mainFunction, req.body.path);
+                const dockerExecution = new DockerExecution(foundFilePath, mainFunction, req.body.path, language);
                 try {
                     dockerExecution.run((err, data) =>
                     {
@@ -135,6 +148,7 @@ const findFile = (dirPath, curPath, file)  => {
 }
 
 const validateMainFile = (path) => {
+    console.log("path : "+path + "/" + mainFileName);
     if(fs.existsSync(path + "/" + mainFileName)) {
         return null;
     } else {

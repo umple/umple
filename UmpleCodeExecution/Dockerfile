@@ -12,6 +12,8 @@ RUN addgroup nodeuser
 RUN adduser  -D -H -S nodeuser -G nodeuser \
         && echo "nodeuser ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/nodeuser \
         && chmod 0440 /etc/sudoers.d/nodeuser
+RUN sudo apk add --no-cache python3
+RUN sudo apk add nano
 
 WORKDIR /usr/src/app
 COPY package*.json ./

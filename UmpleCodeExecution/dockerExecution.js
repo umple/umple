@@ -2,11 +2,12 @@ const fs = require('fs');
 const exec = require('child_process').exec;
 
 class DockerExecution {
-    constructor(path, mainFile, model) {
+    constructor(path, mainFile, model, language="Java") {
         this.path = path;
         this.mainFile = mainFile;
         this.model = model;
         this.outputFolder = "output/" + this.model + "_" + this.mainFile;
+        this.language=language;
 
         const config = this.readConfig();
         this.basePath = config['umplePath'];
@@ -42,7 +43,12 @@ class DockerExecution {
         if(path.endsWith('/')) {
             path = path.substring(0, path.length - 1);
         }
-        return path ? `${path.split('/').join('.')}.${this.mainFile}` : this.mainFile;
+        const pathArr=path.split('/');
+
+        if(this.language=="Python"){
+            return path ? `${path}/${this.mainFile}.py` : `${this.mainFile}.py`;
+        }
+        return path ? `${path.split('/').join('.')}.${this.mainFile}` : this.mainFile;    
     }
 
     listenToChanges(callback) {
@@ -65,7 +71,7 @@ class DockerExecution {
                         if(errorData) {
                             console.log("Error file: ", errorData)
                         }
-                        console.log("Complete file: ", completeData);
+                        console.log("Complete file: \n", completeData);
 
                         callback(errorData, completeData.toString())
                     });
