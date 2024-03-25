@@ -23,7 +23,7 @@ class UmpleToJava {
 	  LinkedList<String> nameOfPrimitives = new LinkedList<String>();
 	  List<String> keys = new ArrayList<String>();
 	  List<String> reflexiveNames = new ArrayList<String>();
-	  List<String> reflexive = new ArrayList<String>();
+	  List<Object> reflexive = new ArrayList<Object>();
 	  for(String k: uClass.getKey().getMembers())
 		  keys.add(k);
 	  for(Attribute av: uClass.getAttributes())
@@ -54,14 +54,13 @@ class UmpleToJava {
 	  }
 	  for(AssociationVariable av: uClass.getAssociationVariables())
 	  {
-	    
 		  reflexiveNames.add(av.getName());
-          reflexive.add(gen.translate("getMethod",av)+"()");
+          reflexive.add(gen.translate("getManyMethod",av)+"()");
 	  }
 	  #>>
     if(atConcreteClass) {
       // This will not be true in a super call; output header
-      toJsonOutput.append(indent+"\'"+this.toString().split("@")[0]+ "\' : {\n"+indent+  "\'umpleObjectID\' : "+System.identityHashCode(this));
+      toJsonOutput.append(indent+"\'"+this.toString().split("@")[0]+ "\' : {\n"+indent+ "  \'umpleObjectID\' : "+System.identityHashCode(this));
 
       // Check if we have already visited this object. If so we will not output details
       alreadyVisited = visitedList.contains(this);
@@ -73,7 +72,7 @@ class UmpleToJava {
     // There is no superclass of this class
     <<#boolean hasSuperClass =uClass.hasExtendsClass();#>>
     if(alreadyVisited) {
-      toJsonOutput.append("\\n");
+      toJsonOutput.append("\n");
     }
     else {
       // Check if this class has a superclass. If it does, we make a call to output superclass content 
@@ -82,38 +81,28 @@ class UmpleToJava {
         haveOutputItem = super.toJsonHelper(toJsonOutput, visitedList, nestLevel, false);
       <<#}#>>
       // When an object has not already been visited, output its details
-      toJsonOutput.append("\n");
+      toJsonOutput.append(",\n");
       
       // When an object has not already been visited, output its details
-      toJsonOutput.append(indent);
-      toJsonOutput.append("<<#
-        for (int m1=0;m1<displayedPrimitives.size();m1++){
-          if (m1==(displayedPrimitives.size()-1)){
-            realSb.append("\'" + nameOfPrimitives.get(m1) + "\'" + " : "+  displayedPrimitives.get(m1)+"\\n");
-          }
-          else{
-            realSb.append("\'" + nameOfPrimitives.get(m1) + "\'" + " : "+  displayedPrimitives.get(m1)+",\\n"); 
-          }
-        }
-        //ret += "m2="+displayedAttributes.size();
-        //for(int m2=0;m2<displayedAttributes.size();m2++)
-	    //{             
-	      
-		  //ret += "\"  \" + " + "\"" + nameOfAttributes.get(m2) + "\" + \":\" + (" + displayedAttributes.get(m2) + " != null ? !" + displayedAttributes.get(m2) + ".equals(this)  ? " + displayedAttributes.get(m2) + ".toString().replaceAll(\"  \",\"    \") : \"this\" : \"null\")";
-	    //}
-	    for(int m3=0;m3<reflexive.size();m3++){       
-	      if(m3==(reflexive.size()-1)){
-	        realSb.append("---\'" + reflexiveNames.get(m3) + "\'" + " : "+  reflexive.get(m3)+",\\n"); 
-	      }
-	      else{
-	      //"---" is for debug, will remove later
-	        realSb.append("---\'" + reflexiveNames.get(m3) + "\'" + " : "+  reflexive.get(m3)+"\\n"); 
-	      }
-         
-	    }  
-	    realSb.append(ret);  
-      #>>");
-
+      
+      <<#
+        for (int m1=0;m1<displayedPrimitives.size();m1++){#>>
+          toJsonOutput.append(indent);
+          toJsonOutput.append("<<#realSb.append("\'" + nameOfPrimitives.get(m1) + "\'" + " : \"+"+  displayedPrimitives.get(m1)+"+ \"");#>>");
+          toJsonOutput.append(",\n");
+        <<#}
+      #>>
+      <<#
+        LinkedList<String> reflexiveContent = new LinkedList<String>();
+        for(int m3=0;m3<reflexive.size();m3++){#>>
+          toJsonOutput.append(indent);
+          toJsonOutput.append("<<#realSb.append("\'" + reflexiveNames.get(m3) + "\' : [");#>>");
+          toJsonOutput.append("<<#realSb.append( "\"+"+  reflexive.get(m3)+"+ \")");#>>");
+        <<#}#>>
+          
+          haveOutputItem = false;
+          //toJsonOutput.append("\n");
+          //toJsonOutput.append(",");
     }
 
     // Finalize the output of the concrete class
