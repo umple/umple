@@ -1174,7 +1174,7 @@ class PlaygroundMain
       for (GenerateTarget gt : model.getGenerates()) 
       {
         String generatorCodeToCompile = gt.getLanguage();
-        if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php")) 
+        if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php") || generatorCodeToCompile.equals("Python")) 
         {
           // TODO: Remove default options in future when syncing umplesync.jar with umple.jar
           successPreviousStep = CodeCompiler.compile(model, generatorCodeToCompile,false, false, "-", errorFileName);

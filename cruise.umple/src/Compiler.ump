@@ -46,6 +46,10 @@ class CodeCompiler {
           wasSuccessful = wasSuccessful & compilePhp(currentElement, model, beQuiet, extra);
           subsequentCompilation = true;
         }
+        else if (generator.equals("Python")) {
+          wasSuccessful = wasSuccessful & compilePython(currentElement, model, beQuiet, extra);
+          subsequentCompilation = true;
+        }
         else {
           System.out.println("Compilation of generated code not supported yet for generator "+generator);
         }
@@ -53,6 +57,61 @@ class CodeCompiler {
     }
     return wasSuccessful;
   }
+ 
+  private static boolean compilePython(UmpleElement aClass, UmpleModel model, boolean beQuiet, String args) {
+    String path="";
+    String base="";
+    for (GenerateTarget gt : model.getGenerates()) {
+      if (gt.getLanguage().equals("Python")) {
+        base = StringFormatter.addPathOrAbsolute( 
+            model.getUmpleFile().getPath() +File.separator+ gt.getPath(), "");
+        path = base + aClass.getPackageName().replace(".", File.separator);
+      }
+    }
+    
+    String filename = path + File.separator + aClass.getName() + ".py";
+    int retval=0;
+
+    try {
+      if(base.contains(" ") && !(beQuiet && subsequentCompilation)) {
+        System.err.println("Warning: Compiling generated Python from a directory or path containing a space character may produce an error message from the Python compiler.");
+      }
+      
+      BufferedReader reader;
+      
+      Process p = Runtime.getRuntime().exec("python -m py_compile \"" +filename+ "\"");
+      reader=new BufferedReader(new InputStreamReader(p.getErrorStream())); 
+
+      // All output of the above should go to standard output
+      try {
+        retval=p.waitFor(); 
+      }
+      catch (InterruptedException e) {}
+
+      String line;
+      if(reader.ready()) {
+        line = reader.readLine();
+      }
+      else {
+        line = null;
+      }
+
+      while (line!=null) {
+        System.err.println(translateLineToUmplePython(line));
+
+        if(reader.ready()) {
+          line = reader.readLine();
+        }
+        else {
+          line = null;
+        }
+      }
+    } catch (IOException e) {
+      println(e.getMessage());
+      retval = 999;
+    }
+    return (retval == 0);
+  }  
 
   private static boolean compilePhp(UmpleElement aClass, UmpleModel model, boolean beQuiet, String args) {
     String path="";
@@ -298,6 +357,16 @@ class CodeCompiler {
     
     return successful;
   }
+
+   private static String translateLineToUmplePython(String line){
+    if(!line.contains("line")){
+      return line;
+    }
+
+    String[] parts=line.split(" ");
+    
+    return "model.ump:"+parts[parts.length-1]+": error";
+   }
 
   // To do: Use model to determine generation path
   private static String translateLineToUmple(String line, UmpleModel model) {
