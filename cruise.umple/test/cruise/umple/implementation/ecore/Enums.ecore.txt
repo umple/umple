@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="example" nsURI="cruise.umple.example" nsPrefix="example">
+  <eClassifiers xsi:type="ecore:EDataType" name="ExampleEnum" instanceClassName="ExampleEnum" />
+  <eClassifiers xsi:type="ecore:EClass" name="RootClass">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="classes1" upperBound="-1" eType="#//Class1" eOpposite="#//Class1/rootClass" />
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Class1">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exampleEnum" eType="#//ExampleEnum" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rootClass" lowerBound="1" eType="#//RootClass" eOpposite="#//RootClass/classes1" />
+  </eClassifiers>
+</ecore:EPackage>

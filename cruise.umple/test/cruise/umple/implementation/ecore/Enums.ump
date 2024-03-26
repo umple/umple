@@ -1,0 +1,12 @@
+generate Ecore;
+namespace cruise.umple.example;
+
+class RootClass {
+  1 <@>- * Class1 classes1;
+}
+
+class Class1 {
+  unique Integer number;
+  enum ExampleEnum { Option1, Option2 };
+  ExampleEnum exampleEnum;
+}

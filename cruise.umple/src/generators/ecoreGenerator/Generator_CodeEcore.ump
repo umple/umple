@@ -232,6 +232,25 @@ class EcoreGenerator {
       }
     }
   }
+
+  private void handleEnums(EcorePackage rootPackage){
+    for(EcoreClass eClass : rootPackage.getClasses()){
+      if(eClass.getIsInterface()){
+        continue;
+      }
+      
+      UmpleClass uClass = model.getUmpleClass(eClass.getName());
+      
+      for(Attribute uAttribute : uClass.getAttributes()){
+        String attrName = uAttribute.getName();
+        String typeName = uAttribute.getType() == null ? "String" : uAttribute.getType();
+        if (typeName == "Enum"){
+          EcoreEnum eEnum = new EcoreEnum(attrName, rootPackage.getIntent()+1);
+          rootPackage.addEnum(eEnum);
+        }
+      }
+    }
+  }
   
   public void generate() {
     // EPackage setup
@@ -246,6 +265,7 @@ class EcoreGenerator {
     handleAttributes(rootPackage);
     handleAssociation(rootPackage);
     handleStateMachine(rootPackage);
+    handleEnums(rootPackage);
     
     // Temporarily support one package only
     model.setCode(genModel.getPackage(0).getCode());
