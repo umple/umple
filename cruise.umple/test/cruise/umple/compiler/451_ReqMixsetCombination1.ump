@@ -1,0 +1,12 @@
+// Mixset with the requirement and class inside the mixset
+// Should not produce 401 warning
+implementsReq A;
+mixset B{
+class X {
+a;
+}
+req A text {
+  This is the second requirement.
+    }  
+}
+use B;

@@ -1,0 +1,11 @@
+// Mixset with implementsReq inside the class
+mixset B{
+implementsReq A;
+class X {
+  a;
+} 
+req A text { 
+  This is the second requirement.  
+  }
+ }
+use B;

@@ -39,12 +39,14 @@ class UmpleInternalParser
   internal String[] parsedUmpleFiles;
   internal Boolean shouldProcessAgain = false;
   internal Boolean shouldProcessClassAgain = false;
+  //private Requirement requirements;// added - to be able to access requirments in UmpleInternalParser 
 
   after constructor { init(); }
 
   public UmpleInternalParser()
   {
     this("UmpleInternalParser", new UmpleModel(null), new RuleBasedParser());
+    //this.requirements = new Requirement("","",""); //added
   }
 
   public UmpleInternalParser(UmpleModel aModel)
@@ -116,7 +118,9 @@ class UmpleInternalParser
       }
       mixset FeatureModel {
         analyzeFeatureModel(); // lastly to analyze the feature model after all mixsets are added to umple model. 
-      }
+      } 
+      // The call to analyzeAllRequirements is here
+      //analyzeAllRequirements();
     
     }
     catch (Exception ex)
@@ -225,6 +229,15 @@ class UmpleInternalParser
     analyzeEnumerationToken(t, analysisStep);
     mixset Class {
       analyzeClassToken(t,analysisStep);
+      //System.out.println("The analysis step in AT-229 is: "+analysisStep);
+ 
+ // DEBUG ... this may not work     
+      // Analyse requirements at the top level because analyse class token will only occur at pass 1
+      if (t.is("requirement") && analysisStep == 1){
+        //System.out.println("It reaches AT-233");
+        //System.out.println("The analysis step in AT-234 is: "+analysisStep);
+        analyzeRequirement(t);
+      }
     }
     mixset Trait {
       analyzeTraitToken(t,analysisStep);
@@ -318,6 +331,39 @@ class UmpleInternalParser
   // Once you have analyze all tokens, you allowed a second 'pass' to apply any additional checks
   // Each step in the process might "fail", so we check the status before calling each delegate
   // token post token analysis method
+  
+  private void analyzeAllRequirements()
+  {
+    // model.getReqImplementations();
+     //model.getAllRequirements();
+     // At this point we take the implementations and map the requirements to see if any are missing
+     for (ReqImplementation reqImpl : model.getReqImplementations())//Loop through requirement implementations ID
+     {
+       String reqImplID = reqImpl.getIdentifier();
+       Token reqToken = reqImpl.getReqToken();
+       Requirement foundRequirement = model.getAllRequirements().get(reqImplID); // found a matching req for implementation
+       //foundRequirement.getReqToken();
+       if(foundRequirement == null) // null then we need to raise an error 
+       {
+         // There is no requirement here so we use the implementation to get the reqToken
+         // There is only one reqToken for an implementation
+         System.out.println("There is an error!");
+         //for (Token reqToken : reqImpl.getReqToken())
+         //{
+            setFailedPosition(reqToken.getPosition(), 401,reqImplID); // Using the reqTokens to find the lines of error
+         //}
+       }
+       else
+       {
+         System.out.println("There is no error!");
+       }
+       //for(String reqID : model.getAllRequirements().keySet())//Loop through requirement ID
+       //{
+       
+       }
+     //}
+  
+  }
   private void postTokenAnalysis()
   {
     analyzeParseResult();

@@ -1,0 +1,13 @@
+// Association with implementsReq inside it
+// Should not produce any warning
+class X {
+  a;
+}
+req A text {  
+  This is the second requirement.
+}
+ class Y{
+ 1 -- * X;
+ implementsReq A;
+}
+
