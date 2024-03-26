@@ -207,6 +207,7 @@ class UmpleInternalParser
   private void analyzeRequirement(Token t) {
    //if(counter <= 1){
     String reqID = t.getSubToken("reqIdentifier").getValue(); // extract new requirement identifier
+    System.out.println("AR: 210 -requirement identifier:"+reqID);
     String newContent = t.getSubToken("reqContent").getValue();// extract content 
 
     String newLanguage = "";// Initialize language
@@ -215,9 +216,11 @@ class UmpleInternalParser
     }
     
     Requirement existingRequirement = model.getAllRequirements().get(reqID); // Retrieves any existing requirement with the same identifier from the model
+    System.out.println("AR: 219 -Existing requirement:"+existingRequirement);
 
     if (existingRequirement != null) { // Checks if a requirement with the same identifier already exists in the model.
         String existingLanguage = existingRequirement.getLanguage();// get the language of the existing requirement
+        System.out.println(" AR: 223-Entering in the if part");
 
         if (!(existingLanguage.equals("") || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
             setFailedPosition(t.getPosition(), 402, reqID,existingLanguage,newLanguage);
@@ -235,15 +238,18 @@ class UmpleInternalParser
         }
         existingRequirement.addReqToken(t);// new addition
         existingRequirement.setStatement(newContent);
-        //System.out.println(existingRequirement.getStatement());
+        System.out.println(" AR:241 -ExistingRequirement:"+existingRequirement.getStatement());
+        //Requirement req1 = new Requirement(reqID, newContent, newLanguage);// Create new requirement
+        //model.getAllRequirements().put(reqID, req1);// We are not going to need this anymore 
         
     }
     else
     {
     // If existing requirement is null
     // create new requirement
-      System.out.println("Entering in the else part");
+      System.out.println(" AR:248-Entering in the else part");
       Requirement req = new Requirement(reqID, newContent, newLanguage);// Create new requirement 
+      System.out.println(" AR: 250 -"+req.getStatement());
     // Add the new requirement
       req.addReqToken(t);// new addition
    
@@ -259,6 +265,7 @@ class UmpleInternalParser
   }
 
   private void analyzeImplementReq(Token t) {
+  System.out.println(" AI:268-Entering in the implementation part");
   //System.out.println("Inside Analyze Requirmenet");
   /*System.out.println("Inside Analyze Requirmenet analysis step: "+analysisStep);
     if (analysisStep != 2) { // Check if it's the second pass, otherwise, skip analysis
@@ -266,12 +273,12 @@ class UmpleInternalParser
         return;
     }*/
     //System.out.println("Inside Analyze Requirmenet after if");
-    int counter = 0;
-    String badReq = "";
+    //int counter = 0;
+    //String badReq = "";
 
     //if (analysisStep == 2) { // Do processing only if it is the second parse 
      //System.out.println("The analysis step is:"+analysisStep);
-     System.out.println("******************************************");
+     //System.out.println("******************************************");
      String reqImpID = t.getSubToken("reqIdentifier").getValue();// Identifier that has been identified 
      //System.out.println("The requirement implementation is:"+reqImpID);
      //reqImplementations.addReqImplementation(reqImpID);// Should we do it to lastRequirement
@@ -283,7 +290,7 @@ class UmpleInternalParser
      //Requirement reqNew = new Requirement(reqImpID, "","");// Create new requirement 
      ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);// Instantiate the requirement implementation
      model.addReqImplementation(reqImplementation);
-     System.out.println("******************************************");
+     //System.out.println("******************************************");
      // REMOVE THE CODE BELOW
    /* if (t.hasSubTokens()) {
         
@@ -309,7 +316,7 @@ class UmpleInternalParser
       //String reqID = t.getSubToken("reqIdentifier").getValue(); 
       //Requirement ImpRequirement = model.getAllRequirements().get(reqID);
       //setFailedPosition(ImpRequirement.getReqToken(), 401,reqImpID);
-      setFailedPosition(t.getPosition(), 401,reqImpID);// There is a need to use reqToken here
+      //setFailedPosition(t.getPosition(), 401,reqImpID);// There is a need to use reqToken here
    // }
   }
 

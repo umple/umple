@@ -120,7 +120,7 @@ class UmpleInternalParser
         analyzeFeatureModel(); // lastly to analyze the feature model after all mixsets are added to umple model. 
       } 
       // The call to analyzeAllRequirements is here
-      analyzeAllRequirements();
+      //analyzeAllRequirements();
     
     }
     catch (Exception ex)
@@ -336,23 +336,31 @@ class UmpleInternalParser
   {
     // model.getReqImplementations();
      //model.getAllRequirements();
+     // At this point we take the implementations and map the requirements to see if any are missing
      for (ReqImplementation reqImpl : model.getReqImplementations())//Loop through requirement implementations ID
      {
        String reqImplID = reqImpl.getIdentifier();
-       Requirement foundRequirement = model.getAllRequirements().get(reqImplID); // mapping the requirement
+       Token reqToken = reqImpl.getReqToken();
+       Requirement foundRequirement = model.getAllRequirements().get(reqImplID); // found a matching req for implementation
+       //foundRequirement.getReqToken();
        if(foundRequirement == null) // null then we need to raise an error 
        {
+         // There is no requirement here so we use the implementation to get the reqToken
+         // There is only one reqToken for an implementation
          System.out.println("There is an error!");
+         //for (Token reqToken : reqImpl.getReqToken())
+         //{
+            setFailedPosition(reqToken.getPosition(), 401,reqImplID); // Using the reqTokens to find the lines of error
+         //}
        }
        else
        {
-         System.out.println("There is an no error!");
+         System.out.println("There is no error!");
        }
        //for(String reqID : model.getAllRequirements().keySet())//Loop through requirement ID
        //{
        
        }
-       
      //}
   
   }
