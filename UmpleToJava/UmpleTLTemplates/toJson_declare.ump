@@ -22,8 +22,9 @@ class UmpleToJava {
 	  LinkedList<String> displayedPrimitives = new LinkedList<String>();
 	  LinkedList<String> nameOfPrimitives = new LinkedList<String>();
 	  List<String> keys = new ArrayList<String>();
-	  List<String> reflexiveNames = new ArrayList<String>();
-	  List<String> reflexive = new ArrayList<String>();
+	  List<String> associationNames = new ArrayList<String>();
+	  List<Object> associations = new ArrayList<Object>();
+	  List<Object> associationItems = new ArrayList<Object>();
 	  for(String k: uClass.getKey().getMembers())
 		  keys.add(k);
 	  for(Attribute av: uClass.getAttributes())
@@ -54,8 +55,9 @@ class UmpleToJava {
 	  }
 	  for(AssociationVariable av: uClass.getAssociationVariables())
 	  {
-		  reflexiveNames.add(av.getName());
-          reflexive.add(gen.translate("getManyMethod",av)+"()");
+		  associationNames.add(av.getName());
+          associations.add(gen.translate("getManyMethod",av)+"()");
+          associationItems.add(av.getType());
 	  }
 	  #>>
     if(atConcreteClass) {
@@ -88,23 +90,25 @@ class UmpleToJava {
       <<#
         for (int m1=0;m1<displayedPrimitives.size();m1++){#>>
           toJsonOutput.append(indent);
-          
           toJsonOutput.append("<<#realSb.append("  \'" + nameOfPrimitives.get(m1) + "\'" + " : \"+"+  displayedPrimitives.get(m1)+"+ \"");#>>");
           toJsonOutput.append(",\n");
         <<#}
       #>>
+      haveOutputItem = false;
       <<#
-        LinkedList<String> reflexiveContent = new LinkedList<String>();
-        for(int m3=0;m3<reflexive.size();m3++){#>>
-          toJsonOutput.append(indent);
-          toJsonOutput.append("<<#realSb.append("\'" + reflexiveNames.get(m3) + "\' : [");#>>");
-         
-          //toJsonOutput.append("<<#realSb.append( "\"+"+  reflexive.get(m3)+"+ \")");#>>");
-        <<#}#>>
-          
-          haveOutputItem = false;
-          //toJsonOutput.append("\n");
-          //toJsonOutput.append(",");
+      //debug
+      //System.out.print("\"this is the content of associationItems = \"+"+associationItems);
+        for(int assoIndex=0;assoIndex<associationItems.size();assoIndex++){#>>
+         toJsonOutput.append(indent);
+          toJsonOutput.append("<<#realSb.append("  \'" + associationNames.get(assoIndex) + "\' : [");#>>");
+          toJsonOutput.append("\n");
+         for (<<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anItem :<<#append(realSb,"" + associations.get(assoIndex) + "");#>>){
+           anItem.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
+           haveOutputItem=true;
+          }
+      <<#}#>>
+          toJsonOutput.append("\n");    
+          toJsonOutput.append(indent+"  ]\n");
     }
 
     // Finalize the output of the concrete class
