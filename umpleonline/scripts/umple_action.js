@@ -2516,8 +2516,8 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
       updatedAssociationString = isEnd ? (startPart + parts[1] + updatedEndPart) : (updatedStartPart + parts[1] + endPart);
     }
     else{
-      let parts2 = selectedText.split(";")
-      parts=parts2[0].split(" ");
+      let parts2 = selectedText.split(";");
+      parts1=parts2[0].split(" ");
       if (isEnd==false) {
         updatedStartPart = mult.trim()+" "+newRoleName;
         if(parts.length>2){
