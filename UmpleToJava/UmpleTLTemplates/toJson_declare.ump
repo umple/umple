@@ -84,9 +84,6 @@ class UmpleToJava {
       <<#}#>>
       // When an object has not already been visited, output its details
       toJsonOutput.append(",\n");
-      
-      // When an object has not already been visited, output its details
-      
       <<#
         for (int m1=0;m1<displayedPrimitives.size();m1++){#>>
           toJsonOutput.append(indent);
@@ -102,7 +99,11 @@ class UmpleToJava {
          toJsonOutput.append(indent);
           toJsonOutput.append("<<#realSb.append("  \'" + associationNames.get(assoIndex) + "\' : [");#>>");
           toJsonOutput.append("\n");
-         for (<<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anItem :<<#append(realSb,"" + associations.get(assoIndex) + "");#>>){
+          haveOutputItem = false;
+        for (<<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anItem :<<#append(realSb,"" + associations.get(assoIndex) + "");#>>){
+          if(haveOutputItem) {
+            toJsonOutput.append(",\n");
+          }
            anItem.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
            haveOutputItem=true;
           }
