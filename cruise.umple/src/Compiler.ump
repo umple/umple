@@ -47,7 +47,7 @@ class CodeCompiler {
           subsequentCompilation = true;
         }
         else if (generator.equals("Python")) {
-          wasSuccessful = wasSuccessful & compilePython(currentElement, model, beQuiet, extra);
+          wasSuccessful = wasSuccessful & compilePython(currentElement, model, beQuiet,errorFileName, extra);
           subsequentCompilation = true;
         }
         else {
@@ -58,7 +58,7 @@ class CodeCompiler {
     return wasSuccessful;
   }
  
-  private static boolean compilePython(UmpleElement aClass, UmpleModel model, boolean beQuiet, String args) {
+  private static boolean compilePython(UmpleElement aClass, UmpleModel model, boolean beQuiet,String errorFileName, String args) {
     String path="";
     String base="";
     for (GenerateTarget gt : model.getGenerates()) {
@@ -96,8 +96,10 @@ class CodeCompiler {
         line = null;
       }
 
+      StringBuilder builder = new StringBuilder();
       while (line!=null) {
         System.err.println(translateLineToUmplePython(line));
+        builder = builder.append(translateLineToUmplePython(line)+"\n");
 
         if(reader.ready()) {
           line = reader.readLine();
@@ -105,6 +107,30 @@ class CodeCompiler {
         else {
           line = null;
         }
+      }
+
+      if(retval!=0 && errorFileName != null) {
+        String error = builder.toString().trim();
+          try
+          {
+            File newFile = new File(errorFileName);
+            newFile.createNewFile();   
+          }
+          catch (IOException ex)  
+          {
+            System.err.println(ex);
+          }
+
+          // Write to the file
+          try (PrintWriter fileout = new PrintWriter(errorFileName)) 
+          { 
+            fileout.println("test1 file: "+errorFileName+"\n")
+            fileout.println(error);
+          }  
+          catch (FileNotFoundException ex) 
+          {
+            System.err.println(ex);
+          }
       }
     } catch (IOException e) {
       println(e.getMessage());
@@ -333,7 +359,7 @@ class CodeCompiler {
 
           // Write to the file
           try (PrintWriter fileout = new PrintWriter(errorFileName)) 
-          {
+          { 
             fileout.println(error);
           }  
           catch (FileNotFoundException ex) 
