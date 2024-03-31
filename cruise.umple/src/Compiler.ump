@@ -361,6 +361,7 @@ class CodeCompiler {
           // Write to the file
           try (PrintWriter fileout = new PrintWriter(errorFileName)) 
           { 
+            fileout.println("filename: "+errorFileName+"\n");
             fileout.println(error);
           }  
           catch (FileNotFoundException ex) 
