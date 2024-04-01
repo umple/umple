@@ -82,6 +82,22 @@ class CodeCompiler {
       Process p = Runtime.getRuntime().exec(cmd);
       reader=new BufferedReader(new InputStreamReader(p.getErrorStream())); 
 
+        String content;
+        StringBuilder contentBuilder = new StringBuilder();
+        try {
+            File file2 = new File(filename);
+            FileInputStream fis = new FileInputStream(file2);
+            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+            String lin;
+            while ((lin = br.readLine()) != null) {
+                contentBuilder.append(lin).append("\n");
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        content = contentBuilder.toString();
+
       // All output of the above should go to standard output
       try {
         retval=p.waitFor(); 
@@ -98,13 +114,15 @@ class CodeCompiler {
 
       StringBuilder builder = new StringBuilder();
       if(line!=null){
+        System.err.println("file content:\n\n"+content+"\n");
         System.err.println("the only line to print");
          System.err.println("linuxx cmd: "+cmd);
          System.err.println("error filename: "+errorFileName);
       }
        
       while (line!=null) {
-        System.err.println(translateLineToUmplePython(line));
+        //System.err.println(translateLineToUmplePython(line));
+        System.err.println("line: "+line);
         builder = builder.append(translateLineToUmplePython(line)+"\n");
         //triger
 
