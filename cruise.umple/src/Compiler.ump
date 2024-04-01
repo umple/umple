@@ -98,7 +98,8 @@ class CodeCompiler {
 
       StringBuilder builder = new StringBuilder();
       if(line!=null){
-         System.err.println("linux cmd: "+cmd);
+        System.err.println("the only line to print");
+         System.err.println("linuxx cmd: "+cmd);
          System.err.println("error filename: "+errorFileName);
       }
        
