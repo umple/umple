@@ -335,7 +335,7 @@ class CodeCompiler {
       StringBuilder builder = new StringBuilder();
       if(line!=null)
          System.err.println("file name: "+errorFileName);
-         
+
       while (line!=null) {
         System.err.println(translateLineToUmple(line, model));
         builder = builder.append(translateLineToUmple(line, model)+"\n");
@@ -365,7 +365,7 @@ class CodeCompiler {
           try (PrintWriter fileout = new PrintWriter(errorFileName)) 
           { 
             fileout.println("filename: "+errorFileName+"\n");
-            fileout.println(error);
+            //fileout.println(error);
           }  
           catch (FileNotFoundException ex) 
           {
