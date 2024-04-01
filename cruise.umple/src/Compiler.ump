@@ -78,8 +78,8 @@ class CodeCompiler {
       }
       
       BufferedReader reader;
-      
-      Process p = Runtime.getRuntime().exec("python -m py_compile \"" +filename+ "\"");
+      String cmd="python3 -m py_compile \"" +filename+ "\"";
+      Process p = Runtime.getRuntime().exec(cmd);
       reader=new BufferedReader(new InputStreamReader(p.getErrorStream())); 
 
       // All output of the above should go to standard output
@@ -97,6 +97,9 @@ class CodeCompiler {
       }
 
       StringBuilder builder = new StringBuilder();
+      if(line!=null)
+
+        System.err.println("linux cmd: "+cmd);
       while (line!=null) {
         System.err.println(translateLineToUmplePython(line));
         builder = builder.append(translateLineToUmplePython(line)+"\n");
@@ -333,6 +336,8 @@ class CodeCompiler {
       }
 
       StringBuilder builder = new StringBuilder();
+      if(line!=null)
+         System.err.println("test2 file name: "+errorFileName);
 
       while (line!=null) {
         System.err.println(translateLineToUmple(line, model));
@@ -362,9 +367,8 @@ class CodeCompiler {
           // Write to the file
           try (PrintWriter fileout = new PrintWriter(errorFileName)) 
           { 
-            //write error to file, executed on linux
-            fileout.println("filename: "+errorFileName+"\n");
-            //fileout.println(error);
+            fileout.println("filename test3: "+errorFileName+"\n");
+            fileout.println(error);
           }  
           catch (FileNotFoundException ex) 
           {
