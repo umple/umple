@@ -97,9 +97,11 @@ class CodeCompiler {
       }
 
       StringBuilder builder = new StringBuilder();
-      if(line!=null)
-
-        System.err.println("linux cmd: "+cmd);
+      if(line!=null){
+         System.err.println("linux cmd: "+cmd);
+         System.err.println("error filename: "+errorFileName);
+      }
+       
       while (line!=null) {
         System.err.println(translateLineToUmplePython(line));
         builder = builder.append(translateLineToUmplePython(line)+"\n");
@@ -336,8 +338,6 @@ class CodeCompiler {
       }
 
       StringBuilder builder = new StringBuilder();
-      if(line!=null)
-         System.err.println("test2 file name: "+errorFileName);
 
       while (line!=null) {
         System.err.println(translateLineToUmple(line, model));
@@ -366,8 +366,7 @@ class CodeCompiler {
 
           // Write to the file
           try (PrintWriter fileout = new PrintWriter(errorFileName)) 
-          { 
-            fileout.println("filename test3: "+errorFileName+"\n");
+          {
             fileout.println(error);
           }  
           catch (FileNotFoundException ex) 
