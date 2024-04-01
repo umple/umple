@@ -333,7 +333,9 @@ class CodeCompiler {
       }
 
       StringBuilder builder = new StringBuilder();
+      System.err.println("error filename: "+errorFileName);
       while (line!=null) {
+        
         System.err.println(translateLineToUmple(line, model));
         builder = builder.append(translateLineToUmple(line, model)+"\n");
         if(reader.ready()) {
