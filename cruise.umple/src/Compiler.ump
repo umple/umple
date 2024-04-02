@@ -114,10 +114,20 @@ class CodeCompiler {
 
       StringBuilder builder = new StringBuilder();
       if(line!=null){
+        String javaVersion = System.getProperty("java.version");
+        String javaVendor = System.getProperty("java.vendor");
+        String osName = System.getProperty("os.name");
+        String osArch = System.getProperty("os.arch");
+
+        System.err.println("Java Version: " + javaVersion);
+        System.err.println("Java Vendor: " + javaVendor);
+        System.err.println("Operating System: " + osName);
+        System.err.println("Architecture: " + osArch);
+
         System.err.println("file content:\n\n"+content+"\n");
         System.err.println("the only line to print");
-         System.err.println("linuxx cmd: "+cmd);
-         System.err.println("error filename: "+errorFileName);
+        System.err.println("linuxx cmd: "+cmd);
+        System.err.println("error filename: "+errorFileName);
       }
        
       while (line!=null) {
