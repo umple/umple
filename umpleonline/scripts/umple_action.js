@@ -1284,6 +1284,9 @@ Action.displayTransitionMenu = function(event) {
   let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
   let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
   let line = Action.findEOL(cText);
+  if(line==""){
+    alert("Please edit this complex transition in the textual code.");
+  }
   let endIndex=startIndex+line.length;
   let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
    let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
@@ -1302,7 +1305,7 @@ Action.displayTransitionMenu = function(event) {
        action="";
      }
      //
-
+    console.log(match);
   //need to sanitize any linebreaks or quotes that could break the generated HTML
   //var jsInput=chosenState.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
   var menu = document.createElement('customContextMenu');
@@ -1447,6 +1450,7 @@ Action.changeTransition = function(dest,startIndex,endIndex) {
         TabControl.getCurrentHistory().save(Page.getUmpleCode(), "changeTransitionDestination");
         document.removeEventListener("mousedown",hider);
         prompt.remove(); // Remove the prompt after processing
+        Action.selectMatchingText(modifiedTransition);
     });
 };
 
@@ -1582,6 +1586,7 @@ Action.modifyTransitionGuard = function(startIndex,endIndex) {
     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "modifyGuard");
     document.removeEventListener("mousedown",hider);
     prompt.remove(); // Remove the prompt after processing
+    Action.selectMatchingText(modifiedTransition);
 });
 };
 
@@ -1688,6 +1693,7 @@ Action.modifyTransitionAction = function(startIndex,endIndex) {
       TabControl.getCurrentHistory().save(Page.getUmpleCode(), "modifyAction");
       document.removeEventListener("mousedown",hider);
       prompt.remove(); // Remove the prompt after processing
+      Action.selectMatchingText(modifiedTransition);
   });
 };
   Action.modifyTransitionEventName = function(startIndex,endIndex) {
@@ -1762,6 +1768,7 @@ Action.modifyTransitionAction = function(startIndex,endIndex) {
         TabControl.getCurrentHistory().save(Page.getUmpleCode(), "renameTransition");
         document.removeEventListener("mousedown",hider);
         prompt.remove(); // Remove the prompt after processing
+        Action.selectMatchingText(modifiedTransition);
     });
 };
 
@@ -2240,7 +2247,7 @@ Action.displayAssociMenu = function(event,associationLink) {
     isEnd=3;
   }
   var menu = document.createElement('customContextMenu');
-  var rowContent = ["Alter start multiplicity","Alter start role name","Alter end multiplicity","Alter end role name","Delete the association."];
+  var rowContent = ["Alter "+className+" multiplicity","Alter "+className+" role name" ,"Alter other multiplicity","Alter other role name","Delete the association."];
   var rowFuncs = [
     "Action.modifyMultiplicity(\""+jsInput+"\",\""+selectedText+"\",\""+startInfo[0]+"\",\""+0+"\")",
     "Action.modifyRoleName(\""+jsInput+"\",\""+selectedText+"\",\""+startInfo[1]+"\",\""+startInfo[0]+"\",\""+0+"\")",
@@ -2422,6 +2429,7 @@ Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
      Action.removeContextMenu();
      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
      prompt.remove(); // Remove the prompt after processing
+     Action.selectMatchingText(updatedAssociationString);
   }
   else {
     // If the format is invalid, display a message
@@ -2517,13 +2525,15 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
     }
     else{
       let parts2 = selectedText.split(";");
-      parts1=parts2[0].split(" ");
+      parts=parts2[0].split(" ");
       if (isEnd==false) {
         updatedStartPart = mult.trim()+" "+newRoleName;
         if(parts.length>2){
           updatedAssociationString = updatedStartPart+" "+parts[1].trim()+" "+parts[2].trim()+";";
         }
         else{
+          
+          alert("To add a role name at this end there must be a role name at the other end first");
           updatedAssociationString = updatedStartPart+" "+parts[1].trim()+";";
         }
       } else {
@@ -2548,11 +2558,10 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
     
     Page.codeMirrorEditor.setValue(orig);
     // Apply updatedAssociationString to the Umple code as needed
-    
      Action.removeContextMenu();
      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
      prompt.remove(); // Remove the prompt after processing
-  
+     Action.selectMatchingText(updatedAssociationString);
   });
  };
 
@@ -2784,14 +2793,20 @@ Action.changeAttributeType = function(classCode, className, attributeName, curre
 
       if (selectedType !== currentType) { // Proceed only if the type has been changed
         let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
-        let attrRegexWithType = new RegExp("\\b" + currentType + "\\s" + attributeName + "\\s*;", "g");
-        let attrRegexWithoutType = new RegExp("\\b" + attributeName + "\\s*;\\n?", "g");
         let modifiedClassCode = classyCode;
-        modifiedClassCode = modifiedClassCode.replace(attrRegexWithType, "");
-        modifiedClassCode = modifiedClassCode.replace(attrRegexWithoutType, "");
-        modifiedClassCode = modifiedClassCode.substr(0,modifiedClassCode.length-1)+"  "+selectedType+" "+attributeName+";\n}";
-        let orig=Page.codeMirrorEditor.getValue();
+        if(currentType !="String"){
+          let attrRegexWithType = new RegExp("\\b" + currentType + "\\s" + attributeName,"g");
+          modifiedClassCode = modifiedClassCode.replace(attrRegexWithType,  selectedType+" "+attributeName);
+        }
+        else{
+          
+          let attrRegexWithType = new RegExp("\\b" + currentType + "\\s" + attributeName, "g");
+          let attrRegexWithoutType = new RegExp("\\b" + attributeName  , "g");
+          modifiedClassCode = modifiedClassCode.replace(attrRegexWithType,  selectedType+" "+attributeName);
+          modifiedClassCode = modifiedClassCode.replace(attrRegexWithoutType,  selectedType+" "+attributeName);
+        }
         
+        let orig=Page.codeMirrorEditor.getValue();
         orig=orig.replace(classyCode,modifiedClassCode);
         // Update the editor with the new code
 
@@ -3042,6 +3057,10 @@ Action.transitionClicked = function(identifier)
   let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
+  if(line==""){
+    alert("Please edit this complex transition in the textual code.");
+  }
+  
   Action.highlightByIndex(startIndex,endIndex);
   /*
   let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
