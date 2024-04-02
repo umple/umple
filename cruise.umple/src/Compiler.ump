@@ -78,7 +78,7 @@ class CodeCompiler {
       }
       
       BufferedReader reader;
-      String cmd="python3 -m py_compile \"" +filename+ "\"";
+      String cmd="python -m py_compile \"" +filename+ "\"";
       Process p = Runtime.getRuntime().exec(cmd);
       reader=new BufferedReader(new InputStreamReader(p.getErrorStream())); 
 
