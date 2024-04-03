@@ -25,6 +25,8 @@ class UmpleToJava {
 	  List<String> associationNames = new ArrayList<String>();
 	  List<Object> associations = new ArrayList<Object>();
 	  List<Object> associationItems = new ArrayList<Object>();
+      List<Boolean> associationIsMany = new ArrayList<Boolean>();
+
 	  for(String k: uClass.getKey().getMembers())
 		  keys.add(k);
 	  for(Attribute av: uClass.getAttributes())
@@ -55,9 +57,20 @@ class UmpleToJava {
 	  }
 	  for(AssociationVariable av: uClass.getAssociationVariables())
 	  {
-		  associationNames.add(av.getName());
-          associations.add(gen.translate("getManyMethod",av)+"()");
-          associationItems.add(av.getType());
+//debug
+//System.out.print("\n"+av+"\n");
+//System.out.print("\n av.isMany()"+av.isMany()+"\n");
+		associationNames.add(av.getName());
+		//check if the association variable has more than 1 multiplicity or not
+		//If the av has more than 1 multiplicity, get plural get()
+		if (av.isMany()){
+		  associations.add(gen.translate("getManyMethod",av)+"()");
+		}
+		else{
+		  associations.add(gen.translate("getMethod",av)+"()");
+		}
+		associationItems.add(av.getType());
+		associationIsMany.add(av.isMany());
 	  }
 	  #>>
     if(atConcreteClass) {
@@ -93,25 +106,33 @@ class UmpleToJava {
       #>>
       haveOutputItem = false;
       <<#
-      //debug
-      //System.out.print("\"this is the content of associationItems = \"+"+associationItems);
-        for(int assoIndex=0;assoIndex<associationItems.size();assoIndex++){#>>
-         toJsonOutput.append(indent);
-          toJsonOutput.append("<<#realSb.append("  \'" + associationNames.get(assoIndex) + "\' : [");#>>");
-          toJsonOutput.append("\n");
-          haveOutputItem = false;
-        for (<<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anItem :<<#append(realSb,"" + associations.get(assoIndex) + "");#>>){
-          if(haveOutputItem) {
-            toJsonOutput.append(",\n");
-          }
-           anItem.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
-           haveOutputItem=true;
-          }
-      <<#}#>>
-          toJsonOutput.append("\n");    
-          toJsonOutput.append(indent+"  ]\n");
+//debug
+//System.out.print("\"this is the content of associationItems = \"+"+associationItems);
+//System.out.print("\"associationNames.size()= \n\""+associationNames_mulMany.size()+"\"\n\"");
+        for(int assoIndex=0;assoIndex<associationNames.size();assoIndex++){#>>
+          toJsonOutput.append(indent);
+          <<#if(associationIsMany.get(assoIndex)){#>>
+            toJsonOutput.append("<<#realSb.append("  \'" + associationNames.get(assoIndex) + "\' : [");#>>");
+            toJsonOutput.append("\n");
+            haveOutputItem = false;
+            for (<<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anItem :<<#append(realSb,"" + associations.get(assoIndex) + "");#>>){
+              if(haveOutputItem) {
+                toJsonOutput.append(",\n");
+              }
+              anItem.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
+              haveOutputItem=true;
+            }
+            toJsonOutput.append("\n");    
+            toJsonOutput.append(indent+"]");
+          <<#}
+          else{#>>
+            toJsonOutput.append("\n");
+            toJsonOutput.append("<<#realSb.append("  \'" + associationNames.get(assoIndex) + "\' : ");#>>");
+            toJsonOutput.append("<<#realSb.append("\"+"+associations.get(assoIndex)+"+ \"");#>>");
+          <<#}#>>
+      <<#}#>>     
+          toJsonOutput.append(indent+"  \n");
     }
-
     // Finalize the output of the concrete class
     if(atConcreteClass) {
       if(!alreadyVisited) {
