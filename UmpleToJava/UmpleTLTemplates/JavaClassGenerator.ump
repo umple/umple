@@ -90,6 +90,7 @@ class JavaClassGenerator {
   }
   boolean isFirst = true;
 #>>
+
 <<=gen.translate("packageDefinition",uClass)>><<@ UmpleToJava.import_packages >>
 
 
