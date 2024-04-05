@@ -71,7 +71,6 @@ class JavaClassGenerator {
   JavaGenerator gen = new JavaGenerator();
   gen.setModel(model);
   GeneratorHelper.generator = gen;
-  
   HashMap<String,String> codeInjectionMap = new HashMap<String,String>();
   for (CodeInjection inject : uClass.getCodeInjections())
   {
@@ -89,14 +88,10 @@ class JavaClassGenerator {
     }
     codeInjectionMap.put(key,newCodeToInject);
   }
-  
   boolean isFirst = true;
 #>>
-
 <<=gen.translate("packageDefinition",uClass)>><<@ UmpleToJava.import_packages >>
-<<#if (model.modelHasSuboption("Java", "genJson")){
-    append(realSb,"\n{0}","import java.util.HashSet;");
-  }#>>
+
 
 <<# if (uClass.numberOfComments() > 0 && uClass.numberOfRequirements() > 0) { List<Comment> toComment = new ArrayList<Comment>(uClass.getComments()); toComment.addAll(Requirement.convertToComment(uClass.getRequirements())); append(realSb, "\n{0}", Comment.format("Javadoc", toComment)); } #>>
 <<# if (uClass.numberOfComments() > 0 && uClass.numberOfRequirements() == 0) { append(realSb, "\n{0}", Comment.format("Javadoc",uClass.getComments())); } #>>

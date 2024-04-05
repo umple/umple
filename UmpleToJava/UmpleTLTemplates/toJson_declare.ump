@@ -149,7 +149,7 @@ class UmpleToJava {
   !>>  
   
   toJson_declare <<!<</*toJson_declare*/>>
-  /** 
+  /*
   * Generate Json for this object and connected objects visited objects to enable avoidance of infinite loops
   *
   * @param toJsonOutput  Output is aded to this as the network of objects is traversed
