@@ -333,7 +333,14 @@ class UmpleConsoleMain
               continue;
             }
           
-            if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php")) {
+            // if(generatorCodeToCompile.equals("Python") && model.isSkippythoncompile()) {
+            //     if(!cfg.getBeQuiet()) {
+            //       System.out.println("Skipping compilation of python due to @@@skipphpcompile in a comment.");
+            //     }
+            //     continue;
+            //   }
+
+            if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php") || generatorCodeToCompile.equals("Python")) {
               compileSuccess = CodeCompiler.compile(model, generatorCodeToCompile,cfg.getUseExec(), cfg.getBeQuiet(), cfg.getCompile().get(), null);
             }
             else if (generatorCodeToCompile.startsWith("Gv")) {
@@ -562,9 +569,9 @@ class UmpleConsoleMain
     suboptionsAvail += "(With GvClassDiagram or GvClassTraitDiagram or GvEntityRelationshipDiagram: hideattributes, showmethods)";
     suboptionsAvail += " (With all Gv: gvseparator=n.n where n.n is greater than 1.0 to separate nodes more than default, or less than one to make the diagram tighter)";
 
-    optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
-    optparser.acceptsAll(Arrays.asList("performance", "p"), "Indicate time taken to parse and generate code");
-    optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
+      optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
+      optparser.acceptsAll(Arrays.asList("performance", "p"), "Indicate time taken to parse and generate code");
+      optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
 
     optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: " + languages).withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("u", "umple"), "Include umple code directly as a single string, instead of or addition to in files.").withRequiredArg().ofType(String.class);

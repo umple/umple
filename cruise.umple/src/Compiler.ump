@@ -78,7 +78,12 @@ class CodeCompiler {
       }
       
       BufferedReader reader;
-      String cmd="python2 -m py_compile \"" +filename+ "\"";
+      //used python3 for linux, use python for windows
+      String cmd="python3 -m py_compile \"" +filename+ "\"";
+      if(System.getProperty("os.name").toLowerCase().contains("windows")){
+        cmd="python -m py_compile \"" +filename+ "\"";
+      }
+      
       Process p = Runtime.getRuntime().exec(cmd);
       reader=new BufferedReader(new InputStreamReader(p.getErrorStream())); 
 
@@ -114,28 +119,14 @@ class CodeCompiler {
 
       StringBuilder builder = new StringBuilder();
       if(line!=null){
-        String javaVersion = System.getProperty("java.version");
-        String javaVendor = System.getProperty("java.vendor");
-        String osName = System.getProperty("os.name");
-        String osArch = System.getProperty("os.arch");
-
-        System.err.println("Java Version: " + javaVersion);
-        System.err.println("Java Vendor: " + javaVendor);
-        System.err.println("Operating System: " + osName);
-        System.err.println("Architecture: " + osArch);
-
-        System.err.println("file content:\n\n"+content+"\n");
-        System.err.println("the only line to print");
-        System.err.println("linuxx cmd: "+cmd);
-        System.err.println("error filename: "+errorFileName);
+        System.err.println("umple file code:\n----------------------\n"+content+"\n----------------------\n");
+        System.err.println("cmd: "+cmd);
       }
        
       while (line!=null) {
         //System.err.println(translateLineToUmplePython(line));
-        System.err.println("line: "+line);
+        System.err.println(translateLineToUmplePython(line));
         builder = builder.append(translateLineToUmplePython(line)+"\n");
-        //triger
-
         if(reader.ready()) {
           line = reader.readLine();
         }
@@ -159,7 +150,6 @@ class CodeCompiler {
           // Write to the file
           try (PrintWriter fileout = new PrintWriter(errorFileName)) 
           { 
-            fileout.println("test1 linux file: "+errorFileName+"\n");
             fileout.println(error);
           }  
           catch (FileNotFoundException ex) 
