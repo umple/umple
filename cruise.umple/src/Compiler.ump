@@ -80,7 +80,7 @@ class CodeCompiler {
       BufferedReader reader;
       //used python3 for linux, use python for windows
       String pythonVersion="python3";
-      
+
       if(System.getProperty("os.name").toLowerCase().contains("windows"))
         pythonVersion="python";
 
@@ -136,8 +136,8 @@ class CodeCompiler {
         
         // Compile Python code
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder(pythonVersion, "-m", "compileall", pythonFile.getAbsolutePath());
-            System.err.println("Abs path: "+pythonFile.getAbsolutePath());
+            ProcessBuilder processBuilder = new ProcessBuilder(pythonVersion, "-m", "compileall", file);
+            System.err.println("file path: "+filename);
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
 
