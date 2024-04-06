@@ -134,7 +134,10 @@ class UmpleToJava {
           <<#}
           else{#>>
             toJsonOutput.append("\n");
-            toJsonOutput.append("<<#realSb.append("\"+\"  " + associationNames.get(assoIndex) + "\"+\"" + " : ");#>>");
+            toJsonOutput.append("  \"");
+            toJsonOutput.append("<<#realSb.append(associationNames.get(assoIndex));#>>");
+            toJsonOutput.append("\"");
+            toJsonOutput.append(" : ");
             toJsonOutput.append("<<#realSb.append("\"+"+associations.get(assoIndex)+"+ \"");#>>");
           <<#}#>>
       <<#}#>>     
