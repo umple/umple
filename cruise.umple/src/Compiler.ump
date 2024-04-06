@@ -105,7 +105,8 @@ class CodeCompiler {
 
       // All output of the above should go to standard output
       try {
-        retval=p.waitFor(); 
+        retval=p.waitFor();
+        System.err.println("retval: "+retval);
       }
       catch (InterruptedException e) {}
 
@@ -116,6 +117,50 @@ class CodeCompiler {
       else {
         line = null;
       }
+
+      //GPT
+      String pythonCode = content;
+        
+        // Prepare Python code file
+        File pythonFile = new File("temp.py");
+        try {
+            FileWriter fileWriter = new FileWriter(pythonFile);
+            fileWriter.write(pythonCode);
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        // Compile Python code
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("python", "-m", "compileall", pythonFile.getAbsolutePath());
+            System.err.println("Abs path: "+pythonFile.getAbsolutePath());
+            Process process = processBuilder.start();
+
+            BufferedReader readerr = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder outputBuilder = new StringBuilder();
+            String line2;
+            while ((line2 = readerr.readLine()) != null) {
+                outputBuilder.append(line2).append("\n");
+            }
+            
+            // Wait for the compilation process to finish
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+              System.err.println("err Python code compiled successfully.");
+                System.out.println("Python code compiled successfully.");
+                System.err.println("success msg: "+ outputBuilder.toString());
+            } else {
+              System.err.println("Failed to compile Python code.");
+                System.out.println("Failed to compile Python code.");
+                System.err.println("err msg: "+ outputBuilder.toString());
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+        // Clean up temporary file
+        pythonFile.delete();
 
       StringBuilder builder = new StringBuilder();
       if(line!=null){
