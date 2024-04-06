@@ -136,7 +136,7 @@ class CodeCompiler {
         
         // Compile Python code
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder(pythonVersion, "-m", "compileall", file);
+            ProcessBuilder processBuilder = new ProcessBuilder(pythonVersion, "-m", "compileall", filename);
             System.err.println("file path: "+filename);
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
