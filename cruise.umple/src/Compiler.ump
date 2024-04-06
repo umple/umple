@@ -79,10 +79,13 @@ class CodeCompiler {
       
       BufferedReader reader;
       //used python3 for linux, use python for windows
-      String cmd="python3 -m py_compile \"" +filename+ "\"";
-      if(System.getProperty("os.name").toLowerCase().contains("windows")){
-        cmd="python -m py_compile \"" +filename+ "\"";
-      }
+      String pythonVersion="python3";
+      
+      if(System.getProperty("os.name").toLowerCase().contains("windows"))
+        pythonVersion="python";
+
+      String cmd=pythonVersion+" -m py_compile \"" +filename+ "\"";
+
       
       Process p = Runtime.getRuntime().exec(cmd);
       reader=new BufferedReader(new InputStreamReader(p.getErrorStream())); 
@@ -133,8 +136,9 @@ class CodeCompiler {
         
         // Compile Python code
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder("python", "-m", "compileall", pythonFile.getAbsolutePath());
+            ProcessBuilder processBuilder = new ProcessBuilder(pythonVersion, "-m", "compileall", pythonFile.getAbsolutePath());
             System.err.println("Abs path: "+pythonFile.getAbsolutePath());
+            processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
 
             BufferedReader readerr = new BufferedReader(new InputStreamReader(process.getInputStream()));
