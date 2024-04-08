@@ -55,11 +55,10 @@ class UmpleToJava {
 			  }
 		  }
 	  }
+	  
+	  
 	  for(AssociationVariable av: uClass.getAssociationVariables())
 	  {
-//debug
-//System.out.print("\n"+av+"\n");
-//System.out.print("\n av.isMany()"+av.isMany()+"\n");
 		associationNames.add(av.getName());
 		//check if the association variable has more than 1 multiplicity or not
 		//If the av has more than 1 multiplicity, get plural get()
@@ -75,7 +74,7 @@ class UmpleToJava {
 	  #>>
     if(atConcreteClass) {
       // This will not be true in a super call; output header
-      toJsonOutput.append(indent+"\""+this.toString().split("@")[0]+ "\" : {\n"+indent+ "  \"umpleObjectID\" : "+System.identityHashCode(this));
+      toJsonOutput.append(indent+"\""+this.toString().split("@")[0]+ "\" : {\n"+indent+ "  \"umpleObjectID\" : \""+System.identityHashCode(this)+"\"");
 
       // Check if we have already visited this object. If so we will not output details
       alreadyVisited = visitedList.contains(this);
@@ -102,9 +101,9 @@ class UmpleToJava {
           toJsonOutput.append(indent);
           toJsonOutput.append("  \"");
           toJsonOutput.append("<<#realSb.append(nameOfPrimitives.get(m1));#>>");
+          toJsonOutput.append("\" : \"");
+          toJsonOutput.append("<<#realSb.append("\"+"+  displayedPrimitives.get(m1)+"+ \"");#>>");
           toJsonOutput.append("\"");
-          toJsonOutput.append("<<#realSb.append(" : \"+"+  displayedPrimitives.get(m1)+"+ \"");#>>");
-          
           toJsonOutput.append(",\n");
         <<#}
       #>>
@@ -131,6 +130,7 @@ class UmpleToJava {
             }
             toJsonOutput.append("\n");    
             toJsonOutput.append(indent+"]");
+            toJsonOutput.append("\n"); 
           <<#}
           else{#>>
             toJsonOutput.append("\n");
@@ -138,7 +138,11 @@ class UmpleToJava {
             toJsonOutput.append("<<#realSb.append(associationNames.get(assoIndex));#>>");
             toJsonOutput.append("\"");
             toJsonOutput.append(" : ");
-            toJsonOutput.append("<<#realSb.append("\"+"+associations.get(assoIndex)+"+ \"");#>>");
+            toJsonOutput.append("\n");
+            <<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anotherItem = <<#realSb.append(associations.get(assoIndex));#>>;
+            anotherItem.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
+            //toJsonOutput.append("<<#realSb.append("\"+"+associations.get(assoIndex)+"+ \"");#>>");
+            haveOutputItem=true;
           <<#}#>>
       <<#}#>>     
           toJsonOutput.append(indent+"  \n");
