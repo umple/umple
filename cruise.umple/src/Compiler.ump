@@ -84,12 +84,14 @@ class CodeCompiler {
       if(System.getProperty("os.name").toLowerCase().contains("windows"))
         pythonVersion="python";
 
-      String cmd=pythonVersion+" -m py_compile \"" +filename+ "\"";
+      String cmd=pythonVersion+" -m py_compile " +filename;
 
       
       Process p = Runtime.getRuntime().exec(cmd);
       reader=new BufferedReader(new InputStreamReader(p.getErrorStream())); 
 
+// DEBUG the following code is temporary ... just to output the file
+/*
         String content;
         StringBuilder contentBuilder = new StringBuilder();
         try {
@@ -105,11 +107,16 @@ class CodeCompiler {
             e.printStackTrace();
         }
         content = contentBuilder.toString();
+*/
+// End DEBUG block
 
       // All output of the above should go to standard output
       try {
         retval=p.waitFor();
+// DEBUG temp
+/*
         System.err.println("retval: "+retval);
+*/
       }
       catch (InterruptedException e) {}
 
@@ -121,7 +128,9 @@ class CodeCompiler {
         line = null;
       }
 
-      //GPT
+// DEBUG ... the following is to test if we can compile the file ... temporary
+/*
+      // Came from GPT: 
       String pythonCode = content;
         
         // Prepare Python code file
@@ -171,11 +180,17 @@ class CodeCompiler {
         System.err.println("umple file code:\n----------------------\n"+content+"\n----------------------\n");
         System.err.println("cmd: "+cmd);
       }
-       
+*/
+// DEBUG block end\
+
+// DEBUG
+System.err.println("Any output from the Python compiler should appear below\n cmd="+cmd);
+
       while (line!=null) {
         //System.err.println(translateLineToUmplePython(line));
         System.err.println(translateLineToUmplePython(line));
-        builder = builder.append(translateLineToUmplePython(line)+"\n");
+// DEBUG
+//        builder = builder.append(translateLineToUmplePython(line)+"\n");
         if(reader.ready()) {
           line = reader.readLine();
         }
@@ -183,7 +198,11 @@ class CodeCompiler {
           line = null;
         }
       }
+// DEBUG
+System.err.println("End of Python compiler output");      
 
+// DEBUG block
+/*
       if(retval!=0 && errorFileName != null) {
         String error = builder.toString().trim();
           try
@@ -206,6 +225,9 @@ class CodeCompiler {
             System.err.println(ex);
           }
       }
+// END DEBUG
+*/
+      
     } catch (IOException e) {
       println(e.getMessage());
       retval = 999;
