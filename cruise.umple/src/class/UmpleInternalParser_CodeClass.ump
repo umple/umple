@@ -209,14 +209,15 @@ class UmpleInternalParser
     String reqID = t.getSubToken("reqIdentifier").getValue(); // extract new requirement identifier
     System.out.println("AR: 210 -requirement identifier:"+reqID);
     String newContent = t.getSubToken("reqContent").getValue();// extract content 
+    System.out.println("212: New content is:"+newContent);
 
     String newLanguage = "";// Initialize language
     if (!(t.getSubToken("reqLanguage") == null || t.getSubToken("reqLanguage").getValue() == null)) {
         newLanguage = t.getSubToken("reqLanguage").getValue();// get the language of the sub token
     }
     
-    Requirement existingRequirement = model.getAllRequirements().get(reqID); // Retrieves any existing requirement with the same identifier from the model
-    System.out.println("AR: 219 -Existing requirement:"+existingRequirement);
+     Requirement existingRequirement = model.getAllRequirements().get(reqID); // Retrieves any existing requirement with the same identifier from the model
+     System.out.println("AR: 219 -Existing requirement:"+existingRequirement);
 
     if (existingRequirement != null) { // Checks if a requirement with the same identifier already exists in the model.
         String existingLanguage = existingRequirement.getLanguage();// get the language of the existing requirement
@@ -241,7 +242,8 @@ class UmpleInternalParser
         System.out.println(" AR:241 -ExistingRequirement:"+existingRequirement.getStatement());
         //Requirement req1 = new Requirement(reqID, newContent, newLanguage);// Create new requirement
         //model.getAllRequirements().put(reqID, req1);// We are not going to need this anymore 
-        
+        //model.getAllRequirements().put(reqID, existingRequirement);
+        //lastRequirements.add(existingRequirement);
     }
     else
     {
@@ -253,7 +255,14 @@ class UmpleInternalParser
     // Add the new requirement
       req.addReqToken(t);// new addition
    
-      model.getAllRequirements().put(reqID, req);// We are not going to need this anymore
+     model.getAllRequirements().put(reqID, req);// We are not going to need this anymore
+      //if(lastRequirements.isEmpty())
+     //{
+     	//System.out.println("lastREquiremenent is empty and can be used for condition!");
+     	//lastRequirements.add(req);
+     	System.out.println("AR:263");
+     	System.out.println(lastRequirements);
+     //}
     //System.out.println("The requirement identifier is: "+reqID);
     //System.out.println("The requirement is: "+req);
     //}
@@ -280,6 +289,9 @@ class UmpleInternalParser
      //System.out.println("The analysis step is:"+analysisStep);
      //System.out.println("******************************************");
      String reqImpID = t.getSubToken("reqIdentifier").getValue();// Identifier that has been identified 
+     Requirement Implreq = model.getAllRequirements().get(reqImpID);
+     System.out.println(" AI:286- Implereq is:"+Implreq);
+     //lastRequirements.add(Implreq);
      //System.out.println("The requirement implementation is:"+reqImpID);
      //reqImplementations.addReqImplementation(reqImpID);// Should we do it to lastRequirement
      //addReqImplementation.add(reqImpID);
@@ -292,7 +304,7 @@ class UmpleInternalParser
      model.addReqImplementation(reqImplementation);
      //System.out.println("******************************************");
      // REMOVE THE CODE BELOW
-   /* if (t.hasSubTokens()) {
+    if (t.hasSubTokens()) {
         
 
         for (Token sub : t.getSubTokens()) {
@@ -300,15 +312,31 @@ class UmpleInternalParser
 		System.out.println("The tokens are:"+subValue);
 
             if (!subValue.equals("STATIC")) {
+            	System.out.println("AI: 315-The value is not STATIC");
                 if (model.getAllRequirements().containsKey(subValue)) {
+                    System.out.println("AI:317-Their exits a requirement in the model");
                     lastRequirements.add(model.getAllRequirements().get(subValue)); // If requirement is found add it to lastRequirement list
-                } else {
-                    counter++;
-                    badReq += " " + subValue;
-                }
+                } 
+               /* else {
+                    //counter++;
+                    //badReq += " " + subValue;
+                    String reqIID = t.getSubToken("reqIdentifier").getValue(); 
+                    System.out.println("AI: 324 in else part The requirement ID"+reqIID);
+                    Requirement Ireq = model.getAllRequirements().get(reqIID);
+                    System.out.println("AI: 326 in else part The requirement "+Ireq);
+                    
+                }*/
             }
         }
-      }*/
+      }
+      System.out.println("AI:324-The lastRequirement list:");
+      System.out.println(lastRequirements);
+      //System.out.println(" AI:321- Implereq is:"+Implreq);
+     // if(lastRequirements.isEmpty())
+     //{
+     	//System.out.println(" AI:321- Implereq is:"+Implreq);
+     	//lastRequirements.add(Implreq);
+    // }
     //}
 
     //if (counter != 0) {
