@@ -1193,7 +1193,8 @@ class PlaygroundMain
     String javaPath = model.getUmpleFile().getPath() + File.separator + "JavaMainClasses.txt";
     String PythonPath = model.getUmpleFile().getPath() + File.separator + "PythonMainClasses.txt";
     deleteFileIfExists(javaPath);
-    deleteFileIfExists(PythonPath);
+// DEBUG
+//    deleteFileIfExists(PythonPath);
 
     // If execution required, output the main classes to a file
     if(successPreviousStep && executionRequired) 
@@ -1260,6 +1261,30 @@ class PlaygroundMain
     {
       if(key.compareTo("Java") == 0 || key.compareTo("Python") == 0) 
       {
+//DEBUG block start
+String dbfilePath = model.getUmpleFile().getPath() + File.separator + key + "DebugTEst.txt";
+
+          try
+          {
+            File newFile = new File(dbfilePath);
+            newFile.createNewFile();   
+          }
+          catch (IOException ex)  
+          {
+            System.out.println(ex);
+          }
+
+          // Write to the file
+          try (PrintWriter out = new PrintWriter(dbfilePath)) 
+          {
+            out.println("This is the debug file test output");
+          }  
+          catch (FileNotFoundException ex) 
+          {
+            System.out.println(ex);
+          }
+// DEBUG block end
+
         // Get all main file names and make a single string
         StringBuilder builder = new StringBuilder();
         for (UmpleClass mainClass: CodeCompiler.getMainClasses(model)) 
