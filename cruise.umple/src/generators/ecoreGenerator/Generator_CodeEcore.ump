@@ -240,13 +240,21 @@ class EcoreGenerator {
       }
       
       UmpleClass uClass = model.getUmpleClass(eClass.getName());
-      
-      for(Attribute uAttribute : uClass.getAttributes()){
-        String attrName = uAttribute.getName();
-        String typeName = uAttribute.getType() == null ? "String" : uAttribute.getType();
-        if (typeName == "Enum"){
-          EcoreEnum eEnum = new EcoreEnum(attrName, rootPackage.getIntent()+1);
+
+      List<UmpleEnumeration> uEnums = uClass.getEnums();
+      if(uEnums != null){
+        for(UmpleEnumeration uEnum : uEnums){
+          EcoreEnum eEnum = new EcoreEnum(uEnum.getName(), rootPackage.getIntent()+1);
+
+          String[] items = uEnum.getEnumValues();
+          for(int i=0; i<items.length; i++){
+            EcoreEnumItem eEnumItem = new EcoreEnumItem(items[i], eEnum.getIntent()+1, i);
+            eEnum.addItem(eEnumItem);
+          }
           rootPackage.addEnum(eEnum);
+
+          EcoreAttribute eAttribute = new EcoreAttribute(uEnum.getName(), eClass.getIntent()+1, "EEnum");
+          eClass.addAttribute(eAttribute);
         }
       }
     }
