@@ -36,7 +36,7 @@ digraph "WeakEntity" {
   "PlayerOnTeam_Player" [shape=diamond, peripheries=2, label="      ", tooltip="PlayerOnTeam->Player"];
   "PlayerOnTeam" -> "PlayerOnTeam_Player" [dir="none", label="*", tooltip="PlayerOnTeam->Player" labeltooltip="PlayerOnTeam->Player" headtooltip="PlayerOnTeam->Player" tailtooltip="PlayerOnTeam->Player" URL="javascript:Action.selectAssociation('PlayerOnTeam,PlayerOnTeam_Player,*')" ];
 
-  "PlayerOnTeam_Player" -> "Player" [dir="none", label="1", tooltip="PlayerOnTeam->Player" labeltooltip="PlayerOnTeam->Player" headtooltip="PlayerOnTeam->Player" tailtooltip="PlayerOnTeam->Player" URL="javascript:Action.selectAssociation('PlayerOnTeam_Team,Player,1')" ];
+  "PlayerOnTeam_Player" -> "Player" [dir="none", label="1", tooltip="PlayerOnTeam->Player" labeltooltip="PlayerOnTeam->Player" headtooltip="PlayerOnTeam->Player" tailtooltip="PlayerOnTeam->Player" URL="javascript:Action.selectAssociation('PlayerOnTeam_Player,Player,1')" ];
 
   "PlayerOnTeam_Team" [shape=diamond, peripheries=2, label="      ", tooltip="PlayerOnTeam->Team"];
   "PlayerOnTeam" -> "PlayerOnTeam_Team" [dir="none", label="*", tooltip="PlayerOnTeam->Team" labeltooltip="PlayerOnTeam->Team" headtooltip="PlayerOnTeam->Team" tailtooltip="PlayerOnTeam->Team" URL="javascript:Action.selectAssociation('PlayerOnTeam,PlayerOnTeam_Team,*')" ];
