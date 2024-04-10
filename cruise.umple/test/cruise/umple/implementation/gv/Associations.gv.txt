@@ -88,7 +88,7 @@ A C may have a C. It can have none or just 1.
 
 A C has some Cs. It can have none, and there is no upper bound defined.
 
-" URL="javascript:Action.selectAssociation('C,C,*,0..1 ')" ]; 
+" URL="javascript:Action.selectAssociation('C,C,* ,0..1 ')" ]; 
   "C" -> "D" [dir="none", taillabel="1 ", headlabel="0..1 ", tooltip="C 1  -- 0..1  D
 
 A D has A C. It must always have exactly, one, and can never have none. And there is an upper bound of at most one C.
