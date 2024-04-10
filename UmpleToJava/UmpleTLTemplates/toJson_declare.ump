@@ -109,10 +109,22 @@ class UmpleToJava {
       #>>
       haveOutputItem = false;
       <<#
-//debug
-//System.out.print("\"this is the content of associationItems = \"+"+associationItems);
-//System.out.print("\"associationNames.size()= \n\""+associationNames_mulMany.size()+"\"\n\"");
+        for (int numAttributes=0;numAttributes<displayedAttributes.size();numAttributes++){#>>
+          toJsonOutput.append(indent);
+          toJsonOutput.append("  \"");
+          toJsonOutput.append("<<#realSb.append(nameOfAttributes.get(numAttributes));#>>");
+          toJsonOutput.append("\" : \"");
+          toJsonOutput.append("<<#realSb.append("\"+"+  displayedAttributes.get(numAttributes)+"+ \"");#>>");
+          toJsonOutput.append("\"");
+          toJsonOutput.append(",\n");
+        <<#}
+      #>>
+      haveOutputItem = false;
+      <<#
         for(int assoIndex=0;assoIndex<associationNames.size();assoIndex++){#>>
+         if(haveOutputItem) {
+                toJsonOutput.append(",\n");
+              }
           toJsonOutput.append(indent);
           <<#if(associationIsMany.get(assoIndex)){#>>
             toJsonOutput.append("  \"");
@@ -125,12 +137,17 @@ class UmpleToJava {
               if(haveOutputItem) {
                 toJsonOutput.append(",\n");
               }
+              toJsonOutput.append(indent+"{");
+              toJsonOutput.append("\n");
               anItem.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
+              toJsonOutput.append("\n");
+              toJsonOutput.append(indent+"}");
               haveOutputItem=true;
             }
             toJsonOutput.append("\n");    
             toJsonOutput.append(indent+"]");
             toJsonOutput.append("\n"); 
+            haveOutputItem=true;
           <<#}
           else{#>>
             toJsonOutput.append("\n");
@@ -139,9 +156,12 @@ class UmpleToJava {
             toJsonOutput.append("\"");
             toJsonOutput.append(" : ");
             toJsonOutput.append("\n");
+            toJsonOutput.append(indent+"{");
+            toJsonOutput.append("\n");
             <<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anotherItem = <<#realSb.append(associations.get(assoIndex));#>>;
             anotherItem.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
-            //toJsonOutput.append("<<#realSb.append("\"+"+associations.get(assoIndex)+"+ \"");#>>");
+            toJsonOutput.append("\n");
+            toJsonOutput.append(indent+"}");
             haveOutputItem=true;
           <<#}#>>
       <<#}#>>     
@@ -155,9 +175,7 @@ class UmpleToJava {
       toJsonOutput.append(indent+"}");
     }
     haveOutputItem = true;
-    
-
-  return haveOutputItem;
+    return haveOutputItem;
   }
 
   !>>  
