@@ -1251,71 +1251,73 @@ Action.drawStateMenu = function(){
   document.body.appendChild(menu);
 }
 Action.displayTransitionMenu = function(event) {
-  if(!Action.diagramInSync){
-    return;
+  if (!Action.diagramInSync) {
+      return;
   }
   // Remove old menu, if any
   Action.removeContextMenu();
-  var targ=event.target;
+  var targ = event.target;
   //iterate up to top of graph elements
-  while(targ.parentElement.id!="graph0"){
-    targ=targ.parentNode;
+  while (targ.parentElement.id != "graph0") {
+      targ = targ.parentNode;
   }
   //grabs state name
-  var elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("transitionClicked(&quot;")+"transitionClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("transitionClicked(&quot;")+"transitionClicked(&quot;".length));
-  elemText=elemText.replaceAll("&amp;","&");
+  var elemText = targ.outerHTML.substr(targ.outerHTML.indexOf("transitionClicked(&quot;") + "transitionClicked(&quot;".length, targ.outerHTML.indexOf("&quot;)\"") - (targ.outerHTML.indexOf("transitionClicked(&quot;") + "transitionClicked(&quot;".length));
+  elemText = elemText.replaceAll("&amp;", "&");
   let id = elemText.split("*^*");
-  let identifierState=id[3].split(".");
-  dest=id[4].split(".");
+  let identifierState = id[3].split(".");
+  dest = id[4].split(".");
 
-  var selection = Action.selectStateInClass(id[0],id[1],identifierState[0]);
-  for (var i=1;i<identifierState.length;i++){
-    selection=Action.selectStateInState(selection.startIndex,selection.endIndex,identifierState[i]);
+  var selection = Action.selectStateInClass(id[0], id[1], identifierState[0]);
+  for (var i = 1; i < identifierState.length; i++) {
+      selection = Action.selectStateInState(selection.startIndex, selection.endIndex, identifierState[i]);
   }
-  let searchTerm=id[2].replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
-  searchTerm=searchTerm.replace("after","after~`~?:Every`~`?"); //subpar solution, could be improved
-  if(id[5]!=""){
-    let guardStr=id[5].trim().replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
-    searchTerm=searchTerm+"\\s*[\\s*"+guardStr.trim().slice(1,guardStr.trim().length-1)+"\\s*]";
+  let searchTerm = id[2].replaceAll("+", "\\+").replaceAll("-", "\\-").replaceAll("*", "\\*").replaceAll("?", "\\?").replaceAll("|", "\\|"); //preceed any accidental quantifiers with escape character
+  searchTerm = searchTerm.replace("after", "after~`~?:Every`~`?"); //subpar solution, could be improved
+  if (id[5] != "") {
+      let guardStr = id[5].trim().replaceAll("+", "\\+").replaceAll("-", "\\-").replaceAll("*", "\\*").replaceAll("?", "\\?").replaceAll("|", "\\|"); //preceed any accidental quantifiers with escape character
+      searchTerm = searchTerm + "\\s*[\\s*" + guardStr.trim().slice(1, guardStr.trim().length - 1) + "\\s*]";
   }
-  searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)?").replaceAll("(","\\(?").replaceAll("~`~","(").replaceAll("`~`",")").replaceAll(" ","\\s*").replaceAll(",","\\s*,\\s*").replaceAll("!","\\s*!\\s*").replaceAll("/","\\s*/\\s*"); 
-  searchTerm=searchTerm.replaceAll("&&","&{1,2}");
-  let pattern= new RegExp(searchTerm+".*->","s");
-  let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
+  searchTerm = searchTerm.replaceAll("]", "\\]").replaceAll("[", "\\[").replaceAll(")", "\\)?").replaceAll("(", "\\(?").replaceAll("~`~", "(").replaceAll("`~`", ")").replaceAll(" ", "\\s*").replaceAll(",", "\\s*,\\s*").replaceAll("!", "\\s*!\\s*").replaceAll("/", "\\s*/\\s*");
+  searchTerm = searchTerm.replaceAll("&&", "&{1,2}");
+  let pattern = new RegExp(searchTerm + ".*->", "s");
+  let startIndex = Page.codeMirrorEditor.getValue().substr(selection.startIndex, selection.endIndex - selection.startIndex).search(pattern) + selection.startIndex;
   let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
   let line = Action.findEOL(cText);
-  if(line==""){
-    alert("Please edit this complex transition in the textual code.");
+  console.log(line);
+  if (line == "") {
+      //alert("Please edit this complex transition in the textual code.");
+      Page.setFeedbackMessage(" Please edit this complex transition in the textual code.");
   }
-  let endIndex=startIndex+line.length;
+  let endIndex = startIndex + line.length;
   let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
-   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
+  let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
 
-   const match =code.trim().match(pattern2);
+  const match = code.trim().match(pattern2);
   // Extracting captured groups based on the updated pattern
   let eventName = match[1].trim();
   let guard = match[3] ? match[3].trim() : (match[7] ? match[7].trim() : null);
   let action = match[5] ? match[5].trim() : (match[9] ? match[9].trim() : null);
   let destinationState = match[10].trim();
-     if(guard===null){
-       guard="";
-     }
-     //
-     if(action===null){
-       action="";
-     }
-     //
-    console.log(match);
+  if (guard === null) {
+      guard = "";
+  }
+  //
+  if (action === null) {
+      action = "";
+  }
+  //
+  console.log(match);
   //need to sanitize any linebreaks or quotes that could break the generated HTML
   //var jsInput=chosenState.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
   var menu = document.createElement('customContextMenu');
-  var rowContent = ["Change or Add Event Name","Change or Add Guard","Change or Add Action", "Change Destination State", "Delete Transition"];
+  var rowContent = ["Change or Add Event Name", "Change or Add Guard", "Change or Add Action", "Change Destination State", "Delete Transition"];
   var rowFuncs = [
-    "Action.modifyTransitionEventName(\""+startIndex+"\",\""+endIndex+"\")",
-    "Action.modifyTransitionGuard(\""+startIndex+"\",\""+endIndex+"\")",
-    "Action.modifyTransitionAction(\""+startIndex+"\",\""+endIndex+"\")",
-    "Action.changeTransition(\""+destinationState+"\",\""+startIndex+"\",\""+endIndex+"\")",
-    "Action.deleteTransition(\""+startIndex+"\",\""+endIndex+"\")"
+      "Action.modifyTransitionEventName(\"" + startIndex + "\",\"" + endIndex + "\")",
+      "Action.modifyTransitionGuard(\"" + startIndex + "\",\"" + endIndex + "\")",
+      "Action.modifyTransitionAction(\"" + startIndex + "\",\"" + endIndex + "\")",
+      "Action.changeTransition(\"" + destinationState + "\",\"" + startIndex + "\",\"" + endIndex + "\")",
+      "Action.deleteTransition(\"" + startIndex + "\",\"" + endIndex + "\")"
 
   ];
 
@@ -1326,55 +1328,56 @@ Action.displayTransitionMenu = function(event) {
   menu.style.position = "fixed";
   //add rows
   for (var i = 0; i < rowContent.length; i++) {
-    var row = document.createElement("div");
-    row.style.padding = "5px";
-    row.style.borderRadius = "3px";
-    row.style.cursor = "pointer";
-    row.style.transition = "background-color 0.3s";
-    row.textContent = rowContent[i];
-    row.setAttribute('onclick',"javascript:"+rowFuncs[i]);
-    // Highlight row on hover
-    row.addEventListener("mouseover", function() {
-      this.style.backgroundColor = "#ddd";
-    });
-    row.addEventListener("mouseout", function() {
-      this.style.backgroundColor = "transparent";
-    });
+      var row = document.createElement("div");
+      row.style.padding = "5px";
+      row.style.borderRadius = "3px";
+      row.style.cursor = "pointer";
+      row.style.transition = "background-color 0.3s";
+      row.textContent = rowContent[i];
+      row.setAttribute('onclick', "javascript:" + rowFuncs[i]);
+      // Highlight row on hover
+      row.addEventListener("mouseover", function() {
+          this.style.backgroundColor = "#ddd";
+      });
+      row.addEventListener("mouseout", function() {
+          this.style.backgroundColor = "transparent";
+      });
 
-    //add row to context menu
-    menu.appendChild(row);
+      //add row to context menu
+      menu.appendChild(row);
 
   }
 
   //set menu location at mouse, while ensuring it is on screen
-  var menuRect=menu.getBoundingClientRect();
-  if(event.clientX+menuRect.width>window.innerWidth){
-    menu.style.right=(window.innerWidth-event.clientX)+"px";
+  var menuRect = menu.getBoundingClientRect();
+  if (event.clientX + menuRect.width > window.innerWidth) {
+      menu.style.right = (window.innerWidth - event.clientX) + "px";
   } else {
-    menu.style.left = event.clientX+"px";
+      menu.style.left = event.clientX + "px";
   }
-  if(event.clientY+menuRect.height>window.innerHeight){
-    menu.style.bottom=(window.innerHieght-event.clientY)+"px";
+  if (event.clientY + menuRect.height > window.innerHeight) {
+      menu.style.bottom = (window.innerHieght - event.clientY) + "px";
   } else {
-    menu.style.top = event.clientY+"px";
+      menu.style.top = event.clientY + "px";
   }
   // Add a listener to hide the menu when the user clicks outside of it
   document.addEventListener('mousedown', function hideMenu(e) {
-    var prompt=document.getElementById("promptBox");
-    if (e.target != menu && !menu.contains(e.target)) {
-      if(prompt!=null&&e.target != prompt && !prompt.contains(e.target)){
+      var prompt = document.getElementById("promptBox");
+      if (e.target != menu && !menu.contains(e.target)) {
+          if (prompt != null && e.target != prompt && !prompt.contains(e.target)) {
 
-        document.removeEventListener('mousedown', hideMenu);
-        Action.removeContextMenu();
+              document.removeEventListener('mousedown', hideMenu);
+              Action.removeContextMenu();
 
-      } else {
-        document.removeEventListener('mousedown', hideMenu);
-        Action.removeContextMenu();
+          } else {
+              document.removeEventListener('mousedown', hideMenu);
+              Action.removeContextMenu();
+          }
       }
-    }
   });
   document.body.appendChild(menu);
 }
+
 Action.changeTransition = function(dest,startIndex,endIndex) {
   let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
    // Assuming classCode contains the full transition line, including condition and destination
@@ -1454,12 +1457,12 @@ Action.changeTransition = function(dest,startIndex,endIndex) {
     });
 };
 
-  Action.deleteTransition = function(startIndex,endIndex) {
-    let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+Action.deleteTransition = function(startIndex, endIndex) {
+  let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
 
-  let orig=Page.codeMirrorEditor.getValue();
+  let orig = Page.codeMirrorEditor.getValue();
 
-  orig=orig.replace(classCode,"");
+  orig = orig.replace(classCode, "");
   // Update the editor with the new code
 
   Page.codeMirrorEditor.setValue(orig);
@@ -1696,80 +1699,81 @@ Action.modifyTransitionAction = function(startIndex,endIndex) {
       Action.selectMatchingText(modifiedTransition);
   });
 };
-  Action.modifyTransitionEventName = function(startIndex,endIndex) {
-    let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
-    let pattern2 = new RegExp("^(.*?)\\s*(\\[(.*?)\\])?\\s*(\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\w+);?$", "s");
+
+Action.modifyTransitionEventName = function(startIndex, endIndex) {
+  let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  let pattern2 = new RegExp("^(.*?)\\s*(\\[(.*?)\\])?\\s*(\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\w+);?$", "s");
 
   const match = classCode.match(pattern2);
 
 
-      let eventName= match[1].trim();
-      let guard= match[3] ? match[3].trim() : null;
-      let action= match[5] ? match[5].trim() : null;
-      let destinationState= match[6].trim();
-    // Create the input prompt for renaming the transition condition
-    var prompt = document.createElement('div');
-    prompt.style.zIndex = "1000";
-    prompt.style.border = "1px solid #ccc";
-    prompt.style.backgroundColor = "#f8f8f8";
-    prompt.style.padding = "5px";
-    prompt.style.position = "absolute";
-    prompt.style.left = '50%';
-    prompt.style.top = '50%';
-    prompt.style.transform = 'translate(-50%, -50%)';
-    prompt.id = "promptBox";
+  let eventName = match[1].trim();
+  let guard = match[3] ? match[3].trim() : null;
+  let action = match[5] ? match[5].trim() : null;
+  let destinationState = match[6].trim();
+  // Create the input prompt for renaming the transition condition
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+  prompt.style.border = "1px solid #ccc";
+  prompt.style.backgroundColor = "#f8f8f8";
+  prompt.style.padding = "5px";
+  prompt.style.position = "absolute";
+  prompt.style.left = '50%';
+  prompt.style.top = '50%';
+  prompt.style.transform = 'translate(-50%, -50%)';
+  prompt.id = "promptBox";
 
-    var input = document.createElement('input');
-    input.type = 'text';
-    input.value = eventName;
-    input.style.padding = '5px';
-    input.style.margin = '5px';
-    input.style.width = '200px';
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.value = eventName;
+  input.style.padding = '5px';
+  input.style.margin = '5px';
+  input.style.width = '200px';
 
-    var submitButton = document.createElement('button');
-    submitButton.textContent = 'Change/Add Event Name';
-    submitButton.style.padding = '5px';
-    submitButton.style.marginLeft = '5px';
+  var submitButton = document.createElement('button');
+  submitButton.textContent = 'Change/Add Event Name';
+  submitButton.style.padding = '5px';
+  submitButton.style.marginLeft = '5px';
 
-    // Append elements to the prompt
-    prompt.appendChild(input);
-    prompt.appendChild(submitButton);
+  // Append elements to the prompt
+  prompt.appendChild(input);
+  prompt.appendChild(submitButton);
 
-    // Add the prompt to the document body
-    document.body.appendChild(prompt);
-    input.focus(); // Automatically focus the input
-    var hider=function hidePrompt(e) {
+  // Add the prompt to the document body
+  document.body.appendChild(prompt);
+  input.focus(); // Automatically focus the input
+  var hider = function hidePrompt(e) {
       if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
-        document.removeEventListener("mousedown", hidePrompt);
-        prompt.remove();
+          document.removeEventListener("mousedown", hidePrompt);
+          prompt.remove();
       }
-    };
-    // Add a listener to hide the prompt when the user clicks outside of it
-    document.addEventListener("mousedown", hider);
-    // Event listener for the submit action
-    submitButton.addEventListener('click', function() {
-        // Validate input value is not empty
-        if (input.value.trim() === "") {
-            console.log("Input for new transition condition is empty.");
-            return;
-        }
+  };
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", hider);
+  // Event listener for the submit action
+  submitButton.addEventListener('click', function() {
+      // Validate input value is not empty
+      if (input.value.trim() === "") {
+          console.log("Input for new transition condition is empty.");
+          return;
+      }
 
-        // Create the modified transition string
-        let modifiedTransition = classCode.replace(eventName,input.value.trim());
+      // Create the modified transition string
+      let modifiedTransition = classCode.replace(eventName, input.value.trim());
 
-        // Assuming classyCode is meant to represent the original content where the transition is to be found
-        let orig = Page.codeMirrorEditor.getValue();
-        let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
+      // Assuming classyCode is meant to represent the original content where the transition is to be found
+      let orig = Page.codeMirrorEditor.getValue();
+      let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
 
-        // Update the editor with the new content
-        Page.codeMirrorEditor.setValue(updatedContent);
+      // Update the editor with the new content
+      Page.codeMirrorEditor.setValue(updatedContent);
 
-        Action.removeContextMenu();
-        TabControl.getCurrentHistory().save(Page.getUmpleCode(), "renameTransition");
-        document.removeEventListener("mousedown",hider);
-        prompt.remove(); // Remove the prompt after processing
-        Action.selectMatchingText(modifiedTransition);
-    });
+      Action.removeContextMenu();
+      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "renameTransition");
+      document.removeEventListener("mousedown", hider);
+      prompt.remove(); // Remove the prompt after processing
+      Action.selectMatchingText(modifiedTransition);
+  });
 };
 
 //Searches the document for any element matching the "customContextMenu" tag, and removes it. 
@@ -2151,29 +2155,29 @@ Action.displayMenu = function(event) {
   });
   document.body.appendChild(menu);
 }
-Action.displayAssociMenu = function(event,associationLink) {
+
+Action.displayAssociMenu = function(event, associationLink) {
   const regex = /Action\.selectAssociation\('([^']+)'\)/;
 
   // Use the regex to extract the content
   const associationDetails = associationLink.match(regex);
 
-      
+
   // associationDetails array contains the extracted information
   let indices = Action.selectAssociation(associationDetails[1]);
- 
+
   var detailsArray = associationDetails[1].split(',');
 
-  if(detailsArray.length==4){
-    var className = detailsArray[0].trim();
-    var endInfo = detailsArray[2].split(' ');
-    var startInfo = detailsArray[3].split(' ');
- 
-  }
-  else{
-    var endInfo = detailsArray[2].split(' ');
-    var startInfo = detailsArray[2].split(' ');
-    var className = detailsArray[0].trim();
-    
+  if (detailsArray.length == 4) {
+      var className = detailsArray[0].trim();
+      var endInfo = detailsArray[2].split(' ');
+      var startInfo = detailsArray[3].split(' ');
+
+  } else {
+      var endInfo = detailsArray[2].split(' ');
+      var startInfo = detailsArray[2].split(' ');
+      var className = detailsArray[0].trim();
+
   }
   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
@@ -2233,27 +2237,27 @@ Action.displayAssociMenu = function(event,associationLink) {
       }
 
       Page.codeMirrorEditor.setSelection(theStart, theEnd);
-      var classCode = Page.codeMirrorEditor.getSelection();//get the class code for where the association belong
-     
-    }
-    var jsInput=classCode.replaceAll("\n","&#10").replaceAll("\"","&#$quot");;
-  let isEnd=1;//0 as start 1 as end
+      var classCode = Page.codeMirrorEditor.getSelection(); //get the class code for where the association belong
+
+  }
+  var jsInput = classCode.replaceAll("\n", "&#10").replaceAll("\"", "&#$quot");;
+  let isEnd = 1; //0 as start 1 as end
   let startIndex = indices.startIndex;
-  let endIndex = indices.endIndex;   
-  Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex,Page.codeMirrorEditor.getValue()),Action.indexToPos(endIndex,Page.codeMirrorEditor.getValue()))
+  let endIndex = indices.endIndex;
+  Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor.getValue()), Action.indexToPos(endIndex, Page.codeMirrorEditor.getValue()))
   var selectedText = Page.codeMirrorEditor.getSelection();
 
-  if(selectedText.includes(endInfo[0].trim())==false){
-    isEnd=3;
+  if (selectedText.includes(endInfo[0].trim()) == false) {
+      isEnd = 3;
   }
   var menu = document.createElement('customContextMenu');
-  var rowContent = ["Alter "+className+" multiplicity","Alter "+className+" role name" ,"Alter other multiplicity","Alter other role name","Delete the association."];
+  var rowContent = ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter other multiplicity", "Alter other role name", "Delete the association."];
   var rowFuncs = [
-    "Action.modifyMultiplicity(\""+jsInput+"\",\""+selectedText+"\",\""+startInfo[0]+"\",\""+0+"\")",
-    "Action.modifyRoleName(\""+jsInput+"\",\""+selectedText+"\",\""+startInfo[1]+"\",\""+startInfo[0]+"\",\""+0+"\")",
-    "Action.modifyMultiplicity(\""+jsInput+"\",\""+selectedText+"\",\""+endInfo[0]+"\",\""+isEnd+"\")",
-    "Action.modifyRoleName(\""+jsInput+"\",\""+selectedText+"\",\""+endInfo[1]+"\",\""+startInfo[0]+"\",\""+1+"\")",
-    "Action.deleteAssociation(\""+jsInput+"\",\""+selectedText+"\")"
+      "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
+      "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
+      "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + endInfo[0] + "\",\"" + isEnd + "\")",
+      "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + endInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 1 + "\")",
+      "Action.deleteAssociation(\"" + jsInput + "\",\"" + selectedText + "\")"
 
   ];
 
@@ -2264,55 +2268,56 @@ Action.displayAssociMenu = function(event,associationLink) {
   menu.style.position = "fixed";
   //add rows
   for (var i = 0; i < rowContent.length; i++) {
-    var row = document.createElement("div");
-    row.style.padding = "5px";
-    row.style.borderRadius = "3px";
-    row.style.cursor = "pointer";
-    row.style.transition = "background-color 0.3s";
-    row.textContent = rowContent[i];
-    row.setAttribute('onclick',"javascript:"+rowFuncs[i]);
-    // Highlight row on hover
-    row.addEventListener("mouseover", function() {
-      this.style.backgroundColor = "#ddd";
-    });
-    row.addEventListener("mouseout", function() {
-      this.style.backgroundColor = "transparent";
-    });
+      var row = document.createElement("div");
+      row.style.padding = "5px";
+      row.style.borderRadius = "3px";
+      row.style.cursor = "pointer";
+      row.style.transition = "background-color 0.3s";
+      row.textContent = rowContent[i];
+      row.setAttribute('onclick', "javascript:" + rowFuncs[i]);
+      // Highlight row on hover
+      row.addEventListener("mouseover", function() {
+          this.style.backgroundColor = "#ddd";
+      });
+      row.addEventListener("mouseout", function() {
+          this.style.backgroundColor = "transparent";
+      });
 
-    //add row to context menu
-    menu.appendChild(row);
+      //add row to context menu
+      menu.appendChild(row);
 
   }
 
   //set menu location at mouse, while ensuring it is on screen
-  var menuRect=menu.getBoundingClientRect();
-  if(event.clientX+menuRect.width>window.innerWidth){
-    menu.style.right=(window.innerWidth-event.clientX)+"px";
+  var menuRect = menu.getBoundingClientRect();
+  if (event.clientX + menuRect.width > window.innerWidth) {
+      menu.style.right = (window.innerWidth - event.clientX) + "px";
   } else {
-    menu.style.left = event.clientX+"px";
+      menu.style.left = event.clientX + "px";
   }
-  if(event.clientY+menuRect.height>window.innerHeight){
-    menu.style.bottom=(window.innerHieght-event.clientY)+"px";
+  if (event.clientY + menuRect.height > window.innerHeight) {
+      menu.style.bottom = (window.innerHieght - event.clientY) + "px";
   } else {
-    menu.style.top = event.clientY+"px";
+      menu.style.top = event.clientY + "px";
   }
   // Add a listener to hide the menu when the user clicks outside of it
   document.addEventListener('mousedown', function hideMenu(e) {
-    var prompt=document.getElementById("promptBox");
-    if (e.target != menu && !menu.contains(e.target)) {
-      if(prompt!=null&&e.target != prompt && !prompt.contains(e.target)){
+      var prompt = document.getElementById("promptBox");
+      if (e.target != menu && !menu.contains(e.target)) {
+          if (prompt != null && e.target != prompt && !prompt.contains(e.target)) {
 
-        document.removeEventListener('mousedown', hideMenu);
-        Action.removeContextMenu();
+              document.removeEventListener('mousedown', hideMenu);
+              Action.removeContextMenu();
 
-      } else {
-        document.removeEventListener('mousedown', hideMenu);
-        Action.removeContextMenu();
+          } else {
+              document.removeEventListener('mousedown', hideMenu);
+              Action.removeContextMenu();
+          }
       }
-    }
   });
   document.body.appendChild(menu);
 };
+
 Action.validateMultiplicity = function(multiplicity) {
   // Check if not empty
   if (!multiplicity) return false;
@@ -2342,6 +2347,7 @@ Action.validateMultiplicity = function(multiplicity) {
   // If none of the above conditions met, return false
   return false;
 };
+
 Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
   let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
   if(isStart==1){
@@ -2349,7 +2355,8 @@ Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
     
   }
   else if(isStart==3){
-    alert("unable to change end multiplicity for associationClass");
+    //alert("unable to change end multiplicity for associationClass");
+    Page.setFeedbackMessage(" unable to change end multiplicity for associationClass ");
     return;
   }
   else{
@@ -2433,9 +2440,10 @@ Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
   }
   else {
     // If the format is invalid, display a message
-    alert("Invalid multiplicity format. Please enter a valid format (e.g., '*', '1', '0..1', '1..*', or '2..5').");
+    //alert("Invalid multiplicity format. Please enter a valid format (e.g., '*', '1', '0..1', '1..*', or '2..5').");
+    Page.setFeedbackMessage("Invalid multiplicity format. Please enter a valid format (e.g., '*', '1', '0..1', '1..*', or '2..5').");
     input.focus(); // Re-focus on the input to allow the user to correct it
-}
+      }
   });
  };
 
@@ -2532,8 +2540,8 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
           updatedAssociationString = updatedStartPart+" "+parts[1].trim()+" "+parts[2].trim()+";";
         }
         else{
-          
-          alert("To add a role name at this end there must be a role name at the other end first");
+          Page.setFeedbackMessage("To add a role name at this end there must be a role name at the other end first");
+          //alert("To add a role name at this end there must be a role name at the other end first");
           updatedAssociationString = updatedStartPart+" "+parts[1].trim()+";";
         }
       } else {
@@ -2566,22 +2574,19 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
  };
 
    
-Action.deleteAssociation = function(classCode,selectedText){
-  let orig=Page.codeMirrorEditor.getValue();
-  let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
-  if((classyCode.includes(selectedText))==false){
-    orig=orig.replace(selectedText,"");
+ Action.deleteAssociation = function(classCode, selectedText) {
+  let orig = Page.codeMirrorEditor.getValue();
+  let classyCode = classCode.replaceAll("&#10", "\n").replaceAll("&#$quot", "\"");
+  if ((classyCode.includes(selectedText)) == false) {
+      orig = orig.replace(selectedText, "");
+  } else {
+      let modifiedClassCode = classyCode;
+      modifiedClassCode = modifiedClassCode.replace(selectedText, "");
+
+      orig = orig.replace(classyCode, modifiedClassCode);
   }
-  else{
-  let modifiedClassCode = classyCode;
-    modifiedClassCode = modifiedClassCode.replace(selectedText,"");
-  
-    orig=orig.replace(classyCode,modifiedClassCode);
-  }
-    
-    Page.codeMirrorEditor.setValue(orig);
-  
-  
+
+  Page.codeMirrorEditor.setValue(orig);
   Action.removeContextMenu();
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
 }
@@ -3058,7 +3063,8 @@ Action.transitionClicked = function(identifier)
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
   if(line==""){
-    alert("Please edit this complex transition in the textual code.");
+    //alert("Please edit this complex transition in the textual code.");
+    Page.setFeedbackMessage("Please edit this complex transition in the textual code.");
   }
   
   Action.highlightByIndex(startIndex,endIndex);
