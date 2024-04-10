@@ -33,6 +33,6 @@ digraph "ColouredEntity" {
   "Y_X" [shape=diamond, label="   test   ", tooltip="Y->X"];
   "Y" -> "Y_X" [dir="back", arrowtail="open", label="0..1", tooltip="Y->X" labeltooltip="Y->X" headtooltip="Y->X" tailtooltip="Y->X" URL="javascript:Action.selectAssociation('Y,Y_X,0..1')" ];
 
-  "Y_X" -> "X" [dir="back", arrowtail="open", label="*", tooltip="Y->X" labeltooltip="Y->X" headtooltip="Y->X" tailtooltip="Y->X" URL="javascript:Action.selectAssociation('Y_X,X,,*')" ];
+  "Y_X" -> "X" [dir="back", arrowtail="open", label="*", tooltip="Y->X" labeltooltip="Y->X" headtooltip="Y->X" tailtooltip="Y->X" URL="javascript:Action.selectAssociation('Y_X,X,*')" ];
 
 }
