@@ -31,8 +31,8 @@ digraph "RelationshipRange" {
 
   // All associations
   "X_Y" [shape=diamond, label="   left / right   ", tooltip="X->Y"];
-  "X" -> "X_Y" [dir="none", label="0..1", tooltip="X->Y" labeltooltip="X->Y" headtooltip="X->Y" tailtooltip="X->Y" labelurl="javascript:void()" tailurl="javascript:void()" headurl="javascript:void()" ];
+  "X" -> "X_Y" [dir="none", label="0..1", tooltip="X->Y" labeltooltip="X->Y" headtooltip="X->Y" tailtooltip="X->Y" URL="javascript:Action.selectAssociation('X,X_Y,0..1')"  ];
 
-  "X_Y" -> "Y" [dir="none", label="1..*", tooltip="X->Y" labeltooltip="X->Y" headtooltip="X->Y" tailtooltip="X->Y" labelurl="javascript:void()" tailurl="javascript:void()" headurl="javascript:void()" ];
+  "X_Y" -> "Y" [dir="none", label="1..*", tooltip="X->Y" labeltooltip="X->Y" headtooltip="X->Y" tailtooltip="X->Y" URL="javascript:Action.selectAssociation('X_Y,Y,1..*')"  ];
 
 }
