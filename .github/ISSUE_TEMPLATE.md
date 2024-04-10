@@ -1,6 +1,8 @@
-This is a *guide*, please remove this preamble and other irrelevant sections.
+Please *DELETE this text* after you have read it and replace with a detailed description of your issue, explaining the problem and your suggestion for improving Umple.
 
-*Before writing*, a) please search to ensure the issue doesn't exist. b) If you are using Eclipse, the command line or Docker please ensure you are using the latest version of the relevant Umple tools and dependencies: such as Java 8 or 9, Eclipse Oxygen with modeling tools, or the latest Docker image from docker.umple.org.
+Thanks for reporting an issue!
+
+*Before writing*, a) please search to ensure the issue doesn't exist. b) {lease ensure you are using the latest version of the relevant Umple tools and dependencies: such as Java 11 to 17
 
 ## Specify a Brief Description
 
@@ -10,10 +12,7 @@ Brief, one or two sentences explaining the problem.
 
 This is a **minimum** test case to validate the problem. 
 
-1. Step 1
-2. ...
-
-If using a large code sample, feel free to use a [gist](https://gist.github.com/) or [UmpleOnline](http://cruise.eecs.uottawa.ca/umpleonline/).
+If using a large code sample, feel free to use a [gist](https://gist.github.com/) or link to a saved example in [UmpleOnline](http://cruise.eecs.uottawa.ca/umpleonline/).
 
 ## Describe the expected result that didn't happen
 
@@ -23,11 +22,11 @@ Expected results.
 
 Actual results
 
-Please include any build log output. If long, please paste it into a [gist](https://gist.github.com/) and link to it here. 
+Please include any log output. If long, please paste it into a [gist](https://gist.github.com/) and link to it here. 
 
 ## Labelling and Assigning
 
-If possible, please try to add any relevant label's for this issue, such as 'associations', 'Component-UmpleOnline', etc. as well as Priority- and Diffic- label.
+If possible, please try to add any relevant label's for this issue, such as 'associations', 'Component-UmpleOnline', etc. 
 
 If you are planning on fixing this issue, or know who will, please assign it to yourself.
 
