@@ -61,11 +61,19 @@ class CodeCompiler {
   private static boolean compilePython(UmpleElement aClass, UmpleModel model, boolean beQuiet,String errorFileName, String args) {
     String path="";
     String base="";
+    boolean isMain=false;
+    boolean runtimeErr=false;
     for (GenerateTarget gt : model.getGenerates()) {
       if (gt.getLanguage().equals("Python")) {
         base = StringFormatter.addPathOrAbsolute( 
             model.getUmpleFile().getPath() +File.separator+ gt.getPath(), "");
         path = base + aClass.getPackageName().replace(".", File.separator);
+      }
+    }
+
+    for(UmpleClass mainClass: CodeCompiler.getMainClasses(model)){
+      if(aClass.getName().equals(mainClass.getName())){
+        isMain=true;
       }
     }
     
@@ -85,38 +93,16 @@ class CodeCompiler {
         pythonVersion="python";
 
       String cmd=pythonVersion+" -m py_compile " +filename;
+      String cmd2 = pythonVersion + " " + filename;
 
-      
+      //ProcessBuilder processBuilder = new ProcessBuilder(pythonVersion, "-m", "compileall", filename);
+      //Process p = processBuilder.start();
       Process p = Runtime.getRuntime().exec(cmd);
       reader=new BufferedReader(new InputStreamReader(p.getErrorStream())); 
-
-// DEBUG the following code is temporary ... just to output the file
-/*
-        String content;
-        StringBuilder contentBuilder = new StringBuilder();
-        try {
-            File file2 = new File(filename);
-            FileInputStream fis = new FileInputStream(file2);
-            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-            String lin;
-            while ((lin = br.readLine()) != null) {
-                contentBuilder.append(lin).append("\n");
-            }
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        content = contentBuilder.toString();
-*/
-// End DEBUG block
 
       // All output of the above should go to standard output
       try {
         retval=p.waitFor();
-// DEBUG temp
-/*
-        System.err.println("retval: "+retval);
-*/
       }
       catch (InterruptedException e) {}
 
@@ -125,78 +111,36 @@ class CodeCompiler {
         line = reader.readLine();
       }
       else {
-        line = null;
+        // no syntax error, check runtime error
+        if(isMain){          
+          //check runtime error
+          Process p2 = Runtime.getRuntime().exec(cmd2);
+          reader=new BufferedReader(new InputStreamReader(p2.getErrorStream()));
+
+          try {
+            retval=p2.waitFor();
+          }
+          catch (InterruptedException e) {}
+
+          if(reader.ready()) {
+            line = reader.readLine();
+            runtimeErr=true;
+          }else{
+            return (retval==0);
+          }
+        }else{
+           return (retval==0);
+        }    
       }
-
-// DEBUG ... the following is to test if we can compile the file ... temporary
-/*
-      // Came from GPT: 
-      String pythonCode = content;
-        
-        // Prepare Python code file
-        File pythonFile = new File("temp.py");
-        try {
-            FileWriter fileWriter = new FileWriter(pythonFile);
-            fileWriter.write(pythonCode);
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-        // Compile Python code
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder(pythonVersion, "-m", "compileall", filename);
-            System.err.println("file path: "+filename);
-            processBuilder.redirectErrorStream(true);
-            Process process = processBuilder.start();
-
-            BufferedReader readerr = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            StringBuilder outputBuilder = new StringBuilder();
-            String line2;
-            while ((line2 = readerr.readLine()) != null) {
-                outputBuilder.append(line2).append("\n");
-            }
-            
-            // Wait for the compilation process to finish
-            int exitCode = process.waitFor();
-            if (exitCode == 0) {
-              System.err.println("err Python code compiled successfully.");
-                System.out.println("Python code compiled successfully.");
-                System.err.println("success msg: "+ outputBuilder.toString());
-            } else {
-              System.err.println("Failed to compile Python code.");
-                System.out.println("Failed to compile Python code.");
-                System.err.println("err msg: "+ outputBuilder.toString());
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        // Clean up temporary file
-        pythonFile.delete();
-*/
-// DEBUG block end\
 
       StringBuilder builder = new StringBuilder();
-// DEbug bliock
-/*
-
-      if(line!=null){
-        System.err.println("umple file code:\n----------------------\n"+content+"\n----------------------\n");
-        System.err.println("cmd: "+cmd);
-      }
-*/
-// DEBUG block end\
-
-// DEBUG
-System.err.println("Any output from the Python compiler should appear below\n cmd="+cmd);
 
       while (line!=null) {
-        retval=1;
-        //System.err.println(translateLineToUmplePython(line));
-        System.err.println(translateLineToUmplePython(line));
-// DEBUG
-        builder = builder.append(translateLineToUmplePython(line)+"\n");
+        //System.err.println(translateLineToUmplePython(line, base+"model.ump", filename, runtimeErr));
+        //System.err.println(line);
+        // DEBUG
+        //builder = builder.append(translateLineToUmplePython(line, base+"model.ump", filename)+"\n");
+        builder.append(line+"\n");
         if(reader.ready()) {
           line = reader.readLine();
         }
@@ -204,11 +148,12 @@ System.err.println("Any output from the Python compiler should appear below\n cm
           line = null;
         }
       }
-// DEBUG
-System.err.println("End of Python compiler output");      
+
+      String translatedOutput=translateLineToUmplePython(builder.toString(), base+"model.ump", filename, runtimeErr);
+      System.err.println(translatedOutput);
 
       if(retval!=0 && errorFileName != null) {
-        String error = builder.toString().trim();
+        String error = translatedOutput.trim();
           try
           {
             File newFile = new File(errorFileName);
@@ -222,6 +167,8 @@ System.err.println("End of Python compiler output");
           // Write to the file
           try (PrintWriter fileout = new PrintWriter(errorFileName)) 
           { 
+//DEBUG to test if the the compiler writes to the file            
+            fileout.println("Second time compile: ");
             fileout.println(error);
           }  
           catch (FileNotFoundException ex) 
@@ -484,15 +431,92 @@ System.err.println("End of Python compiler output");
     return successful;
   }
 
-   private static String translateLineToUmplePython(String line){
-    if(!line.contains("line")){
-      return line;
-    }
+  private static String translateLineToUmplePython(String msg, String model, String filename, boolean runtime) {
+      String[] lines = msg.split("\n");
+      int length = lines.length;
+      String line;
+      // String word;
+      StringBuilder builder = new StringBuilder();
 
-    String[] parts=line.split(" ");
-    
-    return "model.ump:"+parts[parts.length-1]+": error";
-   }
+      // find the main method line number in model.ump
+      ArrayList<Integer> list = new ArrayList<Integer>();
+      try (BufferedReader br = new BufferedReader(new FileReader(model))) {
+          String l;
+          int lineNumber = 0;
+
+          // Read lines from the file
+          while ((l = br.readLine()) != null) {
+              lineNumber++;
+              // Check if the line contains the string "main"
+              if (l.contains("main")) {
+                  list.add(lineNumber);
+              }
+          }
+      } catch (IOException e) {
+          System.err.println("Error reading the file: " + e.getMessage());
+      }
+
+      int mainLine = 0;
+      try (BufferedReader br2 = new BufferedReader(new FileReader(filename))) {
+          String l;
+          int lineNumber = 0;
+
+          // Read lines from the file
+          while ((l = br2.readLine()) != null) {
+              lineNumber++;
+              // Check if the line contains the string "main"
+              if (l.contains("main")) {
+                  mainLine = lineNumber;
+                  break;
+              }
+          }
+      } catch (IOException e) {
+          System.err.println("Error reading the file: " + e.getMessage());
+      }
+      // System.err.println("mainLine: "+mainLine);
+      // System.err.println("model: "+list.get(0));
+      int gap = list.get(0) - mainLine;
+
+      for (int i = 0; i < length; i++) {
+          line = lines[i];
+          if (!line.contains("line")) {
+              builder.append(line + "\n");
+              // System.out.println("no line: " + line);
+          } else {
+              // if not the last line
+              if (i != length - 1 || !runtime) {
+                  if (i != length - 1 && lines[i + 1].contains("main")) {
+                      builder.append(line + "\n");
+                  } else {
+
+                      String[] words = line.split(" ");
+                      for (int k = 0; k < words.length; k++) {
+                          if (words[k].equals("line")) {
+                              String num = words[k + 1];
+                              System.out.println("num = " + num);
+                              boolean convert = false;
+                              int lineNum = 0;
+                              while (!convert) {
+                                  try {
+                                      lineNum = Integer.parseInt(num);
+                                      convert = true;
+                                  } catch (NumberFormatException e) {
+                                      num = num.substring(0, num.length() - 1);
+                                  }
+                              }
+                              builder.append("model.ump:" + (Integer.parseInt(num) + gap) + ": error \nCompiler msg: "
+                                      + line + "\n");
+                              break;
+                          }
+                      }
+                  }
+              } else {
+                  builder.append(line + "\n");
+              }
+          }
+      }
+      return builder.toString();
+  }
 
   // To do: Use model to determine generation path
   private static String translateLineToUmple(String line, UmpleModel model) {
