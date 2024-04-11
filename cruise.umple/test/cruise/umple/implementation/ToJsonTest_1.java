@@ -15,17 +15,14 @@ public class ToJsonTest_1 extends TemplateTest
 {
   
   @Test
-  public void Person()
+  public void GenJsonTest_1Person()
   {
-    addNewSuboption("genJson");
     assertUmpleTemplateFor("ToJsonTest_1.ump",languagePath + "/ToJsonTest_1_Person."+ languagePath +".txt","Person");
  }
   
   @Test
-  public void Address()
+  public void GenJsonTest_1Address()
   {
-  
-    addNewSuboption("genJson");
     assertUmpleTemplateFor("ToJsonTest_1.ump",languagePath + "/ToJsonTest_1_Address."+ languagePath +".txt","Address");
   } 
 }

@@ -1,4 +1,4 @@
--g Java -s genJson;
+generate Java --suboption "genJson";
 namespace example;
 
 class Person{
