@@ -153,7 +153,7 @@ class CodeCompiler {
       System.err.println(translatedOutput);
 
       if(retval!=0 && errorFileName != null) {
-        String error = translatedOutput.trim();
+        String error = translatedOutput;
           try
           {
             File newFile = new File(errorFileName);
@@ -167,8 +167,7 @@ class CodeCompiler {
           // Write to the file
           try (PrintWriter fileout = new PrintWriter(errorFileName)) 
           { 
-//DEBUG to test if the the compiler writes to the file            
-            fileout.println("Second time compile: ");
+//DEBUG to test if the the compiler writes to the file
             fileout.println(error);
           }  
           catch (FileNotFoundException ex) 
