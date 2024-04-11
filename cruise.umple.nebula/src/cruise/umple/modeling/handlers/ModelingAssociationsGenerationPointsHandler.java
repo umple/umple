@@ -1108,6 +1108,8 @@ public class ModelingAssociationsGenerationPointsHandler{
 		addOrMoveAt.setReturnType(CPPTypesConstants.BOOL);
 		addOrMoveAt.addParameter(new GenMethodParameter(normalizedType, newInstance));
 		addOrMoveAt.addParameter(new GenMethodParameter(CPPTypesConstants.INTEGER, "index"));
+		String addOrMoveAtName = association.addOrMoveAtInstance(source.getRole());
+		addOrMoveAt.setName(addOrMoveAtName);
 		
 		GenMethod existing= genClass.methodByIdentifier(addOrMoveAt.identifier());
 		if(existing != null){
@@ -1194,6 +1196,12 @@ public class ModelingAssociationsGenerationPointsHandler{
 		
 		
 		GenClass genClass = generationValueGetter.rootModel.classByName(generationValueGetter.getString(parent, IModelingElementDefinitions.NAME));
+		if(element instanceof cruise.umple.compiler.Method){
+			cruise.umple.compiler.Method umpleMethod = (cruise.umple.compiler.Method) element;
+			if(!umpleMethod.isIsImplemented()){
+				return;
+			}
+		}
 		if(genClass.getName().equals(operationName)){
 			return;
 		}

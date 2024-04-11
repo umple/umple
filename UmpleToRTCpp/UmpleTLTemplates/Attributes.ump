@@ -24,6 +24,24 @@ association { 0..1 AbstractGenConstraint constraint -- * GenConstraintCondition 
 association { 0..1 AbstractGenConstraint listenerOwner -- * GenConstraintVariable listeners;}
 
 class GenMethod{
+
+    boolean equals(Object object) {
+        if (!(object instanceof GenMethod)) { return false; }
+
+        GenMethod compareTo = (GenMethod)object;
+
+        if (getName() == null && compareTo.getName() != null)
+        {
+          return false;
+        }
+        else if (getName() != null && !getName().equals(compareTo.getName()))
+        {
+          return false;
+        }
+
+        return true;
+    }
+    
 	Boolean hasBodyConstraints() {
 		for(GenBody _body: getBody()){
 			if(_body instanceof AbstractGenConstraint){
