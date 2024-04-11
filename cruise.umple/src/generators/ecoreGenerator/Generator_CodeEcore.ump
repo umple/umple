@@ -252,9 +252,6 @@ class EcoreGenerator {
             eEnum.addItem(eEnumItem);
           }
           rootPackage.addEnum(eEnum);
-
-          EcoreAttribute eAttribute = new EcoreAttribute(uEnum.getName(), eClass.getIntent()+1, "EEnum");
-          eClass.addAttribute(eAttribute);
         }
       }
     }

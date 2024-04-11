@@ -29,7 +29,6 @@ class EcoreGenModel {
       ecorePrimitiveTypeMap.put("char", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EChar");
       ecorePrimitiveTypeMap.put("java.lang.Character", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ECharacterObject");
       ecorePrimitiveTypeMap.put("java.lang.Object", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject");
-      ecorePrimitiveTypeMap.put("enum", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EEnum");
 
       ecoreGenericTypeMap = new HashMap<String, String[]>();
       ecoreGenericTypeMap.put("java.util.List", new String[]{"1", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EEList"});
@@ -112,7 +111,7 @@ class EcorePackage {
     }
   }
   
-  String[] getActualEType(UmpleClass uClass, String eType){
+  String[] getActualEType(UmpleClass uClass, String eType){    
     List<String> typeArgs = new ArrayList<String>();
 
     if(EcoreGenModel.ecorePrimitiveTypeMap.containsKey(eType)){
