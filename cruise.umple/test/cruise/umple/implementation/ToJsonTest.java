@@ -11,7 +11,7 @@ package cruise.umple.implementation;
 
 import org.junit.*;
 
-public class ToJsonTest_1 extends TemplateTest
+public class ToJsonTest extends TemplateTest
 {
   
   @Test
