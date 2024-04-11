@@ -111,7 +111,7 @@ class EcorePackage {
     }
   }
   
-  String[] getActualEType(UmpleClass uClass, String eType){    
+  String[] getActualEType(UmpleClass uClass, String eType, EcorePackage rootPackage){    
     List<String> typeArgs = new ArrayList<String>();
 
     if(EcoreGenModel.ecorePrimitiveTypeMap.containsKey(eType)){
@@ -160,9 +160,20 @@ class EcorePackage {
       }else if(EcoreGenModel.ecoreGenericTypeMap.containsKey(existingType)){
         typeArgs.set(0, existingType);
       }else{
-        EcoreDataType dataType = new EcoreDataType(actualEType, getIntent()+1, existingType, typeArgs.size()-1);
-        addDataType(dataType);
-        typeArgs.set(0, "#//"+actualEType);
+        // See if there is already an enum with this type
+        Boolean isMatchingEnumForThisType=false;
+        for (EcoreEnum e: rootPackage.getEnums()) {
+          if(e.getName().equals(actualEType)) {
+            isMatchingEnumForThisType=true;
+            break;
+          }
+        }
+        if(!isMatchingEnumForThisType)
+        {
+          EcoreDataType dataType = new EcoreDataType(actualEType, getIntent()+1, existingType, typeArgs.size()-1);
+          addDataType(dataType);
+          typeArgs.set(0, "#//"+actualEType);
+        }
       }
       return typeArgs.toArray(new String[0]);
     }

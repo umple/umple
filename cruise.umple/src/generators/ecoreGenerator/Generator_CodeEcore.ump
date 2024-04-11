@@ -65,7 +65,7 @@ class EcoreGenerator {
       if(model.getUmpleClass(typeArgument) != null){
         typeArgumentActualType = new String[]{"#//" + typeArgument};
       }else{
-        typeArgumentActualType = rootPackage.getActualEType(uClass, typeArgument);
+        typeArgumentActualType = rootPackage.getActualEType(uClass, typeArgument, rootPackage);
       }
       
       if(EcoreGenModel.ecoreGenericTypeMap.containsKey(typeArgumentActualType[0])){
@@ -107,10 +107,10 @@ class EcoreGenerator {
           }
           eClass.addReference(eReference);
         }else{
-          String[] type = rootPackage.getActualEType(uClass, uAttribute.getType() == null ? "String" : uAttribute.getType());
+          String[] type = rootPackage.getActualEType(uClass, uAttribute.getType() == null ? "String" : uAttribute.getType(), rootPackage);
           String actualTypeName = type[0];        
           EcoreAttribute eAttribute = null;
-          
+
           if(EcoreGenModel.ecoreGenericTypeMap.containsKey(actualTypeName)){
             String[] value = EcoreGenModel.ecoreGenericTypeMap.get(actualTypeName);
             eAttribute = new EcoreAttribute(attrName, eClass.getIntent()+1, "");
@@ -264,13 +264,13 @@ class EcoreGenerator {
     EcorePackage rootPackage = new EcorePackage(packageName, 0, nsURI, packageName);
     
     genModel.addPackage(rootPackage);
-    
+
     handleInterfaces(rootPackage);
     handleClasses(rootPackage);
+    handleEnums(rootPackage);
     handleAttributes(rootPackage);
     handleAssociation(rootPackage);
     handleStateMachine(rootPackage);
-    handleEnums(rootPackage);
     
     // Temporarily support one package only
     model.setCode(genModel.getPackage(0).getCode());
