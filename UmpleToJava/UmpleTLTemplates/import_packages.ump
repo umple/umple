@@ -18,8 +18,14 @@ class UmpleToJava {
     if (importSet.contains(anImport) | uClass.hasOuterClass()) {
       continue;
     }
+    importSet.add(anImport);
     appendln(realSb, "");
     append(realSb, "import {0};", anImport);
+  }
+  if(!importSet.contains("java.util.*")&&model.modelHasSuboption("Java", "genJson")){
+    importSet.add("java.util.HashSet");
+    appendln(realSb, "");
+    append(realSb, "import {0};", "java.util.HashSet");
   }
 #>>!>>
 }
