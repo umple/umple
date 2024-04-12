@@ -1284,10 +1284,10 @@ Action.displayTransitionMenu = function(event) {
   let startIndex = Page.codeMirrorEditor.getValue().substr(selection.startIndex, selection.endIndex - selection.startIndex).search(pattern) + selection.startIndex;
   let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
   let line = Action.findEOL(cText);
-  console.log(line);
-  if (line == "") {
+  if (!(line.split("->").length - 1 === 1) ) {
       //alert("Please edit this complex transition in the textual code.");
       Page.setFeedbackMessage(" Please edit this complex transition in the textual code.");
+      return;
   }
   let endIndex = startIndex + line.length;
   let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
@@ -1307,7 +1307,7 @@ Action.displayTransitionMenu = function(event) {
       action = "";
   }
   //
-  console.log(match);
+
   //need to sanitize any linebreaks or quotes that could break the generated HTML
   //var jsInput=chosenState.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
   var menu = document.createElement('customContextMenu');
@@ -1375,6 +1375,20 @@ Action.displayTransitionMenu = function(event) {
           }
       }
   });
+  document.addEventListener('keydown', function hideMenu(e) {
+    var prompt = document.getElementById("promptBox");
+      if (e.target != menu && !menu.contains(e.target)&&e.key === "Escape") {
+          if (prompt != null && e.target != prompt && !prompt.contains(e.target)) {
+
+              document.removeEventListener('keydown', hideMenu);
+              Action.removeContextMenu();
+
+          } else {
+              document.removeEventListener('keydown', hideMenu);
+              Action.removeContextMenu();
+          }
+      }
+  });
   document.body.appendChild(menu);
 }
 
@@ -1431,6 +1445,12 @@ Action.changeTransition = function(dest,startIndex,endIndex) {
     };
     // Add a listener to hide the prompt when the user clicks outside of it
     document.addEventListener("mousedown", hider);
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape") {
+        prompt.remove();
+        document.removeEventListener("keydown", arguments.callee);
+      }
+    });
     // Event listener for the submit action
     submitButton.addEventListener('click', function() {
         // Validate input value is not empty
@@ -1444,7 +1464,12 @@ Action.changeTransition = function(dest,startIndex,endIndex) {
         let modifiedTransition = parts[0] + " -> " + parts[1].replace(dest,input.value.trim()) + ";";
 
         let orig = Page.codeMirrorEditor.getValue();
-        let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
+        let before = orig.substring(0, startIndex);
+    
+      // Get the part of the string after the substring you want to replace
+      let after = orig.substring(endIndex);
+      let updatedContent = before + modifiedTransition +after;
+        //let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
 
         // Update the editor with the new content
         Page.codeMirrorEditor.setValue(updatedContent);
@@ -1454,6 +1479,13 @@ Action.changeTransition = function(dest,startIndex,endIndex) {
         document.removeEventListener("mousedown",hider);
         prompt.remove(); // Remove the prompt after processing
         Action.selectMatchingText(modifiedTransition);
+    });
+    input.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        e.preventDefault(); // Prevent the default form submission behavior
+        e.stopPropagation();
+        submitButton.click();
+      }
     });
 };
 
@@ -1528,6 +1560,12 @@ Action.modifyTransitionGuard = function(startIndex,endIndex) {
   };
   // Add a listener to hide the prompt when the user clicks outside of it
   document.addEventListener("mousedown", hider);
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+      prompt.remove();
+      document.removeEventListener("keydown", arguments.callee);
+    }
+  });
   // Event listener for the submit action
   submitButton.addEventListener('click', function() {
     // Validate input value is not empty
@@ -1580,7 +1618,12 @@ Action.modifyTransitionGuard = function(startIndex,endIndex) {
 
     // Assuming classyCode is meant to represent the original content where the transition is to be found
     let orig = Page.codeMirrorEditor.getValue();
-    let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
+    let before = orig.substring(0, startIndex);
+    
+      // Get the part of the string after the substring you want to replace
+      let after = orig.substring(endIndex);
+      let updatedContent = before + modifiedTransition +after;
+    //let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
 
     // Update the editor with the new content
     Page.codeMirrorEditor.setValue(updatedContent);
@@ -1590,6 +1633,13 @@ Action.modifyTransitionGuard = function(startIndex,endIndex) {
     document.removeEventListener("mousedown",hider);
     prompt.remove(); // Remove the prompt after processing
     Action.selectMatchingText(modifiedTransition);
+});
+input.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    e.preventDefault(); // Prevent the default form submission behavior
+    e.stopPropagation();
+    submitButton.click();
+  }
 });
 };
 
@@ -1647,6 +1697,12 @@ Action.modifyTransitionAction = function(startIndex,endIndex) {
   };
   // Add a listener to hide the prompt when the user clicks outside of it
   document.addEventListener("mousedown", hider);
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+      prompt.remove();
+      document.removeEventListener("keydown", arguments.callee);
+    }
+  });
   // Event listener for the submit action
   submitButton.addEventListener('click', function() {
       // Validate input value is not empty
@@ -1687,7 +1743,12 @@ Action.modifyTransitionAction = function(startIndex,endIndex) {
 
       // Assuming classyCode is meant to represent the original content where the transition is to be found
       let orig = Page.codeMirrorEditor.getValue();
-      let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
+      let before = orig.substring(0, startIndex);
+    
+      // Get the part of the string after the substring you want to replace
+      let after = orig.substring(endIndex);
+      let updatedContent = before + modifiedTransition +after;
+      //let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
 
       // Update the editor with the new content
       Page.codeMirrorEditor.setValue(updatedContent);
@@ -1697,6 +1758,13 @@ Action.modifyTransitionAction = function(startIndex,endIndex) {
       document.removeEventListener("mousedown",hider);
       prompt.remove(); // Remove the prompt after processing
       Action.selectMatchingText(modifiedTransition);
+  });
+  input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent the default form submission behavior
+      e.stopPropagation();
+      submitButton.click();
+    }
   });
 };
 
@@ -1750,6 +1818,12 @@ Action.modifyTransitionEventName = function(startIndex, endIndex) {
   };
   // Add a listener to hide the prompt when the user clicks outside of it
   document.addEventListener("mousedown", hider);
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+      prompt.remove();
+      document.removeEventListener("keydown", arguments.callee);
+    }
+  });
   // Event listener for the submit action
   submitButton.addEventListener('click', function() {
       // Validate input value is not empty
@@ -1763,7 +1837,11 @@ Action.modifyTransitionEventName = function(startIndex, endIndex) {
 
       // Assuming classyCode is meant to represent the original content where the transition is to be found
       let orig = Page.codeMirrorEditor.getValue();
-      let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
+      let before = orig.substring(0, startIndex);
+    
+      // Get the part of the string after the substring you want to replace
+      let after = orig.substring(endIndex);
+      let updatedContent = before + modifiedTransition +after;
 
       // Update the editor with the new content
       Page.codeMirrorEditor.setValue(updatedContent);
@@ -1773,6 +1851,13 @@ Action.modifyTransitionEventName = function(startIndex, endIndex) {
       document.removeEventListener("mousedown", hider);
       prompt.remove(); // Remove the prompt after processing
       Action.selectMatchingText(modifiedTransition);
+  });
+  input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent the default form submission behavior
+      e.stopPropagation();
+      submitButton.click();
+    }
   });
 };
 
@@ -2169,16 +2254,19 @@ Action.displayAssociMenu = function(event, associationLink) {
   var detailsArray = associationDetails[1].split(',');
 
   if (detailsArray.length == 4) {
+      var destination = detailsArray[1].trim();
       var className = detailsArray[0].trim();
       var endInfo = detailsArray[2].split(' ');
       var startInfo = detailsArray[3].split(' ');
 
   } else {
+      var destination = detailsArray[1].trim();
       var endInfo = detailsArray[2].split(' ');
       var startInfo = detailsArray[2].split(' ');
       var className = detailsArray[0].trim();
 
   }
+  
   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
   if (Page.codeMirrorOn) {
@@ -2248,11 +2336,22 @@ Action.displayAssociMenu = function(event, associationLink) {
   var selectedText = Page.codeMirrorEditor.getSelection();
 
   if (selectedText.includes(endInfo[0].trim()) == false) {
-      isEnd = 3;
+      isEnd = 3;//association class
   }
   var menu = document.createElement('customContextMenu');
-  var rowContent = ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter other multiplicity", "Alter other role name", "Delete the association."];
-  var rowFuncs = [
+  //special menu for association class
+  var rowContent = isEnd === 3 ?
+  ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter "+destination+" role name"] :
+  ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter "+destination+" multiplicity" , "Alter "+destination+" role name", "Delete the association"];
+  //var rowContent = ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter "+destination+" multiplicity" , "Alter "+destination+" role name", "Delete the association."];
+  var rowFuncs = isEnd === 3 ?
+        [
+            "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
+            "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
+            "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + endInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 1 + "\")"
+        ] :[
+
+        
       "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
       "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
       "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + endInfo[0] + "\",\"" + isEnd + "\")",
@@ -2301,6 +2400,20 @@ Action.displayAssociMenu = function(event, associationLink) {
       menu.style.top = event.clientY + "px";
   }
   // Add a listener to hide the menu when the user clicks outside of it
+  document.addEventListener('keydown', function hideMenu(e) {
+    var prompt = document.getElementById("promptBox");
+      if (e.target != menu && !menu.contains(e.target)&&e.key === "Escape") {
+          if (prompt != null && e.target != prompt && !prompt.contains(e.target)) {
+
+              document.removeEventListener('keydown', hideMenu);
+              Action.removeContextMenu();
+
+          } else {
+              document.removeEventListener('keydown', hideMenu);
+              Action.removeContextMenu();
+          }
+      }
+  });
   document.addEventListener('mousedown', function hideMenu(e) {
       var prompt = document.getElementById("promptBox");
       if (e.target != menu && !menu.contains(e.target)) {
@@ -2385,11 +2498,16 @@ Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
   submitButton.textContent = 'Change';
   submitButton.style.padding = '5px';
   submitButton.style.marginLeft = '5px';
+
+  var inputErrorMsg = document.createElement('label');
+  inputErrorMsg.type='label';
+  inputErrorMsg.style.color = "red";
+  inputErrorMsg.textContent = "Please enter a valid multiplicity format (e.g., '*', '1', '0..1', '1..*', '2..5').";
  
   // Append elements to the prompt
   prompt.appendChild(input);
   prompt.appendChild(submitButton);
- 
+  
   // Add the prompt to the document body
   document.body.appendChild(prompt);
   input.focus(); // Automatically focus the input
@@ -2401,6 +2519,15 @@ Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
   };
   // Add a listener to hide the prompt when the user clicks outside of it
   document.addEventListener("mousedown", hider);
+
+   // Add ESC key listener to close the prompt
+   document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+      prompt.remove();
+      document.removeEventListener("keydown", arguments.callee);
+    }
+  });
+
   // Event listener for the submit action
   submitButton.addEventListener('click', function() {
     if(Action.validateMultiplicity(input.value.trim())){
@@ -2441,9 +2568,18 @@ Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
   else {
     // If the format is invalid, display a message
     //alert("Invalid multiplicity format. Please enter a valid format (e.g., '*', '1', '0..1', '1..*', or '2..5').");
-    Page.setFeedbackMessage("Invalid multiplicity format. Please enter a valid format (e.g., '*', '1', '0..1', '1..*', or '2..5').");
     input.focus(); // Re-focus on the input to allow the user to correct it
+    prompt.appendChild(inputErrorMsg);
       }
+  });
+
+  // Add Enter key listener to trigger the change
+  input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent the default form submission behavior
+      e.stopPropagation();
+      submitButton.click();
+    }
   });
  };
 
@@ -2479,6 +2615,11 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
   submitButton.textContent = 'Change';
   submitButton.style.padding = '5px';
   submitButton.style.marginLeft = '5px';
+
+  var inputErrorMsg = document.createElement('label');
+  inputErrorMsg.type='label';
+  inputErrorMsg.style.color = "red";
+  inputErrorMsg.textContent = "To add a role name at this end there must be a role name at the other end first";
  
   // Append elements to the prompt
   prompt.appendChild(input);
@@ -2495,6 +2636,12 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
   };
   // Add a listener to hide the prompt when the user clicks outside of it
   document.addEventListener("mousedown", hider);
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+      prompt.remove();
+      document.removeEventListener("keydown", arguments.callee);
+    }
+  });
   // Event listener for the submit action
   submitButton.addEventListener('click', function() {
     var newRoleName = input.value.trim();
@@ -2540,9 +2687,11 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
           updatedAssociationString = updatedStartPart+" "+parts[1].trim()+" "+parts[2].trim()+";";
         }
         else{
-          Page.setFeedbackMessage("To add a role name at this end there must be a role name at the other end first");
-          //alert("To add a role name at this end there must be a role name at the other end first");
-          updatedAssociationString = updatedStartPart+" "+parts[1].trim()+";";
+          //Page.setFeedbackMessage("To add a role name at this end there must be a role name at the other end first");
+          input.focus();
+          prompt.appendChild(inputErrorMsg);
+          return;
+          //updatedAssociationString = updatedStartPart+" "+parts[1].trim()+";";
         }
       } else {
         endParts = selectedText.split(";");
@@ -2570,6 +2719,13 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
      prompt.remove(); // Remove the prompt after processing
      Action.selectMatchingText(updatedAssociationString);
+  });
+  input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent the default form submission behavior
+      e.stopPropagation();
+      submitButton.click();
+    }
   });
  };
 
@@ -2673,7 +2829,20 @@ Action.displayAttributeMenu = function(event, attributeName, attributeType) {
   } else {
     menu.style.top = event.clientY + "px";
   }
-  
+  document.addEventListener('keydown', function hideMenu(e) {
+    var prompt = document.getElementById("promptBox");
+      if (e.target != menu && !menu.contains(e.target)&&e.key === "Escape") {
+          if (prompt != null && e.target != prompt && !prompt.contains(e.target)) {
+
+              document.removeEventListener('keydown', hideMenu);
+              Action.removeContextMenu();
+
+          } else {
+              document.removeEventListener('keydown', hideMenu);
+              Action.removeContextMenu();
+          }
+      }
+  });
   // Add an event listener to hide the menu when the user clicks outside of it
   document.addEventListener('mousedown', function hideMenu(e) {
     if (e.target != menu && !menu.contains(e.target)) {
@@ -3062,7 +3231,8 @@ Action.transitionClicked = function(identifier)
   let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
-  if(line==""){
+
+  if(!(line.split("->").length - 1 === 1) ){
     //alert("Please edit this complex transition in the textual code.");
     Page.setFeedbackMessage("Please edit this complex transition in the textual code.");
   }
