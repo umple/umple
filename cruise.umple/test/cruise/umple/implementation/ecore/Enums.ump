@@ -2,6 +2,20 @@ generate Ecore;
 namespace cruise.umple.example;
 
 class X {
- enum Status { FullTime, PartTime }
+ enum Status { FullTime, PartTime };
  Status s; 
+}
+
+class A{  
+  Throwable t1;
+  Throwable[] t2;
+  
+  StringBuilder s1;
+  StringBuilder[] s2;
+  
+  Float f1;
+  Float[] f2;
+  
+  enum Color { Red, Green, Blue };
+  Color c; 
 }

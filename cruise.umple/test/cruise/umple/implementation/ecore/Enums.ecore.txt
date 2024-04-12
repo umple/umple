@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="example" nsURI="cruise.umple.example" nsPrefix="example">
+  <eClassifiers xsi:type="ecore:EDataType" name="Throwable" instanceClassName="java.lang.Throwable" />
+  <eClassifiers xsi:type="ecore:EDataType" name="StringBuilder" instanceClassName="java.lang.StringBuilder" />
   <eClassifiers xsi:type="ecore:EClass" name="X">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="s" eType="#//Status" />
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="A">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="t1" eType="#//Throwable" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="t2" upperBound="-1" eType="#//Throwable" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="s1" eType="#//StringBuilder" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="s2" upperBound="-1" eType="#//StringBuilder" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="f1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloat" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="f2" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloat" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="c" eType="#//Color" />
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Status">
     <eLiterals name="FullTime" value="0" />
     <eLiterals name="PartTime" value="1" />
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Color">
+    <eLiterals name="Red" value="0" />
+    <eLiterals name="Green" value="1" />
+    <eLiterals name="Blue" value="2" />
   </eClassifiers>
 </ecore:EPackage>

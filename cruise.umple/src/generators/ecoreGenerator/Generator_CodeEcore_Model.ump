@@ -161,15 +161,15 @@ class EcorePackage {
         typeArgs.set(0, existingType);
       }else{
         // See if there is already an enum with this type
-        Boolean isMatchingEnumForThisType=false;
+        Boolean isMatchingEnumForThisType = false;
         for (EcoreEnum e: rootPackage.getEnums()) {
           if(e.getName().equals(actualEType)) {
-            isMatchingEnumForThisType=true;
+            isMatchingEnumForThisType = true;
+            typeArgs.set(0, "#//"+actualEType);
             break;
           }
         }
-        if(!isMatchingEnumForThisType)
-        {
+        if(!isMatchingEnumForThisType){
           EcoreDataType dataType = new EcoreDataType(actualEType, getIntent()+1, existingType, typeArgs.size()-1);
           addDataType(dataType);
           typeArgs.set(0, "#//"+actualEType);
