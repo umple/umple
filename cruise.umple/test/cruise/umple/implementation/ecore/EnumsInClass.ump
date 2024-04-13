@@ -1,0 +1,7 @@
+generate Ecore;
+namespace cruise.umple.example;
+
+class X {
+  enum Status { FullTime, PartTime };
+  Status s; 
+}
