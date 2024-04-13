@@ -1058,6 +1058,7 @@ Action.drawInputState = function(inputType,stateCode,stateName){
   document.addEventListener("mousedown", hider);
   if(inputType=="rename"){
     label.appendChild(document.createTextNode("New name for \'"+stateName+"\'?"));
+    input.value = stateName;
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         //only accounts for case where states all have unique names
@@ -1249,6 +1250,617 @@ Action.drawStateMenu = function(){
   });
   document.body.appendChild(menu);
 }
+Action.displayTransitionMenu = function(event) {
+  if (!Action.diagramInSync) {
+      return;
+  }
+  // Remove old menu, if any
+  Action.removeContextMenu();
+  var targ = event.target;
+  //iterate up to top of graph elements
+  while (targ.parentElement.id != "graph0") {
+      targ = targ.parentNode;
+  }
+  //grabs state name
+  var elemText = targ.outerHTML.substr(targ.outerHTML.indexOf("transitionClicked(&quot;") + "transitionClicked(&quot;".length, targ.outerHTML.indexOf("&quot;)\"") - (targ.outerHTML.indexOf("transitionClicked(&quot;") + "transitionClicked(&quot;".length));
+  elemText = elemText.replaceAll("&amp;", "&");
+  let id = elemText.split("*^*");
+  let identifierState = id[3].split(".");
+  dest = id[4].split(".");
+
+  var selection = Action.selectStateInClass(id[0], id[1], identifierState[0]);
+  for (var i = 1; i < identifierState.length; i++) {
+      selection = Action.selectStateInState(selection.startIndex, selection.endIndex, identifierState[i]);
+  }
+  let searchTerm = id[2].replaceAll("+", "\\+").replaceAll("-", "\\-").replaceAll("*", "\\*").replaceAll("?", "\\?").replaceAll("|", "\\|"); //preceed any accidental quantifiers with escape character
+  searchTerm = searchTerm.replace("after", "after~`~?:Every`~`?"); //subpar solution, could be improved
+  if (id[5] != "") {
+      let guardStr = id[5].trim().replaceAll("+", "\\+").replaceAll("-", "\\-").replaceAll("*", "\\*").replaceAll("?", "\\?").replaceAll("|", "\\|"); //preceed any accidental quantifiers with escape character
+      searchTerm = searchTerm + "\\s*[\\s*" + guardStr.trim().slice(1, guardStr.trim().length - 1) + "\\s*]";
+  }
+  searchTerm = searchTerm.replaceAll("]", "\\]").replaceAll("[", "\\[").replaceAll(")", "\\)?").replaceAll("(", "\\(?").replaceAll("~`~", "(").replaceAll("`~`", ")").replaceAll(" ", "\\s*").replaceAll(",", "\\s*,\\s*").replaceAll("!", "\\s*!\\s*").replaceAll("/", "\\s*/\\s*");
+  searchTerm = searchTerm.replaceAll("&&", "&{1,2}");
+  let pattern = new RegExp(searchTerm + ".*->", "s");
+  let startIndex = Page.codeMirrorEditor.getValue().substr(selection.startIndex, selection.endIndex - selection.startIndex).search(pattern) + selection.startIndex;
+  let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
+  let line = Action.findEOL(cText);
+  if (!(line.split("->").length - 1 === 1) ) {
+      //alert("Please edit this complex transition in the textual code.");
+      Page.setFeedbackMessage(" Please edit this complex transition in the textual code.");
+      return;
+  }
+  let endIndex = startIndex + line.length;
+  let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
+
+  const match = code.trim().match(pattern2);
+  // Extracting captured groups based on the updated pattern
+  let eventName = match[1].trim();
+  let guard = match[3] ? match[3].trim() : (match[7] ? match[7].trim() : null);
+  let action = match[5] ? match[5].trim() : (match[9] ? match[9].trim() : null);
+  let destinationState = match[10].trim();
+  if (guard === null) {
+      guard = "";
+  }
+  //
+  if (action === null) {
+      action = "";
+  }
+  //
+
+  //need to sanitize any linebreaks or quotes that could break the generated HTML
+  //var jsInput=chosenState.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
+  var menu = document.createElement('customContextMenu');
+  var rowContent = ["Change or Add Event Name", "Change or Add Guard", "Change or Add Action", "Change Destination State", "Delete Transition"];
+  var rowFuncs = [
+      "Action.modifyTransitionEventName(\"" + startIndex + "\",\"" + endIndex + "\")",
+      "Action.modifyTransitionGuard(\"" + startIndex + "\",\"" + endIndex + "\")",
+      "Action.modifyTransitionAction(\"" + startIndex + "\",\"" + endIndex + "\")",
+      "Action.changeTransition(\"" + destinationState + "\",\"" + startIndex + "\",\"" + endIndex + "\")",
+      "Action.deleteTransition(\"" + startIndex + "\",\"" + endIndex + "\")"
+
+  ];
+
+  menu.style.zIndex = "1000";
+  menu.style.border = "1px solid #ccc";
+  menu.style.backgroundColor = "#f8f8f8";
+  menu.style.padding = "5px";
+  menu.style.position = "fixed";
+  //add rows
+  for (var i = 0; i < rowContent.length; i++) {
+      var row = document.createElement("div");
+      row.style.padding = "5px";
+      row.style.borderRadius = "3px";
+      row.style.cursor = "pointer";
+      row.style.transition = "background-color 0.3s";
+      row.textContent = rowContent[i];
+      row.setAttribute('onclick', "javascript:" + rowFuncs[i]);
+      // Highlight row on hover
+      row.addEventListener("mouseover", function() {
+          this.style.backgroundColor = "#ddd";
+      });
+      row.addEventListener("mouseout", function() {
+          this.style.backgroundColor = "transparent";
+      });
+
+      //add row to context menu
+      menu.appendChild(row);
+
+  }
+
+  //set menu location at mouse, while ensuring it is on screen
+  var menuRect = menu.getBoundingClientRect();
+  if (event.clientX + menuRect.width > window.innerWidth) {
+      menu.style.right = (window.innerWidth - event.clientX) + "px";
+  } else {
+      menu.style.left = event.clientX + "px";
+  }
+  if (event.clientY + menuRect.height > window.innerHeight) {
+      menu.style.bottom = (window.innerHieght - event.clientY) + "px";
+  } else {
+      menu.style.top = event.clientY + "px";
+  }
+  // Add a listener to hide the menu when the user clicks outside of it
+  document.addEventListener('mousedown', function hideMenu(e) {
+      var prompt = document.getElementById("promptBox");
+      if (e.target != menu && !menu.contains(e.target)) {
+          if (prompt != null && e.target != prompt && !prompt.contains(e.target)) {
+
+              document.removeEventListener('mousedown', hideMenu);
+              Action.removeContextMenu();
+
+          } else {
+              document.removeEventListener('mousedown', hideMenu);
+              Action.removeContextMenu();
+          }
+      }
+  });
+  document.addEventListener('keydown', function hideMenu(e) {
+    var prompt = document.getElementById("promptBox");
+      if (e.target != menu && !menu.contains(e.target)&&e.key === "Escape") {
+          if (prompt != null && e.target != prompt && !prompt.contains(e.target)) {
+
+              document.removeEventListener('keydown', hideMenu);
+              Action.removeContextMenu();
+
+          } else {
+              document.removeEventListener('keydown', hideMenu);
+              Action.removeContextMenu();
+          }
+      }
+  });
+  document.body.appendChild(menu);
+}
+
+Action.changeTransition = function(dest,startIndex,endIndex) {
+  let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+   // Assuming classCode contains the full transition line, including condition and destination
+   let trimmedString = classCode.trim().replace(/;$/, "");
+
+   // Split the string into condition (with guard) and destination parts
+   let parts = trimmedString.split("->");
+   parts[0] = parts[0].trim(); // Condition part
+   parts[1] = parts[1].trim(); // Destination part
+
+   // Ensure there are two parts (condition and destination)
+   if (parts.length != 2) {
+       console.log("Invalid transition format.");
+       return;
+   }
+  var prompt = document.createElement('div');
+    prompt.style.zIndex = "1000";
+    prompt.style.border = "1px solid #ccc";
+    prompt.style.backgroundColor = "#f8f8f8";
+    prompt.style.padding = "5px";
+    prompt.style.position = "absolute";
+    prompt.style.left = '50%';
+    prompt.style.top = '50%';
+    prompt.style.transform = 'translate(-50%, -50%)';
+    prompt.id = "promptBox";
+
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.value=parts[1];
+    input.style.padding = '5px';
+    input.style.margin = '5px';
+    input.style.width = '200px';
+
+    var submitButton = document.createElement('button');
+    submitButton.textContent = 'Change Destination';
+    submitButton.style.padding = '5px';
+    submitButton.style.marginLeft = '5px';
+
+    // Append elements to the prompt
+    prompt.appendChild(input);
+    prompt.appendChild(submitButton);
+
+    // Add the prompt to the document body
+    document.body.appendChild(prompt);
+    input.focus(); // Automatically focus the input
+    var hider=function hidePrompt(e) {
+      if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+        document.removeEventListener("mousedown", hidePrompt);
+        prompt.remove();
+      }
+    };
+    // Add a listener to hide the prompt when the user clicks outside of it
+    document.addEventListener("mousedown", hider);
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape") {
+        prompt.remove();
+        document.removeEventListener("keydown", arguments.callee);
+      }
+    });
+    // Event listener for the submit action
+    submitButton.addEventListener('click', function() {
+        // Validate input value is not empty
+        if (input.value.trim() === "") {
+            console.log("Input for new destination state is empty.");
+            return;
+        }
+
+
+        // Create the modified transition string with the new destination
+        let modifiedTransition = parts[0] + " -> " + parts[1].replace(dest,input.value.trim()) + ";";
+
+        let orig = Page.codeMirrorEditor.getValue();
+        let before = orig.substring(0, startIndex);
+    
+      // Get the part of the string after the substring you want to replace
+      let after = orig.substring(endIndex);
+      let updatedContent = before + modifiedTransition +after;
+        //let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
+
+        // Update the editor with the new content
+        Page.codeMirrorEditor.setValue(updatedContent);
+
+        Action.removeContextMenu();
+        TabControl.getCurrentHistory().save(Page.getUmpleCode(), "changeTransitionDestination");
+        document.removeEventListener("mousedown",hider);
+        prompt.remove(); // Remove the prompt after processing
+        Action.selectMatchingText(modifiedTransition);
+    });
+    input.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        e.preventDefault(); // Prevent the default form submission behavior
+        e.stopPropagation();
+        submitButton.click();
+      }
+    });
+};
+
+Action.deleteTransition = function(startIndex, endIndex) {
+  let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+
+  let orig = Page.codeMirrorEditor.getValue();
+
+  orig = orig.replace(classCode, "");
+  // Update the editor with the new code
+
+  Page.codeMirrorEditor.setValue(orig);
+
+  Action.removeContextMenu();
+  TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+};
+
+Action.modifyTransitionGuard = function(startIndex,endIndex) {
+
+  let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
+  let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  const match =classCode.trim().match(pattern2);
+
+  // Extracting captured groups based on the updated pattern
+  let eventName = match[1].trim();
+  let guard = match[3] ? match[3].trim() : (match[7] ? match[7].trim() : null);
+  let action = match[5] ? match[5].trim() : (match[9] ? match[9].trim() : null);
+  let destinationState = match[10].trim();
+     if(guard===null){
+       guard="";
+     }
+     //
+     if(action===null){
+       action="";
+     }
+  // Create the input prompt for renaming the transition condition
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+  prompt.style.border = "1px solid #ccc";
+  prompt.style.backgroundColor = "#f8f8f8";
+  prompt.style.padding = "5px";
+  prompt.style.position = "absolute";
+  prompt.style.left = '50%';
+  prompt.style.top = '50%';
+  prompt.style.transform = 'translate(-50%, -50%)';
+  prompt.id = "promptBox";
+
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.value = guard;
+  input.style.padding = '5px';
+  input.style.margin = '5px';
+  input.style.width = '200px';
+
+  var submitButton = document.createElement('button');
+  submitButton.textContent = 'Change/Add Guard';
+  submitButton.style.padding = '5px';
+  submitButton.style.marginLeft = '5px';
+
+  // Append elements to the prompt
+  prompt.appendChild(input);
+  prompt.appendChild(submitButton);
+
+  // Add the prompt to the document body
+  document.body.appendChild(prompt);
+  input.focus(); // Automatically focus the input
+  var hider=function hidePrompt(e) {
+    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  };
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", hider);
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+      prompt.remove();
+      document.removeEventListener("keydown", arguments.callee);
+    }
+  });
+  // Event listener for the submit action
+  submitButton.addEventListener('click', function() {
+    // Validate input value is not empty
+
+    let trimmedString = classCode.trim();
+
+    // Split the string into condition (with guard) and destination parts
+    let parts = trimmedString.split("->");
+    parts[0] = parts[0].trim(); 
+    parts[1] = parts[1].trim(); // Destination part
+
+    // Ensure there are two parts (condition and destination)
+    if (parts.length != 2) {
+        console.log("Invalid transition format.");
+        return;
+    }
+    let modifiedTransition = "";
+    if (input.value.trim() === "") {
+      if (guard === null || guard === "") {
+        return;
+     }
+     else{
+       pattern=new RegExp("\\[\\s*(.*?)\\s*\\]", "g");
+       modifiedTransition = classCode.replace(pattern,"");
+     }
+    }
+    else{
+      if (guard === null || guard === "") {
+        if(action==null || action === ""){
+          parts[0]=eventName+" ["+input.value.trim()+"]";
+
+        }
+        else{
+          if(parts[1].includes(action)){
+            parts[0]=eventName+" ["+input.value.trim()+"]";
+          }
+          else{
+            parts[0]=eventName+" ["+input.value.trim()+"]"+" /{" +action+"}"
+          }
+
+        }
+        modifiedTransition = parts[0]+ " -> " + parts[1];
+
+      }
+      else{
+        modifiedTransition = classCode.replace(guard,input.value.trim());
+      }
+    }
+
+
+    // Assuming classyCode is meant to represent the original content where the transition is to be found
+    let orig = Page.codeMirrorEditor.getValue();
+    let before = orig.substring(0, startIndex);
+    
+      // Get the part of the string after the substring you want to replace
+      let after = orig.substring(endIndex);
+      let updatedContent = before + modifiedTransition +after;
+    //let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
+
+    // Update the editor with the new content
+    Page.codeMirrorEditor.setValue(updatedContent);
+
+    Action.removeContextMenu();
+    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "modifyGuard");
+    document.removeEventListener("mousedown",hider);
+    prompt.remove(); // Remove the prompt after processing
+    Action.selectMatchingText(modifiedTransition);
+});
+input.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    e.preventDefault(); // Prevent the default form submission behavior
+    e.stopPropagation();
+    submitButton.click();
+  }
+});
+};
+
+Action.modifyTransitionAction = function(startIndex,endIndex) {
+  let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
+  let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  const match =classCode.trim().match(pattern2);
+  // Extracting captured groups based on the updated pattern
+
+  let guard = match[3] ? match[3].trim() : (match[7] ? match[7].trim() : null);
+  let currentAction = match[5] ? match[5].trim() : (match[9] ? match[9].trim() : null);
+
+     if(guard===null){
+       guard="";
+     }
+     //
+  if(currentAction===null){
+    currentAction="";
+  }
+  // Create the input prompt for  the transition condition
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+    prompt.style.border = "1px solid #ccc";
+    prompt.style.backgroundColor = "#f8f8f8";
+    prompt.style.padding = "5px";
+    prompt.style.position = "absolute";
+    prompt.style.left = '50%';
+    prompt.style.top = '50%';
+    prompt.style.transform = 'translate(-50%, -50%)';
+    prompt.id = "promptBox";
+
+  var textarea = document.createElement('textarea');
+  textarea.style.width = '300px';
+    textarea.style.height = '100px';
+    textarea.value = currentAction || ""; // Pre-fill the textarea with the current action if any
+    // Styling for the textarea omitted for brevity...
+
+  var submitButton = document.createElement('button');
+  submitButton.textContent = 'Change/Add Action';
+  submitButton.style.padding = '5px';
+  submitButton.style.marginLeft = '5px';
+
+  // Append elements to the prompt
+  prompt.appendChild(textarea);
+  prompt.appendChild(submitButton);
+
+  // Add the prompt to the document body
+  document.body.appendChild(prompt);
+  textarea.focus(); // Automatically focus the input
+  var hider=function hidePrompt(e) {
+    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  };
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", hider);
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+      prompt.remove();
+      document.removeEventListener("keydown", arguments.callee);
+    }
+  });
+  // Event listener for the submit action
+  submitButton.addEventListener('click', function() {
+      // Validate input value is not empty
+
+      let trimmedString = classCode.trim();
+
+      // Split the string into condition (with guard) and destination parts
+      let parts = trimmedString.split("->");
+      parts[0] = parts[0].trim(); 
+      parts[1] = parts[1].trim(); // Destination part
+
+      // Ensure there are two parts (condition and destination)
+      if (parts.length != 2) {
+          console.log("Invalid transition format.");
+          return;
+      }
+      let modifiedTransition = "";
+      if (textarea.value.trim() === "") {
+        if (currentAction === null || currentAction === "") {
+          return;
+       }
+       else{
+         pattern=new RegExp("/\\s*\\{.*?\\}\\s*->", "g");
+         modifiedTransition = classCode.replace(pattern," ->");
+       }
+      }
+      else{
+        if (currentAction === null || currentAction === "") {
+          modifiedTransition = parts[0]+"/{"+textarea.value.trim()+"}"+ " -> " + parts[1];
+
+
+        }
+        else{
+          modifiedTransition = classCode.replace(currentAction,textarea.value.trim());
+        }
+      }
+
+
+      // Assuming classyCode is meant to represent the original content where the transition is to be found
+      let orig = Page.codeMirrorEditor.getValue();
+      let before = orig.substring(0, startIndex);
+    
+      // Get the part of the string after the substring you want to replace
+      let after = orig.substring(endIndex);
+      let updatedContent = before + modifiedTransition +after;
+      //let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
+
+      // Update the editor with the new content
+      Page.codeMirrorEditor.setValue(updatedContent);
+
+      Action.removeContextMenu();
+      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "modifyAction");
+      document.removeEventListener("mousedown",hider);
+      prompt.remove(); // Remove the prompt after processing
+      Action.selectMatchingText(modifiedTransition);
+  });
+  input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent the default form submission behavior
+      e.stopPropagation();
+      submitButton.click();
+    }
+  });
+};
+
+Action.modifyTransitionEventName = function(startIndex, endIndex) {
+  let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  let pattern2 = new RegExp("^(.*?)\\s*(\\[(.*?)\\])?\\s*(\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\w+);?$", "s");
+
+  const match = classCode.match(pattern2);
+
+
+  let eventName = match[1].trim();
+  let guard = match[3] ? match[3].trim() : null;
+  let action = match[5] ? match[5].trim() : null;
+  let destinationState = match[6].trim();
+  // Create the input prompt for renaming the transition condition
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+  prompt.style.border = "1px solid #ccc";
+  prompt.style.backgroundColor = "#f8f8f8";
+  prompt.style.padding = "5px";
+  prompt.style.position = "absolute";
+  prompt.style.left = '50%';
+  prompt.style.top = '50%';
+  prompt.style.transform = 'translate(-50%, -50%)';
+  prompt.id = "promptBox";
+
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.value = eventName;
+  input.style.padding = '5px';
+  input.style.margin = '5px';
+  input.style.width = '200px';
+
+  var submitButton = document.createElement('button');
+  submitButton.textContent = 'Change/Add Event Name';
+  submitButton.style.padding = '5px';
+  submitButton.style.marginLeft = '5px';
+
+  // Append elements to the prompt
+  prompt.appendChild(input);
+  prompt.appendChild(submitButton);
+
+  // Add the prompt to the document body
+  document.body.appendChild(prompt);
+  input.focus(); // Automatically focus the input
+  var hider = function hidePrompt(e) {
+      if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+          document.removeEventListener("mousedown", hidePrompt);
+          prompt.remove();
+      }
+  };
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", hider);
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+      prompt.remove();
+      document.removeEventListener("keydown", arguments.callee);
+    }
+  });
+  // Event listener for the submit action
+  submitButton.addEventListener('click', function() {
+      // Validate input value is not empty
+      if (input.value.trim() === "") {
+          console.log("Input for new transition condition is empty.");
+          return;
+      }
+
+      // Create the modified transition string
+      let modifiedTransition = classCode.replace(eventName, input.value.trim());
+
+      // Assuming classyCode is meant to represent the original content where the transition is to be found
+      let orig = Page.codeMirrorEditor.getValue();
+      let before = orig.substring(0, startIndex);
+    
+      // Get the part of the string after the substring you want to replace
+      let after = orig.substring(endIndex);
+      let updatedContent = before + modifiedTransition +after;
+
+      // Update the editor with the new content
+      Page.codeMirrorEditor.setValue(updatedContent);
+
+      Action.removeContextMenu();
+      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "renameTransition");
+      document.removeEventListener("mousedown", hider);
+      prompt.remove(); // Remove the prompt after processing
+      Action.selectMatchingText(modifiedTransition);
+  });
+  input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent the default form submission behavior
+      e.stopPropagation();
+      submitButton.click();
+    }
+  });
+};
+
 //Searches the document for any element matching the "customContextMenu" tag, and removes it. 
 //Removes context menu on state and class diagrams
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
@@ -1388,6 +2000,7 @@ Action.drawInput = function(inputType,classCode,className){
     replaceAllLabel.htmlFor = 'replace-all-checkbox';
     replaceAllLabel.style.marginRight = '5px';
     replaceAllLabel.appendChild(document.createTextNode("New name for \'"+className+"\'?"));
+    input.value = className;
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
@@ -1618,12 +2231,520 @@ Action.displayMenu = function(event) {
         Action.removeContextMenu();
         
       } else {
+
+
         document.removeEventListener('mousedown', hideMenu);
         Action.removeContextMenu();
       }
     }
   });
   document.body.appendChild(menu);
+}
+
+Action.displayAssociMenu = function(event, associationLink) {
+  const regex = /Action\.selectAssociation\('([^']+)'\)/;
+
+  // Use the regex to extract the content
+  const associationDetails = associationLink.match(regex);
+
+
+  // associationDetails array contains the extracted information
+  let indices = Action.selectAssociation(associationDetails[1]);
+
+  var detailsArray = associationDetails[1].split(',');
+
+  if (detailsArray.length == 4) {
+      var destination = detailsArray[1].trim();
+      var className = detailsArray[0].trim();
+      var endInfo = detailsArray[2].split(' ');
+      var startInfo = detailsArray[3].split(' ');
+
+  } else {
+      var destination = detailsArray[1].trim();
+      var endInfo = detailsArray[2].split(' ');
+      var startInfo = detailsArray[2].split(' ');
+      var className = detailsArray[0].trim();
+
+  }
+  
+  var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
+  var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
+  if (Page.codeMirrorOn) {
+      scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
+
+      if (!scursor.findNext()) {
+          return; // false
+      }
+
+      // Have found declaration of class. Now have to search for the next class or end
+      var theStart = scursor.from();
+
+      var theEnd = new Object();
+
+      theEnd.line = Page.codeMirrorEditor.lineCount();
+      theEnd.ch = 9999;
+
+      scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
+
+      while (scursor.findNext()) {
+          var endObject = scursor.from();
+
+          //This is checking if the class declaration found was in a single line comment.
+          innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
+          var commentFound = innerCursor.findPrevious();
+          if (commentFound && innerCursor.from().line == endObject.line) {
+              //The class declaration found was actually in a single line comment, keep searching
+              continue;
+          }
+
+          //Check if the found class declaration is in a multiline comment
+          innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
+          //Search backwards for a /* or */
+          var commentFound = innerCursor.findPrevious();
+          if (commentFound) {
+              if (commentFound[0] === "/*") {
+                  //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
+
+                  //Look for the exit marker
+                  innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
+                  var commentFound = innerCursor.findNext();
+
+                  if (commentFound) {
+                      var commentEnd = innerCursor.from();
+                      if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
+                          //The class declaration found is in a multiline comment, keep looking
+                          continue;
+                      }
+                  }
+              }
+          }
+
+          theEnd.line = endObject.line - 1;
+          theEnd.ch = 999;
+          break;
+      }
+
+      Page.codeMirrorEditor.setSelection(theStart, theEnd);
+      var classCode = Page.codeMirrorEditor.getSelection(); //get the class code for where the association belong
+
+  }
+  var jsInput = classCode.replaceAll("\n", "&#10").replaceAll("\"", "&#$quot");;
+  let isEnd = 1; //0 as start 1 as end
+  let startIndex = indices.startIndex;
+  let endIndex = indices.endIndex;
+  Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor.getValue()), Action.indexToPos(endIndex, Page.codeMirrorEditor.getValue()))
+  var selectedText = Page.codeMirrorEditor.getSelection();
+
+  if (selectedText.includes(endInfo[0].trim()) == false) {
+      isEnd = 3;//association class
+  }
+  var menu = document.createElement('customContextMenu');
+  //special menu for association class
+  var rowContent = isEnd === 3 ?
+  ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter "+destination+" role name"] :
+  ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter "+destination+" multiplicity" , "Alter "+destination+" role name", "Delete the association"];
+  //var rowContent = ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter "+destination+" multiplicity" , "Alter "+destination+" role name", "Delete the association."];
+  var rowFuncs = isEnd === 3 ?
+        [
+            "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
+            "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
+            "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + endInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 1 + "\")"
+        ] :[
+
+        
+      "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
+      "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
+      "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + endInfo[0] + "\",\"" + isEnd + "\")",
+      "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + endInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 1 + "\")",
+      "Action.deleteAssociation(\"" + jsInput + "\",\"" + selectedText + "\")"
+
+  ];
+
+  menu.style.zIndex = "1000";
+  menu.style.border = "1px solid #ccc";
+  menu.style.backgroundColor = "#f8f8f8";
+  menu.style.padding = "5px";
+  menu.style.position = "fixed";
+  //add rows
+  for (var i = 0; i < rowContent.length; i++) {
+      var row = document.createElement("div");
+      row.style.padding = "5px";
+      row.style.borderRadius = "3px";
+      row.style.cursor = "pointer";
+      row.style.transition = "background-color 0.3s";
+      row.textContent = rowContent[i];
+      row.setAttribute('onclick', "javascript:" + rowFuncs[i]);
+      // Highlight row on hover
+      row.addEventListener("mouseover", function() {
+          this.style.backgroundColor = "#ddd";
+      });
+      row.addEventListener("mouseout", function() {
+          this.style.backgroundColor = "transparent";
+      });
+
+      //add row to context menu
+      menu.appendChild(row);
+
+  }
+
+  //set menu location at mouse, while ensuring it is on screen
+  var menuRect = menu.getBoundingClientRect();
+  if (event.clientX + menuRect.width > window.innerWidth) {
+      menu.style.right = (window.innerWidth - event.clientX) + "px";
+  } else {
+      menu.style.left = event.clientX + "px";
+  }
+  if (event.clientY + menuRect.height > window.innerHeight) {
+      menu.style.bottom = (window.innerHieght - event.clientY) + "px";
+  } else {
+      menu.style.top = event.clientY + "px";
+  }
+  // Add a listener to hide the menu when the user clicks outside of it
+  document.addEventListener('keydown', function hideMenu(e) {
+    var prompt = document.getElementById("promptBox");
+      if (e.target != menu && !menu.contains(e.target)&&e.key === "Escape") {
+          if (prompt != null && e.target != prompt && !prompt.contains(e.target)) {
+
+              document.removeEventListener('keydown', hideMenu);
+              Action.removeContextMenu();
+
+          } else {
+              document.removeEventListener('keydown', hideMenu);
+              Action.removeContextMenu();
+          }
+      }
+  });
+  document.addEventListener('mousedown', function hideMenu(e) {
+      var prompt = document.getElementById("promptBox");
+      if (e.target != menu && !menu.contains(e.target)) {
+          if (prompt != null && e.target != prompt && !prompt.contains(e.target)) {
+
+              document.removeEventListener('mousedown', hideMenu);
+              Action.removeContextMenu();
+
+          } else {
+              document.removeEventListener('mousedown', hideMenu);
+              Action.removeContextMenu();
+          }
+      }
+  });
+  document.body.appendChild(menu);
+};
+
+Action.validateMultiplicity = function(multiplicity) {
+  // Check if not empty
+  if (!multiplicity) return false;
+
+  // Validate '*' or a single positive integer including '0'
+  if (multiplicity === "*" || multiplicity.match(/^\d+$/)) return true;
+
+  // Validate range formats including "n..m", "0..*", "1..*", "n..*", "0..m", "1..m"
+  if (multiplicity.match(/^(\d+|\*)\.\.(\d+|\*)$/)) {
+    const parts = multiplicity.split('..');
+    const lowerBound = parts[0];
+    const upperBound = parts[1];
+
+    // Handle '*' in either part of the range
+    if (lowerBound === '*' || upperBound === '*') {
+      // Validate "0..*" or "n..*" where n > 0
+      if (lowerBound === '0' || lowerBound.match(/^\d+$/) && lowerBound !== '0') return true;
+    } else {
+      // Validate "n..m" where n <= m
+      const n = parseInt(lowerBound, 10);
+      const m = parseInt(upperBound, 10);
+
+      if (n <= m) return true;
+    }
+  }
+
+  // If none of the above conditions met, return false
+  return false;
+};
+
+Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
+  let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+  if(isStart==1){
+    var isEnd=true;
+    
+  }
+  else if(isStart==3){
+    //alert("unable to change end multiplicity for associationClass");
+    Page.setFeedbackMessage(" unable to change end multiplicity for associationClass ");
+    return;
+  }
+  else{
+    var isEnd=false;
+    ;
+  }
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+  prompt.style.border = "1px solid #ccc";
+  prompt.style.backgroundColor = "#f8f8f8";
+  prompt.style.padding = "5px";
+  prompt.style.position = "absolute";
+  prompt.style.left = '50%';
+  prompt.style.top = '50%';
+  prompt.style.transform = 'translate(-50%, -50%)';
+  prompt.id = "promptBox";
+ 
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.value = mult; // Pre-fill with the current attribute name
+  input.style.padding = '5px';
+  input.style.margin = '5px';
+  input.style.width = '200px';
+ 
+  var submitButton = document.createElement('button');
+  submitButton.textContent = 'Change';
+  submitButton.style.padding = '5px';
+  submitButton.style.marginLeft = '5px';
+
+  var inputErrorMsg = document.createElement('label');
+  inputErrorMsg.type='label';
+  inputErrorMsg.style.color = "red";
+  inputErrorMsg.textContent = "Please enter a valid multiplicity format (e.g., '*', '1', '0..1', '1..*', '2..5').";
+ 
+  // Append elements to the prompt
+  prompt.appendChild(input);
+  prompt.appendChild(submitButton);
+  
+  // Add the prompt to the document body
+  document.body.appendChild(prompt);
+  input.focus(); // Automatically focus the input
+  var hider=function hidePrompt(e) {
+    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  };
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", hider);
+
+   // Add ESC key listener to close the prompt
+   document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+      prompt.remove();
+      document.removeEventListener("keydown", arguments.callee);
+    }
+  });
+
+  // Event listener for the submit action
+  submitButton.addEventListener('click', function() {
+    if(Action.validateMultiplicity(input.value.trim())){
+    var escapedOldMult = mult.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    
+    let updatedAssociationString;
+    
+    if (isEnd) {
+        // If it's the end multiplicity and there are two occurrences, replace the second one
+        const parts = selectedText.split(new RegExp(escapedOldMult));
+        if (parts.length === 3) { // Assuming exactly two occurrences
+            updatedAssociationString = parts[0] + mult.trim() + parts[1] + input.value.trim() + parts[2];
+        } else if (parts.length === 2) { // Assuming only one occurrence (end multiplicity)
+            updatedAssociationString = parts[0] + input.value.trim() + parts[1];
+        }
+    } else {
+        // If it's the start multiplicity, simply replace the first occurrence
+        updatedAssociationString = selectedText.replace(new RegExp(escapedOldMult), input.value.trim());
+    }
+    let orig=Page.codeMirrorEditor.getValue();
+    if((classyCode.includes(selectedText))==false){
+      orig=orig.replace(selectedText,updatedAssociationString);
+    }
+    else{
+    let modifiedClassCode = classyCode;
+    modifiedClassCode = modifiedClassCode.replace(selectedText,updatedAssociationString);
+     orig=orig.replace(classyCode,modifiedClassCode);
+    }
+    
+    Page.codeMirrorEditor.setValue(orig);
+    // Apply updatedAssociationString to the Umple code as needed
+    
+     Action.removeContextMenu();
+     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+     prompt.remove(); // Remove the prompt after processing
+     Action.selectMatchingText(updatedAssociationString);
+  }
+  else {
+    // If the format is invalid, display a message
+    //alert("Invalid multiplicity format. Please enter a valid format (e.g., '*', '1', '0..1', '1..*', or '2..5').");
+    input.focus(); // Re-focus on the input to allow the user to correct it
+    prompt.appendChild(inputErrorMsg);
+      }
+  });
+
+  // Add Enter key listener to trigger the change
+  input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent the default form submission behavior
+      e.stopPropagation();
+      submitButton.click();
+    }
+  });
+ };
+
+Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
+  let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+  if(isStart==1){
+    var isEnd=true;
+    
+  }
+  else{
+    var isEnd=false;
+    ;
+  }
+  var prompt = document.createElement('div');
+  prompt.style.zIndex = "1000";
+  prompt.style.border = "1px solid #ccc";
+  prompt.style.backgroundColor = "#f8f8f8";
+  prompt.style.padding = "5px";
+  prompt.style.position = "absolute";
+  prompt.style.left = '50%';
+  prompt.style.top = '50%';
+  prompt.style.transform = 'translate(-50%, -50%)';
+  prompt.id = "promptBox";
+ 
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.value = roleName; // Pre-fill with the current attribute name
+  input.style.padding = '5px';
+  input.style.margin = '5px';
+  input.style.width = '200px';
+ 
+  var submitButton = document.createElement('button');
+  submitButton.textContent = 'Change';
+  submitButton.style.padding = '5px';
+  submitButton.style.marginLeft = '5px';
+
+  var inputErrorMsg = document.createElement('label');
+  inputErrorMsg.type='label';
+  inputErrorMsg.style.color = "red";
+  inputErrorMsg.textContent = "To add a role name at this end there must be a role name at the other end first";
+ 
+  // Append elements to the prompt
+  prompt.appendChild(input);
+  prompt.appendChild(submitButton);
+ 
+  // Add the prompt to the document body
+  document.body.appendChild(prompt);
+  input.focus(); // Automatically focus the input
+  var hider=function hidePrompt(e) {
+    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  };
+  // Add a listener to hide the prompt when the user clicks outside of it
+  document.addEventListener("mousedown", hider);
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+      prompt.remove();
+      document.removeEventListener("keydown", arguments.callee);
+    }
+  });
+  // Event listener for the submit action
+  submitButton.addEventListener('click', function() {
+    var newRoleName = input.value.trim();
+    if(roleName==""){
+      var connectionPattern = /(\s*<-\s*|\s*><\s*|\s*--\s*|\s*->\s*|\s*<@>-\s*|\s*-\s*<@>\s*)/;
+    var parts = selectedText.split(connectionPattern);
+    var startPart = parts[0].trim(); // "1 parent"
+    var updatedStartPart, updatedEndPart;
+    var updatedAssociationString;
+    if(parts.length>2){
+      var endPart = parts[2].trim(); // "* FunctionalArea child;"
+      if (isEnd) {
+        if((endPart.includes("sorted"))){
+          var endParts2 = endPart.split("sorted");
+          var endParts = endPart.split(";");
+          updatedEndPart = endParts2[0].trim()+" "+newRoleName+""+"sorted"+endParts2[1];
+        }
+        else{
+        var endParts = endPart.split(";");
+          updatedEndPart = endParts[0].trim()+" "+newRoleName+";";
+        }
+      } else {
+        if((classyCode.includes(selectedText))==false){
+          updatedStartPart = startPart.trim()+" "+newRoleName;
+        }
+        else{
+          updatedStartPart = mult.trim()+" "+newRoleName;
+        }
+        if((startPart.includes("sorted"))){
+          var startParts = startPart.split("sorted");
+
+          updatedStartPart = mult.trim()+" "+newRoleName+""+"sorted"+startParts[1];
+        }
+      }
+      updatedAssociationString = isEnd ? (startPart + parts[1] + updatedEndPart) : (updatedStartPart + parts[1] + endPart);
+    }
+    else{
+      let parts2 = selectedText.split(";");
+      parts=parts2[0].split(" ");
+      if (isEnd==false) {
+        updatedStartPart = mult.trim()+" "+newRoleName;
+        if(parts.length>2){
+          updatedAssociationString = updatedStartPart+" "+parts[1].trim()+" "+parts[2].trim()+";";
+        }
+        else{
+          //Page.setFeedbackMessage("To add a role name at this end there must be a role name at the other end first");
+          input.focus();
+          prompt.appendChild(inputErrorMsg);
+          return;
+          //updatedAssociationString = updatedStartPart+" "+parts[1].trim()+";";
+        }
+      } else {
+        endParts = selectedText.split(";");
+        updatedAssociationString = endParts[0].trim()+" "+newRoleName+";";
+      }
+    }
+    }
+    else{
+      updatedAssociationString = selectedText.replace(roleName, newRoleName);
+    }
+    
+    let orig=Page.codeMirrorEditor.getValue();
+    if((classyCode.includes(selectedText))==false){
+      orig=orig.replace(selectedText,updatedAssociationString);
+    }
+    else{
+    let modifiedClassCode = classyCode;
+    modifiedClassCode = modifiedClassCode.replace(selectedText,updatedAssociationString);
+     orig=orig.replace(classyCode,modifiedClassCode);
+    }
+    
+    Page.codeMirrorEditor.setValue(orig);
+    // Apply updatedAssociationString to the Umple code as needed
+     Action.removeContextMenu();
+     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+     prompt.remove(); // Remove the prompt after processing
+     Action.selectMatchingText(updatedAssociationString);
+  });
+  input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent the default form submission behavior
+      e.stopPropagation();
+      submitButton.click();
+    }
+  });
+ };
+
+   
+ Action.deleteAssociation = function(classCode, selectedText) {
+  let orig = Page.codeMirrorEditor.getValue();
+  let classyCode = classCode.replaceAll("&#10", "\n").replaceAll("&#$quot", "\"");
+  if ((classyCode.includes(selectedText)) == false) {
+      orig = orig.replace(selectedText, "");
+  } else {
+      let modifiedClassCode = classyCode;
+      modifiedClassCode = modifiedClassCode.replace(selectedText, "");
+
+      orig = orig.replace(classyCode, modifiedClassCode);
+  }
+
+  Page.codeMirrorEditor.setValue(orig);
+  Action.removeContextMenu();
+  TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
 }
 
 Action.displayAttributeMenu = function(event, attributeName, attributeType) {
@@ -1660,7 +2781,6 @@ Action.displayAttributeMenu = function(event, attributeName, attributeType) {
   menuHeader.style.fontWeight = "bold";
   menu.appendChild(menuHeader);
   var rowContent = ["Rename Attribute", "Change Type", "Delete Attribute"];
-  
   var jsInput=chosenClass.replaceAll("\n","&#10").replaceAll("\"","&#$quot");;
   var rowFuncs = [
     "Action.renameAttribute(\""+jsInput+"\",\""+elemText+"\",\""+attributeName+"\",\""+attributeType+"\")",
@@ -1709,7 +2829,20 @@ Action.displayAttributeMenu = function(event, attributeName, attributeType) {
   } else {
     menu.style.top = event.clientY + "px";
   }
-  
+  document.addEventListener('keydown', function hideMenu(e) {
+    var prompt = document.getElementById("promptBox");
+      if (e.target != menu && !menu.contains(e.target)&&e.key === "Escape") {
+          if (prompt != null && e.target != prompt && !prompt.contains(e.target)) {
+
+              document.removeEventListener('keydown', hideMenu);
+              Action.removeContextMenu();
+
+          } else {
+              document.removeEventListener('keydown', hideMenu);
+              Action.removeContextMenu();
+          }
+      }
+  });
   // Add an event listener to hide the menu when the user clicks outside of it
   document.addEventListener('mousedown', function hideMenu(e) {
     if (e.target != menu && !menu.contains(e.target)) {
@@ -1753,7 +2886,13 @@ Action.renameAttribute = function(classCode, className, attributeName, attribute
  // Add the prompt to the document body
  document.body.appendChild(prompt);
  input.focus(); // Automatically focus the input
-
+ var hider=function hidePrompt(e) {
+  if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+    document.removeEventListener("mousedown", hidePrompt);
+    prompt.remove();
+  }
+};
+document.addEventListener("mousedown", hider);
  // Event listener for the submit action
  submitButton.addEventListener('click', function() {
   if(Action.validateAttributeName(input.value.trim())){
@@ -1776,6 +2915,7 @@ Action.renameAttribute = function(classCode, className, attributeName, attribute
 
     Action.removeContextMenu();
     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+    document.removeEventListener("mousedown", hider);
     prompt.remove(); // Remove the prompt after processing
     }
  });
@@ -1814,21 +2954,33 @@ Action.changeAttributeType = function(classCode, className, attributeName, curre
 
   document.body.appendChild(prompt);
   select.focus(); // Automatically focus the select dropdown
-
+  var hider=function hidePrompt(e) {
+    if (document.contains(prompt) && e.target != prompt && !prompt.contains(e.target)) {
+      document.removeEventListener("mousedown", hidePrompt);
+      prompt.remove();
+    }
+  };
+  document.addEventListener("mousedown", hider);
   // Event listener for the submit button action
     submitButton.addEventListener('click', function() {
       var selectedType = select.options[select.selectedIndex].value;
 
       if (selectedType !== currentType) { // Proceed only if the type has been changed
         let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
-        let attrRegexWithType = new RegExp("\\b" + currentType + "\\s" + attributeName + "\\s*;", "g");
-        let attrRegexWithoutType = new RegExp("\\b" + attributeName + "\\s*;\\n?", "g");
         let modifiedClassCode = classyCode;
-        modifiedClassCode = modifiedClassCode.replace(attrRegexWithType, "");
-        modifiedClassCode = modifiedClassCode.replace(attrRegexWithoutType, "");
-        modifiedClassCode = modifiedClassCode.substr(0,modifiedClassCode.length-1)+"  "+selectedType+" "+attributeName+";\n}";
-        let orig=Page.codeMirrorEditor.getValue();
+        if(currentType !="String"){
+          let attrRegexWithType = new RegExp("\\b" + currentType + "\\s" + attributeName,"g");
+          modifiedClassCode = modifiedClassCode.replace(attrRegexWithType,  selectedType+" "+attributeName);
+        }
+        else{
+          
+          let attrRegexWithType = new RegExp("\\b" + currentType + "\\s" + attributeName, "g");
+          let attrRegexWithoutType = new RegExp("\\b" + attributeName  , "g");
+          modifiedClassCode = modifiedClassCode.replace(attrRegexWithType,  selectedType+" "+attributeName);
+          modifiedClassCode = modifiedClassCode.replace(attrRegexWithoutType,  selectedType+" "+attributeName);
+        }
         
+        let orig=Page.codeMirrorEditor.getValue();
         orig=orig.replace(classyCode,modifiedClassCode);
         // Update the editor with the new code
 
@@ -1836,7 +2988,13 @@ Action.changeAttributeType = function(classCode, className, attributeName, curre
         
         Action.removeContextMenu();
         TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+        document.removeEventListener("mousedown", hider);
         prompt.remove(); // Remove the prompt after processing
+
+      }
+      else{
+        document.removeEventListener("mousedown", hider);
+        prompt.remove();
       }
       })
     };
@@ -2051,7 +3209,8 @@ Action.transitionClicked = function(identifier)
   Action.unselectAll();
   let id = identifier.split("*^*");
   let identifierState=id[3].split(".");
-  dest=id[4];
+  dest=id[4].split(".");
+
   var selection = Action.selectStateInClass(id[0],id[1],identifierState[0]);
   for (var i=1;i<identifierState.length;i++){
     selection=Action.selectStateInState(selection.startIndex,selection.endIndex,identifierState[i]);
@@ -2059,16 +3218,37 @@ Action.transitionClicked = function(identifier)
   let searchTerm=id[2].replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
   searchTerm=searchTerm.replace("after","after~`~?:Every`~`?"); //subpar solution, could be improved
   if(id[5]!=""){
+
     let guardStr=id[5].trim().replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
     searchTerm=searchTerm+"\\s*[\\s*"+guardStr.trim().slice(1,guardStr.trim().length-1)+"\\s*]";
+
   }
   searchTerm=searchTerm.replaceAll("]","\\]").replaceAll("[","\\[").replaceAll(")","\\)?").replaceAll("(","\\(?").replaceAll("~`~","(").replaceAll("`~`",")").replaceAll(" ","\\s*").replaceAll(",","\\s*,\\s*").replaceAll("!","\\s*!\\s*").replaceAll("/","\\s*/\\s*"); 
+  searchTerm=searchTerm.replaceAll("&&","&{1,2}");
   let pattern= new RegExp(searchTerm+".*->","s");
+
   let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
   let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
+
+  if(!(line.split("->").length - 1 === 1) ){
+    //alert("Please edit this complex transition in the textual code.");
+    Page.setFeedbackMessage("Please edit this complex transition in the textual code.");
+  }
+  
   Action.highlightByIndex(startIndex,endIndex);
+  /*
+  let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
+   const match =code.trim().match(pattern2);
+ 
+   // Extracting captured groups based on the updated pattern
+   let eventName = match[1].trim();
+   let guard = match[3] ? match[3].trim() : (match[7] ? match[7].trim() : null);
+   let action = match[5] ? match[5].trim() : (match[9] ? match[9].trim() : null);
+   let destinationState = match[10].trim();
+*/
 }
 Action.generalizationClicked = function(event)
 {
@@ -3089,10 +4269,174 @@ Action.selectMethod = function(methodName, type, accessMod)
 	Action.selectItem(scursor, ncursor);
 }
 
+
+Action.selectAssociation = function(associationDetails) {
+  var detailsArray = associationDetails.split(',');
+  var className = detailsArray[0];
+  var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
+  var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
+  if (Page.codeMirrorOn) {
+      scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
+
+      if (!scursor.findNext()) {
+          return; // false
+      }
+
+      // Have found declaration of class. Now have to search for the next class or end
+      var theStart = scursor.from();
+
+      var theEnd = new Object();
+
+      theEnd.line = Page.codeMirrorEditor.lineCount();
+      theEnd.ch = 9999;
+
+      scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
+
+      while (scursor.findNext()) {
+          var endObject = scursor.from();
+
+          //This is checking if the class declaration found was in a single line comment.
+          innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
+          var commentFound = innerCursor.findPrevious();
+          if (commentFound && innerCursor.from().line == endObject.line) {
+              //The class declaration found was actually in a single line comment, keep searching
+              continue;
+          }
+
+          //Check if the found class declaration is in a multiline comment
+          innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
+          //Search backwards for a /* or */
+          var commentFound = innerCursor.findPrevious();
+          if (commentFound) {
+              if (commentFound[0] === "/*") {
+                  //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
+
+                  //Look for the exit marker
+                  innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
+                  var commentFound = innerCursor.findNext();
+
+                  if (commentFound) {
+                      var commentEnd = innerCursor.from();
+                      if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
+                          //The class declaration found is in a multiline comment, keep looking
+                          continue;
+                      }
+                  }
+              }
+          }
+
+          theEnd.line = endObject.line - 1;
+          theEnd.ch = 999;
+          break;
+      }
+
+      Page.codeMirrorEditor.setSelection(theStart, theEnd);
+      var selectedText = Page.codeMirrorEditor.getSelection();//get the class code for where the association belong
+  }
+  var start, end;
+  //for labelAssociation
+  if (detailsArray.length > 3) {
+      if (detailsArray[2].trim().includes(' ')) {
+          // When there's a space, indicating the presence of a role name or additional details
+          var array = detailsArray[2].split(' ');
+          start = detailsArray[3].trim(); //.replace(/[\*+?.()|[\]\\{}^$]/g, "\\$&"); // Assuming the start multiplicity is always in the 4th segment
+          if (array.length == 2) {
+              // When there's more than just the multiplicity and class name, indicating a role name is present
+              end = array[0].trim() + ' ' + detailsArray[1].trim() + ' ' + array[1].trim();
+          } else {
+              end = array[0].trim() + ' ' + detailsArray[1].trim();
+          }
+      } else {
+          // When there's no space, meaning no role name is present
+          start = detailsArray[3].trim(); //.replace(/[\*+?.()|[\]\\{}^$]/g, "\\$&");
+          end = detailsArray[2].trim() + ' ' + detailsArray[1].trim();
+      }
+
+
+      var startEscaped = start.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      var endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      var patternString = startEscaped + "(?:\\s+sorted\\s+{.*?})?" + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped + "(?:\\s+sorted\\s+{.*?})?" + "\\s*;";
+
+      var pattern = new RegExp(patternString, "g");
+      var code = Page.codeMirrorEditor.getValue();
+      //Finding matches using the constructed pattern
+      var matches = selectedText.match(pattern);
+      if (matches) {
+          
+          startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
+          endIndex = startIndex + matches[0].length;
+          Action.highlightByIndex(startIndex, endIndex);
+          return { startIndex: startIndex, endIndex: endIndex };
+      } else {
+          if (endEscaped.startsWith("1")) { // this for simple writing association
+              end = endEscaped.substring(2).trim();
+              endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+              patternString = startEscaped + "\\s+" + endEscaped+ "\\s*;";
+              pattern = new RegExp(patternString, "g");
+              matches = selectedText.match(pattern);
+              if (matches == null) {
+                  patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
+                  pattern = new RegExp(patternString, "g");
+                  matches = selectedText.match(pattern);
+              }
+              
+              startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
+              endIndex = startIndex + matches[0].length;
+              Action.highlightByIndex(startIndex, endIndex);
+              return { startIndex: startIndex, endIndex: endIndex };
+          } else {
+              if (startEscaped.trim().includes(' ')) {
+                  var newstart = startEscaped.split(' ');
+                  startEscaped = newstart[0].trim() + " " + className + " " + newstart[1].trim();
+              } else {
+                  startEscaped += " " + className;
+              }
+              
+              patternString = startEscaped + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped+ "\\s*;";
+              pattern = new RegExp(patternString, "g");
+              matches = code.match(pattern);
+              if (matches == null) {
+                  patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
+                  pattern = new RegExp(patternString, "g");
+                  matches = code.match(pattern);
+              }
+              
+              startIndex = code.indexOf(matches[0]);
+              endIndex = startIndex + matches[0].length;
+              Action.highlightByIndex(startIndex, endIndex);
+              return { startIndex: startIndex, endIndex: endIndex };
+
+          }
+      }
+
+  } else { //for two label association
+
+      var array = detailsArray[2].split(' ');
+      start = array[0].trim();
+      end = array[1].trim();
+
+      var startEscaped = start.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      var endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      var patternString = startEscaped + ".*?" + endEscaped+ "\\s*;";
+      var pattern = new RegExp(patternString, "g");
+      var code = Page.codeMirrorEditor.getValue();
+      //Finding matches using the constructed pattern
+      var matches = selectedText.match(pattern);
+      if (matches) {
+          startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
+          endIndex = startIndex + matches[0].length;
+          Action.highlightByIndex(startIndex, endIndex);
+          return { startIndex: startIndex, endIndex: endIndex };
+      }
+
+  }
+}
+
+
 // Highlights the text of the class that is currently selected.
 Action.selectClass = function(className) 
 {
-	var scursor = new RegExp("(class|interface|trait) "+className+"($|\\\s|[{])");
+	var scursor = new RegExp("(associationClass|class|interface|trait) "+className+"($|\\\s|[{])");
 	var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
 
 	Action.selectItem(scursor, ncursor);
@@ -3647,13 +4991,33 @@ Action.updateUmpleDiagramCallback = function(response)
       for (let j = 1; j < attributeAnchors.length; j++) {
         let titleText = attributeAnchors[j].getAttribute("xlink:title");
         let [attributeType, attributeName] = titleText.split(' ');
-        attributeAnchors[j].addEventListener("click", function (event) {
+        attributeAnchors[j].addEventListener("dblclick", function (event) {
           event.preventDefault();
+          Action.displayAttributeMenu(event, attributeName, attributeType); // Calls the testing function
+        });
+        attributeAnchors[j].addEventListener("contextmenu", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
           Action.displayAttributeMenu(event, attributeName, attributeType); // Calls the testing function
         });
       }
     }
+      var associationElems = document.getElementsByClassName("edge");
+    for (let i = 0; i < associationElems.length; i++) {
+      var associationAnchors = associationElems[i].getElementsByTagName("a");
+      for (let j = 0; j < associationAnchors.length; j++) {
+        let associationLink = associationAnchors[j].getAttribute("xlink:href");
+        associationAnchors[j].addEventListener("dblclick", function(event) {
+            event.preventDefault(); // Prevent the default click behavior
+            Action.displayAssociMenu(event,associationLink);
+        });
+        associationAnchors[j].addEventListener("contextmenu", function(event) {
+          event.preventDefault(); // Prevent the default click behavior
+          Action.displayAssociMenu(event,associationLink);
+      });
+    }
   }
+}
   
 
   if(Page.useGvStateDiagram){
@@ -3683,6 +5047,18 @@ Action.updateUmpleDiagramCallback = function(response)
         event.preventDefault(); // Prevent the default double-click behavior
         Action.drawStateMenu(event); // Call the same function to display the menu
       });
+    }
+    var transitionElems = document.getElementsByClassName("edge");
+
+    for (let i = 0; i < transitionElems.length; i++) {
+      transitionElems[i].addEventListener("dblclick", function(event) {
+        event.preventDefault(); // Prevent the default click behavior
+        Action.displayTransitionMenu(event);
+    });
+    transitionElems[i].addEventListener("contextmenu", function(event) {
+        event.preventDefault();
+        Action.displayTransitionMenu(event);
+    });
     }
   }  
 }
