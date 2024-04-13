@@ -1,0 +1,205 @@
+class UmpleToJava {
+  toJson_helper <<!<</*toJson_helper*/>>
+  public boolean toJsonHelper(StringBuilder toJsonOutput, HashSet<Object> visitedList, int nestLevel, boolean atConcreteClass){
+      
+      String indent = "  ".repeat(nestLevel);
+      boolean alreadyVisited = false;
+      boolean haveOutputItem = false;
+      
+      <<#String customToJsonPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","toJsonHelper"));
+	  String customToJsonPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","toJsonHelper"));
+	  if (customToJsonPrefixCode != null) 
+	  {
+		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customToJsonPrefixCode, "    "));
+	  }
+	  if (customToJsonPostfixCode != null) 
+	  {
+		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customToJsonPostfixCode, "    "));
+	  }
+      String ret = "";
+	  LinkedList<String> displayedAttributes = new LinkedList<String>();
+	  LinkedList<String> nameOfAttributes = new LinkedList<String>();
+	  LinkedList<String> displayedPrimitives = new LinkedList<String>();
+	  LinkedList<String> nameOfPrimitives = new LinkedList<String>();
+	  List<String> keys = new ArrayList<String>();
+	  List<String> associationNames = new ArrayList<String>();
+	  List<Object> associations = new ArrayList<Object>();
+	  List<Object> associationItems = new ArrayList<Object>();
+      List<Boolean> associationIsMany = new ArrayList<Boolean>();
+
+	  for(String k: uClass.getKey().getMembers())
+		  keys.add(k);
+	  for(Attribute av: uClass.getAttributes())
+	  {
+	      
+		  if(!av.getIsList()&&!"internal".equals(av.getModifier())&&!"const".equals(av.getModifier())&&("String".equals(av.getType())||"int".equals(av.getType())||"Integer".equals(av.getType())||"boolean".equals(av.getType().toLowerCase())||"float".equals(av.getType())||"Float".equals(av.getType())||"double".equals(av.getType())||"Double".equals(av.getType())||"byte".equals(av.getType())||"Byte".equals(av.getType())||"char".equals(av.getType())||"Character".equals(av.getType())||"long".equals(av.getType())||"Long".equals(av.getType())||"short".equals(av.getType())||"Short".equals(av.getType())))
+		  {
+			  if(av.getIsAutounique() || keys.contains(av.getName())){
+				  nameOfPrimitives.addFirst(av.getName());
+				  displayedPrimitives.addFirst(gen.translate("getMethod",av)+"()");
+			  }
+			  else {
+				  nameOfPrimitives.addLast(av.getName());
+				  displayedPrimitives.addLast(gen.translate("getMethod",av)+"()");
+			  }
+		  }
+		  else if(!av.getIsList()&&!"const".equals(av.getModifier())&&!"internal".equals(av.getModifier()))
+		  {
+			  if(av.getIsAutounique() || keys.contains(av.getName())){
+				  nameOfAttributes.addFirst(av.getName());
+				  displayedAttributes.addFirst(gen.translate("getMethod",av)+"()");
+			  }
+			  else {
+				  nameOfAttributes.addLast(av.getName());
+				  displayedAttributes.addLast(gen.translate("getMethod",av)+"()");
+			  }
+		  }
+	  }
+	  
+	  
+	  for(AssociationVariable av: uClass.getAssociationVariables())
+	  {
+		associationNames.add(av.getName());
+		//check if the association variable has more than 1 multiplicity or not
+		//If the av has more than 1 multiplicity, get plural get()
+		if (av.isMany()){
+		  associations.add(gen.translate("getManyMethod",av)+"()");
+		}
+		else{
+		  associations.add(gen.translate("getMethod",av)+"()");
+		}
+		associationItems.add(av.getType());
+		associationIsMany.add(av.isMany());
+	  }
+	  #>>
+    if(atConcreteClass) {
+      // This will not be true in a super call; output header
+      toJsonOutput.append(indent+"\""+this.toString().split("@")[0]+ "\" : {\n"+indent+ "  \"umpleObjectID\" : \""+System.identityHashCode(this)+"\"");
+
+      // Check if we have already visited this object. If so we will not output details
+      alreadyVisited = visitedList.contains(this);
+      if(!alreadyVisited) {
+        visitedList.add(this);
+      }
+    }
+    
+    // There is no superclass of this class
+    <<#boolean hasSuperClass =uClass.hasExtendsClass();#>>
+    if(alreadyVisited) {
+      toJsonOutput.append("\n");
+    }
+    else {
+      // Check if this class has a superclass. If it does, we make a call to output superclass content 
+      // This will keep calling super so the topmost attributes and associations appear first
+      <<#if(hasSuperClass){#>>
+        haveOutputItem = super.toJsonHelper(toJsonOutput, visitedList, nestLevel, false);
+      <<#}#>>
+      // When an object has not already been visited, output its details
+      toJsonOutput.append(",\n");
+      <<#
+        for (int m1=0;m1<displayedPrimitives.size();m1++){#>>
+          toJsonOutput.append(indent);
+          toJsonOutput.append("  \"");
+          toJsonOutput.append("<<#realSb.append(nameOfPrimitives.get(m1));#>>");
+          toJsonOutput.append("\" : \"");
+          toJsonOutput.append("<<#realSb.append("\"+"+  displayedPrimitives.get(m1)+"+ \"");#>>");
+          toJsonOutput.append("\"");
+          toJsonOutput.append(",\n");
+        <<#}
+      #>>
+      haveOutputItem = false;
+      <<#
+        for (int numAttributes=0;numAttributes<displayedAttributes.size();numAttributes++){#>>
+          toJsonOutput.append(indent);
+          toJsonOutput.append("  \"");
+          toJsonOutput.append("<<#realSb.append(nameOfAttributes.get(numAttributes));#>>");
+          toJsonOutput.append("\" : \"");
+          toJsonOutput.append("<<#realSb.append("\"+"+  displayedAttributes.get(numAttributes)+"+ \"");#>>");
+          toJsonOutput.append("\"");
+          toJsonOutput.append(",\n");
+        <<#}
+      #>>
+      haveOutputItem = false;
+      <<#
+        for(int assoIndex=0;assoIndex<associationNames.size();assoIndex++){#>>
+         if(haveOutputItem) {
+                toJsonOutput.append(",\n");
+              }
+          toJsonOutput.append(indent);
+          <<#if(associationIsMany.get(assoIndex)){#>>
+            toJsonOutput.append("  \"");
+            toJsonOutput.append("<<#realSb.append(associationNames.get(assoIndex));#>>");
+            toJsonOutput.append("\"");
+            toJsonOutput.append("<<#realSb.append(" : [");#>>");
+            toJsonOutput.append("\n");
+            haveOutputItem = false;
+            for (<<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anItem :<<#append(realSb,"" + associations.get(assoIndex) + "");#>>){
+              if(haveOutputItem) {
+                toJsonOutput.append(",\n");
+              }
+              toJsonOutput.append(indent+"{");
+              toJsonOutput.append("\n");
+              anItem.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
+              toJsonOutput.append("\n");
+              toJsonOutput.append(indent+"}");
+              haveOutputItem=true;
+            }
+            toJsonOutput.append("\n");    
+            toJsonOutput.append(indent+"]");
+            toJsonOutput.append("\n"); 
+            haveOutputItem=true;
+          <<#}
+          else{#>>
+            toJsonOutput.append("\n");
+            toJsonOutput.append("  \"");
+            toJsonOutput.append("<<#realSb.append(associationNames.get(assoIndex));#>>");
+            toJsonOutput.append("\"");
+            toJsonOutput.append(" : ");
+            toJsonOutput.append("\n");
+            toJsonOutput.append(indent+"{");
+            toJsonOutput.append("\n");
+            <<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anotherItem = <<#realSb.append(associations.get(assoIndex));#>>;
+            anotherItem.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
+            toJsonOutput.append("\n");
+            toJsonOutput.append(indent+"}");
+            haveOutputItem=true;
+          <<#}#>>
+      <<#}#>>     
+          toJsonOutput.append(indent+"  \n");
+    }
+    // Finalize the output of the concrete class
+    if(atConcreteClass) {
+      if(!alreadyVisited) {
+        toJsonOutput.append("\n");
+      }
+      toJsonOutput.append(indent+"}");
+    }
+    haveOutputItem = true;
+    return haveOutputItem;
+  }
+
+  !>>  
+  
+  toJson_declare <<!<</*toJson_declare*/>>
+  /*
+  * Generate Json for this object and connected objects visited objects to enable avoidance of infinite loops
+  *
+  * @param toJsonOutput  Output is aded to this as the network of objects is traversed
+  * @param visitedList  Every concrete object visited is added so we don't re-outpu
+  * @param nestLevel    As we output deeper objects, indent them more
+  * @param atConcreteClass false when we are recursing to a superclass
+  *     so we get the superclass data
+  * @return whether or not anything was output (so we can tell whether we need to output a comma)
+  */  
+  public String toJson()
+  {
+    HashSet<Object> visitedList = new HashSet<Object>();
+    StringBuilder toJsonOutput = new StringBuilder();
+    toJsonOutput.append("{\n");
+    this.toJsonHelper(toJsonOutput, visitedList,1,true);
+    toJsonOutput.append("\n}");
+    return(toJsonOutput.toString());
+  }
+  !>>
+    
+}
