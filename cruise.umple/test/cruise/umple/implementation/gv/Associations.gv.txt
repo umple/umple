@@ -41,7 +41,7 @@ A C may have an A. It can have none or just 1.
 
 An A has some Cs. It can have none, and there is no upper bound defined.
 
-" tailurl="javascript:void()" headurl="javascript:void()" ];
+" URL="javascript:Action.selectAssociation('A,C,* ,0..1 ')" ];
   "B" -> "A" [dir="none", taillabel="1 ", headlabel="* endTwo", tooltip="B 1  -- * endTwo A
 
 An A called endTwo has A B. It must always have exactly, one, and can never have none. And there is an upper bound of at most one B.
@@ -69,7 +69,7 @@ A B has some As called endTwo. It can have none, and there is no upper bound def
 When an A is created, its B must be assigned.
 When an A is deleted, its B is not deleted and its list of As is decreased.
 When a B is deleted, its As are not deleted. They are assigned to another B.
-" tailurl="javascript:void()" headurl="javascript:void()" ];
+" URL="javascript:Action.selectAssociation('B,A,* endTwo,1 ')" ];
   "C" -> "C" [dir="none", taillabel="0..1 ", headlabel="* ", tooltip="C 0..1  -- *  C
 
 A C may have a C. It can have none or just 1. 
@@ -88,7 +88,7 @@ A C may have a C. It can have none or just 1.
 
 A C has some Cs. It can have none, and there is no upper bound defined.
 
-" tailurl="javascript:void()" headurl="javascript:void()" ];
+" URL="javascript:Action.selectAssociation('C,C,* ,0..1 ')" ]; 
   "C" -> "D" [dir="none", taillabel="1 ", headlabel="0..1 ", tooltip="C 1  -- 0..1  D
 
 A D has A C. It must always have exactly, one, and can never have none. And there is an upper bound of at most one C.
@@ -107,4 +107,4 @@ A D has A C. It must always have exactly, one, and can never have none. And ther
 
 A C may have a D. It can have none or just 1. 
 
-" tailurl="javascript:void()" headurl="javascript:void()" ];
+" URL="javascript:Action.selectAssociation('C,D,0..1 ,1 ')" ];

@@ -230,7 +230,7 @@ class GvClassDiagramGenerator
       String leftMult= leftEnd.toSimpleString();      
       String rightMult= rightEnd.toSimpleString();
       String rightClass= rightEnd.getClassName();
-        
+      
       if ("symmetricreflexive".equals(modifierOne) && "symmetricreflexive".equals(modifierTwo)) 
       {
         if ("undefined".equals(rightEnd.getDisplayRoleName()))
