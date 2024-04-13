@@ -111,7 +111,7 @@ class EcorePackage {
     }
   }
   
-  String[] getActualEType(UmpleClass uClass, String eType, EcorePackage rootPackage){    
+  String[] getActualEType(UmpleClass uClass, String eType, EcorePackage rootPackage){
     List<String> typeArgs = new ArrayList<String>();
 
     if(EcoreGenModel.ecorePrimitiveTypeMap.containsKey(eType)){

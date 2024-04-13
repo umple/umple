@@ -2,11 +2,11 @@ generate Ecore;
 namespace cruise.umple.example;
 
 class X {
- enum Status { FullTime, PartTime };
- Status s; 
+  enum Status { FullTime, PartTime };
+  Status s; 
 }
 
-class A{  
+class A {
   Throwable t1;
   Throwable[] t2;
   
