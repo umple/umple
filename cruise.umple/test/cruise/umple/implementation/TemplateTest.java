@@ -490,6 +490,11 @@ public class TemplateTest
     }
 
   }
+  
+  public String[] addNewSuboption(String subOption){
+    suboptions = new String[]{"genJson"};
+    return suboptions;
+  }
 
   public UmpleModel createUmpleSystem(String path, String filename)
   {
