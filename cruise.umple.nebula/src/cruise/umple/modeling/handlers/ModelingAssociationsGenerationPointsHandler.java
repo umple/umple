@@ -1079,7 +1079,7 @@ public class ModelingAssociationsGenerationPointsHandler{
 		GenAssociationEnd source = association.getSource();
 		getterMethod.setName(association.addInstance(source.getRole()));
 		
-		String addBody = association.getAddBody();
+		String addBody = association.getAddBody(getterMethod);
 		if(addBody== null){
 			return;
 		}
@@ -1117,7 +1117,7 @@ public class ModelingAssociationsGenerationPointsHandler{
 		}
 		
 		addOrMoveAt.setVisibility(Visibilities.PUBLIC);
-		addOrMoveAt.addBody(new GenBody(association.addOrMoveImplementation()));
+		addOrMoveAt.addBody(new GenBody(association.addOrMoveImplementation(addOrMoveAt)));
 		String addOrMoveAtInstance = association.addOrMoveAtInstance(source.getRole());
 		addOrMoveAt.setName(addOrMoveAtInstance);
 		addChecker("wasAdded", addOrMoveAt);
@@ -1171,7 +1171,7 @@ public class ModelingAssociationsGenerationPointsHandler{
 		
 		addAtMethod.setVisibility(Visibilities.PUBLIC);
 		
-		addAtMethod.addBody(new GenBody(association.addAtImplementation()));
+		addAtMethod.addBody(new GenBody(association.addAtImplementation(addAtMethod)));
 		addChecker("wasAdded", addAtMethod);
 		
 		return addAtMethod;

@@ -105,7 +105,7 @@ A CanalNetwork called subNetwork may have a CanalNetwork. It can have none or ju
 
 A CanalNetwork has some CanalNetworks called subNetwork. It can have none, and there is no upper bound defined.
 
-" tailurl="javascript:void()" headurl="javascript:void()" ];
+" URL="javascript:Action.selectAssociation('CanalNetwork,CanalNetwork,* subNetwork,0..1 ')" ];
   "CanalNetwork" -> "Craft" [dir="none", taillabel="0..1 ", headlabel="* activeVessels", tooltip="CanalNetwork 0..1  -- * activeVessels Craft
 
 A Craft called activeVessels may have a CanalNetwork. It can have none or just 1. 
@@ -124,7 +124,7 @@ A Craft called activeVessels may have a CanalNetwork. It can have none or just 1
 
 A CanalNetwork has some Crafts called activeVessels. It can have none, and there is no upper bound defined.
 
-" tailurl="javascript:void()" headurl="javascript:void()" ];
+" URL="javascript:Action.selectAssociation('CanalNetwork,Craft,* activeVessels,0..1 ')" ];
   "CanalNetwork" -> "SegEnd" [dir="none", taillabel="* ", headlabel="* ", tooltip="CanalNetwork *  -- *  SegEnd
 
 A SegEnd has some CanalNetworks. It can have none, and there is no upper bound defined.
@@ -143,7 +143,7 @@ A SegEnd has some CanalNetworks. It can have none, and there is no upper bound d
 
 A CanalNetwork has some SegEnds. It can have none, and there is no upper bound defined.
 
-" tailurl="javascript:void()" headurl="javascript:void()" ];
+" URL="javascript:Action.selectAssociation('CanalNetwork,SegEnd,* ,* ')" ];
   "Segment" -> "SegEnd" [dir="none", taillabel="1..* ", headlabel="2 ", tooltip="Segment 1..*  -- 2  SegEnd
 
 A SegEnd has at least 1 Segment and can never have none. And there is no upper bound defined.
@@ -165,7 +165,7 @@ A SegEnd has at least 1 Segment and can never have none. And there is no upper b
 A Segment has 2 SegEnds. 
 When a Segment is created, its 2 SegEnds must be assigned.
 
-" tailurl="javascript:void()" headurl="javascript:void()" ];
+" URL="javascript:Action.selectAssociation('Segment,SegEnd,2 ,1..* ')" ];
   "Obstacle" -> "Craft" [dir="none", taillabel="0..1 downstreamObstacle", headlabel="* upStreamQueue", tooltip="Obstacle 0..1 downstreamObstacle -- * upStreamQueue Craft
 
 A Craft called upStreamQueue may have an Obstacle called downstreamObstacle. It can have none or just 1. 
@@ -184,7 +184,7 @@ A Craft called upStreamQueue may have an Obstacle called downstreamObstacle. It 
 
 An Obstacle called downstreamObstacle has some Crafts called upStreamQueue. It can have none, and there is no upper bound defined.
 
-" tailurl="javascript:void()" headurl="javascript:void()" ];
+" URL="javascript:Action.selectAssociation('Obstacle,Craft,* upStreamQueue,0..1 downstreamObstacle')" ];
   "Obstacle" -> "Craft" [dir="none", taillabel="0..1 upstreamObstacle", headlabel="* downStreamQueue", tooltip="Obstacle 0..1 upstreamObstacle -- * downStreamQueue Craft
 
 A Craft called downStreamQueue may have an Obstacle called upstreamObstacle. It can have none or just 1. 
@@ -203,7 +203,7 @@ A Craft called downStreamQueue may have an Obstacle called upstreamObstacle. It 
 
 An Obstacle called upstreamObstacle has some Crafts called downStreamQueue. It can have none, and there is no upper bound defined.
 
-" tailurl="javascript:void()" headurl="javascript:void()" ];
+" URL="javascript:Action.selectAssociation('Obstacle,Craft,* downStreamQueue,0..1 upstreamObstacle')" ];
   "Trip" -> "SegEnd" [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="1..* ", tooltip="Trip 0..1  -> 1..*  SegEnd
 
 A SegEnd may have a Trip. It can have none or just 1. 
@@ -222,7 +222,7 @@ A SegEnd may have a Trip. It can have none or just 1.
 
 A Trip has at least 1 SegEnd and can never have none. And there is no upper bound defined.
 
-" tailurl="javascript:void()" headurl="javascript:void()" ];
+" URL="javascript:Action.selectAssociation('Trip,SegEnd,1..* ,0..1 ')" ];
   "Trip" -> "Craft" [dir="none", taillabel="0..1 ", headlabel="1 ", tooltip="Trip 0..1  -- 1  Craft
 
 A Craft may have a Trip. It can have none or just 1. 
@@ -241,7 +241,7 @@ A Craft may have a Trip. It can have none or just 1.
 
 A Trip has A Craft. It must always have exactly, one, and can never have none. And there is an upper bound of at most one Craft.
 
-" tailurl="javascript:void()" headurl="javascript:void()" ];
+" URL="javascript:Action.selectAssociation('Trip,Craft,1 ,0..1 ')" ];
   "Transponder" -> "Craft" [dir="none", taillabel="0..1 ", headlabel="0..1 ", tooltip="Transponder 0..1  -- 0..1  Craft
 
 A Craft may have a Transponder. It can have none or just 1. 
@@ -260,5 +260,5 @@ A Craft may have a Transponder. It can have none or just 1.
 
 A Transponder may have a Craft. It can have none or just 1. 
 
-" tailurl="javascript:void()" headurl="javascript:void()" ];
+" URL="javascript:Action.selectAssociation('Transponder,Craft,0..1 ,0..1 ')" ];
 }
