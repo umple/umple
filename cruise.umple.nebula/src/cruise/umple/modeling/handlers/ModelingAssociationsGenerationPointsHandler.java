@@ -1108,6 +1108,7 @@ public class ModelingAssociationsGenerationPointsHandler{
 		addOrMoveAt.setReturnType(CPPTypesConstants.BOOL);
 		addOrMoveAt.addParameter(new GenMethodParameter(normalizedType, newInstance));
 		addOrMoveAt.addParameter(new GenMethodParameter(CPPTypesConstants.INTEGER, "index"));
+		// Request the association manager to add a new instance or move an existing one to a specific role, then set the name of the result.
 		String addOrMoveAtName = association.addOrMoveAtInstance(source.getRole());
 		addOrMoveAt.setName(addOrMoveAtName);
 		
@@ -1196,6 +1197,9 @@ public class ModelingAssociationsGenerationPointsHandler{
 		
 		
 		GenClass genClass = generationValueGetter.rootModel.classByName(generationValueGetter.getString(parent, IModelingElementDefinitions.NAME));
+		// This check prevents executing the following code for methods not marked as implemented.
+		// Unimplemented methods are initially introduced with null implementations.
+		// If unchecked, this may cause conflicts with future actual implementations due to duplicate method names.
 		if(element instanceof cruise.umple.compiler.Method){
 			if (!((cruise.umple.compiler.Method) element).isIsImplemented()) {
 				return;
