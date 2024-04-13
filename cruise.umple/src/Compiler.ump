@@ -14,6 +14,7 @@ namespace cruise.umple.compiler;
 class CodeCompiler {
 
   depend java.util.*;
+  depend java.util.regex.*;
   depend java.io.*;
   depend cruise.umple.compiler.*;
   depend cruise.umple.compiler.exceptions.*;
@@ -136,7 +137,7 @@ class CodeCompiler {
       StringBuilder builder = new StringBuilder();
 
       while (line!=null) {
-        //System.err.println(translateLineToUmplePython(line, base+"model.ump", filename, runtimeErr));
+        //System.err.println(translateLineToUmplePython(line, base+model.getUmpleFile().getPath(), filename, runtimeErr));
         //System.err.println(line);
         // DEBUG
         //builder = builder.append(translateLineToUmplePython(line, base+"model.ump", filename)+"\n");
@@ -432,85 +433,101 @@ class CodeCompiler {
 
   private static String translateLineToUmplePython(String msg, String model, String filename, boolean runtime) {
       String[] lines = msg.split("\n");
-      int length = lines.length;
       String line;
-      // String word;
+      boolean errored=false;
       StringBuilder builder = new StringBuilder();
 
       // find the main method line number in model.ump
-      ArrayList<Integer> list = new ArrayList<Integer>();
+      int modelMainLine=0;
+
+      //Regex pattern for python main
+      String regex = "public\\s+static\\s+void\\s+main\\s*\\(\\s*String\\s*\\[\\]\\s*argc\\s*\\)\\s*Python\\s*";
+      //Regex pattern for normal main
+      String regex2 = "public\\s+static\\s+void\\s+main\\s*\\(\\s*String\\s*\\[\\]\\s*argc\\s*\\)\\s*";
+
       try (BufferedReader br = new BufferedReader(new FileReader(model))) {
-          String l;
-          int lineNumber = 0;
+          String modelLine;
+          int lineNumber=0;
 
           // Read lines from the file
-          while ((l = br.readLine()) != null) {
+          while ((modelLine = br.readLine()) != null) {
               lineNumber++;
-              // Check if the line contains the string "main"
-              if (l.contains("main")) {
-                  list.add(lineNumber);
+              // Check if the line match the Pattern1
+              Pattern pattern = Pattern.compile(regex);
+              Matcher matcher = pattern.matcher(modelLine);
+              if(matcher.find()){
+                System.err.println("matched to python pattern");
+                modelMainLine=lineNumber;
+                break;
+              }
+
+              Pattern pattern2 = Pattern.compile(regex2);
+              Matcher matcher2 = pattern2.matcher(modelLine);
+              if(matcher2.find()){
+                System.err.println("matched to normal pattern");
+                modelMainLine=lineNumber;
               }
           }
       } catch (IOException e) {
           System.err.println("Error reading the file: " + e.getMessage());
       }
 
-      int mainLine = 0;
+      // find main line in python file
+      int pythonMainLine = 0;
+
       try (BufferedReader br2 = new BufferedReader(new FileReader(filename))) {
-          String l;
+          String pythonLine;
           int lineNumber = 0;
 
           // Read lines from the file
-          while ((l = br2.readLine()) != null) {
+          while ((pythonLine = br2.readLine()) != null) {
               lineNumber++;
-              // Check if the line contains the string "main"
-              if (l.contains("main")) {
-                  mainLine = lineNumber;
+              // Check if the line contains the string "@staticmethod", main is one line under it
+              if (pythonLine.contains("@staticmethod")) {
+                  pythonMainLine = lineNumber+1;
                   break;
               }
           }
       } catch (IOException e) {
           System.err.println("Error reading the file: " + e.getMessage());
       }
-      // System.err.println("mainLine: "+mainLine);
-      // System.err.println("model: "+list.get(0));
-      int gap = list.get(0) - mainLine;
 
-      for (int i = 0; i < length; i++) {
+      System.err.println("modelMainLine: "+modelMainLine);
+      System.err.println("pythonMainLine: "+pythonMainLine);
+      int gap = modelMainLine - pythonMainLine;
+
+      for (int i = 0; i < lines.length; i++) {
           line = lines[i];
           if (!line.contains("line")) {
               builder.append(line + "\n");
               // System.out.println("no line: " + line);
           } else {
-              // if not the last line
-              if (i != length - 1 || !runtime) {
-                  if (i != length - 1 && lines[i + 1].contains("main")) {
-                      builder.append(line + "\n");
-                  } else {
-
-                      String[] words = line.split(" ");
-                      for (int k = 0; k < words.length; k++) {
-                          if (words[k].equals("line")) {
-                              String num = words[k + 1];
-                              System.out.println("num = " + num);
-                              boolean convert = false;
-                              int lineNum = 0;
-                              while (!convert) {
-                                  try {
-                                      lineNum = Integer.parseInt(num);
-                                      convert = true;
-                                  } catch (NumberFormatException e) {
-                                      num = num.substring(0, num.length() - 1);
-                                  }
+              // convert the line for first error
+              if(!errored){
+                String[] words = line.split(" ");
+                  for (int k = 0; k < words.length; k++) {
+                      if (words[k].equals("line")) {
+                          String num = words[k + 1];
+                          System.out.println("num = " + num);
+                          boolean convert = false;
+                          int lineNum = 0;
+                          while (!convert) {
+                              try {
+                                  lineNum = Integer.parseInt(num);
+                                  convert = true;
+                              } catch (NumberFormatException e) {
+                                  num = num.substring(0, num.length() - 1);
                               }
-                              builder.append("model.ump:" + (Integer.parseInt(num) + gap) + ": error \nCompiler msg: "
-                                      + line + "\n");
-                              break;
                           }
+                          System.err.println("num: "+num);
+                          builder.append("model.ump:" + (Integer.parseInt(num) + gap) + ": error \nCompiler msg: "
+                                  + line + "\n");
+                          errored=true;
+                          break;
                       }
                   }
-              } else {
-                  builder.append(line + "\n");
+              }else{
+                builder.append(line+"\n");
               }
           }
       }
