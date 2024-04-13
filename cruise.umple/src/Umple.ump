@@ -1356,6 +1356,9 @@ class GenerateTarget
 
   before getPath{if(path == null) path = ""; }
   key{language}
+  public Boolean tarHasSubOption(String subOption){
+  	return suboptions.contains(subOption);
+  }
 }
 
 //added for issue 1315 warning 31
