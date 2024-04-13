@@ -49,7 +49,7 @@ An Y called ies has some Xs. It can have none, and there is no upper bound defin
 A X has at least2 Ys called ies and can never have none. And there is an upper bound of at most 3 Ys called ies.
 
 This is a composition. A X is part of an Y. When any Y is destroyed its parts are destroyed too.
-" tailurl="javascript:void()" headurl="javascript:void()" ];
+" URL="javascript:Action.selectAssociation('X,Y,2..3 ,* x')" ];
   "B" -> "A" [dir="forward", arrowhead="diamond", taillabel="1 ", headlabel="* endTwo", tooltip="B 1  -<@> * endTwo A
 
 An A called endTwo has A B. It must always have exactly, one, and can never have none. And there is an upper bound of at most one B.
@@ -71,7 +71,7 @@ An A called endTwo has A B. It must always have exactly, one, and can never have
 A B has some As called endTwo. It can have none, and there is no upper bound defined.
 
 This is a composition. A B is part of an A. When any A is destroyed its parts are destroyed too.
-" tailurl="javascript:void()" headurl="javascript:void()" ];
+" URL="javascript:Action.selectAssociation('B,A,* endTwo,1 ')" ];
   "C" -> "A" [dir="back", arrowtail="diamond", taillabel="0..1 endOne", headlabel="* endTwo", tooltip="C 0..1 endOne <@>- * endTwo A
 
 An A called endTwo may have a C called endOne. It can have none or just 1. 
@@ -93,5 +93,5 @@ An A called endTwo may have a C called endOne. It can have none or just 1.
 A C called endOne has some As called endTwo. It can have none, and there is no upper bound defined.
 
 This is a composition. An A is part of a C. When any C is destroyed its parts are destroyed too.
-" tailurl="javascript:void()" headurl="javascript:void()" ];
+" URL="javascript:Action.selectAssociation('C,A,* endTwo,0..1 endOne')" ];
 }
