@@ -65,7 +65,7 @@ class EcoreGenerator {
       if(model.getUmpleClass(typeArgument) != null){
         typeArgumentActualType = new String[]{"#//" + typeArgument};
       }else{
-        typeArgumentActualType = rootPackage.getActualEType(uClass, typeArgument);
+        typeArgumentActualType = rootPackage.getActualEType(uClass, typeArgument, rootPackage);
       }
       
       if(EcoreGenModel.ecoreGenericTypeMap.containsKey(typeArgumentActualType[0])){
@@ -107,10 +107,10 @@ class EcoreGenerator {
           }
           eClass.addReference(eReference);
         }else{
-          String[] type = rootPackage.getActualEType(uClass, uAttribute.getType() == null ? "String" : uAttribute.getType());
+          String[] type = rootPackage.getActualEType(uClass, uAttribute.getType() == null ? "String" : uAttribute.getType(), rootPackage);
           String actualTypeName = type[0];        
           EcoreAttribute eAttribute = null;
-          
+
           if(EcoreGenModel.ecoreGenericTypeMap.containsKey(actualTypeName)){
             String[] value = EcoreGenModel.ecoreGenericTypeMap.get(actualTypeName);
             eAttribute = new EcoreAttribute(attrName, eClass.getIntent()+1, "");
@@ -232,6 +232,43 @@ class EcoreGenerator {
       }
     }
   }
+
+  private void handleEnums(EcorePackage rootPackage){
+    for(EcoreClass eClass : rootPackage.getClasses()){
+      if(eClass.getIsInterface()){
+        continue;
+      }
+      UmpleClass uClass = model.getUmpleClass(eClass.getName());
+      List<UmpleEnumeration> classEnums = uClass.getEnums();
+      List<UmpleEnumeration> modelEnums = model.getEnums();
+      
+      if(!classEnums.isEmpty()){
+        for(UmpleEnumeration classEnum : classEnums){
+          EcoreEnum eEnum = new EcoreEnum(classEnum.getName(), rootPackage.getIntent()+1);
+
+          String[] items = classEnum.getEnumValues();
+          for(int i=0; i<items.length; i++){
+            EcoreEnumItem eEnumItem = new EcoreEnumItem(items[i], eEnum.getIntent()+1, i);
+            eEnum.addItem(eEnumItem);
+          }
+          rootPackage.addEnum(eEnum);
+        }
+      }
+
+      if(!modelEnums.isEmpty()){
+        for(UmpleEnumeration modelEnum : modelEnums){
+          EcoreEnum eEnum = new EcoreEnum(modelEnum.getName(), rootPackage.getIntent()+1);
+
+          String[] items = modelEnum.getEnumValues();
+          for(int i=0; i<items.length; i++){
+            EcoreEnumItem eEnumItem = new EcoreEnumItem(items[i], eEnum.getIntent()+1, i);
+            eEnum.addItem(eEnumItem);
+          }
+          rootPackage.addEnum(eEnum);
+        }
+      }
+    }
+  }
   
   public void generate() {
     // EPackage setup
@@ -240,9 +277,10 @@ class EcoreGenerator {
     EcorePackage rootPackage = new EcorePackage(packageName, 0, nsURI, packageName);
     
     genModel.addPackage(rootPackage);
-    
+
     handleInterfaces(rootPackage);
     handleClasses(rootPackage);
+    handleEnums(rootPackage);
     handleAttributes(rootPackage);
     handleAssociation(rootPackage);
     handleStateMachine(rootPackage);
