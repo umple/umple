@@ -1197,8 +1197,7 @@ public class ModelingAssociationsGenerationPointsHandler{
 		
 		GenClass genClass = generationValueGetter.rootModel.classByName(generationValueGetter.getString(parent, IModelingElementDefinitions.NAME));
 		if(element instanceof cruise.umple.compiler.Method){
-			cruise.umple.compiler.Method umpleMethod = (cruise.umple.compiler.Method) element;
-			if(!umpleMethod.isIsImplemented()){
+			if (!((cruise.umple.compiler.Method) element).isIsImplemented()) {
 				return;
 			}
 		}
