@@ -431,107 +431,121 @@ class CodeCompiler {
     return successful;
   }
 
-  private static String translateLineToUmplePython(String msg, String model, String filename, boolean runtime) {
-      String[] lines = msg.split("\n");
-      String line;
-      boolean errored=false;
-      StringBuilder builder = new StringBuilder();
+  private static String translateLineToUmplePython(String msg, String model, String filePath, boolean runtime) {
+    //retrieve filename and ignore pattern for main method error traceback msg
+    String filenameParts[] = filePath.split("\\\\");
+    String last = filenameParts[filenameParts.length-1];
+    String filename = last.substring(0, last.length()-3);
+    String ignorePattern = filename + ".main(";
+    //System.err.println("ignore pattern: " + ignorePattern);
 
-      // find the main method line number in model.ump
-      int modelMainLine=0;
+    String[] lines = msg.split("\n");
+    String line;
+    StringBuilder builder = new StringBuilder();
 
-      //Regex pattern for python main
-      String regex = "public\\s+static\\s+void\\s+main\\s*\\(\\s*String\\s*\\[\\]\\s*argc\\s*\\)\\s*Python\\s*";
-      //Regex pattern for normal main
-      String regex2 = "public\\s+static\\s+void\\s+main\\s*\\(\\s*String\\s*\\[\\]\\s*argc\\s*\\)\\s*";
+    // find the main method line number in model.ump
+    int modelMainLine=0;
 
-      try (BufferedReader br = new BufferedReader(new FileReader(model))) {
-          String modelLine;
-          int lineNumber=0;
+    //Regex pattern for python main
+    String regex = "public\\s+static\\s+void\\s+main\\s*\\(\\s*String\\s*\\[\\]\\s*argc\\s*\\)\\s*Python\\s*";
+    //Regex pattern for normal main
+    String regex2 = "public\\s+static\\s+void\\s+main\\s*\\(\\s*String\\s*\\[\\]\\s*argc\\s*\\)\\s*";
 
-          // Read lines from the file
-          while ((modelLine = br.readLine()) != null) {
-              lineNumber++;
-              // Check if the line match the Pattern1
-              Pattern pattern = Pattern.compile(regex);
-              Matcher matcher = pattern.matcher(modelLine);
-              if(matcher.find()){
-                System.err.println("matched to python pattern");
-                modelMainLine=lineNumber;
+    try (BufferedReader br = new BufferedReader(new FileReader(model))) {
+        String modelLine = br.readLine();
+        int lineNumber=0;
+
+        if(modelLine != null){
+          //ignore the first generated line
+          if(!modelLine.contains("generate Python")){
+            lineNumber++;
+          }
+        }
+
+        // Read lines from the file
+        while ((modelLine = br.readLine()) != null) {
+            lineNumber++;
+            // Check if the line match the Pattern1
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(modelLine);
+            if(matcher.find()){
+              //System.err.println("matched to python pattern");
+              modelMainLine=lineNumber;
+              break;
+            }
+
+            Pattern pattern2 = Pattern.compile(regex2);
+            Matcher matcher2 = pattern2.matcher(modelLine);
+            if(matcher2.find()){
+              //System.err.println("matched to normal pattern");
+              modelMainLine=lineNumber;
+            }
+        }
+    } catch (IOException e) {
+        System.err.println("Error reading the file: " + e.getMessage());
+    }
+
+    // find main line in python file
+    int pythonMainLine = 0;
+
+    try (BufferedReader br2 = new BufferedReader(new FileReader(filePath))) {
+        String pythonLine;
+        int lineNumber = 0;
+
+        // Read lines from the file
+        while ((pythonLine = br2.readLine()) != null) {
+            lineNumber++;
+            // Check if the line contains the string "@staticmethod", main is one line under it
+            if (pythonLine.contains("@staticmethod")) {
+                pythonMainLine = lineNumber+1;
                 break;
-              }
+            }
+        }
+    } catch (IOException e) {
+        System.err.println("Error reading the file: " + e.getMessage());
+    }
 
-              Pattern pattern2 = Pattern.compile(regex2);
-              Matcher matcher2 = pattern2.matcher(modelLine);
-              if(matcher2.find()){
-                System.err.println("matched to normal pattern");
-                modelMainLine=lineNumber;
-              }
-          }
-      } catch (IOException e) {
-          System.err.println("Error reading the file: " + e.getMessage());
-      }
+    System.err.println("modelMainLine: "+modelMainLine);
+    System.err.println("pythonMainLine: "+pythonMainLine);
+    int gap = modelMainLine - pythonMainLine;
+    System.err.println("gap: "+gap);
 
-      // find main line in python file
-      int pythonMainLine = 0;
-
-      try (BufferedReader br2 = new BufferedReader(new FileReader(filename))) {
-          String pythonLine;
-          int lineNumber = 0;
-
-          // Read lines from the file
-          while ((pythonLine = br2.readLine()) != null) {
-              lineNumber++;
-              // Check if the line contains the string "@staticmethod", main is one line under it
-              if (pythonLine.contains("@staticmethod")) {
-                  pythonMainLine = lineNumber+1;
-                  break;
-              }
-          }
-      } catch (IOException e) {
-          System.err.println("Error reading the file: " + e.getMessage());
-      }
-
-      System.err.println("modelMainLine: "+modelMainLine);
-      System.err.println("pythonMainLine: "+pythonMainLine);
-      int gap = modelMainLine - pythonMainLine;
-
-      for (int i = 0; i < lines.length; i++) {
-          line = lines[i];
-          if (!line.contains("line")) {
-              builder.append(line + "\n");
-              // System.out.println("no line: " + line);
-          } else {
-              // convert the line for first error
-              if(!errored){
-                String[] words = line.split(" ");
-                  for (int k = 0; k < words.length; k++) {
-                      if (words[k].equals("line")) {
-                          String num = words[k + 1];
-                          System.out.println("num = " + num);
-                          boolean convert = false;
-                          int lineNum = 0;
-                          while (!convert) {
-                              try {
-                                  lineNum = Integer.parseInt(num);
-                                  convert = true;
-                              } catch (NumberFormatException e) {
-                                  num = num.substring(0, num.length() - 1);
-                              }
+    for (int i = 0; i < lines.length; i++) {
+        line = lines[i];
+        if (!line.contains("line")) {
+            builder.append(line + "\n");
+        } else {
+            //skip the error msg for main method traceback
+            if(i <lines.length-1 && lines[i+1].contains(ignorePattern)){
+              //System.err.println("ignore msg line: "+line);
+              builder.append(line+"\n");
+            }else{
+              // convert the line for error msg
+              String[] words = line.split(" ");
+              for (int k = 0; k < words.length; k++) {
+                  if (words[k].equals("line")) {
+                      String num = words[k + 1];
+                      System.out.println("num = " + num);
+                      boolean convert = false;
+                      int lineNum = 0;
+                      while (!convert) {
+                          try {
+                              lineNum = Integer.parseInt(num);
+                              convert = true;
+                          } catch (NumberFormatException e) {
+                              num = num.substring(0, num.length() - 1);
                           }
-                          System.err.println("num: "+num);
-                          builder.append("model.ump:" + (Integer.parseInt(num) + gap) + ": error \nCompiler msg: "
-                                  + line + "\n");
-                          errored=true;
-                          break;
                       }
+                      System.err.println("num: "+num);
+                      builder.append("model.ump:" + (Integer.parseInt(num) + gap + 1) + ": error \nCompiler msg: "
+                              + line + "\n");
+                      break;
                   }
-              }else{
-                builder.append(line+"\n");
-              }
-          }
-      }
-      return builder.toString();
+                }
+            }
+        }
+    }
+    return builder.toString();
   }
 
   // To do: Use model to determine generation path
@@ -623,13 +637,13 @@ class CodeCompiler {
     List<UmpleClass> mainClasses = new ArrayList<UmpleClass>();
     for(UmpleClass uClass:model.getUmpleClasses())
     {
-	if (!uClass.hasMethods()) {
-    		continue;
-	}
+      if (!uClass.hasMethods()) {
+            continue;
+      }
       for (Method aMethod : uClass.getMethods()) 
       {
         
-        if(!aMethod.getExistsInLanguage("Java")) {
+        if(!(aMethod.getExistsInLanguage("Java") || aMethod.getExistsInLanguage("Python"))) {
           continue;
         }
         String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
