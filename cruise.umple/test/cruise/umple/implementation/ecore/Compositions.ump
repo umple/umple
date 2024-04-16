@@ -1,0 +1,9 @@
+generate Ecore;
+namespace cruise.umple.example;
+
+class A {
+  1 <@>- * B;
+}
+
+class B {
+}
