@@ -177,12 +177,12 @@ class EcoreGenerator {
           processedAssociation.add(uAssociation);
                     
           if(uAssociation.getIsLeftNavigable() && eThatClass != null){
-            EcoreReference ref = createEcoreAssociation(thisEnd, thatEnd, uAssociation.getIsRightNavigable(), eClass.getIntent()+1);
+            EcoreReference ref = createEcoreAssociation(thisEnd, thatEnd, uAssociation.getIsRightNavigable(), uAssociation.getIsRightComposition(), eClass.getIntent()+1);
             eThatClass.addReference(ref);
           }
           
           if(uAssociation.getIsRightNavigable()){
-            EcoreReference ref = createEcoreAssociation(thatEnd, thisEnd, uAssociation.getIsLeftNavigable(), eClass.getIntent()+1);
+            EcoreReference ref = createEcoreAssociation(thatEnd, thisEnd, uAssociation.getIsLeftNavigable(), uAssociation.getIsLeftComposition(), eClass.getIntent()+1);
             eClass.addReference(ref);
           }
         }
@@ -190,16 +190,17 @@ class EcoreGenerator {
     }
   }
   
-  private EcoreReference createEcoreAssociation(AssociationEnd thisEnd, AssociationEnd thatEnd, boolean isBiDirectional, int intent){    
+  private EcoreReference createEcoreAssociation(AssociationEnd thisEnd, AssociationEnd thatEnd, boolean isBiDirectional, boolean isComposition, int intent){
     String thisRoleName = thisEnd.getIsDefaultRoleName() ? (thisEnd.getMultiplicity().isMany() ? getModel().getGlossary().getPlural(thisEnd.getRoleName()) : getModel().getGlossary().getSingular(thisEnd.getRoleName())) : thisEnd.getRoleName();
     String thatRoleName = thatEnd.getIsDefaultRoleName() ? (thatEnd.getMultiplicity().isMany() ? getModel().getGlossary().getPlural(thatEnd.getRoleName()) : getModel().getGlossary().getSingular(thatEnd.getRoleName())) : thatEnd.getRoleName();
     EcoreReference thisAssociation = new EcoreReference(thisRoleName, intent, thisEnd.getClassName());
-    
+    thisAssociation.setIsComposition(isComposition);
+
     if(isBiDirectional){
       thisAssociation.setEOppositeType(thisEnd.getClassName());
       thisAssociation.setEOppositeName(thatRoleName);
     }
-    
+
     String lower = thisEnd.getLowerBoundString();
     String upper = thisEnd.getUpperBoundString();
     thisAssociation.setLowerBound("*".equals(lower) ? "-1" : lower);
