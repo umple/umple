@@ -1,5 +1,15 @@
 class UmpleToJava {
   toJson_helper <<!<</*toJson_helper*/>>
+  /*
+  * Generate Json for this object and connected objects visited objects to enable avoidance of infinite loops
+  *
+  * @param toJsonOutput  Output is aded to this as the network of objects is traversed
+  * @param visitedList  Every concrete object visited is added so we don't re-outpu
+  * @param nestLevel    As we output deeper objects, indent them more
+  * @param atConcreteClass false when we are recursing to a superclass
+  *     so we get the superclass data
+  * @return whether or not anything was output (so we can tell whether we need to output a comma)
+  */ 
   public boolean toJsonHelper(StringBuilder toJsonOutput, HashSet<Object> visitedList, int nestLevel, boolean atConcreteClass){
       
       String indent = "  ".repeat(nestLevel);
@@ -180,17 +190,7 @@ class UmpleToJava {
 
   !>>  
   
-  toJson_declare <<!<</*toJson_declare*/>>
-  /*
-  * Generate Json for this object and connected objects visited objects to enable avoidance of infinite loops
-  *
-  * @param toJsonOutput  Output is aded to this as the network of objects is traversed
-  * @param visitedList  Every concrete object visited is added so we don't re-outpu
-  * @param nestLevel    As we output deeper objects, indent them more
-  * @param atConcreteClass false when we are recursing to a superclass
-  *     so we get the superclass data
-  * @return whether or not anything was output (so we can tell whether we need to output a comma)
-  */  
+  toJson_declare <<!<</*toJson_declare*/>> 
   public String toJson()
   {
     HashSet<Object> visitedList = new HashSet<Object>();
@@ -201,5 +201,31 @@ class UmpleToJava {
     return(toJsonOutput.toString());
   }
   !>>
+  
+  fromJson_declare <<!<</*fromJson_declare*/>>
+  /*
+  * Deserialize Json string to instantiate Objects from top-level class
+  *
+  * @param umpleObjectIDMap<int, Object> mapping parsed objectID (from Json string) with newly instantiated object's objectID
+  * 
+  * @return newly instantiated Object
+  */  
+  public Object fromJson(String aJsonString){
+    // check if the top-level exists
+    boolean classExist;
+    // if top-level class does not exist, throw exception
+    if(!classExist){
+      throw new IllegalArgumentException("Top level class does not exist, please check the input json string");
+    }
+    else{
+      Map<int, Object> umpleObjectIDMap = new Map<int, Object>();
+      fromJsonHelper(umpleObjectIDMap);
+    }
+  }
+  !>>
     
+  fromJson_helper <<!<</*fromJson_helper*/>>
+  public Object fromJsonHelper(Map<int, Object> umpleObjectIDMap){
+  }
+  !>>
 }
