@@ -7,4 +7,124 @@ The C++ generator is in beta because it has a few bugs in certain aspects. When 
 
 <p>C++ code can be embedded in Umple, and Umple is designed to generate C++ from its modeling features.</p>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Setting Up Your Environment for C++ on Linux and Windows</title>
+    <style>
+        .highlighted-step {
+            font-family: Arial, sans-serif;
+            font-size: 16px; /* Larger and more visible font size */
+            font-weight: bold;
+            color: #333;
+            background-color: #f7f7f7;
+            padding: 10px;
+            margin-top: 20px;
+            border-left: 5px solid #0056b3;
+        }
+        .important-note {
+            font-family: Arial, sans-serif;
+            font-size: 20px; /* Slightly smaller than the step, but still large */
+            color: red; /* Color to grab attention */
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="important-note">
+        Recommended CMake Version: 3.12.xx to latest.
+        Please refer to the <a href="https://cmake.org/cmake/help/latest/release/index.html">CMake Release Notes</a> for version reference.
+    </div>
 
+<h1>Setting Up Your Environment for C++ on Linux and Windows</h1>
+
+    <div class="highlighted-step"><h2>Running C++ Code with CMake (Linux)<h2>
+    <h4>Prepare the Project</h4>
+    <p>Extract the downloaded ZIP file and navigate to its directory in the terminal.<br>
+       Create a new directory for the build process named 'build' (or any name of your choice):</p>
+    <pre>mkdir build</pre>
+    <p>Move into the 'build' directory:</p>
+    <pre>cd build</pre>
+    <h4>Configure and Build the Project</h4>
+    <p>From within the build directory run CMake to configure your project:</p>
+    <pre>cmake ..</pre>
+    <p>Compile and build the project by executing:</p>
+    <pre>make</pre>
+    <h4>Run Your Executable</h4>
+    <p>If the compilation is successful you can run the generated executable. Replace 'executable' with the actual name of your program:</p>
+    <pre>./executable</pre>
+</div>
+
+<div class="highlighted-step"><h2>Running C++ Code with CMake (Windows)<h2>
+    <h4>Prepare the Project</h4>
+    <p>Extract the downloaded ZIP file. Ensure all files are unzipped in the same directory. You can create a new directory for the build project to keep things organized.<br>
+       Use Visual Studio to open the directory where you extracted your files.</p>
+    <h4>Configure and Build the Project</h4>
+    <p>Visual Studio with CMake integration should automatically recognize the CMake configuration. Open the terminal in Visual Studio.<br>
+       Compile and build the project by pressing Ctrl+B or navigating to the build section in the navigator.<br>
+       If the build succeeds you will see a success message in the terminal. If it fails, there may be issues with the files generated from UmpleOnline; try regenerating them.</p>
+    <h4>Run Your Executable</h4>
+    <p>If the compilation is successful run the generated executable by clicking the run button in Visual Studio.</p>
+</div>
+<br>
+    <h2>Here is the complete set up you may refer to</h2>
+    <h2>Linux For Ubuntu-based distributions</h2>
+    <h3>Step 1: Install Prerequisites</h3>
+    <h4>Update Package Information</h4>
+    <p>Before installing any new software ensure your system's package list is up-to-date. Open a terminal and execute:</p>
+    <pre>sudo apt update</pre>
+    <h4>Install CMake</h4>
+    <p>CMake is a cross-platform tool to manage the build process. Install it by running:</p>
+    <pre>sudo apt install cmake -y</pre>
+    <p>To verify the installation check the installed version of CMake:</p>
+    <pre>cmake –version</pre>
+   
+    <h3>Step 2: Running C++ Code with CMake</h3>
+    <h4>Generate C++ Code</h4>
+    <p>Visit <a href="https://www.umple.org/online">UmpleOnline</a>.<br>
+       Input your code and select the option to generate C++ code. Click on the "Generate It" button.<br>
+       Once the C++ code is generated click the link in blue stating "<a href="downloadLink">Download the following as a zip file</a>" to download your C++ project.</p>
+    <h4>Prepare the Project</h4>
+    <p>Extract the downloaded ZIP file and navigate to its directory in the terminal.<br>
+       Create a new directory for the build process named 'build' (or any name of your choice):</p>
+    <pre>mkdir build</pre>
+    <p>Move into the 'build' directory:</p>
+    <pre>cd build</pre>
+    <h4>Configure and Build the Project</h4>
+    <p>From within the build directory run CMake to configure your project:</p>
+    <pre>cmake ..</pre>
+    <p>Compile and build the project by executing:</p>
+    <pre>make</pre>
+    <h4>Run Your Executable</h4>
+    <p>If the compilation is successful you can run the generated executable. Replace 'executable' with the actual name of your program:</p>
+    <pre>./executable</pre>
+   
+    <h2>Windows</h2>
+    <h3>Step 1: Install Prerequisites (Set up)</h3>
+    <h4>Update Package Information</h4>
+    <p>Before installing any new software ensure your system's package list is up-to-date. This ensures compatibility and the latest features are available.</p>
+    <h4>Install CMake with Visual Studio</h4>
+    <p>It is recommended to use Visual Studio for building and running the project. However, other IDEs like IntelliJ can also work if configured to use CMake.<br>
+       CMake is a cross-platform tool to manage the build process. Installing it alongside Visual Studio is highly recommended.<br>
+       Follow the instructions in the <a href="https://docs.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=msvc-160">Microsoft documentation</a> to install CMake with Visual Studio.</p>
+    <p>To verify the installation open a command prompt and type:</p>
+    <pre>cmake --version</pre>
+   
+    <h3>Step 2: Running C++ Code with CMake</h3>
+    <h4>Generate C++ Code</h4>
+    <p>Go to <a href="https://www.umple.org/online">UmpleOnline</a> and input your model or code.<br>
+       Select the option to generate C++ code and click on the "Generate It" button.<br>
+       Once the C++ code is generated download your C++ project by clicking the link that says "Download the following as a zip file".</p>
+    <h4>Prepare the Project</h4>
+    <p>Extract the downloaded ZIP file. Ensure all files are unzipped in the same directory. You can create a new directory for the build project to keep things organized.<br>
+       Use Visual Studio to open the directory where you extracted your files.</p>
+    <h4>Configure and Build the Project</h4>
+    <p>Visual Studio with CMake integration should automatically recognize the CMake configuration. Open the terminal in Visual Studio.<br>
+       Compile and build the project by pressing Ctrl+B or navigating to the build section in the navigator.<br>
+       If the build succeeds you will see a success message in the terminal. If it fails, there may be issues with the files generated from UmpleOnline; try regenerating them.</p>
+    <h4>Run Your Executable</h4>
+    <p>If the compilation is successful run the generated executable by clicking the run button in Visual Studio.</p>
+<p>This streamlined approach allows you to handle the entire process from code generation to execution, ensuring a smooth workflow for developing C++ applications with UmpleOnline and CMake.</p>
+</body>
+</html>
