@@ -23,9 +23,15 @@ class UmpleToJava {
     append(realSb, "import {0};", anImport);
   }
   if(!importSet.contains("java.util.*")&&model.modelHasSuboption("Java", "genJson")){
+    importSet.add("java.util.HashMap");
     importSet.add("java.util.HashSet");
+    importSet.add("java.util.Map");
     appendln(realSb, "");
     append(realSb, "import {0};", "java.util.HashSet");
+    appendln(realSb, "");
+    append(realSb, "import {0};", "java.util.Map");
+    appendln(realSb, "");
+    append(realSb, "import {0};", "java.util.HashMap");
   }
 #>>!>>
 }

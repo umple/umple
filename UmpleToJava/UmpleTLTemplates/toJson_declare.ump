@@ -1,7 +1,8 @@
 class UmpleToJava {
+  depend cruise.umple.parser.analysis.RuleBasedParser;
   toJson_helper <<!<</*toJson_helper*/>>
   /*
-  * Generate Json for this object and connected objects visited objects to enable avoidance of infinite loops
+  * Helper function to generate Json for this object and connected objects visited objects to enable avoidance of infinite loops
   *
   * @param toJsonOutput  Output is aded to this as the network of objects is traversed
   * @param visitedList  Every concrete object visited is added so we don't re-outpu
@@ -191,6 +192,11 @@ class UmpleToJava {
   !>>  
   
   toJson_declare <<!<</*toJson_declare*/>> 
+  /*
+  * Generate Json for this object and connected objects visited objects to enable avoidance of infinite loops
+  *
+  * @return a string in Json  format of this object
+  */ 
   public String toJson()
   {
     HashSet<Object> visitedList = new HashSet<Object>();
@@ -206,26 +212,31 @@ class UmpleToJava {
   /*
   * Deserialize Json string to instantiate Objects from top-level class
   *
-  * @param umpleObjectIDMap<int, Object> mapping parsed objectID (from Json string) with newly instantiated object's objectID
+  * @param umpleObjectIDMap<String, Object> mapping parsed objectID (from Json string) with newly instantiated object's objectID
   * 
   * @return newly instantiated Object
   */  
-  public Object fromJson(String aJsonString){
+  public String fromJson(String aJsonString){
     // check if the top-level exists
-    boolean classExist;
+    boolean classExist=false;
     // if top-level class does not exist, throw exception
     if(!classExist){
       throw new IllegalArgumentException("Top level class does not exist, please check the input json string");
     }
     else{
-      Map<int, Object> umpleObjectIDMap = new Map<int, Object>();
+      Map<String, Object> umpleObjectIDMap = new HashMap<String, Object>();
+      <<#
+      UmpleInternalParser parser = new UmpleInternalParser();
+      
+      #>>
       fromJsonHelper(umpleObjectIDMap);
+      return "11";
     }
   }
   !>>
     
   fromJson_helper <<!<</*fromJson_helper*/>>
-  public Object fromJsonHelper(Map<int, Object> umpleObjectIDMap){
+  public void fromJsonHelper(Map<String, Object> umpleObjectIDMap){
   }
   !>>
 }

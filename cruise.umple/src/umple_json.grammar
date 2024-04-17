@@ -1,0 +1,12 @@
+BracketCouple : BracketOn- | BracketOff-;
+BracketOn- : "{" ;
+BracketOff- : "}" ;
+
+json : BracketCouple | {[[json_entity]] ( , [[json_entity]] )* };
+json_entity : [[name_json_array]] | [[name_array]] | [[name_json]] | [[name_value]];
+name_json_array : [[name]] : [  [[json]]  (, [[json]])*  ];
+name_array : [[name]] : [  [[json]]  (, [[json]])*  ];
+name_json : [[name]] : [[json]];
+name_value : [[name]] : [[value]];
+name- : \" [**name] \" | [name];
+value- : \" [**value] \" | [value]
