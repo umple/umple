@@ -51,6 +51,11 @@ class Shape2D {
       RegularPolygon("0,0","0","3","100");
     System.out.println(s);
   }
+
+  public static void main(String [] argc) Python{
+    S = Shape2D(None)
+    print("Python main executed successfully")
+  }
 }
 //$?[End_of_model]$?
 // @@@skipcppcompile - Contains Java code

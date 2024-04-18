@@ -139,10 +139,6 @@ class CodeCompiler {
       StringBuilder builder = new StringBuilder();
 
       while (line!=null) {
-        //System.err.println(translateLineToUmplePython(line, modelname, filename, runtimeErr));
-        //System.err.println(line);
-        // DEBUG
-        //builder = builder.append(translateLineToUmplePython(line, base+"model.ump", filename)+"\n");
         builder.append(line+"\n");
         if(reader.ready()) {
           line = reader.readLine();
@@ -152,7 +148,7 @@ class CodeCompiler {
         }
       }
 
-      System.err.println("SHOULD SHOW IN TEST CONSOLE, model file path: "+modelname);
+      //System.err.println("SHOULD SHOW IN TEST CONSOLE, model file path: "+modelname);
       String translatedOutput=translateLineToUmplePython(builder.toString(), modelname, filename, runtimeErr);
       System.err.println(translatedOutput);
 
@@ -508,10 +504,10 @@ class CodeCompiler {
         System.err.println("Error reading the file: " + e.getMessage());
     }
 
-    System.err.println("modelMainLine: "+modelMainLine);
-    System.err.println("pythonMainLine: "+pythonMainLine);
+    //System.err.println("modelMainLine: "+modelMainLine);
+    //System.err.println("pythonMainLine: "+pythonMainLine);
     int gap = modelMainLine - pythonMainLine;
-    System.err.println("gap: "+gap);
+    //System.err.println("gap: "+gap);
 
     for (int i = 0; i < lines.length; i++) {
         line = lines[i];
@@ -539,7 +535,7 @@ class CodeCompiler {
                               num = num.substring(0, num.length() - 1);
                           }
                       }
-                      System.err.println("num: "+num);
+                      //System.err.println("num: "+num);
                       builder.append("model.ump:" + (Integer.parseInt(num) + gap + 1) + ": error \nCompiler msg: "
                               + line + "\n");
                       break;

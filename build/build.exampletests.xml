@@ -182,7 +182,15 @@
       <exclude name="W069AutoTransitionConflict2.ump"/>
       <exclude name="W1009GetterSetterConflict2.ump"/>
       <exclude name="W1012MethodNotFoundInjection1.ump"/>
-
+      <!-- can't be transformed to python code properly, added Java tag -->
+      <exclude name="ActiveObjects1.ump"/>
+      <exclude name="ConcurrencyUsingDoActivities1.ump"/>
+      <exclude name="DigitalWatchFlat.ump"/>
+      <exclude name="DigitalWatchNested.ump"/>
+      <exclude name="HelloWorldExamples2py.ump"/>
+      <exclude name="HelloWorldExamples2pyAndCpp.ump"/>
+      <exclude name="TimedTransitions1.ump"/>
+      <exclude name="TimedTransitions2.ump"/>
 
       
       <!-- April 2023, no longer excluded 
