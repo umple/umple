@@ -46,7 +46,7 @@ class RegularPolygon {
 }
 
 class Shape2D {
-  public static void main(String [] argc) {
+  public static void main(String [] argc) Java {
     Shape2D s = new
       RegularPolygon("0,0","0","3","100");
     System.out.println(s);

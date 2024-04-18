@@ -39,12 +39,12 @@ class Position {
 class Candidature {
  internal Boolean isIncumbent = false;
  
- public void markAsIncumbent()
+ public void markAsIncumbent()Java
  {
    isIncumbent = true;
  }
  
- public String toString()
+ public String toString()Java
  {
    return isIncumbent ? "Incumbent" : "Candidature";
  }

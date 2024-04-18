@@ -1,7 +1,7 @@
 class PotentialVoter {
   Integer age;
   
-  int vote(int candidate) {
+  int vote(int candidate) Java {
     [pre: age >= 18]
     [pre: candidate > 0]
     // rest of stuff that we do not interpret

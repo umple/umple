@@ -10,12 +10,12 @@
     Use control-m to show/hide methods
 */
 class Dashboard{
-  void update (Sensor sensor){ /* code */ }
+  void update (Sensor sensor) Java { /* code */ }
 }
 class Sensor{
   isA Subject< Observer = Dashboard >;
 }
 trait Subject <Observer>{
   0..1  -> * Observer;
-  void notifyObservers() { /* code */ }
+  void notifyObservers() Java { /* code */ }
 }

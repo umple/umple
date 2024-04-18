@@ -21,7 +21,7 @@ class Academy {
   depend java.nio.file.*;
   depend java.io.*;
   
-  public static void main(String [ ] args) {
+  public static void main(String [ ] args) Java {
     String filename = "SortedSerializableAssociation.ser";
     Academy ac = new Academy();
     Student j = ac.addRegistrant(12,"Jim");
@@ -76,7 +76,7 @@ class Academy {
     
   }
   
-  public String toString() {
+  public String toString() Java {
     String result="Students:\n";
     for (Student s: getRegistrants()) {
       result +=s + "\n";
@@ -86,7 +86,7 @@ class Academy {
 }
 
 class Student {
-  public String toString() {
+  public String toString() Java {
     String result="Student=" + id + "["
       + name +"]"+ "\n";
     return result;

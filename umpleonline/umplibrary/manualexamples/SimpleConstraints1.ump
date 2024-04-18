@@ -8,7 +8,7 @@ class Client {
   [age >= MinAge]
   [age <= 120]
   
-  public static void main(String [ ] args) {
+  public static void main(String [ ] args) Java {
     Client c = new Client(40);
     for (int i: new int[]
       {-1,10,17,18,19,50,119,120,122,1000}) 

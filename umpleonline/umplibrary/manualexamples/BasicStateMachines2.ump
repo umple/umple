@@ -26,57 +26,57 @@ class Garage {
     }
   }
   
-  boolean runMotorInReverse() {
+  boolean runMotorInReverse() Java {
      System.out.println(
        "Running motor in reverse");
     return true;
   }
   
-  boolean flashLightOn() {
+  boolean flashLightOn() Java {
      System.out.println("Flashing light on");
     return true;
   }
 
-  boolean turnLightOn() {
+  boolean turnLightOn() Java {
      System.out.println("Turning light on");
     return true;
   }
   
-   boolean turnLightOff() {
+   boolean turnLightOff() Java {
      System.out.println(
        "Turning light off");
     return true;
   }
   
-  boolean runMotorForward() {
+  boolean runMotorForward() Java {
      System.out.println(
        "Running motor forwards");
     return true;
   }
 
-  boolean triggerEnergySaveMode() {
+  boolean triggerEnergySaveMode() Java {
      System.out.println(
        "Triggering Energy Saving Mode");
     return true;
   }
 
-  boolean stopMotor() {
+  boolean stopMotor() Java {
      System.out.println("Stopping motor");
     return true;
   }
 
-  boolean triggerNormalEnergyMode() {
+  boolean triggerNormalEnergyMode() Java {
      System.out.println(
        "Triggering Normal Energy Mode");
          return true;
   }
   
-  boolean waitawhile() {
+  boolean waitawhile() Java {
     System.out.println("Waiting");
     return true;
   }
   
-  boolean test() {
+  boolean test() Java {
           System.out.println("Testing");
          return true;
   }

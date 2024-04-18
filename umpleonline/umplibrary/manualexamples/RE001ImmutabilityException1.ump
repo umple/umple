@@ -11,7 +11,7 @@ class Path
 {  
   immutable;  
   1 -> * Point2D pathElements;  
-    public static void main(String[] argv) {
+    public static void main(String[] argv) Java {
     
       Point2D p2d = new Point2D(0,0);
 

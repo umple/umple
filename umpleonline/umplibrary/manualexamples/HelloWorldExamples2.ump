@@ -30,7 +30,7 @@ class Person {
   // Notice that we are defining more contents for Person
   // This uses Umple's mixin capability
   
-  public static void main(String [ ] args) {
+  public static void main(String [ ] args) Java {
     Mentor m = new Mentor("Nick The Mentor");
     Student s = new Student("Tom The Student");
     s.setMentor(m);

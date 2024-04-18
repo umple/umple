@@ -11,7 +11,7 @@ class Shape {
   Integer y;
   
   abstract Double area();
-  void move() {
+  void move() Java {
     /* implementation */
   }
 }
@@ -24,9 +24,14 @@ class Square {
   Double width;
   Double height;
   
-  Double area() {
+  Double area() Java {
     return getWidth()*getHeight();
   }
+  
+  Double area() Python {
+    return self.getWidth()*self.getHeight()
+  }
+  
 }
 
 class Circle {
@@ -34,16 +39,20 @@ class Circle {
   Double radius;
   const Double PI = 3.1416;
   
-  Double area() {
+  Double area() Java {
     return PI*radius*radius;
   }
+  
+  Double area() Python {
+    return self.PI*self.radius*self.radius
+  }  
 }
 
 class A {
   Square s;
   Circle c;
   
-  void Test() {
+  void Test() Java {
     //The method implemented in Shape is
     //used
     s.move();

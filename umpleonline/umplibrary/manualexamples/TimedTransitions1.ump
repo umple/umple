@@ -11,7 +11,7 @@ class X {
       entry / {System.out.println("entering b");}
     }
   }
-  public static void main(String [ ] args) {
+  public static void main(String [ ] args) Java {
     X x = new X();
   }
 }

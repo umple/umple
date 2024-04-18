@@ -31,7 +31,7 @@ class Registration {
   code = {getCourse().getCode()}
 
   
-  public String toString() {
+  public String toString() Java {
     return "Registration: " + getName()
       + ":" + getCode();
   }
@@ -39,7 +39,7 @@ class Registration {
 
 // Mixin with main program and toString method
 class Academy {
-  public static void main(String [ ] args) {
+  public static void main(String [ ] args) Java {
     Academy ac = new Academy();
     Student j = ac.addRegistrant(12,"Jim");
     Student a = ac.addRegistrant(4,"Ali");
@@ -55,7 +55,7 @@ class Academy {
     f.addRegistration(c2);
     System.out.println(ac);
   }
-  public String toString() {
+  public String toString() Java {
     String result="Students:\n";
     for (Student s: getRegistrants()) {
       result +=s + "\n";
@@ -70,7 +70,7 @@ class Academy {
 }
 
 class Student {
-  public String toString() {
+  public String toString() Java {
     String result="Student=" + id + "["
       + name + "\n";
     for (Registration r: getRegistrations()) {
@@ -81,7 +81,7 @@ class Student {
 }
 
 class Course {
-  public String toString() {
+  public String toString() Java {
     String result ="Course=" + code + "\n";
     for (Registration r: getRegistrations()) {
       result +="  Has: " + r + "\n";

@@ -45,7 +45,7 @@ class Person {
 class Company {
   depend java.sql.Date;
   
-  public static void main(String [] args) {
+  public static void main(String [] args) Java {
   
     // First create some instances of Person
     // They are initially not on any boards

@@ -79,6 +79,8 @@ class CodeCompiler {
     }
     
     String filename = path + File.separator + aClass.getName() + ".py";
+    String modelname = base + File.separator + model.getUmpleFile().getFileName();
+
     int retval=0;
 
     try {
@@ -137,7 +139,7 @@ class CodeCompiler {
       StringBuilder builder = new StringBuilder();
 
       while (line!=null) {
-        //System.err.println(translateLineToUmplePython(line, base+model.getUmpleFile().getPath(), filename, runtimeErr));
+        //System.err.println(translateLineToUmplePython(line, modelname, filename, runtimeErr));
         //System.err.println(line);
         // DEBUG
         //builder = builder.append(translateLineToUmplePython(line, base+"model.ump", filename)+"\n");
@@ -150,7 +152,8 @@ class CodeCompiler {
         }
       }
 
-      String translatedOutput=translateLineToUmplePython(builder.toString(), base+"model.ump", filename, runtimeErr);
+      System.err.println("SHOULD SHOW IN TEST CONSOLE, model file path: "+modelname);
+      String translatedOutput=translateLineToUmplePython(builder.toString(), modelname, filename, runtimeErr);
       System.err.println(translatedOutput);
 
       if(retval!=0 && errorFileName != null) {

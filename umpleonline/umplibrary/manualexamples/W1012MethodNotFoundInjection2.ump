@@ -7,5 +7,5 @@ class A {
     doSomething();
   }
   
-  doSomething(){/* Implementation */}
+  doSomething() Java {/* Implementation */}
 }

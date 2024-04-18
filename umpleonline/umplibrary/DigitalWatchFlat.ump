@@ -143,7 +143,7 @@ class DigitalWatch {
     );
   }
   
-  public static void main (String[] args) {
+  public static void main (String[] args) Java {
     DigitalWatch dw=new DigitalWatch();
     
     List<Runnable> methods = new ArrayList<>();

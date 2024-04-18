@@ -14,11 +14,11 @@ class LightFixture
     Off {}
   }
 
-  void doEntry() {System.out.println("Entry");}
-  void doExit() {System.out.println("Exit");}
-  void doTransition() {
+  void doEntry() Java {System.out.println("Entry");}
+  void doExit() Java {System.out.println("Exit");}
+  void doTransition() Java {
     System.out.println("Transition");}
-  void doThisContinuouslyWhileOn() {
+  void doThisContinuouslyWhileOn() Java {
     while (true) {
       System.out.println("Still on");
       try {

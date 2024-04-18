@@ -8,7 +8,7 @@ class StockSymbol {
 class Company {
   name;
    
-  public static void main(String[] argv) {
+  public static void main(String[] argv) Java {
     
     Company c1 = null;
     StockSymbol s1 = null;

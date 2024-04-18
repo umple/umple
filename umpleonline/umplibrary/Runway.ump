@@ -53,8 +53,8 @@ class Runway {
       }
     }
   }
-  void closeRunway() {}
-  void turnOffGreenLight() {}
-  void turnOnGreenLight() {}
-  void performMaintenanceWork() {}
+  void closeRunway() Java {}
+  void turnOffGreenLight() Java {}
+  void turnOnGreenLight() Java {}
+  void performMaintenanceWork() Java {}
 }
