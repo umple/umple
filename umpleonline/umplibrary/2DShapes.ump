@@ -53,8 +53,9 @@ class Shape2D {
   }
 
   public static void main(String [] argc) Python{
-    S = Shape2D(None)
-    print("Python main executed successfully")
+    import RegularPolygon
+    s = RegularPolygon.RegularPolygon("0,0","0","3","100")
+    print(str(s))
   }
 }
 //$?[End_of_model]$?
