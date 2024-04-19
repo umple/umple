@@ -22,7 +22,7 @@ class X {
       }
     }
   }
-  public static void main(String[] argv) Java {
+  public static void main(String[] argv) {
     new X();
   }
 }

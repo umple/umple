@@ -169,28 +169,8 @@
       <!-- Contains the Java specific TimerTask class-->
       <exclude name="Dishwasher.ump"/> <!-- uses synchronized keyword -->
 
-      <!-- can't be transformed to python code properly-->
-      <exclude name="Auto-Transitions1.ump"/> <!-- transform error -->
-      <exclude name="ConcurrencyUsingDoActivities2.ump"/> <!-- equivalent code can be genereated but too complicated, will leave it to the end -->
-      <exclude name="EventsWithParameters1.ump"/> 
-      <exclude name="HelloWorld_SPL.ump"/> <!-- mixset keyword can't be transformed -->
-      <exclude name="HistoryStates2.ump"/>
-      <exclude name="MixsetsInMethod.ump"/>
-      <exclude name="StateMachineActionsandDoActivities2.ump"/>
-      <exclude name="UnspecifiedEvents1.ump"/>
-      <exclude name="W069AutoTransitionConflict1.ump"/>
-      <exclude name="W069AutoTransitionConflict2.ump"/>
-      <exclude name="W1009GetterSetterConflict2.ump"/>
-      <exclude name="W1012MethodNotFoundInjection1.ump"/>
-      <!-- can't be transformed to python code properly, added Java tag -->
-      <exclude name="ActiveObjects1.ump"/>
-      <exclude name="ConcurrencyUsingDoActivities1.ump"/>
-      <exclude name="DigitalWatchFlat.ump"/> <!-- equivalent code can be genereated but too complicated, will leave it to the end -->
-      <exclude name="DigitalWatchNested.ump"/> <!-- equivalent code can be genereated but too complicated, will leave it to the end -->
-      <!-- <exclude name="HelloWorldExamples2pyAndCpp.ump"/> -->
-      <exclude name="TimedTransitions2.ump"/> <!-- time out errer -->
+      <exclude name="W1012MethodNotFoundInjection1.ump"/> <!-- meant to be error -->
 
-      
       <!-- April 2023, no longer excluded 
       <exclude name="AccessControl2.ump"/>
       <exclude name="CanalLockStateMachine.ump"/>

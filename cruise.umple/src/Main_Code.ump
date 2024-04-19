@@ -333,12 +333,12 @@ class UmpleConsoleMain
               continue;
             }
           
-            // if(generatorCodeToCompile.equals("Python") && model.isSkippythoncompile()) {
-            //     if(!cfg.getBeQuiet()) {
-            //       System.out.println("Skipping compilation of python due to @@@skipphpcompile in a comment.");
-            //     }
-            //     continue;
-            //   }
+             if(generatorCodeToCompile.equals("Python") && model.isSkippythoncompile()) {
+                 if(!cfg.getBeQuiet()) {
+                   System.out.println("Skipping compilation of python due to @@@skippythoncompile in a comment.");
+                 }
+                 continue;
+               }
 
             if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php") || generatorCodeToCompile.equals("Python")) {
               compileSuccess = CodeCompiler.compile(model, generatorCodeToCompile,cfg.getUseExec(), cfg.getBeQuiet(), cfg.getCompile().get(), null);

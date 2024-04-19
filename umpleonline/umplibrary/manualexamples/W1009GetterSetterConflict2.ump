@@ -3,4 +3,5 @@
 class A {
   attr;
   returnAttr() Java {/* Implementation */};
+  returnAttr() Python {''' Implementation '''};
 }

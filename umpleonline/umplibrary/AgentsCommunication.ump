@@ -6,7 +6,7 @@ class AgentSystem {
    depend java.math.*;
    1 -- * Agent;
    
-   Agent findAgent(int num) Java {
+   Agent findAgent(int num) {
      
      for(Agent agent : getAgents()) {
        if(agent.getAgentNumber() == num) {
@@ -16,7 +16,7 @@ class AgentSystem {
      return null;
    }
    
-   public static void main(String [ ] args) Java {
+   public static void main(String [ ] args) {
     int randomIndex;
     AgentSystem theAgentSystem = new AgentSystem();
     theAgentSystem.addAgent(new AgentA(1, theAgentSystem));
@@ -43,7 +43,7 @@ class Agent {
  
   0..1 -> * Message messages;
   
-  boolean send(int agentNumber, String val) Java {
+  boolean send(int agentNumber, String val) {
     // Send to the other agent asynchronously
     System.out.println(agentNumber +  " Sent " + val);
     Agent recipient = getAgentSystem().findAgent(agentNumber);
@@ -56,14 +56,14 @@ class Agent {
     }
   }
   
-  boolean receive(String val) Java {
+  boolean receive(String val) {
       // Receive from the other agent and put into a queue
       addMessage(new Message(val));
       System.out.println(agentNumber +  " Received " + val);
       return true;
   }  
   
-  boolean consume(String val) Java {
+  boolean consume(String val) {
      // returns true if the first item on the queue matches val
      // deletes first item if it matches 
     if(numberOfMessages() >0)
@@ -77,7 +77,7 @@ class Agent {
     return(false);
   }
   
-  public boolean clock() Java {
+  public boolean clock() {
    //abstract method -- does nothing; overridden by state machines
     return false;
   }
