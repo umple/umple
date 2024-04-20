@@ -8,7 +8,7 @@ class Program {
 class Student {
   name;
    
-  public static void main(String[] argv) Java {
+  public static void main(String[] argv) {
     
     Student s1 = null;
     Program p1 = null;

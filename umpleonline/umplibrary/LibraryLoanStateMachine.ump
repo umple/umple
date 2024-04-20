@@ -62,4 +62,10 @@ class Loan
   void assessReplacementCost() Java {}
   int currentTime() Java {return 1;}
   
+  void refundReplacementCost() Python { ''' Implementation ''' }
+  void sendRecallNotice() Python { ''' Implementation ''' }
+  void assessFine() Python { ''' Implementation ''' }
+  void sendOverdueNotice() Python { ''' Implementation ''' }
+  void assessReplacementCost() Python { ''' Implementation ''' }
+  int currentTime() Python {return 1}  
 }

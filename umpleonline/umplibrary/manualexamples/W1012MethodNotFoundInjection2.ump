@@ -7,5 +7,6 @@ class A {
     doSomething();
   }
   
-  doSomething() Java {/* Implementation */}
+  doSomething() {/* Implementation */}
 }
+// @@@skippythoncompile - Contains Java Code

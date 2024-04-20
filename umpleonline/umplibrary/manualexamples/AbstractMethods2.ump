@@ -63,4 +63,16 @@ class A {
     s.area();
     c.area();
   }
+
+  void Test() Python {
+    # The method implemented in Shape is
+    # used
+    self._s.move()
+    self._c.move()
+  
+    # The methods implemented in their
+    # respective classes are used
+    self._s.area()
+    self._c.area()
+  } 
 }

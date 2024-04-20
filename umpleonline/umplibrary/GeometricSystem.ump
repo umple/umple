@@ -12,17 +12,17 @@ class Color{
   isA RootClass;
   isA TEquality<TP1=Color>;
   String rgb;
-  Integer getRed() Java {return 1;}
-  Integer getBlue() Java {return 2;}
-  Integer getGreen() Java {return 3;}
-  Boolean isEqual(Color object) Java {return true;}
+  Integer getRed() {return 1;}
+  Integer getBlue() {return 2;}
+  Integer getGreen() {return 3;}
+  Boolean isEqual(Color object) {return true;}
 }
 
 //used to draw geometric objects.
 class Canvas {  
   isA RootClass;
-  void paint (GeometricObject g) Java {/*implementation*/}
-  void update (GeometricObject g) Java {/*implementation*/}
+  void paint (GeometricObject g) {/*implementation*/}
+  void update (GeometricObject g) {/*implementation*/}
 }
 
 // a root abstract class for geometric objects.
@@ -60,7 +60,7 @@ class Point {
   isA TEquality<TP1=Point>;
   Double pX;
   Double pY;
-  Boolean isEqual (Point object) Java {return true;}
+  Boolean isEqual (Point object) {return true;}
 }
 
 //a class for lines. A line doesn't have an end.
@@ -69,7 +69,7 @@ class Line {
   isA TEquality<TP1=Line>;
   Point pA;
   Point pB;
-  Boolean isEqual (Line object) Java {return true;}
+  Boolean isEqual (Line object) {return true;}
 }
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
@@ -114,10 +114,10 @@ class NonPolyhedra{
 class Circle{
   isA CurvedShape;
   Double radius;
-  Double getArea() Java {return 1.0;}
-  Double getPerimeterLength() Java {return 1.0;}
-  Boolean isEqual(CurvedShape object) Java {return true;}
-  Boolean isLessThan(CurvedShape object) Java {return true;}
+  Double getArea() {return 1.0;}
+  Double getPerimeterLength() {return 1.0;}
+  Boolean isEqual(CurvedShape object) {return true;}
+  Boolean isLessThan(CurvedShape object) {return true;}
 }
 class Ellipse {
   isA CurvedShape;
@@ -125,34 +125,34 @@ class Ellipse {
   Double minorAxis;
   Point fFocus;
   Point gFocus;
-  Point[] getFoci() Java {return new Point[2];}
-  Double getArea() Java {return 1.0;}
-  Double getPerimeterLength() Java {return 1.0;}
-  Line getTangent() Java {return new Line(fFocus, gFocus);}
-  Boolean isEqual(CurvedShape object) Java {return true;}
-  Boolean isLessThan(CurvedShape object) Java {return true;}
+  Point[] getFoci() {return new Point[2];}
+  Double getArea() {return 1.0;}
+  Double getPerimeterLength() {return 1.0;}
+  Line getTangent() {return new Line(fFocus, gFocus);}
+  Boolean isEqual(CurvedShape object) {return true;}
+  Boolean isLessThan(CurvedShape object) {return true;}
 }
 class Quadrilateral{
   isA Polygon;
-  Double getArea() Java {return 1.0;}
-  Double getPerimeterLength() Java {return 1.0;}
-  Boolean isEqual(Polygon object) Java {return true;}
-  Boolean isLessThan(Polygon object) Java {return true;}
+  Double getArea() {return 1.0;}
+  Double getPerimeterLength() {return 1.0;}
+  Boolean isEqual(Polygon object) {return true;}
+  Boolean isLessThan(Polygon object) {return true;}
 }
 
 class Rectangle{
   isA Quadrilateral;
   //overwrite for better calculation
-  Double getArea() Java {return 1.0;}
+  Double getArea() {return 1.0;}
   //overwrite for better calculation
-  Double getPerimeterLength() Java {return 1.0;}  
+  Double getPerimeterLength() {return 1.0;}  
 }
 class ArbitraryPolygon{
   isA Polygon;
-  Double getArea() Java {return 1.0;}
-  Double getPerimeterLength() Java {return 1.0;}
-  Boolean isEqual(Polygon object) Java {return true;}
-  Boolean isLessThan(Polygon object) Java {return true;}
+  Double getArea() {return 1.0;}
+  Double getPerimeterLength() {return 1.0;}
+  Boolean isEqual(Polygon object) {return true;}
+  Boolean isLessThan(Polygon object) {return true;}
 }
 
 class Sphere{
@@ -170,20 +170,20 @@ class Torus {
   Double radius_R;
   Double theta;
   Double phi;
-  Double volume() Java {return 1.0;}
-  Double surfaceArea() Java {return 1.0;}
-  Boolean isEqual(NonPolyhedra object) Java {return true;}
-  Boolean isLessThan(NonPolyhedra object) Java {return true;}
+  Double volume() {return 1.0;}
+  Double surfaceArea() {return 1.0;}
+  Boolean isEqual(NonPolyhedra object) {return true;}
+  Boolean isLessThan(NonPolyhedra object) {return true;}
 }
 
 class Cylinder{
   isA NonPolyhedra;
   Double radius;
   Double height;
-  Double volume() Java {return 1.0;}
-  Double surfaceArea() Java {return 1.0;} 
-  Boolean isEqual(NonPolyhedra object) Java {return true;}
-  Boolean isLessThan(NonPolyhedra object) Java {return true;}
+  Double volume() {return 1.0;}
+  Double surfaceArea() {return 1.0;} 
+  Boolean isEqual(NonPolyhedra object) {return true;}
+  Boolean isLessThan(NonPolyhedra object) {return true;}
 }
 
 class Cone{
@@ -191,19 +191,19 @@ class Cone{
   Double radius;
   Double height;
   Double sideLength;
-  Double volume() Java {return 1.0;}
-  Double surfaceArea() Java {return 1.0;}
-  Boolean isEqual(NonPolyhedra object) Java {return true;}
-  Boolean isLessThan(NonPolyhedra object) Java {return true;}     
+  Double volume() {return 1.0;}
+  Double surfaceArea() {return 1.0;}
+  Boolean isEqual(NonPolyhedra object) {return true;}
+  Boolean isLessThan(NonPolyhedra object) {return true;}     
 }
 
 class Cube{
   isA Polyhedra;
   Double edgeLength;
-  Double volume() Java {return 1.0;}
-  Double surfaceArea() Java {return 1.0;}   
-  Boolean isEqual(Polyhedra object) Java {return true;}
-  Boolean isLessThan(Polyhedra object) Java {return true;}  
+  Double volume() {return 1.0;}
+  Double surfaceArea() {return 1.0;}   
+  Boolean isEqual(Polyhedra object) {return true;}
+  Boolean isLessThan(Polyhedra object) {return true;}  
 }
 
 class RectangularPrism{
@@ -211,10 +211,10 @@ class RectangularPrism{
   Double length;
   Double width;
   Double height;
-  Double volume() Java {return 1.0;}
-  Double surfaceArea() Java {return 1.0;} 
-  Boolean isEqual(Polyhedra object) Java {return true;}
-  Boolean isLessThan(Polyhedra object) Java {return true;}  
+  Double volume() {return 1.0;}
+  Double surfaceArea() {return 1.0;} 
+  Boolean isEqual(Polyhedra object) {return true;}
+  Boolean isLessThan(Polyhedra object) {return true;}  
 }
 
 class TriangularPyramid{
@@ -232,7 +232,7 @@ class TriangularPyramid{
 //for example: point, line
 trait TEquality<TP1>{
   abstract Boolean isEqual (TP1 object);
-  Boolean isNotEqual(TP1 object) Java {
+  Boolean isNotEqual(TP1 object) {
     return isEqual(object) ? true : false;
   }
 }
@@ -242,13 +242,13 @@ trait TEquality<TP1>{
 trait TComparable<TP2>{
   isA TEquality<TP1=TP2>;
   abstract Boolean isLessThan(TP2 object);
-  Boolean isLessAndEqual(TP2 object) Java {
+  Boolean isLessAndEqual(TP2 object) {
     return (isLessThan(object) && isEqual(object)) ? true : false;
   }
-  Boolean isBiggerThan(TP2 object) Java {
+  Boolean isBiggerThan(TP2 object) {
     return isLessAndEqual(object) ? false : true;
   }
-  Boolean isBiggerAndEqual(TP2 object) Java {
+  Boolean isBiggerAndEqual(TP2 object) {
     return (!isLessThan(object) && isEqual(object)) ? true : false;
   }
 }
@@ -256,30 +256,31 @@ trait TComparable<TP2>{
 //For geometric objects that cannot have color for edges.
 trait TDrawable {
   0..1 -> * Color color;
-  Integer getRed() Java {return 1;}
-  Integer getBlue() Java {return 2;}
-  Integer getGreen() Java {return 3;}
-  void applyTransparency(Integer percentage) Java {/*implementation */}
-  void applyPattern(Integer type) Java {/*implementation */}
-  void applyColorFilter(Integer f) Java {/*implementation */}
+  Integer getRed() {return 1;}
+  Integer getBlue() {return 2;}
+  Integer getGreen() {return 3;}
+  void applyTransparency(Integer percentage) {/*implementation */}
+  void applyPattern(Integer type) {/*implementation */}
+  void applyColorFilter(Integer f) {/*implementation */}
 }
 
 //For geometric objects that can have colors for filling and edges.
 trait TDrawableWithEdge{
   isA TDrawable;
-  Integer getERed() Java {return 1;}
-  Integer getEBlue() Java {return 2;}
-  Integer getEGreen() Java {return 3;}  
-  void applyETransparency(Integer percentage) Java {/*implementation */}
-  void applyEPattern(Integer type) Java {/*implementation */}
-  void applyEColorFilter(Integer f) Java {/*implementation */}
+  Integer getERed() {return 1;}
+  Integer getEBlue() {return 2;}
+  Integer getEGreen() {return 3;}  
+  void applyETransparency(Integer percentage) {/*implementation */}
+  void applyEPattern(Integer type) {/*implementation */}
+  void applyEColorFilter(Integer f) {/*implementation */}
 }
 
 //this trait brings the features that a Subject must have in Observerable Pattern.
 //It makes connection with Observer through a template parameter.
 trait Subject <Observer> {
   0..1  -> * Observer;
-  void notifyObservers() Java {/*implementation*/ }
+  void notifyObservers() {/*implementation*/ }
 }
 
 // @@@skipphpcompile -  skip PHP compilation until issue #964 "Umple's PHP method generation fails to create valid method parameters" is fixed
+// @@@skippythoncompile - Contains Java Code

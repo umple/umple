@@ -57,4 +57,9 @@ class Runway {
   void turnOffGreenLight() Java {}
   void turnOnGreenLight() Java {}
   void performMaintenanceWork() Java {}
+
+  void closeRunway() Python { ''' Implementaion ''' }
+  void turnOffGreenLight() Python { ''' Implementaion ''' }
+  void turnOnGreenLight() Python { ''' Implementaion ''' }
+  void performMaintenanceWork() Python { ''' Implementaion ''' }
 }

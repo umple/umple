@@ -11,6 +11,7 @@
 */
 class Dashboard{
   void update (Sensor sensor) Java { /* code */ }
+  void update (Sensor sensor) Python { ''' code ''' }
 }
 class Sensor{
   isA Subject< Observer = Dashboard >;
@@ -18,4 +19,5 @@ class Sensor{
 trait Subject <Observer>{
   0..1  -> * Observer;
   void notifyObservers() Java { /* code */ }
+  void notifyObservers() Python { ''' code ''' }
 }

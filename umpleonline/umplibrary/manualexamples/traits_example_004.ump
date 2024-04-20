@@ -11,7 +11,7 @@
 */
 trait T1{
   int getData();
-  int processData() Java {
+  int processData() {
     int data = getData();
     data=data+2;
     setData(data);

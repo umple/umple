@@ -9,8 +9,12 @@
  */
 class Person {
   name; // Attribute, string by default
-  String toString () {
-    return(getName());
+  String toString () Java {
+    return(getName());	
+  }
+  
+  String __str__ () Python {
+    return self.getName()
   }
 }
 
@@ -39,6 +43,18 @@ class Person {
     System.out.println("The students of "
       +  m  + " are " +  m.getStudents());
   }
+
+  public static void main(String [ ] args) Python {
+    import Mentor
+    import Student
+
+    m = Mentor.Mentor("Nick The Mentor")
+    s = Student.Student("Tom The Student")
+    s.setMentor(m)
+    print("The mentor of " + str(s)  + " is " + str(s.getMentor()))
+    print("The students of " + str(m) + " are " + str(m.getStudents()))
+  }
+  
 }//$?[End_of_model]$?
 
 class Person

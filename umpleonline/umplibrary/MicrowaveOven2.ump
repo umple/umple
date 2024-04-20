@@ -76,20 +76,20 @@ class Microwave{
     
   
   // turn on light
-  public void turnLightOn(boolean on) Java {
+  public void turnLightOn(boolean on) {
     System.out.println("turns the light "+ (on ? "on" : "off"));
     System.out.println("light " + (on ? "on" : "off"));
     setLightOn(on);
   }
   
   // energize/deenergize power tube
-  public void energizePowerTube(boolean on) Java {
+  public void energizePowerTube(boolean on) {
     System.out.println("energizes/deenergize the power tube");
     System.out.println("power tube " + (on ? "on" : "off"));
     setPowerTubeOn(on);
   }
   
-  public void turnOff() Java {
+  public void turnOff() {
     // turn off light
     turnLightOn(false);
     //release button
@@ -100,7 +100,7 @@ class Microwave{
     timer.setTimeMs(0);
   }
  
-  public static void main(String[] args) Java {
+  public static void main(String[] args) {
     Microwave microwave=new Microwave();
     //microwave.doorOpened();
     microwave.buttonPressed();
@@ -112,7 +112,7 @@ class Microwave{
 class Timer {
   lazy Integer timeMs; 
   
-  public int tick(int time) Java {
+  public int tick(int time) {
     while (time > 0){
       setTimeMs(time);
       time = time - 1;

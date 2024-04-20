@@ -32,10 +32,6 @@ class X
     X x = new X();
   }
 
-  public static void main(String [] args)Python
-  {
-    x = X();
-  }  
 }
 //$?[End_of_model]$?
 // @@@skipcppcompile - Has Java code

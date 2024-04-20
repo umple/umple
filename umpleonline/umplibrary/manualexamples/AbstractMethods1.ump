@@ -11,6 +11,10 @@ class Person {
   void method3() Java {
     /* Implementation */
   }
+
+  void method3() Python {
+    ''' Implementation '''
+  }
 }
 
 class Student {
@@ -21,5 +25,12 @@ class Student {
   }
   void method2() Java {
     /* Implementation */
+  }
+
+ void method1() Python {
+    ''' Implementation '''
+  }
+  void method2() Python {
+    ''' Implementation '''
   }
 }

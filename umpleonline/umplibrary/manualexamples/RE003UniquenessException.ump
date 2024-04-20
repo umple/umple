@@ -4,7 +4,7 @@ class Student {
   unique Integer number;
   name;
  
-  public static void main(String[] argv) Java {
+  public static void main(String[] argv) {
     
     Student s1 = null;
     Student s2 = null;

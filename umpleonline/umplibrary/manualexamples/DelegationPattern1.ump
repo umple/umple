@@ -45,7 +45,7 @@ class Booking {
   Time plannedDepTime = {getSpecificFlight().getPlannedDepTime()}
 
   //Simple method using the data gathered by delegation
-  public String toString() Java {
+  public String toString() {
     return getFlightNumber()+" "+getPlannedDepTime()+" "+
       getDestination().getName()+" "+getPassengerName()+" "+getSeat();
   }
@@ -64,7 +64,7 @@ class Airport {
 
 // Mixin with main program to test the above
 class Airline {
-  public static void main(String [ ] args)  Java {
+  public static void main(String [ ] args)  {
     Airport ott = new Airport("YOW","Ottawa");
     Airport tor = new Airport("YYZ","Toronto Pearson");
     Airline a = new Airline("AO","Air Ottawa");
