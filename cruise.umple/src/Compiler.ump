@@ -449,6 +449,8 @@ class CodeCompiler {
     String regex = "public\\s+static\\s+void\\s+main\\s*\\(\\s*String\\s*\\[\\]\\s*argc\\s*\\)\\s*Python\\s*";
     //Regex pattern for normal main
     String regex2 = "public\\s+static\\s+void\\s+main\\s*\\(\\s*String\\s*\\[\\]\\s*argc\\s*\\)\\s*";
+    //Regex pattern for simple Python main
+    String regex3 = "\\s*Python\\s*\\{\\s*";
 
     try (BufferedReader br = new BufferedReader(new FileReader(model))) {
         String modelLine = br.readLine();
@@ -464,6 +466,7 @@ class CodeCompiler {
         // Read lines from the file
         while ((modelLine = br.readLine()) != null) {
             lineNumber++;
+
             // Check if the line match the Pattern1
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(modelLine);
@@ -473,11 +476,21 @@ class CodeCompiler {
               break;
             }
 
+            // Check if the line match the Pattern2
             Pattern pattern2 = Pattern.compile(regex2);
             Matcher matcher2 = pattern2.matcher(modelLine);
             if(matcher2.find()){
               //System.err.println("matched to normal pattern");
               modelMainLine=lineNumber;
+            }
+
+            // Check if the line match the Pattern3
+            Pattern pattern3 = Pattern.compile(regex3);
+            Matcher matcher3 = pattern3.matcher(modelLine);
+            if(matcher3.find()){
+              //System.err.println("matched to normal pattern");
+              modelMainLine=lineNumber;
+              break;
             }
         }
     } catch (IOException e) {
