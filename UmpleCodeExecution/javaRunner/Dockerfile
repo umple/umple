@@ -1,7 +1,11 @@
-FROM --platform=linux/amd64 openjdk:17-alpine
+FROM --platform=linux/amd64 alpine
 
 RUN addgroup nodeuser
 RUN adduser  -D -H -S nodeuser -G nodeuser
+
+RUN apk add sudo
+RUN sudo apk add --no-cache python3
+RUN sudo apk add --no-cache openjdk17
 
 RUN mkdir output 
 RUN mkdir input

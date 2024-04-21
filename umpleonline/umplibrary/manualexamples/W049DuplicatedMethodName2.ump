@@ -1,5 +1,8 @@
 // The following shows how to avoid the message.
 class A{
-  void test1(){}
-  void test2(){}
+  void test1() Java {}
+  void test2() Java {}
+
+  void test1() Python { ''' code here ''' }
+  void test2() Python { ''' code here ''' }
 }

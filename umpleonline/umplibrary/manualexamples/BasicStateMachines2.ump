@@ -26,58 +26,108 @@ class Garage {
     }
   }
   
-  boolean runMotorInReverse() {
+  boolean runMotorInReverse() Java {
      System.out.println(
        "Running motor in reverse");
     return true;
   }
+
+  boolean runMotorInReverse() Python {
+    print("Running motor in reverse")
+    return True
+  }
   
-  boolean flashLightOn() {
+  boolean flashLightOn() Java {
      System.out.println("Flashing light on");
     return true;
   }
 
-  boolean turnLightOn() {
+  boolean flashLightOn() Python {
+    print("Flashing light on")
+    return True;
+  }
+
+  boolean turnLightOn() Java {
      System.out.println("Turning light on");
     return true;
   }
+
+  boolean turnLightOn() Python {
+    print("Turning light on")
+    return True
+  }  
   
-   boolean turnLightOff() {
+   boolean turnLightOff() Java {
      System.out.println(
        "Turning light off");
     return true;
   }
+
+   boolean turnLightOff() Python {
+    print("Turning light off")
+    return True
+  }  
   
-  boolean runMotorForward() {
+  boolean runMotorForward() Java {
      System.out.println(
        "Running motor forwards");
     return true;
   }
 
-  boolean triggerEnergySaveMode() {
+  boolean runMotorForward() Python {
+    print("Running motor forwards")
+    return True
+  }  
+
+  boolean triggerEnergySaveMode() Java {
      System.out.println(
        "Triggering Energy Saving Mode");
     return true;
   }
 
-  boolean stopMotor() {
+  boolean triggerEnergySaveMode() Python {
+    print("Triggering Energy Saving Mode")
+    return True
+  }
+
+  boolean stopMotor() Java {
      System.out.println("Stopping motor");
     return true;
   }
 
-  boolean triggerNormalEnergyMode() {
+  boolean stopMotor() Python {
+    print("Stopping motor")
+    return True
+  }  
+
+  boolean triggerNormalEnergyMode() Java {
      System.out.println(
        "Triggering Normal Energy Mode");
          return true;
   }
+
+  boolean triggerNormalEnergyMode() Python {
+    print("Triggering Normal Energy Mode")
+    return True
+  }  
   
-  boolean waitawhile() {
+  boolean waitawhile() Java {
     System.out.println("Waiting");
     return true;
   }
+
+  boolean waitawhile() Python {
+    print("Waiting")
+    return True
+  }  
   
-  boolean test() {
+  boolean test() Java {
           System.out.println("Testing");
          return true;
   }
+
+  boolean test() Python {
+    print("Testing")
+    return True
+  }  
 }
