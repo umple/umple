@@ -49,29 +49,30 @@ class RTCppGenerator
 	}
   }
   
-  protected void generateContents(UmpleModel model ,StringBuilder model_code, String filename, String content, String owingFolder) throws IOException {		
-		 String path = model.getUmpleFile().getPath() + "/";
-		 owingFolder= owingFolder.replace(".", "::").replace("::", "/");
-		 String qualifiedPath = path+ owingFolder;
-		 File folder = new File(qualifiedPath);
-		 if (!folder.exists()) {
-			 folder.mkdirs();
-		 }
-		 
-		 File folderFile = new File(qualifiedPath+ "/"+ filename); 	
-		 
-		 if (!folderFile.exists()) {
-		 	folderFile.createNewFile();
-		 }
-		 
-		 model.getGeneratedCode().put(filename,content);
-		 
-		 model_code.append(content);
-		 model_code.append("\n\n");
-		 
-		 BufferedWriter output = new BufferedWriter(new FileWriter(folderFile));
-		 output.write(content);
-		 output.close();
-	}
-  
-}
+  protected void generateContents(UmpleModel model, StringBuilder model_code, String filename, String content, String owingFolder) throws IOException{
+      String path = model.getUmpleFile().getPath() + "/";
+         if(owingFolder.equals("RTCpp")){
+             owingFolder = "";
+         }
+         owingFolder = "RTCpp/" + owingFolder.replace(".", "::").replace("::", "/");
+         String qualifiedPath = path+ owingFolder;
+         File folder = new File(qualifiedPath);
+         if (!folder.exists()) {
+             folder.mkdirs();
+         }
+
+         File folderFile = new File(qualifiedPath+ "/"+ filename);
+
+         if (!folderFile.exists()) {
+             folderFile.createNewFile();
+         }
+
+         model.getGeneratedCode().put(filename,content);
+
+         model_code.append(content);
+         model_code.append("\n\n");
+
+         BufferedWriter output = new BufferedWriter(new FileWriter(folderFile));
+         output.write(content);
+         output.close();
+  }
