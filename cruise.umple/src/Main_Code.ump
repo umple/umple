@@ -333,7 +333,14 @@ class UmpleConsoleMain
               continue;
             }
           
-            if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php")) {
+             if(generatorCodeToCompile.equals("Python") && model.isSkippythoncompile()) {
+                 if(!cfg.getBeQuiet()) {
+                   System.out.println("Skipping compilation of python due to @@@skippythoncompile in a comment.");
+                 }
+                 continue;
+               }
+
+            if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php") || generatorCodeToCompile.equals("Python")) {
               compileSuccess = CodeCompiler.compile(model, generatorCodeToCompile,cfg.getUseExec(), cfg.getBeQuiet(), cfg.getCompile().get(), null);
             }
             else if (generatorCodeToCompile.startsWith("Gv")) {
@@ -562,9 +569,9 @@ class UmpleConsoleMain
     suboptionsAvail += "(With GvClassDiagram or GvClassTraitDiagram or GvEntityRelationshipDiagram: hideattributes, showmethods)";
     suboptionsAvail += " (With all Gv: gvseparator=n.n where n.n is greater than 1.0 to separate nodes more than default, or less than one to make the diagram tighter)";
 
-    optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
-    optparser.acceptsAll(Arrays.asList("performance", "p"), "Indicate time taken to parse and generate code");
-    optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
+      optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
+      optparser.acceptsAll(Arrays.asList("performance", "p"), "Indicate time taken to parse and generate code");
+      optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
 
     optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: " + languages).withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("u", "umple"), "Include umple code directly as a single string, instead of or addition to in files.").withRequiredArg().ofType(String.class);
@@ -1174,7 +1181,7 @@ class PlaygroundMain
       for (GenerateTarget gt : model.getGenerates()) 
       {
         String generatorCodeToCompile = gt.getLanguage();
-        if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php")) 
+        if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php") || generatorCodeToCompile.equals("Python")) 
         {
           // TODO: Remove default options in future when syncing umplesync.jar with umple.jar
           successPreviousStep = CodeCompiler.compile(model, generatorCodeToCompile,false, false, "-", errorFileName);
@@ -1183,8 +1190,10 @@ class PlaygroundMain
     }
 
     // Delete main file if any existing
-    String filePath = model.getUmpleFile().getPath() + File.separator + "JavaMainClasses.txt";
-    deleteFileIfExists(filePath);
+    String javaPath = model.getUmpleFile().getPath() + File.separator + "JavaMainClasses.txt";
+    String PythonPath = model.getUmpleFile().getPath() + File.separator + "PythonMainClasses.txt";
+    deleteFileIfExists(javaPath);
+    deleteFileIfExists(PythonPath);
 
     // If execution required, output the main classes to a file
     if(successPreviousStep && executionRequired) 
@@ -1249,7 +1258,7 @@ class PlaygroundMain
   {
     for (String key : model.getHashMap().keySet()) 
     {
-      if(key.compareTo("Java") == 0) 
+      if(key.compareTo("Java") == 0 || key.compareTo("Python") == 0) 
       {
         // Get all main file names and make a single string
         StringBuilder builder = new StringBuilder();
@@ -1258,7 +1267,7 @@ class PlaygroundMain
           builder = builder.append(mainClass.getName() + " ");
         }
         String mainFileNames = builder.toString().trim();
-        String filePath = model.getUmpleFile().getPath() + File.separator + "JavaMainClasses.txt";
+        String filePath = model.getUmpleFile().getPath() + File.separator + key + "MainClasses.txt";
         if(!mainFileNames.isEmpty())
         {
           // Create or override JavaMainClasses.txt

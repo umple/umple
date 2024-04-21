@@ -168,6 +168,9 @@
 
       <!-- Contains the Java specific TimerTask class-->
       <exclude name="Dishwasher.ump"/> <!-- uses synchronized keyword -->
+
+      <exclude name="W1012MethodNotFoundInjection1.ump"/> <!-- meant to be error -->
+
       <!-- April 2023, no longer excluded 
       <exclude name="AccessControl2.ump"/>
       <exclude name="CanalLockStateMachine.ump"/>

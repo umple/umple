@@ -56,3 +56,4 @@ class Mentor
 // @@@skipphpcompile - Contains Python code
 // @@@skiprubycompile - Contains Python code
 // @@@skipjavacompile - Contains Python Code
+// @@@skippythoncompile - quires Python 3, Current CLI uses Python 2.7
