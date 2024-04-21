@@ -14,6 +14,7 @@ namespace cruise.umple.compiler;
 class CodeCompiler {
 
   depend java.util.*;
+  depend java.util.regex.*;
   depend java.io.*;
   depend cruise.umple.compiler.*;
   depend cruise.umple.compiler.exceptions.*;
@@ -46,6 +47,10 @@ class CodeCompiler {
           wasSuccessful = wasSuccessful & compilePhp(currentElement, model, beQuiet, extra);
           subsequentCompilation = true;
         }
+        else if (generator.equals("Python")) {
+          wasSuccessful = wasSuccessful & compilePython(currentElement, model, beQuiet,errorFileName, extra);
+          subsequentCompilation = true;
+        }
         else {
           System.out.println("Compilation of generated code not supported yet for generator "+generator);
         }
@@ -53,6 +58,131 @@ class CodeCompiler {
     }
     return wasSuccessful;
   }
+ 
+  private static boolean compilePython(UmpleElement aClass, UmpleModel model, boolean beQuiet,String errorFileName, String args) {
+    String path="";
+    String base="";
+    boolean isMain=false;
+    boolean runtimeErr=false;
+    for (GenerateTarget gt : model.getGenerates()) {
+      if (gt.getLanguage().equals("Python")) {
+        base = StringFormatter.addPathOrAbsolute( 
+            model.getUmpleFile().getPath() +File.separator+ gt.getPath(), "");
+        path = base + aClass.getPackageName().replace(".", File.separator);
+      }
+    }
+
+    for(UmpleClass mainClass: CodeCompiler.getMainClasses(model)){
+      if(aClass.getName().equals(mainClass.getName())){
+        isMain=true;
+      }
+    }
+    
+    String filename = path + File.separator + aClass.getName() + ".py";
+    String modelname = base + File.separator + model.getUmpleFile().getFileName();
+
+    int retval=0;
+
+    try {
+      if(base.contains(" ") && !(beQuiet && subsequentCompilation)) {
+        System.err.println("Warning: Compiling generated Python from a directory or path containing a space character may produce an error message from the Python compiler.");
+      }
+      
+      BufferedReader reader;
+      //used python3 for linux, use python for windows
+      String pythonVersion="python3";
+
+      if(System.getProperty("os.name").toLowerCase().contains("windows"))
+        pythonVersion="python";
+
+      String cmd=pythonVersion+" -m py_compile " +filename;
+      String cmd2 = pythonVersion + " " + filename;
+
+      //ProcessBuilder processBuilder = new ProcessBuilder(pythonVersion, "-m", "compileall", filename);
+      //Process p = processBuilder.start();
+      Process p = Runtime.getRuntime().exec(cmd);
+      reader=new BufferedReader(new InputStreamReader(p.getErrorStream())); 
+
+      // All output of the above should go to standard output
+      try {
+        retval=p.waitFor();
+      }
+      catch (InterruptedException e) {}
+
+      String line;
+      if(reader.ready()) {
+        line = reader.readLine();
+      }
+      else {
+        // no syntax error, check runtime error
+        if(isMain){          
+          //check runtime error
+          Process p2 = Runtime.getRuntime().exec(cmd2);
+          reader=new BufferedReader(new InputStreamReader(p2.getErrorStream()));
+
+          try {
+            retval=p2.waitFor();
+          }
+          catch (InterruptedException e) {}
+
+          if(reader.ready()) {
+            line = reader.readLine();
+            runtimeErr=true;
+          }else{
+            return (retval==0);
+          }
+        }else{
+           return (retval==0);
+        }    
+      }
+
+      StringBuilder builder = new StringBuilder();
+
+      while (line!=null) {
+        builder.append(line+"\n");
+        if(reader.ready()) {
+          line = reader.readLine();
+        }
+        else {
+          line = null;
+        }
+      }
+
+      //System.err.println("SHOULD SHOW IN TEST CONSOLE, model file path: "+modelname);
+      String translatedOutput=translateLineToUmplePython(builder.toString(), modelname, filename, runtimeErr);
+      System.err.println(translatedOutput);
+
+      if(retval!=0 && errorFileName != null) {
+        String error = translatedOutput;
+          try
+          {
+            File newFile = new File(errorFileName);
+            newFile.createNewFile();   
+          }
+          catch (IOException ex)  
+          {
+            System.err.println(ex);
+          }
+
+          // Write to the file
+          try (PrintWriter fileout = new PrintWriter(errorFileName)) 
+          { 
+//DEBUG to test if the the compiler writes to the file
+            fileout.println(error);
+          }  
+          catch (FileNotFoundException ex) 
+          {
+            System.err.println(ex);
+          }
+      }
+      
+    } catch (IOException e) {
+      println(e.getMessage());
+      retval = 999;
+    }
+
+    return (retval == 0);
+  }  
 
   private static boolean compilePhp(UmpleElement aClass, UmpleModel model, boolean beQuiet, String args) {
     String path="";
@@ -247,6 +377,7 @@ class CodeCompiler {
       }
 
       StringBuilder builder = new StringBuilder();
+
       while (line!=null) {
         System.err.println(translateLineToUmple(line, model));
         builder = builder.append(translateLineToUmple(line, model)+"\n");
@@ -297,6 +428,136 @@ class CodeCompiler {
     }
     
     return successful;
+  }
+
+  private static String translateLineToUmplePython(String msg, String model, String filePath, boolean runtime) {
+    //retrieve filename and ignore pattern for main method error traceback msg
+    String filenameParts[] = filePath.split("\\\\");
+    String last = filenameParts[filenameParts.length-1];
+    String filename = last.substring(0, last.length()-3);
+    String ignorePattern = filename + ".main(";
+    //System.err.println("ignore pattern: " + ignorePattern);
+
+    String[] lines = msg.split("\n");
+    String line;
+    StringBuilder builder = new StringBuilder();
+
+    // find the main method line number in model.ump
+    int modelMainLine=0;
+
+    //Regex pattern for python main
+    String regex = "public\\s+static\\s+void\\s+main\\s*\\(\\s*String\\s*\\[\\]\\s*argc\\s*\\)\\s*Python\\s*";
+    //Regex pattern for normal main
+    String regex2 = "public\\s+static\\s+void\\s+main\\s*\\(\\s*String\\s*\\[\\]\\s*argc\\s*\\)\\s*";
+    //Regex pattern for simple Python main
+    String regex3 = "\\s*Python\\s*\\{\\s*";
+
+    try (BufferedReader br = new BufferedReader(new FileReader(model))) {
+        String modelLine = br.readLine();
+        int lineNumber=0;
+
+        if(modelLine != null){
+          //ignore the first generated line
+          if(!modelLine.contains("generate Python")){
+            lineNumber++;
+          }
+        }
+
+        // Read lines from the file
+        while ((modelLine = br.readLine()) != null) {
+            lineNumber++;
+
+            // Check if the line match the Pattern1
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(modelLine);
+            if(matcher.find()){
+              //System.err.println("matched to python pattern");
+              modelMainLine=lineNumber;
+              break;
+            }
+
+            // Check if the line match the Pattern2
+            Pattern pattern2 = Pattern.compile(regex2);
+            Matcher matcher2 = pattern2.matcher(modelLine);
+            if(matcher2.find()){
+              //System.err.println("matched to normal pattern");
+              modelMainLine=lineNumber;
+            }
+
+            // Check if the line match the Pattern3
+            Pattern pattern3 = Pattern.compile(regex3);
+            Matcher matcher3 = pattern3.matcher(modelLine);
+            if(matcher3.find()){
+              //System.err.println("matched to normal pattern");
+              modelMainLine=lineNumber;
+              break;
+            }
+        }
+    } catch (IOException e) {
+        System.err.println("Error reading the file: " + e.getMessage());
+    }
+
+    // find main line in python file
+    int pythonMainLine = 0;
+
+    try (BufferedReader br2 = new BufferedReader(new FileReader(filePath))) {
+        String pythonLine;
+        int lineNumber = 0;
+
+        // Read lines from the file
+        while ((pythonLine = br2.readLine()) != null) {
+            lineNumber++;
+            // Check if the line contains the string "@staticmethod", main is one line under it
+            if (pythonLine.contains("@staticmethod")) {
+                pythonMainLine = lineNumber+1;
+                break;
+            }
+        }
+    } catch (IOException e) {
+        System.err.println("Error reading the file: " + e.getMessage());
+    }
+
+    //System.err.println("modelMainLine: "+modelMainLine);
+    //System.err.println("pythonMainLine: "+pythonMainLine);
+    int gap = modelMainLine - pythonMainLine;
+    //System.err.println("gap: "+gap);
+
+    for (int i = 0; i < lines.length; i++) {
+        line = lines[i];
+        if (!line.contains("line")) {
+            builder.append(line + "\n");
+        } else {
+            //skip the error msg for main method traceback
+            if(i <lines.length-1 && lines[i+1].contains(ignorePattern)){
+              //System.err.println("ignore msg line: "+line);
+              builder.append(line+"\n");
+            }else{
+              // convert the line for error msg
+              String[] words = line.split(" ");
+              for (int k = 0; k < words.length; k++) {
+                  if (words[k].equals("line")) {
+                      String num = words[k + 1];
+                      System.out.println("num = " + num);
+                      boolean convert = false;
+                      int lineNum = 0;
+                      while (!convert) {
+                          try {
+                              lineNum = Integer.parseInt(num);
+                              convert = true;
+                          } catch (NumberFormatException e) {
+                              num = num.substring(0, num.length() - 1);
+                          }
+                      }
+                      //System.err.println("num: "+num);
+                      builder.append("model.ump:" + (Integer.parseInt(num) + gap + 1) + ": error \nCompiler msg: "
+                              + line + "\n");
+                      break;
+                  }
+                }
+            }
+        }
+    }
+    return builder.toString();
   }
 
   // To do: Use model to determine generation path
@@ -388,13 +649,13 @@ class CodeCompiler {
     List<UmpleClass> mainClasses = new ArrayList<UmpleClass>();
     for(UmpleClass uClass:model.getUmpleClasses())
     {
-	if (!uClass.hasMethods()) {
-    		continue;
-	}
+      if (!uClass.hasMethods()) {
+            continue;
+      }
       for (Method aMethod : uClass.getMethods()) 
       {
         
-        if(!aMethod.getExistsInLanguage("Java")) {
+        if(!(aMethod.getExistsInLanguage("Java") || aMethod.getExistsInLanguage("Python"))) {
           continue;
         }
         String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();

@@ -2,5 +2,6 @@
 //method can fix the warning
 class A {
   attr;
-  returnAttr() {/* Implementation */};
+  returnAttr() Java {/* Implementation */};
+  returnAttr() Python {''' Implementation '''};
 }

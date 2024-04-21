@@ -51,9 +51,15 @@ class Elevator {
     } 
   }
   Integer timer = 100;
-  void goUp(){}
-  void goDown(){}
-  void stop(){}
-  void openDoor(){}  
-  Boolean floorRequested() {return false;}
+  void goUp() Java {}
+  void goDown() Java {}
+  void stop() Java {}
+  void openDoor() Java {}  
+  Boolean floorRequested() Java {return false;}
+
+  void goUp() Python { ''' Implementation '''}
+  void goDown() Python { ''' Implementation '''}
+  void stop() Python { ''' Implementation '''}
+  void openDoor() Python { ''' Implementation '''}
+  Boolean floorRequested() Python {return False}
 }
