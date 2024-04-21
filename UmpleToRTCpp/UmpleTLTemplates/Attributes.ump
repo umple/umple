@@ -24,6 +24,35 @@ association { 0..1 AbstractGenConstraint constraint -- * GenConstraintCondition 
 association { 0..1 AbstractGenConstraint listenerOwner -- * GenConstraintVariable listeners;}
 
 class GenMethod{
+
+	depend java.util.stream.IntStream;
+
+	boolean equals(Object object) {
+		if (this == object){
+			return true;
+		}
+
+		if (!(object instanceof GenMethod)) {
+            		return false;
+        	}
+
+        	GenMethod compareTo = (GenMethod)object;
+
+        	return Objects.equals(getName(), compareTo.getName()) && areParameterTypesEqual(getParameters(), compareTo.getParameters());
+        }
+
+	boolean areParameterTypesEqual(List<GenMethodParameter> list1, List<GenMethodParameter> list2) {
+        	if (list1 == null || list2 == null){
+            		return list1 == list2;
+        	}
+
+        	if (list1.size() != list2.size()) {
+            		return false;
+        	}
+
+        	return IntStream.range(0, list1.size()).allMatch(i -> Objects.equals(list1.get(i).getType(), list2.get(i).getType()));
+	}
+    
 	Boolean hasBodyConstraints() {
 		for(GenBody _body: getBody()){
 			if(_body instanceof AbstractGenConstraint){

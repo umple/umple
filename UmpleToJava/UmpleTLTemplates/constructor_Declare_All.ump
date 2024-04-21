@@ -48,4 +48,6 @@ class UmpleToJava {
   }
 
 #>>!>>
+ constructor_EmptyConstructor <<!<</*constructor_EmptyConstructor*/>>
+ public <<#realSb.append(uClass.getName());#>>(){}!>>
 }

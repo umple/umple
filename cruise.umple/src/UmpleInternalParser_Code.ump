@@ -83,9 +83,6 @@ class UmpleInternalParser
     }
     parser.addGrammarFile("/umple_exceptions.grammar");
     parser.addGrammarFile("/use.grammar");
-    if (this.getModel().modelHasSuboption("Java", "genJson")){
-      parser.addGrammarFile("/fromJson.grammar");
-    }
   }
 
   public ParseResult parse(String ruleName, String input){
