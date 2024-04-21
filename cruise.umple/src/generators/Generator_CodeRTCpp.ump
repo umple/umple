@@ -51,7 +51,11 @@ class RTCppGenerator
   
   protected void generateContents(UmpleModel model ,StringBuilder model_code, String filename, String content, String owingFolder) throws IOException {		
 		 String path = model.getUmpleFile().getPath() + "/";
-		 owingFolder= owingFolder.replace(".", "::").replace("::", "/");
+		 if(owingFolder.equals("RTCpp")){
+                      owingFolder = "";
+                 }
+
+		 owingFolder= "RTCpp/" + owingFolder.replace(".", "::").replace("::", "/");
 		 String qualifiedPath = path+ owingFolder;
 		 File folder = new File(qualifiedPath);
 		 if (!folder.exists()) {
