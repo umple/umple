@@ -104,3 +104,4 @@ class RoleFacilityAccessRight
 }
 
 // @@@skipphpcompile - remove when issue 697 is fixed
+// @@@skipcppcompile 

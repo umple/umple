@@ -25,3 +25,4 @@ trait X {
 
 // @@@skipphpcompile - contains java code
 // @@@skippythoncompile - Contains Java Code
+// @@@skipcppcompile

@@ -95,3 +95,4 @@ class Person
 }
 // @@@skipphpcompile Contains Java code
 // @@@skippythoncompile - Contains Java Code
+// @@@skipcppcompile

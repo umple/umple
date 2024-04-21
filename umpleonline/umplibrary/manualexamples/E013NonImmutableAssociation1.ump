@@ -19,3 +19,4 @@ class X
 {
   position 50 26 109 60;
 }
+// @@@skipcppcompile
