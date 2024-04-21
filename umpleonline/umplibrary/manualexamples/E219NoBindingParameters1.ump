@@ -11,3 +11,4 @@ class B{
 trait T<X,Y>{
 	//elements
 }
+// @@@skipcppcompile

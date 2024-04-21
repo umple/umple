@@ -6,3 +6,4 @@ class X {
 class Y {
   Integer a;
 }
+// @@@skipcppcompile

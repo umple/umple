@@ -10,3 +10,4 @@ class C{
   isA T<TP=C1>;
   /*implementation*/
 }
+// @@@skipcppcompile

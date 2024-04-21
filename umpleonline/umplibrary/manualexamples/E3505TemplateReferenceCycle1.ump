@@ -9,3 +9,4 @@ class A {
     
   emit method()(temp);
 }
+// @@@skipcppcompile

@@ -14,3 +14,4 @@ trait T2 {
 	//special implementation by T2
 	}
 }
+// @@@skipcppcompile

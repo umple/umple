@@ -2,3 +2,4 @@
 class @ {}
 //$?[End_of_model]$?
 // @@@skipcompile
+// @@@skipcppcompile 

@@ -13,3 +13,4 @@ trait T2{
 	//implementation
 	}
 }
+// @@@skipcppcompile 

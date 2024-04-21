@@ -13,3 +13,4 @@ associationClass Assignment {
   * Member mentor;
   * Member mentee;
 }
+// @@@skipcppcompile
