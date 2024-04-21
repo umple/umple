@@ -7,4 +7,3 @@ enum X{ Red, Blue, Green }
 class X{
   X t;
 }
-// @@@skipcppcompile 

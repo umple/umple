@@ -6,4 +6,3 @@ class P2 {}
 class Sub {
   isA P1, P2;
 }
-// @@@skipcppcompile

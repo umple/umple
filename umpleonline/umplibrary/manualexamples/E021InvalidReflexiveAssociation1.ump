@@ -3,4 +3,3 @@
 class X {
     0..1 -- 0..1 X;
 }
-// @@@skipcppcompile

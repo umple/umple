@@ -19,4 +19,3 @@ class C1{
     s3{}
   }
 }
-// @@@skipcppcompile
