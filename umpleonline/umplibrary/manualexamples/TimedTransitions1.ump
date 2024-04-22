@@ -11,12 +11,16 @@ class X {
       entry / {System.out.println("entering b");}
     }
   }
-  public static void main(String [ ] args) {
+  public static void main(String [ ] args) Java {
     X x = new X();
   }
+
+  public static void main(String [ ] args) Python {
+    x = X()
+  }  
 }
 //$?[End_of_model]$?
 // @@@skipcppcompile - Contains Java Code
 // @@@skipphpcompile - Contains Java Code
 // @@@skiprubycompile - Contains Java Code
-// @@@skippythoncompile - Contains Java Code
+// @@@skippythoncompile - quires Python 3, Current CLI uses Python 2.7
