@@ -217,15 +217,16 @@ class UmpleToJava {
   *
   * @return newly instantiated Object
   */  
-  
-//DEBUG
-//return type should be Object, string is left here for easy testing in the first step
 
-  public <<#realSb.append(uClass.getName());#>> fromJson(String aJsonString, String className){
+  public static <<#realSb.append(uClass.getName());#>> fromJson(String aJsonString, String className){
     aJsonString=aJsonString.replace("\n","").replace(" ","");
     //check if user input class matches parsed class name, and if the class inputed exist
     boolean classExist=false;
     boolean classMatch=false;
+    Map<String, Object> umpleObjectIDMap = new HashMap<String, Object>();
+    <<#appendln(realSb,"");#>>
+    <<#realSb.append(uClass.getName());#>> anObject = new <<#realSb.append(uClass.getName());#>>(aJsonString, umpleObjectIDMap);
+    
     HashMap<String,String> parsedResult = new HashMap<String,String>();
     parsedResult = fromJsonParser(aJsonString,parsedResult);
     String parsedClassName=parsedResult.get("className");
@@ -235,15 +236,23 @@ class UmpleToJava {
     if(!classExist||!classMatch){
       throw new IllegalArgumentException("Top level class does not exist, please check the input json string");
     }
-    
 //DEBUG
-System.out.print("\nclass exist, className = "+ parsedClassName+"\n");
+//fromJsonHelper(umpleObjectIDMap);
+    return anObject;
+  }
+  !>>
     
+  fromJson_helper <<!<</*fromJson_helper*/>>
+  public void fromJsonHelper(Map<String, Object> umpleObjectIDMap){
+  }
+  !>>
+  
+  fromJson_constructor <<!<</*fromJson_constructor*/>>
+  public <<#realSb.append(uClass.getName());#>>(String aJsonString, Map<String, Object> umpleObjectIDMap){
+    HashMap<String,String> parsedResult = new HashMap<String,String>();
+    parsedResult = fromJsonParser(aJsonString,parsedResult);
     String umpleObjectId=parsedResult.get("umpleObjectID");
-//DEBUG
-System.out.print("\nclass exist, umpleobjID = "+ umpleObjectId+"\n");
-
-    // Get the name of attributes in a class
+    if (parsedResult.get(umpleObjectId)==null){
     <<#
     String customFromJsonPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","fromJson"));
 	  String customFromJsonPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","fromJson"));
@@ -296,49 +305,37 @@ System.out.print("\nclass exist, umpleobjID = "+ umpleObjectId+"\n");
 	}
 	for(int attrCounter=0;attrCounter< nameOfPrimitivesFromJson.size();attrCounter++){#>>
 	<<#}#>>
-	<<#append(realSb,uClass.getName());#>> anObject = new <<#realSb.append(uClass.getName());#>>();
+
     <<#for (int primJsonCount=0; primJsonCount<nameOfPrimitivesFromJson.size();primJsonCount++){#>>
       String jsonKey=<<#append(realSb,"\""+nameOfPrimitivesFromJson.get(primJsonCount)+"\"");#>>;
 //more types should be considered here
       <<#if(primitiveTypeFromJson.get(primJsonCount).equals("int")){#>>
         int valueInt = Integer.valueOf(parsedResult.get(jsonKey));
-        anObject.<<#realSb.append(displayedPrimitivesFromJson.get(primJsonCount));#>>(valueInt);
+        this.<<#realSb.append(displayedPrimitivesFromJson.get(primJsonCount));#>>(valueInt);
       <<#}
       if(primitiveTypeFromJson.get(primJsonCount).equals("double")){#>>
         double valueDouble =Double.valueOf(parsedResult.get(jsonKey));
-        anObject.<<#realSb.append(displayedPrimitivesFromJson.get(primJsonCount));#>>(valueDouble);
+        this.<<#realSb.append(displayedPrimitivesFromJson.get(primJsonCount));#>>(valueDouble);
       <<#}
       if(primitiveTypeFromJson.get(primJsonCount).equals("float")){#>>
         float valueFloat=Float.parseFloat(parsedResult.get(jsonKey));
-        anObject.<<#realSb.append(displayedPrimitivesFromJson.get(primJsonCount));#>>(valueFloat);
+        this.<<#realSb.append(displayedPrimitivesFromJson.get(primJsonCount));#>>(valueFloat);
       <<#}
       if(primitiveTypeFromJson.get(primJsonCount).equals("boolean")){#>>
         boolean valueBool=Boolean.parseBoolean(parsedResult.get(jsonKey));
-        anObject.<<#realSb.append(displayedPrimitivesFromJson.get(primJsonCount));#>>(valueBool);
+        this.<<#realSb.append(displayedPrimitivesFromJson.get(primJsonCount));#>>(valueBool);
       <<#}
       if(primitiveTypeFromJson.get(primJsonCount).equals("String")){#>>
-        anObject.<<#realSb.append(displayedPrimitivesFromJson.get(primJsonCount));#>>(parsedResult.get(jsonKey));
+        this.<<#realSb.append(displayedPrimitivesFromJson.get(primJsonCount));#>>(parsedResult.get(jsonKey));
       <<#}#>>
       
     <<#}#>>
-//DEBUG
-    Map<String, Object> umpleObjectIDMap = new HashMap<String, Object>();
-    umpleObjectIDMap.put("umpleObjectId",anObject);
-//DEBUG
-System.out.print("\numpleObjectId exist, umpleObjectId = "+ umpleObjectId+"\n");
-
-fromJsonHelper(umpleObjectIDMap);
-    return anObject;
-  }
-  !>>
-    
-  fromJson_helper <<!<</*fromJson_helper*/>>
-  public void fromJsonHelper(Map<String, Object> umpleObjectIDMap){
-  }
-  !>>
-  
+      umpleObjectIDMap.put(umpleObjectId,this);
+    }
+  }!>>
+ 
   fromJson_parser <<!<</*fromJson_parser*/>>
-  public HashMap<String,String> fromJsonParser(String jsonString, HashMap<String,String> parsedResult){
+  public static HashMap<String,String> fromJsonParser(String jsonString, HashMap<String,String> parsedResult){
     // A HashMap to keep track of the matching pattern and parsed result. 
     // Eg., if the matching pattern is classname, result found is Person, put pair <classname, Person> in the HashMap
     
@@ -432,8 +429,14 @@ fromJsonHelper(umpleObjectIDMap);
         return parsedResult;
       }
     }
-    
+//DEBUG
+    //for (Map.Entry<String, String> entry : parsedResult.entrySet()) {
+           // String key = entry.getKey();
+            //String value = entry.getValue();
+           // System.out.println("Key=" + key + ", Value=" + value);
+        //}
     return parsedResult;
   }
   !>>
+ 
 }
