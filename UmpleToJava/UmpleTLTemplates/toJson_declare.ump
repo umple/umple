@@ -252,6 +252,7 @@ class UmpleToJava {
     HashMap<String,String> parsedResult = new HashMap<String,String>();
     parsedResult = fromJsonParser(aJsonString,parsedResult);
     String umpleObjectId=parsedResult.get("umpleObjectID");
+    String jsonKey="";
     if (parsedResult.get(umpleObjectId)==null){
     <<#
     String customFromJsonPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","fromJson"));
@@ -307,7 +308,7 @@ class UmpleToJava {
 	<<#}#>>
 
     <<#for (int primJsonCount=0; primJsonCount<nameOfPrimitivesFromJson.size();primJsonCount++){#>>
-      String jsonKey=<<#append(realSb,"\""+nameOfPrimitivesFromJson.get(primJsonCount)+"\"");#>>;
+       jsonKey=<<#append(realSb,"\""+nameOfPrimitivesFromJson.get(primJsonCount)+"\"");#>>;
 //more types should be considered here
       <<#if(primitiveTypeFromJson.get(primJsonCount).equals("int")){#>>
         int valueInt = Integer.valueOf(parsedResult.get(jsonKey));
@@ -388,7 +389,11 @@ class UmpleToJava {
       String[] splitKeyValuePair = pairString.split(quotes);
       parsedResult.put(splitKeyValuePair[1],splitKeyValuePair[3]);
       try{
-        jsonString = jsonString.split(pair)[1];
+        jsonString = jsonString.split(pair,2)[1];
+//DEBUG
+//System.out.println("jsonString[0]-----------"+jsonString);
+//System.out.println("jsonString[1]-----------"+jsonString);
+//System.out.println("jsonString-----------"+jsonString);
         fromJsonParser(jsonString,parsedResult);
       } catch (ArrayIndexOutOfBoundsException exception){
         return parsedResult;
@@ -400,11 +405,13 @@ class UmpleToJava {
     Pattern patternPairint = Pattern.compile(intPair);
     Matcher matcherPairint = patternPairint.matcher(jsonString);
     if(matcherPairint.find()){
+//DEBUG
+System.out.println("matcherPairinttttttttt");
       String pairFoundint = matcherPairint.group(0);
       String[] splitPairFoundint=pairFoundint.split(quotes);
       parsedResult.put(splitPairFoundint[1],splitPairFoundint[3]);
       try {
-        jsonString=jsonString.split(pairFoundint)[1];
+        jsonString=jsonString.split(pairFoundint,2)[1];
         fromJsonParser(jsonString,parsedResult);
       } catch (ArrayIndexOutOfBoundsException exception) {
         return parsedResult;
@@ -423,18 +430,18 @@ class UmpleToJava {
       String associationObj_ID=Integer.toString(hashCodeObj);
       parsedResult.put(splitSbFound[1],associationObj_ID);
       try {
-        jsonString=jsonString.split(squareBracketFound)[1];
+        jsonString=jsonString.split(squareBracketFound,2)[1];
         fromJsonParser(jsonString,parsedResult);
       } catch (ArrayIndexOutOfBoundsException exception) {
         return parsedResult;
       }
     }
 //DEBUG
-    //for (Map.Entry<String, String> entry : parsedResult.entrySet()) {
-           // String key = entry.getKey();
-            //String value = entry.getValue();
-           // System.out.println("Key=" + key + ", Value=" + value);
-        //}
+ //  for (Map.Entry<String, String> entry : parsedResult.entrySet()) {
+    //       String key = entry.getKey();
+   //         String value = entry.getValue();
+   //      System.out.println("Key=" + key + ", Value=" + value);
+  //    }
     return parsedResult;
   }
   !>>
