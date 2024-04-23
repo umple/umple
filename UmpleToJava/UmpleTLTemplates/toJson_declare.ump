@@ -228,7 +228,7 @@ class UmpleToJava {
     <<#realSb.append(uClass.getName());#>> anObject = new <<#realSb.append(uClass.getName());#>>(aJsonString, umpleObjectIDMap);
     
     HashMap<String,String> parsedResult = new HashMap<String,String>();
-    parsedResult = fromJsonParser(aJsonString,parsedResult);
+    parsedResult = fromJsonParser(aJsonString,parsedResult,true);
     String parsedClassName=parsedResult.get("className");
     classExist = parsedClassName.equals(className);
     classMatch = <<#realSb.append("\""+uClass.getName()+"\"");#>>.equals(parsedClassName);
@@ -250,7 +250,8 @@ class UmpleToJava {
   fromJson_constructor <<!<</*fromJson_constructor*/>>
   public <<#realSb.append(uClass.getName());#>>(String aJsonString, Map<String, Object> umpleObjectIDMap){
     HashMap<String,String> parsedResult = new HashMap<String,String>();
-    parsedResult = fromJsonParser(aJsonString,parsedResult);
+    Boolean isTopLevel=true;
+    parsedResult = fromJsonParser(aJsonString,parsedResult,isTopLevel);
     String umpleObjectId=parsedResult.get("umpleObjectID");
     String jsonKey="";
     if (parsedResult.get(umpleObjectId)==null){
@@ -304,7 +305,28 @@ class UmpleToJava {
 		}
 	  }
 	}
-	for(int attrCounter=0;attrCounter< nameOfPrimitivesFromJson.size();attrCounter++){#>>
+	for(int attrJsonCount=0;attrJsonCount< nameOfAttributesFromJson.size();attrJsonCount++){#>>
+	  jsonKey=<<#append(realSb,"\""+nameOfAttributesFromJson.get(attrJsonCount)+"\"");#>>;
+//more types should be considered here
+      <<#if(attributeTypeFromJson.get(attrJsonCount).equals("int")){#>>
+        int attrvalueInt = Integer.valueOf(parsedResult.get(jsonKey));
+        this.<<#realSb.append(displayedAttributesFromJson.get(attrJsonCount));#>>(attrvalueInt);
+      <<#}
+      if(attributeTypeFromJson.get(attrJsonCount).equals("double")){#>>
+        double attrvalueDouble =Double.valueOf(parsedResult.get(jsonKey));
+        this.<<#realSb.append(displayedAttributesFromJson.get(attrJsonCount));#>>(attrvalueDouble);
+      <<#}
+      if(attributeTypeFromJson.get(attrJsonCount).equals("float")){#>>
+        float attrvalueFloat=Float.parseFloat(parsedResult.get(jsonKey));
+        this.<<#realSb.append(displayedAttributesFromJson.get(attrJsonCount));#>>(attrvalueFloat);
+      <<#}
+      if(attributeTypeFromJson.get(attrJsonCount).equals("boolean")){#>>
+        boolean attrvalueBool=Boolean.parseBoolean(parsedResult.get(jsonKey));
+        this.<<#realSb.append(displayedAttributesFromJson.get(attrJsonCount));#>>(attrvalueBool);
+      <<#}
+      if(attributeTypeFromJson.get(attrJsonCount).equals("String")){#>>
+        this.<<#realSb.append(displayedAttributesFromJson.get(attrJsonCount));#>>(parsedResult.get(jsonKey));
+      <<#}#>>
 	<<#}#>>
 
     <<#for (int primJsonCount=0; primJsonCount<nameOfPrimitivesFromJson.size();primJsonCount++){#>>
@@ -336,7 +358,7 @@ class UmpleToJava {
   }!>>
  
   fromJson_parser <<!<</*fromJson_parser*/>>
-  public static HashMap<String,String> fromJsonParser(String jsonString, HashMap<String,String> parsedResult){
+  public static HashMap<String,String> fromJsonParser(String jsonString, HashMap<String,String> parsedResult, boolean isTopLevel){
     // A HashMap to keep track of the matching pattern and parsed result. 
     // Eg., if the matching pattern is classname, result found is Person, put pair <classname, Person> in the HashMap
     
@@ -348,15 +370,18 @@ class UmpleToJava {
     Matcher openBracketMatcher = openBracketPattern.matcher(jsonString);
     
     // if an open bracket matching pattern is found, then the following code parse a string that is the class name for the object
-    if(openBracketMatcher.find()){
+    if(openBracketMatcher.find()&&isTopLevel){
       String openBracketString=openBracketMatcher.group(0);
       String[] firstPartClassName=openBracketString.split("\\{\\\"");
       String[] lastPartClassName=firstPartClassName[1].split("\\\"+$");
       String className = lastPartClassName[0];
       parsedResult.put("className",className);
+      isTopLevel=false;
       try{
-        jsonString = jsonString.split(openBracket)[1];
-        fromJsonParser(jsonString,parsedResult);
+        jsonString = jsonString.split(openBracket,2)[1];
+//DEBUG
+System.out.println("openbracket json "+ jsonString);        
+        fromJsonParser(jsonString,parsedResult,isTopLevel);
       }catch (ArrayIndexOutOfBoundsException exception){
         return parsedResult;
       }
@@ -366,75 +391,130 @@ class UmpleToJava {
     String umpObjIDStr = "\"umpleObjectID\"\\:\"[0-9]*\"\\,";
     Pattern objIdSubStrPattern = Pattern.compile(umpObjIDStr);
     Matcher objIdSubStrMatcher = objIdSubStrPattern.matcher(jsonString);
+        
+    // json name-value (String:String) pair pattern definition
+    String pair = "\"\\w*\":\"\\w*\",";
+    Pattern pairPatter = Pattern.compile(pair);
+    Matcher pairMatcher = pairPatter.matcher(jsonString);
+    // json name-value (String:int) pair pattern definition
+    String intPair = "\"\\w*\":\\w*,";
+    Pattern patternPairint = Pattern.compile(intPair);
+    Matcher matcherPairint = patternPairint.matcher(jsonString);
+    // find square bracket (list) that represent class associations 
+    String squareBracketString_1="\\\"\\w*\\\"\\:\\[\\{.*\\]";
+    String squareBracketString_2="\\\"\\w*\\\"\\:\\[\\]";
+    Pattern squareBracketPattern_1 = Pattern.compile(squareBracketString_1);
+    Matcher squareBracketMatcher_1 = squareBracketPattern_1.matcher(jsonString);
+    Pattern squareBracketPattern_2 = Pattern.compile(squareBracketString_2);
+    Matcher squareBracketMatcher_2 = squareBracketPattern_2.matcher(jsonString);
+    
     // if an objectId matching pattern is found, then return the parsed objectID
     if(objIdSubStrMatcher.find()){
       String umpleObjectID=objIdSubStrMatcher.group(0);
       String[] splitObjectId=umpleObjectID.split(quotes);
       parsedResult.put("umpleObjectID",splitObjectId[3]);
       try{
-        jsonString = jsonString.split(umpObjIDStr)[1];
-        fromJsonParser(jsonString,parsedResult);
+        jsonString = jsonString.split(umpObjIDStr,2)[1];
+//DEBUG
+System.out.println("objID   "+jsonString);
+        fromJsonParser(jsonString,parsedResult,isTopLevel);
       } catch (ArrayIndexOutOfBoundsException exception){
         return parsedResult;
       }
       
     }
-    
-    // json name-value (String:String) pair pattern definition
-    String pair = "\"\\w*\":\"\\w*\",";
-    Pattern pairPatter = Pattern.compile(pair);
-    Matcher pairMatcher = pairPatter.matcher(jsonString);
-    if(pairMatcher.find()){
-      String pairString = pairMatcher.group(0);
-      String[] splitKeyValuePair = pairString.split(quotes);
-      parsedResult.put(splitKeyValuePair[1],splitKeyValuePair[3]);
+
+      else if(pairMatcher.find()){
+        String pairString = pairMatcher.group(0);
+//DEBUG
+System.out.println("objID22   "+jsonString);
+System.out.println("pairsting  "+pairString);
+        String[] splitKeyValuePair = pairString.split(quotes);
+        parsedResult.put(splitKeyValuePair[1],splitKeyValuePair[3]);
       try{
+
         jsonString = jsonString.split(pair,2)[1];
 //DEBUG
-//System.out.println("jsonString[0]-----------"+jsonString);
-//System.out.println("jsonString[1]-----------"+jsonString);
-//System.out.println("jsonString-----------"+jsonString);
-        fromJsonParser(jsonString,parsedResult);
+System.out.println("pairsting22  "+jsonString);
+        fromJsonParser(jsonString,parsedResult,isTopLevel);
       } catch (ArrayIndexOutOfBoundsException exception){
         return parsedResult;
       }
-    }
+      pairPatter = Pattern.compile(pair);
+      pairMatcher = pairPatter.matcher(jsonString);
+      }
     
-    // json name-value (String:int) pair pattern definition
-    String intPair = "\"\\w*\":\\w*,";
-    Pattern patternPairint = Pattern.compile(intPair);
-    Matcher matcherPairint = patternPairint.matcher(jsonString);
-    if(matcherPairint.find()){
-//DEBUG
-System.out.println("matcherPairinttttttttt");
+    else if(matcherPairint.find()){
       String pairFoundint = matcherPairint.group(0);
       String[] splitPairFoundint=pairFoundint.split(quotes);
       parsedResult.put(splitPairFoundint[1],splitPairFoundint[3]);
       try {
         jsonString=jsonString.split(pairFoundint,2)[1];
-        fromJsonParser(jsonString,parsedResult);
+        fromJsonParser(jsonString,parsedResult,isTopLevel);
       } catch (ArrayIndexOutOfBoundsException exception) {
         return parsedResult;
       }
     }
     
-    // find square bracket (list) that represent class associations 
-    String squareBracketString="\\\"\\w*\\\"\\:\\[\\{.*\\]";
-    Pattern squareBracketPattern = Pattern.compile(squareBracketString);
-    Matcher squareBracketMatcher = squareBracketPattern.matcher(jsonString);
-    if(squareBracketMatcher.find()){
-      String squareBracketFound = squareBracketMatcher.group(0);
-      String[] splitSbFound = squareBracketFound.split(colon,2);
+    else if(squareBracketMatcher_1.find()){
+      String squareBracketFound_1 = squareBracketMatcher_1.group(0);
+//DEBUG
+System.out.println("SB json!!  "+jsonString);
+System.out.println("SB found!!  "+squareBracketFound_1);
+      String[] splitSbFound_1 = squareBracketFound_1.split(colon,2);
+
+      
+//DEBUG statement logic wrong, should take id from new object instead of List<Object>
       List<Object> associationObj = new ArrayList<Object>();
       int hashCodeObj=System.identityHashCode(associationObj);
+      
+      String newObjectClassName="";
       String associationObj_ID=Integer.toString(hashCodeObj);
-      parsedResult.put(splitSbFound[1],associationObj_ID);
+      parsedResult.put(splitSbFound_1[1],associationObj_ID);
       try {
-        jsonString=jsonString.split(squareBracketFound,2)[1];
-        fromJsonParser(jsonString,parsedResult);
+//DEBUG
+System.out.println("$$$$$$$$$$$$$$$$$"+jsonString);
+
+        jsonString=jsonString.split(squareBracketFound_1,2)[1];
+
+//DEBUG
+System.out.println("-----"+jsonString);
+      
       } catch (ArrayIndexOutOfBoundsException exception) {
         return parsedResult;
       }
+    }
+    else if(squareBracketMatcher_2.find()){
+      String squareBracketFound_2 = squareBracketMatcher_2.group(0);
+//DEBUG
+System.out.println("SB2 json!!  "+jsonString);
+System.out.println("SB2 found!!  "+squareBracketFound_2);
+      String[] splitSbFound_2 = squareBracketFound_2.split(colon,2);
+
+      
+//DEBUG statement logic wrong, should take id from new object instead of List<Object>
+      List<Object> associationObj = new ArrayList<Object>();
+      int hashCodeObj=System.identityHashCode(associationObj);
+      
+      String newObjectClassName="";
+      String associationObj_ID=Integer.toString(hashCodeObj);
+      parsedResult.put(splitSbFound_2[1],associationObj_ID);
+      try {
+//DEBUG
+System.out.println("$$$$$$$$$$$$$$$$$"+jsonString);
+
+        jsonString=jsonString.split(squareBracketString_2,2)[1];
+//System.out.println("if see this, parse fail at 506");
+
+//DEBUG
+System.out.println("-----"+jsonString);
+      
+      } catch (ArrayIndexOutOfBoundsException exception) {
+        return parsedResult;
+      }
+    }
+    else{
+      return parsedResult;
     }
 //DEBUG
  //  for (Map.Entry<String, String> entry : parsedResult.entrySet()) {
