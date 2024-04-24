@@ -434,7 +434,7 @@ class CodeCompiler {
       String last = filenameParts[filenameParts.length - 1];
       String filename = last.substring(0, last.length() - 3);
       String ignorePattern = filename + ".main(";
-      System.err.println("ignore pattern: " + ignorePattern);
+      // System.err.println("ignore pattern: " + ignorePattern);
 
       // key functionName, value umpLine
       Map<String, Integer> hashMap = new HashMap<>();
@@ -531,23 +531,24 @@ class CodeCompiler {
 
                           String pythonErrorFunction = getPythonLine(lineNum, pythonFileCode);
                           if(pythonErrorFunction == null){
-                              System.err.println("function not found for python file line: " + lineNum);
-                                  builder.append(line + "\n");
+                              // System.err.println("function not found for python file line: " + lineNum);
+                              builder.append(line + "\n");
                               break;
                           }
                           // get function name and ump line number
                           String[] components = pythonErrorFunction.split("\\|\\|");
                           String errorFunctionName = components[0];
                           if (hashMap.containsKey(errorFunctionName)) {
-                              System.err.println("Function: " + errorFunctionName + "modelLine: " + hashMap.get(errorFunctionName) + " pythonLine: "
-                                      + components[1]);
+                              // System.err.println("Function: " + errorFunctionName + "modelLine: " + hashMap.get(errorFunctionName) + " pythonLine: "
+                              //        + components[1]);
                               int gap = hashMap.get(errorFunctionName) - Integer.parseInt(components[1]);
                               builder.append(
                                       "model.ump:" + (lineNum + gap +1) + ": error in the ump code \nCompiler msg: "
                                               + line + "\n");
                               break;
                           } else {
-                              builder.append(line + "\n");
+
+                              builder.append("function: " + errorFunctionName + "not found "+ line + "\n");
                               break;
                           }
                       }
@@ -589,7 +590,7 @@ class CodeCompiler {
       String regex = "def\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\([^\\)]*\\):";
       Pattern pattern = Pattern.compile(regex);
       Matcher matcher = null;
-      while (line >= 0) {
+      while (line >= 0 && line < pythonFileCode.length) {
           matcher = pattern.matcher(pythonFileCode[line]);
           if (matcher.find())
               return matcher.group(1) + "||" + (1+line);
