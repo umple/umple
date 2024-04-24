@@ -438,23 +438,34 @@ System.out.println("-------isTopLevel---------");
     
     
     // if an objectId matching pattern is found, then return the parsed objectID
-    if(objIdSubStrMatcher.find()&&!ObjIDFound){
+    else if(objIdSubStrMatcher.find()&&!ObjIDFound){
       ObjIDFound=true;
       String umpleObjectID=objIdSubStrMatcher.group(0);
 //DEBUG
 System.out.println("*  obj id found=  "+umpleObjectID);
       String[] splitObjectId=umpleObjectID.split(quotes);
-      parsedResult.put("umpleObjectID",splitObjectId[3]);
-      try{
-        jsonString = jsonString.split(umpObjIDStr,2)[1];
-        fromJsonParser(jsonString,parsedResult,isTopLevel,ObjIDFound,umpleObjectIDMap,listMatcherFound);
-      } catch (ArrayIndexOutOfBoundsException exception){
-        return parsedResult;
-      }
       
+      String objIDfound=splitObjectId[3];
+      if(!parsedResult.containsValue(objIDfound)){
+      
+//DEBUG
+System.out.println("xxxx     !parsedResult.containsValue(objIDfound) ");
+        parsedResult.put("umpleObjectID",splitObjectId[3]);
+        try{
+          jsonString = jsonString.split(umpObjIDStr,2)[1];
+          fromJsonParser(jsonString,parsedResult,isTopLevel,ObjIDFound,umpleObjectIDMap,listMatcherFound);
+         } catch (ArrayIndexOutOfBoundsException exception){
+          return parsedResult;
+         }
+       }
+       else{
+//DEBUG
+System.out.println("xxxx     ! ");
+        return parsedResult;
+       }
     }
 
-    if(pairMatcher.find()&&ObjIDFound){
+    else if(pairMatcher.find()&&ObjIDFound){
         String pairString = pairMatcher.group(0);
         String[] splitKeyValuePair = pairString.split(quotes);
         parsedResult.put(splitKeyValuePair[1],splitKeyValuePair[3]);
