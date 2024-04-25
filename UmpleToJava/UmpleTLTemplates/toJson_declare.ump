@@ -211,16 +211,21 @@ class UmpleToJava {
   /*
   * Deserialize Json string to instantiate Objects from top-level class
   *
-  * @param umpleObjectIDMap<String, Object> mapping parsed objectID (from Json string) with newly instantiated object's objectID
+  * @param umpleObjectIDMap<String, Integer> mapping parsed objectID (from Json string) with newly instantiated object's objectID
   * 
-  * @param className is the class name of the object the user wants to get
+  * @param String aJsonString is the string in json format that is to be processed and turned into an object
   *
-  * @return newly instantiated Object
+  * @return newly instantiated Object 
   */  
 
   public static <<#realSb.append(uClass.getName());#>> fromJson(String aJsonString){
+    // process the input jsonString so that it can further processed using regex
     aJsonString=aJsonString.replace("\n","").replace(" ","");   
+    
+    // a map to store the umpleObjectID present in jsonString
     Map<String, Integer> umpleObjectIDMap=new HashMap<String,Integer>();
+    
+    // instantiate a new object
     <<#appendln(realSb,"");#>>
     <<#realSb.append(uClass.getName());#>> anObject = new <<#realSb.append(uClass.getName());#>>(aJsonString, umpleObjectIDMap);
     return anObject;
@@ -228,7 +233,17 @@ class UmpleToJava {
   !>>
   
   fromJson_constructor <<!<</*fromJson_constructor*/>>
+  /*
+  * A new constructor specifically implemented if -s genJson is specified
+  * 
+  * @param String aJsonString is the string in json format that is to be processed and turned into an object
+  *
+  * @param umpleObjectIDMap<String, Integer> mapping parsed objectID (from Json string) with newly instantiated object's objectID
+  */ 
   public <<#realSb.append(uClass.getName());#>>(String aJsonString, Map<String, Integer> umpleObjectIDMap){
+    // Initialize a HashMap to store the parsed result
+    // key is the attribute name present in the jsonString
+    // value is the attribute value present in the jsonString
     HashMap<String,String> parsedResult = new HashMap<String,String>();
     parsedResult = fromJsonParser(aJsonString);
 
@@ -241,21 +256,10 @@ class UmpleToJava {
     }
     String umpleObjectId=parsedResult.get("umpleObjectID");
     
-    
-//DEBUG
-System.out.println("***  umpleObjectId   = "+umpleObjectId);
-System.out.println("in class:  "+<<#realSb.append("\""+uClass.getName()+"\"");#>>);
+    // Check if the object has already been visited and created
     if((umpleObjectIDMap.get(umpleObjectId)==null)){
     
-//DEBUG
-//DEBUG
-System.out.println("000000000000000000000000");
-for (Map.Entry<String, String> entry : parsedResult.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            System.out.println("parsedResult map ley=" + key + ", parsedResult map value=" + value);
-        }
-System.out.println("000000000000000000000000");
+    // map the old objectID (in jsonString) with the newly created object's hashCode in umpleObjectIDMap 
     umpleObjectIDMap.put(umpleObjectId,System.identityHashCode(this));
     
     String jsonKey="";
@@ -270,6 +274,7 @@ System.out.println("000000000000000000000000");
 	  {
 		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customFromJsonPostfixCode, "    "));
 	  }
+	// create lists to store the attributes and associations present in the top level class
     LinkedList<String> nameOfAttributesFromJson = new LinkedList<String>();
 	LinkedList<String> nameOfPrimitivesFromJson = new LinkedList<String>();
 	List<String> keysFromJson = new ArrayList<String>();
@@ -310,8 +315,6 @@ System.out.println("000000000000000000000000");
 	for(AssociationVariable av: uClass.getAssociationVariables())
 	  {
 		associationNamesFromJson.add(av.getName());
-//DEBUG
-System.out.println("av.getName()=   "+av.getName());
 		//check if the association variable has more than 1 multiplicity or not
 		//If the av has more than 1 multiplicity, get plural get()
 		if (av.isMany()){
@@ -320,11 +323,10 @@ System.out.println("av.getName()=   "+av.getName());
 		else{
 		  associationsFromJson.add(gen.translate("getMethod",av)+"()");
 		}
-//DEBUG
-System.out.println("av.getType()=   "+av.getType());
 		associationItemsFromJson.add(av.getType());
 		associationIsManyFromJson.add(av.isMany());
 	  }
+	// below for-loop populate the newly instantiated objects according to parsed value with the value parsed from the json String
 	for(int attrJsonCount=0;attrJsonCount< nameOfAttributesFromJson.size();attrJsonCount++){#>>
 	  jsonKey=<<#append(realSb,"\""+nameOfAttributesFromJson.get(attrJsonCount)+"\"");#>>;
 //more types should be considered here
@@ -348,7 +350,6 @@ System.out.println("av.getType()=   "+av.getType());
         this.<<#realSb.append(nameOfAttributesFromJson);#>>=parsedResult.get(jsonKey);
       <<#}#>>
 	<<#}#>>
-
     <<#for (int primJsonCount=0; primJsonCount<nameOfPrimitivesFromJson.size();primJsonCount++){#>>
        jsonKey=<<#append(realSb,"\""+nameOfPrimitivesFromJson.get(primJsonCount)+"\"");#>>;
 //more types should be considered here
@@ -372,136 +373,103 @@ System.out.println("av.getType()=   "+av.getType());
         this.<<#append(realSb,nameOfPrimitivesFromJson.get(primJsonCount));#>>=parsedResult.get(jsonKey);
       <<#}#>>
     <<#}#>>
-	//List<String> associationNamesFromJson = new ArrayList<String>();
-	//List<Object> associationsFromJson = new ArrayList<Object>();
-	//List<Object> associationItemsFromJson = new ArrayList<Object>();
-    //List<Boolean> associationIsManyFromJson = new ArrayList<Boolean>();
-    
+    // below for-loop check the association class of the top level class
     <<#for (int assoJsonCount=0; assoJsonCount<associationNamesFromJson.size();assoJsonCount++){#>>
        jsonKey=<<#append(realSb,"\""+associationNamesFromJson.get(assoJsonCount)+"\"");#>>;
        String newJsonString=parsedResult.get(jsonKey);
 //more types should be considered here
+       // if is single association, only create 1 associated object
       <<#if(associationIsManyFromJson.get(assoJsonCount)){#>>
-//DEBUG
-System.out.println("1111111111111111111111");
-System.out.println("999999 json string before customer created"+newJsonString);
-System.out.println("9999 about to create Customer created=  ");
         <<#appendln(realSb,"");#>>
-
         <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> manyAssoObj=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString,umpleObjectIDMap);
         List<<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>> aAssoList=new ArrayList<<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>>();
-//DEBUG
-System.out.println("9999Customer created=  "+manyAssoObj.toString());
         aAssoList.add(manyAssoObj);
         this.<<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=aAssoList;
-//DEBUG
-System.out.println("1111111111111111111111");
       <<#}
+      // if is multiple association, create a new list to store the objects
       else{#>>
-//DEBUG
-System.out.println("2222222222222222222222");
         <<#appendln(realSb,"");#>>
         <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> anAssoObj=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString,umpleObjectIDMap);
         this.<<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=anAssoObj;
-//DEBUG
-System.out.println("2222222222222222222222");
       <<#}
       }#>>
-      
-//DEBUG
-for (Map.Entry<String, Integer> entry : umpleObjectIDMap.entrySet()) {
-            String key = entry.getKey();
-            Integer value = entry.getValue();
-            System.out.println("OBjId map ley=" + key + ", objid map value=" + value);
-        }
       }
   }!>>
  
   fromJson_parser <<!<</*fromJson_parser*/>>
+  /*
+  * A json parser to parse the input jsonString, if -s genJson is specified
+  * 
+  * @param String aJsonString is the string in json format that is to be processed and turned into an object
+  *
+  * @ return HashMap<String,String> that stores paresed result, key is the attribute(or associations) of an object, value is the attribute value or association string
+  */ 
   public static HashMap<String,String> fromJsonParser(String jsonString){
-    // A HashMap to keep track of the matching pattern and parsed result. 
-    // Eg., if the matching pattern is classname, result found is Person, put pair <classname, Person> in the HashMap
-    
-    // className string pattern definition
+  
     HashMap<String,String> parsedResultMap = new HashMap<String,String>();
+    //Below (String, Pattern, Matcher) are the regex strings and their patterns and matcher used to process a jsonString
+    
+        // topLevelString is the regex representing the topLevel class name
         String topLevelString = "\\{\\\"[A-Z]*+[a-z]*\\\":";
         Pattern topLevelPattern = Pattern.compile(topLevelString);
         Matcher topLevelMatcher = topLevelPattern.matcher(jsonString);
         String quotes="\\\"";
         String colon="\\:";
         String colonSquareBracket="\\:\\[";
+        //objIDString is the regex representing umpleObjectID that could be found in jsonString
         String objIDString = "\"umpleObjectID\"\\:\"[0-9]*\",";
         Pattern objIDPattern = Pattern.compile(objIDString);
         Matcher objIDMatcher = objIDPattern.matcher(jsonString);
         if(topLevelMatcher.find()){
+            //actual string that represent the topLevel className
             String topLevelStringFound=topLevelMatcher.group(0);
-            //System.out.println("topLevelStringFound=  "+topLevelStringFound);
             String className=topLevelStringFound.split(quotes)[1];
-            //System.out.println("className="+className);
             parsedResultMap.put("className", className);
             jsonString=jsonString.split(topLevelString,2)[1];
-            //System.out.println(" - jsonString after topLevelString is found"+jsonString);
         }
         if(objIDMatcher.find()){
             String objIDFound=objIDMatcher.group(0);
-            //System.out.println(" - jsonString before objIDFound "+jsonString);
-            //System.out.println("objIDFound=  "+objIDFound);
             parsedResultMap.put("umpleObjectID", objIDFound.split(colon)[1].split(quotes)[1]);
-            //System.out.println(parsedResultMap.get("umpleObejctID"));
             jsonString=jsonString.split(objIDString, 2)[1];
-            //System.out.println(" - jsonString after objIDString is found"+jsonString);
         }
+        
+        // pairString is the regex for an object's attribute and attribute value, the string parsed will be in key-value formate
         String pairString = "\"\\w*\":\"\\w*\"";
         Pattern pairPattern=Pattern.compile(pairString);
         Matcher pairMatcher=pairPattern.matcher(jsonString);
+        // associationString is the regex for an object's multi-association
         String associationString="\\\"\\w*\\\"\\:\\[\\{.*\\]";
         Pattern associationPattern=Pattern.compile(associationString);
         Matcher associationMatcher=associationPattern.matcher(jsonString);
+        // newObjJsonString is the regex for an object's single-association
+        String newObjJsonString="\\,\\\"\\w*\\\"\\:\\{\\\"\\w*\\\"\\:.*\\}";
+        Pattern newObjJsonPattern=Pattern.compile(newObjJsonString);
+        Matcher newObjJsonMatcher=newObjJsonPattern.matcher(jsonString);
+        //Keep on parsing the attribute's key-value pair, 
+        //until a List (multi-associations) pattern or a newObject parttern (single association) is found
         while(pairMatcher.find()){
-            //System.out.println("");
-           // System.out.println("*current json string ="+jsonString);
             String pairStringFound=pairMatcher.group(0);
-           // System.out.println("pairStirng found= "+pairStringFound);
             parsedResultMap.put(pairStringFound.split(colon)[0].split(quotes)[1], pairStringFound.split(colon)[1].split(quotes)[1]);
             if (associationMatcher.find()){
                 String assoStringFound=associationMatcher.group(0);
-                System.out.println("asso found= "+assoStringFound);
                 jsonString=jsonString.replaceFirst(associationString, "");
-                //System.out.println("*json string after ass found="+jsonString);
                 String associationName=assoStringFound.split(colon,2)[0].split(quotes)[1];
                 String associationItems=assoStringFound.split(colonSquareBracket,2)[1];
                 parsedResultMap.put(associationName, associationItems);
                 pairPattern=Pattern.compile(pairString);
                 pairMatcher=pairPattern.matcher(jsonString);
             }
-            String newObjJsonString="\\,\\\"\\w*\\\"\\:\\{\\\"\\w*\\\"\\:.*\\}";
-            Pattern newObjJsonPattern=Pattern.compile(newObjJsonString);
-            Matcher newObjJsonMatcher=newObjJsonPattern.matcher(jsonString);
         
             if(newObjJsonMatcher.find()){
                String newObjJsonFound=newObjJsonMatcher.group(0);
-               //System.out.println("^^newObjJsonFound   "+newObjJsonFound);
                jsonString=jsonString.replaceFirst(newObjJsonString, "");
                String newObjName=newObjJsonFound.split(colon,2)[0].split(quotes)[1];
                String newObjItems=newObjJsonFound.split(colon,2)[1];
-               System.out.println("newObjItems"+newObjItems);
                parsedResultMap.put(newObjName, newObjItems);
                pairPattern=Pattern.compile(pairString);
                pairMatcher=pairPattern.matcher(jsonString);
             }
-            
-           // System.out.println("");
         }
-        
-        //System.out.println("-----see parsedResultMap content--------");
-        //for (Map.Entry<String, String> entry : parsedResultMap.entrySet()) {
-        //    String key = entry.getKey();
-        //   String value = entry.getValue();
-        //   System.out.println("attribute =" + key + ", value=" + value);
-        //}
-        //System.out.println("-----------------------------------");
-
-
         return parsedResultMap;
   }
   !>>
