@@ -211,7 +211,7 @@ class UmpleToJava {
   /*
   * Deserialize Json string to instantiate Objects from top-level class
   *
-  * @param umpleObjectIDMap<String, Integer> mapping parsed objectID (from Json string) with newly instantiated object's objectID
+  * @param umpleObjectIDMap<String, Object> mapping parsed objectID (from Json string) with newly instantiated object's objectID
   * 
   * @param String aJsonString is the string in json format that is to be processed and turned into an object
   *
@@ -223,7 +223,7 @@ class UmpleToJava {
     aJsonString=aJsonString.replace("\n","").replace(" ","");   
     
     // a map to store the umpleObjectID present in jsonString
-    Map<String, Integer> umpleObjectIDMap=new HashMap<String,Integer>();
+    Map<String, Object> umpleObjectIDMap=new HashMap<>();
     
     // instantiate a new object
     <<#appendln(realSb,"");#>>
@@ -240,7 +240,7 @@ class UmpleToJava {
   *
   * @param umpleObjectIDMap<String, Integer> mapping parsed objectID (from Json string) with newly instantiated object's objectID
   */ 
-  public <<#realSb.append(uClass.getName());#>>(String aJsonString, Map<String, Integer> umpleObjectIDMap){
+  public <<#realSb.append(uClass.getName());#>>(String aJsonString, Map<String, Object> umpleObjectIDMap){
     // Initialize a HashMap to store the parsed result
     // key is the attribute name present in the jsonString
     // value is the attribute value present in the jsonString
@@ -255,28 +255,12 @@ class UmpleToJava {
       throw new IllegalArgumentException("Top level class "+parsedClassName+" does not exist, please check the input json string");
     }
     String umpleObjectId=parsedResult.get("umpleObjectID");
-    
-    // Check if the object has already been visited and created
-    if((umpleObjectIDMap.get(umpleObjectId)==null)){
-    
-    // map the old objectID (in jsonString) with the newly created object's hashCode in umpleObjectIDMap 
-    umpleObjectIDMap.put(umpleObjectId,System.identityHashCode(this));
-    
-    String jsonKey="";
     <<#
-    String customFromJsonPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","fromJson"));
-	  String customFromJsonPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","fromJson"));
-	  if (customFromJsonPrefixCode != null) 
-	  {
-		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customFromJsonPrefixCode, "    "));
-	  }
-	  if (customFromJsonPostfixCode != null) 
-	  {
-		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customFromJsonPostfixCode, "    "));
-	  }
-	// create lists to store the attributes and associations present in the top level class
+    // create lists to store the attributes and associations present in the top level class
     LinkedList<String> nameOfAttributesFromJson = new LinkedList<String>();
 	LinkedList<String> nameOfPrimitivesFromJson = new LinkedList<String>();
+	LinkedList<String> displayedAttributesFromJson = new LinkedList<String>();
+	LinkedList<String> displayedPrimitivesFromJson = new LinkedList<String>();
 	List<String> keysFromJson = new ArrayList<String>();
 	LinkedList<String> attributeTypeFromJson = new LinkedList<String>();
 	LinkedList<String> primitiveTypeFromJson = new LinkedList<String>();
@@ -293,10 +277,12 @@ class UmpleToJava {
 	  {
 	    if(av.getIsAutounique() || keys.contains(av.getName())){
 		  nameOfPrimitivesFromJson.addFirst(av.getName());
+		  displayedPrimitivesFromJson.addFirst(gen.translate("getMethod",av)+"()");
 		  primitiveTypeFromJson.addFirst(av.getType());
 		}
 		else {
 		  nameOfPrimitivesFromJson.addLast(av.getName());
+		  displayedPrimitivesFromJson.addLast(gen.translate("getMethod",av)+"()");
 		  primitiveTypeFromJson.addLast(av.getType());
 		}
 	  }
@@ -304,11 +290,13 @@ class UmpleToJava {
 	  {
 	    if(av.getIsAutounique() || keys.contains(av.getName())){
 		  nameOfAttributesFromJson.addFirst(av.getName());
+		  displayedAttributesFromJson.addFirst(gen.translate("getMethod",av)+"()");
 		  attributeTypeFromJson.addFirst(av.getType());
 		}
 		else {
 		  nameOfAttributesFromJson.addLast(av.getName());
-		   attributeTypeFromJson.addLast(av.getType());
+		  displayedAttributesFromJson.addLast(gen.translate("getMethod",av)+"()");
+		  attributeTypeFromJson.addLast(av.getType());
 		}
 	  }
 	}
@@ -326,6 +314,26 @@ class UmpleToJava {
 		associationItemsFromJson.add(av.getType());
 		associationIsManyFromJson.add(av.isMany());
 	  }
+    #>>
+    // Check if the object has already been visited and created
+    if((umpleObjectIDMap.get(umpleObjectId)==null)){
+    
+    // map the old objectID (in jsonString) with the newly created object's hashCode in umpleObjectIDMap 
+    umpleObjectIDMap.put(umpleObjectId,this);
+    
+    String jsonKey="";
+    <<#
+    String customFromJsonPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","fromJson"));
+	  String customFromJsonPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","fromJson"));
+	  if (customFromJsonPrefixCode != null) 
+	  {
+		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customFromJsonPrefixCode, "    "));
+	  }
+	  if (customFromJsonPostfixCode != null) 
+	  {
+		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customFromJsonPostfixCode, "    "));
+	  }
+
 	// below for-loop populate the newly instantiated objects according to parsed value with the value parsed from the json String
 	for(int attrJsonCount=0;attrJsonCount< nameOfAttributesFromJson.size();attrJsonCount++){#>>
 	  jsonKey=<<#append(realSb,"\""+nameOfAttributesFromJson.get(attrJsonCount)+"\"");#>>;
@@ -393,6 +401,17 @@ class UmpleToJava {
         this.<<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=anAssoObj;
       <<#}
       }#>>
+      }
+      else{
+      //copy the object retrieved from umpleObjectIDMap
+      <<#appendln(realSb,"");#>>
+      <<#realSb.append(uClass.getName());#>> createdObj=(<<#realSb.append(uClass.getName());#>>) umpleObjectIDMap.get(umpleObjectId);
+      <<#for(int attrJsonCount=0;attrJsonCount< nameOfAttributesFromJson.size();attrJsonCount++){#>>
+        this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=createdObj.<<#realSb.append(displayedAttributesFromJson.get(attrJsonCount));#>>;
+      <<#}#>>
+      <<#for (int primJsonCount=0; primJsonCount<nameOfPrimitivesFromJson.size();primJsonCount++){#>>
+          this.<<#realSb.append(nameOfPrimitivesFromJson.get(primJsonCount));#>>=createdObj.<<#realSb.append(displayedPrimitivesFromJson.get(primJsonCount));#>>;
+      <<#}#>>
       }
   }!>>
  
