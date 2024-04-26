@@ -1,0 +1,5 @@
+class Alcohol
+{
+  Integer age;
+  [age > 21]
+ }

@@ -1,0 +1,8 @@
+generate Cpp "../src-gen-umple";
+
+use ../../testbed/src/TestHarnessAssociations.ump;
+use ../../testbed/src/TestHarnessAttributesCpp.ump;
+use ../../testbed/src/TestHarnessStateMachineCpp.ump;
+use ../../testbed/src/TestHarnessPatternsImmutable.ump;
+use ../../testbed/src/TestHarnessConstraints.ump;
+use LocalHarness.ump;

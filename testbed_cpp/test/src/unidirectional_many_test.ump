@@ -1,0 +1,11 @@
+class User {
+  name
+}
+
+class Account {
+  id
+} 
+
+association {
+  * User -> * Account;
+}

@@ -1,0 +1,11 @@
+class Publisher {
+  name
+}
+
+class Magazine {
+  title
+} 
+
+association {
+  0..1 Magazine -> * Publisher;
+}

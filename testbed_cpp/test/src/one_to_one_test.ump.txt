@@ -1,0 +1,11 @@
+class Instructor {
+  name;
+}
+
+class Course {
+  title;
+}
+
+association {
+  0..1 Course -- 0..1 Instructor;
+}

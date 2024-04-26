@@ -1,0 +1,11 @@
+class Group {
+  name
+}
+
+class Description {
+  info
+} 
+
+association {
+  0..1 Group -> 0..1 Description;
+}
