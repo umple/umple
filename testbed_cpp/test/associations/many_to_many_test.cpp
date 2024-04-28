@@ -1,7 +1,8 @@
 #include <iostream>
 #include <cassert>
-#include "src/Author.h"
-#include "src/Book.h"
+#include "../RTCpp/Author.h"
+#include "../RTCpp/Book.h"
+
 
 void many_to_many_test() {
     // Create Authors

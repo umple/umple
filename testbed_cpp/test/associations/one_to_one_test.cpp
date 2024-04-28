@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cassert>
-#include "src/Instructor.h"
-#include "src/Course.h"
+#include "../RTCpp/Instructor.h"
+#include "../RTCpp/Course.h"
 
 void one_to_one_test() {
     // Create an Instructor and a Course

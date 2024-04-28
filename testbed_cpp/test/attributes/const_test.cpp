@@ -1,16 +1,12 @@
 #include <iostream>
 #include <cassert>
 #include <ctime>
-#include "Const.h"
+#include "../RTCpp/Const.h"
 
 void const_test() {
-    // Create time objects for testing
-    time_t rawtime;
-    time(&rawtime);
-    tm* timeInfo = localtime(&rawtime);
 
     // Create const objects with various parameters
-    Const constObject1(1, "TestString1", "TestString2", 3.14f, 2.718, true, timeInfo, &rawtime);
+    Const constObject1(1, "TestString1", "TestString2", 3.14f, 2.718, true);
     Const constObject2(constObject1);  // Copy constructor
 
 

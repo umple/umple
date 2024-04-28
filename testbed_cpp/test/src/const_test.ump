@@ -14,10 +14,7 @@ class Const
   
   Boolean bln;  
   Boolean bln2 = false;  
-  
-  Date dte;    
-  
-  Time tme; 
-  Time tme2 = "14:56:50";  
+     
+   
 }  
   

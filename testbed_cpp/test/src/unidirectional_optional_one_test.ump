@@ -1,9 +1,9 @@
 class Group {
-  name
+  name;
 }
 
 class Description {
-  info
+  info;
 } 
 
 association {

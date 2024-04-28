@@ -1,7 +1,8 @@
 #include <iostream>
 #include <cassert>
-#include "src/Mentor.h"
-#include "src/Student.h"
+#include "../RTCpp/Mentor.h"
+#include "../RTCpp/Student.h"
+#include "../RTCpp/Person.h"
 
 void optional_one_to_many_test() {
     // Create a Mentor

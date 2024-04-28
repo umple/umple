@@ -6,11 +6,10 @@ class Chat{
   
   immutable String str;  
     
-  lazy Time t;  
   lazy Boolean b;  
   lazy s;  
 
-  settable Date d;
+  settable Float f;
 
   unique u;  
    

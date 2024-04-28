@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cassert>
-#include "src/Folder.h"
+#include "../RTCpp/Folder.h"
 
 void reflexive_many_test() {
     // Create some Folder instances

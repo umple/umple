@@ -1,9 +1,9 @@
 class Publisher {
-  name
+  name;
 }
 
 class Magazine {
-  title
+  title;
 } 
 
 association {
