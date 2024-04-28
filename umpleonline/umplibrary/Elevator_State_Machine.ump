@@ -63,3 +63,4 @@ class Elevator {
   void openDoor() Python { ''' Implementation '''}
   Boolean floorRequested() Python {return False}
 }
+// @@@skipcppcompile

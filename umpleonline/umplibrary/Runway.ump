@@ -63,3 +63,4 @@ class Runway {
   void turnOnGreenLight() Python { ''' Implementaion ''' }
   void performMaintenanceWork() Python { ''' Implementaion ''' }
 }
+// @@@skipcppcompile
