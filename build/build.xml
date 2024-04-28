@@ -139,6 +139,11 @@
   <target name="compileRuby" >
     <ant antfile="build/build.testbed.xml" target="compileRuby" inheritAll="true" />
   </target>
+  
+  <!-- Compile the RTCpp testbed program against the latest umple.jar -->
+  <target name="compileRTCpp" >
+    <ant antfile="build/build.testbed.xml" target="compileRTCpp" inheritAll="true" />
+  </target>
 
   <!-- Test all testbed programs against the latest umple.jar -->
   <target name="testTestbed" >
@@ -165,6 +170,11 @@
     <ant antfile="build/build.testbed.xml" target="testRuby" inheritAll="true" />
   </target>
 
+  <!-- Test the RTCpp testbed program against the latest umple.jar -->
+  <target name="testRTCpp" >
+    <ant antfile="build/build.testbed.xml" target="RTCpp" inheritAll="true" />
+  </target>
+  
   <target name="sandbox">
     <deps-declare-taskdef />
 
