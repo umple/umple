@@ -46,7 +46,7 @@
       <try>
         <antcall target="newUserManualAndExampleTestsJava" /> <!-- New replacement for above -->
         <antcall target="newUserManualAndExampleTestsPython" /> <!-- New replacement for above -->
-        <!-- <antcall target="doCpp" />-->
+        <antcall target="newUserManualAndExampleTestsCpp" />
         <antcall target="newUserManualAndExampleTestsPhp" /> <!-- New replacement for above -->
         <!--<antcall target="doRuby" />-->
       </try>
@@ -369,7 +369,285 @@
       </trycatch>
 
   </target>
+
+  <target name="newUserManualAndExampleTestsCpp">
+    <echo>Building User Manual and UmpleOnline Examples for RTCpp and checking validity of RTCpp using -c - option.</echo>
   
+    <!-- Pick all the relevant examples to test -->
+    <fileset dir="${cpp.path}" includes="*.ump" id="cppumpfiles">
+      <!-- Special cases - temporary until error detection-->
+      <exclude name="AccessControl.ump"/>
+      <exclude name="AccessControl2.ump"/>
+      <exclude name="ActiveObjects1.ump"/>
+      <exclude name="AgentsCommunication.ump"/>
+      <exclude name="Airline.ump"/>
+      <exclude name="AssociationDefinition1.ump"/>
+      <exclude name="AssociationOneToOne.ump"/>
+      <exclude name="assocSpecEx.ump"/>
+      <exclude name="AttributeDefinition1.ump"/>
+      <exclude name="Auto-Transitions1.ump"/>
+      <exclude name="Ball_Game.ump"/>
+      <exclude name="BasicStateMachines2.ump"/>
+      <exclude name="BcmsBaseConfiguration.ump"/>
+      <exclude name="BcmsCore.ump"/>
+      <exclude name="BcmsMultipleCrisis-Multiple-Coordinator-Configuration.ump"/>
+      <exclude name="BeforeandAfterStatements1.ump"/>
+      <exclude name="BeforeandAfterStatements2.ump"/>
+      <exclude name="BeforeandAfterStatements3.ump"/>
+      <exclude name="CarTransmission.ump"/>
+      <exclude name="ClassDefinition1.ump"/>
+      <exclude name="CodeInjectioninCustomMethods1.ump"/>
+      <exclude name="CodeInjectioninEventMethods1.ump"/>
+      <exclude name="CodeInjectionPatternMatching1.ump"/>
+      <exclude name="CodeInjectionPatternMatching2.ump"/>
+      <exclude name="CollisionAvoidanceA1.ump"/>
+      <exclude name="CollisionAvoidanceA2.ump"/>
+      <exclude name="CollisionAvoidanceA3.ump"/>
+      <exclude name="CollisionAvoidance.ump"/>
+      <exclude name="ComplexStateMachine.ump"/>
+      <exclude name="Compositions1_eq1.ump"/>
+      <exclude name="Compositions1_eq2.ump"/>
+      <exclude name="Compositions_regAssoc.ump"/>
+      <exclude name="Compositions.ump"/>
+      <exclude name="ConcurrencyUsingDoActivities1.ump"/>
+      <exclude name="ConcurrencyUsingDoActivities2.ump"/>
+      <exclude name="concurrentAlongsideNonConcurrent.ump"/>
+      <exclude name="CoOpSystem.ump"/>
+      <exclude name="CoordinationStateMachine.ump"/>
+      <exclude name="CourseSectionNested.ump"/>
+      <exclude name="DelegationPattern1.ump"/>
+      <exclude name="DerivedAttributes1.ump"/>
+      <exclude name="DerivedAttributes2.ump"/>
+      <exclude name="DigitalWatchFlat.ump"/>
+      <exclude name="DigitalWatchNested.ump"/>
+      <exclude name="Dishwasher.ump"/>
+      <exclude name="DMMModelElementHierarchy.ump"/>
+      <exclude name="DMMSourceObjectHierarchy.ump"/>
+      <exclude name="Elevator_State_Machine.ump"/>
+      <exclude name="ExternalInterface.ump"/>
+      <exclude name="GenealogyA.ump"/>
+      <exclude name="GenealogyB.ump"/>
+      <exclude name="GenealogyC.ump"/>
+      <exclude name="HistoryStates1.ump"/>
+      <exclude name="HistoryStates2.ump"/>
+      <exclude name="HomeHeater.ump"/>
+      <exclude name="HtmlGeneration.ump"/>
+      <exclude name="InventoryManagement.ump"/>
+      <exclude name="LibraryLoanStateMachine.ump"/>
+      <exclude name="Lights.ump"/>
+      <exclude name="MailOrderSystem.ump"/>
+      <exclude name="MicrowaveOven2.ump"/>
+      <exclude name="Multiplicity2.ump"/>
+      <exclude name="MultiValuedAttributes1.ump"/>
+      <exclude name="NamespaceDirectives4.ump"/>
+      <exclude name="NestedStateMachines1.ump"/>
+      <exclude name="NestedStateMachines2.ump"/>
+      <exclude name="NestedStateMachines3.ump"/>
+      <exclude name="NullExample.ump"/>
+      <exclude name="OBDCarSystem.ump"/>
+      <exclude name="Ovens.ump"/>
+      <exclude name="ParliamentBill.ump"/>
+      <exclude name="Phone.ump"/>
+      <exclude name="Pizza.ump"/>
+      <exclude name="PoliticalEntities.ump"/>
+      <exclude name="PooledStateMachines1.ump"/>
+      <exclude name="QueuedStateMachines1.ump"/>
+      <exclude name="realestate.ump"/>
+      <exclude name="RegionFinal_ConcurrentExample.ump"/>
+      <exclude name="RegionFinal_NonConcurrentExample.ump"/>
+      <exclude name="Regions1.ump"/>
+      <exclude name="Runway.ump"/>
+      <exclude name="SecurityLight.ump"/>
+      <exclude name="SortedAssociations1.ump"/>
+      <exclude name="SortedAssociations2.ump"/>
+      <exclude name="SpecificFlight.ump"/>
+      <exclude name="StateDependentMethods1.ump"/>
+      <exclude name="StateDependentMethods2.ump"/>
+      <exclude name="StateMachineActionsandDoActivities1.ump"/>
+      <exclude name="TcpIpSimulation.txt.ump"/>
+      <exclude name="TicTacToe.ump"/>
+      <exclude name="TimedCommands.ump"/>
+      <exclude name="TimedTransitions1.ump"/>
+      <exclude name="TimedTransitions2.ump"/>
+      <exclude name="ToplevelAspect1.ump"/>
+      <exclude name="ToplevelAspect2.ump"/>
+      <exclude name="TrafficLightsB.ump"/>
+      <exclude name="traits_example_003.ump"/>
+      <exclude name="traits_example_018.ump"/>
+      <exclude name="traits_example_020.ump"/>
+      <exclude name="traits_example_021.ump"/>
+      <exclude name="traits_example_022.ump"/>
+      <exclude name="traits_example_023.ump"/>
+      <exclude name="traits_example_024.ump"/>
+      <exclude name="traits_example_multifeature.ump"/>
+      <exclude name="traits_example_standaloneStateMachine.ump"/>
+      <exclude name="UnspecifiedEvents1.ump"/>
+      <exclude name="UnspecifiedEvents2.ump"/>
+      <exclude name="E013NonImmutableAssociation1.ump"/>
+      <exclude name="E019DuplicateAssociation3.ump"/>
+      <exclude name="E034MultipleInheritance1.ump"/>
+      <exclude name="E219NoBindingParameters1.ump"/>
+      <exclude name="E095DuplicateEnumerations2.ump"/>
+      <exclude name="E021InvalidReflexiveAssociation1.ump"/>
+      <exclude name="E225SatisfactionOfConstraints.ump"/>
+      <exclude name="E211MoreModifications1.ump"/>
+      <exclude name="WE1xxIdentifierInvalid1.ump"/>
+      <exclude name="E224MultipleInheritanceConstraint.ump"/>
+      <exclude name="E235SuperCallConflict.ump"/>
+      <exclude name="E096EnumerationNamingConflict1.ump"/>
+      <exclude name="E221BoundTypeAvailable.ump"/>
+      <exclude name="E3505TemplateReferenceCycle1.ump"/>
+      <exclude name="E210ConflictMethods1.ump"/>
+      <exclude name="E058RegularQueuedPooledStateMachineInClass1.ump"/>
+      <exclude name="E037UninitializedConstantObject1.ump"/>
+      <exclude name="WE1xxIdentifierInvalid3.ump"/>
+      <exclude name="E112DuplicateConstantsinInterface1.ump"/>
+      <exclude name="E081InvalidMultivaluedAttributeAssignment1.ump"/>
+      <exclude name="E095DuplicateEnumerations1.ump"/>
+      <exclude name="E026DuplicateKeyItem1.ump"/>
+      <exclude name="E092ClassIsNotSubclassConstraint1.ump"/>
+      <exclude name="E213BidirectionalTraitAssociation.ump"/>
+      <exclude name="E220TwoMethodWithSameName1.ump"/>
+      <exclude name="E029ConstraintTypeMismatch1.ump"/>
+      <exclude name="E018ReflexiveImmutable1.ump"/>
+      <exclude name="E083InvalidMultivaluedAttributeInitialization1.ump"/>
+      <exclude name="E180DuplicateRoleNameSubclass.ump"/>
+      <exclude name="E3504TemplateReferenceCannotBeResolved1.ump"/>
+      <exclude name="E219NoBindingParameters.ump"/>
+      <exclude name="E3507DuplicateEmitMethodName1.ump"/>
+      <exclude name="E096EnumerationNamingConflict2.ump"/>
+      <exclude name="E212NoAvailableMethod1.ump"/>
+      <exclude name="E3500InvalidTemplateName1.ump"/>
+      <exclude name="E217ConflictInTypeofAttributes.ump"/>
+      <exclude name="E041NonVoidQueuedMethod1.ump"/>
+      <exclude name="E074UserDefinedStateCannotBeNamedFinal1.ump"/>
+      <exclude name="E063ReservedNameHistoryState1.ump"/>
+      <exclude name="E061RegularQueuedStateMachineInClass1.ump"/>
+      <exclude name="E019DuplicateAssociation1.ump"/>
+      <exclude name="E024SortKeyNotofUmpleType1.ump"/>
+      <exclude name="E230SMAvailability.ump"/>
+      <exclude name="E032ReservedRoleName3.ump"/>
+      <exclude name="E234NonDeteministicComposition.ump"/>
+      <exclude name="E210ConflictMethods2.ump"/>
+      <exclude name="E017NonImmutableBidirectionality1.ump"/>
+      <exclude name="E232EventAvailability.ump"/>
+      <exclude name="E040_singleton_inherited.ump"/>
+      <exclude name="E023AttributeAssociationNameClash2.ump"/>
+      <exclude name="E215NoAvailableTemplateParameter.ump"/>
+      <exclude name="E014ImmutableSubclassofMutable1.ump"/>
+      <exclude name="E204CyclicUse1.ump"/>
+      <exclude name="E216TwiceBinding.ump"/>
+      <exclude name="E038AutogeneratedAttributeNameConflict1.ump"/>
+      <exclude name="E093ClassIsNotSuperClassConstraint1.ump"/>
+      <exclude name="E005UndefinedClassinAssociation4.ump"/>
+      <exclude name="E094NoAssociationFoundConstraint1.ump"/>
+      <exclude name="E208NotRequiredMethod.ump"/>
+      <exclude name="E212NoAvailableMethod3.ump"/>
+      <exclude name="E020InterfaceAssociationNotOneWay2.ump"/>
+      <exclude name="E080InvalidAbstractClassAssociation1.ump"/>
+      <exclude name="E237UniqueRegionName.ump"/>
+      <exclude name="E073DuplicateParallelStateMachineName1.ump"/>
+      <exclude name="E080InvalidAbstractClassAssociation2.ump"/>
+      <exclude name="E231EventAvailability.ump"/>
+      <exclude name="E012ClassIndirectlySubclassofSelf1.ump"/>
+      <exclude name="E200InvalidTraitIdentifierE2.ump"/>
+      <exclude name="E060RegularPooledStateMachineInClass1.ump"/>
+      <exclude name="E059QueuedPooledStateMachineInClass1.ump"/>
+      <exclude name="E020InterfaceAssociationNotOneWay1.ump"/>
+      <exclude name="E097EnumerationAndStateMachineConflict1.ump"/>
+      <exclude name="E034MultipleInheritance2.ump"/>
+      <exclude name="E222SatisfactionOfRequiredInterfaces.ump"/>
+      <exclude name="E006MissingDefault1.ump"/>
+      <exclude name="E004InvalidMultiplicity1.ump"/>
+      <exclude name="E223AvailabilityOfTypes.ump"/>
+      <exclude name="E051EventParametersMustMatch1.ump"/>
+      <exclude name="E064NonExistentHistoryState1.ump"/>
+      <exclude name="E052StateMachineNameClash1.ump"/>
+      <exclude name="E212NoAvailableMethod2.ump"/>
+      <exclude name="E065NoSubstatesHistoryState1.ump"/>
+      <exclude name="E205CyclicUse1.ump"/>
+      <exclude name="E053NoConcurrencyAtTopLevel1.ump"/>
+      <exclude name="E202NotAvailableTraits.ump"/>
+      <exclude name="E206SatisfactionOfConstraints.ump"/>
+      <exclude name="E052StateMachineNameClash2.ump"/>
+      <exclude name="E104EnumerationInBidirectionalAssociation1.ump"/>
+      <exclude name="E091AttributeOfTypeNotFoundConstraint1.ump"/>
+      <exclude name="E005UndefinedClassinAssociation1.ump"/>
+      <exclude name="E097EnumerationAndStateMachineConflict2.ump"/>
+      <exclude name="E025SortKeyNotFound1.ump"/>
+      <exclude name="E009ReflexiveLowerBound1.ump"/>
+      <exclude name="E233RemoveInitialState.ump"/>
+      <exclude name="E008AssociationClassMissingEnd1.ump"/>
+      <exclude name="E3607PortNameCannotBeResolved1.ump"/>
+      <exclude name="E210ConflictMethods4.ump"/>
+      <exclude name="E229RenamingTwoTimesStates.ump"/>
+      <exclude name="E028ConstraintIdentifierIncorrect1.ump"/>
+      <exclude name="E211MoreModifications2.ump"/>
+      <exclude name="E032ReservedRoleName1.ump"/>
+      <exclude name="E096EnumerationNamingConflict4.ump"/>
+      <exclude name="E011ClassisSubclassOfSelf1.ump"/>
+      <exclude name="E4500TagNotClosedCorrectly1.ump"/>
+      <exclude name="E022DuplicateAttribute1.ump"/>
+      <exclude name="E203NotHavingUniqueID.ump"/>
+      <exclude name="WE1xxIdentifierInvalid6.ump"/>
+      <exclude name="E200InvalidTraitIdentifierE1.ump"/>
+      <exclude name="E3501TemplateMethodCannotBeMain1.ump"/>
+      <exclude name="E016NonImmutableSuperclass1.ump"/>
+      <exclude name="E3503TemplateReferenceRefersToItself1.ump"/>
+      <exclude name="E220TwoMethodWithSameName2.ump"/>
+      <exclude name="E236TwoStateEntries.ump"/>
+      <exclude name="E096EnumerationNamingConflict3.ump"/>
+      <exclude name="WE1xxIdentifierInvalid7.ump"/>
+      <exclude name="E090AttributeNameNotFoundConstraint1.ump"/>
+      <exclude name="E3502TemplateNameNotResolved1.ump"/>
+      <exclude name="E075UserDefinedStateMachineCannotBeNamedTimer1.ump"/>
+      <exclude name="E105EnumerationInComposition1.ump"/>
+      <exclude name="E023AttributeAssociationNameClash1.ump"/>
+      <exclude name="E214Twosametemplateparameters.ump"/>
+      
+    </fileset>  
+
+    <pathconvert pathsep=";" property="cppumpfiles2" refid="cppumpfiles"/>
+    
+    <echo file="${cpp.path}/allExamplesListCpp.txt">${cppumpfiles2}</echo>
+
+    <replace file="${cpp.path}/allExamplesListCpp.txt" token=";" value="&#10;"/>
+    <echo>Umple examples to be tested and RTCpp Compiled are in "${cpp.path}/allExamplesListCpp.txt"</echo>
+
+    <copy file="${cpp.path}/allExamplesListCpp.txt" todir="${dist.dir}/qa"/>
+
+    <!-- Compile in umple to RTCpp and generate the Java -->
+      <trycatch>
+        <try>
+          <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true" dir="${cpp.path}">
+            <arg value="-g" />
+            <arg value="RTCpp" />
+            <arg value="--path" />
+            <arg value="src-gen-umple" />
+            <!--arg value="-r" --> <!-- Uncomment to remove prev generated java+class files before each compile -->
+            <arg value="-w" /> <!-- Suppress expected warnings for files starting W -->
+            <arg value="-q" /> <!-- Comment out for more verbose trace -->
+            <arg value="-c" /> <!-- Do the Java compilation of whatever is produced by Umple -->
+            <arg value="-" />
+            <!--arg value="-x" --> <!-- Uncomment to use slower exec method of invoking compiler instead of internal -->           
+            <arg value="-f" /> <!-- Do separate generation and compilation for each line in this file -->
+            <arg value="allExamplesListCpp.txt" />
+          </java>
+        </try>
+
+        <catch>
+          <echo>Failed to compile Umple and/or generate RTCpp code from one or more examples and/or to compile the resulting RTCpp</echo>
+          <if>
+            <equals arg1="${failfast}" arg2="true" />
+            <then>
+              <fail message="Failed tests of an Umpleonline or manual example when generating and compiling the RTCpp"/>
+            </then>
+          </if>
+        </catch>
+      </trycatch>
+
+  </target>
+
   <!-- Setup and teardown targets -->
 
   <target name="testSetup">
