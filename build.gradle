@@ -1418,8 +1418,8 @@ task rtcppTestbedTest {
         def executableName = isWindows ? "runAllTests.exe" : "runAllTests"
         def executablePath = new File(testDir, executableName).absolutePath
 
-        // Compile the C++ tests using g++ with explicit output filename
-        def compileCommand = "g++ -o ${executableName} runAllTests.cpp".execute(null, testDir)
+        // Modify the compile command to use gcc and link against libstdc++
+        def compileCommand = "gcc -o ${executableName} runAllTests.cpp -lstdc++".execute(null, testDir)
         compileCommand.waitFor()  // Wait for the compilation to complete
 
         if (compileCommand.exitValue() != 0) {
@@ -1471,6 +1471,7 @@ task rtcppTestbedTest {
                 "See results at ${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp/index.html")
     }
 }
+
 
 task testbedTests {
     group = "Custom"
