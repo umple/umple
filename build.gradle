@@ -1391,6 +1391,87 @@ task rubyTestbedTest {
     }
 }
 
+task RTCppTestbedCompileUmple {
+  group = "Custom"
+  description = "Compiling RTCpp testbed source files"
+  doLast{
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_cpp/src/TestHarnessRtcpp.ump")
+    }
+}
+
+task RTCppTestbedCompile {
+    group = "Custom"
+    description = "Compiling RTCpp testbed generated files"
+    dependsOn RTCppTestbedCompileUmple
+
+}
+
+task rtcppTestbedTest {
+    group = "Custom"
+    description = "Running RTCpp testbed tests"
+    dependsOn RTCppTestbedCompile
+    doLast {
+        println("Running RTCPP tests")
+        def osName = System.getProperty("os.name").toLowerCase()
+        def isWindows = osName.contains("win")
+        def testDir = new File("${rootProject.projectDir.toString()}/testbed_cpp/test")
+        def executableName = isWindows ? "runAllTests.exe" : "runAllTests"
+        def executablePath = new File(testDir, executableName).absolutePath
+
+        // Modify the compile command to use gcc and link against libstdc++
+        def compileCommand = "gcc -o ${executableName} runAllTests.cpp -lstdc++".execute(null, testDir)
+        compileCommand.waitFor()  // Wait for the compilation to complete
+
+        if (compileCommand.exitValue() != 0) {
+            println "Compilation failed with errors:"
+            println compileCommand.err.text  // Print error messages if any
+            throw new RuntimeException("Compilation failed")
+        }
+
+        // Check if executable file exists
+        if (!new File(executablePath).exists()) {
+            println "Executable not found: $executablePath"
+            throw new RuntimeException("Executable not found")
+        }
+
+        // Set executable permission on Unix-like systems (Linux and macOS)
+        if (!isWindows && !new File(executablePath).setExecutable(true)) {
+            println "Failed to set executable permission for $executablePath"
+            throw new RuntimeException("Failed to set executable permission")
+        }
+
+        // Execute the tests
+        def execCommand = (isWindows ? executablePath : "./${executableName}").execute(null, testDir)
+        execCommand.waitFor()  // Wait for the tests to complete
+
+        if (execCommand.exitValue() != 0) {
+            println "Execution failed with errors:"
+            println execCommand.err.text  // Print error messages if any
+            throw new RuntimeException("Execution failed")
+        }
+
+        // Manage test summary and report
+        def summaryFile = new File(testDir, "test_summary.txt")
+        if (summaryFile.exists()) {
+            new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp/index.txt").text = summaryFile.text
+        } else {
+            println("Test summary file not found.")
+        }
+
+        copy {
+            from("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp")
+            into("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp")
+            include "index.txt"
+            rename ("index.txt", "index.html")
+        }
+
+        delete "${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp/index.txt"
+
+        println("RTcpp tests completed!\n" +
+                "See results at ${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp/index.html")
+    }
+}
+
 task testbedTests {
     group = "Custom"
     description = "Running all testbed tests"
@@ -1398,6 +1479,7 @@ task testbedTests {
     dependsOn phpTestbedTest
     dependsOn pythonTestbedTest
     dependsOn rubyTestbedTest
+    dependsOn rtcppTestbedTest
 }
 
 def setupUserManualAndExampleTests(language) {
