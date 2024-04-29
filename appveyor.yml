@@ -34,9 +34,6 @@ init:
 # install the latest gcc and g++
 - ps: choco install mingw --limitoutput --no-progress
 
-# install the latest python3 ... python is already installed
-- ps: choco install python3 --pre --limitoutput --no-progress
-
 # Download the latest TXL version (this requires editing the install script)
 # Extract the files
 # Remove the need for user input
@@ -67,9 +64,6 @@ install:
 
 - ps: echo "gcc version"
 - ps: gcc --version
-
-- ps: echo "python3 version"
-- ps: python3 --version
 
 - ps: echo "cmake version"
 - ps: cmake --version
