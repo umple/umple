@@ -282,7 +282,7 @@
 
 <target name="testRTCpp">
     <echo message="Running RTCpp tests"/>
-    <exec executable="g++" dir="testbed_cpp/test/" output="${test.output.path.cpp}/index.html" outputproperty="test.output.cpp">
+    <exec executable="cpp" dir="testbed_cpp/test/" output="${test.output.path.cpp}/index.html" outputproperty="test.output.cpp">
         <arg value="-o"/>
         <arg value="runAllTests"/>
         <arg value="runAllTests.cpp"/>
