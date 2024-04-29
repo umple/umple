@@ -52,27 +52,22 @@ init:
 
 install:
 # NOTE if changing php version, make sure you change the cache above
-- ps: $env:Path="C:\Ruby23\bin;C:\Program Files\Java\jdk11\bin;$($env:Path);C:\tools\php83;C:\tools\php;C:\tools\MinGW;C:\ProgramData\mingw64\mingw64\bin;C:\ProgramData\chocolatey\lib\ant"
+- ps: $env:Path="C:\Ruby23\bin;C:\Program Files\Java\jdk11\bin;$($env:Path);C:\tools\php83;C:\tools\php;C:\tools\MinGW;C:\ProgramData\mingw64\mingw64\bin;C:\ProgramData\chocolatey\lib\ant;C:\Program Files\CMake;C:\Program Files\CMake\bin"
+
 - ps: $env:JAVA_HOME="C:\Program Files\Java\jdk11" 
 - ps: echo "Path is $env:Path"
-- ps: echo "Choco log:"
-- ps: type "C:\ProgramData\chocolatey\logs\chocolatey.log"
+
 - ps: echo "Java versions available"
 - ps: dir "C:\Program Files\Java"
+
 - ps: ant -version
+
 - ps: echo "gcc version"
 - ps: gcc --version
-- ps: echo "listing of C:"
-- ps: dir "C:"
-- ps: echo "listing of C:\ProgramData"
-- ps: dir "C:\ProgramData"
-- ps: echo "listing of C:\ProgramData\chocolatey"
-- ps: dir "C:\ProgramData\chocolatey"
-- ps: echo "listing of C:\Program Files"
-- ps: dir "C:\Program Files"
 
-- ps: echo "listing of C:\tools"
-- ps: dir "C:\tools"
+- ps: echo "listing of C:\Program Files\CMake"
+- ps: dir "C:\Program Files\CMake"
+
 - ps: echo "cmake version"
 - ps: cmake --version
 
