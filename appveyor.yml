@@ -65,8 +65,8 @@ install:
 - ps: echo "gcc version"
 - ps: gcc --version
 
-- ps: echo "listing of C:\Program Files\CMake"
-- ps: dir "C:\Program Files\CMake"
+- ps: echo "python version"
+- ps: python --version
 
 - ps: echo "cmake version"
 - ps: cmake --version
