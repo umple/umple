@@ -28,6 +28,12 @@ init:
 # install the latest php (dependencies kb2919442 kb3035131 kb2999226 were failing )
 - ps: choco install php --ignore-dependencies --limitoutput --no-progress 
 
+# install the latest cmalke
+- ps: choco install cmake --ignore-dependencies --limitoutput --no-progress 
+
+# install the latest gcc and g++
+- ps: choco install mingw --ignore-dependencies --limitoutput --no-progress 
+
 # Download the latest TXL version (this requires editing the install script)
 # Extract the files
 # Remove the need for user input
@@ -52,6 +58,11 @@ install:
 - ps: echo "Java versions available"
 - ps: dir "C:\Program Files\Java"
 - ps: ant -version
+- ps: echo "g++ version"
+- ps: g++ --version
+- ps: echo "cmake version"
+- ps: cmake --version
+
 - ps: pushd build
 
 - cmd: ant bootstrap
