@@ -29,7 +29,7 @@ init:
 - ps: choco install php --ignore-dependencies --limitoutput --no-progress 
 
 # install the latest cmake
-- ps: choco install cmake.portable 
+- ps: choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --apply-install-arguments-to-dependencies
 
 # install the latest gcc and g++
 - ps: choco install mingw --limitoutput --no-progress
@@ -60,6 +60,10 @@ install:
 - ps: ant -version
 - ps: echo "gcc version"
 - ps: gcc --version
+- ps: echo "listing of C:\ProgramData"
+- ps: dir "C:\ProgramData"
+- ps: echo "listing of C:\tools"
+- ps: dir "C:\tools"
 - ps: echo "cmake version"
 - ps: cmake --version
 
