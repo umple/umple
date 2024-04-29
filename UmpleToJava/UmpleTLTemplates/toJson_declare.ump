@@ -143,7 +143,8 @@ class UmpleToJava {
             toJsonOutput.append("<<#realSb.append(" : [");#>>");
             toJsonOutput.append("\n");
             haveOutputItem = false;
-            for (<<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anItem :<<#append(realSb,"" + associations.get(assoIndex) + "");#>>){
+            try{
+              for (<<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anItem :<<#append(realSb,"" + associations.get(assoIndex) + "");#>>){
               if(haveOutputItem) {
                 toJsonOutput.append(",\n");
               }
@@ -154,6 +155,9 @@ class UmpleToJava {
               toJsonOutput.append(indent+"}");
               haveOutputItem=true;
             }
+            }catch (NullPointerException e){
+            }
+
             toJsonOutput.append("\n");    
             toJsonOutput.append(indent+"]");
             toJsonOutput.append("\n"); 
@@ -385,8 +389,7 @@ class UmpleToJava {
     <<#for (int assoJsonCount=0; assoJsonCount<associationNamesFromJson.size();assoJsonCount++){#>>
        jsonKey=<<#append(realSb,"\""+associationNamesFromJson.get(assoJsonCount)+"\"");#>>;
        String newJsonString=parsedResult.get(jsonKey);
-//more types should be considered here
-       // if is single association, only create 1 associated object
+      // if is multiple association, create a new list to store the objects
       <<#if(associationIsManyFromJson.get(assoJsonCount)){#>>
         <<#appendln(realSb,"");#>>
         <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> manyAssoObj=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString,umpleObjectIDMap);
@@ -394,7 +397,7 @@ class UmpleToJava {
         aAssoList.add(manyAssoObj);
         this.<<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=aAssoList;
       <<#}
-      // if is multiple association, create a new list to store the objects
+      // if is single association, only create 1 associated object
       else{#>>
         <<#appendln(realSb,"");#>>
         <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> anAssoObj=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString,umpleObjectIDMap);
@@ -412,6 +415,7 @@ class UmpleToJava {
       <<#for (int primJsonCount=0; primJsonCount<nameOfPrimitivesFromJson.size();primJsonCount++){#>>
           this.<<#realSb.append(nameOfPrimitivesFromJson.get(primJsonCount));#>>=createdObj.<<#realSb.append(displayedPrimitivesFromJson.get(primJsonCount));#>>;
       <<#}#>>
+      
       }
   }!>>
  
