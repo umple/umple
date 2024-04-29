@@ -29,7 +29,7 @@ init:
 - ps: choco install php --ignore-dependencies --limitoutput --no-progress 
 
 # install the latest cmake
-- ps: choco install cmake  --installargs 'ADD_CMAKE_TO_PATH=System'
+- ps: choco install cmake.portable 
 
 # install the latest gcc and g++
 - ps: choco install mingw --limitoutput --no-progress
