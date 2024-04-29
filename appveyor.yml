@@ -52,7 +52,7 @@ init:
 
 install:
 # NOTE if changing php version, make sure you change the cache above
-- ps: $env:Path="C:\Ruby23\bin;C:\Program Files\Java\jdk11\bin;$($env:Path);C:\tools\php83;C:\tools\php;C:\tools\MinGW;C:\ProgramData\chocolatey\lib\ant"
+- ps: $env:Path="C:\Ruby23\bin;C:\Program Files\Java\jdk11\bin;$($env:Path);C:\tools\php83;C:\tools\php;C:\tools\MinGW;C:\ProgramData\mingw64\mingw64\bin;C:\ProgramData\chocolatey\lib\ant"
 - ps: $env:JAVA_HOME="C:\Program Files\Java\jdk11" 
 - ps: echo "Path is $env:Path"
 - ps: echo "Java versions available"
