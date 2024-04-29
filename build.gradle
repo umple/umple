@@ -1441,10 +1441,10 @@ task rtCppTestbedTest {
 task testbedTests {
     group = "Custom"
     description = "Running all testbed tests"
-    // dependsOn javaTestbedTest
-    // dependsOn phpTestbedTest
-    // dependsOn pythonTestbedTest
-    // dependsOn rubyTestbedTest
+    dependsOn javaTestbedTest
+    dependsOn phpTestbedTest
+    dependsOn pythonTestbedTest
+    dependsOn rubyTestbedTest
     dependsOn rtCppTestbedTest
 }
 
