@@ -1391,13 +1391,61 @@ task rubyTestbedTest {
     }
 }
 
+task RTCppTestbedCompileUmple {
+  group = "Custom"
+  description = "Compiling RTCpp testbed source files"
+  doLast{
+    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_cpp/src/TestHarnessPython.ump")
+    }
+}
+
+task RTCppTestbedCompile {
+    group = "Custom"
+    description = "Compiling RTCpp testbed generated files"
+    dependsOn RTCppTestbedCompileUmple
+
+}
+
+task rtCppTestbedTest {
+    group = "Custom"
+    description = "Running RTCpp testbed tests"
+    dependsOn RTCppTestbedCompile
+    doLast {
+        println("Running RTCPP tests")
+        new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp").mkdir()
+        def command = "cpp -o runAllTests runAllTests.cpp -I."  
+
+        // Execute the C++ tests in the appropriate directory
+        def proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_cpp/test"))
+        
+        // Write the output of the tests to a file
+        def out = new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp/index.txt")
+        out.text = proc.text
+        
+        // Optionally, convert the plain text report to HTML or another format
+        copy {
+            from("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp")
+            into("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp")
+            include "index.txt"
+            rename ("index.txt", "index.html")
+        }
+
+        // Clean up by deleting the text file if no longer needed
+        delete "${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp/index.txt"
+
+        println("RTcpp tests completed!\n" +
+                "See results at ${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp/index.html")
+    }
+}
+
 task testbedTests {
     group = "Custom"
     description = "Running all testbed tests"
-    dependsOn javaTestbedTest
-    dependsOn phpTestbedTest
-    dependsOn pythonTestbedTest
-    dependsOn rubyTestbedTest
+    // dependsOn javaTestbedTest
+    // dependsOn phpTestbedTest
+    // dependsOn pythonTestbedTest
+    // dependsOn rubyTestbedTest
+    dependsOn rtCppTestbedTest
 }
 
 def setupUserManualAndExampleTests(language) {

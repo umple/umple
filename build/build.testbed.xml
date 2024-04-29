@@ -16,6 +16,7 @@
   <property name="test.output.path.php" value="${dist.dir}/qa/testbed_php"/>
   <property name="test.output.path.python" value="${dist.dir}/qa/testbed_python"/>
   <property name="test.output.path.ruby" value="${dist.dir}/qa/testbed_ruby"/>
+  <property name="test.output.path.cpp" value="${dist.dir}/qa/testbed_cpp"/>
 
   <property name="examplepattern" value="*" />
   <property name="manualumpfiles.path" value="umpleonline/umplibrary/manualexamples"/>
@@ -60,6 +61,7 @@
     <mkdir dir="${test.output.path.php}"/>
     <mkdir dir="${test.output.path.python}"/>
     <mkdir dir="${test.output.path.ruby}"/>
+    <mkdir dir="${test.output.path.cpp}"/>
   </target>
 
 
@@ -72,6 +74,7 @@
     <antcall target="compilePhp" />
     <antcall target="compilePython" />
     <antcall target="compileRuby" />
+    <antcall target="compileRTCpp" />
   </target>
 
   <target name="compileJava">
@@ -160,6 +163,14 @@
     </java>
   </target>
 
+  <target name="compileRTCpp">
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
+
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
+      <arg value="testbed_cpp/src/TestHarnessRTCpp.ump"/>
+    </java>
+  </target>
+
   <!-- ```````````````````````````
     Run the testbed tests for all supported languages
   ``````````````````````````` -->
@@ -169,6 +180,7 @@
     <antcall target="testPhp" />
     <antcall target="testPython" />
     <antcall target="testRuby" />
+    <antcall target="testRTCpp" />
     <!--
     <antcall target="allUserManualAndExampleTests" />
     -->
@@ -267,6 +279,26 @@
 
     <echo message="RUBY tests completed!"/>
   </target>
+
+<target name="testRTCpp">
+    <echo message="Running RTCpp tests"/>
+    <exec executable="g++" dir="testbed_cpp/test/" output="${test.output.path.cpp}/index.html" outputproperty="test.output.cpp">
+        <arg value="-o"/>
+        <arg value="runAllTests"/>
+        <arg value="runAllTests.cpp"/>
+        <arg value="-I."/>
+    </exec>
+
+    <fail message="RTCpp Error found">
+        <condition>
+            <contains string="${test.output.cpp}" substring="FAIL" casesensitive="true"/>
+        </condition>
+    </fail>
+
+    <echo message="RTCPP tests completed!"/>
+</target>
+
+
 
   <!-- ``````````````````````````````````````````````
     User manual example and umpleonline example tests

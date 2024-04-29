@@ -1,0 +1,24 @@
+class Chat{  
+
+  Integer i;  
+  
+  const Integer Max = 100;  
+  
+  immutable String str;  
+    
+  lazy Boolean b;  
+  lazy s;  
+
+  settable Float f;
+
+  unique u;  
+   
+  autounique x;  
+
+  String q = "chicken";   
+        
+
+  defaulted String p = "robot";  
+
+  defaulted r = "";  
+}  
