@@ -29,10 +29,10 @@ init:
 - ps: choco install php --ignore-dependencies --limitoutput --no-progress 
 
 # install the latest cmake
-- ps: choco install cmake --limitoutput --no-progress --installargs 'ADD_CMAKE_TO_PATH=System'
+- ps: choco install cmake  --installargs 'ADD_CMAKE_TO_PATH=System'
 
 # install the latest gcc and g++
-- ps: choco install mingw 
+- ps: choco install mingw --limitoutput --no-progress
 
 # Download the latest TXL version (this requires editing the install script)
 # Extract the files
