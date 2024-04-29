@@ -28,11 +28,11 @@ init:
 # install the latest php (dependencies kb2919442 kb3035131 kb2999226 were failing )
 - ps: choco install php --ignore-dependencies --limitoutput --no-progress 
 
-# install the latest cmalke
-- ps: choco install cmake --ignore-dependencies --limitoutput --no-progress 
+# install the latest cmake
+- ps: choco install cmake --limitoutput --no-progress --installargs 'ADD_CMAKE_TO_PATH=System'
 
 # install the latest gcc and g++
-- ps: choco install mingw --ignore-dependencies --limitoutput --no-progress 
+- ps: choco install mingw 
 
 # Download the latest TXL version (this requires editing the install script)
 # Extract the files
@@ -52,14 +52,14 @@ init:
 
 install:
 # NOTE if changing php version, make sure you change the cache above
-- ps: $env:Path="C:\Ruby23\bin;C:\Program Files\Java\jdk11\bin;$($env:Path);C:\tools\php83;C:\tools\php;C:\ProgramData\chocolatey\lib\ant"
+- ps: $env:Path="C:\Ruby23\bin;C:\Program Files\Java\jdk11\bin;$($env:Path);C:\tools\php83;C:\tools\php;C:\tools\MinGW;C:\ProgramData\chocolatey\lib\ant"
 - ps: $env:JAVA_HOME="C:\Program Files\Java\jdk11" 
 - ps: echo "Path is $env:Path"
 - ps: echo "Java versions available"
 - ps: dir "C:\Program Files\Java"
 - ps: ant -version
-- ps: echo "g++ version"
-- ps: g++ --version
+- ps: echo "gcc version"
+- ps: gcc --version
 - ps: echo "cmake version"
 - ps: cmake --version
 
