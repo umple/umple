@@ -219,3 +219,4 @@ class CarSystem {
  motorOilViscosity.motorOilViscosity -> motorOilCheck.motorOilViscosity;
 }
 // @@@skipjavacompile @@@skipphpcompile @@@skippythoncompile generated code does not compile - likely incomplete
+// @@@skipcppcompile

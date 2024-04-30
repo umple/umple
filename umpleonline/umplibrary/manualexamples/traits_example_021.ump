@@ -36,3 +36,4 @@ class C1 {
 class C2 {
   isA T1<+sm1.s1>;
 }
+// @@@skipcppcompile
