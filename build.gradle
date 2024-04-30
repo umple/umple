@@ -1415,6 +1415,7 @@ task rtcppTestbedTest {
     dependsOn RTCppTestbedCompile
     doLast {
         println("Running RTCPP tests")
+        new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp").mkdir()
         def osName = System.getProperty("os.name").toLowerCase()
         def isWindows = osName.contains("win")
         def testDir = new File("${rootProject.projectDir.toString()}/testbed_cpp/test")
