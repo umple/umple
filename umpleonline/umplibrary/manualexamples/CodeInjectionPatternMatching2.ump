@@ -10,3 +10,4 @@ class Student
   }
 }
 //$?[End_of_model]$?
+// @@@skipcppcompile
