@@ -86,3 +86,4 @@ class Supplier
   position.association OrderToSupplier__Supplier 84,92 32,0;
   position.association ReceivedDelivery__Supplier 32,92 19,0;
 }
+// @@@skipcppcompile

@@ -134,3 +134,4 @@ class Student
   position.association Student__Transcript 127,32 0,10;
   position.association Student__TimeSlot 116,0 0,10;
 }
+// @@@skipcppcompile

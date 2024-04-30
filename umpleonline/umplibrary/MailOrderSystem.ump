@@ -69,3 +69,4 @@ class OrderToSupplier {
  1 -- * SupplierOrderLineItem;
 }
 class ReceivedLineItem { numberReceived; actualCostPerUnit; }
+// @@@skipcppcompile

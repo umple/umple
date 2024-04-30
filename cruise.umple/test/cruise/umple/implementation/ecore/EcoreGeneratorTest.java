@@ -43,6 +43,8 @@ public class EcoreGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/ecore/EnumsInClass.ecore");
     SampleFileWriter.destroy(pathToInput + "/ecore/EnumsOutClass.ecore");
     SampleFileWriter.destroy(pathToInput + "/ecore/MultipleEnums.ecore");
+    SampleFileWriter.destroy(pathToInput + "/ecore/Compositions.ecore");
+    SampleFileWriter.destroy(pathToInput + "/ecore/CompositionsInAssociations.ecore");
   }
 
   @Test
@@ -170,5 +172,19 @@ public class EcoreGeneratorTest extends TemplateTest
     language = null;
     assertUmpleTemplateFor("ecore/MultipleEnums.ump","ecore/MultipleEnums.ecore.txt");
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/MultipleEnums.ecore")).exists());
+  }
+
+  @Test
+  public void Compositions(){
+    language = null;
+    assertUmpleTemplateFor("ecore/Compositions.ump","ecore/Compositions.ecore.txt");
+    Assert.assertEquals(true, (new File(pathToInput + "/ecore/Compositions.ecore")).exists());
+  }
+
+  @Test
+  public void CompositionsInAssociations(){
+    language = null;
+    assertUmpleTemplateFor("ecore/CompositionsInAssociations.ump","ecore/CompositionsInAssociations.ecore.txt");
+    Assert.assertEquals(true, (new File(pathToInput + "/ecore/CompositionsInAssociations.ecore")).exists());
   }
 }

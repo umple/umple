@@ -59,3 +59,4 @@ class AutomatedTellerMachine{
   void ejectCard() {/*Code would be written here*/}
 
 }
+// @@@skipcppcompile

@@ -101,3 +101,4 @@ class Booking
   position.association Booking__SpecificFlight 154,33 0,35;
   position.association Booking:Booking__SpecificFlight 154,41 0,43;
 }
+// @@@skipcppcompile

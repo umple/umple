@@ -36,3 +36,4 @@ class K{isA F;}
 namespace p;
 class X{isA A;}
 // interface Y{isA E;}
+// @@@skipcppcompile

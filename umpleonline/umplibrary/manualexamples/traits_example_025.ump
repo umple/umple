@@ -10,12 +10,13 @@
 */
 trait T1{
   void method1();
-  void method2(){/*impl… */ }
+  void method2() Java {/*impl… */ }
+  void method2() Python {'''impl… ''' }
 }
 trait T1{
-  void method3(){/*impl… */ }
+  void method3() Python {'''impl… ''' }
 }
 class C1{
   isA T1;
-  void method1(){/*impl… */ }    
+  void method1() Python {'''impl… ''' }
 }

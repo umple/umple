@@ -50,6 +50,7 @@ class UmpleModel
   // These are set to true when various @@@skip directives are found in comments
   Boolean skipcompile=false;
   Boolean skipjavacompile=false;
+  Boolean skippythoncompile=false;
   Boolean skipcppcompile=false;
   Boolean skiprubycompile=false;
   Boolean skipphpcompile=false;
