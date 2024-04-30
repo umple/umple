@@ -344,22 +344,26 @@ class UmpleToJava {
 //more types should be considered here
       <<#if(attributeTypeFromJson.get(attrJsonCount).equals("int")){#>>
         int attrvalueInt = Integer.valueOf(parsedResult.get(jsonKey));
-        this.<<#realSb.append(nameOfAttributesFromJson);#>>=attrvalueInt;
+        this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=attrvalueInt;
       <<#}
       if(attributeTypeFromJson.get(attrJsonCount).equals("double")){#>>
         double attrvalueDouble =Double.valueOf(parsedResult.get(jsonKey));
-        this.<<#realSb.append(nameOfAttributesFromJson);#>>=attrvalueDouble;
+        this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=attrvalueDouble;
       <<#}
       if(attributeTypeFromJson.get(attrJsonCount).equals("float")){#>>
         float attrvalueFloat=Float.parseFloat(parsedResult.get(jsonKey));
-        this.<<#realSb.append(nameOfAttributesFromJson);#>>=attrvalueFloat;
+        this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=attrvalueFloat;
       <<#}
       if(attributeTypeFromJson.get(attrJsonCount).equals("boolean")){#>>
         boolean attrvalueBool=Boolean.parseBoolean(parsedResult.get(jsonKey));
-        this.<<#realSb.append(nameOfAttributesFromJson);#>>=attrvalueBool;
+        this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=attrvalueBool;
+      <<#}
+      if(attributeTypeFromJson.get(attrJsonCount).equals("Time")){#>>
+        Time attrvalueTime=Time.valueOf(parsedResult.get(jsonKey));
+        this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=attrvalueTime;
       <<#}
       if(attributeTypeFromJson.get(attrJsonCount).equals("String")){#>>
-        this.<<#realSb.append(nameOfAttributesFromJson);#>>=parsedResult.get(jsonKey);
+        this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=parsedResult.get(jsonKey);
       <<#}#>>
 	<<#}#>>
     <<#for (int primJsonCount=0; primJsonCount<nameOfPrimitivesFromJson.size();primJsonCount++){#>>
@@ -380,6 +384,10 @@ class UmpleToJava {
       if(primitiveTypeFromJson.get(primJsonCount).equals("boolean")){#>>
         boolean valueBool=Boolean.parseBoolean(parsedResult.get(jsonKey));
         this.<<#append(realSb,nameOfPrimitivesFromJson.get(primJsonCount));#>>=valueBool;
+      <<#}
+      if(primitiveTypeFromJson.get(primJsonCount).equals("Time")){#>>
+        boolean valueTime=Time.valueOf(parsedResult.get(jsonKey));
+        this.<<#append(realSb,nameOfPrimitivesFromJson.get(primJsonCount));#>>=valueTime;
       <<#}
       if(primitiveTypeFromJson.get(primJsonCount).equals("String")){#>>
         this.<<#append(realSb,nameOfPrimitivesFromJson.get(primJsonCount));#>>=parsedResult.get(jsonKey);
@@ -474,12 +482,19 @@ class UmpleToJava {
             jsonString=jsonString.split(objIDString, 2)[1];
         }
         
+        String timeString="\\\"\\w*\\\"\\:\\\"\\d{2}:\\d{2}\\:\\d{2}\\\"";
+        Pattern timeStringPattern=Pattern.compile(timeString);
+        Matcher timeStringPatternMatcher=timeStringPattern.matcher(jsonString);
+        if(timeStringPatternMatcher.find()){
+          String timeStringFound=timeStringPatternMatcher.group(0);
+          parsedResultMap.put(timeStringFound.split(colon,2)[0].split(quotes)[1], timeStringFound.split(colon,2)[1].split(quotes)[1]);
+          
+        }
+        
         // pairString is the regex for an object's attribute and attribute value, the string parsed will be in key-value formate
         String pairString = "\\\"\\w*\\\"\\:\\\"\\w*([.])?\\w*\\\"";
         Pattern pairPattern=Pattern.compile(pairString);
         Matcher pairMatcher=pairPattern.matcher(jsonString);
-        
-       
         //Keep on parsing the attribute's key-value pair, 
         //until a List (multi-associations) pattern or a newObject parttern (single association) is found
         while(pairMatcher.find()){
@@ -526,6 +541,7 @@ class UmpleToJava {
                pairMatcher=pairPattern.matcher(jsonString);
         }
         }
+        
         return parsedResultMap;
     }catch(NullPointerException e){
       return parsedResultMap;
