@@ -16,6 +16,7 @@
   <property name="test.output.path.php" value="${dist.dir}/qa/testbed_php"/>
   <property name="test.output.path.python" value="${dist.dir}/qa/testbed_python"/>
   <property name="test.output.path.ruby" value="${dist.dir}/qa/testbed_ruby"/>
+  <property name="test.output.path.cpp" value="${dist.dir}/qa/testbed_cpp"/>
 
   <property name="examplepattern" value="*" />
   <property name="manualumpfiles.path" value="umpleonline/umplibrary/manualexamples"/>
@@ -60,6 +61,7 @@
     <mkdir dir="${test.output.path.php}"/>
     <mkdir dir="${test.output.path.python}"/>
     <mkdir dir="${test.output.path.ruby}"/>
+    <mkdir dir="${test.output.path.cpp}"/>
   </target>
 
 
@@ -72,6 +74,7 @@
     <antcall target="compilePhp" />
     <antcall target="compilePython" />
     <antcall target="compileRuby" />
+    <antcall target="compileRTCpp" />
   </target>
 
   <target name="compileJava">
@@ -159,6 +162,14 @@
       <arg value="testbed_ruby/src/TestHarnessRuby.ump"/>
     </java>
   </target>
+  
+  <target name="compileRTCpp">
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
+
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
+      <arg value="testbed_cpp/src/TestHarnessRTCpp.ump"/>
+    </java>
+  </target>
 
   <!-- ```````````````````````````
     Run the testbed tests for all supported languages
@@ -169,6 +180,7 @@
     <antcall target="testPhp" />
     <antcall target="testPython" />
     <antcall target="testRuby" />
+    <antcall target="testRTCpp" />
     <!--
     <antcall target="allUserManualAndExampleTests" />
     -->
@@ -266,6 +278,35 @@
     </fail>
 
     <echo message="RUBY tests completed!"/>
+  </target>
+  
+  <target name="testRTCpp">
+    <echo message="Compiling RTCpp tests using gcc"/>
+    <exec executable="gcc" dir="testbed_cpp/test" failonerror="true">
+        <arg value="-o"/>
+        <arg value="runAllTests"/>
+        <arg value="runAllTests.cpp"/>
+        <arg line="-lstdc++"/>
+    </exec>
+
+    <available file="runAllTests" property="exe.exists"/>
+
+    <echo message="Running RTCpp tests"/>
+
+    <exec executable="./runAllTests" dir="testbed_cpp/test" failonerror="true" osfamily="unix" output="${test.output.path.cpp}/index.html">
+    </exec>
+
+    <exec executable="cmd" dir="testbed_cpp/test" failonerror="true" osfamily="windows" output="${test.output.path.cpp}/index.html">
+        <arg value="/c runAllTests"/>
+    </exec> <!-- Ensure using cmd to handle on Windows -->
+
+    <fail message="RTCpp Error found">
+        <condition>
+            <contains string="${test.output.path.cpp}/index.html" substring="FAIL" casesensitive="true"/>
+        </condition>
+    </fail> 
+
+    <echo message="RTCpp tests completed!"/>
   </target>
 
   <!-- ``````````````````````````````````````````````
