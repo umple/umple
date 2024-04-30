@@ -53,8 +53,14 @@ class Runway {
       }
     }
   }
-  void closeRunway() {}
-  void turnOffGreenLight() {}
-  void turnOnGreenLight() {}
-  void performMaintenanceWork() {}
+  void closeRunway() Java {}
+  void turnOffGreenLight() Java {}
+  void turnOnGreenLight() Java {}
+  void performMaintenanceWork() Java {}
+
+  void closeRunway() Python { ''' Implementaion ''' }
+  void turnOffGreenLight() Python { ''' Implementaion ''' }
+  void turnOnGreenLight() Python { ''' Implementaion ''' }
+  void performMaintenanceWork() Python { ''' Implementaion ''' }
 }
+// @@@skipcppcompile

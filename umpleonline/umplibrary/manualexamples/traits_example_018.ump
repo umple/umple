@@ -15,3 +15,4 @@ trait T1 {
 class C1 {
   isA T1<sm.s0 as state0, sm.s0.s0.s11 as state11>;
 }
+// @@@skipcppcompile

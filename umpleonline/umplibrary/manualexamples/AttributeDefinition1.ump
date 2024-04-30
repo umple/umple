@@ -66,3 +66,4 @@ class Group
   // no type is given, then the default type is String.
   defaulted r = "";
 }
+// @@@skipcppcompile

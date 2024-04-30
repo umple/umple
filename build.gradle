@@ -1391,6 +1391,99 @@ task rubyTestbedTest {
     }
 }
 
+task RTCppTestbedCompileUmple {
+    group = "Custom"
+    description = "Compiling RTCpp testbed source files"
+    doLast {
+        runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_cpp/src/TestHarnessRtcpp.ump")
+        // Cleanup the generated source directory
+        delete {
+            delete "${rootProject.projectDir.toString()}/testbed_cpp/src/RTCpp"
+        }
+    }
+}
+
+task RTCppTestbedCompile {
+    group = "Custom"
+    description = "Compiling RTCpp testbed generated files"
+    dependsOn RTCppTestbedCompileUmple
+}
+
+task rtcppTestbedTest {
+    group = "Custom"
+    description = "Running RTCpp testbed tests"
+    dependsOn RTCppTestbedCompile
+    doLast {
+        println("Running RTCPP tests")
+        new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp").mkdir()
+        def osName = System.getProperty("os.name").toLowerCase()
+        def isWindows = osName.contains("win")
+        def testDir = new File("${rootProject.projectDir.toString()}/testbed_cpp/test")
+        def executableName = isWindows ? "runAllTests.exe" : "runAllTests"
+        def executablePath = new File(testDir, executableName).absolutePath
+
+        // Modify the compile command to use gcc and link against libstdc++
+        def compileCommand = "gcc -o ${executableName} runAllTests.cpp -lstdc++".execute(null, testDir)
+        compileCommand.waitFor()  // Wait for the compilation to complete
+
+        if (compileCommand.exitValue() != 0) {
+            println "Compilation failed with errors:"
+            println compileCommand.err.text  // Print error messages if any
+            throw new RuntimeException("Compilation failed")
+        }
+
+        // Check if executable file exists
+        if (!new File(executablePath).exists()) {
+            println "Executable not found: $executablePath"
+            throw new RuntimeException("Executable not found")
+        }
+
+        // Set executable permission on Unix-like systems (Linux and macOS)
+        if (!isWindows && !new File(executablePath).setExecutable(true)) {
+            println "Failed to set executable permission for $executablePath"
+            throw new RuntimeException("Failed to set executable permission")
+        }
+
+        // Execute the tests
+        def execCommand = (isWindows ? executablePath : "./${executableName}").execute(null, testDir)
+        execCommand.waitFor()  // Wait for the tests to complete
+
+        if (execCommand.exitValue() != 0) {
+            println "Execution failed with errors:"
+            println execCommand.err.text  // Print error messages if any
+            throw new RuntimeException("Execution failed")
+        }
+
+        // Manage test summary and report
+        def summaryFile = new File(testDir, "test_summary.txt")
+        if (summaryFile.exists()) {
+            new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp/index.txt").text = summaryFile.text
+        } else {
+            println("Test summary file not found.")
+        }
+
+        copy {
+            from("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp")
+            into("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp")
+            include "index.txt"
+            rename ("index.txt", "index.html")
+        }
+
+        delete "${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp/index.txt"
+
+        // Cleanup after tests
+        delete {
+            delete "$testDir/runAllTests.exe"
+            delete "$testDir/test_summary.txt"
+            delete fileTree(dir: "$testDir", include: '*.exe')
+            delete "$testDir/RTCpp"
+        }
+
+        println("RTCpp tests completed!\n" +
+                "See results at ${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp/index.html")
+    }
+}
+
 task testbedTests {
     group = "Custom"
     description = "Running all testbed tests"
@@ -1398,6 +1491,7 @@ task testbedTests {
     dependsOn phpTestbedTest
     dependsOn pythonTestbedTest
     dependsOn rubyTestbedTest
+    dependsOn rtcppTestbedTest
 }
 
 def setupUserManualAndExampleTests(language) {
@@ -1616,6 +1710,178 @@ task phpUserManualAndExampleTests {
     }
 }
 
+task ('setupRTCppUserManualAndExampleTests') {
+  group = "Custom"
+  description = "Setting up RTCpp umpleonline and user manual examples"
+  doLast{
+    setupUserManualAndExampleTests("rtcpp");
+    }
+}
+
+task rtcppUserManualAndExampleTests {
+    group = "Custom"
+    description = "Testing RTCpp umpleonline and Manual Examples"
+    dependsOn setupRTCppUserManualAndExampleTests
+    doLast {
+        def excludes = [
+            "ActiveObjects1.ump",
+            "AgentsCommunication.ump",
+            "Auto-Transitions1.ump",
+            "ClassDefinition1.ump",
+            "CodeInjectioninEventMethods1.ump",
+            "CollisionAvoidanceA1.ump",
+            "CollisionAvoidanceA2.ump",
+            "CollisionAvoidanceA3.ump",
+            "ComplexStateMachine.ump",
+            "ConcurrencyUsingDoActivities1.ump",
+            "ConcurrencyUsingDoActivities2.ump",
+            "CoordinationStateMachine.ump",
+            "DelegationPattern1.ump",
+            "Dishwasher.ump",
+            "ExternalInterface.ump",
+            "HomeHeater.ump",
+            "HtmlGeneration.ump",
+            "MicrowaveOven2.ump",
+            "OBDCarSystem.ump",
+            "PooledStateMachines1.ump",
+            "QueuedStateMachines1.ump",
+            "School.ump",
+            "SecurityLight.ump",        
+            "SortedAssociations1.ump",
+            "SortedAssociations2.ump",
+            "StateMachineActionsandDoActivities1.ump",
+            "TcpIpSimulation.txt.ump",
+            "TimedCommands.ump",
+            "TimedTransitions1.ump",
+            "TimedTransitions2.ump",
+            "traits_example_multifeature.ump",
+            "E013NonImmutableAssociation1.ump",               
+            "E019DuplicateAssociation3.ump",
+            "E034MultipleInheritance1.ump",
+            "E219NoBindingParameters1.ump",
+            "E095DuplicateEnumerations2.ump",
+            "E021InvalidReflexiveAssociation1.ump",
+            "E225SatisfactionOfConstraints.ump",
+            "E211MoreModifications1.ump",
+            "WE1xxIdentifierInvalid1.ump",
+            "E224MultipleInheritanceConstraint.ump",
+            "E235SuperCallConflict.ump",
+            "E096EnumerationNamingConflict1.ump",
+            "E221BoundTypeAvailable.ump",
+            "E3505TemplateReferenceCycle1.ump",
+            "E210ConflictMethods1.ump",
+            "E058RegularQueuedPooledStateMachineInClass1.ump",
+            "E037UninitializedConstantObject1.ump",
+            "WE1xxIdentifierInvalid3.ump",
+            "E112DuplicateConstantsinInterface1.ump",
+            "E081InvalidMultivaluedAttributeAssignment1.ump",
+            "E095DuplicateEnumerations1.ump",
+            "E026DuplicateKeyItem1.ump",
+            "E092ClassIsNotSubclassConstraint1.ump",
+            "E213BidirectionalTraitAssociation.ump",
+            "E220TwoMethodWithSameName1.ump",
+            "E029ConstraintTypeMismatch1.ump",
+            "E018ReflexiveImmutable1.ump",
+            "E083InvalidMultivaluedAttributeInitialization1.ump",
+            "E180DuplicateRoleNameSubclass.ump",
+            "E3504TemplateReferenceCannotBeResolved1.ump",
+            "E219NoBindingParameters.ump",
+            "E3507DuplicateEmitMethodName1.ump",
+            "E096EnumerationNamingConflict2.ump",
+            "E212NoAvailableMethod1.ump",
+            "E3500InvalidTemplateName1.ump",
+            "E217ConflictInTypeofAttributes.ump",
+            "E041NonVoidQueuedMethod1.ump",
+            "E074UserDefinedStateCannotBeNamedFinal1.ump",
+            "E063ReservedNameHistoryState1.ump",
+            "E061RegularQueuedStateMachineInClass1.ump",
+            "E019DuplicateAssociation1.ump",
+            "E024SortKeyNotofUmpleType1.ump",
+            "E230SMAvailability.ump",
+            "E032ReservedRoleName3.ump",
+            "E234NonDeteministicComposition.ump",
+            "E210ConflictMethods2.ump",
+            "E017NonImmutableBidirectionality1.ump",
+            "E232EventAvailability.ump",
+            "E040_singleton_inherited.ump",
+            "E023AttributeAssociationNameClash2.ump",
+            "E215NoAvailableTemplateParameter.ump",
+            "E014ImmutableSubclassofMutable1.ump",
+            "E204CyclicUse1.ump",
+            "E216TwiceBinding.ump",
+            "E038AutogeneratedAttributeNameConflict1.ump",
+            "E093ClassIsNotSuperClassConstraint1.ump",
+            "E005UndefinedClassinAssociation4.ump",
+            "E094NoAssociationFoundConstraint1.ump",
+            "E208NotRequiredMethod.ump",
+            "E212NoAvailableMethod3.ump",
+            "E020InterfaceAssociationNotOneWay2.ump",
+            "E080InvalidAbstractClassAssociation1.ump",
+            "E237UniqueRegionName.ump",
+            "E073DuplicateParallelStateMachineName1.ump",
+            "E080InvalidAbstractClassAssociation2.ump",
+            "E231EventAvailability.ump",
+            "E012ClassIndirectlySubclassofSelf1.ump",
+            "E200InvalidTraitIdentifierE2.ump",
+            "E060RegularPooledStateMachineInClass1.ump",
+            "E059QueuedPooledStateMachineInClass1.ump",
+            "E020InterfaceAssociationNotOneWay1.ump",
+            "E097EnumerationAndStateMachineConflict1.ump",
+            "E034MultipleInheritance2.ump",
+            "E222SatisfactionOfRequiredInterfaces.ump",
+            "E006MissingDefault1.ump",
+            "E004InvalidMultiplicity1.ump",
+            "E223AvailabilityOfTypes.ump",
+            "E051EventParametersMustMatch1.ump",
+            "E064NonExistentHistoryState1.ump",
+            "E052StateMachineNameClash1.ump",
+            "E212NoAvailableMethod2.ump",
+            "E065NoSubstatesHistoryState1.ump",
+            "E205CyclicUse1.ump",
+            "E053NoConcurrencyAtTopLevel1.ump",
+            "E202NotAvailableTraits.ump",
+            "E206SatisfactionOfConstraints.ump",
+            "E052StateMachineNameClash2.ump",
+            "E104EnumerationInBidirectionalAssociation1.ump",
+            "E091AttributeOfTypeNotFoundConstraint1.ump",
+            "E005UndefinedClassinAssociation1.ump",
+            "E097EnumerationAndStateMachineConflict2.ump",
+            "E025SortKeyNotFound1.ump",
+            "E009ReflexiveLowerBound1.ump",
+            "E233RemoveInitialState.ump",
+            "E008AssociationClassMissingEnd1.ump",
+            "E3607PortNameCannotBeResolved1.ump",
+            "E210ConflictMethods4.ump",
+            "E229RenamingTwoTimesStates.ump",
+            "E028ConstraintIdentifierIncorrect1.ump",
+            "E211MoreModifications2.ump",
+            "E032ReservedRoleName1.ump",
+            "E096EnumerationNamingConflict4.ump",
+            "E011ClassisSubclassOfSelf1.ump",
+            "E4500TagNotClosedCorrectly1.ump",
+            "E022DuplicateAttribute1.ump",
+            "E203NotHavingUniqueID.ump",
+            "WE1xxIdentifierInvalid6.ump",
+            "E200InvalidTraitIdentifierE1.ump",
+            "E3501TemplateMethodCannotBeMain1.ump",
+            "E016NonImmutableSuperclass1.ump",
+            "E3503TemplateReferenceRefersToItself1.ump",
+            "E220TwoMethodWithSameName2.ump",
+            "E236TwoStateEntries.ump",
+            "E096EnumerationNamingConflict3.ump",
+            "WE1xxIdentifierInvalid7.ump",
+            "E090AttributeNameNotFoundConstraint1.ump",
+            "E3502TemplateNameNotResolved1.ump",
+            "E075UserDefinedStateMachineCannotBeNamedTimer1.ump",
+            "E105EnumerationInComposition1.ump",
+            "E023AttributeAssociationNameClash1.ump",
+            "E214Twosametemplateparameters.ump",
+            "src-gen-umple",
+            "allExamplesList.txt"]
+        runUserManualAndExampleTests("rtcpp", "RTCpp", excludes)
+    }
+}
+
 // Testing UmpleOnline Examples and Manual Examples
 task allUserManualAndExampleTests {
     group = "Custom"
@@ -1627,6 +1893,7 @@ task allUserManualAndExampleTests {
     dependsOn javaUserManualAndExampleTests
     dependsOn phpUserManualAndExampleTests
     dependsOn pythonUserManualAndExampleTests
+    dependsOn rtcppUserManualAndExampleTests
     // Consider doing this for the other languages too
 }
 

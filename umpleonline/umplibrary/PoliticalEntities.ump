@@ -53,3 +53,4 @@ class Territory
   position 305 139 109 45;
   position.association Territory__Territory:borders 102,0 109,13;
 }
+// @@@skipcppcompile
