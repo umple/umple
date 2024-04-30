@@ -169,6 +169,7 @@
     <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="testbed_cpp/src/TestHarnessRTCpp.ump"/>
     </java>
+    <delete dir="testbed_cpp/src/RTCpp" includeemptydirs="true" verbose="false"/>
   </target>
 
   <!-- ```````````````````````````
@@ -305,7 +306,35 @@
             <contains string="${test.output.path.cpp}/index.html" substring="FAIL" casesensitive="true"/>
         </condition>
     </fail> 
-
+    
+    <!-- Cleanup generated files and executables -->
+    <delete file="testbed_cpp/test/runAllTests.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/test_summary.txt" verbose="false"/>
+    <delete file="testbed_cpp/test/attribute_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/const_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/constraint_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/many_to_many_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/one_to_one_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/optional_one_to_many_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/optional_one_to_one_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/reflexive_many_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/reflexive_optional_one_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/unidirectional_many_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/unidirectional_optional_many_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/test_summary.txt" verbose="false"/>
+    <delete file="testbed_cpp/test/attribute_test" verbose="false"/>
+    <delete file="testbed_cpp/test/const_test" verbose="false"/>
+    <delete file="testbed_cpp/test/constraint_test" verbose="false"/>
+    <delete file="testbed_cpp/test/many_to_many_test" verbose="false"/>
+    <delete file="testbed_cpp/test/one_to_one_test" verbose="false"/>
+    <delete file="testbed_cpp/test/optional_one_to_many_test" verbose="false"/>
+    <delete file="testbed_cpp/test/optional_one_to_one_test" verbose="false"/>
+    <delete file="testbed_cpp/test/reflexive_many_test" verbose="false"/>
+    <delete file="testbed_cpp/test/reflexive_optional_one_test" verbose="false"/>
+    <delete file="testbed_cpp/test/unidirectional_many_test" verbose="false"/>
+    <delete file="testbed_cpp/test/unidirectional_optional_many_test" verbose="false"/>
+    <delete file="testbed_cpp/test/unidirectional_optional_one_test" verbose="false"/>
+    <delete dir="testbed_cpp/test/RTCpp" includeemptydirs="true" verbose="false"/>
     <echo message="RTCpp tests completed!"/>
   </target>
 
