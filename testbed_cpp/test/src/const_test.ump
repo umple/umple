@@ -1,0 +1,20 @@
+class Const   
+{  
+  Integer i;  
+  Integer i2 = 5;  
+  
+  String str;  // the default if no type is specified  
+  str2;  
+  str3 = "";  
+    
+  Float flt;  
+  
+  Double dbl;  
+  Double dbl2 = 8.0;  
+  
+  Boolean bln;  
+  Boolean bln2 = false;  
+     
+   
+}  
+  
