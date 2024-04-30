@@ -129,3 +129,4 @@ class GPSCoord
 }
 
 // @@@skipphpcompile - Skipped due to issue 700
+// @@@skipcppcompile
