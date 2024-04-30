@@ -250,7 +250,7 @@ class UmpleToJava {
     // value is the attribute value present in the jsonString
     HashMap<String,String> parsedResult = new HashMap<String,String>();
     parsedResult = fromJsonParser(aJsonString);
-
+    if(!parsedResult.isEmpty()){
     boolean classExist;
     String parsedClassName=parsedResult.get("className");
     classExist=<<#realSb.append("\""+uClass.getName()+"\"");#>>.equals(parsedClassName);
@@ -387,35 +387,52 @@ class UmpleToJava {
     <<#}#>>
     // below for-loop check the association class of the top level class
     <<#for (int assoJsonCount=0; assoJsonCount<associationNamesFromJson.size();assoJsonCount++){#>>
+       <<#
+        Random random=new Random();
+        int randomName = random.nextInt(900000)+100000;
+        #>>
        jsonKey=<<#append(realSb,"\""+associationNamesFromJson.get(assoJsonCount)+"\"");#>>;
-       String newJsonString=parsedResult.get(jsonKey);
+       <<#
+        Random randomJson=new Random();
+        int randomJsonName = randomJson.nextInt(900000)+100000;
+        #>>
+       String newJsonString_<<#realSb.append(randomJsonName);#>>=parsedResult.get(jsonKey);
       // if is multiple association, create a new list to store the objects
       <<#if(associationIsManyFromJson.get(assoJsonCount)){#>>
         <<#appendln(realSb,"");#>>
-        <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> manyAssoObj=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString,umpleObjectIDMap);
-        List<<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>> aAssoList=new ArrayList<<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>>();
-        aAssoList.add(manyAssoObj);
-        this.<<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=aAssoList;
+        <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> manyAssoObj_<<#realSb.append(randomName);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString_<<#realSb.append(randomJsonName);#>>,umpleObjectIDMap);
+        List<<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>> aAssoList_<<#realSb.append(randomName);#>>=new ArrayList<<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>>();
+        aAssoList_<<#realSb.append(randomName);#>>.add(manyAssoObj_<<#realSb.append(randomName);#>>);
+        this.<<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=aAssoList_<<#realSb.append(randomName);#>>;
       <<#}
       // if is single association, only create 1 associated object
       else{#>>
+        <<#
+        Random randomAssoObj=new Random();
+        int anAssoObjNameRandom = randomAssoObj.nextInt(900000)+100000;
+        #>>
         <<#appendln(realSb,"");#>>
-        <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> anAssoObj=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString,umpleObjectIDMap);
-        this.<<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=anAssoObj;
+        <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> anAssoObj_<<#realSb.append(anAssoObjNameRandom);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString_<<#realSb.append(randomJsonName);#>>,umpleObjectIDMap);
+        this.<<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=anAssoObj_<<#realSb.append(anAssoObjNameRandom);#>>;
       <<#}
       }#>>
       }
       else{
       //copy the object retrieved from umpleObjectIDMap
       <<#appendln(realSb,"");#>>
-      <<#realSb.append(uClass.getName());#>> createdObj=(<<#realSb.append(uClass.getName());#>>) umpleObjectIDMap.get(umpleObjectId);
+      <<#
+      Random randomObj=new Random();
+      int createdObjNameRandom = randomObj.nextInt(900000)+100000;
+      #>>
+      <<#realSb.append(uClass.getName());#>> createdObj_<<#realSb.append(createdObjNameRandom);#>>=(<<#realSb.append(uClass.getName());#>>) umpleObjectIDMap.get(umpleObjectId);
       <<#for(int attrJsonCount=0;attrJsonCount< nameOfAttributesFromJson.size();attrJsonCount++){#>>
-        this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=createdObj.<<#realSb.append(displayedAttributesFromJson.get(attrJsonCount));#>>;
+        this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=createdObj_<<#realSb.append(createdObjNameRandom);#>>.<<#realSb.append(displayedAttributesFromJson.get(attrJsonCount));#>>;
       <<#}#>>
       <<#for (int primJsonCount=0; primJsonCount<nameOfPrimitivesFromJson.size();primJsonCount++){#>>
-          this.<<#realSb.append(nameOfPrimitivesFromJson.get(primJsonCount));#>>=createdObj.<<#realSb.append(displayedPrimitivesFromJson.get(primJsonCount));#>>;
+          this.<<#realSb.append(nameOfPrimitivesFromJson.get(primJsonCount));#>>=createdObj_<<#realSb.append(createdObjNameRandom);#>>.<<#realSb.append(displayedPrimitivesFromJson.get(primJsonCount));#>>;
       <<#}#>>
       
+      }
       }
   }!>>
  
@@ -428,9 +445,10 @@ class UmpleToJava {
   * @ return HashMap<String,String> that stores paresed result, key is the attribute(or associations) of an object, value is the attribute value or association string
   */ 
   public static HashMap<String,String> fromJsonParser(String jsonString){
-  
+    
     HashMap<String,String> parsedResultMap = new HashMap<String,String>();
-    //Below (String, Pattern, Matcher) are the regex strings and their patterns and matcher used to process a jsonString
+    try{
+      //Below (String, Pattern, Matcher) are the regex strings and their patterns and matcher used to process a jsonString
     
         // topLevelString is the regex representing the topLevel class name
         String topLevelString = "\\{\\\"[A-Z]*+[a-z]*\\\":";
@@ -457,22 +475,21 @@ class UmpleToJava {
         }
         
         // pairString is the regex for an object's attribute and attribute value, the string parsed will be in key-value formate
-        String pairString = "\"\\w*\":\"\\w*\"";
+        String pairString = "\\\"\\w*\\\"\\:\\\"\\w*([.])?\\w*\\\"";
         Pattern pairPattern=Pattern.compile(pairString);
         Matcher pairMatcher=pairPattern.matcher(jsonString);
-        // associationString is the regex for an object's multi-association
-        String associationString="\\\"\\w*\\\"\\:\\[\\{.*\\]";
-        Pattern associationPattern=Pattern.compile(associationString);
-        Matcher associationMatcher=associationPattern.matcher(jsonString);
-        // newObjJsonString is the regex for an object's single-association
-        String newObjJsonString="\\,\\\"\\w*\\\"\\:\\{\\\"\\w*\\\"\\:.*\\}";
-        Pattern newObjJsonPattern=Pattern.compile(newObjJsonString);
-        Matcher newObjJsonMatcher=newObjJsonPattern.matcher(jsonString);
+        
+       
         //Keep on parsing the attribute's key-value pair, 
         //until a List (multi-associations) pattern or a newObject parttern (single association) is found
         while(pairMatcher.find()){
             String pairStringFound=pairMatcher.group(0);
             parsedResultMap.put(pairStringFound.split(colon)[0].split(quotes)[1], pairStringFound.split(colon)[1].split(quotes)[1]);
+            jsonString=jsonString.replaceFirst(pairString, "");
+            // associationString is the regex for an object's multi-association
+            String associationString="\\\"\\w*\\\"\\:\\[\\{.*?\\]";
+            Pattern associationPattern=Pattern.compile(associationString);
+            Matcher associationMatcher=associationPattern.matcher(jsonString);
             if (associationMatcher.find()){
                 String assoStringFound=associationMatcher.group(0);
                 jsonString=jsonString.replaceFirst(associationString, "");
@@ -482,7 +499,10 @@ class UmpleToJava {
                 pairPattern=Pattern.compile(pairString);
                 pairMatcher=pairPattern.matcher(jsonString);
             }
-        
+             // newObjJsonString is the regex for an object's single-association
+            String newObjJsonString="\\,\\\"\\w*\\\"\\:\\{\\\"\\w*\\\"\\:.*\\}";
+            Pattern newObjJsonPattern=Pattern.compile(newObjJsonString);
+            Matcher newObjJsonMatcher=newObjJsonPattern.matcher(jsonString);
             if(newObjJsonMatcher.find()){
                String newObjJsonFound=newObjJsonMatcher.group(0);
                jsonString=jsonString.replaceFirst(newObjJsonString, "");
@@ -492,8 +512,25 @@ class UmpleToJava {
                pairPattern=Pattern.compile(pairString);
                pairMatcher=pairPattern.matcher(jsonString);
             }
+        String associationEmptyString="\\\"\\w*\\\"\\:\\[\\]";
+        Pattern associationEmptyPattern=Pattern.compile(associationEmptyString);
+        Matcher associationEmptyStringMatcher=associationEmptyPattern.matcher(jsonString);
+        
+        if(associationEmptyStringMatcher.find()){
+          String associationEmptyStringFound=associationEmptyStringMatcher.group(0);
+          jsonString=jsonString.replace(associationEmptyStringFound, "");
+          String associationEmptyName=associationEmptyStringFound.split(colon,2)[0].split(quotes)[1];
+            String associationEmptyItems=associationEmptyStringFound.split(colon,2)[1];
+               parsedResultMap.put(associationEmptyName, associationEmptyItems);
+               pairPattern=Pattern.compile(pairString);
+               pairMatcher=pairPattern.matcher(jsonString);
+        }
         }
         return parsedResultMap;
+    }catch(NullPointerException e){
+      return parsedResultMap;
+    }
+    
   }
   !>>
  
