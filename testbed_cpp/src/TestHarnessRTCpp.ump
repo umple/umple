@@ -1,0 +1,8 @@
+generate RTCpp "../src-gen-umple";
+
+use ../../testbed/src/TestHarnessAssociations.ump;
+use ../../testbed/src/TestHarnessAttributesRTCpp.ump;
+use ../../testbed/src/TestHarnessStateMachine.ump;
+use ../../testbed/src/TestHarnessPatternsImmutable.ump;
+use ../../testbed/src/TestHarnessConstraints.ump;
+use LocalHarness.ump;
