@@ -248,15 +248,27 @@ class UmpleToJava {
     // Initialize a HashMap to store the parsed result
     // key is the attribute name present in the jsonString
     // value is the attribute value present in the jsonString
+    <<#boolean hasSuperClassFromJson =uClass.hasExtendsClass();#>>
+    <<#if (hasSuperClassFromJson){#>>
+      super(aJsonString,umpleObjectIDMap);
+      boolean visitedSuperClass=true;
+    <<#}
+    else{#>>
+      boolean visitedSuperClass=false;
+    <<#}#>>
+    
     HashMap<String,String> parsedResult = new HashMap<String,String>();
     parsedResult = fromJsonParser(aJsonString);
     if(!parsedResult.isEmpty()){
     boolean classExist;
+    boolean classChildExist;
     String parsedClassName=parsedResult.get("className");
+    String childName=this.getClass().getSimpleName();
     classExist=<<#realSb.append("\""+uClass.getName()+"\"");#>>.equals(parsedClassName);
+    classChildExist=childName.equals(parsedClassName);
     // if top-level class does not exist, throw exception
-    if(!classExist){
-      throw new IllegalArgumentException("Top level class "+parsedClassName+" does not exist, please check the input json string");
+    if(!classExist&&!classChildExist){
+      throw new IllegalArgumentException("Top-level class \""+parsedClassName+"\" does not exist, please check the input json string");
     }
     String umpleObjectId=parsedResult.get("umpleObjectID");
     <<#
@@ -320,8 +332,10 @@ class UmpleToJava {
 	  }
     #>>
     // Check if the object has already been visited and created
-    if((umpleObjectIDMap.get(umpleObjectId)==null)){
-    
+    if((umpleObjectIDMap.get(umpleObjectId)==null)||visitedSuperClass){
+      try{
+      
+    visitedSuperClass=false;
     // map the old objectID (in jsonString) with the newly created object's hashCode in umpleObjectIDMap 
     umpleObjectIDMap.put(umpleObjectId,this);
     
@@ -424,8 +438,10 @@ class UmpleToJava {
         this.<<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=anAssoObj_<<#realSb.append(anAssoObjNameRandom);#>>;
       <<#}
       }#>>
+      }catch(Exception e){
       }
-      else{
+    }
+      else if((umpleObjectIDMap.get(umpleObjectId)!=null)){
       //copy the object retrieved from umpleObjectIDMap
       <<#appendln(realSb,"");#>>
       <<#
