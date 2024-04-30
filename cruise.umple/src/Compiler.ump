@@ -456,19 +456,26 @@ class CodeCompiler {
           Matcher matcher = pattern1.matcher(umpFileCode[i]);
           if (matcher.find()) {
               functionName = matcher.group(1);
-              umpLine = i;
+                while(umpFileCode[i+1].trim().isEmpty()){
+                    i++;
+                }
+                umpLine = i;
               hashMap.put(functionName, umpLine);
           }
       }
 
-      if (!hashMap.containsKey("main")) {
+      if (!hashMap.containsKey("main")){
           // Regex pattern for simple Python main
           String regex2 = "\\s*Python\\s*\\{\\s*";
           Pattern pattern2 = Pattern.compile(regex2);
           for (int i = 0; i < umpFileCode.length; i++) {
               Matcher matcher2 = pattern2.matcher(umpFileCode[i]);
+
               if (matcher2.find()) {
                   functionName = "main";
+                  while(umpFileCode[i+1].trim().isEmpty()){
+                      i++;
+                  }
                   umpLine = i;
                   hashMap.put("main", umpLine);
                   break;
@@ -476,9 +483,8 @@ class CodeCompiler {
           }
       }
 
-      // locate line number of regular function
-      // Regex pattern for regular function
-      String regex3 = "\\b\\w+\\s+(\\w+)\\s*\\([^{}]*?\\)\\s*";
+      // locate line number for python funciton in python format with python keyword
+      String regex3 = "\\b(\\w+)\\s*\\(\\s*(.*?)\\s*\\)\\s*Python\\s*\\{?";
       Pattern pattern3 = Pattern.compile(regex3);
 
       for (int i = 0; i < umpFileCode.length; i++) {
@@ -486,17 +492,62 @@ class CodeCompiler {
           if (matcher3.find() && !umpFileCode[i].contains("=") && !umpFileCode[i].contains(".")
                   && !umpFileCode[i].contains("new")) {
               functionName = matcher3.group(1);
+              System.out.println("Found regular function: " + functionName + " at line: " + (i + 1));
               if (!hashMap.containsKey(functionName)) {
+                  while(umpFileCode[i+1].trim().isEmpty()){
+                    i++;
+                  }
                   umpLine = i;
                   hashMap.put(functionName, umpLine);
               }
           }
       }
 
-      // System.err.println("Functions:");
-      // for (Map.Entry<String, Integer> entry : hashMap.entrySet()) {
-      //     System.err.println("Line: " + entry.getValue() + " function: " + entry.getKey());
-      // }
+
+      // locate line number of regular function in java format without python keyword
+      // Regex pattern for regular function
+      String regex4 = "\\b\\w+\\s+(\\w+)\\s*\\([^{}]*?\\)\\s*";
+      Pattern pattern4 = Pattern.compile(regex4);
+
+      for (int i = 0; i < umpFileCode.length; i++) {
+          Matcher matcher4 = pattern4.matcher(umpFileCode[i]);
+          if (matcher4.find() && !umpFileCode[i].contains("=") && !umpFileCode[i].contains(".")
+                  && !umpFileCode[i].contains("new")) {
+              functionName = matcher4.group(1);
+              if (!hashMap.containsKey(functionName)) {
+                  while(umpFileCode[i+1].trim().isEmpty()){
+                      i++;
+                  }
+                  umpLine = i;
+                  hashMap.put(functionName, umpLine);
+              }
+          }
+      }
+
+      // locate line number of regular function in python format without python keyword
+      String regex5 = "\\b(\\w+)\\s*\\(\\s*(.*?)\\s*\\)\\s*\\{?";
+      Pattern pattern5 = Pattern.compile(regex5);
+
+      for (int i = 0; i < umpFileCode.length; i++) {
+          Matcher matcher5 = pattern5.matcher(umpFileCode[i]);
+          if (matcher5.find() && !umpFileCode[i].contains("=") && !umpFileCode[i].contains(".")
+                  && !umpFileCode[i].contains("new")) {
+              functionName = matcher5.group(1);
+              System.out.println("Found regular function: " + functionName + " at line: " + (i + 1));
+              if (!hashMap.containsKey(functionName)) {
+                  while (umpFileCode[i + 1].trim().isEmpty()) {
+                      ++i;
+                  }
+                  umpLine = i;
+                  hashMap.put(functionName, umpLine);
+              }
+          }
+      }
+
+      System.err.println("Functions:");
+      for (Map.Entry<String, Integer> entry : hashMap.entrySet()) {
+          System.err.println("Line: " + entry.getValue() + " function: " + entry.getKey());
+      }
 
       StringBuilder builder = new StringBuilder();
       String[] errorLines = error.split("\n");
@@ -506,12 +557,13 @@ class CodeCompiler {
           line = errorLines[i];
           // if no error line number in the msg line
           if (!line.contains("line")) {
-              builder.append(line + "\n");
+             builder.append(line + "\n");
           } else {
               // skip the error msg for main method traceback
               if (i < errorLines.length - 1 && errorLines[i + 1].contains(ignorePattern)) {
-                  builder.append(line + "\n");
+                  i++;
               } else {
+                  // System.err.println("Line: "+line);
                   // convert the line for error msg
                   String[] words = line.split(" ");
                   for (int k = 0; k < words.length; k++) {
@@ -542,13 +594,16 @@ class CodeCompiler {
                               // System.err.println("Function: " + errorFunctionName + "modelLine: " + hashMap.get(errorFunctionName) + " pythonLine: "
                               //        + components[1]);
                               int gap = hashMap.get(errorFunctionName) - Integer.parseInt(components[1]);
-                              builder.append(
-                                      "model.ump:" + (lineNum + gap +1) + ": error in the ump code \nCompiler msg: "
-                                              + line + "\n");
+                              builder.append("model.ump:" + (lineNum + gap +1) + ": error in the ump code\n");
+                              if(line.contains("indentation")){
+                                  builder.append( line + "\n");
+                              }
+                                  
+                             
+
                               break;
                           } else {
-
-                              builder.append("function: " + errorFunctionName + "not found "+ line + "\n");
+                              builder.append("function: " + errorFunctionName + "not found\n"+ line + "\n");
                               break;
                           }
                       }
