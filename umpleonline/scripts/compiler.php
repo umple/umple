@@ -359,7 +359,8 @@ else if (isset($_REQUEST["umpleCode"]))
   //
   if($execute) 
   {
-    $command = "java -jar umplesync.jar -generate Java {$filename} -cx 2> {$executionErrorFilename}";
+    $language = $_REQUEST['language'];
+    $command = "java -jar umplesync.jar -generate {$language} {$filename} -cx 2> {$executionErrorFilename}";
     executeCommand($command);
     $errhtml = getErrorHtml($executionErrorFilename);
     if($errhtml != "") {
@@ -732,10 +733,11 @@ function getErrorHtml($errorFilename, $offset = 1)
 
 function executeCode($modelName, $error) 
 {
+  $language=$_REQUEST['language'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,"{$GLOBALS['EXECUTION_SERVER']}/run");
   curl_setopt($ch, CURLOPT_POST, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, "path={$modelName}&error={$error}");
+  curl_setopt($ch, CURLOPT_POSTFIELDS, "path={$modelName}&error={$error}&language={$language}");
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   $content = curl_exec($ch);
   if (curl_errno($ch)) {

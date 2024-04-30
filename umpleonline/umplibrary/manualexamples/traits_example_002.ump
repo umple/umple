@@ -12,19 +12,24 @@
 trait T1{
   abstract void method1();
   abstract void method2();
-  void method4(){/*implementation*/ }
+  void method4() Java {/*implementation*/ }
+  void method4() Python { ''' implementation ''' }
 }
 trait T2{
   isA T1;
   void method3();
-  void method1(){/*implementation*/ }
-  void method2(){/*implementation*/ }
+  void method1() Java {/*implementation*/ }
+  void method2() Java {/*implementation*/ }
+  void method1() Python { ''' implementation ''' }
+  void method2() Python { ''' implementation ''' }
 }
 class C1{
-  void method3(){/*implementation*/ }
+  void method3() Java {/*implementation*/ }
+  void method3() Python { ''' implementation ''' }
 }
 class C2{
   isA C1;
   isA T2;
-  void method2(){/*implementation*/ }
+  void method2() Java {/*implementation*/ }
+  void method2() Python { ''' implementation ''' }
 }
