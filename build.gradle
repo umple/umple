@@ -1392,10 +1392,14 @@ task rubyTestbedTest {
 }
 
 task RTCppTestbedCompileUmple {
-  group = "Custom"
-  description = "Compiling RTCpp testbed source files"
-  doLast{
-    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_cpp/src/TestHarnessRtcpp.ump")
+    group = "Custom"
+    description = "Compiling RTCpp testbed source files"
+    doLast {
+        runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_cpp/src/TestHarnessRtcpp.ump")
+        // Cleanup the generated source directory
+        delete {
+            delete "${rootProject.projectDir.toString()}/testbed_cpp/src/RTCpp"
+        }
     }
 }
 
@@ -1403,7 +1407,6 @@ task RTCppTestbedCompile {
     group = "Custom"
     description = "Compiling RTCpp testbed generated files"
     dependsOn RTCppTestbedCompileUmple
-
 }
 
 task rtcppTestbedTest {
@@ -1467,7 +1470,15 @@ task rtcppTestbedTest {
 
         delete "${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp/index.txt"
 
-        println("RTcpp tests completed!\n" +
+        // Cleanup after tests
+        delete {
+            delete "$testDir/runAllTests.exe"
+            delete "$testDir/test_summary.txt"
+            delete fileTree(dir: "$testDir", include: '*.exe')
+            delete "$testDir/RTCpp"
+        }
+
+        println("RTCpp tests completed!\n" +
                 "See results at ${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_cpp/index.html")
     }
 }
