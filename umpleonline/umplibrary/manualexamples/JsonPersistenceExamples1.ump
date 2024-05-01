@@ -1,0 +1,10 @@
+class Bank {
+  String bankName;
+  int numAccount;
+  
+  public static void main(String[] args){
+    Bank boc=new Bank("BankCanada",100000);
+    System.out.println(boc.toJson());
+  }
+}
+//$?[End_of_model]$?

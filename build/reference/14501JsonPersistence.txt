@@ -1,0 +1,19 @@
+Json
+Persistence Between Generators and Umpleification
+noreferences
+@@tooltip Basic example showing how to use Umple's Json serialization/de-serialization feature
+
+@@description
+<p>To better realize the functionality of Umple, any object needs to have:</p>
+<ul>
+<li><b>String toJson()</b> method that generates (serializes) a Json representation </li>
+<li><b>Object fromJson(String)</b> static method that would instantiate (de-serialize) the object and its related objects</li>
+</ul>
+<p>However, such function is not required in all systems, therefore the system should only generate this if <i>-s genJson</i> sub-option is specified when <i>-g Java</i> is also specified at the time of compiling an Umple model to generate code.</p>
+&nbsp;<br/>
+<p><b>About examples below</b>: demonstrate how to serialize/de-serialize to/from Json.</p>
+&nbsp;<br/>
+
+@@example @@caption Example Showing a Simple Class implementing Json Serialization @@endcaption
+@@source manualexamples/JsonPersistenceExamples1.ump
+@@endexample
