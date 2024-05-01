@@ -144,13 +144,17 @@ class UmpleToJava {
             toJsonOutput.append("\n");
             haveOutputItem = false;
             try{
-              for (<<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anItem :<<#append(realSb,"" + associations.get(assoIndex) + "");#>>){
+              <<#
+              Random randomAnItem=new Random();
+              int randomAnItemName = randomAnItem.nextInt(900000)+100000;
+              #>>
+              for (<<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anItem_<<#realSb.append(randomAnItemName);#>> :<<#append(realSb,"" + associations.get(assoIndex) + "");#>>){
               if(haveOutputItem) {
                 toJsonOutput.append(",\n");
               }
               toJsonOutput.append(indent+"{");
               toJsonOutput.append("\n");
-              anItem.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
+              anItem_<<#realSb.append(randomAnItemName);#>>.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
               toJsonOutput.append("\n");
               toJsonOutput.append(indent+"}");
               haveOutputItem=true;
@@ -172,8 +176,12 @@ class UmpleToJava {
             toJsonOutput.append("\n");
             toJsonOutput.append(indent+"{");
             toJsonOutput.append("\n");
-            <<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anotherItem = <<#realSb.append(associations.get(assoIndex));#>>;
-            anotherItem.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
+            <<#
+            Random randomItem=new Random();
+            int randomItemName = randomItem.nextInt(900000)+100000;
+            #>>
+            <<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anotherItem_<<#realSb.append(randomItemName);#>> = <<#realSb.append(associations.get(assoIndex));#>>;
+            anotherItem_<<#realSb.append(randomItemName);#>>.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
             toJsonOutput.append("\n");
             toJsonOutput.append(indent+"}");
             haveOutputItem=true;
