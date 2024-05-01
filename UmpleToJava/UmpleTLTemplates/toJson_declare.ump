@@ -85,10 +85,10 @@ class UmpleToJava {
     if(atConcreteClass) {
       // This will not be true in a super call; output header
       toJsonOutput.append(indent+"\""+this.toString().split("@")[0]+ "\" : {\n"+indent+ "  \"umpleObjectID\" : \""+System.identityHashCode(this)+"\"");
-
       // Check if we have already visited this object. If so we will not output details
       alreadyVisited = visitedList.contains(this);
       if(!alreadyVisited) {
+        toJsonOutput.append(",\n");
         visitedList.add(this);
       }
     }
@@ -105,36 +105,46 @@ class UmpleToJava {
         haveOutputItem = super.toJsonHelper(toJsonOutput, visitedList, nestLevel, false);
       <<#}#>>
       // When an object has not already been visited, output its details
-      toJsonOutput.append(",\n");
+      if(haveOutputItem){
+      //toJsonOutput.append(",\n");  
+      }
+         
       <<#
         for (int m1=0;m1<displayedPrimitives.size();m1++){#>>
+          if(haveOutputItem){
+            toJsonOutput.append(",\n");
+          }
           toJsonOutput.append(indent);
           toJsonOutput.append("  \"");
           toJsonOutput.append("<<#realSb.append(nameOfPrimitives.get(m1));#>>");
           toJsonOutput.append("\" : \"");
           toJsonOutput.append("<<#realSb.append("\"+"+  displayedPrimitives.get(m1)+"+ \"");#>>");
           toJsonOutput.append("\"");
-          toJsonOutput.append(",\n");
+          haveOutputItem=true;
         <<#}
       #>>
-      haveOutputItem = false;
+      //haveOutputItem = false;
       <<#
         for (int numAttributes=0;numAttributes<displayedAttributes.size();numAttributes++){#>>
+          if(haveOutputItem){
+            toJsonOutput.append(",\n");
+          }
           toJsonOutput.append(indent);
           toJsonOutput.append("  \"");
           toJsonOutput.append("<<#realSb.append(nameOfAttributes.get(numAttributes));#>>");
           toJsonOutput.append("\" : \"");
           toJsonOutput.append("<<#realSb.append("\"+"+  displayedAttributes.get(numAttributes)+"+ \"");#>>");
           toJsonOutput.append("\"");
-          toJsonOutput.append(",\n");
+          //toJsonOutput.append(",\n");
+          haveOutputItem=true;
         <<#}
       #>>
-      haveOutputItem = false;
+      //haveOutputItem = false;
       <<#
         for(int assoIndex=0;assoIndex<associationNames.size();assoIndex++){#>>
          if(haveOutputItem) {
-                toJsonOutput.append(",\n");
-              }
+           toJsonOutput.append(",\n");
+         }
           toJsonOutput.append(indent);
           <<#if(associationIsMany.get(assoIndex)){#>>
             toJsonOutput.append("  \"");
@@ -152,29 +162,27 @@ class UmpleToJava {
               if(haveOutputItem) {
                 toJsonOutput.append(",\n");
               }
-              toJsonOutput.append(indent+"{");
+              toJsonOutput.append(indent+"  {");
               toJsonOutput.append("\n");
               anItem_<<#realSb.append(randomAnItemName);#>>.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
               toJsonOutput.append("\n");
-              toJsonOutput.append(indent+"}");
+              toJsonOutput.append(indent+"  }");
               haveOutputItem=true;
             }
             }catch (NullPointerException e){
             }
-
             toJsonOutput.append("\n");    
-            toJsonOutput.append(indent+"]");
-            toJsonOutput.append("\n"); 
+            toJsonOutput.append(indent+"  ]");
             haveOutputItem=true;
           <<#}
           else{#>>
-            toJsonOutput.append("\n");
+            toJsonOutput.append("\n"+indent);
             toJsonOutput.append("  \"");
             toJsonOutput.append("<<#realSb.append(associationNames.get(assoIndex));#>>");
             toJsonOutput.append("\"");
             toJsonOutput.append(" : ");
             toJsonOutput.append("\n");
-            toJsonOutput.append(indent+"{");
+            toJsonOutput.append(indent+"  {");
             toJsonOutput.append("\n");
             <<#
             Random randomItem=new Random();
@@ -183,10 +191,11 @@ class UmpleToJava {
             <<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anotherItem_<<#realSb.append(randomItemName);#>> = <<#realSb.append(associations.get(assoIndex));#>>;
             anotherItem_<<#realSb.append(randomItemName);#>>.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
             toJsonOutput.append("\n");
-            toJsonOutput.append(indent+"}");
+            toJsonOutput.append(indent+"  }");
             haveOutputItem=true;
           <<#}#>>
-      <<#}#>>     
+      <<#}#>>
+              
           toJsonOutput.append(indent+"  \n");
     }
     // Finalize the output of the concrete class
@@ -363,47 +372,49 @@ class UmpleToJava {
 	// below for-loop populate the newly instantiated objects according to parsed value with the value parsed from the json String
 	for(int attrJsonCount=0;attrJsonCount< nameOfAttributesFromJson.size();attrJsonCount++){#>>
 	  jsonKey=<<#append(realSb,"\""+nameOfAttributesFromJson.get(attrJsonCount)+"\"");#>>;
-//more types should be considered here
-      <<#if(attributeTypeFromJson.get(attrJsonCount).equals("int")){#>>
+
+        //more types should be considered here
+        <<#if(attributeTypeFromJson.get(attrJsonCount).equals("int")||attributeTypeFromJson.get(attrJsonCount).equals("Integer")){#>>
         int attrvalueInt = Integer.valueOf(parsedResult.get(jsonKey));
         this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=attrvalueInt;
-      <<#}
-      if(attributeTypeFromJson.get(attrJsonCount).equals("double")){#>>
+        <<#}
+        if(attributeTypeFromJson.get(attrJsonCount).equals("double")||attributeTypeFromJson.get(attrJsonCount).equals("Double")){#>>
         double attrvalueDouble =Double.valueOf(parsedResult.get(jsonKey));
         this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=attrvalueDouble;
-      <<#}
-      if(attributeTypeFromJson.get(attrJsonCount).equals("float")){#>>
+        <<#}
+        if(attributeTypeFromJson.get(attrJsonCount).equals("Float")||attributeTypeFromJson.get(attrJsonCount).equals("float")){#>>
         float attrvalueFloat=Float.parseFloat(parsedResult.get(jsonKey));
         this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=attrvalueFloat;
-      <<#}
-      if(attributeTypeFromJson.get(attrJsonCount).equals("boolean")){#>>
+        <<#}
+        if(attributeTypeFromJson.get(attrJsonCount).equals("boolean")||attributeTypeFromJson.get(attrJsonCount).equals("Boolean")){#>>
         boolean attrvalueBool=Boolean.parseBoolean(parsedResult.get(jsonKey));
         this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=attrvalueBool;
-      <<#}
-      if(attributeTypeFromJson.get(attrJsonCount).equals("Time")){#>>
+        <<#}
+        if(attributeTypeFromJson.get(attrJsonCount).equals("Time")){#>>
         Time attrvalueTime=Time.valueOf(parsedResult.get(jsonKey));
         this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=attrvalueTime;
-      <<#}
-      if(attributeTypeFromJson.get(attrJsonCount).equals("String")){#>>
+        <<#}
+        if(attributeTypeFromJson.get(attrJsonCount).equals("String")){#>>
         this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=parsedResult.get(jsonKey);
-      <<#}#>>
+        <<#}#>>
+
 	<<#}#>>
     <<#for (int primJsonCount=0; primJsonCount<nameOfPrimitivesFromJson.size();primJsonCount++){#>>
        jsonKey=<<#append(realSb,"\""+nameOfPrimitivesFromJson.get(primJsonCount)+"\"");#>>;
-//more types should be considered here
-      <<#if(primitiveTypeFromJson.get(primJsonCount).equals("int")){#>>
-        int valueInt = Integer.valueOf(parsedResult.get(jsonKey));
-        this.<<#append(realSb,nameOfPrimitivesFromJson.get(primJsonCount));#>>=valueInt;
-      <<#}
-      if(primitiveTypeFromJson.get(primJsonCount).equals("double")){#>>
+       //more types should be considered here
+       <<#if(primitiveTypeFromJson.get(primJsonCount).equals("int")||primitiveTypeFromJson.get(primJsonCount).equals("Integer")){#>>
+       int valueInt = Integer.valueOf(parsedResult.get(jsonKey));
+       this.<<#append(realSb,nameOfPrimitivesFromJson.get(primJsonCount));#>>=valueInt;
+       <<#}
+       if(primitiveTypeFromJson.get(primJsonCount).equals("double")||primitiveTypeFromJson.get(primJsonCount).equals("Double")){#>>
         double valueDouble =Double.valueOf(parsedResult.get(jsonKey));
         this.<<#append(realSb,nameOfPrimitivesFromJson.get(primJsonCount));#>>=valueDouble;
       <<#}
-      if(primitiveTypeFromJson.get(primJsonCount).equals("float")){#>>
+        if(primitiveTypeFromJson.get(primJsonCount).equals("Float")||primitiveTypeFromJson.get(primJsonCount).equals("float")){#>>
         float valueFloat=Float.parseFloat(parsedResult.get(jsonKey));
         this.<<#append(realSb,nameOfPrimitivesFromJson.get(primJsonCount));#>>=valueFloat;
       <<#}
-      if(primitiveTypeFromJson.get(primJsonCount).equals("boolean")){#>>
+      if(primitiveTypeFromJson.get(primJsonCount).equals("boolean")||primitiveTypeFromJson.get(primJsonCount).equals("Boolean")){#>>
         boolean valueBool=Boolean.parseBoolean(parsedResult.get(jsonKey));
         this.<<#append(realSb,nameOfPrimitivesFromJson.get(primJsonCount));#>>=valueBool;
       <<#}
@@ -415,6 +426,7 @@ class UmpleToJava {
         this.<<#append(realSb,nameOfPrimitivesFromJson.get(primJsonCount));#>>=parsedResult.get(jsonKey);
       <<#}#>>
     <<#}#>>
+    
     // below for-loop check the association class of the top level class
     <<#for (int assoJsonCount=0; assoJsonCount<associationNamesFromJson.size();assoJsonCount++){#>>
        <<#
@@ -573,5 +585,12 @@ class UmpleToJava {
     
   }
   !>>
+  
+  
+  
+ 
+ 
+ 
+ 
  
 }
