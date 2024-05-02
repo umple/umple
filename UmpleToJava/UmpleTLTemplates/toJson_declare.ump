@@ -301,6 +301,7 @@ class UmpleToJava {
 	List<Object> associationsFromJson = new ArrayList<Object>();
 	List<Object> associationItemsFromJson = new ArrayList<Object>();
     List<Boolean> associationIsManyFromJson = new ArrayList<Boolean>();
+    List<UmpleClass> associationClassName=new ArrayList<UmpleClass>();
 
 	for(String k: uClass.getKey().getMembers())
 	  keysFromJson.add(k);
@@ -346,6 +347,7 @@ class UmpleToJava {
 		}
 		associationItemsFromJson.add(av.getType());
 		associationIsManyFromJson.add(av.isMany());
+		associationClassName.add(av.getUmpleClass());
 	  }
     #>>
     // Check if the object has already been visited and created
@@ -430,54 +432,51 @@ class UmpleToJava {
     // below for-loop check the association class of the top level class
     <<#for (int assoJsonCount=0; assoJsonCount<associationNamesFromJson.size();assoJsonCount++){#>>
        <<#
-        Random random=new Random();
-        int randomName = random.nextInt(900000)+100000;
-        #>>
+         Random random=new Random();
+         int randomName = random.nextInt(900000)+100000;
+       #>>
        jsonKey=<<#append(realSb,"\""+associationNamesFromJson.get(assoJsonCount)+"\"");#>>;
-       <<#
-        Random randomJson=new Random();
-        int randomJsonName = randomJson.nextInt(900000)+100000;
-        #>>
-       String newJsonString_<<#realSb.append(randomJsonName);#>>=parsedResult.get(jsonKey);
-      // if is multiple association, create a new list to store the objects
-      <<#if(associationIsManyFromJson.get(assoJsonCount)){#>>
-        <<#appendln(realSb,"");#>>
-        <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> manyAssoObj_<<#realSb.append(randomName);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString_<<#realSb.append(randomJsonName);#>>,umpleObjectIDMap);
-        List<<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>> aAssoList_<<#realSb.append(randomName);#>>=new ArrayList<<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>>();
-        aAssoList_<<#realSb.append(randomName);#>>.add(manyAssoObj_<<#realSb.append(randomName);#>>);
-        this.<<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=aAssoList_<<#realSb.append(randomName);#>>;
-      <<#}
-      // if is single association, only create 1 associated object
-      else{#>>
-        <<#
-        Random randomAssoObj=new Random();
-        int anAssoObjNameRandom = randomAssoObj.nextInt(900000)+100000;
-        #>>
-        <<#appendln(realSb,"");#>>
-        <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> anAssoObj_<<#realSb.append(anAssoObjNameRandom);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString_<<#realSb.append(randomJsonName);#>>,umpleObjectIDMap);
-        this.<<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=anAssoObj_<<#realSb.append(anAssoObjNameRandom);#>>;
-      <<#}
-      }#>>
-      }catch(Exception e){
-      }
+       String newJsonString_<<#realSb.append(randomName);#>>=parsedResult.get(jsonKey);
+       String newIDRegex_<<#realSb.append(randomName);#>>="\\\"\\w*\\\"\\:\\{\\\"umpleObjectID\\\"\\:\\\"[0-9]{10}\\\"";
+       String newUmpleID_<<#realSb.append(randomName);#>>=fromJsonParserHelper(newJsonString_<<#realSb.append(randomName);#>>,newIDRegex_<<#realSb.append(randomName);#>>);
+       //umpleObjectId of the next visited object is NOT recorded, create new object/add new object to assoList 
+       if(!umpleObjectIDMap.containsKey(newUmpleID_<<#realSb.append(randomName);#>>)){
+          // multiple associatoin
+         <<#if(associationIsManyFromJson.get(assoJsonCount)){#>>
+           <<#appendln(realSb,"");#>>
+           <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> manyAssoObj_<<#realSb.append(randomName);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString_<<#realSb.append(randomName);#>>,umpleObjectIDMap);
+           <<#appendln(realSb,"");#>>
+           <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=new ArrayList<<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>>();
+           <<#appendln(realSb,"");#>>
+           <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>.add(manyAssoObj_<<#realSb.append(randomName);#>>);
+         <<#}  
+         else{#>>
+           //Single association
+            <<#appendln(realSb,"");#>>
+            <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> oneAssoObj_<<#realSb.append(randomName);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString_<<#realSb.append(randomName);#>>,umpleObjectIDMap);
+            <<#appendln(realSb,"");#>>
+            <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=oneAssoObj_<<#realSb.append(randomName);#>>;
+         <<#}#>>
+       }
+       //umpleObjectId of the next visit object IS recorded, point back to the object created before
+       else{
+         //multi association
+         <<#if(associationIsManyFromJson.get(assoJsonCount)){#>>
+           <<#appendln(realSb,"");#>>
+           <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>.add((<<#realSb.append(associationItemsFromJson.get(assoJsonCount));#>>)umpleObjectIDMap.get(newUmpleID_<<#realSb.append(randomName);#>>));
+         <<#} 
+         //single association 
+         else{#>>
+           <<#appendln(realSb,"");#>>
+           <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=(<<#realSb.append(associationItemsFromJson.get(assoJsonCount));#>>)umpleObjectIDMap.get(newUmpleID_<<#realSb.append(randomName);#>>);
+         <<#}#>>
+       }
+    <<#}#>>
+    //bracket up: pair with for loop bracket
+    }catch(Exception e){
     }
-      else if((umpleObjectIDMap.get(umpleObjectId)!=null)){
-      //copy the object retrieved from umpleObjectIDMap
-      <<#appendln(realSb,"");#>>
-      <<#
-      Random randomObj=new Random();
-      int createdObjNameRandom = randomObj.nextInt(900000)+100000;
-      #>>
-      <<#realSb.append(uClass.getName());#>> createdObj_<<#realSb.append(createdObjNameRandom);#>>=(<<#realSb.append(uClass.getName());#>>) umpleObjectIDMap.get(umpleObjectId);
-      <<#for(int attrJsonCount=0;attrJsonCount< nameOfAttributesFromJson.size();attrJsonCount++){#>>
-        this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=createdObj_<<#realSb.append(createdObjNameRandom);#>>.<<#realSb.append(displayedAttributesFromJson.get(attrJsonCount));#>>;
-      <<#}#>>
-      <<#for (int primJsonCount=0; primJsonCount<nameOfPrimitivesFromJson.size();primJsonCount++){#>>
-          this.<<#realSb.append(nameOfPrimitivesFromJson.get(primJsonCount));#>>=createdObj_<<#realSb.append(createdObjNameRandom);#>>.<<#realSb.append(displayedPrimitivesFromJson.get(primJsonCount));#>>;
-      <<#}#>>
-      
-      }
-      }
+    }
+  }
   }!>>
  
   fromJson_parser <<!<</*fromJson_parser*/>>
@@ -535,7 +534,9 @@ class UmpleToJava {
         //until a List (multi-associations) pattern or a newObject parttern (single association) is found
         while(pairMatcher.find()){
             String pairStringFound=pairMatcher.group(0);
-            parsedResultMap.put(pairStringFound.split(colon)[0].split(quotes)[1], pairStringFound.split(colon)[1].split(quotes)[1]);
+            if(parsedResultMap.get(pairStringFound.split(colon)[0].split(quotes)[1])==null){
+              parsedResultMap.put(pairStringFound.split(colon)[0].split(quotes)[1], pairStringFound.split(colon)[1].split(quotes)[1]);
+            }
             jsonString=jsonString.replaceFirst(pairString, "");
             // associationString is the regex for an object's multi-association
             String associationString="\\\"\\w*\\\"\\:\\[\\{.*?\\]";
@@ -586,7 +587,29 @@ class UmpleToJava {
   }
   !>>
   
-  
+  fromJson_parserHelper <<!<</*fromJson_parserHelper*/>>
+  public static String fromJsonParserHelper(String jsonString, String regexString){
+    String umpleID = "";
+    try{
+      Pattern umpleIDPattern=Pattern.compile(regexString);
+      Matcher umpleIDMatcher=umpleIDPattern.matcher(jsonString);
+      if(umpleIDMatcher.find()){
+        String umpleIDStringFound=umpleIDMatcher.group(0);
+        String idString="\\d{10}";
+        Pattern idPattern=Pattern.compile(idString);
+        Matcher idMatcher=idPattern.matcher(umpleIDStringFound);
+        if(idMatcher.find()){
+          umpleID=idMatcher.group(0);
+        }
+      }
+      return umpleID;
+    } catch(NullPointerException e){
+      return umpleID;
+    }
+  }
+  !>>
+
+
   
  
  
