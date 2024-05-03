@@ -439,39 +439,41 @@ class UmpleToJava {
        String newJsonString_<<#realSb.append(randomName);#>>=parsedResult.get(jsonKey);
        String newIDRegex_<<#realSb.append(randomName);#>>="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
        String newUmpleID_<<#realSb.append(randomName);#>>=fromJsonParserHelper(newJsonString_<<#realSb.append(randomName);#>>,newIDRegex_<<#realSb.append(randomName);#>>);
-       //umpleObjectId of the next visited object is NOT recorded, create new object/add new object to assoList 
-       if(!umpleObjectIDMap.containsKey(newUmpleID_<<#realSb.append(randomName);#>>)){
-          // multiple associatoin
-         <<#if(associationIsManyFromJson.get(assoJsonCount)){#>>
-           <<#appendln(realSb,"");#>>
-           <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> manyAssoObj_<<#realSb.append(randomName);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString_<<#realSb.append(randomName);#>>,umpleObjectIDMap);
-           <<#appendln(realSb,"");#>>
-           <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=new ArrayList<<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>>();
-           <<#appendln(realSb,"");#>>
-           <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>.add(manyAssoObj_<<#realSb.append(randomName);#>>);
-         <<#}  
-         else{#>>
-           //Single association
+       
+        <<#if(associationIsManyFromJson.get(assoJsonCount)){#>>
+         List<String> multiAssoObjList_<<#realSb.append(randomName);#>> = new ArrayList<String>();
+         multiAssoObjList_<<#realSb.append(randomName);#>>=fromJsonParserList(newJsonString_<<#realSb.append(randomName);#>>);
+         <<#appendln(realSb,"");#>>
+         <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=new ArrayList<<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>>();
+         for(String obj: multiAssoObjList_<<#realSb.append(randomName);#>>){
+         System.out.println("******  "+obj);
+           newUmpleID_<<#realSb.append(randomName);#>>=fromJsonParserHelper(obj,newIDRegex_<<#realSb.append(randomName);#>>);
+           if(!umpleObjectIDMap.containsKey(newUmpleID_<<#realSb.append(randomName);#>>)){
+             <<#appendln(realSb,"");#>>
+             <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> manyAssoObj_<<#realSb.append(randomName);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(obj,umpleObjectIDMap);
+             
+             <<#appendln(realSb,"");#>>
+             <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>.add(manyAssoObj_<<#realSb.append(randomName);#>>);
+           }
+           else{
+             <<#appendln(realSb,"");#>>
+             <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>.add((<<#realSb.append(associationItemsFromJson.get(assoJsonCount));#>>)umpleObjectIDMap.get(newUmpleID_<<#realSb.append(randomName);#>>));
+           }
+         }
+      <<#}
+      else{#>>
+          if(!umpleObjectIDMap.containsKey(newUmpleID_<<#realSb.append(randomName);#>>)){
             <<#appendln(realSb,"");#>>
-            <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> oneAssoObj_<<#realSb.append(randomName);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString_<<#realSb.append(randomName);#>>,umpleObjectIDMap);
+           <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> oneAssoObj_<<#realSb.append(randomName);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString_<<#realSb.append(randomName);#>>,umpleObjectIDMap);
+           <<#appendln(realSb,"");#>>
+           <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=oneAssoObj_<<#realSb.append(randomName);#>>;
+          }
+          else{
             <<#appendln(realSb,"");#>>
-            <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=oneAssoObj_<<#realSb.append(randomName);#>>;
-         <<#}#>>
-       }
-       //umpleObjectId of the next visit object IS recorded, point back to the object created before
-       else{
-         //multi association
-         <<#if(associationIsManyFromJson.get(assoJsonCount)){#>>
-           <<#appendln(realSb,"");#>>
-           <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>.add((<<#realSb.append(associationItemsFromJson.get(assoJsonCount));#>>)umpleObjectIDMap.get(newUmpleID_<<#realSb.append(randomName);#>>));
-         <<#} 
-         //single association 
-         else{#>>
-           <<#appendln(realSb,"");#>>
-           <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=(<<#realSb.append(associationItemsFromJson.get(assoJsonCount));#>>)umpleObjectIDMap.get(newUmpleID_<<#realSb.append(randomName);#>>);
-           
-         <<#}#>>
-       }
+          <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=(<<#realSb.append(associationItemsFromJson.get(assoJsonCount));#>>)umpleObjectIDMap.get(newUmpleID_<<#realSb.append(randomName);#>>);
+          }
+      <<#}#>>
+
     <<#}#>>
     //bracket up: pair with for loop bracket
     }catch(Exception e){
@@ -615,12 +617,26 @@ class UmpleToJava {
     }
   }
   !>>
-
-
+  fromJson_parserList <<!<</*fromJson_parserList*/>>
+  public static List<String> fromJsonParserList(String objListString){
+    List<String> objList=new ArrayList<String>();
+    try{
+      String objString="(?=\\{\\\"\\w*\\\"\\:\\{)(?:(?=.*?\\{(?!.*?\\1)(.*\\}(?!.*\\2).*))(?=.*?\\}(?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\{]*(?=\\2$)";
+      Pattern objStringPattern=Pattern.compile(objString);
+      Matcher objStringMatcher=objStringPattern.matcher(objListString);
+      while(objStringMatcher.find()){
+        objList.add(objStringMatcher.group(0));
+      }
+      for(String s:objList){
+        System.out.println("content in List parser helper  "+s);
+      }
+      return objList;
+   }catch(NullPointerException e){
+     System.out.println ("Null pointer exception, please check input string at \"fromJson_parserList\". ");
+     return objList;
+   }
+  }
+  !>>
   
- 
- 
- 
- 
- 
+    
 }
