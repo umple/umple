@@ -440,6 +440,8 @@ class UmpleToJava {
        String newIDRegex_<<#realSb.append(randomName);#>>="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
        String newUmpleID_<<#realSb.append(randomName);#>>=fromJsonParserHelper(newJsonString_<<#realSb.append(randomName);#>>,newIDRegex_<<#realSb.append(randomName);#>>);
        
+       System.out.println("first umple id    "+newUmpleID_<<#realSb.append(randomName);#>>);
+       
         <<#if(associationIsManyFromJson.get(assoJsonCount)){#>>
          List<String> multiAssoObjList_<<#realSb.append(randomName);#>> = new ArrayList<String>();
          multiAssoObjList_<<#realSb.append(randomName);#>>=fromJsonParserList(newJsonString_<<#realSb.append(randomName);#>>);
@@ -448,12 +450,18 @@ class UmpleToJava {
          for(String obj: multiAssoObjList_<<#realSb.append(randomName);#>>){
          System.out.println("******  "+obj);
            newUmpleID_<<#realSb.append(randomName);#>>=fromJsonParserHelper(obj,newIDRegex_<<#realSb.append(randomName);#>>);
+         <<#
+         Random randomManyName=new Random();
+         int randomManyNameInt = randomManyName.nextInt(900000)+100000;
+       #>>
            if(!umpleObjectIDMap.containsKey(newUmpleID_<<#realSb.append(randomName);#>>)){
+           <<#randomManyNameInt = randomManyName.nextInt(900000)+100000;#>>
              <<#appendln(realSb,"");#>>
-             <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> manyAssoObj_<<#realSb.append(randomName);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(obj,umpleObjectIDMap);
-             
+             <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> manyAssoObj_<<#realSb.append(randomManyNameInt);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(obj,umpleObjectIDMap);
+              System.out.println(" .... ");
+             System.out.println(" many obj  === "+manyAssoObj_<<#realSb.append(randomManyNameInt);#>>);
              <<#appendln(realSb,"");#>>
-             <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>.add(manyAssoObj_<<#realSb.append(randomName);#>>);
+             <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>.add(manyAssoObj_<<#realSb.append(randomManyNameInt);#>>);
            }
            else{
              <<#appendln(realSb,"");#>>
@@ -463,10 +471,14 @@ class UmpleToJava {
       <<#}
       else{#>>
           if(!umpleObjectIDMap.containsKey(newUmpleID_<<#realSb.append(randomName);#>>)){
+          <<#
+         Random randomOneName=new Random();
+         int randomOneNameInt = randomOneName.nextInt(900000)+100000;
+       #>>
             <<#appendln(realSb,"");#>>
-           <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> oneAssoObj_<<#realSb.append(randomName);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString_<<#realSb.append(randomName);#>>,umpleObjectIDMap);
+           <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> oneAssoObj_<<#realSb.append(randomOneNameInt);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString_<<#realSb.append(randomName);#>>,umpleObjectIDMap);
            <<#appendln(realSb,"");#>>
-           <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=oneAssoObj_<<#realSb.append(randomName);#>>;
+           <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=oneAssoObj_<<#realSb.append(randomOneNameInt);#>>;
           }
           else{
             <<#appendln(realSb,"");#>>
@@ -553,6 +565,15 @@ class UmpleToJava {
             String newObjJsonString= "(?=\\,\\\"\\w*\\\"\\:\\{)(?:(?=.*?\\{(?!.*?\\1)(.*\\}(?!.*\\2).*))(?=.*?\\}(?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\{]*(?=\\2$)";
             Pattern newObjJsonPattern=Pattern.compile(newObjJsonString);
             Matcher newObjJsonMatcher=newObjJsonPattern.matcher(jsonString);
+            if(newObjJsonMatcher.find()){
+               String newObjJsonFound=newObjJsonMatcher.group(0);
+               jsonString=jsonString.replaceFirst(newObjJsonString, "");
+               String newObjName=newObjJsonFound.split(colon,2)[0].split(quotes)[1];
+               String newObjItems=newObjJsonFound.split(colon,2)[1];
+               parsedResultMap.put(newObjName, newObjItems);
+               pairPattern=Pattern.compile(pairString);
+               pairMatcher=pairPattern.matcher(jsonString);
+            }
             if (associationMatcher.find()){
                 String assoStringFound=associationMatcher.group(0);
                 jsonString=jsonString.replaceFirst(associationString, "");
@@ -562,17 +583,6 @@ class UmpleToJava {
                 pairPattern=Pattern.compile(pairString);
                 pairMatcher=pairPattern.matcher(jsonString);
             }
-           
-             if(newObjJsonMatcher.find()){
-               String newObjJsonFound=newObjJsonMatcher.group(0);
-               jsonString=jsonString.replaceFirst(newObjJsonString, "");
-               String newObjName=newObjJsonFound.split(colon,2)[0].split(quotes)[1];
-               String newObjItems=newObjJsonFound.split(colon,2)[1];
-               parsedResultMap.put(newObjName, newObjItems);
-               pairPattern=Pattern.compile(pairString);
-               pairMatcher=pairPattern.matcher(jsonString);
-            }
-             
         String associationEmptyString="\\\"\\w*\\\"\\:\\[\\]";
         Pattern associationEmptyPattern=Pattern.compile(associationEmptyString);
         Matcher associationEmptyStringMatcher=associationEmptyPattern.matcher(jsonString);
@@ -587,6 +597,13 @@ class UmpleToJava {
                pairMatcher=pairPattern.matcher(jsonString);
         }
         }
+        System.out.println("");
+for (String name: parsedResultMap.keySet()) {
+    String key = name.toString();
+    String value = parsedResultMap.get(name).toString();
+    System.out.println(key + " >>>>>> " + value);
+}
+System.out.println("");
         return parsedResultMap;
     }catch(NullPointerException e){
       return parsedResultMap;
