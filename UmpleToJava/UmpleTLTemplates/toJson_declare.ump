@@ -439,9 +439,9 @@ class UmpleToJava {
        String newJsonString_<<#realSb.append(randomName);#>>=parsedResult.get(jsonKey);
        String newIDRegex_<<#realSb.append(randomName);#>>="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
        String newUmpleID_<<#realSb.append(randomName);#>>=fromJsonParserHelper(newJsonString_<<#realSb.append(randomName);#>>,newIDRegex_<<#realSb.append(randomName);#>>);
-       
-       System.out.println("first umple id    "+newUmpleID_<<#realSb.append(randomName);#>>);
-       
+      <<# if (uClass.getKey().isProvided()){#>>
+          cachedHashCode=-1;
+       <<#}#>>
         <<#if(associationIsManyFromJson.get(assoJsonCount)){#>>
          List<String> multiAssoObjList_<<#realSb.append(randomName);#>> = new ArrayList<String>();
          multiAssoObjList_<<#realSb.append(randomName);#>>=fromJsonParserList(newJsonString_<<#realSb.append(randomName);#>>);
@@ -450,12 +450,11 @@ class UmpleToJava {
          for(String obj: multiAssoObjList_<<#realSb.append(randomName);#>>){
          System.out.println("******  "+obj);
            newUmpleID_<<#realSb.append(randomName);#>>=fromJsonParserHelper(obj,newIDRegex_<<#realSb.append(randomName);#>>);
-         <<#
-         Random randomManyName=new Random();
-         int randomManyNameInt = randomManyName.nextInt(900000)+100000;
-       #>>
+           <<#
+           Random randomManyName=new Random();
+           int randomManyNameInt = randomManyName.nextInt(900000)+100000;
+           #>>
            if(!umpleObjectIDMap.containsKey(newUmpleID_<<#realSb.append(randomName);#>>)){
-           <<#randomManyNameInt = randomManyName.nextInt(900000)+100000;#>>
              <<#appendln(realSb,"");#>>
              <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> manyAssoObj_<<#realSb.append(randomManyNameInt);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(obj,umpleObjectIDMap);
               System.out.println(" .... ");
@@ -477,6 +476,7 @@ class UmpleToJava {
        #>>
             <<#appendln(realSb,"");#>>
            <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> oneAssoObj_<<#realSb.append(randomOneNameInt);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString_<<#realSb.append(randomName);#>>,umpleObjectIDMap);
+           System.out.println("---------  "+oneAssoObj_<<#realSb.append(randomOneNameInt);#>>);
            <<#appendln(realSb,"");#>>
            <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=oneAssoObj_<<#realSb.append(randomOneNameInt);#>>;
           }
@@ -550,13 +550,13 @@ class UmpleToJava {
         //Keep on parsing the attribute's key-value pair, 
         //until a List (multi-associations) pattern or a newObject parttern (single association) is found
         while(pairMatcher.find()){
-            String pairStringFound=pairMatcher.group(0);
-              
-            if(parsedResultMap.get(pairStringFound.split(colon)[0].split(quotes)[1])==null){
-              parsedResultMap.put(pairStringFound.split(colon)[0].split(quotes)[1], pairStringFound.split(colon)[1].split(quotes)[1]);
+               String pairStringFound=pairMatcher.group(0);
+               System.out.println("0000000 pairfound     "+pairStringFound);
+              if(parsedResultMap.get(pairStringFound.split(colon)[0].split(quotes)[1])==null){
+                parsedResultMap.put(pairStringFound.split(colon)[0].split(quotes)[1], pairStringFound.split(colon)[1].split(quotes)[1]);
                 
                 jsonString=jsonString.replaceFirst(pairString, "");
-            }
+              }
             // associationString is the regex for an object's multi-association
             String associationString="(?=\\\"\\w*\\\"\\:\\[)(?:(?=.*?\\[(?!.*?\\1)(.*\\](?!.*\\2).*))(?=.*?\\](?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\[]*(?=\\2$)";
             Pattern associationPattern=Pattern.compile(associationString);
@@ -565,37 +565,32 @@ class UmpleToJava {
             String newObjJsonString= "(?=\\,\\\"\\w*\\\"\\:\\{)(?:(?=.*?\\{(?!.*?\\1)(.*\\}(?!.*\\2).*))(?=.*?\\}(?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\{]*(?=\\2$)";
             Pattern newObjJsonPattern=Pattern.compile(newObjJsonString);
             Matcher newObjJsonMatcher=newObjJsonPattern.matcher(jsonString);
+            
+            
+            if (associationMatcher.find()){
+                String assoStringFound=associationMatcher.group(0);
+                System.out.println("");
+                 System.out.println("111111111 assoString  found  "+assoStringFound);
+                  System.out.println("");
+                jsonString=jsonString.replaceFirst(associationString, "");
+                String associationName=assoStringFound.split(colon,2)[0].split(quotes)[1];;
+                String associationItems=assoStringFound.split(colonSquareBracket,2)[1];
+                parsedResultMap.put(associationName, associationItems);
+                pairPattern=Pattern.compile(pairString);
+            }
             if(newObjJsonMatcher.find()){
                String newObjJsonFound=newObjJsonMatcher.group(0);
                jsonString=jsonString.replaceFirst(newObjJsonString, "");
+               System.out.println("");
+                 System.out.println("22222222 objstring  found  "+newObjJsonFound);
+                  System.out.println("");
                String newObjName=newObjJsonFound.split(colon,2)[0].split(quotes)[1];
                String newObjItems=newObjJsonFound.split(colon,2)[1];
                parsedResultMap.put(newObjName, newObjItems);
                pairPattern=Pattern.compile(pairString);
                pairMatcher=pairPattern.matcher(jsonString);
             }
-            if (associationMatcher.find()){
-                String assoStringFound=associationMatcher.group(0);
-                jsonString=jsonString.replaceFirst(associationString, "");
-                String associationName=assoStringFound.split(colon,2)[0].split(quotes)[1];;
-                String associationItems=assoStringFound.split(colonSquareBracket,2)[1];
-                parsedResultMap.put(associationName, associationItems);
-                pairPattern=Pattern.compile(pairString);
-                pairMatcher=pairPattern.matcher(jsonString);
-            }
-        String associationEmptyString="\\\"\\w*\\\"\\:\\[\\]";
-        Pattern associationEmptyPattern=Pattern.compile(associationEmptyString);
-        Matcher associationEmptyStringMatcher=associationEmptyPattern.matcher(jsonString);
-        
-        if(associationEmptyStringMatcher.find()){
-          String associationEmptyStringFound=associationEmptyStringMatcher.group(0);
-          jsonString=jsonString.replace(associationEmptyStringFound, "");
-          String associationEmptyName=associationEmptyStringFound.split(colon,2)[0].split(quotes)[1];
-            String associationEmptyItems=associationEmptyStringFound.split(colon,2)[1];
-               parsedResultMap.put(associationEmptyName, associationEmptyItems);
-               pairPattern=Pattern.compile(pairString);
-               pairMatcher=pairPattern.matcher(jsonString);
-        }
+
         }
         System.out.println("");
 for (String name: parsedResultMap.keySet()) {
@@ -649,11 +644,9 @@ System.out.println("");
       }
       return objList;
    }catch(NullPointerException e){
-     System.out.println ("Null pointer exception, please check input string at \"fromJson_parserList\". ");
      return objList;
    }
   }
   !>>
-  
-    
+
 }
