@@ -275,7 +275,6 @@ class UmpleToJava {
     <<#}#>>
     
     HashMap<String,String> parsedResult = new HashMap<String,String>();
-    System.out.println("This is the jsonstring sent to the parser    "+aJsonString);
     parsedResult = fromJsonParser(aJsonString);
     if(!parsedResult.isEmpty()){
     boolean classExist;
@@ -349,14 +348,9 @@ class UmpleToJava {
 		}
 		associationItemsFromJson.add(av.getType());
 		associationIsManyFromJson.add(av.isMany());
-		//UmpleClass avClass=av.getUmpleClass();
-		//System.out.println("toString .....  "+avClass);
-		//assoSubClassMap.put(av.getType(),avClass.getSubclasses());
-		//System.out.println("av.getType() =============== "+av.getType());
 	  }
     for (UmpleClass up:uClass.getSubclasses()){
         subClassList.add(up.getName());
-        System.out.println("   sub   name "+up.getName());
     }	  
 	  
     #>>
@@ -461,22 +455,20 @@ class UmpleToJava {
            <<#appendln(realSb,"");#>>
            <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=new ArrayList<<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>>();
            for(String obj: multiAssoObjList_<<#realSb.append(randomName);#>>){
-         
              newUmpleID_<<#realSb.append(randomName);#>>=fromJsonParserHelper(obj,newIDRegex_<<#realSb.append(randomName);#>>);
              <<#
              Random randomManyName=new Random();
              int randomManyNameInt = randomManyName.nextInt(900000)+100000;
              #>>
-             System.out.println("0000000000000"+newUmpleID_<<#realSb.append(randomName);#>>);
+             String newClassName_<<#realSb.append(randomManyNameInt);#>>=fromJsonParserClassName(obj);
            if(!umpleObjectIDMap.containsKey(newUmpleID_<<#realSb.append(randomName);#>>)){
            
             boolean subClassFound=false;
-            
+            Class clazz_<<#realSb.append(randomManyNameInt);#>>=Class.forName(newClassName_<<#realSb.append(randomManyNameInt);#>>);
+            Constructor constructor_<<#realSb.append(randomManyNameInt);#>>=clazz_<<#realSb.append(randomManyNameInt);#>>.getConstructor(String.class, Map.class);
+            Object objectNew_<<#realSb.append(randomManyNameInt);#>>=constructor_<<#realSb.append(randomManyNameInt);#>>.newInstance(obj,umpleObjectIDMap);
              <<#appendln(realSb,"");#>>
-                <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> manyAssoObj_<<#realSb.append(randomManyNameInt);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(obj,umpleObjectIDMap);
-
-             <<#appendln(realSb,"");#>>
-             <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>.add(manyAssoObj_<<#realSb.append(randomManyNameInt);#>>);
+             <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>.add((<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>)objectNew_<<#realSb.append(randomManyNameInt);#>>);
             }
            else{
              <<#appendln(realSb,"");#>>
@@ -493,11 +485,11 @@ class UmpleToJava {
           
           if(!umpleObjectIDMap.containsKey(newUmpleID_<<#realSb.append(randomName);#>>)){
             String newClassNameOne_<<#realSb.append(randomName);#>>=fromJsonParserClassName(newJsonString_<<#realSb.append(randomName);#>>);
-            System.out.println("999999999999"+newClassNameOne_<<#realSb.append(randomName);#>>);
-            System.out.println("999999  josn key   999999"+jsonKey);
-            
+            Class clazzOne_<<#realSb.append(randomOneNameInt);#>>=Class.forName(newClassNameOne_<<#realSb.append(randomName);#>>);
+            Constructor constructorOne_<<#realSb.append(randomOneNameInt);#>>=clazzOne_<<#realSb.append(randomOneNameInt);#>>.getConstructor(String.class, Map.class);
+            Object objectNewOne_<<#realSb.append(randomOneNameInt);#>>=constructorOne_<<#realSb.append(randomOneNameInt);#>>.newInstance(newJsonString_<<#realSb.append(randomName);#>>,umpleObjectIDMap);
             <<#appendln(realSb,"");#>>
-            <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> oneAssoObj_<<#realSb.append(randomOneNameInt);#>>=new <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>(newJsonString_<<#realSb.append(randomName);#>>,umpleObjectIDMap);
+            <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> oneAssoObj_<<#realSb.append(randomOneNameInt);#>>=(<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>)objectNewOne_<<#realSb.append(randomOneNameInt);#>>;
            <<#appendln(realSb,"");#>>
            <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=oneAssoObj_<<#realSb.append(randomOneNameInt);#>>;
           }
@@ -575,7 +567,6 @@ class UmpleToJava {
         //until a List (multi-associations) pattern or a newObject parttern (single association) is found
         while(pairMatcher.find()){
                String pairStringFound=pairMatcher.group(0);
-               System.out.println("0000000 pairfound     "+pairStringFound);
               if(parsedResultMap.get(pairStringFound.split(colon)[0].split(quotes)[1])==null){
                 parsedResultMap.put(pairStringFound.split(colon)[0].split(quotes)[1], pairStringFound.split(colon)[1].split(quotes)[1]);
                 
@@ -607,26 +598,12 @@ class UmpleToJava {
                     break;
                   }
                 }
-
         }
         }
-        
-        
-        
-        
-        
-        System.out.println("");
-for (String name: parsedResultMap.keySet()) {
-    String key = name.toString();
-    String value = parsedResultMap.get(name).toString();
-    System.out.println(key + " >>>>>> " + value);
-}
-System.out.println("");
         return parsedResultMap;
     }catch(NullPointerException e){
       return parsedResultMap;
     }
-    
   }
   !>>
   
@@ -661,9 +638,6 @@ System.out.println("");
       Matcher objStringMatcher=objStringPattern.matcher(objListString);
       while(objStringMatcher.find()){
         objList.add(objStringMatcher.group(0));
-      }
-      for(String s:objList){
-        System.out.println("content in List parser helper  "+s);
       }
       return objList;
    }catch(NullPointerException e){

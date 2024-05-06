@@ -44,6 +44,7 @@ class JavaClassGenerator {
     depend cruise.umple.parser.Position;
     depend java.util.regex.Matcher;
     depend java.util.regex.Pattern;
+    depend java.lang.reflect.Constructor;
 
     isA ILang;
 

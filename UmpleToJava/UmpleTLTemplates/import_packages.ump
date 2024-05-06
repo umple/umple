@@ -31,6 +31,7 @@ class UmpleToJava {
     importSet.add("java.util.ArrayList");
     importSet.add("java.util.List");
     importSet.add("java.sql.*");
+    importSet.add("java.lang.reflect.Constructor");
     
     appendln(realSb, "");
     append(realSb, "import {0};", "java.util.HashSet");
@@ -48,6 +49,8 @@ class UmpleToJava {
     append(realSb, "import {0};", "java.util.List");
     appendln(realSb, "");
     append(realSb, "import {0};", "java.sql.*");
+    appendln(realSb, "");
+    append(realSb, "import {0};", "java.lang.reflect.Constructor");
   }
   else if(importSet.contains("java.util.*")&&model.modelHasSuboption("Java", "genJson")){
     importSet.add("java.util.regex.Matcher");
@@ -60,6 +63,8 @@ class UmpleToJava {
     append(realSb, "import {0};", "java.util.regex.Pattern");
     appendln(realSb, "");
     append(realSb, "import {0};", "java.sql.*");
+    appendln(realSb, "");
+    append(realSb, "import {0};", "java.lang.reflect.Constructor");
     }
 #>>!>>
 }
