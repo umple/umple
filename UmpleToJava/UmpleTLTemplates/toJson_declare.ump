@@ -556,7 +556,7 @@ class UmpleToJava {
           
             }
             // pairString is the regex for an object's attribute and attribute value, the string parsed will be in key-value formate
-        String pairString = "(?!\\\"umpleObjectID\\\")\\\"\\w*\\\"\\:\\\"\\w*([.])?\\w*\\\"";
+        String pairString = "(?!\\\"umpleObjectID\\\")\\\"\\w*\\\"\\:\\\"\\w*\\s*([.])?\\w*([\\W*](?!,))*\\w*\\s*\\\"";
         Pattern pairPattern=Pattern.compile(pairString);
         Matcher pairMatcher=pairPattern.matcher(jsonString);
         String associationString="(?=\\\"\\w*\\\"\\:\\[)(?:(?=.*?\\[(?!.*?\\1)(.*\\](?!.*\\2).*))(?=.*?\\](?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\[]*(?=\\2$)";
