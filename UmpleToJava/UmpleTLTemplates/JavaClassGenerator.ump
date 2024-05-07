@@ -465,7 +465,7 @@ for (StateMachine smq : uClass.getStateMachines())
 <<@ UmpleToJava.constructor_Declare_All >>
   <<#return realSb.toString();
     } 
-    
+
     private String getAttributeCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
   { 
     String umpleSourceFile = "";
@@ -570,7 +570,7 @@ for (StateMachine smq : uClass.getStateMachines())
 <<# } #>>
   <<#return realSb.toString();
     }
-   
+    
     private String getJsonGenerationCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
   {
     if (model.modelHasSuboption("Java", "genJson")){

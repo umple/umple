@@ -271,6 +271,7 @@ class UmpleToJava {
   *
   * @param umpleObjectIDMap<String, Integer> mapping parsed objectID (from Json string) with newly instantiated object's objectID
   */ 
+  @SuppressWarnings("unchecked")
   public <<#realSb.append(uClass.getName());#>>(String aJsonString, Map<String, Object> umpleObjectIDMap){
     // Initialize a HashMap to store the parsed result
     // key is the attribute name present in the jsonString
@@ -518,7 +519,7 @@ class UmpleToJava {
     //}
   }
   }!>>
- 
+  
   fromJson_parser <<!<</*fromJson_parser*/>>
   /*
   * A json parser to parse the input jsonString, if -s genJson is specified
