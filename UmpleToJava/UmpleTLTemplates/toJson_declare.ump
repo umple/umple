@@ -252,7 +252,6 @@ class UmpleToJava {
   public static <<#realSb.append(uClass.getName());#>> fromJson(String aJsonString){
     // process the input jsonString so that it can further processed using regex
     aJsonString=aJsonString.replace("\n","").replace(" ","");   
-    System.out.println(aJsonString);
     // a map to store the umpleObjectID present in jsonString
     Map<String, Object> umpleObjectIDMap=new HashMap<>();
     
@@ -570,27 +569,20 @@ class UmpleToJava {
         String pairString = "(\\\"(?!umpleObjectID)[^\\\"]+)\\\":\\\"((?:\\\\\\\"|[^\\\"])*)";
         Pattern pairPattern=Pattern.compile(pairString);
         Matcher pairMatcher=pairPattern.matcher(jsonString);
-        String associationString="(?=\\,\\\"\\w*\\\"\\:\\[)(?:(?=.*?\\[(?!.*?\\1)(.*\\](?!.*\\2).*))(?=.*?\\](?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\[]*(?=\\2$)";
+        String associationString="(?=\\\"\\w*\\\"\\:\\[\\{)(?:(?=.*?\\[\\{(?!.*?\\1)(.*\\}\\](?!.*\\2).*))(?=.*?\\}\\](?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\[]*(?=\\2$)";
         Pattern associationPattern=Pattern.compile(associationString);
-        String newObjJsonString= "(?=\\,\\\"\\w*\\\"\\:\\{)(?:(?=.*?\\{(?!.*?\\1)(.*\\}(?!.*\\2).*))(?=.*?\\}(?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\{]*(?=\\2$)";
+        String newObjJsonString="(?=\\,\\\"\\w*\\\"\\:\\{)(?:(?=.*?\\{\\\"(?!.*?\\1)(.*\\}(?!.*\\2).*))(?=.*?\\}(?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\{]*(?=\\2$)";
         Pattern newObjJsonPattern=Pattern.compile(newObjJsonString);
         String quoteColonQuote="\\\"\\:\\\"";
         //Keep on parsing the attribute's key-value pair, 
         //until a List (multi-associations) pattern or a newObject parttern (single association) is found
         while(pairMatcher.find()){
                String pairStringFound=pairMatcher.group(0);
-               System.out.println("6666666"+pairStringFound);
               if(parsedResultMap.get(pairStringFound.split(colon)[0].split(quotes)[1])==null){
                 String keyPair=pairStringFound.split(colon)[0].split(quotes)[1];
                 String valuePair=pairStringFound.split(quoteColonQuote,2)[1];
-                System.out.println("value before  "+valuePair);
                 keyPair=keyPair.replace("\\\\","\\").replace("\\\"","\"");
-                
                 valuePair=valuePair.replace("\\\\","\\").replace("\\\"","\"");
-                System.out.println("..........");
-                System.out.println("key   "+keyPair);
-                System.out.println("value   "+valuePair);
-                System.out.println("..........");
                 parsedResultMap.put(keyPair,valuePair);
                 jsonString=jsonString.replaceFirst(pairString, "");
               }
@@ -605,7 +597,6 @@ class UmpleToJava {
                   
                   if (assoFound&&(!newObjFound||associationMatcher.start()<newObjJsonMatcher.start())){
                     String assoStringFound=associationMatcher.group(0);
-                    System.out.println("association   "+assoStringFound);
                     String associationName=assoStringFound.split(colon,2)[0].split(quotes)[1];;
                     String associationItems=assoStringFound.split(colonSquareBracket,2)[1];
                     parsedResultMap.put(associationName, associationItems);
@@ -613,7 +604,6 @@ class UmpleToJava {
                   }
                   else if (newObjFound){
                     String newObjJsonFound=newObjJsonMatcher.group(0);
-                    System.out.println("new obj found   "+newObjJsonFound);
                     String newObjName=newObjJsonFound.split(colon,2)[0].split(quotes)[1];
                     String newObjItems=newObjJsonFound.split(colon,2)[1];
                     parsedResultMap.put(newObjName, newObjItems);
@@ -624,13 +614,6 @@ class UmpleToJava {
                 }
         }
         }
-                System.out.println("");
-for (String name: parsedResultMap.keySet()) {
-    String key = name.toString();
-    String value = parsedResultMap.get(name).toString();
-    System.out.println(key + "  >>>>>>  " + value);
-}
-System.out.println("");
         return parsedResultMap;
     }catch(NullPointerException e){
       return parsedResultMap;
@@ -664,7 +647,7 @@ System.out.println("");
   public static List<String> fromJsonParserList(String objListString){
     List<String> objList=new ArrayList<String>();
     try{
-      String objString="(?=\\{\\\"\\w*\\\"\\:\\{)(?:(?=.*?\\{(?!.*?\\1)(.*\\}(?!.*\\2).*))(?=.*?\\}(?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\{]*(?=\\2$)";
+      String objString="(?:(?=.*?\\{(?!.*?\\1)(.*\\}(?!.*\\2).*))(?=.*?\\}(?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\{]*(?=\\2$)";
       Pattern objStringPattern=Pattern.compile(objString);
       Matcher objStringMatcher=objStringPattern.matcher(objListString);
       while(objStringMatcher.find()){
