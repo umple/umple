@@ -108,9 +108,13 @@ class UmpleToJava {
       if(haveOutputItem){
       //toJsonOutput.append(",\n");  
       }
-         
+        
       <<#
         for (int m1=0;m1<displayedPrimitives.size();m1++){#>>
+          <<#
+           Random randomValuePrim=new Random();
+           int randomValueNamePrim = randomValuePrim.nextInt(900000)+100000;
+          #>> 
           if(haveOutputItem){
             toJsonOutput.append(",\n");
           }
@@ -118,7 +122,8 @@ class UmpleToJava {
           toJsonOutput.append("  \"");
           toJsonOutput.append("<<#realSb.append(nameOfPrimitives.get(m1));#>>");
           toJsonOutput.append("\" : \"");
-          toJsonOutput.append("<<#realSb.append("\"+"+  displayedPrimitives.get(m1)+"+ \"");#>>");
+          String primValue_<<#realSb.append(randomValueNamePrim);#>>=""+<<#realSb.append(displayedPrimitives.get(m1));#>>+"";
+          toJsonOutput.append(primValue_<<#realSb.append(randomValueNamePrim);#>>.replace("\\","\\\\").replace("\"","\\\""));
           toJsonOutput.append("\"");
           haveOutputItem=true;
         <<#}
@@ -126,6 +131,10 @@ class UmpleToJava {
       //haveOutputItem = false;
       <<#
         for (int numAttributes=0;numAttributes<displayedAttributes.size();numAttributes++){#>>
+          <<#
+           Random randomValueAttr=new Random();
+           int randomValueNameAttr = randomValueAttr.nextInt(900000)+100000;
+          #>>
           if(haveOutputItem){
             toJsonOutput.append(",\n");
           }
@@ -133,7 +142,8 @@ class UmpleToJava {
           toJsonOutput.append("  \"");
           toJsonOutput.append("<<#realSb.append(nameOfAttributes.get(numAttributes));#>>");
           toJsonOutput.append("\" : \"");
-          toJsonOutput.append("<<#realSb.append("\"+"+  displayedAttributes.get(numAttributes)+"+ \"");#>>");
+          String attrValue_<<#realSb.append(randomValueNameAttr);#>>=""+<<#realSb.append(displayedAttributes.get(numAttributes));#>>+"";
+          toJsonOutput.append(attrValue_<<#realSb.append(randomValueNameAttr);#>>.replace("\\","\\\\").replace("\"","\\\""));
           toJsonOutput.append("\"");
           //toJsonOutput.append(",\n");
           haveOutputItem=true;
@@ -242,7 +252,7 @@ class UmpleToJava {
   public static <<#realSb.append(uClass.getName());#>> fromJson(String aJsonString){
     // process the input jsonString so that it can further processed using regex
     aJsonString=aJsonString.replace("\n","").replace(" ","");   
-    
+    System.out.println(aJsonString);
     // a map to store the umpleObjectID present in jsonString
     Map<String, Object> umpleObjectIDMap=new HashMap<>();
     
@@ -556,20 +566,31 @@ class UmpleToJava {
           
             }
             // pairString is the regex for an object's attribute and attribute value, the string parsed will be in key-value formate
-        String pairString = "(?!\\\"umpleObjectID\\\")\\\"\\w*\\\"\\:\\\"(\\\\\"|[^\"])*\\\"";
+        String pairString = "(\\\"(?!umpleObjectID)[^\\\"]+)\\\":\\\"((?:\\\\\\\"|[^\\\"])*)";
         Pattern pairPattern=Pattern.compile(pairString);
         Matcher pairMatcher=pairPattern.matcher(jsonString);
-        String associationString="(?=\\\"\\w*\\\"\\:\\[)(?:(?=.*?\\[(?!.*?\\1)(.*\\](?!.*\\2).*))(?=.*?\\](?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\[]*(?=\\2$)";
+        String associationString="(?=\\,\\\"\\w*\\\"\\:\\[)(?:(?=.*?\\[(?!.*?\\1)(.*\\](?!.*\\2).*))(?=.*?\\](?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\[]*(?=\\2$)";
         Pattern associationPattern=Pattern.compile(associationString);
         String newObjJsonString= "(?=\\,\\\"\\w*\\\"\\:\\{)(?:(?=.*?\\{(?!.*?\\1)(.*\\}(?!.*\\2).*))(?=.*?\\}(?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\{]*(?=\\2$)";
-            Pattern newObjJsonPattern=Pattern.compile(newObjJsonString);
+        Pattern newObjJsonPattern=Pattern.compile(newObjJsonString);
+        String quoteColonQuote="\\\"\\:\\\"";
         //Keep on parsing the attribute's key-value pair, 
         //until a List (multi-associations) pattern or a newObject parttern (single association) is found
         while(pairMatcher.find()){
                String pairStringFound=pairMatcher.group(0);
+               System.out.println("6666666"+pairStringFound);
               if(parsedResultMap.get(pairStringFound.split(colon)[0].split(quotes)[1])==null){
-                parsedResultMap.put(pairStringFound.split(colon)[0].split(quotes)[1], pairStringFound.split(colon)[1].split(quotes)[1]);
+                String keyPair=pairStringFound.split(colon)[0].split(quotes)[1];
+                String valuePair=pairStringFound.split(quoteColonQuote,2)[1];
+                System.out.println("value before  "+valuePair);
+                keyPair=keyPair.replace("\\\\","\\").replace("\\\"","\"");
                 
+                valuePair=valuePair.replace("\\\\","\\").replace("\\\"","\"");
+                System.out.println("..........");
+                System.out.println("key   "+keyPair);
+                System.out.println("value   "+valuePair);
+                System.out.println("..........");
+                parsedResultMap.put(keyPair,valuePair);
                 jsonString=jsonString.replaceFirst(pairString, "");
               }
                 int lastIndex = 0;
@@ -583,6 +604,7 @@ class UmpleToJava {
                   
                   if (assoFound&&(!newObjFound||associationMatcher.start()<newObjJsonMatcher.start())){
                     String assoStringFound=associationMatcher.group(0);
+                    System.out.println("association   "+assoStringFound);
                     String associationName=assoStringFound.split(colon,2)[0].split(quotes)[1];;
                     String associationItems=assoStringFound.split(colonSquareBracket,2)[1];
                     parsedResultMap.put(associationName, associationItems);
@@ -590,6 +612,7 @@ class UmpleToJava {
                   }
                   else if (newObjFound){
                     String newObjJsonFound=newObjJsonMatcher.group(0);
+                    System.out.println("new obj found   "+newObjJsonFound);
                     String newObjName=newObjJsonFound.split(colon,2)[0].split(quotes)[1];
                     String newObjItems=newObjJsonFound.split(colon,2)[1];
                     parsedResultMap.put(newObjName, newObjItems);
@@ -600,6 +623,13 @@ class UmpleToJava {
                 }
         }
         }
+                System.out.println("");
+for (String name: parsedResultMap.keySet()) {
+    String key = name.toString();
+    String value = parsedResultMap.get(name).toString();
+    System.out.println(key + "  >>>>>>  " + value);
+}
+System.out.println("");
         return parsedResultMap;
     }catch(NullPointerException e){
       return parsedResultMap;
