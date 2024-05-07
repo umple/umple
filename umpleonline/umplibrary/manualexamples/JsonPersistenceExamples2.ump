@@ -1,0 +1,94 @@
+generate Java --suboption "genJson";
+class University {
+  singleton;
+  lazy name;
+  lazy Float tuition;
+  1 -- * Course;
+}
+
+class Person {
+  Integer id;
+  name;
+}
+
+class Student {
+  isA Person;
+  Float tuitionPaid;
+}
+
+class PartTimeStudent {
+  isA Student;
+  Boolean isExemptFromFees;
+}
+
+class Employee {
+  isA Person;
+  Double salary;
+  lazy job;
+  * -- * CourseSection teaches;
+}
+
+association {
+  * Student -- 1 University;
+}
+
+class Course {
+  title;
+}
+
+class CourseSection {
+  code;
+  * -- 1 Course;
+}
+
+associationClass Registration {
+  * Student;
+  * CourseSection;
+  lazy grade;
+}
+
+class University {
+  public static void main (String[] args) Java{
+  
+    University u = new University();
+    u.setName("UOttawa");
+    u.setTuition(1000.00f);
+  
+    Student s1 = new Student(101, "Ti\" \\m", 800.0f, u);
+    Student s2 = new Student(102, "Jane", 2000.0f, u); 
+    Student s3 = new Student(103, "Ali", 750.0f, u); 
+  
+    PartTimeStudent s4= new PartTimeStudent(104, "Marie", 600.56f, u, false);
+  
+    Employee e1 = new Employee(202, "Julia", 6585.45);
+    Employee e2 = new Employee(203, "Robin", 8785.11);
+    e2.setJob("Advisor");
+  
+    Course ca= new Course("Architecture",u);
+    Course cb= new Course("Biology",u);
+CourseSection csa1= new CourseSection("A1",ca);
+    e1.addTeache(csa1);
+    CourseSection csa2= new CourseSection("A2",ca);
+    e1.addTeache(csa1);
+    CourseSection csb1= new CourseSection("B1",cb);
+    e2.addTeache(csa1);
+    e1.addTeache(csa1);  // two teachers for this
+
+    new Registration(s1,csa1);
+    new Registration(s1,csb1);
+    new Registration(s2,csa2);
+    new Registration(s2,csb1);
+    new Registration(s2,csa1);
+    new Registration(s3,csb1);
+    new Registration(s4,csa2);
+    String jsonString = u.toJson();
+    University u2 = University.fromJson(jsonString);
+    
+    System.out.println("----- fromJson object -------\n"+u2);
+    
+    System.out.println("----- fromJson --->  toJson ------");
+    System.out.println(u2.toJson());
+    
+  }
+}
+  
