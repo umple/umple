@@ -54,7 +54,7 @@ class University {
     u.setName("UOttawa");
     u.setTuition(1000.00f);
   
-    Student s1 = new Student(101, "Ti\" \\m", 800.0f, u);
+    Student s1 = new Student(101, "Tim", 800.0f, u);
     Student s2 = new Student(102, "Jane", 2000.0f, u); 
     Student s3 = new Student(103, "Ali", 750.0f, u); 
   
