@@ -1,4 +1,4 @@
-generate Java --suboption "genJson";
+suboption "genJson";
 class Bank {
   String bankName;
   int numAccount;
@@ -8,4 +8,4 @@ class Bank {
     System.out.println(boc.toJson());
   }
 }
-//$?[End_of_model]$?
+// @@@skipcompile   Temporary to bootstrap

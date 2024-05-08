@@ -1,4 +1,4 @@
-generate Java --suboption "genJson";
+suboption "genJson";
 class University {
   singleton;
   lazy name;
@@ -91,4 +91,5 @@ CourseSection csa1= new CourseSection("A1",ca);
     
   }
 }
+// @@@skipcompile   Temporary to bootstrap
   
