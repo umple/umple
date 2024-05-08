@@ -19,7 +19,7 @@ Composite Structure%Capabilities to define components with nested elements and c
 Tracing%Capabilities to specify run-time tracing of API calls for attributes, associations, state machines and methods;
 UmpleOnline%Capabilities of the Umple web-based interface that runs at try.umple.org and in Docker;
 Generators%Capabilities of Umple to generate code;
-Persistence%
+Persistence%Capabilities to load and save instances of Umple classes;
 Umplification%Capabilities to reverse engineer Java to Umple;
 Examples%A selection of Umple examples, many more can be found in UmnpleOnline and other manual pages;
 Tips%A collection of all the different tips-of-the-day that would occasionally appear;
