@@ -8,155 +8,311 @@ import java.util.regex.Pattern;
 import java.sql.*;
 import java.lang.reflect.Constructor;
 
-// line 4 "../toJsonTest_1.ump"
-public class Person
+// line 41 "../ToJsonComplexTest.ump"
+public class CourseSection
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Person Attributes
-  private String name;
+  //CourseSection Attributes
+  private String code;
 
-  //Person Associations
-  private List<Address> addresses;
+  //CourseSection Associations
+  private Course course;
+  private List<Employee> employees;
+  private List<Registration> registrations;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Person(String aName)
+  public CourseSection(String aCode, Course aCourse)
   {
-    name = aName;
-    addresses = new ArrayList<Address>();
+    code = aCode;
+    boolean didAddCourse = setCourse(aCourse);
+    if (!didAddCourse)
+    {
+      throw new RuntimeException("Unable to create courseSection due to course. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    employees = new ArrayList<Employee>();
+    registrations = new ArrayList<Registration>();
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public boolean setName(String aName)
+  public boolean setCode(String aCode)
   {
     boolean wasSet = false;
-    name = aName;
+    code = aCode;
     wasSet = true;
     return wasSet;
   }
 
-  public String getName()
+  public String getCode()
   {
-    return name;
+    return code;
+  }
+  /* Code from template association_GetOne */
+  public Course getCourse()
+  {
+    return course;
   }
   /* Code from template association_GetMany */
-  public Address getAddress(int index)
+  public Employee getEmployee(int index)
   {
-    Address aAddress = addresses.get(index);
-    return aAddress;
+    Employee aEmployee = employees.get(index);
+    return aEmployee;
   }
 
-  public List<Address> getAddresses()
+  public List<Employee> getEmployees()
   {
-    List<Address> newAddresses = Collections.unmodifiableList(addresses);
-    return newAddresses;
+    List<Employee> newEmployees = Collections.unmodifiableList(employees);
+    return newEmployees;
   }
 
-  public int numberOfAddresses()
+  public int numberOfEmployees()
   {
-    int number = addresses.size();
+    int number = employees.size();
     return number;
   }
 
-  public boolean hasAddresses()
+  public boolean hasEmployees()
   {
-    boolean has = addresses.size() > 0;
+    boolean has = employees.size() > 0;
     return has;
   }
 
-  public int indexOfAddress(Address aAddress)
+  public int indexOfEmployee(Employee aEmployee)
   {
-    int index = addresses.indexOf(aAddress);
+    int index = employees.indexOf(aEmployee);
     return index;
   }
+  /* Code from template association_GetMany */
+  public Registration getRegistration(int index)
+  {
+    Registration aRegistration = registrations.get(index);
+    return aRegistration;
+  }
+
+  public List<Registration> getRegistrations()
+  {
+    List<Registration> newRegistrations = Collections.unmodifiableList(registrations);
+    return newRegistrations;
+  }
+
+  public int numberOfRegistrations()
+  {
+    int number = registrations.size();
+    return number;
+  }
+
+  public boolean hasRegistrations()
+  {
+    boolean has = registrations.size() > 0;
+    return has;
+  }
+
+  public int indexOfRegistration(Registration aRegistration)
+  {
+    int index = registrations.indexOf(aRegistration);
+    return index;
+  }
+  /* Code from template association_SetOneToMany */
+  public boolean setCourse(Course aCourse)
+  {
+    boolean wasSet = false;
+    if (aCourse == null)
+    {
+      return wasSet;
+    }
+
+    Course existingCourse = course;
+    course = aCourse;
+    if (existingCourse != null && !existingCourse.equals(aCourse))
+    {
+      existingCourse.removeCourseSection(this);
+    }
+    course.addCourseSection(this);
+    wasSet = true;
+    return wasSet;
+  }
   /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfAddresses()
+  public static int minimumNumberOfEmployees()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToManyMethod */
+  public boolean addEmployee(Employee aEmployee)
+  {
+    boolean wasAdded = false;
+    if (employees.contains(aEmployee)) { return false; }
+    employees.add(aEmployee);
+    if (aEmployee.indexOfTeache(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aEmployee.addTeache(this);
+      if (!wasAdded)
+      {
+        employees.remove(aEmployee);
+      }
+    }
+    return wasAdded;
+  }
+  /* Code from template association_RemoveMany */
+  public boolean removeEmployee(Employee aEmployee)
+  {
+    boolean wasRemoved = false;
+    if (!employees.contains(aEmployee))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = employees.indexOf(aEmployee);
+    employees.remove(oldIndex);
+    if (aEmployee.indexOfTeache(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aEmployee.removeTeache(this);
+      if (!wasRemoved)
+      {
+        employees.add(oldIndex,aEmployee);
+      }
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  public boolean addEmployeeAt(Employee aEmployee, int index)
+  {  
+    boolean wasAdded = false;
+    if(addEmployee(aEmployee))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfEmployees()) { index = numberOfEmployees() - 1; }
+      employees.remove(aEmployee);
+      employees.add(index, aEmployee);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveEmployeeAt(Employee aEmployee, int index)
+  {
+    boolean wasAdded = false;
+    if(employees.contains(aEmployee))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfEmployees()) { index = numberOfEmployees() - 1; }
+      employees.remove(aEmployee);
+      employees.add(index, aEmployee);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addEmployeeAt(aEmployee, index);
+    }
+    return wasAdded;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  public static int minimumNumberOfRegistrations()
   {
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Address addAddress(String aStreet)
+  public Registration addRegistration(Student aStudent)
   {
-    return new Address(aStreet, this);
+    return new Registration(aStudent, this);
   }
 
-  public boolean addAddress(Address aAddress)
+  public boolean addRegistration(Registration aRegistration)
   {
     boolean wasAdded = false;
-    if (addresses.contains(aAddress)) { return false; }
-    Person existingPerson = aAddress.getPerson();
-    boolean isNewPerson = existingPerson != null && !this.equals(existingPerson);
-    if (isNewPerson)
+    if (registrations.contains(aRegistration)) { return false; }
+    CourseSection existingCourseSection = aRegistration.getCourseSection();
+    boolean isNewCourseSection = existingCourseSection != null && !this.equals(existingCourseSection);
+    if (isNewCourseSection)
     {
-      aAddress.setPerson(this);
+      aRegistration.setCourseSection(this);
     }
     else
     {
-      addresses.add(aAddress);
+      registrations.add(aRegistration);
     }
     wasAdded = true;
     return wasAdded;
   }
 
-  public boolean removeAddress(Address aAddress)
+  public boolean removeRegistration(Registration aRegistration)
   {
     boolean wasRemoved = false;
-    //Unable to remove aAddress, as it must always have a person
-    if (!this.equals(aAddress.getPerson()))
+    //Unable to remove aRegistration, as it must always have a courseSection
+    if (!this.equals(aRegistration.getCourseSection()))
     {
-      addresses.remove(aAddress);
+      registrations.remove(aRegistration);
       wasRemoved = true;
     }
     return wasRemoved;
   }
   /* Code from template association_AddIndexControlFunctions */
-  public boolean addAddressAt(Address aAddress, int index)
+  public boolean addRegistrationAt(Registration aRegistration, int index)
   {  
     boolean wasAdded = false;
-    if(addAddress(aAddress))
+    if(addRegistration(aRegistration))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfAddresses()) { index = numberOfAddresses() - 1; }
-      addresses.remove(aAddress);
-      addresses.add(index, aAddress);
+      if(index > numberOfRegistrations()) { index = numberOfRegistrations() - 1; }
+      registrations.remove(aRegistration);
+      registrations.add(index, aRegistration);
       wasAdded = true;
     }
     return wasAdded;
   }
 
-  public boolean addOrMoveAddressAt(Address aAddress, int index)
+  public boolean addOrMoveRegistrationAt(Registration aRegistration, int index)
   {
     boolean wasAdded = false;
-    if(addresses.contains(aAddress))
+    if(registrations.contains(aRegistration))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfAddresses()) { index = numberOfAddresses() - 1; }
-      addresses.remove(aAddress);
-      addresses.add(index, aAddress);
+      if(index > numberOfRegistrations()) { index = numberOfRegistrations() - 1; }
+      registrations.remove(aRegistration);
+      registrations.add(index, aRegistration);
       wasAdded = true;
     } 
     else 
     {
-      wasAdded = addAddressAt(aAddress, index);
+      wasAdded = addRegistrationAt(aRegistration, index);
     }
     return wasAdded;
   }
 
   public void delete()
   {
-    for(int i=addresses.size(); i > 0; i--)
+    Course placeholderCourse = course;
+    this.course = null;
+    if(placeholderCourse != null)
     {
-      Address aAddress = addresses.get(i - 1);
-      aAddress.delete();
+      placeholderCourse.removeCourseSection(this);
+    }
+    ArrayList<Employee> copyOfEmployees = new ArrayList<Employee>(employees);
+    employees.clear();
+    for(Employee aEmployee : copyOfEmployees)
+    {
+      aEmployee.removeTeache(this);
+    }
+    for(int i=registrations.size(); i > 0; i--)
+    {
+      Registration aRegistration = registrations.get(i - 1);
+      aRegistration.delete();
     }
   }
 
@@ -164,7 +320,8 @@ public class Person
   public String toString()
   {
     return super.toString() + "["+
-            "name" + ":" + getName()+ "]";
+            "code" + ":" + getCode()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "course = "+(getCourse()!=null?Integer.toHexString(System.identityHashCode(getCourse())):"null");
   }
        
   /*
@@ -226,9 +383,9 @@ public class Person
           }
           toJsonOutput.append(indent);
           toJsonOutput.append("  \"");
-          toJsonOutput.append("name");
+          toJsonOutput.append("code");
           toJsonOutput.append("\" : \"");
-          String primValue_0=""+getName()+"";
+          String primValue_0=""+getCode()+"";
           toJsonOutput.append(primValue_0.replace("\\","\\\\").replace("\"","\\\""));
           toJsonOutput.append("\"");
           haveOutputItem=true;
@@ -238,20 +395,63 @@ public class Person
            toJsonOutput.append(",\n");
          }
           toJsonOutput.append(indent);
+            toJsonOutput.append("\n"+indent);
             toJsonOutput.append("  \"");
-            toJsonOutput.append("addresses");
+            toJsonOutput.append("course");
+            toJsonOutput.append("\"");
+            toJsonOutput.append(" : ");
+            toJsonOutput.append("\n");
+            toJsonOutput.append(indent+"  {");
+            toJsonOutput.append("\n");Course anotherItem_0 = getCourse();
+            anotherItem_0.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
+            toJsonOutput.append("\n");
+            toJsonOutput.append(indent+"  }");
+            haveOutputItem=true;
+         if(haveOutputItem) {
+           toJsonOutput.append(",\n");
+         }
+          toJsonOutput.append(indent);
+            toJsonOutput.append("  \"");
+            toJsonOutput.append("employees");
             toJsonOutput.append("\"");
             toJsonOutput.append(" : [");
             toJsonOutput.append("\n");
             haveOutputItem = false;
             try{
-              for (Address anItem_0 :getAddresses()){
+              for (Employee anItem_1 :getEmployees()){
               if(haveOutputItem) {
                 toJsonOutput.append(",\n");
               }
               toJsonOutput.append(indent+"  {");
               toJsonOutput.append("\n");
-              anItem_0.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
+              anItem_1.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
+              toJsonOutput.append("\n");
+              toJsonOutput.append(indent+"  }");
+              haveOutputItem=true;
+            }
+            }catch (NullPointerException e){
+            }
+            toJsonOutput.append("\n");    
+            toJsonOutput.append(indent+"  ]");
+            haveOutputItem=true;
+         if(haveOutputItem) {
+           toJsonOutput.append(",\n");
+         }
+          toJsonOutput.append(indent);
+            toJsonOutput.append("  \"");
+            toJsonOutput.append("registrations");
+            toJsonOutput.append("\"");
+            toJsonOutput.append(" : [");
+            toJsonOutput.append("\n");
+            haveOutputItem = false;
+            try{
+              for (Registration anItem_2 :getRegistrations()){
+              if(haveOutputItem) {
+                toJsonOutput.append(",\n");
+              }
+              toJsonOutput.append(indent+"  {");
+              toJsonOutput.append("\n");
+              anItem_2.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
               toJsonOutput.append("\n");
               toJsonOutput.append(indent+"  }");
               haveOutputItem=true;
@@ -287,14 +487,14 @@ public class Person
   * @return newly instantiated Object 
   */  
 
-  public static Person fromJson(String aJsonString){
+  public static CourseSection fromJson(String aJsonString){
     // process the input jsonString so that it can further processed using regex
     aJsonString=aJsonString.replace("\n","").replace(" ","");   
     // a map to store the umpleObjectID present in jsonString
     Map<String, Object> umpleObjectIDMap=new HashMap<>();
     
     // instantiate a new object
-Person anObject = new Person(aJsonString, umpleObjectIDMap);
+CourseSection anObject = new CourseSection(aJsonString, umpleObjectIDMap);
     return anObject;
   }
    
@@ -306,7 +506,7 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
   * @param umpleObjectIDMap<String, Integer> mapping parsed objectID (from Json string) with newly instantiated object's objectID
   */ 
   @SuppressWarnings("unchecked")
-  public Person(String aJsonString, Map<String, Object> umpleObjectIDMap){
+  public CourseSection(String aJsonString, Map<String, Object> umpleObjectIDMap){
     // Initialize a HashMap to store the parsed result
     // key is the attribute name present in the jsonString
     // value is the attribute value present in the jsonString
@@ -319,7 +519,7 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
     boolean classChildExist;
     String parsedClassName=parsedResult.get("className");
     String childName=this.getClass().getSimpleName();
-    classExist="Person".equals(parsedClassName);
+    classExist="CourseSection".equals(parsedClassName);
     classChildExist=childName.equals(parsedClassName);
     // if top-level class does not exist, throw exception
     if(!classExist&&!classChildExist){
@@ -335,35 +535,82 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
     umpleObjectIDMap.put(umpleObjectId,this);
     
     String jsonKey="";
-       jsonKey="name";
+       jsonKey="code";
        //more types should be considered here
-        this.name=parsedResult.get(jsonKey);
+        this.code=parsedResult.get(jsonKey);
     
     // below for-loop check the association class of the top level class
        
-       jsonKey="addresses";
+       jsonKey="course";
        String newJsonString_0=parsedResult.get(jsonKey);
        String newIDRegex_0="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
        String newUmpleID_0=fromJsonParserHelper(newJsonString_0,newIDRegex_0);
        
        //Multiple associations
-           List<String> multiAssoObjList_0 = new ArrayList<String>();
-           multiAssoObjList_0=fromJsonParserList(newJsonString_0);
-addresses=new ArrayList<Address>();
-           for(String obj: multiAssoObjList_0){
-             newUmpleID_0=fromJsonParserHelper(obj,newIDRegex_0);
+          
+          if(!umpleObjectIDMap.containsKey(newUmpleID_0)){
+            String newClassNameOne_0=fromJsonParserClassName(newJsonString_0);
+            Class clazzOne_0=Class.forName(newClassNameOne_0);
+            Constructor constructorOne_0=clazzOne_0.getConstructor(String.class, Map.class);
+            Object objectNewOne_0=constructorOne_0.newInstance(newJsonString_0,umpleObjectIDMap);
+Course oneAssoObj_0=(Course)objectNewOne_0;
+course=oneAssoObj_0;
+          }
+          else{
+course=(Course)umpleObjectIDMap.get(newUmpleID_0);
+          }
+
+       
+       jsonKey="employees";
+       String newJsonString_1=parsedResult.get(jsonKey);
+       String newIDRegex_1="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
+       String newUmpleID_1=fromJsonParserHelper(newJsonString_1,newIDRegex_1);
+       
+       //Multiple associations
+           List<String> multiAssoObjList_1 = new ArrayList<String>();
+           multiAssoObjList_1=fromJsonParserList(newJsonString_1);
+employees=new ArrayList<Employee>();
+           for(String obj: multiAssoObjList_1){
+             newUmpleID_1=fromJsonParserHelper(obj,newIDRegex_1);
              
-             String newClassName_0=fromJsonParserClassName(obj);
-           if(!umpleObjectIDMap.containsKey(newUmpleID_0)){
+             String newClassName_1=fromJsonParserClassName(obj);
+           if(!umpleObjectIDMap.containsKey(newUmpleID_1)){
            
             boolean subClassFound=false;
-            Class clazz_0=Class.forName(newClassName_0);
-            Constructor constructor_0=clazz_0.getConstructor(String.class, Map.class);
-            Object objectNew_0=constructor_0.newInstance(obj,umpleObjectIDMap);
-addresses.add((Address)objectNew_0);
+            Class clazz_1=Class.forName(newClassName_1);
+            Constructor constructor_1=clazz_1.getConstructor(String.class, Map.class);
+            Object objectNew_1=constructor_1.newInstance(obj,umpleObjectIDMap);
+employees.add((Employee)objectNew_1);
             }
            else{
-addresses.add((Address)umpleObjectIDMap.get(newUmpleID_0));
+employees.add((Employee)umpleObjectIDMap.get(newUmpleID_1));
+           }
+         }
+
+       
+       jsonKey="registrations";
+       String newJsonString_2=parsedResult.get(jsonKey);
+       String newIDRegex_2="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
+       String newUmpleID_2=fromJsonParserHelper(newJsonString_2,newIDRegex_2);
+       
+       //Multiple associations
+           List<String> multiAssoObjList_2 = new ArrayList<String>();
+           multiAssoObjList_2=fromJsonParserList(newJsonString_2);
+registrations=new ArrayList<Registration>();
+           for(String obj: multiAssoObjList_2){
+             newUmpleID_2=fromJsonParserHelper(obj,newIDRegex_2);
+             
+             String newClassName_2=fromJsonParserClassName(obj);
+           if(!umpleObjectIDMap.containsKey(newUmpleID_2)){
+           
+            boolean subClassFound=false;
+            Class clazz_2=Class.forName(newClassName_2);
+            Constructor constructor_2=clazz_2.getConstructor(String.class, Map.class);
+            Object objectNew_2=constructor_2.newInstance(obj,umpleObjectIDMap);
+registrations.add((Registration)objectNew_2);
+            }
+           else{
+registrations.add((Registration)umpleObjectIDMap.get(newUmpleID_2));
            }
          }
 

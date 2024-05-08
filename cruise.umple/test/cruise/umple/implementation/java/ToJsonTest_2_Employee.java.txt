@@ -8,163 +8,192 @@ import java.util.regex.Pattern;
 import java.sql.*;
 import java.lang.reflect.Constructor;
 
-// line 4 "../toJsonTest_1.ump"
-public class Person
+// line 26 "../ToJsonComplexTest.ump"
+public class Employee extends Person
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Person Attributes
-  private String name;
+  //Employee Attributes
+  private double salary;
+  private String job;
 
-  //Person Associations
-  private List<Address> addresses;
+  //Employee Associations
+  private List<CourseSection> teaches;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Person(String aName)
+  public Employee(int aId, String aName, double aSalary)
   {
-    name = aName;
-    addresses = new ArrayList<Address>();
+    super(aId, aName);
+    salary = aSalary;
+    job = null;
+    teaches = new ArrayList<CourseSection>();
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public boolean setName(String aName)
+  public boolean setSalary(double aSalary)
   {
     boolean wasSet = false;
-    name = aName;
+    salary = aSalary;
     wasSet = true;
     return wasSet;
   }
 
-  public String getName()
+  public boolean setJob(String aJob)
   {
-    return name;
+    boolean wasSet = false;
+    job = aJob;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public double getSalary()
+  {
+    return salary;
+  }
+
+  public String getJob()
+  {
+    return job;
   }
   /* Code from template association_GetMany */
-  public Address getAddress(int index)
+  public CourseSection getTeache(int index)
   {
-    Address aAddress = addresses.get(index);
-    return aAddress;
+    CourseSection aTeache = teaches.get(index);
+    return aTeache;
   }
 
-  public List<Address> getAddresses()
+  public List<CourseSection> getTeaches()
   {
-    List<Address> newAddresses = Collections.unmodifiableList(addresses);
-    return newAddresses;
+    List<CourseSection> newTeaches = Collections.unmodifiableList(teaches);
+    return newTeaches;
   }
 
-  public int numberOfAddresses()
+  public int numberOfTeaches()
   {
-    int number = addresses.size();
+    int number = teaches.size();
     return number;
   }
 
-  public boolean hasAddresses()
+  public boolean hasTeaches()
   {
-    boolean has = addresses.size() > 0;
+    boolean has = teaches.size() > 0;
     return has;
   }
 
-  public int indexOfAddress(Address aAddress)
+  public int indexOfTeache(CourseSection aTeache)
   {
-    int index = addresses.indexOf(aAddress);
+    int index = teaches.indexOf(aTeache);
     return index;
   }
   /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfAddresses()
+  public static int minimumNumberOfTeaches()
   {
     return 0;
   }
-  /* Code from template association_AddManyToOne */
-  public Address addAddress(String aStreet)
-  {
-    return new Address(aStreet, this);
-  }
-
-  public boolean addAddress(Address aAddress)
+  /* Code from template association_AddManyToManyMethod */
+  public boolean addTeache(CourseSection aTeache)
   {
     boolean wasAdded = false;
-    if (addresses.contains(aAddress)) { return false; }
-    Person existingPerson = aAddress.getPerson();
-    boolean isNewPerson = existingPerson != null && !this.equals(existingPerson);
-    if (isNewPerson)
+    if (teaches.contains(aTeache)) { return false; }
+    teaches.add(aTeache);
+    if (aTeache.indexOfEmployee(this) != -1)
     {
-      aAddress.setPerson(this);
+      wasAdded = true;
     }
     else
     {
-      addresses.add(aAddress);
+      wasAdded = aTeache.addEmployee(this);
+      if (!wasAdded)
+      {
+        teaches.remove(aTeache);
+      }
     }
-    wasAdded = true;
     return wasAdded;
   }
-
-  public boolean removeAddress(Address aAddress)
+  /* Code from template association_RemoveMany */
+  public boolean removeTeache(CourseSection aTeache)
   {
     boolean wasRemoved = false;
-    //Unable to remove aAddress, as it must always have a person
-    if (!this.equals(aAddress.getPerson()))
+    if (!teaches.contains(aTeache))
     {
-      addresses.remove(aAddress);
+      return wasRemoved;
+    }
+
+    int oldIndex = teaches.indexOf(aTeache);
+    teaches.remove(oldIndex);
+    if (aTeache.indexOfEmployee(this) == -1)
+    {
       wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aTeache.removeEmployee(this);
+      if (!wasRemoved)
+      {
+        teaches.add(oldIndex,aTeache);
+      }
     }
     return wasRemoved;
   }
   /* Code from template association_AddIndexControlFunctions */
-  public boolean addAddressAt(Address aAddress, int index)
+  public boolean addTeacheAt(CourseSection aTeache, int index)
   {  
     boolean wasAdded = false;
-    if(addAddress(aAddress))
+    if(addTeache(aTeache))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfAddresses()) { index = numberOfAddresses() - 1; }
-      addresses.remove(aAddress);
-      addresses.add(index, aAddress);
+      if(index > numberOfTeaches()) { index = numberOfTeaches() - 1; }
+      teaches.remove(aTeache);
+      teaches.add(index, aTeache);
       wasAdded = true;
     }
     return wasAdded;
   }
 
-  public boolean addOrMoveAddressAt(Address aAddress, int index)
+  public boolean addOrMoveTeacheAt(CourseSection aTeache, int index)
   {
     boolean wasAdded = false;
-    if(addresses.contains(aAddress))
+    if(teaches.contains(aTeache))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfAddresses()) { index = numberOfAddresses() - 1; }
-      addresses.remove(aAddress);
-      addresses.add(index, aAddress);
+      if(index > numberOfTeaches()) { index = numberOfTeaches() - 1; }
+      teaches.remove(aTeache);
+      teaches.add(index, aTeache);
       wasAdded = true;
     } 
     else 
     {
-      wasAdded = addAddressAt(aAddress, index);
+      wasAdded = addTeacheAt(aTeache, index);
     }
     return wasAdded;
   }
 
   public void delete()
   {
-    for(int i=addresses.size(); i > 0; i--)
+    ArrayList<CourseSection> copyOfTeaches = new ArrayList<CourseSection>(teaches);
+    teaches.clear();
+    for(CourseSection aTeache : copyOfTeaches)
     {
-      Address aAddress = addresses.get(i - 1);
-      aAddress.delete();
+      aTeache.removeEmployee(this);
     }
+    super.delete();
   }
 
 
   public String toString()
   {
     return super.toString() + "["+
-            "name" + ":" + getName()+ "]";
+            "salary" + ":" + getSalary()+ "," +
+            "job" + ":" + getJob()+ "]";
   }
        
   /*
@@ -216,6 +245,7 @@ public class Person
     else {
       // Check if this class has a superclass. If it does, we make a call to output superclass content 
       // This will keep calling super so the topmost attributes and associations appear first
+        haveOutputItem = super.toJsonHelper(toJsonOutput, visitedList, nestLevel, false);
       // When an object has not already been visited, output its details
       if(haveOutputItem){
       //toJsonOutput.append(",\n");  
@@ -226,10 +256,21 @@ public class Person
           }
           toJsonOutput.append(indent);
           toJsonOutput.append("  \"");
-          toJsonOutput.append("name");
+          toJsonOutput.append("salary");
           toJsonOutput.append("\" : \"");
-          String primValue_0=""+getName()+"";
+          String primValue_0=""+getSalary()+"";
           toJsonOutput.append(primValue_0.replace("\\","\\\\").replace("\"","\\\""));
+          toJsonOutput.append("\"");
+          haveOutputItem=true;
+          if(haveOutputItem){
+            toJsonOutput.append(",\n");
+          }
+          toJsonOutput.append(indent);
+          toJsonOutput.append("  \"");
+          toJsonOutput.append("job");
+          toJsonOutput.append("\" : \"");
+          String primValue_1=""+getJob()+"";
+          toJsonOutput.append(primValue_1.replace("\\","\\\\").replace("\"","\\\""));
           toJsonOutput.append("\"");
           haveOutputItem=true;
       //haveOutputItem = false;
@@ -239,13 +280,13 @@ public class Person
          }
           toJsonOutput.append(indent);
             toJsonOutput.append("  \"");
-            toJsonOutput.append("addresses");
+            toJsonOutput.append("teaches");
             toJsonOutput.append("\"");
             toJsonOutput.append(" : [");
             toJsonOutput.append("\n");
             haveOutputItem = false;
             try{
-              for (Address anItem_0 :getAddresses()){
+              for (CourseSection anItem_0 :getTeaches()){
               if(haveOutputItem) {
                 toJsonOutput.append(",\n");
               }
@@ -287,14 +328,14 @@ public class Person
   * @return newly instantiated Object 
   */  
 
-  public static Person fromJson(String aJsonString){
+  public static Employee fromJson(String aJsonString){
     // process the input jsonString so that it can further processed using regex
     aJsonString=aJsonString.replace("\n","").replace(" ","");   
     // a map to store the umpleObjectID present in jsonString
     Map<String, Object> umpleObjectIDMap=new HashMap<>();
     
     // instantiate a new object
-Person anObject = new Person(aJsonString, umpleObjectIDMap);
+Employee anObject = new Employee(aJsonString, umpleObjectIDMap);
     return anObject;
   }
    
@@ -306,11 +347,12 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
   * @param umpleObjectIDMap<String, Integer> mapping parsed objectID (from Json string) with newly instantiated object's objectID
   */ 
   @SuppressWarnings("unchecked")
-  public Person(String aJsonString, Map<String, Object> umpleObjectIDMap){
+  public Employee(String aJsonString, Map<String, Object> umpleObjectIDMap){
     // Initialize a HashMap to store the parsed result
     // key is the attribute name present in the jsonString
     // value is the attribute value present in the jsonString
-      boolean visitedSuperClass=false;
+      super(aJsonString,umpleObjectIDMap);
+      boolean visitedSuperClass=true;
     
     HashMap<String,String> parsedResult = new HashMap<String,String>();
     parsedResult = fromJsonParser(aJsonString);
@@ -319,7 +361,7 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
     boolean classChildExist;
     String parsedClassName=parsedResult.get("className");
     String childName=this.getClass().getSimpleName();
-    classExist="Person".equals(parsedClassName);
+    classExist="Employee".equals(parsedClassName);
     classChildExist=childName.equals(parsedClassName);
     // if top-level class does not exist, throw exception
     if(!classExist&&!classChildExist){
@@ -335,13 +377,17 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
     umpleObjectIDMap.put(umpleObjectId,this);
     
     String jsonKey="";
-       jsonKey="name";
+       jsonKey="salary";
        //more types should be considered here
-        this.name=parsedResult.get(jsonKey);
+        double valueDouble =Double.valueOf(parsedResult.get(jsonKey));
+        this.salary=valueDouble;
+       jsonKey="job";
+       //more types should be considered here
+        this.job=parsedResult.get(jsonKey);
     
     // below for-loop check the association class of the top level class
        
-       jsonKey="addresses";
+       jsonKey="teaches";
        String newJsonString_0=parsedResult.get(jsonKey);
        String newIDRegex_0="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
        String newUmpleID_0=fromJsonParserHelper(newJsonString_0,newIDRegex_0);
@@ -349,7 +395,7 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
        //Multiple associations
            List<String> multiAssoObjList_0 = new ArrayList<String>();
            multiAssoObjList_0=fromJsonParserList(newJsonString_0);
-addresses=new ArrayList<Address>();
+teaches=new ArrayList<CourseSection>();
            for(String obj: multiAssoObjList_0){
              newUmpleID_0=fromJsonParserHelper(obj,newIDRegex_0);
              
@@ -360,10 +406,10 @@ addresses=new ArrayList<Address>();
             Class clazz_0=Class.forName(newClassName_0);
             Constructor constructor_0=clazz_0.getConstructor(String.class, Map.class);
             Object objectNew_0=constructor_0.newInstance(obj,umpleObjectIDMap);
-addresses.add((Address)objectNew_0);
+teaches.add((CourseSection)objectNew_0);
             }
            else{
-addresses.add((Address)umpleObjectIDMap.get(newUmpleID_0));
+teaches.add((CourseSection)umpleObjectIDMap.get(newUmpleID_0));
            }
          }
 

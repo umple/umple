@@ -2,13 +2,17 @@
 /*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
 package example;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 import java.sql.*;
 import java.lang.reflect.Constructor;
 
-// line 4 "../toJsonTest_1.ump"
+// line 11 "../ToJsonComplexTest.ump"
 public class Person
 {
 
@@ -17,24 +21,30 @@ public class Person
   //------------------------
 
   //Person Attributes
+  private int id;
   private String name;
-
-  //Person Associations
-  private List<Address> addresses;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Person(String aName)
+  public Person(int aId, String aName)
   {
+    id = aId;
     name = aName;
-    addresses = new ArrayList<Address>();
   }
 
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
 
   public boolean setName(String aName)
   {
@@ -44,126 +54,24 @@ public class Person
     return wasSet;
   }
 
+  public int getId()
+  {
+    return id;
+  }
+
   public String getName()
   {
     return name;
   }
-  /* Code from template association_GetMany */
-  public Address getAddress(int index)
-  {
-    Address aAddress = addresses.get(index);
-    return aAddress;
-  }
-
-  public List<Address> getAddresses()
-  {
-    List<Address> newAddresses = Collections.unmodifiableList(addresses);
-    return newAddresses;
-  }
-
-  public int numberOfAddresses()
-  {
-    int number = addresses.size();
-    return number;
-  }
-
-  public boolean hasAddresses()
-  {
-    boolean has = addresses.size() > 0;
-    return has;
-  }
-
-  public int indexOfAddress(Address aAddress)
-  {
-    int index = addresses.indexOf(aAddress);
-    return index;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfAddresses()
-  {
-    return 0;
-  }
-  /* Code from template association_AddManyToOne */
-  public Address addAddress(String aStreet)
-  {
-    return new Address(aStreet, this);
-  }
-
-  public boolean addAddress(Address aAddress)
-  {
-    boolean wasAdded = false;
-    if (addresses.contains(aAddress)) { return false; }
-    Person existingPerson = aAddress.getPerson();
-    boolean isNewPerson = existingPerson != null && !this.equals(existingPerson);
-    if (isNewPerson)
-    {
-      aAddress.setPerson(this);
-    }
-    else
-    {
-      addresses.add(aAddress);
-    }
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeAddress(Address aAddress)
-  {
-    boolean wasRemoved = false;
-    //Unable to remove aAddress, as it must always have a person
-    if (!this.equals(aAddress.getPerson()))
-    {
-      addresses.remove(aAddress);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addAddressAt(Address aAddress, int index)
-  {  
-    boolean wasAdded = false;
-    if(addAddress(aAddress))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfAddresses()) { index = numberOfAddresses() - 1; }
-      addresses.remove(aAddress);
-      addresses.add(index, aAddress);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveAddressAt(Address aAddress, int index)
-  {
-    boolean wasAdded = false;
-    if(addresses.contains(aAddress))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfAddresses()) { index = numberOfAddresses() - 1; }
-      addresses.remove(aAddress);
-      addresses.add(index, aAddress);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addAddressAt(aAddress, index);
-    }
-    return wasAdded;
-  }
 
   public void delete()
-  {
-    for(int i=addresses.size(); i > 0; i--)
-    {
-      Address aAddress = addresses.get(i - 1);
-      aAddress.delete();
-    }
-  }
+  {}
 
 
   public String toString()
   {
     return super.toString() + "["+
+            "id" + ":" + getId()+ "," +
             "name" + ":" + getName()+ "]";
   }
        
@@ -226,41 +134,25 @@ public class Person
           }
           toJsonOutput.append(indent);
           toJsonOutput.append("  \"");
+          toJsonOutput.append("id");
+          toJsonOutput.append("\" : \"");
+          String primValue_0=""+getId()+"";
+          toJsonOutput.append(primValue_0.replace("\\","\\\\").replace("\"","\\\""));
+          toJsonOutput.append("\"");
+          haveOutputItem=true;
+          if(haveOutputItem){
+            toJsonOutput.append(",\n");
+          }
+          toJsonOutput.append(indent);
+          toJsonOutput.append("  \"");
           toJsonOutput.append("name");
           toJsonOutput.append("\" : \"");
-          String primValue_0=""+getName()+"";
-          toJsonOutput.append(primValue_0.replace("\\","\\\\").replace("\"","\\\""));
+          String primValue_1=""+getName()+"";
+          toJsonOutput.append(primValue_1.replace("\\","\\\\").replace("\"","\\\""));
           toJsonOutput.append("\"");
           haveOutputItem=true;
       //haveOutputItem = false;
       //haveOutputItem = false;
-         if(haveOutputItem) {
-           toJsonOutput.append(",\n");
-         }
-          toJsonOutput.append(indent);
-            toJsonOutput.append("  \"");
-            toJsonOutput.append("addresses");
-            toJsonOutput.append("\"");
-            toJsonOutput.append(" : [");
-            toJsonOutput.append("\n");
-            haveOutputItem = false;
-            try{
-              for (Address anItem_0 :getAddresses()){
-              if(haveOutputItem) {
-                toJsonOutput.append(",\n");
-              }
-              toJsonOutput.append(indent+"  {");
-              toJsonOutput.append("\n");
-              anItem_0.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
-              toJsonOutput.append("\n");
-              toJsonOutput.append(indent+"  }");
-              haveOutputItem=true;
-            }
-            }catch (NullPointerException e){
-            }
-            toJsonOutput.append("\n");    
-            toJsonOutput.append(indent+"  ]");
-            haveOutputItem=true;
               
           toJsonOutput.append(indent+"  \n");
     }
@@ -335,38 +227,15 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
     umpleObjectIDMap.put(umpleObjectId,this);
     
     String jsonKey="";
+       jsonKey="id";
+       //more types should be considered here
+       int valueInt = Integer.valueOf(parsedResult.get(jsonKey));
+       this.id=valueInt;
        jsonKey="name";
        //more types should be considered here
         this.name=parsedResult.get(jsonKey);
     
     // below for-loop check the association class of the top level class
-       
-       jsonKey="addresses";
-       String newJsonString_0=parsedResult.get(jsonKey);
-       String newIDRegex_0="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
-       String newUmpleID_0=fromJsonParserHelper(newJsonString_0,newIDRegex_0);
-       
-       //Multiple associations
-           List<String> multiAssoObjList_0 = new ArrayList<String>();
-           multiAssoObjList_0=fromJsonParserList(newJsonString_0);
-addresses=new ArrayList<Address>();
-           for(String obj: multiAssoObjList_0){
-             newUmpleID_0=fromJsonParserHelper(obj,newIDRegex_0);
-             
-             String newClassName_0=fromJsonParserClassName(obj);
-           if(!umpleObjectIDMap.containsKey(newUmpleID_0)){
-           
-            boolean subClassFound=false;
-            Class clazz_0=Class.forName(newClassName_0);
-            Constructor constructor_0=clazz_0.getConstructor(String.class, Map.class);
-            Object objectNew_0=constructor_0.newInstance(obj,umpleObjectIDMap);
-addresses.add((Address)objectNew_0);
-            }
-           else{
-addresses.add((Address)umpleObjectIDMap.get(newUmpleID_0));
-           }
-         }
-
 
     
     }catch(Exception e){
