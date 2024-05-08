@@ -29,6 +29,10 @@ class UmpleInternalParser
     {
       analyzeGenerate(t);
     }
+    else if (t.is("suboption"))
+    {
+      analyzeSuboption(t);
+    }
     else if (t.is("glossary"))
     {
       analyzeGlossary(t);
@@ -220,5 +224,13 @@ class UmpleInternalParser
       model.addGenerate(target);  	
     }
   }
-
+  private void analyzeSuboption(Token suboptionToken)
+  {
+     // Add the relevant suboption to all the generate targets (so far)
+    for(GenerateTarget target : model.getGenerates()) {
+      target.addSuboption(suboptionToken.getSubToken(2).getValue());
+    }
+    // Add the suboption to the list of suboptions so it can be added to other generators defined later
+    model.addAvailableSuboption(suboptionToken.getSubToken(2).getValue());
+  }
 }
