@@ -8,155 +8,191 @@ import java.util.regex.Pattern;
 import java.sql.*;
 import java.lang.reflect.Constructor;
 
-// line 4 "../toJsonTest_1.ump"
-public class Person
+// line 37 "../ToJsonComplexTest.ump"
+public class Course
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Person Attributes
-  private String name;
+  //Course Attributes
+  private String title;
 
-  //Person Associations
-  private List<Address> addresses;
+  //Course Associations
+  private University university;
+  private List<CourseSection> courseSections;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Person(String aName)
+  public Course(String aTitle, University aUniversity)
   {
-    name = aName;
-    addresses = new ArrayList<Address>();
+    title = aTitle;
+    boolean didAddUniversity = setUniversity(aUniversity);
+    if (!didAddUniversity)
+    {
+      throw new RuntimeException("Unable to create course due to university. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    courseSections = new ArrayList<CourseSection>();
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public boolean setName(String aName)
+  public boolean setTitle(String aTitle)
   {
     boolean wasSet = false;
-    name = aName;
+    title = aTitle;
     wasSet = true;
     return wasSet;
   }
 
-  public String getName()
+  public String getTitle()
   {
-    return name;
+    return title;
+  }
+  /* Code from template association_GetOne */
+  public University getUniversity()
+  {
+    return university;
   }
   /* Code from template association_GetMany */
-  public Address getAddress(int index)
+  public CourseSection getCourseSection(int index)
   {
-    Address aAddress = addresses.get(index);
-    return aAddress;
+    CourseSection aCourseSection = courseSections.get(index);
+    return aCourseSection;
   }
 
-  public List<Address> getAddresses()
+  public List<CourseSection> getCourseSections()
   {
-    List<Address> newAddresses = Collections.unmodifiableList(addresses);
-    return newAddresses;
+    List<CourseSection> newCourseSections = Collections.unmodifiableList(courseSections);
+    return newCourseSections;
   }
 
-  public int numberOfAddresses()
+  public int numberOfCourseSections()
   {
-    int number = addresses.size();
+    int number = courseSections.size();
     return number;
   }
 
-  public boolean hasAddresses()
+  public boolean hasCourseSections()
   {
-    boolean has = addresses.size() > 0;
+    boolean has = courseSections.size() > 0;
     return has;
   }
 
-  public int indexOfAddress(Address aAddress)
+  public int indexOfCourseSection(CourseSection aCourseSection)
   {
-    int index = addresses.indexOf(aAddress);
+    int index = courseSections.indexOf(aCourseSection);
     return index;
   }
+  /* Code from template association_SetOneToMany */
+  public boolean setUniversity(University aUniversity)
+  {
+    boolean wasSet = false;
+    if (aUniversity == null)
+    {
+      return wasSet;
+    }
+
+    University existingUniversity = university;
+    university = aUniversity;
+    if (existingUniversity != null && !existingUniversity.equals(aUniversity))
+    {
+      existingUniversity.removeCourse(this);
+    }
+    university.addCourse(this);
+    wasSet = true;
+    return wasSet;
+  }
   /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfAddresses()
+  public static int minimumNumberOfCourseSections()
   {
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Address addAddress(String aStreet)
+  public CourseSection addCourseSection(String aCode)
   {
-    return new Address(aStreet, this);
+    return new CourseSection(aCode, this);
   }
 
-  public boolean addAddress(Address aAddress)
+  public boolean addCourseSection(CourseSection aCourseSection)
   {
     boolean wasAdded = false;
-    if (addresses.contains(aAddress)) { return false; }
-    Person existingPerson = aAddress.getPerson();
-    boolean isNewPerson = existingPerson != null && !this.equals(existingPerson);
-    if (isNewPerson)
+    if (courseSections.contains(aCourseSection)) { return false; }
+    Course existingCourse = aCourseSection.getCourse();
+    boolean isNewCourse = existingCourse != null && !this.equals(existingCourse);
+    if (isNewCourse)
     {
-      aAddress.setPerson(this);
+      aCourseSection.setCourse(this);
     }
     else
     {
-      addresses.add(aAddress);
+      courseSections.add(aCourseSection);
     }
     wasAdded = true;
     return wasAdded;
   }
 
-  public boolean removeAddress(Address aAddress)
+  public boolean removeCourseSection(CourseSection aCourseSection)
   {
     boolean wasRemoved = false;
-    //Unable to remove aAddress, as it must always have a person
-    if (!this.equals(aAddress.getPerson()))
+    //Unable to remove aCourseSection, as it must always have a course
+    if (!this.equals(aCourseSection.getCourse()))
     {
-      addresses.remove(aAddress);
+      courseSections.remove(aCourseSection);
       wasRemoved = true;
     }
     return wasRemoved;
   }
   /* Code from template association_AddIndexControlFunctions */
-  public boolean addAddressAt(Address aAddress, int index)
+  public boolean addCourseSectionAt(CourseSection aCourseSection, int index)
   {  
     boolean wasAdded = false;
-    if(addAddress(aAddress))
+    if(addCourseSection(aCourseSection))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfAddresses()) { index = numberOfAddresses() - 1; }
-      addresses.remove(aAddress);
-      addresses.add(index, aAddress);
+      if(index > numberOfCourseSections()) { index = numberOfCourseSections() - 1; }
+      courseSections.remove(aCourseSection);
+      courseSections.add(index, aCourseSection);
       wasAdded = true;
     }
     return wasAdded;
   }
 
-  public boolean addOrMoveAddressAt(Address aAddress, int index)
+  public boolean addOrMoveCourseSectionAt(CourseSection aCourseSection, int index)
   {
     boolean wasAdded = false;
-    if(addresses.contains(aAddress))
+    if(courseSections.contains(aCourseSection))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfAddresses()) { index = numberOfAddresses() - 1; }
-      addresses.remove(aAddress);
-      addresses.add(index, aAddress);
+      if(index > numberOfCourseSections()) { index = numberOfCourseSections() - 1; }
+      courseSections.remove(aCourseSection);
+      courseSections.add(index, aCourseSection);
       wasAdded = true;
     } 
     else 
     {
-      wasAdded = addAddressAt(aAddress, index);
+      wasAdded = addCourseSectionAt(aCourseSection, index);
     }
     return wasAdded;
   }
 
   public void delete()
   {
-    for(int i=addresses.size(); i > 0; i--)
+    University placeholderUniversity = university;
+    this.university = null;
+    if(placeholderUniversity != null)
     {
-      Address aAddress = addresses.get(i - 1);
-      aAddress.delete();
+      placeholderUniversity.removeCourse(this);
+    }
+    for(int i=courseSections.size(); i > 0; i--)
+    {
+      CourseSection aCourseSection = courseSections.get(i - 1);
+      aCourseSection.delete();
     }
   }
 
@@ -164,7 +200,8 @@ public class Person
   public String toString()
   {
     return super.toString() + "["+
-            "name" + ":" + getName()+ "]";
+            "title" + ":" + getTitle()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "university = "+(getUniversity()!=null?Integer.toHexString(System.identityHashCode(getUniversity())):"null");
   }
        
   /*
@@ -226,9 +263,9 @@ public class Person
           }
           toJsonOutput.append(indent);
           toJsonOutput.append("  \"");
-          toJsonOutput.append("name");
+          toJsonOutput.append("title");
           toJsonOutput.append("\" : \"");
-          String primValue_0=""+getName()+"";
+          String primValue_0=""+getTitle()+"";
           toJsonOutput.append(primValue_0.replace("\\","\\\\").replace("\"","\\\""));
           toJsonOutput.append("\"");
           haveOutputItem=true;
@@ -238,20 +275,36 @@ public class Person
            toJsonOutput.append(",\n");
          }
           toJsonOutput.append(indent);
+            toJsonOutput.append("\n"+indent);
             toJsonOutput.append("  \"");
-            toJsonOutput.append("addresses");
+            toJsonOutput.append("university");
+            toJsonOutput.append("\"");
+            toJsonOutput.append(" : ");
+            toJsonOutput.append("\n");
+            toJsonOutput.append(indent+"  {");
+            toJsonOutput.append("\n");University anotherItem_0 = getUniversity();
+            anotherItem_0.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
+            toJsonOutput.append("\n");
+            toJsonOutput.append(indent+"  }");
+            haveOutputItem=true;
+         if(haveOutputItem) {
+           toJsonOutput.append(",\n");
+         }
+          toJsonOutput.append(indent);
+            toJsonOutput.append("  \"");
+            toJsonOutput.append("courseSections");
             toJsonOutput.append("\"");
             toJsonOutput.append(" : [");
             toJsonOutput.append("\n");
             haveOutputItem = false;
             try{
-              for (Address anItem_0 :getAddresses()){
+              for (CourseSection anItem_1 :getCourseSections()){
               if(haveOutputItem) {
                 toJsonOutput.append(",\n");
               }
               toJsonOutput.append(indent+"  {");
               toJsonOutput.append("\n");
-              anItem_0.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
+              anItem_1.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
               toJsonOutput.append("\n");
               toJsonOutput.append(indent+"  }");
               haveOutputItem=true;
@@ -287,14 +340,14 @@ public class Person
   * @return newly instantiated Object 
   */  
 
-  public static Person fromJson(String aJsonString){
+  public static Course fromJson(String aJsonString){
     // process the input jsonString so that it can further processed using regex
     aJsonString=aJsonString.replace("\n","").replace(" ","");   
     // a map to store the umpleObjectID present in jsonString
     Map<String, Object> umpleObjectIDMap=new HashMap<>();
     
     // instantiate a new object
-Person anObject = new Person(aJsonString, umpleObjectIDMap);
+Course anObject = new Course(aJsonString, umpleObjectIDMap);
     return anObject;
   }
    
@@ -306,7 +359,7 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
   * @param umpleObjectIDMap<String, Integer> mapping parsed objectID (from Json string) with newly instantiated object's objectID
   */ 
   @SuppressWarnings("unchecked")
-  public Person(String aJsonString, Map<String, Object> umpleObjectIDMap){
+  public Course(String aJsonString, Map<String, Object> umpleObjectIDMap){
     // Initialize a HashMap to store the parsed result
     // key is the attribute name present in the jsonString
     // value is the attribute value present in the jsonString
@@ -319,7 +372,7 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
     boolean classChildExist;
     String parsedClassName=parsedResult.get("className");
     String childName=this.getClass().getSimpleName();
-    classExist="Person".equals(parsedClassName);
+    classExist="Course".equals(parsedClassName);
     classChildExist=childName.equals(parsedClassName);
     // if top-level class does not exist, throw exception
     if(!classExist&&!classChildExist){
@@ -335,35 +388,55 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
     umpleObjectIDMap.put(umpleObjectId,this);
     
     String jsonKey="";
-       jsonKey="name";
+       jsonKey="title";
        //more types should be considered here
-        this.name=parsedResult.get(jsonKey);
+        this.title=parsedResult.get(jsonKey);
     
     // below for-loop check the association class of the top level class
        
-       jsonKey="addresses";
+       jsonKey="university";
        String newJsonString_0=parsedResult.get(jsonKey);
        String newIDRegex_0="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
        String newUmpleID_0=fromJsonParserHelper(newJsonString_0,newIDRegex_0);
        
        //Multiple associations
-           List<String> multiAssoObjList_0 = new ArrayList<String>();
-           multiAssoObjList_0=fromJsonParserList(newJsonString_0);
-addresses=new ArrayList<Address>();
-           for(String obj: multiAssoObjList_0){
-             newUmpleID_0=fromJsonParserHelper(obj,newIDRegex_0);
+          
+          if(!umpleObjectIDMap.containsKey(newUmpleID_0)){
+            String newClassNameOne_0=fromJsonParserClassName(newJsonString_0);
+            Class clazzOne_0=Class.forName(newClassNameOne_0);
+            Constructor constructorOne_0=clazzOne_0.getConstructor(String.class, Map.class);
+            Object objectNewOne_0=constructorOne_0.newInstance(newJsonString_0,umpleObjectIDMap);
+University oneAssoObj_0=(University)objectNewOne_0;
+university=oneAssoObj_0;
+          }
+          else{
+university=(University)umpleObjectIDMap.get(newUmpleID_0);
+          }
+
+       
+       jsonKey="courseSections";
+       String newJsonString_1=parsedResult.get(jsonKey);
+       String newIDRegex_1="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
+       String newUmpleID_1=fromJsonParserHelper(newJsonString_1,newIDRegex_1);
+       
+       //Multiple associations
+           List<String> multiAssoObjList_1 = new ArrayList<String>();
+           multiAssoObjList_1=fromJsonParserList(newJsonString_1);
+courseSections=new ArrayList<CourseSection>();
+           for(String obj: multiAssoObjList_1){
+             newUmpleID_1=fromJsonParserHelper(obj,newIDRegex_1);
              
-             String newClassName_0=fromJsonParserClassName(obj);
-           if(!umpleObjectIDMap.containsKey(newUmpleID_0)){
+             String newClassName_1=fromJsonParserClassName(obj);
+           if(!umpleObjectIDMap.containsKey(newUmpleID_1)){
            
             boolean subClassFound=false;
-            Class clazz_0=Class.forName(newClassName_0);
-            Constructor constructor_0=clazz_0.getConstructor(String.class, Map.class);
-            Object objectNew_0=constructor_0.newInstance(obj,umpleObjectIDMap);
-addresses.add((Address)objectNew_0);
+            Class clazz_1=Class.forName(newClassName_1);
+            Constructor constructor_1=clazz_1.getConstructor(String.class, Map.class);
+            Object objectNew_1=constructor_1.newInstance(obj,umpleObjectIDMap);
+courseSections.add((CourseSection)objectNew_1);
             }
            else{
-addresses.add((Address)umpleObjectIDMap.get(newUmpleID_0));
+courseSections.add((CourseSection)umpleObjectIDMap.get(newUmpleID_1));
            }
          }
 
