@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
 package example;
 import java.util.*;
@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import java.sql.*;
 import java.lang.reflect.Constructor;
 
-// line 2 "test1.ump"
+// line 4 "../toJsonTest_1.ump"
 public class Person
 {
 
@@ -220,7 +220,7 @@ public class Person
       if(haveOutputItem){
       //toJsonOutput.append(",\n");  
       }
-         
+        
           if(haveOutputItem){
             toJsonOutput.append(",\n");
           }
@@ -228,8 +228,8 @@ public class Person
           toJsonOutput.append("  \"");
           toJsonOutput.append("name");
           toJsonOutput.append("\" : \"");
-          String primValue_212500=""+getName()+"";
-          toJsonOutput.append(primValue_212500.replace("\\","\\\\").replace("\"","\\\""));
+          String primValue_0=""+getName()+"";
+          toJsonOutput.append(primValue_0.replace("\\","\\\\").replace("\"","\\\""));
           toJsonOutput.append("\"");
           haveOutputItem=true;
       //haveOutputItem = false;
@@ -245,13 +245,13 @@ public class Person
             toJsonOutput.append("\n");
             haveOutputItem = false;
             try{
-              for (Address anItem_137145 :getAddresses()){
+              for (Address anItem_0 :getAddresses()){
               if(haveOutputItem) {
                 toJsonOutput.append(",\n");
               }
               toJsonOutput.append(indent+"  {");
               toJsonOutput.append("\n");
-              anItem_137145.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
+              anItem_0.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
               toJsonOutput.append("\n");
               toJsonOutput.append(indent+"  }");
               haveOutputItem=true;
@@ -342,27 +342,28 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
     // below for-loop check the association class of the top level class
        
        jsonKey="addresses";
-       String newJsonString_163870=parsedResult.get(jsonKey);
-       String newIDRegex_163870="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
-       String newUmpleID_163870=fromJsonParserHelper(newJsonString_163870,newIDRegex_163870);
+       String newJsonString_0=parsedResult.get(jsonKey);
+       String newIDRegex_0="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
+       String newUmpleID_0=fromJsonParserHelper(newJsonString_0,newIDRegex_0);
        
        //Multiple associations
-           List<String> multiAssoObjList_163870 = new ArrayList<String>();
-           multiAssoObjList_163870=fromJsonParserList(newJsonString_163870);
+           List<String> multiAssoObjList_0 = new ArrayList<String>();
+           multiAssoObjList_0=fromJsonParserList(newJsonString_0);
 addresses=new ArrayList<Address>();
-           for(String obj: multiAssoObjList_163870){
-             newUmpleID_163870=fromJsonParserHelper(obj,newIDRegex_163870);
-             String newClassName_298263=fromJsonParserClassName(obj);
-           if(!umpleObjectIDMap.containsKey(newUmpleID_163870)){
+           for(String obj: multiAssoObjList_0){
+             newUmpleID_0=fromJsonParserHelper(obj,newIDRegex_0);
+             
+             String newClassName_0=fromJsonParserClassName(obj);
+           if(!umpleObjectIDMap.containsKey(newUmpleID_0)){
            
             boolean subClassFound=false;
-            Class clazz_298263=Class.forName(newClassName_298263);
-            Constructor constructor_298263=clazz_298263.getConstructor(String.class, Map.class);
-            Object objectNew_298263=constructor_298263.newInstance(obj,umpleObjectIDMap);
-addresses.add((Address)objectNew_298263);
+            Class clazz_0=Class.forName(newClassName_0);
+            Constructor constructor_0=clazz_0.getConstructor(String.class, Map.class);
+            Object objectNew_0=constructor_0.newInstance(obj,umpleObjectIDMap);
+addresses.add((Address)objectNew_0);
             }
            else{
-addresses.add((Address)umpleObjectIDMap.get(newUmpleID_163870));
+addresses.add((Address)umpleObjectIDMap.get(newUmpleID_0));
            }
          }
 

@@ -111,10 +111,6 @@ class UmpleToJava {
         
       <<#
         for (int m1=0;m1<displayedPrimitives.size();m1++){#>>
-          <<#
-           Random randomValuePrim=new Random();
-           int randomValueNamePrim = randomValuePrim.nextInt(900000)+100000;
-          #>> 
           if(haveOutputItem){
             toJsonOutput.append(",\n");
           }
@@ -122,8 +118,8 @@ class UmpleToJava {
           toJsonOutput.append("  \"");
           toJsonOutput.append("<<#realSb.append(nameOfPrimitives.get(m1));#>>");
           toJsonOutput.append("\" : \"");
-          String primValue_<<#realSb.append(randomValueNamePrim);#>>=""+<<#realSb.append(displayedPrimitives.get(m1));#>>+"";
-          toJsonOutput.append(primValue_<<#realSb.append(randomValueNamePrim);#>>.replace("\\","\\\\").replace("\"","\\\""));
+          String primValue_<<#realSb.append(m1);#>>=""+<<#realSb.append(displayedPrimitives.get(m1));#>>+"";
+          toJsonOutput.append(primValue_<<#realSb.append(m1);#>>.replace("\\","\\\\").replace("\"","\\\""));
           toJsonOutput.append("\"");
           haveOutputItem=true;
         <<#}
@@ -131,10 +127,7 @@ class UmpleToJava {
       //haveOutputItem = false;
       <<#
         for (int numAttributes=0;numAttributes<displayedAttributes.size();numAttributes++){#>>
-          <<#
-           Random randomValueAttr=new Random();
-           int randomValueNameAttr = randomValueAttr.nextInt(900000)+100000;
-          #>>
+          
           if(haveOutputItem){
             toJsonOutput.append(",\n");
           }
@@ -142,8 +135,8 @@ class UmpleToJava {
           toJsonOutput.append("  \"");
           toJsonOutput.append("<<#realSb.append(nameOfAttributes.get(numAttributes));#>>");
           toJsonOutput.append("\" : \"");
-          String attrValue_<<#realSb.append(randomValueNameAttr);#>>=""+<<#realSb.append(displayedAttributes.get(numAttributes));#>>+"";
-          toJsonOutput.append(attrValue_<<#realSb.append(randomValueNameAttr);#>>.replace("\\","\\\\").replace("\"","\\\""));
+          String attrValue_<<#realSb.append(numAttributes);#>>=""+<<#realSb.append(displayedAttributes.get(numAttributes));#>>+"";
+          toJsonOutput.append(attrValue_<<#realSb.append(numAttributes);#>>.replace("\\","\\\\").replace("\"","\\\""));
           toJsonOutput.append("\"");
           //toJsonOutput.append(",\n");
           haveOutputItem=true;
@@ -164,17 +157,13 @@ class UmpleToJava {
             toJsonOutput.append("\n");
             haveOutputItem = false;
             try{
-              <<#
-              Random randomAnItem=new Random();
-              int randomAnItemName = randomAnItem.nextInt(900000)+100000;
-              #>>
-              for (<<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anItem_<<#realSb.append(randomAnItemName);#>> :<<#append(realSb,"" + associations.get(assoIndex) + "");#>>){
+              for (<<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anItem_<<#realSb.append(assoIndex);#>> :<<#append(realSb,"" + associations.get(assoIndex) + "");#>>){
               if(haveOutputItem) {
                 toJsonOutput.append(",\n");
               }
               toJsonOutput.append(indent+"  {");
               toJsonOutput.append("\n");
-              anItem_<<#realSb.append(randomAnItemName);#>>.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
+              anItem_<<#realSb.append(assoIndex);#>>.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
               toJsonOutput.append("\n");
               toJsonOutput.append(indent+"  }");
               haveOutputItem=true;
@@ -194,12 +183,8 @@ class UmpleToJava {
             toJsonOutput.append("\n");
             toJsonOutput.append(indent+"  {");
             toJsonOutput.append("\n");
-            <<#
-            Random randomItem=new Random();
-            int randomItemName = randomItem.nextInt(900000)+100000;
-            #>>
-            <<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anotherItem_<<#realSb.append(randomItemName);#>> = <<#realSb.append(associations.get(assoIndex));#>>;
-            anotherItem_<<#realSb.append(randomItemName);#>>.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
+            <<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anotherItem_<<#realSb.append(assoIndex);#>> = <<#realSb.append(associations.get(assoIndex));#>>;
+            anotherItem_<<#realSb.append(assoIndex);#>>.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
             toJsonOutput.append("\n");
             toJsonOutput.append(indent+"  }");
             haveOutputItem=true;
@@ -446,66 +431,55 @@ class UmpleToJava {
     // below for-loop check the association class of the top level class
     <<#for (int assoJsonCount=0; assoJsonCount<associationNamesFromJson.size();assoJsonCount++){#>>
        
-       <<#
-         Random random=new Random();
-         int randomName = random.nextInt(900000)+100000;
-       #>>
        jsonKey=<<#append(realSb,"\""+associationNamesFromJson.get(assoJsonCount)+"\"");#>>;
-       String newJsonString_<<#realSb.append(randomName);#>>=parsedResult.get(jsonKey);
-       String newIDRegex_<<#realSb.append(randomName);#>>="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
-       String newUmpleID_<<#realSb.append(randomName);#>>=fromJsonParserHelper(newJsonString_<<#realSb.append(randomName);#>>,newIDRegex_<<#realSb.append(randomName);#>>);
+       String newJsonString_<<#realSb.append(assoJsonCount);#>>=parsedResult.get(jsonKey);
+       String newIDRegex_<<#realSb.append(assoJsonCount);#>>="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
+       String newUmpleID_<<#realSb.append(assoJsonCount);#>>=fromJsonParserHelper(newJsonString_<<#realSb.append(assoJsonCount);#>>,newIDRegex_<<#realSb.append(assoJsonCount);#>>);
        
       <<# if (uClass.getKey().isProvided()){#>>
           cachedHashCode=-1;
        <<#}#>>
        //Multiple associations
         <<#if(associationIsManyFromJson.get(assoJsonCount)){#>>
-           List<String> multiAssoObjList_<<#realSb.append(randomName);#>> = new ArrayList<String>();
-           multiAssoObjList_<<#realSb.append(randomName);#>>=fromJsonParserList(newJsonString_<<#realSb.append(randomName);#>>);
+           List<String> multiAssoObjList_<<#realSb.append(assoJsonCount);#>> = new ArrayList<String>();
+           multiAssoObjList_<<#realSb.append(assoJsonCount);#>>=fromJsonParserList(newJsonString_<<#realSb.append(assoJsonCount);#>>);
            <<#appendln(realSb,"");#>>
            <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=new ArrayList<<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>>();
-           for(String obj: multiAssoObjList_<<#realSb.append(randomName);#>>){
-             newUmpleID_<<#realSb.append(randomName);#>>=fromJsonParserHelper(obj,newIDRegex_<<#realSb.append(randomName);#>>);
-             <<#
-             Random randomManyName=new Random();
-             int randomManyNameInt = randomManyName.nextInt(900000)+100000;
-             #>>
-             String newClassName_<<#realSb.append(randomManyNameInt);#>>=fromJsonParserClassName(obj);
-           if(!umpleObjectIDMap.containsKey(newUmpleID_<<#realSb.append(randomName);#>>)){
+           for(String obj: multiAssoObjList_<<#realSb.append(assoJsonCount);#>>){
+             newUmpleID_<<#realSb.append(assoJsonCount);#>>=fromJsonParserHelper(obj,newIDRegex_<<#realSb.append(assoJsonCount);#>>);
+             
+             String newClassName_<<#realSb.append(assoJsonCount);#>>=fromJsonParserClassName(obj);
+           if(!umpleObjectIDMap.containsKey(newUmpleID_<<#realSb.append(assoJsonCount);#>>)){
            
             boolean subClassFound=false;
-            Class clazz_<<#realSb.append(randomManyNameInt);#>>=Class.forName(newClassName_<<#realSb.append(randomManyNameInt);#>>);
-            Constructor constructor_<<#realSb.append(randomManyNameInt);#>>=clazz_<<#realSb.append(randomManyNameInt);#>>.getConstructor(String.class, Map.class);
-            Object objectNew_<<#realSb.append(randomManyNameInt);#>>=constructor_<<#realSb.append(randomManyNameInt);#>>.newInstance(obj,umpleObjectIDMap);
+            Class clazz_<<#realSb.append(assoJsonCount);#>>=Class.forName(newClassName_<<#realSb.append(assoJsonCount);#>>);
+            Constructor constructor_<<#realSb.append(assoJsonCount);#>>=clazz_<<#realSb.append(assoJsonCount);#>>.getConstructor(String.class, Map.class);
+            Object objectNew_<<#realSb.append(assoJsonCount);#>>=constructor_<<#realSb.append(assoJsonCount);#>>.newInstance(obj,umpleObjectIDMap);
              <<#appendln(realSb,"");#>>
-             <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>.add((<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>)objectNew_<<#realSb.append(randomManyNameInt);#>>);
+             <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>.add((<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>)objectNew_<<#realSb.append(assoJsonCount);#>>);
             }
            else{
              <<#appendln(realSb,"");#>>
-             <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>.add((<<#realSb.append(associationItemsFromJson.get(assoJsonCount));#>>)umpleObjectIDMap.get(newUmpleID_<<#realSb.append(randomName);#>>));
+             <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>.add((<<#realSb.append(associationItemsFromJson.get(assoJsonCount));#>>)umpleObjectIDMap.get(newUmpleID_<<#realSb.append(assoJsonCount);#>>));
            }
          }
       <<#}
       //single association
       else{#>>
-       <<#
-         Random randomOneName=new Random();
-         int randomOneNameInt = randomOneName.nextInt(900000)+100000;
-       #>>
           
-          if(!umpleObjectIDMap.containsKey(newUmpleID_<<#realSb.append(randomName);#>>)){
-            String newClassNameOne_<<#realSb.append(randomName);#>>=fromJsonParserClassName(newJsonString_<<#realSb.append(randomName);#>>);
-            Class clazzOne_<<#realSb.append(randomOneNameInt);#>>=Class.forName(newClassNameOne_<<#realSb.append(randomName);#>>);
-            Constructor constructorOne_<<#realSb.append(randomOneNameInt);#>>=clazzOne_<<#realSb.append(randomOneNameInt);#>>.getConstructor(String.class, Map.class);
-            Object objectNewOne_<<#realSb.append(randomOneNameInt);#>>=constructorOne_<<#realSb.append(randomOneNameInt);#>>.newInstance(newJsonString_<<#realSb.append(randomName);#>>,umpleObjectIDMap);
+          if(!umpleObjectIDMap.containsKey(newUmpleID_<<#realSb.append(assoJsonCount);#>>)){
+            String newClassNameOne_<<#realSb.append(assoJsonCount);#>>=fromJsonParserClassName(newJsonString_<<#realSb.append(assoJsonCount);#>>);
+            Class clazzOne_<<#realSb.append(assoJsonCount);#>>=Class.forName(newClassNameOne_<<#realSb.append(assoJsonCount);#>>);
+            Constructor constructorOne_<<#realSb.append(assoJsonCount);#>>=clazzOne_<<#realSb.append(assoJsonCount);#>>.getConstructor(String.class, Map.class);
+            Object objectNewOne_<<#realSb.append(assoJsonCount);#>>=constructorOne_<<#realSb.append(assoJsonCount);#>>.newInstance(newJsonString_<<#realSb.append(assoJsonCount);#>>,umpleObjectIDMap);
             <<#appendln(realSb,"");#>>
-            <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> oneAssoObj_<<#realSb.append(randomOneNameInt);#>>=(<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>)objectNewOne_<<#realSb.append(randomOneNameInt);#>>;
+            <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> oneAssoObj_<<#realSb.append(assoJsonCount);#>>=(<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>)objectNewOne_<<#realSb.append(assoJsonCount);#>>;
            <<#appendln(realSb,"");#>>
-           <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=oneAssoObj_<<#realSb.append(randomOneNameInt);#>>;
+           <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=oneAssoObj_<<#realSb.append(assoJsonCount);#>>;
           }
           else{
             <<#appendln(realSb,"");#>>
-          <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=(<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>)umpleObjectIDMap.get(newUmpleID_<<#realSb.append(randomName);#>>);
+          <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=(<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>)umpleObjectIDMap.get(newUmpleID_<<#realSb.append(assoJsonCount);#>>);
           }
       <<#}#>>
 

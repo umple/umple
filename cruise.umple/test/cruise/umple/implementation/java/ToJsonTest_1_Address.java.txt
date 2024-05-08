@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
 package example;
 import java.util.HashSet;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.sql.*;
 import java.lang.reflect.Constructor;
 
-// line 6 "test1.ump"
+// line 8 "../toJsonTest_1.ump"
 public class Address
 {
 
@@ -152,7 +152,7 @@ public class Address
       if(haveOutputItem){
       //toJsonOutput.append(",\n");  
       }
-         
+        
           if(haveOutputItem){
             toJsonOutput.append(",\n");
           }
@@ -160,8 +160,8 @@ public class Address
           toJsonOutput.append("  \"");
           toJsonOutput.append("street");
           toJsonOutput.append("\" : \"");
-          String primValue_830970=""+getStreet()+"";
-          toJsonOutput.append(primValue_830970.replace("\\","\\\\").replace("\"","\\\""));
+          String primValue_0=""+getStreet()+"";
+          toJsonOutput.append(primValue_0.replace("\\","\\\\").replace("\"","\\\""));
           toJsonOutput.append("\"");
           haveOutputItem=true;
       //haveOutputItem = false;
@@ -177,8 +177,8 @@ public class Address
             toJsonOutput.append(" : ");
             toJsonOutput.append("\n");
             toJsonOutput.append(indent+"  {");
-            toJsonOutput.append("\n");Person anotherItem_562277 = getPerson();
-            anotherItem_562277.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
+            toJsonOutput.append("\n");Person anotherItem_0 = getPerson();
+            anotherItem_0.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
             toJsonOutput.append("\n");
             toJsonOutput.append(indent+"  }");
             haveOutputItem=true;
@@ -263,22 +263,22 @@ Address anObject = new Address(aJsonString, umpleObjectIDMap);
     // below for-loop check the association class of the top level class
        
        jsonKey="person";
-       String newJsonString_808025=parsedResult.get(jsonKey);
-       String newIDRegex_808025="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
-       String newUmpleID_808025=fromJsonParserHelper(newJsonString_808025,newIDRegex_808025);
+       String newJsonString_0=parsedResult.get(jsonKey);
+       String newIDRegex_0="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
+       String newUmpleID_0=fromJsonParserHelper(newJsonString_0,newIDRegex_0);
        
        //Multiple associations
           
-          if(!umpleObjectIDMap.containsKey(newUmpleID_808025)){
-            String newClassNameOne_808025=fromJsonParserClassName(newJsonString_808025);
-            Class clazzOne_225907=Class.forName(newClassNameOne_808025);
-            Constructor constructorOne_225907=clazzOne_225907.getConstructor(String.class, Map.class);
-            Object objectNewOne_225907=constructorOne_225907.newInstance(newJsonString_808025,umpleObjectIDMap);
-Person oneAssoObj_225907=(Person)objectNewOne_225907;
-person=oneAssoObj_225907;
+          if(!umpleObjectIDMap.containsKey(newUmpleID_0)){
+            String newClassNameOne_0=fromJsonParserClassName(newJsonString_0);
+            Class clazzOne_0=Class.forName(newClassNameOne_0);
+            Constructor constructorOne_0=clazzOne_0.getConstructor(String.class, Map.class);
+            Object objectNewOne_0=constructorOne_0.newInstance(newJsonString_0,umpleObjectIDMap);
+Person oneAssoObj_0=(Person)objectNewOne_0;
+person=oneAssoObj_0;
           }
           else{
-person=(Person)umpleObjectIDMap.get(newUmpleID_808025);
+person=(Person)umpleObjectIDMap.get(newUmpleID_0);
           }
 
 
