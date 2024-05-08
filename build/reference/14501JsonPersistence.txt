@@ -4,20 +4,21 @@ noreferences
 @@tooltip Basic example showing how to use Umple's Json serialization/de-serialization feature
 
 @@description
-<p>To better realize the functionality of Umple, any object needs to have:</p>
+<p>JSON as a data-interchange format that can save and load data in many context and languages. For example, it can be used in transmitting over networks. and saving the state of the system persistently. </p>
+<p>To better realize the functionality of Umple in terms of generating JSON, we would like any object to have:</p>
 <ul>
 <li><b>String toJson()</b> method that generates (serializes) a Json representation </li>
 <li><b>Object fromJson(String)</b> static method that would instantiate (deserialize) the object and its related objects</li>
 </ul>
-<p>However, such function is not required in all systems, therefore the system should only generate this if <i>-s genJson</i> sub-option is specified when <i>-g Java</i> is also specified at the time of compiling an Umple model to generate code.</p>
+<p>To generate functions for serializing and deserializing JSON, use command <i>umple [FILENAME].ump -g Java -s genJson -c-</i> to compile the code.</p>
 &nbsp;<br/>
-<p><b>About examples below</b>: demonstrate how to serialize/de-serialize to/from Json.</p>
+<p><b>These examples below</b>: demonstrate how use toJson() and fromJson() statements to serialize/de-serialize to/from Json.</p>
 &nbsp;<br/>
 
-@@example @@caption Example Showing a Simple Class implementing JSON Serialization @@endcaption
+@@example @@caption This example Shows a Simple Class implementing JSON Serialization @@endcaption
 @@source manualexamples/JsonPersistenceExamples1.ump
 @@endexample
 
-@@example @@caption Example Showing a More Sophisticated Class implementing JSON Serialization and Deserialization @@endcaption
+@@example @@caption This example Shows a More Sophisticated Class implementing JSON Serialization and Deserialization @@endcaption
 @@source manualexamples/JsonPersistenceExamples2.ump
 @@endexample
