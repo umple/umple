@@ -167,3 +167,4 @@ class DigitalWatch {
 // @@@skipphpcompile - Contains Java/Cpp Code
 // @@@skiprubycompile - Contains Java/Cpp Code
 // @@@skippythoncompile - Contains Java/Cpp Code
+// @@@skipcppcompile

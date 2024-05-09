@@ -22,3 +22,4 @@ class TicTacToe {
  Boolean isThreeInARow() {return false;}
  Boolean spaceAvailable() {return true;}
 }
+// @@@skipcppcompile

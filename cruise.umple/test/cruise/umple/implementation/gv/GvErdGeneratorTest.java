@@ -34,6 +34,8 @@ public class GvErdGeneratorTest extends TemplateTest {
 	    SampleFileWriter.destroy(pathToInput + "/gv/RelationshipRangeerd.gv");
 	    SampleFileWriter.destroy(pathToInput + "/gv/RelationshipReflexiveerd.gv");
 	    SampleFileWriter.destroy(pathToInput + "/gv/RelationshipAttributeserd.gv");
+	    
+	    SampleFileWriter.destroy(pathToInput + "/gv/IncreaseERSeperd.gv");
 	}
 
 	// Also tests multi-valued attribute, derived attribute

@@ -111,7 +111,7 @@ class EcorePackage {
     }
   }
   
-  String[] getActualEType(UmpleClass uClass, String eType){
+  String[] getActualEType(UmpleClass uClass, String eType, EcorePackage rootPackage){
     List<String> typeArgs = new ArrayList<String>();
 
     if(EcoreGenModel.ecorePrimitiveTypeMap.containsKey(eType)){
@@ -160,9 +160,20 @@ class EcorePackage {
       }else if(EcoreGenModel.ecoreGenericTypeMap.containsKey(existingType)){
         typeArgs.set(0, existingType);
       }else{
-        EcoreDataType dataType = new EcoreDataType(actualEType, getIntent()+1, existingType, typeArgs.size()-1);
-        addDataType(dataType);
-        typeArgs.set(0, "#//"+actualEType);
+        // See if there is already an enum with this type
+        Boolean isMatchingEnumForThisType = false;
+        for (EcoreEnum e: rootPackage.getEnums()) {
+          if(e.getName().equals(actualEType)) {
+            isMatchingEnumForThisType = true;
+            typeArgs.set(0, "#//"+actualEType);
+            break;
+          }
+        }
+        if(!isMatchingEnumForThisType){
+          EcoreDataType dataType = new EcoreDataType(actualEType, getIntent()+1, existingType, typeArgs.size()-1);
+          addDataType(dataType);
+          typeArgs.set(0, "#//"+actualEType);
+        }
       }
       return typeArgs.toArray(new String[0]);
     }
@@ -445,6 +456,7 @@ class EcoreReference {
   
   defaulted String eOppositeType = "";
   defaulted String eOppositeName = "";
+  defaulted Boolean isComposition = false;
     
   Map<String,String> getNodeAttributes(){
     Map<String,String> map = super.getNodeAttributes();
@@ -457,6 +469,11 @@ class EcoreReference {
       map.put("upperBound", String.valueOf(getUpperBound()));
       
     map.put("eType", "#//"+getEType());
+
+    if(isComposition){
+      map.put("containment", "true");
+    }
+
     if(!getDefaultEOppositeType().equals(getEOppositeType())
       || !getDefaultEOppositeName().equals(getEOppositeName()))
       map.put("eOpposite", String.format("#//%s/%s", getEOppositeType(), getEOppositeName()));

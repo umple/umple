@@ -1,0 +1,10 @@
+generate Ecore;
+namespace cruise.umple.example;
+
+enum Size { Small, Medium, Large };
+
+class A {
+  enum Color { Red, Green, Blue };
+  Color c;
+  Size s;
+}

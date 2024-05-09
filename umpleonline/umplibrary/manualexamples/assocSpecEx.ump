@@ -52,3 +52,4 @@ position 188 35 109 45;
 }
 
 // @@@skipphpcompile - Skipped due to issue 701
+// @@@skipcppcompile

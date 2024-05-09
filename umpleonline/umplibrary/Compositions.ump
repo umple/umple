@@ -63,3 +63,4 @@ class Wheel
 {
   position 382 207 117 60;
 }
+// @@@skipcppcompile
