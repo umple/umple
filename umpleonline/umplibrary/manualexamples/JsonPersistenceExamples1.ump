@@ -1,0 +1,11 @@
+suboption "genJson";
+class Bank {
+  String bankName;
+  int numAccount;
+  
+  public static void main(String[] args) Java{
+    Bank boc=new Bank("BankCanada",100000);
+    System.out.println(boc.toJson());
+  }
+}
+// @@@skipcompile   Temporary to bootstrap
