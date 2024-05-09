@@ -2,161 +2,209 @@
 /*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
 package example;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 import java.sql.*;
 import java.lang.reflect.Constructor;
 
-// line 4 "../toJsonTest_1.ump"
-public class Person
+// line 46 "../ToJsonComplexTest.ump"
+public class Registration
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Person Attributes
-  private String name;
+  //Registration Attributes
+  private String grade;
 
-  //Person Associations
-  private List<Address> addresses;
+  //Registration Associations
+  private Student student;
+  private CourseSection courseSection;
+
+  //Helper Variables
+  private int cachedHashCode;
+  private boolean canSetStudent;
+  private boolean canSetCourseSection;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Person(String aName)
+  public Registration(Student aStudent, CourseSection aCourseSection)
   {
-    name = aName;
-    addresses = new ArrayList<Address>();
+    cachedHashCode = -1;
+    canSetStudent = true;
+    canSetCourseSection = true;
+    grade = null;
+    boolean didAddStudent = setStudent(aStudent);
+    if (!didAddStudent)
+    {
+      throw new RuntimeException("Unable to create registration due to student. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    boolean didAddCourseSection = setCourseSection(aCourseSection);
+    if (!didAddCourseSection)
+    {
+      throw new RuntimeException("Unable to create registration due to courseSection. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public boolean setName(String aName)
+  public boolean setGrade(String aGrade)
   {
     boolean wasSet = false;
-    name = aName;
+    grade = aGrade;
     wasSet = true;
     return wasSet;
   }
 
-  public String getName()
+  public String getGrade()
   {
-    return name;
+    return grade;
   }
-  /* Code from template association_GetMany */
-  public Address getAddress(int index)
+  /* Code from template association_GetOne */
+  public Student getStudent()
   {
-    Address aAddress = addresses.get(index);
-    return aAddress;
+    return student;
   }
-
-  public List<Address> getAddresses()
+  /* Code from template association_GetOne */
+  public CourseSection getCourseSection()
   {
-    List<Address> newAddresses = Collections.unmodifiableList(addresses);
-    return newAddresses;
+    return courseSection;
   }
-
-  public int numberOfAddresses()
+  /* Code from template association_SetOneToManyAssociationClass */
+  public boolean setStudent(Student aStudent)
   {
-    int number = addresses.size();
-    return number;
-  }
-
-  public boolean hasAddresses()
-  {
-    boolean has = addresses.size() > 0;
-    return has;
-  }
-
-  public int indexOfAddress(Address aAddress)
-  {
-    int index = addresses.indexOf(aAddress);
-    return index;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfAddresses()
-  {
-    return 0;
-  }
-  /* Code from template association_AddManyToOne */
-  public Address addAddress(String aStreet)
-  {
-    return new Address(aStreet, this);
-  }
-
-  public boolean addAddress(Address aAddress)
-  {
-    boolean wasAdded = false;
-    if (addresses.contains(aAddress)) { return false; }
-    Person existingPerson = aAddress.getPerson();
-    boolean isNewPerson = existingPerson != null && !this.equals(existingPerson);
-    if (isNewPerson)
+    boolean wasSet = false;
+    if (!canSetStudent) { return false; }
+    if (aStudent == null)
     {
-      aAddress.setPerson(this);
+      return wasSet;
+    }
+
+    Student existingStudent = student;
+    student = aStudent;
+    if (existingStudent != null && !existingStudent.equals(aStudent))
+    {
+      existingStudent.removeRegistration(this);
+    }
+    if (!student.addRegistration(this))
+    {
+      student = existingStudent;
+      wasSet = false;
     }
     else
     {
-      addresses.add(aAddress);
+      wasSet = true;
     }
-    wasAdded = true;
-    return wasAdded;
+    return wasSet;
+  }
+  /* Code from template association_SetOneToManyAssociationClass */
+  public boolean setCourseSection(CourseSection aCourseSection)
+  {
+    boolean wasSet = false;
+    if (!canSetCourseSection) { return false; }
+    if (aCourseSection == null)
+    {
+      return wasSet;
+    }
+
+    CourseSection existingCourseSection = courseSection;
+    courseSection = aCourseSection;
+    if (existingCourseSection != null && !existingCourseSection.equals(aCourseSection))
+    {
+      existingCourseSection.removeRegistration(this);
+    }
+    if (!courseSection.addRegistration(this))
+    {
+      courseSection = existingCourseSection;
+      wasSet = false;
+    }
+    else
+    {
+      wasSet = true;
+    }
+    return wasSet;
   }
 
-  public boolean removeAddress(Address aAddress)
+  public boolean equals(Object obj)
   {
-    boolean wasRemoved = false;
-    //Unable to remove aAddress, as it must always have a person
-    if (!this.equals(aAddress.getPerson()))
+    if (obj == null) { return false; }
+    if (!getClass().equals(obj.getClass())) { return false; }
+
+    Registration compareTo = (Registration)obj;
+  
+    if (getStudent() == null && compareTo.getStudent() != null)
     {
-      addresses.remove(aAddress);
-      wasRemoved = true;
+      return false;
     }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addAddressAt(Address aAddress, int index)
-  {  
-    boolean wasAdded = false;
-    if(addAddress(aAddress))
+    else if (getStudent() != null && !getStudent().equals(compareTo.getStudent()))
     {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfAddresses()) { index = numberOfAddresses() - 1; }
-      addresses.remove(aAddress);
-      addresses.add(index, aAddress);
-      wasAdded = true;
+      return false;
     }
-    return wasAdded;
+
+    if (getCourseSection() == null && compareTo.getCourseSection() != null)
+    {
+      return false;
+    }
+    else if (getCourseSection() != null && !getCourseSection().equals(compareTo.getCourseSection()))
+    {
+      return false;
+    }
+
+    return true;
   }
 
-  public boolean addOrMoveAddressAt(Address aAddress, int index)
+  public int hashCode()
   {
-    boolean wasAdded = false;
-    if(addresses.contains(aAddress))
+    if (cachedHashCode != -1)
     {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfAddresses()) { index = numberOfAddresses() - 1; }
-      addresses.remove(aAddress);
-      addresses.add(index, aAddress);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addAddressAt(aAddress, index);
+      return cachedHashCode;
     }
-    return wasAdded;
+    cachedHashCode = 17;
+    if (getStudent() != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + getStudent().hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
+    if (getCourseSection() != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + getCourseSection().hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
+
+    canSetStudent = false;
+    canSetCourseSection = false;
+    return cachedHashCode;
   }
 
   public void delete()
   {
-    for(int i=addresses.size(); i > 0; i--)
+    Student placeholderStudent = student;
+    this.student = null;
+    if(placeholderStudent != null)
     {
-      Address aAddress = addresses.get(i - 1);
-      aAddress.delete();
+      placeholderStudent.removeRegistration(this);
+    }
+    CourseSection placeholderCourseSection = courseSection;
+    this.courseSection = null;
+    if(placeholderCourseSection != null)
+    {
+      placeholderCourseSection.removeRegistration(this);
     }
   }
 
@@ -164,7 +212,9 @@ public class Person
   public String toString()
   {
     return super.toString() + "["+
-            "name" + ":" + getName()+ "]";
+            "grade" + ":" + getGrade()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "student = "+(getStudent()!=null?Integer.toHexString(System.identityHashCode(getStudent())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "courseSection = "+(getCourseSection()!=null?Integer.toHexString(System.identityHashCode(getCourseSection())):"null");
   }
        
   /*
@@ -226,9 +276,9 @@ public class Person
           }
           toJsonOutput.append(indent);
           toJsonOutput.append("  \"");
-          toJsonOutput.append("name");
+          toJsonOutput.append("grade");
           toJsonOutput.append("\" : \"");
-          String primValue_0=""+getName()+"";
+          String primValue_0=""+getGrade()+"";
           toJsonOutput.append(primValue_0.replace("\\","\\\\").replace("\"","\\\""));
           toJsonOutput.append("\"");
           haveOutputItem=true;
@@ -238,28 +288,33 @@ public class Person
            toJsonOutput.append(",\n");
          }
           toJsonOutput.append(indent);
+            toJsonOutput.append("\n"+indent);
             toJsonOutput.append("  \"");
-            toJsonOutput.append("addresses");
+            toJsonOutput.append("student");
             toJsonOutput.append("\"");
-            toJsonOutput.append(" : [");
+            toJsonOutput.append(" : ");
             toJsonOutput.append("\n");
-            haveOutputItem = false;
-            try{
-              for (Address anItem_0 :getAddresses()){
-              if(haveOutputItem) {
-                toJsonOutput.append(",\n");
-              }
-              toJsonOutput.append(indent+"  {");
-              toJsonOutput.append("\n");
-              anItem_0.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
-              toJsonOutput.append("\n");
-              toJsonOutput.append(indent+"  }");
-              haveOutputItem=true;
-            }
-            }catch (NullPointerException e){
-            }
-            toJsonOutput.append("\n");    
-            toJsonOutput.append(indent+"  ]");
+            toJsonOutput.append(indent+"  {");
+            toJsonOutput.append("\n");Student anotherItem_0 = getStudent();
+            anotherItem_0.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
+            toJsonOutput.append("\n");
+            toJsonOutput.append(indent+"  }");
+            haveOutputItem=true;
+         if(haveOutputItem) {
+           toJsonOutput.append(",\n");
+         }
+          toJsonOutput.append(indent);
+            toJsonOutput.append("\n"+indent);
+            toJsonOutput.append("  \"");
+            toJsonOutput.append("courseSection");
+            toJsonOutput.append("\"");
+            toJsonOutput.append(" : ");
+            toJsonOutput.append("\n");
+            toJsonOutput.append(indent+"  {");
+            toJsonOutput.append("\n");CourseSection anotherItem_1 = getCourseSection();
+            anotherItem_1.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
+            toJsonOutput.append("\n");
+            toJsonOutput.append(indent+"  }");
             haveOutputItem=true;
               
           toJsonOutput.append(indent+"  \n");
@@ -287,14 +342,14 @@ public class Person
   * @return newly instantiated Object 
   */  
 
-  public static Person fromJson(String aJsonString){
+  public static Registration fromJson(String aJsonString){
     // process the input jsonString so that it can further processed using regex
     aJsonString=aJsonString.replace("\n","").replace(" ","");   
     // a map to store the umpleObjectID present in jsonString
     Map<String, Object> umpleObjectIDMap=new HashMap<>();
     
     // instantiate a new object
-Person anObject = new Person(aJsonString, umpleObjectIDMap);
+Registration anObject = new Registration(aJsonString, umpleObjectIDMap);
     return anObject;
   }
    
@@ -306,7 +361,7 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
   * @param umpleObjectIDMap<String, Integer> mapping parsed objectID (from Json string) with newly instantiated object's objectID
   */ 
   @SuppressWarnings("unchecked")
-  public Person(String aJsonString, Map<String, Object> umpleObjectIDMap){
+  public Registration(String aJsonString, Map<String, Object> umpleObjectIDMap){
     // Initialize a HashMap to store the parsed result
     // key is the attribute name present in the jsonString
     // value is the attribute value present in the jsonString
@@ -319,7 +374,7 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
     boolean classChildExist;
     String parsedClassName=parsedResult.get("className");
     String childName=this.getClass().getSimpleName();
-    classExist="Person".equals(parsedClassName);
+    classExist="Registration".equals(parsedClassName);
     classChildExist=childName.equals(parsedClassName);
     // if top-level class does not exist, throw exception
     if(!classExist&&!classChildExist){
@@ -335,37 +390,52 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
     umpleObjectIDMap.put(umpleObjectId,this);
     
     String jsonKey="";
-       jsonKey="name";
+       jsonKey="grade";
        //more types should be considered here
-        this.name=parsedResult.get(jsonKey);
+        this.grade=parsedResult.get(jsonKey);
     
     // below for-loop check the association class of the top level class
        
-       jsonKey="addresses";
+       jsonKey="student";
        String newJsonString_0=parsedResult.get(jsonKey);
        String newIDRegex_0="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
        String newUmpleID_0=fromJsonParserHelper(newJsonString_0,newIDRegex_0);
        
+          cachedHashCode=-1;
        //Multiple associations
-           List<String> multiAssoObjList_0 = new ArrayList<String>();
-           multiAssoObjList_0=fromJsonParserList(newJsonString_0);
-addresses=new ArrayList<Address>();
-           for(String obj: multiAssoObjList_0){
-             newUmpleID_0=fromJsonParserHelper(obj,newIDRegex_0);
-             
-             String newClassName_0=fromJsonParserClassName(obj);
-           if(!umpleObjectIDMap.containsKey(newUmpleID_0)){
-           
-            boolean subClassFound=false;
-            Class clazz_0=Class.forName(newClassName_0);
-            Constructor constructor_0=clazz_0.getConstructor(String.class, Map.class);
-            Object objectNew_0=constructor_0.newInstance(obj,umpleObjectIDMap);
-addresses.add((Address)objectNew_0);
-            }
-           else{
-addresses.add((Address)umpleObjectIDMap.get(newUmpleID_0));
-           }
-         }
+          
+          if(!umpleObjectIDMap.containsKey(newUmpleID_0)){
+            String newClassNameOne_0=fromJsonParserClassName(newJsonString_0);
+            Class clazzOne_0=Class.forName(newClassNameOne_0);
+            Constructor constructorOne_0=clazzOne_0.getConstructor(String.class, Map.class);
+            Object objectNewOne_0=constructorOne_0.newInstance(newJsonString_0,umpleObjectIDMap);
+Student oneAssoObj_0=(Student)objectNewOne_0;
+student=oneAssoObj_0;
+          }
+          else{
+student=(Student)umpleObjectIDMap.get(newUmpleID_0);
+          }
+
+       
+       jsonKey="courseSection";
+       String newJsonString_1=parsedResult.get(jsonKey);
+       String newIDRegex_1="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
+       String newUmpleID_1=fromJsonParserHelper(newJsonString_1,newIDRegex_1);
+       
+          cachedHashCode=-1;
+       //Multiple associations
+          
+          if(!umpleObjectIDMap.containsKey(newUmpleID_1)){
+            String newClassNameOne_1=fromJsonParserClassName(newJsonString_1);
+            Class clazzOne_1=Class.forName(newClassNameOne_1);
+            Constructor constructorOne_1=clazzOne_1.getConstructor(String.class, Map.class);
+            Object objectNewOne_1=constructorOne_1.newInstance(newJsonString_1,umpleObjectIDMap);
+CourseSection oneAssoObj_1=(CourseSection)objectNewOne_1;
+courseSection=oneAssoObj_1;
+          }
+          else{
+courseSection=(CourseSection)umpleObjectIDMap.get(newUmpleID_1);
+          }
 
 
     

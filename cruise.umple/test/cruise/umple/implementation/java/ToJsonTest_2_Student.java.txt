@@ -8,163 +8,202 @@ import java.util.regex.Pattern;
 import java.sql.*;
 import java.lang.reflect.Constructor;
 
-// line 4 "../toJsonTest_1.ump"
-public class Person
+// line 16 "../ToJsonComplexTest.ump"
+public class Student extends Person
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Person Attributes
-  private String name;
+  //Student Attributes
+  private float tuitionPaid;
 
-  //Person Associations
-  private List<Address> addresses;
+  //Student Associations
+  private University university;
+  private List<Registration> registrations;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Person(String aName)
+  public Student(int aId, String aName, float aTuitionPaid, University aUniversity)
   {
-    name = aName;
-    addresses = new ArrayList<Address>();
+    super(aId, aName);
+    tuitionPaid = aTuitionPaid;
+    boolean didAddUniversity = setUniversity(aUniversity);
+    if (!didAddUniversity)
+    {
+      throw new RuntimeException("Unable to create student due to university. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    registrations = new ArrayList<Registration>();
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public boolean setName(String aName)
+  public boolean setTuitionPaid(float aTuitionPaid)
   {
     boolean wasSet = false;
-    name = aName;
+    tuitionPaid = aTuitionPaid;
     wasSet = true;
     return wasSet;
   }
 
-  public String getName()
+  public float getTuitionPaid()
   {
-    return name;
+    return tuitionPaid;
+  }
+  /* Code from template association_GetOne */
+  public University getUniversity()
+  {
+    return university;
   }
   /* Code from template association_GetMany */
-  public Address getAddress(int index)
+  public Registration getRegistration(int index)
   {
-    Address aAddress = addresses.get(index);
-    return aAddress;
+    Registration aRegistration = registrations.get(index);
+    return aRegistration;
   }
 
-  public List<Address> getAddresses()
+  public List<Registration> getRegistrations()
   {
-    List<Address> newAddresses = Collections.unmodifiableList(addresses);
-    return newAddresses;
+    List<Registration> newRegistrations = Collections.unmodifiableList(registrations);
+    return newRegistrations;
   }
 
-  public int numberOfAddresses()
+  public int numberOfRegistrations()
   {
-    int number = addresses.size();
+    int number = registrations.size();
     return number;
   }
 
-  public boolean hasAddresses()
+  public boolean hasRegistrations()
   {
-    boolean has = addresses.size() > 0;
+    boolean has = registrations.size() > 0;
     return has;
   }
 
-  public int indexOfAddress(Address aAddress)
+  public int indexOfRegistration(Registration aRegistration)
   {
-    int index = addresses.indexOf(aAddress);
+    int index = registrations.indexOf(aRegistration);
     return index;
   }
+  /* Code from template association_SetOneToMany */
+  public boolean setUniversity(University aUniversity)
+  {
+    boolean wasSet = false;
+    if (aUniversity == null)
+    {
+      return wasSet;
+    }
+
+    University existingUniversity = university;
+    university = aUniversity;
+    if (existingUniversity != null && !existingUniversity.equals(aUniversity))
+    {
+      existingUniversity.removeStudent(this);
+    }
+    university.addStudent(this);
+    wasSet = true;
+    return wasSet;
+  }
   /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfAddresses()
+  public static int minimumNumberOfRegistrations()
   {
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Address addAddress(String aStreet)
+  public Registration addRegistration(CourseSection aCourseSection)
   {
-    return new Address(aStreet, this);
+    return new Registration(this, aCourseSection);
   }
 
-  public boolean addAddress(Address aAddress)
+  public boolean addRegistration(Registration aRegistration)
   {
     boolean wasAdded = false;
-    if (addresses.contains(aAddress)) { return false; }
-    Person existingPerson = aAddress.getPerson();
-    boolean isNewPerson = existingPerson != null && !this.equals(existingPerson);
-    if (isNewPerson)
+    if (registrations.contains(aRegistration)) { return false; }
+    Student existingStudent = aRegistration.getStudent();
+    boolean isNewStudent = existingStudent != null && !this.equals(existingStudent);
+    if (isNewStudent)
     {
-      aAddress.setPerson(this);
+      aRegistration.setStudent(this);
     }
     else
     {
-      addresses.add(aAddress);
+      registrations.add(aRegistration);
     }
     wasAdded = true;
     return wasAdded;
   }
 
-  public boolean removeAddress(Address aAddress)
+  public boolean removeRegistration(Registration aRegistration)
   {
     boolean wasRemoved = false;
-    //Unable to remove aAddress, as it must always have a person
-    if (!this.equals(aAddress.getPerson()))
+    //Unable to remove aRegistration, as it must always have a student
+    if (!this.equals(aRegistration.getStudent()))
     {
-      addresses.remove(aAddress);
+      registrations.remove(aRegistration);
       wasRemoved = true;
     }
     return wasRemoved;
   }
   /* Code from template association_AddIndexControlFunctions */
-  public boolean addAddressAt(Address aAddress, int index)
+  public boolean addRegistrationAt(Registration aRegistration, int index)
   {  
     boolean wasAdded = false;
-    if(addAddress(aAddress))
+    if(addRegistration(aRegistration))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfAddresses()) { index = numberOfAddresses() - 1; }
-      addresses.remove(aAddress);
-      addresses.add(index, aAddress);
+      if(index > numberOfRegistrations()) { index = numberOfRegistrations() - 1; }
+      registrations.remove(aRegistration);
+      registrations.add(index, aRegistration);
       wasAdded = true;
     }
     return wasAdded;
   }
 
-  public boolean addOrMoveAddressAt(Address aAddress, int index)
+  public boolean addOrMoveRegistrationAt(Registration aRegistration, int index)
   {
     boolean wasAdded = false;
-    if(addresses.contains(aAddress))
+    if(registrations.contains(aRegistration))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfAddresses()) { index = numberOfAddresses() - 1; }
-      addresses.remove(aAddress);
-      addresses.add(index, aAddress);
+      if(index > numberOfRegistrations()) { index = numberOfRegistrations() - 1; }
+      registrations.remove(aRegistration);
+      registrations.add(index, aRegistration);
       wasAdded = true;
     } 
     else 
     {
-      wasAdded = addAddressAt(aAddress, index);
+      wasAdded = addRegistrationAt(aRegistration, index);
     }
     return wasAdded;
   }
 
   public void delete()
   {
-    for(int i=addresses.size(); i > 0; i--)
+    University placeholderUniversity = university;
+    this.university = null;
+    if(placeholderUniversity != null)
     {
-      Address aAddress = addresses.get(i - 1);
-      aAddress.delete();
+      placeholderUniversity.removeStudent(this);
     }
+    for(int i=registrations.size(); i > 0; i--)
+    {
+      Registration aRegistration = registrations.get(i - 1);
+      aRegistration.delete();
+    }
+    super.delete();
   }
 
 
   public String toString()
   {
     return super.toString() + "["+
-            "name" + ":" + getName()+ "]";
+            "tuitionPaid" + ":" + getTuitionPaid()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "university = "+(getUniversity()!=null?Integer.toHexString(System.identityHashCode(getUniversity())):"null");
   }
        
   /*
@@ -216,6 +255,7 @@ public class Person
     else {
       // Check if this class has a superclass. If it does, we make a call to output superclass content 
       // This will keep calling super so the topmost attributes and associations appear first
+        haveOutputItem = super.toJsonHelper(toJsonOutput, visitedList, nestLevel, false);
       // When an object has not already been visited, output its details
       if(haveOutputItem){
       //toJsonOutput.append(",\n");  
@@ -226,9 +266,9 @@ public class Person
           }
           toJsonOutput.append(indent);
           toJsonOutput.append("  \"");
-          toJsonOutput.append("name");
+          toJsonOutput.append("tuitionPaid");
           toJsonOutput.append("\" : \"");
-          String primValue_0=""+getName()+"";
+          String primValue_0=""+getTuitionPaid()+"";
           toJsonOutput.append(primValue_0.replace("\\","\\\\").replace("\"","\\\""));
           toJsonOutput.append("\"");
           haveOutputItem=true;
@@ -238,20 +278,36 @@ public class Person
            toJsonOutput.append(",\n");
          }
           toJsonOutput.append(indent);
+            toJsonOutput.append("\n"+indent);
             toJsonOutput.append("  \"");
-            toJsonOutput.append("addresses");
+            toJsonOutput.append("university");
+            toJsonOutput.append("\"");
+            toJsonOutput.append(" : ");
+            toJsonOutput.append("\n");
+            toJsonOutput.append(indent+"  {");
+            toJsonOutput.append("\n");University anotherItem_0 = getUniversity();
+            anotherItem_0.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
+            toJsonOutput.append("\n");
+            toJsonOutput.append(indent+"  }");
+            haveOutputItem=true;
+         if(haveOutputItem) {
+           toJsonOutput.append(",\n");
+         }
+          toJsonOutput.append(indent);
+            toJsonOutput.append("  \"");
+            toJsonOutput.append("registrations");
             toJsonOutput.append("\"");
             toJsonOutput.append(" : [");
             toJsonOutput.append("\n");
             haveOutputItem = false;
             try{
-              for (Address anItem_0 :getAddresses()){
+              for (Registration anItem_1 :getRegistrations()){
               if(haveOutputItem) {
                 toJsonOutput.append(",\n");
               }
               toJsonOutput.append(indent+"  {");
               toJsonOutput.append("\n");
-              anItem_0.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
+              anItem_1.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
               toJsonOutput.append("\n");
               toJsonOutput.append(indent+"  }");
               haveOutputItem=true;
@@ -287,14 +343,14 @@ public class Person
   * @return newly instantiated Object 
   */  
 
-  public static Person fromJson(String aJsonString){
+  public static Student fromJson(String aJsonString){
     // process the input jsonString so that it can further processed using regex
     aJsonString=aJsonString.replace("\n","").replace(" ","");   
     // a map to store the umpleObjectID present in jsonString
     Map<String, Object> umpleObjectIDMap=new HashMap<>();
     
     // instantiate a new object
-Person anObject = new Person(aJsonString, umpleObjectIDMap);
+Student anObject = new Student(aJsonString, umpleObjectIDMap);
     return anObject;
   }
    
@@ -306,11 +362,12 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
   * @param umpleObjectIDMap<String, Integer> mapping parsed objectID (from Json string) with newly instantiated object's objectID
   */ 
   @SuppressWarnings("unchecked")
-  public Person(String aJsonString, Map<String, Object> umpleObjectIDMap){
+  public Student(String aJsonString, Map<String, Object> umpleObjectIDMap){
     // Initialize a HashMap to store the parsed result
     // key is the attribute name present in the jsonString
     // value is the attribute value present in the jsonString
-      boolean visitedSuperClass=false;
+      super(aJsonString,umpleObjectIDMap);
+      boolean visitedSuperClass=true;
     
     HashMap<String,String> parsedResult = new HashMap<String,String>();
     parsedResult = fromJsonParser(aJsonString);
@@ -319,7 +376,7 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
     boolean classChildExist;
     String parsedClassName=parsedResult.get("className");
     String childName=this.getClass().getSimpleName();
-    classExist="Person".equals(parsedClassName);
+    classExist="Student".equals(parsedClassName);
     classChildExist=childName.equals(parsedClassName);
     // if top-level class does not exist, throw exception
     if(!classExist&&!classChildExist){
@@ -335,35 +392,56 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
     umpleObjectIDMap.put(umpleObjectId,this);
     
     String jsonKey="";
-       jsonKey="name";
+       jsonKey="tuitionPaid";
        //more types should be considered here
-        this.name=parsedResult.get(jsonKey);
+        float valueFloat=Float.parseFloat(parsedResult.get(jsonKey));
+        this.tuitionPaid=valueFloat;
     
     // below for-loop check the association class of the top level class
        
-       jsonKey="addresses";
+       jsonKey="university";
        String newJsonString_0=parsedResult.get(jsonKey);
        String newIDRegex_0="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
        String newUmpleID_0=fromJsonParserHelper(newJsonString_0,newIDRegex_0);
        
        //Multiple associations
-           List<String> multiAssoObjList_0 = new ArrayList<String>();
-           multiAssoObjList_0=fromJsonParserList(newJsonString_0);
-addresses=new ArrayList<Address>();
-           for(String obj: multiAssoObjList_0){
-             newUmpleID_0=fromJsonParserHelper(obj,newIDRegex_0);
+          
+          if(!umpleObjectIDMap.containsKey(newUmpleID_0)){
+            String newClassNameOne_0=fromJsonParserClassName(newJsonString_0);
+            Class clazzOne_0=Class.forName(newClassNameOne_0);
+            Constructor constructorOne_0=clazzOne_0.getConstructor(String.class, Map.class);
+            Object objectNewOne_0=constructorOne_0.newInstance(newJsonString_0,umpleObjectIDMap);
+University oneAssoObj_0=(University)objectNewOne_0;
+university=oneAssoObj_0;
+          }
+          else{
+university=(University)umpleObjectIDMap.get(newUmpleID_0);
+          }
+
+       
+       jsonKey="registrations";
+       String newJsonString_1=parsedResult.get(jsonKey);
+       String newIDRegex_1="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
+       String newUmpleID_1=fromJsonParserHelper(newJsonString_1,newIDRegex_1);
+       
+       //Multiple associations
+           List<String> multiAssoObjList_1 = new ArrayList<String>();
+           multiAssoObjList_1=fromJsonParserList(newJsonString_1);
+registrations=new ArrayList<Registration>();
+           for(String obj: multiAssoObjList_1){
+             newUmpleID_1=fromJsonParserHelper(obj,newIDRegex_1);
              
-             String newClassName_0=fromJsonParserClassName(obj);
-           if(!umpleObjectIDMap.containsKey(newUmpleID_0)){
+             String newClassName_1=fromJsonParserClassName(obj);
+           if(!umpleObjectIDMap.containsKey(newUmpleID_1)){
            
             boolean subClassFound=false;
-            Class clazz_0=Class.forName(newClassName_0);
-            Constructor constructor_0=clazz_0.getConstructor(String.class, Map.class);
-            Object objectNew_0=constructor_0.newInstance(obj,umpleObjectIDMap);
-addresses.add((Address)objectNew_0);
+            Class clazz_1=Class.forName(newClassName_1);
+            Constructor constructor_1=clazz_1.getConstructor(String.class, Map.class);
+            Object objectNew_1=constructor_1.newInstance(obj,umpleObjectIDMap);
+registrations.add((Registration)objectNew_1);
             }
            else{
-addresses.add((Address)umpleObjectIDMap.get(newUmpleID_0));
+registrations.add((Registration)umpleObjectIDMap.get(newUmpleID_1));
            }
          }
 

@@ -1,5 +1,15 @@
 class UmpleToJava {
   toJson_helper <<!<</*toJson_helper*/>>
+  /*
+  * Helper function to generate Json for this object and connected objects visited objects to enable avoidance of infinite loops
+  *
+  * @param toJsonOutput  Output is aded to this as the network of objects is traversed
+  * @param visitedList  Every concrete object visited is added so we don't re-outpu
+  * @param nestLevel    As we output deeper objects, indent them more
+  * @param atConcreteClass false when we are recursing to a superclass
+  *     so we get the superclass data
+  * @return whether or not anything was output (so we can tell whether we need to output a comma)
+  */ 
   public boolean toJsonHelper(StringBuilder toJsonOutput, HashSet<Object> visitedList, int nestLevel, boolean atConcreteClass){
       
       String indent = "  ".repeat(nestLevel);
@@ -75,10 +85,10 @@ class UmpleToJava {
     if(atConcreteClass) {
       // This will not be true in a super call; output header
       toJsonOutput.append(indent+"\""+this.toString().split("@")[0]+ "\" : {\n"+indent+ "  \"umpleObjectID\" : \""+System.identityHashCode(this)+"\"");
-
       // Check if we have already visited this object. If so we will not output details
       alreadyVisited = visitedList.contains(this);
       if(!alreadyVisited) {
+        toJsonOutput.append(",\n");
         visitedList.add(this);
       }
     }
@@ -95,36 +105,49 @@ class UmpleToJava {
         haveOutputItem = super.toJsonHelper(toJsonOutput, visitedList, nestLevel, false);
       <<#}#>>
       // When an object has not already been visited, output its details
-      toJsonOutput.append(",\n");
+      if(haveOutputItem){
+      //toJsonOutput.append(",\n");  
+      }
+        
       <<#
         for (int m1=0;m1<displayedPrimitives.size();m1++){#>>
+          if(haveOutputItem){
+            toJsonOutput.append(",\n");
+          }
           toJsonOutput.append(indent);
           toJsonOutput.append("  \"");
           toJsonOutput.append("<<#realSb.append(nameOfPrimitives.get(m1));#>>");
           toJsonOutput.append("\" : \"");
-          toJsonOutput.append("<<#realSb.append("\"+"+  displayedPrimitives.get(m1)+"+ \"");#>>");
+          String primValue_<<#realSb.append(m1);#>>=""+<<#realSb.append(displayedPrimitives.get(m1));#>>+"";
+          toJsonOutput.append(primValue_<<#realSb.append(m1);#>>.replace("\\","\\\\").replace("\"","\\\""));
           toJsonOutput.append("\"");
-          toJsonOutput.append(",\n");
+          haveOutputItem=true;
         <<#}
       #>>
-      haveOutputItem = false;
+      //haveOutputItem = false;
       <<#
         for (int numAttributes=0;numAttributes<displayedAttributes.size();numAttributes++){#>>
+          
+          if(haveOutputItem){
+            toJsonOutput.append(",\n");
+          }
           toJsonOutput.append(indent);
           toJsonOutput.append("  \"");
           toJsonOutput.append("<<#realSb.append(nameOfAttributes.get(numAttributes));#>>");
           toJsonOutput.append("\" : \"");
-          toJsonOutput.append("<<#realSb.append("\"+"+  displayedAttributes.get(numAttributes)+"+ \"");#>>");
+          String attrValue_<<#realSb.append(numAttributes);#>>=""+<<#realSb.append(displayedAttributes.get(numAttributes));#>>+"";
+          toJsonOutput.append(attrValue_<<#realSb.append(numAttributes);#>>.replace("\\","\\\\").replace("\"","\\\""));
           toJsonOutput.append("\"");
-          toJsonOutput.append(",\n");
+          //toJsonOutput.append(",\n");
+          haveOutputItem=true;
         <<#}
       #>>
-      haveOutputItem = false;
+      //haveOutputItem = false;
       <<#
         for(int assoIndex=0;assoIndex<associationNames.size();assoIndex++){#>>
          if(haveOutputItem) {
-                toJsonOutput.append(",\n");
-              }
+           toJsonOutput.append(",\n");
+         }
           toJsonOutput.append(indent);
           <<#if(associationIsMany.get(assoIndex)){#>>
             toJsonOutput.append("  \"");
@@ -133,38 +156,41 @@ class UmpleToJava {
             toJsonOutput.append("<<#realSb.append(" : [");#>>");
             toJsonOutput.append("\n");
             haveOutputItem = false;
-            for (<<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anItem :<<#append(realSb,"" + associations.get(assoIndex) + "");#>>){
+            try{
+              for (<<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anItem_<<#realSb.append(assoIndex);#>> :<<#append(realSb,"" + associations.get(assoIndex) + "");#>>){
               if(haveOutputItem) {
                 toJsonOutput.append(",\n");
               }
-              toJsonOutput.append(indent+"{");
+              toJsonOutput.append(indent+"  {");
               toJsonOutput.append("\n");
-              anItem.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
+              anItem_<<#realSb.append(assoIndex);#>>.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
               toJsonOutput.append("\n");
-              toJsonOutput.append(indent+"}");
+              toJsonOutput.append(indent+"  }");
               haveOutputItem=true;
             }
+            }catch (NullPointerException e){
+            }
             toJsonOutput.append("\n");    
-            toJsonOutput.append(indent+"]");
-            toJsonOutput.append("\n"); 
+            toJsonOutput.append(indent+"  ]");
             haveOutputItem=true;
           <<#}
           else{#>>
-            toJsonOutput.append("\n");
+            toJsonOutput.append("\n"+indent);
             toJsonOutput.append("  \"");
             toJsonOutput.append("<<#realSb.append(associationNames.get(assoIndex));#>>");
             toJsonOutput.append("\"");
             toJsonOutput.append(" : ");
             toJsonOutput.append("\n");
-            toJsonOutput.append(indent+"{");
+            toJsonOutput.append(indent+"  {");
             toJsonOutput.append("\n");
-            <<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anotherItem = <<#realSb.append(associations.get(assoIndex));#>>;
-            anotherItem.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
+            <<#append(realSb,""+associationItems.get(assoIndex)+"");#>> anotherItem_<<#realSb.append(assoIndex);#>> = <<#realSb.append(associations.get(assoIndex));#>>;
+            anotherItem_<<#realSb.append(assoIndex);#>>.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
             toJsonOutput.append("\n");
-            toJsonOutput.append(indent+"}");
+            toJsonOutput.append(indent+"  }");
             haveOutputItem=true;
           <<#}#>>
-      <<#}#>>     
+      <<#}#>>
+              
           toJsonOutput.append(indent+"  \n");
     }
     // Finalize the output of the concrete class
@@ -180,17 +206,12 @@ class UmpleToJava {
 
   !>>  
   
-  toJson_declare <<!<</*toJson_declare*/>>
+  toJson_declare <<!<</*toJson_declare*/>> 
   /*
   * Generate Json for this object and connected objects visited objects to enable avoidance of infinite loops
   *
-  * @param toJsonOutput  Output is aded to this as the network of objects is traversed
-  * @param visitedList  Every concrete object visited is added so we don't re-outpu
-  * @param nestLevel    As we output deeper objects, indent them more
-  * @param atConcreteClass false when we are recursing to a superclass
-  *     so we get the superclass data
-  * @return whether or not anything was output (so we can tell whether we need to output a comma)
-  */  
+  * @return a string in Json  format of this object
+  */ 
   public String toJson()
   {
     HashSet<Object> visitedList = new HashSet<Object>();
@@ -201,5 +222,435 @@ class UmpleToJava {
     return(toJsonOutput.toString());
   }
   !>>
+  
+  fromJson_declare <<!<</*fromJson_declare*/>>
+  /*
+  * Deserialize Json string to instantiate Objects from top-level class
+  *
+  * @param umpleObjectIDMap<String, Object> mapping parsed objectID (from Json string) with newly instantiated object's objectID
+  * 
+  * @param String aJsonString is the string in json format that is to be processed and turned into an object
+  *
+  * @return newly instantiated Object 
+  */  
+
+  public static <<#realSb.append(uClass.getName());#>> fromJson(String aJsonString){
+    // process the input jsonString so that it can further processed using regex
+    aJsonString=aJsonString.replace("\n","").replace(" ","");   
+    // a map to store the umpleObjectID present in jsonString
+    Map<String, Object> umpleObjectIDMap=new HashMap<>();
     
+    // instantiate a new object
+    <<#appendln(realSb,"");#>>
+    <<#realSb.append(uClass.getName());#>> anObject = new <<#realSb.append(uClass.getName());#>>(aJsonString, umpleObjectIDMap);
+    return anObject;
+  }
+  !>>
+  
+  fromJson_constructor <<!<</*fromJson_constructor*/>>
+  /*
+  * A new constructor specifically implemented if -s genJson is specified
+  * 
+  * @param String aJsonString is the string in json format that is to be processed and turned into an object
+  *
+  * @param umpleObjectIDMap<String, Integer> mapping parsed objectID (from Json string) with newly instantiated object's objectID
+  */ 
+  @SuppressWarnings("unchecked")
+  public <<#realSb.append(uClass.getName());#>>(String aJsonString, Map<String, Object> umpleObjectIDMap){
+    // Initialize a HashMap to store the parsed result
+    // key is the attribute name present in the jsonString
+    // value is the attribute value present in the jsonString
+    <<#boolean hasSuperClassFromJson =uClass.hasExtendsClass();#>>
+    <<#if (hasSuperClassFromJson){#>>
+      super(aJsonString,umpleObjectIDMap);
+      boolean visitedSuperClass=true;
+    <<#}
+    else{#>>
+      boolean visitedSuperClass=false;
+    <<#}#>>
+    
+    HashMap<String,String> parsedResult = new HashMap<String,String>();
+    parsedResult = fromJsonParser(aJsonString);
+    if(!parsedResult.isEmpty()){
+    boolean classExist;
+    boolean classChildExist;
+    String parsedClassName=parsedResult.get("className");
+    String childName=this.getClass().getSimpleName();
+    classExist=<<#realSb.append("\""+uClass.getName()+"\"");#>>.equals(parsedClassName);
+    classChildExist=childName.equals(parsedClassName);
+    // if top-level class does not exist, throw exception
+    if(!classExist&&!classChildExist){
+      throw new IllegalArgumentException("Top-level class \""+parsedClassName+"\" does not exist, please check the input json string");
+    }
+    String umpleObjectId=parsedResult.get("umpleObjectID");
+    <<#
+    // create lists to store the attributes and associations present in the top level class
+    LinkedList<String> nameOfAttributesFromJson = new LinkedList<String>();
+	LinkedList<String> nameOfPrimitivesFromJson = new LinkedList<String>();
+	LinkedList<String> displayedAttributesFromJson = new LinkedList<String>();
+	LinkedList<String> displayedPrimitivesFromJson = new LinkedList<String>();
+	List<String> keysFromJson = new ArrayList<String>();
+	LinkedList<String> attributeTypeFromJson = new LinkedList<String>();
+	LinkedList<String> primitiveTypeFromJson = new LinkedList<String>();
+	List<String> associationNamesFromJson = new ArrayList<String>();
+	List<Object> associationsFromJson = new ArrayList<Object>();
+	List<Object> associationItemsFromJson = new ArrayList<Object>();
+    List<Boolean> associationIsManyFromJson = new ArrayList<Boolean>();
+    List<String> subClassList = new ArrayList<String>();
+    
+
+	for(String k: uClass.getKey().getMembers())
+	  keysFromJson.add(k);
+	for(Attribute av: uClass.getAttributes())
+	{
+	  if(!av.getIsList()&&!"internal".equals(av.getModifier())&&!"const".equals(av.getModifier())&&("String".equals(av.getType())||"int".equals(av.getType())||"Integer".equals(av.getType())||"boolean".equals(av.getType().toLowerCase())||"float".equals(av.getType())||"Float".equals(av.getType())||"double".equals(av.getType())||"Double".equals(av.getType())||"byte".equals(av.getType())||"Byte".equals(av.getType())||"char".equals(av.getType())||"Character".equals(av.getType())||"long".equals(av.getType())||"Long".equals(av.getType())||"short".equals(av.getType())||"Short".equals(av.getType())))
+	  {
+	    if(av.getIsAutounique() || keys.contains(av.getName())){
+		  nameOfPrimitivesFromJson.addFirst(av.getName());
+		  displayedPrimitivesFromJson.addFirst(gen.translate("getMethod",av)+"()");
+		  primitiveTypeFromJson.addFirst(av.getType());
+		}
+		else {
+		  nameOfPrimitivesFromJson.addLast(av.getName());
+		  displayedPrimitivesFromJson.addLast(gen.translate("getMethod",av)+"()");
+		  primitiveTypeFromJson.addLast(av.getType());
+		}
+	  }
+	  else if(!av.getIsList()&&!"const".equals(av.getModifier())&&!"internal".equals(av.getModifier()))
+	  {
+	    if(av.getIsAutounique() || keys.contains(av.getName())){
+		  nameOfAttributesFromJson.addFirst(av.getName());
+		  displayedAttributesFromJson.addFirst(gen.translate("getMethod",av)+"()");
+		  attributeTypeFromJson.addFirst(av.getType());
+		}
+		else {
+		  nameOfAttributesFromJson.addLast(av.getName());
+		  displayedAttributesFromJson.addLast(gen.translate("getMethod",av)+"()");
+		  attributeTypeFromJson.addLast(av.getType());
+		}
+	  }
+	}
+	for(AssociationVariable av: uClass.getAssociationVariables())
+	  {
+		associationNamesFromJson.add(av.getName());
+		//check if the association variable has more than 1 multiplicity or not
+		//If the av has more than 1 multiplicity, get plural get()
+		if (av.isMany()){
+		  associationsFromJson.add(gen.translate("getManyMethod",av)+"()");
+		}
+		else{
+		  associationsFromJson.add(gen.translate("getMethod",av)+"()");
+		}
+		associationItemsFromJson.add(av.getType());
+		associationIsManyFromJson.add(av.isMany());
+	  }
+    for (UmpleClass up:uClass.getSubclasses()){
+        subClassList.add(up.getName());
+    }	  
+	  
+    #>>
+    // Check if the object has already been visited and created
+    //if((umpleObjectIDMap.get(umpleObjectId)==null)||visitedSuperClass){
+      try{
+      
+    visitedSuperClass=false;
+    // map the old objectID (in jsonString) with the newly created object's hashCode in umpleObjectIDMap 
+    umpleObjectIDMap.put(umpleObjectId,this);
+    
+    String jsonKey="";
+    <<#
+    String customFromJsonPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","fromJson"));
+	  String customFromJsonPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","fromJson"));
+	  if (customFromJsonPrefixCode != null) 
+	  {
+		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customFromJsonPrefixCode, "    "));
+	  }
+	  if (customFromJsonPostfixCode != null) 
+	  {
+		  append(realSb, "\n{0}",GeneratorHelper.doIndent(customFromJsonPostfixCode, "    "));
+	  }
+
+	// below for-loop populate the newly instantiated objects according to parsed value with the value parsed from the json String
+	for(int attrJsonCount=0;attrJsonCount< nameOfAttributesFromJson.size();attrJsonCount++){#>>
+	  jsonKey=<<#append(realSb,"\""+nameOfAttributesFromJson.get(attrJsonCount)+"\"");#>>;
+
+        //more types should be considered here
+        <<#if(attributeTypeFromJson.get(attrJsonCount).equals("int")||attributeTypeFromJson.get(attrJsonCount).equals("Integer")){#>>
+        int attrvalueInt = Integer.valueOf(parsedResult.get(jsonKey));
+        this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=attrvalueInt;
+        <<#}
+        if(attributeTypeFromJson.get(attrJsonCount).equals("double")||attributeTypeFromJson.get(attrJsonCount).equals("Double")){#>>
+        double attrvalueDouble =Double.valueOf(parsedResult.get(jsonKey));
+        this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=attrvalueDouble;
+        <<#}
+        if(attributeTypeFromJson.get(attrJsonCount).equals("Float")||attributeTypeFromJson.get(attrJsonCount).equals("float")){#>>
+        float attrvalueFloat=Float.parseFloat(parsedResult.get(jsonKey));
+        this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=attrvalueFloat;
+        <<#}
+        if(attributeTypeFromJson.get(attrJsonCount).equals("boolean")||attributeTypeFromJson.get(attrJsonCount).equals("Boolean")){#>>
+        boolean attrvalueBool=Boolean.parseBoolean(parsedResult.get(jsonKey));
+        this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=attrvalueBool;
+        <<#}
+        if(attributeTypeFromJson.get(attrJsonCount).equals("Time")){#>>
+        Time attrvalueTime=Time.valueOf(parsedResult.get(jsonKey));
+        this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=attrvalueTime;
+        <<#}
+        if(attributeTypeFromJson.get(attrJsonCount).equals("String")){#>>
+        this.<<#realSb.append(nameOfAttributesFromJson.get(attrJsonCount));#>>=parsedResult.get(jsonKey);
+        <<#}#>>
+
+	<<#}#>>
+    <<#for (int primJsonCount=0; primJsonCount<nameOfPrimitivesFromJson.size();primJsonCount++){#>>
+       jsonKey=<<#append(realSb,"\""+nameOfPrimitivesFromJson.get(primJsonCount)+"\"");#>>;
+       //more types should be considered here
+       <<#if(primitiveTypeFromJson.get(primJsonCount).equals("int")||primitiveTypeFromJson.get(primJsonCount).equals("Integer")){#>>
+       int valueInt = Integer.valueOf(parsedResult.get(jsonKey));
+       this.<<#append(realSb,nameOfPrimitivesFromJson.get(primJsonCount));#>>=valueInt;
+       <<#}
+       if(primitiveTypeFromJson.get(primJsonCount).equals("double")||primitiveTypeFromJson.get(primJsonCount).equals("Double")){#>>
+        double valueDouble =Double.valueOf(parsedResult.get(jsonKey));
+        this.<<#append(realSb,nameOfPrimitivesFromJson.get(primJsonCount));#>>=valueDouble;
+      <<#}
+        if(primitiveTypeFromJson.get(primJsonCount).equals("Float")||primitiveTypeFromJson.get(primJsonCount).equals("float")){#>>
+        float valueFloat=Float.parseFloat(parsedResult.get(jsonKey));
+        this.<<#append(realSb,nameOfPrimitivesFromJson.get(primJsonCount));#>>=valueFloat;
+      <<#}
+      if(primitiveTypeFromJson.get(primJsonCount).equals("boolean")||primitiveTypeFromJson.get(primJsonCount).equals("Boolean")){#>>
+        boolean valueBool=Boolean.parseBoolean(parsedResult.get(jsonKey));
+        this.<<#append(realSb,nameOfPrimitivesFromJson.get(primJsonCount));#>>=valueBool;
+      <<#}
+      if(primitiveTypeFromJson.get(primJsonCount).equals("Time")){#>>
+        boolean valueTime=Time.valueOf(parsedResult.get(jsonKey));
+        this.<<#append(realSb,nameOfPrimitivesFromJson.get(primJsonCount));#>>=valueTime;
+      <<#}
+      if(primitiveTypeFromJson.get(primJsonCount).equals("String")){#>>
+        this.<<#append(realSb,nameOfPrimitivesFromJson.get(primJsonCount));#>>=parsedResult.get(jsonKey);
+      <<#}#>>
+    <<#}#>>
+    
+    // below for-loop check the association class of the top level class
+    <<#for (int assoJsonCount=0; assoJsonCount<associationNamesFromJson.size();assoJsonCount++){#>>
+       
+       jsonKey=<<#append(realSb,"\""+associationNamesFromJson.get(assoJsonCount)+"\"");#>>;
+       String newJsonString_<<#realSb.append(assoJsonCount);#>>=parsedResult.get(jsonKey);
+       String newIDRegex_<<#realSb.append(assoJsonCount);#>>="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
+       String newUmpleID_<<#realSb.append(assoJsonCount);#>>=fromJsonParserHelper(newJsonString_<<#realSb.append(assoJsonCount);#>>,newIDRegex_<<#realSb.append(assoJsonCount);#>>);
+       
+      <<# if (uClass.getKey().isProvided()){#>>
+          cachedHashCode=-1;
+       <<#}#>>
+       //Multiple associations
+        <<#if(associationIsManyFromJson.get(assoJsonCount)){#>>
+           List<String> multiAssoObjList_<<#realSb.append(assoJsonCount);#>> = new ArrayList<String>();
+           multiAssoObjList_<<#realSb.append(assoJsonCount);#>>=fromJsonParserList(newJsonString_<<#realSb.append(assoJsonCount);#>>);
+           <<#appendln(realSb,"");#>>
+           <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=new ArrayList<<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>>();
+           for(String obj: multiAssoObjList_<<#realSb.append(assoJsonCount);#>>){
+             newUmpleID_<<#realSb.append(assoJsonCount);#>>=fromJsonParserHelper(obj,newIDRegex_<<#realSb.append(assoJsonCount);#>>);
+             
+             String newClassName_<<#realSb.append(assoJsonCount);#>>=fromJsonParserClassName(obj);
+           if(!umpleObjectIDMap.containsKey(newUmpleID_<<#realSb.append(assoJsonCount);#>>)){
+           
+            boolean subClassFound=false;
+            Class clazz_<<#realSb.append(assoJsonCount);#>>=Class.forName(newClassName_<<#realSb.append(assoJsonCount);#>>);
+            Constructor constructor_<<#realSb.append(assoJsonCount);#>>=clazz_<<#realSb.append(assoJsonCount);#>>.getConstructor(String.class, Map.class);
+            Object objectNew_<<#realSb.append(assoJsonCount);#>>=constructor_<<#realSb.append(assoJsonCount);#>>.newInstance(obj,umpleObjectIDMap);
+             <<#appendln(realSb,"");#>>
+             <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>.add((<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>)objectNew_<<#realSb.append(assoJsonCount);#>>);
+            }
+           else{
+             <<#appendln(realSb,"");#>>
+             <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>.add((<<#realSb.append(associationItemsFromJson.get(assoJsonCount));#>>)umpleObjectIDMap.get(newUmpleID_<<#realSb.append(assoJsonCount);#>>));
+           }
+         }
+      <<#}
+      //single association
+      else{#>>
+          
+          if(!umpleObjectIDMap.containsKey(newUmpleID_<<#realSb.append(assoJsonCount);#>>)){
+            String newClassNameOne_<<#realSb.append(assoJsonCount);#>>=fromJsonParserClassName(newJsonString_<<#realSb.append(assoJsonCount);#>>);
+            Class clazzOne_<<#realSb.append(assoJsonCount);#>>=Class.forName(newClassNameOne_<<#realSb.append(assoJsonCount);#>>);
+            Constructor constructorOne_<<#realSb.append(assoJsonCount);#>>=clazzOne_<<#realSb.append(assoJsonCount);#>>.getConstructor(String.class, Map.class);
+            Object objectNewOne_<<#realSb.append(assoJsonCount);#>>=constructorOne_<<#realSb.append(assoJsonCount);#>>.newInstance(newJsonString_<<#realSb.append(assoJsonCount);#>>,umpleObjectIDMap);
+            <<#appendln(realSb,"");#>>
+            <<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>> oneAssoObj_<<#realSb.append(assoJsonCount);#>>=(<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>)objectNewOne_<<#realSb.append(assoJsonCount);#>>;
+           <<#appendln(realSb,"");#>>
+           <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=oneAssoObj_<<#realSb.append(assoJsonCount);#>>;
+          }
+          else{
+            <<#appendln(realSb,"");#>>
+          <<#append(realSb,associationNamesFromJson.get(assoJsonCount));#>>=(<<#append(realSb,""+associationItemsFromJson.get(assoJsonCount)+"");#>>)umpleObjectIDMap.get(newUmpleID_<<#realSb.append(assoJsonCount);#>>);
+          }
+      <<#}#>>
+
+    <<#}#>>
+
+    
+    }catch(Exception e){
+    }
+
+    //}
+  }
+  }!>>
+  
+  fromJson_parser <<!<</*fromJson_parser*/>>
+  /*
+  * A json parser to parse the input jsonString, if -s genJson is specified
+  * 
+  * @param String aJsonString is the string in json format that is to be processed and turned into an object
+  *
+  * @ return HashMap<String,String> that stores paresed result, key is the attribute(or associations) of an object, value is the attribute value or association string
+  */ 
+  public static HashMap<String,String> fromJsonParser(String jsonString){
+    
+    HashMap<String,String> parsedResultMap = new HashMap<String,String>();
+    try{
+      //Below (String, Pattern, Matcher) are the regex strings and their patterns and matcher used to process a jsonString
+    
+        // topLevelString is the regex representing the topLevel class name
+        String topLevelString = "\\{\\\"[A-Z]\\w*\\\":";
+        Pattern topLevelPattern = Pattern.compile(topLevelString);
+        Matcher topLevelMatcher = topLevelPattern.matcher(jsonString);
+        String quotes="\\\"";
+        String colon="\\:";
+        String colonSquareBracket="\\:\\[";
+        
+        if(topLevelMatcher.find()){
+            //actual string that represent the topLevel className
+            String topLevelStringFound=topLevelMatcher.group(0);
+            String className=topLevelStringFound.split(quotes)[1];
+            parsedResultMap.put("className", className);
+            jsonString=jsonString.split(topLevelString,2)[1];
+            
+            //objIDString is the regex representing umpleObjectID that could be found in jsonString
+            String objIDString = "\"umpleObjectID\"\\:\"[0-9]*\",";
+            Pattern objIDPattern = Pattern.compile(objIDString);
+            Matcher objIDMatcher = objIDPattern.matcher(jsonString);
+            if(objIDMatcher.find()){
+              String objIDFound=objIDMatcher.group(0);
+              parsedResultMap.put("umpleObjectID", objIDFound.split(colon)[1].split(quotes)[1]);
+              jsonString=jsonString.replaceFirst(objIDFound,"");
+            }
+            String timeString="\\\"\\w*\\\"\\:\\\"\\d{2}:\\d{2}\\:\\d{2}\\\"";
+            Pattern timeStringPattern=Pattern.compile(timeString);
+            Matcher timeStringPatternMatcher=timeStringPattern.matcher(jsonString);
+            if(timeStringPatternMatcher.find()){
+              String timeStringFound=timeStringPatternMatcher.group(0);
+              parsedResultMap.put(timeStringFound.split(colon,2)[0].split(quotes)[1], timeStringFound.split(colon,2)[1].split(quotes)[1]);
+          
+            }
+            // pairString is the regex for an object's attribute and attribute value, the string parsed will be in key-value formate
+        String pairString = "(\\\"(?!umpleObjectID)[^\\\"]+)\\\":\\\"((?:\\\\\\\"|[^\\\"])*)";
+        Pattern pairPattern=Pattern.compile(pairString);
+        Matcher pairMatcher=pairPattern.matcher(jsonString);
+        String associationString="(?=\\\"\\w*\\\"\\:\\[\\{)(?:(?=.*?\\[\\{(?!.*?\\1)(.*\\}\\](?!.*\\2).*))(?=.*?\\}\\](?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\[]*(?=\\2$)";
+        Pattern associationPattern=Pattern.compile(associationString);
+        String newObjJsonString="(?=\\,\\\"\\w*\\\"\\:\\{)(?:(?=.*?\\{\\\"(?!.*?\\1)(.*\\}(?!.*\\2).*))(?=.*?\\}(?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\{]*(?=\\2$)";
+        Pattern newObjJsonPattern=Pattern.compile(newObjJsonString);
+        String quoteColonQuote="\\\"\\:\\\"";
+        //Keep on parsing the attribute's key-value pair, 
+        //until a List (multi-associations) pattern or a newObject parttern (single association) is found
+        while(pairMatcher.find()){
+               String pairStringFound=pairMatcher.group(0);
+              if(parsedResultMap.get(pairStringFound.split(colon)[0].split(quotes)[1])==null){
+                String keyPair=pairStringFound.split(colon)[0].split(quotes)[1];
+                String valuePair=pairStringFound.split(quoteColonQuote,2)[1];
+                keyPair=keyPair.replace("\\\\","\\").replace("\\\"","\"");
+                valuePair=valuePair.replace("\\\\","\\").replace("\\\"","\"");
+                parsedResultMap.put(keyPair,valuePair);
+                jsonString=jsonString.replaceFirst(pairString, "");
+              }
+                int lastIndex = 0;
+                while (lastIndex<jsonString.length()){
+                  String remainingJson=jsonString.substring(lastIndex);
+                  Matcher associationMatcher=associationPattern.matcher(jsonString);
+                  Matcher newObjJsonMatcher=newObjJsonPattern.matcher(jsonString);
+                  
+                  boolean assoFound=associationMatcher.find();
+                  boolean newObjFound=newObjJsonMatcher.find();
+                  
+                  if (assoFound&&(!newObjFound||associationMatcher.start()<newObjJsonMatcher.start())){
+                    String assoStringFound=associationMatcher.group(0);
+                    String associationName=assoStringFound.split(colon,2)[0].split(quotes)[1];;
+                    String associationItems=assoStringFound.split(colonSquareBracket,2)[1];
+                    parsedResultMap.put(associationName, associationItems);
+                    jsonString=jsonString.replaceFirst(associationString, "");
+                  }
+                  else if (newObjFound){
+                    String newObjJsonFound=newObjJsonMatcher.group(0);
+                    String newObjName=newObjJsonFound.split(colon,2)[0].split(quotes)[1];
+                    String newObjItems=newObjJsonFound.split(colon,2)[1];
+                    parsedResultMap.put(newObjName, newObjItems);
+                    jsonString=jsonString.replaceFirst(newObjJsonString, "");
+                  }else{
+                    break;
+                  }
+                }
+        }
+        }
+        return parsedResultMap;
+    }catch(NullPointerException e){
+      return parsedResultMap;
+    }
+  }
+  !>>
+  
+  fromJson_parserHelper <<!<</*fromJson_parserHelper*/>>
+  public static String fromJsonParserHelper(String jsonString, String regexString){
+    String umpleID = "";
+    String quo="\\\"";
+    try{
+      Pattern umpleIDPattern=Pattern.compile(regexString);
+      Matcher umpleIDMatcher=umpleIDPattern.matcher(jsonString);
+      if(umpleIDMatcher.find()){
+        String umpleIDStringFound=umpleIDMatcher.group(0);
+        String idString="\\\"\\d*\\\"";
+        Pattern idPattern=Pattern.compile(idString);
+        Matcher idMatcher=idPattern.matcher(umpleIDStringFound);
+        if(idMatcher.find()){
+          umpleID=idMatcher.group(0).split(quo)[1];
+        }
+      }
+      return umpleID;
+    } catch(NullPointerException e){
+      return umpleID;
+    }
+  }
+  !>>
+  fromJson_parserList <<!<</*fromJson_parserList*/>>
+  public static List<String> fromJsonParserList(String objListString){
+    List<String> objList=new ArrayList<String>();
+    try{
+      String objString="(?:(?=.*?\\{(?!.*?\\1)(.*\\}(?!.*\\2).*))(?=.*?\\}(?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\{]*(?=\\2$)";
+      Pattern objStringPattern=Pattern.compile(objString);
+      Matcher objStringMatcher=objStringPattern.matcher(objListString);
+      while(objStringMatcher.find()){
+        objList.add(objStringMatcher.group(0));
+      }
+      return objList;
+   }catch(NullPointerException e){
+     return objList;
+   }
+  }
+  !>>
+
+  fromJson_parserClassName <<!<</*fromJson_parserClassName*/>>
+  public static String fromJsonParserClassName(String objNameString){
+    String nextName="";
+    String quotes="\\\"";
+    try{
+      String nextNameString="\\{\\\"[A-Z]\\w*\\\":";
+      Pattern nextNamePattern=Pattern.compile(nextNameString);
+      Matcher nextNameMatcher=nextNamePattern.matcher(objNameString);
+      if(nextNameMatcher.find()){
+        nextName=nextNameMatcher.group(0).split(quotes)[1];
+       
+      }
+      return nextName;
+   }catch(NullPointerException e){
+     return nextName;
+   }
+  }
+  !>>
+
 }
