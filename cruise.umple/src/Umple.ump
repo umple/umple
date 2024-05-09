@@ -50,6 +50,7 @@ class UmpleModel
   // These are set to true when various @@@skip directives are found in comments
   Boolean skipcompile=false;
   Boolean skipjavacompile=false;
+  Boolean skippythoncompile=false;
   Boolean skipcppcompile=false;
   Boolean skiprubycompile=false;
   Boolean skipphpcompile=false;
@@ -120,6 +121,14 @@ class UmpleModel
 
   // The Umple interfaces contained within the model.
   1 -> * UmpleInterface;
+
+  // Suboptions that might be added by the suboption command;
+  lazy String[] availableSuboptions;
+  before addGenerate(GenerateTarget) {
+    for (String so : availableSuboptions) {
+      aGenerate.addSuboption(so);
+    }
+  }
 
 }
 
@@ -1296,9 +1305,12 @@ class GenerateTarget
   Boolean override = false;
   Boolean overrideAll = false;
   lazy String[] suboptions;
-
+  
   before getPath{if(path == null) path = ""; }
   key{language}
+  public Boolean tarHasSubOption(String subOption){
+  	return suboptions.contains(subOption);
+  }
 }
 
 //added for issue 1315 warning 31

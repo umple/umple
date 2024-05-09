@@ -9,8 +9,12 @@
  */
 class Person {
   name; // Attribute, string by default
-  String toString () {
-    return(getName());
+  String toString () Java {
+    return(getName());	
+  }
+  
+  String __str__ () Python {
+    return self.getName()
   }
 }
 
@@ -30,7 +34,7 @@ class Person {
   // Notice that we are defining more contents for Person
   // This uses Umple's mixin capability
   
-  public static void main(String [ ] args) {
+  public static void main(String [ ] args) Java {
     Mentor m = new Mentor("Nick The Mentor");
     Student s = new Student("Tom The Student");
     s.setMentor(m);
@@ -39,6 +43,18 @@ class Person {
     System.out.println("The students of "
       +  m  + " are " +  m.getStudents());
   }
+
+  public static void main(String [ ] args) Python {
+    import Mentor
+    import Student
+
+    m = Mentor.Mentor("Nick The Mentor")
+    s = Student.Student("Tom The Student")
+    s.setMentor(m)
+    print("The mentor of " + str(s)  + " is " + str(s.getMentor()))
+    print("The students of " + str(m) + " are " + str(m.getStudents()))
+  }
+  
 }//$?[End_of_model]$?
 
 class Person
@@ -55,3 +71,4 @@ class Mentor
 // @@@skipcppcompile - Contains Java code
 // @@@skipphpcompile - Contains Java code
 // @@@skiprubycompile - Contains Java code
+// @@@skippythoncompile - Contains Java Code

@@ -1,0 +1,13 @@
+Alloy
+Generators
+noreferences
+@@description
+<p>
+Alloy is a formal method notation that can be used check properties of models using logic.</p>
+
+<p>The Umple Alloy generator generates statements that can be used to analyse properties of class models involving associations. Both classes (with their attributes) and associations (with their multiplicity) are turned into sig statements in Alloy.</p>
+
+<p>More information about Alloy can be found at the <a target="Alloy" href="https://alloytools.org/about.html">Alloy project home page, or on the <a target="AlloyW" href="https://en.wikipedia.org/wiki/Alloy_(specification_language)">Wikipedia Alloy page</a>.</p>
+
+<p>This generator is discussed in detail in <a target="OpeyemiTh" href="https://dx.doi.org/10.20381/ruor-20549">Opeyemi Adesina's PhD thesis: Integrating Formal Methods with Model-Driven Engineering</a>.</p>
+

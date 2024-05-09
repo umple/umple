@@ -2,11 +2,12 @@ const fs = require('fs');
 const exec = require('child_process').exec;
 
 class DockerExecution {
-    constructor(path, mainFile, model) {
+    constructor(path, mainFile, model, language="Java") {
         this.path = path;
         this.mainFile = mainFile;
         this.model = model;
         this.outputFolder = "output/" + this.model + "_" + this.mainFile;
+        this.language=language;
 
         const config = this.readConfig();
         this.basePath = config['umplePath'];
@@ -20,8 +21,14 @@ class DockerExecution {
         this.makeOutputFolder();
         const mainFilePath = this.getNormalizedMainFilename();
         console.log("Normalized main file: ", mainFilePath);
+        let command;
+        //if BASE_DIR environment variable exist, it means the docker was launced on Windows
+        if(process.env['BASE_DIR']){
+            command = `sh dockerTimeout.sh ${this.timeoutValue}s -i -t --network none -v $BASE_DIR/umpleonline/ump/${this.model}:/input/:ro -v $BASE_DIR/umpleCodeExecution/tmp/${this.model}_${this.mainFile}:/output/ ${this.tempContainerName} ${mainFilePath}` 
+        }else{
+            command = `sh dockerTimeout.sh ${this.timeoutValue}s -i -t --network none -v ${this.basePath}/${this.model}:/input/:ro -v ${this.baseOutputPath}/${this.model}_${this.mainFile}:/output/ ${this.tempContainerName} ${mainFilePath}` 
+        }
         
-        const command = `sh dockerTimeout.sh ${this.timeoutValue}s -i -t --network none -v ${this.basePath}/${this.model}:/input/:ro -v ${this.baseOutputPath}/${this.model}_${this.mainFile}:/output/ ${this.tempContainerName} ${mainFilePath}` 
         console.log("Docker command:'",command,"'"); 
         exec(command); // Execute docker for Java execution
 
@@ -36,7 +43,12 @@ class DockerExecution {
         if(path.endsWith('/')) {
             path = path.substring(0, path.length - 1);
         }
-        return path ? `${path.split('/').join('.')}.${this.mainFile}` : this.mainFile;
+        const pathArr=path.split('/');
+
+        if(this.language=="Python"){
+            return path ? `${path}/${this.mainFile}.py` : `${this.mainFile}.py`;
+        }
+        return path ? `${path.split('/').join('.')}.${this.mainFile}` : this.mainFile;    
     }
 
     listenToChanges(callback) {
@@ -59,7 +71,7 @@ class DockerExecution {
                         if(errorData) {
                             console.log("Error file: ", errorData)
                         }
-                        console.log("Complete file: ", completeData);
+                        console.log("Complete file: \n", completeData);
 
                         callback(errorData, completeData.toString())
                     });

@@ -1,6 +1,7 @@
 //The warning is resolved
 //by correcting the name of the
 //attribute to be traced
+@SuppressWarnings("deprecation")
 class A {
   Integer identifier;
   

@@ -1,6 +1,6 @@
 trait TEquality{
   Boolean isEqual(Object object);
-  Boolean isNotEqual(Object object){
+  Boolean isNotEqual(Object object) Java {
     
     return isEqual(object) ? false : true;
   }
@@ -16,7 +16,7 @@ class RealNumber
   float value;  
   isA TEquality;
 
-  Boolean isEqual(Object object)
+  Boolean isEqual (Object object)Java
   {
     if(object instanceof RealNumber)
     return this.value == ((RealNumber) object).value;
@@ -35,3 +35,4 @@ class RealNumber
 
 //$?[End_of_model]$?
 // @@@skipphpcompile
+// @@@skippythoncompile - Contains Java Code

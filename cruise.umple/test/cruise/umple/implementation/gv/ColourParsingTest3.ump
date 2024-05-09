@@ -1,0 +1,7 @@
+generate GvClassDiagram;
+namespace example;
+
+class A{
+  String b = "";
+ displayColor=               "red";
+}

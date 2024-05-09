@@ -28,3 +28,5 @@ trait X {
 }//$?[End_of_model]$?
 
 // @@@skipphpcompile - contains java code
+// @@@skippythoncompile - Contains Java Code
+// @@@skipcppcompile

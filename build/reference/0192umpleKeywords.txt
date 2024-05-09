@@ -187,7 +187,7 @@ noreferences
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">forced:</span> Preceded by a <i>distributable</i> statement, this sets all classes in the program to be distributable, that is, allowed to be instantiated on multiple machines. <a href="BasicDistributedSystems.html"><i>See Basic Distributed Systems</i></a></li>
 
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">generate:</span> <span style="background-color:lime">[top]</span> Specifies the languages to be generated when compiling (Java is the default); can also be specified on the command line. <a href="UmpleGrammar.html#generate"><i>See the list of keywords that can be specified</i></a>. A list is also available from the command line by specifying --help.</li>
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">generate:</span> <span style="background-color:lime">[top]</span> Specifies the languages to be generated when compiling (Java is the default); can also be specified on the command line. <a href="UmpleGrammar.html#generate"><i>See the list of keywords that can be specified in the grammar</i></a>. A list is also available from the command line by specifying --help. There is also a <a href="Java.html">section in the user manual that describes the capabilities of key generators</a>.</li>
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">generated:</span> <span style="background-color:plum">[method]</span> Indicates that code should be injected in every generated method that matches the specified pattern, but not custom methods. <a href="BeforeandAfterStatements.html"><i>See Before and After Statements</i></a></li>
 

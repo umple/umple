@@ -1,0 +1,101 @@
+from Foo import Foo
+
+class Teacher():
+    def __init__(self):
+        self._myFooss = []
+
+    def getMyFooss(self, index):
+        aMyFooss = self._myFooss[index]
+        return aMyFooss
+
+    def getMyFooss(self):
+        newMyFooss = tuple(self._myFooss)
+        return newMyFooss
+
+    def numberOfMyFooss(self):
+        number = len(self._myFooss)
+        return number
+
+    def hasMyFooss(self):
+        has = len(self._myFooss) > 0
+        return has
+
+    def indexOfMyFooss(self, aMyFooss):
+        index = self._myFooss.index(aMyFooss)
+        return index
+
+    @staticmethod
+    def minimumNumberOfMyFooss():
+        return 0
+
+    @staticmethod
+    def maximumNumberOfMyFooss():
+        return 2
+
+    def addMyFooss(self, aMyFooss):
+        wasAdded = False
+        if aMyFooss in self._myFooss :
+            return False
+
+        if self.numberOfMyFooss() > = self.maximumNumberOfMyFooss() :
+            return wasAdded
+
+        existingTeacher = aMyFooss.getTeacher()
+        isNewTeacher = existingTeacher != None and not self.equals(existingTeacher)
+        if isNewTeacher :
+            aMyFooss.setTeacher(self)
+
+        else :
+            self._myFooss.append(aMyFooss)
+
+        wasAdded = True
+        return wasAdded
+
+    def removeMyFooss(self, aMyFooss):
+        wasRemoved = False
+        if not self.equals(aMyFooss.getTeacher()) :
+            self._myFooss.remove(aMyFooss)
+            wasRemoved = True
+
+        return wasRemoved
+
+    def addMyFoossAt(self, aMyFooss, index):
+        wasAdded = False
+        if self.addMyFooss(aMyFooss) :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfMyFooss() :
+                index = self.numberOfMyFooss() - 1
+
+            self._myFooss.remove(aMyFooss)
+            self._myFooss.insert(index, aMyFooss)
+            wasAdded = True
+
+        return wasAdded
+
+    def addOrMoveMyFoossAt(self, aMyFooss, index):
+        wasAdded = False
+        if aMyFooss in self._myFooss :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfMyFooss() :
+                index = self.numberOfMyFooss() - 1
+
+            self._myFooss.remove(aMyFooss)
+            self._myFooss.insert(index, aMyFooss)
+            wasAdded = True
+
+        else :
+            wasAdded = self.addMyFoossAt(aMyFooss, index)
+
+        return wasAdded
+
+    def delete(self):
+        i = len(self._myFooss)
+        while i > 0 :
+            aMyFooss = self._myFooss[i - 1]
+            aMyFooss.delete()
+            i = i - 1
+

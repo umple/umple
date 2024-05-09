@@ -1,7 +1,14 @@
 /*
-	Example 9: showing how the operator
-	"Extending a state by adding a state machine
-	to it" works.
+  Example 9: showing how the operator
+  "Extending a state by adding a state machine
+  to it" works.
+
+  To see different diagram views in UmpleOnline:
+    Use control-g for auto-layout as a class diagram
+    Use control-r to switch between trait view and
+       plain classes resulting from applying traits
+    Use control-m to show/hide methods
+    Use control-s to show the resulting state diagram
 */
 trait T1{
   sm1{    
@@ -24,3 +31,4 @@ class C1{
     }
   }
 }
+// @@@skipcppcompile

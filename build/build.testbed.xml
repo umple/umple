@@ -14,7 +14,9 @@
   <property name="test.output.path" value="${dist.dir}/qa/testbed_java"/>
   <property name="test.output.path.java" value="${dist.dir}/qa/testbed_java"/>
   <property name="test.output.path.php" value="${dist.dir}/qa/testbed_php"/>
+  <property name="test.output.path.python" value="${dist.dir}/qa/testbed_python"/>
   <property name="test.output.path.ruby" value="${dist.dir}/qa/testbed_ruby"/>
+  <property name="test.output.path.cpp" value="${dist.dir}/qa/testbed_cpp"/>
 
   <property name="examplepattern" value="*" />
   <property name="manualumpfiles.path" value="umpleonline/umplibrary/manualexamples"/>
@@ -31,7 +33,7 @@
 
   <property name="php.simpletest.version" value="1.2" />
   <property name="php.simpletest.url" 
-            value="https://github.com/simpletest/simpletest/archive/v${php.simpletest.version}.0.tar.gz" />
+            value="https://codeload.github.com/simpletest/simpletest/tar.gz/refs/tags/v${php.simpletest.version}.0" />
   <property name="php.libs.dir" value="${dist.dir}/libs/php" />
 
   <path id="project.classpath">
@@ -57,7 +59,9 @@
     <antcall target="template.init" />
     <mkdir dir="${test.output.path.java}"/>
     <mkdir dir="${test.output.path.php}"/>
+    <mkdir dir="${test.output.path.python}"/>
     <mkdir dir="${test.output.path.ruby}"/>
+    <mkdir dir="${test.output.path.cpp}"/>
   </target>
 
 
@@ -68,7 +72,9 @@
   <target name="compile">
     <antcall target="compileJava" />
     <antcall target="compilePhp" />
+    <antcall target="compilePython" />
     <antcall target="compileRuby" />
+    <antcall target="compileRTCpp" />
   </target>
 
   <target name="compileJava">
@@ -141,12 +147,29 @@
 
   </target>
 
+  <target name="compilePython">
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
+
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
+      <arg value="testbed_python/src/TestHarnessPython.ump"/>
+    </java>
+  </target>
+
   <target name="compileRuby">
     <deps-load-path conf="core" pathid="core.ivy.classpath" />
 
     <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <arg value="testbed_ruby/src/TestHarnessRuby.ump"/>
     </java>
+  </target>
+  
+  <target name="compileRTCpp">
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
+
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
+      <arg value="testbed_cpp/src/TestHarnessRTCpp.ump"/>
+    </java>
+    <delete dir="testbed_cpp/src/RTCpp" includeemptydirs="true" verbose="false"/>
   </target>
 
   <!-- ```````````````````````````
@@ -156,7 +179,9 @@
   <target name="test">
     <antcall target="testJava" />
     <antcall target="testPhp" />
+    <antcall target="testPython" />
     <antcall target="testRuby" />
+    <antcall target="testRTCpp" />
     <!--
     <antcall target="allUserManualAndExampleTests" />
     -->
@@ -221,6 +246,27 @@
     <echo message="PHP tests completed!"/>
   </target>
 
+  <target name="testPython">
+    <echo message="Running PYTHON tests from command line"/>
+    <exec executable="python" dir="testbed_python/test/" output="${test.output.path.python}/index.html" outputproperty="test.output.python">
+	    <arg value="AllTests.py"/>
+    </exec>
+
+    <fail message="Python Import Error found">
+      <condition>
+        <contains string="${test.output.python}" substring="Import Failed" casesensitive="true"/>
+      </condition>
+    </fail>
+
+    <fail message="Python Error found">
+      <condition>
+        <contains string="${test.output.python}" substring="FAIL" casesensitive="true"/>
+      </condition>
+    </fail>
+
+    <echo message="PYTHON tests completed!"/>
+  </target>
+
   <target name="testRuby">
     <echo message="Running RUBY tests via rake task ${rake_cmd} output ${test.output.path.ruby}/index.html to ${test.output.ruby}"/>
     <exec executable="${rake_cmd}" dir="testbed_ruby/" output="${test.output.path.ruby}/index.html" outputproperty="test.output.ruby" />
@@ -233,6 +279,63 @@
     </fail>
 
     <echo message="RUBY tests completed!"/>
+  </target>
+  
+  <target name="testRTCpp">
+    <echo message="Compiling RTCpp tests using gcc"/>
+    <exec executable="gcc" dir="testbed_cpp/test" failonerror="true">
+        <arg value="-o"/>
+        <arg value="runAllTests"/>
+        <arg value="runAllTests.cpp"/>
+        <arg line="-lstdc++"/>
+    </exec>
+
+    <available file="runAllTests" property="exe.exists"/>
+
+    <echo message="Running RTCpp tests"/>
+
+    <exec executable="./runAllTests" dir="testbed_cpp/test" failonerror="true" osfamily="unix" output="${test.output.path.cpp}/index.html">
+    </exec>
+
+    <exec executable="cmd" dir="testbed_cpp/test" failonerror="true" osfamily="windows" output="${test.output.path.cpp}/index.html">
+        <arg value="/c runAllTests"/>
+    </exec> <!-- Ensure using cmd to handle on Windows -->
+
+    <fail message="RTCpp Error found">
+        <condition>
+            <contains string="${test.output.path.cpp}/index.html" substring="FAIL" casesensitive="true"/>
+        </condition>
+    </fail> 
+    
+    <!-- Cleanup generated files and executables -->
+    <delete file="testbed_cpp/test/runAllTests.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/test_summary.txt" verbose="false"/>
+    <delete file="testbed_cpp/test/attribute_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/const_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/constraint_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/many_to_many_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/one_to_one_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/optional_one_to_many_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/optional_one_to_one_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/reflexive_many_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/reflexive_optional_one_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/unidirectional_many_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/unidirectional_optional_many_test.exe" verbose="false"/>
+    <delete file="testbed_cpp/test/test_summary.txt" verbose="false"/>
+    <delete file="testbed_cpp/test/attribute_test" verbose="false"/>
+    <delete file="testbed_cpp/test/const_test" verbose="false"/>
+    <delete file="testbed_cpp/test/constraint_test" verbose="false"/>
+    <delete file="testbed_cpp/test/many_to_many_test" verbose="false"/>
+    <delete file="testbed_cpp/test/one_to_one_test" verbose="false"/>
+    <delete file="testbed_cpp/test/optional_one_to_many_test" verbose="false"/>
+    <delete file="testbed_cpp/test/optional_one_to_one_test" verbose="false"/>
+    <delete file="testbed_cpp/test/reflexive_many_test" verbose="false"/>
+    <delete file="testbed_cpp/test/reflexive_optional_one_test" verbose="false"/>
+    <delete file="testbed_cpp/test/unidirectional_many_test" verbose="false"/>
+    <delete file="testbed_cpp/test/unidirectional_optional_many_test" verbose="false"/>
+    <delete file="testbed_cpp/test/unidirectional_optional_one_test" verbose="false"/>
+    <delete dir="testbed_cpp/test/RTCpp" includeemptydirs="true" verbose="false"/>
+    <echo message="RTCpp tests completed!"/>
   </target>
 
   <!-- ``````````````````````````````````````````````

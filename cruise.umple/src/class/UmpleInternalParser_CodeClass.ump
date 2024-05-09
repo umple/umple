@@ -186,7 +186,10 @@ class UmpleInternalParser
     {
       analyzeToplevelException(t);
     }
-
+    else if (t.is("checkForUnintendedBracket"))
+    {
+      setFailedPosition(t.getPosition(),1016);
+    }
     // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above
     // classes, methods, attributes, etc (whichever comes next) rather than old comments propogating everywhere.
     if (shouldConsumeComment)
@@ -200,57 +203,66 @@ class UmpleInternalParser
 
   }  
 
-  private void analyzeRequirement(Token t)
-  {
-    Requirement req;
-    if (model.getAllRequirements().get(t.getSubToken("reqIdentifier").getValue()) != null){
-      System.out.println("ERROR: requirement with that identifier already exists");
+    private void analyzeRequirement(Token t) {
+    String reqID = t.getSubToken("reqIdentifier").getValue(); // extract new requirement identifier
+    String newContent = t.getSubToken("reqContent").getValue();// extract content 
+    String newLanguage = "";// Initialize language
+    
+    if (!(t.getSubToken("reqLanguage") == null || t.getSubToken("reqLanguage").getValue() == null)) {
+        newLanguage = t.getSubToken("reqLanguage").getValue();// get the language of the sub token
     }
 
-    if (t.getSubToken("language") == null || t.getSubToken("language").getValue() ==  null){
-      req = new Requirement(t.getSubToken("reqIdentifier").getValue(), t.getSubToken("reqContent").getValue(), "");
+    Requirement existingRequirement = model.getAllRequirements().get(reqID); // Retrieves any existing requirement with the same identifier from the model
+
+    if (existingRequirement != null) { // Checks if a requirement with the same identifier already exists in the model.
+        String existingLanguage = existingRequirement.getLanguage();// get the language of the existing requirement
+
+        if (!(existingLanguage.equals("") || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
+            setFailedPosition(t.getPosition(), 402, reqID,existingLanguage,newLanguage);
+            return;// return if different languages are encountered
+        }
+
+        String existingContent = existingRequirement.getStatement();// retrieve the content of the existing requirement
+
+
+        // Requirement with the same identifier already exists, combine them
+        // Concatenate the content of the existing requirement with the new content
+        newContent = existingContent + " " + newContent;
+        if (newLanguage.equals("")) {
+            newLanguage = existingLanguage;
+        }
     }
-    else{
-      req = new Requirement(t.getSubToken("reqIdentifier").getValue(), t.getSubToken("reqContent").getValue(), t.getSubToken("language").getValue());
-    }
+    // DEBUG
+    Requirement req = new Requirement(reqID, newContent, newLanguage);// Create new requirement 
     Map<String, Requirement> newAllReq = model.getAllRequirements();
     newAllReq.put(t.getSubToken("reqIdentifier").getValue(), req);
-    model.setAllRequirements(newAllReq);    
-  }
+    model.setAllRequirements(newAllReq);
+}
+
 
   private void analyzeImplementReq(Token t){
     int counter=0;
+    String badReq="";
 
     if (t.hasSubTokens()){
       for (Token sub : t.getSubTokens()){
         if (!sub.getValue().equals("STATIC") && model.getAllRequirements().containsKey(sub.getValue())){
             lastRequirements.add(model.getAllRequirements().get(sub.getValue()));
         }
-        else if (!sub.getValue().equals("STATIC")) counter++;
+        else if (!sub.getValue().equals("STATIC")) {
+          counter++;
+          badReq+=" "+sub.getValue();
+        }
       }
     }
 
     if (counter != 0){
-      System.out.println("ERROR: Cannot find specified requirement identifier");
+      setFailedPosition(t.getPosition(), 401, badReq);
     }
   }
 
-  private void analyzeImplementReq(Token t, UmpleClass aClass){
-    int counter=0;
-
-    if (t.hasSubTokens()){
-      for (Token sub : t.getSubTokens()){
-        if (!sub.getValue().equals("STATIC") && aClass.getSourceModel().getAllRequirements().containsKey(sub.getValue())){
-            lastRequirements.add(model.getAllRequirements().get(sub.getValue()));
-        }
-        else if (!sub.getValue().equals("STATIC")) counter++;
-      }
-    }
-
-    if (counter != 0){
-      analyzeAttribute(t, aClass);
-    }
-
+  private void analyzeImplementReq(Token t, UmpleClass aClass) {
+    analyzeImplementReq(t);
   }
   
   /*
@@ -352,7 +364,6 @@ class UmpleInternalParser
     {
       return;
     }
-
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
     boolean shouldConsumeRequirement = lastRequirements.size() > 0;
@@ -562,6 +573,7 @@ class UmpleInternalParser
     if(theComment.contains("@@@skipcompile")) model.setSkipcompile(true);
     if(theComment.contains("@@@skipphpcompile")) model.setSkipphpcompile(true);
     if(theComment.contains("@@@skipjavacompile")) model.setSkipjavacompile(true);
+    if(theComment.contains("@@@skippythoncompile")) model.setSkippythoncompile(true);
     if(theComment.contains("@@@skipcppcompile")) model.setSkipcppcompile(true);
     if(theComment.contains("@@@skiprubycompile")) model.setSkiprubycompile(true);
     
@@ -602,6 +614,7 @@ class UmpleInternalParser
       if(theComment.contains("@@@skipcompile")) model.setSkipcompile(true);
       if(theComment.contains("@@@skipphpcompile")) model.setSkipphpcompile(true);
       if(theComment.contains("@@@skipjavacompile")) model.setSkipjavacompile(true);
+      if(theComment.contains("@@@skippythoncompile")) model.setSkippythoncompile(true);
       if(theComment.contains("@@@skipcppcompile")) model.setSkipcppcompile(true);
       if(theComment.contains("@@@skiprubycompile")) model.setSkiprubycompile(true);
       
@@ -1306,7 +1319,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
    */
   private UmpleClass analyzeClass(Token classToken)
   {
-  
+
     mixset StateMachine {
     //Reset number of activeObjects with each class definition
     this.numberOfActiveObjects = 1;
@@ -1751,11 +1764,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
       
       else if (childToken.is("displayColor"))
-      {  // Note: See near clone in UmpleInternalParser_CodeLayout.ump
+      {  // Note: See near clones in UmpleInternalParser_CodeLayout.ump and UmpleInternalParser_CodeStateMachine.ump
         String theColor = childToken.getValue("colorValue");
+        // Optionally users may add an equals sign, which we take out
         if(theColor.startsWith("=")) theColor=theColor.substring(1,theColor.length());
-        if(!theColor.startsWith("\"")) theColor= "\""+theColor;
-        if(!theColor.endsWith("\"")) theColor= theColor+"\"";         
+        // Optionally users may add quotation marks around the colour, which we take out
+        theColor=theColor.replace('\"',' ');
+        // Remove all spaces that may have been before any quotation marks or after the equals sign
+        theColor="\""+theColor.trim()+"\"";
         aInterface.setDisplayColor(theColor);
       }
       else if (childToken.is("extraCode") || childToken.is("exception"))
@@ -2430,6 +2446,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
         for (int i=0; i < numCurAssocVar; i++) {
           AssociationVariable curAssocVar = uClass.getAssociationVariable(uClassAssocVarClassNames[i], uClassAssocVarNames[i]);
+          if (curAssocVar == null)
+          {
+             // Issue 2040  ... looking in an extraneous superclass
+             continue;
+          }
 
           AssociationVariable supAssocVar = superClass.getAssociationVariable(curAssocVar.getType(), curAssocVar.getName());
           if (supAssocVar == null) continue;

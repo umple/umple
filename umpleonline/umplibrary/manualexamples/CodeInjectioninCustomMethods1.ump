@@ -45,3 +45,5 @@ class Car {
 }
 //$?[End_of_model]$?
 // @@@skipphpcompile Contains Java Code
+// @@@skippythoncompile - Contains Java Code
+// @@@skipcppcompile

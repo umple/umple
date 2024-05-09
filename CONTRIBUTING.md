@@ -51,7 +51,7 @@ Example:
 > 2. This is the second step
 > 3. Further steps, etc.
 >
-> `<url>` - a link to the reduced test case (e.g. a [GitHub Gist](https://gist.github.com/), or [UmpleOnline](http://cruise.eecs.uottawa.ca/umpleonline/))
+> `<url>` - a link to the reduced test case (e.g. a [GitHub Gist](https://gist.github.com/), or [UmpleOnline](https://try.umple.org))
 >
 > Any other information you want to share that is relevant to the issue being
 > reported. This might include the lines of code that you have identified as
@@ -123,7 +123,7 @@ The umple project is split into many smaller subproject, the folder hierarchy is
 * `UmpleToTemplate` - Template for creating new code generation subprojects*
 
 * `umpleonline` - The UmpleOnline web application
-  * UmpleOnline allows generation of code from Umple directly in a web browser, and also editing of Umple both graphically and textually. Available at http://try.umple.org
+  * UmpleOnline allows generation of code from Umple directly in a web browser, and also editing of Umple both graphically and textually. Available at https://try.umple.org
 
 * `Umplificator` - Reverse engineer code to Umple
 
@@ -141,7 +141,7 @@ and that you are familiar with running the build using our [build cheat sheet](h
 After your changes are done, please remember to run the full suite with
 `cd build && ant -Dmyenv=local`.
 
-You can check [the official build status on CruiseControl](http://cc.umple.org).
+You can check [the build status on Jenkins](https://jenkins.umple.org).
 
 With tests running and passing, you are ready to contribute to Umple and
 send your pull requests.

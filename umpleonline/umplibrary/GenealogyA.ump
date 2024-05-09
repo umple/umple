@@ -6,7 +6,7 @@
   Last updated: June 8, 2010
 */
 //Namespace for core of the system.
-namespace Geneology.core;
+namespace GenealogyA.core;
 
 class Person{
  name;
@@ -41,3 +41,4 @@ class Union
   position.association Person:partner__Union 30,0 8,143;
   position 63 282 184 92;
 }
+// @@@skipcppcompile

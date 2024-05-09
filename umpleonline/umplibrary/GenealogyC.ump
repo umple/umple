@@ -7,7 +7,7 @@
   Last updated: June 8, 2010
 */
 //Namespace for core of the system.
-namespace Geneology.core;
+namespace GenealogyC.core;
 
 class Person{
  name;
@@ -55,3 +55,4 @@ class Person
 {
   position 236 30 165 143;
 }
+// @@@skipcppcompile

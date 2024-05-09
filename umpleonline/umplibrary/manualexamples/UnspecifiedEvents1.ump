@@ -29,3 +29,6 @@ class GarageDoor {
     }
   }
 }
+//$?[End_of_model]$?
+// @@@skippythoncompile - Contains Java Code
+// @@@skipcppcompile

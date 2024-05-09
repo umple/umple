@@ -1,0 +1,63 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
+from enum import Enum, auto
+
+class Course():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Course State Machines
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Open = auto()
+        Full = auto()
+
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self):
+        self._status = None
+        self.setStatus(Course.Status.Open)
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def getStatusFullName(self):
+        answer = self._status.__str__()
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def register(self, name, age, grades):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == Course.Status.Open :
+            self.setStatus(Course.Status.Open)
+            wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
+        return wasEventProcessed
+
+    def reject(self, firstName):
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus == Course.Status.Full :
+            self.setStatus(Course.Status.Full)
+            wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
+        return wasEventProcessed
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+
+    def delete(self):
+        pass
+

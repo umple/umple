@@ -1,0 +1,107 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+import os
+import pickle
+
+class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self, aStudentsPriority):
+        self._students = None
+        self._studentsPriority = None
+        self._studentsPriority = aStudentsPriority
+        self._students = []
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def setStudentsPriority(self, aStudentsPriority):
+        wasSet = False
+        self._studentsPriority = aStudentsPriority
+        wasSet = True
+        return wasSet
+
+    def getStudentsPriority(self):
+        return self._studentsPriority
+
+    # Code from template association_GetMany 
+    def getStudent(self, index):
+        aStudent = self._students[index]
+        return aStudent
+
+    def getStudents(self):
+        newStudents = tuple(self._students)
+        return newStudents
+
+    def numberOfStudents(self):
+        number = len(self._students)
+        return number
+
+    def hasStudents(self):
+        has = len(self._students) > 0
+        return has
+
+    def indexOfStudent(self, aStudent):
+        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
+        return index
+
+    # Code from template association_MinimumNumberOfMethod 
+    @staticmethod
+    def minimumNumberOfStudents():
+        return 0
+
+    # Code from template association_AddManyToManyMethod 
+    def addStudent(self, aStudent):
+        wasAdded = False
+        if (aStudent) in self._students :
+            return False
+        self._students.append(aStudent)
+        if aStudent.indexOfMentor(self) != -1 :
+            wasAdded = True
+        else :
+            wasAdded = aStudent.addMentor(self)
+            if not wasAdded :
+                self._students.remove(aStudent)
+        return wasAdded
+
+    # Code from template association_RemoveMany 
+    def removeStudent(self, aStudent):
+        wasRemoved = False
+        if not (aStudent) in self._students :
+            return wasRemoved
+        oldIndex = (-1 if not aStudent in self._students else self._students.index(aStudent))
+        self._students.remove(oldIndex)
+        if aStudent.indexOfMentor(self) == -1 :
+            wasRemoved = True
+        else :
+            wasRemoved = aStudent.removeMentor(self)
+            if not wasRemoved :
+                self._students.insert(oldIndex, aStudent)
+        return wasRemoved
+
+    # Code from template association_sorted_serializable_readObject 
+    def readObject(self, input):
+        self.__dict__.clear()
+        self.__dict__.update(pickle.load(input).__dict__)
+        self._studentsPriority = None
+
+    def delete(self):
+        copyOfStudents = self._students.copy()
+        self._students.clear()
+        for aStudent in copyOfStudents:
+            aStudent.removeMentor(self)
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "]" + str(os.linesep) + "  " + "studentsPriority" + "=" + (((self.getStudentsPriority().__str__().replaceAll("  ", "    ")) if not self.getStudentsPriority() == self else "this") if not (self.getStudentsPriority() is None) else "null")
+
+    def __getstate__(self):
+        state = dict(self.__dict__)
+        state.pop("_studentsPriority")
+        return state
+

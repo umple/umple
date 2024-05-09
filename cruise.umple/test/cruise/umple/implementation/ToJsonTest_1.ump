@@ -1,0 +1,10 @@
+generate Java --suboption "genJson";
+namespace example;
+
+class Person{
+  String name;
+  1 -- * Address;
+}
+class Address{
+  String street;
+}
