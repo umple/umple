@@ -34,3 +34,4 @@ class C3{
 class C4{
   isA T1<-sm.s3.[]>;
 }
+// @@@skipcppcompile

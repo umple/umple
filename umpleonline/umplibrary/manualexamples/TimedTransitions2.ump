@@ -10,7 +10,7 @@ class X
     a 
     {
       entry / { System.out.println("entering a"); }
-      do 
+      do
       {
         while (count > 0) 
         {
@@ -27,10 +27,11 @@ class X
     }
   }
 
-  public static void main(String [] args) 
+  public static void main(String [] args)
   {
     X x = new X();
   }
+
 }
 //$?[End_of_model]$?
 // @@@skipcppcompile - Has Java code

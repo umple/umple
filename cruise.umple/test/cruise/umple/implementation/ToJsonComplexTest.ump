@@ -1,0 +1,50 @@
+generate Java --suboption "genJson";
+namespace example;
+
+class University {
+  singleton;
+  lazy name;
+  lazy Float tuition;
+  1 -- * Course;
+}
+
+class Person {
+  Integer id;
+  name;
+}
+
+class Student {
+  isA Person;
+  Float tuitionPaid;
+}
+
+class PartTimeStudent {
+  isA Student;
+  Boolean isExemptFromFees;
+}
+
+class Employee {
+  isA Person;
+  Double salary;
+  lazy job;
+  * -- * CourseSection teaches;
+}
+
+association {
+  * Student -- 1 University;
+}
+
+class Course {
+  title;
+}
+
+class CourseSection {
+  code;
+  * -- 1 Course;
+}
+
+associationClass Registration {
+  * Student;
+  * CourseSection;
+  lazy grade;
+}

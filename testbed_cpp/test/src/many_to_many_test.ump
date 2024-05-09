@@ -1,0 +1,11 @@
+class Author {
+  name;
+}
+
+class Book {
+  title;
+}
+
+association {
+  * Author -- * Book;
+}

@@ -1,0 +1,604 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
+
+package example;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.sql.*;
+import java.lang.reflect.Constructor;
+
+// line 37 "../ToJsonComplexTest.ump"
+public class Course
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Course Attributes
+  private String title;
+
+  //Course Associations
+  private University university;
+  private List<CourseSection> courseSections;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Course(String aTitle, University aUniversity)
+  {
+    title = aTitle;
+    boolean didAddUniversity = setUniversity(aUniversity);
+    if (!didAddUniversity)
+    {
+      throw new RuntimeException("Unable to create course due to university. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    courseSections = new ArrayList<CourseSection>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setTitle(String aTitle)
+  {
+    boolean wasSet = false;
+    title = aTitle;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getTitle()
+  {
+    return title;
+  }
+  /* Code from template association_GetOne */
+  public University getUniversity()
+  {
+    return university;
+  }
+  /* Code from template association_GetMany */
+  public CourseSection getCourseSection(int index)
+  {
+    CourseSection aCourseSection = courseSections.get(index);
+    return aCourseSection;
+  }
+
+  public List<CourseSection> getCourseSections()
+  {
+    List<CourseSection> newCourseSections = Collections.unmodifiableList(courseSections);
+    return newCourseSections;
+  }
+
+  public int numberOfCourseSections()
+  {
+    int number = courseSections.size();
+    return number;
+  }
+
+  public boolean hasCourseSections()
+  {
+    boolean has = courseSections.size() > 0;
+    return has;
+  }
+
+  public int indexOfCourseSection(CourseSection aCourseSection)
+  {
+    int index = courseSections.indexOf(aCourseSection);
+    return index;
+  }
+  /* Code from template association_SetOneToMany */
+  public boolean setUniversity(University aUniversity)
+  {
+    boolean wasSet = false;
+    if (aUniversity == null)
+    {
+      return wasSet;
+    }
+
+    University existingUniversity = university;
+    university = aUniversity;
+    if (existingUniversity != null && !existingUniversity.equals(aUniversity))
+    {
+      existingUniversity.removeCourse(this);
+    }
+    university.addCourse(this);
+    wasSet = true;
+    return wasSet;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  public static int minimumNumberOfCourseSections()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToOne */
+  public CourseSection addCourseSection(String aCode)
+  {
+    return new CourseSection(aCode, this);
+  }
+
+  public boolean addCourseSection(CourseSection aCourseSection)
+  {
+    boolean wasAdded = false;
+    if (courseSections.contains(aCourseSection)) { return false; }
+    Course existingCourse = aCourseSection.getCourse();
+    boolean isNewCourse = existingCourse != null && !this.equals(existingCourse);
+    if (isNewCourse)
+    {
+      aCourseSection.setCourse(this);
+    }
+    else
+    {
+      courseSections.add(aCourseSection);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeCourseSection(CourseSection aCourseSection)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aCourseSection, as it must always have a course
+    if (!this.equals(aCourseSection.getCourse()))
+    {
+      courseSections.remove(aCourseSection);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  public boolean addCourseSectionAt(CourseSection aCourseSection, int index)
+  {  
+    boolean wasAdded = false;
+    if(addCourseSection(aCourseSection))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCourseSections()) { index = numberOfCourseSections() - 1; }
+      courseSections.remove(aCourseSection);
+      courseSections.add(index, aCourseSection);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveCourseSectionAt(CourseSection aCourseSection, int index)
+  {
+    boolean wasAdded = false;
+    if(courseSections.contains(aCourseSection))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCourseSections()) { index = numberOfCourseSections() - 1; }
+      courseSections.remove(aCourseSection);
+      courseSections.add(index, aCourseSection);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addCourseSectionAt(aCourseSection, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    University placeholderUniversity = university;
+    this.university = null;
+    if(placeholderUniversity != null)
+    {
+      placeholderUniversity.removeCourse(this);
+    }
+    for(int i=courseSections.size(); i > 0; i--)
+    {
+      CourseSection aCourseSection = courseSections.get(i - 1);
+      aCourseSection.delete();
+    }
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "title" + ":" + getTitle()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "university = "+(getUniversity()!=null?Integer.toHexString(System.identityHashCode(getUniversity())):"null");
+  }
+       
+  /*
+  * Generate Json for this object and connected objects visited objects to enable avoidance of infinite loops
+  *
+  * @return a string in Json  format of this object
+  */ 
+  public String toJson()
+  {
+    HashSet<Object> visitedList = new HashSet<Object>();
+    StringBuilder toJsonOutput = new StringBuilder();
+    toJsonOutput.append("{\n");
+    this.toJsonHelper(toJsonOutput, visitedList,1,true);
+    toJsonOutput.append("\n}");
+    return(toJsonOutput.toString());
+  }
+   
+  /*
+  * Helper function to generate Json for this object and connected objects visited objects to enable avoidance of infinite loops
+  *
+  * @param toJsonOutput  Output is aded to this as the network of objects is traversed
+  * @param visitedList  Every concrete object visited is added so we don't re-outpu
+  * @param nestLevel    As we output deeper objects, indent them more
+  * @param atConcreteClass false when we are recursing to a superclass
+  *     so we get the superclass data
+  * @return whether or not anything was output (so we can tell whether we need to output a comma)
+  */ 
+  public boolean toJsonHelper(StringBuilder toJsonOutput, HashSet<Object> visitedList, int nestLevel, boolean atConcreteClass){
+      
+      String indent = "  ".repeat(nestLevel);
+      boolean alreadyVisited = false;
+      boolean haveOutputItem = false;
+      
+    if(atConcreteClass) {
+      // This will not be true in a super call; output header
+      toJsonOutput.append(indent+"\""+this.toString().split("@")[0]+ "\" : {\n"+indent+ "  \"umpleObjectID\" : \""+System.identityHashCode(this)+"\"");
+      // Check if we have already visited this object. If so we will not output details
+      alreadyVisited = visitedList.contains(this);
+      if(!alreadyVisited) {
+        toJsonOutput.append(",\n");
+        visitedList.add(this);
+      }
+    }
+    
+    // There is no superclass of this class
+    if(alreadyVisited) {
+      toJsonOutput.append("\n");
+    }
+    else {
+      // Check if this class has a superclass. If it does, we make a call to output superclass content 
+      // This will keep calling super so the topmost attributes and associations appear first
+      // When an object has not already been visited, output its details
+      if(haveOutputItem){
+      //toJsonOutput.append(",\n");  
+      }
+        
+          if(haveOutputItem){
+            toJsonOutput.append(",\n");
+          }
+          toJsonOutput.append(indent);
+          toJsonOutput.append("  \"");
+          toJsonOutput.append("title");
+          toJsonOutput.append("\" : \"");
+          String primValue_0=""+getTitle()+"";
+          toJsonOutput.append(primValue_0.replace("\\","\\\\").replace("\"","\\\""));
+          toJsonOutput.append("\"");
+          haveOutputItem=true;
+      //haveOutputItem = false;
+      //haveOutputItem = false;
+         if(haveOutputItem) {
+           toJsonOutput.append(",\n");
+         }
+          toJsonOutput.append(indent);
+            toJsonOutput.append("\n"+indent);
+            toJsonOutput.append("  \"");
+            toJsonOutput.append("university");
+            toJsonOutput.append("\"");
+            toJsonOutput.append(" : ");
+            toJsonOutput.append("\n");
+            toJsonOutput.append(indent+"  {");
+            toJsonOutput.append("\n");University anotherItem_0 = getUniversity();
+            anotherItem_0.toJsonHelper(toJsonOutput, visitedList, nestLevel+2, true);
+            toJsonOutput.append("\n");
+            toJsonOutput.append(indent+"  }");
+            haveOutputItem=true;
+         if(haveOutputItem) {
+           toJsonOutput.append(",\n");
+         }
+          toJsonOutput.append(indent);
+            toJsonOutput.append("  \"");
+            toJsonOutput.append("courseSections");
+            toJsonOutput.append("\"");
+            toJsonOutput.append(" : [");
+            toJsonOutput.append("\n");
+            haveOutputItem = false;
+            try{
+              for (CourseSection anItem_1 :getCourseSections()){
+              if(haveOutputItem) {
+                toJsonOutput.append(",\n");
+              }
+              toJsonOutput.append(indent+"  {");
+              toJsonOutput.append("\n");
+              anItem_1.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
+              toJsonOutput.append("\n");
+              toJsonOutput.append(indent+"  }");
+              haveOutputItem=true;
+            }
+            }catch (NullPointerException e){
+            }
+            toJsonOutput.append("\n");    
+            toJsonOutput.append(indent+"  ]");
+            haveOutputItem=true;
+              
+          toJsonOutput.append(indent+"  \n");
+    }
+    // Finalize the output of the concrete class
+    if(atConcreteClass) {
+      if(!alreadyVisited) {
+        toJsonOutput.append("\n");
+      }
+      toJsonOutput.append(indent+"}");
+    }
+    haveOutputItem = true;
+    return haveOutputItem;
+  }
+
+  
+      
+  /*
+  * Deserialize Json string to instantiate Objects from top-level class
+  *
+  * @param umpleObjectIDMap<String, Object> mapping parsed objectID (from Json string) with newly instantiated object's objectID
+  * 
+  * @param String aJsonString is the string in json format that is to be processed and turned into an object
+  *
+  * @return newly instantiated Object 
+  */  
+
+  public static Course fromJson(String aJsonString){
+    // process the input jsonString so that it can further processed using regex
+    aJsonString=aJsonString.replace("\n","").replace(" ","");   
+    // a map to store the umpleObjectID present in jsonString
+    Map<String, Object> umpleObjectIDMap=new HashMap<>();
+    
+    // instantiate a new object
+Course anObject = new Course(aJsonString, umpleObjectIDMap);
+    return anObject;
+  }
+   
+  /*
+  * A new constructor specifically implemented if -s genJson is specified
+  * 
+  * @param String aJsonString is the string in json format that is to be processed and turned into an object
+  *
+  * @param umpleObjectIDMap<String, Integer> mapping parsed objectID (from Json string) with newly instantiated object's objectID
+  */ 
+  @SuppressWarnings("unchecked")
+  public Course(String aJsonString, Map<String, Object> umpleObjectIDMap){
+    // Initialize a HashMap to store the parsed result
+    // key is the attribute name present in the jsonString
+    // value is the attribute value present in the jsonString
+      boolean visitedSuperClass=false;
+    
+    HashMap<String,String> parsedResult = new HashMap<String,String>();
+    parsedResult = fromJsonParser(aJsonString);
+    if(!parsedResult.isEmpty()){
+    boolean classExist;
+    boolean classChildExist;
+    String parsedClassName=parsedResult.get("className");
+    String childName=this.getClass().getSimpleName();
+    classExist="Course".equals(parsedClassName);
+    classChildExist=childName.equals(parsedClassName);
+    // if top-level class does not exist, throw exception
+    if(!classExist&&!classChildExist){
+      throw new IllegalArgumentException("Top-level class \""+parsedClassName+"\" does not exist, please check the input json string");
+    }
+    String umpleObjectId=parsedResult.get("umpleObjectID");
+    // Check if the object has already been visited and created
+    //if((umpleObjectIDMap.get(umpleObjectId)==null)||visitedSuperClass){
+      try{
+      
+    visitedSuperClass=false;
+    // map the old objectID (in jsonString) with the newly created object's hashCode in umpleObjectIDMap 
+    umpleObjectIDMap.put(umpleObjectId,this);
+    
+    String jsonKey="";
+       jsonKey="title";
+       //more types should be considered here
+        this.title=parsedResult.get(jsonKey);
+    
+    // below for-loop check the association class of the top level class
+       
+       jsonKey="university";
+       String newJsonString_0=parsedResult.get(jsonKey);
+       String newIDRegex_0="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
+       String newUmpleID_0=fromJsonParserHelper(newJsonString_0,newIDRegex_0);
+       
+       //Multiple associations
+          
+          if(!umpleObjectIDMap.containsKey(newUmpleID_0)){
+            String newClassNameOne_0=fromJsonParserClassName(newJsonString_0);
+            Class clazzOne_0=Class.forName(newClassNameOne_0);
+            Constructor constructorOne_0=clazzOne_0.getConstructor(String.class, Map.class);
+            Object objectNewOne_0=constructorOne_0.newInstance(newJsonString_0,umpleObjectIDMap);
+University oneAssoObj_0=(University)objectNewOne_0;
+university=oneAssoObj_0;
+          }
+          else{
+university=(University)umpleObjectIDMap.get(newUmpleID_0);
+          }
+
+       
+       jsonKey="courseSections";
+       String newJsonString_1=parsedResult.get(jsonKey);
+       String newIDRegex_1="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
+       String newUmpleID_1=fromJsonParserHelper(newJsonString_1,newIDRegex_1);
+       
+       //Multiple associations
+           List<String> multiAssoObjList_1 = new ArrayList<String>();
+           multiAssoObjList_1=fromJsonParserList(newJsonString_1);
+courseSections=new ArrayList<CourseSection>();
+           for(String obj: multiAssoObjList_1){
+             newUmpleID_1=fromJsonParserHelper(obj,newIDRegex_1);
+             
+             String newClassName_1=fromJsonParserClassName(obj);
+           if(!umpleObjectIDMap.containsKey(newUmpleID_1)){
+           
+            boolean subClassFound=false;
+            Class clazz_1=Class.forName(newClassName_1);
+            Constructor constructor_1=clazz_1.getConstructor(String.class, Map.class);
+            Object objectNew_1=constructor_1.newInstance(obj,umpleObjectIDMap);
+courseSections.add((CourseSection)objectNew_1);
+            }
+           else{
+courseSections.add((CourseSection)umpleObjectIDMap.get(newUmpleID_1));
+           }
+         }
+
+
+    
+    }catch(Exception e){
+    }
+
+    //}
+  }
+  } 
+  /*
+  * A json parser to parse the input jsonString, if -s genJson is specified
+  * 
+  * @param String aJsonString is the string in json format that is to be processed and turned into an object
+  *
+  * @ return HashMap<String,String> that stores paresed result, key is the attribute(or associations) of an object, value is the attribute value or association string
+  */ 
+  public static HashMap<String,String> fromJsonParser(String jsonString){
+    
+    HashMap<String,String> parsedResultMap = new HashMap<String,String>();
+    try{
+      //Below (String, Pattern, Matcher) are the regex strings and their patterns and matcher used to process a jsonString
+    
+        // topLevelString is the regex representing the topLevel class name
+        String topLevelString = "\\{\\\"[A-Z]\\w*\\\":";
+        Pattern topLevelPattern = Pattern.compile(topLevelString);
+        Matcher topLevelMatcher = topLevelPattern.matcher(jsonString);
+        String quotes="\\\"";
+        String colon="\\:";
+        String colonSquareBracket="\\:\\[";
+        
+        if(topLevelMatcher.find()){
+            //actual string that represent the topLevel className
+            String topLevelStringFound=topLevelMatcher.group(0);
+            String className=topLevelStringFound.split(quotes)[1];
+            parsedResultMap.put("className", className);
+            jsonString=jsonString.split(topLevelString,2)[1];
+            
+            //objIDString is the regex representing umpleObjectID that could be found in jsonString
+            String objIDString = "\"umpleObjectID\"\\:\"[0-9]*\",";
+            Pattern objIDPattern = Pattern.compile(objIDString);
+            Matcher objIDMatcher = objIDPattern.matcher(jsonString);
+            if(objIDMatcher.find()){
+              String objIDFound=objIDMatcher.group(0);
+              parsedResultMap.put("umpleObjectID", objIDFound.split(colon)[1].split(quotes)[1]);
+              jsonString=jsonString.replaceFirst(objIDFound,"");
+            }
+            String timeString="\\\"\\w*\\\"\\:\\\"\\d{2}:\\d{2}\\:\\d{2}\\\"";
+            Pattern timeStringPattern=Pattern.compile(timeString);
+            Matcher timeStringPatternMatcher=timeStringPattern.matcher(jsonString);
+            if(timeStringPatternMatcher.find()){
+              String timeStringFound=timeStringPatternMatcher.group(0);
+              parsedResultMap.put(timeStringFound.split(colon,2)[0].split(quotes)[1], timeStringFound.split(colon,2)[1].split(quotes)[1]);
+          
+            }
+            // pairString is the regex for an object's attribute and attribute value, the string parsed will be in key-value formate
+        String pairString = "(\\\"(?!umpleObjectID)[^\\\"]+)\\\":\\\"((?:\\\\\\\"|[^\\\"])*)";
+        Pattern pairPattern=Pattern.compile(pairString);
+        Matcher pairMatcher=pairPattern.matcher(jsonString);
+        String associationString="(?=\\\"\\w*\\\"\\:\\[\\{)(?:(?=.*?\\[\\{(?!.*?\\1)(.*\\}\\](?!.*\\2).*))(?=.*?\\}\\](?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\[]*(?=\\2$)";
+        Pattern associationPattern=Pattern.compile(associationString);
+        String newObjJsonString="(?=\\,\\\"\\w*\\\"\\:\\{)(?:(?=.*?\\{\\\"(?!.*?\\1)(.*\\}(?!.*\\2).*))(?=.*?\\}(?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\{]*(?=\\2$)";
+        Pattern newObjJsonPattern=Pattern.compile(newObjJsonString);
+        String quoteColonQuote="\\\"\\:\\\"";
+        //Keep on parsing the attribute's key-value pair, 
+        //until a List (multi-associations) pattern or a newObject parttern (single association) is found
+        while(pairMatcher.find()){
+               String pairStringFound=pairMatcher.group(0);
+              if(parsedResultMap.get(pairStringFound.split(colon)[0].split(quotes)[1])==null){
+                String keyPair=pairStringFound.split(colon)[0].split(quotes)[1];
+                String valuePair=pairStringFound.split(quoteColonQuote,2)[1];
+                keyPair=keyPair.replace("\\\\","\\").replace("\\\"","\"");
+                valuePair=valuePair.replace("\\\\","\\").replace("\\\"","\"");
+                parsedResultMap.put(keyPair,valuePair);
+                jsonString=jsonString.replaceFirst(pairString, "");
+              }
+                int lastIndex = 0;
+                while (lastIndex<jsonString.length()){
+                  String remainingJson=jsonString.substring(lastIndex);
+                  Matcher associationMatcher=associationPattern.matcher(jsonString);
+                  Matcher newObjJsonMatcher=newObjJsonPattern.matcher(jsonString);
+                  
+                  boolean assoFound=associationMatcher.find();
+                  boolean newObjFound=newObjJsonMatcher.find();
+                  
+                  if (assoFound&&(!newObjFound||associationMatcher.start()<newObjJsonMatcher.start())){
+                    String assoStringFound=associationMatcher.group(0);
+                    String associationName=assoStringFound.split(colon,2)[0].split(quotes)[1];;
+                    String associationItems=assoStringFound.split(colonSquareBracket,2)[1];
+                    parsedResultMap.put(associationName, associationItems);
+                    jsonString=jsonString.replaceFirst(associationString, "");
+                  }
+                  else if (newObjFound){
+                    String newObjJsonFound=newObjJsonMatcher.group(0);
+                    String newObjName=newObjJsonFound.split(colon,2)[0].split(quotes)[1];
+                    String newObjItems=newObjJsonFound.split(colon,2)[1];
+                    parsedResultMap.put(newObjName, newObjItems);
+                    jsonString=jsonString.replaceFirst(newObjJsonString, "");
+                  }else{
+                    break;
+                  }
+                }
+        }
+        }
+        return parsedResultMap;
+    }catch(NullPointerException e){
+      return parsedResultMap;
+    }
+  }
+   
+  public static String fromJsonParserHelper(String jsonString, String regexString){
+    String umpleID = "";
+    String quo="\\\"";
+    try{
+      Pattern umpleIDPattern=Pattern.compile(regexString);
+      Matcher umpleIDMatcher=umpleIDPattern.matcher(jsonString);
+      if(umpleIDMatcher.find()){
+        String umpleIDStringFound=umpleIDMatcher.group(0);
+        String idString="\\\"\\d*\\\"";
+        Pattern idPattern=Pattern.compile(idString);
+        Matcher idMatcher=idPattern.matcher(umpleIDStringFound);
+        if(idMatcher.find()){
+          umpleID=idMatcher.group(0).split(quo)[1];
+        }
+      }
+      return umpleID;
+    } catch(NullPointerException e){
+      return umpleID;
+    }
+  }
+   
+  public static List<String> fromJsonParserList(String objListString){
+    List<String> objList=new ArrayList<String>();
+    try{
+      String objString="(?:(?=.*?\\{(?!.*?\\1)(.*\\}(?!.*\\2).*))(?=.*?\\}(?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\{]*(?=\\2$)";
+      Pattern objStringPattern=Pattern.compile(objString);
+      Matcher objStringMatcher=objStringPattern.matcher(objListString);
+      while(objStringMatcher.find()){
+        objList.add(objStringMatcher.group(0));
+      }
+      return objList;
+   }catch(NullPointerException e){
+     return objList;
+   }
+  }
+   
+  public static String fromJsonParserClassName(String objNameString){
+    String nextName="";
+    String quotes="\\\"";
+    try{
+      String nextNameString="\\{\\\"[A-Z]\\w*\\\":";
+      Pattern nextNamePattern=Pattern.compile(nextNameString);
+      Matcher nextNameMatcher=nextNamePattern.matcher(objNameString);
+      if(nextNameMatcher.find()){
+        nextName=nextNameMatcher.group(0).split(quotes)[1];
+       
+      }
+      return nextName;
+   }catch(NullPointerException e){
+     return nextName;
+   }
+  }
+  
+}

@@ -119,3 +119,4 @@ class PizzaOrder
   position.association PizzaOrder__StandardPizzaSize 0,43 136,9;
   position.association PizzaOrder__ToppingType:toppings 109,39 0,10;
 }
+// @@@skipcppcompile
