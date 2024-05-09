@@ -9,3 +9,4 @@ class Student
     if ( DEBUG) { System.out.println("accessing the name"); }
   }
 }
+// @@@skipcppcompile

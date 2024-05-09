@@ -4,3 +4,4 @@ class Rectangle {
   Double area =
     Java {height*width} Php {$height*$width}
 }
+// @@@skipcppcompile

@@ -3,4 +3,4 @@ class X {
   na$me;
 }
 //$?[End_of_model]$?
-// @@@skipcompile
+// @@@skipcppcompile

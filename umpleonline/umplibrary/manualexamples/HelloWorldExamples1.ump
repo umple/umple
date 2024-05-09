@@ -9,12 +9,15 @@
  * can do with Umple
  */
 class HelloWorld {
-  public static void main(String [ ] args) {
+  public static void main(String [ ] args) Java {
     System.out.println("Hello World");
   }
+
+  public static void main(String [ ] args) Python {
+    print("Hello World")
+  }  
 }
 //$?[End_of_model]$?
 // @@@skipcppcompile - Contains Java Code
 // @@@skipphpcompile - Contains Java Code
 // @@@skiprubycompile - Contains Java Code
-// @@@skippythoncompile - Contains Java Code

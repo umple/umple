@@ -5,3 +5,4 @@ class Wheel {}
 association {
     0..1 Vehicle v -- 2..4 Wheel w;
 }
+// @@@skipcppcompile
