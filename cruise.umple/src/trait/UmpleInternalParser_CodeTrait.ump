@@ -87,10 +87,15 @@ class UmpleInternalParser
       regularCommentCountEnd++;
     }
 
-    for (Requirement r : lastRequirements)
+    /*for (Requirement r : lastRequirements)
     {
       aTrait.addRequirement(r);
     }
+    */
+    for (ReqImplementation ri : lastRequirementsImpl){ // change to ReqImpl
+      aTrait.addReqImplementation(ri);
+    }
+    
 
     // Add special position comment at the end if @outputumplesource had been 
     // detected earlier in a comment
@@ -212,7 +217,8 @@ class UmpleInternalParser
     boolean shouldConsumeComment = lastComments.size() > 0;
 
     // Only need to clear requirements if there actually was requirements.
-    boolean shouldConsumeRequirement = lastRequirements.size() > 0;
+    //boolean shouldConsumeRequirement = lastRequirements.size() > 0;
+    boolean shouldConsumeRequirementImpl = lastRequirementsImpl.size() > 0;
     
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
     if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
@@ -250,7 +256,8 @@ class UmpleInternalParser
     else if (token.is("reqImplementation"))
     {
       analyzeImplementReq(token);
-      shouldConsumeRequirement = isReqAddedToLast(token);
+      //shouldConsumeRequirement = isReqAddedToLast(token);
+      shouldConsumeRequirementImpl = isReqAddedToLast(token);
     }
     // TODO Under development
     
@@ -316,9 +323,14 @@ class UmpleInternalParser
     {
       lastComments.clear();
     }
-    if (shouldConsumeRequirement)
+   /* if (shouldConsumeRequirement)// changed to requirement impl
     {
       lastRequirements.clear();
+      //lastRequirementsImpl.clear();
+    }*/
+    if (shouldConsumeRequirementImpl)// changed to requirement impl
+    {
+      lastRequirementsImpl.clear();
     }
   }
   
@@ -504,10 +516,16 @@ class UmpleInternalParser
     {
       attribute.addComment(c);
     }
-    for (Requirement r : lastRequirements)
+   /* for (Requirement r : lastRequirements)
     {
       attribute.addRequirement(r);
     }
+    */
+    for (ReqImplementation ri : lastRequirementsImpl){ // change to ReqImpl
+      attribute.addReqImplementation(ri);
+    }
+    
+
     
     // set the last attribute made to be attribute, clear lastassoc
     lastattr = attribute;
@@ -595,11 +613,17 @@ mixset Association {
     {
       yourAs.addComment(c);
     }
-
+    /*
     for (Requirement r : lastRequirements)
     {
       yourAs.addRequirement(r);
     }
+    */
+    
+    for (ReqImplementation ri : lastRequirementsImpl){ // change to ReqImpl
+      yourAs.addReqImplementation(ri);
+    }
+    
     
     // set last association made to be yourAs. clear lastattr.
     lastassoc = yourAs;

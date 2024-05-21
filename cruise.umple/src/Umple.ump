@@ -50,7 +50,6 @@ class UmpleModel
   // These are set to true when various @@@skip directives are found in comments
   Boolean skipcompile=false;
   Boolean skipjavacompile=false;
-  Boolean skippythoncompile=false;
   Boolean skipcppcompile=false;
   Boolean skiprubycompile=false;
   Boolean skipphpcompile=false;
@@ -126,14 +125,6 @@ class UmpleModel
 
   // The Umple interfaces contained within the model.
   1 -> * UmpleInterface;
-
-  // Suboptions that might be added by the suboption command;
-  lazy String[] availableSuboptions;
-  before addGenerate(GenerateTarget) {
-    for (String so : availableSuboptions) {
-      aGenerate.addSuboption(so);
-    }
-  }
 
 }
 
@@ -241,6 +232,8 @@ class Method
 
   //The requirement ids implemented within the method.
   1 -> * Requirement;
+  
+  1 -> * ReqImplementation;
   
   // Specifies, for fAutoAPI methods, if the method was generated
   Boolean wasGenerated = false;
@@ -669,6 +662,8 @@ class UmpleInterface
 
   1 -> * Requirement;
   
+  1 -> * ReqImplementation;
+  
   0..1 -- * UmpleTestCase;
 
   before setPackageName { if (aPackageName == null) { return false; } }
@@ -769,6 +764,8 @@ class UmpleClass
   1 -> * Comment;
 
   1 -> * Requirement;
+  
+  1 -> * ReqImplementation;
 
   //This is used to assign inheritance parameters.
   1 -> * GeneralTPApplied;
@@ -846,6 +843,8 @@ class UmpleTrait {
 
   // The requirement associated with the Umple Trait (such as the Javadoc above it).
   1 -> * Requirement;
+  
+  1 -> * ReqImplementation;
 
   //The template parameters which are specified when traits are defined.
   1 -> * GeneralTemplateParameter;
@@ -1054,6 +1053,7 @@ class Attribute
   1 -> * Comment;
 
   1 -> * Requirement;
+  1 -> * ReqImplementation;
 
   // In case this attribute needs to have error handling preformed
   1 -> 0..1 Position;
@@ -1176,6 +1176,7 @@ class AssociationVariable
   1 -> * Comment;
 
   1 -> * Requirement;
+  1 -> * ReqImplementation;
 
   before setUmpleClass { if ((aUmpleClass != null) && !aUmpleClass.immutabilityAssociationRulesSatisfied(this, aUmpleClass.isImmutable())) { return false; } }
 
@@ -1362,12 +1363,9 @@ class GenerateTarget
   Boolean override = false;
   Boolean overrideAll = false;
   lazy String[] suboptions;
-  
+
   before getPath{if(path == null) path = ""; }
   key{language}
-  public Boolean tarHasSubOption(String subOption){
-  	return suboptions.contains(subOption);
-  }
 }
 
 //added for issue 1315 warning 31

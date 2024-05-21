@@ -39,14 +39,12 @@ class UmpleInternalParser
   internal String[] parsedUmpleFiles;
   internal Boolean shouldProcessAgain = false;
   internal Boolean shouldProcessClassAgain = false;
-  //private Requirement requirements;// added - to be able to access requirments in UmpleInternalParser 
 
   after constructor { init(); }
 
   public UmpleInternalParser()
   {
     this("UmpleInternalParser", new UmpleModel(null), new RuleBasedParser());
-    //this.requirements = new Requirement("","",""); //added
   }
 
   public UmpleInternalParser(UmpleModel aModel)
@@ -229,15 +227,6 @@ class UmpleInternalParser
     analyzeEnumerationToken(t, analysisStep);
     mixset Class {
       analyzeClassToken(t,analysisStep);
-      //System.out.println("The analysis step in AT-229 is: "+analysisStep);
- 
- // DEBUG ... this may not work     
-      // Analyse requirements at the top level because analyse class token will only occur at pass 1
-      //if (t.is("requirement") && analysisStep == 1){
-        //System.out.println("It reaches AT-233");
-        //System.out.println("The analysis step in AT-234 is: "+analysisStep);
-        //analyzeRequirement(t);
-      //}
     }
     mixset Trait {
       analyzeTraitToken(t,analysisStep);
@@ -334,8 +323,6 @@ class UmpleInternalParser
   
   private void analyzeAllRequirements()
   {
-    // model.getReqImplementations();
-     //model.getAllRequirements();
      // At this point we take the implementations and map the requirements to see if any are missing
      for (ReqImplementation reqImpl : model.getReqImplementations())//Loop through requirement implementations ID
      {
@@ -343,29 +330,26 @@ class UmpleInternalParser
        Token reqImplToken = reqImpl.getReqToken();
        Requirement foundRequirement = model.getAllRequirements().get(reqImplID); // found a matching req for implementation
        System.out.println("AAR 345: found requirement to check if it is null:"+foundRequirement);
-       //foundRequirement.getReqToken();
        if(foundRequirement == null) // null then we need to raise an error 
        {
          // There is no requirement here so we use the implementation to get the reqToken
          // There is only one reqToken for an implementation
          System.out.println("There is an error!");
-         //for (Token reqToken : reqImpl.getReqToken())
-         //{
-            setFailedPosition(reqImplToken.getPosition(), 401,reqImplID); // Using the reqTokens to find the lines of error
-         //}
+         // Using the reqTokens to find the lines of error
+         setFailedPosition(reqImplToken.getPosition(), 401,reqImplID); 
+       
        }
        else
        {
          System.out.println("There is no error!");
          // There is a need to make a connection
-         foundRequirement.addReqImplementation(reqImpl);// Make the connection
+         foundRequirement.addReqImplementation(reqImpl);
          
        }
-       //for(String reqID : model.getAllRequirements().keySet())//Loop through requirement ID
-       //{
        System.out.println("Model found requirement:"+foundRequirement);
-       lastRequirements.add(foundRequirement);// Adding found requirement to the lastRequirement set
-       System.out.println("AAR: 368 -Last Requirements"+lastRequirements);
+       // Adding found requirement to the lastRequirement set
+       //lastRequirements.add(foundRequirement);
+       //System.out.println("AAR: 368 -Last Requirements"+lastRequirements);
        
      }
   

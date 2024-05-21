@@ -34,7 +34,10 @@ class UmpleInternalParser
   // List of comments populated by the parser to be added to the next class, attribute, association, method, etc.
   internal Comment[] lastComments;
 
-  internal Requirement[] lastRequirements;
+  //internal Requirement[] lastRequirements;
+  
+  internal ReqImplementation[] lastRequirementsImpl;
+  
   
   // last attribute made.
   internal Attribute lastattr = null;
@@ -67,13 +70,14 @@ class UmpleInternalParser
 
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
-    boolean shouldConsumeRequirement = lastRequirements.size() > 0;
+    //boolean shouldConsumeRequirement = lastRequirements.size() > 0;
+    boolean shouldConsumeRequirementImpl = lastRequirementsImpl.size() > 0;
 
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
     if (t.isStatic("//") || t.isStatic("/*") || t.isStatic("*/"))
     {
       shouldConsumeComment = false;
-      shouldConsumeRequirement = false;
+      //shouldConsumeRequirement = false;
     }
     else if (t.is("useStatement") )
     {
@@ -137,27 +141,32 @@ class UmpleInternalParser
     {
       analyzeComment(t, false);
       shouldConsumeComment = addToLastAttributeOrAssociation(t);
-      shouldConsumeRequirement = shouldConsumeComment;
+      //shouldConsumeRequirement = shouldConsumeComment;
+      shouldConsumeRequirementImpl = shouldConsumeComment;
     }
     else if (t.is("annotationComment"))
     {
       analyzeComment(t, true);
       shouldConsumeComment = addToLastAttributeOrAssociation(t);
-      shouldConsumeRequirement = shouldConsumeComment;
+      //shouldConsumeRequirement = shouldConsumeComment;
+      shouldConsumeRequirementImpl = shouldConsumeComment;
     }     
     else if (t.is("multilineComment"))
     {
       analyzeMultilineComment(t);
       shouldConsumeComment = false;
-      shouldConsumeRequirement = false;
+      //shouldConsumeRequirement = false;
+      shouldConsumeRequirementImpl = false;
     }
     else if (t.is("requirement")){
       analyzeRequirement(t);
     }
     else if (t.is("reqImplementation")){
       analyzeImplementReq(t);
-      shouldConsumeRequirement = isReqAddedToLast(t);
-      shouldConsumeComment = shouldConsumeRequirement;   
+      //shouldConsumeRequirement = isReqAddedToLast(t);
+      //shouldConsumeComment = shouldConsumeRequirement;   
+      shouldConsumeRequirementImpl = isReqAddedToLast(t);
+      shouldConsumeComment = shouldConsumeRequirementImpl;   
     }
     else if (t.is("classDefinition"))
     {
@@ -196,16 +205,20 @@ class UmpleInternalParser
     {
       lastComments.clear();
     }
-    if (shouldConsumeRequirement)
+    /*if (shouldConsumeRequirement)// change to shouldConsumeRequirementImpl
     {
       lastRequirements.clear();
+    }*/
+    if (shouldConsumeRequirementImpl)// change to shouldConsumeRequirementImpl
+    {
+      lastRequirementsImpl.clear();
     }
+    
 
   }  
 
-  //private int counter = 0;
+
   private void analyzeRequirement(Token t) {
-   //if(counter <= 1){
     String reqID = t.getSubToken("reqIdentifier").getValue(); // extract new requirement identifier
     System.out.println("AR: 210 -requirement identifier:"+reqID);
     String newContent = t.getSubToken("reqContent").getValue();// extract content 
@@ -215,12 +228,14 @@ class UmpleInternalParser
     if (!(t.getSubToken("reqLanguage") == null || t.getSubToken("reqLanguage").getValue() == null)) {
         newLanguage = t.getSubToken("reqLanguage").getValue();// get the language of the sub token
     }
-    
-     Requirement existingRequirement = model.getAllRequirements().get(reqID); // Retrieves any existing requirement with the same identifier from the model
+     // Retrieves any existing requirement with the same identifier from the model
+     Requirement existingRequirement = model.getAllRequirements().get(reqID); 
      System.out.println("AR: 219 -Existing requirement:"+existingRequirement);
-
-    if (existingRequirement != null) { // Checks if a requirement with the same identifier already exists in the model.
+     
+    // Checks if a requirement with the same identifier already exists in the model.
+    if (existingRequirement != null) { 
         String existingLanguage = existingRequirement.getLanguage();// get the language of the existing requirement
+//DEBUG        
         System.out.println(" AR: 223-Entering in the if part");
 
         if (!(existingLanguage.equals("") || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
@@ -240,69 +255,33 @@ class UmpleInternalParser
         existingRequirement.addReqToken(t);// new addition
         existingRequirement.setStatement(newContent);
         System.out.println(" AR:241 -ExistingRequirement:"+existingRequirement.getStatement());
-        //Requirement req1 = new Requirement(reqID, newContent, newLanguage);// Create new requirement
-        //model.getAllRequirements().put(reqID, req1);// We are not going to need this anymore 
-        //model.getAllRequirements().put(reqID, existingRequirement);
-        //lastRequirements.add(existingRequirement);
     }
     else
     {
     // If existing requirement is null
     // create new requirement
+//DEBUG      
       System.out.println(" AR:248-Entering in the else part");
       Requirement req = new Requirement(reqID, newContent, newLanguage);// Create new requirement 
+//DEBUG        
       System.out.println(" AR: 250 -"+req.getStatement());
     // Add the new requirement
       req.addReqToken(t);// new addition
-   
-     model.getAllRequirements().put(reqID, req);// We are not going to need this anymore
-      //if(lastRequirements.isEmpty())
-     //{
-     	//System.out.println("lastREquiremenent is empty and can be used for condition!");
-     	//lastRequirements.add(req);
-     	System.out.println("AR:263");
-     	System.out.println(lastRequirements);
-     //}
-    //System.out.println("The requirement identifier is: "+reqID);
-    //System.out.println("The requirement is: "+req);
-    //}
-    //counter+=1;
-    //System.out.println("The value of the counter is: ");
-    //System.out.println(counter);
+      model.getAllRequirements().put(reqID, req);
+      //System.out.println("AR:263");
+      //System.out.println(lastRequirements);
     }
 
   }
 
   private void analyzeImplementReq(Token t) {
-  System.out.println(" AI:268-Entering in the implementation part");
-  //System.out.println("Inside Analyze Requirmenet");
-  /*System.out.println("Inside Analyze Requirmenet analysis step: "+analysisStep);
-    if (analysisStep != 2) { // Check if it's the second pass, otherwise, skip analysis
-        shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
-        return;
-    }*/
-    //System.out.println("Inside Analyze Requirmenet after if");
-    //int counter = 0;
-    //String badReq = "";
-
-    //if (analysisStep == 2) { // Do processing only if it is the second parse 
-     //System.out.println("The analysis step is:"+analysisStep);
-     //System.out.println("******************************************");
+     System.out.println(" AI:268-Entering in the implementation part");
      String reqImpID = t.getSubToken("reqIdentifier").getValue();// Identifier that has been identified 
      Requirement Implreq = model.getAllRequirements().get(reqImpID);
      System.out.println(" AI:286- Implereq is:"+Implreq);
-     //lastRequirements.add(Implreq);
-     //System.out.println("The requirement implementation is:"+reqImpID);
-     //reqImplementations.addReqImplementation(reqImpID);// Should we do it to lastRequirement
-     //addReqImplementation.add(reqImpID);
-     //ReqImplementation reqImpl = new ReqImplementation();
-     //ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
-     //reqImplementation.addReqImplementation(reqImplementation);
-     // new addition
-     //Requirement reqNew = new Requirement(reqImpID, "","");// Create new requirement 
      ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);// Instantiate the requirement implementation
      model.addReqImplementation(reqImplementation);
-     //System.out.println("******************************************");
+     
      // REMOVE THE CODE BELOW
     if (t.hasSubTokens()) {
         
@@ -315,37 +294,20 @@ class UmpleInternalParser
             	System.out.println("AI: 315-The value is not STATIC");
                 if (model.getAllRequirements().containsKey(subValue)) {
                     System.out.println("AI:317-Their exits a requirement in the model");
-                    lastRequirements.add(model.getAllRequirements().get(subValue)); // If requirement is found add it to lastRequirement list
+                    //lastRequirements.add(model.getAllRequirements().get(subValue)); // If requirement is found add it to lastRequirement list
+                    lastRequirementsImpl.add(reqImplementation);
                 } 
                /* else {
                     //counter++;
                     //badReq += " " + subValue;
                     String reqIID = t.getSubToken("reqIdentifier").getValue(); 
-                    System.out.println("AI: 324 in else part The requirement ID"+reqIID);
-                    Requirement Ireq = model.getAllRequirements().get(reqIID);
-                    System.out.println("AI: 326 in else part The requirement "+Ireq);
-                    
                 }*/
             }
         }
       }
-      System.out.println("AI:324-The lastRequirement list:");
-      System.out.println(lastRequirements);
-      //System.out.println(" AI:321- Implereq is:"+Implreq);
-     // if(lastRequirements.isEmpty())
-     //{
-     	//System.out.println(" AI:321- Implereq is:"+Implreq);
-     	//lastRequirements.add(Implreq);
-    // }
-    //}
-
-    //if (counter != 0) {
-      //setFailedPosition(t.getPosition(), 401, badReq); // If there are requirements not found, set failed position with code 401
-      //String reqID = t.getSubToken("reqIdentifier").getValue(); 
-      //Requirement ImpRequirement = model.getAllRequirements().get(reqID);
-      //setFailedPosition(ImpRequirement.getReqToken(), 401,reqImpID);
-      //setFailedPosition(t.getPosition(), 401,reqImpID);// There is a need to use reqToken here
-   // }
+//DEBUG        
+      //System.out.println("AI:324-The lastRequirement list:");
+      //System.out.println(lastRequirements);
   }
 
   private void analyzeImplementReq(Token t, UmpleClass aClass) {
@@ -402,12 +364,12 @@ class UmpleInternalParser
    */
   private boolean isReqAddedToLast(Token t)
   {
-    if (t.getPosition() == null) {return false;}
+    /*if (t.getPosition() == null) {return false;}
     if (lastattr != null)
     {
       if (lastattr.getPosition().getLineNum() == t.getPosition().getLineNum())
       {
-        for (Requirement r : lastRequirements)
+        for (Requirement r : lastRequirements)// need to change the logic here 
         {
           lastattr.addRequirement(r);
         }
@@ -434,6 +396,42 @@ class UmpleInternalParser
       }
     }
     return false;
+    */
+    
+    if (t.getPosition() == null) {return false;}
+    if (lastattr != null)
+    {
+      if (lastattr.getPosition().getLineNum() == t.getPosition().getLineNum())
+      {
+        for (ReqImplementation ri : lastRequirementsImpl)
+        {
+          lastattr.addReqImplementation(ri);
+        }
+        return true;
+      }
+      else
+      {
+        lastattr = null;
+      }
+    }  
+    else if (lastassoc != null && lastassocPosition != null)
+    {
+      if (lastassocPosition.getLineNum() == t.getPosition().getLineNum())
+      {
+        for (ReqImplementation ri : lastRequirementsImpl)
+        {
+          lastattr.addReqImplementation(ri);
+        }
+
+        return true;
+      }
+      else
+      {
+        lastassoc = null;
+      }
+    }
+    return false;
+
   }
 
   /*
@@ -453,13 +451,15 @@ class UmpleInternalParser
     }
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
-    boolean shouldConsumeRequirement = lastRequirements.size() > 0;
+    //boolean shouldConsumeRequirement = lastRequirements.size() > 0;
+    boolean shouldConsumeRequirementImpl = lastRequirementsImpl.size() > 0;
     
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
     if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
     {
       shouldConsumeComment = false;
-      shouldConsumeRequirement = false;
+      //shouldConsumeRequirement = false;// change to RequirementImpl
+      shouldConsumeRequirementImpl = false;
     }
     else if (token.is("strictnessDisableAuto"))
     {
@@ -471,19 +471,22 @@ class UmpleInternalParser
     {
       analyzeComment(token, false);
       shouldConsumeComment = addToLastAttributeOrAssociation(token);
-      shouldConsumeRequirement = shouldConsumeComment;
+      //shouldConsumeRequirement = shouldConsumeComment;// change to RequirementImpl
+      shouldConsumeRequirementImpl = shouldConsumeComment;
     }
     else if (token.is("annotationComment"))
     {
       analyzeComment(token, true);
       shouldConsumeComment = addToLastAttributeOrAssociation(token);
-      shouldConsumeRequirement = shouldConsumeComment;
+      //shouldConsumeRequirement = shouldConsumeComment;// change to RequirementImpl
+      shouldConsumeRequirementImpl = shouldConsumeComment;
     }
     else if (token.is("multilineComment"))
     {
       analyzeMultilineComment(token);
       shouldConsumeComment = false;
-      shouldConsumeRequirement = false;
+      //shouldConsumeRequirement = false;// change to RequirementImpl
+      shouldConsumeRequirementImpl = false;
     }
     else if (token.is("requirement"))
     {
@@ -492,8 +495,10 @@ class UmpleInternalParser
     else if (token.is("reqImplementation"))
     {
       analyzeImplementReq(token, aClass);
-      shouldConsumeRequirement = isReqAddedToLast(token);
-      shouldConsumeComment = shouldConsumeRequirement;
+      //shouldConsumeRequirement = isReqAddedToLast(token);
+      //shouldConsumeComment = shouldConsumeRequirement;// change to RequirementImpl
+      shouldConsumeRequirementImpl = isReqAddedToLast(token);
+      shouldConsumeComment = shouldConsumeRequirementImpl;
     }
     else if (token.is("innerClass"))
     {
@@ -629,9 +634,14 @@ class UmpleInternalParser
       lastComments.clear();
 
     }
-    if (shouldConsumeRequirement)
+    /*if (shouldConsumeRequirement)// change to RequirementImpl
     {
       lastRequirements.clear();
+      //lastRequirementsImpl.clear();
+    }*/
+     if (shouldConsumeRequirementImpl)// change to RequirementImpl
+    {
+        lastRequirementsImpl.clear();
     }
   }
   
@@ -660,7 +670,6 @@ class UmpleInternalParser
     if(theComment.contains("@@@skipcompile")) model.setSkipcompile(true);
     if(theComment.contains("@@@skipphpcompile")) model.setSkipphpcompile(true);
     if(theComment.contains("@@@skipjavacompile")) model.setSkipjavacompile(true);
-    if(theComment.contains("@@@skippythoncompile")) model.setSkippythoncompile(true);
     if(theComment.contains("@@@skipcppcompile")) model.setSkipcppcompile(true);
     if(theComment.contains("@@@skiprubycompile")) model.setSkiprubycompile(true);
     
@@ -701,7 +710,6 @@ class UmpleInternalParser
       if(theComment.contains("@@@skipcompile")) model.setSkipcompile(true);
       if(theComment.contains("@@@skipphpcompile")) model.setSkipphpcompile(true);
       if(theComment.contains("@@@skipjavacompile")) model.setSkipjavacompile(true);
-      if(theComment.contains("@@@skippythoncompile")) model.setSkippythoncompile(true);
       if(theComment.contains("@@@skipcppcompile")) model.setSkipcppcompile(true);
       if(theComment.contains("@@@skiprubycompile")) model.setSkiprubycompile(true);
       
@@ -1449,10 +1457,15 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       aClass.addCommentAt(c,regularCommentCountEnd);
       regularCommentCountEnd++;
     }
-
-    for (Requirement r : lastRequirements){
+    /*
+    for (Requirement r : lastRequirements){ // change to ReqImpl
       aClass.addRequirement(r);
+    }*/
+    
+    for (ReqImplementation ri : lastRequirementsImpl){ // change to ReqImpl
+      aClass.addReqImplementation(ri);
     }
+    
     
     // Add special position comment at the end if @outputumplesource had been 
     // detected earlier in a comment
@@ -1689,10 +1702,15 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       anInterface.addCommentAt(c,regularCommentCountEnd);
       regularCommentCountEnd++;
     }
-
-    for (Requirement r : lastRequirements){
+    /*
+    for (Requirement r : lastRequirements){ // change to ReqImpl
       anInterface.addRequirement(r);
+    }*/
+    
+    for (ReqImplementation ri : lastRequirementsImpl){ // change to ReqImpl
+      anInterface.addReqImplementation(ri);
     }
+   
     
     // Add special position comment at the end if @outputumplesource had been 
     // detected earlier in a comment
@@ -3461,10 +3479,16 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       aMethod.addComment(c);
     }
-
-    for (Requirement r : lastRequirements){
+    /*
+    for (Requirement r : lastRequirements){ // change to ReqImpl 
       aMethod.addRequirement(r);
     }
+    */
+    for (ReqImplementation ri : lastRequirementsImpl){ // change to ReqImpl
+      aMethod.addReqImplementation(ri);
+    }
+    
+    
 
     // Go through all the sub tokens of the "method token" to obtain details about it, using them to populate a method instance.
     List<String> langs = new ArrayList<String>();
@@ -4733,10 +4757,15 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       yourAs.addComment(c);
     }
-
-    for (Requirement r : lastRequirements){
+    /*
+    for (Requirement r : lastRequirements){ // change to ReqImpl
       yourAs.addRequirement(r);
     }
+     */
+    for (ReqImplementation ri : lastRequirementsImpl){ // change to ReqImpl
+      yourAs.addReqImplementation(ri);
+    }
+    
     
     // set last association made to be yourAs. clear lastattr.
     lastassoc = yourAs;
@@ -5028,10 +5057,15 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       attribute.addComment(c);
     }
-
-    for (Requirement r : lastRequirements){
+    /*
+    for (Requirement r : lastRequirements){ // change to ReqIml
       attribute.addRequirement(r);
+    }*/
+     
+    for (ReqImplementation ri : lastRequirementsImpl){ // change to ReqImpl
+      attribute.addReqImplementation(ri);
     }
+    
     
     // set the last attribute made to be attribute, clear lastassoc
     lastattr = attribute;
