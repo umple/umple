@@ -347,9 +347,10 @@ class UmpleInternalParser
          
        }
        System.out.println("Model found requirement:"+foundRequirement);
+//DEBUG       
        // Adding found requirement to the lastRequirement set
        //lastRequirements.add(foundRequirement);
-       //System.out.println("AAR: 368 -Last Requirements"+lastRequirements);
+      // System.out.println("AAR: 368 -Last RequirementsImpl"+lastRequirementsImpl);
        
      }
   

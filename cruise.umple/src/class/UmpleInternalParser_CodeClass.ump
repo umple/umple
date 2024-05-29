@@ -33,7 +33,7 @@ class UmpleInternalParser
 
   // List of comments populated by the parser to be added to the next class, attribute, association, method, etc.
   internal Comment[] lastComments;
-
+//DEBUG  
   //internal Requirement[] lastRequirements;
   
   internal ReqImplementation[] lastRequirementsImpl;
@@ -70,6 +70,7 @@ class UmpleInternalParser
 
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
+//DEBUG     
     //boolean shouldConsumeRequirement = lastRequirements.size() > 0;
     boolean shouldConsumeRequirementImpl = lastRequirementsImpl.size() > 0;
 
@@ -77,7 +78,9 @@ class UmpleInternalParser
     if (t.isStatic("//") || t.isStatic("/*") || t.isStatic("*/"))
     {
       shouldConsumeComment = false;
+//DEBUG       
       //shouldConsumeRequirement = false;
+      shouldConsumeRequirementImpl = false;
     }
     else if (t.is("useStatement") )
     {
@@ -141,6 +144,7 @@ class UmpleInternalParser
     {
       analyzeComment(t, false);
       shouldConsumeComment = addToLastAttributeOrAssociation(t);
+//DEBUG       
       //shouldConsumeRequirement = shouldConsumeComment;
       shouldConsumeRequirementImpl = shouldConsumeComment;
     }
@@ -148,6 +152,7 @@ class UmpleInternalParser
     {
       analyzeComment(t, true);
       shouldConsumeComment = addToLastAttributeOrAssociation(t);
+//DEBUG       
       //shouldConsumeRequirement = shouldConsumeComment;
       shouldConsumeRequirementImpl = shouldConsumeComment;
     }     
@@ -155,6 +160,7 @@ class UmpleInternalParser
     {
       analyzeMultilineComment(t);
       shouldConsumeComment = false;
+//DEBUG       
       //shouldConsumeRequirement = false;
       shouldConsumeRequirementImpl = false;
     }
@@ -163,6 +169,7 @@ class UmpleInternalParser
     }
     else if (t.is("reqImplementation")){
       analyzeImplementReq(t);
+//DEBUG       
       //shouldConsumeRequirement = isReqAddedToLast(t);
       //shouldConsumeComment = shouldConsumeRequirement;   
       shouldConsumeRequirementImpl = isReqAddedToLast(t);
@@ -205,6 +212,7 @@ class UmpleInternalParser
     {
       lastComments.clear();
     }
+//DEBUG     
     /*if (shouldConsumeRequirement)// change to shouldConsumeRequirementImpl
     {
       lastRequirements.clear();
@@ -268,6 +276,7 @@ class UmpleInternalParser
     // Add the new requirement
       req.addReqToken(t);// new addition
       model.getAllRequirements().put(reqID, req);
+//DEBUG       
       //System.out.println("AR:263");
       //System.out.println(lastRequirements);
     }
@@ -281,19 +290,21 @@ class UmpleInternalParser
      System.out.println(" AI:286- Implereq is:"+Implreq);
      ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);// Instantiate the requirement implementation
      model.addReqImplementation(reqImplementation);
-     
+     lastRequirementsImpl.add(reqImplementation);
+     System.out.println("AI 293- LastReqImpl:"+lastRequirementsImpl);
+//DEBUG      
      // REMOVE THE CODE BELOW
-    if (t.hasSubTokens()) {
+    /*if (t.hasSubTokens()) {
         
 
         for (Token sub : t.getSubTokens()) {
             String subValue = sub.getValue(); // Declare subValue to store the result of sub.getValue()
 		System.out.println("The tokens are:"+subValue);
-
             if (!subValue.equals("STATIC")) {
             	System.out.println("AI: 315-The value is not STATIC");
                 if (model.getAllRequirements().containsKey(subValue)) {
                     System.out.println("AI:317-Their exits a requirement in the model");
+                    // DEBUG
                     //lastRequirements.add(model.getAllRequirements().get(subValue)); // If requirement is found add it to lastRequirement list
                     lastRequirementsImpl.add(reqImplementation);
                 } 
@@ -304,7 +315,7 @@ class UmpleInternalParser
                 }*/
             }
         }
-      }
+      }*/
 //DEBUG        
       //System.out.println("AI:324-The lastRequirement list:");
       //System.out.println(lastRequirements);
@@ -364,6 +375,7 @@ class UmpleInternalParser
    */
   private boolean isReqAddedToLast(Token t)
   {
+//DEBUG   
     /*if (t.getPosition() == null) {return false;}
     if (lastattr != null)
     {
@@ -451,6 +463,7 @@ class UmpleInternalParser
     }
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
+//DEBUG     
     //boolean shouldConsumeRequirement = lastRequirements.size() > 0;
     boolean shouldConsumeRequirementImpl = lastRequirementsImpl.size() > 0;
     
@@ -458,6 +471,7 @@ class UmpleInternalParser
     if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
     {
       shouldConsumeComment = false;
+//DEBUG       
       //shouldConsumeRequirement = false;// change to RequirementImpl
       shouldConsumeRequirementImpl = false;
     }
@@ -471,6 +485,7 @@ class UmpleInternalParser
     {
       analyzeComment(token, false);
       shouldConsumeComment = addToLastAttributeOrAssociation(token);
+//DEBUG       
       //shouldConsumeRequirement = shouldConsumeComment;// change to RequirementImpl
       shouldConsumeRequirementImpl = shouldConsumeComment;
     }
@@ -478,6 +493,7 @@ class UmpleInternalParser
     {
       analyzeComment(token, true);
       shouldConsumeComment = addToLastAttributeOrAssociation(token);
+//DEBUG       
       //shouldConsumeRequirement = shouldConsumeComment;// change to RequirementImpl
       shouldConsumeRequirementImpl = shouldConsumeComment;
     }
@@ -485,6 +501,7 @@ class UmpleInternalParser
     {
       analyzeMultilineComment(token);
       shouldConsumeComment = false;
+//DEBUG       
       //shouldConsumeRequirement = false;// change to RequirementImpl
       shouldConsumeRequirementImpl = false;
     }
@@ -495,6 +512,7 @@ class UmpleInternalParser
     else if (token.is("reqImplementation"))
     {
       analyzeImplementReq(token, aClass);
+//DEBUG       
       //shouldConsumeRequirement = isReqAddedToLast(token);
       //shouldConsumeComment = shouldConsumeRequirement;// change to RequirementImpl
       shouldConsumeRequirementImpl = isReqAddedToLast(token);
@@ -634,10 +652,10 @@ class UmpleInternalParser
       lastComments.clear();
 
     }
+//DEBUG     
     /*if (shouldConsumeRequirement)// change to RequirementImpl
     {
       lastRequirements.clear();
-      //lastRequirementsImpl.clear();
     }*/
      if (shouldConsumeRequirementImpl)// change to RequirementImpl
     {
@@ -1457,6 +1475,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       aClass.addCommentAt(c,regularCommentCountEnd);
       regularCommentCountEnd++;
     }
+//DEBUG     
     /*
     for (Requirement r : lastRequirements){ // change to ReqImpl
       aClass.addRequirement(r);
@@ -1702,6 +1721,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       anInterface.addCommentAt(c,regularCommentCountEnd);
       regularCommentCountEnd++;
     }
+//DEBUG     
     /*
     for (Requirement r : lastRequirements){ // change to ReqImpl
       anInterface.addRequirement(r);
@@ -3479,6 +3499,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       aMethod.addComment(c);
     }
+//DEBUG     
     /*
     for (Requirement r : lastRequirements){ // change to ReqImpl 
       aMethod.addRequirement(r);
@@ -4757,6 +4778,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       yourAs.addComment(c);
     }
+//DEBUG     
     /*
     for (Requirement r : lastRequirements){ // change to ReqImpl
       yourAs.addRequirement(r);
@@ -5057,6 +5079,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       attribute.addComment(c);
     }
+//DEBUG     
     /*
     for (Requirement r : lastRequirements){ // change to ReqIml
       attribute.addRequirement(r);
