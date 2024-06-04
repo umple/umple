@@ -294,7 +294,7 @@ class UmpleInternalParser
      System.out.println("AI 293- LastReqImpl:"+lastRequirementsImpl);
 //DEBUG      
      // REMOVE THE CODE BELOW
-    /*if (t.hasSubTokens()) {
+    if (t.hasSubTokens()) {
         
 
         for (Token sub : t.getSubTokens()) {
@@ -315,7 +315,7 @@ class UmpleInternalParser
                 }*/
             }
         }
-      }*/
+      }
 //DEBUG        
       //System.out.println("AI:324-The lastRequirement list:");
       //System.out.println(lastRequirements);
