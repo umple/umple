@@ -1,0 +1,49 @@
+class X {
+  sm {
+    a {
+      // Ordinary transition
+      e1-> bsub1;
+    }
+    b {
+      bsub1 {
+        // transition in substate
+        e2 -> bsub2;
+      }
+      bsub2 {}
+    }
+    // Standalone transition
+    // at to level
+    e3 b -> a;
+    
+    // Standalone transition
+    // between substate
+    e4 bsub2 -> bsub1;
+  }
+}
+
+// Mixin for class that mixes in
+// more details into the state machine
+class X {
+  // Supplemental detail for same
+  // state machine
+  sm {
+    // Standalone transition
+    e5 bsub1 -> a;
+    
+    // Another way of adding a transition
+    a {e6 -> bsub2;}
+  }
+}
+
+// Mixset to optionally add more detail
+mixset extra class X {
+  sm {
+    // Adding a new state
+    c {}
+    // Adding a transition
+    e7 b -> c;
+  }
+}
+
+// Activating the above mixset
+use extra;
