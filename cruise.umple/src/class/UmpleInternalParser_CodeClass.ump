@@ -690,6 +690,7 @@ class UmpleInternalParser
     if(theComment.contains("@@@skipjavacompile")) model.setSkipjavacompile(true);
     if(theComment.contains("@@@skipcppcompile")) model.setSkipcppcompile(true);
     if(theComment.contains("@@@skiprubycompile")) model.setSkiprubycompile(true);
+    if(theComment.contains("@@@skippythoncompile")) model.setSkippythoncompile(true);
     
     if (theComment.startsWith("@outputumplesource")) { 
       outputUmpleSource = true;
@@ -730,6 +731,7 @@ class UmpleInternalParser
       if(theComment.contains("@@@skipjavacompile")) model.setSkipjavacompile(true);
       if(theComment.contains("@@@skipcppcompile")) model.setSkipcppcompile(true);
       if(theComment.contains("@@@skiprubycompile")) model.setSkiprubycompile(true);
+      if(theComment.contains("@@@skippythoncompile")) model.setSkippythoncompile(true);
       
       if(theComment.startsWith("@outputumplesource")) {
         outputUmpleSource = true;
