@@ -86,13 +86,8 @@ class UmpleInternalParser
       aTrait.addCommentAt(c,regularCommentCountEnd);
       regularCommentCountEnd++;
     }
-//DEBUG
-    /*for (Requirement r : lastRequirements)
-    {
-      aTrait.addRequirement(r);
-    }
-    */
-    for (ReqImplementation ri : lastRequirementsImpl){ // change to ReqImpl
+    for (ReqImplementation ri : lastRequirementsImpl)
+    { 
       aTrait.addReqImplementation(ri);
     }
     
@@ -217,8 +212,6 @@ class UmpleInternalParser
     boolean shouldConsumeComment = lastComments.size() > 0;
 
     // Only need to clear requirements if there actually was requirements.
-//DEBUG    
-    //boolean shouldConsumeRequirement = lastRequirements.size() > 0;
     boolean shouldConsumeRequirementImpl = lastRequirementsImpl.size() > 0;
     
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
@@ -257,7 +250,6 @@ class UmpleInternalParser
     else if (token.is("reqImplementation"))
     {
       analyzeImplementReq(token);
-      //shouldConsumeRequirement = isReqAddedToLast(token);
       shouldConsumeRequirementImpl = isReqAddedToLast(token);
     }
     // TODO Under development
@@ -324,12 +316,6 @@ class UmpleInternalParser
     {
       lastComments.clear();
     }
-//DEBUG    
-   /* if (shouldConsumeRequirement)// changed to requirement impl
-    {
-      lastRequirements.clear();
-      //lastRequirementsImpl.clear();
-    }*/
     if (shouldConsumeRequirementImpl)// changed to requirement impl
     {
       lastRequirementsImpl.clear();
@@ -518,13 +504,8 @@ class UmpleInternalParser
     {
       attribute.addComment(c);
     }
-//DEBUG    
-   /* for (Requirement r : lastRequirements)
-    {
-      attribute.addRequirement(r);
-    }
-    */
-    for (ReqImplementation ri : lastRequirementsImpl){ // change to ReqImpl
+    for (ReqImplementation ri : lastRequirementsImpl)
+    { 
       attribute.addReqImplementation(ri);
     }
     
@@ -616,15 +597,8 @@ mixset Association {
     {
       yourAs.addComment(c);
     }
-//DEBUG    
-    /*
-    for (Requirement r : lastRequirements)
+    for (ReqImplementation ri : lastRequirementsImpl)
     {
-      yourAs.addRequirement(r);
-    }
-    */
-    
-    for (ReqImplementation ri : lastRequirementsImpl){ // change to ReqImpl
       yourAs.addReqImplementation(ri);
     }
     

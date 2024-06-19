@@ -329,6 +329,7 @@ class UmpleInternalParser
        String reqImplID = reqImpl.getIdentifier();
        Token reqImplToken = reqImpl.getReqToken();
        Requirement foundRequirement = model.getAllRequirements().get(reqImplID); // found a matching req for implementation
+//DEBUG       
        System.out.println("AAR 345: found requirement to check if it is null:"+foundRequirement);
        if(foundRequirement == null) // null then we need to raise an error 
        {
@@ -346,8 +347,8 @@ class UmpleInternalParser
          foundRequirement.addReqImplementation(reqImpl);
          
        }
-       System.out.println("Model found requirement:"+foundRequirement);
-//DEBUG       
+//DEBUG         
+       System.out.println("Model found requirement:"+foundRequirement);     
        // Adding found requirement to the lastRequirement set
        //lastRequirements.add(foundRequirement);
       // System.out.println("AAR: 368 -Last RequirementsImpl"+lastRequirementsImpl);
