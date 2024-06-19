@@ -330,7 +330,9 @@ class UmpleInternalParser
        Token reqImplToken = reqImpl.getReqToken();
        Requirement foundRequirement = model.getAllRequirements().get(reqImplID); // found a matching req for implementation
 //DEBUG       
-       System.out.println("AAR 345: found requirement to check if it is null:"+foundRequirement);
+if(model.isDebugMode()) {
+   System.out.println("AAR 345: ffound requirement to check if it is null:"+foundRequirement);
+}
        if(foundRequirement == null) // null then we need to raise an error 
        {
          // There is no requirement here so we use the implementation to get the reqToken
