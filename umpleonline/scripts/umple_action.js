@@ -3787,15 +3787,16 @@ Action.loadExample = function loadExample()
   
   var sel = Page.getSelectedExample();
   
-  if (exampleName.startsWith("http")) {
+  if (exampleName.startsWith("https")) {
     var shortExampleName=exampleName.split("/").pop();
+    var newURL="?filename="+exampleName.substr(8)+".ump"+diagramType;
   }
   else
   {
     var shortExampleName=exampleName;
+    var newURL="?example="+shortExampleName+diagramType;
   }
   
-  var newURL="?example="+shortExampleName+diagramType;
   Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+shortExampleName+" example</a>");
 
  // TODO - fix so history works nicely
