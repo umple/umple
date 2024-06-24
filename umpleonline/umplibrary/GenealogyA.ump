@@ -41,3 +41,4 @@ class Union
   position.association Person:partner__Union 30,0 8,143;
   position 63 282 184 92;
 }
+// @@@skipcppcompile

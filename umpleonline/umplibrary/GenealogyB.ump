@@ -44,3 +44,4 @@ class Person
 {
   position 87 78 165 143;
 }
+// @@@skipcppcompile

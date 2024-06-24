@@ -4,6 +4,14 @@ exec  2> "/output/errors"
 
 cd /input/
 
-java $@
+py=$(echo $@ | cut -d'.' -f2)
+
+if [ $py = "py" ]; then
+    echo "Python result:"
+    python3 $@
+else
+    echo "Java result:"
+    java $@
+fi
 
 mv /output/logfile.txt /output/completed

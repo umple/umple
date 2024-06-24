@@ -1,0 +1,15 @@
+class Person {
+  name;
+}
+
+class Student {
+  isA Person;
+}
+
+class Mentor {
+  isA Person;
+}
+
+association {
+  0..1 Mentor -- * Student;
+}

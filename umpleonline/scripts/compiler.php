@@ -359,7 +359,8 @@ else if (isset($_REQUEST["umpleCode"]))
   //
   if($execute) 
   {
-    $command = "java -jar umplesync.jar -generate Java {$filename} -cx 2> {$executionErrorFilename}";
+    $language = $_REQUEST['language'];
+    $command = "java -jar umplesync.jar -generate {$language} {$filename} -cx 2> {$executionErrorFilename}";
     executeCommand($command);
     $errhtml = getErrorHtml($executionErrorFilename);
     if($errhtml != "") {
@@ -479,7 +480,7 @@ else if (isset($_REQUEST["umpleCode"]))
       $svgcode = readTemporaryFile("{$thedir}/stateDiagram.svg");
       $gvlink = $workDir->makePermalink('model'.$generatorType.'.gv');      
       $svglink = $workDir->makePermalink('stateDiagram.svg');
-      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a target=\"_GraphVizOutput\" href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       $changesToMake = 1;
@@ -504,7 +505,7 @@ else if (isset($_REQUEST["umpleCode"]))
       $gvlink = $workDir->makePermalink('modelGvFeatureDiagram.gv');
       $svglink = $workDir->makePermalink('featureDiagram.svg');
       
-      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a target=\"_GraphVizOutput\" href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       $changesToMake = 1;
@@ -525,7 +526,7 @@ else if (isset($_REQUEST["umpleCode"]))
       $svgcode = readTemporaryFile("{$thedir}/classDiagram.svg");
       $gvlink = $workDir->makePermalink('model'.$generatorType.'.gv');
       $svglink = $workDir->makePermalink('classDiagram.svg');
-      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a target=\"_GraphVizOutput\" href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       $changesToMake = 1;
@@ -546,7 +547,7 @@ else if (isset($_REQUEST["umpleCode"]))
       $svgcode = readTemporaryFile("{$thedir}/entityRelationshipDiagram.svg");
       $gvlink = $workDir->makePermalink('modelerd.gv');
       $erdiagramlink = $workDir->makePermalink('entityRelationshipDiagram.svg');
-      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a href=\"$erdiagramlink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a target=\"_GraphVizOutput\" href=\"$erdiagramlink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       $changesToMake = 1;
@@ -720,10 +721,11 @@ function getErrorHtml($errorFilename, $offset = 1)
 
 function executeCode($modelName, $error) 
 {
+  $language=$_REQUEST['language'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,"{$GLOBALS['EXECUTION_SERVER']}/run");
   curl_setopt($ch, CURLOPT_POST, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, "path={$modelName}&error={$error}");
+  curl_setopt($ch, CURLOPT_POSTFIELDS, "path={$modelName}&error={$error}&language={$language}");
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   $content = curl_exec($ch);
   if (curl_errno($ch)) {

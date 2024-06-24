@@ -334,6 +334,16 @@ class UmpleModel
     }
     return false;
   }
+  //this function return true if a model is of a particular language that contains specified suboption
+  public boolean modelHasSuboption(String lang, String subOption){
+    boolean suboptionFound=false;
+    for (GenerateTarget target : getGenerates()){
+      if (target.tarHasSubOption(subOption)&&target.getLanguage().equals(lang)){
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 /*
