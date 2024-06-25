@@ -540,6 +540,9 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="Accidents.ump">Accidents</option>
                 <option name = "optionExample" value="Accommodations.ump">Accommodations</option>
                 <option name = "optionExample" value="AfghanRainDesign.ump">Afghan Rain Design</option>
+
+                <option name = "optionExample" value="https://raw.githubusercontent.com/umple/agreementNegotiation/main/negotiationMetamodel/src/Negotiations.ump">Agreement Negotiation</option>
+                
                 <option name = "optionExample" value="AirlineExample.ump">Airline *</option>
                 <option name = "optionExample" value="Auction.ump">Auction *</option>                
                 <option name = "optionExample" value="BankingSystemA.ump">Banking System A</option>
