@@ -619,7 +619,7 @@ else if (isset($_REQUEST["umpleCode"]))
 else if (isset($_REQUEST["exampleCode"]))
 {
   $exampleName=$_REQUEST["exampleCode"];
-  if (str_starts_with($exampleName, 'http')) {
+  if (substr($exampleName,0,4) == 'http') {
      // Load from a separate URL (new off-repo examples)
      // This code is similar to if #_REQUEST is load as earlier
      $outputUmple = file_get_contents($exampleName);
