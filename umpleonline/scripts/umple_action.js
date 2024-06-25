@@ -3930,8 +3930,17 @@ Action.loadExample = function loadExample()
   
   var sel = Page.getSelectedExample();
   
-  var newURL="?example="+exampleName+diagramType;
-  Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+exampleName+" example</a>");
+  if (exampleName.startsWith("https")) {
+    var shortExampleName=exampleName.split("/").pop();
+    var newURL="?filename="+exampleName.substr(8)+".ump"+diagramType;
+  }
+  else
+  {
+    var shortExampleName=exampleName;
+    var newURL="?example="+shortExampleName+diagramType;
+  }
+  
+  Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+shortExampleName+" example</a>");
 
  // TODO - fix so history works nicely
  //   if(history.pushState) {history.pushState("", document.title, newURL);}

@@ -614,11 +614,23 @@ else if (isset($_REQUEST["umpleCode"]))
      echo $html;
   }
 }  // end request has umpleCode
+
+// Load an official UmpleOnline example
 else if (isset($_REQUEST["exampleCode"]))
 {
-  $filename = rootDir()."/umplibrary/" . $_REQUEST["exampleCode"];
-  $outputUmple = readTemporaryFile($filename);
-  echo $outputUmple;
+  $exampleName=$_REQUEST["exampleCode"];
+  if (str_starts_with($exampleName, 'http')) {
+     // Load from a separate URL (new off-repo examples)
+     // This code is similar to if #_REQUEST is load as earlier
+     $outputUmple = file_get_contents($exampleName);
+     echo $outputUmple;     
+  }
+  else {
+    // Load from the umplibrary directory (normal case)
+    $filename = rootDir()."/umplibrary/" . $exampleName;
+    $outputUmple = readTemporaryFile($filename);
+    echo $outputUmple;
+  }
 }
 else if (isset($_REQUEST["asImage"]))
 {

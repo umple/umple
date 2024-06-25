@@ -846,7 +846,8 @@ Page.setExamples = function(ex)
   var exValue = ex+".ump"
   jQuery("#inputExample").change(Action.loadExample);
   jQuery("#inputExample option").each(function(){
-    if (this.value==exValue){
+    if (this.value==exValue || 
+      (this.value.startsWith("http") && this.value.endsWith(exValue))){
       jQuery("#inputExample option[value = \""+exValue  +"\"]").attr("selected", true);
       return ;
     }
@@ -857,7 +858,8 @@ Page.setExamples = function(ex)
 
   jQuery("#inputExample2").change(Action.loadExample);
   jQuery("#inputExample2 option").each(function(){
-    if (this.value==exValue){
+     if (this.value==exValue || 
+      (this.value.startsWith("http") && this.value.endsWith(exValue))){
       jQuery("#inputExample2 option[value = \""+exValue  +"\"]").attr("selected", true);
       return ;
     }
@@ -866,7 +868,8 @@ Page.setExamples = function(ex)
   
   jQuery("#inputExample3").change(Action.loadExample);
   jQuery("#inputExample3 option").each(function(){
-    if (this.value==exValue){
+    if (this.value==exValue || 
+      (this.value.startsWith("http") && this.value.endsWith(exValue))){
       jQuery("#inputExample3 option[value = \""+exValue  +"\"]").attr("selected", true);
       return ;
     }
@@ -875,7 +878,8 @@ Page.setExamples = function(ex)
  
   jQuery("#inputExample4").change(Action.loadExample);
   jQuery("#inputExample4 option").each(function(){
-    if (this.value==exValue){
+    if (this.value==exValue || 
+      (this.value.startsWith("http") && this.value.endsWith(exValue))){
       jQuery("#inputExample4 option[value = \""+exValue  +"\"]").attr("selected", true);
       return ;
     }

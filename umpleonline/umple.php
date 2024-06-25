@@ -547,7 +547,11 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="Accidents.ump">Accidents</option>
                 <option name = "optionExample" value="Accommodations.ump">Accommodations</option>
                 <option name = "optionExample" value="AfghanRainDesign.ump">Afghan Rain Design</option>
+
+                <option name = "optionExample" value="https://raw.githubusercontent.com/umple/agreementNegotiation/main/negotiationMetamodel/src/Negotiations.ump">Agreement Negotiation</option>
+                
                 <option name = "optionExample" value="AirlineExample.ump">Airline *</option>
+                <option name = "optionExample" value="Auction.ump">Auction *</option>                
                 <option name = "optionExample" value="BankingSystemA.ump">Banking System A</option>
                 <option name = "optionExample" value="BankingSystemB.ump">Banking System B</option>
                 <option name = "optionExample" value="CanalSystem.ump">Canal</option>
@@ -595,6 +599,7 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample2" id = "defaultExampleOption2" value="">Select Example</option>
                 <option name = "optionExample" value="AgentsCommunication.ump">Agents Communicating *</option>
                 <option name = "optionExample" value="ApplicationProcessing.ump">Application for a Grant</option>
+                <option name = "optionExample" value="Auction.ump">Auction *</option>                  
                 <option name = "optionExample" value="Booking.ump">Booking (Airline)</option>
                 <option name = "optionExample" value="CanalLockStateMachine.ump">Canal Lock</option>
                 <option name = "optionExample" value="CarTransmission.ump">Car Transmission</option>
