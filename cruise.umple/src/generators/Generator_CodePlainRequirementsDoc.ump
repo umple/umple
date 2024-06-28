@@ -72,6 +72,7 @@ class ReqVisitor {
 	Requirement[] allReqs;
 	
 	
+	
     // TO DO: 
     // use a List to gather all of the requirements in the visit function below, sort them in alphabetical order
     // in void done() create paragraph elements with them
@@ -82,16 +83,18 @@ class ReqVisitor {
 	addAllReq(req);
 //DEBUG	
 	System.out.println("visit 83:"+ req);
-        done(req);
+        //done(req);
 	}
 	
-	void done(Requirement req)
+	void done()
 	{
 	  HashMap<String, String> ReqMap = new HashMap<>();
+	  String lang = "";
 	  for (Requirement reqIndi : allReqs)
 	  {
 		String reqID = reqIndi.getIdentifier();
 		String reqStat = reqIndi.getStatement();
+		lang = reqIndi.getLanguage();
 		ReqMap.put(reqStat,reqID);
 	  }
 	  ArrayList<String> sortedKeys= new ArrayList<String>(ReqMap.keySet());
@@ -107,7 +110,7 @@ class ReqVisitor {
 	  System.out.println("********");
 	    for (String x : sortedKeys)
 		{
-			String text = Requirement.translateToHTML(x, req.getLanguage());
+			String text = Requirement.translateToHTML(x, lang);
 			doc.createParagraphElement(""+ReqMap.get(x)+": "+text, false); 
 		}	
             
