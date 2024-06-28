@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
  */
 
@@ -19,21 +19,21 @@ class EcoreGenModel {
   static {
     // Map for Ecore primitive Types
       ecorePrimitiveTypeMap = new HashMap<String, String>();
-      ecorePrimitiveTypeMap.put("Integer", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt");
-      ecorePrimitiveTypeMap.put("Float", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloat");
-      ecorePrimitiveTypeMap.put("String", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString");
-      ecorePrimitiveTypeMap.put("Double", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble");
-      ecorePrimitiveTypeMap.put("Boolean", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean");
-      ecorePrimitiveTypeMap.put("java.math.BigDecimal", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigDecimal");
-      ecorePrimitiveTypeMap.put("java.math.BigInteger", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigInteger");
-      ecorePrimitiveTypeMap.put("char", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EChar");
-      ecorePrimitiveTypeMap.put("java.lang.Character", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ECharacterObject");
-      ecorePrimitiveTypeMap.put("java.lang.Object", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject");
+      ecorePrimitiveTypeMap.put("Integer", "ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EInt");
+      ecorePrimitiveTypeMap.put("Float", "ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EFloat");
+      ecorePrimitiveTypeMap.put("String", "ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EString");
+      ecorePrimitiveTypeMap.put("Double", "ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EDouble");
+      ecorePrimitiveTypeMap.put("Boolean", "ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EBoolean");
+      ecorePrimitiveTypeMap.put("java.math.BigDecimal", "ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EBigDecimal");
+      ecorePrimitiveTypeMap.put("java.math.BigInteger", "ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EBigInteger");
+      ecorePrimitiveTypeMap.put("char", "ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EChar");
+      ecorePrimitiveTypeMap.put("java.lang.Character", "ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//ECharacterObject");
+      ecorePrimitiveTypeMap.put("java.lang.Object", "ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EJavaObject");
 
       ecoreGenericTypeMap = new HashMap<String, String[]>();
-      ecoreGenericTypeMap.put("java.util.List", new String[]{"1", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EEList"});
-      ecoreGenericTypeMap.put("java.util.Map", new String[]{"2", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap"});
-      ecoreGenericTypeMap.put("java.lang.Class", new String[]{"1", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaClass"});
+      ecoreGenericTypeMap.put("java.util.List", new String[]{"1", "ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EEList"});
+      ecoreGenericTypeMap.put("java.util.Map", new String[]{"2", "ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EMap"});
+      ecoreGenericTypeMap.put("java.lang.Class", new String[]{"1", "ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EJavaClass"});
       
       umplePrimitiveTypeMap = new HashMap<String, String>();
       umplePrimitiveTypeMap.put("Time", "java.sql.Time");
@@ -182,9 +182,9 @@ class EcorePackage {
   Map<String,String> getNodeAttributes(){
     Map<String,String> map = super.getNodeAttributes();
     map.put("xmi:version", "2.0");
-    map.put("xmlns:xmi", "http://www.omg.org/XMI");
-    map.put("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-    map.put("xmlns:ecore", "http://www.eclipse.org/emf/2002/Ecore");
+    map.put("xmlns:xmi", "https://www.omg.org/XMI");
+    map.put("xmlns:xsi", "https://www.w3.org/2001/XMLSchema-instance");
+    map.put("xmlns:ecore", "https://www.eclipse.org/emf/2002/Ecore");
     map.put("name", getName());
     map.put("nsURI", nsURI);
     map.put("nsPrefix", nsPrefix);

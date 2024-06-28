@@ -33,7 +33,7 @@ public class Course
     boolean didAddUniversity = setUniversity(aUniversity);
     if (!didAddUniversity)
     {
-      throw new RuntimeException("Unable to create course due to university. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create course due to university. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     courseSections = new ArrayList<CourseSection>();
   }

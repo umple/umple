@@ -45,12 +45,12 @@ public class Registration
     boolean didAddStudent = setStudent(aStudent);
     if (!didAddStudent)
     {
-      throw new RuntimeException("Unable to create registration due to student. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create registration due to student. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     boolean didAddCourseSection = setCourseSection(aCourseSection);
     if (!didAddCourseSection)
     {
-      throw new RuntimeException("Unable to create registration due to courseSection. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create registration due to courseSection. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

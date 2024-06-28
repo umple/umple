@@ -3,7 +3,7 @@
  Copyright: All contributers to the Umple Project
  
  This file is made available subject to the open source license found at:
- http://umple.org/license
+ https://umple.org/license
 
  In this case, there is no maximum bound on the number of StudentAR's contained
  within MentorAR. so a getMaximumNumberOfStudents() method should NOT generate in

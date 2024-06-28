@@ -25,12 +25,12 @@ public class Registration implements java.io.Serializable
     boolean didAddStudent = setStudent(aStudent);
     if (!didAddStudent)
     {
-      throw new RuntimeException("Unable to create registration due to student. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create registration due to student. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     boolean didAddCourse = setCourse(aCourse);
     if (!didAddCourse)
     {
-      throw new RuntimeException("Unable to create registration due to course. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create registration due to course. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

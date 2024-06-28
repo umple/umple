@@ -3,7 +3,7 @@
  Copyright: All contributers to the Umple Project
 
  This file is made available subject to the open source license found at:
- http://umple.org/license
+ https://umple.org/license
 
 */
 
@@ -2803,7 +2803,7 @@ public class UmpleParserTest
   @Test
   public void mixingRegularAndDerivedAttributes_bug201()
   {
-    //http://code.google.com/p/umple/issues/detail?id=201
+    //https://code.google.com/p/umple/issues/detail?id=201
     assertParse("030_mixingRegularAndDerivedAttributes_bug201.ump");
 
     UmpleClass student = model.getUmpleClass("Student");

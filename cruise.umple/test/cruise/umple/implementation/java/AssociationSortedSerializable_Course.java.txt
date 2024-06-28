@@ -33,7 +33,7 @@ public class Course implements java.io.Serializable
     boolean didAddAcademy = setAcademy(aAcademy);
     if (!didAddAcademy)
     {
-      throw new RuntimeException("Unable to create course due to academy. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create course due to academy. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     registrations = new ArrayList<Registration>();
   }

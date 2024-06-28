@@ -3,7 +3,7 @@
 
 // Copyright: All contributors to the Umple Project
 // This file is made available subject to the open source license found at:
-// [*http://umple.org/license*]
+// [*https://umple.org/license*]
 
 traitDefinition : trait [name] [[traitParameters]]? { [[traitContent]]* }
 traitContent- : [[mixsetDefinition]] | [[testCase]] | [[requiredModelElements]] | [[comment]] | [[reqImplementation]] | [[traitDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[abstractMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; | [[exception]] | [[extraCode]]

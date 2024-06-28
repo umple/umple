@@ -67,7 +67,7 @@ class OptionalOneToOneTest extends UnitTestCase
 
   public function test_UnableToConstructNewSubordinateFromExistingDriverThatAlreadyHasDriver()
   {
-  	$this->expectException(new Exception("Unable to create mentor due to student. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
+  	$this->expectException(new Exception("Unable to create mentor due to student. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $student = new StudentB();
     new MentorB($student);
     new MentorB($student); 

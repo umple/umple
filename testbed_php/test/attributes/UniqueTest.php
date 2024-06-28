@@ -15,7 +15,7 @@ class UniqueTest extends UnitTestCase
   }
 
   public function testCreateWithDuplicates() {
-    $this->expectException(new RuntimeException("Cannot create due to duplicate id. See http://manual.umple.org?RE003ViolationofUniqueness.html"));
+    $this->expectException(new RuntimeException("Cannot create due to duplicate id. See https://manual.umple.org?RE003ViolationofUniqueness.html"));
     $duplicate = new ItemWithUniqueId("1"); 
   }
   
