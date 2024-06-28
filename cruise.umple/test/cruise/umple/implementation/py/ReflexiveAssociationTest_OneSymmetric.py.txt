@@ -20,7 +20,7 @@ class OneSymmetric():
         self._name = aName
         self._number = aNumber
         if aFriend is None or not (aFriend.getFriend() is None) :
-            raise RuntimeError ("Unable to create OneSymmetric due to aFriend. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+            raise RuntimeError ("Unable to create OneSymmetric due to aFriend. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
         self._friend = aFriend
         return self
 

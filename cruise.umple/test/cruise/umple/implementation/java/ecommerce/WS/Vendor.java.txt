@@ -687,7 +687,7 @@ this(aName,UmpleRuntime.getComponent("Vendor"));
         try 
         {
           URL url = new URL(remoteUrl+":"+remotePort+"/Vendor"+objectId+"?wsdl");
-          QName qname = new QName("http://ecommerceWS/","VendorService");
+          QName qname = new QName("https://ecommerceWS/","VendorService");
           Service service = Service.create(url, qname);
           setRealObject(service.getPort(IVendorImpl.class));
           success = true;

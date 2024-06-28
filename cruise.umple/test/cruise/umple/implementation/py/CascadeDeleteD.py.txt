@@ -3,7 +3,7 @@ from C import C
 class D():
     def __init__(self, aC):
         if aC is None or aC.getMyD() != None :
-            raise RuntimeError ("Unable to create D due to aC. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+            raise RuntimeError ("Unable to create D due to aC. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
         self._c = aC
 

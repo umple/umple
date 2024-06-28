@@ -77,7 +77,7 @@ class JavaDistributedTemplates {
         try 
         {
           URL url = new URL(remoteUrl+":"+remotePort+"/<<=remoteName>>"+objectId+"?wsdl");
-          QName qname = new QName("http://<<=packageName>>/","<<=remoteName>>Service");
+          QName qname = new QName("https://<<=packageName>>/","<<=remoteName>>Service");
           Service service = Service.create(url, qname);
           setRealObject(service.getPort(<<=interfaceName>>.class));
           success = true;

@@ -26,7 +26,7 @@ public class MySubordinate
     boolean didAddMyDriver = setMyDriver(aMyDriver);
     if (!didAddMyDriver)
     {
-      throw new RuntimeException("Unable to create mySubordinate due to myDriver. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create mySubordinate due to myDriver. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

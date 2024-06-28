@@ -39,19 +39,19 @@ public class RegularFlight
     time = aTime;
     if (!setFlightNumber(aFlightNumber))
     {
-      throw new RuntimeException("Cannot create due to duplicate flightNumber. See http://manual.umple.org?RE003ViolationofUniqueness.html");
+      throw new RuntimeException("Cannot create due to duplicate flightNumber. See https://manual.umple.org?RE003ViolationofUniqueness.html");
     }
     if (!setFlightNumber3(aFlightNumber3))
     {
-      throw new RuntimeException("Cannot create due to duplicate flightNumber3. See http://manual.umple.org?RE003ViolationofUniqueness.html");
+      throw new RuntimeException("Cannot create due to duplicate flightNumber3. See https://manual.umple.org?RE003ViolationofUniqueness.html");
     }
     if (!setFlightNumber4(aFlightNumber4))
     {
-      throw new RuntimeException("Cannot create due to duplicate flightNumber4. See http://manual.umple.org?RE003ViolationofUniqueness.html");
+      throw new RuntimeException("Cannot create due to duplicate flightNumber4. See https://manual.umple.org?RE003ViolationofUniqueness.html");
     }
     if (!setLala(aLala))
     {
-      throw new RuntimeException("Cannot create due to duplicate lala. See http://manual.umple.org?RE003ViolationofUniqueness.html");
+      throw new RuntimeException("Cannot create due to duplicate lala. See https://manual.umple.org?RE003ViolationofUniqueness.html");
     }
   }
 

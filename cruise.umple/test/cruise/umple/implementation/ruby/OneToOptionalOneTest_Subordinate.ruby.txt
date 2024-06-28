@@ -28,7 +28,7 @@ class MySubordinate
     @number = a_number
     @myDriver = nil
     did_add_myDriver = set_myDriver(a_myDriver)
-    raise "Unable to create mySubordinate due to @myDriver. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" unless did_add_myDriver
+    raise "Unable to create mySubordinate due to @myDriver. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" unless did_add_myDriver
     @initialized = true
   end
 

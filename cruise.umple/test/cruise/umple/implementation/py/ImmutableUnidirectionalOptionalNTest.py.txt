@@ -22,7 +22,7 @@ class Student():
         self._mentors = []
         didAddMentors = self.setMentors(*allMentors)
         if not didAddMentors :
-            raise RuntimeError ("Unable to create Student, must have 3 or fewer mentors, no duplicates. See http://manual.umple.org?RE001ViolationofImmutability.html")
+            raise RuntimeError ("Unable to create Student, must have 3 or fewer mentors, no duplicates. See https://manual.umple.org?RE001ViolationofImmutability.html")
 
     #------------------------
     # INTERFACE
