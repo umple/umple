@@ -50,7 +50,7 @@ class PlainRequirementsDocGenerator
   }
 }
 
-class ReqVisitor {
+/*class ReqVisitor {
     depend java.io.IOException;
 	isA UmpleModelVisitor;
 	HtmlDocument doc;
@@ -63,4 +63,56 @@ class ReqVisitor {
         String text = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
         doc.createParagraphElement(""+req.getIdentifier()+": "+text, false);
 	}
+}*/
+class ReqVisitor {
+    depend java.io.IOException;
+	isA UmpleModelVisitor;
+	HtmlDocument doc;
+	// List of Requirements stored
+	Requirement[] allReqs;
+	
+	
+    // TO DO: 
+    // use a List to gather all of the requirements in the visit function below, sort them in alphabetical order
+    // in void done() create paragraph elements with them
+
+    // Requirement
+	void visit(Requirement req) {	
+	// Requirements being added to the list
+	addAllReq(req);
+//DEBUG	
+	System.out.println("visit 83:"+ req);
+        done(req);
+	}
+	
+	void done(Requirement req)
+	{
+	  HashMap<String, String> ReqMap = new HashMap<>();
+	  for (Requirement reqIndi : allReqs)
+	  {
+		String reqID = reqIndi.getIdentifier();
+		String reqStat = reqIndi.getStatement();
+		ReqMap.put(reqStat,reqID);
+	  }
+	  ArrayList<String> sortedKeys= new ArrayList<String>(ReqMap.keySet());
+	  Collections.sort(sortedKeys);
+//DEBUG		  
+	  System.out.println("done 100: the list after sorting is:");
+	  System.out.println(sortedKeys);
+	  System.out.println("********");
+	  for (String x : sortedKeys)
+	  {
+	  	System.out.println(x);
+	  }
+	  System.out.println("********");
+	    for (String x : sortedKeys)
+		{
+			String text = Requirement.translateToHTML(x, req.getLanguage());
+			doc.createParagraphElement(""+ReqMap.get(x)+": "+text, false); 
+		}	
+            
+	}
 }
+
+
+
