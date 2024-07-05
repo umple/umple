@@ -7,7 +7,7 @@ class UmpleToRuby {
   if(av.getValue() == null)
   {
      // Try to assign a null value or 0 value if we recognize
-     // one of Umple's built in data types. (http://cruise.site.uottawa.ca/umple/UmpleBuiltinDataTypes.html)
+     // one of Umple's built in data types. (https://cruise.site.uottawa.ca/umple/UmpleBuiltinDataTypes.html)
 
      if(av.getType().equals("String") || av.getType().equals("Date") || av.getType().equals("Time"))
      {

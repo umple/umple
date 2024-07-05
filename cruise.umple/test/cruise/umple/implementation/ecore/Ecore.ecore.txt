@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="example" nsURI="cruise.umple.example" nsPrefix="example">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="https://www.omg.org/XMI" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="https://www.eclipse.org/emf/2002/Ecore" name="example" nsURI="cruise.umple.example" nsPrefix="example">
   <eClassifiers xsi:type="ecore:EDataType" name="Date" instanceClassName="java.sql.Date" />
   <eClassifiers xsi:type="ecore:EDataType" name="Time" instanceClassName="java.sql.Time" />
   <eClassifiers xsi:type="ecore:EClass" name="ICart" interface="true" abstract="true" />
   <eClassifiers xsi:type="ecore:EClass" name="Person">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="myF" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloat" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allMyF" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloat" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="myF" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EFloat" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allMyF" upperBound="-1" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EFloat" />
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="myMap" transient="true">
-      <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
-        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EEList">
+      <eGenericType eClassifier="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EMap">
+        <eTypeArguments eClassifier="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EEList">
           <eTypeArguments />
         </eTypeArguments>
-        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EEList">
+        <eTypeArguments eClassifier="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EEList">
           <eTypeArguments />
         </eTypeArguments>
       </eGenericType>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="anotherMap" transient="true">
-      <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
-        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
-        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+      <eGenericType eClassifier="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EMap">
+        <eTypeArguments eClassifier="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eTypeArguments eClassifier="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EString" />
       </eGenericType>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//Status" />
@@ -27,17 +27,17 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="student" upperBound="-1" eType="#//Person" eOpposite="#//Person/mentor" />
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Product">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="available" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="price" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EString" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="available" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EInt" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="price" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EDouble" />
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="createdDate" eType="#//Date" />
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="createdTime" eType="#//Time" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isActive" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allAvailable" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allPrice" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isActive" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EBoolean" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allAvailable" upperBound="-1" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EInt" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allPrice" upperBound="-1" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EDouble" />
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="allCreatedDate" upperBound="-1" eType="#//Date" />
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="allCreatedTime" upperBound="-1" eType="#//Time" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allIsActive" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allIsActive" upperBound="-1" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EBoolean" />
     <eStructuralFeatures xsi:type="ecore:EReference" name="addr" eType="#//Address" />
     <eStructuralFeatures xsi:type="ecore:EReference" name="allAddr" upperBound="-1" eType="#//Address" />
     <eStructuralFeatures xsi:type="ecore:EReference" name="item" lowerBound="3" upperBound="-1" eType="#//CartItem" eOpposite="#//CartItem/product" />

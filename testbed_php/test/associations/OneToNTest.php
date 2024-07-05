@@ -5,7 +5,7 @@ class OneToNTest extends UnitTestCase
 
   public function test_cannotCreateNullStudent()
   {
-  	$this->expectException(new Exception("Unable to create student due to mentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
+  	$this->expectException(new Exception("Unable to create student due to mentor. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     new StudentL(99,null);
   }
   
@@ -99,7 +99,7 @@ class OneToNTest extends UnitTestCase
   
   public function test_createStudentWhenMentorAlreadyHasEnogh()
   {
-  	$this->expectException(new Exception("Unable to create student due to mentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
+  	$this->expectException(new Exception("Unable to create student due to mentor. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $m = new MentorL("blah");
     new StudentL(10,$m);
     new StudentL(11,$m);

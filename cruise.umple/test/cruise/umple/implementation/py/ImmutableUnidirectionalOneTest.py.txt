@@ -20,7 +20,7 @@ class Student():
         self._number = aNumber
         self._canSetMentor = True
         if not self.setMentor(aMentor) :
-            raise RuntimeError ("Unable to create Student due to aMentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+            raise RuntimeError ("Unable to create Student due to aMentor. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
     #------------------------
     # INTERFACE

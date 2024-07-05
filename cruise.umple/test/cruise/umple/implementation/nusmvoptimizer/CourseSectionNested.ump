@@ -1,7 +1,7 @@
 // UML state diagram of a course selection
 // From Lethbridge and Laganiere, McGraw Hill, 2004
 // Object Oriented Software Engineering, Practical Software Development Using UML and Java
-// http://www.lloseng.com
+// https://www.lloseng.com
 // Note that it is left as an exercise to add a student requesting to drop the course
 // This version has nesting
 class CourseSection
