@@ -18,6 +18,8 @@ class PlainRequirementsDocGenerator
   depend java.util.*;
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
+  depend java.util.Map.Entry;
+  depend java.util.Set;
   
   
   UmpleModel model = null;
@@ -28,7 +30,40 @@ class PlainRequirementsDocGenerator
   void generate(){
     doc.createParagraphElement("Plain Requirements Doc from "+model.getUmpleFile().getSimpleFileName()+".ump", false);
     UmpleModelWalker walker = new UmpleModelWalker(model);
-    walker.accept(new ReqVisitor(doc));
+    // This is the first comparator that compares by the statement of the requirement
+    Comparator<Requirement> StatComparator = new Comparator<Requirement>() {
+    @Override
+    public int compare(Requirement r1, Requirement r2) {
+        String v1 = r1.getStatement();
+        String v2 = r2.getStatement();
+        return v1.compareTo(v2);
+    }
+   };
+
+    // This is the second comparator that compares by the identifier of the requirement
+    Comparator<Requirement> IDComparator = new Comparator<Requirement>() {
+    @Override
+    public int compare(Requirement r1, Requirement r2) {
+        String v1 = r1.getIdentifier();
+        String v2 = r2.getIdentifier();
+        return v1.compareTo(v2);
+    }
+   };
+
+  // Initializing a new instance of the TreeSet called ReqTreeSet and passing the statement comparator
+  TreeSet<Requirement> ReqTreeSet = new TreeSet<Requirement>(StatComparator);
+
+  // Looping through the model's requirements to add it to the initialized TreeSet
+  for (Map.Entry<String, Requirement> entry : model.getAllRequirements().entrySet()) {
+      ReqTreeSet.add(entry.getValue());
+  }
+
+  // Creating paragraph elements from the TreeSet
+  for (Requirement x : ReqTreeSet) {
+      String text = Requirement.translateToHTML(x.getStatement(), x.getLanguage());
+      doc.createParagraphElement("" + x.getIdentifier() + ": " + text, false);
+  }
+
     model.setCode(doc.toString());
     writeModel();
     return;
@@ -51,51 +86,5 @@ class PlainRequirementsDocGenerator
   }
 }
 
-class ReqVisitor  {
-    depend java.io.IOException;
-    depend java.util.Set;
-	isA UmpleModelVisitor;
-	HtmlDocument doc;
-	// List of Requirements stored
-	Requirement[] allReqs;
-	UmpleModel model=null;
-    // TO DO: 
-    // use a List to gather all of the requirements in the visit function below, sort them in alphabetical order
-    // in void done() create paragraph elements with them
-
-    // Requirement
-	void visit(Requirement req) {	
-	// Requirements being added to the list
-	   addAllReq(req);
-	}
-	
-	void done()
-	{
-	   // Creating a custom comparator to compare the requirements based on statement but can be changed to identifier as well
-           Comparator<Requirement> valueComparator  = new Comparator<Requirement>() {
-            
-            @Override
-            public int compare(Requirement r1, Requirement r2) {
-                String v1 = r1.getStatement();
-                String v2 = r2.getStatement();
-                return v1.compareTo(v2);
-            }
-        };	
-                // Creating a set to remove any duplicates 	
-                Set<Requirement> ReqSet = new HashSet<Requirement>(allReqs);
-                // Adding all the requirements in the list to a set to avoid duplication
-                ReqSet.addAll(allReqs);
-                // Creating a list from the set(after removing duplicates) because sort only takes a list
-                List<Requirement> SortedSet = new ArrayList<>(ReqSet);
-                // Sort the list of requirements without any duplicates
-        	Collections.sort(SortedSet, valueComparator);	
-        	// Create paragraph elements with the list of requirements without any duplicates
-           	for (Requirement x : SortedSet)
-		{
-			String text = Requirement.translateToHTML(x.getStatement(), x.getLanguage());
-			doc.createParagraphElement(""+x.getIdentifier()+": "+text, false); 
-		}	
-	}
-}
 
 
