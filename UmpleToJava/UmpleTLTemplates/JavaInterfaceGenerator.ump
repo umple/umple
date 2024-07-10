@@ -48,9 +48,9 @@ class JavaInterfaceGenerator {
 #>>
 <<=gen.translate("packageDefinition",uInterface)>><<@ UmpleToJava.import_packages_interface >>
 
-<<# if (uInterface.numberOfComments() > 0 && uInterface.numberOfRequirements() > 0) { List<Comment> toComment = new ArrayList<Comment>(uInterface.getComments()); toComment.addAll(Requirement.convertToComment(uInterface.getRequirements())); append(realSb, "\n{0}", Comment.format("Javadoc", toComment)); } #>>
+<<# if (uInterface.numberOfComments() > 0 && uInterface.numberOfRequirements() > 0) { List<Comment> toComment = new ArrayList<Comment>(uInterface.getComments()); toComment.addAll(Requirement.convertToComment(uInterface.getReqImplementations(),model)); append(realSb, "\n{0}", Comment.format("Javadoc", toComment)); } #>>
 <<# if (uInterface.numberOfComments() > 0 && uInterface.numberOfRequirements() == 0) { append(realSb, "\n{0}", Comment.format("Javadoc",uInterface.getComments())); } #>>
-<<# if (uInterface.numberOfComments() == 0 && uInterface.numberOfRequirements() > 0) { append(realSb, "\n{0}", Requirement.format("Javadoc",uInterface.getRequirements())); } #>>
+<<# if (uInterface.numberOfComments() == 0 && uInterface.numberOfRequirements() > 0) { append(realSb, "\n{0}", Requirement.format("Javadoc",uInterface.getReqImplementations(),model)); } #>>
 <<# for (Position p : uInterface.getPositions()) { #>>
 // line <<= p.getLineNumber() >> "<<= uInterface.getRelativePath(p.getFilename(),"Java") >>"
 <<# } #>>

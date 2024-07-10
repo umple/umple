@@ -291,11 +291,6 @@ if(model.isDebugMode()) {
 }
      // Identifier that has been identified 
      String reqImpID = t.getSubToken("reqIdentifier").getValue();
-     Requirement Implreq = model.getAllRequirements().get(reqImpID);
-//DEBUG    
-if(model.isDebugMode()) {  
-     System.out.println(" AI:279- Implereq is:"+Implreq);
-}
      ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);// Instantiate the requirement implementation
      model.addReqImplementation(reqImplementation);
      lastRequirementsImpl.add(reqImplementation);
@@ -328,11 +323,6 @@ if(model.isDebugMode()) {
             }
         }
       }
-//DEBUG      
-if(model.isDebugMode()) {   
-      //System.out.println("AI:307-The lastRequirement list:");
-      //System.out.println(lastRequirements);
-}
   }
 
   private void analyzeImplementReq(Token t, UmpleClass aClass) {
@@ -471,11 +461,11 @@ if(model.isDebugMode()) {
 }       
         for (ReqImplementation ri : lastRequirementsImpl)
         {
-          lastattr.addReqImplementation(ri);
+          lastassoc.addReqImplementation(ri);
         }
 if(model.isDebugMode()) {    
-    System.out.println("isReqAddedToLast 474: lastattr is:");
-    System.out.println(lastattr);
+    System.out.println("isReqAddedToLast 474: lastassoc is:");
+    System.out.println(lastassoc);
 }         
         return true;
       }

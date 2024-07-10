@@ -887,7 +887,7 @@ class Requirement{
     language = aReq.getLanguage();
   }
 
-  public static List<Comment> convertToComment(List<Requirement> reqSelected){
+  /*public static List<Comment> convertToComment(List<Requirement> reqSelected){
     List<Comment> reqTextOnly = new ArrayList<Comment>();
     String reqText = new String();
 
@@ -906,10 +906,43 @@ class Requirement{
     }
       
     return reqTextOnly;
+  }*/
+  public static List<Comment> convertToComment(List<ReqImplementation> reqSelected,UmpleModel aModel){
+    List<Comment> reqTextOnly = new ArrayList<Comment>();
+    String reqText = new String();
+    String reqImpID = "";
+
+    for (ReqImplementation reqImpl : reqSelected){
+      reqImpID = reqImpl.getIdentifier();
+      Requirement findRequirement = aModel.getAllRequirements().get(reqImpID);
+      if(findRequirement != null)
+     {
+      
+      reqText = findRequirement.getStatement().trim();
+
+      reqText = findRequirement.getIdentifier() + ": " + reqText;
+
+      String [] reqTextList = reqText.split("\n");
+
+      for (String line : reqTextList){
+        // convert text of req to comment and format like a comment
+        Comment reqComment = new Comment(line);      
+        reqTextOnly.add(reqComment);
+        }
+      }
+     else
+     {
+        String commentmssg = "No requirement found for this requirement identifier:"+reqImpID;
+        Comment NoComment = new Comment(commentmssg);
+        reqTextOnly.add(NoComment);
+     }
+    }
+      
+    return reqTextOnly;
   }
 
-  public static String format(String type, List<Requirement> reqSelected){
-    List<Comment> listOfReq = convertToComment(reqSelected);
+  public static String format(String type, List<ReqImplementation> reqSelected,UmpleModel aModel){
+    List<Comment> listOfReq = convertToComment(reqSelected,aModel);
     return Comment.format(type, listOfReq);
   }
 

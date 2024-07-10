@@ -169,9 +169,9 @@ class UmpleToJava {
                              "    Thread.setDefaultUncaughtExceptionHandler(new "+exceptionHandlerPackage+"UmpleExceptionHandler());\n"+properMethodBody;
           uClass.setHasMainMethod(true);
         }
-        if (aMethod.numberOfComments() > 0 && aMethod.numberOfRequirements() > 0) { List<Comment> toComment = new ArrayList<Comment>(aMethod.getComments()); toComment.addAll(Requirement.convertToComment(aMethod.getRequirements())); append(realSb, "\n\n  {0}", Comment.format("Method Javadoc", toComment)); }
+        if (aMethod.numberOfComments() > 0 && aMethod.numberOfRequirements() > 0) { List<Comment> toComment = new ArrayList<Comment>(aMethod.getComments()); toComment.addAll(Requirement.convertToComment(aMethod.getReqImplementations(),model)); append(realSb, "\n\n  {0}", Comment.format("Method Javadoc", toComment)); }
         else if (aMethod.numberOfComments() > 0) { append(realSb, "\n\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
-        else if (aMethod.numberOfRequirements() > 0) { append(realSb, "\n\n  {0}", Requirement.format("Method Javadoc",aMethod.getRequirements())); }
+        else if (aMethod.numberOfRequirements() > 0) { append(realSb, "\n\n  {0}", Requirement.format("Method Javadoc",aMethod.getReqImplementations(),model)); }
         
         append(realSb,"\n");
         int javaline = realSb.toString().split("\\n").length+(aMethod.numberOfComments() > 0?0:1);
