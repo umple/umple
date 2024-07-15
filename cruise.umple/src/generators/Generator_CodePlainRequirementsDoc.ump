@@ -14,6 +14,7 @@ namespace cruise.umple.compiler;
 class PlainRequirementsDocGenerator
 {
   isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
@@ -49,20 +50,23 @@ class PlainRequirementsDocGenerator
         return v1.compareTo(v2);
     }
    };
-
-  // Initializing a new instance of the TreeSet called ReqTreeSet and passing the statement comparator
-  TreeSet<Requirement> ReqTreeSet = new TreeSet<Requirement>(StatComparator);
-
-  // Looping through the model's requirements to add it to the initialized TreeSet
-  for (Map.Entry<String, Requirement> entry : model.getAllRequirements().entrySet()) {
-      ReqTreeSet.add(entry.getValue());
-  }
-
-  // Creating paragraph elements from the TreeSet
-  for (Requirement x : ReqTreeSet) {
-      String text = Requirement.translateToHTML(x.getStatement(), x.getLanguage());
-      doc.createParagraphElement("" + x.getIdentifier() + ": " + text, false);
-  }
+   TreeSet<Requirement> ReqTreeSet = new TreeSet<>();
+   if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortID")){
+	// Initializing a new instance of the TreeSet called ReqTreeSet and passing the statement comparator
+  	ReqTreeSet = new TreeSet<>(IDComparator);
+   }
+   if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortStat")){
+	// Initializing a new instance of the TreeSet called ReqTreeSet and passing the statement comparator
+  	ReqTreeSet = new TreeSet<>(StatComparator);
+   }
+   for (Map.Entry<String, Requirement> entry : model.getAllRequirements().entrySet()) {
+      		ReqTreeSet.add(entry.getValue());
+  	}
+  	 // Creating paragraph elements from the TreeSet
+   for (Requirement x : ReqTreeSet) {
+      		String text = Requirement.translateToHTML(x.getStatement(), x.getLanguage());
+      		doc.createParagraphElement("" + x.getIdentifier() + ": " + text, false);
+        }
 
     model.setCode(doc.toString());
     writeModel();
