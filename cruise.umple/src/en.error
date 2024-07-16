@@ -190,7 +190,7 @@
 
 # Message related to requirements start with 400
 401: 4, "https://manual.umple.org/?PageBeingDeveloped.html", Cannot find specified requirement identifier(s): {0} ;
-402: 4,  "http://manual.umple.org/?PageBeingDeveloped.html", Language Conflict for requirement identifier:{0}. The languages encountered are: {1} and {2} ;
+402: 4,  "https://manual.umple.org/?PageBeingDeveloped.html", Language Conflict for requirement identifier:{0}. The languages encountered are: {1} and {2} ;
 
 # Messages relating to deprecated features starting with 901
 901: 4, "https://manual.umple.org/?W901DeprecatedKeywordConstant.html", Keyword "constant" deprecated, please use "const" ;

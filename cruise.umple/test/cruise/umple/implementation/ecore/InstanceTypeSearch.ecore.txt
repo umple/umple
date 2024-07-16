@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="example" nsURI="example" nsPrefix="example">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="https://www.omg.org/XMI" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="https://www.eclipse.org/emf/2002/Ecore" name="example" nsURI="example" nsPrefix="example">
   <eClassifiers xsi:type="ecore:EDataType" name="Throwable" instanceClassName="java.lang.Throwable" />
   <eClassifiers xsi:type="ecore:EDataType" name="StringBuilder" instanceClassName="java.lang.StringBuilder" />
   <eClassifiers xsi:type="ecore:EDataType" name="File" instanceClassName="java.io.File" />
@@ -10,8 +10,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="t2" upperBound="-1" eType="#//Throwable" />
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="s1" eType="#//StringBuilder" />
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="s2" upperBound="-1" eType="#//StringBuilder" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="f1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloat" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="f2" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloat" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="f1" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EFloat" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="f2" upperBound="-1" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EFloat" />
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="B">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="file1" eType="#//File" />
@@ -26,15 +26,15 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigDec2" upperBound="-1" eType="#//BigDecimal" />
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="E">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigInt1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigInteger" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigInt2" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigInteger" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigDec1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigDecimal" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigDec2" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigDecimal" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="c1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EChar" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="c2" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EChar" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="c3" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ECharacterObject" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="c4" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ECharacterObject" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="o1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject" />
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="o2" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigInt1" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EBigInteger" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigInt2" upperBound="-1" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EBigInteger" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigDec1" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EBigDecimal" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigDec2" upperBound="-1" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EBigDecimal" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="c1" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EChar" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="c2" upperBound="-1" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EChar" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="c3" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//ECharacterObject" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="c4" upperBound="-1" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//ECharacterObject" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="o1" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EJavaObject" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="o2" upperBound="-1" eType="ecore:EDataType https://www.eclipse.org/emf/2002/Ecore#//EJavaObject" />
   </eClassifiers>
 </ecore:EPackage>

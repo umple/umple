@@ -13,7 +13,7 @@ class OneToMany():
     def __init__(self, aOneToMany):
         self._oneToMany = None
         if not self.setOneToMany(aOneToMany) :
-            raise RuntimeError ("Unable to create OneToMany due to aOneToMany. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+            raise RuntimeError ("Unable to create OneToMany due to aOneToMany. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
     #------------------------
     # INTERFACE
