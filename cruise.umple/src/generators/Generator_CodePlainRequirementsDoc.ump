@@ -14,7 +14,6 @@ namespace cruise.umple.compiler;
 class PlainRequirementsDocGenerator
 {
   isA CodeGenerator;
-  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
@@ -31,43 +30,29 @@ class PlainRequirementsDocGenerator
   void generate(){
     doc.createParagraphElement("Plain Requirements Doc from "+model.getUmpleFile().getSimpleFileName()+".ump", false);
     UmpleModelWalker walker = new UmpleModelWalker(model);
-    // This is the first comparator that compares by the statement of the requirement
-    Comparator<Requirement> StatComparator = new Comparator<Requirement>() {
-    @Override
-    public int compare(Requirement r1, Requirement r2) {
-        String v1 = r1.getStatement();
-        String v2 = r2.getStatement();
-        return v1.compareTo(v2);
+    TreeSet<Requirement> ReqTreeSet;
+    if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortID")) {
+      Comparator<Requirement> IdComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier());
+      // Initialize with ID Comparator
+      ReqTreeSet = new TreeSet<>(IdComparator); 
+    } 
+    else if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortStat")) {
+      Comparator<Requirement> StatComparator = (r1, r2) -> r1.getStatement().compareTo(r2.getStatement());
+      // Initialize with Statement Comparator
+      ReqTreeSet = new TreeSet<>(StatComparator); 
+    } 
+    else {
+      Comparator<Requirement> DefaultComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier());
+      // Initialize with default Comparator or natural ordering
+      ReqTreeSet = new TreeSet<>(DefaultComparator); 
     }
-   };
-
-    // This is the second comparator that compares by the identifier of the requirement
-    Comparator<Requirement> IDComparator = new Comparator<Requirement>() {
-    @Override
-    public int compare(Requirement r1, Requirement r2) {
-        String v1 = r1.getIdentifier();
-        String v2 = r2.getIdentifier();
-        return v1.compareTo(v2);
+    // Add all requirements found in the model to the TreeSet 
+    ReqTreeSet.addAll(model.getAllRequirements().values());
+    // Creating paragraph elements from the TreeSet
+    for (Requirement x : ReqTreeSet) {
+      String text = Requirement.translateToHTML(x.getStatement(), x.getLanguage());
+      doc.createParagraphElement("" + x.getIdentifier() + ": " + text, false);
     }
-   };
-   TreeSet<Requirement> ReqTreeSet = new TreeSet<>();
-   if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortID")){
-	// Initializing a new instance of the TreeSet called ReqTreeSet and passing the statement comparator
-  	ReqTreeSet = new TreeSet<>(IDComparator);
-   }
-   if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortStat")){
-	// Initializing a new instance of the TreeSet called ReqTreeSet and passing the statement comparator
-  	ReqTreeSet = new TreeSet<>(StatComparator);
-   }
-   for (Map.Entry<String, Requirement> entry : model.getAllRequirements().entrySet()) {
-      		ReqTreeSet.add(entry.getValue());
-  	}
-  	 // Creating paragraph elements from the TreeSet
-   for (Requirement x : ReqTreeSet) {
-      		String text = Requirement.translateToHTML(x.getStatement(), x.getLanguage());
-      		doc.createParagraphElement("" + x.getIdentifier() + ": " + text, false);
-        }
-
     model.setCode(doc.toString());
     writeModel();
     return;

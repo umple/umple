@@ -568,8 +568,7 @@ class UmpleConsoleMain
     String suboptionsAvail = "(With GvStateDiagram: hideactions, hideguards, showtransitionlabels, showguardlabels, Java, Cpp) ";
     suboptionsAvail += "(With GvClassDiagram or GvClassTraitDiagram or GvEntityRelationshipDiagram: hideattributes, showmethods)";
     suboptionsAvail += " (With all Gv: gvseparator=n.n where n.n is greater than 1.0 to separate nodes more than default, or less than one to make the diagram tighter)";
-    suboptionsAvail += " (With all reqSortID: reqSortID to sort requirements by their ID)";
-    suboptionsAvail += " (With all reqSortStat: reqSortStat to sort requirements by their Statement)";
+    suboptionsAvail += " (With all Requirements: reqSortID to sort requirements by their ID, reqSortStat to sort requirements by their Statement)";
 
       optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
       optparser.acceptsAll(Arrays.asList("performance", "p"), "Indicate time taken to parse and generate code");
