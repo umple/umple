@@ -21,7 +21,7 @@ class Student():
         self._name = aName
         self._number = aNumber
         if aMentor is None or not (aMentor.getStudent() is None) :
-            raise RuntimeError ("Unable to create Student due to aMentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+            raise RuntimeError ("Unable to create Student due to aMentor. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
         self._mentor = aMentor
         return self
 

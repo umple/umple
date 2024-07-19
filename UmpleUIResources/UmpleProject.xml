@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- UMPLE PROJECT JSF PROVIDER-->
-<UmpleProject UmpleFile="examples/school.ump" name="School" UIFactory="cruise.ui.jsf.JSFFactory" OutputFolder="AirlineOut" xsi:noNamespaceSchemaLocation="UmpleProject.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<UmpleProject UmpleFile="examples/school.ump" name="School" UIFactory="cruise.ui.jsf.JSFFactory" OutputFolder="AirlineOut" xsi:noNamespaceSchemaLocation="UmpleProject.xsd" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance">
 	<Properties>
 		<Property name="UMPLE_FOLDER" value="JavaSource" />
 		<Property name="ATTRIBUTE_CONFIGURATOR" value="xml/AttributeConfigurator.xml" />

@@ -213,7 +213,7 @@ this(aName,UmpleRuntime.getComponent("Agent"));
         try 
         {
           URL url = new URL(remoteUrl+":"+remotePort+"/Agent"+objectId+"?wsdl");
-          QName qname = new QName("http://ecommerceWS/","AgentService");
+          QName qname = new QName("https://ecommerceWS/","AgentService");
           Service service = Service.create(url, qname);
           setRealObject(service.getPort(IAgentImpl.class));
           success = true;

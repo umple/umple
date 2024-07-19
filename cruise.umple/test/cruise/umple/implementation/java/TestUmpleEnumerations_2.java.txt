@@ -43,7 +43,7 @@ public class X
     defaultAttr = aDefaultAttr;
     if (!setMyName(aMyName))
     {
-      throw new RuntimeException("Cannot create due to duplicate myName. See http://manual.umple.org?RE003ViolationofUniqueness.html");
+      throw new RuntimeException("Cannot create due to duplicate myName. See https://manual.umple.org?RE003ViolationofUniqueness.html");
     }
     setSm(Sm.s1);
   }

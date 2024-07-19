@@ -24,7 +24,7 @@ public class First implements I
     boolean didAddSecond = setSecond(aSecond);
     if (!didAddSecond)
     {
-      throw new RuntimeException("Unable to create first due to second. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create first due to second. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

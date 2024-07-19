@@ -36,7 +36,7 @@ public class Address
     boolean didAddPerson = setPerson(aPerson);
     if (!didAddPerson)
     {
-      throw new RuntimeException("Unable to create address due to person. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create address due to person. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

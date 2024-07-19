@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<uml:Package xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_0" name="example">
+<uml:Package xmi:version="2.1" xmlns:xmi="https://schema.omg.org/spec/XMI/2.1" xmlns:uml="https://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_0" name="example">
   <packageImport xmi:id="_packageImport.0" importedPackage="dataType"/>
   <packagedElement xmi:type="uml:Package" xmi:id="dataType" name="dataType">
     <packagedElement xmi:type="uml:PrimitiveType" xmi:id="dataType-String" name="String"/>
