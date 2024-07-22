@@ -1428,6 +1428,16 @@ public class UmpleParserTest
           assertNoWarningsParse("450_ReqSameOneBlank.ump");
           assertNoWarningsParse("450_ReqSameLang.ump");
   }
+  
+   @Test
+  public void ReqSort()
+  {
+	  assertNoWarningsParse("452_ReqSorted2Reqs.ump");
+          assertNoWarningsParse("452_ReqSortedAlphabetA.ump");
+          assertNoWarningsParse("452_ReqSortedInsideClass.ump");
+          assertNoWarningsParse("452_ReqSortedOutsideClass.ump");
+          assertNoWarningsParse("452_ReqSortedSameLetterID.ump");
+  }
 
   @Test
   public void associationName()
