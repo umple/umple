@@ -3,7 +3,7 @@
 
 // Copyright: All contributors to the Umple Project
 // This file is made available subject to the open source license found at:
-// [*http://umple.org/license*]
+// [*https://umple.org/license*]
 
 // State machine elements in Umple. See user manual page: [*BasicStateMachines*]
 stateMachineDefinition : statemachine [=queued]? [=pooled]? [name] { [[state]]* }

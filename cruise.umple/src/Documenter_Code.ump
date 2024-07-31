@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
 Code for generating documentation such as the Umple user manual
 */
@@ -101,8 +101,8 @@ class Documenter
     // NEW
     StringBuilder combinedHtmlOutput = new StringBuilder();
     combinedHtmlOutput.append(
-        "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" + "\n" +
-        "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
+        "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" + "\n" +
+        "<html xmlns=\"https://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
         "<head>" + "\n" +
         "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" + "\n" +
         "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />" + "\n" +        
@@ -114,7 +114,7 @@ class Documenter
         "  <style> .regCentered {text-align: center; font-size: 110%  }</style>\n" +  
         "  <meta name='viewport' content='width=device-width, initial-scale=1'>\n  " +
         "</head>\n<body>\n" +
-        "<div class='largeCentered'>Umple Combined User Manual<br><a href='http://www.umple.org'>http://www.umple.org</a></div><div class='regCentered'>This version is one large page and is intended to allow searching through the entire manual, or easy printing to pdf for offline reading. For most purposes you will want to work with the individual manual pages at <a href='http://manual.umple.org'>http://manual.umple.org</a>. A published 526-page <a href='https://doi.org/10393/42044'>pdf version of the Umple User Manual</a> is also available for download. </div>&nbsp;<br/>"
+        "<div class='largeCentered'>Umple Combined User Manual<br><a href='https://www.umple.org'>https://www.umple.org</a></div><div class='regCentered'>This version is one large page and is intended to allow searching through the entire manual, or easy printing to pdf for offline reading. For most purposes you will want to work with the individual manual pages at <a href='https://manual.umple.org'>https://manual.umple.org</a>. A published 526-page <a href='https://doi.org/10393/42044'>pdf version of the Umple User Manual</a> is also available for download. </div>&nbsp;<br/>"
         );
 
     Hashtable<String,String> referenceLookup = createReferenceLookup();
@@ -678,8 +678,8 @@ class Template
   private static String htmlTemplate()
   {
     String template = "" + 
-        "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" + "\n" +
-        "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
+        "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" + "\n" +
+        "<html xmlns=\"https://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
         "<head>" + "\n" +
         "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" + "\n" +
         "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />" + "\n" +

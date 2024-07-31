@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
  */
 
@@ -125,7 +125,7 @@ class XtextGenerator
         return groups[0] + "_" + frequency + "=block";
       }
     });
-    xtext.append("grammar cruise.umple.Umple with org.eclipse.xtext.common.Terminals\n\ngenerate umple \"http://www.umple.cruise/Umple\"\n\nModel:\n\tmodel=Program_;\n\n");
+    xtext.append("grammar cruise.umple.Umple with org.eclipse.xtext.common.Terminals\n\ngenerate umple \"https://www.umple.cruise/Umple\"\n\nModel:\n\tmodel=Program_;\n\n");
     HashSet<String> used = new HashSet<String>();
     for(Rule rule:(new UmpleInternalParser()).getRules()){
       if(used.add(rule.getName())){

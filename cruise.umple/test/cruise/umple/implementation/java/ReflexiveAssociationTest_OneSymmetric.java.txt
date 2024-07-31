@@ -27,7 +27,7 @@ public class OneSymmetric
     number = aNumber;
     if (aFriend == null || aFriend.getFriend() != null)
     {
-      throw new RuntimeException("Unable to create OneSymmetric due to aFriend. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create OneSymmetric due to aFriend. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     friend = aFriend;
   }

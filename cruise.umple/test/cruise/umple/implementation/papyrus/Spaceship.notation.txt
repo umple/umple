@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" type="PapyrusUMLClassDiagram" name="Spaceship" measurementUnit="Pixel">
+<notation:Diagram xmi:version="2.0" xmlns:xmi="https://www.omg.org/XMI" xmlns:notation="https://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:uml="https://www.eclipse.org/uml2/5.0.0/UML" type="PapyrusUMLClassDiagram" name="Spaceship" measurementUnit="Pixel">
   <styles xmi:type="notation:DiagramStyle"/>
   <element xmi:type="uml:Model" href="model.uml#_Spaceship"/>
   <children xmi:type="notation:Shape" type="2008">

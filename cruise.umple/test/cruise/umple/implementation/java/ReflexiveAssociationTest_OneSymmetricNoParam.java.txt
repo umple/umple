@@ -21,7 +21,7 @@ public class OneSymmetricNoParam
   {
     if (aFriend == null || aFriend.getFriend() != null)
     {
-      throw new RuntimeException("Unable to create OneSymmetricNoParam due to aFriend. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create OneSymmetricNoParam due to aFriend. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     friend = aFriend;
   }
