@@ -14,5 +14,4 @@ req A01 {
 class Example { 
   var1;
   var2;
- } 
-     
+ }

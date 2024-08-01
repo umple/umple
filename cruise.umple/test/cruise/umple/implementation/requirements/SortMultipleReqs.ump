@@ -1,0 +1,22 @@
+// To test if a mutliple requirements are outputted.
+req A01 {    
+  b requirement.
+}
+req C01 {    
+  a requirement.
+}
+req D01 {    
+  d requirement.
+}
+req B01 {    
+  c requirement.
+}
+ implementsReq A01;
+ implementsReq B01;
+ implementsReq C01;
+ implementsReq D01;   
+class Example { 
+   var1;
+    var2;
+ } 
+

@@ -30,6 +30,7 @@ class PlainRequirementsDocGenerator
   void generate(){
     doc.createParagraphElement("Plain Requirements Doc from "+model.getUmpleFile().getSimpleFileName()+".ump", false);
     UmpleModelWalker walker = new UmpleModelWalker(model);
+    //System.out.println(model.getAllRequirements().values());
     TreeSet<Requirement> ReqTreeSet;
     if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortID")) {
       Comparator<Requirement> IdComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier());
