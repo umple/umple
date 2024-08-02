@@ -69,6 +69,7 @@ class UmpleInternalParser
 
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
+    // Only need to clear reqImplementations if there actually was reqImplementations.
     boolean shouldConsumeRequirementImpl = lastRequirementsImpl.size() > 0;
 
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
@@ -217,8 +218,8 @@ if(model.isDebugMode()) {
 if(model.isDebugMode()) {   
     System.out.println("216: New content is:"+newContent);
 }
-
-    String newLanguage = "";// Initialize language
+    // Initialize language
+    String newLanguage = "";
     if (!(t.getSubToken("reqLanguage") == null || t.getSubToken("reqLanguage").getValue() == null)) {
         // get the language of the sub token
         newLanguage = t.getSubToken("reqLanguage").getValue();
@@ -276,11 +277,6 @@ if(model.isDebugMode()) {
     // Add the new requirement
       req.addReqToken(t);// new addition
       model.getAllRequirements().put(reqID, req);
-//DEBUG     
-if(model.isDebugMode()) {   
-      //System.out.println("AR:267");
-      //System.out.println(lastRequirements);
-}
     }
 
   }
@@ -291,38 +287,14 @@ if(model.isDebugMode()) {
 }
      // Identifier that has been identified 
      String reqImpID = t.getSubToken("reqIdentifier").getValue();
-     ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);// Instantiate the requirement implementation
+     // Instantiate the requirement implementation
+     ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
      model.addReqImplementation(reqImplementation);
      lastRequirementsImpl.add(reqImplementation);
 //DEBUG   
 if(model.isDebugMode()) {   
      System.out.println("AI 284- LastReqImpl:"+lastRequirementsImpl);
 }
-//DEBUG      
-     // REMOVE THE CODE BELOW
-    if (t.hasSubTokens()) {
-        
-
-        for (Token sub : t.getSubTokens()) {
-            // Declare subValue to store the result of sub.getValue()
-            String subValue = sub.getValue(); 
-		System.out.println("The tokens are:"+subValue);
-            if (!subValue.equals("STATIC")) {
-            	System.out.println("AI: 315-The value is not STATIC");
-                if (model.getAllRequirements().containsKey(subValue)) {
-                    System.out.println("AI:317-Their exits a requirement in the model");
-                    // DEBUG
-                    //lastRequirements.add(model.getAllRequirements().get(subValue)); // If requirement is found add it to lastRequirement list
-                    lastRequirementsImpl.add(reqImplementation);
-                } 
-               /* else {
-                    //counter++;
-                    //badReq += " " + subValue;
-                    String reqIID = t.getSubToken("reqIdentifier").getValue(); 
-                }*/
-            }
-        }
-      }
   }
 
   private void analyzeImplementReq(Token t, UmpleClass aClass) {

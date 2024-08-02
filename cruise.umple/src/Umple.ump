@@ -74,7 +74,7 @@ class UmpleModel
   // The core list of all requirement in this Model s found while parsing
   Map<String, Requirement> allRequirements = new HashMap<String, Requirement>();
   
-  // The core list of all requirement implementation annotations found while parsing
+  // The core list of all requirement implementation annotations found while parsing.
   * -> * ReqImplementation reqImplementations;
 
   // data for default class positioning
@@ -240,8 +240,6 @@ class Method
   1 -> * Comment;
 
   //The requirement ids implemented within the method.
-  1 -> * Requirement;
-  
   1 -> * ReqImplementation;
   
   // Specifies, for fAutoAPI methods, if the method was generated
@@ -669,8 +667,7 @@ class UmpleInterface
   // The comments associated with the Umple Interface (such as the Javadoc above it).
   1 -> * Comment;
 
-  1 -> * Requirement;
-  
+  //The requirement ids implemented within the Umple Interface.
   1 -> * ReqImplementation;
   
   0..1 -- * UmpleTestCase;
@@ -772,8 +769,7 @@ class UmpleClass
   // The comments associated with the Umple Class (such as the Javadoc above it).
   1 -> * Comment;
 
-  1 -> * Requirement;
-  
+  //The requirement ids implemented within the class.
   1 -> * ReqImplementation;
 
   //This is used to assign inheritance parameters.
@@ -850,9 +846,7 @@ class UmpleTrait {
   // The comments associated with the Umple Trait (such as the Javadoc above it).
   1 -> * Comment;
 
-  // The requirement associated with the Umple Trait (such as the Javadoc above it).
-  1 -> * Requirement;
-  
+  // The requirement associated with the Umple Trait (such as the Javadoc above it). 
   1 -> * ReqImplementation;
 
   //The template parameters which are specified when traits are defined.
@@ -1061,7 +1055,7 @@ class Attribute
   // The comments associated with the attribute (such as the Javadoc above it).
   1 -> * Comment;
 
-  1 -> * Requirement;
+ //The requirement ids implemented within the attribute.
   1 -> * ReqImplementation;
 
   // In case this attribute needs to have error handling preformed
@@ -1184,7 +1178,7 @@ class AssociationVariable
   // The comments associated with the association (such as the Javadoc above it).
   1 -> * Comment;
 
-  1 -> * Requirement;
+  //The requirement ids implemented within the association variable.
   1 -> * ReqImplementation;
 
   before setUmpleClass { if ((aUmpleClass != null) && !aUmpleClass.immutabilityAssociationRulesSatisfied(this, aUmpleClass.isImmutable())) { return false; } }
@@ -1335,6 +1329,7 @@ class Requirement{
  */
 class ReqImplementation {
   depend cruise.umple.parser.Token;
+  depend java.util.*;
 
   // unique identifier that should match the identifier of a Requirement
   identifier;

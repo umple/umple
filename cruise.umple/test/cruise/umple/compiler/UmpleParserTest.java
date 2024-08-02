@@ -1433,7 +1433,7 @@ public class UmpleParserTest
   @Test
   public void ReqSameNameCombine3()
   {
-           assertNoWarningsParse("450_ReqSameNoLang.ump");
+          assertNoWarningsParse("450_ReqSameNolang.ump");
   }
   @Test
   public void ReqSameNameCombine4()
@@ -1501,7 +1501,7 @@ public class UmpleParserTest
   @Test
   public void ImplementsPrecedeReq12()
   {
-          assertNoWarningsParse("451_ReqMixsetNoUse.ump"); // Should this produce another warning
+          assertNoWarningsParse("451_ReqMixsetNoUse.ump"); 
   }
   @Test
   public void ImplementsPrecedeReq13()

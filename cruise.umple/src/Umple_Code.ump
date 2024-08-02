@@ -876,7 +876,8 @@ class Comment
     return output.trim();
   }
 }
-
+/*
+ */
 class Requirement{
 
   // deep copy constructor
@@ -886,38 +887,19 @@ class Requirement{
     statement = aReq.getStatement();
     language = aReq.getLanguage();
   }
-
-  /*public static List<Comment> convertToComment(List<Requirement> reqSelected){
-    List<Comment> reqTextOnly = new ArrayList<Comment>();
-    String reqText = new String();
-
-    for (Requirement req : reqSelected){
-      reqText = req.getStatement().trim();
-
-      reqText = req.getIdentifier() + ": " + reqText;
-
-      String [] reqTextList = reqText.split("\n");
-
-      for (String line : reqTextList){
-        // convert text of req to comment and format like a comment
-        Comment reqComment = new Comment(line);      
-        reqTextOnly.add(reqComment);
-      }
-    }
-      
-    return reqTextOnly;
-  }*/
   public static List<Comment> convertToComment(List<ReqImplementation> reqSelected,UmpleModel aModel){
+    //System.out.println("convertToComment: Inside the function!");
     List<Comment> reqTextOnly = new ArrayList<Comment>();
     String reqText = new String();
     String reqImpID = "";
-
+    //System.out.println("convertToComment: the value of reqSelected!"+reqSelected)
     for (ReqImplementation reqImpl : reqSelected){
       reqImpID = reqImpl.getIdentifier();
       Requirement findRequirement = aModel.getAllRequirements().get(reqImpID);
       if(findRequirement != null)
      {
-      
+      //System.out.println("convertToComment: findRequirement not NUll!");
+      //System.out.println("convertToComment:"+findRequirement);
       reqText = findRequirement.getStatement().trim();
 
       reqText = findRequirement.getIdentifier() + ": " + reqText;
@@ -937,13 +919,12 @@ class Requirement{
         reqTextOnly.add(NoComment);
      }
     }
-      
     return reqTextOnly;
   }
 
   public static String format(String type, List<ReqImplementation> reqSelected,UmpleModel aModel){
     List<Comment> listOfReq = convertToComment(reqSelected,aModel);
-    return Comment.format(type, listOfReq);
+    return Comment.format(type, listOfReq); 
   }
 
   public static String translateToHTML(String content, String lang){
@@ -954,6 +935,8 @@ class Requirement{
 
     return content;
   }
+  //String output = Requirement.format("Slashes",allTestRequirementsImpl,model);
+  //System.out.println("945: OUTPUT:"+output);
 
 }
 

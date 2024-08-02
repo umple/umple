@@ -54,6 +54,7 @@ class ReqVisitor {
     depend java.io.IOException;
 	isA UmpleModelVisitor;
 	HtmlDocument doc;
+	
     // TO DO: 
     // use a List to gather all of the requirements in the visit function below, sort them in alphabetical order
     // in void done() create paragraph elements with them

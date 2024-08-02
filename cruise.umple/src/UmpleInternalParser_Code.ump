@@ -119,7 +119,7 @@ class UmpleInternalParser
       } 
       // The call to analyzeAllRequirements is here
       analyzeAllRequirements();
-    
+      
     }
     catch (Exception ex)
     {
@@ -324,16 +324,21 @@ class UmpleInternalParser
   private void analyzeAllRequirements()
   {
      // At this point we take the implementations and map the requirements to see if any are missing
-     for (ReqImplementation reqImpl : model.getReqImplementations())//Loop through requirement implementations ID
+     if(model.getReqImplementations() != null){
+     //System.out.println("Inside the analyzeAllRequirements");
+     //Loop through requirement implementations ID
+     for (ReqImplementation reqImpl : model.getReqImplementations())
      {
        String reqImplID = reqImpl.getIdentifier();
        Token reqImplToken = reqImpl.getReqToken();
-       Requirement foundRequirement = model.getAllRequirements().get(reqImplID); // found a matching req for implementation
+       // found a matching req for implementation
+       Requirement foundRequirement = model.getAllRequirements().get(reqImplID); 
 //DEBUG       
 if(model.isDebugMode()) {
    System.out.println("AAR 345: found requirement to check if it is null:"+foundRequirement);
 }
-       if(foundRequirement == null) // null then we need to raise an error 
+       // null then we need to raise an error 
+       if(foundRequirement == null) 
        {
          // There is no requirement here so we use the implementation to get the reqToken
          // There is only one reqToken for an implementation
@@ -362,7 +367,7 @@ if(model.isDebugMode()) {
       // System.out.println("AAR: 368 -Last RequirementsImpl"+lastRequirementsImpl);
        
      }
-  
+    } 
   }
   private void postTokenAnalysis()
   {
