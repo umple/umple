@@ -1161,8 +1161,9 @@ mixset Association {
 			inClass.addComment(aComment);
 		}		
 		
-		for(ReqImplementation aReqImpl : inTrait.getReqImplementations()) {
-			inClass.addReqImplementation​(aReqImpl);
+		for(ReqImplementation aReqImpl : inTrait.getReqImplementations()) 
+		{
+			inClass.addReqImplementation(aReqImpl);
 		}
 
 		//set the dependens
