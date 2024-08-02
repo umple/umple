@@ -5,14 +5,14 @@ class UnidirectionalMNTest extends UnitTestCase
 
   public function test_constructorTooFew()
   {
-  	$this->expectException(new Exception("Unable to create MentorI, must have 2 to 4 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
+  	$this->expectException(new Exception("Unable to create MentorI, must have 2 to 4 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentI(99);
     new MentorI("blah",array($s));
   }
   
   public function test_constructorTooMany()
   {
-  	$this->expectException(new Exception("Unable to create MentorI, must have 2 to 4 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
+  	$this->expectException(new Exception("Unable to create MentorI, must have 2 to 4 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentI(99);
     $s2 = new StudentI(98);
     $s3 = new StudentI(97);

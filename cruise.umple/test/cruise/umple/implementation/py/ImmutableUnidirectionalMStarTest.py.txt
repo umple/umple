@@ -22,7 +22,7 @@ class Student():
         self._mentors = []
         didAddMentors = self.setMentors(*allMentors)
         if not didAddMentors :
-            raise RuntimeError ("Unable to create Student, must have at least 1 mentors. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+            raise RuntimeError ("Unable to create Student, must have at least 1 mentors. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
     #------------------------
     # INTERFACE

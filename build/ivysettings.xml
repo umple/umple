@@ -13,7 +13,7 @@
       <resolver ref="default" />
 
       <url name="jboss" m2compatible="true">
-        <artifact pattern="http://repository.jboss.org/nexus/content/groups/public-jboss/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+        <artifact pattern="https://repository.jboss.org/nexus/content/groups/public-jboss/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
       </url>
     </chain>
   </resolvers>

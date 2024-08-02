@@ -6,7 +6,7 @@ class Y():
         self._c = aC
         didAddX = self.setX(aX)
         if not didAddX :
-            raise RuntimeError ("Unable to create y due to x. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+            raise RuntimeError ("Unable to create y due to x. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
     def setC(self, aC):
         wasSet = False

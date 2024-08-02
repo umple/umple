@@ -3,7 +3,7 @@
  Copyright: All contributers to the Umple Project
  
  This file is made available subject to the open source license found at:
- http://umple.org/license
+ https://umple.org/license
 
 */
 
@@ -230,8 +230,8 @@ public class RulePartTest
     Assert.assertEquals(true, part.regexMatches("https://www.google.com"));
     Assert.assertEquals(true, part.regexMatches("file://home/root/file"));
     Assert.assertEquals(false, part.regexMatches("www.google.com"));
-    Assert.assertEquals(false, part.regexMatches("http://www.google.com."));
-    Assert.assertEquals(false, part.regexMatches("http://"));
+    Assert.assertEquals(false, part.regexMatches("https://www.google.com."));
+    Assert.assertEquals(false, part.regexMatches("https://"));
   }
 
   

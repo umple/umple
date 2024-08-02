@@ -45,7 +45,7 @@ depend java.util.Arrays;
         
         if(options.has(help)) {
         	System.out.println("Please specify <umple_file.umpt> to process for unit-test generation");
-        	System.out.println("For more detailed information visit http://manual.umple.org");
+        	System.out.println("For more detailed information visit https://manual.umple.org");
         	System.out.println("#############################################################################################");
         	System.out.println("Example: java -jar umple.unit-test.jar -generate model.umpt -l JUnit   ");
         	System.out.println("#############################################################################################");

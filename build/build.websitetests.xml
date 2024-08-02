@@ -25,10 +25,10 @@
     <echo>Using this build script:
   There are several entry targets for this build script:
   testUmpleOnlineMain - runs the tests against the public umpleonline (https://cruise.umple.org/umpleonline/)
-  testUmpleOnlineLocal - runs against the local server (http://cruise.local/)
+  testUmpleOnlineLocal - runs against the local server (https://cruise.local/)
 
   You can specify a custom hostName with -DhostName="yourserver" 
-  eg. ant testUmpleOnlineLocal -DhostName=http://cruise2.local/
+  eg. ant testUmpleOnlineLocal -DhostName=https://cruise2.local/
   
   The testing environment can also be specified, that is, whether they are to run on a headless browser or not.
   By default they are run on a headless browser but you can use a proper browser by setting the env property to no-headless. 
@@ -68,7 +68,7 @@
   </target>
 
   <target name="testUmpleOnlineLocal">
-    <property name="hostName" value="http://cruise.local/" />
+    <property name="hostName" value="https://cruise.local/" />
     <property name="env" value=""/>
     <antcall target="doWebsiteTests" />
   </target>

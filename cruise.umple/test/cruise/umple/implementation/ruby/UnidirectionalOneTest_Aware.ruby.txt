@@ -27,7 +27,7 @@ class Mentor
     @deleted = false
     @name = a_name
     unless set_student(a_student)
-      raise "Unable to create Mentor due to a_student. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" 
+      raise "Unable to create Mentor due to a_student. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" 
     end
     @initialized = true
   end

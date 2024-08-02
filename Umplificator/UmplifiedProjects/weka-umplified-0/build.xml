@@ -627,7 +627,7 @@
       
     <replace dir="${doc}" 
              token="Help&lt;/B&gt;&lt;/FONT&gt;&lt;/A&gt;&#38;nbsp;&lt;/TD&gt;" 
-             value="Help&lt;/B&gt;&lt;/FONT&gt;&lt;/A&gt;&#38;nbsp;&lt;/TD&gt; &lt;TD BGCOLOR=&#34;&#35;EEEEFF&#34; CLASS=&#34;NavBarCell1&#34;&gt; &lt;A HREF=&#34;http://www.cs.waikato.ac.nz/ml/weka/&#34; target=&#34;_blank&#34;&gt;&lt;FONT CLASS=&#34;NavBarFont1&#34;&gt;&lt;B&gt;Weka's home&lt;/B&gt;&lt;/FONT&gt;&lt;/A&gt;&#38;nbsp;&lt;/TD&gt;">
+             value="Help&lt;/B&gt;&lt;/FONT&gt;&lt;/A&gt;&#38;nbsp;&lt;/TD&gt; &lt;TD BGCOLOR=&#34;&#35;EEEEFF&#34; CLASS=&#34;NavBarCell1&#34;&gt; &lt;A HREF=&#34;https://www.cs.waikato.ac.nz/ml/weka/&#34; target=&#34;_blank&#34;&gt;&lt;FONT CLASS=&#34;NavBarFont1&#34;&gt;&lt;B&gt;Weka's home&lt;/B&gt;&lt;/FONT&gt;&lt;/A&gt;&#38;nbsp;&lt;/TD&gt;">
       <include name="**/*.html"/>
     </replace>
   </target> 
