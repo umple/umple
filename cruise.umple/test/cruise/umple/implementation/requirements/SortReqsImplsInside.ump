@@ -1,0 +1,19 @@
+// To test if the requirements are sorted correctly when the implementsReq is inside the class.
+req B01 {      
+  b is a second requirement statement.
+}    
+req A02 {    
+  a requirement.
+}
+  req A01 { 
+  z requirement.
+}  
+     
+class Example { 
+  implementsReq A02; 
+  implementsReq A01; 
+  implementsReq B01;
+  var1;
+  var2;
+ }  
+     

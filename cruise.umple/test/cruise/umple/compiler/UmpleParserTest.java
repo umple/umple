@@ -1528,6 +1528,7 @@ public class UmpleParserTest
   {
           assertNoWarningsParse("451_ReqMixsetOutputGenerated.ump");
   }
+
   @Test
   public void associationName()
   {

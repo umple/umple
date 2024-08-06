@@ -1,0 +1,14 @@
+// To test if the requirements are sorted correctly when there is a case of identifiers having the same starting letter 'A'.
+req A01 {    
+  z requirement.
+}
+req A02 {      
+  a is a second requirement statement.
+} 
+    implementsReq A01; 
+   implementsReq A02;  
+class Example { 
+   var1;
+    var2;
+ } 
+     
