@@ -12,7 +12,7 @@ class OptionalOneToNTest extends UnitTestCase
   
   public function test_ConstructorWithoutNStudents()
   {
-  	$this->expectException(new Exception("Unable to create MentorD, must have 3 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
+  	$this->expectException(new Exception("Unable to create MentorD, must have 3 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentD();
     $s2 = new StudentD();    
     new MentorD(array($s,$s2));
@@ -48,7 +48,7 @@ class OptionalOneToNTest extends UnitTestCase
 
   public function test_setStudents_watchOutForDuplicateEntries()
   {
-  	$this->expectException(new Exception("Unable to create MentorD, must have 3 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
+  	$this->expectException(new Exception("Unable to create MentorD, must have 3 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentD();
     $s2 = new StudentD();
     new MentorD(array($s, $s2, $s));
@@ -96,7 +96,7 @@ class OptionalOneToNTest extends UnitTestCase
   
   public function test_checkForExistingMentor()
   {
-		$this->expectException(new Exception("Unable to create MentorD, must have 3 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
+		$this->expectException(new Exception("Unable to create MentorD, must have 3 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s1 = new StudentD();
     $s2 = new StudentD();
     $s3 = new StudentD();

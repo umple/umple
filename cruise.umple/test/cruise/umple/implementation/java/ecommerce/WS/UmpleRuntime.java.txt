@@ -150,7 +150,7 @@ public class UmpleRuntime implements IUmpleRuntime
 
     private void readConfigFile()
     {
-      String input="{id=0; port=1099; http://localhost {component1}}{id=1; port=1700; http://localhost {component2}}";
+      String input="{id=0; port=1099; https://localhost {component1}}{id=1; port=1700; https://localhost {component2}}";
       try (BufferedReader br = new BufferedReader(new FileReader(fileAddress))) {
         input="";
         String line;
@@ -195,7 +195,7 @@ public class UmpleRuntime implements IUmpleRuntime
             Boolean condition3=matcher3.find();
             while (condition1||condition2||condition3) 
             { 
-              url="http://localhost";
+              url="https://localhost";
               ip="localhost";
               name="";
               port=1111;
@@ -283,7 +283,7 @@ public class UmpleRuntime implements IUmpleRuntime
             {
               URL url = new URL(nodes.get(node).getUrl()+":"+String.valueOf(nodes.get(node).getPort())+"/UmpleRuntime?wsdl");
              
-              QName qname = new QName("http://ecommerceWS/",
+              QName qname = new QName("https://ecommerceWS/",
                   "UmpleRuntimeService");
               Service service = Service.create(url, qname);
               IUmpleRuntime proxy = service.getPort(IUmpleRuntime.class);
@@ -570,7 +570,7 @@ synchronized public SystemManager createSystemManager()
       //------------------------
       private int id;
       private String ip="localhost";
-      private String url="http://localhost";
+      private String url="https://localhost";
       private int port=1098;
       //------------------------
       // CONSTRUCTOR

@@ -3,7 +3,7 @@
  Copyright: All contributers to the Umple Project
  
  This file is made available subject to the open source license found at:
- http://umple.org/license
+ https://umple.org/license
 
 */
 
@@ -23,7 +23,7 @@ import cruise.umple.util.SampleFileWriter;
 /**
  * Tests for CommonFileTest
  * <p>
- * <a href="http://cruise.site.uottawa.ca">CRuiSE lab, University of Ottawa</a>
+ * <a href="https://cruise.site.uottawa.ca">CRuiSE lab, University of Ottawa</a>
  * <p>
  * Modification History: none.
  *

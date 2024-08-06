@@ -34,7 +34,7 @@ public class CourseSection
     boolean didAddCourse = setCourse(aCourse);
     if (!didAddCourse)
     {
-      throw new RuntimeException("Unable to create courseSection due to course. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create courseSection due to course. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     employees = new ArrayList<Employee>();
     registrations = new ArrayList<Registration>();

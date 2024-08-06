@@ -22,7 +22,7 @@ public class D
   {
     if (aC == null || aC.getMyD() != null)
     {
-      throw new RuntimeException("Unable to create D due to aC. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create D due to aC. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     c = aC;
   }

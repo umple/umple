@@ -17,7 +17,7 @@ class Mentor():
         self._name = None
         self._name = aName
         if not self.setStudent(aStudent) :
-            raise RuntimeError ("Unable to create Mentor due to aStudent. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+            raise RuntimeError ("Unable to create Mentor due to aStudent. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
     #------------------------
     # INTERFACE
