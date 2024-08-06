@@ -408,9 +408,12 @@ $output = $dataHandle->readData('model.ump');
   
     <span style="font-size: 30%; white-space:nowrap;">  
     <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
-      <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
+      <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL</a>
+      <!-- <script type="text/javascript">
+        Collab.connectCollabServer()
+      </script> -->
     <?php } else if (!isset($_REQUEST["task"])) { ?>
-      <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
+      <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate</a>
     <?php } ?>
 
     </span>
@@ -418,7 +421,7 @@ $output = $dataHandle->readData('model.ump');
     <span style="font-size: 30%; white-space:nowrap;">  
     <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>
     </span>
-    
+
     <span id="restorecode" >&nbsp; &nbsp; <a href="#"> Restore Saved State</a></span>
 
     &nbsp; &nbsp;<span id=exampleMessage><?php echo $messageURL ?></span> <span id=feedbackMessage></span>
@@ -434,8 +437,12 @@ $output = $dataHandle->readData('model.ump');
 
   <div id="mainApplication" class="row"> 
     <div id="textEditorColumn"  tabIndex="2"  class="inRow"> 
-      <div id="topTextEditor">
+      <!-- codemirror 5 editor -->
+      <div id="topTextEditor" style="float:left; width:100%">
         <textarea id="umpleModelEditorText" class="umpleModelEditor" wrap="off"></textarea>
+      </div>
+      <!-- codemirror 6 editor -->
+      <div id="newEditor" style="width:100%">
       </div>
       <div id="bottomTextEditor">
         <textarea id="umpleLayoutEditorText" class="umpleLayoutEditor" wrap="off"></textarea>
@@ -460,7 +467,7 @@ $output = $dataHandle->readData('model.ump');
             <?php } else if (!isset($_REQUEST["task"])) { ?>
             <li id="ttSaveModel"> 
               <div id="menuBookmarkable" class="bookmarkableUrl">
-                <a href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Save as URL</a>
+                <a href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Save & Collaborate</a>
               </div>
             </li>
             <?php } ?>
@@ -846,7 +853,13 @@ $output = $dataHandle->readData('model.ump');
       <div id="umpleCanvas"  tabIndex="1" class="surface"></div>
     </div>
   </div>
- <a name="genArea"/>  
+
+  <!-- Added for including codemirror6 editor -->
+  <script src="./scripts/codemirror6/editor.bundle.js"></script>
+  <!-- Added for sockets usage in client-side -->
+  <script src="./scripts/socket.io/socket.io.js"></script>
+
+  <a name="genArea"/>  
   <div id="generatedCodeRow" class="row">
 		<li id="ttTabsCheckbox">
 			<input id="buttonTabsCheckbox" type="checkbox" class="checkbox" name="buttonTabsCheckbox" value="buttonTabsCheckbox"/>
@@ -884,6 +897,9 @@ $output = $dataHandle->readData('model.ump');
       Page.setExamples("<?php echo $actualExample ?>")
       <?php } ?> 
       //
+  </script>
+  <script>
+    Collab.connectCollabServer();
   </script>
   <?php if ($showChrome) { ?>
     <div class="visitors-count" align="right">
