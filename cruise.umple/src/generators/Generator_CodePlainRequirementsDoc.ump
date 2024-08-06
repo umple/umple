@@ -18,6 +18,9 @@ class PlainRequirementsDocGenerator
   depend java.util.*;
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
+  depend java.util.Map.Entry;
+  depend java.util.Set;
+  
   
   UmpleModel model = null;
   String output = "";
@@ -27,7 +30,24 @@ class PlainRequirementsDocGenerator
   void generate(){
     doc.createParagraphElement("Plain Requirements Doc from "+model.getUmpleFile().getSimpleFileName()+".ump", false);
     UmpleModelWalker walker = new UmpleModelWalker(model);
-    walker.accept(new ReqVisitor(doc));
+    // Intializing the TreeSet
+    TreeSet<Requirement> ReqTreeSet;
+    // Intializing the Comparator and assigning it to a default which is to sort by the identifier
+    // This applies to default case including "PlainRequirementsDoc", "reqSortID" 
+    Comparator<Requirement> defaultComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier());
+    if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortStat")) {
+      // If -s reqSortStat is present the comparator is changed to be assigned to statement
+      defaultComparator = (r1, r2) -> r1.getStatement().compareTo(r2.getStatement());
+    } 
+    // The TreeSet is created based on the chosen comparator
+    ReqTreeSet = new TreeSet<>(defaultComparator);
+    // Add all requirements found in the model to the TreeSet 
+    ReqTreeSet.addAll(model.getAllRequirements().values());
+    // Creating paragraph elements from the TreeSet
+    for (Requirement x : ReqTreeSet) {
+      String text = Requirement.translateToHTML(x.getStatement(), x.getLanguage());
+      doc.createParagraphElement("" + x.getIdentifier() + ": " + text, false);
+    }
     model.setCode(doc.toString());
     writeModel();
     return;
@@ -54,6 +74,7 @@ class ReqVisitor {
     depend java.io.IOException;
 	isA UmpleModelVisitor;
 	HtmlDocument doc;
+	
     // TO DO: 
     // use a List to gather all of the requirements in the visit function below, sort them in alphabetical order
     // in void done() create paragraph elements with them

@@ -7,6 +7,7 @@ import java.util.*;
 /**
  * R1: There should be a class called X
  */
+// line 19 "model.ump"
 public class X
 {
 

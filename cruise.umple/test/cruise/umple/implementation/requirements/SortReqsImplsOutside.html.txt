@@ -1,0 +1,4 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from SortReqsImplsOutside.ump
+</p><p>A01: z requirement.
+</p><p>A02: a requirement.
+</p><p>B01: a is a second requirement statement.
