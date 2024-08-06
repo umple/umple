@@ -13,7 +13,7 @@ class OptionalOneToMStarTest extends UnitTestCase
 
   public function test_ConstructorWithTooFew()
   {
-  	$this->expectException(new Exception("Unable to create MentorF, must have at least 2 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
+  	$this->expectException(new Exception("Unable to create MentorF, must have at least 2 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentF();
     new MentorF(array($s));
   }
@@ -35,14 +35,14 @@ class OptionalOneToMStarTest extends UnitTestCase
 
   public function test_constructorWatchOutForDuplicateEntries()
   {
-  	$this->expectException(new Exception("Unable to create MentorF, must have at least 2 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
+  	$this->expectException(new Exception("Unable to create MentorF, must have at least 2 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentF();
     new MentorF(array($s, $s));
   }
   
   public function test_constructorCheckForExistingMentorNotEnoughToSurvive()
   {
-  	$this->expectException(new Exception("Unable to create MentorF, must have at least 2 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
+  	$this->expectException(new Exception("Unable to create MentorF, must have at least 2 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s1 = new StudentF();
     $s2 = new StudentF();
     $s3 = new StudentF();

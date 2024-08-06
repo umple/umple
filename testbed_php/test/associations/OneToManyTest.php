@@ -5,7 +5,7 @@ class OneToManyTest extends UnitTestCase
 
   public function test_cannotCreateNullStudent()
   {
-  	$this->expectException(new Exception("Unable to create student due to mentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
+  	$this->expectException(new Exception("Unable to create student due to mentor. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     new StudentJ(99,null);
   }
   

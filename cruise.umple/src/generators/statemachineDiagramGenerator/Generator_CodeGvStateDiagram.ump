@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
 This file generates .gv files for use by Graphviz, representing all state machines
 encountered in the Umple model. To generate for this format, use 
@@ -11,14 +11,14 @@ encountered in the Umple model. To generate for this format, use
 in your umple file, or the command line option
   -g GvStateDiagram
 
-GraphViz documentation is here: http://www.graphviz.org/Documentation.php
+GraphViz documentation is here: https://www.graphviz.org/Documentation.php
 
 To turn the gv state diagram into a png, run this:
   dot -Tpng umplefile.gv -o umplefile.png
 
 See examples others have done: 
-  http://www.ffnn.nl/pages/articles/media/uml-diagrams-using-graphviz-dot.php
-  http://martin-thoma.com/how-to-draw-a-finite-state-machine/
+  https://www.ffnn.nl/pages/articles/media/uml-diagrams-using-graphviz-dot.php
+  https://martin-thoma.com/how-to-draw-a-finite-state-machine/
  */
 
 namespace cruise.umple.compiler;

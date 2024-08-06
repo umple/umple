@@ -1,0 +1,27 @@
+Composing State Machines
+State Machines
+noreferences
+
+@@description
+<p>      
+State machines can be built from parts. Elements of state machines can be added in several ways:</p>
+
+<ul>
+
+<li><p>By repeating the state machine definition in the same class, adding more detail. In the example below, the state machine sm has part of its definition starting at line 2, and part of its definition starting at line 26.</p></li>
+
+<li><p>By using standalone transitions. Line 20 shows that outside the context of any state, a transition can be defined. Just add the origin state before the arrow. This one indicates that when e3 occurs, if in state b, then go to state a. This notation can be used to help separate concerns, and place focus on a particular transition. Another example of this is at line 31, where event e5 can cause a transition from state bsub1 to state a. Note that line 34 shows another way of indicating a standalone transition, by adding more detail to state a (that had already beed defined starting at line 3).</p></li>
+
+<li><p>By using mixins where a more detail to a class (and its contained state machine) is added. Starting at line 26, there is a new definition adding more detail to class X, which in turn adds more detail to state machine sm starting at line 29.</p></li>
+
+<li><p>By using <a href="BasicMixsets.html">mixsets</a>: Mixsets are like mixins but can be either excluded or included in the system. To include a mixset,add a use statement (as i line 49) or command line option. An example starts at line 39, where yet more detail is added to class X and its state machine sm. This is activated with the use statement at line 49.</p></li>
+
+</ul>
+
+@@syntax
+
+[[stateMachineDefinition]] [[state]] [[stateEntity] [[transition]] [[standAloneTransition]]
+
+@@example @@caption Illustration of various ways of adding details to a state machine @@endcaption
+@@source manualexamples/composedStateMachine.ump &diagramtype=state
+@@endexample

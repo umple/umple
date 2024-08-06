@@ -29,7 +29,7 @@ class Student
     @can_set_number = false
     @can_set_mentor = true
     unless set_mentor(a_mentor)
-      raise "Unable to create Student due to a_mentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" 
+      raise "Unable to create Student due to a_mentor. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" 
     end
     @initialized = true
   end

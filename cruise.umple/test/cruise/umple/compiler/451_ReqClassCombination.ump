@@ -1,0 +1,10 @@
+// Requirement and class combination- Requirement before the class
+// Should not produce 401 warning
+implementsReq A;
+req A text
+{ 
+  This is the second requirement.
+} 
+class X {
+ a;
+}

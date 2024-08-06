@@ -22,7 +22,7 @@ class First implements I
 
     if ($aSecond == null || $aSecond->getFirst() != null)
     {
-      throw new Exception("Unable to create First due to aSecond. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new Exception("Unable to create First due to aSecond. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     $this->second = $aSecond;
   }

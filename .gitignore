@@ -19,6 +19,7 @@ umpleonline/scripts/codemirror6/node_modules
 umpleonline/scripts/codemirror6-plugins/collaboration-test-client/node_modules
 
 build/UserManualAndExampleTests_output.txt
+build/txl
 umpleonline/manual
 umpleonline/qr*
 umpleonline/countlog.txt
@@ -35,6 +36,7 @@ UmpleCodeExecution/config.cfg.bak
 UmpleCodeExecution/config.cfg
 UmpleCollabServer/config.cfg.bak
 UmpleCollabServer/config.cfg
+testbed_cpp/test/runAllTests
 
 # generated Umple code that is not saved
 src-gen-umple/
