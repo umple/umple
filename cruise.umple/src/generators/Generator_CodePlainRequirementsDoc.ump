@@ -33,17 +33,14 @@ class PlainRequirementsDocGenerator
     // Intializing the TreeSet
     TreeSet<Requirement> ReqTreeSet;
     // Intializing the Comparator and assigning it to a default which is to sort by the identifier
-    Comparator<Requirement> MainComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier());
-    if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortID")) {
-      // If suboption is present the Comparator is reassigned to sort by identifier
-      MainComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier()); 
-    } 
-    else if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortStat")) {
-      // If suboption is present the comparator is changed to be assigned to statement
-      MainComparator = (r1, r2) -> r1.getStatement().compareTo(r2.getStatement());
+    // This applies to default case including "PlainRequirementsDoc", "reqSortID" 
+    Comparator<Requirement> defaultComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier());
+    if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortStat")) {
+      // If -s reqSortStat is present the comparator is changed to be assigned to statement
+      defaultComparator = (r1, r2) -> r1.getStatement().compareTo(r2.getStatement());
     } 
     // The TreeSet is created based on the chosen comparator
-    ReqTreeSet = new TreeSet<>(MainComparator);
+    ReqTreeSet = new TreeSet<>(defaultComparator);
     // Add all requirements found in the model to the TreeSet 
     ReqTreeSet.addAll(model.getAllRequirements().values());
     // Creating paragraph elements from the TreeSet
