@@ -30,23 +30,20 @@ class PlainRequirementsDocGenerator
   void generate(){
     doc.createParagraphElement("Plain Requirements Doc from "+model.getUmpleFile().getSimpleFileName()+".ump", false);
     UmpleModelWalker walker = new UmpleModelWalker(model);
-    //System.out.println(model.getAllRequirements().values());
+    // Intializing the TreeSet
     TreeSet<Requirement> ReqTreeSet;
+    // Intializing the Comparator and assigning it to a default which is to sort by the identifier
+    Comparator<Requirement> MainComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier());
     if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortID")) {
-      Comparator<Requirement> IdComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier());
-      // Initialize with ID Comparator
-      ReqTreeSet = new TreeSet<>(IdComparator); 
+      // If suboption is present the Comparator is reassigned to sort by identifier
+      MainComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier()); 
     } 
     else if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortStat")) {
-      Comparator<Requirement> StatComparator = (r1, r2) -> r1.getStatement().compareTo(r2.getStatement());
-      // Initialize with Statement Comparator
-      ReqTreeSet = new TreeSet<>(StatComparator); 
+      // If suboption is present the comparator is changed to be assigned to statement
+      MainComparator = (r1, r2) -> r1.getStatement().compareTo(r2.getStatement());
     } 
-    else {
-      Comparator<Requirement> DefaultComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier());
-      // Initialize with default Comparator or natural ordering
-      ReqTreeSet = new TreeSet<>(DefaultComparator); 
-    }
+    // The TreeSet is created based on the chosen comparator
+    ReqTreeSet = new TreeSet<>(MainComparator);
     // Add all requirements found in the model to the TreeSet 
     ReqTreeSet.addAll(model.getAllRequirements().values());
     // Creating paragraph elements from the TreeSet
