@@ -116,8 +116,10 @@ class UmpleInternalParser
       }
       mixset FeatureModel {
         analyzeFeatureModel(); // lastly to analyze the feature model after all mixsets are added to umple model. 
-      }
-    
+      } 
+      // The call to analyzeAllRequirements is here
+      analyzeAllRequirements();
+      
     }
     catch (Exception ex)
     {
@@ -318,6 +320,34 @@ class UmpleInternalParser
   // Once you have analyze all tokens, you allowed a second 'pass' to apply any additional checks
   // Each step in the process might "fail", so we check the status before calling each delegate
   // token post token analysis method
+  
+  private void analyzeAllRequirements()
+  {
+     // At this point we take the implementations and map the requirements to see if any are missing
+     if(model.getReqImplementations() != null){
+     //Loop through requirement implementations ID
+     for (ReqImplementation reqImpl : model.getReqImplementations())
+     {
+       String reqImplID = reqImpl.getIdentifier();
+       Token reqImplToken = reqImpl.getReqToken();
+       // found a matching req for implementation
+       Requirement foundRequirement = model.getAllRequirements().get(reqImplID); 
+       // null then we need to raise an error 
+       if(foundRequirement == null) 
+       {
+         // There is no requirement here so we use the implementation to get the reqToken
+         // There is only one reqToken for an implementation
+         // Using the reqTokens to find the lines of error
+         setFailedPosition(reqImplToken.getPosition(), 401,reqImplID); 
+       }
+       else
+       {  
+         // There is a need to make a connection
+         foundRequirement.addReqImplementation(reqImpl);
+       }
+     }
+    } 
+  }
   private void postTokenAnalysis()
   {
     analyzeParseResult();
