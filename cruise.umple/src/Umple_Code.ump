@@ -888,18 +888,14 @@ class Requirement{
     language = aReq.getLanguage();
   }
   public static List<Comment> convertToComment(List<ReqImplementation> reqSelected,UmpleModel aModel){
-    //System.out.println("convertToComment: Inside the function!");
     List<Comment> reqTextOnly = new ArrayList<Comment>();
     String reqText = new String();
     String reqImpID = "";
-    //System.out.println("convertToComment: the value of reqSelected!"+reqSelected)
     for (ReqImplementation reqImpl : reqSelected){
       reqImpID = reqImpl.getIdentifier();
       Requirement findRequirement = aModel.getAllRequirements().get(reqImpID);
       if(findRequirement != null)
      {
-      //System.out.println("convertToComment: findRequirement not NUll!");
-      //System.out.println("convertToComment:"+findRequirement);
       reqText = findRequirement.getStatement().trim();
 
       reqText = findRequirement.getIdentifier() + ": " + reqText;
@@ -935,8 +931,6 @@ class Requirement{
 
     return content;
   }
-  //String output = Requirement.format("Slashes",allTestRequirementsImpl,model);
-  //System.out.println("945: OUTPUT:"+output);
 
 }
 

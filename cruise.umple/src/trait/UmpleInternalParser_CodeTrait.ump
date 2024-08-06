@@ -84,18 +84,10 @@ class UmpleInternalParser
     for (Comment c : lastComments)
     {
       aTrait.addCommentAt(c,regularCommentCountEnd);
-      regularCommentCountEnd++;
-if(model.isDebugMode()) {  
-    System.out.println("UPCT 89: comment that is being added here for trait:");
-    System.out.println(c);
-}         
+      regularCommentCountEnd++;         
     }
     for (ReqImplementation ri : lastRequirementsImpl)
-    { 
- if(model.isDebugMode()) {  
-    System.out.println("UPCT 98: being added here for trait:");
-    System.out.println(ri);
-}     
+    {   
       aTrait.addReqImplementation(ri);
     }
         
@@ -511,19 +503,11 @@ if(model.isDebugMode()) {
     // Add comments above the attribute to the attribute.
     for (Comment c : lastComments)
     {
-      attribute.addComment(c);
-if(model.isDebugMode()) {    
-    System.out.println("UPCT 516: comments addded to an attribute:");
-    System.out.println(c);
-}           
+      attribute.addComment(c);           
     }
     for (ReqImplementation ri : lastRequirementsImpl)
     { 
-      attribute.addReqImplementation(ri);
-if(model.isDebugMode()) {    
-    System.out.println("UPCT 524:reqImpl addded to an attribute:");
-    System.out.println(ri);
-}      
+      attribute.addReqImplementation(ri);     
     }
     
 
@@ -612,19 +596,11 @@ mixset Association {
     // Add comments above the association to the association.
     for (Comment c : lastComments)
     {
-      yourAs.addComment(c);
-if(model.isDebugMode()) {    
-    System.out.println("UPCT 617: comments addded to an association:");
-    System.out.println(c);
-}        
+      yourAs.addComment(c);       
     }
     for (ReqImplementation ri : lastRequirementsImpl)
     {
-      yourAs.addReqImplementation(ri);
-if(model.isDebugMode()) {    
-    System.out.println("UPCT 625: requirements addded to an attribute:");
-    System.out.println(ri);
-}        
+      yourAs.addReqImplementation(ri);        
     }
     
     

@@ -209,15 +209,7 @@ class UmpleInternalParser
   private void analyzeRequirement(Token t) {
     // extract new requirement identifier 
     String reqID = t.getSubToken("reqIdentifier").getValue(); 
-//DEBUG    
-if(model.isDebugMode()) {  
-    System.out.println("AR: 213 -requirement identifier:"+reqID);
-}
     String newContent = t.getSubToken("reqContent").getValue();// extract content 
-//DEBUG   
-if(model.isDebugMode()) {   
-    System.out.println("216: New content is:"+newContent);
-}
     // Initialize language
     String newLanguage = "";
     if (!(t.getSubToken("reqLanguage") == null || t.getSubToken("reqLanguage").getValue() == null)) {
@@ -226,19 +218,10 @@ if(model.isDebugMode()) {
     }
      // Retrieves any existing requirement with the same identifier from the model
      Requirement existingRequirement = model.getAllRequirements().get(reqID); 
-//DEBUG     
-if(model.isDebugMode()) {  
-     System.out.println("AR: 226 -Existing requirement:"+existingRequirement);
-}
-     
     // Checks if a requirement with the same identifier already exists in the model.
     if (existingRequirement != null) { 
         // get the language of the existing requirement
         String existingLanguage = existingRequirement.getLanguage();
-//DEBUG  
-if(model.isDebugMode()) {       
-        System.out.println(" AR: 233-Entering in the if part");
-}
 	// return if different languages are encountered
         if (!(existingLanguage.equals("") || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
             setFailedPosition(t.getPosition(), 402, reqID,existingLanguage,newLanguage);
@@ -256,24 +239,12 @@ if(model.isDebugMode()) {
         }
         existingRequirement.addReqToken(t);// new addition
         existingRequirement.setStatement(newContent);
-//DEBUG 
-if(model.isDebugMode()) {         
-        System.out.println(" AR:252 -ExistingRequirement:"+existingRequirement.getStatement());
-}
     }
     else
     {
     // If existing requirement is null
     // create new requirement
-//DEBUG    
-if(model.isDebugMode()) {   
-      System.out.println(" AR:259-Entering in the else part");
-}
       Requirement req = new Requirement(reqID, newContent, newLanguage);// Create new requirement 
-//DEBUG    
-if(model.isDebugMode()) {     
-      System.out.println(" AR: 262 -"+req.getStatement());
-}
     // Add the new requirement
       req.addReqToken(t);// new addition
       model.getAllRequirements().put(reqID, req);
@@ -282,19 +253,12 @@ if(model.isDebugMode()) {
   }
 
   private void analyzeImplementReq(Token t) {
-if(model.isDebugMode()) {   
-     System.out.println(" AI:274-Entering in the implementation part");
-}
      // Identifier that has been identified 
      String reqImpID = t.getSubToken("reqIdentifier").getValue();
      // Instantiate the requirement implementation
      ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
      model.addReqImplementation(reqImplementation);
      lastRequirementsImpl.add(reqImplementation);
-//DEBUG   
-if(model.isDebugMode()) {   
-     System.out.println("AI 284- LastReqImpl:"+lastRequirementsImpl);
-}
   }
 
   private void analyzeImplementReq(Token t, UmpleClass aClass) {
@@ -311,67 +275,36 @@ if(model.isDebugMode()) {
     if (t.getPosition() == null) {return false;}
     if (lastattr != null)
     {
-if(model.isDebugMode()) {          
-        System.out.println("addToLastAttributeOrAssociation 353: lastattr is not null and is:");
-        System.out.println(lastattr);
-        System.out.println("addToLastAttributeOrAssociation 355: Token is");
-        System.out.println(t);
-         
- }
       if (lastattr.getPosition().getLineNum() == t.getPosition().getLineNum())
       {
         // this will only add the current comment, as there can only be 1 inline comment per line
-if(model.isDebugMode()) {          
-        System.out.println("addToLastAttributeOrAssociation 360: The line numbers are the same!");
- }
         for (Comment c : lastComments)
         {
           lastattr.addComment(c);
-if(model.isDebugMode()) {          
-        System.out.println("addToLastAttributeOrAssociation 366: The comments line by line are:");
-        System.out.println(c);
- }
         }
         return true;
       }
       else
       {
         lastattr = null;
-if(model.isDebugMode()) {          
-        System.out.println("addToLastAttributeOrAssociation 364: It is NULL!");
-        }
       }
     }  
     else if (lastassoc != null && lastassocPosition != null)
     {
       if (lastassocPosition.getLineNum() == t.getPosition().getLineNum())
-      {
-if(model.isDebugMode()) {        
-        System.out.println("addToLastAttributeOrAssociation 385: In the 2 nd if statement");
-}        
+      {       
         // this will only add the current comment, as there can only be 1 inline comment per line
         for (Comment c : lastComments)
         {
           lastassoc.addComment(c);
-if(model.isDebugMode()) {          
-        System.out.println("addToLastAttributeOrAssociation 392: The comments line by line are:");
-        System.out.println(c);
- } 
         }
         return true;
       }
       else
       {
-        lastassoc = null;
-if(model.isDebugMode()) {          
-        System.out.println("addToLastAttributeOrAssociation 402: It is NULL!");
-}        
+        lastassoc = null;        
       }
-    } 
-if(model.isDebugMode()) {    
-    System.out.println("AC 407: Last association what is being added:");
-    System.out.println(lastassoc);
-}                      
+    }                   
     return false;
   }
 
@@ -381,78 +314,38 @@ if(model.isDebugMode()) {
    * @param t the implementsReq token that is used to see the position of the implements requirement statement
    */
   private boolean isReqAddedToLast(Token t)
-  {    
-if(model.isDebugMode()) {    
-    System.out.println("isReqAddedToLast 421: method is being called.");
-    System.out.println("isReqAddedToLast 422: the token is t:");  
-    System.out.println(t);  
-    System.out.println("isReqAddedToLast 427: the position of the token is:");
-    System.out.println(t.getPosition());
-    System.out.println("isReqAddedToLast 427: The value of lastAttr is:");
-    System.out.println(lastattr);
-}         
+  {          
     if (t.getPosition() == null) {return false;}
     if (lastattr != null)
-    {
-if(model.isDebugMode()) {  
-    System.out.println("isReqAddedToLast 434: lastarttr is not null!:");
-    System.out.println(lastattr);
-}     
+    {   
       if (lastattr.getPosition().getLineNum() == t.getPosition().getLineNum())
-      {
-if(model.isDebugMode()) {    
-    System.out.println("isReqAddedToLast 439: the line number matches!");
-}           
+      {          
         for (ReqImplementation ri : lastRequirementsImpl)
         {
           lastattr.addReqImplementation(ri);
         }
-if(model.isDebugMode()) {    
-    System.out.println("isReqAddedToLast 446: lastattr is:");
-    System.out.println(lastattr);
-}         
-        return true;
+    return true;
       }
       else
       {
-        lastattr = null;
-if(model.isDebugMode()) {    
-    System.out.println("isReqAddedToLast 455: lastattr NULL!");
-}            
+        lastattr = null;           
       }
     }  
     else if (lastassoc != null && lastassocPosition != null)
-    {
-if(model.isDebugMode()) {    
-    System.out.println("isReqAddedToLast 462: both are not NULL!");
-}   
+    {  
       if (lastassocPosition.getLineNum() == t.getPosition().getLineNum())
-      {
-if(model.isDebugMode()) {    
-    System.out.println("isReqAddedToLast 467: the line number matches!");
-}       
+      {      
         for (ReqImplementation ri : lastRequirementsImpl)
         {
           lastassoc.addReqImplementation(ri);
-        }
-if(model.isDebugMode()) {    
-    System.out.println("isReqAddedToLast 474: lastassoc is:");
-    System.out.println(lastassoc);
-}         
+        }      
         return true;
       }
       else
       {
-        lastassoc = null;
-if(model.isDebugMode()) {          
-        System.out.println("isReqAddedToLast 483: It is NULL!");
-}   
+        lastassoc = null;  
       }
     }
-if(model.isDebugMode()) {    
-    System.out.println("isReqAddedToLast 488: Last association what is being added:");
-    System.out.println(lastassoc);
-} 
     return false;
   }
 
@@ -696,10 +589,6 @@ if(model.isDebugMode()) {
       }
       lastComments.add(newComment);
     } 
-    if(model.isDebugMode()) {    
-    System.out.println("AC 668: The last singleline comment stored is:");
-    System.out.println(lastComments);
-    }
   }
   
   /**
@@ -737,10 +626,6 @@ if(model.isDebugMode()) {
         comment.setIsInline(false);
         lastComments.add(comment);
       }
-    }
-if(model.isDebugMode()) {    
-    System.out.println("AMC 705: The last multiline comment stored is:");
-    System.out.println(lastComments);
     }
   }
 
@@ -1477,11 +1362,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       aClass.addCommentAt(c,regularCommentCountEnd);
       regularCommentCountEnd++;   
     }
-if(model.isDebugMode()) {    
-    System.out.println("UMPLE CLASS 1448: The list of comment stored in class:");
-    System.out.println(lastComments);
-    }       
-    
+        
     for (ReqImplementation ri : lastRequirementsImpl)
     { 
       aClass.addReqImplementation(ri);
@@ -1723,10 +1604,6 @@ if(model.isDebugMode()) {
       anInterface.addCommentAt(c,regularCommentCountEnd);
       regularCommentCountEnd++;    
     }
-    if(model.isDebugMode()) {    
-    System.out.println("AC 1695: The list of comments in class:");
-    System.out.println(lastComments);
-    }  
     
     for (ReqImplementation ri : lastRequirementsImpl)
     { 
@@ -3501,10 +3378,7 @@ if(model.isDebugMode()) {
     {
       aMethod.addComment(c);     
     }
-if(model.isDebugMode()) {    
-    System.out.println("AC 3473: The comments in the method:");
-    System.out.println(lastComments);
-    }     
+    
     for (ReqImplementation ri : lastRequirementsImpl)
     { 
       aMethod.addReqImplementation(ri);
@@ -4779,11 +4653,7 @@ if(model.isDebugMode()) {
     {
       yourAs.addComment(c);
     }
-    if(model.isDebugMode()) {    
-    System.out.println("AC 4751: The singleline comment stored for association:");
-    System.out.println(lastComments);
-    }
-
+  
     for (ReqImplementation ri : lastRequirementsImpl)
     { 
       yourAs.addReqImplementation(ri);
@@ -5083,11 +4953,7 @@ if(model.isDebugMode()) {
     for (ReqImplementation ri : lastRequirementsImpl)
     { 
       attribute.addReqImplementation(ri);
-    }
-if(model.isDebugMode()) {    
-    System.out.println("AC 5056: The singleline comment in method:");
-    System.out.println(lastComments);
-    }     
+    }  
     
     // set the last attribute made to be attribute, clear lastassoc
     lastattr = attribute;
