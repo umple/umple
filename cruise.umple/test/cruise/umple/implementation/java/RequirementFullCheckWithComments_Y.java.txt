@@ -7,6 +7,7 @@
  * This is class Y
  * R3: There must be a class called Y
  */
+// line 32 "model.ump"
 public class Y
 {
 
