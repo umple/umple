@@ -31,7 +31,7 @@ public class Product implements java.io.Serializable
     canSetProductType = true;
     if (!setProductType(aProductType))
     {
-      throw new RuntimeException("Unable to create Product due to aProductType. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create Product due to aProductType. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

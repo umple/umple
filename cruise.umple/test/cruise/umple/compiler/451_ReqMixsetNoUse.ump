@@ -1,0 +1,12 @@
+// Mixset with no use
+// Should not raise 401 warning
+implementsReq A;
+mixset B{
+class X {
+  a;
+ }
+}
+req A text {
+  This is the second requirement.
+} 
+

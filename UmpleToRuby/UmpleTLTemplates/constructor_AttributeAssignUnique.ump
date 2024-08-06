@@ -2,6 +2,6 @@ class UmpleToRuby {
     constructor_AttributeAssignUnique <<!<</*constructor_AttributeAssignUnique*/>>
     @<<=av.getName()>> = nil
     if (!<<=gen.translate("setMethod", av)>>(<<=gen.translate("parameterOne", av)>>))
-      raise ArgumentError, 'Cannot create due to duplicate <<=av.getName()>>. See http://manual.umple.org?RE003ViolationofUniqueness.html'
+      raise ArgumentError, 'Cannot create due to duplicate <<=av.getName()>>. See https://manual.umple.org?RE003ViolationofUniqueness.html'
     end!>>
 }

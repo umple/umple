@@ -13,14 +13,14 @@ class OneToOneTest extends UnitTestCase
   
   public function test_ConstructorIfAlreadySet()
   {
-  	$this->expectException(new Exception("Unable to create StudentG due to aMentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
+  	$this->expectException(new Exception("Unable to create StudentG due to aMentor. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $m = MentorG::newInstance("a",1);
     new StudentG(1,$m);
   }  
   
   public function test_ConstructorCannotSetNull()
   {
-  	$this->expectException(new Exception("Unable to create MentorG due to aStudent. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
+  	$this->expectException(new Exception("Unable to create MentorG due to aStudent. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     new MentorG("a",null);
   }   
   

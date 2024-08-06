@@ -1,11 +1,11 @@
 // The master source of this first part of the Umple grammar is available at
 // [*https://github.com/umple/umple/blob/master/cruise.umple/src/umple_core.grammar *]
 // The html rendering is generated from the master and appears in the Umple User manual
-// at page [*http://grammar.umple.org*]
+// at page [*https://umple.org/grammar*]
 
 // Copyright: All contributors to the Umple Project
 // This file is made available subject to the open source license found at:
-// [*http://umple.org/license*]
+// [*https://umple.org/license*]
 
 // The core of umple is a "program". This is the grammar's 'start symbol'
 // Comments and lone semicolons are ignored

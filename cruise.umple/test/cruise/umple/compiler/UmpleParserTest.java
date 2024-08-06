@@ -3,7 +3,7 @@
  Copyright: All contributers to the Umple Project
 
  This file is made available subject to the open source license found at:
- http://umple.org/license
+ https://umple.org/license
 
 */
 
@@ -1420,13 +1420,113 @@ public class UmpleParserTest
   	  assertNoWarningsParse("429_sharedAttributeName_Refinements.ump");
 
   }
-   @Test
-  public void ReqSameNameCombine()
+  @Test
+  public void ReqSameNameCombine1()
   {
 	  assertHasWarningsParse("450_ReqSameWarning.ump", 402);
-          assertNoWarningsParse("450_ReqSameNolang.ump");
+  }
+  @Test
+  public void ReqSameNameCombine2()
+  {
           assertNoWarningsParse("450_ReqSameOneBlank.ump");
+  }
+  @Test
+  public void ReqSameNameCombine3()
+  {
+          assertNoWarningsParse("450_ReqSameNolang.ump");
+  }
+  @Test
+  public void ReqSameNameCombine4()
+  {
           assertNoWarningsParse("450_ReqSameLang.ump");
+  }
+  
+  @Test
+  public void ImplementsPrecedeReq1()
+  {
+	  assertHasWarningsParse("451_ReqMismatch401Warning.ump", 401);
+  }
+  @Test
+  public void ImplementsPrecedeReq2()
+  {
+  
+  	assertHasWarningsParse("451_ReqMismatch401WarningModified.ump", 401);
+  }
+  @Test
+  public void ImplementsPrecedeReq3()
+  {
+  
+  	  assertNoWarningsParse("451_ReqNoWarning.ump");
+  }
+  @Test
+  public void ImplementsPrecedeReq4()
+  {
+  	  assertNoWarningsParse("451_Req2Combination1.ump");
+  }
+  @Test
+  public void ImplementsPrecedeReq5()
+  {
+          assertNoWarningsParse("451_Req2Combination2.ump");
+  }
+  @Test
+  public void ImplementsPrecedeReq6()
+  {
+          assertNoWarningsParse("451_Req2Combination3.ump");
+  }
+  @Test
+  public void ImplementsPrecedeReq7()
+  {
+          assertNoWarningsParse("451_ReqAssociation.ump");
+  }
+  @Test
+  public void ImplementsPrecedeReq8()
+  {
+          assertNoWarningsParse("451_ReqClassCombination.ump");
+  }
+  @Test
+  public void ImplementsPrecedeReq9()
+  {
+          assertNoWarningsParse("451_ReqMixset.ump");
+  }
+  @Test
+  public void ImplementsPrecedeReq10()
+  {
+          assertNoWarningsParse("451_ReqMixsetCombination1.ump");
+  }
+  @Test
+  public void ImplementsPrecedeReq11()
+  {
+          assertNoWarningsParse("451_ReqMixsetCombination2.ump");
+  }
+  @Test
+  public void ImplementsPrecedeReq12()
+  {
+          assertNoWarningsParse("451_ReqMixsetNoUse.ump"); 
+  }
+  @Test
+  public void ImplementsPrecedeReq13()
+  {
+          assertNoWarningsParse("451_Req2Combination3Modified.ump");
+  }
+  @Test
+  public void ImplementsPrecedeReq14()
+  {
+          assertNoWarningsParse("451_Req2Combination1Modified.ump");
+  }
+  @Test
+  public void ImplementsPrecedeReq15()
+  {
+          assertNoWarningsParse("451_ReqAssociationModified.ump");
+  }
+  @Test
+  public void ImplementsPrecedeReq16()
+  {
+          assertNoWarningsParse("451_ReqMixsetClassOutside.ump");
+  }
+  @Test
+  public void ImplementsPrecedeReq17()
+  {
+          assertNoWarningsParse("451_ReqMixsetOutputGenerated.ump");
   }
 
   @Test
@@ -2803,7 +2903,7 @@ public class UmpleParserTest
   @Test
   public void mixingRegularAndDerivedAttributes_bug201()
   {
-    //http://code.google.com/p/umple/issues/detail?id=201
+    //https://code.google.com/p/umple/issues/detail?id=201
     assertParse("030_mixingRegularAndDerivedAttributes_bug201.ump");
 
     UmpleClass student = model.getUmpleClass("Student");

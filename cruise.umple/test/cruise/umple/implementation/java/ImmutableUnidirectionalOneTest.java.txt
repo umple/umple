@@ -29,7 +29,7 @@ public class Student
     canSetMentor = true;
     if (!setMentor(aMentor))
     {
-      throw new RuntimeException("Unable to create Student due to aMentor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create Student due to aMentor. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

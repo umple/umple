@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
  */
 
@@ -72,7 +72,7 @@ class PapyrusGenerator
         {
           isFirst = false;
 
-          code.append(StringFormatter.format("<uml:Model xmi:version=\"2.1\" xmlns:xmi=\"http://schema.omg.org/spec/XMI/2.1\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" xmlns:uml=\"http://www.eclipse.org/uml2/2.1.0/UML\" xmi:id=\"_{0}\" name=\"{0}\">\n",model.getUmpleFile().getSimpleFileName()));
+          code.append(StringFormatter.format("<uml:Model xmi:version=\"2.1\" xmlns:xmi=\"https://schema.omg.org/spec/XMI/2.1\" xmlns:ecore=\"https://www.eclipse.org/emf/2002/Ecore\" xmlns:uml=\"https://www.eclipse.org/uml2/2.1.0/UML\" xmi:id=\"_{0}\" name=\"{0}\">\n",model.getUmpleFile().getSimpleFileName()));
           code.append(StringFormatter.format("  <packageImport xmi:id=\"_packageImport.0\">\n"));
           code.append(StringFormatter.format("    <importedPackage xmi:type=\"uml:Model\" href=\"pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0\"/>\n"));
           code.append(StringFormatter.format("  </packageImport>\n"));
@@ -215,7 +215,7 @@ class PapyrusGenerator
           allNestedStateMachines = sm.getImmediateNestedStateMachines();
 
           smcode.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-          smcode.append(StringFormatter.format("<uml:Model xmi:version=\"2.1\" xmlns:xmi=\"http://schema.omg.org/spec/XMI/2.1\" xmlns:uml=\"http://www.eclipse.org/uml2/5.0.0/UML\" xmi:id=\"_{0}\" name=\"model\">\n",model.getUmpleFile().getSimpleFileName()));
+          smcode.append(StringFormatter.format("<uml:Model xmi:version=\"2.1\" xmlns:xmi=\"https://schema.omg.org/spec/XMI/2.1\" xmlns:uml=\"https://www.eclipse.org/uml2/5.0.0/UML\" xmi:id=\"_{0}\" name=\"model\">\n",model.getUmpleFile().getSimpleFileName()));
           smcode.append(StringFormatter.format("  <packagedElement xmi:type=\"uml:StateMachine\" xmi:id=\"_{0}\" name=\"{1}\">\n",smID, sm.getName()));
           smcode.append(StringFormatter.format("    <region xmi:id=\"_{0}\" name=\"Region0\">\n",regionID));
 
@@ -449,8 +449,8 @@ class PapyrusGenerator
     if (!isFirst && !isFirstInterface)
     {
       code.append("  <profileApplication xmi:id=\"_profileApplication.0\">\n");
-      code.append("    <eAnnotations xmi:id=\"_eAnnotations.0\" source=\"http://www.eclipse.org/uml2/2.0.0/UML\">\n");
-      code.append("      <references xmi:type=\"ecore:EPackage\" href=\"http://www.eclipse.org/uml2/schemas/Standard/1#/\"/>\n");
+      code.append("    <eAnnotations xmi:id=\"_eAnnotations.0\" source=\"https://www.eclipse.org/uml2/2.0.0/UML\">\n");
+      code.append("      <references xmi:type=\"ecore:EPackage\" href=\"https://www.eclipse.org/uml2/schemas/Standard/1#/\"/>\n");
       code.append("    </eAnnotations>\n");
       code.append("    <appliedProfile href=\"pathmap://UML_PROFILES/Standard.profile.uml#_0\"/>\n");
       code.append("  </profileApplication>\n");
@@ -500,8 +500,8 @@ class PapyrusGenerator
       
       if(isClassDiagram)
       {
-      noteCode.append("<notation:Diagram xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:notation=\"http://www.eclipse.org/gmf/runtime/1.0.2/notation\"");
-      noteCode.append(StringFormatter.format(" xmlns:uml=\"http://www.eclipse.org/uml2/5.0.0/UML\" xmi:id=\"_{0}\"",diagramID));
+      noteCode.append("<notation:Diagram xmi:version=\"2.0\" xmlns:xmi=\"https://www.omg.org/XMI\" xmlns:notation=\"https://www.eclipse.org/gmf/runtime/1.0.2/notation\"");
+      noteCode.append(StringFormatter.format(" xmlns:uml=\"https://www.eclipse.org/uml2/5.0.0/UML\" xmi:id=\"_{0}\"",diagramID));
       noteCode.append(StringFormatter.format(" type=\"PapyrusUMLClassDiagram\" name=\"{0}\" measurementUnit=\"Pixel\">\n",model.getUmpleFile().getSimpleFileName()));
       noteCode.append(StringFormatter.format("  <styles xmi:type=\"notation:DiagramStyle\" xmi:id=\"_{0}DiagramStyle\"/>\n",model.getUmpleFile().getSimpleFileName()));
       noteCode.append(StringFormatter.format("  <element xmi:type=\"uml:Model\" href=\"model.uml#_{0}\"/>\n",model.getUmpleFile().getSimpleFileName()));
@@ -512,8 +512,8 @@ class PapyrusGenerator
       }
 
       else{
-      noteCode.append("<notation:Diagram xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" xmlns:notation=\"http://www.eclipse.org/gmf/runtime/1.0.2/notation\"");
-      noteCode.append(StringFormatter.format(" xmlns:uml=\"http://www.eclipse.org/uml2/3.0.0/UML\" xmi:id=\"_{0}\"", diagramID));
+      noteCode.append("<notation:Diagram xmi:version=\"2.0\" xmlns:xmi=\"https://www.omg.org/XMI\" xmlns:ecore=\"https://www.eclipse.org/emf/2002/Ecore\" xmlns:notation=\"https://www.eclipse.org/gmf/runtime/1.0.2/notation\"");
+      noteCode.append(StringFormatter.format(" xmlns:uml=\"https://www.eclipse.org/uml2/3.0.0/UML\" xmi:id=\"_{0}\"", diagramID));
       noteCode.append(StringFormatter.format(" type=\"PapyrusUMLStateMachineDiagram\" name=\"{0}\" measurementUnit=\"Pixel\">\n",smName));
       noteCode.append(innerCode);
       noteCode.append(StringFormatter.format("  <styles xmi:type=\"notation:DiagramStyle\" xmi:id=\"_{0}\"/>\n",generatePapyrusID()));
@@ -546,7 +546,7 @@ class PapyrusGenerator
       String modelFilename = null;
       if(isClassDiagram){
         diCode.append("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n");
-        diCode.append("<di:SashWindowsMngr xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:di=\"http://www.eclipse.org/papyrus/0.7.0/sashdi\">\n");
+        diCode.append("<di:SashWindowsMngr xmi:version=\"2.0\" xmlns:xmi=\"https://www.omg.org/XMI\" xmlns:xsi=\"https://www.w3.org/2001/XMLSchema-instance\" xmlns:di=\"https://www.eclipse.org/papyrus/0.7.0/sashdi\">\n");
         diCode.append("  <pageList>\n    <availablePage>\n");
         diCode.append(StringFormatter.format("      <emfPageIdentifier href=\"model.notation#_{0}\"/>\n",diagramID));
         diCode.append("    </availablePage>\n  </pageList>\n");
@@ -560,7 +560,7 @@ class PapyrusGenerator
       }
       else{
         diCode.append("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n");
-        diCode.append("<di:SashWindowsMngr xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:di=\"http://www.eclipse.org/papyrus/0.7.0/sashdi\">\n");
+        diCode.append("<di:SashWindowsMngr xmi:version=\"2.0\" xmlns:xmi=\"https://www.omg.org/XMI\" xmlns:xsi=\"https://www.w3.org/2001/XMLSchema-instance\" xmlns:di=\"https://www.eclipse.org/papyrus/0.7.0/sashdi\">\n");
         diCode.append("  <pageList>\n    <availablePage>\n");
         diCode.append(StringFormatter.format("      <emfPageIdentifier href=\"{0}_{1}.notation#_{2}\"/>\n",className, smName, diagramID));
         diCode.append("    </availablePage>\n  </pageList>\n");

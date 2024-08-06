@@ -18,7 +18,7 @@ class MySubordinate():
         self._number = aNumber
         didAddMyDriver = self.setMyDriver(aMyDriver)
         if not didAddMyDriver :
-            raise RuntimeError ("Unable to create mySubordinate due to myDriver. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+            raise RuntimeError ("Unable to create mySubordinate due to myDriver. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
     #------------------------
     # INTERFACE
