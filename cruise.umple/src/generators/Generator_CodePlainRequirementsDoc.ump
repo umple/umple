@@ -43,10 +43,34 @@ class PlainRequirementsDocGenerator
     ReqTreeSet = new TreeSet<>(defaultComparator);
     // Add all requirements found in the model to the TreeSet 
     ReqTreeSet.addAll(model.getAllRequirements().values());
-    // Creating paragraph elements from the TreeSet
-    for (Requirement x : ReqTreeSet) {
-      String text = Requirement.translateToHTML(x.getStatement(), x.getLanguage());
-      doc.createParagraphElement("" + x.getIdentifier() + ": " + text, false);
+    // Creating paragraph elements from the TreeSet below
+    // Intializing the text to an empty string
+    String text= "";
+    // Assigning variables to the 2 suboptions 
+    // -s reqSortImpl which filters only the implemented requirements
+    // -s reqSortNotImpl which filters only the Not implemented requirements
+    boolean hasReqSortImpl = model.modelHasSuboption("PlainRequirementsDoc", "reqSortImpl");
+    boolean hasReqSortNotImpl = model.modelHasSuboption("PlainRequirementsDoc", "reqSortNotImpl");
+    // Loop through the sorted reqs in the TreeSet and check if they have an implementation
+    for (Requirement req : ReqTreeSet){
+    	if(req.hasReqImplementations())
+    	{
+    	  if (hasReqSortImpl || (!hasReqSortImpl && !hasReqSortNotImpl)){
+    	  // if the suboption -s reqSortImpl is present or it is the default case (no sub option)
+    	   text = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
+    	   doc.createParagraphElement(""+req.getIdentifier()+": "+text, false);
+    	   }
+    	}
+    	else
+    	{
+    	   if (hasReqSortNotImpl || (!hasReqSortImpl && !hasReqSortNotImpl)){
+    	     // if the suboption -s reqSortNotImpl is present or it is the default case (no sub option)
+    	    text = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
+    	    // Append the test with the word 'NOT IMPLEMENTED'
+    	    text = text+ " NOT IMPLEMENTED";
+    	    doc.createParagraphElement(""+req.getIdentifier()+": "+text, false);
+    	    }
+    	}
     }
     model.setCode(doc.toString());
     writeModel();
@@ -70,18 +94,3 @@ class PlainRequirementsDocGenerator
   }
 }
 
-class ReqVisitor {
-    depend java.io.IOException;
-	isA UmpleModelVisitor;
-	HtmlDocument doc;
-	
-    // TO DO: 
-    // use a List to gather all of the requirements in the visit function below, sort them in alphabetical order
-    // in void done() create paragraph elements with them
-
-    // Requirement
-	void visit(Requirement req) {	
-        String text = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
-        doc.createParagraphElement(""+req.getIdentifier()+": "+text, false);
-	}
-}
