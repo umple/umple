@@ -43,6 +43,7 @@ class StateMachine
   
   Boolean queued = false;
   Boolean pooled = false;
+  1 -> * ReqImplementation;
 }
 
 /*
@@ -73,6 +74,7 @@ class State
   before getIsHistoryState { if ("H".equals(name)) { isHistoryState = true; } }
   before getIsDeepHistoryState { if ("HStar".equals(name)) { isDeepHistoryState = true; } }
   before isFinalState { if ("Final".equals(name)) { finalState = true; } }
+  1 -> * ReqImplementation;
 }
 
 /* 

@@ -33,6 +33,7 @@ public class RequirementsPlainTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/requirements/SortOneReq.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/SortMultipleReqs.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/SortReqsStartA.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqHideNotImpl.html");
   }
 
   @Test
@@ -75,5 +76,11 @@ public class RequirementsPlainTest extends TemplateTest
   public void SortReqsStartA()
   {
     assertUmpleTemplateFor("requirements/SortReqsStartA.ump","requirements/SortReqsStartA.html.txt");
+  }
+  
+  @Test
+  public void ReqHideNotImpl()
+  {
+    assertUmpleTemplateFor("requirements/ReqHideNotImpl.ump","requirements/ReqHideNotImpl.html.txt");
   }
 }

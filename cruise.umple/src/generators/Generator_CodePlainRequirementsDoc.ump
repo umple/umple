@@ -20,6 +20,7 @@ class PlainRequirementsDocGenerator
   depend cruise.umple.compiler.exceptions.*;
   depend java.util.Map.Entry;
   depend java.util.Set;
+  depend cruise.umple.parser.Token;
   
   
   UmpleModel model = null;
@@ -43,33 +44,65 @@ class PlainRequirementsDocGenerator
     ReqTreeSet = new TreeSet<>(defaultComparator);
     // Add all requirements found in the model to the TreeSet 
     ReqTreeSet.addAll(model.getAllRequirements().values());
-    // Creating paragraph elements from the TreeSet below
-    // Intializing the text to an empty string
-    String text= "";
-    // Assigning variables to the 2 suboptions 
-    // -s reqSortImpl which filters only the implemented requirements
-    // -s reqSortNotImpl which filters only the Not implemented requirements
-    boolean hasReqSortImpl = model.modelHasSuboption("PlainRequirementsDoc", "reqSortImpl");
-    boolean hasReqSortNotImpl = model.modelHasSuboption("PlainRequirementsDoc", "reqSortNotImpl");
+    // Assigning the suboption to a variable 
+    boolean hasreqHideNotImpl = model.modelHasSuboption("PlainRequirementsDoc", "reqHideNotImpl");
+    // Assigning a variable to hold the filename so it can be output in the implemented by section
+    String fileName = model.getUmpleFile().getSimpleFileName()+".ump";
     // Loop through the sorted reqs in the TreeSet and check if they have an implementation
     for (Requirement req : ReqTreeSet){
-    	if(req.hasReqImplementations())
-    	{
-    	  if (hasReqSortImpl || (!hasReqSortImpl && !hasReqSortNotImpl)){
-    	  // if the suboption -s reqSortImpl is present or it is the default case (no sub option)
-    	   text = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
-    	   doc.createParagraphElement(""+req.getIdentifier()+": "+text, false);
-    	   }
-    	}
-    	else
-    	{
-    	   if (hasReqSortNotImpl || (!hasReqSortImpl && !hasReqSortNotImpl)){
-    	     // if the suboption -s reqSortNotImpl is present or it is the default case (no sub option)
-    	    text = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
-    	    // Append the test with the word 'NOT IMPLEMENTED'
-    	    text = text+ " NOT IMPLEMENTED";
-    	    doc.createParagraphElement(""+req.getIdentifier()+": "+text, false);
-    	    }
+    	if (req.hasReqImplementations() || !hasreqHideNotImpl) {
+    	  String mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
+    	  String implText="";
+          if(req.hasReqImplementations()) {
+            implText= " IMPLEMENTED BY: ";
+            for (UmpleClass aClass : getModel().getUmpleClasses())
+   	    {
+	      for (Attribute att : aClass.getAttributes())
+	      { 
+	        if(att.hasReqImplementations()){
+	          implText += " "+att.getName()+" ; ";
+	        }
+	        
+	      }
+	      for (StateMachine sm : aClass.getStateMachines())
+	      { 
+	       
+	        System.out.println(sm);
+	        // State machines don't have the hasReqImplementations() method this print statement  below returns false
+	        //System.out.println(sm.hasReqImplementations());
+	        for (State s : sm.getStates())
+	        {
+	          //print statement  below returns false
+	          //System.out.println(s.hasReqImplementations());
+	        }
+	        
+	      }
+	      
+	      for (AssociationVariable as : aClass.getAssociationVariables())
+	      {
+	        System.out.println("It is implemented by an association!");
+	        if(as.hasReqImplementations()){
+	          implText += " "+as.getName()+" ; ";
+	        }
+	      
+	      }
+	      // We always have to print the class name in the implemented by block
+	      implText += "In Class: "+aClass.getName() +"; "; 
+	    }
+	    // Appending the file name to the text
+	    implText += "In File: "+ fileName + "; ";
+	    // Below is done to get the position of the implements req statement so it can be displayed in the block
+	    List<ReqImplementation> ReqImp = new ArrayList<ReqImplementation>(); 
+	    ReqImp = model.getReqImplementations();
+	    for (ReqImplementation reqImpl : ReqImp)
+	    {
+              implText += " At line number: "+ reqImpl.getReqToken().getPosition().getLineNumber()+ "; ";
+	    }
+          }
+          else {
+            implText="NOT IMPLEMENTED.";
+          }
+          doc.createParagraphElement("" + req.getIdentifier() + ": " + mainReqText+implText, false);
     	}
     }
     model.setCode(doc.toString());

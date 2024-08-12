@@ -1,0 +1,15 @@
+// This is a test to filter not the not implemented requirements
+suboption "reqHideNotImpl";
+req Z text
+ { 
+  A second requirement.
+} 
+
+req A text
+ { 
+ Is the second requirement.
+} 
+class X {
+implementsReq A;
+a;
+}
