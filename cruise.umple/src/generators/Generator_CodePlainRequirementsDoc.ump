@@ -18,8 +18,6 @@ class PlainRequirementsDocGenerator
   depend java.util.*;
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
-  depend java.util.Map.Entry;
-  depend java.util.Set;
   depend cruise.umple.parser.Token;
   
   
@@ -51,10 +49,15 @@ class PlainRequirementsDocGenerator
     // Loop through the sorted reqs in the TreeSet and check if they have an implementation
     for (Requirement req : ReqTreeSet){
     	if (req.hasReqImplementations() || !hasreqHideNotImpl) {
+    	  // Below string stores the requirement statement and language and translates to html
     	  String mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
+    	  // Below string will store the details like class, attribute, association and state
     	  String implText="";
+    	  // Check if the requirement is implemented
           if(req.hasReqImplementations()) {
+            // Append the text with this prompt
             implText= " IMPLEMENTED BY: ";
+            // Loop through classes to check for attributes that have implementations
             for (UmpleClass aClass : getModel().getUmpleClasses())
    	    {
 	      for (Attribute att : aClass.getAttributes())
@@ -64,20 +67,20 @@ class PlainRequirementsDocGenerator
 	        }
 	        
 	      }
+	      // Loop through classes to check for state machines that have implementations
 	      for (StateMachine sm : aClass.getStateMachines())
 	      { 
-	       
-	        System.out.println(sm);
-	        // State machines don't have the hasReqImplementations() method this print statement  below returns false
-	        //System.out.println(sm.hasReqImplementations());
-	        for (State s : sm.getStates())
-	        {
-	          //print statement  below returns false
-	          //System.out.println(s.hasReqImplementations());
+	        if(sm.hasReqImplementations()){
+	          implText += " "+sm.getName()+" ; ";
+	          for (State s : sm.getStates())
+	          {
+	            //print statement  below returns false
+	            // There is an issue with linking states with reqImplementation
+	            System.out.println("State has reqimpl: "+s.hasReqImplementations());
+	          }
 	        }
-	        
 	      }
-	      
+	      // Loop through classes to check for associations that have implementations
 	      for (AssociationVariable as : aClass.getAssociationVariables())
 	      {
 	        System.out.println("It is implemented by an association!");
@@ -100,8 +103,10 @@ class PlainRequirementsDocGenerator
 	    }
           }
           else {
+            // If the requirement does not have an implementation
             implText="NOT IMPLEMENTED.";
           }
+          // Create the paragraph elements
           doc.createParagraphElement("" + req.getIdentifier() + ": " + mainReqText+implText, false);
     	}
     }

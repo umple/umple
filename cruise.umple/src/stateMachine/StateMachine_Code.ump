@@ -12,8 +12,7 @@ State machine extensions
 namespace cruise.umple.compiler;
 
 class StateMachine
-{
-  
+{ 
   public boolean getHasExitAction()
   {
     return getHasAction("exit");
@@ -500,7 +499,6 @@ class StateMachine
 
 class State
 {
-
   public boolean isSameState(State state, StateMachine relativeTo)
   {
     if (this.equals(state))

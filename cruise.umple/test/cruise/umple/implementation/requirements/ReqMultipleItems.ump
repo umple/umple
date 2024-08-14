@@ -1,0 +1,32 @@
+// This is a test to filter not the not implemented requirements
+suboption "reqSortID";
+
+req A01 {    
+  first requirement.
+}
+
+req A02 {    
+  second requirement.
+}
+
+req A03 {    
+  third requirement.
+}
+
+req A04 {    
+  fourth requirement.
+}
+// A02 not implemented 
+// A01 implemented by a class
+implementsReq A01;
+class Example{
+  // A03 implemented by attribute 'a'
+  implementsReq A03;
+  a;
+  
+  // A04 implemented by an association
+  implementsReq A04;
+  * -> * A;
+}
+
+

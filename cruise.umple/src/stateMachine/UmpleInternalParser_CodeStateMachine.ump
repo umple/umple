@@ -634,7 +634,19 @@ class UmpleInternalParser
         }
       } 
     }
+    
+    List<ReqImplementation> reqImpls = model.getReqImplementations();
+    if (uClassifier instanceof UmpleClass) {
+      for(ReqImplementation reqImp : reqImpls)
+      {
+        sm.addReqImplementation(reqImp);    
       
+        for(State s : sm.getStates())
+        {
+          s.addReqImplementation(reqImp);
+        }
+      }
+    }
     
     if(stateMachineToken.is("pooled"))
     {
