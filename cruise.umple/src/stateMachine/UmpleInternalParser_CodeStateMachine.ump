@@ -245,7 +245,7 @@ class UmpleInternalParser
         }	
 	    }
     }
-      
+      //String reqImpID = stateMachineToken.getSubToken("reqIdentifier").getValue();
       Token subToken = token.getSubToken(0);
       if (subToken.is("activeDefinition"))
       {
@@ -635,7 +635,7 @@ class UmpleInternalParser
       } 
     }
     
-    List<ReqImplementation> reqImpls = model.getReqImplementations();
+   List<ReqImplementation> reqImpls =model.getReqImplementations();
     if (uClassifier instanceof UmpleClass) {
       for(ReqImplementation reqImp : reqImpls)
       {
@@ -647,7 +647,6 @@ class UmpleInternalParser
         }
       }
     }
-    
     if(stateMachineToken.is("pooled"))
     {
       sm.setPooled(true);
@@ -1153,6 +1152,14 @@ class UmpleInternalParser
               addNewSm = true;
               isConcurrentState = true;
       }
+      /*else if (subToken.is("reqImplementation"))
+      {
+      List<ReqImplementation> reqImpls = model.getReqImplementations();
+      for(ReqImplementation reqImp : reqImpls)
+       {
+         fromState.addReqImplementation(reqImp);
+       }    
+      }*/
       else if (subToken.is("state"))
       {
         StateMachine nestedStateMachine = null;

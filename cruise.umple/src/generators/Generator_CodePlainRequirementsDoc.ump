@@ -47,69 +47,158 @@ class PlainRequirementsDocGenerator
     // Assigning a variable to hold the filename so it can be output in the implemented by section
     String fileName = model.getUmpleFile().getSimpleFileName()+".ump";
     // Loop through the sorted reqs in the TreeSet and check if they have an implementation
+    List<ReqImplementation> ReqImp = new ArrayList<ReqImplementation>(); 
+    ReqImp = model.getReqImplementations();
+    //System.out.println(ReqTreeSet);
     for (Requirement req : ReqTreeSet){
     	if (req.hasReqImplementations() || !hasreqHideNotImpl) {
     	  // Below string stores the requirement statement and language and translates to html
     	  String mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
+    	  doc.createParagraphElement("" + req.getIdentifier() + ": " + mainReqText, false);
     	  // Below string will store the details like class, attribute, association and state
     	  String implText="";
     	  // Check if the requirement is implemented
           if(req.hasReqImplementations()) {
             // Append the text with this prompt
-            implText= " IMPLEMENTED BY: ";
+            //doc.createParagraphElement("<br>", false);
+            doc.createParagraphElement("&nbsp;"+" IMPLEMENTED BY: ", false);
+            //doc.createParagraphElement("<br>", false);
+            //implText= " IMPLEMENTED BY: ";
             // Loop through classes to check for attributes that have implementations
             for (UmpleClass aClass : getModel().getUmpleClasses())
    	    {
+   	      for(ReqImplementation classimps : aClass.getReqImplementations())
+   	      {
+   	        for(ReqImplementation reqimps : req.getReqImplementations())
+   	        {
+   	          if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	          {
+		     System.out.println("Are the equal at some point in LOOP: ");
+		     String classText= ""; 
+	             int lineText;
+	             String lineNum="";
+	             for (ReqImplementation reqImpl : ReqImp)
+	            {
+                      lineText = reqImpl.getReqToken().getPosition().getLineNumber();
+                      lineText += 1;
+                      lineNum = String.valueOf(lineText);
+	            }
+	              classText = "&nbsp;"+"&nbsp;"+"In class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ lineNum+ " ; ";
+	              doc.createParagraphElement("&nbsp;"+"&nbsp;"+classText, false);
+		  }
+   	        }
+   	      
+   	      }
 	      for (Attribute att : aClass.getAttributes())
 	      { 
-	        if(att.hasReqImplementations()){
-	          implText += " "+att.getName()+" ; ";
-	        }
-	        
+	        for(ReqImplementation classimps : att.getReqImplementations())
+   	        {
+   	        for(ReqImplementation reqimps : req.getReqImplementations())
+   	        {
+   	          if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	          {
+	             String attrText= ""; 
+	             int lineText;
+	             String lineNum="";
+	             if(att.hasReqImplementations()){
+	              for (ReqImplementation reqImpl : ReqImp)
+	              {
+                        lineText = reqImpl.getReqToken().getPosition().getLineNumber();
+                        lineText += 1;
+                        lineNum = String.valueOf(lineText);
+	              }
+	             attrText = "&nbsp;"+"&nbsp;"+"attribute:"+"&nbsp;"+att.getName()+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ lineNum+ " ; ";
+	             doc.createParagraphElement("&nbsp;"+"&nbsp;"+attrText, false);
+	              }
+	           }
+	         }
+	        }  
 	      }
 	      // Loop through classes to check for state machines that have implementations
 	      for (StateMachine sm : aClass.getStateMachines())
 	      { 
-	        if(sm.hasReqImplementations()){
-	          implText += " "+sm.getName()+" ; ";
-	          for (State s : sm.getStates())
-	          {
+	        for(ReqImplementation classimps : sm.getReqImplementations())
+   	        {
+   	          for(ReqImplementation reqimps : req.getReqImplementations())
+   	          {
+   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            {
+   	              //System.out.println("sm's impls:"+ sm.getReqImplementations());
+   	              //System.out.println("classimps ID:"+classimps.getIdentifier() );
+   	              //System.out.println("reqimps ID:"+reqimps.getIdentifier() );
+	              if(sm.hasReqImplementations()){
+	              String smText= ""; 
+	              int lineText;
+	              String lineNum="";
+	              if(sm.hasReqImplementations()){
+	                for (ReqImplementation reqImpl : ReqImp)
+	                {
+                          lineText = reqImpl.getReqToken().getPosition().getLineNumber();
+                          lineText += 1;
+                          lineNum = String.valueOf(lineText);
+	                }
+	               smText = "&nbsp;"+"&nbsp;"+"state machine:"+"&nbsp;"+sm.getName()+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ lineNum+ " ; ";
+	               doc.createParagraphElement("&nbsp;"+"&nbsp;"+smText, false);
+	              }
+	              for (State s : sm.getStates())
+	              {
 	            //print statement  below returns false
 	            // There is an issue with linking states with reqImplementation
-	            System.out.println("State has reqimpl: "+s.hasReqImplementations());
-	          }
+	            //System.out.println("State has reqimpl: "+s.hasReqImplementations());
+	             }
+	           }
+	         }
+	         }
 	        }
 	      }
 	      // Loop through classes to check for associations that have implementations
 	      for (AssociationVariable as : aClass.getAssociationVariables())
 	      {
-	        System.out.println("It is implemented by an association!");
-	        if(as.hasReqImplementations()){
-	          implText += " "+as.getName()+" ; ";
+	        for(ReqImplementation classimps : as.getReqImplementations())
+   	        {
+   	          for(ReqImplementation reqimps : req.getReqImplementations())
+   	          {
+   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            {
+	              String assoText= ""; 
+	              int lineText;
+	              String lineNum="";
+	              if(as.hasReqImplementations()){
+	                for (ReqImplementation reqImpl : ReqImp)
+	                {
+                          lineText = reqImpl.getReqToken().getPosition().getLineNumber();
+                          lineText += 1;
+                          lineNum = String.valueOf(lineText);
+	                }
+	              assoText = "&nbsp;"+"&nbsp;"+"association:"+"&nbsp;"+as.getName()+"class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ lineNum+ " ; ";
+	              doc.createParagraphElement("&nbsp;"+"&nbsp;"+assoText, false);
+	             }
+	           }
+	         }
 	        }
-	      
 	      }
 	      // We always have to print the class name in the implemented by block
-	      implText += "In Class: "+aClass.getName() +"; "; 
+	      //implText += "In Class: "+aClass.getName() +"; ";
 	    }
 	    // Appending the file name to the text
-	    implText += "In File: "+ fileName + "; ";
+	    //implText += "In File: "+ fileName + "; ";
 	    // Below is done to get the position of the implements req statement so it can be displayed in the block
-	    List<ReqImplementation> ReqImp = new ArrayList<ReqImplementation>(); 
-	    ReqImp = model.getReqImplementations();
-	    for (ReqImplementation reqImpl : ReqImp)
+	    //List<ReqImplementation> ReqImp = new ArrayList<ReqImplementation>(); 
+	   // ReqImp = model.getReqImplementations();
+	    /*for (ReqImplementation reqImpl : ReqImp)
 	    {
               implText += " At line number: "+ reqImpl.getReqToken().getPosition().getLineNumber()+ "; ";
-	    }
+	    }*/
+          }
           }
           else {
             // If the requirement does not have an implementation
-            implText="NOT IMPLEMENTED.";
+            //implText="NOT IMPLEMENTED.";
+            doc.createParagraphElement("&nbsp;"+"NOT IMPLEMENTED.", false);
+          }
           }
           // Create the paragraph elements
-          doc.createParagraphElement("" + req.getIdentifier() + ": " + mainReqText+implText, false);
-    	}
-    }
+         // doc.createParagraphElement("" + req.getIdentifier() + ": " + mainReqText+implText, false);
     model.setCode(doc.toString());
     writeModel();
     return;
