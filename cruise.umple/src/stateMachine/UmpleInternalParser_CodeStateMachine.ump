@@ -140,6 +140,12 @@ class UmpleInternalParser
     {
       analyzeStateMachineDefinition(token);
     }
+    if(token.is("reqImplementation"))
+    {
+       analyzeImplementReq(token);
+       isReqAddedToLast(token);
+       //shouldConsumeRequirementImpl = isReqAddedToLast(token);
+    }
   }  
   
   private String getThreadName(Token activeToken)
@@ -635,7 +641,7 @@ class UmpleInternalParser
       } 
     }
     
-   List<ReqImplementation> reqImpls =model.getReqImplementations();
+   /*List<ReqImplementation> reqImpls =model.getReqImplementations();
     if (uClassifier instanceof UmpleClass) {
       for(ReqImplementation reqImp : reqImpls)
       {
@@ -646,7 +652,9 @@ class UmpleInternalParser
           s.addReqImplementation(reqImp);
         }
       }
-    }
+    }*/
+     analyazeStateMachineImpl(sm);
+     
     if(stateMachineToken.is("pooled"))
     {
       sm.setPooled(true);

@@ -73,17 +73,21 @@ class PlainRequirementsDocGenerator
    	        {
    	          if(classimps.getIdentifier() == reqimps.getIdentifier())
    	          {
-		     System.out.println("Are the equal at some point in LOOP: ");
+		     //System.out.println("Are the equal at some point in LOOP: ");
 		     String classText= ""; 
-	             int lineText;
+	             int lineText=0;
 	             String lineNum="";
 	             for (ReqImplementation reqImpl : ReqImp)
 	            {
+	              if(reqImpl == classimps){
+	              System.out.println("They are equal in one case!");
                       lineText = reqImpl.getReqToken().getPosition().getLineNumber();
                       lineText += 1;
-                      lineNum = String.valueOf(lineText);
+                      //System.out.println("line num:"+lineText);
+                      //lineNum = String.valueOf(lineText);
+                      }
 	            }
-	              classText = "&nbsp;"+"&nbsp;"+"In class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ lineNum+ " ; ";
+	              classText = "&nbsp;"+"&nbsp;"+"class:"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+"&nbsp;"+ lineText+ " ; ";
 	              doc.createParagraphElement("&nbsp;"+"&nbsp;"+classText, false);
 		  }
    	        }
@@ -98,16 +102,18 @@ class PlainRequirementsDocGenerator
    	          if(classimps.getIdentifier() == reqimps.getIdentifier())
    	          {
 	             String attrText= ""; 
-	             int lineText;
+	             int lineText=0;
 	             String lineNum="";
 	             if(att.hasReqImplementations()){
 	              for (ReqImplementation reqImpl : ReqImp)
 	              {
+	                if(reqImpl == classimps){
                         lineText = reqImpl.getReqToken().getPosition().getLineNumber();
                         lineText += 1;
-                        lineNum = String.valueOf(lineText);
+                        //lineNum = String.valueOf(lineText);
+                        }
 	              }
-	             attrText = "&nbsp;"+"&nbsp;"+"attribute:"+"&nbsp;"+att.getName()+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ lineNum+ " ; ";
+	             attrText = "&nbsp;"+"&nbsp;"+"attribute:"+"&nbsp;"+att.getName()+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+ lineText+ " ; ";
 	             doc.createParagraphElement("&nbsp;"+"&nbsp;"+attrText, false);
 	              }
 	           }
@@ -128,16 +134,18 @@ class PlainRequirementsDocGenerator
    	              //System.out.println("reqimps ID:"+reqimps.getIdentifier() );
 	              if(sm.hasReqImplementations()){
 	              String smText= ""; 
-	              int lineText;
+	              int lineText=0;
 	              String lineNum="";
 	              if(sm.hasReqImplementations()){
 	                for (ReqImplementation reqImpl : ReqImp)
 	                {
+	                  if(reqImpl == classimps){
                           lineText = reqImpl.getReqToken().getPosition().getLineNumber();
                           lineText += 1;
-                          lineNum = String.valueOf(lineText);
+                          //lineNum = String.valueOf(lineText);
+                          }
 	                }
-	               smText = "&nbsp;"+"&nbsp;"+"state machine:"+"&nbsp;"+sm.getName()+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ lineNum+ " ; ";
+	               smText = "&nbsp;"+"&nbsp;"+"state machine:"+"&nbsp;"+sm.getName()+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+"&nbsp;"+lineText+ " ; ";
 	               doc.createParagraphElement("&nbsp;"+"&nbsp;"+smText, false);
 	              }
 	              for (State s : sm.getStates())
@@ -154,6 +162,7 @@ class PlainRequirementsDocGenerator
 	      // Loop through classes to check for associations that have implementations
 	      for (AssociationVariable as : aClass.getAssociationVariables())
 	      {
+	        //System.out.println("The association:"+ as);
 	        for(ReqImplementation classimps : as.getReqImplementations())
    	        {
    	          for(ReqImplementation reqimps : req.getReqImplementations())
@@ -161,16 +170,18 @@ class PlainRequirementsDocGenerator
    	            if(classimps.getIdentifier() == reqimps.getIdentifier())
    	            {
 	              String assoText= ""; 
-	              int lineText;
+	              int lineText=0;
 	              String lineNum="";
 	              if(as.hasReqImplementations()){
 	                for (ReqImplementation reqImpl : ReqImp)
-	                {
+	                { 
+	                  if(reqImpl == classimps){
                           lineText = reqImpl.getReqToken().getPosition().getLineNumber();
                           lineText += 1;
-                          lineNum = String.valueOf(lineText);
+                          //lineNum = String.valueOf(lineText);
+                          }
 	                }
-	              assoText = "&nbsp;"+"&nbsp;"+"association:"+"&nbsp;"+as.getName()+"class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ lineNum+ " ; ";
+	              assoText = "&nbsp;"+"&nbsp;"+"association:"+"&nbsp;"+as.getType()+"&nbsp;"+"class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+lineText+ " ; ";
 	              doc.createParagraphElement("&nbsp;"+"&nbsp;"+assoText, false);
 	             }
 	           }
@@ -179,7 +190,100 @@ class PlainRequirementsDocGenerator
 	      }
 	      // We always have to print the class name in the implemented by block
 	      //implText += "In Class: "+aClass.getName() +"; ";
+	       for(Method me : aClass.getMethods())
+	       {
+	       //System.out.println("methods!:"+aClass.getMethods());
+	       if(me.hasReqImplementations())
+	       {  
+	         for(ReqImplementation classimps : me.getReqImplementations())
+   	         {
+   	          for(ReqImplementation reqimps : req.getReqImplementations())
+   	          {
+   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            {
+	          System.out.println("There are methods!");
+	          String meText= ""; 
+	          int lineText=0;
+	          String lineNum="";
+	          for (ReqImplementation reqImpl : ReqImp)
+	          {
+	             if(reqImpl == classimps){
+                     lineText = reqImpl.getReqToken().getPosition().getLineNumber();
+                     lineText += 1;
+                     //lineNum = String.valueOf(lineText);
+                     }
+	           }
+	           meText = "&nbsp;"+"&nbsp;"+"method:"+"&nbsp;"+me.getName()+"&nbsp;"+"class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+lineText+ " ; ";
+	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+meText, false);
+                }
+                }
+                }
+                }
+              }
 	    }
+	    for(UmpleTrait tr : model.getUmpleTraits())
+	    {
+	       //System.out.println("traits!:"+model.getUmpleTraits());
+	        //System.out.println("There are no traits!:"+tr.hasReqImplementations());
+	       if(tr.hasReqImplementations())
+	       {  
+	       for(ReqImplementation classimps : tr.getReqImplementations())
+   	         {
+   	          for(ReqImplementation reqimps : req.getReqImplementations())
+   	          {
+   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            {
+	             //System.out.println("There are traits!");
+	             String trText= ""; 
+	             int lineText=0;
+	             String lineNum="";
+	             for (ReqImplementation reqImpl : ReqImp)
+	             {
+	             if(reqImpl == classimps){
+                     lineText = reqImpl.getReqToken().getPosition().getLineNumber();
+                     lineText += 1;
+                     //lineNum = String.valueOf(lineText);
+                     }
+	            }
+	           trText = "&nbsp;"+"&nbsp;"+"trait:"+"&nbsp;"+tr.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+lineText+ " ; ";
+	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+trText, false);
+                   }
+                 }
+                }
+              }
+            }
+            
+             for(UmpleInterface ui : model.getUmpleInterfaces())
+	    {
+	       //System.out.println("traits!:"+model.getUmpleTraits());
+	       if(ui.hasReqImplementations())
+	       {  
+	         for(ReqImplementation classimps : ui.getReqImplementations())
+   	         {
+   	          for(ReqImplementation reqimps : req.getReqImplementations())
+   	          {
+   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            {
+	         // System.out.println("There are traits!");
+	          String uiText= ""; 
+	          int lineText=0;
+	          String lineNum="";
+	          for (ReqImplementation reqImpl : ReqImp)
+	          {
+	             //if(reqImpl == classimps){
+                     lineText = reqImpl.getReqToken().getPosition().getLineNumber();
+                     lineText += 1;
+                     //lineNum = String.valueOf(lineText);
+                     //}
+	           }
+	           uiText = "&nbsp;"+"&nbsp;"+"interface:"+"&nbsp;"+ui.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+lineText+ " ; ";
+	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+uiText, false);
+                  }
+                 }
+               }
+              }
+            }
+            
 	    // Appending the file name to the text
 	    //implText += "In File: "+ fileName + "; ";
 	    // Below is done to get the position of the implements req statement so it can be displayed in the block
