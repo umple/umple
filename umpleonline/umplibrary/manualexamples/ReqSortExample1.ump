@@ -1,0 +1,18 @@
+// This is an example to show how requirements can be sorted.
+req B01 {      
+  b is a requirement.
+}    
+req A02 {    
+  a is a requirement.
+}
+req C03 { 
+  z is a requirement.
+}  
+class Example1 { 
+  implementsReq A02; 
+  implementsReq C03; 
+  implementsReq B01;
+  var1;
+  var2;
+ }  
+     
