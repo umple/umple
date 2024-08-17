@@ -23,6 +23,7 @@ class UmpleInternalParser
   internal List<Token> transitionNames = null;
   internal List<Token> ignoredTransitions = new ArrayList<Token>();
   internal List<Token> innerMixsetTokens = null;
+  List<ReqImplementation> ReqImpState= new ArrayList<ReqImplementation>();
   
   
   //------------------------
@@ -142,8 +143,9 @@ class UmpleInternalParser
     }
     if(token.is("reqImplementation"))
     {
-       analyzeImplementReq(token);
-       isReqAddedToLast(token);
+       //ReqImpState = analyzeStateReqImpl(token);
+       //analyzeImplementReq(token);
+       //isReqAddedToLast(token);
        //shouldConsumeRequirementImpl = isReqAddedToLast(token);
     }
   }  
@@ -268,6 +270,14 @@ class UmpleInternalParser
       {
         analyzedReferencedStateMachine(subToken,uClassifier);
       }
+    }
+     if(token.is("reqImplementation"))
+    {
+       ReqImpState = analyzeStateReqImpl(token);
+       //analyzeImplementReq(token);
+       //isReqAddedToLast(token);
+       //shouldConsumeRequirementImpl = isReqAddedToLast(token);
+       //System.out.println("277-classtoken state reqimpl");
     }
   }
 
@@ -653,7 +663,13 @@ class UmpleInternalParser
         }
       }
     }*/
-     analyazeStateMachineImpl(sm);
+     //analyazeStateMachineImpl(sm);
+     if (uClassifier instanceof UmpleClass) {
+      for(ReqImplementation reqImp : ReqImpState)
+      {
+        sm.addReqImplementation(reqImp);    
+      }
+      }
      
     if(stateMachineToken.is("pooled"))
     {

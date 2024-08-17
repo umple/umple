@@ -1,0 +1,25 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqMultipleItems.ump
+</p><p>R1: Test of req 1
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;attribute:&nbsp;att2&nbsp;in class&nbsp;A&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;40 ; 
+</p><p>R2: Another req
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;attribute:&nbsp;att1&nbsp;in class&nbsp;A&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;35 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;association:&nbsp;A&nbsp;class&nbsp;B&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;52 ; 
+</p><p>R3: The third req
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;A&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;32 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;state machine:&nbsp;sm&nbsp;in class&nbsp;B&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;56 ; 
+</p><p>R4: The Fourth req
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;B&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;75 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;m1&nbsp;class&nbsp;B&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;75 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;trait:&nbsp;C&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;75 ; 
+</p><p>R5: This one is to test that two methods show as implementing R5
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;m2&nbsp;class&nbsp;B&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;65 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;m1&nbsp;class&nbsp;B&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;77 ; 
+</p><p>R6: Req to test interface implementation
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;interface:&nbsp;Itest&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;89 ; 
+</p></html>

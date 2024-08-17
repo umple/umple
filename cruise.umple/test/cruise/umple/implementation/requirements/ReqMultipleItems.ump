@@ -1,32 +1,93 @@
-// This is a test to filter not the not implemented requirements
 suboption "reqSortID";
 
-req A01 {    
-  first requirement.
+req R1 {
+ Test of req 1
 }
 
-req A02 {    
-  second requirement.
+
+req R2 {
+ Another req
 }
 
-req A03 {    
-  third requirement.
+
+req R3 {
+ The third req
 }
 
-req A04 {    
-  fourth requirement.
+req R4 {
+ The Fourth req
 }
-// A02 not implemented 
-// A01 implemented by a class
-implementsReq A01;
-class Example{
-  // A03 implemented by attribute 'a'
-  implementsReq A03;
-  a;
+
+req R5 {
+  This one is to test that two methods show as implementing R5
+}
+
+req R6 {
+  Req to test interface implementation
+}
+
+
+// First class A
+implementsReq R3;
+class A {
   
-  // A04 implemented by an association
-  implementsReq A04;
+  implementsReq R2;
+  att1;
+  
+  
+  // an integer attribute
+  implementsReq R1;
+  Integer att2;
+}
+
+
+
+// A second class
+class B {
+  isA C;
+  isA Itest;
+
+  // An association
+  implementsReq R2;
   * -> * A;
+  
+  // A test state machine
+  implementsReq R3;
+  sm {
+    s1 {
+      e -> s2;
+    }
+    s2 {
+    }
+  } 
+  
+  implementsReq R5;
+  String m2(String s) {
+    return(s);
+  }
+}
+
+
+// A trait that is part of B
+implementsReq R4;
+trait C {
+   implementsReq R4;
+   
+   implementsReq R5;
+   int m1() {
+     return 5;
+   }
+}
+
+
+// This class doesn't implement a valid req
+implementsReq R99;
+class X {
+}
+
+implementsReq R6;
+interface Itest {
+  String m2(String s);
 }
 
 

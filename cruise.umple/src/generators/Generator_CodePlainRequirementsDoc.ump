@@ -52,6 +52,7 @@ class PlainRequirementsDocGenerator
     //System.out.println(ReqTreeSet);
     for (Requirement req : ReqTreeSet){
     	if (req.hasReqImplementations() || !hasreqHideNotImpl) {
+    	  //System.out.println("55 has reqImpls:"+ req.hasReqImplementations());
     	  // Below string stores the requirement statement and language and translates to html
     	  String mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
     	  doc.createParagraphElement("" + req.getIdentifier() + ": " + mainReqText, false);
@@ -80,7 +81,7 @@ class PlainRequirementsDocGenerator
 	             for (ReqImplementation reqImpl : ReqImp)
 	            {
 	              if(reqImpl == classimps){
-	              System.out.println("They are equal in one case!");
+	              //System.out.println("They are equal in one case!");
                       lineText = reqImpl.getReqToken().getPosition().getLineNumber();
                       lineText += 1;
                       //System.out.println("line num:"+lineText);
@@ -129,31 +130,19 @@ class PlainRequirementsDocGenerator
    	          {
    	            if(classimps.getIdentifier() == reqimps.getIdentifier())
    	            {
-   	              //System.out.println("sm's impls:"+ sm.getReqImplementations());
-   	              //System.out.println("classimps ID:"+classimps.getIdentifier() );
-   	              //System.out.println("reqimps ID:"+reqimps.getIdentifier() );
 	              if(sm.hasReqImplementations()){
 	              String smText= ""; 
 	              int lineText=0;
 	              String lineNum="";
-	              if(sm.hasReqImplementations()){
 	                for (ReqImplementation reqImpl : ReqImp)
 	                {
-	                  if(reqImpl == classimps){
+	                  if(reqImpl.getIdentifier() == classimps.getIdentifier()){
                           lineText = reqImpl.getReqToken().getPosition().getLineNumber();
                           lineText += 1;
-                          //lineNum = String.valueOf(lineText);
                           }
 	                }
 	               smText = "&nbsp;"+"&nbsp;"+"state machine:"+"&nbsp;"+sm.getName()+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+"&nbsp;"+lineText+ " ; ";
 	               doc.createParagraphElement("&nbsp;"+"&nbsp;"+smText, false);
-	              }
-	              for (State s : sm.getStates())
-	              {
-	            //print statement  below returns false
-	            // There is an issue with linking states with reqImplementation
-	            //System.out.println("State has reqimpl: "+s.hasReqImplementations());
-	             }
 	           }
 	         }
 	         }
@@ -201,7 +190,7 @@ class PlainRequirementsDocGenerator
    	          {
    	            if(classimps.getIdentifier() == reqimps.getIdentifier())
    	            {
-	          System.out.println("There are methods!");
+	          //System.out.println("There are methods!");
 	          String meText= ""; 
 	          int lineText=0;
 	          String lineNum="";
@@ -294,11 +283,13 @@ class PlainRequirementsDocGenerator
               implText += " At line number: "+ reqImpl.getReqToken().getPosition().getLineNumber()+ "; ";
 	    }*/
           }
-          }
-          else {
+          //}
+         else {
             // If the requirement does not have an implementation
             //implText="NOT IMPLEMENTED.";
+            //System.out.println("There is no reqimp!");
             doc.createParagraphElement("&nbsp;"+"NOT IMPLEMENTED.", false);
+            }
           }
           }
           // Create the paragraph elements

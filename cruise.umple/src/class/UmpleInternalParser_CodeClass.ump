@@ -254,16 +254,32 @@ class UmpleInternalParser
 
   private void analyzeImplementReq(Token t) {
      // Identifier that has been identified 
-     System.out.println("257-CC-This analyzeImplementsReq is being called!"+t);
+     //System.out.println("257-CC-This analyzeImplementsReq is being called!"+t);
      String reqImpID = t.getSubToken("reqIdentifier").getValue();
      // Instantiate the requirement implementation
      ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
      model.addReqImplementation(reqImplementation);
      lastRequirementsImpl.add(reqImplementation); 
   }
-
+  
   private void analyzeImplementReq(Token t, UmpleClass aClass) {
     analyzeImplementReq(t);
+  }
+  
+  mixset StateMachine {
+    private List<ReqImplementation> analyzeStateReqImpl(Token t)
+    {
+      List<ReqImplementation> ReqImp= new ArrayList<ReqImplementation>();
+      //System.out.println("272 value of lastReqIMpl in new sm impl:"+lastRequirementsImpl);
+      String reqImpID = t.getSubToken("reqIdentifier").getValue();
+      ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
+      //model.addReqImplementation(reqImplementation);
+      ReqImp.add(reqImplementation);
+      //System.out.println("278 value of lastReqIMpl in new sm impl:"+ReqImp);
+      return ReqImp;
+     
+    }
+  
   }
   
   /*
@@ -1965,8 +1981,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     
    private void analyazeStateMachineImpl(StateMachine sm){
      //shouldConsumeRequirementImpl = isReqAddedToLast(sm.getToken());
-     System.out.println("1952-sm method is called!2222"+lastRequirementsImpl);
-     System.out.println("1952 -sm the passed sm is:"+sm);
+     //System.out.println("1952-sm method is called!2222"+lastRequirementsImpl);
+     //System.out.println("1952 -sm the passed sm is:"+sm);
      for (ReqImplementation ri : lastRequirementsImpl)
      {  
        sm.addReqImplementation(ri);
