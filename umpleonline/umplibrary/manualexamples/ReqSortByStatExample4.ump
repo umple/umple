@@ -6,9 +6,8 @@ req A01 {
 req Z01 {    
   a requirement.
 }
+implementsReq Z01;
 class Example { 
-  implementsReq A01;
-  implementsReq C01; 
+  implementsReq A01; 
   var1;
-  var2;
  } 

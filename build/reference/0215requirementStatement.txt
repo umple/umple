@@ -12,49 +12,14 @@ Requirements allow for the same comment to appear in different sections of the c
 
 <br />
 
+<p>A requirement can be tagged with multiple entities like classes, attributes, associations, state machines, traits, methods, interface etc.<p>
+
+<br />
+
 @@example
 @@source manualexamples/Requirements1.ump
 @@endexample
 
-Sorting Requirements
-Comments and Requirements
-noreferences
-@@tooltip Requirements can be sorted by their ID or Statement the default being ID.
-
-@@description
-Requirements can be sorted by by their ID or Statement the default being ID. 
-
-<p>There are suboptions that allow you to choose what way you would like to sort the requirements. There are suboptions '-s reqSortID' that sorts requirements by ID and '-s reqSortStat' that sorts requirements by Statement. If no suboption is provided the requirements are sorted by default order which is byy thier ID.<p>
-
-<br />
-
-@@example
-@@source manualexamples/ReqSortExample1.ump
+@@example@@caption Requirement tagging with multiple entities@@endcaption
+@@source manualexamples/ReqImplTag.ump
 @@endexample
-
-<br />
-
-<p>You can sort multiple requirements.An example containing many requirements is provided below:<p>
-
-@@example
-@@source manualexamples/ReqSortExample2.ump
-@@endexample
-
-
-<br />
-
-<p>You can sort requirements by ID you can do this by providing the sub-option 'reqSortID' in the test file or '-s reqSortID' on the command line, sorting by ID is default. An example demonstrating sorting requirements by ID is  is provided below:<p>
-
-@@example
-@@source manualexamples/ReqSortIDExample3.ump
-@@endexample
-
-<br />
-
-<p>You can sort requirements by Statement you can do this by providing the sub-option 'reqSortStat' in the test file or '-s reqSortStat' on the command line, sorting by ID is default. An example demonstrating sorting requirements by Statement is  is provided below:<p>
-
-@@example
-@@source manualexamples/ReqSortStatExample4.ump
-@@endexample
-
-
