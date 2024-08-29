@@ -1,10 +1,10 @@
 <html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from SortReqsImplsOutside.ump
-</p><p>A01: z requirement.
+</p><p><b>A01: z requirement.</b>
 </p><p>&nbsp; IMPLEMENTED BY: 
 </p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;Example&nbsp;SortReqsImplsOutside.ump&nbsp;line&nbsp;14 ; 
-</p><p>A02: a requirement.
+</p><p><b>A02: a requirement.</b>
 </p><p>&nbsp; IMPLEMENTED BY: 
-</p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;Example&nbsp;SortReqsImplsOutside.ump&nbsp;line&nbsp;12 ; 
-</p><p>B01: a is a second requirement statement.
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;Example&nbsp;SortReqsImplsOutside.ump&nbsp;line&nbsp;14 ; 
+</p><p><b>B01: a is a second requirement statement.</b>
 </p><p>&nbsp; IMPLEMENTED BY: 
-</p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;Example&nbsp;SortReqsImplsOutside.ump&nbsp;line&nbsp;13 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;Example&nbsp;SortReqsImplsOutside.ump&nbsp;line&nbsp;14 ; 

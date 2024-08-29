@@ -141,13 +141,6 @@ class UmpleInternalParser
     {
       analyzeStateMachineDefinition(token);
     }
-    if(token.is("reqImplementation"))
-    {
-       //ReqImpState = analyzeStateReqImpl(token);
-       //analyzeImplementReq(token);
-       //isReqAddedToLast(token);
-       //shouldConsumeRequirementImpl = isReqAddedToLast(token);
-    }
   }  
   
   private String getThreadName(Token activeToken)
@@ -253,7 +246,6 @@ class UmpleInternalParser
         }	
 	    }
     }
-      //String reqImpID = stateMachineToken.getSubToken("reqIdentifier").getValue();
       Token subToken = token.getSubToken(0);
       if (subToken.is("activeDefinition"))
       {
@@ -274,10 +266,6 @@ class UmpleInternalParser
      if(token.is("reqImplementation"))
     {
        ReqImpState = analyzeStateReqImpl(token);
-       //analyzeImplementReq(token);
-       //isReqAddedToLast(token);
-       //shouldConsumeRequirementImpl = isReqAddedToLast(token);
-       //System.out.println("277-classtoken state reqimpl");
     }
   }
 
@@ -651,25 +639,14 @@ class UmpleInternalParser
       } 
     }
     
-   /*List<ReqImplementation> reqImpls =model.getReqImplementations();
-    if (uClassifier instanceof UmpleClass) {
-      for(ReqImplementation reqImp : reqImpls)
-      {
-        sm.addReqImplementation(reqImp);    
-      
-        for(State s : sm.getStates())
+     if (uClassifier instanceof UmpleClass) {
+        for(ReqImplementation reqImp : ReqImpState)
         {
-          s.addReqImplementation(reqImp);
+          sm.addReqImplementation(reqImp);    
         }
       }
-    }*/
-     //analyazeStateMachineImpl(sm);
-     if (uClassifier instanceof UmpleClass) {
-      for(ReqImplementation reqImp : ReqImpState)
-      {
-        sm.addReqImplementation(reqImp);    
-      }
-      }
+      
+      sm.setPosition(stateMachineToken.getPosition());
      
     if(stateMachineToken.is("pooled"))
     {
@@ -1176,14 +1153,6 @@ class UmpleInternalParser
               addNewSm = true;
               isConcurrentState = true;
       }
-      /*else if (subToken.is("reqImplementation"))
-      {
-      List<ReqImplementation> reqImpls = model.getReqImplementations();
-      for(ReqImplementation reqImp : reqImpls)
-       {
-         fromState.addReqImplementation(reqImp);
-       }    
-      }*/
       else if (subToken.is("state"))
       {
         StateMachine nestedStateMachine = null;
@@ -1518,7 +1487,6 @@ class UmpleInternalParser
               priorAutoTransitionExists = true;
             }
           }
-          //System.out.println("added: " + subToken.getValue("event"));
           
           if(subToken.getValue("timer") == null)
           	unguardedEvents.add(subToken.getValue("event"));
