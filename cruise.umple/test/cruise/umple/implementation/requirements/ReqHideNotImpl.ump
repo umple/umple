@@ -1,0 +1,14 @@
+// This is a test to filter not the not implemented requirements
+suboption "reqHideNotImpl";
+req B01 {      
+  this is an implemented requirement.
+}    
+req A01 {    
+  this is a not implemented requirement.
+}
+  implementsReq B01;   
+class Example { 
+  var1;
+  var2;
+ }
+     

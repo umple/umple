@@ -94,7 +94,6 @@ mixset Trait {
       {
         return null;
       }
-
       for (StateMachine sm : getStateMachines())
       {
         for (Event aEvent : sm.getAllEvents())
