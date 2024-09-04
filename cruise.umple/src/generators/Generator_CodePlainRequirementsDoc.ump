@@ -312,6 +312,30 @@ class PlainRequirementsDocGenerator
                      }
                   }
 	        }
+	       
+	       for(MixsetOrFile mix : model.getMixsetOrFiles())
+	       {
+	        for(ReqImplementation classimps : mix.getReqImplementations())
+   	            {
+   	               for(ReqImplementation reqimps : req.getReqImplementations())
+   	               {
+   	                 if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	                 {
+	                    String mixText= ""; 
+	                    int mixLine=0;
+	                    for (ReqImplementation reqImpl : ReqImp)
+	                    {
+	                     if(reqImpl.getIdentifier() == classimps.getIdentifier()){
+                                mixLine = mix.getPosition().getLineNumber();
+                              }
+	                    }
+	               mixText = "&nbsp;"+"&nbsp;"+"mixset:"+"&nbsp;"+mix.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+mixLine+ " ; ";
+	               doc.createParagraphElement("&nbsp;"+"&nbsp;"+mixText, false);
+                       }
+                     }
+                  }
+	        }
+	        
              }
          else {
             // If the requirement does not have an implementation

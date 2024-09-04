@@ -107,3 +107,10 @@ class E {
 implementsReq R6;
 enum Status { FullTime } 
 
+implementsReq R4;
+mixset specialVersion {  
+  class X {  
+    b;  
+  }  
+} 
+

@@ -17,6 +17,7 @@
 </p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;m1&nbsp;class&nbsp;B&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;77 ; 
 </p><p>&nbsp;&nbsp;&nbsp;&nbsp;trait:&nbsp;C&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;73 ; 
 </p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;m1&nbsp;trait&nbsp;C&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;73 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;mixset:&nbsp;specialVersion&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;111 ; 
 </p><p><b>R5: This one is to test that two methods show as implementing R5</b>
 </p><p>&nbsp; IMPLEMENTED BY: 
 </p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;m2&nbsp;class&nbsp;B&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;65 ; 
