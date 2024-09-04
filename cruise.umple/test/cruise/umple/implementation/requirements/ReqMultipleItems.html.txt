@@ -24,5 +24,10 @@
 </p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;m1&nbsp;trait&nbsp;C&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;73 ; 
 </p><p><b>R6: Req to test interface implementation</b>
 </p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;association class:&nbsp;  * acs -- 1..1 D a1;
+&nbsp;in class&nbsp;Ac&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;97 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;association class:&nbsp;  * b2 -- 1..1 E c1;
+&nbsp;in class&nbsp;Ac&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;97 ; 
 </p><p>&nbsp;&nbsp;&nbsp;&nbsp;interface:&nbsp;Itest&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;89 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;enum:&nbsp;Status&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;108 ; 
 </p></html>

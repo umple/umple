@@ -90,4 +90,20 @@ interface Itest {
   String m2(String s);
 }
 
+class D{  
+    f;  
+}  
+implementsReq R6;  
+associationClass Ac{  
+    * D a1;  
+    * b2 E c1;  
+}  
+  
+  
+class E {  
+    d;  
+}  
+  
+implementsReq R6;
+enum Status { FullTime } 
 

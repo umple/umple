@@ -626,6 +626,7 @@ class Key
    name;
    String[] enumValues;
    1 -> 0..1 Position;
+   1 -> * ReqImplementation;
  }
 
 /*

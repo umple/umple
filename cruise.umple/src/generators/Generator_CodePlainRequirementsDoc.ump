@@ -54,8 +54,6 @@ class PlainRequirementsDocGenerator
     	  // Below string stores the requirement statement and language and translates to html
     	  String mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
     	  doc.createParagraphElement("<b>"+"" + req.getIdentifier() + ": " + mainReqText+"</b>", false);
-    	  // Below string will store the details like class, attribute, association and state
-    	  String implText="";
     	  // Check if the requirement is implemented
           if(req.hasReqImplementations()) {
             // Append the text with this prompt
@@ -78,8 +76,35 @@ class PlainRequirementsDocGenerator
                       classLine = aClass.getPosition(0).getLineNumber();
                       }
 	            }
+	            if (aClass instanceof AssociationClass) {
+	             
+	               for(Association ass : aClass.getAssociations())
+                        {
+			   AssociationEnd myEnd = ass.getIsRightNavigable() ? ass.getEnd(0) : ass.getEnd(1);
+		           AssociationEnd theirEnd = ass.getIsRightNavigable() ? ass.getEnd(1) : ass.getEnd(0);
+		           String arrowDirection ="";
+			   if(ass.isIsRightNavigable() && ass.isIsLeftNavigable())
+			   {
+			     arrowDirection = "--"; 
+			   }
+			   else if(ass.isIsLeftNavigable())
+			   {
+			     arrowDirection = "<-";
+			   }
+			   else if(ass.isIsRightNavigable())
+			   {
+			      arrowDirection = "->";
+			   }
+		           String assoStruct = StringFormatter.format("  {0} {1} {5} {3} {4} {2};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(),theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName(),arrowDirection);
+		           //assoLine = ass.getTokenPosition().getLineNumber();
+			   classText = "&nbsp;"+"&nbsp;"+"association class:"+"&nbsp;"+assoStruct+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+classLine+ " ; ";
+	              doc.createParagraphElement("&nbsp;"+"&nbsp;"+classText, false);
+	             }
+	            }
+	            else{
 	              classText = "&nbsp;"+"&nbsp;"+"class:"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+"&nbsp;"+ classLine+ " ; ";
 	              doc.createParagraphElement("&nbsp;"+"&nbsp;"+classText, false);
+	            }
 		  }
    	        }
    	      
@@ -117,7 +142,6 @@ class PlainRequirementsDocGenerator
    	          {
    	            if(classimps.getIdentifier() == reqimps.getIdentifier())
    	            {
-	              if(sm.hasReqImplementations()){
 	              String smText= ""; 
 	              int smLine=0;
 	                for (ReqImplementation reqImpl : ReqImp)
@@ -128,9 +152,8 @@ class PlainRequirementsDocGenerator
 	                }
 	               smText = "&nbsp;"+"&nbsp;"+"state machine:"+"&nbsp;"+sm.getName()+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+"&nbsp;"+smLine+ " ; ";
 	               doc.createParagraphElement("&nbsp;"+"&nbsp;"+smText, false);
-	           }
-	         }
-	         }
+	            }
+	          }
 	        }
 	      }
 	      // Loop through classes to check for associations that have implementations
@@ -144,7 +167,6 @@ class PlainRequirementsDocGenerator
    	            {
 	              String assoText= ""; 
 	              int assoLine=0;
-	              if(as.hasReqImplementations()){
 	                for(Association ass : aClass.getAssociations())
                         {
 			   AssociationEnd myEnd = ass.getIsRightNavigable() ? ass.getEnd(0) : ass.getEnd(1);
@@ -166,45 +188,39 @@ class PlainRequirementsDocGenerator
 		           assoLine = ass.getTokenPosition().getLineNumber();
 			   assoText = "&nbsp;"+"&nbsp;"+"association:"+"&nbsp;"+assoStruct+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+assoLine+ " ; ";
 	              doc.createParagraphElement("&nbsp;"+"&nbsp;"+assoText, false);
-                        }
 	             }
 	           }
 	         }
-	        }
+	       }
 	      }
+	      // Loop through classes to check for methods that have implementations
 	       for(Method me : aClass.getMethods())
-	       {
-	       if(me.hasReqImplementations())
-	       {  
+	       { 
 	         for(ReqImplementation classimps : me.getReqImplementations())
    	         {
    	          for(ReqImplementation reqimps : req.getReqImplementations())
    	          {
    	            if(classimps.getIdentifier() == reqimps.getIdentifier())
    	            {
-	          
 	              String meText= ""; 
 	              int meLine=0;
-	          
 	              for (ReqImplementation reqImpl : ReqImp)
 	              {
 	                 if(reqImpl == classimps){
                          meLine = me.getPosition().getLineNumber();
-                     }
-	           }
+                       }
+	              }
 	           meText = "&nbsp;"+"&nbsp;"+"method:"+"&nbsp;"+me.getName()+"&nbsp;"+"class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+meLine+ " ; ";
 	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+meText, false);
                      }
                    }
-                  }
-                }
-              }
-	    }
+                 }
+               }
+	     }
+	    // Loop through model to check for traits that have implementations
 	    for(UmpleTrait tr : model.getUmpleTraits())
 	    {
-	       if(tr.hasReqImplementations())
-	       {  
-	         for(ReqImplementation classimps : tr.getReqImplementations())
+	       for(ReqImplementation classimps : tr.getReqImplementations())
    	         {
    	            for(ReqImplementation reqimps : req.getReqImplementations())
    	            {
@@ -222,16 +238,13 @@ class PlainRequirementsDocGenerator
 	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+trText, false);
                    }
                  }
-                }
-              }
-            }
-            
+               }
+             }
+             // Loop through model to check for interfaces that have implementations
              for(UmpleInterface ui : model.getUmpleInterfaces())
-	    {
-	       if(ui.hasReqImplementations())
-	       {  
-	         for(ReqImplementation classimps : ui.getReqImplementations())
-   	         {
+	     {
+	      for(ReqImplementation classimps : ui.getReqImplementations())
+   	        {
    	          for(ReqImplementation reqimps : req.getReqImplementations())
    	          {
    	            if(classimps.getIdentifier() == reqimps.getIdentifier())
@@ -249,9 +262,8 @@ class PlainRequirementsDocGenerator
                   }
                  }
                }
-              }
-            }
-            
+             }
+            // Loop through model to check for trait methods that have implementations
             for(UmpleTrait tr : model.getUmpleTraits())
 	    {
 	       for(Method aMeth : tr.getMethods())
@@ -272,20 +284,41 @@ class PlainRequirementsDocGenerator
 	                    }
 	           metText = "&nbsp;"+"&nbsp;"+"method:"+"&nbsp;"+aMeth.getName()+"&nbsp;"+"trait"+"&nbsp;"+tr.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+metLine+ " ; ";
 	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+metText, false);
-                  }
+                     }
+                   }
                  }
-                 }
-		  
-		}
-		
+	       }
 	     }
-          }
+	     // Loop through model to check for enums that have implementations
+	     for(UmpleEnumeration ue : model.getEnums())
+	     {
+	        for(ReqImplementation classimps : ue.getReqImplementations())
+   	            {
+   	               for(ReqImplementation reqimps : req.getReqImplementations())
+   	               {
+   	                 if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	                 {
+	                    String ueText= ""; 
+	                    int ueLine=0;
+	                    for (ReqImplementation reqImpl : ReqImp)
+	                    {
+	                     if(reqImpl.getIdentifier() == classimps.getIdentifier()){
+                                ueLine = ue.getPosition().getLineNumber();
+                              }
+	                    }
+	               ueText = "&nbsp;"+"&nbsp;"+"enum:"+"&nbsp;"+ue.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+ueLine+ " ; ";
+	               doc.createParagraphElement("&nbsp;"+"&nbsp;"+ueText, false);
+                       }
+                     }
+                  }
+	        }
+             }
          else {
             // If the requirement does not have an implementation
             doc.createParagraphElement("&nbsp;"+"NOT IMPLEMENTED.", false);
             }
-           }
           }
+        }
     model.setCode(doc.toString());
     writeModel();
     return;

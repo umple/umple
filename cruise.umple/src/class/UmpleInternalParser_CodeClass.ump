@@ -265,6 +265,16 @@ class UmpleInternalParser
     analyzeImplementReq(t);
   }
   
+  private List<ReqImplementation> analyzeEnumImplReq(Token t)
+  {
+     List<ReqImplementation> ReqImp= new ArrayList<ReqImplementation>();
+     String reqImpID = t.getSubToken("reqIdentifier").getValue();
+     // Instantiate the requirement implementation
+     ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
+     ReqImp.add(reqImplementation); 
+     return ReqImp;
+  }
+  
   mixset StateMachine {
     private List<ReqImplementation> analyzeStateReqImpl(Token t)
     {
