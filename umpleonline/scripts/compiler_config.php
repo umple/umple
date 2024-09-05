@@ -334,6 +334,7 @@ function generateMenu($buttonSuffix)
             <option value=\"java:Json\">Json</option>
             <option id=\"gensql\" value=\"sql:Sql\">Sql</option>
             <option id=\"genmetrics\" value=\"html:SimpleMetrics\">Simple Metrics</option>
+            <option id=\"genplainrequirementsdoc\" value=\"html:PlainRequirementsDoc\">Plain Requirements Doc</option>
             <option value=\"html:CodeAnalysis\">Code Analysis</option>
             <option value=\"java:USE\">USE Model</option>
             <option value=\"java:UmpleSelf\">Internal Umple Representation</option>

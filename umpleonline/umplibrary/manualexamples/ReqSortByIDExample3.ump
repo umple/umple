@@ -1,0 +1,13 @@
+// This is an example to use reqSortID to sort requirements by thier ID.
+suboption "reqSortID";
+req A01 {    
+  b requirement.
+ }
+req Z01 {    
+  a requirement.
+ }
+implementsReq Z01;
+class Example { 
+  implementsReq A01; 
+  var1;
+ } 
