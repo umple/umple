@@ -590,6 +590,7 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
   overflow: auto !important;
 }
 .cm-editor {
+  min-height: 100% !important;
   max-height: 100% !important;
 }
 
@@ -614,5 +615,7 @@ div#newEditor {
 textarea#umpleLayoutEditorText {
   resize: vertical;
 }
-
-.cm-content, .cm-gutter { min-height: 750px; }
+/* 
+.cm-content, .cm-gutter { 
+  min-height: 750px; 
+} */
