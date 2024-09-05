@@ -16,10 +16,13 @@ class UmpleModel {
 }
 // A MixsetOrFile is an umple entity that is subject to require logic
 class MixsetOrFile {
+  depend cruise.umple.parser.Position;
   UmpleFile useUmpleFile = null; // File where the use statement was encountered
   Integer useUmpleLine = 0; 
   Boolean isMixset = false;
   abstract String getName();
+  1 -> 0..1 Position;
+  1 -> * ReqImplementation;
 
 }
 // This class already exists in the util subdirectory

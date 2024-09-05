@@ -1,0 +1,13 @@
+// This is an example to show how not implemented requirements can be hidden
+suboption "reqHideNotImpl";
+req B01 {      
+  b is a requirement.
+}    
+req A02 {    
+  a is a requirement.
+}  
+class Example1 {  
+  implementsReq A02;
+  var1;
+ }  
+     
