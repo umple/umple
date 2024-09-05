@@ -53,7 +53,7 @@ class Animal(ThingInWorld):
         self._drops = []
         didAddWorld = self.setWorld(aWorld)
         if not didAddWorld :
-            raise RuntimeError ("Unable to create animal due to world. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+            raise RuntimeError ("Unable to create animal due to world. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
         self.setStateAlive(Animal.StateAlive.Null)
         self.setStateAliveNormal(Animal.StateAliveNormal.Null)
         self.setState(Animal.State.alive)

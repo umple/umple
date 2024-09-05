@@ -26,7 +26,7 @@ public class First implements I
     boolean didAddSeconds = setSeconds(allSeconds);
     if (!didAddSeconds)
     {
-      throw new RuntimeException("Unable to create First, must have 1 to 5 seconds. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create First, must have 1 to 5 seconds. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

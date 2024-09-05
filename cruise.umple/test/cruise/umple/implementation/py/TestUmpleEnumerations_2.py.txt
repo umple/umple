@@ -21,7 +21,7 @@ class X():
     def __init__(self, aDefaultAttr):
         self._defaultAttr = aDefaultAttr
         if not self.setMyName(aMyName) :
-            raise RuntimeError ("Cannot create due to duplicate myName. See http://manual.umple.org?RE003ViolationofUniqueness.html")
+            raise RuntimeError ("Cannot create due to duplicate myName. See https://manual.umple.org?RE003ViolationofUniqueness.html")
 
         self.setSm(X.Sm.s1)
 

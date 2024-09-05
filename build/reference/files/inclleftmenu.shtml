@@ -29,7 +29,7 @@
           <!--#else -->
             <div class="menu1-level1-no"> 
           <!--#endif -->
-            <a href="http://www.site.uottawa.ca/~tcl"
+            <a href="https://www.site.uottawa.ca/~tcl"
                 onfocus="blurLink(this);">
               T.C. Lethbridge<br />Home
             </a>
@@ -40,7 +40,7 @@
           <!--#else -->
             <div class="menu1-level1-no">
           <!--#endif -->
-            <a href="http://www.site.uottawa.ca/~tcl/research.shtml"
+            <a href="https://www.site.uottawa.ca/~tcl/research.shtml"
                 onfocus="blurLink(this);">
               Research
             </a>
@@ -51,7 +51,7 @@
           <!--#else -->
             <div class="menu1-level2-no">
           <!--#endif -->
-            <a href="http://www.site.uottawa.ca/~tcl/publications/"
+            <a href="https://www.site.uottawa.ca/~tcl/publications/"
                 onfocus="blurLink(this);">
               Publications</a>
           </div>
@@ -61,7 +61,7 @@
           <!--#else -->
             <div class="menu1-level2-no">
           <!--#endif -->
-            <a href="http://www.site.uottawa.ca/~tcl/presentations/"
+            <a href="https://www.site.uottawa.ca/~tcl/presentations/"
                 onfocus="blurLink(this);">
               Presentations</a>
           </div>
@@ -71,7 +71,7 @@
           <!--#else -->
             <div class="menu1-level2-no">
           <!--#endif -->
-            <a href="http://www.site.uottawa.ca/~tcl/gradtheses/"
+            <a href="https://www.site.uottawa.ca/~tcl/gradtheses/"
                 onfocus="blurLink(this);">
               Grad students</a>
           </div>
@@ -81,7 +81,7 @@
           <!--#else -->
             <div class="menu1-level2-no">
           <!--#endif -->
-            <a href="http://cruise.site.uottawa.ca/umple/"
+            <a href="https://cruise.site.uottawa.ca/umple/"
                 onfocus="blurLink(this);">
               Umple
             </a>
@@ -92,7 +92,7 @@
           <!--#else -->
             <div class="menu1-level2-no">
           <!--#endif -->
-            <a href="http://cruise.site.uottawa.ca/"
+            <a href="https://cruise.site.uottawa.ca/"
                 onfocus="blurLink(this);">
               CRuiSE Lab
             </a>
@@ -103,7 +103,7 @@
           <!--#else -->
             <div class="menu1-level2-no">
           <!--#endif -->
-            <a href="http://www.site.uottawa.ca/~tcl/edrel/"
+            <a href="https://www.site.uottawa.ca/~tcl/edrel/"
                 onfocus="blurLink(this);">
               Education
             </a>
@@ -114,7 +114,7 @@
           <!--#else -->
             <div class="menu1-level1-no">
           <!--#endif -->
-            <a href="http://www.site.uottawa.ca/~tcl/teaching.shtml"
+            <a href="https://www.site.uottawa.ca/~tcl/teaching.shtml"
                 onfocus="blurLink(this);">
               Teaching
             </a>
@@ -125,7 +125,7 @@
           <!--#else -->
             <div class="menu1-level2-no">
           <!--#endif -->
-            <a href="http://www.site.uottawa.ca/~tcl/csi5122/"
+            <a href="https://www.site.uottawa.ca/~tcl/csi5122/"
                 onfocus="blurLink(this);">
               CSI5122
             </a>
@@ -136,7 +136,7 @@
           <!--#else -->
             <div class="menu1-level2-no">
           <!--#endif -->
-            <a href="http://www.site.uottawa.ca/~tcl/seg2105/"
+            <a href="https://www.site.uottawa.ca/~tcl/seg2105/"
                 onfocus="blurLink(this);">
               SEG2105
             </a>
@@ -147,7 +147,7 @@
           <!--#else -->
             <div class="menu1-level2-no">
           <!--#endif -->
-            <a href="http://www.site.uottawa.ca/~tcl/seg4210/"
+            <a href="https://www.site.uottawa.ca/~tcl/seg4210/"
                 onfocus="blurLink(this);">
               SEG4210
             </a>
@@ -169,7 +169,7 @@
           <!--#else -->
             <div class="menu1-level1-no">
           <!--#endif -->
-            <a href="http://www.site.uottawa.ca/~tcl/biography.shtml"
+            <a href="https://www.site.uottawa.ca/~tcl/biography.shtml"
                 onfocus="blurLink(this);">
               Biography
             </a>
@@ -180,7 +180,7 @@
           <!--#else -->
             <div class="menu1-level1-no">
           <!--#endif -->
-            <a href="http://www.site.uottawa.ca/eng/" target="_blank"
+            <a href="https://www.site.uottawa.ca/eng/" target="_blank"
                 onfocus="blurLink(this);">
               School of Electrical Engineering and Computer Science.
             </a>

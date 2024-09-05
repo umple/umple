@@ -63,7 +63,7 @@ class Mentor():
         self.resetW()
         self._x, Mentor.nextX = Mentor.nextX, Mentor.nextX + 1
         if not self.setId(aId) :
-            raise RuntimeError ("Cannot create due to duplicate id. See http://manual.umple.org?RE003ViolationofUniqueness.html")
+            raise RuntimeError ("Cannot create due to duplicate id. See https://manual.umple.org?RE003ViolationofUniqueness.html")
 
     #------------------------
     # INTERFACE

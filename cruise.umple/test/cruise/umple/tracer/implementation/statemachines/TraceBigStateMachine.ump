@@ -1,5 +1,5 @@
 // A state machine with a variety of events
-// This is http://cruise.site.uottawa.ca/umpleonline/umple.php?model=116
+// This is https://cruise.site.uottawa.ca/umpleonline/umple.php?model=116
 namespace example;
 
 class StateMachineTest {

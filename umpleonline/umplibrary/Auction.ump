@@ -1,0 +1,338 @@
+// This models an auction process, and contains a simulation class for it
+
+// This is a comprehensive example of Umple, showing many features
+// including attributes, associations, state machines and templates
+// You can generate Java (there will be a different result each time)
+// And you can display the GraphViz class and state diagrams.
+
+// Class Auction models the basic information about auctions
+// including the items for sale and the possible states
+class Auction {
+  1 -- * ItemAtAuction;
+
+  // State machine showing three possible states
+  status {
+    gathering {
+      // Items being added to the auction
+      open -> underway;
+    }
+    underway {
+      // In this state, items are being bid on and sold
+      // Depending on the type of auction sales may be
+      // sequential or concurrent
+      close -> concluded;
+      
+      // Upon leaving underway state, we close bidding
+      // on all the items that are still up for bid
+      exit / {
+        for(ItemAtAuction iau : getItemAtAuctions()) {
+          iau.closeBids();
+        }
+      }
+    }
+    concluded {
+      // no items left on sale
+    }
+  }
+}
+
+// Class ItemAtAuction models anything for sale
+class ItemAtAuction {
+  description;
+  * itemForSale -- 1 Person seller;
+  * -- 0..1 Person highestBidder;
+
+  autounique lotNumber;
+  Double reservePrice = -1.0;
+  Double highestBidPrice = -1.0;
+  Double salePrice = -1.0;
+  Boolean active = false;
+  Boolean sold = false;
+  
+  // This models the states that an item can go
+  // during the auction process
+  status {
+    // In the initial state, the item is being prepared for auction
+    // but is not yet revealed to bidders
+    created {
+
+      listitem(double reserve) / {
+        reservePrice = reserve;
+        active = true;
+      }
+      -> listed;
+    }
+    
+    // In this state, bidders can see the item, and its reserve price
+    // but bidding is not open
+    listed {
+      entry / {highestBidPrice = reservePrice;}
+            
+      // openBidding enables bidding;
+      // This is only allowed if the auction is underway
+      openBidding [getAuction().getStatusFullName().equals("underway")]
+        -> openForBidding;
+
+      withdraw -> withdrawn;
+    }
+    
+    // In this state, bids on this item may be received
+    // .. bidding continues until closeBids    
+    openForBidding {
+
+      bid(Bid newBid) [newBid.getBidValue() > highestBidPrice] / {
+        newBid.setAccepted(true);
+        setHighestBidPrice(newBid.getBidValue());
+        setHighestBidder(newBid.getBidder());} -> openForBidding;
+
+      closeBids [highestBidPrice == reservePrice] -> withdrawn;
+
+      closeBids [ highestBidPrice > reservePrice] / {
+        setSalePrice(getHighestBidPrice());
+        highestBidder.addItemsBought(this);
+      } -> sold;
+      
+      withdraw -> withdrawn;
+    }
+
+    withdrawn {
+      entry / {active = false; }
+    }
+
+    sold {
+      entry / {active = false; sold=true;}
+    }
+  }
+  // Override the defaultToString method to create a nice result
+  depend java.text.DecimalFormat;
+  String toString() {
+    DecimalFormat dec2 = new DecimalFormat("0.00");  
+    return("Lot number "+getLotNumber()+" Description:"+ getDescription()+
+      "  Reserve price "+ dec2.format(getReservePrice())+
+      "  Highest bid "+ dec2.format(getHighestBidPrice())+
+      "  active: "+isActive() + " sold: "+isSold());
+  }  
+}
+
+// This class simply holds data about each bid
+class Bid {
+  * -- 1 Person bidder;
+  Double bidValue;
+  * -- 1 ItemAtAuction;
+  Boolean  accepted=false;
+  
+  // Override the defaultToString method to create a nice result
+  depend java.text.DecimalFormat;
+  String toString() {
+    DecimalFormat dec2 = new DecimalFormat("0.00");  
+    return("Bid for item "+getItemAtAuction().getLotNumber()+" "+
+      getItemAtAuction().getDescription()+
+      "  By bidder "+ getBidder().getName()+
+      "  At price "+ dec2.format(bidValue)+
+      (isAccepted() ? "... Accepted" : "... NOT accepted"));
+  }
+}
+
+// Instances of Person can be sellers, buyers or both
+class Person {
+  depend java.lang.StringBuffer;
+  depend java.text.DecimalFormat;
+  
+  name;
+  0..1 buyer -- * ItemAtAuction itemsBought;
+
+  // The following use Umple Template language
+  // Code that has to be injected
+  formatter <<!<<#
+    DecimalFormat dec2 = new DecimalFormat("0.00");
+  #>>!>>
+
+  // Simple carriage return
+  cr <<!  
+!>>  
+
+  // Return a description of the person
+  postAuctionheader <<!Items bought by <<=getName()>>!>>
+  
+  // Output one row per bought item
+  boughtItems <<!<<#for(ItemAtAuction iau : getItemsBought())
+  {#>>
+   Lot: <<=
+   iau.getLotNumber()>> Description: <<=
+   iau.getDescription()>> Seller: <<=
+   iau.getSeller().getName()>>
+  ... purchase price: <<=dec2.format(iau.getSalePrice())>>
+  <<#}#>>!>> 
+  
+  
+  emit getPersonStatus()(formatter,cr,postAuctionheader,cr,boughtItems);
+}
+
+
+// AuctionSimulation has a main program that initiates an auction
+// and simulates the creation of people who will buy and sell,
+// items, bids and ultimately sales.
+//
+// Each time this is run, the result will be different
+// due to randomness
+class AuctionSimulation {
+  depend java.util.Random;
+  depend java.text.DecimalFormat;
+  
+  public static void main(String[] argv) {
+    // Ensure currency has 2 decimal places
+    DecimalFormat dec2 = new DecimalFormat("0.00");
+
+    // Create the auction
+    Auction auc = new Auction();
+    
+    // Create three simulated people
+    Person ann = new Person("Ann");
+    Person baker = new Person("Baker");
+    Person charlie = new Person("Charlie");
+
+    // From this point on we will introduce some randomness
+    Random rnd = new Random();
+    
+    // Initial output
+    System.out.println("\n ***** Umple Auction Simulation *****");
+    System.out.println("\n =====The following random items are up for auction =====\n");
+    
+    // Create 2-10 random items to be auctioned by Ann and Baker
+    for(int i = 1; i<= ((int) (rnd.nextFloat()*8.0f))+2; i++)
+    {
+      Person currentSeller;
+      if(rnd.nextFloat() > 0.5f) currentSeller=ann;
+      else currentSeller=baker;
+      
+      StringBuilder sb = new StringBuilder();
+      sb.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ".
+        charAt((int)(rnd.nextFloat()*26.0f)));
+      sb.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ".
+        charAt((int)(rnd.nextFloat()*26.0f)));
+      ItemAtAuction iau = new ItemAtAuction(sb.toString(), currentSeller, auc);
+      iau.listitem(Math.round(rnd.nextDouble()*4000)/100.0);
+            
+      System.out.println("Item: "+i+" "+iau);
+    }
+    
+    // Initiate the auction
+    auc.open();
+    System.out.println("\n===== The auction is now taking bids =====");
+    
+    // Other types of auctions sould open each item for bids
+    // one at a time.
+    // However, in this auction we open them all and accept bids
+    // on all items in any order silent-auction style
+    for(ItemAtAuction iau : auc.getItemAtAuctions()) {
+      iau.openBidding();
+    }
+    
+    // Place at least 4 random bids
+    for(int i = 1; i<= ((int) (rnd.nextFloat()*23.0f))+4; i++) {
+      // Choose the bidder
+      Person currentBidder;
+      switch ((int)(rnd.nextFloat()*3.0f)) {
+        case 1: currentBidder = ann; break;
+        case 2: currentBidder = baker; break;
+        default: currentBidder = charlie; break;
+      }
+      
+      // Choose the item, making sure it is not their own
+      // amd they are not the most recent bidder
+      ItemAtAuction currentItem = auc.getItemAtAuction(
+        (int)(rnd.nextFloat()*auc.numberOfItemAtAuctions()));
+      
+      if(currentItem.getSeller() == currentBidder) {
+        System.out.println("\nBidder "+currentBidder.getName()+
+          "  will not bid on their own item!");
+      }
+      else if(currentItem.getHighestBidder() == currentBidder) {
+        System.out.println("\nBidder "+currentBidder.getName()+ 
+          "  will not increase their own highest bid!");
+      }
+      else {
+      
+        // Place a bid above the highest bid
+        // Except sometimes we make a mistake
+        // to show that a bid can be rejected
+        double bidIncrement = (Math.round(rnd.nextDouble()*700)/100.0)-1.00;
+        double bidAmount = currentItem.getHighestBidPrice()+bidIncrement;
+ 
+        System.out.println("\nBidder "+currentBidder.getName() +
+          " will bid on lot number "+ currentItem.getLotNumber()+
+          " item description "+currentItem.getDescription()+
+          " amount="+dec2.format(bidAmount));
+ 
+        Bid bidAttempted = new Bid(bidAmount, currentBidder, currentItem);
+        currentItem.bid(bidAttempted);
+        
+        System.out.println("...Status of bid: "+bidAttempted);
+        String feedback = bidAttempted.getAccepted() ? "New " : "Unchanged ";
+        System.out.println("..."+feedback+" price for lot " +
+          currentItem.getLotNumber()+" is "+
+          dec2.format(currentItem.getHighestBidPrice()));
+      
+      }
+    }
+    
+    // Close auction ... foreach item, indicate the sale
+    System.out.println("\n===== Sales are now being finalized =====");
+    auc.close();
+    
+    System.out.println("\n Final status of lots");
+    
+    for(ItemAtAuction currentItem : auc.getItemAtAuctions()) {
+      System.out.println("\nLot number "+currentItem.getLotNumber()+
+        " "+currentItem.getDescription()+
+        " Seller="+currentItem.getSeller().getName());
+      Person buyer = currentItem.getHighestBidder();
+      if(buyer == null) System.out.println("... not sold");
+      else System.out.println("... buyer "+buyer.getName()+
+        " price="+dec2.format(currentItem.getSalePrice())+
+        " profit="+dec2.format(currentItem.getSalePrice()-currentItem.getReservePrice()));
+    }
+    
+    System.out.println("\n =====Final status of people =====");
+    
+    System.out.println(ann.getPersonStatus());
+    System.out.println(baker.getPersonStatus());
+    System.out.println(charlie.getPersonStatus());
+    
+  }
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code
+// @@@skippythoncompile - Contains Java code
+
+class ItemAtAuction
+{
+  position.association ItemAtAuction:itemForSale__Person:seller 22,157 0,14;
+  position.association ItemAtAuction__Person:highestBidder 59,157 16,0;
+  position 237 27 183.043488 157.391312;
+}
+
+class Person
+{
+  position.association ItemAtAuction:itemsBought__Person:buyer 112,20 177,157;
+  position 285 350 111.779892 57.527176;
+}
+
+class Auction
+{
+  position.association Auction__ItemAtAuction 109,23 0,17;
+}
+
+class Bid
+{
+  position.association Bid__Person:bidder 32,74 0,40;
+  position.association Bid__ItemAtAuction 30,0 0,90;
+  position 50 246 146.983704 74.171196;
+}
+
+class AuctionSimulation
+{
+  position 32 100 143.709244 40.883152;
+}
