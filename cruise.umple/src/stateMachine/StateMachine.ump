@@ -18,6 +18,7 @@ namespace cruise.umple.compiler;
 class StateMachine
 {
   depend cruise.umple.util.*;
+  depend cruise.umple.parser.Position;
   Integer recentSearchDepth = -1;
   name;
   Boolean containsHistoryState = false;
@@ -43,6 +44,8 @@ class StateMachine
   
   Boolean queued = false;
   Boolean pooled = false;
+  1 -> * ReqImplementation;
+  Position position = null;
 }
 
 /*
@@ -73,6 +76,7 @@ class State
   before getIsHistoryState { if ("H".equals(name)) { isHistoryState = true; } }
   before getIsDeepHistoryState { if ("HStar".equals(name)) { isDeepHistoryState = true; } }
   before isFinalState { if ("Final".equals(name)) { finalState = true; } }
+  1 -> * ReqImplementation;
 }
 
 /* 

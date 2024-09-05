@@ -1,0 +1,34 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqMultipleItems.ump
+</p><p><b>R1: Test of req 1</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;attribute:&nbsp;att2&nbsp;in class&nbsp;A&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;40 ; 
+</p><p><b>R2: Another req</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;attribute:&nbsp;att1&nbsp;in class&nbsp;A&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;35 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;association:&nbsp;  * bs -> * A as;
+&nbsp;in class&nbsp;B&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;52 ; 
+</p><p><b>R3: The third req</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;A&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;32 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;state machine:&nbsp;sm&nbsp;in class&nbsp;B&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;56 ; 
+</p><p><b>R4: The Fourth req</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;B&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;46 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;m1&nbsp;class&nbsp;B&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;77 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;trait:&nbsp;C&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;73 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;m1&nbsp;trait&nbsp;C&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;73 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;mixset:&nbsp;specialVersion&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;111 ; 
+</p><p><b>R5: This one is to test that two methods show as implementing R5</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;m2&nbsp;class&nbsp;B&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;65 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;m1&nbsp;class&nbsp;B&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;77 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;m1&nbsp;trait&nbsp;C&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;73 ; 
+</p><p><b>R6: Req to test interface implementation</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;association class:&nbsp;  * acs -- 1..1 D a1;
+&nbsp;in class&nbsp;Ac&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;97 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;association class:&nbsp;  * b2 -- 1..1 E c1;
+&nbsp;in class&nbsp;Ac&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;97 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;interface:&nbsp;Itest&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;89 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;enum:&nbsp;Status&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;108 ; 
+</p></html>
