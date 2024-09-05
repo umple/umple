@@ -1,0 +1,27 @@
+Sorting Requirements
+Comments and Requirements
+noreferences
+@@tooltip Requirements can be sorted by using either ID or Statement with ID being default.
+
+@@description
+Requirements can be sorted by ID using the suboption 'reqSortID' and Statement by using the suboption 'reqSortStat'.
+
+<p> The default is to sort by ID when no suboption is provided.<p>
+
+<br />
+
+<p> Additionally there is also a suboption 'reqHideNotImpl' to filter out the not implemented requirements.<p>
+
+<br />
+
+@@example@@caption Example Showing Sorting by ID@@endcaption
+@@source manualexamples/ReqSortByIDExample3.ump
+@@endexample
+
+@@example@@caption Example Showing Sorting by Statement@@endcaption
+@@source manualexamples/ReqSortByStatExample4.ump
+@@endexample
+
+@@example@@caption Example Showing Filtering of not implemented requirements@@endcaption
+@@source manualexamples/ReqHideNotImpl.ump
+@@endexample
