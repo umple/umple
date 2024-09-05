@@ -1,0 +1,79 @@
+req R1 {
+  First requirement with the identifier R1.
+}
+
+
+req R2 {
+  Second requirement with the identifier R2.
+}
+
+
+req R3 {
+  Third requirement with the identifier R3.
+}
+
+
+req R4 {
+  Fourth requirement with the identifier R4.
+}
+
+
+req R5 {
+  Fifth requirement with the identifier R5.
+}
+
+
+req R6 {
+  Sixth requirement with the identifier R6.
+}
+
+
+// Requirements tagged with class
+implementsReq R3;
+class A {
+  
+  // Requirements tagged with attribute
+  implementsReq R2;
+  att1;
+}
+
+
+// A second class
+class B {
+  
+  // Requirement tagged with association
+  implementsReq R2;
+  * -> * A;
+  
+  // Requirement tagged with state machine
+  implementsReq R3;
+  sm {
+    s1 {
+      e -> s2;
+    }
+    s2 {
+    }
+  } 
+  
+  // Requirement tagged with method
+  implementsReq R5;
+  String m1(String s) {
+    return(s);
+  }
+}
+
+
+// Requirement tagged with trait 
+implementsReq R4;
+trait C {
+   g;
+}
+
+
+// Requirement tagged with interface
+implementsReq R6;
+interface Itest {
+  String m2(String s);
+}
+
+

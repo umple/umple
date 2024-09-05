@@ -1,3 +1,8 @@
 <html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from Sort2Reqs.ump
-</p><p>A01: z requirement.
-</p><p>B01: a is a second requirement statement.
+</p><p><b>A01: z requirement.</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;Example&nbsp;Sort2Reqs.ump&nbsp;line&nbsp;10 ; 
+</p><p><b>B01: a is a second requirement statement.</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;Example&nbsp;Sort2Reqs.ump&nbsp;line&nbsp;10 ; 
+</p></html>
