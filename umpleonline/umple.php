@@ -186,7 +186,7 @@ $output = $dataHandle->readData('model.ump');
 <link rel="icon" type="image/png" sizes="32x32" href="https://cruise.umple.org/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="96x96" href="https://cruise.umple.org/favicon-96x96.png">
 <link rel="icon" type="image/png" sizes="16x16" href="https://cruise.umple.org/favicon-16x16.png">
-<link rel="manifest" href="https://cruise.umple.org/manifest.json">
+<!-- <link rel="manifest" href="https://cruise.umple.org/manifest.json"> -->
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="msapplication-TileImage" content="https://cruise.umple.org/ms-icon-144x144.png">
 <meta name="theme-color" content="#8f001a">

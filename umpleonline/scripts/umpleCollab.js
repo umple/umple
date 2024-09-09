@@ -1,3 +1,5 @@
+// console.log("umpleCollab.js loaded ...")
+
 Collab = new Object();
 
 // this method is called in umple.php when it is verified that current URL is Bookmarked/Collaborative URL
@@ -16,8 +18,17 @@ Collab.connectCollabServer = async function() {
     // The client will try to connect to serverURL: https://cruise.umple.org and serverPath: /collabapi
     const serverURL = typeof CollabServerConfig !== 'undefined' ? CollabServerConfig.serverURL : "https://cruise.umple.org"
     const serverPath = typeof CollabServerConfig !== 'undefined' ? CollabServerConfig.serverPath : "/collabapi" 
+    
+    // DEBUG
+    console.log("serverURL: ", serverURL, "serverPath: ", serverPath);
+
+
     var socket = io(serverURL, {
-      path: serverPath
+      path: serverPath,
+      cors: {
+      origin: '*',
+      methods: ['GET', 'POST']}
+
     });
 
     // DEBUG
@@ -28,6 +39,9 @@ Collab.connectCollabServer = async function() {
       console.log("Collaboration server is disconnected/down !")
       Page.setFeedbackMessage("Cannot Collaborate right now!")
     }, 5000); // 5 seconds timeout
+
+    console.log("serverURL: ", serverURL, "serverPath: ", serverPath);
+
 
     socket.on('connect', () => {
       clearTimeout(connectionTimeout);

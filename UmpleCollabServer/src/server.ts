@@ -20,8 +20,10 @@ import {ChangeSet, Text} from "@codemirror/state"
 import {Update} from "@codemirror/collab"
 import express from 'express';
 import config from 'config';
+import cors from 'cors';
 
 const app = express();
+app.use(cors());
 const server = http.createServer(app);
 
 const port:string = config.get('collab_server.port');
