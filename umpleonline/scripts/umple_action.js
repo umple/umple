@@ -4452,7 +4452,7 @@ Action.selectItemCM6 = function(searchCursor){
     }
     // console.log("currClass: ", currClass)
     let startIndex=text.indexOf(currClass);
-    let endIndex=startIndex+currClass.length;
+    let endIndex=startIndex+currClass.length +1;
     // console.log("startIndex:", startIndex)
     // console.log("endIndex:", endIndex)
     var outputObj={startIndex: startIndex,endIndex: endIndex};
@@ -4471,7 +4471,7 @@ Action.selectMethod = function(methodName, type, accessMod)
   // Action.selectItem(scursor, ncursor);
 
   var selectionIndiciesCM6 = Action.selectItemCM6(scursor);
-  Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex);
+  Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex) ;
 }
 
 
