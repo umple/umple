@@ -94,7 +94,7 @@ $diagramType = "class";
 if (isset($_REQUEST["diagramtype"])) {
   $diagramType=$_REQUEST["diagramtype"];
   if ($diagramType=="state") $diagramType = "GvState";
-  else if ($diagramType=="structure") $diagramType = "structureDiagram";  
+  else if ($diagramType=="structure") $diagramType = "structureDiagram";
   else if ($diagramType !="GvState" && $diagramType !="GvClass" && $diagramType !="structureDiagram" && $diagramType !="GvFeature" && $diagramType !="GvClassTrait" ) $diagramType = "class";
 }
 if ($diagramtype=="") $diagramtype = "&diagramtype=".$diagramType;
@@ -114,9 +114,9 @@ if (isset($_REQUEST["nomenu"])) {$showMenu=false;} else {$showMenu=true;}
 $readOnly = isset($_REQUEST["readOnly"]);
 if (isset($_REQUEST["model"]) && explode("-", $_REQUEST["model"])[0] == "task")
 {
-  foreach (new DirectoryIterator("ump/" . $_REQUEST['model']) as $file) 
+  foreach (new DirectoryIterator("ump/" . $_REQUEST['model']) as $file)
   {
-    if ($file->getFilename() == "submitted.md") 
+    if ($file->getFilename() == "submitted.md")
     {
       $readOnly = true;
     }
@@ -168,9 +168,24 @@ $output = $dataHandle->readData('model.ump');
    background: #810b09;
    color: #ccc;
    }
-.active {
-  background: #B06C5B;
+
+  .active {
+    background: #B06C5B;
+  }
+
+  .ͼ2 .cm-activeLine{
+  background-color: #d9d9d9;!important;
+  /* animation: myfadeIn 4s forwards;
+  -webkit-animation: myfadeIn 4s forwards;
+  -moz-animation: myfadeIn 4s forwards;
+  -o-animation: myfadeIn 4s forwards; */
 }
+/* 
+@keyframes myfadeIn {
+  0%   { background: #d9d9d9;!important; }
+  100% { background: transparent; }
+} */
+
 </style>
 <link rel="stylesheet" href="scripts/styleSurvey.css"> 
 <link rel="apple-touch-icon" sizes="57x57" href="https://cruise.umple.org/apple-icon-57x57.png">
