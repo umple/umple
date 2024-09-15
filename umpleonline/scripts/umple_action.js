@@ -2149,7 +2149,7 @@ Action.drawInput = function(inputType,classCode,className){
   input.focus();
 }
 
-
+// code mirror 5 
 // //Searches for existing associations, children, and associationClasses related to the target class
 // //Associations are: deleted
 // //Children are: pointed to parent (if exists)
@@ -2249,6 +2249,37 @@ Action.deleteClass = function(classCode, className){
   Action.removeContextMenu();
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
 }
+
+// codemirror 5
+// //Adds an association to a class, this function is called by Action.displayMenu() when the user selects "Add Association"
+// //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+// Action.addAssociationGv = function(classCode, className){
+//   var elems=document.getElementsByClassName("node");
+//   var orig=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+//   Action.removeContextMenu();
+//   //add event listener to Graphviz nodes for left click
+//   for(let i=0;i<elems.length;i++){
+//     elems[i].addEventListener("mousedown", function assocClass(event){
+//       var elemText=event.target;
+//       //iterate up to find class node
+//       while(elemText.parentElement.id!="graph0"){
+//         elemText=elemText.parentNode;
+//       }
+//       elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
+//       let subtext="  * -> 1 "+elemText+";\n}\n";
+//       let newClass=orig.substr(0,orig.length-1)+subtext;
+//       Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
+//       TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+//       let others=document.getElementsByClassName("node");
+//       for(let q=0;q<others.length;q++){
+//         others[q].removeEventListener("mousedown",assocClass);
+//       }
+//     });
+//   }
+// }
+
+
+
 //Adds an association to a class, this function is called by Action.displayMenu() when the user selects "Add Association"
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.addAssociationGv = function(classCode, className){
@@ -2266,7 +2297,10 @@ Action.addAssociationGv = function(classCode, className){
       elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
       let subtext="  * -> 1 "+elemText+";\n}\n";
       let newClass=orig.substr(0,orig.length-1)+subtext;
-      Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
+
+      Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(orig,newClass) } });
+
+      //Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
       TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
       let others=document.getElementsByClassName("node");
       for(let q=0;q<others.length;q++){
