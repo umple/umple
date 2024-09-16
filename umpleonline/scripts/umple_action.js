@@ -3104,10 +3104,13 @@ document.addEventListener("mousedown", hider);
     modifiedClassCode = modifiedClassCode.replace(attrRegexWithoutType, newAttributeDeclaration);
     let globalAttrRegex = new RegExp("\\b" + attributeName + "\\b", "g");
     modifiedClassCode = modifiedClassCode.replace(globalAttrRegex, input.value.trim());
-    let orig=Page.codeMirrorEditor.getValue();
+
+    //let orig=Page.codeMirrorEditor.getValue();
+    let orig = Page.codeMirrorEditor6.state.doc.toString();
 
     orig=orig.replace(classyCode,modifiedClassCode);
-    Page.codeMirrorEditor.setValue(orig);
+    //Page.codeMirrorEditor.setValue(orig);
+    Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
 
     Action.removeContextMenu();
     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
