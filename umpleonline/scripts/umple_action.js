@@ -2107,13 +2107,15 @@ Action.drawInput = function(inputType,classCode,className){
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
-          let orig=Page.codeMirrorEditor.getValue();
+          // let orig=Page.codeMirrorEditor.getValue();
+          let orig = Page.codeMirrorEditor6.state.doc.toString();
           let regex=new RegExp("(\\W+)("+className+")(\\W+)");
           let res;
           while((res=orig.match(regex))!=null){
             orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
           }
-          Page.codeMirrorEditor.setValue(orig);
+          // Page.codeMirrorEditor.setValue(orig);
+          Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
           document.removeEventListener("mousedown", hider);
           prompt.remove();
           Action.removeContextMenu();
