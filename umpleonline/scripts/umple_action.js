@@ -1939,26 +1939,57 @@ Action.removeContextMenu = function(){
     o.item(0).remove();
   }
 }
+
+//codemirror5
+// //Called from Action.drawInput(), searches for existing displayColor definitions in the class code, replaces it if it exists,
+// //prepends a new displayColor statement to the start of the class if one doesn't exist.
+// //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
+// Action.setColor=function(classCode,className,color){
+//   let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
+//   if(!classyCode.includes("displayColor")){ //if color is not already set, we can prepend it to the start of the class
+//     let subtext="{  displayColor "+color+";\n"; 
+//     subtext=classyCode.substr(0,classyCode.indexOf("{"))+subtext+classyCode.substr(classyCode.indexOf("{")+1,classyCode.length-classyCode.indexOf("{")-1);
+//     Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
+//   } else { //otherwise, use regex to replace existing displayColor statement
+//     let subtext="displayColor "+color+";"; 
+//     let regex=new RegExp("displayColor\\s+.*;");
+//     subtext=classyCode.replace(regex,subtext);
+//     Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
+//     setTimeout(function(){
+//         TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+//     }, 100);
+
+//   }
+// }
+
 //Called from Action.drawInput(), searches for existing displayColor definitions in the class code, replaces it if it exists,
 //prepends a new displayColor statement to the start of the class if one doesn't exist.
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.setColor=function(classCode,className,color){
+  // console.log("classCode: " + classCode);
+  // console.log("className: " + className);
+  //  console.log("color: " + color);
   let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
   if(!classyCode.includes("displayColor")){ //if color is not already set, we can prepend it to the start of the class
     let subtext="{  displayColor "+color+";\n"; 
     subtext=classyCode.substr(0,classyCode.indexOf("{"))+subtext+classyCode.substr(classyCode.indexOf("{")+1,classyCode.length-classyCode.indexOf("{")-1);
-    Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
+    Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(classyCode,subtext) } });
+
+  //  Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
   } else { //otherwise, use regex to replace existing displayColor statement
     let subtext="displayColor "+color+";"; 
     let regex=new RegExp("displayColor\\s+.*;");
     subtext=classyCode.replace(regex,subtext);
-    Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
+    //Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
+    Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(classyCode,subtext) } });
+
     setTimeout(function(){
         TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
     }, 100);
 
   }
 }
+
 //Multiuse function called whenever a user wants to use a menu edit function that requires user input
 //allows users to input their text/color selection, listens for "enter", then performs the relevant edit
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
