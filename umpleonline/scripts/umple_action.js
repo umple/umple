@@ -2132,7 +2132,8 @@ Action.drawInput = function(inputType,classCode,className){
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
           let subtext="\nclass "+input.value+"\n{\n  isA "+className+";\n}\n";
-          Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue()+subtext);
+         // Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue()+subtext);
+          Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString() + subtext}});
           document.removeEventListener("mousedown", hider);
           TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
           prompt.remove();
