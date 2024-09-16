@@ -2033,6 +2033,7 @@ Action.drawInput = function(inputType,classCode,className){
   };
   // Add a listener to hide the prompt when the user clicks outside of it
   document.addEventListener("mousedown", hider);
+
   if(inputType=="attri"){
     //create the attribute dropdown list
     var select = document.createElement("select");
@@ -2084,7 +2085,9 @@ Action.drawInput = function(inputType,classCode,className){
           } else { //if users use dropdown and type attribute name in text box
             newClass=orig.substr(0,orig.length-1)+"  "+select.value+" "+input.value+";\n}";
           }
-          Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
+          // Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
+          Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(orig,newClass) } });
+
           document.removeEventListener("mousedown", hider);
           prompt.remove();
           Action.removeContextMenu();
