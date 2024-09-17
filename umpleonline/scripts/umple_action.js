@@ -2945,7 +2945,9 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
 
    
  Action.deleteAssociation = function(classCode, selectedText) {
-  let orig = Page.codeMirrorEditor.getValue();
+  // let orig = Page.codeMirrorEditor.getValue();
+  let orig = Page.codeMirrorEditor6.state.doc.toString();
+
   let classyCode = classCode.replaceAll("&#10", "\n").replaceAll("&#$quot", "\"");
   if ((classyCode.includes(selectedText)) == false) {
       orig = orig.replace(selectedText, "");
@@ -2956,9 +2958,11 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
       orig = orig.replace(classyCode, modifiedClassCode);
   }
 
-  Page.codeMirrorEditor.setValue(orig);
+  // Page.codeMirrorEditor.setValue(orig);
+  Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
   Action.removeContextMenu();
-  TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+  // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+  TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
 }
 
 Action.displayAttributeMenu = function(event, attributeName, attributeType) {
