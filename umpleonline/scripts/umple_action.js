@@ -3179,12 +3179,14 @@ Action.changeAttributeType = function(classCode, className, attributeName, curre
           modifiedClassCode = modifiedClassCode.replace(attrRegexWithoutType,  selectedType+" "+attributeName);
         }
         
-        let orig=Page.codeMirrorEditor.getValue();
+        //let orig=Page.codeMirrorEditor.getValue();
+        let orig=Page.codeMirrorEditor6.state.doc.toString();
         orig=orig.replace(classyCode,modifiedClassCode);
         // Update the editor with the new code
 
-        Page.codeMirrorEditor.setValue(orig);
-        
+        //Page.codeMirrorEditor.setValue(orig);
+        Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
+
         Action.removeContextMenu();
         TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
         document.removeEventListener("mousedown", hider);
