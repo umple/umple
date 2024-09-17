@@ -1980,11 +1980,16 @@ Action.setColor=function(classCode,className,color){
     let subtext="displayColor "+color+";"; 
     let regex=new RegExp("displayColor\\s+.*;");
     subtext=classyCode.replace(regex,subtext);
+
     //Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
     Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(classyCode,subtext) } });
 
+    // setTimeout(function(){
+    //     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+    // }, 100);
+
     setTimeout(function(){
-        TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+        TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
     }, 100);
 
   }
@@ -2743,7 +2748,9 @@ Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
         // If it's the start multiplicity, simply replace the first occurrence
         updatedAssociationString = selectedText.replace(new RegExp(escapedOldMult), input.value.trim());
     }
-    let orig=Page.codeMirrorEditor.getValue();
+    // CM5 remove
+    //let orig=Page.codeMirrorEditor.getValue();
+    let orig=Page.codeMirrorEditor6.state.doc.toString();;
     if((classyCode.includes(selectedText))==false){
       orig=orig.replace(selectedText,updatedAssociationString);
     }
@@ -2753,11 +2760,16 @@ Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
      orig=orig.replace(classyCode,modifiedClassCode);
     }
     
-    Page.codeMirrorEditor.setValue(orig);
+    //Page.codeMirrorEditor.setValue(orig);
+    Page.setCodeMirror6Text(orig);
+
     // Apply updatedAssociationString to the Umple code as needed
     
      Action.removeContextMenu();
-     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+
+     //TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+     TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
+     
      prompt.remove(); // Remove the prompt after processing
      Action.selectMatchingText(updatedAssociationString);
   }
@@ -2778,6 +2790,7 @@ Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
     }
   });
  };
+ 
 
 Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
   let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
