@@ -3211,13 +3211,15 @@ Action.deleteAttribute = function(classCode, className, attributeName, attribute
   modifiedClassCode = modifiedClassCode.replace(attrRegexWithType, "");
   modifiedClassCode = modifiedClassCode.replace(attrRegexWithoutType, "");
   
-  let orig=Page.codeMirrorEditor.getValue();
+  //let orig=Page.codeMirrorEditor.getValue();
+  let orig = Page.codeMirrorEditor6.state.doc.toString();
   
-  orig=orig.replace(classyCode,modifiedClassCode);
+  orig = orig.replace(classyCode,modifiedClassCode);
+  
   // Update the editor with the new code
+  // Page.codeMirrorEditor.setValue(orig);
+  Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
 
-  Page.codeMirrorEditor.setValue(orig);
-  
   Action.removeContextMenu();
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
 };
