@@ -2790,7 +2790,7 @@ Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
     }
   });
  };
- 
+
 
 Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
   let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
@@ -2912,7 +2912,9 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
       updatedAssociationString = selectedText.replace(roleName, newRoleName);
     }
     
-    let orig=Page.codeMirrorEditor.getValue();
+    //let orig=Page.codeMirrorEditor.getValue();
+    let orig=Page.codeMirrorEditor6.state.doc.toString();
+
     if((classyCode.includes(selectedText))==false){
       orig=orig.replace(selectedText,updatedAssociationString);
     }
@@ -2922,10 +2924,13 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
      orig=orig.replace(classyCode,modifiedClassCode);
     }
     
-    Page.codeMirrorEditor.setValue(orig);
+    //Page.codeMirrorEditor.setValue(orig);
+    Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
+
     // Apply updatedAssociationString to the Umple code as needed
      Action.removeContextMenu();
-     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+    //TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+     TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate"); 
      prompt.remove(); // Remove the prompt after processing
      Action.selectMatchingText(updatedAssociationString);
   });
@@ -3126,7 +3131,8 @@ document.addEventListener("mousedown", hider);
     Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
 
     Action.removeContextMenu();
-    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+    // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+    TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString() , "menuUpdate");
     document.removeEventListener("mousedown", hider);
     prompt.remove(); // Remove the prompt after processing
     }
