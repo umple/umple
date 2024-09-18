@@ -1984,13 +1984,13 @@ Action.setColor=function(classCode,className,color){
     //Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
     Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(classyCode,subtext) } });
 
-    // setTimeout(function(){
-    //     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-    // }, 100);
-
     setTimeout(function(){
-        TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
+        TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
     }, 100);
+
+    // setTimeout(function(){
+    //     TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
+    // }, 100);
 
   }
 }
@@ -2767,8 +2767,8 @@ Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
     
      Action.removeContextMenu();
 
-     //TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-     TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
+     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+     // TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
      
      prompt.remove(); // Remove the prompt after processing
      Action.selectMatchingText(updatedAssociationString);
@@ -2928,9 +2928,9 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
     Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
 
     // Apply updatedAssociationString to the Umple code as needed
-     Action.removeContextMenu();
-    //TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-     TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate"); 
+    Action.removeContextMenu();
+    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+    // TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate"); 
      prompt.remove(); // Remove the prompt after processing
      Action.selectMatchingText(updatedAssociationString);
   });
@@ -2961,8 +2961,8 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
   // Page.codeMirrorEditor.setValue(orig);
   Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
   Action.removeContextMenu();
-  // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-  TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
+  TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+  // TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
 }
 
 Action.displayAttributeMenu = function(event, attributeName, attributeType) {
@@ -3135,8 +3135,8 @@ document.addEventListener("mousedown", hider);
     Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
 
     Action.removeContextMenu();
-    // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-    TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString() , "menuUpdate");
+    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+    //TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString() , "menuUpdate");
     document.removeEventListener("mousedown", hider);
     prompt.remove(); // Remove the prompt after processing
     }
