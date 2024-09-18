@@ -1337,21 +1337,31 @@ Action.displayTransitionMenu = function(event) {
   let identifierState = id[3].split(".");
   dest = id[4].split(".");
 
-  var selection = Action.selectStateInClass(id[0], id[1], identifierState[0]);
+  // var selection = Action.selectStateInClass(id[0], id[1], identifierState[0]);
+  var selection = Action.selectStateInClassCM6(id[0], id[1], identifierState[0]);
+
   for (var i = 1; i < identifierState.length; i++) {
-      selection = Action.selectStateInState(selection.startIndex, selection.endIndex, identifierState[i]);
+      //selection = Action.selectStateInState(selection.startIndex, selection.endIndex, identifierState[i]);
+      selection = Action.selectStateInStateCM6(selection.startIndex, selection.endIndex, identifierState[i]);
   }
+
   let searchTerm = id[2].replaceAll("+", "\\+").replaceAll("-", "\\-").replaceAll("*", "\\*").replaceAll("?", "\\?").replaceAll("|", "\\|"); //preceed any accidental quantifiers with escape character
   searchTerm = searchTerm.replace("after", "after~`~?:Every`~`?"); //subpar solution, could be improved
   if (id[5] != "") {
       let guardStr = id[5].trim().replaceAll("+", "\\+").replaceAll("-", "\\-").replaceAll("*", "\\*").replaceAll("?", "\\?").replaceAll("|", "\\|"); //preceed any accidental quantifiers with escape character
       searchTerm = searchTerm + "\\s*[\\s*" + guardStr.trim().slice(1, guardStr.trim().length - 1) + "\\s*]";
   }
+
   searchTerm = searchTerm.replaceAll("]", "\\]").replaceAll("[", "\\[").replaceAll(")", "\\)?").replaceAll("(", "\\(?").replaceAll("~`~", "(").replaceAll("`~`", ")").replaceAll(" ", "\\s*").replaceAll(",", "\\s*,\\s*").replaceAll("!", "\\s*!\\s*").replaceAll("/", "\\s*/\\s*");
   searchTerm = searchTerm.replaceAll("&&", "&{1,2}");
   let pattern = new RegExp(searchTerm + ".*->", "s");
-  let startIndex = Page.codeMirrorEditor.getValue().substr(selection.startIndex, selection.endIndex - selection.startIndex).search(pattern) + selection.startIndex;
-  let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
+
+  // let startIndex = Page.codeMirrorEditor.getValue().substr(selection.startIndex, selection.endIndex - selection.startIndex).search(pattern) + selection.startIndex;
+     let startIndex = Page.codeMirrorEditor6.state.doc.toString().substr(selection.startIndex, selection.endIndex - selection.startIndex).search(pattern) + selection.startIndex;
+  
+     // let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
+     let cText = Page.codeMirrorEditor6.state.doc.toString().substr(startIndex);
+
   let line = Action.findEOL(cText);
   if (!(line.split("->").length - 1 === 1) ) {
       //alert("Please edit this complex transition in the textual code.");
@@ -1359,7 +1369,8 @@ Action.displayTransitionMenu = function(event) {
       return;
   }
   let endIndex = startIndex + line.length;
-  let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  // let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+   let code = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
 
   const match = code.trim().match(pattern2);
@@ -2766,7 +2777,6 @@ Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
     // Apply updatedAssociationString to the Umple code as needed
     
      Action.removeContextMenu();
-
      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
      // TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
      
