@@ -1473,7 +1473,9 @@ Action.displayTransitionMenu = function(event) {
 }
 
 Action.changeTransition = function(dest,startIndex,endIndex) {
-  let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+   // let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+   let classCode = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
+
    // Assuming classCode contains the full transition line, including condition and destination
    let trimmedString = classCode.trim().replace(/;$/, "");
 
@@ -1542,8 +1544,10 @@ Action.changeTransition = function(dest,startIndex,endIndex) {
 
         // Create the modified transition string with the new destination
         let modifiedTransition = parts[0] + " -> " + parts[1].replace(dest,input.value.trim()) + ";";
-
-        let orig = Page.codeMirrorEditor.getValue();
+        
+        // cm5
+        // let orig = Page.codeMirrorEditor.getValue();
+        let orig = Page.codeMirrorEditor6.state.doc.toString();
         let before = orig.substring(0, startIndex);
     
       // Get the part of the string after the substring you want to replace
@@ -1552,7 +1556,9 @@ Action.changeTransition = function(dest,startIndex,endIndex) {
         //let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
 
         // Update the editor with the new content
-        Page.codeMirrorEditor.setValue(updatedContent);
+        //Page.codeMirrorEditor.setValue(updatedContent);
+        Page.setCodeMirror6Text(updatedContent);
+
 
         Action.removeContextMenu();
         TabControl.getCurrentHistory().save(Page.getUmpleCode(), "changeTransitionDestination");
@@ -1568,6 +1574,7 @@ Action.changeTransition = function(dest,startIndex,endIndex) {
       }
     });
 };
+
 
 Action.deleteTransition = function(startIndex, endIndex) {
   let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
