@@ -1889,7 +1889,8 @@ Action.modifyTransitionAction = function(startIndex,endIndex) {
 
 
 Action.modifyTransitionEventName = function(startIndex, endIndex) {
-  let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  //let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  let classCode = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
   let pattern2 = new RegExp("^(.*?)\\s*(\\[(.*?)\\])?\\s*(\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\w+);?$", "s");
 
   const match = classCode.match(pattern2);
@@ -1956,7 +1957,8 @@ Action.modifyTransitionEventName = function(startIndex, endIndex) {
       let modifiedTransition = classCode.replace(eventName, input.value.trim());
 
       // Assuming classyCode is meant to represent the original content where the transition is to be found
-      let orig = Page.codeMirrorEditor.getValue();
+      //let orig = Page.codeMirrorEditor.getValue();
+      let orig = Page.codeMirrorEditor6.state.doc.toString();
       let before = orig.substring(0, startIndex);
     
       // Get the part of the string after the substring you want to replace
@@ -1964,7 +1966,8 @@ Action.modifyTransitionEventName = function(startIndex, endIndex) {
       let updatedContent = before + modifiedTransition +after;
 
       // Update the editor with the new content
-      Page.codeMirrorEditor.setValue(updatedContent);
+      //Page.codeMirrorEditor.setValue(updatedContent);
+      Page.setCodeMirror6Text(updatedContent);
 
       Action.removeContextMenu();
       TabControl.getCurrentHistory().save(Page.getUmpleCode(), "renameTransition");
