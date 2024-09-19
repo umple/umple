@@ -1577,18 +1577,37 @@ Action.changeTransition = function(dest,startIndex,endIndex) {
 
 
 Action.deleteTransition = function(startIndex, endIndex) {
-  let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  //let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+ let classCode = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
 
-  let orig = Page.codeMirrorEditor.getValue();
+ // let orig = Page.codeMirrorEditor.getValue();
+ let orig = Page.codeMirrorEditor6.state.doc.toString();
 
   orig = orig.replace(classCode, "");
   // Update the editor with the new code
 
-  Page.codeMirrorEditor.setValue(orig);
+  // Page.codeMirrorEditor.setValue(orig);
+     Page.setCodeMirror6Text(orig);
 
   Action.removeContextMenu();
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
 };
+
+// cm5
+// Action.deleteTransition = function(startIndex, endIndex) {
+//   let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+
+//   let orig = Page.codeMirrorEditor.getValue();
+
+//   orig = orig.replace(classCode, "");
+//   // Update the editor with the new code
+
+//   Page.codeMirrorEditor.setValue(orig);
+
+//   Action.removeContextMenu();
+//   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+// };
+
 
 Action.modifyTransitionGuard = function(startIndex,endIndex) {
 
