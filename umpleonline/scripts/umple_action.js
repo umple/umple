@@ -1612,7 +1612,9 @@ Action.deleteTransition = function(startIndex, endIndex) {
 Action.modifyTransitionGuard = function(startIndex,endIndex) {
 
   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
-  let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  // let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
+  let classCode = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
+  
   const match =classCode.trim().match(pattern2);
 
   // Extracting captured groups based on the updated pattern
@@ -1723,7 +1725,8 @@ Action.modifyTransitionGuard = function(startIndex,endIndex) {
 
 
     // Assuming classyCode is meant to represent the original content where the transition is to be found
-    let orig = Page.codeMirrorEditor.getValue();
+    //let orig = Page.codeMirrorEditor.getValue();
+    let orig = Page.codeMirrorEditor6.state.doc.toString();
     let before = orig.substring(0, startIndex);
     
       // Get the part of the string after the substring you want to replace
@@ -1732,7 +1735,8 @@ Action.modifyTransitionGuard = function(startIndex,endIndex) {
     //let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
 
     // Update the editor with the new content
-    Page.codeMirrorEditor.setValue(updatedContent);
+    //Page.codeMirrorEditor.setValue(updatedContent);
+    Page.setCodeMirror6Text(updatedContent);
 
     Action.removeContextMenu();
     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "modifyGuard");
@@ -1748,6 +1752,8 @@ input.addEventListener("keydown", function(e) {
   }
 });
 };
+
+
 
 Action.modifyTransitionAction = function(startIndex,endIndex) {
   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
@@ -1873,6 +1879,10 @@ Action.modifyTransitionAction = function(startIndex,endIndex) {
     }
   });
 };
+
+
+
+
 
 Action.modifyTransitionEventName = function(startIndex, endIndex) {
   let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
