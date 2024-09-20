@@ -2053,7 +2053,9 @@ Action.setColor=function(classCode,className,color){
 //allows users to input their text/color selection, listens for "enter", then performs the relevant edit
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.drawInput = function(inputType,classCode,className){
-  //creating input div
+  console.warn("class code: " + classCode);
+  // creating input div
+  // console.log("zzzzzz- inputType: " + inputType);
   var prompt = document.createElement('div');
   prompt.style.zIndex = "1000";
   prompt.style.border = "1px solid #ccc";
@@ -2135,22 +2137,71 @@ Action.drawInput = function(inputType,classCode,className){
     input.style.marginLeft = "5px";
     input.addEventListener("keydown", function(e) {
       if (e.key === "Enter") {
+        // console.log("1"); 
         if(Action.validateAttributeName(input.value)){
+          // console.log("1.1 validate");
           let orig=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
           let newClass;
           if(input.value.includes(":")){ //In the case users wish to type in the format - "newAttrName:Type" - instead of using dropdown
             let attriInput=input.value.split(":");
             newClass=orig.substr(0,orig.length-1)+"  "+attriInput[1].trim()+" "+attriInput[0].trim()+";\n}";
+          
           } else { //if users use dropdown and type attribute name in text box
             newClass=orig.substr(0,orig.length-1)+"  "+select.value+" "+input.value+";\n}";
+            // console.log("select value ", select.value);
+            // console.log("input value:", input.value);
           }
+          // console.log("1.2 before dispatch");
           // Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
-          Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(orig,newClass) } });
+          const textlength = Page.codeMirrorEditor6.state.doc.length
+          const insertval = Page.codeMirrorEditor6.state.doc.toString().replace(orig,newClass)
+
+          // console.log("TL::",textlength);
+          // console.log("insert value" , insertval);
+          console.log("orig value" , orig);
+          console.log("=======================");
+          console.log("newclass value" , newClass);
+
+          Page.codeMirrorEditor6.dispatch({ 
+            changes: { 
+              from: 0, 
+              to: textlength,
+              insert:  insertval
+            } 
+          });
+
+          setTimeout(() => {
+            const textlength = Page.codeMirrorEditor6.state.doc.length
+            const newClass2 = newClass.replace("String xx;", "String xx;\n String xx2;")
+            const insertval = Page.codeMirrorEditor6.state.doc.toString().replace(newClass,newClass2)
+
+            // console.log("TL::",textlength);
+            // console.log("insert value" , insertval);
+            console.log("orig value" , orig);
+            console.log("=======================");
+            console.log("newclass value" , newClass);
+            console.log("=======================");
+            console.log("newclass2 value" , newClass2);
+
+            Page.codeMirrorEditor6.dispatch({ 
+              changes: { 
+                from: 0, 
+                to: textlength,
+                insert:  insertval
+              } 
+             });
+          
+            
+          }, 30000);
+
+          console.log("1.3 after dispatch");
 
           document.removeEventListener("mousedown", hider);
+        
           prompt.remove();
           Action.removeContextMenu();
           TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+          // TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
         }
@@ -2165,6 +2216,7 @@ Action.drawInput = function(inputType,classCode,className){
     input.value = className;
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
+        console.log("2"); 
         if(Action.validateAttributeName(input.value)){
           // let orig=Page.codeMirrorEditor.getValue();
           let orig = Page.codeMirrorEditor6.state.doc.toString();
@@ -2189,6 +2241,7 @@ Action.drawInput = function(inputType,classCode,className){
   } else if(inputType=="subclass") {
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
+        console.log("3"); 
         if(Action.validateAttributeName(input.value)){
           let subtext="\nclass "+input.value+"\n{\n  isA "+className+";\n}\n";
          // Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue()+subtext);
@@ -2243,6 +2296,8 @@ Action.drawInput = function(inputType,classCode,className){
   // Add the prompt to the page
   document.body.appendChild(prompt);
   input.focus();
+
+  // console.log("zzzzzz- inputType end: " + inputType);
 }
 
 // code mirror 5 
@@ -2422,8 +2477,10 @@ Action.displayMenu = function(event) {
   }
   //unstable - grabs class name
   elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
-  var orig=Page.codeMirrorEditor.getValue();
-  var chosenClass=Action.splitStates(orig);
+ // var orig=Page.codeMirrorEditor.getValue();
+ var orig=Page.codeMirrorEditor6.state.doc.toString();
+ 
+ var chosenClass=Action.splitStates(orig);
   for(let i=0;i<chosenClass.length;i++){
     if(chosenClass[i].startsWith("class "+elemText+"{")||chosenClass[i].startsWith("class "+elemText+" ")||chosenClass[i].startsWith("class "+elemText+"\n")){
       chosenClass=chosenClass[i];
@@ -2435,6 +2492,7 @@ Action.displayMenu = function(event) {
   var menu = document.createElement('customContextMenu');
   var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color"];
   var jsInput=chosenClass.replaceAll("\n","&#10").replaceAll("\"","&#$quot");;
+  console.info("jsInput: " + jsInput);
   var rowFuncs = ["Action.drawInput(\"attri\",\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+jsInput+"\",\""+elemText+"\")","Action.deleteClass(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"subclass\",\""+jsInput+"\",\""+elemText+"\")","Action.addAssociationGv(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"color\",\""+jsInput+"\",\""+elemText+"\")"];
 
   menu.style.zIndex = "1000";

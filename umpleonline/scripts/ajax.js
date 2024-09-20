@@ -91,3 +91,7 @@ function AjaxSender(aUrl,aCallback,aPostData)
     http.send(postData);
   }
  } 
+
+
+
+ console.log("ajax.js loaded", this == window);
