@@ -90,8 +90,4 @@ function AjaxSender(aUrl,aCallback,aPostData)
     if (http.readyState == 4) return;
     http.send(postData);
   }
- } 
-
-
-
- console.log("ajax.js loaded", this == window);
+ }

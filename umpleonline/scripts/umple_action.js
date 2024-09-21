@@ -2053,9 +2053,7 @@ Action.setColor=function(classCode,className,color){
 //allows users to input their text/color selection, listens for "enter", then performs the relevant edit
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.drawInput = function(inputType,classCode,className){
-  console.warn("class code: " + classCode);
   // creating input div
-  // console.log("zzzzzz- inputType: " + inputType);
   var prompt = document.createElement('div');
   prompt.style.zIndex = "1000";
   prompt.style.border = "1px solid #ccc";
@@ -2137,30 +2135,18 @@ Action.drawInput = function(inputType,classCode,className){
     input.style.marginLeft = "5px";
     input.addEventListener("keydown", function(e) {
       if (e.key === "Enter") {
-        // console.log("1"); 
         if(Action.validateAttributeName(input.value)){
-          // console.log("1.1 validate");
           let orig=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
           let newClass;
           if(input.value.includes(":")){ //In the case users wish to type in the format - "newAttrName:Type" - instead of using dropdown
             let attriInput=input.value.split(":");
             newClass=orig.substr(0,orig.length-1)+"  "+attriInput[1].trim()+" "+attriInput[0].trim()+";\n}";
-          
           } else { //if users use dropdown and type attribute name in text box
             newClass=orig.substr(0,orig.length-1)+"  "+select.value+" "+input.value+";\n}";
-            // console.log("select value ", select.value);
-            // console.log("input value:", input.value);
           }
-          // console.log("1.2 before dispatch");
           // Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
           const textlength = Page.codeMirrorEditor6.state.doc.length
           const insertval = Page.codeMirrorEditor6.state.doc.toString().replace(orig,newClass)
-
-          // console.log("TL::",textlength);
-          // console.log("insert value" , insertval);
-          console.log("orig value" , orig);
-          console.log("=======================");
-          console.log("newclass value" , newClass);
 
           Page.codeMirrorEditor6.dispatch({ 
             changes: { 
@@ -2169,33 +2155,6 @@ Action.drawInput = function(inputType,classCode,className){
               insert:  insertval
             } 
           });
-
-          setTimeout(() => {
-            const textlength = Page.codeMirrorEditor6.state.doc.length
-            const newClass2 = newClass.replace("String xx;", "String xx;\n String xx2;")
-            const insertval = Page.codeMirrorEditor6.state.doc.toString().replace(newClass,newClass2)
-
-            // console.log("TL::",textlength);
-            // console.log("insert value" , insertval);
-            console.log("orig value" , orig);
-            console.log("=======================");
-            console.log("newclass value" , newClass);
-            console.log("=======================");
-            console.log("newclass2 value" , newClass2);
-
-            Page.codeMirrorEditor6.dispatch({ 
-              changes: { 
-                from: 0, 
-                to: textlength,
-                insert:  insertval
-              } 
-             });
-          
-            
-          }, 30000);
-
-          console.log("1.3 after dispatch");
-
           document.removeEventListener("mousedown", hider);
         
           prompt.remove();
@@ -2216,7 +2175,6 @@ Action.drawInput = function(inputType,classCode,className){
     input.value = className;
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
-        console.log("2"); 
         if(Action.validateAttributeName(input.value)){
           // let orig=Page.codeMirrorEditor.getValue();
           let orig = Page.codeMirrorEditor6.state.doc.toString();
@@ -2241,7 +2199,6 @@ Action.drawInput = function(inputType,classCode,className){
   } else if(inputType=="subclass") {
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
-        console.log("3"); 
         if(Action.validateAttributeName(input.value)){
           let subtext="\nclass "+input.value+"\n{\n  isA "+className+";\n}\n";
          // Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue()+subtext);
@@ -2297,58 +2254,7 @@ Action.drawInput = function(inputType,classCode,className){
   document.body.appendChild(prompt);
   input.focus();
 
-  // console.log("zzzzzz- inputType end: " + inputType);
 }
-
-// code mirror 5 
-// //Searches for existing associations, children, and associationClasses related to the target class
-// //Associations are: deleted
-// //Children are: pointed to parent (if exists)
-// //associationClasses are: deleted
-// //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
-// Action.deleteClass = function(classCode, className){
-//   let orig=Page.codeMirrorEditor.getValue();
-//   orig=orig.replace(classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\""),"");
-//   //deletes all associations leading to target class
-//   let regex=new RegExp(".*\\s*(-|<)(>|-)\\s*.*\\s*"+className+"(\\s+\\w+)*\\s*;");
-//   let res;
-//   while((res=orig.match(regex))!=null){ 
-//     orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
-//   }
-//   regex=new RegExp(".*"+className+"\\s*(<|-)(>|-)\\s*.*\\s+\\w+;");
-//   while((res=orig.match(regex))!=null){ 
-//     orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
-//   }
-//   //finds all children of target class and connects them to parent of target, if it exists
-//   regex=new RegExp("isA\\s+"+className);
-//   if(orig.match(regex)!=null){
-//     let subregex=new RegExp("isA\\s+(\\w+);");
-//     let test;
-//     if((test=classCode.match(subregex))!=null){ //if parent class exists, link children to it
-//       let parentClass="isA "+test[1]+";";
-//       while((res=orig.match(regex))!=null){
-//         orig=orig.substr(0,res.index)+parentClass+orig.substr(res.index+res[0].length+1,orig.length-(res.index+res[0].length+1));
-//       }
-//     } else { //if parent class does not exist, delete relevant isA statements
-//       while((res=orig.match(regex))!=null){
-//         orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length+1,orig.length-(res.index+res[0].length+1));
-//       }
-//     }
-//   }
-//   //remove any associationClass definitions containing this class
-//   regex=new RegExp("associationClass\\s+\\w+\\s*\\n*{(\\n*\\W*\\w*;)*(\\s*CRUD_Value\\s*{(\\s*\\w*\\s*,*)*}\\s*\\n*)*(\\n*\\W*\\w*;)*([\\s|\\t]*[*]\\s+"+className+";)(\\n*\\W*\\w*;)*(\\s*CRUD_Value\\s*{(\\s*\\w*\\s*,*)*}\\s*\\n*)*(\\n*\\W*\\w*)*?}");
-//   res=null;
-//   while((res=orig.match(regex))!=null){ 
-//     orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
-//   }
-//   //set editor code, save new state, and remove the context menu
-//   Page.codeMirrorEditor.setValue(orig);
-//   Action.removeContextMenu();
-//   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-// }
-
-
-
 
 //Searches for existing associations, children, and associationClasses related to the target class
 //Associations are: deleted
@@ -2401,34 +2307,6 @@ Action.deleteClass = function(classCode, className){
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
 }
 
-// codemirror 5
-// //Adds an association to a class, this function is called by Action.displayMenu() when the user selects "Add Association"
-// //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
-// Action.addAssociationGv = function(classCode, className){
-//   var elems=document.getElementsByClassName("node");
-//   var orig=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
-//   Action.removeContextMenu();
-//   //add event listener to Graphviz nodes for left click
-//   for(let i=0;i<elems.length;i++){
-//     elems[i].addEventListener("mousedown", function assocClass(event){
-//       var elemText=event.target;
-//       //iterate up to find class node
-//       while(elemText.parentElement.id!="graph0"){
-//         elemText=elemText.parentNode;
-//       }
-//       elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
-//       let subtext="  * -> 1 "+elemText+";\n}\n";
-//       let newClass=orig.substr(0,orig.length-1)+subtext;
-//       Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
-//       TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-//       let others=document.getElementsByClassName("node");
-//       for(let q=0;q<others.length;q++){
-//         others[q].removeEventListener("mousedown",assocClass);
-//       }
-//     });
-//   }
-// }
-
 
 
 //Adds an association to a class, this function is called by Action.displayMenu() when the user selects "Add Association"
@@ -2479,7 +2357,7 @@ Action.displayMenu = function(event) {
   elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
  // var orig=Page.codeMirrorEditor.getValue();
  var orig=Page.codeMirrorEditor6.state.doc.toString();
- 
+
  var chosenClass=Action.splitStates(orig);
   for(let i=0;i<chosenClass.length;i++){
     if(chosenClass[i].startsWith("class "+elemText+"{")||chosenClass[i].startsWith("class "+elemText+" ")||chosenClass[i].startsWith("class "+elemText+"\n")){
@@ -2491,8 +2369,7 @@ Action.displayMenu = function(event) {
   }
   var menu = document.createElement('customContextMenu');
   var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color"];
-  var jsInput=chosenClass.replaceAll("\n","&#10").replaceAll("\"","&#$quot");;
-  console.info("jsInput: " + jsInput);
+  var jsInput=chosenClass.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
   var rowFuncs = ["Action.drawInput(\"attri\",\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+jsInput+"\",\""+elemText+"\")","Action.deleteClass(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"subclass\",\""+jsInput+"\",\""+elemText+"\")","Action.addAssociationGv(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"color\",\""+jsInput+"\",\""+elemText+"\")"];
 
   menu.style.zIndex = "1000";
