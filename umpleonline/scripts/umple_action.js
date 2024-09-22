@@ -2516,14 +2516,18 @@ Action.displayAssociMenu = function(event, associationLink) {
 
       Page.codeMirrorEditor.setSelection(theStart, theEnd);
       var classCode = Page.codeMirrorEditor.getSelection(); //get the class code for where the association belong
+      // console.log("classCode: " + classCode);
 
   }
   var jsInput = classCode.replaceAll("\n", "&#10").replaceAll("\"", "&#$quot");;
   let isEnd = 1; //0 as start 1 as end
   let startIndex = indices.startIndex;
   let endIndex = indices.endIndex;
-  Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor.getValue()), Action.indexToPos(endIndex, Page.codeMirrorEditor.getValue()))
+  //Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor.getValue()), Action.indexToPos(endIndex, Page.codeMirrorEditor.getValue()))
+  Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor6.state.doc.toString() ), Action.indexToPos(endIndex, Page.codeMirrorEditor6.state.doc.toString()))
+  
   var selectedText = Page.codeMirrorEditor.getSelection();
+  console.warn("selectedText: " + selectedText);  
 
   if (selectedText.includes(endInfo[0].trim()) == false) {
       isEnd = 3;//association class
@@ -2913,7 +2917,8 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
     }
     
     //Page.codeMirrorEditor.setValue(orig);
-    Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
+    //Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
+    Page.setCodeMirror6Text(orig);
 
     // Apply updatedAssociationString to the Umple code as needed
     Action.removeContextMenu();
@@ -2947,7 +2952,8 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
   }
 
   // Page.codeMirrorEditor.setValue(orig);
-  Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
+  //Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
+  Page.setCodeMirror6Text(orig);
   Action.removeContextMenu();
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
   // TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
@@ -2967,7 +2973,9 @@ Action.displayAttributeMenu = function(event, attributeName, attributeType) {
   }
   //unstable - grabs class name
   elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
-  var orig=Page.codeMirrorEditor.getValue();
+  
+  // var orig=Page.codeMirrorEditor.getValue();
+  var orig=Page.codeMirrorEditor6.state.doc.toString();
   var chosenClass=Action.splitStates(orig);
   for(let i=0;i<chosenClass.length;i++){
     if(chosenClass[i].startsWith("class "+elemText+"{")||chosenClass[i].startsWith("class "+elemText+" ")||chosenClass[i].startsWith("class "+elemText+"\n")){
