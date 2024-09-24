@@ -2440,8 +2440,10 @@ Action.displayAssociMenu = function(event, associationLink) {
 
   // associationDetails array contains the extracted information
   let indices = Action.selectAssociation(associationDetails[1]);
+ // console.log("indices: " + indices);
 
   var detailsArray = associationDetails[1].split(',');
+ // console.log("detailsArray: " + detailsArray);
 
   if (detailsArray.length == 4) {
       var destination = detailsArray[1].trim();
@@ -2471,7 +2473,9 @@ Action.displayAssociMenu = function(event, associationLink) {
 
       var theEnd = new Object();
 
-      theEnd.line = Page.codeMirrorEditor.lineCount();
+      // theEnd.line = Page.codeMirrorEditor.lineCount();
+      theEnd.line = Page.codeMirrorEditor6.state.doc.lines;
+      // console.warn("theEnd.line: " + theEnd.line);
       theEnd.ch = 9999;
 
       scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
@@ -2516,6 +2520,9 @@ Action.displayAssociMenu = function(event, associationLink) {
 
       Page.codeMirrorEditor.setSelection(theStart, theEnd);
       var classCode = Page.codeMirrorEditor.getSelection(); //get the class code for where the association belong
+      // console.warn("classCode: " + classCode);
+      // var classcode2 = page.codeMirrorEditor6.sliceDoc(theStart, theEnd);
+      //console.log("classcode2: " + classcode2);
       // console.log("classCode: " + classCode);
 
   }
@@ -2523,7 +2530,7 @@ Action.displayAssociMenu = function(event, associationLink) {
   let isEnd = 1; //0 as start 1 as end
   let startIndex = indices.startIndex;
   let endIndex = indices.endIndex;
-  //Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor.getValue()), Action.indexToPos(endIndex, Page.codeMirrorEditor.getValue()))
+  // Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor.getValue()), Action.indexToPos(endIndex, Page.codeMirrorEditor.getValue()))
   Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor6.state.doc.toString() ), Action.indexToPos(endIndex, Page.codeMirrorEditor6.state.doc.toString()))
   
   var selectedText = Page.codeMirrorEditor.getSelection();
@@ -4803,72 +4810,280 @@ Action.selectMethod = function(methodName, type, accessMod)
 // }
 
 
+// Action.selectAssociation = function(associationDetails) {
+//   var detailsArray = associationDetails.split(',');
+//   var className = detailsArray[0];
+//   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
+//   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
+//   if (Page.codeMirrorOn) {
+//       scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
+
+//       if (!scursor.findNext()) {
+//           return; // false
+//       }
+
+//       // Have found declaration of class. Now have to search for the next class or end
+//       var theStart = scursor.from();
+
+//       var theEnd = new Object();
+
+//       theEnd.line = Page.codeMirrorEditor.lineCount();
+//       theEnd.ch = 9999;
+
+//       scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
+
+//       while (scursor.findNext()) {
+//           var endObject = scursor.from();
+
+//           //This is checking if the class declaration found was in a single line comment.
+//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
+//           var commentFound = innerCursor.findPrevious();
+//           if (commentFound && innerCursor.from().line == endObject.line) {
+//               //The class declaration found was actually in a single line comment, keep searching
+//               continue;
+//           }
+
+//           //Check if the found class declaration is in a multiline comment
+//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
+//           //Search backwards for a /* or */
+//           var commentFound = innerCursor.findPrevious();
+//           if (commentFound) {
+//               if (commentFound[0] === "/*") {
+//                   //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
+
+//                   //Look for the exit marker
+//                   innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
+//                   var commentFound = innerCursor.findNext();
+
+//                   if (commentFound) {
+//                       var commentEnd = innerCursor.from();
+//                       if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
+//                           //The class declaration found is in a multiline comment, keep looking
+//                           continue;
+//                       }
+//                   }
+//               }
+//           }
+
+//           theEnd.line = endObject.line - 1;
+//           theEnd.ch = 999;
+//           break;
+//       }
+
+//       Page.codeMirrorEditor.setSelection(theStart, theEnd);
+//       //debug console.log("theStart: ", theStart);
+//       // console.log("theEnd: ", theEnd);
+//       var selectedText = Page.codeMirrorEditor.getSelection();
+//       //get the class code for where the association belong
+//   }
+//   var start, end;
+//   //for labelAssociation
+//   if (detailsArray.length > 3) {
+//       if (detailsArray[2].trim().includes(' ')) {
+//           // When there's a space, indicating the presence of a role name or additional details
+//           var array = detailsArray[2].split(' ');
+//           start = detailsArray[3].trim(); //.replace(/[\*+?.()|[\]\\{}^$]/g, "\\$&"); // Assuming the start multiplicity is always in the 4th segment
+//           if (array.length == 2) {
+//               // When there's more than just the multiplicity and class name, indicating a role name is present
+//               end = array[0].trim() + ' ' + detailsArray[1].trim() + ' ' + array[1].trim();
+//           } else {
+//               end = array[0].trim() + ' ' + detailsArray[1].trim();
+//           }
+//       } else {
+//           // When there's no space, meaning no role name is present
+//           start = detailsArray[3].trim(); //.replace(/[\*+?.()|[\]\\{}^$]/g, "\\$&");
+//           end = detailsArray[2].trim() + ' ' + detailsArray[1].trim();
+//       }
+
+
+//       var startEscaped = start.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+//       var endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+//       var patternString = startEscaped + "(?:\\s+sorted\\s+{.*?})?" + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped + "(?:\\s+sorted\\s+{.*?})?" + "\\s*;";
+
+//       var pattern = new RegExp(patternString, "g");
+//       // var code = Page.codeMirrorEditor.getValue();
+//       var code = Page.codeMirrorEditor6.state.doc.toString();
+//       //Finding matches using the constructed pattern
+//       var matches = selectedText.match(pattern);
+//       if (matches) {
+          
+//           startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
+//           endIndex = startIndex + matches[0].length;
+          
+//           Action.highlightByIndexCM6(startIndex, endIndex);
+
+//           //debug : console.log("startIndex: ", startIndex);
+//           //debug : console.log("endIndex: ", endIndex);
+
+//           return { startIndex: startIndex, endIndex: endIndex };
+//       } else {
+//           if (endEscaped.startsWith("1")) { // this for simple writing association
+//               end = endEscaped.substring(2).trim();
+//               endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+//               patternString = startEscaped + "\\s+" + endEscaped+ "\\s*;";
+//               pattern = new RegExp(patternString, "g");
+//               matches = selectedText.match(pattern);
+//               if (matches == null) {
+//                   patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
+//                   pattern = new RegExp(patternString, "g");
+//                   matches = selectedText.match(pattern);
+//               }
+              
+//               startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
+//               endIndex = startIndex + matches[0].length;
+//               Action.highlightByIndexCM6(startIndex, endIndex);
+//               return { startIndex: startIndex, endIndex: endIndex };
+//           } else {
+//               if (startEscaped.trim().includes(' ')) {
+//                   var newstart = startEscaped.split(' ');
+//                   startEscaped = newstart[0].trim() + " " + className + " " + newstart[1].trim();
+//               } else {
+//                   startEscaped += " " + className;
+//               }
+              
+//               patternString = startEscaped + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped+ "\\s*;";
+//               console.log("patternString: ", patternString);
+
+//               pattern = new RegExp(patternString, "g");
+//               matches = code.match(pattern);
+//               console.warn("matches: ", matches);
+//               if (matches == null) {
+//                   patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
+//                   pattern = new RegExp(patternString, "g");
+//                   matches = code.match(pattern);
+//               }
+              
+//               startIndex = code.indexOf(matches[0]);
+//               endIndex = startIndex + matches[0].length;
+//               Action.highlightByIndexCM6(startIndex, endIndex);
+//               //console.log("startIndex: ", startIndex);
+//               //console.log("endIndex: ", endIndex);  
+//               return { startIndex: startIndex, endIndex: endIndex };
+
+//           }
+//       }
+
+//   } else { //for two label association
+
+//       var array = detailsArray[2].split(' ');
+//       start = array[0].trim();
+//       end = array[1].trim();
+
+//       var startEscaped = start.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+//       var endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+//       var patternString = startEscaped + ".*?" + endEscaped+ "\\s*;";
+//       var pattern = new RegExp(patternString, "g");
+//       // var code = Page.codeMirrorEditor.getValue();
+//       var code = Page.codeMirrorEditor6.state.doc.toString();
+//       //Finding matches using the constructed pattern
+//       var matches = selectedText.match(pattern);
+//       if (matches) {
+//           startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
+//           endIndex = startIndex + matches[0].length;
+//           Action.highlightByIndexCM6(startIndex, endIndex);
+//           return { startIndex: startIndex, endIndex: endIndex };
+//       }
+
+//   }
+// }
+
+
+
+
+
+
 Action.selectAssociation = function(associationDetails) {
   var detailsArray = associationDetails.split(',');
   var className = detailsArray[0];
   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
-  if (Page.codeMirrorOn) {
-      scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
+  // if (Page.codeMirrorOn) {
+  //     scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
+  //     console.log("scursor: ", scursor)
+  //     scursor2 = new cm6.RegExpCursor(Page.codeMirrorEditor6.state.doc, searchCursor);
+  //     console.log("scursor2: ", scursor2);
 
-      if (!scursor.findNext()) {
-          return; // false
-      }
+  //     if (!scursor.findNext()) {
+  //         return; // false
+  //     }
 
-      // Have found declaration of class. Now have to search for the next class or end
-      var theStart = scursor.from();
+  //     // Have found declaration of class. Now have to search for the next class or end
+  //     var theStart = scursor.from();
+  //     console.log("theStart: ", theStart);
+  //     var theStart2 = scursor.from();
+  //     console.log("theStart2: ", theStart2);
 
-      var theEnd = new Object();
 
-      theEnd.line = Page.codeMirrorEditor.lineCount();
-      theEnd.ch = 9999;
+  //     var theEnd = new Object();
 
-      scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
+  //     //theEnd.line = Page.codeMirrorEditor.lineCount();
+  //     theEnd.line = Page.codeMirrorEditor6.state.doc.lines;
+  //     theEnd.ch = 9999;
 
-      while (scursor.findNext()) {
-          var endObject = scursor.from();
+  //     // console.log("theEnd: ", scursor.to());
+  //     scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
+  //     // console.log("scursor: ", scursor)
+  //     scursor2 = new cm6.RegExpCursor(Page.codeMirrorEditor6.state.doc, nextCursor,{ from: scursor.to() });
+  //     console.log("scursor2: ", scursor2);  
 
-          //This is checking if the class declaration found was in a single line comment.
-          innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
-          var commentFound = innerCursor.findPrevious();
-          if (commentFound && innerCursor.from().line == endObject.line) {
-              //The class declaration found was actually in a single line comment, keep searching
-              continue;
-          }
+  //     while (scursor2.next()) {
 
-          //Check if the found class declaration is in a multiline comment
-          innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
-          //Search backwards for a /* or */
-          var commentFound = innerCursor.findPrevious();
-          if (commentFound) {
-              if (commentFound[0] === "/*") {
-                  //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
+  //         var endObject2 = scursor2.value.from;
+  //         console.warn("endObject2: ", endObject2);
 
-                  //Look for the exit marker
-                  innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
-                  var commentFound = innerCursor.findNext();
+  //         //This is checking if the class declaration found was in a single line comment.
+  //         // innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
+  //         innerCursor2 = new cm6.RegExpCursor(Page.codeMirrorEditor6.state.doc, new RegExp("//"),{ from: endObject2 });
+  //         console.log("innerCursor2: ", innerCursor2);
 
-                  if (commentFound) {
-                      var commentEnd = innerCursor.from();
-                      if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
-                          //The class declaration found is in a multiline comment, keep looking
-                          continue;
-                      }
-                  }
-              }
-          }
+  //         // //var commentFound = innerCursor.findPrevious();
+  //         //  var commentFound2 = innerCursor2.findPrevious();
+  //         // console.log("commentFound2: ", commentFound2);
 
-          theEnd.line = endObject.line - 1;
-          theEnd.ch = 999;
-          break;
-      }
+  //         // if (commentFound && innerCursor.from().line == endObject.line) {
+  //         //     //The class declaration found was actually in a single line comment, keep searching
+  //         //     continue;
+  //         // }
 
-      Page.codeMirrorEditor.setSelection(theStart, theEnd);
-      //debug console.log("theStart: ", theStart);
-      // console.log("theEnd: ", theEnd);
-      var selectedText = Page.codeMirrorEditor.getSelection();
-      //get the class code for where the association belong
-  }
+  //         // //Check if the found class declaration is in a multiline comment
+  //         // innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
+  //         // //Search backwards for a /* or */
+  //         // var commentFound = innerCursor.findPrevious();
+  //         // if (commentFound) {
+  //         //     if (commentFound[0] === "/*") {
+  //         //         //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
+
+  //         //         //Look for the exit marker
+  //         //         innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
+  //         //         var commentFound = innerCursor.findNext();
+
+  //         //         if (commentFound) {
+  //         //             var commentEnd = innerCursor.from();
+  //         //             if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
+  //         //                 //The class declaration found is in a multiline comment, keep looking
+  //         //                 continue;
+  //         //             }
+  //         //         }
+  //         //     }
+  //         // }
+
+  //         theEnd.line = endObject2.line - 1;
+  //         theEnd.ch = 999;
+  //         break;
+  //     }
+
+  //     // Page.codeMirrorEditor.setSelection(theStart, theEnd);
+  //     Action.highlightByIndexCM6(theStart2, theEnd) ;
+
+  //     // setSelection(theStart2, theEnd);
+  //     //debug console.log("theStart: ", theStart);
+  //     // console.log("theEnd: ", theEnd);
+
+   var selectionIndiciesCM6 = Action.selectItemCM6(searchCursor);
+  var selectedText = Page.codeMirrorEditor6.state.sliceDoc(selectionIndiciesCM6.startIndex,selectionIndiciesCM6.endIndex) ;//get the class code for where the association belong
+  //     //get the class code for where the association belong
+  // }
+  
   var start, end;
   //for labelAssociation
   if (detailsArray.length > 3) {
@@ -4903,6 +5118,7 @@ Action.selectAssociation = function(associationDetails) {
           startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
           endIndex = startIndex + matches[0].length;
           
+          // Action.highlightByIndexCM6(1,5);
           Action.highlightByIndexCM6(startIndex, endIndex);
 
           //debug : console.log("startIndex: ", startIndex);
@@ -4925,6 +5141,8 @@ Action.selectAssociation = function(associationDetails) {
               startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
               endIndex = startIndex + matches[0].length;
               Action.highlightByIndexCM6(startIndex, endIndex);
+              // Action.highlightByIndexCM6(840, 850);
+              //  console.warn(startIndex, endIndex);
               return { startIndex: startIndex, endIndex: endIndex };
           } else {
               if (startEscaped.trim().includes(' ')) {
@@ -4935,8 +5153,11 @@ Action.selectAssociation = function(associationDetails) {
               }
               
               patternString = startEscaped + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped+ "\\s*;";
+              // console.log("patternString: ", patternString);
+
               pattern = new RegExp(patternString, "g");
               matches = code.match(pattern);
+              // console.warn("matches: ", matches);
               if (matches == null) {
                   patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
                   pattern = new RegExp(patternString, "g");
@@ -4946,8 +5167,11 @@ Action.selectAssociation = function(associationDetails) {
               startIndex = code.indexOf(matches[0]);
               endIndex = startIndex + matches[0].length;
               Action.highlightByIndexCM6(startIndex, endIndex);
+              // Action.highlightByIndexCM6(1, 7);
+
               //console.log("startIndex: ", startIndex);
               //console.log("endIndex: ", endIndex);  
+
               return { startIndex: startIndex, endIndex: endIndex };
 
           }
@@ -4976,7 +5200,6 @@ Action.selectAssociation = function(associationDetails) {
 
   }
 }
-
 
 // Highlights the text of the class that is currently selected.
 Action.selectClass = function(className) 
