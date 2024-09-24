@@ -2431,6 +2431,208 @@ Action.displayMenu = function(event) {
   document.body.appendChild(menu);
 }
 
+// Action.displayAssociMenu = function(event, associationLink) {
+//   const regex = /Action\.selectAssociation\('([^']+)'\)/;
+
+//   // Use the regex to extract the content
+//   const associationDetails = associationLink.match(regex);
+
+
+//   // associationDetails array contains the extracted information
+//   let indices = Action.selectAssociation(associationDetails[1]);
+//  // console.log("indices: " + indices);
+
+//   var detailsArray = associationDetails[1].split(',');
+//  // console.log("detailsArray: " + detailsArray);
+
+//   if (detailsArray.length == 4) {
+//       var destination = detailsArray[1].trim();
+//       var className = detailsArray[0].trim();
+//       var endInfo = detailsArray[2].split(' ');
+//       var startInfo = detailsArray[3].split(' ');
+
+//   } else {
+//       var destination = detailsArray[1].trim();
+//       var endInfo = detailsArray[2].split(' ');
+//       var startInfo = detailsArray[2].split(' ');
+//       var className = detailsArray[0].trim();
+
+//   }
+  
+//   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
+//   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
+//   if (Page.codeMirrorOn) {
+//       scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
+
+//       if (!scursor.findNext()) {
+//           return; // false
+//       }
+
+//       // Have found declaration of class. Now have to search for the next class or end
+//       var theStart = scursor.from();
+
+//       var theEnd = new Object();
+
+//       // theEnd.line = Page.codeMirrorEditor.lineCount();
+//       theEnd.line = Page.codeMirrorEditor6.state.doc.lines;
+//       // console.warn("theEnd.line: " + theEnd.line);
+//       theEnd.ch = 9999;
+
+//       scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
+
+//       while (scursor.findNext()) {
+//           var endObject = scursor.from();
+
+//           //This is checking if the class declaration found was in a single line comment.
+//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
+//           var commentFound = innerCursor.findPrevious();
+//           if (commentFound && innerCursor.from().line == endObject.line) {
+//               //The class declaration found was actually in a single line comment, keep searching
+//               continue;
+//           }
+
+//           //Check if the found class declaration is in a multiline comment
+//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
+//           //Search backwards for a /* or */
+//           var commentFound = innerCursor.findPrevious();
+//           if (commentFound) {
+//               if (commentFound[0] === "/*") {
+//                   //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
+
+//                   //Look for the exit marker
+//                   innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
+//                   var commentFound = innerCursor.findNext();
+
+//                   if (commentFound) {
+//                       var commentEnd = innerCursor.from();
+//                       if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
+//                           //The class declaration found is in a multiline comment, keep looking
+//                           continue;
+//                       }
+//                   }
+//               }
+//           }
+
+//           theEnd.line = endObject.line - 1;
+//           theEnd.ch = 999;
+//           break;
+//       }
+
+//       Page.codeMirrorEditor.setSelection(theStart, theEnd);
+//       var classCode = Page.codeMirrorEditor.getSelection(); //get the class code for where the association belong
+//       // console.warn("classCode: " + classCode);
+//       // var classcode2 = page.codeMirrorEditor6.sliceDoc(theStart, theEnd);
+//       //console.log("classcode2: " + classcode2);
+//       // console.log("classCode: " + classCode);
+
+//   }
+//   var jsInput = classCode.replaceAll("\n", "&#10").replaceAll("\"", "&#$quot");;
+//   let isEnd = 1; //0 as start 1 as end
+//   let startIndex = indices.startIndex;
+//   let endIndex = indices.endIndex;
+//   // Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor.getValue()), Action.indexToPos(endIndex, Page.codeMirrorEditor.getValue()))
+//   Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor6.state.doc.toString() ), Action.indexToPos(endIndex, Page.codeMirrorEditor6.state.doc.toString()))
+  
+//   var selectedText = Page.codeMirrorEditor.getSelection();
+//   console.warn("selectedText: " + selectedText);  
+
+//   if (selectedText.includes(endInfo[0].trim()) == false) {
+//       isEnd = 3;//association class
+//   }
+//   var menu = document.createElement('customContextMenu');
+//   //special menu for association class
+//   var rowContent = isEnd === 3 ?
+//   ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter "+destination+" role name"] :
+//   ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter "+destination+" multiplicity" , "Alter "+destination+" role name", "Delete the association"];
+//   //var rowContent = ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter "+destination+" multiplicity" , "Alter "+destination+" role name", "Delete the association."];
+//   var rowFuncs = isEnd === 3 ?
+//         [
+//             "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
+//             "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
+//             "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + endInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 1 + "\")"
+//         ] :[
+
+        
+//       "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
+//       "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
+//       "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + endInfo[0] + "\",\"" + isEnd + "\")",
+//       "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + endInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 1 + "\")",
+//       "Action.deleteAssociation(\"" + jsInput + "\",\"" + selectedText + "\")"
+
+//   ];
+
+//   menu.style.zIndex = "1000";
+//   menu.style.border = "1px solid #ccc";
+//   menu.style.backgroundColor = "#f8f8f8";
+//   menu.style.padding = "5px";
+//   menu.style.position = "fixed";
+//   //add rows
+//   for (var i = 0; i < rowContent.length; i++) {
+//       var row = document.createElement("div");
+//       row.style.padding = "5px";
+//       row.style.borderRadius = "3px";
+//       row.style.cursor = "pointer";
+//       row.style.transition = "background-color 0.3s";
+//       row.textContent = rowContent[i];
+//       row.setAttribute('onclick', "javascript:" + rowFuncs[i]);
+//       // Highlight row on hover
+//       row.addEventListener("mouseover", function() {
+//           this.style.backgroundColor = "#ddd";
+//       });
+//       row.addEventListener("mouseout", function() {
+//           this.style.backgroundColor = "transparent";
+//       });
+
+//       //add row to context menu
+//       menu.appendChild(row);
+
+//   }
+
+//   //set menu location at mouse, while ensuring it is on screen
+//   var menuRect = menu.getBoundingClientRect();
+//   if (event.clientX + menuRect.width > window.innerWidth) {
+//       menu.style.right = (window.innerWidth - event.clientX) + "px";
+//   } else {
+//       menu.style.left = event.clientX + "px";
+//   }
+//   if (event.clientY + menuRect.height > window.innerHeight) {
+//       menu.style.bottom = (window.innerHieght - event.clientY) + "px";
+//   } else {
+//       menu.style.top = event.clientY + "px";
+//   }
+//   // Add a listener to hide the menu when the user clicks outside of it
+//   document.addEventListener('keydown', function hideMenu(e) {
+//     var prompt = document.getElementById("promptBox");
+//       if (e.target != menu && !menu.contains(e.target)&&e.key === "Escape") {
+//           if (prompt != null && e.target != prompt && !prompt.contains(e.target)) {
+
+//               document.removeEventListener('keydown', hideMenu);
+//               Action.removeContextMenu();
+
+//           } else {
+//               document.removeEventListener('keydown', hideMenu);
+//               Action.removeContextMenu();
+//           }
+//       }
+//   });
+//   document.addEventListener('mousedown', function hideMenu(e) {
+//       var prompt = document.getElementById("promptBox");
+//       if (e.target != menu && !menu.contains(e.target)) {
+//           if (prompt != null && e.target != prompt && !prompt.contains(e.target)) {
+
+//               document.removeEventListener('mousedown', hideMenu);
+//               Action.removeContextMenu();
+
+//           } else {
+//               document.removeEventListener('mousedown', hideMenu);
+//               Action.removeContextMenu();
+//           }
+//       }
+//   });
+//   document.body.appendChild(menu);
+// };
+
+
 Action.displayAssociMenu = function(event, associationLink) {
   const regex = /Action\.selectAssociation\('([^']+)'\)/;
 
@@ -2462,78 +2664,88 @@ Action.displayAssociMenu = function(event, associationLink) {
   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
   if (Page.codeMirrorOn) {
-      scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
+      // scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
 
-      if (!scursor.findNext()) {
-          return; // false
-      }
+      // if (!scursor.findNext()) {
+      //     return; // false
+      // }
 
-      // Have found declaration of class. Now have to search for the next class or end
-      var theStart = scursor.from();
+      // // Have found declaration of class. Now have to search for the next class or end
+      // var theStart = scursor.from();
 
-      var theEnd = new Object();
+      // var theEnd = new Object();
 
-      // theEnd.line = Page.codeMirrorEditor.lineCount();
-      theEnd.line = Page.codeMirrorEditor6.state.doc.lines;
-      // console.warn("theEnd.line: " + theEnd.line);
-      theEnd.ch = 9999;
+      // // theEnd.line = Page.codeMirrorEditor.lineCount();
+      // theEnd.line = Page.codeMirrorEditor6.state.doc.lines;
+      // // console.warn("theEnd.line: " + theEnd.line);
+      // theEnd.ch = 9999;
 
-      scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
+      // scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
 
-      while (scursor.findNext()) {
-          var endObject = scursor.from();
+      // while (scursor.findNext()) {
+      //     var endObject = scursor.from();
 
-          //This is checking if the class declaration found was in a single line comment.
-          innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
-          var commentFound = innerCursor.findPrevious();
-          if (commentFound && innerCursor.from().line == endObject.line) {
-              //The class declaration found was actually in a single line comment, keep searching
-              continue;
-          }
+      //     //This is checking if the class declaration found was in a single line comment.
+      //     innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
+      //     var commentFound = innerCursor.findPrevious();
+      //     if (commentFound && innerCursor.from().line == endObject.line) {
+      //         //The class declaration found was actually in a single line comment, keep searching
+      //         continue;
+      //     }
 
-          //Check if the found class declaration is in a multiline comment
-          innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
-          //Search backwards for a /* or */
-          var commentFound = innerCursor.findPrevious();
-          if (commentFound) {
-              if (commentFound[0] === "/*") {
-                  //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
+      //     //Check if the found class declaration is in a multiline comment
+      //     innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
+      //     //Search backwards for a /* or */
+      //     var commentFound = innerCursor.findPrevious();
+      //     if (commentFound) {
+      //         if (commentFound[0] === "/*") {
+      //             //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
 
-                  //Look for the exit marker
-                  innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
-                  var commentFound = innerCursor.findNext();
+      //             //Look for the exit marker
+      //             innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
+      //             var commentFound = innerCursor.findNext();
 
-                  if (commentFound) {
-                      var commentEnd = innerCursor.from();
-                      if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
-                          //The class declaration found is in a multiline comment, keep looking
-                          continue;
-                      }
-                  }
-              }
-          }
+      //             if (commentFound) {
+      //                 var commentEnd = innerCursor.from();
+      //                 if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
+      //                     //The class declaration found is in a multiline comment, keep looking
+      //                     continue;
+      //                 }
+      //             }
+      //         }
+      //     }
 
-          theEnd.line = endObject.line - 1;
-          theEnd.ch = 999;
-          break;
-      }
+      //     theEnd.line = endObject.line - 1;
+      //     theEnd.ch = 999;
+      //     break;
+      // }
 
-      Page.codeMirrorEditor.setSelection(theStart, theEnd);
-      var classCode = Page.codeMirrorEditor.getSelection(); //get the class code for where the association belong
-      // console.warn("classCode: " + classCode);
+      // Page.codeMirrorEditor.setSelection(theStart, theEnd);
+      // var classCode = Page.codeMirrorEditor.getSelection(); //get the class code for where the association belong
+      var selectionIndiciesCM6 = Action.selectItemCM6(searchCursor);
+      var classCode = Page.codeMirrorEditor6.state.sliceDoc(selectionIndiciesCM6.startIndex,selectionIndiciesCM6.endIndex) ;
+  //get the class code f
+      
+      console.warn("classCode: " + classCode);
       // var classcode2 = page.codeMirrorEditor6.sliceDoc(theStart, theEnd);
       //console.log("classcode2: " + classcode2);
       // console.log("classCode: " + classCode);
 
   }
+
+
   var jsInput = classCode.replaceAll("\n", "&#10").replaceAll("\"", "&#$quot");;
   let isEnd = 1; //0 as start 1 as end
   let startIndex = indices.startIndex;
   let endIndex = indices.endIndex;
   // Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor.getValue()), Action.indexToPos(endIndex, Page.codeMirrorEditor.getValue()))
-  Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor6.state.doc.toString() ), Action.indexToPos(endIndex, Page.codeMirrorEditor6.state.doc.toString()))
+  // Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor6.state.doc.toString() ), Action.indexToPos(endIndex, Page.codeMirrorEditor6.state.doc.toString()))
   
-  var selectedText = Page.codeMirrorEditor.getSelection();
+  // var selectedText = Page.codeMirrorEditor.getSelection();
+
+  // var selectedText = "miomio" ;
+  var selectedText = Page.codeMirrorEditor6.state.sliceDoc(startIndex,endIndex) ;
+
   console.warn("selectedText: " + selectedText);  
 
   if (selectedText.includes(endInfo[0].trim()) == false) {
@@ -2631,6 +2843,9 @@ Action.displayAssociMenu = function(event, associationLink) {
   });
   document.body.appendChild(menu);
 };
+
+
+
 
 Action.validateMultiplicity = function(multiplicity) {
   // Check if not empty
@@ -4997,7 +5212,7 @@ Action.selectAssociation = function(associationDetails) {
   var className = detailsArray[0];
   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
-  // if (Page.codeMirrorOn) {
+  if (Page.codeMirrorOn) {
   //     scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
   //     console.log("scursor: ", scursor)
   //     scursor2 = new cm6.RegExpCursor(Page.codeMirrorEditor6.state.doc, searchCursor);
@@ -5082,7 +5297,7 @@ Action.selectAssociation = function(associationDetails) {
    var selectionIndiciesCM6 = Action.selectItemCM6(searchCursor);
   var selectedText = Page.codeMirrorEditor6.state.sliceDoc(selectionIndiciesCM6.startIndex,selectionIndiciesCM6.endIndex) ;//get the class code for where the association belong
   //     //get the class code for where the association belong
-  // }
+  }
   
   var start, end;
   //for labelAssociation
