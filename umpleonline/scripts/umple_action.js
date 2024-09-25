@@ -4269,7 +4269,7 @@ Action.loadExample = function loadExample()
   var $option = jQuery(' option:selected', this);
   if ($option.hasClass('openUmprOption')) {
     // user wants to open the umpr repository
-    location.href = "http://umpr.umple.org?diagram-type=" + diagramType;
+    location.href = "http://umple.org/umpr?diagram-type=" + diagramType;
     return;
   }
 
