@@ -4825,9 +4825,20 @@ Action.selectItemCM6 = function(searchCursor){
         break;
       }
     }
+    let startIndex = 0;
+    let endIndex = 0;
     // console.log("currClass: ", currClass)
-    let startIndex=text.indexOf(currClass);
-    let endIndex=startIndex+currClass.length;
+    try{
+      startIndex=text.indexOf(currClass);
+      endIndex=startIndex+currClass.length;
+      
+    } catch(err){  
+      console.log("Please wait a little more for diagram updates, and try again.") ;
+
+    }
+
+
+
     // let endIndex=startIndex+currClass.length +1;
 
     // console.log("startIndex:", startIndex)
@@ -5352,9 +5363,15 @@ Action.selectAssociation = function(associationDetails) {
                   pattern = new RegExp(patternString, "g");
                   matches = selectedText.match(pattern);
               }
-              
+
+              try {
               startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
               endIndex = startIndex + matches[0].length;
+                
+              } catch (error) {
+                console.log("Please wait a little more for diagram updates, and try again.") ;     
+              }
+
               Action.highlightByIndexCM6(startIndex, endIndex);
               // Action.highlightByIndexCM6(840, 850);
               //  console.warn(startIndex, endIndex);
@@ -5379,8 +5396,14 @@ Action.selectAssociation = function(associationDetails) {
                   matches = code.match(pattern);
               }
               
-              startIndex = code.indexOf(matches[0]);
-              endIndex = startIndex + matches[0].length;
+              try {
+                
+                    startIndex = code.indexOf(matches[0]);
+                    endIndex = startIndex + matches[0].length;
+                
+              } catch (error) {
+                console.log("Please wait a little more for diagram updates, and try again.") ;
+              }
               Action.highlightByIndexCM6(startIndex, endIndex);
               // Action.highlightByIndexCM6(1, 7);
 
