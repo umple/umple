@@ -92,9 +92,9 @@ ToolTips.tooltipEntries = {
   ttShowStructureDiagram: ["li", "Display a graphically editable composite structure diagram </br><b>Shortcut: [ctrl+l]</b>"],
   ttShowGvFeatureDiagram: ["li", "Display a feature diagram rendered using GraphViz </br>"],
 
-  ECD_button: ['a', "Editable class diagram - <b>ctrl-E</b>"],
-  GCD_button: ['a', "Graphviz class diagram - <b>ctrl-G</b>"],
-  SD_button: ['a', "State diagram - <b>ctrl-S</b>"],
+  ECD_button: ['a', "Class diagram where the user can Edit the layout - <b>ctrl-E</b>"],
+  GCD_button: ['a', "Graphviz Class diagram, automatically laid out - editable using a contextual menu when pointing to a class, association or attribute - <b>ctrl-G</b>"],
+  SD_button: ['a', "State diagram - editable using a contextual menu when pointing to  a state or transition  - <b>ctrl-S</b>"],
 
   // preferences tooltips
   ttPhotoReady: ["li", "Remove editing handles from diagram"],
