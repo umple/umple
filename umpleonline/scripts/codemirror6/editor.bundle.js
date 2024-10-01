@@ -25001,11 +25001,26 @@ var cm6 = (function (exports) {
        return state.field(collabField).version;
    }
 
+   // Define the custom theme for active line and selection highlighting
+
+   const myTheme = EditorView.theme({
+     
+     ".cm-activeLine": {
+       backgroundColor: "#d9d9d977"  // active line color
+     },
+     ".cm-selectionBackground": {
+       backgroundColor: "#edededff" // selection color
+     }
+     
+   });
+
+
    function createEditorState(intialContents, options={}) {
 
      let extensions = [
        basicSetup,
        umple(),
+       myTheme,
        lineNumbers(),
        bracketMatching(),
        syntaxHighlighting(defaultHighlightStyle, { fallback: true }),

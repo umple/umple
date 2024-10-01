@@ -173,18 +173,23 @@ $output = $dataHandle->readData('model.ump');
     background: #B06C5B;
   }
 
+
+/*
   .ͼ2 .cm-activeLine{
   background-color: #d9d9d9;!important;
   /* animation: myfadeIn 4s forwards;
   -webkit-animation: myfadeIn 4s forwards;
   -moz-animation: myfadeIn 4s forwards;
-  -o-animation: myfadeIn 4s forwards; */
+  -o-animation: myfadeIn 4s forwards; 
 }
-/* 
+/*
+
+/*
 @keyframes myfadeIn {
   0%   { background: #d9d9d9;!important; }
   100% { background: transparent; }
-} */
+}
+*/
 
 </style>
 <link rel="stylesheet" href="scripts/styleSurvey.css"> 
