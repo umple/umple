@@ -6981,6 +6981,8 @@ Action.hidegdpr = function()
   Action.gdprHidden = true;
 }
 
+
+
 Action.reindent = function(lines, cursorPos)
 {
   var offset = "";
@@ -7044,6 +7046,7 @@ Action.reindent = function(lines, cursorPos)
     var indexOfOpenCurlyBrace = trimmedLine.indexOf("{");
     var indexOfCloseCurlyBrace = trimmedLine.indexOf("}");
     var indexOfSemiColon = trimmedLine.indexOf(";");
+
     
     if (indexOfSemiColon != -1 && indexOfSemiColon != trimmedLine.length - 1 && trimmedLine.substr(indexOfSemiColon+1).trim().charAt(0) != "}")
     {
@@ -7185,7 +7188,11 @@ Action.reindent = function(lines, cursorPos)
   
   if(Page.codeMirrorOn) 
   {
-    Page.codeMirrorEditor.setValue(codeAfterIndent);
+    // Page.codeMirrorEditor.setValue(codeAfterIndent);
+    Page.codeMirrorEditor6.dispatch({
+      changes: {from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: codeAfterIndent}
+    })
+
   }
   
   // Refactoring definitive text location
@@ -7195,15 +7202,19 @@ Action.reindent = function(lines, cursorPos)
   var whiteSpace = cursorLine.match(/^\s*/)[0].length;
   if (cursorPos.ch >= cursorLine.trim().length) 
   {
-    Page.codeMirrorEditor.setCursor(cursorPos.line, cursorLine.trim().length + whiteSpace);
+   // Page.codeMirrorEditor.setCursor(cursorPos.line, cursorLine.trim().length + whiteSpace);
+    Page.codeMirrorEditor6.dispatch({selection: {anchor: (cursorPos.line), head: (cursorLine.trim().length + whiteSpace)}});
   }
   else if (cursorPos.ch >= 0)
   {
-    Page.codeMirrorEditor.setCursor(cursorPos.line, cursorPos.ch+whiteSpace);
+    // Page.codeMirrorEditor.setCursor(cursorPos.line, cursorPos.ch+whiteSpace);
+    Page.codeMirrorEditor6.dispatch({selection: {anchor: (cursorPos.line), head: (cursorPos.ch+whiteSpace)}});  
   }
   else
   {
-    Page.codeMirrorEditor.setCursor(cursorPos.line, 0);
+   // Page.codeMirrorEditor.setCursor(cursorPos.line, 0);
+    Page.codeMirrorEditor6.dispatch({selection: {anchor: (cursorPos.line), head: 0}});
   }
-  Page.codeMirrorEditor.focus();
+ // Page.codeMirrorEditor.focus();
+  Page.codeMirrorEditor6.focus();
 }
