@@ -22,7 +22,17 @@ const myTheme = EditorView.theme({
 });
 
 
-function createEditorState(intialContents, options={}) {
+// Debounce function - to avoid multiple calls when typing
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
+
+
+function createEditorState(initialContents, options={}) {
 
   let extensions = [
     basicSetup,
@@ -40,7 +50,7 @@ function createEditorState(intialContents, options={}) {
   
   let startState = EditorState.create({
     // Use the textarea's value as the initial text for CodeMirror
-    doc: intialContents,
+    doc: initialContents,
     extensions
   });
 
@@ -52,6 +62,12 @@ function createEditorView(state, parent){
     state, parent
   });
 }
+
+// Debounced action function
+const debouncedProcessTyping = debounce((editorName, flag) => {
+  Action.processTyping(editorName, flag); // call the action function
+}, Action.waiting_time);
+
 
 // a custom plugin to listen for any changes in the code editor
 // and update the digram accordingly without triggering any events
@@ -67,7 +83,7 @@ const changeListenerPlugin = ViewPlugin.fromClass(class {
     // console.log('update:', update);
 
     if (update.docChanged) {
-      console.log('Editor doc changed...');
+      console.log('Editor updated..');
 
       // const newContent = update.state.doc.toString();
         // const newContent = update.state.doc.toString().toLowerCase().trim();
@@ -92,8 +108,9 @@ const changeListenerPlugin = ViewPlugin.fromClass(class {
         // console.log('Editor content changed...', 'Update the Diagram!');
         this.lastContent = newContent;
         //  setTimeout('Action.processTyping("newEditor",' + false + ')', 2500);
-        
-       setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+
+        debouncedProcessTyping("newEditor", false); // call the debounced function
+      // setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
       }
     }
   }
