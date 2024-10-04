@@ -25011,7 +25011,7 @@ var cm6 = (function (exports) {
      ".cm-selectionBackground": {
        backgroundColor: "#edededff" // selection color
      }
-     
+
    });
 
 
@@ -25050,17 +25050,43 @@ var cm6 = (function (exports) {
    // and update the digram accordingly without triggering any events
    const changeListenerPlugin = ViewPlugin.fromClass(class {
      constructor(view) {
-       this.view = view;
-       this.lastContent = view.state.doc.toString();
+     this.view = view;
+     this.lastContent = view.state.doc.toString().trim();
+     // this.lastContent = view.state.doc.toString();
+     // this.lastContent = view.state.doc.toString().toLowerCase().trim();
      }
+
      update(update) {
+       // console.log('update:', update);
+
        if (update.docChanged) {
-         const newContent = update.state.doc.toString();
+         console.log('Editor doc changed...');
+
+         // const newContent = update.state.doc.toString();
+           // const newContent = update.state.doc.toString().toLowerCase().trim();
+         const newContent = update.state.doc.toString().trim();
+
          if (newContent !== this.lastContent) {
-           // DEBUG
-           console.log('Editor content changed...', 'Update the Diagram!');
+          // if (newContent.localeCompare(this.lastContent) !== 0) {
+             console.warn('Content changed');
+
+             //console.warn('new content:', newContent); 
+             console.log('new content lenght:', newContent.length);
+
+            // console.warn('old content:', this.lastContent);
+             console.log('old content lenght:', this.lastContent.length);
+
+            // console.warn('update:', update);
+
+             // console.log('update lenght:', update.length);
+             console.warn('details:', update.changes);
+         
+         // DEBUG
+           // console.log('Editor content changed...', 'Update the Diagram!');
            this.lastContent = newContent;
-           setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+           //  setTimeout('Action.processTyping("newEditor",' + false + ')', 2500);
+           
+          setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
          }
        }
      }

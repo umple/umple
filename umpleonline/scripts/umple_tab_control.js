@@ -360,8 +360,16 @@ TabControl.selectTab = function(tabId)
   Action.setCaretPosition(0);
   Action.updateLineNumberDisplay();
 
-  // update the diagram
-  setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+  // update the diagram -- this is a redundent call
+  
+  // console.warn('TabControl.selectTab() ...',Object.keys(TabControl.tabs).length);
+  if(Object.keys(TabControl.tabs).length > 1) {
+  // console.warn('TabControl.selectTab() ...',TabControl.activeTab.name);
+    setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+  }
+
+  // setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+
 }
 
 /**
