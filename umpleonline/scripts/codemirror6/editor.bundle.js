@@ -25015,18 +25015,9 @@ var cm6 = (function (exports) {
    });
 
 
-   // Debounce function - to avoid multiple calls when typing
-   function debounce(func, wait) {
-     let timeout;
-     return function executedFunction(...args) {
-       clearTimeout(timeout);
-       timeout = setTimeout(() => func(...args), wait);
-     };
-   }
-
 
    function createEditorState(initialContents, options={}) {
-
+     
      let extensions = [
        basicSetup,
        umple(),
@@ -25046,7 +25037,7 @@ var cm6 = (function (exports) {
        doc: initialContents,
        extensions
      });
-
+     
      return startState;
    }
 
@@ -25056,9 +25047,20 @@ var cm6 = (function (exports) {
      });
    }
 
+
+   // Debounce function - to avoid multiple calls when typing
+   function debounce(func, wait) {
+     let timeout;
+     return function executedFunction(...args) {
+       clearTimeout(timeout);
+       timeout = setTimeout(() => func(...args), wait);
+     };
+   }
+
+
    // Debounced action function
-   const debouncedProcessTyping = debounce((editorName, flag) => {
-     Action.processTyping(editorName, flag); // call the action function
+   const debouncedProcessTyping = debounce((editorName, flag, currentPositionofCursor) => {
+     Action.processTyping(editorName, flag, currentPositionofCursor); // call the action function
    }, Action.waiting_time);
 
 
@@ -25068,8 +25070,11 @@ var cm6 = (function (exports) {
      constructor(view) {
      this.view = view;
      this.lastContent = view.state.doc.toString().trim();
+
      // this.lastContent = view.state.doc.toString();
      // this.lastContent = view.state.doc.toString().toLowerCase().trim();
+     // Dispatch a change to the view
+
      }
 
      update(update) {
@@ -25080,9 +25085,11 @@ var cm6 = (function (exports) {
 
          // const newContent = update.state.doc.toString();
            // const newContent = update.state.doc.toString().toLowerCase().trim();
-         const newContent = update.state.doc.toString().trim();
-
-         if (newContent !== this.lastContent) {
+           
+           const newContent = update.state.doc.toString().trim();
+           
+           if (newContent !== this.lastContent) {
+           const currentPositionofCursor = this.view.state.selection.main.head;
           // if (newContent.localeCompare(this.lastContent) !== 0) {
              console.warn('Content changed');
 
@@ -25100,13 +25107,24 @@ var cm6 = (function (exports) {
          // DEBUG
            // console.log('Editor content changed...', 'Update the Diagram!');
            this.lastContent = newContent;
-           //  setTimeout('Action.processTyping("newEditor",' + false + ')', 2500);
 
-           debouncedProcessTyping("newEditor", false); // call the debounced function
+           debouncedProcessTyping("newEditor", false ,currentPositionofCursor); // call the debounced function
+
+           // // Use setTimeout to avoid the update-in-progress error
+           // setTimeout(() => {
+           //   this.view.dispatch({
+           //     selection: EditorSelection.single(currentPositionofCursor)
+           //   });
+
+           // }, 0); // This will schedule the execution in the next event loop cycle
+
+
          // setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
          }
        }
      }
+
+     
    });
 
    exports.ChangeSet = ChangeSet;

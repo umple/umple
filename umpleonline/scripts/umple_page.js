@@ -645,10 +645,10 @@ Page.initCodeMirrorEditor = function() {
   //   Action.umpleCodeMirrorCursorActivity();
   // });
 
-  // Page.codeMirrorEditor6.dom.addEventListener('mousedown', function () {
-  //   console.log("mousedown Event Triggered by CM6 editor ...")
-  //   Action.umpleCodeMirrorCursorActivity();
-  // });
+   Page.codeMirrorEditor6.dom.addEventListener('mousedown', function () {
+   // console.log("mousedown Event Triggered by CM6 editor ...")
+    Action.umpleCodeMirrorCursorActivity();
+   });
 
   // Event triggering events end here
   Page.hLine = Page.codeMirrorEditor.addLineClass(0, "activeline");

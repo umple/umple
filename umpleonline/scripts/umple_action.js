@@ -308,7 +308,8 @@ Action.clicked = function(event)
   else if (action == "SyncDiagram")
   {
     Action.processTyping("codeMirrorEditor", true);
-    Page.codeMirrorEditor.focus();
+   //  Page.codeMirrorEditor.focus();
+   Page.codeMirrorEditor6.focus();
   }
   else if (action == "PhotoReady")
   {
@@ -5760,6 +5761,8 @@ Action.updateLineNumberDisplay = function()
 {
   // console.log("Inside Action.updateLineNumberDisplay()...")
   jQuery("#linenum").val(Action.getCaretPosition());
+    // jQuery("#linenum").val(Page.codeMirrorEditor6.state.doc.lineAt(Page.codeMirrorEditor6.state.selection.main.head).number);
+
 }
 
 Action.umpleTyped = function(eventObject)
@@ -5924,11 +5927,31 @@ Action.removeCheckComplexityWarning = function()
 // Called after a 3s delay as controlled by umpleTypingActivity when
 // text has been edited in any of the editors (indicated by target)
 // Target can be diagramEdit (when diagram changed), newEditor for CM6, codeMirrorEditor (will be obsolete)
-Action.processTyping = function(target, manuallySynchronized)
+Action.processTyping = function(target, manuallySynchronized, currentCursorPosition)
 {
   // DEBUG
+  // if(this.lastPositionofCursor != null){
+  // this.lastPositionofCursor = currentCursorPosition;
+  // }
+
   console.log("Inside Action.processTyping ...", target)
   document.getElementById("umpleModelEditorText").value = Page.codeMirrorEditor6.state.doc.toString();
+
+  if(currentCursorPosition != null){
+
+    console.log("current cursor: ", currentCursorPosition );
+
+     Page.codeMirrorEditor6.dispatch({ 
+       selection: { anchor: currentCursorPosition , head: currentCursorPosition }
+          });    
+  }
+
+  // else if (this.lastPositionofCursor != null){
+  //   console.log("last cursor: ", lastPositionofCursor );
+  //   Page.codeMirrorEditor6.dispatch({ 
+  //     selection: { anchor: this.lastPositionofCursor , head: this.lastPositionofCursor }
+  //        });
+  // }
 
   // Save in history after a pause in typing
   if (target != "diagramEdit") 
@@ -5963,12 +5986,14 @@ Action.processTyping = function(target, manuallySynchronized)
     if (!justUpdatetoSaveLater){
       TabControl.getCurrentHistory().save(Page.getUmpleCode(), "processTyping");
     }
-    else if (target == "umpleModelEditorText" || target == "codeMirrorEditor"){
+    else if (target == "umpleModelEditorText" || target == "codeMirrorEditor" || target == "newEditor") {
       Action.setjustUpdatetoSaveLater(false);
     }
     Page.setExampleMessage("");
     
   }
+
+
 	setTimeout(Action.checkComplexity,10000);
 }
 
