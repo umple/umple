@@ -76,10 +76,11 @@ const debouncedProcessTyping = debounce((editorName, flag, currentPositionofCurs
 const changeListenerPlugin = ViewPlugin.fromClass(class {
   constructor(view) {
   this.view = view;
-  this.lastContent = view.state.doc.toString().trim();
 
-  // this.lastContent = view.state.doc.toString();
-  // this.lastContent = view.state.doc.toString().toLowerCase().trim();
+  // We cannot use trim() here since we use Enter to go to the next line;
+  this.lastContent = view.state.doc.toString();
+
+
   // Dispatch a change to the view
 
   }
@@ -89,11 +90,8 @@ const changeListenerPlugin = ViewPlugin.fromClass(class {
 
     if (update.docChanged) {
       console.log('Editor updated..');
-
-      // const newContent = update.state.doc.toString();
-        // const newContent = update.state.doc.toString().toLowerCase().trim();
         
-        const newContent = update.state.doc.toString().trim();
+        const newContent = update.state.doc.toString();
         
         if (newContent !== this.lastContent) {
         const currentPositionofCursor = this.view.state.selection.main.head;
