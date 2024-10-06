@@ -121,8 +121,10 @@ Layout.resizeCodeMirrorEditor = function(newHeight)
 {
   if(Page.codeMirrorOn)
   {
-    Page.codeMirrorEditor.getWrapperElement().style.height=newHeight+"px";
-    Page.codeMirrorEditor.refresh();
+    // Page.codeMirrorEditor.getWrapperElement().style.height=newHeight+"px";
+    Page.codeMirrorEditor6.dom.style.height=newHeight+"px";
+    // Page.codeMirrorEditor.refresh();
+    // Page.codeMirrorEditor6.refresh;
   }
 }
 

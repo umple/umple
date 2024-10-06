@@ -254,9 +254,16 @@ Action.clicked = function(event)
   }
   else if (action == "Reindent") 
   { 
-    var lines = Page.getRawUmpleCode().split("\n");
-    var cursorPos = Page.codeMirrorEditor.getCursor(true);
-    var whiteSpace = lines[cursorPos.line].match(/^\s*/)[0].length;
+    // var lines = Page.getRawUmpleCode().split("\n");
+    var lines = Page.getRawUmpleCodeCM6().split("\n");
+
+    // var cursorPos = Page.codeMirrorEditor.getCursor(true);
+    var cursorPos = Page.codeMirrorEditor6.state.selection.main.head;
+    var cursorPosLine = Page.codeMirrorEditor6.state.doc.lineAt(cursorPos).number;
+    console.log(cursorPosLine);
+
+    // var whiteSpace = lines[cursorPos.line].match(/^\s*/)[0].length;
+    var whiteSpace = lines[cursorPosLine].match(/^\s*/)[0].length;
     var lengthToFirstCh = cursorPos.ch - whiteSpace;
     cursorPos.ch = lengthToFirstCh;
     Action.reindent(lines, cursorPos);
@@ -491,7 +498,10 @@ Action.redoOrUndo = function(isUndo)
   else {
     rawReplacement = afterHistoryChange.substring(0,delimiterLoc);
   }
-  var rawOriginal = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
+
+  // var rawOriginal = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
+  var rawOriginal = Page.getRawUmpleCodeCM6().replace(Page.modelDelimiter, "");
+  
   var theDiff=Action.findDiff(rawOriginal, rawReplacement);
   var prevLine=Action.getCaretPosition();
   Action.freshLoad = true;
@@ -4418,23 +4428,31 @@ Action.keyboardShortcut = function(event)
 
 Action.getCaretPosition = function() // TIM Returns the line number
 {
-  var ctrl = document.getElementById('umpleModelEditorText');
-  
-  var CaretPos = Action.getInputSelectionStart(ctrl);
-  
-  var nlcount=1;
-  var theCode=Page.getRawUmpleCode();
 
-  for(var ch=0; ch<(CaretPos); ch++)
-  {
-     if(theCode.charAt(ch)=="\n") nlcount++;
+  // ==================== this should be change ====================
+
+  // // var ctrl = document.getElementById('umpleModelEditorText');
+  // var ctrl = document.getElementById('newEditor');
+  
+  // var CaretPos = Action.getInputSelectionStart(ctrl);
+  
+  // var nlcount=1;
+  // // var theCode=Page.getRawUmpleCode();
+  // var theCode=Page.getRawUmpleCodeCM6();
+
+  // for(var ch=0; ch<(CaretPos); ch++)
+  // {
+  //    if(theCode.charAt(ch)=="\n") nlcount++;
      
-     // The following for debugging
-     if (Page.getAdvancedMode() == 2 && ch < 15) { // debug
-       Page.catFeedbackMessage("<"+ch+" "+theCode.charAt(ch)+"="+theCode.charCodeAt(ch)+"> ");
-     }
-  }
-  return nlcount;
+  //    // The following for debugging
+  //    if (Page.getAdvancedMode() == 2 && ch < 15) { // debug
+  //      Page.catFeedbackMessage("<"+ch+" "+theCode.charAt(ch)+"="+theCode.charCodeAt(ch)+"> ");
+  //    }
+  // }
+  // return nlcount;
+
+  // ==================== this should be change ====================
+  return 0;
 }
 
 // The following from http://stackoverflow.com/questions/263743/how-to-get-cursor-position-in-textarea/3373056#3373056
@@ -4589,8 +4607,12 @@ Action.setCaretPosition = function(line)
   }
   if(Page.codeMirrorOn) 
   {
-    Page.codeMirrorEditor.setSelection({line: line-1,ch: 0},{line: line-1,ch: 999999});
-    Page.codeMirrorEditor.focus();
+   //  Page.codeMirrorEditor.setSelection({line: line-1,ch: 0},{line: line-1,ch: 999999});
+  //  Page.codeMirrorEditor6.dispatch({  
+  //   selection: { anchor: 0, head: 0 }, 
+  // })  
+   //  Page.codeMirrorEditor.focus();
+   Page.codeMirrorEditor6.focus();
     
     // DEBUG
     // console.log("Inside Action.setCaretPosition() ... Line number: ", line)
@@ -4616,7 +4638,9 @@ Action.setCaretPosition = function(line)
   }
   else
   {
-    var theCode=Page.getRawUmpleCode();
+    // var theCode=Page.getRawUmpleCode();
+    var theCode=Page.getRawUmpleCodeCM6();
+
     for(var ch=0; ch<theCode.length; ch++)
     {
       if(theCode.charAt(ch)=='\n')
@@ -5899,7 +5923,8 @@ Action.checkComplexity = function()
 	{
 		return;
 	}
-	var editorText = jQuery("#umpleModelEditorText").val();
+	var editorText = jQuery("#newEditor").val();
+	// var editorText = jQuery("#umpleModelEditorText").val();
 	var matches = editorText.match(/class( |\n)((.|\n)*?){/g);
 	if(matches == null)
 	{
@@ -5935,7 +5960,8 @@ Action.processTyping = function(target, manuallySynchronized, currentCursorPosit
   // }
 
   console.log("Inside Action.processTyping ...", target)
-  document.getElementById("umpleModelEditorText").value = Page.codeMirrorEditor6.state.doc.toString();
+  // document.getElementById("umpleModelEditorText").value = Page.codeMirrorEditor6.state.doc.toString();
+  document.getElementById("newEditor").value = Page.codeMirrorEditor6.state.doc.toString();
 
   if(currentCursorPosition != null){
 
@@ -6121,6 +6147,7 @@ Action.updateUmpleDiagramCallback = function(response)
       var newSystem = Json.toObject(diagramCode);
       UmpleSystem.merge(newSystem);
       UmpleSystem.update(); 
+      // UmpleSystem.update(); 
       
       //Apply readonly styles
       if (Page.readOnly) 
@@ -7223,8 +7250,11 @@ Action.reindent = function(lines, cursorPos)
   // Refactoring definitive text location
   Action.updateCurrentUmpleTextBeingEdited(codeAfterIndent);
 
-  var cursorLine = Page.getRawUmpleCode().split("\n")[cursorPos.line];
+  // var cursorLine = Page.getRawUmpleCode().split("\n")[cursorPos.line];
+  var cursorLine = Page.getRawUmpleCodeCM6().split("\n")[Page.codeMirrorEditor6.state.doc.lineAt(Page.codeMirrorEditor6.state.selection.main.head).number];
   var whiteSpace = cursorLine.match(/^\s*/)[0].length;
+  // console.log("cursorPos.ch: ", cursorPos.ch);
+
   if (cursorPos.ch >= cursorLine.trim().length) 
   {
    // Page.codeMirrorEditor.setCursor(cursorPos.line, cursorLine.trim().length + whiteSpace);
@@ -7238,8 +7268,11 @@ Action.reindent = function(lines, cursorPos)
   else
   {
    // Page.codeMirrorEditor.setCursor(cursorPos.line, 0);
-    Page.codeMirrorEditor6.dispatch({selection: {anchor: (cursorPos.line), head: 0}});
+   //  Page.codeMirrorEditor6.dispatch({selection: {anchor: , head: 0}});
+   const position = Page.codeMirrorEditor6.state.selection.main.head;
+   Page.codeMirrorEditor6.dispatch({selection: {anchor: position, head: position}});
   }
+
  // Page.codeMirrorEditor.focus();
   Page.codeMirrorEditor6.focus();
 }

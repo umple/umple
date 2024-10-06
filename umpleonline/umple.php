@@ -457,10 +457,12 @@ $output = $dataHandle->readData('model.ump');
 
   <div id="mainApplication" class="row"> 
     <div id="textEditorColumn"  tabIndex="2"  class="inRow"> 
+      
       <!-- codemirror 5 editor -->
-      <div id="topTextEditor" style="float:left; width:100%">
+      <!-- <div id="topTextEditor" style="float:left; width:100%">
         <textarea id="umpleModelEditorText" class="umpleModelEditor" wrap="off"></textarea>
-      </div>
+      </div> -->
+
       <!-- codemirror 6 editor -->
       <div id="newEditor" style="width:100%">
       </div>
