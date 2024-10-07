@@ -594,7 +594,7 @@ Page.initCodeMirrorEditor = function() {
 
   // ==================== this should be change for code mirror 6 ====================
 
-
+  // no longer need on cm6
   // Event triggering changes for CodeMirror 5
   // Page.codeMirrorEditor.on('focus', function (id, gained) {
   //   Action.focusOn('CodeMirror', true);
@@ -656,11 +656,9 @@ Page.initCodeMirrorEditor = function() {
     Action.umpleCodeMirrorCursorActivity();
    });
 
-  // ==================== this should be change ====================
   // Event triggering events end here
   // Page.hLine = Page.codeMirrorEditor.addLineClass(0, "activeline");
 
-  // ==================== this should be change ====================
 
 
   Page.codeMirrorOn = true;  

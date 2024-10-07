@@ -3764,7 +3764,8 @@ Action.transitionClicked = function(identifier)
     Page.setFeedbackMessage("Please edit this complex transition in the textual code.");
   }
   
-  Action.highlightByIndex(startIndex,endIndex);
+ // Action.highlightByIndex(startIndex,endIndex);
+  Action.highlightByIndexCM6(startIndex,endIndex);
 // DEBUG the following block commented out for unknown reason
   /*
   let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
@@ -4738,22 +4739,59 @@ Action.directAddAttribute = function(classname, attribute) {
 }
 
 
-// Searches for the matching text in the code mirror editor
-// Does not span lines
+// // Searches for the matching text in the code mirror editor
+// // Does not span lines
+// Action.selectMatchingText = function(text) 
+// {
+//   // Does nothing if CodeMirror is off
+//   if(Page.codeMirrorOn) {
+//     var scursor = Page.codeMirrorEditor.getSearchCursor(text);
+//     if(!scursor.findNext()) {
+//       return false;
+//     }
+//     Page.codeMirrorEditor.setSelection(scursor.from(),scursor.to());
+//     Page.codeMirrorEditor.focus();
+//     return true;
+//   }
+//   return false;
+// }
+
 Action.selectMatchingText = function(text) 
 {
   // Does nothing if CodeMirror is off
-  if(Page.codeMirrorOn) {
-    var scursor = Page.codeMirrorEditor.getSearchCursor(text);
-    if(!scursor.findNext()) {
+  if (Page.codeMirrorOn) {
+    const scursor = new cm6.SearchCursor(Page.codeMirrorEditor6.state.doc, text)
+    
+    if (!scursor.next()) {
       return false;
     }
-    Page.codeMirrorEditor.setSelection(scursor.from(),scursor.to());
-    Page.codeMirrorEditor.focus();
-    return true;
+      Page.codeMirrorEditor6.dispatch({
+        selection: { anchor: scursor.value.from, head: scursor.value.to }
+      })    ;
+          return true;
+
   }
   return false;
 }
+
+
+// // // Searches for the matching text in the code mirror 6
+// // // Does not span lines
+// // Action.selectMatchingText = function(text) 
+// // {
+// //   // Does nothing if CodeMirror is off
+// //   if(Page.codeMirrorOn) {
+// //     // var scursor = Page.codeMirrorEditor.getSearchCursor(text);
+// //      var scursor = Page.codeMirrorEditor6.getSearchCursor(text);
+// // if(scursor!=null) {
+// //   console.warn("scursor: ", scursor.startIndex, scursor.endIndex);
+// //   Action.highlightByIndexCM6(scursor.startIndex,scursor.endIndex);
+// //   Page.codeMirrorEditor6.focus();
+// //   return true;    }
+
+// //   }
+// //   return false;
+// // }
 
 // Removing CM5
 // Code behind highlighting of text
@@ -5962,15 +6000,15 @@ Action.processTyping = function(target, manuallySynchronized, currentCursorPosit
   console.log("Inside Action.processTyping ...", target)
   // document.getElementById("umpleModelEditorText").value = Page.codeMirrorEditor6.state.doc.toString();
   document.getElementById("newEditor").value = Page.codeMirrorEditor6.state.doc.toString();
+ // we no longer need this part for codemirror 6
+  // if(currentCursorPosition != null){
 
-  if(currentCursorPosition != null){
+  //   console.log("current cursor: ", currentCursorPosition );
 
-    console.log("current cursor: ", currentCursorPosition );
-
-     Page.codeMirrorEditor6.dispatch({ 
-       selection: { anchor: currentCursorPosition , head: currentCursorPosition }
-          });    
-  }
+  //    Page.codeMirrorEditor6.dispatch({ 
+  //      selection: { anchor: currentCursorPosition , head: currentCursorPosition }
+  //         });    
+  // }
 
   // else if (this.lastPositionofCursor != null){
   //   console.log("last cursor: ", lastPositionofCursor );
