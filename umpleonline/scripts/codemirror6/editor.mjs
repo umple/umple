@@ -87,7 +87,7 @@ const changeListenerPlugin = ViewPlugin.fromClass(class {
 
   update(update) {
     // console.log('update:', update);
-
+    
     if (update.docChanged) {
       console.log('Editor updated..');
         
@@ -127,6 +127,7 @@ const changeListenerPlugin = ViewPlugin.fromClass(class {
       // setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
       }
     }
+    Action.updateLineNumberDisplay();
   }
 
   

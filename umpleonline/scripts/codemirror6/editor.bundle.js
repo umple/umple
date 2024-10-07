@@ -25080,7 +25080,7 @@ var cm6 = (function (exports) {
 
      update(update) {
        // console.log('update:', update);
-
+       
        if (update.docChanged) {
          console.log('Editor updated..');
            
@@ -25120,6 +25120,7 @@ var cm6 = (function (exports) {
          // setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
          }
        }
+       Action.updateLineNumberDisplay();
      }
 
      
