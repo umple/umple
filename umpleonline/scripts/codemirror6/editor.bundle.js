@@ -25120,7 +25120,6 @@ var cm6 = (function (exports) {
          // setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
          }
        }
-       Action.updateLineNumberDisplay();
      }
 
      

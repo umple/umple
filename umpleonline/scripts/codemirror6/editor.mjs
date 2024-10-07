@@ -127,7 +127,6 @@ const changeListenerPlugin = ViewPlugin.fromClass(class {
       // setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
       }
     }
-    Action.updateLineNumberDisplay();
   }
 
   

@@ -4429,21 +4429,16 @@ Action.keyboardShortcut = function(event)
 Action.getCaretPosition = function() // TIM Returns the line number
 {
 
-  return Page.codeMirrorEditor6.state.doc.lineAt(Page.codeMirrorEditor6.state.selection.main.head).number;
-}
-
-
-// codemirror 5
- // Action.getCaretPosition = function() // TIM Returns the line number
- // {
+  // ==================== this should be change ====================
 
   // // var ctrl = document.getElementById('umpleModelEditorText');
+  // var ctrl = document.getElementById('newEditor');
   
   // var CaretPos = Action.getInputSelectionStart(ctrl);
-  // console.log("CaretPos: ", CaretPos)
   
   // var nlcount=1;
   // // var theCode=Page.getRawUmpleCode();
+  // var theCode=Page.getRawUmpleCodeCM6();
 
   // for(var ch=0; ch<(CaretPos); ch++)
   // {
@@ -4456,65 +4451,61 @@ Action.getCaretPosition = function() // TIM Returns the line number
   // }
   // return nlcount;
 
-// }
-
-
-
-
+  // ==================== this should be change ====================
+  return 0;
+}
 
 // The following from http://stackoverflow.com/questions/263743/how-to-get-cursor-position-in-textarea/3373056#3373056
-// for codemirror 5
-// Action.getInputSelectionStart = function(el) 
-// {
-//   var start = 0, normalizedValue, range, textInputRange, len, endRange;
+Action.getInputSelectionStart = function(el) 
+{
+  var start = 0, normalizedValue, range, textInputRange, len, endRange;
 
-//   if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") 
-//   {
-//     start = el.selectionStart;
-//     // The following for debugging
-//     if (Page.getAdvancedMode() == 2) 
-//     { // debug
-//       Page.setFeedbackMessage("Non-IE browser ");
-//     }
-//   }
-//   else 
-//   { // IE Support
-//     // The following for debugging
-//     if (Page.getAdvancedMode() == 2) // debug
-//     { 
-//       Page.setFeedbackMessage("IE-type browser ");
-//     }
-//     range = document.selection.createRange();
+  if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") 
+  {
+    start = el.selectionStart;
+    // The following for debugging
+    if (Page.getAdvancedMode() == 2) 
+    { // debug
+      Page.setFeedbackMessage("Non-IE browser ");
+    }
+  }
+  else 
+  { // IE Support
+    // The following for debugging
+    if (Page.getAdvancedMode() == 2) // debug
+    { 
+      Page.setFeedbackMessage("IE-type browser ");
+    }
+    range = document.selection.createRange();
     
-//     if (range && range.parentElement() == el) {
-//       len = el.value.length;
-//       normalizedValue = el.value.replace(/\r\n/g, "\n");
+    if (range && range.parentElement() == el) {
+      len = el.value.length;
+      normalizedValue = el.value.replace(/\r\n/g, "\n");
     
-//       // Create a working TextRange that lives only in the input
-//       textInputRange = el.createTextRange();
-//       textInputRange.moveToBookmark(range.getBookmark());
+      // Create a working TextRange that lives only in the input
+      textInputRange = el.createTextRange();
+      textInputRange.moveToBookmark(range.getBookmark());
     
-//       // Check if the start and end of the selection are at the very end
-//       // of the input, since moveStart/moveEnd doesn't return what we want
-//       // in those cases
-//       endRange = el.createTextRange();
-//       endRange.collapse(false);
+      // Check if the start and end of the selection are at the very end
+      // of the input, since moveStart/moveEnd doesn't return what we want
+      // in those cases
+      endRange = el.createTextRange();
+      endRange.collapse(false);
     
-//       if (textInputRange.compareEndPoints("StartToEnd", endRange) > -1) 
-//       {
-//         start = len;
-//       } 
-//       else 
-//       {
-//         start = -textInputRange.moveStart("character", -len);
-//         start += normalizedValue.slice(0, start).split("\n").length - 1;
-//       }
-//     }
-//   }
+      if (textInputRange.compareEndPoints("StartToEnd", endRange) > -1) 
+      {
+        start = len;
+      } 
+      else 
+      {
+        start = -textInputRange.moveStart("character", -len);
+        start += normalizedValue.slice(0, start).split("\n").length - 1;
+      }
+    }
+  }
 
-//   return start;
-// }
-
+  return start;
+}
 
 Action.setCaretPosition = function(line)
 {
@@ -5794,7 +5785,7 @@ Action.updateLineNumberDisplay = function()
 {
   // console.log("Inside Action.updateLineNumberDisplay()...")
   jQuery("#linenum").val(Action.getCaretPosition());
- //jQuery("#linenum").val(Page.codeMirrorEditor6.state.doc.lineAt(Page.codeMirrorEditor6.state.selection.main.head).number);
+    // jQuery("#linenum").val(Page.codeMirrorEditor6.state.doc.lineAt(Page.codeMirrorEditor6.state.selection.main.head).number);
 
 }
 
