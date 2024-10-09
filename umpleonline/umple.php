@@ -174,6 +174,20 @@ $output = $dataHandle->readData('model.ump');
   }
 
 
+  .ui-tooltip{
+  animation: myDisplayNone 4s forwards;
+  -webkit-animation: myDisplayNone 4s forwards;
+  -moz-animation: myDisplayNone 4s forwards;
+  -o-animation: myDisplayNone 4s forwards;
+}
+
+
+@keyframes myDisplayNone{
+  0%   { }
+  100% { display:none; }
+}
+
+
 /*
   .ͼ2 .cm-activeLine{
   background-color: #d9d9d9;!important;
