@@ -4769,7 +4769,7 @@ Action.selectMatchingText = function(text)
     }
       Page.codeMirrorEditor6.dispatch({
         selection: { anchor: scursor.value.from, head: scursor.value.to }
-      })    ;
+      });
           return true;
 
   }
@@ -5771,7 +5771,7 @@ Action.highlightByIndexCM6 = function(startIndex,endIndex){
   // console.log("selection start: ", startSelection)
   // console.log("selection start Document Position: ", startDocPosition)
   let endSelection = Action.indexToPos(endIndex,Page.codeMirrorEditor6.state.doc.toString());
-  let endDocPosition = Page.codeMirrorEditor6.state.doc.line(endSelection.line +1).from;
+  let endDocPosition = Page.codeMirrorEditor6.state.doc.line(endSelection.line +2).from;
   // console.log("selection end: ", endSelection)
   // console.log("selection end Document Position: ", endDocPosition)
 
@@ -5784,7 +5784,8 @@ Action.highlightByIndexCM6 = function(startIndex,endIndex){
   // following is for multiple selection ranges
   Page.codeMirrorEditor6.dispatch({
     selection: cm6.EditorSelection.create([
-      cm6.EditorSelection.range(startDocPosition, endDocPosition),
+      // Reversing selection to keep the active line on the top;
+      cm6.EditorSelection.range(endDocPosition,startDocPosition),
       // cm6.EditorSelection.range(endDocPosition, endDocPosition+1),
       // cm6.EditorSelection.cursor(endDocPosition+1)
     ]),
