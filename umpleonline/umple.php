@@ -175,16 +175,27 @@ $output = $dataHandle->readData('model.ump');
 
 
   .ui-tooltip{
-  animation: myDisplayNone 4s forwards;
-  -webkit-animation: myDisplayNone 4s forwards;
-  -moz-animation: myDisplayNone 4s forwards;
-  -o-animation: myDisplayNone 4s forwards;
+  animation: myDisplayNone 3.5s forwards;
+  -webkit-animation: myDisplayNone 3.5s forwards;
+  -moz-animation: myDisplayNone 3.5s forwards;
+  -o-animation: myDisplayNone 3.5s forwards;
 }
 
+ /* .ui-tooltip:hover{
+    animation-play-state: paused !important;
+  
+}  */
 
 @keyframes myDisplayNone{
-  0%   { }
-  100% { display:none; }
+  0%   {
+  /* opacity: 1; */
+  }
+
+  100% { 
+    display:none;
+    /* opacity: 0.99;  */
+
+  }
 }
 
 
@@ -441,16 +452,16 @@ $output = $dataHandle->readData('model.ump');
     </span>    
   
     <span style="font-size: 30%; white-space:nowrap;">  
-    <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
-      <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL</a>
-      <!-- <script type="text/javascript">
-        Collab.connectCollabServer()
-      </script> -->
-    <?php } else if (!isset($_REQUEST["task"])) { ?>
-      <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate</a>
-    <?php } ?>
-
+          <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
     </span>
+
+    <!-- <span style="font-size: 30%; white-space:nowrap;">   -->
+    <!-- <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?> -->
+      <!-- <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL</a> -->
+    <!-- <?php } else if (!isset($_REQUEST["task"])) { ?> -->
+      <!-- <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate</a> -->
+    <!-- <?php } ?> -->
+    <!-- </span> -->
 
     <span style="font-size: 30%; white-space:nowrap;">  
     <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>
@@ -934,9 +945,11 @@ $output = $dataHandle->readData('model.ump');
       <?php } ?> 
       //
   </script>
-  <script>
+
+  <!-- <script>
     Collab.connectCollabServer();
-  </script>
+  </script> -->
+  
   <?php if ($showChrome) { ?>
     <div class="visitors-count" align="right">
         <?php include "counter.php"; ?>
