@@ -8,6 +8,9 @@ import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from "@cod
 import { SearchCursor, RegExpCursor } from "@codemirror/search";
 
 
+const debuggerFlag = false;
+
+
 // Define the custom theme for active line and selection highlighting
 
 const myTheme = EditorView.theme({
@@ -89,6 +92,7 @@ const changeListenerPlugin = ViewPlugin.fromClass(class {
     // console.log('update:', update);
     
     if (update.docChanged) {
+      if (debuggerFlag)
       console.log('Editor updated..');
         
         const newContent = update.state.doc.toString();
@@ -96,18 +100,23 @@ const changeListenerPlugin = ViewPlugin.fromClass(class {
         if (newContent !== this.lastContent) {
         const currentPositionofCursor = this.view.state.selection.main.head;
        // if (newContent.localeCompare(this.lastContent) !== 0) {
-          console.warn('Content changed');
+       
+        if (debuggerFlag)   
+       console.warn('Content changed');
 
-          //console.warn('new content:', newContent); 
-          console.log('new content lenght:', newContent.length);
+        //console.warn('new content:', newContent); 
+        if (debuggerFlag)
+        console.log('new content lenght:', newContent.length);
 
-         // console.warn('old content:', this.lastContent);
-          console.log('old content lenght:', this.lastContent.length);
+        // console.warn('old content:', this.lastContent);
+        if (debuggerFlag)
+        console.log('old content lenght:', this.lastContent.length);
 
-         // console.warn('update:', update);
+        // console.warn('update:', update);
 
-          // console.log('update lenght:', update.length);
-          console.warn('details:', update.changes);
+        // console.log('update lenght:', update.length);
+        if (debuggerFlag)
+        console.warn('details:', update.changes);
       
       // DEBUG
         // console.log('Editor content changed...', 'Update the Diagram!');

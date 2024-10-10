@@ -25082,25 +25082,11 @@ var cm6 = (function (exports) {
        // console.log('update:', update);
        
        if (update.docChanged) {
-         console.log('Editor updated..');
            
            const newContent = update.state.doc.toString();
            
            if (newContent !== this.lastContent) {
            const currentPositionofCursor = this.view.state.selection.main.head;
-          // if (newContent.localeCompare(this.lastContent) !== 0) {
-             console.warn('Content changed');
-
-             //console.warn('new content:', newContent); 
-             console.log('new content lenght:', newContent.length);
-
-            // console.warn('old content:', this.lastContent);
-             console.log('old content lenght:', this.lastContent.length);
-
-            // console.warn('update:', update);
-
-             // console.log('update lenght:', update.length);
-             console.warn('details:', update.changes);
          
          // DEBUG
            // console.log('Editor content changed...', 'Update the Diagram!');

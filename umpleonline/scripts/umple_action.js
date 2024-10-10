@@ -20,6 +20,9 @@ Action.savedCanonical = "";
 Action.gdprHidden = false;
 Action.update = "";
 
+const debuggerFlag = false;
+
+
 // Regulators of whether a save occurs on not
 // false: the program proceeds and saves as normal; true: skip the save as the program would have saved earlier already
 let justUpdatetoSaveLater = false;
@@ -260,6 +263,8 @@ Action.clicked = function(event)
     // var cursorPos = Page.codeMirrorEditor.getCursor(true);
     var cursorPos = Page.codeMirrorEditor6.state.selection.main.head;
     var cursorPosLine = Page.codeMirrorEditor6.state.doc.lineAt(cursorPos).number;
+
+    if (debuggerFlag)
     console.log(cursorPosLine);
 
     // var whiteSpace = lines[cursorPos.line].match(/^\s*/)[0].length;
@@ -1071,13 +1076,18 @@ Action.drawInputState = function(inputType,stateCode,stateName){
   // Add a listener to hide the prompt when the user clicks outside of it
   document.addEventListener("mousedown", hider);
   if(inputType=="rename"){
+
+    if (debuggerFlag)
     console.log("Renaming State ...")
+
     label.appendChild(document.createTextNode("New name for \'"+stateName+"\'?"));
     input.value = stateName;
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         //only accounts for case where states all have unique names
         if(Action.validateAttributeName(input.value)){
+
+          if (debuggerFlag)
           console.log("Getting code from codemirror editor ...")
 
           // Removing CM5
@@ -1091,7 +1101,10 @@ Action.drawInputState = function(inputType,stateCode,stateName){
           while((res=orig.match(regex))!=null){
             orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
           }
+
+          if (debuggerFlag)
           console.log("Setting updated code to codemirror editor ...")
+
           // Removing CM5
           // Page.codeMirrorEditor.setValue(orig);
 
@@ -1102,7 +1115,10 @@ Action.drawInputState = function(inputType,stateCode,stateName){
           setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
 
           document.removeEventListener("mousedown", hider);
+
+          if (debuggerFlag)
           console.log("Removing mousedown event ...")
+          
           prompt.remove();
           Action.removeContextMenu();
           // Removing CM5
@@ -1114,18 +1130,25 @@ Action.drawInputState = function(inputType,stateCode,stateName){
       }
     });  
   } else if(inputType=="substate") {
+
+    if (debuggerFlag)
     console.log("Substating state ...")
+
     label.appendChild(document.createTextNode("Name of new substate?"));
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
           let subtext=unsanitizedState.substr(0,unsanitizedState.length-1)+"  "+input.value+"{}}";
+
+          if (debuggerFlag)
           console.log("Getting original code and adding substate ...")
           // Removing CM5
           // subtext=Page.codeMirrorEditor.getValue().replace(unsanitizedState,subtext);
           subtext=Page.codeMirrorEditor6.state.doc.toString().replace(unsanitizedState,subtext);
 
+          if (debuggerFlag)
           console.log("Setting updated code with substate into codemirror editor ...")
+
           // Removing CM5
           // Page.codeMirrorEditor.setValue(subtext);
           Page.setCodeMirror6Text(subtext);
@@ -1133,7 +1156,10 @@ Action.drawInputState = function(inputType,stateCode,stateName){
           setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
 
           document.removeEventListener("mousedown", hider);
+
+          if (debuggerFlag)
           console.log("Removing mousedown event ...")
+
           prompt.remove();
           Action.removeContextMenu();
           // Removing CM5
@@ -1145,8 +1171,12 @@ Action.drawInputState = function(inputType,stateCode,stateName){
       }
     });
    
-  } else if(inputType=="transition"){ //should have an indicator after user enters label so they know to press another state
+  } else if(inputType=="transition"){
+    //should have an indicator after user enters label so they know to press another state
+    
+    if (debuggerFlag)
     console.log("Adding Transition ...")
+
     label.appendChild(document.createTextNode("Condition for new transition?"));
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
@@ -1156,7 +1186,10 @@ Action.drawInputState = function(inputType,stateCode,stateName){
           document.removeEventListener("mousedown", hider);
           prompt.remove();
           Action.removeContextMenu();
+
+          if (debuggerFlag)
           console.log("Waiting to select target state for transition ...")
+
           var assocState=function (event){
               let targ=event.target;
               while(targ.parentElement.id!="graph0"){
@@ -1166,10 +1199,16 @@ Action.drawInputState = function(inputType,stateCode,stateName){
               elemText=elemText.split("^*^"); //index 0: class, index 1: base state, index 2: remaining states
               let subtext="  "+input.value+" -> "+elemText[2]+";\n}";
               let newState=orig.substr(0,orig.length-1)+subtext;
+
+              if (debuggerFlag)
               console.log("New state created ...")
+
               // Removing CM5
               // Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newState));
+
+              if (debuggerFlag)
               console.log("Replacing original state with new state in the code ...")
+
               Page.setCodeMirror6Text(Page.codeMirrorEditor6.state.doc.toString().replace(orig,newState));
 
               setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
@@ -1213,11 +1252,17 @@ Action.drawInputState = function(inputType,stateCode,stateName){
 Action.deleteState = function(stateCode,className,smName,stateName){
   // console.log("Inside Action.deleteState ...")
   let subStates=stateName.split(",");
+
+  if (debuggerFlag)
   console.log("Getting code from codemirror editor ...")
+
   // Removing CM5
   // let orig=Page.codeMirrorEditor.getValue();
   let orig=Page.codeMirrorEditor6.state.doc.toString();
-  console.log("Deleting State: ", stateName)
+
+  if (debuggerFlag)
+  console.log("Deleting State: ", stateName);
+
   let unsanitizedState = stateCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
   orig=orig.replace(unsanitizedState,"");
   //delete any transitions leading to target state - this handles the case where there are NOT multiple states with the same name
@@ -1226,7 +1271,10 @@ Action.deleteState = function(stateCode,className,smName,stateName){
   while((res=orig.match(regex))!=null){ 
     orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
   }
-  console.log("Setting updated code to codemirror editor ...")
+
+  if (debuggerFlag)
+  console.log("Setting updated code to codemirror editor ...");
+
   // Removing CM5
   // Page.codeMirrorEditor.setValue(orig);
   Page.setCodeMirror6Text(orig);
@@ -2737,7 +2785,9 @@ Action.displayAssociMenu = function(event, associationLink) {
       var classCode = Page.codeMirrorEditor6.state.sliceDoc(selectionIndiciesCM6.startIndex,selectionIndiciesCM6.endIndex) ;
   //get the class code f
       
+      if (debuggerFlag)
       console.warn("classCode: " + classCode);
+ 
       // var classcode2 = page.codeMirrorEditor6.sliceDoc(theStart, theEnd);
       //console.log("classcode2: " + classcode2);
       // console.log("classCode: " + classCode);
@@ -2757,7 +2807,9 @@ Action.displayAssociMenu = function(event, associationLink) {
   // var selectedText = "miomio" ;
   var selectedText = Page.codeMirrorEditor6.state.sliceDoc(startIndex,endIndex) ;
 
-  console.warn("selectedText: " + selectedText);  
+  if (debuggerFlag)
+    console.warn("selectedText: " + selectedText);  
+
 
   if (selectedText.includes(endInfo[0].trim()) == false) {
       isEnd = 3;//association class
@@ -3641,7 +3693,10 @@ Action.stateClicked = function(identifier)
     var selectionIndicies=null;
     var selectionIndiciesCM6=null;
     if(identifierState.includes('.')){ //nested case
+
+      if (debuggerFlag)
       console.log("stateClicked - nested state case")
+      
       identifierState=identifierState.split('.');
       // Removing CM5
       // selectionIndicies=Action.selectStateInClass(identifierClass,identifierSM,identifierState[0]);
@@ -3649,19 +3704,28 @@ Action.stateClicked = function(identifier)
       // console.log("selectionIndicies: ", selectionIndicies)
       // console.log("identifierState.length: ", identifierState.length)
       for(let i=1;i<identifierState.length;i++){
+
+        if (debuggerFlag)
         console.log("Iterating states within Identified state ...")
+
         // console.log("selectionIndiciesCM6.startIndex: ", selectionIndiciesCM6.startIndex)
         // Removing CM5
         // selectionIndicies=Action.selectStateInState(selectionIndicies.startIndex,selectionIndicies.endIndex,identifierState[i]);
         selectionIndiciesCM6=Action.selectStateInStateCM6(selectionIndiciesCM6.startIndex,selectionIndiciesCM6.endIndex,identifierState[i]);
       }
     } else { //base case
+
+      if (debuggerFlag)
       console.log("stateClicked - else - base case")
+
       // Removing CM5
       // selectionIndicies=Action.selectStateInClass(identifierClass,identifierSM,identifierState);
       // console.log("selectionIndicies: ", selectionIndicies)
       selectionIndiciesCM6 = Action.selectStateInClassCM6(identifierClass,identifierSM,identifierState);
+
+      if (debuggerFlag)
       console.log("selectionIndiciesCM6: ", selectionIndiciesCM6)
+
     }
     // Removing CM5
     // Action.highlightByIndex(selectionIndicies.startIndex,selectionIndicies.endIndex);
@@ -5833,7 +5897,9 @@ Action.updateLineNumberDisplay = function()
 Action.umpleTyped = function(eventObject)
 {
   // DEBUG
+  if (debuggerFlag)
   console.log("Inside Action.umpleTyped()...")
+
   // This function is not called by CodeMirror
   // See umpleCodeMirrorTypingActivity if CodeMirror is on (as it normally is)
   // debug - output key code
@@ -5862,7 +5928,9 @@ Action.umpleCodeMirrorCursorActivity = function() {
 
 // Called whenever any text is changed in codemirror 5 or codemirror 6
 Action.umpleCodeMirrorTypingActivity = function(editorThatChanged) {
+  
   // DEBUG
+  if (debuggerFlag)
   console.log("Inside Action.umpleCodeMirrorTypingActivity...")
 
   if(Action.freshLoad == false) {
@@ -5939,7 +6007,10 @@ Action.removeComments = function(str)
 // Sets a timer or resets the time such that the function processTyping
 // ends up being called after a 3s gap in calls to this.
 Action.umpleTypingActivity = function(target) {
+
+  if (debuggerFlag)
   console.log("Inside Action.umpleTypingActivity()...")
+
   if (Action.manualSync && Action.diagramInSync)
   {
     if (jQuery("#umpleCanvasColumn").is(":visible")) Page.enablePaletteItem("buttonSyncDiagram", true);
@@ -6000,7 +6071,9 @@ Action.processTyping = function(target, manuallySynchronized, currentCursorPosit
   // this.lastPositionofCursor = currentCursorPosition;
   // }
 
+  if (debuggerFlag)
   console.log("Inside Action.processTyping ...", target)
+
   // document.getElementById("umpleModelEditorText").value = Page.codeMirrorEditor6.state.doc.toString();
   document.getElementById("newEditor").value = Page.codeMirrorEditor6.state.doc.toString();
  // we no longer need this part for codemirror 6
