@@ -94,7 +94,7 @@ $diagramType = "class";
 if (isset($_REQUEST["diagramtype"])) {
   $diagramType=$_REQUEST["diagramtype"];
   if ($diagramType=="state") $diagramType = "GvState";
-  else if ($diagramType=="structure") $diagramType = "structureDiagram";  
+  else if ($diagramType=="structure") $diagramType = "structureDiagram";
   else if ($diagramType !="GvState" && $diagramType !="GvClass" && $diagramType !="structureDiagram" && $diagramType !="GvFeature" && $diagramType !="GvClassTrait" ) $diagramType = "class";
 }
 if ($diagramtype=="") $diagramtype = "&diagramtype=".$diagramType;
@@ -114,9 +114,9 @@ if (isset($_REQUEST["nomenu"])) {$showMenu=false;} else {$showMenu=true;}
 $readOnly = isset($_REQUEST["readOnly"]);
 if (isset($_REQUEST["model"]) && explode("-", $_REQUEST["model"])[0] == "task")
 {
-  foreach (new DirectoryIterator("ump/" . $_REQUEST['model']) as $file) 
+  foreach (new DirectoryIterator("ump/" . $_REQUEST['model']) as $file)
   {
-    if ($file->getFilename() == "submitted.md") 
+    if ($file->getFilename() == "submitted.md")
     {
       $readOnly = true;
     }
@@ -168,9 +168,54 @@ $output = $dataHandle->readData('model.ump');
    background: #810b09;
    color: #ccc;
    }
-.active {
-  background: #B06C5B;
+
+  .active {
+    background: #B06C5B;
+  }
+
+
+  .ui-tooltip{
+  animation: myDisplayNone 3.5s forwards;
+  -webkit-animation: myDisplayNone 3.5s forwards;
+  -moz-animation: myDisplayNone 3.5s forwards;
+  -o-animation: myDisplayNone 3.5s forwards;
 }
+
+ /* .ui-tooltip:hover{
+    animation-play-state: paused !important;
+  
+}  */
+
+@keyframes myDisplayNone{
+  0%   {
+  /* opacity: 1; */
+  }
+
+  100% { 
+    display:none;
+    /* opacity: 0.99;  */
+
+  }
+}
+
+
+/*
+  .ͼ2 .cm-activeLine{
+  background-color: #d9d9d9;!important;
+  /* animation: myfadeIn 4s forwards;
+  -webkit-animation: myfadeIn 4s forwards;
+  -moz-animation: myfadeIn 4s forwards;
+  -o-animation: myfadeIn 4s forwards; 
+}
+/*
+
+/*
+@keyframes myfadeIn {
+  0%   { background: #d9d9d9;!important; }
+  100% { background: transparent; }
+}
+*/
+
 </style>
 <link rel="stylesheet" href="scripts/styleSurvey.css"> 
 <link rel="apple-touch-icon" sizes="57x57" href="https://cruise.umple.org/apple-icon-57x57.png">
@@ -186,7 +231,7 @@ $output = $dataHandle->readData('model.ump');
 <link rel="icon" type="image/png" sizes="32x32" href="https://cruise.umple.org/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="96x96" href="https://cruise.umple.org/favicon-96x96.png">
 <link rel="icon" type="image/png" sizes="16x16" href="https://cruise.umple.org/favicon-16x16.png">
-<link rel="manifest" href="https://cruise.umple.org/manifest.json">
+<!-- <link rel="manifest" href="https://cruise.umple.org/manifest.json"> -->
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="msapplication-TileImage" content="https://cruise.umple.org/ms-icon-144x144.png">
 <meta name="theme-color" content="#8f001a">
@@ -407,18 +452,21 @@ $output = $dataHandle->readData('model.ump');
     </span>    
   
     <span style="font-size: 30%; white-space:nowrap;">  
-    <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
-      <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
-    <?php } else if (!isset($_REQUEST["task"])) { ?>
-      <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
-    <?php } ?>
-
+          <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
     </span>
+
+    <!-- <span style="font-size: 30%; white-space:nowrap;">   -->
+    <!-- <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?> -->
+      <!-- <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL</a> -->
+    <!-- <?php } else if (!isset($_REQUEST["task"])) { ?> -->
+      <!-- <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate</a> -->
+    <!-- <?php } ?> -->
+    <!-- </span> -->
 
     <span style="font-size: 30%; white-space:nowrap;">  
     <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>
     </span>
-    
+
     <span id="restorecode" >&nbsp; &nbsp; <a href="#"> Restore Saved State</a></span>
 
     &nbsp; &nbsp;<span id=exampleMessage><?php echo $messageURL ?></span> <span id=feedbackMessage></span>
@@ -434,8 +482,14 @@ $output = $dataHandle->readData('model.ump');
 
   <div id="mainApplication" class="row"> 
     <div id="textEditorColumn"  tabIndex="2"  class="inRow"> 
-      <div id="topTextEditor">
+      
+      <!-- codemirror 5 editor -->
+      <!-- <div id="topTextEditor" style="float:left; width:100%">
         <textarea id="umpleModelEditorText" class="umpleModelEditor" wrap="off"></textarea>
+      </div> -->
+
+      <!-- codemirror 6 editor -->
+      <div id="newEditor" style="width:100%">
       </div>
       <div id="bottomTextEditor">
         <textarea id="umpleLayoutEditorText" class="umpleLayoutEditor" wrap="off"></textarea>
@@ -460,7 +514,7 @@ $output = $dataHandle->readData('model.ump');
             <?php } else if (!isset($_REQUEST["task"])) { ?>
             <li id="ttSaveModel"> 
               <div id="menuBookmarkable" class="bookmarkableUrl">
-                <a href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Save as URL</a>
+                <a href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Save & Collaborate</a>
               </div>
             </li>
             <?php } ?>
@@ -846,7 +900,13 @@ $output = $dataHandle->readData('model.ump');
       <div id="umpleCanvas"  tabIndex="1" class="surface"></div>
     </div>
   </div>
- <a name="genArea"/>  
+
+  <!-- Added for including codemirror6 editor -->
+  <script src="./scripts/codemirror6/editor.bundle.js"></script>
+  <!-- Added for sockets usage in client-side -->
+  <script src="./scripts/socket.io/socket.io.js"></script>
+
+  <a name="genArea"/>  
   <div id="generatedCodeRow" class="row">
 		<li id="ttTabsCheckbox">
 			<input id="buttonTabsCheckbox" type="checkbox" class="checkbox" name="buttonTabsCheckbox" value="buttonTabsCheckbox"/>
@@ -885,6 +945,11 @@ $output = $dataHandle->readData('model.ump');
       <?php } ?> 
       //
   </script>
+
+  <!-- <script>
+    Collab.connectCollabServer();
+  </script> -->
+  
   <?php if ($showChrome) { ?>
     <div class="visitors-count" align="right">
         <?php include "counter.php"; ?>

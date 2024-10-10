@@ -6,6 +6,10 @@
 // Layout initialization and maintenance is located in umple_layout.js.
 
 Page = new Object();
+
+// Refactoring definitive text location
+Page.currentUmpleTextBeingEdited = "";
+
 Page.selectedItem = null;
 Page.selectedClass = null;
 Page.selectedAssociation = null;
@@ -22,6 +26,7 @@ Page.modelDelimiter = "//$?[End_of_model]$?";
 
 Page.codeMirrorOn = false;
 Page.codeMirrorEditor = null;
+Page.codeMirrorEditor6 = null;
 Page.hLine = null;
 
 Page.modelLoadingCount = 0;
@@ -49,6 +54,12 @@ Page.showGuardLabels = false;
 Page.showGuards = true;
 Page.modifiedDiagrams = false;
 Page.allowPinch = false;
+
+
+  Page.blahblah = function (theString) {
+    console.log("In blah blah "+theString);
+  }
+
 
 
 // The following is set called from umple.php
@@ -483,7 +494,7 @@ Page.initUmpleTextArea = function()
   layoutEditor.keyup(function(eventObject){
     Action.freshLoad = false;
     Action.setjustUpdateNowtoSaveLater(false);
-    Action.umpleCodeMirrorTypingActivity();
+    Action.umpleCodeMirrorTypingActivity("layoutEditor");
   }); // Fixes Issue#1571 Editing on the layout editor will not update the Umple diagram
   modelEditor.focus(function(){Action.focusOn("umpleModelEditorText", true);});
   layoutEditor.focus(function(){Action.focusOn("umpleLayoutEditorText", true);});
@@ -496,61 +507,170 @@ Page.initUmpleTextArea = function()
   if (!Layout.isLayoutVisible) {Layout.showHideLayoutEditor(false);}
 }
 
+/* CodeMirror 5 */
 Page.initCodeMirrorEditor = function() {
-  Page.codeMirrorEditor = CodeMirror.fromTextArea(
-    document.getElementById('umpleModelEditorText'),{
-        lineNumbers: true,
-        matchBrackets: true,
-        readOnly: Page.readOnly,
-        mode: "text/x-umple",
-        lineWrapping: true,
+  // Page.codeMirrorEditor = CodeMirror.fromTextArea(
+  //   document.getElementById('umpleModelEditorText'),{
+  //       lineNumbers: true,
+  //       matchBrackets: true,
+  //       readOnly: Page.readOnly,
+  //       mode: "text/x-umple",
+  //       lineWrapping: true,
                    
-        extraKeys: { // Change consistently in umple_action.js for Mousetrap
-          "Ctrl-E": function(cm) {Page.clickShowEditableClassDiagram()},
-          "Ctrl-J": function(cm) {Page.clickShowJointJSClassDiagram()},
-          "Ctrl-G": function(cm) {Page.clickShowGvClassDiagram()},
-          "Ctrl-S": function(cm) {Page.clickShowGvStateDiagram()},
-          "Ctrl-L": function(cm) {Page.clickShowStructureDiagram()},
-          "Ctrl-T": function(cm) {Page.clickShowHideText()},
-          "Shift-Ctrl-Alt-T": function(cm) {Page.clickShowHideText()},
-          "Ctrl-D": function(cm) {Page.clickShowHideCanvas()},
-          "Ctrl-N": function(cm) {Page.clickShowHideMenu()},
-          "Ctrl-Alt-N": function(cm) {Page.clickShowHideMenu()},
-          "Ctrl-Shift-=": function(cm) {Page.clickButtonlarger()},
-          "Ctrl-Shift--": function(cm) {Page.clickButtonSmaller()},
-          "Shift-Ctrl-A": function(cm) {Page.clickToggleAttributes()},
-          "Ctrl-M": function(cm) {Page.clickToggleMethods()},
-          "Ctrl-R": function(cm) {Page.clickToggleTraits()},
-          "Ctrl-I": function(cm) {Page.clickToggleTransitionLabels()},
-          "Ctrl-K": function(cm) {Page.clickToggleGuardLabels()},
-          "Ctrl-O": function(cm) {Action.copyCommandLineCode()},
-          "Ctrl-B": function(cm) {Action.promptAndExecuteTest()},
-          "Esc": function(cm) {cm.getInputField().blur()}
-          }
+  //       extraKeys: { // Change consistently in umple_action.js for Mousetrap
+  //         "Ctrl-E": function(cm) {Page.clickShowEditableClassDiagram()},
+  //         "Ctrl-J": function(cm) {Page.clickShowJointJSClassDiagram()},
+  //         "Ctrl-G": function(cm) {Page.clickShowGvClassDiagram()},
+  //         "Ctrl-S": function(cm) {Page.clickShowGvStateDiagram()},
+  //         "Ctrl-L": function(cm) {Page.clickShowStructureDiagram()},
+  //         "Ctrl-T": function(cm) {Page.clickShowHideText()},
+  //         "Shift-Ctrl-Alt-T": function(cm) {Page.clickShowHideText()},
+  //         "Ctrl-D": function(cm) {Page.clickShowHideCanvas()},
+  //         "Ctrl-N": function(cm) {Page.clickShowHideMenu()},
+  //         "Ctrl-Alt-N": function(cm) {Page.clickShowHideMenu()},
+  //         "Ctrl-Shift-=": function(cm) {Page.clickButtonlarger()},
+  //         "Ctrl-Shift--": function(cm) {Page.clickButtonSmaller()},
+  //         "Shift-Ctrl-A": function(cm) {Page.clickToggleAttributes()},
+  //         "Ctrl-M": function(cm) {Page.clickToggleMethods()},
+  //         "Ctrl-R": function(cm) {Page.clickToggleTraits()},
+  //         "Ctrl-I": function(cm) {Page.clickToggleTransitionLabels()},
+  //         "Ctrl-K": function(cm) {Page.clickToggleGuardLabels()},
+  //         "Ctrl-O": function(cm) {Action.copyCommandLineCode()},
+  //         "Ctrl-B": function(cm) {Action.promptAndExecuteTest()},
+  //         "Esc": function(cm) {cm.getInputField().blur()}
+  //         }
+  //       }
+  //     );
+    
+  /* codemirror 6 */
+  const extraKeys = [
+    { key: "Ctrl-E", run: function() { Page.clickShowEditableClassDiagram() } },
+    { key: "Ctrl-J", run: function() { Page.clickShowJointJSClassDiagram() } },
+    { key: "Ctrl-G", run: function() { Page.clickShowGvClassDiagram() } },
+    { key: "Ctrl-S", run: function() { Page.clickShowGvStateDiagram() } },
+    { key: "Ctrl-L", run: function() { Page.clickShowStructureDiagram() } },
+    { key: "Ctrl-T", run: function() { Page.clickShowHideText() } },
+    { key: "Shift-Ctrl-Alt-T", run: function() { Page.clickShowHideText() } },
+    { key: "Ctrl-D", run: function() { Page.clickShowHideCanvas() } },
+    { key: "Ctrl-N", run: function() { Page.clickShowHideMenu() } },
+    { key: "trl-Alt-N", run: function() { Page.clickShowHideMenu() } },
+    { key: "Ctrl-Shift-=", run: function() { Page.clickButtonlarger() } },
+    { key: "Ctrl-Shift--", run: function() { Page.clickButtonSmaller() } },
+    { key: "Shift-Ctrl-A", run: function() { Page.clickToggleAttributes() } },
+    { key: "Ctrl-M", run: function() { Page.clickToggleMethods() } },
+    { key: "Ctrl-R", run: function() { Page.clickToggleTraits() } },
+    { key: "Ctrl-I", run: function() { Page.clickToggleTransitionLabels() } },
+    { key: "Ctrl-K", run: function() { Page.clickToggleGuardLabels() } },
+    { key: "Ctrl-O", run: function() { Page.copyCommandLineCode() } },
+    { key: "Ctrl-B", run: function() { Page.promptAndExecuteTest() } },
+    { key: "Esc", run: function(cm6) { cm6.getInputField().blur() } },
+  ]
+    
+  // codemirror 6 
+  // comment the following when trying to mount react app
+  const initialState = cm6.createEditorState(
+   // document.getElementById("umpleModelEditorText").value, 
+    document.getElementById("newEditor").value, 
+     {
+       extensions: []
+     });
+
+  Page.codeMirrorEditor6 = cm6.createEditorView(
+    initialState, document.getElementById("newEditor"));
+
+  // adds changeListenerPlugin to the code editor
+  // to listen to code changes happening in it
+  // either due to collaborative editing or normal editing
+  // without triggering any keyboard/mouse events
+  Page.codeMirrorEditor6.dispatch({
+    effects: cm6.StateEffect.appendConfig.of(cm6.changeListenerPlugin)
+  });
+
+  // monitor codemirror6 state to listen to any changes in editor contents and update diagram accordingly
+  // Page.codeMirrorEditor6.dom.addEventListener("input", () => {
+  //   console.log("Input event triggered...")
+  //   const newText = Page.codeMirrorEditor6.state.doc.toString();
+  //   setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+  // });
+
+  // ==================== this should be change for code mirror 6 ====================
+
+  // no longer need on cm6
+  // Event triggering changes for CodeMirror 5
+  // Page.codeMirrorEditor.on('focus', function (id, gained) {
+  //   Action.focusOn('CodeMirror', true);
+  // });
+  // Page.codeMirrorEditor.on('blur', function (id, gained) {
+  //   Action.focusOn('CodeMirror', false);
+  // });
+  // Page.codeMirrorEditor.on('gutterClick', function (id, theLine) {
+  //   Page.codeMirrorEditor.foldCode(theLine);
+  // });
+  // ==================== this should be change up to this point ====================
+
+  
+  /* codemirror 5: detect changes. See below for inverse */
+  /* This is triggered indirectly by keyUP, which causes save to element 
+    umpleModelEditorText */
+  // Removing CM5
+  // Page.codeMirrorEditor.on('change', function (ed, changes) {
+  //   /* start timer to process changes 3s after after the editing is done */
+  //   console.log("onChange Triggered")
+  //   Action.umpleCodeMirrorTypingActivity("codeMirrorEditor");
+  //   /* update codemirror 6 panel with the same changes  .. NO LONGER DONE HERE  */
+  //   // Page.setCodeMirror6Text(document.getElementById("umpleModelEditorText").value);
+  //  });
+      
+  // Sets the codemirror 6 text without any change trigger (hopefully)
+  Page.setCodeMirror6Text = function (textToSet) {
+    // DEBUG
+    // console.log("Inside Page.setCodeMirror6Text() ...")
+    Page.codeMirrorEditor6.dispatch({ 
+      changes: { 
+        from: 0, 
+        to: Page.codeMirrorEditor6.state.doc.length, 
+        insert: textToSet
         }
-      );
-  // Event triggering changes for CodeMirror5
-  Page.codeMirrorEditor.on('focus', function (id, gained) {
-    Action.focusOn('CodeMirror', true);
-  });
-  Page.codeMirrorEditor.on('blur', function (id, gained) {
-    Action.focusOn('CodeMirror', false);
-  });
-  Page.codeMirrorEditor.on('gutterClick', function (id, theLine) {
-    Page.codeMirrorEditor.foldCode(theLine);
-  });
-  Page.codeMirrorEditor.on('change', function (ed, changes) {
-    Action.umpleCodeMirrorTypingActivity();
-  });
-  Page.codeMirrorEditor.on('cursorActivity', function () {
-    Page.codeMirrorEditor.addLineClass(Page.hLine, null);
-    Page.hLine = Page.codeMirrorEditor.addLineClass(
-    Page.codeMirrorEditor.getCursor().line,'activeline');
+    } )
+  }
+   
+  // codemirror 6: respond to each keyup to start the process of marking a change
+  // Page.codeMirrorEditor6.dom.addEventListener('keyup', function (ed, changes) {
+  //   console.log("keyup Event Triggered ...")
+  //   // start timer to process changes 3s after the editing is done
+  //   // Action.umpleCodeMirrorTypingActivity("newEditor");
+  //   setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+  //  // console.log("keyup event triggered in CodeMirror 6 and hopefully saved text !!"+cm6.getCodeMirror6UmpleText());
+  // });
+
+  // Removing CM5
+  // CM5 cursorActivity event
+  // Page.codeMirrorEditor.on('cursorActivity', function () {
+  //   Page.codeMirrorEditor.addLineClass(Page.hLine, null);
+  //   Page.hLine = Page.codeMirrorEditor.addLineClass(
+  //   Page.codeMirrorEditor.getCursor().line,'activeline');
+  //   Action.umpleCodeMirrorCursorActivity();
+  // });
+
+   Page.codeMirrorEditor6.dom.addEventListener('mousedown', function () {
+   // console.log("mousedown Event Triggered by CM6 editor ...")
     Action.umpleCodeMirrorCursorActivity();
-  });
+   });
+
   // Event triggering events end here
-  Page.hLine = Page.codeMirrorEditor.addLineClass(0, "activeline");
+  // Page.hLine = Page.codeMirrorEditor.addLineClass(0, "activeline");
+
+
+
   Page.codeMirrorOn = true;  
+  
+  // DOES NOT WORK - DEBUG ... testing to see if we can trigger change made in CodeMirror 6
+/*  document.getElementById('umpleModelEditorText')
+     .addEventListener('DOMSubtreeModified',function () {
+    console.log("       CM6 changes to umpleModelEditorText: "+Page.codeMirrorEditor6.state.doc.toString());
+    // start timer to process changes 3s after after the editing is done
+    Action.umpleCodeMirrorTypingActivity("notUsed");    
+  } ); */
 }
 
 // Function to make the E G S icons in UmpleOnline context senstive (#1400)
@@ -933,12 +1053,27 @@ Page.canShowHovers = function()
 
 Page.getRawUmpleCode = function()
 {
+  // DEBUG
+  // console.log("Inside Page.getRawUmpleCode ...")
+  // console.log("Reading Model Code from 'umpleModelEditorText' html element ...")
   return document.getElementById('umpleModelEditorText').value;
+}
+
+// CM6 function corresponding to CM5 Page.getRawUmpleCode()
+Page.getRawUmpleCodeCM6 = function()
+{
+  // DEBUG
+  // console.log("Reading Model Code from CM6 editor ...")
+  return Page.codeMirrorEditor6.state.doc.toString();
 }
 
 Page.getUmpleCode = function()
 {
-  var modelCleaned = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
+  // DEBUG
+  // console.log("Inside Page.getUmpleCode ...")
+  // var modelCleaned = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
+  var modelCleaned = Page.getRawUmpleCodeCM6().replace(Page.modelDelimiter, "");
+  // console.log("Reading Positioning Code from 'umpleLayoutEditorText' html element ...")
   var positioning = jQuery("#umpleLayoutEditorText").val().replace(Page.modelDelimiter, "");
   if(positioning !== "" && !positioning.includes("namespace -;")){
    // prepend namespace cancellation to prevent namespace redefinition errors
@@ -959,6 +1094,8 @@ Page.getEncodedURL = function()
 
 Page.splitUmpleCode = function(umpleCode)
 {
+  // DEBUG
+  // console.log("Inside Page.splitUmpleCode ...")
   var splitIndex = umpleCode.indexOf(Page.modelDelimiter);
   if (splitIndex == -1)
   {
@@ -976,20 +1113,35 @@ Page.splitUmpleCode = function(umpleCode)
   return modelAndPositioning;
 }  
 
+// Takes as an argument the full file with core code and layout info
+// Called by fuunctions such as loadExampeCallback and loadFileCallback
+// Also called by updateUmpleTextCallback which is triggered by diagram edit by directUpdateCommandCallback  
+// Updates all text editors, and then can call a function called reason
 Page.setUmpleCode = function(umpleCode, reason)
 {
+  // DEBUG
+  // console.log("Inside Page.setUmpleCode() ...")
   var modelAndPositioning = Page.splitUmpleCode(umpleCode);
 
+  // Update the layout editor with the second part of the combined file
+  // console.log("Setting positioningCode into umpleLayoutEditorText html element ...")
   jQuery("#umpleLayoutEditorText").val(modelAndPositioning[1]);
 
   if(Page.codeMirrorOn) {
     // issue#1409  Do not Set the umple code if codeChange is false(i.e. reason is false)
     if (!((typeof reason === 'boolean') && reason == false))
     {
-      Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
+      // Update the codemirror 5 editor itself
+      // console.log("Setting modelCode to codeMirror editor ...")
+      // Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
+      Page.setCodeMirror6Text(modelAndPositioning[0]);
     }
   }
-  jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
+  // Refactoring definitive text location
+  // Update Codemirror 6 and the backup variable
+  // console.log("Setting modelCode to codeMirror 6 ...")
+  Action.updateCurrentUmpleTextBeingEdited(modelAndPositioning[0]);
+  //OLD jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
 
   if (typeof reason === 'function'){
     reason();
@@ -1006,6 +1158,9 @@ Page.umpleCanvasId = function()
   return "umpleCanvas";
 }
 
+// Page.createBookmark() is called when Save & Collaborate button is clicked in umpleonline ui
+// this method internally calls Page.connectCollabServer() which connects the current client to the UmpleCollabServer
+// and enables the current users to collaborate by sharing the collaborative URL
 Page.createBookmark = function()
 {
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
@@ -1141,7 +1296,9 @@ Page.showDiagramSyncNeeded = function(doShow)
 
 Page.hideLoading = function()
 {
-  var modelEditor = "#topTextEditor";
+  // change to code mirror 6
+  // var modelEditor = "#topTextEditor";
+  var modelEditor = "#newEditor";
   var layoutEditor = "#bottomTextEditor";
   var canvas = "#" + Page.umpleCanvasId();  
 
@@ -1163,7 +1320,9 @@ Page.hideLoading = function()
 
 Page.showModelLoading = function()
 {
-  var modelEditor = jQuery("#topTextEditor");
+  // change to code mirror 6
+  // var modelEditor = jQuery("#topTextEditor");
+  var modelEditor = jQuery("#newEditor");
 
   if(Page.modelLoadingCount == 0)
   {
@@ -1195,6 +1354,9 @@ Page.showLayoutLoading = function()
 
 Page.showCanvasLoading = function()
 {
+  if (debuggerFlag)   
+  console.log("Inside Page.showCanvasLoading() ...")
+
   var canvas = jQuery("#umpleCanvas");
   if(Page.canvasLoadingCount == 0)
   {
@@ -1536,4 +1698,14 @@ jQuery.fn.selectRange = function(start, end) {
        range.select();
     }
   });
+}
+
+// checks if the uel of current page is bookmark or not
+Page.isBookmarkURL = function() {
+  const currentURL = window.location.href;
+  const modelName = currentURL.substring(currentURL.indexOf("?model=") + 1) 
+  if(currentURL.includes("model") && modelName.length!=0){
+    return true;
+  }
+  return false;
 }

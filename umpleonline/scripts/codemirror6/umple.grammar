@@ -1,0 +1,933 @@
+@precedence {
+  // ternary @right
+  autoTransition @left,
+  activity @left
+}
+
+// @top Program { (UseProgram | UmpleProgram)? }
+@top Program { UmpleProgram }
+
+// UseProgram { useProgram* }
+
+UmpleProgram { 
+  ( Comment 
+    | Directive 
+    | ";" )* 
+}
+
+Directive {
+  Glossary 
+  | Generate
+  | UseStatement
+  | Namespace
+  | Requirement
+  | ReqImplementation
+  | Entity 
+}
+
+Generate {
+  kw<"generate"> ( kw<"Java">
+                   | kw<"Nothing">
+                   | kw<"Php">
+                   | kw<"RTCpp">
+                   | kw<"SimpleCpp">
+                   | kw<"Ruby">
+                   | kw<"Python">
+                   | kw<"Cpp">
+                   | kw<"Json">
+                   | kw<"StructureDiagram">
+                   | kw<"Yuml">
+                   | kw<"Violet">
+                   | kw<"Umlet">
+                   | kw<"Simulate">
+                   | kw<"TextUml">
+                   | kw<"Scxml">
+                   | kw<"GvStateDiagram">
+                   | kw<"GvClassDiagram">
+                   | kw<"GvFeatureDiagram">
+                   | kw<"GvClassTraitDiagram">
+                   | kw<"GvEntityRelationshipDiagram">
+                   | kw<"Alloy">
+                   | kw<"NuSMV">
+                   | kw<"NuSMVOptimizer">
+                   | kw<"Papyrus">
+                   | kw<"Ecore">
+                   | kw<"Xmi">
+                   | kw<"Xtext">
+                   | kw<"Sql">
+                   | kw<"Umple">
+                   | kw<"UmpleSelf">
+                   | kw<"USE">
+                   | kw<"Test">
+                   | kw<"SimpleMetrics">
+                   | kw<"PlainRequirementsDoc">
+                   | kw<"Uigu2"> ) ( ( kw<"-s">
+                                       | kw<"--suboption"> ) '"' Suboption '"' )* ";"
+}
+
+// Hack: Let Suboption be Code for now. To be re-considered!!!
+Suboption {
+  Code
+}
+
+UseStatement {
+  kw<"use"> Use ( "," ExtraUse )*
+}
+
+Glossary { kw<"glossary"> "{" Word* "}" }
+Word { Identifier ":" Identifier ";" }
+
+Entity {
+  MixsetDefinition
+  | ClassDefinition 
+  | TraitDefinition
+  | InterfaceDefinition
+  | AssociationDefinition
+  | AssociationClassDefinition
+  | StateMachineDefinition
+  // | AssociationDefinition | AssociationClassDefinition | StateMachineDefinition 
+}
+
+StateMachineDefinition {
+  kw<"statemachine"> kw<"queued">? kw<"pooled">? StateMachineName "{" State* "}"
+} 
+
+AssociationClassDefinition {
+  kw<"associationClass"> Name "{" AssociationClassContent* "}"
+}
+
+TraitContent {
+  MixsetDefinition
+  | Comment
+  | ReqImplementation
+  | TraitDefinition
+  | Abstract
+  | KeyDefinition ~keyDefinition
+  | SoftwarePattern ~keyDefinition
+  | Depend
+  | Attribute
+  | StateMachine
+  | InlineAssociation
+  | ConcreteMethodDeclaration ~methodDeclaration
+  | AbstractMethodDeclaration ~methodDeclaration
+  | ConstantDeclaration
+  | ";"
+}
+
+TraitParametersInterface {
+  kw<"isA"> TInterface ( "&" TInterface )*
+}
+
+// ParameterName was originally named [~parameter]
+TraitFullParameters {
+  ParameterName ( TraitParametersInterface )? ( "=" DefaultType )?
+}
+
+TraitParameters {
+  "<" TraitFullParameters ( "," TraitFullParameters )* ">"
+
+}
+
+TraitDefinition {
+  kw<"trait"> Name TraitParameters? "{" TraitContent* "}"
+}
+
+// Hack: Code was originally called [**value]
+ConstantDeclarationDeprecated {
+  kw<"constant"> TypedName ( "=" Value )? ";"
+}
+
+ConstantDeclaration {
+  kw<"internal">? kw<"const"> TypedName ( "=" Value )? ";"
+} 
+
+// ClassName was originally called [type] in Umple.
+AbstractMethodDeclaration {
+  ClassName MethodDeclarator ";"
+}
+
+InterfaceMemberDeclaration {
+  Comment
+  | ReqImplementation
+  | ConstantDeclaration
+  | ConstantDeclarationDeprecated
+  | AbstractMethodDeclaration
+  | IsA
+}
+
+InterfaceBody {
+  InterfaceMemberDeclaration*
+}
+
+// Hack: Extract the content between the two curlt braces and the braces for auto-completion, and name them
+// InterfaceDefinitionBody
+InterfaceDefinition {
+  kw<"interface"> InterfaceDefinitionName InterfaceDefinitionBody
+}
+
+InterfaceDefinitionBody {
+  "{" Depend* InterfaceBody "}"
+}
+
+Namespace {
+  kw<"namespace"> NamespaceName Namespaceoption? ";"
+}
+
+Namespaceoption {
+  kw<"--redefine">
+}
+
+MixsetDefinition {
+  kw<"mixset"> MixsetName ( MixsetInnerContent
+                            | Requirement
+                            | MixsetInlineDefinition )
+}
+
+MixsetInlineDefinition {
+  ( EntityType EntityName ( MixsetInnerContent
+                            | EntityOneElement )
+    | OneElement )
+}
+
+MixsetInnerContent {
+  "{" ExtraCode 
+   | ReqImplementation "}"
+} 
+
+Requirement {
+  kw<"req"> ReqIdentifier ReqLanguage? "{" ReqContent "}"
+}
+
+ReqImplementation {
+  kw<"implementsReq"> ReqIdentifier ( "," ReqIdentifier )* ";"
+}
+
+RequireLinkingOptNot {
+  ( kw<"opt"> | kw<"not"> )
+}
+
+RequireLinkingOp {
+  ( RequireLinkingOptNot
+    | ( "&" | "&&" | kw<"and"> | "," )
+    | ( "|" "|"? | kw<"or"> | ";" )
+    | ( kw<"xor"> | kw<"XOR"> ) )
+}
+
+// 
+ClassDefinition {
+  kw<"class"> Name ClassBody
+  // kw<"class"> Name "{" ClassContent* "}"
+}
+
+ClassBody {
+  "{" ClassContent* "}"
+}
+
+ClassContent {
+  Comment 
+  | ReqImplementation
+  | MixsetDefinition
+  | ClassDefinition 
+  | Abstract
+  | KeyDefinition ~keyDefinition
+  | SoftwarePattern ~keyDefinition
+  | Depend
+  | Attribute 
+  | StateMachine 
+  | InlineAssociation 
+  | ConcreteMethodDeclaration 
+  | ";"
+  // Comment | ClassDefinition | StateMachine | InlineAssociation | ";"
+  // Comment | ClassDefinition | InlineAssociation | ";"
+}
+
+Depend {
+  kw<"depend"> DependName ";"
+}
+
+Key {
+  kw<"key"> "{" KeyId ( "," KeyId )* "}"
+}
+
+DefaultKey {
+  kw<"key"> "{" "}"
+}
+
+KeyDefinition {
+  DefaultKey |Key
+}
+
+Abstract {
+  kw<"abstract"> ";"
+}
+
+SoftwarePattern {
+  IsA 
+  | Singleton 
+  | Immutable
+  | KeyDefinition
+}
+
+IsA {
+  SingleIsA ~isA 
+  | MultipleIsA ~isA
+}
+
+// Hack: Treat extendsNames and extendsName the same for now. To be re-considered!!!
+ExtendsNames {
+  ExtendsName
+}
+
+// Hack: Leave gTemplateParameter for now. To be re-considered!!!
+IsAName {
+  '"' ExtendsNames '"' 
+  | ExtendsName
+}
+
+SingleIsA {
+  kw<"isA"> IsAName ( "," kw<"isA"> IsAName )* ";"
+}
+
+MultipleIsA {
+  kw<"isA"> IsAName ( "," IsAName )* ";"
+}
+
+Singleton {
+  kw<"singleton"> ";"
+}
+
+Immutable {
+  kw<"immutable"> ";"
+}
+
+SimpleAttribute {
+  SimpleAttributeName ";"
+}
+
+Value {
+  Integer 
+  | StringLiteral
+}
+
+ComplexAttribute {
+  kw<"unique">? kw<"lazy">? kw<"ivar">?
+  (
+    kw<"immutable">
+    kw<"settable">
+    kw<"internal">
+    kw<"defaulted">
+    kw<"const">
+    kw<"fixml">
+  )?
+  TypedName
+  ( "=" Value )?
+  ";"
+}
+
+Attribute {
+  SimpleAttribute 
+  | ComplexAttribute
+}
+
+// ClassName was originally called [type] in Umple.
+ConcreteMethodDeclaration {
+  ( ( kw<"public"> | kw<"protected"> | kw<"private"> )? kw<"static">? kw<"synchronized">? kw<"queued">? ClassName? MethodDeclarator MethodThrowsExceptions? MethodBody )
+  | ( ( kw<"public"> | kw<"protected"> )? kw<"abstract">? ClassName? MethodDeclarator MethodThrowsExceptions? ) ";"
+}
+
+// Hack: Skip others for now. To be re-considered!!!
+ConstraintExpr {
+  "{" FakeContraint "}"
+}
+
+LinkingOpBody {
+  Constraint
+}
+
+EqualityOperator {
+  ( "==" 
+    | kw<"equals"> ) 
+  | ( "!=" 
+      | "/=" 
+      | "=!" 
+      | "=/=" )
+}
+
+LinkingOp {
+  ( ( kw<"and"> 
+      | "&&" 
+      | "&" ) 
+    | EqualityOperator 
+    | ( kw<"or"> 
+        | "||" ) ) LinkingOpBody
+}
+
+ConstraintBody {
+  "(" Constraint ")"
+}
+
+Constraint {
+  ConstraintBody LinkingOp? 
+  | ConstraintExpr LinkingOp?
+}
+
+Precondition {
+  "[" Name? kw<"pre"> ":" Constraint "]"
+}
+
+Postcondition {
+  "[" Name? kw<"post"> ":" Constraint "]"
+}
+
+MethodBody {
+  ( CodeLangs "{" ( Precondition 
+                    | Postcondition )* Code "}" )+
+}
+
+MethodThrowsExceptions {
+  kw<"throws"> Exception ( "," Exception )*
+}
+
+MethodDeclarator {
+  MethodName ParameterList
+}
+
+ParameterList {
+  "(" ( Parameter ( "," Parameter )* )? ")"
+}
+
+Parameter { TypedName }
+
+StateMachine {
+  InlineStateMachine
+}
+
+// Hack: Extract the content between the two curly braces and the braces for auto-completion, and name them
+// InlineStateMachineBody
+InlineStateMachine {
+  // kw<"queued">? kw<"pooled">? InlineStateMachineName "{" ( Comment | State | "||" | StandAloneTransition )* "}"
+  kw<"queued">? kw<"pooled">? InlineStateMachineName InlineStateMachineBody
+
+}
+
+InlineStateMachineBody {
+  "{" ( Comment 
+        | State 
+        | MixsetDefinition
+        | "||"
+        | StandAloneTransition )* "}"
+}
+
+State {
+  kw<"final">? StateName StateBody
+}
+
+// Hack:
+StateBody {
+  "{" StateInternal* "}"
+}
+
+
+StateInternal {
+  Comment 
+  | ( "+" 
+      | "-" 
+      | "-" 
+      | "*" )? StateEntity 
+  | StandAloneTransition 
+  | ConcreteMethodDeclaration
+}
+
+Activity {
+  kw<"do"> MoreCode+
+}
+
+GuardCode {
+  "[" Code "]"
+}
+
+EntryOrExitAction {
+  ( kw<"entry"> 
+    | kw<"exit"> ) GuardCode? "/" MoreCode+
+}
+
+Transition {
+  ( EventDefinition Guard
+    | Guard EventDefinition
+    | kw<"unspecified">? Guard
+    | EventDefinition )? ( Action "->"
+                           | "->" Action
+                           | "->" ) StateNameDestination ";"
+}
+
+
+
+AutoTransitionBlock {
+  Guard? ( Action "->" 
+           | "->" Action 
+           | "->" ) StateNameDestination ";"
+}
+
+AutoTransition {
+  Activity? AutoTransitionBlock
+}
+
+// Hack: Remove Activity for now: shift/reduce conflict
+StateEntity {
+  "||"
+  | MixsetDefinition
+  | EntryOrExitAction
+  | !autoTransition AutoTransition ~transition
+  | Transition ~transition
+  | !activity Activity
+  | State
+  | ";"
+}
+
+StandAloneTransition {
+  ( EventDefinition ~name Guard 
+    | Guard EventDefinition ~name
+    | kw<"unspecified">? Guard 
+    | EventDefinition ~name )? FromState ~name ( Action "->" 
+                                     | "->" Action 
+                                     | "->" ) ToState ";"
+}
+
+EventDefinition {
+  AfterEveryEvent 
+  | AfterEvent 
+  | EventName ParameterList?
+}
+
+AfterEveryEvent {
+  kw<"afterEvery"> "(" Timer ")"
+}
+
+AfterEvent {
+  kw<"after"> "(" Timer ")"
+}
+
+Guard {
+  "[" Constraint "]"
+}
+
+Action {
+  "/" MoreCode+
+}
+
+AssociationDefinition {
+  kw<"association"> Name? "{" ( Comment 
+                                | ReqImplementation
+                                | MixsetDefinition
+                                | Association )* "}"
+}
+
+AssociationClassContent {
+  Comment
+  | ReqImplementation
+  | ClassDefinition
+  | SoftwarePattern 
+  | Depend
+  | Association 
+  | InlineAssociation 
+  | Attribute 
+  | StateMachine 
+  | ";"
+}
+
+Association {
+  kw<"immutable">? AssociationEnd Arrow AssociationEnd ";"
+}
+
+InlineAssociation {
+  kw<"immutable">? InlineAssociationEnd Arrow AssociationEnd ";"
+}
+
+AssociationEnd {
+  Multiplicity ClassName AssociationEndName?
+}
+
+InlineAssociationEnd {
+  Multiplicity AssociationEndName?
+}
+
+Multiplicity { 
+  Range 
+  | Bound
+}
+
+Range { LowerBound DoubleDots UpperBound }
+
+Bound { 
+  MultiplicityInteger 
+  | Asterisk 
+}
+
+LowerBound { 
+  MultiplicityInteger 
+  | Asterisk 
+}
+
+UpperBound { 
+  MultiplicityInteger 
+  | Asterisk 
+}
+
+BaseType { normalWithout ~normal | normal ~normal
+  // $[a-zA-Z0-9_$]+
+}
+
+NestedType {
+  BaseType ( "<" ArgType ">" )?
+}
+
+ArgType {
+  ( "?" 
+    | NestedType list? ) ( "," ArgType )?
+}
+
+Type {
+  NestedType "..."?
+}
+
+TypedName {
+  Type? list? NameOfTypedName
+}
+
+AssociationEndName { normalWithout ~normal | normal ~normal }
+
+NameOfTypedName { normalWithout ~normal | normal ~normal }
+
+// AlphanumericOnlyName { alphanumericOnly ~alphanumericOnly }
+AlphanumericOnlyName { normalWithout ~normal | normal ~normal }
+
+MethodName { normalWithout ~normal | normal ~normal }
+ClassName { normalWithout ~normal | normal ~normal }
+
+InlineStateMachineName { normalWithout }
+StateName { normalWithout ~normal | normal ~normal }
+
+FromState { normalWithout }
+ToState { normalWithout }
+EventName { normalWithout ~normal | normal ~normal }
+
+StateNameDestination { normalWithout ~normal | normal ~normal }
+
+SimpleAttributeName { normalWithout ~normal | normal ~normal }
+
+Name { normalWithout ~normal | normal ~normal }
+
+ExtendsName { normalWithout ~normal | normal ~normal }
+
+Exception { normalWithout }
+
+ReqIdentifier { normalWithout ~normal | normal ~normal }
+
+ReqLanguage { normalWithout ~normal | normal ~normal }
+
+EntityType { normalWithout ~normal | normal ~normal }
+EntityName { normalWithout ~normal | normal ~normal }
+EntityOneElement { normalWithout ~normal | normal ~normal }
+OneElement { normalWithout ~normal | normal ~normal }
+MixsetName { normalWithout ~normal | normal ~normal }
+NamespaceName { normalWithout ~normal | normal ~normal }
+Use { normalWithout ~normal | normal ~normal }
+ExtraUse { normalWithout ~normal | normal ~normal }
+KeyId { normalWithout ~normal | normal ~normal }
+DependName { normalWithout ~normal | normal ~normal }
+InterfaceDefinitionName { normalWithout ~normal | normal ~normal }
+TInterface { normalWithout }
+ParameterName { normalWithout }
+DefaultType { normalWithout }
+StateMachineName { normalWithout ~normal | normal ~normal }
+
+annotation {
+  MarkerAnnotation |
+  Annotation
+}
+
+MarkerAnnotation {
+  "@" name
+}
+
+Annotation {
+  "@" name AnnotationArgumentList
+}
+
+AnnotationArgumentList {
+  "(" (elementValue | commaSep<ElementValuePair>) ")"
+}
+
+ElementValuePair {
+  Identifier !valuePair "=" elementValue
+}
+
+elementValue {
+  (expression |
+   ElementValueArrayInitializer |
+   annotation) !valuePair
+}
+
+ElementValueArrayInitializer {
+  "{" commaSepTrailing<elementValue> "}"
+}
+
+Comment { 
+  InlineComment 
+  | MultilineComment 
+  | AnnotationComment 
+}
+// AnnotationComment { annotation }
+
+commaSep<expr> { (expr ("," expr)*)? }
+
+commaSep1<expr> { expr ("," expr)* }
+
+commaSepTrailing<expr> { (expr ("," expr?)*)? }
+
+name {
+  Identifier |
+  ScopedIdentifier
+}
+
+ScopedIdentifier {
+  name ( "." | "-" )+ Identifier
+}
+
+Identifier {
+  identifier ~identifier |
+  [@dynamicPrecedence=-1] { capitalIdentifier ~identifier }
+}
+
+expression[@isGroup=Expression] {
+  // AssignmentExpression |
+  // BinaryExpression |
+  // InstanceofExpression |
+  // LambdaExpression |
+  // TernaryExpression |
+  // UpdateExpression |
+  // baseExpression |
+  // UnaryExpression |
+  // CastExpression
+  Identifier
+}
+
+CodeLangs {
+  ( ( kw<"Java">
+      |kw<"RTCpp">
+      |kw<"SimpleCpp">
+      |kw<"Cpp">
+      |kw<"Php">
+      |kw<"Ruby">
+      |kw<"Python">
+      |kw<"Alloy">
+      |kw<"UmpleSelf"> ) ( "," ( kw<"Java">
+                                 |kw<"Alloy">
+                                 |kw<"RTCpp">
+                                 |kw<"SimpleCpp">
+                                 |kw<"Cpp">
+                                 |kw<"Php">
+                                 |kw<"Ruby">
+                                 |kw<"Python">
+                                 |kw<"UmpleSelf"> ) )* )?
+}
+
+MoreCode {
+  CodeLangs "{" Code "}"
+}
+
+@skip { whitespace }
+
+// kw<term> { @specialize[@name={term}]<identifier, term> }
+kw<term> { @specialize[@name={term}]<normalWithout, term> }
+// ckw<term> { @extend[@name={term}]<identifier, term> }
+ckw<term> { @extend[@name={term}]<normalWithout, term> }
+
+// modifier { kw<"public"> | kw<"protected"> | kw<"private"> | kw<"static"> | kw<"synchronized"> | kw<"queued"> | kw<"abstract"> }
+
+@tokens {
+  // times[@name=ArithOp] { "*" | "/" }
+
+  InlineComment { "//" ![\n]* }
+
+  MultilineComment { "/*" MultilineCommentRest}
+
+  MultilineCommentRest { ![*] MultilineCommentRest | "*" MultilineCommentAfterStar }
+
+  MultilineCommentAfterStar { "/" | "*" MultilineCommentAfterStar | ![/*] MultilineCommentRest }
+
+  // Annotation { "@" $[a-zA-Z_] $[a-zA-Z0-9_-]* }
+
+  // Identifier { $[a-zA-Z_] $[a-zA-Z0-9_-]* }
+
+  // Expression { $[a-zA-Z0-9_-]+ }
+
+  // MessageNumber { $[0-9]+ }
+
+  // Output { $[a-zA-Z0-9_-]+ }
+
+  // BoolLiteral { "true" | "false" }
+
+  Code {
+    ( ![{}] )+
+    // ![{] ( $[\w$\xa1-\uffff] $[\w$\d\xa1-\uffff]* )+ ![}]
+  }
+
+  // Hack: Let ExtraCode be Code for now. To be re-considered!!!
+  ExtraCode {
+    Code
+  }
+
+  // Hack: Let ReqContent be Code for now. To be re-considered!!!
+  ReqContent {
+    Code
+  }
+
+  Integer { @digit+ }
+  MultiplicityInteger { @digit+ }
+
+  // This is for [~name]
+  // alphanumericOnly { @digit | @asciiLetter }
+  // alphanumericOnly { $[a-zA-Z] $[a-zA-Z0-9]* }
+
+  list {
+    "[" @whitespace* "]"
+  }
+
+  // digits {
+  //   $[0-9]+ ("_"+ $[0-9]+)*
+  // }
+
+  // hexDigits {
+  //   $[A-Fa-f0-9]+ ("_" $[A-Fa-f0-9]+)*
+  // }
+
+  IntegerLiteral {
+    (digits |
+     ("0x" | "0X") hexDigits |
+     ("0o" | "0O") $[0-7]+ ("_" $[0-7]+)* |
+     ("0b" | "0B") $[01]+ ("_" $[01]+)*)
+    ("l" | "L")?
+  }
+
+  exponent {
+    $[eE] ("-" | "+")? digits
+  }
+
+  hexExponent {
+    $[pP] ("-" | "+")? digits
+  }
+
+  floatSuffix {
+    $[fFdD]
+  }
+
+  FloatingPointLiteral {
+    digits ("." digits? exponent? floatSuffix? | exponent floatSuffix? | floatSuffix) |
+    "." digits exponent? floatSuffix? |
+    ("0x" | "0X") (hexDigits ("." hexDigits?)? | "." hexDigits) hexExponent floatSuffix?
+  }
+
+  // @precedence { FloatingPointLiteral, IntegerLiteral }
+
+  CharacterLiteral {
+    "'" (![\\'\n] | "\\" ("'" | "\\" | ![\n\\']+)) "'"
+  }
+  StringLiteral {
+    "\"" (![\\"\n] | "\\" (![\n] | "\n"))* "\""
+    | "\'" (![\\'\n] | "\\" (![\n] | "\n"))* "\'"
+  }
+  textBlockStart {
+    '"""' $[ \t]* "\n"
+  }
+  // @precedence { textBlockStart, StringLiteral }
+  textBlockContent { "\n" | !["\n] textBlockContent? | '"' textBlockQuote }
+  textBlockQuote { !["\n] textBlockContent | "\n" | '"' textBlockQuote2 }
+  textBlockQuote2 { !["\n] textBlockContent | "\n" }
+  textBlockEnd { '"""' }
+
+  Asterisk { "*" }
+
+  // AsteriskMultiplicity { "*" }
+
+  // identifier { $[a-z_$] $[a-zA-Z0-9_$]* }
+
+  // capitalIdentifier { $[A-Z] $[a-zA-Z0-9_$]* }
+
+  identifier { $[a-z] $[a-zA-Z0-9]* }
+
+  capitalIdentifier { $[A-Z] $[a-zA-Z0-9]* }
+
+  normalWithout { $[a-zA-Z] $[a-zA-Z0-9_$]* }
+  normal { normalWithout? $[-.] normalWithout* ($[-.] normalWithout)* }
+  @precedence { normal, normalWithout }
+
+  // Must contain an underscore
+  // identifierMCU { $[a-zA-Z_$] $[a-zA-Z0-9_$]*  ( "_" | "$" ) $[a-zA-Z0-9_$]* }
+
+  AssignOp {
+    ("+" | "-" | "*" | "/" | "&" | "|" | "^" | "%" | "<<" | ">>" ">"?) "="
+  }
+
+  op[@name={name} "Op"]<name, body> { body }
+
+  whitespace {
+    @whitespace+
+  }
+
+  @precedence { capitalIdentifier, identifier }
+  // @precedence { InlineComment, times }
+  // @precedence { MultilineComment, times }
+  // ??? Not Sure
+  // @precedence { identifier, alphanumericOnly }
+  // @precedence { capitalIdentifier, alphanumericOnly }
+  @precedence { whitespace, Code }
+  @precedence { whitespace, ExtraCode }
+  @precedence { whitespace, ReqContent }
+  // @precedence { Comment, Code }
+  @precedence { "[", Code }
+
+  "="[@name=AssignOp]
+
+  "{" "}" "(" ")" "[" "]" "." "," ";" ":"
+
+  DoubleDots { ".." }
+  
+  // DoubleAsterisks { "**" }
+
+  Arrow {
+    "--" | "->" | "<-" | "><" | "<@>-" | "-<@>"
+  }
+
+  @precedence { DoubleDots, normal }
+  @precedence { Arrow, normal }
+  @precedence { "-", normal }
+  // @precedence { "-", normal }
+  @precedence { "->", normal }
+  @precedence { "...", normal }
+
+  @precedence { FakeContraint, whitespace }
+  @precedence { InlineComment, "/" }
+
+  Timer {
+    $[+*/a-zA-Z0-9_\.-] ( "(" $[0-9\.]* ")" )?
+  }
+
+  // AnnotationComment {
+  //   '@' $[a-zA-Z_] $[a-zA-Z0-9_-]* ( '(' ( ( '"' $[\w|\s|-]* '"' ) | $[\w] | $[\s] | '=' | ',' | '.' )* ')' )?
+  // }
+  AnnotationComment {
+  '@' $[a-zA-Z_] $[a-zA-Z0-9_-]* ( '(' ( ( '"' $[\w\s-]* '"' ) | $[\w] | $[\s] | '=' | ',' | '.' )* ')' )?
+  }
+
+  FakeContraint {
+    ( ![\n] )+
+  }
+
+}
+
+// The remaining rules should be added here, following the same pattern as the existing rules.
+
+@detectDelim
+
+// Dot "." and hyphen "-" regarding [~name] and [name]

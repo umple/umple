@@ -37,7 +37,7 @@ textArea {
   -webkit-border-radius: 4px; width:100%; height:100%; margin:0px; 
 }
 textArea.umpleModelEditor { resize:none; }
-textArea.umpleLayoutEditor {overflow-y: scroll; resize: none; border: 1px solid gray; }
+textArea.umpleLayoutEditor {overflow-y: scroll; /* resize: none; */ border: 1px solid gray; }
 .CodeMirror-scroll { 
   box-sizing:border-box; -moz-box-sizing:border-box; -moz-border-radius: 4px; 
   -webkit-border-radius: 4px; border-radius: 4px;
@@ -573,3 +573,49 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
 .executionHeader {
   font-family: Verdana, Arial, Helvetica, sans-serif;
 }
+
+/* codemirror 6 */
+.cm-editor {
+  /* margin-top: 5px ; */
+  border: 1px solid black ;
+  border-radius: 4px ;
+}
+.cm-gutters {
+  width: 29 px !important;
+}
+
+/* make codemirro 6 scrollable */
+.cm-scroller {
+  padding: 1px;
+  overflow: auto !important;
+}
+.cm-editor {
+  min-height: 100% !important;
+  max-height: 100% !important;
+}
+
+/* div[role=tooltip] {
+  display: none !important;
+} */
+
+
+/* Removing CM5 */
+div#topTextEditor {
+  display: none !important;
+}
+
+/* codemirror 6 editor */
+div#newEditor {
+  position: relative;
+  /* height: 90%; */
+}
+
+/* DEBUG */
+/* makes layout editor resizable vertically */
+textarea#umpleLayoutEditorText {
+  resize: vertical;
+}
+/* 
+.cm-content, .cm-gutter { 
+  min-height: 750px; 
+} */

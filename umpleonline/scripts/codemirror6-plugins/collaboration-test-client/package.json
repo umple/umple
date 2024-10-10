@@ -10,19 +10,20 @@
   "dependencies": {
     "@codemirror/collab": "^6.0.0",
     "@codemirror/language": "^6.8.0",
+    "@types/react": "^18.0.37",
+    "@types/react-dom": "^18.0.11",
     "@uiw/codemirror-extensions-basic-setup": "^4.21.3",
     "@uiw/codemirror-extensions-langs": "^4.21.3",
     "@uiw/react-codemirror": "^4.21.3",
+    "@vitejs/plugin-react": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "socket.io-client": "^4.6.2",
-    "@types/react": "^18.0.37",
-    "@types/react-dom": "^18.0.11",
-    "@vitejs/plugin-react": "^4.0.0",
     "typescript": "^5.0.2",
     "vite": "^4.3.9"
   },
   "devDependencies": {
+    "@types/node": "^20.5.9",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react": "^4.0.0",
