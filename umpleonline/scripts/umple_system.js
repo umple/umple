@@ -503,8 +503,9 @@ UmpleSystem.trimOverlappingAssociations = function(umpleClass)
 
       if(umpleAssociation.isReflexive()) 
         umpleAssociation.adjustReflexiveEndpoints();
-      else 
-        umpleAssociation.trimOverlap();
+      else
+        // this needs to fix for codemirror 6 in the future which cause error on refresh 
+        // umpleAssociation.trimOverlap();
 
       // if an offset position has changed, update the association
       if (!oldOffsetOne.equalsIgnoreSize(umpleAssociation.offsetOnePosition) ||
