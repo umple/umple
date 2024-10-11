@@ -1,9 +1,13 @@
 #! /bin/bash
 
+echo doing npm install
+npm install
+
+echo doing npm run build
 npm run build
 
 BASEDIR=$(dirname "$0")
-echo "Running setup.sh for Umple Collaboration Server"
+echo "Running setup.sh for Umple Collaboration Server in " $BASEDIR 
 cd $BASEDIR
 
 . config.cfg
