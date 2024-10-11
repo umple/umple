@@ -27,6 +27,7 @@ class UmpleInternalParser
     parser.addGrammarFile("/trait/umple_traits.grammar");
   }
 
+
 //----------------------------------------------------------------------------  
 //---------------------------------Start--------------------------------------
 //----------------------------------------------------------------------------   
@@ -84,13 +85,14 @@ class UmpleInternalParser
     for (Comment c : lastComments)
     {
       aTrait.addCommentAt(c,regularCommentCountEnd);
-      regularCommentCountEnd++;
+      regularCommentCountEnd++;         
     }
-
-    for (Requirement r : lastRequirements)
-    {
-      aTrait.addRequirement(r);
+    for (ReqImplementation ri : lastRequirementsImpl)
+    {   
+      aTrait.addReqImplementation(ri);
     }
+        
+    
 
     // Add special position comment at the end if @outputumplesource had been 
     // detected earlier in a comment
@@ -211,8 +213,8 @@ class UmpleInternalParser
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
 
-    // Only need to clear requirements if there actually was requirements.
-    boolean shouldConsumeRequirement = lastRequirements.size() > 0;
+    // Only need to clear requirement implementations if there actually was implementations.
+    boolean shouldConsumeRequirementImpl = lastRequirementsImpl.size() > 0;
     
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
     if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
@@ -249,8 +251,10 @@ class UmpleInternalParser
     }
     else if (token.is("reqImplementation"))
     {
+      analyazeTraitImpl(aTrait);
+      
       analyzeImplementReq(token);
-      shouldConsumeRequirement = isReqAddedToLast(token);
+      shouldConsumeRequirementImpl = isReqAddedToLast(token);
     }
     // TODO Under development
     
@@ -316,12 +320,70 @@ class UmpleInternalParser
     {
       lastComments.clear();
     }
-    if (shouldConsumeRequirement)
+    if (shouldConsumeRequirementImpl)
     {
-      lastRequirements.clear();
+      lastRequirementsImpl.clear();
     }
   }
-  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+ private void analyzeRequirement(Token t) {
+    // extract new requirement identifier 
+    String reqID = t.getSubToken("reqIdentifier").getValue(); 
+    String newContent = t.getSubToken("reqContent").getValue();// extract content 
+    // Initialize language
+    String newLanguage = "";
+    if (!(t.getSubToken("reqLanguage") == null || t.getSubToken("reqLanguage").getValue() == null)) {
+        // get the language of the sub token
+        newLanguage = t.getSubToken("reqLanguage").getValue();
+    }
+     // Retrieves any existing requirement with the same identifier from the model
+     Requirement existingRequirement = model.getAllRequirements().get(reqID); 
+    // Checks if a requirement with the same identifier already exists in the model.
+    if (existingRequirement != null) { 
+        // get the language of the existing requirement
+        String existingLanguage = existingRequirement.getLanguage();
+	// return if different languages are encountered
+        if (!(existingLanguage.equals("") || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
+            setFailedPosition(t.getPosition(), 402, reqID,existingLanguage,newLanguage);
+            return;
+        }
+        // retrieve the content of the existing requirement
+        String existingContent = existingRequirement.getStatement();
+
+
+        // Requirement with the same identifier already exists, combine them
+        // Concatenate the content of the existing requirement with the new content
+        newContent = existingContent + " " + newContent;
+        if (newLanguage.equals("")) {
+            newLanguage = existingLanguage;
+        }
+        existingRequirement.addReqToken(t);// new addition
+        existingRequirement.setStatement(newContent);
+    }
+    else
+    {
+    // If existing requirement is null
+    // create new requirement
+      Requirement req = new Requirement(reqID, newContent, newLanguage);// Create new requirement 
+    // Add the new requirement
+      req.addReqToken(t);// new addition
+      model.getAllRequirements().put(reqID, req);
+    }
+
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+   private void analyzeImplementReq(Token t) {
+     // Identifier that has been identified 
+     String reqImpID = t.getSubToken("reqIdentifier").getValue();
+     // Instantiate the requirement implementation
+     ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
+     model.addReqImplementation(reqImplementation);
+     lastRequirementsImpl.add(reqImplementation);
+  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
@@ -502,12 +564,14 @@ class UmpleInternalParser
     // Add comments above the attribute to the attribute.
     for (Comment c : lastComments)
     {
-      attribute.addComment(c);
+      attribute.addComment(c);           
     }
-    for (Requirement r : lastRequirements)
-    {
-      attribute.addRequirement(r);
+    for (ReqImplementation ri : lastRequirementsImpl)
+    { 
+      attribute.addReqImplementation(ri);     
     }
+    
+
     
     // set the last attribute made to be attribute, clear lastassoc
     lastattr = attribute;
@@ -593,13 +657,13 @@ mixset Association {
     // Add comments above the association to the association.
     for (Comment c : lastComments)
     {
-      yourAs.addComment(c);
+      yourAs.addComment(c);       
     }
-
-    for (Requirement r : lastRequirements)
+    for (ReqImplementation ri : lastRequirementsImpl)
     {
-      yourAs.addRequirement(r);
+      yourAs.addReqImplementation(ri);        
     }
+    
     
     // set last association made to be yourAs. clear lastattr.
     lastassoc = yourAs;
@@ -1134,8 +1198,9 @@ mixset Association {
 			inClass.addComment(aComment);
 		}		
 		
-		for(Requirement aRequirement : inTrait.getRequirements()) {
-			inClass.addRequirement(aRequirement);
+		for(ReqImplementation aReqImpl : inTrait.getReqImplementations()) 
+		{
+			inClass.addReqImplementation(aReqImpl);
 		}
 
 		//set the dependens
@@ -1700,7 +1765,7 @@ private void copyAttributesFromTraitsToClass(UmpleClass inClass){
 			//I need some comment for users in generated code;
 			//attribute.getComment(2).setText(attribute.getComment(2).getText()+"'"+inClass.getName()+"' ");
 			attribute.setSource(Attribute.Source.fTrait);
-      if (attribute.hasRequirements()){
+      if (attribute.hasReqImplementations()){
       }
       else{
       }

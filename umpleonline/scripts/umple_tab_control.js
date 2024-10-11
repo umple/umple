@@ -302,6 +302,7 @@ TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
  */
 TabControl.saveTab = function(tabId, umpleCode)
 {
+  // console.log("Inside TabControl.saveTab() ...")
   var filename = TabControl.getTabFilename(TabControl.tabs[tabId].name);
   var modelname = Page.getModel();
   localStorage[filename] = umpleCode;
@@ -334,6 +335,7 @@ TabControl.saveTabCallback = function(tabId)
  */
 TabControl.selectTab = function(tabId)
 { 
+  // console.log("Inside TabControl.selectTab() ...")
   if (TabControl.activeTab) {
     // Do nothing if already selected
     if (tabId == TabControl.activeTab.id) return;
@@ -357,6 +359,17 @@ TabControl.selectTab = function(tabId)
   // Reset caret position
   Action.setCaretPosition(0);
   Action.updateLineNumberDisplay();
+
+  // update the diagram -- this is a redundent call
+  
+  // console.warn('TabControl.selectTab() ...',Object.keys(TabControl.tabs).length);
+  if(Object.keys(TabControl.tabs).length > 1) {
+  // console.warn('TabControl.selectTab() ...',TabControl.activeTab.name);
+    setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+  }
+
+  // setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+
 }
 
 /**
@@ -618,6 +631,7 @@ TabControl.addCallbackToRequestQueue = function(callback)
  */
 TabControl.getCurrentHistory = function()
 {
+  // console.log("Inside TabControl.getCurrentHistory() ...")
   if (!TabControl.activeTab) return History.getInstance();
   return TabControl.tabs[TabControl.activeTab.id].history;
 }

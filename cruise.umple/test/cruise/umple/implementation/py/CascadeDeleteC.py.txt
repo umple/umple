@@ -4,18 +4,18 @@ from B import B
 class C():
     def __init__(self, aMyD, aB):
         if aMyD is None or aMyD.getC() != None :
-            raise RuntimeError ("Unable to create C due to aMyD. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+            raise RuntimeError ("Unable to create C due to aMyD. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
         self._myD = aMyD
         didAddB = self.setB(aB)
         if not didAddB :
-            raise RuntimeError ("Unable to create myC due to b. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+            raise RuntimeError ("Unable to create myC due to b. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
     def __init__(self, aB):
         self._myD = D(self)
         didAddB = self.setB(aB)
         if not didAddB :
-            raise RuntimeError ("Unable to create myC due to b. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+            raise RuntimeError ("Unable to create myC due to b. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
     def getMyD(self):
         return self._myD

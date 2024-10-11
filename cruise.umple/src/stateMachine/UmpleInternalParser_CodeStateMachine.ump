@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
 This file analyzes token related State Machines and populates the State Machine
 related meta model entities in Umple.
@@ -23,6 +23,7 @@ class UmpleInternalParser
   internal List<Token> transitionNames = null;
   internal List<Token> ignoredTransitions = new ArrayList<Token>();
   internal List<Token> innerMixsetTokens = null;
+  List<ReqImplementation> ReqImpState= new ArrayList<ReqImplementation>();
   
   
   //------------------------
@@ -245,7 +246,6 @@ class UmpleInternalParser
         }	
 	    }
     }
-      
       Token subToken = token.getSubToken(0);
       if (subToken.is("activeDefinition"))
       {
@@ -262,6 +262,10 @@ class UmpleInternalParser
       {
         analyzedReferencedStateMachine(subToken,uClassifier);
       }
+    }
+     if(token.is("reqImplementation"))
+    {
+       ReqImpState = analyzeStateReqImpl(token);
     }
   }
 
@@ -634,8 +638,16 @@ class UmpleInternalParser
         }
       } 
     }
-      
     
+     if (uClassifier instanceof UmpleClass) {
+        for(ReqImplementation reqImp : ReqImpState)
+        {
+          sm.addReqImplementation(reqImp);    
+        }
+      }
+      
+      sm.setPosition(stateMachineToken.getPosition());
+     
     if(stateMachineToken.is("pooled"))
     {
       sm.setPooled(true);
@@ -1475,7 +1487,6 @@ class UmpleInternalParser
               priorAutoTransitionExists = true;
             }
           }
-          //System.out.println("added: " + subToken.getValue("event"));
           
           if(subToken.getValue("timer") == null)
           	unguardedEvents.add(subToken.getValue("event"));

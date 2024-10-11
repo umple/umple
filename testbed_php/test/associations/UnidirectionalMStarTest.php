@@ -5,7 +5,7 @@ class UnidirectionalMStarTest extends UnitTestCase
 
   public function test_constructorTooFew()
   {
-  	$this->expectException(new Exception("Unable to create MentorAL, must have at least 3 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
+  	$this->expectException(new Exception("Unable to create MentorAL, must have at least 3 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html"));
     $s = new StudentAL(99);
     $s2 = new StudentAL(98);
     new MentorAL("blah",array($s,$s2));

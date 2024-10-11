@@ -93,11 +93,9 @@ class PythonClassGenerator {
 #>>
 
 <<=gen.translate("packageDefinition",uClass)>><<@ UmpleToJava.import_packages >>
-
-
-<<# if (uClass.numberOfComments() > 0 && uClass.numberOfRequirements() > 0) { List<Comment> toComment = new ArrayList<Comment>(uClass.getComments()); toComment.addAll(Requirement.convertToComment(uClass.getRequirements())); append(realSb, "\n{0}", Comment.format("Javadoc", toComment)); } #>>
-<<# if (uClass.numberOfComments() > 0 && uClass.numberOfRequirements() == 0) { append(realSb, "\n{0}", Comment.format("Javadoc",uClass.getComments())); } #>>
-<<# if (uClass.numberOfComments() == 0 && uClass.numberOfRequirements() > 0) { append(realSb, "\n{0}", Requirement.format("Javadoc",uClass.getRequirements())); } #>>
+<<# if (uClass.numberOfComments() > 0 && uClass.numberOfReqImplementations() > 0 && uClass.getReqImplementations() != null) { List<Comment> toComment = new ArrayList<Comment>(uClass.getComments()); toComment.addAll(Requirement.convertToComment(uClass.getReqImplementations(),model)); append(realSb, "\n{0}", Comment.format("Javadoc", toComment)); } #>>
+<<# if (uClass.numberOfComments() > 0 && uClass.numberOfReqImplementations() == 0) { append(realSb, "\n{0}", Comment.format("Javadoc",uClass.getComments())); } #>>
+<<# if (uClass.numberOfComments() == 0 && uClass.numberOfReqImplementations() > 0 && uClass.getReqImplementations() != null) { append(realSb, "\n{0}", Requirement.format("Javadoc",uClass.getReqImplementations(),model)); } #>>
 <<# for (Position p : uClass.getPositions()) { #>>
 // line <<= p.getLineNumber() >> "<<= uClass.getRelativePath(p.getFilename(),"Java") >>"
 <<# }

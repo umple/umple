@@ -17,5 +17,5 @@ class UmpleToRuby {
 #>>
     @<<=gen.translate("associationMany",av)>> = []
     <<=gen.translate("didAddMany",av)>> = <<=gen.translate("setManyMethod",av)>>(<<=gen.translate("parameterAll",av)>>)
-    raise "Unable to create <<=gen.relatedTranslate("type",av)>>, must have <<=requiredNumber>> @<<=gen.translate("associationMany",av)>>. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" unless <<=gen.translate("didAddMany",av)>>!>>
+    raise "Unable to create <<=gen.relatedTranslate("type",av)>>, must have <<=requiredNumber>> @<<=gen.translate("associationMany",av)>>. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" unless <<=gen.translate("didAddMany",av)>>!>>
 }

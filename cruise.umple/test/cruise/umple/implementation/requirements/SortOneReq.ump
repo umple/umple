@@ -1,0 +1,10 @@
+// To test if a single requirement is outputted.
+req A01 {    
+  z requirement.
+}
+ implementsReq A01;   
+class Example { 
+   var1;
+    var2;
+ } 
+    

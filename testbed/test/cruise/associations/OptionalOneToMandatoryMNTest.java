@@ -3,7 +3,7 @@
  Copyright: All contributers to the Umple Project
  
  This file is made available subject to the open source license found at:
- http://umple.org/license
+ https://umple.org/license
 
  In this case, there is a maximum bound on the number of StudentAQ's contained
  within MentorAQ. so a getMaximumNumberOfStudents() method should generate in
