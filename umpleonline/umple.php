@@ -216,6 +216,22 @@ $output = $dataHandle->readData('model.ump');
 }
 */
 
+
+.led {
+    display: inline-block; 
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+
+    vertical-align: middle;
+    alighn: center;
+    margin:0.3% 0.3% 0 0.5%;
+    background-color: gray; /* Default color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+}
+
+
 </style>
 <link rel="stylesheet" href="scripts/styleSurvey.css"> 
 <link rel="apple-touch-icon" sizes="57x57" href="https://cruise.umple.org/apple-icon-57x57.png">
@@ -452,18 +468,22 @@ $output = $dataHandle->readData('model.ump');
     </span>    
 
     <!-- disabling the save as URL feature and activating collaboration feature-->
-    <!--   
-    <span style="font-size: 30%; white-space:nowrap;">  
+    <!--
+    <span style="font-size: 30%; white-space:nowrap;">
           <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
     </span> -->
 
     <span style="font-size: 30%; white-space:nowrap;">
     <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
-      <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL</a>
+      <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL 
+      </a>
     <?php } else if (!isset($_REQUEST["task"])) { ?>
       <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate</a>
     <?php } ?>
+
     </span>
+
+    <span id="led" class="led"> </span>
 
     <span style="font-size: 30%; white-space:nowrap;">  
     <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>

@@ -34,10 +34,15 @@ Collab.connectCollabServer = async function() {
     // DEBUG
     // console.log("Socket Info: ", socket)
 
+    // LED updates:
+    const led = document.getElementById('led');
+    
     const connectionTimeout = setTimeout(() => {
       console.error('Connection to Collaboration server timed out!');
       console.log("Collaboration server is disconnected/down !")
       Page.setFeedbackMessage("Cannot Collaborate right now!")
+      led.style.backgroundColor = 'red' ; 
+      
     }, 5000); // 5 seconds timeout
 
     console.log("serverURL: ", serverURL, "serverPath: ", serverPath);
@@ -48,6 +53,7 @@ Collab.connectCollabServer = async function() {
       console.log("Connected to Collab Server....")
       // set a feedback message for connected umpleonline window
       Page.setFeedbackMessage("Connected to Collab Server")
+        led.style.backgroundColor = 'green ';
     })
 
     const umpdir = Page.getModel();
@@ -169,6 +175,7 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       const version = cm6.getSyncedVersion(this.view.state);
       const success = await Collab.pushUpdates(socket, filekey, version, updates);
       console.log(success);
+
       this.pushing = false;
       // Regardless of whether the push failed or new updates came in
       // while it was running, try again if there are updates remaining
