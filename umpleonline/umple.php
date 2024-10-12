@@ -450,18 +450,20 @@ $output = $dataHandle->readData('model.ump');
     <a class="button2" href="javascript:Action.generateCode('java','Java');"
       title="Generate Java from this Umple model ... To generate other outputs such as C++, PhP, ER Diagrams and Formal Methods, use the Generate menu in Tools">Generate Java</a>&nbsp;
     </span>    
-  
+
+    <!-- disabling the save as URL feature and activating collaboration feature-->
+    <!--   
     <span style="font-size: 30%; white-space:nowrap;">  
           <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
-    </span>
+    </span> -->
 
-    <!-- <span style="font-size: 30%; white-space:nowrap;">   -->
-    <!-- <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?> -->
-      <!-- <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL</a> -->
-    <!-- <?php } else if (!isset($_REQUEST["task"])) { ?> -->
-      <!-- <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate</a> -->
-    <!-- <?php } ?> -->
-    <!-- </span> -->
+    <span style="font-size: 30%; white-space:nowrap;">
+    <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
+      <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL</a>
+    <?php } else if (!isset($_REQUEST["task"])) { ?>
+      <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate</a>
+    <?php } ?>
+    </span>
 
     <span style="font-size: 30%; white-space:nowrap;">  
     <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>
@@ -946,10 +948,10 @@ $output = $dataHandle->readData('model.ump');
       //
   </script>
 
-  <!-- <script>
+  <script>
     Collab.connectCollabServer();
-  </script> -->
-  
+  </script>
+
   <?php if ($showChrome) { ?>
     <div class="visitors-count" align="right">
         <?php include "counter.php"; ?>
