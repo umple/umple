@@ -1,6 +1,7 @@
 // console.log("umpleCollab.js loaded ...")
 
 Collab = new Object();
+var sockett= null;
 
 // this method is called in umple.php when it is verified that current URL is Bookmarked/Collaborative URL
 // connect to UmpleCollabServer which takes URL parameters umpdir, filename and inittext
@@ -32,7 +33,7 @@ Collab.connectCollabServer = async function() {
     });
 
     // DEBUG
-    // console.log("Socket Info: ", socket)
+    // console.warn("Socket Info: ", socket)
 
     // LED updates:
     const led = document.getElementById('led');
@@ -59,8 +60,10 @@ Collab.connectCollabServer = async function() {
     const umpdir = Page.getModel();
     const filename = TabControl.activeTab != null ? TabControl.activeTab.name : "Untitled";
     // const filename = "untitled";
+
     const inittext = Page.codeMirrorEditor6.state.doc.toString();
     // const inittext = "Test Content";
+
     var filekey = umpdir+"_"+filename;
     // DEBUG
     // console.log(umpdir, filename, inittext)
@@ -72,9 +75,11 @@ Collab.connectCollabServer = async function() {
     console.log("Version: ", getDocumentResponse.version, "Doc: ", getDocumentResponse.doc)
     // when response document coming from collaboration server has some content,
     // then only update the code editor
+
     if(getDocumentResponse.doc.length != 0){
       Page.setCodeMirror6Text(getDocumentResponse.doc);
     }
+
     // call Action.processTyping() to load diagram based on the editor content
     setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
 
@@ -82,13 +87,39 @@ Collab.connectCollabServer = async function() {
     Page.codeMirrorEditor6.dispatch({
       effects: cm6.StateEffect.appendConfig.of(Collab.peerExtension(socket, filekey, getDocumentResponse.version))
     })
+
+
+
   }
   else{
     // DEBUG
     console.log("Current Page URL is NOT Bookmarked!")
     Page.setFeedbackMessage("Current URL is not Collaborative!")
   }
+      // DEBUG
+      console.warn("Socket Info: ", socket)
+      sockett = socket;
+
 }
+
+
+Collab.disconnectFromServer = function() {
+  socket=sockett;
+  // Notify the server about disconnection if necessary
+  socket.emit('disconnectRequest');
+
+  // Clean up the socket connection
+  socket.disconnect();
+
+  // Update UI for disconnected state
+  const led = document.getElementById('led');
+  led.style.backgroundColor = 'gray'; // Indicate disconnected state
+  Page.setFeedbackMessage("Disconnected from Collab Server");
+  // console.log("Disconnected from Collab Server")
+console.log("Disconnected from Collab Server",socket);
+}
+
+
 
 // DEBUG
 // console.log(Page.getModel())
@@ -143,6 +174,7 @@ Collab.pushUpdates = function(socket, filekey, version, fullUpdates) {
 Collab.pullUpdates = function(socket, filekey, version) {
   return new Promise(function(resolve) {
     socket.emit('pullUpdates', filekey, version);
+
     // DEBUG
     // console.log("Emitted pullUpdates with filekey: ", filekey)
     socket.once('pullUpdateResponse', function(updates) {

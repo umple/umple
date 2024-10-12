@@ -261,9 +261,11 @@ $output = $dataHandle->readData('model.ump');
       <div class="inRow logo">
         <a href="https://cruise.umple.org/umple"><img src="scripts/umpleonline_title.jpg" alt="UmpleOnline logo" /></a>     
       </div>
-      <div class="inRow">
-        <p class="pagedescription">
+
+      <div class="inRow" style = "width: 77%">
         
+        <p class="pagedescription">
+
         <span class="pretext">
           Draw on the right, write (Umple) model code on the left. Analyse models and generate code.<br/>
            <?php
@@ -322,12 +324,40 @@ $output = $dataHandle->readData('model.ump');
         <span id="gdprtext" class="pretext">        
           This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="https://umple.org/privacy" target="privacy">Click to learn about privacy.</a>
         <br/></span>
-    
-    <span style="font-size: 30%; white-space:nowrap;">
-    <a class="button2" style="padding-top:auto; padding-bottom: auto;" href="https://umple.org/dl" target="dlpage" title="Go to the page that gives instructions on how to download Umple for use in Docker, or Eclipse or on the command line">Download</a>&nbsp;
-    <a class="button2" style="padding-top:auto; padding-bottom: auto;" href="https://umple.org/donate" target="donatepage" title="Go to a University of Ottawa page that will enable you to donate to support Umple; even a few dollars will be much appreciated">Donate</a>&nbsp;
-    
-    </span>&nbsp; &nbsp;
+
+        
+        
+        <span style="font-size: 30%; white-space:nowrap;">
+          <a class="button2" style="padding-top:auto; padding-bottom: auto;" href="https://umple.org/dl" target="dlpage" title="Go to the page that gives instructions on how to download Umple for use in Docker, or Eclipse or on the command line">Download</a>&nbsp;
+          <a class="button2" style="padding-top:auto; padding-bottom: auto;" href="https://umple.org/donate" target="donatepage" title="Go to a University of Ottawa page that will enable you to donate to support Umple; even a few dollars will be much appreciated">Donate</a>&nbsp;
+          
+          </span>&nbsp;
+    <!-- </span>&nbsp; &nbsp; -->
+
+          <!-- collaboration button -->
+         
+          <span style="font-size: 30%; white-space:nowrap;">
+             <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
+               <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL </a>
+               &nbsp;&nbsp;
+               <a class="button2" id="CollabDisconnect" href="javascript:Collab.disconnectFromServer(); // Optional: if you have a server-side handling
+"> Disconnect </a>
+               &nbsp;&nbsp;
+               <a class="button2" id="CollabReconnect" href="javascript:prompt('reconnect')"> Reconnect </a>
+
+
+             <?php } else if (!isset($_REQUEST["task"])) { ?>
+               <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate</a>
+             <?php } ?>
+         
+             </span>
+             
+              <!-- collaboration LED -->
+         
+             <span id="led" class="led"> </span>
+
+
+             
           For help:
     <?php if(strpos($_SERVER['REQUEST_URI'], 'umple.php') !== false && strpos($_SERVER['REQUEST_URI'], 'umpleonline/umple.php') === false ) {$manpage="/manual/GettingStarted.html";} else {$manpage="https://manual.umple.org";} ?>                
     <span style="font-size: 30%; white-space:nowrap;">
@@ -337,6 +367,7 @@ $output = $dataHandle->readData('model.ump');
     <a class="button2" style="line-height: 1; padding-top:auto; padding-bottom: auto;" href="https://github.com/umple/umple/issues/new" target="issuepage" title="Open a separate tab on the page where you can report an Umple bug or request an improvement">Report issue</a>&nbsp;
     </span>
         </p>
+        
       </div>
     </div>
   <?php } ?>
@@ -473,17 +504,8 @@ $output = $dataHandle->readData('model.ump');
           <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
     </span> -->
 
-    <span style="font-size: 30%; white-space:nowrap;">
-    <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
-      <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL 
-      </a>
-    <?php } else if (!isset($_REQUEST["task"])) { ?>
-      <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate</a>
-    <?php } ?>
 
-    </span>
-
-    <span id="led" class="led"> </span>
+    <!-- <span id="led" class="led"> </span> -->
 
     <span style="font-size: 30%; white-space:nowrap;">  
     <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>
