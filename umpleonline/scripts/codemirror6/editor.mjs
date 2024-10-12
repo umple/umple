@@ -8,7 +8,7 @@ import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from "@cod
 import { SearchCursor, RegExpCursor } from "@codemirror/search";
 
 
-const debuggerFlag = false;
+const debuggerFlag = true;
 
 
 // Define the custom theme for active line and selection highlighting
@@ -100,7 +100,7 @@ const changeListenerPlugin = ViewPlugin.fromClass(class {
         if (newContent !== this.lastContent) {
         const currentPositionofCursor = this.view.state.selection.main.head;
        // if (newContent.localeCompare(this.lastContent) !== 0) {
-       
+
         if (debuggerFlag)   
        console.warn('Content changed');
 
