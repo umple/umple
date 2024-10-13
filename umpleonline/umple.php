@@ -297,16 +297,17 @@ $output = $dataHandle->readData('model.ump');
     <h2>Reconnect to Collaboration session</h2>
 
     <p>Reconnecting your previous session? </p>
-    <button id="collabReconnectmodal" onclick="Collab.reconnectToServer()">Reconnect</button>
+    <button id="collabReconnectmodal" onclick= "reconnect()" >Reconnect
+    </button>
 
     <div>
-    <p>Reconnecting to specific session with ID: </p>
-    <input type="text" id="collabSessionURL" placeholder="Enter your session ID"></input>
-    <button id="collabReconnectmodal2" onclick="Collab.reconnectToServer()">Reconnect</button>
+    <p>Reconnecting to specific session with URL: </p>
+    <input type="text" id="collabSessionURL" placeholder="Enter your session URL"></input>
+    <button id="collabReconnectmodal2" onclick="reconnectToSpecificlocation()">Reconnect to this URL</button>
     </div>
 
     <p>start a new session?</p>
-    <button id="collabStartNew" onclick="Collab.startNewSession()">Start New</button>
+    <button id="collabStartNew" onclick="javascript:Page.createBookmark()">Start New</button>
     <br>
     <br>
     <button id="closeModal">Close</button>
@@ -1070,6 +1071,19 @@ $output = $dataHandle->readData('model.ump');
     });
 
     }
+
+
+
+    function reconnect() {
+      var currentaddress = document.location.href;
+      window.location.href = currentaddress;
+    }
+
+
+    function reconnectToSpecificlocation() {
+      var collabURL = document.getElementById('collabSessionURL').value;
+      window.open(collabURL,'_blank');
+        }
 
 
   </script>
