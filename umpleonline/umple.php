@@ -232,6 +232,43 @@ $output = $dataHandle->readData('model.ump');
 }
 
 
+.modal-container{
+  background-color: rgba(0, 0, 0, 0.3);
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  opacity: 0;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  trsnsition: opacity 0.3s ease;
+  z-index: 100000;
+  display: none;
+}
+
+.modal-container.show{
+  pointer-events: auto;
+  opacity: 1;
+  display: flex;
+}
+
+.modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+  top: -20%;
+  text-align: center;
+  position: relative;
+}
+
+
+
 </style>
 <link rel="stylesheet" href="scripts/styleSurvey.css"> 
 <link rel="apple-touch-icon" sizes="57x57" href="https://cruise.umple.org/apple-icon-57x57.png">
@@ -253,6 +290,31 @@ $output = $dataHandle->readData('model.ump');
 <meta name="theme-color" content="#8f001a">
 </head>
 <body>
+
+<div id="modal-container" class="modal-container">
+  <div class="modal">
+
+    <h2>Reconnect to Collaboration session</h2>
+
+    <p>Reconnecting your previous session? </p>
+    <button id="collabReconnectmodal" onclick="Collab.reconnectToServer()">Reconnect</button>
+
+    <div>
+    <p>Reconnecting to specific session with ID: </p>
+    <input type="text" id="collabSessionURL" placeholder="Enter your session ID"></input>
+    <button id="collabReconnectmodal2" onclick="Collab.reconnectToServer()">Reconnect</button>
+    </div>
+
+    <p>start a new session?</p>
+    <button id="collabStartNew" onclick="Collab.startNewSession()">Start New</button>
+    <br>
+    <br>
+    <button id="closeModal">Close</button>
+
+  </div>
+</div>
+
+
   <?php if($showChrome) { ?> 
     <div id="header" class="row">
         <span style="float: right">
@@ -340,10 +402,9 @@ $output = $dataHandle->readData('model.ump');
              <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
                <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL </a>
                &nbsp;&nbsp;
-               <a class="button2" id="CollabDisconnect" href="javascript:Collab.disconnectFromServer(); // Optional: if you have a server-side handling
-"> Disconnect </a>
+               <a class="button2" id="collabDisconnect" href="javascript:Collab.disconnectFromServer();"> Disconnect </a>
                &nbsp;&nbsp;
-               <a class="button2" id="CollabReconnect" href="javascript:prompt('reconnect')"> Reconnect </a>
+               <a class="button2" id="collabReconnect" href="javascript:"> Reconnect </a>
 
 
              <?php } else if (!isset($_REQUEST["task"])) { ?>
@@ -994,10 +1055,31 @@ $output = $dataHandle->readData('model.ump');
     Collab.connectCollabServer();
   </script>
 
+  <script>
+    if (document.getElementById('collabReconnect')) {
+    const open = document.getElementById('collabReconnect');
+    const modalContainer = document.getElementById('modal-container');
+    const close = document.getElementById('closeModal');
+
+    open.addEventListener('click', () => {
+      modalContainer.classList.add('show');
+    });
+
+    close.addEventListener('click', () => {
+      modalContainer.classList.remove('show');
+    });
+
+    }
+
+
+  </script>
+
   <?php if ($showChrome) { ?>
     <div class="visitors-count" align="right">
         <?php include "counter.php"; ?>
     </div>
   <?php } ?>
+
+
 </body>
 </html>
