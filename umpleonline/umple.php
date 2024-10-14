@@ -236,6 +236,11 @@ $output = $dataHandle->readData('model.ump');
     transition: background-color 0.2s ease !important;
 }
 
+.LEDonError {
+    background-color: orange !important;
+    transition: background-color 0.2s ease !important;
+}
+
 
 
 .modal-container{

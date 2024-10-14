@@ -2,6 +2,7 @@
 
 Collab = new Object();
 var sockett= null;
+var dc = null;
 
 // this method is called in umple.php when it is verified that current URL is Bookmarked/Collaborative URL
 // connect to UmpleCollabServer which takes URL parameters umpdir, filename and inittext
@@ -210,6 +211,9 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
 
       if (success){
         document.getElementById('led').classList.add('LEDon');
+      }else{
+        document.getElementById('led').classList.add('LEDonError');
+        dc+=1;
       }
 
       this.pushing = false;
@@ -220,7 +224,14 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
 
       setTimeout(() => {
         document.getElementById('led').classList.remove('LEDon');
+        document.getElementById('led').classList.remove('LEDonError');
       }, 200); 
+
+      if (dc >= 100){
+        Collab.disconnectFromServer();
+        alert("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
+        dc=0;
+      }
 
     }
 x
