@@ -208,13 +208,22 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       const success = await Collab.pushUpdates(socket, filekey, version, updates);
       console.log(success);
 
+      if (success){
+        document.getElementById('led').classList.add('LEDon');
+      }
+
       this.pushing = false;
       // Regardless of whether the push failed or new updates came in
       // while it was running, try again if there are updates remaining
       if (cm6.sendableUpdates(this.view.state).length)
         setTimeout(() => this.push(filekey), 100);
-    }
 
+      setTimeout(() => {
+        document.getElementById('led').classList.remove('LEDon');
+      }, 200); 
+
+    }
+x
     async pull(filekey) {
       while (!this.done) {
         const version = cm6.getSyncedVersion(this.view.state);

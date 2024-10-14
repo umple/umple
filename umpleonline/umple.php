@@ -218,7 +218,7 @@ $output = $dataHandle->readData('model.ump');
 
 
 .led {
-    display: inline-block; 
+    display: inline-block;
     width: 12px;
     height: 12px;
     border-radius: 50%;
@@ -230,6 +230,12 @@ $output = $dataHandle->readData('model.ump');
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     transition: background-color 0.3s ease;
 }
+
+.LEDon {
+    background-color: #04ca04 !important;
+    transition: background-color 0.2s ease !important;
+}
+
 
 
 .modal-container{
