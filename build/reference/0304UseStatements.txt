@@ -16,7 +16,7 @@ of use statements.</p>
 
 <p>Parts of an individual class can be specified in separate files, and brought together using several use statements. For example the associations or attributes could be in one (or several) files, and the methods could be in one (or more) additional files.</p>
 
-<p>Another way to decompose a system is to have a 'core' set of files that can be included in several different systems using use statements.</p>
+<p>Another way to decompose a system is to have a 'core' set of files that can be included in several different systems using &#39;use&#39; statements.</p>
 
 <p>Use statements work in a manner similar to 'include' directives in other languages.</p>
 
