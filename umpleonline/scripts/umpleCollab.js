@@ -240,6 +240,11 @@ x
         const version = cm6.getSyncedVersion(this.view.state);
         const updates = await Collab.pullUpdates(socket, filekey, version); // filekey added here
         this.view.dispatch(cm6.receiveUpdates(this.view.state, updates));
+        document.getElementById('led').classList.add('LEDonReceive');
+        setTimeout(() => {
+          document.getElementById('led').classList.remove('LEDonReceive');
+        }, 200);
+
       }
     }
 

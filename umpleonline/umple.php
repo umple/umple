@@ -222,10 +222,12 @@ $output = $dataHandle->readData('model.ump');
     width: 12px;
     height: 12px;
     border-radius: 50%;
+    position: relative;
+    top:1px;
 
-    vertical-align: middle;
-    alighn: center;
-    margin:0.3% 0.3% 0 0.5%;
+    /* vertical-align: middle; */
+    /* alighn: center; */
+    /* margin:0.3% 0.3% 0 0.5%; */
     background-color: gray; /* Default color */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     transition: background-color 0.3s ease;
@@ -238,6 +240,10 @@ $output = $dataHandle->readData('model.ump');
 
 .LEDonError {
     background-color: orange !important;
+    transition: background-color 0.2s ease !important;
+}
+.LEDonReceive {
+    background-color: #e021cd !important;
     transition: background-color 0.2s ease !important;
 }
 
@@ -412,7 +418,9 @@ $output = $dataHandle->readData('model.ump');
          
           <span style="font-size: 30%; white-space:nowrap;">
              <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
-               <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL </a>
+               <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL 
+               <span id="led" class="led"> </span>
+               </a>
                &nbsp;&nbsp;
                <a class="button2" id="collabDisconnect" href="javascript:Collab.disconnectFromServer();"> Disconnect </a>
                &nbsp;&nbsp;
@@ -420,18 +428,20 @@ $output = $dataHandle->readData('model.ump');
 
 
              <?php } else if (!isset($_REQUEST["task"])) { ?>
-               <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate</a>
+               <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate 
+                 <span id="led" class="led"> </span>
+               </a>
              <?php } ?>
          
              </span>
              
               <!-- collaboration LED -->
          
-             <span id="led" class="led"> </span>
+             <!-- <span id="led" class="led"> </span> -->
 
 
              
-          For help:
+         <span> &nbsp; For help: </span>
     <?php if(strpos($_SERVER['REQUEST_URI'], 'umple.php') !== false && strpos($_SERVER['REQUEST_URI'], 'umpleonline/umple.php') === false ) {$manpage="/manual/GettingStarted.html";} else {$manpage="https://manual.umple.org";} ?>                
     <span style="font-size: 30%; white-space:nowrap;">
     <a class="button2" style="line-height: 1; padding-top:auto; padding-bottom: auto;" href="<?php echo $manpage ?>" target="helppage" title="Open the Umple user manual in a separate tab" >User manual</a>&nbsp;
