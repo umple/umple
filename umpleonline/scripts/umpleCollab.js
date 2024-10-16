@@ -3,6 +3,7 @@
 Collab = new Object();
 var sockett= null;
 var dc = null;
+var baseclientID = null;
 
 // this method is called in umple.php when it is verified that current URL is Bookmarked/Collaborative URL
 // connect to UmpleCollabServer which takes URL parameters umpdir, filename and inittext
@@ -159,6 +160,8 @@ Collab.pushUpdates = function(socket, filekey, version, fullUpdates) {
       effects: u.effects
   }));
 
+  baseclientID = fullUpdates[0].clientID;
+
   return new Promise(function(resolve) {
     socket.emit('pushUpdates', filekey, version, JSON.stringify(updates));
 
@@ -240,10 +243,17 @@ x
         const version = cm6.getSyncedVersion(this.view.state);
         const updates = await Collab.pullUpdates(socket, filekey, version); // filekey added here
         this.view.dispatch(cm6.receiveUpdates(this.view.state, updates));
-        document.getElementById('led').classList.add('LEDonReceive');
-        setTimeout(() => {
-          document.getElementById('led').classList.remove('LEDonReceive');
-        }, 200);
+
+        // console.log("updates: ", updates);
+        // console.log(updates[0].clientID);
+        // console.log(baseclientID);
+
+        if(updates[0].clientID != baseclientID){ 
+          document.getElementById('led').classList.add('LEDonReceive');
+          setTimeout(() => {
+            document.getElementById('led').classList.remove('LEDonReceive');
+         }, 200);
+        }
 
       }
     }
