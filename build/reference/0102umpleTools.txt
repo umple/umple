@@ -27,7 +27,7 @@ href="https://umple.org/dl">downloads site</a>.</li>
 <li><b>Command-line based compiler</b> You can always use Umple from the 
 command line, typically from an ant script. Simply <a
 href="https://github.com/umple/umple/releases/latest">download the latest 
-officially released version of the umple jar</a>, and run it as "java -jar umple.jar *.ump".  A shell script called umple is also available in the dev-tools directory to make the preceding easier. The dev-tools directory also has other tools to automated useful tasks for building and using Umple. Additionally you can download and install the Umple jar file and the umple shell script using chocolatey (Windows), or brew (Mac). </li>
+officially released version of the umple jar</a>, and run it as "java -jar umple.jar *.ump".  A shell script called umple is also available in the dev-tools directory to make the preceding easier. The dev-tools directory also has other tools to automate useful tasks for building and using Umple. Additionally you can download and install the Umple jar file and the umple shell script using chocolatey (Windows), or brew (Mac). </li>
 
 <br />
 
