@@ -5,7 +5,6 @@ var sockett= null;
 var dc = null;
 var baseclientID = null;
 
-
 function updateConnectionStatus() {
   // if (navigator.onLine) {
   //     console.log("You are online");
@@ -15,7 +14,7 @@ function updateConnectionStatus() {
   // }
 
   if(!navigator.onLine){
-    console.warn("You are offline");
+    console.warn("You are not connected to the Internet. Please check your connection and try again.");
     Collab.disconnectFromServer();
   }
   
@@ -51,6 +50,10 @@ updateConnectionStatus();
 
 
     var socket = io(serverURL, {
+      reconnection: true,          // Enable reconnection
+      reconnectionAttempts: 3,     // Set maximum reconnection attempts to 5
+      reconnectionDelay: 800,     // Optional: delay between attempts (in ms)
+
       path: serverPath,
       cors: {
       origin: '*',
@@ -70,7 +73,7 @@ updateConnectionStatus();
       Page.setFeedbackMessage("Cannot Collaborate right now!")
       // led.style.backgroundColor = 'red' ; 
       
-    }, 5000); // 5 seconds timeout
+    }, 10000); // 10 seconds timeout
 
     console.log("serverURL: ", serverURL, "serverPath: ", serverPath);
 
@@ -92,6 +95,32 @@ updateConnectionStatus();
         disconnectButton.style.display = 'inherit'; // Hide disconnect button
 
     })
+    .on('connect_error', (error) => {
+      
+        console.warn('Connection to Collaboration server failed! Please try again later.');
+        Page.setFeedbackMessage("Cannot Collaborate right now!")
+
+        const reconnectButton = document.getElementById('collabReconnect');
+        reconnectButton.style.display = 'inherit'; // Show reconnect button
+
+        const disconnectButton = document.getElementById('collabDisconnect');
+        if(!disconnectButton){
+        disconnectButton.style.display = 'none'; // Hide disconnect button
+        }
+
+        led.style.backgroundColor = 'red';
+      
+    });
+
+
+    socket.on('disconnect', function () {
+      console.log('You are disconnected from server.');
+      Page.setFeedbackMessage("Disconnected from Collab Server")
+      // Collab.disconnectFromServer();
+      
+    });
+
+
 
     const umpdir = Page.getModel();
     const filename = TabControl.activeTab != null ? TabControl.activeTab.name : "Untitled";
@@ -142,9 +171,10 @@ updateConnectionStatus();
 Collab.disconnectFromServer = function() {
   socket=sockett;
   // Notify the server about disconnection if necessary
-  socket.emit('disconnectRequest');
+  // socket.emit('disconnectRequest');
 
   // Clean up the socket connection
+  if(socket != null)
   socket.disconnect();
 
   // Update UI for disconnected state

@@ -430,7 +430,7 @@ $output = $dataHandle->readData('model.ump');
 
              <?php } else if (!isset($_REQUEST["task"])) { ?>
                <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate 
-                 <span id="led" class="led"> </span>
+                 <!-- <span id="led" class="led"> </span> -->
                </a>
              <?php } ?>
          
