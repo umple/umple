@@ -5,12 +5,36 @@ var sockett= null;
 var dc = null;
 var baseclientID = null;
 
+
+function updateConnectionStatus() {
+  // if (navigator.onLine) {
+  //     console.log("You are online");
+  // } else {
+  //     console.log("You are offline");
+  //     this.Collab.disconnectFromServer();
+  // }
+
+  if(!navigator.onLine){
+    console.warn("You are offline");
+    Collab.disconnectFromServer();
+  }
+  
+}
+// Listen for changes
+// window.addEventListener('online', updateConnectionStatus);
+window.addEventListener('offline', updateConnectionStatus);
+
+
 // this method is called in umple.php when it is verified that current URL is Bookmarked/Collaborative URL
 // connect to UmpleCollabServer which takes URL parameters umpdir, filename and inittext
 // umpdir represents the current model
 // filename represents the currently active tab
 // inittext represents the current contents of the codemirror6 editor
 Collab.connectCollabServer = async function() {
+
+// Check the initial status
+updateConnectionStatus();
+
   // DEBUG
   console.log("Inside Collab.connectCollabServer ...")
   if(Page.isBookmarkURL()){
