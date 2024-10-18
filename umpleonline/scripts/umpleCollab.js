@@ -1,6 +1,29 @@
 // console.log("umpleCollab.js loaded ...")
 
 Collab = new Object();
+var sockett= null;
+var dc = null;
+var baseclientID = null;
+var attamept = 0;
+
+function updateConnectionStatus() {
+  // if (navigator.onLine) {
+  //     console.log("You are online");
+  // } else {
+  //     console.log("You are offline");
+  //     this.Collab.disconnectFromServer();
+  // }
+
+  if(!navigator.onLine){
+    console.warn("You are not connected to the Internet. Please check your connection and try again.");
+    Collab.disconnectFromServer();
+  }
+  
+}
+// Listen for changes
+// window.addEventListener('online', updateConnectionStatus);
+window.addEventListener('offline', updateConnectionStatus);
+
 
 // this method is called in umple.php when it is verified that current URL is Bookmarked/Collaborative URL
 // connect to UmpleCollabServer which takes URL parameters umpdir, filename and inittext
@@ -8,6 +31,10 @@ Collab = new Object();
 // filename represents the currently active tab
 // inittext represents the current contents of the codemirror6 editor
 Collab.connectCollabServer = async function() {
+
+// Check the initial status
+updateConnectionStatus();
+
   // DEBUG
   console.log("Inside Collab.connectCollabServer ...")
   if(Page.isBookmarkURL()){
@@ -24,6 +51,10 @@ Collab.connectCollabServer = async function() {
 
 
     var socket = io(serverURL, {
+      reconnection: true,          // Enable reconnection
+      reconnectionAttempts: 3,     // Set maximum reconnection attempts to 5
+      reconnectionDelay: 800,     // Optional: delay between attempts (in ms)
+
       path: serverPath,
       cors: {
       origin: '*',
@@ -32,13 +63,18 @@ Collab.connectCollabServer = async function() {
     });
 
     // DEBUG
-    // console.log("Socket Info: ", socket)
+    // console.warn("Socket Info: ", socket)
 
+    // LED updates:
+    const led = document.getElementById('led');
+    
     const connectionTimeout = setTimeout(() => {
       console.error('Connection to Collaboration server timed out!');
       console.log("Collaboration server is disconnected/down !")
       Page.setFeedbackMessage("Cannot Collaborate right now!")
-    }, 5000); // 5 seconds timeout
+      // led.style.backgroundColor = 'red' ; 
+      
+    }, 10000); // 10 seconds timeout
 
     console.log("serverURL: ", serverURL, "serverPath: ", serverPath);
 
@@ -48,13 +84,61 @@ Collab.connectCollabServer = async function() {
       console.log("Connected to Collab Server....")
       // set a feedback message for connected umpleonline window
       Page.setFeedbackMessage("Connected to Collab Server")
+        led.style.backgroundColor = 'green ';
+
+
+        const reconnectButton = document.getElementById('collabReconnect');
+        if(reconnectButton){
+          reconnectButton.style.display = 'none'; // Show reconnect button
+        }
+      
+        const disconnectButton = document.getElementById('collabDisconnect');
+        disconnectButton.style.display = 'inherit'; // Hide disconnect button
+
     })
+    .on('connect_error', (error) => {
+      
+        console.warn('Connection to Collaboration server failed! Please try again later.');
+        Page.setFeedbackMessage("Cannot Collaborate right now!")
+
+        const reconnectButton = document.getElementById('collabReconnect');
+        reconnectButton.style.display = 'inherit'; // Show reconnect button
+
+        const disconnectButton = document.getElementById('collabDisconnect');
+
+        led.style.backgroundColor = 'red';
+        // Hide disconnect button
+        if(disconnectButton.style.display == 'inherit'){
+        disconnectButton.style.display = 'none'; // Hide disconnect button
+
+        }
+
+        attamept+=1;  
+        if (attamept >= 3){
+        console.log("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
+        Page.setFeedbackMessage("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
+        attamept=0;
+        Collab.disconnectFromServer();
+        }
+      
+    });
+
+
+    socket.on('disconnect', function () {
+      console.log('You are disconnected from server.');
+      Page.setFeedbackMessage("Disconnected from Collab Server")
+      // Collab.disconnectFromServer();
+      
+    });
+
 
     const umpdir = Page.getModel();
     const filename = TabControl.activeTab != null ? TabControl.activeTab.name : "Untitled";
     // const filename = "untitled";
+
     const inittext = Page.codeMirrorEditor6.state.doc.toString();
     // const inittext = "Test Content";
+
     var filekey = umpdir+"_"+filename;
     // DEBUG
     // console.log(umpdir, filename, inittext)
@@ -66,9 +150,11 @@ Collab.connectCollabServer = async function() {
     console.log("Version: ", getDocumentResponse.version, "Doc: ", getDocumentResponse.doc)
     // when response document coming from collaboration server has some content,
     // then only update the code editor
+
     if(getDocumentResponse.doc.length != 0){
       Page.setCodeMirror6Text(getDocumentResponse.doc);
     }
+
     // call Action.processTyping() to load diagram based on the editor content
     setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
 
@@ -76,13 +162,47 @@ Collab.connectCollabServer = async function() {
     Page.codeMirrorEditor6.dispatch({
       effects: cm6.StateEffect.appendConfig.of(Collab.peerExtension(socket, filekey, getDocumentResponse.version))
     })
+
+
+
   }
   else{
     // DEBUG
     console.log("Current Page URL is NOT Bookmarked!")
     Page.setFeedbackMessage("Current URL is not Collaborative!")
   }
+      // DEBUG
+      console.warn("Socket Info: ", socket)
+      sockett = socket;
+
 }
+
+
+Collab.disconnectFromServer = function() {
+  socket=sockett;
+  // Notify the server about disconnection if necessary
+  // socket.emit('disconnectRequest');
+
+  // Clean up the socket connection
+  if(socket != null)
+  socket.disconnect();
+
+  // Update UI for disconnected state
+  const led = document.getElementById('led');
+  led.style.backgroundColor = 'gray'; // Indicate disconnected state
+
+  const reconnectButton = document.getElementById('collabReconnect');
+  reconnectButton.style.display = 'inherit'; // Show reconnect button
+
+  const disconnectButton = document.getElementById('collabDisconnect');
+  disconnectButton.style.display = 'none'; // Hide disconnect button
+
+  Page.setFeedbackMessage("Disconnected from Collab Server");
+  // console.log("Disconnected from Collab Server")
+console.log("Disconnected from Collab Server",socket);
+}
+
+
 
 // DEBUG
 // console.log(Page.getModel())
@@ -121,6 +241,8 @@ Collab.pushUpdates = function(socket, filekey, version, fullUpdates) {
       effects: u.effects
   }));
 
+  baseclientID = fullUpdates[0].clientID;
+
   return new Promise(function(resolve) {
     socket.emit('pushUpdates', filekey, version, JSON.stringify(updates));
 
@@ -137,6 +259,7 @@ Collab.pushUpdates = function(socket, filekey, version, fullUpdates) {
 Collab.pullUpdates = function(socket, filekey, version) {
   return new Promise(function(resolve) {
     socket.emit('pullUpdates', filekey, version);
+
     // DEBUG
     // console.log("Emitted pullUpdates with filekey: ", filekey)
     socket.once('pullUpdateResponse', function(updates) {
@@ -169,18 +292,50 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       const version = cm6.getSyncedVersion(this.view.state);
       const success = await Collab.pushUpdates(socket, filekey, version, updates);
       console.log(success);
+
+      if (success){
+        document.getElementById('led').classList.add('LEDon');
+      }else{
+        document.getElementById('led').classList.add('LEDonError');
+        dc+=1;
+      }
+
       this.pushing = false;
       // Regardless of whether the push failed or new updates came in
       // while it was running, try again if there are updates remaining
       if (cm6.sendableUpdates(this.view.state).length)
         setTimeout(() => this.push(filekey), 100);
-    }
 
+      setTimeout(() => {
+        document.getElementById('led').classList.remove('LEDon');
+        document.getElementById('led').classList.remove('LEDonError');
+      }, 200); 
+
+      if (dc >= 100){
+        Collab.disconnectFromServer();
+        alert("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
+        dc=0;
+      }
+
+    }
+x
     async pull(filekey) {
       while (!this.done) {
         const version = cm6.getSyncedVersion(this.view.state);
         const updates = await Collab.pullUpdates(socket, filekey, version); // filekey added here
         this.view.dispatch(cm6.receiveUpdates(this.view.state, updates));
+
+        // console.log("updates: ", updates);
+        // console.log(updates[0].clientID);
+        // console.log(baseclientID);
+
+        if(updates[0].clientID != baseclientID){ 
+          document.getElementById('led').classList.add('LEDonReceive');
+          setTimeout(() => {
+            document.getElementById('led').classList.remove('LEDonReceive');
+         }, 200);
+        }
+
       }
     }
 

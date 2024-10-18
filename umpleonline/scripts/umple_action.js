@@ -20,7 +20,7 @@ Action.savedCanonical = "";
 Action.gdprHidden = false;
 Action.update = "";
 
-const debuggerFlag = false;
+const debuggerFlag = true;
 
 
 // Regulators of whether a save occurs on not
