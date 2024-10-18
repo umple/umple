@@ -44,7 +44,7 @@ Collab.connectCollabServer = async function() {
       console.error('Connection to Collaboration server timed out!');
       console.log("Collaboration server is disconnected/down !")
       Page.setFeedbackMessage("Cannot Collaborate right now!")
-      led.style.backgroundColor = 'red' ; 
+      // led.style.backgroundColor = 'red' ; 
       
     }, 5000); // 5 seconds timeout
 
@@ -57,6 +57,16 @@ Collab.connectCollabServer = async function() {
       // set a feedback message for connected umpleonline window
       Page.setFeedbackMessage("Connected to Collab Server")
         led.style.backgroundColor = 'green ';
+
+
+        const reconnectButton = document.getElementById('collabReconnect');
+        if(reconnectButton){
+          reconnectButton.style.display = 'none'; // Show reconnect button
+        }
+      
+        const disconnectButton = document.getElementById('collabDisconnect');
+        disconnectButton.style.display = 'inherit'; // Hide disconnect button
+
     })
 
     const umpdir = Page.getModel();
@@ -116,6 +126,13 @@ Collab.disconnectFromServer = function() {
   // Update UI for disconnected state
   const led = document.getElementById('led');
   led.style.backgroundColor = 'gray'; // Indicate disconnected state
+
+  const reconnectButton = document.getElementById('collabReconnect');
+  reconnectButton.style.display = 'inherit'; // Show reconnect button
+
+  const disconnectButton = document.getElementById('collabDisconnect');
+  disconnectButton.style.display = 'none'; // Hide disconnect button
+
   Page.setFeedbackMessage("Disconnected from Collab Server");
   // console.log("Disconnected from Collab Server")
 console.log("Disconnected from Collab Server",socket);

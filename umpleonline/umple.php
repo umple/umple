@@ -249,7 +249,7 @@ $output = $dataHandle->readData('model.ump');
 
 
 
-.modal-container{
+/* .modal-container{
   background-color: rgba(0, 0, 0, 0.3);
   display:flex;
   align-items: center;
@@ -282,7 +282,7 @@ $output = $dataHandle->readData('model.ump');
   top: -20%;
   text-align: center;
   position: relative;
-}
+} */
 
 
 
@@ -307,7 +307,7 @@ $output = $dataHandle->readData('model.ump');
 <meta name="theme-color" content="#8f001a">
 </head>
 <body>
-
+<!-- 
 <div id="modal-container" class="modal-container">
   <div class="modal">
 
@@ -330,7 +330,7 @@ $output = $dataHandle->readData('model.ump');
     <button id="closeModal">Close</button>
 
   </div>
-</div>
+</div> -->
 
 
   <?php if($showChrome) { ?> 
@@ -422,10 +422,11 @@ $output = $dataHandle->readData('model.ump');
                <span id="led" class="led"> </span>
                </a>
                &nbsp;&nbsp;
-               <a class="button2" id="collabDisconnect" href="javascript:Collab.disconnectFromServer();"> Disconnect </a>
-               &nbsp;&nbsp;
-               <a class="button2" id="collabReconnect" href="javascript:"> Reconnect </a>
 
+               <a class="button2" id="collabDisconnect" style="display:none" href="javascript:Collab.disconnectFromServer();"> Disconnect </a>
+               &nbsp;&nbsp;
+               
+              <a class="button2" id="collabReconnect" style="display:none" href="javascript:reconnect()"> Reconnect </a>
 
              <?php } else if (!isset($_REQUEST["task"])) { ?>
                <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate 
@@ -1078,20 +1079,20 @@ $output = $dataHandle->readData('model.ump');
   </script>
 
   <script>
-    if (document.getElementById('collabReconnect')) {
-    const open = document.getElementById('collabReconnect');
-    const modalContainer = document.getElementById('modal-container');
-    const close = document.getElementById('closeModal');
+    // if (document.getElementById('collabReconnect')) {
+    // const open = document.getElementById('collabReconnect');
+    // const modalContainer = document.getElementById('modal-container');
+    // const close = document.getElementById('closeModal');
 
-    open.addEventListener('click', () => {
-      modalContainer.classList.add('show');
-    });
+    // open.addEventListener('click', () => {
+    //   modalContainer.classList.add('show');
+    // });
 
-    close.addEventListener('click', () => {
-      modalContainer.classList.remove('show');
-    });
+    // close.addEventListener('click', () => {
+    //   modalContainer.classList.remove('show');
+    // });
 
-    }
+    // }
 
 
 
@@ -1101,10 +1102,10 @@ $output = $dataHandle->readData('model.ump');
     }
 
 
-    function reconnectToSpecificlocation() {
-      var collabURL = document.getElementById('collabSessionURL').value;
-      window.open(collabURL,'_blank');
-        }
+    // function reconnectToSpecificlocation() {
+    //   var collabURL = document.getElementById('collabSessionURL').value;
+    //   window.open(collabURL,'_blank');
+    //     }
 
 
   </script>
