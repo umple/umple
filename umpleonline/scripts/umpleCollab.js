@@ -4,6 +4,7 @@ Collab = new Object();
 var sockett= null;
 var dc = null;
 var baseclientID = null;
+var attamept = 0;
 
 function updateConnectionStatus() {
   // if (navigator.onLine) {
@@ -104,11 +105,21 @@ updateConnectionStatus();
         reconnectButton.style.display = 'inherit'; // Show reconnect button
 
         const disconnectButton = document.getElementById('collabDisconnect');
-        if(!disconnectButton){
-        disconnectButton.style.display = 'none'; // Hide disconnect button
-        }
 
         led.style.backgroundColor = 'red';
+        // Hide disconnect button
+        if(disconnectButton.style.display == 'inherit'){
+        disconnectButton.style.display = 'none'; // Hide disconnect button
+
+        }
+
+        attamept+=1;  
+        if (attamept >= 3){
+        console.log("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
+        Page.setFeedbackMessage("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
+        attamept=0;
+        Collab.disconnectFromServer();
+        }
       
     });
 
@@ -119,7 +130,6 @@ updateConnectionStatus();
       // Collab.disconnectFromServer();
       
     });
-
 
 
     const umpdir = Page.getModel();
