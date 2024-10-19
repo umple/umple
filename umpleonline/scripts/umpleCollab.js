@@ -95,10 +95,11 @@ updateConnectionStatus();
         const disconnectButton = document.getElementById('collabDisconnect');
         disconnectButton.style.display = 'inherit'; // Hide disconnect button
 
-        if(cm6.EditorView.editable.of(false))
-        Page.codeMirrorEditor6.dispatch({
-          effects: cm6.StateEffect.removeConfig.of(cm6.EditorView.editable.of(false))
-        });
+        // if(cm6.EditorView.editable.of(false) == true)
+        //   console.log("Editor is not editable")
+        // Page.codeMirrorEditor6.dispatch({
+        //   effects: cm6.StateEffect.removeConfig.of(cm6.EditorView.editable.of(false))
+        // });
 
     })
     .on('connect_error', (error) => {
