@@ -95,6 +95,11 @@ updateConnectionStatus();
         const disconnectButton = document.getElementById('collabDisconnect');
         disconnectButton.style.display = 'inherit'; // Hide disconnect button
 
+        if(cm6.EditorView.editable.of(false))
+        Page.codeMirrorEditor6.dispatch({
+          effects: cm6.StateEffect.removeConfig.of(cm6.EditorView.editable.of(false))
+        });
+
     })
     .on('connect_error', (error) => {
       
@@ -200,6 +205,11 @@ Collab.disconnectFromServer = function() {
   Page.setFeedbackMessage("Disconnected from Collab Server");
   // console.log("Disconnected from Collab Server")
 console.log("Disconnected from Collab Server",socket);
+
+Page.codeMirrorEditor6.dispatch({
+  effects: cm6.StateEffect.appendConfig.of(cm6.EditorView.editable.of(false))
+});
+
 }
 
 
