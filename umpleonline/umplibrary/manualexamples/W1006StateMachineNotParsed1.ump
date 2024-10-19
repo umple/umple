@@ -1,5 +1,39 @@
 // This example generates the warning
-// because there is a missing semicolon
+// on line 9 there is a missing semicolon
+// on line 17 the = should be ==
+// on line 24 the -> should be after the guard
+// on line 30 there should be an / after entry
+class X {
+  sm1 {
+    s1 {
+      a -> sb
+    }
+    s2{}
+  }
+
+  Integer v = 0;
+  sm2 {
+    s3 {
+      e1 [v = 5] -> s4;
+    }
+    s4 {}
+  }
+
+  sm3 {
+    s5{
+      e2 -> [v==1] s6;
+    }
+    s6{}
+  }
+
+  sm4 {
+    s6 {
+      entry {dosomething();}
+      e3 -> s7;
+    }
+    s7 {}
+  }
+}
 class X {
   sm {
     a -> b

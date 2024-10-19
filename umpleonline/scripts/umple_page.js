@@ -586,6 +586,12 @@ Page.initCodeMirrorEditor = function() {
     effects: cm6.StateEffect.appendConfig.of(cm6.changeListenerPlugin)
   });
 
+  if (Page.readOnly) {
+    Page.codeMirrorEditor6.dispatch({
+      effects: cm6.StateEffect.appendConfig.of(cm6.EditorView.editable.of(false))
+        });
+  }
+  
   // monitor codemirror6 state to listen to any changes in editor contents and update diagram accordingly
   // Page.codeMirrorEditor6.dom.addEventListener("input", () => {
   //   console.log("Input event triggered...")
