@@ -1254,25 +1254,35 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             UmpleClass extend = child.getExtendsClass();
             while(extend!=null && child != extend && limit > 0) 
             {
+              // Look through all the parent classes to see if there are duplicate attributes
               limit--;
               for(Attribute extendAttr : extend.getAttributes()) 
               {
-                
+                // look one by one at the attributes inherited from a parent (extend)
                 String currentName = aAttribute.getName();
                 if (extendAttr.getName().equals(currentName)) 
                 {
+                  // There is an inherited attribute with the same name, but it might be OK if
+                  // it is being 'refined' e.g. given a different type or value
                   if(extendAttr.getType().equals(aAttribute.getType()))
                   {
-                    if(aAttribute.getValue() == null)
+                    if(aAttribute.getValue() == null) {
+                      // Not a refinement by setting a value, so it is a duplicate
                       attRepetition.add(aAttribute);
-                    else
+                      // issue 2173
+                      // warn of the duplicate
+                      setFailedPosition(aAttribute.getPosition(), 44, child.getName(), currentName, extend.getName());
+                    }
+                    else {
+                      // OK the value is being changed
                       aAttribute.setIsRefinement(true);
+                    }
                   }
                   else
                   {
-                  attRepetition.add(aAttribute);
+                    // The new attribute has same name but different type
+                    attRepetition.add(aAttribute);
                     setFailedPosition(aAttribute.getPosition(), 44, child.getName(), currentName, extend.getName());
-                
                   }
                 }
               }
