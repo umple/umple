@@ -420,6 +420,7 @@ $output = $dataHandle->readData('model.ump');
              <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
                <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL 
                <span id="led" class="led"> </span>
+               <span id="activeUsersIcon">&#128100</span>&nbsp;<span id="activeUsers"></span>
                </a>
                &nbsp;&nbsp;
 

@@ -95,12 +95,15 @@ updateConnectionStatus();
         const disconnectButton = document.getElementById('collabDisconnect');
         disconnectButton.style.display = 'inherit'; // Hide disconnect button
 
+        document.getElementById('activeUsers').style.display = 'inherit'; // Hide active users display
+        document.getElementById('activeUsersIcon').style.display = 'inherit'; // Hide active users label
+
         // if(cm6.EditorView.editable.of(false) == true)
         //   console.log("Editor is not editable")
         // Page.codeMirrorEditor6.dispatch({
         //   effects: cm6.StateEffect.removeConfig.of(cm6.EditorView.editable.of(false))
         // });
-
+      socket.emit('joinSession', filekey); // Notify server of joining the session
     })
     .on('connect_error', (error) => {
       
@@ -129,6 +132,13 @@ updateConnectionStatus();
       
     });
 
+
+    // Set up listener for user count updates
+    socket.on('userCountUpdate', function (count) {
+      // document.getElementById('userCountDisplay').innerText = `Users Online: ${count}`;
+      console.warn("Users Online: ", count);
+      document.getElementById('activeUsers').innerText = `${count}`;
+    });
 
     socket.on('disconnect', function () {
       console.log('You are disconnected from server.');
@@ -203,9 +213,12 @@ Collab.disconnectFromServer = function() {
   const disconnectButton = document.getElementById('collabDisconnect');
   disconnectButton.style.display = 'none'; // Hide disconnect button
 
+  document.getElementById('activeUsers').style.display = 'none'; // Hide active users display
+  document.getElementById('activeUsersIcon').style.display = 'none'; // Hide active users label
+
   Page.setFeedbackMessage("Disconnected from Collab Server");
   // console.log("Disconnected from Collab Server")
-console.log("Disconnected from Collab Server",socket);
+  console.log("Disconnected from Collab Server",socket);
 
 Page.codeMirrorEditor6.dispatch({
   effects: cm6.StateEffect.appendConfig.of(cm6.EditorView.editable.of(false))
