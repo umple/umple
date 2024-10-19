@@ -38,7 +38,7 @@ to see how to do this.</li>
 compiler creates code in languages like Java, C++ and PHP that is of top 
 quality. It is a goal of the Umple team to create the best open-source 
 code-generation tool available. The generated code never needs to be 
-edited and never should be edited, since You can always embed native methods  (i.e. 
+edited and never should be edited, since you can always embed native methods  (i.e. 
 Java, Php, etc.) in the Umple, or else use Umple's <a href="BeforeandAfterStatements.html">aspect oriented</a> 
 capabilities to alter the effects of generated code. As a result the concept of 'round 
 tripping' is obsolete in Umple. You should treat Umple-generated code just 
