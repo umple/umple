@@ -233,12 +233,33 @@ $output = $dataHandle->readData('model.ump');
     transition: background-color 0.3s ease;
 }
 
-.LEDon {
+.LEDOne {
+    background-color: #49d3ff !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.LEDTwo {
     background-color: #04ca04 !important;
     transition: background-color 0.2s ease !important;
 }
 
+.LEDMoreThanTwo {
+    background-color: green !important;
+    transition: background-color 0.2s ease !important;
+}
+
+
+.LEDon {
+    background-color: #fcff06 !important;
+    transition: background-color 0.2s ease !important;
+}
+
 .LEDonError {
+    background-color: red !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.LEDonDisconnect {
     background-color: orange !important;
     transition: background-color 0.2s ease !important;
 }

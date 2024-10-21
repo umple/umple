@@ -73,6 +73,9 @@ updateConnectionStatus();
       console.log("Collaboration server is disconnected/down !")
       Page.setFeedbackMessage("Cannot Collaborate right now!")
       // led.style.backgroundColor = 'red' ; 
+      document.getElementById('led').classList.remove('LEDonError');
+      document.getElementById('led').classList.remove('LEDonDisconnect')
+
       
     }, 10000); // 10 seconds timeout
 
@@ -84,9 +87,7 @@ updateConnectionStatus();
       console.log("Connected to Collab Server....")
       // set a feedback message for connected umpleonline window
       Page.setFeedbackMessage("Connected to Collab Server")
-        led.style.backgroundColor = 'green ';
-
-
+        // led.style.backgroundColor = 'green ';
         const reconnectButton = document.getElementById('collabReconnect');
         if(reconnectButton){
           reconnectButton.style.display = 'none'; // Show reconnect button
@@ -115,7 +116,8 @@ updateConnectionStatus();
 
         const disconnectButton = document.getElementById('collabDisconnect');
 
-        led.style.backgroundColor = 'red';
+        // led.style.backgroundColor = 'red';
+        document.getElementById('led').classList.add('LEDonError');
         // Hide disconnect button
         if(disconnectButton.style.display == 'inherit'){
         disconnectButton.style.display = 'none'; // Hide disconnect button
@@ -128,6 +130,10 @@ updateConnectionStatus();
         Page.setFeedbackMessage("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
         attamept=0;
         Collab.disconnectFromServer();
+        document.getElementById('led').classList.remove('LEDonError');
+        document.getElementById('led').classList.remove('LEDonDisconnect')
+
+
         }
       
     });
@@ -138,6 +144,42 @@ updateConnectionStatus();
       // document.getElementById('userCountDisplay').innerText = `Users Online: ${count}`;
       console.warn("Users Online: ", count);
       document.getElementById('activeUsers').innerText = `${count}`;
+      if(count == 1){
+        document.getElementById('led').classList.remove('LEDonError');
+        document.getElementById('led').classList.remove('LEDMoreThanTwo');
+        document.getElementById('led').classList.remove('LEDTwo');
+        document.getElementById('led').classList.remove('LEDonDisconnect')
+
+        document.getElementById('led').classList.add('LEDOne');
+
+      }
+      else if(count == 2){
+        document.getElementById('led').classList.remove('LEDonError');
+        document.getElementById('led').classList.remove('LEDOne');
+        document.getElementById('led').classList.remove('LEDMoreThanTwo');
+        document.getElementById('led').classList.remove('LEDonDisconnect')
+
+        document.getElementById('led').classList.add('LEDTwo');
+      }
+      else if(count >=2){
+        document.getElementById('led').classList.remove('LEDonError');
+        document.getElementById('led').classList.remove('LEDOne');
+        document.getElementById('led').classList.remove('LEDTwo');
+        document.getElementById('led').classList.remove('LEDon');
+        document.getElementById('led').classList.remove('LEDonDisconnect')
+        document.getElementById('led').classList.add('LEDMoreThanTwo');
+        
+      }
+      else {
+        document.getElementById('led').classList.remove('LEDOne');
+        document.getElementById('led').classList.remove('LEDTwo');
+        document.getElementById('led').classList.remove('LEDMoreThanTwo');
+        document.getElementById('led').classList.remove('LEDon');
+        document.getElementById('led').classList.remove('LEDonError');
+        document.getElementById('led').classList.remove('LEDonReceive');
+        document.getElementById('led').classList.add('LEDonDisconnect');
+        document.getElementById('led').backgroundColor = 'gray';
+      }
     });
 
     socket.on('disconnect', function () {
@@ -205,7 +247,15 @@ Collab.disconnectFromServer = function() {
 
   // Update UI for disconnected state
   const led = document.getElementById('led');
-  led.style.backgroundColor = 'gray'; // Indicate disconnected state
+  // led.style.backgroundColor = 'gray'; // Indicate disconnected state
+  document.getElementById('led').classList.add('LEDonDisconnect');
+  document.getElementById('led').classList.remove('LEDon');
+  document.getElementById('led').classList.remove('LEDonError');
+  document.getElementById('led').classList.remove('LEDonReceive');
+  document.getElementById('led').classList.remove('LEDOne');
+  document.getElementById('led').classList.remove('LEDTwo');
+  document.getElementById('led').classList.remove('LEDMoreThanTwo');
+
 
   const reconnectButton = document.getElementById('collabReconnect');
   reconnectButton.style.display = 'inherit'; // Show reconnect button
@@ -320,8 +370,9 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       if (success){
         document.getElementById('led').classList.add('LEDon');
       }else{
+        setTimeout(() => {
         document.getElementById('led').classList.add('LEDonError');
-        dc+=1;
+        dc+=1;}, 200);
       }
 
       this.pushing = false;
