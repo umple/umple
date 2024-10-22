@@ -24,7 +24,6 @@ function updateConnectionStatus() {
 // window.addEventListener('online', updateConnectionStatus);
 window.addEventListener('offline', updateConnectionStatus);
 
-
 // this method is called in umple.php when it is verified that current URL is Bookmarked/Collaborative URL
 // connect to UmpleCollabServer which takes URL parameters umpdir, filename and inittext
 // umpdir represents the current model
@@ -32,12 +31,16 @@ window.addEventListener('offline', updateConnectionStatus);
 // inittext represents the current contents of the codemirror6 editor
 Collab.connectCollabServer = async function() {
 
+
 // Check the initial status
 updateConnectionStatus();
 
   // DEBUG
   console.log("Inside Collab.connectCollabServer ...")
   if(Page.isBookmarkURL()){
+    Page.codeMirrorEditor6.dispatch({
+      effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(false))
+  });
     // DEBUG
     console.log("Current Page is Bookmark URL --- connecting to Collab Server!")
 
@@ -105,6 +108,10 @@ updateConnectionStatus();
         //   effects: cm6.StateEffect.removeConfig.of(cm6.EditorView.editable.of(false))
         // });
       socket.emit('joinSession', filekey); // Notify server of joining the session
+      Page.codeMirrorEditor6.dispatch({
+        effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(true))
+    });
+
     })
     .on('connect_error', (error) => {
       
@@ -270,10 +277,14 @@ Collab.disconnectFromServer = function() {
   // console.log("Disconnected from Collab Server")
   console.log("Disconnected from Collab Server",socket);
 
-Page.codeMirrorEditor6.dispatch({
-  effects: cm6.StateEffect.appendConfig.of(cm6.EditorView.editable.of(false))
-});
+// Page.codeMirrorEditor6.dispatch({
+//   effects: cm6.StateEffect.appendConfig.of(cm6.EditorView.editable.of(false))
+// });
 
+  Page.codeMirrorEditor6.dispatch({
+    effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(false))
+  });
+  
 }
 
 

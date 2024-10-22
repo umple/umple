@@ -25001,6 +25001,9 @@ var cm6 = (function (exports) {
        return state.field(collabField).version;
    }
 
+   // Create a compartment for editable state
+   const editableCompartment = new Compartment();
+
    // Define the custom theme for active line and selection highlighting
 
    const myTheme = EditorView.theme({
@@ -25030,6 +25033,7 @@ var cm6 = (function (exports) {
          keydown(e, view) {
          }
        }),
+       editableCompartment.of(EditorView.editable.of(true)),
      ];
      
      let startState = EditorState.create({
@@ -25128,6 +25132,7 @@ var cm6 = (function (exports) {
    });
 
    exports.ChangeSet = ChangeSet;
+   exports.Compartment = Compartment;
    exports.EditorSelection = EditorSelection;
    exports.EditorView = EditorView;
    exports.RegExpCursor = RegExpCursor;
@@ -25140,6 +25145,7 @@ var cm6 = (function (exports) {
    exports.collab = collab;
    exports.createEditorState = createEditorState;
    exports.createEditorView = createEditorView;
+   exports.editableCompartment = editableCompartment;
    exports.getSyncedVersion = getSyncedVersion;
    exports.receiveUpdates = receiveUpdates;
    exports.sendableUpdates = sendableUpdates;
