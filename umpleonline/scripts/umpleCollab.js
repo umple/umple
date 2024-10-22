@@ -41,6 +41,10 @@ updateConnectionStatus();
     Page.codeMirrorEditor6.dispatch({
       effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(false))
   });
+  Page.readOnly = true;
+  document.getElementById('inputExampleType').disabled = true;
+  document.getElementById('inputExample').disabled = true;
+
     // DEBUG
     console.log("Current Page is Bookmark URL --- connecting to Collab Server!")
 
@@ -108,9 +112,16 @@ updateConnectionStatus();
         //   effects: cm6.StateEffect.removeConfig.of(cm6.EditorView.editable.of(false))
         // });
       socket.emit('joinSession', filekey); // Notify server of joining the session
+      
       Page.codeMirrorEditor6.dispatch({
         effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(true))
     });
+
+    Page.readOnly = false;
+    document.getElementById('inputExampleType').disabled=false;
+    document.getElementById('inputExample').disabled=false;
+
+    // Action.changeDiagramType({type:"editableClass"});
 
     })
     .on('connect_error', (error) => {
@@ -284,7 +295,13 @@ Collab.disconnectFromServer = function() {
   Page.codeMirrorEditor6.dispatch({
     effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(false))
   });
+
+  Page.readOnly = true;
   
+  Action.redrawDiagram();
+
+  document.getElementById('inputExampleType').disabled=true;
+  document.getElementById('inputExample').disabled=true;
 }
 
 
