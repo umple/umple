@@ -451,9 +451,13 @@ $output = $dataHandle->readData('model.ump');
       title="Generate Java from this Umple model ... To generate other outputs such as C++, PhP, ER Diagrams and Formal Methods, use the Generate menu in Tools">Generate Java</a>&nbsp;
     </span>    
   
-    <span style="font-size: 30%; white-space:nowrap;">  
-          <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
-    </span>
+    <span style="font-size: 30%; white-space: nowrap;">  
+    <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
+        <a class="button2" id="topBookmarkable" href="javascript:copyBookmarkURL()">Copy Bookmarked URL</a>
+    <?php } else { ?>
+        <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
+    <?php } ?>
+</span>
 
     <!-- <span style="font-size: 30%; white-space:nowrap;">   -->
     <!-- <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?> -->
@@ -949,6 +953,14 @@ $output = $dataHandle->readData('model.ump');
   <!-- <script>
     Collab.connectCollabServer();
   </script> -->
+
+  <script>
+      copyBookmarkURL = function(){
+      // Get the current URL
+      const currentUrl = window.location.href;
+     navigator.clipboard.writeText(currentUrl);
+     }
+  </script>
   
   <?php if ($showChrome) { ?>
     <div class="visitors-count" align="right">
