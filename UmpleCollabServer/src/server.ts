@@ -54,6 +54,9 @@ type collabDoc = {
 // collabDoc is a custom type created just above
 let collabfilemap = new Map<string, collabDoc>();
 
+// Map for tracking online users per session
+let activeUsers = new Map<string, Set<string>>();
+
 // DEBUG
 // The following code is currently not active
 // app.get('/collabapitest/healthCheck', (req: any, res: any)=>{
@@ -81,6 +84,24 @@ io.on('connect_error', (err) => {
 io.on('connection', (socket: Socket) =>{
   // DEBUG
   console.log("Client connected! ", "Socket ID: ", socket.id)
+
+
+  // Listen for a new session
+  socket.on('joinSession', (fileKey: string) => {
+    if (!activeUsers.has(fileKey)) {
+      activeUsers.set(fileKey, new Set());
+    }
+    
+    const users = activeUsers.get(fileKey)!;
+    users.add(socket.id);
+    
+    // Join the socket to the room
+    socket.join(fileKey);
+
+    io.in(fileKey).emit('userCountUpdate', users.size);
+    console.log(`User joined session: ${fileKey}, current count: ${users.size}`);
+  });
+  
   
   // core socket event that sends updates to a requesting client
   // when the client requests for them to be pulled
@@ -166,7 +187,22 @@ io.on('connection', (socket: Socket) =>{
       }
       socket.emit('getDocumentResponse', updates.length, doc.toString());
   })
+
+  socket.on('disconnect', () => {
+    // Remove the user from all active sessions
+    for (const [fileKey, users] of activeUsers.entries()) {
+      if (users.delete(socket.id)) {
+        // Emit the updated user count to all clients in the session
+        io.in(fileKey).emit('userCountUpdate', users.size);
+        console.log(`User disconnected from session: ${fileKey}, current count: ${users.size}`);
+        break; // Exit after handling the first found session
+      }
+    }
+  });
+  
 })
+
+
 
 // checks if the Map contains any records related to the fileKey coming from the client
 // fileKey is created as follows: umpdir_filename (both of these parameters are passed in the URL by cleint)

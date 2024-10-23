@@ -587,9 +587,12 @@ Page.initCodeMirrorEditor = function() {
   });
 
   if (Page.readOnly) {
-    Page.codeMirrorEditor6.dispatch({
-      effects: cm6.StateEffect.appendConfig.of(cm6.EditorView.editable.of(false))
-        });
+    // Page.codeMirrorEditor6.dispatch({
+    //   effects: cm6.StateEffect.appendConfig.of(cm6.EditorView.editable.of(false))
+    //     });
+            Page.codeMirrorEditor6.dispatch({
+          effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(false))
+      });
   }
   
   // monitor codemirror6 state to listen to any changes in editor contents and update diagram accordingly

@@ -25001,6 +25001,9 @@ var cm6 = (function (exports) {
        return state.field(collabField).version;
    }
 
+   // Create a compartment for editable state
+   const editableCompartment = new Compartment();
+
    // Define the custom theme for active line and selection highlighting
 
    const myTheme = EditorView.theme({
@@ -25030,6 +25033,7 @@ var cm6 = (function (exports) {
          keydown(e, view) {
          }
        }),
+       editableCompartment.of(EditorView.editable.of(true)),
      ];
      
      let startState = EditorState.create({
@@ -25082,11 +25086,26 @@ var cm6 = (function (exports) {
        // console.log('update:', update);
        
        if (update.docChanged) {
+         console.log('Editor updated..');
            
            const newContent = update.state.doc.toString();
            
            if (newContent !== this.lastContent) {
            const currentPositionofCursor = this.view.state.selection.main.head;
+          // if (newContent.localeCompare(this.lastContent) !== 0) {
+
+           console.warn('Content changed');
+
+           //console.warn('new content:', newContent); 
+           console.log('new content lenght:', newContent.length);
+
+           // console.warn('old content:', this.lastContent);
+           console.log('old content lenght:', this.lastContent.length);
+
+           // console.warn('update:', update);
+
+           // console.log('update lenght:', update.length);
+           console.warn('details:', update.changes);
          
          // DEBUG
            // console.log('Editor content changed...', 'Update the Diagram!');
@@ -25113,6 +25132,7 @@ var cm6 = (function (exports) {
    });
 
    exports.ChangeSet = ChangeSet;
+   exports.Compartment = Compartment;
    exports.EditorSelection = EditorSelection;
    exports.EditorView = EditorView;
    exports.RegExpCursor = RegExpCursor;
@@ -25125,6 +25145,7 @@ var cm6 = (function (exports) {
    exports.collab = collab;
    exports.createEditorState = createEditorState;
    exports.createEditorView = createEditorView;
+   exports.editableCompartment = editableCompartment;
    exports.getSyncedVersion = getSyncedVersion;
    exports.receiveUpdates = receiveUpdates;
    exports.sendableUpdates = sendableUpdates;
