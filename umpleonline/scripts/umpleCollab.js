@@ -15,11 +15,13 @@ function updateConnectionStatus() {
   // }
 
   if(!navigator.onLine){
-    console.warn("You are not connected to the Internet. Please check your connection and try again.");
-    Collab.disconnectFromServer();
+    // console.warn("You are not connected to the Internet. Please check your connection and try again.");
+    // Page.setFeedbackMessage("You are not connected to the Internet. Please check your connection and try again.");
+    Collab.disconnectFromServer("You are not connected to the Internet. Please check your connection and try again.");
   }
   
 }
+
 // Listen for changes
 // window.addEventListener('online', updateConnectionStatus);
 window.addEventListener('offline', updateConnectionStatus);
@@ -76,9 +78,10 @@ updateConnectionStatus();
     const led = document.getElementById('led');
     
     const connectionTimeout = setTimeout(() => {
+      // console.error('Connection to Collaboration server timed out!', window.performance.now()-snapshot);
       console.error('Connection to Collaboration server timed out!');
       console.log("Collaboration server is disconnected/down !")
-      Page.setFeedbackMessage("Cannot Collaborate right now!")
+      Page.setFeedbackMessage("Cannot Collaborate right now, due to connection time out!")
       // led.style.backgroundColor = 'red' ; 
       document.getElementById('led').classList.remove('LEDonError');
       document.getElementById('led').classList.remove('LEDonDisconnect')
@@ -86,15 +89,20 @@ updateConnectionStatus();
       
     }, 10000); // 10 seconds timeout
 
+    // const snapshot= window.performance.now();
+    // console.log("timeout registered", snapshot);
+
     console.log("serverURL: ", serverURL, "serverPath: ", serverPath);
 
 
     socket.on('connect', () => {
+      // console.log("connected", window.performance.now()-snapshot);
       clearTimeout(connectionTimeout);
-      console.log("Connected to Collab Server....")
+      //console.log("Connected to Collab Server....")
+      
       // set a feedback message for connected umpleonline window
-      Page.setFeedbackMessage("Connected to Collab Server")
-        // led.style.backgroundColor = 'green ';
+      setTimeout(Page.setFeedbackMessage("Connected to Collab Server"),2500);
+      
         const reconnectButton = document.getElementById('collabReconnect');
         if(reconnectButton){
           reconnectButton.style.display = 'none'; // Show reconnect button
@@ -127,7 +135,7 @@ updateConnectionStatus();
     .on('connect_error', (error) => {
       
         console.warn('Connection to Collaboration server failed! Please try again later.');
-        Page.setFeedbackMessage("Cannot Collaborate right now!")
+        Page.setFeedbackMessage("Connection to Collaboration server failed! Please try again later.")
 
         const reconnectButton = document.getElementById('collabReconnect');
         reconnectButton.style.display = 'inherit'; // Show reconnect button
@@ -144,10 +152,11 @@ updateConnectionStatus();
 
         attamept+=1;  
         if (attamept >= 3){
-        console.log("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
-        Page.setFeedbackMessage("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
+        // console.log("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
+        // Page.setFeedbackMessage("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
+        
         attamept=0;
-        Collab.disconnectFromServer();
+        Collab.disconnectFromServer("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
         document.getElementById('led').classList.remove('LEDonError');
         document.getElementById('led').classList.remove('LEDonDisconnect')
 
@@ -201,9 +210,9 @@ updateConnectionStatus();
     });
 
     socket.on('disconnect', function () {
-      console.log('You are disconnected from server.');
-      Page.setFeedbackMessage("Disconnected from Collab Server")
-      // Collab.disconnectFromServer();
+     // console.log('You are disconnected from server.');
+     // Page.setFeedbackMessage("Disconnected from Collab Server")
+    // Collab.disconnectFromServer();
       
     });
 
@@ -254,7 +263,7 @@ updateConnectionStatus();
 }
 
 
-Collab.disconnectFromServer = function() {
+Collab.disconnectFromServer = function(text) {
   socket=sockett;
   // Notify the server about disconnection if necessary
   // socket.emit('disconnectRequest');
@@ -284,9 +293,20 @@ Collab.disconnectFromServer = function() {
   document.getElementById('activeUsers').style.display = 'none'; // Hide active users display
   document.getElementById('activeUsersIcon').style.display = 'none'; // Hide active users label
 
-  Page.setFeedbackMessage("Disconnected from Collab Server");
-  // console.log("Disconnected from Collab Server")
-  console.log("Disconnected from Collab Server",socket);
+  if(text !== undefined){
+    setTimeout(() => {
+    Page.setFeedbackMessage(text);
+    console.log(text);
+    }, 1000);
+  }else{
+    setTimeout(() => {
+    Page.setFeedbackMessage("Disconnected from Collab Server");
+    console.log("Disconnected from Collab Server");
+  }, 1000);
+  }
+  // Page.setFeedbackMessage("Disconnected from Collab Server");
+  // // console.log("Disconnected from Collab Server")
+  // console.log("Disconnected from Collab Server",socket);
 
 // Page.codeMirrorEditor6.dispatch({
 //   effects: cm6.StateEffect.appendConfig.of(cm6.EditorView.editable.of(false))
@@ -414,14 +434,14 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
         document.getElementById('led').classList.remove('LEDonError');
       }, 200); 
 
-      if (dc >= 100){
-        Collab.disconnectFromServer();
+      if (dc >= 20){
+        Collab.disconnectFromServer("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
         alert("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
         dc=0;
       }
 
     }
-x
+
     async pull(filekey) {
       while (!this.done) {
         const version = cm6.getSyncedVersion(this.view.state);

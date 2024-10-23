@@ -445,7 +445,7 @@ $output = $dataHandle->readData('model.ump');
                </a>
                &nbsp;
 
-               <a class="button2" id="collabDisconnect" style="display:none" href="javascript:Collab.disconnectFromServer();"> Disconnect </a>
+               <a class="button2" id="collabDisconnect" style="display:none" href="javascript:Collab.disconnectFromServer('Disconnected from the server, the collaboration session has ended at the user\'s request.');"> Disconnect </a>
                &nbsp;&nbsp;
                
               <a class="button2" id="collabReconnect" style="display:none" href="javascript:reconnect()"> Reconnect </a>
