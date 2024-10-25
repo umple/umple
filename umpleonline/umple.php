@@ -439,7 +439,8 @@ $output = $dataHandle->readData('model.ump');
          
           <span style="font-size: 30%; white-space:nowrap;">
              <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
-               <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL 
+               <!-- <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL  -->
+               <a class="button2" id="topBookmarkable" href="javascript:copyBookmarkURL()">Copy collaboration URL
                <span id="led" class="led"> </span>
                <span id="activeUsersIcon" style="display:none">&#128100</span>&nbsp;<span id="activeUsers" style="display:none" ></span>
                </a>
@@ -1130,6 +1131,16 @@ $output = $dataHandle->readData('model.ump');
     //     }
 
 
+  </script>
+
+<script>
+      copyBookmarkURL = function(){
+      // Get the current URL
+      const currentUrl = window.location.href;
+      navigator.clipboard.writeText(currentUrl);
+      Page.setFeedbackMessage("URL copied to clipboard");
+      console.log("URL copied to clipboard");
+    }
   </script>
 
   <?php if ($showChrome) { ?>

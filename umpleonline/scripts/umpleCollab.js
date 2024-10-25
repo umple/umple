@@ -269,7 +269,10 @@ updateConnectionStatus();
     Page.setFeedbackMessage("Current URL is not Collaborative!")
   }
       // DEBUG
-      console.warn("Socket Info: ", socket)
+      if(socket != null){
+        console.warn("Socket Info: ", socket);
+      }
+      
       sockett = socket;
 
 }
