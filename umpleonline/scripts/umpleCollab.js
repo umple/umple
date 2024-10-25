@@ -1,10 +1,19 @@
 // console.log("umpleCollab.js loaded ...")
 
 Collab = new Object();
-var sockett= null;
-var dc = null;
-var baseclientID = null;
-var attamept = 0;
+let sockett= null;
+let dc = null;
+let baseclientID = null;
+let attamept = 0;
+// let inActivityIntervalID;
+
+// the main process of Idle timer
+// let inactivityTime = 300000; // 5 minutes 
+let inactivityTime = 45000; // 45 seconds 
+let inactivitywarningTime = 25000; // 20 seconds
+let inactivityTimer;
+let inactivitywarningTimer;
+
 
 function updateConnectionStatus() {
   // if (navigator.onLine) {
@@ -130,6 +139,8 @@ updateConnectionStatus();
     document.getElementById('inputExample').disabled=false;
 
     // Action.changeDiagramType({type:"editableClass"});
+    startCheckingInactivity();
+    // resetInactivityTimer();
 
     })
     .on('connect_error', (error) => {
@@ -147,6 +158,7 @@ updateConnectionStatus();
         // Hide disconnect button
         if(disconnectButton.style.display == 'inherit'){
         disconnectButton.style.display = 'none'; // Hide disconnect button
+
 
         }
 
@@ -304,13 +316,13 @@ Collab.disconnectFromServer = function(text) {
     console.log("Disconnected from Collab Server");
   }, 1000);
   }
-  // Page.setFeedbackMessage("Disconnected from Collab Server");
-  // // console.log("Disconnected from Collab Server")
-  // console.log("Disconnected from Collab Server",socket);
+      // Page.setFeedbackMessage("Disconnected from Collab Server");
+      // // console.log("Disconnected from Collab Server")
+      // console.log("Disconnected from Collab Server",socket);
 
-// Page.codeMirrorEditor6.dispatch({
-//   effects: cm6.StateEffect.appendConfig.of(cm6.EditorView.editable.of(false))
-// });
+    // Page.codeMirrorEditor6.dispatch({
+    //   effects: cm6.StateEffect.appendConfig.of(cm6.EditorView.editable.of(false))
+    // });
 
   Page.codeMirrorEditor6.dispatch({
     effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(false))
@@ -322,6 +334,10 @@ Collab.disconnectFromServer = function(text) {
 
   document.getElementById('inputExampleType').disabled=true;
   document.getElementById('inputExample').disabled=true;
+
+  clearTimeout(inactivityTimer); // Clear the existing timer
+  clearTimeout(inactivitywarningTimer); // Clear the existing timer 
+
 }
 
 
@@ -440,6 +456,8 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
         dc=0;
       }
 
+      debounce(resetInactivityTimer, 2000)(); // Reset the inactivity timer
+
     }
 
     async pull(filekey) {
@@ -462,6 +480,8 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       }
     }
 
+
+
     destroy() {
       this.done = true;
     }
@@ -469,3 +489,85 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
 
   return [cm6.collab({ startVersion }), plugin];
 };
+
+
+
+
+
+function startCheckingInactivity() {
+// Inactive timer:
+// if(document.getElementById('disconnectButton')){
+  resetInactivityTimer();
+
+  // inActivityIntervalID = setInterval(()=>{
+
+
+  //   // if(inactivityTimer >= inactivityTime){
+  //   //   userIsInactive();
+  //   // }
+      
+  //     }, 3000);
+
+   //    console.warn("Interval started", inActivityIntervalID);
+}
+
+
+function sendInactivitywarning() {
+  console.warn("Only 20 seconds left to disconnect due to inactivity");
+  Page.setFeedbackMessage("Only 20 seconds left to disconnect due to inactivity");  
+  // Page.setFeedbackMessage("You will be disconnected from collaboration due to inactivity in 20 seconds. Please type something on the editor to continue collaborating."); 
+}
+
+
+// Function to trigger when the user is considered inactive
+function userIsInactive() {
+  console.log("User is inactive, disconnect sequence started...");
+  
+  // stopActivityInterval();
+
+  Collab.disconnectFromServer(); // Function to handle disconnection
+
+  setTimeout(()=>{
+    alert("You have disconnected from collaboration due to inactivity. Please click reconnect if you want to connect to your collaboration session again.");
+  } ,3000);    
+
+  // resetInactivityTimer(); // Reset the inactivity timer 
+
+}
+
+
+function debounce(callback, delay) {
+  let timeoutId;  // Variable to store the timeout ID
+
+  return function(...args) {
+      // Clear any existing timer before starting a new one
+      if (timeoutId) {
+          clearTimeout(timeoutId);
+      }
+
+      // Set a new timer
+      timeoutId = setTimeout(() => {
+          // Call the callback function after the delay
+          callback.apply(this, args);
+      }, delay);
+  };
+}
+
+
+// Function to reset the inactivity timer
+function resetInactivityTimer() {
+  console.warn('timer reset called ...');
+  clearTimeout(inactivityTimer); // Clear the existing timer
+  clearTimeout(inactivitywarningTimer); // Clear the existing timer
+
+  inactivityTimer = setTimeout(userIsInactive, inactivityTime); // Set a new timer
+  inactivitywarningTimer = setTimeout(sendInactivitywarning, inactivitywarningTime); // Set a new timer
+
+}
+
+// function stopActivityInterval() {
+//   console.warn("Stopping the interval triggered", inActivityIntervalID);
+//   clearInterval(inActivityIntervalID);
+// }
+
+
