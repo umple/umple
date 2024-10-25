@@ -1177,6 +1177,15 @@ Page.createBookmark = function()
   window.location.href = "bookmark.php?model=" + Page.getModel();
 }
 
+// same as Page.createBookmark() but opens the collaborative URL in a new tab
+Page.createBookmarkFork = function()
+{
+  TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+  TabControl.saveActiveTabs();
+  //window.location.href = "bookmark.php?model=" + Page.getModel();
+  window.open("bookmark.php?model=" + Page.getModel(), "_blank");
+}
+
 Page.createTask = function()
 {
   var taskName = jQuery("#taskName").val();

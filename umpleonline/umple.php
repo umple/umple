@@ -450,6 +450,8 @@ $output = $dataHandle->readData('model.ump');
                &nbsp;&nbsp;
                
               <a class="button2" id="collabReconnect" style="display:none" href="javascript:reconnect()"> Reconnect </a>
+              <a class="button2" id="collabFork" style="display:none" href="javascript:Page.createBookmarkFork();"> Fork </a>
+              
 
              <?php } else if (!isset($_REQUEST["task"])) { ?>
                <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate 
@@ -652,7 +654,6 @@ $output = $dataHandle->readData('model.ump');
 
         <!-- GROUP 1 OF OPTIONS -->
         <h3><a href="#saveload">SAVE & LOAD</a></h3>
-        
         <div class="section">
           <ul class="first" id="saveLoad">
             <li class="subtitle">SAVE</li>

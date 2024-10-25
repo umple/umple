@@ -113,9 +113,13 @@ updateConnectionStatus();
       setTimeout(Page.setFeedbackMessage("Connected to Collab Server"),2500);
       
         const reconnectButton = document.getElementById('collabReconnect');
+
         if(reconnectButton){
           reconnectButton.style.display = 'none'; // Show reconnect button
         }
+
+        const forkButton = document.getElementById('collabFork');
+        forkButton.style.display = 'inherit'; // show fork button
       
         const disconnectButton = document.getElementById('collabDisconnect');
         disconnectButton.style.display = 'inherit'; // Hide disconnect button
@@ -152,14 +156,14 @@ updateConnectionStatus();
         reconnectButton.style.display = 'inherit'; // Show reconnect button
 
         const disconnectButton = document.getElementById('collabDisconnect');
+        const collabFork = document.getElementById('collabFork');
 
         // led.style.backgroundColor = 'red';
         document.getElementById('led').classList.add('LEDonError');
         // Hide disconnect button
         if(disconnectButton.style.display == 'inherit'){
         disconnectButton.style.display = 'none'; // Hide disconnect button
-
-
+        collabFork.style.display = 'none'; // Hide fork button
         }
 
         attamept+=1;  
@@ -272,7 +276,7 @@ updateConnectionStatus();
       if(socket != null){
         console.warn("Socket Info: ", socket);
       }
-      
+
       sockett = socket;
 
 }
@@ -304,6 +308,9 @@ Collab.disconnectFromServer = function(text) {
 
   const disconnectButton = document.getElementById('collabDisconnect');
   disconnectButton.style.display = 'none'; // Hide disconnect button
+
+  const collabFork = document.getElementById('collabFork');
+  collabFork.style.display = 'none'; // Hide fork button
 
   document.getElementById('activeUsers').style.display = 'none'; // Hide active users display
   document.getElementById('activeUsersIcon').style.display = 'none'; // Hide active users label
