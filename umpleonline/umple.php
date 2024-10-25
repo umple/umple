@@ -440,9 +440,9 @@ $output = $dataHandle->readData('model.ump');
           <span style="font-size: 30%; white-space:nowrap;">
              <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
                <!-- <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL  -->
-               <a class="button2" id="topBookmarkable" href="javascript:copyBookmarkURL()">Copy collaboration URL
+               <a class="button2" id="topBookmarkable" href="javascript:copyBookmarkURL()"><span>&#128279;</span> Copy collaboration URL 
                <span id="led" class="led"> </span>
-               <span id="activeUsersIcon" style="display:none">&#128100</span>&nbsp;<span id="activeUsers" style="display:none" ></span>
+               <span id="activeUsersIcon" style="display:none">&#128100;</span>&nbsp;<span id="activeUsers" style="display:none" ></span>
                </a>
                &nbsp;
 
