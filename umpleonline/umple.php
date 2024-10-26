@@ -450,8 +450,8 @@ $output = $dataHandle->readData('model.ump');
                &nbsp;&nbsp;
                
               <a class="button2" id="collabReconnect" style="display:none" href="javascript:reconnect()"> Reconnect </a>
-              <a class="button2" id="collabFork" style="display:none" href="javascript:Page.createBookmarkFork();"> Fork </a>
-              
+              <!-- <a class="button2" id="buttonCollabFork" style="display:none" href="javascript:Page.createBookmarkFork();"> Fork </a> -->
+
 
              <?php } else if (!isset($_REQUEST["task"])) { ?>
                <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate 
@@ -670,10 +670,16 @@ $output = $dataHandle->readData('model.ump');
               </div>
             </li>
             <?php } ?>
-            <li id="buttonCopyClip" class="copyClip">
+            <li id="buttonCopyClip" class="copyClip" >
               <img src="scripts/copy.png" alt="Copy to Clipboard icon"/> 
                Copy to Clipboard
             </li>           
+
+            <li id="buttonCollabFork" class="buttonCollabFork" style="display:none">
+              <img src="scripts/copy.png" alt="Fork"/> 
+              <a href="javascript:Page.createBookmarkFork();"  style="text-decoration:none;">Fork</a>
+            </li>     
+
             <li id="buttonCopy" class="copy">
               <img src="scripts/copy.png" alt="Source to Copy icon"/> 
                Source to Copy

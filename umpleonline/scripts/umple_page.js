@@ -181,6 +181,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonSimulateCode");
   Page.initHighlighter("buttonUigu");
   Page.initHighlighter("buttonCopyClip");
+  Page.initHighlighter("buttonCollabFork");
   Page.initHighlighter("buttonCopy");
   Page.initHighlighter("buttonCopyEncodedURL");
   Page.initHighlighter("buttonCopyCommandLine");
@@ -247,6 +248,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowHideLayoutEditor");
   Page.initAction("buttonManualSync");
   Page.initAction("buttonCopyClip");
+  Page.initAction("buttonCollabFork");
   Page.initAction("buttonCopy");
   Page.initAction("buttonCopyEncodedURL");
   Page.initAction("buttonCopyCommandLine");

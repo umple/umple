@@ -9,8 +9,8 @@ let attamept = 0;
 
 // the main process of Idle timer
 // let inactivityTime = 300000; // 5 minutes 
-let inactivityTime = 45000; // 45 seconds 
-let inactivitywarningTime = 25000; // 20 seconds
+let inactivityTime = 600000; // 10 minutes
+let inactivitywarningTime = 540000; // 9 minutes
 let inactivityTimer;
 let inactivitywarningTimer;
 
@@ -118,7 +118,7 @@ updateConnectionStatus();
           reconnectButton.style.display = 'none'; // Show reconnect button
         }
 
-        const forkButton = document.getElementById('collabFork');
+        const forkButton = document.getElementById('buttonCollabFork');
         forkButton.style.display = 'inherit'; // show fork button
       
         const disconnectButton = document.getElementById('collabDisconnect');
@@ -156,7 +156,7 @@ updateConnectionStatus();
         reconnectButton.style.display = 'inherit'; // Show reconnect button
 
         const disconnectButton = document.getElementById('collabDisconnect');
-        const collabFork = document.getElementById('collabFork');
+        const collabFork = document.getElementById('buttonCollabFork');
 
         // led.style.backgroundColor = 'red';
         document.getElementById('led').classList.add('LEDonError');
@@ -309,7 +309,7 @@ Collab.disconnectFromServer = function(text) {
   const disconnectButton = document.getElementById('collabDisconnect');
   disconnectButton.style.display = 'none'; // Hide disconnect button
 
-  const collabFork = document.getElementById('collabFork');
+  const collabFork = document.getElementById('buttonCollabFork');
   collabFork.style.display = 'none'; // Hide fork button
 
   document.getElementById('activeUsers').style.display = 'none'; // Hide active users display
@@ -523,8 +523,8 @@ function startCheckingInactivity() {
 
 
 function sendInactivitywarning() {
-  console.warn("Only 20 seconds left to disconnect due to inactivity");
-  Page.setFeedbackMessage("Only 20 seconds left to disconnect due to inactivity");  
+  console.warn("Only one minute left to disconnect due to inactivity");
+  Page.setFeedbackMessage("Only one minute left to disconnect due to inactivity");  
   // Page.setFeedbackMessage("You will be disconnected from collaboration due to inactivity in 20 seconds. Please type something on the editor to continue collaborating."); 
 }
 
