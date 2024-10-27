@@ -440,16 +440,19 @@ $output = $dataHandle->readData('model.ump');
           <span style="font-size: 30%; white-space:nowrap;">
              <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
                <!-- <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL  -->
-               <a class="button2" id="topBookmarkable" href="javascript:copyBookmarkURL()"><span>&#128279;</span> Copy collaboration URL 
-               <span id="led" class="led"> </span>
-               <span id="activeUsersIcon" style="display:none">&#128100;</span>&nbsp;<span id="activeUsers" style="display:none" ></span>
-               </a>
-               &nbsp;
-
+               
+              <span id="changableButton">
+              <a class="button2" id="topBookmarkable" href="javascript:copyBookmarkURL()"><span>&#128279;</span> Copy collaboration URL
+              <span id="led" class="led"> </span>
+              <span id="activeUsersIcon" style="display:none">&#128100;</span>&nbsp;<span id="activeUsers" style="display:none" ></span>
+              </a>
+              </span>
+              &nbsp;
+    
                <a class="button2" id="collabDisconnect" style="display:none" href="javascript:Collab.disconnectFromServer('Disconnected from the server, the collaboration session has ended at the user\'s request.');"> Disconnect </a>
                &nbsp;&nbsp;
                
-              <a class="button2" id="collabReconnect" style="display:none" href="javascript:reconnect()"> Reconnect </a>
+              <!-- <a class="button2" id="collabReconnect" style="display:none" href="javascript:reconnect()"> Reconnect </a> -->
               <!-- <a class="button2" id="buttonCollabFork" style="display:none" href="javascript:Page.createBookmarkFork();"> Fork </a> -->
 
 
