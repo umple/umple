@@ -1179,13 +1179,15 @@ Page.createBookmark = function()
   window.location.href = "bookmark.php?model=" + Page.getModel();
 }
 
-// same as Page.createBookmark() but opens the collaborative URL in a new tab
+// same as Page.createBookmark()
+// but creates a new temporary copy of the bookmarked model
+// useful when collaborating and the user wants to work
+// independently on their own version
 Page.createBookmarkFork = function()
 {
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
-  //window.location.href = "bookmark.php?model=" + Page.getModel();
-  window.open("bookmark.php?model=" + Page.getModel(), "_blank");
+  window.location.href = "bookmark.php?model=" + Page.getModel() + "&forkSoMakeTmpOnly";
 }
 
 Page.createTask = function()
