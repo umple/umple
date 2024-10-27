@@ -3,8 +3,9 @@
 Collab = new Object();
 let sockett= null;
 let dc = null;
-let baseclientID = null;
+let baseclientID = null;  
 let attamept = 0;
+let checktemp = false;
 // let inActivityIntervalID;
 
 // the main process of Idle timer
@@ -42,13 +43,21 @@ window.addEventListener('offline', updateConnectionStatus);
 // inittext represents the current contents of the codemirror6 editor
 Collab.connectCollabServer = async function() {
 
+  let urlParams = new URLSearchParams(new URL(window.location.href).search);
+  if (urlParams.has('model')) {
+    let checkModel = urlParams.get('model');
+    checktemp = checkModel.startsWith('tmp');
+    console.warn("Model Parameter: ", checkModel, "CheckTemp: ", checktemp);
+  }
 
 // Check the initial status
 updateConnectionStatus();
 
   // DEBUG
   console.log("Inside Collab.connectCollabServer ...")
-  if(Page.isBookmarkURL()){
+
+// Check if 'model' parameter exists and starts with 'tmp'
+  if(Page.isBookmarkURL() && checktemp!=true){
     Page.codeMirrorEditor6.dispatch({
       effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(false))
   });
@@ -121,12 +130,15 @@ updateConnectionStatus();
         const forkButton = document.getElementById('buttonCollabFork');
         forkButton.style.display = 'inherit'; // show fork button
       
+
         const disconnectButton = document.getElementById('collabDisconnect');
+        if(disconnectButton)
         disconnectButton.style.display = 'inherit'; // Hide disconnect button
 
+        if (document.getElementById('activeUsers')){
         document.getElementById('activeUsers').style.display = 'inherit'; // Hide active users display
         document.getElementById('activeUsersIcon').style.display = 'inherit'; // Hide active users label
-
+        }
         // if(cm6.EditorView.editable.of(false) == true)
         //   console.log("Editor is not editable")
         // Page.codeMirrorEditor6.dispatch({
@@ -186,6 +198,7 @@ updateConnectionStatus();
     socket.on('userCountUpdate', function (count) {
       // document.getElementById('userCountDisplay').innerText = `Users Online: ${count}`;
       console.warn("Users Online: ", count);
+      if(document.getElementById('activeUsers')){
       document.getElementById('activeUsers').innerText = `${count}`;
       if(count == 1){
         document.getElementById('led').classList.remove('LEDonError');
@@ -223,6 +236,7 @@ updateConnectionStatus();
         document.getElementById('led').classList.add('LEDonDisconnect');
         document.getElementById('led').backgroundColor = 'gray';
       }
+    }
     });
 
     socket.on('disconnect', function () {
@@ -443,9 +457,9 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       const success = await Collab.pushUpdates(socket, filekey, version, updates);
       console.log(success);
 
-      if (success){
+      if (success && document.getElementById('led')){
         document.getElementById('led').classList.add('LEDon');
-      }else{
+      }else if (!success && document.getElementById('led')){
         setTimeout(() => {
         document.getElementById('led').classList.add('LEDonError');
         dc+=1;}, 200);
@@ -457,10 +471,12 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       if (cm6.sendableUpdates(this.view.state).length)
         setTimeout(() => this.push(filekey), 100);
 
+      if(document.getElementById('led')){
       setTimeout(() => {
         document.getElementById('led').classList.remove('LEDon');
         document.getElementById('led').classList.remove('LEDonError');
       }, 200); 
+    }
 
       if (dc >= 20){
         Collab.disconnectFromServer("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
