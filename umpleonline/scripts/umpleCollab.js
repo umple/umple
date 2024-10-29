@@ -14,6 +14,7 @@ let inactivityTime = 600000; // 10 minutes
 let inactivitywarningTime = 540000; // 9 minutes
 let inactivityTimer;
 let inactivitywarningTimer;
+let debugFlag=true;
 
 
 function updateConnectionStatus() {
@@ -54,7 +55,8 @@ Collab.connectCollabServer = async function() {
 updateConnectionStatus();
 
   // DEBUG
-  console.log("Inside Collab.connectCollabServer ...")
+  if(debugFlag)
+  console.warn("Inside Collab.connectCollabServer ...");
 
 // Check if 'model' parameter exists and starts with 'tmp'
   if(Page.isBookmarkURL() && checktemp!=true){
@@ -66,7 +68,8 @@ updateConnectionStatus();
   document.getElementById('inputExample').disabled = true;
 
     // DEBUG
-    console.log("Current Page is Bookmark URL --- connecting to Collab Server!")
+    if(debugFlag)
+    console.log("Current Page is Bookmark URL --- connecting to Collab Server!");
 
     // setup default values CollabServerConfig is not set by creating collab-server-config.js
     // The client will try to connect to serverURL: https://cruise.umple.org and serverPath: /collabapi
@@ -74,8 +77,10 @@ updateConnectionStatus();
     const serverPath = typeof CollabServerConfig !== 'undefined' ? CollabServerConfig.serverPath : "/collabapi" 
     
     // DEBUG
-    console.log("serverURL: ", serverURL, "serverPath: ", serverPath);
-
+    if(debugFlag){
+    console.log("serverURL: ", serverURL);
+    console.log("serverPath: ", serverPath);
+    }
 
     var socket = io(serverURL, {
       reconnection: true,          // Enable reconnection
@@ -89,8 +94,10 @@ updateConnectionStatus();
 
     });
 
+
     // DEBUG
-    // console.warn("Socket Info: ", socket)
+    if(debugFlag)
+    console.warn("Socket Info: ", socket);
 
     // LED updates:
     const led = document.getElementById('led');
@@ -98,11 +105,11 @@ updateConnectionStatus();
     const connectionTimeout = setTimeout(() => {
       // console.error('Connection to Collaboration server timed out!', window.performance.now()-snapshot);
       console.error('Connection to Collaboration server timed out!');
-      console.log("Collaboration server is disconnected/down !")
-      Page.setFeedbackMessage("Cannot Collaborate right now, due to connection time out!")
+      console.log("Collaboration server is disconnected/down !");
+      Page.setFeedbackMessage("Cannot Collaborate right now, due to connection time out!");
       // led.style.backgroundColor = 'red' ; 
       document.getElementById('led').classList.remove('LEDonError');
-      document.getElementById('led').classList.remove('LEDonDisconnect')
+      document.getElementById('led').classList.remove('LEDonDisconnect');
 
       
     }, 10000); // 10 seconds timeout
@@ -111,15 +118,19 @@ updateConnectionStatus();
     // console.log("timeout registered", snapshot);
 
     console.log("serverURL: ", serverURL, "serverPath: ", serverPath);
+  
+
 
 
     socket.on('connect', () => {
       // console.log("connected", window.performance.now()-snapshot);
       clearTimeout(connectionTimeout);
-      //console.log("Connected to Collab Server....")
+      
+      console.log("Connected to Collab Server....");
       
       // set a feedback message for connected umpleonline window
       setTimeout(Page.setFeedbackMessage("Connected to Collab Server"),2500);
+
       
         const reconnectButton = document.getElementById('collabReconnect');
 
@@ -162,7 +173,7 @@ updateConnectionStatus();
     .on('connect_error', (error) => {
       
         console.warn('Connection to Collaboration server failed! Please try again later.');
-        Page.setFeedbackMessage("Connection to Collaboration server failed! Please try again later.")
+        Page.setFeedbackMessage("Connection to Collaboration server failed! Please try again later.");
 
         const reconnectButton = document.getElementById('collabReconnect');
         reconnectButton.style.display = 'inherit'; // Show reconnect button
@@ -186,7 +197,7 @@ updateConnectionStatus();
         attamept=0;
         Collab.disconnectFromServer("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
         document.getElementById('led').classList.remove('LEDonError');
-        document.getElementById('led').classList.remove('LEDonDisconnect')
+        document.getElementById('led').classList.remove('LEDonDisconnect');
 
 
         }
@@ -204,7 +215,7 @@ updateConnectionStatus();
         document.getElementById('led').classList.remove('LEDonError');
         document.getElementById('led').classList.remove('LEDMoreThanTwo');
         document.getElementById('led').classList.remove('LEDTwo');
-        document.getElementById('led').classList.remove('LEDonDisconnect')
+        document.getElementById('led').classList.remove('LEDonDisconnect');
 
         document.getElementById('led').classList.add('LEDOne');
 
@@ -213,7 +224,7 @@ updateConnectionStatus();
         document.getElementById('led').classList.remove('LEDonError');
         document.getElementById('led').classList.remove('LEDOne');
         document.getElementById('led').classList.remove('LEDMoreThanTwo');
-        document.getElementById('led').classList.remove('LEDonDisconnect')
+        document.getElementById('led').classList.remove('LEDonDisconnect');
 
         document.getElementById('led').classList.add('LEDTwo');
       }
@@ -222,7 +233,7 @@ updateConnectionStatus();
         document.getElementById('led').classList.remove('LEDOne');
         document.getElementById('led').classList.remove('LEDTwo');
         document.getElementById('led').classList.remove('LEDon');
-        document.getElementById('led').classList.remove('LEDonDisconnect')
+        document.getElementById('led').classList.remove('LEDonDisconnect');
         document.getElementById('led').classList.add('LEDMoreThanTwo');
         
       }
@@ -262,12 +273,18 @@ updateConnectionStatus();
     // const {version, doc} = getDocument(socket, filekey, inittext)
 
     // DEBUG
-    console.log("Version: ", getDocumentResponse.version, "Doc: ", getDocumentResponse.doc)
+    if(debugFlag)
+    console.log("Version: ", getDocumentResponse.version, "Doc: ", getDocumentResponse.doc);
     // when response document coming from collaboration server has some content,
     // then only update the code editor
 
     if(getDocumentResponse.doc.length != 0){
       Page.setCodeMirror6Text(getDocumentResponse.doc);
+      if(debugFlag){
+        console.warn("Document content received from Collab Server: ");
+        console.log("response of get document ", getDocumentResponse.doc);
+        console.log("Document Version received from Collab Server: ", getDocumentResponse.version);
+      }
     }
 
     // call Action.processTyping() to load diagram based on the editor content
@@ -283,8 +300,8 @@ updateConnectionStatus();
   }
   else{
     // DEBUG
-    console.log("Current Page URL is NOT Bookmarked!")
-    Page.setFeedbackMessage("Current URL is not Collaborative!")
+    console.log("Current Page URL is NOT Bookmarked!");
+    Page.setFeedbackMessage("Current URL is not Collaborative!");
   }
       // DEBUG
       if(socket != null){
@@ -379,17 +396,22 @@ Collab.disconnectFromServer = function(text) {
 // once the promise is resolved, returns document version and document content
 Collab.getDocument = function(socket, filekey, inittext) {
   // DEBUG
-  console.log("Inside Collab.getDocument() ...")
+  console.warn("Inside Collab.getDocument() ...");
   // socket.emit('getDocument', filekey, inittext);
   // return {version: 0, doc: "FROM getDocument"}
   return new Promise(function(resolve) {
       socket.emit('getDocument', filekey, inittext);
+      
+      if(debugFlag)
+      console.log("Emitted getDocument with filekey: ", filekey);
 
       socket.once('getDocumentResponse', function(version, doc) {
       resolve({
           version,
           doc: cm6.Text.of(doc.split("\n"))
       })
+      if(debugFlag)
+        console.log("Version: ", version, "Doc: ", doc);
       })
     })
 }
@@ -405,6 +427,17 @@ Collab.pushUpdates = function(socket, filekey, version, fullUpdates) {
       effects: u.effects
   }));
 
+
+ if(debugFlag){
+  console.warn("Inside Collab.pushUpdates() ...");
+  console.warn("clientID: ", fullUpdates[0].clientID);
+  console.log("Updates: ", updates);
+  console.log("Filekey: ", filekey);
+  console.log("Version: ", version);
+  console.log("FullUpdates: ", fullUpdates);
+ }
+
+
   baseclientID = fullUpdates[0].clientID;
 
   return new Promise(function(resolve) {
@@ -415,12 +448,21 @@ Collab.pushUpdates = function(socket, filekey, version, fullUpdates) {
       // console.log("status: ", status)
       resolve(status);
     });
+
+    if(debugFlag)
+    console.log("Emitted pushUpdates with filekey: ", filekey, "Version: ", version, "Updates: ", updates , "FullUpdates: ", fullUpdates);
   });
 }
 
 // pullUpdates obtains changes made by other collaborators
 // the arguments are the same three as for pushUpdates above
 Collab.pullUpdates = function(socket, filekey, version) {
+   if (debugFlag){
+    console.log("Inside Collab.pullUpdates() ...");
+    console.log("Filekey: ", filekey);
+    console.log("Version: ", version);
+   }
+
   return new Promise(function(resolve) {
     socket.emit('pullUpdates', filekey, version);
 
@@ -436,6 +478,12 @@ Collab.pullUpdates = function(socket, filekey, version) {
 }
 
 Collab.peerExtension = function(socket, filekey, startVersion) {
+  if(debugFlag){
+    console.warn("Inside Collab.peerExtension() ...");
+    console.log("Socket: ", socket);
+    console.log("Filekey: ", filekey);
+    console.log("StartVersion: ", startVersion);
+  }
   // console.log("filekey inside PeerExtension! ", filekey)
   const plugin = cm6.ViewPlugin.fromClass(class {
     constructor(view) {
@@ -457,6 +505,13 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       const success = await Collab.pushUpdates(socket, filekey, version, updates);
       console.log(success);
 
+      if(debugFlag){
+        console.warn("Inside Collab.peerExtension.push(),update ...");
+        console.log("Updates: ", updates);
+        console.log("Version: ", version);
+        console.log("Success: ", success);
+      }
+
       if (success && document.getElementById('led')){
         document.getElementById('led').classList.add('LEDon');
       }else if (!success && document.getElementById('led')){
@@ -469,7 +524,7 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       // Regardless of whether the push failed or new updates came in
       // while it was running, try again if there are updates remaining
       if (cm6.sendableUpdates(this.view.state).length)
-        setTimeout(() => this.push(filekey), 100);
+        setTimeout(() => this.push(filekey), 200);
 
       if(document.getElementById('led')){
       setTimeout(() => {
@@ -493,6 +548,13 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
         const version = cm6.getSyncedVersion(this.view.state);
         const updates = await Collab.pullUpdates(socket, filekey, version); // filekey added here
         this.view.dispatch(cm6.receiveUpdates(this.view.state, updates));
+
+        if(debugFlag){
+          console.warn("Inside Collab.peerExtension.pull(),update ...");
+          console.log("Updates: ", updates);
+          console.log("Version: ", version);
+          console.warn("client ID",updates[0].clientID);
+        }
 
         // console.log("updates: ", updates);
         // console.log(updates[0].clientID);
@@ -527,16 +589,6 @@ function startCheckingInactivity() {
 // if(document.getElementById('disconnectButton')){
   resetInactivityTimer();
 
-  // inActivityIntervalID = setInterval(()=>{
-
-
-  //   // if(inactivityTimer >= inactivityTime){
-  //   //   userIsInactive();
-  //   // }
-      
-  //     }, 3000);
-
-   //    console.warn("Interval started", inActivityIntervalID);
 }
 
 
@@ -592,10 +644,5 @@ function resetInactivityTimer() {
   inactivitywarningTimer = setTimeout(sendInactivitywarning, inactivitywarningTime); // Set a new timer
 
 }
-
-// function stopActivityInterval() {
-//   console.warn("Stopping the interval triggered", inActivityIntervalID);
-//   clearInterval(inActivityIntervalID);
-// }
 
 
