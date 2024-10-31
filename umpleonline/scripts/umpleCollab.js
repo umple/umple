@@ -423,7 +423,7 @@ Collab.getDocument = function(socket, filekey, inittext) {
 // When the updates are sent, it waits for a response with a boolean status, 
 // and once that response is received, the Promise is resolved with that status
 // this ensures that updates were successfully received or processed by the other side of the socket connection.
-Collab.pushUpdates = function(socket, filekey, version, fullUpdates) {
+Collab.pushUpdates = async function(socket, filekey, version, fullUpdates) {
   const updates = fullUpdates.map(u => ({
       clientID: u.clientID,
       changes: u.changes.toJSON(),
@@ -445,10 +445,14 @@ Collab.pushUpdates = function(socket, filekey, version, fullUpdates) {
 
   return new Promise(function(resolve) {
     socket.emit('pushUpdates', filekey, version, JSON.stringify(updates));
-
     socket.once('pushUpdateResponse', function(status) {
       // DEBUG
       // console.log("status: ", status)
+      // ===================
+      if (status.error) {
+        return reject(new Error(status.error));
+      }
+      // ===================
       resolve(status);
     });
 
@@ -501,13 +505,19 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
     }
 
     async push(filekey) {
+      let success = false;
       const updates = cm6.sendableUpdates(this.view.state);
       if (this.pushing || !updates.length) return;
       this.pushing = true;
       const version = cm6.getSyncedVersion(this.view.state);
-      const success = await Collab.pushUpdates(socket, filekey, version, updates);
+      try {
+       success = await Collab.pushUpdates(socket, filekey, version, updates);
       console.log(success);
-
+      } catch (e) {
+      success = false;
+      console.error(e);
+      }
+     
       if(debugFlag){
         console.warn("Inside Collab.peerExtension.push(),update ...");
         console.log("Updates: ", updates);
