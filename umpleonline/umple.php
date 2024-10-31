@@ -435,42 +435,8 @@ $output = $dataHandle->readData('model.ump');
           </span>&nbsp;
     <!-- </span>&nbsp; &nbsp; -->
 
-          <!-- collaboration button -->
-         
-          <span style="font-size: 30%; white-space:nowrap;">
-             <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
-               <!-- <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL  -->
-               
-              <span id="changableButton">
-              <a class="button2" id="topBookmarkable" href="javascript:copyBookmarkURL()"><span>&#128279;</span> Copy collaboration URL
-              <span id="led" class="led"> </span>
-              <span id="activeUsersIcon" style="display:none">&#128100;</span>&nbsp;<span id="activeUsers" style="display:none" ></span>
-              </a>
-              </span>
-              &nbsp;
-    
-               <a class="button2" id="collabDisconnect" style="display:none" href="javascript:Collab.disconnectFromServer('Disconnected from the server, the collaboration session has ended at the user\'s request.');"> Disconnect </a>
-               &nbsp;&nbsp;
-               
-              <!-- <a class="button2" id="collabReconnect" style="display:none" href="javascript:reconnect()"> Reconnect </a> -->
-              <!-- <a class="button2" id="buttonCollabFork" style="display:none" href="javascript:Page.createBookmarkFork();"> Fork </a> -->
-
-
-             <?php } else if (!isset($_REQUEST["task"])) { ?>
-               <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate 
-                 <!-- <span id="led" class="led"> </span> -->
-               </a>
-             <?php } ?>
-         
-             </span>
              
-              <!-- collaboration LED -->
-         
-             <!-- <span id="led" class="led"> </span> -->
-
-
-             
-         <span> &nbsp; For help: </span>
+    <span> &nbsp; For help: </span>
     <?php if(strpos($_SERVER['REQUEST_URI'], 'umple.php') !== false && strpos($_SERVER['REQUEST_URI'], 'umpleonline/umple.php') === false ) {$manpage="/manual/GettingStarted.html";} else {$manpage="https://manual.umple.org";} ?>                
     <span style="font-size: 30%; white-space:nowrap;">
     <a class="button2" style="line-height: 1; padding-top:auto; padding-bottom: auto;" href="<?php echo $manpage ?>" target="helppage" title="Open the Umple user manual in a separate tab" >User manual</a>&nbsp;
@@ -617,7 +583,44 @@ $output = $dataHandle->readData('model.ump');
     </span> -->
 
 
-    <!-- <span id="led" class="led"> </span> -->
+
+<!-- collaboration button -->
+         
+<span style="font-size: 30%; white-space:nowrap;">
+             <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
+               <!-- <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL  -->
+               
+              <span id="changableButton">
+              <a class="button2" id="topBookmarkable" href="javascript:copyBookmarkURL()"><span>&#128279;</span> Copy collaboration URL
+              <span id="led" class="led"> </span>
+              <span id="activeUsersIcon" style="display:none">&#128100;</span>&nbsp;<span id="activeUsers" style="display:none" ></span>
+              </a>
+              </span>
+              &nbsp;
+    
+               <a class="button2" id="collabDisconnect" style="display:none" href="javascript:Collab.disconnectFromServer('Disconnected from the server, the collaboration session has ended at the user\'s request.');"> Disconnect </a>
+               &nbsp;
+               <!-- &nbsp; -->
+               
+              <!-- <a class="button2" id="collabReconnect" style="display:none" href="javascript:reconnect()"> Reconnect </a> -->
+              <!-- <a class="button2" id="buttonCollabFork" style="display:none" href="javascript:Page.createBookmarkFork();"> Fork </a> -->
+
+
+             <?php } else if (!isset($_REQUEST["task"])) { ?>
+               <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate 
+                 <!-- <span id="led" class="led"> </span> -->
+               </a>
+               &nbsp;
+             <?php } ?>
+         
+             </span>
+             
+              <!-- collaboration LED -->
+         
+             <!-- <span id="led" class="led"> </span> -->
+
+
+
 
     <span style="font-size: 30%; white-space:nowrap;">  
     <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>
