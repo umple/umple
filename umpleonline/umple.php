@@ -622,13 +622,13 @@ $output = $dataHandle->readData('model.ump');
 
 
 
-    <span style="font-size: 30%; white-space:nowrap;">  
+    <span style="font-size: 30%; white-space:nowrap; display:none;">  
     <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>
     </span>
 
-    <span id="restorecode" >&nbsp; &nbsp; <a href="#"> Restore Saved State</a></span>
+    <span id="restorecode" > &nbsp; <a href="#"> Restore Saved State</a></span>
 
-    &nbsp; &nbsp;<span id=exampleMessage><?php echo $messageURL ?></span> <span id=feedbackMessage></span>
+    &nbsp;<span id=exampleMessage><?php echo $messageURL ?></span> <span id=feedbackMessage></span>
   </div>
 
   <div id="tabControl">
