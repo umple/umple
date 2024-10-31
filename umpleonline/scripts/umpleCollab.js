@@ -4,12 +4,13 @@ Collab = new Object();
 let sockett= null;
 let dc = null;
 let baseclientID = null;  
-let attamept = 0;
+let attempt = 0;
 let checktemp = false;
 // let inActivityIntervalID;
 
 // the main process of Idle timer
 // let inactivityTime = 300000; // 5 minutes 
+// let inactivityTime = 6000; // 6 seconds
 let inactivityTime = 600000; // 10 minutes
 let inactivitywarningTime = 540000; // 9 minutes
 let inactivityTimer;
@@ -176,6 +177,8 @@ updateConnectionStatus();
         Page.setFeedbackMessage("Connection to Collaboration server failed! Please try again later.");
 
         const reconnectButton = document.getElementById('collabReconnect');
+
+        if(reconnectButton)
         reconnectButton.style.display = 'inherit'; // Show reconnect button
 
         const disconnectButton = document.getElementById('collabDisconnect');
@@ -189,13 +192,13 @@ updateConnectionStatus();
         collabFork.style.display = 'none'; // Hide fork button
         }
 
-        attamept+=1;  
-        if (attamept >= 3){
+        attempt+=1;  
+        if (attempt >= 3){
         // console.log("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
         // Page.setFeedbackMessage("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
         
-        attamept=0;
-        Collab.disconnectFromServer("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
+        attempt=0;
+        Collab.disconnectFromServer("You have been disconnected from the server due to multiple failed attempts to update the document. Please try to reconnect to your collaboration session later.");
         document.getElementById('led').classList.remove('LEDonError');
         document.getElementById('led').classList.remove('LEDonDisconnect');
 
@@ -513,11 +516,22 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       }
 
       if (success && document.getElementById('led')){
+        document.getElementById('led').classList.remove('LEDonError');
         document.getElementById('led').classList.add('LEDon');
       }else if (!success && document.getElementById('led')){
         setTimeout(() => {
+          document.getElementById('led').classList.remove('LEDon');
         document.getElementById('led').classList.add('LEDonError');
-        dc+=1;}, 200);
+        dc+=1;
+      }, 200);
+
+      if (dc >= 20){
+        Collab.disconnectFromServer("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
+        // alert("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
+        setTimeout(Page.setFeedbackMessage("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later."),3000);
+        dc=0;
+      }
+
       }
 
       this.pushing = false;
@@ -533,14 +547,7 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       }, 200); 
     }
 
-      if (dc >= 20){
-        Collab.disconnectFromServer("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
-        alert("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
-        dc=0;
-      }
-
       debounce(resetInactivityTimer, 2000)(); // Reset the inactivity timer
-
     }
 
     async pull(filekey) {
@@ -608,7 +615,8 @@ function userIsInactive() {
   Collab.disconnectFromServer(); // Function to handle disconnection
 
   setTimeout(()=>{
-    alert("You have disconnected from collaboration due to inactivity. Please click reconnect if you want to connect to your collaboration session again.");
+   // alert("You have disconnected from collaboration due to inactivity. Please click reconnect if you want to connect to your collaboration session again.");
+  Page.setFeedbackMessage("Collaboration disconnected and model is read only after " + inactivityTime/1000 + " seconds of inactivity. Click reconnect to continue.");
   } ,3000);    
 
   // resetInactivityTimer(); // Reset the inactivity timer 
