@@ -8,7 +8,7 @@ import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from "@cod
 import { SearchCursor, RegExpCursor } from "@codemirror/search";
 
 
-const debuggerFlag = true;
+const debuggerFlag = false;
 
 // Create a compartment for editable state
 const editableCompartment = new Compartment();

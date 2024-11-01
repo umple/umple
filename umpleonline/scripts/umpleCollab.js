@@ -15,7 +15,8 @@ let inactivityTime = 600000; // 10 minutes
 let inactivitywarningTime = 540000; // 9 minutes
 let inactivityTimer;
 let inactivitywarningTimer;
-let debugFlag=true;
+let debugFlag=false;
+let achknowledgedTimer = 0;
 
 
 function updateConnectionStatus() {
@@ -49,6 +50,7 @@ Collab.connectCollabServer = async function() {
   if (urlParams.has('model')) {
     let checkModel = urlParams.get('model');
     checktemp = checkModel.startsWith('tmp');
+    if(debugFlag)
     console.warn("Model Parameter: ", checkModel, "CheckTemp: ", checktemp);
   }
 
@@ -105,8 +107,10 @@ updateConnectionStatus();
     
     const connectionTimeout = setTimeout(() => {
       // console.error('Connection to Collaboration server timed out!', window.performance.now()-snapshot);
-      console.error('Connection to Collaboration server timed out!');
-      console.log("Collaboration server is disconnected/down !");
+      if(debugFlag){
+        console.error('Connection to Collaboration server timed out!');
+        console.log("Collaboration server is disconnected/down !");
+      }
       Page.setFeedbackMessage("Cannot Collaborate right now, due to connection time out!");
       // led.style.backgroundColor = 'red' ; 
       document.getElementById('led').classList.remove('LEDonError');
@@ -117,7 +121,7 @@ updateConnectionStatus();
 
     // const snapshot= window.performance.now();
     // console.log("timeout registered", snapshot);
-
+    if(debugFlag)
     console.log("serverURL: ", serverURL, "serverPath: ", serverPath);
   
 
@@ -127,6 +131,7 @@ updateConnectionStatus();
       // console.log("connected", window.performance.now()-snapshot);
       clearTimeout(connectionTimeout);
       
+      if(debugFlag)
       console.log("Connected to Collab Server....");
       
       // set a feedback message for connected umpleonline window
@@ -173,7 +178,9 @@ updateConnectionStatus();
     })
     .on('connect_error', (error) => {
       
+      if(debugFlag)
         console.warn('Connection to Collaboration server failed! Please try again later.');
+
         Page.setFeedbackMessage("Connection to Collaboration server failed! Please try again later.");
 
         const reconnectButton = document.getElementById('collabReconnect');
@@ -211,9 +218,12 @@ updateConnectionStatus();
     // Set up listener for user count updates
     socket.on('userCountUpdate', function (count) {
       // document.getElementById('userCountDisplay').innerText = `Users Online: ${count}`;
+      if(debugFlag)
       console.warn("Users Online: ", count);
+
       if(document.getElementById('activeUsers')){
       document.getElementById('activeUsers').innerText = `${count}`;
+
       if(count == 1){
         document.getElementById('led').classList.remove('LEDonError');
         document.getElementById('led').classList.remove('LEDMoreThanTwo');
@@ -303,11 +313,14 @@ updateConnectionStatus();
   }
   else{
     // DEBUG
+    if(debugFlag)
     console.log("Current Page URL is NOT Bookmarked!");
+
     Page.setFeedbackMessage("Current URL is not Collaborative!");
   }
       // DEBUG
       if(socket != null){
+        if(debugFlag)
         console.warn("Socket Info: ", socket);
       }
 
@@ -360,7 +373,10 @@ Collab.disconnectFromServer = function(text) {
   }else{
     setTimeout(() => {
     Page.setFeedbackMessage("Disconnected from Collab Server");
+    
+    if(debugFlag)
     console.log("Disconnected from Collab Server");
+
   }, 1000);
   }
       // Page.setFeedbackMessage("Disconnected from Collab Server");
@@ -399,6 +415,7 @@ Collab.disconnectFromServer = function(text) {
 // once the promise is resolved, returns document version and document content
 Collab.getDocument = function(socket, filekey, inittext) {
   // DEBUG
+  if(debugFlag)
   console.warn("Inside Collab.getDocument() ...");
   // socket.emit('getDocument', filekey, inittext);
   // return {version: 0, doc: "FROM getDocument"}
@@ -438,6 +455,7 @@ Collab.pushUpdates = async function(socket, filekey, version, fullUpdates) {
   console.log("Filekey: ", filekey);
   console.log("Version: ", version);
   console.log("FullUpdates: ", fullUpdates);
+  achknowledgedTimer = Date.now();
  }
 
 
@@ -512,10 +530,18 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       const version = cm6.getSyncedVersion(this.view.state);
       try {
        success = await Collab.pushUpdates(socket, filekey, version, updates);
-      console.log(success);
+       
+       if(debugFlag){
+         console.log(success);
+         if (success){
+          console.warn("Updates have been successfully pushed to the server in : "+ (Date.now() - achknowledgedTimer) + " milliseconds");
+          }
+          }
       } catch (e) {
       success = false;
       console.error(e);
+      console.warn("Failed to push updates to the server");
+
       }
      
       if(debugFlag){
@@ -610,7 +636,9 @@ function startCheckingInactivity() {
 
 
 function sendInactivitywarning() {
+  if(debugFlag)
   console.warn("Only one minute left to disconnect due to inactivity");
+
   Page.setFeedbackMessage("Only one minute left to disconnect due to inactivity");  
   // Page.setFeedbackMessage("You will be disconnected from collaboration due to inactivity in 20 seconds. Please type something on the editor to continue collaborating."); 
 }
@@ -618,6 +646,7 @@ function sendInactivitywarning() {
 
 // Function to trigger when the user is considered inactive
 function userIsInactive() {
+  if(debugFlag)
   console.log("User is inactive, disconnect sequence started...");
   
   // stopActivityInterval();
@@ -654,7 +683,9 @@ function debounce(callback, delay) {
 
 // Function to reset the inactivity timer
 function resetInactivityTimer() {
+  if(debugFlag)
   console.warn('timer reset called ...');
+
   clearTimeout(inactivityTimer); // Clear the existing timer
   clearTimeout(inactivitywarningTimer); // Clear the existing timer
 
@@ -662,5 +693,27 @@ function resetInactivityTimer() {
   inactivitywarningTimer = setTimeout(sendInactivitywarning, inactivitywarningTime); // Set a new timer
 
 }
+
+
+
+Collab.WebsocketLogging = function(command){
+  if(command == 0){
+    console.log("Unlimited collaboration logging");
+    debugFlag = true;
+
+  }else if(command == -1){
+    console.log("Disable collaboration logging");
+    debugFlag = false;
+ 
+  }else if(command == 10){
+    console.log("Ten seconds of collaboration logging started");
+    debugFlag = true;
+    setTimeout(() => {
+      debugFlag = false;
+      Page.setFeedbackMessage("Ten seconds of collaboration logging ended");
+    }, 10000);
+  }
+
+ }
 
 

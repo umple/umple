@@ -4599,6 +4599,29 @@ Action.setCaretPosition = function(line)
       Page.setFeedbackMessage("Debug Mode");
       return;
     }
+
+
+    if(line.substr(0,5)=="clwst") 
+      {
+        if (line.substr(5,1)=="q") 
+        {
+          Page.setFeedbackMessage("Ten seconds of collaboration logging");
+          Collab.WebsocketLogging(10);
+        }
+        else if (line.substr(5,1)=="n")
+        {
+          Page.setFeedbackMessage("Removing collaboration logging");
+          Collab.WebsocketLogging(-1);
+        }
+        else if (line.substr(5,1)=="x")
+        {
+            Page.setFeedbackMessage("Unlimited collaboration logging");
+            Collab.WebsocketLogging(0);
+        }
+        return;    
+      } 
+
+
     if(line=="sp")
     { // creates Survey Pass; modifies conditions to allow for survey to be displayed:
       // includes setting RandomizedFrequency to 1, MinutesBeforePrompt to 5 secs, EditsBeforePrompt to 1;
@@ -4658,6 +4681,7 @@ Action.setCaretPosition = function(line)
       }
       return;
     }
+
     if(line.substr(0,2)=="bp") {  // Begin prompt - Also invoked by ctrl-b
       Action.promptAndExecuteTest();
       return;
