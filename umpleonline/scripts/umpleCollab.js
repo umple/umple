@@ -338,7 +338,7 @@ Collab.disconnectFromServer = function(text) {
   if(socket != null)
   socket.disconnect();
 
-  document.getElementById('changableButton').innerHTML= "<a class='button2' id='topBookmarkable' href='javascript:reconnect()'> Reconnect <span id='led' class='led'> </span><span id='activeUsersIcon' style='display:none'>&#128100;</span>&nbsp;<span id='activeUsers' style='display:none' ></span></a>"
+  document.getElementById('changableButton').innerHTML= "<a class='button2' id='topBookmarkable' href='javascript:reconnect()' title= 'You can reconnect to your last collaboration session at any time.'> Reconnect <span id='led' class='led'> </span><span id='activeUsersIcon' style='display:none'>&#128100;</span>&nbsp;<span id='activeUsers' style='display:none' ></span></a>"
 
 
   // Update UI for disconnected state
