@@ -173,12 +173,15 @@ $output = $dataHandle->readData('model.ump');
     background: #B06C5B;
   }
 
+:root {
+ --tooltipDwellTime: 3.5s;
+}
 
   .ui-tooltip{
-  animation: myDisplayNone 3.5s forwards;
-  -webkit-animation: myDisplayNone 3.5s forwards;
-  -moz-animation: myDisplayNone 3.5s forwards;
-  -o-animation: myDisplayNone 3.5s forwards;
+  animation: myDisplayNone var(--tooltipDwellTime) forwards;
+  -webkit-animation: myDisplayNone var(--tooltipDwellTime) forwards;
+  -moz-animation: myDisplayNone var(--tooltipDwellTime) forwards;
+  -o-animation: myDisplayNone var(--tooltipDwellTime) forwards;
 }
 
  /* .ui-tooltip:hover{

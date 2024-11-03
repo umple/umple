@@ -108,49 +108,76 @@ ToolTips.tooltipEntries = {
 };
 
 
+//Sets the example dropdown menus tooltips so they does not collide with the
+//contents of the dropdown list. They always appear above
+ToolTips.dropDownTooltips = {
+  exampleType: ["li", "Choose an example type to load"],
+  itemLoadExamples: ["li", "Choose a class diagram example to load. * means executable, since it has a main program"],
+  itemLoadExamples2: ["li", "Choose a state diagram example to load. * means executable, since it has a main program"],
+  itemLoadExamples3: ["li", "Choose a composite structure diagram example to load"]
+};
+
+
+
+// This function displays a particular tooltip from the sets above, using a
+// dwell time that is based on the length of the tooltip
+ToolTips.setATooltip = function(tooltipList,id,positionBlock)
+{
+  var rootForCssVar = document.querySelector(':root');
+  var theContent = tooltipList[id][1];
+  var dwellTime = Math.max(3.5,theContent.length/10)+"s";
+  jQuery("#" + id).tooltip({
+    items: tooltipList[id][0],
+    content: theContent,
+    show: {delay: 1000},
+    open: function(event,ui) {
+      rootForCssVar.style.setProperty("--tooltipDwellTime",dwellTime);
+    },
+    position: positionBlock
+  });
+};
+
+
 ToolTips.initTooltips = function()
-{  
+{
   // Initialize the tooltips in the above tooltip dictionary
   for(var id in this.tooltipEntries)
   {
-  //Special cases
-    if (id=="SD_button"||id=="GCD_button"||id=="ECD_button"||id=="SHT_button"||id=="SHD_button"||id=="SHA_button"||id=="SHM_button") {
-      jQuery("#" + id).tooltip({
-        items: this.tooltipEntries[id][0],
-        content: this.tooltipEntries[id][1],
-        show: {delay: 1000},
-        position: {my:"left top+25%", of:"#"+id}
-        });
+    // Tooltips that should appear below (which is all in the top buttons
+    if (
+        id=="SD_button"
+        ||id=="GCD_button"
+        ||id=="ECD_button"
+        ||id=="SHT_button"
+        ||id=="SHD_button"
+        ||id=="SHA_button"
+        ||id=="SHM_button")
+    {
+    
+      ToolTips.setATooltip(
+        this.tooltipEntries,
+        id,
+        {my:"left top+25%", of:"#"+id}
+      );   
     }
     else{
-      jQuery("#" + id).tooltip({
-        items: this.tooltipEntries[id][0],
-        content: this.tooltipEntries[id][1],
-        show: {delay: 1000},
-        position: {my:"right", at:"left", of:"#"+id}
-      });
-      }
+      // Tooltips that should appear to the left (which is all in the central menu)
+      ToolTips.setATooltip(
+        this.tooltipEntries,
+        id,
+        {my:"right", at:"left", of:"#"+id}
+      );
+    }
   }
 
-  //Special cases
-
-  //Sets the example dropdown menus tooltip so it does not collide with the
-  //contents of the dropdown list
-  dropDownTooltips = {
-    exampleType: ["li", "Choose an example type to load"],
-    itemLoadExamples: ["li", "Choose a class diagram example to load. * means executable, since it has a main program"],
-    itemLoadExamples2: ["li", "Choose a state diagram example to load. * means executable, since it has a main program"],
-    itemLoadExamples3: ["li", "Choose a composite structure diagram example to load"]
-  }
-
-  for(id in dropDownTooltips)
+  // Tooltips that should appear above
+  for(id in this.dropDownTooltips)
   {
-    jQuery("#" + id).tooltip({
-      items: dropDownTooltips[id][0],
-      content: dropDownTooltips[id][1],
-      show: {delay: 1000},
-      position: {my:"center+15% bottom", at:"top", of:"#"+id}
-    });
+     ToolTips.setATooltip(
+        this.dropDownTooltips,
+        id,
+        {my:"center+15% bottom", at:"top", of:"#"+id}
+      );   
   }
 
   // Sets the rest of the tooltips using the styling provided by the jQuery style.
