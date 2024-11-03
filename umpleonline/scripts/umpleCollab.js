@@ -705,15 +705,16 @@ Collab.WebsocketLogging = function(command){
     console.log("Disable collaboration logging");
     debugFlag = false;
  
-  }else if(command == 10){
-    console.log("Ten seconds of collaboration logging started");
-    debugFlag = true;
-    setTimeout(() => {
-      debugFlag = false;
-      Page.setFeedbackMessage("Ten seconds of collaboration logging ended");
-    }, 10000);
   }
-
  }
 
+
+//  if(command == 10){
+//   console.log("Ten seconds of collaboration logging started");
+//   debugFlag = true;
+//   setTimeout(() => {
+//     debugFlag = false;
+//     Page.setFeedbackMessage("Ten seconds of collaboration logging ended");
+//   }, 10000);
+// }
 
