@@ -4621,6 +4621,21 @@ Action.setCaretPosition = function(line)
         return;    
       } 
 
+      if(line.substr(0,4)=="clws") 
+        {
+          if (line.substr(4,1)=="+") 
+          {
+            Page.setFeedbackMessage("Collaboration logging Enabled");
+            Collab.WebsocketLogging(0);
+          }
+          else if (line.substr(4,1)=="-")
+          {
+            Page.setFeedbackMessage("Collaboration logging disabled");
+            Collab.WebsocketLogging(-1);
+          }
+          return;    
+        } 
+
 
     if(line=="sp")
     { // creates Survey Pass; modifies conditions to allow for survey to be displayed:
