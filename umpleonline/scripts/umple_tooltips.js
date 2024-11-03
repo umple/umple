@@ -95,6 +95,13 @@ ToolTips.tooltipEntries = {
   ECD_button: ['a', "Class diagram where the user can Edit the layout - <b>ctrl-E</b>"],
   GCD_button: ['a', "Graphviz Class diagram, automatically laid out - editable using a contextual menu when pointing to a class, association or attribute - <b>ctrl-G</b>"],
   SD_button: ['a', "State diagram - editable using a contextual menu when pointing to  a state or transition  - <b>ctrl-S</b>"],
+  
+  GenJavaButton:['a',"Generate Java from this Umple model ... To generate other outputs such as Python, C++, PhP, ER Diagrams and Formal Methods, use the Generate menu in Tools"],
+//  topBookmarkable: ['a',"You can reconnect to your last collaboration session at any time."],
+  topBookmarkable: ['a',"Click to copy your collaboration URL and save it so you can come back to it later.<br/> <br/>And you can do this just so you remember the location of your model, but you can also share it with other people to collaborate in real time on a model.<br/> <br/>When more than one person is working on a model, a collaborator who has stopped editing may time out after a while and would have to then reconnect."],
+  
+  collabDisconnect: ['a',"You can disconnect from your collaboration session with this button."],
+  ttSaveNCollab: ["a", "Click to save this model for ongoing editing.<br/><br/>After clicking this, you will need to use your browser's functionality to copy or bookmark the newly-created semi-permanent URL.<br/><br/>As you make further edits at the new URL, they will be instantly saved. You will be able to come back any time to continue editing.<br/><br/>The URL and its model will continue to be available for up to a year from the last time you edited it.<br/><br/>Do not use the new URL as a safe backup: If you (or anyone else who you give the URL) modifies or deletes the text, then your work would be lost. <br/><br/>You can share the URL with others, or open multiple tabs with it by yourself. As you type, the text will change simultaneously in all open browsers or browser tabs."],
 
   // preferences tooltips
   ttPhotoReady: ["li", "Remove editing handles from diagram"],
@@ -103,8 +110,6 @@ ToolTips.tooltipEntries = {
 
   // other views tooltips
   ttYumlImage: ["li", "Generate a class diagram using Yuml in another window"],
-
-  ttSaveNCollab: ["a", "Click to save this model for ongoing editing.<br/><br/>After clicking this, you will need to use your browser's functionality to copy or bookmark the newly-created semi-permanent URL.<br/><br/>As you make further edits at the new URL, they will be instantly saved. You will be able to come back any time to continue editing.<br/><br/>The URL and its model will continue to be available for up to a year from the last time you edited it.<br/><br/>Do not use the new URL as a safe backup: If you (or anyone else who you give the URL) modifies or deletes the text, then your work would be lost. <br/><br/>You can share the URL with others, or open multiple tabs with it by yourself. As you type the text will change simultaneously in all open tabs."],
 };
 
 
@@ -143,7 +148,7 @@ ToolTips.initTooltips = function()
   // Initialize the tooltips in the above tooltip dictionary
   for(var id in this.tooltipEntries)
   {
-    // Tooltips that should appear below (which is all in the top buttons
+    // Start by listing buttons at the top
     if (
         id=="SD_button"
         ||id=="GCD_button"
@@ -151,13 +156,18 @@ ToolTips.initTooltips = function()
         ||id=="SHT_button"
         ||id=="SHD_button"
         ||id=="SHA_button"
-        ||id=="SHM_button")
+        ||id=="SHM_button"
+        ||id=="GenJavaButton"
+        ||id=="ttSaveNCollab"
+        ||id=="collabDisconnect"
+        ||id=="topBookmarkable"
+    )
     {
-    
+      // Tooltips selected above should appear below (which is all in the top buttons
       ToolTips.setATooltip(
         this.tooltipEntries,
         id,
-        {my:"left top+25%", of:"#"+id}
+        {my:"left top+10", of:"#"+id}
       );   
     }
     else{

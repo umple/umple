@@ -575,8 +575,7 @@ $output = $dataHandle->readData('model.ump');
 
     &nbsp; 
     <span style="font-size: 30%; white-space:nowrap;">
-    <a class="button2" href="javascript:Action.generateCode('java','Java');"
-      title="Generate Java from this Umple model ... To generate other outputs such as C++, PhP, ER Diagrams and Formal Methods, use the Generate menu in Tools">Generate Java</a>&nbsp;
+    <a id="GenJavaButton" class="button2" href="javascript:Action.generateCode('java','Java');">Generate Java</a>&nbsp;
     </span>    
 
     <!-- disabling the save as URL feature and activating collaboration feature-->
