@@ -591,14 +591,14 @@ $output = $dataHandle->readData('model.ump');
                <!-- <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL  -->
                
               <span id="changableButton">
-              <a class="button2" id="topBookmarkable" href="javascript:copyBookmarkURL()" title="You can copy your collaboration's URL and share it with your friends to collaborate together on a model."><span>&#128279;</span> Copy collaboration URL
+              <a class="button2" id="topBookmarkable" href="javascript:copyBookmarkURL()"><span>&#128279;</span> Copy collaboration URL
               <span id="led" class="led"> </span>
               <span id="activeUsersIcon" style="display:none">&#128100;</span>&nbsp;<span id="activeUsers" style="display:none" ></span>
               </a>
               </span>
               &nbsp;
     
-               <a class="button2" id="collabDisconnect" style="display:none" href="javascript:Collab.disconnectFromServer('Disconnected from the server, the collaboration session has ended at the user\'s request.');" title="You can disconnect from your collaboration session with this button." > Disconnect </a>
+               <a class="button2" id="collabDisconnect" style="display:none" href="javascript:Collab.disconnectFromServer('Disconnected from the server, the collaboration session has ended at the user\'s request.');"> Disconnect </a>
                &nbsp;
                <!-- &nbsp; -->
                
@@ -607,17 +607,7 @@ $output = $dataHandle->readData('model.ump');
 
 
              <?php } else if (!isset($_REQUEST["task"])) { ?>
-               <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()" title = "Click to save this model for ongoing editing.
-               
-               After clicking this, you will need to use your browser's functionality to copy or bookmark the newly-created semi-permanent URL.
-               
-               As you make further edits at the new URL, they will be instantly saved. You will be able to come back any time to continue editing.
-               
-               The URL and its model will continue to be available for up to a year from the last time you edited it. 
-               
-               Do not use the new URL as a safe backup: If you (or anyone else who you give the URL) modifies or deletes the text, then your work would be lost.
-               
-               You can share the URL with others, or open multiple tabs with it by yourself. As you type the text will change simultaneously in all open tabs." >Save & Collaborate 
+               <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate 
                  <!-- <span id="led" class="led"> </span> -->
                </a>
                &nbsp;
