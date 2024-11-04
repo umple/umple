@@ -470,7 +470,16 @@ Collab.pushUpdates = async function(socket, filekey, version, fullUpdates) {
 
   return new Promise(function(resolve) {
     socket.emit('pushUpdates', filekey, version, JSON.stringify(updates));
-    socket.once('pushUpdateResponse', function(status) {
+    //console.log("pushUpdates", filekey, version, JSON.stringify(updates));
+    socket.on('pushUpdateResponse', function(status) {
+
+      if (!status.success && status.reason === 'versionMismatch') {
+        // Pull the latest updates and try again
+        console.warn("versionMismatch", filekey, version);
+        Collab.peerExtension(socket, filekey, version);
+        
+      }
+
       // DEBUG
       // console.log("status: ", status)
       // ===================
