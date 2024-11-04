@@ -7,6 +7,7 @@ let baseclientID = null;
 let attempt = 0;
 let checktemp = false;
 let isConnected = false;
+let inactivityDisabled = false;
 // let inActivityIntervalID;
 
 // the main process of Idle timer
@@ -701,6 +702,7 @@ function debounce(callback, delay) {
 
 // Function to reset the inactivity timer
 function resetInactivityTimer() {
+  if (!inactivityDisabled){
   if(debugFlag)
   console.warn('timer reset called ...');
 
@@ -709,7 +711,7 @@ function resetInactivityTimer() {
 
   inactivityTimer = setTimeout(userIsInactive, inactivityTime); // Set a new timer
   inactivitywarningTimer = setTimeout(sendInactivitywarning, inactivitywarningTime); // Set a new timer
-
+  }
 }
 
 
@@ -729,6 +731,7 @@ Collab.websocketLogging = function(command){
  Collab.clientSetTimeout = function(command){
   if(command == 10){
     if (isConnected){
+    inactivityDisabled = false;
     console.log("Timeout the client after 10 seconds");
     inactivityTime = 10000; // 10 seconds
     inactivitywarningTime = 6000; // 6 seconds
@@ -742,6 +745,7 @@ Collab.websocketLogging = function(command){
   
   }else if(command == -1){
     if (isConnected){
+    inactivityDisabled = false;
     console.log("Reset to normal inactivity time");
     inactivityTime = 600000; // 10 minutes
     inactivitywarningTime = 540000; // 9 minutes
@@ -759,6 +763,7 @@ Collab.websocketLogging = function(command){
     console.log("client timeout disabled");
     clearTimeout(inactivityTimer); // Clear the existing timer
     clearTimeout(inactivitywarningTimer); // Clear the existing timer
+    inactivityDisabled = true;
     }
     else{
       console.log("you are not connected to the collaboration server");
