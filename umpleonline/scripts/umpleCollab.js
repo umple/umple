@@ -6,6 +6,7 @@ let dc = null;
 let baseclientID = null;  
 let attempt = 0;
 let checktemp = false;
+let isConnected = false;
 // let inActivityIntervalID;
 
 // the main process of Idle timer
@@ -13,6 +14,7 @@ let checktemp = false;
 // let inactivityTime = 6000; // 6 seconds
 let inactivityTime = 600000; // 10 minutes
 let inactivitywarningTime = 540000; // 9 minutes
+let diff = (inactivityTime - inactivitywarningTime)/1000;
 let inactivityTimer;
 let inactivitywarningTimer;
 let debugFlag=false;
@@ -128,6 +130,7 @@ updateConnectionStatus();
 
 
     socket.on('connect', () => {
+      isConnected = true;
       // console.log("connected", window.performance.now()-snapshot);
       clearTimeout(connectionTimeout);
       
@@ -177,6 +180,7 @@ updateConnectionStatus();
 
     })
     .on('connect_error', (error) => {
+      isConnected = false;
       
       if(debugFlag)
         console.warn('Connection to Collaboration server failed! Please try again later.');
@@ -267,6 +271,7 @@ updateConnectionStatus();
      // console.log('You are disconnected from server.');
      // Page.setFeedbackMessage("Disconnected from Collab Server")
     // Collab.disconnectFromServer();
+    isConnected = false;
       
     });
 
@@ -331,6 +336,7 @@ updateConnectionStatus();
 
 Collab.disconnectFromServer = function(text) {
   socket=sockett;
+  isConnected = false;
   // Notify the server about disconnection if necessary
   // socket.emit('disconnectRequest');
 
@@ -637,9 +643,9 @@ function startCheckingInactivity() {
 
 function sendInactivitywarning() {
   if(debugFlag)
-  console.warn("Only one minute left to disconnect due to inactivity");
+  console.warn("Only " + diff + " seconds left to disconnect due to inactivity");
 
-  Page.setFeedbackMessage("Only one minute left to disconnect due to inactivity");  
+  Page.setFeedbackMessage("Only " + diff + " seconds left to disconnect due to inactivity");  
   // Page.setFeedbackMessage("You will be disconnected from collaboration due to inactivity in 20 seconds. Please type something on the editor to continue collaborating."); 
 }
 
@@ -653,11 +659,23 @@ function userIsInactive() {
 
   Collab.disconnectFromServer(); // Function to handle disconnection
 
-  setTimeout(()=>{
-   // alert("You have disconnected from collaboration due to inactivity. Please click reconnect if you want to connect to your collaboration session again.");
-  Page.setFeedbackMessage("Collaboration disconnected and model is read only after " + inactivityTime/1000 + " seconds of inactivity. Click reconnect to continue.");
-  } ,3000);    
+  if(inactivityTime == 600000){
+    setTimeout(()=>{
+      // alert("You have disconnected from collaboration due to inactivity. Please click reconnect if you want to connect to your collaboration session again.");
+      console.warn("Collaboration disconnected and model is read only after 10 minutes of inactivity. Click reconnect to continue."); 
+      Page.setFeedbackMessage("Collaboration disconnected and model is read only after 10 minutes of inactivity. Click reconnect to continue.");
+    } ,3000);
 
+  }
+  else
+  {
+    setTimeout(()=>{
+      // alert("You have disconnected from collaboration due to inactivity. Please click reconnect if you want to connect to your collaboration session again.");
+      console.warn("Collaboration disconnected and model is read only after " + inactivityTime/1000 + " seconds of inactivity. Click reconnect to continue.");
+      Page.setFeedbackMessage("Collaboration disconnected and model is read only after " + inactivityTime/1000 + " seconds of inactivity. Click reconnect to continue.");
+    } ,3000);
+
+  }
   // resetInactivityTimer(); // Reset the inactivity timer 
 
 }
@@ -696,7 +714,7 @@ function resetInactivityTimer() {
 
 
 
-Collab.WebsocketLogging = function(command){
+Collab.websocketLogging = function(command){
   if(command == 0){
     console.log("Unlimited collaboration logging");
     debugFlag = true;
@@ -705,6 +723,47 @@ Collab.WebsocketLogging = function(command){
     console.log("Disable collaboration logging");
     debugFlag = false;
  
+  }
+ }
+
+ Collab.clientSetTimeout = function(command){
+  if(command == 10){
+    if (isConnected){
+    console.log("Timeout the client after 10 seconds");
+    inactivityTime = 10000; // 10 seconds
+    inactivitywarningTime = 6000; // 6 seconds
+    diff = 4000/1000;
+    resetInactivityTimer();
+    }
+    else{
+      console.log("you are not connected to the collaboration server");
+      Page.setFeedbackMessage("You are not connected to the collaboration server");
+    }
+  
+  }else if(command == -1){
+    if (isConnected){
+    console.log("Reset to normal inactivity time");
+    inactivityTime = 600000; // 10 minutes
+    inactivitywarningTime = 540000; // 9 minutes
+    diff = (600000- 540000)/1000;
+    resetInactivityTimer();
+    }
+    else{
+      console.log("you are not connected to the collaboration server");
+      Page.setFeedbackMessage("You are not connected to the collaboration server");
+    }
+   
+  }
+  else if(command == 0){
+    if (isConnected){
+    console.log("client timeout disabled");
+    clearTimeout(inactivityTimer); // Clear the existing timer
+    clearTimeout(inactivitywarningTimer); // Clear the existing timer
+    }
+    else{
+      console.log("you are not connected to the collaboration server");
+      Page.setFeedbackMessage("You are not connected to the collaboration server");
+    }
   }
  }
 

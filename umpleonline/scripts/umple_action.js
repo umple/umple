@@ -4601,38 +4601,33 @@ Action.setCaretPosition = function(line)
     }
 
 
-    if(line.substr(0,5)=="clwst") 
-      {
-        if (line.substr(5,1)=="q") 
-        {
-          Page.setFeedbackMessage("Ten seconds of collaboration logging");
-          Collab.WebsocketLogging(10);
-        }
-        else if (line.substr(5,1)=="n")
-        {
-          Page.setFeedbackMessage("Removing collaboration logging");
-          Collab.WebsocketLogging(-1);
-        }
-        else if (line.substr(5,1)=="x")
-        {
-            Page.setFeedbackMessage("Unlimited collaboration logging");
-            Collab.WebsocketLogging(0);
-        }
-        return;    
-      } 
-
       if(line.substr(0,4)=="clws") 
         {
           if (line.substr(4,1)=="+") 
           {
             Page.setFeedbackMessage("Collaboration logging Enabled");
-            Collab.WebsocketLogging(0);
+            Collab.websocketLogging(0);
           }
           else if (line.substr(4,1)=="-")
           {
             Page.setFeedbackMessage("Collaboration logging disabled");
-            Collab.WebsocketLogging(-1);
+            Collab.websocketLogging(-1);
           }
+          else if (line.substr(4,2)=="tq") 
+            {
+              Page.setFeedbackMessage("Ten seconds to timeout the client");
+              Collab.clientSetTimeout(10);
+            }
+            else if (line.substr(4,2)=="tn")
+            {
+              Page.setFeedbackMessage("Turn the timeout back to normal");
+              Collab.clientSetTimeout(-1);
+            }
+            else if (line.substr(4,2)=="tx")
+            {
+                Page.setFeedbackMessage("Disabled the timeout");
+                Collab.clientSetTimeout(0);
+            }
           return;    
         } 
 
