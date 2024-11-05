@@ -230,14 +230,12 @@ if(serverDebugFlag){
       }
 
       if (version != updates.length) {
-        // Emit an error back to the client to inform it of the version mismatch
-        socket.emit('pushUpdateResponse', { success: false, reason: 'versionMismatch' });
+        socket.emit('pushUpdateResponse', false);
 
         if(serverDebugFlag){
           console.log(`pushUpdateResponse sent with false`);
           console.log(`filekey: ${fileKey} version: ${version} != updates.length: ${updates.length}`);
         }
-        return;
         
       } else {
 
