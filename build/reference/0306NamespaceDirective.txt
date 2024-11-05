@@ -1,7 +1,7 @@
 Namespace Directives
 Directives
 noreferences
-@@tooltip Define how classes will be organized into output directories so there will not be clashes among classes with the same name
+@@tooltip Organize classes into namespaces to prevent naming conflicts.
 
 @@description
 <p>Namespaces allow you to group similar entities to promote cohesion, 
