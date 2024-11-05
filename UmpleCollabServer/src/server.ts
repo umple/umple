@@ -226,7 +226,7 @@ if(serverDebugFlag){
     try {
       // DEBUG
       if(serverDebugFlag){
-      console.log(`fileKey: ${fileKey} , version: ${version} != updates.length: ${updates.length}`);
+      console.log(`fileKey: ${fileKey} , version: ${version} , updates.length: ${updates.length}`);
       }
 
       if (version != updates.length) {
