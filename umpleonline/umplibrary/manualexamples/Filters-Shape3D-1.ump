@@ -36,6 +36,11 @@
 // will always show the associations
 //  filter { include Colour, SurfaceQuality;}
 
+// Filter 9: Use of patterns
+//filter { include M????3D,*Polyhedron;}
+
+// Filter 10: Excluding those that start with P (except superclasses)
+// filter { include ~P*;}
 
 class Point3D {
   Double x;
@@ -119,7 +124,9 @@ class Cube {
   isA RegularPolyhedron;
 }
 
-strictness ignore 30; // hide namespace warnings//$?[End_of_model]$?
+strictness ignore 42; // hide namespace warnings
+
+//$?[End_of_model]$?
 
 class Colour
 {
