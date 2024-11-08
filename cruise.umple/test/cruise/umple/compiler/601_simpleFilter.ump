@@ -13,7 +13,39 @@ class Mentor{
   1 -- * Student;  
 }
 
+class Evermore {
+  a;
+}
+ 
+class Zigbee {
+  b;
+}
+
 filter roles
 {
   include Student, Mentor;
+}
+
+filter onlyStartWithS
+{
+  include S*;
+}
+
+filter onlyWithT
+{
+  include *t*;
+}
+filter onlySixLetters
+{
+  include ??????;
+}
+
+filter hasTwoOsOrUOrEBeforeEnd
+{
+  include *oo*,*u*,*e?;
+}
+
+filter negFilter
+{
+  include ~*ver*,~*l;
 }
