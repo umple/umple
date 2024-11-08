@@ -68,7 +68,7 @@ A class can contain any of the following items. <a href="interfaceDefinition.htm
 
 <br />
 
-<li><b><a href="BasicMixsets.html">Mixset definitions</a></b> that contains other items that can be in classes. These allow for conditional compilation and are activated by use statements elsewhere.<font color="green">[Allowed in traits]</font></li>
+<li><b><a href="BasicMixsets.html">Mixset definitions</a></b> that are named blocks containing any of the other items that can appear in classes (i.e. those listed on this page). These allow for conditional compilation because the content of the mixset an either be active or not active. Mixsets are activated by use statements or command line arguments.<font color="green">[Allowed in traits]</font></li>
 
 <br />
 
