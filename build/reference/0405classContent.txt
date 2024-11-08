@@ -14,7 +14,7 @@ A class can contain any of the following items. <a href="interfaceDefinition.htm
 
 <br />
 
-<li><b><a href="isAclause.html">isA directives</a></b> that specify a superclass to your class (e.g. a Supervisor could be descrbied as "isA Person"). A class can only have one isA clause referring to another class, but can have many referring to traits or interfaces. <font color="red">[More than one allowed in interfaces]</font> <font color="green">[More than one allowed in traits]</font></li>
+<li><b><a href="isAclause.html">isA directives</a></b> that specify a superclass to your class (e.g. a Supervisor could be described as "isA Person"). A class can only have one isA clause referring to another class, but can have many referring to traits or interfaces. <font color="red">[More than one allowed in interfaces]</font> <font color="green">[More than one allowed in traits]</font></li>
 
 <br />
 
