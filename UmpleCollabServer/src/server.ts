@@ -244,9 +244,16 @@ if(serverDebugFlag){
         for (let update of docUpdates) {
           // Convert the JSON representation to an actual ChangeSet
           // instance
-          let changes = ChangeSet.fromJSON(update.changes)
-          updates.push({changes, clientID: update.clientID})
-          doc = changes.apply(doc)
+
+          try {
+            let changes = ChangeSet.fromJSON(update.changes)
+            updates.push({changes, clientID: update.clientID})
+            doc = changes.apply(doc)
+  
+          } catch (error) {
+            console.error(error); 
+            socket.emit('pushUpdateResponse', false);
+          }
 
           if(serverDebugFlag)
             {
