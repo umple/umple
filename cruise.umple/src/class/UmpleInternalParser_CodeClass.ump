@@ -1235,7 +1235,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   }
 
   // Check for the existence of a a parent class
-   private void checkExtendsClass(){
+   private void checkExtendsClass(UmpleClass classToCheck){
     for(UmpleClass child : model.getUmpleClasses()) 
     {
       if(child.getExtendsToken() != null) 
@@ -1292,12 +1292,16 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           
           for(Attribute att : attRepetition)
             child.deleteAttribute(att);
-            
           continue;
         }
         else{
           Token t = child.getExtendsToken();
-          getParseResult().addErrorMessage(new ErrorMessage(33,t.getPosition(),t.getValue(),child.getName()));      
+
+          // Issue #2195 indicated that message 33 was being repeated unnecessarily (computing from each subclass)
+          if(classToCheck == child) {
+            // Only do it in one case, otherwise will duplicate error 33
+            getParseResult().addErrorMessage(new ErrorMessage(33,t.getPosition(),t.getValue(),child.getName()));
+          }
         }
       }
     }
@@ -2107,7 +2111,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       try
       {
         child.setExtendsToken(extendsToken.get(i));
-        checkExtendsClass();                            //Issue 543
+        checkExtendsClass(child);                            //Issue 543
       }
       catch(Exception e){}
           }
