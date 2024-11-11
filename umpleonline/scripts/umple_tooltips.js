@@ -95,6 +95,13 @@ ToolTips.tooltipEntries = {
   ECD_button: ['a', "Class diagram where the user can Edit the layout - <b>ctrl-E</b>"],
   GCD_button: ['a', "Graphviz Class diagram, automatically laid out - editable using a contextual menu when pointing to a class, association or attribute - <b>ctrl-G</b>"],
   SD_button: ['a', "State diagram - editable using a contextual menu when pointing to  a state or transition  - <b>ctrl-S</b>"],
+  
+  GenJavaButton:['a',"Generate Java from this Umple model ... To generate other outputs such as Python, C++, PhP, ER Diagrams and Formal Methods, use the Generate menu in Tools"],
+//  topBookmarkable: ['a',"You can reconnect to your last collaboration session at any time."],
+  topBookmarkable: ['a',"Click to copy your collaboration URL and save it so you can come back to it later.<br/> <br/>And you can do this just so you remember the location of your model, but you can also share it with other people to collaborate in real time on a model.<br/> <br/>When more than one person is working on a model, a collaborator who has stopped editing may time out after a while and would have to then reconnect."],
+  
+  collabDisconnect: ['a',"You can disconnect from your collaboration session with this button."],
+  ttSaveNCollab: ["a", "Click to save this model for ongoing editing.<br/><br/>After clicking this, you will need to use your browser's functionality to copy or bookmark the newly-created semi-permanent URL.<br/><br/>As you make further edits at the new URL, they will be instantly saved. You will be able to come back any time to continue editing.<br/><br/>The URL and its model will continue to be available for up to a year from the last time you edited it.<br/><br/>Do not use the new URL as a safe backup: If you (or anyone else who you give the URL) modifies or deletes the text, then your work would be lost. <br/><br/>You can share the URL with others, or open multiple tabs with it by yourself. As you type, the text will change simultaneously in all open browsers or browser tabs."],
 
   // preferences tooltips
   ttPhotoReady: ["li", "Remove editing handles from diagram"],
@@ -103,54 +110,84 @@ ToolTips.tooltipEntries = {
 
   // other views tooltips
   ttYumlImage: ["li", "Generate a class diagram using Yuml in another window"],
+};
 
-  ttSaveNCollab: ["a", "Click to save this model for ongoing editing.<br/><br/>After clicking this, you will need to use your browser's functionality to copy or bookmark the newly-created semi-permanent URL.<br/><br/>As you make further edits at the new URL, they will be instantly saved. You will be able to come back any time to continue editing.<br/><br/>The URL and its model will continue to be available for up to a year from the last time you edited it.<br/><br/>Do not use the new URL as a safe backup: If you (or anyone else who you give the URL) modifies or deletes the text, then your work would be lost. <br/><br/>You can share the URL with others, or open multiple tabs with it by yourself. As you type the text will change simultaneously in all open tabs."],
+
+//Sets the example dropdown menus tooltips so they does not collide with the
+//contents of the dropdown list. They always appear above
+ToolTips.dropDownTooltips = {
+  exampleType: ["li", "Choose an example type to load"],
+  itemLoadExamples: ["li", "Choose a class diagram example to load. * means executable, since it has a main program"],
+  itemLoadExamples2: ["li", "Choose a state diagram example to load. * means executable, since it has a main program"],
+  itemLoadExamples3: ["li", "Choose a composite structure diagram example to load"]
+};
+
+
+
+// This function displays a particular tooltip from the sets above, using a
+// dwell time that is based on the length of the tooltip
+ToolTips.setATooltip = function(tooltipList,id,positionBlock)
+{
+  var rootForCssVar = document.querySelector(':root');
+  var theContent = tooltipList[id][1];
+  var dwellTime = Math.max(3.5,theContent.length/10)+"s";
+  jQuery("#" + id).tooltip({
+    items: tooltipList[id][0],
+    content: theContent,
+    show: {delay: 1000},
+    open: function(event,ui) {
+      rootForCssVar.style.setProperty("--tooltipDwellTime",dwellTime);
+    },
+    position: positionBlock
+  });
 };
 
 
 ToolTips.initTooltips = function()
-{  
+{
   // Initialize the tooltips in the above tooltip dictionary
   for(var id in this.tooltipEntries)
   {
-  //Special cases
-    if (id=="SD_button"||id=="GCD_button"||id=="ECD_button"||id=="SHT_button"||id=="SHD_button"||id=="SHA_button"||id=="SHM_button") {
-      jQuery("#" + id).tooltip({
-        items: this.tooltipEntries[id][0],
-        content: this.tooltipEntries[id][1],
-        show: {delay: 1000},
-        position: {my:"left top+25%", of:"#"+id}
-        });
+    // Start by listing buttons at the top
+    if (
+        id=="SD_button"
+        ||id=="GCD_button"
+        ||id=="ECD_button"
+        ||id=="SHT_button"
+        ||id=="SHD_button"
+        ||id=="SHA_button"
+        ||id=="SHM_button"
+        ||id=="GenJavaButton"
+        ||id=="ttSaveNCollab"
+        ||id=="collabDisconnect"
+        ||id=="topBookmarkable"
+    )
+    {
+      // Tooltips selected above should appear below (which is all in the top buttons
+      ToolTips.setATooltip(
+        this.tooltipEntries,
+        id,
+        {my:"left top+10", of:"#"+id}
+      );   
     }
     else{
-      jQuery("#" + id).tooltip({
-        items: this.tooltipEntries[id][0],
-        content: this.tooltipEntries[id][1],
-        show: {delay: 1000},
-        position: {my:"right", at:"left", of:"#"+id}
-      });
-      }
+      // Tooltips that should appear to the left (which is all in the central menu)
+      ToolTips.setATooltip(
+        this.tooltipEntries,
+        id,
+        {my:"right", at:"left", of:"#"+id}
+      );
+    }
   }
 
-  //Special cases
-
-  //Sets the example dropdown menus tooltip so it does not collide with the
-  //contents of the dropdown list
-  dropDownTooltips = {
-    exampleType: ["li", "Choose an example type to load"],
-    itemLoadExamples: ["li", "Choose a class diagram example to load. * means executable, since it has a main program"],
-    itemLoadExamples2: ["li", "Choose a state diagram example to load. * means executable, since it has a main program"],
-    itemLoadExamples3: ["li", "Choose a composite structure diagram example to load"]
-  }
-
-  for(id in dropDownTooltips)
+  // Tooltips that should appear above
+  for(id in this.dropDownTooltips)
   {
-    jQuery("#" + id).tooltip({
-      items: dropDownTooltips[id][0],
-      content: dropDownTooltips[id][1],
-      show: {delay: 1000},
-      position: {my:"center+15% bottom", at:"top", of:"#"+id}
-    });
+     ToolTips.setATooltip(
+        this.dropDownTooltips,
+        id,
+        {my:"center+15% bottom", at:"top", of:"#"+id}
+      );   
   }
 
   // Sets the rest of the tooltips using the styling provided by the jQuery style.
