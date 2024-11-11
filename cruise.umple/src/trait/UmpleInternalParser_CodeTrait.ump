@@ -507,7 +507,7 @@ class UmpleInternalParser
       Matcher m = Pattern.compile("([a-zA-Z_][0-9a-zA-Z_]*(<(.*)>)?)").matcher(type);
       if(!m.matches()) 
       {
-        setFailedPosition(attributeToken.getPosition(), 140, type);
+        raiseError130or140(attributeToken.getPosition(), 140, type);
         return;
       }
     }
@@ -737,7 +737,7 @@ mixset Association {
         }
         else 
         {
-          setFailedPosition(sub.getPosition(), 130, sub.getValue("name"));
+          raiseError130or140(sub.getPosition(), 130, sub.getValue("name"));
         }
         return;
       }
@@ -750,7 +750,7 @@ mixset Association {
       {
         if(!Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w|<|>|,)*", type))
         {
-          setFailedPosition(sub.getPosition(), 140, type);
+          raiseError130or140(sub.getPosition(), 140, type);
         }
       }
     }

@@ -161,6 +161,15 @@ class UmpleInternalParser
     getParseResult().setPosition(position);
     getParseResult().addErrorMessage(new ErrorMessage(errorCode,position,messages));
   }
+  
+  // Generate a generic error for debug purposes that just contains the string s
+  public void emitDebugError(String s) {
+    setFailedPosition(new Position("debug",0,0,0), 8001, s);
+  }
+  // Generate a generic warning for debug purposes that just contains the string s
+  public void emitDebugWarning(String s) {
+    setFailedPosition(new Position("debug",0,0,0), 8005, s);
+  }
 
   // Analyze all child tokens of the "root" token.  This delegates to a individual
   // Each token is analyzed as long as "shouldProcessAgain" is set to true during the analysis
