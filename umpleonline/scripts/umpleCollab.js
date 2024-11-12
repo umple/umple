@@ -568,10 +568,12 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
         dc+=1;
       }, 200);
 
-      if (dc >= 20){
-        Collab.disconnectFromServer("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
-        // alert("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
-        setTimeout(Page.setFeedbackMessage("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later."),3000);
+      if (dc >= 50){
+        // Collab.disconnectFromServer("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
+        // setTimeout(Page.setFeedbackMessage("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later."),3000);
+        
+        console.log("It looks like you're experiencing packet loss, which can cause lag or slow performance.");
+        setTimeout(Page.setFeedbackMessage("It looks like you're experiencing packet loss, which can cause lag or slow performance."),3000);
         dc=0;
       }
 
