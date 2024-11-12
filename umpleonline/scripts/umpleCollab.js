@@ -568,7 +568,7 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
         dc+=1;
       }, 200);
 
-      if (dc >= 50){
+      if (dc >= 500){
         // Collab.disconnectFromServer("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
         // setTimeout(Page.setFeedbackMessage("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later."),3000);
         
