@@ -25009,7 +25009,7 @@ var cm6 = (function (exports) {
    const myTheme = EditorView.theme({
      
      ".cm-activeLine": {
-       backgroundColor: "#d9d9d977"  // active line color
+       backgroundColor: "#e9e9e977"  // active line color
      },
      ".cm-selectionBackground": {
        backgroundColor: "#edededff" // selection color

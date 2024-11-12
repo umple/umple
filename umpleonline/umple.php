@@ -173,6 +173,10 @@ $output = $dataHandle->readData('model.ump');
     background: #B06C5B;
   }
 
+::selection {
+  color: #DD0033;
+}
+
 :root {
  --tooltipDwellTime: 3.5s;
 }
