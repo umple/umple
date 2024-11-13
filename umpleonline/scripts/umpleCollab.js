@@ -18,8 +18,10 @@ let inactivitywarningTime = 540000; // 9 minutes
 let diff = (inactivityTime - inactivitywarningTime)/1000;
 let inactivityTimer;
 let inactivitywarningTimer;
-let debugFlag=false;
+let debugFlag=true;
 let achknowledgedTimer = 0;
+let count = 0;
+let inactivitychecker = true;
 
 
 function updateConnectionStatus() {
@@ -176,6 +178,7 @@ updateConnectionStatus();
     document.getElementById('inputExample').disabled=false;
 
     // Action.changeDiagramType({type:"editableClass"});
+    if(count > 1 && inactivitychecker)
     startCheckingInactivity();
     // resetInactivityTimer();
 
@@ -222,6 +225,7 @@ updateConnectionStatus();
 
     // Set up listener for user count updates
     socket.on('userCountUpdate', function (count) {
+      count = count;
       // document.getElementById('userCountDisplay').innerText = `Users Online: ${count}`;
       if(debugFlag)
       console.warn("Users Online: ", count);
@@ -236,6 +240,8 @@ updateConnectionStatus();
         document.getElementById('led').classList.remove('LEDonDisconnect');
 
         document.getElementById('led').classList.add('LEDOne');
+        clearTimeout(inactivityTimer); // Clear the existing timer
+        clearTimeout(inactivitywarningTimer); // Clear the existing timer
 
       }
       else if(count == 2){
@@ -245,14 +251,21 @@ updateConnectionStatus();
         document.getElementById('led').classList.remove('LEDonDisconnect');
 
         document.getElementById('led').classList.add('LEDTwo');
+        
+        if(inactivitychecker)
+        startCheckingInactivity();
+
       }
-      else if(count >=2){
+      else if(count >2){
         document.getElementById('led').classList.remove('LEDonError');
         document.getElementById('led').classList.remove('LEDOne');
         document.getElementById('led').classList.remove('LEDTwo');
         document.getElementById('led').classList.remove('LEDon');
         document.getElementById('led').classList.remove('LEDonDisconnect');
         document.getElementById('led').classList.add('LEDMoreThanTwo');
+
+        if(inactivitychecker)
+        startCheckingInactivity();
         
       }
       else {
@@ -338,6 +351,7 @@ updateConnectionStatus();
 Collab.disconnectFromServer = function(text) {
   socket=sockett;
   isConnected = false;
+  inactivitychecker = true;
   // Notify the server about disconnection if necessary
   // socket.emit('disconnectRequest');
 
@@ -592,6 +606,7 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       }, 200); 
     }
 
+      if(count > 1)
       debounce(resetInactivityTimer, 2000)(); // Reset the inactivity timer
     }
 
@@ -640,6 +655,7 @@ function startCheckingInactivity() {
 // Inactive timer:
 // if(document.getElementById('disconnectButton')){
   resetInactivityTimer();
+  inactivitychecker = false;
 
 }
 
