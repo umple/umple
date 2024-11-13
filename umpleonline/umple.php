@@ -556,26 +556,12 @@ $output = $dataHandle->readData('model.ump');
 
 
   <div id="topLine" class="bookmarkableUrl">
-    <span id="linetext">Line=<input size=2 id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
-  
-    <span style="font-size: 30%">
-    <a id="ECD_button" class="button2 active" href="javascript:Page.clickShowEditableClassDiagram()">E</a>&nbsp;
-    <a id="GCD_button" class="button2" href="javascript:Page.clickShowGvClassDiagram()">G</a>&nbsp;
-    <a id="SD_button" class="button2" href="javascript:Page.clickShowGvStateDiagram()">S</a>&nbsp;
-    </span>
- 
-    &nbsp; 
+   <span id="linetext">Line=<input size=2 style="font-size: 12px;" id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
+     
     <span style="font-size: 30%">
     <a id="SHT_button" class="button2 active" href="javascript:Page.clickShowHideText()">T</a>&nbsp;
     <a id="SHD_button" class="button2 active" href="javascript:Page.clickShowHideCanvas()">D</a>&nbsp;
     </span>
-    
-    &nbsp; 
-    <span style="font-size: 30%">
-    <a id="SHA_button" class="button2 active" href="javascript:Page.clickToggleAttributes()">A</a>&nbsp;
-    <a id="SHM_button" class="button2" href="javascript:Page.clickToggleMethods()">M</a>&nbsp;
-    </span>
-
 
     &nbsp; 
     <span style="font-size: 30%; white-space:nowrap;">
@@ -1067,6 +1053,26 @@ $output = $dataHandle->readData('model.ump');
     </div>
    
     <div id="umpleCanvasColumn" class="umpleCanvasColumn inRow">
+      <div id="canvasIconRow">
+  
+    <span style="font-size: 30%">
+    <a id="ECD_button" class="button2 active" href="javascript:Page.clickShowEditableClassDiagram()">E</a>&nbsp;
+    <a id="GCD_button" class="button2" href="javascript:Page.clickShowGvClassDiagram()">G</a>&nbsp;
+    <a id="SD_button" class="button2" href="javascript:Page.clickShowGvStateDiagram()">S</a>&nbsp;
+    </span>
+ 
+    &nbsp; 
+
+    <span style="font-size: 30%">
+    <a id="SHA_button" class="button2 active" href="javascript:Page.clickToggleAttributes()">A</a>&nbsp;
+    <a id="SHM_button" class="button2" href="javascript:Page.clickToggleMethods()">M</a>&nbsp;
+    </span>
+
+         <span id="filtertext">Filter=<input size=15 style="font-size: 12px;" id="filtervalues" value="*" onChange="Action.setFilter(value);"></input>&nbsp; </span>   
+
+         <span id="hopstext">Hops=<input size=2 style="font-size: 12px;" id="hopsvalues" value="0" onChange="Action.setFilterHops(value);"></input>&nbsp; &nbsp;</span>   
+ 
+      </div>
       <div id="umpleCanvas"  tabIndex="1" class="surface"></div>
     </div>
   </div>

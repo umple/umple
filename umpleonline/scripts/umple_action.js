@@ -4809,6 +4809,19 @@ Action.promptAndExecuteTest = function() {
   return;
 }
 
+// Processes the filter (limits the classes shown)
+Action.setFilter = function(newFilter)
+{
+  // DEBUG
+  Page.setFeedbackMessage("Filter set to"+newFilter);
+}
+
+// Processes the filter hops (adds classes this many hops from the ones shown)
+Action.setFilterHops = function(newHops)
+{
+  Page.setFeedbackMessage("Hops set to"+newHops);  
+}
+
 // Adds a class with the given name. The class may already be there. Just edits the text.
 // This could be modified to 
 Action.directAddClass = function(className) {
