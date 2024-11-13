@@ -18,7 +18,7 @@ let inactivitywarningTime = 540000; // 9 minutes
 let diff = (inactivityTime - inactivitywarningTime)/1000;
 let inactivityTimer;
 let inactivitywarningTimer;
-let debugFlag=true;
+let debugFlag=false;
 let achknowledgedTimer = 0;
 let count = 0;
 let inactivitychecker = true;
@@ -155,7 +155,7 @@ updateConnectionStatus();
       
 
         const disconnectButton = document.getElementById('collabDisconnect');
-        if(disconnectButton)
+        if(disconnectButton && count>1)
         disconnectButton.style.display = 'inherit'; // Hide disconnect button
 
         if (document.getElementById('activeUsers')){
@@ -243,6 +243,9 @@ updateConnectionStatus();
         clearTimeout(inactivityTimer); // Clear the existing timer
         clearTimeout(inactivitywarningTimer); // Clear the existing timer
 
+        if(isConnected)
+          document.getElementById('collabDisconnect').style.display = 'none';
+
       }
       else if(count == 2){
         document.getElementById('led').classList.remove('LEDonError');
@@ -255,6 +258,9 @@ updateConnectionStatus();
         if(inactivitychecker)
         startCheckingInactivity();
 
+        if(isConnected)
+          document.getElementById('collabDisconnect').style.display = 'inherit';
+
       }
       else if(count >2){
         document.getElementById('led').classList.remove('LEDonError');
@@ -266,6 +272,9 @@ updateConnectionStatus();
 
         if(inactivitychecker)
         startCheckingInactivity();
+
+        if(isConnected)
+          document.getElementById('collabDisconnect').style.display = 'inherit';
         
       }
       else {
