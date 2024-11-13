@@ -43,7 +43,14 @@ if (isset($_REQUEST["taskname"])) {
     exit();
   }
 } else {
-  $savedModelData = dataStore()->createData(date("ymd"));
+  $createDataArg=date("ymd"); // prefix new session directory with yyyymmdd
+  if (isset($_REQUEST["forkSoMakeTmpOnly"]))
+  {
+    // Although the default is to create a permanent URL
+    // when forking, we want to create a tmp one
+    $createDataArg="tmp";
+  }
+  $savedModelData = dataStore()->createData($createDataArg);
   $tempModelData = dataStore()->openData($tempModelId);
 }
 
@@ -78,7 +85,9 @@ if (!$tempModelData->hasData('model.ump.erroroutput'))
 $savedModelData->cloneFrom($tempModelData);
 
 // Empty anything else in directory and remove it
-if (!isset($_REQUEST["taskname"])) 
+// Exceptions are if we are copy a task
+// or we are forking a permanent URL
+if (!isset($_REQUEST["taskname"]) && !isset($_REQUEST["forkSoMakeTmpOnly"])) 
 {
   $tempModelData->delete();
 }

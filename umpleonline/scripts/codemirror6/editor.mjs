@@ -1,5 +1,5 @@
 import { basicSetup } from "codemirror"
-import { EditorSelection, EditorState, Text, ChangeSet, StateEffect } from "@codemirror/state";
+import { EditorSelection, EditorState, Text, ChangeSet, StateEffect, Compartment } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript"
 import { umple } from "./umple.js"
 import { EditorView, ViewPlugin, ViewUpdate, lineNumbers, keymap, Decoration } from "@codemirror/view"
@@ -10,13 +10,15 @@ import { SearchCursor, RegExpCursor } from "@codemirror/search";
 
 const debuggerFlag = false;
 
+// Create a compartment for editable state
+const editableCompartment = new Compartment();
 
 // Define the custom theme for active line and selection highlighting
 
 const myTheme = EditorView.theme({
   
   ".cm-activeLine": {
-    backgroundColor: "#d9d9d977"  // active line color
+    backgroundColor: "#e9e9e977"  // active line color
   },
   ".cm-selectionBackground": {
     backgroundColor: "#edededff" // selection color
@@ -40,6 +42,7 @@ function createEditorState(initialContents, options={}) {
       keydown(e, view) {
       }
     }),
+    editableCompartment.of(EditorView.editable.of(true)),
   ]
   
   let startState = EditorState.create({
@@ -100,7 +103,7 @@ const changeListenerPlugin = ViewPlugin.fromClass(class {
         if (newContent !== this.lastContent) {
         const currentPositionofCursor = this.view.state.selection.main.head;
        // if (newContent.localeCompare(this.lastContent) !== 0) {
-       
+
         if (debuggerFlag)   
        console.warn('Content changed');
 
@@ -146,5 +149,5 @@ const changeListenerPlugin = ViewPlugin.fromClass(class {
 export { createEditorState, createEditorView, 
   EditorSelection, SearchCursor, RegExpCursor, changeListenerPlugin,
   EditorView, ViewPlugin, ViewUpdate, Text, ChangeSet, StateEffect,
-  receiveUpdates, sendableUpdates, collab, getSyncedVersion
+  receiveUpdates, sendableUpdates, collab, getSyncedVersion, Compartment,editableCompartment
 }
