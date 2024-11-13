@@ -1,4 +1,4 @@
-// console.log("umpleCollab.js loaded ...")
+// console.log("umpleCollab.js loaded ...");
 
 Collab = new Object();
 let sockett= null;
@@ -18,7 +18,7 @@ let inactivitywarningTime = 540000; // 9 minutes
 let diff = (inactivityTime - inactivitywarningTime)/1000;
 let inactivityTimer;
 let inactivitywarningTimer;
-let debugFlag=false;
+let debugFlag = false;
 let achknowledgedTimer = 0;
 let count = 0;
 let inactivitychecker = true;
@@ -33,9 +33,9 @@ function updateConnectionStatus() {
   // }
 
   if(!navigator.onLine){
-    // console.warn("You are not connected to the Internet. Please check your connection and try again.");
-    // Page.setFeedbackMessage("You are not connected to the Internet. Please check your connection and try again.");
-    Collab.disconnectFromServer("You are not connected to the Internet. Please check your connection and try again.");
+    console.warn("You are not connected to the Internet. Please check your connection and try again.");
+    Page.setFeedbackMessage("You are not connected to the Internet. Please check your connection and try again.");
+    Collab.disconnectFromServer();
   }
   
 }
@@ -174,6 +174,7 @@ updateConnectionStatus();
     });
 
     Page.readOnly = false;
+    UmpleSystem.redrawCanvas();
     document.getElementById('inputExampleType').disabled=false;
     document.getElementById('inputExample').disabled=false;
 
@@ -423,11 +424,15 @@ Collab.disconnectFromServer = function(text) {
 
   Page.readOnly = true;
   
-  Action.redrawDiagram();
+  // Action.redrawDiagram();
+  UmpleSystem.redrawCanvas();
+
+  
 
   document.getElementById('inputExampleType').disabled=true;
   document.getElementById('inputExample').disabled=true;
 
+  
   clearTimeout(inactivityTimer); // Clear the existing timer
   clearTimeout(inactivitywarningTimer); // Clear the existing timer 
 }
