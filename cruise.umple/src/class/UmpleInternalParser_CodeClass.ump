@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
 This file analyze class related umple meta model tokens such class declarations,
 associations and attributes and populates the umple meta model.
@@ -33,8 +33,10 @@ class UmpleInternalParser
 
   // List of comments populated by the parser to be added to the next class, attribute, association, method, etc.
   internal Comment[] lastComments;
-
-  internal Requirement[] lastRequirements;
+  
+  // List of requirement implementations
+  internal ReqImplementation[] lastRequirementsImpl;
+  
   
   // last attribute made.
   internal Attribute lastattr = null;
@@ -67,13 +69,14 @@ class UmpleInternalParser
 
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
-    boolean shouldConsumeRequirement = lastRequirements.size() > 0;
+    // Only need to clear reqImplementations if there actually was reqImplementations.
+    boolean shouldConsumeRequirementImpl = lastRequirementsImpl.size() > 0;
 
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
     if (t.isStatic("//") || t.isStatic("/*") || t.isStatic("*/"))
     {
       shouldConsumeComment = false;
-      shouldConsumeRequirement = false;
+      shouldConsumeRequirementImpl = false;
     }
     else if (t.is("useStatement") )
     {
@@ -137,27 +140,27 @@ class UmpleInternalParser
     {
       analyzeComment(t, false);
       shouldConsumeComment = addToLastAttributeOrAssociation(t);
-      shouldConsumeRequirement = shouldConsumeComment;
+      shouldConsumeRequirementImpl = shouldConsumeComment;
     }
     else if (t.is("annotationComment"))
     {
       analyzeComment(t, true);
       shouldConsumeComment = addToLastAttributeOrAssociation(t);
-      shouldConsumeRequirement = shouldConsumeComment;
+      shouldConsumeRequirementImpl = shouldConsumeComment;
     }     
     else if (t.is("multilineComment"))
     {
       analyzeMultilineComment(t);
       shouldConsumeComment = false;
-      shouldConsumeRequirement = false;
+      shouldConsumeRequirementImpl = false;
     }
     else if (t.is("requirement")){
       analyzeRequirement(t);
     }
     else if (t.is("reqImplementation")){
-      analyzeImplementReq(t);
-      shouldConsumeRequirement = isReqAddedToLast(t);
-      shouldConsumeComment = shouldConsumeRequirement;
+      analyzeImplementReq(t);   
+      shouldConsumeRequirementImpl = isReqAddedToLast(t);
+      shouldConsumeComment = shouldConsumeRequirementImpl;   
     }
     else if (t.is("classDefinition"))
     {
@@ -186,71 +189,101 @@ class UmpleInternalParser
     {
       analyzeToplevelException(t);
     }
-
+    else if (t.is("checkForUnintendedBracket"))
+    {
+      setFailedPosition(t.getPosition(),1016);
+    }
     // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above
     // classes, methods, attributes, etc (whichever comes next) rather than old comments propogating everywhere.
     if (shouldConsumeComment)
     {
       lastComments.clear();
     }
-    if (shouldConsumeRequirement)
+    if (shouldConsumeRequirementImpl)
     {
-      lastRequirements.clear();
+      lastRequirementsImpl.clear();
     }
-
   }  
 
-  private void analyzeRequirement(Token t)
+
+  private void analyzeRequirement(Token t) {
+    // extract new requirement identifier 
+    String reqID = t.getSubToken("reqIdentifier").getValue(); 
+    String newContent = t.getSubToken("reqContent").getValue();// extract content 
+    // Initialize language
+    String newLanguage = "";
+    if (!(t.getSubToken("reqLanguage") == null || t.getSubToken("reqLanguage").getValue() == null)) {
+        // get the language of the sub token
+        newLanguage = t.getSubToken("reqLanguage").getValue();
+    }
+     // Retrieves any existing requirement with the same identifier from the model
+     Requirement existingRequirement = model.getAllRequirements().get(reqID); 
+    // Checks if a requirement with the same identifier already exists in the model.
+    if (existingRequirement != null) { 
+        // get the language of the existing requirement
+        String existingLanguage = existingRequirement.getLanguage();
+	// return if different languages are encountered
+        if (!(existingLanguage.equals("") || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
+            setFailedPosition(t.getPosition(), 402, reqID,existingLanguage,newLanguage);
+            return;
+        }
+        // retrieve the content of the existing requirement
+        String existingContent = existingRequirement.getStatement();
+
+
+        // Requirement with the same identifier already exists, combine them
+        // Concatenate the content of the existing requirement with the new content
+        newContent = existingContent + " " + newContent;
+        if (newLanguage.equals("")) {
+            newLanguage = existingLanguage;
+        }
+        existingRequirement.addReqToken(t);// new addition
+        existingRequirement.setStatement(newContent);
+    }
+    else
+    {
+    // If existing requirement is null
+    // create new requirement
+      Requirement req = new Requirement(reqID, newContent, newLanguage);// Create new requirement 
+    // Add the new requirement
+      req.addReqToken(t);// new addition
+      model.getAllRequirements().put(reqID, req);
+    }
+
+  }
+
+  private void analyzeImplementReq(Token t) {
+     // Identifier that has been identified 
+     String reqImpID = t.getSubToken("reqIdentifier").getValue();
+     // Instantiate the requirement implementation
+     ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
+     model.addReqImplementation(reqImplementation);
+     lastRequirementsImpl.add(reqImplementation); 
+  }
+  
+  private void analyzeImplementReq(Token t, UmpleClass aClass) {
+    analyzeImplementReq(t);
+  }
+  
+  private List<ReqImplementation> analyzeEnumImplReq(Token t)
   {
-    Requirement req;
-    if (model.getAllRequirements().get(t.getSubToken("reqIdentifier").getValue()) != null){
-      System.out.println("ERROR: requirement with that identifier already exists");
-    }
-
-    if (t.getSubToken("language") == null || t.getSubToken("language").getValue() ==  null){
-      req = new Requirement(t.getSubToken("reqIdentifier").getValue(), t.getSubToken("reqContent").getValue(), "");
-    }
-    else{
-      req = new Requirement(t.getSubToken("reqIdentifier").getValue(), t.getSubToken("reqContent").getValue(), t.getSubToken("language").getValue());
-    }
-    Map<String, Requirement> newAllReq = model.getAllRequirements();
-    newAllReq.put(t.getSubToken("reqIdentifier").getValue(), req);
-    model.setAllRequirements(newAllReq);    
+     List<ReqImplementation> ReqImp= new ArrayList<ReqImplementation>();
+     String reqImpID = t.getSubToken("reqIdentifier").getValue();
+     // Instantiate the requirement implementation
+     ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
+     ReqImp.add(reqImplementation); 
+     return ReqImp;
   }
-
-  private void analyzeImplementReq(Token t){
-    int counter=0;
-
-    if (t.hasSubTokens()){
-      for (Token sub : t.getSubTokens()){
-        if (!sub.getValue().equals("STATIC") && model.getAllRequirements().containsKey(sub.getValue())){
-            lastRequirements.add(model.getAllRequirements().get(sub.getValue()));
-        }
-        else if (!sub.getValue().equals("STATIC")) counter++;
-      }
+  
+  mixset StateMachine {
+    private List<ReqImplementation> analyzeStateReqImpl(Token t)
+    {
+      List<ReqImplementation> ReqImp= new ArrayList<ReqImplementation>();
+      String reqImpID = t.getSubToken("reqIdentifier").getValue();
+      ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
+      ReqImp.add(reqImplementation);
+      return ReqImp;
     }
-
-    if (counter != 0){
-      System.out.println("ERROR: Cannot find specified requirement identifier");
-    }
-  }
-
-  private void analyzeImplementReq(Token t, UmpleClass aClass){
-    int counter=0;
-
-    if (t.hasSubTokens()){
-      for (Token sub : t.getSubTokens()){
-        if (!sub.getValue().equals("STATIC") && aClass.getSourceModel().getAllRequirements().containsKey(sub.getValue())){
-            lastRequirements.add(model.getAllRequirements().get(sub.getValue()));
-        }
-        else if (!sub.getValue().equals("STATIC")) counter++;
-      }
-    }
-
-    if (counter != 0){
-      analyzeAttribute(t, aClass);
-    }
-
   }
   
   /*
@@ -280,7 +313,7 @@ class UmpleInternalParser
     else if (lastassoc != null && lastassocPosition != null)
     {
       if (lastassocPosition.getLineNum() == t.getPosition().getLineNum())
-      {
+      {       
         // this will only add the current comment, as there can only be 1 inline comment per line
         for (Comment c : lastComments)
         {
@@ -290,9 +323,9 @@ class UmpleInternalParser
       }
       else
       {
-        lastassoc = null;
+        lastassoc = null;        
       }
-    }                
+    }                   
     return false;
   }
 
@@ -302,36 +335,36 @@ class UmpleInternalParser
    * @param t the implementsReq token that is used to see the position of the implements requirement statement
    */
   private boolean isReqAddedToLast(Token t)
-  {
+  {          
     if (t.getPosition() == null) {return false;}
     if (lastattr != null)
-    {
+    {   
       if (lastattr.getPosition().getLineNum() == t.getPosition().getLineNum())
-      {
-        for (Requirement r : lastRequirements)
+      {          
+        for (ReqImplementation ri : lastRequirementsImpl)
         {
-          lastattr.addRequirement(r);
+          lastattr.addReqImplementation(ri);
         }
-        return true;
+    return true;
       }
       else
       {
-        lastattr = null;
+        lastattr = null;           
       }
     }  
     else if (lastassoc != null && lastassocPosition != null)
-    {
+    {  
       if (lastassocPosition.getLineNum() == t.getPosition().getLineNum())
-      {
-        for (Requirement r : lastRequirements)
+      {      
+        for (ReqImplementation ri : lastRequirementsImpl)
         {
-          lastassoc.addRequirement(r);
-        }
+          lastassoc.addReqImplementation(ri);
+        }      
         return true;
       }
       else
       {
-        lastassoc = null;
+        lastassoc = null;  
       }
     }
     return false;
@@ -352,16 +385,15 @@ class UmpleInternalParser
     {
       return;
     }
-
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
-    boolean shouldConsumeRequirement = lastRequirements.size() > 0;
+    boolean shouldConsumeRequirementImpl = lastRequirementsImpl.size() > 0;
     
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
     if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
     {
       shouldConsumeComment = false;
-      shouldConsumeRequirement = false;
+      shouldConsumeRequirementImpl = false;
     }
     else if (token.is("strictnessDisableAuto"))
     {
@@ -373,19 +405,19 @@ class UmpleInternalParser
     {
       analyzeComment(token, false);
       shouldConsumeComment = addToLastAttributeOrAssociation(token);
-      shouldConsumeRequirement = shouldConsumeComment;
+      shouldConsumeRequirementImpl = shouldConsumeComment;
     }
     else if (token.is("annotationComment"))
     {
       analyzeComment(token, true);
       shouldConsumeComment = addToLastAttributeOrAssociation(token);
-      shouldConsumeRequirement = shouldConsumeComment;
+      shouldConsumeRequirementImpl = shouldConsumeComment;
     }
     else if (token.is("multilineComment"))
     {
       analyzeMultilineComment(token);
       shouldConsumeComment = false;
-      shouldConsumeRequirement = false;
+      shouldConsumeRequirementImpl = false;
     }
     else if (token.is("requirement"))
     {
@@ -394,8 +426,8 @@ class UmpleInternalParser
     else if (token.is("reqImplementation"))
     {
       analyzeImplementReq(token, aClass);
-      shouldConsumeRequirement = isReqAddedToLast(token);
-      shouldConsumeComment = shouldConsumeRequirement;
+      shouldConsumeRequirementImpl = isReqAddedToLast(token);
+      shouldConsumeComment = shouldConsumeRequirementImpl;
     }
     else if (token.is("innerClass"))
     {
@@ -531,9 +563,9 @@ class UmpleInternalParser
       lastComments.clear();
 
     }
-    if (shouldConsumeRequirement)
+     if (shouldConsumeRequirementImpl)
     {
-      lastRequirements.clear();
+        lastRequirementsImpl.clear();
     }
   }
   
@@ -564,6 +596,7 @@ class UmpleInternalParser
     if(theComment.contains("@@@skipjavacompile")) model.setSkipjavacompile(true);
     if(theComment.contains("@@@skipcppcompile")) model.setSkipcppcompile(true);
     if(theComment.contains("@@@skiprubycompile")) model.setSkiprubycompile(true);
+    if(theComment.contains("@@@skippythoncompile")) model.setSkippythoncompile(true);
     
     if (theComment.startsWith("@outputumplesource")) { 
       outputUmpleSource = true;
@@ -576,7 +609,7 @@ class UmpleInternalParser
         newComment.setAnnotation(true);
       }
       lastComments.add(newComment);
-    }
+    } 
   }
   
   /**
@@ -604,6 +637,7 @@ class UmpleInternalParser
       if(theComment.contains("@@@skipjavacompile")) model.setSkipjavacompile(true);
       if(theComment.contains("@@@skipcppcompile")) model.setSkipcppcompile(true);
       if(theComment.contains("@@@skiprubycompile")) model.setSkiprubycompile(true);
+      if(theComment.contains("@@@skippythoncompile")) model.setSkippythoncompile(true);
       
       if(theComment.startsWith("@outputumplesource")) {
         outputUmpleSource = true;
@@ -1201,7 +1235,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   }
 
   // Check for the existence of a a parent class
-   private void checkExtendsClass(){
+   private void checkExtendsClass(UmpleClass classToCheck){
     for(UmpleClass child : model.getUmpleClasses()) 
     {
       if(child.getExtendsToken() != null) 
@@ -1220,25 +1254,35 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             UmpleClass extend = child.getExtendsClass();
             while(extend!=null && child != extend && limit > 0) 
             {
+              // Look through all the parent classes to see if there are duplicate attributes
               limit--;
               for(Attribute extendAttr : extend.getAttributes()) 
               {
-                
+                // look one by one at the attributes inherited from a parent (extend)
                 String currentName = aAttribute.getName();
                 if (extendAttr.getName().equals(currentName)) 
                 {
+                  // There is an inherited attribute with the same name, but it might be OK if
+                  // it is being 'refined' e.g. given a different type or value
                   if(extendAttr.getType().equals(aAttribute.getType()))
                   {
-                    if(aAttribute.getValue() == null)
+                    if(aAttribute.getValue() == null) {
+                      // Not a refinement by setting a value, so it is a duplicate
                       attRepetition.add(aAttribute);
-                    else
+                      // issue 2173
+                      // warn of the duplicate
+                      setFailedPosition(aAttribute.getPosition(), 44, child.getName(), currentName, extend.getName());
+                    }
+                    else {
+                      // OK the value is being changed
                       aAttribute.setIsRefinement(true);
+                    }
                   }
                   else
                   {
-                  attRepetition.add(aAttribute);
+                    // The new attribute has same name but different type
+                    attRepetition.add(aAttribute);
                     setFailedPosition(aAttribute.getPosition(), 44, child.getName(), currentName, extend.getName());
-                
                   }
                 }
               }
@@ -1248,12 +1292,16 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           
           for(Attribute att : attRepetition)
             child.deleteAttribute(att);
-            
           continue;
         }
         else{
           Token t = child.getExtendsToken();
-          getParseResult().addErrorMessage(new ErrorMessage(33,t.getPosition(),t.getValue(),child.getName()));      
+
+          // Issue #2195 indicated that message 33 was being repeated unnecessarily (computing from each subclass)
+          if(classToCheck == child) {
+            // Only do it in one case, otherwise will duplicate error 33
+            getParseResult().addErrorMessage(new ErrorMessage(33,t.getPosition(),t.getValue(),child.getName()));
+          }
         }
       }
     }
@@ -1306,7 +1354,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
    */
   private UmpleClass analyzeClass(Token classToken)
   {
-  
+
     mixset StateMachine {
     //Reset number of activeObjects with each class definition
     this.numberOfActiveObjects = 1;
@@ -1347,12 +1395,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     for (Comment c : lastComments)
     {
       aClass.addCommentAt(c,regularCommentCountEnd);
-      regularCommentCountEnd++;
+      regularCommentCountEnd++;   
     }
-
-    for (Requirement r : lastRequirements){
-      aClass.addRequirement(r);
+        
+    for (ReqImplementation ri : lastRequirementsImpl)
+    { 
+      aClass.addReqImplementation(ri);
     }
+    
     
     // Add special position comment at the end if @outputumplesource had been 
     // detected earlier in a comment
@@ -1587,12 +1637,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     for (Comment c : lastComments)
     {
       anInterface.addCommentAt(c,regularCommentCountEnd);
-      regularCommentCountEnd++;
+      regularCommentCountEnd++;    
     }
-
-    for (Requirement r : lastRequirements){
-      anInterface.addRequirement(r);
+    
+    for (ReqImplementation ri : lastRequirementsImpl)
+    { 
+      anInterface.addReqImplementation(ri);
     }
+   
     
     // Add special position comment at the end if @outputumplesource had been 
     // detected earlier in a comment
@@ -1751,11 +1803,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
       
       else if (childToken.is("displayColor"))
-      {  // Note: See near clone in UmpleInternalParser_CodeLayout.ump
+      {  // Note: See near clones in UmpleInternalParser_CodeLayout.ump and UmpleInternalParser_CodeStateMachine.ump
         String theColor = childToken.getValue("colorValue");
+        // Optionally users may add an equals sign, which we take out
         if(theColor.startsWith("=")) theColor=theColor.substring(1,theColor.length());
-        if(!theColor.startsWith("\"")) theColor= "\""+theColor;
-        if(!theColor.endsWith("\"")) theColor= theColor+"\"";         
+        // Optionally users may add quotation marks around the colour, which we take out
+        theColor=theColor.replace('\"',' ');
+        // Remove all spaces that may have been before any quotation marks or after the equals sign
+        theColor="\""+theColor.trim()+"\"";
         aInterface.setDisplayColor(theColor);
       }
       else if (childToken.is("extraCode") || childToken.is("exception"))
@@ -1895,7 +1950,15 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
          
          return false;
     }
+    private void analyazeTraitImpl(UmpleTrait aTrait){
+     for (ReqImplementation ri : lastRequirementsImpl)
+     {   
+      aTrait.addReqImplementation(ri);
+     }
+   }
+        
   }
+  
 
   private void addAutogeneratedMethodsForAssociations()
   {
@@ -1916,6 +1979,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
   }
   }
+  
 
   private void addUnlinkedAssociationVariables()
   {
@@ -2047,7 +2111,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       try
       {
         child.setExtendsToken(extendsToken.get(i));
-        checkExtendsClass();                            //Issue 543
+        checkExtendsClass(child);                            //Issue 543
       }
       catch(Exception e){}
           }
@@ -2430,6 +2494,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
         for (int i=0; i < numCurAssocVar; i++) {
           AssociationVariable curAssocVar = uClass.getAssociationVariable(uClassAssocVarClassNames[i], uClassAssocVarNames[i]);
+          if (curAssocVar == null)
+          {
+             // Issue 2040  ... looking in an extraneous superclass
+             continue;
+          }
 
           AssociationVariable supAssocVar = superClass.getAssociationVariable(curAssocVar.getType(), curAssocVar.getName());
           if (supAssocVar == null) continue;
@@ -3351,12 +3420,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     // Add comments above the method to the method.
     for (Comment c : lastComments)
     {
-      aMethod.addComment(c);
+      aMethod.addComment(c);     
     }
-
-    for (Requirement r : lastRequirements){
-      aMethod.addRequirement(r);
+    for (ReqImplementation ri : lastRequirementsImpl)
+    { 
+      aMethod.addReqImplementation(ri);
     }
+    
+    
 
     // Go through all the sub tokens of the "method token" to obtain details about it, using them to populate a method instance.
     List<String> langs = new ArrayList<String>();
@@ -4625,10 +4696,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     {
       yourAs.addComment(c);
     }
-
-    for (Requirement r : lastRequirements){
-      yourAs.addRequirement(r);
+  
+    for (ReqImplementation ri : lastRequirementsImpl)
+    { 
+      yourAs.addReqImplementation(ri);
     }
+    
     
     // set last association made to be yourAs. clear lastattr.
     lastassoc = yourAs;
@@ -4746,7 +4819,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         setFailedPosition(attributeToken.getPosition(), 160, name);
       }
       else {
-        setFailedPosition(attributeToken.getPosition(), 130, name);
+        raiseError130or140(attributeToken.getPosition(), 130, name);
       }
       
       return;
@@ -4841,7 +4914,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       Matcher m = Pattern.compile("([a-zA-Z_][0-9a-zA-Z_]*(<(.*)>)?)").matcher(type);
       if(!m.matches()) 
       {
-        setFailedPosition(attributeToken.getPosition(), 140, type);
+        raiseError130or140(attributeToken.getPosition(),140, type);
         return;
       }
     }
@@ -4919,11 +4992,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     for (Comment c : lastComments)
     {
       attribute.addComment(c);
-    }
-
-    for (Requirement r : lastRequirements){
-      attribute.addRequirement(r);
-    }
+    }     
+    for (ReqImplementation ri : lastRequirementsImpl)
+    { 
+      attribute.addReqImplementation(ri);
+    }  
     
     // set the last attribute made to be attribute, clear lastassoc
     lastattr = attribute;
@@ -4942,6 +5015,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       addAttributeToConstructor(attribute, aClass);
     }
   }
+  
+  
 
   private void addAttributeToConstructor(Attribute attribute, UmpleClass aClass)
   {
@@ -4965,6 +5040,42 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     aClass.addMethod(constructor);
   }
 
+  // All the places where error 130 (attribute name or 140 (type) are raised will call
+  // this function to be more specific about the details of what is wrong with
+  // the name or type name (issue #2193)
+  private void raiseError130or140 (Position position, int errorNum, String attributeNameOrType)
+  {
+    String caseRequired = "a lower case";
+    if (errorNum == 140) {
+      caseRequired = "a"; // types can start with uppercaser
+    }
+  
+    String detailedReason = "be alphanumeric, starting with "+caseRequired+" letter";
+    boolean startsWithNumber = false;
+    boolean hasSpecialCharacter = false;
+    
+    // detect case where attributeNameOrType starts with non letter
+    Pattern pat = Pattern.compile("^[0-9].*");
+    if(pat.matcher(attributeNameOrType).find()) {
+      startsWithNumber = true;
+    }
+    
+    // detect case where attributeNameOrType has special character
+    pat = Pattern.compile("^[:alnum:]*$");
+    if(!pat.matcher(attributeNameOrType).find()) {
+      hasSpecialCharacter = true;
+    }
+    
+    // Narrow down default message if appropriate
+    if(startsWithNumber && ! hasSpecialCharacter) {
+      detailedReason = "start with "+caseRequired+" letter";
+    }
+    else  if(hasSpecialCharacter && ! startsWithNumber) {
+      detailedReason = "not have special characters";
+    }    
+    
+    setFailedPosition(position, errorNum, attributeNameOrType, detailedReason);
+  }
   
   private void addAPIMethodsForAttribute(Attribute attribute, UmpleClass aClass)
   {
@@ -5615,7 +5726,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         }
         else 
         {
-          setFailedPosition(sub.getPosition(), 130, sub.getValue("name"));
+          raiseError130or140(sub.getPosition(), 130, sub.getValue("name"));
         }
         return;
       }
@@ -5628,7 +5739,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       {
         if(!Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w|<|>|,)*", type))
         {
-          setFailedPosition(sub.getPosition(), 140, type);
+          raiseError130or140(sub.getPosition(), 140, type);
         }
       }
     }
@@ -5722,7 +5833,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         }
         else 
         {
-          setFailedPosition(sub.getPosition(), 130, sub.getValue("name"));
+          raiseError130or140(sub.getPosition(), 130, sub.getValue("name"));
         }
         return;
       }
@@ -5735,7 +5846,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       {
         if(!Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w|<|>|,)*", type))
         {
-          setFailedPosition(sub.getPosition(), 140, type);
+          raiseError130or140(sub.getPosition(), 140, type);
         }
       }
     }

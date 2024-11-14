@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
 Methods for the metamodel found in Umple.ump. Most of these are mixins.
 
@@ -230,11 +230,12 @@ class UmpleModel
     }
 
 		
-    if (language.equals("Cpp")) realLanguage="RTCpp";
-    else if (language.equals("SimpleCpp")) realLanguage="RTCpp";
+    if (language.equalsIgnoreCase("Cpp")) realLanguage="RTCpp";
+    else if (language.equalsIgnoreCase("SimpleCpp")) realLanguage="RTCpp";
     
     String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",realLanguage);
     Class<?> classDefinition = null;
+    String msgIfNotFound = "Code generator "+realLanguage+ " not found. Check spelling. Specify --help.";
     try {
       classDefinition = Class.forName(className);
       CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
@@ -242,11 +243,19 @@ class UmpleModel
       return generator;
     }
     catch (ClassNotFoundException cnf) {
-      System.err.println("Code generator "+realLanguage+ " not found. Check spelling. Specify --help.");
-      throw new RuntimeException(cnf);
+      System.err.println(msgIfNotFound);
+      try {
+        classDefinition = Class.forName("cruise.umple.compiler.NothingGenerator");
+        CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
+        generator.setModel(this);
+        return generator;
+      }
+      catch(Exception ex3) {
+      throw new RuntimeException("Unable to instantiate the Nothing code generator.",ex3);
+      }
     }
     catch (Exception ex2) {
-      System.err.println("Code generator "+realLanguage+ " not found. Check spelling. Specify --help.");
+      System.err.println(msgIfNotFound);
       throw new RuntimeException("Unable to instantiate "+realLanguage+ ".",ex2);
     }
   }
@@ -320,6 +329,16 @@ class UmpleModel
   public boolean hasEnum(String enumName) {
     for (UmpleEnumeration uEnum : getEnums()) {
       if (uEnum.getName().equals(enumName)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  //this function return true if a model is of a particular language that contains specified suboption
+  public boolean modelHasSuboption(String lang, String subOption){
+    boolean suboptionFound=false;
+    for (GenerateTarget target : getGenerates()){
+      if (target.tarHasSubOption(subOption)&&target.getLanguage().equals(lang)){
         return true;
       }
     }
@@ -464,6 +483,10 @@ class UmpleClassifier{
       return "";
     }
     
+    if(filename.startsWith("lib:")) {
+      return "";
+    }
+    
     //Find path relative to namespace folders
     String packageName = getPackageName();
     if (packageName == null || packageName.equals(""))
@@ -492,7 +515,11 @@ class UmpleClassifier{
       {
         if (generates[i].getLanguage().equals(language))
         {
-          generatesPath = currentPath.resolve(Paths.get(generates[i].getPath())).normalize();
+          String genPath = generates[i].getPath();
+          if(genPath.startsWith("lib:")) {
+            genPath = genPath.substring(4);
+          }
+          generatesPath = currentPath.resolve(Paths.get(genPath)).normalize();
         }
       }
       if (generatesPath != null)
@@ -849,7 +876,8 @@ class Comment
     return output.trim();
   }
 }
-
+/*
+ */
 class Requirement{
 
   // deep copy constructor
@@ -859,15 +887,18 @@ class Requirement{
     statement = aReq.getStatement();
     language = aReq.getLanguage();
   }
-
-  public static List<Comment> convertToComment(List<Requirement> reqSelected){
+  public static List<Comment> convertToComment(List<ReqImplementation> reqSelected,UmpleModel aModel){
     List<Comment> reqTextOnly = new ArrayList<Comment>();
     String reqText = new String();
+    String reqImpID = "";
+    for (ReqImplementation reqImpl : reqSelected){
+      reqImpID = reqImpl.getIdentifier();
+      Requirement findRequirement = aModel.getAllRequirements().get(reqImpID);
+      if(findRequirement != null)
+     {
+      reqText = findRequirement.getStatement().trim();
 
-    for (Requirement req : reqSelected){
-      reqText = req.getStatement().trim();
-
-      reqText = req.getIdentifier() + ": " + reqText;
+      reqText = findRequirement.getIdentifier() + ": " + reqText;
 
       String [] reqTextList = reqText.split("\n");
 
@@ -875,15 +906,21 @@ class Requirement{
         // convert text of req to comment and format like a comment
         Comment reqComment = new Comment(line);      
         reqTextOnly.add(reqComment);
+        }
       }
+     else
+     {
+        String commentmssg = "No requirement found for this requirement identifier:"+reqImpID;
+        Comment NoComment = new Comment(commentmssg);
+        reqTextOnly.add(NoComment);
+     }
     }
-      
     return reqTextOnly;
   }
 
-  public static String format(String type, List<Requirement> reqSelected){
-    List<Comment> listOfReq = convertToComment(reqSelected);
-    return Comment.format(type, listOfReq);
+  public static String format(String type, List<ReqImplementation> reqSelected,UmpleModel aModel){
+    List<Comment> listOfReq = convertToComment(reqSelected,aModel);
+    return Comment.format(type, listOfReq); 
   }
 
   public static String translateToHTML(String content, String lang){

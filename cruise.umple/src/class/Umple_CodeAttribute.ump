@@ -16,10 +16,10 @@ class Attribute
   {
     comments.add(new Comment(comment));
   }
-	requirements = new ArrayList<Requirement>(); // Create a deep copy of requirements.
-  for (Requirement req : another.getRequirements())
+	reqImplementations = new ArrayList<ReqImplementation>(); // Create a deep copy of reqImplementations.
+  for (ReqImplementation reqImpl : another.getReqImplementations())
   {
-    requirements.add(new Requirement(req));
+    reqImplementations.add(new ReqImplementation(reqImpl.getIdentifier(), reqImpl.getReqToken()));
   }
 	position = another.getPosition();
 	endPosition = another.getEndPosition();

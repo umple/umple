@@ -94,3 +94,5 @@ class Person
   position 276 17 140 75;
 }
 // @@@skipphpcompile Contains Java code
+// @@@skippythoncompile - Contains Java Code
+// @@@skipcppcompile

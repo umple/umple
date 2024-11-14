@@ -5,7 +5,7 @@
 
   <extension point="org.eclipse.emf.ecore.generated_package">
     <package 
-       uri = "http://www.umple.cruise/Umple" 
+       uri = "https://www.umple.cruise/Umple" 
        class = "cruise.umple.umple.UmplePackage"
        genModel = "cruise/umple/Umple.genmodel" /> 
 	

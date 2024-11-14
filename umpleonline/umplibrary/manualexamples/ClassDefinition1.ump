@@ -32,3 +32,4 @@ class Student
 // @@@skipcppcompile - Contains Java code
 // @@@skipphpcompile - Contains Java code also, issue 700 (line 17)
 // @@@skiprubycompile - Contains Java code
+// @@@skippythoncompile - Contains Java Code

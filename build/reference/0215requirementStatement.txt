@@ -12,6 +12,14 @@ Requirements allow for the same comment to appear in different sections of the c
 
 <br />
 
+<p>A requirement can be tagged with multiple entities like classes, attributes, associations, state machines, traits, methods, interface etc.<p>
+
+<br />
+
 @@example
 @@source manualexamples/Requirements1.ump
+@@endexample
+
+@@example@@caption Requirement tagging with multiple entities@@endcaption
+@@source manualexamples/ReqImplTag.ump
 @@endexample

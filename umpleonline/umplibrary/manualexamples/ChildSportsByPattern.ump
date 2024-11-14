@@ -1,0 +1,89 @@
+/* Example of using builtin Umple
+ * Player Role pattern
+*/
+
+use lib:PlayerRole.ump;
+
+class Person {
+ isA Player;
+ name;
+}
+
+class TeamRole {
+  isA Role<Player=Person>;
+}
+
+class Athlete {
+  isA TeamRole;
+}
+
+class Coach {
+  isA TeamRole;
+}
+
+class ParentOfAthlete
+{
+  isA TeamRole;
+  * -- * Athlete;
+}
+
+
+class SportsTeam {
+  nickname;
+  * -- * TeamRole;
+}
+//$?[End_of_model]$?
+
+namespace -;
+
+class Person
+{
+  position 50 30 109 45;
+}
+
+class Athlete
+{
+  position 24 232 109 41.453125;
+}
+
+class TeamRole
+{
+  position 50 230 109 45;
+}
+
+class SportsTeam
+{
+  position 304 67 135.75 58.453125;
+  position.association SportsTeam__TeamRole 0,44 109,21;
+}
+
+class Coach
+{
+  position 355 234 109 41.453125;
+}
+
+class Person
+{
+  position 50 30 109 45;
+}
+
+class TeamRole
+{
+  position 50 130 109 45;
+  position.association SportsTeam:childSportsTeam__TeamRole 109,9 0,12;
+}
+
+class Athlete
+{
+  position 24 232 109 41.453125;
+}
+
+class Coach
+{
+  position 355 234 109 41.453125;
+}
+
+class ParentOfAthlete
+{
+  position 203 233 109 41.453125;
+}

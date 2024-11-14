@@ -1,0 +1,64 @@
+from Student import Student
+import os
+
+class Mentor():
+    def __init__(self, aName):
+        self._name = aName
+
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getStudent(self):
+        return self._student
+
+    def hasStudent(self):
+        has = not(self._student is None)
+        return has
+
+    def setStudent(self, aStudent):
+        wasSet = False
+        existingStudent = self._student
+        if existingStudent is None :
+            if not(aStudent is None) :
+                if aStudent.addMentor(self) :
+                    existingStudent = aStudent
+                    wasSet = True
+
+        elif not(existingStudent is None) :
+            if aStudent is None :
+                if existingStudent.minimumNumberOfMentors() < existingStudent.numberOfMentors() :
+                    existingStudent.removeMentor(self)
+                    existingStudent = aStudent
+                    wasSet = True
+
+            else :
+                if existingStudent.minimumNumberOfMentors() < existingStudent.numberOfMentors() :
+                    existingStudent.removeMentor(self)
+                    aStudent.addMentor(self)
+                    existingStudent = aStudent
+                    wasSet = True
+
+        if wasSet :
+            self._student = existingStudent
+
+        return wasSet
+
+    def delete(self):
+        if not(self._student is None) :
+            if self._student.numberOfMentors() < = 1 :
+                self._student.delete()
+
+            else :
+                placeholderStudent = self._student
+                self._student = None
+                placeholderStudent.removeMentor(self)
+
+    def __str__(self):
+        return str(super()) + "[" + "name" + ":" + self.getName() + "]" + os.linesep + "  " + "student = " + (self.getStudent() != (format(id(self.getStudent()), "x")) if None else "null")
+

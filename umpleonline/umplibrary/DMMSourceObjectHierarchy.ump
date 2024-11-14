@@ -178,3 +178,4 @@ class IsExpansionOf
   position.association IsExpansionOf__MacroDefinition 109,10 0,11;
   position.association IsExpansionOf__MacroExpansion 40,0 50,45;
 }
+// @@@skipcppcompile

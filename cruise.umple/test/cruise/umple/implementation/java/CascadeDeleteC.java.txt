@@ -23,13 +23,13 @@ public class C
   {
     if (aMyD == null || aMyD.getC() != null)
     {
-      throw new RuntimeException("Unable to create C due to aMyD. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create C due to aMyD. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     myD = aMyD;
     boolean didAddB = setB(aB);
     if (!didAddB)
     {
-      throw new RuntimeException("Unable to create myC due to b. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create myC due to b. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 
@@ -39,7 +39,7 @@ public class C
     boolean didAddB = setB(aB);
     if (!didAddB)
     {
-      throw new RuntimeException("Unable to create myC due to b. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create myC due to b. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

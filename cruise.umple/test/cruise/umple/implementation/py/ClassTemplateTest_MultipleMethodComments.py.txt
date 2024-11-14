@@ -1,0 +1,60 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 1 "MultipleMethodComments.ump"
+
+class Foo():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self):
+        pass
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def delete(self):
+        pass
+
+    #*
+    
+    #   * Inline comment above method.
+    
+    #   
+    # line 6 "MultipleMethodComments.ump"
+    def testMethod1(self):
+        // I am a comment inside a method.
+
+    #*
+    
+    #   * Multiple inline comments
+    
+    #   * above method.
+    
+    #   
+    # line 13 "MultipleMethodComments.ump"
+    def testMethod2(self):
+        // I am a comment inside a method.
+
+    #*
+    
+    #   * Multiline comment above method.
+    
+    #   
+    # line 19 "MultipleMethodComments.ump"
+    def testMethod3(self):
+        // I am a comment inside a method.
+
+    #*
+    
+    #   * Multiple multiline comments
+    
+    #   * above method.
+    
+    #   
+    # line 28 "MultipleMethodComments.ump"
+    def testMethod4(self):
+        // I am a comment inside a method.
+

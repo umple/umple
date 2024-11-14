@@ -11,9 +11,9 @@ noreferences
 
 <ol>
 
-<li><b>Model-code duality:</b> Umple means you no longer have to maintain models separately from the code. Your code and model become the same thing. Your models therefore don't get out of date and your volume of separately-maintained documentation becomes less. Model elements in the Umple code, along with their comments, become the design documentation.</li><br/>
+<li><b>Model-code duality:</b> Umple means you no longer have to maintain models separately from the code. Your code and model become the same thing. Your models therefore don&#39;t get out of date and your volume of separately-maintained documentation becomes less. Model elements in the Umple code, along with their comments, become the design documentation.</li><br/>
 
-<li><b>Rapid application development:</b> Models containing the essential structure of a system can be developed extremely fast, and modified extremely rapidly. This is because most people can edit Umple text faster than they can use a drawing tool. But the ability to use a drawing tool is not sacrificed  you can still draw an Umple model as a diagram with <a href="UsingUmpleOnline.html">UmpleOnline</a>!</li><br/>
+<li><b>Rapid application development:</b> Models containing the essential structure of a system can be developed extremely fast, and modified extremely rapidly. This is because most people can edit Umple text faster than they can use a drawing tool. But the ability to use a drawing tool is not sacrificed, as you can still draw an Umple model as a diagram with <a href="UsingUmpleOnline.html">UmpleOnline</a>!</li><br/>
 
 <li><b>Less code to write:</b> Code for UML constructs like <a href="AssociationDefinition.html">associations</a>, <a href="BasicStateMachines.html">state machines</a> and certain <a href="SingletonPattern.html">patterns</a> is generated. Less code means fewer bugs.  Developers can concentrate on the more interesting or critical parts of their code.</li><br/>
 
@@ -29,11 +29,11 @@ noreferences
 
 <li><b>Generation for multiple languages:</b> Umple allows development targeted to several different programming languages at the same time: All the developer has to do is to maintain language-independent files for the models, and link them to language-specific code for algorithms.</li><br/>
 
-<li><b>Incremental adoption:</b> You can start with just one Umple statement in a million lines of code and gradually increase Umple usage. Your software will remain fully compliable and functional as you gradually increase your uptake of Umple.</li><br/>
+<li><b>Incremental adoption:</b> You can start with just one Umple statement in a million lines of code and gradually increase Umple usage. Your software will remain fully compilable and functional as you gradually increase your uptake of Umple.</li><br/>
 
 <li><b>Use just like a pre-processor:</b> Programmers have been confidently using pre-processors for half a century.</li><br/>
 
-<li><b>Fully open source with a liberal license:</b> If you dont like something about Umple you can fix it and contribute to the community. But there are no restrictions on what you do with Umple or its generated code since it uses an <a href="http://umple.org/license">MIT-style license</a>.</li><br/>
+<li><b>Fully open source with a liberal license:</b> If you don&#39;t like something about Umple you can fix it, and contribute to the community. Because it uses an <a href="https://umple.org/license">MIT-style license</a>, there are no restrictions on your use of Umple or its generated code.</li><br/>
 
 <li><b>Commitment to the future:</b> The team at the University of Ottawa developing Umple plan to continue active development for the years to come. This will not become one of those research programs that comes to an end and is then abandoned. We recognize that ideas can take decades to percolate to the community. We plan to be right there supporting Umple as this happens.</li><br/>
 

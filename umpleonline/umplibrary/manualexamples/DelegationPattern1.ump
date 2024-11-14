@@ -64,7 +64,7 @@ class Airport {
 
 // Mixin with main program to test the above
 class Airline {
-  public static void main(String [ ] args) {
+  public static void main(String [ ] args)  {
     Airport ott = new Airport("YOW","Ottawa");
     Airport tor = new Airport("YYZ","Toronto Pearson");
     Airline a = new Airline("AO","Air Ottawa");
@@ -115,3 +115,4 @@ class Passenger
 // @@@skipcppcompile - Contains Java Code
 // @@@skipphpcompile - Contains Java Code
 // @@@skiprubycompile - Contains Java Code
+// @@@skippythoncompile - Contains Java Code

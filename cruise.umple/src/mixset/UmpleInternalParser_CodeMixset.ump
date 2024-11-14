@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
 This file analyzses mixset related tokens to populate the Umple meta model for
 mixsets.
@@ -14,6 +14,7 @@ Please refer to UmpleInternalParser.ump for more details.
 
 
 namespace cruise.umple.compiler;
+
 
 class UmpleModel{
 /*
@@ -54,6 +55,7 @@ class UmpleInternalParser
 {
 	depend cruise.umple.compiler.UmpleFile;
 	depend  java.util.stream.*;
+	List<ReqImplementation> ReqImpMixset= new ArrayList<ReqImplementation>();
   
   Map<String, Boolean> parsedUmpfiles = new HashMap<>(); // The key is to store names of parsed umple files. The value is to specify if fully parsed file (true) or partially (false). 
 
@@ -189,23 +191,33 @@ class UmpleInternalParser
 
       for (String mixsetName : mixsetNames)
       {
-        // check if the mixset was added before 
-        Mixset mixset = model.getMixset(mixsetName.trim());
-        if(mixset == null)
-        {
-          mixset = new Mixset(mixsetName);
-          mixset.setUseUmpleFile(mixsetUseFile);
-          mixset.setUseUmpleLine(useLineNumber);
-          model.addMixsetOrFile(mixset);
+        if(mixsetName.trim().charAt(0) == '!') {
+          // request to not use the mixset, hence delete if found
+          // useful for certain conditional logic cases
+          Mixset mixsetToDelete = model.getMixset(mixsetName.trim().substring(1));
+          if (mixsetToDelete != null) {
+            model.removeMixsetOrFile(mixsetToDelete);
+          }
         }
-        else if (mixset.getUseUmpleFile() == null)
-        {
-          mixset.setUseUmpleFile(mixsetUseFile);
-          mixset.setUseUmpleLine(useLineNumber);
+        else {
+
+          // check if the mixset was added before
+          Mixset mixset = model.getMixset(mixsetName.trim());
+          if(mixset == null)
+          {
+            mixset = new Mixset(mixsetName);
+            mixset.setUseUmpleFile(mixsetUseFile);
+            mixset.setUseUmpleLine(useLineNumber);
+            model.addMixsetOrFile(mixset);
+          }
+          else if (mixset.getUseUmpleFile() == null)
+          {
+            mixset.setUseUmpleFile(mixsetUseFile);
+            mixset.setUseUmpleLine(useLineNumber);
+          }
+        // this handles the case when a mixset definition is in a file and the mixset use exists in a subsequent file.
+          parseMixset(mixset);
         }
-	   
-	    // this handles the case when a mixset definition is in a file and the mixset use exists in a subsequent file.
-	    parseMixset(mixset); 
       }
     }
   }
@@ -296,6 +308,10 @@ class UmpleInternalParser
     {
       analyzeMixset(t);
     }
+    if (t.is("reqImplementation"))
+    {
+      ReqImpMixset = analyzeEnumImplReq(t);
+    }
     
   }
 
@@ -317,6 +333,11 @@ class UmpleInternalParser
     // Here the mixset fragment is considered as waitingFragment (mixsetFragment.isParsed==false). 
     mixset.addMixsetFragment(mixsetFragment);
     mixsetFragment.setMixset(mixset);
+    for (ReqImplementation ri : ReqImpMixset )
+      { 
+        mixset.addReqImplementation(ri);
+      } 
+      mixset.setPosition(token.getPosition()); 
     // parse mixset fragments right away if there is a use-statement. 
     if(mixset.getUseUmpleFile() != null)
       parseMixsetWaitingFragment(mixsetFragment);

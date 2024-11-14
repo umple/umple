@@ -1,0 +1,8 @@
+from abc import ABC, abstractmethod
+from ISomething import ISomething
+
+class IFirstChild(ABC, ISomething):
+    @abstractmethod
+    def __init__(self):
+        pass
+

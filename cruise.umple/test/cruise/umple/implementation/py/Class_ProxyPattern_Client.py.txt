@@ -1,0 +1,103 @@
+from ClientI import ClientI
+from Microwave import Microwave
+
+class Client(ClientI):
+    def __init__(self):
+        self._microwaves = []
+
+    def getMicrowave(self, index):
+        aMicrowave = self._microwaves[index]
+        return aMicrowave
+
+    def getMicrowaves(self):
+        newMicrowaves = tuple(self._microwaves)
+        return newMicrowaves
+
+    def numberOfMicrowaves(self):
+        number = len(self._microwaves)
+        return number
+
+    def hasMicrowaves(self):
+        has = len(self._microwaves) > 0
+        return has
+
+    def indexOfMicrowave(self, aMicrowave):
+        index = self._microwaves.index(aMicrowave)
+        return index
+
+    @staticmethod
+    def minimumNumberOfMicrowaves():
+        return 0
+
+    def addMicrowave(self, aMicrowave):
+        wasAdded = False
+        if aMicrowave in self._microwaves :
+            return False
+
+        self._microwaves.append(aMicrowave)
+        if aMicrowave.indexOfClient(self) != -1 :
+            wasAdded = True
+
+        else :
+            wasAdded = aMicrowave.addClient(self)
+            if not wasAdded :
+                self._microwaves.remove(aMicrowave)
+
+        return wasAdded
+
+    def removeMicrowave(self, aMicrowave):
+        wasRemoved = False
+        if not self._microwaves.contains(aMicrowave) :
+            return wasRemoved
+
+        oldIndex = self._microwaves.index(aMicrowave)
+        self._microwaves.remove(oldIndex)
+        if aMicrowave.indexOfClient(self) == -1 :
+            wasRemoved = True
+
+        else :
+            wasRemoved = aMicrowave.removeClient(self)
+            if not wasRemoved :
+                self._microwaves.insert(oldIndex, aMicrowave)
+
+        return wasRemoved
+
+    def addMicrowaveAt(self, aMicrowave, index):
+        wasAdded = False
+        if self.addMicrowave(aMicrowave) :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfMicrowaves() :
+                index = self.numberOfMicrowaves() - 1
+
+            self._microwaves.remove(aMicrowave)
+            self._microwaves.insert(index, aMicrowave)
+            wasAdded = True
+
+        return wasAdded
+
+    def addOrMoveMicrowaveAt(self, aMicrowave, index):
+        wasAdded = False
+        if aMicrowave in self._microwaves :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfMicrowaves() :
+                index = self.numberOfMicrowaves() - 1
+
+            self._microwaves.remove(aMicrowave)
+            self._microwaves.insert(index, aMicrowave)
+            wasAdded = True
+
+        else :
+            wasAdded = self.addMicrowaveAt(aMicrowave, index)
+
+        return wasAdded
+
+    def delete(self):
+        copyOfMicrowaves = self._microwaves.copy()
+        self._microwaves.clear()
+        for aMicrowave in copyOfMicrowaves:
+            aMicrowave.removeClient(self)
+

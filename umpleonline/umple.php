@@ -1,7 +1,7 @@
 <?php
 // Copyright: All contributors to the Umple Project
 // This file is made available subject to the open source license found at:
-// http://umple.org/license
+// https://umple.org/license
 //
 // Main program that generates UmpleOnline
 require_once ("scripts/compiler_config.php");
@@ -28,15 +28,17 @@ $diagramtype = "";
 $isCachedExample = false;
 $imageoutput="";
 $messageURL="";
+$actualExample="";
 if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
-  $cachedimage= "umplibrary/imagecache/".htmlspecialchars($_REQUEST['example']).".svg";
+  $actualExample=preg_replace("/[^a-zA-Z0-9_\-\/]/",'',$_REQUEST["example"]);
+  $cachedimage= "umplibrary/imagecache/".$actualExample.".svg";
   if (file_exists($cachedimage))
   {
     $isCachedExample=true;
   }
   else
   {
-    $cachedimage= "umplibrary/imagecachesm/".htmlspecialchars($_REQUEST['example']).".svg";
+    $cachedimage= "umplibrary/imagecachesm/".$actualExample.".svg";
     if (file_exists($cachedimage))
     {
       $isCachedExample=true;
@@ -44,7 +46,7 @@ if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
     }
     else
     {
-      $cachedimage= "umplibrary/imagecachestructure/".htmlspecialchars($_REQUEST['example']).".svg";
+      $cachedimage= "umplibrary/imagecachestructure/".$actualExample.".svg";
       if (file_exists($cachedimage))
       {
         $isCachedExample=true;
@@ -54,7 +56,7 @@ if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
   }
   if($isCachedExample) {
     $imageoutput = "<br/><iframe src=\"".$cachedimage."\"></iframe><br\>";
-    $messageURL = "<a href=\"?example=".$_REQUEST['example'].$diagramtype."\">URL for ".$_REQUEST['example']." example</a>";
+    $messageURL = "<a href=\"?example=".$actualExample.$diagramtype."\">URL for ".$actualExample." example</a>";
   }
 }
 
@@ -75,7 +77,7 @@ if (isset($_REQUEST["model"]) && substr(explode("-", $_REQUEST["model"])[0], 0, 
 
 // example=xxx means load the .ump file named xxx
 
-// filename=xxx means load the URL named xxx (but without the leading http://
+// filename=xxx means load the URL named xxx (but without the leading http:// or https://
 
 // model=nnnn means load the saved bookmark
 
@@ -92,8 +94,8 @@ $diagramType = "class";
 if (isset($_REQUEST["diagramtype"])) {
   $diagramType=$_REQUEST["diagramtype"];
   if ($diagramType=="state") $diagramType = "GvState";
-  else if ($diagramType=="structure") $diagramType = "structureDiagram";  
-  else if ($diagramType !="GvState" && $diagramType !="GvClass" && $diagramType !="structureDiagram" && $diagramType !="GvFeature") $diagramType = "class";
+  else if ($diagramType=="structure") $diagramType = "structureDiagram";
+  else if ($diagramType !="GvState" && $diagramType !="GvClass" && $diagramType !="structureDiagram" && $diagramType !="GvFeature" && $diagramType !="GvClassTrait" ) $diagramType = "class";
 }
 if ($diagramtype=="") $diagramtype = "&diagramtype=".$diagramType;
 
@@ -112,9 +114,9 @@ if (isset($_REQUEST["nomenu"])) {$showMenu=false;} else {$showMenu=true;}
 $readOnly = isset($_REQUEST["readOnly"]);
 if (isset($_REQUEST["model"]) && explode("-", $_REQUEST["model"])[0] == "task")
 {
-  foreach (new DirectoryIterator("ump/" . $_REQUEST['model']) as $file) 
+  foreach (new DirectoryIterator("ump/" . $_REQUEST['model']) as $file)
   {
-    if ($file->getFilename() == "submitted.md") 
+    if ($file->getFilename() == "submitted.md")
     {
       $readOnly = true;
     }
@@ -166,9 +168,152 @@ $output = $dataHandle->readData('model.ump');
    background: #810b09;
    color: #ccc;
    }
-.active {
-  background: #B06C5B;
+
+  .active {
+    background: #B06C5B;
+  }
+
+::selection {
+  color: #DD0033;
 }
+
+:root {
+ --tooltipDwellTime: 3.5s;
+}
+
+  .ui-tooltip{
+  animation: myDisplayNone var(--tooltipDwellTime) forwards;
+  -webkit-animation: myDisplayNone var(--tooltipDwellTime) forwards;
+  -moz-animation: myDisplayNone var(--tooltipDwellTime) forwards;
+  -o-animation: myDisplayNone var(--tooltipDwellTime) forwards;
+}
+
+ /* .ui-tooltip:hover{
+    animation-play-state: paused !important;
+  
+}  */
+
+@keyframes myDisplayNone{
+  0%   {
+  /* opacity: 1; */
+  }
+
+  100% { 
+    display:none;
+    /* opacity: 0.99;  */
+
+  }
+}
+
+
+/*
+  .ͼ2 .cm-activeLine{
+  background-color: #d9d9d9;!important;
+  /* animation: myfadeIn 4s forwards;
+  -webkit-animation: myfadeIn 4s forwards;
+  -moz-animation: myfadeIn 4s forwards;
+  -o-animation: myfadeIn 4s forwards; 
+}
+/*
+
+/*
+@keyframes myfadeIn {
+  0%   { background: #d9d9d9;!important; }
+  100% { background: transparent; }
+}
+*/
+
+
+.led {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    position: relative;
+    top:1px;
+
+    /* vertical-align: middle; */
+    /* alighn: center; */
+    /* margin:0.3% 0.3% 0 0.5%; */
+    background-color: gray; /* Default color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+}
+
+.LEDOne {
+    background-color: #49d3ff !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.LEDTwo {
+    background-color: #04ca04 !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.LEDMoreThanTwo {
+    background-color: green !important;
+    transition: background-color 0.2s ease !important;
+}
+
+
+.LEDon {
+    background-color: #fcff06 !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.LEDonError {
+    background-color: red !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.LEDonDisconnect {
+    background-color: orange !important;
+    transition: background-color 0.2s ease !important;
+}
+.LEDonReceive {
+    background-color: #e021cd !important;
+    transition: background-color 0.2s ease !important;
+}
+
+
+
+/* .modal-container{
+  background-color: rgba(0, 0, 0, 0.3);
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  opacity: 0;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  trsnsition: opacity 0.3s ease;
+  z-index: 100000;
+  display: none;
+}
+
+.modal-container.show{
+  pointer-events: auto;
+  opacity: 1;
+  display: flex;
+}
+
+.modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+  top: -20%;
+  text-align: center;
+  position: relative;
+} */
+
+
+
 </style>
 <link rel="stylesheet" href="scripts/styleSurvey.css"> 
 <link rel="apple-touch-icon" sizes="57x57" href="https://cruise.umple.org/apple-icon-57x57.png">
@@ -184,12 +329,38 @@ $output = $dataHandle->readData('model.ump');
 <link rel="icon" type="image/png" sizes="32x32" href="https://cruise.umple.org/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="96x96" href="https://cruise.umple.org/favicon-96x96.png">
 <link rel="icon" type="image/png" sizes="16x16" href="https://cruise.umple.org/favicon-16x16.png">
-<link rel="manifest" href="https://cruise.umple.org/manifest.json">
+<!-- <link rel="manifest" href="https://cruise.umple.org/manifest.json"> -->
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="msapplication-TileImage" content="https://cruise.umple.org/ms-icon-144x144.png">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#8f001a">
 </head>
 <body>
+<!-- 
+<div id="modal-container" class="modal-container">
+  <div class="modal">
+
+    <h2>Reconnect to Collaboration session</h2>
+
+    <p>Reconnecting your previous session? </p>
+    <button id="collabReconnectmodal" onclick= "reconnect()" >Reconnect
+    </button>
+
+    <div>
+    <p>Reconnecting to specific session with URL: </p>
+    <input type="text" id="collabSessionURL" placeholder="Enter your session URL"></input>
+    <button id="collabReconnectmodal2" onclick="reconnectToSpecificlocation()">Reconnect to this URL</button>
+    </div>
+
+    <p>start a new session?</p>
+    <button id="collabStartNew" onclick="javascript:Page.createBookmark()">Start New</button>
+    <br>
+    <br>
+    <button id="closeModal">Close</button>
+
+  </div>
+</div> -->
+
+
   <?php if($showChrome) { ?> 
     <div id="header" class="row">
         <span style="float: right">
@@ -198,9 +369,11 @@ $output = $dataHandle->readData('model.ump');
       <div class="inRow logo">
         <a href="https://cruise.umple.org/umple"><img src="scripts/umpleonline_title.jpg" alt="UmpleOnline logo" /></a>     
       </div>
-      <div class="inRow">
-        <p class="pagedescription">
+
+      <div class="inRow" style = "width: 77%">
         
+        <p class="pagedescription">
+
         <span class="pretext">
           Draw on the right, write (Umple) model code on the left. Analyse models and generate code.<br/>
            <?php
@@ -257,23 +430,29 @@ $output = $dataHandle->readData('model.ump');
           ?>
         </span>
         <span id="gdprtext" class="pretext">        
-          This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="http://privacy.umple.org" target="privacy">Click to learn about privacy.</a>
+          This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="https://umple.org/privacy" target="privacy">Click to learn about privacy.</a>
         <br/></span>
-    
-    <span style="font-size: 30%; white-space:nowrap;">
-    <a class="button2" style="padding-top:auto; padding-bottom: auto;" href="http://dl.umple.org" target="dlpage" title="Go to the page that gives instructions on how to download Umple for use in Docker, or Eclipse or on the command line">Download</a>&nbsp;
-    <a class="button2" style="padding-top:auto; padding-bottom: auto;" href="https://alumni.uottawa.ca/donation-form?fid=bp71rD2pbt0%3d&fdesc=vj8yiR3kw2%2bPwQCmy1Z8CfKc0F1zufF0wBCY%2fxboCy4%2bHJZne7BoLhQuKHwuRN4R5bhBEciI1Gn5RbPGt1TgEQ%3d%3d" target="donatepage" title="Go to a University of Ottawa page that will enable you to donate to support Umple; even a few dollars will be much appreciated">Donate</a>&nbsp;
-    
-    </span>&nbsp; &nbsp;
-          For help:
-    <?php if(strpos($_SERVER['REQUEST_URI'], 'umple.php') !== false && strpos($_SERVER['REQUEST_URI'], 'umpleonline/umple.php') === false ) {$manpage="/manual/GettingStarted.html";} else {$manpage="http://manual.umple.org";} ?>                
+
+        
+        
+        <span style="font-size: 30%; white-space:nowrap;">
+          <a class="button2" style="padding-top:auto; padding-bottom: auto;" href="https://umple.org/dl" target="dlpage" title="Go to the page that gives instructions on how to download Umple for use in Docker, or Eclipse or on the command line">Download</a>&nbsp;
+          <a class="button2" style="padding-top:auto; padding-bottom: auto;" href="https://umple.org/donate" target="donatepage" title="Go to a University of Ottawa page that will enable you to donate to support Umple; even a few dollars will be much appreciated">Donate</a>&nbsp;
+          
+          </span>&nbsp;
+    <!-- </span>&nbsp; &nbsp; -->
+
+             
+    <span> &nbsp; For help: </span>
+    <?php if(strpos($_SERVER['REQUEST_URI'], 'umple.php') !== false && strpos($_SERVER['REQUEST_URI'], 'umpleonline/umple.php') === false ) {$manpage="/manual/GettingStarted.html";} else {$manpage="https://manual.umple.org";} ?>                
     <span style="font-size: 30%; white-space:nowrap;">
     <a class="button2" style="line-height: 1; padding-top:auto; padding-bottom: auto;" href="<?php echo $manpage ?>" target="helppage" title="Open the Umple user manual in a separate tab" >User manual</a>&nbsp;
-    <a class="button2" style="line-height: 1; padding-top:auto; padding-bottom: auto;" href="http://questions.umple.org"
+    <a class="button2" style="line-height: 1; padding-top:auto; padding-bottom: auto;" href="https://umple.org/questions"
        target="questionpage" title="Open a separate tab on the StackOverflow page where you can ask Umple community members questions">Ask questions</a>&nbsp;
     <a class="button2" style="line-height: 1; padding-top:auto; padding-bottom: auto;" href="https://github.com/umple/umple/issues/new" target="issuepage" title="Open a separate tab on the page where you can report an Umple bug or request an improvement">Report issue</a>&nbsp;
     </span>
         </p>
+        
       </div>
     </div>
   <?php } ?>
@@ -400,26 +579,62 @@ $output = $dataHandle->readData('model.ump');
 
     &nbsp; 
     <span style="font-size: 30%; white-space:nowrap;">
-    <a class="button2" href="javascript:Action.generateCode('java','Java');"
-      title="Generate Java from this Umple model ... To generate other outputs such as C++, PhP, ER Diagrams and Formal Methods, use the Generate menu in Tools">Generate Java</a>&nbsp;
+    <a id="GenJavaButton" class="button2" href="javascript:Action.generateCode('java','Java');">Generate Java</a>&nbsp;
     </span>    
-  
-    <span style="font-size: 30%; white-space:nowrap;">  
-    <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
-      <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Changes at this URL are saved</a>
-    <?php } else if (!isset($_REQUEST["task"])) { ?>
-      <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
-    <?php } ?>
 
-    </span>
+    <!-- disabling the save as URL feature and activating collaboration feature-->
+    <!--
+    <span style="font-size: 30%; white-space:nowrap;">
+          <a class="button2" id="topBookmarkable" href="javascript:Page.createBookmark()" title="Create a URL for this model that you can bookmark and will allow you to come back and edit again. The URL will persist for a year after its last edit.">Save as URL</a>
+    </span> -->
 
-    <span style="font-size: 30%; white-space:nowrap;">  
+
+
+<!-- collaboration button -->
+         
+<span style="font-size: 30%; white-space:nowrap;">
+             <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
+               <!-- <a class="button2" id="topBookmarkable" href="umple.php?model=<?php echo $dataHandle->getName() ?>">Collaborating at this URL  -->
+               
+              <span id="changableButton">
+              <a class="button2" id="topBookmarkable" href="javascript:copyBookmarkURL()"><span>&#128279;</span> Copy collaboration URL
+              <span id="led" class="led"> </span>
+              <span id="activeUsersIcon" style="display:none">&#128100;</span>&nbsp;<span id="activeUsers" style="display:none" ></span>
+              </a>
+              </span>
+              &nbsp;
+    
+               <a class="button2" id="collabDisconnect" style="display:none" href="javascript:Collab.disconnectFromServer('Disconnected from the server, the collaboration session has ended at the user\'s request.');"> Disconnect </a>
+               &nbsp;
+               <!-- &nbsp; -->
+               
+              <!-- <a class="button2" id="collabReconnect" style="display:none" href="javascript:reconnect()"> Reconnect </a> -->
+              <!-- <a class="button2" id="buttonCollabFork" style="display:none" href="javascript:Page.createBookmarkFork();"> Fork </a> -->
+
+
+             <?php } else if (!isset($_REQUEST["task"])) { ?>
+               <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate 
+                 <!-- <span id="led" class="led"> </span> -->
+               </a>
+               &nbsp;
+             <?php } ?>
+         
+             </span>
+             
+              <!-- collaboration LED -->
+         
+             <!-- <span id="led" class="led"> </span> -->
+
+
+
+
+    <span style="font-size: 30%; white-space:nowrap; display:none;">  
     <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>
     </span>
-    
-    <span id="restorecode" >&nbsp; &nbsp; <a href="#"> Restore Saved State</a></span>
 
-    &nbsp; &nbsp;<span id=exampleMessage><?php echo $messageURL ?></span> <span id=feedbackMessage></span>
+    <span id="restorecode" > &nbsp; <a href="#"> Restore Saved State</a></span>
+
+    &nbsp;<span id=exampleMessage><?php echo $messageURL ?></span> <span id=feedbackMessage></span>
   </div>
 
   <div id="tabControl">
@@ -432,8 +647,14 @@ $output = $dataHandle->readData('model.ump');
 
   <div id="mainApplication" class="row"> 
     <div id="textEditorColumn"  tabIndex="2"  class="inRow"> 
-      <div id="topTextEditor">
+      
+      <!-- codemirror 5 editor -->
+      <!-- <div id="topTextEditor" style="float:left; width:100%">
         <textarea id="umpleModelEditorText" class="umpleModelEditor" wrap="off"></textarea>
+      </div> -->
+
+      <!-- codemirror 6 editor -->
+      <div id="newEditor" style="width:100%">
       </div>
       <div id="bottomTextEditor">
         <textarea id="umpleLayoutEditorText" class="umpleLayoutEditor" wrap="off"></textarea>
@@ -445,7 +666,6 @@ $output = $dataHandle->readData('model.ump');
 
         <!-- GROUP 1 OF OPTIONS -->
         <h3><a href="#saveload">SAVE & LOAD</a></h3>
-        
         <div class="section">
           <ul class="first" id="saveLoad">
             <li class="subtitle">SAVE</li>
@@ -458,28 +678,34 @@ $output = $dataHandle->readData('model.ump');
             <?php } else if (!isset($_REQUEST["task"])) { ?>
             <li id="ttSaveModel"> 
               <div id="menuBookmarkable" class="bookmarkableUrl">
-                <a href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Save as URL</a>
+                <a href="bookmark.php?model=<?php echo $dataHandle->getName() ?>">Save & Collaborate</a>
               </div>
             </li>
             <?php } ?>
-            <li id="buttonCopyClip" class="copyClip">
-              <img src="scripts/copy.png"/> 
+            <li id="buttonCopyClip" class="copyClip" >
+              <img src="scripts/copy.png" alt="Copy to Clipboard icon"/> 
                Copy to Clipboard
             </li>           
+
+            <li id="buttonCollabFork" class="buttonCollabFork" style="display:none">
+              <img src="scripts/copy.png" alt="Fork"/> 
+              <a href="javascript:Page.createBookmarkFork();"  style="text-decoration:none;">Fork</a>
+            </li>     
+
             <li id="buttonCopy" class="copy">
-              <img src="scripts/copy.png"/> 
+              <img src="scripts/copy.png" alt="Source to Copy icon"/> 
                Source to Copy
             </li>
             <li id="buttonCopyEncodedURL" class="copyEncoded">
-              <img src="scripts/copy.png"/> 
+              <img src="scripts/copy.png" alt="Copy Encoded URL icon"/> 
               Encoded URL
             </li>
             <li id="buttonCopyCommandLine" class="copyCommandLine">
-              <img src="scripts/copy.png"/> 
+              <img src="scripts/copy.png" alt="Copy Command Line Script icon"/> 
               Command Script
             </li>
             <li id="buttonCopyLocalBrowser" class="copyLocalBrowser">
-              <img src="scripts/copy.png"/> 
+              <img src="scripts/copy.png" alt="Store in Local Browser icon"/> 
               Store in Browser
             </li>
             
@@ -538,7 +764,11 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="Accidents.ump">Accidents</option>
                 <option name = "optionExample" value="Accommodations.ump">Accommodations</option>
                 <option name = "optionExample" value="AfghanRainDesign.ump">Afghan Rain Design</option>
+
+                <option name = "optionExample" value="https://raw.githubusercontent.com/umple/agreementNegotiation/main/negotiationMetamodel/src/Negotiations.ump">Agreement Negotiation</option>
+                
                 <option name = "optionExample" value="AirlineExample.ump">Airline *</option>
+                <option name = "optionExample" value="Auction.ump">Auction *</option>                
                 <option name = "optionExample" value="BankingSystemA.ump">Banking System A</option>
                 <option name = "optionExample" value="BankingSystemB.ump">Banking System B</option>
                 <option name = "optionExample" value="CanalSystem.ump">Canal</option>
@@ -586,6 +816,7 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample2" id = "defaultExampleOption2" value="">Select Example</option>
                 <option name = "optionExample" value="AgentsCommunication.ump">Agents Communicating *</option>
                 <option name = "optionExample" value="ApplicationProcessing.ump">Application for a Grant</option>
+                <option name = "optionExample" value="Auction.ump">Auction *</option>                  
                 <option name = "optionExample" value="Booking.ump">Booking (Airline)</option>
                 <option name = "optionExample" value="CanalLockStateMachine.ump">Canal Lock</option>
                 <option name = "optionExample" value="CarTransmission.ump">Car Transmission</option>
@@ -648,15 +879,15 @@ $output = $dataHandle->readData('model.ump');
           <ul id="mainDrawMenu" class="second toggle">
             <li class="subtitle"> Draw </li>
             <li id="buttonAddClass" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the canvas to add a new class." tabindex="0">
-              <img src="scripts/class.png"/> 
+              <img src="scripts/class.png" alt="Icon to click on to create a new class in editable mode"/> 
               Class
             </li>
             <li id="buttonAddAssociation" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on a class to draw an association." tabindex="0">
-              <img src="scripts/assoc.png"/> 
+              <img src="scripts/assoc.png" alt="Icon to click on to create an association in editable mode"/> 
               Association
             </li>
             <li id="buttonAddTransition" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select and click on a state to draw a transition." tabindex="0">
-               <img src="scripts/assoc.png"/>
+               <img src="scripts/assoc.png" alt="Icon to click on to create a new transition in certain state modes"/>
                Transition
              </li>            
             <!-- <li id="buttonBendAssociation" class="toggleToolItem" name="paletteItem">
@@ -664,27 +895,27 @@ $output = $dataHandle->readData('model.ump');
               Bend Assoc.
             </li> -->
             <li id="buttonAddGeneralization" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class." tabindex="0">
-              <img src="scripts/generalization.png"/> 
+              <img src="scripts/generalization.png" alt="Icon to click on to create a generalization (subclass relationship) in editable mode"/> 
               Generalization
             </li>
             <li id="buttonDeleteEntity" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on an element to remove it from your model." tabindex="0">
-              <img src="scripts/delete.png"/>
+              <img src="scripts/delete.png" alt="Icon to click on to delete and item in editable mode"/>
                Delete
              </li>
             <li id="buttonUndo" name="paletteItem" tabindex="0">
-              <img src="scripts/undo.png"> 
+              <img src="scripts/undo.png" alt="Icon to click on to undo the last action"> 
               Undo
             </li>
             <li id="buttonRedo" name="paletteItem" tabindex="0">
-              <img src="scripts/redo.png"> 
+              <img src="scripts/redo.png" alt="Icon to click on to redo an undone item in editable mode"> 
               Redo
             </li>
             <li id="buttonReindent" name="paletteItem" tabindex="0">
-              <img src="scripts/sync_diagram.png" /> 
+              <img src="scripts/sync_diagram.png" alt="Icon to click on to reindent the code"/> 
               Reindent Code
             </li>
             <li id="buttonSyncDiagram" name="paletteItem" tabindex="0">
-              <img src="scripts/sync_diagram.png" /> 
+              <img src="scripts/sync_diagram.png" alt="Icon to sync the diagram manually when automatic syncing is off"/> 
               Sync Diagram 
             </li>
         </ul>
@@ -802,19 +1033,19 @@ $output = $dataHandle->readData('model.ump');
             
             <?php if ($canCreateTask) { ?>
               <li id="buttonCreateTask">
-                <img src="scripts/copy.png"/>
+                <img src="scripts/copy.png" alt="Icon to click on to create a task"/>
                 Create a Task
               </li>
             <?php } ?>
 
             <li id="buttonLoadTask">
-              <img src="scripts/copy.png"/>
+              <img src="scripts/copy.png" alt="Icon to click on to load a task"/>
               Load a Task
             </li>
 
             <?php if (isset($_REQUEST["task"])) { ?>
             <li id="buttonRequestAllZip">
-              <img src="scripts/copy.png"/> 
+              <img src="scripts/copy.png" alt="Icon to click on to get a zip file with task submissions"/> 
               Request all Directories as a zip under this task
             </li>
             <?php } ?>
@@ -839,7 +1070,13 @@ $output = $dataHandle->readData('model.ump');
       <div id="umpleCanvas"  tabIndex="1" class="surface"></div>
     </div>
   </div>
- <a name="genArea"/>  
+
+  <!-- Added for including codemirror6 editor -->
+  <script src="./scripts/codemirror6/editor.bundle.js"></script>
+  <!-- Added for sockets usage in client-side -->
+  <script src="./scripts/socket.io/socket.io.js"></script>
+
+  <a name="genArea"/>  
   <div id="generatedCodeRow" class="row">
 		<li id="ttTabsCheckbox">
 			<input id="buttonTabsCheckbox" type="checkbox" class="checkbox" name="buttonTabsCheckbox" value="buttonTabsCheckbox"/>
@@ -873,15 +1110,64 @@ $output = $dataHandle->readData('model.ump');
       <?php if(isset($_REQUEST["task"])) { ?> true <?php } else { ?> false <?php } ?>,
       <?php if($canCreateTask) { ?> true <?php } else { ?> false <?php } ?>
       ); 
-      <?php if (isset($_REQUEST['example']) && $_REQUEST["example"] != ""){?> 
-      Page.setExamples("<?php echo $_REQUEST['example'] ?>")
+      <?php if (isset($_REQUEST['example']) && $actualExample != ""){?> 
+      Page.setExamples("<?php echo $actualExample ?>")
       <?php } ?> 
       //
   </script>
+
+  <script>
+    Collab.connectCollabServer();
+  </script>
+
+  <script>
+    // if (document.getElementById('collabReconnect')) {
+    // const open = document.getElementById('collabReconnect');
+    // const modalContainer = document.getElementById('modal-container');
+    // const close = document.getElementById('closeModal');
+
+    // open.addEventListener('click', () => {
+    //   modalContainer.classList.add('show');
+    // });
+
+    // close.addEventListener('click', () => {
+    //   modalContainer.classList.remove('show');
+    // });
+
+    // }
+
+
+
+    function reconnect() {
+      var currentaddress = document.location.href;
+      window.location.href = currentaddress;
+    }
+
+
+    // function reconnectToSpecificlocation() {
+    //   var collabURL = document.getElementById('collabSessionURL').value;
+    //   window.open(collabURL,'_blank');
+    //     }
+
+
+  </script>
+
+<script>
+      copyBookmarkURL = function(){
+      // Get the current URL
+      const currentUrl = window.location.href;
+      navigator.clipboard.writeText(currentUrl);
+      Page.setFeedbackMessage("URL copied to clipboard");
+      console.log("URL copied to clipboard");
+    }
+  </script>
+
   <?php if ($showChrome) { ?>
     <div class="visitors-count" align="right">
         <?php include "counter.php"; ?>
     </div>
   <?php } ?>
+
+
 </body>
 </html>

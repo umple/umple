@@ -3,7 +3,7 @@
  Copyright: All contributers to the Umple Project
  
  This file is made available subject to the open source license found at:
- http://umple.org/license
+ https://umple.org/license
 
  */
 
@@ -59,7 +59,7 @@ public class UmpleConsoleMainTest {
    String[] args = new String[0];
    
     UmpleConsoleMain.main(args);
-    Assert.assertEquals("For more detailed information go to http://manual.umple.org"+System.lineSeparator()
+    Assert.assertEquals("For more detailed information go to https://manual.umple.org"+System.lineSeparator()
         +"Usage: java -jar umple.jar [options] <umple_file>"+System.lineSeparator()
         + "Example: java -jar umple.jar airline.ump"+System.lineSeparator(), outErrIntercept.toString());
   }
@@ -125,7 +125,7 @@ public class UmpleConsoleMainTest {
 		    UmpleConsoleMain.main(args);
 
       Assert.assertEquals("Processing -> testclass1.ump"+System.lineSeparator()
-              + "  Compiled to target language Java"+System.lineSeparator()
+              + "  Finished generating Java"+System.lineSeparator()
               + "Success! Processed testclass1.ump."+System.lineSeparator()
               + "Success! Processed testclass2.ump."+System.lineSeparator(),
           outErrIntercept.toString());
@@ -147,7 +147,7 @@ public class UmpleConsoleMainTest {
       // load simple ECore
       SampleFileWriter.createFile("testclass.ecore", String.join(System.lineSeparator(),
           "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
-          "<ecore:EPackage xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" name=\"base\" nsURI=\"cruise.example.base\" nsPrefix=\"base\">",
+          "<ecore:EPackage xmi:version=\"2.0\" xmlns:xmi=\"https://www.omg.org/XMI\" xmlns:xsi=\"https://www.w3.org/2001/XMLSchema-instance\" xmlns:ecore=\"https://www.eclipse.org/emf/2002/Ecore\" name=\"base\" nsURI=\"cruise.example.base\" nsPrefix=\"base\">",
           "<eClassifiers xsi:type=\"ecore:EDataType\" name=\"Time\" instanceClassName=\"java.sql.Time\"/>",
           "<eClassifiers xsi:type=\"ecore:EClass\" name=\"ICart\" interface=\"true\" abstract=\"true\">",
           "</eClassifiers>",

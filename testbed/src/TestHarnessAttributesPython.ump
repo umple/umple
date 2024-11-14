@@ -1,0 +1,215 @@
+namespace cruise.attributes.test;
+
+// Removed:
+// - ManyKeys
+// - ManKeysStringAndInt
+// - ItemWithUniqueId
+
+
+// Ignore warnings about lack of initialization of constants and setting to default
+strictness ignore 35;
+
+class DoorA
+{
+  immutable id = "1";
+  immutable Integer intId = 2;
+  immutable Double doubleId = 3.4;
+  immutable Boolean booleanId = false;
+}
+
+class DoorB 
+{
+  Integer id;
+  key {id}
+}
+
+class DoorC
+{
+  immutable id;
+  immutable Integer intId;
+  immutable Double doubleId;
+  immutable Date dateId;
+  immutable Time timeId;
+  immutable Boolean booleanId;
+  immutable DoorB doorId;
+}
+
+class DoorD
+{
+  defaulted id = "1";
+  defaulted Integer intId = 2;
+  defaulted Double doubleId = 3.4;
+  defaulted Boolean booleanId = false;
+}
+
+class DoorE
+{
+  Date d1 = "1978-12-01";
+  immutable Date d2 = "1978-12-02";
+  defaulted Date d3 = "1978-12-03";
+}
+
+class DoorF
+{
+  Time d1 = "12:51:51";
+  immutable Time d2 = "12:52:52";
+  defaulted Time d3 = "12:53:53";
+}
+
+class DoorG
+{
+  Float floatNoF = 1.1;
+  Float floatWithF = 1.2f;
+  Double doubleNoF = 1.3;
+  Double doubleWithF = 1.4;    	
+}
+
+class DoorH
+{
+  id;
+}
+
+class DoorI
+{
+  isA DoorH;
+  key {id};
+}
+
+class ManyAttribute
+{
+  Integer[] works;
+}
+
+class ManyStringAttributes
+{
+  String[] worksString;
+}
+
+class TypeInference
+{
+  a = 2;
+  b = 3.0;
+  c = false;
+  d = "hello world!";
+  e;
+  Integer f;
+  Integer g = 42;
+  String h = "hello";
+  String i;
+  j = -1;
+  k = -3.33333;
+  l = "-6";
+  m = "-3.1415926";
+  n = "99";
+  Boolean o = false;
+  Boolean p;
+  Double q;
+  Double r = 3;
+}
+
+class MoreTypeInference
+{
+  a = "12:12:12";       
+  Time b; 
+  c = "12:12";  
+  Time d = "12:12:12";      
+  e = "99:99:99";  
+  f = "2000:01:01";  
+  g = "2000-01-01";  
+  Date h;           
+  i = "2000-01"; 
+  j = "2000:01:01"; 
+  Date k = "2000-01-01";
+
+  l = new Object(); 
+}
+
+class ConstDefault
+{
+  const int I1;
+  const Integer I2;
+  const double D1;
+  const Double D2;
+  const float F1;
+  const Float F2;
+  const boolean B1;
+  const Boolean B2;
+  const String STR;
+  const Date DATE;
+  const Time TIME;
+}
+
+interface ConstDefaultInterface
+{
+  const int I1;
+  const Integer I2;
+  const double D1;
+  const Double D2;
+  const float F1;
+  const Float F2;
+  const boolean B1;
+  const Boolean B2;
+  const String STR;
+  const Date DATE;
+  const Time TIME;
+}
+
+class ConstDefaultInterfaceObject
+{
+  isA ConstDefaultInterface;
+}
+
+interface ConstDefaultInterfacePHP
+{
+  const int I1;
+  const Integer I2;
+  const double D1;
+  const Double D2;
+  const float F1;
+  const Float F2;
+  const boolean B1;
+  const Boolean B2;
+  const String STR;
+}
+
+class ConstDefaultInterfaceObjectPHP
+{
+  isA ConstDefaultInterfacePHP;
+}
+
+interface TypeInferenceInterface
+{
+  const A = 2;
+  const B = 3.0;
+  const C = false;
+  const D = "hello world!";
+  const E;
+  const Integer F;
+  const Integer G = 42;
+  const String H = "hello";
+  const String I;
+  const J = -1;
+  const K = -3.33333;
+  const L = "-6";
+  const M = "-3.1415926";
+  const N = "99";
+  const Boolean O = false;
+  const Boolean P;
+  const Double Q;
+  const Double R = 3;
+  const AA = "12:12:12";
+  const AC = "12:12";  
+  const Time AD = "12:12:12";      
+  const AE = "99:99:99";  
+  const AF = "2000:01:01";  
+  const AG = "2000-01-01";
+  const AI = "2000-01"; 
+  const AJ = "2000:01:01"; 
+  const Date AK = "2000-01-01";
+  const AL = new Object(); 
+}
+
+class TypeInferenceInterfaceObject{
+  isA TypeInferenceInterface;
+}
+

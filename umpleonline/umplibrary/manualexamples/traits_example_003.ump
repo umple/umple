@@ -3,6 +3,13 @@
  The trait has regular attributes, derived
  attribute and a method that are copied into
  Organization and Company  
+
+  To see different diagram views in UmpleOnline:
+    Use control-g for auto-layout
+      (if not already showing)
+    Use control-r to switch between trait view and
+       plain classes resulting from applying traits
+    Use control-m to show/hide methods
 */
 trait Identifiable {
   firstName;
@@ -21,3 +28,4 @@ class Organization {
 class Company {
   isA Organization, Identifiable;
 }
+// @@@skipcppcompile

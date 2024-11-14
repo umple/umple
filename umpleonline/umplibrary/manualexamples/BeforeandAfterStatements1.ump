@@ -8,3 +8,4 @@ class X
      setWhenWasASet(getA() + System.currentTimeMillis());
   }
 }
+// @@@skipcppcompile

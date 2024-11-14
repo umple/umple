@@ -1,0 +1,17 @@
+generate Sql;
+
+namespace example;
+
+class Person{
+    name;
+    int age;
+}
+
+class Employee{
+    isA Person;
+}
+
+class Admin{
+    int number;
+    isA Employee;
+}

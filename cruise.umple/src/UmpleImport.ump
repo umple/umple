@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
 Model for importing XMI and generating Umple code
 
@@ -116,13 +116,13 @@ class UmpleImportType {
 
   depend java.util.*;
 
-  // http://eclipse.org/ecoretools/
+  // https://eclipse.org/ecoretools/
   const UmpleImportType ECORE = new UmpleImportType("ecore", "ECore");
   
-  // http://en.wikipedia.org/wiki/SCXML
+  // https://en.wikipedia.org/wiki/SCXML
   const UmpleImportType SCXML = new UmpleImportType("scxml", "State-Chart XML");
     
- // http://www.eclipse.org/papyrus/
+ // https://www.eclipse.org/papyrus/
   const UmpleImportType PAPYRUS = new UmpleImportType("uml", "Papyrus XML");
 
   const Set<UmpleImportType> ALL = new HashSet<>(Arrays.asList(ECORE, SCXML, PAPYRUS));

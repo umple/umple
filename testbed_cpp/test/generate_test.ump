@@ -1,0 +1,13 @@
+generate RTCpp;
+
+use src/optional_one_to_many_test.ump;
+use src/one_to_one_test.ump;
+use src/many_to_many_test.ump;
+use src/reflexive_many_test.ump;
+use src/reflexive_optional_one_test.ump;
+use src/unidirectional_optional_one_test.ump;
+use src/unidirectional_optional_many_test.ump;
+use src/unidirectional_many_test.ump;
+use src/const_test.ump;
+use src/attribute_test.ump;
+use src/constraint_test.ump;

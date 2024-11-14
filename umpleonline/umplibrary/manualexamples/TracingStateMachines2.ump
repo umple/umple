@@ -1,3 +1,4 @@
+@SuppressWarnings("deprecation")
 class LightBulb
 {
   status

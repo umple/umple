@@ -17,12 +17,10 @@
       <td class="event-header">&nbsp;</td>
       <td class="event-header">(auto)</td>
       <td class="event-header">power</td>
-      <td class="event-header">test</td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="">OverState</td>
-      <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
     </tr>
@@ -31,26 +29,22 @@
       <td class="state-header" data-parent="0">- On</td>
       <td class="event-entry"><span>Off</span></td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry">&nbsp;</td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="0">- Off</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry"><span>On</span></td>
-      <td class="event-entry">&nbsp;</td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="0">- Yes</td>
       <td class="event-entry"><span>No</span></td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry">&nbsp;</td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="0">- No</td>
-      <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry"><span>Yes</span></td>
     </tr>
@@ -111,7 +105,7 @@
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>test</span></td>
+      <td class="state-entry"><span>power</span></td>
       <td class="state-entry">&nbsp;</td>
     </tr>
 
@@ -124,24 +118,23 @@
     <tr>
       <td class="event-header">&nbsp;</td>
       <td class="event-header">(auto)</td>
-      <td class="event-header">test</td>
       <td class="event-header">power</td>
     </tr>
     <tr>
       <td class="state-header" data-parent="">OverState (Yes || On)</td>
-      <td class="event-entry"><span>OverState (No || On)</span></td>      <td class="event-entry">&nbsp;</td>      <td class="event-entry">&nbsp;</td>    </tr>
+      <td class="event-entry"><span>OverState (Yes || Off)</span></td>      <td class="event-entry">&nbsp;</td>    </tr>
 
     <tr>
       <td class="state-header" data-parent="0">OverState (No || On)</td>
-      <td class="event-entry"><span>OverState (No || Off)</span></td>      <td class="event-entry"><span>OverState (Yes || On)</span></td>      <td class="event-entry">&nbsp;</td>    </tr>
+      <td class="event-entry"><span>OverState (No || Off)</span></td>      <td class="event-entry"><span>OverState (Yes || On)</span></td>    </tr>
 
     <tr>
       <td class="state-header" data-parent="0">OverState (Yes || Off)</td>
-      <td class="event-entry"><span>OverState (No || Off)</span></td>      <td class="event-entry">&nbsp;</td>      <td class="event-entry"><span>OverState (Yes || On)</span></td>    </tr>
+      <td class="event-entry"><span>OverState (No || Off)</span></td>      <td class="event-entry"><span>OverState (Yes || On)</span></td>    </tr>
 
     <tr>
       <td class="state-header" data-parent="0">OverState (No || Off)</td>
-      <td class="event-entry">&nbsp;</td>      <td class="event-entry"><span>OverState (Yes || Off)</span></td>      <td class="event-entry"><span>OverState (No || On)</span></td>    </tr>
+      <td class="event-entry">&nbsp;</td>      <td class="event-entry"><span>OverState (No || On)</span></td>    </tr>
 
   </table>
 </div>
@@ -163,7 +156,7 @@
 
     <tr>
       <td class="state-header" data-parent="0">OverState (No || On)</td>
-      <td class="state-entry"><span>test</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>(auto)</span></td>    </tr>
+      <td class="state-entry"><span>power</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>(auto)</span></td>    </tr>
 
     <tr>
       <td class="state-header" data-parent="0">OverState (Yes || Off)</td>
@@ -171,7 +164,7 @@
 
     <tr>
       <td class="state-header" data-parent="0">OverState (No || Off)</td>
-      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>power</span></td>      <td class="state-entry"><span>test</span></td>      <td class="state-entry">&nbsp;</td>    </tr>
+      <td class="state-entry">&nbsp;</td>      <td class="state-entry"><span>power</span></td>      <td class="state-entry">&nbsp;</td>      <td class="state-entry">&nbsp;</td>    </tr>
 
   </table>
 </div>

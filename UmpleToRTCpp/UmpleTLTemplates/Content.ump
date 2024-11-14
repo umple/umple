@@ -3,7 +3,7 @@
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
 * which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v10.html
+* https://www.eclipse.org/legal/epl-v10.html
 *
 * Contributors:
 *     Ahmed M.Orabi
@@ -31,6 +31,8 @@ class GenPackage{
 	#>><<=copyRight>>
 #ifndef <<=fullName>>
 #define <<=fullName>>
+
+#include <condition_variable>
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__) || defined(_WIN64)
 #define WINDOWS_OS
@@ -135,21 +137,16 @@ class GenClass{
 };
 <<=predefinitions>><<=namespaceClosing()>>
 //------------------------
-//GNU HASH FUNCTION USE
+//HASH FUNCTION USE
 //------------------------
-#ifdef __GNUC__
-using namespace __gnu_cxx;
-namespace __gnu_cxx{
-	template<> struct hash<<<=fullQualifiedName>>*>{
-		size_t operator()(<<=fullQualifiedName>>* ptr ) const {
-		    return ptr->hashCode();
-		}
-	};
+#include <unordered_map>
+namespace std{
+    template<> struct hash<<<=fullQualifiedName>> *> {
+        size_t operator()(<<=fullQualifiedName>>* ptr ) const {
+            return ptr->hashCode();
+        }
+    };
 }
-#include <ext/hash_map>
-#else
-#include <hash_map>
-#endif
 #endif!>>
 	emit emitHeader()(emitHeaderT);
 

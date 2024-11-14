@@ -3,7 +3,7 @@
  Copyright: All contributers to the Umple Project
  
  This file is made available subject to the open source license found at:
- http://umple.org/license
+ https://umple.org/license
 
 */
 
@@ -18,7 +18,7 @@ public class DoubleGenTest extends TemplateTest
   public void Parent()
   {
     assertUmpleTemplateFor("DoubleGenTest.ump",languagePath + "/DoubleGenTest_Parent."+ languagePath +".txt","Person");
- }
+  }
   
   @Test
   public void Child()

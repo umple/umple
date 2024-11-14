@@ -34,6 +34,8 @@ public class GvErdGeneratorTest extends TemplateTest {
 	    SampleFileWriter.destroy(pathToInput + "/gv/RelationshipRangeerd.gv");
 	    SampleFileWriter.destroy(pathToInput + "/gv/RelationshipReflexiveerd.gv");
 	    SampleFileWriter.destroy(pathToInput + "/gv/RelationshipAttributeserd.gv");
+	    
+	    SampleFileWriter.destroy(pathToInput + "/gv/IncreaseERSeperd.gv");
 	}
 
 	// Also tests multi-valued attribute, derived attribute
@@ -132,5 +134,13 @@ public class GvErdGeneratorTest extends TemplateTest {
 	public void Relationship_Attributes_Test() {
 		language = null;
 	    assertUmplePartialTemplateFor("gv/RelationshipAttributes.ump","gv/RelationshipAttributes.gv.txt");
-	}	
+	}
+	
+  @Test
+  public void nodeSeparationErd()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/IncreaseERSep.ump","gv/IncreaseERSep.gv.txt");
+  }
+
 }

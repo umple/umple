@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-    http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="https://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="https://maven.apache.org/POM/4.0.0
+    https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.jhotdraw</groupId>
@@ -11,7 +11,7 @@
 
   <name>JHotDraw 7</name>
   <description>JHotDraw 7 is a two-dimensional graphics framework for structured drawing editors. It can be used to create many different editors from a simple doodle program up to full fledged diagram editors and vector animation tools.</description>
-  <url>http://www.randelshofer.ch/oop/jhotdraw/</url>
+  <url>https://www.randelshofer.ch/oop/jhotdraw/</url>
 
   <scm>
     <connection>scm:https://jhotdraw.svn.sourceforge.net/svnroot/jhotdraw</connection>

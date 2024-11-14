@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
 This file analyzes token related State Machines and populates the State Machine
 related meta model entities in Umple.
@@ -23,6 +23,7 @@ class UmpleInternalParser
   internal List<Token> transitionNames = null;
   internal List<Token> ignoredTransitions = new ArrayList<Token>();
   internal List<Token> innerMixsetTokens = null;
+  List<ReqImplementation> ReqImpState= new ArrayList<ReqImplementation>();
   
   
   //------------------------
@@ -245,7 +246,6 @@ class UmpleInternalParser
         }	
 	    }
     }
-      
       Token subToken = token.getSubToken(0);
       if (subToken.is("activeDefinition"))
       {
@@ -262,6 +262,10 @@ class UmpleInternalParser
       {
         analyzedReferencedStateMachine(subToken,uClassifier);
       }
+    }
+     if(token.is("reqImplementation"))
+    {
+       ReqImpState = analyzeStateReqImpl(token);
     }
   }
 
@@ -634,8 +638,16 @@ class UmpleInternalParser
         }
       } 
     }
-      
     
+     if (uClassifier instanceof UmpleClass) {
+        for(ReqImplementation reqImp : ReqImpState)
+        {
+          sm.addReqImplementation(reqImp);    
+        }
+      }
+      
+      sm.setPosition(stateMachineToken.getPosition());
+     
     if(stateMachineToken.is("pooled"))
     {
       sm.setPooled(true);
@@ -1120,6 +1132,17 @@ class UmpleInternalParser
       {
       	fromState.addAction(analyzeAction(subToken, fromState));
       }
+      else if (subToken.is("displayColor"))
+      { // See near clone in UmpleInternalParser_CodeClass.ump and UmpleInternalParser_CodeLayout.ump
+          String theColor = subToken.getValue("colorValue");
+          // Optionally users may add an equals sign, which we take out
+          if(theColor.startsWith("=")) theColor=theColor.substring(1,theColor.length());
+          // Optionally users may add quotation marks around the colour, which we take out
+          theColor=theColor.replace('\"',' ');
+          // Remove all spaces that may have been before any quotation marks or after the equals sign
+          theColor="\""+theColor.trim()+"\"";
+          fromState.setDisplayColor(theColor);
+      }
       else if (subToken.is("||"))
       {
         if (fromState.numberOfNestedStateMachines() == 0) { continue; }
@@ -1464,7 +1487,6 @@ class UmpleInternalParser
               priorAutoTransitionExists = true;
             }
           }
-          //System.out.println("added: " + subToken.getValue("event"));
           
           if(subToken.getValue("timer") == null)
           	unguardedEvents.add(subToken.getValue("event"));

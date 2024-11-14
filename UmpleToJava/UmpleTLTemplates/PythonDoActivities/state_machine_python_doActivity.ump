@@ -1,0 +1,54 @@
+class UmpleToJava {
+    state_machine_python_doActivity <<!<</*state_machine_python_doActivity*/>><<#
+  Event e = activity.getOnCompletionEvent();
+  String postTransition = e != null ? gen.translate("eventMethod",e) : null; 
+#>>
+  private void <<= gen.translate("doActivityMethod",activity)>>()
+  {
+      <TXL UGM>
+        try:
+        <<#Position p = activity.getPosition();
+        if (p != null) {
+        String activityCode = activity.getActivityCode();
+        String[] lines = activityCode.split("\\r?\\n");
+        // The first line in the activity code needs 3 tabs
+        boolean isFirstLine = true;
+        // Each line in the activityCode needs to be indented 12 spaces
+        for (String line : lines) {
+            if (isFirstLine) {
+                realSb.append("\n").append("            ").append(line);
+                isFirstLine = false;
+            } else {
+                // lines after the first line have a position offset 
+                // that affects how many spaces need to be indented
+                if (p.getCharacterOffset() > 10) {
+                  int removeExtraSpace = p.getCharacterOffset() - 10;
+                  line = line.substring(removeExtraSpace);
+                  realSb.append("\n").append(line);
+                } else if (p.getCharacterOffset() < 10 && p.getCharacterOffset() >= 0) {
+                  realSb.append("\n").append(" ".repeat(10 - p.getCharacterOffset())).append(line);
+                }
+            }
+        }
+      } #>>
+    <<# 
+	if (p != null) { 
+	   int javaline = realSb.toString().split("\\n").length;
+	   addUncaughtExceptionVariables(gen.translate("doActivityMethod",activity),p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline-2,activity.getActivityCode().split("\\n").length); 
+	  } #>>
+      <<# if (postTransition != null)
+      { 
+        for (Activity a : state.getActivities())
+        {
+          if(a != activity){
+            append(realSb, "\n      {0}.join();",gen.translate("doActivityThread",a));
+          }
+        }
+        append(realSb, "\n      {0}();",postTransition); 
+      } #>>
+        except :
+            pass
+      </TXL UGM>
+  }
+!>>
+}

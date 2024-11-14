@@ -36,8 +36,8 @@ digraph "RelationshipAttributes" {
   "Seminar" -> "addressSeminar" [arrowhead="none"];
 
   // All associations
-  "Person" -> "Ticket" [dir="none", label="1", tooltip="Person->Ticket" labeltooltip="Person->Ticket" headtooltip="Person->Ticket" tailtooltip="Person->Ticket" labelurl="javascript:void()" tailurl="javascript:void()" headurl="javascript:void()" ];
+  "Person" -> "Ticket" [dir="none", label="1", tooltip="Person->Ticket" labeltooltip="Person->Ticket" headtooltip="Person->Ticket" tailtooltip="Person->Ticket" URL="javascript:Action.selectAssociation('Person,Ticket,1')" ];
 
-  "Seminar" -> "Ticket" [dir="none", label="*", tooltip="Seminar->Ticket" labeltooltip="Seminar->Ticket" headtooltip="Seminar->Ticket" tailtooltip="Seminar->Ticket" labelurl="javascript:void()" tailurl="javascript:void()" headurl="javascript:void()" ];
+  "Seminar" -> "Ticket" [dir="none", label="*", tooltip="Seminar->Ticket" labeltooltip="Seminar->Ticket" headtooltip="Seminar->Ticket" tailtooltip="Seminar->Ticket" URL="javascript:Action.selectAssociation('Seminar,Ticket,*')" ];
 
 }
