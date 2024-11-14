@@ -28,3 +28,4 @@ class Organization {
 class Company {
   isA Organization, Identifiable;
 }
+// @@@skipcppcompile

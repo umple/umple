@@ -4,17 +4,17 @@
       label="UmpleEditorAndCompiler"
       version="1.15.0.963">
 
-   <description url="http://cruise.site.uottawa.ca/umple/">
+   <description url="https://cruise.site.uottawa.ca/umple/">
       Umple is a model-oriented programming language that lets you
       model in code.  This feature encapsulates the Umple editor and
       compiler.
    </description>
 
-   <copyright url="http://cruise.site.uottawa.ca/umple/">
+   <copyright url="https://cruise.site.uottawa.ca/umple/">
       Copyright 2008-2011 Timothy C. Lethbridge, Andrew Forward, Omar Badreddin, Dusan Brestovansky, Julie Filion, Miguel Garzon, Hamoud Aljamaan.
    </copyright>
 
-   <license url="http://cruise.site.uottawa.ca/umple/">
+   <license url="https://cruise.site.uottawa.ca/umple/">
       Copyright 2008-2011 Timothy C. Lethbridge, Andrew Forward, Omar Badreddin, Dusan Brestovansky, Julie Filion, Miguel Garzon, Hamoud Aljamaan
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.

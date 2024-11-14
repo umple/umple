@@ -11,3 +11,4 @@ class Operation {
     if (DEBUG) { System.out.println("Created " + query); }
   }
 }
+// @@@skipcppcompile

@@ -23,7 +23,7 @@ public class First implements I
   {
     if (aSecond == null || aSecond.getFirst() != null)
     {
-      throw new RuntimeException("Unable to create First due to aSecond. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create First due to aSecond. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     second = aSecond;
   }

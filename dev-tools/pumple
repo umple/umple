@@ -3,10 +3,16 @@ if ! $?UMPLEROOT then
   setenv UMPLEROOT ~/umple
 endif
 cd $UMPLEROOT/build
+echo Doing final UmpleOnline setup in $UMPLEROOT
 echo Copying jars from dist director to the umpleonline scripts directory
 echo Do this after qfbumple when resting umpleonline
 ant -DshouldPackageUmpleOnline=true -Dmyenv=local -f build.umple.xml packageUmpleonline
 cd $UMPLEROOT/umpleonline/scripts
+echo restarting the umpleonline server
 quitserver
+echo restarting the docker server for code execution
 startexecdocker
+echo rebuilding the codemirror6 tech
+cd $UMPLEROOT/umpleonline/scripts/codemirror6
+npm start
 

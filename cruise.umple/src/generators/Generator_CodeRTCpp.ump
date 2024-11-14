@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
  */
 
@@ -51,7 +51,10 @@ class RTCppGenerator
   
   protected void generateContents(UmpleModel model ,StringBuilder model_code, String filename, String content, String owingFolder) throws IOException {		
 		 String path = model.getUmpleFile().getPath() + "/";
-		 owingFolder= owingFolder.replace(".", "::").replace("::", "/");
+		 //Create a temporary string to hold owingFolder and remove "RTCpp" from owingFolder 
+		 String temp = owingFolder;
+		 owingFolder = temp.replace("RTCpp", "");
+		 owingFolder= "RTCpp/" + owingFolder.replace(".", "::").replace("::", "/");
 		 String qualifiedPath = path+ owingFolder;
 		 File folder = new File(qualifiedPath);
 		 if (!folder.exists()) {

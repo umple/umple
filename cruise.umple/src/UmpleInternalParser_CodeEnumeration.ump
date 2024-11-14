@@ -9,6 +9,7 @@ namespace cruise.umple.compiler;
 class UmpleInternalParser
 {
   final String AUTO_GENERATED_METHOD = "fAutoAPI";
+   List<ReqImplementation> ReqImpEnum= new ArrayList<ReqImplementation>();
   /*
    * Issue 1008 - Analyze enumerations defined at the top-level of an Umple Model
    */
@@ -21,6 +22,10 @@ class UmpleInternalParser
      if (t.is("enumerationDefinition"))
      {
        analyzeEnumeration(t);
+     }
+     if (t.is("reqImplementation"))
+     {  
+       ReqImpEnum = analyzeEnumImplReq(t);
      }
    }
    
@@ -40,7 +45,11 @@ class UmpleInternalParser
        if (subToken.is("enumValue")) {
          umpleEnum.addEnumValue(subToken.getValue());
        }
-     }     
+     }  
+    for (ReqImplementation ri : ReqImpEnum )
+    { 
+      umpleEnum.addReqImplementation(ri);
+    }   
      model.addEnum(umpleEnum);
   }
    

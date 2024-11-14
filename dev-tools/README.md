@@ -36,7 +36,7 @@ For normal use of Umple by end users on the command line.
 For developers
 
  bumple
-  - does a full build of Umple (make sure you have done git pull first
+  - does a full build of Umple (make sure you have done git pull first)
   - you should run this before creating any pull request 
   - Takes 2-5 minutes. Emulates what the server does and cleanly deals with UmpleVersion
 

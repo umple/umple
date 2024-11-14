@@ -30,26 +30,31 @@
     }
     private void markIncludedClasses(Filter f)
     {
-        if (f == null || f.isEmpty()) 
-        {
+      if (f == null || f.isEmpty()) 
+      {
         return;
-        }
+      }
 
-        for(UmpleClass clazz : umpleClasses)
+      // Loop through all the classes to determine if
+      // any of the patterns say they should be included
+      // By default no class is included unless isIncluded returns true
+      for(UmpleClass clazz : umpleClasses)
+      {
+        boolean patternSaysInclude = f.isIncluded(clazz);
+        if(patternSaysInclude)
         {
-        if(f.isIncluded(clazz))
-        {
-            clazz.setFilteredin(true);
-            if(f.hasSub())
-            {
+          clazz.setFilteredin(true);
+          // we may also ask to add subs and supers
+          if(f.hasSub())
+          {
             addSubClasses(f.getSubCount(),clazz);
-            }
-            if(f.hasSuper())
-            {
+          }
+          if(f.hasSuper())
+          {
             addSuperClasses(f.getSuperCount(), clazz);
-            }
+          }
         }  
-        }
+      }
 
         mixset Association {
           if(f.hasAssociation())
@@ -144,6 +149,8 @@
 // Line : 4932
   class Filter
   {
+    depend java.util.regex.*;
+
     public boolean hasNestedFilter()
     {
       return getFilterValues().length > 0;
@@ -172,6 +179,8 @@
       return getValues().length == 0 || "*".equals(getValue(0));
     }
 
+    // Determine whether any of the class filter patterns (values) match the name
+    // This function is called once for each class
     public boolean isIncluded(String name)
     {
       if (name == null)
@@ -180,10 +189,42 @@
       }
       else
       {
-        return values.indexOf(name) != -1;
+        // Normal case: No tildes so true means keep it
+        Boolean isPositive = true;
+
+        // base case ... just a class name with no * or ?
+        // Class is found directly matching the name
+        if(values.indexOf(name) != -1) {
+          return true;
+        }
+        else {
+          // loop through the values as regexes to see if any of them result in matches
+          // This is a bit inefficient since it recompiles the regexes for every string
+          // TODO: Invert the search
+          for(String aPossiblePattern: values) {
+            String patternToUse = aPossiblePattern;
+            if(aPossiblePattern != null
+              && aPossiblePattern.startsWith("~")) {
+              // This is a negation
+              patternToUse = aPossiblePattern.substring(1);
+              
+              // We have a tilde so now don't keep this one
+              isPositive = false;
+            }
+            if(aPossiblePattern != null
+              && Pattern.compile(createRegex(patternToUse)).matcher(name).find())
+            {
+              // Found a match; if positive return true; otherwise return false
+              return(isPositive);
+            }
+          }
+        }
+        // None of the values were patterns that matched
+        return !isPositive;
       }
     }
 
+    // Determine whether a given Umple class is to be included
     public boolean isIncluded(UmpleClass clazz)
     {
       if (clazz == null)
@@ -196,6 +237,24 @@
       }
     }
 
+    // Allow pattern patching with * and ?
+    public String createRegex(String globString) {
+      String regex="^";
+      for(int i = 0; i < globString.length(); ++i)
+      {
+        final char c = globString.charAt(i);
+        switch(c)
+        {
+          case '*': regex += ".*"; break;
+          case '?': regex += '.'; break;
+          case '.': regex += "\\."; break;
+          case '\\': regex += "\\\\"; break;
+          default: regex += c;
+        }
+      }
+      regex += '$';
+      return regex;
+    }
   }
 
 

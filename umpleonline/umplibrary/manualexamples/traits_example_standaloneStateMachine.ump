@@ -40,3 +40,4 @@ trait DeviceWithStatus {
     }
   }
 }
+// @@@skipcppcompile

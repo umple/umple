@@ -3,7 +3,7 @@
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
 * which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v10.html
+* https://www.eclipse.org/legal/epl-v10.html
 *
 * Contributors:
 *     Ahmed M.Orabi
@@ -27,6 +27,7 @@ class GenConnectEntry{
 	String toOwner;
 	
 	lazy Boolean inverse;
+	lazy Boolean isCompound;
 	
 	depend java.util.List;
 	
@@ -80,6 +81,12 @@ class GenConnectEntry{
 			expectedRelatedFromField = relatedToField;
 			expectedRelatedToField = relatedFromField;
 		}
+		
+		if (isCompound) {
+		 return expectedFromSegment + "->" + expectedRelatedToField.getName() + "+= " + (isReference ? "&" : "")
+				+ expectedToSegment + "->" + expectedRelatedFromField.getName() + ";";
+		}
+		
 
 		return expectedFromSegment + "->" + expectedRelatedFromField.getName() + "+= " + (isReference ? "&" : "")
 				+ expectedToSegment + "->" + expectedRelatedToField.getName() + ";";

@@ -113,3 +113,4 @@ class A
 {
   position 41 17 158 80;
 }
+// @@@skipcppcompile

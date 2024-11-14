@@ -55,11 +55,18 @@ class Loan
       returnitem / {refundReplacementCost();} -> returned;
     }
   }
-  void refundReplacementCost() {}
-  void sendRecallNotice() {}
-  void assessFine() {}
-  void sendOverdueNotice() {}
-  void assessReplacementCost() {}
-  int currentTime() {return 1;}
+  void refundReplacementCost() Java {}
+  void sendRecallNotice() Java{}
+  void assessFine() Java {}
+  void sendOverdueNotice() Java {}
+  void assessReplacementCost() Java {}
+  int currentTime() Java {return 1;}
   
+  void refundReplacementCost() Python { ''' Implementation ''' }
+  void sendRecallNotice() Python { ''' Implementation ''' }
+  void assessFine() Python { ''' Implementation ''' }
+  void sendOverdueNotice() Python { ''' Implementation ''' }
+  void assessReplacementCost() Python { ''' Implementation ''' }
+  int currentTime() Python {return 1}  
 }
+// @@@skipcppcompile

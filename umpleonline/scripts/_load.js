@@ -55,16 +55,17 @@ document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/fol
 document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/search/searchcursor.js"></script>');
 document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/edit/matchbrackets.js"></script>');
 
-
+// socket io to connect to UmpleCollabServer using sockets
+document.write('<script type="text/javascript" src="scripts/socket.io/socket.io.js"></script>');
 
 // ====== The following minified version of the subsequent group can be commented out when testing
 // Regenerate this using the allumple-minifyscript unix script (relies on yuicompressor)
-document.write('<script type="text/javascript" src="scripts/allumple-min.js"></script>');
+// document.write('<script type="text/javascript" src="scripts/allumple-min.js"></script>');
 
 
 // ------ The following should be commented out, and the above min version used, except when testing 
 // If you change any constituent file, regenerate allumple-min.js as above
-/*
+///*
 
 //Prototype
 document.write('<script type="text/javascript" src="scripts/prototype.js"></script>');
@@ -114,14 +115,18 @@ document.write('<script type="text/javascript" src="scripts/umple_restore.js"></
 document.write('<script type="text/javascript" src="scripts/umple_action_diagram.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_tooltips.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_tab_control.js"></script>');
+// The following script includes configuration file for collab_server
+// where serverURL and path have to be set to connect specific instance of a collaboration server
+document.write('<script type="text/javascript" src="scripts/collab-server-config.js"></script>')
 
 //For styling and colouring statetables
 document.write('<script type="text/javascript" src="scripts/statetable/state_table_colourer.js"></script>');
 
-*/
+//*/
 
 // ----------- END OF FILES THAT ARE MINIFIED -----------
 
+document.write('<script type="text/javascript" src="scripts/umpleCollab.js"></script>');
 document.write('<script type="text/javascript" src="scripts/structureDiagram.js" ></script>');
 
 // JointJS support from local directories

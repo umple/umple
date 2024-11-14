@@ -3,7 +3,7 @@
  Copyright: All contributers to the Umple Project
  
  This file is made available subject to the open source license found at:
- http://umple.org/license
+ https://umple.org/license
 
  */
 
@@ -489,6 +489,11 @@ public class TemplateTest
       SampleFileWriter.assertPartialFileContent(expected, actual);
     }
 
+  }
+  
+  public String[] addNewSuboption(String subOption){
+    suboptions = new String[]{"genJson"};
+    return suboptions;
   }
 
   public UmpleModel createUmpleSystem(String path, String filename)

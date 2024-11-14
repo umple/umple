@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
 Command line tools: To compile Umple files, or to do diffs
 
@@ -333,7 +333,14 @@ class UmpleConsoleMain
               continue;
             }
           
-            if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php")) {
+             if(generatorCodeToCompile.equals("Python") && model.isSkippythoncompile()) {
+                 if(!cfg.getBeQuiet()) {
+                   System.out.println("Skipping compilation of python due to @@@skippythoncompile in a comment.");
+                 }
+                 continue;
+               }
+
+            if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php") || generatorCodeToCompile.equals("Python")) {
               compileSuccess = CodeCompiler.compile(model, generatorCodeToCompile,cfg.getUseExec(), cfg.getBeQuiet(), cfg.getCompile().get(), null);
             }
             else if (generatorCodeToCompile.startsWith("Gv")) {
@@ -373,7 +380,7 @@ class UmpleConsoleMain
           System.out.println("  Finished generating "+key);
           if(key.compareTo("Java")==0) {
             for (UmpleClass mainClass: CodeCompiler.getMainClasses(model)) {
-              System.out.println("  Main method found. Run Java "+mainClass.getName());
+              System.out.println("  Main method found. Run java "+mainClass.getName());
             }
           }
         }
@@ -561,18 +568,20 @@ class UmpleConsoleMain
     String suboptionsAvail = "(With GvStateDiagram: hideactions, hideguards, showtransitionlabels, showguardlabels, Java, Cpp) ";
     suboptionsAvail += "(With GvClassDiagram or GvClassTraitDiagram or GvEntityRelationshipDiagram: hideattributes, showmethods)";
     suboptionsAvail += " (With all Gv: gvseparator=n.n where n.n is greater than 1.0 to separate nodes more than default, or less than one to make the diagram tighter)";
+    suboptionsAvail += " (With all Requirements: reqSortID to sort requirements by their ID, reqSortStat to sort requirements by their Statement)";
+    suboptionsAvail += " (With all Requirements: reqHideNotImpl to hide the not implemented requirements. )";
 
-    optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
-    optparser.acceptsAll(Arrays.asList("performance", "p"), "Indicate time taken to parse and generate code");
-    optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
+      optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
+      optparser.acceptsAll(Arrays.asList("performance", "p"), "Indicate time taken to parse and generate code");
+      optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
 
     optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: " + languages).withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("u", "umple"), "Include umple code directly as a single string, instead of or addition to in files.").withRequiredArg().ofType(String.class);
-    
+    optparser.acceptsAll(Arrays.asList("d","debug"), "Debug. For developers of the compiler. Turns on internal debug statements wrapped in blocks that check model.isDebugMode().");    
     optparser.acceptsAll(Arrays.asList("override"), "If a output language <lang> is specified using option -g, output will only generate language <lang>");
     optparser.acceptsAll(Arrays.asList("removeprevious", "r"), "used with -g; remove previously generated code before generating new. Can help prevent leftover code causing errors. Does not work with generators specified inside a file.");
     optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
-    optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to the entry class to compile, or with argument - to compile all outputfiles; compiles Java to .class, lints Php, converts Graphviz to .svg").withRequiredArg().ofType(String.class);
+    optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to the entry class to compile, or with argument - to compile all outputfiles; compiles Java to .class, lints Php and Python, converts Graphviz to .svg").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("f","file"), "Read in a file containing sets of umple-files to process, one set per line. Each is an independent compilation. Intended for testing.").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("e","exitonfirstfailure"), "Used with -f. Exit with nonzero on first failure of a compile specified in the file passed to -f. Otherwise exits after completing all compilations with nonzero if any failed.");    
     optparser.acceptsAll(Arrays.asList("q","quiet"), "Be quiet. Only output compilation information in case of failure");
@@ -1174,7 +1183,7 @@ class PlaygroundMain
       for (GenerateTarget gt : model.getGenerates()) 
       {
         String generatorCodeToCompile = gt.getLanguage();
-        if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php")) 
+        if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php") || generatorCodeToCompile.equals("Python")) 
         {
           // TODO: Remove default options in future when syncing umplesync.jar with umple.jar
           successPreviousStep = CodeCompiler.compile(model, generatorCodeToCompile,false, false, "-", errorFileName);
@@ -1183,8 +1192,10 @@ class PlaygroundMain
     }
 
     // Delete main file if any existing
-    String filePath = model.getUmpleFile().getPath() + File.separator + "JavaMainClasses.txt";
-    deleteFileIfExists(filePath);
+    String javaPath = model.getUmpleFile().getPath() + File.separator + "JavaMainClasses.txt";
+    String PythonPath = model.getUmpleFile().getPath() + File.separator + "PythonMainClasses.txt";
+    deleteFileIfExists(javaPath);
+    deleteFileIfExists(PythonPath);
 
     // If execution required, output the main classes to a file
     if(successPreviousStep && executionRequired) 
@@ -1249,7 +1260,7 @@ class PlaygroundMain
   {
     for (String key : model.getHashMap().keySet()) 
     {
-      if(key.compareTo("Java") == 0) 
+      if(key.compareTo("Java") == 0 || key.compareTo("Python") == 0) 
       {
         // Get all main file names and make a single string
         StringBuilder builder = new StringBuilder();
@@ -1258,7 +1269,7 @@ class PlaygroundMain
           builder = builder.append(mainClass.getName() + " ");
         }
         String mainFileNames = builder.toString().trim();
-        String filePath = model.getUmpleFile().getPath() + File.separator + "JavaMainClasses.txt";
+        String filePath = model.getUmpleFile().getPath() + File.separator + key + "MainClasses.txt";
         if(!mainFileNames.isEmpty())
         {
           // Create or override JavaMainClasses.txt

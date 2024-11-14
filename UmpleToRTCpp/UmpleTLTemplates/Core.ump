@@ -3,7 +3,7 @@
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
 * which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v10.html
+* https://www.eclipse.org/legal/epl-v10.html
 *
 * Contributors:
 *     Ahmed M.Orabi
@@ -658,8 +658,13 @@ class GenClass{
 		String root= Arrays.asList(splits).stream().map(string-> "namespace "+ string + " {").collect(Collectors.joining(" "));
 		
 		String enclosure= namespaceEnclosure();
-		return "#define "+ enclosure+ "_BEGIN"+ "   "+ root;
+		return namspaceCheck(enclosure, root);
 	}
+	
+	namspaceCheckT <<!#ifndef <<=enclosure>>_BEGIN
+	#define <<=enclosure>>_BEGIN   <<=root>>
+#endif!>>
+	emit namspaceCheck(String enclosure, String root)(namspaceCheckT);
 	
 	String callNamespaceEnd(){
 		String enclosure= namespaceEnclosure();
@@ -965,9 +970,10 @@ class GenMethod{
 	lazy Boolean isFriend;
 	
 	before getIsConstant{
-		if(normalize && !getGenClass().getIsRemote()){
-			return getGenClass().getGenPackage().isPrimitive(returnType);
-		}
+		//if(normalize && !getGenClass().getIsRemote()){
+		//	return getGenClass().getGenPackage().isPrimitive(returnType);
+		//}
+		
 	}
 	
 	before getIsPointer{

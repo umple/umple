@@ -334,6 +334,7 @@ function generateMenu($buttonSuffix)
             <option value=\"java:Json\">Json</option>
             <option id=\"gensql\" value=\"sql:Sql\">Sql</option>
             <option id=\"genmetrics\" value=\"html:SimpleMetrics\">Simple Metrics</option>
+            <option id=\"genplainrequirementsdoc\" value=\"html:PlainRequirementsDoc\">Plain Requirements Doc</option>
             <option value=\"html:CodeAnalysis\">Code Analysis</option>
             <option value=\"java:USE\">USE Model</option>
             <option value=\"java:UmpleSelf\">Internal Umple Representation</option>
@@ -532,7 +533,8 @@ function extractFilename()
     {
         // The actual Umple code (must be very short) follows the ?text= in the URL
         $dataHandle = dataStore()->createData();
-        $dataHandle->writeData('model.ump', urldecode(urldecode($_REQUEST["text"])));
+        $rawUmpleForFile=$_REQUEST["text"];
+        $dataHandle->writeData('model.ump', strip_tags(urldecode(urldecode($rawUmpleForFile))));
     }
     // Starting from scratch; so simply create a blank model
     elseif (!isset($_REQUEST['filename']) || $_REQUEST["filename"] == "")

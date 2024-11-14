@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
 Code for generating documentation such as the Umple user manual
 */
@@ -101,8 +101,8 @@ class Documenter
     // NEW
     StringBuilder combinedHtmlOutput = new StringBuilder();
     combinedHtmlOutput.append(
-        "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" + "\n" +
-        "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
+        "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" + "\n" +
+        "<html xmlns=\"https://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
         "<head>" + "\n" +
         "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" + "\n" +
         "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />" + "\n" +        
@@ -114,7 +114,7 @@ class Documenter
         "  <style> .regCentered {text-align: center; font-size: 110%  }</style>\n" +  
         "  <meta name='viewport' content='width=device-width, initial-scale=1'>\n  " +
         "</head>\n<body>\n" +
-        "<div class='largeCentered'>Umple Combined User Manual<br><a href='http://www.umple.org'>http://www.umple.org</a></div><div class='regCentered'>This version is one large page and is intended to allow searching through the entire manual, or easy printing to pdf for offline reading. For most purposes you will want to work with the individual manual pages at <a href='http://manual.umple.org'>http://manual.umple.org</a>. A published 526-page <a href='https://doi.org/10393/42044'>pdf version of the Umple User Manual</a> is also available for download. </div>&nbsp;<br/>"
+        "<div class='largeCentered'>Umple Combined User Manual<br><a href='https://www.umple.org'>https://www.umple.org</a></div><div class='regCentered'>This version is one large page and is intended to allow searching through the entire manual, or easy printing to pdf for offline reading. For most purposes you will want to work with the individual manual pages at <a href='https://manual.umple.org'>https://manual.umple.org</a>. A published 526-page <a href='https://doi.org/10393/42044'>pdf version of the Umple User Manual</a> is also available for download. </div>&nbsp;<br/>"
         );
 
     Hashtable<String,String> referenceLookup = createReferenceLookup();
@@ -678,11 +678,12 @@ class Template
   private static String htmlTemplate()
   {
     String template = "" + 
-        "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" + "\n" +
-        "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
+        "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" + "\n" +
+        "<html xmlns=\"https://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
         "<head>" + "\n" +
         "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" + "\n" +
         "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />" + "\n" +
+        "  <meta name=\"description\" content=\"Umple User Manual page for @@TITLE@@\"/>" + "\n" +
         "  <link rel=\"stylesheet\" type=\"text/css\" href=\"files/layout.css\" />" + "\n" +
         "  <script type=\"text/javascript\" src=\"files/script.js\"></script>" + "\n" +
         "  <title>Umple User Manual: @@TITLE@@</title>" + "\n" +
@@ -707,13 +708,13 @@ class Template
         "  <table class=\"body\" >" + "\n" +
         "  <tbody>" + "\n" +
         "  <tr>" + "\n" +
-        "    <td class=\"menu\">" + "\n" +
+        "    <td class=\"menu\" style=\"width: 170px; min-width: 170px\">" + "\n" +
         "      <div class=\"title\"><a href=\"https://cruise.umple.org/umple\">" +
         "<img height=\"25\" src=\"files/indicator_blocks.gif\" alt=\"Umple Logo\" />&nbsp;" +
         "Umple </a></div>" + "\n" +
         
 // Code from Google to inject translation - script is at end
-"<div id=\"google_translate_element\"></div>" +
+"<div id=\"google_translate_element\" style=\"min-height: 24px\"></div>" +
 // End of code from Google
         "@@NAVIGATION@@" + "\n" +
         "<div class=\"level1\"><a href=\"UmpleUserManualCombined.html\">Combined Version</a></div>\n" +  
@@ -727,13 +728,15 @@ class Template
         "" + "\n" +
         
         "<span style=\"float: right\">"+
-        "  <a title=\"Umple is led by Timothy Lethbridge, professor at the University of Ottawa. Much of the development has been by graduate students at uOttawa.\" href=\"https://www.uottawa.ca\" target=\"uottawatab\"><img height=\"20px\" src=\"files/uottawa_ver_black.png\" alt=\"University of Ottawa logo / Université d'Ottawa\" /></a>"+
+        "  <a title=\"The Umple website and UmpleOnline are hosted using facilities provided by the Digital Research Alliance of Canada to Canadian university faculty members.\" href=\"https://alliancecan.ca/en\" target=\"alliancecantab\"><img height=\"16px\" style=\"vertical-align:top\" src=\"files/DRAC_logo.jpeg\" alt=\"Digital Research Alliance of Canada logo\" /></a>&nbsp;"+
+        "  <a title=\"We acknowledge the support of the Natural Sciences and Engineering Research Council of Canada (NSERC) grant number 752498 for ongoing support of research into Umple. /Nous remercions le Conseil de recherches en sciences naturelles et en génie du Canada (CRSNG) de son soutien.\" href=\"https://www.nserc-crsng.gc.ca/ase-oro/Details-Detailles_eng.asp?id=752498\" target=\"NSERCtab\"><img height=\"18px\" style=\"vertical-align:top\" src=\"files/NSERC_BLACK.png\" alt=\"NSERC logo\" /></a>&nbsp;"+        
+        "  <a title=\"Umple is led by Timothy Lethbridge, professor in Electrical Engineering and Computer Science, Faculty of Engineering at the University of Ottawa. Much of the development has been by graduate and undergraduate students at uOttawa.\" href=\"https://www.uottawa.ca/faculty-engineering/school-electrical-engineering-computer-science\" target=\"uottawatab\"><img height=\"20px\" src=\"files/uottawa_ver_black.png\" alt=\"University of Ottawa logo / Université d'Ottawa\" /></a>"+
         "</span>"+
         
         "      <h2><i>User Manual @@PREVNEXT@@</i></h2>"  + "\n" +
         
 // Code from Google to inject custom search -- scripts are at end
-"<gcse:search></gcse:search>" + "\n" +
+"<div style=\"min-height: 61px\"><gcse:search></gcse:search></div>" + "\n" +
 // End code from Google
         Template.HtmlCoreTemplate +
         "      </td>" + "\n" +
