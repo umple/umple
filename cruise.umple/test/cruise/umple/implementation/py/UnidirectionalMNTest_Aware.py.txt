@@ -19,7 +19,7 @@ class Mentor():
         self._students = []
         didAddStudents = self.setStudents(*allStudents)
         if not didAddStudents :
-            raise RuntimeError ("Unable to create Mentor, must have 3 to 7 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+            raise RuntimeError ("Unable to create Mentor, must have 3 to 7 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
     #------------------------
     # INTERFACE

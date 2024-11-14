@@ -4,6 +4,6 @@ class UmpleToPhp {
     $<<=gen.translate("didAddMany",av)>> = $<<=instanceIdentifier>>-><<=gen.translate("setManyMethod",av)>>($<<=gen.translate("parameterAll",av)>>);
     if (!$<<=gen.translate("didAddMany",av)>>)
     {
-      throw new Exception("Unable to create <<=gen.relatedTranslate("type",av)>>, must not have duplicate <<=gen.translate("associationMany",av)>>. See http://manual.umple.org?RE001ViolationofImmutability.html");
+      throw new Exception("Unable to create <<=gen.relatedTranslate("type",av)>>, must not have duplicate <<=gen.translate("associationMany",av)>>. See https://manual.umple.org?RE001ViolationofImmutability.html");
     }!>>
 }

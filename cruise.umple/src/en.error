@@ -119,11 +119,11 @@
 # [TODO - issue 337] 120: 2, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Association role name '{0}' must be alphanumeric and start with a letter ;
 # [TODO - issue 337] 121: 4, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Association role name '{0}' should start with a lower-case letter ;
 
-130: 2, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Attribute name '{0}' must be alphanumeric, starting with a lower-case letter ;
+130: 2, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Attribute name '{0}' must {1} ;
 131: 4, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Attribute name '{0}' should start with a lower-case letter ;
 132: 2, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Attribute name '{0}' contains special characters. Association declaration must be separated by spaces ;
 
-140: 2, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Attribute type name '{0}' must be alphanumeric, starting with a letter ;
+140: 2, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Attribute type name '{0}' must {1} ;
 141: 4, "https://manual.umple.org/?W141ValueTypeMismatch.html", Mismatch between type '{0}' and value {1} ;
 142: 3, "https://manual.umple.org/?W142Typeisaccessspecifier.html", Attribute '{0}' has a type of {public|private|protected}. This looks like a variable of type '{1}' and is likely an error. In Umple attributes are private by default, and are Strings if no type is specified. ;
 
@@ -190,7 +190,7 @@
 
 # Message related to requirements start with 400
 401: 4, "https://manual.umple.org/?PageBeingDeveloped.html", Cannot find specified requirement identifier(s): {0} ;
-402: 4,  "http://manual.umple.org/?PageBeingDeveloped.html", Language Conflict for requirement identifier:{0}. The languages encountered are: {1} and {2} ;
+402: 4,  "https://manual.umple.org/?PageBeingDeveloped.html", Language Conflict for requirement identifier:{0}. The languages encountered are: {1} and {2} ;
 
 # Messages relating to deprecated features starting with 901
 901: 4, "https://manual.umple.org/?W901DeprecatedKeywordConstant.html", Keyword "constant" deprecated, please use "const" ;

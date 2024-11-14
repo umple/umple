@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
 The main Umple metamodel.
 
@@ -70,7 +70,12 @@ class UmpleModel
 
   Map<String,String> generatedCode = new HashMap<String,String>();
   Map<String,Analyzer> analyzers = new HashMap<String,Analyzer>();
+  
+  // The core list of all requirement in this Model s found while parsing
   Map<String, Requirement> allRequirements = new HashMap<String, Requirement>();
+  
+  // The core list of all requirement implementation annotations found while parsing.
+  * -> * ReqImplementation reqImplementations;
 
   // data for default class positioning
   internal Coordinate levelOffset = new Coordinate(200,100,0,0);
@@ -121,7 +126,7 @@ class UmpleModel
 
   // The Umple interfaces contained within the model.
   1 -> * UmpleInterface;
-
+  
   // Suboptions that might be added by the suboption command;
   lazy String[] availableSuboptions;
   before addGenerate(GenerateTarget) {
@@ -235,7 +240,7 @@ class Method
   1 -> * Comment;
 
   //The requirement ids implemented within the method.
-  1 -> * Requirement;
+  1 -> * ReqImplementation;
   
   // Specifies, for fAutoAPI methods, if the method was generated
   Boolean wasGenerated = false;
@@ -621,6 +626,7 @@ class Key
    name;
    String[] enumValues;
    1 -> 0..1 Position;
+   1 -> * ReqImplementation;
  }
 
 /*
@@ -662,7 +668,8 @@ class UmpleInterface
   // The comments associated with the Umple Interface (such as the Javadoc above it).
   1 -> * Comment;
 
-  1 -> * Requirement;
+  //The requirement ids implemented within the Umple Interface.
+  1 -> * ReqImplementation;
   
   0..1 -- * UmpleTestCase;
 
@@ -763,7 +770,8 @@ class UmpleClass
   // The comments associated with the Umple Class (such as the Javadoc above it).
   1 -> * Comment;
 
-  1 -> * Requirement;
+  //The requirement ids implemented within the class.
+  1 -> * ReqImplementation;
 
   //This is used to assign inheritance parameters.
   1 -> * GeneralTPApplied;
@@ -839,8 +847,8 @@ class UmpleTrait {
   // The comments associated with the Umple Trait (such as the Javadoc above it).
   1 -> * Comment;
 
-  // The requirement associated with the Umple Trait (such as the Javadoc above it).
-  1 -> * Requirement;
+  // The requirement associated with the Umple Trait (such as the Javadoc above it). 
+  1 -> * ReqImplementation;
 
   //The template parameters which are specified when traits are defined.
   1 -> * GeneralTemplateParameter;
@@ -1048,7 +1056,8 @@ class Attribute
   // The comments associated with the attribute (such as the Javadoc above it).
   1 -> * Comment;
 
-  1 -> * Requirement;
+ //The requirement ids implemented within the attribute.
+  1 -> * ReqImplementation;
 
   // In case this attribute needs to have error handling preformed
   1 -> 0..1 Position;
@@ -1170,7 +1179,8 @@ class AssociationVariable
   // The comments associated with the association (such as the Javadoc above it).
   1 -> * Comment;
 
-  1 -> * Requirement;
+  //The requirement ids implemented within the association variable.
+  1 -> * ReqImplementation;
 
   before setUmpleClass { if ((aUmpleClass != null) && !aUmpleClass.immutabilityAssociationRulesSatisfied(this, aUmpleClass.isImmutable())) { return false; } }
 
@@ -1277,14 +1287,67 @@ class Comment
 
 
 /*
-* Represents a requirement, such as those found around classes, methods, attributes and associations.
-*/
+ * Represents a requirement, such as those found around
+ * classes, methods, attributes, associations, stateMachines, states, etc.
+ * If multiple occurrences of a requirement are found, their statements are concatenated
+ * and a single instance is created.
+ * If the language of two occurrences differs (and neither is blank) the the latter occurrences
+ * is ignored with warning 401
+ * All instances of this class are tracked in the instance of Model
+ * with the map allRequirements, whose key is the identifier
+ */
 class Requirement{
   depend java.util.*;
+  depend cruise.umple.parser.Token;
 
+  // A unique identifier for this requirement
+  // Alphanumeric, with -, . and _ allowed
+  // TODO: add an Umple 'key' statement for this.
   identifier;
+  
+  // The content of the requirement, expressed in the language
   statement;
+  
+  // The requirements language used to express this requirement
+  // can be blank, then 'text' is assumed
+  // Other languages can be added e.g. GRL = Goal Requirement Language
   language;
+  
+  // List of tokens where the requirement was found
+  // Used when reporting errors regarding missing implementations
+  // and when reporting where a requirement is located in the code
+  * -> * Token reqToken;
+}
+
+/*
+ * Represents an implementation of a requirement
+ * Stored to allow for analysis of matching requirement
+ * and reporting on what features implement what requirement
+ * all instances of this class are tracked in the instance of the model
+ * with the association allReqImplementations
+ * Note that there can be multiple instances of this class for each identifier
+ * because, for example, multiple methods may be needed to implement a given requirement
+ */
+class ReqImplementation {
+  depend cruise.umple.parser.Token;
+  depend java.util.*;
+
+  // unique identifier that should match the identifier of a Requirement
+  identifier;
+  
+  // After analysis of the code, this will identify the requirement if there is one
+  // If there are zero requirements it would indicate a mismatch (warning 402)
+  // A requirement can have many implementing features.
+  * -- 0..1 Requirement;
+  
+  // The location in the code where the implementation was found, so we can
+  // report warning 402 if we find no matching requirement
+  // and so we can output a requirements document that enables the reader to find each implementation
+  * -> 1 Token reqToken;
+  
+  // the class, attribute, state machine, state, association, mixset etc. that the
+  // implementation corresponds to, e.g. 'class Person'
+  lazy implementingFeature;
 }
 
 class UmpleTemplate {
@@ -1305,11 +1368,11 @@ class GenerateTarget
   Boolean override = false;
   Boolean overrideAll = false;
   lazy String[] suboptions;
-  
+
   before getPath{if(path == null) path = ""; }
   key{language}
   public Boolean tarHasSubOption(String subOption){
-  	return suboptions.contains(subOption);
+  return suboptions.contains(subOption);
   }
 }
 

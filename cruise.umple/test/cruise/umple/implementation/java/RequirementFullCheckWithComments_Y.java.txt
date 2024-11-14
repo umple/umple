@@ -7,6 +7,7 @@
  * This is class Y
  * R3: There must be a class called Y
  */
+// line 32 "model.ump"
 public class Y
 {
 
@@ -30,7 +31,7 @@ public class Y
     boolean didAddX = setX(aX);
     if (!didAddX)
     {
-      throw new RuntimeException("Unable to create y due to x. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create y due to x. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

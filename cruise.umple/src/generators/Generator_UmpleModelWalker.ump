@@ -3,7 +3,7 @@
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
 * which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v10.html
+* https://www.eclipse.org/legal/epl-v10.html
 *
 * Contributors:
 *     Ahmed M.Orabi
@@ -58,7 +58,7 @@ class UmpleModelVisitor {
 	// Comment
 	void visit(Comment comment) {}
 	// Requirement
-	void visit(Requirement req) {}
+	void visit(ReqImplementation reqImpl) {}
 	
 	// Umple Classifiers
 	void visit(UmpleElement umpleElement) {}
@@ -175,8 +175,9 @@ class UmpleModelWalker {
 					for(Comment cmt : mth.getComments()) {
 						visitor.visit(cmt);
 					}
-					for(Requirement r : mth.getRequirements()) {
-						visitor.visit(r);
+					// A problem could arise with the visit function due to the change for req to reqImpl
+					for(ReqImplementation ri : mth.getReqImplementations()) {
+						visitor.visit(ri);
 					}
 				}
 				for(Constant cnst : classifier.getConstants()) {
@@ -207,8 +208,9 @@ class UmpleModelWalker {
 					for(Comment cmt : clazz.getComments()) {
 						visitor.visit(cmt);
 					}
-					for(Requirement r : clazz.getRequirements()) {
-						visitor.visit(r);
+					// A problem could arise with the visit function due to the change for req to reqImpl
+					for(ReqImplementation ri : clazz.getReqImplementations()) {
+						visitor.visit(ri);
 					}
 					
 					if(clazz.getParentInterface().size() > 0 || clazz.getExtendsClass() != null) {
@@ -268,8 +270,8 @@ class UmpleModelWalker {
 						for(Comment cmt : aVar.getComments()) {
 							visitor.visit(cmt);
 						}
-						for(Requirement r : aVar.getRequirements()) {
-							visitor.visit(r);
+						for(ReqImplementation ri : aVar.getReqImplementations()) {
+							visitor.visit(ri);
 						}
 					}
 					
@@ -282,8 +284,8 @@ class UmpleModelWalker {
 						for(Comment cmt : attribute.getComments()) {
 							visitor.visit(cmt);
 						}	
-						for(Requirement r : attribute.getRequirements()) {
-							visitor.visit(r);
+						for(ReqImplementation ri : attribute.getReqImplementations()) {
+							visitor.visit(ri);
 						}				
 					}
 					for(StateMachine sm: clazz.getAllStateMachines()){

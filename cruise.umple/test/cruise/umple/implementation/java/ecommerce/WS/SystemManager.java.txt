@@ -814,7 +814,7 @@ this(UmpleRuntime.getComponent("SystemManager"));
         try 
         {
           URL url = new URL(remoteUrl+":"+remotePort+"/SystemManager"+objectId+"?wsdl");
-          QName qname = new QName("http://ecommerceWS/","SystemManagerService");
+          QName qname = new QName("https://ecommerceWS/","SystemManagerService");
           Service service = Service.create(url, qname);
           setRealObject(service.getPort(ISystemManagerImpl.class));
           success = true;

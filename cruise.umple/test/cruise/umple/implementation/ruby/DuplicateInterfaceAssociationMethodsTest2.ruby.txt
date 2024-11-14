@@ -24,7 +24,7 @@ class First < I
     @deleted = false
     @second = nil
     did_add_second = set_second(a_second)
-    raise "Unable to create first due to @second. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" unless did_add_second
+    raise "Unable to create first due to @second. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" unless did_add_second
     @initialized = true
   end
 

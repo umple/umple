@@ -3,7 +3,7 @@
  Copyright: All contributers to the Umple Project
 
  This file is made available subject to the open source license found at:
- http://umple.org/license
+ https://umple.org/license
 
 */
 
@@ -63,7 +63,7 @@ public class FilterTest
   public void getFilterTest()
   {
     model = parse("601_simpleFilter.ump");
-    assertEquals(1, model.getFilters().size());
+    assertEquals(6, model.getFilters().size());
     assertNotNull(model.getFilter("roles"));  
   }
   
@@ -174,6 +174,69 @@ public class FilterTest
     Assert.assertEquals(2, model.numberOfUmpleClasses());
   }
   
+  @Test
+  public void applyFilter_AsteriskAtEnd()
+  {
+    model = parse("601_simpleFilter.ump");
+    model.applyFilter("onlyStartWithS");
+    ArrayList<String> names = new ArrayList<String>();
+    names.add("School");
+    names.add("Student");
+    Assert.assertEquals(2, model.numberOfUmpleClasses());
+    assertFiltered(names, model.getUmpleClasses()); 
+  }
+
+  @Test
+  public void applyFilter_AsteriskBothEnds()
+  {
+    model = parse("601_simpleFilter.ump");
+    model.applyFilter("onlyWithT");
+    ArrayList<String> names = new ArrayList<String>();
+    names.add("Student");
+    names.add("Mentor");
+    Assert.assertEquals(2, model.numberOfUmpleClasses());
+    assertFiltered(names, model.getUmpleClasses()); 
+  }
+
+  @Test
+  public void applyFilter_QuestionMarks()
+  {
+    model = parse("601_simpleFilter.ump");
+    model.applyFilter("onlySixLetters");
+    ArrayList<String> names = new ArrayList<String>();
+    names.add("School");
+    names.add("Mentor");
+    names.add("Zigbee");
+    Assert.assertEquals(3, model.numberOfUmpleClasses());
+    assertFiltered(names, model.getUmpleClasses()); 
+  }
+  
+  @Test
+  public void applyFilter_Complex()
+  {
+    model = parse("601_simpleFilter.ump");
+    model.applyFilter("hasTwoOsOrUOrEBeforeEnd");
+    ArrayList<String> names = new ArrayList<String>();
+    names.add("School");
+    names.add("Student");
+    names.add("Zigbee");
+    Assert.assertEquals(3, model.numberOfUmpleClasses());
+    assertFiltered(names, model.getUmpleClasses()); 
+  }
+
+  @Test
+  public void applyFilter_Negation()
+  {
+    model = parse("601_simpleFilter.ump");
+    model.applyFilter("negFilter");
+    ArrayList<String> names = new ArrayList<String>();
+    names.add("Student");
+    names.add("Mentor");
+    names.add("Zigbee");
+    Assert.assertEquals(3, model.numberOfUmpleClasses());
+    assertFiltered(names, model.getUmpleClasses()); 
+  }
+
   @Test
   public void applyFilter_Association()
   {
@@ -361,14 +424,20 @@ public class FilterTest
     assertFiltered(names, model.getUmpleClasses()); 
   }
   
-  private void assertFiltered(ArrayList<String> names, List<UmpleClass> list)
+  private void assertFiltered(ArrayList<String> names, List<UmpleClass> allFilteredClasses)
   {
-    ArrayList<String> className = new ArrayList<String>();
-    for(UmpleClass c : list)
+    for(UmpleClass c : allFilteredClasses)
     {
-      className.add(c.getName());
+      if(!names.contains(c.getName())) {
+        Assert.fail("Unexpected class present after filtering: "+
+          c.getName());
+      }
     }
-    Assert.assertEquals(names, className);
+    
+    // After the above we know that the names we
+    // asserted to be present are present as classes
+    // But maybe there are extra classes ... check this
+    Assert.assertEquals(names.size(), allFilteredClasses.size());
   }
   
   public UmpleModel parse(String filename)
