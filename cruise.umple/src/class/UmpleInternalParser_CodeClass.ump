@@ -1235,7 +1235,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   }
 
   // Check for the existence of a a parent class
-   private void checkExtendsClass(){
+   private void checkExtendsClass(UmpleClass classToCheck){
     for(UmpleClass child : model.getUmpleClasses()) 
     {
       if(child.getExtendsToken() != null) 
@@ -1254,25 +1254,35 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             UmpleClass extend = child.getExtendsClass();
             while(extend!=null && child != extend && limit > 0) 
             {
+              // Look through all the parent classes to see if there are duplicate attributes
               limit--;
               for(Attribute extendAttr : extend.getAttributes()) 
               {
-                
+                // look one by one at the attributes inherited from a parent (extend)
                 String currentName = aAttribute.getName();
                 if (extendAttr.getName().equals(currentName)) 
                 {
+                  // There is an inherited attribute with the same name, but it might be OK if
+                  // it is being 'refined' e.g. given a different type or value
                   if(extendAttr.getType().equals(aAttribute.getType()))
                   {
-                    if(aAttribute.getValue() == null)
+                    if(aAttribute.getValue() == null) {
+                      // Not a refinement by setting a value, so it is a duplicate
                       attRepetition.add(aAttribute);
-                    else
+                      // issue 2173
+                      // warn of the duplicate
+                      setFailedPosition(aAttribute.getPosition(), 44, child.getName(), currentName, extend.getName());
+                    }
+                    else {
+                      // OK the value is being changed
                       aAttribute.setIsRefinement(true);
+                    }
                   }
                   else
                   {
-                  attRepetition.add(aAttribute);
+                    // The new attribute has same name but different type
+                    attRepetition.add(aAttribute);
                     setFailedPosition(aAttribute.getPosition(), 44, child.getName(), currentName, extend.getName());
-                
                   }
                 }
               }
@@ -1282,12 +1292,16 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           
           for(Attribute att : attRepetition)
             child.deleteAttribute(att);
-            
           continue;
         }
         else{
           Token t = child.getExtendsToken();
-          getParseResult().addErrorMessage(new ErrorMessage(33,t.getPosition(),t.getValue(),child.getName()));      
+
+          // Issue #2195 indicated that message 33 was being repeated unnecessarily (computing from each subclass)
+          if(classToCheck == child) {
+            // Only do it in one case, otherwise will duplicate error 33
+            getParseResult().addErrorMessage(new ErrorMessage(33,t.getPosition(),t.getValue(),child.getName()));
+          }
         }
       }
     }
@@ -2097,7 +2111,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       try
       {
         child.setExtendsToken(extendsToken.get(i));
-        checkExtendsClass();                            //Issue 543
+        checkExtendsClass(child);                            //Issue 543
       }
       catch(Exception e){}
           }
@@ -4805,7 +4819,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         setFailedPosition(attributeToken.getPosition(), 160, name);
       }
       else {
-        setFailedPosition(attributeToken.getPosition(), 130, name);
+        raiseError130or140(attributeToken.getPosition(), 130, name);
       }
       
       return;
@@ -4900,7 +4914,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       Matcher m = Pattern.compile("([a-zA-Z_][0-9a-zA-Z_]*(<(.*)>)?)").matcher(type);
       if(!m.matches()) 
       {
-        setFailedPosition(attributeToken.getPosition(), 140, type);
+        raiseError130or140(attributeToken.getPosition(),140, type);
         return;
       }
     }
@@ -5001,6 +5015,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       addAttributeToConstructor(attribute, aClass);
     }
   }
+  
+  
 
   private void addAttributeToConstructor(Attribute attribute, UmpleClass aClass)
   {
@@ -5024,6 +5040,42 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     aClass.addMethod(constructor);
   }
 
+  // All the places where error 130 (attribute name or 140 (type) are raised will call
+  // this function to be more specific about the details of what is wrong with
+  // the name or type name (issue #2193)
+  private void raiseError130or140 (Position position, int errorNum, String attributeNameOrType)
+  {
+    String caseRequired = "a lower case";
+    if (errorNum == 140) {
+      caseRequired = "a"; // types can start with uppercaser
+    }
+  
+    String detailedReason = "be alphanumeric, starting with "+caseRequired+" letter";
+    boolean startsWithNumber = false;
+    boolean hasSpecialCharacter = false;
+    
+    // detect case where attributeNameOrType starts with non letter
+    Pattern pat = Pattern.compile("^[0-9].*");
+    if(pat.matcher(attributeNameOrType).find()) {
+      startsWithNumber = true;
+    }
+    
+    // detect case where attributeNameOrType has special character
+    pat = Pattern.compile("^[:alnum:]*$");
+    if(!pat.matcher(attributeNameOrType).find()) {
+      hasSpecialCharacter = true;
+    }
+    
+    // Narrow down default message if appropriate
+    if(startsWithNumber && ! hasSpecialCharacter) {
+      detailedReason = "start with "+caseRequired+" letter";
+    }
+    else  if(hasSpecialCharacter && ! startsWithNumber) {
+      detailedReason = "not have special characters";
+    }    
+    
+    setFailedPosition(position, errorNum, attributeNameOrType, detailedReason);
+  }
   
   private void addAPIMethodsForAttribute(Attribute attribute, UmpleClass aClass)
   {
@@ -5674,7 +5726,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         }
         else 
         {
-          setFailedPosition(sub.getPosition(), 130, sub.getValue("name"));
+          raiseError130or140(sub.getPosition(), 130, sub.getValue("name"));
         }
         return;
       }
@@ -5687,7 +5739,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       {
         if(!Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w|<|>|,)*", type))
         {
-          setFailedPosition(sub.getPosition(), 140, type);
+          raiseError130or140(sub.getPosition(), 140, type);
         }
       }
     }
@@ -5781,7 +5833,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         }
         else 
         {
-          setFailedPosition(sub.getPosition(), 130, sub.getValue("name"));
+          raiseError130or140(sub.getPosition(), 130, sub.getValue("name"));
         }
         return;
       }
@@ -5794,7 +5846,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       {
         if(!Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w|<|>|,)*", type))
         {
-          setFailedPosition(sub.getPosition(), 140, type);
+          raiseError130or140(sub.getPosition(), 140, type);
         }
       }
     }

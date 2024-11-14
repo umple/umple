@@ -1,0 +1,28 @@
+{
+  "name": "codemirror6",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm install && rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@codemirror/basic-setup": "^0.20.0",
+    "@codemirror/collab": "^6.1.0",
+    "@codemirror/lang-javascript": "^6.1.4",
+    "@codemirror/language": "^6.6.0",
+    "@codemirror/search": "^6.3.0",
+    "@codemirror/state": "^6.2.1",
+    "@codemirror/view": "^6.17.1",
+    "codemirror": "^6.0.1",
+    "rollup": "^3.29.5"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.4",
+    "@rollup/plugin-node-resolve": "^15.2.1"
+  }
+}
