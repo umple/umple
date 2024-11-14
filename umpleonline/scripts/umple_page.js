@@ -181,6 +181,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonSimulateCode");
   Page.initHighlighter("buttonUigu");
   Page.initHighlighter("buttonCopyClip");
+  Page.initHighlighter("buttonCollabFork");
   Page.initHighlighter("buttonCopy");
   Page.initHighlighter("buttonCopyEncodedURL");
   Page.initHighlighter("buttonCopyCommandLine");
@@ -247,6 +248,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowHideLayoutEditor");
   Page.initAction("buttonManualSync");
   Page.initAction("buttonCopyClip");
+  Page.initAction("buttonCollabFork");
   Page.initAction("buttonCopy");
   Page.initAction("buttonCopyEncodedURL");
   Page.initAction("buttonCopyCommandLine");
@@ -587,9 +589,12 @@ Page.initCodeMirrorEditor = function() {
   });
 
   if (Page.readOnly) {
-    Page.codeMirrorEditor6.dispatch({
-      effects: cm6.StateEffect.appendConfig.of(cm6.EditorView.editable.of(false))
-        });
+    // Page.codeMirrorEditor6.dispatch({
+    //   effects: cm6.StateEffect.appendConfig.of(cm6.EditorView.editable.of(false))
+    //     });
+            Page.codeMirrorEditor6.dispatch({
+          effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(false))
+      });
   }
   
   // monitor codemirror6 state to listen to any changes in editor contents and update diagram accordingly
@@ -1172,6 +1177,17 @@ Page.createBookmark = function()
   TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
   TabControl.saveActiveTabs();
   window.location.href = "bookmark.php?model=" + Page.getModel();
+}
+
+// same as Page.createBookmark()
+// but creates a new temporary copy of the bookmarked model
+// useful when collaborating and the user wants to work
+// independently on their own version
+Page.createBookmarkFork = function()
+{
+  TabControl.useActiveTabTo(TabControl.saveTab)(Page.getUmpleCode());
+  TabControl.saveActiveTabs();
+  window.location.href = "bookmark.php?model=" + Page.getModel() + "&forkSoMakeTmpOnly";
 }
 
 Page.createTask = function()

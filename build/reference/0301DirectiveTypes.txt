@@ -8,7 +8,7 @@ noreferences
 Directives appear as the 'main' entries in an Umple file. The following are the main types:</p>
 
 <ul>
-<li><b><a href="UseStatements.html">Use statements</a></b> result in inclusion of other Umple files to allow for modularization and reuse.</li>
+<li><b><a href="UseStatements.html">Use statements</a></b> include other Umple files to allow for modularization and reuse.</li>
 
 <br />
 
@@ -23,11 +23,11 @@ Other model or code elements, such as <a href="MethodDefinition.html">methods</a
 
 <br />
 
-<li><b><a href="Top-levelAspects.html">Aspects (code injections)</a></b> tell umple to inject certain code before, after or around certain methods of certain classes. These can be used to modify the behaviour of both custom and generated code.</li>
+<li><b><a href="Top-levelAspects.html">Aspects (code injections)</a></b> tell Umple to inject certain code before, after or around certain methods of certain classes. These can be used to modify the behaviour of both custom and generated code.</li>
 
 <br />
 
-<li><b><a href="BasicMixsets.html">Mixset directives.</a></b> These are named blocks of Umple code that can be included (optionally) with a <a href="UseStatements.html">use statement</a>. Several of them can have the same name. If there us no use statement for the mixset, that code is ignored. These can be used to build product lines and different software versions.</li>
+<li><b><a href="BasicMixsets.html">Mixset directives.</a></b> These are named blocks of Umple code that can be included (optionally) with a <a href="UseStatements.html">use statement</a>. Several of them can have the same name. If there is no use statement for the mixset, that code is ignored. These can be used to build product lines and different software versions.</li>
 
 <br />
 

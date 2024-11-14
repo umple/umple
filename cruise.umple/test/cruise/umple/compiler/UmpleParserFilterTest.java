@@ -42,7 +42,7 @@ public class UmpleParserFilterTest
   @Test
   public void simpleFilter()
   {
-	  assertParse("601_simpleFilter.ump","[classDefinition][name:School][attribute][name:name][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Mentor][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Student][classDefinition][name:Student][classDefinition][name:Mentor][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Student][filter][filterName:roles][filterValue][classname:Student][classname:Mentor]");
+	  assertParse("601a_simpleFilter.ump","[classDefinition][name:School][attribute][name:name][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Mentor][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Student][classDefinition][name:Student][classDefinition][name:Mentor][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Student][filter][filterName:roles][filterValue][classname:Student][classname:Mentor]");
 	  Assert.assertNotNull(model.getFilter("roles"));
 	  String actuals[] = {"Student", "Mentor"};
 	  Assert.assertArrayEquals(model.getFilter("roles").getValues(), actuals);
